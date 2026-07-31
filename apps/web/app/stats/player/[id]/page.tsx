@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Shell, Cards, DataTable, Badge, ScoreRing, BarChart, StatusRibbon, InsightCard, SectionHeader } from "../../_components";
 import { getPlayer, loadWeeklyStats, loadComps, loadArchetypes } from "@/lib/statking/product";
 export const metadata = {
-  title: "Player Profile: StatKing Metrics & Lineage",
-  description: "A full StatKing metric profile with source lineage and data-confidence for an NFL player.",
+  title: "Player Profile: Galaxy Stats Metrics & Lineage",
+  description: "A full Galaxy Stats metric profile with source lineage and data-confidence for an NFL player.",
   alternates: { canonical: "/stats/players" },
 };
 export default function Page({ params }: { params: { id: string } }) {

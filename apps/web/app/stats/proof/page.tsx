@@ -4,8 +4,8 @@ import { loadKingStandard } from "@/lib/statking/king-standard-loader";
 import { isMeasured } from "@/lib/statking/king-standard";
 
 export const metadata = {
-  title: "Proof & Backtests: How StatKing Is Validated",
-  description: "Backtests, metric reliability, and the honest proof layer behind StatKing metrics.",
+  title: "Proof & Backtests: How Galaxy Stats Is Validated",
+  description: "Backtests, metric reliability, and the honest proof layer behind Galaxy Stats metrics.",
   alternates: { canonical: "/stats/proof" },
 };
 

@@ -5,7 +5,7 @@ import { rankPlayers, loadPlayers } from "@/lib/statking/product";
 import { glossaryEntry } from "@/lib/glossary";
 export const metadata = {
   title: "Player Database: Every Tracked NFL Player",
-  description: "Browse the full StatKing player universe with usage, efficiency, role, and fantasy edge.",
+  description: "Browse the full Galaxy Stats player universe with usage, efficiency, role, and fantasy edge.",
   alternates: { canonical: "/stats/players" },
 };
 export default function Page({ searchParams }: { searchParams?: { filter?: string } }) {

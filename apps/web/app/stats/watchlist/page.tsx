@@ -3,7 +3,7 @@ import { Shell, Cards, StatusRibbon, HeroStat, InsightCard, SectionHeader } from
 import { loadArchetypes, loadPlayers } from "@/lib/statking/product";
 export const metadata = {
   title: "Watchlist: Your Tracked Players",
-  description: "Track players and surface their StatKing signals in one place.",
+  description: "Track players and surface their Galaxy Stats signals in one place.",
   alternates: { canonical: "/stats/watchlist" },
 };
 export default function Page() {
