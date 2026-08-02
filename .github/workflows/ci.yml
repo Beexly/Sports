@@ -27,6 +27,7 @@ jobs:
   test:
     name: Test, type-check, lint, Prisma
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     services:
       postgres:
@@ -102,6 +103,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     needs: test
 
     steps:
@@ -134,6 +136,7 @@ jobs:
   trust-gate:
     name: Trust gate (banned phrases on public copy)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -164,6 +167,7 @@ jobs:
   ai-council:
     name: AI Council (DESTROY ship blockers)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -187,6 +191,7 @@ jobs:
   model-freeze:
     name: Model freeze (MODEL_VERSION guardrail)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -210,6 +215,7 @@ jobs:
   draft-only:
     name: Draft-only (no auto-publish)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -232,6 +238,7 @@ jobs:
   secret-scan:
     name: Secret scan (full tree)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -252,6 +259,7 @@ jobs:
   api-v1-boundary:
     name: API v1 boundary (shadow stack)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -268,6 +276,7 @@ jobs:
   ai-transport-import-boundary:
     name: AI transport import boundary
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -292,6 +301,7 @@ jobs:
   guardrails:
     name: All guardrails
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -319,6 +329,7 @@ jobs:
   brand-safety:
     name: Brand safety (customer copy invariants)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
