@@ -36,13 +36,24 @@ for (const [k, expect] of cases) {
   if (got !== expect) failed.push(`path-select(${JSON.stringify(k)})=${got} want ${expect}`);
 }
 
-// 2. Source of truth: settle-picks uses selectSettlementPath
+// 2. Source of truth: settle-picks delegates the free/paid decision to the
+// centralised path-select module and never inlines its own key check.
+// Assert that invariant rather than one symbol's spelling: the route moved
+// from selectSettlementPath to the hasOddsApiKey type guard so TypeScript
+// could narrow `apiKey` to string on the paid path, and grepping a single
+// name reported that correctness fix as a regression.
 const settleSrc = readFileSync(
   join(root, "apps/web/app/api/cron/settle-picks/route.ts"),
   "utf8",
 );
-if (!settleSrc.includes("selectSettlementPath")) {
-  failed.push("settle-picks must use selectSettlementPath");
+if (!settleSrc.includes("@/lib/settlement/path-select")) {
+  failed.push("settle-picks must import the path-select law module");
+}
+const DECIDERS = ["hasOddsApiKey", "selectSettlementPath", "isFreePath"];
+if (!DECIDERS.some((fn) => settleSrc.includes(fn))) {
+  failed.push(
+    `settle-picks must decide via path-select (one of: ${DECIDERS.join(", ")})`,
+  );
 }
 
 // 3. vercel cron matrix — required high-leverage schedules
