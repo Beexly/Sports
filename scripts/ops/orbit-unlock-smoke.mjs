@@ -83,9 +83,53 @@ for (const rel of [
 ]) {
   if (!existsSync(join(root, rel))) failed.push(`missing ${rel}`);
 }
-const vercelSrc = readFileSync(join(root, "vercel.json"), "utf8");
-if (!vercelSrc.includes("frame-ancestors *")) {
-  failed.push("vercel.json must allow embed frame-ancestors *");
+// Embed framing must survive the EDGE, not just next.config. vercel.json headers
+// are applied by Vercel, and every matching `source` contributes — so a broad
+// "/(.*)" rule setting `frame-ancestors 'self'` lands on /embed responses
+// alongside `frame-ancestors *` and the badge stops framing cross-origin.
+//
+// The old check here was `vercelSrc.includes("frame-ancestors *")` — a raw
+// substring test that passes whether or not a second rule clobbers it. It could
+// not fail on the bug it existed to prevent. Assert the real invariant instead:
+// resolve every rule that MATCHES a concrete path and check what that path
+// actually receives, in both directions.
+function sourceToRegex(source) {
+  // Vercel uses path-to-regexp. ":name*" is a wildcard tail; the remaining
+  // syntax in use here (groups, negative lookaheads) is already regex.
+  return new RegExp(`^${source.replace(/\/:\w+\*/g, "(?:/.*)?")}$`);
+}
+
+function cspFor(path) {
+  return (vercel.headers ?? [])
+    .filter((rule) => sourceToRegex(rule.source).test(path))
+    .flatMap((rule) => rule.headers ?? [])
+    .filter((h) => h.key.toLowerCase() === "content-security-policy")
+    .map((h) => h.value);
+}
+
+for (const path of ["/embed", "/embed/edge-index/abc123"]) {
+  const csp = cspFor(path);
+  if (!csp.some((v) => v.includes("frame-ancestors *"))) {
+    failed.push(`vercel.json: ${path} must receive frame-ancestors *`);
+  }
+  const restrictive = csp.filter((v) => /frame-ancestors(?!\s+\*)/.test(v));
+  if (restrictive.length > 0) {
+    failed.push(
+      `vercel.json: ${path} ALSO receives restrictive CSP ${JSON.stringify(restrictive)} — a broad source is over-matching /embed`,
+    );
+  }
+}
+
+// And the inverse: excluding /embed must not disarm clickjacking protection
+// everywhere else.
+for (const path of ["/", "/dashboard"]) {
+  const csp = cspFor(path);
+  if (!csp.some((v) => /frame-ancestors\s+'self'/.test(v))) {
+    failed.push(`vercel.json: ${path} must receive frame-ancestors 'self'`);
+  }
+  if (csp.some((v) => v.includes("frame-ancestors *"))) {
+    failed.push(`vercel.json: ${path} must NOT be framable by anyone`);
+  }
 }
 
 // 5. Live env diagnosis (local process env only — no invent)
