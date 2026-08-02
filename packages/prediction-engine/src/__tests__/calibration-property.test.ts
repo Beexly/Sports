@@ -28,6 +28,26 @@ import { neumaierSum, logSpaceGeometricMeanAggregation } from "../calibration/ag
 
 const RUNS = 500;
 
+/**
+ * Shared assert params. `numRuns` is the coverage knob; the rest is a hang guard.
+ *
+ * fc.assert runs its properties — and, on failure, its shrinker — SYNCHRONOUSLY.
+ * A blocked event loop cannot service timers, so vitest's own testTimeout can
+ * never fire, and a pathological shrink over 1e12-magnitude doubles wedges the
+ * worker until something external kills it. That is not hypothetical: it hung
+ * this file on ~21% of local runs (5/24) and twice in CI, each time leaving an
+ * orphaned `node (vitest 1)` worker behind and burning the whole job budget.
+ *
+ * A 30s ceiling is ~500x the normal per-property runtime (~60ms), so it cannot
+ * fire on a merely slow runner — only on a genuine pathology. markInterruptAsFailure
+ * makes that outcome a loud red test instead of a silent pass or an infinite hang.
+ */
+const FUZZ = {
+  numRuns: RUNS,
+  interruptAfterTimeLimit: 30_000,
+  markInterruptAsFailure: true,
+};
+
 /** Arbitrary: a finite double in a sane score range. */
 const score = fc.double({ min: -1e6, max: 1e6, noNaN: true, noDefaultInfinity: true });
 
@@ -51,7 +71,7 @@ describe("PAV isotonic regression — invariants under fuzz", () => {
         }
         expect(fitted).toHaveLength(ys.length);
       }),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 
@@ -75,7 +95,7 @@ describe("PAV isotonic regression — invariants under fuzz", () => {
           expect(Math.abs(before - after) / scale).toBeLessThan(1e-6);
         },
       ),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 
@@ -88,7 +108,7 @@ describe("PAV isotonic regression — invariants under fuzz", () => {
           expect(Math.abs(twice[i]! - once[i]!)).toBeLessThan(1e-9);
         }
       }),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 
@@ -102,7 +122,7 @@ describe("PAV isotonic regression — invariants under fuzz", () => {
           expect(f).toBeLessThanOrEqual(hi + 1e-9);
         }
       }),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 });
@@ -122,7 +142,7 @@ describe("IVAP — interval invariants under fuzz", () => {
         expect(p.pMid).toBeGreaterThanOrEqual(p.p0 - 1e-12);
         expect(p.pMid).toBeLessThanOrEqual(p.p1 + 1e-12);
       }),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 
@@ -151,7 +171,7 @@ describe("IVAP — interval invariants under fuzz", () => {
           expect(p.p0).toBeLessThanOrEqual(p.p1 + 1e-12);
         },
       ),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 });
@@ -175,7 +195,7 @@ describe("CVAP — cross-fold invariants under fuzz", () => {
           expect(p.foldsUsed).toBeLessThanOrEqual(Math.max(cal.length, 0));
         },
       ),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 
@@ -188,7 +208,7 @@ describe("CVAP — cross-fold invariants under fuzz", () => {
         expect(a.p1).toBe(b.p1);
         expect(a.foldsUsed).toBe(b.foldsUsed);
       }),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 });
@@ -214,7 +234,7 @@ describe("CVAP degenerate-calibration regression (found by this fuzz suite)", ()
         expect(p.foldsUsed).toBeLessThanOrEqual(Math.max(1, cal.length));
         expect(p.foldPredictions).toHaveLength(p.foldsUsed);
       }),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 });
@@ -229,12 +249,37 @@ describe("aggregation — numeric safety under fuzz", () => {
         (xs) => {
           const s = neumaierSum(xs);
           expect(Number.isFinite(s)).toBe(true);
+
           const naive = xs.reduce((a, b) => a + b, 0);
           const scale = Math.max(1, Math.abs(naive));
-          expect(Math.abs(s - naive) / scale).toBeLessThan(1e-6);
+
+          // "Well-conditioned" in this test's name is a real precondition, and
+          // it has to be spent against the INPUT magnitude, not the result.
+          // Naive summation carries an error of order n·eps·Σ|xᵢ|, so once
+          // Σ|xᵢ| >> |Σ xᵢ| (catastrophic cancellation) it is naive that is
+          // wrong and Neumaier that is right — holding them to a tolerance
+          // scaled by the result alone asserts the compensation does nothing,
+          // which is the opposite of the invariant.
+          //
+          // Seed -223359811 proved it: on
+          //   [-999999999969.7399, -999999999969.7358,
+          //     999999999817.4058,  999999999999.9995]   (condition ~3.3e10)
+          // the exact sum is -122.0704345703125; neumaierSum returns it to the
+          // bit, naive is off by 1.22e-4, and the old bound failed the correct
+          // implementation for not reproducing the incorrect one.
+          //
+          // Allowing naive its own documented error budget keeps the check
+          // exactly as strict as before on well-conditioned draws (there
+          // Σ|xᵢ| ≈ |Σ xᵢ|, so the budget term vanishes) while still catching a
+          // genuinely broken compensation, which would drift far past it.
+          const magnitude = xs.reduce((a, b) => a + Math.abs(b), 0);
+          const naiveErrorBudget = xs.length * Number.EPSILON * magnitude;
+          expect(Math.abs(s - naive)).toBeLessThanOrEqual(
+            1e-6 * scale + 2 * naiveErrorBudget,
+          );
         },
       ),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 
@@ -265,7 +310,7 @@ describe("aggregation — numeric safety under fuzz", () => {
           expect(agg.p0).toBeLessThanOrEqual(agg.p1 + 1e-12);
         },
       ),
-      { numRuns: RUNS },
+      FUZZ,
     );
   });
 });
