@@ -72,15 +72,19 @@ for h in "strict-transport-security" "x-content-type-options" "x-frame-options" 
 done
 
 bold "5. Canonical URLs"
+# Canonical host is WWW, never the apex — apps/web/lib/seo/site-url.ts is the
+# single source of truth (NEXT_PUBLIC_APP_URL, else https://www.galaxysportsedge.com).
+# The apex only 30x-redirects to www (checked in section 1); it never serves
+# canonical tags of its own.
 declare -A CANONICAL_EXPECTED=(
-  ["/"]="$APEX/"
-  ["/about"]="$APEX/about"
-  ["/pricing"]="$APEX/pricing"
-  ["/press"]="$APEX/press"
-  ["/contact"]="$APEX/contact"
-  ["/privacy"]="$APEX/privacy"
-  ["/terms"]="$APEX/terms"
-  ["/responsible-play"]="$APEX/responsible-play"
+  ["/"]="$BASE/"
+  ["/about"]="$BASE/about"
+  ["/pricing"]="$BASE/pricing"
+  ["/press"]="$BASE/press"
+  ["/contact"]="$BASE/contact"
+  ["/privacy"]="$BASE/privacy"
+  ["/terms"]="$BASE/terms"
+  ["/responsible-play"]="$BASE/responsible-play"
 )
 for path in "${!CANONICAL_EXPECTED[@]}"; do
   expected="${CANONICAL_EXPECTED[$path]}"
