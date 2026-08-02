@@ -89,9 +89,54 @@ if (!embedSrc.includes("canSeeLineMovement: false")) {
   failed.push("embed must force FREE line movement off");
 }
 
+// FULL_SESSION_EXTRACT.md documents a command block and a package import
+// surface. Both are exact strings that rot silently when a script is renamed
+// or an export moves — the doc keeps claiming SHIPPED while the reader's
+// copy-paste fails. Parse the doc's OWN claims and assert them, so the file
+// cannot drift from the repo it describes.
+//
+// The Path column is deliberately NOT asserted: it is prose shorthand
+// ("existing outbox", "webhooks/stripe", "same"), not repo-root paths.
+const extractSrc = readFileSync(
+  join(root, "docs/ops/FULL_SESSION_EXTRACT.md"),
+  "utf8",
+);
+
+const rootScripts = JSON.parse(
+  readFileSync(join(root, "package.json"), "utf8"),
+).scripts ?? {};
+const claimedCommands = [
+  ...extractSrc.matchAll(/^npm run ([\w:-]+)/gm),
+].map((m) => m[1]);
+if (claimedCommands.length === 0) {
+  failed.push("FULL_SESSION_EXTRACT: no npm commands parsed (block moved?)");
+}
+for (const cmd of claimedCommands) {
+  if (!(cmd in rootScripts)) {
+    failed.push(`FULL_SESSION_EXTRACT documents undeclared script: ${cmd}`);
+  }
+}
+
+const importBlock =
+  /import \{([\s\S]*?)\} from "@sports\/prediction-engine"/.exec(extractSrc)?.[1];
+if (!importBlock) {
+  failed.push("FULL_SESSION_EXTRACT: import surface block not found");
+}
+const claimedImports = (importBlock ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+for (const sym of claimedImports) {
+  if (!indexSrc.includes(sym)) {
+    failed.push(`FULL_SESSION_EXTRACT documents unexported symbol: ${sym}`);
+  }
+}
+
 const report = {
   paths: REQUIRED_PATHS.length,
   exports: EXPORTS.length,
+  extractCommands: claimedCommands.length,
+  extractImports: claimedImports.length,
   failed,
   ok: failed.length === 0,
 };

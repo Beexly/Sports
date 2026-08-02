@@ -1,9 +1,13 @@
-# Full session extract — waves 0–6 (integrity)
+# Full session extract — waves 0–7 (integrity)
 
-Consolidates process-capital + waves 3–6 + Session 2 research. Every row is
+Consolidates process-capital + waves 3–7 + Session 2 research. Every row is
 **SHIPPED**, **OPERATOR**, or **HARD NON-GOAL**. No soft deferrals.
 
-Merge order when landing: **#281 → #282 → #283 → this wave6**.
+Merge order when landing: **none — land the single consolidated branch.**
+The wave branches are linear ancestors of each other, so #281–#285 each carry a
+cumulative superset diff against `main` and #286 supersedes all five. The
+earlier "#281 → #282 → #283 → this wave6" sequence assumed independent diffs
+and would merge the same commits repeatedly.
 
 | Field | Rule |
 |-------|------|
@@ -28,7 +32,7 @@ Merge order when landing: **#281 → #282 → #283 → this wave6**.
 | MODEL_PRIMARY / MODEL_CHEAP | model-router.ts | SHIPPED |
 | export:settled-picks | scripts/export-settled-picks… | SHIPPED |
 | ORBIT_UNLOCK founder checklist | docs/ops/ORBIT_UNLOCK.md | SHIPPED |
-| Credits claims | CREDITS.md | OPERATOR |
+| Credits claims | docs/ops/CREDITS.md | OPERATOR |
 | Polymarket feature work | polymarket-hold | HARD NON-GOAL |
 | Rebuild webhook/outbox | — | HARD NON-GOAL |
 | LIVE_BOARD without founder YES | — | HARD NON-GOAL |
@@ -83,9 +87,16 @@ Merge order when landing: **#281 → #282 → #283 → this wave6**.
 npm run dspy:gse
 npm run calibration:offline
 npm run agent:eval
-npm run orbit:integrity   # path assert + session2:extract
+npm run orbit:integrity        # path assert + session2:extract
+npm run orbit:integrity:full   # the above, chained with dspy + calibration:offline + agent:eval
 npm run session2:extract
 ```
+
+`npm run orbit:integrity` parses **this file** and fails if any command above is
+not declared in the root `package.json`, or if any symbol in the import surface
+below is not exported from `packages/prediction-engine/src/index.ts` — so the
+doc cannot drift from the repo it describes. The Path column in the tables is
+prose shorthand, not repo-root paths, and is not machine-asserted.
 
 ## Package import surface
 
