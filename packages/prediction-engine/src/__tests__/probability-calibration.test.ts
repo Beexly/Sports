@@ -1,11 +1,16 @@
 import { describe, it, expect } from "vitest";
 import {
   isotonicCalibration,
+  centeredIsotonicCalibration,
+  countDistinctPredictions,
   brierDecomposition,
   expectedCalibrationError,
   reliabilityCurve,
+  timeHoldoutSplit,
+  selectedSliceEce,
   type CalibrationSample,
 } from "../probability-calibration.js";
+
 
 describe("brierDecomposition", () => {
   it("splits a coin-flip forecast into pure uncertainty", () => {
@@ -164,5 +169,152 @@ describe("reliabilityCurve", () => {
     const bin = reliabilityCurve(samples, 10)[3]!; // [0.3, 0.4)
     expect(bin.meanForecast).toBeCloseTo(0.3, 4);
     expect(bin.observedRate).toBeCloseTo(0.3, 4);
+  });
+});
+
+describe("centeredIsotonicCalibration (CIR)", () => {
+  it("returns identity-ish passthrough on empty input", () => {
+    const m = centeredIsotonicCalibration([]);
+    expect(m.points).toHaveLength(0);
+    expect(m.predict(0.42)).toBeCloseTo(0.42, 4);
+  });
+
+  it("is monotone non-decreasing", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.1, y: 0 },
+      { p: 0.2, y: 1 },
+      { p: 0.3, y: 0 },
+      { p: 0.4, y: 1 },
+      { p: 0.5, y: 1 },
+      { p: 0.7, y: 1 },
+      { p: 0.9, y: 1 },
+    ]);
+    const grid = [0.05, 0.15, 0.25, 0.35, 0.45, 0.6, 0.8, 0.95];
+    for (let i = 1; i < grid.length; i++) {
+      expect(m.predict(grid[i]!)).toBeGreaterThanOrEqual(m.predict(grid[i - 1]!) - 1e-9);
+    }
+  });
+
+  it("preserves more distinct predictions than step PAVA on a dense overconfident set", () => {
+    const samples: CalibrationSample[] = [];
+    for (let i = 0; i < 200; i++) {
+      const p = 0.1 + (0.8 * i) / 199;
+      // overconfident: high p still only ~p-0.15 true rate
+      const y = (Math.sin(i * 12.9898) * 0.5 + 0.5) < Math.max(0.05, p - 0.15) ? 1 : 0;
+      samples.push({ p, y: y as 0 | 1 });
+    }
+    const pava = isotonicCalibration(samples);
+    const cir = centeredIsotonicCalibration(samples);
+    const dPava = countDistinctPredictions(pava);
+    const dCir = countDistinctPredictions(cir);
+    // CIR must keep more ranking resolution than step PAVA on this dense set
+    expect(dCir).toBeGreaterThanOrEqual(dPava);
+    // Both should still be reasonably calibrated (ECE finite)
+    const calSamples = samples.map((s) => ({ p: cir.predict(s.p), y: s.y }));
+    expect(expectedCalibrationError(calSamples)).toBeLessThan(0.35);
+  });
+
+  it("interpolates between centers (not a pure step at midpoints)", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.2, y: 0 },
+      { p: 0.2, y: 0 },
+      { p: 0.8, y: 1 },
+      { p: 0.8, y: 1 },
+    ]);
+    const mid = m.predict(0.5);
+    // With two well-separated centers at 0 and 1, midpoint should be interior
+    expect(mid).toBeGreaterThan(0);
+    expect(mid).toBeLessThan(1);
+  });
+
+  // Regression: block centers used to be quantised onto a 1e-4 grid, so two
+  // genuinely distinct centers closer than that collapsed onto ONE breakpoint.
+  // The "enforce strictly increasing x" guard could not repair it — its 1e-6
+  // nudge was finer than the grid it re-rounded onto, so the push was a proven
+  // no-op for every already-rounded x. Breakpoints must be strictly increasing.
+  it("keeps breakpoints strictly increasing when centers are closer than 1e-4", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.5, y: 0 },
+      { p: 0.50001, y: 1 },
+    ]);
+    expect(m.points).toHaveLength(2);
+    for (let i = 1; i < m.points.length; i++) {
+      expect(m.points[i]!.x).toBeGreaterThan(m.points[i - 1]!.x);
+    }
+  });
+
+  it("interpolates across near-tied centers instead of degenerating to a step", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.5, y: 0 },
+      { p: 0.50001, y: 1 },
+    ]);
+    // Halfway between the two centers must be interior. With a collapsed
+    // breakpoint `predict` short-circuits on `x >= last.x` and returns 1 —
+    // a hard step, which is the plateau behaviour CIR exists to remove.
+    const mid = m.predict(0.500005);
+    expect(mid).toBeGreaterThan(0);
+    expect(mid).toBeLessThan(1);
+  });
+
+  it("never emits a duplicate breakpoint on a densely packed forecast set", () => {
+    // 60 forecasts spanning 6e-4 — far tighter than the old 1e-4 grid, so the
+    // rounded implementation produced many colliding centers.
+    const samples: CalibrationSample[] = [];
+    for (let i = 0; i < 60; i++) {
+      samples.push({ p: 0.4 + i * 1e-5, y: (i % 3 === 0 ? 1 : 0) as 0 | 1 });
+    }
+    const m = centeredIsotonicCalibration(samples);
+    for (let i = 1; i < m.points.length; i++) {
+      expect(m.points[i]!.x).toBeGreaterThan(m.points[i - 1]!.x);
+    }
+  });
+});
+
+describe("timeHoldoutSplit", () => {
+  it("orders by time and never shuffles", () => {
+    const samples = [
+      { p: 0.6, y: 1 as const, t: 300 },
+      { p: 0.4, y: 0 as const, t: 100 },
+      { p: 0.5, y: 1 as const, t: 200 },
+      { p: 0.7, y: 0 as const, t: 400 },
+    ];
+    const { train, test, trainFraction } = timeHoldoutSplit(samples, 0.5);
+    expect(trainFraction).toBe(0.5);
+    expect(train.map((s) => s.t)).toEqual([100, 200]);
+    expect(test.map((s) => s.t)).toEqual([300, 400]);
+  });
+
+  it("returns empty splits for empty input", () => {
+    const s = timeHoldoutSplit([], 0.7);
+    expect(s.train).toEqual([]);
+    expect(s.test).toEqual([]);
+  });
+});
+
+describe("selectedSliceEce (calibration paradox)", () => {
+  it("flags worse ECE on overconfident selected slice", () => {
+    // Full set: mix of well-calibrated low-p and overconfident high-p selected
+    const samples: CalibrationSample[] = [
+      ...Array.from({ length: 40 }, (): CalibrationSample => ({ p: 0.3, y: 0 })),
+      ...Array.from({ length: 10 }, (): CalibrationSample => ({ p: 0.3, y: 1 })),
+      // selected +EV band: model says 0.75 but only ~40% hit
+      ...Array.from({ length: 12 }, (): CalibrationSample => ({ p: 0.75, y: 0 })),
+      ...Array.from({ length: 8 }, (): CalibrationSample => ({ p: 0.75, y: 1 })),
+    ];
+    const selected = [
+      ...Array.from({ length: 50 }, () => false),
+      ...Array.from({ length: 20 }, () => true),
+    ];
+    const r = selectedSliceEce({ samples, selected, bins: 10 });
+    expect(r.selectedCount).toBe(20);
+    expect(r.unselectedCount).toBe(50);
+    expect(r.selectedEce).toBeGreaterThan(r.fullEce - 1e-9);
+    expect(r.paradoxGap).toBeGreaterThanOrEqual(0);
+  });
+
+  it("throws on length mismatch", () => {
+    expect(() =>
+      selectedSliceEce({ samples: [{ p: 0.5, y: 1 }], selected: [] }),
+    ).toThrow(/length/);
   });
 });

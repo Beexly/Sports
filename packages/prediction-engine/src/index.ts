@@ -207,15 +207,23 @@ export type {
 // calibration that turns the confidence score into a calibrated win probability.
 export {
   isotonicCalibration,
+  centeredIsotonicCalibration,
+  countDistinctPredictions,
   brierDecomposition,
   expectedCalibrationError,
   reliabilityCurve,
+  timeHoldoutSplit,
+  selectedSliceEce,
 } from "./probability-calibration.js";
 export type {
   CalibrationSample,
   IsotonicModel,
   BrierDecomposition,
   ReliabilityBin,
+  TimestampedCalibrationSample,
+  TimeHoldoutSplit,
+  SelectedSliceEceArgs,
+  SelectedSliceEceResult,
 } from "./probability-calibration.js";
 
 // R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
@@ -1072,3 +1080,30 @@ export {
   type UnifiedPrefireDecision,
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
+
+// Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
+// surfaces only; never report stakes as CLV. CLV deflator self-disarms until
+// ~50 settled samples. Do not invert Σ (no Markowitz).
+export {
+  fractionalKellyStake,
+  jamesSteinShrink,
+  ledoitWolfShrinkCovariance,
+  clvDeflator,
+  portfolioKellyStakes,
+} from "./edge-lab/kelly.js";
+export type {
+  LedoitWolfResult,
+  PortfolioKellyArgs,
+  PortfolioKellyDiagnostics,
+  PortfolioKellyResult,
+} from "./edge-lab/kelly.js";
+
+// CIR → Kelly bridge: fit calibrator on hold-out train, size on calibrated p.
+export {
+  applyCalibrator,
+  sizeAfterCalibration,
+  type TimedCalibrationSample,
+  type SizeAfterCalibrationArgs,
+  type SizeAfterCalibrationResult,
+} from "./calibration-kelly-bridge.js";
+

@@ -1,0 +1,53 @@
+{
+  "id": "orbit-wave5-session2",
+  "predicates": [
+    {
+      "id": "session2-extract-doc",
+      "type": "file_contains",
+      "path": "docs/ops/SESSION_2_EXTRACT.md",
+      "mustInclude": [
+        "Prediction(score, feedback)",
+        "reflection_lm",
+        "sizeAfterCalibration",
+        "portfolioKellyStakes",
+        "HARD NON-GOAL"
+      ]
+    },
+    {
+      "id": "gse-metric-module",
+      "type": "file_contains",
+      "path": "scripts/dspy-gse/gse_metric.mjs",
+      "mustInclude": ["export function gse_metric", "score", "feedback"]
+    },
+    {
+      "id": "gepa-config-laws",
+      "type": "file_contains",
+      "path": "scripts/dspy-gse/gepa_config.json",
+      "mustInclude": ["\"temperature\": 1.0", "\"temperature\": 0", "\"auto\": \"light\"", "gse_metric"]
+    },
+    {
+      "id": "examples-promote",
+      "type": "file_contains",
+      "path": "scripts/dspy-gse/promote.mjs",
+      "mustInclude": ["examples.json", "train", "val"]
+    },
+    {
+      "id": "portfolio-kelly-barrel",
+      "type": "file_contains",
+      "path": "packages/prediction-engine/src/index.ts",
+      "mustInclude": ["portfolioKellyStakes", "sizeAfterCalibration", "clvDeflator"]
+    },
+    {
+      "id": "cir-kelly-bridge",
+      "type": "file_contains",
+      "path": "packages/prediction-engine/src/calibration-kelly-bridge.ts",
+      "mustInclude": ["sizeAfterCalibration", "centeredIsotonicCalibration", "clvDeflator"]
+    },
+    {
+      "id": "dspy-gepa-skill",
+      "type": "file_contains",
+      "path": "docs/agent-skills/dspy-gepa/SKILL.md",
+      "mustInclude": ["name: dspy-gepa", "temperature = 1.0", "gse_metric"]
+    }
+  ]
+}

@@ -15,9 +15,14 @@
  * Contents:
  *   - isotonicCalibration: non-parametric monotonic mapping (PAVA) — the gold
  *     standard for recalibrating a monotone-but-miscalibrated score.
+ *   - centeredIsotonicCalibration: CIR / CenteredIsotonic — PAVA plateaus collapsed
+ *     to mass-weighted centers + linear interpolation so ranking/Kelly resolution
+ *     is preserved (distinct calibrated values ≈ sample size, not ~50 steps).
+ *     R&D only; same gate as isotonic (NOT live until CALIBRATION_ADJUSTMENTS_ENABLED).
  *   - brierDecomposition: Murphy's reliability / resolution / uncertainty split —
  *     the rigorous way to read WHY a Brier score is what it is.
  *   - expectedCalibrationError: ECE over equal-width bins.
+ *   - countDistinctPredictions: diagnostic — plateaus destroy Kelly differentiation.
  */
 
 export interface CalibrationSample {
@@ -119,6 +124,148 @@ export function isotonicCalibration(samples: readonly CalibrationSample[]): Isot
   };
 
   return { points, predict };
+}
+
+// ============================================================
+// Centered isotonic (CIR) — plateau-free ranking-preserving calibrator
+// ============================================================
+
+/**
+ * Centered isotonic regression for probability calibration.
+ *
+ * Classic PAVA is well-calibrated but produces flat plateaus that collapse
+ * many distinct forecasts onto one calibrated value — fine for ECE/Brier,
+ * fatal for ranking and fractional/portfolio Kelly (identical stakes across
+ * a band of real edges). CIR collapses each PAVA plateau to its
+ * mass-weighted forecast center and linearly interpolates between centers
+ * so the map is strictly increasing in the interior while remaining
+ * monotone and free of tuning parameters (Oron CIR; calibre CenteredIsotonic).
+ *
+ * Still R&D — do not wire into live scoring without the calibration gate.
+ */
+export function centeredIsotonicCalibration(
+  samples: readonly CalibrationSample[],
+): IsotonicModel {
+  const sorted = [...samples].sort((a, b) => a.p - b.p);
+  if (sorted.length === 0) {
+    return { points: [], predict: (p) => clamp01(p) };
+  }
+
+  type Block = {
+    value: number;
+    weight: number;
+    xStart: number;
+    xEnd: number;
+    massSum: number; // sum of p_i * w for center
+  };
+
+  // Phase 1 — identical-p groups
+  const groups: Block[] = [];
+  for (const s of sorted) {
+    const last = groups[groups.length - 1];
+    if (last && last.xStart === s.p) {
+      last.value = (last.value * last.weight + s.y) / (last.weight + 1);
+      last.weight += 1;
+      last.massSum += s.p;
+      last.xEnd = s.p;
+    } else {
+      groups.push({
+        value: s.y,
+        weight: 1,
+        xStart: s.p,
+        xEnd: s.p,
+        massSum: s.p,
+      });
+    }
+  }
+
+  // Phase 2 — PAVA merge, preserving x range + mass
+  const blocks: Block[] = [];
+  for (const g of groups) {
+    let block: Block = { ...g };
+    while (blocks.length > 0 && blocks[blocks.length - 1]!.value > block.value) {
+      const prev = blocks.pop()!;
+      const mergedWeight = prev.weight + block.weight;
+      block = {
+        value: (prev.value * prev.weight + block.value * block.weight) / mergedWeight,
+        weight: mergedWeight,
+        xStart: prev.xStart,
+        xEnd: block.xEnd,
+        massSum: prev.massSum + block.massSum,
+      };
+    }
+    blocks.push(block);
+  }
+
+  // CIR: one point per block at mass-weighted center of the plateau.
+  //
+  // `x` is a breakpoint in FORECAST space, not a reported probability, so it is
+  // kept at full precision — exactly like isotonicCalibration, which never
+  // rounds its `b.xStart`. Only `calibrated` (the value we hand out) is rounded.
+  //
+  // It used to be `round(...)` (4 digits), which quantised centers onto a 1e-4
+  // grid and collapsed any two blocks whose centers were closer than that onto
+  // ONE breakpoint. The strictly-increasing guard below could not repair it:
+  // pushing by 1e-6 and re-rounding to 1e-4 returns the input unchanged for
+  // every already-rounded x, so `round(prev.x + 1e-6, 4) === prev.x` and the
+  // whole loop was a proven no-op. The duplicate breakpoint was then
+  // unreachable in `predict` — the interpolation branch is only entered with
+  // lo.x < x <= hi.x, which no hi.x <= lo.x can satisfy — so its calibrated
+  // value was silently discarded and the map degenerated to a hard step across
+  // that band: precisely the plateau behaviour CIR exists to remove.
+  const points: IsoPoint[] = blocks.map((b) => ({
+    x: clamp01(b.massSum / b.weight),
+    calibrated: round(clamp01(b.value)),
+  }));
+
+  // Defensive only. Centers are means over disjoint, strictly ascending p-ranges
+  // (phase 1 pools identical p, so block i's p's are all below block i+1's), so
+  // they are strictly increasing in exact arithmetic; this guards the
+  // floating-point tie. Unrounded, the epsilon push now actually moves the
+  // point. `min(1, …)` cannot bind — prev.x === 1 requires every p in that block
+  // to be 1, which leaves no room for a following block.
+  for (let i = 1; i < points.length; i++) {
+    if (points[i]!.x <= points[i - 1]!.x) {
+      points[i] = {
+        x: Math.min(1, points[i - 1]!.x + 1e-6),
+        calibrated: points[i]!.calibrated,
+      };
+    }
+  }
+
+  const predict = (p: number): number => {
+    const x = clamp01(p);
+    if (points.length === 0) return x;
+    if (x <= points[0]!.x) return points[0]!.calibrated;
+    if (x >= points[points.length - 1]!.x) return points[points.length - 1]!.calibrated;
+    for (let i = 1; i < points.length; i++) {
+      const lo = points[i - 1]!;
+      const hi = points[i]!;
+      if (x <= hi.x) {
+        const t = (x - lo.x) / (hi.x - lo.x || 1e-12);
+        return round(clamp01(lo.calibrated + t * (hi.calibrated - lo.calibrated)));
+      }
+    }
+    return points[points.length - 1]!.calibrated;
+  };
+
+  return { points, predict };
+}
+
+/**
+ * How many distinct calibrated values a model emits over a forecast grid.
+ * Classic PAVA often collapses ~2000 forecasts to ~50–80; CIR keeps ~1800+.
+ * Low distinct count → Kelly cannot differentiate edge ranks.
+ */
+export function countDistinctPredictions(
+  model: IsotonicModel,
+  grid: readonly number[] = Array.from({ length: 101 }, (_, i) => i / 100),
+): number {
+  const seen = new Set<number>();
+  for (const p of grid) {
+    seen.add(model.predict(p));
+  }
+  return seen.size;
 }
 
 // ============================================================
@@ -303,4 +450,97 @@ export function reliabilityCurve(samples: readonly CalibrationSample[], bins = 1
     });
   }
   return out;
+}
+
+// ============================================================
+// Time hold-out split (never fit calibrator on the evaluation window)
+// ============================================================
+
+export interface TimestampedCalibrationSample extends CalibrationSample {
+  /** Unix ms or any monotone time key — larger = later. */
+  readonly t: number;
+}
+
+export interface TimeHoldoutSplit<T extends TimestampedCalibrationSample = TimestampedCalibrationSample> {
+  readonly train: readonly T[];
+  readonly test: readonly T[];
+  readonly trainFraction: number;
+}
+
+/**
+ * Time-ordered hold-out: sort by `t` ascending, first `trainFraction` → train,
+ * remainder → test. Never random-shuffle for calibration (look-ahead leak).
+ * `trainFraction` clamped to (0.05, 0.95); empty input → empty splits.
+ */
+export function timeHoldoutSplit<T extends TimestampedCalibrationSample>(
+  samples: readonly T[],
+  trainFraction = 0.7,
+): TimeHoldoutSplit<T> {
+  const frac = Math.min(0.95, Math.max(0.05, trainFraction));
+  if (samples.length === 0) {
+    return { train: [], test: [], trainFraction: frac };
+  }
+  const sorted = [...samples].sort((a, b) => a.t - b.t || a.p - b.p);
+  const cut = Math.max(1, Math.min(sorted.length - 1, Math.floor(sorted.length * frac)));
+  // If n===1, put sole sample in train so fit can run; test empty (caller checks).
+  if (sorted.length === 1) {
+    return { train: sorted, test: [], trainFraction: frac };
+  }
+  return {
+    train: sorted.slice(0, cut),
+    test: sorted.slice(cut),
+    trainFraction: frac,
+  };
+}
+
+// ============================================================
+// Calibration paradox — ECE on the +EV / selected stake slice
+// ============================================================
+
+export interface SelectedSliceEceArgs {
+  readonly samples: readonly CalibrationSample[];
+  /** True when the row would have been staked / shown as +EV. */
+  readonly selected: readonly boolean[];
+  readonly bins?: number;
+}
+
+export interface SelectedSliceEceResult {
+  readonly fullEce: number;
+  readonly selectedEce: number;
+  readonly unselectedEce: number;
+  readonly selectedCount: number;
+  readonly unselectedCount: number;
+  /** selectedEce - fullEce; >0 means selected book looks worse-calibrated (paradox). */
+  readonly paradoxGap: number;
+}
+
+/**
+ * Compute ECE on the full set vs the selected (+EV) subset.
+ * Well-known calibration paradox: models can look calibrated overall while
+ * the stake-selected slice is overconfident. Gate sizing reports on both.
+ */
+export function selectedSliceEce(args: SelectedSliceEceArgs): SelectedSliceEceResult {
+  const { samples, selected, bins = 10 } = args;
+  if (samples.length !== selected.length) {
+    throw new RangeError(
+      `samples and selected must match length (got ${samples.length} vs ${selected.length})`,
+    );
+  }
+  const sel: CalibrationSample[] = [];
+  const unsel: CalibrationSample[] = [];
+  for (let i = 0; i < samples.length; i++) {
+    if (selected[i]) sel.push(samples[i]!);
+    else unsel.push(samples[i]!);
+  }
+  const fullEce = expectedCalibrationError(samples, bins);
+  const selectedEce = expectedCalibrationError(sel, bins);
+  const unselectedEce = expectedCalibrationError(unsel, bins);
+  return {
+    fullEce,
+    selectedEce,
+    unselectedEce,
+    selectedCount: sel.length,
+    unselectedCount: unsel.length,
+    paradoxGap: round(selectedEce - fullEce),
+  };
 }

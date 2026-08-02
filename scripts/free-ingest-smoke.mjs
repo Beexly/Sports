@@ -97,6 +97,12 @@ async function checkConsensus(label, espnSport, henrygdPath) {
     for (const a of report.agreements.slice(0, 2)) {
       console.log(`  ✓ CONFIRMED ${a.matchup} ${a.a.away}-${a.a.home} (ESPN + henrygd agree)`);
     }
+    if (report.summary.confirmed === 0 || report.summary.conflicts > 0) {
+      console.error(
+        `consensus ${label} FAILED: confirmed=${report.summary.confirmed} conflicts=${report.summary.conflicts}`,
+      );
+      return false;
+    }
     return true;
   } catch (err) {
     console.error(`consensus ${label} FAILED: ${err instanceof Error ? err.message : err}`);

@@ -30,6 +30,16 @@ const AUTH_COOKIE_NAMES = [
 export function middleware(req: NextRequest): NextResponse {
   const { pathname } = req.nextUrl;
 
+  // ── Free embed widgets: always public, never auth-redirected ─────────────
+  // (DEC-017 free Edge Index.) Framing headers are NOT set here: next.config
+  // owns them, and middleware cannot remove a header the framework appends
+  // afterwards — the previous `res.headers.delete("X-Frame-Options")` was a
+  // silent no-op. Left as an early return so an embed can never be bounced to
+  // /auth/signin by a later gate.
+  if (pathname === "/embed" || pathname.startsWith("/embed/")) {
+    return NextResponse.next();
+  }
+
   // ── Waitlist Basic Auth gate ──────────────────────────────────────────────
   // Protects /waitlist and /waitlist/* only.
   // Active only when GSE_WAITLIST_GATE_ENABLED=true.

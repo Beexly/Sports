@@ -15,8 +15,11 @@ async function main() {
     process.exit(1);
   }
   const html = await pricing.text();
+  // Require an actual dollar-formatted price string alongside a tier name —
+  // not just a fallback on raw body length, which is true for nearly any
+  // real Next.js page and would pass even if every price string vanished.
   const hasPriceSignal =
-    /Pro|Elite|Founding|\/mo|subscription/i.test(html) || html.length > 500;
+    /\$\d+(?:\.\d{2})?\s*\/\s*(?:mo|yr)\b/i.test(html) && /Pro|Elite|Founding/i.test(html);
   if (!hasPriceSignal) {
     console.error("FAIL pricing body missing commercial signals");
     process.exit(1);

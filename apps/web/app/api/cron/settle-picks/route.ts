@@ -26,6 +26,7 @@ import {
 } from "@/lib/settlement-outbox/worker";
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
+import { hasOddsApiKey } from "@/lib/settlement/path-select";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -40,9 +41,9 @@ export async function GET(request: Request) {
   const requestedSport = new URL(request.url).searchParams.get("sport");
   const startedAt = Date.now();
   const gates = getReadinessGates();
-
   // ── Free path: no paid Odds key required ─────────────────────────────────
-  if (!apiKey) {
+  // Negated type guard, so `apiKey` narrows to `string` for the paid path below.
+  if (!hasOddsApiKey(apiKey)) {
     const freeScores = await persistFreeScores({ sportKey: requestedSport });
     const free = await runFreePathSettlement({ sportKey: requestedSport });
     let alertDrain: OutboxDrainSummary | null = null;

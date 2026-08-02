@@ -16,9 +16,20 @@ on:
 # pushes) so the duplicate pair dedupes across event types. The head-repo
 # qualifier keeps same-named fork branches out of each other's group. Never
 # cancel main: every push to main must complete its run.
+#
+# Only the pull_request event may cancel. Cancelling from EITHER side made the
+# survivor a race: on df8bf8f4 the push and PR runs raced inside the same group,
+# the `test` job was cancelled 3s into "Set up job", no successor run took over,
+# and two guardrail jobs were left in_progress past their own timeout-minutes —
+# a commit can then sit on a PR looking checked while CI never actually
+# finished. Gating cancellation on pull_request makes the survivor deterministic
+# (the PR run always owns the check) and makes the canceller a run that is
+# itself guaranteed to complete, so an in-flight test is never orphaned without
+# a successor. Push runs no longer cancel, so a branch with no open PR trades a
+# little duplicate work for never losing its only run.
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.repo.full_name || github.repository }}-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' && github.ref != 'refs/heads/main' }}
 
 jobs:
   # --------------------------------------------------------------
@@ -27,6 +38,7 @@ jobs:
   test:
     name: Test, type-check, lint, Prisma
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     services:
       postgres:
@@ -102,6 +114,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     needs: test
 
     steps:
@@ -134,6 +147,7 @@ jobs:
   trust-gate:
     name: Trust gate (banned phrases on public copy)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -164,6 +178,7 @@ jobs:
   ai-council:
     name: AI Council (DESTROY ship blockers)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -187,6 +202,7 @@ jobs:
   model-freeze:
     name: Model freeze (MODEL_VERSION guardrail)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -210,6 +226,7 @@ jobs:
   draft-only:
     name: Draft-only (no auto-publish)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -232,6 +249,7 @@ jobs:
   secret-scan:
     name: Secret scan (full tree)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -252,6 +270,7 @@ jobs:
   api-v1-boundary:
     name: API v1 boundary (shadow stack)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -268,6 +287,7 @@ jobs:
   ai-transport-import-boundary:
     name: AI transport import boundary
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -292,6 +312,7 @@ jobs:
   guardrails:
     name: All guardrails
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -319,6 +340,7 @@ jobs:
   brand-safety:
     name: Brand safety (customer copy invariants)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4

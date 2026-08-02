@@ -54,8 +54,34 @@ const nextConfig = {
   },
   async headers() {
     return [
+      // Free embed widgets (DEC-017) — iframe distribution. Framing is allowed
+      // here via CSP frame-ancestors; the X-Frame-Options entry below is scoped
+      // to exclude /embed so the two never land on the same response.
       {
-        source: "/(.*)",
+        source: "/embed/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+      // X-Frame-Options: DENY on every route EXCEPT /embed. Next applies every
+      // matching source, so a broad "/(.*)" would re-add DENY to the embed
+      // response — shipping DENY alongside "frame-ancestors *". Browsers that
+      // implement CSP2 ignore XFO when frame-ancestors is present, so the embed
+      // still framed, but anything honouring XFO (older WebViews, scanners,
+      // proxies) would refuse it. Excluding /embed here is what actually makes
+      // the free Edge Index badge embeddable.
+      {
+        source: "/((?!embed$|embed/).*)",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },

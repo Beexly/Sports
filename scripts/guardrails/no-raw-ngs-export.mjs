@@ -26,9 +26,6 @@ const SKIP_PATH_PARTS = [
   "/lib/ingestion/next-gen-stats",
   "/lib/nflverse/next-gen-stats",
   "/app/api/nflverse/next-gen-stats",
-  "/docs/ip/",
-  "/docs/media/",
-  "/docs/commercial/",
   "/docs/api/API_V1",
 ];
 
@@ -40,7 +37,7 @@ const BLOCKED_PATTERNS = [
 ];
 
 const SAFE_CONTEXT =
-  /\b(no|not|never|without|blocked|avoid|policy|do not|dont|must not|cannot|can't|forbidden|guardrail|source rights|rights permit|cleared|nflverse|aggregate|aggregates|not raw)\b/i;
+  /\b(no|not|never|without|blocked|avoid|policy|do not|dont|must not|cannot|can't|forbidden|guardrails?|source rights|rights permit|cleared|nflverse|aggregate|aggregates|not raw)\b/i;
 
 function rel(filePath) {
   return relative(ROOT, filePath).split(sep).join("/");

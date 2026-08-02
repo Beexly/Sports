@@ -1,0 +1,33 @@
+{
+  "optimizer": "GEPA",
+  "auto": "light",
+  "reflection_lm": {
+    "temperature": 1.0,
+    "rationale": "Session 2: reflection LM needs diversity; temp <1.0 collapses critique modes and wastes GEPA budget"
+  },
+  "task_lm": {
+    "temperature": 0,
+    "rationale": "Deterministic scoring for metric stability; never sample task LM during eval"
+  },
+  "metric": {
+    "name": "gse_metric",
+    "return_shape": "Prediction(score, feedback)",
+    "score_range": [
+      0,
+      1
+    ],
+    "feedback_required": true
+  },
+  "not_default": {
+    "MIPROv2": "Heavier; only after GEPA light plateaus with fixed seed budget",
+    "full_auto": "Cost cosplay; auto=light is the GSE default"
+  },
+  "train_val_split": {
+    "val_ids": [
+      "free-path-present-deactivated",
+      "free-path-violation",
+      "coding-tool-correct",
+      "cal-paradox-slice"
+    ]
+  }
+}

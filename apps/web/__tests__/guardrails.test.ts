@@ -365,7 +365,35 @@ describe("guardrail-hardening: CI topology (O-5.1)", () => {
   it("duplicate push+PR runs are deduped by a concurrency group that never cancels main", () => {
     const ci = readFileSync(resolve(REPO_ROOT, ".github/workflows/ci.yml"), "utf8");
     expect(ci).toContain("concurrency:");
-    expect(ci).toContain("cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}");
+
+    // Dedupe: the group must key on the SOURCE branch, so a push and its
+    // pull_request twin for the same head land in one group.
+    const group = /^\s*group:\s*(.+)$/m.exec(ci)?.[1] ?? "";
+    expect(group).toContain("github.head_ref");
+    expect(group).toContain("github.ref_name");
+
+    // Never cancel main. Assert the INVARIANT, not one spelling of it. This
+    // previously pinned the exact expression, which reported the
+    // event-gating hardening below as a regression even though that change
+    // strictly REDUCES what gets cancelled. Two things still must hold: the
+    // guard is a conditional (never a bare `true`), and it excludes main.
+    const cancel = /^\s*cancel-in-progress:\s*(.+)$/m.exec(ci)?.[1]?.trim() ?? "";
+    expect(cancel).toMatch(/^\$\{\{.*\}\}$/);
+    expect(cancel).toContain("github.ref != 'refs/heads/main'");
+  });
+
+  it("only the pull_request event may cancel, so a superseded run always has a successor", () => {
+    // Cancelling from EITHER side made the survivor a race rather than a
+    // dedupe. Observed on df8bf8f4: the push and PR runs raced inside one
+    // group, the `test` job was cancelled 3s into "Set up job", no successor
+    // took over, and two guardrail jobs were left in_progress past their own
+    // timeout-minutes — a commit can then sit on a PR looking checked while
+    // CI never actually finished. Gating on the event makes the PR run
+    // deterministically own the head and makes the canceller a run that is
+    // itself guaranteed to complete.
+    const ci = readFileSync(resolve(REPO_ROOT, ".github/workflows/ci.yml"), "utf8");
+    const cancel = /^\s*cancel-in-progress:\s*(.+)$/m.exec(ci)?.[1]?.trim() ?? "";
+    expect(cancel).toContain("github.event_name == 'pull_request'");
   });
 });
 

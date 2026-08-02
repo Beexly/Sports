@@ -1,12 +1,19 @@
-# Explicit defer (90 days)
+# Hard non-goals (regression / license / compliance)
 
-| Item | Why |
-|------|-----|
-| Multica / full multi-agent platforms | License + framework tourism; patterns only |
-| GPU self-host / DeepSpeed clusters | Cosplay cost vs Flash/API credits |
-| AgentGPT / CowAgent ports | GPL/noise; skills packs replace need |
-| WordPress Bedrock as app rewrite | Wrong stack for Next monorepo |
-| Own foundation training | No volume/ROI proof; export labels only |
-| Rebuilding outbox / Stripe idempotency | Already world-class — regression risk |
+Not a backlog. These are **forbidden** unless founder+counsel explicitly reverse.
+
+| Item | Why forbidden |
+|------|----------------|
+| Multica / full multi-agent platforms | License + framework tourism |
+| GPU self-host / DeepSpeed clusters | Cost cosplay vs Flash/API |
+| AgentGPT / CowAgent ports | GPL/noise; skills packs suffice |
+| WordPress Bedrock rewrite | Wrong stack |
+| Own foundation training | No volume/ROI; export labels only |
+| Rebuild outbox / Stripe idempotency | Already world-class |
 | Gamma cron re-enable | Compliance hold until counsel registry |
 | LIVE_BOARD / public ROI claims | Founder YES + trust-gate only |
+| Full Kelly (κ=1) on model p | Estimation error → ruin path |
+| Wire CIR into live scoring without gate | `CALIBRATION_ADJUSTMENTS_ENABLED` only |
+| MIPROv2 as default skill optimizer | Use GEPA `auto=light` first; MIPRO only after plateau |
+
+Everything else orbit-relevant is either **shipped** or **operator-only** (see ORBIT_UNLOCK.md).
