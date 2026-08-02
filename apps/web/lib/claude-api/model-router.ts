@@ -49,17 +49,15 @@ export const SURFACE_RECOMMENDED: Record<ClaudeSurface, ModelTier> = {
   brief: "haiku",
 };
 
-function envModel(key: string): string | undefined {
-  const v = process.env[key]?.trim();
-  return v && v.length > 0 ? v : undefined;
-}
-
 /**
  * Resolved catalog: defaults from MODELS, optional env overrides for primary/cheap.
  * Unset env → byte-identical to MODELS.
  */
 export function resolveModelCatalog(
-  env: NodeJS.ProcessEnv = process.env,
+  // Only two string keys are read, so accept any env-shaped bag. NodeJS.ProcessEnv
+  // requires NODE_ENV under this repo's types, which made plain `{}` test fixtures
+  // (and even a direct cast) fail to typecheck.
+  env: Readonly<Record<string, string | undefined>> = process.env,
 ): Record<ModelTier, string> {
   const primary =
     env["MODEL_PRIMARY"]?.trim() ||
