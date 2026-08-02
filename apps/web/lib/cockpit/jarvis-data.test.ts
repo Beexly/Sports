@@ -24,7 +24,38 @@ const state = vi.hoisted(() => ({
   // Every `where` passed to a snapshot-scoped pick.count, for scoping asserts.
   snapshotWheres: [] as Array<Record<string, unknown>>,
   dataQuality: 0.95,
+  // The other signal dimensions. classifySignal takes the MIN across all of
+  // them, so any one left at 0 pins the status to RED and makes the snapshot
+  // ratio — the thing this file actually tests — unobservable. Each test sets
+  // these to whatever isolates the dimension under test.
+  featureSnapshots: [] as Array<Record<string, boolean>>,
+  gameSignalIds: [] as string[],
+  publishedGameIds: [] as string[],
+  dailyBriefCount: 0,
 }));
+
+/** A snapshot row with every `had*Signal` flag set — a fully-covered pick. */
+function fullSignalSnapshot(): Record<string, boolean> {
+  return Object.fromEntries(
+    [
+      "hadOddsSignal",
+      "hadLineMovementSignal",
+      "hadRestSignal",
+      "hadScheduleSignal",
+      "hadAtsFormSignal",
+      "hadH2HSignal",
+      "hadVenueSignal",
+      "hadWeatherSignal",
+      "hadInjurySignal",
+      "hadRatingsSignal",
+      "hadPlayerSignal",
+      "hadOfficialsSignal",
+      "hadVenueEnvironmentSignal",
+      "hadPaceSignal",
+      "hadMilestoneSignal",
+    ].map((k) => [k, true]),
+  );
+}
 
 type Where = Record<string, unknown> & {
   signalSnapshot?: unknown;
@@ -64,6 +95,11 @@ function pickCount(args?: { where?: Where }): Promise<number> {
   return Promise.resolve(0);
 }
 
+// The loader fans out over SEVEN Prisma models inside one Promise.all. A model
+// missing from this fake is `undefined`, so the property access throws while
+// BUILDING the array — before any per-call `.catch()` can attach — and every
+// test in this file dies with a TypeError instead of an assertion failure.
+// Keep this list in sync with the `db.<model>` calls in jarvis-data.ts.
 vi.mock("@sports/db", () => ({
   isStubMode: () => false,
   isDemoPicksEnabled: () => false,
@@ -75,12 +111,64 @@ vi.mock("@sports/db", () => ({
     pick: {
       count: pickCount,
       findFirst: () => Promise.resolve(null),
-      findMany: () => Promise.resolve([{ modelVersion: "v-test" }]),
+      // Two distinct call sites: model versions, and published gameIds.
+      findMany: (args?: { distinct?: readonly string[] }) =>
+        args?.distinct?.includes("gameId")
+          ? Promise.resolve(state.publishedGameIds.map((gameId) => ({ gameId })))
+          : Promise.resolve([{ modelVersion: "v-test" }]),
     },
     game: {
       aggregate: () => Promise.resolve({ _avg: { dataQualityScore: state.dataQuality } }),
     },
+    settlementRun: {
+      findFirst: () => Promise.resolve(null),
+      count: () => Promise.resolve(0),
+    },
+    pickSignalSnapshot: {
+      findMany: () => Promise.resolve(state.featureSnapshots),
+    },
+    gameSignal: {
+      groupBy: () =>
+        Promise.resolve(
+          state.gameSignalIds.map((gameId) => ({ gameId, _count: { _all: 1 } })),
+        ),
+    },
+    dailyBrief: {
+      count: () => Promise.resolve(state.dailyBriefCount),
+    },
   },
+}));
+
+// The free-source redundancy score is one of the six metrics classifySignal
+// takes the MIN over, and it is currently ~0.73 because polymarket-gamma and
+// kalshi-public are on COMPLIANCE HOLD (cleared:false). That is a real, live
+// rights fact — and it is not what this file tests. Left un-mocked it pins the
+// status to AMBER no matter how honest the snapshot ratio is, so the GREEN
+// assertion could never observe the dimension under test. Pin it to full
+// redundancy so these tests measure snapshot-coverage math and nothing else.
+// (source-router's own coverage lives in source-router.test.ts.)
+const NEEDS = [
+  "scores",
+  "results",
+  "odds",
+  "standings",
+  "schedules",
+  "weather",
+  "player_stats",
+] as const;
+
+vi.mock("@/lib/data-sources/source-router", () => ({
+  freeCoverageMatrix: () =>
+    NEEDS.map((need) => ({
+      need,
+      sport: "nfl",
+      freeCovers: true,
+      primaryId: "espn-public-api",
+      mustSpend: false,
+      clearedCount: 2,
+      redundancy: "multi",
+    })),
+  redundancyGaps: () => [],
 }));
 
 async function load() {
@@ -94,6 +182,10 @@ describe("jarvis-data signal coverage", () => {
     state.snapshotCount = 30;
     state.publishedCanonicalCount = 100;
     state.dataQuality = 0.95;
+    state.featureSnapshots = [];
+    state.gameSignalIds = [];
+    state.publishedGameIds = [];
+    state.dailyBriefCount = 0;
     vi.resetModules();
   });
 
@@ -130,6 +222,13 @@ describe("jarvis-data signal coverage", () => {
   it("reads GREEN only when the scoped coverage is genuinely high", async () => {
     state.snapshotCount = 95;
     state.publishedCanonicalCount = 100;
+    // Isolate the dimension under test. classifySignal takes the MIN across
+    // every defined metric, so the feature-matrix and game-signal dimensions
+    // must be non-limiting or they, not the scoped snapshot ratio, decide the
+    // status. (The free-source score is handled by the mock below.)
+    state.featureSnapshots = Array.from({ length: 200 }, fullSignalSnapshot);
+    state.publishedGameIds = Array.from({ length: 50 }, (_, i) => `g${i}`);
+    state.gameSignalIds = [...state.publishedGameIds];
     const { assessment } = await load();
     expect(assessment.signalCoverageStatus).toBe("GREEN");
   });
