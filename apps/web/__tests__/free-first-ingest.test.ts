@@ -42,7 +42,13 @@ describe("free-first ingestion", () => {
   it("spend guard: scores never justify paid; odds currently do", () => {
     expect(paidCallJustified("scores", "nfl")).toBe(false);
     expect(paidCallJustified("weather", "ncaaf")).toBe(false);
-    expect(paidCallJustified("odds", "nfl")).toBe(false); // free gamma/kalshi dual sources still gated
+    // Odds DO justify paid, exactly as this test's name says. polymarket-gamma
+    // and kalshi-public are cleared:false (COMPLIANCE HOLD, reverted in
+    // f7681128), so no cleared free source covers "odds" and the plan must
+    // spend. source-router.test.ts:83 asserts the same law from the other side:
+    // requiresPaidEscalation("odds","nfl") === true. The assertion here was
+    // left at false when the sources were re-gated.
+    expect(paidCallJustified("odds", "nfl")).toBe(true);
   });
 
   it("only declares an adapter for sources we actually implemented", () => {
