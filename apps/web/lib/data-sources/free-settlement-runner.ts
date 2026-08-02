@@ -5,6 +5,10 @@
  * then writes PENDING→result with transactional outbox + post-settlement work
  * (same durability pattern as settleSport).
  *
+ * STP + RCA: overdue picks are processed first; each cycle emits a root-cause
+ * Pareto and straight-through clearance plan so settlement-health CRITICAL is
+ * actionable (not just a count).
+ *
  * Law: oddsApiRequired=false · refuse-default · DISPUTED holds · no invented scores.
  */
 
@@ -28,6 +32,18 @@ import {
   settlePendingPicks,
   type PendingPick,
 } from "./free-settlement";
+import {
+  aggregateSettlementRca,
+  classifySettlementRootCause,
+  type SettlementRcaReport,
+} from "@/lib/settlement/root-cause-analysis";
+import {
+  computeBurnRate,
+  planClearanceWaves,
+  stpLoadPriority,
+  type BurnRateReport,
+  type ClearanceWavePlan,
+} from "@/lib/settlement/stp-clearance";
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -59,6 +75,12 @@ export type FreeSettlementRunResult = {
   sports: FreeSettlementSportResult[];
   picksSettled: number;
   picksHeld: number;
+  /** Root-cause analysis over all inspected PENDING picks this cycle. */
+  rca: SettlementRcaReport;
+  /** Straight-through clearance wave plan for this cycle. */
+  stp: ClearanceWavePlan;
+  /** Burn rate when prior overdue count is supplied by the caller. */
+  burnRate: BurnRateReport | null;
 };
 
 async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
@@ -73,8 +95,15 @@ async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
 
 export async function runFreePathSettlement(options?: {
   sportKey?: string | null;
+  /** Hours after kickoff before PENDING counts as overdue (RCA/STP). Default 6. */
+  graceHours?: number;
+  /** Optional prior overdue count for burn-rate (leading indicator drain). */
+  priorOverdueCount?: number;
+  now?: Date;
 }): Promise<FreeSettlementRunResult> {
   const started = Date.now();
+  const now = options?.now ?? new Date();
+  const graceHours = options?.graceHours ?? 6;
   const sports = options?.sportKey
     ? SUPPORTED_SPORTS.filter((s) => s.key === options.sportKey)
     : [...SUPPORTED_SPORTS];
@@ -82,6 +111,10 @@ export async function runFreePathSettlement(options?: {
   const out: FreeSettlementSportResult[] = [];
   let picksSettled = 0;
   let picksHeld = 0;
+
+  const rcaInputs: Parameters<typeof classifySettlementRootCause>[0][] = [];
+  const settledPickIds = new Set<string>();
+  const confirmationByPickId = new Map<string, "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED">();
 
   for (const sport of sports) {
     const freeSport = ODDS_KEY_TO_FREE[sport.key] ?? null;
@@ -101,7 +134,7 @@ export async function runFreePathSettlement(options?: {
     }
 
     try {
-      const pendingRows = await db.pick.findMany({
+      const loadedRows = await db.pick.findMany({
         where: {
           result: "PENDING",
           game: { sport: { key: sport.key } },
@@ -117,6 +150,17 @@ export async function runFreePathSettlement(options?: {
           },
         },
         take: 500,
+      });
+
+      // STP load order: overdue first so limited cron time drains the health band.
+      const pendingRows = [...loadedRows].sort((a, b) => {
+        const ageA =
+          (now.getTime() - a.game.commenceTime.getTime()) / (60 * 60 * 1000);
+        const ageB =
+          (now.getTime() - b.game.commenceTime.getTime()) / (60 * 60 * 1000);
+        const byPri =
+          stpLoadPriority(ageB, graceHours) - stpLoadPriority(ageA, graceHours);
+        return byPri !== 0 ? byPri : ageB - ageA;
       });
 
       if (pendingRows.length === 0) {
@@ -156,17 +200,39 @@ export async function runFreePathSettlement(options?: {
       const settledAt = new Date();
 
       for (const o of outcomes) {
+        const row = pendingRows.find((r) => r.id === o.pickId);
+        const ageHours = row
+          ? (now.getTime() - row.game.commenceTime.getTime()) / (60 * 60 * 1000)
+          : 0;
+
         if (o.status === "PENDING") {
           stillPending++;
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "PENDING",
+            pendingReason: o.reason,
+            settlementPath: "free",
+          });
           continue;
         }
         if (o.status === "HELD") {
           held++;
           picksHeld++;
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "HELD",
+            holdReason: "DISPUTED",
+            settlementPath: "free",
+          });
           continue;
         }
 
-        const row = pendingRows.find((r) => r.id === o.pickId);
         if (!row) continue;
 
         const written = await db.$transaction(async (tx) => {
@@ -208,6 +274,26 @@ export async function runFreePathSettlement(options?: {
         if (written.count > 0) {
           settled++;
           picksSettled++;
+          settledPickIds.add(o.pickId);
+          confirmationByPickId.set(o.pickId, o.confirmation);
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "SETTLED",
+            confirmation: o.confirmation,
+            settlementPath: "free",
+          });
+        } else {
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "WRITE_FAILED",
+            settlementPath: "free",
+          });
         }
       }
 
@@ -236,6 +322,40 @@ export async function runFreePathSettlement(options?: {
     }
   }
 
+  const findings = rcaInputs.map((i) => classifySettlementRootCause(i));
+  // Actionable + timing context for operators; pure SETTLED/CONFIRMED successes omitted.
+  const reportFindings = findings.filter(
+    (f) =>
+      f.code === "SINGLE_SOURCE_POLICY_HOLD" ||
+      f.code === "WRITE_RACE_LOST" ||
+      f.code === "DISPUTED_SCORES" ||
+      f.code === "TEAM_ORIENT_FAIL" ||
+      f.code === "NO_TRUSTED_FINAL" ||
+      f.code === "OVERDUE_NO_SCORE" ||
+      f.code === "PATH_MISCONFIG" ||
+      f.code === "WITHIN_GRACE" ||
+      f.code === "NOT_COMMENCED",
+  );
+  const rca = aggregateSettlementRca(reportFindings);
+
+  const stp = planClearanceWaves(reportFindings, {
+    settledPickIds,
+    confirmationByPickId,
+  });
+
+  let burnRate: BurnRateReport | null = null;
+  if (options?.priorOverdueCount !== undefined) {
+    const stillOverdue = reportFindings.filter((f) => f.overdue && f.code !== "WRITE_RACE_LOST").length;
+    // Approximates inflow as max(0, stillOverdue + cleared - prior); cleared = picksSettled this cycle that were overdue-eligible.
+    const clearedOverdue = picksSettled; // conservative: all settles reduce potential overdue
+    const inflow = Math.max(0, stillOverdue + clearedOverdue - options.priorOverdueCount);
+    burnRate = computeBurnRate({
+      cleared: clearedOverdue,
+      newOverdueInflow: inflow,
+      reopened: 0,
+    });
+  }
+
   return {
     path: "free",
     oddsApiRequired: false,
@@ -244,5 +364,8 @@ export async function runFreePathSettlement(options?: {
     sports: out,
     picksSettled,
     picksHeld,
+    rca,
+    stp,
+    burnRate,
   };
 }

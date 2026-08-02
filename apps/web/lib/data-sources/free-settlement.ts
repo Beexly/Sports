@@ -8,7 +8,8 @@
  *   - CONFIRMED    — both free sources agree on the final → settle with high trust.
  *   - SINGLE_SOURCE — only one free source has the final → settle, flagged for audit.
  *   - DISPUTED     — sources disagree on the score → HOLD, never settle blindly.
- *   - (no final)   — PENDING.
+ *   - (no final)   — PENDING with reason NO_FINAL (RCA/STP consume this).
+ *   - orient fail  — PENDING with reason ORIENT_FAIL.
  *
  * Pure + deterministic (no DB, no network). The worker supplies pending picks and the
  * already-fetched free games; this decides the outcome.
@@ -118,9 +119,17 @@ export type PendingPick = {
 };
 
 export type SettlementOutcome =
-  | { pickId: string; status: "SETTLED"; result: SettlementResult; confirmation: Confirmation; homeScore: number; awayScore: number; sources: readonly string[] }
+  | {
+      pickId: string;
+      status: "SETTLED";
+      result: SettlementResult;
+      confirmation: Confirmation;
+      homeScore: number;
+      awayScore: number;
+      sources: readonly string[];
+    }
   | { pickId: string; status: "HELD"; reason: "DISPUTED"; sources: readonly string[] }
-  | { pickId: string; status: "PENDING" };
+  | { pickId: string; status: "PENDING"; reason: "NO_FINAL" | "ORIENT_FAIL" };
 
 /** Does this trusted final involve both of the pick's teams (token match, either orientation)? */
 function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
@@ -147,12 +156,12 @@ export function settlePendingPicks(picks: readonly PendingPick[], finals: readon
       (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 1 && finalMatchesPick(pick, f),
     );
     const final = candidates[0];
-    if (!final) return { pickId: pick.pickId, status: "PENDING" };
+    if (!final) return { pickId: pick.pickId, status: "PENDING", reason: "NO_FINAL" };
     if (final.confirmation === "DISPUTED") {
       return { pickId: pick.pickId, status: "HELD", reason: "DISPUTED", sources: final.sources };
     }
     const oriented = orientToPickHome(pick, final);
-    if (!oriented) return { pickId: pick.pickId, status: "PENDING" };
+    if (!oriented) return { pickId: pick.pickId, status: "PENDING", reason: "ORIENT_FAIL" };
 
     const result = calculatePickResult(
       pick.pickType,

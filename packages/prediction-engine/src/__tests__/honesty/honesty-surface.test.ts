@@ -6,6 +6,7 @@ import {
   chainReceipts,
   recomputeChain,
   ledgerHead,
+  type PlaceboPair,
 } from "../../index.js";
 
 describe("evaluateProductNoBet", () => {
@@ -44,11 +45,56 @@ describe("evaluateProductNoBet", () => {
   });
 });
 
-describe("placebo", () => {
-  it("near-zero series passes", () => {
-    const series = Array.from({ length: 50 }, () => 0.0001);
-    const r = runShuffledTimePlacebo(series, { threshold: 0.01, rng: mulberry32(1) });
+describe("placebo (label-permutation harness)", () => {
+  it("rejects bare CLV series fail-closed (legacy no-op / inverted gate)", () => {
+    // Real edge series used to fail the gate — that was inverted leakage semantics.
+    const realEdge = Array.from({ length: 50 }, () => 0.04);
+    const r = runShuffledTimePlacebo(realEdge, { threshold: 0.01, rng: mulberry32(1) });
+    expect(r.pass).toBe(false);
+    expect(r.detail).toMatch(/unsupported_input/);
+  });
+
+  it("near-zero independent pairs pass after scramble", () => {
+    const rng = mulberry32(7);
+    const pairs: PlaceboPair[] = Array.from({ length: 50 }, () => ({
+      modelSignal: rng() * 0.1 - 0.05,
+      realizedReturn: rng() * 0.02 - 0.01,
+    }));
+    const r = runShuffledTimePlacebo(pairs, { threshold: 0.01, rng: mulberry32(1), runs: 32 });
     expect(r.pass).toBe(true);
+    expect(r.placeboAbsAssociation).toBeLessThanOrEqual(0.01);
+  });
+
+  it("does not fail merely because observed edge is large", () => {
+    // Strong co-movement on the true pairing is real edge, not a harness fail.
+    // After scramble association collapses → pass.
+    const pairs: PlaceboPair[] = Array.from({ length: 60 }, (_, i) => {
+      const signal = (i % 2 === 0 ? 1 : -1) * (0.05 + (i % 5) * 0.01);
+      return { modelSignal: signal, realizedReturn: signal * 0.8 };
+    });
+    const r = runShuffledTimePlacebo(pairs, { threshold: 0.01, rng: mulberry32(99), runs: 40 });
+    expect(Math.abs(r.observedAssociation)).toBeGreaterThan(0.001);
+    expect(r.pass).toBe(true);
+  });
+
+  it("fails closed on degenerate constant signal", () => {
+    const pairs: PlaceboPair[] = Array.from({ length: 40 }, () => ({
+      modelSignal: 0.02,
+      realizedReturn: 0.01,
+    }));
+    const r = runShuffledTimePlacebo(pairs, { threshold: 0.01, rng: mulberry32(3) });
+    expect(r.pass).toBe(false);
+    expect(r.detail).toMatch(/degenerate_signal/);
+  });
+
+  it("sample floor still enforced", () => {
+    const pairs: PlaceboPair[] = Array.from({ length: 10 }, (_, i) => ({
+      modelSignal: i,
+      realizedReturn: i * 0.01,
+    }));
+    const r = runShuffledTimePlacebo(pairs);
+    expect(r.pass).toBe(false);
+    expect(r.detail).toMatch(/sample_floor/);
   });
 });
 
