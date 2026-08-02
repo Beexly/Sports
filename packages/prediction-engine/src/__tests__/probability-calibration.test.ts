@@ -226,6 +226,48 @@ describe("centeredIsotonicCalibration (CIR)", () => {
     expect(mid).toBeGreaterThan(0);
     expect(mid).toBeLessThan(1);
   });
+
+  // Regression: block centers used to be quantised onto a 1e-4 grid, so two
+  // genuinely distinct centers closer than that collapsed onto ONE breakpoint.
+  // The "enforce strictly increasing x" guard could not repair it — its 1e-6
+  // nudge was finer than the grid it re-rounded onto, so the push was a proven
+  // no-op for every already-rounded x. Breakpoints must be strictly increasing.
+  it("keeps breakpoints strictly increasing when centers are closer than 1e-4", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.5, y: 0 },
+      { p: 0.50001, y: 1 },
+    ]);
+    expect(m.points).toHaveLength(2);
+    for (let i = 1; i < m.points.length; i++) {
+      expect(m.points[i]!.x).toBeGreaterThan(m.points[i - 1]!.x);
+    }
+  });
+
+  it("interpolates across near-tied centers instead of degenerating to a step", () => {
+    const m = centeredIsotonicCalibration([
+      { p: 0.5, y: 0 },
+      { p: 0.50001, y: 1 },
+    ]);
+    // Halfway between the two centers must be interior. With a collapsed
+    // breakpoint `predict` short-circuits on `x >= last.x` and returns 1 —
+    // a hard step, which is the plateau behaviour CIR exists to remove.
+    const mid = m.predict(0.500005);
+    expect(mid).toBeGreaterThan(0);
+    expect(mid).toBeLessThan(1);
+  });
+
+  it("never emits a duplicate breakpoint on a densely packed forecast set", () => {
+    // 60 forecasts spanning 6e-4 — far tighter than the old 1e-4 grid, so the
+    // rounded implementation produced many colliding centers.
+    const samples: CalibrationSample[] = [];
+    for (let i = 0; i < 60; i++) {
+      samples.push({ p: 0.4 + i * 1e-5, y: (i % 3 === 0 ? 1 : 0) as 0 | 1 });
+    }
+    const m = centeredIsotonicCalibration(samples);
+    for (let i = 1; i < m.points.length; i++) {
+      expect(m.points[i]!.x).toBeGreaterThan(m.points[i - 1]!.x);
+    }
+  });
 });
 
 describe("timeHoldoutSplit", () => {

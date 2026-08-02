@@ -197,17 +197,37 @@ export function centeredIsotonicCalibration(
     blocks.push(block);
   }
 
-  // CIR: one point per block at mass-weighted center of the plateau
+  // CIR: one point per block at mass-weighted center of the plateau.
+  //
+  // `x` is a breakpoint in FORECAST space, not a reported probability, so it is
+  // kept at full precision — exactly like isotonicCalibration, which never
+  // rounds its `b.xStart`. Only `calibrated` (the value we hand out) is rounded.
+  //
+  // It used to be `round(...)` (4 digits), which quantised centers onto a 1e-4
+  // grid and collapsed any two blocks whose centers were closer than that onto
+  // ONE breakpoint. The strictly-increasing guard below could not repair it:
+  // pushing by 1e-6 and re-rounding to 1e-4 returns the input unchanged for
+  // every already-rounded x, so `round(prev.x + 1e-6, 4) === prev.x` and the
+  // whole loop was a proven no-op. The duplicate breakpoint was then
+  // unreachable in `predict` — the interpolation branch is only entered with
+  // lo.x < x <= hi.x, which no hi.x <= lo.x can satisfy — so its calibrated
+  // value was silently discarded and the map degenerated to a hard step across
+  // that band: precisely the plateau behaviour CIR exists to remove.
   const points: IsoPoint[] = blocks.map((b) => ({
-    x: round(clamp01(b.massSum / b.weight)),
+    x: clamp01(b.massSum / b.weight),
     calibrated: round(clamp01(b.value)),
   }));
 
-  // Enforce strictly increasing x (identical centers → tiny epsilon push)
+  // Defensive only. Centers are means over disjoint, strictly ascending p-ranges
+  // (phase 1 pools identical p, so block i's p's are all below block i+1's), so
+  // they are strictly increasing in exact arithmetic; this guards the
+  // floating-point tie. Unrounded, the epsilon push now actually moves the
+  // point. `min(1, …)` cannot bind — prev.x === 1 requires every p in that block
+  // to be 1, which leaves no room for a following block.
   for (let i = 1; i < points.length; i++) {
     if (points[i]!.x <= points[i - 1]!.x) {
       points[i] = {
-        x: round(Math.min(1, points[i - 1]!.x + 1e-6)),
+        x: Math.min(1, points[i - 1]!.x + 1e-6),
         calibrated: points[i]!.calibrated,
       };
     }
