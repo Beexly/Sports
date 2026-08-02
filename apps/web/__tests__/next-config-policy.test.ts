@@ -2,16 +2,54 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
+import nextConfig from "../next.config.mjs";
+
 /**
  * next.config.mjs policy.
  *
  * Pins the security-relevant configuration that lives in the Next.js
  * build config. The goal: catch a future refactor that silently
  * relaxes a header or exposes a secret env at build time.
+ *
+ * The framing checks used to grep the file's TEXT for the tokens
+ * "X-Frame-Options", "DENY", "frame-ancestors *", and "/embed/:path*"
+ * independently — proof every token appears SOMEWHERE, not proof of what
+ * a concrete route actually receives. next.config.mjs relies on two
+ * `source` patterns being mutually exclusive (DENY on "everything except
+ * /embed", `frame-ancestors *` on "/embed"); a regression that re-widened
+ * either source to overlap the other would leave every token grep green
+ * while shipping DENY and `frame-ancestors *` on the same response (or
+ * neither). Resolve the real `headers()` export instead — the same data
+ * Next.js itself matches requests against — and assert what each
+ * concrete path actually gets.
  */
 
 const repoRoot = resolve(__dirname, "..");
 const src = readFileSync(resolve(repoRoot, "next.config.mjs"), "utf8");
+
+type HeaderEntry = { key: string; value: string };
+type HeaderRule = { source: string; headers: HeaderEntry[] };
+
+function sourceToRegex(source: string): RegExp {
+  // Mirrors the two `source` shapes this config actually uses: ":name*"
+  // wildcard tails, and pre-built regex groups (negative lookaheads) that
+  // pass through unchanged — same approach used to resolve vercel.json's
+  // header rules against real paths.
+  return new RegExp(`^${source.replace(/\/:\w+\*/g, "(?:/.*)?")}$`);
+}
+
+async function headersFor(path: string): Promise<Record<string, string[]>> {
+  const rules = (await nextConfig.headers?.()) as HeaderRule[] | undefined;
+  const matched = (rules ?? []).filter((rule) => sourceToRegex(rule.source).test(path));
+  const out: Record<string, string[]> = {};
+  for (const rule of matched) {
+    for (const h of rule.headers) {
+      const key = h.key.toLowerCase();
+      (out[key] ??= []).push(h.value);
+    }
+  }
+  return out;
+}
 
 describe("next.config.mjs — security policy", () => {
   it("does not explicitly disable React strict mode", () => {
@@ -20,14 +58,28 @@ describe("next.config.mjs — security policy", () => {
     expect(src).not.toMatch(/reactStrictMode\s*:\s*false/);
   });
 
-  it("emits the X-Frame-Options DENY header on non-embed routes", () => {
-    expect(src).toMatch(/X-Frame-Options/);
-    expect(src).toMatch(/DENY/);
+  it("denies framing (X-Frame-Options DENY) on non-embed routes, with no conflicting frame-ancestors *", async () => {
+    for (const path of ["/", "/dashboard", "/pricing"]) {
+      const headers = await headersFor(path);
+      expect(headers["x-frame-options"], `${path} must deny framing`).toEqual(["DENY"]);
+      const csp = headers["content-security-policy"] ?? [];
+      expect(
+        csp.some((v) => v.includes("frame-ancestors *")),
+        `${path} must not also receive frame-ancestors *`,
+      ).toBe(false);
+    }
   });
 
-  it("allows free embed iframes via frame-ancestors on /embed", () => {
-    expect(src).toMatch(/frame-ancestors \*/);
-    expect(src).toMatch(/\/embed\/:path\*/);
+  it("allows free embed iframes via frame-ancestors on /embed, and does not also send DENY", async () => {
+    for (const path of ["/embed", "/embed/edge-index/abc123"]) {
+      const headers = await headersFor(path);
+      const csp = headers["content-security-policy"] ?? [];
+      expect(
+        csp.some((v) => v.includes("frame-ancestors *")),
+        `${path} must receive frame-ancestors *`,
+      ).toBe(true);
+      expect(headers["x-frame-options"] ?? [], `${path} must not also receive X-Frame-Options`).toEqual([]);
+    }
   });
 
   it("emits the X-Content-Type-Options nosniff header on every route", () => {
