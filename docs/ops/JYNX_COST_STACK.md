@@ -116,4 +116,4 @@ Pass = free-lane content shows `gpt-oss*`; studio shows cloud id not plain `clau
 - Never invent model map ids  
 - LIVE_BOARD / public picks stay gated by product law — Jynx is cost routing only  
 
-See also: `JYNX_MARKET_TIER_MAP.md` · `JYNX_OPEN_WEIGHT_FREE_MAP.md` · `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`
+See also: `JYNX_FAILOVER_AND_MODEL_MAPS.md` · `JYNX_VS_AI_GATEWAYS.md` · `JYNX_MARKET_TIER_MAP.md` · `JYNX_OPEN_WEIGHT_FREE_MAP.md` · `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`
