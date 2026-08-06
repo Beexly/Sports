@@ -81,6 +81,18 @@ export type FreeSettlementSportResult = {
   stillPending: number;
   finals: number;
   error?: string;
+  /**
+   * Operator samples when finals loaded but picks stayed PENDING — team strings
+   * + reason so residual OVERDUE_NO_SCORE can be fixed without DB shell access.
+   */
+  matchDebug?: readonly {
+    pickId: string;
+    reason: "NO_FINAL" | "ORIENT_FAIL";
+    homeTeam: string;
+    awayTeam: string;
+    gameDate: string;
+    ageHours: number;
+  }[];
 };
 
 export type FreeSettlementRunResult = {
@@ -439,6 +451,33 @@ export async function runFreePathSettlement(options?: {
         }
       }
 
+      // Sample unmatched overdue for operator RCA (no secrets — team names only).
+      const matchDebug =
+        stillPending > 0 && finals.length > 0
+          ? outcomes
+              .filter(
+                (o): o is Extract<typeof o, { status: "PENDING" }> =>
+                  o.status === "PENDING",
+              )
+              .slice(0, 8)
+              .map((o) => {
+                const row = pendingRows.find((r) => r.id === o.pickId);
+                const ageHours = row
+                  ? (now.getTime() - row.game.commenceTime.getTime()) /
+                    (60 * 60 * 1000)
+                  : 0;
+                return {
+                  pickId: o.pickId,
+                  reason: o.reason,
+                  homeTeam: row?.game.homeTeamName ?? "",
+                  awayTeam: row?.game.awayTeamName ?? "",
+                  gameDate:
+                    row?.game.commenceTime.toISOString().slice(0, 10) ?? "",
+                  ageHours: Math.round(ageHours * 10) / 10,
+                };
+              })
+          : undefined;
+
       out.push({
         sport: sport.key,
         freeSport,
@@ -448,6 +487,7 @@ export async function runFreePathSettlement(options?: {
         held,
         stillPending,
         finals: finals.length,
+        ...(matchDebug && matchDebug.length > 0 ? { matchDebug } : {}),
       });
     } catch (err) {
       out.push({

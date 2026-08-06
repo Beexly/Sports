@@ -81,3 +81,47 @@ describe("free-settlement abbr + name matching", () => {
     );
   });
 });
+
+describe("alias + city-strip matching", () => {
+  it("matches Oakland Athletics to ESPN Athletics / ATH", () => {
+    const pick: PendingPick = {
+      pickId: "oa",
+      pickType: "MONEYLINE",
+      selection: "HOME",
+      line: 0,
+      homeTeam: "Oakland Athletics",
+      awayTeam: "Houston Astros",
+      sportKey: "baseball_mlb",
+      gameDateIso: "2026-07-15T00:00:00.000Z",
+    };
+    const final: TrustedFinal = {
+      date: "2026-07-15",
+      home: { name: "Athletics", abbr: "ATH", score: 4 },
+      away: { name: "Astros", abbr: "HOU", score: 2 },
+      confirmation: "SINGLE_SOURCE",
+      sources: ["espn"],
+    };
+    expect(finalMatchesPick(pick, final)).toBe(true);
+  });
+
+  it("matches LAFC style MLS short names", () => {
+    const pick: PendingPick = {
+      pickId: "mls1",
+      pickType: "MONEYLINE",
+      selection: "HOME",
+      line: 0,
+      homeTeam: "Los Angeles FC",
+      awayTeam: "Seattle Sounders FC",
+      sportKey: "soccer_usa_mls",
+      gameDateIso: "2026-07-15T00:00:00.000Z",
+    };
+    const final: TrustedFinal = {
+      date: "2026-07-15",
+      home: { name: "LAFC", abbr: "LAFC", score: 2 },
+      away: { name: "Sounders", abbr: "SEA", score: 1 },
+      confirmation: "SINGLE_SOURCE",
+      sources: ["espn"],
+    };
+    expect(finalMatchesPick(pick, final)).toBe(true);
+  });
+});
