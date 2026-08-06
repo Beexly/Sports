@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
+import type { NormalizedGame } from "@/lib/data-sources/free-adapters/espn-scores";
 import {
   expandTeamMatchTokens,
   finalMatchesPick,
+  findPostponedMatch,
+  isPostponedOrCancelledDetail,
   orientToPickHome,
   settlePendingPicks,
   type PendingPick,
@@ -80,9 +83,7 @@ describe("free-settlement abbr + name matching", () => {
       expect.arrayContaining(["bluejays", "jays", "torontobluejays"]),
     );
   });
-});
 
-describe("alias + city-strip matching", () => {
   it("matches Oakland Athletics to ESPN Athletics / ATH", () => {
     const pick: PendingPick = {
       pickId: "oa",
@@ -123,5 +124,78 @@ describe("alias + city-strip matching", () => {
       sources: ["espn"],
     };
     expect(finalMatchesPick(pick, final)).toBe(true);
+  });
+});
+
+describe("postponed free-path VOID (no invented scores)", () => {
+  it("detects postponed detail", () => {
+    expect(isPostponedOrCancelledDetail("Postponed")).toBe(true);
+    expect(isPostponedOrCancelledDetail("Final")).toBe(false);
+  });
+
+  it("voids when free source marks matchup postponed", () => {
+    const pick: PendingPick = {
+      pickId: "ppd1",
+      pickType: "MONEYLINE",
+      selection: "HOME",
+      line: 0,
+      homeTeam: "Chicago White Sox",
+      awayTeam: "Atlanta Braves",
+      sportKey: "baseball_mlb",
+      gameDateIso: "2026-06-11T23:00:00.000Z",
+    };
+    const games: NormalizedGame[] = [
+      {
+        sourceId: "espn-public-api",
+        sport: "mlb",
+        gameId: "824589",
+        startTime: "2026-06-11T23:10:00Z",
+        state: "unknown",
+        completed: false,
+        statusDetail: "Postponed",
+        venue: null,
+        home: { team: "Chicago White Sox", abbreviation: "CHW", score: null },
+        away: { team: "Atlanta Braves", abbreviation: "ATL", score: null },
+        attribution: "mlb",
+      },
+    ];
+    expect(findPostponedMatch(pick, games)?.detail).toMatch(/Postponed/i);
+    const out = settlePendingPicks([pick], [], { postponedCandidates: games })[0]!;
+    expect(out.status).toBe("SETTLED");
+    if (out.status === "SETTLED") {
+      expect(out.result).toBe("VOID");
+      expect(out.homeScore).toBeNull();
+      expect(out.awayScore).toBeNull();
+    }
+  });
+
+  it("does not void when only missing final (not postponed)", () => {
+    const pick: PendingPick = {
+      pickId: "live1",
+      pickType: "MONEYLINE",
+      selection: "HOME",
+      line: 0,
+      homeTeam: "Chicago Cubs",
+      awayTeam: "St. Louis Cardinals",
+      sportKey: "baseball_mlb",
+      gameDateIso: "2026-06-11T23:00:00.000Z",
+    };
+    const games: NormalizedGame[] = [
+      {
+        sourceId: "espn-public-api",
+        sport: "mlb",
+        gameId: "1",
+        startTime: "2026-06-11T23:10:00Z",
+        state: "pre",
+        completed: false,
+        statusDetail: "Scheduled",
+        venue: null,
+        home: { team: "Chicago Cubs", abbreviation: "CHC", score: null },
+        away: { team: "St. Louis Cardinals", abbreviation: "STL", score: null },
+        attribution: "espn",
+      },
+    ];
+    const out = settlePendingPicks([pick], [], { postponedCandidates: games })[0]!;
+    expect(out.status).toBe("PENDING");
   });
 });

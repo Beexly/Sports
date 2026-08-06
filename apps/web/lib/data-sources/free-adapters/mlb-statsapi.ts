@@ -37,7 +37,7 @@ export async function fetchMlbScheduleScores(
       games?: Array<{
         gamePk: number;
         gameDate?: string;
-        status?: { abstractGameState?: string; detailedState?: string };
+        status?: { abstractGameState?: string; detailedState?: string; codedGameState?: string };
         teams?: {
           home?: { team?: { name?: string; abbreviation?: string }; score?: number };
           away?: { team?: { name?: string; abbreviation?: string }; score?: number };
@@ -53,15 +53,30 @@ export async function fetchMlbScheduleScores(
       const away = g.teams?.away;
       if (!home?.team?.name || !away?.team?.name) continue;
       const abstract = (g.status?.abstractGameState ?? "").toLowerCase();
+      const detailed = (g.status?.detailedState ?? "").toLowerCase();
+      const coded = ((g.status as { codedGameState?: string } | undefined)?.codedGameState ?? "").toUpperCase();
+      // MLB marks postponed games abstract=Final with coded D — never treat as completed scores.
+      const postponedLike =
+        detailed.includes("postpon") ||
+        detailed.includes("cancel") ||
+        detailed.includes("suspend") ||
+        coded === "D" ||
+        coded === "C";
       const state =
-        abstract === "final"
-          ? "post"
-          : abstract === "live"
-            ? "in"
-            : abstract === "preview"
-              ? "pre"
-              : "unknown";
-      const completed = state === "post";
+        postponedLike
+          ? "unknown"
+          : abstract === "final"
+            ? "post"
+            : abstract === "live"
+              ? "in"
+              : abstract === "preview"
+                ? "pre"
+                : "unknown";
+      const completed =
+        state === "post" &&
+        !postponedLike &&
+        typeof home.score === "number" &&
+        typeof away.score === "number";
       out.push({
         sourceId: "espn-public-api",
         sport: "mlb",
@@ -69,7 +84,7 @@ export async function fetchMlbScheduleScores(
         startTime: g.gameDate ?? date,
         state,
         completed,
-        statusDetail: g.status?.abstractGameState ?? "",
+        statusDetail: g.status?.detailedState ?? g.status?.abstractGameState ?? "",
         venue: null,
         home: {
           team: home.team.name,
