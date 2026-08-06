@@ -8,6 +8,7 @@ import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
 import { db } from "@sports/db";
 import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -24,15 +25,28 @@ export async function GET() {
     commencedTotal: number;
     overduePending: number;
     operatorMessage: string;
+    bySport?: readonly { sportKey: string; overduePending: number }[];
+    operatorNext?: readonly string[];
   } | null = null;
   try {
     if (!isStubMode()) {
       const s = await loadSettlementHealth(db, { graceHours: 6 });
+      let bySport: { sportKey: string; overduePending: number }[] = [];
+      let operatorNext: string[] = [];
+      try {
+        const b = await loadSettlementBreakdown(db, { graceHours: 6 });
+        bySport = [...b.overdueBySport];
+        operatorNext = [...b.operatorNext];
+      } catch {
+        /* breakdown optional */
+      }
       settlement = {
         health: s.health,
         commencedTotal: s.commencedTotal,
         overduePending: s.overduePending,
         operatorMessage: s.operatorMessage,
+        bySport,
+        operatorNext,
       };
     }
   } catch {

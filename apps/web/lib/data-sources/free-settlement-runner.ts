@@ -173,11 +173,12 @@ export async function runFreePathSettlement(options?: {
             },
           },
         },
-        take: 500,
+        take: 1500,
       });
 
       // STP load order: overdue first so limited cron time drains the health band.
-      const pendingRows = [...loadedRows].sort((a, b) => {
+      // When backlog is large, process overdue-only first (health CRITICAL band).
+      const sorted = [...loadedRows].sort((a, b) => {
         const ageA =
           (now.getTime() - a.game.commenceTime.getTime()) / (60 * 60 * 1000);
         const ageB =
@@ -186,6 +187,17 @@ export async function runFreePathSettlement(options?: {
           stpLoadPriority(ageB, graceHours) - stpLoadPriority(ageA, graceHours);
         return byPri !== 0 ? byPri : ageB - ageA;
       });
+      const overdueOnly = sorted.filter((r) => {
+        const ageH =
+          (now.getTime() - r.game.commenceTime.getTime()) / (60 * 60 * 1000);
+        return ageH > graceHours;
+      });
+      // Prefer overdue slice when it is non-empty and we would otherwise burn
+      // the cycle on within-grace PENDING that do not affect settlement health.
+      const pendingRows =
+        overdueOnly.length > 0 && overdueOnly.length < sorted.length
+          ? overdueOnly
+          : sorted;
 
       if (pendingRows.length === 0) {
         out.push({
