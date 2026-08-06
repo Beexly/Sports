@@ -1,15 +1,13 @@
 /**
  * Settlement backlog breakdown — sport-level overdue counts for ops truth.
  * Pure loader; no invented scores. Complements loadSettlementHealth.
+ *
+ * Client shape is findMany-only so PrismaClient assigns cleanly under
+ * next build typecheck (groupBy stubs with string[] `by` broke prod deploys).
  */
 
 export interface SettlementBreakdownClient {
   pick: {
-    groupBy: (args: {
-      by: ["gameId"] | string[];
-      where: Record<string, unknown>;
-      _count: { _all: true } | true;
-    }) => Promise<Array<{ gameId?: string; _count: { _all: number } | number }>>;
     findMany: (args: {
       where: Record<string, unknown>;
       select: Record<string, unknown>;
