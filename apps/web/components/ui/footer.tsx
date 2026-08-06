@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
+import { isStatsPublic } from "@/lib/statking/public-gate";
 
 const PRODUCT_LINKS = [
   { label: "Today's Picks", href: "/picks" },
@@ -48,11 +49,11 @@ const RESPONSIBLE_LINKS = [
 ] as const;
 
 // Beyond the NFL: the other sports data hubs plus the data-sourcing record.
-const DATA_LINKS = [
+// StatKing (/stats) stays off this list until STATS_PUBLIC=true.
+const DATA_LINKS_BASE = [
   { label: "MLB stats", href: "/mlb" },
   { label: "NHL stats", href: "/nhl" },
   { label: "NFL weather", href: "/weather" },
-  { label: "NFL stat intelligence", href: "/stats" },
   { label: "How we source data", href: "/data" },
 ] as const;
 
@@ -67,6 +68,14 @@ const SOCIAL_LINKS = [
 ].filter((link) => link.href);
 
 export function Footer() {
+  const dataLinks = isStatsPublic()
+    ? [
+        ...DATA_LINKS_BASE.slice(0, 3),
+        { label: "NFL stat intelligence", href: "/stats" },
+        ...DATA_LINKS_BASE.slice(3),
+      ]
+    : [...DATA_LINKS_BASE];
+
   return (
     <footer className="footer">
       {/* Ambient wordmark — closing brand statement under the link columns */}
@@ -97,7 +106,7 @@ export function Footer() {
 
           <FooterColumn title="Product" links={PRODUCT_LINKS} />
           <FooterColumn title="Company" links={COMPANY_LINKS} />
-          <FooterColumn title="Data" links={DATA_LINKS} />
+          <FooterColumn title="Data" links={dataLinks} />
           <FooterColumn title="Responsible" links={RESPONSIBLE_LINKS} />
         </div>
 
