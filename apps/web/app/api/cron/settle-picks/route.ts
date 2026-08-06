@@ -73,6 +73,8 @@ export async function GET(request: Request) {
           `${drainErr instanceof Error ? drainErr.message : drainErr}`,
       );
     }
+    // Top-level clvRepair / snapshotRepair / scoreDates / rca for ops
+    // (same values also under free.* for full free-path payload).
     return NextResponse.json({
       ok: free.sports.every((s) => s.ok),
       path: "free" as const,
@@ -80,6 +82,10 @@ export async function GET(request: Request) {
       elapsedMs: Date.now() - startedAt,
       picksSettled: free.picksSettled,
       picksHeld: free.picksHeld,
+      clvRepair: free.clvRepair,
+      snapshotRepair: free.snapshotRepair,
+      scoreDates: free.scoreDates,
+      rca: free.rca,
       bootstrapMode: gates.isBootstrapMode,
       free,
       freeScores,
