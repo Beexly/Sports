@@ -5,6 +5,8 @@ import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
+import { db } from "@sports/db";
+import { loadSettlementHealth } from "@/lib/performance/settlement-health";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,6 +17,27 @@ export const runtime = "nodejs";
  */
 export async function GET() {
   const gates = getReadinessGates();
+
+  let settlement: {
+    health: string;
+    commencedTotal: number;
+    overduePending: number;
+    operatorMessage: string;
+  } | null = null;
+  try {
+    if (!isStubMode()) {
+      const s = await loadSettlementHealth(db, { graceHours: 6 });
+      settlement = {
+        health: s.health,
+        commencedTotal: s.commencedTotal,
+        overduePending: s.overduePending,
+        operatorMessage: s.operatorMessage,
+      };
+    }
+  } catch {
+    settlement = null;
+  }
+
   return NextResponse.json(
     {
       ok: true,
@@ -32,6 +55,7 @@ export async function GET() {
         isBootstrapMode: gates.isBootstrapMode,
       },
       contestStorage: resolveContestStorageMode(),
+      settlement,
       content: {
         podcastEpisodes: listEpisodes().length,
         newsletterIssues: listIssues().length,

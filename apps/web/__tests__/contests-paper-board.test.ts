@@ -93,7 +93,6 @@ describe("paper week + enter", () => {
     dirs.push(dir);
     process.env.GSE_CONTEST_STORE_PATH = path.join(dir, "entries.json");
 
-    const week = getCurrentContestWeek(new Date("2026-08-06T12:00:00Z"));
     // force open window: week uses relative kickoffs from now — use current now
     const now = new Date();
     const live = getCurrentContestWeek(now);
