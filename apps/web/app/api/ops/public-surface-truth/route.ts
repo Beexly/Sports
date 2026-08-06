@@ -6,7 +6,7 @@ import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
-import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
   } | null = null;
   try {
     if (!isStubMode()) {
-      const s = await loadSettlementHealth(db, { graceHours: 6 });
+      const s = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
       settlement = {
         health: s.health,
         commencedTotal: s.commencedTotal,
@@ -89,7 +89,7 @@ export async function GET(request: Request) {
       };
       if (detailed) {
         try {
-          const b = await loadSettlementBreakdown(db, { graceHours: 6 });
+          const b = await loadSettlementBreakdown(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
           settlement = {
             ...settlement,
             bySport: [...b.overdueBySport],

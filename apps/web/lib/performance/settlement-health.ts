@@ -42,6 +42,9 @@ export interface SettlementHealth {
 
 const CRITICAL_DEFAULT = 5;
 
+/** Hours after kickoff before PENDING counts as overdue. Single source of truth. */
+export const SETTLEMENT_DEFAULT_GRACE_HOURS = 6;
+
 /**
  * Evaluate settlement health from two counts: how many picks have commenced, and
  * how many of those are overdue to settle. Pure. `overduePending` is clamped to
@@ -125,7 +128,7 @@ export async function loadSettlementHealth(
   db: SettlementHealthClient,
   input: LoadSettlementHealthInput = {}
 ): Promise<SettlementHealth> {
-  const graceHours = input.graceHours ?? 6;
+  const graceHours = input.graceHours ?? SETTLEMENT_DEFAULT_GRACE_HOURS;
   const now = input.now ?? new Date();
   const overdueCutoff = new Date(now.getTime() - graceHours * 60 * 60 * 1000);
 

@@ -29,7 +29,7 @@ import {
   synthesizeJarvis,
   type JarvisAssessment,
 } from "@/lib/cockpit/jarvis";
-import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import {
   planAutonomyCycle,
   autonomyActionsAsJarvisNext,
@@ -470,7 +470,7 @@ export async function loadJarvisAssessment(): Promise<{
   // Autonomy kernel: prepend self-correcting priorities (settlement P0, gates, sample).
   try {
     if (!stub) {
-      const sh = await loadSettlementHealth(db, { graceHours: 6 }).catch(() => null);
+      const sh = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS }).catch(() => null);
       const envTrue = (k: string) => process.env[k]?.trim().toLowerCase() === "true";
       const autonomy = planAutonomyCycle({
         observedAt: now.toISOString(),
