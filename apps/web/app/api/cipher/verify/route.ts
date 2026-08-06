@@ -7,11 +7,10 @@
  * server-side — the plaintext solution never reaches the client and the bundle
  * never contains it. Brute force is throttled by a per-IP token bucket.
  *
- * REWARD IS FOUNDER-GATED. A correct solve does NOT comp a membership. It hands
- * out the next pre-provisioned, single-use code from CIPHER_REWARD_CODES (a
- * comma-separated env list of Stripe coupon/promo codes the founder created in
- * advance). With no pool configured, it returns a manual-claim reference and
- * logs the win for human fulfillment. Nothing is charged or granted here.
+ * REWARD IS FOUNDER-GATED. A correct solve does NOT comp a membership. It returns
+ * a manual-claim reference and logs the win for human fulfillment. Stripe codes
+ * are not auto-issued from process memory (serverless would double-issue). Nothing
+ * is charged or granted here.
  */
 
 import { NextResponse, type NextRequest } from "next/server";
@@ -46,21 +45,11 @@ function hashEquals(aHex: string, bHex: string): boolean {
 }
 
 // ── Founder-gated reward issuance ─────────────────────────────────────────
-// Pool is consumed in-order from the env list. (v1: in-memory cursor; a durable
-// store would persist redemptions. Codes themselves are created by the founder
-// in Stripe — this route never creates or grants anything.)
-const rewardPool = (process.env.CIPHER_REWARD_CODES ?? "")
-  .split(",")
-  .map((c) => c.trim())
-  .filter(Boolean);
-let rewardCursor = 0;
-
-function issueReward(week: number): { kind: "code" | "claim"; value: string } {
-  if (rewardCursor < rewardPool.length) {
-    const code = rewardPool[rewardCursor++]!;
-    return { kind: "code", value: code };
-  }
-  // No pre-provisioned codes left/configured → manual claim reference.
+// Serverless honesty: an in-memory cursor across Vercel isolates would LIE about
+// single-use Stripe codes. Always issue a claim reference for human fulfillment.
+// CIPHER_REWARD_CODES may still be set for founder ops, but this route never
+// auto-consumes them until a durable redemption table exists.
+function issueReward(week: number): { kind: "claim"; value: string } {
   const claim = `CIPHER-W${week}-${sha256(`${week}:${Date.now()}`).slice(0, 8).toUpperCase()}`;
   return { kind: "claim", value: claim };
 }
