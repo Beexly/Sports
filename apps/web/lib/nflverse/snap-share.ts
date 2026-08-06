@@ -29,7 +29,7 @@ export interface SnapShareRow {
   readonly team: string;
   readonly position: SkillPosition;
   readonly games: number;
-  readonly snapSharePct: number; // 0..1 average offensive snap share
+  readonly snapSharePct: number;
   readonly snapsPerGame: number;
   readonly totalOffenseSnaps: number;
 }
@@ -45,7 +45,6 @@ export interface NflverseSnapShare {
   readonly blockReason: string;
   readonly sourceUrl: string;
   readonly error: string | null;
-  /** Present when roster crosswalk loaded for GSIS resolution. */
   readonly crosswalk?: {
     readonly primarySeason: number;
     readonly seasonsUsed: readonly number[];
@@ -160,7 +159,7 @@ async function loadSeasonMatchedCrosswalk(
       const rows = await fetchCsv(url, fetcher, timeoutMs);
       if (rows.length > 0) batches.push({ season: candidate, rows });
     } catch {
-      // Prior season optional; primary miss still allows PFR-only leaders.
+      // Prior season optional.
     }
   }
   if (batches.length === 0) return null;
@@ -208,6 +207,9 @@ export async function loadNflverseSnapShare({
       if (regRows.length === 0) throw new Error("no REG snap rows");
 
       const crosswalk = await loadSeasonMatchedCrosswalk(candidate, fetcher, timeoutMs);
+      const crosswalkNote = crosswalk
+        ? ` GSIS resolved via season-matched roster crosswalk (${crosswalk.stats.pfrBridged} PFR bridges).`
+        : " Roster crosswalk unavailable; playerId may be PFR until roster fetch succeeds.";
       const value: NflverseSnapShare = {
         generatedAt: new Date().toISOString(),
         status: "live",
@@ -218,9 +220,7 @@ export async function loadNflverseSnapShare({
         canPublishProjections: false,
         blockReason:
           "Snap share is real, settled workload from nflverse: the share of team offensive snaps a player was on the field for. It is historical opportunity, not a projection or a betting pick." +
-          (crosswalk
-            ? ` GSIS resolved via season-matched roster crosswalk (${crosswalk.stats.pfrBridged} PFR bridges)."`
-            : " Roster crosswalk unavailable; playerId may be PFR until roster fetch succeeds."),
+          crosswalkNote,
         sourceUrl: url,
         error: null,
         crosswalk: crosswalk
@@ -247,8 +247,8 @@ export async function loadNflverseSnapShare({
     leaders: emptyLeaders,
     canPublishProjections: false,
     blockReason:
-      "Snap counts could not load from nflverse. The product shows an empty state instead of fabricated workload." +
-      ` (${resolved.reason})`,
+      "Snap counts could not load from nflverse. The product shows an empty state instead of fabricated workload. " +
+      resolved.reason,
     sourceUrl: nflverseUrl("snap_counts", resolved.season),
     error: lastError instanceof Error ? lastError.message : "UNKNOWN",
   };
