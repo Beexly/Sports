@@ -13,10 +13,8 @@ name: External Cron (Galaxy Sports Edge)
 #   CRON_SECRET       — must match production env
 #   CRON_TARGET_URL   — e.g. https://www.galaxysportsedge.com (no trailing slash)
 #
-# 2026-08-06: free-spine-health + refresh-player-stats added so free-mode
-# IngestionRun SUCCESS stays under REFRESH_STALE (240m). settle-picks alone
-# can stamp SUCCESS when it runs, but multi-hour settle hangs / failures left
-# /api/health degraded for ~8h with free-spine only on Vercel Hobby daily.
+# 2026-08-06: free-spine-health primary heartbeat; refresh-player-stats
+# secondary (sequential satellites after OOM fix). settle hourly.
 
 on:
   schedule:
@@ -26,9 +24,9 @@ on:
     # Every 2h at :05 — free multi-source spine + IngestionRun SUCCESS stamp
     # (under 240m SLA; ~12 jobs/day).
     - cron: "5 */2 * * *"
-    # Every 2h at :35 — nflverse player-stats free SUCCESS multi-writer
-    # (refresh-player-stats also stamps when primary weekly-stats ok).
-    - cron: "35 */2 * * *"
+    # Every 6h at :40 — nflverse player-stats free SUCCESS multi-writer
+    # (heavier job; free-spine keeps health green between runs).
+    - cron: "40 */6 * * *"
   workflow_dispatch:
     inputs:
       target:
@@ -79,7 +77,7 @@ jobs:
 
   refresh-player-stats:
     name: Refresh nflverse player stats (free SUCCESS writer)
-    if: ${{ github.event.schedule == '35 */2 * * *' || github.event.inputs.target == 'refresh-player-stats' }}
+    if: ${{ github.event.schedule == '40 */6 * * *' || github.event.inputs.target == 'refresh-player-stats' }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
