@@ -1,33 +1,28 @@
 /**
- * Provider dispatch for Claude message calls.
+ * Provider dispatch for Claude message calls — Jynx cloud execution layer.
  *
- * Routes by CLAUDE_PROVIDER (single selection) when fully configured:
- *   bedrock       → AWS Bedrock InvokeModel (Activate GenAI credits)
- *   vertex        → Google Vertex Model Garden (partner credits)
- *   azure|azure-foundry → Microsoft Foundry Anthropic Messages API (Azure bill/credits)
+ * Attempt order comes from `jynx.cloudAttemptOrder`:
+ *   explicit CLAUDE_PROVIDER | auto preference → configured clouds with failover
+ *   → direct Anthropic cash last.
  *
- * On ANY provider error (config or runtime) → direct Anthropic API so reliability
- * and governance never regress. Default (unset) is Anthropic-only.
- *
- * Free-lane Cerebras is a separate path (free-lane.ts), not CLAUDE_PROVIDER.
+ * Free-lane Cerebras is handled by free-lane / jynxComplete (before this).
+ * Failures on a cloud try the next cloud before cash so AWS/Azure/Google cooperate.
  */
 import { callClaudeMessages, type ClaudeMessagesRequest, type ClaudeMessagesResult } from "./messages";
 import { pickModelForSurface } from "./model-router";
+import { cloudAttemptOrder, type JynxCloud } from "./jynx";
 import {
   callBedrockClaudeMessages,
-  isBedrockProviderSelected,
   BedrockConfigError,
   BedrockMessagesError,
 } from "./providers/bedrock";
 import {
   callVertexClaudeMessages,
-  isVertexProviderSelected,
   VertexConfigError,
   VertexMessagesError,
 } from "./providers/vertex";
 import {
   callAzureFoundryClaudeMessages,
-  isAzureFoundryProviderSelected,
   AzureFoundryConfigError,
   AzureFoundryMessagesError,
 } from "./providers/azure-foundry";
@@ -43,10 +38,37 @@ export function resolveAnthropicModelId(request: ClaudeMessagesRequest): string 
   return DEFAULT_MODEL;
 }
 
+function isCloudTransportError(error: unknown): boolean {
+  return (
+    error instanceof BedrockMessagesError ||
+    error instanceof BedrockConfigError ||
+    error instanceof VertexMessagesError ||
+    error instanceof VertexConfigError ||
+    error instanceof AzureFoundryMessagesError ||
+    error instanceof AzureFoundryConfigError
+  );
+}
+
+async function invokeCloud(
+  cloud: JynxCloud,
+  providerRequest: {
+    anthropicModelId: string;
+    system: string;
+    user: string;
+    maxTokens: number;
+    temperature?: number;
+    fetchImpl?: typeof fetch;
+    cache?: { readonly system?: boolean };
+  },
+  env: Env,
+): Promise<ClaudeMessagesResult> {
+  if (cloud === "bedrock") return callBedrockClaudeMessages(providerRequest, env);
+  if (cloud === "azure") return callAzureFoundryClaudeMessages(providerRequest, env);
+  return callVertexClaudeMessages(providerRequest, env);
+}
+
 /**
- * Provider-aware Claude call. One credit cloud at a time via CLAUDE_PROVIDER.
- * Failures always fall through to direct Anthropic (cash) rather than taking
- * the surface down.
+ * Provider-aware Claude call. Clouds from Jynx order; cash Anthropic last.
  */
 export async function callClaude(
   request: ClaudeMessagesRequest,
@@ -62,33 +84,15 @@ export async function callClaude(
     ...(request.cache ? { cache: request.cache } : {}),
   };
 
-  if (isBedrockProviderSelected(env)) {
+  const attempts = cloudAttemptOrder(env);
+  for (const cloud of attempts) {
     try {
-      return await callBedrockClaudeMessages(providerRequest, env);
+      return await invokeCloud(cloud, providerRequest, env);
     } catch (error) {
-      if (!(error instanceof BedrockMessagesError) && !(error instanceof BedrockConfigError)) {
-        throw error;
-      }
-    }
-  } else if (isVertexProviderSelected(env)) {
-    try {
-      return await callVertexClaudeMessages(providerRequest, env);
-    } catch (error) {
-      if (!(error instanceof VertexMessagesError) && !(error instanceof VertexConfigError)) {
-        throw error;
-      }
-    }
-  } else if (isAzureFoundryProviderSelected(env)) {
-    try {
-      return await callAzureFoundryClaudeMessages(providerRequest, env);
-    } catch (error) {
-      if (
-        !(error instanceof AzureFoundryMessagesError) &&
-        !(error instanceof AzureFoundryConfigError)
-      ) {
-        throw error;
-      }
+      if (!isCloudTransportError(error)) throw error;
+      // try next cloud / cash
     }
   }
+
   return callClaudeMessages(request);
 }

@@ -9,6 +9,8 @@ describe("loadCreditStackPosture", () => {
     expect(p.vertexConfigured).toBe(false);
     expect(p.azureFoundryConfigured).toBe(false);
     expect(p.claudeProvider).toBe("anthropic");
+    expect(p.jynx).toBeDefined();
+    expect(p.jynx.mode).toBe("anthropic");
   });
 
   it("detects free-lane", () => {

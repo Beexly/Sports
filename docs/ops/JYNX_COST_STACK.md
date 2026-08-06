@@ -1,54 +1,118 @@
-# Jynx cost stack — correct tools (save money)
+# Jynx — unified intelligence + credit OS
 
-**Name:** Founder shorthand **“Jynx”** = the multi-lane AI/cost routing stack  
-already in Beexly/Sports. There is no separate product binary named Jynx.
+**Jynx** is GSE’s single AI routing brain. Not a separate binary — it is the  
+**coherent stack** that makes free-lane, AWS, Azure, Google, tier routing, and  
+cash fallback **feed into each other** instead of competing.
 
-## Map (what to use when)
+Code: `apps/web/lib/claude-api/jynx.ts` · `jynx-complete.ts` · `free-lane*` · `provider-dispatch.ts` · `model-router.ts`
 
-| Lane | Module | Cost | Use for |
-|------|--------|------|---------|
-| **Claude Max Pro / Claude Code** | Human + agent coding | Flat Max subscription | Implementation, PRs, Neon SQL, Vercel env, long refactors |
-| **Haiku (router)** | `apps/web/lib/claude-api/model-router.ts` | Low | `brief`, `calibration-insight` (already flipped) |
-| **Sonnet (router)** | same | Mid | studio, journal, content, model-court |
-| **Cerebras free lane** | `free-lane.ts` + **content-generator** | ~$0 | `content` (blog) + `brief` allow-list when env on |
-| **Bedrock credits** | `providers/bedrock.ts` via `callClaude` | AWS credits | `CLAUDE_PROVIDER=bedrock` + model map |
-| **Internal LLM (Groq etc.)** | `internal-llm.ts` | Low/free credits | Internal classify — never public claims |
-| **Free settlement / scores** | free-settlement-runner | $0 Odds | Production settle when Odds key **absent** |
-| **Grok Build sandbox** | demo only | — | Not production |
+---
 
-## Activate free-lane (content wire live on main after PR)
+## Decision stack (every call)
+
+```
+surface (studio|content|brief|…)
+    ↓
+model tier (haiku / sonnet / opus)     ← model-router
+    ↓
+free-lane eligible?                    ← free-lane-policy (content, brief)
+    ├─ yes + env on → Cerebras $0      ← free-lane.ts
+    │                    ↓ on error
+    └─ no ──────────────────────────────┐
+                                        ↓
+cloud attempt order                    ← jynx.cloudAttemptOrder
+    bedrock → azure → vertex (default)
+    (CLAUDE_PROVIDER forces primary; failover ON by default)
+                                        ↓ on all cloud errors
+Anthropic cash last                    ← messages.ts
+                                        ↓
+ledger modelName → credit pool         ← credit-pool.ts
+```
+
+**Nothing pulls opposite:** free-lane never blocks clouds; clouds failover before cash;  
+tier routing always applies to Anthropic-model-id before maps.
+
+---
+
+## Lanes (max intelligence, min cash)
+
+| Priority | Lane | When | Intelligence |
+|----------|------|------|--------------|
+| 1 | **Cerebras free** | content/brief + free-lane env | Fast draft; numeric-guard still applies |
+| 2 | **AWS Bedrock** | configured (+ auto or selected) | Full Claude via Activate credits |
+| 3 | **Azure Foundry** | configured | Full Claude via Azure bill/credits (verify SKU) |
+| 4 | **Google Vertex** | configured | Full Claude via partner credits |
+| 5 | **Anthropic cash** | last resort / emergency | Same models, real $ |
+| — | **Haiku tier** | brief, calibration-insight | Cheap Claude when on cloud/cash |
+| — | **Sonnet tier** | studio, journal, content, court | Default reasoning |
+| — | **Internal LLM** | classify only | Never public claims |
+| — | **Claude Max Pro** | human coding agents | Outside runtime |
+
+---
+
+## Founder env (recommended production)
 
 ```bash
-# Vercel Production → Redeploy
+# Free content
 CONTENT_FREE_LANE_ENABLED=true
-CEREBRAS_API_KEY=<from cloud.cerebras.ai>
-ANTHROPIC_API_KEY=<still required for fallback>
-```
+CEREBRAS_API_KEY=...
 
-Smoke (repo root):
+# Use every configured cloud cooperatively
+CLAUDE_PROVIDER=auto
+# or JYNX_MODE=auto
 
-```bash
-CONTENT_FREE_LANE_ENABLED=true CEREBRAS_API_KEY=… ANTHROPIC_API_KEY=… \
-  node scripts/ops/smoke-free-lane.mjs
-```
+# Optional preference (default bedrock,azure,vertex)
+JYNX_CLOUD_ORDER=bedrock,azure,vertex
+JYNX_CLOUD_FAILOVER=true
 
-App path: `generateBlogPost` → `generateContentMessages({ surface: "content" })` → Cerebras  
-when env on; else Bedrock/Vertex/Anthropic via `callClaude`.
-
-## Activate Bedrock credits
-
-See `docs/ops/BEDROCK_CREDIT_INTEGRATION.md`.
-
-```bash
-CLAUDE_PROVIDER=bedrock
-AWS_ACCESS_KEY_ID=…
-AWS_SECRET_ACCESS_KEY=…
+# Configure ALL clouds you have keys for — Jynx will use them
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
 AWS_BEDROCK_REGION=us-east-1
-BEDROCK_MODEL_MAP={"claude-sonnet-4-6":"<verified-bedrock-id>"}
+BEDROCK_MODEL_MAP={...}
+
+AZURE_FOUNDRY_RESOURCE=...
+AZURE_FOUNDRY_API_KEY=...
+AZURE_FOUNDRY_MODEL_MAP={...}
+
+GOOGLE_VERTEX_PROJECT=...
+GOOGLE_VERTEX_REGION=...
+GOOGLE_APPLICATION_CREDENTIALS_JSON=...
+VERTEX_MODEL_MAP={...}
+
+ANTHROPIC_API_KEY=...   # emergency only
 ```
+
+**Force one cloud:** `CLAUDE_PROVIDER=bedrock` (failover still tries others unless `JYNX_CLOUD_FAILOVER=false`).
+
+---
+
+## Observability
+
+| Surface | Field |
+|---------|--------|
+| Ops truth | `creditStack.jynx` — mode, configured clouds, attempt order, content plan |
+| Usage ledger | `modelName` → pool (aws_activate / azure_foundry / vertex_partner / cerebras_free / anthropic_direct) |
+| Planner | `planJynx({ surface: "studio" })` pure |
+
+Pass = free-lane content shows `gpt-oss*`; studio shows cloud id not plain `claude-*` when auto+configured.
+
+---
+
+## Call sites
+
+| Prefer | Avoid for new code |
+|--------|---------------------|
+| `jynxComplete` / `generateContentMessages` / `callClaude` | raw `callClaudeMessages` (skips credits) |
+| content-generator → `jynxComplete` | hard-coded provider SDKs |
+
+---
 
 ## Law
 
-Never claim “on free credits” while billing Anthropic.  
-Never free-lane studio / journal / model-court until quality validated.  
-Numeric-guard + blog policy still apply on free-lane output.
+- Never claim free/credits while ledger shows cash Anthropic  
+- Never free-lane studio/journal/model-court until quality validated  
+- Never invent model map ids  
+- LIVE_BOARD / public picks stay gated by product law — Jynx is cost routing only  
+
+See also: `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`
