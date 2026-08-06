@@ -1,26 +1,28 @@
 /**
- * Credit-pool attribution for Claude spend.
+ * Credit-pool attribution for AI spend.
  *
- * Every Claude call is already recorded to the DB ledger (ClaudeApiCallRecord)
- * with the resolved `modelName`. Because each provider returns a distinctly-shaped
- * model id — Bedrock ids carry an `anthropic.` / regional inference-profile prefix,
- * Vertex Model Garden ids carry an `@version`, and the direct Anthropic API returns
- * a plain `claude-*` id — we can attribute each dollar of spend to the credit pool
- * that paid for it WITHOUT a schema migration.
+ * Every call is recorded to the DB ledger (ClaudeApiCallRecord) with the resolved
+ * `modelName`. Provider-shaped ids let us attribute spend to the credit pool that
+ * paid for it WITHOUT a schema migration:
  *
- * This gives the visibility the credits strategy needs: "how much of AWS Activate
- * vs the Vertex partner credit vs the direct Anthropic bill have we burned?" — read
- * from the real ledger, not a parallel file. If we later add an explicit `provider`
- * column to the ledger, `creditPoolForModel` becomes a fallback rather than the
- * source of truth; until then the id shape is authoritative.
+ *   - Bedrock: anthropic.* / us.anthropic.* → AWS Activate
+ *   - Vertex:  claude-…@version              → Google partner credit
+ *   - Cerebras free-lane: gpt-oss-* / *cerebras* → free (reward programs / free tier)
+ *   - plain claude-*                         → Anthropic direct (cash unless Claude Startups)
+ *
+ * This answers: "how much of AWS Activate vs Vertex vs free-lane vs cash?"
  */
 
-export type CreditPool = "aws_activate" | "vertex_partner" | "anthropic_direct";
+export type CreditPool =
+  | "aws_activate"
+  | "vertex_partner"
+  | "cerebras_free"
+  | "anthropic_direct";
 
 export interface CreditPoolMeta {
   readonly label: string;
-  readonly provider: "bedrock" | "vertex" | "anthropic";
-  /** Whether this spend is offsettable by cloud-program credits. */
+  readonly provider: "bedrock" | "vertex" | "cerebras" | "anthropic";
+  /** Whether this spend is offsettable by a free tier or cloud-program credit. */
   readonly creditEligible: boolean;
   readonly note: string;
 }
@@ -36,7 +38,13 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
     label: "Google Vertex partner credit",
     provider: "vertex",
     creditEligible: true,
-    note: "Claude via Vertex Model Garden — billable to the $10k Anthropic partner credit.",
+    note: "Claude via Vertex Model Garden — billable to Google/Anthropic partner credits.",
+  },
+  cerebras_free: {
+    label: "Cerebras free lane",
+    provider: "cerebras",
+    creditEligible: true,
+    note: "Content free-lane (gpt-oss / Cerebras free tier) — $0 cash when lane enabled.",
   },
   anthropic_direct: {
     label: "Anthropic direct",
@@ -49,17 +57,16 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
 /**
  * Classify a recorded model id to the credit pool that paid for it.
  *
- * Order matters: the Vertex `@` marker and the Bedrock `anthropic.` /
- * `<region>.anthropic.` prefixes are checked before the plain `claude-*`
- * direct-API shape. Unknown shapes default to anthropic_direct (the cash pool) —
- * the conservative choice, since it never over-claims credit coverage.
+ * Order: Vertex @ · Bedrock anthropic. · Cerebras free · Anthropic cash default.
+ * Unknown shapes default to anthropic_direct (never over-claim credit coverage).
  */
 export function creditPoolForModel(modelName: string): CreditPool {
   const id = modelName.trim();
   if (id.includes("@")) return "vertex_partner"; // e.g. claude-3-5-sonnet-v2@20241022
-  // Bedrock: "anthropic.claude-..." or a cross-region inference profile
-  // "us.anthropic.claude-...", "eu.anthropic.*", "apac.anthropic.*".
+  // Bedrock: "anthropic.claude-..." or cross-region "us.anthropic.claude-..."
   if (/^(?:[a-z]{2,4}\.)?anthropic\./.test(id)) return "aws_activate";
+  // Free-lane Cerebras (default gpt-oss-120b) and explicit cerebras ids
+  if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "cerebras_free";
   return "anthropic_direct";
 }
 
@@ -107,9 +114,7 @@ function finalize(
 }
 
 /**
- * Roll up per-call ledger records by credit pool. Pure — the DB-reading wrapper
- * feeds it, so the aggregation logic is unit-tested without a database. Pools with
- * no spend are omitted; the result is sorted by descending spend (biggest first).
+ * Roll up per-call ledger records by credit pool. Pure — unit-tested without DB.
  */
 export function rollupByCreditPool(records: readonly SpendRecord[]): CreditPoolTotals[] {
   const acc = new Map<CreditPool, { calls: number; input: number; output: number; usd: number }>();
@@ -126,10 +131,7 @@ export function rollupByCreditPool(records: readonly SpendRecord[]): CreditPoolT
 }
 
 /**
- * Same rollup, but over pre-grouped rows (one row per distinct model with its call
- * count) — lets the DB reader use an efficient groupBy instead of fetching every
- * call. Multiple model ids can map to the same pool, so rows are merged, not assumed
- * one-per-pool.
+ * Same rollup over pre-grouped rows (one row per model + call count).
  */
 export function rollupGroupedByCreditPool(groups: readonly GroupedSpendRecord[]): CreditPoolTotals[] {
   const acc = new Map<CreditPool, { calls: number; input: number; output: number; usd: number }>();
