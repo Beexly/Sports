@@ -35,8 +35,17 @@ export default async function GSNPage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
-                <span className="live-dot" />
+                {transmission.illustrative ? null : <span className="live-dot" />}
                 Galaxy Sports Network
+                {transmission.illustrative ? (
+                  <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+                    · methodology structure
+                  </span>
+                ) : (
+                  <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+                    · board-sourced
+                  </span>
+                )}
               </p>
             </Reveal>
             <Reveal delay={90}>

@@ -6,6 +6,10 @@
  *
  * Law: oddsApiRequired=false · refuse-default · no score overwrite with null.
  *
+ * Date-targets ESPN/secondary boards from pending game commence days (undated
+ * boards are "now" only and starve historical rows). Matching uses the same
+ * nickname/alias expansion as free settlement.
+ *
  * Also records an honest IngestionRun SUCCESS when the persist cycle completes
  * so /api/health recovers under free mode.
  */
@@ -20,8 +24,13 @@ import {
 } from "./free-adapters/henrygd-ncaa";
 import type { NormalizedGame } from "./free-adapters/espn-scores";
 import type { Sport } from "./source-router";
-import { buildTrustedFinals, type TrustedFinal } from "./free-settlement";
-import { normalizeTeamToken } from "./score-verification";
+import {
+  buildTrustedFinals,
+  expandTeamMatchTokens,
+  teamTokensMatch,
+  type TrustedFinal,
+} from "./free-settlement";
+import { uniqueScoreboardDates } from "./settlement-score-dates";
 import { recordFreeIngestionRun } from "./free-ingestion-run";
 
 const ODDS_KEY_TO_FREE: Record<string, Sport> = {
@@ -53,10 +62,11 @@ export type FreeScorePersistResult = {
   ingestionRunId?: string | null;
 };
 
-function teamsMatch(a: string, b: string): boolean {
-  const x = normalizeTeamToken(a);
-  const y = normalizeTeamToken(b);
-  return x === y || x.includes(y) || y.includes(x);
+function sideTokens(side: { name: string; abbr: string }): string[] {
+  return [
+    ...expandTeamMatchTokens(side.name),
+    ...expandTeamMatchTokens(side.abbr),
+  ].filter(Boolean);
 }
 
 function finalMatchesGame(
@@ -64,12 +74,18 @@ function finalMatchesGame(
   home: string,
   away: string,
 ): { homeScore: number; awayScore: number } | null {
-  const fh = f.home.name;
-  const fa = f.away.name;
-  if (teamsMatch(home, fh) && teamsMatch(away, fa)) {
+  const homeTok = expandTeamMatchTokens(home);
+  const awayTok = expandTeamMatchTokens(away);
+  const fHome = sideTokens(f.home);
+  const fAway = sideTokens(f.away);
+  const homeOnHome = homeTok.some((t) => fHome.some((ft) => teamTokensMatch(t, ft)));
+  const awayOnAway = awayTok.some((t) => fAway.some((ft) => teamTokensMatch(t, ft)));
+  if (homeOnHome && awayOnAway) {
     return { homeScore: f.home.score, awayScore: f.away.score };
   }
-  if (teamsMatch(home, fa) && teamsMatch(away, fh)) {
+  const homeOnAway = homeTok.some((t) => fAway.some((ft) => teamTokensMatch(t, ft)));
+  const awayOnHome = awayTok.some((t) => fHome.some((ft) => teamTokensMatch(t, ft)));
+  if (homeOnAway && awayOnHome) {
     return { homeScore: f.away.score, awayScore: f.home.score };
   }
   return null;
@@ -115,18 +131,17 @@ export async function persistFreeScores(options?: {
     }
 
     try {
-      const multi = await fetchScoresMultiSource(freeSport);
-      const espn: readonly NormalizedGame[] = multi.games;
-      const henry = await loadHenry(freeSport);
-      const finals = buildTrustedFinals(espn, henry).filter((f) => f.confirmation !== "DISPUTED");
-
-      // Look at recent games not yet fully result-fetched
-      const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+      // Look at recent games not yet fully result-fetched (load first for date keys)
+      const since = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000);
       const games = await db.game.findMany({
         where: {
           sport: { key: sport.key },
           commenceTime: { gte: since },
-          OR: [{ resultFetched: false }, { status: { in: ["SCHEDULED", "LIVE"] } }, { homeScore: null }],
+          OR: [
+            { resultFetched: false },
+            { status: { in: ["SCHEDULED", "LIVE"] } },
+            { homeScore: null },
+          ],
         },
         select: {
           id: true,
@@ -136,8 +151,24 @@ export async function persistFreeScores(options?: {
           homeScore: true,
           awayScore: true,
         },
-        take: 200,
+        take: 300,
       });
+
+      const { espnKeys, isoKeys } = uniqueScoreboardDates(
+        games.map((g) => g.commenceTime),
+        { maxDays: 21 },
+      );
+
+      const multi = await fetchScoresMultiSource(freeSport, {
+        ...(espnKeys.length > 0
+          ? { espnDateKeys: espnKeys, isoDateKeys: isoKeys }
+          : {}),
+      });
+      const espn: readonly NormalizedGame[] = multi.games;
+      const henry = await loadHenry(freeSport);
+      const finals = buildTrustedFinals(espn, henry).filter(
+        (f) => f.confirmation !== "DISPUTED",
+      );
 
       let matched = 0;
       let updated = 0;
@@ -149,7 +180,7 @@ export async function persistFreeScores(options?: {
           const d0 = Date.parse(day);
           const d1 = Date.parse(fd);
           if (!Number.isFinite(d0) || !Number.isFinite(d1)) return false;
-          return Math.abs(d0 - d1) <= 36e5 * 36; // ~1.5 days
+          return Math.abs(d0 - d1) <= 36e5 * 48; // ~2 days (TZ edge)
         });
 
         let hit: { homeScore: number; awayScore: number } | null = null;

@@ -181,7 +181,14 @@ const TOKEN_ALIASES: Readonly<Record<string, readonly string[]>> = {
   sounders: ["seattlesounders", "seattlesoundersfc"],
   seattlesoundersfc: ["sounders", "seattlesounders"],
   seattlesounders: ["sounders"],
+  chicagofire: ["fire", "chicagofirefc"],
+  chicagofirefc: ["chicagofire", "fire"],
+  fire: ["chicagofire", "chicagofirefc"],
+  vancouverwhitecaps: ["whitecaps", "vancouverwhitecapsfc"],
+  vancouverwhitecapsfc: ["whitecaps", "vancouverwhitecaps"],
+  whitecaps: ["vancouverwhitecaps", "vancouverwhitecapsfc"],
 };
+
 
 /**
  * Expand a team display string into match tokens:

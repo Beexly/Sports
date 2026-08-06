@@ -16,7 +16,17 @@ export async function GET(): Promise<NextResponse> {
   // drift apart.
   const { checks, capabilities } = await computeLiveCapabilityProbes();
 
+  // Readiness (DB + ingestion) — Sentinel / uptime still use ok + HTTP.
   const allOk = Object.values(checks).every((c) => c.status === "ok");
+
+  // Settlement band is capability-only (not a check). Surface DEGRADED/CRITICAL
+  // on top-level status so operators never see "healthy" while settle is behind.
+  // Keep `ok` true when checks pass so Sentinel does not page on settlement lag.
+  const settlement = capabilities.find((c) => c.capabilityId === "settlement");
+  const settlementImpaired =
+    settlement?.status === "degraded" || settlement?.status === "unavailable";
+  const status: "healthy" | "degraded" =
+    !allOk || settlementImpaired ? "degraded" : "healthy";
 
   // ── Capability dependency graph (epistemic-twin, P2) ─────────────────────
   // Purely additive/observability, same as `capabilities` (OP-003) above:
@@ -32,12 +42,12 @@ export async function GET(): Promise<NextResponse> {
   return NextResponse.json(
     {
       ok: allOk,
-      status: allOk ? "healthy" : "degraded",
+      status,
       checks,
       capabilities,
       capabilityGraph,
       deployment: { sha: deploymentSha(), observedAt: new Date().toISOString() },
     },
-    { status: allOk ? 200 : 503 }
+    { status: allOk ? 200 : 503 },
   );
 }
