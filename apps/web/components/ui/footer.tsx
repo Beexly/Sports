@@ -3,6 +3,7 @@ import { BrandLockup } from "@/components/brand/brand-lockup";
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
 import { isStatsPublic } from "@/lib/statking/public-gate";
+import { isContestsPublic } from "@/lib/launch/public-surface-gate";
 
 const PRODUCT_LINKS = [
   { label: "Today's Picks", href: "/picks" },
@@ -14,7 +15,6 @@ const PRODUCT_LINKS = [
   { label: "Decision Autopsy", href: "/performance/losses" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Start-Sit Helper", href: "/fantasy/lineup" },
-  { label: "Contests", href: "/fantasy/contests" },
   { label: "The Beat", href: "/the-beat" },
   { label: "Newsletter", href: "/newsletter" },
   { label: "Podcast", href: "/podcast" },
@@ -68,6 +68,15 @@ const SOCIAL_LINKS = [
 ].filter((link) => link.href);
 
 export function Footer() {
+  // Contests only when public (default on; CONTESTS_PUBLIC=false emergency dark).
+  const productLinks = isContestsPublic()
+    ? [
+        ...PRODUCT_LINKS.slice(0, 9),
+        { label: "Contests", href: "/fantasy/contests" },
+        ...PRODUCT_LINKS.slice(9),
+      ]
+    : [...PRODUCT_LINKS];
+
   // StatKing only appears when STATS_PUBLIC=true (foundation otherwise stays dark).
   const dataLinks = isStatsPublic()
     ? [
@@ -105,7 +114,7 @@ export function Footer() {
             </p>
           </div>
 
-          <FooterColumn title="Product" links={PRODUCT_LINKS} />
+          <FooterColumn title="Product" links={productLinks} />
           <FooterColumn title="Company" links={COMPANY_LINKS} />
           <FooterColumn title="Data" links={dataLinks} />
           <FooterColumn title="Responsible" links={RESPONSIBLE_LINKS} />

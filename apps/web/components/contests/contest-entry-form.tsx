@@ -27,6 +27,11 @@ export function ContestEntryForm({ week }: Props) {
       setMessage("Consent is required.");
       return;
     }
+    if (Object.keys(picks).length < week.games.length) {
+      setStatus("error");
+      setMessage(`Pick every game (${Object.keys(picks).length}/${week.games.length}).`);
+      return;
+    }
     const body = {
       displayName,
       email,
@@ -95,7 +100,9 @@ export function ContestEntryForm({ week }: Props) {
       </div>
 
       <fieldset className="space-y-3">
-        <legend className="text-sm font-medium text-ion-white">Picks (home or away)</legend>
+        <legend className="text-sm font-medium text-ion-white">
+          Picks (home or away) · {Object.keys(picks).length}/{week.games.length}
+        </legend>
         {week.games.map((g) => (
           <div key={g.gameId} className="flex flex-wrap items-center gap-2 border border-mineral/50 p-3">
             <span className="min-w-[8rem] text-sm text-ion-white">{g.label}</span>

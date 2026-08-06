@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { getCurrentContestWeek } from "@/lib/contests/week";
-import { leaderboard, resolveContestStorageMode } from "@/lib/contests/store";
+import { loadCurrentContestWeek, leaderboard, resolveContestStorageMode } from "@/lib/contests/store";
 import { ContestEntryForm } from "@/components/contests/contest-entry-form";
 import { notFound } from "next/navigation";
 import { isContestsPublic } from "@/lib/launch/public-surface-gate";
@@ -19,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function ContestBayPage() {
   if (!isContestsPublic()) notFound();
-  const week = getCurrentContestWeek();
+  const week = await loadCurrentContestWeek();
   const board = await leaderboard(week.weekId);
   const storageMode = resolveContestStorageMode();
 
