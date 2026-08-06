@@ -50,6 +50,10 @@ import {
   type LearningBatchReport,
 } from "@/lib/autonomy/settlement-learning";
 import { planAutonomyCycle, type AutonomyPlan } from "@/lib/autonomy/operating-kernel";
+import {
+  gradeFreePathClv,
+  drainPendingClvGrades,
+} from "@/lib/settlement/free-path-clv";
 
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
@@ -92,6 +96,8 @@ export type FreeSettlementRunResult = {
   learning: LearningBatchReport | null;
   /** Autonomy plan snapshot for operator/agent loops. */
   autonomy: AutonomyPlan | null;
+  /** Pending CLV_GRADE work drained this cycle. */
+  clvRepair: { attempted: number; graded: number; noClose: number; failed: number } | null;
 };
 ;
 
@@ -163,7 +169,14 @@ export async function runFreePathSettlement(options?: {
           result: "PENDING",
           game: { sport: { key: sport.key } },
         },
-        include: {
+        select: {
+          id: true,
+          pickType: true,
+          selection: true,
+          modelVersion: true,
+          edgeScore: true,
+          clvLockLine: true,
+          clvLockPrice: true,
           game: {
             select: {
               id: true,
@@ -321,6 +334,36 @@ export async function runFreePathSettlement(options?: {
             confirmation: o.confirmation,
             settlementPath: "free",
           });
+
+          // Free-path CLV grade (parity with settleSport) — never blocks settle.
+          let clvValue: number | null = null;
+          try {
+            const clvR = await gradeFreePathClv(
+              db as never,
+              {
+                id: row.id,
+                pickType: String(row.pickType),
+                selection: String(row.selection),
+                clvLockLine:
+                  typeof (row as { clvLockLine?: number | null }).clvLockLine === "number"
+                    ? (row as { clvLockLine: number }).clvLockLine
+                    : null,
+                clvLockPrice:
+                  typeof (row as { clvLockPrice?: number | null }).clvLockPrice === "number"
+                    ? (row as { clvLockPrice: number }).clvLockPrice
+                    : null,
+                game: row.game,
+              },
+              settledAt,
+            );
+            clvValue = clvR.clvValue;
+          } catch (clvErr) {
+            console.warn(
+              `[free-settle] CLV grade failed ${o.pickId}: ` +
+                `${clvErr instanceof Error ? clvErr.message : clvErr}`,
+            );
+          }
+
           gradedForLearning.push({
             pickId: o.pickId,
             sportKey: sport.key,
@@ -332,7 +375,7 @@ export async function runFreePathSettlement(options?: {
               typeof (row as { edgeScore?: number }).edgeScore === "number"
                 ? (row as { edgeScore: number }).edgeScore
                 : null,
-            clv: null,
+            clv: clvValue,
             settledAtIso: settledAt.toISOString(),
           });
         } else {
@@ -438,6 +481,22 @@ export async function runFreePathSettlement(options?: {
     minSettledForLearning: 100,
   });
 
+  // Repair: grade PENDING CLV_GRADE rows left by prior free settles (pre-grade path).
+  let clvRepair: {
+    attempted: number;
+    graded: number;
+    noClose: number;
+    failed: number;
+  } | null = null;
+  try {
+    clvRepair = await drainPendingClvGrades(db as never, { take: 100, now });
+  } catch (err) {
+    console.warn(
+      `[free-settle] CLV repair drain failed: ${err instanceof Error ? err.message : err}`,
+    );
+    clvRepair = null;
+  }
+
   return {
     path: "free",
     oddsApiRequired: false,
@@ -451,5 +510,6 @@ export async function runFreePathSettlement(options?: {
     burnRate,
     learning,
     autonomy,
+    clvRepair,
   };
 }
