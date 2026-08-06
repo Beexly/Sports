@@ -2,23 +2,40 @@ import { NextResponse } from "next/server";
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
 import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
-import { isStubMode, isDemoPicksEnabled } from "@sports/db";
+import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
-import { db } from "@sports/db";
 import { loadSettlementHealth } from "@/lib/performance/settlement-health";
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
+import { timingSafeEqual } from "node:crypto";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+function hasOpsAuth(request: Request): boolean {
+  const secret = process.env.CRON_SECRET?.trim();
+  if (!secret) return false;
+  const auth = request.headers.get("authorization") ?? "";
+  const expected = `Bearer ${secret}`;
+  try {
+    const a = Buffer.from(auth);
+    const b = Buffer.from(expected);
+    return a.length === b.length && timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
+
 /**
- * Operator truth snapshot — what public gates resolve to on this host.
- * No secrets. Under /api/ (robots-disallowed). Cache-Control: no-store.
+ * Surface truth snapshot.
+ * - Public: gates, storage modes, settlement band counts (honest ops posture).
+ * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
+ * Under /api/ (robots-disallowed). Cache-Control: no-store.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const gates = getReadinessGates();
+  const detailed = hasOpsAuth(request);
 
   let settlement: {
     health: string;
@@ -31,23 +48,27 @@ export async function GET() {
   try {
     if (!isStubMode()) {
       const s = await loadSettlementHealth(db, { graceHours: 6 });
-      let bySport: { sportKey: string; overduePending: number }[] = [];
-      let operatorNext: string[] = [];
-      try {
-        const b = await loadSettlementBreakdown(db, { graceHours: 6 });
-        bySport = [...b.overdueBySport];
-        operatorNext = [...b.operatorNext];
-      } catch {
-        /* breakdown optional */
-      }
       settlement = {
         health: s.health,
         commencedTotal: s.commencedTotal,
         overduePending: s.overduePending,
-        operatorMessage: s.operatorMessage,
-        bySport,
-        operatorNext,
+        // Public message stays factual; no cron paths unless authenticated.
+        operatorMessage: detailed
+          ? s.operatorMessage
+          : `${s.overduePending} of ${s.commencedTotal} commenced picks overdue past grace (${s.health}).`,
       };
+      if (detailed) {
+        try {
+          const b = await loadSettlementBreakdown(db, { graceHours: 6 });
+          settlement = {
+            ...settlement,
+            bySport: [...b.overdueBySport],
+            operatorNext: [...b.operatorNext],
+          };
+        } catch {
+          /* optional */
+        }
+      }
     }
   } catch {
     settlement = null;
@@ -57,6 +78,7 @@ export async function GET() {
     {
       ok: true,
       generatedAt: new Date().toISOString(),
+      detail: detailed ? "operator" : "public",
       host: {
         stubMode: isStubMode(),
         demoPicksEnabled: isDemoPicksEnabled(),

@@ -11,7 +11,7 @@
 import { NextResponse } from "next/server";
 import { validateWaitlistLead } from "@/lib/gse/waitlist-validation";
 import { selectWaitlistStore } from "@/lib/gse/waitlist-store";
-import { consumeRateLimit } from "@/lib/api/rate-limit";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,11 +46,11 @@ export async function POST(request: Request): Promise<NextResponse> {
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||
     "anon";
-  const rl = consumeRateLimit("waitlist", ip, 5, 60_000);
+  const rl = await consumePublicFormRateLimit("waitlist", ip, 5, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many requests" },
-      { status: 429, headers: { "retry-after": String(rl.retryAfterSec) } },
+      { status: rl.status, headers: { "retry-after": String(rl.retryAfterSec) } },
     );
   }
 

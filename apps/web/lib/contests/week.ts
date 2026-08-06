@@ -55,13 +55,15 @@ export function buildContestWeek(
 ): ContestWeek {
   const weekId = isoWeekId(now);
 
+  // Labels are practice matchups (team codes only) — NOT a claim about this
+  // week's real NFL schedule or market lines. Kickoffs are synthetic windows.
   const baseGames: Array<Omit<ContestGame, "result">> = [
-    { gameId: `${weekId}-g1`, label: "KC @ BUF", away: "KC", home: "BUF", kickoff: isoOffset(now, 2) },
-    { gameId: `${weekId}-g2`, label: "PHI @ DAL", away: "PHI", home: "DAL", kickoff: isoOffset(now, 2.1) },
-    { gameId: `${weekId}-g3`, label: "SF @ SEA", away: "SF", home: "SEA", kickoff: isoOffset(now, 2.2) },
-    { gameId: `${weekId}-g4`, label: "BAL @ CIN", away: "BAL", home: "CIN", kickoff: isoOffset(now, 3) },
-    { gameId: `${weekId}-g5`, label: "DET @ GB", away: "DET", home: "GB", kickoff: isoOffset(now, 3.1) },
-    { gameId: `${weekId}-g6`, label: "MIA @ NYJ", away: "MIA", home: "NYJ", kickoff: isoOffset(now, 3.2) },
+    { gameId: `${weekId}-g1`, label: "Practice A · KC vs BUF", away: "KC", home: "BUF", kickoff: isoOffset(now, 2) },
+    { gameId: `${weekId}-g2`, label: "Practice B · PHI vs DAL", away: "PHI", home: "DAL", kickoff: isoOffset(now, 2.1) },
+    { gameId: `${weekId}-g3`, label: "Practice C · SF vs SEA", away: "SF", home: "SEA", kickoff: isoOffset(now, 2.2) },
+    { gameId: `${weekId}-g4`, label: "Practice D · BAL vs CIN", away: "BAL", home: "CIN", kickoff: isoOffset(now, 3) },
+    { gameId: `${weekId}-g5`, label: "Practice E · DET vs GB", away: "DET", home: "GB", kickoff: isoOffset(now, 3.1) },
+    { gameId: `${weekId}-g6`, label: "Practice F · MIA vs NYJ", away: "MIA", home: "NYJ", kickoff: isoOffset(now, 3.2) },
   ];
 
   const games: ContestGame[] = baseGames.map((g) => ({
@@ -79,7 +81,7 @@ export function buildContestWeek(
 
   return {
     weekId,
-    title: `Paper Board · ${weekId}`,
+    title: `Methodology paper slate · ${weekId}`,
     sport: "NFL",
     opensAt,
     locksAt,
@@ -89,6 +91,7 @@ export function buildContestWeek(
     rules: [
       "Free skill only — no entry fee, no prize pool, no real money.",
       "This is a methodology paper slate for process practice — not live market odds.",
+      "Matchups are practice labels with synthetic close times — not a live NFL schedule claim.",
       "Pick home or away on every game (straight up, no spread).",
       "Score = correct picks among settled games. Ties → earliest valid entry.",
       "Entries close at first listed kickoff. Late entries are rejected.",
