@@ -113,3 +113,45 @@ describe("callClaude — provider routing", () => {
     expect(result.modelName).toBe("azure-foundry/claude-sonnet-4-6");
   });
 });
+
+describe("callClaude — multi-cloud failover (Jynx)", () => {
+  it("failovers bedrock to azure when Bedrock transport errors and auto mode", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockImplementationOnce(async () => ({
+        ok: false,
+        status: 503,
+        json: async () => ({}),
+        text: async () => "bedrock down",
+      }) as unknown as Response)
+      .mockImplementationOnce(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          content: [{ type: "text", text: "via-azure-failover" }],
+          usage: { input_tokens: 1, output_tokens: 1 },
+        }),
+        text: async () => "",
+      }) as unknown as Response);
+
+    const env = {
+      CLAUDE_PROVIDER: "auto",
+      JYNX_CLOUD_FAILOVER: "true",
+      AWS_REGION: "us-east-1",
+      AWS_ACCESS_KEY_ID: "AKIDEXAMPLE",
+      AWS_SECRET_ACCESS_KEY: "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
+      BEDROCK_MODEL_MAP: JSON.stringify({
+        "claude-sonnet-4-6": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+      }),
+      AZURE_FOUNDRY_RESOURCE: "gse-foundry",
+      AZURE_FOUNDRY_API_KEY: "az-key",
+      AZURE_FOUNDRY_MODEL_MAP: JSON.stringify({ "claude-sonnet-4-6": "claude-sonnet-4-6" }),
+    };
+
+    const result = await callClaude(baseReq(fetchImpl as unknown as typeof fetch), env);
+    expect(result.text).toBe("via-azure-failover");
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect((fetchImpl.mock.calls[0] as unknown as [string])[0]).toContain("bedrock-runtime");
+    expect((fetchImpl.mock.calls[1] as unknown as [string])[0]).toContain("services.ai.azure.com");
+  });
+});
