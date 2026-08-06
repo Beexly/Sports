@@ -8,7 +8,7 @@
  * intelligence segments as an expandable briefing (Galaxy Brief, Market Mirage,
  * Roster Shock, Coaching Edge, Line-Movement Autopsy). Click a count or a
  * segment to decrypt its detail; points reveal in a short stagger. Illustrative
- * sample transmission, explicitly badged. Keyboard-accessible accordion.
+ * daily transmission, source-badged (board vs methodology). Keyboard-accessible accordion.
  */
 
 import { useRef, useState } from "react";

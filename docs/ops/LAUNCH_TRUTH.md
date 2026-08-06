@@ -72,3 +72,12 @@ Not podcast polish. Not StatKing vanity.
 2. **LIVE_BOARD off** — correct until proof bar; do not flip.
 3. **PUBLISH_LEDGER owner_gated** — Glass Ledger clock starts when founder enables commit path.
 4. **CI green** — never merge public copy that contains bare "lock" (betting slang ban).
+
+## Pass-4 (2026-08-06)
+
+| Fix | Detail |
+|-----|--------|
+| Waitlist / newsletter subscribe | Durable Postgres `gse_waitlist_leads` when Neon live (same class as contests) |
+| Vercel+stub waitlist | Honest 503 refuse (no ephemeral pretend) |
+| Podcast ep copy | Removed public unfinished-fence phrase |
+| Ops truth | `waitlistStorage` mode |
