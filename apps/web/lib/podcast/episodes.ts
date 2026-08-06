@@ -39,7 +39,7 @@ export const EPISODES: readonly PodcastEpisode[] = [
       },
       {
         title: "What broke",
-        body: "Unfinished StatKing and Contest surfaces leaked into public nav before readiness. Fixture labels read as 'not finished' instead of complete sealed posture. Fixed by product gates and finished surfaces, not marketing.",
+        body: "StatKing and Contest surfaces leaked into public nav before readiness. Fixture labels read as incomplete instead of complete sealed posture. Fixed by product gates and finished surfaces, not marketing.",
       },
       {
         title: "What the model learned",

@@ -1,8 +1,8 @@
 /**
  * GSE Founding Waitlist — local submission handler.
  *
- * Local-only: validates the lead, enforces the consent gate, and records it to
- * the local-file fallback store. It does NOT send any email, call any external
+ * Validates the lead, enforces consent, and records to durable Postgres when
+ * Neon is live (else local file in dev). It does NOT send any email, call any external
  * service, change pricing, touch Stripe, flip a flag, or publish anything. The
  * confirmation / follow-up emails in `docs/gse/` remain draft-only and
  * owner-gated.
@@ -87,11 +87,18 @@ export async function POST(request: Request): Promise<NextResponse> {
       { ok: true, status: duplicate ? "already_queued" : "queued" },
       { status: 200 },
     );
-  } catch {
-    // Local persistence failed; never leak internals.
+  } catch (err) {
+    // Persistence failed; never leak internals / stack.
+    const msg = err instanceof Error ? err.message : "";
+    const unavailable = /unavailable|durable database/i.test(msg);
     return NextResponse.json(
-      { ok: false, error: "Could not record locally" },
-      { status: 500 },
+      {
+        ok: false,
+        error: unavailable
+          ? "Subscribe storage is unavailable on this host (database not configured)."
+          : "Could not record subscription. Try again shortly.",
+      },
+      { status: unavailable ? 503 : 500 },
     );
   }
 }

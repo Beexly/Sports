@@ -147,5 +147,5 @@ export function createDbWaitlistStore(leads: WaitlistLeadDelegate): WaitlistStor
   }
 
   // filePath is part of the interface (file store); not meaningful for the DB store.
-  return { filePath: "db://waitlist_lead", record, list };
+  return { backend: "postgres", filePath: "db://waitlist_lead", record, list };
 }

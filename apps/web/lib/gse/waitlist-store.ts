@@ -1,20 +1,17 @@
 /**
- * GSE Founding Waitlist — LOCAL-FILE storage fallback.
+ * GSE Founding Waitlist store — dual backend.
  *
- * The durable store is intended to be a Prisma `WaitlistLead` table, but adding
- * that table is an owner-gated schema/migration change. Until that gate is
- * cleared, leads are persisted to a local JSON file ONLY. This is:
- *   - local-only (no network, no DB, no external service),
- *   - lazy (no filesystem access at import time),
- *   - de-duplicated by lowercased email.
+ * 1) Postgres when !isStubMode() — durable on Vercel (CREATE TABLE IF NOT EXISTS).
+ * 2) Local JSON file for dev/CI / stub mode (non-Vercel).
+ * 3) On Vercel+stub: still attempt file (may fail); prefer postgres when Neon is live.
  *
- * Default path is the gitignored `.gse-local/` dir (override with
- * `GSE_WAITLIST_STORE_PATH`) so captured leads are discoverable for owner
- * review yet provably never committed.
+ * Does NOT require the gated Prisma WaitlistLead model. Table: gse_waitlist_leads.
+ * Owner may later migrate to formal Prisma model; selectWaitlistStore stays the switch.
  */
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { db, isStubMode } from "@sports/db";
 import type { WaitlistLeadInput } from "@/lib/gse/waitlist-validation";
 
 export interface StoredWaitlistLead {
@@ -31,7 +28,6 @@ export interface StoredWaitlistLead {
   referrer?: string;
   path?: string;
   copyVersion?: string;
-  // Review workflow — owner-driven only; nothing auto-transitions or sends.
   reviewStatus: "QUEUED";
 }
 
@@ -41,23 +37,28 @@ export interface RecordResult {
 }
 
 export interface WaitlistStore {
+  /** Optional: which backend is active (file | postgres). */
+  readonly backend?: "postgres" | "file";
   readonly filePath: string;
   record(lead: WaitlistLeadInput): Promise<RecordResult>;
   list(): Promise<StoredWaitlistLead[]>;
 }
 
+export type WaitlistStorageMode = "postgres" | "file" | "unavailable";
+
+export function resolveWaitlistStorageMode(): WaitlistStorageMode {
+  if (!isStubMode()) return "postgres";
+  if (process.env.VERCEL === "1") return "unavailable";
+  return "file";
+}
+
 function defaultStorePath(): string {
   return (
     process.env.GSE_WAITLIST_STORE_PATH ??
-    // Repo-local but gitignored (.gse-local/ — see .gitignore). Discoverable for
-    // owner review, and provably never committed.
     path.join(process.cwd(), ".gse-local", "waitlist-leads.json")
   );
 }
 
-// Serialize read-modify-write per file so concurrent submissions in one process
-// can't clobber each other (the local fallback has no DB-level concurrency; the
-// gated DB store will get real row-level guarantees — see pr3-durable-storage-plan).
 const fileWriteLocks = new Map<string, Promise<unknown>>();
 function withFileLock<T>(filePath: string, fn: () => Promise<T>): Promise<T> {
   const prev = fileWriteLocks.get(filePath) ?? Promise.resolve();
@@ -109,7 +110,9 @@ export function createWaitlistStore(filePath: string = defaultStorePath()): Wait
       };
       all.push(entry);
       await fs.mkdir(path.dirname(filePath), { recursive: true });
-      await fs.writeFile(filePath, JSON.stringify(all, null, 2), "utf8");
+      const tmp = `${filePath}.${process.pid}.tmp`;
+      await fs.writeFile(tmp, JSON.stringify(all, null, 2), "utf8");
+      await fs.rename(tmp, filePath);
       return { stored: true, duplicate: false };
     });
   }
@@ -118,16 +121,166 @@ export function createWaitlistStore(filePath: string = defaultStorePath()): Wait
     return readAll();
   }
 
-  return { filePath, record, list };
+  return { backend: "file", filePath, record, list };
+}
+
+// ─── Postgres ────────────────────────────────────────────────────────────────
+
+let pgReady: Promise<void> | null = null;
+
+async function ensurePgTable(): Promise<void> {
+  if (!pgReady) {
+    pgReady = (async () => {
+      await db.$executeRawUnsafe(`
+        CREATE TABLE IF NOT EXISTS gse_waitlist_leads (
+          email TEXT PRIMARY KEY,
+          full_name TEXT NOT NULL,
+          role TEXT NOT NULL,
+          sport_interests JSONB NOT NULL,
+          current_stack TEXT,
+          weakest_process TEXT,
+          consent BOOLEAN NOT NULL DEFAULT TRUE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          utm_source TEXT,
+          utm_campaign TEXT,
+          referrer TEXT,
+          source_path TEXT,
+          copy_version TEXT,
+          review_status TEXT NOT NULL DEFAULT 'QUEUED'
+        )
+      `);
+    })().catch((err) => {
+      pgReady = null;
+      throw err;
+    });
+  }
+  await pgReady;
+}
+
+function createPgWaitlistStore(): WaitlistStore {
+  async function record(lead: WaitlistLeadInput): Promise<RecordResult> {
+    await ensurePgTable();
+    const email = lead.email.trim().toLowerCase();
+    try {
+      await db.$executeRawUnsafe(
+        `INSERT INTO gse_waitlist_leads (
+           email, full_name, role, sport_interests, current_stack, weakest_process,
+           consent, created_at, utm_source, utm_campaign, referrer, source_path, copy_version, review_status
+         ) VALUES ($1,$2,$3,$4::jsonb,$5,$6,TRUE,NOW(),$7,$8,$9,$10,$11,'QUEUED')`,
+        email,
+        lead.fullName,
+        lead.role,
+        JSON.stringify(lead.sportInterests),
+        lead.currentStack ?? null,
+        lead.weakestProcess ?? null,
+        lead.utmSource ?? null,
+        lead.utmCampaign ?? null,
+        lead.referrer ?? null,
+        lead.path ?? null,
+        lead.copyVersion ?? null,
+      );
+      return { stored: true, duplicate: false };
+    } catch (err) {
+      const msg = String(err);
+      const code =
+        typeof err === "object" && err && "code" in err
+          ? String((err as { code: unknown }).code)
+          : "";
+      if (code === "23505" || code === "P2002" || /unique/i.test(msg)) {
+        return { stored: false, duplicate: true };
+      }
+      throw err;
+    }
+  }
+
+  async function list(): Promise<StoredWaitlistLead[]> {
+    await ensurePgTable();
+    const rows = await db.$queryRaw<
+      Array<{
+        email: string;
+        full_name: string;
+        role: string;
+        sport_interests: unknown;
+        current_stack: string | null;
+        weakest_process: string | null;
+        created_at: Date;
+        utm_source: string | null;
+        utm_campaign: string | null;
+        referrer: string | null;
+        source_path: string | null;
+        copy_version: string | null;
+      }>
+    >`
+      SELECT email, full_name, role, sport_interests, current_stack, weakest_process,
+             created_at, utm_source, utm_campaign, referrer, source_path, copy_version
+      FROM gse_waitlist_leads
+      ORDER BY created_at ASC
+    `;
+    return rows.map((r) => {
+      let sports: string[] = [];
+      if (Array.isArray(r.sport_interests)) sports = r.sport_interests as string[];
+      else if (typeof r.sport_interests === "string") {
+        try {
+          sports = JSON.parse(r.sport_interests) as string[];
+        } catch {
+          sports = [];
+        }
+      }
+      return {
+        email: r.email,
+        fullName: r.full_name,
+        role: r.role,
+        sportInterests: sports,
+        currentStack: r.current_stack ?? undefined,
+        weakestProcess: r.weakest_process ?? undefined,
+        consent: true as const,
+        createdAt: new Date(r.created_at).toISOString(),
+        utmSource: r.utm_source ?? undefined,
+        utmCampaign: r.utm_campaign ?? undefined,
+        referrer: r.referrer ?? undefined,
+        path: r.source_path ?? undefined,
+        copyVersion: r.copy_version ?? undefined,
+        reviewStatus: "QUEUED" as const,
+      };
+    });
+  }
+
+  return {
+    backend: "postgres",
+    filePath: "postgres:gse_waitlist_leads",
+    record,
+    list,
+  };
 }
 
 /**
- * Choose the active waitlist store. Today this is always the local-file fallback.
- * It is the single switch point for the gated `WaitlistLead` DB store (see
- * `docs/gse/pr3-durable-storage-plan.md`): when that lands, branch here on
- * `WAITLIST_STORAGE=db` — no call site changes.
+ * Active waitlist store.
+ * - Neon live → durable Postgres bootstrap table
+ * - Local stub → file
+ * - Vercel+stub → unavailable store that refuses writes honestly
  */
 export function selectWaitlistStore(): WaitlistStore {
-  // if (process.env.WAITLIST_STORAGE === "db") return createDbWaitlistStore(); // gated
-  return createWaitlistStore();
+  // Explicit file path (tests + operator local capture) always wins.
+  if (process.env.GSE_WAITLIST_STORE_PATH) {
+    return createWaitlistStore(process.env.GSE_WAITLIST_STORE_PATH);
+  }
+  if (process.env.WAITLIST_STORAGE === "file") {
+    return createWaitlistStore();
+  }
+  const mode = resolveWaitlistStorageMode();
+  if (mode === "postgres") return createPgWaitlistStore();
+  if (mode === "file") return createWaitlistStore();
+  // Vercel without DB: refuse durable claim — record() throws; route returns 503.
+  return {
+    backend: "file",
+    filePath: "unavailable",
+    async record() {
+      throw new Error(
+        "Waitlist storage unavailable: no durable database on this host (DATABASE_URL / Neon required).",
+      );
+    },
+    async list() {
+      return [];
+    },
+  };
 }

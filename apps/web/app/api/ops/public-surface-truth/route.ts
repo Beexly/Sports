@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
 import { resolveContestStorageMode } from "@/lib/contests/store";
+import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
@@ -55,6 +56,7 @@ export async function GET() {
         isBootstrapMode: gates.isBootstrapMode,
       },
       contestStorage: resolveContestStorageMode(),
+      waitlistStorage: resolveWaitlistStorageMode(),
       settlement,
       content: {
         podcastEpisodes: listEpisodes().length,
