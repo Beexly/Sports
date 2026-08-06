@@ -6,12 +6,15 @@
  * run on a frequent cadence at no metered cost — the "accurate numbers from free
  * sources, refreshed often, without the Odds API bill" path.
  *
- * Schedule: vercel.json `0,30 * * * *` (every 30 minutes).
+ * Schedule: vercel.json `0,30 * * * *` (every 30 minutes); External Cron every 2h.
  *
  * Also records an honest IngestionRun SUCCESS when the primary weekly-stats
  * ingest completes so /api/health free-mode freshness is not solely dependent
- * on free-spine-health (which can lag if CRON_SECRET mismatches or the probe
- * times out). Does not invent scores or injury designations.
+ * on free-spine-health. Does not invent scores or injury designations.
+ *
+ * Memory: satellites run **sequentially** after the primary. Parallel
+ * Promise.all of snaps+injuries+depth+3×NGS OOMs Hobby serverless (observed
+ * 2026-08-06: "instance was killed because it ran out of available memory").
  *
  * Auth: Bearer <CRON_SECRET>, same as the other cron routes.
  */
@@ -29,6 +32,8 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 300; // Vercel cron caps at 5 min
 
+type IngestResult = { status: string; error?: string | null; statsUpserted?: number };
+
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
@@ -40,37 +45,36 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "invalid season" }, { status: 400 });
   }
 
-  // Players first (creates the Player rows), then the satellites concurrently —
-  // injuries resolve playerId against the players just upserted. Next Gen Stats
-  // (separation, CPOE, RYOE — free CC-BY-4.0 aggregates) persist alongside, one
-  // pass per variant; previously the ingester existed but nothing invoked it.
-  const stats = await ingestPlayerWeeklyStats(season);
-  const [snaps, injuries, depth, ngsPassing, ngsReceiving, ngsRushing] = await Promise.all([
-    ingestSnapCounts(season),
-    ingestInjuries(season),
-    ingestDepthCharts(season),
-    ingestNextGenStats(season, "passing"),
-    ingestNextGenStats(season, "receiving"),
-    ingestNextGenStats(season, "rushing"),
-  ]);
-  const ngs = { passing: ngsPassing, receiving: ngsReceiving, rushing: ngsRushing };
-  const success = [stats, snaps, injuries, depth, ngsPassing, ngsReceiving, ngsRushing].every(
-    (r) => r.status === "ok",
-  );
-
-  // Durable free-mode health evidence: primary weekly-stats ok stamps SUCCESS
-  // even when a satellite (e.g. early-season injuries) is empty/error — empty
-  // injury state is honest, not a heartbeat failure.
+  // Primary first (creates Player rows) — this is the paid-worth stats spine.
+  const stats = (await ingestPlayerWeeklyStats(season)) as IngestResult & {
+    statsUpserted: number;
+  };
   const primaryOk = stats.status === "ok";
+
+  // Stamp free SUCCESS as soon as primary lands so health SLA is not blocked by
+  // satellite OOMs or empty early-season injury files.
   const ingestionRun = await recordFreeIngestionRun({
     sport: "nflverse-player-stats",
-    gamesUpserted: stats.statsUpserted,
+    gamesUpserted: stats.statsUpserted ?? 0,
     oddsInserted: 0,
     failed: !primaryOk,
     errorMessage: primaryOk
       ? null
       : `refresh-player-stats: stats=${stats.status}${stats.error ? ` (${stats.error})` : ""}`,
   });
+
+  // Sequential satellites — never Promise.all all six CSVs into one isolate.
+  const snaps = await ingestSnapCounts(season);
+  const injuries = await ingestInjuries(season);
+  const depth = await ingestDepthCharts(season);
+  const ngsPassing = await ingestNextGenStats(season, "passing");
+  const ngsReceiving = await ingestNextGenStats(season, "receiving");
+  const ngsRushing = await ingestNextGenStats(season, "rushing");
+  const ngs = { passing: ngsPassing, receiving: ngsReceiving, rushing: ngsRushing };
+
+  const success = [stats, snaps, injuries, depth, ngsPassing, ngsReceiving, ngsRushing].every(
+    (r) => r.status === "ok",
+  );
 
   return NextResponse.json(
     {
@@ -88,6 +92,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       depth,
       ngs,
       ingestionRun,
+      execution: "sequential-satellites",
     },
     { status: success || primaryOk ? 200 : 502 },
   );
