@@ -16,6 +16,8 @@ describe("free settle response contract", () => {
     expect(runner).toMatch(/snapshotRepair:/);
     expect(runner).toMatch(/drainPendingClvGrades/);
     expect(runner).toMatch(/drainPendingSnapshotOutcomes/);
+    expect(runner).toMatch(/drainPendingTeamGameLogs/);
+    expect(runner).toMatch(/teamGameLogRepair/);
     expect(runner).toMatch(/recordFreePathSnapshot/);
     // Both work kinds enqueued on free settle write
     expect(runner).toMatch(/kind: "CLV_GRADE"/);
@@ -32,5 +34,6 @@ describe("free settle response contract", () => {
     // Top-level promotion for ops dashboards (added alongside nested free.*)
     expect(route).toMatch(/clvRepair:\s*free\.clvRepair/);
     expect(route).toMatch(/snapshotRepair:\s*free\.snapshotRepair/);
+    expect(route).toMatch(/teamGameLogRepair:\s*free\.teamGameLogRepair/);
   });
 });

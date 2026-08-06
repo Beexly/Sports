@@ -87,6 +87,7 @@ export async function GET(request: Request) {
       picksHeld: free.picksHeld,
       clvRepair: free.clvRepair,
       snapshotRepair: free.snapshotRepair,
+      teamGameLogRepair: free.teamGameLogRepair,
       scoreDates: free.scoreDates,
       rca: free.rca,
       bootstrapMode: gates.isBootstrapMode,
