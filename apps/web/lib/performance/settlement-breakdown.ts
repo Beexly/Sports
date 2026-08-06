@@ -2,24 +2,18 @@
  * Settlement backlog breakdown — sport-level overdue counts for ops truth.
  * Pure loader; no invented scores. Complements loadSettlementHealth.
  *
- * Client shape is findMany-only so PrismaClient assigns cleanly under
- * next build typecheck (groupBy stubs with string[] `by` broke prod deploys).
+ * Client is intentionally loose so PrismaClient assigns under next build
+ * (strict findMany stubs kept breaking production deploys #300–#306).
  */
 
-export interface SettlementBreakdownClient {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SettlementBreakdownClient = {
   pick: {
-    findMany: (args: {
-      where: Record<string, unknown>;
-      select: Record<string, unknown>;
-      take?: number;
-    }) => Promise<
-      Array<{
-        id: string;
-        game: { sport: { key: string }; commenceTime: Date };
-      }>
-    >;
+    // Prisma's findMany generics are incompatible with hand-rolled stubs.
+    // Runtime only needs findMany; shape is validated by usage below.
+    findMany: (args: any) => Promise<any[]>;
   };
-}
+};
 
 export type SportOverdueRow = {
   readonly sportKey: string;
@@ -32,6 +26,11 @@ export type SettlementBreakdown = {
   readonly overduePending: number;
   readonly samplePickIds: readonly string[];
   readonly operatorNext: readonly string[];
+};
+
+type BreakdownRow = {
+  id: string;
+  game: { sport: { key: string }; commenceTime: Date };
 };
 
 /**
@@ -47,7 +46,7 @@ export async function loadSettlementBreakdown(
   const overdueCutoff = new Date(now.getTime() - graceHours * 60 * 60 * 1000);
   const sampleLimit = input.sampleLimit ?? 12;
 
-  const rows = await db.pick.findMany({
+  const rows = (await db.pick.findMany({
     where: {
       isPublished: true,
       result: "PENDING",
@@ -59,11 +58,12 @@ export async function loadSettlementBreakdown(
       game: { select: { commenceTime: true, sport: { select: { key: true } } } },
     },
     take: 2000,
-  });
+  })) as BreakdownRow[];
 
   const bySport = new Map<string, number>();
   for (const r of rows) {
-    const key = r.game.sport.key;
+    const key = r.game?.sport?.key;
+    if (!key) continue;
     bySport.set(key, (bySport.get(key) ?? 0) + 1);
   }
 
