@@ -12,7 +12,9 @@ export interface FounderNextStep {
     | "free_lane"
     | "product_gates"
     | "content"
-    | "statking";
+    | "statking"
+    | "billing"
+    | "analytics";
   readonly priority: "P0" | "P1" | "P2";
   readonly action: string;
 }
@@ -116,6 +118,22 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
     });
   }
 
+
+  steps.push({
+    id: "stripe-webhook-audit",
+    domain: "billing",
+    priority: "P1",
+    action:
+      "Stripe Dashboard: confirm only galaxysportsedge.com webhook endpoints (remove foreign domains e.g. medusajs if unintended).",
+  });
+
+  steps.push({
+    id: "analytics-optional",
+    domain: "analytics",
+    priority: "P2",
+    action:
+      "Optional: NEXT_PUBLIC_ANALYTICS_ENABLED=true + NEXT_PUBLIC_CLARITY_PROJECT_ID (PostHog only with keys + privacy review).",
+  });
   if (input.podcastEpisodes < 1 || input.newsletterIssues < 1) {
     steps.push({
       id: "content-archives",
