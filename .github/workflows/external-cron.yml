@@ -3,9 +3,7 @@ name: External Cron (Galaxy Sports Edge)
 # Why this exists:
 # Vercel Hobby caps cron frequency at once per day. The Vercel-declared
 # crons in `vercel.json` remain the daily backstop. This workflow gives
-# us a 30-minute refresh cadence without paying for Vercel Pro by
-# hitting the public cron routes with the same CRON_SECRET bearer token
-# Vercel uses.
+# us higher-cadence hits with the same CRON_SECRET bearer token Vercel uses.
 #
 # The routes themselves enforce auth and gate writes via
 # `getReadinessGates()`, so this is purely a scheduler — no business
@@ -14,29 +12,33 @@ name: External Cron (Galaxy Sports Edge)
 # Required repository secrets:
 #   CRON_SECRET       — must match production env
 #   CRON_TARGET_URL   — e.g. https://www.galaxysportsedge.com (no trailing slash)
+#
+# 2026-08-06: free-spine-health + refresh-player-stats added so free-mode
+# IngestionRun SUCCESS stays under REFRESH_STALE (240m). settle-picks alone
+# can stamp SUCCESS when it runs, but multi-hour settle hangs / failures left
+# /api/health degraded for ~8h with free-spine only on Vercel Hobby daily.
 
 on:
   schedule:
-    # PRIVATE-REPO MINUTES ECONOMY (2026-07-30): the repo went private, so
-    # Actions minutes are no longer unlimited — GitHub Free includes 2,000
-    # min/month for private repos and bills each job at a 1-minute minimum.
-    # The former 30-minute refresh-odds schedule alone cost ~48 jobs/day
-    # (~1,460 min/month) to hit an endpoint that, in free mode (no
-    # THE_ODDS_API_KEY), intentionally skips. It is REMOVED while odds
-    # ingestion is off. To re-enable when a paid odds key returns, restore:
-    #   - cron: "*/30 * * * *"
-    # (the refresh-odds job below still matches that schedule string, and
-    # stays runnable on demand via workflow_dispatch either way).
+    # PRIVATE-REPO MINUTES ECONOMY: keep cadence lean.
     # Hourly on the :15 — settle picks whose games have completed.
     - cron: "15 * * * *"
+    # Every 2h at :05 — free multi-source spine + IngestionRun SUCCESS stamp
+    # (under 240m SLA; ~12 jobs/day).
+    - cron: "5 */2 * * *"
+    # Every 2h at :35 — nflverse player-stats free SUCCESS multi-writer
+    # (refresh-player-stats also stamps when primary weekly-stats ok).
+    - cron: "35 */2 * * *"
   workflow_dispatch:
     inputs:
       target:
         description: "Which endpoint to hit"
         required: true
-        default: "refresh-odds"
+        default: "free-spine-health"
         type: choice
         options:
+          - free-spine-health
+          - refresh-player-stats
           - refresh-odds
           - settle-picks
           - jarvis-snapshot
@@ -46,6 +48,65 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  free-spine-health:
+    name: Free spine health (ingestion heartbeat)
+    if: ${{ github.event.schedule == '5 */2 * * *' || github.event.inputs.target == 'free-spine-health' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Hit /api/cron/free-spine-health
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
+            --max-time 120 \
+            "${CRON_TARGET_URL}/api/cron/free-spine-health")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
+
+  refresh-player-stats:
+    name: Refresh nflverse player stats (free SUCCESS writer)
+    if: ${{ github.event.schedule == '35 */2 * * *' || github.event.inputs.target == 'refresh-player-stats' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Hit /api/cron/refresh-player-stats
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
+            --max-time 300 \
+            "${CRON_TARGET_URL}/api/cron/refresh-player-stats")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          # 200 when full success or primary weekly-stats ok (satellite empty is honest)
+          test "${response}" = "200"
+
   refresh-odds:
     name: Refresh odds (all sports)
     if: ${{ github.event.schedule == '*/30 * * * *' || github.event.inputs.target == 'refresh-odds' }}
@@ -68,7 +129,6 @@ jobs:
             --max-time 360 \
             "${CRON_TARGET_URL}/api/cron/refresh-odds")
           echo "HTTP ${response}"
-          # Pretty-print body when jq is present.
           if command -v jq >/dev/null 2>&1; then
             jq . /tmp/body.json || cat /tmp/body.json
           else
