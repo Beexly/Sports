@@ -98,3 +98,9 @@ Not podcast polish. Not StatKing vanity.
 
 ### Founder action
 Ensure `CRON_SECRET` is set so Vercel actually invokes settle-picks. Watch overdue drop after 1–2 hourly cycles.
+
+## Three tasks (2026-08-06)
+
+1. **Postgres rate limiting** — `consumePublicFormRateLimit` on waitlist + contest enter; tests for fingerprint.
+2. **CLV settlement optimization** — free path grades CLV after settle + drains PENDING `CLV_GRADE` work.
+3. **CRON_SECRET verification** — `docs/ops/CRON_SECRET_VERIFY.md` + `scripts/ops/verify-cron-secret.mjs`.
