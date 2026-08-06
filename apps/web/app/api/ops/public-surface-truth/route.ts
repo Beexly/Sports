@@ -9,6 +9,7 @@ import { listIssues } from "@/lib/newsletter/issues";
 import { loadSettlementHealth } from "@/lib/performance/settlement-health";
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
+import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { timingSafeEqual } from "node:crypto";
 
@@ -36,6 +37,8 @@ const MAIN_FEATURE_MARKERS = [
   "web-standards-trust-surfaces",
   "free-lane-content-smoke",
   "jynx-multicloud-failover-smoke",
+  "free-path-team-game-log-repair",
+  "revenue-ladder-ops-surface",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -122,6 +125,18 @@ export async function GET(request: Request) {
     expectedMarkerFloor: MAIN_FEATURE_MARKERS.length,
   });
 
+  // Proof-gated ladder — never invents calibration/CLV; never flips gates.
+  const revenueLadder = evaluateRevenueLadder({
+    canonicalSettled: settlement?.commencedTotal ?? 0,
+    calibrationPublished: false,
+    clvBeatCloseRate: null,
+    settlementHealthy: settlement?.health === "HEALTHY",
+    boardNotSuppressed: false,
+    liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
+    publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
+    performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+  });
+
   return NextResponse.json(
     {
       ok: true,
@@ -161,6 +176,13 @@ export async function GET(request: Request) {
         refuseEphemeralWrites: true,
       },
       founderNextSteps,
+      revenueLadder: {
+        currentStep: revenueLadder.currentStep,
+        nextStep: revenueLadder.nextStep,
+        canHonestlyMonetizePublicTrackRecord: revenueLadder.canHonestlyMonetizePublicTrackRecord,
+        operatorMessage: revenueLadder.operatorMessage,
+        blockersToNext: revenueLadder.blockersToNext,
+      },
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },
