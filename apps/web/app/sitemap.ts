@@ -3,6 +3,7 @@ import { loadPublicJournalEntries } from "@/lib/journal/load";
 import { SITE_URL } from "@/lib/seo/site-url";
 import { slugify } from "@/lib/seo/sports-jsonld";
 import { db } from "@sports/db";
+import { isStatsPublic } from "@/lib/launch/public-surface-gate";
 
 /**
  * sitemap.xml
@@ -74,12 +75,10 @@ const ROUTES: ReadonlyArray<{
   { path: "/fantasy", priority: 0.6, changeFrequency: "weekly" },
   { path: "/the-beat", priority: 0.6, changeFrequency: "weekly" },
   { path: "/gsn", priority: 0.5, changeFrequency: "weekly" },
-  // StatKing public surfaces
-  { path: "/stats", priority: 0.6, changeFrequency: "weekly" },
-  { path: "/stats/compare", priority: 0.5, changeFrequency: "weekly" },
-  { path: "/stats/ask", priority: 0.5, changeFrequency: "weekly" },
-  { path: "/stats/proof", priority: 0.5, changeFrequency: "weekly" },
-  { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" },
+  // StatKing: only appended when STATS_PUBLIC=true (see default export)
+  { path: "/fantasy/contests", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/podcast", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/newsletter", priority: 0.6, changeFrequency: "weekly" },
   { path: "/tools", priority: 0.7, changeFrequency: "monthly" },
   { path: "/tools/ev-calculator", priority: 0.6, changeFrequency: "monthly" },
   { path: "/tools/no-vig-calculator", priority: 0.6, changeFrequency: "monthly" },
@@ -137,7 +136,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // No lastModified on static routes: stamping them with request time claims
   // every page changed today, which teaches crawlers the field is noise.
   // Real change dates stay on journal/preview entries below.
-  const staticRoutes = ROUTES.map(({ path, priority, changeFrequency }) => ({
+  // Never advertise foundation-dark URLs (align with robots + isStatsPublic).
+  const routes = [
+    ...ROUTES,
+    ...(isStatsPublic()
+      ? ([
+          { path: "/stats", priority: 0.6, changeFrequency: "weekly" as const },
+          { path: "/stats/compare", priority: 0.5, changeFrequency: "weekly" as const },
+          { path: "/stats/ask", priority: 0.5, changeFrequency: "weekly" as const },
+          { path: "/stats/proof", priority: 0.5, changeFrequency: "weekly" as const },
+          { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" as const },
+        ] as const)
+      : []),
+  ];
+
+  const staticRoutes = routes.map(({ path, priority, changeFrequency }) => ({
     url: `${baseUrl}${path}`,
     changeFrequency,
     priority,
