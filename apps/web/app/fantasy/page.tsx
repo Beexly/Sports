@@ -47,7 +47,7 @@ const LIVE_FIRST = [
   {
     title: "Live usage layer",
     href: "/trends",
-    status: "Building",
+    status: "Live path",
     body: "Snap share, player weeks, injuries, depth charts, and rosters become the free-first base layer.",
   },
 ] as const;

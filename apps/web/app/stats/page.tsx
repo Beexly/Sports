@@ -57,7 +57,7 @@ export default async function Page() {
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2">Overall rating</p>
             <p className="mt-1 text-2xl font-bold text-ion-white">
-              {overallMeasured ? `King Standard: ${king.overall.score} / 100` : "King Standard: not yet measured"}
+              {overallMeasured ? `King Standard: ${king.overall.score} / 100` : "King Standard: unmeasured"}
             </p>
             <p className="mt-1 text-sm text-ion-1">{king.overall.basis}</p>
           </div>
@@ -119,8 +119,8 @@ export default async function Page() {
 
       <InsightCard
         eyebrow={`King Standard · ${king.overall.basis}`}
-        headline="Agent-assisted foundation — King of Stats not finished"
-        body="Every score above is computed from real state at request time, not asserted. A dimension without a live signal to compute from (yet) renders as 'not measured' instead of a number — never a placeholder guess. 90+ requires live feeds, licenses, and a settled-pick archive that clears the platform's own readiness floor."
+        headline="King Standard foundation — public launch only when readiness clears"
+        body="Every score above is computed from real state at request time, not asserted. A dimension without a live signal renders as unmeasured instead of a number — never a guessed score. 90+ requires live feeds, licenses, and a settled-pick archive that clears the platform readiness floor."
         tone="warn"
       />
 

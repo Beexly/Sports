@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "The Airwave Ledger: Pundits, On the Record",
   description:
-    "Sports takes, held to an outcome. The Airwave Ledger turns what pundits say on air into a paraphrased, timestamped, graded record, the same glass-box standard the engine holds itself to. Illustrative personas until founded.",
+    "Sports takes, held to an outcome. The Airwave Ledger turns what pundits say on air into a paraphrased, timestamped, graded record — the same glass-box standard the engine holds itself to. Public demo uses illustrative personas only.",
   alternates: { canonical: "/airwave" },
 };
 
@@ -99,7 +99,7 @@ export default async function AirwavePage() {
                 <div>
                   <h2 className="text-lg font-semibold text-ion-white">Ingestion status</h2>
                   <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ion-1">
-                    The board below is illustrative until the control plane has real reviewed
+                    The board below is an illustrative ledger demo: real intake stays operator-reviewed before any public grade lands.
                     transcript rows. Today this page exposes the gate state honestly instead of
                     pretending the media engine is already running.
                   </p>
