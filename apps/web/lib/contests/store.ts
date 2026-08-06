@@ -299,7 +299,7 @@ export async function enterContest(
   }
 
   if (week.status !== "open" || now >= new Date(week.locksAt)) {
-    return { ok: false, error: "This contest week is locked." };
+    return { ok: false, error: "This contest week is closed." };
   }
 
   if (input.picks.length < week.games.length) {

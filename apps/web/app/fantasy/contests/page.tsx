@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Contest Bay · Free Paper Board | Galaxy Sports Edge",
   description:
-    "Free skill-only paper contest: pick the board, lock before kickoff, climb the accuracy leaderboard. No entry fee, no prize pool, no real money.",
+    "Free skill-only paper contest: pick the board, close entries before kickoff, climb the accuracy leaderboard. No entry fee, no prize pool, no real money.",
   alternates: { canonical: "/fantasy/contests" },
 };
 
@@ -33,7 +33,7 @@ export default async function ContestBayPage() {
               {week.title}
             </h1>
             <p className="mt-5 max-w-3xl text-lg text-ion-1">
-              Pick home or away on every game. Lock before first kickoff. Climb a pure accuracy
+              Pick home or away on every game. Close entries before first kickoff. Climb a pure accuracy
               leaderboard. This is a completed free paper product — no entry fee, no prize pool,
               no wagering. Process practice with receipts. Slate kind: methodology paper board (not live market odds).
             </p>
@@ -42,7 +42,7 @@ export default async function ContestBayPage() {
                 Status · {week.status}
               </span>
               <span className="rounded-full border border-mineral px-3 py-1">
-                Locks · {new Date(week.locksAt).toLocaleString()}
+                Closes · {new Date(week.locksAt).toLocaleString()}
               </span>
               <span className="rounded-full border border-mineral px-3 py-1">
                 {week.games.length} games
@@ -102,7 +102,7 @@ export default async function ContestBayPage() {
                 </div>
               ) : (
                 <p className="mt-6 border border-mineral bg-eclipse/40 p-6 text-ion-1">
-                  Entries are locked for this week. Browse the leaderboard and come back next open
+                  Entries are closed for this week. Browse the leaderboard and come back next open
                   window.
                 </p>
               )}

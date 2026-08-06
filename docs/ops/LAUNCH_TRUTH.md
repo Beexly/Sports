@@ -52,3 +52,23 @@
 | Footer Contests | Respects `isContestsPublic()` (no orphan link when dark) |
 | `/api/contests/week` | JSON week + leaderboard + storageMode |
 | Ops truth | readiness bootstrap flags + content counts |
+
+## Live production snapshot (agent probe 2026-08-06)
+
+| Signal | Value | Action |
+|--------|-------|--------|
+| `/api/health` database | ok | — |
+| ingestion last success | ~180m at probe | free-spine / odds refresh cadence |
+| **settlement capability** | **CRITICAL / unavailable** | **P0: settle-picks must clear overdue PENDING picks** |
+| contestStorage | postgres (durable) | good |
+| statsPublic | false | correct |
+| CI trust-gate | was red on "lock" slang in Contest Bay | use close/submit wording only |
+
+### What actually blocks "launch of the moat"
+
+Not podcast polish. Not StatKing vanity.
+
+1. **Settlement overdue** — public record + CLV starve while PENDING past grace.
+2. **LIVE_BOARD off** — correct until proof bar; do not flip.
+3. **PUBLISH_LEDGER owner_gated** — Glass Ledger clock starts when founder enables commit path.
+4. **CI green** — never merge public copy that contains bare "lock" (betting slang ban).

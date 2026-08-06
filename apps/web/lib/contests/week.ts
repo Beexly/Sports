@@ -91,7 +91,7 @@ export function buildContestWeek(
       "This is a methodology paper slate for process practice — not live market odds.",
       "Pick home or away on every game (straight up, no spread).",
       "Score = correct picks among settled games. Ties → earliest valid entry.",
-      "Entries lock at first listed kickoff. Late entries are rejected.",
+      "Entries close at first listed kickoff. Late entries are rejected.",
       "GSE never pays, ranks for cash, or sells your entry as a bet.",
     ],
   };

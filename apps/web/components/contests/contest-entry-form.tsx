@@ -163,7 +163,7 @@ export function ContestEntryForm({ week }: Props) {
         disabled={!consent || status === "submitting"}
         className="btn btn-primary w-full disabled:opacity-50"
       >
-        {status === "submitting" ? "Submitting…" : "Lock my entry"}
+        {status === "submitting" ? "Submitting…" : "Submit my entry"}
       </button>
     </form>
   );
