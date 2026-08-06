@@ -17,6 +17,15 @@ const input = {
   ],
 };
 
+const validBlogJson = JSON.stringify({
+  title: "NBA Picks for May 22",
+  excerpt: "A measured preview.",
+  content: "Full analysis. Please gamble responsibly and only bet what you can afford to lose.",
+  seoTitle: "NBA Picks May 22",
+  seoDescription: "Measured NBA pick analysis.",
+  tags: ["NBA", "picks", "analysis"],
+});
+
 describe("blog content generator", () => {
   it("blocks generated blog content missing the responsible-gambling disclaimer", () => {
     expect(
@@ -85,14 +94,7 @@ describe("blog content generator", () => {
           content: [
             {
               type: "text",
-              text: JSON.stringify({
-                title: "NBA Picks for May 22",
-                excerpt: "A measured preview.",
-                content: "Full analysis. Please gamble responsibly and only bet what you can afford to lose.",
-                seoTitle: "NBA Picks May 22",
-                seoDescription: "Measured NBA pick analysis.",
-                tags: ["NBA", "picks", "analysis"],
-              }),
+              text: validBlogJson,
             },
           ],
           usage: { input_tokens: 1000, output_tokens: 500 },
@@ -129,6 +131,50 @@ describe("blog content generator", () => {
       templateKind: null,
       success: true,
       errorKind: null,
+    });
+  });
+
+  it("routes blog generation through Cerebras free-lane when enabled", async () => {
+    process.env["ANTHROPIC_API_KEY"] = "test-key";
+    const fetchImpl = vi.fn(async (url: string) => {
+      if (String(url).includes("cerebras")) {
+        return new Response(
+          JSON.stringify({
+            choices: [{ message: { content: validBlogJson } }],
+            usage: { prompt_tokens: 50, completion_tokens: 80 },
+          }),
+          { status: 200 },
+        );
+      }
+      return new Response("unexpected anthropic", { status: 500 });
+    });
+    const create = vi.fn().mockResolvedValue({ id: "record-free" });
+
+    const post = await generateBlogPost(input, {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      monthlySpendUsd: 0,
+      budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.BLOG_GENERATION,
+      recordUsage: true,
+      usageClient: {
+        claudeApiCallRecord: {
+          aggregate: vi.fn(),
+          create,
+        },
+      },
+      env: {
+        ANTHROPIC_API_KEY: "test-key",
+        CONTENT_FREE_LANE_ENABLED: "true",
+        CEREBRAS_API_KEY: "cb-test",
+      },
+    });
+
+    expect(post.title).toBe("NBA Picks for May 22");
+    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.cerebras.ai");
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "BLOG_GENERATION",
+      modelName: "gpt-oss-120b",
+      estimatedCostUsd: 0,
+      success: true,
     });
   });
 
