@@ -306,6 +306,22 @@ export const OWN_METRICS: readonly OwnMetricContract[] = [
     status: "ACTIVE",
   }),
   fp({
+    id: "own.ctx.referee_crew_hash",
+    name: "Referee Crew Hash (consumed)",
+    plane: "context",
+    unit: "hash",
+    ownership: "derived_cleared",
+    licenseSpdx: "CC-BY-4.0",
+    attributionRequired: true,
+    attributionText: "nflverse officials (CC-BY-4.0)",
+    description:
+      "Stable numeric hash of the sorted crew signature — numeric companion to own.ctx.referee_crew for the numeric-only value read path.",
+    formulaId: "ctx.referee_crew_hash",
+    dependsOn: ["nflverse.officials"],
+    publicApiEligible: true,
+    status: "ACTIVE",
+  }),
+  fp({
     id: "own.opt.scorebug_acc",
     name: "Scorebug OCR Accuracy",
     plane: "optical",

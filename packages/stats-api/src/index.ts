@@ -24,6 +24,13 @@ export {
   createNflverseMemoryProvider,
   type NflverseRow,
 } from "./providers/nflverse-memory.js";
+export {
+  expandContractRows,
+  expandOfficialRows,
+  hydrateContextToMemory,
+  stableNumericHash,
+  type ContextHydrationResult,
+} from "./providers/nflverse-context.js";
 
 export * from "./entitlements.js";
 
