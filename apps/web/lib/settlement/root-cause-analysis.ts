@@ -310,7 +310,6 @@ export function buildCausePareto(findings: readonly SettlementRcaFinding[]): Par
   const backlog = findings.filter(
     (f) => f.code !== "NOT_COMMENCED" && f.code !== "WITHIN_GRACE" && f.overdue,
   );
-  const total = backlog.length || findings.filter((f) => f.overdue).length;
   const counts = new Map<SettlementRootCauseCode, number>();
   for (const f of backlog.length > 0 ? backlog : findings) {
     counts.set(f.code, (counts.get(f.code) ?? 0) + 1);
@@ -331,6 +330,7 @@ export function buildCausePareto(findings: readonly SettlementRcaFinding[]): Par
     };
   });
 }
+
 
 export function aggregateSettlementRca(
   findings: readonly SettlementRcaFinding[],

@@ -1,43 +1,48 @@
 # CURRENT_STATE
 
-Updated: 2026-07-30
+Updated: 2026-08-06 (Grok autonomous session)
 
-**MAIN:** AI-first cockpit prime + free-spine-health cron
-**SoT:** `CANONICAL.md` + Production `/cockpit`
-**class_A:** 0
+**MAIN HEAD (repo):** `addbec0` — orbit waves 3–7 (#286)  
+**Production deploy SHA:** `addbec09877f67f22903484eb23941b3e846ad4a` (matches #286)  
+**Open ship PR:** [#289](https://github.com/Beexly/Sports/pull/289) — settlement RCA+STP + placebo integrity + autonomy kernel (see branch `grok/settlement-rca-stp-integrity`)
 
-## Production truth
-- Green on commit `1dbcca9`. Redeployed 2x today after env fix.
-- main HEAD `4b4ae1e` does NOT build. Verified 7-file fix patch delivered, NOT pushed. Do not redeploy from HEAD until pushed.
-- Env fixed: `DATABASE_URL` + `DIRECT_URL` = gse-postgres (current password). `CRON_SECRET` rotated. `GEMINI_API_KEY` set.
-- Smoke green: gamma 401 bad Bearer / 200 good Bearer. `/api/health` db check ok.
-- Health "degraded" = stale ingestion only. Paid Odds API key deactivated ~Jul 25. Free-spine patch is the strategic fix.
-- DB real: 837 games · 1622 picks · ~1.18M odds rows. Empty: odds_line_snapshots, teams, leagues, historical_games.
-- Repo is PUBLIC (Beexly/Sports). No secrets in repo, ever.
+**SoT:** Production `/api/health` + `/api/board/state` + this file (docs lag is a bug — treat probes as ground truth)
 
-## Law
-LIVE_BOARD=off · oddsApiRequired=false · refuse-default · CPA blocked · externalActions NONE
-Enforced 2026-07-30: `PERFORMANCE_STATS_ENABLED` and `PUBLIC_PICKS_ENABLED` found true in Production (violation), flipped false.
+## Production truth (probed 2026-08-06 ~02:36Z)
 
-## AI runs (you watch)
-- 13 Vercel crons incl. free-spine-health, jarvis-snapshot, free settle. **gamma is NOT scheduled** ÔÇö paused in `3dfbc726` (B-0) pending a counsel-approved source-rights entry for Polymarket Gamma
-- Command Center attention + multi-source cues in Jarvis
-- Draft tasks from jarvis-snapshot
-- Cockpit operating map 28 surfaces · Agent OS draft-primed
+| Surface | State |
+|--------|--------|
+| `/api/health` overall | **healthy** (ok:true) — DB + ingestion ok |
+| Database | healthy |
+| Ingestion | healthy — last success ~148m age at probe (within SLA at time of check) |
+| **Settlement** | **UNAVAILABLE / CRITICAL** — "critically behind on commenced picks" |
+| Board | **SUPPRESSED_STALE** — openPicks=0, refusePublicFire=true, draftOnly=true, honestEmpty=true |
+| Proof slate | unavailable (hard dep on settlement) |
 
-## Founder-only remaining
-Formal `prove:neon` local run · optional free AI keys (Groq/xAI) · push build-fix patch decision
+## Law (do not violate)
 
-## Explicit YES only
-LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · #226
+LIVE_BOARD=off · PUBLIC_PICKS_ENABLED=off · PERFORMANCE_STATS_ENABLED=off · PUBLISH_LEDGER=off  
+oddsApiRequired=false on free path · refuse-default · CPA blocked · no auto-publish · no auto-bet
 
-## Orbit unlock
+## P0 right now
 
-See `docs/ops/ORBIT_UNLOCK.md` · `docs/agent-skills/` · `npm run agent:eval`.
+1. **Settlement backlog** — free-path settle-picks + free-spine; after #289 deploy use `free.rca` / `free.stp` / burn rate.
+2. Land **#289** once CI green (lint unused-var fixed; autonomy + learning modules added).
+3. Keep public gates closed until settled sample + healthy settlement + non-stale board.
 
-## Orbit wave 3
-- [ORBIT_MAP.md](./ORBIT_MAP.md)
-- [CALIBRATION_PIPELINE.md](./CALIBRATION_PIPELINE.md)
-- [ORBIT_NEXT_50.md](./ORBIT_NEXT_50.md)
-- CIR: `centeredIsotonicCalibration`
-- `npm run dspy:gse` · `npm run orbit:map`
+## Autonomy (new)
+
+- Pure kernel: `apps/web/lib/autonomy/operating-kernel.ts` — P0/P1 plan from probes; never flips gates.
+- Learning loop: `apps/web/lib/autonomy/settlement-learning.ts` — grades → samples; no silent MODEL_VERSION apply.
+- Health-alert cron returns `autonomy` plan (severity, queues, honesty, revenue readiness).
+
+## Explicit founder YES only
+
+LIVE_BOARD · PUBLISH_LEDGER · public picks · PERFORMANCE_STATS · Phase C · historical-eval #226
+
+## Do not
+
+- Redeploy from unreviewed HEAD without green CI
+- Force-settle DISPUTED scores
+- Treat skipped PG integration suites as proven without disposable Postgres job
+- Update this file from memory without a fresh `/api/health` probe
