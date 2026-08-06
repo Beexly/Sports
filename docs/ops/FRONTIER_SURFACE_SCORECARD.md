@@ -22,5 +22,10 @@ Probe date: **2026-08-06** (v2 pass). Re-run after every redeploy. Law: finish �
 | SEO schema | no fake SearchAction | fixed | — |
 | Cipher | durable RL · claim rewards | fixed | — |
 
+| security.txt / ads.txt / humans | web standards | **code** | Outside-box trust chrome |
+| favicon.ico / apple-touch | browser defaults | **code** | No more 404 chrome |
+| RSS alternates | podcast + journal | **code** | Feed discovery |
+| Manifest copy | honest | **code** | No live-odds cadence lie |
+
 ## One-team rule
 Do not flip surface flags to look complete. Calibrate moat (settle/CLV) and credits (Jynx) first; public boards second.

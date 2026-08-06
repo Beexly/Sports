@@ -33,6 +33,7 @@ const MAIN_FEATURE_MARKERS = [
   "cipher-claim-reward-honesty",
   "open-weight-free-lane-secondary",
   "founder-next-steps-queue",
+  "web-standards-trust-surfaces",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {

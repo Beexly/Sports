@@ -109,6 +109,12 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": [
+        { url: "/podcast/feed.xml", title: "GSE Board Meeting podcast" },
+        { url: "/journal/rss.xml", title: "GSE Journal" },
+      ],
+    },
   },
   openGraph: {
     type: "website",
