@@ -34,6 +34,8 @@ const MAIN_FEATURE_MARKERS = [
   "open-weight-free-lane-secondary",
   "founder-next-steps-queue",
   "web-standards-trust-surfaces",
+  "free-lane-content-smoke",
+  "jynx-multicloud-failover-smoke",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {

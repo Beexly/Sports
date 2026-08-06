@@ -85,4 +85,14 @@ describe("content free-lane dispatcher", () => {
     expect(shouldUseFreeLane("studio", FREE_ON)).toBe(false);
     expect(shouldUseFreeLane("content", {})).toBe(false);
   });
+
+  /** Image-task smoke (operator checklist): free-lane policy for content surface */
+  it("routes content to free-lane when enabled", () => {
+    expect(
+      shouldUseFreeLane("content", {
+        CONTENT_FREE_LANE_ENABLED: "true",
+        CEREBRAS_API_KEY: "test",
+      }),
+    ).toBe(true);
+  });
 });
