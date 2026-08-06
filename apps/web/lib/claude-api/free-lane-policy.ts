@@ -1,6 +1,5 @@
 /**
  * Free-lane policy (pure) — shared by free-lane dispatcher and Jynx planner.
- * Kept separate to avoid circular imports (jynx ↔ free-lane ↔ provider-dispatch).
  */
 import type { ClaudeSurface } from "./model-router";
 
@@ -11,8 +10,14 @@ export const FREE_LANE_SURFACES: ReadonlySet<ClaudeSurface> = new Set<ClaudeSurf
   "content",
 ]);
 
+/** True when free content lane can attempt at least one $0 host. */
 export function isFreeLaneEnabled(env: Env = process.env): boolean {
-  return env["CONTENT_FREE_LANE_ENABLED"] === "true" && Boolean(env["CEREBRAS_API_KEY"]?.trim());
+  if (env["CONTENT_FREE_LANE_ENABLED"] !== "true") return false;
+  if (env["CEREBRAS_API_KEY"]?.trim()) return true;
+  if (env["FREE_LANE_SECONDARY_BASE_URL"]?.trim() && env["FREE_LANE_SECONDARY_MODEL"]?.trim()) {
+    return true;
+  }
+  return false;
 }
 
 export function shouldUseFreeLane(surface: ClaudeSurface | undefined, env: Env = process.env): boolean {

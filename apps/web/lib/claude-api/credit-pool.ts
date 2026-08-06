@@ -44,10 +44,10 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
     note: "Claude via Foundry Messages API — bills Azure subscription; verify credit SKU covers Claude.",
   },
   cerebras_free: {
-    label: "Cerebras free lane",
+    label: "Open free lane (Cerebras / Gemma / Nemotron hosts)",
     provider: "cerebras",
     creditEligible: true,
-    note: "Content free-lane (gpt-oss / Cerebras free tier) — $0 cash when lane enabled.",
+    note: "Content free-lane: Cerebras gpt-oss and/or secondary free OpenAI-compat hosts — $0 cash.",
   },
   anthropic_direct: {
     label: "Anthropic direct",
@@ -67,6 +67,7 @@ export function creditPoolForModel(modelName: string): CreditPool {
   if (id.includes("@")) return "vertex_partner";
   if (/^(?:[a-z]{2,4}\.)?anthropic\./.test(id)) return "aws_activate";
   if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "cerebras_free";
+  if (id.startsWith("free-secondary/") || id.startsWith("free-groq/") || id.startsWith("free-nim/") || id.startsWith("free-compat/")) return "cerebras_free";
   return "anthropic_direct";
 }
 

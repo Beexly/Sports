@@ -45,7 +45,9 @@ export function resolveClaudeProviderSelection(env: Env = process.env): ClaudePr
 
 export function loadCreditStackPosture(env: Env = process.env): CreditStackPosture {
   const freeLaneConfigured =
-    env["CONTENT_FREE_LANE_ENABLED"] === "true" && has(env, "CEREBRAS_API_KEY");
+    env["CONTENT_FREE_LANE_ENABLED"] === "true" &&
+    (has(env, "CEREBRAS_API_KEY") ||
+      (has(env, "FREE_LANE_SECONDARY_BASE_URL") && has(env, "FREE_LANE_SECONDARY_MODEL")));
   const internalLlmConfigured = has(env, "INTERNAL_LLM_API_KEY");
   const claudeProvider = resolveClaudeProviderSelection(env);
 
