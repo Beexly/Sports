@@ -14,6 +14,7 @@ const PRODUCT_LINKS = [
   { label: "Decision Autopsy", href: "/performance/losses" },
   { label: "Parlay MRI", href: "/parlay-mri" },
   { label: "Start-Sit Helper", href: "/fantasy/lineup" },
+  { label: "Contests", href: "/fantasy/contests" },
   { label: "The Beat", href: "/the-beat" },
   { label: "Newsletter", href: "/newsletter" },
   { label: "Podcast", href: "/podcast" },
@@ -67,6 +68,7 @@ const SOCIAL_LINKS = [
 ].filter((link) => link.href);
 
 export function Footer() {
+  // StatKing only appears when STATS_PUBLIC=true (foundation otherwise stays dark).
   const dataLinks = isStatsPublic()
     ? [
         ...DATA_LINKS_BASE.slice(0, 3),

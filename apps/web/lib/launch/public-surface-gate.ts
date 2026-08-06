@@ -1,10 +1,11 @@
 /**
- * Public product surface gates.
+ * Public product surface gates — smart defaults.
  *
- * Incomplete products stay dark by default. Flip only when the surface is
- * launch-ready (not "almost" / fixture-only / foundation).
+ * COMPLETE products ship public.
+ * FOUNDATION / fixture-only / rights-incomplete products stay dark
+ * until the founder flips an explicit opt-in env.
  *
- * Admin / cockpit routes are never covered here.
+ * Do NOT default-open unfinished work.
  */
 
 function truthy(raw: string | undefined): boolean {
@@ -12,25 +13,38 @@ function truthy(raw: string | undefined): boolean {
   return v === "1" || v === "true" || v === "yes" || v === "on";
 }
 
-/** Galaxy StatKing — /stats/* */
+function falsy(raw: string | undefined): boolean {
+  const v = (raw ?? "").trim().toLowerCase();
+  return v === "0" || v === "false" || v === "no" || v === "off";
+}
+
+/**
+ * Galaxy StatKing (`/stats/*`) — still foundation / snapshot pipeline.
+ * Default OFF. Opt-in only: STATS_PUBLIC=true when readiness + rights clear.
+ */
 export function isStatsPublic(): boolean {
   return truthy(process.env.STATS_PUBLIC);
 }
 
-/** Contest Bay — /fantasy/contests */
+/**
+ * Contest Bay (`/fantasy/contests`) — free paper skill board is a complete product.
+ * Default ON. Emergency dark: CONTESTS_PUBLIC=false.
+ */
 export function isContestsPublic(): boolean {
-  return truthy(process.env.CONTESTS_PUBLIC);
+  if (falsy(process.env.CONTESTS_PUBLIC)) return false;
+  // default public — free skill paper product is finished
+  return true;
 }
 
 /**
- * Surfaces that may appear in public nav/footer only when ready.
- * Waitlist pages (podcast, newsletter) are complete products and stay public.
+ * Policy map (documentation for operators / agents).
  */
 export const PUBLIC_NAV_POLICY = {
-  stats: "env:STATS_PUBLIC",
-  contests: "env:CONTESTS_PUBLIC",
-  podcast: "waitlist-complete",
-  newsletter: "waitlist-complete",
-  observatory: "readiness-sealed-complete",
-  gsn: "format-specimen-complete",
+  stats: "opt-in STATS_PUBLIC — foundation until rights+live feeds clear",
+  contests: "default-public free paper skill (no prizes, no fees)",
+  podcast: "episode archive complete — public",
+  newsletter: "issue archive + subscribe form complete — public",
+  observatory: "readiness-sealed complete — public",
+  gsn: "board-backed transmission — public",
+  airwave: "illustrative demo — keep unlabeled as live intake",
 } as const;

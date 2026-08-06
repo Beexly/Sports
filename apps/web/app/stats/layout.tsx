@@ -4,7 +4,7 @@ import { isStatsPublic } from "@/lib/statking/public-gate";
 import { StatsNav } from "./stats-nav";
 
 /**
- * StatKing public surface. Default: hidden (404) until STATS_PUBLIC=true.
+ * StatKing foundation surface. Default dark (404). Opt-in: STATS_PUBLIC=true only when rights + live readiness clear.
  * Admin StatKing lives under /admin/statking and is auth-gated separately.
  */
 export default function StatsLayout({
