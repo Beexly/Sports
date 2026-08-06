@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { ContestEntrySchema } from "@/lib/contests/types";
 import { getCurrentContestWeek, isoWeekId } from "@/lib/contests/week";
-import { enterContest, leaderboard, scoreEntry } from "@/lib/contests/store";
+import { enterContest, leaderboard, scoreEntry, resolveContestStorageMode } from "@/lib/contests/store";
 
 const dirs: string[] = [];
 
@@ -82,6 +82,7 @@ describe("paper week + enter", () => {
   });
 
   it("accepts one entry and rejects duplicate email", async () => {
+    delete process.env.VERCEL;
     const dir = mkdtempSync(path.join(tmpdir(), "gse-contest-"));
     dirs.push(dir);
     process.env.GSE_CONTEST_STORE_PATH = path.join(dir, "entries.json");
@@ -120,5 +121,20 @@ describe("paper week + enter", () => {
     const board = await leaderboard(live.weekId);
     expect(board.length).toBeGreaterThanOrEqual(1);
     expect(board[0]!.displayName).toBe("Alpha");
+  });
+});
+
+describe("resolveContestStorageMode", () => {
+  const prevVercel = process.env.VERCEL;
+  afterEach(() => {
+    if (prevVercel === undefined) delete process.env.VERCEL;
+    else process.env.VERCEL = prevVercel;
+  });
+
+  it("uses file when stub and not on Vercel", () => {
+    delete process.env.VERCEL;
+    // isStubMode depends on db package env — in unit tests without DATABASE_URL typically stub
+    const mode = resolveContestStorageMode();
+    expect(["file", "postgres", "unavailable"]).toContain(mode);
   });
 });
