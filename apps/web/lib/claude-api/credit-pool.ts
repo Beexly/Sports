@@ -1,27 +1,24 @@
 /**
  * Credit-pool attribution for AI spend.
  *
- * Every call is recorded to the DB ledger (ClaudeApiCallRecord) with the resolved
- * `modelName`. Provider-shaped ids let us attribute spend to the credit pool that
- * paid for it WITHOUT a schema migration:
- *
- *   - Bedrock: anthropic.* / us.anthropic.* → AWS Activate
- *   - Vertex:  claude-…@version              → Google partner credit
- *   - Cerebras free-lane: gpt-oss-* / *cerebras* → free (reward programs / free tier)
- *   - plain claude-*                         → Anthropic direct (cash unless Claude Startups)
- *
- * This answers: "how much of AWS Activate vs Vertex vs free-lane vs cash?"
+ * Ledger `modelName` shapes map to pools without a schema migration:
+ *   - Bedrock: anthropic.* / us.anthropic.*     → aws_activate
+ *   - Vertex:  claude-…@version                 → vertex_partner
+ *   - Azure Foundry: azure-foundry/*            → azure_foundry
+ *   - Cerebras free-lane: gpt-oss-* / *cerebras* → cerebras_free
+ *   - plain claude-*                            → anthropic_direct (cash)
  */
 
 export type CreditPool =
   | "aws_activate"
   | "vertex_partner"
+  | "azure_foundry"
   | "cerebras_free"
   | "anthropic_direct";
 
 export interface CreditPoolMeta {
   readonly label: string;
-  readonly provider: "bedrock" | "vertex" | "cerebras" | "anthropic";
+  readonly provider: "bedrock" | "vertex" | "azure" | "cerebras" | "anthropic";
   /** Whether this spend is offsettable by a free tier or cloud-program credit. */
   readonly creditEligible: boolean;
   readonly note: string;
@@ -40,6 +37,12 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
     creditEligible: true,
     note: "Claude via Vertex Model Garden — billable to Google/Anthropic partner credits.",
   },
+  azure_foundry: {
+    label: "Azure AI Foundry",
+    provider: "azure",
+    creditEligible: true,
+    note: "Claude via Foundry Messages API — bills Azure subscription; verify credit SKU covers Claude.",
+  },
   cerebras_free: {
     label: "Cerebras free lane",
     provider: "cerebras",
@@ -56,16 +59,13 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
 
 /**
  * Classify a recorded model id to the credit pool that paid for it.
- *
- * Order: Vertex @ · Bedrock anthropic. · Cerebras free · Anthropic cash default.
  * Unknown shapes default to anthropic_direct (never over-claim credit coverage).
  */
 export function creditPoolForModel(modelName: string): CreditPool {
   const id = modelName.trim();
-  if (id.includes("@")) return "vertex_partner"; // e.g. claude-3-5-sonnet-v2@20241022
-  // Bedrock: "anthropic.claude-..." or cross-region "us.anthropic.claude-..."
+  if (id.startsWith("azure-foundry/")) return "azure_foundry";
+  if (id.includes("@")) return "vertex_partner";
   if (/^(?:[a-z]{2,4}\.)?anthropic\./.test(id)) return "aws_activate";
-  // Free-lane Cerebras (default gpt-oss-120b) and explicit cerebras ids
   if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "cerebras_free";
   return "anthropic_direct";
 }
@@ -92,7 +92,6 @@ function toNumber(value: SpendRecord["estimatedCostUsd"]): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-/** Pre-grouped ledger rows (e.g. from a Prisma groupBy by modelName). */
 export interface GroupedSpendRecord extends SpendRecord {
   readonly calls: number;
 }
@@ -113,9 +112,6 @@ function finalize(
     .sort((a, b) => b.estimatedCostUsd - a.estimatedCostUsd);
 }
 
-/**
- * Roll up per-call ledger records by credit pool. Pure — unit-tested without DB.
- */
 export function rollupByCreditPool(records: readonly SpendRecord[]): CreditPoolTotals[] {
   const acc = new Map<CreditPool, { calls: number; input: number; output: number; usd: number }>();
   for (const record of records) {
@@ -130,9 +126,6 @@ export function rollupByCreditPool(records: readonly SpendRecord[]): CreditPoolT
   return finalize(acc);
 }
 
-/**
- * Same rollup over pre-grouped rows (one row per model + call count).
- */
 export function rollupGroupedByCreditPool(groups: readonly GroupedSpendRecord[]): CreditPoolTotals[] {
   const acc = new Map<CreditPool, { calls: number; input: number; output: number; usd: number }>();
   for (const group of groups) {

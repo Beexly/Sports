@@ -1,17 +1,15 @@
 /**
  * Provider dispatch for Claude message calls.
  *
- * `callClaude` is a drop-in for `callClaudeMessages` with one addition: when the
- * operator has deliberately selected Bedrock (`CLAUDE_PROVIDER=bedrock` + AWS
- * creds), the call is routed to AWS Bedrock so the spend hits AWS Activate GenAI
- * credits instead of the Anthropic bill. On ANY Bedrock error — misconfiguration
- * or a runtime API failure — it transparently falls back to the direct Anthropic
- * API, so reliability and output governance never regress.
+ * Routes by CLAUDE_PROVIDER (single selection) when fully configured:
+ *   bedrock       → AWS Bedrock InvokeModel (Activate GenAI credits)
+ *   vertex        → Google Vertex Model Garden (partner credits)
+ *   azure|azure-foundry → Microsoft Foundry Anthropic Messages API (Azure bill/credits)
  *
- * With no provider selected (the default), this is a byte-for-byte pass-through to
- * `callClaudeMessages`. Adoption is the same deliberate, per-surface flip pattern
- * the rest of claude-api uses (model-router, free-lane): a call site swaps
- * `callClaudeMessages(req)` for `callClaude(req)` when it's ready to be credit-routable.
+ * On ANY provider error (config or runtime) → direct Anthropic API so reliability
+ * and governance never regress. Default (unset) is Anthropic-only.
+ *
+ * Free-lane Cerebras is a separate path (free-lane.ts), not CLAUDE_PROVIDER.
  */
 import { callClaudeMessages, type ClaudeMessagesRequest, type ClaudeMessagesResult } from "./messages";
 import { pickModelForSurface } from "./model-router";
@@ -27,6 +25,12 @@ import {
   VertexConfigError,
   VertexMessagesError,
 } from "./providers/vertex";
+import {
+  callAzureFoundryClaudeMessages,
+  isAzureFoundryProviderSelected,
+  AzureFoundryConfigError,
+  AzureFoundryMessagesError,
+} from "./providers/azure-foundry";
 
 type Env = Record<string, string | undefined>;
 
@@ -40,10 +44,9 @@ export function resolveAnthropicModelId(request: ClaudeMessagesRequest): string 
 }
 
 /**
- * Provider-aware Claude call. Routes to Bedrock or Vertex only when that provider
- * is explicitly selected (single `CLAUDE_PROVIDER` value) and configured; otherwise
- * — and on ANY provider error (config or runtime) — uses the direct Anthropic API,
- * so a credits-routing problem never takes a surface down.
+ * Provider-aware Claude call. One credit cloud at a time via CLAUDE_PROVIDER.
+ * Failures always fall through to direct Anthropic (cash) rather than taking
+ * the surface down.
  */
 export async function callClaude(
   request: ClaudeMessagesRequest,
@@ -72,6 +75,17 @@ export async function callClaude(
       return await callVertexClaudeMessages(providerRequest, env);
     } catch (error) {
       if (!(error instanceof VertexMessagesError) && !(error instanceof VertexConfigError)) {
+        throw error;
+      }
+    }
+  } else if (isAzureFoundryProviderSelected(env)) {
+    try {
+      return await callAzureFoundryClaudeMessages(providerRequest, env);
+    } catch (error) {
+      if (
+        !(error instanceof AzureFoundryMessagesError) &&
+        !(error instanceof AzureFoundryConfigError)
+      ) {
         throw error;
       }
     }

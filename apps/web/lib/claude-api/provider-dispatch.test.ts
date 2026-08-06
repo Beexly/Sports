@@ -93,4 +93,23 @@ describe("callClaude — provider routing", () => {
     expect((fetchImpl.mock.calls[1] as unknown as [string])[0]).toBe("https://api.anthropic.com/v1/messages");
     expect(result.text).toBe("anthropic-direct");
   });
+
+  it("routes to Azure Foundry when CLAUDE_PROVIDER=azure and configured", async () => {
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ content: [{ type: "text", text: "via-azure" }], usage: { input_tokens: 1, output_tokens: 1 } }),
+      text: async () => "",
+    }) as unknown as Response);
+    const env = {
+      CLAUDE_PROVIDER: "azure",
+      AZURE_FOUNDRY_RESOURCE: "gse-foundry",
+      AZURE_FOUNDRY_API_KEY: "az-key",
+      AZURE_FOUNDRY_MODEL_MAP: JSON.stringify({ "claude-sonnet-4-6": "claude-sonnet-4-6" }),
+    };
+    const result = await callClaude(baseReq(fetchImpl as unknown as typeof fetch), env);
+    expect((fetchImpl.mock.calls[0] as unknown as [string])[0]).toContain("services.ai.azure.com/anthropic/v1/messages");
+    expect(result.text).toBe("via-azure");
+    expect(result.modelName).toBe("azure-foundry/claude-sonnet-4-6");
+  });
 });
