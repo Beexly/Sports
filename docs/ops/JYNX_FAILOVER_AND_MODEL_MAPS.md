@@ -2,6 +2,7 @@
 
 **Code:** `apps/web/lib/claude-api/jynx.ts`, `provider-dispatch.ts`, `free-lane.ts`, `providers/*`  
 **Examples:** `apps/web/lib/claude-api/jynx-examples.ts`  
+**Errors/Cerebras:** `JYNX_ERROR_HANDLING_AND_CEREBRAS.md`  
 **Compare:** `docs/ops/JYNX_VS_AI_GATEWAYS.md`
 
 ---
