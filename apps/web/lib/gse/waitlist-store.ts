@@ -3,7 +3,7 @@
  *
  * 1) Postgres when !isStubMode() — durable on Vercel (CREATE TABLE IF NOT EXISTS).
  * 2) Local JSON file for dev/CI / stub mode (non-Vercel).
- * 3) On Vercel+stub: still attempt file (may fail); prefer postgres when Neon is live.
+ * 3) On Vercel+stub: refuse writes (unavailable) — never claim durable file store.
  *
  * Does NOT require the gated Prisma WaitlistLead model. Table: gse_waitlist_leads.
  * Owner may later migrate to formal Prisma model; selectWaitlistStore stays the switch.
