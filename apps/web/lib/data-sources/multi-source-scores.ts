@@ -3,6 +3,9 @@
  *
  * Primary → fallback chain per sport. Never a single free source for scores.
  * oddsApiRequired=false. Paid Odds is optional enrichment only.
+ *
+ * Settlement callers MUST pass `dates` (ESPN YYYYMMDD keys and/or ISO days)
+ * for historical overdue picks — undated boards are "now" only.
  */
 
 import { fetchScoresFreeFirst } from "./free-first-ingest";
@@ -19,6 +22,7 @@ import type { Sport } from "./source-router";
 import { fetchMlbScheduleScores } from "./free-adapters/mlb-statsapi";
 import { fetchBalldontlieScores } from "./free-adapters/balldontlie-nba";
 import { fetchNhlWebScores } from "./free-adapters/nhl-web-api";
+import { compactEspnDateRanges } from "./settlement-score-dates";
 
 export type ScoreSourceId =
   | "espn-public-api"
@@ -36,6 +40,8 @@ export type MultiSourceScoreResult = {
   readonly failover: boolean;
   readonly errors: readonly string[];
   readonly oddsApiRequired: false;
+  /** ESPN date params actually requested (empty = undated "now" board). */
+  readonly datesRequested: readonly string[];
 };
 
 function henryToNormalized(sport: Sport, games: readonly NcaaGame[]): NormalizedGame[] {
@@ -75,14 +81,143 @@ export function scoreSourceChain(sport: Sport): readonly ScoreSourceId[] {
   }
 }
 
+function mergeGames(parts: readonly (readonly NormalizedGame[])[]): NormalizedGame[] {
+  const byId = new Map<string, NormalizedGame>();
+  for (const part of parts) {
+    for (const g of part) {
+      const key = g.gameId || `${g.startTime}|${g.home?.abbreviation}|${g.away?.abbreviation}`;
+      const prev = byId.get(key);
+      // Prefer completed rows when deduping.
+      if (!prev || (!prev.completed && g.completed)) byId.set(key, g);
+    }
+  }
+  return [...byId.values()];
+}
+
+async function fetchEspnForDates(
+  sport: Sport,
+  espnKeys: readonly string[],
+  fetchImpl?: typeof fetch,
+): Promise<{ games: NormalizedGame[]; errors: string[]; params: string[] }> {
+  const errors: string[] = [];
+  if (espnKeys.length === 0) {
+    try {
+      const games = await fetchEspnScoreboard(sport, { fetchImpl });
+      return { games: [...games], errors, params: [] };
+    } catch (e) {
+      errors.push(`espn-now: ${e instanceof Error ? e.message : String(e)}`);
+      return { games: [], errors, params: [] };
+    }
+  }
+
+  const params = compactEspnDateRanges(espnKeys);
+  const chunks: NormalizedGame[][] = [];
+  // Serial ranges keep ESPN friendly under cron; cap already applied upstream.
+  for (const dates of params) {
+    try {
+      const games = await fetchEspnScoreboard(sport, { fetchImpl, dates });
+      chunks.push([...games]);
+    } catch (e) {
+      errors.push(`espn ${dates}: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+  return { games: mergeGames(chunks), errors, params };
+}
+
+async function fetchSecondaryForIsoDays(
+  source: ScoreSourceId,
+  sport: Sport,
+  isoKeys: readonly string[],
+  fetchImpl?: typeof fetch,
+): Promise<{ games: NormalizedGame[]; errors: string[] }> {
+  const errors: string[] = [];
+  const days = isoKeys.length > 0 ? isoKeys : [new Date().toISOString().slice(0, 10)];
+  const chunks: NormalizedGame[][] = [];
+
+  for (const date of days) {
+    try {
+      if (source === "mlb-statsapi") {
+        chunks.push([...(await fetchMlbScheduleScores({ fetchImpl, date }))]);
+      } else if (source === "balldontlie-nba") {
+        chunks.push([...(await fetchBalldontlieScores({ fetchImpl, date }))]);
+      } else if (source === "nhl-web-api") {
+        chunks.push([...(await fetchNhlWebScores({ fetchImpl, date }))]);
+      } else if (source === "henrygd-ncaa") {
+        const path = sport === "ncaab" ? HENRYGD_PATHS.mbb : HENRYGD_PATHS.cfb;
+        const ncaa = await fetchHenrygdScoreboard(path, { fetchImpl });
+        chunks.push([...henryToNormalized(sport, ncaa)]);
+        // henrygd is full board once — no need to loop days
+        break;
+      }
+    } catch (e) {
+      errors.push(`${source} ${date}: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+  return { games: mergeGames(chunks), errors };
+}
+
+export type MultiSourceOpts = {
+  readonly fetchImpl?: typeof fetch;
+  /**
+   * ESPN-style day keys (YYYYMMDD). When provided, scoreboards for those days
+   * are fetched instead of the undated "current" board.
+   */
+  readonly espnDateKeys?: readonly string[];
+  /** ISO days YYYY-MM-DD for secondary APIs (mlb/nhl/balldontlie). */
+  readonly isoDateKeys?: readonly string[];
+};
+
+/**
+ * Fetch free scores. Prefer `espnDateKeys` when settling overdue picks.
+ * Returns merged games across requested dates; still tries secondary sources
+ * for dual confirmation / failover.
+ */
 export async function fetchScoresMultiSource(
   sport: Sport,
-  opts: { fetchImpl?: typeof fetch } = {},
+  opts: MultiSourceOpts = {},
 ): Promise<MultiSourceScoreResult> {
   const chain = scoreSourceChain(sport);
   const errors: string[] = [];
   const attempted: ScoreSourceId[] = [];
+  const espnKeys = opts.espnDateKeys ?? [];
+  const isoKeys = opts.isoDateKeys ?? [];
+  const datesRequested = espnKeys.length > 0 ? [...espnKeys] : [];
 
+  // When settling historical days, go straight to date-targeted ESPN (skip undated free-first).
+  if (espnKeys.length > 0) {
+    attempted.push("espn-public-api");
+    const espn = await fetchEspnForDates(sport, espnKeys, opts.fetchImpl);
+    errors.push(...espn.errors);
+
+    let games = espn.games;
+    let used: ScoreSourceId | null = games.length > 0 ? "espn-public-api" : null;
+
+    // Dual / failover secondaries (do not replace ESPN finals — merge).
+    for (const source of chain) {
+      if (source === "espn-public-api") continue;
+      attempted.push(source);
+      const sec = await fetchSecondaryForIsoDays(source, sport, isoKeys, opts.fetchImpl);
+      errors.push(...sec.errors);
+      if (sec.games.length > 0) {
+        games = mergeGames([games, sec.games]);
+        if (!used) used = source;
+      }
+    }
+
+    return {
+      sport,
+      primary: chain[0] ?? null,
+      used,
+      attempted,
+      games,
+      failover: attempted.length > 1,
+      errors,
+      oddsApiRequired: false,
+      datesRequested: espn.params.length > 0 ? espn.params : datesRequested,
+    };
+  }
+
+  // Undated path (live board / health probes) — original chain behavior.
   for (const source of chain) {
     attempted.push(source);
     try {
@@ -98,9 +233,9 @@ export async function fetchScoresMultiSource(
             failover: attempted.length > 1,
             errors,
             oddsApiRequired: false,
+            datesRequested: [],
           };
         }
-        // empty board is seasonal — still try fallback for dual confirmation sports
         if (chain.length === 1) {
           return {
             sport,
@@ -111,6 +246,7 @@ export async function fetchScoresMultiSource(
             failover: false,
             errors,
             oddsApiRequired: false,
+            datesRequested: [],
           };
         }
         errors.push("espn-public-api: empty board");
@@ -129,6 +265,7 @@ export async function fetchScoresMultiSource(
             failover: true,
             errors,
             oddsApiRequired: false,
+            datesRequested: [],
           };
         }
         errors.push("henrygd-ncaa: empty");
@@ -146,6 +283,7 @@ export async function fetchScoresMultiSource(
             failover: true,
             errors,
             oddsApiRequired: false,
+            datesRequested: [],
           };
         }
         errors.push("mlb-statsapi: empty");
@@ -163,6 +301,7 @@ export async function fetchScoresMultiSource(
             failover: true,
             errors,
             oddsApiRequired: false,
+            datesRequested: [],
           };
         }
         errors.push("balldontlie-nba: empty");
@@ -180,6 +319,7 @@ export async function fetchScoresMultiSource(
             failover: true,
             errors,
             oddsApiRequired: false,
+            datesRequested: [],
           };
         }
         errors.push("nhl-web-api: empty");
@@ -189,7 +329,6 @@ export async function fetchScoresMultiSource(
     }
   }
 
-  // last resort: espn even if empty
   try {
     const games = await fetchEspnScoreboard(sport, { fetchImpl: opts.fetchImpl });
     return {
@@ -201,6 +340,7 @@ export async function fetchScoresMultiSource(
       failover: attempted.length > 1,
       errors,
       oddsApiRequired: false,
+      datesRequested: [],
     };
   } catch (e) {
     errors.push(`espn-final: ${e instanceof Error ? e.message : String(e)}`);
@@ -213,6 +353,7 @@ export async function fetchScoresMultiSource(
       failover: true,
       errors,
       oddsApiRequired: false,
+      datesRequested: [],
     };
   }
 }

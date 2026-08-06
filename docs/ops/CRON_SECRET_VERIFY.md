@@ -58,7 +58,9 @@ Look for:
 - `path: "free"` when Odds API key absent (correct free-first mode)
 - `picksSettled` > 0 when backlog exists and scores match
 - `clvRepair` — pending CLV grades drained this cycle
+- `snapshotRepair` — pending SNAPSHOT_OUTCOME drained this cycle
 - `rca` / `stp` for root-cause if still overdue
+- non-zero `picksSettled` after deploy of date-targeted free scores (historical overdue)
 
 ## 5. Ops truth detail (Bearer)
 

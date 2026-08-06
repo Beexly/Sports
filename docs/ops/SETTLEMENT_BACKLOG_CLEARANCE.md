@@ -84,6 +84,19 @@ Cron `/api/cron/settle-picks` free branch already returns the full `free` object
 7. Track burn: pass prior overdue into the runner or compare consecutive health probes.
 8. Declare clear only when settlement-health is `HEALTHY` **and** net burn stayed positive.
 
+## 2026-08-06 — historical free scores + snapshot parity
+
+**RCA finding (code path):** free settle called ESPN **undated** scoreboard ("now" only).
+Overdue picks from past days never saw a final → permanent `OVERDUE_NO_SCORE` / health CRITICAL.
+
+**Fix:** derive `YYYYMMDD` keys from pending commence times (cap 21 days) and
+`fetchScoresMultiSource({ espnDateKeys, isoDateKeys })`. Team match also uses
+final **abbr** tokens (not only full names). Free path now writes + drains
+`SNAPSHOT_OUTCOME` (was enqueue-only) alongside `CLV_GRADE` / `clvRepair`.
+
+Watch settle response for: `picksSettled`, `free.clvRepair`, `free.snapshotRepair`,
+`free.rca`, and ops `overduePending` burn-down.
+
 ## Integrity companions (same PR family)
 
 - **placebo-leak harness** fixed: bare CLV series rejected (was no-op + inverted);

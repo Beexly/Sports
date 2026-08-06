@@ -118,34 +118,39 @@ export type PendingPick = {
   readonly gameDateIso: string;
 };
 
-export type SettlementOutcome =
-  | {
-      pickId: string;
-      status: "SETTLED";
-      result: SettlementResult;
-      confirmation: Confirmation;
-      homeScore: number;
-      awayScore: number;
-      sources: readonly string[];
-    }
-  | { pickId: string; status: "HELD"; reason: "DISPUTED"; sources: readonly string[] }
-  | { pickId: string; status: "PENDING"; reason: "NO_FINAL" | "ORIENT_FAIL" };
+/** Token equality or containment (handles "LAD" vs "Los Angeles Dodgers" via abbr path). */
+export function teamTokensMatch(a: string, b: string): boolean {
+  if (!a || !b) return false;
+  return a === b || a.includes(b) || b.includes(a);
+}
 
-/** Does this trusted final involve both of the pick's teams (token match, either orientation)? */
-function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
-  const pickTeams = new Set([normalizeTeamToken(pick.homeTeam), normalizeTeamToken(pick.awayTeam)]);
-  const finalTeams = [f.home.name, f.away.name].map(normalizeTeamToken);
-  // Each pick team must token-match a final team (equal, or one contains the other).
-  return [...pickTeams].every((pt) => finalTeams.some((ft) => pt === ft || pt.includes(ft) || ft.includes(pt)));
+function finalSideTokens(side: { name: string; abbr: string }): string[] {
+  return [normalizeTeamToken(side.name), normalizeTeamToken(side.abbr)].filter(Boolean);
+}
+
+/** Does this trusted final involve both of the pick's teams (name OR abbr, either orientation)? */
+export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
+  const pickTeams = [normalizeTeamToken(pick.homeTeam), normalizeTeamToken(pick.awayTeam)].filter(
+    Boolean,
+  );
+  const finalTokens = [...finalSideTokens(f.home), ...finalSideTokens(f.away)];
+  return pickTeams.every((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
 }
 
 /** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */
-function orientToPickHome(pick: PendingPick, f: TrustedFinal): { homeScore: number; awayScore: number } | null {
+export function orientToPickHome(
+  pick: PendingPick,
+  f: TrustedFinal,
+): { homeScore: number; awayScore: number } | null {
   const ph = normalizeTeamToken(pick.homeTeam);
-  const fh = normalizeTeamToken(f.home.name);
-  const fa = normalizeTeamToken(f.away.name);
-  if (ph === fh || ph.includes(fh) || fh.includes(ph)) return { homeScore: f.home.score, awayScore: f.away.score };
-  if (ph === fa || ph.includes(fa) || fa.includes(ph)) return { homeScore: f.away.score, awayScore: f.home.score };
+  const homeTokens = finalSideTokens(f.home);
+  const awayTokens = finalSideTokens(f.away);
+  if (homeTokens.some((t) => teamTokensMatch(ph, t))) {
+    return { homeScore: f.home.score, awayScore: f.away.score };
+  }
+  if (awayTokens.some((t) => teamTokensMatch(ph, t))) {
+    return { homeScore: f.away.score, awayScore: f.home.score };
+  }
   return null;
 }
 
@@ -184,3 +189,16 @@ export function settlePendingPicks(picks: readonly PendingPick[], finals: readon
     };
   });
 }
+
+export type SettlementOutcome =
+  | {
+      pickId: string;
+      status: "SETTLED";
+      result: SettlementResult;
+      confirmation: Confirmation;
+      homeScore: number;
+      awayScore: number;
+      sources: readonly string[];
+    }
+  | { pickId: string; status: "HELD"; reason: "DISPUTED"; sources: readonly string[] }
+  | { pickId: string; status: "PENDING"; reason: "NO_FINAL" | "ORIENT_FAIL" };
