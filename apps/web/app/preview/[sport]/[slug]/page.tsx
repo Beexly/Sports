@@ -53,6 +53,11 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import type { PickType } from "@sports/db";
+import {
+  bindPublicConsensusClaim,
+  consensusEvidenceCaption,
+  isBookmakerConsensusClaim,
+} from "@/lib/claims/public-consensus-claim";
 
 // Per-viewer gating means this page can never be served from a shared static /
 // full-route cache — a cached Pro render would hand the paid metrics to the next
@@ -310,11 +315,32 @@ export default async function PreviewPage({ params }: Props) {
                 </Link>
               </p>
             )}
-            {/* The short reasoning teaser is free-visible (the board serves
-                reasoningShort to FREE); the full factor trail never renders here. */}
-            {pick.reasoningShort && (
-              <p className="text-sm mt-2 text-ion-white">{pick.reasoningShort}</p>
-            )}
+            {/* Free teaser. Quantified "bookmaker consensus" claims only render
+                when bound to bookmakerCount + dataFreshnessAt (T-1 tripwire).
+                Non-consensus shorts still render as stored. Claim text is not
+                rewritten — evidence rides as a caption. */}
+            {(() => {
+              const short = pick.reasoningShort?.trim() ?? "";
+              if (!short) return null;
+              if (isBookmakerConsensusClaim(short)) {
+                const bound = bindPublicConsensusClaim({
+                  reasoningShort: short,
+                  consensusPct: pick.consensusPct,
+                  bookmakerCount: pick.bookmakerCount,
+                  dataFreshnessAt: pick.dataFreshnessAt,
+                });
+                if (!bound) return null;
+                return (
+                  <>
+                    <p className="text-sm mt-2 text-ion-white">{bound.claimText}</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+                      {consensusEvidenceCaption(bound)}
+                    </p>
+                  </>
+                );
+              }
+              return <p className="text-sm mt-2 text-ion-white">{short}</p>;
+            })()}
           </section>
         ) : (
           <section className="rounded-lg border border-mineral p-6">
