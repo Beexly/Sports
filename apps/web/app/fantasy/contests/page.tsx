@@ -35,7 +35,7 @@ export default async function ContestBayPage() {
             <p className="mt-5 max-w-3xl text-lg text-ion-1">
               Pick home or away on every game. Lock before first kickoff. Climb a pure accuracy
               leaderboard. This is a completed free paper product — no entry fee, no prize pool,
-              no wagering. Process practice with receipts.
+              no wagering. Process practice with receipts. Slate kind: methodology paper board (not live market odds).
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-sm text-ion-2">
               <span className="rounded-full border border-mineral px-3 py-1">

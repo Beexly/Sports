@@ -16,10 +16,23 @@ export const ContestEntrySchema = z.object({
       }),
     )
     .min(3, "Pick at least 3 games")
-    .max(16, "At most 16 picks"),
-  consent: z.literal(true, {
-    errorMap: () => ({ message: "Consent is required" }),
-  }),
+    .max(16, "At most 16 picks")
+    .superRefine((picks, ctx) => {
+      const seen = new Set<string>();
+      for (const p of picks) {
+        if (seen.has(p.gameId)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Duplicate game pick",
+          });
+          return;
+        }
+        seen.add(p.gameId);
+      }
+    }),
+  consent: z
+    .boolean()
+    .refine((v) => v === true, { message: "Consent is required" }),
   honeypot: z.string().max(0).optional().or(z.literal("")),
 });
 
@@ -43,7 +56,7 @@ export type ContestGame = {
   away: string;
   home: string;
   kickoff: string;
-  /** null until settled */
+  /** null until operator settles via settlement file */
   result: "home" | "away" | "push" | null;
 };
 
@@ -56,4 +69,6 @@ export type ContestWeek = {
   status: "open" | "locked" | "settled";
   games: ContestGame[];
   rules: readonly string[];
+  /** Honest label: synthetic methodology slate vs operator-settled */
+  slateKind: "methodology_paper";
 };

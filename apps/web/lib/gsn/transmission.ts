@@ -6,10 +6,9 @@
  * intelligence format (Galaxy Brief, Market Mirage, Roster Shock, Coaching Edge,
  * Line-Movement Autopsy) connected to the same reasoning the engine uses.
  *
- * DOCTRINE: this is an explicitly illustrative SAMPLE transmission — methodology
- * and scenario language, no real teams, no fabricated track-record numbers
- * presented as the platform's record. Live daily transmissions are generated
- * from the real slate once it's wired behind the readiness gate.
+ * DOCTRINE: methodology fallback is illustrative structure language only —
+ * never fabricated track-record numbers. Board-sourced transmissions use
+ * published/gated row labels from loadBoardState (no invented edge claims).
  */
 
 export type SegmentTone = "ion" | "anomaly" | "deep";
@@ -23,7 +22,10 @@ export type TransmissionSegment = {
 };
 
 export type Transmission = {
-  readonly illustrative: true;
+  /** True when content is methodology/demo structure, not live board-derived. */
+  readonly illustrative: boolean;
+  /** Provenance for the badge. */
+  readonly source: "board" | "methodology";
   /** Date code, shown after "GSN TRANSMISSION //". */
   readonly code: string;
   readonly summary: ReadonlyArray<{ label: string; count: number; tone: SegmentTone }>;
@@ -38,6 +40,7 @@ export const TONE_HEX: Record<SegmentTone, string> = {
 
 export const SAMPLE_TRANSMISSION: Transmission = {
   illustrative: true,
+  source: "methodology",
   code: "06 · 04 · 26",
   summary: [
     { label: "Market Mirages", count: 3, tone: "anomaly" },
