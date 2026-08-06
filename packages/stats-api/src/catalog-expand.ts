@@ -355,6 +355,77 @@ export function expandGseProprietary(): MetricDef[] {
   );
 }
 
+/**
+ * Own-derived formula catalog rows — expose the pure formulas in
+ * formulas/derived.ts (rest days, rolling mean, success rate, self-CLV)
+ * through the public metric catalog. Ids match each formula's own
+ * `formulaId` exactly (see formulas/derived.ts), so a caller goes straight
+ * from catalog entry to function call with no separate id-mapping table.
+ * These are real, tested formulas (definition-first honesty: catalog ACTIVE
+ * means the formula is real, not that a value provider is wired yet —
+ * handleGetMetricValue reports 501 honestly when one isn't).
+ */
+export function expandOwnDerivedFormulas(): MetricDef[] {
+  const out: MetricDef[] = [
+    row(
+      "derived.rest_days",
+      "Rest Days (derived)",
+      "MULTI",
+      "context",
+      "ACTIVE",
+      "days",
+      "Days between a team's last game and the as-of timestamp, from nflverse schedules.",
+      "restDays",
+      ["nflverse.schedules"],
+      env("cc_by_4", "public_api", "Attribute nflverse"),
+    ),
+    row(
+      "derived.self_clv_bps",
+      "Self-CLV (owned closing archive)",
+      "MULTI",
+      "proprietary",
+      "ACTIVE",
+      "bps",
+      "CLV in basis points from GSE's own closing-line archive only — never the Odds API spine.",
+      "selfClvFromArchive",
+      ["quote_plane.closing_archive"],
+      env("internal_synthetic", "elite_api", "First-party archive only; no Odds API dependency"),
+    ),
+  ];
+  const rollWindows = [4, 8, 16];
+  for (const w of rollWindows) {
+    out.push(
+      row(
+        `derived.roll_mean.w${w}`,
+        `Rolling Mean (last ${w})`,
+        "MULTI",
+        "context",
+        "ACTIVE",
+        "mixed",
+        `Rolling mean over the last ${w} qualifying values on a cleared base; refuses below an 8-sample floor.`,
+        "rollingMean",
+        ["nflverse.pbp"],
+        env("cc_by_4", "public_api", "Attribute nflverse"),
+      ),
+    );
+    out.push(
+      row(
+        `derived.success_rate.w${w}`,
+        `Success Rate (last ${w})`,
+        "MULTI",
+        "context",
+        "ACTIVE",
+        "rate",
+        `Success rate over the last ${w} plays on a cleared base; refuses below a 20-attempt floor. Not a win-rate claim.`,
+        "successRateRoll",
+        ["nflverse.pbp"],
+        env("cc_by_4", "public_api", "Attribute nflverse"),
+      ),
+    );
+  }
+  return out;
+}
+
 /** DFS contest metrics. */
 export function expandDfs(): MetricDef[] {
   const out: MetricDef[] = [];
@@ -390,6 +461,7 @@ export function expandAll(): MetricDef[] {
     ...expandSoccer(),
     ...expandContextFree(),
     ...expandGseProprietary(),
+    ...expandOwnDerivedFormulas(),
     ...expandDfs(),
     ...expandNhlDense(),
     ...expandNcaaDense(),
