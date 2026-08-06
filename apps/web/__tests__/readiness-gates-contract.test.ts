@@ -57,7 +57,9 @@ describe("ReadinessGates contract", () => {
 
   it("bootstrapGateResponse() returns the expected JSON envelope", () => {
     expect(src).toMatch(/export\s+function\s+bootstrapGateResponse/);
-    expect(src).toMatch(/bootstrapMode:\s*true/);
+    expect(src).toMatch(/bootstrapMode/);
+    expect(src).toMatch(/feature_gate/);
+    expect(src).toMatch(/reason/)
     expect(src).toMatch(/hint:\s*"/);
   });
 });

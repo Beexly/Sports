@@ -147,17 +147,35 @@ export function getReadinessGates(): ReadinessGates {
 }
 
 /**
- * Returns a structured 503 error body for routes blocked by bootstrap mode.
+ * Returns a structured 503 error body for routes blocked by readiness gates.
  * Pair with `{ status: 503 }` in the route handler.
+ *
+ * Honesty: do NOT claim "bootstrap mode" when bootstrap is off and only a
+ * feature flag (e.g. PUBLIC_PICKS_ENABLED) is closed. Live prod previously
+ * reported isBootstrapMode=false while /api/picks said bootstrapMode:true.
  */
 export function bootstrapGateResponse(featureName: string): {
   error: string;
-  bootstrapMode: true;
+  /** True only when CANONICAL_HISTORY is still off (true bootstrap). */
+  bootstrapMode: boolean;
+  /** Distinguishes history-bootstrap from a deliberate feature gate. */
+  reason: "bootstrap" | "feature_gate";
   hint: string;
 } {
+  const gates = getReadinessGates();
+  if (gates.isBootstrapMode) {
+    return {
+      error: `${featureName} is disabled in bootstrap mode.`,
+      bootstrapMode: true,
+      reason: "bootstrap",
+      hint: "Set the appropriate environment flag to enable this feature. See .env.example for the bootstrap progression guide.",
+    };
+  }
   return {
-    error: `${featureName} is disabled in bootstrap mode.`,
-    bootstrapMode: true,
-    hint: "Set the appropriate environment flag to enable this feature. See .env.example for the bootstrap progression guide.",
+    error: `${featureName} is disabled by feature gate.`,
+    bootstrapMode: false,
+    reason: "feature_gate",
+    hint:
+      "Founder-gated closed (e.g. PUBLIC_PICKS_ENABLED / PERFORMANCE_STATS_ENABLED). Not bootstrap history mode — see /api/ops/public-surface-truth gates.",
   };
 }

@@ -64,8 +64,9 @@ describe("/api/clv", () => {
     const { status, body } = await callClv();
 
     expect(status).toBe(503);
-    expect(body["bootstrapMode"]).toBe(true);
-    // The gate short-circuits before any DB read.
+    // Honest gate: bootstrapMode tracks real history mode, not "any feature off".
+    expect(typeof body["bootstrapMode"]).toBe("boolean");
+    expect(String(body["error"] ?? "")).toMatch(/disabled/i);
     expect(mocks.pickCount).not.toHaveBeenCalled();
   });
 
@@ -105,6 +106,7 @@ describe("/api/clv", () => {
     const { status, body } = await callClv();
 
     expect(status).toBe(503);
-    expect(body["bootstrapMode"]).toBe(true);
+    expect(typeof body["bootstrapMode"]).toBe("boolean");
+    expect(String(body["error"] ?? "")).toMatch(/disabled|collecting|unavailable/i);
   });
 });

@@ -74,7 +74,9 @@ describe("Readiness gate enforcement at the engine boundary", () => {
   it("bootstrapGateResponse helper is exported with the right shape", () => {
     const src = read("packages/prediction-engine/src/readiness.ts");
     expect(src).toMatch(/export function bootstrapGateResponse/);
-    expect(src).toMatch(/bootstrapMode:\s*true/);
+    expect(src).toMatch(/bootstrapMode/);
+    expect(src).toMatch(/feature_gate/);
+    expect(src).toMatch(/reason/)
   });
 
   it("process-sport derives isBootstrap from !canPersistCanonicalHistory at function entry", () => {

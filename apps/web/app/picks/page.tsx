@@ -91,11 +91,20 @@ async function fetchPicks(
       hint?: string;
     } | null;
 
-    // Both graceful dark states share the shape: the bootstrap/history gate
-    // (bootstrapMode) and the stale-data kill switch (reason: "stale_data",
-    // distinct body since the 2026-07-10 incident). Render both as a calm
-    // board state, never an error page.
-    if (body?.bootstrapMode || body?.reason === "stale_data") {
+    // Graceful dark states: bootstrap history, feature gate (PUBLIC_PICKS off),
+    // or stale-data kill switch. Never throw an error page for intentional dark.
+    if (
+      body?.bootstrapMode ||
+      body?.reason === "stale_data" ||
+      body?.reason === "feature_gate" ||
+      body?.reason === "bootstrap"
+    ) {
+      const kind =
+        body?.reason === "stale_data"
+          ? "stale"
+          : body?.reason === "feature_gate"
+            ? "gated"
+            : "gated";
       return {
         success: false,
         data: [],
@@ -107,7 +116,7 @@ async function fetchPicks(
         bootstrap: {
           message: body.error ?? "Today's Board is collecting live history.",
           hint: body.hint,
-          kind: body?.reason === "stale_data" ? "stale" : "gated",
+          kind,
         },
       };
     }
