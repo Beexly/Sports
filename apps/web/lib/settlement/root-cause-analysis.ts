@@ -276,9 +276,9 @@ export function classifySettlementRootCause(input: SettlementRcaInput): Settleme
   } else if (input.outcomeStatus === "HELD" || input.holdReason === "DISPUTED") {
     code = "DISPUTED_SCORES";
   } else if (input.outcomeStatus === "SETTLED") {
-    // Settled rows are not backlog; if called, treat single-source as policy note.
-    code =
-      input.confirmation === "SINGLE_SOURCE" ? "SINGLE_SOURCE_POLICY_HOLD" : "UNKNOWN";
+    // Settled is success — free path settles SINGLE_SOURCE by design.
+    // Do not pollute backlog Pareto with "policy hold" for completed rows.
+    code = "UNKNOWN";
   } else if (input.ageHours < 0) {
     code = "NOT_COMMENCED";
   } else if (!overdue) {
@@ -307,11 +307,16 @@ export function classifySettlementRootCause(input: SettlementRcaInput): Settleme
 
 /** Build Pareto of causes (count desc) with cumulative share for 80/20 attack. */
 export function buildCausePareto(findings: readonly SettlementRcaFinding[]): ParetoBucket[] {
+  // Actionable overdue only — exclude timing noise and successful SETTLED (UNKNOWN).
   const backlog = findings.filter(
-    (f) => f.code !== "NOT_COMMENCED" && f.code !== "WITHIN_GRACE" && f.overdue,
+    (f) =>
+      f.overdue &&
+      f.code !== "NOT_COMMENCED" &&
+      f.code !== "WITHIN_GRACE" &&
+      f.code !== "UNKNOWN",
   );
   const counts = new Map<SettlementRootCauseCode, number>();
-  for (const f of backlog.length > 0 ? backlog : findings) {
+  for (const f of backlog) {
     counts.set(f.code, (counts.get(f.code) ?? 0) + 1);
   }
   const ordered = [...counts.entries()].sort((a, b) => b[1] - a[1]);
@@ -335,7 +340,13 @@ export function buildCausePareto(findings: readonly SettlementRcaFinding[]): Par
 export function aggregateSettlementRca(
   findings: readonly SettlementRcaFinding[],
 ): SettlementRcaReport {
-  const overdue = findings.filter((f) => f.overdue).length;
+  const overdue = findings.filter(
+    (f) =>
+      f.overdue &&
+      f.code !== "NOT_COMMENCED" &&
+      f.code !== "WITHIN_GRACE" &&
+      f.code !== "UNKNOWN",
+  ).length;
   const pareto = buildCausePareto(findings);
   const byCategory: Record<FishboneCategory, number> = {
     DATA_SOURCE: 0,
