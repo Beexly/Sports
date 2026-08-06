@@ -108,7 +108,6 @@ export type FreeSettlementRunResult = {
   /** ESPN/ISO date keys used for score fetch this cycle (empty = undated board). */
   scoreDates: { espnKeys: string[]; isoKeys: string[] } | null;
 };
-;
 
 async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
   try {
@@ -183,6 +182,7 @@ export async function runFreePathSettlement(options?: {
           id: true,
           pickType: true,
           selection: true,
+          line: true,
           modelVersion: true,
           edgeScore: true,
           clvLockLine: true,
@@ -260,7 +260,10 @@ export async function runFreePathSettlement(options?: {
         pickId: p.id,
         pickType: p.pickType as PendingPick["pickType"],
         selection: p.selection,
-        line: selectGradingLine(p),
+        line: selectGradingLine({
+          clvLockLine: p.clvLockLine,
+          line: p.line,
+        }),
         homeTeam: p.game.homeTeamName,
         awayTeam: p.game.awayTeamName,
         sportKey: sport.key,
@@ -370,13 +373,9 @@ export async function runFreePathSettlement(options?: {
                 pickType: String(row.pickType),
                 selection: String(row.selection),
                 clvLockLine:
-                  typeof (row as { clvLockLine?: number | null }).clvLockLine === "number"
-                    ? (row as { clvLockLine: number }).clvLockLine
-                    : null,
+                  typeof row.clvLockLine === "number" ? row.clvLockLine : null,
                 clvLockPrice:
-                  typeof (row as { clvLockPrice?: number | null }).clvLockPrice === "number"
-                    ? (row as { clvLockPrice: number }).clvLockPrice
-                    : null,
+                  typeof row.clvLockPrice === "number" ? row.clvLockPrice : null,
                 game: row.game,
               },
               settledAt,
@@ -395,17 +394,17 @@ export async function runFreePathSettlement(options?: {
               db as never,
               {
                 id: row.id,
-                gameId: (row as { gameId?: string }).gameId ?? row.game.id,
-                isBootstrap: Boolean((row as { isBootstrap?: boolean }).isBootstrap),
-                bookmakerCount: Number((row as { bookmakerCount?: number }).bookmakerCount ?? 0),
-                confidence: Number((row as { confidence?: number }).confidence ?? 0),
-                modelVersion: (row as { modelVersion?: string | null }).modelVersion ?? null,
-                factorBreakdown: (row as { factorBreakdown?: unknown }).factorBreakdown ?? null,
+                gameId: row.gameId ?? row.game.id,
+                isBootstrap: Boolean(row.isBootstrap),
+                bookmakerCount: Number(row.bookmakerCount ?? 0),
+                confidence: Number(row.confidence ?? 0),
+                modelVersion: row.modelVersion ?? null,
+                factorBreakdown: row.factorBreakdown ?? null,
               },
               o.result as "WIN" | "LOSS" | "PUSH" | "VOID",
               settledAt,
-              typeof (row.game as { dataQualityScore?: number }).dataQualityScore === "number"
-                ? (row.game as { dataQualityScore: number }).dataQualityScore
+              typeof row.game.dataQualityScore === "number"
+                ? row.game.dataQualityScore
                 : 0,
             );
           } catch (snapErr) {
@@ -419,13 +418,11 @@ export async function runFreePathSettlement(options?: {
             pickId: o.pickId,
             sportKey: sport.key,
             pickType: String(row.pickType ?? "UNKNOWN"),
-            modelVersion: String((row as { modelVersion?: string }).modelVersion ?? "unknown"),
+            modelVersion: String(row.modelVersion ?? "unknown"),
             result: o.result as "WIN" | "LOSS" | "PUSH" | "VOID",
             confirmation: o.confirmation,
             modelEdge:
-              typeof (row as { edgeScore?: number }).edgeScore === "number"
-                ? (row as { edgeScore: number }).edgeScore
-                : null,
+              typeof row.edgeScore === "number" ? row.edgeScore : null,
             clv: clvValue,
             settledAtIso: settledAt.toISOString(),
           });
