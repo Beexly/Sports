@@ -54,6 +54,11 @@ import {
   gradeFreePathClv,
   drainPendingClvGrades,
 } from "@/lib/settlement/free-path-clv";
+import {
+  recordFreePathSnapshot,
+  drainPendingSnapshotOutcomes,
+} from "@/lib/settlement/free-path-snapshot";
+import { uniqueScoreboardDates } from "./settlement-score-dates";
 
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
@@ -98,6 +103,10 @@ export type FreeSettlementRunResult = {
   autonomy: AutonomyPlan | null;
   /** Pending CLV_GRADE work drained this cycle. */
   clvRepair: { attempted: number; graded: number; noClose: number; failed: number } | null;
+  /** PENDING SNAPSHOT_OUTCOME drained this cycle. */
+  snapshotRepair: { attempted: number; done: number; failed: number } | null;
+  /** ESPN/ISO date keys used for score fetch this cycle (empty = undated board). */
+  scoreDates: { espnKeys: string[]; isoKeys: string[] } | null;
 };
 ;
 
@@ -131,6 +140,7 @@ export async function runFreePathSettlement(options?: {
   let picksHeld = 0;
 
   const rcaInputs: Parameters<typeof classifySettlementRootCause>[0][] = [];
+  const scoreDateAcc = new Set<string>();
   const settledPickIds = new Set<string>();
   const confirmationByPickId = new Map<string, "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED">();
   const gradedForLearning: Array<{
@@ -177,12 +187,18 @@ export async function runFreePathSettlement(options?: {
           edgeScore: true,
           clvLockLine: true,
           clvLockPrice: true,
+          gameId: true,
+          isBootstrap: true,
+          bookmakerCount: true,
+          confidence: true,
+          factorBreakdown: true,
           game: {
             select: {
               id: true,
               homeTeamName: true,
               awayTeamName: true,
               commenceTime: true,
+              dataQualityScore: true,
             },
           },
         },
@@ -226,7 +242,16 @@ export async function runFreePathSettlement(options?: {
         continue;
       }
 
-      const multi = await fetchScoresMultiSource(freeSport);
+      // Date-target free scoreboards — undated ESPN board is "now" only (overdue never matches).
+      const { espnKeys, isoKeys } = uniqueScoreboardDates(
+        pendingRows.map((r) => r.game.commenceTime),
+        { maxDays: 21 },
+      );
+      for (const k of espnKeys) scoreDateAcc.add(k);
+      const multi = await fetchScoresMultiSource(freeSport, {
+        espnDateKeys: espnKeys,
+        isoDateKeys: isoKeys,
+      });
       const espn: readonly NormalizedGame[] = multi.games;
       const henry = await loadHenrygdFor(freeSport);
       const finals = buildTrustedFinals(espn, henry);
@@ -364,6 +389,32 @@ export async function runFreePathSettlement(options?: {
             );
           }
 
+          // Free-path SNAPSHOT_OUTCOME (parity with settleSport) — never blocks settle.
+          try {
+            await recordFreePathSnapshot(
+              db as never,
+              {
+                id: row.id,
+                gameId: (row as { gameId?: string }).gameId ?? row.game.id,
+                isBootstrap: Boolean((row as { isBootstrap?: boolean }).isBootstrap),
+                bookmakerCount: Number((row as { bookmakerCount?: number }).bookmakerCount ?? 0),
+                confidence: Number((row as { confidence?: number }).confidence ?? 0),
+                modelVersion: (row as { modelVersion?: string | null }).modelVersion ?? null,
+                factorBreakdown: (row as { factorBreakdown?: unknown }).factorBreakdown ?? null,
+              },
+              o.result as "WIN" | "LOSS" | "PUSH" | "VOID",
+              settledAt,
+              typeof (row.game as { dataQualityScore?: number }).dataQualityScore === "number"
+                ? (row.game as { dataQualityScore: number }).dataQualityScore
+                : 0,
+            );
+          } catch (snapErr) {
+            console.warn(
+              `[free-settle] SNAPSHOT_OUTCOME failed ${o.pickId}: ` +
+                `${snapErr instanceof Error ? snapErr.message : snapErr}`,
+            );
+          }
+
           gradedForLearning.push({
             pickId: o.pickId,
             sportKey: sport.key,
@@ -497,6 +548,20 @@ export async function runFreePathSettlement(options?: {
     clvRepair = null;
   }
 
+  let snapshotRepair: {
+    attempted: number;
+    done: number;
+    failed: number;
+  } | null = null;
+  try {
+    snapshotRepair = await drainPendingSnapshotOutcomes(db as never, { take: 100, now });
+  } catch (err) {
+    console.warn(
+      `[free-settle] SNAPSHOT repair drain failed: ${err instanceof Error ? err.message : err}`,
+    );
+    snapshotRepair = null;
+  }
+
   return {
     path: "free",
     oddsApiRequired: false,
@@ -511,5 +576,16 @@ export async function runFreePathSettlement(options?: {
     learning,
     autonomy,
     clvRepair,
+    snapshotRepair,
+    scoreDates:
+      scoreDateAcc.size > 0
+        ? {
+            espnKeys: [...scoreDateAcc].sort().reverse(),
+            isoKeys: [...scoreDateAcc]
+              .sort()
+              .reverse()
+              .map((k) => `${k.slice(0, 4)}-${k.slice(4, 6)}-${k.slice(6, 8)}`),
+          }
+        : null,
   };
 }
