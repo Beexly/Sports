@@ -121,20 +121,50 @@ export type PendingPick = {
 /** Token equality or containment (handles "LAD" vs "Los Angeles Dodgers" via abbr path). */
 export function teamTokensMatch(a: string, b: string): boolean {
   if (!a || !b) return false;
-  return a === b || a.includes(b) || b.includes(a);
+  if (a === b || a.includes(b) || b.includes(a)) return true;
+  // Require short tokens (abbrs) to match as whole-token containment only when len>=2
+  // already covered by includes. No fuzzy beyond that.
+  return false;
+}
+
+/**
+ * Expand a team display string into match tokens:
+ * full normalized string, abbr-sized forms, last-word nickname, last-two-words
+ * (Red Sox, Blue Jays, White Sox).
+ */
+export function expandTeamMatchTokens(name: string): string[] {
+  const full = normalizeTeamToken(name);
+  if (!full) return [];
+  const words = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+  const out = new Set<string>([full]);
+  if (words.length >= 2) {
+    out.add(normalizeTeamToken(words[words.length - 1]!));
+    out.add(normalizeTeamToken(words.slice(-2).join(" ")));
+  }
+  // Drop ultra-short noise (a, of) unless full is short abbr
+  return [...out].filter((t) => t.length >= 2);
 }
 
 function finalSideTokens(side: { name: string; abbr: string }): string[] {
-  return [normalizeTeamToken(side.name), normalizeTeamToken(side.abbr)].filter(Boolean);
+  return [
+    ...expandTeamMatchTokens(side.name),
+    normalizeTeamToken(side.abbr),
+  ].filter(Boolean);
 }
 
 /** Does this trusted final involve both of the pick's teams (name OR abbr, either orientation)? */
 export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
-  const pickTeams = [normalizeTeamToken(pick.homeTeam), normalizeTeamToken(pick.awayTeam)].filter(
-    Boolean,
-  );
+  const pickHome = expandTeamMatchTokens(pick.homeTeam);
+  const pickAway = expandTeamMatchTokens(pick.awayTeam);
+  if (pickHome.length === 0 || pickAway.length === 0) return false;
   const finalTokens = [...finalSideTokens(f.home), ...finalSideTokens(f.away)];
-  return pickTeams.every((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
+  const homeOk = pickHome.some((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
+  const awayOk = pickAway.some((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
+  return homeOk && awayOk;
 }
 
 /** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */
@@ -142,13 +172,13 @@ export function orientToPickHome(
   pick: PendingPick,
   f: TrustedFinal,
 ): { homeScore: number; awayScore: number } | null {
-  const ph = normalizeTeamToken(pick.homeTeam);
+  const pickHomeTokens = expandTeamMatchTokens(pick.homeTeam);
   const homeTokens = finalSideTokens(f.home);
   const awayTokens = finalSideTokens(f.away);
-  if (homeTokens.some((t) => teamTokensMatch(ph, t))) {
+  if (pickHomeTokens.some((ph) => homeTokens.some((t) => teamTokensMatch(ph, t)))) {
     return { homeScore: f.home.score, awayScore: f.away.score };
   }
-  if (awayTokens.some((t) => teamTokensMatch(ph, t))) {
+  if (pickHomeTokens.some((ph) => awayTokens.some((t) => teamTokensMatch(ph, t)))) {
     return { homeScore: f.away.score, awayScore: f.home.score };
   }
   return null;
@@ -158,7 +188,7 @@ export function orientToPickHome(
 export function settlePendingPicks(picks: readonly PendingPick[], finals: readonly TrustedFinal[]): SettlementOutcome[] {
   return picks.map((pick): SettlementOutcome => {
     const candidates = finals.filter(
-      (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 1 && finalMatchesPick(pick, f),
+      (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 2 && finalMatchesPick(pick, f),
     );
     const final = candidates[0];
     if (!final) return { pickId: pick.pickId, status: "PENDING", reason: "NO_FINAL" };

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  expandTeamMatchTokens,
   finalMatchesPick,
   orientToPickHome,
   settlePendingPicks,
@@ -47,5 +48,36 @@ describe("free-settlement abbr + name matching", () => {
       expect(out.result).toBe("WIN");
       expect(out.homeScore).toBe(5);
     }
+  });
+
+  it("matches full city name to ESPN nickname display", () => {
+    const pick: PendingPick = {
+      pickId: "1",
+      pickType: "MONEYLINE",
+      selection: "HOME",
+      line: 0,
+      homeTeam: "Los Angeles Angels",
+      awayTeam: "Boston Red Sox",
+      sportKey: "baseball_mlb",
+      gameDateIso: "2026-07-15T00:00:00.000Z",
+    };
+    const final: TrustedFinal = {
+      date: "2026-07-15",
+      home: { name: "Angels", abbr: "LAA", score: 5 },
+      away: { name: "Red Sox", abbr: "BOS", score: 3 },
+      confirmation: "SINGLE_SOURCE",
+      sources: ["espn"],
+    };
+    expect(finalMatchesPick(pick, final)).toBe(true);
+    expect(expandTeamMatchTokens("Los Angeles Angels")).toEqual(
+      expect.arrayContaining(["losangelesangels", "angels"]),
+    );
+  });
+
+  it("matches Blue Jays two-word nickname", () => {
+    const tokens = expandTeamMatchTokens("Toronto Blue Jays");
+    expect(tokens).toEqual(
+      expect.arrayContaining(["bluejays", "jays", "torontobluejays"]),
+    );
   });
 });
