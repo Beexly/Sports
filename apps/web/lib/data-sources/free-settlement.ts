@@ -374,19 +374,22 @@ export function findPostponedMatch(
   for (const g of games) {
     if (g.completed) continue;
     if (!isPostponedOrCancelledDetail(g.statusDetail ?? "")) continue;
+    const home = g.home;
+    const away = g.away;
+    if (!home?.team || !away?.team) continue;
     const gDate = (g.startTime ?? "").slice(0, 10);
     const pDate = pick.gameDateIso.slice(0, 10);
     if (!gDate || daysApart(gDate, pDate) > 2) continue;
     const asFinal: TrustedFinal = {
       date: gDate,
       home: {
-        name: g.home.team,
-        abbr: g.home.abbreviation,
+        name: home.team,
+        abbr: home.abbreviation ?? home.team.slice(0, 3).toUpperCase(),
         score: 0,
       },
       away: {
-        name: g.away.team,
-        abbr: g.away.abbreviation,
+        name: away.team,
+        abbr: away.abbreviation ?? away.team.slice(0, 3).toUpperCase(),
         score: 0,
       },
       confirmation: "SINGLE_SOURCE",
