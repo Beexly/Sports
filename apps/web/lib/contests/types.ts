@@ -15,7 +15,7 @@ export const ContestEntrySchema = z.object({
         side: z.enum(["home", "away"]),
       }),
     )
-    .min(3, "Pick at least 3 games")
+    .min(6, "Pick every game on the slate")
     .max(16, "At most 16 picks")
     .superRefine((picks, ctx) => {
       const seen = new Set<string>();

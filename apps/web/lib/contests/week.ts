@@ -2,14 +2,15 @@
  * Contest Bay — free paper skill slate.
  *
  * Legal: FREE skill only. No entry fee, no prize pool, no real money.
- * Slate is a methodology paper board (stable weekly IDs) so the product is
- * always enterable without depending on live odds rights. Operator can
- * settle results via GSE_CONTEST_SETTLEMENT_PATH JSON.
+ * Slate is a methodology paper board (stable weekly IDs).
+ * Settlements: file (local) and/or Postgres when durable mode is active.
  */
 
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import type { ContestGame, ContestWeek } from "./types";
+
+export type SettlementMap = Record<string, "home" | "away" | "push">;
 
 export function isoWeekId(now = new Date()): string {
   const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
@@ -24,31 +25,35 @@ function isoOffset(now: Date, days: number): string {
   return new Date(now.getTime() + days * 86400000).toISOString();
 }
 
-function settlementPath(): string {
+function settlementFilePath(): string {
   return (
     process.env.GSE_CONTEST_SETTLEMENT_PATH ??
     path.join(process.cwd(), ".gse-local", "contest-settlement.json")
   );
 }
 
-/** Optional operator file: { [weekId]: { [gameId]: "home"|"away"|"push" } } */
-export function loadSettlements(weekId: string): Record<string, "home" | "away" | "push"> {
+/** Sync file settlements (local operator / tests). */
+export function loadFileSettlements(weekId: string): SettlementMap {
   try {
-    const file = settlementPath();
+    const file = settlementFilePath();
     if (!existsSync(file)) return {};
-    const all = JSON.parse(readFileSync(file, "utf8")) as Record<
-      string,
-      Record<string, "home" | "away" | "push">
-    >;
+    const all = JSON.parse(readFileSync(file, "utf8")) as Record<string, SettlementMap>;
     return all[weekId] ?? {};
   } catch {
     return {};
   }
 }
 
-export function getCurrentContestWeek(now = new Date()): ContestWeek {
+/** @deprecated use loadFileSettlements or async loader in store */
+export function loadSettlements(weekId: string): SettlementMap {
+  return loadFileSettlements(weekId);
+}
+
+export function buildContestWeek(
+  now = new Date(),
+  settlements: SettlementMap = {},
+): ContestWeek {
   const weekId = isoWeekId(now);
-  const settled = loadSettlements(weekId);
 
   const baseGames: Array<Omit<ContestGame, "result">> = [
     { gameId: `${weekId}-g1`, label: "KC @ BUF", away: "KC", home: "BUF", kickoff: isoOffset(now, 2) },
@@ -61,7 +66,7 @@ export function getCurrentContestWeek(now = new Date()): ContestWeek {
 
   const games: ContestGame[] = baseGames.map((g) => ({
     ...g,
-    result: settled[g.gameId] ?? null,
+    result: settlements[g.gameId] ?? null,
   }));
 
   const opensAt = isoOffset(now, -2);
@@ -84,10 +89,16 @@ export function getCurrentContestWeek(now = new Date()): ContestWeek {
     rules: [
       "Free skill only — no entry fee, no prize pool, no real money.",
       "This is a methodology paper slate for process practice — not live market odds.",
-      "Pick home or away for each game (straight up, no spread).",
+      "Pick home or away on every game (straight up, no spread).",
       "Score = correct picks among settled games. Ties → earliest valid entry.",
       "Entries lock at first listed kickoff. Late entries are rejected.",
       "GSE never pays, ranks for cash, or sells your entry as a bet.",
     ],
   };
+}
+
+/** Sync helper (file settlements only). Prefer loadCurrentContestWeek for prod. */
+export function getCurrentContestWeek(now = new Date()): ContestWeek {
+  const weekId = isoWeekId(now);
+  return buildContestWeek(now, loadFileSettlements(weekId));
 }

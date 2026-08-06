@@ -30,12 +30,15 @@ describe("ContestEntrySchema", () => {
         { gameId: "g1", side: "home" },
         { gameId: "g1", side: "away" },
         { gameId: "g2", side: "home" },
+        { gameId: "g3", side: "away" },
+        { gameId: "g4", side: "home" },
+        { gameId: "g5", side: "away" },
       ],
     });
     expect(r.success).toBe(false);
   });
 
-  it("accepts valid entry", () => {
+  it("accepts valid full-slate entry", () => {
     const r = ContestEntrySchema.safeParse({
       displayName: "Ops",
       email: "a@example.com",
@@ -44,6 +47,9 @@ describe("ContestEntrySchema", () => {
         { gameId: "g1", side: "home" },
         { gameId: "g2", side: "away" },
         { gameId: "g3", side: "home" },
+        { gameId: "g4", side: "away" },
+        { gameId: "g5", side: "home" },
+        { gameId: "g6", side: "away" },
       ],
     });
     expect(r.success).toBe(true);
@@ -91,7 +97,7 @@ describe("paper week + enter", () => {
     // force open window: week uses relative kickoffs from now — use current now
     const now = new Date();
     const live = getCurrentContestWeek(now);
-    const picks = live.games.slice(0, 3).map((g) => ({
+    const picks = live.games.map((g) => ({
       gameId: g.gameId,
       side: "home" as const,
     }));

@@ -42,3 +42,13 @@
 - Default-opening StatKing / Airwave live / fantasy as "live".
 - Adding Prisma models casually without owner intent (migrate-in-build auto-applies).
 - Shipping "complete" write paths on Vercel filesystem.
+
+## Pass-3 (2026-08-06)
+
+| Fix | Detail |
+|-----|--------|
+| Contest settlements | Postgres `gse_contest_settlements` merged with local file |
+| Contest entries | Full-slate required; fail-soft list/enter; email hash pepper env |
+| Footer Contests | Respects `isContestsPublic()` (no orphan link when dark) |
+| `/api/contests/week` | JSON week + leaderboard + storageMode |
+| Ops truth | readiness bootstrap flags + content counts |
