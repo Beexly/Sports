@@ -165,9 +165,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
               {result.reward.value}
             </p>
             <p className="mt-1 text-xs text-ion-2">
-              {result.reward.kind === "code"
-                ? "Redeem at checkout for one week of Elite."
-                : "Present this reference to support to claim your free Elite week."}
+              Present this claim reference to support to redeem your free Elite week.
             </p>
           </div>
         )}
