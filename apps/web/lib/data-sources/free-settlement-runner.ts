@@ -282,7 +282,9 @@ export async function runFreePathSettlement(options?: {
         gameDateIso: p.game.commenceTime.toISOString(),
       }));
 
-      const outcomes = settlePendingPicks(pending, finals);
+      const outcomes = settlePendingPicks(pending, finals, {
+        postponedCandidates: espn,
+      });
       let settled = 0;
       let held = 0;
       let stillPending = 0;

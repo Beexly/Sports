@@ -267,14 +267,37 @@ export function orientToPickHome(
   return null;
 }
 
-/** Settle pending picks against trusted free finals. DISPUTED finals HOLD; unmatched stay PENDING. */
-export function settlePendingPicks(picks: readonly PendingPick[], finals: readonly TrustedFinal[]): SettlementOutcome[] {
+/**
+ * Settle pending picks against trusted free finals.
+ * DISPUTED finals HOLD; unmatched stay PENDING; dual-confirmed postponed → honest VOID.
+ */
+export function settlePendingPicks(
+  picks: readonly PendingPick[],
+  finals: readonly TrustedFinal[],
+  options: { postponedCandidates?: readonly NormalizedGame[] } = {},
+): SettlementOutcome[] {
+  const postponedCandidates = options.postponedCandidates ?? [];
   return picks.map((pick): SettlementOutcome => {
     const candidates = finals.filter(
       (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 2 && finalMatchesPick(pick, f),
     );
     const final = candidates[0];
-    if (!final) return { pickId: pick.pickId, status: "PENDING", reason: "NO_FINAL" };
+    if (!final) {
+      const pp = findPostponedMatch(pick, postponedCandidates);
+      if (pp) {
+        return {
+          pickId: pick.pickId,
+          status: "SETTLED",
+          result: "VOID",
+          confirmation: "SINGLE_SOURCE",
+          homeScore: null,
+          awayScore: null,
+          sources: pp.sources,
+          voidReason: "POSTPONED_OR_CANCELLED",
+        };
+      }
+      return { pickId: pick.pickId, status: "PENDING", reason: "NO_FINAL" };
+    }
     if (final.confirmation === "DISPUTED") {
       return { pickId: pick.pickId, status: "HELD", reason: "DISPUTED", sources: final.sources };
     }
@@ -313,5 +336,67 @@ export type SettlementOutcome =
       awayScore: number;
       sources: readonly string[];
     }
+  | {
+      /** Honest VOID — league postponed/cancelled; never invents a score. */
+      pickId: string;
+      status: "SETTLED";
+      result: "VOID";
+      confirmation: "SINGLE_SOURCE";
+      homeScore: null;
+      awayScore: null;
+      sources: readonly string[];
+      voidReason: "POSTPONED_OR_CANCELLED";
+    }
   | { pickId: string; status: "HELD"; reason: "DISPUTED"; sources: readonly string[] }
   | { pickId: string; status: "PENDING"; reason: "NO_FINAL" | "ORIENT_FAIL" };
+
+/** ESPN/MLB status text that means the contest did not produce a final score. */
+export function isPostponedOrCancelledDetail(detail: string): boolean {
+  const d = detail.toLowerCase();
+  return (
+    d.includes("postpon") ||
+    d.includes("cancel") ||
+    d.includes("suspend") ||
+    d.includes("forfeit") || // rare; still not a graded contest for our path
+    d === "d" ||
+    d === "c"
+  );
+}
+
+/**
+ * If a free source lists this matchup as postponed/cancelled (no completed scores),
+ * return sources for an honest VOID. Does not invent scores.
+ */
+export function findPostponedMatch(
+  pick: PendingPick,
+  games: readonly NormalizedGame[],
+): { sources: string[]; detail: string } | null {
+  for (const g of games) {
+    if (g.completed) continue;
+    if (!isPostponedOrCancelledDetail(g.statusDetail ?? "")) continue;
+    const gDate = (g.startTime ?? "").slice(0, 10);
+    const pDate = pick.gameDateIso.slice(0, 10);
+    if (!gDate || daysApart(gDate, pDate) > 2) continue;
+    const asFinal: TrustedFinal = {
+      date: gDate,
+      home: {
+        name: g.home.team,
+        abbr: g.home.abbreviation,
+        score: 0,
+      },
+      away: {
+        name: g.away.team,
+        abbr: g.away.abbreviation,
+        score: 0,
+      },
+      confirmation: "SINGLE_SOURCE",
+      sources: [String(g.sourceId)],
+    };
+    if (!finalMatchesPick(pick, asFinal)) continue;
+    return {
+      sources: [String(g.sourceId)],
+      detail: g.statusDetail ?? "postponed",
+    };
+  }
+  return null;
+}
