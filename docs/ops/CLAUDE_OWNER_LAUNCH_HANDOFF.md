@@ -27,7 +27,7 @@
 
 ```bash
 git fetch origin main && git checkout main && git pull --ff-only
-node scripts/ops/launch-preflight.mjs
+node scripts/ops/launch-preflight.mjs   # see docs/ops/LAUNCH_PREFLIGHT.md
 # CRON_SECRET=… node scripts/ops/launch-preflight.mjs
 ```
 

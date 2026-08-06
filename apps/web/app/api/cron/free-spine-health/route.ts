@@ -1,7 +1,7 @@
 /**
  * Free multi-source spine health — AI-first, no Odds key.
  * Probes free score chains + freeCoverage matrix without inventing data.
- * Auth: CRON_SECRET. Schedule: daily with player-stats window.
+ * Auth: CRON_SECRET. Schedule: every 2h (vercel.json) so SUCCESS stays under REFRESH_STALE 240m.
  *
  * Also records an honest IngestionRun SUCCESS when the probe completes so
  * /api/health recovers under free mode (no paid THE_ODDS_API_KEY required).
