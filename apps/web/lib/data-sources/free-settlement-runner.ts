@@ -40,6 +40,7 @@ import {
   classifySettlementRootCause,
   type SettlementRcaReport,
 } from "@/lib/settlement/root-cause-analysis";
+import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import {
   computeBurnRate,
   planClearanceWaves,
@@ -146,7 +147,7 @@ export async function runFreePathSettlement(options?: {
 }): Promise<FreeSettlementRunResult> {
   const started = Date.now();
   const now = options?.now ?? new Date();
-  const graceHours = options?.graceHours ?? 6;
+  const graceHours = options?.graceHours ?? SETTLEMENT_DEFAULT_GRACE_HOURS;
   const sports = options?.sportKey
     ? SUPPORTED_SPORTS.filter((s) => s.key === options.sportKey)
     : [...SUPPORTED_SPORTS];

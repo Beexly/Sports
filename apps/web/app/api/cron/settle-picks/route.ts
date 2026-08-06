@@ -28,7 +28,7 @@ import {
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
 import { hasOddsApiKey } from "@/lib/settlement/path-select";
-import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
 import { drainPendingSnapshotOutcomes } from "@/lib/settlement/free-path-snapshot";
 
@@ -52,7 +52,7 @@ export async function GET(request: Request) {
     // Snapshot overdue before STP so burn-rate can tell whether this cycle drained the band.
     let priorOverdueCount: number | undefined;
     try {
-      const healthBefore = await loadSettlementHealth(db, { graceHours: 6 });
+      const healthBefore = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
       priorOverdueCount = healthBefore.overduePending;
     } catch (healthErr) {
       console.warn(
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
     const freeScores = await persistFreeScores({ sportKey: requestedSport });
     const free = await runFreePathSettlement({
       sportKey: requestedSport,
-      graceHours: 6,
+      graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
       ...(priorOverdueCount !== undefined ? { priorOverdueCount } : {}),
     });
 

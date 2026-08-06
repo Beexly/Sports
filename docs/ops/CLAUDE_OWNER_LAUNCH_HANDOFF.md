@@ -1,10 +1,29 @@
-# Claude Code — Owner / launch handoff (2026-08-06)
+# Claude Code — Owner launch handoff (refresh 2026-08-06)
 
-**Truth:** `github.com/Beexly/Sports` · **Live:** https://www.galaxysportsedge.com  
-**Do not** re-ship #320–#339 · **Do not** flip LIVE_BOARD / PUBLIC_PICKS / STATS_PUBLIC  
-**Do not** put CrewAI/Ollama/OpenClaw into this monorepo
+**Truth:** github.com/Beexly/Sports · **Live:** https://www.galaxysportsedge.com  
+**Do not re-ship:** #320–#341 (Jynx, free-lane, settle drains, trust chrome, grace DRY, preflight)  
+**Do not flip:** LIVE_BOARD · PUBLIC_PICKS · STATS_PUBLIC · PERFORMANCE_STATS  
+**Do not** put CrewAI / Ollama / OpenClaw into this monorepo (personal machine only)
 
-## Start
+---
+
+## Concepts you may touch (do not rewrite)
+
+### Settlement grace period
+- Constant: `SETTLEMENT_DEFAULT_GRACE_HOURS = 6` in `apps/web/lib/performance/settlement-health.ts`
+- A pick is **overdue** if published, non-seed, `result=PENDING`, and `commenceTime` older than **now − 6h**
+- Used by: `loadSettlementHealth`, free settle, ops truth, health probes, health-alert, Jarvis
+- Bands: 0 overdue = HEALTHY; 1–4 = DEGRADED; ≥5 = CRITICAL (default threshold)
+
+### /api/health vs alert
+- `ok` / HTTP 503 = **database + ingestion checks only**
+- Settlement CRITICAL → `status: degraded` + capability unavailable; does **not** alone 503
+- Health-alert pages on settlement **CRITICAL**, check errors, or ingestion age **>90m** (quiet 4h)
+- Capability graph = observability only (never flips `ok`)
+
+---
+
+## START
 
 ```bash
 git fetch origin main && git checkout main && git pull --ff-only
@@ -12,51 +31,58 @@ node scripts/ops/launch-preflight.mjs
 # CRON_SECRET=… node scripts/ops/launch-preflight.mjs
 ```
 
-Also open **Vercel → Production** and confirm deploy **READY** (not ERROR). #334 fixed cipher typecheck; if ERROR again, read build log only.
+Confirm **Vercel Production READY** on main HEAD (not ERROR).
 
-## Owner checklist (do all)
+---
 
-### P0 — Deploy green
-- [ ] Production READY on main HEAD (includes revenueLadder on ops truth #339)
-- [ ] `launch-preflight` shows revenueLadder + stripe-webhook-audit founder steps (not missing)
+## OWNER WORK (all of these)
+
+### P0 — Deploy
+- [ ] Production READY includes latest main (revenueLadder on ops, grace constant, free-path TEAM_GAME_LOG)
+- [ ] Preflight: no unexpected 404s; settle overdue 0
 
 ### P1 — Env (Vercel Production → redeploy)
-```bash
+```
 CONTENT_FREE_LANE_ENABLED=true
-CEREBRAS_API_KEY=...
+CEREBRAS_API_KEY=…
 # optional FREE_LANE_SECONDARY_*
 CLAUDE_PROVIDER=auto
 JYNX_CLOUD_ORDER=bedrock,azure,vertex
 JYNX_CLOUD_FAILOVER=true
 # + BEDROCK and/or AZURE_FOUNDRY and/or VERTEX full *_MODEL_MAP
-# optional WAITLIST_WELCOME_EMAIL=true + RESEND_* + ALERTS_EMAIL_FROM
+# optional WAITLIST_WELCOME_EMAIL + RESEND + ALERTS_EMAIL_FROM
+# optional HEALTH_ALERT_WEBHOOK_URL (or ALERT_WEBHOOK_URL)
 # optional NEXT_PUBLIC_ANALYTICS_ENABLED + NEXT_PUBLIC_CLARITY_PROJECT_ID
 ```
-- [ ] Ops: `freeLaneConfigured` and/or `jynx.attemptOrder` non-empty
+- [ ] Ops: freeLaneConfigured and/or jynx.attemptOrder non-empty
 
 ### P1 — Stripe Dashboard
-- [ ] Webhooks: only `galaxysportsedge.com/api/webhooks/stripe`
-- [ ] Remove/justify foreign `lumeralabel.medusajs.app` if present
-- [ ] Signing secret matches Vercel `STRIPE_WEBHOOK_SECRET`
+- [ ] Only webhook → galaxysportsedge.com `/api/webhooks/stripe`
+- [ ] Remove/justify `lumeralabel.medusajs.app` if present
+- [ ] Secret matches `STRIPE_WEBHOOK_SECRET`
 
-### P1 — Settle proof (CRON_SECRET)
+### P1 — Settle proof
 ```bash
 curl -sS -H "Authorization: Bearer $CRON_SECRET" \
-  "$BASE/api/cron/settle-picks" | jq '{path, picksSettled, clvRepair, snapshotRepair, teamGameLogRepair, overdue: .free.rca}'
+  "https://www.galaxysportsedge.com/api/cron/settle-picks"
 ```
-- [ ] 2xx · overdue still 0 · repair fields present
+- [ ] 2xx · path free|paid · overdue still 0  
+- [ ] Fields: `clvRepair`, `snapshotRepair`, `teamGameLogRepair`
 
-### P2 — Optional
-- [ ] Clarity analytics keys only after privacy comfort
-- [ ] Large open PRs #121 #226 #247 #248 #258 — VERIFY PREMISE + slim re-land only (do not bulk-merge)
+### P2
+- [ ] Clarity optional; PostHog only after privacy review  
+- [ ] Open PRs #121 #226 #247 #248 #258 — VERIFY PREMISE + slim re-land only (no bulk merge)
 
-## Forbidden
-Gate flips · public ROI/lock · hive into Sports · settlement via LLM · rebuild free-lane adapters
+---
 
-## Done when
-- Preflight !! only intentional dark gates / optional analytics  
-- Stripe clean · free-lane or Jynx credits live if desired  
-- Auth settle shows repairs · SHA matches main  
+## FORBIDDEN
+Gate flips · public ROI / lock slang · hive into Sports · settlement via LLM · invent scores · change grace without product reason
 
-## Report (one block)
-`mainSHA · prodSHA · match · overdue · freeLane · jynx · stripeClean · one next action`
+---
+
+## DONE WHEN
+- Preflight !! only intentional (dark gates / optional analytics / cash path until env set)
+- Stripe clean · desired free-lane/Jynx live · settle repairs OK · SHA ≈ main
+
+## REPORT (one block)
+`mainSHA · prodSHA · match · overdue · freeLane · jynx · stripeClean · webhookAlert · one next action`

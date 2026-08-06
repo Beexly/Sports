@@ -24,7 +24,7 @@ import {
   decideHealthAlert,
   type HealthAlertState,
 } from "@/lib/ops/health-alert-decision";
-import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { db } from "@sports/db";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -86,7 +86,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     let overdue: number | null = null;
     let commenced: number | null = null;
     try {
-      const sh = await loadSettlementHealth(db, { graceHours: 6 });
+      const sh = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
       settlementBand = sh.health;
       overdue = sh.overduePending;
       commenced = sh.commencedTotal;
