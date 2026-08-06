@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ContestEntrySchema } from "@/lib/contests/types";
 import { enterContest } from "@/lib/contests/store";
-import { consumeRateLimit } from "@/lib/api/rate-limit";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import { isContestsPublic } from "@/lib/launch/public-surface-gate";
 
 export const runtime = "nodejs";
@@ -16,11 +16,11 @@ export async function POST(req: Request) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     req.headers.get("x-real-ip") ||
     "anon";
-  const rl = consumeRateLimit("contest-enter", ip, 8, 60_000);
+  const rl = await consumePublicFormRateLimit("contest-enter", ip, 8, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many entries — try again shortly." },
-      { status: 429, headers: { "retry-after": String(rl.retryAfterSec) } },
+      { status: rl.status, headers: { "retry-after": String(rl.retryAfterSec) } },
     );
   }
 
