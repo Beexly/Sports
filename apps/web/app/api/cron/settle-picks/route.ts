@@ -17,6 +17,7 @@ import {
   settleSport,
   freezeSlateCommitments,
   computeScheduledWindow,
+  drainPendingTeamGameLogs,
   type SlateFreezeResult,
 } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -28,6 +29,8 @@ import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
 import { hasOddsApiKey } from "@/lib/settlement/path-select";
 import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
+import { drainPendingSnapshotOutcomes } from "@/lib/settlement/free-path-snapshot";
 
 
 export const dynamic = "force-dynamic";
@@ -169,6 +172,39 @@ export async function GET(request: Request) {
     );
   }
 
+  // Repair: complete any PENDING PostSettlementWork rows left by a crash
+  // between settleSport()'s enqueue and its inline write (hardening 6.10).
+  // The free path already drains CLV_GRADE/SNAPSHOT_OUTCOME every cycle;
+  // this path previously drained nothing, so a mid-cycle crash left rows
+  // PENDING forever with no process ever revisiting them.
+  let clvRepair: { attempted: number; graded: number; noClose: number; failed: number } | null =
+    null;
+  try {
+    clvRepair = await drainPendingClvGrades(db as never, { take: 100 });
+  } catch (err) {
+    console.warn(
+      `[cron:settle-picks] CLV repair drain failed: ${err instanceof Error ? err.message : err}`,
+    );
+  }
+
+  let snapshotRepair: { attempted: number; done: number; failed: number } | null = null;
+  try {
+    snapshotRepair = await drainPendingSnapshotOutcomes(db as never, { take: 100 });
+  } catch (err) {
+    console.warn(
+      `[cron:settle-picks] SNAPSHOT repair drain failed: ${err instanceof Error ? err.message : err}`,
+    );
+  }
+
+  let teamGameLogRepair: { attempted: number; done: number; failed: number } | null = null;
+  try {
+    teamGameLogRepair = await drainPendingTeamGameLogs(db as never, gates, { take: 100 });
+  } catch (err) {
+    console.warn(
+      `[cron:settle-picks] TEAM_GAME_LOG repair drain failed: ${err instanceof Error ? err.message : err}`,
+    );
+  }
+
   const okCount = results.filter((r) => r.ok).length;
   return NextResponse.json({
     ok: okCount === results.length,
@@ -189,5 +225,8 @@ export async function GET(request: Request) {
     results,
     freeze,
     alertDrain,
+    clvRepair,
+    snapshotRepair,
+    teamGameLogRepair,
   });
 }
