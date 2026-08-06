@@ -1,7 +1,7 @@
 /**
- * Content generator using Claude API.
- * IMPORTANT: Claude is ONLY used for writing narrative content.
- * Pick data is the source of truth; Claude never generates picks.
+ * Content generator using Claude API (or Cerebras free-lane when enabled).
+ * IMPORTANT: LLMs are ONLY used for writing narrative content.
+ * Pick data is the source of truth; models never generate picks.
  */
 
 import type { ContentGenerationInput, GeneratedContent } from "@sports/types";
@@ -16,7 +16,7 @@ import {
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
 import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
-import { callClaude } from "@/lib/claude-api/provider-dispatch";
+import { generateContentMessages } from "@/lib/claude-api/free-lane";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -36,6 +36,8 @@ export interface BlogGenerationOptions {
   readonly recordUsage?: boolean;
   readonly usageClient?: ClaudeUsageStoreDb;
   readonly userId?: string | null;
+  /** Inject env for free-lane tests (defaults to process.env). */
+  readonly env?: Record<string, string | undefined>;
 }
 
 type ParsedBlogGeneration = {
@@ -59,11 +61,17 @@ export interface BlogGenerationPolicyResult {
   readonly reason: BlogGenerationPolicyReason | null;
 }
 
+/** True when model id is a Claude Anthropic id (billable at Claude rates). */
+function isAnthropicClaudeModel(modelName: string): boolean {
+  return modelName.startsWith("claude-") || modelName.includes("anthropic");
+}
+
 export async function generateBlogPost(
   input: ContentGenerationInput,
   options: BlogGenerationOptions = {}
 ): Promise<GeneratedContent> {
-  const apiKey = process.env["ANTHROPIC_API_KEY"];
+  const env = options.env ?? process.env;
+  const apiKey = env["ANTHROPIC_API_KEY"]?.trim() ?? process.env["ANTHROPIC_API_KEY"];
   if (!apiKey) {
     throw new Error("ANTHROPIC_API_KEY is not configured");
   }
@@ -105,7 +113,8 @@ Respond ONLY with valid JSON in this exact format:
   "tags": ["...", "..."]
 }`;
 
-  const modelName = "claude-sonnet-4-6";
+  // Anthropic path default; free-lane uses Cerebras model when enabled for surface "content".
+  const anthropicModelName = "claude-sonnet-4-6";
   const [monthlySpendUsd, budget] =
     typeof options.monthlySpendUsd === "number" && options.budgetPolicy
       ? [
@@ -129,15 +138,21 @@ Respond ONLY with valid JSON in this exact format:
 
   let parsed: ParsedBlogGeneration;
   try {
-    const result = await callClaude({
-      apiKey,
-      fetchImpl: options.fetchImpl,
-      model: modelName,
-      maxTokens: 2000,
-      system: systemPrompt,
-      user: userPrompt,
-      cache: { system: true },
-    });
+    // Free-lane (Cerebras) when CONTENT_FREE_LANE_ENABLED + key + surface content;
+    // else callClaude (Bedrock / Vertex / Anthropic). Policy + numeric-guard unchanged.
+    const result = await generateContentMessages(
+      {
+        apiKey,
+        fetchImpl: options.fetchImpl,
+        surface: "content",
+        model: anthropicModelName,
+        maxTokens: 2000,
+        system: systemPrompt,
+        user: userPrompt,
+        cache: { system: true },
+      },
+      env,
+    );
     try {
       parsed = parseGeneratedBlogResponse(result.text);
     } catch {
@@ -285,13 +300,18 @@ async function maybeRecordBlogUsage(args: {
 }): Promise<void> {
   if (!args.options.recordUsage) return;
 
+  // Free-lane / non-Claude providers: do not invent Anthropic $ for gpt-oss ids.
+  const estimatedCostUsd = isAnthropicClaudeModel(args.modelName)
+    ? estimateClaudeCostUsd(args.inputTokens, args.outputTokens)
+    : 0;
+
   await recordClaudeApiCall(
     {
       surface: "BLOG_GENERATION",
       modelName: args.modelName,
       inputTokens: args.inputTokens,
       outputTokens: args.outputTokens,
-      estimatedCostUsd: estimateClaudeCostUsd(args.inputTokens, args.outputTokens),
+      estimatedCostUsd,
       userId: args.options.userId ?? null,
       gameId: null,
       templateKind: null,

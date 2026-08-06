@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { generateContentMessages, shouldUseFreeLane } from "@/lib/claude-api/free-lane";
+import {
+  FREE_LANE_SURFACES,
+  generateContentMessages,
+  shouldUseFreeLane,
+} from "@/lib/claude-api/free-lane";
 
 const anthropicResponse = () =>
   new Response(
@@ -27,6 +31,12 @@ const urls = (fetchImpl: ReturnType<typeof vi.fn>) =>
   (fetchImpl.mock.calls as unknown as Array<[string, RequestInit]>).map((c) => c[0]);
 
 describe("content free-lane dispatcher", () => {
+  it("allow-lists brief and content only", () => {
+    expect(FREE_LANE_SURFACES.has("brief")).toBe(true);
+    expect(FREE_LANE_SURFACES.has("content")).toBe(true);
+    expect(FREE_LANE_SURFACES.has("studio")).toBe(false);
+  });
+
   it("defaults to Anthropic when the lane is disabled", async () => {
     const fetchImpl = vi.fn(async () => anthropicResponse());
     const result = await generateContentMessages({ ...base, fetchImpl, surface: "brief" }, {});
@@ -34,10 +44,18 @@ describe("content free-lane dispatcher", () => {
     expect(urls(fetchImpl)[0]).toBe("https://api.anthropic.com/v1/messages");
   });
 
-  it("uses Cerebras for an allow-listed surface when enabled", async () => {
+  it("uses Cerebras for brief when enabled", async () => {
     const fetchImpl = vi.fn(async () => cerebrasResponse());
     const result = await generateContentMessages({ ...base, fetchImpl, surface: "brief" }, FREE_ON);
     expect(result.text).toBe("Cerebras text");
+    expect(urls(fetchImpl)[0]).toBe("https://api.cerebras.ai/v1/chat/completions");
+  });
+
+  it("uses Cerebras for content when enabled", async () => {
+    const fetchImpl = vi.fn(async () => cerebrasResponse());
+    const result = await generateContentMessages({ ...base, fetchImpl, surface: "content" }, FREE_ON);
+    expect(result.text).toBe("Cerebras text");
+    expect(result.modelName).toBe("gpt-oss-120b");
     expect(urls(fetchImpl)[0]).toBe("https://api.cerebras.ai/v1/chat/completions");
   });
 
@@ -52,7 +70,7 @@ describe("content free-lane dispatcher", () => {
       .fn()
       .mockResolvedValueOnce(new Response("cerebras down", { status: 500 }))
       .mockResolvedValueOnce(anthropicResponse());
-    const result = await generateContentMessages({ ...base, fetchImpl, surface: "brief" }, FREE_ON);
+    const result = await generateContentMessages({ ...base, fetchImpl, surface: "content" }, FREE_ON);
     expect(result.text).toBe("Anthropic text");
     expect(fetchImpl).toHaveBeenCalledTimes(2);
     expect(urls(fetchImpl)).toEqual([
@@ -61,9 +79,10 @@ describe("content free-lane dispatcher", () => {
     ]);
   });
 
-  it("shouldUseFreeLane is true only for an allow-listed surface with the lane enabled", () => {
+  it("shouldUseFreeLane is true only for allow-listed surfaces with the lane enabled", () => {
     expect(shouldUseFreeLane("brief", FREE_ON)).toBe(true);
+    expect(shouldUseFreeLane("content", FREE_ON)).toBe(true);
     expect(shouldUseFreeLane("studio", FREE_ON)).toBe(false);
-    expect(shouldUseFreeLane("brief", {})).toBe(false);
+    expect(shouldUseFreeLane("content", {})).toBe(false);
   });
 });
