@@ -127,25 +127,108 @@ export function teamTokensMatch(a: string, b: string): boolean {
   return false;
 }
 
+/** Multi-word city / place prefixes common in US pro sports display names. */
+const CITY_PREFIXES: readonly string[] = [
+  "los angeles",
+  "new york",
+  "san francisco",
+  "san diego",
+  "san antonio",
+  "kansas city",
+  "tampa bay",
+  "green bay",
+  "oklahoma city",
+  "golden state",
+  "trail blazers", // handled as nickname path, not city
+  "st louis",
+  "saint louis",
+  "new england",
+  "new orleans",
+  "new jersey",
+  "las vegas",
+];
+
+/** Known alternate tokens (normalized) that should match each other. */
+const TOKEN_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  athletics: ["as", "oaklandathletics", "oaklandas", "oak"],
+  as: ["athletics", "oaklandathletics", "oaklandas"],
+  oaklandathletics: ["athletics", "as", "oaklandas"],
+  guardians: ["clevelandguardians", "indians", "cle"],
+  indians: ["guardians", "clevelandguardians"],
+  diamondbacks: ["arizona", "ari", "dbacks", "dback"],
+  dbacks: ["diamondbacks", "ari"],
+  redsox: ["boston", "bos"],
+  whitesox: ["chicago", "cws", "chw"],
+  bluesox: [], // placeholder no-op
+  redwings: ["detroit"],
+  bluejays: ["toronto", "tor"],
+  // Soccer / MLS short forms often seen on ESPN
+  lafc: ["losangelesfc", "losangelesfootballclub"],
+  losangelesfc: ["lafc"],
+  losangelesfootballclub: ["lafc", "losangelesfc"],
+  lagalaxy: ["galaxy", "losangelesgalaxy"],
+  galaxy: ["lagalaxy", "losangelesgalaxy"],
+  losangelesgalaxy: ["lagalaxy", "galaxy"],
+  intermiami: ["miami", "intermiamicf"],
+  intermiamicf: ["intermiami", "miami"],
+  nycfc: ["newyorkcity", "newyorkcityfc"],
+  newyorkcityfc: ["nycfc", "newyorkcity"],
+  nyrb: ["redbulls", "newyorkredbulls"],
+  newyorkredbulls: ["nyrb", "redbulls"],
+  redbulls: ["nyrb", "newyorkredbulls"],
+  atlantaunited: ["atlanta", "atl", "atlantaunitedfc"],
+  stlcity: ["stlouiscity", "stlouis", "stlouiscitysc"],
+  sounders: ["seattlesounders", "seattlesoundersfc"],
+  seattlesoundersfc: ["sounders", "seattlesounders"],
+  seattlesounders: ["sounders"],
+};
+
 /**
  * Expand a team display string into match tokens:
- * full normalized string, abbr-sized forms, last-word nickname, last-two-words
- * (Red Sox, Blue Jays, White Sox).
+ * full normalized string, last-word / last-two-words nicknames, city-stripped
+ * nickname, and a small alias table for known short forms (A's, D-backs, …).
  */
 export function expandTeamMatchTokens(name: string): string[] {
   const full = normalizeTeamToken(name);
   if (!full) return [];
-  const words = name
-    .toLowerCase()
+  const lower = name.toLowerCase().replace(/['']/g, ""); // Athletics / A's
+  const words = lower
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
     .filter(Boolean);
   const out = new Set<string>([full]);
+
   if (words.length >= 2) {
     out.add(normalizeTeamToken(words[words.length - 1]!));
     out.add(normalizeTeamToken(words.slice(-2).join(" ")));
   }
-  // Drop ultra-short noise (a, of) unless full is short abbr
+
+  // Strip known multi-word city prefixes → leftover nickname tokens
+  for (const city of CITY_PREFIXES) {
+    if (lower.startsWith(city + " ")) {
+      const rest = lower.slice(city.length).trim();
+      if (rest) {
+        out.add(normalizeTeamToken(rest));
+        const rw = rest.split(/\s+/).filter(Boolean);
+        if (rw.length >= 1) out.add(normalizeTeamToken(rw[rw.length - 1]!));
+        if (rw.length >= 2) out.add(normalizeTeamToken(rw.slice(-2).join(" ")));
+      }
+    }
+  }
+
+  // Single leading city word strip (Chicago Cubs → cubs) when ≥2 words
+  if (words.length >= 2) {
+    out.add(normalizeTeamToken(words.slice(1).join(" ")));
+  }
+
+  // Alias expansion (two passes so reverse maps connect)
+  for (let pass = 0; pass < 2; pass++) {
+    for (const tok of [...out]) {
+      const al = TOKEN_ALIASES[tok];
+      if (al) for (const a of al) out.add(normalizeTeamToken(a));
+    }
+  }
+
   return [...out].filter((t) => t.length >= 2);
 }
 
