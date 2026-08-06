@@ -22,10 +22,15 @@ export function ContestEntryForm({ week }: Props) {
     e.preventDefault();
     setStatus("submitting");
     setMessage("");
+    if (!consent) {
+      setStatus("error");
+      setMessage("Consent is required.");
+      return;
+    }
     const body = {
       displayName,
       email,
-      consent: true as const,
+      consent: true,
       honeypot,
       picks: week.games
         .filter((g) => picks[g.gameId])

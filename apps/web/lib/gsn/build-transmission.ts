@@ -1,9 +1,13 @@
 /**
- * Build a GSN daily transmission from live board state when available.
+ * Build a GSN daily transmission from loadBoardState().
  * Always returns a complete Transmission — never a teaser.
+ *
+ * Board-sourced: uses publishedToday / gatedTodayRows / scoringNow labels only.
+ * Methodology: full structure when board is empty/suppressed/unreachable.
+ * Never invents edge %, ROI, or win-rate claims.
  */
 
-import { loadBoardState } from "@/lib/board/state";
+import { loadBoardState, type BoardStatePayload, type BoardStateRow } from "@/lib/board/state";
 import type { Transmission, TransmissionSegment } from "./transmission";
 import { SAMPLE_TRANSMISSION } from "./transmission";
 
@@ -14,28 +18,30 @@ function codeFromDate(d = new Date()): string {
   return `${mm} · ${dd} · ${yy}`;
 }
 
-export async function buildDailyTransmission(): Promise<Transmission & { source: "board" | "methodology" }> {
+function rowLabel(row: BoardStateRow): string {
+  const market = row.market ? ` · ${row.market}` : "";
+  const gate = row.gateReason ? ` · ${row.gateReason}` : "";
+  return `${row.matchup}${market}${gate}`;
+}
+
+export async function buildDailyTransmission(
+  now = new Date(),
+): Promise<Transmission> {
   try {
-    const board = await loadBoardState();
-    // BoardStatePayload shape may vary — use defensive extraction
-    const anyBoard = board as unknown as {
-      publishedPicks?: Array<{ label?: string; side?: string; grade?: string }>;
-      picks?: Array<{ label?: string; side?: string; grade?: string }>;
-      passes?: Array<{ reason?: string }>;
-      health?: { publishedCount?: number; passCount?: number };
-      mode?: string;
-    };
+    const board: BoardStatePayload = await loadBoardState(now);
+    const { publishedToday, gatedTodayRows, scoringNow } = board.data;
+    const pubN = publishedToday.length;
+    const passN = gatedTodayRows.length;
+    const scoringN = scoringNow.length;
+    const total = pubN + passN + scoringN;
 
-    const published =
-      anyBoard.publishedPicks ??
-      anyBoard.picks ??
-      [];
-    const passes = anyBoard.passes ?? [];
-    const pubN = anyBoard.health?.publishedCount ?? published.length;
-    const passN = anyBoard.health?.passCount ?? passes.length;
-
-    if (pubN + passN === 0) {
-      return { ...SAMPLE_TRANSMISSION, code: codeFromDate(), source: "methodology" };
+    if (total === 0 || board.meta.suppressedDemoData || board.meta.dataError) {
+      return {
+        ...SAMPLE_TRANSMISSION,
+        code: codeFromDate(now),
+        source: "methodology",
+        illustrative: true,
+      };
     }
 
     const segments: TransmissionSegment[] = [
@@ -43,29 +49,32 @@ export async function buildDailyTransmission(): Promise<Transmission & { source:
         type: "Galaxy Brief",
         tone: "ion",
         title: "The board, read at a glance.",
-        dek: `${pubN} published reads · ${passN} No-Bet / pass decisions on the current slate.`,
+        dek: `${pubN} published · ${passN} gated/No-Bet · ${scoringN} scoring-now on this snapshot.`,
         points: [
           pubN > 0
-            ? `Published concentration: ${pubN} fire(s) cleared honesty and readiness gates.`
-            : "No fires cleared the gate — silence is a valid board state.",
+            ? `${pubN} published read(s) cleared the public lane.`
+            : "No published fires on this snapshot — silence is a valid board state.",
           passN > 0
-            ? `${passN} pass(es) recorded with reasons — No-Bet is first-class.`
-            : "Pass lane is quiet on this snapshot.",
-          "Every published row carries reasoning; nothing ships as a naked pick.",
+            ? `${passN} gated row(s) held — No-Bet / gate reasons are first-class.`
+            : "Gate lane is quiet on this snapshot.",
+          scoringN > 0
+            ? `${scoringN} row(s) still scoring — not yet in a public fire lane.`
+            : "Nothing currently in scoring-now.",
         ],
       },
       {
         type: "No-Bet Warnings",
         tone: "ion",
         title: "Where the governor held fire.",
-        dek: "Passes protect bankroll and brand when evidence is thin, stale, or rights-blocked.",
-        points: (passes.length
-          ? passes.slice(0, 3).map((p) => p.reason ?? "Pass recorded with structured reason.")
-          : [
-              "No-Bet fires when freshness, rights, calibration, or agreement fail.",
-              "A pass is logged with the same audit posture as a fire.",
-              "We do not invent action to fill a content calendar.",
-            ]),
+        dek: "Gated rows protect bankroll and brand when evidence fails readiness.",
+        points:
+          passN > 0
+            ? gatedTodayRows.slice(0, 4).map(rowLabel)
+            : [
+                "No-Bet when freshness, rights, calibration, or agreement fail.",
+                "A pass is logged with the same audit posture as a fire.",
+                "We do not invent action to fill a content calendar.",
+              ],
       },
       {
         type: "Market Mirage",
@@ -80,33 +89,44 @@ export async function buildDailyTransmission(): Promise<Transmission & { source:
       },
     ];
 
-    // Include up to 2 published pick labels if present
-    if (published.length > 0) {
+    if (pubN > 0) {
       segments.push({
         type: "Line-Movement Autopsy",
         tone: "deep",
         title: "Published reads on this transmission.",
-        dek: "Labels only — full reasoning lives on the board and pick pages.",
-        points: published.slice(0, 4).map((p) => {
-          const label = p.label ?? "Published read";
-          const grade = p.grade ? ` · ${p.grade}` : "";
-          return `${label}${grade}`;
-        }),
+        dek: "Matchup labels only — full reasoning lives on the board and pick pages. No edge % invented here.",
+        points: publishedToday.slice(0, 5).map(rowLabel),
+      });
+    }
+
+    if (scoringN > 0) {
+      segments.push({
+        type: "Roster Shock",
+        tone: "anomaly",
+        title: "Still under evaluation.",
+        dek: "Scoring-now rows are not public fires. Treat them as in-progress only.",
+        points: scoringNow.slice(0, 4).map(rowLabel),
       });
     }
 
     return {
-      illustrative: true,
-      code: codeFromDate(),
+      illustrative: board.meta.isSampleData,
+      source: "board",
+      code: codeFromDate(now),
       summary: [
         { label: "Published", count: pubN, tone: "ion" },
-        { label: "No-Bet / Pass", count: passN, tone: "anomaly" },
-        { label: "Segments", count: segments.length, tone: "deep" },
+        { label: "Gated / No-Bet", count: passN, tone: "anomaly" },
+        { label: "Scoring now", count: scoringN, tone: "deep" },
+        { label: "Segments", count: segments.length, tone: "ion" },
       ],
       segments,
-      source: "board",
     };
   } catch {
-    return { ...SAMPLE_TRANSMISSION, code: codeFromDate(), source: "methodology" };
+    return {
+      ...SAMPLE_TRANSMISSION,
+      code: codeFromDate(now),
+      source: "methodology",
+      illustrative: true,
+    };
   }
 }

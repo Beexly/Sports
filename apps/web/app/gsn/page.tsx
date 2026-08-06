@@ -64,6 +64,10 @@ export default async function GSNPage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <GSNTransmission transmission={transmission} />
+              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
+                Source · {transmission.source === "board" ? "board snapshot" : "methodology structure"}
+                {transmission.illustrative ? " · no fabricated track-record numbers" : ""}
+              </p>
             </Reveal>
           </div>
         </section>

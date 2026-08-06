@@ -4,6 +4,8 @@ import { SITE_URL } from "@/lib/seo/site-url";
 import { slugify } from "@/lib/seo/sports-jsonld";
 import { db } from "@sports/db";
 import { isStatsPublic } from "@/lib/launch/public-surface-gate";
+import { listEpisodes } from "@/lib/podcast/episodes";
+import { listIssues } from "@/lib/newsletter/issues";
 
 /**
  * sitemap.xml
@@ -156,6 +158,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority,
   }));
 
+  const podcastRoutes = listEpisodes().map((ep) => ({
+    url: `${baseUrl}/podcast/${ep.slug}`,
+    lastModified: new Date(ep.publishedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.55,
+  }));
+
+  const newsletterRoutes = listIssues().map((issue) => ({
+    url: `${baseUrl}/newsletter/${issue.slug}`,
+    lastModified: new Date(issue.publishedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.55,
+  }));
+
   const journalRoutes = journalEntries.map((entry) => ({
     url: `${baseUrl}/journal/${entry.slug}`,
     lastModified: new Date(entry.publishedAt),
@@ -163,5 +179,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...journalRoutes, ...previewRoutes];
+  return [...staticRoutes, ...podcastRoutes, ...newsletterRoutes, ...journalRoutes, ...previewRoutes];
 }

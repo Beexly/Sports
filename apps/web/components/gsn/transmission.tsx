@@ -46,7 +46,11 @@ export function GSNTransmission({ transmission }: { transmission: Transmission }
           <span className="live-dot" />
           GSN TRANSMISSION // {transmission.code}
         </p>
-        <span className="text-[10px] uppercase tracking-[0.22em] text-ion-2">Decrypted · illustrative sample</span>
+        <span className="text-[10px] uppercase tracking-[0.22em] text-ion-2">
+          {transmission.source === "board"
+            ? "Decrypted · board-sourced"
+            : "Decrypted · methodology structure"}
+        </span>
       </div>
 
       {/* summary count strip, each cell jumps to its segment */}

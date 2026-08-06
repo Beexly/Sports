@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { ContestEntryInput, StoredContestEntry } from "./types";
@@ -15,6 +15,20 @@ function hashEmail(email: string): string {
   return createHash("sha256").update(email.trim().toLowerCase()).digest("hex").slice(0, 24);
 }
 
+const fileWriteLocks = new Map<string, Promise<unknown>>();
+function withFileLock<T>(filePath: string, fn: () => Promise<T>): Promise<T> {
+  const prev = fileWriteLocks.get(filePath) ?? Promise.resolve();
+  const next = prev.then(fn, fn);
+  fileWriteLocks.set(
+    filePath,
+    next.then(
+      () => undefined,
+      () => undefined,
+    ),
+  );
+  return next;
+}
+
 async function readAll(): Promise<StoredContestEntry[]> {
   try {
     const raw = await fs.readFile(storePath(), "utf8");
@@ -29,7 +43,9 @@ async function readAll(): Promise<StoredContestEntry[]> {
 async function writeAll(rows: StoredContestEntry[]): Promise<void> {
   const file = storePath();
   await fs.mkdir(path.dirname(file), { recursive: true });
-  await fs.writeFile(file, JSON.stringify(rows, null, 2), "utf8");
+  const tmp = `${file}.${process.pid}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(rows, null, 2), "utf8");
+  await fs.rename(tmp, file);
 }
 
 export async function listEntries(weekId?: string): Promise<StoredContestEntry[]> {
@@ -37,15 +53,29 @@ export async function listEntries(weekId?: string): Promise<StoredContestEntry[]
   return weekId ? all.filter((e) => e.weekId === weekId) : all;
 }
 
+export function scoreEntry(
+  picks: StoredContestEntry["picks"],
+  results: Record<string, "home" | "away" | "push" | null>,
+): { score: number | null; correct: number | null; total: number | null } {
+  let correct = 0;
+  let total = 0;
+  for (const p of picks) {
+    const r = results[p.gameId];
+    if (r === null || r === undefined || r === "push") continue;
+    total++;
+    if (p.side === r) correct++;
+  }
+  if (total === 0) return { score: null, correct: null, total: null };
+  return { score: correct, correct, total };
+}
+
 export async function enterContest(
   input: ContestEntryInput,
+  now = new Date(),
 ): Promise<{ ok: true; entry: StoredContestEntry } | { ok: false; error: string }> {
-  const week = getCurrentContestWeek();
-  if (week.status !== "open") {
+  const week = getCurrentContestWeek(now);
+  if (week.status !== "open" || now >= new Date(week.locksAt)) {
     return { ok: false, error: "This contest week is locked." };
-  }
-  if (new Date() >= new Date(week.locksAt)) {
-    return { ok: false, error: "Entries are locked for this week." };
   }
 
   const validIds = new Set(week.games.map((g) => g.gameId));
@@ -55,27 +85,30 @@ export async function enterContest(
     }
   }
 
-  const all = await readAll();
-  const emailHash = hashEmail(input.email);
-  if (all.some((e) => e.weekId === week.weekId && e.emailHash === emailHash)) {
-    return { ok: false, error: "You already entered this week with that email." };
-  }
+  const file = storePath();
+  return withFileLock(file, async () => {
+    const all = await readAll();
+    const emailHash = hashEmail(input.email);
+    if (all.some((e) => e.weekId === week.weekId && e.emailHash === emailHash)) {
+      return { ok: false, error: "You already entered this week with that email." };
+    }
 
-  const entry: StoredContestEntry = {
-    id: `ce_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
-    weekId: week.weekId,
-    displayName: input.displayName.trim(),
-    emailHash,
-    picks: input.picks,
-    createdAt: new Date().toISOString(),
-    score: null,
-    correct: null,
-    total: null,
-  };
+    const entry: StoredContestEntry = {
+      id: `ce_${Date.now().toString(36)}_${randomBytes(3).toString("hex")}`,
+      weekId: week.weekId,
+      displayName: input.displayName.trim(),
+      emailHash,
+      picks: input.picks,
+      createdAt: now.toISOString(),
+      score: null,
+      correct: null,
+      total: null,
+    };
 
-  all.push(entry);
-  await writeAll(all);
-  return { ok: true, entry };
+    all.push(entry);
+    await writeAll(all);
+    return { ok: true, entry };
+  });
 }
 
 export async function leaderboard(weekId: string): Promise<
@@ -89,24 +122,17 @@ export async function leaderboard(weekId: string): Promise<
   }>
 > {
   const week = getCurrentContestWeek();
-  const entries = await listEntries(weekId);
+  const results: Record<string, "home" | "away" | "push" | null> = {};
+  for (const g of week.games) results[g.gameId] = g.result;
 
-  // Score against settled games if any
+  const entries = await listEntries(weekId);
   const scored = entries.map((e) => {
-    let correct = 0;
-    let total = 0;
-    for (const p of e.picks) {
-      const g = week.games.find((x) => x.gameId === p.gameId);
-      if (!g || g.result === null || g.result === "push") continue;
-      total++;
-      if (p.side === g.result) correct++;
-    }
-    const score = total > 0 ? correct : null;
+    const s = scoreEntry(e.picks, results);
     return {
       displayName: e.displayName,
-      score,
-      correct: total > 0 ? correct : null,
-      total: total > 0 ? total : null,
+      score: s.score,
+      correct: s.correct,
+      total: s.total,
       enteredAt: e.createdAt,
     };
   });
