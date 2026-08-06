@@ -13,6 +13,17 @@ import { timingSafeEqual } from "node:crypto";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+/** Features expected on main that older deploys may lack — diagnose lag. */
+const MAIN_FEATURE_MARKERS = [
+  "free-path-clv-grade",
+  "free-path-clv-repair",
+  "free-path-snapshot-outcome",
+  "settle-picks-hourly",
+  "overdue-first-stp",
+  "postgres-public-form-rate-limit",
+  "ops-truth-detail-auth",
+] as const;
+
 function hasOpsAuth(request: Request): boolean {
   const secret = process.env.CRON_SECRET?.trim();
   if (!secret) return false;
@@ -29,13 +40,16 @@ function hasOpsAuth(request: Request): boolean {
 
 /**
  * Surface truth snapshot.
- * - Public: gates, storage modes, settlement band counts (honest ops posture).
+ * - Public: gates, storage modes, settlement band counts, deploymentSha.
  * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
- * Under /api/ (robots-disallowed). Cache-Control: no-store.
  */
 export async function GET(request: Request) {
   const gates = getReadinessGates();
   const detailed = hasOpsAuth(request);
+  const deploymentSha =
+    process.env.VERCEL_GIT_COMMIT_SHA?.trim() ||
+    process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.trim() ||
+    null;
 
   let settlement: {
     health: string;
@@ -52,7 +66,6 @@ export async function GET(request: Request) {
         health: s.health,
         commencedTotal: s.commencedTotal,
         overduePending: s.overduePending,
-        // Public message stays factual; no cron paths unless authenticated.
         operatorMessage: detailed
           ? s.operatorMessage
           : `${s.overduePending} of ${s.commencedTotal} commenced picks overdue past grace (${s.health}).`,
@@ -79,6 +92,10 @@ export async function GET(request: Request) {
       ok: true,
       generatedAt: new Date().toISOString(),
       detail: detailed ? "operator" : "public",
+      deployment: {
+        sha: deploymentSha,
+        note: "If settlement stays CRITICAL after main merges, redeploy so Vercel runs the latest SHA.",
+      },
       host: {
         stubMode: isStubMode(),
         demoPicksEnabled: isDemoPicksEnabled(),
@@ -105,6 +122,7 @@ export async function GET(request: Request) {
         contestsDefault: "public free paper skill",
         refuseEphemeralWrites: true,
       },
+      ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },
   );
