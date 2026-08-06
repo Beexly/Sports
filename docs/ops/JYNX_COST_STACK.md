@@ -38,7 +38,8 @@ tier routing always applies to Anthropic-model-id before maps.
 
 | Priority | Lane | When | Intelligence |
 |----------|------|------|--------------|
-| 1 | **Cerebras free** | content/brief + free-lane env | Fast draft; numeric-guard still applies |
+| 1 | **Cerebras free** | content/brief + free-lane env | gpt-oss-120b primary |
+| 1b | **Secondary free host** | FREE_LANE_SECONDARY_* | Gemma 4 / Nemotron free OpenAI-compat |
 | 2 | **AWS Bedrock** | configured (+ auto or selected) | Full Claude via Activate credits |
 | 3 | **Azure Foundry** | configured | Full Claude via Azure bill/credits (verify SKU) |
 | 4 | **Google Vertex** | configured | Full Claude via partner credits |
@@ -115,4 +116,4 @@ Pass = free-lane content shows `gpt-oss*`; studio shows cloud id not plain `clau
 - Never invent model map ids  
 - LIVE_BOARD / public picks stay gated by product law — Jynx is cost routing only  
 
-See also: `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`
+See also: `JYNX_OPEN_WEIGHT_FREE_MAP.md` · `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`
