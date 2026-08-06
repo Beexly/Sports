@@ -6,19 +6,24 @@
  * run on a frequent cadence at no metered cost — the "accurate numbers from free
  * sources, refreshed often, without the Odds API bill" path.
  *
- * NOT yet scheduled. To enable (e.g. every 30 minutes), add to `vercel.json`
- * crons (mind your Vercel plan's cron limit):
- *   { "path": "/api/cron/refresh-player-stats", "schedule": "0,30 * * * *" }
+ * Schedule: vercel.json `0,30 * * * *` (every 30 minutes).
+ *
+ * Also records an honest IngestionRun SUCCESS when the primary weekly-stats
+ * ingest completes so /api/health free-mode freshness is not solely dependent
+ * on free-spine-health (which can lag if CRON_SECRET mismatches or the probe
+ * times out). Does not invent scores or injury designations.
  *
  * Auth: Bearer <CRON_SECRET>, same as the other cron routes.
  */
 import { NextResponse } from "next/server";
+import { resolveFootballStatsSeason } from "@sports/data-ingestion";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
+import { ingestPlayerWeeklyStats } from "@/lib/ingestion/player-stats";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
+import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -29,7 +34,8 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   const seasonParam = new URL(request.url).searchParams.get("season");
-  const season = seasonParam ? Number(seasonParam) : currentNflSeason();
+  const resolved = resolveFootballStatsSeason();
+  const season = seasonParam ? Number(seasonParam) : resolved.season;
   if (!Number.isInteger(season) || season < 1999 || season > 2100) {
     return NextResponse.json({ error: "invalid season" }, { status: 400 });
   }
@@ -51,8 +57,38 @@ export async function GET(request: Request): Promise<NextResponse> {
   const success = [stats, snaps, injuries, depth, ngsPassing, ngsReceiving, ngsRushing].every(
     (r) => r.status === "ok",
   );
+
+  // Durable free-mode health evidence: primary weekly-stats ok stamps SUCCESS
+  // even when a satellite (e.g. early-season injuries) is empty/error — empty
+  // injury state is honest, not a heartbeat failure.
+  const primaryOk = stats.status === "ok";
+  const ingestionRun = await recordFreeIngestionRun({
+    sport: "nflverse-player-stats",
+    gamesUpserted: stats.statsUpserted,
+    oddsInserted: 0,
+    failed: !primaryOk,
+    errorMessage: primaryOk
+      ? null
+      : `refresh-player-stats: stats=${stats.status}${stats.error ? ` (${stats.error})` : ""}`,
+  });
+
   return NextResponse.json(
-    { success, season, stats, snaps, injuries, depth, ngs },
-    { status: success ? 200 : 502 },
+    {
+      success,
+      season,
+      seasonResolution: {
+        season: resolved.season,
+        reason: resolved.reason,
+        labelledCurrent: resolved.labelledCurrent,
+        completedFloor: resolved.completedFloor,
+      },
+      stats,
+      snaps,
+      injuries,
+      depth,
+      ngs,
+      ingestionRun,
+    },
+    { status: success || primaryOk ? 200 : 502 },
   );
 }

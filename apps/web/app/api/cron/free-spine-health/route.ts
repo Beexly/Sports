@@ -13,6 +13,8 @@ import { fetchScoresMultiSource, scoreSourceChain } from "@/lib/data-sources/mul
 import { buildWorldClassReadiness } from "@/lib/platform/world-class-readiness";
 import { writeFreeSpineCache } from "@/lib/data-sources/free-spine-cache";
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
+import { probeNflverseSourceCurrency } from "@sports/data-ingestion";
+import { captureError } from "@/lib/observability/sentry";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -94,6 +96,37 @@ export async function GET(request: Request): Promise<NextResponse> {
       : null,
   });
 
+  // Lightweight nflverse currency (catalog HEAD) — evidence for operators +
+  // free-spine response. Health route also probes independently; this stamps
+  // the same season floor so logs stay aligned. Never invents currency.
+  let nflverseCurrency: Awaited<ReturnType<typeof probeNflverseSourceCurrency>> | null = null;
+  try {
+    nflverseCurrency = await probeNflverseSourceCurrency({ timeoutMs: 4000 });
+  } catch (err) {
+    captureError(err, { path: "free-spine-health", stage: "nflverse-currency" });
+    console.warn(
+      `[free-spine-health] nflverse currency probe failed: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    );
+  }
+
+  if (probeFailed) {
+    captureError(new Error("free-spine probe: all sports failed"), {
+      path: "free-spine-health",
+      hardFailures,
+      sportsProbed: live.length,
+    });
+  }
+
+  if (!ingestionRun) {
+    captureError(new Error("free-spine failed to record IngestionRun"), {
+      path: "free-spine-health",
+      stage: "recordFreeIngestionRun",
+      probeFailed,
+    });
+  }
+
   return NextResponse.json({
     ok: true,
     path: "free-spine-health",
@@ -115,5 +148,6 @@ export async function GET(request: Request): Promise<NextResponse> {
     })),
     agentPrime: readiness.agentPrime,
     ingestionRun,
+    nflverseCurrency,
   });
 }

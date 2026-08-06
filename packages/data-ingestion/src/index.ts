@@ -78,6 +78,12 @@ export {
   type StatsSeasonResolution,
 } from "./nflverse-season.js";
 export {
+  probeNflverseSourceCurrency,
+  type NflverseCurrencyAssetResult,
+  type NflverseCurrencyProbeResult,
+  type NflverseCurrencyProbeOptions,
+} from "./nflverse-currency-probe.js";
+export {
   mergeNormalizedOdds,
   bookmakerCoverage,
   gamesBelowThreshold,

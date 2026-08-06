@@ -73,12 +73,26 @@ export function buildIdCrosswalk(
       if (espn) withEspn += 1;
 
       if (gsis && pfr) {
-        if (!pfrToGsis.has(pfr)) pfrToGsis.set(pfr, gsis);
-        if (!gsisToPfr.has(gsis)) gsisToPfr.set(gsis, pfr);
+        // Primary batch first: once a GSIS owns a PFR, later seasons must not
+        // register alternate historical PFR slugs for the same player (stale
+        // slug → wrong bridge if the id was reused). First write still wins
+        // when the same PFR appears twice.
+        if (!gsisToPfr.has(gsis)) {
+          gsisToPfr.set(gsis, pfr);
+        }
+        const canonicalPfr = gsisToPfr.get(gsis);
+        if (canonicalPfr === pfr && !pfrToGsis.has(pfr)) {
+          pfrToGsis.set(pfr, gsis);
+        }
       }
       if (gsis && espn) {
-        if (!espnToGsis.has(espn)) espnToGsis.set(espn, gsis);
-        if (!gsisToEspn.has(gsis)) gsisToEspn.set(gsis, espn);
+        if (!gsisToEspn.has(gsis)) {
+          gsisToEspn.set(gsis, espn);
+        }
+        const canonicalEspn = gsisToEspn.get(gsis);
+        if (canonicalEspn === espn && !espnToGsis.has(espn)) {
+          espnToGsis.set(espn, gsis);
+        }
       }
     }
   }

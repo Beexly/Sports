@@ -14,6 +14,7 @@
  */
 
 import { db } from "@sports/db";
+import { captureError } from "@/lib/observability/sentry";
 
 export type FreeIngestionRunInput = {
   /** Sport key when single-sport; omit or use "free-spine" for multi-sport probes. */
@@ -58,6 +59,11 @@ export async function recordFreeIngestionRun(
       completedAt: (run.completedAt ?? completedAt).toISOString(),
     };
   } catch (err) {
+    captureError(err, {
+      path: "recordFreeIngestionRun",
+      sport: input.sport ?? null,
+      failed: Boolean(input.failed),
+    });
     console.warn(
       `[free-ingestion-run] failed to record ${input.failed ? "FAILED" : "SUCCESS"}: ` +
         `${err instanceof Error ? err.message : String(err)}`,
