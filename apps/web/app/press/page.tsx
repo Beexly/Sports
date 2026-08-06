@@ -14,7 +14,11 @@ const FACTS = [
   { label: "Tagline", value: BRAND_TAGLINE },
   { label: "Category", value: "Sports intelligence platform" },
   { label: "Coverage", value: "NFL · NBA · MLB · NHL · NCAAF · NCAAB · MLS" },
-  { label: "Refresh cadence", value: "Live odds ingested every 30 minutes" },
+  {
+    label: "Odds cadence",
+    value: "Free-first ingestion; paid odds refresh when configured (board stays gated until readiness)",
+  },
+  { label: "Doctrine", value: "Finish · dark · or refuse the write" },
   { label: "HQ", value: "United States" },
 ];
 
@@ -23,6 +27,17 @@ const SOUNDBITES = [
   "Outcomes are uncertain. Variance is described, not hidden.",
   "Every pick traces back to a real market line. No synthetic numbers.",
   "Performance stats stay gated until the data can honestly support them.",
+  "We detect. You decide.",
+];
+
+const ASSETS = [
+  { href: "/brand/gse-emblem.png", label: "Emblem 512 (PNG)" },
+  { href: "/brand/gse-emblem-180.png", label: "Emblem 180 (PNG)" },
+  { href: "/brand/gse-emblem-64.png", label: "Emblem 64 (PNG)" },
+  { href: "/favicon.svg", label: "Favicon (SVG)" },
+  { href: "/opengraph-image", label: "Open Graph image" },
+  { href: "/site.webmanifest", label: "Web manifest" },
+  { href: "/llms.txt", label: "Machine proof manifest (llms.txt)" },
 ];
 
 export default function PressPage() {
@@ -38,9 +53,9 @@ export default function PressPage() {
               Press kit
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ion-1">
-              Quick facts, media availability, and ready-to-quote soundbites
-              for journalists, podcasters, and analysts covering the sports
-              intelligence space.
+              Quick facts, brand assets, media availability, and ready-to-quote
+              soundbites for journalists, podcasters, and analysts covering the
+              sports intelligence space.
             </p>
           </div>
         </section>
@@ -62,6 +77,32 @@ export default function PressPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="border-t border-mineral/40 px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
+            <p className="eyebrow">Brand assets</p>
+            <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
+              Downloadable marks.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm text-ion-1">
+              Official chrome only. Do not invent ROI graphics or “locks.” Link
+              attribution to galaxysportsedge.com when used in coverage.
+            </p>
+            <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {ASSETS.map((a) => (
+                <li key={a.href}>
+                  <a
+                    href={a.href}
+                    className="surface-card flex items-center justify-between px-5 py-4 text-sm text-ion transition hover:border-orbital-cyan/40"
+                  >
+                    <span>{a.label}</span>
+                    <span className="font-mono text-xs text-orbital-cyan">{a.href}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -91,8 +132,8 @@ export default function PressPage() {
               Direct line to the desk.
             </h2>
             <p className="mt-5 text-base text-ion-1">
-              For interviews, embargoed coverage, or a deeper walkthrough of
-              the model, write to{" "}
+              For interviews, embargoed coverage, or a deeper walkthrough of the
+              model, write to{" "}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
                 className="font-mono text-orbital-cyan underline-offset-4 hover:underline"
@@ -107,6 +148,9 @@ export default function PressPage() {
               </Link>
               <Link href="/about" className="btn btn-ghost">
                 About {BRAND_NAME}
+              </Link>
+              <Link href="/proof" className="btn btn-ghost">
+                Proof surface
               </Link>
             </div>
           </div>

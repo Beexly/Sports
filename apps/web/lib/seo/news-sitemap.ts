@@ -1,15 +1,9 @@
 /**
  * Google News sitemap builder (pure).
  *
- * Emits a `<urlset>` in the Google News namespace for journal entries
- * published within the last 48 hours — Google News only accepts articles that
- * recent, so older entries are excluded by design (they stay in the main
- * sitemap.xml). Degrades to a valid empty `<urlset>` when nothing qualifies,
- * never an error.
- *
- * Pure + injectable clock/base URL so it is unit-testable without a DB or
- * server. The route (app/news-sitemap.xml/route.ts) supplies the loaded
- * entries, `now`, and the canonical base URL.
+ * Emits a `<urlset>` in the Google News namespace for articles published within
+ * the last 48 hours. Supports journal, newsletter, and podcast paths via
+ * `pathPrefix` so substance is not journal-only.
  */
 
 /** The 48-hour inclusion window Google News enforces, in milliseconds. */
@@ -20,6 +14,11 @@ export interface NewsSitemapEntry {
   readonly title: string;
   /** ISO-8601 publish timestamp. */
   readonly publishedAt: string;
+  /**
+   * URL path prefix without trailing slash. Default `/journal`.
+   * Examples: `/newsletter`, `/podcast`.
+   */
+  readonly pathPrefix?: string;
 }
 
 export interface BuildNewsSitemapOptions {
@@ -33,11 +32,11 @@ export interface BuildNewsSitemapOptions {
 
 function escapeXml(value: string): string {
   return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
+    .replace(/&/g, "&" + "amp;")
+    .replace(/</g, "&" + "lt;")
+    .replace(/>/g, "&" + "gt;")
+    .replace(/"/g, "&" + "quot;")
+    .replace(/'/g, "&" + "apos;");
 }
 
 /**
@@ -52,13 +51,11 @@ export function buildGoogleNewsSitemap(opts: BuildNewsSitemapOptions): string {
   const urls = opts.entries
     .filter((entry) => {
       const published = new Date(entry.publishedAt).getTime();
-      // Exclude unparseable dates and anything outside the 48h window. Also
-      // guard against future-dated entries (clock skew) — never advertise a
-      // publish time ahead of now.
       return Number.isFinite(published) && published >= cutoff && published <= opts.now.getTime();
     })
     .map((entry) => {
-      const loc = `${base}/journal/${entry.slug}`;
+      const prefix = (entry.pathPrefix ?? "/journal").replace(/\/+$/, "") || "/journal";
+      const loc = `${base}${prefix}/${entry.slug}`;
       const publicationDate = new Date(entry.publishedAt).toISOString();
       return `  <url>
     <loc>${escapeXml(loc)}</loc>
