@@ -81,3 +81,20 @@ Not podcast polish. Not StatKing vanity.
 | Vercel+stub waitlist | Honest 503 refuse (no ephemeral pretend) |
 | Podcast ep copy | Removed public unfinished-fence phrase |
 | Ops truth | `waitlistStorage` mode |
+
+## Settlement P0 (live probe 2026-08-06 ~06:35Z)
+
+| Metric | Value |
+|--------|-------|
+| commenced picks | **1478** |
+| overdue PENDING (>6h) | **139** |
+| band | CRITICAL |
+
+### Code changes for drain
+- Free settle batch `take` 500 → **1500**
+- Prefer **overdue-only** slice when mixed with within-grace PENDING
+- `settle-picks` cron **hourly** at :20 (was every 3h)
+- Ops truth: **bySport** + **operatorNext**
+
+### Founder action
+Ensure `CRON_SECRET` is set so Vercel actually invokes settle-picks. Watch overdue drop after 1–2 hourly cycles.
