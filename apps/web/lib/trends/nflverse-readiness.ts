@@ -4,6 +4,7 @@ import {
   NFLVERSE_TREND_PLANS,
   nflverseUrl,
   parseCsv,
+  resolveFootballStatsSeason,
   type NflverseDatasetKey,
   type TrendPlanKey,
 } from "@sports/data-ingestion";
@@ -57,37 +58,27 @@ export interface NflverseTrendReadiness {
   readonly requiredDatasetCount: number;
   readonly liveDatasetCount: number;
   readonly totalSourceRows: number;
-  /** Oldest season (inclusive) the publication gate counts — the ingestion planner's backfill-window start. */
   readonly windowStartSeason: number;
-  /** Newest season (inclusive) the publication gate counts — the current NFL season, anchored to real time. */
   readonly windowEndSeason: number;
-  /** Joined observations a season must hold before it counts toward minimumSeasons (see PER_SEASON_OBSERVATION_FLOOR). */
   readonly perSeasonObservationFloor: number;
-  /**
-   * Persisted PlayerGameStat rows INSIDE the trend window
-   * ([windowStartSeason, windowEndSeason]) stamped with the nflverse sourceId —
-   * each is a player-week observation already joined to a Player identity
-   * (FK-enforced at ingestion). Out-of-window rows (e.g. an operator's manual
-   * ?season=1999 cron override) never move this number.
-   */
   readonly joinedTrendObservations: number;
-  /**
-   * Distinct in-window seasons holding at least perSeasonObservationFloor
-   * joined observations. Thin seasons never satisfy minimumSeasons.
-   */
   readonly persistedSeasonCount: number;
-  /** True ONLY when the declared thresholds (minimumSeasons AND minimumObservations) are genuinely met by persisted rows. */
   readonly canPublishTrends: boolean;
-  /** Why publication is blocked; null once the declared data volume is truly met. */
   readonly blockReason: string | null;
   readonly datasets: readonly NflverseDatasetReadiness[];
 }
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
+/**
+ * Default season for nflverse website/engine probes.
+ *
+ * Delegates to `resolveFootballStatsSeason` so product surfaces stay on the
+ * completed REG floor (through 2025 in Aug 2026) until a newer season has real
+ * REG rows — never invents current-season completeness.
+ */
 export function latestNflverseInspectionSeason(now = new Date()): number {
-  const month = now.getUTCMonth();
-  return month >= 8 ? now.getUTCFullYear() : now.getUTCFullYear() - 1;
+  return resolveFootballStatsSeason(now).season;
 }
 
 function datasetName(key: NflverseDatasetKey): string {
@@ -174,26 +165,6 @@ interface PersistedJoinCounts {
   readonly seasonCount: number;
 }
 
-/**
- * Count the persisted, joined trend observations INSIDE the ingestion
- * planner's declared backfill window. A PlayerGameStat row exists only with a
- * valid Player foreign key, so the `player_stats_week` → Player identity join
- * is materialized at ingestion time; counting rows counts joined player-week
- * observations. Scoping rules (the PUBLIC honesty gate must not open on
- * out-of-window or trivially thin data):
- *
- *   - only seasons in `[windowStart, windowEnd]` count — rows persisted by an
- *     operator's manual `?season=1999` override or a historical backfill
- *     script never move the gate;
- *   - only rows stamped `sourceId: "nflverse"` count — the writer's
- *     clearance-gated path is the sole trusted source;
- *   - a season counts toward the seasons threshold only once it holds at
- *     least PER_SEASON_OBSERVATION_FLOOR observations, so a 1-row season can
- *     never satisfy minimumSeasons.
- *
- * Fails CLOSED: if the DB is unreachable (or the stub client is active) the
- * counts read as zero and the gate stays shut.
- */
 async function countPersistedJoinedObservations(
   windowStart: number,
   windowEnd: number,
@@ -223,13 +194,9 @@ export async function loadNflverseTrendReadiness({
   season?: number;
   timeoutMs?: number;
   fetcher?: FetchLike;
-  /** Anchors the publication-gate window; injectable for deterministic tests. */
   now?: Date;
 } = {}): Promise<NflverseTrendReadiness> {
   const plan = NFLVERSE_TREND_PLANS[planKey];
-  // Publication-gate window: identical to the ingestion planner's target
-  // window and anchored to REAL time — never to the `season` inspection
-  // override, which only steers the read-only dataset probes above.
   const windowEndSeason = currentNflSeason(now);
   const windowStartSeason = windowEndSeason - TREND_BACKFILL_SEASONS + 1;
   const [datasets, persisted] = await Promise.all([
@@ -239,9 +206,6 @@ export async function loadNflverseTrendReadiness({
   const liveDatasetCount = datasets.filter((dataset) => dataset.status === "live").length;
   const totalSourceRows = datasets.reduce((sum, dataset) => sum + (dataset.rowCount ?? 0), 0);
 
-  // The honest release contract: publication opens ONLY when the declared data
-  // volume is truly persisted inside the trend window. No partial credit, no
-  // source-row substitution, no credit for out-of-window or thin seasons.
   const canPublishTrends =
     persisted.seasonCount >= plan.minimumSeasons && persisted.observationCount >= plan.minimumObservations;
   const blockReason = canPublishTrends

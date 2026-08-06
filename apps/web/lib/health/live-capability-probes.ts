@@ -14,7 +14,7 @@ import {
   loadSettlementHealth,
   type SettlementHealthBand,
 } from "@/lib/performance/settlement-health";
-import { nflverseTableCacheStats } from "@sports/data-ingestion";
+import { nflverseTableCacheStats, probeNflverseSourceCurrency } from "@sports/data-ingestion";
 import { fromHealthCheck, fromSettlementBand, unknownCapability, type CapabilityState } from "./capability-state";
 
 export type HealthCheck = {
@@ -80,13 +80,28 @@ export async function computeLiveCapabilityProbes(): Promise<LiveCapabilityProbe
     settlementBand = null;
   }
 
+  // Prefer process-local OP-002 cache counters when this runtime has already
+  // touched nflverse. On cold serverless isolates those counters are zero —
+  // fall through to a lightweight catalog HEAD probe (completed REG floor)
+  // so source:nflverse is never a static "unknown" with no evidence.
   const nflverseStats = nflverseTableCacheStats();
   let nflverseCapability: CapabilityState;
-  if (nflverseStats.entries === 0 && nflverseStats.misses === 0) {
-    nflverseCapability = unknownCapability(
-      "nflverse-reports",
-      "no fetch attempted in this runtime — no evidence either way"
-    );
+  if (nflverseStats.entries === 0 && nflverseStats.misses === 0 && nflverseStats.failures === 0) {
+    try {
+      const currency = await probeNflverseSourceCurrency({ timeoutMs: 4000 });
+      nflverseCapability = {
+        capabilityId: "nflverse-reports",
+        status: currency.ok ? "healthy" : "unavailable",
+        reason: currency.reason,
+        observedAt: currency.probedAt,
+        evidence: "probe",
+      };
+    } catch (err) {
+      nflverseCapability = unknownCapability(
+        "nflverse-reports",
+        `currency probe threw: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
   } else if (nflverseStats.failures > 0 && nflverseStats.entries === 0) {
     nflverseCapability = {
       capabilityId: "nflverse-reports",

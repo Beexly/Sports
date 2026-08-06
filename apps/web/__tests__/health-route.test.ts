@@ -4,6 +4,26 @@ import { resolve } from "node:path";
 import { REFRESH_STALE_AFTER_MINUTES } from "@/lib/data-reliability/refresh-sla";
 import { resetNflverseTableCacheForTests } from "@sports/data-ingestion";
 
+const nflverseProbeMocks = vi.hoisted(() => ({
+  probeNflverseSourceCurrency: vi.fn(async () => ({
+    ok: true,
+    season: 2025,
+    labelledCurrent: 2025,
+    completedFloor: 2025,
+    probedAt: new Date().toISOString(),
+    assets: [],
+    reason: "test mock: nflverse hard assets reachable",
+  })),
+}));
+
+vi.mock("@sports/data-ingestion", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/data-ingestion")>();
+  return {
+    ...actual,
+    probeNflverseSourceCurrency: nflverseProbeMocks.probeNflverseSourceCurrency,
+  };
+});
+
 /**
  * /api/health source-level contract.
  *
@@ -88,6 +108,16 @@ describe("/api/health — freshness threshold (executed)", () => {
     // DB ping always healthy so the ingestion check drives the outcome.
     dbMocks.queryRaw.mockResolvedValue([{ "?column?": 1 }]);
     resetNflverseTableCacheForTests();
+    nflverseProbeMocks.probeNflverseSourceCurrency.mockReset();
+    nflverseProbeMocks.probeNflverseSourceCurrency.mockResolvedValue({
+      ok: true,
+      season: 2025,
+      labelledCurrent: 2025,
+      completedFloor: 2025,
+      probedAt: new Date().toISOString(),
+      assets: [],
+      reason: "test mock: healthy default",
+    });
   });
 
   afterEach(() => {
@@ -167,9 +197,18 @@ describe("/api/health — capabilities (OP-003, additive)", () => {
     );
   });
 
-  it("reports nflverse-reports as 'unknown' when the table cache stats are zeroed", async () => {
+  it("reports nflverse-reports via catalog currency probe when table cache is cold", async () => {
     dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
     resetNflverseTableCacheForTests();
+    nflverseProbeMocks.probeNflverseSourceCurrency.mockResolvedValueOnce({
+      ok: true,
+      season: 2025,
+      labelledCurrent: 2025,
+      completedFloor: 2025,
+      probedAt: new Date().toISOString(),
+      assets: [],
+      reason: "test mock: healthy",
+    });
 
     const { GET } = await import("@/app/api/health/route");
     const res = await GET();
@@ -178,8 +217,35 @@ describe("/api/health — capabilities (OP-003, additive)", () => {
     const nflverse = body.capabilities.find(
       (c: { capabilityId: string }) => c.capabilityId === "nflverse-reports"
     );
-    expect(nflverse.status).toBe("unknown");
-    expect(nflverse.evidence).toBe("none");
+    expect(nflverse.status).toBe("healthy");
+    expect(nflverse.evidence).toBe("probe");
+  });
+
+  it("reports nflverse-reports unavailable when currency probe fails hard assets", async () => {
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+    resetNflverseTableCacheForTests();
+    nflverseProbeMocks.probeNflverseSourceCurrency.mockResolvedValueOnce({
+      ok: false,
+      season: 2025,
+      labelledCurrent: 2025,
+      completedFloor: 2025,
+      probedAt: new Date().toISOString(),
+      assets: [],
+      reason: "test mock: unreachable",
+    });
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET();
+    const body = await res.json();
+
+    const nflverse = body.capabilities.find(
+      (c: { capabilityId: string }) => c.capabilityId === "nflverse-reports"
+    );
+    expect(nflverse.status).toBe("unavailable");
+    expect(nflverse.evidence).toBe("probe");
+    // Currency probe must not flip readiness ok (checks-only)
+    expect(body.ok).toBe(true);
+    expect(res.status).toBe(200);
   });
 
   it("returns deployment.sha as null when no deploy-sha env var is set", async () => {

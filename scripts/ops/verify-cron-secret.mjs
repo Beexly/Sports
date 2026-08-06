@@ -12,6 +12,7 @@ const base = (process.env.BASE_URL || process.env.ORBIT_SMOKE_BASE || "http://12
 );
 const secret = process.env.CRON_SECRET?.trim();
 const path = "/api/cron/health-alert";
+const freeSpinePath = "/api/cron/free-spine-health";
 
 async function hit(headers = {}) {
   const res = await fetch(`${base}${path}`, { headers, redirect: "manual" });
@@ -58,9 +59,29 @@ try {
   console.log(`[info] settle-picks probe skipped: ${e instanceof Error ? e.message : e}`);
 }
 
+// free-spine-health: same auth law; critical free-mode SUCCESS writer
+const fsUnauth = await fetch(`${base}${freeSpinePath}`, { redirect: "manual" });
+if (fsUnauth.status !== 401 && fsUnauth.status !== 500) {
+  failures.push(`free-spine unauth expected 401 or 500, got ${fsUnauth.status}`);
+} else {
+  console.log(`[ok] free-spine unauth status=${fsUnauth.status}`);
+}
+const fsAuth = await fetch(`${base}${freeSpinePath}`, {
+  headers: { Authorization: `Bearer ${secret}` },
+  redirect: "manual",
+});
+if (fsAuth.status !== 200) {
+  const body = await fsAuth.text();
+  failures.push(
+    `free-spine auth expected 200, got ${fsAuth.status} body=${body.slice(0, 160)}`,
+  );
+} else {
+  console.log(`[ok] free-spine auth status=200`);
+}
+
 if (failures.length) {
   console.error("[fail]", failures.join("; "));
   process.exit(1);
 }
-console.log("[pass] CRON_SECRET verification steps complete");
+console.log("[pass] CRON_SECRET verification steps complete (health-alert + free-spine)");
 process.exit(0);

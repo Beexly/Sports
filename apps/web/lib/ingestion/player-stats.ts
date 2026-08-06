@@ -12,7 +12,7 @@
  * nflverse is CC-BY-4.0 (free) so this can run on a frequent cadence at no
  * metered cost — unlike the paid Odds API path.
  */
-import { fetchNflverse, type NflverseDatasetKey } from "@sports/data-ingestion";
+import { fetchNflverse, resolveFootballStatsSeason, type NflverseDatasetKey } from "@sports/data-ingestion";
 import { db } from "@sports/db";
 import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 
@@ -40,11 +40,15 @@ function int(value: string | undefined): number | null {
 }
 
 /**
- * NFL seasons are labelled by their starting year (~September). Before September
- * the most recent labelled season is the prior calendar year.
+ * Stats season for engines + website + crons.
+ *
+ * Delegates to `resolveFootballStatsSeason` so product surfaces stay on the
+ * completed REG floor (through 2025 in Aug 2026) until a newer season has real
+ * REG rows — never invents current-season completeness. Callers that need the
+ * calendar label (September+) should use `currentNflSeasonLabel` instead.
  */
 export function currentNflSeason(now = new Date()): number {
-  return now.getUTCMonth() >= 8 ? now.getUTCFullYear() : now.getUTCFullYear() - 1;
+  return resolveFootballStatsSeason(now).season;
 }
 
 /**
