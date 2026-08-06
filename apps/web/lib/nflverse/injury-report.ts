@@ -1,12 +1,24 @@
-import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
-import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
+import {
+  assertIngestible,
+  fetchWithFailover,
+  nflverseUrl,
+  parseCsv,
+  resolveFootballStatsSeason,
+  withMirrors,
+} from "@sports/data-ingestion";
 
 /**
- * NFL injury report — the official team-submitted availability designations
+ * NFL injury report — official team-submitted availability designations
  * (Out / Doubtful / Questionable) and practice status, read-only from the
- * openly-licensed nflverse `injuries` release (CC-BY-4.0). Availability is the
- * single highest-value non-market driver of game outcomes. These are reported
- * facts as published by teams — not our prediction of who will play.
+ * openly-licensed nflverse `injuries` release (CC-BY-4.0).
+ *
+ * Integrity:
+ *   - playerId is source `gsis_id` only (never invented).
+ *   - Default season is the completed REG floor (through 2025 until a newer
+ *     injuries file exists). Missing current-season file → try prior season
+ *     with an explicit note, or empty state — never fabricate designations.
+ *   - Upstream as of 2026-08: injuries_2026.csv often 404; 2025 remains the
+ *     honest last complete report season for product surfaces.
  */
 
 export type ReportStatus = "Out" | "Doubtful" | "Questionable" | "Other";
@@ -33,6 +45,8 @@ export interface NflverseInjuryReport {
   readonly note: string;
   readonly sourceUrl: string;
   readonly error: string | null;
+  /** True when the served season differs from the requested/default season. */
+  readonly usedFallbackSeason?: boolean;
 }
 
 type CsvRecord = Readonly<Record<string, string>>;
@@ -66,25 +80,33 @@ export function resetInjuryReportCacheForTests(): void {
 }
 
 export async function loadNflverseInjuryReport({
-  season = latestNflverseInspectionSeason(),
+  season,
   timeoutMs = 15000,
   cacheTtlMs = 30 * 60 * 1000,
   fetcher = fetch,
+  now = new Date(),
 }: {
   season?: number;
   timeoutMs?: number;
   cacheTtlMs?: number;
   fetcher?: FetchLike;
+  now?: Date;
 } = {}): Promise<NflverseInjuryReport> {
   assertIngestible("nflverse");
 
-  const now = Date.now();
-  if (cacheTtlMs > 0 && fetcher === fetch && injuryCache && injuryCache.expiresAt > now) {
+  const resolved =
+    season !== undefined
+      ? { season, reason: "caller override" }
+      : resolveFootballStatsSeason(now);
+  const requestedSeason = resolved.season;
+
+  const cacheNow = Date.now();
+  if (cacheTtlMs > 0 && fetcher === fetch && injuryCache && injuryCache.expiresAt > cacheNow) {
     return injuryCache.value;
   }
 
-  // injuries are per-season files; fall back one year if the requested season isn't published.
-  const candidates = [season, season - 1];
+  // Per-season files; fall back one year if the requested season isn't published.
+  const candidates = [requestedSeason, requestedSeason - 1];
   let lastError: unknown = null;
 
   for (const candidate of candidates) {
@@ -101,7 +123,10 @@ export async function loadNflverseInjuryReport({
           const reportStatusRaw = row["report_status"] ?? "";
           return {
             playerId: row["gsis_id"] ?? "",
-            playerName: row["full_name"] || `${row["first_name"] ?? ""} ${row["last_name"] ?? ""}`.trim() || "UNKNOWN",
+            playerName:
+              row["full_name"] ||
+              `${row["first_name"] ?? ""} ${row["last_name"] ?? ""}`.trim() ||
+              "UNKNOWN",
             team: row["team"] ?? "",
             position: row["position"] ?? "",
             reportStatus: classifyStatus(reportStatusRaw),
@@ -110,7 +135,6 @@ export async function loadNflverseInjuryReport({
             practiceStatus: row["practice_status"] ?? "",
           };
         })
-        // Keep rows that carry an actual designation or a practice note.
         .filter((row) => row.reportStatus !== "Other" || row.practiceStatus.trim() !== "")
         .sort(
           (a, b) =>
@@ -126,6 +150,11 @@ export async function loadNflverseInjuryReport({
         questionable: rows.filter((r) => r.reportStatus === "Questionable").length,
       };
 
+      const usedFallbackSeason = candidate !== requestedSeason;
+      const note = usedFallbackSeason
+        ? `Serving season ${candidate} injury designations (requested/default ${requestedSeason} file missing or empty upstream). Official team-submitted facts from the latest week in that file — not a prediction of who will play, and not current-season invents.`
+        : "Official team-submitted injury designations as published, from the latest week in the source file. These are reported facts, not a prediction of availability.";
+
       const value: NflverseInjuryReport = {
         generatedAt: new Date().toISOString(),
         status: "live",
@@ -134,11 +163,12 @@ export async function loadNflverseInjuryReport({
         sourceRows: records.length,
         counts,
         rows,
-        note: "Official team-submitted injury designations as published, from the latest week in the source file. These are reported facts, not a prediction of availability.",
+        note,
         sourceUrl: url,
         error: null,
+        usedFallbackSeason,
       };
-      if (cacheTtlMs > 0 && fetcher === fetch) injuryCache = { expiresAt: now + cacheTtlMs, value };
+      if (cacheTtlMs > 0 && fetcher === fetch) injuryCache = { expiresAt: cacheNow + cacheTtlMs, value };
       return value;
     } catch (error) {
       lastError = error;
@@ -148,13 +178,15 @@ export async function loadNflverseInjuryReport({
   return {
     generatedAt: new Date().toISOString(),
     status: "source-error",
-    season,
+    season: requestedSeason,
     week: null,
     sourceRows: 0,
     counts: { out: 0, doubtful: 0, questionable: 0 },
     rows: [],
-    note: "The injury report could not load. The product shows an empty state instead of fabricated availability.",
-    sourceUrl: nflverseUrl("injuries", season),
+    note:
+      "The injury report could not load for the requested season or the prior season. Empty state shown — no fabricated Out/Doubtful/Questionable designations. Upstream injuries files are per-season; 2026 may be unpublished until in-season reports begin.",
+    sourceUrl: nflverseUrl("injuries", requestedSeason),
     error: lastError instanceof Error ? lastError.message : "UNKNOWN",
+    usedFallbackSeason: false,
   };
 }
