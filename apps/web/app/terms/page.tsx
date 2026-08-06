@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Terms of Service — placeholder, written to be safe-by-default while the
+ * Terms of Service — safe-by-default public legal copy while the
  * operator runs the final legal review. The content is reasonable to ship as
  * v1 but must be reviewed by counsel before paid checkout is enabled.
  */

@@ -41,9 +41,9 @@ export default async function Page() {
         </p>
       </div>
       <InsightCard
-        eyebrow={`Proof Readiness · ${measured ? `${proofArchive.score} / 100` : "not yet measured"}`}
+        eyebrow={`Proof Readiness · ${measured ? `${proofArchive.score} / 100` : "unmeasured"}`}
         headline="Predictions are logged, settled, and checked once live data flows"
-        body="Proof Readiness is computed from real settled/graded pick counts against the platform's own readiness floor, never hand-typed. It reads 'not yet measured' instead of a number whenever the database isn't reachable at render time, and it rises automatically as real picks settle — every pick is archived with the model version, input data snapshot, and outcome, making the calibration score auditable."
+        body="Proof Readiness is computed from real settled/graded pick counts against the platform's own readiness floor, never hand-typed. It reads 'unmeasured' instead of a number whenever the database isn't reachable at render time, and it rises automatically as real picks settle — every pick is archived with the model version, input data snapshot, and outcome, making the calibration score auditable."
         tone="warn"
       />
       <div>

@@ -37,13 +37,12 @@ const LAUNCH_PAGES: readonly LaunchPage[] = [
     route: "/newsletter",
     file: "apps/web/app/newsletter/page.tsx",
     requiredCopy: [
-      "No email provider is wired here yet",
+      "Join the waitlist",
       "No-Bet Playbook",
       "Market Mirage Checklist",
       "Sports AI Builder Field Guide",
       "Fantasy Role Volatility Watchlist",
-      "Draft-only concept",
-      "source review, claim scan, and operator approval",
+      "operator-reviewed for claim safety",
     ],
   },
   {
@@ -71,8 +70,8 @@ const LAUNCH_PAGES: readonly LaunchPage[] = [
     route: "/podcast",
     file: "apps/web/app/podcast/page.tsx",
     requiredCopy: [
-      "GSE Board Meeting, coming soon.",
-      "No feed, sponsor inventory, or publishing integration is active yet.",
+      "GSE Board Meeting — join the waitlist.",
+      "Join the waitlist",
       "what shipped",
       "what broke",
       "what the model learned",

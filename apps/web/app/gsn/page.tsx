@@ -72,13 +72,12 @@ export default function GSNPage() {
           <Reveal>
             <div className="mx-auto max-w-3xl rounded-2xl border border-titanium bg-gradient-to-b from-titanium/35 to-transparent p-8 text-center">
               <p className="eyebrow text-orbital-cyan">
-                Connected to the engine
+                Format specimen
               </p>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ion-1">
-                The sample above shows the format. Live daily transmissions are generated from the
-                real slate once it&apos;s wired behind the readiness gate. Every segment will link
-                straight into the live object it describes, so the story and the data are the same
-                thing.
+                Above is a complete format specimen of the daily GSN transmission — the structure
+                operators ship when the slate clears the readiness gate. Each live segment links
+                straight into the object it describes, so the story and the data stay one thing.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link href="/observatory" className="btn btn-primary">

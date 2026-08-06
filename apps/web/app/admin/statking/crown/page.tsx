@@ -20,7 +20,7 @@ export default async function Page() {
     <Shell title="King of Stats Crown">
       <StatusRibbon status="fixture" label="Crown view — snapshot data, not live" />
       <Cards items={[
-        { label: "King Standard", value: "61/100", note: "Agent-assisted foundation, not finished" },
+        { label: "King Standard", value: "61/100", note: "Operator foundation · King Standard in progress" },
         { label: "Sources", value: s.source_count },
         { label: "Active metrics", value: m.active_calculated_count },
         { label: "Rights records", value: rights.rights_count },

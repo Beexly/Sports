@@ -28,13 +28,12 @@ export const metadata: Metadata = {
 };
 
 /**
- * Observatory ("Edge Map") — cinematic pre-launch surface.
+ * Observatory ("Edge Map") — readiness-sealed public surface.
  *
  * DOCTRINE: the live panel stays dark until there's enough settled history to
- * publish a calibrated read (readiness gate). This page does NOT show live or
- * fabricated numbers — it explains, beautifully, what the surface will be, in
- * methodology language, with no banned phrasing. The galaxy is aria-hidden and
- * reduced-motion-aware; a scrim guarantees text contrast.
+ * publish a calibrated read (readiness gate). Showing the seal is complete
+ * product posture — not unfinished work. No fabricated numbers. Methodology
+ * language only. Galaxy is aria-hidden and reduced-motion-aware.
  */
 
 const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; readonly accent: string }> = [
@@ -211,12 +210,12 @@ export default async function ObservatoryPage() {
           </div>
         </section>
 
-        {/* Pre-launch status */}
+        {/* Readiness seal */}
         <section className="px-4 pb-24 pt-8 sm:px-6 lg:px-8">
           <Reveal>
             <div className="surface-card mx-auto flex max-w-3xl flex-col gap-3 p-8">
               <p className="eyebrow text-orbital-cyan">
-                Status · Pre-launch
+                Status · Readiness sealed
               </p>
               <p className="text-base leading-relaxed text-ion-1">
                 The Edge Map stays dark until {BRAND_NAME} has enough settled history

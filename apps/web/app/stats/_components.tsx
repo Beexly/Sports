@@ -104,7 +104,7 @@ export function BarChart({ items }: { items: Array<{ label: string; value: numbe
 export function ScoreRing({ score, label, size = 120, notMeasured = false }: { score: number; label?: string; size?: number; notMeasured?: boolean }) {
   const inner = Math.round(size * 0.74);
   if (notMeasured) {
-    return <div className="flex flex-col items-center gap-2"><div className="relative flex items-center justify-center rounded-full border-2 border-dashed border-mineral" style={{ width: size, height: size }}><div className="absolute flex items-center justify-center rounded-full bg-carbon" style={{ width: inner, height: inner }}><span className="text-2xl font-bold text-ion-2" aria-hidden="true">—</span></div></div>{label && <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 text-center">{label} <span className="text-ion-3">(not yet measured)</span></p>}</div>;
+    return <div className="flex flex-col items-center gap-2"><div className="relative flex items-center justify-center rounded-full border-2 border-dashed border-mineral" style={{ width: size, height: size }}><div className="absolute flex items-center justify-center rounded-full bg-carbon" style={{ width: inner, height: inner }}><span className="text-2xl font-bold text-ion-2" aria-hidden="true">—</span></div></div>{label && <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 text-center">{label} <span className="text-ion-3">(unmeasured)</span></p>}</div>;
   }
   const pct = Math.min(100, Math.max(0, score));
   const color = pct >= 70 ? "var(--orbital-cyan)" : pct >= 40 ? "var(--caution)" : "var(--alert)";

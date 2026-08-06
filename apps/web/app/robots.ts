@@ -31,6 +31,8 @@ export default function robots(): MetadataRoute.Robots {
           // StatKing unfinished — keep crawlers off even if flag flipped briefly
           "/stats",
           "/stats/",
+          "/fantasy/contests",
+          "/fantasy/contests/",
         ],
       },
     ],

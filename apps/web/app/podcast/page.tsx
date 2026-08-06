@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { SUPPORT_EMAIL } from "@/lib/brand";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/podcast" },
-  description: "The future GSE Board Meeting podcast format for sports intelligence, model accountability, no-bet discipline, and partner-safe media.",
+  description:
+    "GSE Board Meeting — a waitlist for the operator-reviewed podcast format covering what shipped, what broke, model lessons, no-bet decisions, and partner spotlights.",
   title: "GSE Board Meeting Podcast",
 };
 
-const SEGMENTS = ["what shipped", "what broke", "what the model learned", "what GSE passed on", "partner/tool spotlight"];
+const SEGMENTS = [
+  "what shipped",
+  "what broke",
+  "what the model learned",
+  "what GSE passed on",
+  "partner/tool spotlight",
+] as const;
 
 export default function PodcastPage() {
   return (
@@ -18,12 +26,26 @@ export default function PodcastPage() {
       <main id="main-content" className="flex-1">
         <section className="border-b border-mineral/40 px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <p className="eyebrow">Podcast</p>
-            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">GSE Board Meeting, coming soon.</h1>
+            <p className="eyebrow">Podcast · Waitlist</p>
+            <h1 className="mt-3 font-display text-display-xl text-balance text-ion-white">
+              GSE Board Meeting — join the waitlist.
+            </h1>
             <p className="mt-5 max-w-3xl text-lg text-ion-1">
-              The podcast starts as a board meeting format: what shipped, what broke, what the model learned, what GSE passed on, and
-              which partners or tools deserve a closer look. No feed, sponsor inventory, or publishing integration is active yet.
+              Operator-reviewed episodes in a board-meeting format: what shipped, what broke, what the model
+              learned, what GSE passed on, and which partners or tools deserve a closer look. Episodes publish
+              only after human review — no auto-publishing path.
             </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/waitlist" className="btn btn-primary">
+                Join the waitlist
+              </Link>
+              <a
+                href={`mailto:${SUPPORT_EMAIL}?subject=GSE%20Board%20Meeting%20guest%20or%20partner%20inquiry`}
+                className="btn btn-ghost"
+              >
+                Guest or partner inquiry
+              </a>
+            </div>
           </div>
         </section>
 
@@ -40,9 +62,6 @@ export default function PodcastPage() {
                 </article>
               ))}
             </div>
-            <a href={`mailto:${SUPPORT_EMAIL}?subject=GSE%20Board%20Meeting%20guest%20or%20partner%20inquiry`} className="btn btn-primary mt-10">
-              Guest or partner inquiry
-            </a>
           </div>
         </section>
       </main>

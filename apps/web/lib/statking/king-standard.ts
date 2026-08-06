@@ -257,7 +257,7 @@ export function computeOverall(dimensions: KingStandardDimensions): KingStandard
       measuredCount: 0,
       totalDimensions,
       score: null,
-      basis: `not yet measured — 0 of ${totalDimensions} dimensions have a live signal`,
+      basis: `unmeasured — 0 of ${totalDimensions} dimensions have a live signal`,
     };
   }
 

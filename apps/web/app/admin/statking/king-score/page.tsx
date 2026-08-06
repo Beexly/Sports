@@ -13,7 +13,7 @@ export default async function Page() {
   return (
     <Shell title="King Standard Score" eyebrow="Cockpit · scorecard">
       <Cards items={[
-        { label: "King Standard", value: "61/100", note: "Agent-assisted foundation, not finished" },
+        { label: "King Standard", value: "61/100", note: "Operator foundation · King Standard in progress" },
         { label: "Sources", value: s.source_count },
         { label: "Metrics", value: s.metric_count },
         { label: "Readiness avg", value: avg }
