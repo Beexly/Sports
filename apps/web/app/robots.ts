@@ -28,6 +28,9 @@ export default function robots(): MetadataRoute.Robots {
           "/dashboard/",
           "/brief",
           "/go/",
+          // StatKing unfinished — keep crawlers off even if flag flipped briefly
+          "/stats",
+          "/stats/",
         ],
       },
     ],
