@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { getCurrentContestWeek } from "@/lib/contests/week";
-import { leaderboard } from "@/lib/contests/store";
+import { leaderboard, resolveContestStorageMode } from "@/lib/contests/store";
 import { ContestEntryForm } from "@/components/contests/contest-entry-form";
 import { notFound } from "next/navigation";
 import { isContestsPublic } from "@/lib/launch/public-surface-gate";
@@ -21,6 +21,7 @@ export default async function ContestBayPage() {
   if (!isContestsPublic()) notFound();
   const week = getCurrentContestWeek();
   const board = await leaderboard(week.weekId);
+  const storageMode = resolveContestStorageMode();
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -49,6 +50,9 @@ export default async function ContestBayPage() {
               </span>
               <span className="rounded-full border border-mineral px-3 py-1">
                 {board.length} entries
+              </span>
+              <span className="rounded-full border border-mineral px-3 py-1">
+                Store · {storageMode === "postgres" ? "durable DB" : storageMode === "file" ? "local file" : "unavailable"}
               </span>
             </div>
           </div>
@@ -87,7 +91,13 @@ export default async function ContestBayPage() {
 
             <div>
               <h2 className="font-display text-2xl text-ion-white">Enter this week</h2>
-              {week.status === "open" ? (
+              {storageMode === "unavailable" ? (
+                <p className="mt-6 border border-mineral bg-eclipse/40 p-6 text-ion-1">
+                  Entries are paused on this host because durable storage is not configured
+                  (production requires DATABASE_URL). We refuse to accept entries that would
+                  vanish on the next serverless cold start.
+                </p>
+              ) : week.status === "open" ? (
                 <div className="mt-6">
                   <ContestEntryForm week={week} />
                 </div>
