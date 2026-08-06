@@ -2,13 +2,14 @@
  * Model routing — the single, auditable place that decides which Claude tier
  * handles each Claude API "surface".
  *
- * 2026 lineup (cost ascending): Haiku (cheap, fast, structured) < Sonnet
- * (default reasoning) < Opus (deep reasoning).
+ * Cost ascending: Haiku (cheap/structured) < Sonnet (default) < Opus (deep).
+ * Market-cap "hot" models (Opus 5, Fable, GPT-5.5, Gemini 3.1) do NOT auto-wire —
+ * see docs/ops/JYNX_MARKET_TIER_MAP.md. Promote only via env + credit model maps.
  *
  * Env overrides (optional — default behavior unchanged when unset):
- *   MODEL_PRIMARY  — model id used for sonnet-tier (and default quality) surfaces
- *   MODEL_CHEAP    — model id used for haiku-tier surfaces
- * Optional aliases: CLAUDE_MODEL_PRIMARY / CLAUDE_MODEL_CHEAP
+ *   MODEL_PRIMARY / CLAUDE_MODEL_PRIMARY  — sonnet-tier id
+ *   MODEL_CHEAP / CLAUDE_MODEL_CHEAP      — haiku-tier id
+ *   MODEL_OPUS / CLAUDE_MODEL_OPUS        — opus-tier id (e.g. after map verified)
  */
 
 export const MODELS = {
@@ -29,6 +30,7 @@ export type ClaudeSurface =
 
 /**
  * ACTIVE routing. Haiku flips validated for calibration-insight + brief.
+ * model-court stays sonnet until opus quality+cost validated (recommended = opus).
  */
 const SURFACE_TIER: Record<ClaudeSurface, ModelTier> = {
   studio: "sonnet",
@@ -50,13 +52,10 @@ export const SURFACE_RECOMMENDED: Record<ClaudeSurface, ModelTier> = {
 };
 
 /**
- * Resolved catalog: defaults from MODELS, optional env overrides for primary/cheap.
+ * Resolved catalog: defaults from MODELS, optional env overrides for all tiers.
  * Unset env → byte-identical to MODELS.
  */
 export function resolveModelCatalog(
-  // Only two string keys are read, so accept any env-shaped bag. NodeJS.ProcessEnv
-  // requires NODE_ENV under this repo's types, which made plain `{}` test fixtures
-  // (and even a direct cast) fail to typecheck.
   env: Readonly<Record<string, string | undefined>> = process.env,
 ): Record<ModelTier, string> {
   const primary =
@@ -67,17 +66,24 @@ export function resolveModelCatalog(
     env["MODEL_CHEAP"]?.trim() ||
     env["CLAUDE_MODEL_CHEAP"]?.trim() ||
     MODELS.haiku;
+  const opus =
+    env["MODEL_OPUS"]?.trim() ||
+    env["CLAUDE_MODEL_OPUS"]?.trim() ||
+    MODELS.opus;
   return {
     haiku: cheap || MODELS.haiku,
     sonnet: primary || MODELS.sonnet,
-    opus: MODELS.opus,
+    opus: opus || MODELS.opus,
   };
 }
 
 /** Resolve the model id for a surface. Unknown surfaces fall back to Sonnet/primary. */
-export function pickModelForSurface(surface: ClaudeSurface): string {
+export function pickModelForSurface(
+  surface: ClaudeSurface,
+  env: Readonly<Record<string, string | undefined>> = process.env,
+): string {
   const tier = SURFACE_TIER[surface] ?? "sonnet";
-  return resolveModelCatalog()[tier];
+  return resolveModelCatalog(env)[tier];
 }
 
 /** The currently-active tier for a surface. */

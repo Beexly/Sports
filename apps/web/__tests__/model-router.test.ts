@@ -24,7 +24,7 @@ describe("model router", () => {
   const saved = { ...process.env };
 
   afterEach(() => {
-    for (const k of ["MODEL_PRIMARY", "MODEL_CHEAP", "CLAUDE_MODEL_PRIMARY", "CLAUDE_MODEL_CHEAP"]) {
+    for (const k of ["MODEL_PRIMARY", "MODEL_CHEAP", "MODEL_OPUS", "CLAUDE_MODEL_PRIMARY", "CLAUDE_MODEL_CHEAP", "CLAUDE_MODEL_OPUS"]) {
       if (saved[k] === undefined) delete process.env[k];
       else process.env[k] = saved[k];
     }
@@ -61,6 +61,10 @@ describe("model router", () => {
     expect(over.sonnet).toBe("claude-sonnet-custom");
     expect(over.haiku).toBe("claude-haiku-custom");
     expect(over.opus).toBe(MODELS.opus);
+
+    const opusOver = resolveModelCatalog({ MODEL_OPUS: "claude-opus-market-custom" });
+    expect(opusOver.opus).toBe("claude-opus-market-custom");
+    expect(opusOver.sonnet).toBe(MODELS.sonnet);
   });
 });
 
