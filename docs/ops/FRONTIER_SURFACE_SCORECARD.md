@@ -1,6 +1,6 @@
 # Frontier surface scorecard (multi-domain)
 
-Probe date: **2026-08-06**. Re-run after every redeploy. Law: finish · dark · or refuse.
+Probe date: **2026-08-06** (v2 pass). Re-run after every redeploy. Law: finish · dark · or refuse.
 
 | Domain | Live signal | Status | Next lever |
 |--------|-------------|--------|------------|
@@ -15,7 +15,9 @@ Probe date: **2026-08-06**. Re-run after every redeploy. Law: finish · dark · 
 | GSN | methodology vs board badge | OK | Board-sourced when LIVE |
 | Podcast/newsletter archive | 2+2 | OK | Continue issues |
 | Cron settle | 401 unauth | OK | CRON_SECRET founder-held |
-| Free-lane / Jynx | env founder | **Configure** | `CLAUDE_PROVIDER=auto` + maps |
+| Free-lane / Jynx | env founder | **Configure** | free-lane + `CLAUDE_PROVIDER=auto` + maps |
+| Founder queue | ops `founderNextSteps` | **code** | Multi-domain P0→P2 queue |
+| Free-spine cron | every 6h | **code** | Free data path probe |
 | Deploy SHA | may lag main | **Ops** | Redeploy after #323+ |
 | SEO schema | no fake SearchAction | fixed | — |
 | Cipher | durable RL · claim rewards | fixed | — |

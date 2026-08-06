@@ -9,6 +9,7 @@ import { listIssues } from "@/lib/newsletter/issues";
 import { loadSettlementHealth } from "@/lib/performance/settlement-health";
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
+import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { timingSafeEqual } from "node:crypto";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,8 @@ const MAIN_FEATURE_MARKERS = [
   "jynx-unified-intelligence",
   "azure-foundry-provider",
   "cipher-claim-reward-honesty",
+  "open-weight-free-lane-secondary",
+  "founder-next-steps-queue",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -95,6 +98,27 @@ export async function GET(request: Request) {
     settlement = null;
   }
 
+
+  const creditStack = loadCreditStackPosture();
+  const jynx = creditStack.jynx;
+  const founderNextSteps = buildFounderNextSteps({
+    overduePending: settlement?.overduePending ?? null,
+    settlementHealth: settlement?.health ?? null,
+    freeLaneConfigured: creditStack.freeLaneConfigured,
+    claudeProvider: creditStack.claudeProvider,
+    anyCloudConfigured:
+      creditStack.bedrockConfigured ||
+      creditStack.azureFoundryConfigured ||
+      creditStack.vertexConfigured,
+    jynxAuto: Boolean(jynx?.auto),
+    statsPublic: isStatsPublic(),
+    canExposePublicPicks: gates.canExposePublicPicks,
+    podcastEpisodes: listEpisodes().length,
+    newsletterIssues: listIssues().length,
+    markerCount: MAIN_FEATURE_MARKERS.length,
+    expectedMarkerFloor: MAIN_FEATURE_MARKERS.length,
+  });
+
   return NextResponse.json(
     {
       ok: true,
@@ -102,7 +126,7 @@ export async function GET(request: Request) {
       detail: detailed ? "operator" : "public",
       deployment: {
         sha: deploymentSha,
-        note: "If settlement stays CRITICAL after main merges, redeploy so Vercel runs the latest SHA.",
+        note: "Redeploy after main merges (honesty/Jynx/free-lane). Settlement CRITICAL or SHA lag → redeploy before matching code.",
         expectedMainFeatures: MAIN_FEATURE_MARKERS,
       },
       host: {
@@ -125,7 +149,7 @@ export async function GET(request: Request) {
         newsletterIssues: listIssues().length,
       },
       /** Public-safe AI cost posture — booleans only, never secrets. */
-      creditStack: loadCreditStackPosture(),
+      creditStack,
       policy: PUBLIC_NAV_POLICY,
       law: {
         liveBoardDefault: "off",
@@ -133,6 +157,7 @@ export async function GET(request: Request) {
         contestsDefault: "public free paper skill",
         refuseEphemeralWrites: true,
       },
+      founderNextSteps,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },
