@@ -18,6 +18,7 @@ const MAIN_FEATURE_MARKERS = [
   "free-path-clv-grade",
   "free-path-clv-repair",
   "free-path-snapshot-outcome",
+  "free-path-date-targeted-scores",
   "settle-picks-hourly",
   "overdue-first-stp",
   "postgres-public-form-rate-limit",
@@ -95,6 +96,7 @@ export async function GET(request: Request) {
       deployment: {
         sha: deploymentSha,
         note: "If settlement stays CRITICAL after main merges, redeploy so Vercel runs the latest SHA.",
+        expectedMainFeatures: MAIN_FEATURE_MARKERS,
       },
       host: {
         stubMode: isStubMode(),

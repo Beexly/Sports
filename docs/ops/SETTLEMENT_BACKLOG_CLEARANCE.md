@@ -91,3 +91,11 @@ Cron `/api/cron/settle-picks` free branch already returns the full `free` object
   `shuffledTimePlacebo`.
 - **skipped-pg-integration-honesty** guard inventories AI claim + slate opener PG
   suites so skipped-green cannot silently delete money-path proofs.
+
+
+## 2026-08-06 — historical free scores + snapshot wire
+
+**RCA:** free settle used undated ESPN board ("now" only) → overdue never matched.
+
+**Fix:** date keys from pending commence times + abbr matching + SNAPSHOT_OUTCOME
+inline + drain. Watch `picksSettled`, `clvRepair`, `snapshotRepair`, `scoreDates`.

@@ -1,21 +1,14 @@
 # Wire free-path SNAPSHOT_OUTCOME into runner
 
-`apps/web/lib/settlement/free-path-snapshot.ts` is on main after this PR.
+**Status: wired** (see free-settlement-runner on the date-target + snapshot PR).
 
-Wire into `apps/web/lib/data-sources/free-settlement-runner.ts`:
+`apps/web/lib/settlement/free-path-snapshot.ts` provides:
 
-1. Import:
-```ts
-import {
-  recordFreePathSnapshot,
-  drainPendingSnapshotOutcomes,
-} from "@/lib/settlement/free-path-snapshot";
-```
+- `recordFreePathSnapshot` — after free-path settle (never blocks)
+- `drainPendingSnapshotOutcomes` — repair PENDING SNAPSHOT_OUTCOME
 
-2. Expand pick `select` with: `isBootstrap`, `bookmakerCount`, `confidence`, `factorBreakdown`, `gameId`, and `game.dataQualityScore`.
+Runner also **date-targets** free scoreboards (`uniqueScoreboardDates` →
+`fetchScoresMultiSource({ espnDateKeys, isoDateKeys })`) so overdue picks can
+match historical finals. Undated ESPN boards are "now" only.
 
-3. After free-path CLV grade (never block settle), call `recordFreePathSnapshot(...)` with the settled pick + result.
-
-4. After `drainPendingClvGrades`, call `drainPendingSnapshotOutcomes(db, { take: 100, now })` and return as `snapshotRepair`.
-
-Law: snapshot failure never blocks settlement.
+Return fields: `clvRepair`, `snapshotRepair`, `scoreDates`.
