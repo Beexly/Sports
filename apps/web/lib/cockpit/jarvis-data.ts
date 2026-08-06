@@ -29,6 +29,12 @@ import {
   synthesizeJarvis,
   type JarvisAssessment,
 } from "@/lib/cockpit/jarvis";
+import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import {
+  planAutonomyCycle,
+  autonomyActionsAsJarvisNext,
+} from "@/lib/autonomy/operating-kernel";
+
 
 const FEATURE_FLAG_KEYS = [
   "hadOddsSignal",
@@ -459,6 +465,54 @@ export async function loadJarvisAssessment(): Promise<{
     recommendedNextActions.unshift(
       "Set DATABASE_URL + DIRECT_URL (gse-postgres dual) and FORCE_REAL_PRISMA=true; run npm run prove:neon."
     );
+  }
+
+  // Autonomy kernel: prepend self-correcting priorities (settlement P0, gates, sample).
+  try {
+    if (!stub) {
+      const sh = await loadSettlementHealth(db, { graceHours: 6 }).catch(() => null);
+      const envTrue = (k: string) => process.env[k]?.trim().toLowerCase() === "true";
+      const autonomy = planAutonomyCycle({
+        observedAt: now.toISOString(),
+        deploymentSha:
+          process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ??
+          process.env["GIT_COMMIT_SHA"]?.slice(0, 12) ??
+          null,
+        databaseOk: !stub,
+        ingestionOk: lastSuccessIngestion != null,
+        ingestionAgeMinutes: lastSuccessIngestion?.completedAt
+          ? Math.round((now.getTime() - new Date(lastSuccessIngestion.completedAt).getTime()) / 60000)
+          : null,
+        settlementBand: sh?.health ?? "UNKNOWN",
+        settlementOverdue: sh?.overduePending ?? null,
+        settlementCommenced: sh?.commencedTotal ?? null,
+        topRcaCause: null,
+        rcaHeadline: sh && !sh.clean ? sh.operatorMessage : null,
+        stpAutoEligible: null,
+        stpExceptions: null,
+        burnDraining: null,
+        liveBoardEnabled: envTrue("LIVE_BOARD"),
+        publicPicksEnabled: envTrue("PUBLIC_PICKS_ENABLED"),
+        performanceStatsEnabled: envTrue("PERFORMANCE_STATS_ENABLED"),
+        publishLedgerEnabled: envTrue("PUBLISH_LEDGER"),
+        draftOnly: !envTrue("LIVE_BOARD"),
+        boardSuppressed: true,
+        openPicks: null,
+        canonicalSettled: canonicalSettledCount,
+        minSettledForLearning: gates.minSettledPicksForLearning,
+      });
+      const autoLines = autonomyActionsAsJarvisNext(autonomy, 5);
+      for (let i = autoLines.length - 1; i >= 0; i--) {
+        recommendedNextActions.unshift(autoLines[i]!);
+      }
+      if (autonomy.severity === "P0" || autonomy.severity === "P1") {
+        safetyWarnings.unshift(
+          `Autonomy ${autonomy.severity}: ${autonomy.headline} (honesty ${autonomy.introspection.honestyScore}/100).`,
+        );
+      }
+    }
+  } catch {
+    /* never block assessment */
   }
 
   let picksStatus = synth.picksStatus;
