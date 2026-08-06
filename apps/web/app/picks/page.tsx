@@ -16,7 +16,7 @@ import { headers } from "next/headers";
 export const metadata: Metadata = {
   title: "Today's Board: Sports Picks With Reasoning Attached",
   description:
-    "Signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater, just the reasoning.",
+    "Sports signals with full factor reasoning — when the public board is enabled. LIVE_BOARD stays off by default until proof and settlement are healthy. No certainty theater.",
   alternates: { canonical: "/picks" },
 };
 

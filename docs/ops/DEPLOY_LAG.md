@@ -1,23 +1,33 @@
 # Deploy lag (2026-08-06)
 
-## Finding
-Live `/api/health` reported deployment SHA `2d0f3a2…` while main already contained:
-- hourly settle-picks + overdue-first STP (#300)
-- free-path CLV grade + repair (#302)
-- durable public form rate limits (#301/#302)
-- ops truth detail auth
+## Live evidence (agent probe)
 
-Settlement stayed **CRITICAL 139/1478** because **production had not redeployed** the drain code.
+| Source | Value |
+|--------|-------|
+| Production `/api/health` deployment.sha | `2d0f3a21a38e87d350129eccd2bfb1478b4bda74` |
+| Main HEAD (post #306 date-target free settle) | newer than `2d0f3a2…` |
+| Settlement overdue | **CRITICAL 139 / 1478** while SHA stuck |
 
-## Founder action (highest leverage)
+Code on main (hourly settle, free-path CLV + repair, date-targeted free scores,
+SNAPSHOT wire, ops deploy markers) **cannot burn overdue until production redeploys**.
+
+## Founder action (highest leverage — do this first)
+
 1. Vercel → Sports web project → **Redeploy** latest production from `main`
-2. Confirm `deployment.sha` on `/api/ops/public-surface-truth` advances past `2d0f3a2`
-3. After redeploy, with CRON_SECRET:
+2. Confirm:
    ```bash
-   curl -sS -H "Authorization: Bearer $CRON_SECRET" \
-     "https://www.galaxysportsedge.com/api/cron/settle-picks" | python3 -m json.tool | head -80
+   curl -sS https://www.galaxysportsedge.com/api/health | python3 -c \
+     "import sys,json; d=json.load(sys.stdin); print(d.get('deployment')); print(d.get('status'))"
    ```
-4. Watch overduePending trend on ops truth
+   SHA must **not** stay on `2d0f3a2…`
+3. Then with CRON_SECRET:
+   ```bash
+   CRON_SECRET=… BASE_URL=https://www.galaxysportsedge.com \
+     node scripts/ops/verify-cron-secret.mjs
+   curl -sS -H "Authorization: Bearer $CRON_SECRET" \
+     "https://www.galaxysportsedge.com/api/cron/settle-picks" | python3 -m json.tool | head -100
+   ```
+4. Watch `picksSettled`, `clvRepair`, `snapshotRepair`, `scoreDates`, then ops `overduePending` down
 
 ## Law
 Code on main is not live until Vercel serves that SHA. Always probe `deployment.sha` before concluding settlement code "failed."

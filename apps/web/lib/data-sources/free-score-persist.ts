@@ -8,6 +8,9 @@
  *
  * Also records an honest IngestionRun SUCCESS when the persist cycle completes
  * so /api/health recovers under free mode.
+ *
+ * Date-targets free scoreboards from pending game commence times (same class
+ * of fix as free-settlement-runner — undated ESPN boards are "now" only).
  */
 
 import { db } from "@sports/db";
@@ -23,6 +26,7 @@ import type { Sport } from "./source-router";
 import { buildTrustedFinals, type TrustedFinal } from "./free-settlement";
 import { normalizeTeamToken } from "./score-verification";
 import { recordFreeIngestionRun } from "./free-ingestion-run";
+import { uniqueScoreboardDates } from "./settlement-score-dates";
 
 const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -53,10 +57,15 @@ export type FreeScorePersistResult = {
   ingestionRunId?: string | null;
 };
 
-function teamsMatch(a: string, b: string): boolean {
+function teamTokensMatch(a: string, b: string): boolean {
   const x = normalizeTeamToken(a);
   const y = normalizeTeamToken(b);
+  if (!x || !y) return false;
   return x === y || x.includes(y) || y.includes(x);
+}
+
+function finalSideTokens(side: { name: string; abbr: string }): string[] {
+  return [normalizeTeamToken(side.name), normalizeTeamToken(side.abbr)].filter(Boolean);
 }
 
 function finalMatchesGame(
@@ -64,12 +73,20 @@ function finalMatchesGame(
   home: string,
   away: string,
 ): { homeScore: number; awayScore: number } | null {
-  const fh = f.home.name;
-  const fa = f.away.name;
-  if (teamsMatch(home, fh) && teamsMatch(away, fa)) {
+  const homeTok = normalizeTeamToken(home);
+  const awayTok = normalizeTeamToken(away);
+  const fh = finalSideTokens(f.home);
+  const fa = finalSideTokens(f.away);
+
+  const homeIsFinalHome = fh.some((t) => teamTokensMatch(homeTok, t));
+  const awayIsFinalAway = fa.some((t) => teamTokensMatch(awayTok, t));
+  if (homeIsFinalHome && awayIsFinalAway) {
     return { homeScore: f.home.score, awayScore: f.away.score };
   }
-  if (teamsMatch(home, fa) && teamsMatch(away, fh)) {
+
+  const homeIsFinalAway = fa.some((t) => teamTokensMatch(homeTok, t));
+  const awayIsFinalHome = fh.some((t) => teamTokensMatch(awayTok, t));
+  if (homeIsFinalAway && awayIsFinalHome) {
     return { homeScore: f.away.score, awayScore: f.home.score };
   }
   return null;
@@ -115,18 +132,17 @@ export async function persistFreeScores(options?: {
     }
 
     try {
-      const multi = await fetchScoresMultiSource(freeSport);
-      const espn: readonly NormalizedGame[] = multi.games;
-      const henry = await loadHenry(freeSport);
-      const finals = buildTrustedFinals(espn, henry).filter((f) => f.confirmation !== "DISPUTED");
-
-      // Look at recent games not yet fully result-fetched
-      const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+      // Load pending games FIRST so we can date-target free scoreboards.
+      const since = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000);
       const games = await db.game.findMany({
         where: {
           sport: { key: sport.key },
           commenceTime: { gte: since },
-          OR: [{ resultFetched: false }, { status: { in: ["SCHEDULED", "LIVE"] } }, { homeScore: null }],
+          OR: [
+            { resultFetched: false },
+            { status: { in: ["SCHEDULED", "LIVE"] } },
+            { homeScore: null },
+          ],
         },
         select: {
           id: true,
@@ -136,7 +152,25 @@ export async function persistFreeScores(options?: {
           homeScore: true,
           awayScore: true,
         },
-        take: 200,
+        take: 300,
+      });
+
+      const { espnKeys, isoKeys } = uniqueScoreboardDates(
+        games.map((g) => g.commenceTime),
+        { maxDays: 21 },
+      );
+
+      const multi = await fetchScoresMultiSource(freeSport, {
+        espnDateKeys: espnKeys,
+        isoDateKeys: isoKeys,
+      });
+      const espn: readonly NormalizedGame[] = multi.games;
+      const henry = await loadHenry(freeSport);
+      const finals = buildTrustedFinals(espn, henry).filter((f) => f.confirmation !== "DISPUTED");
+      // Prefer CONFIRMED when multiple finals match
+      const rankedFinals = [...finals].sort((a, b) => {
+        const rank = (c: TrustedFinal) => (c.confirmation === "CONFIRMED" ? 0 : 1);
+        return rank(a) - rank(b);
       });
 
       let matched = 0;
@@ -144,7 +178,7 @@ export async function persistFreeScores(options?: {
 
       for (const g of games) {
         const day = g.commenceTime.toISOString().slice(0, 10);
-        const candidates = finals.filter((f) => {
+        const candidates = rankedFinals.filter((f) => {
           const fd = f.date.slice(0, 10);
           const d0 = Date.parse(day);
           const d1 = Date.parse(fd);

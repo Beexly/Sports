@@ -18,6 +18,19 @@ export async function GET(): Promise<NextResponse> {
 
   const allOk = Object.values(checks).every((c) => c.status === "ok");
 
+  // Settlement CRITICAL must not report as a healthy product even when process
+  // readiness (DB/ingestion checks) is green. Does NOT flip `ok`/HTTP for
+  // Sentinel process-readiness consumers — only the human `status` string and
+  // additive settlement summary.
+  const settlement = capabilities.find((c) => c.capabilityId === "settlement");
+  const settlementCritical =
+    settlement?.status === "unavailable" || settlement?.status === "degraded";
+  const productStatus = !allOk
+    ? "degraded"
+    : settlementCritical
+      ? "degraded"
+      : "healthy";
+
   // ── Capability dependency graph (epistemic-twin, P2) ─────────────────────
   // Purely additive/observability, same as `capabilities` (OP-003) above:
   // composes the 4 leaf observations plus the 2 real founder feature-gate
@@ -29,15 +42,24 @@ export async function GET(): Promise<NextResponse> {
   // semantics, which other consumers (the Nightly Sentinel) depend on as-is.
   const capabilityGraph = projectCapabilityGraph(composeCapabilityGraph(capabilities));
 
+  const sha = deploymentSha();
+
   return NextResponse.json(
     {
       ok: allOk,
-      status: allOk ? "healthy" : "degraded",
+      status: productStatus,
       checks,
       capabilities,
       capabilityGraph,
-      deployment: { sha: deploymentSha(), observedAt: new Date().toISOString() },
+      deployment: {
+        sha,
+        observedAt: new Date().toISOString(),
+        note:
+          settlementCritical && sha
+            ? "Settlement degraded/critical. If main has newer settlement fixes, redeploy production so this SHA advances."
+            : undefined,
+      },
     },
-    { status: allOk ? 200 : 503 }
+    { status: allOk ? 200 : 503 },
   );
 }

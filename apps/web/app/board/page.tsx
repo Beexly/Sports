@@ -15,12 +15,12 @@ import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere
 export const metadata: Metadata = {
   title: "Today's Board",
   description:
-    "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
+    "Board state, published picks, gated games, and calibration status. LIVE_BOARD is off by default until settlement is healthy and founder enable.",
   alternates: { canonical: "/board" },
   openGraph: {
     title: "Today's Board",
     description:
-      "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
+      "Board state, published picks, gated games, and calibration status. LIVE_BOARD stays off by default — empty is law, not a quiet winning day.",
   },
 };
 
