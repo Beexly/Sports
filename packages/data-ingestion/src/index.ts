@@ -41,9 +41,6 @@ export {
   type NflverseDatasetKey,
   type NflverseGrain,
 } from "./nflverse-source.js";
-// Next Gen Stats typed access (SEP/CUSH/xYAC receiving, RYOE/efficiency rushing) —
-// CC-BY-4.0 via nflverse; dark/additive; avg_separation is the reconstruction
-// engine's calibration ground truth. See docs/data/ngs-legal-leverage.md.
 export {
   parseNgsReceiving,
   parseNgsRushing,
@@ -66,6 +63,20 @@ export {
   type NflverseTrendPlan,
   type TrendPlanKey,
 } from "./nflverse-trend-plan.js";
+export {
+  buildIdCrosswalk,
+  resolveGsisId,
+  resolveGsisFromRow,
+  type IdVendor,
+  type CrosswalkRow,
+  type IdCrosswalk,
+} from "./nflverse-id-crosswalk.js";
+export {
+  currentNflSeasonLabel,
+  latestCompletedNflSeasonFloor,
+  resolveFootballStatsSeason,
+  type StatsSeasonResolution,
+} from "./nflverse-season.js";
 export {
   mergeNormalizedOdds,
   bookmakerCoverage,

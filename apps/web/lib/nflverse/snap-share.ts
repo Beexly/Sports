@@ -1,11 +1,24 @@
-import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
-import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
+import {
+  assertIngestible,
+  buildIdCrosswalk,
+  fetchWithFailover,
+  nflverseUrl,
+  parseCsv,
+  resolveFootballStatsSeason,
+  resolveGsisFromRow,
+  withMirrors,
+  type IdCrosswalk,
+} from "@sports/data-ingestion";
 
 /**
  * Snap share — the cleanest workload signal there is: the share of his team's
  * offensive snaps a player is on the field for. Opportunity leads box-score
  * production, so rising snap share is an early tell. Read-only from the nflverse
  * `snap_counts` release (CC-BY-4.0). Historical fact, not a projection.
+ *
+ * Snap assets key players by PFR id. We season-match roster crosswalks to
+ * resolve GSIS when possible; unresolved rows keep PFR id (never invent GSIS).
+ * Default season is the completed REG floor (through 2025 until 2026 REG exists).
  */
 
 export type SkillPosition = "RB" | "WR" | "TE";
@@ -32,6 +45,12 @@ export interface NflverseSnapShare {
   readonly blockReason: string;
   readonly sourceUrl: string;
   readonly error: string | null;
+  /** Present when roster crosswalk loaded for GSIS resolution. */
+  readonly crosswalk?: {
+    readonly primarySeason: number;
+    readonly seasonsUsed: readonly number[];
+    readonly pfrBridged: number;
+  };
 }
 
 type CsvRecord = Readonly<Record<string, string>>;
@@ -58,7 +77,10 @@ function isSkill(value: string | undefined): value is SkillPosition {
 }
 
 async function fetchCsv(url: string, fetcher: FetchLike, timeoutMs: number): Promise<readonly CsvRecord[]> {
-  const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs, init: { cache: "no-store" } });
+  const { response } = await fetchWithFailover(withMirrors(url), fetcher, {
+    timeoutMs,
+    init: { cache: "no-store" },
+  });
   return parseCsv(await response.text()).records;
 }
 
@@ -70,17 +92,28 @@ interface Agg {
   snaps: number;
 }
 
-function buildLeaders(records: readonly CsvRecord[]): Record<SkillPosition, SnapShareRow[]> {
+function buildLeaders(
+  records: readonly CsvRecord[],
+  crosswalk: IdCrosswalk | null,
+): Record<SkillPosition, SnapShareRow[]> {
   const byPlayer = new Map<string, Agg>();
   for (const row of records) {
     if (row["game_type"] !== "REG") continue;
     const position = row["position"];
     if (!isSkill(position)) continue;
     const snaps = toNumber(row["offense_snaps"]);
-    if (snaps <= 0) continue; // count only games the player actually played offense
-    const id = row["pfr_player_id"] || row["player"] || "";
+    if (snaps <= 0) continue;
+    const gsis = resolveGsisFromRow(crosswalk, row);
+    const id = gsis || row["pfr_player_id"] || row["player"] || "";
     if (!id) continue;
-    const agg = byPlayer.get(id) ?? { name: row["player"] ?? "UNKNOWN", team: row["team"] ?? "", position, shares: [], snaps: 0 };
+    const agg =
+      byPlayer.get(id) ?? {
+        name: row["player"] ?? "UNKNOWN",
+        team: row["team"] ?? "",
+        position,
+        shares: [],
+        snaps: 0,
+      };
     agg.shares.push(toNumber(row["offense_pct"]));
     agg.snaps += snaps;
     agg.name = row["player"] || agg.name;
@@ -115,30 +148,56 @@ function buildLeaders(records: readonly CsvRecord[]): Record<SkillPosition, Snap
   return result;
 }
 
+async function loadSeasonMatchedCrosswalk(
+  season: number,
+  fetcher: FetchLike,
+  timeoutMs: number,
+): Promise<IdCrosswalk | null> {
+  const batches: { season: number; rows: readonly CsvRecord[] }[] = [];
+  for (const candidate of [season, season - 1]) {
+    try {
+      const url = nflverseUrl("rosters", candidate);
+      const rows = await fetchCsv(url, fetcher, timeoutMs);
+      if (rows.length > 0) batches.push({ season: candidate, rows });
+    } catch {
+      // Prior season optional; primary miss still allows PFR-only leaders.
+    }
+  }
+  if (batches.length === 0) return null;
+  return buildIdCrosswalk(season, batches);
+}
+
 export function resetSnapShareCacheForTests(): void {
   snapCache = null;
 }
 
 export async function loadNflverseSnapShare({
-  season = latestNflverseInspectionSeason(),
+  season,
   timeoutMs = 15000,
   cacheTtlMs = 30 * 60 * 1000,
   fetcher = fetch,
+  now = new Date(),
 }: {
   season?: number;
   timeoutMs?: number;
   cacheTtlMs?: number;
   fetcher?: FetchLike;
+  now?: Date;
 } = {}): Promise<NflverseSnapShare> {
   assertIngestible("nflverse");
 
-  const now = Date.now();
-  if (cacheTtlMs > 0 && fetcher === fetch && snapCache && snapCache.expiresAt > now) {
+  const resolved =
+    season !== undefined
+      ? { season, reason: "caller override", labelledCurrent: season, completedFloor: season }
+      : resolveFootballStatsSeason(now);
+
+  const cacheNow = Date.now();
+  if (cacheTtlMs > 0 && fetcher === fetch && snapCache && snapCache.expiresAt > cacheNow) {
     return snapCache.value;
   }
 
   const emptyLeaders = { RB: [], WR: [], TE: [] } as const;
-  const candidates = [season, season - 1];
+  const candidates = [resolved.season, resolved.season - 1];
   let lastError: unknown = null;
 
   for (const candidate of candidates) {
@@ -147,20 +206,32 @@ export async function loadNflverseSnapShare({
       const records = await fetchCsv(url, fetcher, timeoutMs);
       const regRows = records.filter((row) => row["game_type"] === "REG");
       if (regRows.length === 0) throw new Error("no REG snap rows");
+
+      const crosswalk = await loadSeasonMatchedCrosswalk(candidate, fetcher, timeoutMs);
       const value: NflverseSnapShare = {
         generatedAt: new Date().toISOString(),
         status: "live",
         season: candidate,
         seasonType: "REG",
         sourceRows: records.length,
-        leaders: buildLeaders(records),
+        leaders: buildLeaders(records, crosswalk),
         canPublishProjections: false,
         blockReason:
-          "Snap share is real, settled workload from nflverse: the share of team offensive snaps a player was on the field for. It is historical opportunity, not a projection or a betting pick.",
+          "Snap share is real, settled workload from nflverse: the share of team offensive snaps a player was on the field for. It is historical opportunity, not a projection or a betting pick." +
+          (crosswalk
+            ? ` GSIS resolved via season-matched roster crosswalk (${crosswalk.stats.pfrBridged} PFR bridges)."`
+            : " Roster crosswalk unavailable; playerId may be PFR until roster fetch succeeds."),
         sourceUrl: url,
         error: null,
+        crosswalk: crosswalk
+          ? {
+              primarySeason: crosswalk.primarySeason,
+              seasonsUsed: crosswalk.seasonsUsed,
+              pfrBridged: crosswalk.stats.pfrBridged,
+            }
+          : undefined,
       };
-      if (cacheTtlMs > 0 && fetcher === fetch) snapCache = { expiresAt: now + cacheTtlMs, value };
+      if (cacheTtlMs > 0 && fetcher === fetch) snapCache = { expiresAt: cacheNow + cacheTtlMs, value };
       return value;
     } catch (error) {
       lastError = error;
@@ -170,14 +241,15 @@ export async function loadNflverseSnapShare({
   return {
     generatedAt: new Date().toISOString(),
     status: "source-error",
-    season,
+    season: resolved.season,
     seasonType: "REG",
     sourceRows: 0,
     leaders: emptyLeaders,
     canPublishProjections: false,
     blockReason:
-      "Snap counts could not load from nflverse. The product shows an empty state instead of fabricated workload.",
-    sourceUrl: nflverseUrl("snap_counts", season),
+      "Snap counts could not load from nflverse. The product shows an empty state instead of fabricated workload." +
+      ` (${resolved.reason})`,
+    sourceUrl: nflverseUrl("snap_counts", resolved.season),
     error: lastError instanceof Error ? lastError.message : "UNKNOWN",
   };
 }
