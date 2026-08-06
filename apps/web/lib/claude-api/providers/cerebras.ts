@@ -1,14 +1,16 @@
 /**
- * Cerebras Inference provider — an OpenAI-compatible chat-completions endpoint.
+ * Cerebras Inference provider — OpenAI-compatible chat-completions.
  *
- * Returns the SAME shape as callClaudeMessages (ClaudeMessagesResult) so it is a
- * drop-in for content surfaces and all downstream governance (claim / brand-safety
- * scanners, cost recording) runs unchanged. AI output is Tier 6 / content-only
- * regardless of provider — see docs/models/local-model-lane.md.
+ * Returns the SAME shape as callClaudeMessages (ClaudeMessagesResult) so free-lane
+ * is a drop-in for content surfaces; governance (claim/brand scanners, cost ledger)
+ * is unchanged. Free-lane only — never call directly for product trust surfaces.
  *
- * Chosen over OpenRouter's free tier specifically because Cerebras does not retain
- * or train on request data, satisfying the data-sovereignty constraint in the
- * model doctrine. Used only via the free-lane dispatcher, never directly.
+ * Data posture: Cerebras does not retain/train on request data (see free-lane policy).
+ * Default free model: gpt-oss-120b.
+ *
+ * Errors: HTTP/API failures and empty content throw CerebrasMessagesError so
+ * free-lane can hop to secondary free host or callClaude. Unexpected bugs still
+ * throw generic Error and abort the chain (no silent swallow).
  */
 import type { ClaudeMessagesResult } from "../messages";
 
@@ -43,7 +45,7 @@ export class CerebrasMessagesError extends Error {
 
   constructor(
     message: string,
-    args: { readonly status: number; readonly durationMs: number; readonly modelName: string }
+    args: { readonly status: number; readonly durationMs: number; readonly modelName: string },
   ) {
     super(message);
     this.name = "CerebrasMessagesError";
@@ -54,28 +56,40 @@ export class CerebrasMessagesError extends Error {
 }
 
 export async function callCerebrasMessages(
-  request: CerebrasMessagesRequest
+  request: CerebrasMessagesRequest,
 ): Promise<ClaudeMessagesResult> {
   const fetchImpl = request.fetchImpl ?? fetch;
   const modelName = request.model ?? DEFAULT_CEREBRAS_MODEL;
   const startedAt = Date.now();
 
-  const response = await fetchImpl("https://api.cerebras.ai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${request.apiKey}`,
-    },
-    body: JSON.stringify({
-      model: modelName,
-      max_tokens: request.maxTokens,
-      temperature: request.temperature,
-      messages: [
-        { role: "system", content: request.system },
-        { role: "user", content: request.user },
-      ],
-    }),
-  });
+  let response: Response;
+  try {
+    response = await fetchImpl("https://api.cerebras.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${request.apiKey}`,
+      },
+      body: JSON.stringify({
+        model: modelName,
+        max_tokens: request.maxTokens,
+        temperature: request.temperature,
+        messages: [
+          { role: "system", content: request.system },
+          { role: "user", content: request.user },
+        ],
+      }),
+    });
+  } catch (err) {
+    const durationMs = Date.now() - startedAt;
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new CerebrasMessagesError(`Cerebras network error: ${msg}`, {
+      status: 0,
+      durationMs,
+      modelName,
+    });
+  }
+
   const durationMs = Date.now() - startedAt;
 
   if (!response.ok) {
@@ -87,8 +101,26 @@ export async function callCerebrasMessages(
     });
   }
 
-  const payload = (await response.json()) as CerebrasChatResponse;
+  let payload: CerebrasChatResponse;
+  try {
+    payload = (await response.json()) as CerebrasChatResponse;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new CerebrasMessagesError(`Cerebras invalid JSON: ${msg}`, {
+      status: response.status,
+      durationMs,
+      modelName,
+    });
+  }
+
   const text = extractText(payload);
+  if (!text) {
+    throw new CerebrasMessagesError("Cerebras response did not include text content.", {
+      status: response.status,
+      durationMs,
+      modelName,
+    });
+  }
 
   return {
     text,
@@ -99,10 +131,8 @@ export async function callCerebrasMessages(
   };
 }
 
-function extractText(response: CerebrasChatResponse): string {
+function extractText(response: CerebrasChatResponse): string | null {
   const text = response.choices?.[0]?.message?.content;
-  if (!text?.trim()) {
-    throw new Error("Cerebras response did not include text content.");
-  }
+  if (!text?.trim()) return null;
   return text.trim();
 }

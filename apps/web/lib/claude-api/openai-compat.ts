@@ -1,12 +1,12 @@
 /**
  * Generic OpenAI-compatible chat-completions client.
- * Used by free-lane secondary hosts (Groq free, NVIDIA NIM free, OpenRouter free,
- * self-hosted Gemma/Nemotron) — same result shape as ClaudeMessagesResult.
+ * Free-lane secondary hosts (Gemma/Nemotron free, Groq free, NIM, etc.).
+ * OpenAiCompatError on transport/empty so free-lane can hop to callClaude.
  */
 import type { ClaudeMessagesResult } from "./messages";
 
 export interface OpenAiCompatRequest {
-  readonly baseUrl: string; // e.g. https://api.groq.com/openai/v1
+  readonly baseUrl: string;
   readonly apiKey?: string;
   readonly model: string;
   readonly system: string;
@@ -14,7 +14,6 @@ export interface OpenAiCompatRequest {
   readonly maxTokens: number;
   readonly temperature?: number;
   readonly fetchImpl?: typeof fetch;
-  /** Prefix for ledger modelName (e.g. free-groq/, free-nim/). */
   readonly ledgerPrefix?: string;
 }
 
@@ -57,19 +56,31 @@ export async function callOpenAiCompatMessages(
   }
 
   const startedAt = Date.now();
-  const response = await fetchImpl(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      model: request.model,
-      max_tokens: request.maxTokens,
-      temperature: request.temperature,
-      messages: [
-        { role: "system", content: request.system },
-        { role: "user", content: request.user },
-      ],
-    }),
-  });
+  let response: Response;
+  try {
+    response = await fetchImpl(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        model: request.model,
+        max_tokens: request.maxTokens,
+        temperature: request.temperature,
+        messages: [
+          { role: "system", content: request.system },
+          { role: "user", content: request.user },
+        ],
+      }),
+    });
+  } catch (err) {
+    const durationMs = Date.now() - startedAt;
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new OpenAiCompatError(`OpenAI-compat network error: ${msg}`, {
+      status: 0,
+      durationMs,
+      modelName: ledgerModel,
+    });
+  }
+
   const durationMs = Date.now() - startedAt;
 
   if (!response.ok) {
@@ -81,7 +92,18 @@ export async function callOpenAiCompatMessages(
     });
   }
 
-  const payload = (await response.json()) as ChatResponse;
+  let payload: ChatResponse;
+  try {
+    payload = (await response.json()) as ChatResponse;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new OpenAiCompatError(`OpenAI-compat invalid JSON: ${msg}`, {
+      status: response.status,
+      durationMs,
+      modelName: ledgerModel,
+    });
+  }
+
   const text = payload.choices?.[0]?.message?.content?.trim();
   if (!text) {
     throw new OpenAiCompatError("OpenAI-compat response had no text content.", {
