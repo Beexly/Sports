@@ -28,6 +28,8 @@ const MAIN_FEATURE_MARKERS = [
   "free-lane-content-wire",
   "credit-stack-posture",
   "jynx-unified-intelligence",
+  "azure-foundry-provider",
+  "cipher-claim-reward-honesty",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {

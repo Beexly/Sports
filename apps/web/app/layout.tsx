@@ -174,16 +174,13 @@ const organizationJsonLd = {
   },
 };
 
+// No SearchAction: we do not ship a site-wide search endpoint. Pointing Google
+// at /picks would be dishonest while PUBLIC_PICKS is gated (503 feature_gate).
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: BRAND_NAME,
   url: SITE_URL,
-  potentialAction: {
-    "@type": "SearchAction",
-    target: `${SITE_URL}/picks?q={search_term_string}`,
-    "query-input": "required name=search_term_string",
-  },
 };
 
 export default function RootLayout({

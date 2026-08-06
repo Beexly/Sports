@@ -71,7 +71,7 @@ import { NUMERIC_TEXT_CLASS, formatCount } from "@/lib/format/stat";
 
 export const dynamic = "force-dynamic";
 
-const UNPUBLISHED_HEADLINE = "The Glass Ledger is being built — nothing is published yet.";
+const UNPUBLISHED_HEADLINE = "The Glass Ledger is sealed — nothing is published until the founder flips PUBLISH_LEDGER.";
 
 const ALL_PICKS_SENTENCE =
   "The record defaults to all picks, every tier, every sport we cover — a transparency tool, never a cherry-pick.";
@@ -153,7 +153,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "The Glass Ledger",
     description: view.published
       ? "The public record of every graded pick: calibration first, scored on CLV vs the close, hash-chained and independently recomputable. Gated until each number is honestly substantiated."
-      : "The Glass Ledger is being built. Nothing is published yet.",
+      : "The Glass Ledger is sealed. Nothing is published until the founder flips PUBLISH_LEDGER.",
     alternates: { canonical: "/glass-ledger" },
     ...(view.published ? {} : { robots: { index: false, follow: true } }),
   };
