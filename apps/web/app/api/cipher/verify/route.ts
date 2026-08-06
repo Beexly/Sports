@@ -17,28 +17,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { getChapterByWeek, getCipherStatus, normalizeAnswer } from "@/lib/cipher/cipher";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-// ── Per-IP rate limit (in-memory token bucket) ────────────────────────────
+// Durable rate limit (Postgres when Neon live) — multi-instance serverless cannot bypass.
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_ATTEMPTS = 8;
-const buckets = new Map<string, { count: number; resetAt: number }>();
-
-function rateLimit(ip: string): { ok: boolean; retryAfterSec: number } {
-  const now = Date.now();
-  const b = buckets.get(ip);
-  if (!b || now >= b.resetAt) {
-    buckets.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return { ok: true, retryAfterSec: 0 };
-  }
-  if (b.count >= MAX_ATTEMPTS) {
-    return { ok: false, retryAfterSec: Math.ceil((b.resetAt - now) / 1000) };
-  }
-  b.count += 1;
-  return { ok: true, retryAfterSec: 0 };
-}
 
 function clientIp(req: NextRequest): string {
   const fwd = req.headers.get("x-forwarded-for");
@@ -60,9 +46,11 @@ function hashEquals(aHex: string, bHex: string): boolean {
 }
 
 // ── Founder-gated reward issuance ─────────────────────────────────────────
-// Pool is consumed in-order from the env list. (v1: in-memory cursor; a durable
-// store would persist redemptions. Codes themselves are created by the founder
-// in Stripe — this route never creates or grants anything.)
+// Pool is consumed in-order from the env list.
+// Rate limit is durable (Postgres). Reward cursor remains process-local by design:
+// founder pre-provisions codes; multi-instance may re-issue a code under race —
+// treat CIPHER_REWARD_CODES as single-use Stripe coupons (Stripe enforces once).
+// This route never creates or grants memberships.
 const rewardPool = (process.env.CIPHER_REWARD_CODES ?? "")
   .split(",")
   .map((c) => c.trim())
@@ -81,11 +69,14 @@ function issueReward(week: number): { kind: "code" | "claim"; value: string } {
 
 export async function POST(req: NextRequest) {
   const ip = clientIp(req);
-  const limit = rateLimit(ip);
+  const limit = await consumePublicFormRateLimit("cipher-verify", ip, MAX_ATTEMPTS, WINDOW_MS);
   if (!limit.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many attempts. The box rests. Try again shortly." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      {
+        status: limit.status,
+        headers: { "Retry-After": String(limit.retryAfterSec) },
+      },
     );
   }
 
