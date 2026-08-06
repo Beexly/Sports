@@ -4,9 +4,8 @@ import { SITE_URL } from "@/lib/seo/site-url";
 /**
  * robots.txt
  *
- * Disallows internal operator surfaces (cockpit, admin, api routes,
- * dev-only paths) and pre-launch placeholders. Allows the rest. Points
- * crawlers at the sitemap.
+ * Disallows internal operator surfaces and foundation-only public dark routes.
+ * Complete public products stay crawlable.
  */
 
 export default function robots(): MetadataRoute.Robots {
@@ -28,11 +27,9 @@ export default function robots(): MetadataRoute.Robots {
           "/dashboard/",
           "/brief",
           "/go/",
-          // StatKing unfinished — keep crawlers off even if flag flipped briefly
+          // StatKing foundation — public only with STATS_PUBLIC=true
           "/stats",
           "/stats/",
-          "/fantasy/contests",
-          "/fantasy/contests/",
         ],
       },
     ],

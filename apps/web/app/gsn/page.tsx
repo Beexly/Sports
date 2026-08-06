@@ -5,7 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { GSNTransmission } from "@/components/gsn/transmission";
-import { SAMPLE_TRANSMISSION } from "@/lib/gsn/transmission";
+import { buildDailyTransmission } from "@/lib/gsn/build-transmission";
 
 export const metadata: Metadata = {
   title: "GSN · Galaxy Sports Network",
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/gsn" },
 };
 
-export default function GSNPage() {
+export default async function GSNPage() {
+  const transmission = await buildDailyTransmission();
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
       <Atmosphere />
@@ -62,7 +63,7 @@ export default function GSNPage() {
         <section className="px-4 pb-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <GSNTransmission transmission={SAMPLE_TRANSMISSION} />
+              <GSNTransmission transmission={transmission} />
             </Reveal>
           </div>
         </section>
@@ -72,12 +73,11 @@ export default function GSNPage() {
           <Reveal>
             <div className="mx-auto max-w-3xl rounded-2xl border border-titanium bg-gradient-to-b from-titanium/35 to-transparent p-8 text-center">
               <p className="eyebrow text-orbital-cyan">
-                Format specimen
+                Daily transmission
               </p>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ion-1">
-                Above is a complete format specimen of the daily GSN transmission — the structure
-                operators ship when the slate clears the readiness gate. Each live segment links
-                straight into the object it describes, so the story and the data stay one thing.
+                This transmission is built from the current board state when published reads exist;
+                otherwise it ships the full methodology structure so the product never goes empty.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link href="/observatory" className="btn btn-primary">
