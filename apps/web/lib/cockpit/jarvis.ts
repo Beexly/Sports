@@ -482,10 +482,24 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
   } else if (ingestion === "AMBER" || ingestion === "RED") {
     actions.push("Inspect ingestion errors in /admin/dashboard and rerun the data refresh worker.");
   }
-  if (input.settlement.pendingPickCount > 0 && settlement !== "GREEN") {
-    actions.push(
-      `Settle ${input.settlement.pendingPickCount} pending picks (settlement worker has not run within tolerance).`
-    );
+  // PENDING includes pre-kickoff rows. Do not cry "run settlement worker"
+  // for future games when the issue is only a stale settlement clock.
+  if (settlement === "RED" || settlement === "AMBER") {
+    const pending = input.settlement.pendingPickCount;
+    const runs = input.settlement.settlementRunCount24h ?? 0;
+    if (runs === 0) {
+      actions.push(
+        "Confirm settle-picks cron auth (Bearer CRON_SECRET) and SettlementRun writes — settlement clock is outside tolerance.",
+      );
+    } else if (pending > 0) {
+      actions.push(
+        `${pending} picks still PENDING (includes not-yet-commenced). Check ops settlement.overduePending before forcing settle — do not invent scores.`,
+      );
+    } else {
+      actions.push(
+        "Settlement clock is outside tolerance with zero PENDING — verify SettlementRun timestamps, not pick backlog.",
+      );
+    }
   }
   if (
     input.settlement.settlementSource === "pick.settledAt" ||
