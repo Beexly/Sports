@@ -1,57 +1,25 @@
 /**
- * Content free-lane dispatcher.
- *
- * Default behavior is byte-identical to calling callClaude (Anthropic / Bedrock /
- * Vertex via provider-dispatch). The free lane (Cerebras) is used ONLY when ALL of:
- *   - CONTENT_FREE_LANE_ENABLED === "true"
- *   - CEREBRAS_API_KEY is present
- *   - the surface is on FREE_LANE_SURFACES (conservative allow-list)
- * and even then any Cerebras error falls back to callClaude, so output governance
- * and reliability never regress.
- *
- * This mirrors model-router.ts: introduce the capability inert, flip it on
- * deliberately and per-surface once output quality is validated. AI output stays
- * Tier 6 / content-only regardless of provider (docs/models/local-model-lane.md).
+ * Content free-lane dispatcher (Cerebras).
+ * Policy: free-lane-policy.ts. Cloud path: callClaude (Jynx multi-cloud).
  */
 import { callClaude } from "./provider-dispatch";
 import type { ClaudeMessagesRequest, ClaudeMessagesResult } from "./messages";
 import { callCerebrasMessages, CerebrasMessagesError } from "./providers/cerebras";
 import type { ClaudeSurface } from "./model-router";
+import {
+  FREE_LANE_SURFACES,
+  isFreeLaneEnabled,
+  shouldUseFreeLane,
+} from "./free-lane-policy";
+
+export { FREE_LANE_SURFACES, isFreeLaneEnabled, shouldUseFreeLane };
 
 type Env = Record<string, string | undefined>;
 
-/**
- * Surfaces eligible for the free lane.
- * - brief: reserved for future LLM brief drafts (compose brief is still pure data)
- * - content: blog / narrative generation (wired via content-generator)
- *
- * Quality- / trust-sensitive surfaces (studio, journal, model-court) stay on
- * Anthropic/Bedrock until per-surface output is validated.
- */
-export const FREE_LANE_SURFACES: ReadonlySet<ClaudeSurface> = new Set<ClaudeSurface>([
-  "brief",
-  "content",
-]);
-
-export function isFreeLaneEnabled(env: Env = process.env): boolean {
-  return env["CONTENT_FREE_LANE_ENABLED"] === "true" && Boolean(env["CEREBRAS_API_KEY"]?.trim());
-}
-
-export function shouldUseFreeLane(surface: ClaudeSurface | undefined, env: Env = process.env): boolean {
-  if (surface === undefined || !FREE_LANE_SURFACES.has(surface)) return false;
-  return isFreeLaneEnabled(env);
-}
-
 export interface ContentMessagesRequest extends ClaudeMessagesRequest {
-  /** Optional Cerebras model override for the free lane. */
   readonly cerebrasModel?: string;
 }
 
-/**
- * Provider-aware content generation. See file header for the exact activation
- * conditions; outside them this is a transparent pass-through to callClaude
- * (Bedrock/Vertex/Anthropic per CLAUDE_PROVIDER).
- */
 export async function generateContentMessages(
   request: ContentMessagesRequest,
   env: Env = process.env
@@ -69,10 +37,11 @@ export async function generateContentMessages(
         fetchImpl: request.fetchImpl,
       });
     } catch (error) {
-      // Free lane is best-effort: fall back to callClaude on a provider error so
-      // reliability never regresses. Re-throw anything that isn't a Cerebras error.
       if (!(error instanceof CerebrasMessagesError)) throw error;
     }
   }
   return callClaude(request, env);
 }
+
+// silence unused type export consumers
+export type { ClaudeSurface };

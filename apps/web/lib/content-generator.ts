@@ -16,7 +16,7 @@ import {
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
 import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
-import { generateContentMessages } from "@/lib/claude-api/free-lane";
+import { jynxComplete } from "@/lib/claude-api/jynx-complete";
 import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
@@ -140,7 +140,7 @@ Respond ONLY with valid JSON in this exact format:
   try {
     // Free-lane (Cerebras) when CONTENT_FREE_LANE_ENABLED + key + surface content;
     // else callClaude (Bedrock / Vertex / Anthropic). Policy + numeric-guard unchanged.
-    const result = await generateContentMessages(
+    const result = await jynxComplete(
       {
         apiKey,
         fetchImpl: options.fetchImpl,

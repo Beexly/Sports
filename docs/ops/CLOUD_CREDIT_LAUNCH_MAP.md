@@ -34,7 +34,16 @@ CEREBRAS_API_KEY=...
 Smoke: `node scripts/ops/smoke-free-lane.mjs`  
 Ledger: `modelName` starts with `gpt-oss` → pool `cerebras_free`.
 
-### Phase 1 — pick **one** Claude cloud (you have all three)
+### Phase 1 — Jynx auto (preferred) or one forced cloud
+
+**Preferred:** configure every cloud you own, then:
+```bash
+CLAUDE_PROVIDER=auto
+# JYNX_CLOUD_ORDER=bedrock,azure,vertex
+```
+Jynx failovers across configured clouds before cash.
+
+### Phase 1b — force **one** Claude cloud
 
 | If strongest credit is… | Set |
 |-------------------------|-----|

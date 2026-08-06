@@ -1,3 +1,5 @@
+import { loadJynxPublicSnapshot, type JynxPublicSnapshot } from "@/lib/claude-api/jynx";
+
 /**
  * Public-safe credit / free-capacity posture for ops truth.
  *
@@ -22,6 +24,8 @@ export interface CreditStackPosture {
   readonly azureFoundryConfigured: boolean;
   readonly anyCreditLaneReady: boolean;
   readonly operatorHint: string;
+  /** Unified Jynx routing snapshot (no secrets). */
+  readonly jynx: JynxPublicSnapshot;
 }
 
 type Env = Record<string, string | undefined>;
@@ -109,6 +113,8 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
       "No free/credit lane configured — see docs/ops/CLOUD_CREDIT_LAUNCH_MAP.md";
   }
 
+  const jynx = loadJynxPublicSnapshot(env);
+
   return {
     freeLaneConfigured,
     freeLaneSurfaces: [...freeLaneSurfaces],
@@ -119,5 +125,6 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     azureFoundryConfigured,
     anyCreditLaneReady,
     operatorHint,
+    jynx,
   };
 }

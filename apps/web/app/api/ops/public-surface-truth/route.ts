@@ -27,6 +27,7 @@ const MAIN_FEATURE_MARKERS = [
   "gate-honesty-feature-gate",
   "free-lane-content-wire",
   "credit-stack-posture",
+  "jynx-unified-intelligence",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
