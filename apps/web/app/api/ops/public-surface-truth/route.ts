@@ -8,6 +8,7 @@ import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
 import { loadSettlementHealth } from "@/lib/performance/settlement-health";
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
+import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { timingSafeEqual } from "node:crypto";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,9 @@ const MAIN_FEATURE_MARKERS = [
   "overdue-first-stp",
   "postgres-public-form-rate-limit",
   "ops-truth-detail-auth",
+  "gate-honesty-feature-gate",
+  "free-lane-content-wire",
+  "credit-stack-posture",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -117,6 +121,8 @@ export async function GET(request: Request) {
         podcastEpisodes: listEpisodes().length,
         newsletterIssues: listIssues().length,
       },
+      /** Public-safe AI cost posture — booleans only, never secrets. */
+      creditStack: loadCreditStackPosture(),
       policy: PUBLIC_NAV_POLICY,
       law: {
         liveBoardDefault: "off",

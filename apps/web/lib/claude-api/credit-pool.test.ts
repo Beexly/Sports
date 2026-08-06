@@ -13,15 +13,22 @@ describe("creditPoolForModel", () => {
     expect(creditPoolForModel("claude-3-5-sonnet-v2@20241022")).toBe("vertex_partner");
   });
 
+  it("attributes Cerebras free-lane model ids to cerebras_free", () => {
+    expect(creditPoolForModel("gpt-oss-120b")).toBe("cerebras_free");
+    expect(creditPoolForModel("gpt-oss-20b")).toBe("cerebras_free");
+    expect(creditPoolForModel("cerebras-llama-3.3")).toBe("cerebras_free");
+  });
+
   it("attributes plain claude-* ids to the direct Anthropic (cash) pool, and defaults unknowns there", () => {
     expect(creditPoolForModel("claude-sonnet-4-6")).toBe("anthropic_direct");
     expect(creditPoolForModel("claude-haiku-4-5-20251001")).toBe("anthropic_direct");
     expect(creditPoolForModel("something-unexpected")).toBe("anthropic_direct");
   });
 
-  it("only the credit-eligible pools are flagged creditEligible", () => {
+  it("flags free and credit pools as creditEligible; cash pool not", () => {
     expect(CREDIT_POOL_META.aws_activate.creditEligible).toBe(true);
     expect(CREDIT_POOL_META.vertex_partner.creditEligible).toBe(true);
+    expect(CREDIT_POOL_META.cerebras_free.creditEligible).toBe(true);
     expect(CREDIT_POOL_META.anthropic_direct.creditEligible).toBe(false);
   });
 });
@@ -33,10 +40,16 @@ describe("rollupByCreditPool", () => {
       { modelName: "anthropic.claude-3-5-sonnet-20241022-v2:0", estimatedCostUsd: "0.5", inputTokens: 10, outputTokens: 5 },
       { modelName: "claude-sonnet-4-6", estimatedCostUsd: { toString: () => "3.25" }, inputTokens: 200, outputTokens: 80 },
       { modelName: "claude-3-5-sonnet-v2@20241022", estimatedCostUsd: 0.25 },
+      { modelName: "gpt-oss-120b", estimatedCostUsd: 0, inputTokens: 40, outputTokens: 20 },
     ]);
 
-    // anthropic_direct (3.25) > aws_activate (2.0) > vertex_partner (0.25)
-    expect(rows.map((r) => r.pool)).toEqual(["anthropic_direct", "aws_activate", "vertex_partner"]);
+    // anthropic_direct (3.25) > aws_activate (2.0) > vertex_partner (0.25) > cerebras (0)
+    expect(rows.map((r) => r.pool)).toEqual([
+      "anthropic_direct",
+      "aws_activate",
+      "vertex_partner",
+      "cerebras_free",
+    ]);
 
     const aws = rows.find((r) => r.pool === "aws_activate")!;
     expect(aws.calls).toBe(2);
@@ -44,6 +57,11 @@ describe("rollupByCreditPool", () => {
     expect(aws.inputTokens).toBe(110);
     expect(aws.outputTokens).toBe(55);
     expect(aws.creditEligible).toBe(true);
+
+    const free = rows.find((r) => r.pool === "cerebras_free")!;
+    expect(free.calls).toBe(1);
+    expect(free.estimatedCostUsd).toBe(0);
+    expect(free.creditEligible).toBe(true);
 
     const anthropic = rows.find((r) => r.pool === "anthropic_direct")!;
     expect(anthropic.estimatedCostUsd).toBe(3.25);
