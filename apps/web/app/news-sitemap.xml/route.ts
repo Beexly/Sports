@@ -1,28 +1,51 @@
 import { NextResponse } from "next/server";
 import { loadPublicJournalEntries } from "@/lib/journal/load";
-import { buildGoogleNewsSitemap } from "@/lib/seo/news-sitemap";
+import { buildGoogleNewsSitemap, type NewsSitemapEntry } from "@/lib/seo/news-sitemap";
 import { SITE_URL } from "@/lib/seo/site-url";
 import { BRAND_NAME } from "@/lib/brand";
+import { listIssues } from "@/lib/newsletter/issues";
+import { listEpisodes } from "@/lib/podcast/episodes";
 
 /**
- * GET /news-sitemap.xml — Google News sitemap for recently-published journal
- * entries (last 48h). Separate from the main sitemap.xml (which lists all
- * evergreen URLs) because the News namespace requires the tight recency window.
- * Submit this URL in Google News Publisher Center / Search Console.
- *
- * Degrades to a valid empty <urlset> when nothing is within the window or the
- * DB is unavailable — never a 500.
+ * GET /news-sitemap.xml — Google News sitemap for recent journal, newsletter,
+ * and podcast items (48h window). Empty-but-valid when nothing qualifies.
  */
 
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
-  let entries: readonly { slug: string; title: string; publishedAt: string }[] = [];
+  const entries: NewsSitemapEntry[] = [];
+
   try {
-    entries = await loadPublicJournalEntries();
+    const journal = await loadPublicJournalEntries();
+    for (const e of journal) {
+      entries.push({
+        slug: e.slug,
+        title: e.title,
+        publishedAt: e.publishedAt,
+        pathPrefix: "/journal",
+      });
+    }
   } catch {
-    // DB unavailable — serve an empty-but-valid news sitemap rather than 500.
-    entries = [];
+    /* DB unavailable — continue with static catalogs */
+  }
+
+  for (const issue of listIssues()) {
+    entries.push({
+      slug: issue.slug,
+      title: issue.title,
+      publishedAt: issue.publishedAt,
+      pathPrefix: "/newsletter",
+    });
+  }
+
+  for (const ep of listEpisodes()) {
+    entries.push({
+      slug: ep.slug,
+      title: ep.title,
+      publishedAt: ep.publishedAt,
+      pathPrefix: "/podcast",
+    });
   }
 
   const xml = buildGoogleNewsSitemap({

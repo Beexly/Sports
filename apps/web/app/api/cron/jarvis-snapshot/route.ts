@@ -1,10 +1,8 @@
 /**
  * Vercel cron — Jarvis observatory snapshot.
  *
- * Loads a live Jarvis assessment and pushes it into the process-local
- * ring buffer so /cockpit/jarvis/trend has data without an operator visit.
- * Multi-instance deploys still process-local — durable history is a later
- * Neon-backed upgrade; this removes the pure no-op.
+ * Pushes into process-local ring buffer AND durable Neon (JarvisMemoryEvent)
+ * so multi-instance cockpit trend survives isolate recycle.
  *
  * Auth: Bearer CRON_SECRET. Schedule: vercel.json (hourly).
  */
@@ -14,6 +12,7 @@ import { cronAuthError } from "@/lib/cron/authorize";
 import { loadJarvisAssessment } from "@/lib/cockpit/jarvis-data";
 import { sharedJarvisHistory } from "@/lib/cockpit/jarvis-history";
 import { materializeJarvisDraftTasks } from "@/lib/cockpit/jarvis-draft-tasks";
+import { persistJarvisHistorySnapshot } from "@/lib/cockpit/jarvis-history-durable";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -26,12 +25,14 @@ export async function GET(request: Request) {
   try {
     const { assessment } = await loadJarvisAssessment();
     const snap = sharedJarvisHistory().push(assessment);
+    const durable = await persistJarvisHistorySnapshot(snap);
     const draftTasks = materializeJarvisDraftTasks(assessment);
     return NextResponse.json({
       ok: true,
       path: "jarvis-snapshot",
       oddsApiRequired: false as const,
       bufferSize: sharedJarvisHistory().size(),
+      durable,
       draftTaskCount: draftTasks.length,
       draftTasks: draftTasks.slice(0, 12),
       snapshot: {

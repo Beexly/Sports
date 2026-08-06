@@ -56,6 +56,32 @@ export const ISSUES: readonly NewsletterIssue[] = [
       },
     ],
   },
+  {
+    slug: "003-launch-autonomy",
+    number: 3,
+    title: "Launch autonomy: free lanes, dark gates, receipts",
+    publishedAt: "2026-08-06T16:00:00.000Z",
+    lede:
+      "How GSE runs with minimal human input: free-first data, Jynx credit routing, settlement health, and why public boards stay gated until proof clears.",
+    sections: [
+      {
+        heading: "What runs without a human",
+        body: "Hourly free-path settle, free-spine health, Jarvis snapshots, health alerts. Operators flip env and gates — not every cron.",
+      },
+      {
+        heading: "What stays dark on purpose",
+        body: "LIVE_BOARD, public picks, and StatKing remain off until rights, settlement, and proof bars clear. Empty honesty beats a half-built board.",
+      },
+      {
+        heading: "Cost intelligence",
+        body: "Content free-lane (Cerebras / open free hosts) first, then AWS/Azure/Google Claude credits, cash Anthropic last.",
+      },
+      {
+        heading: "Read next",
+        body: "Methodology, Contests paper bay, /llms.txt proof map, and the founding waitlist if you want the next operator-reviewed issue.",
+      },
+    ],
+  },
 ];
 
 export function listIssues() {

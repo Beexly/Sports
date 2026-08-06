@@ -69,4 +69,17 @@ describe("buildGoogleNewsSitemap", () => {
     expect(xml).toContain("<urlset");
     expect(xml).not.toContain("<url>");
   });
+
+  it("supports newsletter/podcast pathPrefix", () => {
+    const xml = build([
+      {
+        slug: "003-launch-autonomy",
+        title: "Launch",
+        publishedAt: "2026-07-17T06:00:00.000Z",
+        pathPrefix: "/newsletter",
+      },
+    ]);
+    expect(xml).toContain(`${BASE}/newsletter/003-launch-autonomy`);
+    expect(xml).not.toContain("/journal/003-launch-autonomy");
+  });
 });
