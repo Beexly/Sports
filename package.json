@@ -63,6 +63,7 @@
     "guard:ai-council": "npm run test --workspace=@sports/ai-council",
     "guard:nflverse-currency": "tsx scripts/check-nflverse-currency.ts",
     "guard:prisma-version": "node scripts/check-prisma-version.mjs",
+    "verify:season-crosswalk": "node scripts/verify-season-crosswalk.mjs",
     "fable:evidence": "tsx scripts/fable-evidence.ts all",
     "fable:claims": "tsx scripts/fable-evidence.ts claims",
     "fable:aws-gates": "tsx scripts/fable-evidence.ts aws-gates",
