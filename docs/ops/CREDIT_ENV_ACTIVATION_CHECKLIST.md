@@ -53,3 +53,17 @@ VERTEX_MODEL_MAP=...
 ## Failure visibility
 
 If key missing: provider must **fail closed or skip** — never bill Anthropic while claiming “on credits.”
+
+## Azure AI Foundry (Claude)
+
+```bash
+CLAUDE_PROVIDER=azure
+AZURE_FOUNDRY_RESOURCE=...
+AZURE_FOUNDRY_API_KEY=...
+AZURE_FOUNDRY_MODEL_MAP={"claude-sonnet-4-6":"<foundry-model-id>"}
+```
+
+Smoke: ledger `modelName` starts with `azure-foundry/`.  
+**Founder:** confirm credit SKU covers Claude Foundry (older MS sponsorship excluded Anthropic).
+
+Full map: `docs/ops/CLOUD_CREDIT_LAUNCH_MAP.md`.

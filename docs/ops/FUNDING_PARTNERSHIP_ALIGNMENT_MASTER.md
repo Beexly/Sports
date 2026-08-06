@@ -15,6 +15,7 @@ Goal: **systems that reward us for using them** — free tiers, Activate credits
 | **Cerebras free-lane** | Free inference for content | **YES** — content generator wired (#320) | Key + `CONTENT_FREE_LANE_ENABLED=true` + redeploy |
 | **Bedrock / AWS Activate** | GenAI credits pay Claude | **YES** — `callClaude` | Activate claim → model access → `CLAUDE_PROVIDER=bedrock` + map |
 | **Vertex / Google** | Partner credits | **YES** | Google AE / $10k path → `CLAUDE_PROVIDER=vertex` |
+| **Azure Foundry** | Azure subscription / credits for Claude | **YES** — `providers/azure-foundry.ts` | Resource + key + map; **verify SKU covers Claude** |
 | **Groq internal LLM** | Free/cheap classify | **YES** | `INTERNAL_LLM_API_KEY` |
 | **Haiku router** | Cheaper Anthropic | **YES** | `MODEL_CHEAP` optional |
 | **Free settlement spine** | No Odds API bill | **YES** — live HEALTHY | Keep Odds key **off** |
@@ -66,7 +67,8 @@ Ops visibility: `/api/ops/public-surface-truth` → **`creditStack`** (booleans 
 | Datadog | Claim via program **before** organic trial |
 | Google | 31-day Workspace · anti-stacking |
 | AWS | Sequential Founders → Portfolio/GenAI; credits expire |
-| Claude on Azure / Marketplace | **Not** credit-eligible — Bedrock **InvokeModel** only |
+| Claude Marketplace on AWS | Not Activate-eligible — use Bedrock **InvokeModel** |
+| Claude on Azure Foundry | **Eligible if SKU allows** — wire `CLAUDE_PROVIDER=azure`; older MS sponsorship may exclude Anthropic — verify |
 | Odds API paid | Not required — free spine is production settle |
 
 ---
@@ -99,4 +101,4 @@ Ops visibility: `/api/ops/public-surface-truth` → **`creditStack`** (booleans 
 - [ ] ≥1 non-gambling partner outreach started (founder)  
 - [ ] ≥1 startup credit program application submitted (founder)  
 
-**Docs index:** Action Pack v3 · CREDITS.md · JYNX_COST_STACK · BEDROCK_CREDIT_INTEGRATION · revenue/*
+**Docs index:** Action Pack v3 · CREDITS.md · **CLOUD_CREDIT_LAUNCH_MAP** · JYNX_COST_STACK · BEDROCK · revenue/*

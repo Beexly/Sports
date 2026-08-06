@@ -5,24 +5,22 @@
  * Answers: "are we positioned to burn credits instead of cash?"
  */
 
-export type ClaudeProviderSelection = "anthropic" | "bedrock" | "vertex" | "unknown";
+export type ClaudeProviderSelection =
+  | "anthropic"
+  | "bedrock"
+  | "vertex"
+  | "azure"
+  | "unknown";
 
 export interface CreditStackPosture {
-  /** CONTENT_FREE_LANE_ENABLED + CEREBRAS_API_KEY both set. */
   readonly freeLaneConfigured: boolean;
-  /** Free-lane allow-list includes content (blog) after wire PR. */
   readonly freeLaneSurfaces: readonly string[];
-  /** INTERNAL_LLM_API_KEY present. */
   readonly internalLlmConfigured: boolean;
-  /** CLAUDE_PROVIDER selection (no secrets). */
   readonly claudeProvider: ClaudeProviderSelection;
-  /** Bedrock env complete enough for isBedrockProviderSelected-class check. */
   readonly bedrockConfigured: boolean;
-  /** Vertex env complete enough for selection (project + region + creds). */
   readonly vertexConfigured: boolean;
-  /** True when at least one non-cash lane is configured. */
+  readonly azureFoundryConfigured: boolean;
   readonly anyCreditLaneReady: boolean;
-  /** Operator-facing one-liner — no secrets. */
   readonly operatorHint: string;
 }
 
@@ -36,13 +34,11 @@ export function resolveClaudeProviderSelection(env: Env = process.env): ClaudePr
   const raw = env["CLAUDE_PROVIDER"]?.trim().toLowerCase() ?? "";
   if (raw === "bedrock") return "bedrock";
   if (raw === "vertex") return "vertex";
+  if (raw === "azure" || raw === "azure-foundry") return "azure";
   if (raw === "" || raw === "anthropic") return "anthropic";
   return "unknown";
 }
 
-/**
- * Pure posture from env. Safe to embed on public ops JSON.
- */
 export function loadCreditStackPosture(env: Env = process.env): CreditStackPosture {
   const freeLaneConfigured =
     env["CONTENT_FREE_LANE_ENABLED"] === "true" && has(env, "CEREBRAS_API_KEY");
@@ -62,33 +58,55 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
       has(env, "GOOGLE_APPLICATION_CREDENTIALS")) &&
     has(env, "VERTEX_MODEL_MAP");
 
+  const azureFoundryConfigured =
+    has(env, "AZURE_FOUNDRY_API_KEY") &&
+    has(env, "AZURE_FOUNDRY_MODEL_MAP") &&
+    (has(env, "AZURE_FOUNDRY_RESOURCE") || has(env, "AZURE_FOUNDRY_BASE_URL"));
+
   const freeLaneSurfaces = ["brief", "content"] as const;
 
   const anyCreditLaneReady =
     freeLaneConfigured ||
     (claudeProvider === "bedrock" && bedrockConfigured) ||
     (claudeProvider === "vertex" && vertexConfigured) ||
+    (claudeProvider === "azure" && azureFoundryConfigured) ||
+    // Config present even if not selected — still "ready to flip"
+    bedrockConfigured ||
+    vertexConfigured ||
+    azureFoundryConfigured ||
     internalLlmConfigured;
 
   let operatorHint: string;
-  if (freeLaneConfigured && claudeProvider === "bedrock" && bedrockConfigured) {
+  if (freeLaneConfigured && claudeProvider === "azure" && azureFoundryConfigured) {
     operatorHint =
-      "Free-lane + Bedrock both ready — content can be $0; other Claude via Activate credits.";
-  } else if (freeLaneConfigured) {
+      "Free-lane + Azure Foundry selected — content $0 path; Claude via Azure credits (verify SKU).";
+  } else if (freeLaneConfigured && claudeProvider === "bedrock" && bedrockConfigured) {
     operatorHint =
-      "Cerebras free-lane ready for content/brief. Set Bedrock/Vertex to move remaining Claude off cash.";
+      "Free-lane + Bedrock both ready — content $0; other Claude via AWS Activate.";
+  } else if (freeLaneConfigured && claudeProvider === "vertex" && vertexConfigured) {
+    operatorHint =
+      "Free-lane + Vertex both ready — content $0; other Claude via Google partner credits.";
+  } else if (claudeProvider === "azure" && azureFoundryConfigured) {
+    operatorHint =
+      "Azure Foundry selected for Claude. Enable free-lane for content $0. Confirm credit SKU covers Claude.";
   } else if (claudeProvider === "bedrock" && bedrockConfigured) {
     operatorHint =
       "Bedrock selected — Claude spend should hit AWS credits. Enable free-lane for content $0.";
   } else if (claudeProvider === "vertex" && vertexConfigured) {
     operatorHint =
       "Vertex selected — Claude spend should hit Google partner credits. Enable free-lane for content $0.";
+  } else if (azureFoundryConfigured || bedrockConfigured || vertexConfigured) {
+    operatorHint =
+      "Cloud credit providers configured but CLAUDE_PROVIDER not selected — set bedrock|vertex|azure and redeploy.";
+  } else if (freeLaneConfigured) {
+    operatorHint =
+      "Cerebras free-lane ready for content. Wire Bedrock/Vertex/Azure for remaining Claude off cash.";
   } else if (internalLlmConfigured) {
     operatorHint =
-      "Internal LLM key present. Free-lane + Bedrock/Vertex still off — cash Anthropic risk on content.";
+      "Internal LLM key present. Free-lane + cloud Claude providers still off — cash Anthropic risk.";
   } else {
     operatorHint =
-      "No free/credit lane configured — content and Claude paths may bill Anthropic cash. See docs/ops/FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md";
+      "No free/credit lane configured — see docs/ops/CLOUD_CREDIT_LAUNCH_MAP.md";
   }
 
   return {
@@ -98,6 +116,7 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     claudeProvider,
     bedrockConfigured,
     vertexConfigured,
+    azureFoundryConfigured,
     anyCreditLaneReady,
     operatorHint,
   };
