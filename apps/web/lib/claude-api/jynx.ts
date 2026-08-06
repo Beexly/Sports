@@ -98,6 +98,14 @@ export function listConfiguredClouds(env: Env = process.env): readonly JynxCloud
 
 /**
  * Ordered cloud attempts for this env.
+ *
+ * @example
+ * ```ts
+ * import { cloudAttemptOrder } from "@/lib/claude-api/jynx";
+ * // auto + Bedrock+Azure configured → ["bedrock","azure"]
+ * cloudAttemptOrder({ CLAUDE_PROVIDER: "auto", ...bedrockEnv, ...azureEnv });
+ * // See jynx-examples.ts for full fixtures.
+ * ```
  */
 export function cloudAttemptOrder(env: Env = process.env): readonly JynxCloud[] {
   const mode = parseProviderMode(env);
