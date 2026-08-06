@@ -27,6 +27,8 @@ import {
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
 import { hasOddsApiKey } from "@/lib/settlement/path-select";
+import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -44,8 +46,24 @@ export async function GET(request: Request) {
   // ── Free path: no paid Odds key required ─────────────────────────────────
   // Negated type guard, so `apiKey` narrows to `string` for the paid path below.
   if (!hasOddsApiKey(apiKey)) {
+    // Snapshot overdue before STP so burn-rate can tell whether this cycle drained the band.
+    let priorOverdueCount: number | undefined;
+    try {
+      const healthBefore = await loadSettlementHealth(db, { graceHours: 6 });
+      priorOverdueCount = healthBefore.overduePending;
+    } catch (healthErr) {
+      console.warn(
+        `[cron:settle-picks:free] pre-cycle settlement health snapshot failed: ` +
+          `${healthErr instanceof Error ? healthErr.message : healthErr}`,
+      );
+    }
     const freeScores = await persistFreeScores({ sportKey: requestedSport });
-    const free = await runFreePathSettlement({ sportKey: requestedSport });
+    const free = await runFreePathSettlement({
+      sportKey: requestedSport,
+      graceHours: 6,
+      ...(priorOverdueCount !== undefined ? { priorOverdueCount } : {}),
+    });
+
     let alertDrain: OutboxDrainSummary | null = null;
     try {
       alertDrain = await drainSettlementOutbox(db);

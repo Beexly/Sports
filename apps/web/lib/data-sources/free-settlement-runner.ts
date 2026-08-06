@@ -5,6 +5,10 @@
  * then writes PENDING→result with transactional outbox + post-settlement work
  * (same durability pattern as settleSport).
  *
+ * STP + RCA: overdue picks are processed first; each cycle emits a root-cause
+ * Pareto and straight-through clearance plan so settlement-health CRITICAL is
+ * actionable (not just a count).
+ *
  * Law: oddsApiRequired=false · refuse-default · DISPUTED holds · no invented scores.
  */
 
@@ -28,6 +32,25 @@ import {
   settlePendingPicks,
   type PendingPick,
 } from "./free-settlement";
+import {
+  aggregateSettlementRca,
+  classifySettlementRootCause,
+  type SettlementRcaReport,
+} from "@/lib/settlement/root-cause-analysis";
+import {
+  computeBurnRate,
+  planClearanceWaves,
+  stpLoadPriority,
+  type BurnRateReport,
+  type ClearanceWavePlan,
+} from "@/lib/settlement/stp-clearance";
+import {
+  settlementsToLearningSamples,
+  summarizeLearningBatch,
+  type LearningBatchReport,
+} from "@/lib/autonomy/settlement-learning";
+import { planAutonomyCycle, type AutonomyPlan } from "@/lib/autonomy/operating-kernel";
+
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -59,7 +82,18 @@ export type FreeSettlementRunResult = {
   sports: FreeSettlementSportResult[];
   picksSettled: number;
   picksHeld: number;
+  /** Root-cause analysis over all inspected PENDING picks this cycle. */
+  rca: SettlementRcaReport;
+  /** Straight-through clearance wave plan for this cycle. */
+  stp: ClearanceWavePlan;
+  /** Burn rate when prior overdue count is supplied by the caller. */
+  burnRate: BurnRateReport | null;
+  /** Offline learning summary from this cycle's settled grades (no model apply). */
+  learning: LearningBatchReport | null;
+  /** Autonomy plan snapshot for operator/agent loops. */
+  autonomy: AutonomyPlan | null;
 };
+;
 
 async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
   try {
@@ -73,8 +107,15 @@ async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
 
 export async function runFreePathSettlement(options?: {
   sportKey?: string | null;
+  /** Hours after kickoff before PENDING counts as overdue (RCA/STP). Default 6. */
+  graceHours?: number;
+  /** Optional prior overdue count for burn-rate (leading indicator drain). */
+  priorOverdueCount?: number;
+  now?: Date;
 }): Promise<FreeSettlementRunResult> {
   const started = Date.now();
+  const now = options?.now ?? new Date();
+  const graceHours = options?.graceHours ?? 6;
   const sports = options?.sportKey
     ? SUPPORTED_SPORTS.filter((s) => s.key === options.sportKey)
     : [...SUPPORTED_SPORTS];
@@ -82,6 +123,22 @@ export async function runFreePathSettlement(options?: {
   const out: FreeSettlementSportResult[] = [];
   let picksSettled = 0;
   let picksHeld = 0;
+
+  const rcaInputs: Parameters<typeof classifySettlementRootCause>[0][] = [];
+  const settledPickIds = new Set<string>();
+  const confirmationByPickId = new Map<string, "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED">();
+  const gradedForLearning: Array<{
+    pickId: string;
+    sportKey: string;
+    pickType: string;
+    modelVersion: string;
+    result: "WIN" | "LOSS" | "PUSH" | "VOID";
+    confirmation: "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED" | "UNKNOWN";
+    modelEdge: number | null;
+    clv: number | null;
+    settledAtIso: string;
+  }> = [];
+
 
   for (const sport of sports) {
     const freeSport = ODDS_KEY_TO_FREE[sport.key] ?? null;
@@ -101,7 +158,7 @@ export async function runFreePathSettlement(options?: {
     }
 
     try {
-      const pendingRows = await db.pick.findMany({
+      const loadedRows = await db.pick.findMany({
         where: {
           result: "PENDING",
           game: { sport: { key: sport.key } },
@@ -117,6 +174,17 @@ export async function runFreePathSettlement(options?: {
           },
         },
         take: 500,
+      });
+
+      // STP load order: overdue first so limited cron time drains the health band.
+      const pendingRows = [...loadedRows].sort((a, b) => {
+        const ageA =
+          (now.getTime() - a.game.commenceTime.getTime()) / (60 * 60 * 1000);
+        const ageB =
+          (now.getTime() - b.game.commenceTime.getTime()) / (60 * 60 * 1000);
+        const byPri =
+          stpLoadPriority(ageB, graceHours) - stpLoadPriority(ageA, graceHours);
+        return byPri !== 0 ? byPri : ageB - ageA;
       });
 
       if (pendingRows.length === 0) {
@@ -156,17 +224,39 @@ export async function runFreePathSettlement(options?: {
       const settledAt = new Date();
 
       for (const o of outcomes) {
+        const row = pendingRows.find((r) => r.id === o.pickId);
+        const ageHours = row
+          ? (now.getTime() - row.game.commenceTime.getTime()) / (60 * 60 * 1000)
+          : 0;
+
         if (o.status === "PENDING") {
           stillPending++;
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "PENDING",
+            pendingReason: o.reason,
+            settlementPath: "free",
+          });
           continue;
         }
         if (o.status === "HELD") {
           held++;
           picksHeld++;
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "HELD",
+            holdReason: "DISPUTED",
+            settlementPath: "free",
+          });
           continue;
         }
 
-        const row = pendingRows.find((r) => r.id === o.pickId);
         if (!row) continue;
 
         const written = await db.$transaction(async (tx) => {
@@ -208,6 +298,41 @@ export async function runFreePathSettlement(options?: {
         if (written.count > 0) {
           settled++;
           picksSettled++;
+          settledPickIds.add(o.pickId);
+          confirmationByPickId.set(o.pickId, o.confirmation);
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "SETTLED",
+            confirmation: o.confirmation,
+            settlementPath: "free",
+          });
+          gradedForLearning.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            pickType: String(row.pickType ?? "UNKNOWN"),
+            modelVersion: String((row as { modelVersion?: string }).modelVersion ?? "unknown"),
+            result: o.result as "WIN" | "LOSS" | "PUSH" | "VOID",
+            confirmation: o.confirmation,
+            modelEdge:
+              typeof (row as { edgeScore?: number }).edgeScore === "number"
+                ? (row as { edgeScore: number }).edgeScore
+                : null,
+            clv: null,
+            settledAtIso: settledAt.toISOString(),
+          });
+        } else {
+
+          rcaInputs.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            ageHours,
+            graceHours,
+            outcomeStatus: "WRITE_FAILED",
+            settlementPath: "free",
+          });
         }
       }
 
@@ -236,6 +361,71 @@ export async function runFreePathSettlement(options?: {
     }
   }
 
+  const findings = rcaInputs.map((i) => classifySettlementRootCause(i));
+  // Actionable + timing context for operators; pure SETTLED/CONFIRMED successes omitted.
+  const reportFindings = findings.filter(
+    (f) =>
+      f.code === "SINGLE_SOURCE_POLICY_HOLD" ||
+      f.code === "WRITE_RACE_LOST" ||
+      f.code === "DISPUTED_SCORES" ||
+      f.code === "TEAM_ORIENT_FAIL" ||
+      f.code === "NO_TRUSTED_FINAL" ||
+      f.code === "OVERDUE_NO_SCORE" ||
+      f.code === "PATH_MISCONFIG" ||
+      f.code === "WITHIN_GRACE" ||
+      f.code === "NOT_COMMENCED",
+  );
+  const rca = aggregateSettlementRca(reportFindings);
+
+  const stp = planClearanceWaves(reportFindings, {
+    settledPickIds,
+    confirmationByPickId,
+  });
+
+  let burnRate: BurnRateReport | null = null;
+  if (options?.priorOverdueCount !== undefined) {
+    const stillOverdue = reportFindings.filter((f) => f.overdue && f.code !== "WRITE_RACE_LOST").length;
+    // Approximates inflow as max(0, stillOverdue + cleared - prior); cleared = picksSettled this cycle that were overdue-eligible.
+    const clearedOverdue = picksSettled; // conservative: all settles reduce potential overdue
+    const inflow = Math.max(0, stillOverdue + clearedOverdue - options.priorOverdueCount);
+    burnRate = computeBurnRate({
+      cleared: clearedOverdue,
+      newOverdueInflow: inflow,
+      reopened: 0,
+    });
+  }
+
+  const learning =
+    gradedForLearning.length > 0
+      ? summarizeLearningBatch(settlementsToLearningSamples(gradedForLearning))
+      : null;
+
+  const autonomy = planAutonomyCycle({
+    observedAt: new Date().toISOString(),
+    deploymentSha: process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ?? null,
+    databaseOk: true,
+    ingestionOk: true,
+    ingestionAgeMinutes: null,
+    settlementBand:
+      rca.overdue >= 5 ? "CRITICAL" : rca.overdue > 0 ? "DEGRADED" : "HEALTHY",
+    settlementOverdue: rca.overdue,
+    settlementCommenced: rca.total,
+    topRcaCause: rca.topCause,
+    rcaHeadline: rca.operatorHeadline,
+    stpAutoEligible: stp.autoEligible,
+    stpExceptions: stp.exceptionCount,
+    burnDraining: burnRate?.draining ?? null,
+    liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
+    publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
+    performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+    publishLedgerEnabled: process.env["PUBLISH_LEDGER"]?.trim().toLowerCase() === "true",
+    draftOnly: process.env["LIVE_BOARD"]?.trim().toLowerCase() !== "true",
+    boardSuppressed: true,
+    openPicks: null,
+    canonicalSettled: learning?.nEligible ?? null,
+    minSettledForLearning: 100,
+  });
+
   return {
     path: "free",
     oddsApiRequired: false,
@@ -244,5 +434,10 @@ export async function runFreePathSettlement(options?: {
     sports: out,
     picksSettled,
     picksHeld,
+    rca,
+    stp,
+    burnRate,
+    learning,
+    autonomy,
   };
 }

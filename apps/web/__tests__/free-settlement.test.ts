@@ -88,10 +88,12 @@ describe("settlePendingPicks", () => {
     expect(out.status === "HELD" ? out.reason : out.status).toBe("DISPUTED");
   });
 
-  it("leaves picks with no matching final PENDING", () => {
+  it("leaves picks with no matching final PENDING with NO_FINAL reason", () => {
     const out = settlePendingPicks([pick({ homeTeam: "Alabama", awayTeam: "Auburn" })], finals)[0]!;
     expect(out.status).toBe("PENDING");
+    expect(out.status === "PENDING" ? out.reason : null).toBe("NO_FINAL");
   });
+
 
   it("still settles on a single source, flagged for audit", () => {
     const single = buildTrustedFinals(espn, []);

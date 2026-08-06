@@ -1034,7 +1034,9 @@ export {
   mulberry32,
   type PlaceboReport,
   type PlaceboTrial,
+  type PlaceboPair,
 } from "./honesty/placebo-leak.js";
+
 export {
   fingerprintPayload,
   buildReceipt,
