@@ -44,6 +44,13 @@ import {
   type BurnRateReport,
   type ClearanceWavePlan,
 } from "@/lib/settlement/stp-clearance";
+import {
+  settlementsToLearningSamples,
+  summarizeLearningBatch,
+  type LearningBatchReport,
+} from "@/lib/autonomy/settlement-learning";
+import { planAutonomyCycle, type AutonomyPlan } from "@/lib/autonomy/operating-kernel";
+
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -81,7 +88,12 @@ export type FreeSettlementRunResult = {
   stp: ClearanceWavePlan;
   /** Burn rate when prior overdue count is supplied by the caller. */
   burnRate: BurnRateReport | null;
+  /** Offline learning summary from this cycle's settled grades (no model apply). */
+  learning: LearningBatchReport | null;
+  /** Autonomy plan snapshot for operator/agent loops. */
+  autonomy: AutonomyPlan | null;
 };
+;
 
 async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
   try {
@@ -115,6 +127,18 @@ export async function runFreePathSettlement(options?: {
   const rcaInputs: Parameters<typeof classifySettlementRootCause>[0][] = [];
   const settledPickIds = new Set<string>();
   const confirmationByPickId = new Map<string, "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED">();
+  const gradedForLearning: Array<{
+    pickId: string;
+    sportKey: string;
+    pickType: string;
+    modelVersion: string;
+    result: "WIN" | "LOSS" | "PUSH" | "VOID";
+    confirmation: "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED" | "UNKNOWN";
+    modelEdge: number | null;
+    clv: number | null;
+    settledAtIso: string;
+  }> = [];
+
 
   for (const sport of sports) {
     const freeSport = ODDS_KEY_TO_FREE[sport.key] ?? null;
@@ -285,7 +309,22 @@ export async function runFreePathSettlement(options?: {
             confirmation: o.confirmation,
             settlementPath: "free",
           });
+          gradedForLearning.push({
+            pickId: o.pickId,
+            sportKey: sport.key,
+            pickType: String(row.pickType ?? "UNKNOWN"),
+            modelVersion: String((row as { modelVersion?: string }).modelVersion ?? "unknown"),
+            result: o.result as "WIN" | "LOSS" | "PUSH" | "VOID",
+            confirmation: o.confirmation,
+            modelEdge:
+              typeof (row as { edgeScore?: number }).edgeScore === "number"
+                ? (row as { edgeScore: number }).edgeScore
+                : null,
+            clv: null,
+            settledAtIso: settledAt.toISOString(),
+          });
         } else {
+
           rcaInputs.push({
             pickId: o.pickId,
             sportKey: sport.key,
@@ -356,6 +395,37 @@ export async function runFreePathSettlement(options?: {
     });
   }
 
+  const learning =
+    gradedForLearning.length > 0
+      ? summarizeLearningBatch(settlementsToLearningSamples(gradedForLearning))
+      : null;
+
+  const autonomy = planAutonomyCycle({
+    observedAt: new Date().toISOString(),
+    deploymentSha: process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ?? null,
+    databaseOk: true,
+    ingestionOk: true,
+    ingestionAgeMinutes: null,
+    settlementBand:
+      rca.overdue >= 5 ? "CRITICAL" : rca.overdue > 0 ? "DEGRADED" : "HEALTHY",
+    settlementOverdue: rca.overdue,
+    settlementCommenced: rca.total,
+    topRcaCause: rca.topCause,
+    rcaHeadline: rca.operatorHeadline,
+    stpAutoEligible: stp.autoEligible,
+    stpExceptions: stp.exceptionCount,
+    burnDraining: burnRate?.draining ?? null,
+    liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
+    publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
+    performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+    publishLedgerEnabled: process.env["PUBLISH_LEDGER"]?.trim().toLowerCase() === "true",
+    draftOnly: process.env["LIVE_BOARD"]?.trim().toLowerCase() !== "true",
+    boardSuppressed: true,
+    openPicks: null,
+    canonicalSettled: learning?.nEligible ?? null,
+    minSettledForLearning: 100,
+  });
+
   return {
     path: "free",
     oddsApiRequired: false,
@@ -367,5 +437,7 @@ export async function runFreePathSettlement(options?: {
     rca,
     stp,
     burnRate,
+    learning,
+    autonomy,
   };
 }
