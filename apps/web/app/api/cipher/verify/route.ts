@@ -116,9 +116,6 @@ export async function POST(req: NextRequest) {
     week: chapter.week,
     codename: chapter.codename,
     reward,
-    message:
-      reward.kind === "code"
-        ? "Solved. Your code is below — redeem it at checkout for a week of Elite."
-        : "Solved. Save this claim reference — present it to support to redeem your free Elite week.",
+    message: "Solved. Save this claim reference — present it to support to redeem your free Elite week.",
   });
 }

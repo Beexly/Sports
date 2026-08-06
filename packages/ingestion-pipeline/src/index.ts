@@ -49,6 +49,12 @@ export type {
   PostSettlementWorkKind,
   PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";
+export { drainPendingTeamGameLogs } from "./team-game-log-repair.js";
+export type {
+  TeamGameLogRepairDb,
+  TeamGameLogRepairGame,
+  TeamGameLogRepairGates,
+} from "./team-game-log-repair.js";
 export { recordPickSettlementSnapshot } from "./settlement-snapshots.js";
 export type {
   RecordSettlementSnapshotInput,
