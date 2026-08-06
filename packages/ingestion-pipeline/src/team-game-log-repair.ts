@@ -1,10 +1,9 @@
 /**
  * Repair drain for PostSettlementWork TEAM_GAME_LOG rows left PENDING by a
  * crash between settleSport()'s enqueue and its settleGameLogs() write
- * (hardening 6.10). Unlike CLV_GRADE/SNAPSHOT_OUTCOME — which the free
- * settlement path already drains every cycle — TEAM_GAME_LOG had no repair
- * path anywhere: a mid-write crash left the row PENDING forever with no
- * process ever revisiting it.
+ * (hardening 6.10). CLV_GRADE/SNAPSHOT_OUTCOME were already drained on free path; TEAM_GAME_LOG
+ * is now drained on free path too (runFreePathSettlement) and paid settle-picks
+ * so a mid-write crash cannot leave PENDING forever.
  *
  * settleGameLogs() upserts on the (gameId, teamName) unique constraint, so
  * re-running it for an already-written game is a no-op-equivalent, safe to
@@ -58,7 +57,7 @@ export type TeamGameLogRepairGates = {
 
 /**
  * Repair drain: complete PENDING TEAM_GAME_LOG work for games that already
- * have final scores. Call at the end of a paid-path settlement cycle.
+ * have final scores. Call at end of free-path and paid-path settlement cycles.
  */
 export async function drainPendingTeamGameLogs(
   db: TeamGameLogRepairDb,

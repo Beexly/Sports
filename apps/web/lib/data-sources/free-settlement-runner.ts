@@ -9,12 +9,15 @@
  * Pareto and straight-through clearance plan so settlement-health CRITICAL is
  * actionable (not just a count).
  *
+ * Repair drains every cycle: CLV_GRADE, SNAPSHOT_OUTCOME, TEAM_GAME_LOG.
+ *
  * Law: oddsApiRequired=false · refuse-default · DISPUTED holds · no invented scores.
  */
 
 import { db } from "@sports/db";
-import { selectGradingLine } from "@sports/prediction-engine";
+import { getReadinessGates, selectGradingLine } from "@sports/prediction-engine";
 import {
+  drainPendingTeamGameLogs,
   enqueuePostSettlementWork,
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
@@ -117,6 +120,8 @@ export type FreeSettlementRunResult = {
   clvRepair: { attempted: number; graded: number; noClose: number; failed: number } | null;
   /** PENDING SNAPSHOT_OUTCOME drained this cycle. */
   snapshotRepair: { attempted: number; done: number; failed: number } | null;
+  /** PENDING TEAM_GAME_LOG drained this cycle (crash-safe repair). */
+  teamGameLogRepair: { attempted: number; done: number; failed: number } | null;
   /** ESPN/ISO date keys used for score fetch this cycle (empty = undated board). */
   scoreDates: { espnKeys: string[]; isoKeys: string[] } | null;
 };
@@ -601,6 +606,21 @@ export async function runFreePathSettlement(options?: {
     snapshotRepair = null;
   }
 
+  let teamGameLogRepair: {
+    attempted: number;
+    done: number;
+    failed: number;
+  } | null = null;
+  try {
+    const gates = getReadinessGates();
+    teamGameLogRepair = await drainPendingTeamGameLogs(db as never, gates, { take: 100 });
+  } catch (err) {
+    console.warn(
+      `[free-settle] TEAM_GAME_LOG repair drain failed: ${err instanceof Error ? err.message : err}`,
+    );
+    teamGameLogRepair = null;
+  }
+
   return {
     path: "free",
     oddsApiRequired: false,
@@ -616,6 +636,7 @@ export async function runFreePathSettlement(options?: {
     autonomy,
     clvRepair,
     snapshotRepair,
+    teamGameLogRepair,
     scoreDates:
       scoreDateAcc.size > 0
         ? {
