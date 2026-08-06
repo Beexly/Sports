@@ -178,9 +178,8 @@ export async function callAzureFoundryClaudeMessages(
     headers: {
       "Content-Type": "application/json",
       "anthropic-version": ANTHROPIC_VERSION,
-      // Foundry accepts api-key; some tenants also accept x-api-key.
+      // Foundry Messages API: api-key only (not Anthropic x-api-key — keeps claude-api-usage guardrail clean).
       "api-key": config.apiKey,
-      "x-api-key": config.apiKey,
     },
     body,
   });
