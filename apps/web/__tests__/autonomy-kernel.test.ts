@@ -96,6 +96,41 @@ describe("autonomy operating kernel", () => {
     expect(fix).toBeDefined();
     expect(fix!.requiresOwner).toBe(true);
   });
+
+  // I2 freshness self-heal: age > 90m queues durable free-spine SUCCESS stamp (I3/I8).
+  it("stale free-spine ingestion queues autonomous RUN_FREE_SPINE_HEALTH (I2/I8)", () => {
+    const plan = planAutonomyCycle(
+      baseObs({
+        ingestionOk: true,
+        ingestionAgeMinutes: 140,
+        settlementBand: "HEALTHY",
+        settlementOverdue: 0,
+      }),
+    );
+    expect(plan.severity === "P1" || plan.severity === "P0").toBe(true);
+    const spine = plan.autonomousQueue.find((a) => a.kind === "RUN_FREE_SPINE_HEALTH");
+    expect(spine).toBeDefined();
+    expect(spine!.autonomousSafe).toBe(true);
+    expect(spine!.requiresOwner).toBe(false);
+    expect(spine!.target).toBe("/api/cron/free-spine-health");
+  });
+
+  // LAWS: never suggest flipping public gates from the autonomous queue.
+  it("closed public gates stay HOLD only — no autonomous gate flip (LAWS)", () => {
+    const plan = planAutonomyCycle(baseObs({ liveBoardEnabled: false, publicPicksEnabled: false }));
+    expect(plan.introspection.refuseDefaultHeld).toBe(true);
+    expect(
+      plan.autonomousQueue.every(
+        (a) =>
+          a.kind !== "HOLD_PUBLIC_GATES" ||
+          a.detail.includes("closed") ||
+          a.severity === "OK",
+      ),
+    ).toBe(true);
+    expect(plan.actions.some((a) => a.kind === "HOLD_PUBLIC_GATES" && a.requiresOwner)).toBe(
+      false,
+    );
+  });
 });
 
 describe("settlement learning loop", () => {
@@ -114,7 +149,7 @@ describe("settlement learning loop", () => {
       },
       {
         pickId: "2",
-        sportKey: "nfl",
+        sportKey: "nba",
         pickType: "SPREAD",
         modelVersion: "v5.1.0",
         result: "LOSS",
