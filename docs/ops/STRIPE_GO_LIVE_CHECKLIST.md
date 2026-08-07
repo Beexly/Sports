@@ -90,3 +90,20 @@ keep their rate for life (`apps/web/lib/billing/price-ids.ts`). Never just repla
 
 **Bottom line:** the Stripe catalog is correctly built and matches the code. Revenue is gated
 only on setting the six env vars above + the webhook endpoint in production.
+
+## 1b. lookup_key fallback (money-path)
+
+Attach these **lookup keys** on each Stripe Price (Dashboard → Product → Price → Additional options):
+
+| lookup_key | Tier |
+|------------|------|
+| `gse-fantasy-monthly` / `gse-fantasy-annual` | Fantasy |
+| `gse-pro-monthly` / `gse-pro-annual` | Pro |
+| `gse-elite-monthly` / `gse-elite-annual` | Elite |
+
+Checkout + webhooks resolve env price IDs first, then these keys. Sticky seat:
+
+```bash
+STRIPE_SECRET_KEY=sk_live_… node scripts/ops/create-founding-payment-link.mjs --tier FANTASY --interval month
+```
+

@@ -35,6 +35,7 @@ const COMPANY_LINKS = [
   { label: "How We Make Money", href: "/how-we-make-money" },
   { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Founding waitlist", href: "/#founding-waitlist" },
   { label: "About", href: "/about" },
   { label: "Press", href: "/press" },
   { label: "FAQ", href: "/faq" },

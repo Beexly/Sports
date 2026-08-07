@@ -3,10 +3,11 @@
  *
  * LAWS:
  * - CRON_SECRET auth only
- * - Settled graded picks only when available
+ * - Settled graded picks only (never invent)
  * - ZERO public routes / ZERO env gate flips
  * - CALIBRATION_ADJUSTMENTS_ENABLED stays off
- * - Fail closed if no durable settled sample (empty → collecting)
+ * - confidence/100 treated as provisional p (documented); spread/total may not be
+ *   true probabilities — metrics are internal evidence only
  *
  * Not scheduled in vercel.json until founder enables.
  */
@@ -60,11 +61,50 @@ function bss(
 }
 
 /**
- * Load settled (p,y) samples. Empty until durable graded-picks reader is wired.
- * Never invents probabilities.
+ * Load settled (p,y) from durable picks when DB is available.
+ * p := confidence/100 (provisional — not all markets are true probabilities).
+ * Never invents rows.
  */
-async function loadSettledCalibrationSamples(): Promise<CalibrationSample[]> {
-  return [];
+async function loadSettledCalibrationSamples(): Promise<{
+  samples: CalibrationSample[];
+  notes: string[];
+}> {
+  const notes: string[] = [];
+  try {
+    const { db } = await import("@sports/db");
+    const picks = await db.pick.findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        result: { in: ["WIN", "LOSS"] },
+        signalSnapshot: { is: { eligibleForLearning: true } },
+        NOT: { modelVersion: "v5.0.0-seed" },
+      },
+      select: { confidence: true, result: true },
+      orderBy: { settledAt: "desc" },
+      take: 2000,
+    });
+
+    const samples: CalibrationSample[] = [];
+    for (const pick of picks) {
+      if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
+      // confidence is 0–100 display scale in GSE; clamp to unit interval.
+      const p = Math.min(1, Math.max(0, pick.confidence / 100));
+      samples.push({ p, y: pick.result === "WIN" ? 1 : 0 });
+    }
+
+    notes.push(
+      "p derived from confidence/100 (provisional). Spread/total may not be fair probabilities — internal only.",
+    );
+    if (samples.length === 0) {
+      notes.push("No settled non-seed WIN/LOSS picks eligible for learning yet.");
+    }
+    return { samples, notes };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    notes.push(`Settled pick load unavailable: ${msg}`);
+    return { samples: [], notes };
+  }
 }
 
 export async function GET(request: Request): Promise<NextResponse> {
@@ -72,7 +112,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   try {
-    const samples = await loadSettledCalibrationSamples();
+    const { samples, notes } = await loadSettledCalibrationSamples();
     const generatedAt = new Date().toISOString();
     const gitSha =
       process.env["VERCEL_GIT_COMMIT_SHA"] ?? process.env["GIT_SHA"] ?? null;
@@ -87,7 +127,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         n: 0,
         status: "collecting" as const,
         notes: [
-          "No settled graded picks available for metrics yet.",
+          ...notes,
           "Gates unchanged: no PERFORMANCE_STATS / LIVE_BOARD / CALIBRATION_ADJUSTMENTS.",
         ],
         overall: null,
@@ -128,6 +168,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         reliabilityBins: curve,
       },
       notes: [
+        ...notes,
         "Internal only — not a public Proven claim.",
         "bssClose null until closing implied probabilities are joined.",
       ],

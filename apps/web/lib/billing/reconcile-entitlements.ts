@@ -34,7 +34,7 @@
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@sports/db";
-import { tierForPriceId, type PaidTier, type ResolvedTier } from "@/lib/billing/price-ids";
+import { tierForPriceId, tierFromPriceRef, type PaidTier, type ResolvedTier } from "@/lib/billing/price-ids";
 
 /** Stripe statuses that grant entitlement in this platform (mirrors entitlements.ts). */
 const ACCESS_GRANTING_STRIPE_STATUSES = ["active", "trialing", "past_due"] as const;
@@ -54,6 +54,14 @@ const PAID_DB_STATUSES = ["ACTIVE", "TRIALING", "PAST_DUE"] as const;
  * rank wins; ties break on newest (see `isMoreCanonical`).
  */
 const TIER_RANK: Record<ResolvedTier, number> = { ELITE: 3, PRO: 2, FANTASY: 1, FREE: 0 };
+
+/** Resolve tier from a Stripe Price object or id string (lookup_key aware). */
+function tierFromStripePrice(price: Stripe.Price | string | undefined | null): ResolvedTier {
+  if (!price) return "FREE";
+  if (typeof price === "string") return tierForPriceId(price);
+  return tierFromPriceRef(price.id, price.lookup_key);
+}
+
 
 /**
  * FINDING 2 fail-closed anchor. When a past_due grant's real first-failure time
@@ -181,8 +189,8 @@ function canonicalCreatedAt(subscription: Stripe.Subscription): number {
 
 /** FINDING 4 — true when `a` outranks `b` as the customer's canonical subscription. */
 function isMoreCanonical(a: Stripe.Subscription, b: Stripe.Subscription): boolean {
-  const rankA = TIER_RANK[tierForPriceId(a.items.data[0]?.price.id)];
-  const rankB = TIER_RANK[tierForPriceId(b.items.data[0]?.price.id)];
+  const rankA = TIER_RANK[tierFromStripePrice(a.items.data[0]?.price)];
+  const rankB = TIER_RANK[tierFromStripePrice(b.items.data[0]?.price)];
   if (rankA !== rankB) return rankA > rankB;
   return canonicalCreatedAt(a) > canonicalCreatedAt(b);
 }
@@ -279,7 +287,7 @@ async function reconcileConfirmedSubscription(
 ): Promise<"granted" | "noop" | "error"> {
   const customerId = customerIdOf(subscription);
   const priceId = subscription.items.data[0]?.price.id;
-  const intendedTier = tierForPriceId(priceId);
+  const intendedTier = tierFromStripePrice(subscription.items.data[0]?.price);
 
   if (intendedTier === "FREE") {
     // Live Stripe subscription whose price maps to no paid tier — an unmapped or
@@ -575,12 +583,12 @@ export async function reconcileUserEntitlement(userId: string): Promise<void> {
     // on a tie (FINDING 4) — mirrors the cron reconcile so a customer holding several
     // live subs is granted their BEST tier, not whichever `find` happened to hit.
     const paidLiveSubs = list.data.filter(
-      (s) => isAccessGrantingStatus(s.status) && tierForPriceId(s.items.data[0]?.price.id) !== "FREE",
+      (s) => isAccessGrantingStatus(s.status) && tierFromStripePrice(s.items.data[0]?.price) !== "FREE",
     );
     if (paidLiveSubs.length === 0) return; // no positively-confirmed paid subscription ⇒ never grant, never revoke
     const active = canonicalSubscription(paidLiveSubs);
 
-    const intendedTier = tierForPriceId(active.items.data[0]?.price.id);
+    const intendedTier = tierFromStripePrice(active.items.data[0]?.price);
     if (intendedTier === "FREE") return; // narrowing guard (unreachable given the find predicate)
 
     const dbStatus = mapGrantingStatus(active.status as GrantingStripeStatus);

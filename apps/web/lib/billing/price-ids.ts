@@ -117,3 +117,31 @@ export function checkoutPriceId(tier: PaidTier, interval: BillingInterval, env: 
     ? currentPriceId(env["STRIPE_FANTASY_MONTHLY_PRICE_ID"])
     : currentPriceId(env["STRIPE_FANTASY_ANNUAL_PRICE_ID"]);
 }
+
+/** Invert STRIPE_LOOKUP_KEYS: lookup_key → paid tier (or FREE if unknown). */
+export function tierForLookupKey(lookupKey: string | undefined | null): ResolvedTier {
+  if (!lookupKey) return "FREE";
+  const key = lookupKey.trim();
+  if (!key) return "FREE";
+  for (const tier of ["ELITE", "PRO", "FANTASY"] as const) {
+    const row = STRIPE_LOOKUP_KEYS[tier];
+    if (row.month === key || row.year === key) return tier;
+  }
+  return "FREE";
+}
+
+/**
+ * Classify a Stripe price for entitlement: env historical ids first, then
+ * lookup_key. Prevents "charged but FREE" when checkout resolved via lookup_key
+ * with empty STRIPE_*_PRICE_ID envs.
+ */
+export function tierFromPriceRef(
+  priceId: string | undefined | null,
+  lookupKey?: string | null,
+  env: Env = process.env,
+): ResolvedTier {
+  const fromEnv = tierForPriceId(priceId ?? undefined, env);
+  if (fromEnv !== "FREE") return fromEnv;
+  return tierForLookupKey(lookupKey);
+}
+
