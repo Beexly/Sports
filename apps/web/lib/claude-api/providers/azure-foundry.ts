@@ -14,8 +14,16 @@
  * Inert unless CLAUDE_PROVIDER=azure|azure-foundry AND resource/base + key +
  * model map are present. Any config/API error falls back via callClaude.
  * NO guessed model ids — AZURE_FOUNDRY_MODEL_MAP only.
+ *
+ * Prompt caching: pass cache: { system: true }. System must stay byte-stable.
+ * Cache hit/create tokens are returned on ClaudeMessagesResult for cost audit.
  */
-import type { ClaudeMessagesResult } from "../messages";
+import {
+  buildSystemField,
+  parseAnthropicUsage,
+  type AnthropicUsageShape,
+  type ClaudeMessagesResult,
+} from "../messages";
 
 type Env = Record<string, string | undefined>;
 
@@ -128,7 +136,7 @@ interface AnthropicTextBlock {
 }
 interface FoundryMessagesResponse {
   readonly content?: readonly AnthropicTextBlock[];
-  readonly usage?: { readonly input_tokens?: number; readonly output_tokens?: number };
+  readonly usage?: AnthropicUsageShape;
 }
 
 export interface AzureFoundryMessagesRequest {
@@ -160,9 +168,7 @@ export async function callAzureFoundryClaudeMessages(
   const ledgerModelName = `azure-foundry/${foundryModelId}`;
   const fetchImpl = request.fetchImpl ?? fetch;
 
-  const systemField = request.cache?.system
-    ? [{ type: "text" as const, text: request.system, cache_control: { type: "ephemeral" as const } }]
-    : request.system;
+  const systemField = buildSystemField(request.system, request.cache);
 
   const body = JSON.stringify({
     model: foundryModelId,
@@ -203,11 +209,15 @@ export async function callAzureFoundryClaudeMessages(
     });
   }
 
+  const usage = parseAnthropicUsage(payload.usage);
+
   return {
     text: text.trim(),
     modelName: ledgerModelName,
-    inputTokens: payload.usage?.input_tokens ?? 0,
-    outputTokens: payload.usage?.output_tokens ?? 0,
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
+    cacheCreationInputTokens: usage.cacheCreationInputTokens,
+    cacheReadInputTokens: usage.cacheReadInputTokens,
     durationMs,
   };
 }

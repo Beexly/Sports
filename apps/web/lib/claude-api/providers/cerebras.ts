@@ -122,11 +122,13 @@ export async function callCerebrasMessages(
     });
   }
 
-  return {
+    return {
     text,
     modelName,
     inputTokens: payload.usage?.prompt_tokens ?? 0,
     outputTokens: payload.usage?.completion_tokens ?? 0,
+    cacheCreationInputTokens: 0,
+    cacheReadInputTokens: 0,
     durationMs,
   };
 }
