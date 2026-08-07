@@ -1514,6 +1514,11 @@ model JarvisMemoryEvent {
   @@index([memory_type])
   @@index([scope])
   @@index([created_at])
+  // Durable readers (free-spine + jarvis-history): scope + memory_type + created_at DESC.
+  // Matches loadDurableFreeSpine / loadDurableJarvisHistory / pruneOldFreeSpineSnapshots.
+  // Singles kept until EXPLAIN ANALYZE proves them dead. See migration
+  // 20260807120000_jarvis_memory_scope_type_created_idx.
+  @@index([scope, memory_type, created_at(sort: Desc)], map: "jarvis_memory_events_scope_type_created_idx")
   @@map("jarvis_memory_events")
 }
 
