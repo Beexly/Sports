@@ -5,6 +5,9 @@
  *
  * Also records an honest IngestionRun SUCCESS when the probe completes so
  * /api/health recovers under free mode (no paid THE_ODDS_API_KEY required).
+ *
+ * I3/I8: writes process-local free-spine-cache + Neon durable snapshot
+ * (JarvisMemoryEvent) so cold isolates still score multi-source probes.
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
@@ -12,6 +15,7 @@ import { ALL_SPORTS, freeCoverageMatrix, redundancyGaps } from "@/lib/data-sourc
 import { fetchScoresMultiSource, scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
 import { buildWorldClassReadiness } from "@/lib/platform/world-class-readiness";
 import { writeFreeSpineCache } from "@/lib/data-sources/free-spine-cache";
+import { persistFreeSpineSnapshot } from "@/lib/data-sources/free-spine-durable";
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
 import { probeNflverseSourceCurrency } from "@sports/data-ingestion";
 import { captureError } from "@/lib/observability/sentry";
@@ -70,7 +74,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   const hardFailures = live.filter((s) => s.used === null && s.errors.length > 0).length;
   const probeFailed = live.length > 0 && sportsWithGames === 0 && hardFailures === live.length;
 
-  writeFreeSpineCache({
+  const snap = {
     probedAt: new Date().toISOString(),
     sportsProbed: live.length,
     sportsWithGames,
@@ -83,7 +87,18 @@ export async function GET(request: Request): Promise<NextResponse> {
       games: s.games,
       failover: s.failover,
     })),
-  });
+  };
+
+  writeFreeSpineCache(snap);
+
+  // I3: Neon-backed so cold cockpit isolates do not see empty RAM as Critical.
+  const durableWrite = await persistFreeSpineSnapshot(snap);
+  if (durableWrite === "error") {
+    captureError(new Error("free-spine durable persist failed"), {
+      path: "free-spine-health",
+      stage: "persistFreeSpineSnapshot",
+    });
+  }
 
   // Durable evidence for /api/health — free mode must not leave lastSuccess frozen.
   const ingestionRun = await recordFreeIngestionRun({
@@ -148,6 +163,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     })),
     agentPrime: readiness.agentPrime,
     ingestionRun,
+    durableWrite,
     nflverseCurrency,
   });
 }

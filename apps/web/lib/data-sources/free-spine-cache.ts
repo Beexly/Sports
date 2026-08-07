@@ -1,7 +1,8 @@
 /**
- * Process-local free-spine probe cache.
+ * Process-local free-spine probe cache (hot path).
  * free-spine-health cron writes; jarvis-data reads (no network in assessment path).
- * Multi-instance: each isolate has its own cache until Neon-backed store.
+ * Multi-instance: each isolate has its own RAM until free-spine-durable (Neon)
+ * warms this cache on load — see free-spine-durable.ts (I3/I8).
  */
 
 export type FreeSpineCacheSnapshot = {
