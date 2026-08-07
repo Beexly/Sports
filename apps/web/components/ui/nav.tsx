@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { MobileNav } from "@/components/ui/mobile-nav";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 import { NavMenu } from "@/components/ui/nav-menu";
+import { getReadinessGates } from "@sports/prediction-engine";
 
 // Four doors, not ten. The 2026 IA condenses every public surface into four
 // primary doors — Board, Players, Intelligence, Fantasy & Daily — plus two
@@ -75,9 +76,25 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
   },
 ];
 
+function isEnvTrue(name: string): boolean {
+  return process.env[name]?.trim().toLowerCase() === "true";
+}
+
+/**
+ * "Live Board" is a public trust claim. Only render when both:
+ *   - LIVE_BOARD founder gate is on
+ *   - canExposePublicPicks readiness gate is open
+ * Otherwise hide — empty/off is honest; a green live chip while gated off is not.
+ */
+function shouldShowLiveBoardChip(): boolean {
+  if (!isEnvTrue("LIVE_BOARD")) return false;
+  return getReadinessGates().canExposePublicPicks;
+}
+
 export async function Nav() {
   const session = await auth().catch(() => null);
   const user = session?.user ?? null;
+  const showLiveBoard = shouldShowLiveBoardChip();
 
   return (
     <header className="nav">
@@ -101,10 +118,12 @@ export async function Nav() {
         </div>
 
         <div className="nav-right">
-          <span className="live-chip">
-            <span className="dot" />
-            Live Board
-          </span>
+          {showLiveBoard ? (
+            <span className="live-chip" data-testid="nav-live-chip">
+              <span className="dot" />
+              Live Board
+            </span>
+          ) : null}
 
           <div className="desktop-auth">
             {user ? (
