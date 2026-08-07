@@ -114,7 +114,7 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
-          message: body.error ?? "Today's Board is collecting live history.",
+          message: body.error ?? "Today's Board is currently gated while we build up live history.",
           hint: body.hint,
           kind,
         },

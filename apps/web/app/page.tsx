@@ -28,7 +28,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "A Sports Intelligence Operating System",
   description:
-    "Galaxy Sports Edge turns the market's noise into structured signal. A live board, no-bet gating, and receipts for all of it. We detect. You decide.",
+    "Galaxy Sports Edge turns the market's noise into structured signal. A signal board, no-bet gating, and receipts for all of it. We detect. You decide.",
   alternates: { canonical: "/" },
 };
 
@@ -158,7 +158,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 decides="What's worth a play today, and what to pass."
                 stat={
                   boardUnavailable
-                    ? "Live board data unavailable"
+                    ? "Board data unavailable"
                     : cleared > 0 || gated > 0
                       ? `${cleared} cleared · ${gated} gated`
                       : "Gate holding. No forced action"
@@ -173,9 +173,9 @@ export default async function HomePage(): Promise<JSX.Element> {
                 decides="Who to trust this week, with every signal in one place."
                 stat={
                   nflUnavailable
-                    ? "Live player data unavailable"
+                    ? "Player data unavailable"
                     : nflRows > 0
-                      ? `${nflRows.toLocaleString()} live player rows`
+                      ? `${nflRows.toLocaleString()} player rows`
                       : "Intake warming up"
                 }
                 action="Open the lab"
