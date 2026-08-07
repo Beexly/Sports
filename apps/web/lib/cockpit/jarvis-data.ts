@@ -23,13 +23,12 @@ import { scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
 import {
   freeSpineLiveScore,
   isFreeSpineEmptySlate,
-  readFreeSpineCache,
-  writeFreeSpineCache,
+  type FreeSpineCacheSnapshot,
 } from "@/lib/data-sources/free-spine-cache";
 import {
   freeSpineSnapAgeMs,
   freeSpineWithinSla,
-  loadDurableFreeSpine,
+  resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
 import { probeJarvisLayers } from "@/lib/cockpit/jarvis-layer-probes";
 import {
@@ -320,20 +319,15 @@ export async function loadJarvisAssessment(): Promise<{
     publishedGameIdSet.size > 0 ? gamesWithAnySignal / publishedGameIdSet.size : 0;
 
   const multiScore = freeMultiSourceScore();
-  // I3: process-local first; cold isolate → Neon durable (warm process cache).
-  let spineCache = readFreeSpineCache();
-  let spineSource: "process" | "durable" | "none" = spineCache ? "process" : "none";
-  if (!spineCache) {
-    try {
-      const durable = await loadDurableFreeSpine();
-      if (durable) {
-        writeFreeSpineCache(durable);
-        spineCache = durable;
-        spineSource = "durable";
-      }
-    } catch {
-      /* never block assessment */
-    }
+  // I3: process-local when fresh; cold/stale isolate → Neon durable, prefer fresher.
+  let spineCache: FreeSpineCacheSnapshot | null = null;
+  let spineSource: "process" | "durable" | "none" = "none";
+  try {
+    const resolved = await resolveBestFreeSpineSnapshot(now.getTime());
+    spineCache = resolved.snap;
+    spineSource = resolved.source;
+  } catch {
+    /* never block assessment */
   }
   const spineLive = freeSpineLiveScore(spineCache);
 

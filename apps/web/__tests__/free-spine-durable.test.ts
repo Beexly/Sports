@@ -31,8 +31,13 @@ import {
   loadDurableFreeSpine,
   persistFreeSpineSnapshot,
   pruneOldFreeSpineSnapshots,
+  resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
-import type { FreeSpineCacheSnapshot } from "@/lib/data-sources/free-spine-cache";
+import {
+  clearFreeSpineCache,
+  writeFreeSpineCache,
+  type FreeSpineCacheSnapshot,
+} from "@/lib/data-sources/free-spine-cache";
 
 const SAMPLE: FreeSpineCacheSnapshot = {
   probedAt: "2026-08-07T03:00:00.000Z",
@@ -55,6 +60,7 @@ beforeEach(() => {
   findMany.mockResolvedValue([]);
   deleteMany.mockResolvedValue({ count: 0 });
   isStubMode.mockReturnValue(false);
+  clearFreeSpineCache();
 });
 
 describe("persistFreeSpineSnapshot", () => {
@@ -177,5 +183,67 @@ describe("pruneOldFreeSpineSnapshots", () => {
     findMany.mockResolvedValue([{ id: "only" }]);
     await expect(pruneOldFreeSpineSnapshots()).resolves.toBe(0);
     expect(deleteMany).not.toHaveBeenCalled();
+  });
+});
+
+describe("resolveBestFreeSpineSnapshot (I3 fresher-wins)", () => {
+  const now = Date.parse("2026-08-07T04:00:00.000Z");
+
+  const freshProcess: FreeSpineCacheSnapshot = {
+    ...SAMPLE,
+    probedAt: "2026-08-07T03:30:00.000Z", // 30m old — within SLA
+  };
+  const staleProcess: FreeSpineCacheSnapshot = {
+    ...SAMPLE,
+    probedAt: "2026-08-07T01:00:00.000Z", // 180m old — outside SLA
+  };
+  const fresherDurable: FreeSpineCacheSnapshot = {
+    ...SAMPLE,
+    probedAt: "2026-08-07T03:50:00.000Z", // 10m old
+    sportsWithGames: 5,
+  };
+  const olderDurable: FreeSpineCacheSnapshot = {
+    ...SAMPLE,
+    probedAt: "2026-08-07T00:30:00.000Z", // older than stale process
+  };
+
+  it("returns process without DB when process is within SLA", async () => {
+    writeFreeSpineCache(freshProcess);
+    findFirst.mockResolvedValue({ metadata: fresherDurable, full_text: null });
+    const r = await resolveBestFreeSpineSnapshot(now);
+    expect(r.source).toBe("process");
+    expect(r.snap).toEqual(freshProcess);
+    expect(findFirst).not.toHaveBeenCalled();
+  });
+
+  it("loads durable and warms process when process is empty", async () => {
+    findFirst.mockResolvedValue({ metadata: fresherDurable, full_text: null });
+    const r = await resolveBestFreeSpineSnapshot(now);
+    expect(r.source).toBe("durable");
+    expect(r.snap).toEqual(fresherDurable);
+    expect(findFirst).toHaveBeenCalled();
+  });
+
+  it("when process is stale, prefers fresher durable and warms cache", async () => {
+    writeFreeSpineCache(staleProcess);
+    findFirst.mockResolvedValue({ metadata: fresherDurable, full_text: null });
+    const r = await resolveBestFreeSpineSnapshot(now);
+    expect(r.source).toBe("durable");
+    expect(r.snap?.sportsWithGames).toBe(5);
+    expect(r.snap?.probedAt).toBe(fresherDurable.probedAt);
+  });
+
+  it("when process is stale and durable is older, keeps process", async () => {
+    writeFreeSpineCache(staleProcess);
+    findFirst.mockResolvedValue({ metadata: olderDurable, full_text: null });
+    const r = await resolveBestFreeSpineSnapshot(now);
+    expect(r.source).toBe("process");
+    expect(r.snap).toEqual(staleProcess);
+  });
+
+  it("returns none when both empty", async () => {
+    findFirst.mockResolvedValue(null);
+    const r = await resolveBestFreeSpineSnapshot(now);
+    expect(r).toEqual({ snap: null, source: "none" });
   });
 });

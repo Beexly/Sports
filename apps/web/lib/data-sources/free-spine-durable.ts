@@ -2,14 +2,18 @@
  * Durable free-spine probe snapshot — Neon-backed for multi-instance cockpit.
  *
  * Process-local free-spine-cache is hot-path; free-spine-health also writes
- * here so jarvis-data on a cold isolate can still score live multi-source
- * probes. Uses existing JarvisMemoryEvent (no migration) — same pattern as
+ * here so jarvis-data / ops truth on a cold or stale isolate can still score
+ * live multi-source probes (see resolveBestFreeSpineSnapshot). Uses existing JarvisMemoryEvent (no migration) — same pattern as
  * jarvis-history-durable. Stub DB → no-op reads/writes (honest).
  *
  * Invariants: I3 (multi-isolate cache) · I8 (durable snap age ≤ 120m SLA)
  */
 import { db, isStubMode } from "@sports/db";
-import type { FreeSpineCacheSnapshot } from "@/lib/data-sources/free-spine-cache";
+import {
+  type FreeSpineCacheSnapshot,
+  readFreeSpineCache,
+  writeFreeSpineCache,
+} from "@/lib/data-sources/free-spine-cache";
 
 export const FREE_SPINE_SCOPE = "data-sources.free-spine.health";
 
@@ -122,6 +126,56 @@ export function freeSpineWithinSla(
 ): boolean {
   const age = freeSpineSnapAgeMs(snap, nowMs);
   return age != null && age <= maxAgeMs;
+}
+
+
+export type FreeSpineResolveSource = "process" | "durable" | "none";
+
+export type FreeSpineResolveResult = {
+  readonly snap: FreeSpineCacheSnapshot | null;
+  readonly source: FreeSpineResolveSource;
+};
+
+/**
+ * I3 multi-isolate honesty: process RAM first when fresh; if missing or outside
+ * the 120m SLA, load Neon durable and pick the fresher snap (by probedAt age).
+ * Warms process cache when durable wins so subsequent hot-path reads stay local.
+ * Never fabricates a snap.
+ */
+export async function resolveBestFreeSpineSnapshot(
+  nowMs = Date.now(),
+): Promise<FreeSpineResolveResult> {
+  const processSnap = readFreeSpineCache();
+  if (processSnap && freeSpineWithinSla(processSnap, nowMs)) {
+    return { snap: processSnap, source: "process" };
+  }
+
+  let durableSnap: FreeSpineCacheSnapshot | null = null;
+  try {
+    durableSnap = await loadDurableFreeSpine();
+  } catch {
+    durableSnap = null;
+  }
+
+  if (!processSnap && !durableSnap) {
+    return { snap: null, source: "none" };
+  }
+  if (!processSnap && durableSnap) {
+    writeFreeSpineCache(durableSnap);
+    return { snap: durableSnap, source: "durable" };
+  }
+  if (processSnap && !durableSnap) {
+    // May be stale — still the only honest observation we have.
+    return { snap: processSnap, source: "process" };
+  }
+
+  const processAge = freeSpineSnapAgeMs(processSnap, nowMs) ?? Number.POSITIVE_INFINITY;
+  const durableAge = freeSpineSnapAgeMs(durableSnap, nowMs) ?? Number.POSITIVE_INFINITY;
+  if (durableAge < processAge) {
+    writeFreeSpineCache(durableSnap!);
+    return { snap: durableSnap!, source: "durable" };
+  }
+  return { snap: processSnap!, source: "process" };
 }
 
 /** Delete free-spine snaps older than the newest FREE_SPINE_DURABLE_RETAIN rows. Never throws. */

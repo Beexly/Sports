@@ -15,9 +15,8 @@ import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
   freeSpineWithinSla,
-  loadDurableFreeSpine,
+  resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
-import { readFreeSpineCache } from "@/lib/data-sources/free-spine-cache";
 import { timingSafeEqual } from "node:crypto";
 
 export const dynamic = "force-dynamic";
@@ -50,6 +49,7 @@ const MAIN_FEATURE_MARKERS = [
   "autonomy-free-spine-age",
   "free-spine-empty-not-critical-i5",
   "impeccable-probe-harness",
+  "free-spine-prefer-fresher-durable",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -171,12 +171,8 @@ export async function GET(request: Request) {
     slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
   };
   try {
-    let snap = readFreeSpineCache();
-    let source: "process" | "durable" | "none" = snap ? "process" : "none";
-    if (!snap && !isStubMode()) {
-      snap = await loadDurableFreeSpine();
-      if (snap) source = "durable";
-    }
+    // I3: prefer fresh process RAM; if cold/stale, load Neon durable and pick fresher.
+    const { snap, source } = await resolveBestFreeSpineSnapshot();
     if (snap) {
       const ageMs = freeSpineSnapAgeMs(snap);
       freeSpine = {
