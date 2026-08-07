@@ -106,6 +106,26 @@ Endpoint shape: `https://{resource}.services.ai.azure.com/anthropic/v1/messages`
 | Fallback | Anthropic only on provider error (visible in modelName) |
 | Product gates | LIVE_BOARD / PUBLIC_PICKS / STATS still dark until proof bar |
 
+### Verify the env actually landed
+
+`smoke-free-lane.mjs` proves the Cerebras transport works from wherever you run
+it. It does **not** prove production is armed — that is the "set the var, forgot
+to redeploy" gap. After redeploying, run:
+
+```bash
+node scripts/ops/verify-credit-stack.mjs
+# or pin the deploy you expect:
+node scripts/ops/verify-credit-stack.mjs --expect-sha <git-sha>
+```
+
+Exit 0 only when the free lane is armed **and** a credit cloud is in the attempt
+order. It reads the same `/api/ops/public-surface-truth` payload the founder
+queue does, so it cannot disagree with ops truth.
+
+Note on `attemptOrder`: a cloud appears there only when creds **and** its model
+map are both set. `configuredClouds: []` with `CLAUDE_PROVIDER=auto` means Claude
+is still billing cash — auto has nothing to route to.
+
 ---
 
 ## Founder portal checklist (15–40 min each)

@@ -1,4 +1,10 @@
-import { loadJynxPublicSnapshot, type JynxPublicSnapshot } from "@/lib/claude-api/jynx";
+import {
+  loadJynxPublicSnapshot,
+  parseProviderMode,
+  type JynxCloud,
+  type JynxProviderMode,
+  type JynxPublicSnapshot,
+} from "@/lib/claude-api/jynx";
 
 /**
  * Public-safe credit / free-capacity posture for ops truth.
@@ -7,12 +13,23 @@ import { loadJynxPublicSnapshot, type JynxPublicSnapshot } from "@/lib/claude-ap
  * Answers: "are we positioned to burn credits instead of cash?"
  */
 
-export type ClaudeProviderSelection =
-  | "anthropic"
-  | "bedrock"
-  | "vertex"
-  | "azure"
-  | "unknown";
+/**
+ * Provider selection as reported on the public ops surface.
+ *
+ * Deliberately an alias of Jynx's `JynxProviderMode` rather than a parallel
+ * union: this module previously kept its own copy that predated `auto`, so
+ * `CLAUDE_PROVIDER=auto` — the value founder-next-steps tells operators to set —
+ * surfaced as "unknown" and the hint claimed no provider was selected.
+ * One parser, one vocabulary, no drift.
+ */
+export type ClaudeProviderSelection = JynxProviderMode;
+
+/** Operator-facing provider names (hints read as prose, not env keys). */
+const CLOUD_LABEL: Readonly<Record<JynxCloud, string>> = {
+  bedrock: "AWS Bedrock",
+  azure: "Azure Foundry",
+  vertex: "Google Vertex",
+};
 
 export interface CreditStackPosture {
   readonly freeLaneConfigured: boolean;
@@ -34,13 +51,14 @@ function has(env: Env, key: string): boolean {
   return Boolean(env[key]?.trim());
 }
 
+/**
+ * Resolve the reported provider selection.
+ *
+ * Delegates to Jynx so `auto` (and `JYNX_MODE=auto`) resolve identically here
+ * and in the router that actually dispatches the request.
+ */
 export function resolveClaudeProviderSelection(env: Env = process.env): ClaudeProviderSelection {
-  const raw = env["CLAUDE_PROVIDER"]?.trim().toLowerCase() ?? "";
-  if (raw === "bedrock") return "bedrock";
-  if (raw === "vertex") return "vertex";
-  if (raw === "azure" || raw === "azure-foundry") return "azure";
-  if (raw === "" || raw === "anthropic") return "anthropic";
-  return "unknown";
+  return parseProviderMode(env);
 }
 
 export function loadCreditStackPosture(env: Env = process.env): CreditStackPosture {
@@ -71,42 +89,44 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
 
   const freeLaneSurfaces = ["brief", "content"] as const;
 
+  const jynx = loadJynxPublicSnapshot(env);
+
+  /**
+   * `attemptOrder` is what Jynx will actually try before falling back to cash —
+   * it already accounts for mode, failover, and per-cloud completeness. Deriving
+   * the hint from it (rather than re-deducing from raw env) is what keeps this
+   * surface honest: if it says "credits", the router agrees.
+   */
+  const creditCloudsReady = jynx.attemptOrder.length > 0;
+  const creditPath = jynx.attemptOrder
+    .map((cloud) => CLOUD_LABEL[cloud as JynxCloud] ?? cloud)
+    .join(" → ");
+  const anyCloudConfigured = bedrockConfigured || vertexConfigured || azureFoundryConfigured;
+
   const anyCreditLaneReady =
     freeLaneConfigured ||
-    (claudeProvider === "bedrock" && bedrockConfigured) ||
-    (claudeProvider === "vertex" && vertexConfigured) ||
-    (claudeProvider === "azure" && azureFoundryConfigured) ||
+    creditCloudsReady ||
     // Config present even if not selected — still "ready to flip"
-    bedrockConfigured ||
-    vertexConfigured ||
-    azureFoundryConfigured ||
+    anyCloudConfigured ||
     internalLlmConfigured;
 
   let operatorHint: string;
-  if (freeLaneConfigured && claudeProvider === "azure" && azureFoundryConfigured) {
+  if (freeLaneConfigured && creditCloudsReady) {
+    operatorHint = `Free-lane + Claude credits via ${creditPath} — content $0, Claude on credits, cash Anthropic last.`;
+  } else if (creditCloudsReady) {
+    operatorHint = `Claude credits via ${creditPath} (mode=${claudeProvider}). Enable free-lane for content $0.`;
+  } else if (anyCloudConfigured) {
     operatorHint =
-      "Free-lane + Azure Foundry selected — content $0 path; Claude via Azure credits (verify SKU).";
-  } else if (freeLaneConfigured && claudeProvider === "bedrock" && bedrockConfigured) {
+      "Cloud credit providers configured but CLAUDE_PROVIDER not selected — set auto|bedrock|vertex|azure and redeploy.";
+  } else if (freeLaneConfigured && claudeProvider === "auto") {
     operatorHint =
-      "Free-lane + Bedrock both ready — content $0; other Claude via AWS Activate.";
-  } else if (freeLaneConfigured && claudeProvider === "vertex" && vertexConfigured) {
-    operatorHint =
-      "Free-lane + Vertex both ready — content $0; other Claude via Google partner credits.";
-  } else if (claudeProvider === "azure" && azureFoundryConfigured) {
-    operatorHint =
-      "Azure Foundry selected for Claude. Enable free-lane for content $0. Confirm credit SKU covers Claude.";
-  } else if (claudeProvider === "bedrock" && bedrockConfigured) {
-    operatorHint =
-      "Bedrock selected — Claude spend should hit AWS credits. Enable free-lane for content $0.";
-  } else if (claudeProvider === "vertex" && vertexConfigured) {
-    operatorHint =
-      "Vertex selected — Claude spend should hit Google partner credits. Enable free-lane for content $0.";
-  } else if (azureFoundryConfigured || bedrockConfigured || vertexConfigured) {
-    operatorHint =
-      "Cloud credit providers configured but CLAUDE_PROVIDER not selected — set bedrock|vertex|azure and redeploy.";
+      "Free-lane ready for content $0, but auto mode has no cloud fully configured — paste Bedrock/Azure/Vertex creds + model maps.";
   } else if (freeLaneConfigured) {
     operatorHint =
-      "Cerebras free-lane ready for content. Wire Bedrock/Vertex/Azure for remaining Claude off cash.";
+      "Free-lane ready for content $0. Wire Bedrock/Vertex/Azure for remaining Claude off cash.";
+  } else if (claudeProvider === "auto") {
+    operatorHint =
+      "Auto mode on but no cloud fully configured — Claude still on Anthropic cash. Paste Bedrock/Azure/Vertex creds + model maps.";
   } else if (internalLlmConfigured) {
     operatorHint =
       "Internal LLM key present. Free-lane + cloud Claude providers still off — cash Anthropic risk.";
@@ -114,8 +134,6 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
     operatorHint =
       "No free/credit lane configured — see docs/ops/CLOUD_CREDIT_LAUNCH_MAP.md";
   }
-
-  const jynx = loadJynxPublicSnapshot(env);
 
   return {
     freeLaneConfigured,

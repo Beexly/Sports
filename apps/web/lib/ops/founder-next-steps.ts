@@ -76,7 +76,14 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
     });
   }
 
-  if (!input.jynxAuto && input.claudeProvider === "anthropic") {
+  // A credit path is "intended" under auto mode OR an explicit cloud pick.
+  // Only a bare "anthropic" (or unset) means no credit path is selected at all.
+  // Checking the provider — not just `jynxAuto` — is what keeps a half-finished
+  // explicit pick (e.g. CLAUDE_PROVIDER=bedrock with no BEDROCK_MODEL_MAP) from
+  // dropping out of the queue and reading as "done" while spend stays on cash.
+  const intendsCloudCredits = input.jynxAuto || input.claudeProvider !== "anthropic";
+
+  if (!intendsCloudCredits) {
     steps.push({
       id: "jynx-auto-or-cloud",
       domain: "jynx_credits",
@@ -84,12 +91,12 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       action:
         "Set CLAUDE_PROVIDER=auto (or bedrock|azure|vertex) + cloud maps so Claude spends credits not cash.",
     });
-  } else if (input.jynxAuto && !input.anyCloudConfigured) {
+  } else if (!input.anyCloudConfigured) {
     steps.push({
       id: "cloud-maps",
       domain: "jynx_credits",
       priority: "P1",
-      action: "Jynx auto is on but no cloud fully configured — paste Bedrock/Azure/Vertex maps.",
+      action: `Credit routing selected (${input.claudeProvider}) but no cloud is fully configured — Claude still bills cash. Paste Bedrock/Azure/Vertex creds + model maps.`,
     });
   }
 
