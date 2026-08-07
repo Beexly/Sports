@@ -25,6 +25,8 @@ import {
   honestyContrastStrip,
   WHY_PAY_FOR_HONESTY_LEAD,
 } from "@/lib/competitive/honesty-contrast";
+import { WaitlistForm } from "@/components/gsn/waitlist-form";
+import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -605,6 +607,27 @@ export default function PricingPage() {
           </section>
 
           {/* Refund note */}
+
+          {/* Founding waitlist — capture leads even if checkout env is incomplete */}
+          <section
+            id="founding-waitlist"
+            data-testid="pricing-waitlist"
+            className="mx-auto mt-20 max-w-xl border-t border-mineral pt-14"
+          >
+            <p className="text-center font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+              {WAITLIST_COPY.eyebrow}
+            </p>
+            <h2 className="mt-3 text-center font-display text-2xl text-white">
+              Not ready to subscribe? Join the founding list.
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-center text-sm text-ink-300">
+              {WAITLIST_COPY.subhead}
+            </p>
+            <div className="mt-8">
+              <WaitlistForm />
+            </div>
+          </section>
+
           <p className="mt-12 text-center text-xs text-ion-2">
             No free trial. Every paid plan has a 3-day money-back window. Cancel any time
             from your dashboard. Prices shown are founding-member rates.

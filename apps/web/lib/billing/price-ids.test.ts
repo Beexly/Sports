@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { splitPriceIds, currentPriceId, tierForPriceId, checkoutPriceId } from "./price-ids";
+import { splitPriceIds, currentPriceId, tierForPriceId, checkoutPriceId, stripeLookupKeyFor, STRIPE_LOOKUP_KEYS } from "./price-ids";
 
 describe("splitPriceIds", () => {
   it("splits comma lists, trims, drops empties; handles undefined", () => {
@@ -64,5 +64,24 @@ describe("checkoutPriceId — charges the CURRENT price only", () => {
     expect(checkoutPriceId("ELITE", "month", env)).toBe("price_elite_legacy_monthly");
     expect(checkoutPriceId("ELITE", "year", env)).toBe("price_elite_annual");
     expect(checkoutPriceId("PRO", "year", env)).toBe(""); // not configured
+  });
+});
+
+describe("stripeLookupKeyFor", () => {
+  it("returns stable gse-* keys for every paid tier × interval", () => {
+    expect(stripeLookupKeyFor("FANTASY", "month")).toBe("gse-fantasy-monthly");
+    expect(stripeLookupKeyFor("FANTASY", "year")).toBe("gse-fantasy-annual");
+    expect(stripeLookupKeyFor("PRO", "month")).toBe("gse-pro-monthly");
+    expect(stripeLookupKeyFor("PRO", "year")).toBe("gse-pro-annual");
+    expect(stripeLookupKeyFor("ELITE", "month")).toBe("gse-elite-monthly");
+    expect(stripeLookupKeyFor("ELITE", "year")).toBe("gse-elite-annual");
+  });
+
+  it("matches STRIPE_LOOKUP_KEYS table", () => {
+    for (const tier of ["FANTASY", "PRO", "ELITE"] as const) {
+      for (const interval of ["month", "year"] as const) {
+        expect(stripeLookupKeyFor(tier, interval)).toBe(STRIPE_LOOKUP_KEYS[tier][interval]);
+      }
+    }
   });
 });

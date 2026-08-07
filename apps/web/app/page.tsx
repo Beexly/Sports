@@ -20,6 +20,8 @@ import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { loadNflverseUsagePulse } from "@/lib/nflverse/usage-pulse";
+import { WaitlistForm } from "@/components/gsn/waitlist-form";
+import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 
 export const dynamic = "force-dynamic";
 
@@ -308,6 +310,28 @@ export default async function HomePage(): Promise<JSX.Element> {
               and clearer uncertainty, not louder claims.
             </p>
             <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ion-1" />
+          </div>
+        </section>
+
+        {/* Founding waitlist — public lead capture (API /api/waitlist; no gate flip) */}
+        <section
+          id="founding-waitlist"
+          data-testid="homepage-waitlist"
+          className="gw-nebula-deep border-t border-mineral px-4 py-16 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto max-w-xl">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+              {WAITLIST_COPY.eyebrow}
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-ion-white sm:text-3xl">
+              {WAITLIST_COPY.headline}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-ion-1 sm:text-base">
+              {WAITLIST_COPY.subhead}
+            </p>
+            <div className="mt-8">
+              <WaitlistForm />
+            </div>
           </div>
         </section>
       </main>

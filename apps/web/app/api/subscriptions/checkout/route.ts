@@ -4,11 +4,11 @@ import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from 
 import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
-  getStripePriceId,
   getOrCreateStripeCustomer,
   createCheckoutSession,
   retrieveOpenCheckoutSessionUrl,
   stripeCheckoutSessionLookup,
+  resolveCheckoutPriceId,
 } from "@/lib/stripe";
 import {
   CheckoutAttemptPersistenceError,
@@ -81,7 +81,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const priceId = getStripePriceId(tier, interval);
+  // Env price IDs preferred; fallback to Stripe lookup_key (gse-*-monthly/annual).
+  const priceId = await resolveCheckoutPriceId(tier, interval);
   if (!priceId) {
     return NextResponse.json(
       { error: `Pricing for ${tier} (${interval}) is not configured yet.` },

@@ -1,6 +1,11 @@
 import Stripe from "stripe";
 import { getCurrentPricingPhase, type BillingInterval } from "@/lib/pricing/pricing-phases";
-import { checkoutPriceId, currentPriceId } from "@/lib/billing/price-ids";
+import {
+  checkoutPriceId,
+  currentPriceId,
+  stripeLookupKeyFor,
+  type PaidTier,
+} from "@/lib/billing/price-ids";
 import {
   CheckoutAttemptIdError,
   isValidCheckoutAttemptId,
@@ -47,9 +52,43 @@ export const STRIPE_PRICE_IDS = {
   },
 } as const;
 
-/** Resolve the CURRENT Stripe price ID for a tier + billing interval (for checkout). */
+/** Resolve the CURRENT Stripe price ID for a tier + billing interval (env only, sync). */
 export function getStripePriceId(tier: "FANTASY" | "PRO" | "ELITE", interval: BillingInterval): string {
   return checkoutPriceId(tier, interval);
+}
+
+/**
+ * Resolve checkout price: prefer env STRIPE_*_PRICE_ID, else Stripe lookup_key.
+ * Fail-closed empty string if neither env nor an active price with the key exists.
+ */
+export async function resolveCheckoutPriceId(
+  tier: PaidTier,
+  interval: BillingInterval,
+  env: NodeJS.ProcessEnv = process.env,
+): Promise<string> {
+  const fromEnv = checkoutPriceId(tier, interval, env);
+  if (fromEnv) return fromEnv;
+
+  if (!process.env["STRIPE_SECRET_KEY"]) {
+    return "";
+  }
+
+  const lookupKey = stripeLookupKeyFor(tier, interval);
+  try {
+    const listed = await stripe.prices.list({
+      lookup_keys: [lookupKey],
+      active: true,
+      limit: 1,
+    });
+    const price = listed.data[0];
+    return price?.id ?? "";
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "unknown";
+    console.error(
+      `[checkout] lookup_key resolve failed for ${lookupKey}: ${message}`,
+    );
+    return "";
+  }
 }
 
 // Display prices derive from the current pricing phase (Founding by default).
@@ -60,7 +99,6 @@ export const PRICE_DISPLAY = {
   PRO: { monthly: currentPhase.pro.monthly, annual: currentPhase.pro.annual, label: "Pro" },
   ELITE: { monthly: currentPhase.elite.monthly, annual: currentPhase.elite.annual, label: "Elite" },
 } as const;
-
 /**
  * Get or create a Stripe customer for a user.
  * Always checks the database first to avoid duplicates.

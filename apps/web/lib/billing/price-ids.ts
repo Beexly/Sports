@@ -13,6 +13,9 @@
  * are recognized when classifying an existing subscription's price id. Advancing a
  * phase = prepend the new id, keep the old ones.
  *
+ * Lookup keys: when env price IDs are empty, checkout may resolve Stripe prices by
+ * stable lookup_key (gse-fantasy-monthly, etc.). Env IDs remain preferred when set.
+ *
  * Pure + env-injectable → fully unit-tested without Stripe or a live env.
  */
 
@@ -21,6 +24,37 @@ export type ResolvedTier = "FREE" | PaidTier;
 export type BillingInterval = "month" | "year";
 
 type Env = Record<string, string | undefined>;
+
+/**
+ * Stable Stripe Price.lookup_key values for GSE paid tiers.
+ * Operators attach these in the Stripe Dashboard; checkout resolves by key when
+ * STRIPE_*_PRICE_ID envs are missing (fewer Vercel env landmines).
+ */
+export const STRIPE_LOOKUP_KEYS: Record<
+  PaidTier,
+  Record<BillingInterval, string>
+> = {
+  FANTASY: {
+    month: "gse-fantasy-monthly",
+    year: "gse-fantasy-annual",
+  },
+  PRO: {
+    month: "gse-pro-monthly",
+    year: "gse-pro-annual",
+  },
+  ELITE: {
+    month: "gse-elite-monthly",
+    year: "gse-elite-annual",
+  },
+} as const;
+
+/** Lookup key for a tier × interval (for Stripe prices.list). */
+export function stripeLookupKeyFor(
+  tier: PaidTier,
+  interval: BillingInterval,
+): string {
+  return STRIPE_LOOKUP_KEYS[tier][interval];
+}
 
 /** Split a comma-separated price-id env value into trimmed, non-empty ids. */
 export function splitPriceIds(raw: string | undefined): string[] {

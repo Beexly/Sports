@@ -235,6 +235,10 @@ export {
   equalMassEce,
   selectCalibrator,
 } from "./calibration-map.js";
+
+// R&D — temperature scaling (one-parameter overconfidence softener). Not live.
+export { fitTemperature, applyTemperature } from "./temperature-scaling.js";
+export type { TemperatureModel } from "./temperature-scaling.js";
 export type {
   CalibrationMethod,
   CalibratorFit,

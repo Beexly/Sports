@@ -52,6 +52,14 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
   },
+  async redirects() {
+    // Common auth aliases → NextAuth sign-in (preserves ?callbackUrl when present)
+    return [
+      { source: "/signup", destination: "/auth/signin", permanent: false },
+      { source: "/register", destination: "/auth/signin", permanent: false },
+      { source: "/login", destination: "/auth/signin", permanent: false },
+    ];
+  },
   async headers() {
     return [
       // Free embed widgets (DEC-017) — iframe distribution. Framing is allowed
