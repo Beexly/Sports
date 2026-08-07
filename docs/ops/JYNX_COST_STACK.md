@@ -25,7 +25,7 @@ cloud attempt order                    ← jynx.cloudAttemptOrder
     bedrock → azure → vertex (default)
     (CLAUDE_PROVIDER forces primary; failover ON by default)
                                         ↓ on all cloud errors
-Anthropic cash last                    ← messages.ts (+ prompt cache when enabled)
+Anthropic cash last                    ← messages.ts
                                         ↓
 ledger modelName → credit pool         ← credit-pool.ts
 ```
@@ -80,3 +80,42 @@ AZURE_FOUNDRY_MODEL_MAP={...}
 
 GOOGLE_VERTEX_PROJECT=...
 GOOGLE_VERTEX_REGION=...
+GOOGLE_APPLICATION_CREDENTIALS_JSON=...
+VERTEX_MODEL_MAP={...}
+
+ANTHROPIC_API_KEY=...   # emergency only
+```
+
+**Force one cloud:** `CLAUDE_PROVIDER=bedrock` (failover still tries others unless `JYNX_CLOUD_FAILOVER=false`).
+
+---
+
+## Observability
+
+| Surface | Field |
+|---------|--------|
+| Ops truth | `creditStack.jynx` — mode, configured clouds, attempt order, content plan |
+| Usage ledger | `modelName` → pool (aws_activate / azure_foundry / vertex_partner / cerebras_free / anthropic_direct) |
+| Planner | `planJynx({ surface: "studio" })` pure |
+
+Pass = free-lane content shows `gpt-oss*`; studio shows cloud id not plain `claude-*` when auto+configured.
+
+---
+
+## Call sites
+
+| Prefer | Avoid for new code |
+|--------|---------------------|
+| `jynxComplete` / `generateContentMessages` / `callClaude` | raw `callClaudeMessages` (skips credits) |
+| content-generator → `jynxComplete` | hard-coded provider SDKs |
+
+---
+
+## Law
+
+- Never claim free/credits while ledger shows cash Anthropic  
+- Never free-lane studio/journal/model-court until quality validated  
+- Never invent model map ids  
+- LIVE_BOARD / public picks stay gated by product law — Jynx is cost routing only  
+
+See also: `PROMPT_CACHING.md` · `JYNX_FAILOVER_AND_MODEL_MAPS.md` · `JYNX_VS_AI_GATEWAYS.md` · `JYNX_MARKET_TIER_MAP.md` · `JYNX_OPEN_WEIGHT_FREE_MAP.md` · `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`
