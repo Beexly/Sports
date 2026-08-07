@@ -13,6 +13,7 @@ import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
+import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
@@ -61,6 +62,8 @@ const MAIN_FEATURE_MARKERS = [
   "free-spine-odds-path-summary",
   "impeccable-multi-path-probe",
   "checkout-pricing-alias",
+  "stripe-webhook-hosts-posture",
+  "founder-queue-low-noise",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -129,6 +132,14 @@ export async function GET(request: Request) {
   const creditStack = loadCreditStackPosture();
   const billingMoney = loadBillingMoneyPosture();
   const autonomy = loadAutonomyPosture();
+  let stripeWebhookHosts: Awaited<
+    ReturnType<typeof loadStripeWebhookHostsPosture>
+  > = null;
+  try {
+    stripeWebhookHosts = await loadStripeWebhookHostsPosture();
+  } catch {
+    stripeWebhookHosts = null;
+  }
   const jynx = creditStack.jynx;
 
   // I3/I8: resolve free-spine BEFORE founder queue so coverage gaps / SLA land in steps.
@@ -205,6 +216,10 @@ export async function GET(request: Request) {
     expectedMarkerFloor: MAIN_FEATURE_MARKERS.length,
     stripeSecretConfigured: billingMoney.stripeSecretConfigured,
     webhookSecretConfigured: billingMoney.webhookSecretConfigured,
+    stripeWebhookProbed: stripeWebhookHosts?.probed === true,
+    stripeWebhookAuditRequired: stripeWebhookHosts?.auditRequired === true,
+    stripeWebhookGseHealthy: stripeWebhookHosts?.gsePrimaryHealthy === true,
+    stripeWebhookForeignHosts: stripeWebhookHosts?.enabledForeignHosts,
     freeSpinePresent: freeSpine.present,
     freeSpineWithinSla: freeSpine.withinSla,
     freeSpineCriticalGaps: freeSpine.criticalGaps,
@@ -256,6 +271,8 @@ export async function GET(request: Request) {
       creditStack,
       /** Public-safe money path posture — booleans + lookup keys only, never secrets. */
       billingMoney,
+      /** Public-safe Stripe webhook host audit (URLs only). */
+      stripeWebhookHosts,
       /** Public-safe autonomy executor posture — dry-run default, free crons only. */
       autonomy,
       freeSpine,

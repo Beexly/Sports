@@ -1,6 +1,7 @@
 /**
  * Ordered multi-domain founder actions — pure, public-safe (no secrets).
- * Keeps ops truth from hyper-focusing: settle, deploy, credits, free-lane, gates, billing.
+ * Designed for a non-engineer founder: few items, only real decisions.
+ * Suppresses noise (always-on holds, accepted odds paid-single, optional analytics).
  */
 
 export interface FounderNextStep {
@@ -33,22 +34,32 @@ export interface FounderNextStepsInput {
   /** Features this deploy claims vs code markers length (diagnostic only). */
   readonly markerCount: number;
   readonly expectedMarkerFloor: number;
-  /** Money path env posture (optional — older callers omit → dashboard audit still shown). */
+  /** Money path env posture (optional). */
   readonly stripeSecretConfigured?: boolean;
   readonly webhookSecretConfigured?: boolean;
   /**
-   * Free-spine I3/I8 posture (optional — older callers omit → no free-spine steps).
-   * criticalGaps / requireSpend are structural catalog counts from free-spine probe,
-   * not live network failures.
+   * Live Stripe webhook host audit (optional).
+   * When probed + !auditRequired + gsePrimaryHealthy → no Dashboard audit nag.
+   */
+  readonly stripeWebhookProbed?: boolean;
+  readonly stripeWebhookAuditRequired?: boolean;
+  readonly stripeWebhookGseHealthy?: boolean;
+  readonly stripeWebhookForeignHosts?: readonly string[];
+  /**
+   * Free-spine I3/I8 posture (optional).
+   * Pure odds paid-single (requireSpend === criticalGaps) is accepted architecture
+   * — not a founder to-do (never invent lines).
    */
   readonly freeSpinePresent?: boolean;
   readonly freeSpineWithinSla?: boolean;
   readonly freeSpineCriticalGaps?: number | null;
   readonly freeSpineRequireSpend?: number | null;
+  /** When true, surface optional analytics (default off — reduces noise). */
+  readonly includeOptionalAnalytics?: boolean;
 }
 
 /**
- * Build a short ordered queue. Empty array = stack is operator-ready on code side.
+ * Build a short ordered queue. Empty-ish array = stack is operator-ready on code side.
  */
 export function buildFounderNextSteps(input: FounderNextStepsInput): readonly FounderNextStep[] {
   const steps: FounderNextStep[] = [];
@@ -88,8 +99,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
     });
   }
 
-  // Free-spine I3/I8: seed / refresh / dual-path catalog (ABSENT-only free path).
-  // Optional fields — omit keeps queue backward-compatible for pure unit callers.
+  // Free-spine seed / stale only — dual-path pure odds paid-single is accepted (not a to-do).
   if (typeof input.freeSpinePresent === "boolean") {
     if (!input.freeSpinePresent) {
       steps.push({
@@ -112,28 +122,22 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
 
   const criticalGaps = input.freeSpineCriticalGaps;
   const requireSpend = input.freeSpineRequireSpend ?? 0;
-  if (typeof criticalGaps === "number" && criticalGaps > 0) {
-    // Today all critical dual-path shortfalls are odds×sport single-cleared paid
-    // (the-odds-api). When requireSpend matches criticalGaps, say so explicitly —
-    // free odds candidates stay gated; never invent lines.
-    const oddsPaidOnly = requireSpend > 0 && requireSpend === criticalGaps;
+  // Only nag dual-path when gaps are NOT fully explained by paid odds single-path.
+  if (
+    typeof criticalGaps === "number" &&
+    criticalGaps > 0 &&
+    !(requireSpend > 0 && requireSpend === criticalGaps)
+  ) {
     steps.push({
       id: "free-spine-dual-path-gaps",
       domain: "free_lane",
       priority: "P2",
-      action: oddsPaidOnly
-        ? `Free dual-path ABSENT on ${criticalGaps} need×sport cell(s) that mustSpend (catalog: odds via the-odds-api single-clear). Free odds candidates remain gated until a legal free source clears — accept paid single-path or clear free odds; never invent lines.`
-        : `Free multi-source dual-path gaps: ${criticalGaps} critical need×sport cell(s) below dual free redundancy (scores/results/odds/player_stats/weather).${
-            requireSpend > 0 ? ` ${requireSpend} cell(s) still requireSpend.` : ""
-          } Expand free adapters where legal — never invent scores.`,
+      action: `Free multi-source dual-path gaps: ${criticalGaps} critical need×sport cell(s) below dual free redundancy.${
+        requireSpend > 0 ? ` ${requireSpend} cell(s) still requireSpend.` : ""
+      } Expand free adapters where legal — never invent scores.`,
     });
   }
 
-  // A credit path is "intended" under auto mode OR an explicit cloud pick.
-  // Only a bare "anthropic" (or unset) means no credit path is selected at all.
-  // Checking the provider — not just `jynxAuto` — is what keeps a half-finished
-  // explicit pick (e.g. CLAUDE_PROVIDER=bedrock with no BEDROCK_MODEL_MAP) from
-  // dropping out of the queue and reading as "done" while spend stays on cash.
   const intendsCloudCredits = input.jynxAuto || input.claudeProvider !== "anthropic";
 
   if (!intendsCloudCredits) {
@@ -142,7 +146,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "jynx_credits",
       priority: "P1",
       action:
-        "Set CLAUDE_PROVIDER=auto (or bedrock|azure|vertex) + cloud maps so Claude spends credits not cash.",
+        "Set CLAUDE_PROVIDER=auto (or bedrock|azure|vertex) + cloud maps so Claude spends credits not cash. Free-lane already covers content $0.",
     });
   } else if (!input.anyCloudConfigured) {
     steps.push({
@@ -162,6 +166,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
     });
   }
 
+  // StatKing: only escalate when ON (dangerous). Dark hold is correct default — not a to-do.
   if (input.statsPublic) {
     steps.push({
       id: "stats-public-on",
@@ -169,16 +174,9 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       priority: "P0",
       action: "STATS_PUBLIC is ON — confirm rights memo + feed SLA before promoting StatKing.",
     });
-  } else {
-    steps.push({
-      id: "statking-dark-hold",
-      domain: "statking",
-      priority: "P2",
-      action: "StatKing stays dark (correct) until rights + live feeds — see docs/research/STATKING_STILL_DARK.md.",
-    });
   }
 
-  // Money path: escalate missing env first; Dashboard endpoint audit stays when secrets exist.
+  // Money path env first; live host audit when probed.
   const stripeKnown = typeof input.stripeSecretConfigured === "boolean";
   const webhookKnown = typeof input.webhookSecretConfigured === "boolean";
   if (stripeKnown && input.stripeSecretConfigured === false) {
@@ -197,23 +195,46 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       action:
         "STRIPE_WEBHOOK_SECRET missing — sessions may create without durable entitlements. Wire webhook secret + Dashboard endpoint.",
     });
+  } else if (input.stripeWebhookProbed === true) {
+    if (input.stripeWebhookAuditRequired === true) {
+      const hosts = (input.stripeWebhookForeignHosts ?? []).join(", ") || "unknown foreign host";
+      steps.push({
+        id: "stripe-webhook-audit",
+        domain: "billing",
+        priority: "P1",
+        action: `Enabled foreign Stripe webhook host(s): ${hosts} — disable/remove. Keep only www.galaxysportsedge.com/api/webhooks/stripe.`,
+      });
+    } else if (input.stripeWebhookGseHealthy === false) {
+      steps.push({
+        id: "stripe-webhook-gse-missing",
+        domain: "billing",
+        priority: "P1",
+        action:
+          "No enabled GSE Stripe webhook — create https://www.galaxysportsedge.com/api/webhooks/stripe for entitlements.",
+      });
+    }
+    // else: clean — no billing nag
   } else {
+    // Soft: secrets present but live host list not probed this request
     steps.push({
       id: "stripe-webhook-audit",
       domain: "billing",
-      priority: "P1",
+      priority: "P2",
       action:
-        "Stripe Dashboard: confirm only galaxysportsedge.com webhook endpoints (remove foreign domains e.g. medusajs if unintended).",
+        "Stripe webhooks: confirm only galaxysportsedge.com is enabled (foreign disabled leftovers ok to delete).",
     });
   }
 
-  steps.push({
-    id: "analytics-optional",
-    domain: "analytics",
-    priority: "P2",
-    action:
-      "Optional: NEXT_PUBLIC_ANALYTICS_ENABLED=true + NEXT_PUBLIC_CLARITY_PROJECT_ID (PostHog only with keys + privacy review).",
-  });
+  if (input.includeOptionalAnalytics === true) {
+    steps.push({
+      id: "analytics-optional",
+      domain: "analytics",
+      priority: "P2",
+      action:
+        "Optional: NEXT_PUBLIC_ANALYTICS_ENABLED=true + NEXT_PUBLIC_CLARITY_PROJECT_ID (PostHog only with keys + privacy review).",
+    });
+  }
+
   if (input.podcastEpisodes < 1 || input.newsletterIssues < 1) {
     steps.push({
       id: "content-archives",
@@ -223,6 +244,6 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
     });
   }
 
-  // Cap public payload — still multi-domain, not one silo essay
-  return steps.slice(0, 8);
+  // Cap — founder is not an engineer; short queue only
+  return steps.slice(0, 5);
 }

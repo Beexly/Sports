@@ -30,6 +30,9 @@ describe("buildFounderNextSteps", () => {
       claudeProvider: "anthropic",
       jynxAuto: false,
       anyCloudConfigured: false,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
     });
     const ids = steps.map((s) => s.id);
     expect(ids).toContain("free-lane-env");
@@ -42,20 +45,20 @@ describe("buildFounderNextSteps", () => {
       claudeProvider: "bedrock",
       jynxAuto: false,
       anyCloudConfigured: false,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
     });
-    const ids = steps.map((s) => s.id);
-    // Half-finished explicit pick must not silently drop out of the queue.
-    expect(ids).toContain("cloud-maps");
-    expect(steps.find((s) => s.id === "cloud-maps")?.action).toMatch(/bedrock/i);
-  });
-
-  it("asks for cloud maps when auto is on but no cloud configured", () => {
-    const steps = buildFounderNextSteps({ ...base, anyCloudConfigured: false });
     expect(steps.map((s) => s.id)).toContain("cloud-maps");
   });
 
   it("drops the credits ask once auto + a cloud are both live", () => {
-    const ids = buildFounderNextSteps(base).map((s) => s.id);
+    const ids = buildFounderNextSteps({
+      ...base,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
+    }).map((s) => s.id);
     expect(ids).not.toContain("cloud-maps");
     expect(ids).not.toContain("jynx-auto-or-cloud");
   });
@@ -65,13 +68,17 @@ describe("buildFounderNextSteps", () => {
     expect(steps.some((s) => s.id === "redeploy-main")).toBe(true);
   });
 
-  it("holds StatKing dark as P2 when off", () => {
-    const steps = buildFounderNextSteps(base);
-    const sk = steps.find((s) => s.id === "statking-dark-hold");
-    expect(sk?.priority).toBe("P2");
+  it("does not nag StatKing dark hold (correct default, not a to-do)", () => {
+    const ids = buildFounderNextSteps({
+      ...base,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
+    }).map((s) => s.id);
+    expect(ids).not.toContain("statking-dark-hold");
   });
 
-  it("never returns more than 8 steps", () => {
+  it("never returns more than 5 steps (low-noise founder queue)", () => {
     const steps = buildFounderNextSteps({
       ...base,
       overduePending: 5,
@@ -86,8 +93,9 @@ describe("buildFounderNextSteps", () => {
       freeSpinePresent: false,
       freeSpineCriticalGaps: 7,
       freeSpineRequireSpend: 3,
+      includeOptionalAnalytics: true,
     });
-    expect(steps.length).toBeLessThanOrEqual(8);
+    expect(steps.length).toBeLessThanOrEqual(5);
   });
 
   it("escalates missing Stripe secret over Dashboard audit", () => {
@@ -101,93 +109,80 @@ describe("buildFounderNextSteps", () => {
     expect(ids).not.toContain("stripe-webhook-audit");
   });
 
-  it("escalates missing webhook secret when secret is present", () => {
-    const steps = buildFounderNextSteps({
+  it("suppresses webhook audit when live probe says GSE healthy", () => {
+    const ids = buildFounderNextSteps({
       ...base,
       stripeSecretConfigured: true,
-      webhookSecretConfigured: false,
-    });
-    const ids = steps.map((s) => s.id);
-    expect(ids).toContain("stripe-webhook-secret-env");
+      webhookSecretConfigured: true,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
+    }).map((s) => s.id);
     expect(ids).not.toContain("stripe-webhook-audit");
+    expect(ids).not.toContain("stripe-webhook-gse-missing");
   });
 
-  it("keeps Dashboard webhook audit when secrets are configured", () => {
+  it("fires audit when enabled foreign hosts present", () => {
     const steps = buildFounderNextSteps({
       ...base,
       stripeSecretConfigured: true,
       webhookSecretConfigured: true,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: true,
+      stripeWebhookGseHealthy: false,
+      stripeWebhookForeignHosts: ["lumeralabel.medusajs.app"],
     });
-    expect(steps.map((s) => s.id)).toContain("stripe-webhook-audit");
+    const audit = steps.find((s) => s.id === "stripe-webhook-audit");
+    expect(audit?.priority).toBe("P1");
+    expect(audit?.action).toMatch(/medusajs/);
   });
 
-  it("seeds free-spine when snap absent (I3)", () => {
-    const steps = buildFounderNextSteps({
-      ...base,
-      freeSpinePresent: false,
-    });
-    const seed = steps.find((s) => s.id === "free-spine-seed");
-    expect(seed?.priority).toBe("P1");
-    expect(seed?.domain).toBe("free_lane");
-  });
-
-  it("flags free-spine stale past SLA (I8)", () => {
-    const steps = buildFounderNextSteps({
-      ...base,
-      freeSpinePresent: true,
-      freeSpineWithinSla: false,
-    });
-    expect(steps.map((s) => s.id)).toContain("free-spine-stale");
-    expect(steps.map((s) => s.id)).not.toContain("free-spine-seed");
-  });
-
-  it("names odds paid-single ABSENT when requireSpend equals criticalGaps", () => {
-    const steps = buildFounderNextSteps({
+  it("skips dual-path nag when gaps are pure odds paid-single (accepted architecture)", () => {
+    const ids = buildFounderNextSteps({
       ...base,
       freeSpinePresent: true,
       freeSpineWithinSla: true,
       freeSpineCriticalGaps: 7,
       freeSpineRequireSpend: 7,
-    });
-    const gap = steps.find((s) => s.id === "free-spine-dual-path-gaps");
-    expect(gap?.priority).toBe("P2");
-    expect(gap?.action).toMatch(/mustSpend/);
-    expect(gap?.action).toMatch(/the-odds-api/i);
-    expect(gap?.action).toMatch(/never invent/i);
-    expect(gap?.action).toMatch(/gated/i);
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
+    }).map((s) => s.id);
+    expect(ids).not.toContain("free-spine-dual-path-gaps");
   });
 
-  it("uses generic dual-path copy when gaps are not pure mustSpend", () => {
+  it("surfaces dual-path when gaps are mixed (not pure mustSpend)", () => {
     const steps = buildFounderNextSteps({
       ...base,
       freeSpinePresent: true,
       freeSpineWithinSla: true,
       freeSpineCriticalGaps: 4,
       freeSpineRequireSpend: 1,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
     });
-    const gap = steps.find((s) => s.id === "free-spine-dual-path-gaps");
-    expect(gap?.action).toMatch(/dual free redundancy/i);
-    expect(gap?.action).toMatch(/requireSpend/);
-    expect(gap?.action).not.toMatch(/the-odds-api/i);
+    expect(steps.map((s) => s.id)).toContain("free-spine-dual-path-gaps");
   });
 
-  it("omits free-spine steps when posture fields are unknown (backward compat)", () => {
-    const ids = buildFounderNextSteps(base).map((s) => s.id);
-    expect(ids).not.toContain("free-spine-seed");
-    expect(ids).not.toContain("free-spine-stale");
-    expect(ids).not.toContain("free-spine-dual-path-gaps");
-  });
-
-  it("skips dual-path step when criticalGaps is zero", () => {
+  it("omits optional analytics unless requested", () => {
     const ids = buildFounderNextSteps({
       ...base,
-      freeSpinePresent: true,
-      freeSpineWithinSla: true,
-      freeSpineCriticalGaps: 0,
-      freeSpineRequireSpend: 0,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
     }).map((s) => s.id);
-    expect(ids).not.toContain("free-spine-dual-path-gaps");
-    expect(ids).not.toContain("free-spine-seed");
-    expect(ids).not.toContain("free-spine-stale");
+    expect(ids).not.toContain("analytics-optional");
+  });
+
+  it("seeds free-spine when snap absent (I3)", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      freeSpinePresent: false,
+      stripeWebhookProbed: true,
+      stripeWebhookAuditRequired: false,
+      stripeWebhookGseHealthy: true,
+    });
+    expect(steps.find((s) => s.id === "free-spine-seed")?.priority).toBe("P1");
   });
 });

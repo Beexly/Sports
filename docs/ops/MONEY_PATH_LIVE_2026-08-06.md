@@ -1,5 +1,11 @@
 # Money path — live state (2026-08-06)
 
+## Webhook audit (2026-08-07 autonomous)
+
+- **Enabled GSE:** `https://www.galaxysportsedge.com/api/webhooks/stripe` (`we_1TcXVf…`) — correct events for checkout/subscription/invoice
+- **Foreign medusa:** `lumeralabel.medusajs.app` — **disabled** already; safe to delete in Dashboard anytime (not blocking)
+- Ops surface now probes hosts live (`stripeWebhookHosts`) and **suppresses** founder Dashboard audit when GSE healthy
+
 ## Product health (autonomous verified)
 
 - `/api/health` → **ok:true / healthy**
