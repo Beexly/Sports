@@ -60,6 +60,7 @@ const MAIN_FEATURE_MARKERS = [
   "autonomy-posture-ops-surface",
   "free-spine-odds-path-summary",
   "impeccable-multi-path-probe",
+  "checkout-pricing-alias",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {

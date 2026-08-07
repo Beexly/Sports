@@ -54,10 +54,15 @@ const nextConfig = {
   },
   async redirects() {
     // Common auth aliases → NextAuth sign-in (preserves ?callbackUrl when present)
+    // Money path UX: /checkout is not a page — Stripe Checkout is created from
+    // /pricing SubscribeButton → POST /api/subscriptions/checkout. Soft alias so
+    // capability graph + human muscle-memory never 404 the revenue entry.
     return [
       { source: "/signup", destination: "/auth/signin", permanent: false },
       { source: "/register", destination: "/auth/signin", permanent: false },
       { source: "/login", destination: "/auth/signin", permanent: false },
+      { source: "/checkout", destination: "/pricing", permanent: false },
+      { source: "/subscribe", destination: "/pricing", permanent: false },
     ];
   },
   async headers() {
