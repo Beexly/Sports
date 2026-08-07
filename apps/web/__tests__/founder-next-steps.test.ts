@@ -87,3 +87,35 @@ describe("buildFounderNextSteps", () => {
     expect(steps.length).toBeLessThanOrEqual(8);
   });
 });
+
+  it("escalates missing Stripe secret over Dashboard audit", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      stripeSecretConfigured: false,
+      webhookSecretConfigured: false,
+    });
+    const ids = steps.map((s) => s.id);
+    expect(ids).toContain("stripe-secret-env");
+    expect(ids).not.toContain("stripe-webhook-audit");
+  });
+
+  it("escalates missing webhook secret when secret is present", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      stripeSecretConfigured: true,
+      webhookSecretConfigured: false,
+    });
+    const ids = steps.map((s) => s.id);
+    expect(ids).toContain("stripe-webhook-secret-env");
+    expect(ids).not.toContain("stripe-webhook-audit");
+  });
+
+  it("keeps Dashboard webhook audit when secrets are configured", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      stripeSecretConfigured: true,
+      webhookSecretConfigured: true,
+    });
+    expect(steps.map((s) => s.id)).toContain("stripe-webhook-audit");
+  });
+

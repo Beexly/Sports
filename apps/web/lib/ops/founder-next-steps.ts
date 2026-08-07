@@ -1,6 +1,6 @@
 /**
  * Ordered multi-domain founder actions — pure, public-safe (no secrets).
- * Keeps ops truth from hyper-focusing: settle, deploy, credits, free-lane, gates.
+ * Keeps ops truth from hyper-focusing: settle, deploy, credits, free-lane, gates, billing.
  */
 
 export interface FounderNextStep {
@@ -33,6 +33,9 @@ export interface FounderNextStepsInput {
   /** Features this deploy claims vs code markers length (diagnostic only). */
   readonly markerCount: number;
   readonly expectedMarkerFloor: number;
+  /** Money path env posture (optional — older callers omit → dashboard audit still shown). */
+  readonly stripeSecretConfigured?: boolean;
+  readonly webhookSecretConfigured?: boolean;
 }
 
 /**
@@ -125,14 +128,34 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
     });
   }
 
-
-  steps.push({
-    id: "stripe-webhook-audit",
-    domain: "billing",
-    priority: "P1",
-    action:
-      "Stripe Dashboard: confirm only galaxysportsedge.com webhook endpoints (remove foreign domains e.g. medusajs if unintended).",
-  });
+  // Money path: escalate missing env first; Dashboard endpoint audit stays when secrets exist.
+  const stripeKnown = typeof input.stripeSecretConfigured === "boolean";
+  const webhookKnown = typeof input.webhookSecretConfigured === "boolean";
+  if (stripeKnown && input.stripeSecretConfigured === false) {
+    steps.push({
+      id: "stripe-secret-env",
+      domain: "billing",
+      priority: "P1",
+      action:
+        "STRIPE_SECRET_KEY missing in prod — checkout cannot create sessions. Wire secret + price ids/lookup_keys.",
+    });
+  } else if (webhookKnown && input.webhookSecretConfigured === false) {
+    steps.push({
+      id: "stripe-webhook-secret-env",
+      domain: "billing",
+      priority: "P1",
+      action:
+        "STRIPE_WEBHOOK_SECRET missing — sessions may create without durable entitlements. Wire webhook secret + Dashboard endpoint.",
+    });
+  } else {
+    steps.push({
+      id: "stripe-webhook-audit",
+      domain: "billing",
+      priority: "P1",
+      action:
+        "Stripe Dashboard: confirm only galaxysportsedge.com webhook endpoints (remove foreign domains e.g. medusajs if unintended).",
+    });
+  }
 
   steps.push({
     id: "analytics-optional",

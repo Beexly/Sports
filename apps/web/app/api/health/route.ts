@@ -10,10 +10,10 @@ export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<NextResponse> {
   // Probes (DB ping, ingestion freshness, settlement health, nflverse cache
-  // stats) live in live-capability-probes.ts, shared with the epistemic-twin
-  // cron/agent guard (capability-graph.ts's fetchLiveCapabilityGraph) so both
-  // callers read the same evidence instead of two implementations that could
-  // drift apart.
+  // stats, money-path env posture) live in live-capability-probes.ts, shared
+  // with the epistemic-twin cron/agent guard (capability-graph.ts's
+  // fetchLiveCapabilityGraph) so both callers read the same evidence instead
+  // of two implementations that could drift apart.
   const { checks, capabilities } = await computeLiveCapabilityProbes();
 
   // Readiness (DB + ingestion) — Sentinel / uptime still use ok + HTTP.
@@ -30,13 +30,14 @@ export async function GET(): Promise<NextResponse> {
 
   // ── Capability dependency graph (epistemic-twin, P2) ─────────────────────
   // Purely additive/observability, same as `capabilities` (OP-003) above:
-  // composes the 4 leaf observations plus the 2 real founder feature-gate
-  // reads through the frozen composition law over the full 15-node seed
-  // registry, so dependent capabilities with no direct probe (routes,
-  // reports, the proof surface, revenue) get honest dependency-derived truth
-  // instead of no answer at all. Never influences `ok`/`allOk`/HTTP status —
-  // a capability being non-healthy must not flip this route's readiness
-  // semantics, which other consumers (the Nightly Sentinel) depend on as-is.
+  // composes leaf observations plus the 2 real founder feature-gate reads
+  // through the frozen composition law over the full 15-node seed registry,
+  // so dependent capabilities with no direct probe (routes, reports, the
+  // proof surface) get honest dependency-derived truth instead of no answer
+  // at all. Money path (route:/checkout, revenue:checkout) now has env-only
+  // leaf probes. Never influences `ok`/`allOk`/HTTP status — a capability
+  // being non-healthy must not flip this route's readiness semantics, which
+  // other consumers (the Nightly Sentinel) depend on as-is.
   const capabilityGraph = projectCapabilityGraph(composeCapabilityGraph(capabilities));
 
   return NextResponse.json(

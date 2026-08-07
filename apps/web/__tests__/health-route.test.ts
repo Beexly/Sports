@@ -183,7 +183,7 @@ describe("/api/health — capabilities (OP-003, additive)", () => {
     return new Date(Date.now() - m * 60 * 1000);
   }
 
-  it("includes a capabilities array with the 4 expected capability ids", async () => {
+  it("includes a capabilities array with core + money-path capability ids", async () => {
     dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
 
     const { GET } = await import("@/app/api/health/route");
@@ -193,7 +193,14 @@ describe("/api/health — capabilities (OP-003, additive)", () => {
     expect(Array.isArray(body.capabilities)).toBe(true);
     const ids = body.capabilities.map((c: { capabilityId: string }) => c.capabilityId);
     expect(ids).toEqual(
-      expect.arrayContaining(["database", "ingestion", "settlement", "nflverse-reports"])
+      expect.arrayContaining([
+        "database",
+        "ingestion",
+        "settlement",
+        "nflverse-reports",
+        "checkout",
+        "revenue-checkout",
+      ])
     );
   });
 

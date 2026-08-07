@@ -26,7 +26,7 @@ import {
 import { getReadinessGates } from "@sports/prediction-engine";
 import {
   freeSpineSnapAgeMs,
-  loadDurableFreeSpine,
+  resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
 
 export const dynamic = "force-dynamic";
@@ -77,14 +77,17 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   const gates = getReadinessGates();
 
-  // I3/I8: durable free-spine age for planner (null = missing)
+  // I3/I8: best free-spine age (fresh process, else fresher of process|durable)
   let freeSpineAgeMinutes: number | null = null;
+  let freeSpineSource: "process" | "durable" | "none" = "none";
   try {
-    const spine = await loadDurableFreeSpine();
-    const ageMs = freeSpineSnapAgeMs(spine);
+    const resolved = await resolveBestFreeSpineSnapshot();
+    freeSpineSource = resolved.source;
+    const ageMs = freeSpineSnapAgeMs(resolved.snap);
     freeSpineAgeMinutes = ageMs == null ? null : Math.round(ageMs / 60000);
   } catch {
     freeSpineAgeMinutes = null;
+    freeSpineSource = "none";
   }
 
   const observation = {
@@ -143,6 +146,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     observation: {
       ingestionAgeMinutes: observation.ingestionAgeMinutes,
       freeSpineAgeMinutes: observation.freeSpineAgeMinutes,
+      freeSpineSource,
       settlementBand: observation.settlementBand,
       settlementOverdue: observation.settlementOverdue,
       databaseOk: observation.databaseOk,

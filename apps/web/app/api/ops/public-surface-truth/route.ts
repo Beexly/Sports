@@ -11,6 +11,7 @@ import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown"
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
+import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -49,6 +50,9 @@ const MAIN_FEATURE_MARKERS = [
   "autonomy-free-spine-age",
   "free-spine-empty-not-critical-i5",
   "impeccable-probe-harness",
+  "checkout-revenue-capability-probe",
+  "billing-money-posture-ops-surface",
+  "autonomy-resolve-best-free-spine",
   "free-spine-prefer-fresher-durable",
 ] as const;
 
@@ -117,6 +121,7 @@ export async function GET(request: Request) {
 
 
   const creditStack = loadCreditStackPosture();
+  const billingMoney = loadBillingMoneyPosture();
   const jynx = creditStack.jynx;
   const founderNextSteps = buildFounderNextSteps({
     overduePending: settlement?.overduePending ?? null,
@@ -134,6 +139,8 @@ export async function GET(request: Request) {
     newsletterIssues: listIssues().length,
     markerCount: MAIN_FEATURE_MARKERS.length,
     expectedMarkerFloor: MAIN_FEATURE_MARKERS.length,
+    stripeSecretConfigured: billingMoney.stripeSecretConfigured,
+    webhookSecretConfigured: billingMoney.webhookSecretConfigured,
   });
 
   // Proof-gated ladder — never invents calibration/CLV; never flips gates.
@@ -222,6 +229,8 @@ export async function GET(request: Request) {
       },
       /** Public-safe AI cost posture — booleans only, never secrets. */
       creditStack,
+      /** Public-safe money path posture — booleans + lookup keys only, never secrets. */
+      billingMoney,
       freeSpine,
       policy: PUBLIC_NAV_POLICY,
       law: {
