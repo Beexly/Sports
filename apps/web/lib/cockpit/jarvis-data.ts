@@ -8,7 +8,7 @@
  *   1. Signal matrix: snapshot + feature flags + game signals + free multi-source + free-spine
  *   2. Settlement clock prefers SettlementRun, falls back to pick.settledAt
  *   3. Layers from probeJarvisLayers (live evidence), not hard-coded all-implemented
- *   4. Multi-source: pure matrix + free-spine-cache (written by free-spine-health cron)
+ *   4. Multi-source: pure matrix + free-spine-cache + Neon free-spine-durable (I3/I8)
  *   5. Neon dual-URL / DIRECT_URL / FORCE_REAL_PRISMA honesty in externalConfigMissing
  */
 
@@ -23,7 +23,13 @@ import { scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
 import {
   freeSpineLiveScore,
   readFreeSpineCache,
+  writeFreeSpineCache,
 } from "@/lib/data-sources/free-spine-cache";
+import {
+  freeSpineSnapAgeMs,
+  freeSpineWithinSla,
+  loadDurableFreeSpine,
+} from "@/lib/data-sources/free-spine-durable";
 import { probeJarvisLayers } from "@/lib/cockpit/jarvis-layer-probes";
 import {
   synthesizeJarvis,
@@ -313,7 +319,21 @@ export async function loadJarvisAssessment(): Promise<{
     publishedGameIdSet.size > 0 ? gamesWithAnySignal / publishedGameIdSet.size : 0;
 
   const multiScore = freeMultiSourceScore();
-  const spineCache = readFreeSpineCache();
+  // I3: process-local first; cold isolate → Neon durable (warm process cache).
+  let spineCache = readFreeSpineCache();
+  let spineSource: "process" | "durable" | "none" = spineCache ? "process" : "none";
+  if (!spineCache) {
+    try {
+      const durable = await loadDurableFreeSpine();
+      if (durable) {
+        writeFreeSpineCache(durable);
+        spineCache = durable;
+        spineSource = "durable";
+      }
+    } catch {
+      /* never block assessment */
+    }
+  }
   const spineLive = freeSpineLiveScore(spineCache);
 
   // Settlement clock: SettlementRun preferred (weak spot #2)
@@ -446,12 +466,20 @@ export async function loadJarvisAssessment(): Promise<{
     }
     if (!spineCache) {
       recommendedNextActions.unshift(
-        "No free-spine-health cache yet — cron has not written live multi-source probes into this isolate.",
+        "No free-spine probe cache yet (process or Neon) — cron free-spine-health has not written live multi-source probes.",
       );
     } else {
+      const ageMs = freeSpineSnapAgeMs(spineCache, now.getTime());
+      const ageMin = ageMs == null ? null : Math.round(ageMs / 60000);
       recommendedNextActions.push(
-        `Last free-spine probe ${spineCache.probedAt}: ${spineCache.sportsWithGames}/${spineCache.sportsProbed} sports had games.`,
+        `Last free-spine probe ${spineCache.probedAt} (${spineSource}${ageMin != null ? `, age ${ageMin}m` : ""}): ${spineCache.sportsWithGames}/${spineCache.sportsProbed} sports had games.`,
       );
+      // I8: durable snap age ≤ 120m on every cockpit load
+      if (!freeSpineWithinSla(spineCache, now.getTime())) {
+        recommendedNextActions.unshift(
+          `Free-spine probe age ${ageMin ?? "?"}m exceeds 120m SLA (I8) — autonomy should RUN_FREE_SPINE_HEALTH.`,
+        );
+      }
     }
   } catch {
     /* never block assessment */
