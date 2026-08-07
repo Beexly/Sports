@@ -17,10 +17,13 @@ name: External Cron (Galaxy Sports Edge)
 # secondary (sequential satellites after OOM fix). settle hourly.
 # 2026-08-07: autonomy-cycle (I9 plan→act) hourly dry-run / execute when
 # AUTONOMY_EXECUTE=true on production (route-side).
+# 2026-08-07: restore refresh-odds */30 schedule (job existed; schedule missing).
 
 on:
   schedule:
     # PRIVATE-REPO MINUTES ECONOMY: keep cadence lean.
+    # Every 30m — Refresh odds (all sports). Job already keys on this expression.
+    - cron: "*/30 * * * *"
     # Hourly on the :15 — settle picks whose games have completed.
     - cron: "15 * * * *"
     # Every 2h at :05 — free multi-source spine + IngestionRun SUCCESS stamp
