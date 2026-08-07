@@ -12,6 +12,8 @@ import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
+import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
+import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -55,6 +57,9 @@ const MAIN_FEATURE_MARKERS = [
   "autonomy-resolve-best-free-spine",
   "free-spine-prefer-fresher-durable",
   "free-spine-coverage-founder-queue",
+  "autonomy-posture-ops-surface",
+  "free-spine-odds-path-summary",
+  "impeccable-multi-path-probe",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -122,6 +127,7 @@ export async function GET(request: Request) {
 
   const creditStack = loadCreditStackPosture();
   const billingMoney = loadBillingMoneyPosture();
+  const autonomy = loadAutonomyPosture();
   const jynx = creditStack.jynx;
 
   // I3/I8: resolve free-spine BEFORE founder queue so coverage gaps / SLA land in steps.
@@ -135,6 +141,7 @@ export async function GET(request: Request) {
     criticalGaps: number | null;
     freeCovered: number | null;
     requireSpend: number | null;
+    oddsPath: ReturnType<typeof summarizeFreeSpineOddsPath>;
     probedAt: string | null;
     slaMinutes: number;
   } = {
@@ -147,6 +154,7 @@ export async function GET(request: Request) {
     criticalGaps: null,
     freeCovered: null,
     requireSpend: null,
+    oddsPath: null,
     probedAt: null,
     slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
   };
@@ -165,6 +173,11 @@ export async function GET(request: Request) {
         criticalGaps: snap.criticalGaps,
         freeCovered: snap.freeCovered,
         requireSpend: snap.requireSpend,
+        oddsPath: summarizeFreeSpineOddsPath({
+          criticalGaps: snap.criticalGaps,
+          requireSpend: snap.requireSpend,
+          freeCovered: snap.freeCovered,
+        }),
         probedAt: snap.probedAt,
         slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
       };
@@ -242,6 +255,8 @@ export async function GET(request: Request) {
       creditStack,
       /** Public-safe money path posture — booleans + lookup keys only, never secrets. */
       billingMoney,
+      /** Public-safe autonomy executor posture — dry-run default, free crons only. */
+      autonomy,
       freeSpine,
       policy: PUBLIC_NAV_POLICY,
       law: {

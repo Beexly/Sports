@@ -17,6 +17,17 @@ describe("impeccable-probe.mjs", () => {
     expect(SRC).toContain("process.exit");
   });
 
+  it("covers multi-path money + autonomy surfaces", () => {
+    expect(SRC).toContain("billingMoney");
+    expect(SRC).toContain("--strict-money");
+    expect(SRC).toContain("autonomy");
+    expect(SRC).toContain("defaultDryRun");
+    expect(SRC).toContain("route:/checkout");
+    expect(SRC).toContain("revenue:checkout");
+    expect(SRC).toContain("oddsPath");
+    expect(SRC).toContain("criticalGaps");
+  });
+
   it("never instructs gate flips", () => {
     expect(SRC).not.toMatch(/LIVE_BOARD\s*=\s*true/);
     expect(SRC).not.toMatch(/PUBLIC_PICKS_ENABLED\s*=\s*true/);
