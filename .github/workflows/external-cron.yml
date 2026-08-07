@@ -15,6 +15,8 @@ name: External Cron (Galaxy Sports Edge)
 #
 # 2026-08-06: free-spine-health primary heartbeat; refresh-player-stats
 # secondary (sequential satellites after OOM fix). settle hourly.
+# 2026-08-07: autonomy-cycle (I9 plan→act) hourly dry-run / execute when
+# AUTONOMY_EXECUTE=true on production (route-side).
 
 on:
   schedule:
@@ -22,11 +24,14 @@ on:
     # Hourly on the :15 — settle picks whose games have completed.
     - cron: "15 * * * *"
     # Every 2h at :05 — free multi-source spine + IngestionRun SUCCESS stamp
-    # (under 240m SLA; ~12 jobs/day).
+    # (under 240m SLA; ~12 jobs/day). I3/I8 durable free-spine heartbeat.
     - cron: "5 */2 * * *"
     # Every 6h at :40 — nflverse player-stats free SUCCESS multi-writer
     # (heavier job; free-spine keeps health green between runs).
     - cron: "40 */6 * * *"
+    # Hourly at :22 — autonomy plan (+ execute when AUTONOMY_EXECUTE=true).
+    # Fills I2 freshness self-heal between free-spine ticks (age > 90m).
+    - cron: "22 * * * *"
   workflow_dispatch:
     inputs:
       target:
@@ -40,6 +45,8 @@ on:
           - refresh-odds
           - settle-picks
           - jarvis-snapshot
+          - autonomy-cycle
+          - autonomy-cycle-execute
 
 concurrency:
   group: external-cron-${{ github.event.schedule || github.event.inputs.target }}
@@ -155,6 +162,42 @@ jobs:
             --location \
             --max-time 300 \
             "${CRON_TARGET_URL}/api/cron/settle-picks")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
+
+  autonomy-cycle:
+    name: Autonomy cycle (plan; execute when env flag or ?execute=1)
+    # I9: plan→act loop. Default route is dry-run unless AUTONOMY_EXECUTE=true.
+    # Manual autonomy-cycle-execute forces ?execute=1 (founder recovery / I2).
+    if: ${{ github.event.schedule == '22 * * * *' || github.event.inputs.target == 'autonomy-cycle' || github.event.inputs.target == 'autonomy-cycle-execute' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Hit /api/cron/autonomy-cycle
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+          TARGET: ${{ github.event.inputs.target }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          path="/api/cron/autonomy-cycle"
+          if [ "${TARGET:-}" = "autonomy-cycle-execute" ]; then
+            path="/api/cron/autonomy-cycle?execute=1"
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
+            --max-time 120 \
+            "${CRON_TARGET_URL}${path}")
           echo "HTTP ${response}"
           if command -v jq >/dev/null 2>&1; then
             jq . /tmp/body.json || cat /tmp/body.json
