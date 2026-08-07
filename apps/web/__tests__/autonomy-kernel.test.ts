@@ -115,6 +115,53 @@ describe("autonomy operating kernel", () => {
     expect(spine!.target).toBe("/api/cron/free-spine-health");
   });
 
+
+  // I8: durable free-spine age alone (ingestion still green) queues spine act.
+  it("stale freeSpineAgeMinutes queues RUN_FREE_SPINE_HEALTH even if ingestion fresh (I8)", () => {
+    const plan = planAutonomyCycle(
+      baseObs({
+        ingestionOk: true,
+        ingestionAgeMinutes: 20,
+        freeSpineAgeMinutes: 150,
+        settlementBand: "HEALTHY",
+        settlementOverdue: 0,
+      }),
+    );
+    const spine = plan.autonomousQueue.find((a) => a.kind === "RUN_FREE_SPINE_HEALTH");
+    expect(spine).toBeDefined();
+    expect(spine!.autonomousSafe).toBe(true);
+    expect(spine!.detail).toMatch(/I8|120/);
+  });
+
+  it("missing freeSpineAgeMinutes null queues RUN_FREE_SPINE_HEALTH (I3 cold)", () => {
+    const plan = planAutonomyCycle(
+      baseObs({
+        ingestionOk: true,
+        ingestionAgeMinutes: 15,
+        freeSpineAgeMinutes: null,
+        settlementBand: "HEALTHY",
+        settlementOverdue: 0,
+      }),
+    );
+    const spine = plan.autonomousQueue.find((a) => a.kind === "RUN_FREE_SPINE_HEALTH");
+    expect(spine).toBeDefined();
+    expect(spine!.detail).toMatch(/No durable free-spine|never probed|I3/);
+  });
+
+  it("fresh freeSpineAgeMinutes does not force spine when ingestion healthy", () => {
+    const plan = planAutonomyCycle(
+      baseObs({
+        ingestionOk: true,
+        ingestionAgeMinutes: 20,
+        freeSpineAgeMinutes: 30,
+        settlementBand: "HEALTHY",
+        settlementOverdue: 0,
+        canonicalSettled: 100,
+      }),
+    );
+    expect(plan.autonomousQueue.some((a) => a.kind === "RUN_FREE_SPINE_HEALTH")).toBe(false);
+  });
+
   // LAWS: never suggest flipping public gates from the autonomous queue.
   it("closed public gates stay HOLD only — no autonomous gate flip (LAWS)", () => {
     const plan = planAutonomyCycle(baseObs({ liveBoardEnabled: false, publicPicksEnabled: false }));

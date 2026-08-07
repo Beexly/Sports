@@ -24,6 +24,10 @@ import {
   resolveAutonomyBaseUrl,
 } from "@/lib/autonomy/execute-autonomy-cycle";
 import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  freeSpineSnapAgeMs,
+  loadDurableFreeSpine,
+} from "@/lib/data-sources/free-spine-durable";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -72,12 +76,24 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 
   const gates = getReadinessGates();
+
+  // I3/I8: durable free-spine age for planner (null = missing)
+  let freeSpineAgeMinutes: number | null = null;
+  try {
+    const spine = await loadDurableFreeSpine();
+    const ageMs = freeSpineSnapAgeMs(spine);
+    freeSpineAgeMinutes = ageMs == null ? null : Math.round(ageMs / 60000);
+  } catch {
+    freeSpineAgeMinutes = null;
+  }
+
   const observation = {
     observedAt: new Date().toISOString(),
     deploymentSha,
     databaseOk: probes.checks["database"]?.status === "ok",
     ingestionOk: probes.checks["ingestion"]?.status === "ok",
     ingestionAgeMinutes: snap.ingestionAgeMinutes,
+    freeSpineAgeMinutes,
     settlementBand: snap.settlementUnavailable ? ("CRITICAL" as const) : settlementBand,
     settlementOverdue: overdue,
     settlementCommenced: commenced,
@@ -126,6 +142,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     executeEnabled,
     observation: {
       ingestionAgeMinutes: observation.ingestionAgeMinutes,
+      freeSpineAgeMinutes: observation.freeSpineAgeMinutes,
       settlementBand: observation.settlementBand,
       settlementOverdue: observation.settlementOverdue,
       databaseOk: observation.databaseOk,
