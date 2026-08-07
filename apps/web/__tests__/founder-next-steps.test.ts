@@ -36,6 +36,30 @@ describe("buildFounderNextSteps", () => {
     expect(ids).toContain("jynx-auto-or-cloud");
   });
 
+  it("still asks for cloud maps when an explicit provider is picked but unconfigured", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      claudeProvider: "bedrock",
+      jynxAuto: false,
+      anyCloudConfigured: false,
+    });
+    const ids = steps.map((s) => s.id);
+    // Half-finished explicit pick must not silently drop out of the queue.
+    expect(ids).toContain("cloud-maps");
+    expect(steps.find((s) => s.id === "cloud-maps")?.action).toMatch(/bedrock/i);
+  });
+
+  it("asks for cloud maps when auto is on but no cloud configured", () => {
+    const steps = buildFounderNextSteps({ ...base, anyCloudConfigured: false });
+    expect(steps.map((s) => s.id)).toContain("cloud-maps");
+  });
+
+  it("drops the credits ask once auto + a cloud are both live", () => {
+    const ids = buildFounderNextSteps(base).map((s) => s.id);
+    expect(ids).not.toContain("cloud-maps");
+    expect(ids).not.toContain("jynx-auto-or-cloud");
+  });
+
   it("flags redeploy when marker count lags", () => {
     const steps = buildFounderNextSteps({ ...base, markerCount: 10, expectedMarkerFloor: 14 });
     expect(steps.some((s) => s.id === "redeploy-main")).toBe(true);
