@@ -22,6 +22,7 @@ import { redundancyGaps, freeCoverageMatrix } from "@/lib/data-sources/source-ro
 import { scoreSourceChain } from "@/lib/data-sources/multi-source-scores";
 import {
   freeSpineLiveScore,
+  isFreeSpineEmptySlate,
   readFreeSpineCache,
   writeFreeSpineCache,
 } from "@/lib/data-sources/free-spine-cache";
@@ -465,16 +466,23 @@ export async function loadJarvisAssessment(): Promise<{
       );
     }
     if (!spineCache) {
-      recommendedNextActions.unshift(
-        "No free-spine probe cache yet (process or Neon) — cron free-spine-health has not written live multi-source probes.",
+      // I5: missing cache is an operator action, not a safety Critical.
+      recommendedNextActions.push(
+        "No free-spine probe cache yet (process or Neon) — schedule free-spine-health; empty RAM alone is not Critical (I3 durable should warm).",
       );
     } else {
       const ageMs = freeSpineSnapAgeMs(spineCache, now.getTime());
       const ageMin = ageMs == null ? null : Math.round(ageMs / 60000);
-      recommendedNextActions.push(
-        `Last free-spine probe ${spineCache.probedAt} (${spineSource}${ageMin != null ? `, age ${ageMin}m` : ""}): ${spineCache.sportsWithGames}/${spineCache.sportsProbed} sports had games.`,
-      );
-      // I8: durable snap age ≤ 120m on every cockpit load
+      if (isFreeSpineEmptySlate(spineCache)) {
+        recommendedNextActions.push(
+          `Free-spine empty-labelled (${spineCache.sportsWithGames}/${spineCache.sportsProbed} sports with games, ${spineSource}${ageMin != null ? `, age ${ageMin}m` : ""}) — offseason/zero slate, not probe failure (I5).`,
+        );
+      } else {
+        recommendedNextActions.push(
+          `Last free-spine probe ${spineCache.probedAt} (${spineSource}${ageMin != null ? `, age ${ageMin}m` : ""}): ${spineCache.sportsWithGames}/${spineCache.sportsProbed} sports had games.`,
+        );
+      }
+      // I8: durable snap age ≤ 120m on every cockpit load — operational, not public-safety Critical
       if (!freeSpineWithinSla(spineCache, now.getTime())) {
         recommendedNextActions.unshift(
           `Free-spine probe age ${ageMin ?? "?"}m exceeds 120m SLA (I8) — autonomy should RUN_FREE_SPINE_HEALTH.`,

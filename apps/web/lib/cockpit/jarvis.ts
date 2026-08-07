@@ -517,9 +517,15 @@ export function synthesizeJarvis(input: JarvisInput): JarvisAssessment {
   for (const name of externalConfig) {
     actions.push(`Configure missing external dependency: ${name}.`);
   }
-  if (input.signal.freeSpineLiveScore === 0) {
+  // I5: freeSpineLiveScore is null for empty/offseason/stale — never Critical for empty RAM.
+  // Only nudge when signal matrix lacks spine AND free multi-source is also weak.
+  if (
+    typeof input.signal.freeSpineLiveScore !== "number" &&
+    typeof input.signal.freeMultiSourceScore === "number" &&
+    input.signal.freeMultiSourceScore < 0.5
+  ) {
     actions.push(
-      "Run /api/cron/free-spine-health (CRON_SECRET) so Jarvis can score live multi-source probes."
+      "Free multi-source weak and no free-spine live score — run /api/cron/free-spine-health (CRON_SECRET) when slate is live; empty offseason is not Critical."
     );
   }
   if (actions.length === 0) {
