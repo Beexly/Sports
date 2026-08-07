@@ -130,7 +130,8 @@
     "calibration:offline": "node scripts/calibration-offline/run.mjs",
     "orbit:integrity": "node scripts/orbit-extract-integrity.mjs",
     "orbit:integrity:full": "node scripts/orbit-extract-integrity.mjs --full",
-    "orbit:unlock-smoke": "node scripts/ops/orbit-unlock-smoke.mjs"
+    "orbit:unlock-smoke": "node scripts/ops/orbit-unlock-smoke.mjs",
+    "ops:impeccable": "node scripts/ops/impeccable-probe.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
