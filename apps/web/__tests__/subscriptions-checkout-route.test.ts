@@ -12,7 +12,7 @@ import { NextRequest } from "next/server";
 
 const mocks = vi.hoisted(() => ({
   auth: vi.fn<() => Promise<{ user?: { id: string; email?: string; name?: string | null } } | null>>(),
-  getStripePriceId: vi.fn<(tier: string, interval: string) => string>(),
+  resolveCheckoutPriceId: vi.fn<(tier: string, interval: string) => Promise<string>>(),
   getOrCreateStripeCustomer: vi.fn<(userId: string, email: string, name?: string | null) => Promise<string>>(),
   createCheckoutSession: vi.fn<(args: unknown) => Promise<{ id: string; url: string | null }>>(),
   retrieveOpenCheckoutSessionUrl: vi.fn<(sessionId: string) => Promise<string | null>>(),
@@ -23,7 +23,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/stripe", () => ({
-  getStripePriceId: mocks.getStripePriceId,
+  resolveCheckoutPriceId: mocks.resolveCheckoutPriceId,
   getOrCreateStripeCustomer: mocks.getOrCreateStripeCustomer,
   createCheckoutSession: mocks.createCheckoutSession,
   retrieveOpenCheckoutSessionUrl: mocks.retrieveOpenCheckoutSessionUrl,
@@ -103,7 +103,7 @@ describe("POST /api/subscriptions/checkout", () => {
   beforeEach(() => {
     resetRateLimits();
     mocks.auth.mockReset();
-    mocks.getStripePriceId.mockReset();
+    mocks.resolveCheckoutPriceId.mockReset();
     mocks.getOrCreateStripeCustomer.mockReset();
     mocks.createCheckoutSession.mockReset();
     mocks.retrieveOpenCheckoutSessionUrl.mockReset();
@@ -124,7 +124,7 @@ describe("POST /api/subscriptions/checkout", () => {
     process.env["NEXT_PUBLIC_APP_URL"] = "https://app.example.com";
 
     mocks.auth.mockResolvedValue({ user });
-    mocks.getStripePriceId.mockReturnValue("price_pro_monthly");
+    mocks.resolveCheckoutPriceId.mockResolvedValue("price_pro_monthly");
     mocks.getOrCreateStripeCustomer.mockResolvedValue("cus_123");
     mocks.retrieveOpenCheckoutSessionUrl.mockResolvedValue(null);
     mocks.createCheckoutSession.mockResolvedValue({ id: "cs_123", url: "https://checkout.stripe.com/s/123" });
@@ -144,7 +144,7 @@ describe("POST /api/subscriptions/checkout", () => {
   it("rejects invalid tiers with 400 (FREE is not purchasable)", async () => {
     const res = await POST(checkoutRequest({ tier: "FREE" }));
     expect(res.status).toBe(400);
-    expect(mocks.getStripePriceId).not.toHaveBeenCalled();
+    expect(mocks.resolveCheckoutPriceId).not.toHaveBeenCalled();
   });
 
   it("rejects invalid intervals with 400", async () => {
@@ -153,7 +153,7 @@ describe("POST /api/subscriptions/checkout", () => {
   });
 
   it("returns 503 when the price is not configured", async () => {
-    mocks.getStripePriceId.mockReturnValue("");
+    mocks.resolveCheckoutPriceId.mockResolvedValue("");
     const res = await POST(checkoutRequest({ tier: "ELITE", interval: "year" }));
     expect(res.status).toBe(503);
     expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
@@ -161,7 +161,7 @@ describe("POST /api/subscriptions/checkout", () => {
 
   it("defaults the billing interval to month", async () => {
     await POST(checkoutRequest({ tier: "PRO" }));
-    expect(mocks.getStripePriceId).toHaveBeenCalledWith("PRO", "month");
+    expect(mocks.resolveCheckoutPriceId).toHaveBeenCalledWith("PRO", "month");
   });
 
   it("creates a checkout session with the user's customer id, metadata, and a durable attempt id", async () => {
@@ -375,7 +375,7 @@ describe("POST /api/subscriptions/checkout", () => {
       dbMock.attemptCreate.mockRejectedValue(p2002());
       // Existing attempt was made for PRO/month; this request asks ELITE/year.
       dbMock.attemptFindUnique.mockResolvedValue(liveAttempt());
-      mocks.getStripePriceId.mockReturnValue("price_elite_annual");
+      mocks.resolveCheckoutPriceId.mockResolvedValue("price_elite_annual");
 
       const res = await POST(
         checkoutRequest({ tier: "ELITE", interval: "year", clientIntentId: INTENT_ID }),
