@@ -5,7 +5,7 @@
  *   - Never flips LIVE_BOARD / PUBLIC_PICKS / PERFORMANCE_STATS / PUBLISH_LEDGER
  *   - Never executes requiresOwner actions
  *   - Never invents scores; only triggers existing free-path crons
- *   - ATTACK_RCA_WAVE_A is mapped to free-spine + settle (safe subset only)
+ *   - ATTACK_RCA_WAVE_A maps to settle-picks (safe subset; free-spine is sibling)
  *
  * V1 executes HTTP cron targets with CRON_SECRET. Durable AutonomyCycleRun
  * persistence is a follow-on (Neon); this module returns a full result for logs.
@@ -95,10 +95,8 @@ export function executableTargetFor(action: AutonomyAction): string | null {
   if (action.kind === "RUN_FREE_SETTLE") {
     return EXECUTABLE_CRON_TARGETS.RUN_FREE_SETTLE;
   }
-  // Safe subset of Wave A: refresh free scores then settle is represented by
-  // separate queue items; Wave A alone does not invent a third endpoint.
+  // Safe subset of Wave A: settle path only (free-spine is usually a sibling item).
   if (action.kind === "ATTACK_RCA_WAVE_A") {
-    // Prefer settle path — free-spine usually already queued as P1/P0 sibling.
     return EXECUTABLE_CRON_TARGETS.RUN_FREE_SETTLE;
   }
   return null;
@@ -222,12 +220,11 @@ export async function executeAutonomyCycle(
   const toRun = selectExecutableActions(plan, maxActions);
   const runnableKinds = new Set(toRun.map((a) => a.kind));
 
-  // Mark autonomous items beyond cap
+  // Mark autonomous items beyond cap / duplicates
   for (const action of plan.autonomousQueue) {
     const path = executableTargetFor(action);
     if (!path) continue;
     if (runnableKinds.has(action.kind)) continue;
-    // might be duplicate path already selected under another kind
     if (toRun.some((a) => executableTargetFor(a) === path)) {
       acts.push({
         kind: action.kind,
@@ -236,7 +233,7 @@ export async function executeAutonomyCycle(
         status: "skipped_duplicate",
         httpStatus: null,
         ok: true,
-        detail: `path ${path} already selected this cycle",
+        detail: `path ${path} already selected this cycle`,
         elapsedMs: 0,
       });
       continue;
