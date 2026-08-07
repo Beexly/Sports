@@ -79,7 +79,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
       "How Galaxy works: the methodology preview",
       "Glossary and education (how to read confidence, movement, and No-Bet)",
       "Responsible-gaming framing, up front",
-      "2 free picks daily, with the Edge Index and the open verified record",
+      "Free tools, Academy, and transparent process while the public board builds with proof",
       "The Edge Index on every free pick (calibrated confidence unlocks with Pro)",
       "No-Bet examples: when passing is the smarter call",
       "Public proof snippets: the receipts behind the claims",

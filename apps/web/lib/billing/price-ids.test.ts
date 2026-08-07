@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { splitPriceIds, currentPriceId, tierForPriceId, checkoutPriceId } from "./price-ids";
+import { splitPriceIds, currentPriceId, tierForPriceId, checkoutPriceId, stripeLookupKeyFor, STRIPE_LOOKUP_KEYS, tierForLookupKey, tierFromPriceRef } from "./price-ids";
 
 describe("splitPriceIds", () => {
   it("splits comma lists, trims, drops empties; handles undefined", () => {
@@ -64,5 +64,43 @@ describe("checkoutPriceId — charges the CURRENT price only", () => {
     expect(checkoutPriceId("ELITE", "month", env)).toBe("price_elite_legacy_monthly");
     expect(checkoutPriceId("ELITE", "year", env)).toBe("price_elite_annual");
     expect(checkoutPriceId("PRO", "year", env)).toBe(""); // not configured
+  });
+});
+
+describe("stripeLookupKeyFor", () => {
+  it("returns stable gse-* keys for every paid tier × interval", () => {
+    expect(stripeLookupKeyFor("FANTASY", "month")).toBe("gse-fantasy-monthly");
+    expect(stripeLookupKeyFor("FANTASY", "year")).toBe("gse-fantasy-annual");
+    expect(stripeLookupKeyFor("PRO", "month")).toBe("gse-pro-monthly");
+    expect(stripeLookupKeyFor("PRO", "year")).toBe("gse-pro-annual");
+    expect(stripeLookupKeyFor("ELITE", "month")).toBe("gse-elite-monthly");
+    expect(stripeLookupKeyFor("ELITE", "year")).toBe("gse-elite-annual");
+  });
+
+  it("matches STRIPE_LOOKUP_KEYS table", () => {
+    for (const tier of ["FANTASY", "PRO", "ELITE"] as const) {
+      for (const interval of ["month", "year"] as const) {
+        expect(stripeLookupKeyFor(tier, interval)).toBe(STRIPE_LOOKUP_KEYS[tier][interval]);
+      }
+    }
+  });
+});
+
+describe("tierForLookupKey / tierFromPriceRef", () => {
+  it("maps every gse-* lookup key to the right paid tier", () => {
+    expect(tierForLookupKey("gse-fantasy-monthly")).toBe("FANTASY");
+    expect(tierForLookupKey("gse-pro-annual")).toBe("PRO");
+    expect(tierForLookupKey("gse-elite-monthly")).toBe("ELITE");
+    expect(tierForLookupKey("unknown")).toBe("FREE");
+    expect(tierForLookupKey(undefined)).toBe("FREE");
+  });
+
+  it("prefers env historical price ids, then falls back to lookup_key", () => {
+    const env = { STRIPE_PRO_MONTHLY_PRICE_ID: "price_env_pro" };
+    expect(tierFromPriceRef("price_env_pro", "gse-fantasy-monthly", env)).toBe("PRO");
+    // empty env, only lookup_key
+    expect(tierFromPriceRef("price_only_from_lookup", "gse-fantasy-monthly", {})).toBe("FANTASY");
+    // neither
+    expect(tierFromPriceRef("price_mystery", null, {})).toBe("FREE");
   });
 });

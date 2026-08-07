@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
-import { tierForPriceId } from "@/lib/billing/price-ids";
+import { tierFromPriceRef } from "@/lib/billing/price-ids";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
@@ -393,9 +393,11 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     return;
   }
 
-  const priceId = stripeSubscription.items.data[0]?.price.id;
+  const priceObj = stripeSubscription.items.data[0]?.price;
+  const priceId = typeof priceObj === "string" ? priceObj : priceObj?.id;
+  const lookupKey = typeof priceObj === "string" ? null : priceObj?.lookup_key ?? null;
   const status = mapStripeStatus(stripeSubscription.status);
-  let tier = getTierFromPriceId(priceId);
+  let tier = getTierFromPriceId(priceId, lookupKey);
 
   // Defensive no-downgrade guard (grandfathering safety net). If a NON-EMPTY price
   // id maps to no configured tier (an operator repointed a STRIPE_*_PRICE_ID and
@@ -491,12 +493,13 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   }
 }
 
-function getTierFromPriceId(priceId: string | undefined): "FREE" | "FANTASY" | "PRO" | "ELITE" {
-  // Recognizes CURRENT and HISTORICAL price ids (comma-separated env values) so a
-  // grandfathered member's original price id still maps to their paid tier after a
-  // phase advance. A non-empty-but-unmapped id resolving to FREE is logged by the
-  // caller's defensive guard (it has the subscription's paid/active context).
-  return tierForPriceId(priceId);
+function getTierFromPriceId(
+  priceId: string | undefined,
+  lookupKey?: string | null,
+): "FREE" | "FANTASY" | "PRO" | "ELITE" {
+  // Env historical price ids first; then Stripe lookup_key (gse-*-monthly/annual).
+  // lookup_key path is required when checkout resolved price without env IDs.
+  return tierFromPriceRef(priceId, lookupKey);
 }
 
 function mapStripeStatus(

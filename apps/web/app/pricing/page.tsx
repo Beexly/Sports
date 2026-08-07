@@ -25,6 +25,8 @@ import {
   honestyContrastStrip,
   WHY_PAY_FOR_HONESTY_LEAD,
 } from "@/lib/competitive/honesty-contrast";
+import { WaitlistForm } from "@/components/gsn/waitlist-form";
+import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -49,11 +51,13 @@ export const metadata: Metadata = {
 // ─────────────────────────────────────────────
 
 const FREE_FEATURES = [
-  { label: "2 free picks daily, with the Edge Index and the open public record", included: true },
-  { label: "Edge Index on every free pick", included: true },
-  { label: "Game matchup info + pick type", included: true },
-  { label: "Public record & calibration status", included: true },
+  // Honesty: public picks board is founder-gated until calibration is published.
+  // Free still delivers tools, Academy, and transparent process — not invented free picks.
+  { label: "Free calculators & intelligence tools (no account wall)", included: true },
   { label: "The Academy: full training floor", included: true },
+  { label: "Public methodology + calibration status (building honestly)", included: true },
+  { label: "Contest Bay paper skills (no fees, no prizes, no wagering)", included: true },
+  { label: "Founding waitlist for early operator updates", included: true },
   { label: "The full daily board, every signal (Pro)", included: false },
   { label: "Confidence rating on every pick (Pro)", included: false },
   { label: "Factor trail & evidence audit (Pro)", included: false },
@@ -104,7 +108,7 @@ const FANTASY_FEATURES = [
   { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
   { label: "Bye-week fragility + roster-construction guidance", included: true },
   { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
-  { label: "The 2 free daily picks + the public record", included: true },
+  { label: "Everything free plus Fantasy depth tools", included: true },
   { label: "The Academy: full training floor", included: true },
   { label: "Betting depth: factor trail & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
@@ -119,7 +123,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "The discipline, sampled: 2 free picks daily, the public record, and the full Academy.",
+    description: "Tools, Academy, and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
@@ -605,6 +609,27 @@ export default function PricingPage() {
           </section>
 
           {/* Refund note */}
+
+          {/* Founding waitlist — capture leads even if checkout env is incomplete */}
+          <section
+            id="founding-waitlist"
+            data-testid="pricing-waitlist"
+            className="mx-auto mt-20 max-w-xl border-t border-mineral pt-14"
+          >
+            <p className="text-center font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+              {WAITLIST_COPY.eyebrow}
+            </p>
+            <h2 className="mt-3 text-center font-display text-2xl text-white">
+              Not ready to subscribe? Join the founding list.
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-center text-sm text-ink-300">
+              {WAITLIST_COPY.subhead}
+            </p>
+            <div className="mt-8">
+              <WaitlistForm />
+            </div>
+          </section>
+
           <p className="mt-12 text-center text-xs text-ion-2">
             No free trial. Every paid plan has a 3-day money-back window. Cancel any time
             from your dashboard. Prices shown are founding-member rates.
