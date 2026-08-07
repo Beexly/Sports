@@ -141,19 +141,34 @@ describe("buildFounderNextSteps", () => {
     expect(steps.map((s) => s.id)).not.toContain("free-spine-seed");
   });
 
-  it("surfaces dual-path critical gaps as P2 free_lane (never invent scores)", () => {
+  it("names odds paid-single ABSENT when requireSpend equals criticalGaps", () => {
     const steps = buildFounderNextSteps({
       ...base,
       freeSpinePresent: true,
       freeSpineWithinSla: true,
       freeSpineCriticalGaps: 7,
-      freeSpineRequireSpend: 2,
+      freeSpineRequireSpend: 7,
     });
     const gap = steps.find((s) => s.id === "free-spine-dual-path-gaps");
     expect(gap?.priority).toBe("P2");
-    expect(gap?.action).toMatch(/7 critical/);
-    expect(gap?.action).toMatch(/requireSpend/);
+    expect(gap?.action).toMatch(/mustSpend/);
+    expect(gap?.action).toMatch(/the-odds-api/i);
     expect(gap?.action).toMatch(/never invent/i);
+    expect(gap?.action).toMatch(/gated/i);
+  });
+
+  it("uses generic dual-path copy when gaps are not pure mustSpend", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      freeSpinePresent: true,
+      freeSpineWithinSla: true,
+      freeSpineCriticalGaps: 4,
+      freeSpineRequireSpend: 1,
+    });
+    const gap = steps.find((s) => s.id === "free-spine-dual-path-gaps");
+    expect(gap?.action).toMatch(/dual free redundancy/i);
+    expect(gap?.action).toMatch(/requireSpend/);
+    expect(gap?.action).not.toMatch(/the-odds-api/i);
   });
 
   it("omits free-spine steps when posture fields are unknown (backward compat)", () => {

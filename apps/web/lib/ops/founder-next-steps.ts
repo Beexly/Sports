@@ -113,15 +113,19 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
   const criticalGaps = input.freeSpineCriticalGaps;
   const requireSpend = input.freeSpineRequireSpend ?? 0;
   if (typeof criticalGaps === "number" && criticalGaps > 0) {
-    const spendNote =
-      requireSpend > 0
-        ? ` ${requireSpend} need×sport cell(s) still requireSpend.`
-        : "";
+    // Today all critical dual-path shortfalls are odds×sport single-cleared paid
+    // (the-odds-api). When requireSpend matches criticalGaps, say so explicitly —
+    // free odds candidates stay gated; never invent lines.
+    const oddsPaidOnly = requireSpend > 0 && requireSpend === criticalGaps;
     steps.push({
       id: "free-spine-dual-path-gaps",
       domain: "free_lane",
       priority: "P2",
-      action: `Free multi-source dual-path gaps: ${criticalGaps} critical need×sport cell(s) below dual free redundancy (scores/results/odds/player_stats/weather).${spendNote} Expand free adapters — never invent scores.`,
+      action: oddsPaidOnly
+        ? `Free dual-path ABSENT on ${criticalGaps} need×sport cell(s) that mustSpend (catalog: odds via the-odds-api single-clear). Free odds candidates remain gated until a legal free source clears — accept paid single-path or clear free odds; never invent lines.`
+        : `Free multi-source dual-path gaps: ${criticalGaps} critical need×sport cell(s) below dual free redundancy (scores/results/odds/player_stats/weather).${
+            requireSpend > 0 ? ` ${requireSpend} cell(s) still requireSpend.` : ""
+          } Expand free adapters where legal — never invent scores.`,
     });
   }
 
