@@ -278,6 +278,33 @@ if (checkoutNode || revenueNode) {
   }
 }
 
+
+// Stripe webhook host audit — soft until field ships; hard when present
+const webhookHosts = T.stripeWebhookHosts ?? null;
+if (webhookHosts && typeof webhookHosts === "object") {
+  check(
+    "GSE Stripe webhook healthy",
+    webhookHosts.gsePrimaryHealthy === true && webhookHosts.auditRequired !== true,
+    `gse=${webhookHosts.gsePrimaryHealthy} auditRequired=${webhookHosts.auditRequired} enabled=${webhookHosts.enabledCount} — ${webhookHosts.operatorHint ?? ""}`,
+  );
+} else {
+  check(
+    "stripeWebhookHosts field (optional until deploy)",
+    true,
+    "absent — not failing",
+  );
+}
+
+// Waitlist growth posture — informational (never fails closed-funnel policy)
+const waitlist = T.waitlist ?? null;
+if (waitlist && typeof waitlist === "object") {
+  check(
+    "waitlist posture observed",
+    typeof waitlist.publicPageOpen === "boolean",
+    `publicOpen=${waitlist.publicPageOpen} gate=${waitlist.gateEnabled} — ${waitlist.operatorHint ?? ""}`,
+  );
+}
+
 // LAWS: never require open public track-record gates
 check(
   "revenue ladder not inventing public monetization",
@@ -301,6 +328,15 @@ const report = {
         stripeSecretConfigured: billingMoney.stripeSecretConfigured,
         webhookSecretConfigured: billingMoney.webhookSecretConfigured,
         envPriceSlotsConfigured: billingMoney.envPriceSlotsConfigured,
+      }
+    : null,
+  waitlist: waitlist
+    ? { publicPageOpen: waitlist.publicPageOpen, gateEnabled: waitlist.gateEnabled }
+    : null,
+  stripeWebhookHosts: webhookHosts
+    ? {
+        gsePrimaryHealthy: webhookHosts.gsePrimaryHealthy,
+        auditRequired: webhookHosts.auditRequired,
       }
     : null,
   autonomy: autonomy

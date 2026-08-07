@@ -29,38 +29,33 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   const started = Date.now();
-  const live: Array<{
-    sport: string;
-    chain: string[];
-    used: string | null;
-    games: number;
-    failover: boolean;
-    errors: string[];
-  }> = [];
+  // Probe each sport once (network), in parallel — free path, no Odds key.
+  // Failures are reported, not fatal. Parallel keeps wall-clock under maxDuration.
+  const live = await Promise.all(
+    ALL_SPORTS.map(async (sport) => {
+      try {
+        const r = await fetchScoresMultiSource(sport);
+        return {
+          sport,
+          chain: [...scoreSourceChain(sport)],
+          used: r.used,
+          games: r.games.length,
+          failover: r.failover,
+          errors: [...r.errors],
+        };
+      } catch (e) {
+        return {
+          sport,
+          chain: [...scoreSourceChain(sport)],
+          used: null as string | null,
+          games: 0,
+          failover: true,
+          errors: [e instanceof Error ? e.message : String(e)],
+        };
+      }
+    }),
+  );
 
-  // Probe each sport once (network). Failures are reported, not fatal.
-  for (const sport of ALL_SPORTS) {
-    try {
-      const r = await fetchScoresMultiSource(sport);
-      live.push({
-        sport,
-        chain: [...scoreSourceChain(sport)],
-        used: r.used,
-        games: r.games.length,
-        failover: r.failover,
-        errors: [...r.errors],
-      });
-    } catch (e) {
-      live.push({
-        sport,
-        chain: [...scoreSourceChain(sport)],
-        used: null,
-        games: 0,
-        failover: true,
-        errors: [e instanceof Error ? e.message : String(e)],
-      });
-    }
-  }
 
   const matrix = freeCoverageMatrix();
   const gaps = redundancyGaps(2).filter((g) =>

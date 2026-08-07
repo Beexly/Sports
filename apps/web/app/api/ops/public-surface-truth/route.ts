@@ -14,6 +14,7 @@ import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
+import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
@@ -64,6 +65,8 @@ const MAIN_FEATURE_MARKERS = [
   "checkout-pricing-alias",
   "stripe-webhook-hosts-posture",
   "founder-queue-low-noise",
+  "waitlist-posture-ops-surface",
+  "free-spine-parallel-probes",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -132,6 +135,7 @@ export async function GET(request: Request) {
   const creditStack = loadCreditStackPosture();
   const billingMoney = loadBillingMoneyPosture();
   const autonomy = loadAutonomyPosture();
+  const waitlist = loadWaitlistPosture();
   let stripeWebhookHosts: Awaited<
     ReturnType<typeof loadStripeWebhookHostsPosture>
   > = null;
@@ -262,6 +266,8 @@ export async function GET(request: Request) {
       },
       contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
+      /** Public-safe lead-capture gate posture (booleans only). */
+      waitlist,
       settlement,
       content: {
         podcastEpisodes: listEpisodes().length,

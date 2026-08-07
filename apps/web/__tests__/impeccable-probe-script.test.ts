@@ -26,6 +26,8 @@ describe("impeccable-probe.mjs", () => {
     expect(SRC).toContain("revenue:checkout");
     expect(SRC).toContain("oddsPath");
     expect(SRC).toContain("criticalGaps");
+    expect(SRC).toContain("stripeWebhookHosts");
+    expect(SRC).toContain("waitlist");
   });
 
   it("never instructs gate flips", () => {
