@@ -36,6 +36,15 @@ export interface FounderNextStepsInput {
   /** Money path env posture (optional — older callers omit → dashboard audit still shown). */
   readonly stripeSecretConfigured?: boolean;
   readonly webhookSecretConfigured?: boolean;
+  /**
+   * Free-spine I3/I8 posture (optional — older callers omit → no free-spine steps).
+   * criticalGaps / requireSpend are structural catalog counts from free-spine probe,
+   * not live network failures.
+   */
+  readonly freeSpinePresent?: boolean;
+  readonly freeSpineWithinSla?: boolean;
+  readonly freeSpineCriticalGaps?: number | null;
+  readonly freeSpineRequireSpend?: number | null;
 }
 
 /**
@@ -76,6 +85,43 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       priority: "P1",
       action:
         "Enable free content: CONTENT_FREE_LANE_ENABLED=true + CEREBRAS_API_KEY and/or FREE_LANE_SECONDARY_*.",
+    });
+  }
+
+  // Free-spine I3/I8: seed / refresh / dual-path catalog (ABSENT-only free path).
+  // Optional fields — omit keeps queue backward-compatible for pure unit callers.
+  if (typeof input.freeSpinePresent === "boolean") {
+    if (!input.freeSpinePresent) {
+      steps.push({
+        id: "free-spine-seed",
+        domain: "free_lane",
+        priority: "P1",
+        action:
+          "No free-spine durable snap — run free-spine-health (CRON_SECRET) so multi-isolate cockpit can score live free coverage (I3).",
+      });
+    } else if (input.freeSpineWithinSla === false) {
+      steps.push({
+        id: "free-spine-stale",
+        domain: "free_lane",
+        priority: "P1",
+        action:
+          "Free-spine snap past 120m SLA — run free-spine-health (or enable AUTONOMY_EXECUTE for planner re-probe). Stale multi-source age misleads I8.",
+      });
+    }
+  }
+
+  const criticalGaps = input.freeSpineCriticalGaps;
+  const requireSpend = input.freeSpineRequireSpend ?? 0;
+  if (typeof criticalGaps === "number" && criticalGaps > 0) {
+    const spendNote =
+      requireSpend > 0
+        ? ` ${requireSpend} need×sport cell(s) still requireSpend.`
+        : "";
+    steps.push({
+      id: "free-spine-dual-path-gaps",
+      domain: "free_lane",
+      priority: "P2",
+      action: `Free multi-source dual-path gaps: ${criticalGaps} critical need×sport cell(s) below dual free redundancy (scores/results/odds/player_stats/weather).${spendNote} Expand free adapters — never invent scores.`,
     });
   }
 

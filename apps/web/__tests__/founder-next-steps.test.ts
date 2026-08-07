@@ -83,10 +83,12 @@ describe("buildFounderNextSteps", () => {
       newsletterIssues: 0,
       canExposePublicPicks: true,
       statsPublic: true,
+      freeSpinePresent: false,
+      freeSpineCriticalGaps: 7,
+      freeSpineRequireSpend: 3,
     });
     expect(steps.length).toBeLessThanOrEqual(8);
   });
-});
 
   it("escalates missing Stripe secret over Dashboard audit", () => {
     const steps = buildFounderNextSteps({
@@ -119,3 +121,58 @@ describe("buildFounderNextSteps", () => {
     expect(steps.map((s) => s.id)).toContain("stripe-webhook-audit");
   });
 
+  it("seeds free-spine when snap absent (I3)", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      freeSpinePresent: false,
+    });
+    const seed = steps.find((s) => s.id === "free-spine-seed");
+    expect(seed?.priority).toBe("P1");
+    expect(seed?.domain).toBe("free_lane");
+  });
+
+  it("flags free-spine stale past SLA (I8)", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      freeSpinePresent: true,
+      freeSpineWithinSla: false,
+    });
+    expect(steps.map((s) => s.id)).toContain("free-spine-stale");
+    expect(steps.map((s) => s.id)).not.toContain("free-spine-seed");
+  });
+
+  it("surfaces dual-path critical gaps as P2 free_lane (never invent scores)", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      freeSpinePresent: true,
+      freeSpineWithinSla: true,
+      freeSpineCriticalGaps: 7,
+      freeSpineRequireSpend: 2,
+    });
+    const gap = steps.find((s) => s.id === "free-spine-dual-path-gaps");
+    expect(gap?.priority).toBe("P2");
+    expect(gap?.action).toMatch(/7 critical/);
+    expect(gap?.action).toMatch(/requireSpend/);
+    expect(gap?.action).toMatch(/never invent/i);
+  });
+
+  it("omits free-spine steps when posture fields are unknown (backward compat)", () => {
+    const ids = buildFounderNextSteps(base).map((s) => s.id);
+    expect(ids).not.toContain("free-spine-seed");
+    expect(ids).not.toContain("free-spine-stale");
+    expect(ids).not.toContain("free-spine-dual-path-gaps");
+  });
+
+  it("skips dual-path step when criticalGaps is zero", () => {
+    const ids = buildFounderNextSteps({
+      ...base,
+      freeSpinePresent: true,
+      freeSpineWithinSla: true,
+      freeSpineCriticalGaps: 0,
+      freeSpineRequireSpend: 0,
+    }).map((s) => s.id);
+    expect(ids).not.toContain("free-spine-dual-path-gaps");
+    expect(ids).not.toContain("free-spine-seed");
+    expect(ids).not.toContain("free-spine-stale");
+  });
+});
