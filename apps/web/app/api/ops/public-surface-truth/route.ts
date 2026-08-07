@@ -46,6 +46,10 @@ const MAIN_FEATURE_MARKERS = [
   "jynx-multicloud-failover-smoke",
   "free-path-team-game-log-repair",
   "revenue-ladder-ops-surface",
+  "free-spine-durable-i3-i8",
+  "autonomy-free-spine-age",
+  "free-spine-empty-not-critical-i5",
+  "impeccable-probe-harness",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
