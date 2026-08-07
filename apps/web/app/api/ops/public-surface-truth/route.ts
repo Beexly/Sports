@@ -11,6 +11,13 @@ import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown"
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
+import {
+  FREE_SPINE_DURABLE_SLA_MS,
+  freeSpineSnapAgeMs,
+  freeSpineWithinSla,
+  loadDurableFreeSpine,
+} from "@/lib/data-sources/free-spine-durable";
+import { readFreeSpineCache } from "@/lib/data-sources/free-spine-cache";
 import { timingSafeEqual } from "node:crypto";
 
 export const dynamic = "force-dynamic";
@@ -137,6 +144,53 @@ export async function GET(request: Request) {
     performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
   });
 
+  // I3/I8: public-safe free-spine durable posture (no secrets)
+  let freeSpine: {
+    present: boolean;
+    source: "process" | "durable" | "none";
+    ageMinutes: number | null;
+    withinSla: boolean;
+    sportsProbed: number | null;
+    sportsWithGames: number | null;
+    criticalGaps: number | null;
+    probedAt: string | null;
+    slaMinutes: number;
+  } = {
+    present: false,
+    source: "none",
+    ageMinutes: null,
+    withinSla: false,
+    sportsProbed: null,
+    sportsWithGames: null,
+    criticalGaps: null,
+    probedAt: null,
+    slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
+  };
+  try {
+    let snap = readFreeSpineCache();
+    let source: "process" | "durable" | "none" = snap ? "process" : "none";
+    if (!snap && !isStubMode()) {
+      snap = await loadDurableFreeSpine();
+      if (snap) source = "durable";
+    }
+    if (snap) {
+      const ageMs = freeSpineSnapAgeMs(snap);
+      freeSpine = {
+        present: true,
+        source,
+        ageMinutes: ageMs == null ? null : Math.round(ageMs / 60000),
+        withinSla: freeSpineWithinSla(snap),
+        sportsProbed: snap.sportsProbed,
+        sportsWithGames: snap.sportsWithGames,
+        criticalGaps: snap.criticalGaps,
+        probedAt: snap.probedAt,
+        slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
+      };
+    }
+  } catch {
+    /* honest empty */
+  }
+
   return NextResponse.json(
     {
       ok: true,
@@ -168,6 +222,7 @@ export async function GET(request: Request) {
       },
       /** Public-safe AI cost posture — booleans only, never secrets. */
       creditStack,
+      freeSpine,
       policy: PUBLIC_NAV_POLICY,
       law: {
         liveBoardDefault: "off",

@@ -6,6 +6,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const create = vi.fn();
 const findFirst = vi.fn();
+const findMany = vi.fn();
+const deleteMany = vi.fn();
 const isStubMode = vi.fn(() => false);
 
 vi.mock("@sports/db", () => ({
@@ -13,6 +15,8 @@ vi.mock("@sports/db", () => ({
     jarvisMemoryEvent: {
       create: (...a: unknown[]) => create(...a),
       findFirst: (...a: unknown[]) => findFirst(...a),
+      findMany: (...a: unknown[]) => findMany(...a),
+      deleteMany: (...a: unknown[]) => deleteMany(...a),
     },
   },
   isStubMode: () => isStubMode(),
@@ -20,11 +24,13 @@ vi.mock("@sports/db", () => ({
 
 import {
   FREE_SPINE_DURABLE_SLA_MS,
+  FREE_SPINE_DURABLE_RETAIN,
   FREE_SPINE_SCOPE,
   freeSpineSnapAgeMs,
   freeSpineWithinSla,
   loadDurableFreeSpine,
   persistFreeSpineSnapshot,
+  pruneOldFreeSpineSnapshots,
 } from "@/lib/data-sources/free-spine-durable";
 import type { FreeSpineCacheSnapshot } from "@/lib/data-sources/free-spine-cache";
 
@@ -44,6 +50,10 @@ const SAMPLE: FreeSpineCacheSnapshot = {
 beforeEach(() => {
   create.mockReset();
   findFirst.mockReset();
+  findMany.mockReset();
+  deleteMany.mockReset();
+  findMany.mockResolvedValue([]);
+  deleteMany.mockResolvedValue({ count: 0 });
   isStubMode.mockReturnValue(false);
 });
 
@@ -56,6 +66,7 @@ describe("persistFreeSpineSnapshot", () => {
 
   it("writes JarvisMemoryEvent with free-spine scope and confirmed state", async () => {
     create.mockResolvedValue({ id: "mem_fs1" });
+    findMany.mockResolvedValue([{ id: "mem_fs1" }]);
     await expect(persistFreeSpineSnapshot(SAMPLE)).resolves.toBe("ok");
     expect(create).toHaveBeenCalledTimes(1);
     const data = create.mock.calls[0]?.[0]?.data;
@@ -137,5 +148,34 @@ describe("freeSpineSnapAgeMs / freeSpineWithinSla (I8)", () => {
   it("null snap is outside SLA", () => {
     expect(freeSpineSnapAgeMs(null, now)).toBeNull();
     expect(freeSpineWithinSla(null, now)).toBe(false);
+  });
+});
+
+describe("pruneOldFreeSpineSnapshots", () => {
+  it("returns 0 in stub mode", async () => {
+    isStubMode.mockReturnValue(true);
+    await expect(pruneOldFreeSpineSnapshots()).resolves.toBe(0);
+    expect(findMany).not.toHaveBeenCalled();
+  });
+
+  it("deletes rows beyond retain window", async () => {
+    const keep = Array.from({ length: FREE_SPINE_DURABLE_RETAIN }, (_, i) => ({ id: `k${i}` }));
+    findMany.mockResolvedValue(keep);
+    deleteMany.mockResolvedValue({ count: 12 });
+    await expect(pruneOldFreeSpineSnapshots()).resolves.toBe(12);
+    expect(deleteMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          scope: FREE_SPINE_SCOPE,
+          id: { notIn: keep.map((k) => k.id) },
+        }),
+      }),
+    );
+  });
+
+  it("skips delete when fewer than retain rows", async () => {
+    findMany.mockResolvedValue([{ id: "only" }]);
+    await expect(pruneOldFreeSpineSnapshots()).resolves.toBe(0);
+    expect(deleteMany).not.toHaveBeenCalled();
   });
 });

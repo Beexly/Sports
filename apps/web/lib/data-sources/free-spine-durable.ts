@@ -16,6 +16,9 @@ export const FREE_SPINE_SCOPE = "data-sources.free-spine.health";
 /** Cockpit SLA: free-spine durable snap should be ≤ 120 minutes old. */
 export const FREE_SPINE_DURABLE_SLA_MS = 120 * 60 * 1000;
 
+/** Keep last N durable snaps — free-spine-health runs ~12/day; 48 ≈ 4 days. */
+export const FREE_SPINE_DURABLE_RETAIN = 48;
+
 function isLiveRow(value: unknown): value is FreeSpineCacheSnapshot["live"][number] {
   if (typeof value !== "object" || value === null) return false;
   const o = value as Record<string, unknown>;
@@ -67,6 +70,8 @@ export async function persistFreeSpineSnapshot(
         owner_approval: true,
       },
     });
+    // I3 hygiene: cap table growth (best-effort; never fail the write path)
+    await pruneOldFreeSpineSnapshots().catch(() => undefined);
     return "ok";
   } catch {
     return "error";
@@ -117,4 +122,32 @@ export function freeSpineWithinSla(
 ): boolean {
   const age = freeSpineSnapAgeMs(snap, nowMs);
   return age != null && age <= maxAgeMs;
+}
+
+/** Delete free-spine snaps older than the newest FREE_SPINE_DURABLE_RETAIN rows. Never throws. */
+export async function pruneOldFreeSpineSnapshots(
+  retain = FREE_SPINE_DURABLE_RETAIN,
+): Promise<number> {
+  if (isStubMode()) return 0;
+  if (retain < 1) return 0;
+  try {
+    const keep = await db.jarvisMemoryEvent.findMany({
+      where: { scope: FREE_SPINE_SCOPE, memory_type: "episodic" },
+      orderBy: { created_at: "desc" },
+      take: retain,
+      select: { id: true },
+    });
+    if (keep.length < retain) return 0;
+    const keepIds = keep.map((r) => r.id);
+    const res = await db.jarvisMemoryEvent.deleteMany({
+      where: {
+        scope: FREE_SPINE_SCOPE,
+        memory_type: "episodic",
+        id: { notIn: keepIds },
+      },
+    });
+    return res.count ?? 0;
+  } catch {
+    return 0;
+  }
 }

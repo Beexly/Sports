@@ -511,6 +511,10 @@ export async function loadJarvisAssessment(): Promise<{
         ingestionAgeMinutes: lastSuccessIngestion?.completedAt
           ? Math.round((now.getTime() - new Date(lastSuccessIngestion.completedAt).getTime()) / 60000)
           : null,
+        freeSpineAgeMinutes: (() => {
+          const ageMs = freeSpineSnapAgeMs(spineCache, now.getTime());
+          return ageMs == null ? null : Math.round(ageMs / 60000);
+        })(),
         settlementBand: sh?.health ?? "UNKNOWN",
         settlementOverdue: sh?.overduePending ?? null,
         settlementCommenced: sh?.commencedTotal ?? null,

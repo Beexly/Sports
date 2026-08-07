@@ -50,6 +50,12 @@ export interface AutonomyObservation {
   readonly databaseOk: boolean;
   readonly ingestionOk: boolean;
   readonly ingestionAgeMinutes: number | null;
+  /**
+   * Age of durable free-spine snap in minutes (I3/I8).
+   * null = missing/unreadable; undefined = observer did not probe (legacy).
+   * SLA = FREE_SPINE_SLA_MINUTES (120).
+   */
+  readonly freeSpineAgeMinutes?: number | null;
   readonly settlementBand: SettlementHealthBand | "UNKNOWN";
   readonly settlementOverdue: number | null;
   readonly settlementCommenced: number | null;
@@ -68,6 +74,9 @@ export interface AutonomyObservation {
   readonly canonicalSettled: number | null;
   readonly minSettledForLearning: number;
 }
+
+/** I8 SLA: free-spine durable snap age ceiling (minutes). */
+export const FREE_SPINE_SLA_MINUTES = 120;
 
 export interface AutonomyIntrospection {
   readonly honestyScore: number; // 0..100
@@ -199,19 +208,44 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
     });
   }
 
-  // ── Ingestion freshness ────────────────────────────────────────────────
-  if (!obs.ingestionOk || (obs.ingestionAgeMinutes !== null && obs.ingestionAgeMinutes > 90)) {
-    severity = worse(severity, obs.ingestionAgeMinutes !== null && obs.ingestionAgeMinutes > 360 ? "P0" : "P1");
-    actions.push({
-      kind: "RUN_FREE_SPINE_HEALTH",
-      priority: 900,
-      severity: obs.ingestionAgeMinutes !== null && obs.ingestionAgeMinutes > 360 ? "P0" : "P1",
-      title: "Refresh free-spine ingestion health",
-      detail: `Ingestion age ${obs.ingestionAgeMinutes ?? "?"}m — write durable SUCCESS IngestionRun via free-spine-health.`,
-      target: "/api/cron/free-spine-health",
-      requiresOwner: false,
-      autonomousSafe: true,
-    });
+  // ── Ingestion freshness + free-spine durable SLA (I2/I3/I8) ─────────────
+  // I2: stale/failed ingestion → free-spine-health stamps SUCCESS IngestionRun.
+  // I8: durable free-spine snap age > 120m (or missing) → same autonomous act.
+  {
+    const spineAge = obs.freeSpineAgeMinutes;
+    const spineMissing = spineAge === null; // explicit null only; undefined = not probed
+    const spineStale =
+      typeof spineAge === "number" && spineAge > FREE_SPINE_SLA_MINUTES;
+    const ingestionStale =
+      !obs.ingestionOk ||
+      (obs.ingestionAgeMinutes !== null && obs.ingestionAgeMinutes > 90);
+
+    if (ingestionStale || spineStale || spineMissing) {
+      const spineSev: AutonomySeverity =
+        typeof spineAge === "number" && spineAge > 360
+          ? "P0"
+          : spineMissing || spineStale
+            ? "P1"
+            : obs.ingestionAgeMinutes !== null && obs.ingestionAgeMinutes > 360
+              ? "P0"
+              : "P1";
+      severity = worse(severity, spineSev);
+      const spineDetail = spineMissing
+        ? "No durable free-spine snap (I3 cold isolate / never probed) — run free-spine-health."
+        : spineStale
+          ? `Free-spine durable age ${spineAge}m exceeds ${FREE_SPINE_SLA_MINUTES}m SLA (I8).`
+          : `Ingestion age ${obs.ingestionAgeMinutes ?? "?"}m — write durable SUCCESS IngestionRun via free-spine-health.`;
+      actions.push({
+        kind: "RUN_FREE_SPINE_HEALTH",
+        priority: 900,
+        severity: spineSev,
+        title: "Refresh free-spine ingestion health",
+        detail: spineDetail,
+        target: "/api/cron/free-spine-health",
+        requiresOwner: false,
+        autonomousSafe: true,
+      });
+    }
   }
 
   if (!obs.databaseOk) {
@@ -362,6 +396,12 @@ function introspect(
   if (obs.topRcaCause) {
     growthEdges.push(`Automate remediation for top RCA: ${obs.topRcaCause}.`);
   }
+  if (
+    obs.freeSpineAgeMinutes === null ||
+    (typeof obs.freeSpineAgeMinutes === "number" && obs.freeSpineAgeMinutes > FREE_SPINE_SLA_MINUTES)
+  ) {
+    growthEdges.push("Close free-spine durable SLA loop (I3/I8) via free-spine-health.");
+  }
   growthEdges.push("Keep autonomy plans pure + test-backed; wire more crons into autonomousQueue safely.");
 
   let honesty = 100;
@@ -369,6 +409,11 @@ function introspect(
   if (severity === "P0") honesty -= 25;
   else if (severity === "P1") honesty -= 12;
   if (!obs.draftOnly && obs.liveBoardEnabled) honesty -= 10;
+  if (typeof obs.freeSpineAgeMinutes === "number" && obs.freeSpineAgeMinutes > FREE_SPINE_SLA_MINUTES) {
+    honesty -= 8;
+  } else if (obs.freeSpineAgeMinutes === null) {
+    honesty -= 5;
+  }
   honesty = Math.max(0, Math.min(100, honesty));
 
   const refuseDefaultHeld =
