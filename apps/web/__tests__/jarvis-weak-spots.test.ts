@@ -5,6 +5,7 @@ import { probeJarvisLayers } from "@/lib/cockpit/jarvis-layer-probes";
 import {
   clearFreeSpineCache,
   freeSpineLiveScore,
+  isFreeSpineEmptySlate,
   writeFreeSpineCache,
 } from "@/lib/data-sources/free-spine-cache";
 import { externalConfigMissing } from "@/lib/cockpit/jarvis-data";
@@ -183,6 +184,50 @@ describe("weak spot: free-spine cache", () => {
       },
     );
     expect(s).toBeCloseTo(5 / 7, 5);
+  });
+
+  // I5: offseason zero games is empty-labelled, not Critical/RED via score 0
+  it("empty slate (0 games) returns null score and isFreeSpineEmptySlate", () => {
+    const empty = {
+      probedAt: new Date().toISOString(),
+      sportsProbed: 7,
+      sportsWithGames: 0,
+      criticalGaps: 0,
+      requireSpend: 0,
+      freeCovered: 40,
+      live: [],
+    };
+    expect(isFreeSpineEmptySlate(empty)).toBe(true);
+    expect(freeSpineLiveScore(empty)).toBeNull();
+    // must not drag signal min to 0
+    const a = synthesizeJarvis(
+      base({
+        signal: {
+          snapshotCoveragePct: 0.95,
+          signalCoveragePct: 0.9,
+          averageDataQualityScore: 0.9,
+          modelVersionsActive: ["v5"],
+          gameSignalCoveragePct: 0.88,
+          featureMatrixCoveragePct: 0.91,
+          freeMultiSourceScore: 1,
+          // undefined freeSpineLiveScore (empty labelled)
+        },
+      }),
+    );
+    expect(a.signalCoverageStatus).not.toBe("RED");
+  });
+
+  it("stale snap beyond 120m does not score (I8 TTL on live score)", () => {
+    const stale = {
+      probedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3h
+      sportsProbed: 7,
+      sportsWithGames: 5,
+      criticalGaps: 0,
+      requireSpend: 0,
+      freeCovered: 40,
+      live: [],
+    };
+    expect(freeSpineLiveScore(stale)).toBeNull();
   });
 });
 
