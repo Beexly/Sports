@@ -114,7 +114,11 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
-          message: body.error ?? "Today's Board is collecting live history.",
+          // Calibration-aware: name the gate that actually holds the board dark.
+          // Vague "collecting live history" over-promises a near-term open.
+          message:
+            body.error ??
+            "Board is gated. Collecting settled history for calibration.",
           hint: body.hint,
           kind,
         },
