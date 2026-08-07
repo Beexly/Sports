@@ -11,13 +11,15 @@ import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown"
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
+import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
+import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
+import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
   freeSpineWithinSla,
-  loadDurableFreeSpine,
+  resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
-import { readFreeSpineCache } from "@/lib/data-sources/free-spine-cache";
 import { timingSafeEqual } from "node:crypto";
 
 export const dynamic = "force-dynamic";
@@ -50,6 +52,14 @@ const MAIN_FEATURE_MARKERS = [
   "autonomy-free-spine-age",
   "free-spine-empty-not-critical-i5",
   "impeccable-probe-harness",
+  "checkout-revenue-capability-probe",
+  "billing-money-posture-ops-surface",
+  "autonomy-resolve-best-free-spine",
+  "free-spine-prefer-fresher-durable",
+  "free-spine-coverage-founder-queue",
+  "autonomy-posture-ops-surface",
+  "free-spine-odds-path-summary",
+  "impeccable-multi-path-probe",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -115,9 +125,67 @@ export async function GET(request: Request) {
     settlement = null;
   }
 
-
   const creditStack = loadCreditStackPosture();
+  const billingMoney = loadBillingMoneyPosture();
+  const autonomy = loadAutonomyPosture();
   const jynx = creditStack.jynx;
+
+  // I3/I8: resolve free-spine BEFORE founder queue so coverage gaps / SLA land in steps.
+  let freeSpine: {
+    present: boolean;
+    source: "process" | "durable" | "none";
+    ageMinutes: number | null;
+    withinSla: boolean;
+    sportsProbed: number | null;
+    sportsWithGames: number | null;
+    criticalGaps: number | null;
+    freeCovered: number | null;
+    requireSpend: number | null;
+    oddsPath: ReturnType<typeof summarizeFreeSpineOddsPath>;
+    probedAt: string | null;
+    slaMinutes: number;
+  } = {
+    present: false,
+    source: "none",
+    ageMinutes: null,
+    withinSla: false,
+    sportsProbed: null,
+    sportsWithGames: null,
+    criticalGaps: null,
+    freeCovered: null,
+    requireSpend: null,
+    oddsPath: null,
+    probedAt: null,
+    slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
+  };
+  try {
+    // I3: prefer fresh process RAM; if cold/stale, load Neon durable and pick fresher.
+    const { snap, source } = await resolveBestFreeSpineSnapshot();
+    if (snap) {
+      const ageMs = freeSpineSnapAgeMs(snap);
+      freeSpine = {
+        present: true,
+        source,
+        ageMinutes: ageMs == null ? null : Math.round(ageMs / 60000),
+        withinSla: freeSpineWithinSla(snap),
+        sportsProbed: snap.sportsProbed,
+        sportsWithGames: snap.sportsWithGames,
+        criticalGaps: snap.criticalGaps,
+        freeCovered: snap.freeCovered,
+        requireSpend: snap.requireSpend,
+        oddsPath: summarizeFreeSpineOddsPath({
+          criticalGaps: snap.criticalGaps,
+          requireSpend: snap.requireSpend,
+          freeCovered: snap.freeCovered,
+        }),
+        probedAt: snap.probedAt,
+        slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
+      };
+    }
+  } catch {
+    /* honest empty */
+  }
+
   const founderNextSteps = buildFounderNextSteps({
     overduePending: settlement?.overduePending ?? null,
     settlementHealth: settlement?.health ?? null,
@@ -134,6 +202,12 @@ export async function GET(request: Request) {
     newsletterIssues: listIssues().length,
     markerCount: MAIN_FEATURE_MARKERS.length,
     expectedMarkerFloor: MAIN_FEATURE_MARKERS.length,
+    stripeSecretConfigured: billingMoney.stripeSecretConfigured,
+    webhookSecretConfigured: billingMoney.webhookSecretConfigured,
+    freeSpinePresent: freeSpine.present,
+    freeSpineWithinSla: freeSpine.withinSla,
+    freeSpineCriticalGaps: freeSpine.criticalGaps,
+    freeSpineRequireSpend: freeSpine.requireSpend,
   });
 
   // Proof-gated ladder — never invents calibration/CLV; never flips gates.
@@ -147,53 +221,6 @@ export async function GET(request: Request) {
     publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
     performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
   });
-
-  // I3/I8: public-safe free-spine durable posture (no secrets)
-  let freeSpine: {
-    present: boolean;
-    source: "process" | "durable" | "none";
-    ageMinutes: number | null;
-    withinSla: boolean;
-    sportsProbed: number | null;
-    sportsWithGames: number | null;
-    criticalGaps: number | null;
-    probedAt: string | null;
-    slaMinutes: number;
-  } = {
-    present: false,
-    source: "none",
-    ageMinutes: null,
-    withinSla: false,
-    sportsProbed: null,
-    sportsWithGames: null,
-    criticalGaps: null,
-    probedAt: null,
-    slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
-  };
-  try {
-    let snap = readFreeSpineCache();
-    let source: "process" | "durable" | "none" = snap ? "process" : "none";
-    if (!snap && !isStubMode()) {
-      snap = await loadDurableFreeSpine();
-      if (snap) source = "durable";
-    }
-    if (snap) {
-      const ageMs = freeSpineSnapAgeMs(snap);
-      freeSpine = {
-        present: true,
-        source,
-        ageMinutes: ageMs == null ? null : Math.round(ageMs / 60000),
-        withinSla: freeSpineWithinSla(snap),
-        sportsProbed: snap.sportsProbed,
-        sportsWithGames: snap.sportsWithGames,
-        criticalGaps: snap.criticalGaps,
-        probedAt: snap.probedAt,
-        slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
-      };
-    }
-  } catch {
-    /* honest empty */
-  }
 
   return NextResponse.json(
     {
@@ -226,6 +253,10 @@ export async function GET(request: Request) {
       },
       /** Public-safe AI cost posture — booleans only, never secrets. */
       creditStack,
+      /** Public-safe money path posture — booleans + lookup keys only, never secrets. */
+      billingMoney,
+      /** Public-safe autonomy executor posture — dry-run default, free crons only. */
+      autonomy,
       freeSpine,
       policy: PUBLIC_NAV_POLICY,
       law: {

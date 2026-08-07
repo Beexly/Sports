@@ -1,16 +1,16 @@
 /**
  * Epistemic Twin consumer wiring — P2.
  *
- * WHY: OP-003 (`capability-state.ts`) reports 4 flat leaf capabilities
- * (database, ingestion, settlement, nflverse-reports), each evaluated in
- * isolation. It cannot answer the actual production incident the twin
- * contract exists to prevent: "`/nflverse` OOM-500s while `/api/health`
+ * WHY: OP-003 (`capability-state.ts`) reports leaf capabilities
+ * (database, ingestion, settlement, nflverse-reports, checkout, revenue-checkout),
+ * each evaluated in isolation. It cannot answer the actual production incident
+ * the twin contract exists to prevent: "`/nflverse` OOM-500s while `/api/health`
  * reported healthy" is a question about a ROUTE that nothing directly
- * probes. This module composes those 4 leaf observations, plus the two real
+ * probes. This module composes those leaf observations, plus the two real
  * founder feature-gate reads, through `@sports/epistemic-twin`'s frozen
  * composition law over the full 15-node seed registry — so dependent
- * capabilities with no direct probe (routes, reports, the proof surface,
- * revenue) get honest, dependency-derived truth instead of no answer at all.
+ * capabilities with no direct probe (routes, reports, the proof surface)
+ * get honest, dependency-derived truth instead of no answer at all.
  *
  * Pure composition only: no Prisma `CapabilityObservation` table (Phase-1 is
  * founder-gated per CLAUDE.md), no new DB queries — this takes the health
@@ -80,6 +80,9 @@ const ATOM_ID_TO_SEED_ID: Readonly<Record<string, string>> = {
   ingestion: "ingestion",
   settlement: "engine:settlement",
   "nflverse-reports": "source:nflverse",
+  // Money path (env-only probes; no Stripe network from public health)
+  checkout: "route:/checkout",
+  "revenue-checkout": "revenue:checkout",
 };
 
 export interface CapabilityGraph {

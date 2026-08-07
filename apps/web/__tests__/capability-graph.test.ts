@@ -10,7 +10,7 @@ import type { CapabilityState } from "@/lib/health/capability-state";
  * apps/web-side wiring of @sports/epistemic-twin (P2). The composition law
  * itself is pinned exhaustively in packages/epistemic-twin's own test suite
  * — these tests are about THIS module's responsibility: mapping the health
- * route's 4 OP-003 leaf atoms + the 2 real founder gate env vars onto the
+ * route's OP-003 leaf atoms + the 2 real founder gate env vars onto the
  * frozen seed registry correctly, and projecting the result back to the wire
  * form. No composition-law re-litigation here.
  */
@@ -32,6 +32,12 @@ const ALL_HEALTHY_ATOMS: CapabilityState[] = [
   atom("ingestion", "healthy"),
   atom("settlement", "healthy"),
   atom("nflverse-reports", "healthy"),
+];
+
+const ALL_HEALTHY_WITH_MONEY: CapabilityState[] = [
+  ...ALL_HEALTHY_ATOMS,
+  atom("checkout", "healthy"),
+  atom("revenue-checkout", "healthy"),
 ];
 
 afterEach(() => {
@@ -99,14 +105,16 @@ describe("composeCapabilityGraph — the exact production incident this contract
       atom("ingestion", "healthy"),
       atom("settlement", "healthy"),
       atom("nflverse-reports", "unavailable"),
+      atom("checkout", "healthy"),
+      atom("revenue-checkout", "healthy"),
     ];
     const graph = composeCapabilityGraph(atoms, NOW);
 
-    // route:/checkout has no direct probe, so it's honestly "unknown" — but
-    // NOT "unavailable". The load-bearing assertion is that nflverse's
-    // outage never taints it via a fabricated dependency edge.
+    // Money path has its own env probes — nflverse outage never taints them.
     expect(graph.composed.get("route:/checkout")?.kind).not.toBe("unavailable");
     expect(graph.composed.get("revenue:checkout")?.kind).not.toBe("unavailable");
+    expect(graph.composed.get("route:/checkout")?.kind).toBe("healthy");
+    expect(graph.composed.get("revenue:checkout")?.kind).toBe("healthy");
   });
 
   it("database unavailable propagates to ingestion, engine:settlement, and revenue:checkout (real hard deps)", () => {
@@ -115,28 +123,25 @@ describe("composeCapabilityGraph — the exact production incident this contract
       atom("ingestion", "healthy"),
       atom("settlement", "healthy"),
       atom("nflverse-reports", "healthy"),
+      atom("checkout", "healthy"),
+      atom("revenue-checkout", "healthy"),
     ];
     const graph = composeCapabilityGraph(atoms, NOW);
 
     expect(graph.composed.get("db:primary")?.kind).toBe("unavailable");
-    // route:/checkout hard-deps db:primary directly.
+    // route:/checkout hard-deps db:primary directly — hard-dep unavailable wins.
     expect(graph.composed.get("route:/checkout")?.kind).toBe("unavailable");
     expect(graph.composed.get("revenue:checkout")?.kind).toBe("unavailable");
   });
 });
 
 describe("composeCapabilityGraph — absence of coverage is not green", () => {
-  it("nodes with no direct probe (routes, reports) compose 'unknown' when nothing overrides them, never a fabricated 'healthy'", () => {
+  it("nodes with no direct probe (home/picks/reports) compose 'unknown' when nothing overrides them", () => {
     vi.stubEnv("SEALED_ENGINE_ENABLED", "true");
     vi.stubEnv("PUBLISH_LEDGER", "true");
+    // No money atoms — checkout/revenue stay honestly unknown.
     const graph = composeCapabilityGraph(ALL_HEALTHY_ATOMS, NOW);
 
-    // route:/home, route:/picks, route:/checkout, revenue:checkout, the 3
-    // nflverse reports, and proof:slate-commitment have no matching OP-003
-    // atom in ALL_HEALTHY_ATOMS. Per the composition law, a node's own
-    // "unknown" (no evidence) wins over healthy dependency state (rule 3
-    // fires before rule 4/5) — this module must not silently fabricate
-    // healthy status for uncovered nodes.
     for (const id of [
       "route:/home",
       "route:/picks",
@@ -148,6 +153,16 @@ describe("composeCapabilityGraph — absence of coverage is not green", () => {
     ]) {
       expect(graph.composed.get(id)?.kind).toBe("unknown");
     }
+  });
+
+  it("money-path atoms make route:/checkout and revenue:checkout honest (not silent unknown)", () => {
+    vi.stubEnv("SEALED_ENGINE_ENABLED", "true");
+    vi.stubEnv("PUBLISH_LEDGER", "true");
+    const graph = composeCapabilityGraph(ALL_HEALTHY_WITH_MONEY, NOW);
+    expect(graph.composed.get("route:/checkout")?.kind).toBe("healthy");
+    expect(graph.composed.get("revenue:checkout")?.kind).toBe("healthy");
+    // Still no fabricated green for unprobed routes
+    expect(graph.composed.get("route:/home")?.kind).toBe("unknown");
   });
 });
 

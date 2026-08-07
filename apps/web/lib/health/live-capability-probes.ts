@@ -6,6 +6,9 @@
  * implementation instead of two that could silently drift apart. This module
  * performs only read-only Prisma queries the health route already ran; it
  * adds no new persistence (no Prisma `CapabilityObservation` table).
+ *
+ * Money-path leaf (checkout / revenue): env-only — never calls Stripe network
+ * from the public health surface (no secrets leaked, no side effects).
  */
 
 import { db } from "@sports/db";
@@ -15,7 +18,13 @@ import {
   type SettlementHealthBand,
 } from "@/lib/performance/settlement-health";
 import { nflverseTableCacheStats, probeNflverseSourceCurrency } from "@sports/data-ingestion";
-import { fromHealthCheck, fromSettlementBand, unknownCapability, type CapabilityState } from "./capability-state";
+import {
+  fromHealthCheck,
+  fromSettlementBand,
+  unknownCapability,
+  type CapabilityState,
+} from "./capability-state";
+import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 
 export type HealthCheck = {
   status: "ok" | "error";
@@ -27,6 +36,73 @@ export type HealthCheck = {
 export interface LiveCapabilityProbeResult {
   readonly checks: Record<string, HealthCheck>;
   readonly capabilities: CapabilityState[];
+}
+
+/** Env-only money-path leaf — maps to route:/checkout + revenue:checkout. */
+export function probeCheckoutMoneyPath(
+  env: NodeJS.ProcessEnv = process.env,
+  now = new Date(),
+): { checkout: CapabilityState; revenue: CapabilityState } {
+  const money = loadBillingMoneyPosture(env);
+  const observedAt = now.toISOString();
+
+  let checkout: CapabilityState;
+  if (!money.stripeSecretConfigured) {
+    checkout = {
+      capabilityId: "checkout",
+      status: "unavailable",
+      reason: "STRIPE_SECRET_KEY not configured — checkout cannot create sessions",
+      observedAt,
+      evidence: "probe",
+    };
+  } else if (money.envPriceSlotsConfigured === 0) {
+    checkout = {
+      capabilityId: "checkout",
+      status: "degraded",
+      reason:
+        "Stripe secret present; no STRIPE_*_PRICE_ID envs — checkout depends on lookup_key resolution",
+      observedAt,
+      evidence: "probe",
+    };
+  } else {
+    checkout = {
+      capabilityId: "checkout",
+      status: "healthy",
+      reason: `Stripe secret + ${money.envPriceSlotsConfigured}/6 env price slots configured`,
+      observedAt,
+      evidence: "probe",
+    };
+  }
+
+  let revenue: CapabilityState;
+  if (!money.stripeSecretConfigured) {
+    revenue = {
+      capabilityId: "revenue-checkout",
+      status: "unavailable",
+      reason: "Stripe secret missing — revenue path cannot charge or entitle",
+      observedAt,
+      evidence: "probe",
+    };
+  } else if (!money.webhookSecretConfigured) {
+    revenue = {
+      capabilityId: "revenue-checkout",
+      status: "degraded",
+      reason:
+        "Stripe secret present but webhook secret missing — sessions may create without entitlements",
+      observedAt,
+      evidence: "probe",
+    };
+  } else {
+    revenue = {
+      capabilityId: "revenue-checkout",
+      status: "healthy",
+      reason: "Stripe secret + webhook secret configured for entitlement handoff",
+      observedAt,
+      evidence: "probe",
+    };
+  }
+
+  return { checkout, revenue };
 }
 
 export async function computeLiveCapabilityProbes(): Promise<LiveCapabilityProbeResult> {
@@ -128,6 +204,8 @@ export async function computeLiveCapabilityProbes(): Promise<LiveCapabilityProbe
     };
   }
 
+  const money = probeCheckoutMoneyPath();
+
   const capabilities: CapabilityState[] = [
     fromHealthCheck(
       "database",
@@ -145,6 +223,8 @@ export async function computeLiveCapabilityProbes(): Promise<LiveCapabilityProbe
       ? fromSettlementBand(settlementBand)
       : unknownCapability("settlement", "settlement health could not be determined"),
     nflverseCapability,
+    money.checkout,
+    money.revenue,
   ];
 
   return { checks, capabilities };

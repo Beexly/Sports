@@ -1,6 +1,6 @@
 /**
  * Ordered multi-domain founder actions — pure, public-safe (no secrets).
- * Keeps ops truth from hyper-focusing: settle, deploy, credits, free-lane, gates.
+ * Keeps ops truth from hyper-focusing: settle, deploy, credits, free-lane, gates, billing.
  */
 
 export interface FounderNextStep {
@@ -33,6 +33,18 @@ export interface FounderNextStepsInput {
   /** Features this deploy claims vs code markers length (diagnostic only). */
   readonly markerCount: number;
   readonly expectedMarkerFloor: number;
+  /** Money path env posture (optional — older callers omit → dashboard audit still shown). */
+  readonly stripeSecretConfigured?: boolean;
+  readonly webhookSecretConfigured?: boolean;
+  /**
+   * Free-spine I3/I8 posture (optional — older callers omit → no free-spine steps).
+   * criticalGaps / requireSpend are structural catalog counts from free-spine probe,
+   * not live network failures.
+   */
+  readonly freeSpinePresent?: boolean;
+  readonly freeSpineWithinSla?: boolean;
+  readonly freeSpineCriticalGaps?: number | null;
+  readonly freeSpineRequireSpend?: number | null;
 }
 
 /**
@@ -73,6 +85,47 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       priority: "P1",
       action:
         "Enable free content: CONTENT_FREE_LANE_ENABLED=true + CEREBRAS_API_KEY and/or FREE_LANE_SECONDARY_*.",
+    });
+  }
+
+  // Free-spine I3/I8: seed / refresh / dual-path catalog (ABSENT-only free path).
+  // Optional fields — omit keeps queue backward-compatible for pure unit callers.
+  if (typeof input.freeSpinePresent === "boolean") {
+    if (!input.freeSpinePresent) {
+      steps.push({
+        id: "free-spine-seed",
+        domain: "free_lane",
+        priority: "P1",
+        action:
+          "No free-spine durable snap — run free-spine-health (CRON_SECRET) so multi-isolate cockpit can score live free coverage (I3).",
+      });
+    } else if (input.freeSpineWithinSla === false) {
+      steps.push({
+        id: "free-spine-stale",
+        domain: "free_lane",
+        priority: "P1",
+        action:
+          "Free-spine snap past 120m SLA — run free-spine-health (or enable AUTONOMY_EXECUTE for planner re-probe). Stale multi-source age misleads I8.",
+      });
+    }
+  }
+
+  const criticalGaps = input.freeSpineCriticalGaps;
+  const requireSpend = input.freeSpineRequireSpend ?? 0;
+  if (typeof criticalGaps === "number" && criticalGaps > 0) {
+    // Today all critical dual-path shortfalls are odds×sport single-cleared paid
+    // (the-odds-api). When requireSpend matches criticalGaps, say so explicitly —
+    // free odds candidates stay gated; never invent lines.
+    const oddsPaidOnly = requireSpend > 0 && requireSpend === criticalGaps;
+    steps.push({
+      id: "free-spine-dual-path-gaps",
+      domain: "free_lane",
+      priority: "P2",
+      action: oddsPaidOnly
+        ? `Free dual-path ABSENT on ${criticalGaps} need×sport cell(s) that mustSpend (catalog: odds via the-odds-api single-clear). Free odds candidates remain gated until a legal free source clears — accept paid single-path or clear free odds; never invent lines.`
+        : `Free multi-source dual-path gaps: ${criticalGaps} critical need×sport cell(s) below dual free redundancy (scores/results/odds/player_stats/weather).${
+            requireSpend > 0 ? ` ${requireSpend} cell(s) still requireSpend.` : ""
+          } Expand free adapters where legal — never invent scores.`,
     });
   }
 
@@ -125,14 +178,34 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
     });
   }
 
-
-  steps.push({
-    id: "stripe-webhook-audit",
-    domain: "billing",
-    priority: "P1",
-    action:
-      "Stripe Dashboard: confirm only galaxysportsedge.com webhook endpoints (remove foreign domains e.g. medusajs if unintended).",
-  });
+  // Money path: escalate missing env first; Dashboard endpoint audit stays when secrets exist.
+  const stripeKnown = typeof input.stripeSecretConfigured === "boolean";
+  const webhookKnown = typeof input.webhookSecretConfigured === "boolean";
+  if (stripeKnown && input.stripeSecretConfigured === false) {
+    steps.push({
+      id: "stripe-secret-env",
+      domain: "billing",
+      priority: "P1",
+      action:
+        "STRIPE_SECRET_KEY missing in prod — checkout cannot create sessions. Wire secret + price ids/lookup_keys.",
+    });
+  } else if (webhookKnown && input.webhookSecretConfigured === false) {
+    steps.push({
+      id: "stripe-webhook-secret-env",
+      domain: "billing",
+      priority: "P1",
+      action:
+        "STRIPE_WEBHOOK_SECRET missing — sessions may create without durable entitlements. Wire webhook secret + Dashboard endpoint.",
+    });
+  } else {
+    steps.push({
+      id: "stripe-webhook-audit",
+      domain: "billing",
+      priority: "P1",
+      action:
+        "Stripe Dashboard: confirm only galaxysportsedge.com webhook endpoints (remove foreign domains e.g. medusajs if unintended).",
+    });
+  }
 
   steps.push({
     id: "analytics-optional",
