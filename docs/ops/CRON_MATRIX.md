@@ -1,8 +1,19 @@
-# CRON_MATRIX — route × auth × vercel.json
+# CRON_MATRIX — pointer (GENERATED_SOT_ONLY)
 
-**MAIN:** `1e007c3` · Pass 4 canonical  
-**Auth SoT:** `apps/web/lib/cron/authorize.ts` → `cronAuthError`  
-**Runtime:** all routes `dynamic=force-dynamic` · `runtime=nodejs`
+**Do not hand-edit schedules in this file.**
+
+| SoT | Path |
+|-----|------|
+| Vercel schedules | `vercel.json` → `crons` |
+| Generated table | [`CRON_MATRIX.generated.md`](./CRON_MATRIX.generated.md) |
+| Sub-daily heartbeat | `.github/workflows/external-cron.yml` |
+
+```bash
+node scripts/ops/cron-matrix-from-vercel.mjs          # regenerate
+node scripts/ops/cron-matrix-from-vercel.mjs --check  # CI / preflight
+```
+
+## Auth contract (stable)
 
 | Expected | Condition |
 |----------|-----------|
@@ -10,31 +21,35 @@
 | **401** | Missing/wrong Bearer |
 | **200** | Bearer matches primary or previous (handler may still refuse business logic) |
 
-| Route | Auth | vercel.json | Schedule | Expected 401 | Expected 200 (auth OK) |
-|-------|------|-------------|----------|--------------|------------------------|
-| `/api/cron/backfill-historical-games` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
-| `/api/cron/backfill-player-data` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
-| `/api/cron/backfill-team-efficiency` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
-| `/api/cron/backtest-calibration` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
-| `/api/cron/deliver-settlement-alerts` | cronAuthError | scheduled | `30 7 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/drain-ai-telemetry-recovery` | cronAuthError | scheduled | `30 * * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/gamma` | cronAuthError | **PAUSED (B-0)** | _unscheduled_ | bad/missing Bearer | authorized GET/POST · oddsApiRequired=false |
-| `/api/cron/generate-drafts` | cronAuthError | scheduled | `0 11 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/hydrate-cold-plane` | cronAuthError | scheduled | `30 9 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/ingest-player-stats` | cronAuthError | scheduled | `0 9 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/jarvis-snapshot` | cronAuthError | scheduled | `15 * * * *` | bad/missing Bearer | authorized GET · fills Jarvis ring buffer |
-| `/api/cron/prune-rate-limits` | cronAuthError | scheduled | `30 6 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/reconcile-entitlements` | cronAuthError | scheduled | `0 8 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/refresh-odds` | cronAuthError | scheduled | `*/30 * * * *` | bad/missing Bearer | authorized GET · Odds optional |
-| `/api/cron/refresh-player-stats` | cronAuthError | manual-only | — | bad/missing Bearer | authorized GET |
-| `/api/cron/repair-checkout-attempts` | cronAuthError | scheduled | `30 8 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/run-formal-receipt` | cronAuthError | scheduled | `45 9 * * *` | bad/missing Bearer | authorized GET |
-| `/api/cron/settle-picks` | cronAuthError | scheduled | `0 7 * * *` | bad/missing Bearer | authorized GET · free path if no Odds key · paid if key set |
+Auth SoT: `apps/web/lib/cron/authorize.ts` → `cronAuthError`  
+Runtime: all routes `dynamic=force-dynamic` · `runtime=nodejs`
 
-**Counts:** 18 routes · 13 scheduled (incl. jarvis-snapshot) · free settle path · **0 unauth** · **0 edge runtime**
+## Cadence truth (2026-08-08)
 
-Smoke: `scripts/ops/gamma-cron-smoke.sh` (401 then 200).
+| Job | Primary (Vercel) | Backstop (GH External Cron) |
+|-----|------------------|-----------------------------|
+| free-spine-health | `10,40 * * * *` (every 30m) | `5 */2 * * *` (every 2h) |
+| settle-picks | `20 * * * *` | hourly `:15` |
+| autonomy-cycle | `7,22,37,52 * * * *` (~15m) | hourly `:22` |
+| calibration-metrics | `40 */6 * * *` | manual / autonomy re-fire when EXECUTE |
+| refresh-odds | `*/30 * * * *` | — |
+| health-alert | `*/15 * * * *` | — |
 
-> **gamma is intentionally unscheduled.** Removed from `vercel.json` in `3dfbc726` (B-0): the Polymarket Gamma API is not present in `source-rights-registry.ts`, and clearance-engine law requires `checkClearance()` to pass before any extraction job. Route code is left intact on purpose. Re-enable requires a counsel-approved registry entry permitting storage + commercial_display (or the narrower intents actually used) ÔÇö not just re-adding the cron. Restore string is recorded verbatim in the `3dfbc726` commit body.
+**I8:** free-spine durable SLA = **120 minutes**. Vercel 30m + GH 2h keep age under SLA.
 
-| /api/cron/free-spine-health | 0 10 * * * | CRON_SECRET | 401/200 | Multi-source free spine probe |
+## Reliability metrics path
+
+| Cron | Writes | Used by |
+|------|--------|---------|
+| `calibration-metrics` | versioned cal maps + Brier/ECE/reliability bins | cockpit `/cockpit/calibration`, path-to-verified (via facts) |
+| `settle-picks` | graded WIN/LOSS rows (sample fuel) | calibration load query |
+| `free-spine-health` | durable free-spine snap age | I8 / launch gates |
+| `health-alert` | probe classification | autonomy observation |
+
+## Manual-only routes
+
+Routes under `app/api/cron/*` **not** in `vercel.json` are manual / workflow_dispatch only (e.g. backfill, backtest-calibration). Do not re-add without ops decision.
+
+Smoke: `scripts/ops/gamma-cron-smoke.sh` (401 then 200) where applicable.
+
+> **gamma** is intentionally unscheduled (rights registry). Do not re-enable without counsel-approved clearance.

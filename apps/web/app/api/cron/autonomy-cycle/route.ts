@@ -5,7 +5,7 @@
  * Auth: CRON_SECRET.
  *
  * Default: dry-run plan only (safe). Set AUTONOMY_EXECUTE=true to invoke
- * free-spine-health / settle-picks when the pure planner queues them.
+ * allow-listed free-path crons (safe-cron-targets.ts) when the planner queues them.
  * Never flips LAWS. Never runs ownerQueue items.
  */
 
@@ -23,6 +23,7 @@ import {
   executeAutonomyCycle,
   resolveAutonomyBaseUrl,
 } from "@/lib/autonomy/execute-autonomy-cycle";
+import { AUTONOMY_MAX_ACTIONS_PER_CYCLE } from "@/lib/autonomy/safe-cron-targets";
 import { getReadinessGates } from "@sports/prediction-engine";
 import {
   freeSpineSnapAgeMs,
@@ -124,7 +125,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     baseUrl: resolveAutonomyBaseUrl(),
     cronSecret,
     dryRun,
-    maxActions: 2,
+    maxActions: AUTONOMY_MAX_ACTIONS_PER_CYCLE,
   });
 
   if (cycle.failedCount > 0) {

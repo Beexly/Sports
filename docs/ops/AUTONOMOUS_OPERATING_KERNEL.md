@@ -13,7 +13,7 @@ A pure, deterministic control plane that answers:
 | Module | Role |
 |--------|------|
 | `operating-kernel.ts` | P0–P3 action plan, honesty score, refuse-default, revenue blockers |
-| `execute-autonomy-cycle.ts` | **I9** actuator — only `RUN_FREE_SPINE_HEALTH` + `RUN_FREE_SETTLE` / Wave-A→settle |
+| `execute-autonomy-cycle.ts` | **I9** actuator — allow-listed free-path kinds (spine/settle/odds/drafts/calibration; Wave-A/accumulate→settle) |
 | `settlement-learning.ts` | Grades → calibration samples (no MODEL_VERSION apply) |
 | `revenue-ladder.ts` | FOUNDING→PROVEN→ESTABLISHED→AUTHORITY readiness (proof-gated) |
 
