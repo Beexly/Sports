@@ -1,57 +1,35 @@
-# FOUNDER_ONLY_CHECKLIST
+# Founder-only checklist (secrets + YES decisions)
 
-No soft language. Check only when done in **Production**.
-Updated: 2026-07-30.
+Updated: 2026-08-08 — code can prepare everything else; you own secrets, YES flips, and third-party accounts.
 
-## P0 — Runtime honesty (done 2026-07-30)
+## P0 — Keep lights on
 
-- [x] `DATABASE_URL` = gse-postgres **pooled**
-- [x] `DIRECT_URL` = gse-postgres **unpooled**
-- [x] No `storage_*` / sports-db aliases mixed into those two vars
-- [x] `CRON_SECRET` on Vercel Production — **rotated** 2026-07-30
-- [x] Production **redeployed** after env change (2x, green on `1dbcca9`)
-- [x] Gamma smoke: **401** bad Bearer, **200** good Bearer; `/api/health` db ok
-- [ ] Formal `npm run prove:neon` local run (runtime already proves db; run the script anyway to close it)
+- [ ] `prove:neon` green after last schema push
+- [ ] Production deploy of monorepo HEAD (build green)
+- [ ] `CRON_SECRET` on Vercel Production (confirmed)
+- [ ] LLM keys as needed: GROQ / XAI / ANTHROPIC (cash last resort)
+- [ ] TheRundown key mapped as backup + redeploy confirm (`rundownBackupConfigured`)
+- [x] `THE_ODDS_API_KEY` (flipped)
+- [x] Azure Foundry + Vertex live (`anyCreditLaneReady: true`)
 
-## P0 — Push decision (new)
+## P1 — Credits + runway
 
-- [ ] Push the verified 7-file build-fix patch. main HEAD `4b4ae1e` does NOT build; prod is pinned to `1dbcca9`. Do not deploy from HEAD until pushed.
-
-## P0 — Free AI keys
-
-- [x] `GEMINI_API_KEY` (set in Production 2026-07-30)
-- [ ] `GROQ_API_KEY` — rotate if ever leaked in git history (repo is PUBLIC)
-- [ ] `XAI_API_KEY`
-- [ ] `ANTHROPIC_API_KEY` (when available)
-- [ ] Optional internal: `INTERNAL_LLM_BASE_URL` / `INTERNAL_LLM_MODEL` / `INTERNAL_LLM_API_KEY`
-
-## Known state (context, not tasks)
-
-- Ingestion stale since ~Jul 25: paid Odds API key deactivated. Health "degraded" for this reason only. Fix is the free-spine patch, not a new paid key.
-- 2026-07-30 law enforcement: `PERFORMANCE_STATS_ENABLED` and `PUBLIC_PICKS_ENABLED` were live true; flipped false. Do not re-enable without explicit YES.
-
-## P1 — Credits & free SaaS (applications)
-
-- [ ] Microsoft Founders Hub — **without** investor code
-- [ ] Neon for Startups (self-funded)
-- [ ] Cloudflare for Startups (bootstrapped)
-- [ ] AWS Activate Founders
-- [ ] Anthropic for Startups
-- [ ] Sentry for Startups (if eligible)
-- [ ] PostHog free account
-- [ ] Langfuse Hobby
-- [ ] OpenRouter key
-- [ ] Resend free
-- [ ] CF Web Analytics beacon token → `NEXT_PUBLIC_CF_BEACON_TOKEN`
+- [x] `CLAUDE_PROVIDER=auto` + Azure/Vertex model maps (cash only last)
+- [ ] Free-lane overflow keys if using DeepSeek / GLM / Qwen / Gemini / OpenRouter free
 - [ ] Microsoft Clarity project id → `NEXT_PUBLIC_CLARITY_PROJECT_ID`
 - [ ] `NEXT_PUBLIC_ANALYTICS_ENABLED=true` after tokens set
 
-## P2 — When topology needs it
+## P2 — Topology / self-heal
 
 - [ ] Upstash Redis env (multi-instance only)
-- [ ] Stripe live keys + webhook (`STRIPE_GO_LIVE_CHECKLIST.md`)
-- [ ] Oracle Always-Free VPS + DNS (`docker/oracle-vps`)
+- [ ] Stripe live keys + webhook hygiene (`STRIPE_GO_LIVE_CHECKLIST.md`)
+- [ ] Oracle Always-Free VPS + DNS (`docker/oracle-vps`) when needed
 - [ ] Doppler / Clerk / Inngest if scale requires
+- [ ] **`AUTONOMY_EXECUTE=true`** (exact string) — closes plan→act for allow-listed crons only:
+  free-spine-health · settle-picks · refresh-odds · generate-drafts · calibration-metrics.
+  Never flips LAWS / PUBLIC_PICKS / LIVE_BOARD / owner-queue.
+  Note: dedicated crons already run those jobs; this flag re-fires via planner every ~15m when needed.
+  `refresh-odds` may spend Odds API quota when key present.
 
 ## P3 — Relationship / research
 
@@ -64,23 +42,23 @@ Updated: 2026-07-30.
 - [ ] Explicit YES: **LIVE_BOARD** on
 - [ ] Explicit YES: **PUBLISH_LEDGER** on
 - [ ] Explicit YES: **SLATE_OPENING_REVEAL** / reveal on
-- [ ] Explicit YES: public picks (`PUBLIC_PICKS_ENABLED`) / performance stats (`PERFORMANCE_STATS_ENABLED`) back on
+- [ ] Explicit YES: public picks (`PUBLIC_PICKS_ENABLED`) / performance stats (`PERFORMANCE_STATS_ENABLED`)
 - [ ] Explicit YES: merge / land **#226 HEOS**
 - [ ] **Phase C (5b)** remeasure after real path (not silent flip)
+- [ ] Calibration floors met + founder signed YES before any **verified track record** language
 
 ## Forbidden until YES + measurement
 
 - Public ROI / guaranteed edge claims
-- Sportsbook CPA
-- Odds API required on free Gamma/own-feed path
-- Flipping gates without explicit YES
+- Sportsbook CPA / affiliate language without rights
+- “Engines are accurate” public claims without sample floors + reliability
 
-## Related
+## Not “only AUTONOMY_EXECUTE left”
 
-- Walk-through: `CLAUDE_COWORK_PROMPT_P0.md`
-- Full plan: `MASTER_PLAN.md`
-- Smoke: `SMOKE.md`
+Self-heal of free-spine + settle largely already exists via dedicated Vercel crons.
+`AUTONOMY_EXECUTE` closes the **plan→act loop**. Public intelligence promote still needs:
 
-## Credits programs
-
-See `docs/ops/GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md` (keystone email, claim order, agent handshake).
+1. Sample floors (Brier/ECE + settled N)
+2. Free-spine SLA green live
+3. FORCE_NO_BET_IF_STALE before public picks
+4. Founder YES on gates
