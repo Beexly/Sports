@@ -20,6 +20,8 @@ export type AutonomyActionKind =
   | "RUN_FREE_SETTLE"
   | "RUN_FREE_SPINE_HEALTH"
   | "RUN_REFRESH_ODDS_FREE"
+  | "RUN_GENERATE_DRAFTS"
+  | "RUN_CALIBRATION_METRICS"
   | "ATTACK_RCA_WAVE_A"
   | "ATTACK_RCA_WAVE_B"
   | "ESCALATE_DISPUTES"
@@ -320,6 +322,28 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
       autonomousSafe: true,
     });
   }
+
+  // ── Allow-listed housekeeping (never flips gates; fills remaining maxActions) ─
+  actions.push({
+    kind: "RUN_CALIBRATION_METRICS",
+    priority: 120,
+    severity: "P3",
+    title: "Refresh calibration metrics + versioned map",
+    detail: "Internal-only Brier/ECE/reliability fit. Does not publish or flip CALIBRATION_ADJUSTMENTS.",
+    target: "/api/cron/calibration-metrics",
+    requiresOwner: false,
+    autonomousSafe: true,
+  });
+  actions.push({
+    kind: "RUN_GENERATE_DRAFTS",
+    priority: 100,
+    severity: "P3",
+    title: "Generate content drafts (free-lane first)",
+    detail: "Jynx free-lane drafts only; never auto-publishes public blog/picks claims.",
+    target: "/api/cron/generate-drafts",
+    requiresOwner: false,
+    autonomousSafe: true,
+  });
 
   if (actions.filter((a) => a.severity !== "OK").length === 0) {
     actions.push({
