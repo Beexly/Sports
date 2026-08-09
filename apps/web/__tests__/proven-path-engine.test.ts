@@ -22,6 +22,7 @@ describe("proven path engine", () => {
     return {
       pConfidence: conf,
       pEdge: conf * 0.9 + 0.05,
+      pIndependent: group === "nfl|spread" ? conf * 0.95 + 0.03 : null,
       y,
       groupKey: group,
       marketP: 0.5,
@@ -31,7 +32,7 @@ describe("proven path engine", () => {
   it("builds plan with score bakeoff and pause candidates", () => {
     const plan = buildProvenPathPlan(rows, { minN: 40 });
     expect(plan.floorsUnchanged).toBe(true);
-    expect(plan.scoreBakeoff.length).toBe(3);
+    expect(plan.scoreBakeoff.length).toBe(5);
     expect(plan.pathSteps.length).toBeGreaterThan(4);
     expect(plan.baseline.n).toBeGreaterThan(0);
   });

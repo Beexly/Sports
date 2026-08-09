@@ -93,6 +93,7 @@ async function loadSettledCalibrationSamples(): Promise<{
       },
       select: {
         confidence: true,
+        factorBreakdown: true,
         edgeScore: true,
         result: true,
         modelVersion: true,
@@ -128,9 +129,23 @@ async function loadSettledCalibrationSamples(): Promise<{
         typeof pick.edgeScore === "number" && Number.isFinite(pick.edgeScore)
           ? Math.min(1, Math.max(0, pick.edgeScore / 100))
           : null;
+      let pIndependent: number | null = null;
+      const fb = pick.factorBreakdown as {
+        fairProbability?: number | null;
+        independentEdge?: { trueProb?: number | null } | null;
+      } | null | undefined;
+      if (fb?.fairProbability != null && Number.isFinite(fb.fairProbability)) {
+        pIndependent = Math.min(1, Math.max(0, Number(fb.fairProbability)));
+      } else if (
+        fb?.independentEdge?.trueProb != null &&
+        Number.isFinite(fb.independentEdge.trueProb)
+      ) {
+        pIndependent = Math.min(1, Math.max(0, Number(fb.independentEdge.trueProb)));
+      }
       provenRows.push({
         pConfidence: p,
         pEdge: edge,
+        pIndependent,
         y: y as 0 | 1,
         groupKey: `${sport}|${market}`,
         marketP: null,

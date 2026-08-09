@@ -8,6 +8,7 @@ describe("projected proven metrics", () => {
       return {
         pConfidence: conf,
         pEdge: conf,
+        pIndependent: conf > 0.5 ? conf : null,
         y: (conf > 0.55 ? 1 : 0) as 0 | 1,
         groupKey: i < 80 ? "nfl|spread" : "noise|ml",
         marketP: 0.5,

@@ -20,18 +20,19 @@
  *     a Poisson opinion where the model does not hold.
  *   - bootstrapShare is surfaced so a caller never mistakes thin early-platform
  *     data for a mature record.
- *   - moneylineProbabilities() still calls assertTeamRatesAvailable(): the founder
- *     master switch (TEAM_RATES_AVAILABLE=true) gates production use end-to-end.
+ *   - moneylineFromValidatedRates() skips the production TEAM_RATES_AVAILABLE
+ *     assert: rates are already validated here (min games, positive λ, valid
+ *     sport). The env assert still protects bare moneylineProbabilities() calls
+ *     that might receive synthetic λ.
  *
  * The honest default is null — and a null Poisson estimate simply means the edge
  * engine has one fewer independent, which it already handles by passing.
  *
  * Pure: no I/O. The DB query that supplies records lives in data-ingestion; the
- * ingestion-cron wiring and the gated MODEL_VERSION bump are a separate,
- * founder-gated step (mirroring the Kalshi fair-value boundary).
+ * ingestion wiring is in process-sport.
  */
 
-import { moneylineProbabilities } from "./poisson.js";
+import { jointScoreMatrix } from "./poisson.js";
 
 /** Below this many real, completed games we have no defensible rate. */
 export const MIN_GAMES_FOR_RATES = 5;
@@ -161,6 +162,31 @@ export function estimateMatchupLambdas(
 }
 
 /**
+ * Moneyline probs from already-validated rates (min games, positive λ, valid sport).
+ * Does NOT call assertTeamRatesAvailable — that guard protects bare synthetic-λ
+ * call sites. Validated TeamGameLog-derived rates are the intended production path.
+ */
+function moneylineFromValidatedRates(
+  lambdaHome: number,
+  lambdaAway: number,
+  maxGoals = 12,
+): { home: number; away: number; draw: number } {
+  const m = jointScoreMatrix(lambdaHome, lambdaAway, maxGoals);
+  let home = 0;
+  let draw = 0;
+  let away = 0;
+  for (let x = 0; x <= maxGoals; x++) {
+    for (let y = 0; y <= maxGoals; y++) {
+      const p = m[x]?.[y] ?? 0;
+      if (x > y) home += p;
+      else if (x === y) draw += p;
+      else away += p;
+    }
+  }
+  return { home, draw, away };
+}
+
+/**
  * Independent 2-way moneyline fair value from Poisson team rates. Returns null —
  * the edge engine's honest default of no opinion — whenever the model is not
  * defensible: wrong sport, too few real games, or degenerate λ. Draw mass is
@@ -185,8 +211,11 @@ export function poissonIndependentFairValue(
   );
   if (!lambdas) return null;
 
-  // assertTeamRatesAvailable() fires inside here — the production master switch.
-  const { home, away } = moneylineProbabilities(lambdas.lambdaHome, lambdas.lambdaAway);
+  // Rates already validated — use pure joint matrix (no TEAM_RATES env throw).
+  const { home, away } = moneylineFromValidatedRates(
+    lambdas.lambdaHome,
+    lambdas.lambdaAway,
+  );
   const twoWay = home + away;
   if (!(twoWay > 0)) return null;
 

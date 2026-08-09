@@ -202,6 +202,19 @@ export type {
   PoissonFairValueInput,
   PoissonFairValue,
 } from "./team-rates.js";
+export {
+  deriveRankingProbability,
+} from "./ranking-prob.js";
+export type {
+  RankingProbSource,
+  RankingProbResult,
+} from "./ranking-prob.js";
+export {
+  fitEloRatingsFromResults,
+  eloFairValueFromRatings,
+  eloHomeWinFromRatings,
+} from "./elo-from-results.js";
+export type { EloResultGame } from "./elo-from-results.js";
 // R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
 // NOT wired into live scoring; built for the future human-gated MODEL_VERSION
 // calibration that turns the confidence score into a calibrated win probability.

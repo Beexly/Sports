@@ -2,10 +2,11 @@
 
 ## Speeds it (we automate)
 1. Selective publish + pause dead groups (default ON)
-2. Score bake-off (confidence vs edge vs blend)
+2. Score bake-off (confidence vs edge vs blend vs independent_trueProb / blend_indep_conf)
 3. Historical **projection** of filtered Res (ops `provenPathProjection`)
 4. Settlement + metrics crons
-5. Independent modelProb / sport models when we ship them
+5. **Shipped v5.2.0:** independent modelProb priced into ranking (Poisson + Elo from TeamGameLog; SPEAK/LEAN → rankingScore)
+6. Sport-specific models when RES still < 0.02 after independent settle sample (see ENGINE_RESOLUTION_HARD_STOP.md)
 
 ## Does NOT speed it
 - Platt / isotonic / DP (REL only; Res≈0 stays)

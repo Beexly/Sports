@@ -66,7 +66,9 @@ export function projectProvenPathMetrics(
   const fullSamples: CalibrationSample[] = [];
   const selectiveRows = [];
   for (const r of rows) {
-    let p = r.pConfidence;
+    let p = r.pIndependent != null && Number.isFinite(r.pIndependent)
+      ? r.pIndependent
+      : r.pConfidence;
     if (plan.bestScore === "edgeScore" && r.pEdge != null) p = r.pEdge;
     if (plan.bestScore === "blend_conf_edge" && r.pEdge != null) {
       p = 0.5 * r.pConfidence + 0.5 * r.pEdge;

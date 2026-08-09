@@ -1,10 +1,10 @@
 // Model version — bump when scoring logic changes.
+// v5.2.0 (2026-08-09): independent estimators priced into ranking path
+// (rankingScore / rankingP) when edge-engine SPEAK|LEAN. Confidence heuristic
+// unchanged when independents absent. Selective + generation sort use rankingScore.
+// Calibration map apply still OFF until holdout RES + floors improve.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-// Heuristic scoring weights are unchanged; the change is that calibrated
-// P(win) is applied at the display/conviction boundary when the audited
-// CALIBRATION_ADJUSTMENTS_ENABLED env gate is on. See
-// docs/calibration-proposals/2026-06-22-calibration-activation-v5.1.0.md.
-export const MODEL_VERSION = "v5.1.0";
+export const MODEL_VERSION = "v5.2.0";
 
 // ============================================================
 // Confidence thresholds

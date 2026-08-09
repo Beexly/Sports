@@ -27,6 +27,7 @@ async function loadRows() {
       edgeScore: true,
       result: true,
       pickType: true,
+      factorBreakdown: true,
       game: { select: { sport: { select: { key: true, name: true } } } },
     },
     orderBy: { settledAt: "desc" },
@@ -41,11 +42,26 @@ async function loadRows() {
       typeof pick.edgeScore === "number" && Number.isFinite(pick.edgeScore)
         ? Math.min(1, Math.max(0, pick.edgeScore / 100))
         : null;
+    // Prefer priced independent rankingP / trueProb from factorBreakdown when present.
+    let pIndependent: number | null = null;
+    const fb = pick.factorBreakdown as {
+      fairProbability?: number | null;
+      independentEdge?: { trueProb?: number | null; priced?: boolean } | null;
+    } | null;
+    if (fb?.fairProbability != null && Number.isFinite(fb.fairProbability)) {
+      pIndependent = Math.min(1, Math.max(0, fb.fairProbability));
+    } else if (
+      fb?.independentEdge?.trueProb != null &&
+      Number.isFinite(fb.independentEdge.trueProb)
+    ) {
+      pIndependent = Math.min(1, Math.max(0, fb.independentEdge.trueProb));
+    }
     const sport = pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
     const market = pick.pickType ?? "unknown";
     rows.push({
       pConfidence,
       pEdge,
+      pIndependent,
       y: (pick.result === "WIN" ? 1 : 0) as 0 | 1,
       groupKey: `${sport}|${market}`,
       marketP: null,
