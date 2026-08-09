@@ -47,3 +47,31 @@ Code: `fitPlattIrls` / `fitPlattMapFull` / `plattPredictiveMean` in `apps/web/li
 ## Hierarchical ridge intercepts
 
 `fitPlattMapHierarchical`: shared (A,B) + per-group `u_g` with ridge prior. Use only in offline bake-offs vs global MAP. Does not touch eligibility floors.
+
+## Hierarchical model (fixed groups + EB τ only)
+
+```
+Global:
+  A = β₁ ~ Normal(mean=1, var=1)   # mild rescale of logit score
+  B = β₀ ~ Normal(mean=0, var=1)   # mild shift
+Group:
+  u_g ~ Normal(0, τ²)
+  τ ~ EmpiricalBayes (moment or Laplace marginal); clamp [0.05, 2.0]
+  # optional offline hyperprior only: τ ~ HalfNormal(1) — not used in prod path
+Non-centered (sampling notation only):
+  z_g ~ Normal(0,1), u_g = τ * z_g
+Score:
+  s = logit(clip(p_raw))
+  P(y=1) = sigmoid(A * s + B + u_g)
+Fit:
+  MAP via IRLS/Newton; optional Laplace at mode
+  Time-holdout on canonical WIN/LOSS only
+```
+
+### Dirichlet process clustering — R&D only, **not in production path**
+
+Do **not** implement DP mixture clustering of groups in prod. Production eligibility stays frequentist floors. Hierarchical work uses **fixed** `sport|market` keys + **EB τ** only.
+
+### Code
+- `hierarchical-eb-tau.ts` — `fitEmpiricalBayesTau`, `fitTauFromLaplaceGroupMaps`, clamp
+- `platt-map.ts` — `fitPlattMapHierarchical` returns `{ global, groupIntercept, tau, tauMethod }`

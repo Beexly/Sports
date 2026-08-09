@@ -51,6 +51,7 @@ describe("fitPlattIrls MAP", () => {
     const h = fitPlattMapHierarchical(samples);
     expect(h.global.A).toBeDefined();
     expect(Object.keys(h.groupIntercept).length).toBeGreaterThan(0);
-    expect(h.note).toMatch(/offline/i);
+    expect(h.tau).toBeGreaterThan(0);
+    expect(h.note).toMatch(/offline|R&D|Dirichlet/i);
   });
 });

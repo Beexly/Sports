@@ -417,7 +417,9 @@ export async function GET(request: Request) {
       aciPosture: aciPublicPosture(),
       bayesianRd: {
         adjustmentsEnabled: false,
-        note: "Bayesian calibration is offline R&D only — eligibility stays frequentist.",
+        hierarchicalEbTau: true,
+        dirichletProcessInPath: false,
+        note: "Bayesian/hierarchical MAP Platt is offline R&D only (EB τ clamped). Eligibility stays frequentist. DP clustering not in prod path.",
       },
       freeSpine,
       policy: PUBLIC_NAV_POLICY,

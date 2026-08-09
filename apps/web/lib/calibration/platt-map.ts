@@ -5,7 +5,16 @@
  * Model: P(y=1|p) = sigmoid(A * logit(p) + B [+ u_g])
  * Prior: A ~ N(1, σA²), B ~ N(0, σB²); optional group intercept u_g ~ N(0, σg²).
  * Fit: Newton–IRLS (tangent logistic / local quadratic). Optional Laplace at MAP.
+ * Hierarchical: u_g ~ N(0,τ²) with Empirical Bayes τ clamped [0.05,2].
  */
+
+import {
+  clampTau,
+  fitEmpiricalBayesTau,
+  fitTauFromLaplaceGroupMaps,
+  TAU_MAX,
+  TAU_MIN,
+} from "@/lib/calibration/hierarchical-eb-tau";
 
 export interface PlattParams {
   readonly A: number;
@@ -224,18 +233,26 @@ export function fitPlattMapHierarchical(
   options?: {
     readonly sigmaA?: number;
     readonly sigmaB?: number;
+    /** Fixed τ override; if omitted, Empirical Bayes τ is estimated and clamped. */
     readonly sigmaG?: number;
     readonly rounds?: number;
+    readonly tauMethod?: "moment" | "laplace";
   },
 ): {
   readonly global: PlattParams;
   readonly groupIntercept: Readonly<Record<string, number>>;
+  /** Non-centered scale: u_g = τ z_g conceptually; we store u_g directly. */
+  readonly tau: number;
+  readonly tauMethod: string;
+  readonly tauClamp: { readonly min: number; readonly max: number };
   readonly laplace: PlattMapFitResult["laplace"];
   readonly note: string;
 } {
-  const sigmaG = options?.sigmaG ?? 1.0;
   const rounds = options?.rounds ?? 5;
-  const invG = 1 / (sigmaG * sigmaG);
+  // Initial τ
+  let tau = options?.sigmaG != null ? clampTau(options.sigmaG) : 0.5;
+  let tauMethod = options?.sigmaG != null ? "fixed" : "moment-eb";
+  let invG = 1 / (tau * tau);
 
   const groups = new Map<string, ProbOutcome[]>();
   for (const s of samples) {
@@ -248,6 +265,32 @@ export function fitPlattMapHierarchical(
 
   let global: PlattParams = { A: 1, B: 0 };
   let laplace: PlattMapFitResult["laplace"] = null;
+
+  // Seed global MAP ignoring groups
+  global = fitPlattIrls(samples, {
+    map: true,
+    sigmaA: options?.sigmaA,
+    sigmaB: options?.sigmaB,
+  }).params;
+
+  if (options?.sigmaG == null) {
+    const stats = [...groups.entries()].map(([groupKey, rows]) => {
+      let sum = 0;
+      for (const s of rows) {
+        const pred = applyPlatt(s.p, global);
+        sum += s.y - pred;
+      }
+      return {
+        groupKey,
+        residualMean: rows.length ? sum / rows.length : 0,
+        n: rows.length,
+      };
+    });
+    const eb = fitEmpiricalBayesTau(stats);
+    tau = eb.tau;
+    tauMethod = eb.method;
+    invG = 1 / (tau * tau);
+  }
 
   for (let r = 0; r < rounds; r++) {
     // Residualized pseudo-outcomes via offset u_g: fit A,B on adjusted labels through weighted IRLS
@@ -321,11 +364,36 @@ export function fitPlattMapHierarchical(
     }
   }
 
+  // Optional Laplace-marginal EB τ refresh from group MAP curvatures
+  if (options?.sigmaG == null && (options?.tauMethod === "laplace" || options?.tauMethod == null)) {
+    const lapGroups = [...groups.entries()].map(([g, rows]) => {
+      let ug = u[g] ?? 0;
+      let hU = invG;
+      for (const s of rows) {
+        const x = logit(s.p);
+        const z = global.A * x + global.B + ug;
+        const mu = sigmoid(z);
+        hU += Math.max(1e-12, mu * (1 - mu));
+      }
+      return { uMap: ug, hessianU: hU, n: rows.length };
+    });
+    if (options?.tauMethod === "laplace") {
+      const ebL = fitTauFromLaplaceGroupMaps(lapGroups);
+      tau = ebL.tau;
+      tauMethod = ebL.method;
+    }
+  }
+
   return {
     global,
     groupIntercept: u,
+    tau,
+    tauMethod,
+    tauClamp: { min: TAU_MIN, max: TAU_MAX },
     laplace,
-    note: "Hierarchical MAP Platt with ridge group intercepts — offline bake-off only; not a production map.",
+    note:
+      "Hierarchical MAP Platt: A~N(1,1), B~N(0,1), u_g~N(0,τ²) with EB τ clamped [0.05,2]. " +
+      "Offline R&D only — not a production map. No Dirichlet process in path.",
   };
 }
 
