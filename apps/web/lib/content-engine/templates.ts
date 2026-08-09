@@ -231,7 +231,7 @@ export const CONTENT_TEMPLATES: Readonly<Record<string, ContentTemplate>> = {
     requiresPerformanceGate: false,
     defaultVisibility: "INTERNAL",
     reviewOwner: "AVA",
-  },,
+  },
 
   WHY_BOARD_QUIET: {
     key: "WHY_BOARD_QUIET",
@@ -256,8 +256,35 @@ export const CONTENT_TEMPLATES: Readonly<Record<string, ContentTemplate>> = {
     requiresPerformanceGate: false,
     defaultVisibility: "PUBLIC",
     reviewOwner: "AVA",
-  }
+  },
 
+  EVIDENCE_PACK_MATCHUP: {
+    key: "EVIDENCE_PACK_MATCHUP",
+    contentType: "MATCHUP_PREVIEW",
+    title: "Matchup evidence pack",
+    description:
+      "Polyseer/Octagon-shaped brief: cited sources only, independent fair-value summary when present, rankingP, and explicit not-PROVEN footer. No invented stats, no whale/arb language.",
+    requiredSources: ["ODDS", "PICK", "METHODOLOGY"],
+    allowedData: [
+      "game.home",
+      "game.away",
+      "pick.selection",
+      "pick.rankingP",
+      "independent.sources",
+      "board.surface",
+      "calibration.status",
+    ],
+    prohibitedClaimIds: [
+      "banned.guaranteed-outcome",
+      "banned.sure-thing",
+      "banned.verified-roi",
+    ],
+    requiresAffiliateDisclosure: false,
+    requiresResponsibleGaming: true,
+    requiresPerformanceGate: false,
+    defaultVisibility: "INTERNAL",
+    reviewOwner: "AVA",
+  },
 };
 
 export function listTemplates(): readonly ContentTemplate[] {

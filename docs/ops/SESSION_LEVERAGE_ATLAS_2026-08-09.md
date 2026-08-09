@@ -82,6 +82,7 @@ and mapped to **code already on main**, **PRs open**, and **founder clicks**.
 | machina-cli | Installed agent-side; founder login needed |
 | sportsclaw MCP/clipper | Bookmarked for next media/MCP PR |
 | Awesome PM tools | `docs/research/prediction-market-tool-bookmarks.md` |
+| Oddpool full catalog triage | `docs/research/prediction-market-ecosystem-triage-2026-08-09.md` |
 | polymarket | Internal hold unchanged |
 
 ### G. Product brands (StatKing / Helm / PickPilot / Clubhouse)
