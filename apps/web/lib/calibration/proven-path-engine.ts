@@ -7,14 +7,15 @@
  *  3) Compares ranking scores (confidence vs independent trueProb vs blend)
  *  4) Emits durable plan for ops truth + runtime pause/filter
  *
- * RANKING PROBABILITY LAW (hard — 2026-08-09 polarity fix):
+ * RANKING PROBABILITY LAW (hard — 2026-08-09 polarity fix + quality pass):
  *   ranking p for Brier / RES / separation / selective MUST be a win probability:
  *     - confidence/100
- *     - independent trueProb (SPEAK/LEAN path)
+ *     - independent trueProb (raw model P)
  *     - blend of those two
+ *     - market de-vig fair (baseline only)
  *   NEVER use edge, rawEdge, shrunkEdge, or edgeScore as p.
- *   Edge is a signed gap (trueProb − marketFair), not P(side).
- *   bestScore = argmax RES among scores with separation > 0 and n ≥ 50.
+ *   bestScore = argmax RES among scores with:
+ *     separation > 0, n ≥ 50, and coverage ≥ 40% of confidence n (non-conf kinds).
  *   If none qualify → confidence; pathViable stays honest.
  *
  * Does NOT set publishedEffective, AUTO_PUBLISH, or lower floors.
@@ -48,7 +49,7 @@ export type ProvenPathPickRow = {
    * Kept optional for ops diagnostics; bake-off ignores it.
    */
   readonly pEdge?: number | null;
-  /** Independent trueProb or priced rankingP when present (0–1). */
+  /** Independent trueProb only (0–1). Never confidence-echo rankingP. */
   readonly pIndependent: number | null;
   /** Optional market de-vig fair for side (0–1) — baseline only, not edge. */
   readonly marketP?: number | null;
@@ -65,10 +66,13 @@ export type ScoreBakeoffRow = {
   readonly murphyReliability: number;
   /** mean p|win − mean p|loss — must be > 0 for bestScore eligibility */
   readonly separation: number;
+  /** n_kind / n_confidence — thin independent tails cannot win bestScore */
+  readonly coverage: number;
 };
 
 export type ProvenPathPlan = {
   readonly generatedAt: string;
+  /** Winning score metrics (not pre-filter confidence — see scoreBakeoff). */
   readonly baseline: ScoreBakeoffRow;
   readonly scoreBakeoff: readonly ScoreBakeoffRow[];
   readonly bestScore: RankingScoreKind;
@@ -87,6 +91,7 @@ export type ProvenPathPlan = {
 function scoreMetrics(
   score: RankingScoreKind,
   samples: readonly CalibrationSample[],
+  confN: number,
 ): ScoreBakeoffRow {
   if (samples.length === 0) {
     return {
@@ -97,6 +102,7 @@ function scoreMetrics(
       murphyResolution: NaN,
       murphyReliability: NaN,
       separation: NaN,
+      coverage: 0,
     };
   }
   const d = brierDecomposition(samples);
@@ -116,6 +122,7 @@ function scoreMetrics(
     murphyResolution: d.resolution,
     murphyReliability: d.reliability,
     separation: meanPWin - meanPLoss,
+    coverage: confN > 0 ? samples.length / confN : 0,
   };
 }
 
@@ -193,16 +200,24 @@ export function buildProvenPathPlan(
     "blend_indep_conf",
     "marketFairProb",
   ];
-  const scoreBakeoff = kinds.map((k) => scoreMetrics(k, toSamples(rows, k)));
+  const confSamples = toSamples(rows, "confidence");
+  const confN = confSamples.length;
+  const scoreBakeoff = kinds.map((k) =>
+    scoreMetrics(k, toSamples(rows, k), confN),
+  );
 
-  // bestScore: max RES among separation > 0 and n ≥ 50. Else confidence.
-  const confRow = scoreBakeoff.find((r) => r.score === "confidence") ?? scoreBakeoff[0]!;
+  // bestScore: max RES among separation > 0, n ≥ 50, coverage ≥ 40% (non-conf).
+  const confRow =
+    scoreBakeoff.find((r) => r.score === "confidence") ?? scoreBakeoff[0]!;
   let bestScore: RankingScoreKind = "confidence";
   let best = confRow;
+  const minCoverage = 0.4;
   for (const row of scoreBakeoff) {
     if (!Number.isFinite(row.murphyResolution) || row.n < 50) continue;
     // Polarity gate: anti-ranking scores cannot win.
     if (!(row.separation > 0)) continue;
+    // Coverage gate: thin SPEAK tails cannot overfit bestScore.
+    if (row.score !== "confidence" && row.coverage < minCoverage) continue;
     if (
       !(best.separation > 0) ||
       row.murphyResolution > best.murphyResolution + 1e-9 ||
@@ -245,8 +260,8 @@ export function buildProvenPathPlan(
 
   const polarityNote =
     best.separation > 0
-      ? `bestScore=${bestScore} with positive separation ${best.separation.toFixed(4)}`
-      : "no score kind has separation>0 — ranking signal near noise; use confidence fallback";
+      ? `bestScore=${bestScore} with positive separation ${best.separation.toFixed(4)} (coverage ${(best.coverage * 100).toFixed(0)}%)`
+      : "no score kind has separation>0 with adequate coverage — ranking signal near noise; use confidence fallback";
 
   return {
     generatedAt,
@@ -273,7 +288,8 @@ export function buildProvenPathPlan(
     honesty:
       "Edge/edgeScore is NOT a win probability (rawEdge = trueProb − marketFair). " +
       "Bake-off only uses confidence, independent trueProb, blend_indep_conf, marketFairProb. " +
-      "bestScore requires separation > 0. " +
+      "bestScore requires separation > 0 and coverage ≥ 40% of confidence n. " +
+      "pIndependent load must be raw trueProb only — never confidence-echo rankingP. " +
       "If selectiveGainRes≈0 and independents still weak, need sport models / features — not maps. " +
       "Maps will not unlock PROVEN.",
     floorsUnchanged: true,

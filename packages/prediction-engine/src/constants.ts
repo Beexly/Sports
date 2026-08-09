@@ -1,13 +1,11 @@
 // Model version — bump when scoring logic changes.
-// v5.2.0 (2026-08-09): independent estimators priced into ranking path
-// (rankingScore / rankingP) when edge-engine SPEAK|LEAN. Confidence heuristic
-// unchanged when independents absent. Selective + generation sort use rankingScore.
-// Calibration map apply still OFF until holdout RES + floors improve.
-// Bake-off polarity (2026-08-09, same train): proven-path score kinds never use
-// edgeScore-as-p; bestScore requires separation > 0. Metrics-only — no live
-// confidence change → MODEL_VERSION stays v5.2.0.
+// v5.2.1 (2026-08-09): ranking uses trueProb whenever finite (incl. PASS),
+// independentWeight 0.7; persist marketFairProb + rankingP; honest pIndependent
+// load; Kalshi team maps; FPI exact match; selective consumes rankingP.
+// Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.
+// v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-export const MODEL_VERSION = "v5.2.0";
+export const MODEL_VERSION = "v5.2.1";
 
 // ============================================================
 // Confidence thresholds

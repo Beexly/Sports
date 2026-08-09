@@ -46,6 +46,7 @@ const STACK = [
 ] as const;
 
 const CHANGELOG = [
+  ["v5.2.1", "Ranking uses independent model P when present; bake-off never treats edge as a win probability; positive separation required."],
   ["v5.2", "Independent estimators priced into ranking path; edge is never used as a win probability."],
   ["v5.0", "Bootstrap-canonical gating and settled-only learning policy."],
   ["v4.0", "Expanded factor snapshot storage for public audit trails."],

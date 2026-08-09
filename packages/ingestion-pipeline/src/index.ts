@@ -95,9 +95,15 @@ export {
   buildIndependentFairValues,
   getOrFitEloRatings,
   loadSportResultGamesForElo,
+  sportKeyToKalshiLeague,
+  guessKalshiTeamAbbr,
 } from "./build-independent-fair-values.js";
 export type {
   IndependentFairValueBuildInput,
   EloRatingsCache,
 } from "./build-independent-fair-values.js";
+export {
+  resolveKalshiTeamAbbr,
+  normalizeTeamKey,
+} from "./kalshi-team-abbr.js";
 

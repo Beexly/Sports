@@ -119,15 +119,32 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
   }
 
-  // Selective publish (default OFF): drop coin-flips / paused groups when enabled
+  // Selective publish (default ON): prefer priced rankingP over confidence.
   const filteredPicks = (
     await Promise.all(
       picks.map(async (pick) => {
+        let rankingP: number | null = null;
+        let rankingScore: number | null = null;
+        let marketImpliedProb: number | null = null;
+        if (pick.factorBreakdown && typeof pick.factorBreakdown === "object") {
+          const fb = pick.factorBreakdown as Record<string, unknown>;
+          if (typeof fb["rankingP"] === "number" && Number.isFinite(fb["rankingP"])) {
+            rankingP = fb["rankingP"] as number;
+          }
+          if (typeof fb["marketFairProb"] === "number" && Number.isFinite(fb["marketFairProb"])) {
+            marketImpliedProb = fb["marketFairProb"] as number;
+          }
+          // rankingScore 0–100 mirror when rankingP present
+          if (rankingP != null) rankingScore = Math.round(rankingP * 100);
+        }
         const ok = await passesPublicSelectiveFilterAsync({
           confidence: pick.confidence,
+          rankingP,
+          rankingScore,
           edgeScore: pick.edgeScore,
           pickType: pick.pickType,
           sportKey: pick.game?.sport?.key ?? null,
+          marketImpliedProb,
         });
         return ok ? pick : null;
       }),
