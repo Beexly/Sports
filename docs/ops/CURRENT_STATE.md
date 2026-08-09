@@ -48,3 +48,4 @@ Maps fix REL not RES. Path: independents → rankingP → selective/pause → re
 - **Remaining founder:** Vercel Production Redeploy if auto-deploy blocked by commit-author verify; optional Stripe/free-lane env.
 - **Still do not flip gates/maps/RANKING_PAUSE_APPLY.**
 
+**Prod hotfix:** `e5d2eb11` ESLint unblock (prefer-const + spearman test). Redeploy via verified-author commit.
