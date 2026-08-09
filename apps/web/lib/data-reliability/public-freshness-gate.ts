@@ -50,7 +50,7 @@ export function staleDataGateResponse(featureName: string): {
       bootstrapMode: false,
       boardSurface: "signal",
       hint:
-        "Signal board quiet: no recent published non-seed picks within the Refresh SLA. " +
+        "Signal board quiet: no recent generation and no upcoming published model signals (7d). " +
         "This is not a book-odds outage. Model signals only — never labeled as book lines. " +
         "Reopens when generate-drafts / settle pipeline publishes a fresh slate.",
     };
@@ -98,8 +98,12 @@ export async function isMarketBoardOddsStale(now: Date = new Date()): Promise<bo
 }
 
 /**
- * Signal board: slate/pick generation freshness (published non-bootstrap pick).
- * Does NOT use odds inserts. Never certifies book lines.
+ * Signal board: slate usable without book odds.
+ * Fresh if EITHER:
+ *   (a) a published non-seed pick was generated within Refresh SLA, OR
+ *   (b) there is a published non-seed PENDING pick on a game commencing within
+ *       the next 7 days (model signal still relevant even if odds pipeline quiet).
+ * Never certifies book lines. LIVE_BOARD still odds-gated separately.
  */
 export async function isSignalBoardSlateStale(now: Date = new Date()): Promise<boolean> {
   const lastPick = await db.pick.findFirst({
@@ -112,7 +116,25 @@ export async function isSignalBoardSlateStale(now: Date = new Date()): Promise<b
     select: { generatedAt: true },
   });
   const lastAt = lastPick?.generatedAt ?? null;
-  return classifyRefreshFreshness(lastAt, now).status === "stale";
+  if (classifyRefreshFreshness(lastAt, now).status !== "stale") {
+    return false;
+  }
+
+  // Upcoming published model signals keep the board open during quiet odds cycles
+  const horizon = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const upcoming = await db.pick.findFirst({
+    where: {
+      isPublished: true,
+      isBootstrap: false,
+      result: "PENDING",
+      NOT: { modelVersion: "v5.0.0-seed" },
+      game: {
+        commenceTime: { gte: now, lte: horizon },
+      },
+    },
+    select: { id: true },
+  });
+  return upcoming == null;
 }
 
 /**
