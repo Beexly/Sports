@@ -14,6 +14,11 @@ import {
   resolveCalibrationPublishPolicy,
   type PublishPolicyResult,
 } from "@/lib/ops/calibration-publish-policy";
+import {
+  buildDurableMetricsFromSamples,
+  CANONICAL_LEARNING_PICK_WHERE,
+  picksToCalibrationSamples,
+} from "@/lib/ops/compute-live-calibration-metrics";
 
 export const CAL_METRICS_SCOPE = "ops.calibration.metrics";
 export const CAL_ELIGIBILITY_SCOPE = "ops.calibration.eligibility";
@@ -327,6 +332,36 @@ export async function evaluateAndPersistEligibility(input: {
 /**
  * Ops-truth path: read-only load; recompute only if no durable eligibility.
  */
+async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
+  if (isStubMode()) return null;
+  try {
+    const picks = await db.pick.findMany({
+      where: CANONICAL_LEARNING_PICK_WHERE,
+      select: {
+        confidence: true,
+        result: true,
+        modelVersion: true,
+        settledAt: true,
+      },
+      orderBy: { settledAt: "desc" },
+      take: 2000,
+    });
+    const built = picksToCalibrationSamples(picks);
+    const payload = buildDurableMetricsFromSamples({
+      samples: built.samples,
+      modelVersions: built.modelVersions,
+      settledFrom: built.settledFrom,
+      settledTo: built.settledTo,
+      gitSha: process.env["VERCEL_GIT_COMMIT_SHA"] ?? process.env["GIT_SHA"] ?? null,
+      notes: ["Seeded from ops-truth/read path when durable metrics missing."],
+    });
+    await persistCalibrationMetrics(payload);
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
 export async function loadCalibrationOpsSurface(input: {
   readonly canonicalSettled: number;
   readonly minSettledForLearning: number;
@@ -337,7 +372,12 @@ export async function loadCalibrationOpsSurface(input: {
   publish: PublishPolicyResult;
   receipt: PublishReceipt | null;
 }> {
-  const metrics = await loadLatestCalibrationMetrics();
+  let metrics = await loadLatestCalibrationMetrics();
+  // Seed only when never written — do not re-mint generatedAt on every ops hit.
+  if (!metrics) {
+    const seeded = await seedMetricsIfMissing();
+    if (seeded) metrics = seeded;
+  }
   const priorSnap = await loadLatestEligibilitySnap();
   const receipt = await loadPublishReceipt();
   const metricsAt = metrics?.generatedAt ?? null;
@@ -365,6 +405,18 @@ export async function loadCalibrationOpsSurface(input: {
     eligibilityStatus: eligibility.status,
     durablePublished: receipt?.published ?? null,
   });
+
+  // Persist first evaluation of a new metrics artifact so consecutiveGreen advances on later reads/crons.
+  if (
+    metrics &&
+    (!priorSnap || priorSnap.metricsGeneratedAt !== metrics.generatedAt)
+  ) {
+    await persistEligibilitySnap({
+      evaluatedAt: new Date().toISOString(),
+      metricsGeneratedAt: metrics.generatedAt,
+      report: eligibility,
+    });
+  }
 
   return { metrics, eligibility, publish, receipt };
 }
