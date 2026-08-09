@@ -266,6 +266,8 @@ export async function evaluateAndPersistEligibility(input: {
     const receipt = await loadPublishReceipt();
     const publish = resolveCalibrationPublishPolicy({
       eligibilityStatus: priorSnap.report.status,
+      consecutiveGreen: priorSnap.report.consecutiveGreen,
+      streakRequired: priorSnap.report.streakRequired,
       durablePublished: receipt?.published ?? null,
     });
     return {
@@ -299,6 +301,8 @@ export async function evaluateAndPersistEligibility(input: {
   const receipt = await loadPublishReceipt();
   const publish = resolveCalibrationPublishPolicy({
     eligibilityStatus: eligibility.status,
+    consecutiveGreen: eligibility.consecutiveGreen,
+    streakRequired: eligibility.streakRequired,
     durablePublished: receipt?.published ?? null,
   });
 
@@ -403,6 +407,8 @@ export async function loadCalibrationOpsSurface(input: {
 
   const publish = resolveCalibrationPublishPolicy({
     eligibilityStatus: eligibility.status,
+    consecutiveGreen: eligibility.consecutiveGreen,
+    streakRequired: eligibility.streakRequired,
     durablePublished: receipt?.published ?? null,
   });
 

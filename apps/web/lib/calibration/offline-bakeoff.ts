@@ -10,6 +10,7 @@ import {
 } from "@sports/prediction-engine";
 import { fitPlatt, fitPlattMap, applyPlatt, fitPlattMapHierarchical, type ProbOutcome } from "@/lib/calibration/platt-map";
 import { shrinkBin, fitEmpiricalBayesNu } from "@/lib/calibration/bayes-bins";
+import { fitIsotonicPava, applyIsotonic } from "@/lib/calibration/isotonic-pava";
 
 export interface BakeoffMethodResult {
   readonly method: string;
@@ -139,6 +140,10 @@ export function runOfflineBakeoff(
 
   const mapMapped = test.map((r) => ({ p: applyPlatt(r.p, plattMap), y: r.y }));
   methods.push({ method: "platt_map", nTest: test.length, ...score(mapMapped) });
+
+  const iso = fitIsotonicPava(train.map((r) => ({ p: r.p, y: r.y as 0 | 1 })));
+  const isoMapped = test.map((r) => ({ p: applyIsotonic(r.p, iso), y: r.y }));
+  methods.push({ method: "isotonic_pava", nTest: test.length, ...score(isoMapped) });
 
   // EB bin: map p to shrunk rate of containing bin
   const ebMapped = test.map((r) => {
