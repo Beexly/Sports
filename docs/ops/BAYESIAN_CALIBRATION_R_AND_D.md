@@ -33,3 +33,17 @@
 - No fabricated ROI / PROVEN claims from R&D numbers.
 - Demo cockpit N≈120 is not a publish sample.
 - ACI (`CONFORMAL_ABSTAIN_ENABLED`) is show/abstain only — **not** a publish gate.
+
+## Tangent logistic = Newton–IRLS / Laplace (not a separate product)
+
+"Tangent logistic" is the local quadratic approximation used by Newton steps on the logistic log-likelihood (IRLS). At the MAP, the same Hessian **H = X′WX + Σ⁻¹** is the **Laplace** posterior precision:
+
+- MAP point: mode of posterior (production candidate only after bake-off)
+- Laplace: local Gaussian around MAP for **internal** predictive uncertainty
+- **Do not** market Laplace intervals as ROI or edge certainty
+
+Code: `fitPlattIrls` / `fitPlattMapFull` / `plattPredictiveMean` in `apps/web/lib/calibration/platt-map.ts`.
+
+## Hierarchical ridge intercepts
+
+`fitPlattMapHierarchical`: shared (A,B) + per-group `u_g` with ridge prior. Use only in offline bake-offs vs global MAP. Does not touch eligibility floors.

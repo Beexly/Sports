@@ -410,14 +410,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
-                  ? "The board is paused while fresh odds land."
+                  ? "Quiet board — waiting on fresh odds (not broken)."
                   : "Public picks are still gated. LIVE_BOARD stays off until founder enable."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
-                  ? "Our freshness guard holds the board rather than show you " +
-                    "lines that have gone stale. It reopens automatically on the " +
-                    "next successful odds refresh — no stale data, ever."
+                  ? "This is the honesty guard: we hide picks when odds are past the refresh " +
+                    "window or no games are insertable. The board reopens on the next real " +
+                    "odds insert — never on stale lines. Methodology and pricing stay available."
                   : "We're building up odds and settlement history before we " +
                     "publish picks. That keeps the record clean and weak signals " +
                     "off the board."}
@@ -476,7 +476,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               active SPORT filter when one is applied, so an empty board never
               blames "this date" when a sport filter is what emptied it. */}
           {!fetchError && !bootstrapState && picks.length === 0 && !lockedByPaywall && (
-            <div className="rounded-xl border border-titanium bg-carbon/60 p-12 text-center">
+            <div
+              data-testid="picks-quiet-empty"
+              className="rounded-xl border border-titanium bg-carbon/60 p-12 text-center"
+            >
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-titanium">
                 <svg
                   className="h-7 w-7 text-ion-2"
