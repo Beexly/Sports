@@ -5,6 +5,7 @@
  * server.  The middleware imports and calls `checkWaitlistGate`.
  *
  * Gate is opt-in: it only activates when GSE_WAITLIST_GATE_ENABLED === "true".
+ * FOUNDING launch default is OPEN (flag false/unset). Never force Basic Auth for public funnel.
  * Credentials are read exclusively from server-side env vars; they are never
  * logged and never reach the client bundle.
  */

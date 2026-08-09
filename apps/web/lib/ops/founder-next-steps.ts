@@ -194,7 +194,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "growth",
       priority: "P1",
       action:
-        "Waitlist Basic Auth is locking lead capture — set GSE_WAITLIST_GATE_ENABLED=false for full public funnel (Payment Links still founder-owned).",
+        "Waitlist Basic Auth is locking lead capture — FOUNDING open: set GSE_WAITLIST_GATE_ENABLED=false (or unset) on Production; code default is open when flag is not true.",
     });
   }
 
