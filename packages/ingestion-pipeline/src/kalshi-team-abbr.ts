@@ -6,6 +6,10 @@
  * Leagues: NFL/NBA/MLB/NHL (majors) + WNBA/CFB/CBB + EPL/MLS (soccer game series).
  * CFB/CBB maps cover high-volume programs; unmapped → null (series search still
  * needs an abbr — expand as Kalshi coverage is verified live).
+ *
+ * Polarity law: wrong independent null is honest; wrong independent inverted is
+ * a product incident. ESPN shorts that differ from Kalshi (CHW→CWS, GS→GSW)
+ * must never blind-passthrough.
  */
 
 import type { KalshiLeagueCode } from "@sports/data-ingestion";
@@ -150,6 +154,7 @@ const NBA: Readonly<Record<string, string>> = {
   "golden state warriors": "GSW",
   warriors: "GSW",
   gsw: "GSW",
+  gs: "GSW",
   "houston rockets": "HOU",
   rockets: "HOU",
   "indiana pacers": "IND",
@@ -174,9 +179,11 @@ const NBA: Readonly<Record<string, string>> = {
   "new orleans pelicans": "NOP",
   pelicans: "NOP",
   nop: "NOP",
+  no: "NOP",
   "new york knicks": "NYK",
   knicks: "NYK",
   nyk: "NYK",
+  ny: "NYK",
   "oklahoma city thunder": "OKC",
   thunder: "OKC",
   okc: "OKC",
@@ -200,14 +207,17 @@ const NBA: Readonly<Record<string, string>> = {
   "san antonio spurs": "SAS",
   spurs: "SAS",
   sas: "SAS",
+  sa: "SAS",
   "toronto raptors": "TOR",
   raptors: "TOR",
   tor: "TOR",
   "utah jazz": "UTA",
   jazz: "UTA",
   uta: "UTA",
+  utah: "UTA",
   "washington wizards": "WAS",
   wizards: "WAS",
+  wsh: "WAS",
 };
 
 const MLB: Readonly<Record<string, string>> = {
@@ -225,6 +235,9 @@ const MLB: Readonly<Record<string, string>> = {
   "chicago white sox": "CWS",
   "white sox": "CWS",
   cws: "CWS",
+  chw: "CWS",
+  ari: "ARI",
+  az: "ARI",
   "cincinnati reds": "CIN",
   reds: "CIN",
   "cleveland guardians": "CLE",
@@ -286,6 +299,20 @@ const MLB: Readonly<Record<string, string>> = {
   "washington nationals": "WSH",
   nationals: "WSH",
   wsh: "WSH",
+  bal: "BAL",
+  bos: "BOS",
+  cin: "CIN",
+  cle: "CLE",
+  det: "DET",
+  hou: "HOU",
+  kc: "KC",
+  mia: "MIA",
+  mil: "MIL",
+  min: "MIN",
+  pit: "PIT",
+  sea: "SEA",
+  tb: "TB",
+  tor: "TOR",
 };
 
 const NHL: Readonly<Record<string, string>> = {
@@ -330,6 +357,7 @@ const NHL: Readonly<Record<string, string>> = {
   "new jersey devils": "NJD",
   devils: "NJD",
   njd: "NJD",
+  nj: "NJD",
   "new york islanders": "NYI",
   islanders: "NYI",
   nyi: "NYI",
@@ -659,23 +687,61 @@ const BY_LEAGUE: Readonly<
  * Resolve Kalshi team abbreviation for a league + team name.
  * Returns null when unmapped (honest no-opinion).
  */
+/**
+ * Known Kalshi abbreviations for a league (values of the name table).
+ * Used to allowlist short-token passthrough — never invent tickers.
+ */
+function knownKalshiAbbrs(
+  table: Readonly<Record<string, string>>,
+): ReadonlySet<string> {
+  return new Set(Object.values(table));
+}
+
+/**
+ * Resolve Kalshi team abbreviation for a league + team name.
+ * Returns null when unmapped (honest no-opinion).
+ *
+ * Order (polarity-safe):
+ *  1) table hit on full normalized name
+ *  2) table hit on short token / ESPN alias (CHW→CWS, GS→GSW, …)
+ *  3) parenthetical short token if allowlisted for the league
+ *  4) allowlisted Kalshi abbr passthrough (value already in table)
+ *  5) last-token nickname when present in table
+ *  6) null — never blind 2–6 letter invent
+ */
 export function resolveKalshiTeamAbbr(
   league: KalshiLeagueCode,
   teamName: string,
 ): string | null {
   const t = teamName.trim();
   if (!t) return null;
-  // Already a short abbr (2–6 for CFB stems like OHIOST)
-  if (/^[A-Za-z]{2,6}$/.test(t)) return t.toUpperCase();
-  const paren = t.match(/\(([A-Za-z]{2,6})\)/);
-  if (paren?.[1]) return paren[1].toUpperCase();
-
-  const key = normalizeTeamKey(t);
   const table = BY_LEAGUE[league];
   if (!table) return null;
+  const known = knownKalshiAbbrs(table);
+
+  const key = normalizeTeamKey(t);
   if (table[key]) return table[key]!;
 
-  // Last token only when unique-ish (e.g. "Cowboys")
+  // Short token: table key (aliases) first, then allowlist of Kalshi values.
+  if (/^[A-Za-z]{2,6}$/.test(t)) {
+    const upper = t.toUpperCase();
+    const fromTable = table[key] ?? table[normalizeTeamKey(upper)];
+    if (fromTable) return fromTable;
+    if (known.has(upper)) return upper;
+    return null; // unknown short code → honest miss (never CHW/GS poison)
+  }
+
+  const paren = t.match(/\(([A-Za-z]{2,6})\)/);
+  if (paren?.[1]) {
+    const inner = paren[1].toUpperCase();
+    const fromTable =
+      table[normalizeTeamKey(paren[1])] ?? table[normalizeTeamKey(inner)];
+    if (fromTable) return fromTable;
+    if (known.has(inner)) return inner;
+    return null;
+  }
+
+  // Last token only when present in table (e.g. "Cowboys")
   const parts = key.split(" ");
   if (parts.length > 1) {
     const last = parts[parts.length - 1]!;

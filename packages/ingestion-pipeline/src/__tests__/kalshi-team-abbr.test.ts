@@ -34,6 +34,23 @@ describe("kalshi team abbr maps", () => {
     expect(resolveKalshiTeamAbbr("MLB", "Athletics")).toBe("ATH");
   });
 
+  it("maps ESPN short traps to Kalshi abbrs (polarity)", () => {
+    expect(resolveKalshiTeamAbbr("MLB", "CHW")).toBe("CWS");
+    expect(resolveKalshiTeamAbbr("MLB", "Chicago White Sox")).toBe("CWS");
+    expect(resolveKalshiTeamAbbr("NBA", "GS")).toBe("GSW");
+    expect(resolveKalshiTeamAbbr("NBA", "NY")).toBe("NYK");
+    expect(resolveKalshiTeamAbbr("NBA", "SA")).toBe("SAS");
+    expect(resolveKalshiTeamAbbr("NBA", "NO")).toBe("NOP");
+    expect(resolveKalshiTeamAbbr("NBA", "UTAH")).toBe("UTA");
+    expect(resolveKalshiTeamAbbr("NHL", "NJ")).toBe("NJD");
+  });
+
+  it("rejects unknown short codes (honest null, no invent)", () => {
+    expect(resolveKalshiTeamAbbr("MLB", "ZZ")).toBeNull();
+    expect(resolveKalshiTeamAbbr("NBA", "XX")).toBeNull();
+  });
+
+
   it("resolves EPL verified live abbrs", () => {
     expect(resolveKalshiTeamAbbr("EPL", "Newcastle United")).toBe("NEW");
     expect(resolveKalshiTeamAbbr("EPL", "Liverpool")).toBe("LFC");
@@ -59,10 +76,13 @@ describe("kalshi team abbr maps", () => {
     expect(sportKeyToKalshiLeague("tennis_atp")).toBeNull();
   });
 
-  it("guessKalshiTeamAbbr uses league map for full names", () => {
+  it("guessKalshiTeamAbbr uses league map only (no blind short invent)", () => {
     expect(guessKalshiTeamAbbr("Dallas Cowboys", "NFL")).toBe("DAL");
     expect(guessKalshiTeamAbbr("Dallas Cowboys", null)).toBeNull();
     expect(guessKalshiTeamAbbr("NYK", "NBA")).toBe("NYK");
+    expect(guessKalshiTeamAbbr("GS", "NBA")).toBe("GSW");
+    expect(guessKalshiTeamAbbr("CHW", "MLB")).toBe("CWS");
     expect(guessKalshiTeamAbbr("Manchester City", "EPL")).toBe("MCI");
+    expect(guessKalshiTeamAbbr("ZZ", "MLB")).toBeNull();
   });
 });

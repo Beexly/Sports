@@ -202,6 +202,20 @@ export type {
   PoissonFairValueInput,
   PoissonFairValue,
 } from "./team-rates.js";
+// Dixon–Coles τ(ρ) soccer independent (market-free; TeamGameLog λ + low-score corr).
+export {
+  dixonColesTau,
+  jointScoreMatrixDixonColes,
+  dixonColesMoneylineProbabilities,
+  dixonColesIndependentFairValue,
+  isDixonColesValidSport,
+  clampDixonColesRho,
+  DEFAULT_DIXON_COLES_RHO,
+} from "./dixon-coles.js";
+export type {
+  DixonColesFairValueInput,
+  DixonColesFairValue,
+} from "./dixon-coles.js";
 export {
   deriveRankingProbability,
 } from "./ranking-prob.js";

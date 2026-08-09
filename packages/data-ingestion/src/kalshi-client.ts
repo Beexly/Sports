@@ -31,6 +31,8 @@ import {
   gameSeriesForLeague,
   toKalshiDateFragment,
   toKalshiTimeFragment,
+  MAX_MARKET_START_SKEW_MS,
+  parseKalshiEventTail,
   type KalshiLeagueCode,
 } from "./kalshi-series.js";
 
@@ -395,13 +397,33 @@ export class KalshiClient {
         const occ = legs.find((l) => l.occurrence_datetime)?.occurrence_datetime;
         if (occ && Number.isFinite(commenceMs)) {
           const delta = Math.abs(Date.parse(occ) - commenceMs);
+          // sports-skills: drop next-game / far-future attach (12h skew).
+          if (delta > MAX_MARKET_START_SKEW_MS) continue;
           score = -delta;
+        } else if (Number.isFinite(commenceMs)) {
+          // Fallback: parse ET start from ticker tail when occurrence missing.
+          const parsed = parseKalshiEventTail(et);
+          if (parsed?.startUtcMs != null) {
+            const delta = Math.abs(parsed.startUtcMs - commenceMs);
+            if (delta > MAX_MARKET_START_SKEW_MS) continue;
+            score = -delta;
+          }
         }
         const tails = new Set(
           legs.map((l) => l.ticker.slice(l.ticker.lastIndexOf("-") + 1).toUpperCase()),
         );
-        if (tails.has(game.homeAbbr.toUpperCase())) score += 1e12;
-        if (tails.has(game.awayAbbr.toUpperCase())) score += 1e12;
+        const homeU = game.homeAbbr.toUpperCase();
+        const awayU = game.awayAbbr.toUpperCase();
+        // Moneyline needs both team legs — missing side is null fair, not invent.
+        if (!tails.has(homeU) || !tails.has(awayU)) {
+          // Still allow if only non-tie incomplete; prefer complete pairs.
+          if (!(tails.has(homeU) || tails.has(awayU))) continue;
+          score -= 1e9;
+        } else {
+          score += 2e12;
+        }
+        // Prefer canonical AWAYHOME event order over HOMEAWAY.
+        if (et.includes(`${awayU}${homeU}`)) score += 1e10;
         if (!best || score > best.score) {
           best = { eventTicker: et, score };
         }
@@ -517,10 +539,27 @@ export function toIndependentFairValue(
   const tail = (ticker: string) => ticker.slice(ticker.lastIndexOf("-") + 1).toUpperCase();
   const home = fairValue.sides.find((s) => tail(s.ticker) === homeAbbr.toUpperCase());
   const away = fairValue.sides.find((s) => tail(s.ticker) === awayAbbr.toUpperCase());
+  const homeFair = home?.fairProb ?? null;
+  const awayFair = away?.fairProb ?? null;
+  // Polarity law: never publish one-sided moneyline fair (invented complement).
+  // Both sides must map by ticker suffix; null pair = honest miss.
+  if (
+    homeFair == null ||
+    awayFair == null ||
+    !Number.isFinite(homeFair) ||
+    !Number.isFinite(awayFair)
+  ) {
+    return {
+      source: "kalshi",
+      homeFairProb: null,
+      awayFairProb: null,
+      capturedAt: fairValue.capturedAt,
+    };
+  }
   return {
     source: "kalshi",
-    homeFairProb: home?.fairProb ?? null,
-    awayFairProb: away?.fairProb ?? null,
+    homeFairProb: homeFair,
+    awayFairProb: awayFair,
     capturedAt: fairValue.capturedAt,
   };
 }
