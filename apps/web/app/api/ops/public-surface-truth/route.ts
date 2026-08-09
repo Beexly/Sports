@@ -79,6 +79,13 @@ const MAIN_FEATURE_MARKERS = [
   "odds-inserting-freshness-ops",
   "calibration-eligibility-engine",
   "calibration-auto-publish-policy",
+  "ranking-surface-sort",
+  "independent-ranking-v5.2.2",
+  "public-dark-reason-taxonomy",
+  "news-rss-curated-defaults",
+  "b2b-signals-rankingp",
+  "tools-line-movement",
+  "session-leverage-atlas",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {

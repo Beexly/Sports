@@ -207,3 +207,9 @@ export {
   resolveFreshnessThresholdMs,
   type FreshnessMode,
 } from "./freshness-schedule.js";
+
+export {
+  normalizeComparableText,
+  findMatchingTeamInText,
+  parseSportsScore,
+} from "./team-text-match.js";
