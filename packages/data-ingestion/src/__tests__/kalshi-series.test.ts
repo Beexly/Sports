@@ -7,6 +7,8 @@ import {
   sportKeyToKalshiLeagueCode,
   toKalshiDateFragment,
   toKalshiTimeFragment,
+  parseKalshiEventTail,
+  MAX_MARKET_START_SKEW_MS,
 } from "../kalshi-series.js";
 import {
   eventTickerMatchesGame,
@@ -126,5 +128,40 @@ describe("eventTickerMatchesGame — time-encoded MLB", () => {
         homeAbbr: "LFC",
       }),
     ).toBe(true);
+  });
+});
+
+describe("parseKalshiEventTail — sports-skills grammar", () => {
+  it("parses time-encoded MLB tail with ET start", () => {
+    const p = parseKalshiEventTail("KXMLBGAME-26AUG121910MILSD");
+    expect(p).not.toBeNull();
+    expect(p!.dateFrag).toBe("26AUG12");
+    expect(p!.timeFrag).toBe("1910");
+    expect(p!.teamPair).toBe("MILSD");
+    expect(p!.gameNum).toBeNull();
+    expect(p!.startUtcMs).not.toBeNull();
+    // 19:10 ET Aug 12 2026 = 23:10 UTC (EDT)
+    expect(new Date(p!.startUtcMs!).toISOString()).toBe("2026-08-12T23:10:00.000Z");
+  });
+
+  it("parses time-less NBA tail (pair only)", () => {
+    const p = parseKalshiEventTail("KXNBAGAME-26JUN03NYKSAS");
+    expect(p!.timeFrag).toBeNull();
+    expect(p!.teamPair).toBe("NYKSAS");
+    expect(p!.startUtcMs).toBeNull();
+  });
+
+  it("parses doubleheader Gn suffix", () => {
+    const p = parseKalshiEventTail("KXMLBGAME-26AUG121610MILSDG1");
+    expect(p!.gameNum).toBe(1);
+    expect(p!.teamPair).toBe("MILSD");
+  });
+
+  it("null on non-game futures stem", () => {
+    expect(parseKalshiEventTail("KXMLB-SOMETHING")).toBeNull();
+  });
+
+  it("exports 12h skew constant", () => {
+    expect(MAX_MARKET_START_SKEW_MS).toBe(12 * 60 * 60 * 1000);
   });
 });

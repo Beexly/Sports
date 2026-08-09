@@ -313,3 +313,139 @@ export function toKalshiTimeFragment(dateUtc: string): string | null {
 
 /** Max |commence − market occurrence| for series attach (sports-skills: 12h). */
 export const MAX_MARKET_START_SKEW_MS = 12 * 60 * 60 * 1000;
+
+/**
+ * Parse Kalshi game event ticker tail (after last hyphen of series stem):
+ *   YY + MON + DD + optional HHMM + team_pair + optional Gn
+ * e.g. 26AUG121610MILSD, 26AUG12NYKSAS, 26AUG121610MILSDG1
+ *
+ * Port of sports-skills `_parse_kalshi_event_tail`. Embedded HHMM is ET.
+ * Returns null fields when grammar does not match — never invents.
+ */
+export type KalshiEventTail = {
+  readonly dateFrag: string; // YYMMMDD
+  readonly timeFrag: string | null; // HHMM or null
+  readonly teamPair: string;
+  readonly gameNum: number | null;
+  /** Start instant from ET wall clock when HHMM present; else null. */
+  readonly startUtcMs: number | null;
+};
+
+const TAIL_RE =
+  /^(\d{2})([A-Z]{3})(\d{2})(\d{4})?([A-Z]+?)(?:G(\d))?$/;
+
+const MONTH_NUM: Readonly<Record<string, number>> = {
+  JAN: 1,
+  FEB: 2,
+  MAR: 3,
+  APR: 4,
+  MAY: 5,
+  JUN: 6,
+  JUL: 7,
+  AUG: 8,
+  SEP: 9,
+  OCT: 10,
+  NOV: 11,
+  DEC: 12,
+};
+
+export function parseKalshiEventTail(eventTicker: string): KalshiEventTail | null {
+  const upper = eventTicker.toUpperCase();
+  const dash = upper.lastIndexOf("-");
+  const tail = dash >= 0 ? upper.slice(dash + 1) : upper;
+  const m = TAIL_RE.exec(tail);
+  if (!m) return null;
+  const yy = m[1]!;
+  const mon = m[2]!;
+  const dd = m[3]!;
+  const hhmm = m[4] ?? null;
+  const pair = m[5]!;
+  const gameNum = m[6] != null ? Number(m[6]) : null;
+  const month = MONTH_NUM[mon];
+  if (month == null) return null;
+  const dateFrag = `${yy}${mon}${dd}`;
+  let startUtcMs: number | null = null;
+  if (hhmm && hhmm.length === 4) {
+    // Build ET wall time via temporal-like construction: use Date with offset probe.
+    // America/New_York: format a UTC candidate and adjust — prefer Intl.
+    const year = 2000 + Number(yy);
+    const hour = Number(hhmm.slice(0, 2));
+    const minute = Number(hhmm.slice(2));
+    if (
+      Number.isFinite(year) &&
+      Number.isFinite(hour) &&
+      Number.isFinite(minute) &&
+      hour >= 0 &&
+      hour <= 23 &&
+      minute >= 0 &&
+      minute <= 59
+    ) {
+      // Binary-search UTC ms that formats to the desired ET wall components.
+      // Noon UTC on that calendar day as seed, then refine.
+      const seed = Date.UTC(year, month - 1, Number(dd), 12, 0, 0);
+      // Walk a window of ±1 day in 15m steps is too heavy; use offset table via format.
+      // Construct ISO-like local and ask: getTimezoneOffset is host-local, not ET.
+      // Instead: iterate hours around seed with formatToParts.
+      let best: number | null = null;
+      for (let offsetH = -14; offsetH <= 14; offsetH++) {
+        const cand = seed + offsetH * 3600_000;
+        const d = new Date(cand);
+        const parts = new Intl.DateTimeFormat("en-US", {
+          timeZone: KALSHI_TICKER_TZ,
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hourCycle: "h23",
+        }).formatToParts(d);
+        const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+        if (
+          get("year") === year &&
+          get("month") === month &&
+          get("day") === Number(dd) &&
+          get("hour") === hour &&
+          get("minute") === minute
+        ) {
+          best = cand;
+          break;
+        }
+      }
+      // Refine minutes if hour matched but minute off — scan ±60 min around best hour
+      if (best == null) {
+        for (let offsetM = -14 * 60; offsetM <= 14 * 60; offsetM++) {
+          const cand = seed + offsetM * 60_000;
+          const d = new Date(cand);
+          const parts = new Intl.DateTimeFormat("en-US", {
+            timeZone: KALSHI_TICKER_TZ,
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hourCycle: "h23",
+          }).formatToParts(d);
+          const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+          if (
+            get("year") === year &&
+            get("month") === month &&
+            get("day") === Number(dd) &&
+            get("hour") === hour &&
+            get("minute") === minute
+          ) {
+            best = cand;
+            break;
+          }
+        }
+      }
+      startUtcMs = best;
+    }
+  }
+  return {
+    dateFrag,
+    timeFrag: hhmm,
+    teamPair: pair,
+    gameNum: Number.isFinite(gameNum as number) ? gameNum : null,
+    startUtcMs,
+  };
+}

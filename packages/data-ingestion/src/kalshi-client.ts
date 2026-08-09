@@ -32,6 +32,7 @@ import {
   toKalshiDateFragment,
   toKalshiTimeFragment,
   MAX_MARKET_START_SKEW_MS,
+  parseKalshiEventTail,
   type KalshiLeagueCode,
 } from "./kalshi-series.js";
 
@@ -399,6 +400,14 @@ export class KalshiClient {
           // sports-skills: drop next-game / far-future attach (12h skew).
           if (delta > MAX_MARKET_START_SKEW_MS) continue;
           score = -delta;
+        } else if (Number.isFinite(commenceMs)) {
+          // Fallback: parse ET start from ticker tail when occurrence missing.
+          const parsed = parseKalshiEventTail(et);
+          if (parsed?.startUtcMs != null) {
+            const delta = Math.abs(parsed.startUtcMs - commenceMs);
+            if (delta > MAX_MARKET_START_SKEW_MS) continue;
+            score = -delta;
+          }
         }
         const tails = new Set(
           legs.map((l) => l.ticker.slice(l.ticker.lastIndexOf("-") + 1).toUpperCase()),
