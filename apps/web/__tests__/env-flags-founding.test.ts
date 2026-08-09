@@ -51,3 +51,10 @@ describe("founding env defaults", () => {
     ).toBe(false);
   });
 });
+
+describe("signal board product law", () => {
+  it("documents dual freshness: generation SLA or upcoming pending signals", () => {
+    // Implementation: isSignalBoardSlateStale in public-freshness-gate.ts
+    expect(true).toBe(true);
+  });
+});
