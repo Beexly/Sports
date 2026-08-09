@@ -40,7 +40,7 @@ describe("spearman-separation", () => {
 
   it("compareScoreKinds picks stronger series", () => {
     const outcomes = Array.from({ length: 60 }, (_, i) => (i < 30 ? 1 : 0) as 0 | 1);
-    const good = outcomes.map((y, i) => ({
+    const good = outcomes.map((y) => ({
       p: y === 1 ? 0.7 : 0.3,
       y,
     }));
