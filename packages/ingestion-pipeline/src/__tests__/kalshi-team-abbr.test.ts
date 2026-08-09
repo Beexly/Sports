@@ -61,7 +61,16 @@ describe("kalshi team abbr maps", () => {
   it("resolves WNBA + CFB high-volume", () => {
     expect(resolveKalshiTeamAbbr("WNBA", "New York Liberty")).toBe("NY");
     expect(resolveKalshiTeamAbbr("CFB", "Alabama")).toBe("ALA");
+    expect(resolveKalshiTeamAbbr("CFB", "Ohio State")).toBe("OHIOST");
+    expect(resolveKalshiTeamAbbr("CFB", "Michigan State")).toBe("MSU");
+    expect(resolveKalshiTeamAbbr("CFB", "Boise State")).toBe("BSU");
     expect(resolveKalshiTeamAbbr("CBB", "Duke")).toBe("DUKE");
+  });
+
+  it("resolves expanded soccer maps", () => {
+    expect(resolveKalshiTeamAbbr("LALIGA", "Girona")).toBe("GIR");
+    expect(resolveKalshiTeamAbbr("MLS", "Houston Dynamo")).toBe("HOU");
+    expect(resolveKalshiTeamAbbr("MLS", "Charlotte FC")).toBe("CLT");
   });
 
   it("null on unmapped (honest)", () => {
