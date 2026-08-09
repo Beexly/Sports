@@ -46,6 +46,7 @@ const STACK = [
 ] as const;
 
 const CHANGELOG = [
+  ["v5.2", "Independent estimators priced into ranking path; edge is never used as a win probability."],
   ["v5.0", "Bootstrap-canonical gating and settled-only learning policy."],
   ["v4.0", "Expanded factor snapshot storage for public audit trails."],
   ["v3.0", "Added schedule stress, rest, and cross-market checks."],
@@ -242,6 +243,53 @@ export default function MethodologyPage(): JSX.Element {
                   </Link>
                 </article>
               ))}
+            </Stagger>
+          </div>
+        </section>
+
+        {/* Ranking probability vs edge vs confidence */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                Ranking law
+              </p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+                Ranking probability, confidence, and edge are not the same thing.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+                Calibration and board ranking use a win probability — never a signed
+                edge gap dressed up as a probability. While live floors are still red,
+                we do not claim PROVEN performance or ROI.
+              </p>
+            </Reveal>
+            <Stagger className="mt-8 grid gap-5 md:grid-cols-3" step={100}>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Confidence</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  A 0–100 composite of market and matchup factors. Useful for UX and
+                  gates. Alone it often echoes the books, so discrimination can stay near
+                  noise until independents price in.
+                </p>
+              </article>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Ranking probability</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  The probability used for sort, selective publish, and calibration
+                  bake-offs. When independent estimators clear SPEAK or LEAN, ranking
+                  uses their true probability (or a blend with confidence). Otherwise it
+                  is confidence on the 0–1 scale.
+                </p>
+              </article>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Edge is not a probability</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  Edge is the gap between an independent true probability and the
+                  market's fair price — a signed difference, not P(side wins). Edge
+                  can filter and explain; it never enters Brier, resolution, or separation
+                  as if it were a win probability.
+                </p>
+              </article>
             </Stagger>
           </div>
         </section>

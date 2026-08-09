@@ -125,30 +125,58 @@ async function loadSettledCalibrationSamples(): Promise<{
         y: y as 0 | 1,
         marketP: null,
       });
-      const edge =
-        typeof pick.edgeScore === "number" && Number.isFinite(pick.edgeScore)
-          ? Math.min(1, Math.max(0, pick.edgeScore / 100))
-          : null;
+      // Prefer priced rankingP / trueProb. NEVER treat edgeScore as win probability
+      // (rawEdge = trueProb − marketFair — category error for Brier/RES/separation).
       let pIndependent: number | null = null;
+      let marketP: number | null = null;
       const fb = pick.factorBreakdown as {
         fairProbability?: number | null;
-        independentEdge?: { trueProb?: number | null } | null;
+        marketFairProb?: number | null;
+        rankingP?: number | null;
+        independentEdge?: {
+          trueProb?: number | null;
+          priced?: boolean;
+          marketFairProb?: number | null;
+        } | null;
       } | null | undefined;
-      if (fb?.fairProbability != null && Number.isFinite(fb.fairProbability)) {
-        pIndependent = Math.min(1, Math.max(0, Number(fb.fairProbability)));
+
+      if (
+        fb?.rankingP != null &&
+        Number.isFinite(fb.rankingP) &&
+        fb.rankingP > 0 &&
+        fb.rankingP < 1
+      ) {
+        pIndependent = Math.min(1, Math.max(0, Number(fb.rankingP)));
       } else if (
         fb?.independentEdge?.trueProb != null &&
         Number.isFinite(fb.independentEdge.trueProb)
       ) {
         pIndependent = Math.min(1, Math.max(0, Number(fb.independentEdge.trueProb)));
+      } else if (
+        fb?.fairProbability != null &&
+        Number.isFinite(fb.fairProbability) &&
+        fb?.independentEdge?.priced === true
+      ) {
+        pIndependent = Math.min(1, Math.max(0, Number(fb.fairProbability)));
       }
+
+      if (
+        fb?.independentEdge?.marketFairProb != null &&
+        Number.isFinite(fb.independentEdge.marketFairProb)
+      ) {
+        marketP = Math.min(1, Math.max(0, Number(fb.independentEdge.marketFairProb)));
+      } else if (fb?.marketFairProb != null && Number.isFinite(fb.marketFairProb)) {
+        marketP = Math.min(1, Math.max(0, Number(fb.marketFairProb)));
+      }
+
       provenRows.push({
         pConfidence: p,
-        pEdge: edge,
+        // Diagnostic field only — bake-off ignores pEdge (polarity law).
+        pEdge: null,
         pIndependent,
         y: y as 0 | 1,
         groupKey: `${sport}|${market}`,
-        marketP: null,
+        marketP,
       });
       if (pick.modelVersion) versions.add(pick.modelVersion);
       if (pick.settledAt) {

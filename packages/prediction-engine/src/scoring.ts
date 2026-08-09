@@ -928,6 +928,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
     dataQualityScore,
     independentEdge: independentEdge ?? undefined,
+    // Persist ranking law for later metrics / bake-off (never edge-as-p).
+    rankingP: rank.rankingP,
+    rankingSource: rank.source,
     factors,
   };
 

@@ -215,6 +215,20 @@ export {
   eloHomeWinFromRatings,
 } from "./elo-from-results.js";
 export type { EloResultGame } from "./elo-from-results.js";
+// ESPN PowerIndex → independent win probability (logistic). Model-fair only.
+export {
+  powerIndexToWinProbs,
+  powerIndexToIndependentFairValue,
+  sigmoidMargin,
+  resolvePowerIndexSport,
+  POWERINDEX_MARGIN_SCALE,
+  POWERINDEX_HFA,
+} from "./espn-powerindex.js";
+export type {
+  PowerIndexSport,
+  PowerIndexLogisticInput,
+  PowerIndexLogisticResult,
+} from "./espn-powerindex.js";
 // R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
 // NOT wired into live scoring; built for the future human-gated MODEL_VERSION
 // calibration that turns the confidence score into a calibrated win probability.

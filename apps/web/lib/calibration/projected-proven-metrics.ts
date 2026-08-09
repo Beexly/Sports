@@ -2,6 +2,9 @@
  * Project metrics under PROVEN-path filters on historical canonical sample.
  * Does NOT replace live eligibility (still full published sample until policy).
  * Shows whether selective+pause can move Res without inventing outcomes.
+ *
+ * Ranking p law: only win probabilities (confidence / trueProb / blend / market).
+ * Never edge-as-p.
  */
 
 import {
@@ -11,6 +14,7 @@ import {
 } from "@sports/prediction-engine";
 import {
   buildProvenPathPlan,
+  scoreProbability,
   type ProvenPathPickRow,
   type RankingScoreKind,
 } from "@/lib/calibration/proven-path-engine";
@@ -39,6 +43,8 @@ export type ProjectedProvenMetrics = {
   readonly bestScore: string;
   readonly pauseGroups: readonly string[];
   readonly delta: number;
+  /** Separation of the bestScore full-sample projection (must be >0 for healthy ranking). */
+  readonly bestSeparation: number;
 };
 
 function pack(samples: CalibrationSample[]) {
@@ -59,40 +65,26 @@ function pack(samples: CalibrationSample[]) {
   };
 }
 
-/** Score probability for a row under RankingScoreKind — mirrors proven-path-engine. */
-function scoreP(r: ProvenPathPickRow, kind: RankingScoreKind): number | null {
-  if (kind === "confidence") {
-    return r.pConfidence;
-  }
-  if (kind === "edgeScore") {
-    return r.pEdge != null && Number.isFinite(r.pEdge) ? r.pEdge : null;
-  }
-  if (kind === "blend_conf_edge") {
-    if (r.pEdge == null || !Number.isFinite(r.pEdge)) return null;
-    return 0.5 * r.pConfidence + 0.5 * r.pEdge;
-  }
-  if (kind === "independent_trueProb") {
-    return r.pIndependent != null && Number.isFinite(r.pIndependent)
-      ? r.pIndependent
-      : null;
-  }
-  if (kind === "blend_indep_conf") {
-    if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) return null;
-    return 0.5 * r.pConfidence + 0.5 * r.pIndependent;
-  }
-  return r.pConfidence;
+function separationOf(samples: CalibrationSample[]): number {
+  if (samples.length === 0) return NaN;
+  const wins = samples.filter((s) => s.y === 1);
+  const losses = samples.filter((s) => s.y === 0);
+  if (wins.length === 0 || losses.length === 0) return NaN;
+  const meanPWin = wins.reduce((a, s) => a + s.p, 0) / wins.length;
+  const meanPLoss = losses.reduce((a, s) => a + s.p, 0) / losses.length;
+  return meanPWin - meanPLoss;
 }
 
 export function projectProvenPathMetrics(
   rows: readonly ProvenPathPickRow[],
 ): ProjectedProvenMetrics {
   const plan = buildProvenPathPlan(rows, { minN: 50 });
-  const kind = plan.bestScore;
+  const kind = plan.bestScore as RankingScoreKind;
 
   const fullSamples: CalibrationSample[] = [];
   const selectiveRows = [];
   for (const r of rows) {
-    let p = scoreP(r, kind);
+    let p = scoreProbability(r, kind);
     // Fallback: never drop a row from the full projection set — use confidence.
     if (p == null || !Number.isFinite(p)) p = r.pConfidence;
     p = Math.min(1 - 1e-6, Math.max(1e-6, p));
@@ -124,9 +116,18 @@ export function projectProvenPathMetrics(
     filtered.ece <= 0.05 &&
     filtered.murphyReliability <= 0.05;
 
-  const pathViable = deltaRes > 0.005 || wouldPassFloors;
+  const bestSeparation = separationOf(fullSamples);
+  // Path viable only if filter lifts RES meaningfully OR floors pass,
+  // AND ranking polarity is not inverted on the chosen score.
+  const polarityOk = bestSeparation > 0;
+  const pathViable =
+    polarityOk && (deltaRes > 0.005 || wouldPassFloors);
+
   let message: string;
-  if (wouldPassFloors) {
+  if (!polarityOk) {
+    message =
+      "Ranking polarity inverted or noise (separation≤0 on bestScore) — fix independents / trueProb, never promote edge-as-p.";
+  } else if (wouldPassFloors) {
     message =
       "Selective historical projection MEETS floors — keep filter on; accumulate GREEN streak on live filtered publishes.";
   } else if (deltaRes > 0.005) {
@@ -149,5 +150,6 @@ export function projectProvenPathMetrics(
     bestScore: plan.bestScore,
     pauseGroups: plan.pauseGroups,
     delta,
+    bestSeparation,
   };
 }

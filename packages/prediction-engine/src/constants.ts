@@ -3,6 +3,9 @@
 // (rankingScore / rankingP) when edge-engine SPEAK|LEAN. Confidence heuristic
 // unchanged when independents absent. Selective + generation sort use rankingScore.
 // Calibration map apply still OFF until holdout RES + floors improve.
+// Bake-off polarity (2026-08-09, same train): proven-path score kinds never use
+// edgeScore-as-p; bestScore requires separation > 0. Metrics-only — no live
+// confidence change → MODEL_VERSION stays v5.2.0.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
 export const MODEL_VERSION = "v5.2.0";
 

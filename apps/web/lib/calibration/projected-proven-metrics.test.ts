@@ -35,7 +35,7 @@ describe("projectProvenPathMetrics score selection", () => {
     expect(Number.isFinite(proj.full.murphyResolution)).toBe(true);
   });
 
-  it("uses independent blend when independent rows dominate RES", () => {
+  it("uses independent blend when independent rows dominate RES with sep>0", () => {
     // Independent p strongly separates; confidence is noise near 0.5
     const rows: ProvenPathPickRow[] = [];
     for (let i = 0; i < 200; i++) {
@@ -44,6 +44,8 @@ describe("projectProvenPathMetrics score selection", () => {
         row({
           pConfidence: 0.5 + (Math.random() - 0.5) * 0.02,
           pIndependent: win ? 0.72 : 0.28,
+          // inverted edge diagnostic — must not win
+          pEdge: win ? 0.1 : 0.9,
           y: win ? 1 : 0,
           groupKey: "mlb|MONEYLINE",
         }),
@@ -55,5 +57,7 @@ describe("projectProvenPathMetrics score selection", () => {
         proj.bestScore === "blend_indep_conf",
     ).toBe(true);
     expect(proj.full.murphyResolution).toBeGreaterThan(0.01);
+    expect(proj.bestSeparation).toBeGreaterThan(0);
+    expect(proj.bestScore).not.toBe("edgeScore");
   });
 });

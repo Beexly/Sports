@@ -76,4 +76,31 @@ describe("deriveRankingProbability", () => {
     expect(r.rankingScore).toBe(65);
     expect(r.priced).toBe(false);
   });
+
+  it("rankingP === trueProb on SPEAK when pure; never uses rawEdge/shrunkEdge", () => {
+    const r = deriveRankingProbability(
+      55,
+      ie({
+        decision: "SPEAK",
+        trueProb: 0.71,
+        rawEdge: 0.99, // must not become rankingP
+        shrunkEdge: 0.88,
+      }),
+      { pureOnSpeak: true },
+    );
+    expect(r.rankingP).toBeCloseTo(0.71, 5);
+    expect(r.rankingP).not.toBeCloseTo(0.99, 2);
+    expect(r.rankingP).not.toBeCloseTo(0.88, 2);
+  });
+
+  it("rankingP === trueProb path on LEAN with w=1", () => {
+    const r = deriveRankingProbability(
+      40,
+      ie({ decision: "LEAN", trueProb: 0.63 }),
+      { independentWeight: 1 },
+    );
+    expect(r.source).toBe("independent_trueProb");
+    expect(r.rankingP).toBeCloseTo(0.63, 5);
+    expect(r.priced).toBe(true);
+  });
 });
