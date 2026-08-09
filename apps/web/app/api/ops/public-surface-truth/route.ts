@@ -415,6 +415,12 @@ export async function GET(request: Request) {
       stripeWebhookHosts,
       autonomy,
       aciPosture: aciPublicPosture(),
+      mapVsCanonical: {
+        canonicalSettled: sample?.canonicalSettled ?? null,
+        mapN: calibrationEligibility?.n ?? null,
+        note:
+          "canonicalSettled includes WIN|LOSS|PUSH; map n is learning-eligible WIN|LOSS only (eligibleForLearning). Gap is expected — see docs/ops/SAMPLE_N_VS_MAP_N.md",
+      },
       bayesianRd: {
         adjustmentsEnabled: false,
         hierarchicalEbTau: true,

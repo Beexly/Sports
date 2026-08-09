@@ -503,8 +503,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </h2>
               <p className="mt-2 text-sm text-ion-3">
                 {activeSportLabel
-                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date. Try another sport or another date.`
-                  : "We only publish when the stack earns it. Some slates don't clear the gates. That's the point."}
+                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date (quiet board / no published signals). Try another sport or date.`
+                  : "Quiet board for this date: no published signals cleared the gate. Awaiting fresh odds or eligible games — not an outage."}
               </p>
             </div>
           )}

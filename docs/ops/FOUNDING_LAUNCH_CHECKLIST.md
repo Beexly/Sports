@@ -25,3 +25,10 @@
 
 ## ACI
 - `CONFORMAL_ABSTAIN_ENABLED` default false (show/abstain only; not publish)
+
+
+## Sample vs map n
+See `SAMPLE_N_VS_MAP_N.md` — 1017 canonical (incl. PUSH) vs ~760 map (learning-eligible WIN/LOSS).
+
+## Redeploy
+After merges land on main, Production must serve the new SHA before ops fields like `mapVsCanonical` / quiet-board copy appear.

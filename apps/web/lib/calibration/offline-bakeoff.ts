@@ -8,7 +8,7 @@ import {
   brierDecomposition,
   expectedCalibrationError,
 } from "@sports/prediction-engine";
-import { fitPlatt, fitPlattMap, applyPlatt, type ProbOutcome } from "@/lib/calibration/platt-map";
+import { fitPlatt, fitPlattMap, applyPlatt, fitPlattMapHierarchical, type ProbOutcome } from "@/lib/calibration/platt-map";
 import { shrinkBin, fitEmpiricalBayesNu } from "@/lib/calibration/bayes-bins";
 
 export interface BakeoffMethodResult {
@@ -86,6 +86,7 @@ function applyTemperature(p: number, T: number): number {
 export function runOfflineBakeoff(
   samplesChrono: readonly CalibrationSample[],
   trainFrac = 0.7,
+  groupKeysChrono?: readonly string[],
 ): BakeoffReport {
   const n = samplesChrono.length;
   const cut = Math.max(1, Math.floor(n * trainFrac));
@@ -147,6 +148,30 @@ export function runOfflineBakeoff(
     return { p, y: r.y };
   });
   methods.push({ method: "eb_bins", nTest: test.length, ...score(ebMapped) });
+
+  // Hierarchical MAP Platt (global A,B + EB τ group intercepts) when group keys present
+  if (groupKeysChrono && groupKeysChrono.length === samplesChrono.length) {
+    const trainG = train.map((r, i) => ({
+      ...r,
+      groupKey: groupKeysChrono[i] ?? "unknown",
+    }));
+    const h = fitPlattMapHierarchical(trainG);
+    const hMapped = test.map((r, i) => {
+      const gk = groupKeysChrono[cut + i] ?? "unknown";
+      const u = h.groupIntercept[gk] ?? 0;
+      const p = applyPlatt(r.p, h.global);
+      // apply intercept in logit space
+      const x = Math.min(1 - 1e-6, Math.max(1e-6, p));
+      const logit = Math.log(x / (1 - x)) + u;
+      const q = 1 / (1 + Math.exp(-logit));
+      return { p: q, y: r.y };
+    });
+    methods.push({
+      method: `hierarchical_eb(tau=${h.tau.toFixed(3)})`,
+      nTest: test.length,
+      ...score(hMapped),
+    });
+  }
 
   return {
     generatedAt,
