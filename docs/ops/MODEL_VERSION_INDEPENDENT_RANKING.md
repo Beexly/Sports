@@ -37,6 +37,9 @@ Independents (Poisson / Elo / Kalshi / ESPN PowerIndex) wire into `OddsInput.con
 ## Why this is the PROVEN lever
 Live bake-off showed confidence RES ≈ 0.002 (market-echo). Edge-as-p was a category error (negative separation). Pricing real model P raises Murphy RES without inventing skill.
 
+## Public surfaces (v5.2.2 second pass)
+Board, `/api/picks`, dashboard, cockpit overview, and cockpit brief **re-sort by `rankingP`** after load (featured pin preserved). SQL `orderBy confidence` alone no longer defines user-visible order.
+
 ## Self-correction
 After new picks settle under v5.2.2:
 - If selective RES on independent/blend still < 0.02 → engine resolution insufficient; need sport-specific models / new features — **not more maps**.

@@ -11,6 +11,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+
 
 export const dynamic = "force-dynamic";
 
@@ -348,9 +350,9 @@ export async function GET(): Promise<NextResponse> {
         game: { include: { sport: { select: { displayName: true } } } },
         signalSnapshot: true,
       },
-      orderBy: { confidence: "desc" },
-      take: 60,
-    }),
+      orderBy: { generatedAt: "desc" },
+      take: 120,
+    }).then((rows) => [...rows].sort(comparePicksByRanking).slice(0, 60)),
 
     // Recently settled picks
     db.pick.findMany({

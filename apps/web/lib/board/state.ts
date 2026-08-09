@@ -12,6 +12,7 @@ import {
   classifyBoardState,
   type ClassifiedBoardState,
 } from "./classify-board-state";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -258,7 +259,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
       };
     }
 
-    const [publishedToday, scoringNow, gatedToday] = await Promise.all([
+    const [publishedTodayRaw, scoringNow, gatedToday] = await Promise.all([
       db.pick.findMany({
         where: {
           isPublished: true,
@@ -267,8 +268,10 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
           generatedAt: { gte: start, lt: end },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
-        orderBy: [{ confidence: "desc" }, { generatedAt: "desc" }],
-        take: 12,
+        // Wide window — re-rank by rankingP below so low-conf demotions surface
+        // and high-conf market-echo does not monopolize the take.
+        orderBy: [{ generatedAt: "desc" }],
+        take: 48,
       }),
       db.game.findMany({
         where: {
@@ -289,6 +292,10 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         take: 12,
       }),
     ]);
+
+  const publishedToday = [...publishedTodayRaw]
+    .sort(comparePicksByRanking)
+    .slice(0, 12);
 
   const publishedRows = publishedToday.map((pick): BoardStateRow => ({
     id: pick.id,

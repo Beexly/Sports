@@ -14,6 +14,7 @@ import {
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export const dynamic = "force-dynamic";
 
@@ -151,12 +152,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     )
   ).filter((p): p is NonNullable<typeof p> => p != null);
 
+  // Display order must match generation ranking law (rankingP, not confidence).
+  // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
+  const rankedPicks = [...filteredPicks].sort(comparePicksByRanking);
+
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
   // sample is insufficient/non-improving, so this is null-safe by construction.
   const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
 
-  const publicPicks: PublicPick[] = filteredPicks.map((pick) => {
+  const publicPicks: PublicPick[] = rankedPicks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
     // for a malformed/legacy blob (a handled "no factor trail" state) so a

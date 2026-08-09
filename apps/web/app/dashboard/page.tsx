@@ -14,6 +14,7 @@ import { BRAND_NAME } from "@/lib/brand";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,7 @@ type TodayPick = {
   isFeatured: boolean;
   result: string;
   generatedAt: Date;
+  factorBreakdown?: unknown;
   game: {
     homeTeamName: string;
     awayTeamName: string;
@@ -119,9 +121,14 @@ export default async function DashboardPage({
           ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
-        orderBy: [{ isFeatured: "desc" }, { confidence: "desc" }],
-        take: entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1),
+        orderBy: [{ generatedAt: "desc" }],
+        take: entitlements.canSeePremiumPicks ? 24 : (entitlements.dailyPickLimit ?? 1),
       })
+      .then((rows) =>
+        [...rows]
+          .sort(comparePicksByRanking)
+          .slice(0, entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1)),
+      )
       .catch(() => [] as unknown[]) as Promise<TodayPick[]>,
     db.pick
       .count({
