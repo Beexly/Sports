@@ -332,7 +332,7 @@ async function generateQuietBoardDraft(
     oddsInsertAgeMinutes: null,
     publishedPickCount,
     gameCount,
-    calibrationStatus: "RED",
+    calibrationStatus: getReadinessGates().canExposePerformanceStats ? "GREEN" : "RED",
     generatedBy: "cron:generate-drafts",
     slug,
     sources,

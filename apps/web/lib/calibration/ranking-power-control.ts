@@ -194,7 +194,8 @@ export function buildRankingPowerControl(
     "marketFairProb",
   ];
 
-  const scoreBakeoff: RankingPowerControl["scoreBakeoff"] = [];
+  type BakeoffRow = RankingPowerControl["scoreBakeoff"][number];
+  const scoreBakeoffMutable: BakeoffRow[] = [];
   let confN = 0;
 
   for (const kind of kinds) {
@@ -215,7 +216,7 @@ export function buildRankingPowerControl(
       minSeparation: 0.02,
     });
     const coverage = confN > 0 ? m.n / confN : 0;
-    scoreBakeoff.push({
+    scoreBakeoffMutable.push({
       kind,
       n: m.n,
       res: m.res,
@@ -225,6 +226,7 @@ export function buildRankingPowerControl(
       coverage,
     });
   }
+  const scoreBakeoff = scoreBakeoffMutable;
 
   // Polarity gate: separation > 0, n ≥ 50, coverage ≥ 40% for non-conf kinds.
   let bestScore: RankingScoreKind = "confidence";

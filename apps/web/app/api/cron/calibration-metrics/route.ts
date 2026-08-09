@@ -43,12 +43,12 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 function mceFromCurve(
-  curve: readonly { predicted: number; observed: number; count: number }[],
+  curve: readonly { meanForecast: number; observedRate: number; count: number }[],
 ): number {
   let mce = 0;
   for (const b of curve) {
     if (b.count <= 0) continue;
-    mce = Math.max(mce, Math.abs(b.predicted - b.observed));
+    mce = Math.max(mce, Math.abs(b.meanForecast - b.observedRate));
   }
   return mce;
 }
