@@ -31,6 +31,7 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { loadPublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { runOfflineBakeoff } from "@/lib/calibration/offline-bakeoff";
 import { computeResolutionByGroup } from "@/lib/calibration/resolution-by-group";
+import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 import {
   buildDurableMetricsFromSamples,
   picksToCalibrationSamples,
@@ -294,6 +295,24 @@ export async function GET(request: Request): Promise<NextResponse> {
       await writeFile(
         path.join(dir, "resolution-by-group.json"),
         JSON.stringify(resArt, null, 2),
+        "utf8",
+      ).catch(() => undefined);
+      const holdout = buildHoldoutRankingReport(
+        groupedRows.map((r) => ({
+          p: r.p,
+          y: r.y,
+          groupKey: r.groupKey,
+          marketP: r.marketP,
+        })),
+      );
+      await writeFile(
+        path.join(dir, "holdout-ranking-report.json"),
+        JSON.stringify(holdout, null, 2),
+        "utf8",
+      ).catch(() => undefined);
+      await writeFile(
+        path.join(dir, "selective-publish-sweep.json"),
+        JSON.stringify(holdout.selectiveSweep, null, 2),
         "utf8",
       ).catch(() => undefined);
     } catch {
