@@ -3,6 +3,7 @@
 ## Endpoints
 | Path | Auth | Posture |
 |------|------|---------|
+| `GET /api/v1/probabilities` | `x-api-key` | Experimental pModel + rankingP/marketFairProb when present; sorted by rankingP. Not verified ROI. |
 | `GET /api/v1/signals` | `x-api-key` | Model signals — not verified ROI. Sorted by `rankingP` when present. |
 | `GET /api/v1/probabilities` | `x-api-key` | Experimental while eligibility RED |
 

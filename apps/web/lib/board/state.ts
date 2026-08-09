@@ -25,6 +25,8 @@ export interface BoardStateRow {
   status: BoardLane;
   edgeIndex: number | null;
   confidence: number | null;
+  rankingP: number | null;
+  rankingSource: string | null;
   gateReason: string | null;
   updatedAt: string;
 }
@@ -77,7 +79,24 @@ export function redactBoardConfidence(payload: BoardStatePayload): BoardStatePay
   };
 }
 
+function extractRankingFromFb(fb: unknown): {
+  rankingP: number | null;
+  rankingSource: string | null;
+} {
+  if (!fb || typeof fb !== "object") return { rankingP: null, rankingSource: null };
+  const rec = fb as Record<string, unknown>;
+  const rp = rec["rankingP"];
+  const rankingP =
+    typeof rp === "number" && Number.isFinite(rp)
+      ? Math.min(1, Math.max(0, rp))
+      : null;
+  const rs = rec["rankingSource"];
+  const rankingSource = typeof rs === "string" && rs.trim() ? rs.trim() : null;
+  return { rankingP, rankingSource };
+}
+
 function todayBounds(): { start: Date; end: Date } {
+
   const start = new Date();
   start.setHours(0, 0, 0, 0);
   const end = new Date(start);
@@ -228,6 +247,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
               : "SCORING_NOW",
         edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
         confidence: decision.confidence ?? decision.pick?.confidence ?? null,
+        ...extractRankingFromFb(decision.pick?.factorBreakdown),
         gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
         updatedAt: decision.evaluatedAt.toISOString(),
       }));
@@ -306,6 +326,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     status: "PUBLISHED_TODAY",
     edgeIndex: toEdgeIndex(pick.game.currentEdgeIndex ?? pick.edgeScore),
     confidence: pick.confidence,
+    ...extractRankingFromFb(pick.factorBreakdown),
     gateReason: null,
     updatedAt: pick.generatedAt.toISOString(),
   }));
@@ -319,6 +340,8 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     status: "SCORING_NOW",
     edgeIndex: toEdgeIndex(game.currentEdgeIndex),
     confidence: null,
+    rankingP: null,
+    rankingSource: null,
     gateReason: null,
     updatedAt: game.updatedAt.toISOString(),
   }));
@@ -332,6 +355,8 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     status: "GATED_TODAY",
     edgeIndex: toEdgeIndex(game.currentEdgeIndex),
     confidence: null,
+    rankingP: null,
+    rankingSource: null,
     // Shared with the Pass List (./pass-reason.ts). `gatedToday` here is the
     // FALLBACK query — games matching `picks: { none: ... }` — so a row exists
     // because no published pick does, not because the model evaluated the game

@@ -81,3 +81,17 @@ packages/ingestion-pipeline: kalshi-team-abbr
 - Re-measure RES after independents settle under v5.2.2+ (D1, post-deploy)
 - Optional D11 offline Parquet export of settled learning set
 - Close any founderNextSteps noise still showing dual-path paid-single (accepted architecture)
+
+## Cycle 2 — max-autonomy public polish + ranking surfaces (token-efficient)
+
+| Domain | Status | Evidence |
+|--------|--------|----------|
+| **Public honesty** | DONE | Home hero/meta tools-first; pricing free teaser honest; picks meta gated |
+| **SEO** | DONE | sitemap: tools↑ integrity+ tools LM/CLV; picks priority down while dark |
+| **Board rankingP** | DONE | BoardStateRow + UI chip; extract from factorBreakdown |
+| **B2B** | DONE | `/api/v1/probabilities` rankingP + sort parity with signals |
+| **Public tools** | DONE | Line Movement + CLV calculators wired from betting-math |
+| **Export** | DONE | settled-picks JSONL includes rankingP / marketFairProb / trueProb |
+| **Trust chrome** | DONE | footer Integrity; methodology CLV CTA gated copy; house badge; engine quiet copy |
+
+Laws held: no gate flips · maps OFF · no invent PROVEN/ROI.

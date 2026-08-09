@@ -25,7 +25,7 @@ import { SurgeCount, HashMaterialize, GateBar } from "@/components/engine/engine
 export const metadata: Metadata = {
   title: "The Sealed Engine: Watch the Machine Commit",
   description:
-    "Live telemetry from the pick engine: what it swept, what it declined, what it sealed behind receipts before kickoff. Proof you can check, with the recipe kept where it belongs.",
+    "Engine telemetry from the pick engine: what it swept, what it declined, what it sealed behind receipts before kickoff. Proof you can check, with the recipe kept where it belongs.",
   alternates: { canonical: "/engine" },
 };
 

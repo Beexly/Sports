@@ -14,9 +14,9 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Today's Board: Sports Picks With Reasoning Attached",
+  title: "Today's Signals — Galaxy Sports Edge",
   description:
-    "Signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater, just the reasoning.",
+    "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark — no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
   alternates: { canonical: "/picks" },
 };
 

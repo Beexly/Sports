@@ -71,7 +71,7 @@ const MARKET_READS = [
     title: "Did we beat the close?",
     body: "Closing line value grades whether the price we locked beat where the market closed: the leading indicator of a real edge that sharp bettors trust, and the one number tout services never show. Published under the same gate as the win rate.",
     href: "/clv",
-    cta: "See our CLV",
+    cta: "CLV methodology (gated until sample)",
   },
 ] as const;
 
