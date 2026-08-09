@@ -3,10 +3,13 @@
  *
  * Sources (null = honest no opinion):
  *  1) Prefetched (Kalshi / caller-supplied)
- *  2) Kalshi live fair (when league mappable + team abbr resolvable)
+ *  2) Kalshi live fair (series-aware; multi-league)
  *  3) ESPN PowerIndex logistic (NFL/CFB/NBA/NCAAB when FPI available)
- *  4) Poisson team rates from TeamGameLog (soccer / icehockey / baseball only)
- *  5) Elo fitted from chronological TeamGameLog results
+ *  4) ClubElo soccer (Fixtures W/D/L → 2-way, else rating logistic)
+ *  5) Poisson team rates from TeamGameLog (soccer / icehockey / baseball only)
+ *  6) Elo fitted from chronological TeamGameLog results
+ *  7) Polymarket Gamma internal estimator — ONLY when INDEPENDENT_POLYMARKET=1
+ *     (compliance hold: not product, not cron clear)
  *
  * Never synthesizes λ, ratings, or FPI. Never invents book lines.
  * Edge is NOT a probability — consumers must use trueProb / homeFairProb only.
@@ -23,6 +26,11 @@ import {
   getCachedEspnPowerIndexMap,
   lookupTeamFpi,
   defaultPowerIndexSeason,
+  sportKeyToKalshiLeagueCode,
+  getSharedClubEloClient,
+  isClubEloSport,
+  isPolymarketIndependentEnabled,
+  PolymarketIndependentClient,
 } from "@sports/data-ingestion";
 import {
   isPoissonValidSport,
@@ -45,20 +53,15 @@ export type IndependentFairValueBuildInput = {
   readonly prefetched?: readonly IndependentMarketFairValue[];
   /** Injected clock for deterministic capturedAt on Elo. */
   readonly now?: () => Date;
-  /** Skip live network independents (Kalshi / ESPN) — tests. */
+  /** Skip live network independents (Kalshi / ESPN / ClubElo / Polymarket) — tests. */
   readonly skipNetworkIndependents?: boolean;
 };
 
 /**
- * Map Odds-API sport keys → Kalshi league codes.
+ * Map Odds-API sport keys → Kalshi league codes (expanded multi-league harvest).
  */
 export function sportKeyToKalshiLeague(sportKey: string): KalshiLeague | null {
-  const k = sportKey.trim().toLowerCase();
-  if (k === "americanfootball_nfl" || k === "nfl") return "NFL";
-  if (k === "basketball_nba" || k === "nba") return "NBA";
-  if (k === "baseball_mlb" || k === "mlb") return "MLB";
-  if (k === "icehockey_nhl" || k === "nhl") return "NHL";
-  return null;
+  return sportKeyToKalshiLeagueCode(sportKey);
 }
 
 /**
@@ -76,8 +79,8 @@ export function guessKalshiTeamAbbr(
   }
   const t = teamName.trim();
   if (!t) return null;
-  if (/^[A-Za-z]{2,4}$/.test(t)) return t.toUpperCase();
-  const paren = t.match(/\(([A-Za-z]{2,4})\)/);
+  if (/^[A-Za-z]{2,6}$/.test(t)) return t.toUpperCase();
+  const paren = t.match(/\(([A-Za-z]{2,6})\)/);
   if (paren?.[1]) return paren[1].toUpperCase();
   return null;
 }
@@ -165,7 +168,9 @@ async function tryKalshiFairValue(
   const awayAbbr = guessKalshiTeamAbbr(input.awayTeam, league);
   if (!homeAbbr || !awayAbbr) return null;
 
-  const dateUtc = input.commenceTime.toISOString().slice(0, 10);
+  // Prefer full ISO commence so MLB time-fragment construction can help;
+  // series search still recovers pure date-only misses.
+  const dateUtc = input.commenceTime.toISOString();
   const game: KalshiGameRef = {
     league,
     dateUtc,
@@ -213,6 +218,38 @@ async function tryEspnPowerIndexFairValue(
   }
 }
 
+async function tryClubEloFairValue(
+  input: IndependentFairValueBuildInput,
+): Promise<IndependentMarketFairValue | null> {
+  if (!isClubEloSport(input.sportKey)) return null;
+  try {
+    const client = getSharedClubEloClient(input.now);
+    return await client.getFairValue({
+      homeTeam: input.homeTeam,
+      awayTeam: input.awayTeam,
+      commenceTime: input.commenceTime,
+    });
+  } catch {
+    return null;
+  }
+}
+
+async function tryPolymarketIndependentFairValue(
+  input: IndependentFairValueBuildInput,
+): Promise<IndependentMarketFairValue | null> {
+  // Compliance hold: default OFF. Internal estimator only.
+  if (!isPolymarketIndependentEnabled()) return null;
+  try {
+    const client = new PolymarketIndependentClient({ now: input.now });
+    return await client.getFairValue({
+      homeTeam: input.homeTeam,
+      awayTeam: input.awayTeam,
+    });
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Assemble independent fair values for one game. Empty array = no opinion.
  */
@@ -235,7 +272,7 @@ export async function buildIndependentFairValues(
     }
   }
 
-  // 2) Live Kalshi (when mappable) — exchange yes mid as independent P.
+  // 2) Live Kalshi (series-aware, multi-league) — exchange yes mid as independent P.
   if (!input.skipNetworkIndependents && !input.prefetched?.some((f) => f.source === "kalshi")) {
     const kalshi = await tryKalshiFairValue(input);
     if (kalshi) out.push(kalshi);
@@ -247,7 +284,16 @@ export async function buildIndependentFairValues(
     if (fpi) out.push(fpi);
   }
 
-  // 4) Poisson from real TeamGameLog rates (valid sports only).
+  // 4) ClubElo soccer (free CSV) — Fixtures or rating logistic.
+  if (
+    !input.skipNetworkIndependents &&
+    !input.prefetched?.some((f) => f.source === "clubelo")
+  ) {
+    const clubelo = await tryClubEloFairValue(input);
+    if (clubelo) out.push(clubelo);
+  }
+
+  // 5) Poisson from real TeamGameLog rates (valid sports only).
   if (isPoissonValidSport(input.sportKey)) {
     try {
       const [homeRecords, awayRecords, leagueAvg] = await Promise.all([
@@ -286,7 +332,7 @@ export async function buildIndependentFairValues(
     }
   }
 
-  // 5) Elo from chronological results.
+  // 6) Elo from chronological results.
   try {
     const ratings = await getOrFitEloRatings(
       eloCache,
@@ -302,6 +348,15 @@ export async function buildIndependentFairValues(
     if (elo) out.push(elo);
   } catch {
     // Soft-fail.
+  }
+
+  // 7) Polymarket Gamma internal (env-gated compliance hold).
+  if (
+    !input.skipNetworkIndependents &&
+    !input.prefetched?.some((f) => f.source === "polymarket_gamma_internal")
+  ) {
+    const pm = await tryPolymarketIndependentFairValue(input);
+    if (pm) out.push(pm);
   }
 
   return out;

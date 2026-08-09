@@ -6,11 +6,43 @@ export {
   impliedYesProbability,
   devigTwoSided,
   toIndependentFairValue,
+  eventTickerMatchesGame,
   type KalshiLeague,
   type KalshiGameRef,
   type KalshiSideFairValue,
   type KalshiFairValue,
+  type KalshiLeagueCode,
+  sportKeyToKalshiLeagueCode,
+  gameSeriesForLeague,
 } from "./kalshi-client.js";
+export {
+  KALSHI_SERIES,
+  KALSHI_GAME_SERIES,
+  leagueToSportCode,
+  constructedEventSeriesStem,
+  toKalshiDateFragment,
+  toKalshiTimeFragment,
+  type KalshiSportCode,
+} from "./kalshi-series.js";
+export {
+  ClubEloClient,
+  ClubEloError,
+  isClubEloSport,
+  normalizeClubName,
+  clubEloLookupName,
+  fixtureRowToTwoWay,
+  ratingsToTwoWay,
+  getSharedClubEloClient,
+  resetClubEloClientForTests,
+} from "./clubelo-client.js";
+export {
+  PolymarketIndependentClient,
+  PolymarketIndependentError,
+  isPolymarketIndependentEnabled,
+  gammaMarketToIndependent,
+  teamMatchTokens,
+  POLYMARKET_GAMMA_BASE,
+} from "./polymarket-independent-client.js";
 export {
   sportKeyToPowerIndexLeague,
   fetchEspnPowerIndexPage,

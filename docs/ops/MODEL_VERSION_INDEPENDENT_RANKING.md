@@ -10,6 +10,13 @@
 - Kalshi team name → abbr maps; ESPN FPI **exact** name/abbr match only.
 - Public selective filter consumes `rankingP` from factorBreakdown.
 
+## Coverage harvest (same MODEL_VERSION — no formula change)
+- Kalshi **series-aware search** recovers time-encoded MLB (+ soccer/college series).
+- League expand: WNBA/CFB/CBB + EPL/MLS/UCL/Liga/Bundesliga/Serie A/Ligue 1.
+- **ClubElo** soccer independent (`source: clubelo`) via free Fixtures/ratings CSV.
+- **Polymarket** internal estimator env-gated (`INDEPENDENT_POLYMARKET`, default OFF; compliance hold).
+- See `docs/ops/INDEPENDENT_EXCHANGE_HARVEST.md`.
+
 ## v5.2.0 base
 Independents (Poisson / Elo / Kalshi / ESPN PowerIndex) wire into `OddsInput.context.independentFairValues` at process-sport time.
 
@@ -20,6 +27,7 @@ Independents (Poisson / Elo / Kalshi / ESPN PowerIndex) wire into `OddsInput.con
 - Free-path ABSENT-only; Odds key untouched
 - Maps (Platt/Temp/Isotonic) still offline bake-off only
 - Spread/TOTAL: rankingP = confidence until ATS/total independents exist (explicit)
+- MODEL_VERSION string remains **v5.2.1** (coverage-only harvest)
 
 ## Why this is the PROVEN lever
 Live bake-off showed confidence RES ≈ 0.002 (market-echo). Edge-as-p was a category error (negative separation). Pricing real model P raises Murphy RES without inventing skill.
@@ -35,4 +43,4 @@ After new picks settle under v5.2.1:
 - rankingPolarityLaw: positive_separation_required
 
 ## Founder
-Promote Production to main after merge. Re-run calibration-metrics cron. Generate new slate so independents (FPI/Kalshi/Elo) price into rankingP. Odds insert SLA is separate (stale odds ≠ ranking polarity).
+Promote Production to main after merge. Re-run calibration-metrics cron. Generate new slate so independents (FPI/Kalshi/Elo/ClubElo) price into rankingP. Odds insert SLA is separate (stale odds ≠ ranking polarity).
