@@ -131,33 +131,79 @@ export function parseEspnScoreboardForSeed(
   return out;
 }
 
+/** YYYYMMDD for ESPN dates= param (UTC). */
+function espnDateKey(d: Date): string {
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${y}${m}${day}`;
+}
+
+/** Build sparse date keys: today + every 3 days out to horizon (ESPN range-friendly). */
+export function espnHorizonDateKeys(now: Date, horizonDays: number): string[] {
+  const keys: string[] = [];
+  const step = 3;
+  for (let i = 0; i <= horizonDays; i += step) {
+    const d = new Date(now.getTime() + i * 24 * 60 * 60 * 1000);
+    keys.push(espnDateKey(d));
+  }
+  // Always include pure "now" undated board via empty key sentinel handled below
+  return [...new Set(keys)];
+}
+
 export async function fetchEspnSeedGamesForSport(
   short: ShortSportKey,
-  opts?: { readonly fetchImpl?: typeof fetch; readonly timeoutMs?: number },
+  opts?: {
+    readonly fetchImpl?: typeof fetch;
+    readonly timeoutMs?: number;
+    readonly now?: Date;
+    readonly horizonDays?: number;
+  },
 ): Promise<{ games: EspnSeedGame[]; error: string | null }> {
   const meta = SHORT_TO_ODDS_SPORT[short];
   const fetchImpl = opts?.fetchImpl ?? fetch;
   const timeoutMs = opts?.timeoutMs ?? 12_000;
-  const url = `https://site.api.espn.com/apis/site/v2/sports/${meta.espnPath}/scoreboard`;
-  try {
-    const res = await fetchImpl(url, {
-      headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(timeoutMs),
-    });
-    if (!res.ok) return { games: [], error: `espn ${short} HTTP ${res.status}` };
-    const body = (await res.json()) as EspnScoreboard;
-    return { games: parseEspnScoreboardForSeed(short, body), error: null };
-  } catch (err) {
-    return {
-      games: [],
-      error: `espn ${short}: ${err instanceof Error ? err.message : String(err)}`,
-    };
+  const now = opts?.now ?? new Date();
+  const horizonDays = opts?.horizonDays ?? 21;
+  const base = `https://site.api.espn.com/apis/site/v2/sports/${meta.espnPath}/scoreboard`;
+  // Undated "now" + sparse future dates so CFB/NFL preseason weeks land in Game table.
+  const dateKeys = ["", ...espnHorizonDateKeys(now, horizonDays)];
+  const byId = new Map<string, EspnSeedGame>();
+  const errors: string[] = [];
+
+  for (const dates of dateKeys) {
+    const url = dates ? `${base}?dates=${dates}` : base;
+    try {
+      const res = await fetchImpl(url, {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      if (!res.ok) {
+        errors.push(`espn ${short}${dates ? ` ${dates}` : ""} HTTP ${res.status}`);
+        continue;
+      }
+      const body = (await res.json()) as EspnScoreboard;
+      for (const g of parseEspnScoreboardForSeed(short, body)) {
+        byId.set(g.externalId, g);
+      }
+    } catch (err) {
+      errors.push(
+        `espn ${short}${dates ? ` ${dates}` : ""}: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
   }
+
+  return {
+    games: [...byId.values()],
+    error: byId.size === 0 && errors.length > 0 ? errors[0]! : null,
+  };
 }
 
 export async function fetchAllEspnSeedGames(opts?: {
   readonly fetchImpl?: typeof fetch;
   readonly shorts?: readonly ShortSportKey[];
+  readonly now?: Date;
+  readonly horizonDays?: number;
 }): Promise<{ games: EspnSeedGame[]; errors: string[] }> {
   const shorts =
     opts?.shorts ??
@@ -166,7 +212,11 @@ export async function fetchAllEspnSeedGames(opts?: {
   const games: EspnSeedGame[] = [];
   // Serial — keep ESPN friendly under cron.
   for (const short of shorts) {
-    const r = await fetchEspnSeedGamesForSport(short, { fetchImpl: opts?.fetchImpl });
+    const r = await fetchEspnSeedGamesForSport(short, {
+      fetchImpl: opts?.fetchImpl,
+      now: opts?.now,
+      horizonDays: opts?.horizonDays,
+    });
     if (r.error) errors.push(r.error);
     games.push(...r.games);
   }

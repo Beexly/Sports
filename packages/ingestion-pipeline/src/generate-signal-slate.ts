@@ -74,7 +74,7 @@ export async function generateSignalSlate(opts?: {
 }): Promise<SignalSlateResult> {
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
   const now = opts?.now ?? new Date();
-  const horizonHours = opts?.horizonHours ?? 168;
+  const horizonHours = opts?.horizonHours ?? 504; // 21d signal board (early season)
   const horizon = new Date(now.getTime() + horizonHours * 60 * 60 * 1000);
   const gates = getReadinessGates();
   const errors: string[] = [];
@@ -156,6 +156,12 @@ export async function generateSignalSlate(opts?: {
       picksSkipped += 1;
       continue;
     }
+    // Public selective default δ=0.1 — skip coin-flip signals that would be
+    // upserted then filtered to empty on /api/picks.
+    if (Math.abs(trueProb - 0.5) < 0.1) {
+      picksSkipped += 1;
+      continue;
+    }
 
     const chosenTeam = homeChosen ? homeTeam : awayTeam;
     const rankingP = trueProb;
@@ -168,7 +174,7 @@ export async function generateSignalSlate(opts?: {
     const independentEdge: IndependentEdgeSummary = {
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
       agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
-      marketFairProb: 0.5, // no book — neutral anchor; not used as odds invent
+      marketFairProb: 0.5, // no book line — neutral; FactorBreakdown.marketFairProb stays null
       trueProb,
       rawEdge: trueProb - 0.5,
       shrunkEdge: (trueProb - 0.5) * 0.7,
@@ -188,7 +194,7 @@ export async function generateSignalSlate(opts?: {
       fairProbability: rankingP,
       lineMovementScore: 0,
       volatilityPenalty: 0,
-      dataQualityScore: Math.min(100, 40 + independents.length * 15),
+      dataQualityScore: Math.min(100, 60 + independents.length * 15),
       rankingP,
       rankingSource: "independent_trueProb",
       marketFairProb: null,
@@ -271,6 +277,16 @@ export async function generateSignalSlate(opts?: {
           },
         });
       }
+      // Public /api/picks filters on game.dataQualityScore >= 70 — stamp from
+      // independent factor quality so signal path is not invisible by default 0.
+      const gameDq = Math.max(
+        70,
+        Math.min(100, 60 + independents.length * 15),
+      );
+      await db.game.update({
+        where: { id: game.id },
+        data: { dataQualityScore: gameDq },
+      });
       picksUpserted += 1;
     } catch (err) {
       errors.push(

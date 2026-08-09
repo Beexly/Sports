@@ -39,12 +39,14 @@ export async function seedGamesFromEspn(opts?: {
 }): Promise<SeedGamesFromEspnResult> {
   const logPrefix = opts?.logPrefix ?? "[espn-seed]";
   const now = opts?.now ?? new Date();
-  const horizonHours = opts?.horizonHours ?? 168;
+  const horizonHours = opts?.horizonHours ?? 504; // 21d — early CFB/NFL weeks
   const horizon = new Date(now.getTime() + horizonHours * 60 * 60 * 1000);
 
   const { games, errors } = await fetchAllEspnSeedGames({
     fetchImpl: opts?.fetchImpl,
     shorts: opts?.shorts,
+    now,
+    horizonDays: Math.ceil(horizonHours / 24),
   });
 
   const upcoming = games.filter((g) => isUpcoming(g, now, horizon));
