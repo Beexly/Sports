@@ -86,6 +86,8 @@ const MAIN_FEATURE_MARKERS = [
   "b2b-signals-rankingp",
   "tools-line-movement",
   "session-leverage-atlas",
+  "ranking-power-control-plane",
+  "rpcp-conformal-bridge-offline",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -446,6 +448,36 @@ export async function GET(request: Request) {
         return {
           provenPath: surface?.plan ?? null,
           provenPathProjection: surface?.projection ?? null,
+          /** Ranking Power Control Plane — residual + operatorHint for founder ops. */
+          rankingPower: surface?.rankingPowerPosture ?? {
+            present: false,
+            bestScore: null,
+            rankingSignal: null,
+            pathViable: null,
+            liveRes: null,
+            projectedRes: null,
+            deltaRes: null,
+            pauseGroupCount: null,
+            independentCoverage: null,
+            primaryBottleneck: null,
+            mapsApplyGateOpen: null,
+            residualOperatorHint: null,
+            operatorHint: "Ranking Power Control Plane not seeded.",
+            rankingPolarityLaw: "positive_separation_required",
+          },
+          /** Offline conformal bridge posture (never eligibility). */
+          rpcpConformalBridge: surface?.conformalBridgeEnv ?? {
+            computeEnabled: false,
+            productFlags: {
+              conformalAbstainEnabled: false,
+              calibrationAdjustmentsEnabled: false,
+              autoPublish: false,
+            },
+            unlocksProven: false,
+            raisesRes: false,
+            operatorHint:
+              "RPCP–conformal bridge default offline (not seeded).",
+          },
           // Top-level polarity glance (also nested under provenPath*)
           rankingPolarityLaw:
             surface?.plan?.rankingPolarityLaw ?? "positive_separation_required",
