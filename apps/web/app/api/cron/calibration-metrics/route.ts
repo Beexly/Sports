@@ -1,15 +1,13 @@
 /**
- * Internal calibration metrics job — writes ops artifact only.
+ * Internal calibration metrics job — writes ops artifact + durable eligibility.
  *
  * LAWS:
  * - CRON_SECRET auth only
  * - Settled graded picks only (never invent)
- * - ZERO public routes / ZERO env gate flips
+ * - ZERO auto PERFORMANCE_STATS env flips
  * - CALIBRATION_ADJUSTMENTS_ENABLED stays off
- * - confidence/100 treated as provisional p (documented); spread/total may not be
- *   true probabilities — metrics are internal evidence only
- *
- * Not scheduled in vercel.json until founder enables.
+ * - Publish only via CALIBRATION_AUTO_PUBLISH / CALIBRATION_PUBLISHED policy
+ * - confidence/100 treated as provisional p (documented)
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
@@ -19,9 +17,18 @@ import {
   brierDecomposition,
   expectedCalibrationError,
   reliabilityCurve,
+  getReadinessGates,
   type CalibrationSample,
 } from "@sports/prediction-engine";
 import { captureError } from "@/lib/observability/sentry";
+import { db, isStubMode } from "@sports/db";
+import {
+  evaluateAndPersistEligibility,
+  persistCalibrationMetrics,
+  type DurableMetricsPayload,
+} from "@/lib/ops/calibration-eligibility-durable";
+import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
+import { loadPublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -60,18 +67,15 @@ function bss(
   return (bsBase - bsModel) / bsBase;
 }
 
-/**
- * Load settled (p,y) from durable picks when DB is available.
- * p := confidence/100 (provisional — not all markets are true probabilities).
- * Never invents rows.
- */
 async function loadSettledCalibrationSamples(): Promise<{
   samples: CalibrationSample[];
   notes: string[];
+  modelVersions: string[];
+  settledFrom: string | null;
+  settledTo: string | null;
 }> {
   const notes: string[] = [];
   try {
-    const { db } = await import("@sports/db");
     const picks = await db.pick.findMany({
       where: {
         isPublished: true,
@@ -80,17 +84,25 @@ async function loadSettledCalibrationSamples(): Promise<{
         signalSnapshot: { is: { eligibleForLearning: true } },
         NOT: { modelVersion: "v5.0.0-seed" },
       },
-      select: { confidence: true, result: true },
+      select: { confidence: true, result: true, modelVersion: true, settledAt: true },
       orderBy: { settledAt: "desc" },
       take: 2000,
     });
 
     const samples: CalibrationSample[] = [];
+    const versions = new Set<string>();
+    let minT: number | null = null;
+    let maxT: number | null = null;
     for (const pick of picks) {
       if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
-      // confidence is 0–100 display scale in GSE; clamp to unit interval.
       const p = Math.min(1, Math.max(0, pick.confidence / 100));
       samples.push({ p, y: pick.result === "WIN" ? 1 : 0 });
+      if (pick.modelVersion) versions.add(pick.modelVersion);
+      if (pick.settledAt) {
+        const t = pick.settledAt.getTime();
+        minT = minT == null ? t : Math.min(minT, t);
+        maxT = maxT == null ? t : Math.max(maxT, t);
+      }
     }
 
     notes.push(
@@ -99,11 +111,17 @@ async function loadSettledCalibrationSamples(): Promise<{
     if (samples.length === 0) {
       notes.push("No settled non-seed WIN/LOSS picks eligible for learning yet.");
     }
-    return { samples, notes };
+    return {
+      samples,
+      notes,
+      modelVersions: [...versions],
+      settledFrom: minT == null ? null : new Date(minT).toISOString(),
+      settledTo: maxT == null ? null : new Date(maxT).toISOString(),
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     notes.push(`Settled pick load unavailable: ${msg}`);
-    return { samples: [], notes };
+    return { samples: [], notes, modelVersions: [], settledFrom: null, settledTo: null };
   }
 }
 
@@ -112,91 +130,167 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   try {
-    const { samples, notes } = await loadSettledCalibrationSamples();
+    const { samples, notes, modelVersions, settledFrom, settledTo } =
+      await loadSettledCalibrationSamples();
     const generatedAt = new Date().toISOString();
     const gitSha =
       process.env["VERCEL_GIT_COMMIT_SHA"] ?? process.env["GIT_SHA"] ?? null;
+    const modelVersion =
+      modelVersions.length === 1
+        ? modelVersions[0]!
+        : modelVersions.length > 1
+          ? `mixed:${modelVersions.slice(0, 4).join(",")}`
+          : null;
+    const dateRange =
+      settledFrom && settledTo ? `${settledFrom.slice(0, 10)}…${settledTo.slice(0, 10)}` : null;
 
     const dir = path.join(process.cwd(), ".gse-local", "calibration");
-    await mkdir(dir, { recursive: true });
+    await mkdir(dir, { recursive: true }).catch(() => undefined);
+
+    let payload: DurableMetricsPayload;
 
     if (samples.length === 0) {
-      const empty = {
+      payload = {
         generatedAt,
         gitSha,
         n: 0,
-        status: "collecting" as const,
+        status: "collecting",
+        modelVersion,
+        dateRange,
+        overall: null,
         notes: [
           ...notes,
-          "Gates unchanged: no PERFORMANCE_STATS / LIVE_BOARD / CALIBRATION_ADJUSTMENTS.",
+          "Gates unchanged: no PERFORMANCE_STATS / LIVE_BOARD / CALIBRATION_ADJUSTMENTS env auto-flip.",
         ],
-        overall: null,
       };
+    } else {
+      const decomp = brierDecomposition(samples);
+      const ece = expectedCalibrationError(samples);
+      const curve = reliabilityCurve(samples);
+      const mce = mceFromCurve(curve);
+      const logLoss = meanLogLoss(samples);
+
+      const filePayload = {
+        generatedAt,
+        gitSha,
+        n: samples.length,
+        status: "ok" as const,
+        modelVersion,
+        dateRange,
+        overall: {
+          brier: decomp.brier,
+          murphy: {
+            reliability: decomp.reliability,
+            resolution: decomp.resolution,
+            uncertainty: decomp.uncertainty,
+            baseRate: decomp.baseRate,
+            identityNote:
+              "Binned Murphy split: reliability low = good cal; resolution high = discrimination; uncertainty = base-rate difficulty.",
+          },
+          brierDecomp: decomp,
+          logLoss,
+          ece,
+          mce,
+          bssHalf: bss(decomp.brier, "half", decomp.baseRate),
+          bssClim: bss(decomp.brier, "climatology", decomp.baseRate),
+          bssClose: null as number | null,
+          reliabilityBins: curve,
+        },
+        notes: [
+          ...notes,
+          "Internal only until eligibility GREEN + publish policy.",
+          "bssClose null until closing implied probabilities are joined.",
+        ],
+        temperatureT: null,
+      };
+
       await writeFile(
         path.join(dir, "metrics.json"),
-        JSON.stringify(empty, null, 2),
+        JSON.stringify(filePayload, null, 2),
         "utf8",
-      );
-      return NextResponse.json({
-        ok: true,
-        status: "collecting",
-        n: 0,
-        artifact: "internal:metrics.json",
-      });
+      ).catch(() => undefined);
+
+      payload = {
+        generatedAt,
+        gitSha,
+        n: samples.length,
+        status: "ok",
+        modelVersion,
+        dateRange,
+        overall: {
+          brier: decomp.brier,
+          ece,
+          mce,
+          murphy: {
+            reliability: decomp.reliability,
+            resolution: decomp.resolution,
+            uncertainty: decomp.uncertainty,
+          },
+        },
+        notes: filePayload.notes,
+      };
     }
 
-    const decomp = brierDecomposition(samples);
-    const ece = expectedCalibrationError(samples);
-    const curve = reliabilityCurve(samples);
-    const mce = mceFromCurve(curve);
-    const logLoss = meanLogLoss(samples);
+    if (payload.status === "collecting") {
+      await writeFile(
+        path.join(dir, "metrics.json"),
+        JSON.stringify(payload, null, 2),
+        "utf8",
+      ).catch(() => undefined);
+    }
 
-    const payload = {
-      generatedAt,
-      gitSha,
-      n: samples.length,
-      status: "ok" as const,
-      overall: {
-        brier: decomp.brier,
-        // Murphy decomposition (Brier = reliability − resolution + uncertainty)
-        murphy: {
-          reliability: decomp.reliability,
-          resolution: decomp.resolution,
-          uncertainty: decomp.uncertainty,
-          baseRate: decomp.baseRate,
-          identityNote:
-            "Binned Murphy split: reliability low = good cal; resolution high = discrimination; uncertainty = base-rate difficulty.",
-        },
-        brierDecomp: decomp,
-        logLoss,
-        ece,
-        mce,
-        bssHalf: bss(decomp.brier, "half", decomp.baseRate),
-        bssClim: bss(decomp.brier, "climatology", decomp.baseRate),
-        bssClose: null as number | null,
-        reliabilityBins: curve,
-      },
-      notes: [
-        ...notes,
-        "Internal only — not a public Proven claim.",
-        "bssClose null until closing implied probabilities are joined.",
-      ],
-      temperatureT: null,
-    };
+    await persistCalibrationMetrics(payload);
 
-    await writeFile(
-      path.join(dir, "metrics.json"),
-      JSON.stringify(payload, null, 2),
-      "utf8",
-    );
+    // Sample + settlement for eligibility (canonical only)
+    const gates = getReadinessGates();
+    let canonicalSettled = 0;
+    let settlementHealthy = false;
+    if (!isStubMode()) {
+      try {
+        const policy = await loadPublicPerformancePolicy(db, {
+          canExposePerformanceStats: false,
+          minSettledPicksForLearning: gates.minSettledPicksForLearning,
+        });
+        canonicalSettled = policy.canonicalSettledCount;
+      } catch {
+        canonicalSettled = 0;
+      }
+      try {
+        const s = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
+        settlementHealthy = s.health === "HEALTHY";
+      } catch {
+        settlementHealthy = false;
+      }
+    }
+
+    const { eligibility, publish, skippedDuplicate } = await evaluateAndPersistEligibility({
+      metrics: payload,
+      canonicalSettled,
+      minSettledForLearning: gates.minSettledPicksForLearning,
+      settlementHealthy,
+    });
 
     return NextResponse.json({
       ok: true,
-      status: "ok",
-      n: samples.length,
-      ece,
-      mce,
-      artifact: "internal:metrics.json",
+      status: payload.status,
+      n: payload.n,
+      ece: payload.overall?.ece ?? null,
+      mce: payload.overall?.mce ?? null,
+      brier: payload.overall?.brier ?? null,
+      eligibility: {
+        status: eligibility.status,
+        consecutiveGreen: eligibility.consecutiveGreen,
+        streakRequired: eligibility.streakRequired,
+        reasons: eligibility.reasons,
+      },
+      publish: {
+        published: publish.published,
+        source: publish.source,
+        canExposePerformanceStats: publish.canExposePerformanceStats,
+        autoPublish: publish.autoPublish,
+      },
+      skippedDuplicate,
+      artifact: "durable:ops.calibration.metrics",
     });
   } catch (err) {
     captureError(err, { route: "cron/calibration-metrics" });
