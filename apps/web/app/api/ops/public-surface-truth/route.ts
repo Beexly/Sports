@@ -79,6 +79,7 @@ const MAIN_FEATURE_MARKERS = [
   "odds-inserting-freshness-ops",
   "calibration-eligibility-engine",
   "calibration-auto-publish-policy",
+  "ranking-power-control-plane",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -439,6 +440,21 @@ export async function GET(request: Request) {
         return {
           provenPath: surface?.plan ?? null,
           provenPathProjection: surface?.projection ?? null,
+          /** Ranking Power Control Plane — website instrument for RES lift. */
+          rankingPower: surface?.rankingPowerPosture ?? {
+            present: false,
+            bestScore: null,
+            rankingSignal: null,
+            pathViable: null,
+            liveRes: null,
+            projectedRes: null,
+            deltaRes: null,
+            pauseGroupCount: null,
+            independentCoverage: null,
+            primaryBottleneck: null,
+            mapsApplyGateOpen: null,
+            operatorHint: "Ranking Power Control Plane not seeded.",
+          },
           murphyExplain: murphySnap?.explain ?? null,
           murphyRes: murphySnap,
           conformalRd: conformalRdPosture(process.env),

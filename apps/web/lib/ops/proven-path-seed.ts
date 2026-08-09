@@ -1,11 +1,17 @@
 /**
- * Auto-build proven path plan + projected metrics when durable missing.
+ * Auto-build proven path plan + projected metrics + Ranking Power Control Plane.
  * No founder cron click required.
  */
 
 import { db, isStubMode } from "@sports/db";
 import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import { projectProvenPathMetrics } from "@/lib/calibration/projected-proven-metrics";
+import {
+  buildRankingPowerControl,
+  rankingPowerPosture,
+  type RankingPowerControl,
+  type RankingPowerRow,
+} from "@/lib/calibration/ranking-power-control";
 import {
   loadProvenPathPlan,
   persistProvenPathPlan,
@@ -17,6 +23,8 @@ import { CANONICAL_LEARNING_PICK_WHERE } from "@/lib/ops/compute-live-calibratio
 export type ProvenPathSurface = {
   readonly plan: ProvenPathPlan;
   readonly projection: ProjectedProvenMetrics;
+  readonly rankingPower: RankingPowerControl | null;
+  readonly rankingPowerPosture: ReturnType<typeof rankingPowerPosture>;
 };
 
 async function loadRows() {
@@ -33,10 +41,11 @@ async function loadRows() {
     orderBy: { settledAt: "desc" },
     take: 2000,
   });
-  const rows: import("@/lib/calibration/proven-path-engine").ProvenPathPickRow[] = [];
+  const rows: RankingPowerRow[] = [];
   for (const pick of picks) {
     if (pick.result !== "WIN" && pick.result !== "LOSS") continue;
-    if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
+    if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence))
+      continue;
     const pConfidence = Math.min(1, Math.max(0, pick.confidence / 100));
     const pEdge =
       typeof pick.edgeScore === "number" && Number.isFinite(pick.edgeScore)
@@ -86,7 +95,19 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
       await persistProvenPathPlan(plan);
     }
     const projection = projectProvenPathMetrics(rows);
-    return { plan, projection };
+    // RPCP: website-optimized fused diagnostics (significance + Spearman + residual).
+    let rankingPower: RankingPowerControl | null = null;
+    try {
+      rankingPower = buildRankingPowerControl(rows);
+    } catch {
+      rankingPower = null;
+    }
+    return {
+      plan,
+      projection,
+      rankingPower,
+      rankingPowerPosture: rankingPowerPosture(rankingPower),
+    };
   } catch {
     return null;
   }
