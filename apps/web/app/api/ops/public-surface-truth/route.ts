@@ -19,6 +19,7 @@ import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
 import { aciPublicPosture } from "@/lib/calibration/aci-durable";
+import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -415,6 +416,7 @@ export async function GET(request: Request) {
       billingMoney,
       stripeWebhookHosts,
       autonomy,
+      boardSurface: boardSurfacePosture(),
       aciPosture: aciPublicPosture(),
       mapVsCanonical: {
         canonicalSettled: sample?.canonicalSettled ?? null,

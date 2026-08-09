@@ -176,7 +176,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
         domain: "product_gates",
         priority: "P0",
         action:
-          "PUBLIC_PICKS ON but last odds insert is outside Refresh SLA — surface correctly dark. Confirm THE_ODDS_API_KEY quota; optional one-shot refresh-odds. Do not lower SLA.",
+          "PUBLIC_PICKS ON but last odds insert is outside Refresh SLA — surface correctly dark. Confirm THE_ODDS_API_KEY quota for market board; OR set PUBLIC_BOARD_SURFACE=signal for model-signal board (slate-fresh, never book labels). Do not lower SLA.",
       });
     } else {
       steps.push({
