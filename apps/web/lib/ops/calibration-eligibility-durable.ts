@@ -234,7 +234,7 @@ export async function persistPublishReceipt(
   }
 }
 
-export function streakRequiredFromEnv(env: NodeJS.ProcessEnv = process.env): number {
+export function streakRequiredFromEnv(env: Record<string, string | undefined> = process.env): number {
   const raw = env["CALIBRATION_ELIGIBILITY_STREAK"]?.trim();
   const n = raw ? parseInt(raw, 10) : 3;
   return Number.isFinite(n) && n >= 1 ? n : 3;

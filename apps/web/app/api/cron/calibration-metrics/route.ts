@@ -33,11 +33,6 @@ import { runOfflineBakeoff } from "@/lib/calibration/offline-bakeoff";
 import { computeResolutionByGroup } from "@/lib/calibration/resolution-by-group";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 import { runCalibrationMapBakeoff } from "@/lib/calibration/calibration-map-bakeoff";
-import {
-  buildDurableMetricsFromSamples,
-  picksToCalibrationSamples,
-} from "@/lib/ops/compute-live-calibration-metrics";
-
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60;

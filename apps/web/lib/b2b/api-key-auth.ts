@@ -12,7 +12,7 @@ export function extractB2bApiKey(req: Request): string | null {
   return h.trim() || null;
 }
 
-export function authorizeB2bApiKey(req: Request, env: NodeJS.ProcessEnv = process.env): boolean {
+export function authorizeB2bApiKey(req: Request, env: Record<string, string | undefined> = process.env): boolean {
   const presented = extractB2bApiKey(req);
   if (!presented) return false;
   const raw = env["GSE_B2B_API_KEYS"]?.trim() ?? "";

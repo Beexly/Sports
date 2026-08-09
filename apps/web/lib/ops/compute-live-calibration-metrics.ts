@@ -125,7 +125,7 @@ export function buildDurableMetricsFromSamples(input: {
 export const CANONICAL_LEARNING_PICK_WHERE = {
   isPublished: true,
   isBootstrap: false,
-  result: { in: ["WIN", "LOSS"] as const },
+  result: { in: ["WIN" as const, "LOSS" as const] },
   signalSnapshot: { is: { eligibleForLearning: true } },
   NOT: { modelVersion: "v5.0.0-seed" },
-} as const;
+};

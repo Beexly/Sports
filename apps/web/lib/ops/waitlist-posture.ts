@@ -17,12 +17,11 @@ export interface WaitlistPosture {
   readonly operatorHint: string;
 }
 
-function envFlag(env: Env, name: string): boolean {
-  return env[name]?.trim().toLowerCase() === "true";
-}
-
 export function loadWaitlistPosture(env: Env = process.env): WaitlistPosture {
-  const gateEnabled = envFlag(env, "GSE_WAITLIST_GATE_ENABLED");
+  // OPEN unless both gate + BASIC_FORCE are true (FOUNDING: legacy gate alone is open)
+  const gateEnabled =
+    env["GSE_WAITLIST_GATE_ENABLED"]?.trim() === "true" &&
+    env["GSE_WAITLIST_BASIC_FORCE"]?.trim() === "true";
   const user = Boolean(env["GSE_WAITLIST_BASIC_USER"]?.trim());
   const pass = Boolean(env["GSE_WAITLIST_BASIC_PASSWORD"]?.trim());
   const basicAuthCredentialsConfigured = user && pass;
@@ -32,7 +31,7 @@ export function loadWaitlistPosture(env: Env = process.env): WaitlistPosture {
     operatorHint = "Waitlist public — /waitlist accepts anonymous lead capture.";
   } else if (basicAuthCredentialsConfigured) {
     operatorHint =
-      "Waitlist Basic Auth ON — public lead capture blocked. Set GSE_WAITLIST_GATE_ENABLED=false to open funnel.";
+      "Waitlist Basic Auth ON (GATE + BASIC_FORCE). Unset GSE_WAITLIST_BASIC_FORCE to open FOUNDING funnel.";
   } else {
     operatorHint =
       "Waitlist gate flag ON but Basic Auth credentials incomplete — page may 401 inconsistently. Fix creds or disable gate.";

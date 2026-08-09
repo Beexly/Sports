@@ -42,9 +42,9 @@ export type SelectiveMetrics = {
 };
 
 export function isSelectivePublishEnabled(
-  env: NodeJS.ProcessEnv = process.env,
+  env: Record<string, string | undefined> = process.env,
 ): boolean {
-  return env["SELECTIVE_PUBLISH_ENABLED"]?.trim().toLowerCase() === "true";
+  return env["SELECTIVE_PUBLISH_ENABLED"]?.trim() === "true";
 }
 
 export function passesSelectiveThresholds(
