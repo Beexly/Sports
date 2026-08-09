@@ -169,10 +169,10 @@ function toSelectiveRows(
 ): SelectiveRow[] {
   const out: SelectiveRow[] = [];
   for (const r of rows) {
-    let p = scoreProbability(r, kind);
-    if (p == null || !Number.isFinite(p)) continue;
+    const raw = scoreProbability(r, kind);
+    if (raw == null || !Number.isFinite(raw)) continue;
     out.push({
-      p: Math.min(1 - 1e-6, Math.max(1e-6, p)),
+      p: Math.min(1 - 1e-6, Math.max(1e-6, raw)),
       y: r.y,
       groupKey: r.groupKey,
       marketP: r.marketP ?? null,
