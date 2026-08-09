@@ -34,6 +34,7 @@ import {
 } from "@sports/prediction-engine";
 import type { IndependentMarketFairValue } from "@sports/types";
 import { db } from "@sports/db";
+import { resolveKalshiTeamAbbr } from "./kalshi-team-abbr.js";
 
 export type IndependentFairValueBuildInput = {
   readonly sportKey: string;
@@ -62,27 +63,22 @@ export function sportKeyToKalshiLeague(sportKey: string): KalshiLeague | null {
 
 /**
  * Best-effort team abbreviation for Kalshi tickers.
- * Prefer last 2–3 letter token; uppercase. Returns null if unusable.
- * Full abbr tables can replace this later — null is honest no-opinion.
+ * Uses league-specific name tables first; falls back to short tokens only.
+ * Full names without a map hit → null (honest no-opinion).
  */
-export function guessKalshiTeamAbbr(teamName: string): string | null {
+export function guessKalshiTeamAbbr(
+  teamName: string,
+  league?: KalshiLeague | null,
+): string | null {
+  if (league) {
+    const mapped = resolveKalshiTeamAbbr(league, teamName);
+    if (mapped) return mapped;
+  }
   const t = teamName.trim();
   if (!t) return null;
-  // Already short abbr
   if (/^[A-Za-z]{2,4}$/.test(t)) return t.toUpperCase();
-  // Common patterns: "NYK", "LAL" embedded
   const paren = t.match(/\(([A-Za-z]{2,4})\)/);
   if (paren?.[1]) return paren[1].toUpperCase();
-  // Use first letters of multi-word (Dallas Cowboys → DC — often wrong for Kalshi)
-  // Prefer known last-token city nicknames are caller concern; only accept 2–3
-  // letter final tokens that look like abbrs.
-  const parts = t.split(/\s+/).filter(Boolean);
-  const last = parts[parts.length - 1] ?? "";
-  if (last.length >= 2 && last.length <= 3 && /^[A-Za-z]+$/.test(last)) {
-    return last.toUpperCase();
-  }
-  // City + nick: take first 3 of last word if longer (Cowboys → COW — often wrong)
-  // Skip unreliable guesses for long nicknames.
   return null;
 }
 
@@ -165,8 +161,8 @@ async function tryKalshiFairValue(
 ): Promise<IndependentMarketFairValue | null> {
   const league = sportKeyToKalshiLeague(input.sportKey);
   if (!league) return null;
-  const homeAbbr = guessKalshiTeamAbbr(input.homeTeam);
-  const awayAbbr = guessKalshiTeamAbbr(input.awayTeam);
+  const homeAbbr = guessKalshiTeamAbbr(input.homeTeam, league);
+  const awayAbbr = guessKalshiTeamAbbr(input.awayTeam, league);
   if (!homeAbbr || !awayAbbr) return null;
 
   const dateUtc = input.commenceTime.toISOString().slice(0, 10);

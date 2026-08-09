@@ -7,7 +7,9 @@
  * - ZERO auto PERFORMANCE_STATS env flips
  * - CALIBRATION_ADJUSTMENTS_ENABLED stays off
  * - Publish only via CALIBRATION_AUTO_PUBLISH / CALIBRATION_PUBLISHED policy
- * - confidence/100 treated as provisional p (documented)
+ * - confidence/100 treated as provisional p for live eligibility (documented)
+ * - proven-path bake-off uses trueProb only for independent kinds (never edge-as-p,
+ *   never confidence-echo rankingP as independent)
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
@@ -34,31 +36,31 @@ import { computeResolutionByGroup } from "@/lib/calibration/resolution-by-group"
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 import { runCalibrationMapBakeoff } from "@/lib/calibration/calibration-map-bakeoff";
 import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
+import { toProvenPathPickRow } from "@/lib/calibration/proven-path-rows";
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 function mceFromCurve(
-  bins: Array<{ count: number; meanForecast: number; observedRate: number }>,
+  curve: readonly { predicted: number; observed: number; count: number }[],
 ): number {
   let mce = 0;
-  for (const b of bins) {
-    if (b.count === 0) continue;
-    mce = Math.max(mce, Math.abs(b.meanForecast - b.observedRate));
+  for (const b of curve) {
+    if (b.count <= 0) continue;
+    mce = Math.max(mce, Math.abs(b.predicted - b.observed));
   }
   return mce;
 }
 
-function meanLogLoss(samples: readonly CalibrationSample[]): number {
-  const eps = 1e-15;
-  if (samples.length === 0) return NaN;
-  let sum = 0;
-  for (const s of samples) {
-    const p = Math.min(1 - eps, Math.max(eps, s.p));
-    sum += s.y === 1 ? -Math.log(p) : -Math.log(1 - p);
+function meanLogLoss(samples: readonly CalibrationSample[]): number | null {
+  if (samples.length === 0) return null;
+  let s = 0;
+  for (const { p, y } of samples) {
+    const pp = Math.min(1 - 1e-15, Math.max(1e-15, p));
+    s += y === 1 ? -Math.log(pp) : -Math.log(1 - pp);
   }
-  return sum / samples.length;
+  return s / samples.length;
 }
 
 function bss(
@@ -94,7 +96,6 @@ async function loadSettledCalibrationSamples(): Promise<{
       select: {
         confidence: true,
         factorBreakdown: true,
-        edgeScore: true,
         result: true,
         modelVersion: true,
         settledAt: true,
@@ -111,73 +112,40 @@ async function loadSettledCalibrationSamples(): Promise<{
     const versions = new Set<string>();
     let minT: number | null = null;
     let maxT: number | null = null;
+    let independentCount = 0;
     for (const pick of picks) {
       if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
       const p = Math.min(1, Math.max(0, pick.confidence / 100));
       const y = pick.result === "WIN" ? 1 : 0;
       samples.push({ p, y });
-      const sport =
-        pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
-      const market = pick.pickType ?? "unknown";
-      groupedRows.push({
-        groupKey: `${sport}|${market}`,
-        p,
-        y: y as 0 | 1,
-        marketP: null,
+
+      const proven = toProvenPathPickRow({
+        confidence: pick.confidence,
+        result: pick.result ?? "",
+        pickType: pick.pickType,
+        factorBreakdown: pick.factorBreakdown,
+        game: pick.game,
       });
-      // Prefer priced rankingP / trueProb. NEVER treat edgeScore as win probability
-      // (rawEdge = trueProb − marketFair — category error for Brier/RES/separation).
-      let pIndependent: number | null = null;
-      let marketP: number | null = null;
-      const fb = pick.factorBreakdown as {
-        fairProbability?: number | null;
-        marketFairProb?: number | null;
-        rankingP?: number | null;
-        independentEdge?: {
-          trueProb?: number | null;
-          priced?: boolean;
-          marketFairProb?: number | null;
-        } | null;
-      } | null | undefined;
-
-      if (
-        fb?.rankingP != null &&
-        Number.isFinite(fb.rankingP) &&
-        fb.rankingP > 0 &&
-        fb.rankingP < 1
-      ) {
-        pIndependent = Math.min(1, Math.max(0, Number(fb.rankingP)));
-      } else if (
-        fb?.independentEdge?.trueProb != null &&
-        Number.isFinite(fb.independentEdge.trueProb)
-      ) {
-        pIndependent = Math.min(1, Math.max(0, Number(fb.independentEdge.trueProb)));
-      } else if (
-        fb?.fairProbability != null &&
-        Number.isFinite(fb.fairProbability) &&
-        fb?.independentEdge?.priced === true
-      ) {
-        pIndependent = Math.min(1, Math.max(0, Number(fb.fairProbability)));
+      if (proven) {
+        provenRows.push(proven);
+        if (proven.pIndependent != null) independentCount += 1;
+        groupedRows.push({
+          groupKey: proven.groupKey,
+          p,
+          y: proven.y,
+          marketP: proven.marketP ?? null,
+        });
+      } else {
+        const sport =
+          pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
+        const market = pick.pickType ?? "unknown";
+        groupedRows.push({
+          groupKey: `${sport}|${market}`,
+          p,
+          y: y as 0 | 1,
+          marketP: null,
+        });
       }
-
-      if (
-        fb?.independentEdge?.marketFairProb != null &&
-        Number.isFinite(fb.independentEdge.marketFairProb)
-      ) {
-        marketP = Math.min(1, Math.max(0, Number(fb.independentEdge.marketFairProb)));
-      } else if (fb?.marketFairProb != null && Number.isFinite(fb.marketFairProb)) {
-        marketP = Math.min(1, Math.max(0, Number(fb.marketFairProb)));
-      }
-
-      provenRows.push({
-        pConfidence: p,
-        // Diagnostic field only — bake-off ignores pEdge (polarity law).
-        pEdge: null,
-        pIndependent,
-        y: y as 0 | 1,
-        groupKey: `${sport}|${market}`,
-        marketP,
-      });
       if (pick.modelVersion) versions.add(pick.modelVersion);
       if (pick.settledAt) {
         const t = pick.settledAt.getTime();
@@ -187,7 +155,10 @@ async function loadSettledCalibrationSamples(): Promise<{
     }
 
     notes.push(
-      "p derived from confidence/100 (provisional). Spread/total may not be fair probabilities — internal only.",
+      "p derived from confidence/100 (provisional live eligibility). Spread/total may not be fair probabilities — internal only.",
+    );
+    notes.push(
+      `Proven-path rows: ${provenRows.length}; with independent trueProb: ${independentCount} (never edge-as-p; never conf-echo rankingP as independent).`,
     );
     if (samples.length === 0) {
       notes.push("No settled non-seed WIN/LOSS picks eligible for learning yet.");
@@ -443,6 +414,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       },
       skippedDuplicate,
       artifact: "durable:ops.calibration.metrics",
+      provenPathRows: provenRows.length,
     });
   } catch (err) {
     captureError(err, { route: "cron/calibration-metrics" });

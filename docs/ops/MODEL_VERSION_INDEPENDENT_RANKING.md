@@ -1,16 +1,17 @@
-# MODEL_VERSION v5.2.0 — Independent ranking path
+# MODEL_VERSION v5.2.1 — Independent ranking path
 
-## What changed
-Independents (Poisson from real TeamGameLog rates, Elo from chronological results, optional Kalshi) are wired into `OddsInput.context.independentFairValues` at process-sport time.
+## What changed (v5.2.1 quality pass)
+- Ranking uses **trueProb whenever finite** (including PASS) so overpriced favorites demote — not only SPEAK|LEAN.
+- Default `independentWeight` = **0.7** (less market-echo dilution).
+- `factorBreakdown` persists `rankingP`, `rankingSource`, `marketFairProb`.
+- Metrics load: `pIndependent` = **raw trueProb only** — never confidence-echo rankingP, never double-blend.
+- Bake-off kinds: `confidence | independent_trueProb | blend_indep_conf | marketFairProb` only (**never edge-as-p**).
+- `bestScore` requires **separation > 0** and **coverage ≥ 40%** of confidence n.
+- Kalshi team name → abbr maps; ESPN FPI **exact** name/abbr match only.
+- Public selective filter consumes `rankingP` from factorBreakdown.
 
-When edge-engine returns **SPEAK** or **LEAN** with finite `trueProb`:
-- `rankingScore` / `rankingP` = blend(confidence, trueProb) (default 50/50)
-- `independentEdge.priced = true`
-- `factorBreakdown.fairProbability` = rankingP
-- Generation sort + selective publish prefer rankingScore over confidence
-
-When independents absent or PASS:
-- `rankingScore = confidence` (no regression)
+## v5.2.0 base
+Independents (Poisson / Elo / Kalshi / ESPN PowerIndex) wire into `OddsInput.context.independentFairValues` at process-sport time.
 
 ## What did NOT change
 - Floors (Brier ≤ 0.22, ECE ≤ 0.05, Murphy R ≤ 0.05, n ≥ 100, K=3)
@@ -18,19 +19,20 @@ When independents absent or PASS:
 - CALIBRATION_ADJUSTMENTS still OFF
 - Free-path ABSENT-only; Odds key untouched
 - Maps (Platt/Temp/Isotonic) still offline bake-off only
+- Spread/TOTAL: rankingP = confidence until ATS/total independents exist (explicit)
 
 ## Why this is the PROVEN lever
-Live bake-off showed confidence RES ≈ 0.002 (market-echo). Edge/blend already higher. Pricing independents is the documented MODEL_VERSION step that can raise Murphy RES without inventing skill.
+Live bake-off showed confidence RES ≈ 0.002 (market-echo). Edge-as-p was a category error (negative separation). Pricing real model P raises Murphy RES without inventing skill.
 
 ## Self-correction
-After new picks settle under v5.2.0:
+After new picks settle under v5.2.1:
 - If selective RES on independent/blend still < 0.02 → engine resolution insufficient; need sport-specific models / new features — **not more maps**.
 - Maps will not unlock PROVEN while RES≈0.
 
 ## Ops
-- Score bake-off kinds: confidence | edgeScore | blend_conf_edge | independent_trueProb | blend_indep_conf
-- Historical rows without factorBreakdown.independentEdge → pIndependent null → those kinds skipped
-- New published picks carry priced fairProbability for bake-off after settle
+- Score bake-off kinds: confidence | independent_trueProb | blend_indep_conf | marketFairProb
+- Historical rows without independentEdge.trueProb → pIndependent null → those kinds skipped
+- rankingPolarityLaw: positive_separation_required
 
 ## Founder
-0–1 actions: promote Production deploy after green CI on main. No env ceremony for Poisson when rates come from validated TeamGameLog (assert skipped for validated path only).
+Promote Production to main after merge. Re-run calibration-metrics cron. Generate new slate so independents (FPI/Kalshi/Elo) price into rankingP. Odds insert SLA is separate (stale odds ≠ ranking polarity).

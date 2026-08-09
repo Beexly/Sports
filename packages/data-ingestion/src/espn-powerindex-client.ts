@@ -10,6 +10,9 @@
  *   site.api.espn.com/apis/site/v2/sports/{sport}/{league}/teams
  *
  * Use only as independent engine INPUT (model-fair), never as book lines.
+ *
+ * Lookup law: exact name/abbr only — no substring fuzzy match
+ * (collisions invert FPI polarity and poison ranking).
  */
 
 import { noStoreFetch } from "./no-store-fetch.js";
@@ -74,14 +77,17 @@ type PowerIndexListRaw = {
 
 function parseFpi(predictives: readonly PredictiveRaw[] | undefined): number | null {
   if (!predictives?.length) return null;
+  // Prefer named FPI/BPI only — refuse unknown predictive[0] (wrong metric risk).
   const preferred = predictives.find((p) => {
     const n = (p.name ?? p.abbreviation ?? "").toLowerCase();
     return n === "fpi" || n === "bpi" || n === "powerindex" || n === "pwr";
   });
-  const cand = preferred ?? predictives[0];
-  if (cand?.value != null && Number.isFinite(cand.value)) return cand.value;
-  if (cand?.displayValue) {
-    const n = Number(cand.displayValue);
+  if (!preferred) return null;
+  if (preferred.value != null && Number.isFinite(preferred.value)) {
+    return preferred.value;
+  }
+  if (preferred.displayValue) {
+    const n = Number(preferred.displayValue);
     if (Number.isFinite(n)) return n;
   }
   return null;
@@ -174,7 +180,7 @@ export async function fetchEspnTeamMetaMap(
 
 /**
  * Load all team FPI values for a league/season into a lookup map.
- * Keys: lowercased displayName and abbreviation.
+ * Keys: lowercased displayName and abbreviation (exact only).
  * Empty map = honest no opinion.
  */
 export async function loadEspnPowerIndexMap(
@@ -208,14 +214,10 @@ export async function loadEspnPowerIndexMap(
       if (teamId) map.set(`id:${teamId}`, fpi);
       const meta = teamId ? teamMeta.get(teamId) : undefined;
       if (meta?.displayName) {
-        map.set(meta.displayName.toLowerCase(), fpi);
-        const parts = meta.displayName.trim().split(/\s+/);
-        if (parts.length > 1) {
-          map.set(parts[parts.length - 1]!.toLowerCase(), fpi);
-        }
+        map.set(meta.displayName.toLowerCase().trim(), fpi);
       }
       if (meta?.abbreviation) {
-        map.set(meta.abbreviation.toLowerCase(), fpi);
+        map.set(meta.abbreviation.toLowerCase().trim(), fpi);
       }
     }
     if (items.length < 50) break;
@@ -223,7 +225,10 @@ export async function loadEspnPowerIndexMap(
   return map;
 }
 
-/** Look up FPI for a team name/abbr from the map; null if thin. */
+/**
+ * Look up FPI for a team name/abbr — exact keys only.
+ * No substring fuzzy match (polarity-safe).
+ */
 export function lookupTeamFpi(
   map: ReadonlyMap<string, number>,
   teamName: string,
@@ -231,15 +236,9 @@ export function lookupTeamFpi(
   const t = teamName.trim().toLowerCase();
   if (!t) return null;
   if (map.has(t)) return map.get(t)!;
-  const parts = t.split(/\s+/);
-  if (parts.length > 1) {
-    const last = parts[parts.length - 1]!;
-    if (map.has(last)) return map.get(last)!;
-  }
-  for (const [k, v] of map) {
-    if (k.startsWith("id:")) continue;
-    if (t.includes(k) || k.includes(t)) return v;
-  }
+  // Strip common suffixes for exact re-try
+  const stripped = t.replace(/\s+(fc|sc|cf|afc)$/i, "").trim();
+  if (stripped !== t && map.has(stripped)) return map.get(stripped)!;
   return null;
 }
 
@@ -264,7 +263,9 @@ export async function getCachedEspnPowerIndexMap(
 
 export function defaultPowerIndexSeason(now = new Date()): number {
   const y = now.getUTCFullYear();
-  const m = now.getUTCMonth();
+  const m = now.getUTCMonth(); // 0=Jan
+  // Football: new season ~Aug; NBA/NCAAB: new season ~Oct.
+  // Use prior year for Jan–Jul to keep completed season FPI.
   if (m < 7) return y - 1;
   return y;
 }

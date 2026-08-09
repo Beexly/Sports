@@ -75,16 +75,18 @@ export interface FactorBreakdown {
   // Schedule density (v5)
   scheduleStressScore?: number; // ±5: compressed schedule fatigue signal
   dataQualityScore?: number;   // 0–100: overall data trust score (always public)
-  // Independent-edge layer — surfaced, not yet priced (see IndependentEdgeSummary)
+  // Independent-edge layer — may be priced into ranking when trueProb finite (see priced)
   independentEdge?: IndependentEdgeSummary | null;
   /**
    * Ranking win probability used for sort / selective / bake-off (0–1).
    * Always a probability — never edge/rawEdge/edgeScore.
-   * SPEAK|LEAN + trueProb → trueProb or blend; else confidence/100.
+   * Finite trueProb → trueProb or blend; else confidence/100.
    */
   rankingP?: number | null;
   /** How rankingP was derived: confidence | independent_trueProb | blend_indep_conf */
   rankingSource?: "confidence" | "independent_trueProb" | "blend_indep_conf" | null;
+  /** De-vig sportsbook fair for the chosen side (0–1) — selective edge filter / market bake-off. */
+  marketFairProb?: number | null;
   factors: FactorDetail[];     // human-readable factor list
 }
 

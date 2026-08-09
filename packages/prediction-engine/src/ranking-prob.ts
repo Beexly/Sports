@@ -1,10 +1,13 @@
 /**
- * Ranking probability for PROVEN path — independent modelProb when SPEAK/LEAN.
+ * Ranking probability for PROVEN path — independent modelProb when available.
  *
- * Law: confidence is mostly market-echo (RES≈0). When independent estimators
- * (Poisson / Elo / Kalshi) yield SPEAK or LEAN with a finite trueProb, use that
- * (or blend with confidence) as rankingP. Otherwise rankingP = confidence/100 —
- * no regression when independents are absent.
+ * Law (v5.2.1):
+ *   When independent estimators yield a finite trueProb in (0,1), use that
+ *   (or blend with confidence) as rankingP — including PASS. Edge SPEAK/LEAN
+ *   is the glass-box claim; ranking needs P(side) even when we do not claim edge.
+ *   Overpriced favorites (trueProb < conf) must demote ranking or RES stays ~0.
+ *
+ *   NEVER use rawEdge / shrunkEdge / edgeScore as ranking p.
  *
  * Does NOT lower floors, flip AUTO_PUBLISH, or apply calibration maps.
  */
@@ -33,17 +36,22 @@ function clamp01(p: number): number {
 /**
  * Derive ranking probability from heuristic confidence + optional independent edge.
  *
- * SPEAK/LEAN + finite trueProb → blend (default 0.5/0.5) or pure independent.
- * PASS / NONE / missing → confidence only.
+ * Finite trueProb → blend (default) or pure independent — even on PASS.
+ * Missing / non-finite trueProb → confidence only.
  */
 export function deriveRankingProbability(
   confidence: number,
   independentEdge: IndependentEdgeSummary | null | undefined,
   options?: {
-    /** Weight on independent trueProb when blending (0–1). Default 0.5. */
+    /** Weight on independent trueProb when blending (0–1). Default 0.7 (v5.2.1). */
     readonly independentWeight?: number;
-    /** Prefer pure trueProb over blend when SPEAK. Default false (blend). */
+    /** Prefer pure trueProb over blend when SPEAK. Default false. */
     readonly pureOnSpeak?: boolean;
+    /**
+     * When true (default), use trueProb for ranking even if decision is PASS.
+     * SPEAK/LEAN still control glass-box edge claim; ranking needs the model P.
+     */
+    readonly rankOnAnyTrueProb?: boolean;
   },
 ): RankingProbResult {
   const confP = clamp01(
@@ -53,13 +61,17 @@ export function deriveRankingProbability(
   const ie = independentEdge ?? null;
   const trueProb = ie?.trueProb;
   const decision = ie?.decision;
-  const canPrice =
-    ie != null &&
-    (decision === "SPEAK" || decision === "LEAN") &&
+  const hasModelP =
     trueProb != null &&
     Number.isFinite(trueProb) &&
     trueProb > 0 &&
     trueProb < 1;
+
+  // Legacy gate (rankOnAnyTrueProb === false): only SPEAK|LEAN.
+  const rankOnAny = options?.rankOnAnyTrueProb !== false;
+  const decisionOk =
+    rankOnAny || decision === "SPEAK" || decision === "LEAN";
+  const canPrice = ie != null && hasModelP && decisionOk;
 
   if (!canPrice) {
     return {
@@ -70,8 +82,10 @@ export function deriveRankingProbability(
     };
   }
 
-  const w = Math.min(1, Math.max(0, options?.independentWeight ?? 0.5));
-  const pure = options?.pureOnSpeak === true && decision === "SPEAK";
+  const w = Math.min(1, Math.max(0, options?.independentWeight ?? 0.7));
+  const pure =
+    options?.pureOnSpeak === true &&
+    (decision === "SPEAK" || rankOnAny);
   let rankingP: number;
   let source: RankingProbSource;
   if (pure || w >= 1 - 1e-12) {

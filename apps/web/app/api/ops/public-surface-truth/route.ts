@@ -439,6 +439,12 @@ export async function GET(request: Request) {
         return {
           provenPath: surface?.plan ?? null,
           provenPathProjection: surface?.projection ?? null,
+          // Top-level polarity glance (also nested under provenPath*)
+          rankingPolarityLaw:
+            surface?.plan?.rankingPolarityLaw ?? "positive_separation_required",
+          bestScore: surface?.plan?.bestScore ?? null,
+          bestSeparation: surface?.projection?.bestSeparation ?? null,
+          pathViable: surface?.projection?.pathViable ?? null,
           murphyExplain: murphySnap?.explain ?? null,
           murphyRes: murphySnap,
           conformalRd: conformalRdPosture(process.env),

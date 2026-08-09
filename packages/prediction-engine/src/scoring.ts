@@ -530,6 +530,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
+  const confPSpread = Math.min(1 - 1e-6, Math.max(1e-6, confidence / 100));
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
     marketDepthScore: depthScore,
@@ -545,6 +546,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     crossMarketScore: crossMarketScore !== 0 ? crossMarketScore : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
     dataQualityScore,
+    rankingP: confPSpread,
+    rankingSource: "confidence", // no independent ATS model yet
+    marketFairProb: fairProb,
     factors,
   };
 
@@ -723,6 +727,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     lineMovementScore,
     volatilityPenalty,
     dataQualityScore,
+    rankingP: Math.min(1 - 1e-6, Math.max(1e-6, confidence / 100)),
+    rankingSource: "confidence", // no independent total model yet
+    marketFairProb: fairProb,
     factors,
   };
 
@@ -843,7 +850,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
 
-  const rank = deriveRankingProbability(confidence, independentEdgeRaw);
+  const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
+    independentWeight: 0.7,
+    rankOnAnyTrueProb: true,
+  });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
     ? { ...independentEdgeRaw, priced: rank.priced }
     : null;
@@ -931,6 +941,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     // Persist ranking law for later metrics / bake-off (never edge-as-p).
     rankingP: rank.rankingP,
     rankingSource: rank.source,
+    marketFairProb: fairProb,
     factors,
   };
 
