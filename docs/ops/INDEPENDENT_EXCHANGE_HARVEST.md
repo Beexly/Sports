@@ -15,7 +15,7 @@ ABSENT-only unchanged. See CalibrationProposal
 | **ClubElo** | Soccer Fixtures W/D/L → 2-way, else rating logistic | Soccer sport keys only |
 | **ESPN FPI** | Unchanged logistic | Exact name match |
 | **Poisson / Elo** | Unchanged from TeamGameLog | Sport validity |
-| **Dixon–Coles** | Soccer τ(ρ) on Poisson joint (source `dixon_coles`) | Soccer only; same rates as Poisson |
+| **Dixon–Coles** | Soccer τ(ρ) on Poisson joint (source `dixon_coles`) | Soccer only; **replaces** Poisson in blend (no double-count) |
 | **Polymarket Gamma** | Internal estimator only | `INDEPENDENT_POLYMARKET=1` default **OFF** |
 
 ### Kalshi match polarity (v5.2.2)

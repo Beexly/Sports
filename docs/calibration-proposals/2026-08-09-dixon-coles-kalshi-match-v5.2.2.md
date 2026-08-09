@@ -12,7 +12,7 @@ supersedes: v5.2.1
 
 Bump `MODEL_VERSION` to **v5.2.2** for ranking-independent quality:
 
-1. **Dixon–Coles τ(ρ)** soccer independent (`source: "dixon_coles"`) — market-free trueProb from TeamGameLog λ + low-score correlation (ρ default −0.13). Does **not** replace independent Poisson; both can fire on soccer.
+1. **Dixon–Coles τ(ρ)** soccer independent (`source: "dixon_coles"`) — market-free trueProb from TeamGameLog λ + low-score correlation (ρ default −0.13). On soccer it **replaces** independent Poisson in the blend (no double-count of the same rates); hockey/baseball keep Poisson.
 2. **Kalshi ESPN short-code aliases** — CHW→CWS, GS→GSW, NY→NYK, SA→SAS, NO→NOP, UTAH→UTA, NJ→NJD; unknown shorts → null (no invent).
 3. **Kalshi ticker ET wall clock** — date/time fragments for ISO instants use `America/New_York` (date-only strings stay calendar days).
 4. **Series match 12h start skew** — drop far-future attach when `occurrence_datetime` known.
