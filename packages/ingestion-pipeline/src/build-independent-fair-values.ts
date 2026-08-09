@@ -6,8 +6,8 @@
  *  2) Kalshi live fair (series-aware; multi-league)
  *  3) ESPN PowerIndex logistic (NFL/CFB/NBA/NCAAB when FPI available)
  *  4) ClubElo soccer (Fixtures W/D/L → 2-way, else rating logistic)
- *  5) Poisson team rates from TeamGameLog (soccer / icehockey / baseball only)
- *  6) Dixon–Coles τ(ρ) soccer independent (same rates, low-score correlation)
+ *  5) Rate-model independent: Dixon–Coles on soccer (not double-counted with Poisson);
+ *     independent Poisson on icehockey / baseball
  *  7) Elo fitted from chronological TeamGameLog results
  *  8) Polymarket Gamma internal estimator — ONLY when INDEPENDENT_POLYMARKET=1
  *     (compliance hold: not product, not cron clear)
@@ -309,22 +309,9 @@ export async function buildIndependentFairValues(
         getLeagueAverageScored(input.sportKey, input.commenceTime),
       ]);
       if (leagueAvg != null && leagueAvg > 0) {
-        const poisson = poissonIndependentFairValue({
-          sportKey: input.sportKey,
-          homeRecords,
-          awayRecords,
-          leagueAvgScored: leagueAvg,
-        });
-        if (poisson) {
-          out.push({
-            source: "poisson",
-            homeFairProb: poisson.homeFairProb,
-            awayFairProb: poisson.awayFairProb,
-            capturedAt: now().toISOString(),
-          });
-        }
-        // Dixon–Coles: soccer-only second rate model (τ on 0-0/0-1/1-0/1-1).
-        // Market-free; reuses same TeamGameLog λ. Soft-fail → null is honest.
+        // Soccer: Dixon–Coles only (same λ as Poisson + low-score τ). Emitting
+        // both would double-count one rate model in the independent blend and
+        // fake consensus. Hockey/baseball keep independent Poisson.
         if (isDixonColesValidSport(input.sportKey)) {
           const dc = dixonColesIndependentFairValue({
             sportKey: input.sportKey,
@@ -337,6 +324,37 @@ export async function buildIndependentFairValues(
               source: "dixon_coles",
               homeFairProb: dc.homeFairProb,
               awayFairProb: dc.awayFairProb,
+              capturedAt: now().toISOString(),
+            });
+          } else {
+            // Soft fallback: plain Poisson if DC nulls (degenerate τ path rare).
+            const poisson = poissonIndependentFairValue({
+              sportKey: input.sportKey,
+              homeRecords,
+              awayRecords,
+              leagueAvgScored: leagueAvg,
+            });
+            if (poisson) {
+              out.push({
+                source: "poisson",
+                homeFairProb: poisson.homeFairProb,
+                awayFairProb: poisson.awayFairProb,
+                capturedAt: now().toISOString(),
+              });
+            }
+          }
+        } else {
+          const poisson = poissonIndependentFairValue({
+            sportKey: input.sportKey,
+            homeRecords,
+            awayRecords,
+            leagueAvgScored: leagueAvg,
+          });
+          if (poisson) {
+            out.push({
+              source: "poisson",
+              homeFairProb: poisson.homeFairProb,
+              awayFairProb: poisson.awayFairProb,
               capturedAt: now().toISOString(),
             });
           }
