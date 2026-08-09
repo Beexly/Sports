@@ -1,6 +1,11 @@
 /**
  * Empirical Bayes τ for hierarchical group intercepts u_g ~ N(0, τ²).
  * Offline R&D only. Clamp τ ∈ [0.05, 2.0]. No Dirichlet process in prod path.
+ *
+ * Recipe: global Platt MAP → û_g residuals → τ² = clip(mean(û²)−noise) → joint ridge MAP.
+ * Unseen group → u=0. Non-centered z_g only for full-Bayes NUTS (not this MAP path).
+ * Hierarchy ≠ resolution; Res≈0 is a ranking problem, not a τ problem.
+ * @see docs/ops/PLATT_HIERARCHICAL_FULL_POSTURE.md
  */
 
 export const TAU_MIN = 0.05;

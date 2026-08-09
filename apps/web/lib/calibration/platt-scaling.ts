@@ -1,9 +1,16 @@
 /**
- * Platt scaling (MAP IRLS) — calibration map fit/predict.
- * Apply OFF until ranking Res improves + holdout floors + CALIBRATION_ADJUSTMENTS.
+ * Platt MAP IRLS — two-parameter logistic recalibration on logit-scores.
  *
- * score = logit(p_raw); A~N(1,1), B~N(0,1)
+ *   p_cal = σ(A·s + B),  s = logit(clip(p_raw, ε, 1−ε))
+ *   Prior A~N(1,1), B~N(0,1); Newton: g = X\'(p−y)+Σ⁻¹(θ−θ₀), H = X\'WX+Σ⁻¹
+ *
+ * Job = REL (calibration), not RES (ranking). Apply OFF while Res≈0.
+ * Fit: Node cron / offline only. Never Edge middleware. Never per-request IRLS.
+ * Data: canonical WIN/LOSS, time-ordered train, holdout metrics only.
+ *
+ * @see docs/ops/PLATT_HIERARCHICAL_FULL_POSTURE.md
  */
+
 
 export function sigmoid(z: number): number {
   if (z >= 0) {
