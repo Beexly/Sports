@@ -2,7 +2,13 @@
  * Odds-API / ESPN team names → Kalshi exchange abbreviations.
  * Without this map, full names never resolve → Kalshi independent is dead.
  * Null = honest no-opinion (never invent tickers).
+ *
+ * Leagues: NFL/NBA/MLB/NHL (majors) + WNBA/CFB/CBB + EPL/MLS (soccer game series).
+ * CFB/CBB maps cover high-volume programs; unmapped → null (series search still
+ * needs an abbr — expand as Kalshi coverage is verified live).
  */
+
+import type { KalshiLeagueCode } from "@sports/data-ingestion";
 
 /** Normalize for lookup: lower, strip punctuation, collapse whitespace. */
 export function normalizeTeamKey(name: string): string {
@@ -250,10 +256,13 @@ const MLB: Readonly<Record<string, string>> = {
   "new york yankees": "NYY",
   yankees: "NYY",
   nyy: "NYY",
-  "oakland athletics": "OAK",
-  athletics: "OAK",
-  "a s": "OAK",
-  oak: "OAK",
+  // Kalshi uses ATH for Athletics (live 2026-08: …TBATH)
+  "oakland athletics": "ATH",
+  athletics: "ATH",
+  "a s": "ATH",
+  "the a s": "ATH",
+  oak: "ATH",
+  ath: "ATH",
   "philadelphia phillies": "PHI",
   phillies: "PHI",
   "pittsburgh pirates": "PIT",
@@ -358,13 +367,292 @@ const NHL: Readonly<Record<string, string>> = {
   wpg: "WPG",
 };
 
+const WNBA: Readonly<Record<string, string>> = {
+  "atlanta dream": "ATL",
+  dream: "ATL",
+  "chicago sky": "CHI",
+  sky: "CHI",
+  "connecticut sun": "CON",
+  sun: "CON",
+  con: "CON",
+  "dallas wings": "DAL",
+  wings: "DAL",
+  "indiana fever": "IND",
+  fever: "IND",
+  "las vegas aces": "LV",
+  aces: "LV",
+  "los angeles sparks": "LA",
+  sparks: "LA",
+  "minnesota lynx": "MIN",
+  lynx: "MIN",
+  "new york liberty": "NY",
+  liberty: "NY",
+  "phoenix mercury": "PHX",
+  mercury: "PHX",
+  "seattle storm": "SEA",
+  storm: "SEA",
+  "washington mystics": "WAS",
+  mystics: "WAS",
+  "golden state valkyries": "GS",
+  valkyries: "GS",
+};
+
+/** High-volume CFB programs (Kalshi CFB game series). Expand as coverage verified. */
+const CFB: Readonly<Record<string, string>> = {
+  "alabama crimson tide": "ALA",
+  alabama: "ALA",
+  ala: "ALA",
+  "georgia bulldogs": "UGA",
+  georgia: "UGA",
+  uga: "UGA",
+  "ohio state buckeyes": "OHIOST",
+  "ohio state": "OHIOST",
+  "michigan wolverines": "MICH",
+  michigan: "MICH",
+  "texas longhorns": "TEX",
+  "texas a m": "TXAM",
+  "texas am": "TXAM",
+  "oregon ducks": "ORE",
+  oregon: "ORE",
+  "penn state nittany lions": "PSU",
+  "penn state": "PSU",
+  "notre dame fighting irish": "ND",
+  "notre dame": "ND",
+  "lsu tigers": "LSU",
+  lsu: "LSU",
+  "florida state seminoles": "FSU",
+  "florida state": "FSU",
+  "clemson tigers": "CLEM",
+  clemson: "CLEM",
+  "usc trojans": "USC",
+  usc: "USC",
+  "miami hurricanes": "MIA",
+  "oklahoma sooners": "OU",
+  oklahoma: "OU",
+  "tennessee volunteers": "TENN",
+  tennessee: "TENN",
+  "ole miss rebels": "MISS",
+  "ole miss": "MISS",
+  "washington huskies": "WASH",
+  "florida gators": "FLA",
+  "auburn tigers": "AUB",
+  auburn: "AUB",
+};
+
+const CBB: Readonly<Record<string, string>> = {
+  "duke blue devils": "DUKE",
+  duke: "DUKE",
+  "north carolina tar heels": "UNC",
+  "north carolina": "UNC",
+  unc: "UNC",
+  "kansas jayhawks": "KU",
+  kansas: "KU",
+  "kentucky wildcats": "UK",
+  kentucky: "UK",
+  "gonzaga bulldogs": "GONZ",
+  gonzaga: "GONZ",
+  "uconn huskies": "CONN",
+  uconn: "CONN",
+  connecticut: "CONN",
+  "houston cougars": "HOU",
+  "purdue boilermakers": "PUR",
+  purdue: "PUR",
+  "arizona wildcats": "ARIZ",
+  arizona: "ARIZ",
+  "michigan state spartans": "MSU",
+  "michigan state": "MSU",
+  "villanova wildcats": "VILL",
+  villanova: "VILL",
+  "baylor bears": "BAY",
+  baylor: "BAY",
+  "indiana hoosiers": "IND",
+  "ucla bruins": "UCLA",
+  ucla: "UCLA",
+};
+
+/** EPL Kalshi abbrs verified live 2026-08 (NEW, LFC, MCI, BOU, BRI, AVL, BRE, TOT). */
+const EPL: Readonly<Record<string, string>> = {
+  "arsenal": "ARS",
+  "arsenal fc": "ARS",
+  ars: "ARS",
+  "aston villa": "AVL",
+  villa: "AVL",
+  avl: "AVL",
+  "bournemouth": "BOU",
+  "afc bournemouth": "BOU",
+  bou: "BOU",
+  "brentford": "BRE",
+  "brentford fc": "BRE",
+  bre: "BRE",
+  "brighton": "BRI",
+  "brighton and hove albion": "BRI",
+  "brighton hove albion": "BRI",
+  bri: "BRI",
+  "chelsea": "CHE",
+  "chelsea fc": "CHE",
+  che: "CHE",
+  "crystal palace": "CRY",
+  cry: "CRY",
+  "everton": "EVE",
+  "everton fc": "EVE",
+  eve: "EVE",
+  "fulham": "FUL",
+  "fulham fc": "FUL",
+  ful: "FUL",
+  "ipswich": "IPS",
+  "ipswich town": "IPS",
+  "leicester": "LEI",
+  "leicester city": "LEI",
+  "liverpool": "LFC",
+  "liverpool fc": "LFC",
+  lfc: "LFC",
+  "manchester city": "MCI",
+  "man city": "MCI",
+  mci: "MCI",
+  "manchester united": "MUN",
+  "man united": "MUN",
+  "man utd": "MUN",
+  mun: "MUN",
+  "newcastle": "NEW",
+  "newcastle united": "NEW",
+  new: "NEW",
+  "nottingham forest": "NFO",
+  forest: "NFO",
+  nfo: "NFO",
+  "southampton": "SOU",
+  "tottenham": "TOT",
+  "tottenham hotspur": "TOT",
+  spurs: "TOT",
+  tot: "TOT",
+  "west ham": "WHU",
+  "west ham united": "WHU",
+  whu: "WHU",
+  "wolves": "WOL",
+  "wolverhampton": "WOL",
+  "wolverhampton wanderers": "WOL",
+  wol: "WOL",
+};
+
+const MLS: Readonly<Record<string, string>> = {
+  "inter miami": "MIA",
+  "inter miami cf": "MIA",
+  "la galaxy": "LAG",
+  "los angeles galaxy": "LAG",
+  "lafc": "LAFC",
+  "los angeles fc": "LAFC",
+  "seattle sounders": "SEA",
+  "seattle sounders fc": "SEA",
+  "atlanta united": "ATL",
+  "atlanta united fc": "ATL",
+  "new york city fc": "NYC",
+  "nycfc": "NYC",
+  "new york red bulls": "RBNY",
+  "portland timbers": "POR",
+  "austin fc": "ATX",
+  "fc cincinnati": "CIN",
+  "columbus crew": "CLB",
+  "philadelphia union": "PHI",
+  "orlando city": "ORL",
+  "orlando city sc": "ORL",
+  "chicago fire": "CHI",
+  "sporting kansas city": "SKC",
+  "minnesota united": "MIN",
+  "real salt lake": "RSL",
+  "vancouver whitecaps": "VAN",
+  "toronto fc": "TOR",
+  "cf montreal": "MTL",
+  "montreal impact": "MTL",
+};
+
+/** Lightweight tables for remaining soccer series (abbr-heavy; expand live). */
+const LALIGA: Readonly<Record<string, string>> = {
+  "real madrid": "RMA",
+  "barcelona": "BAR",
+  "fc barcelona": "BAR",
+  "atletico madrid": "ATM",
+  "atlético madrid": "ATM",
+  "sevilla": "SEV",
+  "real sociedad": "RSO",
+  "athletic club": "ATH",
+  "athletic bilbao": "ATH",
+  "villarreal": "VIL",
+  "real betis": "BET",
+};
+
+const BUNDESLIGA: Readonly<Record<string, string>> = {
+  "bayern munich": "BAY",
+  "bayern munchen": "BAY",
+  "fc bayern munich": "BAY",
+  "borussia dortmund": "BVB",
+  dortmund: "BVB",
+  "rb leipzig": "RBL",
+  "bayer leverkusen": "B04",
+  leverkusen: "B04",
+  "eintracht frankfurt": "SGE",
+  "borussia monchengladbach": "BMG",
+  "vfb stuttgart": "VFB",
+  stuttgart: "VFB",
+};
+
+const SERIEA: Readonly<Record<string, string>> = {
+  "inter": "INT",
+  "inter milan": "INT",
+  "internazionale": "INT",
+  "ac milan": "MIL",
+  milan: "MIL",
+  "juventus": "JUV",
+  "ssc napoli": "NAP",
+  napoli: "NAP",
+  "as roma": "ROM",
+  roma: "ROM",
+  "ss lazio": "LAZ",
+  lazio: "LAZ",
+  "atalanta": "ATA",
+  "fiorentina": "FIO",
+};
+
+const LIGUE1: Readonly<Record<string, string>> = {
+  "paris saint germain": "PSG",
+  "paris sg": "PSG",
+  psg: "PSG",
+  "olympique marseille": "OM",
+  marseille: "OM",
+  "olympique lyonnais": "OL",
+  lyon: "OL",
+  "as monaco": "ASM",
+  monaco: "ASM",
+  "lille": "LIL",
+  "rc lens": "RCL",
+  lens: "RCL",
+  "ogc nice": "NIC",
+  nice: "NIC",
+};
+
+const UCL: Readonly<Record<string, string>> = {
+  ...EPL,
+  ...LALIGA,
+  ...BUNDESLIGA,
+  ...SERIEA,
+  ...LIGUE1,
+};
+
 const BY_LEAGUE: Readonly<
-  Record<"NFL" | "NBA" | "MLB" | "NHL", Readonly<Record<string, string>>>
+  Record<KalshiLeagueCode, Readonly<Record<string, string>>>
 > = {
   NFL,
   NBA,
   MLB,
   NHL,
+  WNBA,
+  CFB,
+  CBB,
+  EPL,
+  UCL,
+  LALIGA,
+  BUNDESLIGA,
+  SERIEA,
+  LIGUE1,
+  MLS,
 };
 
 /**
@@ -372,18 +660,19 @@ const BY_LEAGUE: Readonly<
  * Returns null when unmapped (honest no-opinion).
  */
 export function resolveKalshiTeamAbbr(
-  league: "NFL" | "NBA" | "MLB" | "NHL",
+  league: KalshiLeagueCode,
   teamName: string,
 ): string | null {
   const t = teamName.trim();
   if (!t) return null;
-  // Already a short abbr
-  if (/^[A-Za-z]{2,4}$/.test(t)) return t.toUpperCase();
-  const paren = t.match(/\(([A-Za-z]{2,4})\)/);
+  // Already a short abbr (2–6 for CFB stems like OHIOST)
+  if (/^[A-Za-z]{2,6}$/.test(t)) return t.toUpperCase();
+  const paren = t.match(/\(([A-Za-z]{2,6})\)/);
   if (paren?.[1]) return paren[1].toUpperCase();
 
   const key = normalizeTeamKey(t);
   const table = BY_LEAGUE[league];
+  if (!table) return null;
   if (table[key]) return table[key]!;
 
   // Last token only when unique-ish (e.g. "Cowboys")

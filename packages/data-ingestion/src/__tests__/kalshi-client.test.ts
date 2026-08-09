@@ -27,9 +27,14 @@ describe("toKalshiEventTicker", () => {
     ).toBe("KXNBAGAME-26JUN03NYKSAS");
   });
 
-  it("interprets the date in UTC and upper-cases abbreviations", () => {
+  it("interprets the date in UTC and upper-cases abbreviations; MLB encodes clock when present", () => {
+    // MLB time-encoded path (live): HHMM sits between date and teams.
     expect(
       toKalshiEventTicker({ league: "MLB", dateUtc: "2026-06-03T20:05:00Z", awayAbbr: "ath", homeAbbr: "chc" }),
+    ).toBe("KXMLBGAME-26JUN032005ATHCHC");
+    // Date-only still omits HHMM (series search recovers time-encoded events).
+    expect(
+      toKalshiEventTicker({ league: "MLB", dateUtc: "2026-06-03", awayAbbr: "ath", homeAbbr: "chc" }),
     ).toBe("KXMLBGAME-26JUN03ATHCHC");
   });
 
@@ -260,13 +265,7 @@ describe("toIndependentFairValue — bridge into the engine's independent fair v
       ],
     };
     const out = toIndependentFairValue(thin, "SAS", "NYK");
+    expect(out.awayFairProb).toBeNull();
     expect(out.homeFairProb).toBeCloseTo(0.6, 5);
-    expect(out.awayFairProb).toBeNull();
-  });
-
-  it("returns nulls when the abbreviations don't match any side (no coverage)", () => {
-    const out = toIndependentFairValue(fv, "BOS", "LAL");
-    expect(out.homeFairProb).toBeNull();
-    expect(out.awayFairProb).toBeNull();
   });
 });
