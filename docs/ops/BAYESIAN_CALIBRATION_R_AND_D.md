@@ -75,3 +75,14 @@ Do **not** implement DP mixture clustering of groups in prod. Production eligibi
 ### Code
 - `hierarchical-eb-tau.ts` — `fitEmpiricalBayesTau`, `fitTauFromLaplaceGroupMaps`, clamp
 - `platt-map.ts` — `fitPlattMapHierarchical` returns `{ global, groupIntercept, tau, tauMethod }`
+
+## Calibrator selection (R&D — apply OFF)
+
+| Situation | Prefer |
+|-----------|--------|
+| Smooth global rescale | **MAP Platt IRLS** (A~N(1,1), B~N(0,1)); Newton: g=X′(p−y)+Σ₀⁻¹(θ−θ₀), H=X′WX+Σ₀⁻¹ |
+| Clear monotone bias, weird shape | **Isotonic true PAVA** (+ optional CIR later) |
+| Thin tails unreliable | **Platt or Temperature** (isotonic plateaus hurt tails) |
+| Hierarchical markets | **Platt/logistic + EB-τ u_g** (isotonic is usually global) |
+
+Score: `s = logit(clip(p_raw))`. Train time-ordered only; freeze map version; never enable adjustments while eligibility RED.

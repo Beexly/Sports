@@ -141,7 +141,7 @@ export function runOfflineBakeoff(
   const mapMapped = test.map((r) => ({ p: applyPlatt(r.p, plattMap), y: r.y }));
   methods.push({ method: "platt_map", nTest: test.length, ...score(mapMapped) });
 
-  const iso = fitIsotonicPava(train.map((r) => ({ p: r.p, y: r.y as 0 | 1 })));
+  const iso = fitIsotonicPava(train.map((r) => ({ p: r.p, y: r.y as 0 | 1 }))); // true PAVA
   const isoMapped = test.map((r) => ({ p: applyIsotonic(r.p, iso), y: r.y }));
   methods.push({ method: "isotonic_pava", nTest: test.length, ...score(isoMapped) });
 
