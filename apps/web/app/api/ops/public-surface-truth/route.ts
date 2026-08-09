@@ -16,7 +16,10 @@ import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
-import { loadLearningSamplePosture } from "@/lib/ops/learning-sample-posture";
+import {
+  isCalibrationPublished,
+  loadCanonicalSamplePosture,
+} from "@/lib/ops/canonical-sample-posture";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -68,7 +71,7 @@ const MAIN_FEATURE_MARKERS = [
   "founder-queue-low-noise",
   "waitlist-posture-ops-surface",
   "free-spine-parallel-probes",
-  "learning-sample-posture",
+  "canonical-sample-ops-truth",
   "odds-inserting-freshness-ops",
 ] as const;
 
@@ -88,7 +91,7 @@ function hasOpsAuth(request: Request): boolean {
 
 /**
  * Surface truth snapshot.
- * - Public: gates, storage modes, settlement band counts, deploymentSha.
+ * - Public: gates, storage modes, settlement band counts, deploymentSha, sample.
  * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
  */
 export async function GET(request: Request) {
@@ -135,13 +138,17 @@ export async function GET(request: Request) {
     settlement = null;
   }
 
-  // Non-seed settled sample — never substitute commencedTotal for ladder N.
-  let learningSample: Awaited<ReturnType<typeof loadLearningSamplePosture>> | null = null;
+  // Canonical sample via loadPublicPerformancePolicy — not commencedTotal.
+  let sample: Awaited<ReturnType<typeof loadCanonicalSamplePosture>> | null = null;
   if (!isStubMode()) {
     try {
-      learningSample = await loadLearningSamplePosture(db);
+      sample = await loadCanonicalSamplePosture(db, {
+        commencedTotal: settlement?.commencedTotal ?? 0,
+        canExposePerformanceStats: gates.canExposePerformanceStats,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+      });
     } catch {
-      learningSample = null;
+      sample = null;
     }
   }
 
@@ -202,7 +209,6 @@ export async function GET(request: Request) {
   }
   const jynx = creditStack.jynx;
 
-  // I3/I8: resolve free-spine BEFORE founder queue so coverage gaps / SLA land in steps.
   let freeSpine: {
     present: boolean;
     source: "process" | "durable" | "none";
@@ -231,7 +237,6 @@ export async function GET(request: Request) {
     slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
   };
   try {
-    // I3: prefer fresh process RAM; if cold/stale, load Neon durable and pick fresher.
     const { snap, source } = await resolveBestFreeSpineSnapshot();
     if (snap) {
       const ageMs = freeSpineSnapAgeMs(snap);
@@ -285,22 +290,23 @@ export async function GET(request: Request) {
     freeSpineCriticalGaps: freeSpine.criticalGaps,
     freeSpineRequireSpend: freeSpine.requireSpend,
     waitlistGateEnabled: waitlist.gateEnabled,
-    nonSeedSettled: learningSample?.nonSeedSettled ?? null,
-    nonSeedFloorProven: learningSample?.floorProven ?? 100,
+    nonSeedSettled: sample?.canonicalSettled ?? null,
+    nonSeedFloorProven: sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
     oddsInsertingStale: oddsInserting.withinRefreshSla === false,
   });
 
-  // Proof-gated ladder — use NON-SEED settled only; never commenced as N.
-  // calibrationPublished stays false until founder ceremony (no auto-flip).
+  // Proof-gated ladder — canonical settled only; calibrationPublished only via env YES.
+  const calibrationPublished = isCalibrationPublished();
   const revenueLadder = evaluateRevenueLadder({
-    canonicalSettled: learningSample?.nonSeedSettled ?? 0,
-    calibrationPublished: false,
+    canonicalSettled: sample?.canonicalSettled ?? 0,
+    calibrationPublished,
     clvBeatCloseRate: null,
     settlementHealthy: settlement?.health === "HEALTHY",
     boardNotSuppressed: oddsInserting.withinRefreshSla === true,
     liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
     publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
     performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+    minSettledProven: gates.minSettledPicksForLearning,
   });
 
   return NextResponse.json(
@@ -324,27 +330,28 @@ export async function GET(request: Request) {
         contestsPublic: isContestsPublic(),
         canExposePublicPicks: gates.canExposePublicPicks,
         isBootstrapMode: gates.isBootstrapMode,
+        canExposePerformanceStats: gates.canExposePerformanceStats,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+        calibrationPublished,
       },
       contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
-      /** Public-safe lead-capture gate posture (booleans only). */
       waitlist,
       settlement,
-      /** Non-seed settled sample for ladder/learning — commenced is NOT a substitute. */
-      learningSample,
-      /** Odds-inserting freshness — kill switch SoT (oddsInserted>0), not free-spine. */
+      /**
+       * Canonical sample (publish/learning SoT).
+       * commenced ≠ settled. Excludes bootstrap + modelVersion v5.0.0-seed.
+       * settle = grade; filter = these counts; publish = founder YES + checklist.
+       */
+      sample,
       oddsInserting,
       content: {
         podcastEpisodes: listEpisodes().length,
         newsletterIssues: listIssues().length,
       },
-      /** Public-safe AI cost posture — booleans only, never secrets. */
       creditStack,
-      /** Public-safe money path posture — booleans + lookup keys only, never secrets. */
       billingMoney,
-      /** Public-safe Stripe webhook host audit (URLs only). */
       stripeWebhookHosts,
-      /** Public-safe autonomy executor posture — dry-run default, free crons only. */
       autonomy,
       freeSpine,
       policy: PUBLIC_NAV_POLICY,
