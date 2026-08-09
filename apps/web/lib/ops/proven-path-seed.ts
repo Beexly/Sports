@@ -1,6 +1,9 @@
 /**
  * Auto-build proven path plan + projected metrics when durable missing.
  * No founder cron click required.
+ *
+ * Ranking p law: load confidence + independent trueProb only.
+ * edgeScore is never converted to a probability for bake-off.
  */
 
 import { db, isStubMode } from "@sports/db";
@@ -38,33 +41,63 @@ async function loadRows() {
     if (pick.result !== "WIN" && pick.result !== "LOSS") continue;
     if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
     const pConfidence = Math.min(1, Math.max(0, pick.confidence / 100));
-    const pEdge =
-      typeof pick.edgeScore === "number" && Number.isFinite(pick.edgeScore)
-        ? Math.min(1, Math.max(0, pick.edgeScore / 100))
-        : null;
-    // Prefer priced independent rankingP / trueProb from factorBreakdown when present.
+
+    // Prefer priced independent rankingP / trueProb from factorBreakdown.
+    // NEVER use edgeScore as a probability (rawEdge = trueProb − marketFair).
     let pIndependent: number | null = null;
+    let marketP: number | null = null;
     const fb = pick.factorBreakdown as {
       fairProbability?: number | null;
-      independentEdge?: { trueProb?: number | null; priced?: boolean } | null;
+      marketFairProb?: number | null;
+      rankingP?: number | null;
+      independentEdge?: {
+        trueProb?: number | null;
+        priced?: boolean;
+        marketFairProb?: number | null;
+      } | null;
     } | null;
-    if (fb?.fairProbability != null && Number.isFinite(fb.fairProbability)) {
-      pIndependent = Math.min(1, Math.max(0, fb.fairProbability));
+
+    if (
+      fb?.rankingP != null &&
+      Number.isFinite(fb.rankingP) &&
+      fb.rankingP > 0 &&
+      fb.rankingP < 1
+    ) {
+      // rankingP already is win probability when priced from trueProb path.
+      pIndependent = Math.min(1, Math.max(0, fb.rankingP));
     } else if (
       fb?.independentEdge?.trueProb != null &&
       Number.isFinite(fb.independentEdge.trueProb)
     ) {
       pIndependent = Math.min(1, Math.max(0, fb.independentEdge.trueProb));
+    } else if (
+      fb?.fairProbability != null &&
+      Number.isFinite(fb.fairProbability) &&
+      // Only treat fairProbability as independent if independentEdge was priced.
+      fb?.independentEdge?.priced === true
+    ) {
+      pIndependent = Math.min(1, Math.max(0, fb.fairProbability));
     }
+
+    if (
+      fb?.independentEdge?.marketFairProb != null &&
+      Number.isFinite(fb.independentEdge.marketFairProb)
+    ) {
+      marketP = Math.min(1, Math.max(0, fb.independentEdge.marketFairProb));
+    } else if (fb?.marketFairProb != null && Number.isFinite(fb.marketFairProb)) {
+      marketP = Math.min(1, Math.max(0, fb.marketFairProb));
+    }
+
     const sport = pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
     const market = pick.pickType ?? "unknown";
     rows.push({
       pConfidence,
-      pEdge,
+      // Diagnostic only — not used as ranking p
+      pEdge: null,
       pIndependent,
       y: (pick.result === "WIN" ? 1 : 0) as 0 | 1,
       groupKey: `${sport}|${market}`,
-      marketP: null,
+      marketP,
     });
   }
   return rows;
@@ -81,10 +114,9 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
     let plan = await loadProvenPathPlan();
     const rows = await loadRows();
     if (rows.length < 50) return null;
-    if (!plan) {
-      plan = buildProvenPathPlan(rows);
-      await persistProvenPathPlan(plan);
-    }
+    // Always rebuild so polarity law applies (edge-as-p plans are invalid).
+    plan = buildProvenPathPlan(rows);
+    await persistProvenPathPlan(plan);
     const projection = projectProvenPathMetrics(rows);
     return { plan, projection };
   } catch {

@@ -11,6 +11,17 @@ export {
   type KalshiSideFairValue,
   type KalshiFairValue,
 } from "./kalshi-client.js";
+export {
+  sportKeyToPowerIndexLeague,
+  fetchEspnPowerIndexPage,
+  fetchEspnTeamMetaMap,
+  loadEspnPowerIndexMap,
+  lookupTeamFpi,
+  getCachedEspnPowerIndexMap,
+  defaultPowerIndexSeason,
+  EspnPowerIndexError,
+  type EspnPowerIndexLeague,
+} from "./espn-powerindex-client.js";
 export { DataNormalizer } from "./normalizer.js";
 export {
   enrichGameContext,

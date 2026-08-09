@@ -4,8 +4,18 @@
  * Law: maps (Platt/Temp/Isotonic) fix REL, not RES. This module:
  *  1) Ranks sport|market groups; builds pause list (Res≈0)
  *  2) Sweeps selective thresholds; picks max Res with n ≥ minN
- *  3) Compares ranking scores (confidence vs edgeScore vs blend)
+ *  3) Compares ranking scores (confidence vs independent trueProb vs blend)
  *  4) Emits durable plan for ops truth + runtime pause/filter
+ *
+ * RANKING PROBABILITY LAW (hard — 2026-08-09 polarity fix):
+ *   ranking p for Brier / RES / separation / selective MUST be a win probability:
+ *     - confidence/100
+ *     - independent trueProb (SPEAK/LEAN path)
+ *     - blend of those two
+ *   NEVER use edge, rawEdge, shrunkEdge, or edgeScore as p.
+ *   Edge is a signed gap (trueProb − marketFair), not P(side).
+ *   bestScore = argmax RES among scores with separation > 0 and n ≥ 50.
+ *   If none qualify → confidence; pathViable stays honest.
  *
  * Does NOT set publishedEffective, AUTO_PUBLISH, or lower floors.
  */
@@ -23,21 +33,27 @@ import {
 } from "@/lib/calibration/selective-publish";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 
+/** Score kinds that are valid win probabilities (never edge-as-p). */
 export type RankingScoreKind =
   | "confidence"
-  | "edgeScore"
-  | "blend_conf_edge"
   | "independent_trueProb"
-  | "blend_indep_conf";
+  | "blend_indep_conf"
+  | "marketFairProb";
 
 export type ProvenPathPickRow = {
-  readonly pConfidence: number; // confidence/100
-  readonly pEdge: number | null; // edgeScore/100 if finite
+  readonly pConfidence: number; // confidence/100 — win probability
+  /**
+   * @deprecated Diagnostic only — signed edge or edgeScore/100.
+   * NEVER used as ranking probability p (category error: edge ≠ P(side)).
+   * Kept optional for ops diagnostics; bake-off ignores it.
+   */
+  readonly pEdge?: number | null;
   /** Independent trueProb or priced rankingP when present (0–1). */
   readonly pIndependent: number | null;
+  /** Optional market de-vig fair for side (0–1) — baseline only, not edge. */
+  readonly marketP?: number | null;
   readonly y: 0 | 1;
   readonly groupKey: string;
-  readonly marketP?: number | null;
 };
 
 export type ScoreBakeoffRow = {
@@ -47,7 +63,8 @@ export type ScoreBakeoffRow = {
   readonly ece: number;
   readonly murphyResolution: number;
   readonly murphyReliability: number;
-  readonly separation: number; // mean p|win - mean p|loss
+  /** mean p|win − mean p|loss — must be > 0 for bestScore eligibility */
+  readonly separation: number;
 };
 
 export type ProvenPathPlan = {
@@ -63,6 +80,8 @@ export type ProvenPathPlan = {
   readonly pathSteps: readonly string[];
   readonly honesty: string;
   readonly floorsUnchanged: true;
+  /** Explicit: edge-as-p banned; only separation>0 scores can win bestScore. */
+  readonly rankingPolarityLaw: "positive_separation_required";
 };
 
 function scoreMetrics(
@@ -100,29 +119,36 @@ function scoreMetrics(
   };
 }
 
+/** Map a row to a win probability for a ranking score kind. Never uses edge. */
+export function scoreProbability(
+  r: ProvenPathPickRow,
+  kind: RankingScoreKind,
+): number | null {
+  if (kind === "confidence") {
+    return Number.isFinite(r.pConfidence) ? r.pConfidence : null;
+  }
+  if (kind === "independent_trueProb") {
+    if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) return null;
+    return r.pIndependent;
+  }
+  if (kind === "blend_indep_conf") {
+    if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) return null;
+    return 0.5 * r.pConfidence + 0.5 * r.pIndependent;
+  }
+  if (kind === "marketFairProb") {
+    if (r.marketP == null || !Number.isFinite(r.marketP)) return null;
+    return r.marketP;
+  }
+  return null;
+}
+
 function toSamples(
   rows: readonly ProvenPathPickRow[],
   kind: RankingScoreKind,
 ): CalibrationSample[] {
   const out: CalibrationSample[] = [];
   for (const r of rows) {
-    let p: number | null = null;
-    if (kind === "confidence") p = r.pConfidence;
-    else if (kind === "edgeScore") {
-      if (r.pEdge == null || !Number.isFinite(r.pEdge)) continue;
-      p = r.pEdge;
-    } else if (kind === "blend_conf_edge") {
-      p =
-        r.pEdge != null && Number.isFinite(r.pEdge)
-          ? 0.5 * r.pConfidence + 0.5 * r.pEdge
-          : r.pConfidence;
-    } else if (kind === "independent_trueProb") {
-      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
-      p = r.pIndependent;
-    } else if (kind === "blend_indep_conf") {
-      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
-      p = 0.5 * r.pConfidence + 0.5 * r.pIndependent;
-    }
+    let p = scoreProbability(r, kind);
     if (p == null || !Number.isFinite(p)) continue;
     p = Math.min(1 - 1e-6, Math.max(1e-6, p));
     out.push({ p, y: r.y });
@@ -134,27 +160,9 @@ function toSelectiveRows(
   rows: readonly ProvenPathPickRow[],
   kind: RankingScoreKind,
 ): SelectiveRow[] {
-  const samples = toSamples(rows, kind);
-  // Rebuild with group keys — map by iterating rows with same kind filter
   const out: SelectiveRow[] = [];
   for (const r of rows) {
-    let p: number | null = null;
-    if (kind === "confidence") p = r.pConfidence;
-    else if (kind === "edgeScore") {
-      if (r.pEdge == null || !Number.isFinite(r.pEdge)) continue;
-      p = r.pEdge;
-    } else if (kind === "blend_conf_edge") {
-      p =
-        r.pEdge != null && Number.isFinite(r.pEdge)
-          ? 0.5 * r.pConfidence + 0.5 * r.pEdge
-          : r.pConfidence;
-    } else if (kind === "independent_trueProb") {
-      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
-      p = r.pIndependent;
-    } else if (kind === "blend_indep_conf") {
-      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
-      p = 0.5 * r.pConfidence + 0.5 * r.pIndependent;
-    }
+    let p = scoreProbability(r, kind);
     if (p == null || !Number.isFinite(p)) continue;
     out.push({
       p: Math.min(1 - 1e-6, Math.max(1e-6, p)),
@@ -163,7 +171,6 @@ function toSelectiveRows(
       marketP: r.marketP ?? null,
     });
   }
-  void samples;
   return out;
 }
 
@@ -179,21 +186,25 @@ export function buildProvenPathPlan(
   const defaultDelta = options?.defaultDelta ?? 0.1;
   const generatedAt = new Date().toISOString();
 
+  // Probability-only kinds. edgeScore / blend_conf_edge intentionally absent.
   const kinds: RankingScoreKind[] = [
     "confidence",
-    "edgeScore",
-    "blend_conf_edge",
     "independent_trueProb",
     "blend_indep_conf",
+    "marketFairProb",
   ];
   const scoreBakeoff = kinds.map((k) => scoreMetrics(k, toSamples(rows, k)));
-  // Prefer higher resolution; tie-break higher separation then lower brier
+
+  // bestScore: max RES among separation > 0 and n ≥ 50. Else confidence.
+  const confRow = scoreBakeoff.find((r) => r.score === "confidence") ?? scoreBakeoff[0]!;
   let bestScore: RankingScoreKind = "confidence";
-  let best = scoreBakeoff[0]!;
+  let best = confRow;
   for (const row of scoreBakeoff) {
     if (!Number.isFinite(row.murphyResolution) || row.n < 50) continue;
+    // Polarity gate: anti-ranking scores cannot win.
+    if (!(row.separation > 0)) continue;
     if (
-      !Number.isFinite(best.murphyResolution) ||
+      !(best.separation > 0) ||
       row.murphyResolution > best.murphyResolution + 1e-9 ||
       (Math.abs(row.murphyResolution - best.murphyResolution) < 1e-9 &&
         row.separation > best.separation)
@@ -201,6 +212,12 @@ export function buildProvenPathPlan(
       best = row;
       bestScore = row.score;
     }
+  }
+  // If best is still confidence but confidence itself has sep ≤ 0, keep it
+  // (honest fallback) — never promote inverted independent scores.
+  if (!(best.separation > 0) && bestScore !== "confidence") {
+    bestScore = "confidence";
+    best = confRow;
   }
 
   const selectiveRows = toSelectiveRows(rows, bestScore);
@@ -226,6 +243,11 @@ export function buildProvenPathPlan(
       ? sweep.recommended.murphyResolution - sweep.baseline.murphyResolution
       : null;
 
+  const polarityNote =
+    best.separation > 0
+      ? `bestScore=${bestScore} with positive separation ${best.separation.toFixed(4)}`
+      : "no score kind has separation>0 — ranking signal near noise; use confidence fallback";
+
   return {
     generatedAt,
     baseline: best,
@@ -240,17 +262,22 @@ export function buildProvenPathPlan(
         ? sweep.recommended.delta
         : defaultDelta,
     pathSteps: [
-      `1. Use ranking score = ${bestScore} (highest holdout Murphy RES among confidence/edge/blend/independent)`,
+      `1. Use ranking score = ${bestScore} (${polarityNote}) — never edge-as-p`,
       "2. Pause sport|market groups with Res≈0 (pauseGroups)",
-      "3. Selective publish |p−0.5|≥δ (and edge when marketP exists) per selectiveRecommended",
+      "3. Selective publish |p−0.5|≥δ (and market edge filter when marketP exists)",
       "4. Re-run calibration-metrics on published canonical WIN/LOSS only",
       "5. When Brier≤0.22, ECE≤0.05, Murphy R≤0.05, Res meaningful, n≥100 → streak GREEN×K",
       "6. Only then CALIBRATION_AUTO_PUBLISH (still never lower floors)",
       "7. Maps (Platt/Temp/Isotonic) only after RES moves — apply still OFF until holdout floors",
     ],
     honesty:
-      "If selectiveGainRes≈0 and independent/blend scores still have Res≈0, recalibration cannot unlock PROVEN — need sport-specific models / new features, not maps. Maps will not unlock PROVEN.",
+      "Edge/edgeScore is NOT a win probability (rawEdge = trueProb − marketFair). " +
+      "Bake-off only uses confidence, independent trueProb, blend_indep_conf, marketFairProb. " +
+      "bestScore requires separation > 0. " +
+      "If selectiveGainRes≈0 and independents still weak, need sport models / features — not maps. " +
+      "Maps will not unlock PROVEN.",
     floorsUnchanged: true,
+    rankingPolarityLaw: "positive_separation_required",
   };
 }
 

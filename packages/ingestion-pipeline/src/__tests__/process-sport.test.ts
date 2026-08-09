@@ -74,6 +74,21 @@ vi.mock("@sports/data-ingestion", () => ({
   enrichGameContext: mocks.enrichGameContext,
   getAtsForm: mocks.getAtsForm,
   getHeadToHeadForm: mocks.getHeadToHeadForm,
+  // Independent fill path (Kalshi / ESPN FPI / team rates) — honest nulls in unit tests.
+  getTeamScoringRecords: vi.fn().mockResolvedValue([]),
+  getLeagueAverageScored: vi.fn().mockResolvedValue(null),
+  KalshiClient: vi.fn().mockImplementation(() => ({
+    getFairValue: vi.fn().mockResolvedValue(null),
+  })),
+  toIndependentFairValue: vi.fn().mockReturnValue({
+    source: "kalshi",
+    homeFairProb: null,
+    awayFairProb: null,
+  }),
+  sportKeyToPowerIndexLeague: vi.fn().mockReturnValue(null),
+  getCachedEspnPowerIndexMap: vi.fn().mockResolvedValue(new Map()),
+  lookupTeamFpi: vi.fn().mockReturnValue(null),
+  defaultPowerIndexSeason: vi.fn().mockReturnValue(2025),
 }));
 
 vi.mock("@sports/prediction-engine", async () => {
@@ -87,6 +102,12 @@ vi.mock("@sports/prediction-engine", async () => {
     scoreGames: mocks.scoreGames,
     buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
     selectionIsHomeSide: actual.selectionIsHomeSide,
+    // Independent fair-value builders — null-safe stubs (network off in unit tests).
+    isPoissonValidSport: actual.isPoissonValidSport ?? (() => false),
+    poissonIndependentFairValue: vi.fn().mockReturnValue(null),
+    fitEloRatingsFromResults: vi.fn().mockReturnValue(new Map()),
+    eloFairValueFromRatings: vi.fn().mockReturnValue(null),
+    powerIndexToIndependentFairValue: vi.fn().mockReturnValue(null),
   };
 });
 
