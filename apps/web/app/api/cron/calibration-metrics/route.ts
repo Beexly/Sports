@@ -30,6 +30,7 @@ import {
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { loadPublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { runOfflineBakeoff } from "@/lib/calibration/offline-bakeoff";
+import { computeResolutionByGroup } from "@/lib/calibration/resolution-by-group";
 import {
   buildDurableMetricsFromSamples,
   picksToCalibrationSamples,
@@ -74,6 +75,7 @@ function bss(
 
 async function loadSettledCalibrationSamples(): Promise<{
   samples: CalibrationSample[];
+  groupedRows: import("@/lib/calibration/resolution-by-group").GroupedCalibRow[];
   notes: string[];
   modelVersions: string[];
   settledFrom: string | null;
@@ -89,19 +91,37 @@ async function loadSettledCalibrationSamples(): Promise<{
         signalSnapshot: { is: { eligibleForLearning: true } },
         NOT: { modelVersion: "v5.0.0-seed" },
       },
-      select: { confidence: true, result: true, modelVersion: true, settledAt: true },
+      select: {
+        confidence: true,
+        result: true,
+        modelVersion: true,
+        settledAt: true,
+        pickType: true,
+        game: { select: { sport: { select: { key: true, name: true } } } },
+      },
       orderBy: { settledAt: "desc" },
       take: 2000,
     });
 
     const samples: CalibrationSample[] = [];
+    const groupedRows: import("@/lib/calibration/resolution-by-group").GroupedCalibRow[] = [];
     const versions = new Set<string>();
     let minT: number | null = null;
     let maxT: number | null = null;
     for (const pick of picks) {
       if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
       const p = Math.min(1, Math.max(0, pick.confidence / 100));
-      samples.push({ p, y: pick.result === "WIN" ? 1 : 0 });
+      const y = pick.result === "WIN" ? 1 : 0;
+      samples.push({ p, y });
+      const sport =
+        pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
+      const market = pick.pickType ?? "unknown";
+      groupedRows.push({
+        groupKey: `${sport}|${market}`,
+        p,
+        y: y as 0 | 1,
+        marketP: null,
+      });
       if (pick.modelVersion) versions.add(pick.modelVersion);
       if (pick.settledAt) {
         const t = pick.settledAt.getTime();
@@ -118,6 +138,7 @@ async function loadSettledCalibrationSamples(): Promise<{
     }
     return {
       samples,
+      groupedRows,
       notes,
       modelVersions: [...versions],
       settledFrom: minT == null ? null : new Date(minT).toISOString(),
@@ -126,7 +147,14 @@ async function loadSettledCalibrationSamples(): Promise<{
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     notes.push(`Settled pick load unavailable: ${msg}`);
-    return { samples: [], notes, modelVersions: [], settledFrom: null, settledTo: null };
+    return {
+      samples: [],
+      groupedRows: [],
+      notes,
+      modelVersions: [],
+      settledFrom: null,
+      settledTo: null,
+    };
   }
 }
 
@@ -135,7 +163,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   try {
-    const { samples, notes, modelVersions, settledFrom, settledTo } =
+    const { samples, groupedRows, notes, modelVersions, settledFrom, settledTo } =
       await loadSettledCalibrationSamples();
     const generatedAt = new Date().toISOString();
     const gitSha =
@@ -259,6 +287,17 @@ export async function GET(request: Request): Promise<NextResponse> {
       } catch {
         /* R&D best-effort */
       }
+    }
+
+    try {
+      const resArt = computeResolutionByGroup(groupedRows);
+      await writeFile(
+        path.join(dir, "resolution-by-group.json"),
+        JSON.stringify(resArt, null, 2),
+        "utf8",
+      ).catch(() => undefined);
+    } catch {
+      /* ranking diagnostic best-effort */
     }
 
     // Sample + settlement for eligibility (canonical only)
