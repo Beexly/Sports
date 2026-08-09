@@ -39,11 +39,10 @@ export type IndependentEdgeAgreement =
  * itself": real edge is the gap between an estimate the market has NOT absorbed
  * and the market price, refereed by a second independent market.
  *
- * `priced` is false in the current wire-in: the assessment is SURFACED in the
- * glass box (and persisted for CLV grading) but does NOT yet move the confidence
- * score. Letting it move confidence is a deliberate, founder-gated MODEL_VERSION
- * step. The honest default with no independent estimate is no `independentEdge`
- * at all — the scorer behaves exactly as before.
+ * When `priced` is true, independents drove the ranking path (rankingScore /
+ * rankingP) used for generation sort and selective publish (MODEL_VERSION step).
+ * When false, the assessment is SURFACED in the glass box only. The honest
+ * default with no independent estimate is no `independentEdge` at all.
  */
 export interface IndependentEdgeSummary {
   decision: IndependentEdgeDecision;
@@ -55,7 +54,7 @@ export interface IndependentEdgeSummary {
   expectedClv: number;          // honest expectation of beating the close, prob pts
   conviction: number;           // 0–100 glass-box conviction
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
-  priced: boolean;              // false = surfaced, not yet in the confidence math
+  priced: boolean;              // true = drove ranking path (SPEAK/LEAN)
   rationale: string;            // plain-language "why"
 }
 
@@ -505,7 +504,13 @@ export interface ScoredPick {
   line: number;
 
   // Scoring
-  confidence: number;      // 0–100
+  confidence: number;      // 0–100 (heuristic UX; market-echo components)
+  /**
+   * Ranking score 0–100 for generation sort + selective path.
+   * Equals confidence when independents absent/PASS; when SPEAK/LEAN, derived
+   * from independent trueProb (blend). Prefer this over confidence for ranking.
+   */
+  rankingScore?: number;
   edgeScore: number;       // 0–100
   consensusPct: number;    // 0.0–1.0
   /**

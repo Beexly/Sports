@@ -39,6 +39,10 @@ import {
   buildPickProofReceipt,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
+import {
+  buildIndependentFairValues,
+  type EloRatingsCache,
+} from "./build-independent-fair-values.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
@@ -351,6 +355,8 @@ export async function processSport(
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
+    // Elo ratings fitted once per sport/day within this cycle (no fabricated ratings).
+    const eloCache: EloRatingsCache = new Map();
 
     // gameId -> per-kind book-line dispersion at lock, filled in the game loop
     // and read at pick creation (a separate loop over scoredPicks below).
@@ -451,6 +457,27 @@ export async function processSport(
 
       const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
 
+      // Independent estimators (Poisson + Elo from real TeamGameLog; never book-echo).
+      // Empty → scorer unchanged; SPEAK/LEAN → rankingScore priced (MODEL_VERSION v5.2.0).
+      let independentFairValues: import("@sports/types").IndependentMarketFairValue[] = [];
+      try {
+        independentFairValues = await buildIndependentFairValues(
+          {
+            sportKey: sport.key,
+            homeTeam: game.homeTeam,
+            awayTeam: game.awayTeam,
+            commenceTime: game.commenceTime,
+            now: () => fetchedAt,
+          },
+          eloCache,
+        );
+      } catch (indepErr) {
+        console.warn(
+          `${logPrefix} Independent fair-values failed for ${game.externalId}: ` +
+          `${indepErr instanceof Error ? indepErr.message : indepErr}`,
+        );
+      }
+
       const context: GameContextInput = {
         openingSpread: enrichedGame?.openingSpread ?? avgSpread,
         currentSpread: avgSpread,
@@ -477,6 +504,9 @@ export async function processSport(
         hasTotalMarket: totalOdds.length > 0,
         hasH2HMarket,
         shadowEvidence: buildMissingContextEvidence(fetchedAt),
+        ...(independentFairValues.length > 0
+          ? { independentFairValues }
+          : {}),
       };
 
       oddsInputs.push({

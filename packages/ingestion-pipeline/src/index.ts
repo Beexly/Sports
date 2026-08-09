@@ -91,3 +91,13 @@ export type {
   TryOpenSlatePort,
 } from "./open-via-sql.js";
 
+export {
+  buildIndependentFairValues,
+  getOrFitEloRatings,
+  loadSportResultGamesForElo,
+} from "./build-independent-fair-values.js";
+export type {
+  IndependentFairValueBuildInput,
+  EloRatingsCache,
+} from "./build-independent-fair-values.js";
+

@@ -23,11 +23,18 @@ import {
 } from "@/lib/calibration/selective-publish";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 
-export type RankingScoreKind = "confidence" | "edgeScore" | "blend_conf_edge";
+export type RankingScoreKind =
+  | "confidence"
+  | "edgeScore"
+  | "blend_conf_edge"
+  | "independent_trueProb"
+  | "blend_indep_conf";
 
 export type ProvenPathPickRow = {
   readonly pConfidence: number; // confidence/100
   readonly pEdge: number | null; // edgeScore/100 if finite
+  /** Independent trueProb or priced rankingP when present (0–1). */
+  readonly pIndependent: number | null;
   readonly y: 0 | 1;
   readonly groupKey: string;
   readonly marketP?: number | null;
@@ -99,19 +106,24 @@ function toSamples(
 ): CalibrationSample[] {
   const out: CalibrationSample[] = [];
   for (const r of rows) {
-    let p: number;
+    let p: number | null = null;
     if (kind === "confidence") p = r.pConfidence;
     else if (kind === "edgeScore") {
       if (r.pEdge == null || !Number.isFinite(r.pEdge)) continue;
       p = r.pEdge;
-    } else {
-      // blend: average conf with edge when present
-      if (r.pEdge != null && Number.isFinite(r.pEdge)) {
-        p = 0.5 * r.pConfidence + 0.5 * r.pEdge;
-      } else {
-        p = r.pConfidence;
-      }
+    } else if (kind === "blend_conf_edge") {
+      p =
+        r.pEdge != null && Number.isFinite(r.pEdge)
+          ? 0.5 * r.pConfidence + 0.5 * r.pEdge
+          : r.pConfidence;
+    } else if (kind === "independent_trueProb") {
+      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
+      p = r.pIndependent;
+    } else if (kind === "blend_indep_conf") {
+      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
+      p = 0.5 * r.pConfidence + 0.5 * r.pIndependent;
     }
+    if (p == null || !Number.isFinite(p)) continue;
     p = Math.min(1 - 1e-6, Math.max(1e-6, p));
     out.push({ p, y: r.y });
   }
@@ -122,19 +134,28 @@ function toSelectiveRows(
   rows: readonly ProvenPathPickRow[],
   kind: RankingScoreKind,
 ): SelectiveRow[] {
+  const samples = toSamples(rows, kind);
+  // Rebuild with group keys — map by iterating rows with same kind filter
   const out: SelectiveRow[] = [];
   for (const r of rows) {
-    let p: number;
+    let p: number | null = null;
     if (kind === "confidence") p = r.pConfidence;
     else if (kind === "edgeScore") {
       if (r.pEdge == null || !Number.isFinite(r.pEdge)) continue;
       p = r.pEdge;
-    } else {
+    } else if (kind === "blend_conf_edge") {
       p =
         r.pEdge != null && Number.isFinite(r.pEdge)
           ? 0.5 * r.pConfidence + 0.5 * r.pEdge
           : r.pConfidence;
+    } else if (kind === "independent_trueProb") {
+      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
+      p = r.pIndependent;
+    } else if (kind === "blend_indep_conf") {
+      if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) continue;
+      p = 0.5 * r.pConfidence + 0.5 * r.pIndependent;
     }
+    if (p == null || !Number.isFinite(p)) continue;
     out.push({
       p: Math.min(1 - 1e-6, Math.max(1e-6, p)),
       y: r.y,
@@ -142,6 +163,7 @@ function toSelectiveRows(
       marketP: r.marketP ?? null,
     });
   }
+  void samples;
   return out;
 }
 
@@ -157,7 +179,13 @@ export function buildProvenPathPlan(
   const defaultDelta = options?.defaultDelta ?? 0.1;
   const generatedAt = new Date().toISOString();
 
-  const kinds: RankingScoreKind[] = ["confidence", "edgeScore", "blend_conf_edge"];
+  const kinds: RankingScoreKind[] = [
+    "confidence",
+    "edgeScore",
+    "blend_conf_edge",
+    "independent_trueProb",
+    "blend_indep_conf",
+  ];
   const scoreBakeoff = kinds.map((k) => scoreMetrics(k, toSamples(rows, k)));
   // Prefer higher resolution; tie-break higher separation then lower brier
   let bestScore: RankingScoreKind = "confidence";
@@ -212,7 +240,7 @@ export function buildProvenPathPlan(
         ? sweep.recommended.delta
         : defaultDelta,
     pathSteps: [
-      `1. Use ranking score = ${bestScore} (highest holdout Murphy RES among confidence/edge/blend)`,
+      `1. Use ranking score = ${bestScore} (highest holdout Murphy RES among confidence/edge/blend/independent)`,
       "2. Pause sport|market groups with Res≈0 (pauseGroups)",
       "3. Selective publish |p−0.5|≥δ (and edge when marketP exists) per selectiveRecommended",
       "4. Re-run calibration-metrics on published canonical WIN/LOSS only",
@@ -221,7 +249,7 @@ export function buildProvenPathPlan(
       "7. Maps (Platt/Temp/Isotonic) only after RES moves — apply still OFF until holdout floors",
     ],
     honesty:
-      "If selectiveGainRes≈0 and all scores have Res≈0, recalibration cannot unlock PROVEN — need new independent model features (edge engine estimators, sport models), not maps.",
+      "If selectiveGainRes≈0 and independent/blend scores still have Res≈0, recalibration cannot unlock PROVEN — need sport-specific models / new features, not maps. Maps will not unlock PROVEN.",
     floorsUnchanged: true,
   };
 }

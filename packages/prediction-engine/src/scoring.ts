@@ -20,6 +20,7 @@ import {
   MIN_BOOKMAKERS,
 } from "./constants.js";
 import { computeGameContext } from "./game-context.js";
+import { deriveRankingProbability } from "./ranking-prob.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -156,14 +157,13 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
 
 // ============================================================
 // Independent-edge assessment — the fix for "the engine grading itself".
-// Compares pre-fetched INDEPENDENT fair values (e.g. the Kalshi exchange,
+// Compares pre-fetched INDEPENDENT fair values (e.g. Kalshi / Poisson / Elo,
 // threaded through context.independentFairValues) against the sportsbook's own
-// de-vigged fair probability, via the edge engine. SURFACED, NOT YET PRICED:
-// the result rides on the pick for the glass box and CLV grading, but does not
-// move the confidence score (a deliberate, founder-gated MODEL_VERSION step).
-// Returns null — and the scorer is byte-identical to before — when no
-// independent estimate is available. We never manufacture an edge from the
-// market's own price.
+// de-vigged fair probability, via the edge engine. After assess, deriveRankingProbability
+// prices SPEAK/LEAN into rankingScore (MODEL_VERSION v5.2.0). Heuristic confidence
+// stays market-echo for UX when we choose not to overwrite it; ranking uses rankingScore.
+// Returns null when no independent estimate is available. We never manufacture an
+// edge from the market's own price.
 // ============================================================
 
 function assessIndependentEdge(
@@ -560,6 +560,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     // chosenSpread is away-perspective for away picks while settlement reads home.
     line: avgSpread,
     confidence,
+    rankingScore: confidence, // no independent ML edge on spreads yet
     edgeScore,
     consensusPct,
     marketFairProb: fairProb,
@@ -731,6 +732,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     selection,
     line: avgTotal,
     confidence,
+    rankingScore: confidence, // no independent ML edge on totals yet
     edgeScore,
     consensusPct,
     marketFairProb: fairProb,
@@ -819,16 +821,33 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
-  // Independent-edge assessment (Kalshi exchange, etc.). Surfaced, not priced:
-  // weight 0 so it appears in the glass-box factor trail without touching the
-  // confidence math. Null (and absent) when no independent estimate exists.
-  const independentEdge = assessIndependentEdge(
+  // Independent-edge assessment (Kalshi / Poisson / Elo). When SPEAK|LEAN,
+  // rankingScore is priced from trueProb (MODEL_VERSION v5.2.0). Heuristic
+  // confidence stays as the market-echo composite for UX continuity.
+  const independentEdgeRaw = assessIndependentEdge(
     input.context?.independentFairValues,
     homeIsChosen,
     fairProb,
     dataQualityScore,
     twoSidedImpliedSum >= 1
   );
+
+  const confidence = Math.round(
+    clamp(
+      consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
+      lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
+      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
+      0, 100
+    )
+  );
+
+  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+
+  const rank = deriveRankingProbability(confidence, independentEdgeRaw);
+  const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
+    ? { ...independentEdgeRaw, priced: rank.priced }
+    : null;
+
   const independentEdgeFactors: FactorDetail[] = independentEdge
     ? [
         {
@@ -840,7 +859,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
               ? "positive"
               : "negative",
           description: independentEdge.rationale,
-          weight: 0, // surfaced in the glass box; NOT yet priced into confidence
+          // Non-zero weight only when priced into ranking path (glass-box honesty).
+          weight: rank.priced ? Math.round((rank.rankingScore - confidence) || 0) : 0,
         },
       ]
     : [];
@@ -854,17 +874,6 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ...shadowEvidenceFactors,
     ...independentEdgeFactors,
   ];
-
-  const confidence = Math.round(
-    clamp(
-      consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
-      lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
-      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
-      0, 100
-    )
-  );
-
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
@@ -885,6 +894,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   else if (headToHeadScore < 0) contextClauses.push("poor H2H history");
   if (venueFormScore > 0) contextClauses.push("strong venue form");
   if (uncertaintyPenalty < -3) contextClauses.push("conflicting signals");
+  if (rank.priced) contextClauses.push("independent model edge priced into ranking");
   const contextNote = contextClauses.length > 0
     ? ` Context: ${contextClauses.join(", ")}.`
     : "";
@@ -894,7 +904,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     `across ${h2hOdds.length} bookmakers. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     contextNote +
-    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
+    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).` +
+    (rank.priced
+      ? ` Ranking: ${rank.rankingScore}/100 via ${rank.source}.`
+      : "");
 
   const reasoningShort =
     `${chosenTeam} implied at ${Math.round(fairProb * 100)}% across ${h2hOdds.length} books.` +
@@ -905,8 +918,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
     marketPriceShapeScore: edgeComponentScore,
-    trueEvScore: null,
-    fairProbability: null,
+    trueEvScore: rank.priced && independentEdge ? independentEdge.shrunkEdge : null,
+    fairProbability: rank.priced ? rank.rankingP : null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
@@ -924,6 +937,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     selection,
     line: avgPrice,
     confidence,
+    rankingScore: rank.rankingScore,
     edgeScore,
     consensusPct,
     marketFairProb: fairProb,
@@ -984,7 +998,7 @@ export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
   const mlPick = scoreMoneylinePick(input, now);
   if (mlPick) picks.push(mlPick);
 
-  return picks.sort((a, b) => b.confidence - a.confidence);
+  return picks.sort((a, b) => (b.rankingScore ?? b.confidence) - (a.rankingScore ?? a.confidence));
 }
 
 // ============================================================
@@ -1016,5 +1030,5 @@ export function scoreGames(inputs: OddsInput[], fetchedAt?: Date): ScoredPick[] 
     allPicks.push(...scoreGame(input, now));
   }
 
-  return allPicks.sort((a, b) => b.confidence - a.confidence);
+  return allPicks.sort((a, b) => (b.rankingScore ?? b.confidence) - (a.rankingScore ?? a.confidence));
 }

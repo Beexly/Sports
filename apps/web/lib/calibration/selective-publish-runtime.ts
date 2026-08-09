@@ -12,10 +12,14 @@ import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 
 export type PublicPickLike = {
   readonly confidence?: number | null;
+  /** Prefer rankingScore (0–100) when independents priced the ranking path. */
+  readonly rankingScore?: number | null;
   readonly edgeScore?: number | null;
   readonly pickType?: string | null;
   readonly sportKey?: string | null;
   readonly marketImpliedProb?: number | null;
+  /** Priced independent rankingP (0–1) when available. */
+  readonly rankingP?: number | null;
 };
 
 const DEFAULT_DELTA = 0.1;
@@ -84,10 +88,21 @@ export function passesPublicSelectiveFilter(
 ): boolean {
   const cfg = loadSelectiveRuntimeConfig(env, plan);
   if (!cfg.enabled) return true;
-  const p =
-    typeof pick.confidence === "number" && Number.isFinite(pick.confidence)
-      ? Math.min(1, Math.max(0, pick.confidence / 100))
-      : 0.5;
+  // Prefer priced independent rankingP, then rankingScore, then confidence.
+  let p = 0.5;
+  if (typeof pick.rankingP === "number" && Number.isFinite(pick.rankingP)) {
+    p = Math.min(1, Math.max(0, pick.rankingP));
+  } else if (
+    typeof pick.rankingScore === "number" &&
+    Number.isFinite(pick.rankingScore)
+  ) {
+    p = Math.min(1, Math.max(0, pick.rankingScore / 100));
+  } else if (
+    typeof pick.confidence === "number" &&
+    Number.isFinite(pick.confidence)
+  ) {
+    p = Math.min(1, Math.max(0, pick.confidence / 100));
+  }
   const groupKey = `${pick.sportKey ?? "unknown"}|${pick.pickType ?? "unknown"}`;
   if (cfg.pausedGroups.includes(groupKey)) return false;
   return passesSelectiveThresholds(
