@@ -41,6 +41,7 @@ export type SelectiveMetrics = {
   readonly minGroupRes: number | null;
 };
 
+/** Explicit true only. Runtime public filter uses isSelectivePublishRuntimeEnabled (default ON). */
 export function isSelectivePublishEnabled(
   env: Record<string, string | undefined> = process.env,
 ): boolean {

@@ -28,8 +28,8 @@ describe("founding env defaults", () => {
     expect(resolveBoardSurface({}, { oddsFresh: true })).toBe("market");
   });
 
-  it("selective filter default off passes all", () => {
-    expect(passesPublicSelectiveFilter({ confidence: 50 }, {})).toBe(true);
+  it("selective filter default ON drops coin-flips", () => {
+    expect(passesPublicSelectiveFilter({ confidence: 50 }, {})).toBe(false);
   });
 
   it("selective filter on drops coin-flips", () => {
