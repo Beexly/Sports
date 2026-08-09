@@ -11,6 +11,7 @@ import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
 } from "@/lib/data-reliability/public-freshness-gate";
+import { passesPublicSelectiveFilter } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 
@@ -118,12 +119,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
   }
 
+  // Selective publish (default OFF): drop coin-flips / paused groups when enabled
+  const filteredPicks = picks.filter((pick) =>
+    passesPublicSelectiveFilter({
+      confidence: pick.confidence,
+      pickType: pick.pickType,
+      sportKey: pick.game?.sport?.key ?? null,
+    }),
+  );
+
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
   // sample is insufficient/non-improving, so this is null-safe by construction.
   const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
 
-  const publicPicks: PublicPick[] = picks.map((pick) => {
+  const publicPicks: PublicPick[] = filteredPicks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
     // for a malformed/legacy blob (a handled "no factor trail" state) so a

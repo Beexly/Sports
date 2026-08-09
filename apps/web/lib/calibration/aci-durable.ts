@@ -14,7 +14,7 @@ import {
 
 export const ACI_SCOPE = "ops.calibration.aci-state";
 
-export function loadAciConfigFromEnv(env: NodeJS.ProcessEnv = process.env): AciConfig {
+export function loadAciConfigFromEnv(_env: Record<string, string | undefined> = process.env): AciConfig {
   return { ...DEFAULT_ACI_CONFIG };
 }
 
@@ -78,7 +78,7 @@ export async function getOrInitGroup(
   return found ?? emptyGroupState(groupKey, config.alphaTarget);
 }
 
-export function aciPublicPosture(env: NodeJS.ProcessEnv = process.env): {
+export function aciPublicPosture(env: Record<string, string | undefined> = process.env): {
   readonly enabled: boolean;
   readonly drivesPublish: false;
   readonly operatorHint: string;

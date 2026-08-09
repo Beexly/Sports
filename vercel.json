@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd ../.. && npm run db:generate && node scripts/deploy/migrate-if-configured.mjs && npm run build --workspace=@sports/web",
+  "buildCommand": "cd ../.. && npm run db:generate && node scripts/deploy/migrate-if-configured.mjs && NODE_OPTIONS=--max-old-space-size=8192 npm run build --workspace=@sports/web",
   "installCommand": "cd ../.. && npm install --include=dev",
   "ignoreCommand": "cd ../.. && node scripts/vercel-skip-build.mjs",
   "framework": "nextjs",

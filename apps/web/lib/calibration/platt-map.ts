@@ -345,6 +345,7 @@ export function fitPlattMapHierarchical(
         u[g] = 0;
         continue;
       }
+      // eslint-disable-next-line prefer-const -- ug updated in IRLS loop
       let ug = u[g] ?? 0;
       for (let it = 0; it < 8; it++) {
         let gU = invG * ug;
@@ -367,7 +368,7 @@ export function fitPlattMapHierarchical(
   // Optional Laplace-marginal EB τ refresh from group MAP curvatures
   if (options?.sigmaG == null && (options?.tauMethod === "laplace" || options?.tauMethod == null)) {
     const lapGroups = [...groups.entries()].map(([g, rows]) => {
-      let ug = u[g] ?? 0;
+      const ug = u[g] ?? 0;
       let hU = invG;
       for (const s of rows) {
         const x = logit(s.p);

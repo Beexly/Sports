@@ -5,9 +5,13 @@ import {
 } from "@/lib/board/board-surface-policy";
 
 describe("board surface policy", () => {
-  it("defaults to market", () => {
-    expect(resolveBoardSurface({})).toBe("market");
-    expect(boardSurfacePosture({}).killSwitch).toBe("odds_fresh");
+  it("auto signal when odds not fresh / unset", () => {
+    expect(resolveBoardSurface({})).toBe("signal");
+    expect(boardSurfacePosture({}).killSwitch).toBe("slate_fresh");
+  });
+
+  it("market when oddsFresh true and no explicit env", () => {
+    expect(resolveBoardSurface({}, { oddsFresh: true })).toBe("market");
   });
 
   it("signal mode slate-fresh model label", () => {

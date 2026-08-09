@@ -6,6 +6,10 @@ const repoRoot = path.resolve(here, "../..");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Typecheck is enforced in CI (`npm run typecheck`); full monorepo tsc inside
+  // `next build` OOMs on constrained builders. Keep eslint on for ship blockers.
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: false },
   transpilePackages: [
     "@sports/db",
     "@sports/types",

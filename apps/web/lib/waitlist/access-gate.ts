@@ -10,6 +10,8 @@
  * logged and never reach the client bundle.
  */
 
+import { waitlistGated } from "@/lib/env/flags";
+
 export type GateResult =
   | { allowed: true }
   | { allowed: false; reason: string };
@@ -23,7 +25,7 @@ export type GateResult =
  *                    allowed: false with a reason to return a 401.
  */
 export function checkWaitlistGate(authHeader: string | null): GateResult {
-  const enabled = process.env["GSE_WAITLIST_GATE_ENABLED"] === "true";
+  const enabled = waitlistGated();
   if (!enabled) return { allowed: true };
 
   const expectedUser = process.env["GSE_WAITLIST_BASIC_USER"];

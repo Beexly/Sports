@@ -40,7 +40,7 @@ export interface LiveCapabilityProbeResult {
 
 /** Env-only money-path leaf — maps to route:/checkout + revenue:checkout. */
 export function probeCheckoutMoneyPath(
-  env: NodeJS.ProcessEnv = process.env,
+  env: Record<string, string | undefined> = process.env,
   now = new Date(),
 ): { checkout: CapabilityState; revenue: CapabilityState } {
   const money = loadBillingMoneyPosture(env);

@@ -121,9 +121,10 @@ export async function isSignalBoardSlateStale(now: Date = new Date()): Promise<b
  * signal: published pick generation SLA
  */
 export async function isPublicPicksSurfaceStale(now: Date = new Date()): Promise<boolean> {
-  const surface = resolveBoardSurface();
+  const oddsStale = await isMarketBoardOddsStale(now);
+  const surface = resolveBoardSurface(process.env, { oddsFresh: !oddsStale });
   if (surface === "signal") {
     return isSignalBoardSlateStale(now);
   }
-  return isMarketBoardOddsStale(now);
+  return oddsStale;
 }

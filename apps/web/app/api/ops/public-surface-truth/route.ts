@@ -416,7 +416,9 @@ export async function GET(request: Request) {
       billingMoney,
       stripeWebhookHosts,
       autonomy,
-      boardSurface: boardSurfacePosture(),
+      boardSurface: boardSurfacePosture(process.env, {
+        oddsFresh: oddsInserting?.withinRefreshSla === true,
+      }),
       aciPosture: aciPublicPosture(),
       mapVsCanonical: {
         canonicalSettled: sample?.canonicalSettled ?? null,
