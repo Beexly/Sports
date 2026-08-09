@@ -143,3 +143,83 @@ describe("resolveCalibrationPublishPolicy", () => {
     expect(r.canExposePerformanceStats).toBe(true);
   });
 });
+
+describe("publishedEffective matrix", () => {
+  const K = 3;
+  it.each([
+    {
+      name: "auto off RED",
+      env: {},
+      status: "RED" as const,
+      streak: 0,
+      durable: null as boolean | null,
+      published: false,
+      expose: false,
+    },
+    {
+      name: "auto off GREEN streak met",
+      env: {},
+      status: "GREEN" as const,
+      streak: 3,
+      durable: null,
+      published: false,
+      expose: false,
+    },
+    {
+      name: "auto on RED",
+      env: { CALIBRATION_AUTO_PUBLISH: "true" },
+      status: "RED" as const,
+      streak: 0,
+      durable: true,
+      published: false,
+      expose: false,
+    },
+    {
+      name: "auto on GREEN streak short",
+      env: { CALIBRATION_AUTO_PUBLISH: "true" },
+      status: "RED" as const, // status RED while floors met mid-streak
+      streak: 2,
+      durable: null,
+      published: false,
+      expose: false,
+    },
+    {
+      name: "auto on GREEN streak met",
+      env: { CALIBRATION_AUTO_PUBLISH: "true" },
+      status: "GREEN" as const,
+      streak: 3,
+      durable: null,
+      published: true,
+      expose: true,
+    },
+    {
+      name: "env published RED",
+      env: { CALIBRATION_PUBLISHED: "true" },
+      status: "RED" as const,
+      streak: 0,
+      durable: null,
+      published: false,
+      expose: false,
+    },
+    {
+      name: "env published GREEN",
+      env: { CALIBRATION_PUBLISHED: "true" },
+      status: "GREEN" as const,
+      streak: 3,
+      durable: null,
+      published: true,
+      expose: true,
+    },
+  ])("$name", ({ env, status, streak, durable, published, expose }) => {
+    const r = resolveCalibrationPublishPolicy({
+      env,
+      eligibilityStatus: status,
+      consecutiveGreen: streak,
+      streakRequired: K,
+      durablePublished: durable,
+    });
+    expect(r.publishedEffective).toBe(published);
+    expect(r.canExposePerformanceStats).toBe(expose);
+    expect(r.autoPublish).toBe(env.CALIBRATION_AUTO_PUBLISH === "true");
+  });
+});

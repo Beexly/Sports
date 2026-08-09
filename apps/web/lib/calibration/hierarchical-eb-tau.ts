@@ -28,17 +28,12 @@ export function fitEmpiricalBayesTau(
     return { tau: clampTau(0.5), method: "default-sparse", nGroups: usable.length };
   }
 
-  const means = usable.map((g) => g.residualMean);
-  const grand = means.reduce((a, b) => a + b, 0) / means.length;
-  let between = 0;
-  for (const m of means) between += (m - grand) ** 2;
-  between /= Math.max(1, means.length - 1);
-
-  // Rough within noise: Bernoulli residual var ~ 0.25 / n
-  const meanWithin =
+  // Moment match: τ² = clip(mean(û²) − mean(noise), τ_min², τ_max²)
+  const meanU2 =
+    usable.reduce((s, g) => s + g.residualMean * g.residualMean, 0) / usable.length;
+  const meanNoise =
     usable.reduce((s, g) => s + 0.25 / Math.max(1, g.n), 0) / usable.length;
-
-  const tau2 = Math.max(0, between - meanWithin);
+  const tau2 = Math.max(0, meanU2 - meanNoise);
   const tau = clampTau(Math.sqrt(tau2));
   return {
     tau,

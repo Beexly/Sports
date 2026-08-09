@@ -399,6 +399,7 @@ export async function GET(request: Request) {
       calibrationPublish: calibrationPublish
         ? {
             published: calibrationPublish.published,
+            publishedEffective: calibrationPublish.publishedEffective ?? calibrationPublish.published,
             source: calibrationPublish.source,
             autoPublish: calibrationPublish.autoPublish,
             autoUnpublish: calibrationPublish.autoUnpublish,
