@@ -47,9 +47,9 @@ export const BRIER_MINIMIZATION_LEVERS: readonly BrierLever[] = [
     unlocksProven: true,
   },
   {
-    lever: "Platt / Temp / Isotonic maps",
+    lever: "Platt / Temp / Isotonic / Beta maps",
     targets: "REL",
-    effect: "Lowers reliability error only; apply OFF until Res moves",
+    effect: "Lowers reliability error and log loss only; apply OFF until Res moves",
     autonomous: false, // gated flag
     unlocksProven: false,
   },
