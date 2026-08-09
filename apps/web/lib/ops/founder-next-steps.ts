@@ -64,6 +64,10 @@ export interface FounderNextStepsInput {
   readonly nonSeedFloorProven?: number;
   /** Last odds-inserting SUCCESS outside Refresh SLA (kill switch dark). */
   readonly oddsInsertingStale?: boolean;
+  readonly calibrationEligibilityStatus?: "GREEN" | "RED" | null;
+  readonly calibrationPublished?: boolean;
+  readonly calibrationAutoPublish?: boolean;
+  readonly remainingToFloor?: number | null;
 }
 
 /**
@@ -195,7 +199,42 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
   }
 
   const floor = input.nonSeedFloorProven ?? 100;
-  if (typeof input.nonSeedSettled === "number" && input.nonSeedSettled < floor) {
+  const remaining = input.remainingToFloor;
+  if (typeof remaining === "number" && remaining > 0) {
+    steps.push({
+      id: "accumulate-nonseed-settled",
+      domain: "product_gates",
+      priority: "P2",
+      action: `Canonical settled short by ${remaining} (floor ${floor}) — settle-picks accumulates; never invent sample.`,
+    });
+  } else if (input.calibrationEligibilityStatus === "RED") {
+    steps.push({
+      id: "calibration-metrics-below-floor",
+      domain: "product_gates",
+      priority: "P1",
+      action:
+        "Sample floor met but calibration eligibility RED — wait for live Brier/ECE/Murphy floors + streak (calibration-metrics cron). Do not claim PROVEN.",
+    });
+  } else if (
+    input.calibrationEligibilityStatus === "GREEN" &&
+    !input.calibrationPublished &&
+    !input.calibrationAutoPublish
+  ) {
+    steps.push({
+      id: "enable-calibration-auto-publish",
+      domain: "product_gates",
+      priority: "P1",
+      action:
+        "Eligibility GREEN. One-time: set CALIBRATION_AUTO_PUBLISH=true (or CALIBRATION_PUBLISHED=true). No weekly ceremony after that.",
+    });
+  } else if (input.calibrationAutoPublish && input.calibrationEligibilityStatus === "GREEN") {
+    steps.push({
+      id: "calibration-unattended",
+      domain: "product_gates",
+      priority: "P2",
+      action: "Auto-publish policy ON + eligibility GREEN — performance path unattended. No founder click required.",
+    });
+  } else if (typeof input.nonSeedSettled === "number" && input.nonSeedSettled < floor) {
     steps.push({
       id: "accumulate-nonseed-settled",
       domain: "product_gates",

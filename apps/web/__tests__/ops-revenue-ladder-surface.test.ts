@@ -10,8 +10,8 @@ describe("ops revenue ladder surface", () => {
       "utf8",
     );
     expect(src).toMatch(/evaluateRevenueLadder/);
-    expect(src).toMatch(/isCalibrationPublished/);
-    expect(src).toMatch(/loadCanonicalSamplePosture|loadPublicPerformancePolicy/);
+    expect(src).toMatch(/loadCalibrationOpsSurface/);
+    expect(src).toMatch(/loadCanonicalSamplePosture|loadPublicPerformancePolicy|loadCalibrationOpsSurface/);
     expect(src).not.toMatch(/canonicalSettled:\s*settlement\?\.commencedTotal/);
     expect(src).toMatch(/sample\?\.canonicalSettled/);
     expect(src).toMatch(/oddsInserting/);

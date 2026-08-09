@@ -40,7 +40,7 @@ export async function loadCanonicalSamplePosture(
   const operatorHint =
     remainingToFloor > 0
       ? `Canonical settled ${policy.canonicalSettledCount}/${min} (seed+bootstrap excluded). Need ${remainingToFloor} more graded non-seed outcomes — settle-picks only; never invent sample.`
-      : `Canonical settled ${policy.canonicalSettledCount} meets learning floor ${min}. PROVEN still requires published calibration + founder YES — sample alone is not enough.`;
+      : `Canonical settled ${policy.canonicalSettledCount} meets learning floor ${min}. PROVEN still requires eligibility GREEN + publish policy (AUTO_PUBLISH or PUBLISHED) — sample alone is not enough.`;
 
   return {
     commencedTotal: Math.max(0, Math.floor(input.commencedTotal)),
@@ -56,7 +56,7 @@ export async function loadCanonicalSamplePosture(
   };
 }
 
-/** Env flag only — never invent “published.” Default false. */
+/** @deprecated Prefer resolveCalibrationPublishPolicy — env flag only. */
 export function isCalibrationPublished(env: NodeJS.ProcessEnv = process.env): boolean {
   return env["CALIBRATION_PUBLISHED"]?.trim().toLowerCase() === "true";
 }

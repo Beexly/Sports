@@ -16,10 +16,8 @@ import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
-import {
-  isCalibrationPublished,
-  loadCanonicalSamplePosture,
-} from "@/lib/ops/canonical-sample-posture";
+import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
+import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -73,6 +71,8 @@ const MAIN_FEATURE_MARKERS = [
   "free-spine-parallel-probes",
   "canonical-sample-ops-truth",
   "odds-inserting-freshness-ops",
+  "calibration-eligibility-engine",
+  "calibration-auto-publish-policy",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -263,6 +263,34 @@ export async function GET(request: Request) {
     /* honest empty */
   }
 
+  // Calibration eligibility + publish policy (durable; never invent metrics).
+  let calibrationEligibility: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["eligibility"] | null = null;
+  let calibrationPublish: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["publish"] | null = null;
+  if (!isStubMode()) {
+    try {
+      const cal = await loadCalibrationOpsSurface({
+        canonicalSettled: sample?.canonicalSettled ?? 0,
+        minSettledForLearning:
+          sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
+        settlementHealthy: settlement?.health === "HEALTHY",
+      });
+      calibrationEligibility = cal.eligibility;
+      calibrationPublish = cal.publish;
+    } catch {
+      calibrationEligibility = null;
+      calibrationPublish = null;
+    }
+  }
+
+  // Ladder + public performance only when published AND eligibility GREEN.
+  const effectivePerformanceStats =
+    calibrationPublish?.canExposePerformanceStats === true;
+  const calibrationPublished = effectivePerformanceStats;
+
   const founderNextSteps = buildFounderNextSteps({
     overduePending: settlement?.overduePending ?? null,
     settlementHealth: settlement?.health ?? null,
@@ -293,10 +321,13 @@ export async function GET(request: Request) {
     nonSeedSettled: sample?.canonicalSettled ?? null,
     nonSeedFloorProven: sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
     oddsInsertingStale: oddsInserting.withinRefreshSla === false,
+    calibrationEligibilityStatus: calibrationEligibility?.status ?? null,
+    calibrationPublished,
+    calibrationAutoPublish: calibrationPublish?.autoPublish ?? false,
+    remainingToFloor: sample?.remainingToFloor ?? null,
   });
 
-  // Proof-gated ladder — canonical settled only; calibrationPublished only via env YES.
-  const calibrationPublished = isCalibrationPublished();
+  // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
     canonicalSettled: sample?.canonicalSettled ?? 0,
     calibrationPublished,
@@ -305,7 +336,7 @@ export async function GET(request: Request) {
     boardNotSuppressed: oddsInserting.withinRefreshSla === true,
     liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
     publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
-    performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+    performanceStatsEnabled: effectivePerformanceStats,
     minSettledProven: gates.minSettledPicksForLearning,
   });
 
@@ -330,7 +361,8 @@ export async function GET(request: Request) {
         contestsPublic: isContestsPublic(),
         canExposePublicPicks: gates.canExposePublicPicks,
         isBootstrapMode: gates.isBootstrapMode,
-        canExposePerformanceStats: gates.canExposePerformanceStats,
+        canExposePerformanceStats: effectivePerformanceStats,
+        envPerformanceStatsEnabled: gates.canExposePerformanceStats,
         minSettledPicksForLearning: gates.minSettledPicksForLearning,
         calibrationPublished,
       },
@@ -341,10 +373,38 @@ export async function GET(request: Request) {
       /**
        * Canonical sample (publish/learning SoT).
        * commenced ≠ settled. Excludes bootstrap + modelVersion v5.0.0-seed.
-       * settle = grade; filter = these counts; publish = founder YES + checklist.
+       * settle = grade; filter = these counts; publish = eligibility GREEN + policy (AUTO_PUBLISH or PUBLISHED).
        */
       sample,
       oddsInserting,
+      calibrationEligibility: calibrationEligibility
+        ? {
+            status: calibrationEligibility.status,
+            reasons: calibrationEligibility.reasons,
+            n: calibrationEligibility.n,
+            brier: calibrationEligibility.brier,
+            ece: calibrationEligibility.ece,
+            mce: calibrationEligibility.mce,
+            murphy: calibrationEligibility.murphy,
+            floors: calibrationEligibility.floors,
+            consecutiveGreen: calibrationEligibility.consecutiveGreen,
+            streakRequired: calibrationEligibility.streakRequired,
+            modelVersion: calibrationEligibility.modelVersion,
+            dateRange: calibrationEligibility.dateRange,
+            generatedAt: calibrationEligibility.generatedAt,
+            operatorHint: calibrationEligibility.operatorHint,
+          }
+        : null,
+      calibrationPublish: calibrationPublish
+        ? {
+            published: calibrationPublish.published,
+            source: calibrationPublish.source,
+            autoPublish: calibrationPublish.autoPublish,
+            autoUnpublish: calibrationPublish.autoUnpublish,
+            canExposePerformanceStats: calibrationPublish.canExposePerformanceStats,
+            operatorHint: calibrationPublish.operatorHint,
+          }
+        : null,
       content: {
         podcastEpisodes: listEpisodes().length,
         newsletterIssues: listIssues().length,
