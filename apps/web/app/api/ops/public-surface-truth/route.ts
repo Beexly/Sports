@@ -24,6 +24,9 @@ import { loadProvenPathSurface } from "@/lib/ops/proven-path-seed";
 import { buildMurphyResSnapshot } from "@/lib/calibration/murphy-res-definition";
 import { conformalRdPosture } from "@/lib/calibration/conformal-calibration";
 import { ISOTONIC_ALTERNATIVES } from "@/lib/calibration/isotonic-alternatives";
+import { productBoardSurfaces } from "@/lib/product/board-surfaces";
+import { rankingPauseApplyPosture } from "@/lib/calibration/ranking-pause-apply";
+import { selectiveRuntimePosture } from "@/lib/calibration/selective-publish-runtime";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -88,6 +91,8 @@ const MAIN_FEATURE_MARKERS = [
   "session-leverage-atlas",
   "ranking-power-control-plane",
   "rpcp-conformal-bridge-offline",
+  "product-board-surfaces-posture",
+  "ranking-pause-apply-default-off",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -355,6 +360,8 @@ export async function GET(request: Request) {
     minSettledProven: gates.minSettledPicksForLearning,
   });
 
+  const productBoards = productBoardSurfaces(process.env);
+
   return NextResponse.json(
     {
       ok: true,
@@ -432,6 +439,14 @@ export async function GET(request: Request) {
       boardSurface: boardSurfacePosture(process.env, {
         oddsFresh: oddsInserting?.withinRefreshSla === true,
       }),
+      /** STATKING / HELM / PICKPILOT / CLUBHOUSE / GSE board honesty map. */
+      productBoards: {
+        surfaces: productBoards.surfaces,
+        liveProductionIds: productBoards.liveProductionIds,
+        darkByLawIds: productBoards.darkByLawIds,
+        designPreviewOnly: productBoards.designPreviewOnly,
+        operatorHint: productBoards.operatorHint,
+      },
       aciPosture: aciPublicPosture(),
       ...(await (async () => {
         const surface = await loadProvenPathSurface();
@@ -445,6 +460,14 @@ export async function GET(request: Request) {
                 uncertainty: calibrationEligibility.murphy.uncertainty,
               })
             : null;
+        const pausePosture = rankingPauseApplyPosture(
+          process.env,
+          surface?.plan ?? null,
+        );
+        const selectivePosture = selectiveRuntimePosture(
+          process.env,
+          surface?.plan ?? null,
+        );
         return {
           provenPath: surface?.plan ?? null,
           provenPathProjection: surface?.projection ?? null,
@@ -478,6 +501,9 @@ export async function GET(request: Request) {
             operatorHint:
               "RPCP–conformal bridge default offline (not seeded).",
           },
+          /** Pause list apply — default OFF; plan pause is advisory until RANKING_PAUSE_APPLY. */
+          rankingPauseApply: pausePosture,
+          selectiveRuntime: selectivePosture,
           // Top-level polarity glance (also nested under provenPath*)
           rankingPolarityLaw:
             surface?.plan?.rankingPolarityLaw ?? "positive_separation_required",
@@ -514,6 +540,8 @@ export async function GET(request: Request) {
         statsDefault: "dark",
         contestsDefault: "public free paper skill",
         refuseEphemeralWrites: true,
+        rankingPauseApplyDefault: "off",
+        mapsDefault: "off",
       },
       founderNextSteps,
       revenueLadder: {

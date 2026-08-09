@@ -9,6 +9,12 @@ describe("publicDarkCopy", () => {
     expect(publicDarkCopy("quiet_board_no_slate").isOutage).toBe(false);
     expect(publicDarkCopy("stale_odds_sla").isOutage).toBe(false);
   });
+
+  it("rights and design-preview are honest non-outages", () => {
+    expect(publicDarkCopy("rights_incomplete").isOutage).toBe(false);
+    expect(publicDarkCopy("design_preview").isOutage).toBe(false);
+    expect(publicDarkCopy("design_preview").body).toMatch(/Helm|PickPilot/i);
+  });
 });
 
 describe("classifyPublicDarkHint", () => {
@@ -18,5 +24,7 @@ describe("classifyPublicDarkHint", () => {
       "quiet_board_no_slate",
     );
     expect(classifyPublicDarkHint("bootstrap")).toBe("bootstrap");
+    expect(classifyPublicDarkHint("StatKing rights incomplete")).toBe("rights_incomplete");
+    expect(classifyPublicDarkHint("Helm design-preview only")).toBe("design_preview");
   });
 });

@@ -1,6 +1,7 @@
 /**
  * Unified public "why is this surface dark?" taxonomy.
  * Quiet board ≠ outage. Stale odds ≠ engine death. Seed purge ≠ bootstrap.
+ * Design-preview brands (Helm/PickPilot) ≠ production dark.
  */
 
 export type PublicDarkReason =
@@ -13,6 +14,8 @@ export type PublicDarkReason =
   | "stub_mode"
   | "not_evaluated"
   | "calibration_unpublished"
+  | "rights_incomplete"
+  | "design_preview"
   | "unknown";
 
 export type PublicDarkCopy = {
@@ -68,6 +71,16 @@ const COPY: Record<PublicDarkReason, Omit<PublicDarkCopy, "reason">> = {
     body: "Track record stays dark until calibration eligibility is GREEN and publish policy allows it.",
     isOutage: false,
   },
+  rights_incomplete: {
+    title: "Rights incomplete",
+    body: "StatKing and rights-gated stats stay dark until licensed/live feeds and STATS_PUBLIC clear. Snapshot data is never sold as live.",
+    isOutage: false,
+  },
+  design_preview: {
+    title: "Design preview only",
+    body: "Helm / PickPilot design-preview HTML is archive chrome — not a production product surface. Use Galaxy Sports Edge routes.",
+    isOutage: false,
+  },
   unknown: {
     title: "Unavailable",
     body: "Surface is dark. Check ops public-surface-truth for the live reason.",
@@ -89,6 +102,9 @@ export function classifyPublicDarkHint(hint: string | null | undefined): PublicD
   if (h.includes("selective")) return "selective_empty";
   if (h.includes("seed")) return "seed_excluded";
   if (h.includes("stub")) return "stub_mode";
+  if (h.includes("rights") || h.includes("statking") || h.includes("licensed")) return "rights_incomplete";
+  if (h.includes("design-preview") || h.includes("design preview") || h.includes("helm") || h.includes("pickpilot"))
+    return "design_preview";
   if (h.includes("feature") || h.includes("gate") || h.includes("disabled")) return "feature_gate";
   if (h.includes("calibration") || h.includes("performance") || h.includes("proven")) return "calibration_unpublished";
   if (h.includes("unevaluated") || h.includes("not evaluated") || h.includes("gated")) return "not_evaluated";
