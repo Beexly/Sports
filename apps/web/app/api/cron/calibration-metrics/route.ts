@@ -33,6 +33,8 @@ import { runOfflineBakeoff } from "@/lib/calibration/offline-bakeoff";
 import { computeResolutionByGroup } from "@/lib/calibration/resolution-by-group";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 import { runCalibrationMapBakeoff } from "@/lib/calibration/calibration-map-bakeoff";
+import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
+import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -73,6 +75,7 @@ function bss(
 async function loadSettledCalibrationSamples(): Promise<{
   samples: CalibrationSample[];
   groupedRows: import("@/lib/calibration/resolution-by-group").GroupedCalibRow[];
+  provenRows: import("@/lib/calibration/proven-path-engine").ProvenPathPickRow[];
   notes: string[];
   modelVersions: string[];
   settledFrom: string | null;
@@ -90,6 +93,7 @@ async function loadSettledCalibrationSamples(): Promise<{
       },
       select: {
         confidence: true,
+        edgeScore: true,
         result: true,
         modelVersion: true,
         settledAt: true,
@@ -102,6 +106,7 @@ async function loadSettledCalibrationSamples(): Promise<{
 
     const samples: CalibrationSample[] = [];
     const groupedRows: import("@/lib/calibration/resolution-by-group").GroupedCalibRow[] = [];
+    const provenRows: import("@/lib/calibration/proven-path-engine").ProvenPathPickRow[] = [];
     const versions = new Set<string>();
     let minT: number | null = null;
     let maxT: number | null = null;
@@ -117,6 +122,17 @@ async function loadSettledCalibrationSamples(): Promise<{
         groupKey: `${sport}|${market}`,
         p,
         y: y as 0 | 1,
+        marketP: null,
+      });
+      const edge =
+        typeof pick.edgeScore === "number" && Number.isFinite(pick.edgeScore)
+          ? Math.min(1, Math.max(0, pick.edgeScore / 100))
+          : null;
+      provenRows.push({
+        pConfidence: p,
+        pEdge: edge,
+        y: y as 0 | 1,
+        groupKey: `${sport}|${market}`,
         marketP: null,
       });
       if (pick.modelVersion) versions.add(pick.modelVersion);
@@ -136,6 +152,7 @@ async function loadSettledCalibrationSamples(): Promise<{
     return {
       samples,
       groupedRows,
+      provenRows,
       notes,
       modelVersions: [...versions],
       settledFrom: minT == null ? null : new Date(minT).toISOString(),
@@ -147,6 +164,7 @@ async function loadSettledCalibrationSamples(): Promise<{
     return {
       samples: [],
       groupedRows: [],
+      provenRows: [],
       notes,
       modelVersions: [],
       settledFrom: null,
@@ -160,7 +178,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   try {
-    const { samples, groupedRows, notes, modelVersions, settledFrom, settledTo } =
+    const { samples, groupedRows, provenRows, notes, modelVersions, settledFrom, settledTo } =
       await loadSettledCalibrationSamples();
     const generatedAt = new Date().toISOString();
     const gitSha =
@@ -317,6 +335,17 @@ export async function GET(request: Request): Promise<NextResponse> {
         JSON.stringify(mapBake, null, 2),
         "utf8",
       ).catch(() => undefined);
+      try {
+        const plan = buildProvenPathPlan(provenRows);
+        await persistProvenPathPlan(plan);
+        await writeFile(
+          path.join(dir, "proven-path-plan.json"),
+          JSON.stringify(plan, null, 2),
+          "utf8",
+        ).catch(() => undefined);
+      } catch {
+        /* proven path best-effort */
+      }
     } catch {
       /* ranking diagnostic best-effort */
     }

@@ -11,7 +11,7 @@ import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
 } from "@/lib/data-reliability/public-freshness-gate";
-import { passesPublicSelectiveFilter } from "@/lib/calibration/selective-publish-runtime";
+import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 
@@ -120,13 +120,19 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   // Selective publish (default OFF): drop coin-flips / paused groups when enabled
-  const filteredPicks = picks.filter((pick) =>
-    passesPublicSelectiveFilter({
-      confidence: pick.confidence,
-      pickType: pick.pickType,
-      sportKey: pick.game?.sport?.key ?? null,
-    }),
-  );
+  const filteredPicks = (
+    await Promise.all(
+      picks.map(async (pick) => {
+        const ok = await passesPublicSelectiveFilterAsync({
+          confidence: pick.confidence,
+          edgeScore: pick.edgeScore,
+          pickType: pick.pickType,
+          sportKey: pick.game?.sport?.key ?? null,
+        });
+        return ok ? pick : null;
+      }),
+    )
+  ).filter((p): p is NonNullable<typeof p> => p != null);
 
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
