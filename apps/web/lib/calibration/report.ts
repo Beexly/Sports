@@ -1,6 +1,6 @@
 import { db } from "@sports/db";
-import { getReadinessGates } from "@sports/prediction-engine";
 import { computeCalibration, type CalibrationPickInput } from "@/lib/calibration/compute";
+import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance-gate";
 
 export interface CalibrationReportPayload {
   data: ReturnType<typeof computeCalibration> & {
@@ -12,21 +12,22 @@ export interface CalibrationReportPayload {
 }
 
 export async function loadPublicCalibrationReport(now = new Date()): Promise<CalibrationReportPayload> {
-  const gates = getReadinessGates();
+  // Public numbers only when published ∩ GREEN (effective gate). Env PERFORMANCE_STATS alone is not enough.
+  const effective = await resolveEffectivePerformanceGate();
 
-  if (!gates.canExposePerformanceStats) {
+  if (!effective.canExposePerformanceStats) {
     const report = computeCalibration([]);
     return {
       data: {
         ...report,
         updatedAt: now.toISOString(),
         isCollecting: true,
-        publicMessage: "Building calibration history from settled canonical picks.",
+        publicMessage:
+          "Building calibration history from settled canonical picks. Public metrics stay dark until eligibility GREEN and publish policy.",
       },
       meta: { gated: true, isSampleData: false },
     };
   }
-
   // Fail OPEN like loadBoardState: a DB blip must never crash the home, board,
   // house, or proof pages that await this. On error, return the honest
   // building/empty state instead of throwing into the global error screen.
