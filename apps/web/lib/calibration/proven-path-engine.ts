@@ -155,9 +155,9 @@ function toSamples(
 ): CalibrationSample[] {
   const out: CalibrationSample[] = [];
   for (const r of rows) {
-    const p = scoreProbability(r, kind);
-    if (p == null || !Number.isFinite(p)) continue;
-    p = Math.min(1 - 1e-6, Math.max(1e-6, p));
+    const raw = scoreProbability(r, kind);
+    if (raw == null || !Number.isFinite(raw)) continue;
+    const p = Math.min(1 - 1e-6, Math.max(1e-6, raw));
     out.push({ p, y: r.y });
   }
   return out;
