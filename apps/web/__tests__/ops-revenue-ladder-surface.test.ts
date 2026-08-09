@@ -12,6 +12,11 @@ describe("ops revenue ladder surface", () => {
     expect(src).toMatch(/evaluateRevenueLadder/);
     expect(src).toMatch(/calibrationPublished:\s*false/);
     expect(src).toMatch(/revenueLadder:/);
+    // Integrity: must not feed commencedTotal into ladder N
+    expect(src).not.toMatch(/canonicalSettled:\s*settlement\?\.commencedTotal/);
+    expect(src).toMatch(/learningSample\?\.nonSeedSettled/);
+    expect(src).toMatch(/oddsInserting/);
+    expect(src).toMatch(/loadLearningSamplePosture/);
   });
 
   it("healthy settlement alone does not unlock monetize without PERFORMANCE_STATS", () => {
@@ -26,5 +31,20 @@ describe("ops revenue ladder surface", () => {
       performanceStatsEnabled: false,
     });
     expect(r.canHonestlyMonetizePublicTrackRecord).toBe(false);
+  });
+
+  it("commenced-like large N without calibration stays FOUNDING", () => {
+    const r = evaluateRevenueLadder({
+      canonicalSettled: 1478,
+      calibrationPublished: false,
+      clvBeatCloseRate: null,
+      settlementHealthy: true,
+      boardNotSuppressed: false,
+      liveBoardEnabled: false,
+      publicPicksEnabled: true,
+      performanceStatsEnabled: false,
+    });
+    expect(r.currentStep).toBe("FOUNDING");
+    expect(r.blockersToNext).toContain("Calibration not published");
   });
 });

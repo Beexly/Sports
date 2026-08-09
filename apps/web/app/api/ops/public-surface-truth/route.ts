@@ -16,6 +16,7 @@ import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
+import { loadLearningSamplePosture } from "@/lib/ops/learning-sample-posture";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -67,6 +68,8 @@ const MAIN_FEATURE_MARKERS = [
   "founder-queue-low-noise",
   "waitlist-posture-ops-surface",
   "free-spine-parallel-probes",
+  "learning-sample-posture",
+  "odds-inserting-freshness-ops",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -130,6 +133,59 @@ export async function GET(request: Request) {
     }
   } catch {
     settlement = null;
+  }
+
+  // Non-seed settled sample — never substitute commencedTotal for ladder N.
+  let learningSample: Awaited<ReturnType<typeof loadLearningSamplePosture>> | null = null;
+  if (!isStubMode()) {
+    try {
+      learningSample = await loadLearningSamplePosture(db);
+    } catch {
+      learningSample = null;
+    }
+  }
+
+  // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
+  let oddsInserting: {
+    lastSuccessAt: string | null;
+    ageMinutes: number | null;
+    withinRefreshSla: boolean | null;
+    oddsInserted: number | null;
+    sport: string | null;
+    operatorHint: string;
+  } = {
+    lastSuccessAt: null,
+    ageMinutes: null,
+    withinRefreshSla: null,
+    oddsInserted: null,
+    sport: null,
+    operatorHint:
+      "No odds-inserting SUCCESS found yet. Public /api/picks stays dark until oddsInserted>0 within Refresh SLA.",
+  };
+  if (!isStubMode()) {
+    try {
+      const run = await db.ingestionRun.findFirst({
+        where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
+        orderBy: { completedAt: "desc" },
+        select: { completedAt: true, oddsInserted: true, sport: true },
+      });
+      if (run?.completedAt) {
+        const ageMinutes = Math.round((Date.now() - run.completedAt.getTime()) / 60000);
+        const withinRefreshSla = ageMinutes <= 240;
+        oddsInserting = {
+          lastSuccessAt: run.completedAt.toISOString(),
+          ageMinutes,
+          withinRefreshSla,
+          oddsInserted: run.oddsInserted ?? null,
+          sport: run.sport ?? null,
+          operatorHint: withinRefreshSla
+            ? `Last odds insert ${ageMinutes}m ago (within 240m SLA) — kill switch should allow public picks if PUBLIC_PICKS on.`
+            : `Last odds insert ${ageMinutes}m ago (outside 240m SLA) — public picks stay dark until refresh-odds inserts odds again (quiet board does not clear this).`,
+        };
+      }
+    } catch {
+      /* leave default */
+    }
   }
 
   const creditStack = loadCreditStackPosture();
@@ -228,15 +284,20 @@ export async function GET(request: Request) {
     freeSpineWithinSla: freeSpine.withinSla,
     freeSpineCriticalGaps: freeSpine.criticalGaps,
     freeSpineRequireSpend: freeSpine.requireSpend,
+    waitlistGateEnabled: waitlist.gateEnabled,
+    nonSeedSettled: learningSample?.nonSeedSettled ?? null,
+    nonSeedFloorProven: learningSample?.floorProven ?? 100,
+    oddsInsertingStale: oddsInserting.withinRefreshSla === false,
   });
 
-  // Proof-gated ladder — never invents calibration/CLV; never flips gates.
+  // Proof-gated ladder — use NON-SEED settled only; never commenced as N.
+  // calibrationPublished stays false until founder ceremony (no auto-flip).
   const revenueLadder = evaluateRevenueLadder({
-    canonicalSettled: settlement?.commencedTotal ?? 0,
+    canonicalSettled: learningSample?.nonSeedSettled ?? 0,
     calibrationPublished: false,
     clvBeatCloseRate: null,
     settlementHealthy: settlement?.health === "HEALTHY",
-    boardNotSuppressed: false,
+    boardNotSuppressed: oddsInserting.withinRefreshSla === true,
     liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
     publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
     performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
@@ -269,6 +330,10 @@ export async function GET(request: Request) {
       /** Public-safe lead-capture gate posture (booleans only). */
       waitlist,
       settlement,
+      /** Non-seed settled sample for ladder/learning — commenced is NOT a substitute. */
+      learningSample,
+      /** Odds-inserting freshness — kill switch SoT (oddsInserted>0), not free-spine. */
+      oddsInserting,
       content: {
         podcastEpisodes: listEpisodes().length,
         newsletterIssues: listIssues().length,
@@ -296,6 +361,7 @@ export async function GET(request: Request) {
         canHonestlyMonetizePublicTrackRecord: revenueLadder.canHonestlyMonetizePublicTrackRecord,
         operatorMessage: revenueLadder.operatorMessage,
         blockersToNext: revenueLadder.blockersToNext,
+        milestones: revenueLadder.milestones,
       },
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
