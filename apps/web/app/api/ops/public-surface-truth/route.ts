@@ -17,6 +17,10 @@ import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import {
+  isCalibrationPublished,
+  loadCanonicalSamplePosture,
+} from "@/lib/ops/canonical-sample-posture";
+import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
   freeSpineWithinSla,
@@ -67,6 +71,8 @@ const MAIN_FEATURE_MARKERS = [
   "founder-queue-low-noise",
   "waitlist-posture-ops-surface",
   "free-spine-parallel-probes",
+  "canonical-sample-ops-truth",
+  "odds-inserting-freshness-ops",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -85,7 +91,7 @@ function hasOpsAuth(request: Request): boolean {
 
 /**
  * Surface truth snapshot.
- * - Public: gates, storage modes, settlement band counts, deploymentSha.
+ * - Public: gates, storage modes, settlement band counts, deploymentSha, sample.
  * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
  */
 export async function GET(request: Request) {
@@ -132,6 +138,63 @@ export async function GET(request: Request) {
     settlement = null;
   }
 
+  // Canonical sample via loadPublicPerformancePolicy — not commencedTotal.
+  let sample: Awaited<ReturnType<typeof loadCanonicalSamplePosture>> | null = null;
+  if (!isStubMode()) {
+    try {
+      sample = await loadCanonicalSamplePosture(db, {
+        commencedTotal: settlement?.commencedTotal ?? 0,
+        canExposePerformanceStats: gates.canExposePerformanceStats,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+      });
+    } catch {
+      sample = null;
+    }
+  }
+
+  // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
+  let oddsInserting: {
+    lastSuccessAt: string | null;
+    ageMinutes: number | null;
+    withinRefreshSla: boolean | null;
+    oddsInserted: number | null;
+    sport: string | null;
+    operatorHint: string;
+  } = {
+    lastSuccessAt: null,
+    ageMinutes: null,
+    withinRefreshSla: null,
+    oddsInserted: null,
+    sport: null,
+    operatorHint:
+      "No odds-inserting SUCCESS found yet. Public /api/picks stays dark until oddsInserted>0 within Refresh SLA.",
+  };
+  if (!isStubMode()) {
+    try {
+      const run = await db.ingestionRun.findFirst({
+        where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
+        orderBy: { completedAt: "desc" },
+        select: { completedAt: true, oddsInserted: true, sport: true },
+      });
+      if (run?.completedAt) {
+        const ageMinutes = Math.round((Date.now() - run.completedAt.getTime()) / 60000);
+        const withinRefreshSla = ageMinutes <= 240;
+        oddsInserting = {
+          lastSuccessAt: run.completedAt.toISOString(),
+          ageMinutes,
+          withinRefreshSla,
+          oddsInserted: run.oddsInserted ?? null,
+          sport: run.sport ?? null,
+          operatorHint: withinRefreshSla
+            ? `Last odds insert ${ageMinutes}m ago (within 240m SLA) — kill switch should allow public picks if PUBLIC_PICKS on.`
+            : `Last odds insert ${ageMinutes}m ago (outside 240m SLA) — public picks stay dark until refresh-odds inserts odds again (quiet board does not clear this).`,
+        };
+      }
+    } catch {
+      /* leave default */
+    }
+  }
+
   const creditStack = loadCreditStackPosture();
   const billingMoney = loadBillingMoneyPosture();
   const autonomy = loadAutonomyPosture();
@@ -146,7 +209,6 @@ export async function GET(request: Request) {
   }
   const jynx = creditStack.jynx;
 
-  // I3/I8: resolve free-spine BEFORE founder queue so coverage gaps / SLA land in steps.
   let freeSpine: {
     present: boolean;
     source: "process" | "durable" | "none";
@@ -175,7 +237,6 @@ export async function GET(request: Request) {
     slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
   };
   try {
-    // I3: prefer fresh process RAM; if cold/stale, load Neon durable and pick fresher.
     const { snap, source } = await resolveBestFreeSpineSnapshot();
     if (snap) {
       const ageMs = freeSpineSnapAgeMs(snap);
@@ -228,18 +289,24 @@ export async function GET(request: Request) {
     freeSpineWithinSla: freeSpine.withinSla,
     freeSpineCriticalGaps: freeSpine.criticalGaps,
     freeSpineRequireSpend: freeSpine.requireSpend,
+    waitlistGateEnabled: waitlist.gateEnabled,
+    nonSeedSettled: sample?.canonicalSettled ?? null,
+    nonSeedFloorProven: sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
+    oddsInsertingStale: oddsInserting.withinRefreshSla === false,
   });
 
-  // Proof-gated ladder — never invents calibration/CLV; never flips gates.
+  // Proof-gated ladder — canonical settled only; calibrationPublished only via env YES.
+  const calibrationPublished = isCalibrationPublished();
   const revenueLadder = evaluateRevenueLadder({
-    canonicalSettled: settlement?.commencedTotal ?? 0,
-    calibrationPublished: false,
+    canonicalSettled: sample?.canonicalSettled ?? 0,
+    calibrationPublished,
     clvBeatCloseRate: null,
     settlementHealthy: settlement?.health === "HEALTHY",
-    boardNotSuppressed: false,
+    boardNotSuppressed: oddsInserting.withinRefreshSla === true,
     liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
     publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
     performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+    minSettledProven: gates.minSettledPicksForLearning,
   });
 
   return NextResponse.json(
@@ -263,23 +330,28 @@ export async function GET(request: Request) {
         contestsPublic: isContestsPublic(),
         canExposePublicPicks: gates.canExposePublicPicks,
         isBootstrapMode: gates.isBootstrapMode,
+        canExposePerformanceStats: gates.canExposePerformanceStats,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+        calibrationPublished,
       },
       contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
-      /** Public-safe lead-capture gate posture (booleans only). */
       waitlist,
       settlement,
+      /**
+       * Canonical sample (publish/learning SoT).
+       * commenced ≠ settled. Excludes bootstrap + modelVersion v5.0.0-seed.
+       * settle = grade; filter = these counts; publish = founder YES + checklist.
+       */
+      sample,
+      oddsInserting,
       content: {
         podcastEpisodes: listEpisodes().length,
         newsletterIssues: listIssues().length,
       },
-      /** Public-safe AI cost posture — booleans only, never secrets. */
       creditStack,
-      /** Public-safe money path posture — booleans + lookup keys only, never secrets. */
       billingMoney,
-      /** Public-safe Stripe webhook host audit (URLs only). */
       stripeWebhookHosts,
-      /** Public-safe autonomy executor posture — dry-run default, free crons only. */
       autonomy,
       freeSpine,
       policy: PUBLIC_NAV_POLICY,
@@ -296,6 +368,7 @@ export async function GET(request: Request) {
         canHonestlyMonetizePublicTrackRecord: revenueLadder.canHonestlyMonetizePublicTrackRecord,
         operatorMessage: revenueLadder.operatorMessage,
         blockersToNext: revenueLadder.blockersToNext,
+        milestones: revenueLadder.milestones,
       },
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },

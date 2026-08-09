@@ -158,6 +158,15 @@ export async function GET(request: Request): Promise<NextResponse> {
       status: "ok" as const,
       overall: {
         brier: decomp.brier,
+        // Murphy decomposition (Brier = reliability − resolution + uncertainty)
+        murphy: {
+          reliability: decomp.reliability,
+          resolution: decomp.resolution,
+          uncertainty: decomp.uncertainty,
+          baseRate: decomp.baseRate,
+          identityNote:
+            "Binned Murphy split: reliability low = good cal; resolution high = discrimination; uncertainty = base-rate difficulty.",
+        },
         brierDecomp: decomp,
         logLoss,
         ece,

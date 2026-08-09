@@ -36,6 +36,9 @@ export interface PublicPerformancePolicy {
   readonly canonicalSettledCount: number;
   readonly bootstrapCount: number;
   readonly pendingCount: number;
+  readonly canonicalWins: number;
+  readonly canonicalLosses: number;
+  readonly canonicalPushes: number;
   readonly eligibleForRateCount: number;
   readonly publicWinRate: number | null;
   readonly publicRecord: string;
@@ -146,6 +149,9 @@ export function evaluatePublicPerformancePolicy(
     canonicalSettledCount: input.canonicalSettledCount,
     bootstrapCount: input.bootstrapCount,
     pendingCount: input.pendingCount,
+    canonicalWins: input.canonicalWins,
+    canonicalLosses: input.canonicalLosses,
+    canonicalPushes: input.canonicalPushes,
     eligibleForRateCount: eligibleForRate,
     publicWinRate: allowed ? winRate : null,
     publicRecord: record,

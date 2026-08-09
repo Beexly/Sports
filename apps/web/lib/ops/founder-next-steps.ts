@@ -15,7 +15,8 @@ export interface FounderNextStep {
     | "content"
     | "statking"
     | "billing"
-    | "analytics";
+    | "analytics"
+    | "growth";
   readonly priority: "P0" | "P1" | "P2";
   readonly action: string;
 }
@@ -56,6 +57,13 @@ export interface FounderNextStepsInput {
   readonly freeSpineRequireSpend?: number | null;
   /** When true, surface optional analytics (default off — reduces noise). */
   readonly includeOptionalAnalytics?: boolean;
+  /** Waitlist public lead capture closed by Basic Auth gate. */
+  readonly waitlistGateEnabled?: boolean;
+  /** Non-seed settled sample vs code floor (optional). */
+  readonly nonSeedSettled?: number | null;
+  readonly nonSeedFloorProven?: number;
+  /** Last odds-inserting SUCCESS outside Refresh SLA (kill switch dark). */
+  readonly oddsInsertingStale?: boolean;
 }
 
 /**
@@ -158,11 +166,41 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
   }
 
   if (input.canExposePublicPicks) {
+    if (input.oddsInsertingStale) {
+      steps.push({
+        id: "public-picks-odds-stale",
+        domain: "product_gates",
+        priority: "P0",
+        action:
+          "PUBLIC_PICKS ON but last odds insert is outside Refresh SLA — surface correctly dark. Confirm THE_ODDS_API_KEY quota; optional one-shot refresh-odds. Do not lower SLA.",
+      });
+    } else {
+      steps.push({
+        id: "public-picks-on",
+        domain: "product_gates",
+        priority: "P0",
+        action: "PUBLIC_PICKS is ON — confirm proof bar + settlement healthy before marketing.",
+      });
+    }
+  }
+
+  if (input.waitlistGateEnabled === true) {
     steps.push({
-      id: "public-picks-on",
+      id: "waitlist-open-funnel",
+      domain: "growth",
+      priority: "P1",
+      action:
+        "Waitlist Basic Auth is locking lead capture — set GSE_WAITLIST_GATE_ENABLED=false for full public funnel (Payment Links still founder-owned).",
+    });
+  }
+
+  const floor = input.nonSeedFloorProven ?? 100;
+  if (typeof input.nonSeedSettled === "number" && input.nonSeedSettled < floor) {
+    steps.push({
+      id: "accumulate-nonseed-settled",
       domain: "product_gates",
-      priority: "P0",
-      action: "PUBLIC_PICKS is ON — confirm proof bar + settlement healthy before marketing.",
+      priority: "P2",
+      action: `Non-seed settled ${input.nonSeedSettled}/${floor} — machine accumulates via settle-picks; do not invent sample or claim PROVEN.`,
     });
   }
 
