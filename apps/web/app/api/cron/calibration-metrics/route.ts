@@ -32,6 +32,7 @@ import { loadPublicPerformancePolicy } from "@/lib/performance/public-performanc
 import { runOfflineBakeoff } from "@/lib/calibration/offline-bakeoff";
 import { computeResolutionByGroup } from "@/lib/calibration/resolution-by-group";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
+import { runCalibrationMapBakeoff } from "@/lib/calibration/calibration-map-bakeoff";
 import {
   buildDurableMetricsFromSamples,
   picksToCalibrationSamples,
@@ -313,6 +314,12 @@ export async function GET(request: Request): Promise<NextResponse> {
       await writeFile(
         path.join(dir, "selective-publish-sweep.json"),
         JSON.stringify(holdout.selectiveSweep, null, 2),
+        "utf8",
+      ).catch(() => undefined);
+      const mapBake = runCalibrationMapBakeoff(samples.slice().reverse());
+      await writeFile(
+        path.join(dir, "calibration-map-bakeoff.json"),
+        JSON.stringify(mapBake, null, 2),
         "utf8",
       ).catch(() => undefined);
     } catch {
