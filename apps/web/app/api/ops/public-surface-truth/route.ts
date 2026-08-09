@@ -20,7 +20,8 @@ import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
 import { aciPublicPosture } from "@/lib/calibration/aci-durable";
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
-import { loadProvenPathPlan } from "@/lib/ops/proven-path-durable";
+import { loadOrSeedProvenPathPlan } from "@/lib/ops/proven-path-seed";
+import { explainLiveMurphy } from "@/lib/calibration/brier-minimization-explore";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -421,7 +422,7 @@ export async function GET(request: Request) {
         oddsFresh: oddsInserting?.withinRefreshSla === true,
       }),
       aciPosture: aciPublicPosture(),
-      provenPath: await loadProvenPathPlan(),
+      provenPath: await loadOrSeedProvenPathPlan(),
       mapVsCanonical: {
         canonicalSettled: sample?.canonicalSettled ?? null,
         mapN: calibrationEligibility?.n ?? null,
