@@ -29,6 +29,11 @@ import {
 } from "@/lib/ops/calibration-eligibility-durable";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { loadPublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
+import { runOfflineBakeoff } from "@/lib/calibration/offline-bakeoff";
+import {
+  buildDurableMetricsFromSamples,
+  picksToCalibrationSamples,
+} from "@/lib/ops/compute-live-calibration-metrics";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -240,6 +245,21 @@ export async function GET(request: Request): Promise<NextResponse> {
     }
 
     await persistCalibrationMetrics(payload);
+
+    // Offline Bayesian bake-off artifact (internal only; never publish/adjustments).
+    if (payload.status === "ok" && samples.length >= 50) {
+      try {
+        const chrono = [...samples].reverse(); // settledAt desc → oldest first
+        const bake = runOfflineBakeoff(chrono, 0.7);
+        await writeFile(
+          path.join(dir, "bayes-bakeoff.json"),
+          JSON.stringify(bake, null, 2),
+          "utf8",
+        ).catch(() => undefined);
+      } catch {
+        /* R&D best-effort */
+      }
+    }
 
     // Sample + settlement for eligibility (canonical only)
     const gates = getReadinessGates();

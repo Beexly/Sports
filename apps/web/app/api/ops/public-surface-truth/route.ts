@@ -18,6 +18,7 @@ import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
+import { aciPublicPosture } from "@/lib/calibration/aci-durable";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -413,6 +414,11 @@ export async function GET(request: Request) {
       billingMoney,
       stripeWebhookHosts,
       autonomy,
+      aciPosture: aciPublicPosture(),
+      bayesianRd: {
+        adjustmentsEnabled: false,
+        note: "Bayesian calibration is offline R&D only — eligibility stays frequentist.",
+      },
       freeSpine,
       policy: PUBLIC_NAV_POLICY,
       law: {
