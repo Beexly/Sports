@@ -343,6 +343,8 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
       where: CANONICAL_LEARNING_PICK_WHERE,
       select: {
         confidence: true,
+        pickType: true,
+        factorBreakdown: true,
         result: true,
         modelVersion: true,
         settledAt: true,

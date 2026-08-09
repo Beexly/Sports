@@ -10,12 +10,15 @@ import {
   reliabilityCurve,
 } from "@sports/prediction-engine";
 import type { DurableMetricsPayload } from "@/lib/ops/calibration-eligibility-durable";
+import { picksToHonestCalibrationSamples } from "@/lib/calibration/live-calibration-p";
 
 export interface PickRowForCal {
   readonly confidence: number | null;
   readonly result: "WIN" | "LOSS" | string;
   readonly modelVersion: string | null;
   readonly settledAt: Date | null;
+  readonly pickType?: string | null;
+  readonly factorBreakdown?: unknown;
 }
 
 function mceFromCurve(
@@ -34,28 +37,25 @@ export function picksToCalibrationSamples(picks: readonly PickRowForCal[]): {
   modelVersions: string[];
   settledFrom: string | null;
   settledTo: string | null;
+  notes?: string[];
 } {
-  const samples: CalibrationSample[] = [];
-  const versions = new Set<string>();
-  let minT: number | null = null;
-  let maxT: number | null = null;
-  for (const pick of picks) {
-    if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
-    if (pick.result !== "WIN" && pick.result !== "LOSS") continue;
-    const p = Math.min(1, Math.max(0, pick.confidence / 100));
-    samples.push({ p, y: pick.result === "WIN" ? 1 : 0 });
-    if (pick.modelVersion) versions.add(pick.modelVersion);
-    if (pick.settledAt) {
-      const t = pick.settledAt.getTime();
-      minT = minT == null ? t : Math.min(minT, t);
-      maxT = maxT == null ? t : Math.max(maxT, t);
-    }
-  }
+  // Honest absolute-probability path (maps OFF; no invent).
+  const honest = picksToHonestCalibrationSamples(
+    picks.map((pick) => ({
+      confidence: pick.confidence,
+      result: pick.result,
+      pickType: pick.pickType,
+      factorBreakdown: pick.factorBreakdown,
+      modelVersion: pick.modelVersion,
+      settledAt: pick.settledAt,
+    })),
+  );
   return {
-    samples,
-    modelVersions: [...versions],
-    settledFrom: minT == null ? null : new Date(minT).toISOString(),
-    settledTo: maxT == null ? null : new Date(maxT).toISOString(),
+    samples: honest.samples.map((s) => ({ p: s.p, y: s.y })),
+    modelVersions: honest.modelVersions,
+    settledFrom: honest.settledFrom,
+    settledTo: honest.settledTo,
+    notes: honest.notes,
   };
 }
 

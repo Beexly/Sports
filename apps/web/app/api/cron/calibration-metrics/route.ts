@@ -37,6 +37,7 @@ import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-rep
 import { runCalibrationMapBakeoff } from "@/lib/calibration/calibration-map-bakeoff";
 import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import { toProvenPathPickRow } from "@/lib/calibration/proven-path-rows";
+import { picksToHonestCalibrationSamples } from "@/lib/calibration/live-calibration-p";
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -106,19 +107,25 @@ async function loadSettledCalibrationSamples(): Promise<{
       take: 2000,
     });
 
-    const samples: CalibrationSample[] = [];
+    const honest = picksToHonestCalibrationSamples(
+      picks.map((pick) => ({
+        confidence: pick.confidence,
+        result: pick.result ?? "",
+        pickType: pick.pickType,
+        factorBreakdown: pick.factorBreakdown,
+        modelVersion: pick.modelVersion,
+        settledAt: pick.settledAt,
+      })),
+    );
+    const samples: CalibrationSample[] = honest.samples.map((s) => ({
+      p: s.p,
+      y: s.y,
+    }));
     const groupedRows: import("@/lib/calibration/resolution-by-group").GroupedCalibRow[] = [];
     const provenRows: import("@/lib/calibration/proven-path-engine").ProvenPathPickRow[] = [];
-    const versions = new Set<string>();
-    let minT: number | null = null;
-    let maxT: number | null = null;
     let independentCount = 0;
     for (const pick of picks) {
       if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) continue;
-      const p = Math.min(1, Math.max(0, pick.confidence / 100));
-      const y = pick.result === "WIN" ? 1 : 0;
-      samples.push({ p, y });
-
       const proven = toProvenPathPickRow({
         confidence: pick.confidence,
         result: pick.result ?? "",
@@ -129,34 +136,23 @@ async function loadSettledCalibrationSamples(): Promise<{
       if (proven) {
         provenRows.push(proven);
         if (proven.pIndependent != null) independentCount += 1;
+        // Group resolution uses honest p when available (market/indep), else conf
+        const honestP =
+          proven.marketP ??
+          proven.pIndependent ??
+          Math.min(1, Math.max(0, pick.confidence / 100));
         groupedRows.push({
           groupKey: proven.groupKey,
-          p,
+          p: honestP,
           y: proven.y,
           marketP: proven.marketP ?? null,
         });
-      } else {
-        const sport =
-          pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
-        const market = pick.pickType ?? "unknown";
-        groupedRows.push({
-          groupKey: `${sport}|${market}`,
-          p,
-          y: y as 0 | 1,
-          marketP: null,
-        });
-      }
-      if (pick.modelVersion) versions.add(pick.modelVersion);
-      if (pick.settledAt) {
-        const t = pick.settledAt.getTime();
-        minT = minT == null ? t : Math.min(minT, t);
-        maxT = maxT == null ? t : Math.max(maxT, t);
       }
     }
-
-    notes.push(
-      "p derived from confidence/100 (provisional live eligibility). Spread/total may not be fair probabilities — internal only.",
-    );
+    const versions = new Set(honest.modelVersions);
+    const minT = honest.settledFrom ? Date.parse(honest.settledFrom) : null;
+    const maxT = honest.settledTo ? Date.parse(honest.settledTo) : null;
+    notes.push(...honest.notes);
     notes.push(
       `Proven-path rows: ${provenRows.length}; with independent trueProb: ${independentCount} (never edge-as-p; never conf-echo rankingP as independent).`,
     );
