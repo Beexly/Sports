@@ -18,6 +18,8 @@ export interface BakeoffMethodResult {
   readonly brier: number;
   readonly ece: number;
   readonly murphyReliability: number;
+  readonly murphyResolution: number;
+  readonly murphyUncertainty: number;
   readonly logLoss: number;
 }
 
@@ -42,13 +44,22 @@ function logLoss(samples: readonly { p: number; y: 0 | 1 }[]): number {
 
 function score(samples: readonly CalibrationSample[]): Omit<BakeoffMethodResult, "method" | "nTest"> {
   if (samples.length === 0) {
-    return { brier: NaN, ece: NaN, murphyReliability: NaN, logLoss: NaN };
+    return {
+      brier: NaN,
+      ece: NaN,
+      murphyReliability: NaN,
+      murphyResolution: NaN,
+      murphyUncertainty: NaN,
+      logLoss: NaN,
+    };
   }
   const decomp = brierDecomposition(samples);
   return {
     brier: decomp.brier,
     ece: expectedCalibrationError(samples),
     murphyReliability: decomp.reliability,
+    murphyResolution: decomp.resolution,
+    murphyUncertainty: decomp.uncertainty,
     logLoss: logLoss(samples),
   };
 }
