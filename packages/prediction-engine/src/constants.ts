@@ -1,11 +1,13 @@
 // Model version — bump when scoring logic changes.
+// v5.2.2 (2026-08-09): Dixon–Coles soccer independent; Kalshi ESPN abbr aliases +
+// ET wall-clock ticker fragments; 12h start skew on series match.
 // v5.2.1 (2026-08-09): ranking uses trueProb whenever finite (incl. PASS),
 // independentWeight 0.7; persist marketFairProb + rankingP; honest pIndependent
 // load; Kalshi team maps; FPI exact match; selective consumes rankingP.
 // Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.
 // v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-export const MODEL_VERSION = "v5.2.1";
+export const MODEL_VERSION = "v5.2.2";
 
 // ============================================================
 // Confidence thresholds

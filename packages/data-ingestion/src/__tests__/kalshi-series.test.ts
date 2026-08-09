@@ -52,17 +52,21 @@ describe("sportKeyToKalshiLeagueCode", () => {
 });
 
 describe("date/time fragments + constructed tickers", () => {
-  it("builds YYMMMDD date fragment in UTC", () => {
+  it("builds YYMMMDD date fragment (date-only calendar; ISO uses ET)", () => {
     expect(toKalshiDateFragment("2026-08-12")).toBe("26AUG12");
+    // 20:05Z = 16:05 ET on Jun 3 — same calendar day in summer EDT
     expect(toKalshiDateFragment("2026-06-03T20:05:00Z")).toBe("26JUN03");
+    // late UTC evening can still be prior ET calendar day
+    expect(toKalshiDateFragment("2026-08-13T02:10:00Z")).toBe("26AUG12");
   });
 
-  it("encodes time fragment only when clock is present", () => {
+  it("encodes ET wall-clock time fragment when clock is present", () => {
     expect(toKalshiTimeFragment("2026-08-12")).toBeNull();
-    expect(toKalshiTimeFragment("2026-08-12T23:10:00Z")).toBe("2310");
+    // 23:10Z = 19:10 EDT
+    expect(toKalshiTimeFragment("2026-08-12T23:10:00Z")).toBe("1910");
   });
 
-  it("constructs MLB with time when commence has clock", () => {
+  it("constructs MLB with ET time when commence has clock", () => {
     expect(
       toKalshiEventTicker({
         league: "MLB",
@@ -70,7 +74,7 @@ describe("date/time fragments + constructed tickers", () => {
         awayAbbr: "MIL",
         homeAbbr: "SD",
       }),
-    ).toBe("KXMLBGAME-26AUG122310MILSD");
+    ).toBe("KXMLBGAME-26AUG121910MILSD");
   });
 
   it("NBA remains date-only constructed grammar", () => {

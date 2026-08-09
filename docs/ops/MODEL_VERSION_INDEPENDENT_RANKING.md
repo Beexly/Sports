@@ -1,4 +1,9 @@
-# MODEL_VERSION v5.2.1 — Independent ranking path
+# MODEL_VERSION v5.2.2 — Independent ranking path
+
+## What changed (v5.2.2)
+- **Dixon–Coles** soccer independent (`dixon_coles`) — TeamGameLog λ + τ(ρ) low-score correlation; market-free.
+- **Kalshi polarity**: ESPN abbr aliases, ET ticker fragments, 12h series skew, both-sides-or-null fair.
+- Ranking math (trueProb / blend 0.7 / bake-off kinds / separation gate) **unchanged** from v5.2.1.
 
 ## What changed (v5.2.1 quality pass)
 - Ranking uses **trueProb whenever finite** (including PASS) so overpriced favorites demote — not only SPEAK|LEAN.
@@ -27,13 +32,13 @@ Independents (Poisson / Elo / Kalshi / ESPN PowerIndex) wire into `OddsInput.con
 - Free-path ABSENT-only; Odds key untouched
 - Maps (Platt/Temp/Isotonic) still offline bake-off only
 - Spread/TOTAL: rankingP = confidence until ATS/total independents exist (explicit)
-- MODEL_VERSION string remains **v5.2.1** (coverage-only harvest)
+- MODEL_VERSION string is **v5.2.2**
 
 ## Why this is the PROVEN lever
 Live bake-off showed confidence RES ≈ 0.002 (market-echo). Edge-as-p was a category error (negative separation). Pricing real model P raises Murphy RES without inventing skill.
 
 ## Self-correction
-After new picks settle under v5.2.1:
+After new picks settle under v5.2.2:
 - If selective RES on independent/blend still < 0.02 → engine resolution insufficient; need sport-specific models / new features — **not more maps**.
 - Maps will not unlock PROVEN while RES≈0.
 
@@ -43,4 +48,4 @@ After new picks settle under v5.2.1:
 - rankingPolarityLaw: positive_separation_required
 
 ## Founder
-Promote Production to main after merge. Re-run calibration-metrics cron. Generate new slate so independents (FPI/Kalshi/Elo/ClubElo) price into rankingP. Odds insert SLA is separate (stale odds ≠ ranking polarity).
+Promote Production to main after merge. Re-run calibration-metrics cron. Generate new slate so independents (FPI/Kalshi/Elo/ClubElo/Dixon–Coles) price into rankingP. Odds insert SLA is separate (stale odds ≠ ranking polarity).

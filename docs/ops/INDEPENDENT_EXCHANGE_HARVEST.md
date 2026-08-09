@@ -1,9 +1,10 @@
-# Independent exchange harvest (coverage expansion under v5.2.1)
+# Independent exchange harvest (v5.2.1 → v5.2.2)
 
-**MODEL_VERSION stays `v5.2.1`.** This work expands *which* independents fill
-`independentFairValues` — it does **not** change ranking math, floors,
-AUTO_PUBLISH, maps, or free-path ABSENT-only. No CalibrationProposal required
-unless ranking formula / bake-off kinds change.
+**MODEL_VERSION `v5.2.2`** adds Dixon–Coles soccer + Kalshi match polarity.
+Coverage harvest from v5.2.1 remains. Floors, AUTO_PUBLISH, maps, free-path
+ABSENT-only unchanged. See CalibrationProposal
+`2026-08-09-dixon-coles-kalshi-match-v5.2.2.md`.
+
 
 ## What shipped
 
@@ -14,7 +15,17 @@ unless ranking formula / bake-off kinds change.
 | **ClubElo** | Soccer Fixtures W/D/L → 2-way, else rating logistic | Soccer sport keys only |
 | **ESPN FPI** | Unchanged logistic | Exact name match |
 | **Poisson / Elo** | Unchanged from TeamGameLog | Sport validity |
+| **Dixon–Coles** | Soccer τ(ρ) on Poisson joint (source `dixon_coles`) | Soccer only; same rates as Poisson |
 | **Polymarket Gamma** | Internal estimator only | `INDEPENDENT_POLYMARKET=1` default **OFF** |
+
+### Kalshi match polarity (v5.2.2)
+
+- ESPN short aliases: CHW→CWS, GS→GSW, NY→NYK, SA→SAS, NO→NOP, UTAH→UTA, NJ→NJD.
+- Unknown 2–6 letter tokens → **null** (no invent).
+- ISO commence → **America/New_York** date/time fragments (date-only stays calendar).
+- Series attach drops candidates with |Δt| > 12h when occurrence known.
+- `toIndependentFairValue`: both sides null if either unmapped/unquoted.
+
 
 ## Kalshi series path (why)
 
@@ -50,12 +61,13 @@ verified live 2026-08-09 against `external-api.kalshi.com`.
 ## Founder ops
 
 1. Promote Production → main after merge (if lagging).
-2. Re-run calibration-metrics; generate slate under v5.2.1.
+2. Re-run calibration-metrics; generate slate under v5.2.2.
 3. Expect more `independentFairValues` hits on MLB/soccer when Kalshi/ClubElo up.
 4. Optional research: set `INDEPENDENT_POLYMARKET=1` in a non-prod env only.
 
 ## Research lineage
 
 - `/workspace/research/sports-skills` — KALSHI_SERIES, ClubElo fixtures, markets matching
+- `/workspace/research/machina-predictions-templates` — Dixon–Coles τ(ρ) monte-carlo
 - `/workspace/research/polymarket-template` — Gamma read-only patterns
 - Existing GSE `@sports/quote-plane` polymarket-gamma (product hold remains)

@@ -7,8 +7,9 @@
  *  3) ESPN PowerIndex logistic (NFL/CFB/NBA/NCAAB when FPI available)
  *  4) ClubElo soccer (Fixtures W/D/L → 2-way, else rating logistic)
  *  5) Poisson team rates from TeamGameLog (soccer / icehockey / baseball only)
- *  6) Elo fitted from chronological TeamGameLog results
- *  7) Polymarket Gamma internal estimator — ONLY when INDEPENDENT_POLYMARKET=1
+ *  6) Dixon–Coles τ(ρ) soccer independent (same rates, low-score correlation)
+ *  7) Elo fitted from chronological TeamGameLog results
+ *  8) Polymarket Gamma internal estimator — ONLY when INDEPENDENT_POLYMARKET=1
  *     (compliance hold: not product, not cron clear)
  *
  * Never synthesizes λ, ratings, or FPI. Never invents book lines.
@@ -35,6 +36,8 @@ import {
 import {
   isPoissonValidSport,
   poissonIndependentFairValue,
+  isDixonColesValidSport,
+  dixonColesIndependentFairValue,
   fitEloRatingsFromResults,
   eloFairValueFromRatings,
   powerIndexToIndependentFairValue,
@@ -73,16 +76,10 @@ export function guessKalshiTeamAbbr(
   teamName: string,
   league?: KalshiLeague | null,
 ): string | null {
-  if (league) {
-    const mapped = resolveKalshiTeamAbbr(league, teamName);
-    if (mapped) return mapped;
-  }
-  const t = teamName.trim();
-  if (!t) return null;
-  if (/^[A-Za-z]{2,6}$/.test(t)) return t.toUpperCase();
-  const paren = t.match(/\(([A-Za-z]{2,6})\)/);
-  if (paren?.[1]) return paren[1].toUpperCase();
-  return null;
+  // League-scoped resolve only — blind short passthrough without a league table
+  // is polarity poison (CHW≠CWS, GS≠GSW). No league → no opinion.
+  if (!league) return null;
+  return resolveKalshiTeamAbbr(league, teamName);
 }
 
 /**
@@ -326,13 +323,31 @@ export async function buildIndependentFairValues(
             capturedAt: now().toISOString(),
           });
         }
+        // Dixon–Coles: soccer-only second rate model (τ on 0-0/0-1/1-0/1-1).
+        // Market-free; reuses same TeamGameLog λ. Soft-fail → null is honest.
+        if (isDixonColesValidSport(input.sportKey)) {
+          const dc = dixonColesIndependentFairValue({
+            sportKey: input.sportKey,
+            homeRecords,
+            awayRecords,
+            leagueAvgScored: leagueAvg,
+          });
+          if (dc) {
+            out.push({
+              source: "dixon_coles",
+              homeFairProb: dc.homeFairProb,
+              awayFairProb: dc.awayFairProb,
+              capturedAt: now().toISOString(),
+            });
+          }
+        }
       }
     } catch {
       // Soft-fail: null opinion is honest.
     }
   }
 
-  // 6) Elo from chronological results.
+  // 7) Elo from chronological results.
   try {
     const ratings = await getOrFitEloRatings(
       eloCache,
@@ -350,7 +365,7 @@ export async function buildIndependentFairValues(
     // Soft-fail.
   }
 
-  // 7) Polymarket Gamma internal (env-gated compliance hold).
+  // 8) Polymarket Gamma internal (env-gated compliance hold).
   if (
     !input.skipNetworkIndependents &&
     !input.prefetched?.some((f) => f.source === "polymarket_gamma_internal")

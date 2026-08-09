@@ -212,33 +212,104 @@ export function constructedEventSeriesStem(league: KalshiLeagueCode): string {
   return stems[league];
 }
 
-/** Kalshi date fragment: 26AUG12 from a UTC date. */
+/** Kalshi US sports calendar uses America/New_York wall dates. */
+export const KALSHI_TICKER_TZ = "America/New_York";
+
+const MONTHS = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+] as const;
+
+function etParts(d: Date): {
+  year: number;
+  monthIndex: number;
+  day: number;
+  hour: number;
+  minute: number;
+} {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: KALSHI_TICKER_TZ,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(d);
+  const get = (type: string): number => {
+    const v = parts.find((p) => p.type === type)?.value;
+    return v != null ? Number(v) : Number.NaN;
+  };
+  return {
+    year: get("year"),
+    monthIndex: get("month") - 1,
+    day: get("day"),
+    hour: get("hour"),
+    minute: get("minute"),
+  };
+}
+
+/**
+ * Kalshi date fragment: 26AUG12.
+ * - Pure YYYY-MM-DD strings are treated as calendar days (no TZ shift).
+ * - Full ISO instants use America/New_York wall date (sports-skills / live Kalshi).
+ */
 export function toKalshiDateFragment(dateUtc: string): string {
+  const trimmed = dateUtc.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    const [ys, ms, ds] = trimmed.split("-");
+    const year = Number(ys);
+    const monthIndex = Number(ms) - 1;
+    const day = Number(ds);
+    if (!Number.isFinite(year) || monthIndex < 0 || monthIndex > 11 || day < 1) {
+      throw new Error(`Invalid game date: ${dateUtc}`);
+    }
+    const yy = String(year).slice(2);
+    const mon = MONTHS[monthIndex];
+    const dd = String(day).padStart(2, "0");
+    return `${yy}${mon}${dd}`;
+  }
   const d = new Date(dateUtc);
   if (Number.isNaN(d.getTime())) {
     throw new Error(`Invalid game date: ${dateUtc}`);
   }
-  const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"] as const;
-  const yy = String(d.getUTCFullYear()).slice(2);
-  const mon = MONTHS[d.getUTCMonth()];
-  const dd = String(d.getUTCDate()).padStart(2, "0");
+  const p = etParts(d);
+  if (!Number.isFinite(p.year) || p.monthIndex < 0 || p.monthIndex > 11) {
+    throw new Error(`Invalid game date: ${dateUtc}`);
+  }
+  const yy = String(p.year).slice(2);
+  const mon = MONTHS[p.monthIndex];
+  const dd = String(p.day).padStart(2, "0");
   return `${yy}${mon}${dd}`;
 }
 
 /**
- * Optional local kickoff HHMM for MLB-style time-encoded tickers.
- * Uses the local wall components of the ISO commence when present;
- * for pure date-only strings returns null (series search by date + teams).
+ * Optional ET kickoff HHMM for MLB-style time-encoded tickers.
+ * Pure date-only strings → null (series search by date + teams).
+ * Port: sports-skills markets connector uses America/New_York wall clock.
  */
 export function toKalshiTimeFragment(dateUtc: string): string | null {
-  // Only encode when the input carries a real time component (not midnight-only date).
   if (/^\d{4}-\d{2}-\d{2}$/.test(dateUtc.trim())) return null;
   const d = new Date(dateUtc);
   if (Number.isNaN(d.getTime())) return null;
-  // Kalshi MLB uses local ET wall time in many tickers; try UTC first as a candidate.
-  // Series search will still match without it.
-  const hh = String(d.getUTCHours()).padStart(2, "0");
-  const mm = String(d.getUTCMinutes()).padStart(2, "0");
+  const p = etParts(d);
+  if (!Number.isFinite(p.hour) || !Number.isFinite(p.minute)) return null;
+  const hh = String(p.hour).padStart(2, "0");
+  const mm = String(p.minute).padStart(2, "0");
+  // Midnight ET with no meaningful clock → treat as date-only (series recovers).
   if (hh === "00" && mm === "00") return null;
   return `${hh}${mm}`;
 }
+
+/** Max |commence − market occurrence| for series attach (sports-skills: 12h). */
+export const MAX_MARKET_START_SKEW_MS = 12 * 60 * 60 * 1000;
