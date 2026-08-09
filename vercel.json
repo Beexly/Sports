@@ -11,7 +11,11 @@
   "crons": [
     {
       "path": "/api/cron/refresh-odds",
-      "schedule": "*/30 * * * *"
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/board-fill",
+      "schedule": "2,17,32,47 * * * *"
     },
     {
       "path": "/api/cron/settle-picks",
@@ -23,7 +27,7 @@
     },
     {
       "path": "/api/cron/generate-signal-slate",
-      "schedule": "0 */2 * * *"
+      "schedule": "5,20,35,50 * * * *"
     },
     {
       "path": "/api/cron/generate-drafts",

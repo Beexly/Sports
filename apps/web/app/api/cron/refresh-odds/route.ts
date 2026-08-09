@@ -56,18 +56,21 @@ export async function GET(request: Request) {
   if (denied) return denied;
 
   const apiKey = process.env["THE_ODDS_API_KEY"]?.trim();
-  if (!apiKey) {
-    // Free mode: no paid Odds API key configured. Skip cleanly instead of
-    // erroring. Writes NOTHING (no ingestionRun, no odds) — invents no data —
-    // and returns 200 so the external-cron scheduler stays green while odds
-    // ingestion is intentionally off. Mirrors the no-key free-path handling in
-    // settle-picks/gamma. When THE_ODDS_API_KEY IS present, every line below
-    // runs exactly as before.
+  const rundownKey =
+    process.env["RUNDOWN_API_KEY"]?.trim() ||
+    process.env["RUNDOWN_KEY"]?.trim() ||
+    process.env["THERUNDOWN_API_KEY"]?.trim() ||
+    process.env["THE_RUNDOWN_API_KEY"]?.trim();
+  if (!apiKey && !rundownKey) {
+    // Free mode: no quote key. Still try signal slate so board can open without books.
+    const { generateSignalSlate } = await import("@sports/ingestion-pipeline");
+    const signals = await generateSignalSlate({ logPrefix: "[cron:refresh-odds:signal-only]" });
     return NextResponse.json({
       ok: true,
       skipped: "no-odds-key",
       refreshed: false,
-      reason: "THE_ODDS_API_KEY not configured — odds ingestion off (free mode)",
+      reason: "No THE_ODDS_API_KEY / RUNDOWN_API_KEY — signal-only board fill attempted",
+      signals,
     });
   }
 
@@ -98,6 +101,17 @@ export async function GET(request: Request) {
   const result = await refreshOdds(
     requestedSport ? { sport: requestedSport } : {}
   );
+
+  // Autonomous board fill: independent signals in same tick (no founder cron wait).
+  let signalFill: Awaited<ReturnType<typeof import("@sports/ingestion-pipeline").generateSignalSlate>> | null = null;
+  try {
+    const { generateSignalSlate } = await import("@sports/ingestion-pipeline");
+    signalFill = await generateSignalSlate({ logPrefix: "[cron:refresh-odds:signal]" });
+  } catch (sigErr) {
+    console.warn(
+      `[cron:refresh-odds] signal slate failed: ${sigErr instanceof Error ? sigErr.message : sigErr}`,
+    );
+  }
 
   if (result.ok) {
     await pingHealthcheck(pingUrl, "success");
@@ -131,6 +145,7 @@ export async function GET(request: Request) {
     bootstrapMode: gates.isBootstrapMode,
     results: result.results,
     freeze: result.freeze,
+    signals: signalFill,
     oddsFreshness: {
       scope: oddsFetchedAt.freshness.scope,
       status: oddsFetchedAt.freshness.status,

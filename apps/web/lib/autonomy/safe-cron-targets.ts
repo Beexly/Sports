@@ -15,6 +15,7 @@ export const AUTONOMY_SAFE_CRON_TARGETS = [
   "/api/cron/refresh-odds",
   "/api/cron/generate-drafts",
   "/api/cron/calibration-metrics",
+  "/api/cron/generate-signal-slate",
 ] as const;
 
 export type AutonomySafeCronTarget = (typeof AUTONOMY_SAFE_CRON_TARGETS)[number];

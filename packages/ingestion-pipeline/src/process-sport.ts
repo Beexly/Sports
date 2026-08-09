@@ -30,6 +30,8 @@ import {
   enrichGameContext,
   getAtsForm,
   getHeadToHeadForm,
+  resolveRundownApiKey,
+  fetchRundownEventsForSport,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
@@ -195,13 +197,45 @@ export async function processSport(
   try {
     const client = new OddsApiClient(apiKey);
     const normalizer = new DataNormalizer();
-
-    const { data: events, remainingRequests } = await client.getOdds(sport.key, [...MARKETS]);
     const fetchedAt = new Date();
+
+    let events: import("@sports/types").OddsApiEvent[] = [];
+    let remainingRequests: number | null = null;
+    let oddsProviderTag = "the-odds-api";
+
+    try {
+      const primary = await client.getOdds(sport.key, [...MARKETS]);
+      events = primary.data as import("@sports/types").OddsApiEvent[];
+      remainingRequests = primary.remainingRequests ?? null;
+    } catch (primaryErr) {
+      console.warn(
+        `${logPrefix} ${sport.key}: Odds API primary failed — ` +
+          `${primaryErr instanceof Error ? primaryErr.message : primaryErr}`,
+      );
+      events = [];
+    }
+
+    // Free dual-path: TheRundown when primary empty/fail and key present (never invent).
+    if (events.length === 0) {
+      const rundownKey = resolveRundownApiKey();
+      if (rundownKey) {
+        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.events.length > 0) {
+          events = rd.events;
+          oddsProviderTag = "therundown";
+          console.log(
+            `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
+              (rd.error ? ` (note: ${rd.error})` : ""),
+          );
+        } else if (rd.error) {
+          console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rd.error}`);
+        }
+      }
+    }
 
     try {
       await recordSourceSnapshot({
-        provider: "the-odds-api",
+        provider: oddsProviderTag,
         sourceKind: "ODDS_EVENTS",
         sport: sport.key,
         ingestionRunId: run.id,
@@ -216,7 +250,8 @@ export async function processSport(
     }
 
     console.log(
-      `${logPrefix} ${sport.key}: ${events.length} events, ${remainingRequests} requests remaining`
+      `${logPrefix} ${sport.key}: ${events.length} events via ${oddsProviderTag}` +
+        (remainingRequests != null ? `, ${remainingRequests} odds-api remaining` : ""),
     );
 
     if (!normalizer.validateFreshness(fetchedAt)) {

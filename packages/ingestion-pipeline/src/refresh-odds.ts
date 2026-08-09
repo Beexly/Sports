@@ -29,7 +29,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, getInSeasonSports, resolveRundownApiKey } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "./process-sport.js";
 import { freezeSlateCommitments, type SlateFreezeResult } from "./freeze-slate-commitments.js";
@@ -99,22 +99,35 @@ export async function refreshOdds(
   const apiKey = process.env["THE_ODDS_API_KEY"]?.trim() ?? "";
   const startedAt = Date.now();
 
-  // Soft-fail when the paid odds provider is offline (missing key / unpaid).
-  // Do not invent quotes; callers (cron) get ok:false with an explicit error
-  // instead of an uncaught throw. Gate integrity stays refusal-native.
-  if (!apiKey || process.env["ODDS_PROVIDER"]?.trim().toLowerCase() === "offline") {
-    const reason = !apiKey
-      ? "THE_ODDS_API_KEY missing — odds provider offline; refusing to invent quotes"
-      : "ODDS_PROVIDER=offline — refusing to invent quotes";
+  // Soft-fail only when NO quote path exists (Odds API + Rundown free dual-path).
+  // Never invent quotes. ODDS_PROVIDER=offline forces refuse.
+  const rundownKey = resolveRundownApiKey();
+  if (process.env["ODDS_PROVIDER"]?.trim().toLowerCase() === "offline") {
     return {
       ok: false,
       elapsedMs: Date.now() - startedAt,
       okCount: 0,
       totalCount: 0,
-      results: [{ sport: "_", ok: false, error: reason }],
+      results: [{ sport: "_", ok: false, error: "ODDS_PROVIDER=offline — refusing to invent quotes" }],
       freeze: [],
     };
   }
+  if (!apiKey && !rundownKey) {
+    return {
+      ok: false,
+      elapsedMs: Date.now() - startedAt,
+      okCount: 0,
+      totalCount: 0,
+      results: [{
+        sport: "_",
+        ok: false,
+        error: "No odds key — set THE_ODDS_API_KEY and/or RUNDOWN_API_KEY (free dual-path)",
+      }],
+      freeze: [],
+    };
+  }
+  // processSport accepts empty Odds key when Rundown is present (primary soft-fails → free path).
+  const processKey = apiKey || "rundown-free-path";
 
   const gates = getReadinessGates();
   const requestedSport = opts.sport ?? null;
@@ -138,7 +151,7 @@ export async function refreshOdds(
       // catches internally and RESOLVES { status: "failed", error }. Inspect
       // the returned status so a failed sport is recorded as ok:false (and the
       // Healthchecks success ping cannot fire falsely on a silent failure).
-      const res = await processSport(sport, apiKey, gates, "[cron:refresh-odds]");
+      const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
       results.push(
         res.status === "success"
           ? { sport: sport.key, ok: true }

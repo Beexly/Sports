@@ -54,6 +54,10 @@ vi.mock("../freeze-slate-commitments.js", () => ({
 vi.mock("@sports/data-ingestion", () => ({
   SUPPORTED_SPORTS: hoisted.SPORTS,
   getInSeasonSports: hoisted.getInSeasonSports,
+  resolveRundownApiKey: () =>
+    process.env["RUNDOWN_API_KEY"]?.trim() ||
+    process.env["RUNDOWN_KEY"]?.trim() ||
+    "",
 }));
 
 vi.mock("@sports/prediction-engine", () => ({
@@ -237,8 +241,10 @@ describe("refreshOdds", () => {
       delete process.env["ODDS_PROVIDER"];
     });
 
-    it("soft-fails with a named reason when THE_ODDS_API_KEY is not configured", async () => {
+    it("soft-fails with a named reason when no odds keys configured", async () => {
       delete process.env["THE_ODDS_API_KEY"];
+      delete process.env["RUNDOWN_API_KEY"];
+      delete process.env["RUNDOWN_KEY"];
 
       const result = await refreshOdds();
 
@@ -251,7 +257,7 @@ describe("refreshOdds", () => {
           {
             sport: "_",
             ok: false,
-            error: "THE_ODDS_API_KEY missing — odds provider offline; refusing to invent quotes",
+            error: "No odds key — set THE_ODDS_API_KEY and/or RUNDOWN_API_KEY (free dual-path)",
           },
         ],
         freeze: [],

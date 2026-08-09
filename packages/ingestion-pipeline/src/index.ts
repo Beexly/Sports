@@ -109,3 +109,6 @@ export {
 
 export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
 export type { SignalSlateResult } from "./generate-signal-slate.js";
+
+export { runBoardFillPipeline } from "./board-fill.js";
+export type { BoardFillResult } from "./board-fill.js";

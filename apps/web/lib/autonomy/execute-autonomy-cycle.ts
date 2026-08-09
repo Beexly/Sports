@@ -30,6 +30,7 @@ export const EXECUTABLE_CRON_TARGETS = {
   RUN_REFRESH_ODDS_FREE: "/api/cron/refresh-odds",
   RUN_GENERATE_DRAFTS: "/api/cron/generate-drafts",
   RUN_CALIBRATION_METRICS: "/api/cron/calibration-metrics",
+  RUN_GENERATE_SIGNAL_SLATE: "/api/cron/generate-signal-slate",
 } as const satisfies Partial<Record<AutonomyActionKind, string>>;
 
 /** Soft load-time check: EXECUTABLE paths must equal SAFE allow-list. */

@@ -213,3 +213,11 @@ export {
   findMatchingTeamInText,
   parseSportsScore,
 } from "./team-text-match.js";
+
+export {
+  resolveRundownApiKey,
+  fetchRundownEventsForSport,
+  rundownEventToOddsApiEvent,
+  RUNDOWN_SPORT_IDS,
+} from "./rundown-client.js";
+export type { RundownFetchResult } from "./rundown-client.js";
