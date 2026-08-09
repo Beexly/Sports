@@ -69,6 +69,8 @@ export async function generateSignalSlate(opts?: {
   readonly horizonHours?: number;
   readonly logPrefix?: string;
   readonly now?: Date;
+  /** When true, do not call ESPN seed (board-fill already seeded). */
+  readonly skipSeed?: boolean;
 }): Promise<SignalSlateResult> {
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
   const now = opts?.now ?? new Date();
@@ -79,6 +81,27 @@ export async function generateSignalSlate(opts?: {
   let candidatesWithIndependents = 0;
   let picksUpserted = 0;
   let picksSkipped = 0;
+
+  // Cold Game table: seed free ESPN schedule so signals can publish without quote keys.
+  if (!opts?.skipSeed) {
+    const existing = await db.game.count({
+      where: { commenceTime: { gte: now, lte: horizon } },
+    });
+    if (existing === 0) {
+      try {
+        const { seedGamesFromEspn } = await import("./seed-games-from-espn.js");
+        await seedGamesFromEspn({
+          horizonHours,
+          logPrefix: `${logPrefix}:auto-seed`,
+          now,
+        });
+      } catch (seedErr) {
+        errors.push(
+          `espn auto-seed: ${seedErr instanceof Error ? seedErr.message : String(seedErr)}`,
+        );
+      }
+    }
+  }
 
   const gameList = await db.game.findMany({
     where: { commenceTime: { gte: now, lte: horizon } },

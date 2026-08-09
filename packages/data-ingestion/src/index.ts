@@ -216,8 +216,26 @@ export {
 
 export {
   resolveRundownApiKey,
+  rundownApiKeyPresence,
   fetchRundownEventsForSport,
   rundownEventToOddsApiEvent,
   RUNDOWN_SPORT_IDS,
+  RUNDOWN_API_KEY_ENV_NAMES,
 } from "./rundown-client.js";
-export type { RundownFetchResult } from "./rundown-client.js";
+export type { RundownFetchResult, RundownApiKeyEnvName } from "./rundown-client.js";
+
+export {
+  resolveOddsApiKey,
+  oddsApiKeyPresence,
+  ODDS_API_KEY_ENV_NAMES,
+} from "./odds-api-key.js";
+export type { OddsApiKeyEnvName } from "./odds-api-key.js";
+
+export {
+  parseEspnScoreboardForSeed,
+  fetchEspnSeedGamesForSport,
+  fetchAllEspnSeedGames,
+  SHORT_TO_ODDS_SPORT,
+  sportMetaForKey,
+} from "./espn-schedule-seed.js";
+export type { ShortSportKey, EspnSeedGame } from "./espn-schedule-seed.js";

@@ -13,6 +13,7 @@ describe("rundown-client", () => {
   it("resolves key from env aliases", () => {
     expect(resolveRundownApiKey({ RUNDOWN_API_KEY: " a " })).toBe("a");
     expect(resolveRundownApiKey({ RUNDOWN_KEY: "b" })).toBe("b");
+    expect(resolveRundownApiKey({ FREE_RUNDOWN_API_KEY: "c" })).toBe("c");
     expect(resolveRundownApiKey({})).toBe("");
   });
 

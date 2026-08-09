@@ -19,6 +19,7 @@ import { persistFreeSpineSnapshot } from "@/lib/data-sources/free-spine-durable"
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
 import { probeNflverseSourceCurrency } from "@sports/data-ingestion";
 import { captureError } from "@/lib/observability/sentry";
+import { resolveOddsApiKey, resolveRundownApiKey } from "@sports/data-ingestion";
 import { runBoardFillPipeline } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
@@ -141,9 +142,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     // Autonomous board fill when quote keys exist (no founder click; same process).
   let boardFill: Awaited<ReturnType<typeof runBoardFillPipeline>> | null = null;
   try {
-    const hasOdds =
-      Boolean(process.env["THE_ODDS_API_KEY"]?.trim()) ||
-      Boolean(process.env["RUNDOWN_API_KEY"]?.trim() || process.env["RUNDOWN_KEY"]?.trim());
+    const hasOdds = Boolean(resolveOddsApiKey()) || Boolean(resolveRundownApiKey());
     if (hasOdds || true /* always attempt signal path */) {
       // Always attempt signal slate; odds path no-ops honestly when keys absent.
       boardFill = await runBoardFillPipeline({ logPrefix: "[cron:free-spine:board-fill]" });

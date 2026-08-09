@@ -29,7 +29,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { SUPPORTED_SPORTS, getInSeasonSports, resolveRundownApiKey } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, getInSeasonSports, resolveRundownApiKey, resolveOddsApiKey } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "./process-sport.js";
 import { freezeSlateCommitments, type SlateFreezeResult } from "./freeze-slate-commitments.js";
@@ -96,7 +96,7 @@ export interface RefreshOddsOptions {
 export async function refreshOdds(
   opts: RefreshOddsOptions = {},
 ): Promise<RefreshOddsResult> {
-  const apiKey = process.env["THE_ODDS_API_KEY"]?.trim() ?? "";
+  const apiKey = resolveOddsApiKey();
   const startedAt = Date.now();
 
   // Soft-fail only when NO quote path exists (Odds API + Rundown free dual-path).

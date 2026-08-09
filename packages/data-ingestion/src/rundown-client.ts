@@ -24,16 +24,39 @@ export const RUNDOWN_SPORT_IDS: Record<string, number> = {
   soccer_usa_mls: 11,
 };
 
+/** Env names checked for free dual-path Rundown key (first non-empty wins). */
+export const RUNDOWN_API_KEY_ENV_NAMES = [
+  "RUNDOWN_API_KEY",
+  "RUNDOWN_KEY",
+  "THERUNDOWN_API_KEY",
+  "THE_RUNDOWN_API_KEY",
+  "THERUNDOWN_KEY",
+  "THE_RUNDOWN_KEY",
+  "RUNDOWN_API_TOKEN",
+  "FREE_RUNDOWN_API_KEY",
+  "THERUNDOWN_API",
+] as const;
+
+export type RundownApiKeyEnvName = (typeof RUNDOWN_API_KEY_ENV_NAMES)[number];
+
 export function resolveRundownApiKey(
   env: Record<string, string | undefined> = process.env,
 ): string {
-  return (
-    env["RUNDOWN_API_KEY"]?.trim() ||
-    env["RUNDOWN_KEY"]?.trim() ||
-    env["THERUNDOWN_API_KEY"]?.trim() ||
-    env["THE_RUNDOWN_API_KEY"]?.trim() ||
-    ""
-  );
+  for (const name of RUNDOWN_API_KEY_ENV_NAMES) {
+    const v = env[name]?.trim();
+    if (v) return v;
+  }
+  return "";
+}
+
+/** Boolean presence only — never returns secret material. */
+export function rundownApiKeyPresence(
+  env: Record<string, string | undefined> = process.env,
+): { present: boolean; matchedEnv: RundownApiKeyEnvName | null } {
+  for (const name of RUNDOWN_API_KEY_ENV_NAMES) {
+    if (env[name]?.trim()) return { present: true, matchedEnv: name };
+  }
+  return { present: false, matchedEnv: null };
 }
 
 function todayIsoUtc(d = new Date()): string {

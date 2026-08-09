@@ -112,3 +112,6 @@ export type { SignalSlateResult } from "./generate-signal-slate.js";
 
 export { runBoardFillPipeline } from "./board-fill.js";
 export type { BoardFillResult } from "./board-fill.js";
+
+export { seedGamesFromEspn } from "./seed-games-from-espn.js";
+export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";

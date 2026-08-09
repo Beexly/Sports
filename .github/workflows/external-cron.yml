@@ -32,6 +32,10 @@ on:
     # Hourly at :22 — autonomy plan (+ execute when AUTONOMY_EXECUTE=true).
     # Fills I2 freshness self-heal between free-spine ticks (age > 90m).
     - cron: "22 * * * *"
+    # Hourly at :10 — autonomous board fill (ESPN seed + odds dual-path + signals).
+    - cron: "10 * * * *"
+    # Hourly at :25 — signal slate only (independent fair values).
+    - cron: "25 * * * *"
   workflow_dispatch:
     inputs:
       target:
@@ -43,6 +47,8 @@ on:
           - free-spine-health
           - refresh-player-stats
           - refresh-odds
+          - board-fill
+          - generate-signal-slate
           - settle-picks
           - jarvis-snapshot
           - autonomy-cycle
@@ -230,3 +236,62 @@ jobs:
             cat /tmp/body.json
           fi
           test "${response}" = "200"
+
+  board-fill:
+    name: Board fill (ESPN seed + odds + signals)
+    if: ${{ github.event.schedule == '10 * * * *' || github.event.inputs.target == 'board-fill' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Hit /api/cron/board-fill
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
+            --max-time 360 \
+            "${CRON_TARGET_URL}/api/cron/board-fill")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
+
+  generate-signal-slate:
+    name: Generate signal slate (independents only)
+    if: ${{ github.event.schedule == '25 * * * *' || github.event.inputs.target == 'generate-signal-slate' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Hit /api/cron/generate-signal-slate
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location \
+            --max-time 360 \
+            "${CRON_TARGET_URL}/api/cron/generate-signal-slate")
+          echo "HTTP ${response}"
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/body.json || cat /tmp/body.json
+          else
+            cat /tmp/body.json
+          fi
+          test "${response}" = "200"
+

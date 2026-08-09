@@ -1,6 +1,6 @@
 /**
- * Autonomous board fill — odds (Odds API + Rundown free) + signal slate.
- * In-process; no founder click. Auth: CRON_SECRET.
+ * Autonomous board fill — ESPN seed + odds (Odds API + Rundown free) + signal slate.
+ * In-process; no founder click. Auth: CRON_SECRET or Vercel platform cron.
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
@@ -20,6 +20,16 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.json({
       ok: result.ok,
       note: result.note,
+      quoteKeys: result.quoteKeys,
+      seed: {
+        ok: result.seed.ok,
+        fetched: result.seed.fetched,
+        upcoming: result.seed.upcoming,
+        upserted: result.seed.upserted,
+        skippedPast: result.seed.skippedPast,
+        errors: result.seed.errors.slice(0, 8),
+        note: result.seed.note,
+      },
       odds: {
         ok: result.odds.ok,
         okCount: result.odds.okCount,

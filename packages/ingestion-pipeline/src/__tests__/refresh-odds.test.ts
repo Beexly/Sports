@@ -54,9 +54,15 @@ vi.mock("../freeze-slate-commitments.js", () => ({
 vi.mock("@sports/data-ingestion", () => ({
   SUPPORTED_SPORTS: hoisted.SPORTS,
   getInSeasonSports: hoisted.getInSeasonSports,
+  resolveOddsApiKey: () =>
+    process.env["THE_ODDS_API_KEY"]?.trim() ||
+    process.env["ODDS_API_KEY"]?.trim() ||
+    process.env["FREE_ODDS_API_KEY"]?.trim() ||
+    "",
   resolveRundownApiKey: () =>
     process.env["RUNDOWN_API_KEY"]?.trim() ||
     process.env["RUNDOWN_KEY"]?.trim() ||
+    process.env["FREE_RUNDOWN_API_KEY"]?.trim() ||
     "",
 }));
 
@@ -242,9 +248,13 @@ describe("refreshOdds", () => {
     });
 
     it("soft-fails with a named reason when no odds keys configured", async () => {
-      delete process.env["THE_ODDS_API_KEY"];
-      delete process.env["RUNDOWN_API_KEY"];
-      delete process.env["RUNDOWN_KEY"];
+      for (const k of [
+        "THE_ODDS_API_KEY","ODDS_API_KEY","THEODDS_API_KEY","THE_ODDS_API",
+        "ODDS_API_KEY_FREE","FREE_ODDS_API_KEY","ODDSAPI_KEY","ODDS_API_IO_KEY",
+        "RUNDOWN_API_KEY","RUNDOWN_KEY","THERUNDOWN_API_KEY","THE_RUNDOWN_API_KEY",
+        "THERUNDOWN_KEY","THE_RUNDOWN_KEY","RUNDOWN_API_TOKEN","FREE_RUNDOWN_API_KEY",
+        "THERUNDOWN_API",
+      ]) delete process.env[k];
 
       const result = await refreshOdds();
 

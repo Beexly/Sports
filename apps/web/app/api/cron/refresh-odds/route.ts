@@ -36,7 +36,7 @@
 
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, resolveOddsApiKey, resolveRundownApiKey } from "@sports/data-ingestion";
 import { refreshOdds } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
@@ -55,12 +55,8 @@ export async function GET(request: Request) {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
-  const apiKey = process.env["THE_ODDS_API_KEY"]?.trim();
-  const rundownKey =
-    process.env["RUNDOWN_API_KEY"]?.trim() ||
-    process.env["RUNDOWN_KEY"]?.trim() ||
-    process.env["THERUNDOWN_API_KEY"]?.trim() ||
-    process.env["THE_RUNDOWN_API_KEY"]?.trim();
+  const apiKey = resolveOddsApiKey();
+  const rundownKey = resolveRundownApiKey();
   if (!apiKey && !rundownKey) {
     // Free mode: no quote key. Still try signal slate so board can open without books.
     const { generateSignalSlate } = await import("@sports/ingestion-pipeline");
