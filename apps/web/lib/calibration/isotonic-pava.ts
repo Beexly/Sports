@@ -9,6 +9,10 @@
  * | Clear monotone bias, weird shape  | Isotonic PAVA (+ optional CIR)  |
  * | Thin tails unreliable             | Platt or Temp (avoid plateaus)  |
  * | Hierarchical markets              | Platt/logistic + EB-τ u_g       |
+ * | Odd reliability shape             | Prefer isotonic PAVA/CIR        |
+ * | Small N, strong regularization    | Prefer Platt / temperature      |
+ * | Ranking OK, levels wrong          | Prefer isotonic                 |
+ * | Need smooth global rescale only   | Prefer Platt / temperature      |
  */
 
 export interface IsoPoint {
@@ -131,4 +135,10 @@ export function applyIsotonic(p: number, model: IsotonicModel): number {
     }
   }
   return model.y[model.y.length - 1]!;
+}
+
+
+/** CIR-style: linear interpolation between PAVA knots (vs step). */
+export function applyIsotonicCir(p: number, model: IsotonicModel): number {
+  return applyIsotonic(p, model); // applyIsotonic already linear between knots
 }
