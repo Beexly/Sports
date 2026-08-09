@@ -1,6 +1,14 @@
 /**
- * Isotonic regression (PAVA) for probability calibration — offline R&D only.
- * Does not enable CALIBRATION_ADJUSTMENTS or production maps.
+ * Isotonic regression (true PAVA on sorted scores) — offline R&D only.
+ * Apply OFF until holdout wins floors + founder enables CALIBRATION_ADJUSTMENTS.
+ *
+ * Calibrator matrix (doc only — not auto-selected in prod):
+ * | Situation                         | Prefer                          |
+ * |-----------------------------------|---------------------------------|
+ * | Smooth global rescale             | Platt IRLS                      |
+ * | Clear monotone bias, weird shape  | Isotonic PAVA (+ optional CIR)  |
+ * | Thin tails unreliable             | Platt or Temp (avoid plateaus)  |
+ * | Hierarchical markets              | Platt/logistic + EB-τ u_g       |
  */
 
 export interface IsoPoint {
@@ -9,8 +17,10 @@ export interface IsoPoint {
 }
 
 export interface IsotonicModel {
-  readonly x: readonly number[]; // sorted unique forecast knots
-  readonly y: readonly number[]; // nondecreasing fitted rates
+  /** Sorted unique forecast knots (input order after sort by p). */
+  readonly x: readonly number[];
+  /** Nondecreasing fitted rates aligned to x. */
+  readonly y: readonly number[];
   readonly note: string;
 }
 
@@ -19,77 +29,92 @@ function clamp01(v: number): number {
 }
 
 /**
- * Pool Adjacent Violators on equal-width bins of mean forecast vs observed rate.
+ * PAVA on sorted scores; y in {0,1} (or any real). Returns block means
+ * aligned to each index (same length as y).
  */
-export function fitIsotonicPava(
-  samples: readonly IsoPoint[],
-  nBins = 10,
-): IsotonicModel {
+export function pava(y: number[], w?: number[]): number[] {
+  const n = y.length;
+  if (n === 0) return [];
+  const weights = w ?? y.map(() => 1);
+  const mean = y.slice();
+  const wt = weights.slice();
+  const left = [...Array(n).keys()];
+  const right = [...Array(n).keys()];
+  let i = 0;
+  while (i < n - 1) {
+    if (mean[i]! <= mean[i + 1]! + 1e-15) {
+      i++;
+      continue;
+    }
+    let j = i;
+    while (j >= 0 && mean[j]! > mean[j + 1]! + 1e-15) {
+      const totalW = wt[j]! + wt[j + 1]!;
+      const m = (mean[j]! * wt[j]! + mean[j + 1]! * wt[j + 1]!) / totalW;
+      const L = left[j]!;
+      const R = right[j + 1]!;
+      for (let k = L; k <= R; k++) {
+        mean[k] = m;
+        wt[k] = totalW;
+        left[k] = L;
+        right[k] = R;
+      }
+      j = L - 1;
+    }
+    i = Math.max(i, right[i] ?? i) + 1;
+  }
+  return mean;
+}
+
+/**
+ * Fit isotonic map: sort by p, run PAVA on outcomes, collapse equal-p ties
+ * into knots for apply.
+ */
+export function fitIsotonicPava(samples: readonly IsoPoint[]): IsotonicModel {
   if (samples.length === 0) {
-    return { x: [0, 1], y: [0.5, 0.5], note: "empty → flat 0.5" };
+    return {
+      x: [0, 1],
+      y: [0.5, 0.5],
+      note: "empty → flat 0.5 (R&D only)",
+    };
   }
-  const bins = Array.from({ length: nBins }, (_, i) => ({
-    sumP: 0,
-    sumY: 0,
-    n: 0,
-    lo: i / nBins,
-  }));
-  for (const s of samples) {
-    const p = clamp01(s.p);
-    const idx = Math.min(nBins - 1, Math.floor(p * nBins));
-    bins[idx]!.sumP += p;
-    bins[idx]!.sumY += s.y;
-    bins[idx]!.n += 1;
-  }
-  // active bins
-  type Block = { w: number; sumY: number; meanP: number; meanY: number };
-  const blocks: Block[] = [];
-  for (const b of bins) {
-    if (b.n === 0) continue;
-    blocks.push({
-      w: b.n,
-      sumY: b.sumY,
-      meanP: b.sumP / b.n,
-      meanY: b.sumY / b.n,
-    });
-  }
-  if (blocks.length === 0) {
-    return { x: [0, 1], y: [0.5, 0.5], note: "no mass" };
-  }
-  // PAVA
-  const stack: Block[] = [];
-  for (const b of blocks) {
-    stack.push({ ...b });
-    while (
-      stack.length >= 2 &&
-      stack[stack.length - 2]!.meanY > stack[stack.length - 1]!.meanY
-    ) {
-      const right = stack.pop()!;
-      const left = stack.pop()!;
-      const w = left.w + right.w;
-      const sumY = left.sumY + right.sumY;
-      stack.push({
-        w,
-        sumY,
-        meanP: (left.meanP * left.w + right.meanP * right.w) / w,
-        meanY: sumY / w,
-      });
+
+  const ordered = samples
+    .map((s) => ({ p: clamp01(s.p), y: s.y as number }))
+    .sort((a, b) => a.p - b.p);
+
+  // Pool exact-p ties into weighted observations before PAVA
+  const uniqP: number[] = [];
+  const uniqY: number[] = [];
+  const uniqW: number[] = [];
+  for (const row of ordered) {
+    const last = uniqP.length - 1;
+    if (last >= 0 && Math.abs(uniqP[last]! - row.p) < 1e-12) {
+      const w0 = uniqW[last]!;
+      const w1 = 1;
+      uniqY[last] = (uniqY[last]! * w0 + row.y * w1) / (w0 + w1);
+      uniqW[last] = w0 + w1;
+    } else {
+      uniqP.push(row.p);
+      uniqY.push(row.y);
+      uniqW.push(1);
     }
   }
-  const x = stack.map((b) => b.meanP);
-  const y = stack.map((b) => clamp01(b.meanY));
-  // ensure nondecreasing (numerical)
-  for (let i = 1; i < y.length; i++) {
-    if (y[i]! < y[i - 1]!) y[i] = y[i - 1]!;
+
+  const fitted = pava(uniqY, uniqW).map(clamp01);
+
+  // Enforce nondecreasing (numerical guard)
+  for (let i = 1; i < fitted.length; i++) {
+    if (fitted[i]! < fitted[i - 1]!) fitted[i] = fitted[i - 1]!;
   }
+
   return {
-    x,
-    y,
-    note: "Isotonic PAVA (binned) — R&D only, apply OFF until holdout wins floors.",
+    x: uniqP,
+    y: fitted,
+    note: "True PAVA on sorted scores — R&D only; apply OFF until holdout wins floors.",
   };
 }
 
-/** Piecewise-constant / linear interpolate in probability space. */
+/** Piecewise-linear interpolate in probability space; flat outside range. */
 export function applyIsotonic(p: number, model: IsotonicModel): number {
   const x = clamp01(p);
   if (model.x.length === 0) return 0.5;
