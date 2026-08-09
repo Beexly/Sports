@@ -20,7 +20,7 @@ import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
 import { aciPublicPosture } from "@/lib/calibration/aci-durable";
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
-import { loadOrSeedProvenPathPlan } from "@/lib/ops/proven-path-seed";
+import { loadProvenPathSurface } from "@/lib/ops/proven-path-seed";
 import { explainLiveMurphy } from "@/lib/calibration/brier-minimization-explore";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
@@ -422,7 +422,23 @@ export async function GET(request: Request) {
         oddsFresh: oddsInserting?.withinRefreshSla === true,
       }),
       aciPosture: aciPublicPosture(),
-      provenPath: await loadOrSeedProvenPathPlan(),
+      ...(await (async () => {
+        const surface = await loadProvenPathSurface();
+        return {
+          provenPath: surface?.plan ?? null,
+          provenPathProjection: surface?.projection ?? null,
+          murphyExplain:
+            calibrationEligibility?.murphy != null &&
+            calibrationEligibility.brier != null
+              ? explainLiveMurphy({
+                  brier: calibrationEligibility.brier,
+                  reliability: calibrationEligibility.murphy.reliability,
+                  resolution: calibrationEligibility.murphy.resolution,
+                  uncertainty: calibrationEligibility.murphy.uncertainty,
+                })
+              : null,
+        };
+      })()),
       mapVsCanonical: {
         canonicalSettled: sample?.canonicalSettled ?? null,
         mapN: calibrationEligibility?.n ?? null,
