@@ -66,6 +66,10 @@ export interface FounderNextStepsInput {
   readonly nonSeedFloorProven?: number;
   /** Last odds-inserting SUCCESS outside Refresh SLA (kill switch dark). */
   readonly oddsInsertingStale?: boolean;
+  /** market | signal — dual board mode */
+  readonly boardSurface?: "market" | "signal";
+  /** Signal slate quiet (no recent model picks) */
+  readonly signalSlateStale?: boolean;
   readonly calibrationEligibilityStatus?: "GREEN" | "RED" | null;
   readonly calibrationPublished?: boolean;
   readonly calibrationAutoPublish?: boolean;
@@ -172,20 +176,48 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
   }
 
   if (input.canExposePublicPicks) {
-    if (input.oddsInsertingStale) {
+    const surface = input.boardSurface ?? "market";
+    if (surface === "signal") {
+      if (input.signalSlateStale) {
+        steps.push({
+          id: "signal-slate-regenerate",
+          domain: "product_gates",
+          priority: "P0",
+          action:
+            "PUBLIC_PICKS ON + signal board: model slate quiet — run generate-signal-slate cron (independents only; no book invent). Reopens when published PENDING signals exist for upcoming games.",
+        });
+      } else {
+        steps.push({
+          id: "public-picks-signal-on",
+          domain: "product_gates",
+          priority: "P0",
+          action:
+            "PUBLIC_PICKS ON + signal board live — model signals only (never book labels). PERFORMANCE_STATS stays OFF while eligibility RED.",
+        });
+      }
+      if (input.oddsInsertingStale) {
+        steps.push({
+          id: "market-odds-stale-optional",
+          domain: "product_gates",
+          priority: "P1",
+          action:
+            "Market odds insert outside Refresh SLA — market board stays dark. Optional: restore THE_ODDS_API_KEY quota for book labels; signal path does not need it.",
+        });
+      }
+    } else if (input.oddsInsertingStale) {
       steps.push({
         id: "public-picks-odds-stale",
         domain: "product_gates",
         priority: "P0",
         action:
-          "PUBLIC_PICKS ON but last odds insert is outside Refresh SLA — surface correctly dark. Confirm THE_ODDS_API_KEY quota for market board; OR set PUBLIC_BOARD_SURFACE=signal for model-signal board (slate-fresh, never book labels). Do not lower SLA.",
+          "PUBLIC_PICKS ON but last odds insert is outside Refresh SLA — market board dark. Confirm THE_ODDS_API_KEY quota; OR rely on auto signal board (PUBLIC_BOARD_SURFACE unset + odds stale).",
       });
     } else {
       steps.push({
         id: "public-picks-on",
         domain: "product_gates",
         priority: "P0",
-        action: "PUBLIC_PICKS is ON — confirm proof bar + settlement healthy before marketing.",
+        action: "PUBLIC_PICKS is ON — confirm proof bar + settlement healthy before marketing. PERFORMANCE_STATS still requires GREEN eligibility.",
       });
     }
   }

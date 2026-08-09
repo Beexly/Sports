@@ -11,6 +11,8 @@ import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown"
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
+import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reliability/public-freshness-gate";
+import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
 import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
@@ -19,7 +21,6 @@ import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
 import { aciPublicPosture } from "@/lib/calibration/aci-durable";
-import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
 import { loadProvenPathSurface } from "@/lib/ops/proven-path-seed";
 import { buildMurphyResSnapshot } from "@/lib/calibration/murphy-res-definition";
 import { conformalRdPosture } from "@/lib/calibration/conformal-calibration";
@@ -96,6 +97,8 @@ const MAIN_FEATURE_MARKERS = [
   "why-board-quiet-draft",
   "b2b-experimental-openapi",
   "pick-card-rankingp",
+  "generate-signal-slate",
+  "signal-board-launch-path",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -314,6 +317,13 @@ export async function GET(request: Request) {
     calibrationPublish?.canExposePerformanceStats === true;
   const calibrationPublished = effectivePerformanceStats;
 
+  const oddsStaleForSurface = await isMarketBoardOddsStale().catch(() => true);
+  const boardSurface = boardSurfacePosture(process.env, { oddsFresh: !oddsStaleForSurface });
+  const signalSlateStale =
+    boardSurface.surface === "signal"
+      ? await isSignalBoardSlateStale().catch(() => true)
+      : false;
+
   const founderNextSteps = buildFounderNextSteps({
     overduePending: settlement?.overduePending ?? null,
     settlementHealth: settlement?.health ?? null,
@@ -344,6 +354,8 @@ export async function GET(request: Request) {
     nonSeedSettled: sample?.canonicalSettled ?? null,
     nonSeedFloorProven: sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
     oddsInsertingStale: oddsInserting.withinRefreshSla === false,
+    boardSurface: boardSurface.surface,
+    signalSlateStale,
     calibrationEligibilityStatus: calibrationEligibility?.status ?? null,
     calibrationPublished,
     calibrationAutoPublish: calibrationPublish?.autoPublish ?? false,
@@ -356,7 +368,10 @@ export async function GET(request: Request) {
     calibrationPublished,
     clvBeatCloseRate: null,
     settlementHealthy: settlement?.health === "HEALTHY",
-    boardNotSuppressed: oddsInserting.withinRefreshSla === true,
+    boardNotSuppressed:
+      boardSurface.surface === "signal"
+        ? signalSlateStale === false
+        : oddsInserting.withinRefreshSla === true,
     liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
     publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
     performanceStatsEnabled: effectivePerformanceStats,

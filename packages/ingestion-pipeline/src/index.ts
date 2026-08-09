@@ -107,3 +107,5 @@ export {
   normalizeTeamKey,
 } from "./kalshi-team-abbr.js";
 
+export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
+export type { SignalSlateResult } from "./generate-signal-slate.js";
