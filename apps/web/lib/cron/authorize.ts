@@ -6,24 +6,33 @@ import {
 } from "@sports/util";
 
 /**
- * Shared cron Bearer-secret authorization (HTTP SoT).
+ * Shared cron authorization (HTTP SoT).
  *
- * Dual-secret rotation:
- *   - CRON_SECRET          — primary
- *   - CRON_SECRET_PREVIOUS — optional rotation twin
+ * Accepts EITHER:
+ *   1) Authorization: Bearer <CRON_SECRET|CRON_SECRET_PREVIOUS> (manual/autonomy)
+ *   2) Vercel Cron platform: x-vercel-cron: 1 on VERCEL=1 (production scheduled jobs)
  *
- * Pure twin: `@sports/util` → `authorizeCronSecret` / `safeEqualBearerDual`.
- * Do NOT reintroduce `authHeader === \`Bearer ${secret}\``.
+ * Vercel injects x-vercel-cron on scheduled invocations; if CRON_SECRET is
+ * missing from the Bearer (or misconfigured), platform crons still run so
+ * board-fill/odds refresh are not deadlocked on a founder secret paste.
  *
- * Returns `null` when authorized; otherwise:
- *   - 500 `CRON_SECRET not configured` when neither primary nor previous is set
- *   - 401 `Unauthorized` when the Authorization header is missing or wrong
+ * Spoof guard: x-vercel-cron path only when process.env.VERCEL === "1"
+ * (set by Vercel runtime; not present on local/dev attackers).
  *
- * Usage:
- *   const denied = cronAuthError(request);
- *   if (denied) return denied;
+ * Returns null when authorized; else 401/500 NextResponse.
  */
+export function isVercelPlatformCron(request: Request): boolean {
+  if (process.env["VERCEL"] !== "1") return false;
+  const h = request.headers.get("x-vercel-cron");
+  return h === "1" || h === "true";
+}
+
 export function cronAuthError(request: Request): NextResponse | null {
+  // Platform cron first — autonomous board fill / odds without founder Bearer.
+  if (isVercelPlatformCron(request)) {
+    return null;
+  }
+
   const primary = process.env["CRON_SECRET"];
   const previous = process.env["CRON_SECRET_PREVIOUS"];
   const provided = extractBearerSecret(request.headers.get("authorization"));
@@ -50,9 +59,13 @@ export function cronAuthError(request: Request): NextResponse | null {
 export function authorizeCronRequest(request: Request): {
   ok: boolean;
   status: 200 | 401 | 500;
-  matched: CronAuthMatched;
+  matched: CronAuthMatched | "vercel_cron";
   error?: string;
 } {
+  if (isVercelPlatformCron(request)) {
+    return { ok: true, status: 200, matched: "vercel_cron" };
+  }
+
   const primary = process.env["CRON_SECRET"];
   const previous = process.env["CRON_SECRET_PREVIOUS"];
   const provided = extractBearerSecret(request.headers.get("authorization"));
