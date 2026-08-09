@@ -1,10 +1,10 @@
 /**
- * Auto-build proven path plan + projected metrics when durable missing.
+ * Auto-build proven path plan + projected metrics + Ranking Power Control Plane.
  * No founder cron click required.
  *
- * Ranking p law: load confidence + independent trueProb only.
+ * Ranking p law: load confidence + independent trueProb only
+ * (via toProvenPathPickRows — never conf-echo rankingP as independent).
  * edgeScore is never converted to a probability for bake-off.
- * confidence-sourced rankingP is never treated as independent.
  */
 
 import { db, isStubMode } from "@sports/db";
@@ -12,7 +12,16 @@ import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import { projectProvenPathMetrics } from "@/lib/calibration/projected-proven-metrics";
 import { toProvenPathPickRows } from "@/lib/calibration/proven-path-rows";
 import {
-  loadProvenPathPlan,
+  buildRankingPowerControl,
+  rankingPowerPosture,
+  type RankingPowerControl,
+} from "@/lib/calibration/ranking-power-control";
+import {
+  buildRpcpConformalBridge,
+  rpcpConformalBridgePosture,
+  type RpcpConformalBridge,
+} from "@/lib/calibration/rpcp-conformal-bridge";
+import {
   persistProvenPathPlan,
 } from "@/lib/ops/proven-path-durable";
 import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
@@ -22,6 +31,11 @@ import { CANONICAL_LEARNING_PICK_WHERE } from "@/lib/ops/compute-live-calibratio
 export type ProvenPathSurface = {
   readonly plan: ProvenPathPlan;
   readonly projection: ProjectedProvenMetrics;
+  readonly rankingPower: RankingPowerControl | null;
+  readonly rankingPowerPosture: ReturnType<typeof rankingPowerPosture>;
+  /** Offline conformal bridge (default not computed). Founder-ops diagnostic only. */
+  readonly conformalBridge: RpcpConformalBridge;
+  readonly conformalBridgeEnv: ReturnType<typeof rpcpConformalBridgePosture>;
 };
 
 async function loadRows() {
@@ -54,7 +68,35 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
     const plan = buildProvenPathPlan(rows);
     await persistProvenPathPlan(plan);
     const projection = projectProvenPathMetrics(rows);
-    return { plan, projection };
+
+    let rankingPower: RankingPowerControl | null = null;
+    try {
+      rankingPower = buildRankingPowerControl(rows);
+    } catch {
+      rankingPower = null;
+    }
+
+    const conformalBridgeEnv = rpcpConformalBridgePosture(process.env);
+    const conformalBridge = rankingPower
+      ? buildRpcpConformalBridge({
+          rows,
+          control: rankingPower,
+          compute: conformalBridgeEnv.computeEnabled,
+        })
+      : buildRpcpConformalBridge({
+          rows: [],
+          control: buildRankingPowerControl([]),
+          compute: false,
+        });
+
+    return {
+      plan,
+      projection,
+      rankingPower,
+      rankingPowerPosture: rankingPowerPosture(rankingPower),
+      conformalBridge,
+      conformalBridgeEnv,
+    };
   } catch {
     return null;
   }

@@ -54,7 +54,7 @@ export interface IndependentEdgeSummary {
   expectedClv: number;          // honest expectation of beating the close, prob pts
   conviction: number;           // 0–100 glass-box conviction
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
-  priced: boolean;              // true = drove ranking path (SPEAK/LEAN)
+  priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
 }
 
@@ -517,8 +517,8 @@ export interface ScoredPick {
   confidence: number;      // 0–100 (heuristic UX; market-echo components)
   /**
    * Ranking score 0–100 for generation sort + selective path.
-   * Equals confidence when independents absent/PASS; when SPEAK/LEAN, derived
-   * from independent trueProb (blend). Prefer this over confidence for ranking.
+   * Equals confidence when independents absent; when trueProb finite (incl. PASS),
+   * derived from independent trueProb (blend). Prefer this over confidence for ranking.
    */
   rankingScore?: number;
   edgeScore: number;       // 0–100

@@ -283,6 +283,13 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
           {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
         </span>
       </div>
+      {row.rankingP !== null && (
+        <p className="mt-3 font-mono text-xs text-ion-1">
+          rankingP {row.rankingP.toFixed(3)}
+          {row.rankingSource ? ` · ${row.rankingSource}` : ""}
+          <span className="text-ion-3"> — model sort key, not verified ROI</span>
+        </p>
+      )}
       {row.confidence !== null && (
         <p className="mt-3 text-sm text-ion-1">Confidence label available on the pick view.</p>
       )}

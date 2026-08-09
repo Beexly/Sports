@@ -73,6 +73,19 @@ describe("kalshi team abbr maps", () => {
     expect(resolveKalshiTeamAbbr("MLS", "Charlotte FC")).toBe("CLT");
   });
 
+  it("resolves expanded CBB + G5 CFB soft-fail maps", () => {
+    expect(resolveKalshiTeamAbbr("CBB", "Creighton")).toBe("CREI");
+    expect(resolveKalshiTeamAbbr("CBB", "San Diego State")).toBe("SDSU");
+    expect(resolveKalshiTeamAbbr("CBB", "Marquette")).toBe("MARQ");
+    expect(resolveKalshiTeamAbbr("CBB", "Alabama")).toBe("ALA");
+    expect(resolveKalshiTeamAbbr("CFB", "Appalachian State")).toBe("APP");
+    expect(resolveKalshiTeamAbbr("CFB", "UTSA")).toBe("UTSA");
+    expect(resolveKalshiTeamAbbr("CFB", "Boise State")).toBe("BSU");
+    // Unmapped → honest null (series/abbr soft-fail)
+    expect(resolveKalshiTeamAbbr("CBB", "Unknown College")).toBeNull();
+    expect(resolveKalshiTeamAbbr("CFB", "ZZZZ FC")).toBeNull();
+  });
+
   it("null on unmapped (honest)", () => {
     expect(resolveKalshiTeamAbbr("NFL", "Unknown FC")).toBeNull();
   });

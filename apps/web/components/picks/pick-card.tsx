@@ -302,6 +302,31 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
+      {/* Ranking path — sort key only; never dress as verified ROI while RED. */}
+      {typeof breakdown.rankingP === "number" && Number.isFinite(breakdown.rankingP) && (
+        <div className="mt-2 rounded-md border border-orbital-cyan/30 bg-orbital-cyan/5 p-2">
+          <div className="mb-0.5 flex items-center gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-orbital-cyan">
+              Ranking P
+            </span>
+            <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
+              {breakdown.rankingSource ?? "unspecified"} · sort key
+            </span>
+          </div>
+          <p className="font-mono text-xs text-ion-white">
+            {(breakdown.rankingP * 100).toFixed(1)}%
+            <span className="ml-2 text-[10px] font-normal text-ion-3">
+              model ranking key — not verified ROI
+            </span>
+          </p>
+          {typeof breakdown.marketFairProb === "number" && Number.isFinite(breakdown.marketFairProb) && (
+            <p className="mt-1 text-[10px] text-ion-3">
+              Market fair (de-vig): {(breakdown.marketFairProb * 100).toFixed(1)}%
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Independent-edge layer (#10) — surfaced, not yet priced into confidence. */}
       {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
         <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">

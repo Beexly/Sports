@@ -58,6 +58,7 @@ try {
       isPublished: true,
       clvLockLine: true,
       clvLockPrice: true,
+      factorBreakdown: true,
       clvCloseLine: true,
       clvClosePrice: true,
       clvKind: true,
@@ -77,9 +78,24 @@ try {
     },
   });
 
-  const lines = rows.map((r) =>
-    JSON.stringify({
-      ...r,
+  const lines = rows.map((r) => {
+    const fb = r.factorBreakdown && typeof r.factorBreakdown === "object" ? r.factorBreakdown : null;
+    const rankingP = fb && typeof fb.rankingP === "number" && Number.isFinite(fb.rankingP) ? fb.rankingP : null;
+    const rankingSource = fb && typeof fb.rankingSource === "string" ? fb.rankingSource : null;
+    const marketFairProb = fb && typeof fb.marketFairProb === "number" && Number.isFinite(fb.marketFairProb) ? fb.marketFairProb : null;
+    const trueProb =
+      fb && fb.independentEdge && typeof fb.independentEdge === "object" && typeof fb.independentEdge.trueProb === "number"
+        ? fb.independentEdge.trueProb
+        : fb && typeof fb.trueProb === "number"
+          ? fb.trueProb
+          : null;
+    const { factorBreakdown: _drop, ...rest } = r;
+    return JSON.stringify({
+      ...rest,
+      rankingP,
+      rankingSource,
+      marketFairProb,
+      independentTrueProb: trueProb,
       generatedAt: r.generatedAt?.toISOString?.() ?? r.generatedAt,
       settledAt: r.settledAt?.toISOString?.() ?? r.settledAt,
       dataFreshnessAt: r.dataFreshnessAt?.toISOString?.() ?? r.dataFreshnessAt,
@@ -91,8 +107,8 @@ try {
         : null,
       exportedAt: new Date().toISOString(),
       purpose: "calibration_ranker_labels_only",
-    }),
-  );
+    });
+  });
 
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, lines.join("\n") + (lines.length ? "\n" : ""), "utf8");

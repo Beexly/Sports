@@ -75,9 +75,10 @@ export type {
   ClvGrade,
 } from "./clv-capture.js";
 // Edge engine — surfaces a pick only where INDEPENDENT estimators (Poisson model,
-// Kalshi exchange) diverge from the sportsbook fair value AND agree with each
-// other. The fix for "the market grading itself." Pure; not yet wired into live
-// scoring (a deliberate MODEL_VERSION step, founder-gated).
+// Kalshi exchange, FPI, ClubElo, Dixon–Coles, …) diverge from the sportsbook fair
+// value AND are not contradicted by a referee. Wired into moneyline scoring via
+// context.independentFairValues + deriveRankingProbability (MODEL_VERSION ≥ v5.2.0).
+// Pure functions; no I/O. Founder-gated only for map activation / floors, not assessEdge.
 export {
   assessEdge,
   SPEAK_EDGE,

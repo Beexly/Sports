@@ -16,6 +16,7 @@ import {
   parseOddsInputToDecimal,
   PARLAY_CORRELATION_CAVEAT,
   vigPercentage,
+  analyzeLineMovement,
 } from "./betting-math";
 
 const sum = (xs: readonly number[]) => xs.reduce((a, b) => a + b, 0);
@@ -436,5 +437,29 @@ describe("computeClvBpsTool — ledger-chain.ts computeClvBps parity", () => {
   it("rounds to 2 decimal places, same as the engine's round(value, 2)", () => {
     const bps = computeClvBpsTool(2.05, 1.98)!;
     expect(bps).toBe(Math.round(10000 * (1 / 1.98 - 1 / 2.05) * 100) / 100);
+  });
+});
+
+
+describe("analyzeLineMovement", () => {
+  it("classifies moneyline shortening (favorite)", () => {
+    const m = analyzeLineMovement({ openOdds: -140, closeOdds: -160 });
+    expect(m?.moneyline?.direction).toBe("shortened");
+    expect(m?.moneyline?.movedToward).toBe("favorite");
+    expect(m?.moneyline?.probShift).toBeGreaterThan(0);
+  });
+
+  it("classifies spread move toward favorite", () => {
+    const m = analyzeLineMovement({
+      openLine: -6.5,
+      closeLine: -7.5,
+      marketType: "spread",
+    });
+    expect(m?.line?.direction).toBe("moved toward favorite");
+  });
+
+  it("returns null without usable inputs", () => {
+    expect(analyzeLineMovement({})).toBeNull();
+    expect(analyzeLineMovement({ openOdds: -50, closeOdds: -60 })).toBeNull();
   });
 });

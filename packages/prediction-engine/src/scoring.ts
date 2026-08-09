@@ -157,11 +157,13 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
 
 // ============================================================
 // Independent-edge assessment — the fix for "the engine grading itself".
-// Compares pre-fetched INDEPENDENT fair values (e.g. Kalshi / Poisson / Elo,
-// threaded through context.independentFairValues) against the sportsbook's own
-// de-vigged fair probability, via the edge engine. After assess, deriveRankingProbability
-// prices SPEAK/LEAN into rankingScore (MODEL_VERSION v5.2.0). Heuristic confidence
-// stays market-echo for UX when we choose not to overwrite it; ranking uses rankingScore.
+// Compares pre-fetched INDEPENDENT fair values (e.g. Kalshi / Poisson / Elo /
+// FPI / ClubElo / Dixon–Coles, threaded through context.independentFairValues)
+// against the sportsbook's own de-vigged fair probability, via the edge engine.
+// After assess, deriveRankingProbability prices finite trueProb into rankingScore
+// even on PASS (MODEL_VERSION v5.2.1+). Edge SPEAK/LEAN remains the glass-box
+// claim only. Heuristic confidence stays market-echo for UX when we choose not
+// to overwrite it; ranking uses rankingScore.
 // Returns null when no independent estimate is available. We never manufacture an
 // edge from the market's own price.
 // ============================================================
@@ -828,9 +830,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
-  // Independent-edge assessment (Kalshi / Poisson / Elo). When SPEAK|LEAN,
-  // rankingScore is priced from trueProb (MODEL_VERSION v5.2.0). Heuristic
-  // confidence stays as the market-echo composite for UX continuity.
+  // Independent-edge assessment (Kalshi / Poisson / Elo / FPI / ClubElo / Dixon–Coles).
+  // rankingScore uses trueProb whenever finite (incl. PASS) — v5.2.1 ranking law.
+  // Heuristic confidence stays as the market-echo composite for UX continuity.
   const independentEdgeRaw = assessIndependentEdge(
     input.context?.independentFairValues,
     homeIsChosen,
@@ -1016,12 +1018,12 @@ export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
 }
 
 // ============================================================
-// Score multiple games — returns all picks sorted by confidence
+// Score multiple games — returns all picks sorted by rankingScore
 // ============================================================
 
 /**
  * Score a batch of games and return the pooled, publishable picks ranked by
- * confidence across all games (highest first).
+ * rankingScore across all games (highest first; falls back to confidence).
  *
  * Every input game is scored against the same `fetchedAt` reference so the
  * whole batch shares one freshness stamp.
@@ -1032,7 +1034,7 @@ export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
  *   when omitted it defaults to wall-clock `new Date()` (nondeterministic), so
  *   production callers MUST pass the real ingestion timestamp.
  * @returns All publishable `ScoredPick`s across `inputs`, sorted by
- *   `confidence` descending.
+ *   `rankingScore` (then confidence) descending.
  */
 export function scoreGames(inputs: OddsInput[], fetchedAt?: Date): ScoredPick[] {
   const allPicks: ScoredPick[] = [];

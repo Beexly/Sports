@@ -126,7 +126,7 @@ function doorBadge(
         ? `${data.cleared} cleared · ${data.gated} gated`
         : "Gate holding";
     case "observatory":
-      return data.scoring > 0 ? `${data.scoring} scoring now` : "Slate map live";
+      return data.scoring > 0 ? `${data.scoring} scoring now` : "Illustrative map · gate sealed";
     case "receipts":
       return data.settled > 0 ? `${data.settled} settled` : "Calibrating";
     case "academy":

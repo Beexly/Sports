@@ -294,3 +294,104 @@ export function computeClvBpsTool(decisionPriceDecimal: number, closingPriceDeci
   const bps = 10000 * (1 / closingPriceDecimal - 1 / decisionPriceDecimal);
   return roundTo(bps, 2);
 }
+
+// ───────────────────────────── line movement ─────────────────────────────
+
+export type LineMovementMoneyline = {
+  readonly openOdds: number;
+  readonly closeOdds: number;
+  readonly openImpliedProb: number;
+  readonly closeImpliedProb: number;
+  readonly probShift: number;
+  readonly direction: "shortened" | "lengthened" | "no movement";
+  readonly movedToward: "favorite" | "underdog" | "none";
+};
+
+export type LineMovementSpreadOrTotal = {
+  readonly openLine: number;
+  readonly closeLine: number;
+  readonly lineChange: number;
+  readonly direction: string;
+};
+
+/**
+ * Open→close line movement (sports-skills betting.line_movement port).
+ * Moneyline uses implied-prob shift; spread/total uses line delta.
+ * Returns null when inputs invalid or nothing to analyze.
+ */
+export function analyzeLineMovement(input: {
+  readonly openOdds?: number | null;
+  readonly closeOdds?: number | null;
+  readonly openLine?: number | null;
+  readonly closeLine?: number | null;
+  readonly marketType?: "moneyline" | "spread" | "total";
+}): {
+  readonly marketType: "moneyline" | "spread" | "total";
+  readonly moneyline?: LineMovementMoneyline;
+  readonly line?: LineMovementSpreadOrTotal;
+} | null {
+  const marketType = input.marketType ?? "moneyline";
+  const hasMl =
+    typeof input.openOdds === "number" &&
+    typeof input.closeOdds === "number" &&
+    isValidAmericanOdds(input.openOdds) &&
+    isValidAmericanOdds(input.closeOdds);
+  const hasLine =
+    typeof input.openLine === "number" &&
+    typeof input.closeLine === "number" &&
+    Number.isFinite(input.openLine) &&
+    Number.isFinite(input.closeLine);
+
+  if (!hasMl && !hasLine) return null;
+
+  const out: {
+    marketType: "moneyline" | "spread" | "total";
+    moneyline?: LineMovementMoneyline;
+    line?: LineMovementSpreadOrTotal;
+  } = { marketType };
+
+  if (hasMl) {
+    const openImpliedProb = americanToImpliedProbability(input.openOdds!)!;
+    const closeImpliedProb = americanToImpliedProbability(input.closeOdds!)!;
+    const probShift = closeImpliedProb - openImpliedProb;
+    let direction: LineMovementMoneyline["direction"] = "no movement";
+    let movedToward: LineMovementMoneyline["movedToward"] = "none";
+    if (probShift > 1e-9) {
+      direction = "shortened";
+      movedToward = "favorite";
+    } else if (probShift < -1e-9) {
+      direction = "lengthened";
+      movedToward = "underdog";
+    }
+    out.moneyline = {
+      openOdds: input.openOdds!,
+      closeOdds: input.closeOdds!,
+      openImpliedProb,
+      closeImpliedProb,
+      probShift: roundTo(probShift, 6),
+      direction,
+      movedToward,
+    };
+  }
+
+  if (hasLine) {
+    const lineChange = input.closeLine! - input.openLine!;
+    let direction = "no movement";
+    if (marketType === "total") {
+      if (lineChange > 0) direction = "total moved up";
+      else if (lineChange < 0) direction = "total moved down";
+    } else {
+      if (lineChange < 0) direction = "moved toward favorite";
+      else if (lineChange > 0) direction = "moved toward underdog";
+    }
+    out.line = {
+      openLine: input.openLine!,
+      closeLine: input.closeLine!,
+      lineChange: roundTo(lineChange, 4),
+      direction,
+    };
+  }
+
+  return out;
+}
+

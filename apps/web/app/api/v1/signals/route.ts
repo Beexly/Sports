@@ -63,6 +63,7 @@ export async function GET(req: Request): Promise<NextResponse> {
         line: true,
         generatedAt: true,
         modelVersion: true,
+        factorBreakdown: true,
         game: {
           select: {
             commenceTime: true,
@@ -83,19 +84,34 @@ export async function GET(req: Request): Promise<NextResponse> {
       lineLabel:
         resolveBoardSurface() === "signal" ? "model_signal" : "may_include_market_context",
       boardSurface: resolveBoardSurface(),
-      data: picks.map((p) => ({
-        id: p.id,
-        sport: p.game?.sport?.key ?? null,
-        home: p.game?.homeTeamName ?? null,
-        away: p.game?.awayTeamName ?? null,
-        commenceTime: p.game?.commenceTime ?? null,
-        market: p.pickType,
-        selection: p.selection,
-        line: p.line,
-        modelConfidence: p.confidence,
-        modelVersion: p.modelVersion,
-        generatedAt: p.generatedAt,
-      })),
+      data: [...picks]
+        .map((p) => {
+          let rankingP: number | null = null;
+          const fb = p.factorBreakdown;
+          if (fb && typeof fb === "object" && !Array.isArray(fb)) {
+            const rp = (fb as Record<string, unknown>)["rankingP"];
+            if (typeof rp === "number" && Number.isFinite(rp)) rankingP = rp;
+          }
+          return {
+            id: p.id,
+            sport: p.game?.sport?.key ?? null,
+            home: p.game?.homeTeamName ?? null,
+            away: p.game?.awayTeamName ?? null,
+            commenceTime: p.game?.commenceTime ?? null,
+            market: p.pickType,
+            selection: p.selection,
+            line: p.line,
+            modelConfidence: p.confidence,
+            rankingP,
+            modelVersion: p.modelVersion,
+            generatedAt: p.generatedAt,
+          };
+        })
+        .sort((a, b) => {
+          const ra = a.rankingP ?? a.modelConfidence / 100;
+          const rb = b.rankingP ?? b.modelConfidence / 100;
+          return rb - ra;
+        }),
       disclaimer:
         "Sports intelligence API — model signals only. Not verified ROI, not PROVEN track record while eligibility RED.",
     },

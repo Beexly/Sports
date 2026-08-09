@@ -26,6 +26,7 @@ import { loadCommandCenterFeed } from "@/lib/command-center/feed";
 import type { OwnerAttentionItem } from "@/lib/command-center/types";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { startOfDay, endOfDay } from "date-fns";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export const dynamic = "force-dynamic";
 
@@ -44,15 +45,15 @@ export default async function CockpitOverview() {
     })
     .catch(() => 0);
 
-  const todaysOperatorPicks = await db.pick
+  const todaysOperatorPicksRaw = await db.pick
     .findMany({
       where: {
         isPublished: true,
         generatedAt: { gte: startOfDay(now), lte: endOfDay(now) },
       },
       include: { game: { include: { sport: { select: { name: true } } } } },
-      orderBy: [{ isFeatured: "desc" }, { confidence: "desc" }],
-      take: 12,
+      orderBy: [{ generatedAt: "desc" }],
+      take: 48,
     })
     .catch(() => [] as unknown[]) as Array<{
       id: string;
@@ -62,8 +63,14 @@ export default async function CockpitOverview() {
       riskLevel: string;
       isFeatured: boolean;
       result: string;
+      generatedAt?: Date;
+      factorBreakdown?: unknown;
       game: { homeTeamName: string; awayTeamName: string; sport: { name: string } };
     }>;
+
+  const todaysOperatorPicks = [...todaysOperatorPicksRaw]
+    .sort(comparePicksByRanking)
+    .slice(0, 12);
 
   const sportBreakdown = new Map<string, number>();
   for (const p of todaysOperatorPicks) {

@@ -21,9 +21,9 @@ import { BRAND_NAME, SURFACES } from "@/lib/brand";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Edge Map: Live Market Intelligence by Sport, Slate, Matchup",
+  title: "Edge Map — Observatory | Galaxy Sports Edge",
   description:
-    "Real-time line movement, sharp/public splits, and market depth across every active matchup. The same view the model is reading from. Opens after the readiness gate clears.",
+    "Sealed market intelligence surface: illustrative twin and market boards when odds exist; calibrated Edge Map after readiness. No invented sharp/public splits while the gate holds.",
   alternates: { canonical: "/observatory" },
 };
 

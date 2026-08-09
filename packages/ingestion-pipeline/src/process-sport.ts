@@ -457,8 +457,9 @@ export async function processSport(
 
       const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
 
-      // Independent estimators (Poisson + Elo from real TeamGameLog; never book-echo).
-      // Empty → scorer unchanged; SPEAK/LEAN → rankingScore priced (MODEL_VERSION v5.2.0).
+      // Independent estimators (Kalshi / FPI / ClubElo / Dixon–Coles / Poisson / Elo;
+      // never book-echo). Empty → conf ranking; finite trueProb → rankingP priced
+      // (v5.2.1+; incl. PASS). SPEAK/LEAN is the glass-box edge claim only.
       let independentFairValues: import("@sports/types").IndependentMarketFairValue[] = [];
       try {
         independentFairValues = await buildIndependentFairValues(

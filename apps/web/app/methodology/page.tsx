@@ -47,7 +47,7 @@ const STACK = [
 
 const CHANGELOG = [
   ["v5.2.2", "Dixon–Coles soccer independent + Kalshi ESPN/ET match polarity; ranking math from v5.2.1 unchanged."],
-  ["v5.2.1", "Ranking uses independent model P when present; bake-off never treats edge as a win probability; positive separation required."],
+  ["v5.2.1", "Ranking uses independent model P whenever finite (incl. PASS); bake-off never treats edge as a win probability; positive separation required."],
   ["v5.2", "Independent estimators priced into ranking path; edge is never used as a win probability."],
   ["v5.0", "Bootstrap-canonical gating and settled-only learning policy."],
   ["v4.0", "Expanded factor snapshot storage for public audit trails."],
@@ -71,7 +71,7 @@ const MARKET_READS = [
     title: "Did we beat the close?",
     body: "Closing line value grades whether the price we locked beat where the market closed: the leading indicator of a real edge that sharp bettors trust, and the one number tout services never show. Published under the same gate as the win rate.",
     href: "/clv",
-    cta: "See our CLV",
+    cta: "CLV methodology (gated until sample)",
   },
 ] as const;
 
@@ -278,9 +278,11 @@ export default function MethodologyPage(): JSX.Element {
                 <h3 className="text-lg font-semibold text-white">Ranking probability</h3>
                 <p className="mt-2 text-sm leading-6 text-ink-300">
                   The probability used for sort, selective publish, and calibration
-                  bake-offs. When independent estimators clear SPEAK or LEAN, ranking
-                  uses their true probability (or a blend with confidence). Otherwise it
-                  is confidence on the 0–1 scale.
+                  bake-offs. When independent estimators yield a finite true probability,
+                  ranking uses that (or a blend with confidence) — including when the
+                  edge claim is PASS. SPEAK/LEAN is the glass-box edge claim, not the
+                  ranking gate. Without independents, ranking falls back to confidence
+                  on the 0–1 scale.
                 </p>
               </article>
               <article className="surface-card p-6">

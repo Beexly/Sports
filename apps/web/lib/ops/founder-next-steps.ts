@@ -16,7 +16,9 @@ export interface FounderNextStep {
     | "statking"
     | "billing"
     | "analytics"
-    | "growth";
+    | "growth"
+    | "research"
+    | "credits";
   readonly priority: "P0" | "P1" | "P2";
   readonly action: string;
 }
@@ -240,6 +242,40 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "product_gates",
       priority: "P2",
       action: `Non-seed settled ${input.nonSeedSettled}/${floor} — machine accumulates via settle-picks; do not invent sample or claim PROVEN.`,
+    });
+  }
+
+
+  // Content archives: free-lane can fill; thin archives leave distribution empty.
+  if (input.podcastEpisodes < 3 || input.newsletterIssues < 4) {
+    steps.push({
+      id: "content-archives-thin",
+      domain: "content",
+      priority: "P2",
+      action:
+        "Content archives thin — generate 1 podcast + 1 newsletter via free-lane (Cerebras), human-review, publish only brand-safe issues. No invent stats.",
+    });
+  }
+
+  // Credits / Action Packs — pure founder portal work (code already multi-cloud).
+  if (input.anyCloudConfigured) {
+    steps.push({
+      id: "claim-remaining-credits",
+      domain: "credits",
+      priority: "P2",
+      action:
+        "Cloud maps ready — claim remaining Action Pack / startup credits (Neon, Vercel, Anthropic, Azure) and record in CREDITS.md. Code already routes free-lane first.",
+    });
+  }
+
+  // Machina research platform — optional external leverage (noise-gated).
+  if (input.includeOptionalAnalytics === true) {
+    steps.push({
+      id: "machina-cli-login",
+      domain: "research",
+      priority: "P2",
+      action:
+        "Optional: machina login on your machine → org/project use → paste workflow/agent/skills list JSON so agents can harvest pods (see docs/ops/machina/MACHINA_CLI_FOUNDER.md).",
     });
   }
 

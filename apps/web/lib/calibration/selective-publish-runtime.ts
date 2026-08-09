@@ -1,7 +1,11 @@
 /**
  * Runtime selective publish + pause-list for public board rows.
  * PROVEN path: default ON (opt-out with SELECTIVE_PUBLISH_ENABLED=false).
- * Pause groups load from durable proven-path plan when present.
+ *
+ * Pause groups:
+ * - SELECTIVE_PAUSE_GROUPS env always applies
+ * - plan.pauseGroups only when RANKING_PAUSE_APPLY=true (default OFF — advisory)
+ * See ranking-pause-apply.ts.
  */
 
 import {
@@ -9,6 +13,10 @@ import {
   type SelectiveThresholds,
 } from "@/lib/calibration/selective-publish";
 import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
+import {
+  resolvePausedGroups,
+  rankingPauseApplyPosture,
+} from "@/lib/calibration/ranking-pause-apply";
 
 export type PublicPickLike = {
   readonly confidence?: number | null;
@@ -42,6 +50,9 @@ export function loadSelectiveRuntimeConfig(
   readonly enabled: boolean;
   readonly thresholds: SelectiveThresholds;
   readonly pausedGroups: readonly string[];
+  readonly pauseSource: "env" | "plan" | "none";
+  readonly pauseApplyEnabled: boolean;
+  readonly pauseOperatorHint: string;
 } {
   const enabled = isSelectivePublishRuntimeEnabled(env);
   const deltaRaw = env["SELECTIVE_PUBLISH_DELTA"]?.trim();
@@ -50,12 +61,7 @@ export function loadSelectiveRuntimeConfig(
     ? deltaFromEnv
     : plan?.selectiveRecommended?.delta ?? plan?.defaultDelta ?? DEFAULT_DELTA;
 
-  const pauseRaw = env["SELECTIVE_PAUSE_GROUPS"]?.trim() ?? "";
-  const envPause = pauseRaw
-    ? pauseRaw.split(",").map((s) => s.trim()).filter(Boolean)
-    : [];
-  const pausedGroups =
-    envPause.length > 0 ? envPause : plan?.pauseGroups ?? [];
+  const pause = resolvePausedGroups(env, plan);
 
   return {
     enabled,
@@ -64,7 +70,10 @@ export function loadSelectiveRuntimeConfig(
       edge: plan?.selectiveRecommended?.edge ?? null,
       minGroupRes: null,
     },
-    pausedGroups,
+    pausedGroups: pause.pausedGroups,
+    pauseSource: pause.source,
+    pauseApplyEnabled: pause.applyEnabled,
+    pauseOperatorHint: pause.operatorHint,
   };
 }
 
@@ -123,4 +132,21 @@ export async function passesPublicSelectiveFilterAsync(
 ): Promise<boolean> {
   const plan = await getCachedProvenPathPlan();
   return passesPublicSelectiveFilter(pick, env, plan);
+}
+
+/** Ops posture for public-surface-truth. */
+export function selectiveRuntimePosture(
+  env: Record<string, string | undefined> = process.env,
+  plan: ProvenPathPlan | null = null,
+) {
+  const cfg = loadSelectiveRuntimeConfig(env, plan);
+  const pause = rankingPauseApplyPosture(env, plan);
+  return {
+    selectiveEnabled: cfg.enabled,
+    delta: cfg.thresholds.delta,
+    pause,
+    operatorHint: cfg.enabled
+      ? `Selective δ=${cfg.thresholds.delta}. ${pause.operatorHint}`
+      : `Selective publish OFF. ${pause.operatorHint}`,
+  };
 }
