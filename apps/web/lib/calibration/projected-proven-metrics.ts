@@ -12,6 +12,7 @@ import {
 import {
   buildProvenPathPlan,
   type ProvenPathPickRow,
+  type RankingScoreKind,
 } from "@/lib/calibration/proven-path-engine";
 import { filterSelective } from "@/lib/calibration/selective-publish";
 
@@ -58,21 +59,42 @@ function pack(samples: CalibrationSample[]) {
   };
 }
 
+/** Score probability for a row under RankingScoreKind — mirrors proven-path-engine. */
+function scoreP(r: ProvenPathPickRow, kind: RankingScoreKind): number | null {
+  if (kind === "confidence") {
+    return r.pConfidence;
+  }
+  if (kind === "edgeScore") {
+    return r.pEdge != null && Number.isFinite(r.pEdge) ? r.pEdge : null;
+  }
+  if (kind === "blend_conf_edge") {
+    if (r.pEdge == null || !Number.isFinite(r.pEdge)) return null;
+    return 0.5 * r.pConfidence + 0.5 * r.pEdge;
+  }
+  if (kind === "independent_trueProb") {
+    return r.pIndependent != null && Number.isFinite(r.pIndependent)
+      ? r.pIndependent
+      : null;
+  }
+  if (kind === "blend_indep_conf") {
+    if (r.pIndependent == null || !Number.isFinite(r.pIndependent)) return null;
+    return 0.5 * r.pConfidence + 0.5 * r.pIndependent;
+  }
+  return r.pConfidence;
+}
+
 export function projectProvenPathMetrics(
   rows: readonly ProvenPathPickRow[],
 ): ProjectedProvenMetrics {
   const plan = buildProvenPathPlan(rows, { minN: 50 });
-  // Build samples under best score
+  const kind = plan.bestScore;
+
   const fullSamples: CalibrationSample[] = [];
   const selectiveRows = [];
   for (const r of rows) {
-    let p = r.pIndependent != null && Number.isFinite(r.pIndependent)
-      ? r.pIndependent
-      : r.pConfidence;
-    if (plan.bestScore === "edgeScore" && r.pEdge != null) p = r.pEdge;
-    if (plan.bestScore === "blend_conf_edge" && r.pEdge != null) {
-      p = 0.5 * r.pConfidence + 0.5 * r.pEdge;
-    }
+    let p = scoreP(r, kind);
+    // Fallback: never drop a row from the full projection set — use confidence.
+    if (p == null || !Number.isFinite(p)) p = r.pConfidence;
     p = Math.min(1 - 1e-6, Math.max(1e-6, p));
     fullSamples.push({ p, y: r.y });
     selectiveRows.push({

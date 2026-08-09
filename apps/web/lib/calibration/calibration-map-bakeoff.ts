@@ -1,18 +1,23 @@
 /**
- * Offline map bake-off: Raw | Temperature | Platt | Isotonic PAVA
- * Full Murphy Brier decomposition on each. Apply OFF.
+ * Offline map bake-off: Raw | Temperature | Platt | Beta | Isotonic PAVA | CIR
+ * Full Murphy Brier decomposition + log loss on each. Apply OFF.
+ *
+ * Does NOT re-implement calibrators — uses package betaCalibration / fitTemperature
+ * and existing web Platt / PAVA helpers. Ranking-first note preserved.
  */
 
 import type { CalibrationSample } from "@sports/prediction-engine";
 import {
+  betaCalibration,
   brierDecomposition,
   expectedCalibrationError,
+  fitTemperature as fitTempPackage,
+  applyTemperature,
 } from "@sports/prediction-engine";
 import { fitPlattFromProbs, applyPlattToProb } from "@/lib/calibration/platt-scaling";
 import { fitIsotonicPava, applyIsotonic, applyIsotonicCir } from "@/lib/calibration/isotonic-pava";
-import { fitTemperature, temperaturePredict } from "@/lib/calibration/temperature-map";
+import { fitTemperature as fitTempLocal, temperaturePredict } from "@/lib/calibration/temperature-map";
 
-// temperature-map may export logit differently - use local
 function logit(p: number): number {
   const x = Math.min(1 - 1e-6, Math.max(1e-6, p));
   return Math.log(x / (1 - x));
@@ -73,6 +78,10 @@ export type CalibrationMapBakeoff = {
   readonly methods: readonly MapDecompRow[];
   readonly note: string;
   readonly rankingFirst: string;
+  /** Best map by holdout Brier (not RES — maps do not raise RES). */
+  readonly bestByBrier: string | null;
+  /** Best map by holdout log loss. */
+  readonly bestByLogLoss: string | null;
 };
 
 /**
@@ -98,22 +107,29 @@ export function runCalibrationMapBakeoff(
       note: "Insufficient holdout.",
       rankingFirst:
         "If resolution stays near 0, maps cannot unlock PROVEN — raise ranking first.",
+      bestByBrier: null,
+      bestByLogLoss: null,
     };
   }
 
   const trainY = train.map((r) => ({ p: r.p, y: r.y as 0 | 1 }));
   const platt = fitPlattFromProbs(trainY);
   const iso = fitIsotonicPava(trainY);
-  const temp = fitTemperature(
+  const tempPkg = fitTempPackage(trainY);
+  // Local grid-fit as fallback if package returns null (degenerate train)
+  const tempLocal = fitTempLocal(
     train.map((r) => ({ logit: logit(r.p), outcome: r.y as 0 | 1 })),
   );
+  const beta = betaCalibration(trainY);
 
   const methods: MapDecompRow[] = [
     decomp("raw", test),
     decomp(
       "temperature",
       test.map((r) => ({
-        p: temperaturePredict(logit(r.p), temp.T),
+        p: tempPkg
+          ? applyTemperature(r.p, tempPkg.T)
+          : temperaturePredict(logit(r.p), tempLocal.T),
         y: r.y,
       })),
     ),
@@ -124,6 +140,32 @@ export function runCalibrationMapBakeoff(
         y: r.y,
       })),
     ),
+  ];
+
+  if (beta != null) {
+    methods.push(
+      decomp(
+        "beta_calibration",
+        test.map((r) => ({
+          p: beta.predict(r.p),
+          y: r.y,
+        })),
+      ),
+    );
+  } else {
+    methods.push({
+      method: "beta_calibration",
+      n: test.length,
+      brier: NaN,
+      ece: NaN,
+      reliability: NaN,
+      resolution: NaN,
+      uncertainty: NaN,
+      logLoss: NaN,
+    });
+  }
+
+  methods.push(
     decomp(
       "isotonic_pava",
       test.map((r) => ({
@@ -138,7 +180,23 @@ export function runCalibrationMapBakeoff(
         y: r.y,
       })),
     ),
-  ];
+  );
+
+  const finite = methods.filter((m) => Number.isFinite(m.brier));
+  let bestByBrier: string | null = null;
+  let bestByLogLoss: string | null = null;
+  let bestB = Infinity;
+  let bestL = Infinity;
+  for (const m of finite) {
+    if (m.brier < bestB) {
+      bestB = m.brier;
+      bestByBrier = m.method;
+    }
+    if (Number.isFinite(m.logLoss) && m.logLoss < bestL) {
+      bestL = m.logLoss;
+      bestByLogLoss = m.method;
+    }
+  }
 
   return {
     generatedAt,
@@ -147,8 +205,11 @@ export function runCalibrationMapBakeoff(
     methods,
     note:
       "Offline only. Apply CALIBRATION_ADJUSTMENTS only after Res improves and holdout floors pass. " +
-      "Maps primarily cut reliability (REL), not resolution (RES).",
+      "Maps primarily cut reliability (REL) and log loss, not resolution (RES). " +
+      "Beta (Kull 2017) includes identity map; Platt cannot. CIR preserves ranking vs PAVA plateaus.",
     rankingFirst:
-      "Live Res≈0.002 ⇒ selective publish + sport models before enabling any map.",
+      "Live Res≈0.002 ⇒ selective publish + independent modelProb / sport models before enabling any map.",
+    bestByBrier,
+    bestByLogLoss,
   };
 }
