@@ -41,14 +41,13 @@ export function staleDataGateResponse(featureName: string): {
   hint: string;
 } {
   return {
-    error: `${featureName} is temporarily dark: awaiting fresh odds data.`,
+    error: `${featureName} is temporarily dark: quiet board / awaiting fresh odds.`,
     reason: "stale_data",
     bootstrapMode: false,
     hint:
-      "The stale-data kill switch (FORCE_NO_BET_IF_STALE) suppressed this surface because " +
-      "the last odds-inserting ingestion run is older than the Refresh SLA. It reopens " +
-      "automatically on the next successful ingestion — check /api/health and recent " +
-      "ingestion runs, not the environment flags.",
+      "Quiet board is honesty, not an outage: the last odds-inserting run is older than the " +
+      "Refresh SLA (or the slate has no insertable games). The kill switch reopens on the next " +
+      "successful odds insert (oddsInserted>0). Check free-spine + refresh-odds — do not lower the SLA.",
   };
 }
 
