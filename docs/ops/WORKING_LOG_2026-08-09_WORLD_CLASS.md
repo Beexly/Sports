@@ -107,3 +107,10 @@ Laws held: no gate flips · maps OFF · no invent PROVEN/ROI.
 | **Audit** | DONE | `docs/ops/MATRIX_COMPLETION_AUDIT_2026-08-09.md` |
 
 **Verdict:** Code matrix exhausted. Only BLOCKED_FOUNDER: merge #410 + redeploy (+ optional Stripe/free-lane env).
+
+## D0 — PR #410 MERGED
+
+- Merged to main: `96785c8` (2026-08-09, founder-approved autonomous).
+- Second-pass polish included: typecheck clean, RPCP suite green.
+- **Your remaining click:** Production redeploy if Git auto-deploy did not pick main (Vercel previously blocked preview on commit-author verify).
+- Do **not** flip gates/maps/RANKING_PAUSE_APPLY.

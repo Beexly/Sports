@@ -39,4 +39,12 @@ Maps fix REL not RES. Path: independents → rankingP → selective/pause → re
 - Redeploy unreviewed HEAD without green CI  
 - Force-settle DISPUTED scores  
 - Claim PROVEN or publish performance while RED  
-- Treat conformal coverage as eligibility  
+- Treat conformal coverage as eligibility
+
+## D0 update (autonomous merge)
+
+- **PR #410 MERGED** to main at `96785c8` (2026-08-09).
+- Second-pass polish landed before merge (`f5e07bcb`): typecheck clean, RPCP suite green.
+- **Remaining founder:** Vercel Production Redeploy if auto-deploy blocked by commit-author verify; optional Stripe/free-lane env.
+- **Still do not flip gates/maps/RANKING_PAUSE_APPLY.**
+

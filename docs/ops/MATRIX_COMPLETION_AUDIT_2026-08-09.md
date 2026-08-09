@@ -51,3 +51,11 @@ Maps do **not** invent RES. Conformal coverage ≠ eligibility.
 
 **Matrix exhausted for code.** Only `BLOCKED_FOUNDER` rows remain (D0, D9 optional env).  
 Hard stop condition met for agent work once #410 merges.
+
+## D0 update (autonomous merge)
+
+- **PR #410 MERGED** to main at `96785c8` (2026-08-09).
+- Second-pass polish landed before merge (`f5e07bcb`): typecheck clean, RPCP suite green.
+- **Remaining founder:** Vercel Production Redeploy if auto-deploy blocked by commit-author verify; optional Stripe/free-lane env.
+- **Still do not flip gates/maps/RANKING_PAUSE_APPLY.**
+
