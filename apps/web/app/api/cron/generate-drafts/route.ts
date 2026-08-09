@@ -33,9 +33,12 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import {
   buildDailyBriefDraft,
   buildWeeklyRecapDraft,
+  buildWhyBoardQuietDraft,
   type SlateSummary,
   type WeeklyRecapSummary,
 } from "@/lib/content-engine/build-draft";
+import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
+import { classifyPublicDarkHint } from "@/lib/public/dark-reason";
 import { contentDraftToCreateData } from "@/lib/content-engine/persist-draft";
 import type { ContentSourceRecord } from "@/lib/content-engine/types";
 
@@ -110,7 +113,16 @@ export async function GET(request: Request): Promise<NextResponse> {
     }
   }
 
-  return NextResponse.json({ ok: true, daily, weeklyRecap });
+  let quietBoard: DraftOutcome | null = null;
+  try {
+    quietBoard = await generateQuietBoardDraft(now, dayStart, dayEnd);
+  } catch (err) {
+    console.error(
+      `[cron:generate-drafts] quiet board draft failed: ${err instanceof Error ? err.message : err}`,
+    );
+  }
+
+  return NextResponse.json({ ok: true, daily, weeklyRecap, quietBoard });
 }
 
 async function generateDailyBrief(
@@ -256,3 +268,80 @@ async function generateWeeklyRecap(now: Date, dayStart: Date): Promise<DraftOutc
     reason: "DRAFT",
   });
 }
+
+
+async function generateQuietBoardDraft(
+  now: Date,
+  dayStart: Date,
+  dayEnd: Date,
+): Promise<DraftOutcome> {
+  const isoDate = now.toISOString().slice(0, 10);
+  const slug = `why-board-quiet-${isoDate}`;
+
+  const existing = await db.contentDraft
+    .findFirst({ where: { slug }, select: { id: true } })
+    .catch(() => null);
+  if (existing) {
+    return { slug, created: false, skipped: true, reason: "already generated today" };
+  }
+
+  const [gameCount, publishedPickCount] = await Promise.all([
+    db.game.count({ where: { commenceTime: { gte: dayStart, lte: dayEnd } } }),
+    db.pick.count({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        NOT: { modelVersion: "v5.0.0-seed" },
+        generatedAt: { gte: dayStart, lte: dayEnd },
+      },
+    }),
+  ]);
+
+  // Only auto-draft when the public slate is empty (quiet / gated day).
+  if (publishedPickCount > 0) {
+    return {
+      slug,
+      created: false,
+      skipped: true,
+      reason: "slate has published picks — quiet explainer not needed",
+    };
+  }
+
+  const surface = boardSurfacePosture(process.env);
+  const darkHint =
+    surface.surface === "signal"
+      ? "quiet board no recent published model signals"
+      : "stale odds insert outside Refresh SLA or market board dark";
+  const darkReason = classifyPublicDarkHint(darkHint);
+
+  const sources: ContentSourceRecord[] = [
+    {
+      sourceType: "DAILY_BRIEF",
+      sourceLabel: "Ops board posture (counts only)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: `games=${gameCount} publishedPicks=${publishedPickCount} surface=${surface.surface}`,
+    },
+  ];
+
+  const record = buildWhyBoardQuietDraft({
+    darkReason,
+    boardSurface: surface.surface,
+    oddsInsertAgeMinutes: null,
+    publishedPickCount,
+    gameCount,
+    calibrationStatus: "RED",
+    generatedBy: "cron:generate-drafts",
+    slug,
+    sources,
+  });
+
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
+    slug,
+    created: true,
+    reason: "DRAFT quiet-board honesty",
+  });
+}
+

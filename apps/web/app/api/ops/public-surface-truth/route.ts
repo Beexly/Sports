@@ -93,6 +93,9 @@ const MAIN_FEATURE_MARKERS = [
   "rpcp-conformal-bridge-offline",
   "product-board-surfaces-posture",
   "ranking-pause-apply-default-off",
+  "why-board-quiet-draft",
+  "b2b-experimental-openapi",
+  "pick-card-rankingp",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
