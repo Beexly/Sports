@@ -54,8 +54,27 @@
  * Newton on I_x(a,b) − q using the exact Beta pdf as the derivative, with every step
  * validated against a monotonically shrinking [lo, hi] bracket and demoted to bisection
  * whenever it would escape. That gives Newton's quadratic convergence with bisection's
- * unconditional guarantee — accurate to ~1e-15 in the CDF, and exact on the closed-form
- * cases (Beta(1,1) is inverted in a single step).
+ * unconditional guarantee.
+ *
+ * Accuracy is INHERITED from that shared continued fraction, not better than it. Its own
+ * convergence criterion is BETACF_EPS = 3e-11, and measured against an exact
+ * Beta-Binomial-duality reference it delivers ~1e-15 absolute in the CDF for small
+ * shapes but only ~1e-10 near the centre of a sharply peaked one (worst observed:
+ * 7.5e-11 at Beta(500, 500), x = 0.5). Past a + b ≈ 1e8 it stops converging altogether
+ * in a narrow band around its own branch-switch point and returns values OUTSIDE [0, 1];
+ * those are rejected rather than propagated (see `admissibleBetaCdf`), and if no
+ * admissible reading exists at all the quantile is NaN and the stake fails closed to 0.
+ *
+ * KNOWN RESIDUAL, stated rather than hidden. Immediately outside that rejected band the
+ * same expansion returns values that are in [0, 1] and therefore indistinguishable from
+ * good ones, but still wrong (at a = 6.2e8 it reads 0.687 where the truth is 0.480), so
+ * I_x is not monotone there and Q(q) is unreliable for q within ~±0.1 standard
+ * deviations of the centre once a + b ≳ 1e8. The defect is in the shared
+ * `regularizedIncompleteBeta`, not here, and this module is insulated from it three
+ * ways: n_eff of 1e8 is five orders past anything the settled-pick history can support,
+ * the affected q sit at α ≈ 0.5 where the "worst case" is the median by construction,
+ * and `min(p, ·)` clamps any resulting optimism away. The α ≤ 0.25 tail that actually
+ * sizes stakes is verified correct to ~1e-5 of a standard deviation out to n_eff = 1e12.
  *
  * DETERMINISM. Fully deterministic and pure: no Math.random, no Date.now, no PRNG (the
  * algorithm is not stochastic, so there is no seed to take), no I/O, no env reads.
@@ -83,14 +102,51 @@ export const DEFAULT_ROBUST_ALPHA = 0.1;
 const MIN_ALPHA = 1e-9;
 const MAX_ALPHA = 0.5;
 
-const QUANTILE_MAX_ITERATIONS = 200;
-/** Absolute tolerance on I_x(a,b) − q. At double precision this is effectively exact. */
-const QUANTILE_CDF_TOLERANCE = 1e-15;
-/** Absolute tolerance on the step size in x. */
-const QUANTILE_X_TOLERANCE = 1e-16;
+/**
+ * Bisection halves the bracket once per iteration, so the budget is also the number
+ * of binary decades the solver can travel from its starting bracket. 1100 covers the
+ * whole positive double range down to the smallest denormal; ordinary calls return in
+ * well under 20 iterations, so the headroom is only ever spent on shapes whose
+ * quantile sits tens of decades from the endpoints (a < 1 with a tiny q).
+ */
+const QUANTILE_MAX_ITERATIONS = 1100;
+/** Absolute tolerance on I_x(a,b) − q. */
+const QUANTILE_CDF_ABS_TOLERANCE = 1e-15;
+/**
+ * RELATIVE tolerance on I_x(a,b) − q. The accepted residual is the tighter of the two
+ * arms: ABS ∧ REL·min(q, 1−q). The relative arm is what makes a TAIL quantile honest —
+ * an absolute 1e-15 on its own is satisfied by almost any x once q itself falls near
+ * 1e-15, which is how Q(1e-15; 1, 1) used to return 5.55e-16 (a 44% error on a case
+ * with a closed form) and Q(1e-12; 1, 1) used to return 9.9953e-13.
+ */
+const QUANTILE_CDF_REL_TOLERANCE = 1e-12;
+/**
+ * RELATIVE tolerance on the step size in x, and on the residual bracket width. Also
+ * relative for the same reason: an absolute 1e-16 floor silently caps every returned
+ * quantile at ~5.5e-17 resolution and terminated the iteration while the CDF was still
+ * orders of magnitude away from q.
+ */
+const QUANTILE_X_TOLERANCE = 8 * Number.EPSILON;
 
 function clamp01(x: number): number {
   return Math.min(1, Math.max(0, x));
+}
+
+/**
+ * I_x(a, b) with an admissibility check. A regularised incomplete beta is a
+ * PROBABILITY, so a reading outside [0, 1] — or a non-finite one — is not a slightly
+ * inaccurate answer, it is a failed evaluation, and it is reported as NaN rather than
+ * passed on.
+ *
+ * This is not hypothetical. The shared Numerical-Recipes continued fraction stops
+ * converging inside a narrow band around its own branch-switch point (a+1)/(a+b+2)
+ * once a and b reach ~1e8: at a = 6.2e8, b = 3.8e8 it returns 2.73 just below the
+ * switch and −1.52 just above it. Both are inadmissible, and both used to be fed
+ * straight into the quantile solver's bracket update (see `betaQuantile`).
+ */
+function admissibleBetaCdf(x: number, a: number, b: number): number {
+  const value = regularizedIncompleteBeta(x, a, b);
+  return Number.isFinite(value) && value >= 0 && value <= 1 ? value : Number.NaN;
 }
 
 /**
@@ -99,14 +155,20 @@ function clamp01(x: number): number {
  * Thin, deliberate re-export of the package's shared Numerical-Recipes implementation
  * (`edge-lab/stats.ts`) so robust-Kelly callers and tests exercise the SAME continued
  * fraction the Clopper-Pearson / selective-gate code paths already depend on, instead
- * of a second private copy that could drift. Returns NaN on invalid shape parameters.
+ * of a second private copy that could drift.
+ *
+ * Returns NaN on invalid shape parameters, and also NaN wherever that shared continued
+ * fraction fails to converge and hands back a value outside [0, 1] — see
+ * `admissibleBetaCdf`. Reporting the failure is the honest option: fabricating a 0 or a
+ * 1 by clamping would leave the CDF non-monotone, which is strictly worse for any
+ * caller that inverts it.
  */
 export function betaCdf(x: number, a: number, b: number): number {
   if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0 || b <= 0) return Number.NaN;
   if (!Number.isFinite(x)) return Number.NaN;
   if (x <= 0) return 0;
   if (x >= 1) return 1;
-  return regularizedIncompleteBeta(x, a, b);
+  return admissibleBetaCdf(x, a, b);
 }
 
 /**
@@ -125,12 +187,31 @@ export function betaPdf(x: number, a: number, b: number): number {
  * Beta quantile Q(q; a, b): the x with I_x(a, b) = q.
  *
  * Bracket-safeguarded Newton. I_x is strictly increasing in x on (0, 1), so [lo, hi] is
- * a valid bracket that we shrink on every evaluation regardless of which rule produced
- * the step; a Newton step is accepted only when it lands strictly inside the current
- * bracket, otherwise the iteration falls back to bisection for that step. Convergence is
- * therefore unconditional (bisection floor) while still quadratic near the root.
+ * a valid bracket that we shrink on every ADMISSIBLE evaluation regardless of which rule
+ * produced the step; a Newton step is accepted only when it lands strictly inside the
+ * current bracket, otherwise the iteration falls back to bisection for that step.
+ * Convergence is therefore unconditional (bisection floor) while still quadratic near
+ * the root.
  *
- * Returns 0 for q ≤ 0 and 1 for q ≥ 1 (the closed-form endpoints), NaN on invalid a/b.
+ * The word "admissible" is load-bearing. The bracket is this solver's only
+ * unconditional correctness guarantee, so it must never be moved by a CDF reading that
+ * is not a probability. The seed sits at the distribution mean, which is within
+ * 1/(a+b) of the shared continued fraction's branch-switch point (a+1)/(a+b+2) — i.e.
+ * exactly where that expansion stops converging for large shapes. One inadmissible
+ * reading there (I_mean evaluating to −1.52 at a = 6.2e8, b = 3.8e8) sets `lo = mean`,
+ * which puts the true α-quantile permanently OUTSIDE the bracket and returns a "worst
+ * case" ABOVE the central estimate. So an inadmissible reading is discarded and the
+ * solver probes elsewhere instead; the failing band is narrow, so alternating
+ * sub-interval midpoints escape it in a step or two.
+ *
+ * Accuracy is bounded by the shared continued fraction (BETACF_EPS = 3e-11 in
+ * edge-lab/stats.ts), which delivers ~1e-10 absolute in the CDF near the centre of a
+ * sharply peaked Beta — NOT the 1e-15 the tolerance constants ask for. The solver asks
+ * for more than it can always get on purpose: whichever criterion binds first, the
+ * answer stays inside a proven bracket.
+ *
+ * Returns 0 for q ≤ 0 and 1 for q ≥ 1 (the closed-form endpoints), and NaN on invalid
+ * a/b or when no admissible CDF reading exists anywhere in [0, 1].
  */
 export function betaQuantile(q: number, a: number, b: number): number {
   if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0 || b <= 0) return Number.NaN;
@@ -138,16 +219,33 @@ export function betaQuantile(q: number, a: number, b: number): number {
   if (q <= 0) return 0;
   if (q >= 1) return 1;
 
+  // Tighter of the absolute and relative arms — see the tolerance constants.
+  const cdfTolerance = Math.min(
+    QUANTILE_CDF_ABS_TOLERANCE,
+    QUANTILE_CDF_REL_TOLERANCE * Math.min(q, 1 - q),
+  );
+
   let lo = 0;
   let hi = 1;
   // Start at the distribution mean; the bracket makes a poor start harmless.
   let x = Math.min(1 - 1e-12, Math.max(1e-12, a / (a + b)));
 
   for (let i = 0; i < QUANTILE_MAX_ITERATIONS; i++) {
-    const err = regularizedIncompleteBeta(x, a, b) - q;
+    const cdf = admissibleBetaCdf(x, a, b);
+    if (Number.isNaN(cdf)) {
+      // Failed evaluation: leave the bracket untouched and probe a different point
+      // inside it. Alternating the two sub-intervals x splits [lo, hi] into keeps
+      // every retry distinct and keeps the probe strictly inside the bracket.
+      const retry = i % 2 === 0 ? 0.5 * (lo + x) : 0.5 * (x + hi);
+      if (!(retry > lo) || !(retry < hi) || retry === x) break;
+      x = retry;
+      continue;
+    }
+
+    const err = cdf - q;
     if (err > 0) hi = x;
     else lo = x;
-    if (Math.abs(err) <= QUANTILE_CDF_TOLERANCE) return x;
+    if (Math.abs(err) <= cdfTolerance) return x;
 
     const density = betaPdf(x, a, b);
     let next =
@@ -155,9 +253,20 @@ export function betaQuantile(q: number, a: number, b: number): number {
     // Demote to bisection whenever Newton would leave the proven bracket.
     if (!Number.isFinite(next) || next <= lo || next >= hi) next = 0.5 * (lo + hi);
 
-    if (Math.abs(next - x) <= QUANTILE_X_TOLERANCE) return next;
+    if (Math.abs(next - x) <= QUANTILE_X_TOLERANCE * Math.abs(next)) return next;
+    // The bracket itself has collapsed to double-precision width: no further
+    // refinement is representable, so stop rather than burn the iteration budget
+    // chasing continued-fraction noise.
+    if (hi - lo <= QUANTILE_X_TOLERANCE * hi) return 0.5 * (lo + hi);
     x = next;
   }
+
+  // The bracket never moved, so not one admissible reading was found anywhere in
+  // [0, 1] — the shapes are past the point where the shared continued fraction can be
+  // evaluated at all. Fail closed with NaN rather than hand back an unvalidated
+  // endpoint: `robustKellyFraction` reads a non-finite quantile as "no usable worst
+  // case" and stakes 0.
+  if (lo === 0 && hi === 1) return Number.NaN;
   return x;
 }
 

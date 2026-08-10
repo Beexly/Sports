@@ -73,12 +73,40 @@ describe("betaCdf (regularised incomplete beta)", () => {
     expect(Number.isNaN(betaCdf(Number.NaN, 2, 3))).toBe(true);
   });
 
-  it("is monotonically increasing in x", () => {
+  it("is STRICTLY increasing in x", () => {
+    // Strict, not >=: a constant function satisfies non-strict monotonicity, so the
+    // weaker form cannot distinguish a working CDF from one stuck at a single value.
     let previous = -1;
     for (let i = 0; i <= 100; i++) {
       const value = betaCdf(i / 100, 3.5, 7.25);
-      expect(value).toBeGreaterThanOrEqual(previous);
+      expect(value).toBeGreaterThan(previous);
       previous = value;
+    }
+  });
+
+  it("never returns a value outside [0, 1] — a CDF is a probability", () => {
+    // Regression: the shared Numerical-Recipes continued fraction stops converging in a
+    // narrow band around its own branch-switch point (a+1)/(a+b+2) once a and b reach
+    // ~1e8, and there it returned readings like 2.73 and -1.52. Those were fed straight
+    // into the quantile solver's bracket update. An inadmissible reading must now
+    // surface as NaN, never as an out-of-range "probability".
+    for (const [a, b] of [
+      [1, 1],
+      [61, 41],
+      [601, 401],
+      [6.2e5, 3.8e5],
+      [6.2e7, 3.8e7],
+      [6.2e8, 3.8e8],
+      [6.2e11, 3.8e11],
+    ] as const) {
+      const mean = a / (a + b);
+      const sd = Math.sqrt((a * b) / ((a + b) ** 2 * (a + b + 1)));
+      for (let z = -4; z <= 4; z += 0.02) {
+        const value = betaCdf(mean + z * sd, a, b);
+        if (Number.isNaN(value)) continue; // documented "cannot evaluate" signal
+        expect(value).toBeGreaterThanOrEqual(0);
+        expect(value).toBeLessThanOrEqual(1);
+      }
     }
   });
 });
@@ -94,6 +122,24 @@ describe("betaPdf", () => {
   it("matches the closed-form Beta(2, 3) density 12x(1-x)^2", () => {
     for (const x of [0.1, 0.35, 0.6, 0.9]) {
       expect(betaPdf(x, 2, 3)).toBeCloseTo(12 * x * (1 - x) ** 2, 10);
+    }
+  });
+
+  it("rejects invalid shape parameters and peaks at the analytic mode", () => {
+    expect(Number.isNaN(betaPdf(0.5, 0, 3))).toBe(true);
+    expect(Number.isNaN(betaPdf(0.5, 2, -1))).toBe(true);
+    expect(Number.isNaN(betaPdf(0.5, Number.NaN, 3))).toBe(true);
+    // The mode of Beta(a, b) with a, b > 1 is (a-1)/(a+b-2). Pinning WHERE the density
+    // peaks (and not just its value at a point) is what catches an a/b transposition.
+    for (const [a, b] of [
+      [2, 5],
+      [5, 2],
+      [61, 41],
+    ] as const) {
+      const mode = (a - 1) / (a + b - 2);
+      const peak = betaPdf(mode, a, b);
+      expect(peak).toBeGreaterThan(betaPdf(mode - 0.01, a, b));
+      expect(peak).toBeGreaterThan(betaPdf(mode + 0.01, a, b));
     }
   });
 
@@ -184,6 +230,64 @@ describe("betaQuantile (inverse regularised incomplete beta)", () => {
       previous = x;
     }
   });
+
+  it("is accurate RELATIVELY, not just absolutely, deep in the lower tail", () => {
+    // Regression: the stopping rules used to be absolute (1e-15 on the CDF residual,
+    // 1e-16 on the step in x). An absolute CDF tolerance of 1e-15 is met by almost any
+    // x once q itself approaches 1e-15, so the solver returned after one Newton step
+    // with an enormous RELATIVE error: Q(1e-15; 1, 1) came back as 5.551115e-16 (44%
+    // low) and Q(1e-12; 1, 1) as 9.995338e-13. Beta(1, 1) is the uniform, so the exact
+    // answer is q itself and there is no numerical excuse.
+    for (const q of [1e-3, 1e-6, 1e-9, 1e-12, 1e-15]) {
+      const x = betaQuantile(q, 1, 1);
+      expect(Math.abs(x - q) / q).toBeLessThan(1e-9);
+    }
+    // Same for a closed form whose quantile is not the identity: Q(q; 1, b) =
+    // 1 - (1-q)^(1/b), computed here via expm1/log1p to dodge the cancellation that
+    // makes the naive expression useless at these magnitudes.
+    for (const b of [7, 1000, 1e6]) {
+      for (const q of [1e-6, 1e-9, 1e-12]) {
+        const exact = -Math.expm1(Math.log1p(-q) / b);
+        const x = betaQuantile(q, 1, b);
+        expect(Math.abs(x - exact) / exact).toBeLessThan(1e-9);
+      }
+    }
+  });
+
+  it("keeps the true root inside its bracket at sharply peaked shapes", () => {
+    // Regression for the bracket-poisoning bug. The solver seeds at the distribution
+    // mean, which sits on the shared continued fraction's branch-switch point; for
+    // a + b >= ~1e9 that evaluation returned -1.52, so `err < 0` set `lo = mean` and
+    // put the true 10th percentile — which is BELOW the mean — permanently outside the
+    // bracket. betaQuantile(0.1, 6.2e8, 3.8e8) then came back ABOVE the mean.
+    const Z10 = -1.2815515655446004; // standard-normal 10th percentile
+    for (const n of [1e6, 1e8, 1e9, 1e10, 1e12]) {
+      const a = 0.62 * n + 1;
+      const b = 0.38 * n + 1;
+      const mean = a / (a + b);
+      const sd = Math.sqrt((a * b) / ((a + b) ** 2 * (a + b + 1)));
+      const lower = betaQuantile(0.1, a, b);
+      const upper = betaQuantile(0.9, a, b);
+      expect(Number.isFinite(lower)).toBe(true);
+      // The direction is the whole point: the 10th percentile is below the mean.
+      expect(lower).toBeLessThan(mean);
+      expect(upper).toBeGreaterThan(mean);
+      expect(lower).toBeLessThan(upper);
+      // A Beta with these shapes is normal to well within 1e-3 of a standard
+      // deviation, so the standardised quantile pins the value, not just its sign.
+      expect((lower - mean) / sd).toBeCloseTo(Z10, 2);
+      expect((upper - mean) / sd).toBeCloseTo(-Z10, 2);
+    }
+  });
+
+  it("fails closed with NaN when no admissible CDF reading exists", () => {
+    // Past ~1e200 the continued fraction cannot be evaluated anywhere in [0, 1]. The
+    // old code walked its bracket to 1 and returned 1 — the most OPTIMISTIC possible
+    // answer, which `min(p, ·)` then silently accepted as "no uncertainty at all".
+    for (const n of [1e200, 1e300]) {
+      expect(Number.isNaN(betaQuantile(0.1, 0.6 * n + 1, 0.4 * n + 1))).toBe(true);
+    }
+  });
 });
 
 describe("betaConfidenceSet", () => {
@@ -217,9 +321,44 @@ describe("betaConfidenceSet", () => {
     ).toBeLessThan(1e-3);
   });
 
+  it("keeps lower <= upper for every shape, or reports the set as non-computable", () => {
+    // `lower <= mean` is deliberately NOT asserted: it is not a theorem. The Beta
+    // median crosses its mean as the skew flips (Beta(5,2) has median 0.736 > mean
+    // 0.714), so at alpha = 0.5 the lower edge legitimately sits above the mean.
+    // What must always hold is the ordering of the two quantiles.
+    for (const probability of [0, 0.02, 0.3, 0.5, 0.62, 0.98, 1]) {
+      for (const effectiveSampleSize of [0, 1, 10, 1e3, 1e6, 1e8, 1e9, 1e12, 1e100, 1e300]) {
+        for (const alpha of [1e-9, 0.01, 0.1, 0.25, 0.5]) {
+          const set = betaConfidenceSet({ probability, effectiveSampleSize, alpha });
+          if (!Number.isFinite(set.lower) || !Number.isFinite(set.upper)) {
+            // Non-computable is allowed, but only if it fails CLOSED downstream.
+            const result = robustKellyFraction({
+              probability,
+              decimalOdds: 2,
+              effectiveSampleSize,
+              alpha,
+            });
+            expect(result.robustFraction).toBe(0);
+            continue;
+          }
+          expect(set.lower).toBeLessThanOrEqual(set.upper);
+          expect(set.width).toBeGreaterThanOrEqual(0);
+          expect(set.lower).toBeGreaterThanOrEqual(0);
+          expect(set.upper).toBeLessThanOrEqual(1);
+        }
+      }
+    }
+  });
+
   it("clamps alpha into (0, 0.5] and clamps the probability into [0, 1]", () => {
     expect(betaConfidenceSet({ probability: 0.5, effectiveSampleSize: 10, alpha: 0.9 }).alpha).toBe(0.5);
-    expect(betaConfidenceSet({ probability: 0.5, effectiveSampleSize: 10, alpha: -1 }).alpha).toBeGreaterThan(0);
+    const floored = betaConfidenceSet({ probability: 0.5, effectiveSampleSize: 10, alpha: -1 });
+    expect(floored.alpha).toBeGreaterThan(0);
+    // Pin the floor, not merely "some positive number": a negative alpha must land on
+    // the tiny MIN_ALPHA (a near-certain set), never silently on the 0.1 default.
+    expect(floored.alpha).toBeLessThan(1e-6);
+    expect(Number.isFinite(floored.lower)).toBe(true);
+    expect(floored.lower).toBeLessThan(floored.upper);
     expect(betaConfidenceSet({ probability: 1.4, effectiveSampleSize: 10 }).probability).toBe(1);
     expect(betaConfidenceSet({ probability: -0.4, effectiveSampleSize: 10 }).probability).toBe(0);
     expect(betaConfidenceSet({ probability: Number.NaN, effectiveSampleSize: 10 }).probability).toBe(0);
@@ -525,6 +664,39 @@ describe("sweepEffectiveSampleSize", () => {
     expect(noEvidenceNaN.effectiveSampleSize).toBe(0);
     expect(real.effectiveSampleSize).toBe(100);
     expect(real.robustFraction).toBeGreaterThan(zeroEvidence.robustFraction);
+  });
+
+  it("carries alpha and cap from the base input onto every swept row", () => {
+    // Without the object spread in sweepEffectiveSampleSize these silently revert to
+    // the defaults, which no other assertion in this file would notice.
+    const grid = [10, 100, 1000];
+    const wide = sweepEffectiveSampleSize(
+      { probability: 0.7, decimalOdds: 2, effectiveSampleSize: 1, alpha: 0.001 },
+      grid,
+    );
+    const narrow = sweepEffectiveSampleSize(
+      { probability: 0.7, decimalOdds: 2, effectiveSampleSize: 1, alpha: 0.5 },
+      grid,
+    );
+    for (let i = 0; i < grid.length; i++) {
+      const w = wide[i];
+      const nRow = narrow[i];
+      if (w === undefined || nRow === undefined) throw new Error("sweep row missing");
+      expect(w.alpha).toBe(0.001);
+      expect(nRow.alpha).toBe(0.5);
+      // A wider set (smaller alpha) must never stake more than a narrower one.
+      expect(w.robustFraction).toBeLessThan(nRow.robustFraction);
+    }
+
+    const capped = sweepEffectiveSampleSize(
+      { probability: 0.7, decimalOdds: 2, effectiveSampleSize: 1, cap: 0.01 },
+      [100, 10_000, 1_000_000],
+    );
+    for (const row of capped) {
+      expect(row.cap).toBe(0.01);
+      expect(row.robustFraction).toBeLessThanOrEqual(0.01);
+    }
+    expect(capped.some((row) => row.capBinding)).toBe(true);
   });
 
   it("returns nothing for an empty grid", () => {
