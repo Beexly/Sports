@@ -17,7 +17,6 @@ function makeSeparatingRows(n = 200) {
   // Strong ranking: high p → more wins
   return Array.from({ length: n }, (_, i) => {
     const p = 0.2 + (i / (n - 1)) * 0.6; // 0.2..0.8
-    const y = (Math.random() < p ? 1 : 0) as 0 | 1;
     // deterministic-ish with seed from i
     const yDet = (p > 0.5 ? (i % 5 !== 0 ? 1 : 0) : i % 5 === 0 ? 1 : 0) as 0 | 1;
     return {

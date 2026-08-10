@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
+import { describe, expect, it, afterEach } from "vitest";
 import { cronAuthError, cronAuthErrorBearerOnly, isVercelPlatformCron } from "@/lib/cron/authorize";
 
 describe("vercel platform cron auth", () => {

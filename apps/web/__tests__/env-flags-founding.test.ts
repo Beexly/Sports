@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { flagEnabled, waitlistGated } from "@/lib/env/flags";
 import { resolveBoardSurface } from "@/lib/board/board-surface-policy";
-import { loadSelectiveRuntimeConfig, passesPublicSelectiveFilter } from "@/lib/calibration/selective-publish-runtime";
+import { passesPublicSelectiveFilter } from "@/lib/calibration/selective-publish-runtime";
 
 describe("founding env defaults", () => {
   it("waitlist open when gate true but FORCE unset (legacy)", () => {
