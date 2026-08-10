@@ -5,11 +5,17 @@
 # The --no-deps is REQUIRED, not a micro-optimisation. See "Why --no-deps" below.
 # The Dockerfile and .github/workflows/python-tests.yml both use exactly this command.
 #
-# Every version here is the version actually installed while the 328-test suite passed,
-# read back from `pip freeze` in a clean virtualenv, not copied from a changelog. The
-# whole file was then re-verified from scratch: fresh venv -> `pip install --no-deps -r
-# requirements.txt` -> `python -m pytest app/tests -q` -> 328 passed, plus a live
-# `uvicorn app.main:app` boot and a GET /health.
+# Every version here is the version actually importable in the environment where
+# `python3 -m pytest app/tests -q` reports 354 passed (CPython 3.11.15), read back from
+# importlib.metadata rather than copied from a changelog, and every pin was confirmed to
+# exist on PyPI. A live `uvicorn app.main:app` boot serving GET /health and the predict
+# endpoints was run against those same versions.
+#
+# NOT verified: a from-scratch `pip install --no-deps -r requirements.txt` into an empty
+# virtualenv. This file describes an environment that was observed working; it has not
+# been replayed. (Five pins — certifi, filelock, fsspec, idna, packaging — previously
+# claimed versions NEWER than anything this suite has ever run against; they are now the
+# versions actually in use.)
 #
 # ---------------------------------------------------------------------------
 # Why --no-deps
@@ -72,13 +78,13 @@ httpx==0.28.1            # transport behind fastapi.testclient.TestClient
 annotated-doc==0.0.5
 annotated-types==0.8.0
 anyio==4.14.2
-certifi==2026.7.22
+certifi==2026.2.25
 click==8.4.2
-filelock==3.32.2
-fsspec==2026.7.0
+filelock==3.29.0
+fsspec==2026.4.0
 h11==0.16.0
 httpcore==1.0.9
-idna==3.18
+idna==3.11
 iniconfig==2.3.0
 Jinja2==3.1.6
 joblib==1.5.3
@@ -86,7 +92,7 @@ MarkupSafe==3.0.3
 mpmath==1.3.0
 narwhals==2.24.0
 networkx==3.6.1
-packaging==26.3
+packaging==24.0
 pluggy==1.6.0
 pydantic_core==2.46.4
 Pygments==2.20.0

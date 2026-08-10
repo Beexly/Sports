@@ -2,7 +2,7 @@
 #
 # gse-ml-service — CPU-only FastAPI sidecar.
 #
-# Base: python:3.11-slim. NOT 3.10 — 3.11.15 is the interpreter this service's 328-test
+# Base: python:3.11-slim. NOT 3.10 — 3.11.15 is the interpreter this service's 354-test
 # suite was actually verified on, and 3.11 is what the CI workflow installs. Keep the
 # three in step; moving the base image means re-running the suite on it first.
 #

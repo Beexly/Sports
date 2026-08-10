@@ -86,7 +86,7 @@ Error contract, uniform across every endpoint:
 
 | Status | When |
 |---|---|
-| `422` | Bad body: wrong JSON shape or types, unknown field, size over a cap, or a value the model itself rejects (unknown team, ragged matrix, non-finite coordinate, a persistence-image spec that does not tile). `detail` carries the message. |
+| `422` | Bad body: wrong JSON shape or types, unknown field, size over a cap, or a value the model itself rejects (unknown team, ragged matrix, non-finite coordinate, a persistence-image spec that does not tile or asks for more than `MAX_IMAGE_PIXELS` pixels, a filter driven out of float64 range by an extreme `inflation`/`initial_spread`). `detail` carries the message. |
 | `503` | That model's module failed to import in this deployment (e.g. a missing optional dependency). The other endpoints keep serving; `GET /health` names the failure. |
 
 Bad input never produces a 500 traceback — asserted for every endpoint in the tests.
@@ -173,6 +173,14 @@ Response:
 advantage, and antisymmetric to bit-exactness when `home_advantage == 0`
 (`p(A,B) + p(B,A) == 1.0`).
 
+It is never `NaN`. Parameters that pass the schema can still push the ensemble out of
+float64 range — `inflation: 1e308`, `initial_spread: 1e308`, a subnormal
+`logistic_scale` — and the logit is evaluated as `m / hypot(k, sqrt(pi/8) * s)` (the same
+number as `(m/k) / sqrt(1 + (pi/8)(s/k)^2)`, but with nothing that can overflow) so the
+link itself cannot produce one. When the *ensemble* is what overflowed, the endpoint
+answers **422 naming the cause** rather than reporting a fabricated `0.5` for a state that
+carries no information.
+
 ### `POST /predict/tda` — features, not a prediction
 
 Request:
@@ -180,7 +188,7 @@ Request:
 | Field | Type | Default | Meaning |
 |---|---|---|---|
 | `frames` | `[[x, y], ...][]` (≤ 512 frames, ≤ 128 points each) | required | One frame per time slice. Frames with < 3 points are skipped, not rejected. |
-| `spec` | object \| `null` | module default | `birth_range`, `pers_range` (default `[0, 2]`), `pixel_size` (`0.2`), `sigma` (`0.2`), `weight_cap` (`null` → `pers_range[1]`). Each range must tile into whole pixels or you get a 422. |
+| `spec` | object \| `null` | module default | `birth_range`, `pers_range` (default `[0, 2]`), `pixel_size` (`0.2`), `sigma` (`0.2`), `weight_cap` (`null` → `pers_range[1]`). Each range must tile into whole pixels, and the resulting grid must be at most `MAX_IMAGE_PIXELS` (1,000,000) pixels per homology degree — the default is 100. Either violation is a 422. |
 | `include_features` | `bool` | `true` | `false` returns diagnostics only. |
 
 Response: `feature_length`, `frames_submitted` / `frames_used` / `frames_skipped`,
@@ -267,7 +275,7 @@ Interactive API docs (FastAPI's generated Swagger UI) at `/docs`; the raw schema
 
 ```bash
 cd gse-ml-service
-python3 -m pytest app/tests -q      # 328 passed
+python3 -m pytest app/tests -q      # 354 passed
 ```
 
 The package tree is deliberately `__init__.py`-free. `gse-ml-service/conftest.py` puts
@@ -304,9 +312,9 @@ a headless API has no use for.
 
 None of it is needed: `app/models/tda.py` calls `ripser.ripser()` only and implements its
 own persistence-image vectorisation (integrating each Gaussian exactly per pixel via
-`erf`), precisely because `PersistenceImager` was unavailable. Verified: a clean
-virtualenv with ripser installed `--no-deps` and no persim present runs all 328 tests
-green.
+`erf`), precisely because `PersistenceImager` was unavailable. Verified: the environment
+the suite passes in has `ripser` importable and **no persim installed at all**, and all
+354 tests are green there.
 
 Adding a dependency therefore means adding its transitive closure: install it normally in
 a scratch venv, run `pip freeze`, and update both sections of `requirements.txt`.
@@ -346,19 +354,32 @@ them out until they can answer with a real probability.
 
 Everything below was run in this repository, not inferred:
 
-- `python3 -m pytest app/tests -q` → **328 passed** (252 model tests + 76 for this HTTP
-  surface), from the service root and from the repo root.
-- The same 328 in a **clean Python 3.11 virtualenv** built from `requirements.txt` with
-  `--no-deps` and no persim/Cython installed.
+- `python3 -m pytest app/tests -q` → **354 passed** (268 model tests + 86 for this HTTP
+  surface), from the service root and from the repo root, on CPython 3.11.15.
+- `persim` is **not installed** in that environment (`importlib.util.find_spec("persim")`
+  is `None`), so the TDA path genuinely runs on the local persistence-image code rather
+  than silently falling back to `PersistenceImager`.
 - A live `uvicorn app.main:app` process serving `GET /health`, `POST /predict/etkf`
-  (probability `0.769`), `POST /predict/irl` (200 with `probability: null`), and a
-  malformed body (422).
-- Mutation check on the IRL contract: forcing the stub to return `0.5` makes the endpoint
-  fail response validation instead of emitting a number.
+  (probability `0.7688608309512989` — the exact body shown above), `POST /predict/irl`
+  (200 with `probability: null`), a malformed body (422), an oversized persistence-image
+  spec (422) and `initial_spread: 1e308` (422).
+- Every pinned version in `requirements.txt` resolves on PyPI, and `ripser==0.6.15`
+  publishes `cp311` manylinux/musllinux wheels for x86_64 and aarch64 — so the
+  `--no-deps` install the Dockerfile and CI run has no source build on those platforms.
+- Mutation checks, each one actually run against a copy of the tree with the suite
+  re-executed: swapping two indices in either `mps_layer` einsum, flipping the ETKF
+  mean-update or matchup-operator sign, replacing the ETKF transform with the identity,
+  dropping the MacKay variance shrinkage, zeroing either free-energy KL term, removing
+  the TDA persistence weighting, swapping the H0/H1 blocks, transposing the image axes,
+  removing the persistence-image pixel cap, and removing `_WARNINGS_LOCK` — all thirteen
+  are caught by the suite. Forcing the IRL stub to return `0.5` makes the endpoint fail
+  response validation instead of emitting a number.
 
 Not verified here: **the Docker image has never been built** — the sandbox has the docker
 CLI but no daemon. Build it once before relying on it in a pipeline. The CI workflow has
-likewise not been executed on a GitHub runner.
+likewise not been executed on a GitHub runner. Nothing here has been run in a fresh
+virtualenv either; the pins are the versions the suite is verified against in this
+environment.
 
 ## Still missing
 

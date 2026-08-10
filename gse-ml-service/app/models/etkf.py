@@ -61,6 +61,7 @@ _MAX_LOGIT = 30.0
 # MacKay's (1992) logistic-probit moment-matching constant: E[sigmoid(z)] for
 # z ~ N(m, v) is approximated by sigmoid(m / sqrt(1 + pi*v/8)).
 _MACKAY_LAMBDA = math.pi / 8.0
+_SQRT_MACKAY_LAMBDA = math.sqrt(_MACKAY_LAMBDA)
 
 
 class ETKFNumericalError(RuntimeError):
@@ -235,7 +236,18 @@ class ETKF:
         # Centre so the initial ensemble mean is exactly ``mean`` rather than
         # ``mean`` plus Monte-Carlo noise.
         perturbations -= perturbations.mean(axis=1, keepdims=True)
-        self._ensemble = mean[:, None] + float(initial_spread) * perturbations
+        with np.errstate(over="ignore", invalid="ignore"):
+            ensemble = mean[:, None] + float(initial_spread) * perturbations
+        # ``initial_spread`` is individually finite, but the PRODUCT can still overflow
+        # (1e308 times a standard-normal draw). Catching it here names the offending
+        # argument; letting it through would surface much later as "the projected ensemble
+        # contains non-finite values", pointing at the wrong thing.
+        if not np.all(np.isfinite(ensemble)):
+            raise ValueError(
+                f"initial_spread={initial_spread!r} overflows float64 once scaled by the "
+                "initial perturbations; use a smaller spread"
+            )
+        self._ensemble = ensemble
 
         #: Transform matrix from the most recent ``update`` (diagnostic; ``None``
         #: before the first update or after a degenerate no-op update).
@@ -348,6 +360,16 @@ class ETKF:
         -------
         The analysis mean, shape ``(n_state,)``.
 
+        Raises
+        ------
+        ValueError
+            On a non-finite observation, operator or ``R``, or on a shape mismatch —
+            all checked before the ensemble is touched.
+        ETKFNumericalError
+            If the innovation covariance or the resulting analysis is not finite. The
+            ensemble is left unmodified. Refusing beats returning the forecast
+            unchanged, which is what an overflowed ``S`` would silently produce.
+
         Algorithm
         ---------
         With ``Z = X' / sqrt(N-1)`` and ``A = (H X)' / sqrt(N-1)`` (primes denote
@@ -402,7 +424,18 @@ class ETKF:
         y_mean = y_ensemble.mean(axis=1)
         a = (y_ensemble - y_mean[:, None]) / scale
 
-        s = a @ a.T + r_matrix
+        # A finite ensemble can still have a sample covariance that is not: squaring
+        # entries near the float64 ceiling overflows. Left unchecked, ``S = inf`` makes
+        # the gain solve to exactly zero, the transform to the identity, and ``update``
+        # returns the forecast unchanged — silently discarding the observation while
+        # reporting success. Refusing is the honest outcome.
+        with np.errstate(over="ignore", invalid="ignore"):
+            s = a @ a.T + r_matrix
+        if not np.all(np.isfinite(s)):
+            raise ETKFNumericalError(
+                "the innovation covariance overflowed float64; the ensemble is too "
+                "large in magnitude to assimilate against (check inflate()/initial_spread)"
+            )
         innovation = y_arr - y_mean
 
         # Mean update: x_a = x_f + Z A^T S^-1 (y - H x_f).
@@ -426,11 +459,28 @@ class ETKF:
         This is the only way to re-open a filter that has been narrowed by many
         assimilations; there is no dynamics/forecast model in this class, so
         without inflation the spread is monotonically non-increasing forever.
+
+        Raises
+        ------
+        ETKFNumericalError
+            If the inflated ensemble is not finite. ``update`` enforces
+            finiteness on its own result, but ``inflate`` is a public mutator
+            that can break the same invariant (repeatedly inflating by a huge
+            factor overflows float64), and a silently non-finite ensemble
+            surfaces much later as a ``NaN`` probability. The ensemble is left
+            unmodified when this raises.
         """
         if not (math.isfinite(factor) and factor >= 0.0):
             raise ValueError(f"factor must be finite and >= 0, got {factor}")
         x_mean = self._ensemble.mean(axis=1, keepdims=True)
-        self._ensemble = x_mean + float(factor) * (self._ensemble - x_mean)
+        with np.errstate(over="ignore", invalid="ignore"):
+            inflated = x_mean + float(factor) * (self._ensemble - x_mean)
+        if not np.all(np.isfinite(inflated)):
+            raise ETKFNumericalError(
+                f"inflating by {factor!r} drove the ensemble out of float64 range; "
+                "the ensemble is unchanged"
+            )
+        self._ensemble = inflated
 
     # ------------------------------------------------------------------
     # Prediction
@@ -459,13 +509,23 @@ class ETKF:
 
                P(home win) = E[sigmoid(d / k)],  d ~ N(m, s^2)
                            ~= sigmoid( (m / k) / sqrt(1 + (pi/8) * (s / k)^2) )
+                            = sigmoid( m / sqrt(k^2 + (pi/8) * s^2) )
 
            the standard logistic-probit moment-matching approximation (MacKay
-           1992). The ``sqrt(1 + ...)`` denominator is the honest treatment of
-           uncertainty the caller asked for: a wide posterior divides the logit
-           down and pulls the probability toward 0.5, so a barely-observed team
-           cannot produce a confident pick. A point estimate would report the
-           same probability whether the margin was known to +/-0.01 or +/-10.
+           1992). The denominator is the honest treatment of uncertainty the
+           caller asked for: a wide posterior divides the logit down and pulls
+           the probability toward 0.5, so a barely-observed team cannot produce a
+           confident pick. A point estimate would report the same probability
+           whether the margin was known to +/-0.01 or +/-10.
+
+           The second form is what is actually evaluated, via ``math.hypot(k,
+           sqrt(pi/8) * s)``. It is algebraically identical but numerically safe:
+           the first form computes ``s / k`` and squares it, which raises
+           ``OverflowError`` for a small ``logistic_scale`` (a plain Python
+           ``float ** 2`` raises rather than saturating), and ``(m / k) / inf``
+           then yields ``NaN`` — a "probability" that is not a number. ``hypot``
+           never overflows or underflows to zero for finite inputs, so the logit
+           is always a real number and the documented ``(0, 1)`` guarantee holds.
 
         Properties this guarantees:
 
@@ -483,24 +543,48 @@ class ETKF:
 
         The absolute calibration of the returned number is only as good as
         ``logistic_scale`` and ``home_advantage``, which this class does not fit.
+
+        Raises
+        ------
+        ETKFNumericalError
+            If the projected ensemble — or the mean/spread summarising it — is
+            not finite. That happens only after the ensemble itself has been
+            driven out of range (e.g. a runaway ``inflate``). Refusing is the
+            honest answer: the alternative is returning ``NaN`` or a fabricated
+            0.5 for a state that carries no information.
         """
         offset = self.home_advantage if home_advantage is None else float(home_advantage)
         if not math.isfinite(offset):
             raise ValueError(f"home_advantage must be finite, got {offset}")
 
         operator = self.matchup_operator(home_team, away_team)
-        margins = (operator @ self._ensemble).ravel()
+        # errstate, not a warning filter: an out-of-range ensemble is reported as the
+        # explicit error below, so numpy's own RuntimeWarning would be duplicate noise.
+        with np.errstate(over="ignore", invalid="ignore"):
+            margins = (operator @ self._ensemble).ravel()
+        if not np.all(np.isfinite(margins)):
+            raise ETKFNumericalError(
+                "the projected ensemble contains non-finite values; no probability can "
+                "be formed from it (check for a runaway inflate() factor)"
+            )
 
-        mean_margin = float(margins.mean()) + offset
-        if self.ensemble_size < 2:
-            spread = 0.0
-        else:
-            spread = float(margins.std(ddof=1))
+        # Overflow here is possible even for a finite ensemble (summing N members
+        # near the float64 ceiling), so it is detected rather than warned about.
+        with np.errstate(over="ignore", invalid="ignore"):
+            mean_margin = float(margins.mean()) + offset
+            spread = 0.0 if self.ensemble_size < 2 else float(margins.std(ddof=1))
+        if not (math.isfinite(mean_margin) and math.isfinite(spread)):
+            raise ETKFNumericalError(
+                "the latent margin summary overflowed float64 "
+                f"(mean={mean_margin!r}, spread={spread!r}); no probability can be formed"
+            )
 
-        k = self.logistic_scale
-        variance = (spread / k) ** 2
-        logit = (mean_margin / k) / math.sqrt(1.0 + _MACKAY_LAMBDA * variance)
-        logit = float(np.clip(logit, -_MAX_LOGIT, _MAX_LOGIT))
+        # sigmoid( m / sqrt(k^2 + (pi/8) s^2) ) — see the docstring for why this
+        # form, and math.hypot, rather than (m/k)/sqrt(1 + (pi/8)(s/k)^2).
+        denominator = math.hypot(self.logistic_scale, _SQRT_MACKAY_LAMBDA * spread)
+        # denominator >= logistic_scale > 0, so this is never 0/0; an overflowing
+        # quotient saturates to +/-inf and is then clipped, never to NaN.
+        logit = float(np.clip(mean_margin / denominator, -_MAX_LOGIT, _MAX_LOGIT))
         return _sigmoid(logit)
 
     # ------------------------------------------------------------------

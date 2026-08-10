@@ -26,6 +26,7 @@ reproducible.
 from __future__ import annotations
 
 import math
+import threading
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -279,6 +280,88 @@ def test_tda_accepts_a_custom_spec() -> None:
     assert body["truncation_warning"] is None
 
 
+def test_tda_oversized_spec_grid_is_422_not_a_memory_error() -> None:
+    """A ~200-byte body must not be able to ask for tens of GB of pixels.
+
+    Adversarial finding: ``pixel_size: 0.001`` over a ``[0, 100]`` window is a
+    100000 x 100000 grid — two 80 GB float64 arrays — and the worker died with a
+    MemoryError (a 500, or an OOM kill of the whole process) instead of answering. Every
+    other size knob on this service is capped; this one was not.
+    """
+    response = client.post(
+        "/predict/tda",
+        json={
+            "frames": [[[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]],
+            "spec": {
+                "birth_range": [0.0, 100.0],
+                "pers_range": [0.0, 100.0],
+                "pixel_size": 0.001,
+                "sigma": 1.0,
+            },
+        },
+    )
+    assert response.status_code == 422
+    assert str(main.MAX_IMAGE_PIXELS) in response.json()["detail"]
+
+
+def test_tda_spec_at_the_pixel_cap_is_accepted() -> None:
+    """The cap is a boundary, not a ban: a grid exactly at the limit still serves."""
+    side = int(round(main.MAX_IMAGE_PIXELS**0.5))
+    response = client.post(
+        "/predict/tda",
+        json={
+            "frames": [[[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]],
+            "spec": {
+                "birth_range": [0.0, float(side)],
+                "pers_range": [0.0, float(side)],
+                "pixel_size": 1.0,
+                "sigma": 1.0,
+            },
+            "include_features": False,
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["feature_length"] == 2 * side * side
+
+
+def test_tda_truncation_warning_is_not_cross_wired_between_concurrent_requests() -> None:
+    """Concurrent callers must each be told the truth about THEIR OWN coordinates.
+
+    ``warnings.catch_warnings`` mutates process-global state and these endpoints run in
+    FastAPI's threadpool. Measured before ``main._WARNINGS_LOCK`` existed: 22 of 72
+    unit-scale requests were falsely told their features were saturated, and 51 of 72
+    genuinely saturated requests received ``truncation_warning: null`` — a false all-clear
+    on an uninformative vector, which is the exact failure mode the warning exists to
+    prevent. This asserts an invariant that must hold under every interleaving, so it
+    cannot fail spuriously once the lock is in place.
+    """
+    unit_frame = _ring(n=24)
+    huge_frame = [[x * 1000.0, y * 1000.0] for x, y in unit_frame]
+    results: Dict[str, List[bool]] = {"unit": [], "huge": []}
+    lock = threading.Lock()
+
+    def hammer(kind: str, frame: List[List[float]]) -> None:
+        warned = []
+        for _ in range(6):
+            body = client.post(
+                "/predict/tda", json={"frames": [frame] * 2, "include_features": False}
+            ).json()
+            warned.append(body["truncation_warning"] is not None)
+        with lock:
+            results[kind].extend(warned)
+
+    threads = [threading.Thread(target=hammer, args=("unit", unit_frame)) for _ in range(4)]
+    threads += [threading.Thread(target=hammer, args=("huge", huge_frame)) for _ in range(4)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert results["unit"] and results["huge"]
+    assert not any(results["unit"]), "a unit-scale request was handed another's truncation warning"
+    assert all(results["huge"]), "a saturated request was given a false all-clear"
+
+
 @pytest.mark.parametrize(
     "payload,reason",
     [
@@ -363,6 +446,45 @@ def test_etkf_is_deterministic() -> None:
 
 
 @pytest.mark.parametrize(
+    "extreme",
+    [
+        {"logistic_scale": 1e-300},
+        {"logistic_scale": 5e-324},
+        {"initial_spread": 1e308},
+        {"initial_spread": 1e300, "logistic_scale": 1e-300},
+        {"inflation": 1e308, "observations": [{"home_team": "A", "away_team": "B", "margin": 1.0}]},
+        {
+            "inflation": 1e300,
+            "observations": [{"home_team": "A", "away_team": "B", "margin": 1.0}] * 3,
+        },
+        {"home_advantage": 1e308, "initial_spread": 1e300},
+    ],
+)
+def test_etkf_extreme_but_typed_parameters_never_500(extreme: Dict[str, Any]) -> None:
+    """Numbers that pass the schema but overflow the filter are a 422, never a 500.
+
+    Adversarial finding: these bodies used to reach ``EtkfResponse`` with
+    ``probability=NaN`` (rejected by response validation -> 500) or raise ``OverflowError``
+    out of ``predict``. Both are the contract violation this file's header names: bad input
+    is a 4xx with a message. The 200s here must still carry a real probability.
+    """
+    response = client.post("/predict/etkf", json={**ETKF_BASE, **extreme})
+    assert response.status_code in (200, 422), f"got {response.status_code}: {response.text[:200]}"
+
+    body = response.json()
+    if response.status_code == 422:
+        assert body["detail"]
+        return
+
+    probability = _extract_probability(body)
+    assert probability is not None and 0.0 < probability < 1.0
+    # A non-finite float would serialise as bare `NaN`/`Infinity`, which is not valid JSON.
+    for token in ("NaN", "Infinity"):
+        assert token not in response.text, f"response contains invalid JSON token {token}"
+    assert math.isfinite(body["latent_margin"]) and math.isfinite(body["margin_spread"])
+
+
+@pytest.mark.parametrize(
     "payload,reason",
     [
         ({"teams": ["A", "B"], "home_team": "Z", "away_team": "B"}, "home team not in roster"),
@@ -408,7 +530,10 @@ def test_free_energy_happy_path_returns_the_objective_terms_and_latents() -> Non
     assert len(body["z2"]) == 3 and len(body["z2"][0]) == 2
     for key in ("loss", "reconstruction", "kl_z1", "kl_z2"):
         assert math.isfinite(body[key])
-    assert body["kl_z1"] >= 0.0 and body["kl_z2"] >= 0.0
+    # Strictly positive, not merely non-negative: a KL term stubbed out to exactly 0.0
+    # satisfies ">= 0" and the sum identity below, and would otherwise go unnoticed here
+    # and in the module tests. Observed on this seed: kl_z1 ~ 0.187, kl_z2 ~ 0.036.
+    assert body["kl_z1"] > 1e-3 and body["kl_z2"] > 1e-3
     # The free energy is exactly the sum of its reported parts.
     assert body["loss"] == pytest.approx(
         body["reconstruction"] + body["kl_z1"] + body["kl_z2"], rel=1e-5, abs=1e-5

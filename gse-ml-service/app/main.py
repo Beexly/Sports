@@ -128,6 +128,17 @@ SERVICE_VERSION = "0.1.0"
 # afterwards so a request cannot perturb any other torch user in the process.
 _TORCH_RNG_LOCK = threading.Lock()
 
+# ``warnings.catch_warnings`` is documented as NOT thread-safe: entering it swaps the
+# process-global ``warnings.showwarning`` and filter list. These ``def`` endpoints run in
+# FastAPI's threadpool, so two concurrent /predict/tda calls used to cross-wire their
+# capture buffers — a unit-scale request could be handed another request's
+# TDATruncationWarning ("your features are saturated") while the genuinely saturated
+# request got ``truncation_warning: null``, i.e. a false all-clear on a useless vector.
+# Measured before this lock existed: 22/72 false alarms and 51/72 missed warnings under
+# 12 concurrent clients. Serialising the capture region is the same trade already made
+# for torch's global RNG above.
+_WARNINGS_LOCK = threading.Lock()
+
 # ---------------------------------------------------------------------------
 # Request-size caps
 #
@@ -147,6 +158,14 @@ MAX_HIDDEN_DIM = 1024
 MAX_LATENT_DIM = 512
 MAX_CORES = 8
 MAX_RANK = 64
+
+# Cap on the persistence-image grid a request may ask for, per homology degree. Without
+# it a ~200-byte body — spec {birth_range: [0, 100], pers_range: [0, 100], pixel_size:
+# 0.001} — asks for a 100000 x 100000 pixel image, i.e. two 80 GB float64 arrays, and the
+# worker dies with a MemoryError (a 500, or an OOM kill) instead of answering. 1e6 pixels
+# per degree is ~8 MB per image and far above any sane spec: the default 10x10 grid is
+# 100. Exceeding it is a 422 like every other cap here.
+MAX_IMAGE_PIXELS = 1_000_000
 
 Point = Tuple[float, float]
 
@@ -686,8 +705,8 @@ def predict_tda(request: TdaRequest) -> TdaResponse:
     The signal is real: a ring of players (a defensive shell) produces a large, long-lived
     H1 class that a random blob of the same size and scale does not.
 
-    Returns 422 on a ragged/non-finite frame or a persistence-image spec whose ranges do
-    not tile into whole pixels.
+    Returns 422 on a ragged/non-finite frame, a persistence-image spec whose ranges do
+    not tile into whole pixels, or a spec whose grid exceeds ``MAX_IMAGE_PIXELS``.
     """
     module = _require("tda")
 
@@ -698,6 +717,17 @@ def predict_tda(request: TdaRequest) -> TdaResponse:
             spec = module.PersistenceImageSpec(**request.spec.model_dump())
         except ValueError as exc:
             raise _bad_request(exc) from exc
+        # The module deliberately puts no upper bound on the grid; the HTTP surface must,
+        # or a tiny body allocates tens of GB. See MAX_IMAGE_PIXELS.
+        if spec.image_length > MAX_IMAGE_PIXELS:
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    f"spec asks for {spec.n_birth_pixels} x {spec.n_pers_pixels} = "
+                    f"{spec.image_length} pixels per homology degree, cap is "
+                    f"{MAX_IMAGE_PIXELS}; widen pixel_size or narrow the ranges"
+                ),
+            )
 
     frames_used = sum(
         1 for frame in request.frames if len(frame) >= module.MIN_POINTS_PER_FRAME
@@ -706,7 +736,11 @@ def predict_tda(request: TdaRequest) -> TdaResponse:
     # compute_tda_features warns (rather than raises) when the diagram overflows the
     # image window; capture it so the caller learns their coordinates are mis-scaled
     # instead of quietly receiving a saturated vector.
-    with warnings.catch_warnings(record=True) as caught:
+    #
+    # _WARNINGS_LOCK is load-bearing, not defensive: catch_warnings mutates global state
+    # and these endpoints run concurrently in a threadpool, so without it this capture
+    # both invents and loses truncation warnings across requests. See its definition.
+    with _WARNINGS_LOCK, warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
         try:
             features = module.compute_tda_features(request.frames, spec)
@@ -753,7 +787,10 @@ def predict_etkf(request: EtkfRequest) -> EtkfResponse:
     settled results before treating the number as a win probability.
 
     Returns 422 for an unknown/duplicate team, a same-team matchup, a non-finite margin,
-    or an assimilation that goes numerically non-finite.
+    or a filter that goes numerically non-finite during assimilation, inflation, or the
+    final projection. In particular an extreme ``inflation`` or ``initial_spread`` can
+    drive the ensemble out of float64 range; that is answered as a 422 naming the cause,
+    never as a NaN "probability".
     """
     module = _require("etkf")
 
@@ -803,7 +840,7 @@ def predict_etkf(request: EtkfRequest) -> EtkfResponse:
     except module.ETKFNumericalError as exc:
         raise HTTPException(
             status_code=422,
-            detail=f"assimilation became numerically non-finite: {exc}",
+            detail=f"the filter became numerically non-finite: {exc}",
         ) from exc
     except ValueError as exc:
         raise _bad_request(exc) from exc

@@ -29,6 +29,8 @@ from app.models.free_energy_coder import (
     DEFAULT_LOGVAR_MIN,
     FreeEnergyOutput,
     HierarchicalPredictiveCoder,
+    _kl_diag_gaussians,
+    _kl_standard_normal,
 )
 
 INPUT_DIM = 8
@@ -186,6 +188,105 @@ def test_loss_is_finite_scalar_and_latent_shapes(batch: int) -> None:
     # loss is exactly the sum of its three parts.
     total = out.reconstruction + out.kl_z1 + out.kl_z2
     assert torch.allclose(out.loss, total, atol=1e-6)
+
+
+# --------------------------------------------------------------------------------------
+# 2b. The KL terms are REAL — not silently zero, and not the wrong closed form
+#
+# Adversarial finding: before these tests existed, replacing ``_kl_standard_normal``'s
+# body with ``return torch.zeros(...)`` passed the ENTIRE suite. ``kl_z2 >= -1e-5`` is
+# satisfied by 0, ``loss == recon + kl_z1 + kl_z2`` is satisfied by 0, and encoder_top
+# still receives gradient through the sampling path, so the gradient test passed too. A
+# silently-zeroed top-level KL turns the objective into a different model and the
+# /predict/free-energy response reports ``kl_z2: 0.0`` forever with nothing complaining.
+# --------------------------------------------------------------------------------------
+def test_kl_terms_are_strictly_positive_not_silently_zero() -> None:
+    """Both KL terms must carry actual mass on a generic model and generic data.
+
+    ``KL(q || p)`` is 0 only when the two Gaussians coincide exactly, which for
+    independently initialised networks on non-degenerate input is a measure-zero
+    coincidence. Observed on these seeds: kl_z1 ~ 0.32, kl_z2 ~ 0.063. Asserting a
+    conservative 1e-3 floor — enough headroom for a different init, far above the 0.0 a
+    stubbed-out KL would return.
+    """
+    torch.manual_seed(0)
+    model = HierarchicalPredictiveCoder(
+        input_dim=INPUT_DIM, hidden_dim=32, z1_dim=Z1_DIM, z2_dim=Z2_DIM
+    )
+    torch.manual_seed(7)
+    out = model(torch.randn(64, INPUT_DIM), sample=False)
+
+    assert out.kl_z1.item() > 1e-3, f"kl_z1 is ~zero ({out.kl_z1.item()!r}) — is it wired up?"
+    assert out.kl_z2.item() > 1e-3, f"kl_z2 is ~zero ({out.kl_z2.item()!r}) — is it wired up?"
+
+
+def test_kl_helpers_match_an_independent_closed_form() -> None:
+    """Both KL helpers checked against ``torch.distributions``, which shares no code.
+
+    This is the reference implementation of the same divergence, so agreement is evidence
+    rather than a restatement of the module's own algebra.
+    """
+    gen = torch.Generator().manual_seed(4242)
+    mu_q = torch.randn(9, 5, generator=gen)
+    logvar_q = torch.randn(9, 5, generator=gen)
+    mu_p = torch.randn(9, 5, generator=gen)
+    logvar_p = torch.randn(9, 5, generator=gen)
+
+    q = torch.distributions.Normal(mu_q, torch.exp(0.5 * logvar_q))
+    p = torch.distributions.Normal(mu_p, torch.exp(0.5 * logvar_p))
+    expected = torch.distributions.kl_divergence(q, p).sum(dim=-1)
+    torch.testing.assert_close(
+        _kl_diag_gaussians(mu_q, logvar_q, mu_p, logvar_p), expected, rtol=1e-5, atol=1e-6
+    )
+
+    standard = torch.distributions.Normal(torch.zeros_like(mu_q), torch.ones_like(mu_q))
+    expected_std = torch.distributions.kl_divergence(q, standard).sum(dim=-1)
+    torch.testing.assert_close(
+        _kl_standard_normal(mu_q, logvar_q), expected_std, rtol=1e-5, atol=1e-6
+    )
+
+
+def test_kl_is_exactly_zero_only_when_the_distributions_coincide() -> None:
+    """The zero case is real, which is why "it returned 0" is not self-evidently a bug."""
+    gen = torch.Generator().manual_seed(11)
+    mu = torch.randn(4, 3, generator=gen)
+    logvar = torch.randn(4, 3, generator=gen)
+
+    torch.testing.assert_close(
+        _kl_diag_gaussians(mu, logvar, mu.clone(), logvar.clone()), torch.zeros(4)
+    )
+    torch.testing.assert_close(
+        _kl_standard_normal(torch.zeros(4, 3), torch.zeros(4, 3)), torch.zeros(4)
+    )
+    # ...and it is NOT zero once they differ, so the assertion above is not vacuous.
+    assert _kl_standard_normal(mu, logvar).abs().sum().item() > 0.0
+
+
+def test_forward_kl_terms_are_the_ones_implied_by_the_reported_parameters() -> None:
+    """End-to-end wiring: ``kl_z1``/``kl_z2`` must be computed from the reported heads.
+
+    Recomputing them from ``FreeEnergyOutput``'s own posterior/prior parameters catches a
+    KL taken against the wrong distribution (e.g. ``kl_z1`` measured against N(0, I)
+    instead of the learned prior p(z1|z2)), which no shape or sign test can see.
+    """
+    model = make_model(seed=23)
+    torch.manual_seed(31)
+    out = model(torch.randn(12, INPUT_DIM), sample=False)
+
+    q1 = torch.distributions.Normal(out.q1_mu, torch.exp(0.5 * out.q1_logvar))
+    p1 = torch.distributions.Normal(out.p1_mu, torch.exp(0.5 * out.p1_logvar))
+    q2 = torch.distributions.Normal(out.q2_mu, torch.exp(0.5 * out.q2_logvar))
+    unit = torch.distributions.Normal(torch.zeros_like(out.q2_mu), torch.ones_like(out.q2_mu))
+
+    torch.testing.assert_close(
+        out.kl_z1, torch.distributions.kl_divergence(q1, p1).sum(dim=-1).mean(), rtol=1e-5, atol=1e-6
+    )
+    torch.testing.assert_close(
+        out.kl_z2,
+        torch.distributions.kl_divergence(q2, unit).sum(dim=-1).mean(),
+        rtol=1e-5,
+        atol=1e-6,
+    )
 
 
 def test_free_energy_helper_matches_forward() -> None:

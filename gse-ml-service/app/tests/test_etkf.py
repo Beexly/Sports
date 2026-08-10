@@ -379,6 +379,37 @@ def test_predict_never_saturates_to_zero_or_one_on_extreme_strengths() -> None:
     assert high + low == 1.0
 
 
+def test_predict_matches_the_mackay_closed_form_computed_independently() -> None:
+    """``predict`` is evaluated as ``m / hypot(k, sqrt(pi/8) s)``; pin it to the source form.
+
+    The implementation uses an algebraically-rewritten denominator for numerical safety.
+    This recomputes the probability straight from the ensemble using the *textbook*
+    expression ``sigmoid((m/k) / sqrt(1 + (pi/8)(s/k)^2))``, in the well-conditioned regime
+    where both forms are computable, so the rewrite cannot have changed the answer.
+    """
+    for scale, advantage in ((1.0, 0.0), (2.5, 0.0), (0.4, 0.7), (1.0, -1.3)):
+        filt = ETKF(
+            n_teams=3,
+            state_dim=1,
+            ensemble_size=48,
+            seed=101,
+            initial_spread=1.2,
+            logistic_scale=scale,
+            home_advantage=advantage,
+        )
+        rng = np.random.default_rng(202)
+        for _ in range(6):
+            filt.update(np.array([rng.normal(0.5, 1.0)]), filt.matchup_operator(0, 1), 0.4)
+
+        margins = (filt.matchup_operator(0, 1) @ filt.ensemble).ravel()
+        m = float(margins.mean()) + advantage
+        s = float(margins.std(ddof=1))
+        expected = 1.0 / (
+            1.0 + math.exp(-((m / scale) / math.sqrt(1.0 + (math.pi / 8.0) * (s / scale) ** 2)))
+        )
+        assert filt.predict(0, 1) == pytest.approx(expected, rel=0, abs=1e-12)
+
+
 def test_matchup_operator_shape_and_signs() -> None:
     filt = ETKF(n_teams=3, state_dim=2, ensemble_size=8, seed=65)
     operator = filt.matchup_operator(2, 0)
@@ -507,6 +538,124 @@ def test_invalid_team_indices_are_rejected() -> None:
         filt.predict(-1, 0)
     with pytest.raises(ValueError, match="must differ"):
         filt.predict(1, 1)
+
+
+# ---------------------------------------------------------------------------
+# 6b. predict() must never hand back a non-number
+#
+# Adversarial finding: with the original ``(m/k) / sqrt(1 + (pi/8)(s/k)^2)`` form,
+# ``logistic_scale=1e-300`` raised ``OverflowError`` (Python's float ``** 2`` raises
+# instead of saturating) and a runaway ``inflate``/``initial_spread`` produced ``inf/inf
+# = NaN`` — a "probability" that is not a number, which reached the HTTP layer and became
+# a 500. The documented guarantee is "strictly in (0, 1)"; these pin it.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"logistic_scale": 1e-300},
+        {"logistic_scale": 5e-324},  # smallest positive subnormal
+        {"logistic_scale": 1e308},
+        {"logistic_scale": 1e-300, "initial_spread": 1e300},
+        {"initial_spread": 1e300, "home_advantage": 1e308},
+        {"initial_spread": 0.0, "logistic_scale": 1e-300},
+    ],
+)
+def test_predict_never_returns_a_non_number_for_extreme_parameters(kwargs: dict) -> None:
+    """Every extreme-but-legal configuration yields (0, 1) or a NAMED numerical error."""
+    filt = ETKF(n_teams=2, state_dim=1, ensemble_size=8, seed=91, **kwargs)
+    try:
+        probability = filt.predict(0, 1)
+    except ETKFNumericalError:
+        return  # An explicit refusal is the honest outcome; NaN is not.
+    assert math.isfinite(probability), f"predict returned {probability!r} for {kwargs}"
+    assert 0.0 < probability < 1.0, f"predict returned {probability!r} for {kwargs}"
+    assert probability + filt.predict(1, 0) == 1.0 or kwargs.get("home_advantage")
+
+
+def test_initial_spread_that_overflows_the_ensemble_is_rejected_at_construction() -> None:
+    """``initial_spread`` is finite on its own but ``spread * N(0,1)`` need not be.
+
+    Building an ensemble full of ``inf`` and only noticing several calls later (as "the
+    projected ensemble contains non-finite values") points at the wrong argument.
+
+    The guard measures the ensemble that was actually drawn, so it is deliberately
+    data-dependent: ``1e308`` overflows only once some centred draw exceeds ~1.798. At
+    ``ensemble_size=64`` the largest |draw| under this seed is 2.78, so it does — and being
+    seeded, that is fixed, not probabilistic.
+    """
+    with pytest.raises(ValueError, match="initial_spread"):
+        ETKF(n_teams=2, state_dim=1, ensemble_size=64, seed=89, initial_spread=1e308)
+    # Large but representable still works.
+    filt = ETKF(n_teams=2, state_dim=1, ensemble_size=64, seed=89, initial_spread=1e100)
+    assert np.all(np.isfinite(filt.ensemble))
+
+
+def test_tiny_logistic_scale_sharpens_rather_than_overflowing() -> None:
+    """A near-zero logit scale means "1 latent unit is a huge log-odd", not a crash."""
+    prior = np.array([0.75, -0.75])
+    filt = ETKF(
+        2, 1, ensemble_size=16, seed=93, initial_spread=0.1, initial_mean=prior,
+        logistic_scale=1e-300,
+    )
+    high = filt.predict(0, 1)
+    low = filt.predict(1, 0)
+    assert 0.5 < high < 1.0 and 0.0 < low < 0.5
+    assert high + low == 1.0
+
+
+def test_inflate_refuses_to_leave_a_non_finite_ensemble() -> None:
+    """``inflate`` is a public mutator; it must not be able to break the finiteness invariant.
+
+    Overflowing silently here surfaces much later as a NaN probability, with nothing
+    pointing at the inflation factor that caused it.
+    """
+    filt = ETKF(n_teams=2, state_dim=1, ensemble_size=8, seed=95, initial_spread=1.0)
+    filt.inflate(1e300)  # large but still representable
+    snapshot = filt.ensemble
+    assert np.all(np.isfinite(snapshot))
+
+    with pytest.raises(ETKFNumericalError, match="out of float64 range"):
+        filt.inflate(1e300)
+
+    assert np.array_equal(filt.ensemble, snapshot), "ensemble mutated by a refused inflate"
+    # The ensemble is still at 1e300 scale, so summarising it legitimately overflows.
+    # Refusing loudly is the contract; silently reporting 0.5 for an overflowed state
+    # would be fabricating a coin flip.
+    with pytest.raises(ETKFNumericalError, match="overflowed float64"):
+        filt.predict(0, 1)
+
+    filt.inflate(0.0)  # collapse back onto the mean: the filter is usable again
+    assert 0.0 < filt.predict(0, 1) < 1.0
+
+
+def test_update_refuses_an_overflowing_innovation_covariance() -> None:
+    """``S = A A^T + R`` overflowing must be an error, not a silently ignored observation.
+
+    With ``S = inf`` the gain solves to exactly zero and the transform to the identity, so
+    ``update`` would return the forecast unchanged and report success — the observation
+    vanishes with no signal to the caller.
+    """
+    filt = ETKF(n_teams=2, state_dim=1, ensemble_size=16, seed=98, initial_spread=1e200)
+    snapshot = filt.ensemble
+
+    with pytest.raises(ETKFNumericalError, match="innovation covariance overflowed"):
+        filt.update(np.array([1.0]), MARGIN_OP, 0.5)
+
+    assert np.array_equal(filt.ensemble, snapshot), "ensemble mutated by a refused update"
+
+
+def test_predict_refuses_a_non_finite_ensemble() -> None:
+    """The guard itself, driven directly.
+
+    ``_ensemble`` is poked deliberately: after the ``inflate`` fix there is no public way
+    to reach this state, and the point is to pin the guard rather than the route to it.
+    """
+    filt = ETKF(n_teams=2, state_dim=1, ensemble_size=8, seed=97, initial_spread=1.0)
+    filt._ensemble[0, 0] = np.inf
+    with pytest.raises(ETKFNumericalError, match="non-finite"):
+        filt.predict(0, 1)
 
 
 def test_ensemble_property_returns_a_copy() -> None:
