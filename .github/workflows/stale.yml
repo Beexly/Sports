@@ -1,0 +1,62 @@
+name: Close Stale Issues and PRs
+
+# Housekeeping only — keeps the tracker usable by surfacing abandoned issues/PRs
+# without silently deleting anything important. Periods are intentionally
+# generous (60 + 14 days) and 'pinned'/'security' are exempt so nothing that
+# still matters gets swept away by inactivity alone.
+
+on:
+  schedule:
+    # Daily at 07:00 UTC, off-the-hour.
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Mark/close stale issues and PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Stale check
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          days-before-stale: 60
+          days-before-close: 14
+
+          exempt-issue-labels: "pinned,security"
+          exempt-pr-labels: "pinned,security"
+
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has had
+            no activity for 60 days. It will be closed in 14 days if no further
+            activity occurs. If this is still relevant, just comment or push a
+            commit and it will stay open — thanks for your patience.
+
+          stale-pr-message: >
+            This pull request has been automatically marked as stale because it
+            has had no activity for 60 days. It will be closed in 14 days if no
+            further activity occurs. If this is still being worked on, just
+            comment or push a commit and it will stay open — thanks for your
+            patience.
+
+          close-issue-message: >
+            Closing this issue due to 74 days of inactivity (60-day stale period
+            plus a 14-day grace period). Feel free to reopen it if it's still
+            relevant.
+
+          close-pr-message: >
+            Closing this pull request due to 74 days of inactivity (60-day stale
+            period plus a 14-day grace period). Feel free to reopen it if it's
+            still being worked on.
+
+          exempt-all-milestones: true

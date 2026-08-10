@@ -1,0 +1,27 @@
+name: Release Drafter
+
+# Keeps a draft release's notes in sync with every merge to main, so a
+# maintainer can cut a release by editing/publishing an already-accurate
+# draft instead of hand-assembling a changelog under time pressure.
+# Categorization rules live in .github/release-drafter.yml, not here.
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  update_release_draft:
+    name: Update release draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Draft release notes
+        uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
