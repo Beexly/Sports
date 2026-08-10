@@ -111,12 +111,33 @@ describe("O(1) recursive intensity update vs. O(n) brute-force resum", () => {
   });
 
   it("matches brute force after a long dormant gap (large elapsed time)", () => {
+    // alpha < beta is required: HawkesSteamDetector's constructor clamps a
+    // supplied prior below beta for subcriticality (see resolvePrior), so an
+    // alpha >= beta here would be silently replaced by a different value and
+    // this test would stop checking the (mu,alpha,beta) it claims to.
     const mu = 0.01;
-    const alpha = 0.5;
+    const alpha = 0.15;
     const beta = 0.2;
     const detector = new HawkesSteamDetector({ priorMu: mu, priorAlpha: alpha, priorBeta: beta });
+    // Guard the premise above: confirm the detector actually seeded with the
+    // exact requested (alpha,beta) rather than a silently-clamped substitute.
+    const seededFit = detector.getFit("home");
+    expect(seededFit.alpha).toBeCloseTo(alpha, 12);
+    expect(seededFit.beta).toBeCloseTo(beta, 12);
+
     const times = [0, 1, 2, 3];
     for (const et of times) detector.observeEvent(et, "home");
+
+    // A moderate, non-degenerate query point where excitation has NOT fully
+    // decayed away. This is what actually exercises the O(1) recursion's decay
+    // arithmetic against the stated alpha/beta -- the far-horizon check below
+    // is insensitive to alpha/beta once excitation has fully decayed to ~0, so
+    // on its own it would not catch the wrong parameters being used internally
+    // (as happened here before this test was fixed to use a subcritical prior).
+    const moderateQuery = 3.5;
+    const observedModerate = detector.intensityAt(moderateQuery, "home");
+    const expectedModerate = bruteForceIntensity(times, moderateQuery, mu, alpha, beta);
+    expect(observedModerate).toBeCloseTo(expectedModerate, 9);
 
     const farQuery = 1e6;
     const observed = detector.intensityAt(farQuery, "home");
@@ -318,7 +339,10 @@ describe("edge cases", () => {
   });
 
   it("very large time gaps decay excitation to (numerically) zero without NaN/Infinity", () => {
-    const detector = new HawkesSteamDetector({ priorAlpha: 0.7, priorBeta: 0.5 });
+    // alpha < beta (subcritical), matching the constructor's hard constraint --
+    // see the note in the "long dormant gap" test above for why alpha >= beta
+    // here would silently test different parameters than intended.
+    const detector = new HawkesSteamDetector({ priorAlpha: 0.3, priorBeta: 0.5 });
     detector.observeEvent(0, "home");
     const far = detector.intensityAt(1e12, "home");
     expect(Number.isFinite(far)).toBe(true);
