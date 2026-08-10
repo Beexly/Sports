@@ -20,20 +20,20 @@ function overconfident(n: number, seed = 1): CalibrationSample[] {
 }
 
 describe("runCalibrationMapBakeoff", () => {
-  it("includes beta_calibration and temperature rows on overconfident chrono sample", () => {
+  it("includes beta_calibration, temperature_nll, isotonic debug on overconfident sample", () => {
     const samples = overconfident(300, 42);
     const result = runCalibrationMapBakeoff(samples, 0.7);
     expect(result.nTest).toBeGreaterThan(50);
+    expect(result.applyOff).toBe(true);
     const methods = result.methods.map((m) => m.method);
     expect(methods).toContain("raw");
-    expect(methods).toContain("temperature");
+    expect(methods).toContain("temperature_nll");
     expect(methods).toContain("platt_map_irls");
     expect(methods).toContain("beta_calibration");
     expect(methods).toContain("isotonic_pava");
     expect(methods).toContain("isotonic_cir");
     const beta = result.methods.find((m) => m.method === "beta_calibration");
     expect(beta).toBeDefined();
-    // On this synthetic overconfident set, some map should beat raw Brier or log loss
     const raw = result.methods.find((m) => m.method === "raw")!;
     const anyBetter = result.methods.some(
       (m) =>
@@ -42,7 +42,13 @@ describe("runCalibrationMapBakeoff", () => {
         (m.brier < raw.brier || m.logLoss < raw.logLoss),
     );
     expect(anyBetter).toBe(true);
-    expect(result.rankingFirst.toLowerCase()).toMatch(/res|modelprob|selective/);
+    expect(result.rankingFirst.toLowerCase()).toMatch(/res|modelprob|selective|independent/);
     expect(result.note.toLowerCase()).toContain("offline");
+    expect(result.isotonicDebug).toBeDefined();
+    expect(result.isotonicDebug!.n).toBe(300);
+    expect(result.isotonicDebug!.applyOff).toBe(true);
+    expect(result.logLossDiagnose).toBeDefined();
+    expect(result.logLossDiagnose!.meanLogLoss).toBeGreaterThan(0);
+    expect(typeof result.temperatureT === "number" || result.temperatureT === null).toBe(true);
   });
 });

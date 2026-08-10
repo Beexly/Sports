@@ -296,6 +296,20 @@ export {
 // R&D — temperature scaling (one-parameter overconfidence softener). Not live.
 export { fitTemperature, applyTemperature } from "./temperature-scaling.js";
 export type { TemperatureModel } from "./temperature-scaling.js";
+
+// R&D — log-loss optimization + isotonic diagnostics (offline; apply OFF).
+export {
+  meanLogLossAtTemperature,
+  temperatureLogLossGradient,
+  fitTemperatureNewton,
+  diagnoseLogLoss,
+  holdoutLogLoss,
+  logLoss,
+  meanLogLoss,
+} from "./log-loss-optimize.js";
+export type { LogLossSliceReport } from "./log-loss-optimize.js";
+export { debugIsotonicCalibration } from "./isotonic-debug.js";
+export type { IsotonicDebugReport } from "./isotonic-debug.js";
 export type {
   CalibrationMethod,
   CalibratorFit,

@@ -1,18 +1,23 @@
 /**
- * Offline map bake-off: Raw | Temperature | Platt | Beta | Isotonic PAVA | CIR
+ * Offline map bake-off: Raw | Temperature (Newton NLL) | Platt | Beta | Isotonic PAVA | CIR
  * Full Murphy Brier decomposition + log loss on each. Apply OFF.
  *
- * Does NOT re-implement calibrators — uses package betaCalibration / fitTemperature
- * and existing web Platt / PAVA helpers. Ranking-first note preserved.
+ * Plus: CV selectCalibrator (ECE), isotonic debug (plateaus/ranking), log-loss diagnose.
+ * Does NOT re-implement calibrators — package + web helpers. Ranking-first note preserved.
  */
 
-import type { CalibrationSample } from "@sports/prediction-engine";
+import type { CalibrationSample, IsotonicDebugReport, LogLossSliceReport } from "@sports/prediction-engine";
 import {
   betaCalibration,
   brierDecomposition,
   expectedCalibrationError,
   fitTemperature as fitTempPackage,
+  fitTemperatureNewton,
   applyTemperature,
+  selectCalibrator,
+  debugIsotonicCalibration,
+  diagnoseLogLoss,
+  meanLogLoss,
 } from "@sports/prediction-engine";
 import { fitPlattFromProbs, applyPlattToProb } from "@/lib/calibration/platt-scaling";
 import { fitIsotonicPava, applyIsotonic, applyIsotonicCir } from "@/lib/calibration/isotonic-pava";
@@ -33,17 +38,6 @@ export type MapDecompRow = {
   readonly uncertainty: number;
   readonly logLoss: number;
 };
-
-function logLoss(samples: readonly CalibrationSample[]): number {
-  const eps = 1e-15;
-  if (samples.length === 0) return NaN;
-  let s = 0;
-  for (const r of samples) {
-    const p = Math.min(1 - eps, Math.max(eps, r.p));
-    s += r.y === 1 ? -Math.log(p) : -Math.log(1 - p);
-  }
-  return s / samples.length;
-}
 
 function decomp(method: string, samples: readonly CalibrationSample[]): MapDecompRow {
   if (samples.length === 0) {
@@ -67,7 +61,7 @@ function decomp(method: string, samples: readonly CalibrationSample[]): MapDecom
     reliability: d.reliability,
     resolution: d.resolution,
     uncertainty: d.uncertainty,
-    logLoss: logLoss(samples),
+    logLoss: meanLogLoss(samples.map((r) => ({ p: r.p, y: r.y }))),
   };
 }
 
@@ -82,6 +76,20 @@ export type CalibrationMapBakeoff = {
   readonly bestByBrier: string | null;
   /** Best map by holdout log loss. */
   readonly bestByLogLoss: string | null;
+  /** Package CV selector (OOF equal-mass ECE + noise bar). */
+  readonly cvSelect?: {
+    readonly recommended: string;
+    readonly rawOofEce: number;
+    readonly nullGainMargin: number;
+    readonly scores: readonly { method: string; oofEce: number | null }[];
+  };
+  /** In-sample isotonic plateaus / ranking diagnostics (apply OFF). */
+  readonly isotonicDebug?: IsotonicDebugReport;
+  /** Full-sample log-loss geometry. */
+  readonly logLossDiagnose?: LogLossSliceReport;
+  /** Fitted T from Newton NLL (train), if available. */
+  readonly temperatureT?: number | null;
+  readonly applyOff: true;
 };
 
 /**
@@ -98,6 +106,9 @@ export function runCalibrationMapBakeoff(
   const test = samplesChrono.slice(cut);
   const generatedAt = new Date().toISOString();
 
+  const isotonicDebug = debugIsotonicCalibration(samplesChrono);
+  const logLossDiagnose = diagnoseLogLoss(samplesChrono);
+
   if (test.length === 0) {
     return {
       generatedAt,
@@ -109,23 +120,48 @@ export function runCalibrationMapBakeoff(
         "If resolution stays near 0, maps cannot unlock PROVEN — raise ranking first.",
       bestByBrier: null,
       bestByLogLoss: null,
+      isotonicDebug,
+      logLossDiagnose,
+      temperatureT: null,
+      applyOff: true,
     };
   }
 
   const trainY = train.map((r) => ({ p: r.p, y: r.y as 0 | 1 }));
   const platt = fitPlattFromProbs(trainY);
   const iso = fitIsotonicPava(trainY);
-  const tempPkg = fitTempPackage(trainY);
-  // Local grid-fit as fallback if package returns null (degenerate train)
+  const tempNewton = fitTemperatureNewton(trainY);
+  const tempPkg = tempNewton ?? fitTempPackage(trainY);
   const tempLocal = fitTempLocal(
     train.map((r) => ({ logit: logit(r.p), outcome: r.y as 0 | 1 })),
   );
   const beta = betaCalibration(trainY);
 
+  // CV family selection on full chrono sample (internal folds) — ECE objective
+  let cvSelect: CalibrationMapBakeoff["cvSelect"];
+  try {
+    if (samplesChrono.length >= 40) {
+      const sel = selectCalibrator(samplesChrono);
+      if (sel) {
+        cvSelect = {
+          recommended: sel.recommended,
+          rawOofEce: sel.rawOofEce,
+          nullGainMargin: sel.nullGainMargin,
+          scores: sel.scores.map((s) => ({
+            method: s.method,
+            oofEce: s.oofEce,
+          })),
+        };
+      }
+    }
+  } catch {
+    cvSelect = undefined;
+  }
+
   const methods: MapDecompRow[] = [
     decomp("raw", test),
     decomp(
-      "temperature",
+      "temperature_nll",
       test.map((r) => ({
         p: tempPkg
           ? applyTemperature(r.p, tempPkg.T)
@@ -205,11 +241,16 @@ export function runCalibrationMapBakeoff(
     methods,
     note:
       "Offline only. Apply CALIBRATION_ADJUSTMENTS only after Res improves and holdout floors pass. " +
-      "Maps primarily cut reliability (REL) and log loss, not resolution (RES). " +
-      "Beta (Kull 2017) includes identity map; Platt cannot. CIR preserves ranking vs PAVA plateaus.",
+      "Maps cut REL + log-loss, not RES. Temperature fit = grid + Newton NLL. " +
+      "CV selectCalibrator uses OOF equal-mass ECE + noise bar. Isotonic debug is in-sample.",
     rankingFirst:
-      "Live Res≈0.002 ⇒ selective publish + independent modelProb / sport models before enabling any map.",
+      "Live Res thin ⇒ selective + independents before enabling any map. Maps never unlock PROVEN alone.",
     bestByBrier,
     bestByLogLoss,
+    cvSelect,
+    isotonicDebug,
+    logLossDiagnose,
+    temperatureT: tempPkg?.T ?? tempLocal.T ?? null,
+    applyOff: true,
   };
 }

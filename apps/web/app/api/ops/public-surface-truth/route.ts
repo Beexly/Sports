@@ -25,6 +25,7 @@ import { loadProvenPathSurface } from "@/lib/ops/proven-path-seed";
 import { buildMurphyResSnapshot } from "@/lib/calibration/murphy-res-definition";
 import { conformalRdPosture } from "@/lib/calibration/conformal-calibration";
 import { ISOTONIC_ALTERNATIVES } from "@/lib/calibration/isotonic-alternatives";
+import { loadMapBakeoff, summarizeMapBakeoff } from "@/lib/ops/map-bakeoff-durable";
 import { productBoardSurfaces } from "@/lib/product/board-surfaces";
 import { rankingPauseApplyPosture } from "@/lib/calibration/ranking-pause-apply";
 import { selectiveRuntimePosture } from "@/lib/calibration/selective-publish-runtime";
@@ -615,6 +616,7 @@ export async function GET(request: Request) {
             module: a.existingModule,
             raisesRes: a.raisesRes,
           })),
+          mapBakeoff: summarizeMapBakeoff(await loadMapBakeoff()),
         };
       })()),
       mapVsCanonical: {

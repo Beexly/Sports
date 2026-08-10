@@ -365,6 +365,16 @@ export async function GET(request: Request): Promise<NextResponse> {
         "utf8",
       ).catch(() => undefined);
       try {
+        const { persistMapBakeoff } = await import("@/lib/ops/map-bakeoff-durable");
+        await persistMapBakeoff(mapBake);
+        console.info(
+          `[cron:calibration-metrics] map-bakeoff bestNLL=${mapBake.bestByLogLoss} bestBrier=${mapBake.bestByBrier} ` +
+            `T=${mapBake.temperatureT ?? "n/a"} iso=${mapBake.isotonicDebug?.recommendation ?? "n/a"} applyOff=true`,
+        );
+      } catch {
+        /* map durable best-effort */
+      }
+      try {
         const plan = buildProvenPathPlan(provenRows);
         await persistProvenPathPlan(plan);
         await writeFile(
