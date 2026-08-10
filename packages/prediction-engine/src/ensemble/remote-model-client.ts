@@ -100,7 +100,9 @@ export type RemoteModelFailureReason =
   | "timeout"
   | "http_error"
   | "malformed_response"
-  | "network_error";
+  | "network_error"
+  /** Endpoint URL refused before any request was made — see {@link validateEndpointUrl}. */
+  | "blocked_url";
 
 export interface RemoteModelFailure {
   readonly name: string;
@@ -119,6 +121,63 @@ export interface FetchModelPredictionDeps {
 
 export function isRemoteModelFailure(outcome: RemoteModelOutcome): outcome is RemoteModelFailure {
   return "reason" in outcome;
+}
+
+/**
+ * Cloud instance-metadata endpoints. These are the classic SSRF escalation
+ * target: they answer unauthenticated HTTP from inside the VPC and hand back
+ * IAM credentials. No legitimate model sidecar is ever hosted here, so denying
+ * them costs nothing and closes the highest-severity outcome of a
+ * caller-supplied URL.
+ */
+const BLOCKED_METADATA_HOSTS: ReadonlySet<string> = new Set([
+  "169.254.169.254", // AWS / Azure / GCP / DigitalOcean IMDS
+  "fd00:ec2::254", // AWS IMDS over IPv6
+  "metadata.google.internal",
+  "metadata.goog",
+]);
+
+/**
+ * Refuse an endpoint URL BEFORE any request is made.
+ *
+ * WHY THIS EXISTS. This module fetches a URL supplied by its caller, which is
+ * a server-side request forgery (SSRF) primitive: whatever can influence
+ * `endpoint.url` can make this process issue requests from inside the
+ * deployment's network. Endpoints are meant to be operator config, not user
+ * input — but "meant to be" is not an enforcement mechanism, and this module
+ * is the single choke point every call path funnels through, so the check
+ * belongs here rather than in each caller.
+ *
+ * SCOPE, stated honestly: this denies non-HTTP schemes (file:, data:, gopher:
+ * and friends) and cloud metadata hosts. It deliberately does NOT deny private
+ * or loopback addresses, because the intended deployment target IS an internal
+ * host (`http://gse-ml-service:8000`) — a blanket private-range ban would
+ * block the actual use case while pushing operators toward disabling the check
+ * entirely. This narrows the blast radius; it is not a complete SSRF defence,
+ * and a caller that genuinely accepts untrusted URLs needs its own allowlist.
+ */
+export function validateEndpointUrl(url: string): { readonly ok: true } | {
+  readonly ok: false;
+  readonly detail: string;
+} {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return { ok: false, detail: `not a valid absolute URL: ${safeStringify(url)}` };
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    return {
+      ok: false,
+      detail: `unsupported scheme ${JSON.stringify(parsed.protocol)} — only http/https are allowed`,
+    };
+  }
+  // URL.hostname keeps IPv6 literals bracketed; strip so the set lookup matches.
+  const host = parsed.hostname.toLowerCase().replace(/^\[/, "").replace(/\]$/, "");
+  if (BLOCKED_METADATA_HOSTS.has(host)) {
+    return { ok: false, detail: `cloud metadata host is never a model endpoint: ${host}` };
+  }
+  return { ok: true };
 }
 
 function describeError(err: unknown): string {
@@ -177,6 +236,13 @@ export async function fetchModelPrediction(
   ctx: GameContext,
   deps: FetchModelPredictionDeps = {},
 ): Promise<RemoteModelOutcome> {
+  // SSRF choke point: refuse the URL before a request exists. Every call path
+  // (getRemoteProbabilities, guardedFetchModelPrediction) funnels through here.
+  const urlCheck = validateEndpointUrl(endpoint.url);
+  if (!urlCheck.ok) {
+    return { name: endpoint.name, reason: "blocked_url", detail: urlCheck.detail };
+  }
+
   const doFetch = deps.fetch ?? fetch;
   const timeoutMs = endpoint.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const controller = new AbortController();

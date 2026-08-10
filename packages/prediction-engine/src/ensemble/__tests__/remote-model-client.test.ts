@@ -6,6 +6,7 @@ import {
   getRemoteProbabilities,
   guardedFetchModelPrediction,
   isRemoteModelFailure,
+  validateEndpointUrl,
   type GameContext,
   type ModelEndpoint,
   type RemoteModelFailure,
@@ -440,5 +441,102 @@ describe("guardedFetchModelPrediction", () => {
     });
     expect(isRemoteModelFailure(okResult)).toBe(false);
     expect(breaker.getState("y", 0)).toBe("closed");
+  });
+});
+
+/**
+ * SSRF hardening. This module fetches a caller-supplied URL, which is a
+ * server-side request forgery primitive. The guard runs BEFORE any request
+ * exists, so the load-bearing assertion in each case is not just "it returned
+ * a failure" but "fetch was never called at all".
+ */
+describe("endpoint URL validation (SSRF guard)", () => {
+  it("refuses non-http(s) schemes without issuing a request", async () => {
+    for (const url of [
+      "file:///etc/passwd",
+      "data:text/plain,probability",
+      "gopher://internal:70/_probe",
+      "ftp://internal/x",
+    ]) {
+      const spy = vi.fn();
+      const result = await fetchModelPrediction(endpoint({ url }), CTX, {
+        fetch: spy as unknown as typeof fetch,
+      });
+      expect(isRemoteModelFailure(result)).toBe(true);
+      expect((result as RemoteModelFailure).reason).toBe("blocked_url");
+      // The point of the guard: no request was ever attempted.
+      expect(spy).not.toHaveBeenCalled();
+    }
+  });
+
+  it("refuses cloud metadata hosts — the classic SSRF credential-theft target", async () => {
+    for (const url of [
+      "http://169.254.169.254/latest/meta-data/iam/security-credentials/",
+      "http://[fd00:ec2::254]/latest/meta-data/",
+      "http://metadata.google.internal/computeMetadata/v1/",
+      "https://METADATA.GOOGLE.INTERNAL/computeMetadata/v1/", // case-insensitive
+    ]) {
+      const spy = vi.fn();
+      const result = await fetchModelPrediction(endpoint({ url }), CTX, {
+        fetch: spy as unknown as typeof fetch,
+      });
+      expect(isRemoteModelFailure(result)).toBe(true);
+      expect((result as RemoteModelFailure).reason).toBe("blocked_url");
+      expect(spy).not.toHaveBeenCalled();
+    }
+  });
+
+  it("refuses a malformed / relative URL", async () => {
+    const spy = vi.fn();
+    const result = await fetchModelPrediction(endpoint({ url: "/predict/tda" }), CTX, {
+      fetch: spy as unknown as typeof fetch,
+    });
+    expect((result as RemoteModelFailure).reason).toBe("blocked_url");
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("STILL ALLOWS the intended internal sidecar host (guard must not break the use case)", async () => {
+    const okFetch = vi.fn(async () => jsonResponse({ probability: 0.61 }));
+    const result = await fetchModelPrediction(
+      endpoint({ url: "http://gse-ml-service:8000/predict/etkf" }),
+      CTX,
+      { fetch: okFetch as unknown as typeof fetch },
+    );
+    expect(isRemoteModelFailure(result)).toBe(false);
+    expect((result as RemoteModelPrediction).probability).toBe(0.61);
+    expect(okFetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("blocks through every call path, not just the direct one", async () => {
+    const spy = vi.fn();
+    const blocked = endpoint({ name: "evil", url: "file:///etc/shadow" });
+
+    const fanned = await getRemoteProbabilities([blocked], CTX, {
+      fetch: spy as unknown as typeof fetch,
+    });
+    expect(fanned.succeeded).toHaveLength(0);
+    expect(fanned.failed[0]?.reason).toBe("blocked_url");
+
+    const breaker = createCircuitBreaker();
+    const guarded = await guardedFetchModelPrediction(breaker, blocked, CTX, {
+      nowMs: 0,
+      fetch: spy as unknown as typeof fetch,
+    });
+    expect((guarded as RemoteModelFailure).reason).toBe("blocked_url");
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("validateEndpointUrl is directly testable and reports why", () => {
+    expect(validateEndpointUrl("https://sidecar.example/predict").ok).toBe(true);
+    expect(validateEndpointUrl("http://gse-ml-service:8000/x").ok).toBe(true);
+
+    const scheme = validateEndpointUrl("file:///etc/passwd");
+    expect(scheme.ok).toBe(false);
+    expect(scheme.ok === false && scheme.detail).toMatch(/scheme/i);
+
+    const meta = validateEndpointUrl("http://169.254.169.254/");
+    expect(meta.ok).toBe(false);
+    expect(meta.ok === false && meta.detail).toMatch(/metadata/i);
   });
 });
