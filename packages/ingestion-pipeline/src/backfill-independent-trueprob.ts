@@ -126,9 +126,14 @@ export async function backfillIndependentTrueProb(opts?: {
     }
 
     const pickType = (pick.pickType ?? "MONEYLINE").toUpperCase();
-    // Independent fair values are 2-way moneyline-style. SPREAD/TOTAL backfill
-    // needs market-side models we do not invent here.
-    if (pickType !== "MONEYLINE") {
+    // Independent fair values are 2-way win probs (ML-style).
+    // MONEYLINE + SPREAD: map published team side → trueProb for that team.
+    // TOTAL: no honest independent cover model here → skip (not invent).
+    if (pickType === "TOTAL") {
+      skippedNonMl += 1;
+      continue;
+    }
+    if (pickType !== "MONEYLINE" && pickType !== "SPREAD") {
       skippedNonMl += 1;
       continue;
     }
@@ -136,7 +141,7 @@ export async function backfillIndependentTrueProb(opts?: {
     const home = pick.game.homeTeamName;
     const away = pick.game.awayTeamName;
     const sportKey = pick.game.sport?.key ?? "unknown";
-    const side = pickSelectionSide("MONEYLINE", pick.selection);
+    const side = pickSelectionSide(pickType === "SPREAD" ? "SPREAD" : "MONEYLINE", pick.selection);
     const homeChosen = teamMatches(side, home);
     const awayChosen = teamMatches(side, away);
     if (!homeChosen && !awayChosen) {
@@ -214,9 +219,12 @@ export async function backfillIndependentTrueProb(opts?: {
       sources,
       priced: true,
       rationale:
-        `Retrospective independent blend (${sources.join(", ")}) prices published side ` +
-        `"${side}" at ${(trueProb * 100).toFixed(1)}%. Calibration enrichment only — ` +
-        `does not rewrite published confidence/selection/result.`,
+        `Retrospective independent blend (${sources.join(", ")}) prices published team side ` +
+        `"${side}" at ${(trueProb * 100).toFixed(1)}% team-win trueProb` +
+        (pickType === "SPREAD"
+          ? " (not ATS cover p — ranking/discrimination feature only)."
+          : ".") +
+        ` Calibration enrichment only — does not rewrite published confidence/selection/result.`,
     };
 
     const next = {

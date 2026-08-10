@@ -207,21 +207,29 @@ export async function processSport(
 
     let events: import("@sports/types").OddsApiEvent[] = [];
     let remainingRequests: number | null = null;
-    let oddsProviderTag = "the-odds-api";
+    // Sentinel used when only Rundown free path is configured (no real Odds key).
+    const oddsKeyIsSentinel =
+      !apiKey ||
+      apiKey === "rundown-free-path" ||
+      apiKey === "absent";
+    let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
 
-    try {
-      const primary = await client.getOdds(sport.key, [...MARKETS]);
-      events = primary.data as import("@sports/types").OddsApiEvent[];
-      remainingRequests = primary.remainingRequests ?? null;
-    } catch (primaryErr) {
-      console.warn(
-        `${logPrefix} ${sport.key}: Odds API primary failed — ` +
-          `${primaryErr instanceof Error ? primaryErr.message : primaryErr}`,
-      );
-      events = [];
+    if (!oddsKeyIsSentinel) {
+      try {
+        const primary = await client.getOdds(sport.key, [...MARKETS]);
+        events = primary.data as import("@sports/types").OddsApiEvent[];
+        remainingRequests = primary.remainingRequests ?? null;
+      } catch (primaryErr) {
+        console.warn(
+          `${logPrefix} ${sport.key}: Odds API primary failed — ` +
+            `${primaryErr instanceof Error ? primaryErr.message : primaryErr}`,
+        );
+        events = [];
+      }
     }
 
     // Free dual-path: TheRundown when primary empty/fail and key present (never invent).
+    let rundownAttemptNote: string | null = null;
     if (events.length === 0) {
       const rundownKey = resolveRundownApiKey();
       if (rundownKey) {
@@ -233,9 +241,13 @@ export async function processSport(
             `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
               (rd.error ? ` (note: ${rd.error})` : ""),
           );
-        } else if (rd.error) {
-          console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rd.error}`);
+        } else {
+          oddsProviderTag = "therundown-empty";
+          rundownAttemptNote = rd.error ?? "rundown empty: no bookmaker lines";
+          console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rundownAttemptNote}`);
         }
+      } else {
+        rundownAttemptNote = "rundown key ABSENT";
       }
     }
 
@@ -793,7 +805,8 @@ export async function processSport(
     const emptyNote =
       oddsInserted === 0 && Object.keys(gameRecords).length === 0
         ? events.length === 0
-          ? `no_events via ${oddsProviderTag}`
+          ? `no_events via ${oddsProviderTag}` +
+            (rundownAttemptNote ? ` (${rundownAttemptNote})` : "")
           : "no_games_after_normalize"
         : oddsInserted === 0
           ? "odds_zero_after_insert_path"
