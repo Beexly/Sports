@@ -1199,3 +1199,37 @@ export type {
   BrierOgdReport,
 } from "./brier-ogd-ensemble.js";
 
+// R&D — RES-aware Beta + OCO (online Beta log-loss, Hedge adaptive-δ, full pipeline). Shadow only.
+export {
+  applyOnlineBeta,
+  runOnlineBetaRecalibration,
+  fitResAwareBeta,
+} from "./online-beta-recalibration.js";
+export type {
+  OnlineBetaParams,
+  OnlineBetaOptions,
+  OnlineBetaStep,
+  OnlineBetaReport,
+  ResCalibratorOptions,
+  ResCalibratorReport,
+} from "./online-beta-recalibration.js";
+export {
+  expertLossAtDelta,
+  runAdaptiveDeltaHedge,
+} from "./adaptive-delta-hedge.js";
+export type {
+  DeltaExpertSample,
+  AdaptiveDeltaOptions,
+  AdaptiveDeltaStep,
+  AdaptiveDeltaReport,
+} from "./adaptive-delta-hedge.js";
+export {
+  runOcoPipeline,
+  runOcoPipelineFromSingleP,
+} from "./oco-pipeline.js";
+export type {
+  OcoMemberSample,
+  OcoPipelineOptions,
+  OcoPipelineStep,
+  OcoPipelineReport,
+} from "./oco-pipeline.js";

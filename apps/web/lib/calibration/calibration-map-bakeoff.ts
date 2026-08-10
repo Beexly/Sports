@@ -18,6 +18,10 @@ import {
   debugIsotonicCalibration,
   diagnoseLogLoss,
   meanLogLoss,
+  fitResAwareBeta,
+  applyOnlineBeta,
+  runOcoPipelineFromSingleP,
+  runOnlineBetaRecalibration,
 } from "@sports/prediction-engine";
 import { fitPlattFromProbs, applyPlattToProb } from "@/lib/calibration/platt-scaling";
 import { fitIsotonicPava, applyIsotonic, applyIsotonicCir } from "@/lib/calibration/isotonic-pava";
@@ -89,6 +93,36 @@ export type CalibrationMapBakeoff = {
   readonly logLossDiagnose?: LogLossSliceReport;
   /** Fitted T from Newton NLL (train), if available. */
   readonly temperatureT?: number | null;
+  /** RES-aware Beta (max val RES s.t. REL cap + λ(a−1)²). Shadow. */
+  readonly resAwareBeta?: {
+    readonly selected: boolean;
+    readonly a: number | null;
+    readonly b: number | null;
+    readonly valRes: number;
+    readonly resGain: number;
+    readonly valRel: number;
+    readonly valBrier: number;
+  };
+  /** Online Beta OGD (log-loss) on chrono sample — shadow. */
+  readonly onlineBeta?: {
+    readonly a: number;
+    readonly b: number;
+    readonly meanBrierOnline: number;
+    readonly meanBrierRaw: number;
+    readonly varCalP: number;
+    readonly varRawP: number;
+    readonly beatsRawBrier: boolean;
+  };
+  /** Single-stream OCO pipeline summary — shadow. */
+  readonly ocoPipeline?: {
+    readonly publishedN: number;
+    readonly meanBrierPublished: number;
+    readonly publishedRes: number;
+    readonly publishedVarP: number;
+    readonly recommendedDelta: number;
+    readonly finalA: number;
+    readonly finalB: number;
+  };
   readonly applyOff: true;
 };
 
@@ -201,6 +235,43 @@ export function runCalibrationMapBakeoff(
     });
   }
 
+
+  // RES-aware Beta (grid max RES s.t. REL) + online Beta OGD + OCO single-p (all shadow)
+  const resFit = fitResAwareBeta(samplesChrono, {
+    trainFrac,
+    maxRel: 0.015,
+    lambdaA: 0.1,
+  });
+  if (resFit.selected && resFit.params) {
+    methods.push(
+      decomp(
+        "res_aware_beta",
+        test.map((r) => ({
+          p: applyOnlineBeta(r.p, resFit.params!),
+          y: r.y,
+        })),
+      ),
+    );
+  } else {
+    methods.push({
+      method: "res_aware_beta",
+      n: test.length,
+      brier: NaN,
+      ece: NaN,
+      reliability: NaN,
+      resolution: NaN,
+      uncertainty: NaN,
+      logLoss: NaN,
+    });
+  }
+
+  const onlineBetaRep = runOnlineBetaRecalibration(
+    samplesChrono.map((r, i) => ({ ...r, sampleId: `c${i}`, t: i })),
+  );
+  const ocoRep = runOcoPipelineFromSingleP(
+    samplesChrono.map((r, i) => ({ ...r, sampleId: `c${i}`, t: i })),
+  );
+
   methods.push(
     decomp(
       "isotonic_pava",
@@ -241,16 +312,44 @@ export function runCalibrationMapBakeoff(
     methods,
     note:
       "Offline only. Apply CALIBRATION_ADJUSTMENTS only after Res improves and holdout floors pass. " +
-      "Maps cut REL + log-loss, not RES. Temperature fit = grid + Newton NLL. " +
-      "CV selectCalibrator uses OOF equal-mass ECE + noise bar. Isotonic debug is in-sample.",
+      "RES-aware Beta can raise Val RES when underconfident (a>1) under REL cap — still shadow. " +
+      "Online Beta OGD + OCO pipeline are shadow; live eligibility stays map-free. " +
+      "Temperature fit = grid + Newton NLL. CV selectCalibrator = OOF ECE + noise bar.",
     rankingFirst:
-      "Live Res thin ⇒ selective + independents before enabling any map. Maps never unlock PROVEN alone.",
+      "Live Res thin ⇒ independents + selective/pause first. RES-cal / OCO may expand Var[P] only when data support underconfidence — never free stretch.",
     bestByBrier,
     bestByLogLoss,
     cvSelect,
     isotonicDebug,
     logLossDiagnose,
     temperatureT: tempPkg?.T ?? tempLocal.T ?? null,
+    resAwareBeta: {
+      selected: resFit.selected,
+      a: resFit.params?.a ?? null,
+      b: resFit.params?.b ?? null,
+      valRes: resFit.valRes,
+      resGain: resFit.resGain,
+      valRel: resFit.valRel,
+      valBrier: resFit.valBrier,
+    },
+    onlineBeta: {
+      a: onlineBetaRep.finalParams.a,
+      b: onlineBetaRep.finalParams.b,
+      meanBrierOnline: onlineBetaRep.meanBrierOnline,
+      meanBrierRaw: onlineBetaRep.meanBrierRaw,
+      varCalP: onlineBetaRep.varCalP,
+      varRawP: onlineBetaRep.varRawP,
+      beatsRawBrier: onlineBetaRep.beatsRawBrier,
+    },
+    ocoPipeline: {
+      publishedN: ocoRep.publishedN,
+      meanBrierPublished: ocoRep.meanBrierPublished,
+      publishedRes: ocoRep.publishedRes,
+      publishedVarP: ocoRep.publishedVarP,
+      recommendedDelta: ocoRep.recommendedDelta,
+      finalA: ocoRep.finalBeta.a,
+      finalB: ocoRep.finalBeta.b,
+    },
     applyOff: true,
   };
 }

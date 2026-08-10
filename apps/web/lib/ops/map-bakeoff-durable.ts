@@ -68,6 +68,12 @@ export function summarizeMapBakeoff(bake: CalibrationMapBakeoff | null): {
   readonly plateauCollapseRate: number | null;
   readonly logLossMean: number | null;
   readonly nTest: number | null;
+  readonly resAwareSelected: boolean | null;
+  readonly resAwareA: number | null;
+  readonly resAwareResGain: number | null;
+  readonly onlineBetaA: number | null;
+  readonly ocoPublishedRes: number | null;
+  readonly ocoRecommendedDelta: number | null;
   readonly operatorHint: string;
 } {
   if (!bake) {
@@ -82,6 +88,12 @@ export function summarizeMapBakeoff(bake: CalibrationMapBakeoff | null): {
       plateauCollapseRate: null,
       logLossMean: null,
       nTest: null,
+      resAwareSelected: null,
+      resAwareA: null,
+      resAwareResGain: null,
+      onlineBetaA: null,
+      ocoPublishedRes: null,
+      ocoRecommendedDelta: null,
       operatorHint:
         "No map bake-off artifact yet — run calibration-metrics. Maps apply OFF.",
     };
@@ -97,6 +109,18 @@ export function summarizeMapBakeoff(bake: CalibrationMapBakeoff | null): {
     plateauCollapseRate: bake.isotonicDebug?.plateauCollapseRate ?? null,
     logLossMean: bake.logLossDiagnose?.meanLogLoss ?? null,
     nTest: bake.nTest,
+    resAwareSelected: bake.resAwareBeta?.selected ?? null,
+    resAwareA: bake.resAwareBeta?.a ?? null,
+    resAwareResGain:
+      bake.resAwareBeta != null && Number.isFinite(bake.resAwareBeta.resGain)
+        ? bake.resAwareBeta.resGain
+        : null,
+    onlineBetaA: bake.onlineBeta?.a ?? null,
+    ocoPublishedRes:
+      bake.ocoPipeline != null && Number.isFinite(bake.ocoPipeline.publishedRes)
+        ? bake.ocoPipeline.publishedRes
+        : null,
+    ocoRecommendedDelta: bake.ocoPipeline?.recommendedDelta ?? null,
     operatorHint:
       bake.isotonicDebug?.operatorHint ??
       "Offline map bake-off present. CALIBRATION_ADJUSTMENTS stays false until RES + holdout floors.",

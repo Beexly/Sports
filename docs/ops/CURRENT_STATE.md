@@ -62,6 +62,6 @@ MODEL_VERSION **v5.2.6** · ranking polarity: never edge-as-p · free-path ABSEN
 - Treat conformal coverage as eligibility  
 - Rebuild a second scheduler while Vercel crons are SoT  
 
-Brier techniques SoT: [BRIER_OPTIMIZATION_TECHNIQUES.md](./BRIER_OPTIMIZATION_TECHNIQUES.md) (integrity δ, Var[P], OGD ensemble, no stretch).
+Brier techniques SoT: [BRIER_OPTIMIZATION_TECHNIQUES.md](./BRIER_OPTIMIZATION_TECHNIQUES.md) · RES-cal/OCO: [RES_CALIBRATION_AND_OCO.md](./RES_CALIBRATION_AND_OCO.md) (integrity δ, Var[P], OGD ensemble, no stretch).
 
 See [CLOSEOUT_TRACKS_A_B_C_D.md](./CLOSEOUT_TRACKS_A_B_C_D.md) · [CLOSEOUT_STATUS_2026-08-10.md](./CLOSEOUT_STATUS_2026-08-10.md) · [FOUNDER_ONLY_CHECKLIST.md](./FOUNDER_ONLY_CHECKLIST.md)
