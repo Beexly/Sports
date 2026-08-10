@@ -15,7 +15,9 @@
  *     - market de-vig fair (baseline only)
  *   NEVER use edge, rawEdge, shrunkEdge, or edgeScore as p.
  *   bestScore = argmax RES among scores with:
- *     separation > 0, n ≥ 50, and coverage ≥ 40% of confidence n (non-conf kinds).
+ *     separation > 0, n ≥ 50, and coverage ≥ 40% of *eligible* n (non-conf kinds).
+ *     Eligible n for independent/blend = MONEYLINE|SPREAD rows only (TOTAL has no
+ *     honest team-win trueProb under current backfill law — do not dilute coverage).
  *   If none qualify → confidence; pathViable stays honest.
  *
  * Does NOT set publishedEffective, AUTO_PUBLISH, or lower floors.
@@ -202,9 +204,23 @@ export function buildProvenPathPlan(
   ];
   const confSamples = toSamples(rows, "confidence");
   const confN = confSamples.length;
-  const scoreBakeoff = kinds.map((k) =>
-    scoreMetrics(k, toSamples(rows, k), confN),
+  // Independent trueProb is defined for ML/SPREAD team-win only (not TOTAL).
+  // Coverage denominator must match that universe or independent never reaches 40%
+  // while TOTAL rows pad confidence n.
+  const indepEligibleN = Math.max(
+    1,
+    rows.filter((r) => {
+      const market = (r.groupKey.split("|")[1] ?? "").toUpperCase();
+      return market === "MONEYLINE" || market === "SPREAD" || market === "H2H" || market === "ML";
+    }).length,
   );
+  const scoreBakeoff = kinds.map((k) => {
+    const denom =
+      k === "independent_trueProb" || k === "blend_indep_conf" || k === "marketFairProb"
+        ? indepEligibleN
+        : confN;
+    return scoreMetrics(k, toSamples(rows, k), denom);
+  });
 
   // bestScore: max RES among separation > 0, n ≥ 50, coverage ≥ 40% (non-conf).
   const confRow =
@@ -288,7 +304,7 @@ export function buildProvenPathPlan(
     honesty:
       "Edge/edgeScore is NOT a win probability (rawEdge = trueProb − marketFair). " +
       "Bake-off only uses confidence, independent trueProb, blend_indep_conf, marketFairProb. " +
-      "bestScore requires separation > 0 and coverage ≥ 40% of confidence n. " +
+      "bestScore requires separation > 0 and coverage ≥ 40% of eligible n (ML/SPREAD for independent). " +
       "pIndependent load must be raw trueProb only — never confidence-echo rankingP. " +
       "If selectiveGainRes≈0 and independents still weak, need sport models / features — not maps. " +
       "Maps will not unlock PROVEN.",
