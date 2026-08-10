@@ -29,6 +29,7 @@ import { loadMapBakeoff, summarizeMapBakeoff } from "@/lib/ops/map-bakeoff-durab
 import { productBoardSurfaces } from "@/lib/product/board-surfaces";
 import { rankingPauseApplyPosture } from "@/lib/calibration/ranking-pause-apply";
 import { selectiveRuntimePosture } from "@/lib/calibration/selective-publish-runtime";
+import { loadRankingPauseApply } from "@/lib/ops/ranking-pause-durable";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -557,13 +558,16 @@ export async function GET(request: Request) {
                 uncertainty: calibrationEligibility.murphy.uncertainty,
               })
             : null;
+        const durablePause = await loadRankingPauseApply();
         const pausePosture = rankingPauseApplyPosture(
           process.env,
           surface?.plan ?? null,
+          durablePause,
         );
         const selectivePosture = selectiveRuntimePosture(
           process.env,
           surface?.plan ?? null,
+          durablePause,
         );
         return {
           provenPath: surface?.plan ?? null,

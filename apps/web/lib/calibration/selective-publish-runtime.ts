@@ -4,7 +4,8 @@
  *
  * Pause groups:
  * - SELECTIVE_PAUSE_GROUPS env always applies
- * - plan.pauseGroups only when RANKING_PAUSE_APPLY=true (default OFF — advisory)
+ * - plan.pauseGroups when RANKING_PAUSE_APPLY=true
+ * - durable founder-yes snap (multi-isolate)
  * See ranking-pause-apply.ts.
  */
 
@@ -17,40 +18,38 @@ import {
   resolvePausedGroups,
   rankingPauseApplyPosture,
 } from "@/lib/calibration/ranking-pause-apply";
+import type { RankingPauseDurableSnap } from "@/lib/ops/ranking-pause-durable";
 
 export type PublicPickLike = {
   readonly confidence?: number | null;
-  /** Prefer rankingScore (0–100) when independents priced the ranking path. */
   readonly rankingScore?: number | null;
   readonly edgeScore?: number | null;
   readonly pickType?: string | null;
   readonly sportKey?: string | null;
   readonly marketImpliedProb?: number | null;
-  /** Priced independent rankingP (0–1) when available. */
   readonly rankingP?: number | null;
 };
 
 const DEFAULT_DELTA = 0.1;
 
-/** Opt-out: false only when env === "false"; unset/true → ON for PROVEN path. */
 export function isSelectivePublishRuntimeEnabled(
   env: Record<string, string | undefined> = process.env,
 ): boolean {
   const v = env["SELECTIVE_PUBLISH_ENABLED"]?.trim();
   if (v === "false") return false;
   if (v === "true") return true;
-  // default ON — path to PROVEN requires fewer, better-ranked published picks
   return true;
 }
 
 export function loadSelectiveRuntimeConfig(
   env: Record<string, string | undefined> = process.env,
   plan: ProvenPathPlan | null = null,
+  durablePause: RankingPauseDurableSnap | null = null,
 ): {
   readonly enabled: boolean;
   readonly thresholds: SelectiveThresholds;
   readonly pausedGroups: readonly string[];
-  readonly pauseSource: "env" | "plan" | "none";
+  readonly pauseSource: "env" | "plan" | "durable" | "none";
   readonly pauseApplyEnabled: boolean;
   readonly pauseOperatorHint: string;
 } {
@@ -61,7 +60,7 @@ export function loadSelectiveRuntimeConfig(
     ? deltaFromEnv
     : plan?.selectiveRecommended?.delta ?? plan?.defaultDelta ?? DEFAULT_DELTA;
 
-  const pause = resolvePausedGroups(env, plan);
+  const pause = resolvePausedGroups(env, plan, durablePause);
 
   return {
     enabled,
@@ -72,12 +71,13 @@ export function loadSelectiveRuntimeConfig(
     },
     pausedGroups: pause.pausedGroups,
     pauseSource: pause.source,
-    pauseApplyEnabled: pause.applyEnabled,
+    pauseApplyEnabled: pause.applyEnabled && pause.pausedGroups.length > 0,
     pauseOperatorHint: pause.operatorHint,
   };
 }
 
 let cachedPlan: ProvenPathPlan | null | undefined;
+let cachedPause: RankingPauseDurableSnap | null | undefined;
 
 export async function getCachedProvenPathPlan(): Promise<ProvenPathPlan | null> {
   if (cachedPlan !== undefined) return cachedPlan;
@@ -90,14 +90,31 @@ export async function getCachedProvenPathPlan(): Promise<ProvenPathPlan | null> 
   return cachedPlan;
 }
 
+export async function getCachedRankingPauseDurable(): Promise<RankingPauseDurableSnap | null> {
+  if (cachedPause !== undefined) return cachedPause;
+  try {
+    const { loadRankingPauseApply } = await import("@/lib/ops/ranking-pause-durable");
+    cachedPause = await loadRankingPauseApply();
+  } catch {
+    cachedPause = null;
+  }
+  return cachedPause;
+}
+
+/** Test / post-write: drop in-memory caches. */
+export function clearSelectiveRuntimeCaches(): void {
+  cachedPlan = undefined;
+  cachedPause = undefined;
+}
+
 export function passesPublicSelectiveFilter(
   pick: PublicPickLike,
   env: Record<string, string | undefined> = process.env,
   plan: ProvenPathPlan | null = null,
+  durablePause: RankingPauseDurableSnap | null = null,
 ): boolean {
-  const cfg = loadSelectiveRuntimeConfig(env, plan);
+  const cfg = loadSelectiveRuntimeConfig(env, plan, durablePause);
   if (!cfg.enabled) return true;
-  // Prefer priced independent rankingP, then rankingScore, then confidence.
   let p = 0.5;
   if (typeof pick.rankingP === "number" && Number.isFinite(pick.rankingP)) {
     p = Math.min(1, Math.max(0, pick.rankingP));
@@ -125,22 +142,22 @@ export function passesPublicSelectiveFilter(
   );
 }
 
-/** Async variant: loads durable pause/δ plan. */
 export async function passesPublicSelectiveFilterAsync(
   pick: PublicPickLike,
   env: Record<string, string | undefined> = process.env,
 ): Promise<boolean> {
   const plan = await getCachedProvenPathPlan();
-  return passesPublicSelectiveFilter(pick, env, plan);
+  const durable = await getCachedRankingPauseDurable();
+  return passesPublicSelectiveFilter(pick, env, plan, durable);
 }
 
-/** Ops posture for public-surface-truth. */
 export function selectiveRuntimePosture(
   env: Record<string, string | undefined> = process.env,
   plan: ProvenPathPlan | null = null,
+  durablePause: RankingPauseDurableSnap | null = null,
 ) {
-  const cfg = loadSelectiveRuntimeConfig(env, plan);
-  const pause = rankingPauseApplyPosture(env, plan);
+  const cfg = loadSelectiveRuntimeConfig(env, plan, durablePause);
+  const pause = rankingPauseApplyPosture(env, plan, durablePause);
   return {
     selectiveEnabled: cfg.enabled,
     delta: cfg.thresholds.delta,
@@ -149,4 +166,13 @@ export function selectiveRuntimePosture(
       ? `Selective δ=${cfg.thresholds.delta}. ${pause.operatorHint}`
       : `Selective publish OFF. ${pause.operatorHint}`,
   };
+}
+
+/** Async posture with durable plan + pause snap loaded. */
+export async function selectiveRuntimePostureAsync(
+  env: Record<string, string | undefined> = process.env,
+) {
+  const plan = await getCachedProvenPathPlan();
+  const durable = await getCachedRankingPauseDurable();
+  return selectiveRuntimePosture(env, plan, durable);
 }

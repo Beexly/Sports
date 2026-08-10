@@ -4,17 +4,27 @@
  * RPCP / proven-path may *recommend* pauseGroups (sport|market dead groups).
  * Applying them to public filter / generation is founder-opt-in:
  *
- *   RANKING_PAUSE_APPLY=true  → plan.pauseGroups take effect
- *   default / unset / false   → plan pause is advisory only (ops + operatorHint)
+ *   1. SELECTIVE_PAUSE_GROUPS env — always applies when non-empty
+ *   2. RANKING_PAUSE_APPLY=true env → plan.pauseGroups
+ *   3. Durable founder-yes snap (JarvisMemoryEvent) → plan or snap.groups
+ *   default → plan pause is advisory only
  *
- * Explicit SELECTIVE_PAUSE_GROUPS env always applies (founder typed the list).
- * Maps stay OFF. This is ranking quality control, not calibration maps.
- * Does not open PROVEN or flip eligibility.
+ * Maps stay OFF. Does not open PROVEN or flip PERFORMANCE_STATS.
  */
 
 import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
+import type { RankingPauseDurableSnap } from "@/lib/ops/ranking-pause-durable";
 
 export type EnvMap = Record<string, string | undefined>;
+
+export type PauseResolveResult = {
+  readonly pausedGroups: readonly string[];
+  readonly source: "env" | "plan" | "durable" | "none";
+  readonly applyEnabled: boolean;
+  readonly planPauseCount: number;
+  readonly planPauseGroups: readonly string[];
+  readonly operatorHint: string;
+};
 
 /** Default OFF — plan pause is residual evidence until founder enables. */
 export function isRankingPauseApplyEnabled(env: EnvMap = process.env): boolean {
@@ -24,23 +34,14 @@ export function isRankingPauseApplyEnabled(env: EnvMap = process.env): boolean {
 
 /**
  * Resolve paused group keys for selective / generation filters.
- * - SELECTIVE_PAUSE_GROUPS (comma list) always wins when non-empty
- * - else plan.pauseGroups only when RANKING_PAUSE_APPLY is on
- * - else empty (advisory only)
+ * Optional durableSnap is the multi-isolate founder-yes path.
  */
 export function resolvePausedGroups(
   env: EnvMap = process.env,
   plan: Pick<ProvenPathPlan, "pauseGroups"> | null = null,
-): {
-  readonly pausedGroups: readonly string[];
-  readonly source: "env" | "plan" | "none";
-  readonly applyEnabled: boolean;
-  readonly planPauseCount: number;
-  /** Advisory keys from plan even when apply is OFF (ops readiness). */
-  readonly planPauseGroups: readonly string[];
-  readonly operatorHint: string;
-} {
-  const applyEnabled = isRankingPauseApplyEnabled(env);
+  durableSnap: RankingPauseDurableSnap | null = null,
+): PauseResolveResult {
+  const envApply = isRankingPauseApplyEnabled(env);
   const planPause = plan?.pauseGroups ?? [];
   const planPauseCount = planPause.length;
 
@@ -56,28 +57,49 @@ export function resolvePausedGroups(
     return {
       pausedGroups: envPause,
       source: "env",
-      applyEnabled,
+      applyEnabled: true,
       planPauseCount,
       planPauseGroups: planPause,
       operatorHint: `Pause list from SELECTIVE_PAUSE_GROUPS (${envPause.length} groups). Plan recommended ${planPauseCount}.`,
     };
   }
 
-  if (applyEnabled && planPauseCount > 0) {
+  if (envApply && planPauseCount > 0) {
     return {
       pausedGroups: planPause,
       source: "plan",
       applyEnabled: true,
       planPauseCount,
       planPauseGroups: planPause,
-      operatorHint: `RANKING_PAUSE_APPLY on — applying ${planPauseCount} plan pause group(s): ${planPause.slice(0, 6).join(", ")}${planPauseCount > 6 ? "…" : ""}. Re-measure RES after settle.`,
+      operatorHint: `RANKING_PAUSE_APPLY env on — applying ${planPauseCount} plan pause group(s): ${planPause.slice(0, 6).join(", ")}${planPauseCount > 6 ? "…" : ""}. Re-measure RES after settle.`,
     };
+  }
+
+  // Durable founder-yes (chat/ops) without waiting for Vercel env redeploy
+  if (durableSnap?.enabled) {
+    const groups =
+      durableSnap.groups.length > 0
+        ? durableSnap.groups
+        : planPause;
+    if (groups.length > 0) {
+      return {
+        pausedGroups: groups,
+        source: "durable",
+        applyEnabled: true,
+        planPauseCount,
+        planPauseGroups: planPause,
+        operatorHint: `Durable RANKING_PAUSE_APPLY ON (${groups.length} groups) setBy=${durableSnap.setBy} at ${durableSnap.setAt}. ${durableSnap.note}`.slice(
+          0,
+          400,
+        ),
+      };
+    }
   }
 
   return {
     pausedGroups: [],
     source: "none",
-    applyEnabled,
+    applyEnabled: envApply || Boolean(durableSnap?.enabled),
     planPauseCount,
     planPauseGroups: planPause,
     operatorHint:
@@ -90,18 +112,18 @@ export function resolvePausedGroups(
 export function rankingPauseApplyPosture(
   env: EnvMap = process.env,
   plan: Pick<ProvenPathPlan, "pauseGroups"> | null = null,
+  durableSnap: RankingPauseDurableSnap | null = null,
 ): {
   readonly applyEnabled: boolean;
-  readonly source: "env" | "plan" | "none";
+  readonly source: "env" | "plan" | "durable" | "none";
   readonly pausedGroupCount: number;
   readonly planPauseCount: number;
-  /** Advisory list when apply OFF — so founder can decide RANKING_PAUSE_APPLY. */
   readonly planPauseGroups: readonly string[];
   readonly operatorHint: string;
 } {
-  const r = resolvePausedGroups(env, plan);
+  const r = resolvePausedGroups(env, plan, durableSnap);
   return {
-    applyEnabled: r.applyEnabled,
+    applyEnabled: r.applyEnabled && r.pausedGroups.length > 0,
     source: r.source,
     pausedGroupCount: r.pausedGroups.length,
     planPauseCount: r.planPauseCount,
