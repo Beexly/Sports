@@ -801,13 +801,13 @@ describe("forecastSkillEProcess — honesty surface", () => {
     expect(res.worstCaseLogFactorPerPick).toBeCloseTo(Math.log(0.1), 12);
     // `alpha` here is the CONFIGURED value and is NOT the level being tested at
     // — the threshold overrode it. The honest level is derived, and reported.
-    expect(res.guaranteedAlpha).toBe(0.01);
+    expect(res.deliveredAlpha).toBe(0.01);
   });
 
   it("reports the level Ville ACTUALLY delivers, not the configured alpha", () => {
     // Default case: the two agree exactly and nothing extra is said.
     const plain = forecastSkillEProcess(underSkill(mulberry32(19), 400, 0.5, 0.68))!;
-    expect(plain.guaranteedAlpha).toBe(plain.alpha);
+    expect(plain.deliveredAlpha).toBe(plain.alpha);
     expect(plain.operatorHint).not.toContain("LEVEL:");
 
     // The trap: a caller names a strict alpha AND a loose threshold. The test is
@@ -817,7 +817,7 @@ describe("forecastSkillEProcess — honesty surface", () => {
     const mismatched = forecastSkillEProcess(pts, { alpha: 0.01, evidenceThreshold: 20 })!;
     expect(mismatched.alpha).toBe(0.01);
     expect(mismatched.threshold).toBe(20);
-    expect(mismatched.guaranteedAlpha).toBe(0.05);
+    expect(mismatched.deliveredAlpha).toBe(0.05);
     expect(mismatched.verdict).toBe("evidence-of-skill-vs-market");
     expect(mismatched.operatorHint).toContain("LEVEL:");
     expect(mismatched.operatorHint).toContain("OVERRIDES the configured alpha");

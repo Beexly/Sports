@@ -169,7 +169,7 @@
  * the whole H0 easier to beat on the y=0 side, because the market is being
  * scored with a number it does not actually believe. Net effect: the test is
  * BIASED IN OUR FAVOUR — M drifts up on a forecaster with no skill at all, and
- * the alpha guarantee is void. Callers MUST pass de-vigged probabilities (see
+ * the alpha bound no longer holds. Callers MUST pass de-vigged probabilities (see
  * shin-devig.ts). We cannot detect this per-pick, so the result carries a
  * crude population-level tripwire instead (`vigWarning`): if the mean market
  * probability exceeds the realised base rate by more than ~2 standard errors,
@@ -208,7 +208,7 @@
  *    0.05 budget, and 0.0067 at threshold 100 against the 0.01 budget, with
  *    33.6% of runs wandering above M = e. The bound is nearly ATTAINED rather
  *    than merely respected, which is the strongest available evidence that the
- *    guarantee is not holding by accident of a process that simply never moves.
+ *    bound is not holding by accident of a process that simply never moves.
  *    (Why "nearly" and not "exactly": for a nonnegative martingale that drifts
  *    to 0 — which this one does under H0, since E[ln E_t] = -KL < 0 whenever
  *    p != m — P(sup M >= a) approaches 1/a from BELOW as the horizon grows, the
@@ -253,7 +253,7 @@ export interface ForecastSkillOptions {
    * Significance level; sets the default threshold to 1/alpha. Default 0.05
    * (=> M >= 20). NOTE: when `evidenceThreshold` is also supplied it WINS, and
    * the level Ville then actually delivers is 1/evidenceThreshold, not this
-   * number. Quote `guaranteedAlpha` from the result, never this field.
+   * number. Quote `deliveredAlpha` from the result, never this field.
    */
   readonly alpha?: number;
   /**
@@ -294,20 +294,20 @@ export interface ForecastSkillResult {
   /**
    * The CONFIGURED alpha, echoed verbatim. This is NOT necessarily the level
    * being tested at: `evidenceThreshold` overrides it. Report
-   * `guaranteedAlpha`; publishing this field alongside an overriding threshold
+   * `deliveredAlpha`; publishing this field alongside an overriding threshold
    * is how a stored result turns into an overclaim.
    */
   readonly alpha: number;
   /** Threshold on M that constitutes rejection (1/alpha unless overridden). */
   readonly threshold: number;
   /**
-   * The level Ville ACTUALLY guarantees for this configuration: 1/threshold.
+   * The level Ville ACTUALLY delivers for this configuration: 1/threshold.
    * Equal to `alpha` in the default case; strictly the number to quote when
    * `evidenceThreshold` was supplied (which can be either tighter OR looser than
    * the configured alpha — the API does not stop a caller asking for a looser
    * threshold while naming a small alpha, so the honest level is derived here).
    */
-  readonly guaranteedAlpha: number;
+  readonly deliveredAlpha: number;
   readonly epsilon: number;
   readonly floor: number;
   readonly minPicks: number;
@@ -332,7 +332,7 @@ export interface ForecastSkillResult {
    * Floored at Number.MIN_VALUE: a huge maxLogM underflows exp() to literal 0,
    * and "p = 0" asserts impossibility, which is never something a finite ledger
    * earns. MIN_VALUE is still a true UPPER bound on 1/max M there, so the
-   * guarantee direction is preserved.
+   * bound stays in the safe direction.
    */
   readonly anytimeValidPValue: number;
 
@@ -544,12 +544,12 @@ export function summarizeForecastSkillFold(state: ForecastSkillFoldState): Forec
     Math.max(state.epsilon, state.floor / (1 - state.floor)),
   );
 
-  const guaranteedAlpha = 1 / state.threshold;
+  const deliveredAlpha = 1 / state.threshold;
 
   return {
     alpha: state.alpha,
     threshold: state.threshold,
-    guaranteedAlpha,
+    deliveredAlpha,
     epsilon: state.epsilon,
     floor: state.floor,
     minPicks: state.minPicks,
@@ -562,7 +562,7 @@ export function summarizeForecastSkillFold(state: ForecastSkillFoldState): Forec
     growthRateBitsPerPick: growthRatePerPick / Math.LN2,
     // Floor at MIN_VALUE: exp(-maxLogM) underflows to literal 0 past ~745 nats,
     // and a published "p = 0" claims impossibility. MIN_VALUE is still an upper
-    // bound on the true value there, so the guarantee direction is preserved.
+    // bound on the true value there, so the bound stays in the safe direction.
     anytimeValidPValue: Math.max(Math.min(1, Math.exp(-maxLogM)), Number.MIN_VALUE),
     rejectsAt: crossed ? state.threshold : null,
     firstCrossedAtPick: state.firstCrossedAtPick,
@@ -578,7 +578,7 @@ export function summarizeForecastSkillFold(state: ForecastSkillFoldState): Forec
       minPicks: state.minPicks,
       threshold: state.threshold,
       configuredAlpha: state.alpha,
-      guaranteedAlpha,
+      deliveredAlpha,
       verdict,
       maxM: saturatingExp(maxLogM),
       firstCrossedAtPick: state.firstCrossedAtPick,
@@ -593,7 +593,7 @@ interface HintInput {
   readonly minPicks: number;
   readonly threshold: number;
   readonly configuredAlpha: number;
-  readonly guaranteedAlpha: number;
+  readonly deliveredAlpha: number;
   readonly verdict: ForecastSkillVerdict;
   readonly maxM: number;
   readonly firstCrossedAtPick: number | null;
@@ -636,7 +636,7 @@ function buildOperatorHint(input: HintInput): string {
   } else {
     parts.push(
       `M reached ${formatEvidence(input.maxM)} (threshold ${thresholdText}, i.e. an alpha budget of ` +
-        `${formatAlpha(input.guaranteedAlpha)}) at pick ` +
+        `${formatAlpha(input.deliveredAlpha)}) at pick ` +
         `${input.firstCrossedAtPick ?? input.n} of ${input.n}, growing ${rateText}. ` +
         `Anytime-valid: the crossing counts even though the record was checked after every pick.`,
     );
@@ -650,16 +650,16 @@ function buildOperatorHint(input: HintInput): string {
 
   parts.push(
     `Requires DE-VIGGED market probabilities and at most one pick per game; vig-inclusive or ` +
-      `same-game-correlated inputs bias this test in our favour and void the alpha guarantee.`,
+      `same-game-correlated inputs bias this test in our favour and invalidate the alpha bound.`,
   );
 
   // An explicit evidenceThreshold silently overrides alpha. Saying so here is
   // the difference between a self-describing record and a quotable overclaim.
-  if (Math.abs(input.configuredAlpha - input.guaranteedAlpha) > 1e-12) {
+  if (Math.abs(input.configuredAlpha - input.deliveredAlpha) > 1e-12) {
     parts.push(
       `LEVEL: evidenceThreshold ${thresholdText} OVERRIDES the configured alpha ` +
-        `${formatAlpha(input.configuredAlpha)}. The level actually guaranteed here is ` +
-        `1/threshold = ${formatAlpha(input.guaranteedAlpha)} — quote that, not the configured alpha.`,
+        `${formatAlpha(input.configuredAlpha)}. The level actually delivered here is ` +
+        `1/threshold = ${formatAlpha(input.deliveredAlpha)} — quote that, not the configured alpha.`,
     );
   }
 
