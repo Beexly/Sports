@@ -23,6 +23,26 @@ describe("buildFounderNextSteps", () => {
     expect(steps[0]?.priority).toBe("P0");
   });
 
+  it("surfaces a dead scheduler ahead of settlement overdue — it's the likely root cause", () => {
+    const steps = buildFounderNextSteps({
+      ...base,
+      overduePending: 12,
+      schedulerStatus: "dead",
+      schedulerAgeMinutes: 803,
+    });
+    expect(steps[0]?.id).toBe("scheduler-dead");
+    expect(steps[0]?.priority).toBe("P0");
+    expect(steps[0]?.action).toContain("803m");
+    expect(steps.map((s) => s.id)).toContain("settle-overdue");
+  });
+
+  it("does not surface the scheduler-dead step when healthy/degraded/unknown", () => {
+    for (const status of ["healthy", "degraded", "unknown"] as const) {
+      const ids = buildFounderNextSteps({ ...base, schedulerStatus: status }).map((s) => s.id);
+      expect(ids).not.toContain("scheduler-dead");
+    }
+  });
+
   it("asks for free-lane + jynx when cash path", () => {
     const steps = buildFounderNextSteps({
       ...base,

@@ -18,7 +18,6 @@ export async function GET(request: Request): Promise<NextResponse> {
   try {
     const result = await generateSignalSlate({ logPrefix: "[cron:generate-signal-slate]" });
     return NextResponse.json({
-      ok: result.ok,
       ...result,
       oddsApiRequired: false as const,
       claimPosture: "experimental_model_signal_not_book_line",

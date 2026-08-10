@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { deploymentSha } from "@/lib/health/capability-state";
 import { computeLiveCapabilityProbes } from "@/lib/health/live-capability-probes";
 import { composeCapabilityGraph, projectCapabilityGraph } from "@/lib/health/capability-graph";
+import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
 
 // A no-arg GET handler is statically cached by Next 14 unless it opts out —
 // which served hours-old "healthy" snapshots from the Vercel edge (observed
@@ -40,6 +41,13 @@ export async function GET(): Promise<NextResponse> {
   // other consumers (the Nightly Sentinel) depend on as-is.
   const capabilityGraph = projectCapabilityGraph(composeCapabilityGraph(capabilities));
 
+  // Diagnostic-only, same rule as capabilityGraph above: never influences
+  // ok/allOk/HTTP status (the `ingestion` check already governs that). This
+  // exists to answer the question `ingestion: error` cannot — is the platform
+  // cron scheduler actually dead, or did every job just find nothing to do?
+  // See lib/ops/scheduler-liveness.ts for the incident this is for.
+  const schedulerLiveness = await assessSchedulerLiveness().catch(() => null);
+
   return NextResponse.json(
     {
       ok: allOk,
@@ -47,6 +55,7 @@ export async function GET(): Promise<NextResponse> {
       checks,
       capabilities,
       capabilityGraph,
+      schedulerLiveness,
       deployment: { sha: deploymentSha(), observedAt: new Date().toISOString() },
     },
     { status: allOk ? 200 : 503 },
