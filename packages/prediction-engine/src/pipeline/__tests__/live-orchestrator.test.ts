@@ -1,11 +1,48 @@
 import { describe, it, expect } from "vitest";
 import { LiveOrchestrator } from "../live-orchestrator.js";
+import { TeamStrengthFilter } from "../../team-strength-filter.js";
 
 function makeOrchestrator(seed = 1): LiveOrchestrator {
   return new LiveOrchestrator({
     filter: { nTeams: 3, seed, nParticles: 200 },
   });
 }
+
+describe("LiveOrchestrator construction around a restored filter", () => {
+  it("accepts an already-hydrated TeamStrengthFilter instance, not just options", async () => {
+    const warm = new TeamStrengthFilter({ nTeams: 4, seed: 5, nParticles: 200 });
+    for (let i = 0; i < 20; i++) {
+      warm.predictStates();
+      warm.update(0, 1, 1); // team 0 always wins
+    }
+    const warmProb = warm.predictHomeWinProbability(0, 1);
+
+    const orch = new LiveOrchestrator({ filter: warm });
+    expect(orch.diagnostics().observations).toBe(20);
+
+    const obs = await orch.evaluateGame({
+      gameId: "g-restored",
+      homeTeamIdx: 0,
+      awayTeamIdx: 1,
+      marketHomeProb: 0.5,
+      decimalOddsHome: 2.0,
+    });
+    expect(obs.particleFilterProb).toBe(warmProb);
+    expect(obs.particleFilterProb).toBeGreaterThan(0.5);
+  });
+
+  it("exportFilter() returns the SAME instance construction was given (identity, not a copy)", () => {
+    const warm = new TeamStrengthFilter({ nTeams: 3, seed: 9, nParticles: 100 });
+    const orch = new LiveOrchestrator({ filter: warm });
+    expect(orch.exportFilter()).toBe(warm);
+  });
+
+  it("exportFilter() reflects state mutated by settleGame — the persistence write path", () => {
+    const orch = makeOrchestrator(2);
+    orch.settleGame("g1", 0, 1, 1);
+    expect(orch.exportFilter().diagnostics().observations).toBe(1);
+  });
+});
 
 describe("LiveOrchestrator", () => {
   it("evaluates a game with no odds events and no remote endpoints (fully cold-start)", async () => {

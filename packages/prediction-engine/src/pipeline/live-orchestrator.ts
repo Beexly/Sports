@@ -56,8 +56,12 @@ import {
 } from "../ensemble/remote-model-client.js";
 
 export interface OrchestratorOptions {
-  /** Passed through to `TeamStrengthFilter` verbatim — `nTeams`/`seed` are required there too. */
-  readonly filter: TeamStrengthFilterOptions;
+  /**
+   * Either fresh construction options, or an already-hydrated filter instance
+   * (from `TeamStrengthFilter.restore`) — the latter is how a caller resumes
+   * across a serverless cold start instead of starting the cloud over.
+   */
+  readonly filter: TeamStrengthFilterOptions | TeamStrengthFilter;
   /** Remote model endpoints to query. Default `[]` — safe when no sidecar is deployed. */
   readonly endpoints?: readonly ModelEndpoint[];
   readonly fetchDeps?: FetchModelPredictionDeps;
@@ -109,7 +113,7 @@ export interface ShadowSignalObservation {
   readonly status: "shadow";
 }
 
-export interface SettlementResult {
+export interface OrchestratorSettlementResult {
   readonly gameId: string;
   readonly filterUpdate: StrengthUpdateReport;
   readonly forecastSkill: ForecastSkillResult | null;
@@ -144,7 +148,8 @@ export class LiveOrchestrator {
   private readonly pendingObservations = new Map<string, { readonly p: number; readonly m: number }>();
 
   constructor(options: OrchestratorOptions) {
-    this.filter = new TeamStrengthFilter(options.filter);
+    this.filter =
+      options.filter instanceof TeamStrengthFilter ? options.filter : new TeamStrengthFilter(options.filter);
     this.endpoints = options.endpoints ?? [];
     this.fetchDeps = options.fetchDeps ?? {};
     this.hawkesOptions = options.hawkesOptions ?? {};
@@ -261,7 +266,7 @@ export class LiveOrchestrator {
    * `gameId` (nothing to score against the market) or if the options passed
    * to the constructor were refused (see `initForecastSkillFold`'s doc).
    */
-  settleGame(gameId: string, homeTeamIdx: number, awayTeamIdx: number, outcome: 0 | 1): SettlementResult {
+  settleGame(gameId: string, homeTeamIdx: number, awayTeamIdx: number, outcome: 0 | 1): OrchestratorSettlementResult {
     const filterUpdate = this.filter.update(homeTeamIdx, awayTeamIdx, outcome);
 
     const pending = this.pendingObservations.get(gameId);
@@ -290,5 +295,10 @@ export class LiveOrchestrator {
 
   diagnostics(): FilterDiagnostics {
     return this.filter.diagnostics();
+  }
+
+  /** The underlying filter instance, for `filter.snapshot()` at persistence time. */
+  exportFilter(): TeamStrengthFilter {
+    return this.filter;
   }
 }
