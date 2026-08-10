@@ -8,28 +8,49 @@ import {
 /**
  * Shared cron authorization (HTTP SoT).
  *
- * Accepts EITHER:
- *   1) Authorization: Bearer <CRON_SECRET|CRON_SECRET_PREVIOUS> (manual/autonomy)
- *   2) Vercel Cron platform: x-vercel-cron: 1 on VERCEL=1 (production scheduled jobs)
+ * Accepts EITHER (mode "dual", default — board-fill / odds / free-spine):
+ *   1) Authorization: Bearer <CRON_SECRET|CRON_SECRET_PREVIOUS>
+ *   2) Vercel Cron platform: x-vercel-cron: 1 when VERCEL=1
  *
- * Vercel injects x-vercel-cron on scheduled invocations; if CRON_SECRET is
- * missing from the Bearer (or misconfigured), platform crons still run so
- * board-fill/odds refresh are not deadlocked on a founder secret paste.
+ * Mode "bearer_only" (autonomy execute path and other sensitive crons):
+ *   Bearer required. Platform header alone is rejected so spoofed
+ *   x-vercel-cron cannot force AUTONOMY_EXECUTE cycles.
  *
- * Spoof guard: x-vercel-cron path only when process.env.VERCEL === "1"
- * (set by Vercel runtime; not present on local/dev attackers).
+ * Env CRON_REQUIRE_BEARER=true forces bearer_only globally (founder opt-in
+ * when Vercel is confirmed to inject Authorization: Bearer $CRON_SECRET).
  *
- * Returns null when authorized; else 401/500 NextResponse.
+ * Spoof note: x-vercel-cron is NOT a cryptographic proof of Vercel origin.
+ * Prefer Bearer for anything that executes side effects beyond data refresh.
  */
+
+export type CronAuthMode = "dual" | "bearer_only";
+
 export function isVercelPlatformCron(request: Request): boolean {
   if (process.env["VERCEL"] !== "1") return false;
   const h = request.headers.get("x-vercel-cron");
   return h === "1" || h === "true";
 }
 
-export function cronAuthError(request: Request): NextResponse | null {
-  // Platform cron first — autonomous board fill / odds without founder Bearer.
-  if (isVercelPlatformCron(request)) {
+function globalRequireBearer(): boolean {
+  return process.env["CRON_REQUIRE_BEARER"]?.trim().toLowerCase() === "true";
+}
+
+function resolveMode(mode?: CronAuthMode): CronAuthMode {
+  if (globalRequireBearer()) return "bearer_only";
+  return mode ?? "dual";
+}
+
+/**
+ * Returns null when authorized; else 401/500 NextResponse.
+ */
+export function cronAuthError(
+  request: Request,
+  options?: { readonly mode?: CronAuthMode },
+): NextResponse | null {
+  const mode = resolveMode(options?.mode);
+
+  // Platform cron only in dual mode (and never when CRON_REQUIRE_BEARER=true).
+  if (mode === "dual" && isVercelPlatformCron(request)) {
     return null;
   }
 
@@ -52,17 +73,26 @@ export function cronAuthError(request: Request): NextResponse | null {
   return null;
 }
 
+/** Bearer-only helper for autonomy / owner-adjacent crons. */
+export function cronAuthErrorBearerOnly(request: Request): NextResponse | null {
+  return cronAuthError(request, { mode: "bearer_only" });
+}
+
 /**
  * Same check as cronAuthError, but returns which secret matched (for telemetry).
- * Prefer cronAuthError at route boundaries; use this when callers need matched.
  */
-export function authorizeCronRequest(request: Request): {
+export function authorizeCronRequest(
+  request: Request,
+  options?: { readonly mode?: CronAuthMode },
+): {
   ok: boolean;
   status: 200 | 401 | 500;
-  matched: CronAuthMatched | "vercel_cron";
+  matched: CronAuthMatched | "vercel_cron" | null;
   error?: string;
 } {
-  if (isVercelPlatformCron(request)) {
+  const mode = resolveMode(options?.mode);
+
+  if (mode === "dual" && isVercelPlatformCron(request)) {
     return { ok: true, status: 200, matched: "vercel_cron" };
   }
 

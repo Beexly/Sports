@@ -10,7 +10,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { cronAuthError } from "@/lib/cron/authorize";
+import { cronAuthError, cronAuthErrorBearerOnly } from "@/lib/cron/authorize";
 import { computeLiveCapabilityProbes } from "@/lib/health/live-capability-probes";
 import { classifyHealthAlertSnapshot } from "@/lib/ops/health-alert-decision";
 import {
@@ -39,15 +39,19 @@ function envFlag(name: string): boolean {
 }
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const denied = cronAuthError(request);
-  if (denied) return denied;
-
   const started = Date.now();
   const url = new URL(request.url);
   const forceExecute = url.searchParams.get("execute") === "1";
   const forceDry = url.searchParams.get("dryRun") === "1";
   const executeEnabled = forceExecute || (envFlag("AUTONOMY_EXECUTE") && !forceDry);
   const dryRun = !executeEnabled;
+
+  // When execute is live, require Bearer so spoofed x-vercel-cron cannot drive acts.
+  // Dry-run plan may still use dual auth (platform header) for observability.
+  const denied = executeEnabled
+    ? cronAuthErrorBearerOnly(request)
+    : cronAuthError(request);
+  if (denied) return denied;
 
   const deploymentSha =
     process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ??
