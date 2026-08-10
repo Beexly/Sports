@@ -39,6 +39,7 @@ import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import { toProvenPathPickRow } from "@/lib/calibration/proven-path-rows";
 import { picksToHonestCalibrationSamples } from "@/lib/calibration/live-calibration-p";
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
+import { backfillIndependentTrueProb } from "@sports/ingestion-pipeline";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -188,8 +189,25 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   try {
+    // Enrich settled sample with retrospective independent trueProb before metrics.
+    // Bounded batch; never invents; never rewrites results/confidence.
+    let backfillNote = "backfill: skipped";
+    try {
+      const bf = await backfillIndependentTrueProb({
+        limit: 60,
+        logPrefix: "[cron:calibration-metrics:backfill-indep]",
+      });
+      backfillNote =
+        `backfill updated=${bf.updated} scanned=${bf.scanned} already=${bf.alreadyPriced} ` +
+        `noOpinion=${bf.skippedNoOpinion}`;
+    } catch (bfErr) {
+      backfillNote = `backfill error: ${bfErr instanceof Error ? bfErr.message : String(bfErr)}`;
+      console.warn(`[cron:calibration-metrics] ${backfillNote}`);
+    }
+
     const { samples, groupedRows, provenRows, notes, modelVersions, settledFrom, settledTo } =
       await loadSettledCalibrationSamples();
+    notes.push(backfillNote);
     const generatedAt = new Date().toISOString();
     const gitSha =
       process.env["VERCEL_GIT_COMMIT_SHA"] ?? process.env["GIT_SHA"] ?? null;

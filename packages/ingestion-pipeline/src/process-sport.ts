@@ -79,6 +79,12 @@ export interface ProcessSportResult {
   error?: string;
   /** Set when the cycle did no work for a benign, classified reason (e.g. "quiet_board"). */
   note?: string;
+  /** Odds rows written this cycle (drives oddsInserting kill-switch clock). */
+  oddsInserted?: number;
+  /** Upstream quote provider tag for this cycle. */
+  provider?: string;
+  /** Raw events accepted before freshness filter. */
+  eventsCount?: number;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -219,7 +225,7 @@ export async function processSport(
     if (events.length === 0) {
       const rundownKey = resolveRundownApiKey();
       if (rundownKey) {
-        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        const rd = await fetchRundownEventsForSport(sport.key, rundownKey, { daySpan: 7 });
         if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
@@ -294,7 +300,16 @@ export async function processSport(
             `fresh bookmaker update (newestUpdateAgeMin=${d.newestAgeMinutes ?? "none"}); ` +
             "skipped without alarm"
         );
-        return { sport: sport.key, status: "success", games: 0, picks: 0, note: "quiet_board" };
+        return {
+          sport: sport.key,
+          status: "success",
+          games: 0,
+          picks: 0,
+          oddsInserted: 0,
+          provider: oddsProviderTag,
+          eventsCount: events.length,
+          note: "quiet_board",
+        };
       }
 
       throw new Error(
@@ -775,11 +790,23 @@ export async function processSport(
       `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})`
     );
 
+    const emptyNote =
+      oddsInserted === 0 && Object.keys(gameRecords).length === 0
+        ? events.length === 0
+          ? `no_events via ${oddsProviderTag}`
+          : "no_games_after_normalize"
+        : oddsInserted === 0
+          ? "odds_zero_after_insert_path"
+          : undefined;
     return {
       sport: sport.key,
       status: "success",
       games: Object.keys(gameRecords).length,
       picks: picksGenerated,
+      oddsInserted,
+      provider: oddsProviderTag,
+      eventsCount: events.length,
+      note: emptyNote,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -793,6 +820,14 @@ export async function processSport(
     await notifyOwner(
       `GSE ingestion FAILED\nsport: ${sport.key}\n${message}`,
     );
-    return { sport: sport.key, status: "failed", games: 0, picks: 0, error: message };
+    return {
+      sport: sport.key,
+      status: "failed",
+      games: 0,
+      picks: 0,
+      oddsInserted: 0,
+      eventsCount: 0,
+      error: message,
+    };
   }
 }

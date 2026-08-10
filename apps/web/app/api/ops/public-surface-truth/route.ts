@@ -35,6 +35,10 @@ import {
   resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
 import { timingSafeEqual } from "node:crypto";
+import {
+  oddsApiKeyPresence,
+  rundownApiKeyPresence,
+} from "@sports/data-ingestion";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -179,12 +183,24 @@ export async function GET(request: Request) {
   }
 
   // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
+  // Dual-path visibility: keys present + last zero-odds SUCCESS (often quiet/empty provider).
+  const oddsKeySlot = oddsApiKeyPresence();
+  const rundownKeySlot = rundownApiKeyPresence();
   let oddsInserting: {
     lastSuccessAt: string | null;
     ageMinutes: number | null;
     withinRefreshSla: boolean | null;
     oddsInserted: number | null;
     sport: string | null;
+    dualPath: {
+      oddsKeyPresent: boolean;
+      oddsMatchedEnv: string | null;
+      rundownKeyPresent: boolean;
+      rundownMatchedEnv: string | null;
+    };
+    lastZeroOddsSuccessAt: string | null;
+    lastZeroOddsSport: string | null;
+    lastZeroOddsNote: string | null;
     operatorHint: string;
   } = {
     lastSuccessAt: null,
@@ -192,28 +208,72 @@ export async function GET(request: Request) {
     withinRefreshSla: null,
     oddsInserted: null,
     sport: null,
+    dualPath: {
+      oddsKeyPresent: oddsKeySlot.present,
+      oddsMatchedEnv: oddsKeySlot.matchedEnv,
+      rundownKeyPresent: rundownKeySlot.present,
+      rundownMatchedEnv: rundownKeySlot.matchedEnv,
+    },
+    lastZeroOddsSuccessAt: null,
+    lastZeroOddsSport: null,
+    lastZeroOddsNote: null,
     operatorHint:
-      "No odds-inserting SUCCESS found yet. Public /api/picks stays dark until oddsInserted>0 within Refresh SLA.",
+      "No odds-inserting SUCCESS found yet. Market board stays dark until oddsInserted>0 within Refresh SLA. Signal board is independent.",
   };
   if (!isStubMode()) {
     try {
-      const run = await db.ingestionRun.findFirst({
-        where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
-        orderBy: { completedAt: "desc" },
-        select: { completedAt: true, oddsInserted: true, sport: true },
-      });
+      const [run, zeroRun] = await Promise.all([
+        db.ingestionRun.findFirst({
+          where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
+          orderBy: { completedAt: "desc" },
+          select: { completedAt: true, oddsInserted: true, sport: true },
+        }),
+        db.ingestionRun.findFirst({
+          where: {
+            status: "SUCCESS",
+            oddsInserted: 0,
+            sport: { not: "free-spine" },
+          },
+          orderBy: { completedAt: "desc" },
+          select: { completedAt: true, oddsInserted: true, sport: true, errorMessage: true },
+        }),
+      ]);
+      if (zeroRun?.completedAt) {
+        oddsInserting.lastZeroOddsSuccessAt = zeroRun.completedAt.toISOString();
+        oddsInserting.lastZeroOddsSport = zeroRun.sport ?? null;
+        oddsInserting.lastZeroOddsNote =
+          "Recent SUCCESS with oddsInserted=0 (quiet board, empty provider events, or mapping drop) — does NOT advance market kill-switch clock.";
+      }
       if (run?.completedAt) {
         const ageMinutes = Math.round((Date.now() - run.completedAt.getTime()) / 60000);
         const withinRefreshSla = ageMinutes <= 240;
+        const keyHint = !oddsKeySlot.present && !rundownKeySlot.present
+          ? " No quote keys visible (THE_ODDS_API_KEY / RUNDOWN_*)."
+          : !oddsKeySlot.present && rundownKeySlot.present
+            ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT.`
+            : oddsKeySlot.present
+              ? ` Odds key present (${oddsKeySlot.matchedEnv}).`
+              : "";
         oddsInserting = {
+          ...oddsInserting,
           lastSuccessAt: run.completedAt.toISOString(),
           ageMinutes,
           withinRefreshSla,
           oddsInserted: run.oddsInserted ?? null,
           sport: run.sport ?? null,
           operatorHint: withinRefreshSla
-            ? `Last odds insert ${ageMinutes}m ago (within 240m SLA) — kill switch should allow public picks if PUBLIC_PICKS on.`
-            : `Last odds insert ${ageMinutes}m ago (outside 240m SLA) — public picks stay dark until refresh-odds inserts odds again (quiet board does not clear this).`,
+            ? `Last odds insert ${ageMinutes}m ago (within 240m SLA).${keyHint}`
+            : `Last odds insert ${ageMinutes}m ago (outside 240m SLA) — market board dark until refresh-odds inserts odds again (quiet/empty SUCCESS does not clear this).${keyHint} Signal board independent.`,
+        };
+      } else {
+        const keyHint = !oddsKeySlot.present && !rundownKeySlot.present
+          ? "No quote keys visible."
+          : rundownKeySlot.present
+            ? `Rundown key present (${rundownKeySlot.matchedEnv}) but no oddsInserted>0 run yet — provider empty/mapping or multi-day lag.`
+            : `Odds key present (${oddsKeySlot.matchedEnv}) but no oddsInserted>0 run yet.`;
+        oddsInserting = {
+          ...oddsInserting,
+          operatorHint: `${keyHint} Market board stays dark until oddsInserted>0. Signal board independent.`,
         };
       }
     } catch {

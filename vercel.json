@@ -82,6 +82,10 @@
       "schedule": "40 */6 * * *"
     },
     {
+      "path": "/api/cron/backfill-independent-trueprob",
+      "schedule": "10 */4 * * *"
+    },
+    {
       "path": "/api/cron/refresh-player-stats",
       "schedule": "0,30 * * * *"
     }

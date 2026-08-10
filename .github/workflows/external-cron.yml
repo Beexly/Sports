@@ -49,6 +49,7 @@ on:
           - refresh-odds
           - board-fill
           - generate-signal-slate
+          - backfill-independent-trueprob
           - settle-picks
           - jarvis-snapshot
           - autonomy-cycle
@@ -293,5 +294,29 @@ jobs:
           else
             cat /tmp/body.json
           fi
+          test "${response}" = "200"
+
+  backfill-independent-trueprob:
+    name: Backfill independent trueProb
+    if: ${{ github.event.inputs.target == 'backfill-independent-trueprob' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Hit /api/cron/backfill-independent-trueprob
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
+            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
+            exit 1
+          fi
+          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            --location --max-time 300 \
+            "${CRON_TARGET_URL}/api/cron/backfill-independent-trueprob?limit=120")
+          echo "HTTP ${response}"
+          jq . /tmp/body.json || cat /tmp/body.json
           test "${response}" = "200"
 

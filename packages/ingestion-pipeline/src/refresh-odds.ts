@@ -44,6 +44,12 @@ export interface RefreshOddsSportResult {
   readonly sport: string;
   readonly ok: boolean;
   readonly error?: string;
+  readonly oddsInserted?: number;
+  readonly provider?: string;
+  readonly eventsCount?: number;
+  readonly games?: number;
+  readonly picks?: number;
+  readonly note?: string;
 }
 
 export interface RefreshOddsResult {
@@ -154,8 +160,25 @@ export async function refreshOdds(
       const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
       results.push(
         res.status === "success"
-          ? { sport: sport.key, ok: true }
-          : { sport: sport.key, ok: false, error: res.error ?? "ingestion failed" },
+          ? {
+              sport: sport.key,
+              ok: true,
+              oddsInserted: res.oddsInserted ?? 0,
+              provider: res.provider,
+              eventsCount: res.eventsCount,
+              games: res.games,
+              picks: res.picks,
+              note: res.note,
+            }
+          : {
+              sport: sport.key,
+              ok: false,
+              error: res.error ?? "ingestion failed",
+              oddsInserted: res.oddsInserted ?? 0,
+              provider: res.provider,
+              eventsCount: res.eventsCount,
+              note: res.note,
+            },
       );
     } catch (err) {
       results.push({

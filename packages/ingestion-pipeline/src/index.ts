@@ -115,3 +115,7 @@ export type { BoardFillResult } from "./board-fill.js";
 
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
+
+export { backfillIndependentTrueProb } from "./backfill-independent-trueprob.js";
+export type { BackfillIndependentResult } from "./backfill-independent-trueprob.js";
+

@@ -89,6 +89,12 @@ vi.mock("@sports/data-ingestion", () => ({
   getCachedEspnPowerIndexMap: vi.fn().mockResolvedValue(new Map()),
   lookupTeamFpi: vi.fn().mockReturnValue(null),
   defaultPowerIndexSeason: vi.fn().mockReturnValue(2025),
+  sportKeyToKalshiLeagueCode: vi.fn().mockReturnValue(null),
+  resolveRundownApiKey: vi.fn().mockReturnValue(""),
+  fetchRundownEventsForSport: vi.fn().mockResolvedValue({ events: [], remaining: null }),
+  resolveOddsApiKey: vi.fn().mockReturnValue("key"),
+  oddsApiKeyPresence: vi.fn().mockReturnValue({ present: true, matchedEnv: "THE_ODDS_API_KEY" }),
+  rundownApiKeyPresence: vi.fn().mockReturnValue({ present: false, matchedEnv: null }),
 }));
 
 vi.mock("@sports/prediction-engine", async () => {
@@ -202,15 +208,27 @@ describe("processSport", () => {
     );
   });
 
-  it("marks the run FAILED and returns status failed when the odds API errors", async () => {
+  it("soft-fails Odds API and succeeds empty when Rundown is also ABSENT (dual free-path)", async () => {
+    // Dual-path law: primary Odds API failure must not hard-fail the sport when
+    // a free fallback is attempted. With Rundown key ABSENT and no events, the
+    // honest outcome is SUCCESS with oddsInserted=0 (does not advance kill-switch).
     mocks.getOdds.mockRejectedValue(new Error("quota exhausted"));
+    mocks.normalizeGames.mockReturnValue([]);
+    mocks.normalizeOdds.mockReturnValue([]);
+    mocks.scoreGames.mockReturnValue([]);
 
     const result = await processSport(SPORT, "key", gates());
 
-    expect(result).toMatchObject({ status: "failed", error: "quota exhausted" });
+    expect(result).toMatchObject({
+      status: "success",
+      games: 0,
+      picks: 0,
+      oddsInserted: 0,
+    });
+    expect(result.note).toMatch(/no_events/);
     expect(mocks.ingestionRunUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ status: "FAILED", errorMessage: "quota exhausted" }),
+        data: expect.objectContaining({ status: "SUCCESS", oddsInserted: 0 }),
       })
     );
     expect(mocks.pickUpsert).not.toHaveBeenCalled();

@@ -224,45 +224,68 @@ export type RundownFetchResult = {
 export async function fetchRundownEventsForSport(
   sportKey: string,
   apiKey: string,
-  options?: { readonly date?: string; readonly fetchImpl?: typeof fetch },
+  options?: {
+    readonly date?: string;
+    /** Inclusive day count starting at `date` (default 1). Caps at 10. */
+    readonly daySpan?: number;
+    readonly fetchImpl?: typeof fetch;
+  },
 ): Promise<RundownFetchResult> {
   const sportId = RUNDOWN_SPORT_IDS[sportKey];
   if (sportId == null) {
     return { events: [], remaining: null, error: `rundown: no sport_id map for ${sportKey}` };
   }
-  const date = options?.date ?? todayIsoUtc();
+  const startDate = options?.date ?? todayIsoUtc();
+  const daySpan = Math.min(10, Math.max(1, options?.daySpan ?? 7));
   const fetchImpl = options?.fetchImpl ?? fetch;
-  const url = `${RUNDOWN_BASE}/sports/${sportId}/events/${date}?market_ids=1,2,3&main_line=true&hide_closed=true&key=${encodeURIComponent(apiKey)}`;
+  const all: OddsApiEvent[] = [];
+  const seen = new Set<string>();
+  const errors: string[] = [];
 
-  try {
-    const res = await fetchImpl(url, {
-      headers: {
-        Accept: "application/json",
-        "X-TheRundown-Key": apiKey,
-      },
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      return {
-        events: [],
-        remaining: null,
-        error: `rundown HTTP ${res.status}`,
-      };
+  for (let i = 0; i < daySpan; i++) {
+    const d = new Date(`${startDate}T00:00:00.000Z`);
+    d.setUTCDate(d.getUTCDate() + i);
+    const date = d.toISOString().slice(0, 10);
+    const url = `${RUNDOWN_BASE}/sports/${sportId}/events/${date}?market_ids=1,2,3&main_line=true&hide_closed=true&key=${encodeURIComponent(apiKey)}`;
+    try {
+      const res = await fetchImpl(url, {
+        headers: {
+          Accept: "application/json",
+          "X-TheRundown-Key": apiKey,
+        },
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        errors.push(`${date}:HTTP ${res.status}`);
+        continue;
+      }
+      const body = (await res.json()) as Loose;
+      const list = (body["events"] ?? body["data"] ?? body) as unknown;
+      const arr = Array.isArray(list) ? list : [];
+      for (const raw of arr) {
+        const mapped = rundownEventToOddsApiEvent(raw, sportKey);
+        if (mapped && mapped.bookmakers.length > 0 && !seen.has(mapped.id)) {
+          seen.add(mapped.id);
+          all.push(mapped);
+        }
+      }
+    } catch (err) {
+      errors.push(`${date}:${err instanceof Error ? err.message : String(err)}`);
     }
-    const body = (await res.json()) as Loose;
-    const list = (body["events"] ?? body["data"] ?? body) as unknown;
-    const arr = Array.isArray(list) ? list : [];
-    const events: OddsApiEvent[] = [];
-    for (const raw of arr) {
-      const mapped = rundownEventToOddsApiEvent(raw, sportKey);
-      if (mapped && mapped.bookmakers.length > 0) events.push(mapped);
-    }
-    return { events, remaining: null };
-  } catch (err) {
+  }
+
+  if (all.length === 0) {
     return {
       events: [],
       remaining: null,
-      error: err instanceof Error ? err.message : String(err),
+      error: errors.length
+        ? `rundown empty (${daySpan}d): ${errors.slice(0, 4).join("; ")}`
+        : `rundown empty (${daySpan}d): no bookmaker lines`,
     };
   }
+  return {
+    events: all,
+    remaining: null,
+    error: errors.length ? `partial: ${errors.slice(0, 3).join("; ")}` : undefined,
+  };
 }

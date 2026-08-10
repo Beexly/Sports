@@ -113,8 +113,8 @@ describe("refreshOdds", () => {
     expect(result.okCount).toBe(2);
     expect(result.totalCount).toBe(2);
     expect(result.results).toEqual([
-      { sport: "americanfootball_nfl", ok: true },
-      { sport: "basketball_nba", ok: true },
+      expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
+      expect.objectContaining({ sport: "basketball_nba", ok: true }),
     ]);
     expect(typeof result.elapsedMs).toBe("number");
   });
@@ -153,9 +153,13 @@ describe("refreshOdds", () => {
     expect(result.okCount).toBe(2);
     expect(result.totalCount).toBe(3);
     expect(result.results).toEqual([
-      { sport: "americanfootball_nfl", ok: true },
-      { sport: "basketball_nba", ok: false, error: "quota exhausted" },
-      { sport: "baseball_mlb", ok: true },
+      expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
+      expect.objectContaining({
+        sport: "basketball_nba",
+        ok: false,
+        error: "quota exhausted",
+      }),
+      expect.objectContaining({ sport: "baseball_mlb", ok: true }),
     ]);
   });
 
@@ -175,8 +179,12 @@ describe("refreshOdds", () => {
     expect(result.okCount).toBe(1); // only nfl counted
     expect(result.totalCount).toBe(2);
     expect(result.results).toEqual([
-      { sport: "americanfootball_nfl", ok: true },
-      { sport: "basketball_nba", ok: false, error: "odds provider 502" },
+      expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
+      expect.objectContaining({
+        sport: "basketball_nba",
+        ok: false,
+        error: "odds provider 502",
+      }),
     ]);
   });
 
@@ -189,7 +197,11 @@ describe("refreshOdds", () => {
     expect(result.ok).toBe(false);
     expect(result.okCount).toBe(0);
     expect(result.results).toEqual([
-      { sport: "americanfootball_nfl", ok: false, error: "ingestion failed" },
+      expect.objectContaining({
+        sport: "americanfootball_nfl",
+        ok: false,
+        error: "ingestion failed",
+      }),
     ]);
   });
 
