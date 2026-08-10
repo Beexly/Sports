@@ -237,6 +237,7 @@ export async function runShadowEvaluationPass(scope: string): Promise<ShadowPass
         shadowProb: observation.blendedProb,
         marketProb: marketHomeProb,
         liveConfidence: Math.round(liveHomeProb * 100),
+        modelProbs: observation.modelProbs,
       });
       evaluated += 1;
     }

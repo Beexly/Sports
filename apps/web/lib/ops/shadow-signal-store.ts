@@ -36,6 +36,9 @@ export interface ShadowSignalInput {
   readonly shadowProb: number;
   readonly marketProb: number;
   readonly liveConfidence?: number | null;
+  /** Raw per-model probabilities behind `shadowProb`. Purely additive — stored
+   *  for a future weighted ensemble; nothing reads it back yet. */
+  readonly modelProbs?: readonly number[];
 }
 
 /**
@@ -120,6 +123,7 @@ export async function recordShadowSignal(input: ShadowSignalInput): Promise<bool
     shadowProb: input.shadowProb,
     marketProb: input.marketProb,
     liveConfidence: input.liveConfidence ?? null,
+    modelProbs: input.modelProbs ? [...input.modelProbs] : null,
   };
 
   return db.shadowSignal

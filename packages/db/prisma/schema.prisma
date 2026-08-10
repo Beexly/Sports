@@ -1317,6 +1317,11 @@ model ShadowSignal {
   marketProb     Float // de-vigged market probability at evaluation time
   liveConfidence Int? // the live engine's published confidence (0-100), when there was one
   outcome        Int? // 1 = home win, 0 = away win; null until settled
+  // Raw per-model probabilities that fed shadowProb (see LiveOrchestrator's
+  // `modelProbs` doc for ordering/length-variance caveats). Purely additive —
+  // shadowProb remains the authoritative blended value this row scores against.
+  // Read-only plumbing for a future weighted ensemble; nothing consumes it yet.
+  modelProbs     Json?
   settledAt      DateTime?
   evaluatedAt    DateTime  @default(now())
 

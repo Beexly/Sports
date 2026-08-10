@@ -100,6 +100,17 @@ export interface ShadowSignalObservation {
    *  signed, bounded Hawkes nudge. NOT an "Oracle Blender" — a placeholder average,
    *  documented as such, until a real weighted ensemble is built and backtested. */
   readonly blendedProb: number;
+  /** The RAW per-model probabilities that fed `blendedProb`, in stable order: index 0
+   *  is the particle filter, then one entry per SUCCEEDED remote endpoint. Failed
+   *  endpoints are absent, so the LENGTH VARIES between calls — any consumer that
+   *  weights these (a future ensemble) must key weights off model identity, never off
+   *  a fixed K or a positional index, or a single endpoint timeout will silently
+   *  re-assign one model's learned weight to a different model.
+   *
+   *  Deliberately EXCLUDES the Hawkes steam nudge: that is a post-blend additive
+   *  adjustment to the mean, not a member of the ensemble. Folding it in here would
+   *  let a weighted ensemble treat an adjustment as though it were a model. */
+  readonly modelProbs: readonly number[];
   /** Prior-only bits vs the module's base rate (default 0.5) — a CONFIDENCE measure,
    *  gameable by an overconfident model, NOT accuracy and NOT "beats the market". See
    *  information-edge-bits.ts's module header. */
@@ -248,6 +259,7 @@ export class LiveOrchestrator {
       remoteProbabilities,
       steamSignal,
       blendedProb,
+      modelProbs: rawSignals,
       edgeBitsVsBaseRate,
       marketDisagreement,
       kelly,
