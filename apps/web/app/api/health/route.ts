@@ -3,6 +3,7 @@ import { deploymentSha } from "@/lib/health/capability-state";
 import { computeLiveCapabilityProbes } from "@/lib/health/live-capability-probes";
 import { composeCapabilityGraph, projectCapabilityGraph } from "@/lib/health/capability-graph";
 import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
+import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
 
 // A no-arg GET handler is statically cached by Next 14 unless it opts out —
 // which served hours-old "healthy" snapshots from the Vercel edge (observed
@@ -47,6 +48,13 @@ export async function GET(): Promise<NextResponse> {
   // cron scheduler actually dead, or did every job just find nothing to do?
   // See lib/ops/scheduler-liveness.ts for the incident this is for.
   const schedulerLiveness = await assessSchedulerLiveness().catch(() => null);
+
+  // Ingestion failsafe. Fires ONLY when the spine is already past the staleness
+  // SLA and no isolate has attempted within the cooldown, so a healthy system
+  // never reaches the work. Deliberately NOT awaited: health must stay fast and
+  // must never fail because a background repair failed. See traffic-heartbeat.ts
+  // for why organic traffic is currently the only reliable trigger available.
+  void maybeRunTrafficHeartbeat().catch(() => undefined);
 
   return NextResponse.json(
     {
