@@ -41,6 +41,7 @@ import { refreshOdds } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 import { monitorOddsFetchedAt } from "@/lib/data-reliability/monitor-odds-fetchedat";
+import { runShadowEvaluationPass, type ShadowPassResult } from "@/lib/ops/shadow-evaluation-pass";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -109,6 +110,25 @@ export async function GET(request: Request) {
     );
   }
 
+  // Shadow prediction engine: absorb settlements, evaluate upcoming games, persist
+  // filter state. SHADOW ONLY — never writes a Pick, never affects `result.ok` or
+  // this route's status code. One sport's failure (a bad game row, a DB blip) must
+  // not blank the rest of the slate, so each sport is independently wrapped, exactly
+  // like the signalFill call above.
+  const shadow: Record<string, ShadowPassResult | { readonly error: string }> = {};
+  const shadowSports = requestedSport
+    ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
+    : SUPPORTED_SPORTS;
+  for (const sport of shadowSports) {
+    try {
+      shadow[sport.key] = await runShadowEvaluationPass(sport.key);
+    } catch (shadowErr) {
+      const message = shadowErr instanceof Error ? shadowErr.message : String(shadowErr);
+      console.warn(`[cron:refresh-odds] shadow pass failed for ${sport.key}: ${message}`);
+      shadow[sport.key] = { error: message };
+    }
+  }
+
   if (result.ok) {
     await pingHealthcheck(pingUrl, "success");
   } else {
@@ -142,6 +162,7 @@ export async function GET(request: Request) {
     results: result.results,
     freeze: result.freeze,
     signals: signalFill,
+    shadow,
     oddsFreshness: {
       scope: oddsFetchedAt.freshness.scope,
       status: oddsFetchedAt.freshness.status,

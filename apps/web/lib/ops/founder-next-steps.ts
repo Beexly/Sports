@@ -24,6 +24,15 @@ export interface FounderNextStep {
 }
 
 export interface FounderNextStepsInput {
+  /**
+   * Platform cron scheduler diagnosis (lib/ops/scheduler-liveness.ts).
+   * "dead" means no cron of any cadence has completed successfully well past
+   * its loosest interval — the scheduler itself, not the data, is the
+   * problem. Distinct from (and usually explains) overduePending / stale
+   * odds / frozen calibration below, so it surfaces first when present.
+   */
+  readonly schedulerStatus?: "healthy" | "degraded" | "dead" | "unknown";
+  readonly schedulerAgeMinutes?: number | null;
   readonly overduePending: number | null;
   readonly settlementHealth: string | null;
   readonly freeLaneConfigured: boolean;
@@ -81,6 +90,20 @@ export interface FounderNextStepsInput {
  */
 export function buildFounderNextSteps(input: FounderNextStepsInput): readonly FounderNextStep[] {
   const steps: FounderNextStep[] = [];
+
+  if (input.schedulerStatus === "dead") {
+    const age = input.schedulerAgeMinutes;
+    steps.push({
+      id: "scheduler-dead",
+      domain: "deploy",
+      priority: "P0",
+      action:
+        `Platform cron scheduler looks dead — no cron of any cadence has succeeded in ` +
+        `${age != null ? `${age}m` : "a long time"}. This is almost certainly the root cause of ` +
+        "any staleness below, not a data problem. Check Vercel dashboard → Cron Jobs for the " +
+        "production deployment, then fire a founder one-shot with CRON_SECRET to confirm the routes still work.",
+    });
+  }
 
   if (input.overduePending !== null && input.overduePending > 0) {
     steps.push({

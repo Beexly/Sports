@@ -13,9 +13,15 @@ describe("brier OGD ensemble", () => {
       ["c", -0.1],
     ]);
     const w = projectProbabilitySimplex(m, ["a", "b", "c"]);
-    const s = w.a + w.b + w.c;
+    // noUncheckedIndexedAccess: Record lookups are T|undefined — assert presence
+    // before arithmetic so a missing key fails loudly instead of yielding NaN.
+    const { a, b, c } = w;
+    if (a === undefined || b === undefined || c === undefined) {
+      throw new Error("projectProbabilitySimplex dropped a key");
+    }
+    const s = a + b + c;
     expect(s).toBeCloseTo(1, 6);
-    expect(w.c).toBeGreaterThanOrEqual(0);
+    expect(c).toBeGreaterThanOrEqual(0);
   });
 
   it("beats equal weight when one member is better", () => {
@@ -37,7 +43,12 @@ describe("brier OGD ensemble", () => {
       etaSchedule: "one_over_sqrt_t",
     });
     expect(rep.n).toBe(80);
-    expect(rep.finalWeights.good).toBeGreaterThan(rep.finalWeights.bad);
+    const goodWeight = rep.finalWeights.good;
+    const badWeight = rep.finalWeights.bad;
+    if (goodWeight === undefined || badWeight === undefined) {
+      throw new Error("expected both 'good' and 'bad' expert weights");
+    }
+    expect(goodWeight).toBeGreaterThan(badWeight);
     expect(rep.meanBrierEnsemble).toBeLessThanOrEqual(rep.meanBrierEqual + 0.02);
     expect(rep.status).toBe("shadow");
     expect(rep.priced).toBe(false);

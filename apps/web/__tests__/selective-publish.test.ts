@@ -3,7 +3,6 @@ import {
   filterSelective,
   selectivePublishSweep,
   isSelectivePublishEnabled,
-  passesSelectiveThresholds,
 } from "@/lib/calibration/selective-publish";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 import { fitPlattFromProbs, applyPlattToProb } from "@/lib/calibration/platt-scaling";

@@ -30,6 +30,8 @@ import { productBoardSurfaces } from "@/lib/product/board-surfaces";
 import { rankingPauseApplyPosture } from "@/lib/calibration/ranking-pause-apply";
 import { selectiveRuntimePosture } from "@/lib/calibration/selective-publish-runtime";
 import { loadRankingPauseApply } from "@/lib/ops/ranking-pause-durable";
+import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
+import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -301,6 +303,16 @@ export async function GET(request: Request) {
     }
   }
 
+  // Distinguishes "platform cron stopped firing" from "quiet board" — see
+  // lib/ops/scheduler-liveness.ts for the 2026-08-10 incident this exists for.
+  const schedulerLiveness = await assessSchedulerLiveness().catch(() => null);
+
+  // Ingestion failsafe (see traffic-heartbeat.ts). This is the most-requested
+  // API route in production (~every 7 min), which makes it the best available
+  // trigger while both schedulers are down. Fire-and-forget: never awaited,
+  // never allowed to fail this response.
+  void maybeRunTrafficHeartbeat().catch(() => undefined);
+
   const creditStack = loadCreditStackPosture();
   const billingMoney = loadBillingMoneyPosture();
   const autonomy = loadAutonomyPosture();
@@ -405,6 +417,8 @@ export async function GET(request: Request) {
       : false;
 
   const founderNextSteps = buildFounderNextSteps({
+    schedulerStatus: schedulerLiveness?.status,
+    schedulerAgeMinutes: schedulerLiveness?.ageMinutes ?? null,
     overduePending: settlement?.overduePending ?? null,
     settlementHealth: settlement?.health ?? null,
     freeLaneConfigured: creditStack.freeLaneConfigured,
@@ -646,6 +660,7 @@ export async function GET(request: Request) {
         mapsDefault: "off",
       },
       founderNextSteps,
+      schedulerLiveness,
       revenueLadder: {
         currentStep: revenueLadder.currentStep,
         nextStep: revenueLadder.nextStep,
