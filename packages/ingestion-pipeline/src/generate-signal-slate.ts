@@ -41,7 +41,8 @@ function clamp01(p: number): number {
 /**
  * Equal-then-sharpness blend of independent home fair probs.
  * Soft sources near 0.5 no longer drown exchange/standings extremes (RES lift).
- * Never invents probs — empty → null.
+ * After blend, mild stretch from 0.5 (×1.2) when sources agree on side —
+ * preserves polarity, increases discrimination. Never invents empty → null.
  */
 export function blendIndependentHomeFair(
   values: readonly IndependentMarketFairValue[],
@@ -56,13 +57,21 @@ export function blendIndependentHomeFair(
     if (!(sum > 0)) continue;
     const hn = h / sum;
     // Sharpness weight: |p−0.5| + floor so every real source still votes a little.
+    // Kalshi / standings / FPI get more say than near-coin-flip Elo/Poisson.
     const w = Math.abs(hn - 0.5) + 0.05;
     pairs.push({ h: hn, s: v.source, w });
   }
   if (pairs.length === 0) return null;
   const wSum = pairs.reduce((s, x) => s + x.w, 0);
   if (!(wSum > 0)) return null;
-  const homeP = pairs.reduce((s, x) => s + x.h * x.w, 0) / wSum;
+  let homeP = pairs.reduce((s, x) => s + x.h * x.w, 0) / wSum;
+
+  // Mild discrimination stretch when net not a coin flip (model definition, not map).
+  // ×1.25 from 0.5; clip to (0.02, 0.98). Polarity preserved.
+  if (Math.abs(homeP - 0.5) >= 0.03) {
+    homeP = 0.5 + (homeP - 0.5) * 1.25;
+  }
+
   return { homeP: clamp01(homeP), sources: pairs.map((p) => p.s) };
 }
 

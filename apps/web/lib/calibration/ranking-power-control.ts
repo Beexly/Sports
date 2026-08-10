@@ -127,7 +127,7 @@ export type RankingPowerControl = {
 };
 
 const RES_FLOOR_FOR_MAPS = 0.02;
-const MIN_N_FILTERED = 80;
+const MIN_N_FILTERED = 60;
 /** Independent/blend kinds need ≥40% of ML/SPREAD eligible n to win bestScore. */
 const MIN_COVERAGE = 0.4;
 const BRIER_FLOOR = 0.22;
