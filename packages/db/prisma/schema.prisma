@@ -2,7 +2,7 @@
 // Generated: 2026-04-07
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   // driverAdapters unlocks the Neon serverless HTTP driver (see
   // src/neon-serverless-adapter.ts): serverless-friendly connections that
   // survive the cold-start flakiness of raw TCP to Neon. Inert unless
@@ -30,13 +30,13 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts      Account[]
-  sessions      Session[]
-  subscription  Subscription?
-  alerts        Alert[]
-  claudeApiCalls ClaudeApiCallRecord[]
-  watchlistEntries Watchlist[]
-  checkoutAttempts CheckoutAttempt[]
+  accounts          Account[]
+  sessions          Session[]
+  subscription      Subscription?
+  alerts            Alert[]
+  claudeApiCalls    ClaudeApiCallRecord[]
+  watchlistEntries  Watchlist[]
+  checkoutAttempts  CheckoutAttempt[]
   pushSubscriptions PushSubscription[]
 
   @@index([email])
@@ -109,8 +109,8 @@ model Subscription {
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
 
-  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  webhookEvents    WebhookEvent[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  webhookEvents WebhookEvent[]
 
   @@index([stripeCustomerId])
   @@index([stripeSubscriptionId])
@@ -244,9 +244,9 @@ model CheckoutAttempt {
 
 model Sport {
   id          String   @id @default(cuid())
-  key         String   @unique  // e.g. "americanfootball_nfl"
-  name        String             // e.g. "NFL"
-  displayName String             // e.g. "National Football League"
+  key         String   @unique // e.g. "americanfootball_nfl"
+  name        String // e.g. "NFL"
+  displayName String // e.g. "National Football League"
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
 
@@ -267,9 +267,9 @@ model League {
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
 
-  sport   Sport    @relation(fields: [sportId], references: [id])
-  games   Game[]
-  teams   Team[]
+  sport Sport  @relation(fields: [sportId], references: [id])
+  games Game[]
+  teams Team[]
 
   @@index([sportId])
   @@map("leagues")
@@ -284,9 +284,9 @@ model Team {
   logoUrl      String?
   createdAt    DateTime @default(now())
 
-  league     League? @relation(fields: [leagueId], references: [id])
-  homeGames  Game[]  @relation("HomeTeam")
-  awayGames  Game[]  @relation("AwayTeam")
+  league    League? @relation(fields: [leagueId], references: [id])
+  homeGames Game[]  @relation("HomeTeam")
+  awayGames Game[]  @relation("AwayTeam")
 
   @@index([leagueId])
   @@index([name])
@@ -298,56 +298,56 @@ model Team {
 // ============================================================
 
 model Game {
-  id             String     @id @default(cuid())
-  externalId     String     @unique  // ID from The Odds API
-  sportId        String
-  leagueId       String?
-  homeTeamId     String?
-  awayTeamId     String?
-  homeTeamName   String               // denormalized for speed
-  awayTeamName   String
-  commenceTime   DateTime
-  status         GameStatus @default(SCHEDULED)
-  homeScore      Int?
-  awayScore      Int?
-  resultFetched  Boolean    @default(false)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  id            String     @id @default(cuid())
+  externalId    String     @unique // ID from The Odds API
+  sportId       String
+  leagueId      String?
+  homeTeamId    String?
+  awayTeamId    String?
+  homeTeamName  String // denormalized for speed
+  awayTeamName  String
+  commenceTime  DateTime
+  status        GameStatus @default(SCHEDULED)
+  homeScore     Int?
+  awayScore     Int?
+  resultFetched Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
   // ── Scheduling / fatigue context (computed from game history) ──
-  restDaysHome        Int?     // calendar days since home team's prior game
-  restDaysAway        Int?     // calendar days since away team's prior game
-  isBackToBackHome    Boolean  @default(false)
-  isBackToBackAway    Boolean  @default(false)
-  scheduleDensityHome Int?     // canonical games in last 7 days (home team)
-  scheduleDensityAway Int?     // canonical games in last 7 days (away team)
+  restDaysHome        Int? // calendar days since home team's prior game
+  restDaysAway        Int? // calendar days since away team's prior game
+  isBackToBackHome    Boolean @default(false)
+  isBackToBackAway    Boolean @default(false)
+  scheduleDensityHome Int? // canonical games in last 7 days (home team)
+  scheduleDensityAway Int? // canonical games in last 7 days (away team)
 
   // ── Line movement (populated on repeat ingestion) ──
-  openingSpread       Float?   // spread at first ingestion
-  openingTotal        Float?   // total at first ingestion
-  lineMovementSpread  Float?   // current avg spread − opening (negative = home favored more)
-  lineMovementTotal   Float?   // current avg total − opening
+  openingSpread      Float? // spread at first ingestion
+  openingTotal       Float? // total at first ingestion
+  lineMovementSpread Float? // current avg spread − opening (negative = home favored more)
+  lineMovementTotal  Float? // current avg total − opening
 
   // ── Data quality ──
-  bookmakerCoverageMax Int      @default(0)  // highest bookmaker count seen for this game
-  dataQualityScore     Float    @default(0)  // 0–100 composite at last computation
-  currentEdgeIndex     Float?                 // public 0-100 readout for every tracked game
-  contextComputedAt    DateTime?              // when scheduling context was last computed
+  bookmakerCoverageMax Int       @default(0) // highest bookmaker count seen for this game
+  dataQualityScore     Float     @default(0) // 0–100 composite at last computation
+  currentEdgeIndex     Float? // public 0-100 readout for every tracked game
+  contextComputedAt    DateTime? // when scheduling context was last computed
 
-  sport    Sport   @relation(fields: [sportId], references: [id])
-  league   League? @relation(fields: [leagueId], references: [id])
-  homeTeam Team?   @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam Team?   @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  odds                Odds[]
-  picks               Pick[]
-  openingLines        OpeningLine[]
-  teamGameLogs        TeamGameLog[]
-  gameSignals         GameSignal[]
-  pickSignalSnapshots PickSignalSnapshot[]
-  gateDecisions       GateDecision[]
-  creatorAssets       CreatorAsset[]
-  claudeApiCalls      ClaudeApiCallRecord[]
-  oddsLineSnapshots   OddsLineSnapshot[]
+  sport                  Sport                   @relation(fields: [sportId], references: [id])
+  league                 League?                 @relation(fields: [leagueId], references: [id])
+  homeTeam               Team?                   @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam               Team?                   @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  odds                   Odds[]
+  picks                  Pick[]
+  openingLines           OpeningLine[]
+  teamGameLogs           TeamGameLog[]
+  gameSignals            GameSignal[]
+  pickSignalSnapshots    PickSignalSnapshot[]
+  gateDecisions          GateDecision[]
+  creatorAssets          CreatorAsset[]
+  claudeApiCalls         ClaudeApiCallRecord[]
+  oddsLineSnapshots      OddsLineSnapshot[]
   settlementObservations SettlementObservation[]
   settlementAnomalies    SettlementAnomaly[]
   pickSettlementEvents   PickSettlementEvent[]
@@ -363,10 +363,10 @@ model OpeningLine {
   id          String     @id @default(cuid())
   gameId      String
   market      OddsMarket
-  spread      Float?     // opening spread (home perspective)
-  total       Float?     // opening total
-  homePrice   Float?     // opening moneyline home
-  awayPrice   Float?     // opening moneyline away
+  spread      Float? // opening spread (home perspective)
+  total       Float? // opening total
+  homePrice   Float? // opening moneyline home
+  awayPrice   Float? // opening moneyline away
   firstSeenAt DateTime   @default(now())
 
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
@@ -378,25 +378,25 @@ model OpeningLine {
 
 // Stores each team's game log for form computation (populated when games settle)
 model TeamGameLog {
-  id            String         @id @default(cuid())
-  teamName      String         // denormalized team identifier (homeTeamName / awayTeamName)
+  id            String        @id @default(cuid())
+  teamName      String // denormalized team identifier (homeTeamName / awayTeamName)
   sport         String
   gameId        String
   opponentName  String
   isHome        Boolean
-  gameDate      DateTime       // commenceTime of the game
+  gameDate      DateTime // commenceTime of the game
   teamScore     Int?
   opponentScore Int?
-  result        GameLogResult  @default(TBD)
+  result        GameLogResult @default(TBD)
   // ATS tracking
-  spread        Float?         // spread from team perspective (negative = team was favored)
-  atsResult     AtsResult      @default(TBD)  // did team cover?
-  createdAt     DateTime       @default(now())
+  spread        Float? // spread from team perspective (negative = team was favored)
+  atsResult     AtsResult     @default(TBD) // did team cover?
+  createdAt     DateTime      @default(now())
 
   // Bootstrap safety — true for all logs written before CANONICAL_HISTORY_ENABLED=true.
   // Bootstrap logs are stored for reference but excluded from ATS/H2H scoring.
   // Set to false only when canonical history mode is explicitly active at write time.
-  isBootstrap   Boolean        @default(true)
+  isBootstrap Boolean @default(true)
 
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
@@ -407,7 +407,7 @@ model TeamGameLog {
 }
 
 model Odds {
-  id              String      @id @default(cuid())
+  id              String     @id @default(cuid())
   gameId          String
   ingestionRunId  String
   bookmaker       String
@@ -422,7 +422,7 @@ model Odds {
   overPrice       Float?
   underPrice      Float?
   fetchedAt       DateTime
-  createdAt       DateTime    @default(now())
+  createdAt       DateTime   @default(now())
 
   game         Game         @relation(fields: [gameId], references: [id])
   ingestionRun IngestionRun @relation(fields: [ingestionRunId], references: [id])
@@ -454,12 +454,12 @@ model OddsLineSnapshot {
   id         String   @id @default(cuid())
   gameId     String
   capturedAt DateTime
-  phase      String   // "OPEN" | "INTERIM" | "CLOSE"
+  phase      String // "OPEN" | "INTERIM" | "CLOSE"
   book       String
-  market     String   // "SPREAD" | "MONEYLINE" | "TOTAL"
+  market     String // "SPREAD" | "MONEYLINE" | "TOTAL"
   side       String
-  price      Float    // price at capture, in the source's native odds format
-  line       Float?   // points line at capture (spread/total); null for moneyline
+  price      Float // price at capture, in the source's native odds format
+  line       Float? // points line at capture (spread/total); null for moneyline
   source     String
   createdAt  DateTime @default(now())
 
@@ -475,13 +475,13 @@ model OddsLineSnapshot {
 // ============================================================
 
 model IngestionRun {
-  id            String            @id @default(cuid())
+  id            String          @id @default(cuid())
   sport         String?
-  status        IngestionStatus   @default(RUNNING)
-  gamesUpserted Int               @default(0)
-  oddsInserted  Int               @default(0)
+  status        IngestionStatus @default(RUNNING)
+  gamesUpserted Int             @default(0)
+  oddsInserted  Int             @default(0)
   errorMessage  String?
-  startedAt     DateTime          @default(now())
+  startedAt     DateTime        @default(now())
   completedAt   DateTime?
 
   odds            Odds[]
@@ -500,56 +500,56 @@ model IngestionRun {
 // ============================================================
 
 model Pick {
-  id             String    @id @default(cuid())
+  id             String  @id @default(cuid())
   gameId         String
   ingestionRunId String?
 
   // Core pick fields
-  pickType       PickType
-  selection      String    // e.g. "Chiefs -3.5" or "OVER 48.5"
-  line           Float
+  pickType  PickType
+  selection String // e.g. "Chiefs -3.5" or "OVER 48.5"
+  line      Float
 
   // Scoring precision fields
-  confidence     Int       // 0–100 overall score
-  edgeScore      Float     @default(0)  // net bookmaker edge (0–100)
-  consensusPct   Float     @default(0)  // bookmaker consensus 0.0–1.0
-  bookmakerCount Int       @default(0)  // number of sources used
+  confidence     Int // 0–100 overall score
+  edgeScore      Float @default(0) // net bookmaker edge (0–100)
+  consensusPct   Float @default(0) // bookmaker consensus 0.0–1.0
+  bookmakerCount Int   @default(0) // number of sources used
 
   // Classification
-  tier           PickTier   @default(FREE)
-  pickGrade      PickGrade  @default(LEAN)    // A+/A/B/C label
-  riskLevel      RiskLevel  @default(MODERATE) // volatility classification
+  tier      PickTier  @default(FREE)
+  pickGrade PickGrade @default(LEAN) // A+/A/B/C label
+  riskLevel RiskLevel @default(MODERATE) // volatility classification
 
   // Explainability
-  reasoning         String @db.Text          // short plain-English summary
-  reasoningShort    String @default("")       // 1-sentence teaser (free users)
-  factorBreakdown   Json?                     // structured scoring factors
+  reasoning       String @db.Text // short plain-English summary
+  reasoningShort  String @default("") // 1-sentence teaser (free users)
+  factorBreakdown Json? // structured scoring factors
 
   // Metadata
-  modelVersion   String
-  generatedAt    DateTime   @default(now())
+  modelVersion    String
+  generatedAt     DateTime  @default(now())
   dataFreshnessAt DateTime? // when the underlying odds data was fetched
 
   // Outcome
-  result         PickResult @default(PENDING)
-  settledAt      DateTime?
-  isPublished    Boolean    @default(true)
-  isFeatured     Boolean    @default(false)
+  result      PickResult @default(PENDING)
+  settledAt   DateTime?
+  isPublished Boolean    @default(true)
+  isFeatured  Boolean    @default(false)
 
   // Closing-Line Value (CLV) — beat-the-close, the sharp credibility metric.
   // Lock fields are captured ONCE at creation (absent from the refresh `update`,
   // so they are immutable) and record the line/price we actually published at.
   // Close + graded fields are filled at settlement by grading the lock against
   // the closing line derived from the odds history. See clv-capture.ts.
-  clvLockLine    Float?     // points line at publish (spread/total); null for ML
-  clvLockPrice   Int?       // American price at publish (moneyline); null otherwise
-  clvCloseLine   Float?     // closing points line compared against (spread/total)
-  clvClosePrice  Int?       // closing American price for the chosen side (moneyline)
-  clvKind        String?    // "POINTS" | "PROBABILITY"
-  clvValue       Float?     // graded CLV — positive = beat the close
-  clvVerdict     String?    // "BEAT_CLOSE" | "MATCHED_CLOSE" | "LOST_TO_CLOSE"
-  clvCapturedAt  DateTime?  // fetchedAt of the closing snapshot used
-  clvGradedAt    DateTime?  // when CLV was graded at settlement
+  clvLockLine   Float? // points line at publish (spread/total); null for ML
+  clvLockPrice  Int? // American price at publish (moneyline); null otherwise
+  clvCloseLine  Float? // closing points line compared against (spread/total)
+  clvClosePrice Int? // closing American price for the chosen side (moneyline)
+  clvKind       String? // "POINTS" | "PROBABILITY"
+  clvValue      Float? // graded CLV — positive = beat the close
+  clvVerdict    String? // "BEAT_CLOSE" | "MATCHED_CLOSE" | "LOST_TO_CLOSE"
+  clvCapturedAt DateTime? // fetchedAt of the closing snapshot used
+  clvGradedAt   DateTime? // when CLV was graded at settlement
 
   // Book-line dispersion (max−min across books) at lock, in the pick kind's unit
   // (points for SPREAD/TOTAL, implied-prob for MONEYLINE). The CLV decomposition's
@@ -560,14 +560,14 @@ model Pick {
   // Bootstrap safety — true for all picks written before CANONICAL_HISTORY_ENABLED=true.
   // Bootstrap picks are stored for admin review and settlement but excluded from
   // canonical performance metrics and public performance stats.
-  isBootstrap    Boolean    @default(true)
+  isBootstrap Boolean @default(true)
 
-  game           Game @relation(fields: [gameId], references: [id])
-  signalSnapshot PickSignalSnapshot?
-  lossAutopsy    LossAutopsy?
-  gateDecisions  GateDecision[]
-  creatorAssets  CreatorAsset[]
-  proofReceipt   PickProofReceipt?
+  game            Game                 @relation(fields: [gameId], references: [id])
+  signalSnapshot  PickSignalSnapshot?
+  lossAutopsy     LossAutopsy?
+  gateDecisions   GateDecision[]
+  creatorAssets   CreatorAsset[]
+  proofReceipt    PickProofReceipt?
   settlementEvent PickSettlementEvent?
 
   // One active pick per game per pick type — enforced at DB level to prevent
@@ -595,20 +595,20 @@ model PickProofReceipt {
   id             String   @id @default(cuid())
   pickId         String   @unique
   payload        String   @db.Text // canonical committed serialization (source of truth)
-  contentHash    String              // hash over the committed leaf (id + payload)
-  marketFairProb Float               // de-vigged market fair prob for the side, 0–1 (real)
-  confidence     Int                 // published 0–100 confidence score (heuristic, NOT a prob)
-  edgeScore      Float               // published 0–100 net edge score
-  modelProb      Float?              // calibrated win prob 0–1 — null until one genuinely exists
-  entryOdds      Int                 // American price we entered at
-  line           Float               // spread/total line (or price for ML)
+  contentHash    String // hash over the committed leaf (id + payload)
+  marketFairProb Float // de-vigged market fair prob for the side, 0–1 (real)
+  confidence     Int // published 0–100 confidence score (heuristic, NOT a prob)
+  edgeScore      Float // published 0–100 net edge score
+  modelProb      Float? // calibrated win prob 0–1 — null until one genuinely exists
+  entryOdds      Int // American price we entered at
+  line           Float // spread/total line (or price for ML)
   modelVersion   String
-  asOf           DateTime            // when the pick + odds were frozen (pre-kickoff)
+  asOf           DateTime // when the pick + odds were frozen (pre-kickoff)
   frozenAt       DateTime @default(now())
-  slateKey       String?             // the slate commitment that pre-registered this pick
+  slateKey       String? // the slate commitment that pre-registered this pick
 
-  pick           Pick             @relation(fields: [pickId], references: [id])
-  slate          SlateCommitment? @relation(fields: [slateKey], references: [slateKey])
+  pick  Pick             @relation(fields: [pickId], references: [id])
+  slate SlateCommitment? @relation(fields: [slateKey], references: [slateKey])
 
   @@index([contentHash])
   @@index([slateKey])
@@ -623,9 +623,9 @@ model PickProofReceipt {
 model SlateCommitment {
   id          String   @id @default(cuid())
   slateKey    String   @unique // e.g. "NFL:2026-09-14" — one frozen commitment per sport + UTC day
-  root        String              // published Merkle root over the slate's receipts
-  count       Int                 // pre-registered population size (the fixed denominator)
-  committedAt DateTime            // published BEFORE the first kickoff
+  root        String // published Merkle root over the slate's receipts
+  count       Int // pre-registered population size (the fixed denominator)
+  committedAt DateTime // published BEFORE the first kickoff
 
   // Pedersen aggregate over the slate's published edge scores (additive layer on
   // the Merkle root; see docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md Phase 0.5).
@@ -637,27 +637,27 @@ model SlateCommitment {
   pedersenAggregateValue String? // decimal-string bigint (fixed-point encoded sum)
   pedersenBlindingSum    String? // decimal-string bigint — SECRET until open
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  receipts    PickProofReceipt[]
+  receipts PickProofReceipt[]
 
   @@index([committedAt])
   @@map("slate_commitments")
 }
 
 model GateDecision {
-  id             String             @id @default(cuid())
-  gameId         String
-  pickId         String?
-  status         GateDecisionStatus
-  reason         String             @db.VarChar(240)
-  reasonCode     String             @db.VarChar(80)
-  edgeIndex      Float?
-  confidence     Int?
-  modelVersion   String
-  isBootstrap    Boolean            @default(true)
-  evaluatedAt    DateTime           @default(now())
-  evidenceRefs   Json?
+  id           String             @id @default(cuid())
+  gameId       String
+  pickId       String?
+  status       GateDecisionStatus
+  reason       String             @db.VarChar(240)
+  reasonCode   String             @db.VarChar(80)
+  edgeIndex    Float?
+  confidence   Int?
+  modelVersion String
+  isBootstrap  Boolean            @default(true)
+  evaluatedAt  DateTime           @default(now())
+  evidenceRefs Json?
 
   game Game  @relation(fields: [gameId], references: [id], onDelete: Cascade)
   pick Pick? @relation(fields: [pickId], references: [id], onDelete: SetNull)
@@ -670,28 +670,28 @@ model GateDecision {
 }
 
 model LossAutopsy {
-  id             String            @id @default(cuid())
-  pickId         String            @unique
-  pick           Pick              @relation(fields: [pickId], references: [id])
+  id     String @id @default(cuid())
+  pickId String @unique
+  pick   Pick   @relation(fields: [pickId], references: [id])
 
-  authorEmail    String
-  authoredAt     DateTime          @default(now())
-  status         LossAutopsyStatus @default(DRAFT)
+  authorEmail String
+  authoredAt  DateTime          @default(now())
+  status      LossAutopsyStatus @default(DRAFT)
 
-  headline       String            @db.VarChar(140)
-  whatWeSaw      String            @db.Text
-  whatHappened   String            @db.Text
-  whatWeLearned  String            @db.Text
+  headline      String @db.VarChar(140)
+  whatWeSaw     String @db.Text
+  whatHappened  String @db.Text
+  whatWeLearned String @db.Text
 
-  rootCause      LossRootCause
-  lessonTags     String[]
-  modelVersion   String?
-  isPublic       Boolean           @default(false)
+  rootCause    LossRootCause
+  lessonTags   String[]
+  modelVersion String?
+  isPublic     Boolean       @default(false)
 
-  evidenceRefs   Json?
+  evidenceRefs Json?
 
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([authoredAt])
   @@index([status])
@@ -733,7 +733,7 @@ model SourceSnapshot {
   externalId     String?
   ingestionRunId String?
   fetchedAt      DateTime
-  payload         Json
+  payload        Json
   payloadHash    String
   payloadBytes   Int                @default(0)
   createdAt      DateTime           @default(now())
@@ -756,17 +756,17 @@ model SourceSnapshot {
 // Future: WEATHER, INJURIES, RATINGS, MARKET_SENTIMENT.
 // @@unique([gameId, sourceName, signalKey]) — one current value per (source, signal) per game.
 model GameSignal {
-  id             String        @id @default(cuid())
+  id             String         @id @default(cuid())
   gameId         String
   sourceCategory SignalCategory
-  sourceName     String        // provider key e.g. "schedule-internal", "openweather"
-  signalKey      String        // e.g. "schedule_density_7d_home", "wind_mph"
-  signalValue    Json          // number | string | object — flexible for all signal types
+  sourceName     String // provider key e.g. "schedule-internal", "openweather"
+  signalKey      String // e.g. "schedule_density_7d_home", "wind_mph"
+  signalValue    Json // number | string | object — flexible for all signal types
   fetchedAt      DateTime
-  expiresAt      DateTime?     // null = valid until game commences
-  trustLevel     Float         @default(1.0)   // 0.0–1.0: source reliability weight
-  isBootstrap    Boolean       @default(true)
-  createdAt      DateTime      @default(now())
+  expiresAt      DateTime? // null = valid until game commences
+  trustLevel     Float          @default(1.0) // 0.0–1.0: source reliability weight
+  isBootstrap    Boolean        @default(true)
+  createdAt      DateTime       @default(now())
 
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
@@ -788,48 +788,48 @@ model PickSignalSnapshot {
   capturedAt DateTime @default(now())
 
   // Active signal categories at prediction time (all boolean flags)
-  hadOddsSignal         Boolean @default(false)  // always true — primary input
-  hadLineMovementSignal Boolean @default(false)  // opening line existed
-  hadRestSignal         Boolean @default(false)  // restDays or B2B data present
-  hadScheduleSignal     Boolean @default(false)  // scheduleDensity data present
-  hadAtsFormSignal      Boolean @default(false)  // canonical ATS form used
-  hadH2HSignal          Boolean @default(false)  // canonical H2H form used
-  hadVenueSignal        Boolean @default(false)  // venue-specific ATS form used
-  hadWeatherSignal      Boolean @default(false)  // weather data present (future)
-  hadInjurySignal       Boolean @default(false)  // injury data present (future)
-  hadRatingsSignal      Boolean @default(false)  // team ratings present (future)
-  hadPlayerSignal       Boolean @default(false)  // player availability/lineup data present (future)
-  hadOfficialsSignal    Boolean @default(false)  // referee/umpire data present (future)
+  hadOddsSignal             Boolean @default(false) // always true — primary input
+  hadLineMovementSignal     Boolean @default(false) // opening line existed
+  hadRestSignal             Boolean @default(false) // restDays or B2B data present
+  hadScheduleSignal         Boolean @default(false) // scheduleDensity data present
+  hadAtsFormSignal          Boolean @default(false) // canonical ATS form used
+  hadH2HSignal              Boolean @default(false) // canonical H2H form used
+  hadVenueSignal            Boolean @default(false) // venue-specific ATS form used
+  hadWeatherSignal          Boolean @default(false) // weather data present (future)
+  hadInjurySignal           Boolean @default(false) // injury data present (future)
+  hadRatingsSignal          Boolean @default(false) // team ratings present (future)
+  hadPlayerSignal           Boolean @default(false) // player availability/lineup data present (future)
+  hadOfficialsSignal        Boolean @default(false) // referee/umpire data present (future)
   hadVenueEnvironmentSignal Boolean @default(false) // venue/park/dome/weather context present (future)
-  hadPaceSignal         Boolean @default(false)  // pace/team-rate context present (future)
-  hadMilestoneSignal    Boolean @default(false)  // team/player milestone context present (future)
+  hadPaceSignal             Boolean @default(false) // pace/team-rate context present (future)
+  hadMilestoneSignal        Boolean @default(false) // team/player milestone context present (future)
 
   // Key quantitative values at prediction time (queryable for calibration regression)
   bookmakerCount         Int    @default(0)
   dataQualityScore       Float  @default(0)
-  confidenceAtPrediction Int    @default(0)  // raw confidence at creation — immutable
-  lineMovementDelta      Float?              // current_spread − opening_spread at pick time
-  restAdvantageNet       Int?               // restDaysHome − restDaysAway (positive = home more rested)
-  atsFormSampleSize      Int?               // largest canonical ATS sample used (0 if none)
-  h2hSampleSize          Int?               // H2H matchup sample size (null if not used)
-  scheduleDensityHome    Int?               // home team games in last 7 days
-  scheduleDensityAway    Int?               // away team games in last 7 days
+  confidenceAtPrediction Int    @default(0) // raw confidence at creation — immutable
+  lineMovementDelta      Float? // current_spread − opening_spread at pick time
+  restAdvantageNet       Int? // restDaysHome − restDaysAway (positive = home more rested)
+  atsFormSampleSize      Int? // largest canonical ATS sample used (0 if none)
+  h2hSampleSize          Int? // H2H matchup sample size (null if not used)
+  scheduleDensityHome    Int? // home team games in last 7 days
+  scheduleDensityAway    Int? // away team games in last 7 days
 
   // Provenance — immutable creation-era flags
-  isBootstrap          Boolean @default(true)   // mirrors pick.isBootstrap at creation
-  usedDerivedHistory   Boolean @default(false)  // ATS/H2H signals were active
-  usedScheduleSignal   Boolean @default(false)  // schedule density signal was active
-  modelVersion         String  @default("")     // prediction engine version at prediction time
+  isBootstrap        Boolean @default(true) // mirrors pick.isBootstrap at creation
+  usedDerivedHistory Boolean @default(false) // ATS/H2H signals were active
+  usedScheduleSignal Boolean @default(false) // schedule density signal was active
+  modelVersion       String  @default("") // prediction engine version at prediction time
 
   // Outcome — filled in when the underlying pick settles (never before)
   // settlementResult: "WIN" | "LOSS" | "PUSH" — mirrors pick.result
-  settlementResult     String?
-  settledAt            DateTime?
+  settlementResult String?
+  settledAt        DateTime?
 
   // Learning eligibility — set by settlement flow when all eligibility conditions met:
   // (1) canLearnFromOutcomes=true, (2) isBootstrap=false, (3) settlement recorded
-  eligibleForLearning  Boolean   @default(false)
-  learningEligibleAt   DateTime?
+  eligibleForLearning Boolean   @default(false)
+  learningEligibleAt  DateTime?
 
   pick Pick @relation(fields: [pickId], references: [id], onDelete: Cascade)
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
@@ -849,8 +849,8 @@ model BlogPost {
   id             String        @id @default(cuid())
   title          String
   slug           String        @unique
-  excerpt        String        @db.Text  // free preview
-  content        String        @db.Text  // full content (premium)
+  excerpt        String        @db.Text // free preview
+  content        String        @db.Text // full content (premium)
   sport          String?
   tags           String[]
   seoTitle       String?
@@ -875,14 +875,14 @@ model BlogPost {
 // ============================================================
 
 model Alert {
-  id        String      @id @default(cuid())
+  id        String       @id @default(cuid())
   userId    String
   sport     String?
   league    String?
-  threshold Int         @default(70) // min confidence
+  threshold Int          @default(70) // min confidence
   channel   AlertChannel @default(EMAIL)
-  active    Boolean     @default(true)
-  createdAt DateTime    @default(now())
+  active    Boolean      @default(true)
+  createdAt DateTime     @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -915,8 +915,8 @@ model Alert {
 model Watchlist {
   id         String   @id @default(cuid())
   userId     String
-  entityType String   // "TEAM" | "PLAYER"
-  entityId   String   // Team.id or Player.id, depending on entityType
+  entityType String // "TEAM" | "PLAYER"
+  entityId   String // Team.id or Player.id, depending on entityType
   createdAt  DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -954,7 +954,6 @@ model PushSubscription {
   @@map("push_subscriptions")
 }
 
-
 // ============================================================
 // SETTLEMENT EVIDENCE + TRANSACTIONAL OUTBOX (Phase 1E)
 // ============================================================
@@ -985,13 +984,13 @@ model PushSubscription {
 // BEFORE any evidence write — retries of the same scheduled invocation over
 // the same source snapshot reuse the SAME run id and corroborate nothing.
 model SettlementRun {
-  id                        String   @id @default(cuid())
-  idempotencyKey            String   @unique // source:sport:scheduledWindow:sourceSnapshotFingerprint
+  id                        String    @id @default(cuid())
+  idempotencyKey            String    @unique // source:sport:scheduledWindow:sourceSnapshotFingerprint
   source                    String
   sport                     String
-  scheduledWindow           String            // e.g. "2026-07-22T18Z" (UTC hour bucket from the scheduler)
-  sourceSnapshotFingerprint String            // sha256 over the normalized source response for this run
-  startedAt                 DateTime @default(now())
+  scheduledWindow           String // e.g. "2026-07-22T18Z" (UTC hour bucket from the scheduler)
+  sourceSnapshotFingerprint String // sha256 over the normalized source response for this run
+  startedAt                 DateTime  @default(now())
   lastReusedAt              DateTime?
 
   @@index([sport, scheduledWindow])
@@ -999,27 +998,27 @@ model SettlementRun {
 }
 
 model SettlementObservation {
-  id                        String   @id @default(cuid())
+  id                        String    @id @default(cuid())
   gameId                    String
-  source                    String                 // upstream feed, e.g. "the-odds-api"
-  settlementRunId           String                 // durable SettlementRun.id (stable across scheduler retries)
-  payloadFingerprint        String                 // sha256 over the normalized source row content
+  source                    String // upstream feed, e.g. "the-odds-api"
+  settlementRunId           String // durable SettlementRun.id (stable across scheduler retries)
+  payloadFingerprint        String // sha256 over the normalized source row content
   // sha256 over the WHOLE normalized source snapshot for the run (6.1):
   // corroboration requires distinct snapshots or minimum temporal separation,
   // so rapid same-snapshot retries can never promote an anomaly. Nullable for
   // pre-hardening rows only.
   sourceSnapshotFingerprint String?
-  observedSourceStatus      String                 // e.g. "completed-scoreless"
+  observedSourceStatus      String // e.g. "completed-scoreless"
   homeScorePresent          Boolean
   awayScorePresent          Boolean
-  mappingStatus             String                 // "matched" — game resolved by externalId
-  freshnessState            String                 // e.g. "within-settlement-window" (daysFrom=2 fetch)
-  observedAt                DateTime               // when the sighting happened (feed read time)
+  mappingStatus             String // "matched" — game resolved by externalId
+  freshnessState            String // e.g. "within-settlement-window" (daysFrom=2 fetch)
+  observedAt                DateTime // when the sighting happened (feed read time)
   // Source-provided event timestamp, retained verbatim when the feed sends
   // one (6.1). Distinct from observedAt (our read time) and recordedAt (row
   // insert time).
   sourceObservedAt          DateTime?
-  recordedAt                DateTime @default(now())
+  recordedAt                DateTime  @default(now())
 
   // RESTRICT (6.2): append-only evidence must not silently vanish because a
   // parent game row was deleted. Deleting a game with evidence is an owner-
@@ -1046,7 +1045,7 @@ model SettlementObservation {
 model SettlementAnomaly {
   id               String    @id @default(cuid())
   gameId           String
-  anomalyType      String                     // e.g. "SCORELESS_COMPLETED"
+  anomalyType      String // e.g. "SCORELESS_COMPLETED"
   state            String    @default("OPEN") // OPEN | OWNER_REVIEW | RESOLVED | DISMISSED
   firstSeenAt      DateTime  @default(now())
   lastSeenAt       DateTime  @default(now())
@@ -1054,9 +1053,9 @@ model SettlementAnomaly {
   // at last evidence write — stored for query convenience only, never the
   // source of truth for threshold decisions.
   distinctRunCount Int       @default(1)
-  resolutionActor  String?                    // e.g. "settlement-pipeline" | an owner user id
+  resolutionActor  String? // e.g. "settlement-pipeline" | an owner user id
   resolvedAt       DateTime?
-  resolutionReason String?                    // e.g. "scores-arrived"
+  resolutionReason String? // e.g. "scores-arrived"
 
   // RESTRICT (6.2): anomaly history is evidence — never cascade-erased.
   game           Game                      @relation(fields: [gameId], references: [id], onDelete: Restrict)
@@ -1077,8 +1076,8 @@ model SettlementAnomaly {
 model OwnerDecisionRequest {
   id          String   @id @default(cuid())
   anomalyId   String   @unique
-  requestKind String                 // e.g. "SCORELESS_COMPLETED_REVIEW"
-  context     Json                   // game, sightings, corroborating runs at promotion time
+  requestKind String // e.g. "SCORELESS_COMPLETED_REVIEW"
+  context     Json // game, sightings, corroborating runs at promotion time
   createdAt   DateTime @default(now())
 
   anomaly SettlementAnomaly @relation(fields: [anomalyId], references: [id], onDelete: Restrict)
@@ -1096,11 +1095,11 @@ model OwnerDecisionRequest {
 model SettlementDecisionEvent {
   id           String   @id @default(cuid())
   anomalyId    String
-  decisionKind String                 // REVIEW_REQUESTED | ACKNOWLEDGED | WAIT_FOR_SOURCE | MARK_POSTPONED | VOID_PICKS | DISMISS_ANOMALY | RESOLVE_SCORES_ARRIVED
-  actorType    String                 // OWNER | SYSTEM
-  actorReceipt Json                   // {actorType, subjectId, requestId?/runId?, observedAt}
-  priorState   String                 // anomaly state before this event
-  nextState    String                 // anomaly state after this event
+  decisionKind String // REVIEW_REQUESTED | ACKNOWLEDGED | WAIT_FOR_SOURCE | MARK_POSTPONED | VOID_PICKS | DISMISS_ANOMALY | RESOLVE_SCORES_ARRIVED
+  actorType    String // OWNER | SYSTEM
+  actorReceipt Json // {actorType, subjectId, requestId?/runId?, observedAt}
+  priorState   String // anomaly state before this event
+  nextState    String // anomaly state after this event
   reason       String?
   evidence     Json?
   createdAt    DateTime @default(now())
@@ -1120,8 +1119,8 @@ model SettlementDecisionEvent {
 model SettlementDecision {
   id           String   @id @default(cuid())
   anomalyId    String   @unique
-  decisionKind String                 // e.g. "REVIEW_REQUESTED"
-  context      Json                   // game, sightings, distinct runs at promotion time
+  decisionKind String // e.g. "REVIEW_REQUESTED"
+  context      Json // game, sightings, distinct runs at promotion time
   createdAt    DateTime @default(now())
 
   // RESTRICT (6.2): a decision receipt is evidence and must survive.
@@ -1169,7 +1168,7 @@ model PickSettlementEvent {
   // When the settlement-time recipient set was materialized into child rows.
   recipientsMaterializedAt DateTime?
   attemptCount             Int        @default(0)
-  channelOutcomes          Json?                          // legacy per-channel detail (pre-delivery-rows)
+  channelOutcomes          Json? // legacy per-channel detail (pre-delivery-rows)
   createdAt                DateTime   @default(now())
 
   // RESTRICT (6.2): the outbox trail is evidence of what was owed/sent.
@@ -1206,10 +1205,10 @@ model PickSettlementDelivery {
   id                 String    @id @default(cuid())
   eventId            String
   userId             String
-  channel            String              // "push" | "email"
-  destinationId      String              // push subscription id, or sha256(email) — never a raw address
+  channel            String // "push" | "email"
+  destinationId      String // push subscription id, or sha256(email) — never a raw address
   destinationVersion Int       @default(1)
-  idempotencyKey     String    @unique   // eventId:userId:channel:destinationId
+  idempotencyKey     String    @unique // eventId:userId:channel:destinationId
   status             String    @default("PENDING")
   attemptCount       Int       @default(0)
   claimVersion       Int       @default(0)
@@ -1218,9 +1217,9 @@ model PickSettlementDelivery {
   leaseExpiresAt     DateTime?
   nextAttemptAt      DateTime?
   lastErrorCode      String?
-  lastErrorClass     String?             // "retryable" | "permanent" | "infrastructure"
-  attemptHistory     Json?               // append-only array of attempt records
-  latencyMs          Int?                // deliveredAt - event.settledAt (6.8)
+  lastErrorClass     String? // "retryable" | "permanent" | "infrastructure"
+  attemptHistory     Json? // append-only array of attempt records
+  latencyMs          Int? // deliveredAt - event.settledAt (6.8)
   deliveredAt        DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
@@ -1247,7 +1246,7 @@ model OutboxDeadLetterReceipt {
   eventId        String
   userId         String
   channel        String
-  reason         Json      // { errorCode, errorClass, attemptCount }
+  reason         Json // { errorCode, errorClass, attemptCount }
   createdAt      DateTime  @default(now())
   acknowledgedAt DateTime?
 
@@ -1268,7 +1267,7 @@ model OutboxDeadLetterReceipt {
 model PostSettlementWork {
   id           String    @id @default(cuid())
   subjectId    String
-  kind         String              // CLV_GRADE | SNAPSHOT_OUTCOME | TEAM_GAME_LOG
+  kind         String // CLV_GRADE | SNAPSHOT_OUTCOME | TEAM_GAME_LOG
   status       String    @default("PENDING") // PENDING | DONE | FAILED
   attemptCount Int       @default(0)
   lastError    String?
@@ -1284,20 +1283,59 @@ model PostSettlementWork {
 // PERFORMANCE TRACKING
 // ============================================================
 
-model PerformanceSummary {
+// Serialized TeamStrengthFilter state, so the filter survives serverless cold starts.
+// Without this the filter is reconstructed empty on every invocation, sits at ~0.5
+// forever, and can never accumulate the settled observations it needs to learn.
+// One live row per scope (e.g. "nba"); `version` guards the serialized layout.
+model FilterStateSnapshot {
   id           String   @id @default(cuid())
+  scope        String   @unique // e.g. "nba" — one filter per league
+  version      Int
+  observations Int      @default(0) // denormalized from the payload for cheap monitoring
+  payload      Json // the FilterStateSnapshot from @sports/prediction-engine
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  @@map("filter_state_snapshots")
+}
+
+// Shadow-engine predictions. NOT picks: nothing here is published, priced, or shown
+// to a user. This is the single source of truth for offline evaluation — it lets the
+// shadow engine be scored against the live one on the SAME games, with zero customer
+// risk, before any traffic is ever routed to it.
+model ShadowSignal {
+  id             String    @id @default(cuid())
+  gameId         String
+  modelVersion   String
+  shadowProb     Float // the shadow engine's home-win probability
+  marketProb     Float // de-vigged market probability at evaluation time
+  liveConfidence Int? // the live engine's published confidence (0-100), when there was one
+  outcome        Int? // 1 = home win, 0 = away win; null until settled
+  settledAt      DateTime?
+  evaluatedAt    DateTime  @default(now())
+
+  // One shadow row per game per model version — a re-run must update, not duplicate,
+  // or the offline Brier would be computed over repeated observations of one game.
+  @@unique([gameId, modelVersion])
+  @@index([settledAt])
+  @@index([evaluatedAt])
+  @@map("shadow_signals")
+}
+
+model PerformanceSummary {
+  id           String    @id @default(cuid())
   sport        String
   league       String?
   pickType     PickType?
   tier         PickTier?
   modelVersion String
-  totalPicks   Int      @default(0)
-  wins         Int      @default(0)
-  losses       Int      @default(0)
-  pushes       Int      @default(0)
-  winRate      Float    @default(0)
-  period       String   // e.g. "2026-04", "2026-Q1", "all-time"
-  computedAt   DateTime @default(now())
+  totalPicks   Int       @default(0)
+  wins         Int       @default(0)
+  losses       Int       @default(0)
+  pushes       Int       @default(0)
+  winRate      Float     @default(0)
+  period       String // e.g. "2026-04", "2026-Q1", "all-time"
+  computedAt   DateTime  @default(now())
 
   @@unique([sport, pickType, tier, modelVersion, period])
   @@index([sport])
@@ -1356,19 +1394,19 @@ enum PickTier {
 
 // Pick quality grade — visible on card
 enum PickGrade {
-  ELITE_PLAY  // confidence 85+, edge 80+
+  ELITE_PLAY // confidence 85+, edge 80+
   STRONG_PLAY // confidence 75+, edge 65+
-  SOLID_PLAY  // confidence 65+, edge 50+
-  LEAN        // confidence 50+
+  SOLID_PLAY // confidence 65+, edge 50+
+  LEAN // confidence 50+
 }
 
 // Risk classification based on volatility factors
 enum RiskLevel {
-  LOW_RISK       // High bookmaker consensus, deep market
-  MODERATE       // Decent consensus, normal market
-  HIGH_VARIANCE  // Low consensus or thin market
-  INJURY_RISK    // Game-time decision or key injury impact
-  LINE_STEAM     // Fast-moving line (high movement detected)
+  LOW_RISK // High bookmaker consensus, deep market
+  MODERATE // Decent consensus, normal market
+  HIGH_VARIANCE // Low consensus or thin market
+  INJURY_RISK // Game-time decision or key injury impact
+  LINE_STEAM // Fast-moving line (high movement detected)
 }
 
 enum PickResult {
@@ -1475,40 +1513,40 @@ enum MemoryState {
 }
 
 model JarvisMemoryEvent {
-  id                  String      @id @default(cuid())
-  memory_type         MemoryType
-  memory_state        MemoryState @default(candidate)
-  scope               String
-  title               String
-  summary             String      @db.Text
-  full_text           String?     @db.Text
-  source_type         String
-  source_ref          String?
-  source_timestamp    DateTime?
-  actor               String
-  owner               String
-  confidence          Int         // 0–100
-  sensitivity         String      @default("normal") // normal | high | legal | hr | spend
-  tags                String[]
-  related_decision_id String?
-  related_agent_id    String?
+  id                   String      @id @default(cuid())
+  memory_type          MemoryType
+  memory_state         MemoryState @default(candidate)
+  scope                String
+  title                String
+  summary              String      @db.Text
+  full_text            String?     @db.Text
+  source_type          String
+  source_ref           String?
+  source_timestamp     DateTime?
+  actor                String
+  owner                String
+  confidence           Int // 0–100
+  sensitivity          String      @default("normal") // normal | high | legal | hr | spend
+  tags                 String[]
+  related_decision_id  String?
+  related_agent_id     String?
   supersedes_memory_id String?
-  expires_at          DateTime?
-  created_at          DateTime    @default(now())
-  updated_at          DateTime    @updatedAt
-  confirmed_at        DateTime?
-  rejected_at         DateTime?
-  embedding_ref       String?
-  metadata            Json?
-  owner_approval      Boolean     @default(false)
+  expires_at           DateTime?
+  created_at           DateTime    @default(now())
+  updated_at           DateTime    @updatedAt
+  confirmed_at         DateTime?
+  rejected_at          DateTime?
+  embedding_ref        String?
+  metadata             Json?
+  owner_approval       Boolean     @default(false)
 
   /// Optional link to the SubagentRun that created this memory candidate.
   related_agent_run_id String?
 
-  superseded_by JarvisMemoryEvent[]  @relation("MemorySupersession")
-  supersedes    JarvisMemoryEvent?   @relation("MemorySupersession", fields: [supersedes_memory_id], references: [id])
-  decisions     JarvisDecision[]     @relation("MemoryDecisionLink")
-  agent_run     SubagentRun?         @relation("MemoryAgentRunLink", fields: [related_agent_run_id], references: [id], onDelete: SetNull)
+  superseded_by JarvisMemoryEvent[] @relation("MemorySupersession")
+  supersedes    JarvisMemoryEvent?  @relation("MemorySupersession", fields: [supersedes_memory_id], references: [id])
+  decisions     JarvisDecision[]    @relation("MemoryDecisionLink")
+  agent_run     SubagentRun?        @relation("MemoryAgentRunLink", fields: [related_agent_run_id], references: [id], onDelete: SetNull)
 
   @@index([memory_state])
   @@index([memory_type])
@@ -1523,21 +1561,21 @@ model JarvisMemoryEvent {
 }
 
 model JarvisDecision {
-  id                  String   @id @default(cuid())
-  decision_title      String
-  decision_summary    String   @db.Text
-  decision_type       String
-  rationale           String   @db.Text
-  evidence            Json?
+  id                    String    @id @default(cuid())
+  decision_title        String
+  decision_summary      String    @db.Text
+  decision_type         String
+  rationale             String    @db.Text
+  evidence              Json?
   alternatives_rejected Json?
-  owner               String
-  decision_date       DateTime
-  revisit_date        DateTime?
-  outcome             String?  @db.Text
-  status              String   @default("open") // open | resolved | superseded | archived
-  source_refs         Json?
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  owner                 String
+  decision_date         DateTime
+  revisit_date          DateTime?
+  outcome               String?   @db.Text
+  status                String    @default("open") // open | resolved | superseded | archived
+  source_refs           Json?
+  created_at            DateTime  @default(now())
+  updated_at            DateTime  @updatedAt
 
   memory_events JarvisMemoryEvent[] @relation("MemoryDecisionLink")
 
@@ -1582,38 +1620,38 @@ enum SubagentParentReviewStatus {
 }
 
 model AgentHandoff {
-  id                     String                @id @default(cuid())
+  id                      String                @id @default(cuid())
   /// Codename of the council seat initiating the handoff.
-  source_seat            String
+  source_seat             String
   /// Codename of the council seat receiving the handoff.
-  target_seat            String
+  target_seat             String
   /// Human-readable reason for the handoff.
-  reason                 String                @db.Text
+  reason                  String                @db.Text
   /// Task type from the routing rules (e.g. "pick-research", "settlement").
-  task_type              String
+  task_type               String
   /// Supporting evidence text (urls, data references, test ids).
-  evidence_text          String                @db.Text
-  risk_level             AgentHandoffRiskLevel @default(low)
+  evidence_text           String                @db.Text
+  risk_level              AgentHandoffRiskLevel @default(low)
   /// Authority tier of the initiating seat (0–4).
-  authority_tier         Int
-  status                 AgentHandoffStatus    @default(pending)
+  authority_tier          Int
+  status                  AgentHandoffStatus    @default(pending)
   /// Whether this handoff requires explicit owner approval before proceeding.
-  owner_approval_required Boolean             @default(false)
+  owner_approval_required Boolean               @default(false)
   /// Outcome narrative once the handoff is resolved — null until then.
-  outcome                String?               @db.Text
-  created_at             DateTime              @default(now())
-  updated_at             DateTime              @updatedAt
+  outcome                 String?               @db.Text
+  created_at              DateTime              @default(now())
+  updated_at              DateTime              @updatedAt
 
   /// Trusted-actor audit trail: the governed actor (HUMAN admin session, or a
   /// SERVICE/SYSTEM identity for background paths) that logged this handoff.
   /// Nullable + additive — rows written before these columns existed have no
   /// value here, not a fabricated one.
-  actor_subject_id       String?
-  actor_type             String?
-  actor_email            String?
-  policy_version         String?
+  actor_subject_id String?
+  actor_type       String?
+  actor_email      String?
+  policy_version   String?
   /// Immutable ActorReceipt id (directive 4.3). Additive + nullable.
-  actor_receipt_id       String?
+  actor_receipt_id String?
 
   @@index([source_seat, created_at])
   @@index([target_seat, created_at])
@@ -1623,46 +1661,46 @@ model AgentHandoff {
 }
 
 model SubagentRun {
-  id                       String                     @id @default(cuid())
+  id                         String                     @id @default(cuid())
   /// Id of the subagent template that ran (matches SubagentTemplate.id).
-  subagent_id              String
+  subagent_id                String
   /// Codename of the parent council seat that spawned this subagent.
-  parent_seat              String
+  parent_seat                String
   /// Narrow task the subagent was given.
-  task                     String                     @db.Text
+  task                       String                     @db.Text
   /// Context provided as input to the subagent.
-  input_context            String                     @db.Text
+  input_context              String                     @db.Text
   /// Reference to the draft artifact the subagent produced (path, id, or url).
-  output_artifact_ref      String                     @db.Text
+  output_artifact_ref        String                     @db.Text
   /// Confidence score 0–100 in the output.
-  confidence               Int
+  confidence                 Int
   /// Explicit uncertainty statement about the output.
-  uncertainty              String                     @db.Text
+  uncertainty                String                     @db.Text
   /// Supporting evidence for the output.
-  evidence                 String[]
+  evidence                   String[]
   /// True = prohibited-actions check passed; false = violation detected.
-  prohibited_actions_checked Boolean                  @default(false)
+  prohibited_actions_checked Boolean                    @default(false)
   /// Parent seat's review status — pending until parent explicitly reviews.
-  parent_review_status     SubagentParentReviewStatus @default(pending_review)
-  created_at               DateTime                   @default(now())
-  updated_at               DateTime                   @updatedAt
+  parent_review_status       SubagentParentReviewStatus @default(pending_review)
+  created_at                 DateTime                   @default(now())
+  updated_at                 DateTime                   @updatedAt
 
   /// Trusted-actor audit trail: the governed actor that logged this run
   /// (HUMAN admin session, or SERVICE/SYSTEM for background agent paths).
   /// Nullable + additive — see AgentHandoff for the same rule.
-  actor_subject_id         String?
-  actor_type               String?
-  actor_email              String?
+  actor_subject_id    String?
+  actor_type          String?
+  actor_email         String?
   /// Trusted-actor audit trail: the HUMAN actor that reviewed this run.
   /// Distinct from parent_seat (the agent identity) — this is the human.
-  reviewer_subject_id      String?
-  reviewer_type            String?
-  reviewer_email           String?
-  policy_version           String?
+  reviewer_subject_id String?
+  reviewer_type       String?
+  reviewer_email      String?
+  policy_version      String?
   /// Immutable ActorReceipt ids (directive 4.3): logging actor + reviewing
   /// human. Additive + nullable.
-  actor_receipt_id         String?
-  reviewer_receipt_id      String?
+  actor_receipt_id    String?
+  reviewer_receipt_id String?
 
   /// Memory events linked to this run (optional, created by linkMemoryToAgentRun).
   memory_events JarvisMemoryEvent[] @relation("MemoryAgentRunLink")
@@ -1697,12 +1735,12 @@ model SubagentRun {
 // ============================================================
 
 enum OperatorAgent {
-  JARVIS   // orchestration / dashboard / next-actions
-  SARAH    // support / review queue
-  TAL      // engineering / repo / bug tasks
-  SCOUT    // sports research, line movement, news intake
-  AVA      // sports content / media workflow
-  BOBBY    // funnel / subscription / analytics insights
+  JARVIS // orchestration / dashboard / next-actions
+  SARAH // support / review queue
+  TAL // engineering / repo / bug tasks
+  SCOUT // sports research, line movement, news intake
+  AVA // sports content / media workflow
+  BOBBY // funnel / subscription / analytics insights
 }
 
 enum CockpitTaskStatus {
@@ -1746,7 +1784,7 @@ model CockpitTask {
   createdAt        DateTime                @default(now())
   updatedAt        DateTime                @updatedAt
 
-  decisions        CockpitDecision[]
+  decisions CockpitDecision[]
 
   @@index([assignedAgent])
   @@index([status])
@@ -1764,7 +1802,7 @@ model CockpitDecision {
   evidence  Json?
   createdAt DateTime          @default(now())
 
-  task      CockpitTask       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task CockpitTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([taskId, createdAt])
   @@map("cockpit_decisions")
@@ -1821,19 +1859,19 @@ model CreatorAsset {
   status           CreatorAssetStatus           @default(DRAFT)
   complianceStatus CreatorAssetComplianceStatus @default(YELLOW)
 
-  title            String
-  body             String                       @db.Text
-  markdown         String                       @db.Text
-  gateState        String                       @db.VarChar(24)
-  citations        Json                         @default("[]")
-  complianceFlags  Json                         @default("[]")
-  modelVersion     String
+  title           String
+  body            String @db.Text
+  markdown        String @db.Text
+  gateState       String @db.VarChar(24)
+  citations       Json   @default("[]")
+  complianceFlags Json   @default("[]")
+  modelVersion    String
 
-  generatedBy      String
-  generatedAt      DateTime                     @default(now())
-  exportedAt       DateTime?
-  createdAt        DateTime                     @default(now())
-  updatedAt        DateTime                     @updatedAt
+  generatedBy String
+  generatedAt DateTime  @default(now())
+  exportedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   game Game  @relation(fields: [gameId], references: [id], onDelete: Cascade)
   pick Pick? @relation(fields: [pickId], references: [id], onDelete: SetNull)
@@ -1854,31 +1892,31 @@ enum ModelJournalEntryStatus {
 }
 
 model ModelJournalEntry {
-  id                      String                  @id @default(cuid())
-  isoWeek                 Int
-  isoYear                 Int
-  status                  ModelJournalEntryStatus @default(DRAFT)
-  title                   String
-  slug                    String                  @unique
-  body                    String                  @db.Text
-  bodyMarkdown            String                  @db.Text
-  modelVersion            String
+  id           String                  @id @default(cuid())
+  isoWeek      Int
+  isoYear      Int
+  status       ModelJournalEntryStatus @default(DRAFT)
+  title        String
+  slug         String                  @unique
+  body         String                  @db.Text
+  bodyMarkdown String                  @db.Text
+  modelVersion String
 
   referencedPickIds       String[]
   referencedAutopsyIds    String[]
   referencedFactorChanges Json?
 
-  authorEmail             String
-  draftedAt               DateTime                @default(now())
-  reviewedAt              DateTime?
-  publishedAt             DateTime?
-  emailedAt               DateTime?
-  twitterTeasedAt         DateTime?
-  retractedAt             DateTime?
-  retractionReason        String?                 @db.Text
+  authorEmail      String
+  draftedAt        DateTime  @default(now())
+  reviewedAt       DateTime?
+  publishedAt      DateTime?
+  emailedAt        DateTime?
+  twitterTeasedAt  DateTime?
+  retractedAt      DateTime?
+  retractionReason String?   @db.Text
 
-  createdAt               DateTime                @default(now())
-  updatedAt               DateTime                @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([isoYear, isoWeek])
   @@index([status])
@@ -1912,14 +1950,14 @@ model ClaudeApiCallRecord {
 }
 
 model ClaudeApiBudget {
-  id                String   @id @default(cuid())
-  surface           String   @unique
-  monthlyBudgetUsd  Decimal  @db.Decimal(10, 2)
+  id                String    @id @default(cuid())
+  surface           String    @unique
+  monthlyBudgetUsd  Decimal   @db.Decimal(10, 2)
   alertThresholds   Json
-  overrideActive    Boolean  @default(false)
+  overrideActive    Boolean   @default(false)
   overrideExpiresAt DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   @@map("claude_api_budgets")
 }
@@ -1966,7 +2004,7 @@ enum PromotionComplianceStatus {
 
 enum PromotionOfferCategory {
   DEPOSIT_MATCH
-  RISK_FREE_BET    // legacy industry term — display copy must NOT use "risk free"
+  RISK_FREE_BET // legacy industry term — display copy must NOT use "risk free"
   ODDS_BOOST
   BONUS_BET
   SIGNUP_BONUS
@@ -1975,46 +2013,46 @@ enum PromotionOfferCategory {
 }
 
 enum PromotionAffiliateType {
-  CPA           // cost-per-acquisition
-  REVSHARE      // revenue share
+  CPA // cost-per-acquisition
+  REVSHARE // revenue share
   HYBRID
-  NONE          // editorial-only listing
+  NONE // editorial-only listing
 }
 
 model Promotion {
-  id                 String                    @id @default(cuid())
-  slug               String                    @unique
-  sportsbookKey      String                    // e.g. "draftkings", "fanduel"
-  operatorName       String                    // e.g. "DraftKings Sportsbook"
-  headline           String                    // short marketing line (auditable)
-  offerSummary       String                    @db.Text
-  offerCategory      PromotionOfferCategory
-  affiliateType      PromotionAffiliateType    @default(NONE)
-  affiliateUrl       String?
-  termsUrl           String?
-  promoCode          String?
+  id            String                 @id @default(cuid())
+  slug          String                 @unique
+  sportsbookKey String // e.g. "draftkings", "fanduel"
+  operatorName  String // e.g. "DraftKings Sportsbook"
+  headline      String // short marketing line (auditable)
+  offerSummary  String                 @db.Text
+  offerCategory PromotionOfferCategory
+  affiliateType PromotionAffiliateType @default(NONE)
+  affiliateUrl  String?
+  termsUrl      String?
+  promoCode     String?
 
   // Geo gating — store JSON arrays of US state codes (e.g. ["NY","NJ"]).
   // Stored as Json (not String[]) so older Postgres dialects without array
   // support still work and so we can extend to country-state pairs later.
-  eligibleStates     Json                      @default("[]")
-  restrictedStates   Json                      @default("[]")
-  country            String                    @default("US")
-  minimumAge         Int                       @default(21)
+  eligibleStates   Json   @default("[]")
+  restrictedStates Json   @default("[]")
+  country          String @default("US")
+  minimumAge       Int    @default(21)
 
-  status             PromotionStatus           @default(DRAFT)
-  complianceStatus   PromotionComplianceStatus @default(UNREVIEWED)
+  status           PromotionStatus           @default(DRAFT)
+  complianceStatus PromotionComplianceStatus @default(UNREVIEWED)
 
   // Required for public render — both must be non-empty or the public
   // selector refuses to surface the promo.
-  disclosureText        String?                @db.Text
-  responsibleGamingText String?                @db.Text
+  disclosureText        String? @db.Text
+  responsibleGamingText String? @db.Text
 
-  lastReviewedAt     DateTime?
-  reviewedBy         String?                   // free-text reviewer id (matches cockpit pattern)
-  expiresAt          DateTime?
-  createdAt          DateTime                  @default(now())
-  updatedAt          DateTime                  @updatedAt
+  lastReviewedAt DateTime?
+  reviewedBy     String? // free-text reviewer id (matches cockpit pattern)
+  expiresAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([status])
   @@index([complianceStatus])
@@ -2042,34 +2080,34 @@ enum SourceArtifactKind {
 }
 
 enum SourceFreshnessStatus {
-  FRESH       // within the per-category freshness budget
-  AGING       // exceeded soft TTL but within hard TTL
-  STALE       // exceeded hard TTL — blocks publish-ready
-  MISSING     // source category required but no evidence exists
+  FRESH // within the per-category freshness budget
+  AGING // exceeded soft TTL but within hard TTL
+  STALE // exceeded hard TTL — blocks publish-ready
+  MISSING // source category required but no evidence exists
   CONTRADICTORY
 }
 
 enum PublishReadinessStatus {
   PUBLISH_READY
-  HOLD          // recoverable — needs fresher data
-  REVIEW        // requires manual judgement
-  BLOCKED       // hard-failed a compliance gate
+  HOLD // recoverable — needs fresher data
+  REVIEW // requires manual judgement
+  BLOCKED // hard-failed a compliance gate
 }
 
 model SourceCoverageReport {
-  id              String                  @id @default(cuid())
-  artifactKind    SourceArtifactKind
-  artifactId      String                  // matches Pick.id / Promotion.id / etc.
-  readiness       PublishReadinessStatus
-  qualityScore    Int                     // 0..100
-  generatedAt     DateTime                @default(now())
+  id           String                 @id @default(cuid())
+  artifactKind SourceArtifactKind
+  artifactId   String // matches Pick.id / Promotion.id / etc.
+  readiness    PublishReadinessStatus
+  qualityScore Int // 0..100
+  generatedAt  DateTime               @default(now())
   /// Snapshot of per-category status: { ODDS: "FRESH", INJURIES: "AGING", ... }
   /// Stored as JSON so categories can evolve without a migration.
-  categories      Json
+  categories   Json
   /// Free-text rationale: which sources backed the readiness decision,
   /// what is missing, and what the operator should do next.
-  rationale       String                  @db.Text
-  blockers        Json                    @default("[]")
+  rationale    String                 @db.Text
+  blockers     Json                   @default("[]")
 
   @@index([artifactKind, artifactId])
   @@index([readiness])
@@ -2144,7 +2182,7 @@ enum BriefSectionType {
 
 model DailyBrief {
   id                    String          @id @default(cuid())
-  briefDate             DateTime        // UTC date snapshot (00:00:00Z)
+  briefDate             DateTime // UTC date snapshot (00:00:00Z)
   status                BriefStatus     @default(DRAFT)
   visibility            BriefVisibility @default(INTERNAL)
   title                 String
@@ -2153,7 +2191,7 @@ model DailyBrief {
   dataQualitySummary    String?         @db.Text
   manualReviewNotes     String?         @db.Text
   responsibleGamingText String          @db.Text
-  generatedBy           String          // free-text id, matches cockpit pattern
+  generatedBy           String // free-text id, matches cockpit pattern
   reviewedBy            String?
   reviewedAt            DateTime?
   publishedAt           DateTime?
@@ -2170,17 +2208,17 @@ model DailyBrief {
 }
 
 model DailyBriefSection {
-  id              String           @id @default(cuid())
-  briefId         String
-  sectionType     BriefSectionType
-  title           String
-  content         String           @db.Text
-  sortOrder       Int              @default(0)
-  visibility      BriefVisibility  @default(INTERNAL)
-  sourceStatus    String           @default("PENDING") // FRESH | AGING | STALE | MISSING | PENDING
-  requiresReview  Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id             String           @id @default(cuid())
+  briefId        String
+  sectionType    BriefSectionType
+  title          String
+  content        String           @db.Text
+  sortOrder      Int              @default(0)
+  visibility     BriefVisibility  @default(INTERNAL)
+  sourceStatus   String           @default("PENDING") // FRESH | AGING | STALE | MISSING | PENDING
+  requiresReview Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   brief DailyBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
 
@@ -2189,18 +2227,18 @@ model DailyBriefSection {
 }
 
 model DailyBriefItem {
-  id          String           @id @default(cuid())
-  briefId     String
-  itemType    String           // GAME | PICK | PROMOTION | WATCH | TASK
-  label       String
-  value       String           @db.Text
-  metadata    Json?
-  sourceId    String?
-  riskLevel   String           @default("LOW")
-  visibility  BriefVisibility  @default(INTERNAL)
-  sortOrder   Int              @default(0)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id         String          @id @default(cuid())
+  briefId    String
+  itemType   String // GAME | PICK | PROMOTION | WATCH | TASK
+  label      String
+  value      String          @db.Text
+  metadata   Json?
+  sourceId   String?
+  riskLevel  String          @default("LOW")
+  visibility BriefVisibility @default(INTERNAL)
+  sortOrder  Int             @default(0)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 
   brief DailyBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
 
@@ -2209,14 +2247,14 @@ model DailyBriefItem {
 }
 
 model CalibrationProposal {
-  id            String                    @id @default(cuid())
-  modelVersion  String                    // version observed when the proposal was generated
-  kind          CalibrationProposalKind
-  observation   String                    @db.Text
-  proposedChange String                   @db.Text
-  evidence      Json                      // bucket stats, sample size, etc.
-  status        CalibrationProposalStatus @default(OPEN)
-  createdAt     DateTime                  @default(now())
+  id             String                    @id @default(cuid())
+  modelVersion   String // version observed when the proposal was generated
+  kind           CalibrationProposalKind
+  observation    String                    @db.Text
+  proposedChange String                    @db.Text
+  evidence       Json // bucket stats, sample size, etc.
+  status         CalibrationProposalStatus @default(OPEN)
+  createdAt      DateTime                  @default(now())
   acknowledgedBy String?
   acknowledgedAt DateTime?
 
@@ -2312,11 +2350,11 @@ enum ContentSourceType {
 }
 
 enum ContentSourceTrustLevel {
-  AUTHORITATIVE   // first-party / regulator / sportsbook official terms
-  PLATFORM        // generated by our own engine / policy
-  REVIEWED        // third-party but reviewed by an operator
-  UNVERIFIED      // pending verification — cannot back a regulated claim
-  BLOCKED         // operator has explicitly rejected this source
+  AUTHORITATIVE // first-party / regulator / sportsbook official terms
+  PLATFORM // generated by our own engine / policy
+  REVIEWED // third-party but reviewed by an operator
+  UNVERIFIED // pending verification — cannot back a regulated claim
+  BLOCKED // operator has explicitly rejected this source
 }
 
 enum ContentSourceStatus {
@@ -2359,20 +2397,20 @@ enum ContentReviewDecision {
 }
 
 model ContentDraft {
-  id                          String                       @id @default(cuid())
-  title                       String
-  slug                        String                       @unique
-  contentType                 ContentDraftType
-  status                      ContentDraftStatus           @default(DRAFT)
-  visibility                  ContentDraftVisibility       @default(INTERNAL)
+  id          String                 @id @default(cuid())
+  title       String
+  slug        String                 @unique
+  contentType ContentDraftType
+  status      ContentDraftStatus     @default(DRAFT)
+  visibility  ContentDraftVisibility @default(INTERNAL)
 
-  sport                       String?
-  league                      String?
+  sport  String?
+  league String?
 
   // Loose JSON references (no FK cascade — content is evidence, not source).
-  relatedPickIds              Json                         @default("[]")
-  relatedPromotionIds         Json                         @default("[]")
-  relatedBriefIds             Json                         @default("[]")
+  relatedPickIds      Json @default("[]")
+  relatedPromotionIds Json @default("[]")
+  relatedBriefIds     Json @default("[]")
 
   sourceCoverageStatus        ContentSourceCoverageStatus  @default(NEEDS_SOURCE)
   complianceStatus            ContentComplianceStatus      @default(REVIEW_REQUIRED)
@@ -2381,19 +2419,19 @@ model ContentDraft {
   performanceGateStatus       ContentPerformanceGateStatus @default(NOT_APPLICABLE)
   bannedPhraseScanClean       Boolean                      @default(false)
 
-  draftBody                   String                       @db.Text
-  excerpt                     String?                      @db.Text
-  metadata                    Json?
+  draftBody String  @db.Text
+  excerpt   String? @db.Text
+  metadata  Json?
 
-  generatedBy                 String                       // free-text agent or operator id
-  reviewedBy                  String?
-  reviewedAt                  DateTime?
-  publishedAt                 DateTime?                    // never set by the engine — operator-only
-  createdAt                   DateTime                     @default(now())
-  updatedAt                   DateTime                     @updatedAt
+  generatedBy String // free-text agent or operator id
+  reviewedBy  String?
+  reviewedAt  DateTime?
+  publishedAt DateTime? // never set by the engine — operator-only
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  sources                     ContentSource[]
-  reviews                     ContentReview[]
+  sources ContentSource[]
+  reviews ContentReview[]
 
   @@index([status])
   @@index([contentType])
@@ -2416,7 +2454,7 @@ model ContentSource {
   notes        String?                 @db.Text
   createdAt    DateTime                @default(now())
 
-  draft        ContentDraft            @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  draft ContentDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
 
   @@index([draftId])
   @@index([sourceType])
@@ -2425,15 +2463,15 @@ model ContentSource {
 }
 
 model ContentReview {
-  id        String                 @id @default(cuid())
+  id        String                @id @default(cuid())
   draftId   String
-  reviewer  String                 // free-text id, matches cockpit pattern
+  reviewer  String // free-text id, matches cockpit pattern
   decision  ContentReviewDecision
-  notes     String?                @db.Text
+  notes     String?               @db.Text
   evidence  Json?
-  createdAt DateTime               @default(now())
+  createdAt DateTime              @default(now())
 
-  draft     ContentDraft           @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  draft ContentDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
 
   @@index([draftId, createdAt])
   @@map("content_reviews")
@@ -2503,19 +2541,19 @@ enum ModerationAppealStatus {
 // domain rows). Written by lib/auth/actor-receipt.ts ONLY; never updated.
 model ActorReceipt {
   id               String   @id @default(cuid())
-  actorType        String   // HUMAN | SERVICE | SYSTEM
-  subjectId        String   // stable principal id — never empty
-  authMethod       String   // SESSION | SERVICE_CREDENTIAL | SYSTEM_INVARIANT
-  authorityScope   String   // ADMIN | USER | SERVICE | SYSTEM
+  actorType        String // HUMAN | SERVICE | SYSTEM
+  subjectId        String // stable principal id — never empty
+  authMethod       String // SESSION | SERVICE_CREDENTIAL | SYSTEM_INVARIANT
+  authorityScope   String // ADMIN | USER | SERVICE | SYSTEM
   tenant           String?
   project          String?
   requestId        String?
   runId            String?
   observedAt       DateTime // when the actor was minted at the choke point
-  emailSnapshot    String?  // display/audit only, never authority
-  policyVersion    String   // ACTOR_POLICY_VERSION at mint time
-  operation        String?  // SERVICE/SYSTEM: registry-scoped operation
-  credentialMethod String?  // SERVICE/SYSTEM: how the credential was verified
+  emailSnapshot    String? // display/audit only, never authority
+  policyVersion    String // ACTOR_POLICY_VERSION at mint time
+  operation        String? // SERVICE/SYSTEM: registry-scoped operation
+  credentialMethod String? // SERVICE/SYSTEM: how the credential was verified
   createdAt        DateTime @default(now())
 
   @@index([subjectId, observedAt])
@@ -2543,24 +2581,24 @@ model RateLimitCounter {
 
 // A report filed by a user or automated system against content.
 model ModerationReport {
-  id           String                  @id @default(cuid())
-  reporterUserId String?               // null for automated/system/anonymous reports
+  id                String                 @id @default(cuid())
+  reporterUserId    String? // null for automated/system/anonymous reports
   // Trusted-actor audit: reporter's actor type ("HUMAN" for authenticated
   // reports; null for anonymous/system). Additive + nullable.
   reporterActorType String?
   // Immutable ActorReceipt id (directive 4.3) for authenticated reports; null
   // for anonymous reports (no actor exists on that path). Additive + nullable.
   reporterReceiptId String?
-  targetUserId  String
-  contentRef   String                  // opaque ref: "message:<id>", "parlay:<id>", etc.
-  surface      String                  // e.g. "sunday_couch", "brotherhood_table"
-  reason       ModerationReasonCode
-  notes        String?                 @db.Text
-  status       ModerationReportStatus  @default(OPEN)
-  resolvedBy   String?                 // free-text actor id
-  resolvedAt   DateTime?
-  createdAt    DateTime                @default(now())
-  updatedAt    DateTime                @updatedAt
+  targetUserId      String
+  contentRef        String // opaque ref: "message:<id>", "parlay:<id>", etc.
+  surface           String // e.g. "sunday_couch", "brotherhood_table"
+  reason            ModerationReasonCode
+  notes             String?                @db.Text
+  status            ModerationReportStatus @default(OPEN)
+  resolvedBy        String? // free-text actor id
+  resolvedAt        DateTime?
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
 
   actions ModerationAction[]
 
@@ -2574,30 +2612,30 @@ model ModerationReport {
 // A moderation action taken against a user (logged, auditable).
 // Every action MUST have actor + reason — enforced in the service layer.
 model ModerationAction {
-  id           String               @id @default(cuid())
-  actor        String               // trusted actor stable subject id — NEVER empty
+  id             String               @id @default(cuid())
+  actor          String // trusted actor stable subject id — NEVER empty
   // Trusted-actor audit trail: the acting operator's actor type + email
   // snapshot + policy version. Additive + nullable.
-  actorType    String?
-  actorEmail   String?
-  policyVersion String?
+  actorType      String?
+  actorEmail     String?
+  policyVersion  String?
   // Immutable ActorReceipt id (directive 4.3) — the complete audit contract
   // for the acting operator. Additive + nullable (pre-receipt rows keep null).
   actorReceiptId String?
-  targetUserId String
-  contentRef   String?              // optional: the specific content actioned
-  surface      String?
-  action       ModerationActionKind
-  reason       ModerationReasonCode
-  notes        String?              @db.Text
-  reportId     String?              // which report triggered this (optional)
+  targetUserId   String
+  contentRef     String? // optional: the specific content actioned
+  surface        String?
+  action         ModerationActionKind
+  reason         ModerationReasonCode
+  notes          String?              @db.Text
+  reportId       String? // which report triggered this (optional)
   // Time-boxed actions: expiresAt required for MUTE_24H, MUTE_7D, SUSPEND.
   // BAN has no expiry. NUDGE/REMOVE have no expiry.
-  expiresAt    DateTime?
-  createdAt    DateTime             @default(now())
+  expiresAt      DateTime?
+  createdAt      DateTime             @default(now())
 
-  report  ModerationReport?  @relation(fields: [reportId], references: [id], onDelete: SetNull)
-  appeal  ModerationAppeal?
+  report ModerationReport? @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  appeal ModerationAppeal?
 
   @@index([targetUserId, createdAt])
   @@index([action])
@@ -2609,29 +2647,29 @@ model ModerationAction {
 // One appeal per SUSPEND/BAN action; decided by a different reviewer.
 // 7-day SLA enforced in service logic.
 model ModerationAppeal {
-  id           String                @id @default(cuid())
-  actionId     String                @unique  // one appeal per action
-  appellantId  String                // the user who was suspended/banned
-  grounds      String                @db.Text
-  status       ModerationAppealStatus @default(PENDING)
+  id                 String                 @id @default(cuid())
+  actionId           String                 @unique // one appeal per action
+  appellantId        String // the user who was suspended/banned
+  grounds            String                 @db.Text
+  status             ModerationAppealStatus @default(PENDING)
   // The reviewer must NOT be the same actor who took the original action.
   // Enforced in the service layer (canReview check).
-  decidedBy    String?               // trusted reviewer stable subject id
+  decidedBy          String? // trusted reviewer stable subject id
   // Trusted-actor audit trail: reviewer's actor type + email snapshot +
   // policy version. Additive + nullable.
-  reviewerType String?
-  reviewerEmail String?
-  policyVersion String?
+  reviewerType       String?
+  reviewerEmail      String?
+  policyVersion      String?
   // Immutable ActorReceipt ids (directive 4.3): the appellant's receipt at
   // filing and the reviewer's receipt at decision. Additive + nullable.
   appellantReceiptId String?
   reviewerReceiptId  String?
-  decision     String?               @db.Text
-  decidedAt    DateTime?
+  decision           String?                @db.Text
+  decidedAt          DateTime?
   // SLA: appeal must be decided within 7 days of filing.
-  slaDeadline  DateTime              // createdAt + 7 days; computed at creation
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
+  slaDeadline        DateTime // createdAt + 7 days; computed at creation
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
 
   action ModerationAction @relation(fields: [actionId], references: [id], onDelete: Cascade)
 
@@ -2653,10 +2691,10 @@ model ModerationAppeal {
 
 model Player {
   id          String   @id @default(cuid())
-  gsisId      String   @unique  // nflverse player_id / gsis_id (canonical)
+  gsisId      String   @unique // nflverse player_id / gsis_id (canonical)
   fullName    String
   position    String?
-  recentTeam  String?  // denormalized most-recent team abbreviation
+  recentTeam  String? // denormalized most-recent team abbreviation
   headshotUrl String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -2770,7 +2808,7 @@ model DepthChartEntry {
   week       Int
   team       String?
   position   String?
-  depthRank  Int?    // depth_team rank (1 = starter)
+  depthRank  Int? // depth_team rank (1 = starter)
   role       String?
 
   sourceId       String   @default("nflverse")
@@ -2794,11 +2832,11 @@ model DepthChartEntry {
 // ============================================================
 
 model HistoricalGame {
-  id            String  @id @default(cuid())
-  gameKey       String  @unique // nflverse game_id (e.g. "2023_01_KC_DET")
+  id            String @id @default(cuid())
+  gameKey       String @unique // nflverse game_id (e.g. "2023_01_KC_DET")
   season        Int
   week          Int
-  gameType      String  @default("REG") // REG | POST
+  gameType      String @default("REG") // REG | POST
   awayTeam      String // abbreviation
   homeTeam      String
   awayScore     Int?
@@ -2829,14 +2867,14 @@ model HistoricalGame {
 
 model TeamGameEfficiency {
   id            String  @id @default(cuid())
-  gameKey       String  // nflverse game_id
+  gameKey       String // nflverse game_id
   season        Int
   week          Int
   seasonType    String  @default("REG")
-  team          String  // abbreviation
+  team          String // abbreviation
   opponent      String
   isHome        Boolean
-  plays         Int     // offensive plays counted (pass + run)
+  plays         Int // offensive plays counted (pass + run)
   offEpaPerPlay Float
   offSuccess    Float
   defEpaPerPlay Float // allowed
@@ -3332,23 +3370,23 @@ model AiBudgetWindow {
 }
 
 model AiBudgetReservation {
-  id           String @id @default(cuid())
-  invocationId String
-  windowId     String
+  id                 String   @id @default(cuid())
+  invocationId       String
+  windowId           String
   // §10.6 idempotency key: (invocationId, windowId, reservationVersion) is
   // UNIQUE; a duplicate reserve returns the existing hold, never double-holds.
-  reservationVersion Int @default(1)
-  amountUsd    Decimal @db.Decimal(12, 6) // worst case of the ENTIRE attempt plan (§10.4)
+  reservationVersion Int      @default(1)
+  amountUsd          Decimal  @db.Decimal(12, 6) // worst case of the ENTIRE attempt plan (§10.4)
   // §10.1 lifecycle: "HELD" | "PROVISIONALLY_SETTLED" | "RECONCILIATION_HOLD"
   //                | "CONFIRMED_SETTLED" | "RELEASED" | "EXPIRED"
-  state          String
-  provisionalUsd Decimal? @db.Decimal(12, 6) // actual applied pre-reconciliation (PROVISIONALLY_SETTLED)
-  confirmedUsd   Decimal? @db.Decimal(12, 6) // reconciled amount (CONFIRMED_SETTLED only, CHECK-enforced)
-  confirmedKind  String? // "BILLED" | "CREDIT" — required exactly when confirmedUsd is set
-  overage        Boolean  @default(false) // §10.2: provisional actual exceeded the hold
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
-  expiresAt      DateTime // sweeper deadline; the sweeper still verifies authoritative attempt state (§10.1)
+  state              String
+  provisionalUsd     Decimal? @db.Decimal(12, 6) // actual applied pre-reconciliation (PROVISIONALLY_SETTLED)
+  confirmedUsd       Decimal? @db.Decimal(12, 6) // reconciled amount (CONFIRMED_SETTLED only, CHECK-enforced)
+  confirmedKind      String? // "BILLED" | "CREDIT" — required exactly when confirmedUsd is set
+  overage            Boolean  @default(false) // §10.2: provisional actual exceeded the hold
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now())
+  expiresAt          DateTime // sweeper deadline; the sweeper still verifies authoritative attempt state (§10.1)
 
   // §10.6: BOTH parent FKs RESTRICT — financial evidence is never silently
   // deleted out from under a hold, including by deleting the window itself.
@@ -3395,13 +3433,13 @@ model CreditGrantReservationLedger {
 }
 
 model CreditGrantReservation {
-  id                 String    @id @default(cuid())
-  grantId            String
-  amountMinorUnits   BigInt // worst-case estimate HELD against the grant
-  state              String // "HELD" | "SETTLED" | "RELEASED" | "EXPIRED"
-  settledMinorUnits  BigInt? // confirmed actual, set only on SETTLED
-  createdAt          DateTime  @default(now())
-  expiresAt          DateTime // auto-release safety net (a future sweep, mirrors budget.ts)
+  id                String   @id @default(cuid())
+  grantId           String
+  amountMinorUnits  BigInt // worst-case estimate HELD against the grant
+  state             String // "HELD" | "SETTLED" | "RELEASED" | "EXPIRED"
+  settledMinorUnits BigInt? // confirmed actual, set only on SETTLED
+  createdAt         DateTime @default(now())
+  expiresAt         DateTime // auto-release safety net (a future sweep, mirrors budget.ts)
 
   ledger CreditGrantReservationLedger @relation(fields: [grantId], references: [grantId], onDelete: Cascade)
 
@@ -3496,13 +3534,13 @@ model ProcessedEvent {
 // incident stamps the active version (if any) so a later reader can tell
 // which certificate generation was live when the incident was recorded.
 model FormalIncident {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   violationKind String // "GE2_PENDING" | "REJECTED_FP_UNBOUND"
   abstractState Json
   eventIds      Json // the witnessEventId(s) this incident is gated on
   srqcVersion   Int? // soft int reference to SrqcVersion.version — NOT a hard FK
-  status        String   @default("open") // "open" | "acknowledged" | "closed" — OPS-QUEUE state (is anyone still looking at this), NOT a correctness judgment
-  createdAt     DateTime @default(now())
+  status        String    @default("open") // "open" | "acknowledged" | "closed" — OPS-QUEUE state (is anyone still looking at this), NOT a correctness judgment
+  createdAt     DateTime  @default(now())
   // W6 — human review label, orthogonal to `status`. `status` answers "is
   // anyone still looking at this"; `reviewOutcome` answers "was the
   // abstract-state violation this row witnessed a real problem or a

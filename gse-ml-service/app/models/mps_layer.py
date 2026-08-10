@@ -65,9 +65,11 @@ Two further honest caveats:
   ``d`` einsums over the whole batch rather than one dense GEMM. Measured on this CPU
   (4 threads, float32, batch 32/256), TT forward time relative to ``nn.Linear``:
   50->2 = 16x/15x slower, 30->10 = 23x/34x slower, 512->512 = 4.7x/9.1x slower,
-  4096->4096 = 0.82x/1.13x (roughly parity). So even at 2731x fewer parameters the
-  4096 layer is only break-even in wall-clock terms. Choose this layer to save
-  *memory*, not time.
+  4096->4096 = 0.82x/1.13x (roughly parity). These are indicative rather than exact —
+  a re-run on the same machine moved the batch-256 figures by up to 2x, which is what a
+  microbenchmark on a shared box does; the batch-32 column reproduces within ~15%. The
+  conclusion is the stable part: even at 2731x fewer parameters the 4096 layer is only
+  break-even in wall-clock terms, so choose this layer to save *memory*, not time.
 * **TT is a restricted hypothesis class.** A rank-``r`` TT-matrix cannot represent every
   dense matrix. Low ranks are a genuine capacity constraint, not free compression. This
   module makes no claim about accuracy retention on any task.

@@ -1253,7 +1253,14 @@ export type { HedgeAdaptiveDeltaAnalysis } from "./adaptive-delta-analysis.js";
 // Sequential Monte Carlo latent team strength — a direct Murphy-RES
 // (resolution/discrimination) lever: time-evolving independent probabilities
 // with genuine posterior uncertainty instead of point estimates.
-export { TeamStrengthFilter, stableSigmoid, softplus } from "./team-strength-filter.js";
+export {
+  TeamStrengthFilter,
+  stableSigmoid,
+  softplus,
+  // Serialization: lets the filter survive a serverless cold start instead of being
+  // reconstructed empty (and stuck at ~0.5, unable to learn) on every invocation.
+  FILTER_SNAPSHOT_VERSION,
+} from "./team-strength-filter.js";
 export type {
   ResamplingScheme,
   TeamStrengthFilterOptions,
@@ -1261,6 +1268,7 @@ export type {
   TeamPosterior,
   StrengthUpdateReport,
   FilterDiagnostics,
+  FilterStateSnapshot,
 } from "./team-strength-filter.js";
 
 // Information-theoretic selective-publication gate, in bits. The closed-form

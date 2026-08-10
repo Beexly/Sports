@@ -191,6 +191,38 @@ export type StrengthUpdateReport = {
   readonly status: "shadow";
 };
 
+/** Bumped whenever the serialized layout changes; `restore` refuses anything else. */
+export const FILTER_SNAPSHOT_VERSION = 1;
+
+/**
+ * Everything needed to resume a filter exactly. Plain JSON-safe arrays (not
+ * typed arrays) so this survives a database round trip unchanged.
+ */
+export type FilterStateSnapshot = {
+  readonly version: number;
+  readonly nTeams: number;
+  readonly dim: number;
+  readonly nParticles: number;
+  readonly a: number;
+  readonly processNoise: number;
+  readonly sigma: number;
+  readonly homeAdvantage: number;
+  readonly interventionGain: number;
+  readonly initialSd: number;
+  readonly essThreshold: number;
+  readonly resampling: ResamplingScheme;
+  readonly seed: number;
+  readonly loading: readonly number[];
+  readonly states: readonly number[];
+  readonly logWeights: readonly number[];
+  readonly rngState: number;
+  readonly spareNormal: number | null;
+  readonly step: number;
+  readonly observations: number;
+  readonly resampleCount: number;
+  readonly degenerateCount: number;
+};
+
 /** Ops-facing filter health snapshot. */
 export type FilterDiagnostics = {
   /** Number of `predictStates` calls (time steps evolved). */
@@ -215,16 +247,19 @@ export type FilterDiagnostics = {
   readonly status: "shadow";
 };
 
-/** Deterministic PRNG (mulberry32) — matches the package's other seeded modules. */
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
+/**
+ * One mulberry32 step. Written as a pure (state) -> (state, value) function rather
+ * than the usual closure so the generator's position in the stream is READABLE and
+ * RESTORABLE — see `snapshot()`. A closure hides `a`, which would make a rehydrated
+ * filter silently resume from a different point in the random stream and diverge
+ * from the run it claims to continue.
+ */
+function mulberry32Step(state: number): { readonly state: number; readonly value: number } {
+  let a = (state | 0) + 0x6d2b79f5;
+  a |= 0;
+  let t = Math.imul(a ^ (a >>> 15), 1 | a);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return { state: a, value: ((t ^ (t >>> 14)) >>> 0) / 4294967296 };
 }
 
 /**
@@ -306,7 +341,8 @@ export class TeamStrengthFilter {
   /** Scratch for resampled parent indices. */
   private readonly indexBuf: Int32Array;
 
-  private readonly rand: () => number;
+  /** mulberry32 position. Mutable and readable so `snapshot()` can capture it. */
+  private rngState: number;
   /** Box–Muller spare; persists across calls (still fully deterministic). */
   private spareNormal: number | null = null;
 
@@ -408,7 +444,7 @@ export class TeamStrengthFilter {
     this.cumBuf = new Float64Array(this.nParticles);
     this.indexBuf = new Int32Array(this.nParticles);
 
-    this.rand = mulberry32(this.seed);
+    this.rngState = this.seed >>> 0;
 
     // Draw the initial cloud from the (self-consistent) stationary prior N(0, initialSd²).
     for (let i = 0; i < cells; i++) {
@@ -638,6 +674,109 @@ export class TeamStrengthFilter {
   }
 
   /** Ops-facing health snapshot. Pure — does not advance the RNG. */
+  /**
+   * Full serializable state — everything needed to resume this filter EXACTLY.
+   *
+   * This exists because the intended host is serverless (Vercel), where every
+   * invocation constructs a fresh instance. Without rehydration the filter is
+   * permanently cold: it re-draws its prior cloud on each request, has zero
+   * observations behind it, and reports ~0.5 forever. It cannot learn from
+   * settled games no matter how many are fed to it. Persisting and restoring
+   * this snapshot is what makes accumulated evidence real rather than notional.
+   *
+   * `rngState` is included deliberately. Restoring the particles but not the
+   * generator's position would resume from a DIFFERENT point in the random
+   * stream, so the continued run would silently diverge from the trajectory it
+   * claims to continue — defeating the `seed`-based auditability this module's
+   * header promises.
+   *
+   * Config is captured too so `restore` can REFUSE a snapshot whose geometry
+   * does not match, rather than reinterpret the flat particle array under the
+   * wrong shape and return plausible nonsense.
+   */
+  snapshot(): FilterStateSnapshot {
+    return {
+      version: FILTER_SNAPSHOT_VERSION,
+      nTeams: this.nTeams,
+      dim: this.dim,
+      nParticles: this.nParticles,
+      a: this.a,
+      processNoise: this.processNoise,
+      sigma: this.sigma,
+      homeAdvantage: this.homeAdvantage,
+      interventionGain: this.interventionGain,
+      initialSd: this.initialSd,
+      essThreshold: this.essThreshold,
+      resampling: this.resampling,
+      seed: this.seed,
+      loading: Array.from(this.loading),
+      states: Array.from(this.states),
+      logWeights: Array.from(this.logWeights),
+      rngState: this.rngState,
+      spareNormal: this.spareNormal,
+      step: this.stepCount,
+      observations: this.observationCount,
+      resampleCount: this.resampleCountInternal,
+      degenerateCount: this.degenerateCountInternal,
+    };
+  }
+
+  /**
+   * Rebuild a filter from `snapshot()`. Throws RangeError on a version mismatch,
+   * a geometry mismatch, or a wrong-length buffer — structural misuse, same
+   * posture as the constructor. Silently accepting a mismatched snapshot would
+   * reinterpret the particle cloud under the wrong shape and yield confident
+   * nonsense, which is far worse than refusing.
+   */
+  static restore(snapshot: FilterStateSnapshot): TeamStrengthFilter {
+    if (snapshot === null || typeof snapshot !== "object") {
+      throw new RangeError("TeamStrengthFilter.restore: snapshot object is required");
+    }
+    if (snapshot.version !== FILTER_SNAPSHOT_VERSION) {
+      throw new RangeError(
+        `TeamStrengthFilter.restore: snapshot version ${String(snapshot.version)} is not ` +
+          `${FILTER_SNAPSHOT_VERSION}; refusing to guess at the older layout`,
+      );
+    }
+    const filter = new TeamStrengthFilter({
+      nTeams: snapshot.nTeams,
+      dim: snapshot.dim,
+      nParticles: snapshot.nParticles,
+      seed: snapshot.seed,
+      a: snapshot.a,
+      processNoise: snapshot.processNoise,
+      sigma: snapshot.sigma,
+      homeAdvantage: snapshot.homeAdvantage,
+      interventionGain: snapshot.interventionGain,
+      initialSd: snapshot.initialSd,
+      essThreshold: snapshot.essThreshold,
+      resampling: snapshot.resampling,
+      w: snapshot.loading,
+    });
+    const cells = snapshot.nParticles * snapshot.nTeams * snapshot.dim;
+    if (snapshot.states.length !== cells) {
+      throw new RangeError(
+        `TeamStrengthFilter.restore: states has ${snapshot.states.length} entries, expected ` +
+          `${cells} for nParticles=${snapshot.nParticles} nTeams=${snapshot.nTeams} dim=${snapshot.dim}`,
+      );
+    }
+    if (snapshot.logWeights.length !== snapshot.nParticles) {
+      throw new RangeError(
+        `TeamStrengthFilter.restore: logWeights has ${snapshot.logWeights.length} entries, ` +
+          `expected nParticles=${snapshot.nParticles}`,
+      );
+    }
+    filter.states.set(snapshot.states);
+    filter.logWeights.set(snapshot.logWeights);
+    filter.rngState = snapshot.rngState >>> 0;
+    filter.spareNormal = snapshot.spareNormal;
+    filter.stepCount = snapshot.step;
+    filter.observationCount = snapshot.observations;
+    filter.resampleCountInternal = snapshot.resampleCount;
+    filter.degenerateCountInternal = snapshot.degenerateCount;
+    return filter;
+  }
+
   diagnostics(): FilterDiagnostics {
     this.syncWeights();
     const w = this.weightBuf;
@@ -679,14 +818,21 @@ export class TeamStrengthFilter {
   }
 
   /** Seeded standard normal (Box–Muller; u1 guarded away from 0 before the log). */
+  /** One uniform in [0,1) from the serializable stream. */
+  private nextRandom(): number {
+    const step = mulberry32Step(this.rngState);
+    this.rngState = step.state;
+    return step.value;
+  }
+
   private nextNormal(): number {
     const spare = this.spareNormal;
     if (spare !== null) {
       this.spareNormal = null;
       return spare;
     }
-    const u1 = Math.max(this.rand(), Number.EPSILON);
-    const u2 = this.rand();
+    const u1 = Math.max(this.nextRandom(), Number.EPSILON);
+    const u2 = this.nextRandom();
     const radius = Math.sqrt(-2 * Math.log(u1));
     const theta = 2 * Math.PI * u2;
     this.spareNormal = radius * Math.sin(theta);
@@ -847,7 +993,7 @@ export class TeamStrengthFilter {
    */
   private systematicIndices(w: Float64Array, out: Int32Array): void {
     const n = this.nParticles;
-    const u0 = this.rand() / n;
+    const u0 = this.nextRandom() / n;
     let i = 0;
     let cum = w[0]!;
     for (let j = 0; j < n; j++) {
@@ -880,7 +1026,7 @@ export class TeamStrengthFilter {
       return;
     }
     for (let j = 0; j < n; j++) {
-      const u = this.rand() * total;
+      const u = this.nextRandom() * total;
       let lo = 0;
       let hi = n - 1;
       while (lo < hi) {
