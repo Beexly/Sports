@@ -72,9 +72,9 @@ export function standingsWinPctToWinProbs(
   }
   const hfa =
     input.hfaLogit != null && Number.isFinite(input.hfaLogit) ? input.hfaLogit : 0.18;
-  // Discrimination scale: stretch logit margin so strong/weak teams separate more
-  // (RES lever). 1.15 is mild — still derived only from real win%.
-  const DISCRIM = 1.15;
+  // Discrimination scale: mild stretch so strong/weak teams separate (RES lever).
+  // 1.1 — was 1.15; pair with softer blend stretch for Brier/ECE discipline.
+  const DISCRIM = 1.1;
   const marginLogit = (logit(homeWinPct) - logit(awayWinPct) + hfa) * DISCRIM;
   const pHome = clipProb(sigmoid(marginLogit));
   return { pHome, pAway: clipProb(1 - pHome), marginLogit };

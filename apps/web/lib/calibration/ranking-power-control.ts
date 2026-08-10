@@ -338,18 +338,25 @@ export function buildRankingPowerControl(
       minGroupRes: null,
     }).filter((r) => !pauseGroups.includes(r.groupKey));
     const m = packMetrics(filtered.map((r) => ({ p: r.p, y: r.y })));
-    // Prefer higher RES; at RES ties prefer lower Brier; require min n.
     if (m.n < MIN_N_FILTERED || !Number.isFinite(m.res)) continue;
+    // Dual objective: prefer clearing RES floor without exploding Brier past 0.26
+    const brierOk =
+      !Number.isFinite(m.brier) ||
+      m.brier <= Math.max(BRIER_FLOOR + 0.04, (bestProj.brier || 1) + 0.02);
     const resGain = m.res > bestProj.res + 1e-9;
+    const clearsResFloor =
+      m.res >= RES_FLOOR_FOR_MAPS && bestProj.res < RES_FLOOR_FOR_MAPS && brierOk;
     const resTieBetterBrier =
       Math.abs(m.res - bestProj.res) < 1e-9 &&
       Number.isFinite(m.brier) &&
       Number.isFinite(bestProj.brier) &&
       m.brier < bestProj.brier - 1e-9;
-    // Prefer clearing RES floor 0.02 when possible without collapsing n
-    const clearsResFloor =
-      m.res >= RES_FLOOR_FOR_MAPS && bestProj.res < RES_FLOOR_FOR_MAPS;
-    if (clearsResFloor || resGain || resTieBetterBrier) {
+    // Prefer higher RES only if Brier stays disciplined; else take better Brier at similar RES
+    const disciplinedGain =
+      resGain &&
+      Number.isFinite(m.brier) &&
+      (m.brier <= 0.26 || m.brier <= (bestProj.brier || 1) + 0.01);
+    if (clearsResFloor || disciplinedGain || resTieBetterBrier) {
       bestProj = m;
       recommendedDelta = d;
     }

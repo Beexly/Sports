@@ -1,4 +1,7 @@
 // Model version — bump when scoring logic changes.
+// v5.2.5 (2026-08-10): dual-objective selective (RES under Brier cap); live
+// eligibility blend 0.7 indep / 0.3 conf; softer discrimination stretch (1.12 /
+// standings 1.1). Maps/PERFORMANCE_STATS still OFF.
 // v5.2.4 (2026-08-10): RES unlock — live eligibility prefers independent trueProb
 // over market; never invent marketFairProb=0.5; sharpness-weighted independent blend;
 // RPCP selective δ sweep to 0.25. Maps/PERFORMANCE_STATS still OFF.
@@ -14,7 +17,7 @@
 // Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.
 // v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-export const MODEL_VERSION = "v5.2.4";
+export const MODEL_VERSION = "v5.2.5";
 
 // ============================================================
 // Confidence thresholds

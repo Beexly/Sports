@@ -22,6 +22,7 @@ import {
 export type LiveCalPSource =
   | "marketFairProb"
   | "independent_trueProb"
+  | "blend_indep_conf"
   | "confidence_moneyline"
   | "excluded_non_prob_market";
 
@@ -53,10 +54,19 @@ export function resolveLiveCalibrationP(input: {
 
   const fb = (input.factorBreakdown ?? null) as FactorBreakdownLike | null;
   const { pIndependent, marketP } = extractProvenPathProbs(fb);
+  const confP = clamp01(input.confidence / 100);
 
-  // Independent model probability first — drives Murphy RES / ranking power.
+  // Priced independent first — with optional blend toward confidence when conf
+  // is finite (ranking law 0.7 indep / 0.3 conf). Pure independent overfits
+  // soft stretch and inflates Brier/ECE; blend keeps RES while calming REL.
   if (pIndependent != null && pIndependent > 0 && pIndependent < 1) {
-    return { p: clamp01(pIndependent), source: "independent_trueProb" };
+    const blended = clamp01(0.7 * pIndependent + 0.3 * confP);
+    // Use pure independent only when far from conf (model has a real view);
+    // otherwise blend. Always report blend source when conf pulled ≥1pt.
+    if (Math.abs(blended - pIndependent) < 0.01) {
+      return { p: clamp01(pIndependent), source: "independent_trueProb" };
+    }
+    return { p: blended, source: "blend_indep_conf" };
   }
 
   // Real book fair (never synthetic 0.5)
@@ -67,8 +77,7 @@ export function resolveLiveCalibrationP(input: {
   const market = (input.pickType ?? "").toUpperCase();
   // MONEYLINE: confidence is partially price-linked; still provisional
   if (market === "MONEYLINE" || market === "" || market === "UNKNOWN") {
-    const p = clamp01(input.confidence / 100);
-    return { p, source: "confidence_moneyline" };
+    return { p: confP, source: "confidence_moneyline" };
   }
 
   // SPREAD / TOTAL without fair p — exclude from absolute calibration floors
@@ -132,10 +141,10 @@ export function picksToHonestCalibrationSamples(picks: readonly PickForLiveCal[]
   }
 
   const notes = [
-    "Live eligibility p: prefer independent trueProb → real marketFairProb → MONEYLINE confidence/100.",
-    "Synthetic marketFairProb=0.5 ignored (backfill neutral — not a book). SPREAD/TOTAL without fair p excluded.",
+    "Live eligibility p: independent trueProb (blend 0.7/0.3 with confidence when conf pulls) → real marketFairProb → MONEYLINE confidence/100.",
+    "Synthetic marketFairProb=0.5 ignored. SPREAD/TOTAL without fair p excluded. Maps OFF.",
     `Included ${samples.length}; excluded non-prob markets ${excludedNonProb}. Sources: ${JSON.stringify(bySource)}.`,
-    "Maps OFF — no isotonic/platt rewrite of live p. PROVEN still needs floors + streak + publish.",
+    "PROVEN still needs floors + streak + publish. PERFORMANCE_STATS untouched.",
   ];
 
   return {

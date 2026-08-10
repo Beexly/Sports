@@ -5,7 +5,7 @@ import {
 } from "@/lib/calibration/live-calibration-p";
 
 describe("resolveLiveCalibrationP", () => {
-  it("prefers independent trueProb over market (RES unlock)", () => {
+  it("blends independent trueProb with confidence (0.7/0.3)", () => {
     const r = resolveLiveCalibrationP({
       confidence: 80,
       pickType: "MONEYLINE",
@@ -14,8 +14,9 @@ describe("resolveLiveCalibrationP", () => {
         independentEdge: { trueProb: 0.67, priced: true, marketFairProb: 0.55 },
       },
     });
-    expect(r?.source).toBe("independent_trueProb");
-    expect(r?.p).toBeCloseTo(0.67);
+    // 0.7*0.67 + 0.3*0.80 = 0.469+0.24 = 0.709
+    expect(r?.source).toBe("blend_indep_conf");
+    expect(r?.p).toBeCloseTo(0.7 * 0.67 + 0.3 * 0.8, 4);
   });
 
   it("uses real marketFairProb when no independent", () => {
@@ -28,7 +29,7 @@ describe("resolveLiveCalibrationP", () => {
     expect(r?.p).toBeCloseTo(0.55);
   });
 
-  it("ignores synthetic marketFairProb=0.5 and uses independent", () => {
+  it("ignores synthetic marketFairProb=0.5 and uses independent path", () => {
     const r = resolveLiveCalibrationP({
       confidence: 70,
       pickType: "MONEYLINE",
@@ -40,21 +41,8 @@ describe("resolveLiveCalibrationP", () => {
         },
       },
     });
-    expect(r?.source).toBe("independent_trueProb");
-    expect(r?.p).toBeCloseTo(0.61);
-  });
-
-  it("uses independent trueProb when no market", () => {
-    const r = resolveLiveCalibrationP({
-      confidence: 70,
-      pickType: "MONEYLINE",
-      factorBreakdown: {
-        independentEdge: { trueProb: 0.61, priced: true },
-        rankingSource: "independent_trueProb",
-      },
-    });
-    expect(r?.source).toBe("independent_trueProb");
-    expect(r?.p).toBeCloseTo(0.61);
+    expect(r?.source).toBe("blend_indep_conf");
+    expect(r?.p).toBeCloseTo(0.7 * 0.61 + 0.3 * 0.7, 4);
   });
 
   it("excludes spread without fair p", () => {

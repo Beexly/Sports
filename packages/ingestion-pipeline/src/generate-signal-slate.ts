@@ -67,9 +67,9 @@ export function blendIndependentHomeFair(
   let homeP = pairs.reduce((s, x) => s + x.h * x.w, 0) / wSum;
 
   // Mild discrimination stretch when net not a coin flip (model definition, not map).
-  // ×1.25 from 0.5; clip to (0.02, 0.98). Polarity preserved.
+  // ×1.12 from 0.5 (was 1.25 — overconfident, ECE/Brier tax). Polarity preserved.
   if (Math.abs(homeP - 0.5) >= 0.03) {
-    homeP = 0.5 + (homeP - 0.5) * 1.25;
+    homeP = 0.5 + (homeP - 0.5) * 1.12;
   }
 
   return { homeP: clamp01(homeP), sources: pairs.map((p) => p.s) };

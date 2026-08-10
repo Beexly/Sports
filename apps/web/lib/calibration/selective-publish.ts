@@ -131,6 +131,9 @@ export type SweepArtifact = {
 
 /**
  * Offline sweep over δ, e, ρ → pick max Res with n ≥ minN.
+ * Dual objective (2026-08-10): among candidates that do not explode Brier
+ * (≤ baseline + 0.03 or ≤ 0.26), maximize RES. Prevents recommending
+ * high-δ tails that lift RES while Brier → 0.32 (blocks GREEN floors).
  */
 export function selectivePublishSweep(
   rows: readonly SelectiveRow[],
@@ -140,13 +143,19 @@ export function selectivePublishSweep(
     readonly minGroupResList?: readonly (number | null)[];
     readonly groupResMap?: Readonly<Record<string, number>>;
     readonly minN?: number;
+    /** Max allowed Brier above baseline for dual-objective pick (default 0.03). */
+    readonly maxBrierLift?: number;
+    /** Absolute Brier ceiling for dual-objective pick (default 0.26). */
+    readonly brierCeiling?: number;
   },
 ): SweepArtifact {
-  const deltas = options?.deltas ?? [0, 0.08, 0.1, 0.12, 0.15];
+  const deltas = options?.deltas ?? [0, 0.08, 0.1, 0.12, 0.15, 0.18];
   const edges = options?.edges ?? [null, 0.03, 0.05];
   const minGroupResList = options?.minGroupResList ?? [null];
   const minN = options?.minN ?? 50;
   const groupResMap = options?.groupResMap;
+  const maxBrierLift = options?.maxBrierLift ?? 0.03;
+  const brierCeiling = options?.brierCeiling ?? 0.26;
 
   const baseline = metricsOf(rows, {
     delta: 0,
@@ -170,16 +179,45 @@ export function selectivePublishSweep(
     }
   }
 
+  const brierCap = Number.isFinite(baseline.brier)
+    ? Math.min(brierCeiling, baseline.brier + maxBrierLift)
+    : brierCeiling;
+
   let recommended: SelectiveMetrics | null = null;
+  let dual: SelectiveMetrics | null = null;
   for (const m of grid) {
     if (m.n < minN || !Number.isFinite(m.murphyResolution)) continue;
+    // Unconstrained max-RES (legacy)
     if (
       !recommended ||
-      m.murphyResolution > recommended.murphyResolution ||
-      (m.murphyResolution === recommended.murphyResolution && m.n > recommended.n)
+      m.murphyResolution > recommended.murphyResolution + 1e-9 ||
+      (Math.abs(m.murphyResolution - recommended.murphyResolution) < 1e-9 &&
+        m.n > recommended.n)
     ) {
       recommended = m;
     }
+    // Dual: RES under Brier discipline
+    if (Number.isFinite(m.brier) && m.brier <= brierCap + 1e-9) {
+      if (
+        !dual ||
+        m.murphyResolution > dual.murphyResolution + 1e-9 ||
+        (Math.abs(m.murphyResolution - dual.murphyResolution) < 1e-9 &&
+          m.brier < dual.brier - 1e-9)
+      ) {
+        dual = m;
+      }
+    }
+  }
+  // Prefer dual when it has meaningful RES (≥ half of unconstrained, or ≥ 0.008)
+  if (
+    dual &&
+    recommended &&
+    dual.murphyResolution >= Math.min(recommended.murphyResolution * 0.5, recommended.murphyResolution) &&
+    (dual.murphyResolution >= 0.008 || dual.murphyResolution >= recommended.murphyResolution - 0.002)
+  ) {
+    recommended = dual;
+  } else if (dual && !recommended) {
+    recommended = dual;
   }
 
   return {
@@ -189,6 +227,7 @@ export function selectivePublishSweep(
     recommended,
     note:
       "Selective publish reveals ranking tails; does not invent edge. " +
-      "SELECTIVE_PUBLISH_ENABLED default OFF. PROVEN still needs live floors after ranking improves.",
+      "Dual objective: max RES subject to Brier ≤ min(0.26, baseline+0.03). " +
+      "Runtime selective default ON. PROVEN still needs live floors after ranking improves.",
   };
 }
