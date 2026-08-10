@@ -1337,6 +1337,32 @@ export type {
   ForecastSkillFoldState,
 } from "./forecast-skill-eprocess.js";
 
+// Shadow ensemble orchestrator — see the module header for the full "why". Not
+// wired into any live/publishing path; SHADOW ONLY.
+export {
+  LiveOrchestrator,
+} from "./pipeline/live-orchestrator.js";
+export type {
+  OrchestratorOptions,
+  OrchestratorGameContext,
+  ShadowSignalObservation,
+  OrchestratorSettlementResult,
+} from "./pipeline/live-orchestrator.js";
+
+// Stable team-name -> filter-index mapping. Append-only ON PURPOSE: reusing an
+// index silently transfers one team's learned posterior to another, and nothing
+// downstream can detect it. See the module header.
+export {
+  createTeamIndexRegistry,
+  assignTeamIndex,
+  lookupTeamIndex,
+  normalizeTeamKey,
+  teamCount,
+  isValidTeamIndexRegistry,
+  DEFAULT_TEAM_CAPACITY,
+} from "./team-index-registry.js";
+export type { TeamIndexRegistry, AssignTeamIndexResult } from "./team-index-registry.js";
+
 // Consecutive-day Brier health check. Pure/DB-agnostic — see
 // apps/web/lib/ops/calibration-regression-snapshot.ts for the DB-backed series builder.
 export { checkCalibrationHealth } from "./calibration-monitor.js";
