@@ -44,6 +44,39 @@ describe("LiveOrchestrator construction around a restored filter", () => {
   });
 });
 
+describe("LiveOrchestrator forecast-skill persistence", () => {
+  it("resumes an already-hydrated fold state instead of restarting at n=0", () => {
+    const warm = makeOrchestrator(3);
+    warm.registerPendingObservation("g1", 0.7, 0.5);
+    warm.settleGame("g1", 0, 1, 1);
+    const exported = warm.exportForecastSkillState();
+    expect(exported).not.toBeNull();
+    expect(exported!.n).toBe(1);
+
+    const resumed = new LiveOrchestrator({
+      filter: { nTeams: 3, seed: 3, nParticles: 200 },
+      forecastSkillState: exported!,
+    });
+    expect(resumed.currentForecastSkill()!.n).toBe(1);
+    resumed.registerPendingObservation("g2", 0.6, 0.5);
+    resumed.settleGame("g2", 0, 1, 1);
+    expect(resumed.currentForecastSkill()!.n).toBe(2); // continued, not restarted
+  });
+
+  it("registerPendingObservation fixes the cross-invocation gap: settleGame folds nothing without it", () => {
+    const cold = makeOrchestrator(4);
+    // No registerPendingObservation call — simulates settling a game that was
+    // evaluated in a DIFFERENT process (the realistic serverless case), where
+    // pendingObservations was never populated for this gameId.
+    cold.settleGame("g-orphan", 0, 1, 1);
+    expect(cold.currentForecastSkill()!.n).toBe(0); // nothing folded, no crash either
+
+    cold.registerPendingObservation("g-known", 0.65, 0.5);
+    cold.settleGame("g-known", 0, 1, 1);
+    expect(cold.currentForecastSkill()!.n).toBe(1);
+  });
+});
+
 describe("LiveOrchestrator", () => {
   it("evaluates a game with no odds events and no remote endpoints (fully cold-start)", async () => {
     const orch = makeOrchestrator();

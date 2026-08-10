@@ -66,7 +66,19 @@ export interface OrchestratorOptions {
   readonly endpoints?: readonly ModelEndpoint[];
   readonly fetchDeps?: FetchModelPredictionDeps;
   readonly hawkesOptions?: HawkesSteamOptions;
+  /**
+   * Fresh-init options for the forecast-skill fold. IGNORED when
+   * `forecastSkillState` is also supplied (that field wins) — mirrors the
+   * `filter` field's "instance beats options" precedence above.
+   */
   readonly forecastSkillOptions?: ForecastSkillOptions;
+  /**
+   * An already-hydrated fold state (from `exportForecastSkillState()` at a
+   * prior persistence point), so the E-process resumes instead of restarting
+   * at n=0 across a serverless cold start — the same reason `filter` accepts
+   * a restored instance above.
+   */
+  readonly forecastSkillState?: ForecastSkillFoldState;
   /** Forwarded to `robustKellyFraction` as `alpha`. Default module default (0.10). */
   readonly kellyAlpha?: number;
   /** Forwarded to `robustKellyFraction` as `cap`. No default cap. */
@@ -166,7 +178,27 @@ export class LiveOrchestrator {
     this.hawkesOptions = options.hawkesOptions ?? {};
     this.kellyAlpha = options.kellyAlpha;
     this.kellyCap = options.kellyCap;
-    this.forecastSkillState = initForecastSkillFold(options.forecastSkillOptions ?? {});
+    this.forecastSkillState =
+      options.forecastSkillState ?? initForecastSkillFold(options.forecastSkillOptions ?? {});
+  }
+
+  /**
+   * Register a (p, m) pair for `gameId` WITHOUT re-running `evaluateGame` —
+   * for reconstructing pending state from a persisted `ShadowSignal` record
+   * when the process that evaluated the game and the process settling it are
+   * different, which in a serverless deployment is the COMMON case, not the
+   * exception: a game is typically evaluated hours or days before it settles,
+   * almost certainly in a different invocation, so `pendingObservations` (only
+   * ever populated in-memory by `evaluateGame`) is empty at settlement time in
+   * practice. Without this method, `settleGame`'s forecast-skill fold silently
+   * never fires outside a single warm process — the E-process would sit at
+   * n=0 forever regardless of how many real games settle. Call this with the
+   * game's already-persisted `(shadowProb, marketProb)` immediately before
+   * `settleGame`, and the existing fold path picks it up exactly as if
+   * `evaluateGame` had just run in this same process.
+   */
+  registerPendingObservation(gameId: string, p: number, m: number): void {
+    this.pendingObservations.set(gameId, { p, m });
   }
 
   /**
@@ -312,5 +344,14 @@ export class LiveOrchestrator {
   /** The underlying filter instance, for `filter.snapshot()` at persistence time. */
   exportFilter(): TeamStrengthFilter {
     return this.filter;
+  }
+
+  /**
+   * The raw fold state, for persistence — NOT the summarized `ForecastSkillResult`
+   * (which loses the exact running sums needed to resume without drift). Null
+   * only if the constructor's options were refused (see `initForecastSkillFold`).
+   */
+  exportForecastSkillState(): ForecastSkillFoldState | null {
+    return this.forecastSkillState;
   }
 }
