@@ -191,10 +191,11 @@ export async function GET(request: Request): Promise<NextResponse> {
   try {
     // Enrich settled sample with retrospective independent trueProb before metrics.
     // Bounded batch; never invents; never rewrites results/confidence.
+    // Raised 150→250: more independents land per cron tick without thrashing.
     let backfillNote = "backfill: skipped";
     try {
       const bf = await backfillIndependentTrueProb({
-        limit: 150,
+        limit: 250,
         logPrefix: "[cron:calibration-metrics:backfill-indep]",
       });
       backfillNote =
@@ -371,6 +372,13 @@ export async function GET(request: Request): Promise<NextResponse> {
           JSON.stringify(plan, null, 2),
           "utf8",
         ).catch(() => undefined);
+        // Attach to payload notes only if we still have a mutable notes array
+        // that already shipped into payload — plan is durable; log for Vercel.
+        console.info(
+          `[cron:calibration-metrics] proven-path best=${plan.bestScore} pause=${plan.pauseGroups.length} ` +
+            `(res0=${plan.pauseSources.resNearZero.length} sig=${plan.pauseSources.significanceDead.length}) ` +
+            `δ=${plan.defaultDelta} selectiveGainRes=${plan.selectiveGainRes ?? "n/a"}`,
+        );
       } catch {
         /* proven path best-effort */
       }

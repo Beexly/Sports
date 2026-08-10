@@ -2,7 +2,7 @@
  * PROVEN path engine — raise Murphy resolution without lowering floors.
  *
  * Law: maps (Platt/Temp/Isotonic) fix REL, not RES. This module:
- *  1) Ranks sport|market groups; builds pause list (Res≈0)
+ *  1) Ranks sport|market groups; builds pause list (Res≈0 ∪ significance-dead)
  *  2) Sweeps selective thresholds; picks max Res with n ≥ minN
  *  3) Compares ranking scores (confidence vs independent trueProb vs blend)
  *  4) Emits durable plan for ops truth + runtime pause/filter
@@ -20,6 +20,11 @@
  *     honest team-win trueProb under current backfill law — do not dilute coverage).
  *   If none qualify → confidence; pathViable stays honest.
  *
+ * Pause list (2026-08-10 leverage):
+ *   Union of (a) holdout Res≈0 sport|markets and (b) holdout-significance dead
+ *   groups (same criteria as RPCP). RANKING_PAUSE_APPLY still defaults OFF —
+ *   plan pause is advisory until founder enables.
+ *
  * Does NOT set publishedEffective, AUTO_PUBLISH, or lower floors.
  */
 
@@ -35,6 +40,7 @@ import {
   type SelectiveMetrics,
 } from "@/lib/calibration/selective-publish";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
+import { computeHoldoutSignificance } from "@/lib/calibration/holdout-significance";
 
 /** Score kinds that are valid win probabilities (never edge-as-p). */
 export type RankingScoreKind =
@@ -81,6 +87,11 @@ export type ProvenPathPlan = {
   readonly selectiveRecommended: SelectiveMetrics | null;
   readonly selectiveGainRes: number | null;
   readonly pauseGroups: readonly string[];
+  /** How pauseGroups were derived (ops honesty). */
+  readonly pauseSources: {
+    readonly resNearZero: readonly string[];
+    readonly significanceDead: readonly string[];
+  };
   readonly keepGroups: readonly string[];
   readonly defaultDelta: number;
   readonly pathSteps: readonly string[];
@@ -183,6 +194,10 @@ function toSelectiveRows(
   return out;
 }
 
+function unionSorted(a: readonly string[], b: readonly string[]): string[] {
+  return [...new Set([...a, ...b])].sort();
+}
+
 /**
  * Build the full PROVEN path plan from settled rows.
  * minN: minimum after selective for recommendation (default 100 = learning floor).
@@ -256,6 +271,15 @@ export function buildProvenPathPlan(
   const groupResMap: Record<string, number> = {};
   for (const g of holdout.groups) groupResMap[g.groupKey] = g.murphyResolution;
 
+  // Align with RPCP: significance-dead groups join Res≈0 pause list (advisory).
+  const significance = computeHoldoutSignificance(
+    selectiveRows.map((r) => ({ groupKey: r.groupKey, p: r.p, y: r.y })),
+    { minGroupN: 20, alpha: 0.05, minAbsSeparation: 0.02 },
+  );
+  const resNearZero = holdout.pauseCandidates;
+  const significanceDead = significance.pauseCandidates;
+  const pauseGroups = unionSorted(resNearZero, significanceDead);
+
   const sweep = selectivePublishSweep(selectiveRows, {
     deltas: [0, 0.08, 0.1, 0.12, 0.15, 0.18],
     edges: [null, 0.03, 0.05],
@@ -264,10 +288,14 @@ export function buildProvenPathPlan(
     minN,
   });
 
-  const pauseGroups = holdout.pauseCandidates;
-  const keepGroups = holdout.groups
-    .filter((g) => !pauseGroups.includes(g.groupKey))
-    .map((g) => g.groupKey);
+  // Keep = groups seen in either report that are not paused
+  const allGroupKeys = new Set<string>([
+    ...holdout.groups.map((g) => g.groupKey),
+    ...significance.groups.map((g) => g.groupKey),
+  ]);
+  const keepGroups = [...allGroupKeys]
+    .filter((g) => !pauseGroups.includes(g))
+    .sort();
 
   const selectiveGainRes =
     sweep.recommended && Number.isFinite(sweep.baseline.murphyResolution)
@@ -287,6 +315,10 @@ export function buildProvenPathPlan(
     selectiveRecommended: sweep.recommended,
     selectiveGainRes,
     pauseGroups,
+    pauseSources: {
+      resNearZero: [...resNearZero].sort(),
+      significanceDead: [...significanceDead].sort(),
+    },
     keepGroups,
     defaultDelta:
       sweep.recommended?.delta != null && Number.isFinite(sweep.recommended.delta)
@@ -294,7 +326,7 @@ export function buildProvenPathPlan(
         : defaultDelta,
     pathSteps: [
       `1. Use ranking score = ${bestScore} (${polarityNote}) — never edge-as-p`,
-      "2. Pause sport|market groups with Res≈0 (pauseGroups)",
+      `2. Pause sport|market groups with Res≈0 or significance-dead (${pauseGroups.length} advisory; RANKING_PAUSE_APPLY default OFF)`,
       "3. Selective publish |p−0.5|≥δ (and market edge filter when marketP exists)",
       "4. Re-run calibration-metrics on published canonical WIN/LOSS only",
       "5. When Brier≤0.22, ECE≤0.05, Murphy R≤0.05, Res meaningful, n≥100 → streak GREEN×K",
@@ -306,6 +338,7 @@ export function buildProvenPathPlan(
       "Bake-off only uses confidence, independent trueProb, blend_indep_conf, marketFairProb. " +
       "bestScore requires separation > 0 and coverage ≥ 40% of eligible n (ML/SPREAD for independent). " +
       "pIndependent load must be raw trueProb only — never confidence-echo rankingP. " +
+      "pauseGroups = Res≈0 ∪ significance-dead (same as RPCP); apply stays OFF until RANKING_PAUSE_APPLY. " +
       "If selectiveGainRes≈0 and independents still weak, need sport models / features — not maps. " +
       "Maps will not unlock PROVEN.",
     floorsUnchanged: true,

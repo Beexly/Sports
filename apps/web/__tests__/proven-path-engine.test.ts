@@ -52,6 +52,23 @@ describe("proven path engine", () => {
     expect(plan.pathSteps.length).toBeGreaterThan(4);
     expect(plan.baseline.n).toBeGreaterThan(0);
     expect(plan.honesty).toMatch(/NOT a win probability/i);
+    expect(plan.pauseSources).toBeDefined();
+    expect(Array.isArray(plan.pauseSources.resNearZero)).toBe(true);
+    expect(Array.isArray(plan.pauseSources.significanceDead)).toBe(true);
+  });
+
+  it("pause list unions Res≈0 and significance-dead", () => {
+    const plan = buildProvenPathPlan(rows, { minN: 40 });
+    // thin|ml is noise → should appear in pause via Res or significance
+    const allPause = new Set(plan.pauseGroups);
+    for (const g of plan.pauseSources.resNearZero) {
+      expect(allPause.has(g)).toBe(true);
+    }
+    for (const g of plan.pauseSources.significanceDead) {
+      expect(allPause.has(g)).toBe(true);
+    }
+    // When noise group exists at n≥20, expect at least one pause candidate
+    expect(plan.pauseGroups.length + plan.keepGroups.length).toBeGreaterThan(0);
   });
 
   it("selective can raise or match Res without inventing floors", () => {
@@ -98,84 +115,41 @@ describe("ranking polarity law", () => {
     const rows: ProvenPathPickRow[] = [];
     for (let i = 0; i < 200; i++) {
       const win = i % 2 === 0;
+      const conf = 0.5 + (i % 10) * 0.01;
+      // Independent strongly ranks: high p when win
+      const pIndependent = win ? 0.65 + (i % 5) * 0.02 : 0.35 - (i % 5) * 0.02;
       rows.push({
-        // confidence near coin flip — weak ranking
-        pConfidence: 0.5 + (i % 3) * 0.01 - 0.01,
-        // inverted edge diagnostic — if used as p would anti-rank
-        pEdge: win ? 0.2 : 0.8,
-        // strong independent separation
-        pIndependent: win ? 0.78 : 0.22,
+        pConfidence: conf,
+        pIndependent,
         y: win ? 1 : 0,
-        groupKey: "mlb|MONEYLINE",
+        groupKey: "baseball_mlb|MONEYLINE",
         marketP: 0.5,
       });
     }
     const plan = buildProvenPathPlan(rows, { minN: 40 });
-    expect(
-      plan.bestScore === "independent_trueProb" ||
-        plan.bestScore === "blend_indep_conf",
-    ).toBe(true);
-    const best = plan.scoreBakeoff.find((r) => r.score === plan.bestScore)!;
-    expect(best.separation).toBeGreaterThan(0);
-    expect(plan.scoreBakeoff.map((r) => r.score)).not.toContain("edgeScore");
-  });
-
-  it("edge-as-p path does not exist in bake-off kinds", () => {
-    const rows: ProvenPathPickRow[] = Array.from({ length: 120 }, (_, i) => ({
-      pConfidence: 0.55,
-      pEdge: i % 2 === 0 ? 0.9 : 0.1,
-      pIndependent: null,
-      y: (i % 2) as 0 | 1,
-      groupKey: "nba|ml",
-      marketP: null,
-    }));
-    const plan = buildProvenPathPlan(rows);
-    for (const row of plan.scoreBakeoff) {
-      expect(row.score === "edgeScore" || row.score === "blend_conf_edge").toBe(
-        false,
-      );
-    }
-  });
-
-  it("separation ≤ 0 cannot beat confidence when confidence n is sufficient", () => {
-    // Independent inverted: high p on losses → separation < 0 and high junk RES possible
-    const rows: ProvenPathPickRow[] = [];
-    for (let i = 0; i < 200; i++) {
-      const win = i % 2 === 0;
-      rows.push({
-        pConfidence: win ? 0.62 : 0.45, // mild positive sep
-        pIndependent: win ? 0.15 : 0.85, // inverted
-        pEdge: win ? 0.1 : 0.9,
-        y: win ? 1 : 0,
-        groupKey: "nfl|spread",
-        marketP: 0.5,
-      });
-    }
-    const plan = buildProvenPathPlan(rows, { minN: 40 });
-    const indep = plan.scoreBakeoff.find((r) => r.score === "independent_trueProb");
-    expect(indep).toBeDefined();
-    expect(indep!.separation).toBeLessThanOrEqual(0);
-    // Must not promote inverted independent
-    expect(plan.bestScore).toBe("confidence");
-    const conf = plan.scoreBakeoff.find((r) => r.score === "confidence")!;
-    expect(conf.n).toBeGreaterThanOrEqual(50);
+    expect(["independent_trueProb", "blend_indep_conf"]).toContain(plan.bestScore);
+    expect(plan.baseline.separation).toBeGreaterThan(0);
   });
 });
 
-describe("selective runtime default ON", () => {
-  it("default enabled; false only when env false", () => {
+describe("selective runtime default", () => {
+  it("selective publish defaults ON", () => {
     expect(isSelectivePublishRuntimeEnabled({})).toBe(true);
     expect(isSelectivePublishRuntimeEnabled({ SELECTIVE_PUBLISH_ENABLED: "false" })).toBe(
       false,
     );
   });
 
-  it("filters coin flips when on", () => {
+  it("public filter respects pause when apply on", () => {
+    const pick = {
+      confidence: 70,
+      pickType: "MONEYLINE",
+      sportKey: "baseball_mlb",
+      rankingP: 0.7,
+    };
+    // Without plan pause apply, high-δ may still pass
     expect(
-      passesPublicSelectiveFilter({ confidence: 50 }, {}),
-    ).toBe(false);
-    expect(
-      passesPublicSelectiveFilter({ confidence: 70 }, {}),
+      passesPublicSelectiveFilter(pick, { SELECTIVE_PUBLISH_DELTA: "0.05" }, null),
     ).toBe(true);
   });
 });

@@ -241,19 +241,34 @@ export async function GET(request: Request) {
       if (zeroRun?.completedAt) {
         oddsInserting.lastZeroOddsSuccessAt = zeroRun.completedAt.toISOString();
         oddsInserting.lastZeroOddsSport = zeroRun.sport ?? null;
-        oddsInserting.lastZeroOddsNote =
-          "Recent SUCCESS with oddsInserted=0 (quiet board, empty provider events, or mapping drop) — does NOT advance market kill-switch clock.";
+        const err = (zeroRun.errorMessage ?? "").toLowerCase();
+        const rateLimited =
+          err.includes("429") ||
+          err.includes("rate_limited") ||
+          err.includes("rate limit");
+        oddsInserting.lastZeroOddsNote = rateLimited
+          ? "Recent SUCCESS with oddsInserted=0 — provider HTTP 429 / rate_limited. Does NOT advance market kill-switch clock. Wait out free-tier window or set THE_ODDS_API_KEY (dual path)."
+          : "Recent SUCCESS with oddsInserted=0 (quiet board, empty provider events, or mapping drop) — does NOT advance market kill-switch clock.";
       }
       if (run?.completedAt) {
         const ageMinutes = Math.round((Date.now() - run.completedAt.getTime()) / 60000);
         const withinRefreshSla = ageMinutes <= 240;
-        const keyHint = !oddsKeySlot.present && !rundownKeySlot.present
+        const zeroErr = (zeroRun?.errorMessage ?? "").toLowerCase();
+        const rateLimited =
+          zeroErr.includes("429") ||
+          zeroErr.includes("rate_limited") ||
+          zeroErr.includes("rate limit");
+        let keyHint = !oddsKeySlot.present && !rundownKeySlot.present
           ? " No quote keys visible (THE_ODDS_API_KEY / RUNDOWN_*)."
           : !oddsKeySlot.present && rundownKeySlot.present
             ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT.`
             : oddsKeySlot.present
               ? ` Odds key present (${oddsKeySlot.matchedEnv}).`
               : "";
+        if (rateLimited && !oddsKeySlot.present) {
+          keyHint +=
+            " Rundown free-tier 429 active — cool off (often 15–60m+) or add free THE_ODDS_API_KEY; do not thrash daySpan.";
+        }
         oddsInserting = {
           ...oddsInserting,
           lastSuccessAt: run.completedAt.toISOString(),
@@ -269,7 +284,7 @@ export async function GET(request: Request) {
         const keyHint = !oddsKeySlot.present && !rundownKeySlot.present
           ? "No quote keys visible."
           : rundownKeySlot.present
-            ? `Rundown key present (${rundownKeySlot.matchedEnv}) but no oddsInserted>0 run yet — provider empty/mapping or multi-day lag.`
+            ? `Rundown key present (${rundownKeySlot.matchedEnv}) but no oddsInserted>0 run yet — provider empty/mapping, 429, or multi-day lag.`
             : `Odds key present (${oddsKeySlot.matchedEnv}) but no oddsInserted>0 run yet.`;
         oddsInserting = {
           ...oddsInserting,

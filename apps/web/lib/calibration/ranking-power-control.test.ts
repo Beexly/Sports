@@ -37,7 +37,8 @@ function synth(
       pEdge: null,
       pIndependent,
       y,
-      groupKey: `sport${i % groups}|ml`,
+      // ML market so coverage denom matches bake-off (not TOTAL)
+      groupKey: `sport${i % groups}|MONEYLINE`,
       marketP: null,
     });
   }
@@ -57,6 +58,7 @@ describe("buildRankingPowerControl", () => {
     );
     expect(c.honesty).toContain("never lowers floors");
     expect(c.honesty).toContain("Never treats edge as p");
+    expect(c.projected).toHaveProperty("brierGapToFloor");
   });
 
   it("bake-off kinds exclude edge-as-p", () => {
@@ -82,10 +84,27 @@ describe("buildRankingPowerControl", () => {
         c.bestScore,
       ),
     ).toBe(true);
+    // Coverage is vs ML/SPREAD eligible — 90% indep rate on all-ML sample
     expect(c.residual.independentCoverage).toBeGreaterThan(0.7);
   });
 
-  it("posture is compact for ops surface with residual hint", () => {
+  it("reports independentCoverage vs ML/SPREAD not diluted by TOTAL", () => {
+    const ml = synth(100, { signal: true, indepRate: 1 });
+    const totals: RankingPowerRow[] = Array.from({ length: 100 }, (_, i) => ({
+      pConfidence: 0.55,
+      pIndependent: null,
+      y: (i % 2 === 0 ? 1 : 0) as 0 | 1,
+      groupKey: "sport0|TOTAL",
+      marketP: null,
+    }));
+    const c = buildRankingPowerControl([...ml, ...totals]);
+    // 100/100 ML eligible with indep; TOTAL does not dilute
+    expect(c.residual.independentCoverage).toBeGreaterThan(0.95);
+    // vs-all is thinner (~50%)
+    expect(c.residual.independentCoverageVsAll).toBeLessThan(0.6);
+  });
+
+  it("posture is compact for ops surface with residual hint + brier gap", () => {
     const rows = synth(120, { signal: false });
     const c = buildRankingPowerControl(rows);
     const p = rankingPowerPosture(c);
@@ -94,11 +113,15 @@ describe("buildRankingPowerControl", () => {
     expect(p.liveRes).not.toBeNull();
     expect(p.residualOperatorHint).toBeTruthy();
     expect(p.rankingPolarityLaw).toBe("positive_separation_required");
+    expect(p.pauseGroups).not.toBeNull();
+    expect(p).toHaveProperty("projectedBrier");
+    expect(p).toHaveProperty("brierGapToFloor");
   });
 
   it("null control yields honest empty posture", () => {
     const p = rankingPowerPosture(null);
     expect(p.present).toBe(false);
     expect(p.operatorHint).toMatch(/not seeded/i);
+    expect(p.pauseGroups).toBeNull();
   });
 });

@@ -21,7 +21,9 @@ describe("ranking-pause-apply", () => {
     expect(r.pausedGroups).toEqual([]);
     expect(r.source).toBe("none");
     expect(r.planPauseCount).toBe(2);
+    expect(r.planPauseGroups).toEqual(["mlb|ml", "nba|spread"]);
     expect(r.operatorHint).toMatch(/RANKING_PAUSE_APPLY is OFF/i);
+    expect(r.operatorHint).toMatch(/mlb\|ml/);
   });
 
   it("applies plan pause when RANKING_PAUSE_APPLY on", () => {
@@ -31,6 +33,7 @@ describe("ranking-pause-apply", () => {
     );
     expect(r.pausedGroups).toEqual(["mlb|ml"]);
     expect(r.source).toBe("plan");
+    expect(r.planPauseGroups).toEqual(["mlb|ml"]);
   });
 
   it("env SELECTIVE_PAUSE_GROUPS wins over plan", () => {
@@ -53,5 +56,6 @@ describe("ranking-pause-apply", () => {
     expect(p.applyEnabled).toBe(false);
     expect(p.pausedGroupCount).toBe(0);
     expect(p.planPauseCount).toBe(1);
+    expect(p.planPauseGroups).toEqual(["cbb|ml"]);
   });
 });

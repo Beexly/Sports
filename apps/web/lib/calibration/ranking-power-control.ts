@@ -20,6 +20,7 @@
  *   - No public copy, no AUTO_PUBLISH flip, no gate changes.
  *   - Independent modelProb / rankingP is the primary lever; maps never invent RES.
  *   - Conformal coverage is diagnostic only — never eligibility.
+ *   - independentCoverage residual uses ML/SPREAD eligible denom (TOTAL excluded).
  */
 
 import {
@@ -60,8 +61,13 @@ export type RankingPowerRow = {
 };
 
 export type ResidualAttribution = {
-  /** Fraction of sample missing independent rankingP. */
+  /**
+   * Fraction of ML/SPREAD-eligible sample with independent rankingP.
+   * TOTAL excluded from denom (no honest team-win trueProb under backfill law).
+   */
   readonly independentCoverage: number;
+  /** Full-row coverage (legacy diagnostic; may look thinner than ML/SPREAD). */
+  readonly independentCoverageVsAll: number;
   /** RES if we could use independent where present, else confidence. */
   readonly resIfIndependentPreferred: number;
   /** RES after significance-gated pause only (no δ). */
@@ -108,6 +114,9 @@ export type RankingPowerControl = {
     readonly ece: number;
     readonly separation: number;
     readonly deltaRes: number;
+    /** How far projected Brier sits above the 0.22 floor (0 if at/under). */
+    readonly brierGapToFloor: number;
+    readonly wouldPassBrierFloor: boolean;
   };
   readonly residual: ResidualAttribution;
   readonly pathViable: boolean;
@@ -121,6 +130,17 @@ const RES_FLOOR_FOR_MAPS = 0.02;
 const MIN_N_FILTERED = 80;
 /** Independent/blend kinds need ≥40% of ML/SPREAD eligible n to win bestScore. */
 const MIN_COVERAGE = 0.4;
+const BRIER_FLOOR = 0.22;
+
+function isIndepEligibleMarket(groupKey: string): boolean {
+  const market = (groupKey.split("|")[1] ?? "").toUpperCase();
+  return (
+    market === "MONEYLINE" ||
+    market === "SPREAD" ||
+    market === "H2H" ||
+    market === "ML"
+  );
+}
 
 function scoreOf(r: RankingPowerRow, kind: RankingScoreKind): number | null {
   if (kind === "confidence") return r.pConfidence;
@@ -200,15 +220,7 @@ export function buildRankingPowerControl(
   // TOTAL has no honest team-win trueProb — do not dilute independent coverage.
   const indepEligibleN = Math.max(
     1,
-    rows.filter((r) => {
-      const market = (r.groupKey.split("|")[1] ?? "").toUpperCase();
-      return (
-        market === "MONEYLINE" ||
-        market === "SPREAD" ||
-        market === "H2H" ||
-        market === "ML"
-      );
-    }).length,
+    rows.filter((r) => isIndepEligibleMarket(r.groupKey)).length,
   );
 
   for (const kind of kinds) {
@@ -290,10 +302,11 @@ export function buildRankingPowerControl(
     alpha: 0.05,
     minAbsSeparation: 0.02,
   });
-  const pauseGroups = significance.pauseCandidates;
+  const pauseGroups = [...significance.pauseCandidates].sort();
   const keepGroups = significance.groups
     .filter((g) => !pauseGroups.includes(g.groupKey))
-    .map((g) => g.groupKey);
+    .map((g) => g.groupKey)
+    .sort();
 
   const fullSamples: CalibrationSample[] = holdoutRows.map((r) => ({
     p: r.p,
@@ -335,6 +348,9 @@ export function buildRankingPowerControl(
     }
   }
 
+  const brierGapToFloor = Number.isFinite(bestProj.brier)
+    ? Math.max(0, bestProj.brier - BRIER_FLOOR)
+    : NaN;
   const projected = {
     n: bestProj.n,
     res: bestProj.res,
@@ -342,12 +358,21 @@ export function buildRankingPowerControl(
     ece: bestProj.ece,
     separation: bestProj.separation,
     deltaRes: bestProj.res - live.res,
+    brierGapToFloor,
+    wouldPassBrierFloor:
+      Number.isFinite(bestProj.brier) && bestProj.brier <= BRIER_FLOOR && bestProj.n >= 100,
   };
 
   const withIndep = rows.filter(
     (r) => r.pIndependent != null && Number.isFinite(r.pIndependent),
   );
+  const withIndepEligible = withIndep.filter((r) =>
+    isIndepEligibleMarket(r.groupKey),
+  );
+  // Residual coverage matches bake-off: ML/SPREAD eligible denom.
   const independentCoverage =
+    indepEligibleN > 0 ? withIndepEligible.length / indepEligibleN : 0;
+  const independentCoverageVsAll =
     rows.length === 0 ? 0 : withIndep.length / rows.length;
 
   const preferredSamples: CalibrationSample[] = [];
@@ -377,13 +402,13 @@ export function buildRankingPowerControl(
       "Selective + pause lifts RES into useful range — keep ranking score, accumulate filtered GREEN streak.";
   } else if (independentCoverage < 0.35) {
     primaryBottleneck = "missing_independent";
-    residualHint = `Independent rankingP present on only ${(independentCoverage * 100).toFixed(0)}% of sample. Ship priced modelProb / trueProb into factorBreakdown before more maps.`;
+    residualHint = `Independent rankingP present on only ${(independentCoverage * 100).toFixed(0)}% of ML/SPREAD-eligible sample. Ship priced modelProb / trueProb into factorBreakdown before more maps.`;
   } else if (pauseGroups.length > 0 && resAfterPauseOnly - live.res > 0.003) {
     primaryBottleneck = "dead_groups";
-    residualHint = `${pauseGroups.length} sport|market groups are significance-dead. Pause them; RES rises on the remaining keep set.`;
+    residualHint = `${pauseGroups.length} sport|market groups are significance-dead (${pauseGroups.slice(0, 6).join(", ")}${pauseGroups.length > 6 ? "…" : ""}). Pause them (RANKING_PAUSE_APPLY still default OFF); RES rises on the remaining keep set.`;
   } else if (projected.deltaRes > 0.004) {
     primaryBottleneck = "selective_needed";
-    residualHint = `δ=${recommendedDelta} selective filter lifts RES by ${projected.deltaRes.toFixed(4)}. Enable selective runtime after founder review.`;
+    residualHint = `δ=${recommendedDelta} selective filter lifts RES by ${projected.deltaRes.toFixed(4)}. Selective runtime already default ON.`;
   } else {
     primaryBottleneck = "ranking_dead";
     residualHint =
@@ -392,6 +417,7 @@ export function buildRankingPowerControl(
 
   const residual: ResidualAttribution = {
     independentCoverage,
+    independentCoverageVsAll,
     resIfIndependentPreferred,
     resAfterPauseOnly,
     resAfterSelective: projected.res,
@@ -406,9 +432,15 @@ export function buildRankingPowerControl(
     best.rankingSignal &&
     best.separation > 0;
 
+  const brierNote = Number.isFinite(projected.brier)
+    ? projected.wouldPassBrierFloor
+      ? `Projected Brier ${projected.brier.toFixed(4)} ≤ ${BRIER_FLOOR} on filtered sample (advisory — live eligibility still full published set).`
+      : `Projected Brier ${projected.brier.toFixed(4)} still ${brierGapToFloor.toFixed(4)} above floor ${BRIER_FLOOR} — RES gap remains the blocker.`
+    : "Projected Brier n/a.";
+
   const operatorHint = pathViable
-    ? `Path viable under ${bestScore} + pause(${pauseGroups.length}) + δ=${recommendedDelta}. Projected RES ${projected.res.toFixed(4)} (Δ+${projected.deltaRes.toFixed(4)}). Maps still gated until live RES ≥ ${RES_FLOOR_FOR_MAPS}.`
-    : `Ranking power still weak (live RES ${Number.isFinite(liveRes) ? liveRes.toFixed(4) : "n/a"}). Primary bottleneck: ${primaryBottleneck}. ${residualHint}`;
+    ? `Path viable under ${bestScore} + pause(${pauseGroups.length}) + δ=${recommendedDelta}. Projected RES ${projected.res.toFixed(4)} (Δ+${projected.deltaRes.toFixed(4)}). ${brierNote} Maps still gated until live RES ≥ ${RES_FLOOR_FOR_MAPS}.`
+    : `Ranking power still weak (live RES ${Number.isFinite(liveRes) ? liveRes.toFixed(4) : "n/a"}). Primary bottleneck: ${primaryBottleneck}. ${residualHint} ${brierNote}`;
 
   return {
     generatedAt,
@@ -429,7 +461,7 @@ export function buildRankingPowerControl(
     mapsApplyGateOpen,
     operatorHint,
     honesty:
-      "RPCP never lowers floors, never sets AUTO_PUBLISH, never applies maps while RES < 0.02. Never treats edge as p. Conformal coverage ≠ eligibility. PROVEN requires live eligibility GREEN on the published sample after ranking improves.",
+      "RPCP never lowers floors, never sets AUTO_PUBLISH, never applies maps while RES < 0.02. Never treats edge as p. Conformal coverage ≠ eligibility. PROVEN requires live eligibility GREEN on the published sample after ranking improves. independentCoverage = priced / ML∪SPREAD eligible.",
     rankingPolarityLaw: "positive_separation_required",
   };
 }
@@ -444,9 +476,17 @@ export function rankingPowerPosture(
   readonly pathViable: boolean | null;
   readonly liveRes: number | null;
   readonly projectedRes: number | null;
+  readonly projectedBrier: number | null;
+  readonly brierGapToFloor: number | null;
+  readonly wouldPassBrierFloor: boolean | null;
   readonly deltaRes: number | null;
   readonly pauseGroupCount: number | null;
+  /** Advisory pause keys (RANKING_PAUSE_APPLY still default OFF). */
+  readonly pauseGroups: readonly string[] | null;
+  readonly keepGroupCount: number | null;
+  readonly recommendedDelta: number | null;
   readonly independentCoverage: number | null;
+  readonly independentCoverageVsAll: number | null;
   readonly primaryBottleneck: string | null;
   readonly mapsApplyGateOpen: boolean | null;
   readonly residualOperatorHint: string | null;
@@ -461,9 +501,16 @@ export function rankingPowerPosture(
       pathViable: null,
       liveRes: null,
       projectedRes: null,
+      projectedBrier: null,
+      brierGapToFloor: null,
+      wouldPassBrierFloor: null,
       deltaRes: null,
       pauseGroupCount: null,
+      pauseGroups: null,
+      keepGroupCount: null,
+      recommendedDelta: null,
       independentCoverage: null,
+      independentCoverageVsAll: null,
       primaryBottleneck: null,
       mapsApplyGateOpen: null,
       residualOperatorHint: null,
@@ -480,9 +527,20 @@ export function rankingPowerPosture(
     pathViable: control.pathViable,
     liveRes: control.liveRes,
     projectedRes: control.projected.res,
+    projectedBrier: Number.isFinite(control.projected.brier)
+      ? control.projected.brier
+      : null,
+    brierGapToFloor: Number.isFinite(control.projected.brierGapToFloor)
+      ? control.projected.brierGapToFloor
+      : null,
+    wouldPassBrierFloor: control.projected.wouldPassBrierFloor,
     deltaRes: control.projected.deltaRes,
     pauseGroupCount: control.pauseGroups.length,
+    pauseGroups: control.pauseGroups,
+    keepGroupCount: control.keepGroups.length,
+    recommendedDelta: control.recommendedDelta,
     independentCoverage: control.residual.independentCoverage,
+    independentCoverageVsAll: control.residual.independentCoverageVsAll,
     primaryBottleneck: control.residual.primaryBottleneck,
     mapsApplyGateOpen: control.mapsApplyGateOpen,
     residualOperatorHint: control.residual.operatorHint,

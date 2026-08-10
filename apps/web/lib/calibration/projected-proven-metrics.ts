@@ -5,6 +5,8 @@
  *
  * Ranking p law: only win probabilities (confidence / trueProb / blend / market).
  * Never edge-as-p.
+ *
+ * Pause list comes from buildProvenPathPlan (Res≈0 ∪ significance-dead).
  */
 
 import {
@@ -45,6 +47,8 @@ export type ProjectedProvenMetrics = {
   readonly delta: number;
   /** Separation of the bestScore full-sample projection (must be >0 for healthy ranking). */
   readonly bestSeparation: number;
+  /** How far filtered Brier sits above 0.22 (0 if at/under). Advisory only. */
+  readonly brierGapToFloor: number;
 };
 
 function pack(samples: CalibrationSample[]) {
@@ -123,6 +127,10 @@ export function projectProvenPathMetrics(
   const pathViable =
     polarityOk && (deltaRes > 0.005 || wouldPassFloors);
 
+  const brierGapToFloor = Number.isFinite(filtered.brier)
+    ? Math.max(0, filtered.brier - 0.22)
+    : NaN;
+
   let message: string;
   if (!polarityOk) {
     message =
@@ -131,7 +139,7 @@ export function projectProvenPathMetrics(
     message =
       "Selective historical projection MEETS floors — keep filter on; accumulate GREEN streak on live filtered publishes.";
   } else if (deltaRes > 0.005) {
-    message = `Filter lifts Res by ${deltaRes.toFixed(4)} but floors not yet met — keep selective ON and improve ranking features.`;
+    message = `Filter lifts Res by ${deltaRes.toFixed(4)} but floors not yet met (Brier gap ${Number.isFinite(brierGapToFloor) ? brierGapToFloor.toFixed(4) : "n/a"}) — keep selective ON; pause ${plan.pauseGroups.length} dead groups when RANKING_PAUSE_APPLY ready.`;
   } else {
     message =
       "Selective alone barely moves Res — need independent modelProb / sport models (not more maps).";
@@ -151,5 +159,6 @@ export function projectProvenPathMetrics(
     pauseGroups: plan.pauseGroups,
     delta,
     bestSeparation,
+    brierGapToFloor: Number.isFinite(brierGapToFloor) ? brierGapToFloor : 0,
   };
 }

@@ -2,17 +2,18 @@
 
 Integrity: no PERFORMANCE_STATS flip, no invented PROVEN/ROI.
 
-## Track A — edge / PROVEN (engineering) — **DONE for shipable spine**
+## Track A — edge / PROVEN (engineering) — **DONE for shipable spine; Brier still RED**
 
 | Item | Status | Evidence |
 |---|---|---|
 | Persist independent trueProb on **new** picks | **Live** | process-sport + generate-signal-slate write `independentEdge.trueProb` / rankingSource |
-| Backfill settled sample | **Live** | `GET /api/cron/backfill-independent-trueprob` + calibration-metrics batch |
-| Independent coverage ≫ 0% | **~65% ML/SPREAD** | n≈291; bake-off cov vs eligible denom |
+| Backfill settled sample | **Live** | `GET /api/cron/backfill-independent-trueprob` + calibration-metrics batch (250/tick) |
+| Independent coverage ≫ 0% | **~65% ML/SPREAD** | n≈291; bake-off cov vs eligible denom; RPCP residual aligned |
 | Separation > 0 (independent) | **+0.038** | confidence still negative (noise) |
-| bestScore = independent | **Plan yes** | proven-path plan; RPCP aligned on 6db76b86 |
+| bestScore = independent | **Plan yes** | proven-path plan; RPCP aligned |
+| Pause list advisory | **Fixed 2026-08-10** | pause = Res≈0 ∪ significance-dead; apply OFF |
 | Re-run calibration-metrics | **Live** | ECE **0.039 ≤ 0.05**; Brier **0.247 > 0.22** only RED reason; green streak 0 |
-| Odds-insert dual-path visibility | **Live** | public-surface-truth.oddsInserting.dualPath + zero-odds SUCCESS notes |
+| Odds-insert dual-path visibility | **Live** | public-surface-truth.oddsInserting.dualPath + 429 notes |
 | Rundown inserts advance clock | **Blocked external** | HTTP **429** free tier; daySpan=2 + abort + cascade skip shipped |
 
 ### How backfill works
@@ -33,9 +34,9 @@ Integrity: no PERFORMANCE_STATS flip, no invented PROVEN/ROI.
 | Murphy RES | conf 0.002 / indep 0.008 | raise | ranking still thin |
 | separation | conf −0.005 / indep +0.038 | >0 | independent ranks |
 | consecutiveGreen | 0 | K=3 | no publish |
-| bottleneck | dead_groups | — | pause Res≈0 groups (apply OFF) |
+| bottleneck | dead_groups | — | pause Res≈0 ∪ sig-dead (apply OFF) |
 
-**PROVEN still OFF.** Sample + ECE alone ≠ PROVEN.
+**PROVEN still OFF.** Sample + ECE alone ≠ PROVEN. Projected RES under pause+selective still short of Brier floor math.
 
 ### Odds-insert visibility
 
@@ -108,5 +109,6 @@ External Cron workflow remains for when Actions minutes return. Until then produ
 | Defensible ranking / PROVEN | **Not yet** (Brier RED; RES thin) |
 | Full market board | **Not yet** (Rundown 429 / Odds key ABSENT) |
 | Closed revenue loop | **Founder checkout once** |
+| Dead-group pause ready | **Advisory keys now listed; apply still OFF** |
 
-Highest remaining engineering leverage: Brier ↓ via selective + dead-group pause evaluation + more independent settles — **not** new product surfaces.
+Highest remaining engineering leverage: Brier ↓ via independent settles + selective + dead-group pause when founder enables apply + sport models — **not** new product surfaces. See [LEVERAGE_LOOP_2026-08-10.md](./LEVERAGE_LOOP_2026-08-10.md).

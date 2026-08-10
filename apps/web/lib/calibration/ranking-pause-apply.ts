@@ -36,6 +36,8 @@ export function resolvePausedGroups(
   readonly source: "env" | "plan" | "none";
   readonly applyEnabled: boolean;
   readonly planPauseCount: number;
+  /** Advisory keys from plan even when apply is OFF (ops readiness). */
+  readonly planPauseGroups: readonly string[];
   readonly operatorHint: string;
 } {
   const applyEnabled = isRankingPauseApplyEnabled(env);
@@ -56,6 +58,7 @@ export function resolvePausedGroups(
       source: "env",
       applyEnabled,
       planPauseCount,
+      planPauseGroups: planPause,
       operatorHint: `Pause list from SELECTIVE_PAUSE_GROUPS (${envPause.length} groups). Plan recommended ${planPauseCount}.`,
     };
   }
@@ -66,7 +69,8 @@ export function resolvePausedGroups(
       source: "plan",
       applyEnabled: true,
       planPauseCount,
-      operatorHint: `RANKING_PAUSE_APPLY on — applying ${planPauseCount} plan pause group(s). Re-measure RES after settle.`,
+      planPauseGroups: planPause,
+      operatorHint: `RANKING_PAUSE_APPLY on — applying ${planPauseCount} plan pause group(s): ${planPause.slice(0, 6).join(", ")}${planPauseCount > 6 ? "…" : ""}. Re-measure RES after settle.`,
     };
   }
 
@@ -75,9 +79,10 @@ export function resolvePausedGroups(
     source: "none",
     applyEnabled,
     planPauseCount,
+    planPauseGroups: planPause,
     operatorHint:
       planPauseCount > 0
-        ? `Plan recommends pause on ${planPauseCount} sport|market group(s) but RANKING_PAUSE_APPLY is OFF (default). Ops-only until founder enables.`
+        ? `Plan recommends pause on ${planPauseCount} sport|market group(s) [${planPause.slice(0, 6).join(", ")}${planPauseCount > 6 ? "…" : ""}] but RANKING_PAUSE_APPLY is OFF (default). Ops-only until founder enables — do not invent PROVEN.`
         : "No pause groups recommended. Independent coverage / ranking features first.",
   };
 }
@@ -90,6 +95,8 @@ export function rankingPauseApplyPosture(
   readonly source: "env" | "plan" | "none";
   readonly pausedGroupCount: number;
   readonly planPauseCount: number;
+  /** Advisory list when apply OFF — so founder can decide RANKING_PAUSE_APPLY. */
+  readonly planPauseGroups: readonly string[];
   readonly operatorHint: string;
 } {
   const r = resolvePausedGroups(env, plan);
@@ -98,6 +105,7 @@ export function rankingPauseApplyPosture(
     source: r.source,
     pausedGroupCount: r.pausedGroups.length,
     planPauseCount: r.planPauseCount,
+    planPauseGroups: r.planPauseGroups,
     operatorHint: r.operatorHint,
   };
 }
