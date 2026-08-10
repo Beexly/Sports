@@ -1293,6 +1293,12 @@ model FilterStateSnapshot {
   version      Int
   observations Int      @default(0) // denormalized from the payload for cheap monitoring
   payload      Json // the FilterStateSnapshot from @sports/prediction-engine
+  // Team-name -> filter-index map, stored in the SAME row as the payload on
+  // purpose: an index IS a team's latent-slot identity, so a snapshot restored
+  // against a mismatched registry silently attributes one team's learned
+  // strength to another, with nothing downstream able to detect it. Writing
+  // both in one upsert makes that state unrepresentable.
+  teamIndex    Json?
   updatedAt    DateTime @updatedAt
   createdAt    DateTime @default(now())
 
