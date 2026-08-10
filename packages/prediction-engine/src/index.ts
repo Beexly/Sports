@@ -1245,3 +1245,34 @@ export type {
 } from "./online-beta-sliding-window.js";
 export { analyzeAdaptiveDeltaHedge } from "./adaptive-delta-analysis.js";
 export type { HedgeAdaptiveDeltaAnalysis } from "./adaptive-delta-analysis.js";
+
+// R&D — Hawkes-process "steam move" detector (self-exciting intensity over a
+// live odds-event stream). Standalone monitoring signal; not yet wired into
+// any ingestion pipeline. See hawkes-steam.ts's banner for the full model.
+export {
+  HawkesSteamDetector,
+  hawkesIntensity,
+  resolveSteamDirection,
+  DEFAULT_MU,
+  DEFAULT_ALPHA,
+  DEFAULT_BETA,
+  DEFAULT_STEAM_MULTIPLIER,
+  DEFAULT_WINDOW_MS,
+  DEFAULT_DIRECTION_WINDOW_MS,
+} from "./hawkes-steam.js";
+export type { OddsEvent, SteamSignal, HawkesSteamDetectorOptions } from "./hawkes-steam.js";
+
+// R&D — remote model client (experimental gse-ml-service sidecar signals:
+// TDA, IRL, ETKF, free-energy, MPS). Dark, NOT wired into live scoring or any
+// pick-generation path; every built-in config ships `enabled: false`. See
+// remote-model-client.ts's banner for the full promotion-gate rationale.
+export {
+  getRemoteModelPredictions,
+  buildDefaultRemoteModelConfigs,
+  DEFAULT_REMOTE_MODEL_TIMEOUT_MS,
+} from "./remote-model-client.js";
+export type {
+  RemoteModelConfig,
+  RemoteModelPrediction,
+  RemoteModelClientOptions,
+} from "./remote-model-client.js";
