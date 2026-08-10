@@ -52,6 +52,31 @@ export const SURFACE_RECOMMENDED: Record<ClaudeSurface, ModelTier> = {
 };
 
 /**
+ * Hard max_tokens ceilings by surface. Call sites may pass lower values;
+ * jynxComplete / maxTokensForSurface will never exceed these.
+ * Prevents unbounded completions burning Azure CCU / cash.
+ */
+export const SURFACE_MAX_TOKENS: Readonly<Record<ClaudeSurface, number>> = {
+  studio: 4096,
+  journal: 3000,
+  "calibration-insight": 256,
+  "model-court": 2048,
+  content: 2048,
+  brief: 512,
+};
+
+/** Clamp requested max_tokens to the surface ceiling (or default when no surface). */
+export function maxTokensForSurface(
+  surface: ClaudeSurface | undefined,
+  requested?: number,
+  defaultCap = 2048,
+): number {
+  const cap = surface ? (SURFACE_MAX_TOKENS[surface] ?? defaultCap) : defaultCap;
+  if (requested === undefined || Number.isNaN(requested)) return cap;
+  return Math.max(1, Math.min(Math.floor(requested), cap));
+}
+
+/**
  * Resolved catalog: defaults from MODELS, optional env overrides for all tiers.
  * Unset env → byte-identical to MODELS.
  */

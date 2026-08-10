@@ -35,6 +35,10 @@ export interface ClaudeBudgetUsage {
 export interface ClaudeTokenPricing {
   readonly inputUsdPerMillionTokens: number;
   readonly outputUsdPerMillionTokens: number;
+  /** Cache read $/MTok (Anthropic ~0.1× input). Defaults to 0.1× input when omitted. */
+  readonly cacheReadUsdPerMillionTokens?: number;
+  /** Cache write $/MTok (Anthropic ~1.25× input for 5m TTL). Defaults to 1.25× input. */
+  readonly cacheWriteUsdPerMillionTokens?: number;
 }
 
 export const CLAUDE_API_SURFACES: readonly ClaudeApiSurface[] = [
@@ -137,9 +141,12 @@ export const CLAUDE_BUDGET_FALLBACKS: Readonly<Record<ClaudeApiSurface, string>>
     "This generation surface is at capacity for this billing cycle. Existing deterministic data remains available.",
 };
 
+/** Sonnet-class default pricing (used when model-specific pricing unavailable). */
 export const DEFAULT_CLAUDE_TOKEN_PRICING: ClaudeTokenPricing = {
   inputUsdPerMillionTokens: 3,
   outputUsdPerMillionTokens: 15,
+  cacheReadUsdPerMillionTokens: 0.3,
+  cacheWriteUsdPerMillionTokens: 3.75,
 };
 
 export function evaluateClaudeBudgetUsage(
@@ -163,14 +170,45 @@ export function evaluateClaudeBudgetUsage(
   };
 }
 
+/**
+ * Estimate USD for a Claude call.
+ * Legacy 2-arg form (input, output) preserved.
+ * When cache tokens are provided, Anthropic billing semantics apply:
+ *   uncached input + cache_write + cache_read + output.
+ */
 export function estimateClaudeCostUsd(
   inputTokens: number,
   outputTokens: number,
-  pricing: ClaudeTokenPricing = DEFAULT_CLAUDE_TOKEN_PRICING
+  pricing: ClaudeTokenPricing = DEFAULT_CLAUDE_TOKEN_PRICING,
+  cache?: { readonly cacheCreationInputTokens?: number; readonly cacheReadInputTokens?: number },
 ): number {
+  const cacheWriteRate =
+    pricing.cacheWriteUsdPerMillionTokens ?? pricing.inputUsdPerMillionTokens * 1.25;
+  const cacheReadRate =
+    pricing.cacheReadUsdPerMillionTokens ?? pricing.inputUsdPerMillionTokens * 0.1;
+  const writeTok = cache?.cacheCreationInputTokens ?? 0;
+  const readTok = cache?.cacheReadInputTokens ?? 0;
+
   const inputCost = (inputTokens / 1_000_000) * pricing.inputUsdPerMillionTokens;
   const outputCost = (outputTokens / 1_000_000) * pricing.outputUsdPerMillionTokens;
-  return Number((inputCost + outputCost).toFixed(6));
+  const writeCost = (writeTok / 1_000_000) * cacheWriteRate;
+  const readCost = (readTok / 1_000_000) * cacheReadRate;
+  return Number((inputCost + outputCost + writeCost + readCost).toFixed(6));
+}
+
+/**
+ * Cache hit rate for a single call (0–1). High rates mean the system prompt
+ * is paying off. Creation-only calls report 0 until subsequent hits.
+ */
+export function cacheHitRate(usage: {
+  readonly inputTokens: number;
+  readonly cacheCreationInputTokens: number;
+  readonly cacheReadInputTokens: number;
+}): number {
+  const total =
+    usage.inputTokens + usage.cacheCreationInputTokens + usage.cacheReadInputTokens;
+  if (total <= 0) return 0;
+  return usage.cacheReadInputTokens / total;
 }
 
 function statusFromRatio(

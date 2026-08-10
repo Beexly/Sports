@@ -14,7 +14,12 @@
  * verified `VERTEX_MODEL_MAP`; an unmapped model throws rather than guesses.
  */
 import { parseServiceAccountJson, fetchAccessToken, type ServiceAccountKey } from "./google-oauth";
-import type { ClaudeMessagesResult } from "../messages";
+import {
+  buildSystemField,
+  parseAnthropicUsage,
+  type AnthropicUsageShape,
+  type ClaudeMessagesResult,
+} from "../messages";
 
 type Env = Record<string, string | undefined>;
 
@@ -118,7 +123,7 @@ interface AnthropicTextBlock {
 }
 interface VertexResponse {
   readonly content?: readonly AnthropicTextBlock[];
-  readonly usage?: { readonly input_tokens?: number; readonly output_tokens?: number };
+  readonly usage?: AnthropicUsageShape;
 }
 
 export interface VertexMessagesRequest {
@@ -157,9 +162,7 @@ export async function callVertexClaudeMessages(
     `https://${config.region}-aiplatform.googleapis.com/v1/projects/${config.project}` +
     `/locations/${config.region}/publishers/anthropic/models/${modelId}:rawPredict`;
 
-  const systemField = request.cache?.system
-    ? [{ type: "text" as const, text: request.system, cache_control: { type: "ephemeral" as const } }]
-    : request.system;
+  const systemField = buildSystemField(request.system, request.cache);
 
   const body = JSON.stringify({
     anthropic_version: VERTEX_ANTHROPIC_VERSION,
@@ -196,11 +199,15 @@ export async function callVertexClaudeMessages(
     });
   }
 
+  const usage = parseAnthropicUsage(payload.usage);
+
   return {
     text: text.trim(),
     modelName: modelId,
-    inputTokens: payload.usage?.input_tokens ?? 0,
-    outputTokens: payload.usage?.output_tokens ?? 0,
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
+    cacheCreationInputTokens: usage.cacheCreationInputTokens,
+    cacheReadInputTokens: usage.cacheReadInputTokens,
     durationMs,
   };
 }

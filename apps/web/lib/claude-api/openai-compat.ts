@@ -113,11 +113,13 @@ export async function callOpenAiCompatMessages(
     });
   }
 
-  return {
+    return {
     text,
     modelName: ledgerModel,
     inputTokens: payload.usage?.prompt_tokens ?? 0,
     outputTokens: payload.usage?.completion_tokens ?? 0,
+    cacheCreationInputTokens: 0,
+    cacheReadInputTokens: 0,
     durationMs,
   };
 }

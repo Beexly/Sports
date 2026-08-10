@@ -100,7 +100,7 @@ export async function callInternalLlm(request: InternalLlmRequest): Promise<Inte
     const payload = (await res.json()) as OpenAiChatResponse;
     const text = payload.choices?.[0]?.message?.content?.trim();
     if (!text) throw new InternalLlmError("Internal LLM returned no content", res.status);
-    return {
+            return {
       text,
       model,
       inputTokens: payload.usage?.prompt_tokens ?? 0,

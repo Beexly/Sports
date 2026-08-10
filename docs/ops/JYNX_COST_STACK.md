@@ -4,7 +4,8 @@
 **coherent stack** that makes free-lane, AWS, Azure, Google, tier routing, and  
 cash fallback **feed into each other** instead of competing.
 
-Code: `apps/web/lib/claude-api/jynx.ts` · `jynx-complete.ts` · `free-lane*` · `provider-dispatch.ts` · `model-router.ts`
+Code: `apps/web/lib/claude-api/jynx.ts` · `jynx-complete.ts` · `free-lane*` · `provider-dispatch.ts` · `model-router.ts`  
+**Prompt caching / CCU stretch:** [`PROMPT_CACHING.md`](./PROMPT_CACHING.md)
 
 ---
 
@@ -46,6 +47,7 @@ tier routing always applies to Anthropic-model-id before maps.
 | 5 | **Anthropic cash** | last resort / emergency | Same models, real $ |
 | — | **Haiku tier** | brief, calibration-insight | Cheap Claude when on cloud/cash |
 | — | **Sonnet tier** | studio, journal, content, court | Default reasoning |
+| — | **Prompt cache** | static system + `cache.system` | ~0.1× input on hits |
 | — | **Internal LLM** | classify only | Never public claims |
 | — | **Claude Max Pro** | human coding agents | Outside runtime |
 
@@ -116,4 +118,4 @@ Pass = free-lane content shows `gpt-oss*`; studio shows cloud id not plain `clau
 - Never invent model map ids  
 - LIVE_BOARD / public picks stay gated by product law — Jynx is cost routing only  
 
-See also: `JYNX_FAILOVER_AND_MODEL_MAPS.md` · `JYNX_VS_AI_GATEWAYS.md` · `JYNX_MARKET_TIER_MAP.md` · `JYNX_OPEN_WEIGHT_FREE_MAP.md` · `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`
+See also: `PROMPT_CACHING.md` · `JYNX_FAILOVER_AND_MODEL_MAPS.md` · `JYNX_VS_AI_GATEWAYS.md` · `JYNX_MARKET_TIER_MAP.md` · `JYNX_OPEN_WEIGHT_FREE_MAP.md` · `CLOUD_CREDIT_LAUNCH_MAP.md` · `CREDIT_ENV_ACTIVATION_CHECKLIST.md` · `FUNDING_PARTNERSHIP_ALIGNMENT_MASTER.md`

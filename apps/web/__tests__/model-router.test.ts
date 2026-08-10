@@ -4,16 +4,32 @@ import {
   ALL_SURFACES,
   pickModelForSurface,
   resolveModelCatalog,
+  maxTokensForSurface,
+  SURFACE_MAX_TOKENS,
 } from "@/lib/claude-api/model-router";
-import { callClaudeMessages } from "@/lib/claude-api/messages";
+import {
+  callClaudeMessages,
+  parseAnthropicUsage,
+  buildSystemField,
+} from "@/lib/claude-api/messages";
+import { estimateClaudeCostUsd, cacheHitRate } from "@/lib/claude-api/cost-monitor";
 
-function capturingFetch(captured: { body?: string }): typeof fetch {
+function capturingFetch(captured: { body?: string }, usage?: Record<string, number>): typeof fetch {
   return (async (_url: string, init: { body: string }) => {
     captured.body = init.body;
     return new Response(
       JSON.stringify({
         content: [{ type: "text", text: "ok" }],
-        usage: { input_tokens: 1, output_tokens: 1 },
+        usage: {
+          input_tokens: usage?.input_tokens ?? 1,
+          output_tokens: usage?.output_tokens ?? 1,
+          ...(usage?.cache_creation_input_tokens !== undefined
+            ? { cache_creation_input_tokens: usage.cache_creation_input_tokens }
+            : {}),
+          ...(usage?.cache_read_input_tokens !== undefined
+            ? { cache_read_input_tokens: usage.cache_read_input_tokens }
+            : {}),
+        },
       }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
@@ -66,6 +82,13 @@ describe("model router", () => {
     expect(opusOver.opus).toBe("claude-opus-market-custom");
     expect(opusOver.sonnet).toBe(MODELS.sonnet);
   });
+
+  it("clamps max_tokens to surface ceilings", () => {
+    expect(maxTokensForSurface("brief", 99999)).toBe(SURFACE_MAX_TOKENS.brief);
+    expect(maxTokensForSurface("calibration-insight", 50)).toBe(50);
+    expect(maxTokensForSurface("studio")).toBe(SURFACE_MAX_TOKENS.studio);
+    expect(maxTokensForSurface(undefined, 5000)).toBe(2048);
+  });
 });
 
 describe("callClaudeMessages — surface routing + prompt caching", () => {
@@ -111,5 +134,49 @@ describe("callClaudeMessages — surface routing + prompt caching", () => {
     });
     const body = JSON.parse(captured.body!);
     expect(body.model).toBe(MODELS.sonnet);
+  });
+
+  it("surfaces cache create/read tokens on the result", async () => {
+    const captured: { body?: string } = {};
+    const result = await callClaudeMessages({
+      apiKey: "k",
+      system: "SYS",
+      user: "U",
+      maxTokens: 10,
+      cache: { system: true },
+      fetchImpl: capturingFetch(captured, {
+        input_tokens: 20,
+        output_tokens: 5,
+        cache_creation_input_tokens: 2000,
+        cache_read_input_tokens: 0,
+      }),
+    });
+    expect(result.cacheCreationInputTokens).toBe(2000);
+    expect(result.cacheReadInputTokens).toBe(0);
+    expect(result.inputTokens).toBe(20);
+  });
+
+  it("buildSystemField + parseAnthropicUsage helpers are pure", () => {
+    expect(buildSystemField("S")).toBe("S");
+    expect(buildSystemField("S", { system: true })).toEqual([
+      { type: "text", text: "S", cache_control: { type: "ephemeral" } },
+    ]);
+    expect(parseAnthropicUsage({ input_tokens: 1, cache_read_input_tokens: 9 })).toEqual({
+      inputTokens: 1,
+      outputTokens: 0,
+      cacheCreationInputTokens: 0,
+      cacheReadInputTokens: 9,
+    });
+  });
+
+  it("prices cache reads cheaper than uncached input", () => {
+    const uncached = estimateClaudeCostUsd(10_000, 0);
+    const cached = estimateClaudeCostUsd(0, 0, undefined, {
+      cacheReadInputTokens: 10_000,
+    });
+    expect(cached).toBeLessThan(uncached);
+    expect(cacheHitRate({ inputTokens: 100, cacheCreationInputTokens: 0, cacheReadInputTokens: 900 })).toBeCloseTo(
+      0.9,
+    );
   });
 });

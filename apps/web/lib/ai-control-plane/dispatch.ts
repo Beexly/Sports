@@ -158,12 +158,13 @@ export function dispatchAnthropicDirect(env: Env = process.env): ProviderDispatc
     const apiKey = env["ANTHROPIC_API_KEY"];
     if (!apiKey) return notConfigured("ANTHROPIC_API_KEY missing");
     try {
-      const result = await callClaudeMessages({
+            const result = await callClaudeMessages({
         apiKey,
         model: payload.modelRequested,
         system: payload.system,
         user: payload.user,
         maxTokens: payload.maxTokens,
+        cache: { system: true },
         ...(payload.temperature !== undefined ? { temperature: payload.temperature } : {}),
         ...(payload.fetchImpl ? { fetchImpl: payload.fetchImpl } : {}),
       });
@@ -178,12 +179,13 @@ export function dispatchBedrock(env: Env = process.env): ProviderDispatchFn {
   return async (payload) => {
     if (!isBedrockConfigured(env)) return notConfigured("bedrock env missing");
     try {
-      const result = await callBedrockClaudeMessages(
+            const result = await callBedrockClaudeMessages(
         {
           anthropicModelId: payload.modelRequested,
           system: payload.system,
           user: payload.user,
           maxTokens: payload.maxTokens,
+          cache: { system: true },
           ...(payload.temperature !== undefined ? { temperature: payload.temperature } : {}),
           ...(payload.fetchImpl ? { fetchImpl: payload.fetchImpl } : {}),
         },
@@ -200,12 +202,13 @@ export function dispatchVertex(env: Env = process.env): ProviderDispatchFn {
   return async (payload) => {
     if (!isVertexConfigured(env)) return notConfigured("vertex env missing");
     try {
-      const result = await callVertexClaudeMessages(
+            const result = await callVertexClaudeMessages(
         {
           anthropicModelId: payload.modelRequested,
           system: payload.system,
           user: payload.user,
           maxTokens: payload.maxTokens,
+          cache: { system: true },
           ...(payload.temperature !== undefined ? { temperature: payload.temperature } : {}),
           ...(payload.fetchImpl ? { fetchImpl: payload.fetchImpl } : {}),
         },

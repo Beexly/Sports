@@ -20,7 +20,12 @@
  * (anthropic id → bedrock id). An unmapped model throws rather than guesses.
  */
 import { signRequest, awsUriEncode } from "./aws-sigv4";
-import type { ClaudeMessagesResult } from "../messages";
+import {
+  buildSystemField,
+  parseAnthropicUsage,
+  type AnthropicUsageShape,
+  type ClaudeMessagesResult,
+} from "../messages";
 
 type Env = Record<string, string | undefined>;
 
@@ -110,7 +115,7 @@ interface AnthropicTextBlock {
 }
 interface BedrockInvokeResponse {
   readonly content?: readonly AnthropicTextBlock[];
-  readonly usage?: { readonly input_tokens?: number; readonly output_tokens?: number };
+  readonly usage?: AnthropicUsageShape;
 }
 
 export interface BedrockMessagesRequest {
@@ -150,9 +155,7 @@ export async function callBedrockClaudeMessages(
   const canonicalUri = `/model/${awsUriEncode(bedrockModelId, true)}/invoke`;
   const endpoint = `https://${host}${canonicalUri}`;
 
-  const systemField = request.cache?.system
-    ? [{ type: "text" as const, text: request.system, cache_control: { type: "ephemeral" as const } }]
-    : request.system;
+  const systemField = buildSystemField(request.system, request.cache);
 
   const body = JSON.stringify({
     anthropic_version: BEDROCK_ANTHROPIC_VERSION,
@@ -203,11 +206,15 @@ export async function callBedrockClaudeMessages(
     });
   }
 
+  const usage = parseAnthropicUsage(payload.usage);
+
   return {
     text: text.trim(),
     modelName: bedrockModelId,
-    inputTokens: payload.usage?.input_tokens ?? 0,
-    outputTokens: payload.usage?.output_tokens ?? 0,
+    inputTokens: usage.inputTokens,
+    outputTokens: usage.outputTokens,
+    cacheCreationInputTokens: usage.cacheCreationInputTokens,
+    cacheReadInputTokens: usage.cacheReadInputTokens,
     durationMs,
   };
 }
