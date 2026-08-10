@@ -18,7 +18,7 @@
  * pipeline, never take down the caller.
  */
 
-import { db } from "@sports/db";
+import { db, Prisma } from "@sports/db";
 import {
   TeamStrengthFilter,
   FILTER_SNAPSHOT_VERSION,
@@ -28,7 +28,44 @@ import {
   type FilterStateSnapshot,
   type TeamStrengthFilterOptions,
   type TeamIndexRegistry,
+  type ForecastSkillFoldState,
 } from "@sports/prediction-engine";
+
+/**
+ * Light structural check for a persisted `ForecastSkillFoldState` — much
+ * cheaper than `isValidTeamIndexRegistry` because the failure mode here is
+ * low-stakes (worst case: the fold resets to n=0), unlike a mismatched team
+ * registry (which can silently misattribute one team's learned strength to
+ * another). Rejects anything that isn't a plausible fold state rather than
+ * feeding a malformed object into `foldForecastSkillPick` downstream.
+ */
+function isValidForecastSkillFoldState(value: unknown): value is ForecastSkillFoldState {
+  if (value === null || typeof value !== "object") return false;
+  const v = value as Record<string, unknown>;
+  return (
+    typeof v.n === "number" &&
+    typeof v.logM === "number" &&
+    typeof v.maxLogM === "number" &&
+    (v.firstCrossedAtPick === null || typeof v.firstCrossedAtPick === "number") &&
+    typeof v.threshold === "number" &&
+    typeof v.alpha === "number" &&
+    typeof v.epsilon === "number" &&
+    typeof v.floor === "number" &&
+    typeof v.minPicks === "number" &&
+    typeof v.sumOurP === "number" &&
+    typeof v.sumMarketP === "number" &&
+    typeof v.sumOutcome === "number"
+  );
+}
+
+/** Light structural check for persisted BAEE weights: a non-empty array of finite, non-negative numbers. */
+function isValidWeightsArray(value: unknown): value is readonly number[] {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every((w) => typeof w === "number" && Number.isFinite(w) && w >= 0)
+  );
+}
 
 export interface ShadowSignalInput {
   readonly gameId: string;
@@ -57,15 +94,35 @@ export async function loadFilter(
   readonly filter: TeamStrengthFilter;
   readonly registry: TeamIndexRegistry;
   readonly restored: boolean;
+  /**
+   * Null whenever there is nothing valid to resume — either no row, a version
+   * mismatch, or a malformed value. INDEPENDENT of `restored`: a version
+   * mismatch forces the filter cold but a row written by an older deploy
+   * (before this column existed) legitimately has no forecast-skill state yet,
+   * which is a normal "nothing to resume" case, not a corruption event.
+   */
+  readonly forecastSkillState: ForecastSkillFoldState | null;
+  /** Null under the same conditions as `forecastSkillState`, independently checked. */
+  readonly baeeWeights: readonly number[] | null;
 }> {
   const cold = () => ({
     filter: new TeamStrengthFilter(fallback),
     registry: createTeamIndexRegistry(scope, fallback.nTeams ?? DEFAULT_TEAM_CAPACITY),
     restored: false as const,
+    forecastSkillState: null,
+    baeeWeights: null,
   });
 
   const row = await db.filterStateSnapshot.findUnique({ where: { scope } }).catch(() => null);
   if (row === null || row.version !== FILTER_SNAPSHOT_VERSION) return cold();
+
+  // forecastSkillState/baeeWeights are read independently of the
+  // filter/registry pairing below — see their doc comments above for why they
+  // carry no cross-field identity hazard and may legitimately be absent.
+  const forecastSkillState = isValidForecastSkillFoldState(row.forecastSkillState)
+    ? row.forecastSkillState
+    : null;
+  const baeeWeights = isValidWeightsArray(row.baeeWeights) ? row.baeeWeights : null;
 
   // The registry and the payload are only meaningful TOGETHER: an index is a
   // team's latent-slot identity. A row whose registry is missing or malformed
@@ -73,41 +130,69 @@ export async function loadFilter(
   // would attribute learned strength to whichever team later lands in each
   // slot. Refuse the pair and start cold — losing history is recoverable,
   // silently mis-attributing it is not.
-  if (!isValidTeamIndexRegistry(row.teamIndex)) return cold();
+  if (!isValidTeamIndexRegistry(row.teamIndex)) {
+    return { ...cold(), forecastSkillState, baeeWeights };
+  }
 
   try {
     return {
       filter: TeamStrengthFilter.restore(row.payload as unknown as FilterStateSnapshot),
       registry: row.teamIndex,
       restored: true,
+      forecastSkillState,
+      baeeWeights,
     };
   } catch {
     // A stored snapshot that no longer restores is a migration/corruption event.
     // Starting cold is honest and recoverable; throwing here would wedge the job.
-    return cold();
+    return { ...cold(), forecastSkillState, baeeWeights };
   }
 }
 
 /**
- * Write-through the filter's full state AND its registry in a single upsert —
- * never one without the other, for the identity reason above. Returns false if
- * the write failed.
+ * Write-through the filter's full state, its registry, and (optionally) the
+ * forecast-skill fold state and BAEE weights, all in a single upsert. Filter
+ * and registry are never written one without the other, for the identity
+ * reason above; the two optional fields are written whenever supplied,
+ * independently of that pairing. Returns false if the write failed.
  */
 export async function saveFilter(
   scope: string,
   filter: TeamStrengthFilter,
   registry: TeamIndexRegistry,
+  forecastSkillState?: ForecastSkillFoldState | null,
+  baeeWeights?: readonly number[] | null,
 ): Promise<boolean> {
   const snapshot = filter.snapshot();
   const payload = snapshot as unknown as object;
   const teamIndex = registry as unknown as object;
   const observations = snapshot.observations;
+  // Prisma's nullable Json columns need Prisma.JsonNull for "write SQL NULL
+  // here", not a plain JS `null` — the generated input types reject a literal
+  // null (see apps/web/lib/cockpit/transitions.ts for the same pattern).
+  const fss = forecastSkillState ? (forecastSkillState as unknown as object) : Prisma.JsonNull;
+  const weights = baeeWeights ? ([...baeeWeights] as unknown as object) : Prisma.JsonNull;
 
   return db.filterStateSnapshot
     .upsert({
       where: { scope },
-      create: { scope, version: snapshot.version, observations, payload, teamIndex },
-      update: { version: snapshot.version, observations, payload, teamIndex },
+      create: {
+        scope,
+        version: snapshot.version,
+        observations,
+        payload,
+        teamIndex,
+        forecastSkillState: fss,
+        baeeWeights: weights,
+      },
+      update: {
+        version: snapshot.version,
+        observations,
+        payload,
+        teamIndex,
+        forecastSkillState: fss,
+        baeeWeights: weights,
+      },
     })
     .then(() => true)
     .catch(() => false);
@@ -123,7 +208,7 @@ export async function recordShadowSignal(input: ShadowSignalInput): Promise<bool
     shadowProb: input.shadowProb,
     marketProb: input.marketProb,
     liveConfidence: input.liveConfidence ?? null,
-    modelProbs: input.modelProbs ? [...input.modelProbs] : null,
+    modelProbs: input.modelProbs ? ([...input.modelProbs] as unknown as object) : Prisma.JsonNull,
   };
 
   return db.shadowSignal

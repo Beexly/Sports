@@ -134,6 +134,46 @@ describe("runShadowEvaluationPass", () => {
     expect(result.observations).toBe(1); // the settlement was absorbed into the filter
   });
 
+  it("folds the forecast-skill E-process at settlement using the DB-persisted (shadowProb, marketProb) — the cross-invocation fix", async () => {
+    // Simulates the realistic serverless case: this game was evaluated in a
+    // DIFFERENT invocation (pendingObservations is empty in a fresh
+    // orchestrator), so the ONLY way to fold it is via the persisted record.
+    loadFilter.mockResolvedValue(coldLoad());
+    shadowSignalFindMany.mockResolvedValue([
+      { gameId: "settled-1", shadowProb: 0.7, marketProb: 0.5, modelProbs: [0.7] },
+    ]);
+    gameFindMany.mockResolvedValue([
+      { id: "settled-1", homeTeamName: "Celtics", awayTeamName: "Lakers", homeScore: 110, awayScore: 100 },
+    ]);
+    const { runShadowEvaluationPass } = await import("../lib/ops/shadow-evaluation-pass");
+    await runShadowEvaluationPass("basketball_nba");
+
+    expect(saveFilter).toHaveBeenCalledTimes(1);
+    const call = saveFilter.mock.calls[0]! as unknown as [
+      string,
+      unknown,
+      unknown,
+      { n: number } | null,
+      readonly number[] | null,
+    ];
+    const [, , , forecastSkillState, baeeWeights] = call;
+    expect(forecastSkillState).not.toBeNull();
+    expect(forecastSkillState!.n).toBe(1); // the fold actually accumulated, not stuck at 0
+    expect(baeeWeights).toEqual([1]); // BAEE update ran (single model — weight is trivially 1)
+  });
+
+  it("does not fold the forecast-skill point when no persisted record exists for the settling game", async () => {
+    loadFilter.mockResolvedValue(coldLoad());
+    shadowSignalFindMany.mockResolvedValue([{ gameId: "settled-1" }]); // no shadowProb/marketProb/modelProbs
+    gameFindMany.mockResolvedValue([
+      { id: "settled-1", homeTeamName: "Celtics", awayTeamName: "Lakers", homeScore: 110, awayScore: 100 },
+    ]);
+    const { runShadowEvaluationPass } = await import("../lib/ops/shadow-evaluation-pass");
+    await runShadowEvaluationPass("basketball_nba");
+    const call = saveFilter.mock.calls[0]! as unknown as [string, unknown, unknown, { n: number } | null];
+    expect(call[3]!.n).toBe(0); // no crash, just nothing to fold
+  });
+
   it("skips a draw rather than encoding it as a home or away win", async () => {
     loadFilter.mockResolvedValue(coldLoad());
     shadowSignalFindMany.mockResolvedValue([{ gameId: "draw-1" }]);

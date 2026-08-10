@@ -34,10 +34,12 @@
 import { db } from "@sports/db";
 import {
   LiveOrchestrator,
+  BAEEEnsemble,
   selectionIsHomeSide,
   assignTeamIndex,
   americanToDecimalOdds,
   DEFAULT_TEAM_CAPACITY,
+  CONSERVATIVE_EVIDENCE_THRESHOLD,
   type TeamIndexRegistry,
 } from "@sports/prediction-engine";
 import { loadFilter, saveFilter, recordShadowSignal, settleShadowSignal } from "./shadow-signal-store";
@@ -48,6 +50,16 @@ const SHADOW_PARTICLES = 1000;
 const SHADOW_SEED = 20260810;
 /** Cap per cycle so a huge slate cannot blow the cron's time budget. */
 const MAX_GAMES_PER_CYCLE = 120;
+/**
+ * `LiveOrchestrator` is constructed below with no `endpoints`, so it defaults
+ * to `[]` and `modelProbs` (`[particleFilterProb, ...remoteProbabilities.succeeded]`)
+ * is always exactly length 1 in THIS pipeline. BAEE is shadow-mode-only and
+ * genuinely has nothing to learn with a single model (weight can only ever be
+ * 1.0) — this wiring exists so the moment a second real model is added here,
+ * persistence and the update call are already correct. Update this constant
+ * in lockstep with any change to the `endpoints` this module passes.
+ */
+const BAEE_NUM_MODELS = 1;
 
 export interface ShadowPassResult {
   readonly scope: string;
@@ -90,7 +102,7 @@ export async function runShadowEvaluationPass(scope: string): Promise<ShadowPass
   let evaluated = 0;
   let skipped = 0;
 
-  const { filter, registry, restored } = await loadFilter(scope, {
+  const { filter, registry, restored, forecastSkillState, baeeWeights } = await loadFilter(scope, {
     nTeams: DEFAULT_TEAM_CAPACITY,
     seed: SHADOW_SEED,
     nParticles: SHADOW_PARTICLES,
@@ -99,8 +111,22 @@ export async function runShadowEvaluationPass(scope: string): Promise<ShadowPass
 
   // Constructed around the RESTORED filter instance — the entire point of the
   // persistence layer is that this is the same cloud the last cycle saved, not
-  // a fresh one drawn from the prior.
-  const orchestrator = new LiveOrchestrator({ filter });
+  // a fresh one drawn from the prior. Same for forecastSkillState: when null
+  // (no prior row, or an older row written before this column existed),
+  // forecastSkillOptions sets the FIRST-EVER threshold to the platform's
+  // conservative convention; a restored state ignores forecastSkillOptions
+  // entirely and keeps whatever threshold it was already initialized with.
+  const orchestrator = new LiveOrchestrator({
+    filter,
+    forecastSkillState: forecastSkillState ?? undefined,
+    forecastSkillOptions: { evidenceThreshold: CONSERVATIVE_EVIDENCE_THRESHOLD },
+  });
+  const baeeEnsemble = new BAEEEnsemble(BAEE_NUM_MODELS, baeeWeights ?? undefined);
+
+  // Captured BEFORE this cycle's settlements so a crossing that happens THIS
+  // cycle can be told apart from one that already happened in a prior cycle
+  // (the note below must fire once, at the crossing, not every cycle after).
+  const evidenceCrossedBefore = (orchestrator.currentForecastSkill()?.firstCrossedAtPick ?? null) !== null;
 
   /** Resolve both teams to stable indices, or null when either cannot be assigned. */
   const resolvePair = (home: string, away: string): { home: number; away: number } | null => {
@@ -125,11 +151,19 @@ export async function runShadowEvaluationPass(scope: string): Promise<ShadowPass
   // have not been settled yet. Scoring a game the filter never forecast would
   // teach it from an outcome it never staked a prediction on.
   try {
+    // shadowProb/marketProb/modelProbs are the ORIGINAL evaluation-time record
+    // for this game — needed because `pendingObservations` (the in-memory map
+    // `evaluateGame` populates) is essentially always empty here: this game
+    // was almost certainly evaluated in a DIFFERENT serverless invocation than
+    // the one settling it now. Without re-registering from this durable
+    // record, `settleGame`'s forecast-skill fold silently folds nothing —
+    // see `registerPendingObservation`'s doc for the full explanation.
     const pending = await db.shadowSignal.findMany({
       where: { outcome: null },
-      select: { gameId: true },
+      select: { gameId: true, shadowProb: true, marketProb: true, modelProbs: true },
       take: MAX_GAMES_PER_CYCLE,
     });
+    const pendingById = new Map(pending.map((r) => [r.gameId, r]));
     const pendingIds = pending.map((r) => r.gameId);
 
     if (pendingIds.length > 0) {
@@ -158,9 +192,29 @@ export async function runShadowEvaluationPass(scope: string): Promise<ShadowPass
         if (pair === null) continue;
 
         const outcome: 0 | 1 = homeScore > awayScore ? 1 : 0;
+        const record = pendingById.get(game.id);
+        if (record) {
+          orchestrator.registerPendingObservation(game.id, record.shadowProb, record.marketProb);
+        }
         orchestrator.settleGame(game.id, pair.home, pair.away, outcome);
         await settleShadowSignal(game.id, outcome);
         settledAbsorbed += 1;
+
+        // BAEE: shadow-mode learning only — never blended into a prediction.
+        // Guarded on length rather than trusting it: a stored `modelProbs`
+        // whose length doesn't match `baeeEnsemble.numModels` (e.g. the
+        // endpoint set changed between evaluation and settlement) would
+        // silently misattribute weight across different models if applied
+        // anyway, exactly the hazard `BAEEEnsemble.update`'s own doc warns
+        // about — skip and note it instead.
+        const modelProbs = record?.modelProbs;
+        if (Array.isArray(modelProbs) && modelProbs.length === baeeEnsemble.numModels) {
+          baeeEnsemble.update(modelProbs as number[], outcome);
+        } else if (modelProbs !== undefined && modelProbs !== null) {
+          notes.push(
+            `BAEE update skipped for ${game.id}: modelProbs length ${Array.isArray(modelProbs) ? modelProbs.length : "n/a"} != ${baeeEnsemble.numModels}`,
+          );
+        }
       }
     }
   } catch (err) {
@@ -245,8 +299,31 @@ export async function runShadowEvaluationPass(scope: string): Promise<ShadowPass
     notes.push(`evaluation sweep failed: ${err instanceof Error ? err.message : String(err)}`);
   }
 
-  // ── 4) Persist filter + registry together ────────────────────────────────
-  const saved = await saveFilter(scope, orchestrator.exportFilter(), workingRegistry);
+  // ── 4) Evidence-threshold note ────────────────────────────────────────────
+  // Deliberately NOT called or titled "PROVEN": forecast-skill-eprocess.ts's
+  // own header is explicit that crossing this threshold is "NOT a licence to
+  // claim PROVEN" — PROVEN is a separate product gate (>=100 settled picks
+  // AND published calibration), a coincidence of both involving the number
+  // 100 that this note must not blur. This fires once, at the crossing, using
+  // a before/after comparison so it does not repeat every cycle afterward.
+  const currentSkill = orchestrator.currentForecastSkill();
+  const evidenceCrossedAfter = (currentSkill?.firstCrossedAtPick ?? null) !== null;
+  if (!evidenceCrossedBefore && evidenceCrossedAfter && currentSkill) {
+    notes.push(
+      `[shadow] evidence threshold crossed for ${scope}: M=${currentSkill.maxM.toFixed(2)} >= ` +
+        `${CONSERVATIVE_EVIDENCE_THRESHOLD} at pick ${currentSkill.firstCrossedAtPick}. Informational only — ` +
+        `NOT the PROVEN product gate. See forecast-skill-eprocess.ts's header for full scope.`,
+    );
+  }
+
+  // ── 5) Persist filter + registry + forecast-skill state + BAEE weights ──
+  const saved = await saveFilter(
+    scope,
+    orchestrator.exportFilter(),
+    workingRegistry,
+    orchestrator.exportForecastSkillState(),
+    baeeEnsemble.currentWeights(),
+  );
   if (!saved) notes.push("filter save FAILED — this cycle's learning was not durable");
 
   return {

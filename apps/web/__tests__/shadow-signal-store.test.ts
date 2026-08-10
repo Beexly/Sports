@@ -18,6 +18,9 @@ vi.mock("@sports/db", () => ({
       findMany: (...a: unknown[]) => findMany(...a),
     },
   },
+  // Real Prisma.JsonNull is an opaque sentinel object; tests only need SOME
+  // stable, distinguishable value in its place, never real JSON-null semantics.
+  Prisma: { JsonNull: Symbol("Prisma.JsonNull") },
 }));
 
 const FALLBACK = { nTeams: 4, seed: 1, nParticles: 64 } as const;
@@ -159,5 +162,85 @@ describe("shadow-signal-store", () => {
     findMany.mockRejectedValue(new Error("down"));
     const mod = await import("../lib/ops/shadow-signal-store");
     expect(await mod.loadSettledShadowSignals(new Date(0))).toEqual([]);
+  });
+
+  it("round-trips forecastSkillState and baeeWeights alongside the filter in one upsert", async () => {
+    const { TeamStrengthFilter, createTeamIndexRegistry } = await import("@sports/prediction-engine");
+    const mod = await import("../lib/ops/shadow-signal-store");
+
+    const foldState = {
+      alpha: 0.05,
+      threshold: 20,
+      epsilon: 0.05,
+      floor: 1e-6,
+      minPicks: 30,
+      n: 3,
+      logM: 0.12,
+      maxLogM: 0.15,
+      firstCrossedAtPick: null,
+      sumOurP: 1.8,
+      sumMarketP: 1.5,
+      sumOutcome: 2,
+    };
+    const weights = [0.7, 0.3];
+
+    upsertFilter.mockResolvedValue({});
+    await mod.saveFilter(
+      "nba",
+      new TeamStrengthFilter({ ...FALLBACK }),
+      createTeamIndexRegistry("nba"),
+      foldState,
+      weights,
+    );
+    const written = upsertFilter.mock.calls[0]![0] as {
+      create: { forecastSkillState: unknown; baeeWeights: unknown };
+    };
+    expect(written.create.forecastSkillState).toEqual(foldState);
+    expect(written.create.baeeWeights).toEqual(weights);
+
+    findUnique.mockResolvedValue({
+      version: 1,
+      payload: JSON.parse(JSON.stringify(new TeamStrengthFilter({ ...FALLBACK }).snapshot())),
+      teamIndex: { scope: "nba", capacity: 128, indexByTeam: {} },
+      forecastSkillState: JSON.parse(JSON.stringify(foldState)),
+      baeeWeights: JSON.parse(JSON.stringify(weights)),
+    });
+    const loaded = await mod.loadFilter("nba", { ...FALLBACK });
+    expect(loaded.forecastSkillState).toEqual(foldState);
+    expect(loaded.baeeWeights).toEqual(weights);
+  });
+
+  it("a missing forecastSkillState/baeeWeights does NOT force the filter itself cold — independent fields", async () => {
+    const { TeamStrengthFilter } = await import("@sports/prediction-engine");
+    const mod = await import("../lib/ops/shadow-signal-store");
+
+    findUnique.mockResolvedValue({
+      version: 1,
+      payload: JSON.parse(JSON.stringify(new TeamStrengthFilter({ ...FALLBACK }).snapshot())),
+      teamIndex: { scope: "nba", capacity: 128, indexByTeam: {} },
+      forecastSkillState: null, // row predates this column
+      baeeWeights: null,
+    });
+    const loaded = await mod.loadFilter("nba", { ...FALLBACK });
+    expect(loaded.restored).toBe(true); // filter still restores fine
+    expect(loaded.forecastSkillState).toBeNull(); // this piece independently resumes fresh
+    expect(loaded.baeeWeights).toBeNull();
+  });
+
+  it("a malformed forecastSkillState/baeeWeights is rejected rather than fed downstream", async () => {
+    const { TeamStrengthFilter } = await import("@sports/prediction-engine");
+    const mod = await import("../lib/ops/shadow-signal-store");
+
+    findUnique.mockResolvedValue({
+      version: 1,
+      payload: JSON.parse(JSON.stringify(new TeamStrengthFilter({ ...FALLBACK }).snapshot())),
+      teamIndex: { scope: "nba", capacity: 128, indexByTeam: {} },
+      forecastSkillState: { garbage: true },
+      baeeWeights: ["not", "numbers"],
+    });
+    const loaded = await mod.loadFilter("nba", { ...FALLBACK });
+    expect(loaded.restored).toBe(true);
+    expect(loaded.forecastSkillState).toBeNull();
+    expect(loaded.baeeWeights).toBeNull();
   });
 });

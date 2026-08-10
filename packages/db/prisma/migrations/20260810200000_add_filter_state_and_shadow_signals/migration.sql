@@ -12,6 +12,8 @@ CREATE TABLE "filter_state_snapshots" (
   "observations" INTEGER NOT NULL DEFAULT 0,
   "payload" JSONB NOT NULL,
   "teamIndex" JSONB,
+  "forecastSkillState" JSONB,
+  "baeeWeights" JSONB,
   "updatedAt" TIMESTAMP(3) NOT NULL,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

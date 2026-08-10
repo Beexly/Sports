@@ -1288,19 +1288,29 @@ model PostSettlementWork {
 // forever, and can never accumulate the settled observations it needs to learn.
 // One live row per scope (e.g. "nba"); `version` guards the serialized layout.
 model FilterStateSnapshot {
-  id           String   @id @default(cuid())
-  scope        String   @unique // e.g. "nba" — one filter per league
-  version      Int
-  observations Int      @default(0) // denormalized from the payload for cheap monitoring
-  payload      Json // the FilterStateSnapshot from @sports/prediction-engine
+  id                 String   @id @default(cuid())
+  scope              String   @unique // e.g. "nba" — one filter per league
+  version            Int
+  observations       Int      @default(0) // denormalized from the payload for cheap monitoring
+  payload            Json // the FilterStateSnapshot from @sports/prediction-engine
   // Team-name -> filter-index map, stored in the SAME row as the payload on
   // purpose: an index IS a team's latent-slot identity, so a snapshot restored
   // against a mismatched registry silently attributes one team's learned
   // strength to another, with nothing downstream able to detect it. Writing
   // both in one upsert makes that state unrepresentable.
-  teamIndex    Json?
-  updatedAt    DateTime @updatedAt
-  createdAt    DateTime @default(now())
+  teamIndex          Json?
+  // The forecast-skill E-process fold state (ForecastSkillFoldState from
+  // @sports/prediction-engine) and the BAEE ensemble's learned weights.
+  // INDEPENDENT of payload/teamIndex — neither carries a team-identity
+  // attribution hazard (the fold is one scalar running state per scope; BAEE
+  // weights index into this scope's model list, not into team slots) — so
+  // unlike payload/teamIndex they may be missing or invalid without forcing
+  // the filter itself cold. A row written before this column existed simply
+  // has null here, which resumes the fold/ensemble fresh, independently.
+  forecastSkillState Json?
+  baeeWeights        Json?
+  updatedAt          DateTime @updatedAt
+  createdAt          DateTime @default(now())
 
   @@map("filter_state_snapshots")
 }
