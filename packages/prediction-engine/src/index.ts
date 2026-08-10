@@ -1184,3 +1184,18 @@ export {
   type SizeAfterCalibrationResult,
 } from "./calibration-kelly-bridge.js";
 
+// R&D — online Brier OGD convex ensemble (binary probs). Shadow only; no live gate flips.
+export {
+  runBrierOgdEnsemble,
+  equalWeightBlend,
+  projectProbabilitySimplex,
+  equalSimplexWeights,
+} from "./brier-ogd-ensemble.js";
+export type {
+  BrierOgdMemberProbs,
+  BrierOgdSample,
+  BrierOgdOptions,
+  BrierOgdStep,
+  BrierOgdReport,
+} from "./brier-ogd-ensemble.js";
+

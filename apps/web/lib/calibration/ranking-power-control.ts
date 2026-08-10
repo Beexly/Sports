@@ -41,6 +41,9 @@ import {
   filterSelective,
   type SelectiveRow,
 } from "@/lib/calibration/selective-publish";
+import {
+  computeSegmentedMurphy,
+} from "@/lib/calibration/segmented-murphy";
 
 /** Win-probability score kinds only — never edge-as-p. */
 export type RankingScoreKind =
@@ -118,6 +121,22 @@ export type RankingPowerControl = {
     readonly brierGapToFloor: number;
     readonly wouldPassBrierFloor: boolean;
   };
+  /**
+   * Segmented Murphy + integrity at recommendedDelta (pause groups applied).
+   * BS_paused ≈ UNC is the integrity condition; Var[p|A] is the calibrated RES proxy.
+   */
+  readonly segmentedMurphy: {
+    readonly delta: number;
+    readonly publishedBrier: number;
+    readonly publishedRes: number;
+    readonly publishedVarP: number;
+    readonly pausedBrier: number;
+    readonly pausedUnc: number;
+    readonly integrityStatus: string;
+    readonly varPNeededForFloor: number;
+    readonly varPGap: number;
+    readonly integrityHint: string;
+  } | null;
   readonly residual: ResidualAttribution;
   readonly pathViable: boolean;
   readonly mapsApplyGateOpen: boolean;
@@ -456,6 +475,34 @@ export function buildRankingPowerControl(
     ? `Path viable under ${bestScore} + pause(${pauseGroups.length}) + δ=${recommendedDelta}. Projected RES ${projected.res.toFixed(4)} (Δ+${projected.deltaRes.toFixed(4)}). ${brierNote} Maps still gated until live RES ≥ ${RES_FLOOR_FOR_MAPS}.`
     : `Ranking power still weak (live RES ${Number.isFinite(liveRes) ? liveRes.toFixed(4) : "n/a"}). Primary bottleneck: ${primaryBottleneck}. ${residualHint} ${brierNote}`;
 
+  // Integrity-guarded segmented Murphy at recommended δ + pause list
+  const segRows = selectiveRows.map((r) => ({
+    p: r.p,
+    y: r.y,
+    groupKey: r.groupKey,
+  }));
+  let segmentedMurphy: RankingPowerControl["segmentedMurphy"] = null;
+  try {
+    const seg = computeSegmentedMurphy(segRows, recommendedDelta, {
+      pausedGroups: pauseGroups,
+      brierFloor: BRIER_FLOOR,
+    });
+    segmentedMurphy = {
+      delta: seg.delta,
+      publishedBrier: seg.published.brier,
+      publishedRes: seg.published.resolution,
+      publishedVarP: seg.published.varP,
+      pausedBrier: seg.paused.brier,
+      pausedUnc: seg.paused.uncertainty,
+      integrityStatus: seg.integrity.status,
+      varPNeededForFloor: seg.varPNeededForFloor,
+      varPGap: seg.varPGap,
+      integrityHint: seg.integrity.operatorHint,
+    };
+  } catch {
+    segmentedMurphy = null;
+  }
+
   return {
     generatedAt,
     n: rows.length,
@@ -470,6 +517,7 @@ export function buildRankingPowerControl(
     keepGroups,
     recommendedDelta,
     projected,
+    segmentedMurphy,
     residual,
     pathViable,
     mapsApplyGateOpen,
@@ -504,6 +552,10 @@ export function rankingPowerPosture(
   readonly primaryBottleneck: string | null;
   readonly mapsApplyGateOpen: boolean | null;
   readonly residualOperatorHint: string | null;
+  readonly integrityStatus: string | null;
+  readonly publishedVarP: number | null;
+  readonly varPGap: number | null;
+  readonly pausedBrier: number | null;
   readonly operatorHint: string;
   readonly rankingPolarityLaw: "positive_separation_required";
 } {
@@ -528,6 +580,10 @@ export function rankingPowerPosture(
       primaryBottleneck: null,
       mapsApplyGateOpen: null,
       residualOperatorHint: null,
+      integrityStatus: null,
+      publishedVarP: null,
+      varPGap: null,
+      pausedBrier: null,
       operatorHint:
         "Ranking Power Control Plane not seeded (sample < threshold or stub).",
       rankingPolarityLaw: "positive_separation_required",
@@ -558,6 +614,22 @@ export function rankingPowerPosture(
     primaryBottleneck: control.residual.primaryBottleneck,
     mapsApplyGateOpen: control.mapsApplyGateOpen,
     residualOperatorHint: control.residual.operatorHint,
+    integrityStatus: control.segmentedMurphy?.integrityStatus ?? null,
+    publishedVarP:
+      control.segmentedMurphy != null &&
+      Number.isFinite(control.segmentedMurphy.publishedVarP)
+        ? control.segmentedMurphy.publishedVarP
+        : null,
+    varPGap:
+      control.segmentedMurphy != null &&
+      Number.isFinite(control.segmentedMurphy.varPGap)
+        ? control.segmentedMurphy.varPGap
+        : null,
+    pausedBrier:
+      control.segmentedMurphy != null &&
+      Number.isFinite(control.segmentedMurphy.pausedBrier)
+        ? control.segmentedMurphy.pausedBrier
+        : null,
     operatorHint: control.operatorHint,
     rankingPolarityLaw: "positive_separation_required",
   };
