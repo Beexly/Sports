@@ -123,6 +123,29 @@ export type CalibrationMapBakeoff = {
     readonly finalA: number;
     readonly finalB: number;
   };
+  /** Full vs sliding-window Online Beta OGD metrics — shadow. */
+  readonly slidingWindowOgd?: {
+    readonly window: number;
+    readonly nFull: number;
+    readonly nWindow: number;
+    readonly fullA: number;
+    readonly windowA: number;
+    readonly deltaA: number;
+    readonly deltaVarCal: number;
+    readonly expansionPreferred: "full" | "window" | "neither";
+    readonly operatorHint: string;
+  };
+  /** Hedge adaptive-δ analysis — shadow advisory. */
+  readonly hedgeAdaptiveDelta?: {
+    readonly recommendedDelta: number;
+    readonly bestFixedDelta: number;
+    readonly regretVsBestFixed: number;
+    readonly weightOnRecommended: number;
+    readonly publishedBrier: number;
+    readonly sitOutBrier: number;
+    readonly integrityStatus: string;
+    readonly operatorHint: string;
+  };
   readonly applyOff: true;
 };
 
@@ -265,11 +288,17 @@ export function runCalibrationMapBakeoff(
     });
   }
 
-  const onlineBetaRep = runOnlineBetaRecalibration(
-    samplesChrono.map((r, i) => ({ ...r, sampleId: `c${i}`, t: i })),
-  );
-  const ocoRep = runOcoPipelineFromSingleP(
-    samplesChrono.map((r, i) => ({ ...r, sampleId: `c${i}`, t: i })),
+  const chronoTagged = samplesChrono.map((r, i) => ({ ...r, sampleId: `c${i}`, t: i }));
+  const onlineBetaRep = runOnlineBetaRecalibration(chronoTagged);
+  const ocoRep = runOcoPipelineFromSingleP(chronoTagged);
+  const slidingOgd = analyzeSlidingWindowOgd(chronoTagged, { window: 120 });
+  const hedgeAnalysis = analyzeAdaptiveDeltaHedge(
+    chronoTagged.map((s) => ({
+      sampleId: s.sampleId,
+      p: s.p,
+      y: s.y as 0 | 1,
+      t: s.t,
+    })),
   );
 
   methods.push(
@@ -313,7 +342,7 @@ export function runCalibrationMapBakeoff(
     note:
       "Offline only. Apply CALIBRATION_ADJUSTMENTS only after Res improves and holdout floors pass. " +
       "RES-aware Beta can raise Val RES when underconfident (a>1) under REL cap — still shadow. " +
-      "Online Beta OGD + OCO pipeline are shadow; live eligibility stays map-free. " +
+      "Online Beta OGD + sliding-window OGD + OCO + Hedge-δ analysis are shadow; live eligibility stays map-free. " +
       "Temperature fit = grid + Newton NLL. CV selectCalibrator = OOF ECE + noise bar.",
     rankingFirst:
       "Live Res thin ⇒ independents + selective/pause first. RES-cal / OCO may expand Var[P] only when data support underconfidence — never free stretch.",
@@ -349,6 +378,27 @@ export function runCalibrationMapBakeoff(
       recommendedDelta: ocoRep.recommendedDelta,
       finalA: ocoRep.finalBeta.a,
       finalB: ocoRep.finalBeta.b,
+    },
+    slidingWindowOgd: {
+      window: slidingOgd.window,
+      nFull: slidingOgd.nFull,
+      nWindow: slidingOgd.nWindow,
+      fullA: slidingOgd.full.a,
+      windowA: slidingOgd.sliding.a,
+      deltaA: slidingOgd.deltaA,
+      deltaVarCal: slidingOgd.deltaVarCal,
+      expansionPreferred: slidingOgd.expansionPreferred,
+      operatorHint: slidingOgd.operatorHint,
+    },
+    hedgeAdaptiveDelta: {
+      recommendedDelta: hedgeAnalysis.report.recommendedDelta,
+      bestFixedDelta: hedgeAnalysis.report.bestFixedDelta,
+      regretVsBestFixed: hedgeAnalysis.regretVsBestFixed,
+      weightOnRecommended: hedgeAnalysis.weightOnRecommended,
+      publishedBrier: hedgeAnalysis.publishedBrier,
+      sitOutBrier: hedgeAnalysis.sitOutBrier,
+      integrityStatus: hedgeAnalysis.integrityStatus,
+      operatorHint: hedgeAnalysis.operatorHint,
     },
     applyOff: true,
   };

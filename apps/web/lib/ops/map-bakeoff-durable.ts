@@ -74,6 +74,12 @@ export function summarizeMapBakeoff(bake: CalibrationMapBakeoff | null): {
   readonly onlineBetaA: number | null;
   readonly ocoPublishedRes: number | null;
   readonly ocoRecommendedDelta: number | null;
+  readonly slidingWindowA: number | null;
+  readonly slidingDeltaA: number | null;
+  readonly slidingExpansionPreferred: string | null;
+  readonly hedgeRecommendedDelta: number | null;
+  readonly hedgeIntegrityStatus: string | null;
+  readonly hedgeRegret: number | null;
   readonly operatorHint: string;
 } {
   if (!bake) {
@@ -94,6 +100,12 @@ export function summarizeMapBakeoff(bake: CalibrationMapBakeoff | null): {
       onlineBetaA: null,
       ocoPublishedRes: null,
       ocoRecommendedDelta: null,
+      slidingWindowA: null,
+      slidingDeltaA: null,
+      slidingExpansionPreferred: null,
+      hedgeRecommendedDelta: null,
+      hedgeIntegrityStatus: null,
+      hedgeRegret: null,
       operatorHint:
         "No map bake-off artifact yet — run calibration-metrics. Maps apply OFF.",
     };
@@ -121,7 +133,22 @@ export function summarizeMapBakeoff(bake: CalibrationMapBakeoff | null): {
         ? bake.ocoPipeline.publishedRes
         : null,
     ocoRecommendedDelta: bake.ocoPipeline?.recommendedDelta ?? null,
+    slidingWindowA: bake.slidingWindowOgd?.windowA ?? null,
+    slidingDeltaA:
+      bake.slidingWindowOgd != null && Number.isFinite(bake.slidingWindowOgd.deltaA)
+        ? bake.slidingWindowOgd.deltaA
+        : null,
+    slidingExpansionPreferred: bake.slidingWindowOgd?.expansionPreferred ?? null,
+    hedgeRecommendedDelta: bake.hedgeAdaptiveDelta?.recommendedDelta ?? null,
+    hedgeIntegrityStatus: bake.hedgeAdaptiveDelta?.integrityStatus ?? null,
+    hedgeRegret:
+      bake.hedgeAdaptiveDelta != null &&
+      Number.isFinite(bake.hedgeAdaptiveDelta.regretVsBestFixed)
+        ? bake.hedgeAdaptiveDelta.regretVsBestFixed
+        : null,
     operatorHint:
+      bake.hedgeAdaptiveDelta?.operatorHint ??
+      bake.slidingWindowOgd?.operatorHint ??
       bake.isotonicDebug?.operatorHint ??
       "Offline map bake-off present. CALIBRATION_ADJUSTMENTS stays false until RES + holdout floors.",
   };

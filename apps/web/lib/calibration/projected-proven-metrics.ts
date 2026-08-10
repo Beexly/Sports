@@ -139,7 +139,7 @@ export function projectProvenPathMetrics(
     message =
       "Selective historical projection MEETS floors — keep filter on; accumulate GREEN streak on live filtered publishes.";
   } else if (deltaRes > 0.005) {
-    message = `Filter lifts Res by ${deltaRes.toFixed(4)} but floors not yet met (Brier gap ${Number.isFinite(brierGapToFloor) ? brierGapToFloor.toFixed(4) : "n/a"}) — keep selective ON; pause ${plan.pauseGroups.length} dead groups when RANKING_PAUSE_APPLY ready.`;
+    message = `Filter lifts Res by ${deltaRes.toFixed(4)} but floors not yet met (Brier gap ${Number.isFinite(brierGapToFloor) ? brierGapToFloor.toFixed(4) : "n/a"}) — keep selective ON; pause ${plan.pauseGroups.length} dead groups (durable RANKING_PAUSE_APPLY when founder YES).`;
   } else {
     message =
       "Selective alone barely moves Res — need independent modelProb / sport models (not more maps).";
