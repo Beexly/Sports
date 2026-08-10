@@ -226,7 +226,11 @@ export async function fetchRundownEventsForSport(
   apiKey: string,
   options?: {
     readonly date?: string;
-    /** Inclusive day count starting at `date` (default 1). Caps at 10. */
+    /**
+     * Inclusive day count starting at `date`.
+     * Default 2 (free-tier economy). Caps at 10.
+     * Env RUNDOWN_DAY_SPAN overrides default when options.daySpan omitted.
+     */
     readonly daySpan?: number;
     readonly fetchImpl?: typeof fetch;
   },
@@ -236,13 +240,21 @@ export async function fetchRundownEventsForSport(
     return { events: [], remaining: null, error: `rundown: no sport_id map for ${sportKey}` };
   }
   const startDate = options?.date ?? todayIsoUtc();
-  const daySpan = Math.min(10, Math.max(1, options?.daySpan ?? 7));
+  const envSpanRaw = Number(process.env["RUNDOWN_DAY_SPAN"] ?? "");
+  const defaultSpan = Number.isFinite(envSpanRaw) && envSpanRaw > 0 ? envSpanRaw : 2;
+  const daySpan = Math.min(10, Math.max(1, options?.daySpan ?? defaultSpan));
   const fetchImpl = options?.fetchImpl ?? fetch;
   const all: OddsApiEvent[] = [];
   const seen = new Set<string>();
   const errors: string[] = [];
+  let rateLimited = false;
 
   for (let i = 0; i < daySpan; i++) {
+    if (rateLimited) break;
+    if (i > 0) {
+      // Free tier: small gap between day fan-out so we do not self-429.
+      await new Promise((r) => setTimeout(r, 200));
+    }
     const d = new Date(`${startDate}T00:00:00.000Z`);
     d.setUTCDate(d.getUTCDate() + i);
     const date = d.toISOString().slice(0, 10);
@@ -256,6 +268,11 @@ export async function fetchRundownEventsForSport(
         cache: "no-store",
       });
       if (!res.ok) {
+        if (res.status === 429) {
+          rateLimited = true;
+          errors.push(`${date}:HTTP 429 rate_limited (abort remaining days)`);
+          break;
+        }
         errors.push(`${date}:HTTP ${res.status}`);
         continue;
       }

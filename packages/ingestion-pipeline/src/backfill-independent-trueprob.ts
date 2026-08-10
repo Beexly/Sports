@@ -109,14 +109,16 @@ export async function backfillIndependentTrueProb(opts?: {
       },
     },
     orderBy: { settledAt: "desc" },
-    take: limit * 3, // oversample; many may already be priced
+    // Oversample heavily: already-priced rows no longer consume the work budget.
+    take: Math.min(2500, Math.max(limit * 12, 200)),
   });
 
   for (const pick of picks) {
+    // Work budget only advances on unpriced candidates (alreadyPriced is free).
     if (scanned >= limit) break;
-    scanned += 1;
 
     if (!pick.game) {
+      scanned += 1;
       skippedNoOpinion += 1;
       continue;
     }
@@ -124,6 +126,7 @@ export async function backfillIndependentTrueProb(opts?: {
       alreadyPriced += 1;
       continue;
     }
+    scanned += 1;
 
     const pickType = (pick.pickType ?? "MONEYLINE").toUpperCase();
     // Independent fair values are 2-way win probs (ML-style).

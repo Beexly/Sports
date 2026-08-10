@@ -97,3 +97,18 @@ Dual path:
 - `public-surface-truth.oddsInserting` shows dualPath key presence + last zero-odds SUCCESS  
 
 Signal board does **not** require oddsInserted>0 (slate-fresh kill switch).
+
+
+## Rundown free-tier rate limits (odds-insert)
+
+The free dual path uses TheRundown. **HTTP 429** means the market clock will not
+advance (`oddsInserted` stays 0) until the provider accepts requests again.
+
+Mitigations in code:
+
+- Default `daySpan` is **2** (not 7); override with `RUNDOWN_DAY_SPAN`
+- Abort remaining days on first 429
+- Longer inter-sport pause when Odds API is ABSENT
+- Cascade-skip later sports in the same refresh cycle after a 429
+
+Signal board does not depend on oddsInserted>0.

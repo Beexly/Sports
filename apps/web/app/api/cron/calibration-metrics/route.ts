@@ -42,7 +42,7 @@ import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
 import { backfillIndependentTrueProb } from "@sports/ingestion-pipeline";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 function mceFromCurve(
   curve: readonly { meanForecast: number; observedRate: number; count: number }[],
@@ -194,7 +194,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     let backfillNote = "backfill: skipped";
     try {
       const bf = await backfillIndependentTrueProb({
-        limit: 60,
+        limit: 150,
         logPrefix: "[cron:calibration-metrics:backfill-indep]",
       });
       backfillNote =

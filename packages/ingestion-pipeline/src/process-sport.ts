@@ -233,7 +233,7 @@ export async function processSport(
     if (events.length === 0) {
       const rundownKey = resolveRundownApiKey();
       if (rundownKey) {
-        const rd = await fetchRundownEventsForSport(sport.key, rundownKey, { daySpan: 7 });
+        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";

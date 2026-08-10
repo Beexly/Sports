@@ -39,3 +39,22 @@ describe("rundown-client", () => {
     expect(ev!.bookmakers[0]!.markets[0]!.outcomes[0]!.name).toBe("Kansas City Chiefs");
   });
 });
+
+describe("fetchRundownEventsForSport rate limit", () => {
+  it("aborts remaining days on HTTP 429", async () => {
+    const { fetchRundownEventsForSport } = await import("../rundown-client.js");
+    let calls = 0;
+    const fetchImpl = async () => {
+      calls += 1;
+      return new Response("rate", { status: 429 });
+    };
+    const out = await fetchRundownEventsForSport("americanfootball_nfl", "k", {
+      daySpan: 5,
+      date: "2026-08-10",
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    expect(out.events).toEqual([]);
+    expect(calls).toBe(1);
+    expect(out.error ?? "").toMatch(/429|rate_limited/);
+  });
+});

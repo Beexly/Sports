@@ -134,6 +134,10 @@ export async function refreshOdds(
   }
   // processSport accepts empty Odds key when Rundown is present (primary soft-fails → free path).
   const processKey = apiKey || "rundown-free-path";
+  const rundownOnly = !apiKey && Boolean(rundownKey);
+  // Free Rundown: longer inter-sport gap to avoid 429 cascading across sports.
+  const interSportPauseMs = rundownOnly ? Math.max(INTER_SPORT_PAUSE_MS, 2000) : INTER_SPORT_PAUSE_MS;
+  let skipRundownSports = false;
 
   const gates = getReadinessGates();
   const requestedSport = opts.sport ?? null;
@@ -152,12 +156,33 @@ export async function refreshOdds(
   const results: RefreshOddsSportResult[] = [];
 
   for (const sport of sportsToProcess) {
+    if (skipRundownSports && rundownOnly) {
+      results.push({
+        sport: sport.key,
+        ok: true,
+        oddsInserted: 0,
+        provider: "therundown-skipped-rate-limit",
+        eventsCount: 0,
+        note: "skipped: prior sport hit Rundown HTTP 429 (free-tier economy)",
+      });
+      continue;
+    }
     try {
       // processSport NEVER throws on a provider/normalization failure — it
       // catches internally and RESOLVES { status: "failed", error }. Inspect
       // the returned status so a failed sport is recorded as ok:false (and the
       // Healthchecks success ping cannot fire falsely on a silent failure).
       const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
+      const note = res.note ?? "";
+      if (
+        rundownOnly &&
+        (note.includes("429") || note.includes("rate_limited") || res.provider === "therundown-empty")
+      ) {
+        // Only cascade-skip when the empty note is rate-limit, not honest empty board.
+        if (note.includes("429") || note.includes("rate_limited")) {
+          skipRundownSports = true;
+        }
+      }
       results.push(
         res.status === "success"
           ? {
@@ -188,7 +213,7 @@ export async function refreshOdds(
       });
     }
     // Brief pause to avoid bursting the upstream API quota.
-    await new Promise((r) => setTimeout(r, INTER_SPORT_PAUSE_MS));
+    await new Promise((r) => setTimeout(r, interSportPauseMs));
   }
 
   // Freeze slate commitments (commit-reveal) for the sports just processed —
