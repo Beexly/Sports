@@ -1349,6 +1349,9 @@ export type {
   OrchestratorSettlementResult,
 } from "./pipeline/live-orchestrator.js";
 
+// BAEE — shadow-mode-only ensemble weight learner. Not wired for blending.
+export { BAEEEnsemble } from "./ensemble/baee-ensemble.js";
+
 // Stable team-name -> filter-index mapping. Append-only ON PURPOSE: reusing an
 // index silently transfers one team's learned posterior to another, and nothing
 // downstream can detect it. See the module header.

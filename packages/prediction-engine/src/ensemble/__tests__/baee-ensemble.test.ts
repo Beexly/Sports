@@ -8,7 +8,7 @@ describe("BAEEEnsemble", () => {
   });
 
   it("increases the weight of a model that was exactly right, decreases a wrong one", () => {
-    const ens = new BAEEEnsemble(2, 1.0);
+    const ens = new BAEEEnsemble(2);
     const before = ens.currentWeights();
     // model 0 said 0.99 (right, home won), model 1 said 0.01 (very wrong)
     ens.update([0.99, 0.01], 1);
@@ -18,7 +18,7 @@ describe("BAEEEnsemble", () => {
   });
 
   it("weights always sum to 1 within floating-point tolerance, over many updates", () => {
-    const ens = new BAEEEnsemble(4, 1.0);
+    const ens = new BAEEEnsemble(4);
     let seed = 7;
     const rand = () => {
       seed = (seed * 1103515245 + 12345) & 0x7fffffff;
@@ -34,7 +34,7 @@ describe("BAEEEnsemble", () => {
   });
 
   it("is immune to NaN when every model (and hence the blend) assigns exact 0 to the realized outcome", () => {
-    const ens = new BAEEEnsemble(2, 1.0);
+    const ens = new BAEEEnsemble(2);
     // both models certain the outcome is impossible; it happens anyway
     ens.update([0, 0], 1);
     for (const w of ens.currentWeights()) {
@@ -47,7 +47,7 @@ describe("BAEEEnsemble", () => {
   });
 
   it("is immune to NaN when a model assigns exact 1 to the outcome that did NOT happen", () => {
-    const ens = new BAEEEnsemble(2, 1.0);
+    const ens = new BAEEEnsemble(2);
     ens.update([1, 0.5], 0); // model 0 was CERTAIN of the wrong side
     for (const w of ens.currentWeights()) {
       expect(Number.isFinite(w)).toBe(true);
@@ -55,7 +55,7 @@ describe("BAEEEnsemble", () => {
   });
 
   it("converges toward the model with the highest log-score on synthetic data", () => {
-    const ens = new BAEEEnsemble(3, 1.0);
+    const ens = new BAEEEnsemble(3);
     // model 0 = truth (p=0.8 whenever home wins w.p. 0.8), models 1/2 = noise
     let seed = 42;
     const rand = () => {
@@ -81,5 +81,34 @@ describe("BAEEEnsemble", () => {
   it("rejects a non-positive-integer model count at construction", () => {
     expect(() => new BAEEEnsemble(0)).toThrow(RangeError);
     expect(() => new BAEEEnsemble(-1)).toThrow(RangeError);
+  });
+
+  it("restores from valid persisted weights instead of starting uniform", () => {
+    const ens = new BAEEEnsemble(2, [0.9, 0.1]);
+    expect(ens.currentWeights()[0]!).toBeCloseTo(0.9, 10);
+    expect(ens.currentWeights()[1]!).toBeCloseTo(0.1, 10);
+  });
+
+  it("normalizes restored weights that don't already sum to 1", () => {
+    const ens = new BAEEEnsemble(2, [9, 1]);
+    expect(ens.currentWeights()[0]!).toBeCloseTo(0.9, 10);
+    expect(ens.currentWeights()[1]!).toBeCloseTo(0.1, 10);
+  });
+
+  it("falls back to uniform when restored weights are the wrong length, negative, or all-zero", () => {
+    expect(new BAEEEnsemble(2, [1, 2, 3]).currentWeights()).toEqual([0.5, 0.5]);
+    expect(new BAEEEnsemble(2, [-1, 2]).currentWeights()).toEqual([0.5, 0.5]);
+    expect(new BAEEEnsemble(2, [0, 0]).currentWeights()).toEqual([0.5, 0.5]);
+    expect(new BAEEEnsemble(2, [NaN, 1]).currentWeights()).toEqual([0.5, 0.5]);
+  });
+
+  it("literal Bayes update matches the hand-derived formula exactly (the bug this class was fixed for)", () => {
+    // w=[0.5,0.5], modelProbs=[0.9,0.3], y=1 -> Bayes gives [0.75, 0.25] exactly,
+    // NOT [0.7311, 0.2689] (what the old exp(gradient) formula produced).
+    const ens = new BAEEEnsemble(2);
+    ens.update([0.9, 0.3], 1);
+    const w = ens.currentWeights();
+    expect(w[0]!).toBeCloseTo(0.75, 10);
+    expect(w[1]!).toBeCloseTo(0.25, 10);
   });
 });

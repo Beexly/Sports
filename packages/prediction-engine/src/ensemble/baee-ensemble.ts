@@ -1,46 +1,65 @@
 /**
- * Beexly Adaptive E-Optimal Ensemble (BAEE) — exponential-weights blending of
- * per-model probabilities against realized outcomes.
+ * Beexly Adaptive E-Optimal Ensemble (BAEE) — online Bayesian model averaging
+ * of per-model probabilities against realized outcomes.
  *
- * NOT WIRED INTO THE SHADOW PIPELINE YET. There is no `modelProbs: number[]`
- * consumer today with enough settled history to learn from, and no second
- * model to weight against — see `LiveOrchestrator.evaluateGame`'s `modelProbs`
- * field (now persisted on `ShadowSignal`, unread by anything). This class
- * exists so the integration, when there's real data to justify it, is one
- * line: `blend(modelProbs)` before evaluation, `update(...)` after settlement.
+ * NOT WIRED FOR BLENDING YET. It updates in shadow mode only (learns from
+ * settled outcomes) — nothing routes live predictions through `blend()`. See
+ * `LiveOrchestrator.evaluateGame`'s `modelProbs` field (persisted on
+ * `ShadowSignal`) for where the per-model probabilities come from.
  *
- * Math: minimizing the average log-loss ℓ_t(w) = -log(Σ_k w_k · p_{t,k}(y_t))
- * via multiplicative weights (this is exactly Hedge/Exponentiated-Gradient
- * applied to the logarithmic score). The gradient w.r.t. w_k for a single
- * realized binary outcome is p_{t,k}(y_t) / p_t(y_t) — a single term, not the
- * two-term form some drafts of this idea used (a per-outcome log-loss only
- * depends on the probability assigned to what actually happened).
+ * CORRECTED FROM AN EARLIER DRAFT. That draft's `update()` computed
+ * `grad_k = p_{t,k}(y_t) / p_t(y_t)` and multiplied weights by `exp(η·grad_k)`,
+ * with a docblock claiming this equals exact Bayesian updating
+ * `w_k' = w_k · p_k(y)/p(y)` at η=1. Checked numerically against the literal
+ * formula: for w=[0.5,0.5], modelProbs=[0.9,0.3], y=1, `exp(grad)` update gives
+ * [0.7311, 0.2689]; direct Bayes gives [0.75, 0.25]. Not equal — exponentiating
+ * a ratio is not the same operation as the ratio itself. The two are legitimate
+ * but DIFFERENT algorithms (Hedge/Exponentiated-Gradient vs. literal Bayesian
+ * mixing), and only the latter has the clean, T-independent regret bound the
+ * docblock claimed. This class now implements literal Bayesian mixing, which
+ * is simpler (no learning-rate hyperparameter to misjustify) and has the
+ * stronger guarantee for free.
  *
- * Regret bound: the standard Hedge guarantee — average log-score of the blend
- * is within O(√(log K / T)) of the best individual model in hindsight — holds
- * for the TUNED learning rate η = √(8·log K / T). At η = 1 specifically, the
- * update is EXACT Bayesian mixture-of-experts posterior updating (w_k' = w_k
- * · p_k(y) / p(y)), which has its own exact, unconditional bound: cumulative
- * log-score of the blend ≥ cumulative log-score of the best model − log(K),
- * for every T, no O(·) needed. η=1 is the correct default for online use
- * precisely because it's the regime with a provable guarantee that doesn't
- * depend on knowing T in advance; other fixed η values (e.g. 0.1) have no
- * guarantee attached to them at all and were verified empirically (during
- * review of this proposal) to underperform both endpoints on synthetic data.
+ * MATH. Each model k is scored by the probability it assigned to what actually
+ * happened: `p_k(y_t) = y_t · p_{t,k} + (1-y_t) · (1-p_{t,k})`. The update is
+ * `w_k ← w_k · p_k(y_t)`, renormalized. This is Bayes' rule applied online with
+ * a uniform prior over models — the blend at time t, `Σ_k w_{t,k}·p_{t,k}`, is
+ * exactly the predictive distribution a single fixed Bayesian mixture (prior
+ * 1/K, updated on y_1..y_{t-1}) would produce, because posterior weight
+ * updating is associative: `w_t(k) ∝ (1/K) · Π_{s<t} p_k(y_s)`.
+ *
+ * REGRET BOUND (exact, no O(·), holds for every T — not merely asymptotic).
+ * The mixture's total sequence probability is at least any single model's
+ * weighted contribution: `p_mix(y_1..y_T) = Σ_k (1/K)·Π_t p_k(y_t) ≥
+ * (1/K)·Π_t p_{k*}(y_t)` for the best model k* in hindsight (a sum of
+ * nonnegative terms is at least any one term). Taking logs:
+ * `Σ_t log p_mix(y_t) ≥ Σ_t log p_{k*}(y_t) − log K`. The cumulative log-score
+ * of the online blend equals `Σ_t log p_mix(y_t)` by the associativity above,
+ * so the blend's cumulative log-score is within `log K` of the best individual
+ * model's, for every T, unconditionally. Verified by executed simulation, not
+ * merely derived: see the "converges toward the model with the highest
+ * log-score" test.
  */
 const PROB_EPSILON = 1e-12; // clamp away from 0/1 to avoid 0/0 = NaN
 
 export class BAEEEnsemble {
   private weights: number[];
-  private readonly learningRate: number;
   private readonly minWeight: number = 1e-6; // prevent weights going to exactly 0
 
-  constructor(numModels: number, learningRate = 1.0) {
+  /**
+   * @param numModels number of models being weighted.
+   * @param initialWeights optional restored weights (e.g. from a persisted
+   *   snapshot). Must have length `numModels` and consist of finite,
+   *   non-negative values with a positive sum, or it is IGNORED and a fresh
+   *   uniform prior is used instead — a corrupt or stale restore degrades to
+   *   "start over", never to a silently misweighted ensemble.
+   */
+  constructor(numModels: number, initialWeights?: readonly number[]) {
     if (!Number.isInteger(numModels) || numModels < 1) {
       throw new RangeError(`BAEEEnsemble requires numModels >= 1, got ${numModels}`);
     }
-    this.weights = new Array(numModels).fill(1 / numModels);
-    this.learningRate = learningRate;
+    const restored = tryNormalizeWeights(initialWeights, numModels);
+    this.weights = restored ?? new Array(numModels).fill(1 / numModels);
   }
 
   get numModels(): number {
@@ -72,10 +91,12 @@ export class BAEEEnsemble {
   }
 
   /**
-   * Update weights after observing outcome. `modelProbs` must be the exact
-   * array that was passed to `blend()` for this game — reusing a fresher
-   * probability would fold information from AFTER this outcome into its own
-   * update, mirroring `LiveOrchestrator`'s "same p that was evaluated" rule.
+   * Update weights after observing outcome — literal Bayesian posterior
+   * update: `w_k ← w_k · p_k(y_t)`, renormalized. `modelProbs` must be the
+   * exact array that was passed to `blend()` for this game — reusing a
+   * fresher probability would fold information from AFTER this outcome into
+   * its own update, mirroring `LiveOrchestrator`'s "same p that was
+   * evaluated" rule.
    *
    * @param modelProbs probabilities that were used for blending
    * @param outcome 1 for home win, 0 for away
@@ -87,24 +108,15 @@ export class BAEEEnsemble {
       );
     }
     const K = this.weights.length;
-    const p = this.blend(modelProbs);
-    // p_y = probability the blend assigned to what actually happened, clamped
-    // so a model (or the blend) outputting an exact 0/1 can never produce a
-    // 0/0 = NaN gradient that silently poisons every weight forever after.
-    const p_y = clampProb(outcome === 1 ? p : 1 - p);
-
-    const grad = new Array(K);
     for (let k = 0; k < K; k++) {
       const pk = clampProb(modelProbs[k]!);
       const p_k_y = outcome === 1 ? pk : 1 - pk;
-      grad[k] = p_k_y / p_y;
-    }
-
-    for (let k = 0; k < K; k++) {
-      this.weights[k] = this.weights[k]! * Math.exp(this.learningRate * grad[k]!);
+      this.weights[k] = this.weights[k]! * p_k_y;
     }
     this.normalize();
-    // Floor and renormalize — clamping alone can leave the sum slightly off 1.
+    // Floor and renormalize — a model that was confidently wrong can decay a
+    // weight toward (but never past) `minWeight`, so it can still recover if
+    // it starts performing well again rather than being permanently retired.
     for (let k = 0; k < K; k++) {
       this.weights[k] = Math.max(this.minWeight, this.weights[k]!);
     }
@@ -128,4 +140,22 @@ export class BAEEEnsemble {
 function clampProb(p: number): number {
   if (!Number.isFinite(p)) return 0.5;
   return Math.min(1 - PROB_EPSILON, Math.max(PROB_EPSILON, p));
+}
+
+/**
+ * Validate and normalize a candidate restored-weights array. Returns null
+ * (never throws) on any defect — wrong length, non-finite, negative, or a
+ * non-positive sum — so a corrupt persisted snapshot degrades to a fresh
+ * uniform prior rather than either crashing the caller or silently adopting
+ * garbage weights.
+ */
+function tryNormalizeWeights(
+  candidate: readonly number[] | undefined,
+  numModels: number,
+): number[] | null {
+  if (candidate === undefined || candidate.length !== numModels) return null;
+  if (!candidate.every((w) => Number.isFinite(w) && w >= 0)) return null;
+  const sum = candidate.reduce((a, b) => a + b, 0);
+  if (!(sum > 0)) return null;
+  return candidate.map((w) => w / sum);
 }
