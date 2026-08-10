@@ -119,7 +119,7 @@ export type RankingPowerControl = {
 
 const RES_FLOOR_FOR_MAPS = 0.02;
 const MIN_N_FILTERED = 80;
-/** Independent/blend kinds need ≥40% of confidence n to win bestScore. */
+/** Independent/blend kinds need ≥40% of ML/SPREAD eligible n to win bestScore. */
 const MIN_COVERAGE = 0.4;
 
 function scoreOf(r: RankingPowerRow, kind: RankingScoreKind): number | null {
@@ -197,6 +197,19 @@ export function buildRankingPowerControl(
   type BakeoffRow = RankingPowerControl["scoreBakeoff"][number];
   const scoreBakeoffMutable: BakeoffRow[] = [];
   let confN = 0;
+  // TOTAL has no honest team-win trueProb — do not dilute independent coverage.
+  const indepEligibleN = Math.max(
+    1,
+    rows.filter((r) => {
+      const market = (r.groupKey.split("|")[1] ?? "").toUpperCase();
+      return (
+        market === "MONEYLINE" ||
+        market === "SPREAD" ||
+        market === "H2H" ||
+        market === "ML"
+      );
+    }).length,
+  );
 
   for (const kind of kinds) {
     const samples: CalibrationSample[] = [];
@@ -215,7 +228,15 @@ export function buildRankingPowerControl(
       minRho: 0.04,
       minSeparation: 0.02,
     });
-    const coverage = confN > 0 ? m.n / confN : 0;
+    const denom =
+      kind === "independent_trueProb" ||
+      kind === "blend_indep_conf" ||
+      kind === "marketFairProb"
+        ? indepEligibleN
+        : confN > 0
+          ? confN
+          : 1;
+    const coverage = m.n / denom;
     scoreBakeoffMutable.push({
       kind,
       n: m.n,
