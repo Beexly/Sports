@@ -32,6 +32,7 @@ import {
   getHeadToHeadForm,
   resolveRundownApiKey,
   fetchRundownEventsForSport,
+  fetchEspnOddsForSport,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
@@ -207,10 +208,11 @@ export async function processSport(
 
     let events: import("@sports/types").OddsApiEvent[] = [];
     let remainingRequests: number | null = null;
-    // Sentinel used when only Rundown free path is configured (no real Odds key).
+    // Sentinel used when only free paths are configured (no real Odds key).
     const oddsKeyIsSentinel =
       !apiKey ||
       apiKey === "rundown-free-path" ||
+      apiKey === "espn-free-path" ||
       apiKey === "absent";
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
 
@@ -230,6 +232,7 @@ export async function processSport(
 
     // Free dual-path: TheRundown when primary empty/fail and key present (never invent).
     let rundownAttemptNote: string | null = null;
+    let espnAttemptNote: string | null = null;
     if (events.length === 0) {
       const rundownKey = resolveRundownApiKey();
       if (rundownKey) {
@@ -248,6 +251,33 @@ export async function processSport(
         }
       } else {
         rundownAttemptNote = "rundown key ABSENT";
+      }
+    }
+
+    // Free tertiary path: ESPN public odds (zero keys) when Odds+Rundown empty.
+    // Never invents — soft-fails empty. Community routing: pseudo-r/Public-ESPN-API.
+    if (events.length === 0) {
+      try {
+        const espn = await fetchEspnOddsForSport(sport.key);
+        if (espn.events.length > 0) {
+          events = espn.events;
+          oddsProviderTag = "espn_public";
+          console.log(
+            `${logPrefix} ${sport.key}: ESPN public free path ${events.length} events` +
+              (espn.error ? ` (note: ${espn.error})` : ""),
+          );
+        } else {
+          oddsProviderTag =
+            oddsProviderTag === "therundown-empty" || oddsProviderTag === "none"
+              ? "espn_public-empty"
+              : oddsProviderTag;
+          espnAttemptNote = espn.error ?? "espn odds empty";
+          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
+        }
+      } catch (espnErr) {
+        espnAttemptNote =
+          espnErr instanceof Error ? espnErr.message : String(espnErr);
+        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
       }
     }
 
@@ -806,7 +836,8 @@ export async function processSport(
       oddsInserted === 0 && Object.keys(gameRecords).length === 0
         ? events.length === 0
           ? `no_events via ${oddsProviderTag}` +
-            (rundownAttemptNote ? ` (${rundownAttemptNote})` : "")
+            (rundownAttemptNote ? ` (${rundownAttemptNote})` : "") +
+            (espnAttemptNote ? ` [${espnAttemptNote}]` : "")
           : "no_games_after_normalize"
         : oddsInserted === 0
           ? "odds_zero_after_insert_path"

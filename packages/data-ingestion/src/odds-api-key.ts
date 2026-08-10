@@ -15,6 +15,16 @@ export const ODDS_API_KEY_ENV_NAMES = [
   "FREE_ODDS_API_KEY",
   "ODDSAPI_KEY",
   "ODDS_API_IO_KEY",
+  // Founder "switched keys" renames seen in dashboards
+  "ODDS_KEY",
+  "THE_ODDS_KEY",
+  "ODDSAPI",
+  "THEODDSAPI_KEY",
+  "THE_ODDS_API_TOKEN",
+  "ODDS_API_TOKEN",
+  "THEODDS_KEY",
+  "API_KEY_ODDS",
+  "ODDSAPIKEY",
 ] as const;
 
 export type OddsApiKeyEnvName = (typeof ODDS_API_KEY_ENV_NAMES)[number];

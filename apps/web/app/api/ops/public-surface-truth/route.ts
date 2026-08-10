@@ -197,6 +197,8 @@ export async function GET(request: Request) {
       oddsMatchedEnv: string | null;
       rundownKeyPresent: boolean;
       rundownMatchedEnv: string | null;
+      /** Zero-key ESPN public odds tertiary path (always code-available). */
+      espnPublicTertiary: true;
     };
     lastZeroOddsSuccessAt: string | null;
     lastZeroOddsSport: string | null;
@@ -213,6 +215,7 @@ export async function GET(request: Request) {
       oddsMatchedEnv: oddsKeySlot.matchedEnv,
       rundownKeyPresent: rundownKeySlot.present,
       rundownMatchedEnv: rundownKeySlot.matchedEnv,
+      espnPublicTertiary: true,
     },
     lastZeroOddsSuccessAt: null,
     lastZeroOddsSport: null,
@@ -259,15 +262,15 @@ export async function GET(request: Request) {
           zeroErr.includes("rate_limited") ||
           zeroErr.includes("rate limit");
         let keyHint = !oddsKeySlot.present && !rundownKeySlot.present
-          ? " No quote keys visible (THE_ODDS_API_KEY / RUNDOWN_*)."
+          ? " No Odds/Rundown keys visible — ESPN public free path still available (tertiary)."
           : !oddsKeySlot.present && rundownKeySlot.present
-            ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT.`
+            ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT; ESPN public tertiary if Rundown empty/429.`
             : oddsKeySlot.present
               ? ` Odds key present (${oddsKeySlot.matchedEnv}).`
               : "";
         if (rateLimited && !oddsKeySlot.present) {
           keyHint +=
-            " Rundown free-tier 429 active — cool off (often 15–60m+) or add free THE_ODDS_API_KEY; do not thrash daySpan.";
+            " Rundown free-tier 429 active — cascade to ESPN public odds (zero keys) or wait cool-off / add THE_ODDS_API_KEY.";
         }
         oddsInserting = {
           ...oddsInserting,

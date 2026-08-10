@@ -35,7 +35,16 @@ export const RUNDOWN_API_KEY_ENV_NAMES = [
   "RUNDOWN_API_TOKEN",
   "FREE_RUNDOWN_API_KEY",
   "THERUNDOWN_API",
+  // Founder "switched keys" renames
+  "RUNDOWN",
+  "THERUNDOWN",
+  "THE_RUNDOWN",
+  "RUNDOWN_TOKEN",
+  "THERUNDOWN_TOKEN",
+  "RUNDOWN_IO_KEY",
+  "THERUNDOWN_IO_KEY",
 ] as const;
+
 
 export type RundownApiKeyEnvName = (typeof RUNDOWN_API_KEY_ENV_NAMES)[number];
 

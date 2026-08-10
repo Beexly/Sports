@@ -232,6 +232,12 @@ export {
 export type { OddsApiKeyEnvName } from "./odds-api-key.js";
 
 export {
+  fetchEspnOddsForSport,
+  ESPN_ODDS_SPORT_MAP,
+} from "./espn-odds-client.js";
+export type { EspnOddsFetchResult } from "./espn-odds-client.js";
+
+export {
   parseEspnScoreboardForSeed,
   fetchEspnSeedGamesForSport,
   fetchAllEspnSeedGames,

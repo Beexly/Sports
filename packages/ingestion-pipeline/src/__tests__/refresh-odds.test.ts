@@ -10,9 +10,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  *   - iterates exactly one sport when given an explicit key
  *   - aggregates per-sport results into the documented envelope
  *   - a single sport throwing does NOT abort the remaining sports
- *   - SOFT-FAILS (ok:false, never a throw) on a missing API key or
- *     ODDS_PROVIDER=offline — refuses to invent quotes rather than crash the
- *     caller; throws only on an unsupported explicit sport
+ *   - soft-fails only on ODDS_PROVIDER=offline (refuses invent)
+ *   - when no Odds/Rundown keys → ESPN free path sentinel (espn-free-path)
+ *   - throws only on an unsupported explicit sport
  *
  * Mocks follow the existing process-sport.test.ts / settle-sport.test.ts
  * pattern: hoisted vi.fn()s wired through vi.mock for processSport, the sport
@@ -259,35 +259,40 @@ describe("refreshOdds", () => {
       delete process.env["ODDS_PROVIDER"];
     });
 
-    it("soft-fails with a named reason when no odds keys configured", async () => {
+    it("uses ESPN free path when no Odds/Rundown keys (never invents; processSport soft-fails empty)", async () => {
       for (const k of [
         "THE_ODDS_API_KEY","ODDS_API_KEY","THEODDS_API_KEY","THE_ODDS_API",
         "ODDS_API_KEY_FREE","FREE_ODDS_API_KEY","ODDSAPI_KEY","ODDS_API_IO_KEY",
+        "ODDS_KEY","THE_ODDS_KEY","ODDSAPI","THEODDSAPI_KEY","THE_ODDS_API_TOKEN",
+        "ODDS_API_TOKEN","THEODDS_KEY","API_KEY_ODDS","ODDSAPIKEY",
         "RUNDOWN_API_KEY","RUNDOWN_KEY","THERUNDOWN_API_KEY","THE_RUNDOWN_API_KEY",
         "THERUNDOWN_KEY","THE_RUNDOWN_KEY","RUNDOWN_API_TOKEN","FREE_RUNDOWN_API_KEY",
-        "THERUNDOWN_API",
+        "THERUNDOWN_API","RUNDOWN","THERUNDOWN","THE_RUNDOWN","RUNDOWN_TOKEN",
+        "THERUNDOWN_TOKEN","RUNDOWN_IO_KEY","THERUNDOWN_IO_KEY",
       ]) delete process.env[k];
 
-      const result = await refreshOdds();
-
-      expect(result).toEqual({
-        ok: false,
-        elapsedMs: expect.any(Number),
-        okCount: 0,
-        totalCount: 0,
-        results: [
-          {
-            sport: "_",
-            ok: false,
-            error: "No odds key — set THE_ODDS_API_KEY and/or RUNDOWN_API_KEY (free dual-path)",
-          },
-        ],
-        freeze: [],
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.getReadinessGates.mockReturnValue(GATES);
+      mocks.processSport.mockResolvedValue({
+        sport: SPORTS[0].key,
+        status: "success",
+        oddsInserted: 3,
+        provider: "espn_public",
+        eventsCount: 2,
+        games: 2,
+        picks: 1,
       });
-      // Never reaches the per-sport loop at all — there is nothing to fetch
-      // odds FOR without a key, so no sport should appear to have been tried.
-      expect(mocks.processSport).not.toHaveBeenCalled();
-      expect(mocks.getInSeasonSports).not.toHaveBeenCalled();
+      mocks.freezeSlateCommitments.mockResolvedValue([]);
+
+      const resultPromise = refreshOdds();
+      await vi.runAllTimersAsync();
+      const result = await resultPromise;
+
+      expect(result.ok).toBe(true);
+      expect(mocks.processSport).toHaveBeenCalled();
+      // Sentinel key for ESPN tertiary free path
+      expect(mocks.processSport.mock.calls[0]![1]).toBe("espn-free-path");
+      expect(result.results[0]!.provider).toBe("espn_public");
     });
 
     it("soft-fails with a named reason when ODDS_PROVIDER=offline, even with a valid key present", async () => {

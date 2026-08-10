@@ -92,6 +92,7 @@ vi.mock("@sports/data-ingestion", () => ({
   sportKeyToKalshiLeagueCode: vi.fn().mockReturnValue(null),
   resolveRundownApiKey: vi.fn().mockReturnValue(""),
   fetchRundownEventsForSport: vi.fn().mockResolvedValue({ events: [], remaining: null }),
+  fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
   resolveOddsApiKey: vi.fn().mockReturnValue("key"),
   oddsApiKeyPresence: vi.fn().mockReturnValue({ present: true, matchedEnv: "THE_ODDS_API_KEY" }),
   rundownApiKeyPresence: vi.fn().mockReturnValue({ present: false, matchedEnv: null }),

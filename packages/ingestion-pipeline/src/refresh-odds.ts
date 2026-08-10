@@ -95,8 +95,10 @@ export interface RefreshOddsOptions {
 /**
  * Runs one full odds-refresh cycle.
  *
- * Soft-fails (ok:false) if `THE_ODDS_API_KEY` is missing or ODDS_PROVIDER=offline
- * rather than inventing quotes.
+ * Soft-fail only when ODDS_PROVIDER=offline. Free paths:
+ *   1) THE_ODDS_API_KEY (+ aliases)
+ *   2) Rundown free dual-path
+ *   3) ESPN public odds (zero keys) — tertiary, never invents
  * @throws {UnsupportedSportError} if `opts.sport` matches no supported sport.
  */
 export async function refreshOdds(
@@ -105,8 +107,8 @@ export async function refreshOdds(
   const apiKey = resolveOddsApiKey();
   const startedAt = Date.now();
 
-  // Soft-fail only when NO quote path exists (Odds API + Rundown free dual-path).
-  // Never invent quotes. ODDS_PROVIDER=offline forces refuse.
+  // Soft-fail only when ODDS_PROVIDER=offline forces refuse.
+  // ESPN free path always available — never invent quotes; soft-fail empty.
   const rundownKey = resolveRundownApiKey();
   if (process.env["ODDS_PROVIDER"]?.trim().toLowerCase() === "offline") {
     return {
@@ -118,25 +120,17 @@ export async function refreshOdds(
       freeze: [],
     };
   }
-  if (!apiKey && !rundownKey) {
-    return {
-      ok: false,
-      elapsedMs: Date.now() - startedAt,
-      okCount: 0,
-      totalCount: 0,
-      results: [{
-        sport: "_",
-        ok: false,
-        error: "No odds key — set THE_ODDS_API_KEY and/or RUNDOWN_API_KEY (free dual-path)",
-      }],
-      freeze: [],
-    };
-  }
-  // processSport accepts empty Odds key when Rundown is present (primary soft-fails → free path).
-  const processKey = apiKey || "rundown-free-path";
+  // processSport accepts empty Odds key → Rundown → ESPN public free path.
+  const processKey =
+    apiKey || (rundownKey ? "rundown-free-path" : "espn-free-path");
   const rundownOnly = !apiKey && Boolean(rundownKey);
   // Free Rundown: longer inter-sport gap to avoid 429 cascading across sports.
-  const interSportPauseMs = rundownOnly ? Math.max(INTER_SPORT_PAUSE_MS, 2000) : INTER_SPORT_PAUSE_MS;
+  // ESPN-only path: moderate gap (scoreboard+N odds calls per sport).
+  const interSportPauseMs = rundownOnly
+    ? Math.max(INTER_SPORT_PAUSE_MS, 2000)
+    : !apiKey
+      ? Math.max(INTER_SPORT_PAUSE_MS, 1500)
+      : INTER_SPORT_PAUSE_MS;
   let skipRundownSports = false;
 
   const gates = getReadinessGates();
@@ -157,14 +151,46 @@ export async function refreshOdds(
 
   for (const sport of sportsToProcess) {
     if (skipRundownSports && rundownOnly) {
-      results.push({
-        sport: sport.key,
-        ok: true,
-        oddsInserted: 0,
-        provider: "therundown-skipped-rate-limit",
-        eventsCount: 0,
-        note: "skipped: prior sport hit Rundown HTTP 429 (free-tier economy)",
-      });
+      // Still try ESPN when Rundown 429 cascade — do not skip tertiary free path.
+      try {
+        const res = await processSport(
+          sport,
+          "espn-free-path",
+          gates,
+          "[cron:refresh-odds]",
+        );
+        results.push(
+          res.status === "success"
+            ? {
+                sport: sport.key,
+                ok: true,
+                oddsInserted: res.oddsInserted ?? 0,
+                provider: res.provider,
+                eventsCount: res.eventsCount,
+                games: res.games,
+                picks: res.picks,
+                note:
+                  (res.note ?? "") +
+                  " (rundown 429 cascade → ESPN free path)",
+              }
+            : {
+                sport: sport.key,
+                ok: false,
+                error: res.error ?? "ingestion failed",
+                oddsInserted: res.oddsInserted ?? 0,
+                provider: res.provider,
+                eventsCount: res.eventsCount,
+                note: res.note,
+              },
+        );
+      } catch (err) {
+        results.push({
+          sport: sport.key,
+          ok: false,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+      await new Promise((r) => setTimeout(r, interSportPauseMs));
       continue;
     }
     try {
