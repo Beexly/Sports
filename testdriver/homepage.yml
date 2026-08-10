@@ -1,0 +1,13 @@
+version: 4
+steps:
+  - prompt: Open a browser and navigate to https://www.galaxysportsedge.com
+  - prompt: Wait for the page to fully load
+  - prompt: >
+      Assert that the page title or heading contains text related to sports
+      intelligence or picks (e.g. "Sports Intelligence", "Galaxy Sports Edge",
+      or "picks")
+  - prompt: >
+      Assert that a navigation bar is visible at the top of the page with links
+      such as "Sign In", "Pricing", or "Board"
+  - prompt: >
+      Assert that there is a hero section or call-to-action visible on the page

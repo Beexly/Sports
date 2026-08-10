@@ -1,0 +1,13 @@
+version: 4
+steps:
+  - prompt: Open a browser and navigate to https://www.galaxysportsedge.com/pricing
+  - prompt: Wait for the page to fully load
+  - prompt: >
+      Assert that the pricing page shows at least two subscription tiers such
+      as "Free", "Pro", or "Elite"
+  - prompt: >
+      Assert that each visible tier shows a price (e.g. "$0", "$14.99", or
+      "$24.99") or a "per month" label
+  - prompt: >
+      Assert that there is a call-to-action button (e.g. "Get Started",
+      "Subscribe", or "Sign Up") visible for at least one tier

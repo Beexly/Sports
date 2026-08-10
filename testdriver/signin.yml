@@ -1,0 +1,10 @@
+version: 4
+steps:
+  - prompt: Open a browser and navigate to https://www.galaxysportsedge.com/auth/signin
+  - prompt: Wait for the page to fully load
+  - prompt: >
+      Assert that the sign-in page is shown with a heading such as "Sign In"
+      or "Welcome Back" and a button or link to sign in with Google
+  - prompt: >
+      Assert that the page contains a link back to the home page (logo or
+      "Back" link)
