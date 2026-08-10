@@ -501,7 +501,7 @@ export class TeamStrengthFilter {
         mass += wp;
       }
     }
-    // No finite mass at all ⇒ the cloud carries no usable information. The honest
+    // No usable mass at all ⇒ the cloud carries no information. The honest
     // forecast is then the uninformative 0.5, not a number invented from NaN.
     const predictedHomeWinProb = mass > 0 ? Math.min(1, Math.max(0, acc / mass)) : 0.5;
 
