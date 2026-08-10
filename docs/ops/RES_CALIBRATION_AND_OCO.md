@@ -18,7 +18,9 @@ Calibrated identity: \(\mathrm{BS} = \mathrm{UNC} - \mathrm{Var}[P]\). Minimizin
 | `brier-ogd-ensemble.ts` | Simplex OGD on Brier for ensemble weights | Shadow |
 | `adaptive-delta-hedge.ts` | Hedge experts over \(\delta\) candidates; sit-out loss≈0.25 | Shadow |
 | `oco-pipeline.ts` | Full sequence: Beta → ensemble → Hedge δ → updates | Shadow |
-| map bake-off | Surfaces `res_aware_beta`, `onlineBeta`, `ocoPipeline` | Cron offline |
+| `online-beta-sliding-window.ts` | Trailing-window OGD + full-vs-window metrics | Shadow |
+| `adaptive-delta-analysis.ts` | Hedge regret / integrity / weight concentration | Shadow |
+| map bake-off | Surfaces resAware / onlineBeta / oco / sliding / hedge | Cron offline |
 
 ## Law
 
@@ -34,6 +36,8 @@ Calibrated identity: \(\mathrm{BS} = \mathrm{UNC} - \mathrm{Var}[P]\). Minimizin
 - `resAwareSelected` / `resAwareA` / `resAwareResGain`  
 - `onlineBetaA`  
 - `ocoPublishedRes` / `ocoRecommendedDelta`  
+- `slidingWindowA` / `slidingDeltaA` / `slidingExpansionPreferred`  
+- `hedgeRecommendedDelta` / `hedgeIntegrityStatus` / `hedgeRegret`  
 
 ## Path to Brier ≤ 0.22
 

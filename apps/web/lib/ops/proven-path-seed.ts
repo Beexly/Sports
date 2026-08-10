@@ -27,6 +27,7 @@ import {
 import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import type { ProjectedProvenMetrics } from "@/lib/calibration/projected-proven-metrics";
 import { CANONICAL_LEARNING_PICK_WHERE } from "@/lib/ops/compute-live-calibration-metrics";
+import { loadRankingPauseApply } from "@/lib/ops/ranking-pause-durable";
 
 export type ProvenPathSurface = {
   readonly plan: ProvenPathPlan;
@@ -69,9 +70,21 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
     await persistProvenPathPlan(plan);
     const projection = projectProvenPathMetrics(rows);
 
+    let appliedPauseGroups: readonly string[] = [];
+    try {
+      const durablePause = await loadRankingPauseApply();
+      if (durablePause?.enabled && Array.isArray(durablePause.groups)) {
+        appliedPauseGroups = durablePause.groups;
+      }
+    } catch {
+      appliedPauseGroups = [];
+    }
+
     let rankingPower: RankingPowerControl | null = null;
     try {
-      rankingPower = buildRankingPowerControl(rows);
+      rankingPower = buildRankingPowerControl(rows, {
+        appliedPauseGroups,
+      });
     } catch {
       rankingPower = null;
     }

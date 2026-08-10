@@ -1233,3 +1233,15 @@ export type {
   OcoPipelineStep,
   OcoPipelineReport,
 } from "./oco-pipeline.js";
+
+// R&D — sliding-window Online Beta OGD + Hedge adaptive-δ analysis (shadow).
+export {
+  runOnlineBetaSlidingWindow,
+  analyzeSlidingWindowOgd,
+} from "./online-beta-sliding-window.js";
+export type {
+  SlidingWindowBetaOptions,
+  SlidingWindowOgdMetrics,
+} from "./online-beta-sliding-window.js";
+export { analyzeAdaptiveDeltaHedge } from "./adaptive-delta-analysis.js";
+export type { HedgeAdaptiveDeltaAnalysis } from "./adaptive-delta-analysis.js";

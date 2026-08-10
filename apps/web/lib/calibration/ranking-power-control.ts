@@ -224,6 +224,8 @@ export function buildRankingPowerControl(
 ): RankingPowerControl {
   const minGroupN = options?.minGroupN ?? 20;
   const defaultDelta = options?.defaultDelta ?? 0.1;
+  const appliedPauseGroups = options?.appliedPauseGroups ?? [];
+  const appliedPauseSet = new Set(appliedPauseGroups);
   const generatedAt = new Date().toISOString();
 
   const kinds: RankingScoreKind[] = [
@@ -438,7 +440,22 @@ export function buildRankingPowerControl(
     residualHint = `Independent rankingP present on only ${(independentCoverage * 100).toFixed(0)}% of ML/SPREAD-eligible sample. Ship priced modelProb / trueProb into factorBreakdown before more maps.`;
   } else if (pauseGroups.length > 0 && resAfterPauseOnly - live.res > 0.003) {
     primaryBottleneck = "dead_groups";
-    residualHint = `${pauseGroups.length} sport|market groups are significance-dead (${pauseGroups.slice(0, 6).join(", ")}${pauseGroups.length > 6 ? "…" : ""}). Pause them (RANKING_PAUSE_APPLY still default OFF); RES rises on the remaining keep set.`;
+    const appliedOfPlan = pauseGroups.filter((g) => appliedPauseSet.has(g));
+    const missingApply = pauseGroups.filter((g) => !appliedPauseSet.has(g));
+    if (missingApply.length === 0 && appliedOfPlan.length > 0) {
+      residualHint =
+        `Dead groups already under durable RANKING_PAUSE_APPLY (${appliedOfPlan.length}): ${appliedOfPlan.slice(0, 6).join(", ")}. ` +
+        `RES gain from pause is active on the keep set — keep selective ON and accumulate independent settles.`;
+    } else if (appliedOfPlan.length > 0) {
+      residualHint =
+        `${pauseGroups.length} significance-dead groups planned; durable applies ${appliedOfPlan.length} ` +
+        `(${appliedOfPlan.slice(0, 4).join(", ")}); still open: ${missingApply.slice(0, 4).join(", ") || "none"}. ` +
+        `Expand durable pause only with founder YES on remaining keys.`;
+    } else {
+      residualHint =
+        `${pauseGroups.length} sport|market groups are significance-dead (${pauseGroups.slice(0, 6).join(", ")}${pauseGroups.length > 6 ? "…" : ""}). ` +
+        `Pause them when RANKING_PAUSE_APPLY is durable-ON for those keys; RES rises on the remaining keep set.`;
+    }
   } else if (projected.deltaRes > 0.004) {
     primaryBottleneck = "selective_needed";
     residualHint = `δ=${recommendedDelta} selective filter lifts RES by ${projected.deltaRes.toFixed(4)}. Selective runtime already default ON.`;
@@ -543,7 +560,7 @@ export function rankingPowerPosture(
   readonly wouldPassBrierFloor: boolean | null;
   readonly deltaRes: number | null;
   readonly pauseGroupCount: number | null;
-  /** Advisory pause keys (RANKING_PAUSE_APPLY still default OFF). */
+  /** Advisory pause keys from significance plan (apply is separate durable gate). */
   readonly pauseGroups: readonly string[] | null;
   readonly keepGroupCount: number | null;
   readonly recommendedDelta: number | null;
