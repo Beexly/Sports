@@ -211,20 +211,34 @@ export async function backfillIndependentTrueProb(opts?: {
         ? ({ ...(prev["independentEdge"] as Record<string, unknown>) } as Record<string, unknown>)
         : ({} as Record<string, unknown>);
 
-    const marketFair =
-      typeof prevEdge["marketFairProb"] === "number" && Number.isFinite(prevEdge["marketFairProb"])
+    const marketFairRaw =
+      typeof prevEdge["marketFairProb"] === "number" &&
+      Number.isFinite(prevEdge["marketFairProb"] as number)
         ? (prevEdge["marketFairProb"] as number)
-        : typeof prev["marketFairProb"] === "number" && Number.isFinite(prev["marketFairProb"])
+        : typeof prev["marketFairProb"] === "number" &&
+            Number.isFinite(prev["marketFairProb"] as number)
           ? (prev["marketFairProb"] as number)
-          : 0.5;
+          : null;
+    // Never invent 0.5 book fair — that shadows trueProb on eligibility and kills RES.
+    // Exact 0.5 is treated as synthetic neutral (prior backfill/signal-slate default).
+    const marketFair =
+      marketFairRaw != null &&
+      marketFairRaw > 0 &&
+      marketFairRaw < 1 &&
+      Math.abs(marketFairRaw - 0.5) > 1e-9
+        ? marketFairRaw
+        : null;
 
-    const rawEdge = trueProb - marketFair;
+    const rawEdge = marketFair != null ? trueProb - marketFair : trueProb - 0.5;
     const sources = blend.sources;
     const independentEdge = {
       ...prevEdge,
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
       agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
-      marketFairProb: marketFair,
+      // Omit synthetic market — only persist real book fair
+      ...(marketFair != null
+        ? { marketFairProb: marketFair }
+        : { marketFairProb: null }),
       trueProb,
       rawEdge,
       shrunkEdge: rawEdge * 0.7,

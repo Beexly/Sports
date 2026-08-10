@@ -324,7 +324,7 @@ export function buildRankingPowerControl(
     groupKey: r.groupKey,
     marketP: null,
   }));
-  const deltas = [0.08, 0.1, 0.12, 0.15];
+  const deltas = [0.08, 0.1, 0.12, 0.15, 0.18, 0.2, 0.22, 0.25];
   let recommendedDelta = defaultDelta;
   let bestProj = packMetrics(
     selectiveRows
@@ -338,11 +338,18 @@ export function buildRankingPowerControl(
       minGroupRes: null,
     }).filter((r) => !pauseGroups.includes(r.groupKey));
     const m = packMetrics(filtered.map((r) => ({ p: r.p, y: r.y })));
-    if (
-      m.n >= MIN_N_FILTERED &&
-      Number.isFinite(m.res) &&
-      m.res > bestProj.res + 1e-9
-    ) {
+    // Prefer higher RES; at RES ties prefer lower Brier; require min n.
+    if (m.n < MIN_N_FILTERED || !Number.isFinite(m.res)) continue;
+    const resGain = m.res > bestProj.res + 1e-9;
+    const resTieBetterBrier =
+      Math.abs(m.res - bestProj.res) < 1e-9 &&
+      Number.isFinite(m.brier) &&
+      Number.isFinite(bestProj.brier) &&
+      m.brier < bestProj.brier - 1e-9;
+    // Prefer clearing RES floor 0.02 when possible without collapsing n
+    const clearsResFloor =
+      m.res >= RES_FLOOR_FOR_MAPS && bestProj.res < RES_FLOOR_FOR_MAPS;
+    if (clearsResFloor || resGain || resTieBetterBrier) {
       bestProj = m;
       recommendedDelta = d;
     }

@@ -47,9 +47,10 @@ export type IndependentEdgeAgreement =
 export interface IndependentEdgeSummary {
   decision: IndependentEdgeDecision;
   agreement: IndependentEdgeAgreement;
-  marketFairProb: number;       // sportsbook de-vigged fair prob for the side, 0–1
+  /** Sportsbook de-vigged fair for the side; null when no real book (never invent 0.5). */
+  marketFairProb: number | null;
   trueProb: number | null;      // independent blended estimate, 0–1
-  rawEdge: number;              // trueProb − marketFairProb
+  rawEdge: number;              // trueProb − marketFairProb (or vs 0.5 when market null)
   shrunkEdge: number;           // rawEdge after evidence/agreement shrink
   expectedClv: number;          // honest expectation of beating the close, prob pts
   conviction: number;           // 0–100 glass-box conviction

@@ -5,7 +5,20 @@ import {
 } from "@/lib/calibration/live-calibration-p";
 
 describe("resolveLiveCalibrationP", () => {
-  it("prefers marketFairProb over confidence", () => {
+  it("prefers independent trueProb over market (RES unlock)", () => {
+    const r = resolveLiveCalibrationP({
+      confidence: 80,
+      pickType: "MONEYLINE",
+      factorBreakdown: {
+        marketFairProb: 0.55,
+        independentEdge: { trueProb: 0.67, priced: true, marketFairProb: 0.55 },
+      },
+    });
+    expect(r?.source).toBe("independent_trueProb");
+    expect(r?.p).toBeCloseTo(0.67);
+  });
+
+  it("uses real marketFairProb when no independent", () => {
     const r = resolveLiveCalibrationP({
       confidence: 80,
       pickType: "MONEYLINE",
@@ -13,6 +26,22 @@ describe("resolveLiveCalibrationP", () => {
     });
     expect(r?.source).toBe("marketFairProb");
     expect(r?.p).toBeCloseTo(0.55);
+  });
+
+  it("ignores synthetic marketFairProb=0.5 and uses independent", () => {
+    const r = resolveLiveCalibrationP({
+      confidence: 70,
+      pickType: "MONEYLINE",
+      factorBreakdown: {
+        independentEdge: {
+          trueProb: 0.61,
+          priced: true,
+          marketFairProb: 0.5,
+        },
+      },
+    });
+    expect(r?.source).toBe("independent_trueProb");
+    expect(r?.p).toBeCloseTo(0.61);
   });
 
   it("uses independent trueProb when no market", () => {

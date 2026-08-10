@@ -1,14 +1,17 @@
 /**
- * Resolve the probability used for LIVE eligibility (Brier/ECE floors).
+ * Resolve the probability used for LIVE eligibility (Brier/ECE/Murphy floors).
  *
- * Hard law:
- * - Prefer marketFairProb (book de-vig for the chosen side) when persisted.
- * - Prefer independent trueProb when priced (absolute forecast).
+ * Hard law (2026-08-10 RES unlock):
+ * - Prefer **priced independent trueProb** when present (absolute model forecast).
+ *   Market-first was killing Murphy RES (book fair ≈ efficient → RES≈0) and
+ *   blocked measuring whether independents separate outcomes.
+ * - Else marketFairProb (book de-vig for the chosen side) when real and finite.
  * - MONEYLINE may fall back to confidence/100 (composite — documented).
  * - SPREAD/TOTAL without market/independent fair ABSENT from absolute floors
  *   (confidence is a rank score, not a fair probability — measuring it as p
  *   invents overconfidence and blocks PROVEN dishonestly).
  * - Never invent p. Never apply maps here.
+ * - Never treat synthetic marketFairProb=0.5 (backfill default) as a real book.
  */
 
 import {
@@ -31,6 +34,14 @@ function clamp01(p: number): number {
   return Math.min(1 - 1e-9, Math.max(1e-9, p));
 }
 
+/** Real book fair only — drop synthetic coin-flip 0.5 that shadows trueProb. */
+function isRealMarketP(p: number | null): p is number {
+  if (p == null || !Number.isFinite(p) || p <= 0 || p >= 1) return false;
+  // Exact 0.5 is almost always our backfill/signal-slate neutral default, not a book.
+  if (Math.abs(p - 0.5) < 1e-9) return false;
+  return true;
+}
+
 export function resolveLiveCalibrationP(input: {
   readonly confidence: number;
   readonly pickType?: string | null;
@@ -43,14 +54,14 @@ export function resolveLiveCalibrationP(input: {
   const fb = (input.factorBreakdown ?? null) as FactorBreakdownLike | null;
   const { pIndependent, marketP } = extractProvenPathProbs(fb);
 
-  // Absolute market-fair first (honest book-side probability)
-  if (marketP != null && marketP > 0 && marketP < 1) {
-    return { p: clamp01(marketP), source: "marketFairProb" };
-  }
-
-  // Independent model probability when present
+  // Independent model probability first — drives Murphy RES / ranking power.
   if (pIndependent != null && pIndependent > 0 && pIndependent < 1) {
     return { p: clamp01(pIndependent), source: "independent_trueProb" };
+  }
+
+  // Real book fair (never synthetic 0.5)
+  if (isRealMarketP(marketP)) {
+    return { p: clamp01(marketP), source: "marketFairProb" };
   }
 
   const market = (input.pickType ?? "").toUpperCase();
@@ -121,8 +132,8 @@ export function picksToHonestCalibrationSamples(picks: readonly PickForLiveCal[]
   }
 
   const notes = [
-    "Live eligibility p: prefer marketFairProb → independent trueProb → MONEYLINE confidence/100.",
-    "SPREAD/TOTAL without fair p excluded from absolute Brier/ECE floors (rank scores ≠ probabilities).",
+    "Live eligibility p: prefer independent trueProb → real marketFairProb → MONEYLINE confidence/100.",
+    "Synthetic marketFairProb=0.5 ignored (backfill neutral — not a book). SPREAD/TOTAL without fair p excluded.",
     `Included ${samples.length}; excluded non-prob markets ${excludedNonProb}. Sources: ${JSON.stringify(bySource)}.`,
     "Maps OFF — no isotonic/platt rewrite of live p. PROVEN still needs floors + streak + publish.",
   ];

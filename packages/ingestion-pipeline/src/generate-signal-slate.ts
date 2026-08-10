@@ -38,10 +38,15 @@ function clamp01(p: number): number {
 }
 
 /** Pure blend of independent home fair probs (exported for unit tests). */
+/**
+ * Equal-then-sharpness blend of independent home fair probs.
+ * Soft sources near 0.5 no longer drown exchange/standings extremes (RES lift).
+ * Never invents probs — empty → null.
+ */
 export function blendIndependentHomeFair(
   values: readonly IndependentMarketFairValue[],
 ): { homeP: number; sources: string[] } | null {
-  const pairs: { h: number; s: string }[] = [];
+  const pairs: { h: number; s: string; w: number }[] = [];
   for (const v of values) {
     const h = v.homeFairProb;
     const a = v.awayFairProb;
@@ -49,10 +54,15 @@ export function blendIndependentHomeFair(
     if (h < 0 || h > 1 || a < 0 || a > 1) continue;
     const sum = h + a;
     if (!(sum > 0)) continue;
-    pairs.push({ h: h / sum, s: v.source });
+    const hn = h / sum;
+    // Sharpness weight: |p−0.5| + floor so every real source still votes a little.
+    const w = Math.abs(hn - 0.5) + 0.05;
+    pairs.push({ h: hn, s: v.source, w });
   }
   if (pairs.length === 0) return null;
-  const homeP = pairs.reduce((s, x) => s + x.h, 0) / pairs.length;
+  const wSum = pairs.reduce((s, x) => s + x.w, 0);
+  if (!(wSum > 0)) return null;
+  const homeP = pairs.reduce((s, x) => s + x.h * x.w, 0) / wSum;
   return { homeP: clamp01(homeP), sources: pairs.map((p) => p.s) };
 }
 
@@ -174,7 +184,8 @@ export async function generateSignalSlate(opts?: {
     const independentEdge: IndependentEdgeSummary = {
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
       agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
-      marketFairProb: 0.5, // no book line — neutral; FactorBreakdown.marketFairProb stays null
+      // No book line on pure signal slate — omit market, never invent 0.5
+      marketFairProb: null,
       trueProb,
       rawEdge: trueProb - 0.5,
       shrunkEdge: (trueProb - 0.5) * 0.7,
