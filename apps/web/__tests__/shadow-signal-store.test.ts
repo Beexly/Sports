@@ -28,8 +28,10 @@ describe("shadow-signal-store", () => {
     [findUnique, upsertFilter, upsertSignal, updateMany, findMany].forEach((m) => m.mockReset());
   });
 
-  it("round-trips a warm filter through save/load, preserving accumulated evidence", async () => {
-    const { TeamStrengthFilter } = await import("@sports/prediction-engine");
+  it("round-trips a warm filter + registry through save/load, preserving evidence AND team identity", async () => {
+    const { TeamStrengthFilter, createTeamIndexRegistry, assignTeamIndex } = await import(
+      "@sports/prediction-engine"
+    );
     const mod = await import("../lib/ops/shadow-signal-store");
 
     const warm = new TeamStrengthFilter({ ...FALLBACK });
@@ -39,40 +41,69 @@ describe("shadow-signal-store", () => {
     }
     const warmProb = warm.predictHomeWinProbability(0, 1);
 
+    let registry = createTeamIndexRegistry("nba", FALLBACK.nTeams);
+    const a = assignTeamIndex(registry, "Celtics");
+    if (a.ok) registry = a.registry;
+    const b = assignTeamIndex(registry, "Lakers");
+    if (b.ok) registry = b.registry;
+
     upsertFilter.mockResolvedValue({});
-    expect(await mod.saveFilter("nba", warm)).toBe(true);
+    expect(await mod.saveFilter("nba", warm, registry)).toBe(true);
 
     // What was written is what we hand back — through a JSON round trip, as a DB would.
-    const written = upsertFilter.mock.calls[0]![0] as { create: { payload: unknown; observations: number } };
+    const written = upsertFilter.mock.calls[0]![0] as {
+      create: { payload: unknown; teamIndex: unknown; observations: number };
+    };
     expect(written.create.observations).toBe(25);
     findUnique.mockResolvedValue({
       version: 1,
       payload: JSON.parse(JSON.stringify(written.create.payload)),
+      teamIndex: JSON.parse(JSON.stringify(written.create.teamIndex)),
     });
 
-    const { filter, restored } = await mod.loadFilter("nba", { ...FALLBACK });
+    const { filter, registry: restoredRegistry, restored } = await mod.loadFilter("nba", { ...FALLBACK });
     expect(restored).toBe(true);
     expect(filter.diagnostics().observations).toBe(25);
     expect(filter.predictHomeWinProbability(0, 1)).toBe(warmProb);
+    // The registry came back paired with the filter, not silently dropped.
+    expect(restoredRegistry.indexByTeam["celtics"]).toBe(0);
+    expect(restoredRegistry.indexByTeam["lakers"]).toBe(1);
   });
 
-  it("returns a COLD filter when nothing is stored (the serverless default)", async () => {
+  it("starts COLD (filter AND registry) when the stored registry is missing or corrupt", async () => {
+    // This is the exact case the loader must refuse to pair: a real filter
+    // payload sitting next to a missing/invalid registry. Restoring the
+    // particles anyway would let whichever team is assigned index 0 next
+    // inherit 25 games of a DIFFERENT team's learned strength.
+    findUnique.mockResolvedValue({ version: 1, payload: { fake: true }, teamIndex: null });
+    const mod = await import("../lib/ops/shadow-signal-store");
+    const { restored, registry } = await mod.loadFilter("nba", { ...FALLBACK });
+    expect(restored).toBe(false);
+    expect(Object.keys(registry.indexByTeam)).toHaveLength(0);
+  });
+
+  it("returns a COLD filter + empty registry when nothing is stored (the serverless default)", async () => {
     findUnique.mockResolvedValue(null);
     const mod = await import("../lib/ops/shadow-signal-store");
-    const { filter, restored } = await mod.loadFilter("nba", { ...FALLBACK });
+    const { filter, registry, restored } = await mod.loadFilter("nba", { ...FALLBACK });
     expect(restored).toBe(false);
     expect(filter.diagnostics().observations).toBe(0);
+    expect(Object.keys(registry.indexByTeam)).toHaveLength(0);
   });
 
   it("ignores a version-mismatched snapshot instead of throwing", async () => {
-    findUnique.mockResolvedValue({ version: 999, payload: { nonsense: true } });
+    findUnique.mockResolvedValue({ version: 999, payload: { nonsense: true }, teamIndex: {} });
     const mod = await import("../lib/ops/shadow-signal-store");
     const { restored } = await mod.loadFilter("nba", { ...FALLBACK });
     expect(restored).toBe(false);
   });
 
   it("ignores a corrupt payload instead of wedging the caller", async () => {
-    findUnique.mockResolvedValue({ version: 1, payload: { version: 1, nTeams: "not-a-number" } });
+    findUnique.mockResolvedValue({
+      version: 1,
+      payload: { version: 1, nTeams: "not-a-number" },
+      teamIndex: { scope: "nba", capacity: 4, indexByTeam: {} },
+    });
     const mod = await import("../lib/ops/shadow-signal-store");
     const { restored } = await mod.loadFilter("nba", { ...FALLBACK });
     expect(restored).toBe(false);
@@ -81,11 +112,24 @@ describe("shadow-signal-store", () => {
   it("fails open on a DB error rather than throwing", async () => {
     findUnique.mockRejectedValue(new Error("connection reset"));
     upsertFilter.mockRejectedValue(new Error("connection reset"));
-    const { TeamStrengthFilter } = await import("@sports/prediction-engine");
+    const { TeamStrengthFilter, createTeamIndexRegistry } = await import("@sports/prediction-engine");
     const mod = await import("../lib/ops/shadow-signal-store");
 
     expect((await mod.loadFilter("nba", { ...FALLBACK })).restored).toBe(false);
-    expect(await mod.saveFilter("nba", new TeamStrengthFilter({ ...FALLBACK }))).toBe(false);
+    expect(
+      await mod.saveFilter("nba", new TeamStrengthFilter({ ...FALLBACK }), createTeamIndexRegistry("nba")),
+    ).toBe(false);
+  });
+
+  it("saves the filter and the registry in the SAME upsert call, never separately", async () => {
+    upsertFilter.mockResolvedValue({});
+    const { TeamStrengthFilter, createTeamIndexRegistry } = await import("@sports/prediction-engine");
+    const mod = await import("../lib/ops/shadow-signal-store");
+    await mod.saveFilter("nba", new TeamStrengthFilter({ ...FALLBACK }), createTeamIndexRegistry("nba"));
+    expect(upsertFilter).toHaveBeenCalledTimes(1);
+    const call = upsertFilter.mock.calls[0]![0] as { create: { payload: unknown; teamIndex: unknown } };
+    expect(call.create.payload).toBeDefined();
+    expect(call.create.teamIndex).toBeDefined();
   });
 
   it("upserts a shadow signal on (gameId, modelVersion) so a re-run cannot duplicate", async () => {

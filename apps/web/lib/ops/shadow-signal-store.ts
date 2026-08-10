@@ -22,8 +22,12 @@ import { db } from "@sports/db";
 import {
   TeamStrengthFilter,
   FILTER_SNAPSHOT_VERSION,
+  createTeamIndexRegistry,
+  isValidTeamIndexRegistry,
+  DEFAULT_TEAM_CAPACITY,
   type FilterStateSnapshot,
   type TeamStrengthFilterOptions,
+  type TeamIndexRegistry,
 } from "@sports/prediction-engine";
 
 export interface ShadowSignalInput {
@@ -46,41 +50,64 @@ export interface ShadowSignalInput {
 export async function loadFilter(
   scope: string,
   fallback: TeamStrengthFilterOptions,
-): Promise<{ readonly filter: TeamStrengthFilter; readonly restored: boolean }> {
-  const row = await db.filterStateSnapshot.findUnique({ where: { scope } }).catch(() => null);
+): Promise<{
+  readonly filter: TeamStrengthFilter;
+  readonly registry: TeamIndexRegistry;
+  readonly restored: boolean;
+}> {
+  const cold = () => ({
+    filter: new TeamStrengthFilter(fallback),
+    registry: createTeamIndexRegistry(scope, fallback.nTeams ?? DEFAULT_TEAM_CAPACITY),
+    restored: false as const,
+  });
 
-  if (row === null || row.version !== FILTER_SNAPSHOT_VERSION) {
-    return { filter: new TeamStrengthFilter(fallback), restored: false };
-  }
+  const row = await db.filterStateSnapshot.findUnique({ where: { scope } }).catch(() => null);
+  if (row === null || row.version !== FILTER_SNAPSHOT_VERSION) return cold();
+
+  // The registry and the payload are only meaningful TOGETHER: an index is a
+  // team's latent-slot identity. A row whose registry is missing or malformed
+  // cannot be paired with its particle cloud, and restoring the cloud anyway
+  // would attribute learned strength to whichever team later lands in each
+  // slot. Refuse the pair and start cold — losing history is recoverable,
+  // silently mis-attributing it is not.
+  if (!isValidTeamIndexRegistry(row.teamIndex)) return cold();
 
   try {
     return {
       filter: TeamStrengthFilter.restore(row.payload as unknown as FilterStateSnapshot),
+      registry: row.teamIndex,
       restored: true,
     };
   } catch {
     // A stored snapshot that no longer restores is a migration/corruption event.
     // Starting cold is honest and recoverable; throwing here would wedge the job.
-    return { filter: new TeamStrengthFilter(fallback), restored: false };
+    return cold();
   }
 }
 
-/** Write-through the filter's full state. Returns false if the write failed. */
-export async function saveFilter(scope: string, filter: TeamStrengthFilter): Promise<boolean> {
+/**
+ * Write-through the filter's full state AND its registry in a single upsert —
+ * never one without the other, for the identity reason above. Returns false if
+ * the write failed.
+ */
+export async function saveFilter(
+  scope: string,
+  filter: TeamStrengthFilter,
+  registry: TeamIndexRegistry,
+): Promise<boolean> {
   const snapshot = filter.snapshot();
   const payload = snapshot as unknown as object;
+  const teamIndex = registry as unknown as object;
   const observations = snapshot.observations;
 
-  const ok = await db.filterStateSnapshot
+  return db.filterStateSnapshot
     .upsert({
       where: { scope },
-      create: { scope, version: snapshot.version, observations, payload },
-      update: { version: snapshot.version, observations, payload },
+      create: { scope, version: snapshot.version, observations, payload, teamIndex },
+      update: { version: snapshot.version, observations, payload, teamIndex },
     })
     .then(() => true)
     .catch(() => false);
-
-  return ok;
 }
 
 /**
