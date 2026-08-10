@@ -4,15 +4,17 @@
 
 PROVEN path is blocked by ranking power, not sample size:
 
-| Metric | Live (approx) | Floor / target |
+| Metric | Live (approx, post-backfill) | Floor / target |
 |---|---|---|
-| Settled n | ≥100 (met) | 100 |
-| Brier | ~0.275 | ≤ 0.22 |
-| ECE | ~0.112 | ≤ 0.05 |
-| Murphy RES | ~0.002 | raise via independent ranking |
-| independent_trueProb coverage | **0% historical** | ≫ 0% |
+| Settled n (eligibility) | ~339 (met) | 100 |
+| Brier | ~0.247 | ≤ 0.22 |
+| ECE | **~0.039 (under floor)** | ≤ 0.05 |
+| Murphy RES (live conf) | ~0.002 | raise via independent ranking |
+| independent_trueProb n | **~291** | grow |
+| independent coverage (ML/SPREAD) | **~65%** | ≥ 40% to win bestScore |
+| bestScore (plan) | **independent_trueProb** | separation > 0 |
 
-`missing_independent` is the primary ranking-power bottleneck. Without priced
+After backfill, bottleneck often shifts to `dead_groups` (pause Res≈0 sport|markets). Without priced
 `independentEdge.trueProb` on settled rows, the bake-off cannot score
 `independent_trueProb` / `blend_indep_conf` kinds — only confidence-echo.
 
@@ -68,6 +70,8 @@ Live eligibility p (`live-calibration-p.ts`):
 | separation | mean p\|win − mean p\|loss. Must be **positive** for ranking polarity. |
 | consecutiveGreen | GREEN streak toward publish (need K=3). |
 | independentCount | Settled rows with pIndependent priced. |
+| coverage (independent) | n_indep / n_(ML∪SPREAD) — TOTAL excluded from denom. |
+| bestScore | argmax RES among sep>0, n≥50, coverage≥40%. |
 
 ### What does **not** get you PROVEN
 
