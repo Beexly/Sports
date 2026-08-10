@@ -74,10 +74,17 @@ export async function backfillIndependentTrueProb(opts?: {
   readonly dryRun?: boolean;
   /** When true, skip network independents (Kalshi/FPI) — tests / offline. */
   readonly skipNetworkIndependents?: boolean;
+  /**
+   * When true, re-price rows that already have independentEdge.trueProb
+   * (e.g. after new free sources like mlb_standings / nfl_epa_adj land).
+   * Still never invents: empty independents → skip. Never rewrites results.
+   */
+  readonly forceReprice?: boolean;
 }): Promise<BackfillIndependentResult> {
   const logPrefix = opts?.logPrefix ?? "[backfill-indep]";
   const limit = Math.min(500, Math.max(1, opts?.limit ?? 80));
   const dryRun = opts?.dryRun === true;
+  const forceReprice = opts?.forceReprice === true;
   const errors: string[] = [];
   let scanned = 0;
   let alreadyPriced = 0;
@@ -122,9 +129,13 @@ export async function backfillIndependentTrueProb(opts?: {
       skippedNoOpinion += 1;
       continue;
     }
-    if (hasIndependentTrueProb(pick.factorBreakdown)) {
+    if (hasIndependentTrueProb(pick.factorBreakdown) && !forceReprice) {
       alreadyPriced += 1;
       continue;
+    }
+    if (hasIndependentTrueProb(pick.factorBreakdown) && forceReprice) {
+      // Count as work item (reprice) so force runs don't spin free forever.
+      alreadyPriced += 1;
     }
     scanned += 1;
 

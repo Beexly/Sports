@@ -19,15 +19,20 @@ export async function GET(request: Request): Promise<NextResponse> {
   const limitRaw = Number(url.searchParams.get("limit") ?? "80");
   const limit = Number.isFinite(limitRaw) ? Math.min(300, Math.max(1, limitRaw)) : 80;
   const dryRun = url.searchParams.get("dryRun") === "1";
+  const forceReprice =
+    url.searchParams.get("force") === "1" ||
+    url.searchParams.get("forceReprice") === "1";
 
   try {
     const result = await backfillIndependentTrueProb({
       limit,
       dryRun,
+      forceReprice,
       logPrefix: "[cron:backfill-independent-trueprob]",
     });
     return NextResponse.json({
       ...result,
+      forceReprice,
       claimPosture: "retrospective_independent_trueProb_not_proven",
     });
   } catch (err) {
