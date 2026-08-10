@@ -1,4 +1,7 @@
 // Model version — bump when scoring logic changes.
+// v5.2.6 (2026-08-10): market-anchored live eligibility p (0.55 shrunk-indep +
+// 0.45 real book fair) + fixed evidence shrink α=0.88; pick-card priced badge.
+// Dual-objective selective retained. Maps/PERFORMANCE_STATS still OFF.
 // v5.2.5 (2026-08-10): dual-objective selective (RES under Brier cap); live
 // eligibility blend 0.7 indep / 0.3 conf; softer discrimination stretch (1.12 /
 // standings 1.1). Maps/PERFORMANCE_STATS still OFF.
@@ -17,7 +20,7 @@
 // Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.
 // v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-export const MODEL_VERSION = "v5.2.5";
+export const MODEL_VERSION = "v5.2.6";
 
 // ============================================================
 // Confidence thresholds

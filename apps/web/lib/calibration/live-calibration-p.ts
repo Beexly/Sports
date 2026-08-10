@@ -1,17 +1,16 @@
 /**
  * Resolve the probability used for LIVE eligibility (Brier/ECE/Murphy floors).
  *
- * Hard law (2026-08-10 RES unlock):
+ * Hard law (2026-08-10 → v5.2.6):
  * - Prefer **priced independent trueProb** when present (absolute model forecast).
- *   Market-first was killing Murphy RES (book fair ≈ efficient → RES≈0) and
- *   blocked measuring whether independents separate outcomes.
- * - Else marketFairProb (book de-vig for the chosen side) when real and finite.
- * - MONEYLINE may fall back to confidence/100 (composite — documented).
- * - SPREAD/TOTAL without market/independent fair ABSENT from absolute floors
- *   (confidence is a rank score, not a fair probability — measuring it as p
- *   invents overconfidence and blocks PROVEN dishonestly).
- * - Never invent p. Never apply maps here.
- * - Never treat synthetic marketFairProb=0.5 (backfill default) as a real book.
+ * - Fixed evidence shrink toward 0.5 (α=0.88) — model definition, not fitted map.
+ * - When real book marketFair exists: market-anchored blend (0.55 shrunk-indep + 0.45 market)
+ *   — cuts Brier when independents are noisy vs efficient books; keeps residual RES.
+ * - Else blend toward confidence only when conf ≠ independent echo.
+ * - MONEYLINE may fall back to confidence/100.
+ * - SPREAD/TOTAL without fair p ABSENT from absolute floors.
+ * - Never invent p. Never apply fitted maps here.
+ * - Never treat synthetic marketFairProb=0.5 as a real book.
  */
 
 import {
@@ -23,6 +22,7 @@ export type LiveCalPSource =
   | "marketFairProb"
   | "independent_trueProb"
   | "blend_indep_conf"
+  | "blend_indep_market"
   | "confidence_moneyline"
   | "excluded_non_prob_market";
 
@@ -31,14 +31,22 @@ export type LiveCalPResolution = {
   readonly source: LiveCalPSource;
 } | null;
 
+/** Evidence shrink toward coin-flip — fixed model prior, not holdout-fitted map. */
+export const INDEPENDENT_EVIDENCE_SHRINK = 0.88;
+/** Weight on shrunk independent when real market fair exists. */
+export const MARKET_ANCHOR_INDEP_WEIGHT = 0.55;
+
 function clamp01(p: number): number {
   return Math.min(1 - 1e-9, Math.max(1e-9, p));
+}
+
+function shrinkIndependent(p: number, alpha = INDEPENDENT_EVIDENCE_SHRINK): number {
+  return clamp01(0.5 + (p - 0.5) * alpha);
 }
 
 /** Real book fair only — drop synthetic coin-flip 0.5 that shadows trueProb. */
 function isRealMarketP(p: number | null): p is number {
   if (p == null || !Number.isFinite(p) || p <= 0 || p >= 1) return false;
-  // Exact 0.5 is almost always our backfill/signal-slate neutral default, not a book.
   if (Math.abs(p - 0.5) < 1e-9) return false;
   return true;
 }
@@ -56,31 +64,36 @@ export function resolveLiveCalibrationP(input: {
   const { pIndependent, marketP } = extractProvenPathProbs(fb);
   const confP = clamp01(input.confidence / 100);
 
-  // Priced independent first — with optional blend toward confidence when conf
-  // is finite (ranking law 0.7 indep / 0.3 conf). Pure independent overfits
-  // soft stretch and inflates Brier/ECE; blend keeps RES while calming REL.
   if (pIndependent != null && pIndependent > 0 && pIndependent < 1) {
-    const blended = clamp01(0.7 * pIndependent + 0.3 * confP);
-    // Use pure independent only when far from conf (model has a real view);
-    // otherwise blend. Always report blend source when conf pulled ≥1pt.
-    if (Math.abs(blended - pIndependent) < 0.01) {
-      return { p: clamp01(pIndependent), source: "independent_trueProb" };
+    const shrunk = shrinkIndependent(pIndependent);
+
+    // Real book fair: market-anchored blend (Brier lever vs pure independent overfit).
+    if (isRealMarketP(marketP)) {
+      const p = clamp01(
+        MARKET_ANCHOR_INDEP_WEIGHT * shrunk +
+          (1 - MARKET_ANCHOR_INDEP_WEIGHT) * marketP,
+      );
+      return { p, source: "blend_indep_market" };
     }
-    return { p: blended, source: "blend_indep_conf" };
+
+    // Confidence only helps when it is not a pure trueProb echo (signal slate).
+    if (Math.abs(confP - pIndependent) >= 0.03) {
+      const p = clamp01(0.7 * shrunk + 0.3 * confP);
+      return { p, source: "blend_indep_conf" };
+    }
+
+    return { p: shrunk, source: "independent_trueProb" };
   }
 
-  // Real book fair (never synthetic 0.5)
   if (isRealMarketP(marketP)) {
     return { p: clamp01(marketP), source: "marketFairProb" };
   }
 
   const market = (input.pickType ?? "").toUpperCase();
-  // MONEYLINE: confidence is partially price-linked; still provisional
   if (market === "MONEYLINE" || market === "" || market === "UNKNOWN") {
     return { p: confP, source: "confidence_moneyline" };
   }
 
-  // SPREAD / TOTAL without fair p — exclude from absolute calibration floors
   return null;
 }
 
@@ -141,8 +154,8 @@ export function picksToHonestCalibrationSamples(picks: readonly PickForLiveCal[]
   }
 
   const notes = [
-    "Live eligibility p: independent trueProb (blend 0.7/0.3 with confidence when conf pulls) → real marketFairProb → MONEYLINE confidence/100.",
-    "Synthetic marketFairProb=0.5 ignored. SPREAD/TOTAL without fair p excluded. Maps OFF.",
+    "Live eligibility p: shrunk independent (α=0.88) → market-anchored blend when real book fair → conf blend when non-echo → MONEYLINE conf.",
+    "Synthetic marketFairProb=0.5 ignored. SPREAD/TOTAL without fair p excluded. Maps OFF (no fitted Platt/isotonic).",
     `Included ${samples.length}; excluded non-prob markets ${excludedNonProb}. Sources: ${JSON.stringify(bySource)}.`,
     "PROVEN still needs floors + streak + publish. PERFORMANCE_STATS untouched.",
   ];

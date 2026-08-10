@@ -327,7 +327,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Independent-edge layer (#10) — surfaced, not yet priced into confidence. */}
+      {/* Independent-edge layer — priced into ranking when rankingP/source present. */}
       {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
         <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">
           <div className="mb-0.5 flex items-center gap-1.5">
@@ -335,12 +335,25 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
               Independent edge
             </span>
             <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
-              {breakdown.independentEdge.sources.join(", ") || "—"} · not yet priced
+              {breakdown.independentEdge.sources.join(", ") || "—"}
+              {" · "}
+              {typeof breakdown.rankingP === "number" &&
+              Number.isFinite(breakdown.rankingP) &&
+              (breakdown.rankingSource?.includes("independent") ||
+                typeof breakdown.independentEdge.trueProb === "number")
+                ? "priced into ranking"
+                : "signal only"}
             </span>
           </div>
           <p className="text-[10px] leading-relaxed text-ion-2">
             {breakdown.independentEdge.rationale}
           </p>
+          {typeof breakdown.independentEdge.trueProb === "number" &&
+            Number.isFinite(breakdown.independentEdge.trueProb) && (
+              <p className="mt-1 font-mono text-[10px] text-ion-2">
+                trueProb {(breakdown.independentEdge.trueProb * 100).toFixed(1)}%
+              </p>
+            )}
         </div>
       )}
 

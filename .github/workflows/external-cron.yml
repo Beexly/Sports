@@ -5,6 +5,12 @@ name: External Cron (Galaxy Sports Edge)
 # crons in `vercel.json` remain the daily backstop. This workflow gives
 # us higher-cadence hits with the same CRON_SECRET bearer token Vercel uses.
 #
+# PRODUCTION SCHEDULER SoT (2026-08-10): **Vercel-only** until private-repo
+# GitHub Actions minutes / billing are restored. This workflow may sit idle
+# (no runners) — that is accepted, not a bug. Do not invent a second
+# scheduler. When minutes return: re-enable Actions billing + set secrets
+# CRON_SECRET + CRON_TARGET_URL.
+#
 # The routes themselves enforce auth and gate writes via
 # `getReadinessGates()`, so this is purely a scheduler — no business
 # logic lives here.

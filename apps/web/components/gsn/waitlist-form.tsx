@@ -144,8 +144,27 @@ export function WaitlistForm(): JSX.Element {
 
   if (status === "done") {
     return (
-      <div role="status" className="rounded-xl border border-verify/40 bg-verify/10 p-6">
+      <div role="status" className="space-y-4 rounded-xl border border-verify/40 bg-verify/10 p-6">
         <p className="text-sm leading-6 text-verify sm:text-base">{WAITLIST_COPY.thankYou}</p>
+        {/* Conversion path — founding rates live; no track-record / PROVEN claim. */}
+        <p className="text-sm leading-6 text-ion-1">
+          Founding seats are open at current rates. No verified public track record yet —
+          process access only.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href="/pricing"
+            className="inline-flex items-center justify-center rounded-md bg-orbital-cyan px-4 py-2.5 text-sm font-semibold text-obsidian transition-opacity hover:opacity-90"
+          >
+            See founding rates
+          </a>
+          <a
+            href="/auth/signin?callbackUrl=%2Fpricing"
+            className="inline-flex items-center justify-center rounded-md border border-mineral px-4 py-2.5 text-sm font-medium text-ion-white transition-colors hover:border-mineral-hi"
+          >
+            Sign in to checkout
+          </a>
+        </div>
       </div>
     );
   }
