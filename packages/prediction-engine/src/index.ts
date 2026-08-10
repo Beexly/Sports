@@ -244,6 +244,21 @@ export type {
   PowerIndexLogisticInput,
   PowerIndexLogisticResult,
 } from "./espn-powerindex.js";
+// MLB / general standings win% → independent ML fair value.
+export {
+  standingsWinPctToWinProbs,
+  standingsWinPctToIndependentFairValue,
+} from "./standings-strength.js";
+export type { StandingsStrengthInput } from "./standings-strength.js";
+// NFL opponent-adjusted EPA → independent ML fair value.
+export {
+  nflEpaToWinProbs,
+  nflEpaToIndependentFairValue,
+  NFL_EPA_MARGIN_SCALE,
+  NFL_EPA_HFA,
+  NFL_EPA_MIN_GAMES,
+} from "./nfl-epa-fair-value.js";
+export type { NflEpaFairValueInput } from "./nfl-epa-fair-value.js";
 // R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
 // NOT wired into live scoring; built for the future human-gated MODEL_VERSION
 // calibration that turns the confidence score into a calibrated win probability.

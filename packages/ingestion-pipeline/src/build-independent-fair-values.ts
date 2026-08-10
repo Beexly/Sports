@@ -8,9 +8,11 @@
  *  4) ClubElo soccer (Fixtures W/D/L → 2-way, else rating logistic)
  *  5) Rate-model independent: Dixon–Coles on soccer (not double-counted with Poisson);
  *     independent Poisson on icehockey / baseball
+ *  6) MLB Stats API standings win% logistic (free official; summer Brier lever)
  *  7) Elo fitted from chronological TeamGameLog results
  *  8) Polymarket Gamma internal estimator — ONLY when INDEPENDENT_POLYMARKET=1
  *     (compliance hold: not product, not cron clear)
+ *  9) NFL opponent-adjusted EPA/play from TeamGameEfficiency (nflverse) when rows exist
  *
  * Never synthesizes λ, ratings, or FPI. Never invents book lines.
  * Edge is NOT a probability — consumers must use trueProb / homeFairProb only.
@@ -32,6 +34,9 @@ import {
   isClubEloSport,
   isPolymarketIndependentEnabled,
   PolymarketIndependentClient,
+  fetchMlbStandings,
+  buildMlbWinPctLookup,
+  lookupMlbWinPct,
 } from "@sports/data-ingestion";
 import {
   isPoissonValidSport,
@@ -41,6 +46,9 @@ import {
   fitEloRatingsFromResults,
   eloFairValueFromRatings,
   powerIndexToIndependentFairValue,
+  standingsWinPctToIndependentFairValue,
+  nflEpaToIndependentFairValue,
+  opponentAdjustedRatings,
   type EloResultGame,
 } from "@sports/prediction-engine";
 import type { IndependentMarketFairValue } from "@sports/types";
@@ -247,6 +255,197 @@ async function tryPolymarketIndependentFairValue(
   }
 }
 
+/** In-process cache for MLB standings within one refresh cycle. */
+let mlbStandingsCache:
+  | { readonly season: number; readonly at: number; readonly rows: Awaited<ReturnType<typeof fetchMlbStandings>> }
+  | null = null;
+
+async function tryMlbStandingsFairValue(
+  input: IndependentFairValueBuildInput,
+): Promise<IndependentMarketFairValue | null> {
+  if (!input.sportKey.includes("baseball_mlb") && input.sportKey !== "mlb") {
+    return null;
+  }
+  try {
+    const season = input.commenceTime.getUTCFullYear();
+    const nowMs = (input.now ?? (() => new Date()))().getTime();
+    if (
+      !mlbStandingsCache ||
+      mlbStandingsCache.season !== season ||
+      nowMs - mlbStandingsCache.at > 30 * 60 * 1000
+    ) {
+      const rows = await fetchMlbStandings({ season });
+      mlbStandingsCache = { season, at: nowMs, rows };
+    }
+    if (mlbStandingsCache.rows.length === 0) return null;
+    const lookup = buildMlbWinPctLookup(mlbStandingsCache.rows);
+    const homeWp = lookupMlbWinPct(lookup, input.homeTeam);
+    const awayWp = lookupMlbWinPct(lookup, input.awayTeam);
+    if (homeWp == null || awayWp == null) return null;
+    // Games played from standings row (wins+losses) when we can soft-match name
+    const findGames = (team: string): number | undefined => {
+      const key = team.toLowerCase();
+      for (const r of mlbStandingsCache!.rows) {
+        if (
+          r.name.toLowerCase() === key ||
+          r.name.toLowerCase().includes(key) ||
+          key.includes(r.name.toLowerCase())
+        ) {
+          return r.wins + r.losses;
+        }
+      }
+      return undefined;
+    };
+    return standingsWinPctToIndependentFairValue(
+      {
+        homeWinPct: homeWp,
+        awayWinPct: awayWp,
+        homeGames: findGames(input.homeTeam),
+        awayGames: findGames(input.awayTeam),
+        source: "mlb_standings",
+      },
+      { now: input.now },
+    );
+  } catch {
+    return null;
+  }
+}
+
+/** Season cache for NFL EPA ratings within one process cycle. */
+const nflEpaRatingsCache = new Map<
+  number,
+  { readonly at: number; readonly byTeam: Map<string, { overall: number; games: number }> }
+>();
+
+async function tryNflEpaFairValue(
+  input: IndependentFairValueBuildInput,
+): Promise<IndependentMarketFairValue | null> {
+  if (
+    input.sportKey !== "americanfootball_nfl" &&
+    input.sportKey !== "nfl"
+  ) {
+    return null;
+  }
+  try {
+    const season = input.commenceTime.getUTCFullYear();
+    // NFL calendar: Jan–Feb games belong to prior season year label in nflverse
+    const month = input.commenceTime.getUTCMonth(); // 0-based
+    const nflSeason = month <= 1 ? season - 1 : season;
+    const nowMs = (input.now ?? (() => new Date()))().getTime();
+    let entry = nflEpaRatingsCache.get(nflSeason);
+    if (!entry || nowMs - entry.at > 30 * 60 * 1000) {
+      const rows = await db.teamGameEfficiency.findMany({
+        where: { season: nflSeason },
+        select: {
+          team: true,
+          opponent: true,
+          offEpaPerPlay: true,
+          defEpaPerPlay: true,
+        },
+        take: 5000,
+      });
+      if (rows.length === 0) {
+        nflEpaRatingsCache.set(nflSeason, {
+          at: nowMs,
+          byTeam: new Map(),
+        });
+        return null;
+      }
+      const games = rows.map((r) => ({
+        team: r.team,
+        opponent: r.opponent,
+        offValue: r.offEpaPerPlay,
+        defValue: r.defEpaPerPlay,
+      }));
+      const ratings = opponentAdjustedRatings(games);
+      const byTeam = new Map<string, { overall: number; games: number }>();
+      for (const r of ratings) {
+        byTeam.set(r.team.toUpperCase(), { overall: r.overall, games: r.games });
+        byTeam.set(r.team, { overall: r.overall, games: r.games });
+      }
+      entry = { at: nowMs, byTeam };
+      nflEpaRatingsCache.set(nflSeason, entry);
+    }
+    if (entry.byTeam.size === 0) return null;
+
+    // TeamGameEfficiency uses abbreviations; GSE games often use full names.
+    // Match by abbreviation tokens embedded in names (e.g. "Kansas City Chiefs" ↔ KC).
+    const resolve = (name: string): { overall: number; games: number } | null => {
+      const direct =
+        entry!.byTeam.get(name) ??
+        entry!.byTeam.get(name.toUpperCase()) ??
+        entry!.byTeam.get(name.trim());
+      if (direct) return direct;
+      // Token overlap: last word often matches mascot; try common abbrs via uppercase words
+      const upper = name.toUpperCase();
+      for (const [k, v] of entry!.byTeam) {
+        if (k.length <= 3 && upper.includes(k)) {
+          // require word boundary-ish: " NE " or start/end
+          const re = new RegExp(`(?:^|\\s)${k}(?:\\s|$)`);
+          if (re.test(upper) || upper.endsWith(k) || upper.startsWith(k)) {
+            return v;
+          }
+        }
+      }
+      return null;
+    };
+
+    // Prefer common NFL abbr maps for full names
+    const NFL_NAME_TO_ABBR: Record<string, string> = {
+      "arizona cardinals": "ARI",
+      "atlanta falcons": "ATL",
+      "baltimore ravens": "BAL",
+      "buffalo bills": "BUF",
+      "carolina panthers": "CAR",
+      "chicago bears": "CHI",
+      "cincinnati bengals": "CIN",
+      "cleveland browns": "CLE",
+      "dallas cowboys": "DAL",
+      "denver broncos": "DEN",
+      "detroit lions": "DET",
+      "green bay packers": "GB",
+      "houston texans": "HOU",
+      "indianapolis colts": "IND",
+      "jacksonville jaguars": "JAX",
+      "kansas city chiefs": "KC",
+      "las vegas raiders": "LV",
+      "los angeles chargers": "LAC",
+      "los angeles rams": "LA",
+      "miami dolphins": "MIA",
+      "minnesota vikings": "MIN",
+      "new england patriots": "NE",
+      "new orleans saints": "NO",
+      "new york giants": "NYG",
+      "new york jets": "NYJ",
+      "philadelphia eagles": "PHI",
+      "pittsburgh steelers": "PIT",
+      "san francisco 49ers": "SF",
+      "seattle seahawks": "SEA",
+      "tampa bay buccaneers": "TB",
+      "tennessee titans": "TEN",
+      "washington commanders": "WAS",
+    };
+    const homeAbbr = NFL_NAME_TO_ABBR[input.homeTeam.toLowerCase().trim()];
+    const awayAbbr = NFL_NAME_TO_ABBR[input.awayTeam.toLowerCase().trim()];
+    const home =
+      (homeAbbr ? entry.byTeam.get(homeAbbr) : null) ?? resolve(input.homeTeam);
+    const away =
+      (awayAbbr ? entry.byTeam.get(awayAbbr) : null) ?? resolve(input.awayTeam);
+    if (!home || !away) return null;
+    return nflEpaToIndependentFairValue(
+      {
+        homeOverall: home.overall,
+        awayOverall: away.overall,
+        homeGames: home.games,
+        awayGames: away.games,
+      },
+      { now: input.now },
+    );
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Assemble independent fair values for one game. Empty array = no opinion.
  */
@@ -365,6 +564,12 @@ export async function buildIndependentFairValues(
     }
   }
 
+  // 6) MLB Stats API standings win% (free official) — summer Brier lever.
+  if (!input.skipNetworkIndependents) {
+    const mlbStand = await tryMlbStandingsFairValue(input);
+    if (mlbStand) out.push(mlbStand);
+  }
+
   // 7) Elo from chronological results.
   try {
     const ratings = await getOrFitEloRatings(
@@ -390,6 +595,12 @@ export async function buildIndependentFairValues(
   ) {
     const pm = await tryPolymarketIndependentFairValue(input);
     if (pm) out.push(pm);
+  }
+
+  // 9) NFL opponent-adjusted EPA (nflverse TeamGameEfficiency) when rows exist.
+  if (!input.skipNetworkIndependents) {
+    const epa = await tryNflEpaFairValue(input);
+    if (epa) out.push(epa);
   }
 
   return out;

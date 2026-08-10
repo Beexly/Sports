@@ -245,3 +245,12 @@ export {
   sportMetaForKey,
 } from "./espn-schedule-seed.js";
 export type { ShortSportKey, EspnSeedGame } from "./espn-schedule-seed.js";
+
+export {
+  fetchMlbStandings,
+  buildMlbWinPctLookup,
+  lookupMlbWinPct,
+  fetchMlbCompletedGamesForDate,
+  fetchMlbRecentCompletedGames,
+} from "./mlb-statsapi-client.js";
+export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";

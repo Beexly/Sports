@@ -1,4 +1,8 @@
 // Model version — bump when scoring logic changes.
+// v5.2.3 (2026-08-10): free open extractors into independent path —
+// MLB Stats API standings win% logistic; NFL opponent-adjusted EPA/play from
+// TeamGameEfficiency (nflverse) when rows exist. No FastAPI dual stack.
+// Maps/AUTO_PUBLISH/PERFORMANCE_STATS still OFF. ESPN free odds tertiary live.
 // v5.2.2 (2026-08-09): Dixon–Coles soccer independent; Kalshi ESPN abbr aliases +
 // ET wall-clock ticker fragments; 12h start skew on series match.
 // v5.2.1 (2026-08-09): ranking uses trueProb whenever finite (incl. PASS),
@@ -7,7 +11,7 @@
 // Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.
 // v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-export const MODEL_VERSION = "v5.2.2";
+export const MODEL_VERSION = "v5.2.3";
 
 // ============================================================
 // Confidence thresholds
