@@ -21,7 +21,7 @@
  *   npx tsx scripts/ops/generate-calibration-proposal.ts [--n=200] [--out=path.md]
  */
 import { writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, sep } from "node:path";
 import { db, isStubMode } from "@sports/db";
 import { MODEL_VERSION } from "@sports/prediction-engine";
 import {
@@ -78,9 +78,14 @@ async function loadLastNSettled(n: number): Promise<readonly CalibrationProposal
 async function main(): Promise<void> {
   const { n, out } = parseArgs(process.argv.slice(2));
 
-  if (out) {
-    const resolvedOut = resolve(process.cwd(), out);
-    if (resolvedOut === PROPOSALS_DIR || resolvedOut.startsWith(PROPOSALS_DIR + "/")) {
+  // Resolved ONCE and reused for both the guard and the write below. Resolving
+  // separately at each site would let the checked path and the written path
+  // diverge — the guard would be attesting about a different path than the one
+  // that actually gets written.
+  const resolvedOut = out === null ? null : resolve(process.cwd(), out);
+
+  if (resolvedOut !== null) {
+    if (resolvedOut === PROPOSALS_DIR || resolvedOut.startsWith(PROPOSALS_DIR + sep)) {
       console.error(
         "[generate-calibration-proposal] refusing --out under docs/calibration-proposals/ — " +
           "landing evidence there is a human decision (see scripts/guardrails/model-freeze.mjs). " +
@@ -104,8 +109,8 @@ async function main(): Promise<void> {
     generatedAt: new Date().toISOString(),
   });
 
-  if (out) {
-    writeFileSync(resolve(process.cwd(), out), draft.markdown, "utf8");
+  if (resolvedOut !== null) {
+    writeFileSync(resolvedOut, draft.markdown, "utf8");
     console.log(
       `[generate-calibration-proposal] wrote DRAFT to ${out} ` +
         `(status OPEN — not evidence until a human reviews and promotes it). ` +
