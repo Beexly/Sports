@@ -64,7 +64,7 @@ export function pava(y: number[], w?: number[]): number[] {
       }
       j = L - 1;
     }
-    i = Math.max(i, right[i] ?? i) + 1;
+    i = Math.max(i, right[i] ?? i);
   }
   return mean;
 }

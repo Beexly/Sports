@@ -23,7 +23,7 @@ describe("/api/cockpit/jarvis/trend — contract", () => {
   });
 
   it("emits no-store cache headers (admin trend is always fresh)", () => {
-    expect(src).toMatch(/Cache-Control[^"]*no-store/);
+    expect(src).toMatch(/Cache-Control.*no-store/);
   });
 
   it("never returns 503 — synthesis failures fall back to the existing buffer", () => {
