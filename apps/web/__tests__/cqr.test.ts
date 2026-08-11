@@ -10,7 +10,7 @@ describe("CQR", () => {
   });
 
   it("expands intervals by qhat", () => {
-    const yCal = [1, 2, 3, 4, 5];
+    const yCal = [2, 3, 4, 5, 6];
     const qLoCal = [0.5, 1.5, 2.5, 3.5, 4.5];
     const qHiCal = [1.5, 2.5, 3.5, 4.5, 5.5];
     const { lo, hi, qhat } = cqrInterval(

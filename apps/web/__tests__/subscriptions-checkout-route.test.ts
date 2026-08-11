@@ -24,6 +24,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/stripe", () => ({
   getStripePriceId: mocks.getStripePriceId,
+  resolveCheckoutPriceId: vi.fn(async (tier: string, interval: string) => mocks.getStripePriceId(tier, interval)),
   getOrCreateStripeCustomer: mocks.getOrCreateStripeCustomer,
   createCheckoutSession: mocks.createCheckoutSession,
   retrieveOpenCheckoutSessionUrl: mocks.retrieveOpenCheckoutSessionUrl,

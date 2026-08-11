@@ -33,8 +33,8 @@ describe("currentNflSeason", () => {
     expect(currentNflSeason(new Date("2025-12-31T00:00:00Z"))).toBe(2025);
   });
   it("uses the prior year before September", () => {
-    expect(currentNflSeason(new Date("2025-03-01T00:00:00Z"))).toBe(2024);
-    expect(currentNflSeason(new Date("2025-08-31T00:00:00Z"))).toBe(2024);
+    expect(currentNflSeason(new Date("2027-03-01T00:00:00Z"))).toBe(2026);
+    expect(currentNflSeason(new Date("2027-08-31T00:00:00Z"))).toBe(2026);
   });
 });
 

@@ -220,6 +220,7 @@ export function buildRankingPowerControl(
     readonly minGroupN?: number;
     readonly defaultDelta?: number;
     readonly liveResOverride?: number;
+    readonly appliedPauseGroups?: readonly string[];
   },
 ): RankingPowerControl {
   const minGroupN = options?.minGroupN ?? 20;

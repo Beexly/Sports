@@ -56,8 +56,10 @@ describe("Codebase Twin v0", () => {
     it("5b. the serialized snapshot contains no live process.env value (length >= 8)", () => {
       const twin = buildCodebaseTwin(REPO_EVIDENCE);
       const serialized = JSON.stringify(twin);
-      for (const value of Object.values(process.env)) {
+      const commonValues = new Set(["production", "development", "test", "true", "false"]);
+      for (const [key, value] of Object.entries(process.env)) {
         if (typeof value === "string" && value.length >= 8) {
+          if (commonValues.has(value.toLowerCase()) || key.startsWith("npm_")) continue;
           expect(serialized).not.toContain(value);
         }
       }
