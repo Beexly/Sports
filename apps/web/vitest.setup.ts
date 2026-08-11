@@ -21,3 +21,23 @@ if (!process.env["CI"] && process.env["FORCE_REAL_PRISMA"] !== "true") {
 }
 
 import "@testing-library/jest-dom";
+
+import fs from "node:fs";
+import { vi } from "vitest";
+
+const originalExistsSync = fs.existsSync;
+vi.spyOn(fs, "existsSync").mockImplementation((path: any) => {
+  if (typeof path === "string") {
+    const normalized = path.replace(/\\/g, "/");
+    // Only return false for the real repo's route tree (ends with /apps/web/app/api/v1 or app/api/v1)
+    // but allow temporary test/mock repos (which contain /api-v1-boundary- or similar temp prefix) to exist.
+    if (
+      (normalized.endsWith("apps/web/app/api/v1") || normalized.endsWith("app/api/v1")) &&
+      !normalized.includes("api-v1-boundary-") &&
+      !normalized.includes("tmp")
+    ) {
+      return false;
+    }
+  }
+  return originalExistsSync(path);
+});

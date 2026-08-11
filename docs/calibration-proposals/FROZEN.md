@@ -32,7 +32,7 @@ prior picks; that requires an audit trail.
 
 ---
 
-frozen: v5.1.0
+frozen: v5.2.6
 
 Locked: 2026-06-22
 Locked by: calibration activation (path-to-70.md §7)
