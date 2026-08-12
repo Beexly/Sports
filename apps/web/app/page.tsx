@@ -118,7 +118,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             <Reveal delay={150}>
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-ion-1">
                 Free tools and transparent process first. The public board opens
-                only when the slate is honest — and the discipline to know when
+                only when the slate is honest, and the discipline to know when
                 not to bet is always on.
               </p>
             </Reveal>
@@ -314,7 +314,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* Founding waitlist — public lead capture (API /api/waitlist; no gate flip) */}
+        {/* Founding waitlist - public lead capture (API /api/waitlist; no gate flip) */}
         <section
           id="founding-waitlist"
           data-testid="homepage-waitlist"
