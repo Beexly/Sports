@@ -215,3 +215,21 @@ REMAINING: 33 failures / 29 files — mapped in handoff/MASKED_TEST_DEBT.md:
 Verification: full web suite 10,786 passed / 33 failed (was 69 failed);
 lint clean; typecheck = exactly 3 pre-existing #421 errors; zero new
 failures attributable to this branch.
+
+## Cross-platform build fix (01:10 local)
+
+`npm run build` was UNRUNNABLE on Windows: the script was
+`NODE_OPTIONS='--max-old-space-size=8192' next build` — POSIX shell syntax
+that cmd.exe rejects ("'NODE_OPTIONS' is not recognized"). The owner's
+machine is Windows; CI only works because it runs ubuntu.
+
+Fix: `apps/web/scripts/build-web.mjs` — dependency-free Node launcher that
+sets NODE_OPTIONS programmatically and spawns the real next binary
+(require.resolve('next/dist/bin/next')). package.json build → `node
+scripts/build-web.mjs`. Works identically on POSIX and Windows; lockfile
+untouched (script-only change).
+
+Verified: build now COMPILES on Windows ("Compiled with warnings") and
+progresses to page-data collection, where it stops at the pre-existing
+DEV_FAKE_ADMIN guard (apps/web/.env.local — documented owner action:
+unset it). The shell parse error is gone.
