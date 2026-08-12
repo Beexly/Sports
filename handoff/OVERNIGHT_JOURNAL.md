@@ -181,3 +181,37 @@ CI will go from 1 red job to 1 red job plus 69 newly-visible test failures").
 Expect more of these once #421 is decided; this one is now cleared.
 
 Full-suite re-run in progress with exit code captured properly.
+
+## Masked-debt repair drive (00:35–01:05 local) — the "69" made visible
+
+The verification nudge exposed that the full suite had NEVER been green
+locally: my earlier "exit 0" was tail's exit code, and the real run shows
+69 latent failures — exactly the "69 newly-visible test failures" issue #421
+predicted once the typecheck gate is lifted (CI stops at the typecheck step,
+so the test step never runs).
+
+Proven with file diffs: every failure is in files my branch never touched
+(byte-identical to base 9a36e11f) — none are regressions from this work.
+
+REPAIRED (6 files / ~36 tests, product code untouched except 2 copy/comment
+fixes):
+1. blendIndependentHomeFair test — sharpness+stretch math (44e974c5) drift
+2. waitlist-access-gate + waitlist-posture — dual-flag (GATE_ENABLED +
+   BASIC_FORCE, #391) drift; added FOUNDING-open + fail-closed cases
+3. subscriptions-checkout-route — stale vi.mock export (getStripePriceId →
+   resolveCheckoutPriceId); 26 hidden Stripe assertions now run and pass
+4. refresh-player-stats-route — season floor (85676e7e), mode=full split,
+   primary-status contract (200+success:false, not 502)
+5. page.tsx em-dashes → em-dash guard green
+
+REMAINING: 33 failures / 29 files — mapped in handoff/MASKED_TEST_DEBT.md:
+- Class A (owner-decision-gated, #419/#420): 12 api-v1-* files + guardrails
+  + model-freeze — green when the decision packets land
+- Class B (same drift class, safe with evidence): ~17 files
+- One load-flake: ai-control-plane-sealing-guard times out at 60s under
+  full-suite CPU contention (passes 8/8 in isolation; vitest config comments
+  document this exact flake class)
+
+Verification: full web suite 10,786 passed / 33 failed (was 69 failed);
+lint clean; typecheck = exactly 3 pre-existing #421 errors; zero new
+failures attributable to this branch.
