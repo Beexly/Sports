@@ -25,7 +25,7 @@ none caused by this branch.
 
 ## (2) SEVERITY HISTOGRAM
 
-Critical: 2 · High: 5 · Medium: 5 · Low: 2 · Info: 3
+Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 
 ## (3) TOP 10
 
@@ -141,6 +141,15 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 2 · Info: 3
 
 ### [INFO] GSE-SEC-014 — auth cookie flags not re-asserted in middleware
 - NextAuth v5 manages cookie flags (HttpOnly, Secure, SameSite=Lax) at the provider level; middleware never sets them. Hypothesis: flags are correct by default; manual step to confirm: inspect Set-Cookie on a sign-in in a prod-like env.
+
+### [LOW] GSE-SEC-015 — B2B API rate limit is process-local (serverless caveat)
+- OWASP / CWE: A04 / CWE-770
+- Confidence: confirmed (code read)
+- Location: `apps/web/lib/b2b/api-key-auth.ts` — `rateLimitB2b` uses a module-level `Map`; on serverless (Vercel) each instance has its own counter, so the effective limit scales with instance count.
+- Exploit / failure scenario: not an exposure today (keys are the trust boundary and env-issued), but if self-serve key issuance is ever added, a key holder could exceed the intended throttle across instances.
+- Blast radius: B2B spend/availability.
+- Remediation sketch: move the counter to a durable store (Redis/DB) before any public key issuance; document the caveat in B2B_API.md.
+- Effort: S–M
 
 ---
 
