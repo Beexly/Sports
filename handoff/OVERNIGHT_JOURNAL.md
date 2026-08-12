@@ -136,3 +136,19 @@ but the upgrade remains the real fix (owner-gated, package.json).
   v1 tree is the intentional B2B surface (key auth, timing-safe compare,
   per-key throttle, honest posture). New Low finding GSE-SEC-015: B2B rate
   limiter is process-local (per-instance on serverless).
+
+## Build verification note (00:30 local)
+
+- `npm run build` locally FAILS with "DEV_FAKE_ADMIN must be unset in production" —
+  NOT a regression. Root cause: stale local env files set DEV_FAKE_ADMIN=true
+  (`apps/web/.env.local` + `.env.production.local`, both gitignored). The
+  app's own fail-closed guard rejects the build — correct behavior.
+- Operator action (owner, not agent — .env* untouchable per protocol): unset
+  DEV_FAKE_ADMIN in `.env.production.local` (and ideally `.env.local`) so
+  local production-build verification works. This is a launch-night leftover
+  escape hatch; leaving it set is the kind of config a copy-paste to a deploy
+  env would trip on (though the guard fails closed, so worst case is a failed
+  deploy, never a bypass).
+- CI impact: none — ci.yml runs on ubuntu with clean env; the build job
+  (`npm run build`, line 136) is unaffected by local env files. My changes are
+  covered by local typecheck (0 new errors), lint (clean), and tests (green).
