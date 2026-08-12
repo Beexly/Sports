@@ -12,6 +12,7 @@ export type VerificationStatus = "verified" | "known-real";
 export type ModelRole =
   | "local-primary"
   | "local-coder"
+  | "agentic-executor"
   | "reasoning"
   | "frontier"
   | "cheap-frontier"

@@ -28,6 +28,7 @@ These run on your own hardware via Ollama/LM Studio — the zero-marginal-cost t
 |---|---|---|---|---|---|---|
 | **Muse Glimmer 30B** | ✅ | `meta-models/Muse-Glimmer-30B` (+`-GGUF`) | Apache-2.0 | ~29.6B dense + ~1.8B ViT | 128K | Agentic + coding + multimodal; **primary local** |
 | **Qwen3-Coder-30B-A3B-Instruct** | ✅ | `Qwen/Qwen3-Coder-30B-A3B-Instruct` (+GGUF) | Apache-2.0 | 30B / 3B active (MoE) | large | **Best practical local coder** — fast, low VRAM |
+| **NVIDIA Nemotron 3.5 Lightning** | ✅ | `nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16` (+GGUF) | ⚠️ `license:other` (NVIDIA Open Model License — **read before commercial use**) | 30B / 3B active (MoE) | — | **Local agentic executor.** Released 2026-08-11/12; GGUF from unsloth/ggml-org/bartowski. Built for high-volume *execution* steps while a bigger model plans. Also on OpenRouter + build.nvidia.com |
 | **Qwen3-Coder-Next** | ✅ | `Qwen/Qwen3-Coder-Next` | Apache-2.0 | MoE | large | Newer Qwen coder line |
 | **Qwen2.5-Coder-32B / 7B** | ◐ | `Qwen/Qwen2.5-Coder-32B-Instruct` | Apache-2.0 | 32B / 7B dense | 128K | Reliable daily driver; 7B for fast edits |
 | **DeepSeek-Coder-V2** | ◐ | `deepseek-ai/DeepSeek-Coder-V2-*` | MIT-style | MoE | long | Strong long-context coder |
@@ -104,6 +105,7 @@ spec in `docs/intelligence/NEXT_LEVEL_BUILD_SPEC.md`):
 | Task shape | Route to | Why |
 |---|---|---|
 | Boilerplate, renames, tests, docstrings | **Local** Qwen3-Coder-30B / Muse Glimmer | Free, offline, no limits |
+| Agent-loop execution steps (high volume) | **Local** Nemotron 3.5 Lightning 30B-A3B | Purpose-built for this; 3B active = cheap/fast |
 | Multi-file refactor, mid reasoning | **OpenRouter** (GLM-5.2 / DeepSeek / Qwen) | Cheap, pay-per-token, failover |
 | Whole-repo understanding, 1M context | Gemini free tier / big-context model | Free/cheap large context |
 | Hardest logic, architecture, novel algos | **Claude Code** (cached, compacted) | Highest ceiling; reserve it |
