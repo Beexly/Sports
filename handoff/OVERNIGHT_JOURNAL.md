@@ -100,3 +100,39 @@ git diff origin/claude/fable-5-ultracode-plan-ptru4e...HEAD | less
 ```
 - Phase A clean + gates green → `git push -u origin claude/fable-5-ultracode-plan-ptru4e`.
 - Bring AUDIT_FINDINGS.md to a strong session to triage Critical/High and plan the build (auth upgrade, next upgrade, rate-limit sweep, CSP, #419/#420/#421 decisions).
+
+---
+
+## Follow-up drive (00:10–00:30 local) — outside-the-box gaps
+
+**Commit**: `fix(auth,eval,hygiene): fail-closed ASCII gate on admin allow-list; drop duplicated surface list; ignore scratch dumps [A++-hardening]`
+
+**Fixes (no regression, all gated):**
+1. **Homoglyph mitigation at CODE level** (GHSA-7rqj-j65f-68wh): new pure
+   `apps/web/lib/auth/email-guard.ts` — isAdminEmail now rejects non-ASCII
+   emails (fail-closed; Google emails are always ASCII). 5 tests. Dependency
+   upgrade still owner-gated, but the attack class is now inert on the
+   allow-list path regardless of when the bump lands.
+2. **T3 single source of truth**: scoreAllSurfaces now defaults to
+   model-router ALL_SURFACES; removed hardcoded SURFACE_ORDER (dead code).
+3. **Hygiene**: .gitignore now covers scratch_audit_*.json / dashfiles.json
+   (local npm-audit dumps found sitting untracked in the tree — a careless
+   `git add .` would have committed them).
+
+**Version-exposure finding (for the triage):** installed versions are IN the
+vulnerable ranges — next-auth 5.0.0-beta.30 (GHSA-8fpg-xm3f-6cx3 applies to
+≤beta.31), @auth/core 0.41.0/0.41.1 (<0.41.3), next 14.2.35 (deserialization
+advisory). Our code mitigates the fail-open class (auth() wrapper catches and
+returns null → fail CLOSED), and the ASCII gate covers the homoglyph class,
+but the upgrade remains the real fix (owner-gated, package.json).
+
+**Decision packets (unblock two stalled issues):**
+- `handoff/ISSUE_419_DECISION_PACKET.md` — verdict: FROZEN is NOT honest for
+  v5.2.6 (commit 5387ac6f changed calibration math: INDEPENDENT_EVIDENCE_SHRINK
+  =0.88, MARKET_ANCHOR_INDEP_WEIGHT=0.55, new 0.55/0.45 blend). Includes the
+  exact IMPLEMENTED proposal doc to create (guard greens in ~5 min). Also
+  found: FROZEN.md stale at v5.1.0; v5.2.3–v5.2.6 all bumped without proposals.
+- `handoff/ISSUE_420_DECISION_PACKET.md` — verdict: PROMOTE, don't delete. The
+  v1 tree is the intentional B2B surface (key auth, timing-safe compare,
+  per-key throttle, honest posture). New Low finding GSE-SEC-015: B2B rate
+  limiter is process-local (per-instance on serverless).
