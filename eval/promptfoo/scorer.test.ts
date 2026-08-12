@@ -14,6 +14,7 @@ import {
   EVAL_SURFACES,
   SURFACE_PROMPTS,
   promptForSurface,
+  type SurfacePrompt,
 } from "./surface-prompts";
 
 describe("surface prompt set integrity", () => {
@@ -35,9 +36,15 @@ describe("surface prompt set integrity", () => {
 });
 
 describe("quality rubric", () => {
+  const firstPrompt = (): SurfacePrompt => {
+    const prompt = SURFACE_PROMPTS.find((entry) => entry.surface === "studio");
+    if (!prompt) throw new Error("test fixture: studio prompt missing");
+    return prompt;
+  };
+
   it("fails a prompt missing the {{input}} placeholder", () => {
-    const broken = {
-      ...SURFACE_PROMPTS[0]!,
+    const broken: SurfacePrompt = {
+      ...firstPrompt(),
       userTemplate: "Write the intro. No slot here.",
     };
     const score = scoreQuality(broken);
@@ -46,9 +53,9 @@ describe("quality rubric", () => {
   });
 
   it("fails a prompt containing a banned phrase", () => {
-    const broken = {
-      ...SURFACE_PROMPTS[0]!,
-      system: `${SURFACE_PROMPTS[0]!.system}\nThis is a guaranteed lock.`,
+    const broken: SurfacePrompt = {
+      ...firstPrompt(),
+      system: `${firstPrompt().system}\nThis is a guaranteed lock.`,
     };
     const score = scoreQuality(broken);
     expect(score.pass).toBe(false);
@@ -56,10 +63,10 @@ describe("quality rubric", () => {
   });
 
   it("fails a public-facing prompt missing risk disclosure", () => {
-    const broken = {
-      ...SURFACE_PROMPTS[0]!,
+    const broken: SurfacePrompt = {
+      ...firstPrompt(),
       publicFacing: true,
-      system: SURFACE_PROMPTS[0]!.system.replace(
+      system: firstPrompt().system.replace(
         /Past performance does not guarantee future results\./,
         ""
       ),
