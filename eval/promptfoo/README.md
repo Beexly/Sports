@@ -17,6 +17,15 @@ npm run eval:prompts
 Requires `ANTHROPIC_API_KEY` (and `GROQ_API_KEY` to also test the internal tier). Costs a
 few cents per run.
 
+### Offline cost/quality report (no API keys, deterministic)
+```bash
+npx tsx eval/promptfoo/report.ts
+```
+Writes `reports/eval-prompts/eval-prompts-YYYY-MM-DD.md`: per-surface active/recommended
+tier, blended $/Mtok from the vendored models.dev snapshot, and a deterministic quality
+rubric over the harness prompt set (`eval/promptfoo/surface-prompts.ts`). Static analysis
+only — no live inference, no fabricated scores. Tests: `npx vitest run eval/promptfoo`.
+
 ## Workflow
 1. `surfaceEconomics()` tells you the highest-savings flip (e.g. calibration-insight
    Sonnet→Haiku ≈ 67%, brief Sonnet→Haiku).
