@@ -152,3 +152,32 @@ but the upgrade remains the real fix (owner-gated, package.json).
 - CI impact: none — ci.yml runs on ubuntu with clean env; the build job
   (`npm run build`, line 136) is unaffected by local env files. My changes are
   covered by local typecheck (0 new errors), lint (clean), and tests (green).
+
+## Verification pass + latent test-bug fix (00:25–00:35 local)
+
+The system flagged stale verification evidence (the earlier full-suite "exit 0"
+was tail's, not npm's — my mistake in capture). Re-verified everything for
+real:
+
+- npm run lint: PASS (all workspaces, --max-warnings=0)
+- npm run typecheck: exactly the 3 pre-existing #421 errors, 0 new
+- npx vitest run eval/promptfoo tools/model-advisor: 23/23
+- apps/web targeted (auth-email-guard, api-costs routing + tiles): 16/16
+- packages/ingestion-pipeline: was 2 FAILING → fixed → 191/191 green
+
+ROOT-CAUSED + FIXED a real latent bug the masked-CI warning (#421) predicted:
+packages/ingestion-pipeline/src/__tests__/backfill-independent-trueprob.test.ts
+asserted the OLD equal-weight blend (0.65/0.38) but the implementation
+(44e974c5, on main) deliberately uses sharpness weights (|p−0.5|+0.05) plus a
+×1.12 discrimination stretch — the test had silently rotted under the
+typecheck gate that stops CI before tests run. Repaired the test to pin the
+documented math (0.682 / 0.6344 / 0.3656), added an extreme-vs-coin-flip
+weighting case and an empty→null case. Product code untouched. Committed as
+`test(ingestion-pipeline): pin blendIndependentHomeFair to the real
+sharpness+stretch math`.
+
+This is exactly the class the #421 issue predicted ("once typecheck passes,
+CI will go from 1 red job to 1 red job plus 69 newly-visible test failures").
+Expect more of these once #421 is decided; this one is now cleared.
+
+Full-suite re-run in progress with exit code captured properly.
