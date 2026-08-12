@@ -15,6 +15,7 @@
  * network calls, and the same inputs always produce the same report.
  */
 import {
+  ALL_SURFACES,
   MODELS,
   type ClaudeSurface,
   type ModelTier,
@@ -205,7 +206,7 @@ export function scoreCost(prompt: SurfacePrompt): CostScore {
 // ---------------------------------------------------------------------------
 
 export function scoreAllSurfaces(
-  surfaces: readonly ClaudeSurface[] = [...SURFACE_ORDER]
+  surfaces: readonly ClaudeSurface[] = [...ALL_SURFACES]
 ): EvalReport {
   const scored = surfaces.map((surface) => {
     const prompt = promptForSurface(surface);
@@ -224,25 +225,6 @@ export function scoreAllSurfaces(
     qualityFailCount: scored.filter((s) => !s.quality.pass).length,
   };
 }
-
-/** Surface order: model-router ALL_SURFACES, deduped to the prompt set. */
-const SURFACE_ORDER: readonly ClaudeSurface[] = (() => {
-  const seen = new Set<ClaudeSurface>();
-  const out: ClaudeSurface[] = [];
-  for (const surface of [
-    "studio",
-    "journal",
-    "calibration-insight",
-    "model-court",
-    "content",
-    "brief",
-  ] as const) {
-    if (seen.has(surface)) continue;
-    seen.add(surface);
-    out.push(surface);
-  }
-  return out;
-})();
 
 export function buildReportMarkdown(report: EvalReport): string {
   const lines: string[] = [
