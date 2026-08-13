@@ -308,6 +308,65 @@ excellent night, and it directly unblocks CI the moment #421 is decided.
 
 ---
 
+### PHASE 1b — The settlement-hold blind spot *(do these right after PHASE 1)*
+
+**Read this whole section before starting. The obvious fix is not available.**
+
+The platform settles picks automatically — `/api/cron/settle-picks` runs hourly at
+`:20`. On the free path, when two score sources disagree, `free-settlement-runner.ts:327`
+**holds** the pick instead of settling it. That is deliberate and it is load-bearing:
+`operating-kernel.ts:178` says *"exception(s) (DISPUTED / orient / path) need human
+evidence — never force-settle."* Refusing to invent a score is the product thesis.
+
+**The blind spot:** that hold is never persisted. `holdReason: "DISPUTED"` is pushed
+into an in-memory `rcaInputs` array and discarded when the run ends. The pick row is
+left `PENDING` with no marker. Meanwhile `settlement-health.ts:143` counts overdue as:
+
+```ts
+where: { ...baseWhere, result: "PENDING", game: { commenceTime: { lt: overdueCutoff } } }
+```
+
+No hold exclusion — **because there is no column to exclude on.** So "settlement
+correctly refused to guess" and "settlement is broken" produce an identical signal.
+That is what drives `settlement=DEGRADED` → the P0 founder step → `operator
+status=degraded` → the preflight's `RESULT: FAIL`.
+
+**Do NOT try to add a WHERE clause.** There is no field. **Do NOT add one to
+schema.prisma** — that file is LAW 4 off-limits and a schema change needs an approved
+proposal. Build these three instead:
+
+**P1b-1 · ADR proposing persisted settlement-hold state.** *(docs only, zero risk)*
+Use the template from P3-1 (build it first if it does not exist yet). Propose the
+minimum: a way to record, per pick per settlement run, that the pick was
+deliberately held and why. Cover — what changes; why now (the metric cannot tell
+refusal from failure); at least two alternatives (a column on `Pick` vs. a separate
+hold record vs. deriving it by re-running the matcher) with the trade-off of each;
+blast radius; rollback; which of the seven `CLAUDE.md` rules it touches. **Propose
+only. Implement nothing.** File as `docs/adr/006-settlement-hold-state.md`.
+
+**P1b-2 · Correct the preflight's PUBLIC_PICKS assertion.** *(script only)*
+`scripts/ops/launch-preflight.mjs` hard-fails on `publicPicks=true (must be false
+pre-proof)`. That is stricter than the platform's actual policy. Publishing a pick is
+not claiming a track record — the honesty boundary is `STATS_PUBLIC` and
+`PERFORMANCE_STATS`, which gate the *record*, and both are correctly closed. The
+operator enabled `PUBLIC_PICKS` deliberately.
+Change it to: report `PUBLIC_PICKS` state as **informational (OK)**, and hard-fail
+only if `STATS_PUBLIC` or `PERFORMANCE_STATS` is open while calibration eligibility
+is not GREEN. Keep every other assertion exactly as-is. **Do not touch any env var or
+gate** — you are correcting what a probe asserts, not what the platform does.
+
+**P1b-3 · Cockpit "needs adjudication" view.** *(read-only UI)*
+New page or card under `apps/web/app/cockpit/` listing every pick that is `PENDING`
+with `game.commenceTime` older than the grace window (`SETTLEMENT_DEFAULT_GRACE_HOURS`,
+6h — import it, do not hardcode). Per row: sport, matchup, commence time, hours
+overdue, pick type, and line. Read-only — **no settle button, no write path, no
+mutation of any kind.** Follow the existing cockpit card styling and add a component
+test. This turns "settlement DEGRADED" into a two-item worklist the owner can act on
+in a minute. It cannot show *why* each is held until P1b-1 is approved and built —
+say so in the caption rather than implying the list is a failure list.
+
+---
+
 ### PHASE 2 — Reports *(read-only; the raw material the owner mines)*
 
 Each writes one file into `handoff/`. Specs are in `docs/ops/hermes/BUILD_QUEUE.md`
