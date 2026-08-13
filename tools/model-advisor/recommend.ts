@@ -45,6 +45,10 @@ function bestLocal(task: TaskProfile, catalog: readonly ModelEntry[]): Recommend
   let primary: ModelEntry;
   if (task.kind === "multimodal") {
     primary = findModel("muse-glimmer-30b");
+  } else if (task.kind === "agentic") {
+    // Nemotron 3.5 Lightning is purpose-built for the execution steps of an
+    // agent loop at 3B active params — the cheapest capable local option here.
+    primary = findModel("nemotron-3-5-lightning");
   } else if (complexity <= 2) {
     primary = findModel("qwen25-coder-7b");
   } else {

@@ -44,6 +44,24 @@ export const MODEL_CATALOG: readonly ModelEntry[] = [
     notes: "MoE 30B total / 3B active — best practical local coder on modest hardware.",
   },
   {
+    id: "nemotron-3-5-lightning",
+    label: "NVIDIA Nemotron 3.5 Lightning 30B-A3B",
+    provider: "NVIDIA",
+    hfRepo: "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+    license: "NVIDIA Open Model License (license:other — read terms before commercial use)",
+    verification: "verified",
+    localRunnable: true,
+    roles: ["agentic-executor", "local-coder"],
+    contextTokens: null,
+    reportedInputUsdPerM: null,
+    reportedOutputUsdPerM: null,
+    notes:
+      "Released 2026-08-11/12. MoE 30B total / 3B active — single consumer GPU. Built for " +
+      "high-volume execution steps inside agent loops (larger models plan, this executes). " +
+      "GGUF from unsloth/ggml-org/bartowski; also on OpenRouter + build.nvidia.com. " +
+      "License is 'other', not Apache — verify terms for commercial use.",
+  },
+  {
     id: "qwen25-coder-32b",
     label: "Qwen2.5-Coder-32B-Instruct",
     provider: "Alibaba",

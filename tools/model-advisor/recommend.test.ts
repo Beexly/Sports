@@ -16,6 +16,13 @@ describe("recommendModel", () => {
     expect(rec.tier).toBe("local");
   });
 
+  it("routes local agentic execution to Nemotron 3.5 Lightning", () => {
+    const rec = recommendModel({ kind: "agentic", complexity: 3, privacy: "local-only" });
+    expect(rec.tier).toBe("local");
+    expect(rec.primary.id).toBe("nemotron-3-5-lightning");
+    expect(rec.primary.roles).toContain("agentic-executor");
+  });
+
   it("routes the hardest coding to an Anthropic frontier model", () => {
     const rec = recommendModel({ kind: "coding", complexity: 10 });
     expect(rec.tier).toBe("frontier");
