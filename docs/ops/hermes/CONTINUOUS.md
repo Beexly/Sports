@@ -254,15 +254,57 @@ in the report, not applied to the tree**. The owner applies it. You do not.
 
 ---
 
-### PHASE 1 — Audit *(read-only; change no source file)*
+### PHASE 1 — Clear the masked test debt *(the highest-value work in this file)*
 
-Run the 28 probes in `docs/ops/hermes/AUDIT_PROMPT.md` §3, following its severity
-lookup table and its evidence rule: **no `file:line` plus a pasted line means no
-finding**. Write `handoff/AUDIT_FINDINGS.md` and `handoff/AUDIT_COVERAGE.md` in the
-formats that file specifies.
+**A previous overnight run already did the audit.** Do not redo it.
+`handoff/AUDIT_FINDINGS.md` holds 18 findings across D1–D15;
+`handoff/AUDIT_COVERAGE.md` holds the gaps. Read both before doing anything else —
+they are your inherited context, and re-running that work wastes the night.
 
-Ledger these as `P1-1` (probes 1–8), `P1-2` (9–16), `P1-3` (17–22), `P1-4` (23–28) so a
-crash costs you one block, not the phase.
+What that run also found is your job now. Read `handoff/MASKED_TEST_DEBT.md` in full.
+
+The short version: issue #421's three typecheck errors make CI's typecheck step fail
+*before* the test step runs — so roughly **69 test failures have never executed in
+CI**. They are not regressions. They are stale assertions left behind by deliberate
+changes that shipped under a broken gate. The previous run repaired **6 files / ~44
+tests** and mapped the rest. **~29 files remain**, already classified for you.
+
+**THE REPAIR RULE — use it exactly, it is what makes this safe:**
+
+> When a test asserts pre-refactor behavior and the current implementation is
+> deliberate (commented, tested elsewhere, on main), **repair the TEST** to pin the
+> real contract. **Product code is untouched.** When the failure traces to an owner
+> decision, register it — do not fix it.
+
+**Class A — DO NOT TOUCH.** Ten `api-v1-*` files plus `guardrails.test.ts` are red
+*by design*, blocked on the #419 and #420 owner decisions. Fixing them would mean
+changing a guard to pass, which is falsifying a gate. Skip every one.
+
+**Class B — your queue, ~17 files, one per ledger task.** Named in the register:
+`board-stale-kill-switch`, `daily-slate-stale-kill-switch`, `picks-stale-kill-switch`,
+`canonical-sample-posture`, `espn-odds-client`, `cockpit-picks-glance`,
+`cockpit-jarvis-trend-api`, `glass-ledger-page`, `calibration-cockpit`,
+`honest-degraded-states`, `cqr`, `picks-daily-limit-meta`, `public-copy-integrity`,
+`nflverse-readiness`, `isotonic-pava`, `player-stats-backfill-plan`.
+
+For each, one cycle:
+```bash
+cd apps/web && npx vitest run __tests__/<file>     # see the real failure
+```
+Read the implementation the test is asserting against. Decide: is the current
+behavior deliberate? If yes, fix the test to pin it, and **quote the evidence in your
+commit message** — the commit or comment that made the change deliberate. If you
+cannot find that evidence, mark the file BLOCKED and move on. Never change product
+code to make a test pass.
+
+Then the verify block, then commit as `[hermes-P1-<file>]`.
+
+**Class C — environment-dependent.** If a failure reads env vars (waitlist creds,
+`DATABASE_URL`, season dates), it may pass in CI and fail locally. Record it as
+`CLASS C — verify on CI` and move on. Do not chase it.
+
+Ledger one task per file. Sixteen safe, bounded, evidence-backed commits is an
+excellent night, and it directly unblocks CI the moment #421 is decided.
 
 ---
 
@@ -290,9 +332,19 @@ Full specs in `docs/ops/hermes/BUILD_QUEUE.md`. Do them in this order:
 - **P3-2** pin promptfoo to `0.122.0` (H3) — one line in `package.json`
 - **P3-3** `normalizeEntityName` + tests (H7) — pure function, no DB
 - **P3-4** entity-graph repository + tests (H8) — injected client, no DB
-- **P3-5** router legibility cockpit card + tests (H9)
-- **P3-6** offline routing-cost report + tests (H10)
-- **P3-7** wire the response cache into the free lane (H11) — riskiest, last
+- **P3-5** wire the response cache into the free lane (H11) — riskiest, last
+
+**Already built — do NOT rebuild these.** A previous run shipped them and they are on
+this branch. Confirm they exist, then skip:
+- `apps/web/app/cockpit/api-costs/routing-legibility.tsx` — the router legibility card
+  (build-spec T2), with 7 component tests
+- `eval/promptfoo/{surface-prompts,scorer,report}.ts` — the offline per-surface
+  cost/quality harness (build-spec T3), with 13 tests
+
+If a task in `BUILD_QUEUE.md` describes something that already exists, that file is
+stale, not a to-do. Ledger it `DONE — pre-existing` with the path as evidence and move
+on. **Building a second copy of a working component is the most expensive mistake
+available to you tonight.**
 
 Before every commit, the **verify block**, all three:
 ```bash
@@ -362,6 +414,15 @@ take the next route with `NONE FOUND` auth and no public-by-design comment. Read
 Add a top-of-file comment stating plainly whether it is public by design and why, or
 `// TODO(auth): unreviewed — no auth check present`. **Add no auth logic** — that is an
 owner decision. Comments only. Five routes per cycle, one commit.
+
+**SO-3b · Re-verify a stale audit finding.** `handoff/AUDIT_FINDINGS.md` was written
+2026-08-12 and the tree has moved since. Its two CRITICAL findings (the
+`next-auth`/`@auth/core` cluster) have been patched — `npm audit --omit=dev` now
+reports **0 critical, 2 high** in production dependencies. Take the next unverified
+finding, re-test its claim against the current tree, and append a dated
+`RE-VERIFIED <date>: still present | resolved by <commit> | now inaccurate because …`
+line to it. Never delete a finding; annotate it. A register nobody re-checks decays
+into fiction, which is exactly the failure this repo exists to avoid.
 
 **SO-4 · Re-run the full verification.** Baseline drift check:
 ```bash
