@@ -220,6 +220,14 @@ export function buildRankingPowerControl(
     readonly minGroupN?: number;
     readonly defaultDelta?: number;
     readonly liveResOverride?: number;
+    /**
+     * Ranking groups currently paused, e.g. ["nhl|ml", "nba|total"]. Sourced from
+     * the durable pause config (`loadRankingPauseApply()`), which itself honors
+     * SELECTIVE_PAUSE_GROUPS. Omitted means "nothing paused" — the caller in
+     * proven-path-seed already degrades to [] when the durable read fails, so a
+     * missing value must never be read as "pause everything".
+     */
+    readonly appliedPauseGroups?: readonly string[];
   },
 ): RankingPowerControl {
   const minGroupN = options?.minGroupN ?? 20;
