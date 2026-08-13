@@ -1,10 +1,10 @@
 # HERMES JOB 2 — BUILD QUEUE
 
-Eleven tasks, ordered safest-first. Build them in order, one at a time. Six are
+Twelve tasks (H0–H11), ordered safest-first. Build them in order, one at a time. Six are
 reports or single-file changes that cannot break anything; five are code. Commit each
 code task separately. Do not push. Then stop.
 
-Read this whole file once before starting H1.
+Read this whole file once before starting H0.
 
 ---
 
@@ -48,7 +48,7 @@ rm -f <the files on that task's list that you created>
 git status --short          # must print nothing before you start the next task
 ```
 Journal it as `H<n> ABANDONED — <the exact error text>`. Then go to the next task. A
-clean eight-of-eleven is a good night. A tangled eleven-of-eleven is a bad one.
+clean eight-of-twelve is a good night. A tangled twelve-of-twelve is a bad one.
 
 **RULE 5 — Every commit is tagged and scoped.**
 ```bash
@@ -72,7 +72,7 @@ complete. Reports must contain only what your commands actually printed.
 
 ---
 
-## 1. SETUP — once, before H1
+## 1. SETUP — once, before H0
 
 ```bash
 cd <repo root>
@@ -138,9 +138,71 @@ immediately.
 
 # THE TASKS
 
-Tasks H1–H6 are warm-ups and reports: no product code, nothing to break, and the
-reports are the raw material the owner mines the next day. H7–H11 are code, ordered by
-blast radius. Do them in order.
+**H0 comes before everything and is the most valuable task in this file.** Then
+H1–H6 are reports (no product code, nothing to break), and H7–H11 are code, ordered
+by blast radius. Do them in order.
+
+---
+
+## H0 — Run the diagnostics that already exist, capture the output
+
+**Why this is first and why it matters more than the other ten combined:** this repo
+already contains a purpose-built founder diagnostic that reads **live production**
+and prints an ordered P0/P1/P2 action list. It is `scripts/ops/launch-preflight.mjs`,
+its step 3 prints `revenueLadder` and `founderNextSteps`, and it needs **no database
+credentials** — it is a black-box HTTP probe. Nobody has been running it.
+
+You are not deciding anything here. You are running three commands and saving what
+they print, so the owner wakes up to real state instead of guesses.
+
+**FILES YOU MAY TOUCH**
+```
+handoff/OPS_TRUTH.md      (create)
+```
+
+**WHAT TO DO**
+
+```bash
+npm run ops:preflight   2>&1 | tee handoff/_preflight.txt ; echo "exit=$?"
+npm run ops:impeccable  2>&1 | tee handoff/_impeccable.txt ; echo "exit=$?"
+node scripts/ops/verify-shadow-pipeline.ts 2>&1 | tee handoff/_shadow.txt ; echo "exit=$?"
+```
+
+Then write `handoff/OPS_TRUTH.md` containing, in this order:
+
+1. **`founderNextSteps`** — every item, verbatim, with its priority and domain. This
+   is the single most important thing you will produce tonight. Do not summarize it,
+   do not reorder it, do not add commentary. Copy it exactly.
+2. **`revenueLadder`** — current step, next step, and every blocker listed.
+3. The **settlement counts** and **gates** from step 3 of the preflight output.
+4. The **trust/SEO** results from step 6 (robots, sitemaps, feed, ads.txt).
+5. Each command's **exit code**, and the full text of any `!!` hard-fail lines.
+
+Then delete the three scratch files:
+```bash
+rm -f handoff/_preflight.txt handoff/_impeccable.txt handoff/_shadow.txt
+```
+
+**IF A COMMAND FAILS**
+
+Record exactly what happened and move on — a failure here is *itself* the finding,
+and it is more valuable than a success:
+
+- **Network unreachable / DNS / timeout** → the probe could not reach production.
+  Write `PRODUCTION UNREACHABLE FROM THIS MACHINE` and the error text.
+- **`founderNextSteps missing — prod SHA likely lags main`** → copy that line
+  verbatim into the report. It means the deployed build is older than the code.
+- **`verify-shadow-pipeline.ts` fails on a missing `DATABASE_URL`** → expected on a
+  laptop. Write `SHADOW VERIFY NEEDS PRODUCTION DATABASE_URL — not run` and move on.
+  Do not go looking for credentials. Do not create a `.env` file.
+
+**DEFINITION OF DONE**
+```bash
+test -f handoff/OPS_TRUTH.md && echo OK
+ls handoff/_*.txt 2>/dev/null && echo "SCRATCH FILES LEFT — delete them" || echo "clean"
+git status --short          # must print nothing
+```
+No commit. Journal as DONE with `-`.
 
 ---
 
@@ -877,7 +939,7 @@ minutes; an unflagged one costs an afternoon.
 
 Stop immediately, write the summary, and end if any of these happen:
 
-1. All eleven tasks are done or abandoned. ← the normal ending
+1. All twelve tasks (H0–H11) are done or abandoned. ← the normal ending
 2. Two tasks in a row abandon for the same underlying reason (something environmental
    is wrong and later tasks will fail the same way).
 3. The typecheck error count rises above 3 and undoing your own last change does not
@@ -899,7 +961,7 @@ That means: one task per commit, tagged `[hermes-H<n>]`. Only that task's files 
 that commit. The verify block green at every commit. No file touched that its task did
 not name. Every uncertainty written down instead of papered over.
 
-Six clean reports and three good commits beats eleven artifacts where two are subtly
+Six clean reports and three good commits beats twelve artifacts where two are subtly
 wrong, because wrong costs more to find than it saved to write.
 
 Begin at §1.

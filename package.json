@@ -134,7 +134,8 @@
     "orbit:integrity": "node scripts/orbit-extract-integrity.mjs",
     "orbit:integrity:full": "node scripts/orbit-extract-integrity.mjs --full",
     "orbit:unlock-smoke": "node scripts/ops/orbit-unlock-smoke.mjs",
-    "ops:impeccable": "node scripts/ops/impeccable-probe.mjs"
+    "ops:impeccable": "node scripts/ops/impeccable-probe.mjs",
+    "ops:preflight": "node scripts/ops/launch-preflight.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
