@@ -7,7 +7,7 @@ have it run unattended overnight.
 |---|---|---|
 | `LAUNCH.md` | Setup, model routes, rate limits, morning review, what I could not verify | **You** |
 | `AUDIT_PROMPT.md` | Job 1 — 28 read-only probes. Writes reports only, changes no source | Paste into Hermes |
-| `BUILD_QUEUE.md` | Job 2 — 8 build tasks, one commit each, no push | Paste into Hermes |
+| `BUILD_QUEUE.md` | Job 2 — 11 tasks: 6 zero-risk reports, 5 code tasks; one commit each, no push | Paste into Hermes |
 
 **Run the audit first.** It cannot damage anything, and it tells you how much to trust
 the setup before you let it write code.
@@ -37,5 +37,5 @@ a two-strike cap so one stuck item cannot consume the night.
 - `docs/ops/HERMES_AUDIT_CHARTER.md` — the audit's design rationale and domain list.
   `AUDIT_PROMPT.md` is its executable form.
 - `docs/intelligence/NEXT_LEVEL_BUILD_SPEC.md` — build-spec tasks T2 and T3 are
-  implemented here as **H6** and **H7**. T4–T6 remain change-proposal-gated and are
+  implemented here as **H9** and **H10**. T4–T6 remain change-proposal-gated and are
   deliberately absent from the queue.

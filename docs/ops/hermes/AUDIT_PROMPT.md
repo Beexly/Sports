@@ -16,8 +16,9 @@ Break any of these and the entire run is discarded.
 No edits, no deletes, no renames, no `npm install`, no `git add`, no `git commit`,
 no `git push`, no `git checkout`, no `git stash`. The only files you create or write
 are `handoff/AUDIT_FINDINGS.md`, `handoff/AUDIT_COVERAGE.md`, and
-`handoff/JOURNAL.md`. At the end you will run `git status --short` and it must show
-nothing except those three files.
+`handoff/JOURNAL.md`. The `handoff/` directory is gitignored, so at the end
+`git status --short` must print **nothing at all**. If it prints anything, you
+modified something you should not have.
 
 **RULE 2 — No evidence, no finding.**
 A finding is only real if you can paste a **file path, a line number, and the actual
@@ -123,15 +124,26 @@ copy these numbers into your report; report what *you* see.
 
 | Probe | Expected roughly |
 |---|---|
+| P1 hardcoded key assignments | 0 |
+| P2 provider key prefixes | ~23 lines across ~9 files — the secret scanner itself, test fixtures, `.env.example`; expect to discard all of them |
 | P4 committed env files | 0 non-example |
-| P8 curl-pipe-to-shell | 0 |
+| P7 unpinned npx | 5 raw, 1 kept (see probe) |
+| P8 curl-pipe-to-shell | 3 raw, 1 kept (see probe) |
+| P9 entitlement enforcement | ~6 call sites |
+| P10 premium gating in components | ~15 files (open the first 12) |
 | P11 routes with no visible auth | ~96 of 176 (most are legitimately public) |
+| P13 raw SQL interpolation | 0 and 0 |
 | P14 unvalidated bodies | ~29 files |
+| P15 dangerouslySetInnerHTML | ~15 (expect mostly JSON-LD) |
+| P16 command execution | ~33 raw (most are literal-array spawns; keep variable-built only) |
 | P17 files with type escapes | ~66 files, max 8 in one file |
 | P18 empty catches | 1 one-line, 0 two-line |
+| P21 skipped/todo tests | ~17 |
 | P22 tests with no assertion | 0 |
 | P23 untested critical modules | 0 modules at zero |
-| P27 guardrails | 20/25 passed |
+| P25 fabricated-data markers | ~33 raw (most are the seed script, comments forbidding mock data, and demo-mode code that labels itself; keep only unlabeled paths that reach users) |
+| P26 freshness context | ~16 files |
+| P27 guardrails | 22/25 passed |
 | P28 TODO/FIXME/HACK | ~14 |
 
 P11 returning ~96 files is normal and is not 96 findings — a sitemap route, a health
@@ -196,16 +208,25 @@ Record exit code and output. Non-zero → **HIGH**.
 
 **P7 — unpinned remote executables**
 ```bash
-git grep -nE "npx [a-z0-9@/._-]+@latest" -- package.json "*.json" "*.yml" "*.yaml" "*.mjs" "*.sh"
+git grep -nE "npx [a-z0-9@/._-]+@latest" -- "*.json" "*.ts" "*.yml" "*.yaml" "*.mjs" "*.sh"
 ```
-Every result is a supply-chain risk: `@latest` means the version that runs tomorrow is
-not the version that ran today. Severity **MEDIUM**. (One known result is expected.)
+Expected: **5 raw hits**. Four are display strings — advice text inside quotes in
+`apps/web/lib/cockpit/*` and `lib/jarvis/capability-registry.ts` telling the owner
+what to type. Those never execute; **discard** them (severity **INFO**, one aggregate
+note). The one that executes is `package.json` `eval:prompts` — `@latest` there means
+the version that runs tomorrow is not the version that ran today. Severity **MEDIUM**.
+(The build queue's H3 pins it; if it is already pinned when you run, record that.)
 
 **P8 — curl-pipe-to-shell**
 ```bash
 git grep -nE "curl [^|]*\| *(ba)?sh" -- . ":(exclude)*.md"
 ```
-Any result is **BLOCKER**. Zero results expected.
+Expected: **3 hits**. Two are self-test fixtures inside
+`scripts/guardrails/agent-bash-guard.mjs` — strings the guard exists to block;
+**discard** those. The third is real: `docker/oracle-vps/deploy.sh` pipes
+`get.docker.com` into `sh`. That is the standard Docker convenience installer, but it
+is still remote code piped to a shell in a deploy script — record it as **HIGH** with
+that context, and let the owner decide. Anything **else** you find is **BLOCKER**.
 
 ---
 
@@ -225,8 +246,12 @@ on its own. Severity **INFO**.
 
 **P10 — premium gating that only exists in a component**
 ```bash
-git grep -lnE "(isPro|isPremium|isElite|tier ?===|subscriptionTier)" -- apps/web/components apps/web/app --and --not -- "*/api/*"
+git grep -lE "(isPro|isPremium|isElite|tier ?===|subscriptionTier)" -- apps/web/components apps/web/app ":(exclude)apps/web/app/api"
 ```
+Use this command exactly — the `:(exclude)...` pathspec is what keeps API routes out
+of the results. (An earlier draft used `--and --not`, which git grep silently
+misapplies to paths; if your output contains any path with `/api/` in it, you ran
+the wrong command.)
 For **each file** returned, open it and answer one question: does the premium data it
 hides ever arrive from the server in the first place? Look for the prop or fetch that
 supplies it. Write for each file, in one line:
@@ -336,8 +361,19 @@ could contain a user identifier, email, or token.
 npm run typecheck 2>&1 | tail -30; echo "typecheck exit=$?"
 npm run lint 2>&1 | tail -30; echo "lint exit=$?"
 ```
-Record exit codes. Non-zero on either → **HIGH**. These are expected to pass; if they
-do not, that is the single most important thing in your report and it goes at the top.
+**Known state, verified 2026-08-13:** typecheck FAILS with exactly **3 errors**, and
+that is the expected baseline, tracked as GitHub issue #421:
+
+```
+apps/web/lib/autonomy/execute-autonomy-cycle.ts(33,3)      TS2353 RUN_GENERATE_SIGNAL_SLATE
+apps/web/lib/calibration/ranking-power-control.ts(227,39)  TS2339 appliedPauseGroups
+apps/web/lib/ops/proven-path-seed.ts(86,9)                 TS2353 appliedPauseGroups
+```
+
+- Exactly those 3 errors → **INFO**, note "matches known debt (#421)".
+- Any **other** typecheck error, or more than 3 → **HIGH**, and it goes at the top of
+  your report.
+- lint is expected to exit 0. Non-zero → **HIGH**.
 
 ---
 
@@ -408,13 +444,16 @@ node scripts/guardrails/run-all.mjs 2>&1 | tail -40; echo "exit=$?"
 ```
 Record the `N/25 passed` line and the exact `FAILED:` list.
 
-**Expected baseline: `20/25 passed`**, with these five failing:
-`model-freeze`, `api-v1-boundary`, `ai-transport-import-boundary`,
-`actor-minting-boundary`, `ai-council`.
+**Expected baseline (after `npm install` has run): `22/25 passed`**, with exactly
+these three failing — all tracked, pre-existing, base-branch debt:
+`model-freeze` (#419), `api-v1-boundary` (#420), `ai-transport-import-boundary`.
 
-- If you see exactly that list → severity **INFO**, note "matches expected baseline".
-- If any **other** guard fails → that guard is a **HIGH** finding, called out by name.
-- If **more than 20** pass → note the improvement, severity **INFO**.
+- Exactly that list → severity **INFO**, note "matches expected baseline".
+- Any **other** guard fails → that guard is a **HIGH** finding, called out by name.
+- `actor-minting-boundary` or `ai-council` failing means `npm install` did not
+  complete — that is an environment problem, not a finding. Journal it, record
+  `NOT DETERMINED` for this probe, and say so in `AUDIT_COVERAGE.md`.
+- **More than 22** pass → note the improvement, severity **INFO**.
 
 ---
 
@@ -541,7 +580,7 @@ Not "how many findings." The four things that make this run worth the electricit
 
 1. Every finding has a real `file:line` and a real pasted line.
 2. Every gap is declared in `AUDIT_COVERAGE.md` rather than quietly skipped.
-3. `git status --short` shows only `handoff/` files at the end.
+3. `git status --short` prints nothing at the end (`handoff/` is gitignored).
 4. Nothing in the report is invented, inferred, or softened.
 
 A report with **four** BLOCKER findings that are all real and all reproducible beats a

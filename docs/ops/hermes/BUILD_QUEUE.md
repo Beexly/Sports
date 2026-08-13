@@ -1,13 +1,14 @@
 # HERMES JOB 2 — BUILD QUEUE
 
-Eight tasks, ordered safest-first. Build them in order, one at a time. Commit each one
-separately. Do not push. Then stop.
+Eleven tasks, ordered safest-first. Build them in order, one at a time. Six are
+reports or single-file changes that cannot break anything; five are code. Commit each
+code task separately. Do not push. Then stop.
 
 Read this whole file once before starting H1.
 
 ---
 
-## 0. THE SIX HARD RULES
+## 0. THE SEVEN HARD RULES
 
 **RULE 1 — `git push` is forbidden.** Every task commits locally. The owner reads the
 diff in the morning and pushes. If you push, the owner loses the ability to reject your
@@ -24,7 +25,16 @@ packages/db/prisma/schema.prisma        any migration under packages/db/prisma/m
 .github/workflows/**                    scripts/guardrails/**
 .claude/**                              .env, .env.local, any .env*
 package-lock.json                       apps/web/lib/ai-control-plane/**
+.gitignore                              .githooks/**
+apps/web/lib/autonomy/execute-autonomy-cycle.ts
+apps/web/lib/calibration/ranking-power-control.ts
+apps/web/lib/ops/proven-path-seed.ts
 ```
+The last three carry known typecheck errors (issue #421) that are **deliberate open
+design questions**, not bugs to fix — the "obvious" fix on each would silently change
+an authorization allow-list or which ranking groups get paused. Leave them exactly as
+they are.
+
 Also: **never run** `npm install <anything>`, `prisma migrate`, `prisma db push`,
 `prisma db seed`, or anything that connects to a database. Adding a dependency requires
 owner approval that you do not have. `npm install` with no arguments — restoring the
@@ -35,10 +45,10 @@ If a task's Definition of Done fails twice, you are done with that task. Undo it
 ```bash
 git checkout -- <the files on that task's list that already existed>
 rm -f <the files on that task's list that you created>
-git status --short          # must be clean before you start the next task
+git status --short          # must print nothing before you start the next task
 ```
 Journal it as `H<n> ABANDONED — <the exact error text>`. Then go to the next task. A
-clean six-of-eight is a good night. A tangled eight-of-eight is a bad one.
+clean eight-of-eleven is a good night. A tangled eleven-of-eleven is a bad one.
 
 **RULE 5 — Every commit is tagged and scoped.**
 ```bash
@@ -48,11 +58,17 @@ git commit -m "[hermes-H<n>] <what you built in one line>"
 Never `git add -A`, never `git add .`, never `git commit -a`. Add files by name. This is
 what lets the owner drop one bad task with `git rebase -i` without losing the rest.
 
-**RULE 6 — No new dependencies, no fabricated data, no `any`.**
-The repo is TypeScript strict. `any`, `as any`, `@ts-ignore`, and `@ts-expect-error` will
-fail review even if they compile. Every number that reaches a user must come from real
-data — never invent a stat, a price, a benchmark, or a result to make output look
-complete.
+**RULE 6 — The pre-commit hook is a tripwire, not an obstacle.**
+This repo installs a pre-commit hook (via `npm install`) that runs a secret scan on
+your staged files. If it blocks a commit, you staged something that looks like a
+credential. **Never use `git commit --no-verify`.** Unstage, figure out which line
+tripped it, journal it, and if you cannot resolve it, abandon the task under RULE 4.
+
+**RULE 7 — No new dependencies, no fabricated data, no `any`.**
+The repo is TypeScript strict. `any`, `as any`, `@ts-ignore`, and `@ts-expect-error`
+will fail review even if they compile. Every number that reaches a user must come from
+real data — never invent a stat, a price, a benchmark, or a result to make output look
+complete. Reports must contain only what your commands actually printed.
 
 ---
 
@@ -61,7 +77,7 @@ complete.
 ```bash
 cd <repo root>
 git rev-parse --abbrev-ref HEAD          # must be claude/fable-5-ultracode-plan-ptru4e
-git status --short                       # must be empty
+git status --short                       # must print nothing
 npm install                              # restores the existing lockfile; runs prisma generate
 mkdir -p handoff
 ```
@@ -69,22 +85,31 @@ mkdir -p handoff
 If the branch is wrong or `git status` is dirty, **stop** and write why in
 `handoff/JOURNAL.md`. Do not switch branches and do not discard someone else's work.
 
-Then confirm the starting line — you need to know these numbers so you can tell later
-whether *you* broke something:
+Then measure the starting line — you need these numbers to tell later whether *you*
+broke something:
 
 ```bash
-npm run typecheck                        # expected: exit 0
-npm run lint                             # expected: exit 0
-node scripts/guardrails/run-all.mjs      # expected: 20/25 passed
+npm run typecheck 2>&1 | grep -c "error TS"      # EXPECTED: 3
+npm run lint 2>&1 | tail -3                       # EXPECTED: exit 0
+node scripts/guardrails/run-all.mjs | tail -3     # EXPECTED: 22/25 passed
 ```
 
 Write all three results into `handoff/JOURNAL.md` under `=== BASELINE ===`.
 
-The five expected guard failures are `model-freeze`, `api-v1-boundary`,
-`ai-transport-import-boundary`, `actor-minting-boundary`, `ai-council`. They are
-pre-existing and **not yours to fix** — they are on the off-limits list in RULE 3.
-If a *sixth* guard fails at baseline, stop and journal it; the ground moved and the
-task specs below assume it did not.
+**The 3 typecheck errors are known debt (issue #421)** and live in the three files
+RULE 3 puts off-limits:
+
+```
+apps/web/lib/autonomy/execute-autonomy-cycle.ts(33,3)      TS2353
+apps/web/lib/calibration/ranking-power-control.ts(227,39)  TS2339
+apps/web/lib/ops/proven-path-seed.ts(86,9)                 TS2353
+```
+
+**The 3 expected guard failures are** `model-freeze` (#419), `api-v1-boundary` (#420),
+`ai-transport-import-boundary` — tracked base-branch debt, not yours to fix. If
+`actor-minting-boundary` or `ai-council` fail, `npm install` did not complete — rerun
+it. If any **other** guard fails, or the typecheck error count is not exactly 3, stop
+and journal it: the ground moved and the task specs below assume it did not.
 
 After **every** task, append one line to `handoff/JOURNAL.md`:
 
@@ -96,33 +121,38 @@ H<n> | <HH:MM> | <DONE|ABANDONED> | <commit hash or "-"> | <one-line note>
 
 ## 2. THE VERIFY BLOCK
 
-Several tasks end with "run the verify block." It is always these three commands, and
-all three must pass before you commit:
+Every code task ends with "run the verify block." It is always these commands, and
+every line must hit its expected value before you commit:
 
 ```bash
-npm run typecheck        # exit 0
-npm run lint             # exit 0
-npx vitest run <the test file you wrote>    # all green
+npm run typecheck 2>&1 | grep -c "error TS"    # must print EXACTLY 3 (the known ones)
+npm run lint                                    # exit 0
+npx vitest run <the test file this task names>  # all green
 ```
 
-If typecheck or lint was already failing at baseline, that is not your problem — but
-the *number* of errors must not have gone up. If it did, your change caused it.
+If the typecheck count is 4 or more, your change added an error — find it and fix it,
+or abandon. If it is somehow less than 3, you modified an off-limits file — undo that
+immediately.
 
 ---
 
 # THE TASKS
 
+Tasks H1–H6 are warm-ups and reports: no product code, nothing to break, and the
+reports are the raw material the owner mines the next day. H7–H11 are code, ordered by
+blast radius. Do them in order.
+
 ---
 
 ## H1 — Create the missing change-proposal template
 
-**Why this is first:** it is documentation only, it cannot break a build, and it is a
-warm-up that proves your file-writing path works before anything risky.
+**Why first:** documentation only, cannot break a build, proves your file-writing path
+works before anything risky.
 
 **The gap:** `docs/intelligence/SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN.md` and
 `docs/adr/005-entity-graph-minimal-schema.md` both instruct contributors to fill out
-`docs/adr/pre-implementation-change-proposal-template.md` before making schema or
-dependency changes. **That file does not exist.** Two documents point at a void.
+`docs/adr/pre-implementation-change-proposal-template.md` before schema or dependency
+changes. **That file does not exist.** Two documents point at a void.
 
 **FILES YOU MAY TOUCH**
 ```
@@ -154,7 +184,7 @@ italic instruction line for whoever fills it in:
 **DEFINITION OF DONE**
 ```bash
 test -f docs/adr/pre-implementation-change-proposal-template.md && echo OK
-grep -c "^## " docs/adr/pre-implementation-change-proposal-template.md   # must be >= 7
+grep -c "^## " docs/adr/pre-implementation-change-proposal-template.md   # >= 7
 node scripts/guardrails/no-unsupported-performance-claims.mjs            # exit 0
 node scripts/guardrails/commercial-copy-scan.mjs                         # exit 0
 ```
@@ -170,7 +200,7 @@ counted. **You are counting. You are not deleting.**
 
 **FILES YOU MAY TOUCH**
 ```
-handoff/INVENTORY.md      (create — note: handoff/, not docs/)
+handoff/INVENTORY.md      (create — handoff/ is gitignored; this is a report, not repo content)
 ```
 
 **WHAT TO BUILD**
@@ -197,25 +227,24 @@ Write `handoff/INVENTORY.md` with three tables: `.agents/skills` (name, size,
 references), `.claude/commands` (name, size, references), and a summary line giving
 total bytes and how many items have **zero** outside references.
 
-Then add one short paragraph: which items are plainly unrelated to a sports-prediction
-platform (judge by name and by the first ten lines of the file), and which are clearly
-in use. **Recommend nothing. Delete nothing.** This is a count for a human to act on.
+Then one short paragraph: which items are plainly unrelated to a sports-prediction
+platform (judge by name and the first ten lines of the file), and which are clearly in
+use. **Recommend nothing. Delete nothing.**
 
 **DEFINITION OF DONE**
 ```bash
 test -f handoff/INVENTORY.md && echo OK
-git status --short          # must show ONLY handoff/INVENTORY.md
+git status --short          # must print nothing (handoff/ is gitignored)
 ```
-**Do not commit this one** — `handoff/` is a scratch directory for reports, not repo
-content. Journal it as DONE with `-` for the commit hash.
+No commit. Journal it as DONE with `-` for the commit hash.
 
 ---
 
 ## H3 — Pin the promptfoo version
 
-**Why:** `package.json` line 27 runs `npx promptfoo@latest`. `@latest` means the version
-that executes tomorrow is not the version that executed today — an unreviewed package
-upgrade every single run. The current published version is **0.122.0**.
+**Why:** `package.json` runs `npx promptfoo@latest` in `eval:prompts`. `@latest` means
+the version that executes tomorrow is not the version that executed today — an
+unreviewed package upgrade every run. The current published version is **0.122.0**.
 
 **FILES YOU MAY TOUCH**
 ```
@@ -233,27 +262,151 @@ to:
 "eval:prompts": "npx promptfoo@0.122.0 eval -c eval/promptfoo/promptfooconfig.yaml",
 ```
 
-That is the whole task. Do not touch any other script. Do not run `npm install`. Do not
-run `npm run eval:prompts` — it costs real money and needs an API key you do not have.
+That is the whole task. Do not touch any other script. (You may notice four more
+`@latest` strings under `apps/web/lib/cockpit/` and `lib/jarvis/` — those are display
+text shown to the owner, not executed commands. **Leave them alone.**) Do not run
+`npm run eval:prompts` — it costs real money and needs an API key you do not have.
 
 **DEFINITION OF DONE**
 ```bash
 node -e "console.log(require('./package.json').scripts['eval:prompts'])"   # shows 0.122.0
 git diff --stat package.json      # must read: 1 file changed, 1 insertion(+), 1 deletion(-)
 ```
-If `git diff --stat` shows more than one changed line, your editor reformatted the file.
-Undo everything (`git checkout -- package.json`) and redo it by changing only that one
-string. Then commit as `[hermes-H3]`.
+If more than one line changed, your editor reformatted the file. `git checkout --
+package.json` and redo it by changing only that one string. Then commit as
+`[hermes-H3]`.
 
 ---
 
-## H4 — Entity name normalization (pure function)
+## H4 — Route-auth inventory (all 176 API routes)
 
-**Why:** `packages/db/prisma/schema.prisma` now has an `Entity` model with a unique
+**Why:** the repo's #1 non-negotiable revenue rule is "no frontend-only paywalls —
+enforcement is server-side only." Whether that holds depends on 176 route files, and
+nobody has a table of them. You are building that table. Read-only. This is one of the
+most valuable things in this queue, and it requires zero judgment — just diligence.
+
+**FILES YOU MAY TOUCH**
+```
+handoff/ROUTE_AUTH_INVENTORY.md      (create)
+```
+
+**WHAT TO BUILD**
+
+For **every** file matching `apps/web/app/api/**/route.ts` (list them with
+`git ls-files "apps/web/app/api"` filtered to `route.ts`), open the file and record
+one row:
+
+| Column | How to fill it |
+|---|---|
+| Route path | The file path with `apps/web/app` and `/route.ts` stripped — e.g. `/api/picks/daily-slate` |
+| Methods | Which of `GET/POST/PUT/PATCH/DELETE` are exported |
+| Auth mechanism | The **first** of these you find in the file: `auth()` / `getServerSession` / `requireUser` / `requireAdmin` / `requireEntitlement` / `checkEntitlement` / `verifySignature` / `CRON_SECRET` / a webhook signature check / `NONE FOUND` |
+| Body parsing | `yes` if the file contains `req.json()` or `request.json()`, else `no` |
+| Validation | `yes` if the file mentions `zod`, `z.object`, or `safeParse`, else `no` |
+| Self-declared public | `yes` if a comment near the top says public/no-auth-by-design, else `no` |
+
+Work in file order, 176 rows, no skipping. If a file is confusing, fill what you can
+and put `?` in the cell you could not determine — a `?` is honest, a guess is not.
+
+End the report with four counts: routes with `NONE FOUND` and no public comment;
+routes parsing bodies without validation; routes with entitlement checks; total rows
+written (must be the number of route files you listed).
+
+**DEFINITION OF DONE**
+```bash
+test -f handoff/ROUTE_AUTH_INVENTORY.md && echo OK
+grep -c "^| /api" handoff/ROUTE_AUTH_INVENTORY.md   # must equal the route-file count
+git status --short                                   # must print nothing
+```
+No commit. Journal as DONE with `-`.
+
+---
+
+## H5 — Doc-drift report (references to files that do not exist)
+
+**Why:** this repo just spent a day discovering that two documents pointed at a
+template that was never created (H1 fixes that one instance). You are finding every
+other instance of the same rot. Read-only.
+
+**FILES YOU MAY TOUCH**
+```
+handoff/DOC_DRIFT.md      (create)
+```
+
+**WHAT TO BUILD**
+
+For every tracked markdown file under `docs/` (`git ls-files "docs/*.md" "docs/**/*.md"`),
+extract every backtick-quoted string that looks like a repo path — starts with one of
+`apps/`, `packages/`, `scripts/`, `docs/`, `workers/`, `eval/`, `tools/`, and contains
+at least one `/`. For each, test whether the path exists in the repo
+(`git ls-files <path>` non-empty, or the directory exists). A path with obvious
+placeholder syntax (`NNN`, `<...>`, `*`, `{`) is skipped, not reported.
+
+Write `handoff/DOC_DRIFT.md`: one table — referencing doc, quoted path, `MISSING`.
+Then a count of docs scanned and references checked. If a doc has more than 5 missing
+references, add one line flagging it as probably stale wholesale.
+
+Write a small throwaway script to do this if you like — put it in `handoff/`
+(e.g. `handoff/_doc_drift.mjs`), run it with `node`, and leave it there so the owner
+can rerun it. It must only read the repo and write into `handoff/`.
+
+**DEFINITION OF DONE**
+```bash
+test -f handoff/DOC_DRIFT.md && echo OK
+git status --short          # must print nothing
+```
+No commit. Journal as DONE with `-`.
+
+---
+
+## H6 — Revenue-core test-gap map
+
+**Why:** the money path (Stripe → entitlements → paywall) and the legal path
+(scraping clearance) are the two places an untested change costs real dollars. You are
+mapping which source files in those areas have tests exercising them and which do not.
+Read-only. The owner writes the missing tests later, with judgment; your map tells
+them where.
+
+**FILES YOU MAY TOUCH**
+```
+handoff/TEST_GAP_MAP.md      (create)
+```
+
+**WHAT TO BUILD**
+
+For every `.ts` file (excluding `.test.ts`) in these places:
+
+```
+apps/web/lib/billing/          apps/web/lib/stripe.ts
+apps/web/lib/entitlements.ts   apps/web/lib/api-entitlement.ts
+apps/web/lib/scraping/         apps/web/lib/claude-api/
+```
+
+record: file path, line count (`wc -l`), how many test files mention its basename
+(`git grep -l "<basename-without-ext>" -- "*.test.ts" "*.test.tsx" | wc -l`), and the
+names of up to 3 of those test files.
+
+Sort the table by (mentions ascending, line count descending) — biggest untested files
+first. End with: the ten highest-priority gaps by that sort, as a plain list.
+
+A mention is a weak signal — say so in the report header: "a test file naming a module
+is not proof it covers it; zero mentions is proof nothing does."
+
+**DEFINITION OF DONE**
+```bash
+test -f handoff/TEST_GAP_MAP.md && echo OK
+git status --short          # must print nothing
+```
+No commit. Journal as DONE with `-`.
+
+---
+
+## H7 — Entity name normalization (pure function)
+
+**Why:** `packages/db/prisma/schema.prisma` has an `Entity` model with a unique
 constraint on `(entity_type, normalized_name, sport)`. Nothing computes
-`normalized_name`. Without it the constraint cannot be honored and the table cannot be
-written to correctly. This function is the missing primitive, and it has zero
-dependencies — no database, no network, no imports beyond types.
+`normalized_name`. This function is the missing primitive — zero dependencies, no
+database, no network.
 
 **FILES YOU MAY TOUCH**
 ```
@@ -264,7 +417,7 @@ apps/web/lib/entity-graph/normalize.test.ts   (create)
 **WHAT TO BUILD**
 
 There is already a `normalizeName` in `apps/web/lib/resource-intelligence/classify.ts`
-for a completely different domain. **Do not import it and do not modify it.** Name yours
+for a different domain. **Do not import it and do not modify it.** Name yours
 `normalizeEntityName` so the two never get confused.
 
 ```ts
@@ -274,8 +427,7 @@ export function normalizeEntityName(raw: string): string
 Apply these steps **in this exact order**:
 
 1. Unicode-normalize with `raw.normalize("NFKD")`, then strip combining marks with
-   `.replace(/[̀-ͯ]/g, "")`. This is what turns `Nikola Jokić` into
-   `Nikola Jokic`.
+   `.replace(/[̀-ͯ]/g, "")`. This turns `Nikola Jokić` into `Nikola Jokic`.
 2. Lowercase.
 3. Remove all periods and apostrophes with **no** replacement character, so `A.J.`
    becomes `aj` and `O'Neal` becomes `oneal`.
@@ -283,8 +435,8 @@ Apply these steps **in this exact order**:
 5. Collapse runs of whitespace to one space, and trim.
 6. Strip a trailing generational suffix — `jr`, `sr`, `ii`, `iii`, `iv`, `v` — but
    **only** when it is the final whitespace-separated token **and** there are at least
-   two other tokens before it. (`Odell Beckham Jr.` → `odell beckham`, but a person
-   whose entire name is `Jr` keeps it.)
+   two other tokens before it. (`Odell Beckham Jr.` → `odell beckham`; a person whose
+   entire name is `Jr` keeps it.)
 
 Return the result. Empty input returns `""`. Never throw.
 
@@ -307,21 +459,18 @@ Return the result. Empty input returns `""`. Never throw.
 Plus one idempotence test: for every input above,
 `normalizeEntityName(normalizeEntityName(x)) === normalizeEntityName(x)`.
 
-Plus one collision test asserting that `"A.J. Brown"` and `"AJ Brown"` produce the
-**same** string — that convergence is the entire reason this function exists.
+Plus one collision test asserting `"A.J. Brown"` and `"AJ Brown"` produce the **same**
+string — that convergence is the entire reason this function exists.
 
 **DEFINITION OF DONE**
 ```bash
 npx vitest run apps/web/lib/entity-graph/normalize.test.ts    # 13+ tests, all green
-npm run typecheck                                             # exit 0
-npm run lint                                                  # exit 0
-git grep -n "any" apps/web/lib/entity-graph/normalize.ts      # must return nothing
 ```
-Then commit as `[hermes-H4]`.
+Then the verify block (§2). Then commit as `[hermes-H7]`.
 
 ---
 
-## H5 — Entity graph repository layer
+## H8 — Entity graph repository layer
 
 **Why:** the `Entity` / `EntityEdge` models exist in the schema and nothing reads or
 writes them. This is the typed access layer. It must be testable with **no database**,
@@ -337,11 +486,23 @@ apps/web/lib/entity-graph/index.ts             (create)
 **THE PATTERN TO COPY**
 
 Open `apps/web/lib/claude-api/usage-store.ts` and read it before writing anything. It
-does exactly what you need: it declares a small structural interface
-(`ClaudeUsageStoreDb`) describing only the Prisma methods it uses, defaults the
-parameter to the real `db`, and casts once at the default. That makes every function
-unit-testable with a hand-written fake and **no** database connection. Follow that shape
-precisely. If your test needs a live database, you have built it wrong.
+declares a small structural interface describing only the Prisma methods it uses,
+defaults the parameter to the real `db`, and casts once at the default. That makes
+every function unit-testable with a hand-written fake and **no** database connection.
+Follow that shape precisely. If your test needs a live database, you built it wrong.
+
+**EXACT IMPORTS** (verified in this repo — use these, do not improvise):
+```ts
+import { db as defaultDb } from "@sports/db";
+import type { Entity, EntityEdge, EntityType } from "@prisma/client";
+import { normalizeEntityName } from "./normalize";
+```
+`npm install` already ran `prisma generate`, so `EntityType` exists in
+`@prisma/client`. If that import errors anyway, run `npm run db:generate` once (it
+reads the schema and writes the client — no database involved). If it STILL errors,
+abandon under RULE 4 and journal the exact error. Do not declare your own `EntityType`
+union and do not widen anything to `string` — a hand-written copy of a generated enum
+rots silently the moment the schema changes.
 
 **WHAT TO BUILD**
 
@@ -361,11 +522,11 @@ export async function upsertEntity(
   db: EntityGraphDb = defaultDb as unknown as EntityGraphDb,
 ): Promise<{ id: string; normalizedName: string }>
 ```
-- Computes `normalizedName` with `normalizeEntityName` from H4.
+- Computes `normalizedName` with `normalizeEntityName` from H7.
 - `sport` defaults to `""`. **Never `null`, never `undefined`.** Read the "sport is NOT
-  NULL DEFAULT ''" paragraph in `docs/adr/005-entity-graph-minimal-schema.md` before you
-  touch this — Postgres treats NULLs as *distinct* inside a unique index, so a null
-  `sport` silently defeats the deduplication the table exists to provide.
+  NULL DEFAULT ''" paragraph in `docs/adr/005-entity-graph-minimal-schema.md` first —
+  Postgres treats NULLs as *distinct* inside a unique index, so a null `sport` silently
+  defeats the deduplication this table exists to provide.
 - Upserts on the unique triple `(entityType, normalizedName, sport)`.
 - Sets `firstSeenAt` on create; always updates `lastSeenAt`.
 
@@ -385,13 +546,12 @@ export async function linkEntities(
   db: EntityGraphDb = defaultDb as unknown as EntityGraphDb,
 ): Promise<void>
 ```
-- **Throws** if `sourceRef` is empty/whitespace or if `sourceTier` is not a finite
-  number. An edge with no provenance is a fabricated relationship, which repo rule #2
-  forbids. This guard is the most important line in the file — write the test for it
-  first.
-- `confidence` defaults to 50 and is clamped to 0–100.
-- Upserts on `(fromEntityId, relation, toEntityId, observedAt)` so re-ingesting the same
-  observation twice is a no-op rather than a duplicate row.
+- **Throws** if `sourceRef` is empty/whitespace or `sourceTier` is not a finite number.
+  An edge with no provenance is a fabricated relationship, which repo rule #2 forbids.
+  This guard is the most important line in the file — write its test first.
+- `confidence` defaults to 50, clamped to 0–100.
+- Upserts on `(fromEntityId, relation, toEntityId, observedAt)` so re-ingesting the
+  same observation twice is a no-op, not a duplicate row.
 
 ```ts
 export async function findEntity(
@@ -410,8 +570,8 @@ export async function neighbors(
   db: EntityGraphDb = defaultDb as unknown as EntityGraphDb,
 ): Promise<readonly EntityEdge[]>
 ```
-- One hop only. `direction` defaults to `"both"`, `limit` defaults to 100 and is capped
-  at 500. **Do not write a recursive traversal** — that is a separate, later change.
+- One hop only. `direction` defaults to `"both"`, `limit` defaults to 100, capped at
+  500. **Do not write a recursive traversal** — that is a separate, later change.
 
 `index.ts` re-exports the four functions plus `normalizeEntityName`. Nothing else.
 
@@ -429,42 +589,31 @@ export async function neighbors(
 8. `neighbors` caps `limit: 9999` at `500`.
 9. `neighbors` with `direction: "out"` queries only the `fromEntityId` side.
 
-**IF `EntityType` DOES NOT IMPORT**
-
-The Prisma client may not have been regenerated. Run `npm run db:generate` (this reads
-`schema.prisma` and writes the client — it does **not** connect to a database and is
-safe). If it still fails, **abandon this task under RULE 4** and journal the exact
-error. Do not work around it by declaring your own `EntityType` union or by widening a
-type to `string` — a hand-written duplicate of a generated enum silently rots the moment
-the schema changes.
-
 **DEFINITION OF DONE**
 ```bash
-npx vitest run apps/web/lib/entity-graph/          # all green, including H4's tests
-npm run typecheck                                   # exit 0
-npm run lint                                        # exit 0
-git grep -n "as any\|: any" apps/web/lib/entity-graph/   # must return nothing
-git status --short                                  # no changes to schema.prisma
+npx vitest run apps/web/lib/entity-graph/          # all green, including H7's tests
+git grep -n "as any\|: any" apps/web/lib/entity-graph/   # must print nothing
+git status --short | grep -v entity-graph          # nothing outside entity-graph
 ```
-Then commit as `[hermes-H5]`.
+Then the verify block (§2). Then commit as `[hermes-H8]`.
 
 ---
 
-## H6 — Router legibility card in the cockpit
+## H9 — Router legibility card in the cockpit
 
 **Why:** `apps/web/lib/claude-api/model-router.ts` decides which Claude tier answers
-each surface, and `SURFACE_RECOMMENDED` records which tier *should* answer it once
-validated. That gap is money — and today it is invisible unless you read the source.
-This makes it a card on a page the owner already looks at.
+each surface, and `SURFACE_RECOMMENDED` records which tier *should* once validated.
+That gap is money, and today it is invisible unless you read source. This makes it a
+card on a page the owner already looks at.
 
 **FILES YOU MAY TOUCH**
 ```
 apps/web/components/cockpit/router-legibility-card.tsx        (create)
 apps/web/__tests__/router-legibility-card.test.tsx            (create)
-apps/web/app/cockpit/api-costs/page.tsx                       (modify — one import, one <section>)
+apps/web/app/cockpit/api-costs/page.tsx                       (modify — one import, one element)
 ```
 
-**READ THIS BEFORE YOU START — the trap in this task**
+**READ THIS FIRST — the trap in this task**
 
 There are **two different surface vocabularies** in this codebase and they do not
 overlap:
@@ -472,82 +621,80 @@ overlap:
 - `ClaudeSurface` in `model-router.ts` — 6 values, lowercase/kebab:
   `studio`, `journal`, `calibration-insight`, `model-court`, `content`, `brief`.
 - `ClaudeApiSurface` in `cost-monitor.ts` — 9 values, SCREAMING_SNAKE:
-  `BLOG_GENERATION`, `STUDIO_GENERATION`, … `OTHER`.
+  `BLOG_GENERATION`, … `OTHER`.
 
 The existing page renders `ClaudeApiSurface` (budget rows). **Your card renders
-`ClaudeSurface` (routing rows).** Do not try to join, map, or reconcile them. Do not
-rename either one. Two tables about two different things on one page is correct here;
-inventing a mapping between them would be a fabricated relationship.
+`ClaudeSurface` (routing rows).** Do not join, map, or reconcile them. Two tables
+about two different things on one page is correct here; inventing a mapping between
+them would be a fabricated relationship.
 
 **WHAT TO BUILD**
 
-The data source is already built, pure, and offline — `surfaceEconomics()` in
+The data source already exists, pure and offline: `surfaceEconomics()` in
 `apps/web/lib/claude-api/model-economics.ts`. It returns one row per `ClaudeSurface`
-with `activeTier`, `recommendedTier`, `activeBlended`, `recommendedBlended`, and
-`savingsFraction`, computed from a vendored price snapshot. **No database call, no
-network call, no new data plumbing.** Call it and render it.
+with `activeTier`, `recommendedTier`, `activeBlended`, `recommendedBlended`,
+`savingsFraction`, computed from a vendored price snapshot. **No database, no network,
+no new plumbing.** Call it and render it.
 
 The component:
 ```tsx
 export function RouterLegibilityCard(): JSX.Element
 ```
-A `<section>` matching the visual language of the sibling sections in `page.tsx` — same
-`rounded-lg border border-titanium/40 bg-obsidian/60` shell, same header treatment, same
-`overflow-x-auto` table wrapper. Copy those class strings from `page.tsx`; do not invent
-new ones and do not add a stylesheet.
+A `<section>` matching the sibling sections in `page.tsx` — same
+`rounded-lg border border-titanium/40 bg-obsidian/60` shell, same header treatment,
+same `overflow-x-auto` table wrapper. Copy those class strings from `page.tsx`; do not
+invent new ones and do not add a stylesheet.
 
-Columns: **Surface · Active tier · Recommended tier · Active $/Mtok · Recommended $/Mtok
-· Savings if flipped**.
+Columns: **Surface · Active tier · Recommended tier · Active $/Mtok · Recommended
+$/Mtok · Savings if flipped**.
 
 Rules for the rows:
-- Sort by `savingsFraction` descending, so the biggest unclaimed saving is at the top.
+- Sort by `savingsFraction` descending — biggest unclaimed saving on top.
 - When `activeTier === recommendedTier`, render the savings cell as `—`, not `0%`.
-- When `savingsFraction` is negative (the recommendation is an *upgrade*, which is true
-  for `model-court`), render it as e.g. `+140% cost` — never as a negative saving. A
-  cost increase displayed as a saving is exactly the kind of quietly-wrong number this
-  repo's rules exist to prevent.
-- Format currency with `Intl.NumberFormat`, matching the `formatUsd` helper already at
-  the bottom of `page.tsx`. Blended costs are dollars per million tokens and are small —
-  use enough decimal places that they do not all render as `$0.00`.
-- Add one line of caption text under the header stating that these figures come from a
-  vendored price snapshot and that a tier flip requires passing the promptfoo gate
-  first. Do not overstate it as live pricing.
+- When `savingsFraction` is negative (the recommendation is an *upgrade* — true for
+  `model-court`), render it as e.g. `+140% cost` — never as a negative saving. A cost
+  increase displayed as a saving is exactly the quietly-wrong number this repo's rules
+  exist to prevent.
+- Format currency with `Intl.NumberFormat` like the `formatUsd` helper at the bottom
+  of `page.tsx`. Blended costs are dollars per million tokens and are small — use
+  enough decimals that they do not all render `$0.00`.
+- One caption line under the header: figures come from a vendored price snapshot, and
+  a tier flip requires passing the promptfoo gate first. Do not present it as live
+  pricing.
 
-Wire it into `page.tsx` by adding the import and placing `<RouterLegibilityCard />`
-directly **after** the "Surface Budgets" section and **before** "Recent Errors". Change
-nothing else in that file.
+Wire into `page.tsx`: add the import, place `<RouterLegibilityCard />` directly
+**after** the "Surface Budgets" section and **before** "Recent Errors". Change nothing
+else in that file.
 
-**Required tests** (Testing Library, following the pattern of any existing test in
-`apps/web/__tests__/`):
+**Required tests** (Testing Library + jsdom — the harness is already configured; see
+`apps/web/__tests__/subscribe-button-disclosure.test.tsx` for a working example to
+imitate):
 1. Renders one row per `ClaudeSurface` — assert exactly 6 data rows.
 2. `brief` shows active tier `haiku`.
 3. `model-court` shows active `sonnet` and recommended `opus`.
 4. A surface where active equals recommended renders `—` in the savings cell.
-5. `model-court`'s savings cell does **not** contain a `-` sign (it is an upgrade and
-   must read as added cost).
+5. `model-court`'s savings cell does **not** contain a `-` sign.
 
 **DEFINITION OF DONE**
 ```bash
 npx vitest run apps/web/__tests__/router-legibility-card.test.tsx   # all green
-npm run typecheck                                                   # exit 0
-npm run lint                                                        # exit 0
-git diff --stat apps/web/app/cockpit/api-costs/page.tsx             # ~2 lines changed, no more
+git diff --stat apps/web/app/cockpit/api-costs/page.tsx             # ~2 lines changed
 ```
-Then commit as `[hermes-H6]`.
+Then the verify block (§2). Then commit as `[hermes-H9]`.
 
 ---
 
-## H7 — Offline routing-cost report
+## H10 — Offline routing-cost report
 
-**Why:** `npm run eval:prompts` is the *quality* gate, but it needs `ANTHROPIC_API_KEY`
+**Why:** `npm run eval:prompts` is the *quality* gate but needs `ANTHROPIC_API_KEY`
 and costs money, so it cannot run in CI or unattended. The *cost* half of the same
-question is fully computable offline from the vendored snapshot. This makes that half
-runnable any time, for free, deterministically.
+question is computable offline from the vendored snapshot. This makes that half
+runnable any time, free, deterministic.
 
-**Scope discipline:** this task builds a cost/routing report. It does **not** score model
-quality. Do not add anything that calls an LLM, and do not label any output as a quality
-score. The report must state in its own header that quality parity is validated
-separately by `npm run eval:prompts` and is not measured here.
+**Scope discipline:** this task builds a cost/routing report. It does **not** score
+model quality. Nothing in it calls an LLM, and no output is labeled a quality score.
+The report's own header must say quality parity is validated separately by
+`npm run eval:prompts` and is not measured here.
 
 **FILES YOU MAY TOUCH**
 ```
@@ -558,35 +705,33 @@ package.json                                (modify — add exactly one script l
 
 **WHAT TO BUILD**
 
-A plain Node ESM script (`.mjs`, run by `node`, matching the style of
-`scripts/guardrails/run-all.mjs` — read it first for the house style: top-of-file
-comment explaining *why* the file exists, `node:` prefixed built-in imports, no
-dependencies).
+A plain Node ESM script, no dependencies, in the house style of
+`scripts/guardrails/run-all.mjs` (read it first: top-of-file WHY comment, `node:`
+prefixed imports).
 
 Behavior:
-- Reads the same vendored price snapshot `model-economics.ts` uses. Since a `.mjs`
-  script cannot import a `.ts` module directly, read the snapshot **JSON** file itself
-  and recompute the blended costs in the script. Find the snapshot by following the
-  `import` at the top of `apps/web/lib/claude-api/model-economics.ts`.
-- Recomputes, per surface: active tier, recommended tier, blended cost of each, and the
-  savings fraction. Blended cost is `input * 0.75 + output * 0.25` — the same 75/25
-  input share the TypeScript module uses. Hardcode the surface→tier maps by copying the
-  current values out of `model-router.ts`, and add a comment naming that file as the
-  source of truth so the next person knows where to re-sync from.
+- Reads the vendored price snapshot **directly** from its literal path:
+  `apps/web/__tests__/fixtures/models-dev-snapshot.json` (this is the same file
+  `model-economics.ts` imports — verified). Parse it with `JSON.parse(readFileSync(...))`.
+- Recomputes per surface: active tier, recommended tier, blended cost of each, savings
+  fraction. Blended cost is `input * 0.75 + output * 0.25` — the same 75/25 split the
+  TypeScript module uses. Hardcode the surface→tier maps by copying the current values
+  out of `model-router.ts` (`SURFACE_TIER` and `SURFACE_RECOMMENDED`), with a comment
+  naming that file as the source of truth to re-sync from.
 - Writes `reports/ai/routing-cost-<YYYY-MM-DD>.md`: a table, a total line, and a
-  "Biggest unclaimed saving" line naming the single surface with the highest positive
+  "Biggest unclaimed saving" line naming the surface with the highest positive
   `savingsFraction`.
-- Supports `--json` (print JSON to stdout, write no file) and `--check` (write no file;
-  exit 1 if any surface's active tier is *more expensive* than its recommended tier by
-  more than 25% — i.e. money is being left on the table — and print which).
+- Supports `--json` (print JSON to stdout, write no file) and `--check` (write no
+  file; exit 1 if any surface's active tier is more than 25% more expensive than its
+  recommended tier — money on the table — and print which).
 - Prints the output path on success. Creates `reports/ai/` if missing.
 
-**Required tests** (`node --test`, matching `scripts/ai/build-call-site-inventory.test.mjs`):
-1. The blended-cost calculation returns a known value for a known input.
-2. Savings fraction is `0` when active and recommended tiers are identical.
+**Required tests** (`node --test`, imitating `scripts/ai/build-call-site-inventory.test.mjs`):
+1. Blended-cost calculation returns a known value for a known input.
+2. Savings fraction is `0` when tiers are identical.
 3. Savings fraction is **negative** when the recommendation is more expensive.
-4. The rendered markdown table has one row per surface.
-5. `--json` produces parseable JSON with one entry per surface.
+4. The markdown table has one row per surface (6).
+5. `--json` produces parseable JSON with 6 entries.
 
 Add to `package.json`, adjacent to `eval:prompts`:
 ```json
@@ -598,114 +743,113 @@ Add to `package.json`, adjacent to `eval:prompts`:
 node --test scripts/eval/routing-cost-report.test.mjs    # all green
 node scripts/eval/routing-cost-report.mjs --json         # valid JSON, 6 entries
 node scripts/eval/routing-cost-report.mjs                # writes the dated file, prints path
-node scripts/eval/routing-cost-report.mjs --check; echo "exit=$?"    # runs, exit 0 or 1
-npm run typecheck && npm run lint                        # both exit 0
+node scripts/eval/routing-cost-report.mjs --check; echo "exit=$?"    # runs; 0 or 1
+rm -f reports/ai/routing-cost-*.md                       # the run's output is not source — delete it
+git status --short    # must show ONLY scripts/eval/* and package.json
 ```
-Commit the script, its test, and the `package.json` line. **Do not commit the generated
-report** — `reports/ai/routing-cost-<date>.md` is an output, not source. If `git status`
-shows it, leave it uncommitted and say so in the journal.
-Then commit as `[hermes-H7]`.
+Commit the script, its test, and the `package.json` line as `[hermes-H10]` (after the
+verify block, §2). The owner regenerates the report any time with
+`npm run eval:routing-cost`.
 
 ---
 
-## H8 — Wire the response cache into the free lane
+## H11 — Wire the response cache into the free lane
 
-**Why last:** this is the only task that changes a code path the product actually runs.
+**Why last:** the only task that changes a code path the product actually runs.
 Everything before it was additive. Read the whole task before typing.
 
-**The gap:** `apps/web/lib/claude-api/response-cache.ts` was built, tested (18 tests
-green), and never connected to anything. It currently saves exactly zero dollars.
+**The gap:** `apps/web/lib/claude-api/response-cache.ts` was built and tested
+(18 tests green) and never connected to anything. It currently saves zero dollars.
 
 **FILES YOU MAY TOUCH**
 ```
-apps/web/lib/claude-api/free-lane.ts              (modify)
+apps/web/lib/claude-api/free-lane.ts                  (modify)
 apps/web/__tests__/free-lane-response-cache.test.ts   (create)
 ```
 
 **THE NON-NEGOTIABLE CONSTRAINT**
 
-With no environment variables set and no store passed in, `generateContentMessages` must
-behave **byte-identically to today**. Same call sequence, same return value, same
+With no environment variables set and no store passed in, `generateContentMessages`
+must behave **byte-identically to today**. Same call sequence, same return value, same
 errors. The cache is strictly opt-in. If you cannot demonstrate that with a test, you
 have not finished this task.
 
-Concretely, the cache activates only when **both** are true:
-1. `env.LLM_RESPONSE_CACHE_ENABLED === "true"`, and
-2. the caller passed a `cacheStore`.
+The cache path activates only when **all three** are true:
+1. `env["LLM_RESPONSE_CACHE_ENABLED"] === "true"`, and
+2. the caller passed a `cacheStore`, and
+3. `request.surface !== undefined`.
 
-Either one missing → the existing code path runs untouched.
+Any of the three missing → the existing body runs untouched. Check all three **before**
+touching the cache; this also sidesteps a type trap — `pickModelForSurface` requires a
+defined `ClaudeSurface`, so never call it with a possibly-undefined surface.
 
 **WHAT TO BUILD**
 
 Read `apps/web/lib/claude-api/response-cache.ts` in full first — particularly
-`withResponseCache`, `cacheBypassReason`, and the comment explaining why this cache is
-exact-key and not semantic. Then:
+`withResponseCache`, `cacheBypassReason`, and the comment on why this cache is
+exact-key, not semantic. Then:
 
-1. Add an optional `cacheStore?: ResponseCacheStore` field to `ContentMessagesRequest`.
-2. Inside `generateContentMessages`, wrap the **entire existing body** (the Cerebras →
-   secondary → `callClaude` chain, unchanged) in a `call` closure and hand it to
-   `withResponseCache`. Do not restructure or reorder the fallback chain. Do not "clean
-   it up." One nested closure is the whole diff.
-3. Build the `CacheableRequest` from the incoming request. For `model`, use the resolved
-   model for the surface — `pickModelForSurface(request.surface, env)` from
-   `model-router.ts`, which is already an in-repo import. **Do not use a literal string
-   and do not use `"unknown"`**: the model id is part of the cache key, so a wrong or
-   constant value there would serve one model's answer for another model's request.
+1. Add optional `cacheStore?: ResponseCacheStore` to `ContentMessagesRequest`.
+2. In `generateContentMessages`, when the three conditions hold, wrap the **entire
+   existing body** (Cerebras → secondary → `callClaude`, unchanged) in a `call`
+   closure handed to `withResponseCache`. Do not restructure the fallback chain. One
+   nested closure is the whole diff.
+3. Build the `CacheableRequest` with
+   `model: pickModelForSurface(request.surface, env)` (import from `./model-router` —
+   already an in-repo import path). **Never a literal string, never `"unknown"`** —
+   the model id is part of the cache key; a constant there would serve one model's
+   answer for another model's request.
 4. `withResponseCache` already refuses non-cacheable surfaces (only `brief` and
-   `content` are eligible) and any request with `temperature > 0`. Do not re-implement
-   those checks and do not widen the allow-list.
-5. Return `outcome.result`. Do not change the shape of what
-   `generateContentMessages` returns — callers depend on it.
+   `content`) and any `temperature > 0`. Do not re-implement those checks and do not
+   widen the allow-list.
+5. Return `outcome.result`. The shape of what `generateContentMessages` returns must
+   not change — callers depend on it.
 
 **Required tests:**
-1. **The identity test, and it comes first.** No env var, no store → the underlying
-   dispatch is called exactly once and the returned object deep-equals what the
-   un-cached path returns. This is the test the whole task lives or dies on.
-2. Env set to `"true"` + memory store (`createMemoryResponseCacheStore`) + surface
-   `"brief"` → two identical calls invoke the underlying dispatch **once**, and both
-   return the same text.
-3. Env set + store + surface `"studio"` → underlying dispatch called **twice**
-   (`studio` is not a cacheable surface).
-4. Env set + store + `temperature: 0.7` → dispatch called **twice** (nondeterministic
-   requests must never be cached).
+1. **The identity test, first.** No env var, no store → underlying dispatch called
+   exactly once, and the returned object deep-equals the un-cached path's result.
+   This is the test the task lives or dies on.
+2. Env `"true"` + memory store (`createMemoryResponseCacheStore`) + surface `"brief"`
+   → two identical calls invoke dispatch **once**; both return the same text.
+3. Env + store + surface `"studio"` → dispatch called **twice** (not cacheable).
+4. Env + store + `temperature: 0.7` → dispatch called **twice** (never cache sampled
+   output).
 5. Store whose `get` rejects → the call still succeeds via the live path. A cache
    failure must never become a product failure.
-6. Two requests differing only in `user` text → dispatch called **twice** (different
-   cache keys).
+6. Two requests differing only in `user` text → dispatch called **twice**.
 
 **IF YOU GET STUCK**
 
 Do not partially wire this. A half-connected cache is worse than none — it can serve a
-stale draft while looking like it works. If test 1 does not pass, abandon under RULE 4,
-restore `free-lane.ts` with `git checkout -- apps/web/lib/claude-api/free-lane.ts`,
-delete your test file, and journal it. The owner would much rather read
-`H8 ABANDONED` than debug a subtly-wrong cache.
+stale draft while looking like it works. If test 1 does not pass, abandon under
+RULE 4, `git checkout -- apps/web/lib/claude-api/free-lane.ts`, delete your test file,
+journal it. The owner would much rather read `H11 ABANDONED` than debug a
+subtly-wrong cache.
 
 **DEFINITION OF DONE**
 ```bash
 npx vitest run apps/web/__tests__/free-lane-response-cache.test.ts   # all green
-npx vitest run apps/web/__tests__/claude-api-free-lane.test.ts       # the EXISTING suite, still green
-npm run typecheck && npm run lint                                    # both exit 0
-node scripts/guardrails/ai-transport-import-boundary.mjs             # not newly broken
-git diff --stat apps/web/lib/claude-api/free-lane.ts                 # should be small
+npx vitest run apps/web/__tests__/claude-api-free-lane.test.ts       # EXISTING suite still green
+node scripts/guardrails/ai-transport-import-boundary.mjs ; echo "exit=$?"  # not newly broken
+git diff --stat apps/web/lib/claude-api/free-lane.ts                 # small
 ```
-The existing `claude-api-free-lane.test.ts` staying green is the real gate here — it is
-the proof you did not change current behavior. Then commit as `[hermes-H8]`.
+The existing suite staying green is the real gate — proof you did not change current
+behavior. Then the verify block (§2). Then commit as `[hermes-H11]`.
 
 ---
 
 # 3. WHEN YOU FINISH
 
-Run the full verification, then write the summary. Do not skip this — an unverified run
-is an unusable run.
+Run the full verification, then write the summary. An unverified run is an unusable
+run.
 
 ```bash
-npm run typecheck
+npm run typecheck 2>&1 | grep -c "error TS"     # must print 3
 npm run lint
 npm test
 node scripts/guardrails/run-all.mjs
 git log --oneline origin/claude/fable-5-ultracode-plan-ptru4e..HEAD
-git status --short
+git status --short                               # must print nothing
 ```
 
 Append to `handoff/JOURNAL.md`:
@@ -714,17 +858,16 @@ Append to `handoff/JOURNAL.md`:
 === RUN COMPLETE ===
 tasks DONE: H<n>, H<n>, ...
 tasks ABANDONED: H<n> (<why>), ...
-typecheck: <exit>   lint: <exit>   tests: <exit>
-guardrails: <N>/25 passed — FAILED: <list>
-baseline was 20/25 — <same | better | WORSE>
+typecheck errors: <n> (baseline 3)   lint: <exit>   tests: <exit>
+guardrails: <N>/25 passed — FAILED: <list>   (baseline 22/25)
 commits: <paste git log --oneline output>
-git status --short: <paste — should be empty or handoff/ only>
+git status --short: <paste — must be empty>
 ```
 
-Then write `handoff/BUILD_SUMMARY.md`: one short section per task with what you built,
-what you verified, and — most valuable of all — **anything you were unsure about**. If
-you guessed at something, say so and name the file and line. A flagged guess costs the
-owner two minutes; an unflagged one costs an afternoon.
+Then write `handoff/BUILD_SUMMARY.md`: one short section per task — what you built,
+what you verified, and, most valuable of all, **anything you were unsure about**. If
+you guessed, say so and name the file and line. A flagged guess costs the owner two
+minutes; an unflagged one costs an afternoon.
 
 **Then stop. Do not push.**
 
@@ -734,10 +877,11 @@ owner two minutes; an unflagged one costs an afternoon.
 
 Stop immediately, write the summary, and end if any of these happen:
 
-1. All eight tasks are done or abandoned. ← the normal ending
-2. Two tasks in a row abandon for the same underlying reason (something environmental is
-   wrong and further tasks will fail the same way).
-3. `npm run typecheck` fails and you cannot make it pass by undoing your own last change.
+1. All eleven tasks are done or abandoned. ← the normal ending
+2. Two tasks in a row abandon for the same underlying reason (something environmental
+   is wrong and later tasks will fail the same way).
+3. The typecheck error count rises above 3 and undoing your own last change does not
+   bring it back.
 4. You are about to touch a file on the RULE 3 off-limits list.
 5. You have been running for eight hours.
 
@@ -745,17 +889,17 @@ Stop immediately, write the summary, and end if any of these happen:
 
 # 5. THE STANDARD
 
-You are not being judged on how many tasks you finish. You are being judged on this:
+You are not judged on how many tasks you finish. You are judged on this:
 
-**Every commit you leave behind is one the owner can read in two minutes and either keep
-or drop, with total confidence about which.**
+**Every commit you leave behind is one the owner can read in two minutes and either
+keep or drop, with total confidence about which. Every report you leave behind
+contains only things your commands actually printed.**
 
-That means: one task per commit, tagged `[hermes-H<n>]`. Only that task's files in that
-commit. Green typecheck and lint at every commit. No file touched that its task did not
-name. Every uncertainty written down instead of papered over.
+That means: one task per commit, tagged `[hermes-H<n>]`. Only that task's files in
+that commit. The verify block green at every commit. No file touched that its task did
+not name. Every uncertainty written down instead of papered over.
 
-Three clean commits and five honest `ABANDONED` lines is a good night's work. Eight
-commits where two are subtly wrong is a bad one, because it costs more to review than it
-saved to write.
+Six clean reports and three good commits beats eleven artifacts where two are subtly
+wrong, because wrong costs more to find than it saved to write.
 
 Begin at §1.
