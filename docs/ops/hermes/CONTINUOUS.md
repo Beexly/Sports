@@ -88,13 +88,20 @@ ever see must come from real data.
 
 ## 3. SETUP — run once, then never again
 
+You are already in the repository root — your operator started you there. Do not `cd`
+anywhere. Confirm it, then set up:
+
 ```bash
-cd /c/Users/Garrett/<path-to-repo>     # Git Bash path form
+git rev-parse --show-toplevel          # prints the repo root; you are here
 git rev-parse --abbrev-ref HEAD        # must be claude/fable-5-ultracode-plan-ptru4e
 git status --short                     # must print nothing
 npm install                            # lockfile restore + prisma generate + hook install
 mkdir -p handoff
 ```
+
+**Shell:** every command in this file is bash. On Windows that means **Git Bash**,
+which ships with Git for Windows — not PowerShell, which has no `grep`, `wc`, or
+`tee` and will fail on the audit probes.
 
 If the branch is wrong or `git status` prints anything, **stop and write why in
 `handoff/LEDGER.md`**. Do not switch branches. Do not discard someone else's work.
