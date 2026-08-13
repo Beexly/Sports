@@ -367,6 +367,70 @@ say so in the caption rather than implying the list is a failure list.
 
 ---
 
+### PHASE 1c — Compliance enforcement layer *(highest stakes in this file)*
+
+**Read all of it before starting. You are building mechanism, never policy.**
+
+What already exists, verified — **do not rebuild any of it**: `/responsible-play`
+(real resources: NCPG, GamTalk, Gamblers Anonymous, the `HELPLINE` constant in
+`lib/brand`), `/terms`, `/privacy`, all linked from the site-wide footer, plus
+`lib/compliance-scanner/rules.ts` and the affiliate-separation and
+partner-offer-compliance guards. The *informational* layer is done and done well.
+
+What is genuinely absent, verified by targeted search: **there is no age
+attestation and no self-exclusion mechanism.** A user cannot tell this platform
+their age, and cannot ask this platform to shut them out. The page points at
+external help; the product itself enforces nothing.
+
+**THE LINE YOU DO NOT CROSS.** You are not a lawyer and neither am I. You will
+**never** write a specific minimum age, a list of permitted or restricted states, a
+retention period, or any statutory claim. Every one of those is an owner decision
+taken with counsel. Where a policy value belongs, write `OWNER+COUNSEL VALUE —
+placeholder` and leave it unset. A mechanism with the wrong threshold hardcoded is
+worse than no mechanism, because it looks compliant.
+
+Both mechanisms need to persist user state, which means `schema.prisma` — LAW 4
+off-limits, approved-proposal-required. So:
+
+**P1c-1 · ADR 007 — user compliance state.** *(docs only)*
+One proposal covering both mechanisms, since they are the same class: durable
+per-user compliance facts. Cover:
+- **Age attestation** — recording that a user affirmed they meet the minimum age,
+  with timestamp and the version of the terms they affirmed against. Note the
+  distinction between *attestation* (self-declared, cheap, standard for analysis
+  products) and *verification* (identity-document, expensive, what a sportsbook
+  does) and present it as an explicit owner choice — do not pick one.
+- **Self-exclusion** — a user-initiated request that durably blocks access, with a
+  start time and an owner-configured duration, and which **cannot be self-reversed
+  before it expires**. That irreversibility is the entire point; a self-exclusion a
+  user can undo in a weak moment is theater.
+- At least three alternatives per mechanism, blast radius, rollback, and the seven
+  `CLAUDE.md` rules checklist.
+- **Explicitly out of scope, say so in the doc:** identity verification, geolocation,
+  state-by-state rules, and anything requiring a vendor. Those are separate decisions.
+
+File as `docs/adr/007-user-compliance-state.md`. **Propose only. Implement nothing.**
+
+**P1c-2 · Integration-point map.** *(read-only report → `handoff/COMPLIANCE_HOOKS.md`)*
+So implementation is mechanical the day the ADR is approved. Find and list, with
+`file:line` for each:
+- every account-creation path (NextAuth callbacks, any signup route/form)
+- every checkout entry point (`/api/subscriptions/checkout` and its callers)
+- every session-establishment point where an exclusion check would have to run
+- the middleware or layout where a site-wide gate would sit, if one is chosen
+For each, one line on what the hook would need to do. **Propose no code.** This is a
+map, and its value is that it is complete and accurate — a missed entry point is a
+hole in the eventual gate.
+
+**P1c-3 · Disclosure-consistency audit.** *(read-only → `handoff/COMPLIANCE_COPY.md`)*
+Run `.claude/commands/check-claims.md` scoped to legal and risk copy. Every page that
+discusses picks, performance, or money: does it carry appropriate risk language, and
+is that language consistent across pages? List every inconsistency with `file:line`.
+Flag any page that discusses potential winnings without adjacent risk context.
+**Report only — change no copy.** Marketing wording is an owner decision.
+
+---
+
 ### PHASE 2 — Reports *(read-only; the raw material the owner mines)*
 
 Each writes one file into `handoff/`. Specs are in `docs/ops/hermes/BUILD_QUEUE.md`
