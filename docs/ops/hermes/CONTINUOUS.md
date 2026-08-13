@@ -431,6 +431,78 @@ Flag any page that discusses potential winnings without adjacent risk context.
 
 ---
 
+### PHASE 1d — Abuse & failure visibility *(cost protection before public traffic)*
+
+Both of these already have working machinery. **You are extending coverage, not
+building a system.** Do not invent a second mechanism alongside the existing one.
+
+**P1d-1 · Rate-limit coverage sweep.** *(the highest-value mechanical work here)*
+
+`apps/web/lib/api/rate-limit.ts` exports `consumeRateLimit()` and `clientIp()`, backed
+by the durable `RateLimitCounter` model — a real, serverless-safe limiter. Audit
+finding **GSE-SEC-006** says it is applied to **8 of 176 routes**.
+
+Why this outranks its MEDIUM rating once traffic is public: **The Odds API bills per
+call.** An unthrottled route that triggers an odds fetch or an LLM call is not just a
+DoS surface, it is a direct withdrawal from an operator with no revenue. Abuse costs
+money here, not just uptime.
+
+Work it in batches of **five routes per ledger task, one commit each**:
+
+1. List unprotected routes: every `apps/web/app/api/**/route.ts` that does **not**
+   contain `consumeRateLimit`.
+2. Prioritise in this order — (a) unauthenticated `POST`, (b) any route reaching an
+   LLM or The Odds API, (c) any route triggering a DB write, (d) everything else.
+   Skip cron routes: `CRON_SECRET` already gates them.
+3. For each, copy the call pattern from an existing protected route — the audit names
+   them: `subscriptions/checkout`, `subscriptions/portal`, `picks/[id]/explain`,
+   `cockpit/studio/generate`, `intelligence/roster-advice`,
+   `human/roster-availability`, `room/[gameId]/model-court`, `admin/losses` draft.
+4. **Never invent a limit.** Use the value from the closest existing comparable route
+   and say in the commit message which route you copied it from. A limit you made up
+   either throttles real users or protects nothing, and neither is discoverable until
+   it hurts.
+5. Add or extend a test asserting the route 429s past the limit.
+
+Verify block per commit. Tag `[hermes-P1d-1-<batch>]`.
+
+**P1d-2 · B2B limiter durability.** *(audit finding GSE-SEC-015)*
+
+`apps/web/lib/b2b/api-key-auth.ts` — `rateLimitB2b` counts in a module-level `Map`. On
+Vercel every instance keeps its own counter, so the effective limit multiplies by
+instance count: the limit is real in dev and largely fictional in production. Move it
+onto the same durable `RateLimitCounter` path `consumeRateLimit` already uses. Keep
+the function signature identical so no caller changes. Test that two separate
+"instances" (fresh module state) share one counter. If the durable path does not fit
+the B2B key shape, **stop and write why** — do not invent a second storage scheme.
+
+**P1d-3 · Runtime error capture.** *(ADR + a zero-dependency interim)*
+
+What exists: `/api/cron/health-alert` posts to a webhook, and
+`ai-control-plane/observability.ts` covers the AI path. What does **not** exist:
+capture of an unhandled exception in an ordinary route handler, with a stack trace, at
+the moment it happens. health-alert is a scheduled poll of *status* — it cannot tell
+you that one checkout 500'd at 02:14 and why.
+
+Two parts:
+
+- **ADR 008** proposing a real error-monitoring decision. A hosted service means a new
+  dependency and an external data flow, both of which need owner approval — so
+  **propose, do not install** (LAW 5). Weigh at least: a hosted service, a
+  self-hosted collector, and staying with structured logs plus the existing webhook.
+  State plainly for each what leaves the machine and where it goes; this repo holds
+  live Stripe and production database credentials, and an error payload can carry
+  request context. File as `docs/adr/008-runtime-error-monitoring.md`.
+- **The interim, buildable now with zero new dependencies:** a small helper that
+  captures an exception's message, stack, route, and timestamp and posts it through
+  the **existing** health-alert webhook path. Wire it into **three** routes only —
+  `subscriptions/checkout` plus the two highest-traffic public GETs — as a working
+  demonstration, not a sweep. **Never log a request body, header, token, or user
+  email.** Route + error class + stack is the whole payload. If you cannot guarantee
+  a field is free of user data, leave it out.
+
+---
+
 ### PHASE 2 — Reports *(read-only; the raw material the owner mines)*
 
 Each writes one file into `handoff/`. Specs are in `docs/ops/hermes/BUILD_QUEUE.md`
