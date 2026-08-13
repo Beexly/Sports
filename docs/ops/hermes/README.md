@@ -5,12 +5,17 @@ have it run unattended overnight.
 
 | File | What it is | Who reads it |
 |---|---|---|
-| `LAUNCH.md` | Setup, model routes, rate limits, morning review, what I could not verify | **You** |
-| `AUDIT_PROMPT.md` | Job 1 — 28 read-only probes. Writes reports only, changes no source | Paste into Hermes |
-| `BUILD_QUEUE.md` | Job 2 — 11 tasks: 6 zero-risk reports, 5 code tasks; one commit each, no push | Paste into Hermes |
+| **`CONTINUOUS.md`** | **The one to paste.** A single non-stop run: ground truth → audit → reports → build → launch prep → standing orders that never run out | **Paste into Hermes** |
+| `LAUNCH.md` | Setup, model choice, morning review, what I could not verify | **You** |
+| `AUDIT_PROMPT.md` | Reference — the 28 probes, severity table, evidence rule. `CONTINUOUS.md` PHASE 1 points here | Reference |
+| `BUILD_QUEUE.md` | Reference — full per-task specs. `CONTINUOUS.md` PHASES 2–3 point here | Reference |
 
-**Run the audit first.** It cannot damage anything, and it tells you how much to trust
-the setup before you let it write code.
+**Paste `CONTINUOUS.md` and walk away.** It is ledger-driven: every task is claimed,
+executed, verified, and recorded in `handoff/LEDGER.md` before the next one starts, so
+an interrupted run is still readable and a crashed run resumes from the ledger.
+
+The other two files are no longer separate jobs — they are the detailed specs that
+`CONTINUOUS.md` sends the agent to read. You do not paste them.
 
 ## The design constraint behind both prompts
 
