@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { auth } from "@/lib/auth";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import type {
   OperatorAgent,
   CockpitTaskStatus,
@@ -10,7 +11,7 @@ import type {
 
 export const dynamic = "force-dynamic";
 
-async function requireAdmin(): Promise<NextResponse | null> {
+async function requireAdmin(): Promise<{ userId: string } | NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json(
@@ -18,12 +19,12 @@ async function requireAdmin(): Promise<NextResponse | null> {
       { status: 403 }
     );
   }
-  return null;
+  return { userId: session.user.id };
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const denied = await requireAdmin();
-  if (denied) return denied;
+  if (denied instanceof NextResponse) return denied;
 
   const { searchParams } = new URL(req.url);
   const statusParam = searchParams.get("status");
@@ -53,7 +54,18 @@ interface CreateTaskInput {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const denied = await requireAdmin();
-  if (denied) return denied;
+  if (denied instanceof NextResponse) return denied;
+
+  // Per-admin throttle on this DB-write task-creation endpoint (defense-in-depth;
+  // same bucket pattern as subscriptions/checkout, keyed by admin id at 10/min).
+  // Limit copied from subscriptions/checkout.
+  const limit = consumeRateLimit("cockpit-tasks", denied.userId, 10, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please slow down and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
 
   const body = (await req.json().catch(() => ({}))) as CreateTaskInput;
 
