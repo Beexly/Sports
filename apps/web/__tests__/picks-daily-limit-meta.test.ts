@@ -54,7 +54,7 @@ describe("/dashboard — tier-gated picks", () => {
 
   it("applies the FREE daily pick limit to the query take", () => {
     expect(dashboardSrc).toMatch(
-      /take:\s*entitlements\.canSeePremiumPicks\s*\?\s*6\s*:\s*\(entitlements\.dailyPickLimit\s*\?\?\s*1\)/
+      /take:\s*entitlements\.canSeePremiumPicks\s*\?\s*24\s*:\s*\(entitlements\.dailyPickLimit\s*\?\?\s*1\)/
     );
   });
 
