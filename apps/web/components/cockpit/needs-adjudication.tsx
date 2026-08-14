@@ -1,5 +1,3 @@
-import type { JSX } from "react";
-
 /**
  * Cockpit "needs adjudication" card — READ-ONLY worklist.
  *
