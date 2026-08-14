@@ -1,4 +1,4 @@
-# ADR-009 — The randomized-publication protocol (the coin)
+# ADR 009 — The randomized-publication protocol (the coin)
 
 **Status:** DECIDED — parameters fixed; activation gated on the two owner
 actions in §5.
