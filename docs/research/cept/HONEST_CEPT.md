@@ -1,6 +1,6 @@
 # Causal E-Process Theory — the defensible version
 
-**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v1.2**
+**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v2.0**
 
 > **Status: implemented, not yet validated.** This document states only what the
 > running system supports. Where evidence does not exist yet, it says so. Section 6
@@ -8,7 +8,7 @@
 >
 > This supersedes the earlier draft (`baxley_cept_document_humanized.pdf` and the
 > DeepSeek markdown variants) for any external use — arXiv, investors, the website.
-> Section 8 explains, claim by claim, what was removed and why.
+> Section 10 explains, claim by claim, what was removed and why.
 >
 > **v1.1** follows an adversarial multi-referee mathematical audit of v1.0. Two
 > substantive corrections were made: the main result is restated as a
@@ -16,9 +16,13 @@
 > (Remark 4 records the counterexample), and the earlier "dropped-set Brier"
 > integrity check was found to be mathematically vacuous and replaced
 > (Proposition 6). **v1.2** folds in the cross-examination round: the novelty
-> claim in §7 is narrowed to proposal-and-design (nothing robust runs yet), the
+> claim in §9 (then §7) is narrowed to proposal-and-design (nothing robust runs yet), the
 > Corollary to Proposition 5 is sharpened against a base-rate trap, and related
-> work extends to the full prior-art frontier. Section 10 is the changelog.
+> work extends to the full prior-art frontier. **v2.0** adds Part II — the
+> reflexive limit: an impossibility theorem (no test on the transcript alone can
+> separate knowledge from echo), the randomized-publication instrument that
+> escapes it with an anytime-valid causal-skill test, and the necessity–
+> sufficiency pairing. Section 12 is the changelog.
 
 ---
 
@@ -53,12 +57,12 @@ The machinery this framework needs is largely established:
   round (Cesa-Bianchi & Lugosi, 2006).
 
 **None of the above is novel here, and this document does not claim it is.** The
-contribution is narrower and is stated in §3; §7 places it against the closest
+contribution is narrower and is stated in §3; §9 places it against the closest
 existing work.
 
 ## 3. The construction
 
-(§7 states precisely what of this is, and is not, claimed as new.)
+(§9 states precisely what of this is, and is not, claimed as new.)
 
 ### 3.1 Setup
 
@@ -308,7 +312,146 @@ the *dropped* set:
 Until step 4, the correct statement is: **"implemented and running in shadow mode;
 validation pending settled evidence."**
 
-## 7. Related work, and the precise novelty claim
+## 7. The reflexive limit: what cannot be tested without an instrument
+
+Theorem 1 buys robustness *within a menu of reactions you must model*. This section
+proves that the modeling step cannot be avoided by cleverness: without exogenous
+variation, the causal question has no answer in the observables at all.
+
+### 7.1 Setup
+
+Rounds `t`; covariates `X_t`; published forecast `P_t ∈ [0,1]`; binary outcome
+`Y_t`. The world reacts through an unknown reaction function:
+`Y_t | (X_t, P_t, H_{t-1}) ~ Bernoulli(r_t(P_t, X_t, H_{t-1}))`, where
+`H_{t-1}` is the observable history. The **causal null** is that publication is
+inert: `r_t(p, x, h)` does not depend on `p`. The forecaster's rule is
+deterministic given `(H_{t-1}, X_t)` — any *unobserved* randomness in the rule can
+be absorbed into the regimes below, so only *observed, exogenous* randomness is
+excluded, which is precisely what §8 adds.
+
+**Theorem 7 (reflexive impossibility).** Let `f` be any measurable map from
+covariates to `[0,1]`. Consider two regimes, each publishing `P_t = f(X_t)`:
+
+- **Regime K (knowledge, no causation).** `Y_t ~ Bernoulli(f(X_t))` regardless of
+  what is published. The causal null is true; the forecaster genuinely knows the
+  outcome law.
+- **Regime E (echo: causation, no knowledge).** `Y_t ~ Bernoulli(P_t)` whatever
+  number is published. The causal null is maximally false; the forecaster knows
+  nothing — *any* published number would equally have come true.
+
+The two regimes induce the **identical joint law** of
+`(X_{1:t}, P_{1:t}, Y_{1:t})` for every `t`. Consequently, any sequential test
+measurable in the observables has the same rejection probability under K and E:
+if it is valid at level α for the causal null (true in K), its power against E is
+at most α. Symmetrically, any test of *predictive knowledge* valid at level α
+under E has power at most α against K.
+
+*Proof.* In both regimes `P_t = f(X_t)`, so the conditional law of `Y_t` given
+`(H_{t-1}, X_t)` is `Bernoulli(f(X_t))` in K and `Bernoulli(P_t) =
+Bernoulli(f(X_t))` in E — the same kernel. The covariate law is shared, so the
+joint laws coincide by induction over `t`. Equal laws give equal rejection
+probabilities; the power bounds follow. ∎
+
+**What this means.** Perfect calibration and arbitrary sharpness are
+observationally indistinguishable from echo. This is an identification failure,
+not a statistical one — more data does not help, and no test statistic, however
+ingenious, escapes it. It is the Lucas critique and Goodhart's law made exact for
+forecast scoring: **a forecaster inside the loop cannot grade its own influence
+from the loop's transcript.** Theorem 1 and Theorem 7 are complementary: Theorem 1
+gives validity *by modeling* (assume the menu `I_t`); §8 gives validity *by
+design* (randomize, and the menu becomes irrelevant for the causal question).
+
+## 8. The instrument: randomized publication
+
+The escape is old, small, and cheap: inject a known coin into the one decision the
+forecaster controls — *what gets published*.
+
+**Protocol.** Maintain the candidate forecast `p_t` and a baseline `q_t` (for GSE:
+the de-vigged market forecast — a real, publishable forecast, not degraded
+content). Draw `Z_t ~ Bernoulli(π_t)` with `π_t` known, `F_{t-1}`-measurable, and
+bounded: `π_t ∈ [ε, 1−ε]`. Publish the candidate if `Z_t = 1`, the baseline if
+`Z_t = 0`. Record a bounded reward `R_t ∈ [0, B]` for the published forecast
+(clipped log-payout, or any bounded functional fixed in advance). Potential
+rewards `R_t(1), R_t(0)`; the design guarantees
+`Z_t ⊥ (R_t(0), R_t(1)) | F_{t-1}`. The causal contrast is
+`Δ_t = E[R_t(1) − R_t(0) | F_{t-1}]`, and the causal null is `H₀: Δ_t ≤ 0` for
+all `t` — *publishing the candidate instead of the baseline adds nothing, however
+the world reacts.*
+
+The score is inverse-propensity-weighted:
+
+```
+S_t = Z_t R_t / π_t  −  (1 − Z_t) R_t / (1 − π_t)
+```
+
+**Lemma 8 (exact unbiasedness).** `E[S_t | F_{t-1}] = Δ_t`.
+*Proof.* `E[Z_t R_t / π_t | F_{t-1}] = E[Z_t R_t(1) | F_{t-1}] / π_t
+= π_t E[R_t(1) | F_{t-1}] / π_t = E[R_t(1) | F_{t-1}]`, using consistency
+(`R_t = R_t(Z_t)`) and design independence; the second term likewise. ∎
+
+**Theorem 9 (instrumented anytime validity).** Given `F_{t-1}`, `S_t` lies in the
+interval `[−B/(1−π_t), B/π_t]`, of width `w_t = B / (π_t(1−π_t))`. For any
+`F_{t-1}`-measurable `λ_t ≥ 0` define
+
+```
+E_t = exp( λ_t S_t − λ_t² w_t² / 8 ) ,     M_t = Π_{s≤t} E_s ,   M_0 = 1 .
+```
+
+Under `H₀`, `M` is a non-negative supermartingale and
+`P(∃t : M_t ≥ 1/α) ≤ α` — anytime-valid, uniformly over **all** reaction
+functions, with no menu `I_t` to choose.
+
+*Proof.* Conditional on `F_{t-1}`, `S_t` is supported on an interval of width
+`w_t`, so Hoeffding's lemma gives
+`E[exp(λ_t(S_t − Δ_t)) | F_{t-1}] ≤ exp(λ_t² w_t² / 8)`. Hence
+`E[E_t | F_{t-1}] ≤ exp(λ_t Δ_t) ≤ 1` under `H₀`. Ville's inequality finishes. ∎
+
+**The constant is load-bearing.** The correction term must be the Hoeffding
+range constant `w_t²/8`, not the conditional variance of `S_t`: a bounded IPW
+score is not sub-Gaussian with its own variance as proxy, and substituting
+`Var(S_t|F_{t-1})/2` can push the conditional expectation above 1, silently
+destroying validity. Concretely: a mean-zero score taking `+9` with probability
+0.1 and `−1` with probability 0.9 has variance 9, yet
+`E[exp(0.3·S − 0.09·9/2)] ≈ 1.44 > 1` — and the IPW score is *exactly* this
+shape, a rare large positive term (`Z_t = 1`, divided by a small `π_t`) against a
+common small negative one, so the failure mode is the typical case, not an edge
+case. Variance-adaptive versions exist and are strictly better in
+growth — empirical-Bernstein e-values (Waudby-Smith & Ramdas) — and should be
+used in production; the Hoeffding form is stated because its proof is
+self-contained and airtight.
+
+**Proposition 10 (design and growth).**
+
+1. `E[S_t² | F_{t-1}] = μ₁/π_t + μ₀/(1−π_t)` where `μ_z = E[R_t(z)² | F_{t-1}]`
+   are **raw second moments** (not central variances);
+   `Var(S_t|F_{t-1})` is that quantity minus `Δ_t²`.
+2. The second moment is minimized over `π_t` at
+   `π* = √μ₁ / (√μ₁ + √μ₀)`; `π* = 1/2` iff `μ₁ = μ₀`.
+3. Under the alternative, the per-round log-growth
+   `E[log E_t | F_{t-1}] = λ_t Δ_t − λ_t² w_t²/8` is maximized at
+   `λ* = 4Δ_t / w_t²`, with value `2Δ_t²/w_t² = 2 Δ_t² π_t²(1−π_t)² / B²`.
+   Variance-adaptive methods improve this toward `Δ_t²/(2 Var(S_t))`.
+4. The cost of the instrument is the exploration itself: under the alternative,
+   forgone reward `(1−π_t) Δ_t⁺` per round. **Any fixed ε > 0 preserves
+   validity exactly**; shrinking ε degrades power continuously, never validity.
+
+**Corollary 11 (necessity and sufficiency).** In the assumption-free reflexive
+setting — reaction functions unrestricted, tests measurable in the observables —
+exogenous publication randomization with known `π_t ∈ [ε, 1−ε]` is *sufficient*
+for uniformly anytime-valid causal-skill inference (Theorem 9), and some observed
+exogenous variation is *necessary* (Theorem 7). Necessity is relative to that
+setting: restricting the reaction class (Theorem 1's menu) is the other road, at
+the price of assuming the menu.
+
+**For this product, concretely.** Randomize at the board level on an ε fraction
+of days between the candidate slate and the market-mirror baseline slate, log
+`(Z_t, π_t, R_t)` in the settlement ledger, and run `M_t` alongside the three §4
+instruments. Both slates are genuine forecasts, so no user receives degraded
+content; the platform becomes its own validation experiment, and the causal claim
+"our picks add value over the market" acquires an anytime-valid test that no
+amount of performativity can fake.
+
+## 9. Related work, and the precise novelty claim
 
 CEPT as scoped here is a **composition**, not a new branch of mathematics. Placing it
 honestly — and this list is deliberately the one a hostile referee would write:
@@ -347,6 +490,19 @@ honestly — and this list is deliberately the one a hostile referee would write
   recently appeared (Li et al., NeurIPS 2025). None of it provides *sequential,
   anytime-valid* tests under the shift.
 - **Ensembling** is Hedge / Bayesian mixtures (Cesa-Bianchi & Lugosi, 2006).
+- **Part II's engine is known technology.** IPW scores inside anytime-valid
+  machinery are the substance of design-based confidence sequences (Ham,
+  Bojinov, Lindon & Tingley, arXiv:2210.08639) and betting-style/empirical-
+  Bernstein e-values (Waudby-Smith & Ramdas, *J. R. Statist. Soc. B*, 2024);
+  sequential experiments on time series are treated in Bojinov & Shephard
+  (*J. Amer. Statist. Assoc.*, 2019). Theorem 9 claims none of that machinery.
+  What Part II claims is the *pairing*: the reflexive impossibility theorem
+  stated for forecast evaluation (Theorem 7 — calibration is observationally
+  indistinguishable from echo), and publication randomization as the minimal
+  instrument that converts a forecasting product's causal claim about itself
+  into an anytime-testable one (Corollary 11). A definitive novelty verdict on
+  that pairing awaits a fuller literature pass; if a precedent surfaces, this
+  section cites it and the claim narrows again.
 
 **The claim being made**, then, is exactly this: *proposing* the instantiation of
 the composite-null e-process construction with the null taken to be *the set of
@@ -362,7 +518,7 @@ have no precedent; no priority is claimed for a completed robust deployment, bec
 none exists. It is a composition claim, deliberately modest, and it survived two
 rounds of adversarial audit.
 
-## 8. What was removed from the earlier draft, and why
+## 10. What was removed from the earlier draft, and why
 
 Recorded so the deletions are not mistaken for oversights.
 
@@ -382,7 +538,30 @@ Recorded so the deletions are not mistaken for oversights.
 material is what a referee attacks first, and every hour spent defending decoration is
 an hour not spent on §6 — which is the only section that would make the rest matter.
 
-## 9. Priority
+### 10.1 Material from the independent DeepSeek review, assessed
+
+A parallel review of the v0 draft (August 2026) proposed several extensions. Each
+was assessed on the same standard as everything else here; the disposition is
+recorded so nothing is silently absorbed or silently dropped.
+
+**Adopted:**
+
+| Item | Disposition |
+|---|---|
+| Randomized publication as an instrument | **Adopted and proved** — it is now Part II (§7–§8). This was the genuinely important idea in the review: it converts the causal question from unanswerable (Theorem 7) to anytime-testable (Theorem 9). The review's sketch left the e-factor's correction constant unspecified; the Hoeffding range constant `w_t²/8` is what the proof licenses, and the variance is written in raw second moments, both fixed here. |
+| Internal-inconsistency check on the removed E-factor claim | **Adopted** as one more nail: the deleted "average E-factor 1.031 over ~148 games" was not only unreproducible — it was internally inconsistent, since `1.031¹⁴⁸ ≈ 92 < 100 = 1/α`; the draft's own numbers never cleared the draft's own threshold. |
+
+**Declined, with reasons:**
+
+| Item | Reason |
+|---|---|
+| "Keystone Conjecture" (sheaf holonomy bounds ⇒ e-process validity) | No sheaf is constructed: stalks and restriction maps over the "causal graph" are never specified, so the holonomy group is undefined — the same defect as the v0 Chern-class claim. Decisively: Theorem 9's validity proof uses only exogeneity of `Z_t` and boundedness of `R_t`; no topological hypothesis appears anywhere in it, so bounded holonomy is not necessary, and no mechanism is offered by which it would be sufficient. If a well-defined drift diagnostic is ever wanted, it should be built as a diagnostic and named one — not tied by conjecture to a validity property it provably does not govern. |
+| Solomonoff universal reflexive test | The weights `2^{-K(g)}` are uncomputable; the proposed MDL/BIC approximation forfeits exactly the universality that was the point, and "Type I error `α + 2^{-K(g)}`" is not a uniform guarantee. |
+| Continuous-time Doléans-Dade e-processes | Legitimate, standard point-process martingale theory (Brémaud) — but nothing in this product emits continuous-time marked streams yet. Deferred, not claimed. |
+| Multi-agent e-BH composition | Correct composition of known parts (e-BH is Wang & Ramdas, 2022). Deferred until there is more than one live predictor. |
+| The review's forensic audit of this repository | Several of its factual claims are contradicted by the repository itself and were not relied on for anything in this document. |
+
+## 11. Priority
 
 This file is committed to a public repository with git-signed timestamps, which
 establishes date of authorship at no cost. That is sufficient for priority on a
@@ -395,10 +574,10 @@ searchable record that would be trivially falsified by anyone who reads the repo
 and this project's single durable asset is that it does not overstate its own
 performance.
 
-## 10. Changelog
+## 12. Changelog
 
 - **v1.0 (2026-08-13).** First defensible version: unsupported theory and all
-  empirical claims removed (§8); three instruments documented; validation steps
+  empirical claims removed (§10); three instruments documented; validation steps
   stated.
 - **v1.1 (2026-08-14).** Corrections from an adversarial multi-referee audit:
   1. Proposition 1 restated as **Theorem 1** under an explicit composite null with
@@ -429,6 +608,22 @@ performance.
      anytime-valid testing (Optimizely), deployed-model martingale monitoring
      (Podkopaev–Ramdas; Vovk et al.), performativity's origins (Callon; MacKenzie)
      and fixed-sample inference under it (Li et al.).
+- **v2.0 (2026-08-14).** Part II — the reflexive limit and its escape.
+  1. **Theorem 7 (reflexive impossibility):** a knowledge-without-causation
+     regime and an echo regime induce identical observable laws, so no
+     transcript-measurable sequential test can be both uniformly valid and
+     non-trivially powered for the causal null; calibration is observationally
+     indistinguishable from echo. Proof by explicit construction.
+  2. **Theorem 9 (instrumented anytime validity):** randomizing publication
+     between candidate and baseline with known `π_t ∈ [ε, 1−ε]` yields an
+     IPW-scored e-process, valid uniformly over *all* reaction functions with no
+     menu to model; exact unbiasedness (Lemma 8), the load-bearing Hoeffding
+     constant, design/growth trade-offs (Proposition 10), and the necessity–
+     sufficiency pairing (Corollary 11).
+  3. §10.1 records what was adopted from the independent DeepSeek review
+     (the instrument idea; an internal-inconsistency check) and what was
+     declined with reasons (sheaf-holonomy conjecture, Solomonoff test,
+     continuous-time and multi-agent extensions).
 
 ---
 
