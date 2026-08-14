@@ -1,0 +1,30 @@
+# =============================================================================
+# DENY-BY-DEFAULT — this is a HOME DIRECTORY, not a project repo.
+# =============================================================================
+# C:\Users\Garrett was initialised as a git repo with 0 commits and no ignore
+# file. Without this file, a single `git add .` — run by a human, an agent, or
+# an unattended overnight job — would stage credentials and sealed legal
+# material, including:
+#
+#   Downloads/client_secret_*.apps.googleusercontent.com.json   (live OAuth secret)
+#   AppData/Local/hermes/.env, auth.json                        (API credentials)
+#   .claude.json, .mcp-auth/, .gitconfig, .docker/              (tokens/config)
+#   Turner_Case_*/, Landry_CasinoTech_Matter_*/                 (legal PII)
+#   Baxley_DoNotProduce_Index_*.md, HCC_Coleman_Appeal_Brief.md (do-not-produce)
+#   ~46 nested project repos
+#
+# Ignoring everything makes that accident impossible. Nothing is currently
+# tracked, so this costs nothing.
+#
+# Project repos (Sports, Sports-canonical-*, Clouds-bruh, ...) each have their
+# own .git and are UNAFFECTED — this file has no bearing on them.
+#
+# To intentionally track something here later, add an explicit negation below,
+# e.g.:   !.bashrc
+# Never replace this file with a permissive one. Add narrow exceptions instead.
+# =============================================================================
+
+*
+
+# The ignore file itself stays committable, so this protection can be recorded.
+!.gitignore
