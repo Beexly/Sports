@@ -101,12 +101,14 @@ if ($missing.Count -gt 0) {
     foreach ($rel in $missing) { Write-Log ("  missing: " + $rel) }
     Write-Log "These files ARE the agent's instructions and backlog. Without them"
     Write-Log "it has nothing to work from and will invent its own task list."
-    Write-Log "They live on branch claude/fable-5-ultracode-plan-ptru4e. To recover,"
-    Write-Log "from this repo root, preserving any uncommitted work:"
-    Write-Log "  git stash -u"
+    Write-Log "They live on branch claude/fable-5-ultracode-plan-ptru4e. MERGE it,"
+    Write-Log "do not check it out - this branch may hold commits that branch does"
+    Write-Log "not, and switching hides them. From this repo root:"
+    Write-Log "  git add -A"
+    Write-Log "  git commit -m 'wip: uncommitted work from a cut-off run'"
     Write-Log "  git fetch origin claude/fable-5-ultracode-plan-ptru4e"
-    Write-Log "  git checkout claude/fable-5-ultracode-plan-ptru4e"
-    Write-Log "  git stash pop"
+    Write-Log "  git merge origin/claude/fable-5-ultracode-plan-ptru4e --no-edit"
+    Write-Log "(--no-edit matters: without it git opens vim and waits forever.)"
     Write-Log "Then start this runner again."
     exit 1
 }
