@@ -317,7 +317,89 @@ excellent night, and it directly unblocks CI the moment #421 is decided.
 
 ---
 
-### PHASE 1b — The settlement-hold blind spot *(do these right after PHASE 1)*
+### PHASE 1a — THE RES PROGRAM *(the only work that unlocks launch)*
+
+**Do this before 1b. Everything else in this file is hygiene; this is the product.**
+
+Read `apps/web/lib/calibration/brier-minimization-explore.ts` first. Its header states
+the whole problem in four lines, and the repo has believed it for months:
+
+```
+Murphy:  BS = REL - RES + UNC
+live:    UNC ~ 0.25 (fixed by a 50/50 world)
+         REL ~ 0.004-0.02 (already excellent)
+         RES ~ 0.0048 (essentially zero)
+the only path to BS <= 0.22 is RES >~ 0.03, not maps
+```
+
+The eligibility floors in `apps/web/lib/ops/calibration-eligibility.ts` are
+`n >= 100`, `Brier <= 0.22`, `ECE <= 0.05`, `Murphy reliability <= 0.05`, over 3
+consecutive GREEN windows. Sample is already met at ~150 settled. **Brier is the only
+failing floor, and Brier fails because RES is near zero.**
+
+**RES is near zero because the platform publishes ~57 picks a day.** Resolution is the
+variance of the published forecasts. Publish everything, including every pick sitting
+near p = 0.5, and that variance collapses toward nothing. Volume is not a feature here
+— it is the direct cause of the number blocking monetization.
+
+`selectivePublishSweep` in `holdout-ranking-report.ts` already sweeps the fix: publish
+only when `|p - 0.5| >= delta`, over
+`delta in {0, 0.08, 0.10, 0.12, 0.15, 0.18}` crossed with edge and
+minimum-group-RES filters. Under calibration, `BS_delta = pi(1-pi) - Var[P | accepted]`,
+so reaching 0.22 needs `Var[P | accepted] >= 0.03`. **Nobody has run it against live
+settled data and written down the answer.** That is this phase.
+
+**P1a-1 · Run the sweep, report the tradeoff table.** *(read-only)*
+
+```bash
+npm run export:settled-picks
+npm run calibration:offline
+```
+
+Write `handoff/RES_PROGRAM.md`. The centrepiece is one table, one row per delta:
+
+| delta | picks published | % of slate kept | RES | REL | Brier | meets 0.22? |
+
+Then state plainly: **the smallest delta whose Brier clears 0.22**, and how many picks
+per day that leaves. That number is the answer to "how many picks should we publish",
+and it is expected to be far below 57. Report it whatever it turns out to be — if no
+delta clears the floor, say so; that is the single most important fact in the repo and
+inventing a passing row would be the worst thing you could do tonight.
+
+If either command fails (missing `DATABASE_URL`, no export), write
+`NEEDS PRODUCTION DATABASE_URL - not run` with the exact error and move to P1a-2. Do
+not hunt for credentials.
+
+**P1a-2 · The integrity condition.** *(read-only, and it is non-negotiable)*
+
+A delta filter is only honest if the picks it drops were genuinely uninformative. For
+the rejected set (`|p - 0.5| < delta`), compute the conditional Brier and report it:
+
+- **~0.25** - correct. Dropped picks were coin flips. The filter found signal.
+- **> 0.25** - you are discarding negative-EV picks. Good for the record, and it means
+  there is a real edge in *fading* them. Flag it; that is a finding, not noise.
+- **< 0.25** - **STOP.** The filter is hiding picks that were beating the market. That
+  is metric gaming: published Brier improves while the product gets worse. Write it in
+  bold at the top of the report and mark the phase BLOCKED.
+
+**P1a-3 · Chronological holdout discipline.** *(read-only)*
+
+The sweep must never be tuned and scored on the same rows. Split the settled sample
+chronologically — earlier portion to select delta, later portion to evaluate it — and
+report both numbers separately. A delta chosen and measured on one sample is a
+curve-fit, not a threshold, and it will not survive contact with next week's games.
+If the sample is too small to split and still clear `n >= 100` on the evaluation half,
+say so and report the single-sample number **clearly labelled as optimistic**.
+
+**What you may NOT do in this phase:** change any floor, set `CALIBRATION_AUTO_PUBLISH`,
+flip `PUBLIC_PICKS` or `PERFORMANCE_STATS`, apply a calibration map, or write a delta
+into any config. This phase produces a decision packet for the owner. The owner sets
+the threshold. `ranking-power-control.ts` says it in its own header: *never lowers
+floors, never sets AUTO_PUBLISH, never applies maps while RES < 0.02.*
+
+---
+
+### PHASE 1b — The settlement-hold blind spot
 
 **Read this whole section before starting. The obvious fix is not available.**
 
