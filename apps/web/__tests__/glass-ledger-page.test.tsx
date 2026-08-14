@@ -61,7 +61,7 @@ describe("/ledger — PUBLISH_LEDGER unset (default): honest unpublished state",
     const { container } = render(await LedgerPage());
     const text = container.textContent ?? "";
 
-    expect(text).toContain("The Glass Ledger is being built — nothing is published yet.");
+    expect(text).toContain("The Glass Ledger is sealed — nothing is published until the founder flips PUBLISH_LEDGER.");
     expect(text).not.toMatch(DIGIT_PERCENT);
     expect(text.toLowerCase()).not.toContain("win rate");
   });
