@@ -41,8 +41,12 @@ describe("loadCanonicalSamplePosture", () => {
         minSettledPicksForLearning: 100,
       },
     );
+    // PR #375 (commit 8670e51b) deliberately replaced "published calibration +
+    // founder YES" with the eligibility + publish-policy contract: PROVEN still
+    // needs eligibility GREEN and a publish policy (AUTO_PUBLISH or PUBLISHED).
     expect(sample.remainingToFloor).toBe(0);
-    expect(sample.operatorHint).toMatch(/founder YES/);
+    expect(sample.operatorHint).toMatch(/eligibility GREEN/);
+    expect(sample.operatorHint).toMatch(/publish policy/);
   });
 });
 
