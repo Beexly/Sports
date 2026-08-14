@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 import { upsertPushSubscription } from "@/lib/push/subscription-db";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { parsePushSubscriptionInput } from "@/lib/push/validation";
 import { badRequestResponse, pushDbErrorResponse, unauthorizedResponse } from "@/lib/push/http";
 
@@ -23,6 +24,17 @@ export async function POST(request: Request): Promise<NextResponse> {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) return unauthorizedResponse();
+
+  // Per-user throttle on this DB-write endpoint: stop one account from looping
+  // subscription upserts (defense-in-depth; same bucket pattern as checkout /
+  // explain). Limit copied from subscriptions/checkout (10/min is ample).
+  const limit = consumeRateLimit("push-subscribe", userId, 10, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please slow down and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
 
   let body: unknown;
   try {
