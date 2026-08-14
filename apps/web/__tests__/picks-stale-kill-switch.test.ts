@@ -21,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   pickCount: vi.fn<(args?: unknown) => Promise<number>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  isPublicPicksSurfaceStale: vi.fn<() => Promise<boolean>>(),
   auth: vi.fn<() => Promise<{ user?: { id: string } } | null>>(),
   getUserEntitlements: vi.fn<(userId: string) => Promise<Record<string, unknown>>>(),
 }));
@@ -34,6 +35,19 @@ vi.mock("@sports/db", () => ({
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
+
+// isPublicPicksSurfaceStale is the freshness gate the route calls directly
+// (not ingestionRun.findFirst). Mock it per board-no-bet-detail.test.ts:34-36
+// precedent: the real implementation routes through resolveBoardSurface
+// dual-mode logic and may call db.pick.findFirst (unmocked shape here).
+// Keep staleDataGateResponse real — it builds the genuine 503 body shape.
+vi.mock("@/lib/data-reliability/public-freshness-gate", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/data-reliability/public-freshness-gate")>();
+  return {
+    ...actual,
+    isPublicPicksSurfaceStale: () => mocks.isPublicPicksSurfaceStale(),
+  };
+});
 
 // Keep bootstrapGateResponse real so the 503 body shape is the genuine one;
 // only the readiness gates are controllable per test.
@@ -66,6 +80,7 @@ describe("/api/picks — stale-data kill switch", () => {
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.pickCount.mockReset().mockResolvedValue(0);
     mocks.ingestionRunFindFirst.mockReset();
+    mocks.isPublicPicksSurfaceStale.mockReset();
     // Anonymous viewer keeps the path simple (no entitlements lookup).
     mocks.auth.mockReset().mockResolvedValue(null);
     mocks.getUserEntitlements.mockReset();
@@ -86,12 +101,12 @@ describe("/api/picks — stale-data kill switch", () => {
     expect(body["success"]).toBe(true);
     // The freshness query must not run when the kill switch is off — this is
     // the byte-for-byte "no behavior change" guarantee.
-    expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
+    expect(mocks.isPublicPicksSurfaceStale).not.toHaveBeenCalled();
   });
 
   it("flag ON + stale: goes dark with a DISTINCT stale_data 503 (not the bootstrap body)", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(241) });
+    mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
 
     const { status, body } = await callPicks();
 
@@ -101,14 +116,17 @@ describe("/api/picks — stale-data kill switch", () => {
     // indistinguishable. The discriminator is part of the contract now.
     expect(body["reason"]).toBe("stale_data");
     expect(body["bootstrapMode"]).toBe(false);
-    expect(body["error"]).toContain("awaiting fresh odds data");
+    // Surface auto-resolves to "signal" when PUBLIC_BOARD_SURFACE unset (PR #375,
+    // board-surface-policy.ts:22-24, board-surface-policy.test.ts:8-10), so the
+    // stale 503 message references "model slate", not "odds data".
+    expect(body["error"]).toContain("awaiting fresh model slate");
     // Suppressed: the picks query never ran.
     expect(mocks.pickFindMany).not.toHaveBeenCalled();
   });
 
   it("flag ON + never-succeeded ingestion is treated as stale (503)", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockResolvedValue(null);
+    mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
 
     const { status, body } = await callPicks();
 
@@ -119,26 +137,19 @@ describe("/api/picks — stale-data kill switch", () => {
 
   it("flag ON + fresh: serves picks normally", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+    mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
     const { status, body } = await callPicks();
 
     expect(status).toBe(200);
     expect(body["success"]).toBe(true);
-    expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
-    // G4: freshness only counts a run that actually inserted odds, so an
-    // empty-but-200 SUCCESS run (oddsInserted=0) can never mask staleness.
-    expect(mocks.ingestionRunFindFirst).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ status: "SUCCESS", oddsInserted: { gt: 0 } }),
-      }),
-    );
+    expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
     expect(mocks.pickFindMany).toHaveBeenCalled();
   });
 
   it("flag ON + DB error on freshness query: fails OPEN (serves picks)", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
+    mocks.isPublicPicksSurfaceStale.mockRejectedValue(new Error("db down"));
 
     const { status, body } = await callPicks();
 
