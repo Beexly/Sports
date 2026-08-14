@@ -556,7 +556,9 @@ npm run typecheck 2>&1 | grep -c "error TS"    # must print EXACTLY 0
 npm run lint                                    # exit 0
 npx vitest run <this task's test file>          # all green
 ```
-Count above 3 means you added an error — fix or abandon. Count below 3 means you edited
+Any non-zero count means you added an error — fix or abandon. The baseline is clean,
+so there is no ambiguity. (An older revision of this line tolerated 3; that is gone —
+issue #421 is resolved and the tree typechecks.) You must never edit
 a LAW 4 file — undo it immediately.
 
 ---
