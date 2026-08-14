@@ -26,7 +26,11 @@ describe("/cockpit picks glance — Session A implementation", () => {
 
   it("queries the day's picks for the operator list", () => {
     expect(src).toMatch(/todaysOperatorPicks/);
-    expect(src).toMatch(/orderBy:\s*\[\{\s*isFeatured:\s*"desc"\s*\}/);
+    // PR 881c305d ('fix(ranking): surface sort by rankingP') deliberately
+    // changed orderBy from [{ isFeatured: "desc" }, { confidence: "desc" }] to
+    // [{ generatedAt: "desc" }] and take from 12 to 48. Ranking is now applied
+    // in-memory via comparePicksByRanking (imported from @/lib/ranking/sort-key).
+    expect(src).toMatch(/orderBy:\s*\[\{\s*generatedAt:\s*"desc"\s*\}/);
   });
 
   it("computes a per-sport slate breakdown from todaysOperatorPicks", () => {
