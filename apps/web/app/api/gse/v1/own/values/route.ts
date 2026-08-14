@@ -7,6 +7,7 @@ import {
   createDemoOwnStore,
   handleOwnValues,
 } from "@sports/stats-api";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,17 @@ export const dynamic = "force-dynamic";
 const store = createDemoOwnStore();
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // External GSE v1 surface — stop a single caller from looping the PIT value
+  // store (defense-in-depth; mirrors the consumeRateLimit call pattern on the
+  // authenticated checkout / explain routes). Limit copied from
+  // subscriptions/checkout (8/min is ample for a human operator console).
+  const limit = consumeRateLimit("gse-v1-own-values", clientIp(req), 8, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
   let body: { metricId?: string; entityId?: string; asOf?: string };
   try {
     body = (await req.json()) as typeof body;
