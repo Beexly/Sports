@@ -69,16 +69,21 @@ describe("planPlayerStatsRun", () => {
     expect(steady.missingSeasons).toEqual([]);
   });
 
-  it("re-anchors the window when the NFL season rolls over", async () => {
-    // All of 2020-2025 persisted, but it is now September 2026: season 2026
-    // becomes current and missing, so the cron backfills it automatically.
+  it("stays anchored on the completed REG floor in September (no invented rollover)", async () => {
+    // P1-14 (commit 073a7dfa) deliberately changed resolveFootballStatsSeason to
+    // return the COMPLETED REG floor (2025) absent a REG-row probe — never the
+    // labelled calendar season (2026). currentNflSeason delegates to it without a
+    // probe, so even in September planPlayerStatsRun anchors on 2025. The cron
+    // route owns the REG probe that flips a newer season to current; the planner
+    // alone must NOT invent a 2026 backfill. Pin that contract here.
     mocks.findMany.mockResolvedValue(
       [2020, 2021, 2022, 2023, 2024, 2025].map((season) => ({ season })),
     );
     const plan = await planPlayerStatsRun(new Date("2026-09-15T12:00:00Z"));
-    expect(plan.mode).toBe("backfill");
-    expect(plan.season).toBe(2026);
-    expect(plan.targetSeasons).toEqual([2021, 2022, 2023, 2024, 2025, 2026]);
-    expect(plan.missingSeasons).toEqual([2026]);
+    expect(plan.mode).toBe("steady-state");
+    expect(plan.season).toBe(2025); // completed REG floor, NOT labelled 2026
+    expect(plan.backfillComplete).toBe(true);
+    expect(plan.targetSeasons).toEqual([2020, 2021, 2022, 2023, 2024, 2025]);
+    expect(plan.missingSeasons).toEqual([]);
   });
 });
