@@ -109,19 +109,28 @@ If the branch is wrong or `git status` prints anything, **stop and write why in
 Now measure the baseline. You need these to know later whether *you* broke something:
 
 ```bash
-npm run typecheck 2>&1 | grep -c "error TS"     # EXPECTED: 3
+npm run typecheck 2>&1 | grep -c "error TS"     # EXPECTED: 0
 npm run lint                                     # EXPECTED: exit 0
-node scripts/guardrails/run-all.mjs | tail -2    # EXPECTED: 22/25 passed
+node scripts/guardrails/run-all.mjs | tail -2    # EXPECTED: 23/25 passed
 ```
 
-**Expected failures — these are pre-existing and NOT yours to fix:**
-- 3 typecheck errors, in the three LAW 4 files, tracked as issue #421
-- 3 guards: `model-freeze` (#419), `api-v1-boundary` (#420),
+**Baseline as of 2026-08-13, measured after a full `npm install`. Issues #421 and
+#419 were resolved just before this run, so typecheck is CLEAN — do not expect the
+3 errors older docs mention.**
+
+**Expected failures — pre-existing and NOT yours to fix:**
+- 2 guards: `api-v1-boundary` (#420, awaiting an owner decision) and
   `ai-transport-import-boundary`
 
 If `actor-minting-boundary` or `ai-council` fail, `npm install` did not finish — run it
-again. If any **other** guard fails, or the typecheck count is not exactly 3, record it
-in the ledger as `BASELINE MOVED` and keep going with read-only tasks only.
+again. If any **other** guard fails, or typecheck reports **any** error, record it in
+the ledger as `BASELINE MOVED` and continue with read-only tasks only.
+
+**One consequence you must not misread.** Typecheck used to fail before the test step,
+so the suite never ran. It runs now — and roughly **38 test failures are visible that
+were previously hidden**. They are not regressions and you did not cause them. They
+are the stale assertions mapped in `handoff/MASKED_TEST_DEBT.md`, and clearing the
+safe ones is PHASE 1, your first real job. Seeing them is the point.
 
 ---
 
@@ -543,7 +552,7 @@ available to you tonight.**
 
 Before every commit, the **verify block**, all three:
 ```bash
-npm run typecheck 2>&1 | grep -c "error TS"    # must print EXACTLY 3
+npm run typecheck 2>&1 | grep -c "error TS"    # must print EXACTLY 0
 npm run lint                                    # exit 0
 npx vitest run <this task's test file>          # all green
 ```
@@ -672,7 +681,7 @@ interrupted run readable:
 ```
 === CHECKPOINT <HH:MM> ===
 done: <n>   blocked: <n>   remaining TODO: <n>
-typecheck: <n> (baseline 3)   guards: <n>/25 (baseline 22)
+typecheck: <n> (baseline 0)   guards: <n>/25 (baseline 23)
 commits so far: <paste git log --oneline of your commits>
 git status --short: <paste — should be empty>
 currently working: <task id>
