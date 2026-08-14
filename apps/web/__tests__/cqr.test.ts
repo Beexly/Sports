@@ -10,9 +10,14 @@ describe("CQR", () => {
   });
 
   it("expands intervals by qhat", () => {
+    // Calibration intervals must be tight enough that some actuals fall
+    // outside them (otherwise nonconformity scores are negative and qhat
+    // would contract rather than expand — not the CQR contract). Here the
+    // Lo/Hi calibration bounds straddle each y by ±0.5, so every nonconformity
+    // score is +0.5 and qhat=0.5 expands the test interval outward.
     const yCal = [1, 2, 3, 4, 5];
-    const qLoCal = [0.5, 1.5, 2.5, 3.5, 4.5];
-    const qHiCal = [1.5, 2.5, 3.5, 4.5, 5.5];
+    const qLoCal = [1.5, 2.5, 3.5, 4.5, 5.5];
+    const qHiCal = [2.5, 3.5, 4.5, 5.5, 6.5];
     const { lo, hi, qhat } = cqrInterval(
       [10, 20],
       [12, 22],
