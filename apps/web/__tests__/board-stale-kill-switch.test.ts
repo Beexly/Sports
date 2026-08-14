@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   forceNoBetIfStale: false,
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  isPublicPicksSurfaceStale: vi.fn<(now: Date) => Promise<boolean>>(),
   gateDecisionFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   gameFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
@@ -32,6 +33,10 @@ vi.mock("@sports/db", () => ({
   },
   isDemoPicksEnabled: () => false,
   isStubMode: () => false,
+}));
+
+vi.mock("@/lib/data-reliability/public-freshness-gate", () => ({
+  isPublicPicksSurfaceStale: (now: Date) => mocks.isPublicPicksSurfaceStale(now),
 }));
 
 vi.mock("@sports/prediction-engine", () => ({
@@ -56,6 +61,7 @@ describe("board loaders — stale-data kill switch", () => {
   beforeEach(() => {
     mocks.forceNoBetIfStale = false;
     mocks.ingestionRunFindFirst.mockReset();
+    mocks.isPublicPicksSurfaceStale.mockReset();
     mocks.gateDecisionFindMany.mockReset().mockResolvedValue([]);
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.gameFindMany.mockReset().mockResolvedValue([]);
@@ -74,13 +80,13 @@ describe("board loaders — stale-data kill switch", () => {
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
       expect(result.meta.isSampleData).toBe(false);
-      expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
+      expect(mocks.isPublicPicksSurfaceStale).not.toHaveBeenCalled();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
 
     it("flag ON + stale: returns the demo-suppressed empty shape", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(241) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
 
       const result = await loadBoardState(NOW);
 
@@ -99,18 +105,18 @@ describe("board loaders — stale-data kill switch", () => {
 
     it("flag ON + fresh: loads normally", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(10) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
       const result = await loadBoardState(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
-      expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
+      expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
 
     it("flag ON + DB error on freshness query: fails OPEN (loads normally)", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
+      mocks.isPublicPicksSurfaceStale.mockRejectedValue(new Error("db down"));
 
       const result = await loadBoardState(NOW);
 
@@ -127,13 +133,13 @@ describe("board loaders — stale-data kill switch", () => {
       const result = await loadBoardPasses(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
-      expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
+      expect(mocks.isPublicPicksSurfaceStale).not.toHaveBeenCalled();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
 
     it("flag ON + stale: returns the demo-suppressed empty passes", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(500) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
 
       const result = await loadBoardPasses(NOW);
 
@@ -144,12 +150,12 @@ describe("board loaders — stale-data kill switch", () => {
 
     it("flag ON + fresh: loads normally", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(30) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
       const result = await loadBoardPasses(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
-      expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
+      expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
   });
