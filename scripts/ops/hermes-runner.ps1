@@ -25,7 +25,16 @@ $ErrorActionPreference = "Continue"
 $RepoRoot   = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $StopFile   = Join-Path $RepoRoot "handoff\.stop"
 $LogFile    = Join-Path $RepoRoot "handoff\RUNNER.log"
-$PromptFile = "docs/ops/hermes/RESUME.md"
+$PromptPath = Join-Path $RepoRoot "docs\ops\hermes\RESUME.md"
+
+# Hermes takes the prompt as TEXT via -z, not as a file path. `hermes --help`
+# lists: -z PROMPT, --cli (non-interactive), --yolo (do not stop for tool
+# approval). Unattended runs need --yolo or the agent blocks on the first tool
+# call and the run stalls until morning. The laws in AGENTS.md plus the ban on
+# git push are what bound the risk of running that way.
+#
+# If a flag below is wrong for your build, this is the ONE line to change.
+$HermesArgs = @("--cli", "--yolo")
 
 # A run shorter than this means the agent died on startup, not on context.
 $FastFailSeconds = 60
@@ -49,7 +58,8 @@ if (Test-Path $StopFile) {
 
 Write-Log "=== RUNNER START ==="
 Write-Log ("repo=" + $RepoRoot)
-Write-Log ("prompt=" + $PromptFile)
+Write-Log ("prompt=" + $PromptPath)
+Write-Log ("args=" + ($HermesArgs -join " "))
 Write-Log "stop with: New-Item handoff\.stop"
 
 $run       = 0
@@ -68,8 +78,11 @@ while ($true) {
 
     try {
         # Hermes auto-discovers AGENTS.md at the repo root, so the laws load every
-        # run. RESUME.md only has to say "recover from the ledger and keep going".
-        & hermes --prompt-file $PromptFile 2>&1 | Tee-Object -FilePath $LogFile -Append
+        # run. RESUME.md only has to say "recover from the ledger and keep going",
+        # and it is read fresh each iteration so edits take effect on the next run
+        # without restarting this loop.
+        $PromptText = Get-Content -Path $PromptPath -Raw
+        & hermes @HermesArgs -z $PromptText 2>&1 | Tee-Object -FilePath $LogFile -Append
     }
     catch {
         Write-Log ("RUN " + $run + " threw: " + $_.Exception.Message)
