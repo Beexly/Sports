@@ -83,7 +83,13 @@ function missingFetcher(): (input: string | URL | Request) => Promise<Response> 
 describe("nflverse trend readiness", () => {
   it("selects the latest inspection season before the next NFL season is active", () => {
     expect(latestNflverseInspectionSeason(new Date("2026-06-05T12:00:00Z"))).toBe(2025);
-    expect(latestNflverseInspectionSeason(new Date("2026-09-10T12:00:00Z"))).toBe(2026);
+    // Sept 2026: labelled current is 2026, but without a REG-rows probe the
+    // completed floor stays at 2025 (resolveFootballStatsSeason defaults to
+    // completedFloor — see nflverse-season.ts:59-66, 29-34). The 2026 REG
+    // season has not yet produced REAL REG rows, so the integrity contract
+    // floors to 2025. (currentNflSeasonLabel correctly returns 2026 — that is
+    // tested separately in nflverse-id-crosswalk.test.ts:70-78.)
+    expect(latestNflverseInspectionSeason(new Date("2026-09-10T12:00:00Z"))).toBe(2025);
   });
 
   it("fetches real trend-plan dependencies without treating source rows as published trends", async () => {
