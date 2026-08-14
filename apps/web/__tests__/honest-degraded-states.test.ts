@@ -225,8 +225,14 @@ describe("/board — honest suppression banner replaces the dead sample-data ban
     const text = textOf(tree);
 
     expect(ids.has("board-suppression-banner")).toBe(true);
-    expect(text).toContain("Board paused");
-    expect(text).toContain("freshness check");
+    // Commit 4ae1e900 ('feat(launch): free signal-slate engine + third-pass
+    // finish-line polish') deliberately renamed 'Board paused' -> 'Quiet board'
+    // and reworded 'Live data did not clear the freshness check...' ->
+    // 'Model signals are quiet... This is restraint, not an outage'. The
+    // restraint-not-outage framing is the documented doctrine
+    // (page.tsx:58-64 comment block).
+    expect(text).toContain("Quiet board");
+    expect(text).toContain("restraint, not an outage");
     // The dead banner and its "sample data" promise must be gone.
     expect(text).not.toContain(DEAD_COPY);
     expect(text).not.toContain("Preview mode");
