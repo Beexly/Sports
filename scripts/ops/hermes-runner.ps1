@@ -25,16 +25,25 @@ $ErrorActionPreference = "Continue"
 $RepoRoot   = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $StopFile   = Join-Path $RepoRoot "handoff\.stop"
 $LogFile    = Join-Path $RepoRoot "handoff\RUNNER.log"
-$PromptPath = Join-Path $RepoRoot "docs\ops\hermes\RESUME.md"
 
-# Hermes takes the prompt as TEXT via -z, not as a file path. `hermes --help`
-# lists: -z PROMPT, --cli (non-interactive), --yolo (do not stop for tool
-# approval). Unattended runs need --yolo or the agent blocks on the first tool
-# call and the run stalls until morning. The laws in AGENTS.md plus the ban on
-# git push are what bound the risk of running that way.
+# --in DIR sets the agent's working directory. Without it hermes inherits
+# whatever cwd it feels like (observed: C:\Users\Garrett) and every npm/git
+# command it runs fails exactly the way a shell in the wrong folder does.
 #
-# If a flag below is wrong for your build, this is the ONE line to change.
-$HermesArgs = @("--cli", "--yolo")
+# --cli is non-interactive, --yolo stops it blocking on tool approval. An
+# unattended run needs both, or it sits at a prompt until morning. What bounds
+# that risk is AGENTS.md carrying the nine laws into every session plus the
+# standing ban on git push - nothing reaches GitHub without review.
+#
+# If a flag is wrong for your build, this is the ONE line to change.
+$HermesArgs = @("--cli", "--yolo", "--in", $RepoRoot)
+
+# ONE LINE, deliberately. A multi-line string does not survive PowerShell's
+# handoff to a native .exe - the argument arrives mangled or empty, hermes
+# treats it as no prompt at all, and drops into its interactive TUI where it
+# waits forever for a human. The full instructions live in RESUME.md; this line
+# only has to point the agent at them.
+$Prompt = "Read docs/ops/hermes/RESUME.md and follow it exactly. Then read AGENTS.md for your laws. Recover any CLAIMED task in handoff/LEDGER.md, then work the loop continuously without stopping and without asking questions."
 
 # A run shorter than this means the agent died on startup, not on context.
 $FastFailSeconds = 60
@@ -58,7 +67,7 @@ if (Test-Path $StopFile) {
 
 Write-Log "=== RUNNER START ==="
 Write-Log ("repo=" + $RepoRoot)
-Write-Log ("prompt=" + $PromptPath)
+Write-Log ("cwd-flag=" + $RepoRoot)
 Write-Log ("args=" + ($HermesArgs -join " "))
 Write-Log "stop with: New-Item handoff\.stop"
 
@@ -81,8 +90,7 @@ while ($true) {
         # run. RESUME.md only has to say "recover from the ledger and keep going",
         # and it is read fresh each iteration so edits take effect on the next run
         # without restarting this loop.
-        $PromptText = Get-Content -Path $PromptPath -Raw
-        & hermes @HermesArgs -z $PromptText 2>&1 | Tee-Object -FilePath $LogFile -Append
+        & hermes @HermesArgs -z $Prompt 2>&1 | Tee-Object -FilePath $LogFile -Append
     }
     catch {
         Write-Log ("RUN " + $run + " threw: " + $_.Exception.Message)
