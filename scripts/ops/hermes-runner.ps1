@@ -71,6 +71,60 @@ Write-Log ("cwd-flag=" + $RepoRoot)
 Write-Log ("args=" + ($HermesArgs -join " "))
 Write-Log "stop with: New-Item handoff\.stop"
 
+# PREFLIGHT.
+#
+# RUN 3 on 2026-08-13 is why this block exists. Hermes launched cleanly, found
+# neither docs\ops\hermes\RESUME.md nor handoff\LEDGER.md - they were on a branch
+# this checkout was not sitting on - concluded there was no backlog to work,
+# went looking for work elsewhere on the disk, and spent 17 minutes auditing an
+# unrelated project. It ran 999 seconds, so the fast-fail guard below never
+# fired. A broken launch that LOOKS healthy is worse than one that crashes: the
+# loop relaunches it every 10 seconds, all night, doing nothing that was asked
+# for. Catch it here, before the burn.
+
+$RequiredFiles = @(
+    "AGENTS.md",
+    "docs\ops\hermes\RESUME.md",
+    "docs\ops\hermes\CONTINUOUS.md"
+)
+
+$branch = (& git rev-parse --abbrev-ref HEAD 2>$null)
+if ($branch) { Write-Log ("branch=" + $branch) }
+
+$missing = @()
+foreach ($rel in $RequiredFiles) {
+    if (-not (Test-Path (Join-Path $RepoRoot $rel))) { $missing += $rel }
+}
+
+if ($missing.Count -gt 0) {
+    Write-Log "PREFLIGHT FAILED - not launching."
+    foreach ($rel in $missing) { Write-Log ("  missing: " + $rel) }
+    Write-Log "These files ARE the agent's instructions and backlog. Without them"
+    Write-Log "it has nothing to work from and will invent its own task list."
+    Write-Log "They live on branch claude/fable-5-ultracode-plan-ptru4e. To recover,"
+    Write-Log "from this repo root, preserving any uncommitted work:"
+    Write-Log "  git stash -u"
+    Write-Log "  git fetch origin claude/fable-5-ultracode-plan-ptru4e"
+    Write-Log "  git checkout claude/fable-5-ultracode-plan-ptru4e"
+    Write-Log "  git stash pop"
+    Write-Log "Then start this runner again."
+    exit 1
+}
+
+# A previous run can patch files and be cut off by context before it commits.
+# That work is real, it is live in the tree right now, and the next thing that
+# runs git reset or git checkout destroys it. Say so at launch, every time.
+$dirty = (& git status --porcelain 2>$null)
+if ($dirty) {
+    $dirtyCount = ($dirty | Measure-Object).Count
+    Write-Log ("WARNING: working tree has " + $dirtyCount + " uncommitted change(s).")
+    Write-Log "If a previous run patched files and did not commit, that is this."
+    Write-Log "Commit or stash it before it is lost. Listing:"
+    foreach ($line in $dirty) { Write-Log ("  " + $line) }
+}
+
+Write-Log "preflight OK"
+
 $run       = 0
 $fastFails = 0
 
