@@ -90,7 +90,16 @@ while ($true) {
         # run. RESUME.md only has to say "recover from the ledger and keep going",
         # and it is read fresh each iteration so edits take effect on the next run
         # without restarting this loop.
-        & hermes @HermesArgs -z $Prompt 2>&1 | Tee-Object -FilePath $LogFile -Append
+        # ForEach-Object, not Tee-Object. Tee buffers a native executable's
+        # output and only flushes when the process exits, so a working agent
+        # looks identical to a hung one for the whole session - which is exactly
+        # the ambiguity this loop exists to remove. ForEach-Object handles each
+        # line as it arrives, so the console shows progress live.
+        & hermes @HermesArgs -z $Prompt 2>&1 | ForEach-Object {
+            $text = [string]$_
+            Write-Host $text
+            Add-Content -Path $LogFile -Value $text
+        }
     }
     catch {
         Write-Log ("RUN " + $run + " threw: " + $_.Exception.Message)
