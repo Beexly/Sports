@@ -13,6 +13,34 @@ describe("pava core", () => {
     const y = [0.1, 0.2, 0.5, 0.9];
     expect(pava(y)).toEqual(y);
   });
+
+  // REGRESSION: the pooling loop used to advance past the merged block's right
+  // edge, so a block that became too large for its RIGHT neighbor was never
+  // re-compared. [0.9, 0.1, 0.2, 0.8] pooled (0.9, 0.1) into 0.5 and then never
+  // tested 0.5 against 0.2, returning [0.5, 0.5, 0.2, 0.8] - non-monotone from
+  // the one function whose entire contract is monotonicity. Exact block means
+  // are asserted here, not just ordering: a merely-sorted output would pass a
+  // monotonicity check while still being the wrong fit.
+  it("pools left AND re-checks the merged block against its right neighbor", () => {
+    // Element-wise closeTo, not toEqual: the first block mean is
+    // (0.9 + 0.1 + 0.2) / 3, which in IEEE-754 is 0.4000000000000001.
+    const out = pava([0.9, 0.1, 0.2, 0.8]);
+    const expected = [0.4, 0.4, 0.4, 0.8];
+    expect(out).toHaveLength(expected.length);
+    out.forEach((v, i) => expect(v).toBeCloseTo(expected[i]!, 12));
+  });
+
+  it("collapses a fully descending sequence to one block at the grand mean", () => {
+    expect(pava([4, 3, 2, 1])).toEqual([2.5, 2.5, 2.5, 2.5]);
+  });
+
+  it("preserves the sum (PAVA is a projection, it moves mass but never adds it)", () => {
+    const y = [0.9, 0.1, 0.2, 0.8, 0.05, 0.4];
+    const out = pava(y);
+    const before = y.reduce((a, b) => a + b, 0);
+    const after = out.reduce((a, b) => a + b, 0);
+    expect(after).toBeCloseTo(before, 12);
+  });
 });
 
 describe("fitIsotonicPava", () => {

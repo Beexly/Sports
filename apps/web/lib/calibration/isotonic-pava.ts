@@ -64,7 +64,15 @@ export function pava(y: number[], w?: number[]): number[] {
       }
       j = L - 1;
     }
-    i = Math.max(i, right[i] ?? i) + 1;
+    // Re-check the merged block against its RIGHT neighbor before advancing.
+    // The previous `i = right[i] + 1` skipped that comparison, so
+    // pava([0.9, 0.1, 0.2, 0.8]) pooled (0.9, 0.1) -> 0.5 and then never saw
+    // 0.5 > 0.2, returning a NON-monotone result from a function whose whole
+    // contract is monotonicity. Landing on the block's right edge makes the
+    // next loop iteration test merged-mean vs next element; i still strictly
+    // increases every pass (pooling always extends right past the old i), so
+    // termination is unaffected.
+    i = right[i] ?? i;
   }
   return mean;
 }
