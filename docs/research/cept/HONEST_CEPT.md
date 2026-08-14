@@ -1,6 +1,6 @@
 # Causal E-Process Theory — the defensible version
 
-**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v2.1**
+**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v2.2**
 
 > **Status: implemented, not yet validated.** This document states only what the
 > running system supports. Where evidence does not exist yet, it says so. Section 6
@@ -211,6 +211,18 @@ not a Brier guarantee).
 - **Live calibration eligibility is RED.** Floors are `n ≥ 100`, `Brier ≤ 0.22`,
   `ECE ≤ 0.05`, `Murphy reliability ≤ 0.05`, over 3 consecutive windows. Sample is met
   at ~150 settled; **Brier is not** — it sits near 0.2478 against a 0.25 baseline.
+- **Part II's instruments are implemented and synthetically validated.**
+  `packages/prediction-engine/src/instrumented-eprocess.ts` implements the
+  value e-process (Theorem 9, predictable plug-in `λ`) and the stratified
+  shift e-process (Remark 13). Its test suite pins the broken-constant
+  expectation `1.4371` analytically, verifies Type I control in a hostile
+  drifting null and power under a real contrast on seeded synthetic worlds,
+  and *executes the Theorem 7 demonstration*: the naive transcript statistic
+  certifies "skill" identically in the knowledge and echo regimes, while the
+  shift e-process stays flat under knowledge and crosses decisively under
+  echo. Synthetic fixtures only — §6's rule (no live performance numbers)
+  is untouched, and the randomized-board protocol is not yet running in
+  production.
 - The Murphy decomposition `BS = REL − RES + UNC` localizes why. With
   `REL ≈ 0.004` and `RES ≈ 0.0048`, the identity forces `UNC ≈ 0.2486`, i.e. a base
   rate near 0.537 (or 0.463) — a near-coin-flip world, exactly what market-priced
@@ -469,9 +481,64 @@ asserts necessity only where all such structure is refused — that is the price
 of days between the candidate slate and the market-mirror baseline slate, log
 `(Z_t, π_t, R_t)` in the settlement ledger, and run `M_t` alongside the three §4
 instruments. Both slates are genuine forecasts, so no user receives degraded
-content; the platform becomes its own validation experiment, and the causal claim
-"our picks add value over the market" acquires an anytime-valid test that no
-amount of performativity can fake.
+content; the platform becomes its own validation experiment, and the claim "our
+picks add value over the market" acquires an anytime-valid test of its **total
+causal value**. What "total" means — and how the same coin separates its
+components — is §8.1.
+
+### 8.1 What the coin buys, precisely
+
+One coin funds three separate tests, and the separation matters as much as the
+tests (the same discipline as the skill/profit/self-honesty triple).
+
+**Remark 13 (value is not knowledge, and the coin can tell them apart).**
+`Δ_t` in Theorem 9 is the causal effect of the *publication decision* on the
+reward — prediction quality and world-influence combined. That is deliberately
+the product question ("does publishing our board help?"), not a knowledge test:
+in a pure echo world, publishing a sharp slate genuinely causes better outcomes
+for its followers, and Theorem 9 honestly reports that value. To *decompose*
+value, run a second instrument on the same rounds — a sequential two-sample
+test of
+
+```
+H₀^shift :  Y_t ⊥ Z_t  |  F_{t-1}, stratum_t
+```
+
+— does the outcome law itself depend on which slate was published, within each
+forecast context? Each round's factor is a predictable per-arm outcome estimate
+divided by its known `π`-mixture; the mixture construction makes the factor's
+conditional expectation exactly 1 under `H₀^shift` *regardless of estimation
+quality*, so validity never rests on the estimates being good. Growth is
+anytime-valid evidence of performativity. Value with no shift is evidence the
+value came from prediction; value with shift is influence. One trap is worth
+recording: an echo world can leave the two arms' **marginal** win rates
+identical (echoing a rule whose average matches the baseline's rate) while the
+conditional-on-forecast laws differ maximally — so the test must stratify by
+the candidate forecast, and the stratification rule must be fixed in advance.
+Sequential two-sample testing by betting is Shekhar & Ramdas (2023); the
+composition here is that construction mounted on the publication coin.
+
+**Theorem 12 (interleaved validity, and the menu on trial).** Let `A_t` be a
+predictable audit schedule. Accumulate Theorem 9's factors on audit rounds into
+`M^C`, and Theorem 1's factors — with `Z_t` adjoined to the filtration and the
+menu permitted to react to it — on the remaining rounds into `M^I`. Then
+`M = M^I · M^C` is a non-negative supermartingale under the intersection null
+("market right with reactions inside `I_t`" *and* "publication adds nothing"),
+and each factor is separately an e-process for its own null at its own level.
+
+*Proof.* Each round is predictably typed, exactly one factor multiplies in, and
+that factor's conditional expectation is at most 1 under its null — Theorem 9's
+by Hoeffding, Theorem 1's unchanged because its proof needs only predictability
+of the menu and models, which adjoining the exogenous `Z_t` preserves. Products
+of such factors telescope; Ville applies to `M^I`, `M^C`, and `M`. ∎
+
+The consequence worth stating plainly: **Theorem 1's open problem becomes
+falsifiable.** A reaction to the coin is precisely a reaction the menu must
+contain, so growth of `M^I` on audit rounds is anytime-valid evidence against
+the menu itself, not merely against skill. Choosing `I_t` (Remark 3) remains a
+modeling decision — but the same coin that tests causal value puts any proposed
+menu on continuous sequential trial. Modeling and design, Parts I and II, stop
+being alternatives and become one instrumented system.
 
 ## 9. Related work, and the precise novelty claim
 
@@ -656,6 +723,18 @@ performance.
      (the instrument idea; an internal-inconsistency check) and what was
      declined with reasons (sheaf-holonomy conjecture, Solomonoff test,
      continuous-time and multi-agent extensions).
+- **v2.2 (2026-08-14).** The coin, cashed.
+  1. **Remark 13:** Theorem 9's `Δ` is total causal value (prediction plus
+     influence); a stratified two-sample e-process on the same coin separates
+     the components, with the marginal-rate trap recorded (echo can equalize
+     arm marginals while conditional laws differ maximally — stratify by the
+     candidate forecast).
+  2. **Theorem 12:** interleaved product validity, and the menu audit —
+     adjoining the exogenous `Z_t` to Theorem 1's filtration preserves its
+     proof, so growth on audit rounds is anytime-valid evidence against `I_t`
+     itself. Remark 3's open problem becomes falsifiable.
+  3. **Implementation:** `instrumented-eprocess.ts` + 8 passing tests,
+     including the executable Theorem 7 demonstration (§5).
 - **v2.1 (2026-08-14).** Literature verdicts from a live search folded in:
   Theorem 7 positioned as the sequential-testing form of outcome
   indistinguishability (Dwork et al. 2022; Perdomo 2025); Theorem 9's engine
