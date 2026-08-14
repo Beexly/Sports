@@ -1,6 +1,6 @@
 # Causal E-Process Theory — the defensible version
 
-**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v2.0**
+**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v2.1**
 
 > **Status: implemented, not yet validated.** This document states only what the
 > running system supports. Where evidence does not exist yet, it says so. Section 6
@@ -361,6 +361,20 @@ from the loop's transcript.** Theorem 1 and Theorem 7 are complementary: Theorem
 gives validity *by modeling* (assume the menu `I_t`); §8 gives validity *by
 design* (randomize, and the menu becomes irrelevant for the causal question).
 
+**Positioning.** The phenomenon underneath Theorem 7 is anticipated in two
+literatures, and this document does not claim otherwise. *Outcome
+indistinguishability* (Dwork, Kim, Reingold, Rothblum & Yona, ALT 2022)
+constructs predictors whose outcomes cannot be distinguished from nature's;
+Perdomo (ICML 2025, arXiv:2503.11713) sharpens this to performative settings,
+exhibiting predictions that are simultaneously self-fulfilling, perfectly
+multicalibrated, and explain none of the outcome variance. Mendler-Dünner, Ding
+& Wang (NeurIPS 2022) observed informally that deterministic prediction rules
+confound causal effects with covariate effects. What Theorem 7 contributes is
+the *testing-theoretic packaging*: two named generative regimes, a formal
+identical-joint-law statement, and the resulting impossibility for uniformly
+valid sequential tests of the causal null — the exact form Corollary 11's
+necessity direction needs.
+
 ## 8. The instrument: randomized publication
 
 The escape is old, small, and cheap: inject a known coin into the one decision the
@@ -439,9 +453,14 @@ self-contained and airtight.
 setting — reaction functions unrestricted, tests measurable in the observables —
 exogenous publication randomization with known `π_t ∈ [ε, 1−ε]` is *sufficient*
 for uniformly anytime-valid causal-skill inference (Theorem 9), and some observed
-exogenous variation is *necessary* (Theorem 7). Necessity is relative to that
-setting: restricting the reaction class (Theorem 1's menu) is the other road, at
-the price of assuming the menu.
+exogenous variation is *necessary* (Theorem 7). **Necessity is exactly as wide as
+the setting, and no wider.** With structure, randomization is not needed: Cheng,
+Hardt & Mendler-Dünner (ICML 2024) estimate performativity with no randomized
+treatment by exploiting dynamical structure; Mendler-Dünner, Ding & Wang
+(NeurIPS 2022) give overparameterization and discrete-prediction identification
+routes; and Theorem 1's menu is this document's own structural road. Corollary 11
+asserts necessity only where all such structure is refused — that is the price of
+"uniform over *all* reaction functions."
 
 **For this product, concretely.** Randomize at the board level on an ε fraction
 of days between the candidate slate and the market-mirror baseline slate, log
@@ -490,19 +509,29 @@ honestly — and this list is deliberately the one a hostile referee would write
   recently appeared (Li et al., NeurIPS 2025). None of it provides *sequential,
   anytime-valid* tests under the shift.
 - **Ensembling** is Hedge / Bayesian mixtures (Cesa-Bianchi & Lugosi, 2006).
-- **Part II's engine is known technology.** IPW scores inside anytime-valid
-  machinery are the substance of design-based confidence sequences (Ham,
-  Bojinov, Lindon & Tingley, arXiv:2210.08639) and betting-style/empirical-
-  Bernstein e-values (Waudby-Smith & Ramdas, *J. R. Statist. Soc. B*, 2024);
-  sequential experiments on time series are treated in Bojinov & Shephard
-  (*J. Amer. Statist. Assoc.*, 2019). Theorem 9 claims none of that machinery.
-  What Part II claims is the *pairing*: the reflexive impossibility theorem
-  stated for forecast evaluation (Theorem 7 — calibration is observationally
-  indistinguishable from echo), and publication randomization as the minimal
-  instrument that converts a forecasting product's causal claim about itself
-  into an anytime-testable one (Corollary 11). A definitive novelty verdict on
-  that pairing awaits a fuller literature pass; if a precedent surfaces, this
-  section cites it and the claim narrows again.
+- **Part II sits inside three known literatures, and says so** (verdicts from a
+  live literature pass, August 2026):
+  1. *The impossibility phenomenon* is anticipated: outcome indistinguishability
+     (Dwork, Kim, Reingold, Rothblum & Yona, ALT 2022) and Perdomo's
+     self-fulfilling-yet-multicalibrated construction (ICML 2025,
+     arXiv:2503.11713). Theorem 7 is the sequential-testing form of that
+     phenomenon, not its discovery.
+  2. *The engine is known*: IPW scores inside anytime-valid machinery are
+     design-based confidence sequences (Ham, Bojinov, Lindon & Tingley,
+     arXiv:2210.08639; *Management Science* 2025), betting/empirical-Bernstein
+     e-values (Waudby-Smith & Ramdas, *J. R. Statist. Soc. B*, 2024), and
+     anytime-valid off-policy inference (arXiv:2210.10768). Theorem 9 claims
+     none of that machinery.
+  3. *Randomizing the forecast itself has a batch precedent*: Gower-Winter &
+     Krempl's intervention testing for outcome performativity (OPAB, 2026)
+     randomizes predictions in a fixed-sample A/B design. Part II's remaining
+     claim relative to it is the *anytime-valid sequential* form — publish
+     indefinitely, monitor continuously, stop at any data-dependent time.
+  4. *Identification without randomization exists under structure* — Cheng,
+     Hardt & Mendler-Dünner (ICML 2024); Mendler-Dünner, Ding & Wang
+     (NeurIPS 2022) — which is exactly why Corollary 11's necessity is scoped
+     to the assumption-free setting; outside it, necessity is false and is not
+     claimed.
 
 **The claim being made**, then, is exactly this: *proposing* the instantiation of
 the composite-null e-process construction with the null taken to be *the set of
@@ -624,6 +653,15 @@ performance.
      (the instrument idea; an internal-inconsistency check) and what was
      declined with reasons (sheaf-holonomy conjecture, Solomonoff test,
      continuous-time and multi-agent extensions).
+- **v2.1 (2026-08-14).** Literature verdicts from a live search folded in:
+  Theorem 7 positioned as the sequential-testing form of outcome
+  indistinguishability (Dwork et al. 2022; Perdomo 2025); Theorem 9's engine
+  credited to design-based confidence sequences, betting e-values, and
+  anytime-valid off-policy inference; the batch precedent for randomized
+  forecast intervention (OPAB 2026) cited, narrowing Part II's claim to the
+  anytime-valid sequential form; Corollary 11's necessity explicitly scoped
+  against the known structure-based escapes (Cheng–Hardt–Mendler-Dünner 2024;
+  Mendler-Dünner–Ding–Wang 2022), which would otherwise falsify it.
 
 ---
 
