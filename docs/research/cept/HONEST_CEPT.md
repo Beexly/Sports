@@ -320,8 +320,11 @@ variation, the causal question has no answer in the observables at all.
 
 ### 7.1 Setup
 
-Rounds `t`; covariates `X_t`; published forecast `P_t ∈ [0,1]`; binary outcome
-`Y_t`. The world reacts through an unknown reaction function:
+Rounds `t`; covariates `X_t` drawn from an exogenous process
+`X_t | H_{t-1}` that does not depend on the publication mechanism (the same
+covariate law in every regime compared below); published forecast
+`P_t ∈ [0,1]`; binary outcome `Y_t`. The world reacts through an unknown
+reaction function:
 `Y_t | (X_t, P_t, H_{t-1}) ~ Bernoulli(r_t(P_t, X_t, H_{t-1}))`, where
 `H_{t-1}` is the observable history. The **causal null** is that publication is
 inert: `r_t(p, x, h)` does not depend on `p`. The forecaster's rule is
