@@ -171,12 +171,24 @@ describe("Phase 9 guardrails", () => {
     expect(pkg.scripts["guard:partner-offers"]).toContain("partner-offer-compliance-scan.mjs");
     expect(pkg.scripts["guard:api-payload-rights"]).toContain("api-payload-rights-scan.mjs");
     expect(pkg.scripts["guard:openapi-security"]).toContain("openapi-security-scan.mjs");
-    expect(pkg.scripts.guardrails).toContain("commercial-copy-scan.mjs");
-    expect(pkg.scripts.guardrails).toContain("no-unsupported-performance-claims.mjs");
-    expect(pkg.scripts.guardrails).toContain("no-raw-ngs-export.mjs");
-    expect(pkg.scripts.guardrails).toContain("partner-offer-compliance-scan.mjs");
-    expect(pkg.scripts.guardrails).toContain("api-payload-rights-scan.mjs");
-    expect(pkg.scripts.guardrails).toContain("openapi-security-scan.mjs");
+    // The `guardrails` script is no longer a long `&&` chain — it is
+    // `node scripts/guardrails/run-all.mjs`. The chain short-circuited at the first
+    // failure, so since the v5.2.6 bump it halted at `model-freeze` in position 2 and
+    // guards 3..25 never executed in CI while the job still reported on all of them.
+    // Membership therefore lives in run-all's GUARDS table, which is what this now
+    // asserts. Reading the runner's source keeps the check honest without executing
+    // the suite twice.
+    const runAll = readFileSync(
+      resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"),
+      "utf8",
+    );
+    expect(runAll).toContain("commercial-copy-scan.mjs");
+    expect(runAll).toContain("no-unsupported-performance-claims.mjs");
+    expect(runAll).toContain("no-raw-ngs-export.mjs");
+    expect(runAll).toContain("partner-offer-compliance-scan.mjs");
+    expect(runAll).toContain("api-payload-rights-scan.mjs");
+    expect(runAll).toContain("openapi-security-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("run-all.mjs");
   });
 
   it("sealed-holdout-open-scan exits 0 with the seal opened only inside edge-lab (FIX 6)", () => {
@@ -192,7 +204,14 @@ describe("Phase 9 guardrails", () => {
   it("root guardrails chain includes the sealed-holdout-open-scan check", () => {
     const pkg = JSON.parse(readFileSync(resolve(REPO_ROOT, "package.json"), "utf8"));
     expect(pkg.scripts["guard:sealed-holdout-open-scan"]).toContain("sealed-holdout-open-scan.mjs");
-    expect(pkg.scripts.guardrails).toContain("sealed-holdout-open-scan.mjs");
+    // Membership moved from the `&&` chain into run-all.mjs's GUARDS table — see the
+    // note on the commercial/performance/payload-rights assertion above.
+    const runAll = readFileSync(
+      resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"),
+      "utf8",
+    );
+    expect(runAll).toContain("sealed-holdout-open-scan.mjs");
+    expect(pkg.scripts.guardrails).toContain("run-all.mjs");
   });
 });
 
