@@ -191,8 +191,13 @@ export interface ShiftEProcessState {
   readonly logM: number;
   readonly logMPeak: number;
   readonly crossed: boolean;
-  /** Laplace(1,1) success/trial counts per arm, keyed by stratum id. */
-  readonly strata: Readonly<Record<string, StratumCounts>>;
+  /**
+   * Laplace(1,1) success/trial counts per arm, keyed by stratum id. A Map,
+   * not a plain object: stratum ids arrive from callers, and Map lookups
+   * carry no prototype-chain semantics, so a hostile or malformed id cannot
+   * alias built-ins or read inherited properties.
+   */
+  readonly strata: ReadonlyMap<string, StratumCounts>;
 }
 
 export interface ShiftRound {
@@ -215,7 +220,7 @@ const EMPTY_STRATUM: StratumCounts = {
 };
 
 export function initShiftEProcess(): ShiftEProcessState {
-  return { rounds: 0, logM: 0, logMPeak: 0, crossed: false, strata: {} };
+  return { rounds: 0, logM: 0, logMPeak: 0, crossed: false, strata: new Map() };
 }
 
 /**
@@ -234,7 +239,10 @@ export function updateShiftEProcess(
     throw new RangeError(`alpha must lie in (0,1), got ${alpha}`);
   }
   assertPi(round.pi);
-  const counts = state.strata[round.stratum] ?? EMPTY_STRATUM;
+  if (round.stratum.length === 0 || round.stratum.length > 64) {
+    throw new RangeError("stratum id must be 1-64 characters");
+  }
+  const counts = state.strata.get(round.stratum) ?? EMPTY_STRATUM;
   // Predictable Beta(1,1)-posterior-mean estimates, from PAST rounds only.
   const p1 = (counts.candidateWins + 1) / (counts.candidateRounds + 2);
   const p0 = (counts.baselineWins + 1) / (counts.baselineRounds + 2);
@@ -252,12 +260,14 @@ export function updateShiftEProcess(
     baselineWins: counts.baselineWins + (round.publishedCandidate ? 0 : y),
     baselineRounds: counts.baselineRounds + (round.publishedCandidate ? 0 : 1),
   };
+  const strata = new Map(state.strata);
+  strata.set(round.stratum, updated);
   return {
     rounds: state.rounds + 1,
     logM,
     logMPeak,
     crossed: state.crossed || logMPeak >= Math.log(1 / alpha) - LN_TWO_SIDED_EPS,
-    strata: { ...state.strata, [round.stratum]: updated },
+    strata,
   };
 }
 
