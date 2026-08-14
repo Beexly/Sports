@@ -1,6 +1,6 @@
 # Causal E-Process Theory — the defensible version
 
-**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v1.1**
+**Garrett Ryan Baxley · Galaxy Sports Edge · August 2026 · v1.2**
 
 > **Status: implemented, not yet validated.** This document states only what the
 > running system supports. Where evidence does not exist yet, it says so. Section 6
@@ -15,7 +15,10 @@
 > composite-null theorem because the earlier premise was not well-posed
 > (Remark 4 records the counterexample), and the earlier "dropped-set Brier"
 > integrity check was found to be mathematically vacuous and replaced
-> (Proposition 6). Section 10 is the changelog.
+> (Proposition 6). **v1.2** folds in the cross-examination round: the novelty
+> claim in §7 is narrowed to proposal-and-design (nothing robust runs yet), the
+> Corollary to Proposition 5 is sharpened against a base-rate trap, and related
+> work extends to the full prior-art frontier. Section 10 is the changelog.
 
 ---
 
@@ -31,9 +34,10 @@ market, then "was the pick right?" and "did the pick have an edge?" stop being t
 same question. A pick that looks right because the line moved toward it has told you
 nothing about skill.
 
-Economists call the general phenomenon performativity; Goodhart's law is a special
-case. What has been missing is a *sequential test* that stays valid when the predictor
-is part of the loop.
+Economic sociology named the general phenomenon performativity (Callon, 1998;
+MacKenzie, *An Engine, Not a Camera*, 2006); Goodhart's law is a special case. What
+has been missing is a *sequential test* that stays valid when the predictor is part
+of the loop.
 
 ## 2. What already exists, and what does not
 
@@ -52,7 +56,9 @@ The machinery this framework needs is largely established:
 contribution is narrower and is stated in §3; §7 places it against the closest
 existing work.
 
-## 3. The contribution
+## 3. The construction
+
+(§7 states precisely what of this is, and is not, claimed as new.)
 
 ### 3.1 Setup
 
@@ -118,6 +124,10 @@ crossing bound. For the last claim: `M_∞ := lim_t M_t` exists almost surely by
 supermartingale convergence theorem for non-negative supermartingales, and Fatou's
 lemma applied to the stopped sequence `M_{τ∧n}` gives `E[M_τ] ≤ 1` for every stopping
 time `τ`, possibly infinite. ∎
+
+The same argument, conditioning on `(F_{t-1}, ι_t)`, extends `H₀(I)` to
+**randomized** reactions — `ι_t` drawn from any non-anticipating kernel supported on
+`I_t` — which strictly enlarges the null at no cost to the theorem.
 
 **Lemma 2 (consistency).** If `I_t = {ι_t}` is a singleton — the reaction is known —
 then `E_t` is the ordinary likelihood ratio and `M` is the classical e-process of §4.
@@ -231,16 +241,24 @@ BS_pub = π_δ(1 − π_δ) − Var[P | published] ,     π_δ = E[P | published
 *Proof.* The publication event `{|P − 0.5| ≥ δ}` is `σ(P)`-measurable, so overall
 calibration is automatically inherited on the published set — this is the one
 regularity condition, and it holds because the rule reads nothing but `p` itself.
+(If publication ever also conditions on covariates beyond `p`, published-set
+calibration must be re-verified, not assumed.)
 Conditional on `P`, `Y` is Bernoulli(`P`), so the squared error decomposes with zero
 bias term: `BS_pub = E[P(1−P) | pub] = π_δ − E[P² | pub] = π_δ(1−π_δ) − Var[P | pub]`,
 and under calibration `π_δ = E[P | pub] = E[Y | pub]`. ∎
 
-*Corollary.* The general requirement for `Brier ≤ 0.22` is
-`Var[P | published] ≥ π_δ(1−π_δ) − 0.22`; under a symmetric filter `π_δ ≈ 1/2`,
-giving the worst case `Var[P | published] ≥ 0.03` — roughly six times the current
-resolution of 0.0048. (v1.0 wrote the global base rate `π` here; the correct
-quantity is the published-set base rate `π_δ`. Under the symmetric filter the
-difference is second-order; in general it is not.)
+*Corollary.* Since `π_δ(1−π_δ) ≤ 1/4`, targeting `Var[P | published] ≥ 0.03` always
+suffices for `Brier ≤ 0.22`; the sharp requirement is
+`Var[P | published] ≥ π_δ(1−π_δ) − 0.22`, exact at `π_δ = 1/2`. With current
+resolution ~0.0048, the worst-case target is roughly six times current. One trap,
+found in cross-examination: `π_δ ≈ 1/2` is a property of the *published forecast
+distribution*, not of the filter — `|p − 0.5| ≥ δ` is symmetric for every δ, yet
+`π_δ` can sit far from 1/2 when the forecasts themselves are asymmetric about 1/2.
+Example: `P = 0.7` with probability 0.2 and `P = 0.45` with probability 0.8,
+calibrated, has global base rate exactly 1/2 — but `δ = 0.1` publishes only the
+`P = 0.7` picks, so `π_δ = 0.7` and `BS_pub = 0.21`. Raising δ is precisely the
+operation that can push `π_δ` away from the global base rate. (v1.0 wrote the
+global base rate `π` in the identity; the correct quantity is `π_δ`.)
 
 **Proposition 6 (the naive integrity check is vacuous).** v1.0 proposed verifying
 that the *dropped* set's conditional Brier "sits near 0.25," with a lower value
@@ -277,7 +295,10 @@ the *dropped* set:
 1. Raise resolution via selective publishing (Proposition 5): emit a pick only when
    `|p − 0.5| ≥ δ`, targeting `Var[P | published] ≥ 0.03`.
 2. Choose δ on an early chronological window and **evaluate it on a later one**. A
-   threshold tuned and scored on the same rows is a curve fit.
+   threshold tuned and scored on the same rows is a curve fit. Report
+   `π_δ = E[Y | published]` on the held-out window alongside `Var[P | published]`;
+   if `π_δ` drifts from 1/2, the corollary's target becomes `π_δ(1−π_δ) − 0.22`,
+   not 0.03.
 3. Run both integrity instruments on the dropped set (the check Proposition 6
    replaces). Either instrument firing means the filter is discarding real skill and
    the published improvement is partly cosmetic.
@@ -290,32 +311,56 @@ validation pending settled evidence."**
 ## 7. Related work, and the precise novelty claim
 
 CEPT as scoped here is a **composition**, not a new branch of mathematics. Placing it
-honestly:
+honestly — and this list is deliberately the one a hostile referee would write:
 
 - **Anytime validity** comes from e-processes: Ville (1939); the modern treatment and
   survey in Ramdas, Grünwald, Vovk & Shafer, *Statistical Science* 38(4), 2023.
-- **The infimum device itself is known.** Taking a statistic that is an e-value
-  simultaneously under every element of a composite null is the standard route to
-  composite-null safe tests (Grünwald, de Heide & Koolen, *Safe Testing*, J. R.
-  Statist. Soc. B, 2024), and universal inference (Wasserman, Ramdas &
-  Balakrishnan, *PNAS* 117(29), 2020) is built from the dual manoeuvre on the
-  alternative. Theorem 1 is an instance of this known construction, and this
-  document does not claim the device.
-- **Performativity** has a modern ML literature: *performative prediction*
-  (Perdomo, Zrnic, Mendler-Dünner & Hardt, ICML 2020) and its successors treat
-  prediction-induced distribution shift as a risk-minimization and stability
-  problem — find performatively stable points, retrain to convergence. That
-  literature optimizes under the shift; it does not provide sequential hypothesis
-  tests that remain valid under it.
+- **The infimum device is old and known.** Worst-case likelihood ratios over a
+  family go back to Huber's robust sequential probability ratio test via
+  least-favorable pairs (Huber, *Ann. Math. Statist.*, 1965; Huber & Strassen,
+  1973). In modern form, composite-null e-processes are exactly
+  `E_t = inf_P M_t^P` (Ramdas, Ruf, Larsson & Koolen, 2020; *Int. J. Approx.
+  Reasoning*, 2022); the worst-case-over-the-null requirement is the defining one
+  in safe testing (Grünwald, de Heide & Koolen, *J. R. Statist. Soc. B*, 2024);
+  and universal inference (Wasserman, Ramdas & Balakrishnan, *PNAS* 117(29), 2020)
+  is the dual manoeuvre on the alternative. Theorem 1 is an instance of this known
+  construction, and this document does not claim the device. Formally,
+  `{m_t(·|do(i)) : i ∈ I_t}` is simply a composite family indexed by `i` — the
+  `do`-notation supplies the *interpretation* of the null as the set of reactions
+  to one's own forecast; it adds no mathematical content.
+- **Sequential forecast evaluation with e-processes exists**, run on real
+  forecasts: Henzi & Ziegel (*Biometrika*, 2022) on forecast dominance, Choe &
+  Ramdas (*Oper. Res.*, 2024) on comparing forecasters — under single-world nulls,
+  without performativity.
+- **Anytime-valid testing in production platforms exists**: always-valid p-values
+  ran at scale in Optimizely's experimentation platform (Johari, Koomen, Pekelis &
+  Walsh, *Oper. Res.* 70(3), 2022). **Live martingale monitoring of deployed
+  models exists**: Podkopaev & Ramdas (ICLR 2022) track deployed-model risk with
+  time-uniform confidence sequences; Vovk et al.'s conformal test martingales
+  (COPA 2021) detect distribution change. In each case the null is
+  non-performative.
+- **Performativity** originates in economic sociology (Callon, 1998; MacKenzie,
+  2006). Its modern ML treatment, *performative prediction* (Perdomo, Zrnic,
+  Mendler-Dünner & Hardt, ICML 2020, and successors), optimizes under
+  prediction-induced distribution shift — performatively stable points, retraining
+  to convergence — and fixed-sample statistical inference under performativity has
+  recently appeared (Li et al., NeurIPS 2025). None of it provides *sequential,
+  anytime-valid* tests under the shift.
 - **Ensembling** is Hedge / Bayesian mixtures (Cesa-Bianchi & Lugosi, 2006).
 
-**The claim being made**, then, is exactly this: instantiating the composite-null
-e-process construction with the null taken to be *the set of admissible performative
-reactions to one's own published forecast, expressed as `do`-interventions* — and
-running the resulting anytime-valid skill test live, in a production forecasting
-system, alongside separate profit and self-honesty instruments. As far as the author
-is aware, that combination has not been built and run before. It is a composition
-claim, deliberately modest, and it survives the audit that produced v1.1.
+**The claim being made**, then, is exactly this: *proposing* the instantiation of
+the composite-null e-process construction with the null taken to be *the set of
+admissible performative reactions to one's own published forecast, expressed as
+`do`-interventions*, and *designing* its deployment as the skill instrument of a
+production forecasting system, alongside separate profit and self-honesty
+instruments. The intervention-infimum factor itself is specified here but not yet
+running — it cannot run until `I_t` is chosen (Remark 3); what runs today is its
+degenerate single-world case (§4, Lemma 2), in shadow mode (§5). As far as the
+author is aware, the proposal and the deployment design — worst-case-over-reactions
+likelihood ratios as a sequential robustness test wired into a forecasting product —
+have no precedent; no priority is claimed for a completed robust deployment, because
+none exists. It is a composition claim, deliberately modest, and it survived two
+rounds of adversarial audit.
 
 ## 8. What was removed from the earlier draft, and why
 
@@ -367,10 +412,27 @@ performance.
      to log loss.
   5. Related work expanded: performative prediction, safe testing, universal
      inference — and the novelty claim narrowed to the composition actually made.
+- **v1.2 (2026-08-14).** Second round: cross-examination of v1.1.
+  1. §7 no longer says the robust test has been "built and run." The
+     intervention-infimum factor is *proposed* and its deployment *designed*; what
+     runs today is the degenerate single-world case, in shadow mode. Priority is
+     claimed for the proposal and design only.
+  2. Corollary to Proposition 5 sharpened: 0.03 is the worst-case target (the sharp
+     requirement is `π_δ(1−π_δ) − 0.22`), with a worked example showing a symmetric
+     filter can still yield `π_δ` far from 1/2; validation step 2 now reports `π_δ`
+     on the held-out window.
+  3. Theorem 1 extended to randomized reactions (non-anticipating kernels on
+     `I_t`) — same proof, strictly larger null.
+  4. Related work extended to the full prior-art frontier: Huber's robust SPRT
+     (the infimum device is sixty years old), composite-null e-processes,
+     sequential forecast evaluation (Henzi–Ziegel; Choe–Ramdas), production
+     anytime-valid testing (Optimizely), deployed-model martingale monitoring
+     (Podkopaev–Ramdas; Vovk et al.), performativity's origins (Callon; MacKenzie)
+     and fixed-sample inference under it (Li et al.).
 
 ---
 
 *© 2026 Garrett Ryan Baxley. Framework composition and implementation. Underlying
-results (Ville 1939; Pearl 2009; Cesa-Bianchi & Lugosi 2006; Wasserman, Ramdas &
-Balakrishnan 2020; Perdomo et al. 2020; Grünwald, de Heide & Koolen 2024; Ramdas et
-al. 2023) are cited, not claimed.*
+results (Ville 1939; Huber 1965; Pearl 2009; Cesa-Bianchi & Lugosi 2006; Wasserman,
+Ramdas & Balakrishnan 2020; Perdomo et al. 2020; Grünwald, de Heide & Koolen 2024;
+Ramdas et al. 2023) are cited, not claimed.*
