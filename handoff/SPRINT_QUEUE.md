@@ -851,7 +851,7 @@ obsolete, mark BLOCKED and explain — removing coverage is an owner decision.
 **VERIFY:** each fixed file's test run passes; commit each fix separately; strike it through in
 `TEST_CENSUS.md`.
 
-### P7-04 — Fix test failures, batch 2 · STATUS: TODO · STRIKES: 0
+### P7-04 — Fix test failures, batch 2 · STATUS: DONE · STRIKES: 0
 Same rules as P7-03, next three category-(b). If (b) is exhausted, move to category (a), easiest
 first. Same never-delete-a-test rule.
 

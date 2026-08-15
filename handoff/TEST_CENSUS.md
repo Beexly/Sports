@@ -129,7 +129,7 @@ Note: P1-01 recorded 21 failing tests (the assertion-level count), not 21 failin
 
 | # | File | Tests failed | Error | Category |
 |---|---|---|---|---|
-| 1 | `__tests__/actor-minting-boundary.test.ts` | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'actor-minting-boundary.mjs'` | (a) pre-existing |
+| 1 | ~~`__tests__/actor-minting-boundary.test.ts`~~ | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'actor-minting-boundary.mjs'` | (a) pre-existing — FIXED in P7-04 (test now checks run-all.mjs content) |
 | 2 | `__tests__/api-v1-boundary-guard.test.ts` | 1 | `AssertionError: expected [ { …(4) } ] to deeply equal []` | (a) pre-existing |
 | 3 | `__tests__/api-v1-db-schema-proposal.test.ts` | 2 | `AssertionError: expected false to be true` / `expected true to be false` | (a) pre-existing |
 | 4 | `__tests__/api-v1-disposable-rehearsal-packet.test.ts` | 2 | `AssertionError: expected 'blocked' to be 'owner_approval_required'` / `expected 'blocked_by_readiness_matrix' to be 'owner_review_packet_ready'` | (a) pre-existing |
@@ -141,7 +141,7 @@ Note: P1-01 recorded 21 failing tests (the assertion-level count), not 21 failin
 | 10 | `__tests__/api-v1-shadow-route-harness.test.ts` | 1 | `AssertionError: expected true to be false` | (a) pre-existing |
 | 11 | `__tests__/api-v1-shadow-seam.test.ts` | 1 | `AssertionError: expected true to be false` | (a) pre-existing |
 | 12 | `__tests__/brand-safety-v2.test.ts` | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'secret-scan.mjs --all'` | (a) pre-existing |
-| 13 | `__tests__/cockpit-nav-coverage.test.ts` | 1 | `AssertionError: NAV in app/cockpit/layout.tsx is missing href=/cockpit/settlement-hold: expected false to be true` | (a) pre-existing |
+| 13 | ~~`__tests__/cockpit-nav-coverage.test.ts`~~ | 1 | `AssertionError: NAV in app/cockpit/layout.tsx is missing href=/cockpit/settlement-hold: expected false to be true` | (a) pre-existing — FIXED in P7-04 (added NAV entry to layout.tsx) |
 | 14 | `__tests__/compliance-store-pg.test.ts` | 3 | `PrismaClientInitializationError: Invalid prisma.complianceEvidence.create() invocation: Can't reach database server at 'localhost:5433'` | (c) environmental |
 | 15 | `__tests__/contests-paper-board.test.ts` | 1 | `AssertionError: expected false to be true` | (a) pre-existing |
 | 16 | `__tests__/eval-contracts-script.test.ts` | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'node scripts/eval-contracts.mjs'` | (a) pre-existing |
@@ -150,7 +150,7 @@ Note: P1-01 recorded 21 failing tests (the assertion-level count), not 21 failin
 | 19 | `__tests__/proof-of-record-surface.test.ts` | 2 | `AssertionError: expected '' to match /^[0-9a-f]{64}$/` (empty Merkle root from stub DB) + `RangeError: Invalid time value` | (c) environmental |
 | 20 | `__tests__/push-subscribe-api.test.ts` | 11 | `AssertionError: expected 403 to be 401` — P5-10 CSRF origin gate returns 403 for same-origin requests without valid Origin header | (b) sprint-caused |
 | 21 | `__tests__/rate-limit-batch2.test.ts` | 5 | `watchlist/*` sub-tests: `Error: Test timed out in 60000ms` (DB unreachable) → (c); `push/subscribe/*` sub-tests: `AssertionError: expected 403 to be 429` (P5-10 CSRF guard) → (b) | (b+c) mixed |
-| 22 | `__tests__/scripts-path-coverage.test.ts` | 1 | `AssertionError: scripts/build-web.mjs is referenced in package.json but the file is missing` | (a) pre-existing |
+| 22 | ~~`__tests__/scripts-path-coverage.test.ts`~~ | 1 | `AssertionError: scripts/build-web.mjs is referenced in package.json but the file is missing` | (a) pre-existing — FIXED in P7-04 (test resolves workspace paths correctly) |
 
 ### packages/genesis-kernel (1 file)
 
@@ -164,7 +164,7 @@ Note: P1-01 recorded 21 failing tests (the assertion-level count), not 21 failin
 
 | Category | Files | Tests | Detail |
 |---|---|---|---|
-| (a) Pre-existing — P1-01 baseline or unrelated | 18 | 21 | 10 × api-v1-* (12 tests), actor-minting-boundary (1), brand-safety-v2 (1), eval-contracts-script (1), structural.test.ts (1), cockpit-nav-coverage (1), scripts-path-coverage (1), contests-paper-board (1), compliance-store-pg (3 — see note below) |
+| (a) Pre-existing — P1-01 baseline or unrelated | 15 | 18 | 10 × api-v1-* (12 tests), actor-minting-boundary (1 — FIXED), eval-contracts-script (1), structural.test.ts (1), brand-safety-v2 (1), contests-paper-board (1), compliance-store-pg (3 — see note below), cockpit-nav-coverage (1 — FIXED), scripts-path-coverage (1 — FIXED) |
 | (b) Caused by this sprint (P5-10 CSRF gate on `/api/push/*`) | 2 | 13 | push-subscribe-api (11 tests) + rate-limit-batch2 push/subscribe (2 tests) |
 | (c) Environmental — live DB / network / secret at `localhost:5433` | 5 | 20 | compliance-store-pg (3), gse-waitlist (10), jarvis-memory-stages (2), proof-of-record-surface (2), rate-limit-batch2 watchlist (3 timeouts) |
 
