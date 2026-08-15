@@ -736,7 +736,7 @@ your assessment (clean-apply / likely-conflict / needs-manual-review).
 **VERIFY:** `handoff/RND_BRANCH_MERGE_MAP.md` exists and accounts for every file in
 `RND_BRANCH_TOUCHED_FILES.txt` — no file silently skipped.
 
-### P6-02 — Test the API v1 hypothesis in a disposable worktree · STATUS: TODO · STRIKES: 0
+### P6-02 — Test the API v1 hypothesis in a disposable worktree · STATUS: DONE · STRIKES: 0
 Tests whether the branch's API v1 cluster (commits from `feat(web): add api v1 shadow seam` onward
 — see `git log origin/main..codex/sunday-frontier-maxforce-2026-07-05 --oneline` for the exact
 range, roughly the last 85 commits) makes the existing `api-v1-*.test.ts` files on main pass.
