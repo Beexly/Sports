@@ -127,8 +127,12 @@ describe("BS-040 — secret-scan pre-commit hook", () => {
 
   it("the composite guardrails script runs secret-scan in --all mode", () => {
     const pkg = JSON.parse(read("package.json"));
-    expect(pkg.scripts["guardrails"]).toContain("secret-scan.mjs --all");
     expect(pkg.scripts["guard:secrets"]).toContain("--all");
+    // The `guardrails` script delegates to run-all.mjs — the actual chain is
+    // defined there, so verify secret-scan is registered with --all.
+    const runAll = read("scripts/guardrails/run-all.mjs");
+    expect(runAll).toContain("secret-scan.mjs");
+    expect(runAll).toContain("--all");
   });
 });
 

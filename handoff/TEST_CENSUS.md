@@ -15,11 +15,11 @@ Vitest: v2.1.9
 | Workspaces with test scripts | 20 (incl. root delegation) |
 | Total test files | 1,120 |
 | Test files passed | 1,085 |
-| Test files failed | 23 |
+| Test files failed | 20 |
 | Test files skipped | 12 |
 | Total tests run | 14,403 |
 | Tests passed | 14,250 |
-| Tests failed | 53 |
+| Tests failed | 50 |
 | Tests skipped | 100 |
 | Test suite exit code | 1 |
 
@@ -46,11 +46,11 @@ Root has no test files of its own; `npm test` delegates to per-workspace `npm ru
 | Metric | Value |
 |---|---|
 | Test files passed | 784 |
-| Test files failed | 22 |
+| Test files failed | 19 |
 | Test files skipped | 11 |
 | Total | 817 |
 | Tests passed | 10,920 |
-| Tests failed | 52 |
+| Tests failed | 49 |
 | Tests skipped | 94 |
 | Total | 11,066 |
 | Exit | 1 |
@@ -140,11 +140,11 @@ Note: P1-01 recorded 21 failing tests (the assertion-level count), not 21 failin
 | 9 | `__tests__/api-v1-promotion-readiness.test.ts` | 2 | `AssertionError: expected 'blocked' to be 'owner_approval_required'` / `expected 'blocked' to be 'ready_for_disposable_rehearsal_review'` | (a) pre-existing |
 | 10 | `__tests__/api-v1-shadow-route-harness.test.ts` | 1 | `AssertionError: expected true to be false` | (a) pre-existing |
 | 11 | `__tests__/api-v1-shadow-seam.test.ts` | 1 | `AssertionError: expected true to be false` | (a) pre-existing |
-| 12 | `__tests__/brand-safety-v2.test.ts` | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'secret-scan.mjs --all'` | (a) pre-existing |
+| 12 | ~~`__tests__/brand-safety-v2.test.ts`~~ | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'secret-scan.mjs --all'` | (a) pre-existing — FIXED in P7-05 (test now checks run-all.mjs content, matching the P7-04 actor-minting-boundary pattern) |
 | 13 | ~~`__tests__/cockpit-nav-coverage.test.ts`~~ | 1 | `AssertionError: NAV in app/cockpit/layout.tsx is missing href=/cockpit/settlement-hold: expected false to be true` | (a) pre-existing — FIXED in P7-04 (added NAV entry to layout.tsx) |
 | 14 | `__tests__/compliance-store-pg.test.ts` | 3 | `PrismaClientInitializationError: Invalid prisma.complianceEvidence.create() invocation: Can't reach database server at 'localhost:5433'` | (c) environmental |
 | 15 | `__tests__/contests-paper-board.test.ts` | 1 | `AssertionError: expected false to be true` | (a) pre-existing |
-| 16 | `__tests__/eval-contracts-script.test.ts` | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'node scripts/eval-contracts.mjs'` | (a) pre-existing |
+| 16 | ~~`__tests__/eval-contracts-script.test.ts`~~ | 1 | `AssertionError: expected 'node scripts/guardrails/run-all.mjs' to contain 'node scripts/eval-contracts.mjs'` | (a) pre-existing — FIXED in P7-05 (same guardrails-chain assertion pattern as P7-04) |
 | 17 | `__tests__/gse-waitlist.test.ts` | 10 | `AssertionError: expected 503 to be 200` (DB stub returns 503; 10 of 49 tests fail) | (c) environmental |
 | 18 | `__tests__/jarvis-memory-stages.test.ts` | 2 | `Jarvis memory store is unavailable. Can't reach database server at 'localhost:5433'` | (c) environmental |
 | 19 | `__tests__/proof-of-record-surface.test.ts` | 2 | `AssertionError: expected '' to match /^[0-9a-f]{64}$/` (empty Merkle root from stub DB) + `RangeError: Invalid time value` | (c) environmental |
@@ -156,7 +156,7 @@ Note: P1-01 recorded 21 failing tests (the assertion-level count), not 21 failin
 
 | # | File | Tests failed | Error | Category |
 |---|---|---|---|---|
-| 23 | `src/__tests__/structural.test.ts` | 1 | `AssertionError: guardrails chain is missing trust-gate: expected 'node scripts/guardrails/run-all.mjs' to contain 'trust-gate'` | (a) pre-existing |
+| 23 | ~~`structural.test.ts`~~ | 1 | `AssertionError: guardrails chain is missing trust-gate: expected 'node scripts/guardrails/run-all.mjs' to contain 'trust-gate'` | (a) pre-existing — FIXED in P7-05 (same guardrails-chain assertion pattern as P7-04) |
 
 ---
 
@@ -164,7 +164,7 @@ Note: P1-01 recorded 21 failing tests (the assertion-level count), not 21 failin
 
 | Category | Files | Tests | Detail |
 |---|---|---|---|
-| (a) Pre-existing — P1-01 baseline or unrelated | 15 | 18 | 10 × api-v1-* (12 tests), actor-minting-boundary (1 — FIXED), eval-contracts-script (1), structural.test.ts (1), brand-safety-v2 (1), contests-paper-board (1), compliance-store-pg (3 — see note below), cockpit-nav-coverage (1 — FIXED), scripts-path-coverage (1 — FIXED) |
+| (a) Pre-existing — P1-01 baseline or unrelated | 12 | 15 | 10 × api-v1-* (12 tests), actor-minting-boundary (1 — FIXED), eval-contracts-script (1 — FIXED in P7-05), structural.test.ts (1 — FIXED in P7-05), brand-safety-v2 (1 — FIXED in P7-05), contests-paper-board (1), compliance-store-pg (3 — see note below), cockpit-nav-coverage (1 — FIXED), scripts-path-coverage (1 — FIXED) |
 | (b) Caused by this sprint (P5-10 CSRF gate on `/api/push/*`) | 2 | 13 | push-subscribe-api (11 tests) + rate-limit-batch2 push/subscribe (2 tests) |
 | (c) Environmental — live DB / network / secret at `localhost:5433` | 5 | 20 | compliance-store-pg (3), gse-waitlist (10), jarvis-memory-stages (2), proof-of-record-surface (2), rate-limit-batch2 watchlist (3 timeouts) |
 
@@ -199,7 +199,7 @@ These pass when a local Postgres is running on port 5433.
 
 ### F.3 — Guardrails chain assertions (3 files, 4 tests)
 
-`actor-minting-boundary`, `brand-safety-v2`, `eval-contracts-script`, and `structural.test.ts` all assert that `scripts/guardrails/run-all.mjs` contains a specific sub-script name. These are structural assertions about the guardrails chain wiring and are unchanged from P1-01.
+`actor-minting-boundary` (FIXED in P7-04), `brand-safety-v2` (FIXED in P7-05), `eval-contracts-script` (FIXED in P7-05), and `structural.test.ts` (FIXED in P7-05) all asserted that `_package.json_`'s `guardrails` script string contained a specific guard name. The `guardrails` script delegates to `run-all.mjs`, so the actual chain is in that file. All four fixed to read `scripts/guardrails/run-all.mjs` content and check the guard name is present there, matching the P7-04-established pattern.
 
 ### F.4 — API v1 shadow seam (10 files, 12 tests)
 
