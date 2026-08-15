@@ -112,6 +112,10 @@ export interface ProcessSportResult {
   provider?: string;
   /** Raw events accepted before freshness filter. */
   eventsCount?: number;
+  /** The-Odds-API's own x-requests-remaining from this cycle's primary call,
+   *  when one was made. Lets a multi-sport caller stop early instead of
+   *  blindly burning the rest of a near-exhausted monthly credit budget. */
+  oddsApiRemainingRequests?: number;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -926,6 +930,7 @@ export async function processSport(
       provider: oddsProviderTag,
       eventsCount: events.length,
       note: emptyNote,
+      oddsApiRemainingRequests: remainingRequests ?? undefined,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

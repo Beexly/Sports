@@ -52,6 +52,13 @@ export interface RefreshOddsSportResult {
   readonly note?: string;
 }
 
+/** Below this many remaining The-Odds-API credits, stop starting new sports
+ *  in this cycle rather than risk exhausting the monthly budget mid-loop.
+ *  One more MARKETS.length-market/1-region call costs MARKETS.length credits
+ *  (3 today); this leaves real margin above that for settle-picks' own
+ *  getScores calls sharing the same key. */
+const ODDS_API_LOW_QUOTA_THRESHOLD = 10;
+
 export interface RefreshOddsResult {
   /** True only when every processed sport succeeded. */
   readonly ok: boolean;
@@ -231,6 +238,27 @@ export async function refreshOdds(
               note: res.note,
             },
       );
+
+      // Stop starting NEW sports this cycle once the vendor reports we're
+      // nearly out of credits — a proactive guard, not just the existing
+      // reactive 402/429 circuit breaker. Skip, don't silently drop, the
+      // rest so the response is honest about what didn't run and why.
+      if (
+        res.oddsApiRemainingRequests != null &&
+        res.oddsApiRemainingRequests < ODDS_API_LOW_QUOTA_THRESHOLD
+      ) {
+        const doneKeys = new Set(results.map((r) => r.sport));
+        for (const skipped of sportsToProcess) {
+          if (doneKeys.has(skipped.key)) continue;
+          results.push({
+            sport: skipped.key,
+            ok: false,
+            error: `skipped: only ${res.oddsApiRemainingRequests} Odds API credits left`,
+            note: "odds_api_low_quota_skip",
+          });
+        }
+        break;
+      }
     } catch (err) {
       results.push({
         sport: sport.key,
