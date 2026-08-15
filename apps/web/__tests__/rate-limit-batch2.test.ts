@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * P1d-1 batch 2 (of 3) — extend consumeRateLimit coverage to five more routes
@@ -27,6 +27,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const ANON_LIMIT = 8;
 const USER_LIMIT = 10;
+// P5-10 CSRF gate on /api/push/*: tests present a same-origin Origin header so
+// the guard passes (the env var must match). Routes without the gate ignore it.
+const APP_ORIGIN = "https://sports.example.com";
 
 const mocks = vi.hoisted(() => ({
   auth: vi.fn<() => Promise<{ user?: { id?: string } } | null>>(),
@@ -45,6 +48,9 @@ function reqAs(ip: string, body: unknown, authUser?: string): Request {
   const headers: Record<string, string> = {
     "x-forwarded-for": ip,
     "content-type": "application/json",
+    // P5-10 CSRF gate on /api/push/*: include a same-origin Origin header so
+    // the guard passes. Routes without the guard simply ignore it.
+    origin: APP_ORIGIN,
   };
   if (authUser) headers["x-user-id"] = authUser;
   return new Request("http://localhost/api/x", {
@@ -94,6 +100,12 @@ function authedPost(handler: (r: never) => Promise<Response>, user: string | nul
 beforeEach(() => {
   resetRateLimits();
   mocks.auth.mockReset();
+  // P5-10 CSRF gate on /api/push/*: stub the app origin so same-origin requests pass.
+  vi.stubEnv("NEXT_PUBLIC_APP_URL", APP_ORIGIN);
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
 });
 
 describe("gse v1 truth/fire rate limit (IP-keyed)", () => {
