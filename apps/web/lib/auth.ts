@@ -15,7 +15,7 @@ export type UserRole = "USER" | "ADMIN";
  * Fail-closed on non-ASCII emails (GHSA-7rqj-j65f-68wh homoglyph class):
  * a Unicode lookalike can never match the allow-list, in either direction.
  */
-function isAdminEmail(email: string | null | undefined): boolean {
+export function isAdminEmail(email: string | null | undefined): boolean {
   if (!isAsciiEmail(email)) return false;
   const list = (process.env["ADMIN_EMAILS"] ?? "")
     .split(",")
