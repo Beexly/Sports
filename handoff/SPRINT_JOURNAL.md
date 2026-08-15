@@ -805,3 +805,25 @@ Commit: 4a4aa0999dffc591999f1cf7bb6058a5cc643569
         "docs: P7-07 production build blocked on DEV_FAKE_ADMIN (owner-gated env)"
         (5 files changed, 260 insertions, 1 deletion). secret-scan: OK.
 
+### 2026-08-17T16:15:00Z · P7-08 · DONE · STRIKES: 0
+
+Action:   Read .env.example, .env.production.example, package.json (root + apps/web + packages/db),
+          apps/web/lib/auth.ts, apps/web/lib/env/flags.ts, packages/db/src/index.ts,
+          apps/web/__tests__/env-example-coverage.test.ts, platform-config.ts,
+          docker/docker-compose.yml, scripts/dev/disposable-postgres.sh, README.md,
+          QUICKSTART.md, docs/launch-runbook.md, and next.config.mjs.
+Result:   Produced handoff/LOCAL_BRINGUP.md — minimal bring-up sequence with:
+          - Path A (stub DB, no Postgres): DATABASE_URL=stub + DEMO_PICKS_ENABLED=true
+          - Path B (real Postgres via Docker Compose on port 5433)
+          - Hard-required env var table (DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL,
+            STRIPE_*, REDIS_URL, NEXT_PUBLIC_APP_URL) with fail-closed behavior
+          - Feature-gated env var table (30+ vars with defaults and what they gate)
+          - Bootstrap progression flags ladder (8 steps, all default false)
+          - Exact command order: npm install → db:generate → db:push → db:seed → dev
+          - Verification commands: typecheck, lint, test, build
+          - Verified: NO undocumented required vars (env-example-coverage.test.ts enforces this)
+COMMIT:   c5f3d79f — "docs(sprint): P7-08 local bring-up runbook — env vars, stub mode, command order [sprint]"
+          (2 files changed, 298 insertions, 1 deletion). secret-scan: OK.
+
+Next:     P7-09
+
