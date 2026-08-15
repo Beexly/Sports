@@ -894,7 +894,7 @@ missing there is a real onboarding defect — list under "UNDOCUMENTED REQUIRED 
 **NEVER open, print, or copy `.env` itself. Names only.**
 **VERIFY:** every command in the runbook traces to a real script in package.json.
 
-### P7-09 — Dependency + supply-chain health · STATUS: TODO · STRIKES: 0
+### P7-09 — Dependency + supply-chain health · STATUS: DOING · STRIKES: 0
 ```
 npm audit --omit=dev --json > handoff/npm-audit-current.json 2>&1
 ```
