@@ -123,14 +123,16 @@ export class OddsApiClient {
   }
 
   /**
-   * Build the request URL with non-secret query params only.
-   * GSE-SEC-028: the API key is NOT placed in the query string — it is sent
-   * via the `X-API-Key` Authorization header in fetchWithinCircuit. Query-string
-   * keys leak into logs, referrers, and history. The Odds API accepts the key
-   * as a Bearer token (per official odds-api/odds-api repo: X-API-Key header).
+   * Build the request URL. api.the-odds-api.com authenticates via an
+   * `apiKey` query parameter — it does not accept a header. A prior change
+   * moved auth to an `X-API-Key` header on the (different) odds-api/odds-api
+   * project's say-so; against the real vendor that returns
+   * `401 {"error_code":"MISSING_KEY"}` on every request. Confirmed live
+   * 2026-08-15. Reverted to query-param auth.
    */
   private buildUrl(path: string, params: Record<string, string> = {}): URL {
     const url = new URL(`${ODDS_API_BASE_URL}${path}`);
+    url.searchParams.set("apiKey", this.apiKey);
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.set(key, value);
     }

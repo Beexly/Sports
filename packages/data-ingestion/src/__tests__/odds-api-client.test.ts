@@ -215,12 +215,12 @@ describe("circuit refusals carry an honest status, not a blanket 402", () => {
   });
 });
 
-describe("GSE-SEC-028: API key via header, not query string", () => {
+describe("api.the-odds-api.com auth: apiKey query param (vendor requires it, confirmed live 2026-08-15)", () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it("does not put apiKey in the URL query string on getOdds", async () => {
+  it("puts apiKey in the URL query string on getOdds", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify([]), {
         status: 200,
@@ -237,12 +237,12 @@ describe("GSE-SEC-028: API key via header, not query string", () => {
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const calledUrl = new URL(fetchSpy.mock.calls[0]![0] as string);
-    // The API key must NOT leak into the URL query string.
-    expect(calledUrl.searchParams.get("apiKey")).toBeNull();
-    expect(calledUrl.searchParams.has("apiKey")).toBe(false);
+    // The vendor rejects requests without ?apiKey= — a header-only request
+    // returns 401 {"error_code":"MISSING_KEY"}, confirmed against the live API.
+    expect(calledUrl.searchParams.get("apiKey")).toBe("test-secret-key");
   });
 
-  it("sends the API key via X-API-Key header, not the query string", async () => {
+  it("does not put the API key anywhere else (headers, logs) besides the required query param", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify([]), {
         status: 200,
@@ -257,15 +257,13 @@ describe("GSE-SEC-028: API key via header, not query string", () => {
     const client = new OddsApiClient("my-secret-key");
     await client.getOdds("baseball_mlb", ["h2h"]);
 
-    const init = fetchSpy.mock.calls[0]![1] as RequestInit;
-    expect(init?.headers).toMatchObject({ "X-API-Key": "my-secret-key" });
-    // Confirm the URL does not contain the key.
     const calledUrl = new URL(fetchSpy.mock.calls[0]![0] as string);
-    expect(calledUrl.search).not.toContain("my-secret-key");
-    expect(calledUrl.search).not.toContain("apiKey");
+    expect(calledUrl.searchParams.get("apiKey")).toBe("my-secret-key");
+    // Non-secret params still travel alongside it.
+    expect(calledUrl.searchParams.get("regions")).not.toBeNull();
   });
 
-  it("does not put apiKey in the URL query string on getScores", async () => {
+  it("puts apiKey in the URL query string on getScores", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify([]), {
         status: 200,
@@ -281,7 +279,7 @@ describe("GSE-SEC-028: API key via header, not query string", () => {
     await client.getScores("baseball_mlb");
 
     const calledUrl = new URL(fetchSpy.mock.calls[0]![0] as string);
-    expect(calledUrl.searchParams.get("apiKey")).toBeNull();
+    expect(calledUrl.searchParams.get("apiKey")).toBe("test-secret-key");
   });
 });
 

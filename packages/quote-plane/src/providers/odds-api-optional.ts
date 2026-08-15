@@ -123,10 +123,10 @@ export function createOddsApiOptionalProvider(opts: {
       if (opts.fixtures) return oddsApiEventsToLines(opts.fixtures);
       if (!opts.apiKey) return []; // key missing → empty, not fake
       const sport = req.sport || "americanfootball_nfl";
-      // GSE-SEC-028: the API key is sent via the X-API-Key header, NOT in the
-      // URL query string. Query-string keys leak into logs, referrers, and
-      // history. The Odds API accepts the key as a header.
-      const url = `https://api.the-odds-api.com/v4/sports/${sport}/odds?regions=us&markets=h2h&oddsFormat=american`;
+      // api.the-odds-api.com authenticates via an `apiKey` query parameter —
+      // it does not accept a header. Confirmed live 2026-08-15 (a header-only
+      // request returns 401 MISSING_KEY). Reverted to query-param auth.
+      const url = `https://api.the-odds-api.com/v4/sports/${sport}/odds?regions=us&markets=h2h&oddsFormat=american&apiKey=${encodeURIComponent(opts.apiKey)}`;
       try {
         const fetchImpl: OddsApiOptionalFetch =
           opts.fetchImpl ??
@@ -134,9 +134,7 @@ export function createOddsApiOptionalProvider(opts: {
             const r = await fetch(u, { headers: init?.headers });
             return { ok: r.ok, json: () => r.json() };
           });
-        const res = await fetchImpl(url, {
-          headers: { "X-API-Key": opts.apiKey },
-        });
+        const res = await fetchImpl(url);
         if (!res.ok) return [];
         const body = (await res.json()) as OddsApiEvent[];
         return Array.isArray(body) ? oddsApiEventsToLines(body) : [];
