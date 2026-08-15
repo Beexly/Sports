@@ -721,7 +721,7 @@ exception to the general "never operate in another worktree" rule. It does NOT a
 off-limits. The temp worktree must be created fresh, used only for the one test in P6-02, and
 removed before that task ends. Never push from it. Never merge from it into anything real.
 
-### P6-01 — Map file-level conflicts between the R&D branch and main · STATUS: TODO · STRIKES: 0
+### P6-01 — Map file-level conflicts between the R&D branch and main · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T11:35:00Z · completed: 2026-08-16T11:55:00Z (commit 68f9df68)
 Read-only. From `C:\Users\Garrett\Sports`:
 ```
 git fetch origin
@@ -1166,6 +1166,34 @@ needed, `npx playwright install chromium` (chromium only, not all browsers).
 ### P9.5-01 — Stand up the e2e harness · STATUS: DONE (Claude, 2026-08-15) · STRIKES: 0
 Passed: homepage returns 200 (684ms) with a valid title, even with no local DATABASE_URL —
 confirms the app fails open gracefully (Prisma auth error logged, 200 still served), not a bug.
+
+### P9.5-00 — Price out The Odds API's paid tiers against real usage (READ-ONLY, no purchase) · STATUS: TODO · STRIKES: 0
+**Context, already established — do not re-derive:** the account is on the free tier (500
+credits/month). At the live production cadence (`refresh-odds` every 15 min, `vercel.json`) with 3
+markets tracked (h2h/spreads/totals = 3 credits/call) and up to 3 sports in season at once, the
+free tier's entire monthly budget can be burned in under 14 hours. The owner has decided to KEEP
+all 3 markets and is willing to pay for a plan that supports them — do NOT propose cutting markets,
+that decision is already made. `cd4e77d6` already added a proactive guard so the app degrades
+safely (stops early, doesn't misdiagnose) rather than crashing when a limit is hit; this task is
+about the BUSINESS decision, not another safety patch.
+Fix: **read-only research, then math, then a recommendation — do not purchase or upgrade anything.**
+1. Fetch `https://theoddsapi.com/pricing` (or search for it) and record every real paid tier's
+   name, monthly credit allowance, and price, exactly as published today.
+2. Compute, for each tier, how many full-sweep cycles/day it actually supports at the CURRENT
+   architecture (3 markets, up to 3 sports in season now — but also compute the NFL-season worst
+   case once NFL is added to `getInSeasonSports()`, since that's weeks away, not hypothetical).
+3. Compute what refresh cadence (e.g., every 15/30/60 min) each tier sustains WITHOUT changing
+   markets, so the owner sees the real cadence-vs-price tradeoff instead of a vague "upgrade."
+4. Note whether `odds-api.io` (already evaluated as the #5 failover source, referenced in
+   `packages/data-ingestion/src/odds-failover.ts` but never actually wired — its HTTP mapping was
+   deferred pending confirmed endpoint/rate limits) has its OWN separate free tier that could
+   share the load instead of one vendor eating it all, and get ITS real current pricing too if so.
+5. Write `handoff/ODDS_API_TIER_DECISION.md`: a short table (tier / price / credits / sustainable
+   cadence at 3 markets) plus a single clear recommendation — cheapest tier that sustains the
+   current cadence without touching markets, given the owner's decision to keep all three.
+**VERIFY:** every number in the file is cited to where it came from (a URL or a real calculation
+shown, not asserted). No purchase, no signup, no payment action of any kind — this is pricing
+research only, the owner makes the actual purchase decision.
 Files: new `playwright.config.ts`, new `apps/web/e2e/smoke.spec.ts`, `package.json` (add a
 `test:e2e` script only).
 Read `.claude/worktrees/phase3/playwright.config.ts` and `.claude/worktrees/phase3/apps/web/e2e/*`
