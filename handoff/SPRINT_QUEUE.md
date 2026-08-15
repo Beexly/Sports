@@ -1015,7 +1015,7 @@ Do these as one small commit each, or grouped if genuinely trivial:
 - Anything whose fix alters the login/session flow. **Lesson from P5-10:** a wrong `trustHost`
   change locks every user out of the live site. Auth flow changes are the owner's call.
 
-### P8-01 — Roadmap triage into an execution list · STATUS: TODO · STRIKES: 0
+### P8-01 — Roadmap triage into an execution list · STATUS: DONE · STRIKES: 0
 Read `handoff/REMEDIATION_ROADMAP.md` IN FULL. Produce `handoff/REMEDIATION_EXECUTION.md`: a
 numbered list of every finding NOT yet fixed and NOT in the scope guard, ordered by
 (severity x how small/safe the fix is). For each: id, one-line description, the real file path you
