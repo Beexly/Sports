@@ -75,6 +75,20 @@ const selected = GUARDS.filter(([name]) => {
   return true;
 });
 
+// When --only is used, every named guard must exist — a typo should fail loud,
+// not silently pass with "0/0 passed".
+if (only !== null) {
+  const known = new Set(GUARDS.map(([name]) => name));
+  const unknown = only.filter((n) => !known.has(n));
+  if (unknown.length > 0) {
+    console.error(
+      `[guardrails] --only references unknown guard(s): ${unknown.join(", ")}\n` +
+        `Available guards: ${GUARDS.map(([n]) => n).join(", ")}`,
+    );
+    process.exit(2);
+  }
+}
+
 function runGuard([name, argv]) {
   return new Promise((resolve) => {
     const startedAt = Date.now();
