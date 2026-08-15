@@ -777,7 +777,7 @@ etc.) indicate unresolved known issues.
 anything concerning, or an explicit "nothing concerning found" if genuinely clean — do not pad
 this with vague caution if the code is actually fine.
 
-### P6-04 — Synthesis: mergeability report + recommended order · STATUS: TODO · STRIKES: 0
+### P6-04 — Synthesis: mergeability report + recommended order · STATUS: DONE · STRIKES: 0
 Read `handoff/RND_BRANCH_MERGE_MAP.md`, `handoff/RND_BRANCH_API_V1_TEST_RESULT.md`, and
 `handoff/RND_BRANCH_CRYPTO_RISK.md` (all from P6-01/02/03). Write
 `handoff/RND_BRANCH_MERGEABILITY_REPORT.md` with: (1) a plain-English summary of what's in the
@@ -788,7 +788,7 @@ first, which needs the most review), (4) explicit red flags from the crypto risk
 check.
 **VERIFY:** file exists and directly answers the API v1 hypothesis with a yes/no, not a hedge.
 
-### P6-05 — Phase 6 exit · STATUS: TODO · STRIKES: 0
+### P6-05 — Phase 6 exit · STATUS: DONE · STRIKES: 0
 Confirm `git worktree list` shows no `Sports_rnd_test_TEMP` entry (if P6-02 left one behind, remove
 it now). Confirm no commits were made to `main` or `claude/fable-5-ultracode-plan-ptru4e` referencing
 the R&D branch's content in this phase — Phase 6 is investigation-only. Write a one-paragraph note
@@ -829,7 +829,7 @@ check in the source to make a test pass.**
 **IF BLOCKED:** if it cannot pass without weakening the source fix, mark BLOCKED and write exactly
 which assertion is impossible and why. Do not force it.
 
-### P7-02 — Full test-suite census · STATUS: TODO · STRIKES: 0
+### P7-02 — Full test-suite census · STATUS: DONE · STRIKES: 0 · 2026-08-17T08:45:00Z
 ```
 CI=1 npm test > handoff/test-census-raw.txt 2>&1
 ```
