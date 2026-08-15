@@ -1,5 +1,34 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// P4-05 added a PFR-specific checkClearance gate for `pfr-advstats-via-nflverse`
+// (status: permission_required, automation_allowed: false in the real registry).
+// Mock checkClearance to return allowed=true so the happy-path and source-error
+// degradation tests actually exercise the fetcher path.
+const cmocks = vi.hoisted(() => ({ checkClearance: vi.fn() }));
+vi.mock("@/lib/scraping/clearance-engine", () => ({ checkClearance: cmocks.checkClearance }));
+
 import { buildRushingContact, loadRushingContact } from "./rushing-contact";
+
+/** Build a minimal allowed ClearanceResult for the given source_id. */
+function allowedClearance(source_id: string) {
+  return {
+    allowed: true,
+    requiresReview: false,
+    source_id,
+    mode: "open_dataset_ingest" as const,
+    tool_id: "fetch-native" as const,
+    intents: [] as readonly string[],
+    blocks: [] as readonly { code: string; message: string }[],
+    warnings: [] as readonly string[],
+    rightsSnapshot: { source_id, source_url: "https://github.com/nflverse/nflverse-data", status: "approved_open_license" },
+    checkedAt: new Date().toISOString(),
+  };
+}
+
+// Default: clearance always allowed
+cmocks.checkClearance.mockImplementation((req: { source_id?: string }) =>
+  allowedClearance(req.source_id ?? "nflverse"),
+);
 
 type Row = Record<string, string>;
 // Mirrors the real combined SEASON file (advstats_season_rush.csv): one row per

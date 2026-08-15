@@ -1,9 +1,38 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+
+// P4-05 added a PFR-specific checkClearance gate for `pfr-advstats-via-nflverse`
+// (status: permission_required, automation_allowed: false in the real registry).
+// In unit tests the happy path must proceed, so we mock checkClearance to return
+// allowed=true. Individual tests can override the mock to simulate denial.
+const cmocks = vi.hoisted(() => ({ checkClearance: vi.fn() }));
+vi.mock("@/lib/scraping/clearance-engine", () => ({ checkClearance: cmocks.checkClearance }));
+
 vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: async () => null }));
 import {
   loadNflversePressureCoverage,
   resetPressureCoverageCacheForTests,
 } from "@/lib/nflverse/pressure-coverage";
+
+/** Build a minimal allowed ClearanceResult for the given source_id. */
+function allowedClearance(source_id: string) {
+  return {
+    allowed: true,
+    requiresReview: false,
+    source_id,
+    mode: "open_dataset_ingest" as const,
+    tool_id: "fetch-native" as const,
+    intents: [] as readonly string[],
+    blocks: [] as readonly { code: string; message: string }[],
+    warnings: [] as readonly string[],
+    rightsSnapshot: { source_id, source_url: "https://github.com/nflverse/nflverse-data", status: "approved_open_license" },
+    checkedAt: new Date().toISOString(),
+  };
+}
+
+// Default: clearance always allowed
+cmocks.checkClearance.mockImplementation((req: { source_id?: string }) =>
+  allowedClearance(req.source_id ?? "nflverse"),
+);
 
 const PASS_HEADER =
   "game_id,pfr_game_id,season,week,game_type,team,opponent,pfr_player_name,pfr_player_id,times_sacked,times_blitzed,times_pressured_pct,passing_bad_throw_pct";
