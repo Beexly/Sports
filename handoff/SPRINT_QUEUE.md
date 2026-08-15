@@ -760,7 +760,7 @@ no longer shows `Sports_rnd_test_TEMP` afterward.
 **ABORT IF:** `npm install` in the temp worktree fails or takes over 15 minutes — mark BLOCKED,
 remove the temp worktree anyway (cleanup is mandatory even on failure), and move on.
 
-### P6-03 — Risk-assess the crypto/ZK cluster (read-only, no integration) · STATUS: TODO · STRIKES: 0
+### P6-03 — Risk-assess the crypto/ZK cluster (read-only, no integration) · STATUS: DONE · STRIKES: 0 · 2026-08-15T11:18:00Z
 Read-only code review. From `C:\Users\Garrett\Sports`:
 ```
 git show codex/sunday-frontier-maxforce-2026-07-05:packages/crypto/package.json

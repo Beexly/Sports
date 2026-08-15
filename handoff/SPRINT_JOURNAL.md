@@ -369,4 +369,100 @@ Commit: 68f9df68
 "P6-01: map file-level conflicts between R&D branch and origin/main"
 (2 files changed, 1509 insertions). secret-scan: OK.
 
+---
+
+### 2026-08-16T11:15:00Z · P6-02 · DONE (strikes 0)
+
+Task: Test the API v1 hypothesis in a disposable worktree — whether the branch's
+API v1 cluster makes the existing api-v1 test files on main pass.
+
+Background: codex/sunday-frontier-maxforce-2026-07-05 is 171 commits ahead of
+origin/main containing a public /verify proof-of-record, crypto/ZK cluster,
+NGS integration, and API v1 shadow-seam.
+
+Action:
+1. Created disposable worktree at C:\Users\Garrett\Sports\UsersGarrettSports_rnd_test_TEMP
+   checking out the R&D branch (HEAD 9ffebc56).
+2. Ran `npm install` in the worktree — 730 packages, exit code 0.
+3. Ran `npx vitest run __tests__/api-v1-*.test.ts __tests__/actor-minting-boundary.test.ts`
+   from apps/web/ (required: the `@` alias lives in apps/web/vitest.config.ts;
+   running from repo root fails to resolve `@/lib/api/v1`).
+4. Recorded full output in handoff/RND_BRANCH_API_V1_TEST_RESULT.md.
+5. Removed temp worktree via `git worktree remove --force` + `git worktree prune`,
+   then deleted the physical dir. Verified `git worktree list` shows no
+   Sports_rnd_test_TEMP entry.
+
+Result: YES — the branch makes main's api-v1 tests pass.
+- 16 api-v1-*.test.ts files exist on the branch, all pass: 110 tests, 0 failures.
+- actor-minting-boundary.test.ts does not exist on this branch (noted in result).
+- One run-from-directory discrepancy documented: must cd to apps/web/ first.
+
+Files committed:
+- handoff/RND_BRANCH_API_V1_TEST_RESULT.md (force-add, gitignored path)
+- handoff/SPRINT_QUEUE.md (STATUS → DONE)
+
+VERIFY: handoff/RND_BRANCH_API_V1_TEST_RESULT.md exists with full vitest output
+and a yes/no answer; git worktree list shows no Sports_rnd_test_TEMP. PASS.
+
+Commit: 1ed19eda
+"P6-02: mark task DONE in sprint queue"
+Commit: 51b2b5e6
+"P6-02: API v1 hypothesis test result - all 16 api-v1 test files pass (110 tests)"
+
+---
+
+### 2026-08-15T11:18:00Z · P6-03 · DONE (strikes 0)
+
+Read-only risk assessment of the crypto/ZK cluster on R&D branch
+codex/sunday-frontier-maxforce-2026-07-05.
+
+Action:
+1. Confirmed cwd is C:\Users/Garrett/Sports before any git read.
+2. Located the cluster: packages/crypto/ (@sports/crypto, v1.0.0).
+   - src/index.ts (barrel), src/pedersen-ledger.ts (secp256k1 Pedersen),
+     src/__tests__/pedersen-ledger.test.ts (12 tests), package.json
+     (deps: @noble/curves ^2.2.0, @noble/hashes ^2.2.0).
+3. Read the module in full from the R&D ref (git show). It is the
+   production-hardened secp256k1 sibling of the zero-dep finite-field
+   demonstrator in packages/prediction-engine/src/pedersen-ledger.ts.
+4. Reviewed cross-references: proof-of-record.ts (SHA-256 Merkle slate layer
+   that Pedersen is strictly ADDITIVE to), calibration-commitment.ts
+   (ZK-dump salvage that correctly labels proof=null and rejects "ZK"
+   overclaim), ZK-ML-DUMP-EXTRACTION-LEDGER.md (defect map of the Grok draft).
+5. Verified wiring scope via git grep: @sports/crypto is referenced ONLY in
+   handoff docs + package-lock. No runtime import from apps/* or workers/*.
+   The package is DARK/R&D — zero production exposure.
+6. Checked guardrail contract (CODEX-HANDOFF-NGS-INTELLIGENCE.md:113):
+   @sports/crypto is the only package allowed the @noble dep; isolation is
+   correct.
+
+Result: All 7 Grok-draft defects already FIXED and pinned by regression tests
+(fe89dd7f + 16fa3f6b): wrong @noble v2 import paths (.js suffix); CURVE.n/.p
+undefined v2 -> Point.Fn.ORDER; the load-bearing G.multiply(0n) crash
+(encodeFixedPoint(-1)=0 = full-stake loss) -> zero-safe mul() mapping [0]P
+to identity; recited "0.3-0.6ms" benchmark -> measured ~3.5ms; toHex(true)
+boolean -> pointToCommitment identity guard; the no-op forgery test -> real
+500-attempt loop (0 openings). Security posture honest: perfectly hiding
+(when caller supplies CSPRNG blinding — that adapter does NOT exist yet,
+risk-L and OUT of this module's surface); computationally binding under
+secp256k1 DLOG (~128-bit); not post-quantum (additive only); constant-time
+@noble scalar mul with residual advisory to run commit off adversary clock
+(risk-L). Three residual findings: RISK-L (blinding minting is caller's job,
+no adapter shipped), RISK-M (public-roi-policy.ts must not cite a Pedersen
+output without the module's null/canonicalization contract), RISK-INFO
+(package dark/unwired — recommend workspace test + tsc before integration).
+
+Files committed:
+- handoff/P6-03-risk-assess.md (force-add, gitignored path)
+- handoff/SPRINT_QUEUE.md (STATUS -> DONE)
+
+VERIFY: handoff/P6-03-risk-assess.md exists (147 lines) and contains the
+required categories (hiding, binding, quantum, side-channel, defect-fix
+table, 3 residual risks); P6-03 STATUS set to DONE with timestamp; secret
+scan gate passed on the assessment file. PASS.
+
+Next: P6-04 (next first-TODO task in SPRINT_QUEUE.md)
+
+Commit: 1b2c177f
+"docs(risk): P6-03 risk assessment of @sports/crypto secp256k1 Pedersen cluster [sprint]"
 
