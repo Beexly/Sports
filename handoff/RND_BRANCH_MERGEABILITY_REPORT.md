@@ -96,3 +96,9 @@ P6-03's verdict is: **architecturally sound, no defects, no changes required.** 
 - **Nothing was pushed.** `git worktree list` (checked during P6-02) showed no `Sports_rnd_test_TEMP` entry after cleanup. No commits were made to `main` or `claude/fable-5-ultracode-plan-ptru4e` referencing the R&D branch's content in this phase — Phase 6 is investigation-only.
 
 **Owner decision needed before any merge:** (1) approve cluster-by-cluster integration order, (2) approve the one-time DB migration(s) the NGS/schema changes require, (3) confirm production env vars, and (4) green-light the `@sports/crypto` CSPRNG-adapter pre-condition.
+
+---
+
+## 7. Phase 6 exit — investigation-only confirmation (P6-05)
+
+**Closed:** Phase 6 (`codex/sunday-frontier-maxforce-2026-07-05`) was investigation-only and is complete. As of this closing note: (1) `git worktree list` shows **no** `Sports_rnd_test_TEMP` entry — the disposable worktree created during P6-02 was removed with `--force` (mandated because it held `node_modules`) and is gone; (2) `git log` of the sprint branch `claude/fable-5-ultracode-plan-ptru4e` confirms **no commits were made to `main` or to the sprint branch that reference, merge, or cherry-pick any content from the R&D branch** — every P6 commit is a read-only doc/test artifact or the P6-02 disposable-worktree test result; (3) **nothing was pushed** to any remote. Phase 6 produced analysis and a recommended integration order for an owner decision; it changed zero source on either branch and merged nothing. The owner gates all subsequent integration.
