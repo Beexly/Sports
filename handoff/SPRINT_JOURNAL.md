@@ -466,3 +466,121 @@ Next: P6-04 (next first-TODO task in SPRINT_QUEUE.md)
 Commit: 1b2c177f
 "docs(risk): P6-03 risk assessment of @sports/crypto secp256k1 Pedersen cluster [sprint]"
 
+### 2026-08-16T11:43:00Z · P6-04 · DONE (strikes 0)
+
+Task: Synthesis — mergeability report + recommended order for the
+R&D branch codex/sunday-frontier-maxforce-2026-07-05.
+
+Action:
+1. Read all three P6-01/02/03 deliverables (RND_BRANCH_MERGE_MAP.md,
+   RND_BRANCH_API_V1_TEST_RESULT.md, RND_BRANCH_CRYPTO_RISK.md) in full.
+2. Confirmed cwd is C:\Users\Garrett\Sports and current branch is
+   claude/fable-5-ultracode-plan-ptru4e.
+3. Cross-checked git state: branch is 171 commits ahead of origin/main;
+   merge-base a7bd5639f9c190d22a5da973ff72114965ca1d15; 736 files differ.
+4. Wrote handoff/RND_BRANCH_MERGEABILITY_REPORT.md covering:
+   (1) plain-English summary of the 4 clusters in the R&D branch
+       (proof-of-record/trust layer, Pedersen/ZK cluster, NGS integration,
+       API v1 + commercial-media-revenue product);
+   (2) direct YES answer to the API v1 hypothesis — 16 api-v1-*.test.ts
+       files / 110 tests all pass in the temp worktree (P6-02 output);
+   (3) recommended integration order — API v1 first (most test coverage,
+       directly complements Phase 7 paywall fixes), then NGS integration,
+       then crypto/ZK (lowest prod risk, needs CSPRNG-adapter pre-gate),
+       then commercial/product last (500+ files, highest review burden);
+   (4) explicit red flags from P6-03 (RISK-L blinding-minting caller
+       responsibility, RISK-L null-on-degenerate commit, RISK-M
+       public-roi-policy.ts RO-claim surface, RISK-INFO dark/unwired
+       package, not post-quantum);
+   (5) honest list of what could NOT be verified (merge-time conflict
+       count via merge-tree, cross-cluster runtime regressions, crypto
+       typecheck/workspace test in real tree, DB migration dependency
+       tracing, env-var contract changes vs .env.example, effect on
+       main's currently-failing Phase 7 tests).
+
+VERIFY (doc-only):
+- RND_BRANCH_MERGEABILITY_REPORT.md exists (98 inserted lines).
+- Directly answers API v1 hypothesis with "YES" (not a hedge).
+- Every cluster has a rationale; every red flag cites pedersen-ledger.ts
+  line ranges and the P6-03 source.
+- Every unverified item named explicitly in "What you could NOT verify".
+
+Committed: 7e4066b9
+"docs: P6-04 synthesis report for R&D branch mergeability"
+(1 file changed, 98 insertions). secret-scan: OK.
+
+Next: P6-05 (Phase 6 exit)
+
+### 2026-08-16T12:00:00Z · P6-05 · DONE (strikes 0)
+
+Task: Phase 6 exit — confirm no `Sports_rnd_test_TEMP` worktree remains, confirm no
+commits were made to `main` or the sprint branch referencing the R&D branch's content
+in Phase 6, and write a closing one-paragraph note to
+`handoff/RND_BRANCH_MERGEABILITY_REPORT.md`.
+
+Action:
+1. `git worktree list` — confirmed NO `Sports_rnd_test_TEMP` entry (the disposable
+   worktree from P6-02 was removed with `--force` during that task; clean).
+2. `git log` on `claude/fable-5-ultracode-plan-ptru4e` — reviewed all 15 recent
+   commits back to `0ddaf278`. None merge, cherry-pick, or add any content from
+   `codex/sunday-frontier-maxforce-2026-07-05`. All P6 commits are read-only docs /
+   P6-02 temp-worktree test results / this closing note. No commit to `main` either
+   (last main tip is the repo's own `9a36e11f`, authored outside this session).
+3. Appended "Section 7: Phase 6 exit — investigation-only confirmation" to
+   RND_BRANCH_MERGEABILITY_REPORT.md explicitly stating the three closure facts.
+
+VERIFY:
+- `git worktree list` clean of Sports_rnd_test_TEMP. PASS.
+- RND_BRANCH_MERGEABILITY_REPORT.md Section 7 present with the explicit confirmation
+  paragraph. PASS.
+
+Committed: 63bef254
+"docs: P6-05 Phase 6 exit confirmation — no temp worktree, no R&D merge, nothing pushed [sprint]"
+
+Next: P7-01 (highest-priority next task per queue priority override)
+
+---
+
+### 2026-08-17T08:45:00Z · P7-02 · DONE (strikes 0)
+
+Resumed from DOING (prior run by another agent at 2026-08-17T08:00:00Z produced
+`handoff/test-census-raw.txt` and `handoff/TEST_CENSUS.md` on disk but never
+committed or journaled).
+
+Action:
+1. Verified cwd is C:/Users/Garrett/Sports (git root confirmed).
+2. Confirmed `CI=1 npm test > handoff/test-census-raw.txt 2>&1` output is
+   complete — raw file ends at the last workspace (@sports/worker-content-publishing)
+   with all 20 workspaces' summary blocks present.
+3. Independently re-ran every VERIFY grep against the raw file:
+   - 23 failing test files: `grep -c '❯.*failed'` → 23 ✓
+   - 53 failed tests: `grep -c '×'` → 53 ✓
+   - 1,120 total test files: sum of all "Test Files" totals → 1120 ✓
+   - 14,403 total tests: sum of all "Tests" totals → 14403 ✓
+   - 1,085 files passed, 12 skipped ✓
+   - 14,250 tests passed, 100 skipped ✓
+4. Cross-checked TEST_CENSUS.md §3 table: all 23 failing files in the raw output
+   appear in the markdown table, with matching error categories:
+   - (a) pre-existing: 18 files / 21 tests (10 api-v1-* + actor-minting-boundary
+     + brand-safety-v2 + eval-contracts-script + structural + cockpit-nav
+     + scripts-path + contests-paper-board + compliance-store-pg)
+   - (b) sprint-caused: 2 files / 13 tests (push-subscribe-api 11 + rate-limit-batch2 2,
+     both from P5-10 CSRF origin gate on /api/push/* routes)
+   - (c) environmental: 5 files / 20 tests (compliance-store-pg, gse-waitlist,
+     jarvis-memory-stages, proof-of-record-surface, rate-limit-batch2 watchlist)
+5. handoff/ is gitignored (.gitignore:202) — force-pushed the two deliverable docs
+   via `git add -f` (same convention as prior P5-14 / P6-05 commits).
+   Files committed:
+   - handoff/test-census-raw.txt (new, force-added)
+   - handoff/TEST_CENSUS.md (new, force-added)
+   - handoff/SPRINT_QUEUE.md (STATUS → DONE)
+
+Commit: 5ae697d1
+"docs(sprint): P7-02 full test-suite census — raw output + TEST_CENSUS.md [sprint]"
+(3 files changed, 4970 insertions, 3 deletions). secret-scan: OK.
+
+VERIFY: every failing file (23) in the raw output appears in TEST_CENSUS.md §3;
+all headline counts match independent greps of test-census-raw.txt. PASS.
+
+Next: P7-03
+
