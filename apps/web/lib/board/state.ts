@@ -80,7 +80,10 @@ export function redactBoardConfidence(payload: BoardStatePayload): BoardStatePay
   };
 }
 
-function extractRankingFromFb(fb: unknown): {
+function extractRankingFromFb(
+  fb: unknown,
+  isPremiumViewer: boolean,
+): {
   rankingP: number | null;
   rankingSource: string | null;
 } {
@@ -93,6 +96,11 @@ function extractRankingFromFb(fb: unknown): {
       : null;
   const rs = rec["rankingSource"];
   const rankingSource = typeof rs === "string" && rs.trim() ? rs.trim() : null;
+  // rankingP / rankingSource are premium-only model internals (the ranking
+  // win-probability used for generation sort + selective publish). They must
+  // never reach a non-PRO viewer. Null them out server-side alongside the
+  // market/selection redaction above. (GSE-SEC-026)
+  if (!isPremiumViewer) return { rankingP: null, rankingSource: null };
   return { rankingP, rankingSource };
 }
 
@@ -260,7 +268,7 @@ export async function loadBoardState(
               : "SCORING_NOW",
         edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
         confidence: decision.confidence ?? decision.pick?.confidence ?? null,
-        ...extractRankingFromFb(decision.pick?.factorBreakdown),
+        ...extractRankingFromFb(decision.pick?.factorBreakdown, isPremiumViewer),
         gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
         updatedAt: decision.evaluatedAt.toISOString(),
       }));
@@ -339,7 +347,7 @@ export async function loadBoardState(
     status: "PUBLISHED_TODAY",
     edgeIndex: toEdgeIndex(pick.game.currentEdgeIndex ?? pick.edgeScore),
     confidence: pick.confidence,
-    ...extractRankingFromFb(pick.factorBreakdown),
+    ...extractRankingFromFb(pick.factorBreakdown, isPremiumViewer),
     gateReason: null,
     updatedAt: pick.generatedAt.toISOString(),
   }));

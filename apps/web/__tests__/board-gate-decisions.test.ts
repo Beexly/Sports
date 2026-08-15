@@ -224,4 +224,75 @@ describe("board loaders with persisted gate decisions", () => {
     // PRO viewer must see at least one real selection (not all redacted).
     expect(proResult.data.publishedToday.some((r) => r.market !== "ALL_MARKETS")).toBe(true);
   });
+
+  it("redacts rankingP/rankingSource for FREE viewers (GSE-SEC-026)", async () => {
+    // rankingP and rankingSource are premium-only model internals.
+    // A FREE/anonymous viewer must never receive them.
+    const premiumPick = {
+      id: "pick_premium",
+      gameId: "game_2",
+      selection: "LAD +2.0",
+      confidence: 82,
+      edgeScore: 75,
+      factorBreakdown: {
+        consensusScore: 15,
+        marketDepthScore: 12,
+        edgeScore: 20,
+        rankingP: 0.723,
+        rankingSource: "independent_trueProb",
+        factors: [],
+      },
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "PREMIUM",
+      game: game({ awayTeamName: "LAD", homeTeamName: "SF", currentEdgeIndex: 55 }),
+    };
+
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([premiumPick]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    const freeViewer = getEntitlements("FREE");
+    const proResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    const freeResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), freeViewer);
+
+    // PRO viewer sees rankingP + rankingSource from the factor breakdown.
+    expect(proResult.data.publishedToday[0]?.rankingP).toBeCloseTo(0.723, 3);
+    expect(proResult.data.publishedToday[0]?.rankingSource).toBe("independent_trueProb");
+
+    // FREE viewer gets BOTH nulled out server-side.
+    expect(freeResult.data.publishedToday[0]?.rankingP).toBeNull();
+    expect(freeResult.data.publishedToday[0]?.rankingSource).toBeNull();
+  });
+
+  it("nulls rankingP for anonymous viewers (no entitlements)", async () => {
+    const premiumPick = {
+      id: "pick_1",
+      gameId: "game_1",
+      selection: "CHI -3.5",
+      confidence: 88,
+      edgeScore: 80,
+      factorBreakdown: {
+        consensusScore: 15,
+        marketDepthScore: 12,
+        edgeScore: 20,
+        rankingP: 0.912,
+        rankingSource: "blend_indep_conf",
+        factors: [],
+      },
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "PREMIUM",
+      game: game(),
+    };
+
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([premiumPick]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    // Anonymous = no entitlements passed -> isPremiumViewer defaults to false.
+    const anonymousResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
+    expect(anonymousResult.data.publishedToday[0]?.rankingP).toBeNull();
+    expect(anonymousResult.data.publishedToday[0]?.rankingSource).toBeNull();
+  });
 });
