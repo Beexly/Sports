@@ -95,10 +95,8 @@ vi.mock("@/lib/observability/sentry", () => ({
   observabilityPosture: vi.fn(() => "not wired"),
 }));
 
-// ─── Now import the module under test + its mocked deps ────────────────────────
+// ─── Now import the module under test ──────────────────────────────────────────
 import { persistFreeScores } from "./free-score-persist";
-import { checkClearance } from "@/lib/scraping/clearance-engine";
-import { buildTrustedFinals } from "./free-settlement";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 

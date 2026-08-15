@@ -859,7 +859,7 @@ first. Same never-delete-a-test rule.
 Same rules, next three. If NO failures remain in (a) or (b), write "suite green except category (c)
 environmental" into `TEST_CENSUS.md` and mark DONE immediately.
 
-### P7-06 — Typecheck + lint across every workspace · STATUS: TODO · STRIKES: 0
+### P7-06 — Typecheck + lint across every workspace · STATUS: DONE · STRIKES: 0
 ```
 npm run typecheck > handoff/typecheck-raw.txt 2>&1
 npm run lint > handoff/lint-raw.txt 2>&1
