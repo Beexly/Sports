@@ -18,6 +18,16 @@ const mocks = vi.hoisted(() => ({
     readonly kind = "durable_write_store_unavailable" as const;
     readonly httpStatus = 503 as const;
   },
+  // Hoisted so the test and the mocked @/lib/stripe module share the SAME
+  // class instance — the route uses `instanceof StripeConfigError`.
+  StripeConfigError: class extends Error {
+    readonly name = "StripeConfigError" as const;
+    constructor(public readonly capability: string) {
+      super(
+        `Stripe is not configured for "${capability}" (STRIPE_SECRET_KEY is missing or blank)`,
+      );
+    }
+  },
   constructEvent: vi.fn<(body: string, sig: string, secret: string) => Stripe.Event>(),
   subscriptionsRetrieve: vi.fn<(id: string) => Promise<unknown>>(),
   webhookEventFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -27,6 +37,9 @@ const mocks = vi.hoisted(() => ({
   subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   checkoutAttemptUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   requireDurableWriteStore: vi.fn<(capability: string) => void>(),
+  // getStripe is the explicit client-acquisition entry point used by the webhook
+  // route to fail-closed on a missing STRIPE_SECRET_KEY before signature verification.
+  getStripe: vi.fn<() => Stripe>(),
 }));
 
 vi.mock("@/lib/stripe", () => ({
@@ -34,6 +47,9 @@ vi.mock("@/lib/stripe", () => ({
     webhooks: { constructEvent: mocks.constructEvent },
     subscriptions: { retrieve: mocks.subscriptionsRetrieve },
   },
+  getStripe: mocks.getStripe,
+  StripeConfigError: mocks.StripeConfigError,
+  __esModule: true,
 }));
 
 vi.mock("@sports/db", () => ({
@@ -121,10 +137,19 @@ describe("POST /api/webhooks/stripe", () => {
     mocks.checkoutAttemptUpdateMany.mockReset();
     mocks.requireDurableWriteStore.mockReset();
     mocks.requireDurableWriteStore.mockReturnValue(undefined);
+    mocks.getStripe.mockReset();
 
     process.env["STRIPE_WEBHOOK_SECRET"] = "whsec_test";
     process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] = PRO_MONTHLY;
     process.env["STRIPE_ELITE_ANNUAL_PRICE_ID"] = ELITE_ANNUAL;
+
+    // Default: getStripe returns a client whose webhooks/subscriptions are wired
+    // to the same mock fns the existing tests assert against.
+    const stripeClient = {
+      webhooks: { constructEvent: mocks.constructEvent },
+      subscriptions: { retrieve: mocks.subscriptionsRetrieve },
+    };
+    mocks.getStripe.mockReturnValue(stripeClient as unknown as Stripe);
 
     // Default: event not yet processed, no prior subscription row, writes succeed
     mocks.webhookEventFindUnique.mockResolvedValue(null);
@@ -491,6 +516,33 @@ describe("POST /api/webhooks/stripe", () => {
   });
 
   describe("signature verification", () => {
+    it("returns 503 (not 400) when STRIPE_SECRET_KEY is missing, naming the correct env var", async () => {
+      // Unset STRIPE_SECRET_KEY and make getStripe throw StripeConfigError.
+      // The route must catch this OUTSIDE the signature try/catch and return 503
+      // with a log naming STRIPE_SECRET_KEY — not misreport it as a 400
+      // "Invalid signature" error pointing at STRIPE_WEBHOOK_SECRET.
+      const savedKey = process.env["STRIPE_SECRET_KEY"];
+      delete process.env["STRIPE_SECRET_KEY"];
+      const errSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+      // Use the hoisted class so the route's `instanceof StripeConfigError` matches.
+      mocks.getStripe.mockImplementation(() => {
+        throw new mocks.StripeConfigError("stripe");
+      });
+      try {
+        mocks.constructEvent.mockReturnValue(stripeEvent("unhandled.event", {}));
+        const res = await POST(webhookRequest());
+        expect(res.status).toBe(503);
+        // constructEvent must NEVER be reached — the client wasn't available.
+        expect(mocks.constructEvent).not.toHaveBeenCalled();
+        // The error log must name STRIPE_SECRET_KEY, not STRIPE_WEBHOOK_SECRET.
+        const logged = errSpy.mock.calls.map((c) => String(c[0])).join(" ");
+        expect(logged).toContain("STRIPE_SECRET_KEY");
+      } finally {
+        errSpy.mockRestore();
+        if (savedKey !== undefined) process.env["STRIPE_SECRET_KEY"] = savedKey;
+      }
+    });
+
     it("returns 400 when the stripe-signature header is missing", async () => {
       const res = await POST(webhookRequest("{}", null));
       expect(res.status).toBe(400);

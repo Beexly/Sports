@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { getStripe, StripeConfigError, stripe } from "@/lib/stripe";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { tierFromPriceRef } from "@/lib/billing/price-ids";
 
@@ -15,10 +15,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
   }
 
+  // Acquire the Stripe client OUTSIDE the signature-try block: a missing
+  // STRIPE_SECRET_KEY makes the `stripe` Proxy throw StripeConfigError on
+  // property access (e.g. `stripe.webhooks`), which would otherwise land in the
+  // catch below and be misreported as a signature failure (400 "Invalid
+  // signature"). constructEvent needs only the webhook secret, not the API
+  // key, so fail CLOSED here with a 503 naming the correct env var.
+  let stripeClient: Stripe;
+  try {
+    stripeClient = getStripe();
+  } catch (err) {
+    if (err instanceof StripeConfigError) {
+      console.error(`Stripe webhook config error: ${err.message}`);
+      return NextResponse.json(
+        { error: "Stripe is not configured (STRIPE_SECRET_KEY is missing or blank)" },
+        { status: 503 }
+      );
+    }
+    throw err;
+  }
+
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = stripeClient.webhooks.constructEvent(
       body,
       signature,
       process.env["STRIPE_WEBHOOK_SECRET"]!
