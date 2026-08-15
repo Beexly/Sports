@@ -842,7 +842,7 @@ baseline in SPRINT_JOURNAL.md, quote that baseline; (b) caused by this sprint's 
 **VERIFY:** every failing file in the raw output appears in the markdown. Counts must be real greps
 of the raw file, not estimates.
 
-### P7-03 — Fix test failures, batch 1 (category b) · STATUS: TODO · STRIKES: 0
+### P7-03 — Fix test failures, batch 1 (category b) · STATUS: DONE · STRIKES: 0
 Read `handoff/TEST_CENSUS.md`. Take the FIRST THREE category-(b) failures. Fix one at a time,
 smallest change first. Prefer fixing the TEST when source behavior is correct and intended; fix the
 SOURCE only when the test documents real required behavior the source now violates.

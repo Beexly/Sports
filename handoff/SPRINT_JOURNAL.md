@@ -584,3 +584,35 @@ all headline counts match independent greps of test-census-raw.txt. PASS.
 
 Next: P7-03
 
+### 2026-08-17T14:00:00Z · P7-03 · DONE (strikes 0)
+
+Task: Fix the first category-(b) test failures from P5-10's CSRF origin gate.
+
+Action:
+1. Read handoff/TEST_CENSUS.md — category (b) failures are P5-10 CSRF gate
+   regressions: `push-subscribe-api.test.ts` (11 failures) and
+   `rate-limit-batch2.test.ts` push/subscribe sub-tests (2 failures). CSRF
+   gate returns 403 before auth/rate-limiting because tests omit Origin header.
+2. `push-subscribe-api.test.ts`:
+   - Added `APP_ORIGIN = "https://sports.example.com"` constant.
+   - Stubbed `NEXT_PUBLIC_APP_URL` in `beforeEach` + `afterEach` unstub.
+   - Added `origin: APP_ORIGIN` header to `postRequest` helper and the
+     direct `Request` in the malformed-JSON test case.
+3. `rate-limit-batch2.test.ts`:
+   - Added same `APP_ORIGIN` constant.
+   - Added `origin: APP_ORIGIN` to the shared `reqAs` helper headers.
+   - Stubbed `NEXT_PUBLIC_APP_URL` in `beforeEach` + `afterEach` unstub.
+4. VERIFY: `npx vitest run __tests__/push-subscribe-api.test.ts
+   __tests__/rate-limit-batch2.test.ts` → 27 passed (11 + 16), 0 failed.
+5. Committed both test files (P5-10 CSRF gate was source-correct; the TEST
+   needed the same-origin Origin header that a real browser would send).
+
+Files committed:
+- apps/web/__tests__/push-subscribe-api.test.ts (modified)
+- apps/web/__tests__/rate-limit-batch2.test.ts (modified)
+
+Commit: 551aab6f333cd8f366f8494469a466108969e207
+"fix(tests): P5-10 CSRF gate — add same-origin Origin header to push/subscribe tests"
+(2 files changed, 36 insertions, 4 deletions). secret-scan: OK.
+
+
