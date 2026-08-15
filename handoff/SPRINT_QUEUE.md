@@ -855,7 +855,7 @@ obsolete, mark BLOCKED and explain — removing coverage is an owner decision.
 Same rules as P7-03, next three category-(b). If (b) is exhausted, move to category (a), easiest
 first. Same never-delete-a-test rule.
 
-### P7-05 — Fix test failures, batch 3 · STATUS: TODO · STRIKES: 0
+### P7-05 — Fix test failures, batch 3 · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17T15:30:00Z (commit 4eff18f8)
 Same rules, next three. If NO failures remain in (a) or (b), write "suite green except category (c)
 environmental" into `TEST_CENSUS.md` and mark DONE immediately.
 
