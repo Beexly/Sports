@@ -174,4 +174,54 @@ describe("board loaders with persisted gate decisions", () => {
 
     expect(result.data.modelVersion).toBe("v5.0.0");
   });
+
+  it("keeps identical pick counts for PRO and FREE viewers (no tier-based row drop)", async () => {
+    // Two picks: one FREE (tier="FREE"), one PREMIUM (tier="PREMIUM").
+    // Before the fix, the FREE viewer's query carried `tier: "FREE"` which dropped
+    // the premium row entirely, making openPicks vary by viewer tier.
+    const freePick = {
+      id: "pick_free",
+      gameId: "game_1",
+      selection: "BOS -1.5",
+      confidence: 68,
+      edgeScore: 60,
+      factorBreakdown: null,
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "FREE",
+      game: game(),
+    };
+    const premiumPick = {
+      id: "pick_premium",
+      gameId: "game_2",
+      selection: "LAD +2.0",
+      confidence: 82,
+      edgeScore: 75,
+      factorBreakdown: null,
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "PREMIUM",
+      game: game({ awayTeamName: "LAD", homeTeamName: "SF", currentEdgeIndex: 55 }),
+    };
+
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([freePick, premiumPick]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    const freeViewer = getEntitlements("FREE");
+    const proResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    const freeResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), freeViewer);
+
+    // Counts must be identical regardless of viewer tier.
+    expect(freeResult.data.openPicks).toBe(proResult.data.openPicks);
+    expect(freeResult.data.openPicks).toBe(2);
+    expect(freeResult.data.gatedToday).toBe(proResult.data.gatedToday);
+    expect(freeResult.data.sportsWatched).toBe(proResult.data.sportsWatched);
+
+    // Only the market field differs: PRO sees real selections, FREE sees "ALL_MARKETS".
+    // Every FREE-viewer row must be redacted to "ALL_MARKETS".
+    expect(freeResult.data.publishedToday.every((r) => r.market === "ALL_MARKETS")).toBe(true);
+    // PRO viewer must see at least one real selection (not all redacted).
+    expect(proResult.data.publishedToday.some((r) => r.market !== "ALL_MARKETS")).toBe(true);
+  });
 });

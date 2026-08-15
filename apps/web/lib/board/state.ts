@@ -224,9 +224,9 @@ export async function loadBoardState(
   // Server-side tier gate (CLAUDE.md rule #3 — no frontend-only paywalls).
   // The `market` field on each BoardStateRow carries pick.selection (e.g. "Chiefs -3.5"),
   // which embeds the paid selection + line. For viewers without canSeePremiumPicks,
-  // tier-filter at the query and redact any selection that still slips through.
+  // keep every row in the query so counts are identical for all viewers, but redact
+  // the `market`/selection field to "ALL_MARKETS" at the row level (see mapping below).
   const isPremiumViewer = entitlements?.canSeePremiumPicks ?? false;
-  const tierFilter = isPremiumViewer ? {} : { tier: "FREE" as const };
 
   const { start, end } = todayBounds();
   try {
@@ -298,7 +298,6 @@ export async function loadBoardState(
           isPublished: true,
           isBootstrap: false,
           ...excludeSeedInProd,
-          ...tierFilter,
           generatedAt: { gte: start, lt: end },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
