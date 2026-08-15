@@ -9,7 +9,7 @@
  *   5. complexity ladder   → local → openrouter → frontier
  * A "free" budget downgrades any paid tier to the best local candidate.
  */
-import { MODEL_CATALOG, findModel } from "./catalog";
+import { MODEL_CATALOG } from "./catalog";
 import type { ModelEntry, Recommendation, TaskProfile, Tier } from "./types";
 
 const LONG_CONTEXT_THRESHOLD = 200_000;
@@ -17,6 +17,24 @@ const LONG_CONTEXT_THRESHOLD = 200_000;
 function clampComplexity(value: number): number {
   if (Number.isNaN(value)) return 5;
   return Math.min(10, Math.max(1, Math.round(value)));
+}
+
+function requireCatalog(catalog: readonly ModelEntry[]): void {
+  if (catalog.length === 0) {
+    throw new Error(
+      "model-advisor: catalog is empty; pass at least one ModelEntry or omit the catalog argument to use MODEL_CATALOG",
+    );
+  }
+}
+
+function requireModel(catalog: readonly ModelEntry[], id: string): ModelEntry {
+  const entry = catalog.find((m) => m.id === id);
+  if (!entry) {
+    throw new Error(
+      `model-advisor: catalog id "${id}" is not in the provided catalog; add that entry or omit the catalog argument to use MODEL_CATALOG`,
+    );
+  }
+  return entry;
 }
 
 function locals(catalog: readonly ModelEntry[]): ModelEntry[] {
@@ -30,11 +48,10 @@ function pick(
   tier: Tier,
   rationale: string,
 ): Recommendation {
-  void catalog;
   return {
     tier,
-    primary: findModel(id),
-    fallbacks: fallbackIds.map(findModel),
+    primary: requireModel(catalog, id),
+    fallbacks: fallbackIds.map((fallbackId) => requireModel(catalog, fallbackId)),
     rationale,
   };
 }
@@ -44,15 +61,15 @@ function bestLocal(task: TaskProfile, catalog: readonly ModelEntry[]): Recommend
   const complexity = clampComplexity(task.complexity);
   let primary: ModelEntry;
   if (task.kind === "multimodal") {
-    primary = findModel("muse-glimmer-30b");
+    primary = requireModel(catalog, "muse-glimmer-30b");
   } else if (task.kind === "agentic") {
     // Nemotron 3.5 Lightning is purpose-built for the execution steps of an
     // agent loop at 3B active params — the cheapest capable local option here.
-    primary = findModel("nemotron-3-5-lightning");
+    primary = requireModel(catalog, "nemotron-3-5-lightning");
   } else if (complexity <= 2) {
-    primary = findModel("qwen25-coder-7b");
+    primary = requireModel(catalog, "qwen25-coder-7b");
   } else {
-    primary = findModel("qwen3-coder-30b-a3b");
+    primary = requireModel(catalog, "qwen3-coder-30b-a3b");
   }
   const fallbacks = candidates.filter((m) => m.id !== primary.id).slice(0, 2);
   return {
@@ -70,6 +87,7 @@ export function recommendModel(
   task: TaskProfile,
   catalog: readonly ModelEntry[] = MODEL_CATALOG,
 ): Recommendation {
+  requireCatalog(catalog);
   const complexity = clampComplexity(task.complexity);
   const privacy = task.privacy ?? "any";
   const budget = task.budget ?? "any";

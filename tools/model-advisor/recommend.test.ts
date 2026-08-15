@@ -34,13 +34,43 @@ describe("recommendModel", () => {
     expect(rec.tier).toBe("batch");
   });
 
-  it("routes very large contexts to a 1M-context model", () => {
+  it("routes very large contexts to a long-context primary", () => {
     const rec = recommendModel({
       kind: "long-context",
       complexity: 6,
       contextTokens: 500_000,
     });
+    expect(rec.primary.roles).toContain("long-context");
     expect(rec.primary.contextTokens).toBeGreaterThanOrEqual(1_000_000);
+  });
+
+  it("routes complexity 1 coding to the small local coder", () => {
+    const rec = recommendModel({ kind: "coding", complexity: 1, privacy: "local-only" });
+    expect(rec.tier).toBe("local");
+    expect(rec.primary.id).toBe("qwen25-coder-7b");
+  });
+
+  it("clamps NaN complexity and still returns a real catalog entry", () => {
+    const rec = recommendModel({ kind: "coding", complexity: Number.NaN, privacy: "local-only" });
+    expect(rec.primary.localRunnable).toBe(true);
+    expect(MODEL_CATALOG.some((entry) => entry.id === rec.primary.id)).toBe(true);
+  });
+
+  it("throws a fixable error when the catalog is empty", () => {
+    expect(() => recommendModel({ kind: "coding", complexity: 1 }, [])).toThrow(
+      /catalog is empty/,
+    );
+  });
+
+  it("resolves picks from the provided catalog, not the module global", () => {
+    const fixtureLabel = "FIXTURE-HAIKU";
+    const substituted = MODEL_CATALOG.map((entry) =>
+      entry.id === "claude-haiku-4-5" ? { ...entry, label: fixtureLabel } : entry,
+    );
+    const rec = recommendModel({ kind: "bulk", complexity: 5 }, substituted);
+    expect(rec.tier).toBe("batch");
+    expect(rec.primary.id).toBe("claude-haiku-4-5");
+    expect(rec.primary.label).toBe(fixtureLabel);
   });
 
   it("never returns a non-local model when privacy is local-only", () => {

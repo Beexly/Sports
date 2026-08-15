@@ -16,6 +16,8 @@ import {
   promptForSurface,
   type SurfacePrompt,
 } from "./surface-prompts";
+import { MODELS } from "../../apps/web/lib/claude-api/model-router";
+import snapshot from "../../apps/web/__tests__/fixtures/models-dev-snapshot.json";
 
 describe("surface prompt set integrity", () => {
   it("covers every model-router surface exactly once", () => {
@@ -91,8 +93,18 @@ describe("quality rubric", () => {
 
 describe("cost scoring (vendored models.dev snapshot)", () => {
   it("finds real prices for all three Claude tiers", () => {
+    const catalog = snapshot as Record<
+      string,
+      { readonly models?: Record<string, { readonly cost?: { readonly input?: number; readonly output?: number } }> }
+    >;
     expect(costForModelId({} as never, "nope")).toBeNull();
     expect(costForModelId({ anthropic: { models: {} } } as never, "x")).toBeNull();
+    for (const modelId of [MODELS.haiku, MODELS.sonnet, MODELS.opus]) {
+      const cost = costForModelId(catalog, modelId);
+      expect(cost, `missing vendored models.dev price for ${modelId}`).not.toBeNull();
+      expect(cost?.input).toBeGreaterThan(0);
+      expect(cost?.output).toBeGreaterThan(0);
+    }
   });
 
   it("blends at the documented 75% input share", () => {
@@ -148,8 +160,10 @@ describe("report", () => {
 
   it("lists quality failures in the report when a prompt is broken", () => {
     const report = scoreAllSurfaces();
+    const firstSurface = report.surfaces[0];
+    if (!firstSurface) throw new Error("test fixture: scoreAllSurfaces returned no surfaces");
     const broken = {
-      ...report.surfaces[0]!,
+      ...firstSurface,
       quality: {
         pass: false,
         checks: [
