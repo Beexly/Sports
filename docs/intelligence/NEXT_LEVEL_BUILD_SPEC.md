@@ -44,8 +44,9 @@ Green on all → commit. Red → fix before proceeding.
 ## Task 1 — `model-advisor` tool (the real "self-router" + reference)
 
 > **STATUS: IMPLEMENTED & VERIFIED** (this session, Fable 5). Lives at
-> `tools/model-advisor/` — strict tsc clean, 10/10 Vitest tests green, CLI
+> `tools/model-advisor/` — strict tsc clean, 15/15 Vitest tests green, CLI
 > smoke-tested. The spec below is kept as the record of the design.
+> Overnight run log: `handoff/OVERNIGHT_JOURNAL.md` (see entry for T2/T3).
 
 Delivers what the thread asked for: a models/pricing/rankings reference AND a
 deterministic "pick the best engine for this task" function. **Dev-facing tool,
@@ -211,8 +212,8 @@ Sources cleared/facts-only/attributed via the clearance engine. Proposal require
 ## Execution order (backlog)
 
 - [x] **T1** model-advisor tool — **done & verified** (`tools/model-advisor/`).
-- [ ] **T2** router legibility cockpit card (read-only). *(Hermes-eligible)*
-- [ ] **T3** eval:prompts quality harness. *(Hermes-eligible)*
+- [x] **T2** router legibility cockpit card (read-only). *(Hermes-eligible)* — committed `41801e6b9` (implementation at `apps/web/app/cockpit/api-costs/routing-legibility.tsx`; see Phase 1 summary in `handoff/PHASE1_SUMMARY.md`).
+- [x] **T3** eval:prompts quality harness. *(Hermes-eligible)* — committed `de4288d9b` (implementation at `eval/promptfoo/`; see Phase 1 summary in `handoff/PHASE1_SUMMARY.md`).
 - [ ] **T4** ADR: governed local lane → STOP for approval.
 - [ ] **T5** calibration/regression loop (after T3 + approval).
 - [ ] **T6** ambition/evolution proposals engine (last; proposal-gated).
