@@ -929,7 +929,7 @@ mocks `db.game.findMany` without inspecting the `where` clause and is currently 
 rewrite its anonymous-viewer case to use a PREMIUM-tier fixture and assert the locked hint renders
 (not the false-absence text, and not the real selection/line). typecheck+lint clean, then commit.
 
-### P7-11 — Fix `/board` + homepage: public pick counts silently vary by viewer tier · STATUS: TODO · STRIKES: 0
+### P7-11 — Fix `/board` + homepage: public pick counts silently vary by viewer tier · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17T17:00:00Z (commit 11ab6160)
 Files (only these): `apps/web/lib/board/state.ts`, `apps/web/__tests__/board-gate-decisions.test.ts`.
 Evidence: `state.ts`'s `tierFilter` (added in the same `d4da1265` commit) DROPS premium rows from
 the published-pick query entirely for non-premium viewers, instead of only redacting the
@@ -952,7 +952,7 @@ data, and that `market` is `"ALL_MARKETS"` specifically for the anonymous case. 
 untested — grep confirms `ALL_MARKETS` appears in exactly one test file and only inside a comment.
 typecheck+lint clean, then commit.
 
-### P7-12 — Harden `/observatory`: same paywall bug class, currently dormant but unguarded · STATUS: TODO · STRIKES: 0
+### P7-12 — Harden `/observatory`: same paywall bug class, currently dormant but unguarded · STATUS: DONE · STRIKES: 0
 Files (only these): `apps/web/lib/slate-twin/get-slate-twin.ts`, `apps/web/app/observatory/page.tsx`.
 Evidence: `get-slate-twin.ts`'s picks query (`picks: { orderBy: { generatedAt: "desc" }, take: 1 }`)
 has NO `isPublished`, NO `isBootstrap`, and NO tier predicate — strictly weaker than the board

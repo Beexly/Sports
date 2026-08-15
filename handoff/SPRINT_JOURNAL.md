@@ -893,3 +893,57 @@ produces an honest locked hint" note), matching the P7-10 task description.
 
 Next: STOP — one task per session per sprint rules. Next first-TODO is P7-11.
 
+### 2026-08-17T17:00:00Z · P7-11 · DONE
+Action:
+1. Read apps/web/lib/board/state.ts — found the bug: `tierFilter` (line 229)
+   was `{ tier: "FREE" }` for non-premium viewers, applied to the `publishedTodayRaw`
+   query at line 301, which DROPS premium picks entirely from the result set.
+   This made `openPicks` count FREE-tier picks only for anonymous viewers.
+   The `market` field was already redacted to "ALL_MARKETS" for non-premium viewers
+   (lines 252-254, 339) — the correct pattern, but the query-level tier filter
+   was redundant and wrong (drops rows, not just hides selections).
+2. Fix: removed `const tierFilter = ...` and removed `...tierFilter` from the
+   publishedTodayRaw `where` clause. The existing `market` redaction at the row
+   mapping level (line 339: `market: isPremiumViewer ? pick.selection : "ALL_MARKETS"`)
+   stays in place — all rows are now returned for all viewers; only the selection
+   text is scrubbed for non-premium viewers.
+3. Added a test case to apps/web/__tests__/board-gate-decisions.test.ts:
+   "keeps identical pick counts for PRO and FREE viewers (no tier-based row drop)".
+   Mocks `gateDecisionFindMany` with `[]` (exercises fallback path), `pickFindMany`
+   with one FREE + one PREMIUM pick, then asserts:
+   - openPicks identical for PRO and FREE (both = 2)
+   - gatedToday identical
+   - sportsWatched identical
+   - EVERY FREE-viewer row has market="ALL_MARKETS"
+   - PRO viewer sees at least one real selection (not all redacted)
+Commands: npx vitest run apps/web/__tests__/board-gate-decisions.test.ts
+Result: 5 passed, 0 failed (5ms). Typecheck (npm run typecheck): exit 0, clean.
+Lint (npm run lint): exit 0, clean.
+Commit: 11ab6160
+"fix(board): public pick counts identical for all viewers, redact market field only [sprint]"
+(2 files changed, 52 insertions(+), 3 deletions(-))
+Next: P7-12
+
+### 2026-08-15T17:19:14Z · P7-12 · DONE (strikes 0)
+
+Resumed from DOING. Prior run (commit 0002e68c) had already implemented and committed
+the core P7-12 fix — get-slate-twin.ts now hard-filters picks with isPublished/isBootstrap/tier
+predicates, redacts confidence/note for non-pro viewers, and observatory/page.tsx resolves
+entitlements via getViewerEntitlements() and passes them through.
+
+Action:
+1. Verified the test file exists at apps/web/__tests__/get-slate-twin-paywall.test.ts
+   (7 tests pinning query-filter shape + FREE/PRO/default/gated behavior).
+2. Ran tests: npx vitest run __tests__/get-slate-twin-paywall.test.ts — 7 passed, 0 failed.
+3. Ran typecheck: npx tsc --noEmit -p apps/web/tsconfig.json — exit 0, clean.
+4. Ran lint on all 3 touched files — one lint error found: unused `Entitlements` import
+   in the test file (line 2). Fixed by removing the unused type import.
+5. Re-ran lint — exit 0, clean.
+6. Re-ran tests — 7 passed, 0 failed.
+7. Committed the lint fix: bfb7ea85
+   "fix(tests): P7-12 remove unused Entitlements import in slate-twin paywall test [sprint]"
+
+Result: VERIFY passes (typecheck + lint clean, tests green). Task implementation was
+already committed (0002e68c); this run's commit (bfb7ea85) is the lint cleanup.
+Next: P7-13
+
