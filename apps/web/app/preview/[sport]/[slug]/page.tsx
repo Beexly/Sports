@@ -29,6 +29,13 @@
  *  - line movement (`canSeeLineMovement`) — the Pro-tier market read, and
  *  - the confidence score (`canSeeConfidence`) — the paid number on every pick.
  *
+ * Additionally, premium-tier picks (confidence >= 70, tier PREMIUM) are gated
+ * for FREE viewers via `canSeePremiumPicks`. Rather than filtering them out at
+ * the query level (which produced a false "pick not yet available" absence when
+ * the ONLY published pick was premium — P7-10), premium picks are now fetched
+ * and the existing render-time gate on `canSeeConfidence` produces an honest
+ * locked hint ("Confidence unlocks with Pro") instead of dropping the pick.
+ *
  * The viewer's entitlements are resolved server-side (anonymous → FREE,
  * fail-closed) and the paid values are selected/rendered ONLY past the gate —
  * including the meta description and FAQ JSON-LD, which are part of the same
@@ -67,7 +74,7 @@ export const dynamic = "force-dynamic";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
-async function loadGameForSlug(sportId: string, slug: string, canSeePremiumPicks: boolean) {
+async function loadGameForSlug(sportId: string, slug: string) {
   const vsIdx = slug.indexOf("-vs-");
   if (vsIdx === -1) return null;
   const awayPart = slug.slice(0, vsIdx);
@@ -87,11 +94,11 @@ async function loadGameForSlug(sportId: string, slug: string, canSeePremiumPicks
           where: {
             isPublished: true,
             isBootstrap: false, // never expose bootstrap-era picks publicly (mirrors /api/picks)
-            // Server-side tier gate (CLAUDE.md rule #3 — no frontend-only paywalls).
-            // The `selection`/`line` fields on a pick embed the paid market read;
-            // without canSeePremiumPicks, tier-filter at the query so premium picks
-            // never reach an anonymous/FREE viewer's document at all.
-            ...(canSeePremiumPicks ? {} : { tier: "FREE" as const }),
+            // NOTE: tier is NOT filtered here. Premium picks (confidence >= 70)
+            // are fetched so an un-entitled viewer gets an honest locked hint
+            // instead of a false "pick not yet available" absence (P7-10).
+            // Redaction happens at render time — the confidence NUMBER is gated
+            // by `canSeeConfidence`, never the pick itself.
             // Production seed-row exclusion (defense-in-depth) — drop dev seed
             // rows tagged modelVersion="v5.0.0-seed" only in production; no-op in
             // dev/test. Mirrors excludeSeedInProd in app/api/picks/route.ts.
@@ -208,7 +215,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     permanentRedirect(`/preview/${resolution.sport.slug}/${slug}`);
   }
   const viewer = await getViewerEntitlements();
-  const game = await loadGameForSlug(resolution.sport.id, slug, viewer.canSeePremiumPicks);
+  const game = await loadGameForSlug(resolution.sport.id, slug);
   if (!game) return { title: "Preview not found" };
 
   const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
@@ -252,7 +259,7 @@ export default async function PreviewPage({ params }: Props) {
   // Resolve the viewer's entitlements server-side (anonymous → FREE, fail-closed)
   // BEFORE anything paid is selected for render (CLAUDE.md rule #3).
   const viewer = await getViewerEntitlements();
-  const game = await loadGameForSlug(resolution.sport.id, slug, viewer.canSeePremiumPicks);
+  const game = await loadGameForSlug(resolution.sport.id, slug);
   if (!game) notFound();
 
   const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
