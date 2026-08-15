@@ -970,7 +970,7 @@ map, not a leaderboard — an un-entitled viewer should see the game exists, jus
 **VERIFY:** add a test asserting an un-entitled viewer's slate never contains real confidence or
 reasoning text for a PREMIUM-tier pick. typecheck+lint clean, then commit.
 
-### P7-13 — Hoist the Stripe webhook's client read out of the signature try block · STATUS: TODO · STRIKES: 0
+### P7-13 — Hoist the Stripe webhook's client read out of the signature try block · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T21:30:00Z
 File (only this): `apps/web/app/api/webhooks/stripe/route.ts`.
 Evidence: `stripe.webhooks.constructEvent(...)` reads the `stripe` Proxy (from this session's
 `b606d4a8` fix) inside the try/catch meant to catch SIGNATURE failures. If `STRIPE_SECRET_KEY` is

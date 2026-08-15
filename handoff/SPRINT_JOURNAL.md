@@ -947,3 +947,34 @@ Result: VERIFY passes (typecheck + lint clean, tests green). Task implementation
 already committed (0002e68c); this run's commit (bfb7ea85) is the lint cleanup.
 Next: P7-13
 
+
+===
+
+2026-08-17T21:40:00Z — P7-13 — DONE
+Task: Hoist the Stripe webhook's client read out of the signature try block.
+Files touched: apps/web/app/api/webhooks/stripe/route.ts, apps/web/__tests__/stripe-webhook-route.test.ts
+
+What I did:
+- Changed route.ts imports: added `getStripe, StripeConfigError` alongside existing `stripe` proxy.
+- Hoisted the stripe client acquisition OUTSIDE the signature try/catch block into its own try/catch:
+  - `getStripe()` is called before signature verification.
+  - If it throws `StripeConfigError`, the route returns 503 with a JSON body naming `STRIPE_SECRET_KEY`,
+    and logs the error via `console.error` (also naming `STRIPE_SECRET_KEY`).
+  - The signature try/catch now uses `stripeClient.webhooks.constructEvent(...)` on the pre-acquired
+    client, so a config error can never be misreported as a 400 "Invalid signature".
+- Updated the test file:
+  - Added `StripeConfigError` and `getStripe` to the `vi.hoisted` mocks and the `vi.mock("@/lib/stripe")`
+    factory (using the same hoisted class so `instanceof` matches).
+  - Added `mocks.getStripe.mockReturnValue(stripeClient)` in beforeEach, wiring the mock client's
+    `webhooks.constructEvent` and `subscriptions.retrieve` to the existing mock fns.
+  - Added a new test: "returns 503 (not 400) when STRIPE_SECRET_KEY is missing, naming the correct env var".
+    It deletes `STRIPE_SECRET_KEY`, sets `getStripe` to throw `mocks.StripeConfigError`, sends a
+    well-formed webhook, asserts: response is 503, `constructEvent` never called, and the error log
+    contains `STRIPE_SECRET_KEY`.
+
+Result: VERIFY passes — `npx vitest run __tests__/stripe-webhook-route.test.ts` (run from apps/web/)
+  52 passed, 0 failed. The new test passes. No regressions in existing tests.
+
+Commit: c46771d06dcf0d1e63065b5aa827a25713b65284
+  "P7-13: hoist Stripe webhook client read out of signature try block"
+  2 files changed, 74 insertions(+), 2 deletions(-)

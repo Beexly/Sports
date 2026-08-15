@@ -3,7 +3,7 @@
 Sprint executor exit for Phase 1 (GSE A++ hardening).
 Generated: 2026-08-14T23:25:00Z
 Branch: `claude/fable-5-ultracode-plan-ptru4e`
-Workdir: `C:/Users/Garrett/Sports`
+Workdir: repository checkout
 
 This file is the P1-04 deliverable. Evidence is `handoff/SPRINT_JOURNAL.md`
 (P1-01, P1-02, P1-03) and `handoff/PHASE1_NOTES.md`. No new product code
