@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getEntitlements, type Entitlements } from "@sports/types";
+import { getEntitlements } from "@sports/types";
 
 /**
  * Server-side paywall enforcement for the Galaxy Slate Twin on /observatory.
