@@ -101,8 +101,9 @@ export type RemoteModelFailureReason =
   | "http_error"
   | "malformed_response"
   | "network_error"
-  /** Endpoint URL refused before any request was made — see {@link validateEndpointUrl}. */
-  | "blocked_url";
+  | "blocked_url"
+  /** A redirect target pointed at a private/loopback/metadata host (SSRF bypass). */
+  | "blocked_redirect";
 
 export interface RemoteModelFailure {
   readonly name: string;
@@ -137,11 +138,83 @@ const BLOCKED_METADATA_HOSTS: ReadonlySet<string> = new Set([
   "metadata.goog",
 ]);
 
+/** A CIDR block used for private-range / loopback SSRF matching. */
+interface CidrBlock {
+  readonly kind: "ipv4";
+  /** Unsigned low/high integer bounds (inclusive). */
+  readonly lo: number;
+  readonly hi: number;
+  readonly label: string;
+}
+
+/**
+ * Parse an IPv4 dotted-quad into an unsigned 32-bit integer, or null if not a
+ * clean 4-octet form. Used only for literal-IP host matching (not DNS).
+ */
+function parseIpv4(host: string): number | null {
+  const parts = host.split(".");
+  if (parts.length !== 4) return null;
+  let n = 0;
+  for (const p of parts) {
+    if (!/^\d{1,3}$/.test(p)) return null;
+    const v = Number(p);
+    if (v < 0 || v > 255) return null;
+    n = (n << 8) >>> 0;
+    n = (n + v) >>> 0;
+  }
+  return n;
+}
+
+/**
+ * RFC1918 / loopback / link-local IP ranges that are unreachable on the public
+ * internet and are the standard SSRF escape hatch (an attacker who can pick
+ * the URL points this process at an internal service). We match CIDR ranges,
+ * not exact strings, so `10.0.0.1`, `10.1.2.3`, etc. are all refused.
+ *
+ * The intended deployment target IS an internal hostname
+ * (`http://gse-ml-service:8000`), which resolves at the OS level and is NOT
+ * an IP literal — so hostname-based endpoints are unaffected; only a URL that
+ * embeds a literal private IP is rejected.
+ */
+const BLOCKED_IPV4_RANGES: readonly CidrBlock[] = [
+  { kind: "ipv4", lo: parseIpv4("0.0.0.0")!, hi: parseIpv4("0.255.255.255")!, label: "0.0.0.0/8 (this-network)" },
+  { kind: "ipv4", lo: parseIpv4("10.0.0.0")!, hi: parseIpv4("10.255.255.255")!, label: "10.0.0.0/8 (RFC1918)" },
+  { kind: "ipv4", lo: parseIpv4("100.64.0.0")!, hi: parseIpv4("100.127.255.255")!, label: "100.64.0.0/10 (RFC6598 CGNAT)" },
+  { kind: "ipv4", lo: parseIpv4("127.0.0.0")!, hi: parseIpv4("127.255.255.255")!, label: "127.0.0.0/8 (loopback)" },
+  { kind: "ipv4", lo: parseIpv4("169.254.0.0")!, hi: parseIpv4("169.254.255.255")!, label: "169.254.0.0/16 (link-local)" },
+  { kind: "ipv4", lo: parseIpv4("172.16.0.0")!, hi: parseIpv4("172.31.255.255")!, label: "172.16.0.0/12 (RFC1918)" },
+  { kind: "ipv4", lo: parseIpv4("192.0.0.0")!, hi: parseIpv4("192.0.0.255")!, label: "192.0.0.0/24 (RFC5737)" },
+  { kind: "ipv4", lo: parseIpv4("192.0.2.0")!, hi: parseIpv4("192.0.2.255")!, label: "192.0.2.0/24 (RFC5737)" },
+  { kind: "ipv4", lo: parseIpv4("192.168.0.0")!, hi: parseIpv4("192.168.255.255")!, label: "192.168.0.0/16 (RFC1918)" },
+  { kind: "ipv4", lo: parseIpv4("198.18.0.0")!, hi: parseIpv4("198.19.255.255")!, label: "198.18.0.0/15 (RFC2544)" },
+  { kind: "ipv4", lo: parseIpv4("198.51.100.0")!, hi: parseIpv4("198.51.100.255")!, label: "198.51.100.0/24 (RFC5737)" },
+  { kind: "ipv4", lo: parseIpv4("203.0.113.0")!, hi: parseIpv4("203.0.113.255")!, label: "203.0.113.0/24 (RFC5737)" },
+];
+
+/** IPv6 loopback / ULA / link-local prefixes that must never be fetched. */
+const BLOCKED_IPV6_PREFIXES: readonly { readonly prefix: string; readonly label: string }[] = [
+  { prefix: "::1", label: "IPv6 loopback (::1)" },
+  { prefix: "::", label: "IPv6 unspecified (::)" },
+  { prefix: "fc00::", label: "IPv6 ULA (fc00::/7)" },
+  { prefix: "fd00::", label: "IPv6 ULA (fc00::/7)" },
+  { prefix: "fe80::", label: "IPv6 link-local (fe80::/10)" },
+];
+
+/** True if `host` is an IPv6 literal (unbracketed) or IPv4 in a blocked range. */
+function isPrivateIpLiteral(host: string): boolean {
+  if (host.includes(":")) {
+    return BLOCKED_IPV6_PREFIXES.some(({ prefix }) => host.startsWith(prefix));
+  }
+  const n = parseIpv4(host);
+  if (n === null) return false; // not an IPv4 literal (it's a hostname) — let DNS resolve
+  return BLOCKED_IPV4_RANGES.some((r) => n >= r.lo && n <= r.hi);
+}
+
 /**
  * Refuse an endpoint URL BEFORE any request is made.
  *
- * WHY THIS EXISTS. This module fetches a URL supplied by its caller, which is
- * a server-side request forgery (SSRF) primitive: whatever can influence
+ * WHY THIS EXISTS. This module fetches a caller-supplied URL, which is a
+ * server-side request forgery (SSRF) primitive: whatever can influence
  * `endpoint.url` can make this process issue requests from inside the
  * deployment's network. Endpoints are meant to be operator config, not user
  * input — but "meant to be" is not an enforcement mechanism, and this module
@@ -149,12 +222,16 @@ const BLOCKED_METADATA_HOSTS: ReadonlySet<string> = new Set([
  * belongs here rather than in each caller.
  *
  * SCOPE, stated honestly: this denies non-HTTP schemes (file:, data:, gopher:
- * and friends) and cloud metadata hosts. It deliberately does NOT deny private
- * or loopback addresses, because the intended deployment target IS an internal
- * host (`http://gse-ml-service:8000`) — a blanket private-range ban would
- * block the actual use case while pushing operators toward disabling the check
- * entirely. This narrows the blast radius; it is not a complete SSRF defence,
- * and a caller that genuinely accepts untrusted URLs needs its own allowlist.
+ * and friends), cloud metadata hosts, and literal private/loopback IP
+ * addresses (RFC1918, 127/8 loopback, 169.254/16 link-local, RFC6598 CGNAT,
+ * IPv6 ULA/link-local/unspecified/loopback). It does NOT block a hostname that
+ * merely RESOLVES to a private IP (that requires a DNS-resolution step this
+ * fetch layer does not perform, and would block the intended internal sidecar
+ * by name). A caller that accepts untrusted URLs needs its own allowlist plus
+ * redirect/DNS-poisoning protection in addition to this choke point.
+ *
+ * This is "defense in depth at the choke point," not a complete SSRF defence —
+ * but it closes the literal-IP bypass cheaply and safely.
  */
 export function validateEndpointUrl(url: string): { readonly ok: true } | {
   readonly ok: false;
@@ -172,12 +249,48 @@ export function validateEndpointUrl(url: string): { readonly ok: true } | {
       detail: `unsupported scheme ${JSON.stringify(parsed.protocol)} — only http/https are allowed`,
     };
   }
-  // URL.hostname keeps IPv6 literals bracketed; strip so the set lookup matches.
+  // URL.hostname keeps IPv6 literals bracketed; strip so prefix/IPv4 checks
+  // see a clean bare address.
   const host = parsed.hostname.toLowerCase().replace(/^\[/, "").replace(/\]$/, "");
   if (BLOCKED_METADATA_HOSTS.has(host)) {
     return { ok: false, detail: `cloud metadata host is never a model endpoint: ${host}` };
   }
+  if (isPrivateIpLiteral(host)) {
+    const range = BLOCKED_IPV4_RANGES.find((r) => {
+      const n = parseIpv4(host);
+      return n !== null && n >= r.lo && n <= r.hi;
+    });
+    const detailHost = range ? `${host} (${range.label})` : host;
+    return { ok: false, detail: `private/loopback IP literal is not a valid model endpoint: ${detailHost}` };
+  }
   return { ok: true };
+}
+
+/**
+ * True if `location` (an absolute URL or a path) points at a host that must
+ * never be followed as a redirect target — used to close the
+ * redirect-to-internal-IP SSRF bypass. Relative paths (e.g. "/predict") are
+ * safe by definition (same origin as the original request) and return false.
+ *
+ * This reuses the SAME host-set logic as {@link validateEndpointUrl}, so the
+ * private/loopback/metadata hosts blocked on the initial URL are also blocked
+ * as redirect destinations.
+ */
+export function locationIsInternalTargetLocation(location: string): boolean {
+  // A bare path with no scheme/host is same-origin — safe to follow.
+  if (!/^([a-z][a-z0-9+.-]*:)?\/\//i.test(location)) return false;
+  let parsed: URL;
+  try {
+    parsed = new URL(location);
+  } catch {
+    // Unparseable Location header — reject defensively rather than guess.
+    return true;
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return true;
+  const host = parsed.hostname.toLowerCase().replace(/^\[/, "").replace(/\]$/, "");
+  if (BLOCKED_METADATA_HOSTS.has(host)) return true;
+  if (isPrivateIpLiteral(host)) return true;
+  return false;
 }
 
 function describeError(err: unknown): string {
@@ -265,6 +378,10 @@ export async function fetchModelPrediction(
         headers: { "content-type": "application/json" },
         body: JSON.stringify(ctx),
         signal: controller.signal,
+        // Do NOT auto-follow redirects. A redirect can point us at a private /
+        // metadata host (redirect-to-internal-IP SSRF bypass), so each hop is
+        // validated by hand via `locationIsInternalTargetLocation` below.
+        redirect: "manual",
       }),
     )
     .then(
@@ -283,6 +400,36 @@ export async function fetchModelPrediction(
   }
 
   const { response } = outcome;
+
+  // Manual-redirect handling: a 3xx here is a redirect the server asked us to
+  // follow. Validate its Location header before doing anything with it — a
+  // redirect to an internal IP/metadata host is an SSRF bypass attempt.
+  if (response.status >= 300 && response.status < 400) {
+    const location = response.headers.get("location");
+    if (!location) {
+      return {
+        name: endpoint.name,
+        reason: "http_error",
+        detail: `HTTP ${response.status} redirect had no Location header`,
+      };
+    }
+    if (locationIsInternalTargetLocation(location)) {
+      return {
+        name: endpoint.name,
+        reason: "blocked_redirect",
+        detail: `redirect target is a private/loopback/metadata host: ${safeStringify(location).slice(0, 120)}`,
+      };
+    }
+    // A safe-looking absolute redirect target: refuse to silently auto-follow
+    // it (that would re-open the bypass in a different layer). Let the caller
+    // decide; report it as an HTTP error rather than risk a follow.
+    return {
+      name: endpoint.name,
+      reason: "http_error",
+      detail: `HTTP ${response.status} redirect to ${safeStringify(location).slice(0, 120)} — redirects are not auto-followed`,
+    };
+  }
+
   if (!response.ok) {
     return {
       name: endpoint.name,

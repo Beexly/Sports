@@ -6,6 +6,7 @@ import {
   getRemoteProbabilities,
   guardedFetchModelPrediction,
   isRemoteModelFailure,
+  locationIsInternalTargetLocation,
   validateEndpointUrl,
   type GameContext,
   type ModelEndpoint,
@@ -538,5 +539,92 @@ describe("endpoint URL validation (SSRF guard)", () => {
     const meta = validateEndpointUrl("http://169.254.169.254/");
     expect(meta.ok).toBe(false);
     expect(meta.ok === false && meta.detail).toMatch(/metadata/i);
+  });
+
+  // --- P5-11 additions: RFC1918 private / loopback IP literal blocking ---
+  it("refuses RFC1918 / loopback / metadata IP literals without issuing a request", async () => {
+    for (const url of [
+      "http://127.0.0.1:8000/predict",
+      "http://127.0.0.1/predict",
+      "http://10.0.0.1/predict",
+      "http://10.255.255.255/predict",
+      "http://172.16.0.2/predict",
+      "http://172.31.255.254/predict",
+      "http://192.168.1.1/predict",
+      "http://192.168.0.0/predict",
+      "http://0.0.0.0/predict",
+      "http://[::1]/predict",
+      "http://[fc00::1]/predict",
+      "http://[fe80::1]/predict",
+    ]) {
+      const spy = vi.fn();
+      const result = await fetchModelPrediction(endpoint({ url }), CTX, {
+        fetch: spy as unknown as typeof fetch,
+      });
+      expect(isRemoteModelFailure(result)).toBe(true);
+      expect((result as RemoteModelFailure).reason).toBe("blocked_url");
+      expect(spy).not.toHaveBeenCalled();
+    }
+  });
+
+  it("validateEndpointUrl rejects private IP literals directly", () => {
+    expect(validateEndpointUrl("http://127.0.0.1/x").ok).toBe(false);
+    expect(validateEndpointUrl("http://10.0.0.1/x").ok).toBe(false);
+    expect(validateEndpointUrl("http://192.168.0.0/x").ok).toBe(false);
+    expect(validateEndpointUrl("http://[::1]/x").ok).toBe(false);
+    const v6 = validateEndpointUrl("http://[::1]/x");
+    expect(v6.ok).toBe(false);
+    expect(v6.ok === false ? v6.detail : "").toMatch(/private\/loopback/i);
+  });
+
+  it("blocks a redirect to an internal IP (redirect-to-internal-IP SSRF bypass)", async () => {
+    for (const location of [
+      "http://127.0.0.1/admin",
+      "http://10.0.0.1/secrets",
+      "http://169.254.169.254/latest/meta-data/",
+      "http://192.168.1.1/predict",
+    ]) {
+      const spy = vi.fn(async () =>
+        new Response(null, { status: 302, headers: { location } }),
+      );
+      const result = await fetchModelPrediction(
+        endpoint({ url: "https://sidecar.example/predict" }),
+        CTX,
+        { fetch: spy as unknown as typeof fetch },
+      );
+      expect(isRemoteModelFailure(result)).toBe(true);
+      expect((result as RemoteModelFailure).reason).toBe("blocked_redirect");
+      expect((result as RemoteModelFailure).detail).toMatch(/private|metadata/i);
+    }
+  });
+
+  it("does not follow a redirect to a safe absolute URL (no silent follow)", async () => {
+    const spy = vi.fn(async () =>
+      new Response(null, { status: 302, headers: { location: "https://elsewhere.example/x" } }),
+    );
+    const result = await fetchModelPrediction(
+      endpoint({ url: "https://sidecar.example/predict" }),
+      CTX,
+      { fetch: spy as unknown as typeof fetch },
+    );
+    expect(isRemoteModelFailure(result)).toBe(true);
+    expect((result as RemoteModelFailure).reason).toBe("http_error");
+    expect((result as RemoteModelFailure).detail).toMatch(/redirect/i);
+  });
+
+  it("locationIsInternalTargetLocation classifies hosts correctly", () => {
+    // Same-origin relative paths are safe.
+    expect(locationIsInternalTargetLocation("/predict/v2")).toBe(false);
+    expect(locationIsInternalTargetLocation("relative/path")).toBe(false);
+    // Private / metadata absolute targets are internal.
+    expect(locationIsInternalTargetLocation("http://127.0.0.1/x")).toBe(true);
+    expect(locationIsInternalTargetLocation("http://10.0.0.1/x")).toBe(true);
+    expect(locationIsInternalTargetLocation("http://169.254.169.254/x")).toBe(true);
+    expect(locationIsInternalTargetLocation("http://192.168.1.1/x")).toBe(true);
+    expect(locationIsInternalTargetLocation("http://[::1]/x")).toBe(true);
+    // Public hosts are not internal.
+    expect(locationIsInternalTargetLocation("https://sidecar.example/x")).toBe(false);
+    // Non-http(s) schemes in a Location are treated as internal (reject).
+    expect(locationIsInternalTargetLocation("file:///etc/passwd")).toBe(true);
   });
 });
