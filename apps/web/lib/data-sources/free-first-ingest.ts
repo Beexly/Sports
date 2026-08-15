@@ -7,6 +7,8 @@
  * cleared source covers the need.
  */
 
+import { checkClearance } from "@/lib/scraping/clearance-engine";
+import type { ExtractionMode } from "@/lib/scraping/extraction-modes";
 import {
   planIngestion,
   bestFreeClearedSource,
@@ -17,7 +19,7 @@ import {
 import { fetchEspnScoreboard, type NormalizedGame, type FetchOptions as EspnOpts } from "./free-adapters/espn-scores";
 import { fetchWeather, weatherAtKickoff, type WeatherResult, type HourlyWeather, type FetchOptions as MeteoOpts } from "./free-adapters/open-meteo";
 
-/** Source ids we have a working free fetcher for (drives free-first selection). */
+/** Source ids we have a working free adapter for (drives free-first selection). */
 export const SOURCES_WITH_FREE_ADAPTER: ReadonlySet<string> = new Set([
   "espn-public-api",
   "open-meteo",
@@ -88,6 +90,30 @@ export async function fetchScoresFreeFirst(
     sourceId === "nhl-web-api" ||
     sourceId === "balldontlie-nba"
   ) {
+    // GSE-SEC-051: ESPN scores carry storage_allowed=false in the rights registry.
+    // Before fetching, confirm the storage intent is cleared for this source. If
+    // not cleared, refuse the fetch — facts-only mode still permits transient display
+    // but not DB persistence. Callers that still need the data can use the returned
+    // clearance block to route to a paid/cleared source instead.
+    const storageMode: ExtractionMode = "public_logged_off_fact_extract";
+    const clearance = checkClearance({
+      source_id: "espn-public-api",
+      mode: storageMode,
+      tool_id: "fetch-native",
+      intents: ["derived_analytics"],
+    });
+    if (!clearance.allowed) {
+      return {
+        need: "scores",
+        sport,
+        usedSourceId: null,
+        usedFree: false,
+        mustSpend: plan.mustSpend,
+        plan,
+        data: null,
+        attribution: null,
+      };
+    }
     const games = await fetchEspnScoreboard(sport, opts);
     return {
       need: "scores",
