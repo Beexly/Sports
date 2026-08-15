@@ -201,10 +201,10 @@ export class OddsApiClient {
         // noStoreFetch: odds/scores MUST bypass Next's Data Cache — a cached
         // quota header + frozen bookmaker timestamps took the whole pipeline
         // down on 2026-07-10 (see no-store-fetch.ts).
-        // GSE-SEC-028: API key sent via X-API-Key header, NOT in the query string.
+        // Auth is via the `apiKey` query param set in buildUrl (vendor-verified:
+        // api.the-odds-api.com returns 401 MISSING_KEY for header-only requests).
         response = await noStoreFetch(url.toString(), {
           signal: AbortSignal.timeout(ODDS_API_TIMEOUT_MS),
-          headers: { "X-API-Key": this.apiKey },
         });
       } catch (err) {
         const name = err instanceof Error ? err.name : "";
