@@ -1024,7 +1024,7 @@ The roadmap's paths are UNVERIFIED for many IDs — confirm each with a real gre
 described code no longer exists, mark it STALE/ALREADY-FIXED and say so.
 **VERIFY:** every entry cites a file path you confirmed with a command.
 
-### P8-02 — Fix the next finding · STATUS: DOING · STRIKES: 0 · started: 2026-08-18T00:00:00Z
+### P8-02 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Take the FIRST unfixed SAFE-DIRECT item in `handoff/REMEDIATION_EXECUTION.md`. Fix exactly that one
 finding, nothing else. Run the relevant test file(s). Commit. Mark it done in that file.
 **VERIFY:** typecheck+lint green, tests run and shown, commit hash in the journal.

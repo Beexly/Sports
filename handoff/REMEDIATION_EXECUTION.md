@@ -82,10 +82,10 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 4 | GSE-SEC-014 | auth cookie flags not re-asserted in middleware | INFO — hypothesis; confirm Set-Cookie in prod-like env | NEEDS-OWNER (manual, no code) | S(manual) |
 | 5 | GSE-SEC-015 | B2B API rate limit is process-local | `apps/web/lib/ai-control-plane/budget.ts:30` verified — process-local Map counter | SAFE DIRECT | S–M |
 | 6 | GSE-SEC-018 | GSE_ALLOW_QUERY_TIER=1 elevates in prod | `apps/web/lib/gse-stats/session-tier.ts:43` verified — flag honored when env=1 | SAFE DIRECT | S |
-| 7 | GSE-SEC-019 | trustHost:true with no AUTH_URL | `apps/web/lib/auth.ts:29` verified — trustHost:true, no NEXTAUTH_URL override | SAFE DIRECT | S |
+| 7 | GSE-SEC-019 | trustHost:true with no AUTH_URL | `apps/web/lib/auth.ts:29` verified — trustHost:true, no NEXTAUTH_URL override | **NEEDS-OWNER — DO NOT TOUCH.** `trustHost: true` is REQUIRED for NextAuth on Vercel behind a proxy. Removing it (or gating it on AUTH_URL without confirming what's set in production) locks every user out of the live site. This exact mistake was already caught and blocked once this session (see P5-10's queue history, 2026-08-15). Nothing in this repo can confirm what AUTH_URL is set to in Vercel production — that check requires the owner with the dashboard open. | S |
 | 8 | GSE-SEC-020 | safeCallbackUrl allows /\ weird relatives | `apps/web/lib/auth/callback-url-guard.ts:24` verified — startsWith("/") only, no backslash check | SAFE DIRECT | S |
 | 9 | GSE-SEC-024 | advertised phase price vs Stripe unit_amount | `apps/web/lib/billing/price-ids.ts:11` verified — price_id vs unit_amount disclosure risk | SAFE DIRECT | S |
-| 10 | GSE-SEC-026 | rankingP on public board | `apps/web/app/board/page.tsx:287` verified — no tier gate on rankingP field | SAFE DIRECT | S |
+| 10 | GSE-SEC-026 | rankingP on public board | `apps/web/lib/board/state.ts` verified — extractRankingFromFb now accepts isPremiumViewer and nulls rankingP/rankingSource for non-PREMIUM viewers (mirroring GSE-SEC-025 market redaction) | FIXED — see fc31f451 | S |
 | 11 | GSE-SEC-029 | .env.example hygiene | STALE — file does not exist (`apps/web/.env.example` not found); no secret leaked | STALE | S |
 | 12 | GSE-SEC-031 | /api/performance loads every settled pick | `apps/web/app/api/performance/route.ts:34` verified — loads all settled picks | SAFE DIRECT | S |
 | 13 | GSE-SEC-036 | env-controlled fetchers have no SSRF guard | `apps/web/lib/news/rss.ts:27` verified — NEWS_RSS_FEEDS fetch with no URL allow-list | SAFE DIRECT | S |
@@ -119,7 +119,7 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 
 | # | ID | One-line description | File verified to exist | Classification | Effort |
 |---|---|---|---|---|---|
-| 34 | GSE-SEC-011 | DEV_FAKE_ADMIN escape hatch | `apps/web/lib/auth.ts:108` verified — double-gated (NODE_ENV !== production) | SAFE DIRECT (remove post-launch) | S |
+| 34 | GSE-SEC-011 | DEV_FAKE_ADMIN escape hatch | `apps/web/lib/auth.ts:108` verified — double-gated (NODE_ENV !== production); confirmed 2026-08-15 that production's actual value is NOT "true", so this is not a live exposure today | **NEEDS-OWNER (timing) — do NOT remove yet.** Already correctly gated in code and confirmed harmless in production. It is a deliberate launch-night demo convenience (see QUICKSTART.md / launch-night runbook) the owner is still using. Removing it now would break that, not fix a live bug. Wait for the owner to say launch is done. | S |
 | 35 | GSE-SEC-012 | /embed frames from any origin (frame-ancestors *) | `apps/web/next.config.mjs:80` verified — /embed header set CSP frame-ancestors * | INFO — intentional (frames partners); do not fix unless product intent changes | — |
 | 36 | GSE-SEC-013 | middleware matcher excludes /api/** by design | `apps/web/middleware.ts:103` verified — matcher regex `/((?!...|api/).*)` excludes /api/ | INFO — intentional (API routes self-gate); do not fix | — |
 | 37 | GSE-SEC-074 | cron error handlers echo err.message in JSON | `apps/web/app/api/cron/calibration-metrics/route.ts:173` verified — `err instanceof Error ? err.message : String(err)` in error JSON | SAFE DIRECT (log internally, return generic) | S |
@@ -163,7 +163,9 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 The first OPEN SAFE DIRECT finding, ordered by severity × effort:
 
 1. **GSE-SEC-026** — `rankingP` on public board
-   - Severity: LOW · Effort: S · File: `apps/web/app/board/page.tsx:287`
+   - Severity: LOW · Effort: S · File: `apps/web/lib/board/state.ts`
+   - **DONE (P8-02)** — `extractRankingFromFb` now accepts `isPremiumViewer` and nulls `rankingP`/`rankingSource` for non-PREMIUM viewers, mirroring the GSE-SEC-025 market redaction. Verified by tests in `board-gate-decisions.test.ts`. Committed as `fc31f451`.
+   - **NEXT TARGET for P8-03:** GSE-SEC-024 — advertised phase price vs Stripe `unit_amount` disclosure risk in `apps/web/lib/billing/price-ids.ts:11`.
    - Pair with the 025 redactor already in `apps/web/lib/board/state.ts`.
 
 2. **GSE-SEC-042** — FreeStats stamps `fetchedAt=now` on cache hits
