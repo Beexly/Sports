@@ -50,6 +50,7 @@
     "guard:agent-bash": "node scripts/guardrails/agent-bash-guard.mjs --selftest",
     "guard:api-v1-boundary": "node scripts/guardrails/api-v1-boundary.mjs",
     "guard:commercial-copy": "node scripts/guardrails/commercial-copy-scan.mjs",
+    "guard:em-dash": "node scripts/guardrails/em-dash-scan.mjs",
     "guard:performance-claims": "node scripts/guardrails/no-unsupported-performance-claims.mjs",
     "guard:no-raw-ngs": "node scripts/guardrails/no-raw-ngs-export.mjs",
     "guard:partner-offers": "node scripts/guardrails/partner-offer-compliance-scan.mjs",

@@ -40,6 +40,7 @@ const GUARDS = [
   ["secret-scan", ["node", "scripts/guardrails/secret-scan.mjs", "--all"]],
   ["api-v1-boundary", ["node", "scripts/guardrails/api-v1-boundary.mjs"]],
   ["commercial-copy-scan", ["node", "scripts/guardrails/commercial-copy-scan.mjs"]],
+  ["em-dash-scan", ["node", "scripts/guardrails/em-dash-scan.mjs"]],
   ["no-unsupported-performance-claims", ["node", "scripts/guardrails/no-unsupported-performance-claims.mjs"]],
   ["no-raw-ngs-export", ["node", "scripts/guardrails/no-raw-ngs-export.mjs"]],
   ["partner-offer-compliance-scan", ["node", "scripts/guardrails/partner-offer-compliance-scan.mjs"]],
