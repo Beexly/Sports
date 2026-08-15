@@ -13,6 +13,7 @@
     "build": "npm run build --workspace=apps/web",
     "start": "npm run start --workspace=apps/web",
     "test": "npm run test --workspaces --if-present",
+    "test:e2e": "playwright test",
     "test:watch": "npm run test:watch --workspace=apps/web",
     "test:integration:db": "node scripts/integration/db-smoke.mjs",
     "nova:inventory": "node scripts/nova/build-convergence-inventory.mjs",
