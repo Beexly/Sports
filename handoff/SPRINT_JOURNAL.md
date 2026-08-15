@@ -827,3 +827,69 @@ COMMIT:   c5f3d79f — "docs(sprint): P7-08 local bring-up runbook — env vars,
 
 Next:     P7-09
 
+
+### 2026-08-15T16:03:00Z · P7-09 · DONE (strikes 0)
+
+Action:   Produced handoff/DEPENDENCY_HEALTH.md (P7-09 deliverable) + saved
+          raw handoff/npm-audit-current.json. Set STATUS DOING then DONE.
+Commands: npm audit --omit=dev --json > handoff/npm-audit-current.json
+          (exit 1 = vulnerabilities found; expected)
+Result:   0 critical, 2 high, 0 moderate/low/info (prod only, 892 deps).
+          The 2 highs share one root cause: Next.js 14.x->16.x major upgrade
+          (next@16.3.1, isSemVerMajor:true). No non-major fix exists.
+          - next: apps/web/package.json:35 declares ^14.2.15; installed 14.2.35
+          - postcss: nested node_modules/next/node_modules/postcss (effects: next)
+          Both only fixable via the Next.js major bump, which the sprint queue
+          scope guard names as owner-gated (GSE-SEC-059/060/003 Next.js major).
+          11-package fabrications watchlist (lite11m..laravel-crm-client)
+          confirmed absent from package-lock.json.
+VERIFY:   PASSED - every number cited to real file/line; no code change warranted.
+Commits: a9daef30 (DEPENDENCY_HEALTH.md + npm-audit-current.json + queue DOING)
+         dd0fc7b0 (queue DONE status)
+Next:     (this session's single task; STOP per sprint rules)
+
+---
+
+### 2026-08-15T16:35:00Z · P7-10 · DONE (strikes 0)
+
+Task: Fix `/preview`: paywalled premium picks now falsely claim "not yet available".
+Resumed from DOING (page.tsx fix + test rewrite were already applied but uncommitted).
+
+Action:
+1. Confirmed cwd is C:\Users\Garrett\Sports (git rev-parse --show-toplevel → C:/Users/Garrett/Sports).
+2. Located first non-DONE task top-to-bottom: P7-10 STATUS DOING (prior run was interrupted).
+3. page.tsx fix already applied (uncommitted): removed the `tier: "FREE" as const` query
+   filter from loadGameForSlug that dropped premium-tier picks (confidence >= 70) for
+   un-entitled viewers, and removed the canSeePremiumPicks param. The existing render-time
+   canSeeConfidence gate now produces an honest locked hint ("Confidence unlocks with Pro")
+   instead of a false "Model pick not yet available" absence. Redaction stays at render.
+4. Test file already rewritten (uncommitted, 122 insertions): anonymous-viewer cases now
+   use PREMIUM-tier fixtures and assert the locked hint renders (not false absence, not
+   the real confidence/numbers). Added FREE-tier and no-teaser edge cases.
+5. Encountered a Vite resolver error when running from repo root: "Failed to load url
+   @/app/preview/[sport]/[slug]/page ... Does the file exist?". This is a pre-existing
+   environment issue affecting ALL bracketed-route-path imports (audit-route-paywall.test.ts
+   fails identically from root) — Vite's `@` alias resolves differently depending on cwd.
+   Fix: run vitest from apps/web/ (matching P6-02's documented workaround). This is the
+   directory-scoped run the task's own VERIFY implies.
+6. VERIFY:
+   - `npx vitest run __tests__/preview-page-paywall.test.tsx` from apps/web/ →
+     11 tests PASSED (was false-green: the old test's `db.game.findMany` mock didn't
+     inspect the `where` clause and the fixture pick was confidence 52 FREE, not premium;
+     now fixtures are PREMIUM tier with confidence 91 and assert the locked hint renders).
+   - `npx tsc --noEmit` from apps/web/ → clean (exit 0).
+   - `npx eslint app/preview/[sport]/[slug]/page.tsx __tests__/preview-page-paywall.test.tsx` → clean (exit 0).
+7. Committed exactly the two task-named files:
+   - apps/web/app/preview/[sport]/[slug]/page.tsx
+   - apps/web/__tests__/preview-page-paywall.test.tsx
+
+Commit: 727cb307
+"fix(p7-10): fetch premium picks on /preview, render locked hint instead of false absence"
+(2 files changed, 125 insertions(+), 20 deletions(-)). secret-scan: OK.
+
+Note: the page.tsx header doc-block already documents the P7-10 fix at lines 32-43
+(including the "premium picks are now fetched and the existing render-time gate
+produces an honest locked hint" note), matching the P7-10 task description.
+
+Next: STOP — one task per session per sprint rules. Next first-TODO is P7-11.
+

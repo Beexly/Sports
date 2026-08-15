@@ -905,7 +905,7 @@ Flag any dependency that does not resolve to a real upstream (this repo was targ
 blueprint once).
 **VERIFY:** the JSON exists; your counts match a real grep of it.
 
-### P7-10 — Fix `/preview`: paywalled premium picks now falsely claim "not yet available" · STATUS: TODO · STRIKES: 0
+### P7-10 — Fix `/preview`: paywalled premium picks now falsely claim "not yet available" · STATUS: DONE · STRIKES: 0 · completed: 2026-08-15T16:35:00Z (commit 727cb307)
 Files (only these): `apps/web/app/preview/[sport]/[slug]/page.tsx`,
 `apps/web/__tests__/preview-page-paywall.test.tsx`.
 Evidence: commit `d4da1265` (this session, GSE-SEC-025) added
