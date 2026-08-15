@@ -869,7 +869,7 @@ Record exit codes. Fix ONLY errors in files this sprint already touched (see
 `handoff/TYPE_LINT_DEBT.md` WITHOUT fixing — a broad lint sweep produces an unreviewable diff.
 **VERIFY:** both raw files exist with real output; any fix has a passing re-run.
 
-### P7-07 — Production build verification · STATUS: TODO · STRIKES: 0
+### P7-07 — Production build verification · STATUS: BLOCKED · STRIKES: 2
 ```
 npm run build > handoff/build-raw.txt 2>&1
 ```

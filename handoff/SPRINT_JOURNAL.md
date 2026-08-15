@@ -731,3 +731,75 @@ Commit: 5c43100b
 Remaining category (a) failures (12 files / 15 tests): all 10 api-v1-* files
 (API v1 shadow seam — R&D feature not merged to main) + contests-paper-board (1)
 + compliance-store-pg (3, environmental). Next task P7-06 will handle typecheck/lint.
+
+### 2026-08-15T20:38:20Z · P7-06 · DONE
+Action:   Ran `npm run typecheck` and `npm run lint` across every workspace;
+          captured both to handoff/typecheck-raw.txt and handoff/lint-raw.txt.
+          Typecheck passed (exit 0). Lint failed (exit 1) with 2 errors, both
+          unused-var violations in apps/web/lib/data-sources/free-score-persist.test.ts
+          (lines 100-101: checkClearance, buildTrustedFinals imported but unused —
+          the file already has hoisted vi.mock() shims for both modules and the
+          tests use the mock objects directly). Fix: removed the two dead imports.
+          Also wrote handoff/TYPE_LINT_DEBT.md documenting the debt register
+          (now empty — all errors resolved in sprint-touched files, none remain
+          outside sprint scope).
+Commands: npm run typecheck > handoff/typecheck-raw.txt 2>&1  → EXIT=0
+          npm run lint > handoff/lint-raw.txt 2>&1  → EXIT=0 (after fix)
+          npx tsc --noEmit (workspace-wide, post-fix) → clean
+Result:   Both typecheck and lint green across all workspaces.
+Files:   apps/web/lib/data-sources/free-score-persist.test.ts (source fix)
+         handoff/SPRINT_QUEUE.md (STATUS TODO→DOING→DONE)
+Commit:  0a028c0f77fcc82314c8fa81fbcd167878245626
+         "fix: remove unused imports in free-score-persist test (lint gate) [P7-06]"
+         (2 files changed, 2 insertions, 4 deletions). secret-scan: OK.
+Next:     P7-07
+
+---
+
+### 2026-08-15T15:46:00Z · P7-07 · BLOCKED (strikes 2)
+
+Task: Production build verification — `npm run build > handoff/build-raw.txt 2>&1`.
+
+Action:
+1. Set P7-07 STATUS TODO -> DOING in SPRINT_QUEUE.md.
+2. Ran `npm run build > handoff/build-raw.txt 2>&1`. Build FAILED (exit 1).
+   Exact error:
+   `Error: DEV_FAKE_ADMIN must be unset in production — it grants ELITE to the
+   dev-admin session and would bypass the paywall. Unset it and redeploy.`
+   Failed at Next.js "Collecting page data" phase for route `/api/blog`.
+3. Root cause: `apps/web/.env.local` (line 122) contains `DEV_FAKE_ADMIN=true`.
+   Next.js auto-loads `.env.local` during build (log line 6: "Environments:
+   .env.local, .env"), setting the var. The boot-time guard
+   `assertDevAdminDisabledInProd()` in `apps/web/lib/entitlements.ts` (line 34)
+   throws when `NODE_ENV=production && DEV_FAKE_ADMIN=true`.
+4. WHY BLOCKED — not auto-fixed (per P7-07 rules):
+   - `.env.local` is gitignored (not tracked; `git check-ignore` confirms).
+   - NOT touched by this sprint — `git status` shows only
+     `budget-override-control.tsx`, `free-score-persist.ts`, and
+     `handoff/*.md` files modified.
+   - `DEV_FAKE_ADMIN` is owner-gated hardening per
+     `reports/claude/GALAXY_FULL_AUDIT_2026-05-29.md` line 91:
+     "do NOT auto-change — protects the launch workflow."
+5. ONE alternative attempted (per task rules): `env -u DEV_FAKE_ADMIN npm run build`.
+   SAME failure (exit 1). The `env -u` override cannot help because Next.js
+   loads `apps/web/.env.local` at the framework level, overriding the process
+   environment.
+6. Wrote `handoff/BUILD_FAILURE.md` with full root-cause diagnosis.
+7. Cleanup: `rm -rf apps/web/.next` (the ONE permitted deletion).
+   Confirmed `.next` removed; confirmed `handoff/build-raw.txt` exists (55 lines).
+
+VERIFY: `handoff/build-raw.txt` exists showing documented failure with root cause.
+`handoff/BUILD_FAILURE.md` exists. `handoff/SPRINT_BLOCKED.md` created.
+P7-07 marked BLOCKED (STRIKES 2) in SPRINT_QUEUE.md.
+
+No code fix attempted — owner-gated env var in gitignored file.
+Only handoff doc artifacts produced/edited.
+
+Files:
+- handoff/BUILD_FAILURE.md (new)
+- handoff/SPRINT_BLOCKED.md (new)
+- handoff/build-raw.txt (new)
+- handoff/SPRINT_QUEUE.md (STATUS -> BLOCKED)
+
+Commit: (see below — doc artifacts only)
+
