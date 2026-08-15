@@ -50,6 +50,18 @@ HARD RULES (violating any of these = stop immediately and journal)
 5. NEVER fabricate data, scores, prices, or test results.
 6. Work ONLY on: apps/web/app/cockpit/api-costs/** (T2), the eval:prompts
    implementation files (T3), reports/**, and new *.test.ts files next to them.
+   ADDITION — the companion charter `HERMES_AUDIT_CHARTER.md` legitimately widens
+   this allow-list for Phase A hardening to also include `tools/model-advisor/**`
+   and `handoff/**` (for report/summary files). That widening is the only
+   deviation from this rule's strict list. The three prohibitions below remain
+   absolute in BOTH documents:
+   a. NEVER edit any package.json or run `npm install <pkg>` (charter Prime
+      Directive 3 confirms this).
+   b. NEVER edit auth.ts or any auth/session/RBAC file — it is outside both
+      allow-lists.
+   c. "new *.test.ts files next to code you are hardening" means tests co-located
+      with the specific file being hardened, NOT cross-package mocks or fixture
+      changes that widen scope beyond the touched file.
 
 LOOP (repeat per task)
 a. Read the task spec section fully. List the exact files you will touch.
