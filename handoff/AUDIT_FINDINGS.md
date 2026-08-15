@@ -173,3 +173,56 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 **Later:**
 10. GSE-SEC-011 remove DEV_FAKE_ADMIN after launch.
 11. GSE-SEC-014 verify cookie flags in prod-like env; add explicit header test.
+
+---
+
+## GSE-SEC-076 — 080: Data-clearance coverage gap audit (P5-13)
+
+### [MEDIUM] GSE-SEC-076 — `open-meteo` fetched without `checkClearance`
+- **OWASP / CWE:** A04 / CWE-862 (missing authorization — missing runtime enforcement of a declared policy)
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/data-sources/free-first-ingest.ts:147` — `fetchWeatherFreeFirst()` calls `fetchWeather(latitude, longitude, opts)` with no preceding `checkClearance({ source_id: "open-meteo", ... })` call.
+- **Exploit / failure scenario:** The `open-meteo` entry in `source-rights-registry.ts` (source_id `open-meteo`, status `approved_open_license`) can be flipped to `permission_required` or have `storage_allowed` revoked, but this fetch site would continue hitting the API regardless. If the source's rights posture changes (e.g. commercial use restriction added), weather data would keep flowing into the prediction engine and downstream display without an enforced stop. The adapter has no `assertIngestible` call either — the registry entry is the only policy and nothing checks it at the call site.
+- **Blast radius:** weather data pipeline (all outdoor-sport totals models), all 7 sports.
+- **Remediation sketch (SAFE DIRECT):** add a `checkClearance({ source_id: "open-meteo", mode: "open_dataset_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics"] })` gate in `fetchWeatherFreeFirst` before the `fetchWeather` call; if denied, return the empty `FreeFirstOutcome` (same pattern as the ESPN gate at line 99). Effort: S.
+- **Effort:** S
+
+### [HIGH] GSE-SEC-077 — `the-odds-api` fetched without `checkClearance` (only spend guard)
+- **OWASP / CWE:** A04 / CWE-862; A04 / CWE-732 (incorrect authorization — spend guard used in place of rights gate)
+- **Confidence:** confirmed (code read)
+- **Location:** three fetch sites, all in-scope:
+  - `packages/ingestion-pipeline/src/process-sport.ts:253` — `client.getOdds(sport.key, [...MARKETS])` (preceded only by `paidCallJustified("odds", sport.key)` at line 251, which is a cost gate, NOT a rights check)
+  - `packages/ingestion-pipeline/src/settle-sport.ts:178` — `client.getScores(sport.key, 2)` (preceded only by `paidCallJustified("scores", sport.key)` at line 171)
+  - `packages/data-ingestion/src/odds-provider-adapter.ts:127` — `this.client.getOdds(...)` (no guard at all)
+- **Exploit / failure scenario:** The `the-odds-api` registry entry (source_id `the-odds-api`, status `approved_api`, `model_training_allowed: false`) explicitly denies model-training use. But none of the three fetch sites call `checkClearance({ source_id: "the-odds-api", ... })` — they only check whether a key is present (`paidCallJustified`). If the registry status flips to `permission_required` or `derived_analytics_allowed` is revoked, the Odds API would still be fetched and its data persisted/normalized as before. The rights registry is effectively advisory for this source, not enforced.
+- **Blast radius:** primary odds feed for all paid pick generation + settlement scores for all 7 sports.
+- **Remediation sketch (SAFE DIRECT for ingest-pipeline; CP for odds-provider-adapter if it touches sealed docs):** add `checkClearance({ source_id: "the-odds-api", mode: "licensed_api_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics", "commercial_display"] })` before each fetch site. On denial, return the existing source-error shape (both call sites already have a try/catch that emits source-error). The `odds-provider-adapter.ts` is inside `packages/` — confirm it is not in a sealed tree before editing. Effort: S–M.
+- **Effort:** S–M
+
+### [MEDIUM] GSE-SEC-078 — `espn-public-api` fetched without `checkClearance` in multi-source score path
+- **OWASP / CWE:** A04 / CWE-862
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/data-sources/multi-source-scores.ts:106` (`fetchEspnScoreboard` via `fetchEspnForDates`), `:218` (`fetchEspnForDates`), `:386` (`fetchEspnScoreboard`). None of these call `checkClearance({ source_id: "espn-public-api", ... })` before the fetch.
+- **Exploit / failure scenario:** `free-first-ingest.ts` was patched in GSE-SEC-051 to gate the ESPN fetch with `checkClearance({ intents: ["derived_analytics"] })`. But `multi-source-scores.ts` (which is called by `free-score-persist.ts:179` → `fetchScoresMultiSource`) calls `fetchEspnScoreboard` and `fetchEspnForDates` without any clearance check. The ESPN fact-extract path is therefore gated in some call chains but not others. A registry status flip would be silently ignored on the multi-source path.
+- **Blast radius:** settlement runner (free-path score finalization for all sports), live board scores.
+- **Remediation sketch (SAFE DIRECT):** add `checkClearance({ source_id: "espn-public-api", mode: "public_logged_off_fact_extract", tool_id: "fetch-native", intents: ["derived_analytics"] })` in `fetchEspnForDates` and before the undated `fetchEspnScoreboard` call at line 386; on denial, return empty results (same pattern as the secondary-source gates at line 154). The persist-time storage gate (GSE-SEC-051, `free-score-persist.ts:216`) remains intact. Effort: S.
+- **Effort:** S
+
+### [LOW] GSE-SEC-079 — `sleeper-api` uses `assertIngestible` (registration gate) not runtime `checkClearance`
+- **OWASP / CWE:** A04 / CWE-862; A01 (separation of duties — two source registries drift)
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/sleeper/market-signal.ts:108` (`assertIngestible("sleeper")`), `apps/web/lib/integrations/sleeper.ts:269` (`assertIngestible("sleeper")`). The leaf adapter `apps/web/lib/sleeper/source.ts` (lines 82, 102) fetches with no gate at all.
+- **Exploit / failure scenario:** `assertIngestible("sleeper")` checks the `@sports/data-ingestion` source-registry (`SOURCE_REGISTRY`), NOT the `source-rights-registry.ts` that `checkClearance` consults. The two registries are separate: the source-registry entry controls `assertIngestible` (verdict: approved_api per `sleeper/source.ts` module comment), but the rights registry entry could be changed independently (e.g. `storage_allowed` flipped to false, or `cease_and_desist_received: true`) and `assertIngestible` would NOT reflect it. The fetch in `sleeper/source.ts` has no runtime guard whatsoever — only the reader-layer `assertIngestible` protects it, and that function is a registration-time assertion, not a point-in-time rights check.
+- **Blast radius:** waiver-trends board + market signal for NFL; the ~14MB player map fetch (cost + rate-limit exposure if rights change).
+- **Remediation sketch (MIXED — source-registry.ts in packages/data-ingestion is outside the sealed trees listed; check before editing):** add a `checkClearance({ source_id: "sleeper-api", ... })` call in both reader functions (`loadSleeperMarketSignal` and `loadSleeperTrending`) before the fetch, mirroring the GSE-SEC-050 pattern. The leaf adapter `sleeper/source.ts` should stay ungated (its module comment explicitly defers the legal gate to readers). Effort: S.
+- **Effort:** S
+
+### [INFO] GSE-SEC-080 — `fpl-api` adapter fetches without any clearance gate
+- **OWASP / CWE:** A04 / CWE-862 (informational)
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/data-sources/free-adapters/fpl.ts:150` — `fetchFplSnapshot` calls `getJson` → `fetch` with no `checkClearance` or `assertIngestible("fpl-api")` guard. The adapter module docstring itself says "GATED: ... not cleared for ingestion/public use until FPL/PL terms are read (see OWNER_ACTION_ITEMS.md). This adapter is the verified, fixture-tested implementation that goes live once cleared."
+- **Exploit / failure scenario:** The adapter has **zero production callers** (grep confirms only the definition at line 150 exists; no imports anywhere). It cannot be triggered without a code change wiring it in. This is a latent gap, not a live one. If someone wires it in without also adding a gate, the FPL API (registered as `permission_required`, `automation_allowed: false`) would be fetched without clearance.
+- **Blast radius:** none today (dormant).
+- **Remediation sketch (SAFE DIRECT, future-only):** when wiring the adapter, add `checkClearance({ source_id: "fpl-api", ... })` before the first fetch call. Alternatively, add an `assertIngestible("fpl-api")` at the top of `fetchFplSnapshot` so it throws even if wired without a clearance gate. Effort: S.
+- **Effort:** S
+
