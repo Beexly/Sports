@@ -12,7 +12,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
-import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import {
   settleSport,
   freezeSlateCommitments,
@@ -98,15 +98,17 @@ export async function GET(request: Request) {
     });
   }
 
-  // GSE-SEC-040: season-gate the paid settle path so out-of-season sports are
-  // not billed against the Odds API quota. Mirrors the trigger-refresh route and
-  // the scheduled worker (refresh-odds.ts / workers/data-refresh/src/index.ts),
-  // both of which call getInSeasonSports(). ODDS_REFRESH_ALL_SPORTS=true forces
-  // every sport (backfills); otherwise only in-season sports are billed.
-  const allInSeasonSports = getInSeasonSports();
+  // Settlement is backward-looking (grading games already played) and free —
+  // unlike refresh (forward-looking, billed), it must NEVER season-gate.
+  // workers/data-refresh/src/index.ts:88 and settle-sport.ts:83-85 make this
+  // contract explicit: refresh uses getInSeasonSports(), settlement always
+  // uses SUPPORTED_SPORTS, "so the two settlement paths can never drift."
+  // A prior change gated this on getInSeasonSports() too, which meant an
+  // MLB World Series game (played in November, after MLB's in-season window)
+  // could never settle on the paid path. Reverted 2026-08-15.
   const sportsToProcess = requestedSport
-    ? allInSeasonSports.filter((sport) => sport.key === requestedSport)
-    : allInSeasonSports;
+    ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
+    : SUPPORTED_SPORTS;
 
   if (requestedSport && sportsToProcess.length === 0) {
     return NextResponse.json(
