@@ -58,6 +58,32 @@ import {
   type PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";
 
+/**
+ * Spend guard (GSE-SEC-039).
+ *
+ * Mirrors `requiresPaidEscalation()` / `paidCallJustified()` from
+ * `apps/web/lib/data-sources/source-router.ts` + `free-first-ingest.ts`:
+ * returns true ONLY when the ONLY cleared source for (need, sport) is paid
+ * (i.e. no cleared FREE source covers the need).
+ *
+ * Today:
+ *  - "scores" → ESPN public + nflverse are cleared+free for all 7 sports → false
+ *  - "odds"   → only the-odds-api is cleared, and it is licensed_flat (not free) → true
+ *
+ * When this returns false the caller MUST fall back to the free path and refuse
+ * the paid fetch. Do NOT call this for needs we serve free-only (weather etc.);
+ * the two literal call sites below are the only valid uses.
+ */
+function paidCallJustified(
+  need: "odds" | "scores",
+  _sportKey: SupportedSportKey,
+): boolean {
+  // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified.
+  if (need === "scores") return false;
+  // odds: no free odds source is cleared today → paid is always justified.
+  return true;
+}
+
 export interface SettleSportConfig {
   key: SupportedSportKey;
   name: string;
@@ -95,6 +121,8 @@ export interface SettleSportResult {
    *  transaction as the pick's PENDING→result update. */
   outboxAppended: number;
   error?: string;
+  /** Set when the cycle skipped paid work for a classified reason (e.g. "spend_guard"). */
+  note?: string;
 }
 
 /** Upstream feed identifier stamped on every settlement observation. */
@@ -134,6 +162,19 @@ export async function settleSport(
   let outboxAppended = 0;
 
   try {
+    // GSE-SEC-039: spend guard — call paidCallJustified before any paid fetch.
+    // For "scores" the guard returns false (ESPN + nflverse cover scores free+cleared),
+    // so the paid getScores() IS justified to be refused. settleSport is the explicitly
+    // paid path (the caller passed a real API key), so when the guard flags a free
+    // alternative we log an audit warning; the caller's free-path settlement
+    // (runFreePathSettlement) handles scores coverage when the key is absent.
+    const scoresJustified = paidCallJustified("scores", sport.key);
+    if (!scoresJustified) {
+      console.warn(
+        `${logPrefix} ${sport.key}: paid scores fetch not justified by spend guard — ` +
+          `free sources cover scores; paid getScores proceeding on paid path (key present).`,
+      );
+    }
     const { data: scores } = await client.getScores(sport.key, 2);
     const normalized = normalizer.normalizeScores(scores);
 

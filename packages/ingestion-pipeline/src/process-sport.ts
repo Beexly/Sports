@@ -66,6 +66,32 @@ import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archiv
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 
+/**
+ * Spend guard (GSE-SEC-039).
+ *
+ * Mirrors `requiresPaidEscalation()` / `paidCallJustified()` from
+ * `apps/web/lib/data-sources/source-router.ts` + `free-first-ingest.ts`:
+ * returns true ONLY when the ONLY cleared source for (need, sport) is paid
+ * (i.e. no cleared FREE source covers the need).
+ *
+ * Today:
+ *  - "scores" → ESPN public + nflverse are cleared+free for all 7 sports → false
+ *  - "odds"   → only the-odds-api is cleared, and it is licensed_flat (not free) → true
+ *
+ * When this returns false the caller MUST fall back to the free path and refuse
+ * the paid fetch. Do NOT call this for needs we serve free-only (weather etc.);
+ * the two literal call sites below are the only valid uses.
+ */
+function paidCallJustified(
+  need: "odds" | "scores",
+  _sportKey: SupportedSportKey,
+): boolean {
+  // scores: free cleared sources exist (espn-public-api, nflverse, etc.) → not justified.
+  if (need === "scores") return false;
+  // odds: no free odds source is cleared today → paid is always justified.
+  return true;
+}
+
 export interface SportConfig {
   key: SupportedSportKey;
   name: string;
@@ -217,16 +243,29 @@ export async function processSport(
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
 
     if (!oddsKeyIsSentinel) {
-      try {
-        const primary = await client.getOdds(sport.key, [...MARKETS]);
-        events = primary.data as import("@sports/types").OddsApiEvent[];
-        remainingRequests = primary.remainingRequests ?? null;
-      } catch (primaryErr) {
+      // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
+      // covers the need. For "odds" the guard passes today (no free odds source
+      // is cleared), so the paid call proceeds. If a free odds source is cleared
+      // in the future, paidCallJustified flips to false and we skip to the free
+      // dual-path below (rundown / espn).
+      if (paidCallJustified("odds", sport.key)) {
+        try {
+          const primary = await client.getOdds(sport.key, [...MARKETS]);
+          events = primary.data as import("@sports/types").OddsApiEvent[];
+          remainingRequests = primary.remainingRequests ?? null;
+        } catch (primaryErr) {
+          console.warn(
+            `${logPrefix} ${sport.key}: Odds API primary failed — ` +
+              `${primaryErr instanceof Error ? primaryErr.message : primaryErr}`,
+          );
+          events = [];
+        }
+      } else {
+        oddsProviderTag = "free-refused-paid";
         console.warn(
-          `${logPrefix} ${sport.key}: Odds API primary failed — ` +
-            `${primaryErr instanceof Error ? primaryErr.message : primaryErr}`,
+          `${logPrefix} ${sport.key}: paid odds fetch refused by spend guard — ` +
+            `free sources cover scores; skipping The Odds API.`,
         );
-        events = [];
       }
     }
 
@@ -689,42 +728,78 @@ export async function processSport(
         );
         upsertedPick = { id: existingPick.id };
       } else {
-        // Upsert by DB-enforced unique key [gameId, pickType].
-        // Create sets origin fields (ingestionRunId, isBootstrap, isFeatured).
-        // Update never changes isBootstrap — creation era is immutable.
-        upsertedPick = await db.pick.upsert({
-          where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-          create: {
+        // Race-safe upsert (GSE-SEC-043): scope the UPDATE to result:"PENDING"
+        // so a concurrent settle cannot have its freshly-graded result overwritten
+        // by this refresh cycle. Matches the updateMany pattern in
+        // settle-sport.ts and free-settlement-runner.ts; the create half is
+        // unchanged.
+        const updated = await db.pick.updateMany({
+          where: {
             gameId: pick.gameId,
             pickType: pick.pickType,
-            ingestionRunId: run.id,
-            isBootstrap,
-            isFeatured,
-            // CLV lock snapshot — the line/price we ACTUALLY published at, captured
-            // once at creation. Absent from `update` below, so the refresh cycle can
-            // never overwrite it (Pick.line itself IS mutated each cycle). Moneyline
-            // `pick.line` holds the American price; spread/total `pick.line` holds the
-            // points line. Graded against the closing line at settlement.
-            clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
-            clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-            // Book-line dispersion at lock — the CLV decomposition's liquidity
-            // regressor, captured write-once (absent from `update`, like the CLV
-            // lock). For MONEYLINE this resolves to the PUBLISHED side (home vs
-            // away) via the canonical selectionIsHomeSide, so an away-ML pick
-            // locks the away side's disagreement. null when <2 books quoted the
-            // relevant side at publish.
-            bookDisagreementAtLock: bookDisagreementForPick(
-              pick,
-              dispersionByGame.get(pick.gameId),
-            ),
-            ...pickUpdateData,
+            result: "PENDING",
           },
-          update: {
+          data: {
             ...pickUpdateData,
             // Re-evaluate featured status on each refresh when promotion is enabled.
             isFeatured,
           },
         });
+
+        if (updated.count > 0) {
+          // Updated an existing PENDING pick — resolve its id for the snapshot
+          // below. existingPick came from the findUnique above; if a concurrent
+          // refresh created the row between findUnique and updateMany, re-fetch.
+          upsertedPick = existingPick
+            ? { id: existingPick.id }
+            : {
+                id: (
+                  await db.pick.findUnique({
+                    where: {
+                      gameId_pickType: {
+                        gameId: pick.gameId,
+                        pickType: pick.pickType,
+                      },
+                    },
+                    select: { id: true },
+                  })
+                )!.id,
+              };
+        } else if (existingPick && existingPick.result !== "PENDING") {
+          // Frozen by settlement between our findUnique and here — leave it graded.
+          // (The skip at the top of the loop handles the common path; this guards the race.)
+          upsertedPick = { id: existingPick.id };
+        } else {
+          // No existing PENDING pick — create one. Create sets origin fields
+          // (ingestionRunId, isBootstrap, isFeatured) and write-once locks.
+          upsertedPick = await db.pick.create({
+            data: {
+              gameId: pick.gameId,
+              pickType: pick.pickType,
+              ingestionRunId: run.id,
+              isBootstrap,
+              isFeatured,
+              // CLV lock snapshot — the line/price we ACTUALLY published at, captured
+              // once at creation. Absent from the updateMany above, so the refresh
+              // cycle can never overwrite it (Pick.line itself IS mutated each cycle).
+              // Moneyline `pick.line` holds the American price; spread/total `pick.line`
+              // holds the points line. Graded against the closing line at settlement.
+              clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+              clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+              // Book-line dispersion at lock — the CLV decomposition's liquidity
+              // regressor, captured write-once (absent from updateMany, like the
+              // CLV lock). For MONEYLINE this resolves to the PUBLISHED side (home vs
+              // away) via the canonical selectionIsHomeSide, so an away-ML pick
+              // locks the away side's disagreement. null when <2 books quoted the
+              // relevant side at publish.
+              bookDisagreementAtLock: bookDisagreementForPick(
+                pick,
+                dispersionByGame.get(pick.gameId),
+              ),
+              ...pickUpdateData,
+            },
+          });
+        }
       }
       picksGenerated++;
 
