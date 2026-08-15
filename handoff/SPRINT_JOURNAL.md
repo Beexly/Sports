@@ -331,5 +331,42 @@ every task has an explicit test-run line (not just typecheck/lint). PASS.
 
 Commit: 846ca467
 "docs: P5-14 Phase 5 summary - P5-01..13 committed, per-task test-run lines"
-(1 file changed, 130 insertions). secret-scan: OK.
+|(1 file changed, 130 insertions). secret-scan: OK.
+
+---
+
+### 2026-08-16T11:55:00Z · P6-01 · DONE (strikes 0)
+
+Started: DOING at 11:35Z. First TODO task in the queue (Phase 6 begins).
+
+Action:
+1. `git fetch origin` — confirmed origin/main HEAD is 9a36e11f (506 commits ahead of merge-base a7bd5639).
+2. Ran `git diff origin/main...codex/sunday-frontier-maxforce-2026-07-05 --name-only` and saved the
+   736-file list to `handoff/RND_BRANCH_TOUCHED_FILES.txt`.
+3. For each file, checked whether origin/main modified it since the merge-base
+   (`git log <merge-base>..origin/main -- <file>`). Files not present on origin/main at all were
+   classified as clean-apply (branch-new). Files with main commits since branch point classified
+   as needs-manual-review.
+4. Wrote `handoff/RND_BRANCH_MERGE_MAP.md` — full coverage table of all 736 files with path,
+   touched-on-main-since-branch-point (yes/no), assessment, and the specific main-side commit(s)/reason.
+
+Result: 736 total files differ. 730 touched on main since branch point (needs-manual-review).
+6 net-new on branch (clean-apply) — all docs/ops and handoff/codex log files.
+
+VERIFY: RND_BRANCH_MERGE_MAP.md exists; every file in RND_BRANCH_TOUCHED_FILES.txt appears in the
+table (0 missing). PASS.
+
+Commits:
+- 68f9df68 "P6-01: map file-level conflicts between R&D branch and origin/main" (2 files: TOUCHED_FILES.txt, MERGE_MAP.md)
+- 68c9e43c "P6-01: mark task DONE in sprint queue"
+
+Files committed (force-added since handoff/ is gitignored but deliverable docs are force-tracked per prior convention):
+- handoff/RND_BRANCH_TOUCHED_FILES.txt (new)
+- handoff/RND_BRANCH_MERGE_MAP.md (new)
+- handoff/SPRINT_QUEUE.md (STATUS → DONE)
+
+Commit: 68f9df68
+"P6-01: map file-level conflicts between R&D branch and origin/main"
+(2 files changed, 1509 insertions). secret-scan: OK.
+
 
