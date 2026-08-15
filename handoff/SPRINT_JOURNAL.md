@@ -801,5 +801,7 @@ Files:
 - handoff/build-raw.txt (new)
 - handoff/SPRINT_QUEUE.md (STATUS -> BLOCKED)
 
-Commit: (see below — doc artifacts only)
+Commit: 4a4aa0999dffc591999f1cf7bb6058a5cc643569
+        "docs: P7-07 production build blocked on DEV_FAKE_ADMIN (owner-gated env)"
+        (5 files changed, 260 insertions, 1 deletion). secret-scan: OK.
 
