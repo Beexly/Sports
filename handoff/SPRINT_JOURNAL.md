@@ -616,3 +616,57 @@ Commit: 551aab6f333cd8f366f8494469a466108969e207
 (2 files changed, 36 insertions, 4 deletions). secret-scan: OK.
 
 
+---
+
+### 2026-08-17T14:10:00Z · P7-04 · DONE (strikes 0)
+
+Task: Fix test failures, batch 2. Category (b) exhausted (both files fixed in P7-03).
+Moved to category (a), easiest three first.
+
+Action:
+1. Read handoff/TEST_CENSUS.md — category (a) has 18 pre-existing failures across 14
+   files. Selected the three easiest:
+   - `cockpit-nav-coverage.test.ts` (1 test) — missing NAV entry for /cockpit/settlement-hold
+   - `scripts-path-coverage.test.ts` (1 test) — build-web.mjs path resolved against repoRoot
+     instead of apps/web/ workspace dir
+   - `actor-minting-boundary.test.ts` (1 test) — guardrails chain assertion checking
+     package.json script string instead of run-all.mjs content
+
+2. `cockpit-nav-coverage.test.ts` fix (SOURCE):
+   - Added `{ href: "/cockpit/settlement-hold", label: "Settlement Hold", hint: "Needs adjudication worklist" }`
+     to the NAV array in `apps/web/app/cockpit/layout.tsx`. The page already exists at
+     `app/cockpit/settlement-hold/page.tsx` — it just wasn't wired into the sidebar nav.
+
+3. `scripts-path-coverage.test.ts` fix (TEST):
+   - Updated `extractScriptPaths` to track a `base` directory per package.json source.
+   - Root package.json paths resolve against repoRoot; apps/web paths resolve against apps/web/.
+   - The `build-web.mjs` script exists at `apps/web/scripts/build-web.mjs`; the test was
+     incorrectly checking `repoRoot/scripts/build-web.mjs`. This is a test bug — the script
+     path in apps/web/package.json is workspace-relative, resolved by npm against the
+     workspace dir, not the repo root.
+
+4. `actor-minting-boundary.test.ts` fix (TEST):
+   - Changed the guardrails chain assertion to read `scripts/guardrails/run-all.mjs` content
+     and check it contains `actor-minting-boundary.mjs`, instead of checking the
+     package.json `guardrails` script string (`"node scripts/guardrails/run-all.mjs"`)
+     which just delegates — the actual chain IS run-all.mjs, which lists all guards.
+
+5. Updated handoff/TEST_CENSUS.md §3 table — struck through the 3 fixed entries, noted
+   the fix approach. Updated §4 summary counts (18→15 files, 21→18 tests in category (a)).
+
+VERIFY: `npx vitest run __tests__/cockpit-nav-coverage.test.ts
+__tests__/scripts-path-coverage.test.ts __tests__/actor-minting-boundary.test.ts`
+→ 3 test files, 121 tests, all passed. PASS.
+
+Files committed:
+- apps/web/app/cockpit/layout.tsx (modified — +1 line)
+- apps/web/__tests__/scripts-path-coverage.test.ts (modified — resolve workspace paths)
+- apps/web/__tests__/actor-minting-boundary.test.ts (modified — check run-all.mjs)
+- handoff/TEST_CENSUS.md (force-added — struck-through 3 entries, updated §4 counts)
+- handoff/SPRINT_QUEUE.md (force-added — STATUS → DONE)
+
+Commit: 9159ae733648bf7cb495e2f68734c99b03e93b8a
+"fix(tests): P7-04 batch 2 — 3 category-(a) test failures resolved"
+(5 files changed, 21 insertions, 13 deletions). secret-scan: OK.
+
+
