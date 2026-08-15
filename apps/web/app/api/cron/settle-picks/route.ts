@@ -12,7 +12,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
-import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
 import {
   settleSport,
   freezeSlateCommitments,
@@ -98,10 +98,15 @@ export async function GET(request: Request) {
     });
   }
 
-  // ── Paid path (enrichment scores via Odds API) ───────────────────────────
+  // GSE-SEC-040: season-gate the paid settle path so out-of-season sports are
+  // not billed against the Odds API quota. Mirrors the trigger-refresh route and
+  // the scheduled worker (refresh-odds.ts / workers/data-refresh/src/index.ts),
+  // both of which call getInSeasonSports(). ODDS_REFRESH_ALL_SPORTS=true forces
+  // every sport (backfills); otherwise only in-season sports are billed.
+  const allInSeasonSports = getInSeasonSports();
   const sportsToProcess = requestedSport
-    ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
-    : SUPPORTED_SPORTS;
+    ? allInSeasonSports.filter((sport) => sport.key === requestedSport)
+    : allInSeasonSports;
 
   if (requestedSport && sportsToProcess.length === 0) {
     return NextResponse.json(

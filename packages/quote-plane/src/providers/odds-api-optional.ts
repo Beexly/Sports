@@ -101,11 +101,17 @@ export function oddsApiEventsToLines(
   return out;
 }
 
+/** The fetch signature this provider accepts for injection (tests / adapters). */
+export type OddsApiOptionalFetch = (
+  url: string,
+  init?: { headers?: Record<string, string> },
+) => Promise<{ ok: boolean; json: () => Promise<unknown> }>;
+
 export function createOddsApiOptionalProvider(opts: {
   apiKey?: string | null;
   /** Offline / test fixtures */
   fixtures?: readonly OddsApiEvent[];
-  fetchImpl?: (url: string) => Promise<{ ok: boolean; json: () => Promise<unknown> }>;
+  fetchImpl?: OddsApiOptionalFetch;
 }): QuoteProvider {
   return {
     id: "the_odds_api",
@@ -117,15 +123,20 @@ export function createOddsApiOptionalProvider(opts: {
       if (opts.fixtures) return oddsApiEventsToLines(opts.fixtures);
       if (!opts.apiKey) return []; // key missing → empty, not fake
       const sport = req.sport || "americanfootball_nfl";
-      const url = `https://api.the-odds-api.com/v4/sports/${sport}/odds?regions=us&markets=h2h&oddsFormat=american&apiKey=${encodeURIComponent(opts.apiKey)}`;
+      // GSE-SEC-028: the API key is sent via the X-API-Key header, NOT in the
+      // URL query string. Query-string keys leak into logs, referrers, and
+      // history. The Odds API accepts the key as a header.
+      const url = `https://api.the-odds-api.com/v4/sports/${sport}/odds?regions=us&markets=h2h&oddsFormat=american`;
       try {
-        const fetchImpl =
+        const fetchImpl: OddsApiOptionalFetch =
           opts.fetchImpl ??
-          (async (u: string) => {
-            const r = await fetch(u);
+          (async (u: string, init?: { headers?: Record<string, string> }) => {
+            const r = await fetch(u, { headers: init?.headers });
             return { ok: r.ok, json: () => r.json() };
           });
-        const res = await fetchImpl(url);
+        const res = await fetchImpl(url, {
+          headers: { "X-API-Key": opts.apiKey },
+        });
         if (!res.ok) return [];
         const body = (await res.json()) as OddsApiEvent[];
         return Array.isArray(body) ? oddsApiEventsToLines(body) : [];

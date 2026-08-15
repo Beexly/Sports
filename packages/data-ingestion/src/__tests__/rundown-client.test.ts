@@ -58,3 +58,43 @@ describe("fetchRundownEventsForSport rate limit", () => {
     expect(out.error ?? "").toMatch(/429|rate_limited/);
   });
 });
+
+describe("GSE-SEC-028: Rundown API key via header, not query string", () => {
+  it("does not put the API key in the URL query string", async () => {
+    const { fetchRundownEventsForSport } = await import("../rundown-client.js");
+    let capturedUrl = "";
+    const fetchImpl = async (input: string) => {
+      capturedUrl = input;
+      return new Response(JSON.stringify({ events: [] }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    };
+    await fetchRundownEventsForSport("americanfootball_nfl", "super-secret-key", {
+      daySpan: 1,
+      date: "2026-08-10",
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    // The API key must NOT appear in the query string.
+    expect(capturedUrl).not.toContain("super-secret-key");
+    expect(capturedUrl).not.toContain("key=");
+  });
+
+  it("sends the API key via X-TheRundown-Key header", async () => {
+    const { fetchRundownEventsForSport } = await import("../rundown-client.js");
+    const headersSent: Record<string, string> = {};
+    const fetchImpl = async (_input: string, init?: { headers?: Record<string, string> }) => {
+      Object.assign(headersSent, init?.headers ?? {});
+      return new Response(JSON.stringify({ events: [] }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    };
+    await fetchRundownEventsForSport("americanfootball_nfl", "my-rundown-key", {
+      daySpan: 1,
+      date: "2026-08-10",
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    expect(headersSent["X-TheRundown-Key"]).toBe("my-rundown-key");
+  });
+});

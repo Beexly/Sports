@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
-import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { getInSeasonSports } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "@sports/ingestion-pipeline";
 
@@ -36,8 +36,13 @@ export async function POST(): Promise<NextResponse> {
   // which ingestion path triggers the refresh.
   const gates = getReadinessGates();
 
+  // GSE-SEC-040: season-gate the bulk refresh so out-of-season sports are not
+  // billed against the paid Odds API quota. Mirrors the scheduled worker in
+  // refresh-odds.ts which calls getInSeasonSports(). The ODDS_REFRESH_ALL_SPORTS
+  // env override still forces all sports for backfills, so no admin workflow is lost.
+  const sports = getInSeasonSports();
   const results = [];
-  for (const sport of SUPPORTED_SPORTS) {
+  for (const sport of sports) {
     results.push(await processSport(sport, apiKey, gates, "[trigger-refresh]"));
   }
 

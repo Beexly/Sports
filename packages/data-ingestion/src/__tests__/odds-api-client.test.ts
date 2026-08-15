@@ -90,7 +90,7 @@ describe("OddsApiClient upstream resilience", () => {
     expect(result.usedRequests).toBe(3);
   });
 
-  it("honors Retry-After for 429 responses before retrying", async () => {
+  it("does NOT retry 429 responses — quota stop prevents over-spending (GSE-SEC-041)", async () => {
     const delays: number[] = [];
     const retryingClient = new OddsApiClient("test-key", {
       baseDelayMs: 100,
@@ -115,9 +115,9 @@ describe("OddsApiClient upstream resilience", () => {
         })
       );
 
-    await retryingClient.getSports();
-
-    expect(delays).toEqual([2_000]);
+    await expect(retryingClient.getSports()).rejects.toThrow(/429/);
+    // GSE-SEC-041: 429 breaks the retry loop immediately — no retry, no sleep.
+    expect(delays).toEqual([]);
   });
 
   it("does not retry non-retryable 4xx responses", async () => {
@@ -212,5 +212,105 @@ describe("circuit refusals carry an honest status, not a blanket 402", () => {
     await client.getSports();
 
     expect(releaseSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe("GSE-SEC-028: API key via header, not query string", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("does not put apiKey in the URL query string on getOdds", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+          "x-requests-remaining": "100",
+          "x-requests-used": "1",
+        },
+      }),
+    );
+
+    const client = new OddsApiClient("test-secret-key");
+    await client.getOdds("baseball_mlb", ["h2h"]);
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    const calledUrl = new URL(fetchSpy.mock.calls[0]![0] as string);
+    // The API key must NOT leak into the URL query string.
+    expect(calledUrl.searchParams.get("apiKey")).toBeNull();
+    expect(calledUrl.searchParams.has("apiKey")).toBe(false);
+  });
+
+  it("sends the API key via X-API-Key header, not the query string", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+          "x-requests-remaining": "100",
+          "x-requests-used": "1",
+        },
+      }),
+    );
+
+    const client = new OddsApiClient("my-secret-key");
+    await client.getOdds("baseball_mlb", ["h2h"]);
+
+    const init = fetchSpy.mock.calls[0]![1] as RequestInit;
+    expect(init?.headers).toMatchObject({ "X-API-Key": "my-secret-key" });
+    // Confirm the URL does not contain the key.
+    const calledUrl = new URL(fetchSpy.mock.calls[0]![0] as string);
+    expect(calledUrl.search).not.toContain("my-secret-key");
+    expect(calledUrl.search).not.toContain("apiKey");
+  });
+
+  it("does not put apiKey in the URL query string on getScores", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+          "x-requests-remaining": "100",
+          "x-requests-used": "1",
+        },
+      }),
+    );
+
+    const client = new OddsApiClient("test-secret-key");
+    await client.getScores("baseball_mlb");
+
+    const calledUrl = new URL(fetchSpy.mock.calls[0]![0] as string);
+    expect(calledUrl.searchParams.get("apiKey")).toBeNull();
+  });
+});
+
+describe("GSE-SEC-041: 429 does not trigger retries (outbound quota stop)", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("makes exactly one request on 429 and does not retry", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ error: "rate limit exceeded" }), {
+        status: 429,
+        headers: {
+          "x-requests-remaining": "0",
+          "x-requests-used": "100",
+          "retry-after": "60",
+        },
+      }),
+    );
+
+    const client = new OddsApiClient("test-key", {
+      sleep: vi.fn().mockResolvedValue(undefined),
+    });
+
+    await expect(client.getOdds("baseball_mlb", ["h2h"])).rejects.toThrow(
+      "429"
+    );
+
+    // On 429, we stop immediately — no retries, no extra upstream calls.
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 });

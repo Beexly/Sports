@@ -122,15 +122,26 @@ export class OddsApiClient {
     this.circuitBreaker = circuitBreaker ?? getOddsPaymentCircuitBreaker();
   }
 
+  /**
+   * Build the request URL with non-secret query params only.
+   * GSE-SEC-028: the API key is NOT placed in the query string — it is sent
+   * via the `X-API-Key` Authorization header in fetchWithinCircuit. Query-string
+   * keys leak into logs, referrers, and history. The Odds API accepts the key
+   * as a Bearer token (per official odds-api/odds-api repo: X-API-Key header).
+   */
+  private buildUrl(path: string, params: Record<string, string> = {}): URL {
+    const url = new URL(`${ODDS_API_BASE_URL}${path}`);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
+    return url;
+  }
+
   private async fetch<T>(
     path: string,
     params: Record<string, string> = {}
   ): Promise<OddsApiFetchResult<T>> {
-    const url = new URL(`${ODDS_API_BASE_URL}${path}`);
-    url.searchParams.set("apiKey", this.apiKey);
-    for (const [key, value] of Object.entries(params)) {
-      url.searchParams.set(key, value);
-    }
+    const url = this.buildUrl(path, params);
 
     // Payment circuit: fail closed on prior 402 without burning more upstream calls.
     const circuit = this.circuitBreaker.tryAcquire();
@@ -188,8 +199,10 @@ export class OddsApiClient {
         // noStoreFetch: odds/scores MUST bypass Next's Data Cache — a cached
         // quota header + frozen bookmaker timestamps took the whole pipeline
         // down on 2026-07-10 (see no-store-fetch.ts).
+        // GSE-SEC-028: API key sent via X-API-Key header, NOT in the query string.
         response = await noStoreFetch(url.toString(), {
           signal: AbortSignal.timeout(ODDS_API_TIMEOUT_MS),
+          headers: { "X-API-Key": this.apiKey },
         });
       } catch (err) {
         const name = err instanceof Error ? err.name : "";
@@ -204,6 +217,13 @@ export class OddsApiClient {
         );
       }
 
+      // GSE-SEC-041: a 429 (rate-limited / quota exhausted) is a signal to STOP,
+      // not a retryable transient error. Each retry on 429 spends another credit
+      // against a depleted quota, compounding the over-spend. Break immediately
+      // and throw the 429 out so callers see a rate-limited result.
+      if (response.status === 429) {
+        break;
+      }
       if (!isRetryableStatus(response.status) || attempt === this.retryOptions.maxRetries) {
         break;
       }
