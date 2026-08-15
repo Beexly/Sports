@@ -27,6 +27,12 @@ vi.mock("@sports/prediction-engine", () => ({
 
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadBoardState } from "@/lib/board/state";
+import { getEntitlements } from "@sports/types";
+
+// This suite exercises Gate Cam lane construction, not the paywall — pass a
+// PRO viewer so `market` reflects the real derived selection instead of the
+// tier-redacted "ALL_MARKETS" a FREE/anonymous viewer now receives.
+const proViewer = getEntitlements("PRO");
 
 const evaluatedAt = new Date("2026-05-22T15:30:00.000Z");
 
@@ -94,7 +100,7 @@ describe("board loaders with persisted gate decisions", () => {
       },
     ]);
 
-    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
 
     expect(result.meta.isSampleData).toBe(false);
     expect(result.data.openPicks).toBe(1);

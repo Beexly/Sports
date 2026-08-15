@@ -1,5 +1,6 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
+import type { Entitlements } from "@sports/types";
 import {
   buildBoardHealth,
   type BoardDegradation,
@@ -157,7 +158,10 @@ function buildBoardMeta({
   };
 }
 
-export async function loadBoardState(now = new Date()): Promise<BoardStatePayload> {
+export async function loadBoardState(
+  now = new Date(),
+  entitlements?: Entitlements,
+): Promise<BoardStatePayload> {
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
@@ -217,6 +221,13 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     ...excludeSeedInProd,
   };
 
+  // Server-side tier gate (CLAUDE.md rule #3 — no frontend-only paywalls).
+  // The `market` field on each BoardStateRow carries pick.selection (e.g. "Chiefs -3.5"),
+  // which embeds the paid selection + line. For viewers without canSeePremiumPicks,
+  // tier-filter at the query and redact any selection that still slips through.
+  const isPremiumViewer = entitlements?.canSeePremiumPicks ?? false;
+  const tierFilter = isPremiumViewer ? {} : { tier: "FREE" as const };
+
   const { start, end } = todayBounds();
   try {
     const decisions = await db.gateDecision.findMany({
@@ -238,7 +249,9 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         gameId: decision.gameId,
         matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
         sport: decision.game.sport.name,
-        market: decision.pick?.selection ?? "ALL_MARKETS",
+        market: isPremiumViewer
+          ? (decision.pick?.selection ?? "ALL_MARKETS")
+          : "ALL_MARKETS",
         status:
           decision.status === "PUBLISHED"
             ? "PUBLISHED_TODAY"
@@ -285,6 +298,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
           isPublished: true,
           isBootstrap: false,
           ...excludeSeedInProd,
+          ...tierFilter,
           generatedAt: { gte: start, lt: end },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
@@ -322,7 +336,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     gameId: pick.gameId,
     matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
     sport: pick.game.sport.name,
-    market: pick.selection,
+    market: isPremiumViewer ? pick.selection : "ALL_MARKETS",
     status: "PUBLISHED_TODAY",
     edgeIndex: toEdgeIndex(pick.game.currentEdgeIndex ?? pick.edgeScore),
     confidence: pick.confidence,

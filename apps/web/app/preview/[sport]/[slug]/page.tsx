@@ -67,7 +67,7 @@ export const dynamic = "force-dynamic";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
-async function loadGameForSlug(sportId: string, slug: string) {
+async function loadGameForSlug(sportId: string, slug: string, canSeePremiumPicks: boolean) {
   const vsIdx = slug.indexOf("-vs-");
   if (vsIdx === -1) return null;
   const awayPart = slug.slice(0, vsIdx);
@@ -87,6 +87,11 @@ async function loadGameForSlug(sportId: string, slug: string) {
           where: {
             isPublished: true,
             isBootstrap: false, // never expose bootstrap-era picks publicly (mirrors /api/picks)
+            // Server-side tier gate (CLAUDE.md rule #3 — no frontend-only paywalls).
+            // The `selection`/`line` fields on a pick embed the paid market read;
+            // without canSeePremiumPicks, tier-filter at the query so premium picks
+            // never reach an anonymous/FREE viewer's document at all.
+            ...(canSeePremiumPicks ? {} : { tier: "FREE" as const }),
             // Production seed-row exclusion (defense-in-depth) — drop dev seed
             // rows tagged modelVersion="v5.0.0-seed" only in production; no-op in
             // dev/test. Mirrors excludeSeedInProd in app/api/picks/route.ts.
@@ -202,10 +207,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // (permanentRedirect throws, so no cuid ever reaches an SEO surface).
     permanentRedirect(`/preview/${resolution.sport.slug}/${slug}`);
   }
-  const [game, viewer] = await Promise.all([
-    loadGameForSlug(resolution.sport.id, slug),
-    getViewerEntitlements(),
-  ]);
+  const viewer = await getViewerEntitlements();
+  const game = await loadGameForSlug(resolution.sport.id, slug, viewer.canSeePremiumPicks);
   if (!game) return { title: "Preview not found" };
 
   const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
@@ -248,10 +251,8 @@ export default async function PreviewPage({ params }: Props) {
   }
   // Resolve the viewer's entitlements server-side (anonymous → FREE, fail-closed)
   // BEFORE anything paid is selected for render (CLAUDE.md rule #3).
-  const [game, viewer] = await Promise.all([
-    loadGameForSlug(resolution.sport.id, slug),
-    getViewerEntitlements(),
-  ]);
+  const viewer = await getViewerEntitlements();
+  const game = await loadGameForSlug(resolution.sport.id, slug, viewer.canSeePremiumPicks);
   if (!game) notFound();
 
   const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);

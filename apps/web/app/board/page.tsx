@@ -39,12 +39,13 @@ export default async function BoardPage(): Promise<JSX.Element> {
   // payload never contains it at all. The refusal ITSELF is unconditional and
   // rendered for everyone; see PassListItem.
   const session = await auth();
-  const canSeeNoBetDetail = session?.user?.id
-    ? (await getUserEntitlements(session.user.id)).canSeeNoBetDetail
-    : false;
+  const viewerEntitlements = session?.user?.id
+    ? await getUserEntitlements(session.user.id)
+    : undefined;
+  const canSeeNoBetDetail = viewerEntitlements?.canSeeNoBetDetail ?? false;
 
   const [stateResult, passesResult, calibrationResult] = await Promise.all([
-    loadBoardState(),
+    loadBoardState(new Date(), viewerEntitlements),
     loadBoardPasses(new Date(), { includeNoBetDetail: canSeeNoBetDetail }),
     loadPublicCalibrationReport(),
   ]);
