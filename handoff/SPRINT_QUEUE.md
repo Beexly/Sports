@@ -985,7 +985,7 @@ entering the signature-verification block.
 **VERIFY:** add a test: unset `STRIPE_SECRET_KEY`, send a well-formed webhook request, assert the
 response is 503 (not 400) and the log names the correct env var. typecheck+lint clean, then commit.
 
-### P7-14 — Housekeeping batch (all trivial, no design decisions) · STATUS: TODO · STRIKES: 0
+### P7-14 — Housekeeping batch (all trivial, no design decisions) · STATUS: DONE · STRIKES: 0 · started: 2026-08-18T10:00:00Z · completed: 2026-08-18T18:00:00Z
 Do these as one small commit each, or grouped if genuinely trivial:
 1. `handoff/PHASE1_SUMMARY.md` — scrub the absolute local path `C:/Users/Garrett/Sports` it leaks.
 2. `QUICKSTART.md` / `README.md` — both cite Postgres port `:5432`, but

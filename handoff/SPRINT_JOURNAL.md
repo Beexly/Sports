@@ -978,3 +978,29 @@ Result: VERIFY passes — `npx vitest run __tests__/stripe-webhook-route.test.ts
 Commit: c46771d06dcf0d1e63065b5aa827a25713b65284
   "P7-13: hoist Stripe webhook client read out of signature try block"
   2 files changed, 74 insertions(+), 2 deletions(-)
+
+===
+
+2026-08-18T18:00:00Z — P7-14 — DONE
+Task: Housekeeping batch (5 sub-items, all trivial/no design decisions).
+Files touched: handoff/PHASE1_SUMMARY.md, QUICKSTART.md, README.md, scripts/guardrails/run-all.mjs, packages/data-ingestion/src/odds-api-client.ts
+
+What I did:
+1. P7-14.1 — Scrubbed absolute local path `C:/Users/Garrett/Sports` from handoff/PHASE1_SUMMARY.md line 6 (`Workdir: C:/Users/Garrett/Sports` → `Workdir: repository checkout`). Committed as 9bffdb99. NOTE: `handoff/` is gitignored; used `git add -f` which also picked up the already-staged SPRINT_JOURNAL.md and SPRINT_QUEUE.md changes from prior sessions.
+
+2. P7-14.2 — QUICKSTART.md and README.md both cited Postgres port `:5432` but docker-compose.yml maps `:5433` (host 5433 → container 5432). Fixed both docs to `:5433`. Also README.md said `cp .env.example .env.local` (root) and "Fill in .env.local", but Next reads `apps/web/.env.local` — fixed both references to `apps/web/.env.local`. Committed as 4aae5875.
+
+3. P7-14.3 — `scripts/guardrails/run-all.mjs --only=<name>` exited 0 when the name matched no registered guard (empty filter → "0/0 passed"). Added a check: if `only` was specified and any named guard is unknown, prints an error listing the unknown name(s) + available guards and exits 2. Verified: `--only=trust-gate` passes; `--only=nonexistent-guard` exits 2. Committed as 14e43ae9.
+
+4. P7-14.4 — `apps/web/__tests__/brand-safety-v2.test.ts` was reported red but is actually GREEN (12/12 pass). It was already fixed in P7-05 (commit 4eff18f8) which resolved the guardrails-chain assertion failures. No change needed. Verified by running `npx vitest run __tests__/brand-safety-v2.test.ts` — 12 passed.
+
+5. P7-14.5 — `scripts/check-deploy-readiness.mjs` line 198 constructs `https://api.the-odds-api.com/v4/sports?apiKey=${THE_ODDS_API_KEY}` (query param auth). The client code (`packages/data-ingestion/src/odds-api-client.ts`) also uses query param auth via `buildUrl` (line 135: `url.searchParams.set("apiKey", ...)`). They AGREE on the auth mechanism. However, `odds-api-client.ts` still had a STALE comment (line 204: "GSE-SEC-028: API key sent via X-API-Key header, NOT in the query string") and a REDUNDANT `X-API-Key` header (line 207) that contradicted the ffe976b1 revert. Fixed the comment to document the correct query-param auth and removed the redundant header. Verified: `npx vitest run src/__tests__/odds-api-client.test.ts` — 15 passed; typecheck clean. Committed as 71e3bca2.
+
+Result: VERIFY passes — all sub-items completed, typecheck clean for touched TS files, tests green (brand-safety-v2: 12/12, odds-api-client: 15/15, full data-ingestion suite: 281/281).
+
+Commits:
+- 9bffdb99  P7-14.1: scrub absolute local path from PHASE1_SUMMARY.md
+- 4aae5875  P7-14.2: fix Postgres port 5432→5433 and .env.local path in docs to match compose
+- 14e43ae9  P7-14.3: run-all --only exits non-zero when a guard name is unknown
+- 71e3bca2  P7-14.5: remove stale X-API-Key header + comment in odds-api-client.ts (auth is query param per ffe976b1)
+(P7-14.4 needed no change — test already green via P7-05/4eff18f8)
