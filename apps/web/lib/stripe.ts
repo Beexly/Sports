@@ -21,9 +21,83 @@ import {
 
 export type { BillingInterval };
 
-export const stripe = new Stripe(process.env["STRIPE_SECRET_KEY"]!, {
-  apiVersion: "2024-06-20",
-  typescript: true,
+/**
+ * Typed, fail-closed error for any Stripe operation attempted without a
+ * configured secret key. Thrown by `getStripe()` (the explicit entry point) so
+ * a misconfigured deploy surfaces as a typed guard — never as an opaque SDK
+ * error or, worse, a crash at module import time.
+ */
+export class StripeConfigError extends Error {
+  readonly name = "StripeConfigError" as const;
+  constructor(public readonly capability: string) {
+    super(
+      `Stripe is not configured for "${capability}" (STRIPE_SECRET_KEY is missing or blank)`,
+    );
+  }
+}
+
+/** The effective Stripe secret key, trimmed and blank-checked. */
+function getStripeSecretKey(): string | null {
+  const raw = process.env["STRIPE_SECRET_KEY"];
+  const trimmed = typeof raw === "string" ? raw.trim() : "";
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+/**
+ * Lazily construct + cache the Stripe client. Throws the typed `StripeConfigError`
+ * when STRIPE_SECRET_KEY is missing or blank — so a caller that opts into this
+ * entry point fails CLOSED at the call site with a recognizable error instead of
+ * throwing at import time or producing an opaque SDK error mid-request.
+ */
+export function getStripe(): Stripe {
+  const key = getStripeSecretKey();
+  if (!key) {
+    throw new StripeConfigError("stripe");
+  }
+  if (!stripeClientCache) {
+    stripeClientCache = new Stripe(key, {
+      apiVersion: "2024-06-20",
+      typescript: true,
+    });
+  }
+  return stripeClientCache;
+}
+
+let stripeClientCache: Stripe | null = null;
+
+/**
+ * Backwards-compatible `stripe` export with DEFERRED construction. The client is
+ * built on first property access (and cached thereafter) instead of at module
+ * import — so this module NEVER constructs a Stripe client (and never throws)
+ * at import time, even when STRIPE_SECRET_KEY is absent. This is what makes the
+ * checkout + webhook routes boot-safe on a misconfigured deploy: import succeeds,
+ * and any Stripe call then fails closed with the typed StripeConfigError via
+ * `getStripe()` rather than crashing the route handler's module load.
+ *
+ * Property access is proxied to the real (lazily-built) client with correct
+ * `this` binding, so `stripe.webhooks.constructEvent(...)`, `stripe.customers.*`,
+ * `stripe.checkout.sessions.*`, etc. all keep their current signatures.
+ */
+export const stripe: Stripe = new Proxy({} as Stripe, {
+  get(_target, prop) {
+    // Fail CLOSED: if STRIPE_SECRET_KEY is missing or blank, throw the typed
+    // StripeConfigError at property-access time so the backwards-compatible
+    // `stripe.*` export surfaces a recognizable error at the call site instead
+    // of silently constructing a client with an empty key (which would produce
+    // an opaque SDK error mid-request, or worse, crash at import time).
+    if (!stripeClientCache) {
+      const key = getStripeSecretKey();
+      if (!key) throw new StripeConfigError("stripe");
+      stripeClientCache = new Stripe(key, {
+        apiVersion: "2024-06-20",
+        typescript: true,
+      });
+    }
+    const client = stripeClientCache;
+    const value = client[prop as keyof Stripe];
+    if (typeof value === "function") return value.bind(client);
+    return value;
+  },
 });
 
 // Stripe price IDs per tier × billing interval. The operator creates these prices
