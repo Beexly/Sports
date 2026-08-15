@@ -697,7 +697,7 @@ GSE-SEC-0NN finding (continue numbering from the highest existing ID in that fil
 **VERIFY:** `handoff/CLEARANCE_COVERAGE_AUDIT.md` exists and covers every source_id in the registry
 — no silent gaps, an explicit row for each one.
 
-### P5-14 — Phase 5 exit · STATUS: TODO · STRIKES: 0
+### P5-14 — Phase 5 exit · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T10:30:00Z · completed: 2026-08-16T10:43:00Z (commit 846ca467)
 Write `handoff/PHASE5_SUMMARY.md`: which of P5-01..13 committed vs. blocked, with commit hashes,
 and for EACH task explicitly state which test file was run and what it showed — not just
 typecheck/lint. This is the field that was missing from Phase 4's summary and caused the gap.

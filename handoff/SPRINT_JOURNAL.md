@@ -281,3 +281,55 @@ Action:
 Commit: 99e84de2
 "P5-13: data-clearance coverage audit - 5 new findings (GSE-SEC-076-080)"
 (3 files changed, 1508 insertions(+)). secret-scan: OK.
+
+---
+
+### 2026-08-16T10:43:00Z · P5-14 · DONE (strikes 0)
+
+Task: Phase 5 exit — write handoff/PHASE5_SUMMARY.md covering P5-01..13 with commit
+hashes and an explicit test-run line per task (the field Phase 4's summary lacked).
+
+Action:
+1. Located the first TODO in SPRINT_QUEUE.md by scanning top-to-bottom: every task in
+   Phases 0-4 was DONE, and every task P5-01..P5-13 was DONE, leaving P5-14 as the first
+   live TODO. Set STATUS DOING, then executed the single task.
+2. Collected commit evidence for all 13 prior P5 tasks: ran git log across the
+   origin/claude/fable-5-ultracode-plan-ptru4e..99e84de2 range and confirmed each
+   hash resolves via `git show <hash>--stat`. 13/13 hashes resolve (b606d4a8, 98b20506,
+   99db1db5, b8ce77c8, f43d439a, 22a201dc, 526bc726, dfa24bdc, 11151694, a0e815ad,
+   8d0cf610, b67ace68, 99e84de2).
+3. Re-ran, live from the repo root, every apps/web test file named by a P5 task so the
+   summary could cite real current results (not journal prose):
+   - lib/auth.test.ts -> 24 passed (P5-03)
+   - lib/data-sources/free-score-persist.test.ts -> 8 passed (P5-04)
+   - __tests__/callback-url-guard.test.ts -> 8 passed (P5-10)
+   - __tests__/csrf-origin-guard.test.ts -> 9 passed (P5-10)
+   - __tests__/free-first-ingest.test.ts -> 4 passed (P5-12)
+   - node scripts/guardrails/run-all.mjs --only=em-dash-scan -> PASS (P5-02)
+   - __tests__/brand-safety-v2.test.ts -> 1 failed / 11 passed (P5-02 side check,
+     pre-existing BS-040 failure, reproduced with this task's changes stashed)
+4. Documented the two honest gaps where re-run was impossible: the `packages/` directory
+   is empty on disk in this working tree (not a submodule, not gitignored, simply absent),
+   so the P5-09 and P5-11 test files under packages/data-ingestion and
+   packages/prediction-engine could not be re-run. Their pass counts are recorded verbatim
+   from the commit messages of 11151694 and 8d0cf610 respectively, and the source changes
+   were verified via `git show` of each commit.
+5. Noted the handoff/ gitignore state: `.gitignore:202` has `handoff/`, but PHASE4_SUMMARY.md
+   and SPRINT_QUEUE.md are force-tracked (appear as M in git status); deliverable docs that
+   are gitignored (RATE_LIMIT_COVERAGE.md, PHASE5_SUMMARY.md, CLEARANCE_COVERAGE_AUDIT.md,
+   SPRINT_JOURNAL.md, AUDIT_FINDINGS.md) were committed via `git add -f`.
+6. Wrote handoff/PHASE5_SUMMARY.md (doc-only VERIFY: file exists, every hash resolves,
+   every task has an explicit test-run line). secret-scan: OK.
+7. Committed with `git add -f handoff/PHASE5_SUMMARY.md` (gitignored path → force-add)
+   so the deliverable is not lost to the gitignore that ate earlier handoff docs.
+
+Files committed (commit 846ca467):
+- handoff/PHASE5_SUMMARY.md (new, 130 insertions)
+
+VERIFY: handoff/PHASE5_SUMMARY.md exists; all 13 hashes resolve via `git show <hash>--stat`;
+every task has an explicit test-run line (not just typecheck/lint). PASS.
+
+Commit: 846ca467
+"docs: P5-14 Phase 5 summary - P5-01..13 committed, per-task test-run lines"
+(1 file changed, 130 insertions). secret-scan: OK.
+
