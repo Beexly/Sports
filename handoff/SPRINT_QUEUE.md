@@ -881,7 +881,7 @@ artifact and is the ONE deletion you are permitted.
 **VERIFY:** `handoff/build-raw.txt` exists showing either a successful build or a documented failure
 with root cause.
 
-### P7-08 — Local bring-up runbook, verified · STATUS: TODO · STRIKES: 0
+### P7-08 — Local bring-up runbook, verified · STATUS: DOING · STRIKES: 0 · started: 2026-08-17T16:00:00Z
 The owner needs to actually RUN this app. Determine the minimal bring-up sequence by READING config
 and code. **Do NOT start a long-running dev server** — you cannot manage its lifecycle and it will
 hang your session.
