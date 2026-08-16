@@ -1037,7 +1037,15 @@ Same as P8-02, next item.
 Commit: 937a9151 — `fix(GSE-SEC-042): stamp FreeStats fetchedAt with actual fetch time, not hit time`.
 3 new tests in `free-stats.test.ts` pass; no new tsc errors in the edited file.
 
-### P8-05 — Fix the next finding · STATUS: TODO · STRIKES: 0
+### P8-05 — Fix the next finding · STATUS: DONE · STRIKES: 0 · started: 2026-08-18T18:30:00Z · completed: 2026-08-18T19:33:00Z (commit 2d008e96)
+Same as P8-02, next item.
+
+P8-05 fixed **GSE-SEC-018** (first SAFE-DIRECT finding in `REMEDIATION_EXECUTION.md` that
+was neither sealed/owner-gated nor stale). Source: `apps/web/lib/gse-stats/session-tier.ts`.
+Fix: production-gate the `GSE_ALLOW_QUERY_TIER=1` env flag and the internal `allowQueryOnly`
+opt-in so anonymous `?tier=` cannot elevate billing tier in production (fails closed to
+FREE with `spoofBlocked: true`). New test: `apps/web/lib/gse-stats/__tests__/session-tier.test.ts`
+(4 tests, all pass). `npx vitest run` on that file: 4 passed.
 Same as P8-02, next item.
 
 ### P8-06 — Fix the next finding · STATUS: TODO · STRIKES: 0
