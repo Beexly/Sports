@@ -1930,7 +1930,7 @@ exercised at runtime).
 non-zero. Nothing writes to any DB. typecheck + lint. Commit. If you cannot construct a sound placebo in two
 attempts, mark BLOCKED with exactly why — do NOT ship a weak test that would bless a leaky harness.
 
-### P14-03 — Write the owner runbook: PROVE_THE_EDGE.md (the one-sitting proof chain) · STATUS: DOING · STRIKES: 0
+### P14-03 — Write the owner runbook: PROVE_THE_EDGE.md (the one-sitting proof chain) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16 · commit c1928108
 Prepare-not-flip. Write `docs/ops/PROVE_THE_EDGE.md` — the exact ordered command sequence that takes the
 owner from empty tables to a published-ready calibration story in one sitting, clearly marking which steps
 WRITE production data (owner-only) vs READ. Trace the real routes/scripts, cite each:

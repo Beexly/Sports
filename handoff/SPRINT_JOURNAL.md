@@ -1,4 +1,37 @@
-### 2026-08-16T13:03:00Z · P10-01 — Round 2 (resume) · DONE · STRIKES: 0
+### 2026-08-16T20:41:57Z · P14-02 — Prove the proof is real: leak-free verification of the historical-replay harness · DONE · STRIKES: 0 · commit 263913e1
+
+Resumed P14-02 from DOING (prior run had already authored the placebo test
+file but had not committed it). Independently re-verified from current HEAD:
+
+Action:
+1. Confirmed cwd via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+   `date +%F` → 2026-08-16.
+2. Read the existing uncommitted test file:
+   packages/prediction-engine/src/edge-lab/__tests__/historical-replay-placebo.test.ts
+   It imports assemblePreGameFeatures, POST_KICKOFF_FIELDS, LookaheadLeakError,
+   replayAndSettleGame, scoreHistoricalGame, settleHistoricalPick, RawScheduleRow,
+   SettledHistoricalPick from ../../historical-replay.js, and mulberry32/shuffled
+   from ../rng.js — both source files confirmed present.
+3. Ran VERIFY:
+   `npx vitest run packages/prediction-engine/src/edge-lab/__tests__/historical-replay-placebo.test.ts`
+   → 9 passed (9), 32ms. Full edge-lab suite run: 30 files, 393 tests, all pass.
+   `npx tsc --noEmit` → exit 0 (clean). eslint not configured for this package
+   (no eslint config exists; lint script absent from package.json — typecheck is
+   the applicable gate here).
+4. Test logic confirmed sound:
+   - Bed 1 — assemblePreGameFeatures throws LookaheadLeakError for each
+     POST_KICKOFF_FIELDS entry, accepts nulls, structurally omits score fields.
+   - Bed 2 — REAL-order fixture shows non-zero realized return >0.1 (model picks
+     settle correctly — not a no-op); CLV honestly 0/MATCHED_CLOSE by construction.
+   - Bed 3 — SHUFFLED settlement facts (24 runs) collapse |return| <= 0.5 and
+     |median return| <= 0.35, proving no lookahead leak survives permutation.
+   - Bed 3b — picks are deterministic across orderings (scorer is score-free).
+5. Committed ONLY the test file (the source historical-replay.ts was already
+   committed, no diff). `git show 263913e1 --stat` confirms 1 file, 422 insertions.
+   No DB writes occurred.
+
+Re-derivation (no inherited figures): all counts and exit codes from commands
+run THIS session. Commit hash verified via `git show 263913e1 --stat`.
 
 Resumed P10-01 from DOING (prior run wrote Round 2 P10-01 content into
 BATTLE_TEST_LOG.md but was interrupted before committing). Independently
@@ -3317,4 +3350,73 @@ Added `__tests__/market-calibration-page.test.tsx` (5 tests).
   adds data, the page will still pass because it renders real numbers only when the
   loader returns status:"ok" (not "no-data").
 
-Next: P14-01 (first TODO after P13-07 in queue).
+---
+
+## P14-03 — Write the owner runbook: PROVE_THE_EDGE.md (2026-08-16)
+
+**Time:** 2026-08-16T15:50:00Z (date confirmed via `date +%F` → 2026-08-16)
+**Status:** DONE → COMMITTED
+**Commit:** c19281088756703499d855dcd2c6dd9192effea6
+(`git show c1928108 --stat` verified: 2 files changed, 234 insertions(+), 2 deletions(-):
+ creates `docs/ops/PROVE_THE_EDGE.md` (232 lines), edits `handoff/SPRINT_QUEUE.md`
+ STATUS DOING→DONE.)
+
+**What I did:**
+- Set P14-03 STATUS to DOING in the queue (was TODO — the first TODO in the file,
+  scanning top-to-bottom; P14-01 and P14-02 were already DONE).
+- Read every file the task names and traced the real routes/scripts rather than
+  assuming paths from the queue's prose:
+  - `apps/web/app/api/cron/backfill-historical-games/route.ts` — GET route, Bearer
+    `CRON_SECRET` via `cronAuthError` (`apps/web/lib/cron/authorize.ts`), calls
+    `ingestHistoricalGames()` (`apps/web/lib/ingestion/historical-games.ts:37`).
+    Writes the `HistoricalGame` model (schema `packages/db/prisma/schema.prisma:2855`).
+  - `apps/web/app/api/cron/backfill-team-efficiency/route.ts` — GET route, chunked
+    2 seasons/call, writes `TeamGameEfficiency` (schema `packages/db/prisma/schema.prisma:2889`).
+  - `/api/cron/settle-picks` route — registered in `vercel.json:21` (verified by
+    `grep -n "settle-picks" vercel.json` → line 21).
+  - `scripts/backfill/historical-settlement-backfill.ts` — dry-run by default;
+    `BACKFILL_WRITE=1` is the only write path (confirmed at lines 21, 34, 152);
+    stamps `isBootstrap=true`; does NOT bump `MODEL_VERSION` (line 28).
+  - `apps/web/app/api/calibration/market-backtest/route.ts` and
+    `.../elo-backtest/route.ts` — public GET endpoints; `loadMarketCalibrationBacktest`
+    (`apps/web/lib/calibration/market-backtest.ts:42`) reads `db.historicalGame.findMany`
+    directly. Honest empty state: `status: "no-data"`, note
+    "No settled historical games with closing moneylines yet. Run the historical-games
+    backfill, then re-check." (read from the source at lines 70-85).
+  - `docs/strategy/PATH_TO_PROVEN_EDGE.md` — the honest framing: ~53-55% ATS cap on
+    mainstream spread win rate, CLV as north star, CLV coverage gate
+    (`apps/web/lib/performance/clv-coverage.ts`), public claim gate
+    (`apps/web/lib/performance/public-clv-policy.ts:89-96`).
+- Wrote `docs/ops/PROVE_THE_EDGE.md` — an owner-only runbook with a legend
+  (READ vs OWNER-ONLY WRITES vs OWNER-ONLY FLAG), a 4-step chain (prerequisites →
+  build the corpus → live settlement → read the proof → close the loop), an honest
+  caveat section stating that blind full-slate edge is capped ~52-56% and the real
+  deliverable is CLV vs obtainable price on a selective subset proven over 200+ bets,
+  a safety checklist, and a "files this runbook traces to" appendix.
+- VERIFY (doc-only per task): every command cites a real file — all 19 cited paths
+  confirmed to exist via a batch `ls`/`[ -e ]` test; schema line numbers confirmed
+  (`grep -n "model HistoricalGame"` → 2855; `model TeamGameEfficiency` → 2889);
+  `vercel.json:21` confirmed for settle-picks; the two backfill routes confirmed
+  NOT in vercel.json (grep exit 1). No command was executed against prod — the
+  runbook documents commands the OWNER runs, it does not run them.
+
+**Result:** PASS. Runbook written, committed, all citations verified to exist.
+
+**UNCERTAINTY / notes (SELF-VERIFICATION PROTOCOL):**
+- The task directive says to include "the honest caveat from the memory/strategy docs:
+  blind full-slate edge is capped ~52-56% and the real deliverable is CLV vs obtainable
+  price on a SELECTIVE subset, proven over 200+ fired bets." I traced this to
+  `docs/strategy/PATH_TO_PROVEN_EDGE.md` (the ~53-55% ATS cap and the CLV-vs-selective-subset
+  framing) and also reproduced it verbatim from the task text in `SPRINT_QUEUE.md:1940-1942`.
+  The EXACT "52-56%" / "200+ fired bets" phrasing is stated in the task directive itself;
+  the grounding doc uses "53-55%" / "selective subset / sample floor." I cited BOTH the
+  task directive and the strategy doc and noted the discrepancy rather than papering over
+  it: "If a differing number is later found in a strategy doc, prefer the doc and update
+  this runbook." (Not re-run — this is a prose citation judgment, not a code assertion.)
+- The ~52-56% cap phrasing is not asserted as a precise empirical figure; it is
+  reproduced as the documented product framing the task asked to carry forward, with the
+  source doc explicitly cited.
+- No git push performed (HARD RULE: never git push). Only new doc + queue-status edit
+  committed; no package.json/npm install; no `.env` touched.
+
+Next: P14-04 (next TODO in queue — "Free-mode reality audit").
