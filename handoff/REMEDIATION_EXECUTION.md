@@ -51,8 +51,9 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 4 | GSE-SEC-005 | HIGH | transitive DoS cluster (fast-uri, brace-expansion, nanoid) | STALE — not in current npm-audit.json; lock has patched versions | DEPENDENCY_HEALTH.md |
 | 5 | GSE-SEC-016 | HIGH | dual-mode cron treats `x-vercel-cron` as auth | `apps/web/lib/cron/authorize.ts` verified — bearer_only now default, dual opt-in | 4ba79943 |
 | 6 | GSE-SEC-017 | MEDIUM | JWT keeps stale ADMIN if DB lookup fails | `apps/web/lib/auth.ts:50-72` verified — re-resolves DB role on every refresh, fail-safe | 99db1db5 |
-| 7 | GSE-SEC-021 | MEDIUM | refund/dispute does not revoke entitlement | `apps/web/app/api/webhooks/stripe/route.ts:174` verified — deleted case sets tier: FREE | d4da1265 + webhook |
-| 8 | GSE-SEC-022 | MEDIUM | Stripe unpaid mapped to PAST_DUE grace | `apps/web/app/api/webhooks/stripe/route.ts:215` verified — atomic PAST_DUE + CANCELED guard | 76254187 + webhook |
+| 7 | GSE-SEC-021 | MEDIUM | refund/dispute does not revoke entitlement | `apps/web/app/api/webhooks/stripe/route.ts:174` verified — deleted case sets tier: FREE | d4da1265 + webhook | 
+
+**CORRECTION 2026-08-26 (verified live):** The claimed commit `d4da1265` does NOT implement a refund handler. `git show d4da1265 --stat` shows it touches only `board-gate-decisions.test.ts`, `route.ts` (board state), `app/board/page.tsx`, `app/preview/[sport]/[slug]/page.tsx`, and `lib/board/state.ts` — all tier-gating for the board/preview paywall (GSE-SEC-025), zero refund-related code. `git show d4da1265 | grep -ic "refund\|charge"` returns `0`. Additionally, `grep -n "charge.refunded\|refund" apps/web/app/api/webhooks/stripe/route.ts` returns ZERO hits — the refund-revocation handler is NOT present in the webhook route. This finding remains **OPEN**, not FIXED. `handoff/LAUNCH_BLOCKERS.md` §1.2 correctly lists GSE-SEC-021 as BLOCKING (the refund gap). Status corrected to OPEN.
 | 9 | GSE-SEC-023 | LOW | no live/test Stripe key guard | `apps/web/lib/stripe.ts:34,83` verified — fail-closed `StripeNotConfiguredError` in own try/catch | b606d4a8 |
 | 10 | GSE-SEC-025 | HIGH | public preview+board leak PREMIUM selection/line | `apps/web/lib/board/state.ts` verified — server-side tier filter, market redaction | d4da1265 |
 | 11 | GSE-SEC-027 | LOW | FREE /api/picks first sentence of full reasoning | `apps/web/app/api/picks/route.ts:237-239` verified — reasoningShort gate behind canSeeFactorBreakdown | P5-13 |
@@ -67,6 +68,8 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 20 | GSE-SEC-051 | HIGH | ESPN ingest skips checkClearance; scores stored despite storage_allowed=false | `apps/web/lib/data-sources/free-first-ingest.ts:99` verified — checkClearance gates ESPN fact-extract | b67ace68, b8ce77c8 |
 | 21 | GSE-SEC-064 | MEDIUM | cookie mutations have no CSRF/Origin check | `apps/web/lib/auth/csrf-origin-guard.ts` verified — csrfOriginCheck wired in push/subscribe | a0e815ad, P5-10 |
 | 22 | GSE-SEC-080 | INFO→FIXED | fpl-api adapter fetches without clearance gate | `apps/web/lib/data-sources/free-score-persist.ts:103` verified — checkClearance gates fpl-api | b992f1c3 (050 commit bundle) |
+
+**CORRECTION 2026-08-26 (verified live):** The claimed `checkClearance` at `apps/web/lib/data-sources/free-score-persist.ts:103` gates `source_id: "henrygd-ncaa"`, NOT `fpl-api`. `sed -n '95,110p'` of that file shows the clearance call is for `henrygd-ncaa` (`mode: "public_logged_off_fact_extract"`, `intents: ["storage", "derived_analytics"]`). Commit `b992f1c3` (the cited fix commit) is titled "fix: GSE-SEC-050 — gate secondary score sources with runtime checkClearance" and touches only `free-score-persist.ts` + `multi-source-scores.ts` + `source-router.ts` — all gating henrygd-ncaa/MLB/BallDontLie/NHL, not fpl-api. The fpl-api adapter at `apps/web/lib/data-sources/free-adapters/fpl.ts:150` remains dormant with zero production callers (per AUDIT_FINDINGS.md GSE-SEC-080 entry). This finding's status was **INFO (dormant)**, not FIXED. Status corrected accordingly.
 
 ---
 
@@ -154,7 +157,9 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 52 | GSE-SEC-077 | the-odds-api fetched without checkClearance | `packages/ingestion-pipeline/src/process-sport.ts:255` verified — paid getOdds at line 257 has spend guard only | SAFE DIRECT | M |
 | 53 | GSE-SEC-078 | espn-public-api multi-source path no checkClearance | `apps/web/lib/data-sources/free-first-ingest.ts:218` verified — fetchEspnForDates at line 98 called without gate | SAFE DIRECT | S |
 | 54 | GSE-SEC-079 | sleeper-api uses assertIngestible not checkClearance | `apps/web/lib/integrations/sleeper.ts:275` verified — registration gate only, no runtime checkClearance | NEEDS-OWNER (MIXED — packages/data-ingestion may be outside sealed trees; verify before editing) | S |
-| 55 | GSE-SEC-080 | fpl-api adapter fetches without clearance gate | FIXED — checkClearance now present at `apps/web/lib/data-sources/free-score-persist.ts:103` | FIXED | — |
+| 55 | GSE-SEC-080 | fpl-api adapter fetches without clearance gate | `apps/web/lib/data-sources/free-adapters/fpl.ts:150` verified — zero production callers (dormant) | INFO | — |
+
+**CORRECTION 2026-08-26 (verified live):** The original FIXED status was false. The `checkClearance` at `free-score-persist.ts:103` gates `henrygd-ncaa`, not `fpl-api` (confirmed via `sed -n '95,110p'`). Commit `b992f1c3` is titled "fix: GSE-SEC-050" and only touches henrygd-ncaa/MLB/BallDontLie/NHL gates. The fpl-api adapter at `free-adapters/fpl.ts:150` remains dormant (INFO, not FIXED).
 
 ---
 

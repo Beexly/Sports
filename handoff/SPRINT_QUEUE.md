@@ -1637,7 +1637,7 @@ Fix: add a "needs autopsy" section backed by
 — highest-confidence losses first, since those are the ones a skeptic finds. Bound it with a `take`.
 **VERIFY:** test the query shape/ordering. typecheck + lint. Commit.
 
-### P12-07 — Correct the false "VERIFIED FIXED" claims in the audit trail · STATUS: TODO · STRIKES: 0
+### P12-07 — Correct the false "VERIFIED FIXED" claims in the audit trail · STATUS: DOING · STRIKES: 0
 Evidence (independently verified): `handoff/REMEDIATION_EXECUTION.md` marks **GSE-SEC-021** ("refund/
 dispute does not revoke entitlement") FIXED citing commit `d4da1265` — but `grep -n "charge.refunded"
 apps/web/app/api/webhooks/stripe/route.ts` returns ZERO hits, and `d4da1265` is a board/preview tier-gate

@@ -18,6 +18,8 @@ by marginal cost with a spend guard. The dominant risk is NOT app logic — it i
 the dependency tree: next-auth/@auth/core carry 2 CRITICAL advisories
 (homoglyph email bypass; fail-open auth object), next has a deserialization DoS,
 and the build chain (postcss) has an arbitrary-file-read advisory. Secondary
+
+**CORRECTION 2026-08-26 (verified live):** The executive summary claim "next-auth/@auth/core carry 2 CRITICAL advisories" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-26 yields **0 critical** — the next-auth/@auth/core advisories (GSE-SEC-001/002) were resolved in the patched lock (`@auth/core >=0.41.3`). Only 2 HIGH findings remain (GSE-SEC-059 Next 14.2.15, GSE-SEC-060 postcss transitive). The remaining dependency risk is HIGH, not CRITICAL.
 risks: rate limiting covers a small fraction of API routes, CSP allows
 unsafe-inline/unsafe-eval, and three pre-existing tracked-debt failures keep CI
 red (model-freeze #419, api-v1-boundary #420, typecheck #421) — all documented,
@@ -27,14 +29,22 @@ none caused by this branch.
 
 Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 
+**CORRECTION 2026-08-26 (verified live):** The severity histogram "Critical: 2" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-26 yields **0 critical, 2 high**. The GSE-SEC-001/002 next-auth/@auth/core critical advisories were resolved (patched versions in the lock). Updated histogram: **0 Critical · 2 High · 5 Medium · 3 Low · 3 Info**.
+
 ## (3) TOP 10
 
 1. CRITICAL — next-auth/@auth/core advisories (homoglyph email bypass, fail-open auth object) — auth stack, unpatched.
+
+**CORRECTION 2026-08-26 (verified live):** GSE-SEC-001/002 are NOT still unpatched. The `npm audit` at the time of the audit was stale; the current lock file has the patched versions (`@auth/core >=0.41.3`). `npm audit --omit=dev --json` re-run on 2026-08-26 yields 0 critical. Updated severity: the CRITICAL label should be **STALE/RESOLVED**, not active.
 2. CRITICAL — next-auth beta-range config-error fail-open (GHSA-8fpg-xm3f-6cx3).
+
+**CORRECTION 2026-08-26 (verified live):** Same as GSE-SEC-001 — resolved in the patched lock. No longer critical.
 3. HIGH — next deserialization DoS (GHSA-h25m-26qc-wcjf) + Image Optimizer DoS.
 4. HIGH — postcss arbitrary file read via sourceMappingURL (build chain).
 5. HIGH — fast-uri host-confusion + brace-expansion/nanoid DoS (transitive).
-6. MEDIUM — rate limiting on 8/176 API routes.
+6. MEDIUM — rate limiting on 8 of 176 API routes.
+
+**CORRECTION 2026-08-26 (verified live):** The rate-limit count "8 of 176 API routes" is STALE. `grep -rl 'rate-limit\|rateLimit\|consumeRateLimit\|@sports/util/rate' apps/web/app/api --include='route.ts' | wc -l` returns **40**, not 8. The gap is now 136 unthrottled (176 - 40), not 168.
 7. MEDIUM — CSP script-src allows 'unsafe-inline' 'unsafe-eval'.
 8. MEDIUM — typecheck debt #421 touches autonomy executor allow-list (governance).
 9. MEDIUM — api-v1 route tree pre-promotion (#420, tracked debt, guard holds).
