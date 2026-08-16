@@ -36,7 +36,7 @@ disproved P8-08-RESUME's incorrect premise (fix IS in a56fe1dc). No new
 regressions found. BATTLE_TEST_LOG.md Round 2 content + SPRINT_QUEUE.md
 STATUS flip + this journal entry committed as one commit.
 
-Commit: c73a4219
+Commit: 4aa440fb
 
 ---
 
