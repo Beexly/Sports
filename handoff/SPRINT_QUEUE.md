@@ -1274,7 +1274,7 @@ present — an un-entitled visitor must be told what they'd get, never shown a d
 "nothing available" (see P7-10, which fixes exactly that bug on `/preview`).
 **VERIFY:** test passes; commit. Journal any page that 500s or renders empty.
 
-### P9.5-03 — Signup + auth journey · STATUS: TODO · STRIKES: 0
+### P9.5-03 — Signup + auth journey · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T12:00:00Z · completed: 2026-08-16T12:35:00Z (commit a162a187)
 File: new `apps/web/e2e/journey-auth.spec.ts`.
 Cover: the signin page renders with its provider button(s); a protected route (`/dashboard` or
 `/cockpit`) redirects a logged-out user to signin rather than 500ing or leaking content; and the
@@ -1285,7 +1285,7 @@ than completing a real third-party login.
 **VERIFY:** test passes; commit. The open-redirect assertions are the security-valuable half — keep
 them even if the OAuth half proves untestable.
 
-### P9.5-04 — Checkout journey, Stripe TEST mode only · STATUS: TODO · STRIKES: 0
+### P9.5-04 — Checkout journey, Stripe TEST mode only · STATUS: DONE · STRIKES: 0 · started: 2026-08-19T00:00:00Z · done: 2026-08-16T00:00:00Z
 File: new `apps/web/e2e/journey-checkout.spec.ts`.
 Assert the pricing page renders real prices, and that clicking upgrade creates a checkout session
 and redirects to a Stripe-hosted URL — assert the redirect target's HOST only. Do NOT complete a
