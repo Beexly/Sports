@@ -43,15 +43,19 @@ Breaking one discards the run.
 5. **NEVER mark DONE** unless the Definition of Done commands actually passed.
 6. **NEVER `git commit --no-verify`.**
 7. **NEVER install a package, run a migration, or touch a database.** (Bare
-   dependency setup is fine — but use **`npm run setup`**, not `npm install`.
-   Since 2026-08-16 the repo ships `.npmrc` with `ignore-scripts=true` as a
-   security control: a malicious or typosquatted package must not be able to
-   execute arbitrary code on a machine holding live production credentials.
-   Bare `npm install` therefore no longer generates the Prisma client and will
-   leave you with a broken build. `npm run setup` installs, explicitly rebuilds
-   only the six packages that legitimately need it, then runs `db:generate`.
-   **Do NOT delete `.npmrc` or re-enable scripts to make something work** — if
-   setup fails, mark BLOCKED and report it.)
+   `npm install` is fine — it is setup, and it still works normally.)
+   **Supply-chain controls, added 2026-08-16 — do not disable them.** `.npmrc`
+   sets `strict-allow-scripts=true` and `min-release-age=7`. Install scripts run
+   only for the version-pinned packages approved in `package.json`'s
+   `allowScripts`; anything else HARD FAILS instead of silently running code on
+   a machine that holds live production credentials.
+   - If an install fails with an unapproved-script error, that is the control
+     working. **Do NOT delete `.npmrc`, do NOT set `ignore-scripts`, and do NOT
+     run `npm install-scripts approve` to make it pass.** Mark the task BLOCKED
+     and report which package wanted to run code.
+   - A version bump of an already-approved package also requires re-approval by
+     design (the allow-list is pinned per version). Same rule: report, don't
+     approve.
 8. **NEVER fabricate product data** — no mock picks, sample odds, placeholder win
    rates, invented benchmarks. Anywhere.
 9. **NEVER weaken a guard to make a test pass.** Never delete a phrase from a
