@@ -3265,4 +3265,56 @@ so the gate runs locally on Windows developer machines, not just Linux CI.
   this change and is NOT in scope for P13-07. Journaling it for visibility.
 - Only one line of source code was changed; no package.json edits, no npm install, no env changes.
 
+---
+
+### 2026-08-16T19:52:03Z · P14-01 — Build the public market-calibration baseline page · DONE · STRIKES: 0
+
+**What:** Created `apps/web/app/calibration/market/page.tsx` — a public page that
+consumes the two live API endpoints (`/api/calibration/market-backtest` and
+`/api/calibration/elo-backtest`), renders the closing line's Brier score /
+ECE / reliability+resolution breakdown with a `ReliabilityChart`, and an
+Elo-vs-market comparison showing the `betterCalibrated` verdict. Honest empty
+state surfaces the loaders' no-data message verbatim (no fabricated stats).
+Added `__tests__/market-calibration-page.test.tsx` (5 tests).
+
+**Steps taken:**
+1. Read handoff/SPRINT_QUEUE.md top-to-bottom via `grep -n 'STATUS: TODO\|STATUS: DOING'`
+   → first TODO/DOING = P14-01 (line 1895). Set STATUS → DOING.
+2. Read both route files + both lib files to get exact response shape
+   (MarketCalibrationReport + EloVsMarketReport). Confirmed field names from
+   @sports/prediction-engine exports.
+3. Created page at apps/web/app/calibration/market/page.tsx (server component,
+   dynamic, fetching both loaders directly like /clv/page.tsx does).
+4. Created test file with vi.hoisted mocks on the loader modules (not the DB).
+
+**VERIFY (all run THIS session):**
+- `npx vitest run __tests__/market-calibration-page.test.tsx` → 5/5 PASS (run from
+  apps/web/ where vitest.config.ts resolves @/ alias).
+- `npx vitest run` for 6 calibration test files → 23/23 PASS (market-backtest.test,
+  market-backtest-route.test, elo-backtest-loader.test, elo-backtest-route.test,
+  calibration-api.test, market-calibration-page.test).
+- `npx vitest run` for 3 guardrail test files → 52/52 PASS (trust-claims, 
+  public-performance-policy, metadata-banned-phrases).
+- `node scripts/guardrails/commercial-copy-scan.mjs` → OK (218 files, no violations).
+- `node scripts/guardrails/no-unsupported-performance-claims.mjs` → OK (217 files).
+- `npx tsc --noEmit` → clean, 0 errors (run from apps/web/).
+- `npx eslint app/calibration/market/page.tsx __tests__/market-calibration-page.test.tsx --max-warnings=0` → clean.
+- `git show 7c0391a8` → confirmed 3 files, 521 insertions; secret-scan OK.
+
+**Commit:** 7c0391a85fb558d693d8307876d844b78b77cc00
+(`git show --stat` run to verify the hash before journaling):
+```
+7c0391a P14-01: Build the public market-calibration baseline page
+ 3 files changed, 521 insertions(+), 1 deletion(-)
+ create mode 100644 apps/web/__tests__/market-calibration-page.test.tsx
+ create mode 100644 apps/web/app/calibration/market/page.tsx
+```
+
+**UNCERTAINTY / notes:**
+- Not running git push (HARD RULE: never git push).
+- Only new files + SPRINT_QUEUE.md status change committed; no package.json/npm install.
+- The empty-state test asserts `not.toMatch(DIGIT_PERCENT)` — if a future backfill
+  adds data, the page will still pass because it renders real numbers only when the
+  loader returns status:"ok" (not "no-data").
+
 Next: P14-01 (first TODO after P13-07 in queue).
