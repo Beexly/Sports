@@ -1470,7 +1470,7 @@ Write `handoff/RANKINGS_ACCURACY_AUDIT.md`:
    any visible indicator to the viewer?
 **VERIFY:** explicit PASS/FAIL/UNKNOWN per item, each backed by file:line or a command run.
 
-### P11-03 — Optimizer calibration audit (READ-ONLY) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-23T05:14:00Z (commit pending)
+### P11-03 — Optimizer calibration audit (READ-ONLY) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-23T05:14:00Z (commit 723ecfef)
 Read `apps/web/lib/fantasy/dfs-optimizer.ts`, `apps/web/components/fantasy/lineup-optimizer.tsx`,
 `apps/web/components/fantasy/optimizer-workspace.tsx`, and their test files in full. Write
 `handoff/OPTIMIZER_CALIBRATION_AUDIT.md`:
