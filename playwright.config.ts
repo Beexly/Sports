@@ -23,6 +23,8 @@ export default defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 900 } } },
+    { name: "mobile", use: { ...devices["iPhone 12"], viewport: { width: 390, height: 844 } } },
+    { name: "safari", use: { ...devices["Desktop Safari"] } },
   ],
   webServer: {
     command: "npm run dev --workspace=apps/web",
