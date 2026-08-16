@@ -1528,7 +1528,7 @@ a guess.
 **and a stale watchdog rule silently reverting real work.** One pass missed all of these. Assume
 the current tree has more of the same, and go find it.
 
-### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DOING · STRIKES: 0 · started: 2026-08-24T00:00:00Z
+### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DONE · STRIKES: 0 · started: 2026-08-24T00:00:00Z · completed: 2026-08-25T07:00:00Z
 For EVERY task in Phases 0-9 marked DONE, do not trust the STATUS field or the journal entry's
 prose. Independently confirm: (a) a real git commit exists whose diff matches what the task
 claimed to do — `git log --all --oneline --grep` or a manual `git show` search; (b) if the task
@@ -1540,7 +1540,7 @@ or a failing re-run is a real regression — reopen it as a new task at the END 
 STATUS TODO and a note citing which round found it.
 **VERIFY:** every DONE task in Phases 0-9 has a row in the round's table, no silent skips.
 
-### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: TODO · STRIKES: 0
+### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: DONE · STRIKES: 0 · completed: 2026-08-25T14:30:00Z
 Re-run Phase 2's structure (D1 Auth through D15 Types/coverage) as if `handoff/AUDIT_FINDINGS.md`
 does not exist yet — read the actual current code fresh, form your own findings first, THEN open
 `AUDIT_FINDINGS.md` and reconcile: what did the original audit miss, what has changed since
@@ -1552,7 +1552,7 @@ found it in `BATTLE_TEST_LOG.md`.
 **VERIFY:** `BATTLE_TEST_LOG.md` states explicitly, per domain, "same as before" or "new finding"
 or "original finding no longer applies" — no domain left unaddressed.
 
-### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: TODO · STRIKES: 0
+### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: DONE · STRIKES: 0 · started: 2026-08-25T18:00:00Z · resumed/finished: 2026-08-26T00:00:00Z
 This exact bug class has been found THREE times this session: a code comment or commit message
 makes a specific, confident technical claim about how something external behaves (a vendor's auth
 mechanism, what another code path does, what a library does on a given input) — and the claim is
@@ -1597,4 +1597,23 @@ Work these in priority order, forever, one item per session:
 6. Pick one file with the most `any` / `as any` / `@ts-ignore` in code this sprint already touched
    and tighten its types, with a test proving behavior is unchanged.
 Each of these is bounded, reversible, and cannot break the build. Journal every one.
+
+---
+
+## REOPENED TASKS (from P10-01 Round 1, 2026-08-25)
+
+### P8-08-RESUME — Implement GSE-SEC-033 fix (durable-write guard on all Stripe caps) · STATUS: TODO · STRIKES: 0
+**Found by:** P10-01 Round 1 (2026-08-25). The original P8-08 was marked DONE with STRIKES:0
+but has NO git commit. `git log --all --oneline --grep="033"` returns no fixing commit.
+`handoff/REMEDIATION_EXECUTION.md` line 98 still lists GSE-SEC-033 as SAFE-DIRECT / OPEN.
+The journal for P8-13 (SPRINT_JOURNAL.md line 1493) says it was "skipped" because the fix
+was "already in code per P8-12 verification" — but no commit anchors this, and line numbers
+have shifted (stripe.ts:393 now points at a checkout-session listing loop, not a durable-write guard).
+
+**Action:** Audit `apps/web/lib/stripe.ts` for ALL mutation entry points. The original finding
+(P8-08) stated the durable-write guard covered only checkout + webhook. Add a guard so that
+ALL Stripe-mutating paths (not just checkout and webhook) flow through a single durable-write
+gate. Add test coverage. Commit. Update REMEDIATION_EXECUTION.md row 15 to FIXED.
+**VERIFY:** `npx vitest run <new-test-file>` passes; `git show <hash> --stat` resolves the
+commit that flips GSE-SEC-033 to FIXED in the execution register.
 
