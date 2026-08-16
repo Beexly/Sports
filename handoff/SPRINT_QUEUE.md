@@ -1116,7 +1116,9 @@ Same as P8-02, next item.
 # PHASE 9 — SHIP-READINESS (no deploying, no pushing)
 *Everything the owner needs to merge and deploy in one confident sitting.*
 
-### P9-01 — Deploy-readiness assessment · STATUS: TODO · STRIKES: 0
+### P9-01 — Deploy-readiness assessment · STATUS: DONE · STRIKES: 0 · completed: 2026-08-15T22:30:00Z
+
+`handoff/DEPLOY_READINESS.md` written (commit pending). Determined: merge-to-main triggers Vercel auto-deploy; production must serve main's SHA. One new migration in this branch (`20260813200000_add_entity_graph`, commit `9cfb91b1`) is unapplied — owner must apply or confirm ledger reconciliation before merge (owner-gated, fail-closed build gate). No new required env vars — `.env.example` diff vs `origin/main` is empty; all 17 required vars already documented. Schema/migration drift confirmed none via `prisma validate` + `prisma migrate diff`. See file for full summary + owner-gated blockers.
 Write `handoff/DEPLOY_READINESS.md`. Determine and record: how a change actually reaches production
 (read `vercel.json` and deploy docs — merge to main, or alias promotion?); whether any commit on
 this branch requires a DB migration applied FIRST; whether any commit changes an env-var contract
