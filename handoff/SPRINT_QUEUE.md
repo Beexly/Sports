@@ -1653,7 +1653,7 @@ Fix: correct each false/stale claim IN PLACE with a dated correction note; do NO
 text (audit trail). Re-derive every number you write from a live command, never from another document.
 **VERIFY:** every corrected number cites the exact command you ran to produce it. Commit.
 
-### P12-08 — Snap counts refresh twice an hour and nothing reads them · STATUS: TODO · STRIKES: 0
+### P12-08 — Snap counts refresh twice an hour and nothing reads them · STATUS: DONE · STRIKES: 0
 Evidence: `SnapCount` and `DepthChartEntry` are written by `/api/cron/refresh-player-stats` (scheduled
 `0,30 * * * *` in `vercel.json`) and have **zero read sites** anywhere in `apps/`, `packages/`,
 `scripts/`, `workers/`. The projection path (`apps/web/lib/projections/player-projections.ts`,

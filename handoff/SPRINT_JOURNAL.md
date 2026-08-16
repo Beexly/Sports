@@ -2851,6 +2851,85 @@ Resumed P12-07 (was STATUS: TODO). Task: correct false/stale claims in the audit
 - `handoff/SPRINT_QUEUE.md` (STATUS TODO→DOING→DONE)
 
 Commits:
-- f1653bc3: "P12-07: correct false 'VERIFIED FIXED' claims in audit trail (2026-08-16)"
-- d20b9937: "P12-07: mark task STATUS DONE (audit trail corrections complete)"
+|- f1653bc3: "P12-07: correct false 'VERIFIED FIXED' claims in audit trail (2026-08-16)"
+|- d20b9937: "P12-07: mark task STATUS DONE (audit trail corrections complete)"
+
+---
+
+### 2026-08-16T16:42:37Z · P12-08 — DONE · STRIKES: 0 · commit 8378d4e7
+
+**Task:** Snap counts refresh twice an hour and nothing reads them. Wire snap
+share into the Galaxy Index composite score as an input.
+
+**Action:**
+1. Confirmed CWD = `C:/Users/Garrett/Sports` (`git rev-parse --show-toplevel`).
+2. Read SPRINT_QUEUE.md top-to-bottom; P0-01..P12-07 are DONE/BLOCKED, the
+   first live TODO was P12-08. Set STATUS TODO→DOING.
+3. Read the task-named sources:
+   - `apps/web/app/api/cron/refresh-player-stats/route.ts` — the cron that
+     writes SnapCount (0,30 * * * *) via `ingestSnapCounts`.
+   - `apps/web/lib/ingestion/snap-counts.ts` — writes `SnapCount` rows with
+     `pfrPlayerId` (natural id), `playerName`, `season`, `week`, `offensePct`
+     (0–100 share of team offensive snaps), and `playerId` (resolved gsis
+     link, nullable / "left null for now" per the file's own comment).
+   - `apps/web/lib/scoring/player-composite.ts` — the Galaxy Index scorer
+     (`loadPlayerCompositeScores`) which builds a `WeightedSignal[]` and blends
+     via `compositeScore` from `@sports/prediction-engine`.
+   - `apps/web/lib/projections/player-projections.ts` — confirmed it reads
+     `PlayerGameStat` only (no snap join), as the evidence states.
+4. Implemented the wiring **additively** in `player-composite.ts`:
+   - Added `SnapRow` interface and a `db.snapCount.findMany` read keyed to the
+     season, selecting `playerId` + `offensePct`.
+   - Built a per-player **peak** offense snap share (max across the season's
+     weeks). Rows with a null `playerId` (unresolved gsis link) are skipped —
+     we never attribute another player's snap share by name guesswork.
+   - Added a `snapShare` WeightedSignal (weight 1, confidence 0.8) **only when
+     snap data exists**. The signal maps `offensePct` onto the shared -1..1
+     scale via `snapShareValue`: `(pct - 50) / 50` clamped, so 50% = neutral.
+   - The signal is **structurally absent** when snap data is missing, so the
+     composite denominator is untouched and scores are byte-identical to the
+     pre-wiring baseline for players/lines without snap data (purely additive,
+     no weighting-story change to the published baseline).
+   - Exposed a read-only `snapShare: number | null` on `PlayerScoreRow`
+     (additive; route.ts and lineup-tools.ts pass the row through as JSON and
+     do not depend on a tight shape, so no downstream changes were needed).
+   - Updated the top-of-file doc block + the `note` string to name snap share
+     as a blended input.
+5. Updated `apps/web/__tests__/player-composite.test.ts`:
+   - Added `snapCount: { findMany }` to the mocked DB client.
+   - New test: equal production + equal touches, differing only in snap share
+     (90% vs 40%) → the high-snap player scores higher, and both carry a
+     `snapShare` driver (proves the signal is a real, bounded differentiator).
+   - New test: empty snap mock → `snapShare` null, no `snapShare` driver,
+     finite score (proves pure additivity / inertness on the no-data path).
+   - New test: a `playerId: null` snap row is ignored (proves no name-leak).
+   - Existing blend/empty tests kept green (snap mock defaults to empty).
+
+**VERIFY (all real commands):**
+- `npx vitest run __tests__/player-composite.test.ts` → 6/6 passed.
+- `npx vitest run __tests__/player-projections.test.ts
+   __tests__/refresh-player-stats-route.test.ts
+   __tests__/backfill-player-data.test.ts __tests__/ingest-nflverse-satellites.test.ts`
+  → 20/20 passed (no regression in snap-count consumers).
+- `npm run typecheck` (apps/web) → exit 0 (no new type errors).
+
+**Live-data caveat (journaling, not a failure):** real `SnapCount` rows are
+ingested with `playerId` left null today (per `snap-counts.ts` line 7:
+"linkage to the gsis-keyed Player table is a later crosswalk step, so
+`playerId` is left null for now"). The wiring joins on `playerId`, so live
+scores will pick up snap share automatically once that crosswalk step runs.
+The unit tests prove the signal math and guards against fixtures; I did NOT
+run the cron or fabricate production snap data to force a live read. The
+existing `0,30 * * * * * refresh-player-stats` cron (primary path) does not
+call `ingestSnapCounts` — it runs only under `?mode=full`. No cron change was
+in scope for this task (do NOT edit `.github`, `vercel.json`, or cron files
+without explicit instruction — left untouched).
+
+**Files committed (exactly the task's named source + its test):**
+- `apps/web/lib/scoring/player-composite.ts`
+- `apps/web/__tests__/player-composite.test.ts`
+
+Commit: 8378d4e7628fe83c878df30c9b49a14f6700a30b
+"wire snap share into the Galaxy Index composite score (P12-08)"
+(2 files changed, 107 insertions(+), 4 deletions(-); secret-scan OK, 2 files, no secrets)
 
