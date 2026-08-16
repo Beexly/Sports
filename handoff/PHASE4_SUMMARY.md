@@ -216,3 +216,21 @@ $ npm run lint
 
 Commit counts: 1 committed (b992f1c3, P4-06), 6 applied-but-uncommitted (P4-01..05, P4-07),
 0 blocked, 0 skipped.
+
+---
+
+## P5-12 NOTE (2026-08-16) — GSE-SEC-051 blocker RESOLVED
+
+P5-12 narrowed the clearance intent in `free-first-ingest.ts` (the GSE-SEC-051
+fix from P4-07) from `["storage", "derived_analytics"]` to `["derived_analytics"]`
+only, and committed it (b67ace68). The original P4-07 clearance call was
+requesting `storage` intent on ESPN, which has `storage_allowed=false`
+permanently in the rights registry — so clearance was always denied, blocking
+the read-only ESPN scores path entirely.
+
+GSE-SEC-051's core blocker (the clearance call itself that gates ESPN ingestion)
+is now committed and passing. It is safe to commit `free-first-ingest.ts` +
+`free-score-persist.ts` together in a future task, but per P5-12's instructions,
+do NOT commit free-score-persist.ts in this task — that remains a separate
+decision. The `free-score-persist.ts` file in the working tree diff still
+carries its own P4-07 clearance gating edit and awaits a separate commit.
