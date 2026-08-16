@@ -1029,7 +1029,7 @@ Take the FIRST unfixed SAFE-DIRECT item in `handoff/REMEDIATION_EXECUTION.md`. F
 finding, nothing else. Run the relevant test file(s). Commit. Mark it done in that file.
 **VERIFY:** typecheck+lint green, tests run and shown, commit hash in the journal.
 
-### P8-03 — Fix the next finding · STATUS: TODO · STRIKES: 0
+### P8-03 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Same as P8-02, next item.
 
 ### P8-04 — Fix the next finding · STATUS: TODO · STRIKES: 0

@@ -4,6 +4,8 @@ import {
   checkoutPriceId,
   currentPriceId,
   stripeLookupKeyFor,
+  stripePriceAmountMatchesAd,
+  advertisedPhaseUnitAmountCents,
   type PaidTier,
 } from "@/lib/billing/price-ids";
 import {
@@ -155,7 +157,22 @@ export async function resolveCheckoutPriceId(
       limit: 1,
     });
     const price = listed.data[0];
-    return price?.id ?? "";
+    if (!price) return "";
+    // GSE-SEC-024: verify the Stripe price's unit_amount matches the advertised
+    // phase price before returning it. A mismatch means someone configured a
+    // Stripe Price with a different amount than what we publicly advertise —
+    // fail CLOSED (return empty → 503 at the route) rather than charging the
+    // wrong amount.
+    if (!stripePriceAmountMatchesAd(price, tier, interval)) {
+      console.error(
+        `[checkout] unit_amount mismatch for ${tier}/${interval}: ` +
+          `Stripe price ${price.id} unit_amount=${price.unit_amount} ` +
+          `but advertised phase price is ${advertisedPhaseUnitAmountCents(tier, interval)} cents. ` +
+          `Refusing to return this price ID.`,
+      );
+      return "";
+    }
+    return price.id;
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown";
     console.error(

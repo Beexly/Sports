@@ -19,6 +19,8 @@
  * Pure + env-injectable → fully unit-tested without Stripe or a live env.
  */
 
+import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
+
 export type PaidTier = "FANTASY" | "PRO" | "ELITE";
 export type ResolvedTier = "FREE" | PaidTier;
 export type BillingInterval = "month" | "year";
@@ -30,6 +32,54 @@ type Env = Record<string, string | undefined>;
  * Operators attach these in the Stripe Dashboard; checkout resolves by key when
  * STRIPE_*_PRICE_ID envs are missing (fewer Vercel env landmines).
  */
+// --- price-ids.ts: SAFE DIRECT fix for GSE-SEC-024 ---
+// The advertised phase price (pricing-phases.ts) and the Stripe price object's
+// unit_amount must agree. Previously, resolveCheckoutPriceId returned a price
+// ID without checking that Stripe's unit_amount matched what we publicly
+// advertise — an operator misconfiguring a Stripe Price with the wrong amount
+// would silently charge a different figure than what's shown on the pricing
+// page. These pure helpers make that mismatch fail-closed and testable.
+
+export type StripePriceLike = {
+  /** Stripe's unit_amount for a price, in the currency's minor unit (cents for USD). */
+  unit_amount: number | null;
+};
+
+/**
+ * The amount we publicly advertise for a tier × interval, expressed in Stripe
+ * minor units (cents for USD). Derived from the CURRENT pricing phase so the
+ * displayed price and the charged price can never drift: advancing
+ * PRICING_PHASE re-prices both at once.
+ */
+export function advertisedPhaseUnitAmountCents(
+  tier: PaidTier,
+  interval: BillingInterval,
+): number {
+  const phase = getCurrentPricingPhase();
+  const price = phase[tier.toLowerCase() as "fantasy" | "pro" | "elite"];
+  const usd = interval === "month" ? price.monthly : price.annual;
+  // Stripe stores unit_amount as an integer in cents. Round to avoid float
+  // drift from the phase's decimal price (e.g. 14.99 → 1499).
+  return Math.round(usd * 100);
+}
+
+/**
+ * Validate that a Stripe price object's unit_amount matches the advertised
+ * phase price for the same tier × interval. Returns true when they agree.
+ * When unit_amount is null (some pricing tiers omit it), this returns false
+ * — fail-closed rather than silently charging an unverified amount.
+ *
+ * Pure + env-free → fully unit-testable without Stripe.
+ */
+export function stripePriceAmountMatchesAd(
+  price: StripePriceLike,
+  tier: PaidTier,
+  interval: BillingInterval,
+): boolean {
+  if (price.unit_amount == null) return false;
+  return price.unit_amount === advertisedPhaseUnitAmountCents(tier, interval);
+}
+
 export const STRIPE_LOOKUP_KEYS: Record<
   PaidTier,
   Record<BillingInterval, string>

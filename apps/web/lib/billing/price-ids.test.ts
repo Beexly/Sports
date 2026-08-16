@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { splitPriceIds, currentPriceId, tierForPriceId, checkoutPriceId, stripeLookupKeyFor, STRIPE_LOOKUP_KEYS, tierForLookupKey, tierFromPriceRef } from "./price-ids";
+import {
+  splitPriceIds,
+  currentPriceId,
+  tierForPriceId,
+  checkoutPriceId,
+  stripeLookupKeyFor,
+  STRIPE_LOOKUP_KEYS,
+  tierForLookupKey,
+  tierFromPriceRef,
+  advertisedPhaseUnitAmountCents,
+  stripePriceAmountMatchesAd,
+} from "./price-ids";
 
 describe("splitPriceIds", () => {
   it("splits comma lists, trims, drops empties; handles undefined", () => {
@@ -102,5 +113,79 @@ describe("tierForLookupKey / tierFromPriceRef", () => {
     expect(tierFromPriceRef("price_only_from_lookup", "gse-fantasy-monthly", {})).toBe("FANTASY");
     // neither
     expect(tierFromPriceRef("price_mystery", null, {})).toBe("FREE");
+  });
+});
+
+/**
+ * GSE-SEC-024: advertised phase price vs Stripe unit_amount disclosure risk.
+ *
+ * These tests verify that the helper which computes the advertised phase price
+ * in Stripe cents (and validates a Stripe price's unit_amount against it) is
+ * correct for every tier × interval combination under the default (FOUNDING)
+ * phase — which is what `getCurrentPricingPhase()` returns when PRICING_PHASE
+ * is unset (the default env in unit tests).
+ */
+describe("GSE-SEC-024 — advertisedPhaseUnitAmountCents", () => {
+  it("returns cents (not dollars) for every paid tier × interval", () => {
+    // FOUNDING phase (default): pro monthly $14.99 → 1499, annual $99 → 9900
+    expect(advertisedPhaseUnitAmountCents("PRO", "month")).toBe(1499);
+    expect(advertisedPhaseUnitAmountCents("PRO", "year")).toBe(9900);
+    // elite monthly $24.99 → 2499, annual $179 → 17900
+    expect(advertisedPhaseUnitAmountCents("ELITE", "month")).toBe(2499);
+    expect(advertisedPhaseUnitAmountCents("ELITE", "year")).toBe(17900);
+    // fantasy monthly $4.99 → 499, annual $49 → 4900
+    expect(advertisedPhaseUnitAmountCents("FANTASY", "month")).toBe(499);
+    expect(advertisedPhaseUnitAmountCents("FANTASY", "year")).toBe(4900);
+  });
+
+  it("rounds to the nearest cent to avoid float drift", () => {
+    // 14.99 * 100 = 1499 (not 1498.9999...)
+    expect(advertisedPhaseUnitAmountCents("PRO", "month")).toBe(
+      Math.round(14.99 * 100),
+    );
+    expect(advertisedPhaseUnitAmountCents("ELITE", "month")).toBe(
+      Math.round(24.99 * 100),
+    );
+  });
+});
+
+describe("GSE-SEC-024 — stripePriceAmountMatchesAd", () => {
+  it("returns true when unit_amount matches the advertised phase price", () => {
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: 1499 }, "PRO", "month"),
+    ).toBe(true);
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: 9900 }, "PRO", "year"),
+    ).toBe(true);
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: 2499 }, "ELITE", "month"),
+    ).toBe(true);
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: 4900 }, "FANTASY", "year"),
+    ).toBe(true);
+  });
+
+  it("returns FALSE when unit_amount does NOT match (prevents overcharge)", () => {
+    // Stripe price says $19.99 (1999) but phase advertises $14.99 (1499)
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: 1999 }, "PRO", "month"),
+    ).toBe(false);
+    // Stripe price says $9.99 (999) but phase advertises $14.99 (1499)
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: 999 }, "PRO", "month"),
+    ).toBe(false);
+    // Annual mismatch: Stripe says 9900 but tier is ELITE
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: 9900 }, "ELITE", "year"),
+    ).toBe(false);
+  });
+
+  it("returns FALSE when unit_amount is null (fail-closed)", () => {
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: null }, "PRO", "month"),
+    ).toBe(false);
+    expect(
+      stripePriceAmountMatchesAd({ unit_amount: null }, "ELITE", "year"),
+    ).toBe(false);
   });
 });
