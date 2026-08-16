@@ -1514,6 +1514,135 @@ a guess.
 
 ---
 
+# PHASE 12 — LAUNCH-READINESS GAPS FROM THE BLIND-SPOT SWEEP (added 2026-08-16)
+
+**Why this phase exists.** A six-lens adversarial sweep (branches / live production / real test state /
+queue blind spots / improvement opportunities / stale claims) found that the entire sprint had audited
+CODE against CODE and CLAIMS against OTHER DOCUMENTS — but never checked whether the live UI actually
+implements what the product publicly promises. That single omission produced most of the items below.
+These are real, verified gaps, each traced to a specific file, ordered by real customer or revenue
+damage rather than technical severity.
+
+**Boundaries for every task in this phase:** never push, never merge to main, never deploy, never touch
+`.env*`, never flip a founder gate, never modify `.github/`, `packages/db/prisma/`, or
+`apps/web/lib/ai-control-plane/`. Commit locally per COMMIT DISCIPLINE. One task per session.
+
+### P12-01 — A paying subscriber cannot cancel (published-promise violation) · STATUS: TODO · STRIKES: 0
+**Highest customer/legal exposure in this phase.**
+Evidence (verified): `apps/web/components/ui/manage-subscription-button.tsx` is rendered ONLY by
+`apps/web/components/ui/billing-notice-banner.tsx:49`, which renders only at
+`apps/web/app/dashboard/page.tsx:279` under `{billingNotice && ...}` — and `getBillingNotice`
+(`apps/web/lib/billing/notice.ts`) returns `null` for a HEALTHY subscription. So the Stripe billing-portal
+button appears only for PAST_DUE/INCOMPLETE accounts. Meanwhile `apps/web/app/pricing/page.tsx:206`
+(repeated at `:633`) publicly promises "Cancel any time from your dashboard", and
+`apps/web/app/terms/page.tsx:78-85` says the same.
+Files (only these): `apps/web/app/dashboard/page.tsx`, plus a new test file.
+Fix: render `<ManageSubscriptionButton />` for ANY user with a paid tier — not only inside the dunning
+banner. The existing "Subscription active" block at `dashboard/page.tsx:251-277` is the right home; it
+currently contains only a link to `/picks`. Do NOT change the button component itself, do NOT change
+`getBillingNotice` (the dunning banner must keep working as-is), do NOT touch
+`/api/subscriptions/portal`.
+**VERIFY:** a new test asserting the manage/cancel affordance renders for an ACTIVE paid subscription
+(not only PAST_DUE). Run it plus any existing dashboard tests. typecheck + lint clean. Commit.
+
+### P12-02 — No Contact/Support link anywhere in the footer · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/components/ui/footer.tsx` defines 40+ links across `PRODUCT_LINKS` (15),
+`COMPANY_LINKS` (16), `RESPONSIBLE_LINKS` (5), `DATA_LINKS`, `SOCIAL_LINKS` — none point to `/contact`.
+Site-wide, `/contact` is linked from exactly ONE place: `apps/web/app/about/page.tsx:119`. Compounds with
+P12-01: a customer who cannot cancel also cannot easily reach anyone. That combination is the chargeback
+pipeline.
+File (only this): `apps/web/components/ui/footer.tsx`. Fix: add a Contact link to the most appropriate
+existing group (likely `COMPANY_LINKS`). One line.
+**VERIFY:** typecheck + lint clean; run any existing footer test; grep-confirm `/contact` appears in the
+footer source. Commit.
+
+### P12-03 — Nothing can answer "did anyone convert" · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/lib/analytics/events.ts:89-96` — `track()` is explicitly inert ("Intentionally inert
+for now — no network, no identity") with exactly ONE non-test caller in the whole app
+(`apps/web/components/gsn/waitlist-form.tsx:17`). ~20 typed funnel events are DECLARED and never fired
+(`pricing_page_view`, `upgrade_cta_click`, `checkout_start`, `checkout_complete`, `checkout_abandon`,
+`cancellation_start`, …).
+Fix: wire the already-declared events at their natural call sites (pricing page view, upgrade CTA click,
+checkout start/complete). `track()` STAYS inert-by-default — do NOT add a network call, do NOT add an
+analytics vendor, do NOT add any env var. Goal: the instrumentation exists and is correct, so enabling a
+sink later is config, not code.
+**VERIFY:** tests asserting the right event fires with the right payload at each wired site (mock
+`track`). typecheck + lint clean. Commit.
+**SCOPE LIMIT:** if wiring one event would substantially restructure a component's data flow, skip that
+one, journal why, wire the rest.
+
+### P12-04 — Mobile and Safari have never been tested · STATUS: TODO · STRIKES: 0
+Evidence: `playwright.config.ts` declares exactly one project: `{ name: "desktop", ...devices["Desktop
+Chrome"], viewport: 1280x900 }`. Grepping this queue and `handoff/LAUNCH_BLOCKERS.md` for
+`mobile|safari|webkit|ios|responsive` returns zero real hits. Sports traffic is overwhelmingly mobile;
+iOS Safari is where checkout actually happens.
+File (only this): `playwright.config.ts`. Fix: add an iPhone-class project and a WebKit/Desktop-Safari
+project to the existing `projects` array, reusing the four e2e specs that already exist.
+**VERIFY:** run the existing e2e suite against the new projects. **Report failures honestly — do NOT fix
+app code in this task.** If a real mobile/Safari bug surfaces, journal it and append a new
+`P12-04-FOLLOWUP` task at the end of this phase. A browser download may be needed
+(`npx playwright install webkit`); if it will not install in two attempts, mark BLOCKED and move on.
+
+### P12-05 — Public CLV page publishes a rate without its coverage denominator · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/app/clv/page.tsx:221-248` renders `{policy.beatCloseRatePct}% of
+{policy.gradedSampleSize} graded canonical picks` — denominator is GRADED picks, not SETTLED.
+`apps/web/lib/performance/public-clv-policy.ts` has no coverage field. Meanwhile
+`apps/web/lib/performance/clv-coverage.ts` ALREADY computes `settledEligible`, `graded`, `uncovered`,
+`coverageRatePct`, `health` — and `loadClvCoverage(db)` has exactly one caller:
+`apps/web/app/admin/clv/page.tsx:82` (admin-only). `docs/strategy/PATH_TO_PROVEN_EDGE.md` §5.2 states the
+rule explicitly: "an unmeasured coverage hole biases the north-star upward"; a beat-close rate under 100%
+coverage must be labeled partial. The public page currently does what the product's own charter forbids.
+Files: `apps/web/app/clv/page.tsx` (+ its loader if a server-side fetch is needed), new/updated test.
+Fix: surface the coverage figure the codebase already computes, beside the rate, labeled honestly. Do NOT
+change how the rate is computed. Do NOT weaken or remove any existing gate.
+**VERIFY:** test asserting coverage renders alongside the rate. typecheck + lint. Commit.
+
+### P12-06 — Loss autopsies have no candidate queue (cherry-picking risk) · STATUS: TODO · STRIKES: 0
+Evidence: the pipeline exists — `apps/web/lib/loss-autopsy/draft.ts`,
+`apps/web/app/api/admin/losses/[pickId]/draft/route.ts`, four read surfaces. But every entry point is
+keyed on a `pickId` the operator supplies, and `apps/web/app/cockpit/losses/page.tsx` reads
+`db.lossAutopsy` — it lists autopsies that ALREADY EXIST. There is no query for the inverse: settled
+losses with NO autopsy. Coverage of the product's most differentiating trust artifact therefore depends
+on operator memory, and selective coverage is indistinguishable from cherry-picking.
+File (only this): `apps/web/app/cockpit/losses/page.tsx` (admin-only surface).
+Fix: add a "needs autopsy" section backed by
+`db.pick.findMany({ where: { result: "LOSS", lossAutopsy: null, ... }, orderBy: { confidence: "desc" } })`
+— highest-confidence losses first, since those are the ones a skeptic finds. Bound it with a `take`.
+**VERIFY:** test the query shape/ordering. typecheck + lint. Commit.
+
+### P12-07 — Correct the false "VERIFIED FIXED" claims in the audit trail · STATUS: TODO · STRIKES: 0
+Evidence (independently verified): `handoff/REMEDIATION_EXECUTION.md` marks **GSE-SEC-021** ("refund/
+dispute does not revoke entitlement") FIXED citing commit `d4da1265` — but `grep -n "charge.refunded"
+apps/web/app/api/webhooks/stripe/route.ts` returns ZERO hits, and `d4da1265` is a board/preview tier-gate
+commit with zero occurrences of "refund". `handoff/LAUNCH_BLOCKERS.md` §1.2 lists the same issue as
+BLOCKING — LAUNCH_BLOCKERS is the one that's right. The same file marks **GSE-SEC-080** FIXED citing a
+`checkClearance` gate belonging to a DIFFERENT source (henrygd-ncaa, not fpl-api). Additionally
+`handoff/AUDIT_COVERAGE.md` claims "full suite green (exit 0)" against its own raw artifact recording
+exit 1, and carries stale counts (npm audit "2 critical" — real current number is 0 critical / 2 high;
+rate limiting "8/176" — real number is 71/176).
+Files: `handoff/REMEDIATION_EXECUTION.md`, `handoff/AUDIT_COVERAGE.md`, `handoff/AUDIT_FINDINGS.md`
+(its header histogram and top-10 list carry the same stale CRITICAL count).
+Fix: correct each false/stale claim IN PLACE with a dated correction note; do NOT delete the original
+text (audit trail). Re-derive every number you write from a live command, never from another document.
+**VERIFY:** every corrected number cites the exact command you ran to produce it. Commit.
+
+### P12-08 — Snap counts refresh twice an hour and nothing reads them · STATUS: TODO · STRIKES: 0
+Evidence: `SnapCount` and `DepthChartEntry` are written by `/api/cron/refresh-player-stats` (scheduled
+`0,30 * * * *` in `vercel.json`) and have **zero read sites** anywhere in `apps/`, `packages/`,
+`scripts/`, `workers/`. The projection path (`apps/web/lib/projections/player-projections.ts`,
+`apps/web/lib/scoring/player-composite.ts`) uses `PlayerGameStat` and `Injury` but NOT snap share — so a
+projection cannot distinguish "20 touches on 60% of snaps" from "20 touches on 95% of snaps", which is
+most of what start/sit actually is.
+Fix: wire snap share into `player-composite.ts` as an input. Keep it additive and inside the existing
+scoring structure — do NOT change the public-facing weighting story or any published number without a
+test proving the change is intentional and bounded.
+**VERIFY:** unit tests covering high vs low snap share at equal volume. Run existing projection/composite
+tests to prove no regression. typecheck + lint. Commit.
+**IF THE DATA IS EMPTY:** if `SnapCount` has no local rows, write the wiring + tests against fixtures and
+journal that live verification needs the cron to have run. Do NOT fabricate data.
+
+---
+
 # PHASE 10 — RECURRING BATTLE-TEST (owner doctrine, 2026-08-15 — does not stop at Phase 9)
 *Owner's standing directive: "we can't launch a website off one or two audits ... this has to be*
 *battle tested time and time again." One audit pass is proof you looked once, not proof it's clean.*
@@ -1540,7 +1669,7 @@ or a failing re-run is a real regression — reopen it as a new task at the END 
 STATUS TODO and a note citing which round found it.
 **VERIFY:** every DONE task in Phases 0-9 has a row in the round's table, no silent skips.
 
-### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: TODO · STRIKES: 0
+### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T13:38:00Z · completed: 2026-08-16T13:39:00Z (commit pending)
 Re-run Phase 2's structure (D1 Auth through D15 Types/coverage) as if `handoff/AUDIT_FINDINGS.md`
 does not exist yet — read the actual current code fresh, form your own findings first, THEN open
 `AUDIT_FINDINGS.md` and reconcile: what did the original audit miss, what has changed since
