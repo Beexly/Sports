@@ -1064,8 +1064,16 @@ NEW failure introduced by P8-02..08 is a regression YOU caused — find the comm
 (`git log --oneline` + `git show`), fix it, commit the fix.
 **VERIFY:** write the comparison explicitly, failure count before vs after.
 
-### P8-10 — Fix the next finding · STATUS: TODO · STRIKES: 0
+### P8-10 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Same as P8-02, next item.
+
+P8-10 fixed **GSE-SEC-034** — push upsert re-owns unique endpoint. File: `apps/web/lib/push/subscription-db.ts`.
+Fix: `upsertPushSubscription` now calls `findUnique` to check the endpoint's
+existing owner before upserting; if it belongs to a different user, returns a
+`conflict` result and the route responds with 409 (no owner identity leak).
+Same-owner re-subscribes proceed in place. Tests: 13/13 in subscription-db.test.ts
+(including 2 new GSE-SEC-034 cases), 12/12 in push-subscribe-api.test.ts.
+Commit: 360d1185.
 
 ### P8-11 — Fix the next finding · STATUS: TODO · STRIKES: 0
 Same as P8-02, next item.
