@@ -1102,8 +1102,11 @@ Verify: npx vitest run (from apps/web root) → 5/5 passed. tsc --noEmit clean. 
 ### P8-12 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T23:15:00Z (commit c3d28f7a)
 Same as P8-02, next item.
 
-### P8-13 — Fix the next finding · STATUS: DOING · STRIKES: 0
-Same as P8-02, next item.
+### P8-13 — Fix the next finding · STATUS: DONE · STRIKES: 0 · commit 758dca07
+GSE-SEC-038: cockpit task routes cast Prisma enums. Added `narrowEnum()` +
+const enum sets in `apps/web/app/api/cockpit/tasks/route.ts`; invalid enum
+inputs now return 400 instead of reaching Prisma. New test file
+`apps/web/__tests__/cockpit-tasks-route.test.ts` (11 tests, all pass).
 
 ### P8-14 — Fix the next finding · STATUS: TODO · STRIKES: 0
 Same as P8-02, next item.
