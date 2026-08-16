@@ -1032,8 +1032,10 @@ finding, nothing else. Run the relevant test file(s). Commit. Mark it done in th
 ### P8-03 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Same as P8-02, next item.
 
-### P8-04 — Fix the next finding · STATUS: TODO · STRIKES: 0
-Same as P8-02, next item.
+### P8-04 — Fix the next finding · STATUS: DONE · STRIKES: 0
+**GSE-SEC-042** — FreeStats stamps `fetchedAt=now` on cache hits.
+Commit: 937a9151 — `fix(GSE-SEC-042): stamp FreeStats fetchedAt with actual fetch time, not hit time`.
+3 new tests in `free-stats.test.ts` pass; no new tsc errors in the edited file.
 
 ### P8-05 — Fix the next finding · STATUS: TODO · STRIKES: 0
 Same as P8-02, next item.

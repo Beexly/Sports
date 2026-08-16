@@ -1079,9 +1079,45 @@ Action:
    Commit: fc31f451
 
 VERIFY:
-- Tests run and shown: 7/7 board-gate-decisions, 7/7 confidence-gate, 4/4
+|- Tests run and shown: 7/7 board-gate-decisions, 7/7 confidence-gate, 4/4
   product-board-surfaces — all green.
-- Commit hash fc31f451 confirmed via git rev-parse HEAD.
-- GSE-SEC-026 marked FIXED in REMEDIATION_EXECUTION.md.
-- P8-02 marked DONE in SPRINT_QUEUE.md.
+|- Commit hash fc31f451 confirmed via git rev-parse HEAD.
+|- GSE-SEC-026 marked FIXED in REMEDIATION_EXECUTION.md.
+|- P8-02 marked DONE in SPRINT_QUEUE.md.
+|- No git push, no --force, no secrets.
+
+### 2026-08-16T12:05:00Z · P8-04 · DONE (strikes 0)
+
+Task: Fix the next SAFE-DIRECT finding — GSE-SEC-042 (FreeStats stamps
+`fetchedAt=now` on cache hits, `apps/web/lib/data-sources/free-stats.ts:72`).
+
+Action:
+1. Root cause: `memoize` cached `{ value, expiresAt }` but returned only `{ value, cached }`.
+   Each public method (`scores`, `rankings`, `standings`, `weather`) then stamped
+   `fetchedAt: this.clock()` — on a cache hit this is the HIT time, not the
+   original fetch time, breaking provenance for any consumer that sorts/diffs.
+2. Fix: `CacheEntry<T>` gains `fetchedAt: number`; `memoize` captures
+   `now = this.clock()` at load time, stores it, and returns it on both miss
+   and hit paths. All four public methods destructure `fetchedAt` from `memoize`
+   and use it directly (no second `this.clock()` call).
+3. Added `free-stats.test.ts` (3 tests): cold-miss stamps fetch time; warm cache
+   HIT returns the original fetch time (not the hit time); post-TTL expiry
+   re-fetches and resets fetchedAt. Used a `clock` mock + injected `fetchImpl`
+   returning ESPN-shaped `Response` objects (no network, no DB).
+
+Files committed (commit 937a9151):
+- apps/web/lib/data-sources/free-stats.ts (modified: CacheEntry + memoize + 4 methods)
+- apps/web/lib/data-sources/free-stats.test.ts (new, 3 tests)
+
+VERIFY:
+- `npx vitest run --root apps/web apps/web/lib/data-sources/free-stats.test.ts`
+  → 1 test file, 3 tests passed.
+- Pre-existing tsconfig/tsc errors (source-confidence.ts missing module,
+  ws esModuleInterop, data-ingestion downlevelIteration, packages/db
+  durable-write-guard) are unchanged; no NEW errors introduced in free-stats.ts
+  or free-stats.test.ts.
+- secret-scan: OK — scanned 2 staged file(s), no secrets detected.
+- Commit 937a9151 confirmed via `git rev-parse HEAD`.
+- GSE-SEC-042 marked FIXED in REMEDIATION_EXECUTION.md (line 172).
+- P8-04 marked DONE in SPRINT_QUEUE.md.
 - No git push, no --force, no secrets.
