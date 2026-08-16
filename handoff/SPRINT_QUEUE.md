@@ -1912,7 +1912,7 @@ into `vercel.json` (that writes prod data — owner-gated, see P14-03).
 **VERIFY:** page renders the honest empty state with no data (this is the state that will ship until the
 owner runs the backfill), and renders the real curve when given fixture data. typecheck + lint. Commit.
 
-### P14-02 — Prove the proof is real: leak-free verification of the historical-replay harness · STATUS: TODO · STRIKES: 0
+### P14-02 — Prove the proof is real: leak-free verification of the historical-replay harness · STATUS: DOING · STRIKES: 0
 **A proof nobody can trust is worse than no proof.** `packages/prediction-engine/src/historical-replay.ts`
 splits an nflverse row into structurally-disjoint `PreGameFeatures` (cannot carry a score by type) and
 `SettlementFacts`, re-runs the FROZEN `scoreGame`, settles via the same `calculatePickResult`, and grades
@@ -2023,6 +2023,35 @@ confirmed, evidenced bugs in live code — cite `file:line` for every claim, sam
 this sprint. Write findings (including "confirmed dormant, no action taken") to
 `handoff/PHASE15_SURFACE_SWEEP.md`, appending one section per task, never overwriting a prior task's
 section.
+
+### P15-00 — Build the COVERAGE LEDGER: make "everything reviewed" a checkable fact, not a feeling · STATUS: TODO · STRIKES: 0
+**Why this exists (owner doctrine, 2026-08-16).** The owner has instructed repeatedly that EVERY part
+of this codebase must be reviewed/tested/audited — yet successive passes kept "discovering" areas
+never opened. Root cause: no enumerated inventory with per-item state ever existed, so every phase
+sampled by salience (security, money, trust surfaces) and "everything" was unverifiable. This task
+makes coverage a database fact.
+Fix: write `handoff/tools/coverage-ledger.mjs` (new file; plain node, no deps) that:
+1. Enumerates the FULL finite inventory: every top-level dir/file under `apps/web/app`, every subdir
+   of `apps/web/lib`, every dir under `packages/`, every file under `scripts/` (list protected ones,
+   do not read them), and `apps/web/components` subdirs.
+2. For each item, computes: (a) TOUCHED-THIS-SPRINT — does `git log 73def0bf..HEAD --name-only`
+   include any file under it (run the git command ONCE, cache the output, then match in-memory —
+   do not run git per item); (b) HAS-TESTS — does a `*.test.*` or `__tests__` exist under/for it.
+3. Emits `handoff/COVERAGE_LEDGER.md`: one table row per item — `item | touched this sprint (Y/N) |
+   has tests (Y/N) | reviewed (phase id or NONE)` — with the `reviewed` column seeded NONE except
+   items named in a DONE task's "Files:"/"Directories:" lines (best-effort grep of this queue).
+   End with totals: N items, X touched, Y tested, Z reviewed.
+4. Append a final section "OUTSIDE THE REPO — cannot be covered by file audits" listing exactly:
+   Vercel platform config (crons/env/aliases), GitHub account (apps/branch-protection/Actions
+   billing/webhooks), Neon (branches/roles/limits), Stripe dashboard (products/prices/webhooks),
+   DNS/domain, OAuth app config — each with last-known state from this sprint's findings, so
+   non-repo surfaces are enumerated too, never rediscovered by surprise.
+STANDING RULE FROM NOW ON (applies to every later task): when you finish any P15/P16+ task, update
+the `reviewed` column for the items you actually opened, in the same commit.
+Files (only these): `handoff/tools/coverage-ledger.mjs`, `handoff/COVERAGE_LEDGER.md`.
+**VERIFY:** `node handoff/tools/coverage-ledger.mjs` exits 0; the ledger's item count for
+`apps/web/app` equals `ls apps/web/app | wc -l` (state both numbers in the journal); spot-check 3
+known-touched items show Y and 3 known-untouched show N. Commit script + ledger together.
 
 ### P15-01 — Sweep: public content & growth pages · STATUS: TODO · STRIKES: 0
 Directories: `apps/web/app/{about,academy,blog,case-studies,changelog,faq,press,media-kit,newsletter,
