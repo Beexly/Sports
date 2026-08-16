@@ -1754,7 +1754,7 @@ leak, and the full-tree pre-push secret scan.
 never modify `.npmrc`/`allowScripts`/`.githooks/` (those ARE the controls), never edit `.github/`,
 `packages/db/prisma/`, or `apps/web/lib/ai-control-plane/`. Commit locally. One task per session.
 
-### P13-01 — 10 Server Actions in the Jarvis memory module have zero authorization · STATUS: DOING · STRIKES: 0 · started: 2026-08-16T17:05:42Z
+### P13-01 — 10 Server Actions in the Jarvis memory module have zero authorization · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T17:05:42Z · completed: 2026-08-16T17:22:10Z (commit fff67cd6)
 Evidence: `apps/web/lib/jarvis/memory/actions.ts` has `"use server"` at line 19 and exports
 `createMemoryCandidate`, `confirmMemory`, `rejectMemory`, `expireMemory`, `supersedeMemory`,
 `linkMemoryToDecision`, `linkMemoryToAgentRun` (+3 readers) with **no** `requireAdminActor()`,
@@ -1776,7 +1776,7 @@ lint. Commit.
 exposure as unproven and the fix as cheap insurance either way. Say so in the journal; don't
 overclaim.
 
-### P13-02 — The repo's own bash guard lets any interpreter read .env · STATUS: TODO · STRIKES: 0
+### P13-02 — The repo's own bash guard lets any interpreter read .env · STATUS: DONE · STRIKES: 0
 Evidence: `scripts/guardrails/agent-bash-guard.mjs:58` — `DISPLAY_CMDS` is
 `(?:cat|less|more|head|tail|grep|rg|strings|xxd|od|base64|awk|sed|dotenv)\b`. `node`, `python`,
 `ruby`, `perl`, `deno`, `bun`, and `pwsh` are all absent, so
