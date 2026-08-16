@@ -1668,6 +1668,46 @@ tests to prove no regression. typecheck + lint. Commit.
 **IF THE DATA IS EMPTY:** if `SnapCount` has no local rows, write the wiring + tests against fixtures and
 journal that live verification needs the cron to have run. Do NOT fabricate data.
 
+### P12-04-FOLLOWUP — Annual billing toggle appears broken on Safari/WebKit · STATUS: TODO · STRIKES: 0
+**Filed by the supervising instance 2026-08-16, exactly as P12-04 instructed** ("if a real
+mobile/Safari bug surfaces, journal it and append a new P12-04-FOLLOWUP task").
+
+**Already fixed, do NOT redo.** P12-04's new WebKit projects immediately found a real checkout bug —
+an unguarded `crypto.randomUUID()` that stopped Safari users subscribing at all. Fixed and verified
+in commits `65698430` + `da2b7ed4`; `POST /api/subscriptions/checkout` now fires on WebKit where it
+previously never did.
+
+**The remaining, separate failure.** `apps/web/e2e/journey-checkout.spec.ts:99` ("pricing page
+renders the founding-tier prices") fails on the `safari` project at line 133: it clicks the Annual
+button inside the `Billing interval` group (`:132`), then times out after 5s waiting for
+`text=/\$99\/year/`. So on WebKit the monthly→annual toggle does not appear to update rendered
+prices. Commercially this matters — annual is the higher-value plan ($99/yr Pro vs $14.99/mo).
+
+**The evidence is genuinely mixed — do NOT assume it is a confirmed product bug:**
+- Safari run #1 (before the randomUUID fix): this test **PASSED**; only the checkout test failed.
+- Safari runs #2 and #3 (after): **FAILED**, reproducibly, including run alone via
+  `-g "founding-tier prices"`.
+- The randomUUID fix touched only intent-id generation and cannot plausibly affect a billing-interval
+  toggle — so "the fix broke it" is unlikely, but has NOT been excluded.
+- Run #2 had severe resource contention (5.5 min vs 1.5 min, plus `worker-1 process did not exit
+  within 300000ms, force-killed`) from the watchdog running concurrently. Timing-sensitive
+  client-side toggles are exactly what degrades under that.
+- **The desktop-Chrome comparison was NOT run** — port 3000 was held by a concurrent session both
+  times. That comparison is the single most decisive next step.
+
+**Do this, in order:**
+1. Run `npx playwright test --project=desktop e2e/journey-checkout.spec.ts -g "founding-tier prices"`.
+   PASSES on Chrome + FAILS on Safari → real WebKit product bug, proceed to step 2.
+   FAILS on both → the test/selector is wrong, not the app; fix the test instead.
+2. If WebKit-specific: read the billing-interval toggle component and the annual-price render path.
+   Look for the same cause class as the randomUUID bug — a browser API or event behavior WebKit
+   handles differently — rather than assuming a CSS/visibility issue.
+3. Fix the product if the product is wrong; fix the test if the test is wrong. State plainly in the
+   journal which it turned out to be.
+**VERIFY:** the test passes on BOTH `desktop` and `safari`. typecheck + lint. Commit.
+**RESOURCE NOTE:** these runs need port 3000. If a dev server is already listening, do NOT kill it —
+another session may be mid-task. Wait and retry, or mark BLOCKED and move on.
+
 ---
 
 # PHASE 13 — SECURITY HARDENING (from the 2026-08-16 adversarial assessment)
