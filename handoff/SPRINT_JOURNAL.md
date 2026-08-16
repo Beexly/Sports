@@ -2714,3 +2714,57 @@ Files committed (exactly the 4 modified files):
 Commit: 67040640
 "fix(e2e): P12-04-FOLLOWUP stub-mode dev server so checkout e2e fails closed instead of timing out"
 
+---
+
+### 2026-08-24T11:15:00Z · P12-05 — DONE · STRIKES: 0
+
+Public CLV page published the beat-close rate as "{policy.beatCloseRatePct}% of
+{policy.gradedSampleSize} graded canonical picks" — denominator was GRADED picks,
+not SETTLED. The codebase already computes a coverage figure via
+`loadClvCoverage()` in `apps/web/lib/performance/clv-coverage.ts` (settledEligible,
+graded, uncovered, coverageRatePct, health, invariantHolds) but only surfaced it
+on the admin-only CLV dashboard (`apps/web/app/admin/clv/page.tsx`).
+
+**What I did:**
+1. Read all referenced files: `apps/web/app/clv/page.tsx`,
+   `apps/web/lib/performance/public-clv-policy.ts`,
+   `apps/web/lib/performance/clv-coverage.ts`,
+   `apps/web/app/admin/clv/page.tsx`, `docs/strategy/PATH_TO_PROVEN_EDGE.md`,
+   and existing tests (`clv-page-contract.test.ts`, `public-clv-policy.test.ts`,
+   `clv-coverage.test.ts`).
+2. Added `loadClvCoverage` import + call in `apps/web/app/clv/page.tsx`, fetching
+   coverage alongside the policy (both gated behind the same DB client shape).
+3. Passed `coverage` through to `ClvScoreboard`. Inside the scoreboard (the allowed
+   branch only), rendered a `data-testid="clv-coverage"` block showing the coverage
+   rate alongside the beat-close rate, labeled honestly: "X% of N settled picks
+   graded against the close". When `invariantHolds` is false (coverage < 100%),
+   showed a caution warning: "The beat-close rate above is a partial sample until
+   coverage reaches 100%."
+4. Updated `apps/web/__tests__/clv-page-contract.test.ts` with 3 new assertions:
+   - `loadClvCoverage` is imported
+   - coverage renders inside `ClvScoreboard` (not `ClvGatedState`)
+   - coverage is passed through as a prop
+
+**VERIFY (the task's own):**
+- `npx vitest run __tests__/clv-page-contract.test.ts` → 7/7 passed (3 new).
+- `npx tsc --noEmit --project apps/web/tsconfig.json` → clean, no errors in
+  touched files.
+- `npx eslint apps/web/app/clv/page.tsx apps/web/__tests__/clv-page-contract.test.ts
+  --max-warnings=0` → clean, no errors.
+
+**NOTE:** `npx vitest run` from the repo root fails for `@/` alias resolution
+(pre-existing environment issue — tests must run from `apps/web/`). This is not
+caused by this change; the contract test reads source as text and passes either
+way.
+
+**Result:** VERIFY passed. Committed.
+
+**Files committed (exactly these):**
+- `apps/web/app/clv/page.tsx`
+- `apps/web/__tests__/clv-page-contract.test.ts`
+- `handoff/SPRINT_QUEUE.md` (STATUS DOING→DONE)
+- `handoff/SPRINT_JOURNAL.md` (this entry)
+
+Commit: 86017cd3
+"fix(P12-05): surface CLV coverage alongside beat-close rate on /clv page"
+

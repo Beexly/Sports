@@ -1610,7 +1610,7 @@ requireDurableWriteStore / price-resolution empty) instead of hanging on Prisma 
 backoff. `npx playwright test --project=mobile --project=safari apps/web/e2e/journey-checkout.spec.ts`
 → 14 passed (7 per project), 0 failed. No app source code was changed.
 
-### P12-05 — Public CLV page publishes a rate without its coverage denominator · STATUS: DOING · STRIKES: 0
+### P12-05 — Public CLV page publishes a rate without its coverage denominator · STATUS: DONE · STRIKES: 0
 Evidence: `apps/web/app/clv/page.tsx:221-248` renders `{policy.beatCloseRatePct}% of
 {policy.gradedSampleSize} graded canonical picks` — denominator is GRADED picks, not SETTLED.
 `apps/web/lib/performance/public-clv-policy.ts` has no coverage field. Meanwhile
