@@ -1383,7 +1383,7 @@ function timeout/memory ceiling a slow query would blow.
 **VERIFY:** every claim cites file:line or a config value. Close with an explicit answer to:
 "if 10,000 people arrive in one hour, what breaks first?"
 
-### P9.5-12 — Launch-blocker consolidation · STATUS: TODO · STRIKES: 0
+### P9.5-12 — Launch-blocker consolidation · STATUS: DONE · STRIKES: 0 · commit: PENDING
 Read every artifact this phase produced, plus `handoff/DEPLOY_READINESS.md` if it exists. Write
 `handoff/LAUNCH_BLOCKERS.md` — the single document the owner reads before deciding to launch.
 Structure: (1) **BLOCKING** — cannot launch, with why and the specific fix; (2) **RISK ACCEPTED** —
