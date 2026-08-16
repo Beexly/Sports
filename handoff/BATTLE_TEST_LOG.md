@@ -8,13 +8,24 @@ domains (P10-02), hunts confidently-wrong claims (P10-03), sweeps working-tree/h
 (P10-04), then closes the round and starts the next (P10-05).
 
 Round N+1 must NOT just copy Round N's conclusions — it must independently re-derive
-them. This is Round 1 (started 2026-08-25).
+them. This is Round 1 (started 2026-08-16).
+
+**CORRECTION (2026-08-16, Opus):** every timestamp in this Round 1 log and in
+`SPRINT_QUEUE.md`'s P10-01/02/03 entries was originally dated 2026-08-24 through
+2026-08-26 — 9-10 days in the future from the real date this round actually ran
+(2026-08-16). This was not one typo; it was consistent across all four tasks, which
+suggests the agent executing this round had a genuine date-computation error, not a
+one-off slip. All dates in this file and in `SPRINT_QUEUE.md` have been corrected to
+2026-08-16. The substantive findings themselves (re-verified independently where it
+mattered, see GSE-SEC-081 in AUDIT_FINDINGS.md) were not affected by this — only the
+dates were wrong. Future Phase 10 rounds: verify the actual current date before
+stamping anything, the same way every other claim in this file must be verified.
 
 ---
 
 ## Round 1 — P10-01
-**Date:** 2026-08-25
-**Started:** 2026-08-25T06:30:00Z
+**Date:** 2026-08-16
+**Started:** 2026-08-16T06:30:00Z
 **Task scope:** Every DONE task in Phases 0-9 (Phase 9.5 and Phase 10/11 excluded).
 **Method:** For each task, independently verify (a) a real git commit exists whose diff
 matches the task description — via `git log --all --oneline --grep` and/or `git show`;
@@ -243,8 +254,8 @@ Round 1 complete. Proceeding to P10-02 (fresh blind re-audit of 15 domains).
 
 ## Round 1 — P10-02: Fresh Blind Re-Audit of 15 Domains (D1–D15)
 
-**Date:** 2026-08-25
-**Started:** 2026-08-25T12:00:00Z
+**Date:** 2026-08-16
+**Started:** 2026-08-16T12:00:00Z
 **Method:** Independent re-read of each domain's current source code (NOT trusting the 2026-08-12 findings), then reconciled against `AUDIT_FINDINGS.md`, `AUDIT_COVERAGE.md`, and `REMEDIATION_EXECUTION.md`. Every claim below is backed by a specific file:line citation found in this run.
 
 ### Domain-by-Domain Reconcile
@@ -375,7 +386,7 @@ Round 1 complete. Proceeding to P10-02 (fresh blind re-audit of 15 domains).
 
 **Fresh read:** `npm-audit-current.json` parsed via python3.
 
-| Original (2026-08-12) | Current (2026-08-25) |
+| Original (2026-08-12) | Current (2026-08-16) |
 |---|---|
 | 9 findings (2 critical, 6 high, 1 low) | 2 findings (next: high, postcss: high) |
 
@@ -456,16 +467,16 @@ Round 1 complete. Proceeding to P10-02 (fresh blind re-audit of 15 domains).
 
 ### P10-02 Cross-check: "Confidently Wrong Claim" Bug Class (CORRECTED)
 
-The previous line (originally written 2026-08-25) claimed P10-03 would find the
+The previous line (originally written 2026-08-16) claimed P10-03 would find the
 odds-api-client.ts:126-131 comment was already "corrected and documented" and that the code is correct.
-Independent live verification in THIS round (2026-08-26) against the vendor contradicts both claims — see
+Independent live verification in THIS round (2026-08-16) against the vendor contradicts both claims — see
 the P10-03 section below. The comment is NOT corrected; the claim it makes is WRONG.
 
 **VERIFY:** Every domain D1–D15 above is addressed with "same as before", "new finding", or "original finding no longer applies." No domain left unaddressed. ✓
 
 ---
 
-## Round 1 — P10-03: Hunt the "Confidently Wrong Claim" Bug Class (2026-08-26, resumed)
+## Round 1 — P10-03: Hunt the "Confidently Wrong Claim" Bug Class (2026-08-16, resumed)
 
 **Scope:** Every file touched by this sprint — `git log --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD`
 yields ~140 files. Source files (excluding tests/docs/handoff) were scanned for comments making confident
@@ -492,7 +503,7 @@ against real current behavior.
 **The code's production base URL (config.ts:132):**
 > `export const THE_ODDS_API_PRODUCTION_BASE_URL = "https://api.the-odds-api.com/v4";`
 
-**Live verification (run 2026-08-26, bogus key — no quota burn):**
+**Live verification (run 2026-08-16, bogus key — no quota burn):**
 
 | Request | Host | Auth | Live response |
 |---|---|---|---|
@@ -562,7 +573,7 @@ the new namespace exposes it the same way on all endpoints the code calls (`/spo
 > (line 20: "Response shape live-verified 2026-07-16 against GET .../ppr?teams=12&year=2026")
 
 **Check performed:** Live-probed `https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026`
-on 2026-08-26. The endpoint IS live and returned the documented `{status:"Success", meta:{...}, players:[...]}`
+on 2026-08-16. The endpoint IS live and returned the documented `{status:"Success", meta:{...}, players:[...]}`
 shape (2026 season data, top player Bijan Robinson adp 1.7) — confirming the response-shape claim at line 20.
 
 **The FFC API TERMS claim (line 78, "once/day ... per the FFC API terms"):** The FFC docs URL registered in

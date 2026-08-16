@@ -1491,7 +1491,7 @@ Read `apps/web/lib/fantasy/dfs-optimizer.ts`, `apps/web/components/fantasy/lineu
 **VERIFY:** explicit PASS/FAIL/UNKNOWN per item. Item 3's finding, if confirmed, goes at the TOP
 of the output file, not the bottom.
 
-### P11-04 — Fantasy data accuracy: consolidated findings + fixes · STATUS: DONE · STRIKES: 0 · completed: 2026-08-25T06:25:00Z (commit 5970f49e)
+### P11-04 — Fantasy data accuracy: consolidated findings + fixes · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T06:25:00Z (commit 5970f49e)
 Depends on P11-01/02/03. Read all three audit files. **FIRST, before anything else in this task:**
 state plainly the SIZE of the gap between what exists today (external ADP passthrough, standalone
 optimizer math, no proprietary layer) and what a real fantasy-primary proprietary score would need
@@ -1528,7 +1528,7 @@ a guess.
 **and a stale watchdog rule silently reverting real work.** One pass missed all of these. Assume
 the current tree has more of the same, and go find it.
 
-### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DONE · STRIKES: 0 · started: 2026-08-24T00:00:00Z · completed: 2026-08-25T07:00:00Z
+### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T00:00:00Z · completed: 2026-08-16T07:00:00Z
 For EVERY task in Phases 0-9 marked DONE, do not trust the STATUS field or the journal entry's
 prose. Independently confirm: (a) a real git commit exists whose diff matches what the task
 claimed to do — `git log --all --oneline --grep` or a manual `git show` search; (b) if the task
@@ -1540,7 +1540,7 @@ or a failing re-run is a real regression — reopen it as a new task at the END 
 STATUS TODO and a note citing which round found it.
 **VERIFY:** every DONE task in Phases 0-9 has a row in the round's table, no silent skips.
 
-### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: DONE · STRIKES: 0 · completed: 2026-08-25T14:30:00Z
+### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T14:30:00Z
 Re-run Phase 2's structure (D1 Auth through D15 Types/coverage) as if `handoff/AUDIT_FINDINGS.md`
 does not exist yet — read the actual current code fresh, form your own findings first, THEN open
 `AUDIT_FINDINGS.md` and reconcile: what did the original audit miss, what has changed since
@@ -1552,7 +1552,7 @@ found it in `BATTLE_TEST_LOG.md`.
 **VERIFY:** `BATTLE_TEST_LOG.md` states explicitly, per domain, "same as before" or "new finding"
 or "original finding no longer applies" — no domain left unaddressed.
 
-### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: DONE · STRIKES: 0 · started: 2026-08-25T18:00:00Z · resumed/finished: 2026-08-26T00:00:00Z
+### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T18:00:00Z · resumed/finished: 2026-08-16T00:00:00Z
 This exact bug class has been found THREE times this session: a code comment or commit message
 makes a specific, confident technical claim about how something external behaves (a vendor's auth
 mechanism, what another code path does, what a library does on a given input) — and the claim is
@@ -1600,10 +1600,10 @@ Each of these is bounded, reversible, and cannot break the build. Journal every 
 
 ---
 
-## REOPENED TASKS (from P10-01 Round 1, 2026-08-25)
+## REOPENED TASKS (from P10-01 Round 1, 2026-08-16)
 
 ### P8-08-RESUME — Implement GSE-SEC-033 fix (durable-write guard on all Stripe caps) · STATUS: TODO · STRIKES: 0
-**Found by:** P10-01 Round 1 (2026-08-25). The original P8-08 was marked DONE with STRIKES:0
+**Found by:** P10-01 Round 1 (2026-08-16). The original P8-08 was marked DONE with STRIKES:0
 but has NO git commit. `git log --all --oneline --grep="033"` returns no fixing commit.
 `handoff/REMEDIATION_EXECUTION.md` line 98 still lists GSE-SEC-033 as SAFE-DIRECT / OPEN.
 The journal for P8-13 (SPRINT_JOURNAL.md line 1493) says it was "skipped" because the fix
