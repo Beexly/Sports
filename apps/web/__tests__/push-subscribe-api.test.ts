@@ -18,6 +18,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   auth: vi.fn<() => Promise<{ user?: { id: string } } | null>>(),
   pushSubscriptionUpsert: vi.fn(),
+  pushSubscriptionFindUnique: vi.fn(),
   pushSubscriptionDeleteMany: vi.fn(),
 }));
 
@@ -31,6 +32,7 @@ vi.mock("@sports/db", () => ({
   db: {
     pushSubscription: {
       upsert: mocks.pushSubscriptionUpsert,
+      findUnique: mocks.pushSubscriptionFindUnique,
       deleteMany: mocks.pushSubscriptionDeleteMany,
     },
   },
@@ -66,6 +68,7 @@ function row(overrides: Partial<{ id: string; userId: string; endpoint: string; 
 beforeEach(() => {
   mocks.auth.mockReset();
   mocks.pushSubscriptionUpsert.mockReset();
+  mocks.pushSubscriptionFindUnique.mockReset();
   mocks.pushSubscriptionDeleteMany.mockReset();
   // P5-10 CSRF gate: the guard reads NEXT_PUBLIC_APP_URL to compare against
   // the request's Origin header. Stub it so the gate verifies same-origin.
@@ -128,8 +131,8 @@ describe("POST /api/push/subscribe", () => {
 
   it("happy path: upserts and returns 200", async () => {
     mocks.auth.mockResolvedValue({ user: { id: "user-1" } });
+    mocks.pushSubscriptionFindUnique.mockResolvedValue(null);
     mocks.pushSubscriptionUpsert.mockResolvedValue(row());
-
     const res = await subscribeRoute(
       postRequest("/api/push/subscribe", {
         endpoint: "https://push.example.com/abc",
@@ -152,10 +155,27 @@ describe("POST /api/push/subscribe", () => {
     });
   });
 
+  it("GSE-SEC-034: endpoint owned by another user → 409 conflict, no upsert", async () => {
+    mocks.auth.mockResolvedValue({ user: { id: "user-B" } });
+    mocks.pushSubscriptionFindUnique.mockResolvedValue(row({ userId: "user-A" }));
+    mocks.pushSubscriptionUpsert.mockResolvedValue(row());
+    const res = await subscribeRoute(
+      postRequest("/api/push/subscribe", {
+        endpoint: "https://push.example.com/abc",
+        keys: { p256dh: "p256dh-key", auth: "auth-key" },
+      }),
+    );
+    expect(res.status).toBe(409);
+    const body = await res.json();
+    expect(body.success).toBe(false);
+    // Must NOT leak which user owns the endpoint.
+    expect(body.error).not.toContain("user-");
+    expect(mocks.pushSubscriptionUpsert).not.toHaveBeenCalled();
+  });
+
   it("table_missing → honest 503, not 500", async () => {
     mocks.auth.mockResolvedValue({ user: { id: "user-1" } });
-    mocks.pushSubscriptionUpsert.mockRejectedValue({ code: "P2021" });
-
+    mocks.pushSubscriptionFindUnique.mockRejectedValue({ code: "P2021" });
     const res = await subscribeRoute(
       postRequest("/api/push/subscribe", {
         endpoint: "https://push.example.com/abc",

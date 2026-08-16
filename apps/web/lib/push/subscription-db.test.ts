@@ -57,27 +57,58 @@ describe("listPushSubscriptionsForUser", () => {
 });
 
 describe("upsertPushSubscription", () => {
-  it("upserts keyed on endpoint", async () => {
+  it("upserts keyed on endpoint (same-owner refresh)", async () => {
     const upsert = vi.fn().mockResolvedValue(row());
+    const findUnique = vi.fn().mockResolvedValue(null);
     const result = await upsertPushSubscription(
-      { pushSubscription: { upsert } },
+      { pushSubscription: { upsert, findUnique } },
       "user-1",
       "https://push.example.com/abc",
       "p256dh-key",
       "auth-key",
     );
     expect(result).toEqual({ ok: true, data: row() });
+    expect(findUnique).toHaveBeenCalledWith({ where: { endpoint: "https://push.example.com/abc" } });
     expect(upsert).toHaveBeenCalledWith({
       where: { endpoint: "https://push.example.com/abc" },
       create: { userId: "user-1", endpoint: "https://push.example.com/abc", p256dh: "p256dh-key", auth: "auth-key" },
-      update: { userId: "user-1", p256dh: "p256dh-key", auth: "auth-key" },
+      update: { p256dh: "p256dh-key", auth: "auth-key", userId: "user-1" },
     });
+  });
+
+  it("refuses to re-own endpoint held by another user (GSE-SEC-034)", async () => {
+    const upsert = vi.fn();
+    const findUnique = vi.fn().mockResolvedValue(row({ userId: "user-A" }));
+    const result = await upsertPushSubscription(
+      { pushSubscription: { upsert, findUnique } },
+      "user-B",
+      "https://push.example.com/abc",
+      "p256dh-key",
+      "auth-key",
+    );
+    expect(result).toEqual({ ok: false, reason: "conflict", exists_for_user: "user-A" });
+    expect(upsert).not.toHaveBeenCalled();
+  });
+
+  it("allows same-owner re-subscribe (endpoint held by caller)", async () => {
+    const upsert = vi.fn().mockResolvedValue(row());
+    const findUnique = vi.fn().mockResolvedValue(row({ userId: "user-1" }));
+    const result = await upsertPushSubscription(
+      { pushSubscription: { upsert, findUnique } },
+      "user-1",
+      "https://push.example.com/abc",
+      "new-p256dh",
+      "new-auth",
+    );
+    expect(result).toEqual({ ok: true, data: row() });
+    expect(upsert).toHaveBeenCalled();
   });
 
   it("degrades to unreachable instead of throwing", async () => {
     const upsert = vi.fn().mockRejectedValue({ code: "P1001" });
+    const findUnique = vi.fn().mockRejectedValue({ code: "P1001" });
     const result = await upsertPushSubscription(
-      { pushSubscription: { upsert } },
+      { pushSubscription: { upsert, findUnique } },
       "user-1",
       "https://push.example.com/abc",
       "p256dh-key",

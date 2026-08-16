@@ -63,7 +63,21 @@ export async function POST(request: Request): Promise<NextResponse> {
   const { endpoint, keys } = parsed.data;
 
   const result = await upsertPushSubscription(db, userId, endpoint, keys.p256dh, keys.auth);
-  if (!result.ok) return pushDbErrorResponse(result);
+  if (!result.ok) {
+    if (result.reason === "conflict") {
+      // GSE-SEC-034: endpoint already exists under a different user — refuse
+      // to re-own. Do NOT echo which user owns it (information leak); return a
+      // generic 409 so the caller can retry with their own device endpoint.
+      return NextResponse.json(
+        {
+          success: false,
+          error: "A subscription with this endpoint already exists for another account.",
+        },
+        { status: 409 },
+      );
+    }
+    return pushDbErrorResponse(result);
+  }
 
   return NextResponse.json({
     success: true,
