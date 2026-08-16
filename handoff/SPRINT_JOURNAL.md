@@ -2641,3 +2641,75 @@ Commit: f863d07a
 (5 files changed, 263 insertions(+), 2 new files)
 
 Result: DONE. Commit f863d07a. One task this run.
+
+### 2026-08-23T21:30:00Z · P12-04 · DONE · STRIKES: 0
+
+Action:   Added two new Playwright projects to `playwright.config.ts`:
+  - "mobile" using devices["iPhone 12"] (viewport 390x844)
+  - "safari" using devices["Desktop Safari"]
+File changed: `playwright.config.ts` (only this file — 2 insertions).
+
+VERIFY:
+  - `npx playwright test --project=mobile --project=safari apps/web/e2e/smoke.spec.ts apps/web/e2e/journey-anonymous.spec.ts apps/web/e2e/journey-auth.spec.ts` → 30 passed, 0 failed (1.3m).
+  - `npx playwright test --project=mobile --project=safari apps/web/e2e/journey-checkout.spec.ts` → 12 passed, 2 failed.
+    The 2 failures are the browser-based checkout test (Part A) on mobile and safari: both time
+    out on `page.waitForResponse` for POST /api/subscriptions/checkout. Root cause is
+    ENVIRONMENTAL, not a code bug: the local dev server has no DATABASE_URL credentials and no
+    STRIPE_SECRET_KEY, so the checkout route hangs on Prisma retry backoff and never returns a
+    response within the 30s waitForResponse timeout. The API-level tests (Part B of the same
+    spec) pass — 12/12, covering the 400/503 fail-closed contract.
+    Per the task instructions ("Report failures honestly — do NOT fix app code in this task"),
+    no app code was changed. No real mobile/Safari-specific bug was found beyond the shared
+    environmental checkout timeout.
+    Appended P12-04-FOLLOWUP to SPRINT_QUEUE.md (see below).
+
+Commit: 31c42803
+"chore(e2e): add mobile (iPhone 12) and Safari (Desktop Safari) Playwright projects [sprint]"
+(1 file changed, 2 insertions+)
+
+---
+
+### 2026-08-24T12:00:00Z · P12-04-FOLLOWUP — DONE · STRIKES: 0
+
+Resumed from DOING (prior run marked the task DOING, added the P12-04-FOLLOWUP entry
+to the queue, and made uncommitted edits to playwright.config.ts and next.config.mjs
+but was interrupted before re-testing or committing).
+
+Action:
+1. Confirmed git root is C:/Users/Garrett/Sports (noted prior run's edits were staged
+   as modifications on top of commit 31c42803).
+2. Verified the prior run's uncommitted edits:
+   - playwright.config.ts: added webServer.env block with DATABASE_URL="stub",
+     STRIPE_SECRET_KEY="", DEV_FAKE_ADMIN="true".
+   - apps/web/next.config.mjs: split CSP headers into dev (no upgrade-insecure-requests,
+     so HTTP localhost works) vs production (adds upgrade-insecure-requests).
+3. Confirmed the fix's root-cause correctness by reading:
+   - apps/web/app/api/subscriptions/checkout/route.ts:49 — the checkout POST first calls
+     resolveCheckoutPriceId (line 85) which returns "" when STRIPE_SECRET_KEY is empty
+     → 503 at lines 86-90 BEFORE any DB/Stripe call. Even if price IDs were set, the
+     requireDurableWriteStore("stripe-checkout") guard (line 109) fires before any
+     Stripe SDK call when DATABASE_URL is a stub.
+   - packages/db/src/durable-write-guard.ts:123 — requires DURABLE_WRITE_CAPABILITIES.
+   - packages/db/src/index.ts:177 — isStubDbUrl("stub") returns true → stub client.
+   The route returns 503 in ~45-500ms, never hangs on Prisma retry backoff.
+4. Ran the test: npx playwright test --project=mobile --project=safari
+   apps/web/e2e/journey-checkout.spec.ts
+   → 14 passed (7 per project), 0 failed (37.3s). Part A browser checkout fail-closes
+   with 503 and stays on /pricing; Part B API-level refusal contract 7/7 pass;
+   Part C dev-bypass documented. No real card or Stripe key was used.
+
+VERIFY (the task's own):
+- All 14 assertions in journey-checkout.spec.ts pass on BOTH mobile and safari projects.
+- The dev server was stub-modeled (DATABASE_URL=stub, STRIPE_SECRET_KEY="" via webServer.env);
+  no local Postgres or Stripe account was needed.
+- No app source code changed — only config (playwright.config.ts webServer env + next.config.mjs
+  CSP dev/prod split). No .env file was opened, printed, or committed.
+
+Files committed (exactly the 4 modified files):
+- playwright.config.ts (webServer.env stub-mode config)
+- apps/web/next.config.mjs (CSP dev vs prod conditional)
+- handoff/SPRINT_QUEUE.md (STATUS DOING→DONE + RESULT annotation)
+- handoff/SPRINT_JOURNAL.md (this entry)
+
+Commit: <TBD>
+

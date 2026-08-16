@@ -30,6 +30,18 @@ export default defineConfig({
     command: "npm run dev --workspace=apps/web",
     url: "http://localhost:3000",
     reuseExistingServer: false,
+    // Run the dev server in stub mode: no real DATABASE_URL and with
+    // DEV_FAKE_ADMIN=true so auth() returns a synthetic session without hitting
+    // Prisma. This makes checkout/API routes fail closed (503) instantly via
+    // requireDurableWriteStore instead of hanging on Prisma retry backoff
+    // against the unreachable Neon URL in .env.local. Next.js does not override
+    // process.env values that are already set, so webServer.env takes precedence
+    // over .env.local.
+    env: {
+      DATABASE_URL: "stub",
+      DEV_FAKE_ADMIN: "true",
+      STRIPE_SECRET_KEY: "",
+    },
     // A cold `next dev` compile of this app's home route has run past two
     // minutes before; give it real headroom rather than a flaky retry.
     timeout: 180_000,

@@ -70,6 +70,31 @@ const nextConfig = {
     ];
   },
   async headers() {
+    // CSP is strict in production (HTTPS expected, upgrade-insecure-requests
+    // forces all mixed traffic to TLS). In dev the server runs on plain HTTP
+    // (localhost:3000) and upgrade-insecure-requests would rewrite every
+    // /_next/* chunk + img src to https://localhost:3000, which has no TLS —
+    // the JS chunks 404, React never hydrates, and client event handlers
+    // (e.g. SubscribeButton) are silently dead. We drop the directive in dev
+    // so the e2e browser can load the bundle over HTTP.
+    const isDev = process.env["NODE_ENV"] !== "production";
+    const baseCsp = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data: https:",
+      "connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com",
+      "frame-src https://js.stripe.com",
+      "worker-src 'self' blob:",
+    ];
+    const cspValue = isDev
+      ? [...baseCsp].join("; ")
+      : [...baseCsp, "upgrade-insecure-requests"].join("; ");
     return [
       // Free embed widgets (DEC-017) — iframe distribution. Framing is allowed
       // here via CSP frame-ancestors; the X-Frame-Options entry below is scoped
@@ -100,7 +125,7 @@ const nextConfig = {
       {
         source: "/((?!embed$|embed/).*)",
         headers: [
-          { key: "Content-Security-Policy", value: "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com; frame-src https://js.stripe.com; worker-src 'self' blob:; upgrade-insecure-requests" },
+          { key: "Content-Security-Policy", value: cspValue },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           {
