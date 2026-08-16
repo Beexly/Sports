@@ -7,6 +7,7 @@ import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-perfor
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
+import { ManageSubscriptionButton } from "@/components/ui/manage-subscription-button";
 import { getBillingNotice } from "@/lib/billing/notice";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
@@ -277,6 +278,26 @@ export default async function DashboardPage({
           )}
 
           {billingNotice && <BillingNoticeBanner notice={billingNotice} />}
+
+          {entitlements.tier !== "FREE" && (
+            <div
+              data-testid="billing-management-section"
+              className="mb-6 rounded-2xl border border-mineral-hi bg-carbon/80 p-6"
+            >
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
+                  Billing
+                </h2>
+              </div>
+              <p className="mb-4 text-sm text-ion-2">
+                Update your card, change your plan, or cancel your subscription
+                anytime via the Stripe customer portal.
+              </p>
+              <div className="w-full max-w-xs">
+                <ManageSubscriptionButton />
+              </div>
+            </div>
+          )}
 
           <div className="mb-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatCard label="Today's Picks" value={todayPicksCount.toString()} />
