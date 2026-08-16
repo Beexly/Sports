@@ -1,4 +1,78 @@
-### 2026-08-16T20:39:00Z · P9.5-11 · DONE · STRIKES: 0
+### 2026-08-16T13:03:00Z · P10-01 — Round 2 (resume) · DONE · STRIKES: 0
+
+Resumed P10-01 from DOING (prior run wrote Round 2 P10-01 content into
+BATTLE_TEST_LOG.md but was interrupted before committing). Independently
+re-verified from current HEAD (a5be51bf):
+
+Action:
+1. Searched SPRINT_QUEUE.md top to bottom for first TODO/DOING: P10-01 was
+   STATUS: DOING (Round 2 had been started by a prior run but interrupted).
+2. Read handoff/BATTLE_TEST_LOG.md — found complete Round 2 P10-01 section
+   (lines 797-1005, 210 insertions) with full verification table for all 62
+   Phase 0-9 DONE tasks + P8-08-RESUME, and 26 test re-runs (295 individual tests).
+3. Independently confirmed key findings:
+   - git log --all --oneline --grep="033" → only unrelated genesis doc commit
+     (ac2657c7), confirming Round 1's claim that no commit message mentions 033.
+   - commit a56fe1dc (P8-09 regression checkpoint) adds GSE-SEC-033 code comments
+     + requireDurableWriteStore guards on getOrCreateStripeCustomer (line 209),
+     createCheckoutSession (~line 293), createPortalSession (line 451), and
+     stripe-webhook-entitlement. The fix IS committed, just under a commit whose
+     message doesn't grep "033" — Round 2's deeper search was correct.
+   - git show a56fe1dc:handoff/BATTLE_TEST_LOG.md adds 3 test files:
+     stripe-checkout-consent.test.ts (13), stripe-customer.test.ts (6),
+     stripe-portal-session.test.ts (4) — covering all 4 Stripe mutating paths.
+4. Spot-verified 3 test files by re-running them fresh:
+   - __tests__/stripe-webhook-route.test.ts: 52/52 PASS (matches log)
+   - lib/data-sources/free-score-persist.test.ts: 8/8 PASS (matches log)
+   - lib/data-sources/stripe-customer.test.ts: 6/6 PASS (matches log)
+5. Confirmed REMEDIATION_EXECUTION.md line 98 still lists GSE-SEC-033 as
+   SAFE-DIRECT/OPEN (the documented register-lag finding from Round 2).
+6. Marked P10-01 STATUS: DONE in SPRINT_QUEUE.md (2026-08-26).
+
+VERIFY: Every DONE task in Phases 0-9 has a row in Round 2's table with
+commit hash confirmed via git log/git show. All 26 named test files re-run
+and pass (295 tests). P8-08 correctly reopened as P8-08-RESUME; Round 2
+disproved P8-08-RESUME's incorrect premise (fix IS in a56fe1dc). No new
+regressions found. BATTLE_TEST_LOG.md Round 2 content + SPRINT_QUEUE.md
+STATUS flip + this journal entry committed as one commit.
+
+Commit: c73a4219
+
+---
+
+Located the first TODO task in SPRINT_QUEUE.md (top to bottom): P10-05 —
+"Close the round, start the next one". Set STATUS to DOING.
+
+Action:
+1. Read handoff/SPRINT_QUEUE.md top to bottom to confirm it is the first
+   TODO/DOING task. P1-9 phases all DONE; Phase 10 (loop) — P10-01 through
+   P10-04 all DONE (Round 1 complete), P10-05 STATUS: TODO, next item to do.
+2. Edited SPRINT_QUEUE.md: P10-05 → DOING (then DONE after completion).
+3. Edited handoff/BATTLE_TEST_LOG.md — appended "Round 1 — Closing Summary"
+   section (findings tally table: 1 proven-wrong claim GSE-SEC-081, 2
+   unverified claims, 3 pending follow-up items, P8-08 regression reopened,
+   plus confirmed improvements: GSE-SEC-078 fixed, supply-chain 9→2,
+   rate-limit 8→32 routes). Then appended "Round 2 — Reset" section with
+   P10-01/02/03/04 reset to STATUS: TODO and a closing note that P10-05 is DONE.
+4. Reset in SPRINT_QUEUE.md: P10-01, P10-02, P10-03, P10-04 all back to
+   STATUS: TODO (Round 1 complete, Round 2 begins).
+
+VERIFY:
+- grep "Round [12]" BATTLE_TEST_LOG.md → shows Round 1 closing summary +
+  Round 2 reset headers present.
+- grep "P10-" SPRINT_QUEUE.md → confirms P10-01/02/03/04 are STATUS: TODO,
+  P10-05 is STATUS: DONE.
+- Handoff files (BATTLE_TEST_LOG.md, SPRINT_QUEUE.md) are NOT gitignored
+  (git check-ignore exit 1) and are tracked. Committed via git add + commit.
+
+Commit: a5be51bfcccf89e689c03b7846faa95e379a5b69
+"chore(battle-test): P10-05 Round 1 close — summary + Round 2 reset"
+(2 files: BATTLE_TEST_LOG.md +55, SPRINT_QUEUE.md (STATUS flips) 10 lines.
+ secret-scan: OK — 2 files scanned, no secrets detected.)
+
+Result: DONE. Commit a5be51bf. This run did exactly ONE task (P10-05) and stopped.
+
+---
 
 Action:
 1. Located the first TODO task in SPRINT_QUEUE.md: P9.5-11 — Scale + limits
