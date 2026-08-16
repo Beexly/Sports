@@ -197,6 +197,16 @@ playwright-report/
 packages/prediction-engine/node_modules/
 machina-templates/
 
-# Hermes overnight-agent scratch output (reports, journals, inventories) —
-# read in the morning, never committed. See docs/ops/hermes/README.md.
-handoff/
+# Hermes overnight-agent scratch output. NARROWED 2026-08-16 (P10-04 hygiene
+# finding): the original blanket `handoff/` rule silently swallowed real,
+# permanent deliverables (reports cited as evidence by other tracked docs) at
+# least 4 separate times this sprint -- 11 files total force-added back after
+# the fact. Markdown reports are the actual deliverable and are tracked by
+# default now; only genuine scratch/log/generated output stays ignored.
+# See docs/ops/hermes/README.md.
+handoff/*.log
+handoff/*.txt
+handoff/*.stderr
+handoff/*.json
+handoff/_*
+handoff/*.py
