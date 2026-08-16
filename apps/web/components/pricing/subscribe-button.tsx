@@ -43,6 +43,31 @@ const PRIMARY_CLASSES =
 const GHOST_CLASSES =
   "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
 
+/**
+ * Per-click checkout-intent id, with a fallback.
+ *
+ * `crypto.randomUUID()` is only exposed in a SECURE CONTEXT and only from
+ * Safari 15.4+. Calling it unguarded here meant that on WebKit without a secure
+ * context — and on older iOS — it threw a TypeError that the surrounding
+ * try/catch swallowed into "Network blip. Check your connection and retry."
+ * The checkout POST was never sent, so the user simply could not subscribe and
+ * the error message pointed them at their own network. Caught 2026-08-16 by the
+ * newly-added WebKit/mobile e2e projects; the desktop-Chrome suite passed it.
+ *
+ * This mirrors the guard the codebase already uses elsewhere
+ * (`lib/ai-control-plane/budget.ts:449`, `credit-admission.ts:349`) — this call
+ * site was the only unguarded browser-side one.
+ *
+ * The id is only a per-visit "same click retried" hint; the server owns the
+ * durable CheckoutAttempt and 409s on any mismatch, so a non-UUID fallback is
+ * safe. It only needs to be collision-resistant within one visit.
+ */
+function newIntentId(): string {
+  const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  if (c?.randomUUID) return c.randomUUID();
+  return `ci_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 12)}`;
+}
+
 export function SubscribeButton({
   tier,
   label,
@@ -83,7 +108,7 @@ export function SubscribeButton({
     try {
       const intentKey = `${tier}:${interval}`;
       if (!intentRef.current || intentRef.current.key !== intentKey) {
-        intentRef.current = { key: intentKey, id: crypto.randomUUID() };
+        intentRef.current = { key: intentKey, id: newIntentId() };
       }
       // Checkout attempt initiated — the durable CheckoutAttempt is about to be
       // minted server-side. Inert no-op until a provider is wired.
