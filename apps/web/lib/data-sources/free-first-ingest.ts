@@ -144,6 +144,34 @@ export async function fetchWeatherFreeFirst(
 ): Promise<FreeFirstOutcome<GameWeather>> {
   // Weather is sport-agnostic; use any sport for the plan lookup.
   const plan = planIngestion("weather", "nfl");
+
+  // GSE-SEC-076: enforce the runtime clearance gate before hitting any
+  // external endpoint. Open-Meteo is approved_open_license (CC-BY-4.0), so
+  // this gate returns allowed=true in the current registry — but if the
+  // source's rights posture changes (e.g. storage_allowed revoked, or a
+  // cease-and-desist flips status to permission_required), this is the
+  // enforcement point that stops the fetch instead of letting it continue
+  // silently on an advisory-only basis.
+  const weatherMode: ExtractionMode = "open_dataset_ingest";
+  const clearance = checkClearance({
+    source_id: "open-meteo",
+    mode: weatherMode,
+    tool_id: "fetch-native",
+    intents: ["storage", "derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    return {
+      need: "weather",
+      sport: null,
+      usedSourceId: null,
+      usedFree: false,
+      mustSpend: plan.mustSpend,
+      plan,
+      data: null,
+      attribution: null,
+    };
+  }
+
   const result = await fetchWeather(latitude, longitude, opts);
   return {
     need: "weather",

@@ -1491,7 +1491,7 @@ Read `apps/web/lib/fantasy/dfs-optimizer.ts`, `apps/web/components/fantasy/lineu
 **VERIFY:** explicit PASS/FAIL/UNKNOWN per item. Item 3's finding, if confirmed, goes at the TOP
 of the output file, not the bottom.
 
-### P11-04 — Fantasy data accuracy: consolidated findings + fixes · STATUS: TODO · STRIKES: 0
+### P11-04 — Fantasy data accuracy: consolidated findings + fixes · STATUS: DOING · STRIKES: 0
 Depends on P11-01/02/03. Read all three audit files. **FIRST, before anything else in this task:**
 state plainly the SIZE of the gap between what exists today (external ADP passthrough, standalone
 optimizer math, no proprietary layer) and what a real fantasy-primary proprietary score would need
@@ -1528,7 +1528,7 @@ a guess.
 **and a stale watchdog rule silently reverting real work.** One pass missed all of these. Assume
 the current tree has more of the same, and go find it.
 
-### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: TODO · STRIKES: 0
+### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DOING · STRIKES: 0 · started: 2026-08-24T00:00:00Z
 For EVERY task in Phases 0-9 marked DONE, do not trust the STATUS field or the journal entry's
 prose. Independently confirm: (a) a real git commit exists whose diff matches what the task
 claimed to do — `git log --all --oneline --grep` or a manual `git show` search; (b) if the task

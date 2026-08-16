@@ -103,6 +103,22 @@ async function fetchEspnForDates(
   const errors: string[] = [];
   if (espnKeys.length === 0) {
     try {
+      // GSE-SEC-078: enforce ESPN clearance on the undated (live board) path.
+      // The ESPN fact-extract path is gated in free-first-ingest.ts (GSE-SEC-051)
+      // but multi-source-scores.ts called fetchEspnScoreboard directly without
+      // any checkClearance — so a registry status flip (e.g. storage_allowed
+      // revoked) would be silently ignored on this code path.
+      const espnClearance = checkClearance({
+        source_id: "espn-public-api",
+        mode: "public_logged_off_fact_extract",
+        tool_id: "fetch-native",
+        intents: ["derived_analytics"],
+      });
+      if (!espnClearance.allowed) {
+        const blockCodes = espnClearance.blocks.map((b) => b.code).join(", ");
+        errors.push(`espn-public-api: clearance-denied [${blockCodes}]`);
+        return { games: [], errors, params: [] };
+      }
       const games = await fetchEspnScoreboard(sport, { fetchImpl });
       return { games: [...games], errors, params: [] };
     } catch (e) {
@@ -383,6 +399,28 @@ export async function fetchScoresMultiSource(
   }
 
   try {
+    // GSE-SEC-078: enforce ESPN clearance on the final undated fallback path.
+    const espnClearance = checkClearance({
+      source_id: "espn-public-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["derived_analytics"],
+    });
+    if (!espnClearance.allowed) {
+      const blockCodes = espnClearance.blocks.map((b) => b.code).join(", ");
+      errors.push(`espn-public-api: clearance-denied [${blockCodes}]`);
+      return {
+        sport,
+        primary: chain[0] ?? null,
+        used: null,
+        attempted,
+        games: [],
+        failover: attempted.length > 1,
+        errors,
+        oddsApiRequired: false,
+        datesRequested: [],
+      };
+    }
     const games = await fetchEspnScoreboard(sport, { fetchImpl: opts.fetchImpl });
     return {
       sport,
