@@ -46,6 +46,41 @@ The ONLY reasons to stop:
 
 ---
 
+## SELF-VERIFICATION PROTOCOL — run this before you mark ANY task DONE
+
+**Why this exists.** For roughly two days you are running UNWATCHED — the human supervisor who has
+been independently re-verifying your commits is unavailable. That supervisor caught, in a single
+session: the same wrong-date bug four times, two "VERIFIED FIXED" claims citing commits that
+contained no such fix, and a change that set `DEV_FAKE_ADMIN=true` in the test environment — which
+silently made the entire e2e suite run as a fully-entitled admin and gutted the anonymous-paywall
+security tests. None of that was laziness. It was confident assertion without a check that was one
+command away. **You must now be your own supervisor.** An audit trail nobody can trust is worth less
+than no audit trail, because it gets acted on.
+
+Before flipping any STATUS to DONE, run these five. They are cheap and they are not optional:
+
+1. **Re-derive, never inherit.** Every number, count, percentage, or status you write must come from
+   a command you ran THIS session. Never copy a figure from another document — several docs in this
+   repo were confidently wrong for days precisely that way. If you cite a count, the grep that
+   produced it goes in the journal entry.
+2. **`git show` every hash you cite.** If you claim a commit fixes something, run
+   `git show <hash> --stat` (and grep its diff for the thing) before writing it down. Two findings
+   were marked FIXED against commits that touched entirely different subsystems.
+3. **A failing test means "form a hypothesis and try to FALSIFY it" — not "fix the app."** Before
+   concluding a product bug, run the same test in a different environment/browser/project. If it
+   fails everywhere, your test or selector is wrong, not the product. This exact check overturned a
+   confident "WebKit product bug" that was really an ambiguous selector.
+4. **Never weaken a guard, gate, env, or test to make something pass.** (AGENTS.md Law 9 — restated
+   here because it was violated *while the rule existed*.) If a test only passes with a security flag
+   flipped, a check disabled, or an assertion loosened, you have deleted the thing being tested. Mark
+   BLOCKED and report it. That is a success, not a failure.
+5. **Write the uncertainty down.** If you did not verify something, say so in the journal in the same
+   sentence as the claim — "not re-run", "could not confirm", "inferred". A hedged true statement is
+   infinitely more useful than a confident false one. You will not be punished for BLOCKED or for "I
+   could not verify this". You will do real damage with a clean-looking DONE that is wrong.
+
+---
+
 ## TWO-STRIKE RULE — your anti-loop protection
 
 This is the most important rule in this document. Repeating a failing action is the single way
