@@ -1754,7 +1754,7 @@ leak, and the full-tree pre-push secret scan.
 never modify `.npmrc`/`allowScripts`/`.githooks/` (those ARE the controls), never edit `.github/`,
 `packages/db/prisma/`, or `apps/web/lib/ai-control-plane/`. Commit locally. One task per session.
 
-### P13-01 — 10 Server Actions in the Jarvis memory module have zero authorization · STATUS: TODO · STRIKES: 0
+### P13-01 — 10 Server Actions in the Jarvis memory module have zero authorization · STATUS: DOING · STRIKES: 0 · started: 2026-08-16T17:05:42Z
 Evidence: `apps/web/lib/jarvis/memory/actions.ts` has `"use server"` at line 19 and exports
 `createMemoryCandidate`, `confirmMemory`, `rejectMemory`, `expireMemory`, `supersedeMemory`,
 `linkMemoryToDecision`, `linkMemoryToAgentRun` (+3 readers) with **no** `requireAdminActor()`,
@@ -1860,6 +1860,137 @@ Fix: one line — `shell: process.platform === "win32"`.
 **VERIFY:** the script runs to completion locally AND still exits non-zero when a critical/high
 production advisory is present (prove the second half; a gate that passes everything is worse than
 none). Commit.
+
+---
+
+# PHASE 14 — PROVE THE THESIS (strategic pass, 2026-08-16, Fable review — owner pre-approved)
+
+**The reframe, read this first.** Phases 0-13 were DEFENSIVE: make it correct, safe, not-sued, not-broken.
+That is table stakes, and it is essentially done. It is not what makes anyone trust or pay. This product's
+entire thesis is honesty/accountability — "we publish our own track record, calibration, and CLV; the
+touts scrub their losses, we don't." Right now the product *asserts* that thesis and *barely proves* it.
+The moat is the proof, and the proof machinery already exists in the repo, built and dark. Phase 14 turns
+the defense into offense: make the honesty demonstrable, reproducible, and impossible for a latecomer to
+fake. That is the work that converts a hardened shell into a product with a reason to exist.
+
+**Four layers, in priority order:**
+- **L1 — Publish the proof (P14-01..03).** The single strongest trust asset a latecomer cannot fake.
+- **L2 — Free-mode IS the product right now (P14-04..05).** The paid odds key is deactivated in prod, so
+  the live product runs on free public data. Everyone has paid odds; almost nobody turns free public data
+  (nflverse EPA, air yards, snaps, Savant) into a calibrated edge. That is the real differentiator, and
+  parts of it are ingested-but-unread.
+- **L3 — Truth-at-the-UI as an invariant (P14-06).** The "/about claims 30-min cadence while the board is
+  20h stale" contradiction (P9.5-08) was a symptom: freshness/provenance is partly systematized
+  (`public-freshness-gate.ts`, `line-freshness-badge.tsx` exist) but not guaranteed everywhere. A
+  trust-first product should enforce "every public number carries its real as-of" with a shared component
+  + guard, not hand-maintained copy.
+- **L4 — Honest degradation that actually detects staleness (P14-07).**
+
+**HARD BOUNDARIES (owner pre-approved the WORK, not the GATES).** Everything here is prepare-not-flip.
+NEVER: run a production data-writing backfill, bump `MODEL_VERSION`, flip a founder gate, publish a forward
+projection or a live win-rate, push, merge, or deploy. Where a step writes prod data or needs a live key,
+you BUILD and VERIFY it and write the one-command owner runbook — the owner runs it. Commit locally, one
+task per session. All the standing §NEVER rules still apply.
+
+### P14-01 — Build the public market-calibration baseline page (the proof that needs NO track record) · STATUS: TODO · STRIKES: 0
+**Why this is the highest-leverage task in the whole queue.** `apps/web/app/api/calibration/market-backtest/route.ts`
+and `.../elo-backtest/route.ts` are LIVE, public, unauthenticated endpoints backed by
+`apps/web/lib/calibration/market-backtest.ts` + `elo-backtest.ts`. They de-vig the CLOSING moneyline over
+the whole `HistoricalGame` archive (nflverse, 1999→present) and compute real Brier decomposition / ECE /
+reliability curves against actual outcomes. **Verified 2026-08-16: NO page anywhere consumes them.** This is
+a measurement OF THE MARKET computed with GSE's own published math — it is NOT a claim about GSE's picks, so
+it needs no gate and no track record. It converts "trust us, we'll show results later" into "here is 25
+seasons of reliability curve, here is the code, reproduce it," and it gives every future GSE claim a
+denominator ("the close's Brier is X; ours must beat X").
+Files: a new page (e.g. `apps/web/app/calibration/market/page.tsx`, or a section on the existing
+`apps/web/app/calibration/page.tsx` — read it first and choose), its loader, a new test. Read the two route
+files + the two lib files first to get the exact response shape; do not guess field names.
+Fix: render the reliability curve + Brier/ECE + the elo-vs-market `betterCalibrated` verdict. **Honest empty
+state is mandatory:** when `HistoricalGame` has no rows yet the loaders already return an explicit "run the
+backfill" message — surface that, never a fabricated or zero-filled chart. Do NOT wire the backfill cron
+into `vercel.json` (that writes prod data — owner-gated, see P14-03).
+**VERIFY:** page renders the honest empty state with no data (this is the state that will ship until the
+owner runs the backfill), and renders the real curve when given fixture data. typecheck + lint. Commit.
+
+### P14-02 — Prove the proof is real: leak-free verification of the historical-replay harness · STATUS: TODO · STRIKES: 0
+**A proof nobody can trust is worse than no proof.** `packages/prediction-engine/src/historical-replay.ts`
+splits an nflverse row into structurally-disjoint `PreGameFeatures` (cannot carry a score by type) and
+`SettlementFacts`, re-runs the FROZEN `scoreGame`, settles via the same `calculatePickResult`, and grades
+CLV via the same `clv.ts` primitives. Its driver `scripts/backfill/historical-settlement-backfill.ts` is
+**dry-run by default (zero writes unless `BACKFILL_WRITE=1`)** and marks output `isBootstrap=true` so it can
+never contaminate canonical history. There is already a leak-detection discipline in the repo:
+`packages/prediction-engine/src/edge-lab/__tests__/leak-gate.test.ts` — read it and extend that pattern, do
+not invent a new one.
+Fix (TEST + HARNESS ONLY, dry-run, no data writes): add the decisive placebo test — a **shuffled-time
+placebo must yield CLV ≈ 0**. If the frozen model shows edge on time-shuffled inputs, there is lookahead and
+the whole proof is invalid; if it shows ~0 on shuffled and >0 only on real order, the harness is trustworthy.
+Also assert `assemblePreGameFeatures` throws if any post-kickoff field is present (the type-level guarantee,
+exercised at runtime).
+**VERIFY:** the placebo test passes (shuffled → CLV≈0 within tolerance) and a real-order fixture shows
+non-zero. Nothing writes to any DB. typecheck + lint. Commit. If you cannot construct a sound placebo in two
+attempts, mark BLOCKED with exactly why — do NOT ship a weak test that would bless a leaky harness.
+
+### P14-03 — Write the owner runbook: PROVE_THE_EDGE.md (the one-sitting proof chain) · STATUS: TODO · STRIKES: 0
+Prepare-not-flip. Write `docs/ops/PROVE_THE_EDGE.md` — the exact ordered command sequence that takes the
+owner from empty tables to a published-ready calibration story in one sitting, clearly marking which steps
+WRITE production data (owner-only) vs READ. Trace the real routes/scripts, cite each:
+`/api/cron/backfill-historical-games` (writes `HistoricalGame`; not in `vercel.json` by design),
+`/api/cron/backfill-team-efficiency` (writes `TeamGameEfficiency`, the only non-market NFL independent leg —
+also verified unwired), the replay dry-run, and where each output is read (P14-01's page, the calibration
+endpoints). Include the honest caveat from the memory/strategy docs: blind full-slate edge is capped ~52-56%
+and the real deliverable is CLV vs obtainable price on a SELECTIVE subset, proven over 200+ fired bets — the
+runbook must not imply the backfill alone proves an edge.
+**VERIFY:** every command cites a real file that exists; every "writes prod data" step is flagged owner-only.
+No command is executed by you. Commit.
+
+### P14-04 — Free-mode reality audit: is the live product actually compelling? (READ-ONLY) · STATUS: TODO · STRIKES: 0
+Strategic. The paid Odds API key is deactivated in prod (`docs/ops/FREE_MODE_INGESTION_HEALTH.md`), so the
+LIVE product runs free-mode-first. Nobody has asked whether free mode is COMPELLING or merely NOT-BROKEN.
+Trace, read-only: what an anonymous visitor actually gets with no paid key — which free sources feed the
+board/picks/intelligence surfaces, what is rich, what is thin. Then inventory the free data that is
+INGESTED-BUT-UNREAD (the blind-spot sweep found `DepthChartEntry`, `PfrAdvStat`, `TeamWeekStat` written by
+`/api/cron/refresh-player-stats` with zero readers; P12-08 just wired snaps — confirm which of the other
+three are still dead by grepping `db.<model>` read sites yourself). Write `handoff/FREE_MODE_AUDIT.md`: is
+free mode a compelling product on its own, what is the single closest "free unlock," and rank the
+ingested-but-unread tables by (differentiator value / effort to surface).
+**VERIFY:** every "unused" claim is backed by a grep you ran showing zero non-test readers. Read-only, no code
+changes. Commit the report.
+
+### P14-05 — Wire ONE dead free-data table into a user-facing surface (additive, P12-08 pattern) · STATUS: TODO · STRIKES: 0
+Depends on P14-04's ranking. Take the top-ranked ingested-but-unread free table (likely `DepthChartEntry` →
+start/sit, or `PfrAdvStat`) and wire it into the projection/composite path the SAME additive way P12-08 wired
+snap share (`apps/web/lib/scoring/player-composite.ts`): a new signal that only participates when its data
+exists, normalized onto the existing scale, **NO existing weight reduced**, so scores are unchanged where the
+data is absent. Do NOT change any published number or the public weighting story without a test proving the
+change is intentional and bounded.
+**VERIFY:** unit tests for the new signal present-vs-absent; existing composite/projection tests still green
+proving no regression; if the table has no local rows, test against fixtures and journal that live
+verification needs the cron. Do NOT fabricate data. typecheck + lint. Commit.
+
+### P14-06 — Freshness-truth coverage audit + close the gaps on the top public surfaces · STATUS: TODO · STRIKES: 0
+The "/about 30-min cadence vs 20h-stale board" contradiction (P9.5-08) is a symptom of freshness not being a
+guaranteed invariant. Machinery already exists: `apps/web/lib/data-reliability/public-freshness-gate.ts`,
+`apps/web/components/picks/line-freshness-badge.tsx`, `apps/web/lib/picks/line-freshness.ts`. First AUDIT
+(read-only) which public surfaces display a data-derived number WITHOUT a real as-of/freshness signal — check
+`/board`, `/picks`, `/clv`, `/proof`, homepage. Then, for the gaps, add the EXISTING freshness component
+(reuse, do not build a new one) so each surfaced number carries its true as-of. Separately, fix the specific
+`/about` + `/faq` cadence claim: either derive the interval from the real cron config or replace it with the
+registry's approved non-numeric wording (`trust-claims.ts` `methodology.odds-ingestion`) — P9.5-08 flagged
+that the registry deliberately refuses to bless a numeric cadence.
+**VERIFY:** a test asserting the covered surfaces render a freshness signal; the `/about` cadence claim no
+longer states an unenforced number. typecheck + lint. Commit.
+
+### P14-07 — Honest degradation must DETECT staleness, not just claim "not an outage" · STATUS: TODO · STRIKES: 0
+Under the dead-scheduler condition this session, the board showed "quiet board — not an outage" copy while it
+WAS an outage (20h stale). The honest-degradation logic must actually detect data-age > SLA and say
+"temporarily stale, refreshing" rather than implying the quiet is intentional. Locate the board/picks
+empty-state + the freshness/`schedulerLiveness` signal (the public ops route
+`apps/web/app/api/ops/public-surface-truth/route.ts` already computes `schedulerLiveness`), and make the
+public copy distinguish three states truthfully: genuinely-quiet (no eligible games) vs stale-but-refreshing
+(data age > SLA) vs healthy. Do NOT expose internal operator language on the public surface — a user-facing
+"refreshing" message, not "scheduler dead."
+**VERIFY:** tests for all three states (quiet / stale / healthy) producing distinct, truthful public copy.
+typecheck + lint. Commit.
 
 ---
 
