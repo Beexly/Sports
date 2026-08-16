@@ -3195,3 +3195,74 @@ Commit: b38d283417bd6991a86857330edc07db9a6300cc
   secret-scan OK — 2 file(s) scanned, no secrets detected.
 VERIFY: 5/5 tests pass; typecheck + lint clean; commit hash verified via git show.
 Next:     P13-07
+
+---
+
+### 2026-08-16T14:34:47Z · P13-07 · DONE · STRIKES: 0
+
+**Task:** Dependency gate fails on Windows (ENOENT). Fix `scripts/guardrails/dependency-audit.mjs`
+so the gate runs locally on Windows developer machines, not just Linux CI.
+
+**STEP 0 — repo confirmation:**
+- `cd C:\Users\Garrett\Sports` && `git rev-parse --show-toplevel` → `C:/Users/Garrett/Sports` (confirmed).
+- `date +%F` → `2026-08-16` (used for all timestamps).
+
+**STEP 1 — locate first TODO/DOING task in SPRINT_QUEUE.md (top to bottom):**
+- Scanned all `STATUS:` lines. P13-07 (line 1853, STATUS: TODO) was the first TODO task.
+  (P10-03 at line 2136 is DOING but appears LATER in the file; P13-07 comes first.)
+- Set P13-07 STATUS: TODO → DOING (started 2026-08-16T22:00:00Z).
+
+**STEP 2 — reproduce the bug:**
+- `node scripts/guardrails/dependency-audit.mjs --json 2>&1` → `[dependency-audit] FAIL — could
+  not run or parse npm audit. spawnSync npm ENOENT` (exit code 2). Confirms the Windows-only
+  ENOENT regression: `execFileSync("npm", …)` without `shell: true` cannot resolve `npm.cmd`.
+
+**STEP 3 — apply fix:**
+- File: `scripts/guardrails/dependency-audit.mjs` (only this file).
+- One-line change on line 55: added `shell: process.platform === "win32"` to the
+  `execFileSync` options object. No other lines touched. Does not affect Linux CI
+  (`process.platform` is `"linux"` there, so `shell: false` = current behavior).
+
+**STEP 4 — VERIFY (both halves):**
+
+*(a) Script runs to completion locally:*
+- `node scripts/guardrails/dependency-audit.mjs 2>&1; echo EXIT_CODE=$?`
+  → `[dependency-audit] WAIVED  HIGH next — …` + `[dependency-audit] WAIVED  HIGH postcss — …`
+  + `[dependency-audit] OK - no unwaived critical/high advisories in production dependencies
+  (2 documented waiver(s)).` + `EXIT_CODE=0`. PASS.
+
+*(b) Gate still exits non-zero when a critical/high advisory is present:*
+  Temporarily emptied the `ACCEPTED` waiver list (backed up first, restored after) to prove the
+  gate fires on unwaived advisories:
+- `node scripts/guardrails/dependency-audit.mjs 2>&1; echo EXIT_CODE=$?` (waivers removed)
+  → `[dependency-audit] BLOCK  HIGH next  9.3.4-canary.0 - 16.3.0-preview.10` +
+  `[dependency-audit] BLOCK  HIGH postcss  <=8.5.22` +
+  `[dependency-audit] FAIL — 2 unwaived critical/high advisorie(s) in production dependencies.`
+  + `EXIT_CODE=1`. PASS — gate has teeth.
+- Restored the original `ACCEPTED` list and confirmed `node scripts/guardrails/dependency-audit.mjs`
+  returns to `EXIT_CODE=0` (waivers honored). No leftover temp changes (`git diff` shows only the
+  one-line `shell:` addition).
+
+*(c) No regression in existing guardrail tests:*
+- `npx vitest run apps/web/__tests__/guardrails.test.ts` → 49 passed, 1 failed.
+  The 1 failure is **pre-existing and unrelated**: `trust-gate` fails on
+  `apps/web/components/fantasy/dfs-optimizer.tsx:120` `[banned.lock]` — a banned "lock" phrase
+  in production code. Confirmed by `git stash` (reverting my change) → same 1 failure, 49 passed.
+  My change does not touch any trust-gate logic.
+
+**STEP 5 — commit:**
+- `git add scripts/guardrails/dependency-audit.mjs handoff/SPRINT_QUEUE.md`
+- Commit: `8003257559472b28378ca8abad77211f314f551c`
+  `"fix(P13-07): add shell:true to dependency-audit execFileSync for Windows"`
+- `git show 80032575 --stat` → 2 files changed, 2 insertions(+), 2 deletions(-). Verified.
+
+**Files committed (exactly the task-nominated file + queue status):**
+- `scripts/guardrails/dependency-audit.mjs` (1 line: + `shell: process.platform === "win32"`)
+- `handoff/SPRINT_QUEUE.md` (STATUS DOING → DONE)
+
+**UNCERTAINTY / notes:**
+- The pre-existing `trust-gate` failure (banned.lock on dfs-optimizer.tsx:120) was NOT caused by
+  this change and is NOT in scope for P13-07. Journaling it for visibility.
+- Only one line of source code was changed; no package.json edits, no npm install, no env changes.
+
+Next: P14-01 (first TODO after P13-07 in queue).
