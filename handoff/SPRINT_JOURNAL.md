@@ -2088,3 +2088,35 @@ VERIFY:   Every tool accounted for (Sentry only); env var NAMES only, no values.
 Commit:   6e5511d2 — docs(observability): add production readiness report P9.5-09 [sprint]
 
 | 2026-08-16T21:03:00Z | P9.5-10 | DONE | Wrote handoff/INCIDENT_RUNBOOK.md (477 lines) grounded in real repo files. Covered: degraded vs down (/api/health semantics, apps/web/app/api/health/route.ts), forcing board refresh (cron routes + external GitHub Actions backstop), kill-switches (all env vars from .env.example + free-settlement-runner.ts), rolling back a bad deploy (Vercel Dashboard Promote to Production -- NOT vercel rollback, per ROLLBACK_PLAN.md:47), DB diagnosis (live-capability-probes + requireDurableWriteStore + Neon connection limits), paid ingestion 401s + payment circuit (odds-api-circuit-breaker.ts: ODDS_API_CIRCUIT_FORCE_OPEN, 6h open window, no invented quotes), cron auth (CRON_SECRET bearer_only/dual contract per authorize.ts), observability (SENTRY_DSN no-op when absent per sentry.ts; PostHog NOT wired -- NO PROCEDURE EXISTS), severity bands, escalation, and gaps (PostHog, automated rollback, external uptime monitoring). VERIFY: every procedure cites real file/flag; gaps named in section 12. | 4b892f38 |
+
+### 2026-08-16T21:03:00Z · P11-01 · DONE · STRIKES: 0
+Action:   READ-ONLY audit. Wrote handoff/ADP_ACCURACY_AUDIT.md (195 lines) covering all 5
+          audit questions the task specified.
+Commands: cd C:/Users/Garrett/Sports (confirmed toplevel)
+          grep -rn "loadFfcAdp|ffcAdpUrl|parseFfcAdp|adpByNormName" --include=*.{ts,tsx} apps/ packages/
+          read apps/web/lib/fantasy/adp-source.ts (293 lines, in full)
+          read apps/web/lib/fantasy/adp-source.test.ts (191 lines, in full)
+          grep -niE "cron|refresh|odds|adp|draft|espn" vercel.json
+          curl "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"
+          git check-ignore -v handoff/ADP_ACCURACY_AUDIT.md  (file IS gitignored by handoff/ rule
+            at .gitignore:202; committed via `git add -f` like prior handoff deliverables which are
+            tracked — gitignore only blocks untracked files)
+Result:   All 6 audit questions answered with PASS/FAIL/PARTIAL + file:line or command evidence:
+          1. Live caller: PASS — graded-pool.ts:420 <- loadAndRegisterGradedProvider
+          2. Stale-serve path: PASS — 24h live / 30m error TTL, expiresAt @ adp-source.ts:226/:290;
+             fetchedAt stamped on real fetch (:275), not hit time
+          3. Live ADP order matches fixture: PASS — curl top-5 order identical to fixture
+             (Bijan, Gibbs, Nacua, Chase, Smith-Njigba); values drift with real drafts
+             (total_drafts 1999 -> 6565)
+          4. Second independent ADP source: FAIL (finding) — only FFC; CSV import is user override
+          5. Year derived (not hardcoded stale): PASS + caveat — season = getUTCFullYear() @ :210;
+             calendar-year vs NFL-season-year boundary in offseason months
+          6. Refresh scheduled/cron-guaranteed: PARTIAL — no ADP cron; freshness is lazy 24h TTL only
+          Findings: F-01 single-source ADP; F-02 lazy refresh cadence (on-demand + 24h, no proactive
+          cron). No code changes (READ-ONLY task).
+VERIFY:   File handoff/ADP_ACCURACY_AUDIT.md exists (195 lines); every claim cites file:line or a
+          command run; explicit PASS/FAIL/PARTIAL per question. PASS.
+Commit:   f4ea1495 — docs(P11-01): add ADP accuracy + freshness audit [sprint]
+          (staged handoff/ADP_ACCURACY_AUDIT.md + SPRINT_QUEUE.md + SPRINT_JOURNAL.md;
+          used `git add -f` to override handoff/ gitignore rule at .gitignore:202)
+Next:     P11-02

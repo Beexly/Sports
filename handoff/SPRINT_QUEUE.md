@@ -1383,7 +1383,7 @@ function timeout/memory ceiling a slow query would blow.
 **VERIFY:** every claim cites file:line or a config value. Close with an explicit answer to:
 "if 10,000 people arrive in one hour, what breaks first?"
 
-### P9.5-12 — Launch-blocker consolidation · STATUS: DONE · STRIKES: 0 · commit: PENDING
+### P9.5-12 — Launch-blocker consolidation · STATUS: DONE · STRIKES: 0 · commit: 800e41f6
 Read every artifact this phase produced, plus `handoff/DEPLOY_READINESS.md` if it exists. Write
 `handoff/LAUNCH_BLOCKERS.md` — the single document the owner reads before deciding to launch.
 Structure: (1) **BLOCKING** — cannot launch, with why and the specific fix; (2) **RISK ACCEPTED** —
@@ -1429,7 +1429,7 @@ by the owner and is explicitly owner-gated; see P11-04.
 until the very end." No task in this phase or elsewhere should touch visual design, layout, or
 styling. This phase is about DATA CORRECTNESS only.
 
-### P11-01 — ADP accuracy + freshness audit (READ-ONLY) · STATUS: TODO · STRIKES: 0
+### P11-01 — ADP accuracy + freshness audit (READ-ONLY) · STATUS: DONE · STRIKES: 0
 Read `apps/web/lib/fantasy/adp-source.ts` and its test file in full. Determine and write
 `handoff/ADP_ACCURACY_AUDIT.md`:
 1. Is the FantasyFootballCalculator integration actually called from a live user-facing route
