@@ -1127,7 +1127,7 @@ origin/main — assess whether a single merge is realistic or it should be split
 **VERIFY:** each claim cites a real file. Explicitly answer: "if the owner merged and deployed this
 branch today, what breaks?"
 
-### P9-02 — Secret + PII sweep of everything this branch committed · STATUS: TODO · STRIKES: 0
+### P9-02 — Secret + PII sweep of everything this branch committed · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T14:30:00Z (commit 64eb7d99)
 Several previously-gitignored `handoff/` files were force-added into git this session. Before this
 branch is ever pushed, verify nothing sensitive entered history.
 Use `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD` and `git ls-files
