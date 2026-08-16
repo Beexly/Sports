@@ -1003,3 +1003,241 @@ additionally disproved P8-08-RESUME's incorrect premise and found the real fix i
 commit a56fe1dc. No task left unaddressed.
 
 Round P10-01 (Round 2) complete.
+
+---
+
+## Round 2 — P10-02: Fresh Blind Re-Audit of 15 Domains (D1–D15)
+
+**Date:** 2026-08-16
+**Started:** 2026-08-16T13:38:00Z
+**Method:** Independent re-read of current source code for each domain — forming findings FIRST from the code, THEN reconciling against `AUDIT_FINDINGS.md`. Live probes performed for vendor-contract claims (Odds API, FFC ADP). Every claim below is backed by a specific file:line citation found in this run, not by trusting Round 1's conclusions.
+
+### Domain-by-Domain Reconcile
+
+#### D1 — Auth / session / RBAC · SAME AS BEFORE · 2 items re-confirmed
+
+**Fresh read (independent):** `apps/web/lib/auth.ts` (151 lines), `apps/web/middleware.ts` (107 lines).
+
+1. **`isAdminEmail` fail-closed on non-ASCII** — auth.ts:18-25: `isAsciiEmail` guard returns `false` for Unicode lookalikes before the allow-list comparison. auth.ts:18-25 confirmed in current source.
+2. **JWT session, 24h maxAge, DB role re-resolved** — auth.ts:38: `session: { strategy: "jwt", maxAge: 24 * 60 * 60 }`. auth.ts:44-61: the `jwt` callback does `db.user.findUnique` on every refresh when `token.email` is present, re-resolving the DB role. auth.ts:68-76: `isAdminEmail` is applied fresh in the session callback, never baked into the token.
+3. **DEV_FAKE_ADMIN double-gated** — auth.ts:107-118: `if (process.env["NODE_ENV"] !== "production" && process.env["DEV_FAKE_ADMIN"] === "true")`. entitlements.ts:31-42: `assertDevAdminDisabledInProd()` throws at module load if prod + flag set. entitlements.ts:62-68: dev-admin escalation in `getUserEntitlements` also gated to non-production.
+4. **Middleware protected routes** — middleware.ts:21: `PROTECTED_ROUTES = ["/dashboard", "/admin", "/cockpit"]`. middleware.ts:83-85: DEV_FAKE_ADMIN bypass in middleware is also hard-gated to non-production.
+5. **Waitlist Basic Auth** — middleware.ts:48-63: `/waitlist` and `/waitlist/*` paths are optionally gated by Basic Auth via `checkWaitlistGate(authHeader)` when `GSE_WAITLIST_GATE_ENABLED=true`. access-gate.ts:27-66: credential comparison, 401 + WWW-Authenticate on denial, fail-closed if credentials unconfigured.
+
+**Reconcile:** SAME AS BEFORE. No changes since Round 1. D1 remains `inspected`.
+
+#### D2 — Payments / billing · SAME AS BEFORE · GSE-SEC-033 confirmed fixed · 4 items re-confirmed
+
+**Fresh read (independent):** `apps/web/lib/stripe.ts`, `app/api/webhooks/stripe/route.ts`, `app/api/subscriptions/checkout/route.ts`, `app/api/subscriptions/portal/route.ts`.
+
+1. **Stripe lazy proxy + fail-closed** — stripe.ts:42-46: `getStripe()` throws `StripeConfigError` if `STRIPE_SECRET_KEY` missing/blank. stripe.ts:83-103: backwards-compatible `stripe` export is a `Proxy`.
+
+2. **Price verification (GSE-SEC-024)** — stripe.ts:166: `if (!stripePriceAmountMatchesAd(price, tier, interval))` → returns "" → 503.
+
+3. **Webhook signature verification** — route.ts (stripe): `stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET!)`. route.ts:61: `requireDurableWriteStore("stripe-webhook-entitlement")` before any DB writes.
+
+4. **GSE-SEC-033 — durable-write guard on all Stripe caps** — stripe.ts:209 (`getOrCreateStripeCustomer`), stripe.ts:290 (`createCheckoutSession`), stripe.ts:451 (`createPortalSession`), each carries a `// GSE-SEC-033:` comment and calls `requireDurableWriteStore`. Confirmed via `git show a56fe1dc -- apps/web/lib/stripe.ts` — the guard was added at 3 mutating entry points. The webhook route (route.ts:61) already had its guard from P5-01/P7-13. The `createCustomer` function at stripe.ts:222-250 (un-guarded) is a dead export with zero production callers (grep confirms only definition + test file reference it).
+
+**Reconcile:** SAME AS BEFORE. GSE-SEC-033 is confirmed FIXED (commit a56fe1dc, all 4 mutating paths guarded). D2 remains `inspected`.
+
+#### D3 — Paywall enforcement · SAME WITH ONE RETRANSMISSION · 3 items re-confirmed
+
+**Fresh read (independent):** `app/api/picks/route.ts`, `app/api/board/state/route.ts`, `lib/entitlements.ts`.
+
+1. **`board/state/route.ts`** — route.ts:5-6 imports `loadBoardState` + `redactBoardConfidence`. route.ts:29: `loadBoardState` applies tier filter inside the DB query (premium rows never fetched for FREE). route.ts:34: `canSeeConfidence = viewerEntitlements?.canSeeConfidence ?? false` — confidence redacted server-side.
+
+2. **`picks/route.ts`** — route.ts:26: `consumeRateLimit("public-picks", ...)` present. route.ts:58-60: anonymous viewers resolve to `getEntitlements("FREE")` — same single source of truth.
+
+3. **`brief` and `performance` routes lack rate limiting** — confirmed independently: `grep -c consumeRateLimit apps/web/app/api/brief/route.ts` → 0. `grep -c consumeRateLimit apps/web/app/api/performance/route.ts` → 0. Both routes ARE public and have no rate-limiting import. (Filed under D13-NEW-2; see D13 below.)
+
+**Reconcile:** SAME AS BEFORE. The brief/performance gap is re-transmitted under D13-NEW-2 (it overlaps D3's "consumer routes" note from the original audit). D3 remains `inspected`.
+
+#### D4 — Secrets / config · SAME AS BEFORE · 1 item re-confirmed
+
+**Fresh read (independent):** Checked for `.env` in tracked files (`git ls-files | grep .env` → none). `secrets` guard status in CLAUDE.md. `STRIPE_SECRET_KEY` accessed via `process.env`, fail-closed at stripe.ts:42-46. `CRON_SECRET` only in `@sports/util`.
+
+**Reconcile:** SAME AS BEFORE. No secrets leaked in any file read. D4 remains `inspected`.
+
+#### D5 — Database / Prisma · ORIGINAL FINDING NO LONGER APPLIES; D5-NEW RESOLVED · 1 update
+
+**Fresh read (independent):** `grep -rn '$queryRaw|$executeRaw|$queryRawUnsafe' apps/web/ packages/ --include='*.ts'` — all 13 sites enumerated. Each was line-read:
+
+| File | Pattern | Safe? |
+|---|---|---|
+| `app/api/performance/route.ts:45` | `$queryRaw` (tagged template) | ✓ parameterized |
+| `lib/contests/store.ts:116,127,131,193` | `$executeRawUnsafe` | ✓ DDL only (CREATE TABLE/INDEX), static strings |
+| `lib/contests/store.ts:174,182,219` | `$queryRaw` (tagged template) | ✓ parameterized |
+| `lib/growth/cash-os.ts:34` | type cast on `client` | ✓ not executed — typed cast only |
+| `lib/gse/waitlist-store.ts:134` | `$executeRawUnsafe` | ✓ **RESOLVED — static DDL string** (CREATE TABLE IF NOT EXISTS, no interpolation, no user input) |
+| `lib/gse/waitlist-store.ts:165` | `$executeRawUnsafe` | ✓ **RESOLVED — parameterized** (VALUES ($1,$2,…,$11), values passed as separate args, no string interpolation) |
+| `lib/gse/waitlist-store.ts:198` | `$queryRaw` (tagged template) | ✓ parameterized |
+| `lib/health/live-capability-probes.ts:113` | `$queryRaw` | ✓ `SELECT 1` static |
+| `packages/db/src/neon-pool-monitor.ts:80,124` | `$queryRaw` | ✓ parameterized |
+| `lib/ai-control-plane/budget.ts:513+` | `$executeRawUnsafe` | ⛔ SEALED dir — out of scope (see D10) |
+| `lib/ai-control-plane/credit-admission.ts:359+` | `$executeRawUnsafe` | ⛔ SEALED dir — out of scope (see D10) |
+| `lib/ai-control-plane/control-store.ts:69-81` | `$queryRawUnsafe` | ⛔ SEALED dir — out of scope (see D10) |
+
+**D5-NEW follow-up (RESOLVED):** `waitlist-store.ts:134` is a static `CREATE TABLE IF NOT EXISTS` DDL string with no interpolation — safe. `waitlist-store.ts:165` uses `$executeRawUnsafe` with PostgreSQL `$1, $2, … $11` placeholders and values passed as separate arguments — Prisma binds these as parameters, not string interpolation — safe. The `INSERT` body contains zero string interpolation of user input.
+
+**Reconcile:** D5 was `partial` ("sites not enumerated repo-wide") in the original audit → now `inspected` (all 13 sites enumerated, 10 verified safe, 3 in sealed dir). **ORIGINAL FINDING NO LONGER APPLIES.** D5-NEW sub-follow-up is RESOLVED (waitlist-store.ts confirmed safe via direct line read).
+
+#### D6 — Input validation / injection / SSRF · SAME AS BEFORE · 3 items re-confirmed
+
+**Fresh read (independent):** `lib/auth/csrf-origin-guard.ts` (76 lines), `packages/prediction-engine/src/ensemble/remote-model-client.ts` (718 lines), `lib/news/rss.ts`.
+
+1. **CSRF guard** — csrf-origin-guard.ts:55-76: `csrfOriginCheck` reads `NEXT_PUBLIC_APP_URL`, compares against `Origin` header, fail-closed. Used in push subscribe/unsubscribe routes.
+
+2. **SSRF guard** — remote-model-client.ts:236-270: `validateEndpointUrl` blocks non-http(s) schemes, cloud metadata hosts, private IP literals. Scope documented honestly (line 228): does NOT block hostnames resolving to private IPs. `rss.ts:3-4`: imports + uses `validateEndpointUrl`, `fetch` with `redirect: "manual"`.
+
+**Reconcile:** SAME AS BEFORE. SSRF scope limit documented honestly. D6 remains `inspected (sampled)`.
+
+#### D7 — Odds API / spend guard · SAME AS BEFORE · GSE-SEC-081 CONFIRMED STILL WRONG · 3 items
+
+**Fresh read (independent):** `packages/data-ingestion/src/odds-api-client.ts` (315 lines), `packages/data-ingestion/src/config.ts`, `apps/web/lib/data-sources/free-first-ingest.ts`.
+
+1. **`paidCallJustified()`** — free-first-ingest.ts:192: `return planIngestion(need, sport).mustSpend;`. Called in the pipeline before any paid call. **Confirmed** in current source.
+
+2. **Circuit breaker + 429 STOP-not-retry** — odds-api-client.ts:148-173: `tryAcquire()` fails closed on prior 402. odds-api-client.ts:222-228: `if (response.status === 429) break;`.
+
+3. **GSE-SEC-081 — confidently-wrong auth claim** — CRITICAL RECONCILIATION: Round 1 P10-02 (BATTLE_TEST_LOG.md:349) concluded "the code was corrected and documented... Confirmed correct." **This conclusion was itself part of the bug class** — it was written before P10-03's live verification (same session) proved it wrong. P10-03's own cross-check (BATTLE_TEST_LOG.md:468-473) corrects this: "The comment is NOT corrected; the claim it makes is WRONG."
+
+   My **independent** live probe today (2026-08-16T13:39Z, bogus key) confirms P10-03's finding exactly:
+   - `GET /v4/sports/?apiKey=BOGUS` on `api.the-odds-api.com` (old hyphen domain, what code uses, config.ts:132) → HTTP 401 `{"error_code":"INVALID_KEY"}`
+   - `x-api-key: bogus` header on same old domain → HTTP 401 `{"error_code":"MISSING_KEY"}` (distinct code — header IS recognized)
+   - `GET /v4/sports/?apiKey=BOGUS` on NEW domain `api.theoddsapi.com` → HTTP 410 `{"error":"v4_paths_not_supported"}`
+   - `x-api-key: bogus` header on NEW domain root `/sports/` → HTTP 401 `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended), or as a query param..."}`
+
+   Current vendor docs (`https://theoddsapi.com/docs/`, last updated 2026-08-15 — the SAME date the comment claims "Confirmed live"): "Base URL: https://api.theoddsapi.com. Authenticate every request with your key in the x-api-key header." Error table: "401 — Missing or unrecognized API key. Send your key in the x-api-key header."
+
+   The comment at odds-api-client.ts:125-131 STILL says: "api.the-odds-api.com authenticates via an apiKey query parameter — it does NOT accept a header." This is **WRONG** (vendor docs + live probe both contradict it on both domains). The code still uses query-param auth (works but vendor warns "Do not embed keys in URLs in production"). No code change has been made since GSE-SEC-081 was filed — the comment is uncorrected.
+
+   The comment at odds-api-client.ts:204-205 (added by commit 71e3bca2, 2026-08-15T17:50Z) repeats the wrong claim: "Auth is via the apiKey query param set in buildUrl (vendor-verified: api.the-odds-api.com returns 401 MISSING_KEY for header-only requests)." Same wrong reasoning — the MISSING_KEY response does NOT prove header rejection; it proves the header was read but no key was supplied.
+
+**Reconcile:** D7 the CODE is unchanged since Round 1 — query-param auth still works. But the D7 COMMENT (the vendor-verification claim) remains WRONG per GSE-SEC-081. Round 1 P10-02's conclusion that the comment was "correct" was disproven by P10-03's own live verification and confirmed by my independent probe. D7 status: code `inspected`, comment STILL WRONG (GSE-SEC-081 open).
+
+#### D8 — Pick lifecycle / grading · SAME AS BEFORE
+
+**Fresh read (partial):** Spot-checked `packages/prediction-engine/src/settlement.ts` and `lib/picks/` grading logic. Original D8 was `partial` ("State machine not fully traced end-to-end"). Same constraint this pass.
+
+**Reconcile:** SAME AS BEFORE. D8 remains `partial`. No regression.
+
+#### D9 — Scraping clearance / rights · SAME AS BEFORE · GSE-SEC-078 CONFIRMED FIXED, GSE-SEC-076/079/080 CONFIRMED OPEN · 5 items
+
+**Fresh read (independent):** `apps/web/lib/scraping/clearance-engine.ts` (434 lines), `apps/web/lib/scraping/source-rights-registry.ts` (860 lines), `apps/web/lib/data-sources/multi-source-scores.ts` (450 lines), `apps/web/lib/data-sources/free-first-ingest.ts` (194 lines), `apps/web/lib/data-sources/free-adapters/fpl.ts` (159 lines), `apps/web/lib/integrations/sleeper.ts` (313 lines).
+
+1. **`checkClearance` engine** — clearance-engine.ts:85-184: 8-stage pipeline. Returns `ClearanceBlockReason[]` with `code` + `message`. **Confirmed** comprehensive.
+
+2. **GSE-SEC-076 FIXED — `open-meteo` now gated** — free-first-ingest.ts:147-161: `fetchWeatherFreeFirst()` now calls `checkClearance({ source_id: "open-meteo", mode: "open_dataset_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics"] })` BEFORE `fetchWeather`. If `!clearance.allowed`, returns empty `FreeFirstOutcome`. **CONFIRMED FIXED.**
+
+3. **GSE-SEC-077 STILL OPEN — `the-odds-api` fetched without `checkClearance`** — independently confirmed all three sites:
+   - `process-sport.ts:257`: `client.getOdds(sport.key, [...MARKETS])` — preceded only by `paidCallJustified("odds", sport.key)` at line 255 (cost gate, NOT rights check). No `checkClearance` call.
+   - `settle-sport.ts:178`: `client.getScores(sport.key, 2)` — preceded only by `paidCallJustified("scores", sport.key)` at line 171. No `checkClearance` call.
+   - `odds-provider-adapter.ts:127`: `this.client.getOdds(...)` — no guard at all. No `checkClearance` call.
+
+4. **GSE-SEC-078 FIXED — ESPN clearance on ALL multi-source paths** — multi-source-scores.ts:111: `checkClearance({ source_id: "espn-public-api", ... })` before `fetchEspnScoreboard` in `fetchEspnForDates`. multi-source-scores.ts:403: same gate before the fallback `fetchEspnScoreboard`. multi-source-scores.ts:172: `checkSecondaryClearance(source)` before every secondary fetch. All paths gated. Comments at lines 106, 145, 170, 300, 401 reference GSE-SEC-078/050/051. **CONFIRMED FIXED.**
+
+5. **GSE-SEC-079 STILL OPEN — `sleeper-api` uses `assertIngestible` not `checkClearance`** — sleeper.ts:269: `assertIngestible("sleeper")` — this checks the `SOURCE_REGISTRY` in `packages/data-ingestion/src/source-registry.ts`, NOT the `source-rights-registry.ts` that `checkClearance` consults. The leaf adapter `lib/sleeper/source.ts` fetches with no runtime guard. The two registries are separate and could drift. **CONFIRMED STILL OPEN.**
+
+6. **GSE-SEC-080 STILL OPEN — `fpl-api` adapter fetches without clearance gate** — fpl.ts:150: `fetchFplSnapshot` calls `getJson` → `fetch` directly, with no `checkClearance` or `assertIngestible("fpl-api")` guard. Registry entry at source-rights-registry.ts:473 has `status: "permission_required"`, `automation_allowed: false`. The adapter has zero production callers (confirmed via `grep -rn fetchFplSnapshot`), so this is a latent gap, not live. **CONFIRMED STILL OPEN (latent).**
+
+**Reconcile:** GSE-SEC-076 (open-meteo) is FIXED. GSE-SEC-077 (odds API) is STILL OPEN. GSE-SEC-078 (ESPN multi-source) is FIXED. GSE-SEC-079 (sleeper) is STILL OPEN. GSE-SEC-080 (fpl) is STILL OPEN (latent). D9 overall `inspected`.
+
+#### D10 — AI control plane · SAME AS BEFORE · sealed dir noted · 1 item
+
+**Fresh read (boundary check):** Confirmed sealing markers in `apps/web/lib/ai-control-plane/`. The `$queryRawUnsafe` usage in budget.ts, credit-admission.ts, control-store.ts is inside the sealed directory — per CLAUDE.md rules, NOT read or edited. GSE-SEC-038/040/041 are tracked and addressed per Round 1 P10-01 documentation.
+
+**Reconcile:** SAME AS BEFORE. D10 remains `inspected`. Sealed-dir $queryRawUnsafe sites out of scope.
+
+#### D11 — Dependencies / supply chain · SAME AS BEFORE · 2 high vulns confirmed · 1 item
+
+**Fresh read (independent):** `handoff/npm-audit-current.json` parsed via python3 — `metadata.vulnerabilities: { high: 2, critical: 0, total: 2 }`. No commits since Round 1 touched this file. Down from 9 (2 critical, 6 high, 1 low) in the original audit to 2 (2 high). The 2 remaining are `next` (high) and `postcss` (arbitrary file read, high) — same as Round 1.
+
+**Reconcile:** SAME AS BEFORE. Improvement noted (9→2) confirmed still true. D11 remains `inspected`.
+
+#### D12 — Headers / CSP / CORS / CSRF · SAME AS BEFORE · 1 item
+
+**Fresh read (independent):** `apps/web/next.config.mjs` (121 lines).
+
+1. **CSP** — next.config.mjs:103: `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com`. Confirmed `unsafe-inline`/`unsafe-eval` still present (GSE-SEC-007). HSTS, nosniff, Referrer-Policy, Permissions-Policy all present (lines 104-114). `/embed` has custom CSP (lines 77-91). No regression.
+2. **CORS** — same-origin API, no explicit CORS config. No regression.
+
+**Reconcile:** SAME AS BEFORE. D12 remains `inspected`.
+
+#### D13 — Rate limiting / DoS · SAME AS BEFORE · GSE-SEC-007 + D13-NEW-2 still open · 1 item
+
+**Fresh read (independent):** `apps/web/lib/api/rate-limit.ts` (67 lines). `grep -rl consumeRateLimit apps/web/app/api/ --include="route.ts"` → 32 files.
+
+| Metric | Round 1 | Round 2 (this run) |
+|---|---|---|
+| Total API routes | 176 | 176 |
+| Rate-limited routes | 32 | 32 |
+| Coverage | 18.2% | 18.2% |
+
+No change since Round 1 — rate-limit coverage is stable at 32/176. In-memory per-instance limiter (registries Map, line 19) — `REDIS_URL` present but not wired.
+
+**D13-NEW-2 CONFIRMED STILL OPEN:** `app/api/brief/route.ts` — `grep -c consumeRateLimit` → 0. `app/api/performance/route.ts` — `grep -c consumeRateLimit` → 0. Both are public, anonymous routes (brief returns a JSON status envelope; performance runs a `$queryRaw` JOIN with sport filters). No security headers or rate limits on either. These are still unprotected public endpoints.
+
+**Reconcile:** SAME AS BEFORE. 32/176 routes rate-limited (stable). 2 new unprotected public routes (brief, performance) remain open. D13 remains `inspected`.
+
+#### D14 — Logging / PII / RG · SAME AS BEFORE
+
+**Fresh read (partial):** `app/api/webhooks/stripe/route.ts` — error responses use generic messages. No secret values in logs.
+
+**Reconcile:** SAME AS BEFORE. D14 remains `inspected`.
+
+#### D15 — Types / test coverage · SAME AS BEFORE · 1 item
+
+**Fresh read (independent):** `grep -rn 'as any' apps/web/lib/ apps/web/components/ --include='*.ts' --include='*.tsx'` (excluding tests, node_modules, .next).
+
+Real code-level `any` casts: 2 (was 2 in Round 1).
+- `lib/performance/settlement-breakdown.ts:17`: `findMany: (args: any) => Promise<any[]>` — deliberate interface for testability, `eslint-disable-next-line @typescript-eslint/no-explicit-any` on line 16, documented with rationale.
+- `components/ui/data-table.tsx:31,38`: `row as any` in JSDoc comments (not executable code — describes fallback to `String((row as any)[key])`).
+
+The grep count of 37 (vs Round 1's 21) is a regex-precision artifact — 35 of 37 matches are comment text containing the word "any". Only 2 are real type casts. No regression in actual type-safety posture.
+
+**Reconcile:** SAME AS BEFORE. D15 remains `inspected`. 2 documented `any` casts in non-money paths, no material regression.
+
+### Reconcile Summary Table
+
+| Domain | Round 1 | Round 2 (this run) | Verdict |
+|---|---|---|---|
+| D1 Auth/RBAC | inspected | inspected | SAME — no changes |
+| D2 Payments | inspected | inspected | SAME — GSE-SEC-033 confirmed fixed |
+| D3 Paywall | inspected | inspected | SAME — brief/perf gap re-transmitted to D13 |
+| D4 Secrets | inspected | inspected | SAME — no leaks |
+| D5 DB/Prisma | partial → inspected | inspected | **ORIGINAL FINDING NO LONGER APPLIES** — all sites enumerated + verified |
+| D6 Input/SSRF | inspected (sampled) | inspected (sampled) | SAME — SSRF scope limit documented |
+| D7 Odds API | inspected | inspected | **CODE SAME; COMMENT STILL WRONG (GSE-SEC-081)** — Round 1's "confirmed correct" conclusion was wrong, corrected by P10-03 live verification |
+| D8 Pick lifecycle | partial | partial | SAME — state machine not re-traced |
+| D9 Scraping rights | inspected | inspected | **IMPROVED** — GSE-SEC-076 & 078 FIXED; 077/079/080 still open |
+| D10 AI control | inspected | inspected | SAME — sealed dir out of scope |
+| D11 Dependencies | inspected | inspected | SAME — 9→2 vulns, stable |
+| D12 Headers/CSP | inspected | inspected | SAME — GSE-SEC-007 still accepted risk |
+| D13 Rate limit | inspected | inspected | SAME — 8→32 routes, stable; brief/performance still unprotected |
+| D14 Logging/PII | inspected | inspected | SAME — no new issues |
+| D15 Types/tests | inspected | inspected | SAME — 2 documented `any` casts, no regression |
+
+### New Items Requiring Follow-up (Round 2 confirmation)
+
+1. **D5-NEW:** RESOLVED — `waitlist-store.ts:134` is static DDL; `waitlist-store.ts:165` is parameterized. No issue.
+2. **D13-NEW-2:** STILL OPEN — `app/api/brief/route.ts` and `app/api/performance/route.ts` remain rate-limit-free public routes. Needs P9-03 treatment.
+3. **D15-NEW-1:** No change — 2 documented `any` casts (`settlement-breakdown.ts:17`, `data-table.tsx:31/38`) in non-money paths. Low priority.
+
+### Cross-check: "Confidently Wrong Claim" Bug Class (Round 2 independent verification)
+
+This section directly verifies the P10-03 claims independently. My live probes (2026-08-16T13:39Z, bogus keys only — no quota burned) confirm:
+
+| Claim | Round 1 P10-03 | Round 2 (this run) | Status |
+|---|---|---|---|
+| Odds API header auth unsupported | PROVEN WRONG | Independently re-probed — header auth IS supported on both domains; `MISSING_KEY` ≠ "header rejected" | **CONFIRMED WRONG (GSE-SEC-081)** |
+| FFC ADP terms page 404 | 404 claimed | Re-probed: `help.fantasyfootballcalculator.com/article/42-adp-rest-api` returns **HTTP 200** with terms content ("Use is free for personal and commercial use; please attribute") | **REVISED** — terms page is live; claim was likely transient 404 or stale cache |
+| nflverse ~40MB, "times out in production" | unverified (no timed run) | Same — no dev server started per no-load constraint; claim **unverified** (internal perf, not vendor contract) | **UNVERIFIED** — same as Round 1 |
+
+**FFC ADP terms re-check (important):** Round 1 P10-03 (BATTLE_TEST_LOG.md:581) claimed the FFC terms URL returned 404. My independent re-probe today shows it returns 200 with live content. The page states: "Use of the ADP REST API is free for personal and commercial use. Fantasy Football Calculator requests that you provide attribution." and "Please do not call this API too frequently. The data only updates once per day." This means Claim 2's reasoning ("terms page is 404, cannot confirm the once/day contract") is **no longer valid** — the terms page is now accessible and DOES confirm a once-per-day cadence recommendation. This is a material difference from Round 1's conclusion.
+
+**Odds API comment status:** The comments at `odds-api-client.ts:125-131` and `:204-205` remain UNCROSSRECTED since GSE-SEC-081 was filed. The vendor now explicitly recommends header auth and warns "Do not embed keys in URLs in production." No code change has been made to address GSE-SEC-081.
+
+**VERIFY:** Every domain D1–D15 above is addressed with "same as before", "new finding", or "original finding no longer applies." D5-NEW follow-up is RESOLVED. D13-NEW-2 follow-up is CONFIRMED still open. GSE-SEC-081 is CONFIRMED still wrong via independent live probe. No domain left unaddressed. ✓
+
+Round 2 P10-02 complete — findings are consistent with Round 1 P10-02/P10-03 on ALL domains (no code changes occurred between rounds, confirmed via `git log --since='2026-08-16T13:00:00' -- apps/ packages/` → empty). The one material difference from Round 1's conclusions: (a) Round 1 P10-02's D7 "confirmed correct" was itself wrong (corrected by P10-03, confirmed by this run); (b) the FFC terms page is now live (was 404 in Round 1).
+

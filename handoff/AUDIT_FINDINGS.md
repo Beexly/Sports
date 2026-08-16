@@ -178,7 +178,7 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 
 ## GSE-SEC-076 — 080: Data-clearance coverage gap audit (P5-13)
 
-### [MEDIUM] GSE-SEC-076 — `open-meteo` fetched without `checkClearance`
+### [MEDIUM] GSE-SEC-076 — `open-meteo` fetched without `checkClearance` — STATUS: FIXED
 - **OWASP / CWE:** A04 / CWE-862 (missing authorization — missing runtime enforcement of a declared policy)
 - **Confidence:** confirmed (code read)
 - **Location:** `apps/web/lib/data-sources/free-first-ingest.ts:147` — `fetchWeatherFreeFirst()` calls `fetchWeather(latitude, longitude, opts)` with no preceding `checkClearance({ source_id: "open-meteo", ... })` call.
@@ -186,6 +186,7 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 - **Blast radius:** weather data pipeline (all outdoor-sport totals models), all 7 sports.
 - **Remediation sketch (SAFE DIRECT):** add a `checkClearance({ source_id: "open-meteo", mode: "open_dataset_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics"] })` gate in `fetchWeatherFreeFirst` before the `fetchWeather` call; if denied, return the empty `FreeFirstOutcome` (same pattern as the ESPN gate at line 99). Effort: S.
 - **Effort:** S
+- **Round 2 Re-verification (P10-02, 2026-08-16):** FIXED. `fetchWeatherFreeFirst()` now calls `checkClearance({ source_id: "open-meteo", mode: "open_dataset_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics"] })` at `free-first-ingest.ts:147-161` before `fetchWeather`, returning empty `FreeFirstOutcome` on denial. Confirmed in commit `5970f49e` ("fix(P11-04): surface partial DFS lineup results, add clearance gates"). Remediation applied as sketched. **Status: FIXED.**
 
 ### [HIGH] GSE-SEC-077 — `the-odds-api` fetched without `checkClearance` (only spend guard)
 - **OWASP / CWE:** A04 / CWE-862; A04 / CWE-732 (incorrect authorization — spend guard used in place of rights gate)
@@ -199,7 +200,7 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 - **Remediation sketch (SAFE DIRECT for ingest-pipeline; CP for odds-provider-adapter if it touches sealed docs):** add `checkClearance({ source_id: "the-odds-api", mode: "licensed_api_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics", "commercial_display"] })` before each fetch site. On denial, return the existing source-error shape (both call sites already have a try/catch that emits source-error). The `odds-provider-adapter.ts` is inside `packages/` — confirm it is not in a sealed tree before editing. Effort: S–M.
 - **Effort:** S–M
 
-### [MEDIUM] GSE-SEC-078 — `espn-public-api` fetched without `checkClearance` in multi-source score path
+### [MEDIUM] GSE-SEC-078 — `espn-public-api` fetched without `checkClearance` in multi-source score path — STATUS: FIXED
 - **OWASP / CWE:** A04 / CWE-862
 - **Confidence:** confirmed (code read)
 - **Location:** `apps/web/lib/data-sources/multi-source-scores.ts:106` (`fetchEspnScoreboard` via `fetchEspnForDates`), `:218` (`fetchEspnForDates`), `:386` (`fetchEspnScoreboard`). None of these call `checkClearance({ source_id: "espn-public-api", ... })` before the fetch.
@@ -207,6 +208,7 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 - **Blast radius:** settlement runner (free-path score finalization for all sports), live board scores.
 - **Remediation sketch (SAFE DIRECT):** add `checkClearance({ source_id: "espn-public-api", mode: "public_logged_off_fact_extract", tool_id: "fetch-native", intents: ["derived_analytics"] })` in `fetchEspnForDates` and before the undated `fetchEspnScoreboard` call at line 386; on denial, return empty results (same pattern as the secondary-source gates at line 154). The persist-time storage gate (GSE-SEC-051, `free-score-persist.ts:216`) remains intact. Effort: S.
 - **Effort:** S
+- **Round 2 Re-verification (P10-02, 2026-08-16):** FIXED. `multi-source-scores.ts:111` now calls `checkClearance({ source_id: "espn-public-api", mode: "public_logged_off_fact_extract", tool_id: "fetch-native", intents: ["derived_analytics"] })` before `fetchEspnScoreboard` in `fetchEspnForDates` (undated/live-board path). The fallback path at line 403 also gates. All secondary sources gate via `checkSecondaryClearance` (lines 172, 302, 327, 351, 375). Comments at lines 106, 145, 170, 300, 401 reference GSE-SEC-078/050/051. Confirmed in commit `5970f49e` ("fix(P11-04): surface partial DFS lineup results, add clearance gates"). Remediation applied as sketched. **Status: FIXED.**
 
 ### [LOW] GSE-SEC-079 — `sleeper-api` uses `assertIngestible` (registration gate) not runtime `checkClearance`
 - **OWASP / CWE:** A04 / CWE-862; A01 (separation of duties — two source registries drift)
@@ -241,3 +243,4 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 - **Blast radius:** odds/quote ingestion (paid-call spend guard GSE-SEC-040/041), circuit-breaker health probe getSports(), any live-quote/refresh path.
 - **Remediation sketch (packages/data-ingestion is NOT in a sealed tree per CLAUDE.md):** switch THE_ODDS_API_PRODUCTION_BASE_URL to https://api.theoddsapi.com (root, no /v4/); add x-api-key header auth (header preferred per docs); correct the :125-131 and :204-205 comments; verify x-requests-remaining/x-requests-used names on the new namespace; update tests. Effort: M.
 - **Effort:** M
+- **Round 2 Re-verification (P10-02):** Independently live-probed on 2026-08-16T13:39Z (bogus key). Confirmed: `GET /v4/sports/?apiKey=BOGUS` on api.the-odds-api.com → 401 `{error_code:INVALID_KEY}`; `x-api-key: *** header on same domain → 401 `{error_code:MISSING_KEY}` (distinct code = header IS recognized). NEW domain `api.theoddsapi.com` rejects `/v4/` (HTTP 410 `v4_paths_not_supported`); header auth on new root `/sports/` → 401 `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended)"}`. Vendor docs (theoddsapi.com/docs, last updated 2026-08-15) explicitly recommend x-api-key header auth. **Status remains OPEN — comment at odds-api-client.ts:125-131 and :204-205 is still WRONG, no code change made since filing.**
