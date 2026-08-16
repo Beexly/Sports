@@ -1817,7 +1817,7 @@ callers unchanged.
 **VERIFY:** test asserting the value passed to `limiter.consume` differs from the input and matches
 `/^[0-9a-f]{64}$/`. typecheck + lint. Commit.
 
-### P13-05 — CSP: make `unsafe-eval` dev-only and fix two silently-broken integrations · STATUS: DOING · STRIKES: 0
+### P13-05 — CSP: make `unsafe-eval` dev-only and fix two silently-broken integrations · STATUS: DONE · STRIKES: 0
 Evidence: `apps/web/next.config.mjs:103` ships `'unsafe-eval'` in `script-src` in production. The
 recorded justification ("Stripe.js and Clarity require it", `handoff/BATTLE_TEST_LOG.md:308`) is
 **wrong** — the emitted production bundle has 0 `eval(` and 0 `new Function(`; the 6 `Function(`
@@ -1839,7 +1839,7 @@ Next.js CVE is unpatchable on 14.x).
 **KEEP** `style-src 'unsafe-inline'` — 797 inline `style={{…}}` props across 145 files, and CSP
 nonces do not apply to style attributes.
 
-### P13-06 — `/api/sleeper/leagues` is an unauthenticated third-party proxy · STATUS: TODO · STRIKES: 0
+### P13-06 — `/api/sleeper/leagues` is an unauthenticated third-party proxy · STATUS: DONE · STRIKES: 0 · started: 2026-08-16 · completed: 2026-08-16 (commit b38d2834)
 Evidence: `apps/web/app/api/sleeper/leagues/route.ts` has no auth, no rate limit, no cache, and
 passes `username` through raw — while its sibling `sleeper/league/route.ts:10-11` sanitizes with
 `.replace(/\D/g,"")`. This is **not** SSRF (`apps/web/lib/integrations/sleeper.ts:40` applies
@@ -2133,7 +2133,7 @@ found it in `BATTLE_TEST_LOG.md`.
 **VERIFY:** `BATTLE_TEST_LOG.md` states explicitly, per domain, "same as before" or "new finding"
 or "original finding no longer applies" — no domain left unaddressed.
 
-### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: TODO · STRIKES: 0
+### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: DOING · started: 2026-08-16T21:50:00Z · STRIKES: 0
 This exact bug class has been found THREE times this session: a code comment or commit message
 makes a specific, confident technical claim about how something external behaves (a vendor's auth
 mechanism, what another code path does, what a library does on a given input) — and the claim is

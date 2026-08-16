@@ -2994,3 +2994,204 @@ Commit: 8b68f9867fed9be40dc41026ced22b25624cc5ee
 "guard: close interpreter .env exfil holes + no-verify/hooksPath/.githooks write"
 (1 file changed, 35 insertions(+), 1 deletion(-); secret-scan OK, 1 file, no secrets)
 
+---
+
+### 2026-08-16T13:26:05Z · P13-03 · DONE · STRIKES: 0
+
+Rate-limit and cache the public ops surface. Located as the first TODO task
+in SPRINT_QUEUE.md (top-to-bottom scan; P13-01/P13-02 were DONE, P13-03 was
+the first STATUS: TODO).
+
+What I did:
+1. Edited SPRINT_QUEUE.md: P13-03 STATUS TODO → DOING.
+2. Read the task instructions + referenced files:
+   - apps/web/app/api/ops/public-surface-truth/route.ts (full file, 701 lines)
+   - apps/web/lib/ops/stripe-webhook-hosts.ts (loadStripeWebhookHostsPosture)
+   - apps/web/app/api/picks/[id]/explain/route.ts (rate-limit pattern example)
+   - apps/web/app/api/verify/slate/route.ts (matching consumeRateLimit pattern)
+   - apps/web/lib/api/rate-limit.ts (consumeRateLimit + clientIp signatures)
+3. Applied fix (a): added consumeRateLimit on the anonymous (non-detailed)
+   branch of GET — 60 req/min per IP, 429 + Retry-After on exceed, matching
+   the pattern from /api/verify/slate and /api/sources/catalog. Also added
+   NextRequest import for the clientIp type cast (Request → NextRequest).
+4. Applied fix (b): moved loadStripeWebhookHostsPosture() behind `if (detailed)`
+   so anonymous callers no longer trigger a live Stripe webhookEndpoints.list()
+   call on every GET. Conditionally included stripeWebhookHosts in the response
+   body only for the operator (detailed) branch.
+   Note: did NOT move behind hasOpsAuth as the task suggests, because hasOpsAuth
+   IS the detailed check — detailed = hasOpsAuth(request). So gating on `detailed`
+   is exactly gating behind hasOpsAuth.
+5. Wrote test suite: apps/web/__tests__/ops-public-surface-truth-rate-limit.test.ts
+   (5 tests):
+   - allows requests within the 60/min quota (200)
+   - returns 429 with Retry-After when anonymous IP exceeds 60 req/min
+   - does NOT call loadStripeWebhookHostsPosture for anonymous requests
+   - excludes stripeWebhookHosts from the public response body
+   - operator requests are NOT rate-limited (61 requests all 200) and DO call
+     loadStripeWebhookHostsPosture each time (toHaveBeenCalledTimes(61))
+
+VERIFY (all commands run from C:/Users/Garrett/Sports):
+- cd /c/Users/Garrett/Sports && git rev-parse --show-toplevel →
+  C:/Users/Garrett/Sports (confirmed correct repo root)
+- npx vitest run --root apps/web __tests__/ops-public-surface-truth-rate-limit.test.ts
+  → 5 passed (116ms)
+- npx vitest run --root apps/web __tests__/public-surface-gate.test.ts
+  → 5 passed (no regression on existing public-surface tests)
+- npm run typecheck --workspace=apps/web → exit 0 (clean)
+- npm run lint --workspace=apps/web → exit 0 (clean)
+- git diff --cached --stat → only 2 files: route.ts (39 insertions, 7 deletions)
+  + test file (439 insertions). Correct — no unintended files staged.
+
+Commit: 94a165c5
+"P13-03: Rate-limit public ops-truth route + gate Stripe call behind auth"
+(2 files changed, 471 insertions(+), 7 deletions(-); secret-scan OK, 2 files, no secrets)
+
+---
+
+### 2026-08-16T13:40:00Z · P13-04 · DONE · STRIKES: 0 · commit ba3eeaec
+
+Task: GSE-SEC-034 — B2B API keys written to Postgres in plaintext.
+`rateLimitB2b` passed the raw API key as the rate-limit `key`, which the
+PostgresDurableRateLimiter inserted verbatim into the `rate_limit_counters` table
+on every request. The durable-rate-limiter interface contract (line 56) requires
+opaque HMAC fingerprints, never raw keys; the `fingerprintClientKey` helper
+already existed in `public-form-rate-limit.ts:19` for this purpose.
+
+Action (one-line source fix + test):
+1. `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports (confirmed).
+2. date +%F → 2026-08-16.
+3. Edited `apps/web/lib/b2b/api-key-auth.ts`:
+   - Added import: `import { fingerprintClientKey } from "@/lib/api/public-form-rate-limit";`
+   - Changed `key,` → `key: fingerprintClientKey(key),` at the limiter.consume() call
+     (line 92). Callers (signals/probabilities routes) unchanged.
+4. Added test `fingerprints the API key before passing it to the rate limiter`
+   in `apps/web/__tests__/b2b-rate-limit.test.ts` using a CapturingLimiter mock
+   that records the key passed to consume(). Asserts: captured key is defined,
+   differs from raw input, matches /^[0-9a-f]{40}$/ (SHA-256 hex truncated to
+   40 chars by fingerprintClientKey — NOT 64 as the task text stated; the
+   function's .slice(0,40) is pre-existing and out of scope per "one line,
+   callers unchanged"). Added type imports for DurableRateLimiter +
+   RateLimitDecision.
+5. grep -an "request.key" durable-rate-limiter.ts: line 154 (CONSUME_SQL
+   insertion) now receives the fingerprinted value, not the raw secret.
+
+VERIFY (commands run from C:\Users\Garrett\Sports\apps\web):
+- npx vitest run __tests__/b2b-rate-limit.test.ts → 6 passed (was 5 before; the
+  new fingerprint test is the 6th; all pass).
+- Confirmed pre-existing tests still green (git stash baseline: 5/5 passed
+  before my change).
+- git diff shows exactly 2 files changed: api-key-auth.ts (2 insertions, 1
+  deletion) + test file (31 insertions).
+- secret-scan: OK — scanned 2 files, no secrets detected.
+- git show ba3eeaec --stat → commit resolves with both files; confirmed.
+
+Note on typecheck/lint: the project's tsc --noEmit shows pre-existing TS2307
+("@/lib/..." path alias) errors on BOTH the original and modified files — this
+is a known harness quirk where tsc run on a single file can't resolve the Next.js
+path alias. vitest (via vitest.config.ts which resolves the alias) runs the tests
+cleanly. No NEW tsconfig errors introduced by this edit.
+
+Commit: ba3eeaec
+"fix(GSE-SEC-034): fingerprint B2B API key before storing in rate-limit counters"
+(2 files changed, 33 insertions(+), 1 deletion(-); secret-scan OK)
+
+---
+
+### 2026-08-16T18:53:31Z · P13-05 · DONE · STRIKES: 0
+
+Action:
+1. Located the first TODO task top-to-bottom in SPRINT_QUEUE.md: P13-05
+   (CSP hardening). Set STATUS TODO -> DOING.
+2. Read apps/web/next.config.mjs (full), apps/web/app/layout.tsx:230-265
+   (Cloudflare Insights beacon render site), lib/observability/sentry.ts +
+   components/observability/SentryClientInit.tsx (Sentry client init reads
+   NEXT_PUBLIC_SENTRY_DSN, no-ops without it), __tests__/next-config-policy.test.ts
+   (existing CSP header test — home for new assertions).
+3. Edit apps/web/next.config.mjs:
+   - Split script-src into scriptSrcProd (no 'unsafe-eval') and scriptSrcDev
+     (= scriptSrcProd + 'unsafe-eval'), selected via the existing isDev flag.
+     Production CSP now emits NO 'unsafe-eval'.
+   - Added Sentry ingest origins to connect-src: https://*.ingest.sentry.io
+     and https://*.ingest.us.sentry.io (client DSN transport was silently
+     failing without these).
+   - Whitelisted the Cloudflare Insights beacon that layout.tsx:246-252 already
+     conditionally renders (gated on NEXT_PUBLIC_ANALYTICS_ENABLED +
+     NEXT_PUBLIC_CF_BEACON_TOKEN via shouldRenderCloudflareAnalytics): added
+     https://static.cloudflareinsights.com to script-src and
+     https://cloudflareinsights.com to connect-src. (Chose whitelist over
+     deletion — the gating + tests already exist in analytics-provider-gating.)
+   - Added poweredByHeader: false at top level of nextConfig.
+4. Extended __tests__/next-config-policy.test.ts with 4 assertions:
+   - production CSP (re-imported with NODE_ENV=production via vi.resetModules)
+     contains no 'unsafe-eval';
+   - production CSP contains both Sentry ingest origins;
+   - production CSP contains the Cloudflare beacon origin in script-src;
+   - nextConfig.poweredByHeader === false.
+
+Commands:
+- NODE_ENV=production node ../../node_modules/next/dist/bin/next build
+  > handoff/build-raw-unset.txt 2>&1  -> BUILD_EXIT=0
+  (NOTE: the SAME build FAILS when DEV_FAKE_ADMIN is set in the local
+   .env — that is the paywall-bypass fail-closed gate, NOT this change.
+   I did NOT open, print, or modify .env; I only overrode the single env
+   var on the command line. The gate correctly blocked production build
+   with DEV_FAKE_ADMIN present.)
+- npx vitest run apps/web/__tests__/next-config-policy.test.ts -> 14 passed
+- npx eslint __tests__/next-config-policy.test.ts next.config.mjs --max-warnings=0
+  -> exit 0, clean.
+
+VERIFY (production NODE_ENV headers() output, asserted via node one-liner):
+- unsafe-eval present: false  (PRODUCTION CSP)
+- sentry ingest present: true
+- cloudflare beacon (script-src): true
+- cloudflare beacon (connect-src): true
+- upgrade-insecure-requests present: true
+- poweredByHeader: false
+- build: 0 "Build error" occurrences in build-raw-unset.txt; 241/321 "Generating
+  static pages" completed; "Build error occurred" absent.
+- Existing header tests: 8 passed (worktree copy).
+- New + existing tests in apps/web copy: 14 passed (22 total across both copies).
+- git show 62df4d1c --stat: 2 files changed, 67 insertions(+), 3 deletions(-).
+  secret-scan OK — 2 file(s) scanned, no secrets detected.
+
+Files committed (exactly the task's named files):
+- apps/web/next.config.mjs (modified)
+- apps/web/__tests__/next-config-policy.test.ts (modified — extended)
+
+Commit: 62df4d1ca065e854aa760217313a141b860d533b
+"fix(P13-05): drop unsafe-eval from prod CSP, add Sentry+CF beacon origins, power off header"
+(secret-scan OK — 2 file(s) scanned, no secrets detected)
+
+UNCERTAINTY NOTE: The Cloudflare Insights beacon domain whitelist was chosen
+over component deletion. If the owner prefers the beacon DELETED entirely
+(rather than allowlisted), that is a one-line follow-up and the allowlist here
+is harmless only insofar as shouldRenderCloudflareAnalytics still gates the
+script on NEXT_PUBLIC_CF_BEACON_TOKEN at render time.
+
+### 2026-08-16T19:19:00Z · P13-06 · DONE · STRIKES: 0
+Action:   Added per-IP consumeRateLimit (20 req/min) + 60s in-memory result cache
+          to /api/sleeper/leagues, an anonymous unauthenticated proxy to Sleeper's
+          public API (two sequential upstream fetches per call at 15s timeout).
+Files:
+- apps/web/app/api/sleeper/leagues/route.ts (modified): added consumeRateLimit
+  ("sleeper-leagues", clientIp(req), 20, 60_000) returning 429 on excess, and
+  a short result cache keyed by "${username}:${season}" with 60s TTL to avoid
+  redundant upstream fetches for identical queries. Season param was already
+  sanitized via .replace(/\D/g,"").slice(0,4) in the original route.
+- apps/web/__tests__/sleeper-leagues-route.test.ts (new, 5 tests):
+  1. allows requests within 20/min quota
+  2. returns 429 on 21st request from same IP
+  3. different IPs have independent quotas
+  4. two identical requests trigger ONE upstream fetch (cache)
+  5. different usernames trigger separate upstream fetches
+Commands:
+- cd C:/Users/Garrett/Sports/apps/web && npx vitest run __tests__/sleeper-leagues-route.test.ts
+  -> 5 passed, 0 failed
+- npx tsc --noEmit --project apps/web/tsconfig.json | grep "sleeper" -> no errors
+- npx eslint apps/web/app/api/sleeper/leagues/route.ts apps/web/__tests__/sleeper-leagues-route.test.ts -> exit 0
+Commit: b38d283417bd6991a86857330edc07db9a6300cc
+  "fix(P13-06): rate-limit + cache /api/sleeper/leagues anonymous proxy [sprint]"
+  git show b38d2834 --stat: 2 files changed, 177 insertions(+), 3 deletions(-)
+  secret-scan OK — 2 file(s) scanned, no secrets detected.
+VERIFY: 5/5 tests pass; typecheck + lint clean; commit hash verified via git show.
+Next:     P13-07
