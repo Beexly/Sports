@@ -1151,8 +1151,13 @@ the ratio in `RATE_LIMIT_COVERAGE.md` to the new real number.
 ### P9-04 — Rate-limit the next three routes · STATUS: DONE · STRIKES: 0
 Same as P9-03, next three by risk.
 
-### P9-05 — Rate-limit the next three routes · STATUS: DONE · STRIKES: 0 · commit (pending)
+### P9-05 — Rate-limit the next three routes · STATUS: DONE · STRIKES: 0 · commit 22be5369 (verified 2026-08-16)
 Same as P9-03, next three by risk.
+**NOTE (2026-08-16, Opus verification):** journal said "commit (pending)" — the 3 route edits
+(verify/slate, proof/receipts, picks/[id]/audit) were actually swept into P9-06's `22be5369` docs
+commit by an unrelated `git add`, not lost. Confirmed via `git log -- <file>` on all 3 files and
+21/21 real tests re-run and passing (verify-slate-route.test.ts, proof-receipts-api.test.ts,
+audit-route-paywall.test.ts). No code change needed, only this stale annotation.
 
 ### P9-06 — Final sprint report · STATUS: DONE · STRIKES: 0 · completed: 2026-08-19T03:30:00Z
 Write `handoff/SPRINT_FINAL.md`: every phase and task with DONE/BLOCKED, every commit hash with its
@@ -1212,7 +1217,7 @@ needed, `npx playwright install chromium` (chromium only, not all browsers).
 Passed: homepage returns 200 (684ms) with a valid title, even with no local DATABASE_URL —
 confirms the app fails open gracefully (Prisma auth error logged, 200 still served), not a bug.
 
-### P9.5-00 — Price out The Odds API's paid tiers against real usage (READ-ONLY, no purchase) · STATUS: TODO · STRIKES: 0
+### P9.5-00 — Price out The Odds API's paid tiers against real usage (READ-ONLY, no purchase) · STATUS: DONE · STRIKES: 0
 **Context, already established — do not re-derive:** the account is on the free tier (500
 credits/month). At the live production cadence (`refresh-odds` every 15 min, `vercel.json`) with 3
 markets tracked (h2h/spreads/totals = 3 credits/call) and up to 3 sports in season at once, the
