@@ -2148,6 +2148,110 @@ you changed confirmed-live code with a confirmed bug.
 
 ---
 
+# PHASE 16 — PERFORMANCE: the front door is broken (audit 2026-08-16, outside-in lens)
+
+*An independent performance audit found the homepage may take up to 30 SECONDS to send its first
+byte, and ships ~12MB of media to every new visitor. No prior phase looked at performance at all.
+This outranks most queued work: a visitor who bounces at 8 seconds never sees any of the honesty,
+calibration, or security work. Every claim below carries file:line from that audit — **but the audit
+was static analysis, so STEP 1 OF EVERY TASK IS: open the cited file:line and confirm the claim is
+still true.** If a claim is wrong, mark the task BLOCKED with the correction; do not "fix" a
+non-problem. Red-before-green (BOOT rule 6) applies where a test is involved.*
+
+### P16-01 — Homepage blocks on downloading the ENTIRE nflverse archive to print one number · STATUS: TODO · STRIKES: 0
+Evidence to verify first: `apps/web/app/page.tsx:39` awaits `loadNflverseUsagePulse()` inside a
+blocking `Promise.all` on a `force-dynamic` route (`:26`) with no Suspense/loading.tsx. That loader
+(`apps/web/lib/nflverse/usage-pulse.ts:213-268`) fetches nflverse's combined ALL-SEASONS
+`player_stats.csv.gz`, gunzips and CSV-parses it in the request handler (size guards in
+`packages/data-ingestion/src/nflverse-cache.ts:123-124` are 150MB raw / 400MB text), then does a
+SECOND sequential fetch at `:233`; each has a 15s timeout → worst case ~30s blocked TTFB. Only cache
+is a module-scope var (`:225`,`:266`) that dies with the lambda, so cold starts pay full cost. The
+page consumes exactly two fields: `sourceRows` (`page.tsx:49`) and a `source-error` check (`:68`),
+rendered at `:179` as a row-count string. Also a heap/OOM risk — the 8GB bump in `vercel.json:3` is
+BUILD-only, not runtime.
+Fix (smallest that works): remove the blocking call from the critical path. Either render the count
+from an already-persisted snapshot if one exists, or wrap that single piece in `<Suspense>` so the
+shell streams immediately. Do NOT delete the pulse feature; do NOT refactor the loader.
+Files (only these): `apps/web/app/page.tsx`, plus a small component file if Suspense needs one.
+**VERIFY:** a test asserting the homepage renders its shell without awaiting the nflverse loader
+(mock it to hang/reject and assert the page still renders). typecheck + lint. Commit.
+
+### P16-02 — Every new visitor waits behind a 6MB video, then downloads 6MB more · STATUS: TODO · STRIKES: 0
+Evidence to verify first: `apps/web/components/landing/montage-entrance.tsx` (mounted
+`app/page.tsx:77`) renders a full-screen opaque overlay (`:146-156`) with poster
+`/brand/gse-reveal-poster.png` (~2.03MB) and `/brand/gse-reveal.mp4` (~3.97MB); `preload="metadata"`
+(`:168`) is defeated by `video.play()` at `:115`; sessionStorage-gated (`:87`) so EVERY new session
+pays; 8s max hold (`:31`). Separately the hero (`app/page.tsx:43,85-90` →
+`apps/web/lib/visual-production/asset-manifest.ts:30-36`) loads `signal-room-hero-a.webp` (~2.00MB)
++ `signal-room-hero.mp4` (~4.02MB) via a RAW `<img>` with an eslint-disable
+(`apps/web/components/immersive/generated-plate.tsx:57`) — so `next/image` optimization configured at
+`next.config.mjs:65-68` never applies. Sibling plates in the same manifest are 60-90KB, so this is a
+few un-recompressed files, not a design choice.
+Fix: this task is CODE ONLY — do NOT re-encode binaries (no ffmpeg/cwebp; asset re-encoding is a
+separate owner task). Make the cold-open respect `navigator.connection.saveData` / slow
+`effectiveType` and `prefers-reduced-motion` by skipping straight to the page, and convert the hero
+still from raw `<img>` to `next/image` so the configured AVIF/WebP + responsive resizing actually
+engages. Note the byte sizes in the journal so the owner can decide on re-encoding.
+Files (only these): `montage-entrance.tsx`, `generated-plate.tsx`, their test files.
+**VERIFY:** tests for skip-on-saveData, skip-on-reduced-motion, and that the still renders through
+next/image. typecheck + lint. Commit.
+
+### P16-03 — `<Nav />` calls auth(), forcing 86 pages (including /pricing) out of static rendering · STATUS: TODO · STRIKES: 0
+Evidence to verify first: `apps/web/components/ui/nav.tsx:95` `await auth()`. Session is JWT
+(`apps/web/lib/auth.ts:38`) so it is not a DB hit, but reading cookies during render opts the route
+out of static generation. 86 `page.tsx` files render `<Nav />`, including pure-marketing pages
+(`pricing`, `about`, `faq`, `methodology`, `how-we-make-money`, `privacy`, `contact`) that set no
+`force-dynamic` of their own. `/pricing` is the revenue page and should be a CDN hit.
+**The audit flagged this as INFERRED, not measured** (verifying needs a build's prerender-manifest).
+So: STEP 1 is confirming the mechanism, and if you cannot confirm it cheaply, mark BLOCKED rather
+than refactoring 86 pages on a guess.
+Fix if confirmed: split ONLY the auth-dependent nav-right markup (`nav.tsx:120-130`) into its own
+component wrapped in `<Suspense>`, leaving the static menu data (`:20-84`) server-static. Smallest
+possible change; do not restructure the nav.
+Files (only these): `apps/web/components/ui/nav.tsx`, one new small component file, its test.
+**VERIFY:** existing nav tests still pass (signed-in and signed-out states both still correct — this
+is the regression risk). typecheck + lint. Commit.
+
+### P16-04 — `/picks` makes HTTPS round-trips to its own origin during render · STATUS: TODO · STRIKES: 0
+Evidence to verify first: `apps/web/app/picks/page.tsx:76` and `:132` both `fetch()` the app's own
+public URL built from request headers (`getRequestOrigin()`, `:49-59`). A server component calling
+its own HTTP API pays full TLS + cold-start latency instead of calling the loader function directly,
+and can deadlock under constrained lambda concurrency.
+Fix: import and call the underlying loader/handler logic directly instead of self-fetching, IF the
+route handler's logic is importable without side effects — read it first. If it is not cleanly
+importable, mark BLOCKED and report why rather than restructuring the API route.
+Files (only these): `apps/web/app/picks/page.tsx`, its test file.
+**VERIFY:** existing picks tests pass; add one asserting no self-origin fetch occurs during render.
+typecheck + lint. Commit.
+
+### P16-05 — Test-coverage reality: 231 routes, 14 render-tested · STATUS: TODO · STRIKES: 0
+A coverage census found the app has **231 page routes** (not the ~130 previously assumed — three
+deep clusters were missed: `admin/statking/*` 19, `cockpit/*` 34, `stats/*` 25), plus 188 API route
+handlers. Of those 231: only **14 are render-tested** (a test actually imports the page component),
+93 have weak name-match-only evidence, and **124 have no test evidence at all** — including ~39
+routes reachable from live nav/footer.
+Task: do NOT attempt to test 124 routes. Write `handoff/ROUTE_COVERAGE_CENSUS.md` recording the
+above with the method used, then pick the **5 highest-value untested LIVE routes** (prioritize:
+reachable from nav/footer AND touching money, auth, or user data) and write ONE smoke test each that
+imports the real page component and asserts it renders without throwing. That is the pattern the
+other 119 can follow later.
+Files (only these): `handoff/ROUTE_COVERAGE_CENSUS.md`, up to 5 new test files under
+`apps/web/__tests__/`.
+**VERIFY:** all 5 new tests pass; state in the journal which 5 routes you chose and why. Commit.
+
+### P16-06 — DO NOT BUILD: DraftKings scraping is already prohibited · STATUS: DONE · STRIKES: 0
+Recorded so nobody re-proposes it. A 2026-08-16 investigation into using a web-scraper for public
+odds cross-checking found: (a) every `draftkings.com` path returns HTTP 403 to non-browser requests
+(WAF/bot-detection — NOT bypassed, per passive-only doctrine), and (b) more decisively, this project
+ALREADY ran this analysis on 2026-05-20 and placed "DraftKings direct scraping — automated access
+prohibited by ToS" in `docs/audit/piracy-malware-do-not-use-register.md`, with The Odds API
+(licensed) as the approved alternative. The ToS-clean versions of the same idea already exist in
+this repo and just need extending if wanted: the ESPN public odds path
+(`docs/ops/ESPN_PUBLIC_ODDS_FREE_PATH.md`, `packages/data-ingestion/src/espn-odds-client.ts`) and the
+Kalshi public-markets spike (`scripts/spikes/kalshi-fairvalue-spike.mjs`). No action. No files.
+
+---
+
 # PHASE 10 — RECURRING BATTLE-TEST (owner doctrine, 2026-08-15 — does not stop at Phase 9)
 *Owner's standing directive: "we can't launch a website off one or two audits ... this has to be*
 *battle tested time and time again." One audit pass is proof you looked once, not proof it's clean.*
