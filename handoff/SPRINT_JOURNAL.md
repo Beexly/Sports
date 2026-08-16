@@ -3420,3 +3420,30 @@ Added `__tests__/market-calibration-page.test.tsx` (5 tests).
   committed; no package.json/npm install; no `.env` touched.
 
 Next: P14-04 (next TODO in queue — "Free-mode reality audit").
+
+### 2026-08-16T21:06:11Z · P10-03 Round 2 — Hunt the "confidently wrong claim" bug class · DONE · STRIKES: 0 · commit 1dcf93e6
+
+Resumed P10-03 Round 2 from DOING (prior run was interrupted). Queue entry at SPRINT_QUEUE.md:2189 showed STATUS: DOING, started 2026-08-16T21:50:00Z. `date +%F` → 2026-08-16. `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date -u +"%Y-%m-%dT%H:%M:%SZ"` → 2026-08-16T21:05:52Z.
+
+Action:
+1. Confirmed cwd via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+2. Read P10-03 from SPRINT_QUEUE.md:2189 — first STATUS: DOING task in queue.
+3. Scanned all ~140 sprint-touched source files (`git diff --name-only origin/main..HEAD` filtered to .ts/.tsx/.mjs/.js, excluding tests/docs/handoff) for confident external-behavior claim comments. Patterns searched: vendor-verified, per the spec, according to docs, verified live, schema verified, confirmed live, confirmed against, does not accept, should return, will return, status code, header auth, vendor domain references (the-odds-api, theoddsapi, fantasyfootballcalculator, sleeper, open-meteo, espn).
+4. Independently verified each claim found against live vendor docs/endpoints (bogus keys only — no quota burned):
+   - Odds API header auth claim (3 files): VERIFIED WRONG — `curl -sS -o /dev/null -w "%{http_code}"` on both `api.the-odds-api.com/v4/sports/` (header → 401 MISSING_KEY/INVALID_KEY) and `api.theoddsapi.com/sports/` (header → 401 with explicit "x-api-key header recommended" message). Current vendor docs (theoddsapi.com/docs, updated 2026-08-15 — the date the comment claims "Confirmed live") state "Base URL: https://api.theoddsapi.com. Authenticate every request with your key in the x-api-key header." The code uses the deprecated /v4/ namespace which the new domain explicitly rejects. Conclusion: header IS accepted; the "does not accept a header" comment is wrong. Reported as GSE-SEC-081.
+   - FFC ADP "Once/day per the FFC API terms" (adp-source.ts:77): VERIFIED CORRECT — `curl help.fantasyfootballcalculator.com/article/42-adp-rest-api` → HTTP 200 (Round 1 claimed 404; Round 1 was wrong). Page confirms "The data only updates once per day."
+   - Sleeper "~5MB player map, once per day" (sleeper-sync.ts:6,80): VERIFIED CORRECT — Sleeper docs (docs.sleeper.com, HTTP 200) state "average size of this query is 5MB" and "You do not need to call this endpoint more than once per day."
+   - ESPN scores paths (espn-scores.ts:19): VERIFIED CORRECT — all 7 sport paths on site.api.espn.com/apis/site/v2/sports/{path}/scoreboard return HTTP 200.
+   - ESPN standings (espn-standings.ts:5): VERIFIED CORRECT — all 7 sport paths on apis/v2/sports/{path}/standings return HTTP 200.
+   - ESPN rankings (espn-rankings.ts:4-5): VERIFIED CORRECT — college-football and ncaa basketball rankings return 200; NFL/NBA return 404 (handled gracefully by code at line 99).
+   - Open-Meteo license/terms: VERIFIED CORRECT — open-meteo.com/en/license → HTTP 200, open-meteo.com/en/terms → HTTP 200, api.open-meteo.com → HTTP 200.
+   - nflverse ~40MB "times out in production" (graded-pool.ts:404-406): UNVERIFIED — internal performance assertion (not a vendor-contract claim); no dev server started per P10-03's read-only scope constraint.
+   - x-requests-remaining/x-requests-used headers (odds-api-client.ts:242-248): N/A — no confident comment claims these are always present; code is defensive with ?? "0" fallback.
+5. Verified commit before citing: `git show 1dcf93e65ab209dcef6f75bdfe53c2d101af46ad` confirms 2 files changed, 222 insertions(+), 1 deletion(-).
+6. Files committed: handoff/BATTLE_TEST_LOG.md, handoff/SPRINT_QUEUE.md. P10-03 STATUS set to DONE (with completed timestamp).
+7. Did NOT commit other modified files (SPRINT_VIOLATIONS.md, build-raw.txt, PROD_HEALTH_ALERT.md) — these were from prior session's P10-02, not this task.
+
+Result: P10-03 Round 2 complete. 9 claims found across 7 source files; 4 verified correct, 1 proven wrong (GSE-SEC-081), 1 Round 1's own 404 was wrong, 1 unverified (internal perf), 1 N/A. BATTLE_TEST_LOG.md updated with Round 2 P10-03 section. SPRINT_QUEUE.md P10-03 STATUS → DONE. Committed as 1dcf93e6. Did NOT start P10-04 (HARD RULE: one task per run).
+
+Next: P10-04 (next TODO in queue — "Working-tree and history hygiene sweep").
+
