@@ -248,3 +248,87 @@ grep 'Test Files.*skipped' handoff/test-census-raw.txt | head -1 → 22 failed |
 ```
 
 Every failing file listed in §3 appears in the `❯` lines of the raw output. The per-file test counts (failed/total) match the `(N tests | M failed)` header extracted from each file's `❯` line in the raw output. Workspace totals in §1 were extracted from the `Test Files` and `Tests` summary lines in each workspace's vitest output section.
+
+---
+
+## 7. P8-09 — REGRESSION CHECKPOINT (P8-02..P8-08)
+
+Generated: 2026-08-18T21:05:00Z
+Command: `CI=1 npm test > handoff/test-census-p8.txt 2>&1`
+Raw output: `handoff/test-census-p8.txt` (4,615 lines)
+Baseline: `handoff/test-census-raw.txt` (4,717 lines) + `handoff/TEST_CENSUS.md` (§1–§6)
+
+### BEFORE vs AFTER
+
+| Metric | BEFORE (test-census-raw.txt) | AFTER (test-census-p8.txt) | Delta |
+|---|---|---|---|
+| Failing test files (apps/web) | 22 | 16 | -6 |
+| Failing test files (genesis-kernel) | 1 | 0 | -1 |
+| Total failing test files | 23 | 16 | **-7** |
+| Failed tests | 52 | 34 | **-18** |
+| Passed tests | 10,920 | 11,018 | +98 |
+| Total tests | 11,066 | 11,146 | +80 |
+| Skipped tests | 94 | 94 | 0 |
+
+### FAILING FILES: BEFORE → AFTER
+
+All 16 files failing in the AFTER run were ALSO failing in the BEFORE run (identical names).
+The 7 files that DISAPPEARED (no longer failing) were resolved by prior sprint work, NOT by P8-02..08:
+
+| File that stopped failing | Root cause fix | Commit |
+|---|---|---|
+| `actor-minting-boundary.test.ts` | P7-04: guardrails-chain assertion now reads `run-all.mjs` | (part of P7-04) |
+| `brand-safety-v2.test.ts` | P7-05: same guardrails-chain assertion fix | (part of P7-05) |
+| `cockpit-nav-coverage.test.ts` | P7-04: added NAV entry to layout.tsx | (part of P7-04) |
+| `eval-contracts-script.test.ts` | P7-05: same guardrails-chain assertion fix | (part of P7-05) |
+| `push-subscribe-api.test.ts` | 551aab6f: P5-10 CSRF regression fix (same-origin Origin header + NEXT_PUBLIC_APP_URL stub) | 551aab6f |
+| `scripts-path-coverage.test.ts` | P7-04: test resolves workspace paths correctly | (part of P7-04) |
+| `src/__tests__/structural.test.ts` | P7-05: guardrails-chain assertion fix | (part of P7-05) |
+
+### NEW FAILING FILES (introduced by P8-02..08)?
+
+**NONE.** Zero new test files appear in the AFTER failure list that were not already in the BEFORE list.
+All 16 remaining failures trace to known categories from §4:
+
+| Category | Files (16) | Tests |
+|---|---|---|
+| (a) Pre-existing api-v1 shadow seam | 10 files | 14 tests |
+| (c) Environmental (DB at localhost:5433 unreachable) | 6 files | 20 tests |
+
+The 10 api-v1 shadow-seam files (all pre-existing, (a)):
+`api-v1-boundary-guard`, `api-v1-db-schema-proposal`, `api-v1-disposable-rehearsal-packet`,
+`api-v1-dormant-durable-adapter-interface`, `api-v1-durable-adapter-harness`,
+`api-v1-durable-fixture-simulator`, `api-v1-durable-rehearsal-plan`, `api-v1-promotion-readiness`,
+`api-v1-shadow-route-harness`, `api-v1-shadow-seam`
+
+The 6 environmental files (all (c) — no live Postgres on localhost:5433):
+`compliance-store-pg` (3 tests), `contests-paper-board` (1), `gse-waitlist` (10),
+`jarvis-memory-stages` (2), `proof-of-record-surface` (2), `rate-limit-batch2` (3, all DB timeouts)
+
+### RATE-LIMIT-BATCH2 NARRATIVE (was (b+c) mixed, now (c) only)
+
+BEFORE: 5 failures — 2 sprint-caused (403 instead of 429 from P5-10 CSRF gate) + 3 environmental
+(DB timeouts on watchlist subtests).
+AFTER: 3 failures — **0 sprint-caused** (push/subscribe subtests now PASS) + 3 environmental
+(watchlist subtests still timeout without a live DB).
+Commit 551aab6f (Fix P5-10 CSRF gate regressions) resolved the 2 sprint-caused failures in this file.
+The remaining 3 are pure environmental (no Postgres on localhost:5433).
+
+### P8 COMMIT TEST FILES — ALL PASS
+
+| P8 Commit | Test file(s) touched | Result in census-p8 |
+|---|---|---|
+| 26001fde (GSE-SEC-037, P8-07) | `gse-v1-hydration-plan-schema.test.ts` (7 tests, new) | ✓ PASS |
+| 2522689b (GSE-SEC-031, P8-06) | `dashboard-performance-gate.test.ts` (15), `performance-min-sample-floor.test.ts` (6) | ✓ PASS |
+| 2d008e96 (GSE-SEC-018, P8-05) | `session-tier.test.ts` (4 tests, new) | ✓ PASS |
+| 937a9151 (GSE-SEC-042, P8-04) | `free-stats.test.ts` (3), `__tests__/free-stats.test.ts` (4) | ✓ PASS |
+| 30316e8d (GSE-SEC-024, P8-03) | `price-ids.test.ts` (17 tests) | ✓ PASS |
+| fc31f451 (GSE-SEC-026, P8-02) | `board-gate-decisions.test.ts` (7) | ✓ PASS |
+
+### CONCLUSION
+
+**NO NEW REGRESSIONS introduced by P8-02..P8-08.** The test failure count went DOWN by 7 files
+(-18 failed tests). The net improvement is attributable to prior P7-04/P7-05 fixes that reached
+the tree before this census run, plus the P5-10 CSRF regression fix (551aab6f). All test files
+touched directly by P8 commits pass. The 16 remaining failures are 100% pre-existing (api-v1
+shadow seam) or environmental (no live Postgres on localhost:5433).

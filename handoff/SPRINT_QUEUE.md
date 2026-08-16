@@ -1051,13 +1051,14 @@ Same as P8-02, next item.
 ### P8-06 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Same as P8-02, next item.
 
-### P8-07 — Fix the next finding · STATUS: DOING · STRIKES: 0
+### P8-07 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-15T20:15:56Z (commit 26001fde)
 Same as P8-02, next item.
 
-### P8-08 — Fix the next finding · STATUS: TODO · STRIKES: 0
+### P8-08 — Fix the next finding · STATUS: DONE · STRIKES: 0
+**RESUMING — GSE-SEC-033** (durable-write guard covers only two Stripe caps) is the first OPEN SAFE DIRECT finding. File: `apps/web/lib/stripe.ts:393`.
 Same as P8-02, next item.
 
-### P8-09 — Mid-backlog regression checkpoint · STATUS: TODO · STRIKES: 0
+### P8-09 — Mid-backlog regression checkpoint · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T21:15:00Z (commit TBD)
 Re-run `CI=1 npm test > handoff/test-census-p8.txt 2>&1` and compare against `TEST_CENSUS.md`. Any
 NEW failure introduced by P8-02..08 is a regression YOU caused — find the commit
 (`git log --oneline` + `git show`), fix it, commit the fix.
@@ -1346,6 +1347,123 @@ Sort BLOCKING by how much money or trust is lost if shipped without it — not b
 Be honest about what is genuinely blocking versus what is perfectionism: the owner is losing
 revenue every day the site is unlaunched, so a padded blocking list has a real cost.
 **VERIFY:** every BLOCKING item traces to a finding produced by a real task, not an assumption.
+
+---
+
+# PHASE 11 — FANTASY DATA ACCURACY: RANKINGS, ADP, OPTIMIZERS (owner request, 2026-08-15)
+*Owner's explicit ask: "accurate rankings, accurate ADP matching other sites, all optimizers*
+*calibrated and working, all data fresh and accurate." This phase verifies claims, it does not*
+*assume they are already true. Confirmed real infrastructure exists (`apps/web/lib/fantasy/*
+*adp-source.ts` pulls live from fantasyfootballcalculator.com; ranking/calibration modules under*
+*`apps/web/lib/calibration/` and `apps/web/lib/ranking/`; `dfs-optimizer.ts` +*
+*`lineup-optimizer.tsx`) — no automated refresh cron for ADP or rankings was found in*
+*`vercel.json`, which may mean on-demand/cached refresh, or may mean a real gap. Find out which.*
+
+**STANDING MANDATE THIS PHASE MUST CHECK AGAINST — CORRECTED 2026-08-15, read this version, not
+an earlier one.** Owner clarified the architecture directly: **"GSE is mostly for fantasy. But GSE
+Confidence for picks could be a thing for the betting side."** When asked explicitly to choose
+between "one score, two applications" and "two distinct scores," the owner chose **TWO DISTINCT
+SCORES.** Do NOT try to unify fantasy under "Edge Index" (that is a betting-side term, staying
+betting-side) — that framing was written and retracted earlier the same day.
+Correct model: (a) **fantasy is the primary product and needs its OWN proprietary score**, which a
+same-day grep confirmed does NOT exist under any name in `apps/web/lib/fantasy/` or
+`apps/web/components/fantasy/` (checked for gseScore/playerRating/powerRank/fantasyScore/gseGrade —
+nothing). This is a real BUILD gap, not a wiring gap. (b) betting picks keep a separate score,
+publicly positioned as **"GSE Confidence"** (Edge Index is the current internal name; whether
+they're the same thing or Confidence is a new public face on it is still open — do not assume).
+(c) users still see their own raw component data/metrics regardless of which score they're looking
+at — that part was never in question.
+**This phase does NOT build either score.** P11-01 through P11-03 should determine and report the
+SIZE of the fantasy-score gap (what inputs exist, what a real fantasy score would need to consume,
+how big a lift it is) — not attempt to design or implement one. That decision is still being shaped
+by the owner and is explicitly owner-gated; see P11-04.
+
+**AESTHETIC PASS IS EXPLICITLY DEFERRED — DO NOT START IT.** The owner said "we can't do that
+until the very end." No task in this phase or elsewhere should touch visual design, layout, or
+styling. This phase is about DATA CORRECTNESS only.
+
+### P11-01 — ADP accuracy + freshness audit (READ-ONLY) · STATUS: TODO · STRIKES: 0
+Read `apps/web/lib/fantasy/adp-source.ts` and its test file in full. Determine and write
+`handoff/ADP_ACCURACY_AUDIT.md`:
+1. Is the FantasyFootballCalculator integration actually called from a live user-facing route
+   today, or only from tests/fixtures? Trace every real caller.
+2. How is the response cached, and for how long? Is there any path where stale ADP could be
+   served indefinitely (no TTL, no refresh trigger)?
+3. Pull a live sample yourself: `curl "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"`
+   (read-only GET against a public API, no auth needed) and compare the top 20 player order against
+   what the app currently returns for the same query, if you can construct an equivalent local call
+   without starting a long-running dev server. If you cannot safely compare live, say so explicitly
+   rather than guessing.
+4. Is there a second, independent ADP source anywhere in the codebase to cross-check against (grep
+   for other ADP/mock-draft provider names)? A single-source ADP claim is weaker than a
+   cross-checked one — note this as a finding either way, do not silently assume one source is enough.
+5. Fantasy positions/players change year to year (rookies, retirements, team changes). Confirm the
+   `year=2026` parameter (or equivalent) is derived from the actual current season, not hardcoded to
+   a stale year that will silently go wrong next season.
+**VERIFY:** every claim has a command or file:line behind it. Explicit PASS/FAIL/UNKNOWN per item
+above, no vague reassurance.
+
+### P11-02 — Rankings pipeline accuracy audit (READ-ONLY) · STATUS: TODO · STRIKES: 0
+Read `apps/web/lib/ranking/` in full, plus `apps/web/lib/calibration/holdout-ranking-report.ts`,
+`ranking-power-control.ts`, and `apps/web/lib/data-sources/free-adapters/espn-rankings.ts`.
+Write `handoff/RANKINGS_ACCURACY_AUDIT.md`:
+1. What is the actual ranking computation — a real statistical model reading real player data, or
+   any component that fabricates, estimates, or hardcodes a ranking without a traceable data source?
+   Every fabricated-number risk found in this codebase so far has been in surfaces the owner did NOT
+   expect to be fake — treat this with the same suspicion.
+2. Where does the input data come from (nflverse, ESPN, a paid provider)? Confirm each source is
+   still reachable/valid (not a dead/retired API) — reuse the pattern from this session's Odds API
+   investigation (verify the vendor is real and the integration actually authenticates correctly,
+   don't trust a comment).
+3. Is there a scheduled refresh (cron, cache TTL) or does staleness only get caught if someone
+   notices? If there's a real gap, do NOT fix it yourself in this task — write it up as a finding
+   for P11-04.
+4. Cross-reference `ranking-pause-apply.ts` / `ranking-pause-durable.ts` — what causes rankings to
+   pause, and is there any silent-fail path where a paused ranking keeps serving stale data without
+   any visible indicator to the viewer?
+**VERIFY:** explicit PASS/FAIL/UNKNOWN per item, each backed by file:line or a command run.
+
+### P11-03 — Optimizer calibration audit (READ-ONLY) · STATUS: TODO · STRIKES: 0
+Read `apps/web/lib/fantasy/dfs-optimizer.ts`, `apps/web/components/fantasy/lineup-optimizer.tsx`,
+`apps/web/components/fantasy/optimizer-workspace.tsx`, and their test files in full. Write
+`handoff/OPTIMIZER_CALIBRATION_AUDIT.md`:
+1. What inputs does the optimizer actually consume — live salary/projection data, or a fixture/demo
+   dataset? If real, trace the exact data source end to end (file:line at each hop).
+2. Does the optimizer's own test suite assert against REAL constraint logic (salary cap, roster
+   slots, correlation) or does any test just check "runs without throwing"? Flag any test that
+   would pass regardless of whether the optimizer's math is actually correct.
+3. There is a separate, more advanced DFS optimizer built on branch `claude/dfs-optimizer-edge`
+   (worktree `Sports-dfs-optimizer-edge`, commit referenced in prior session memory) that was
+   explicitly built to out-perform a competitor's patented approach — but it was left UNPUSHED and
+   gated pending the owner's decision. Confirm whether `apps/web/lib/fantasy/dfs-optimizer.ts` (the
+   one live in THIS branch) is the same code, an older/simpler version, or something unrelated. If
+   the better optimizer exists on that other branch and was never merged, that is the single most
+   important finding this task can produce — write it up prominently, do not bury it.
+4. Does the optimizer ever silently degrade (return a plausible-looking but suboptimal or empty
+   lineup) without telling the user why?
+**VERIFY:** explicit PASS/FAIL/UNKNOWN per item. Item 3's finding, if confirmed, goes at the TOP
+of the output file, not the bottom.
+
+### P11-04 — Fantasy data accuracy: consolidated findings + fixes · STATUS: TODO · STRIKES: 0
+Depends on P11-01/02/03. Read all three audit files. **FIRST, before anything else in this task:**
+state plainly the SIZE of the gap between what exists today (external ADP passthrough, standalone
+optimizer math, no proprietary layer) and what a real fantasy-primary proprietary score would need
+to consume and compute — see the corrected phase header (owner confirmed TWO DISTINCT SCORES:
+fantasy gets its own, separate from betting's "GSE Confidence"/Edge Index; do not propose unifying
+them). Put this sizing first in the output, not buried under smaller findings. This is a
+NEEDS-OWNER product decision the owner is still actively shaping — your job is to size and describe
+the gap precisely (what data exists to build from, what's missing, rough scope), NOT to design or
+build the fantasy score itself in this task.
+Then, for each finding that is SAFE DIRECT (a real, narrow, non-schema, non-owner-gated fix — e.g.,
+adding a missing cache TTL, fixing a hardcoded year, adding a cross-check), fix it following this
+sprint's usual COMMIT DISCIPLINE (typecheck, lint, run the real tests, commit). For anything
+NEEDS-OWNER (a second paid ADP source, merging the dfs-optimizer-edge branch, a new cron job
+requiring `vercel.json` changes, building the fantasy proprietary score), do NOT fix it — write
+`handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md` listing exactly what needs the owner's decision and why,
+using the same BLOCKING / RISK ACCEPTED / POST-LAUNCH structure as `handoff/LAUNCH_BLOCKERS.md`
+from Phase 9.5.
+**VERIFY:** every fix committed with passing tests; every owner-gated item has a real citation, not
+a guess.
 
 ---
 

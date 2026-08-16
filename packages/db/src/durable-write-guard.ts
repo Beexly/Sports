@@ -34,6 +34,7 @@ import { isStubDbUrl, isStubMode } from "./index.js";
 export const DURABLE_WRITE_CAPABILITIES = [
   "stripe-checkout",
   "stripe-webhook-entitlement",
+  "stripe-portal",
 ] as const;
 
 export type DurableWriteCapability = (typeof DURABLE_WRITE_CAPABILITIES)[number];

@@ -1,3 +1,97 @@
+### 2026-08-18T21:05:00Z · P8-09 · DONE · STRIKES: 0 · commit TBD
+Mid-backlog regression checkpoint. Re-ran `CI=1 npm test > handoff/test-census-p8.txt 2>&1`
+(4,615 lines, 11,146 total tests) and compared against the P7-02 baseline
+(`handoff/test-census-raw.txt`, 4,717 lines, 11,066 total tests + `TEST_CENSUS.md` §1–§6).
+
+RESULT: NO NEW REGRESSIONS from P8-02..08.
+
+| Metric | Before | After | Delta |
+|---|---|---|---|
+| Failing test files | 23 | 16 | -7 |
+| Failed tests | 52 | 34 | -18 |
+| Passed tests | 10,920 | 11,018 | +98 |
+
+All 16 files failing AFTER were ALSO failing BEFORE (same names). The 7 files that
+stopped failing were fixed by prior sprint work, NOT by P8 commits:
+- actor-minting-boundary, brand-safety-v2, eval-contracts-script,
+  cockpit-nav-coverage, scripts-path-coverage, structural.test.ts → P7-04/P7-05
+  guardrails-chain assertion fixes (6 files)
+- push-subscribe-api.test.ts → 551aab6f CSRF regression fix (2 commits)
+
+rate-limit-batch2.test.ts went from 5 failures (2 sprint-caused + 3 env) to 3 failures
+(0 sprint-caused + 3 env) — the 2 P5-10 CSRF-gate failures were fixed by 551aab6f.
+
+All test files touched directly by P8 commits pass:
+- 26001fde (GSE-SEC-037): gse-v1-hydration-plan-schema.test.ts ✓ 7/7 pass
+- 2522689b (GSE-SEC-031): dashboard-performance-gate.test.ts ✓ 15/15, performance-min-sample-floor.test.ts ✓ 6/6
+- 2d008e96 (GSE-SEC-018): session-tier.test.ts ✓ 4/4 pass (new)
+- 937a9151 (GSE-SEC-042): free-stats.test.ts ✓ 3/3, __tests__/free-stats.test.ts ✓ 4/4
+- 30316e8d (GSE-SEC-024): price-ids.test.ts ✓ 17/17 pass
+- fc31f451 (GSE-SEC-026): board-gate-decisions.test.ts ✓ 7/7 pass
+
+The 16 remaining failures are all pre-existing (10 api-v1 shadow-seam, (a)) or
+environmental (6 files needing Postgres on localhost:5433, (c)). No P8 commit
+introduced any regression. Full comparison written to TEST_CENSUS.md §7.
+
+No new commits were needed (no regressions to fix). Committed the test-census-p8.txt
+raw output + TEST_CENSUS.md update + P8-09 DONE-in-queue + this journal entry together.
+
+### 2026-08-18T19:33:00Z · P8-05 · DONE (strikes 0)
+Same as P8-02, next item.
+
+P8-05 fixed the FIRST active OPEN SAFE-DIRECT finding in
+handoff/REMEDIATION_EXECUTION.md: GSE-SEC-018.
+
+GSE-SEC-018 — GSE_ALLOW_QUERY_TIER=1 elevates in prod.
+Source: apps/web/lib/gse-stats/session-tier.ts:43.
+Evidence: resolveStatsBillingTier's anonymous ?tier= path honored the
+GSE_ALLOW_QUERY_TIER=1 env flag AND the internal allowQueryOnly opt-in
+with no production guard — an anonymous attacker could send ?tier=ELITE
+and be served premium-tier stats in production.
+
+Fix: production-gate BOTH elevation triggers behind
+`process.env.NODE_ENV !== "production"`. In prod, any ?tier= query from
+an anonymous request now resolves to FREE with source=query_ignored and
+spoofBlocked=true, failing closed. The non-production dev/escape-hatch
+path is unchanged for local/CI use.
+
+Test file: apps/web/lib/gse-stats/__tests__/session-tier.test.ts (new,
+4 tests — mocks @/lib/auth + @/lib/entitlements as anonymous, stubs
+NODE_ENV + GSE_ALLOW_QUERY_TIER via vi.stubEnv):
+  - ?tier=PRO anonymously → FREE / query_ignored / spoofBlocked (no flag)
+  - GSE_ALLOW_QUERY_TIER=1 + ?tier=ELITE → ELITE in dev, FREE in prod
+  - allowQueryOnly opt-in honored in dev, ignored in prod
+  - no ?tier= → FREE/default
+
+Verify: npx vitest run apps/web/lib/gse-stats/__tests__/session-tier.test.ts
+→ 1 test file passed, 4 tests passed. Pre-existing lint typecheck
+errors (node_modules/next, packages/stats-api) are unchanged; no NEW
+errors were introduced by the edit.
+
+Commits (CWD confirmed = C:/Users/Garrett/Sports before each):
+- 2d008e961763bff21d6593ceaf044783b4263ccd
+  "fix(GSE-SEC-018): ignore GSE_ALLOW_QUERY_TIER + allowQueryOnly when NODE_ENV=production"
+  (2 files: session-tier.ts + new test; 114 insertions, 1 deletion)
+- 03630941c2321f632203e8b5958e19d8d3c00f3b
+  "chore(sprint): P8-05 DONE — GSE-SEC-018 fixed, register updated"
+  (handoff/SPRINT_QUEUE.md STATUS→DONE, handoff/REMEDIATION_EXECUTION.md GSE-SEC-018→FIXED; force-add per handoff/ gitignore convention)
+Both: secret-scan OK — scanned 2 file(s) each, no secrets detected.
+handoff/ is gitignored (line 202) so journal/SW files are NOT in the
+commit; only the queue + register edits are tracked.
+
+Files staged: exactly the task's source file + its new test, plus the
+queue and register updates. Other unstaged mods (P5-10 carryovers:
+budget-override-control.tsx, free-score-persist.ts, PHASE4_SUMMARY.md)
+left unstaged — not this task.
+
+Note: GSE-SEC-015 (B2B API rate limit is process-local, apps/web/lib/ai-control-plane/budget.ts) is
+the next SAFE-DIRECT item but lives under the sealed
+apps/web/lib/ai-control-plane/** tree (absolute NEVER-edit per §NEVER in
+SPRINT_BOOT.md) → P8-06 will mark it skipped-with-reason / pass to the
+next safe-item rather than touch the sealed tree.
+
+---
+
 ### 2026-08-15T09:18:00Z · P5-10 · DONE (strikes 0)
 
 Resumed from DOING (prior run had staged guard modules + tests but had

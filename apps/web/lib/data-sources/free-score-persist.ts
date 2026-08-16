@@ -208,6 +208,21 @@ export async function persistFreeScores(options?: {
         if (!hit) continue;
         matched++;
 
+        // GSE-SEC-051: ESPN (espn-public-api) has storage_allowed=false in the rights
+        // registry. The scores above were sourced from ESPN via fetchScoresMultiSource;
+        // before writing them into the Game table (a storage intent), confirm clearance.
+        // If storage is denied, skip the DB write — facts may still be used transiently
+        // but must not be persisted.
+        const persistClearance = checkClearance({
+          source_id: "espn-public-api",
+          mode: "public_logged_off_fact_extract",
+          tool_id: "fetch-native",
+          intents: ["storage"],
+        });
+        if (!persistClearance.allowed) {
+          continue;
+        }
+
         // Do not blank existing scores with null; only write concrete scores.
         const res = await db.game.updateMany({
           where: { id: g.id },

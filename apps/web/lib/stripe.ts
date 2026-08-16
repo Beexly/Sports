@@ -199,7 +199,14 @@ export async function getOrCreateStripeCustomer(
   email: string,
   name?: string | null
 ): Promise<string> {
-  const { db } = await import("@sports/db");
+  const { db, requireDurableWriteStore: guard } = await import("@sports/db");
+
+  // GSE-SEC-033: this function performs a Stripe side effect (customer creation)
+  // gated by a local DB write (subscription upsert). If the local store is a
+  // stub/non-durable, a real Stripe customer would be minted with no durable
+  // local record — stranding the user on the next webhook (keyed on
+  // stripeCustomerId). Fail CLOSED before any Stripe SDK call.
+  guard("stripe-checkout");
 
   // Check if customer already exists
   const existing = await db.subscription.findUnique({
@@ -274,6 +281,14 @@ export async function createCheckoutSession({
       "createCheckoutSession requires a valid durable checkout-attempt id (ca_<uuid>).",
     );
   }
+
+  // GSE-SEC-033: this creates a live Stripe Checkout Session — an external side
+  // effect that must be preceded by a durable local DB write (the checkout
+  // attempt row). If the store is a stub/unavailable, fail CLOSED before any
+  // Stripe SDK call so we never mint a payable session with no durable record.
+  const { requireDurableWriteStore: guard } = await import("@sports/db");
+  guard("stripe-checkout");
+
   const params: Stripe.Checkout.SessionCreateParams = {
     customer: customerId,
     payment_method_types: ["card"],
@@ -421,11 +436,19 @@ export async function runCheckoutAttemptRepair(): Promise<CheckoutAttemptRepairR
 
 /**
  * Create a Stripe Customer Portal session for managing subscriptions.
+ *
+ * Gated by requireDurableWriteStore("stripe-portal") (directive 5.2 / GSE-SEC-033):
+ * the portal session is an external side effect on Stripe's domain. If the local
+ * durable store is unavailable (stub Prisma / sentinel DATABASE_URL), creating a
+ * portal session would give the user a live Stripe-managed page while the local
+ * entitlement record may not persist — fail closed with a 503 instead.
  */
 export async function createPortalSession(
   customerId: string,
   returnUrl: string
 ): Promise<Stripe.BillingPortal.Session> {
+  const { requireDurableWriteStore } = await import("@sports/db");
+  requireDurableWriteStore("stripe-portal");
   return stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
