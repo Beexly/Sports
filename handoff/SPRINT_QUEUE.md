@@ -1140,7 +1140,7 @@ GitHub, and which findings would be most dangerous to publish while still unfixe
 **VERIFY:** `handoff/SECRET_PII_SWEEP.md` exists covering every committed file, no silent gaps.
 **This task's output gates whether the owner pushes. Be thorough and honest.**
 
-### P9-03 — Rate-limit the highest-risk unprotected routes · STATUS: TODO · STRIKES: 0
+### P9-03 — Rate-limit the highest-risk unprotected routes · STATUS: DONE · STRIKES: 0
 `handoff/RATE_LIMIT_COVERAGE.md` found 62/176 routes rate-limited, 82+ anonymous GETs unprotected.
 Pick the THREE highest-risk unprotected routes — anonymous, expensive (DB-heavy or LLM-backed),
 publicly reachable — and add the SAME rate-limit helper comparable routes already use. Do not invent
@@ -1148,7 +1148,7 @@ a new mechanism; copy the established pattern and cite the file you copied from.
 **VERIFY:** run tests for each touched route; grep-confirm each now calls a limiter; commit; update
 the ratio in `RATE_LIMIT_COVERAGE.md` to the new real number.
 
-### P9-04 — Rate-limit the next three routes · STATUS: TODO · STRIKES: 0
+### P9-04 — Rate-limit the next three routes · STATUS: DONE · STRIKES: 0
 Same as P9-03, next three by risk.
 
 ### P9-05 — Rate-limit the next three routes · STATUS: TODO · STRIKES: 0

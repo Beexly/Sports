@@ -1,6 +1,6 @@
 # Rate-Limit Coverage Re-measurement
 
-**Date:** 2026-08-15T00:00:00Z
+**Date:** 2026-08-16T20:00:00Z
 **Commit baseline:** working-tree state as of this measurement
 **Scope:** all `route.ts` files under `apps/web/app/api/`
 **Method:** grep-derived counts, not copied from any prior document.
@@ -12,9 +12,9 @@
 | Metric                          | Count |
 |---|---|
 | Total `route.ts` files          | 176  |
-| Protected (has a rate-limit call) |  62  |
-| Unprotected (no rate-limit call)  | 114  |
-| **Coverage ratio**              | **62 / 176 = 35.2%** |
+| Protected (has a rate-limit call) |  68  |
+| Unprotected (no rate-limit call)  | 108  |
+| **Coverage ratio**              | **68 / 176 = 38.6%** |
 
 No middleware-based rate limiting exists (`apps/web/middleware.ts` contains zero rate-limit references).
 Rate limiting is applied per-route only, via the following helper functions:
@@ -48,7 +48,7 @@ These commits reduced the unprotected count but did not achieve full coverage.
 
 ---
 
-## The 61 protected routes
+## The 65 protected routes
 
 ```
 apps/web/app/api/admin/losses/[pickId]/draft/route.ts          (consumeRateLimit, user-keyed)
@@ -98,6 +98,9 @@ apps/web/app/api/nflverse/qbr/route.ts                         (consumeRateLimit
 apps/web/app/api/nflverse/snap-share/route.ts                  (consumeRateLimit, IP-keyed)
 apps/web/app/api/nflverse/usage-pulse/route.ts                 (consumeRateLimit, IP-keyed)
 apps/web/app/api/ops/public-surface-truth/route.ts             (consumeRateLimit, user-keyed)
+apps/web/app/api/picks/route.ts                                 (consumeRateLimit, IP-keyed)
+apps/web/app/api/board/state/route.ts                           (consumeRateLimit, IP-keyed)
+apps/web/app/api/clv/route.ts                                   (consumeRateLimit, IP-keyed)
 apps/web/app/api/picks/[id]/explain/route.ts                   (consumeRateLimit, IP-keyed)
 apps/web/app/api/projections/route.ts                          (consumeRateLimit, IP-keyed)
 apps/web/app/api/push/subscribe/route.ts                       (consumeRateLimit, user-keyed)
@@ -111,6 +114,9 @@ apps/web/app/api/tools/lineup/route.ts                         (requirePremiumAp
 apps/web/app/api/waitlist/route.ts                             (consumeRateLimit, IP-keyed)
 apps/web/app/api/watchlist/follow/route.ts                    (consumeRateLimit, user-keyed)
 apps/web/app/api/watchlist/unfollow/route.ts                   (consumeRateLimit, user-keyed)
+apps/web/app/api/picks/daily-slate/route.ts                     (consumeRateLimit, IP-keyed)
+apps/web/app/api/sources/catalog/route.ts                       (consumeRateLimit, IP-keyed)
+apps/web/app/api/verify/route.ts                                (consumeRateLimit, IP-keyed)
 [cont'd — see protected list below for the remaining routes matched by
 requirePremiumApiRateLimited in the intelligence/* batch above]
 ```
@@ -125,7 +131,7 @@ requirePremiumApiRateLimited in the intelligence/* batch above]
 
 ---
 
-## The 115 unprotected routes
+## The 111 unprotected routes
 
 ### A. Cron routes (24 files) — bearer-token-authenticated, not rate-limited
 
@@ -204,22 +210,16 @@ Key offenders that hit paid APIs or heavy compute:
 
 ```
 apps/web/app/api/board/passes/route.ts
-apps/web/app/api/board/state/route.ts
 apps/web/app/api/brief/route.ts
-apps/web/app/api/clv/route.ts
 apps/web/app/api/decision-genome/route.ts
 apps/web/app/api/health/route.ts
 apps/web/app/api/health/synthetic-monitoring/route.ts
 apps/web/app/api/picks/[id]/audit/route.ts
-apps/web/app/api/picks/daily-slate/route.ts
-apps/web/app/api/picks/route.ts
 apps/web/app/api/proof/ledger/route.ts
 apps/web/app/api/proof/openapi.json/route.ts
 apps/web/app/api/proof/receipts/route.ts
 apps/web/app/api/proof/verification-spec.json/route.ts
 apps/web/app/api/receipts/[id]/route.ts
-apps/web/app/api/sources/catalog/route.ts
-apps/web/app/api/verify/route.ts
 apps/web/app/api/verify/slate/opening/route.ts
 apps/web/app/api/verify/slate/route.ts
 apps/web/app/api/weather/game/route.ts
@@ -246,7 +246,7 @@ apps/web/app/api/admin/promotions/route.ts
 apps/web/app/api/cockpit/* (remaining unlisted: agents, brief, command-center, content/[id], free-coverage, history/export, jarvis, jarvis/trend, journal, listener-log, market-twin, operator-registry, readiness, resource-intelligence, world-class-readiness)
 ```
 
-> The full machine-generated list of all 114 unprotected routes is in the raw grep output.
+> The full machine-generated list of all 111 unprotected routes is in the raw grep output.
 > The categorization above (A–E) groups them by exposure level.
 
 ---
@@ -257,27 +257,47 @@ Routes that are (1) anonymous-callable, (2) GET, and (3) touch paid APIs, heavy 
 serve premium data:
 
 | Route | Risk note |
-|---|---|
-| `apps/web/app/api/clv/route.ts` | Anonymous, may hit paid odds API |
-| `apps/web/app/api/projections/route.ts` | (protected — for contrast) uses consumeRateLimit |
-| `apps/web/app/api/picks/route.ts` | Serves pick board to anonymous users |
-| `apps/web/app/api/board/state/route.ts` | Board state, anonymous |
+|---|---||
 | `apps/web/app/api/verify/slate/route.ts` | May trigger proof verification compute |
-| `apps/web/app/api/sources/catalog/route.ts` | Catalog endpoint, anonymous |
+| `apps/web/app/api/verify/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
+| `apps/web/app/api/sources/catalog/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
+| `apps/web/app/api/picks/daily-slate/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
+| `apps/web/app/api/clv/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
+| `apps/web/app/api/picks/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
+| `apps/web/app/api/board/state/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 
 ---
 
 ## Conclusion
 
-Rate-limit coverage is **35.2%** (62/176 routes). The prior commits
+Rate-limit coverage is **38.6%** (68/176 routes). The prior commits
 (2318d86f, d3e012ac, 27e9c912) closed part of the previously-cited gap but did not cover all
 routes. The 24 cron routes are bearer-authenticated (not rate-limited). The 9 admin cockpit
-POST routes are auth-gated but not rate-limited. The 114 unprotected routes include 82+
+POST routes are auth-gated but not rate-limited. The 108 unprotected routes include 80+
 anonymous GET routes that are the primary DoS/abuse surface.
+
+**P9-03 update (2026-08-16):** Three new IP-keyed rate-limit wrappers were added to the
+highest-risk anonymous GET routes per the P9 sprint:
+- `apps/web/app/api/clv/route.ts` — 60 req/min/IP (was anonymous, DB-heavy: 4 count queries)
+- `apps/web/app/api/picks/route.ts` — 60 req/min/IP (was anonymous, DB-heavy: findMany + count)
+- `apps/web/app/api/board/state/route.ts` — 60 req/min/IP (was anonymous, DB-heavy board load)
+
+All three follow the established `consumeRateLimit` + `clientIp` pattern from
+`apps/web/app/api/nflverse/injuries/route.ts`. Tests pass for all three routes.
+
+**P9-04 update (2026-08-16):** Three more IP-keyed rate-limit wrappers were added to the
+next batch of highest-risk anonymous GET routes per the P9 sprint:
+- `apps/web/app/api/sources/catalog/route.ts` — 60 req/min/IP (was anonymous, loads 4 large NFLverse datasets sequentially)
+- `apps/web/app/api/verify/route.ts` — 60 req/min/IP (was anonymous, DB-heavy: receipt lookup with game include)
+- `apps/web/app/api/picks/daily-slate/route.ts` — 60 req/min/IP (was anonymous, DB-heavy: multiple count + findMany aggregates)
+
+All three follow the same `consumeRateLimit` + `clientIp` pattern. Tests written covering
+both the within-quota success path (200) and the quota-exceeded path (429 with Retry-After).
+Coverage is now 68/176 = 38.6%.
 
 **Correction note:** `ops/public-surface-truth` was initially flagged as protected due to a
 string match on `"rate_limited"` (a variable name used in an odds-provider error handler),
 but it does NOT call any rate-limit function. Conversely, `v1/probabilities` and
 `v1/signals` use `rateLimitB2b` (a fourth helper from `@/lib/b2b/api-key-auth`) which was
 not in the initial grep pattern and have been added to the protected count. Net: 62
-protected, 114 unprotected.
+protected after P9-01, 65 after P9-02/03, 68 after P9-04 (38.6%).
