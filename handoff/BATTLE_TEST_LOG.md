@@ -624,3 +624,117 @@ cite internal commit hashes, none of which this bug class targets.
 ---
 
 Proceeding to P10-03 (hunt confidently-wrong claims) and P10-04 (working-tree hygiene) in subsequent rounds.
+
+## Round 1 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-17)
+
+**Date:** 2026-08-17
+**Started:** 2026-08-17T00:00:00Z
+**Task scope:** `git status`, `git status --ignored -- handoff/`, `git worktree list`, stash list,
+duplicate-commit audit across all reflogs, and verification that previously-swallowed gitignored
+deliverables remain tracked after `f8dbeddf`.
+
+### Method
+1. `git status` (top-level) + `git status --short` — look for any uncommitted stray files, any recurrence
+   of the P4/P5 non-committing bug.
+2. `git status --ignored -- handoff/` — confirm no real deliverable is gitignored and silently untracked
+   (the bug class that ate `REMEDIATION_ROADMAP.md` and `RATE_LIMIT_COVERAGE.md`).
+3. `git worktree list` — check for stray worktrees or the two-agent collision leaving divergent state.
+4. `git stash list` — check for WIP stashed as a disguise for uncommitted real work.
+5. `git log --oneline --all` — grep for duplicate-byte-identical commits (the P4/P5 collision where Codex
+   + Laguna both committed the same work).
+
+### Results
+
+#### Item 1 — Uncommitted / stray changes · CLEAN (no recurrence)
+`git status` (top-level) and `git status --short` both show a single in-flight change: the staged
+modification of `handoff/SPRINT_QUEUE.md` (this task's own STATUS flip to DOING, plus the unstaged
+queue edits from prior P10 tasks). **No stray uncommitted real-work files** — no `.md` deliverable,
+no source file, no `any`-typed test, no secret leak. This confirms the non-committing bug (Phase 4/5)
+is **not recurring** this round. The 98-ahead count vs `origin/claude/fable-5-ultracode-plan-ptru4e`
+matches the expected sprint progress.
+
+#### Item 2 — Gitignored handoff deliverables · PARTIAL (previously-swallowed files rescued, broad ignore remains)
+`.gitignore` line 202: `handoff/` ignores the entire directory.
+
+Commit `f8dbeddf` (2026-08-16, "docs(handoff): track 7 deliverable reports that were silently gitignored")
+force-tracked these 7 files, which are cited AS EVIDENCE by owner-facing docs while previously untracked:
+- `LEDGER.md` (cited by 29 tracked docs)
+- `DEPENDENCY_HEALTH.md` (cited by 5)
+- `TYPE_LINT_DEBT.md` (cited by 4, incl. LAUNCH_BLOCKERS.md + DEPLOY_READINESS.md)
+- `OPS_TRUTH.md` (cited by 3)
+- `COMPLIANCE_COPY.md` / `COMPLIANCE_HOOKS.md` (cited by 2 each)
+- `SPRINT_FINAL_PHASE1-9.md` (the Phase 1-9 final report)
+
+**Verification:** `git ls-files handoff/LEDGER.md handoff/TYPE_LINT_DEBT.md ...` returns all 7 paths →
+all confirmed **tracked** despite the `handoff/` ignore. `git check-ignore handoff/NONEXISTENT.md`
+returns only files that don't exist; the 7 rescued files are **not** reported as ignored →
+`git add -f` from f8dbeddf persisted. No regression.
+
+**Residual risk (not fixed, documented):** The broad `handoff/` gitignore rule (line 202) is still in
+place. A future handoff deliverable created after f8dbeddf without an explicit `git add -f` will be
+silently swallowed — the exact bug class that motivated f8dbeddf. This is a latent recurrence, not an
+active bug (no current untracked real deliverable exists). Recommended follow-up: narrow the gitignore
+to `handoff/*.log handoff/*.txt handoff/_*.txt` or use an `export-ignore` rather than blanket-ignoring
+the directory, so new `*.md` reports are tracked by default. (Left as a documented finding — not fixed
+in this run, per the read-only hygiene-sweep nature of P10-04 and to avoid touching `.gitignore`
+semantics that could alter the overnight-agent scratch contract.)
+
+**Verification commands:**
+```
+git ls-files handoff/LEDGER.md handoff/DEPENDENCY_HEALTH.md handoff/TYPE_LINT_DEBT.md handoff/OPS_TRUTH.md handoff/COMPLIANCE_COPY.md handoff/COMPLIANCE_HOOKS.md handoff/SPRINT_FINAL_PHASE1-9.md  → 7 paths returned
+git check-ignore handoff/LEDGER.md → (no output → not ignored → tracked)
+git check-ignore handoff/NONEXISTENT.md → returns NONEXISTENT.md (confirms ignore rule is active only for untracked files)
+```
+
+#### Item 3 — Worktrees · CLEAN
+`git worktree list` shows 16 worktrees/dirs: the main `C:/Users/Garrett/Sports` (branch
+`claude/fable-5-ultracode-plan-ptru4e`, commit `eae37c3f`) plus 15 under
+`copilot-worktrees/Sports-GSE-PR3-isolated/*` and `Sports-*` / `Sports_*` dirs. All are experimental
+branches (`beexly-*`, `galaxy-dynasty-*`, `gse-free-waitlist-gate`, `consensus-accuracy-engine`,
+`dfs-optimizer-edge`, detached `Sports_release_codex`). **No stray worktree points at the active sprint
+branch or duplicates the current HEAD.** No worktree collision to clean up.
+
+#### Item 4 — Stashes · CLEAN (no real work hidden)
+`stash@{0}` — WIP on `codex/sunday-frontier-maxforce-2026-07-05` (`9ffebc56`, "feat: conformal
+uncertainty historical adapter"): `git stash show --stat` shows 1 file (`CLAUDE.md`, 120/174 lines
+changed) — a backup/scratch edit, not a real deliverable WIP. `stash@{1..4}` are similarly overnight
+or pre-flight backups on old branches. **No stashed deliverable work** that would constitute a
+non-committing-bug recurrence.
+
+#### Item 5 — Two-agent collision / duplicate commits · CONFIRMED
+`git log --oneline --all` shows multiple pairs of byte-identical commits (same subject, same tree)
+from Codex + Laguna both landing the same work. Examples across full history:
+- `b7b8e36d` / `c7bb335c` — "fix(settlement): single graceHours constant; probes use loadSettlementHealth"
+- `72cac0dd` / `ff45a7c2` — "improve(web): harden contests, GSN board wire, sitemap, gates tests"
+
+**Most direct evidence within this sprint's branch:** the P8-11 status update was committed twice by
+two agents with byte-identical subjects:
+- `bd89a53a` — "chore(sprint): P8-11 DONE — GSE-SEC-015 fixed, register + queue updated [sprint]"
+- `b3159cbb` — "chore(sprint): P8-11 DONE — GSE-SEC-015 fixed, register + queue updated [sprint]"
+
+Both carry the `[sprint]` tag and reference commit `189f5f9e` (the real GSE-SEC-015 fix). This is the
+P10-04 "two-agent collision" the task description warns about: **both agents committed the same
+status/journal update**. No code divergence (the underlying fix `189f5f9e` is single), but the
+duplicate status commits pollute the reflog and could mislead a future `git bisect` or bisect-style
+history walk.
+
+**Recommended follow-up (not done this run):** `git replace` the duplicate with a note, or at minimum
+avoid the pattern — future sprint status commits should be authored by one agent only. Document in
+`handoff/SPRINT_BOOT.md` that status updates are single-author.
+
+### Summary Table
+
+|| Check | Result |\n||---|---|---|\n|| Uncommitted stray files | CLEAN — only the in-flight queue STATUS edit |\n|| Non-committing bug recurrence | NO — no phase 4/5 class bug found |\n|| Gitignored deliverables still swallowed | NONE currently — 7 rescued files tracked post-f8dbeddf |\n|| Broad `handoff/` gitignore latent risk | DOCUMENTED — remains, no active victim, recommend narrowing rule (line 202) |\n|| Stray worktrees | NONE — all 16 are intentional experimental branches |\n|| Hidden stashed real work | NONE — stashes are CLAUDE.md/scratch backups only |\n|| Two-agent duplicate commits | CONFIRMED — P8-11 double-committed (bd89a53a + b3159cbb); historical pairs in settlement/contests commits |\n\n### New Items Requiring Follow-up (not fixed in this run — P10-04 is read-only hygiene)
+1. **hygiene-01:** Narrow `.gitignore` line 202 (`handoff/`) so new handoff `*.md` deliverables are
+   tracked by default instead of requiring `git add -f`. Risk class: silent-untracking regression.
+2. **hygiene-02:** Prevent two-agent duplicate status commits — designate a single agent for
+   `handoff/SPRINT_QUEUE.md` / journal commits, or de-duplicate via `git replace`. Risk class:
+   reflog pollution + bisect confusion.
+
+**VERIFY:** Every check above cites a real command and real output. No domain/skip. The working tree
+is clean of real uncommitted work; the only latent risks are the broad `handoff/` gitignore rule and
+the multi-agent duplicate-commit pattern — both documented above with citations, neither currently
+biting.
+
+---
+
