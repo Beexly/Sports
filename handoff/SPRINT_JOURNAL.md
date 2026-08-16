@@ -1,4 +1,98 @@
-### 2026-08-18T21:05:00Z · P8-09 · DONE · STRIKES: 0 · commit a56fe1dc
+### 2026-08-17T18:35:00Z · P9-05 · DONE · STRIKES: 0 · commit (pending)
+Rate-limited the next three highest-risk unprotected anonymous GET routes
+by risk, following the P9-04 pattern (consumeRateLimit + clientIp from
+@/lib/api/rate-limit, 60 req/min/IP, in-memory bucket, 429 + Retry-After).
+
+Route selection — the three highest-risk remaining unprotected anonymous
+GET routes (by DoS surface + compute/DB cost):
+- verify/slate: anonymous, DB read (slateCommitment.findUnique) + live
+  Merkle root recomputation (merkleRootFromLeafHashes with real sha256).
+- proof/receipts: anonymous, DB findMany with nested includes + per-row
+  verifyReceiptIntegrity calls.
+- picks/[id]/audit: anonymous, DB read (pick.findUnique with nested odds)
+  + CPU-heavy pre-mortem/fragility/death-clock computations.
+
+Files modified:
+- apps/web/app/api/verify/slate/route.ts — changed GET signature from
+  (request: Request) to (req: NextRequest), added consumeRateLimit(
+  "public-verify-slate", clientIp(req), 60, 60_000) guard at handler top.
+  429 + Retry-After on exceed.
+- apps/web/app/api/proof/receipts/route.ts — changed GET signature from
+  (request: Request) to (req: NextRequest), added consumeRateLimit(
+  "public-proof-receipts", clientIp(req), 60, 60_000) guard at handler top.
+  Renamed rate-limit result var to `rl` to avoid shadowing the existing
+  pagination `limit` var.
+- apps/web/app/api/picks/[id]/audit/route.ts — changed _req param to `req`
+  (was unused), added consumeRateLimit("public-pick-audit", clientIp(req),
+  60, 60_000) guard after the tier/auth gate and pickId validation.
+  429 + Retry-After on exceed.
+
+Files created:
+- apps/web/__tests__/api-p9-05-rate-limit.test.ts — 6 tests (2 per route)
+  covering within-quota 200 success path and quota-exceeded 429 + Retry-After.
+  Mocks @sports/db, @sports/prediction-engine, @/lib/proof/receipt-proof,
+  @/lib/seo/site-url, @/lib/auth, @/lib/entitlements, @/lib/premortem/*,
+  @/lib/market/pick-death-clock, @sports/types; uses the REAL consumeRateLimit
+  + resetRateLimits for deterministic tests.
+
+VERIFY:
+- npx vitest run __tests__/api-p9-05-rate-limit.test.ts → 6/6 passed.
+- npx vitest run __tests__/verify-slate-route.test.ts
+  __tests__/proof-receipts-api.test.ts __tests__/audit-route-paywall.test.ts
+  __tests__/api-p9-04-rate-limit.test.ts → 33/33 passed (no regressions).
+- Grep-confirm: all 3 routes import and call consumeRateLimit + clientIp.
+- RATE_LIMIT_COVERAGE.md: 68→71 protected, 108→105 unprotected, 38.6%→40.3%.
+- secret-scan: OK — 6 files staged, no secrets detected.
+
+Files to commit (exactly the task's named sources + test + handoff docs):
+- apps/web/app/api/verify/slate/route.ts
+- apps/web/app/api/proof/receipts/route.ts
+- apps/web/app/api/picks/[id]/audit/route.ts
+- apps/web/__tests__/api-p9-05-rate-limit.test.ts
+- handoff/RATE_LIMIT_COVERAGE.md
+- handoff/SPRINT_QUEUE.md (STATUS DOING→DONE)
+- handoff/SPRINT_JOURNAL.md (this entry)
+
+---
+
+### 2026-08-16T21:10:00Z · P9-04 · DONE · STRIKES: 0 · commit d9ca87bf
+Rate-limited the next three highest-risk unprotected anonymous GET routes
+by risk, following the P9-03 pattern (consumeRateLimit + clientIp from
+@/lib/api/rate-limit, 60 req/min/IP, in-memory bucket, 429 + Retry-After).
+
+Files modified:
+- apps/web/app/api/sources/catalog/route.ts — added NextRequest param +
+  consumeRateLimit("public-source-catalog") guard at handler top. This route
+  loads 4 large NFLverse datasets sequentially via loadSourceLiveEvidence().
+- apps/web/app/api/verify/route.ts — added NextRequest param +
+  consumeRateLimit("public-proof-verify") guard at handler top. This route
+  does a DB-heavy receipt lookup with nested game include.
+- apps/web/app/api/picks/daily-slate/route.ts — added NextRequest param +
+  consumeRateLimit("public-daily-slate") guard at handler top. This route
+  does multiple count + findMany aggregates over today's published picks.
+
+Files created:
+- apps/web/__tests__/api-p9-04-rate-limit.test.ts — 6 tests (2 per route)
+  covering within-quota 200 success path and quota-exceeded 429 + Retry-After.
+  Mocks @sports/db, @sports/prediction-engine, and data-source helpers;
+  uses the REAL consumeRateLimit + resetRateLimits for deterministic tests.
+
+VERIFY:
+- npx vitest run __tests__/api-p9-04-rate-limit.test.ts → 6 passed.
+- npx vitest run __tests__/api-clv-route.test.ts → 4 passed (no regression).
+- Grep-confirm: all 3 routes import and call consumeRateLimit + clientIp.
+- RATE_LIMIT_COVERAGE.md: 65→68 protected, 111→108 unprotected, 36.9%→38.6%.
+
+Files committed (exactly the task's named sources + test + handoff docs):
+- apps/web/app/api/sources/catalog/route.ts
+- apps/web/app/api/verify/route.ts
+- apps/web/app/api/picks/daily-slate/route.ts
+- apps/web/__tests__/api-p9-04-rate-limit.test.ts
+- handoff/RATE_LIMIT_COVERAGE.md
+- handoff/SPRINT_QUEUE.md (STATUS DOING→DONE)
+Secret-scan: OK — 6 files scanned, no secrets detected.
+
+---
 Mid-backlog regression checkpoint. Re-ran `CI=1 npm test > handoff/test-census-p8.txt 2>&1`
 (4,615 lines, 11,146 total tests) and compared against the P7-02 baseline
 (`handoff/test-census-raw.txt`, 4,717 lines, 11,066 total tests + `TEST_CENSUS.md` §1–§6).

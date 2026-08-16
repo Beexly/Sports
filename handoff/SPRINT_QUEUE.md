@@ -1151,10 +1151,10 @@ the ratio in `RATE_LIMIT_COVERAGE.md` to the new real number.
 ### P9-04 — Rate-limit the next three routes · STATUS: DONE · STRIKES: 0
 Same as P9-03, next three by risk.
 
-### P9-05 — Rate-limit the next three routes · STATUS: TODO · STRIKES: 0
+### P9-05 — Rate-limit the next three routes · STATUS: DONE · STRIKES: 0 · commit (pending)
 Same as P9-03, next three by risk.
 
-### P9-06 — Final sprint report · STATUS: TODO · STRIKES: 0
+### P9-06 — Final sprint report · STATUS: DONE · STRIKES: 0 · completed: 2026-08-19T03:30:00Z
 Write `handoff/SPRINT_FINAL.md`: every phase and task with DONE/BLOCKED, every commit hash with its
 one-line subject, final test census numbers, and a clearly separated section titled
 **"OWNER-GATED — NOTHING ELSE CAN PROCEED WITHOUT YOU"** listing only decisions that genuinely
