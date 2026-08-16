@@ -1789,7 +1789,7 @@ regression assertion that a commit message merely *describing* these commands is
 DESIGN NOTE in that file correctly identifies over-triggering as how safety tools get switched off —
 do NOT broaden any rule to match prose. Commit.
 
-### P13-03 — Rate-limit and cache the public ops surface · STATUS: TODO · STRIKES: 0
+### P13-03 — Rate-limit and cache the public ops surface · STATUS: DONE · STRIKES: 0
 Evidence: `apps/web/app/api/ops/public-surface-truth/route.ts:47` is `force-dynamic`, `:674` sends
 `Cache-Control: no-store`, there is no `consumeRateLimit` anywhere in the file, it runs ~31 DB
 loaders per request, and `:324` calls `loadStripeWebhookHostsPosture()` →
@@ -1805,7 +1805,7 @@ Fix: (a) add `consumeRateLimit` on the public (non-`hasOpsAuth`) branch, matchin
 behind auth). typecheck + lint. Commit.
 **DO NOT** change which business fields are public — that is an owner decision, not a security one.
 
-### P13-04 — B2B API keys are written to Postgres in plaintext · STATUS: TODO · STRIKES: 0
+### P13-04 — B2B API keys are written to Postgres in plaintext · STATUS: DONE · STRIKES: 0 (commit ba3eeaec)
 Evidence: `apps/web/lib/b2b/api-key-auth.ts:89-95` passes the raw secret as the rate-limit `key`;
 callers hand it the raw value (`apps/web/app/api/v1/signals/route.ts:26-27`,
 `probabilities/route.ts:22-23`); `apps/web/lib/community/durable-rate-limiter.ts:113` inserts it
@@ -1817,7 +1817,7 @@ callers unchanged.
 **VERIFY:** test asserting the value passed to `limiter.consume` differs from the input and matches
 `/^[0-9a-f]{64}$/`. typecheck + lint. Commit.
 
-### P13-05 — CSP: make `unsafe-eval` dev-only and fix two silently-broken integrations · STATUS: TODO · STRIKES: 0
+### P13-05 — CSP: make `unsafe-eval` dev-only and fix two silently-broken integrations · STATUS: DOING · STRIKES: 0
 Evidence: `apps/web/next.config.mjs:103` ships `'unsafe-eval'` in `script-src` in production. The
 recorded justification ("Stripe.js and Clarity require it", `handoff/BATTLE_TEST_LOG.md:308`) is
 **wrong** — the emitted production bundle has 0 `eval(` and 0 `new Function(`; the 6 `Function(`
@@ -1991,6 +1991,107 @@ public copy distinguish three states truthfully: genuinely-quiet (no eligible ga
 "refreshing" message, not "scheduler dead."
 **VERIFY:** tests for all three states (quiet / stale / healthy) producing distinct, truthful public copy.
 typecheck + lint. Commit.
+
+---
+
+# PHASE 15 — FULL SURFACE SWEEP (owner doctrine, 2026-08-16 — breadth, not just depth)
+*Owner's standing directive: "everything, anything, all of it, the entire code has to be reviewed,*
+*improved, polished, tested, audited, tested again." A measured fact, not a feeling: this repo has*
+*~130 route surfaces under `apps/web/app`, ~190 subsystems under `apps/web/lib`, and 30+ packages —*
+*and a grep of `handoff/SPRINT_QUEUE.md` for every one of those directory names shows over 100 of*
+*them have ZERO mentions anywhere in Phases 0-14. The sprint has been real but narrow: `api`,*
+*`data`, `ingestion`, `calibration`, `cockpit`, `fantasy`, `board` got repeated attention; entire*
+*areas like `academy`, `airwave`, `cipher`, `courtroom`, `war-room`, `decision-genome`,*
+*`epistemic-twin`, `twitter-bot`, `discord-bot`, `dfs`, `tournament`, `vault`, `sealed` have never*
+*been opened this sprint. This phase forces breadth.*
+
+**Every task below starts with LIVE-VS-DORMANT TRIAGE, not "fix it."** Many of these directory names
+(`sealed`, `vault`, `war-room`, `cipher`) suggest intentionally-unlaunched or gated features, not bugs
+— this codebase's own convention (see SPRINT_BOOT.md §NEVER 5) is that some code is deliberately
+DORMANT/sealed/frozen. Step 1 of every task is: grep for whether the route/module is actually linked
+from live navigation, registered in a page, or reachable by an anonymous/authed user in production —
+vs. orphaned, feature-flagged off, or explicitly marked dormant. **Only fix real bugs in LIVE, reachable
+code.** For anything confirmed dormant, report it as dormant (do not build it out, do not delete it,
+do not "finish" it — that is a product decision, not a bug fix) and move on. This distinction matters:
+treating a deliberately-sealed vault page as broken and "fixing" it would be scope creep in the exact
+form CLAUDE.md warns against.
+
+For each task: read every file in the listed directories (skim large generated/config files, read
+logic files fully), typecheck/lint them in isolation if possible, check for an existing test file and
+whether it's ever run, and follow one real user-facing path through the code by hand. Fix only
+confirmed, evidenced bugs in live code — cite `file:line` for every claim, same as every other phase
+this sprint. Write findings (including "confirmed dormant, no action taken") to
+`handoff/PHASE15_SURFACE_SWEEP.md`, appending one section per task, never overwriting a prior task's
+section.
+
+### P15-01 — Sweep: public content & growth pages · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/app/{about,academy,blog,case-studies,changelog,faq,press,media-kit,newsletter,
+podcast,partners,contact,news-sitemap.xml,sitemap.ts,robots.ts}`. Check every page renders without
+error, has no dead links, and — given P14-06 found a stale-claim bug on `/about` already — check for
+the SAME pattern elsewhere: any page stating a cadence, count, or capability the code doesn't actually
+enforce. **VERIFY:** typecheck + lint on touched files; if you fix a stale claim, cite the file:line
+that made the claim false. Commit.
+
+### P15-02 — Sweep: legal, compliance & trust surfaces · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/app/{privacy,terms,responsible-play,integrity,how-to-verify-a-record,verify,
+proof,methodology}`, `apps/web/lib/{compliance,compliance-scanner,trust-claims.ts,legal-dates.ts}`.
+Given this sprint already found two real live compliance gaps (no age-gate despite Terms claiming one;
+refund doesn't revoke access — see `handoff/project-gse-legal-compliance-gaps` context), check
+specifically for MORE instances of the same pattern: a legal/trust page asserting a control that the
+code doesn't actually implement. **VERIFY:** typecheck + lint; any claim-vs-code mismatch found must
+cite both the asserting file:line and the missing enforcement. Commit.
+
+### P15-03 — Sweep: intelligence & analysis engines · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/app/{intelligence,decision-genome}`, `apps/web/lib/{intelligence,
+intelligence-graph,decision-genome,epistemic-twin,constellation,bias-mirror,pre-mortem,premortem,
+opportunity-engine,source-intelligence,resource-intelligence,reconstruction}`, `apps/web/app/{room,
+courtroom}` if present. LIVE-VS-DORMANT TRIAGE IS CRITICAL HERE — these exotic names are likely a mix
+of shipped features and speculative/unlaunched ones. For anything LIVE: does it compute what it claims
+to, does bad/missing input crash it or fail silently with a wrong-but-plausible number (the worst
+failure mode for an "intelligence" feature). **VERIFY:** typecheck + lint on touched files; report
+dormant vs live split in the findings doc. Commit only if you changed code.
+
+### P15-04 — Sweep: social & distribution bots · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/lib/{twitter-bot,discord-bot,bot-outbox,growth,affiliate,media-revenue,
+promotions,waitlist,reader-register}`. Security-relevant: bots that post externally are a
+reputational and secrets-handling risk even if content logic is fine. Check: do these ever actually
+run in production (cron-registered? env-key-gated?), and if so, is there any path where unvalidated
+data reaches an outbound post? **VERIFY:** typecheck + lint; if you find live+unsafe, fix minimally and
+cite the exact injection/leak path. Commit.
+
+### P15-05 — Sweep: fantasy/DFS/contest periphery · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/app/{fantasy,contests,vault,house,gsn}`, `apps/web/lib/{dfs,contests,
+tournament,staking,sleeper,game-room,gsn,house,vault}`. **Cross-check against
+`project-gse-fantasy`/`project-gse-graded-pool-trunk` memory context: real-money fantasy is explicitly
+founder-gated and must NOT go live from this task.** The job here is confirming that gate actually
+holds everywhere in this periphery — not building anything out. If any of these directories expose a
+real-money or forward-projection path that is NOT behind the known gate, that is the single most
+important finding this task could produce — report it prominently, do not fix it yourself (owner
+decision), and flag it clearly in the findings doc. **VERIFY:** typecheck + lint only; no feature
+build-out. Commit only if you changed a genuine bug, not a gate.
+
+### P15-06 — Sweep: scoring, prediction & simulation math · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/lib/{scoring,ranking,projections,sim,correlation,parlay,parlay-mri,optimizer,
+backtest,calibration-training}`. This is quantitative code — check each has real test coverage (not
+just typecheck-passes), and hand-trace one calculation path per directory against a known input to
+confirm the math matches its own documented formula/comment. **VERIFY:** run the relevant test files;
+if any directory has zero tests for a real live calculation, that itself is a finding — write one
+narrow regression test for the highest-risk function, don't attempt full coverage. Commit.
+
+### P15-07 — Sweep: ops, monitoring & background jobs · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/lib/{ops,observability,synthetic-monitoring,health,cache,tasks,workers,cron,
+push}`. Given this sprint already found a dead scheduler and a rate-limit gap in one ops route, check
+the REST of this cluster for the same failure classes: a cron/worker that silently no-ops instead of
+erroring loudly, or a background job with no failure alerting at all. **VERIFY:** typecheck + lint;
+cite file:line for any silent-failure path found and fixed. Commit.
+
+### P15-08 — Sweep: thematic/identity product surfaces · STATUS: TODO · STRIKES: 0
+Directories: `apps/web/app/{sealed,cipher,glass-ledger,ledger,journal,brief,deck,the-beat,live,today,
+track,trends,vs,watchlist,weather,embed}`. Most exotic-name cluster in the app; expect a real mix of
+live product pages and dormant/thematic ones (`sealed` in particular — cross-reference against the
+watchdog's own protected-path convention for "sealed" before touching anything there). LIVE-VS-DORMANT
+TRIAGE FIRST, same rule as P15-03. **VERIFY:** typecheck + lint on touched files only. Commit only if
+you changed confirmed-live code with a confirmed bug.
 
 ---
 
