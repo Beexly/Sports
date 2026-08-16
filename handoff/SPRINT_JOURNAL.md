@@ -2768,3 +2768,40 @@ way.
 Commit: 86017cd3
 "fix(P12-05): surface CLV coverage alongside beat-close rate on /clv page"
 
+---
+
+### 2026-08-24T11:22Z · P12-06 — Loss autopsies have no candidate queue · DONE · STRIKES: 0
+
+Set STATUS DOING → worked task → set STATUS DONE with commit hash.
+
+**What I did:**
+- Read `apps/web/app/cockpit/losses/page.tsx`, `apps/web/lib/loss-autopsy/draft.ts`,
+  `apps/web/app/api/admin/losses/[pickId]/draft/route.ts`, and the Prisma schema
+  for `Pick`, `LossAutopsy`, `PickResult`, and `LossAutopsyStatus`.
+- Added `loadCandidateRows()` to `page.tsx`: `db.pick.findMany` with
+  `where: { result: "LOSS", lossAutopsy: null, isPublished: true }`,
+  `include: { game: { select: { awayTeamName, homeTeamName } } }`,
+  `orderBy: { confidence: "desc" }`, `take: 50`.
+- Added a "Needs Autopsy" section to the page UI with a Draft link to
+  `/cockpit/losses/[pickId]/draft` for each candidate row.
+- Created test file `apps/web/__tests__/cockpit-losses-needs-autopsy.test.ts`
+  verifying: query shape (db.pick.findMany, result=LOSS, lossAutopsy=null,
+  orderBy confidence desc, take bounded), game relation select, DB-error
+  fallback to empty list, and the "Needs Autopsy" heading in JSX.
+
+**VERIFY results (all PASS):**
+- `npx vitest run __tests__/cockpit-losses-needs-autopsy.test.ts` → 5/5 passed
+- `npx vitest run __tests__/loss-room-public-ledger.test.ts` → 3/3 passed (no regression)
+- `npx tsc --noEmit` → no errors for changed files
+- `npx eslint ... --max-warnings=0` → clean
+
+**Result:** VERIFY passed. Committed.
+
+**Files committed (exactly these):**
+- `apps/web/app/cockpit/losses/page.tsx`
+- `apps/web/__tests__/cockpit-losses-needs-autopsy.test.ts` (new)
+- `handoff/SPRINT_QUEUE.md` (STATUS DOING→DONE)
+
+Commit: a3fd8e93
+"P12-06: Add needs-autopsy candidate queue to cockpit losses page"
+
