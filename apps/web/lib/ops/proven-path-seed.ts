@@ -77,7 +77,8 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
       if (durablePause?.enabled && Array.isArray(durablePause.groups)) {
         appliedPauseGroups = durablePause.groups;
       }
-    } catch {
+    } catch (err) {
+      captureError(err, { path: "proven-path-seed", stage: "loadRankingPauseApply" });
       appliedPauseGroups = [];
     }
 
@@ -112,7 +113,8 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
       conformalBridge,
       conformalBridgeEnv,
     };
-  } catch {
+  } catch (err) {
+    captureError(err, { path: "proven-path-seed", stage: "loadProvenPathSurface" });
     return null;
   }
 }
