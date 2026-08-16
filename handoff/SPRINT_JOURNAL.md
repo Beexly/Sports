@@ -2556,3 +2556,35 @@ paid tier, not only inside the dunning `BillingNoticeBanner`.
 | 2 files changed, 79 insertions(+). secret-scan: OK — 2 files scanned, no secrets detected.)
 
 Next: Sprint rule — STOP after one task. Do not start P12-02 this run. STOP.
+
+### 2026-08-16T14:28:39Z · P12-02 — No Contact/Support link anywhere in the footer · DONE · STRIKES: 0
+
+Selected: top-to-bottom first TODO. (PRIORITY OVERRIDE note points to P7-01,
+but P7-01 is already DONE — override satisfied.) First TODO/DOING in queue
+order was P12-02.
+
+Action:
+1. Re-read handoff/SPRINT_QUEUE.md top to bottom; confirmed P12-02 was the
+   first STATUS:TODO (after P0-01/P7-07 which are BLOCKED, not TODO/DOING).
+2. Set P12-02 STATUS -> DOING in SPRINT_QUEUE.md.
+3. Read apps/web/components/ui/footer.tsx. The footer renders link groups
+   PRODUCT_LINKS (13), COMPANY_LINKS (16), RESPONSIBLE_LINKS (5), DATA_LINKS,
+   SOCIAL_LINKS — none pointed to /contact. Site-wide /contact was linked
+   from exactly one place (about/page.tsx:119). Added a Contact link to
+   COMPANY_LINKS after FAQ. One line added.
+4. Did NOT touch the button component, getBillingNotice, /api/subscriptions/portal.
+
+VERIFY:
+- grep -n "/contact" apps/web/components/ui/footer.tsx -> line 43:
+  { label: "Contact", href: "/contact" }.
+- npx tsc --noEmit -p apps/web/tsconfig.json -> exit 0 (clean).
+- npx eslint apps/web/components/ui/footer.tsx -> exit 0 (clean;
+  "Pages directory cannot be found" is a harmless Next config warning, not an error).
+- No existing footer test file found (grep -iname "*footer*" in apps/web
+  returned only footer.tsx). Journaling explicitly: no test to run.
+
+Commit: 8ffacbd32ce7eeec1f030a8833da6b41102da800
+"P12-02: add Contact link to footer COMPANY_LINKS
+apps/web/components/ui/footer.tsx | 1 file changed, 1 insertion(+). secret-scan: OK — 1 file scanned, no secrets detected."
+
+Next: STOP. One task this run.

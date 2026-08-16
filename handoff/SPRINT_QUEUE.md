@@ -1553,7 +1553,7 @@ currently contains only a link to `/picks`. Do NOT change the button component i
 **VERIFY:** a new test asserting the manage/cancel affordance renders for an ACTIVE paid subscription
 (not only PAST_DUE). Run it plus any existing dashboard tests. typecheck + lint clean. Commit.
 
-### P12-02 — No Contact/Support link anywhere in the footer · STATUS: TODO · STRIKES: 0
+### P12-02 — No Contact/Support link anywhere in the footer · STATUS: DONE · STRIKES: 0
 Evidence: `apps/web/components/ui/footer.tsx` defines 40+ links across `PRODUCT_LINKS` (15),
 `COMPANY_LINKS` (16), `RESPONSIBLE_LINKS` (5), `DATA_LINKS`, `SOCIAL_LINKS` — none point to `/contact`.
 Site-wide, `/contact` is linked from exactly ONE place: `apps/web/app/about/page.tsx:119`. Compounds with
