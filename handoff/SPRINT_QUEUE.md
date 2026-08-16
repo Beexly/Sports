@@ -1349,7 +1349,7 @@ number matches the computation. A published number that cannot be traced to sett
 launch blocker.
 **VERIFY:** every claim found has a row; no silent omissions. Report only — do not edit copy here.
 
-### P9.5-09 — Observability readiness: what is actually ON in production · STATUS: DOING · STRIKES: 0
+### P9.5-09 — Observability readiness: what is actually ON in production · STATUS: DONE · STRIKES: 0
 **LAUNCH-CRITICAL.** Read `apps/web/lib/observability/` and every integration point. For EACH tool
 (Sentry, PostHog, others) determine whether it is genuinely active or silently no-ops without an
 env key — note that `sentry.ts` reads `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` and no-ops when

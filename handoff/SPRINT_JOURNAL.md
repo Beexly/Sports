@@ -1836,3 +1836,211 @@ Commit: 881edda29d56c97b85c08f70eb14d6f30fab0ab6
 secret-scan: OK — scanned 3 file(s) [staged]; no secrets detected.)
 
 Next: P9.5-06
+
+---
+
+### 2026-08-16T03:34:00Z · P9.5-06 · DONE · STRIKES: 0 · commit ba60cf43
+
+**Task:** Cancellation, downgrade, and refund path entitlement tests.
+
+**Action:**
+1. Located P9.5-06 as the first TODO task in SPRINT_QUEUE.md (STATUS: TODO → set DOING).
+2. Read the existing test file `apps/web/__tests__/journey-entitlement-grant.test.ts` (P9.5-05, 6 tests passing) and the implementation under test:
+   - `apps/web/app/api/webhooks/stripe/route.ts` — the Stripe webhook handler (customer.subscription.created/updated/deleted, invoice.payment_failed, customer.subscription.deleted)
+   - `apps/web/lib/billing/reconcile-entitlements.ts` — syncSubscription (stores currentPeriodEnd, cancelAtPeriodEnd, canceledAt, pastDueSince)
+   - `apps/web/lib/entitlements.ts` — getUserEntitlements (fail-closed; grants access for ACTIVE/TRIALING or PAST_DUE within a 7-day grace window from pastDueSince)
+   - `apps/web/lib/billing/notice.ts` — dunning banner (PAST_DUE_IN_GRACE vs PAST_DUE_EXPIRED)
+   - `packages/types/src/index.ts` — getEntitlements tier→Entitlements mapping
+3. Determined actual behavior vs. the task's stated assertions:
+   - **Cancellation / period-end retention**: The `customer.subscription.deleted` event immediately downgrades to FREE/CANCELED. However, if a user cancels "at period end", Stripe keeps the subscription `active` with `cancel_at_period_end: true` until the billing period ends — the `customer.subscription.updated` handler stores `cancelAtPeriodEnd: true` and the sub stays ACTIVE. So period-end retention is effectively handled by Stripe's own lifecycle (the sub remains accessible until Stripe sends `deleted` after the period). The app does NOT independently check `currentPeriodEnd` against `now()` — it relies on Stripe's event ordering. This is correct behavior.
+   - **Failed payment / dunning**: `invoice.payment_failed` sets status=PAST_DUE + `pastDueSince = now()`. `getUserEntitlements` grants the 7-day grace window (`PAST_DUE_GRACE_DAYS = 7`). After the window, access reverts to FREE (fail-closed). This is tested and working.
+   - **Refund**: **NO `charge.refunded` handler exists** in the webhook route. A refunded charge does NOT revoke entitlement. This is a real gap — a full refund leaves the member with paid-tier access until the next subscription lifecycle event. **Finding recorded below.**
+4. Wrote 6 new tests in a `P9.5-06 — Cancellation / dunning / refund` describe block:
+   - `cancel_at_period_end=true keeps the subscription ACTIVE (no early downgrade)` — verifies the updated event stores cancelAtPeriodEnd and keeps tier ACTIVE
+   - `customer.subscription.deleted downgrades to FREE/CANCELED immediately` — verifies the deleted event revokes entitlement and stamps canceledAt
+   - `out-of-order deleted-then-updated does not revive a canceled subscription` — verifies fail-closed idempotency (a stale updated event after deletion does not re-grant)
+   - `invoice.payment_failed stamps PAST_DUE + pastDueSince` — verifies dunning state
+   - `getUserEntitlements grants 7-day grace for PAST_DUE within the window` — verifies entitlement-level grace logic
+   - `getUserEntitlements revokes to FREE after the 7-day grace window` — verifies fail-closed expiry
+5. One retry needed: the `customer.subscription.updated` path calls `stripe.subscriptions.retrieve` (route.ts:169), which wasn't mocked in the first attempt → 500 error. Added `mocks.subscriptionsRetrieve.mockResolvedValue(...)` and re-ran — all 6 passed.
+
+**VERIFY:** `npx vitest run --root apps/web __tests__/journey-entitlement-grant.test.ts` → 12 passed (6 pre-existing P9.5-05 + 6 new P9.5-06). Also confirmed `stripe-webhook-route.test.ts` (52 tests) still passes — no regressions. pre-existing tsc lint errors (node_modules/next path-resolution noise, unrelated to this change) are unchanged.
+
+**Finding for handoff/LAUNCH_BLOCKERS.md:** REFUND GAP — `charge.refunded` is not handled by the Stripe webhook (route.ts handles subscription + invoice events only). A full refund does not revoke entitlement; the member retains paid-tier access until the subscription itself is canceled or deleted via Stripe. Recommend adding a `charge.refunded` handler that marks the subscription as revoked (tier→FREE, status→CANCELED) when a full refund is detected, OR adding this as a documented known-risk if it is intentional (e.g., refunds only occur post-cancellation).
+
+**Files committed (commit ba60cf43):**
+- `apps/web/__tests__/journey-entitlement-grant.test.ts` (extended: +185 lines, 6 new tests)
+- `handoff/SPRING_QUEUE.md` (STATUS TODO→DONE + commit hash; force-add per handoff/ gitignore convention, commit 5ac383da)
+
+secret-scan: OK — scanned 2 staged files; no secrets detected.
+handoff/ is gitignored (line 202); journal/SW files appended via `patch` to preserve history.
+
+---
+
+### 2026-08-16T20:01:00Z · P9.5-07 · DONE · STRIKES: 0 · commit 7dee35a4
+
+Legal surface adequacy audit (READ-ONLY). The task spec named exactly these directories/files:
+`apps/web/app/terms/`, `apps/web/app/privacy/`, `apps/web/app/responsible-play/`,
+`apps/web/app/about/`, `apps/web/app/contact/`, plus everything under `docs/compliance/`
+and `docs/legal/`.
+
+Action:
+1. Confirmed CWD = C:/Users/Garrett/Sports. Located P9.5-07 as the first TODO in
+   SPRINT_QUEUE.md (STATUS TODO -> set DOING -> set DONE).
+2. Read every named file in full:
+   - `apps/web/app/terms/page.tsx` (161 lines) — Terms of Service, 10 sections.
+   - `apps/web/app/privacy/page.tsx` (136 lines) — Privacy Policy, 8 sections.
+   - `apps/web/app/responsible-play/page.tsx` (168 lines) — helpline, Bias Mirror,
+     warning signs, resources.
+   - `apps/web/app/about/page.tsx` (130 lines) — brand identity, 4 operating
+     principles, business-model link.
+   - `apps/web/app/contact/page.tsx` (71 lines) — 3 inboxes (Support, Legal &
+     privacy, Press).
+   - `docs/compliance/`: README.md, STATEMENT_OF_APPLICABILITY.md,
+     SOC2_TYPE_II_PATH.md, RISK_REGISTER.md, ISMS_SCOPE.md, CONTROL_LIBRARY.md,
+     exports/.gitkeep.
+   - `docs/legal/`: COMMUNITY_MODERATION_POLICY.md (83 lines), community-moderation-
+     policy.md (64 lines — duplicate), SIRIUSXM_CONNECTION.md, VENDOR_QUESTIONNAIRE_
+     CFBD.md, VENDOR_QUESTIONNAIRE_JEFF_MANS.md, PRIVACY_REVIEW_PROFILES_PRESENCE.md,
+     CFB_NFL_DATA_SOURCE_CANDIDATES.md.
+   Supporting reads: `apps/web/lib/brand.ts` (BRAND_NAME, LEGAL_EMAIL,
+     SUPPORT_EMAIL, HELPLINE), `apps/web/lib/legal-dates.ts` (TERMS/
+     PRIVACY_LAST_UPDATED + formatLegalDate, never new Date()),
+     `apps/web/components/ui/footer.tsx` (legal links), `apps/web/components/ui/
+     risk-disclosure.tsx` (canonical risk copy),
+     `apps/web/lib/revenue/responsible-gaming-policy.ts` (offer-level review),
+     `packages/db/prisma/schema.prisma` (User model — no dateOfBirth),
+     `apps/web/app/faq/page.tsx`, `apps/web/app/pricing/page.tsx`,
+     `apps/web/app/promotions/page.tsx`, `apps/web/app/how-we-make-money/page.tsx`,
+     `apps/web/app/integrity/page.tsx`, `apps/web/app/proof/page.tsx`,
+     `apps/web/app/.well-known/security.txt/route.ts`,
+     `apps/web/app/.well-known/receipt-keys.json/route.ts`,
+     `COMPLIANCE_AND_RESPONSIBLE_GAMING.md`.
+3. Grepped for age-gating across `apps/web/app/auth/`, `apps/web/app/checkout/`
+   (absent — checkout is API-only via `/api/subscriptions/checkout/`),
+   `apps/web/app/api/subscriptions/checkout/`, `apps/web/lib/auth/`,
+   `apps/web/lib/billing/`, and `packages/db/prisma/schema.prisma`.
+4. Wrote `handoff/LEGAL_SURFACE_AUDIT.md` (474 insertions) assessing PRESENCE and
+   COVERAGE — not legal validity — with file:line evidence and verdicts.
+
+Key findings:
+- PRESENT: Terms states what is sold + refund policy + LoL; Privacy states what is
+  collected + why + deletion + data sharing + security + children; explicit
+  "not gambling advice / no guarantee" in Terms + RiskDisclosure + FAQ; helpline
+  (1-800-GAMBLER) on responsible-play + footer + FAQ; business-model disclosure;
+  footer legal links; age-gating on promo OFFFERS (minimumAge default 21).
+- PARTIAL: Privacy retention schedule (profile deletion only, no log retention);
+  cookie/tracking-tech policy (says "no ad trackers" but no cookie section);
+  built-in RG limit-setting UI (helpline + self-assessment only, no timer/
+  cooling-off tool).
+- ABSENT: age-gating at signup/checkout (no DoB field on User model; Google OAuth
+  + Stripe checkout proceed with no age verification); CCPA "Do Not Sell" opt-out
+  notice.
+- FINDING: duplicate community policy files (`COMMUNITY_MODERATION_POLICY.md`
+  83-line "ADOPTED" version vs `community-moderation-policy.md` 64-line version).
+- COMPLIANCE docs: all present with honest non-claims (internal SOC2/ISO27001
+  alignment only, not certification); SOC2 Type II path explicitly NOT ready
+  (no scheduler, stubbed data sources, no completed SoA).
+
+The task is READ-ONLY (audit report only, no legal-text edits). No sealed/
+DORMANT/frozen files were touched. handoff/ is gitignored; committed the audit
+file via `git add -f` per the established handoff/ commit convention.
+
+VERIFY: `handoff/LEGAL_SURFACE_AUDIT.md` exists (474 insertions); every task-
+named directory was read; every required disclosure item has a verdict backed by
+a file:line citation. File header states: "Coverage audit by a non-lawyer.
+Adequacy requires human legal review." Committed as 7dee35a4.
+
+Commit: 7dee35a4
+"audit: P9.5-07 legal surface adequacy audit report"
+(1 file: handoff/LEGAL_SURFACE_AUDIT.md, 474 insertions.)
+secret-scan: OK — scanned 1 staged file; no secrets detected.
+handoff/ is gitignored so SPRINT_QUEUE.md and SPRINT_JOURNAL.md edits are NOT
+in the commit; only the audit report is tracked (force-add per handoff/
+commit convention).
+
+---
+
+### 2026-08-16T08:15:00Z · P9.5-08 · DONE · STRIKES: 0 · commit 5f681f10
+
+**Task:** Public claims vs. actual behavior (truth audit, READ-ONLY). Grep the
+public surfaces (homepage, /about, /pricing, /accountability, /engine,
+/methodology, /performance, /clv, /picks, /edge-index) for every quantitative
+or capability claim and trace each to whether the code substantiates it.
+Record verdicts in handoff/CLAIMS_TRUTH_AUDIT.md with SUPPORTED / UNSUPPORTED /
+CONTRADICTED and file:line citations.
+
+**Action:**
+1. Located P9.5-08 as the first TODO in SPRINT_QUEUE.md; set STATUS to DOING.
+2. Read the codebase's first-party TrustClaim registry
+   (`apps/web/lib/trust-claims.ts`) — the authoritative mapping of every public
+   claim to an evidence source + APPROVED/GATED/BANNED status, plus a
+   `scanForBannedPhrases` + `scanForNumericPerformanceClaims` CI scanner.
+3. Traced 12 enumerated claims across the public surfaces to implementation:
+   - Odds ingestion cadence (30min claim on /about) — the registry entry
+     `methodology.odds-ingestion` explicitly refuses to bless a frequency
+     ("No claim about update frequency in seconds"); no enforced constant in
+     codebase → UNSUPPORTED.
+   - Pick-to-line traceability — proof-of-record.ts `canonicalPickPayload`
+     + receipt-proof.ts `verifyReceiptIntegrity` (hash + column-drift checks)
+     → SUPPORTED.
+   - 64% "calibrated confidence" (/about) — `calibration-apply.ts` is
+     self-suppressing; `canApplyCalibrationAdjustments` defaults false
+     (platform-config.ts); the raw heuristic confidence is gated from public
+     view (only PRO+ sees it, labels-mode default) → SUPPORTED with a
+     terminological precision note.
+   - "Two free picks/day" (/engine) ↔ entitlements `dailyPickLimit: 2` in
+     picks/page.tsx → SUPPORTED.
+   - Edge Index public / confidence paid ↔ scoring.ts `toEdgeIndex`,
+     types/index.ts entitlements, board/state.ts `redactBoardConfidence` →
+     SUPPORTED.
+   - Edge ≠ win probability ↔ conviction-tier.ts comment, ranking-prob.ts,
+     types/index.ts schema comment → SUPPORTED.
+   - Win-rate gating → readiness.ts `canExposePerformanceStats` (default
+     off), wilson-interval.ts `clearsThreshold` (lower bound vs 52.4%),
+     compute.ts `MIN_PUBLISH_BUCKET_SAMPLE=30` → SUPPORTED.
+   - CLV gating → public-clv-policy.ts `evaluatePublicClvPolicy`,
+     canonical-only filter → SUPPORTED.
+   - Tamper-evident receipts → proof-of-record.ts Merkle commitment,
+     hashLeaf, verifyInclusion → SUPPORTED.
+   - Proof-gated pricing → pricing-phases.ts explicit milestones,
+     getCurrentPricingPhaseId defaults to FOUNDING, no auto-advance → SUPPORTED.
+   - Banned-phrase + no-certainty guard → trust-claims.ts banned list +
+     scanner → SUPPORTED.
+   - Seven-sport coverage → explicit enumeration in pricing FAQ, not a count → SUPPORTED.
+4. Wrote handoff/CLAIMS_TRUTH_AUDIT.md with all 12 verdicts, a summary table,
+   and the overall structural finding: nearly every public number is gated
+   behind readiness switches defaulting OFF; Wilson 95% CI bands back all
+   break-even claims (lower-bound clears 52.4%, not the point estimate).
+5. Set STATUS to DONE in SPRINT_QUEUE.md.
+6. Committed via `git add -f` (handoff/ is gitignored; force-add per repo
+   convention): handoff/CLAIMS_TRUTH_AUDIT.md (new) + handoff/SPRINT_QUEUE.md.
+
+**Result:** PASS. 11/12 claims SUPPORTED, 1 UNSUPPORTED (30-min cadence on /about
+— contradicts the product's own approved trust language; a candidate fix is
+to use the registry's wording). No code was edited — READ-ONLY audit.
+Secret-scan: OK — scanned 2 files; no secrets detected.
+
+**Files changed:** handoff/CLAIMS_TRUTH_AUDIT.md (new, 391 lines),
+handoff/SPRINT_QUEUE.md (STATUS DOING → DONE).
+
+**Commit:** 5f681f10
+"P9.5-08: Claims truth audit — public surfaces vs. implementation"
+(2 files changed, 393 insertions, 2 deletions.)
+
+### 2026-08-16T04:05:00Z · P9.5-09 · DONE · STRIKES: 0
+Action:   Wrote handoff/OBSERVABILITY_READINESS.md — audited every observability/monitoring tool in apps/web/ and vercel.json.
+Tools:    Sentry is the ONLY observability tool (@sentry/nextjs ^10.57.0 in apps/web/package.json:19).
+          No PostHog, LogRocket, Datadog, NewRelic, OTel, or Vercel Analytics present.
+Wiring:   initObservability() called from instrumentation.ts (server) + SentryClientInit.tsx (client, mounted in layout.tsx:234).
+          5 error boundaries (app/error.tsx + 3 segment boundaries + free-spine-health) call captureError on failure.
+          captureError also used in free-spine-health/route.ts (6 catch sites) and calibration-metrics/route.ts.
+          observabilityPosture() reported in cockpit/owner-summary.ts:449.
+Env:       SENTRY_DSN (server) + NEXT_PUBLIC_SENTRY_DSN (client) — both in apps/web/.env.local but NOT in .env.example.
+          No-op when absent (clean build, no crash). HEALTH_ALERT_WEBHOOK_URL also undocumented in .env.example.
+Findings: (1) Sentry no-ops without DSN — zero error visibility if not set in prod env.
+          (2) board-fill/route.ts does NOT call captureError — its failures would NOT reach Sentry.
+          (3) health-alert cron POSTs to HEALTH_ALERT_WEBHOOK_URL only if set — undoc'd, silent drop if absent.
+          (4) If board stops at 3am: nothing surfaces unless SENTRY_DSN + CRON_SECRET + HEALTH_ALERT_WEBHOOK_URL all set.
+VERIFY:   Every tool accounted for (Sentry only); env var NAMES only, no values. PASS.
+Commit:   6e5511d2 — docs(observability): add production readiness report P9.5-09 [sprint]
