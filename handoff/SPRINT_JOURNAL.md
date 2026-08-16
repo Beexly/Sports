@@ -2164,3 +2164,60 @@ Action:
 
 Result: DONE. Commit ba59949adaad052ad647cb94cf7f9e2b61c3c722.
 secret-scan: OK - 2 files staged, no secrets detected.
+
+### 2026-08-23T05:14:00Z · P11-03 · DONE · STRIKES: 0
+Action:
+1. Located the first TODO task (top-to-bottom scan of P11): P11-03 — Optimizer
+   calibration audit (READ-ONLY). Set STATUS to DOING at 2026-08-23T00:00:00Z.
+2. Read in full: apps/web/lib/fantasy/dfs-optimizer.ts (exact DP solver, 446 lines),
+   apps/web/components/fantasy/dfs-optimizer.tsx (DFS UI, 210 lines),
+   apps/web/components/fantasy/optimizer-workspace.tsx (workspace shell, 81 lines),
+   apps/web/lib/fantasy/dfs-optimizer.test.ts (22 tests, 310 lines).
+3. Read supporting modules: dfs-slate.ts (slate + roster rules),
+   integrations/dfs.ts (activeDfsSlate provider seam), integrations/providers.ts
+   (DFS_PROVIDER env gate), integrations/projections.ts (founder-gate pattern),
+   lib/fantasy/lineup.ts (the season-long start/sit optimizer used by
+   lineup-optimizer.tsx), lib/fantasy/competitive-baseline.ts (baseline status),
+   integrations/dfs.test.ts (live-gating verified),
+   __tests__/fantasy-competitive-baseline.test.ts.
+4. Investigated the claude/dfs-optimizer-edge branch: it exists as a checked-out
+   worktree at C:/Users/Garrett/Sports-dfs-optimizer-edge (git top-level confirmed
+   to that path -- safely isolated). git log shows it contains an OLDER heuristic
+   optimizer (random multi-start hill-climb) that was then replaced by an even more
+   advanced EXACT solver (dfs-exact.ts with k-best, diversePool, lateSwap,
+   minStack, FLEX symmetry breaking) in commit 8874f174, NEVER merged to the current
+   branch. The current branch's dfs-optimizer.ts is its OWN exact DP rewrite
+   (commit c179a781), provably optimal, deterministic (no Math.random -- asserted by
+   a static test). Confirmed via git diff: the two branches' dfs-optimizer.ts
+   differ fundamentally (edge version has buildRandom/hillClimb/enforceStack +
+   Math.random; current has solveExact/stackBounds/buildSlotSpace + 0 Math.random).
+   Confirmed via git ls-tree that dfs-exact.ts, dfs-exact.test.ts,
+   dfs-correlation.ts, dfs-optimizer-edge.ts do NOT exist in current HEAD.
+5. Ran the solver test suite: "CI=1 npx vitest run --root apps/web
+   lib/fantasy/dfs-optimizer.test.ts" -- all 22 tests pass in 7.21s (the brute-force
+   oracle, determinism assertion, 600-player scale, stack-pruning-correctness,
+   FLEX cross-position, exposure math). NOTE: a bare "npx vitest run
+   apps/web/lib/fantasy/dfs-optimizer.test.ts" from repo root picks up the ABANDONED
+   .claude/worktrees/phase3/ copy (at an old commit where dfs-optimizer.ts imports
+   @/lib/integrations/dfs differently) and fails to resolve -- this is a
+   stale-worktree artifact, NOT a current-branch test failure. The phase3 worktree is
+   not part of the current branch tracked source.
+6. Wrote handoff/OPTIMIZER_CALIBRATION_AUDIT.md (4 items with PASS/FAIL/verdict,
+   every citation backed by file:line or a git command run). Findings:
+   - Item 1 (data inputs): FAIRLY CLEAR -- illustrative-by-default, live gated via
+     DFS_PROVIDER, user DK CSV import available. No silent fabrication risk.
+   - Item 2 (test quality): STRONG on solver (brute-force oracle, real constraints,
+     determinism); NO tests on the 3 UI components (dfs-optimizer.tsx,
+     optimizer-workspace.tsx, lineup-optimizer.tsx).
+   - Item 3 (edge branch): CONFIRMED -- advanced exact solver on unmerged
+     claude/dfs-optimizer-edge branch; current branch has its own exact DP, not
+     older code; merge is owner-gated.
+   - Item 4 (silent degradation): ONE real path -- generateLineups early-exit on
+     exhaustion returns partial results without notice (UI only explains the all-empty
+     case at dfs-optimizer.tsx:156); optimizeOne returning null is acceptable.
+Commands: git diff (branch comparison), git ls-tree -r HEAD (absence check),
+  CI=1 npx vitest run --root apps/web lib/fantasy/dfs-optimizer.test.ts,
+  grep -c Math.random/hillClimb/solveExact across both branches.
+Result: VERIFY passed (every claim has file:line or command output). Task is
+  READ-ONLY -- no code changed, no fix applied (findings recorded as required).
+Next: P11-04
