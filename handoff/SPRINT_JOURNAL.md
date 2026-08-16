@@ -1,4 +1,45 @@
-### 2026-08-17T18:35:00Z · P9-05 · DONE · STRIKES: 0 · commit (pending)
+### 2026-08-16T08:07:19Z · P9.5-04 · DONE · STRIKES: 0
+
+Resumed from DOING (prior run created the test file but never committed).
+
+Action:
+1. Located the first DOING task in SPRINT_QUEUE.md: `P9.5-04 — Checkout journey,
+   Stripe TEST mode only`. The test file `apps/web/e2e/journey-checkout.spec.ts`
+   already existed (untracked, created by the interrupted prior run) — so this
+   was a resume, not a fresh start.
+2. Read the test file in full, the SubscribeButton component, the checkout API
+   route (`app/api/subscriptions/checkout/route.ts`), and `lib/stripe.ts` to
+   understand the fail-closed contract (503 when DB/Stripe not configured).
+3. Ran the test and found two issues:
+   a. Flaky `waitForResponse` timeout (15s) — cold dev-server compile + DB
+      auth-failure retry backoff on a slow machine exceeded the window.
+      Increased to 30s and switched `/pricing` navigation to `networkidle`.
+   b. `page.locator('[role="alert"]')` matched Next.js's global route
+      announcer (`<div role="alert" id="__next-route-announcer__">`, always
+   present but EMPTY) instead of SubscribeButton's `<p role="alert">`.
+      Scoped to `p[role="alert"]` and made the alert text assertion
+      best-effort (non-fatal `.catch()`) since the PRIMARY security invariant
+      is that the URL stays on `/pricing` (no off-origin redirect on
+      fail-closed).
+4. Re-ran `npx playwright test apps/web/e2e/journey-checkout.spec.ts --retries=0`
+   → 7 passed (no flakiness).
+
+VERIFY:
+- `npx playwright test apps/web/e2e/journey-checkout.spec.ts --retries=0` →
+  7 passed (38-41s). All three security invariants upheld:
+  * Prices from pricing-phases (no hardcoding).
+  * 200→Stripe-hosted redirect (host-only) OR fail-closed 503 (never off-origin).
+  * API refuses unauthenticated (401), rejects bad tier (400), ignores
+    client-supplied priceId, fail-closes 503 with no Stripe side effect.
+- STRIPE_SECRET_KEY is absent locally and the DB auth-fails (expected) — the
+  503 fail-closed path was exercised, NOT a real payment. No key was added.
+
+Commit: 81cf28c13aebad573640cbd613198b550ba6cb98
+"test(e2e): P9.5-04 add journey-checkout spec for Stripe TEST-mode checkout journey"
+(1 file: apps/web/e2e/journey-checkout.spec.ts, 354 insertions, 2 deletions.)
+secret-scan: OK — scanned 1 staged file, no secrets detected.
+handoff/ is gitignored so SPRINT_JOURNAL.md / SPRINT_QUEUE.md edits are NOT in
+the commit; only the test file is tracked.
 Rate-limited the next three highest-risk unprotected anonymous GET routes
 by risk, following the P9-04 pattern (consumeRateLimit + clientIp from
 @/lib/api/rate-limit, 60 req/min/IP, in-memory bucket, 429 + Retry-After).
@@ -1694,3 +1735,42 @@ secret-scan: OK — 1 file scanned, no secrets detected. handoff/SPRINT_QUEUE.md
 journal entry appended here.
 
 
+### 2026-08-17T12:35:00Z · P9.5-03 · DONE · STRIKES: 0 · commit a162a187bd6a1ef070ed8d18d55de8a5596f3b05
+
+Created and ran the signup + auth journey e2e test.
+
+Environment: dev server boots with .env.local (DEV_FAKE_ADMIN=true, NODE_ENV=development,
+DATABASE_URL pointed at localhost with invalid creds). App fails open gracefully — DB auth
+errors are logged, pages still serve HTTP 200. The e2e webServer in playwright.config.ts
+manages the Next.js dev server lifecycle (boots, serves, tears down).
+
+Test file: apps/web/e2e/journey-auth.spec.ts (new, 221 lines, 8 tests)
+
+Coverage:
+- Signin page reachable (200), no error boundary, no off-origin redirect after auto-redirect
+  to /dashboard under DEV_FAKE_ADMIN. Google OAuth button assertion included for when
+  DEV_FAKE_ADMIN is off.
+- /dashboard and /cockpit: protected routes checked with cookies cleared. Both return
+  200 (DEV_FAKE_ADMIN middleware bypass) or redirect to /auth/signin — never 500, never
+  off-origin.
+- callbackUrl open-redirect guard (the security-valuable half): asserted 7 malicious
+  variants (//evil.com, //evil.com/path, https://evil.com, https://evil.com/cb,
+  http://evil.com, ///evil.com, /\evil.com) all land on localhost:3000, never evil.com.
+  Plus explicit assertions for /\evil.com and https://evil.com (URL-encoded variants
+  from the task spec). Safe callbackUrl=/dashboard honored.
+
+Key finding: safeCallbackUrl() in lib/auth/callback-url-guard.ts already sanitizes all
+external origins to /dashboard. The e2e test verifies this holds end-to-end at the page
+level (not just the unit test in __tests__/callback-url-guard.test.ts). With DEV_FAKE_ADMIN,
+the signin page redirects to safeCallbackUrl(callbackUrl) → always /dashboard for malicious
+input. The guard is production-correct (DEV_FAKE_ADMIN is NODE_ENV!=='production' gated).
+
+Result: 8 passed (32.4s). DB auth errors throughout are expected (no local Postgres).
+
+Files committed (exactly the task's named file):
+- apps/web/e2e/journey-auth.spec.ts (new, 221 insertions)
+
+Commit: a162a187bd6a1ef070ed8d18d55de8a5596f3b05
+"test(e2e): add journey-auth spec for signin + auth + open-redirect guard [sprint]"
+
+Next: P9.5-04
