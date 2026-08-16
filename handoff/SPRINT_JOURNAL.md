@@ -2120,3 +2120,47 @@ Commit:   f4ea1495 — docs(P11-01): add ADP accuracy + freshness audit [sprint]
           (staged handoff/ADP_ACCURACY_AUDIT.md + SPRINT_QUEUE.md + SPRINT_JOURNAL.md;
           used `git add -f` to override handoff/ gitignore rule at .gitignore:202)
 Next:     P11-02
+
+---
+
+### 2026-08-16T20:55:00Z · P11-02 · DONE · STRIKES: 0 · commit ba59949
+
+Rankings pipeline accuracy audit (READ-ONLY).
+
+Action:
+1. Set P11-02 STATUS to DOING in SPRINT_QUEUE.md.
+2. Read audit targets:
+   - apps/web/lib/ranking/sort-key.ts (only file in ranking/ — 57 lines)
+   - apps/web/lib/calibration/holdout-ranking-report.ts (141 lines)
+   - apps/web/lib/calibration/ranking-power-control.ts (661 lines)
+   - apps/web/lib/data-sources/free-adapters/espn-rankings.ts (105 lines)
+3. Followed the full data flow to understand what "rankings pipeline" means:
+   - packages/prediction-engine/src/ranking-prob.ts — deriveRankingProbability()
+   - apps/web/lib/calibration/proven-path-rows.ts — extractProvenPathProbs()
+   - packages/ingestion-pipeline/src/build-independent-fair-values.ts
+   - apps/web/lib/data-sources/free-stats.ts (FreeStats facade, 6h TTL cache)
+   - apps/web/lib/data-sources/cfb-free.ts (getCfbSnapshot, apTop25)
+   - apps/web/lib/ops/proven-path-seed.ts (loadProvenPathSurface)
+   - apps/web/lib/ops/ranking-pause-durable.ts
+   - apps/web/lib/calibration/ranking-pause-apply.ts + tests
+   - apps/web/app/api/cron/calibration-metrics/route.ts
+   - apps/web/lib/ops/cron-schedule-manifest.ts
+   - packages/data-ingestion/src/espn-powerindex-client.ts
+4. Wrote handoff/RANKINGS_ACCURACY_AUDIT.md (307 lines) with:
+   - Q1: No fabrication. rankingP = real computation (confidence + independent
+     trueProb). Edge score never used as p. Score kinds are win-probs only.
+   - Q2: Real sources confirmed — ESPN FPI (sports.core.api.espn.com), MLB
+     Stats API, ClubElo, Kalshi, nflverse, Elo, Poisson. ESPN poll rankings
+     (site.api.espn.com) is a separate fact-parser for AP/Coaches polls, NOT
+     used for independent trueProb. Polymarket Gamma is OFF (compliance hold).
+   - Q3: FPI has 6h in-process cache, refreshed lazily by backfill-indep cron
+     (every 4h). ESPN poll rankings have 6h TTL but NO live consumer (only
+     called in tests). No rankings-specific cron exists.
+   - Q4: Pause is founder-gated (3 sources: env SELECTIVE_PAUSE_GROUPS >
+     RANKING_PAUSE_APPLY env > durable snap). Silent-fail found: catch block
+     in proven-path-seed.ts:83-90 sets rankingPower=null with no alert/log.
+5. VERIFY: 16 explicit PASS/FAIL verdicts in the table, every claim backed by
+   file:line. Audit file: 307 lines, 22 PASS + 6 FAIL.
+
+Result: DONE. Commit ba59949adaad052ad647cb94cf7f9e2b61c3c722.
+secret-scan: OK - 2 files staged, no secrets detected.
