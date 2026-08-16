@@ -1264,7 +1264,7 @@ and returns 200 with the expected `<title>`.
 `handoff/E2E_BLOCKED.md` with the exact error output and what you tried, and **move immediately to
 P9.5-05**. Do NOT thrash; the launch-critical audit does not depend on this harness.
 
-### P9.5-02 — Anonymous visitor journey · STATUS: DOING · STRIKES: 0
+### P9.5-02 — Anonymous visitor journey · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T02:15:00Z (commit 4b4eac31)
 Depends on P9.5-01. If that is BLOCKED, skip to P9.5-05.
 File: new `apps/web/e2e/journey-anonymous.spec.ts`.
 Walk what a first-time logged-out visitor sees: homepage, `/board`, `/picks`, one `/preview/...`

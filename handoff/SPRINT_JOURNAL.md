@@ -1571,3 +1571,126 @@ Commit: 22be5369
 Next: STOP — P9-06 was the final task of PHASE 9. Remaining TODO
 (P9.5-00..12, P10-01..05, P11-01..04) are the owner's to schedule.
 SPRINT_FINAL.md written per §FINISH.
+
+---
+
+### 2026-08-16T16:12:00Z · P9.5-00 · DONE · STRIKES: 0 · commit b98641ec
+Price out The Odds API's paid tiers against real usage (READ-ONLY, no purchase).
+
+Action:
+1. Confirmed cwd = C:/Users/Garrett/Sports (corrected from HOME dir C:/Users/Garrett on entry).
+2. Scanned SPRINT_QUEUE.md top-to-bottom: Phases 0-9 and P9.5-01 DONE; P9.5-00 is the
+   first TODO. Set STATUS TODO→DOING.
+3. Read the task's named references and their established context:
+   - the free tier = 500 credits/month (task context + commit cd4e77d6).
+   - refresh-odds cron: `*/15 * * * *` (vercel.json lines 12-15); 3 markets
+     (h2h/spreads/totals) × regions=us (1 region) = 3 credits/call
+     (config.ts lines 92, 193; the-odds-api.com API docs v4: "Each specified market
+     costs 1 against the usage quota, for each region").
+   - settle-picks cron: `20 * * * *` hourly (vercel.json lines 20-22); runs over ALL 7
+     SUPPORTED_SPORTS, NOT season-gated (settle-picks/route.ts lines 101-111); each
+     sport calls client.getScores = 1 credit (settle-sport.ts line 178). = 168 credits/day.
+   - In-season gating via getInSeasonSports() → SUPPORTED_SPORTS (7 sports, config.ts).
+   - cd4e77d6 committed the proactive 10-credit safety-margin guard on refresh-odds;
+     this task is the BUSINESS follow-up, not another safety patch.
+4. Fetched live published pricing (read-only):
+   - theoddsapi.com/pricing (fetched 2026-08-16; page "Last updated 2026-07-03"):
+     Free $0 (25 req/day ~750/mo, account cited as 500 credits/mo), Pro $29/mo
+     (20,000/mo), Business $99/mo (200,000/mo). No overage billing (hard 429); same
+     API key upgrades in place with zero code changes; 304/ETag = 0 credits.
+   - FAQ confirms credit model (x-requests-remaining header; 304s cost 0; 1 credit/market/region).
+   - odds-api.io (the deferred #5 failover source, odds-failover.ts): Free 100 req/hour
+     (500/day), separate vendor/quota; paid Solo $65 → Pro $299/mo.
+5. Computed the cadence-vs-price tradeoff for each tier (verified via a python scratch
+   calculation — all headline figures reproduce exactly):
+   - refresh-odds @15min, 3 in-season sports = 864 credits/day; combined with settle-
+     picks (168/day) = 1,032/day = 30,960/mo → exceeds Free (500/mo, burns out in
+     ~13.9h) and exceeds Pro (20,000/mo, ~19.4 days sustainable) for a full month.
+   - NFL-peak (7 in-season sports) @15min = 2,016/day + 168 settle = 2,184/day =
+     65,520/mo → exceeds Pro by 3.3x (Pro lasts ~9.9 days at peak).
+   - Business (200,000/mo) sustains NFL-peak @15min with ~47% headroom
+     (93,360/mo burn vs 200k).
+   - Coarsening cadence: Pro stays green for a full month at 30-min (3 in-season) or
+     60-min (7 in-season, excluding settle-picks); 60-min + paid-key settle-picks tips
+     to 20,160/mo (just over Pro's 20k).
+6. Wrote handoff/ODDS_API_TIER_DECISION.md: full tiered table (tier/price/credits/cadence)
+   plus the single recommendation (Business is the cheapest tier that sustains the
+   current 15-min cadence without touching markets, given the owner's decision to keep
+   all 3 markets). Every number cited to a URL or a real calculation shown.
+   Fixed one arithmetic assertion post-write (60-min+settle is just OVER Pro, not
+   "essentially breakeven") after the python sanity check.
+
+VERIFY (per the task): every number in ODDS_API_TIER_DECISION.md is cited to a URL
+or a real calculation (§7 of the file). No purchase, signup, or payment action of any
+kind was performed. The python reconciliation confirmed: 864/day, 168/day, 1,032/day,
+500/864≈13.89h (matches cd4e77d6's "<14 hours"), Pro 20,000/1,032≈19.4 days,
+Pro 20,000/2,016≈9.92 days — all reproduce exactly.
+
+Files written/commited (force-add per the handoff/ gitignore convention, line 202;
+handoff/ is gitignored so new files need git add -f, matching prior commits like
+22be5369 and a56fe1dc):
+- handoff/ODDS_API_TIER_DECISION.md (new, force-added)
+- handoff/SPRINT_QUEUE.md (STATUS DOING→DONE)
+
+Commit: b98641ec
+"p9.5-00: price out The Odds API paid tiers (Business recommended at current 15-min cadence)"
+(2 files: ODDS_API_TIER_DECISION.md + queue STATUS bump. secret-scan: OK — 2 files scanned,
+no secrets detected. THE_ODDS_API_KEY / ODDS_API_IO_KEY never opened, printed, or committed.
+No sealed/frozen/DORMANT trees were touched.)
+
+---
+
+### 2026-08-16T02:09:00Z · P9.5-02 · DONE · STRIKES: 0 · commit 4b4eac31
+
+Resumed from DOING. P9.5-01 (e2e harness) was DONE and its smoke test passes
+(homepage returns 200 with valid title).
+
+File: apps/web/e2e/journey-anonymous.spec.ts (new).
+
+Walked the anonymous visitor journey across homepage (/), /board, /picks,
+/preview/nfl, and two API seams (/api/board/state, /api/picks). Assertions:
+each page returns 200 (or graceful 404 for preview without DB data), no Next.js
+error boundary in the initial HTML, no premium class markers/confidence numbers
+leaked, and a paywall/upgrade affordance is present.
+
+Two assertion bugs found and fixed before the test could pass:
+
+1. PREMIUM_CLASS_MARKERS substring match: the homepage HTML contains
+   `data-claim-id="methodology.factor-breakdown"` — a legitimate CSS class
+   identifier for a methodology article, NOT a premium data leak. The original
+   `expectNoPremiumClasses` used `.toContain(cls)` which matched this false
+   positive. Fixed by replacing with a regex that matches the marker only as a
+   whitespace-delimited token within a `class="..."` attribute, so
+   `data-claim-id` values and RSC payload JSON do not trigger false positives.
+
+2. Board API assertion `body.meta?.tier === "FREE"`: the board-state route
+   (/api/board/state) returns `{ success: true, data: {...}, meta: {...} }`
+   and its meta object does NOT include a `tier` field (unlike /api/picks which
+   does include `meta.tier`). The test's assumption was wrong. Fixed to check
+   the actual security contract per redactBoardConfidence in state.ts: every
+   pick row in data.scoringNow, data.publishedToday, and data.gatedTodayRows
+   must have `confidence` falsy (nulled) and `market === "ALL_MARKETS"` for
+   anonymous viewers, plus `rankingP` falsy (GSE-SEC-026 premium-internal guard).
+
+VERIFY:
+- `npx playwright test journey-anonymous.spec.ts` → 6 passed (29.0s).
+  - homepage: 200, no error boundary, no premium class leak, pricing affordance present.
+  - board: 200, no error boundary, no premium class leak, pricing affordance present.
+  - picks: 200, no error boundary, no premium class leak, pricing affordance present.
+  - preview/nfl: 404 (graceful fail-safe — no DB, no error boundary). Journaled, not failed.
+  - board API (/api/board/state): 200 on this env; all rows have confidence=null,
+    market="ALL_MARKETS", rankingP=null.
+  - picks API (/api/picks): 503 (bootstrap gate — PUBLIC_PICKS_ENABLED off without DB).
+    Falls into the [429, 503] acceptable branch.
+- App fails open gracefully without a DB (Prisma auth errors logged, 200 served).
+
+Files committed (exactly the task's named file):
+- apps/web/e2e/journey-anonymous.spec.ts (new, 265 insertions)
+
+Commit: 4b4eac31c2ae61f9aba4efe10ff5b5bf7d1d54ef
+"test(e2e): fix P9.5-02 anonymous visitor journey assertions"
+secret-scan: OK — 1 file scanned, no secrets detected. handoff/SPRINT_QUEUE.md
+(STATUS DOING→DONE) committed separately by prior task convention; this task's
+journal entry appended here.
+
+
