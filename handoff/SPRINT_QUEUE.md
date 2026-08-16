@@ -1491,7 +1491,7 @@ Read `apps/web/lib/fantasy/dfs-optimizer.ts`, `apps/web/components/fantasy/lineu
 **VERIFY:** explicit PASS/FAIL/UNKNOWN per item. Item 3's finding, if confirmed, goes at the TOP
 of the output file, not the bottom.
 
-### P11-04 — Fantasy data accuracy: consolidated findings + fixes · STATUS: DOING · STRIKES: 0
+### P11-04 — Fantasy data accuracy: consolidated findings + fixes · STATUS: DONE · STRIKES: 0 · completed: 2026-08-25T06:25:00Z (commit 5970f49e)
 Depends on P11-01/02/03. Read all three audit files. **FIRST, before anything else in this task:**
 state plainly the SIZE of the gap between what exists today (external ADP passthrough, standalone
 optimizer math, no proprietary layer) and what a real fantasy-primary proprietary score would need

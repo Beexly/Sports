@@ -2221,3 +2221,42 @@ Commands: git diff (branch comparison), git ls-tree -r HEAD (absence check),
 Result: VERIFY passed (every claim has file:line or command output). Task is
   READ-ONLY -- no code changed, no fix applied (findings recorded as required).
 Next: P11-04
+
+### 2026-08-25T06:25:00Z · P11-04 · DONE · STRIKES: 0 · commit 5970f49e
+
+**Task:** Fantasy data accuracy: consolidated findings + fixes. Read
+ADP_ACCURACY_AUDIT.md, RANKINGS_ACCURACY_AUDIT.md, OPTIMIZER_CALIBRATION_AUDIT.md;
+state the gap to a real fantasy-primary proprietary score; fix SAFE DIRECT items;
+write FANTASY_DATA_LAUNCH_BLOCKERS.md for NEEDS-OWNER items.
+
+**Gap sizing (5 layers):**
+1. Fact ingestion — COMPLETE (espn-public-api, open-meteo, ffc-adp, sleeper,
+   nflverse, etc., all clearance-gated)
+2. ADP cross-validation — GAP: single source (ffc-adp only, no second provider)
+3. Rankings persistence — GAP: adapter exists (espn-rankings.ts) but has zero
+   live consumers (getCfbSnapshot/apTop25 only called from tests)
+4. Proprietary projection model — LARGE GAP: all proj/ceiling/own values are
+   manually authored constants in dfs-slate.ts; no model training pipeline
+5. Calibration feedback loop — LARGE GAP: confidence not recalibrated from
+   settled pick results
+
+**SAFE DIRECT fixes applied (committed in 5970f49e):**
+- dfs-optimizer.ts: generateLineups returns {requested, partial}; dfs-optimizer.tsx
+  surfaces UI notice when partial=true; test added for the partial path
+- multi-source-scores.ts: checkClearance gates added on ESPN fact-extract paths
+  (GSE-SEC-078) in fetchEspnForDates and final fallback
+- free-first-ingest.ts: checkClearance gate added on Open-Meteo weather fetch
+  (GSE-SEC-076)
+
+**NEEDS-OWNER items (documented in handoff/FANTASY_DATA_LAUNCH_BLOCKERS.md):**
+- N-1: Second ADP provider needed for cross-validation ($0–$250/mo)
+- N-2: ADP freshness cron requires vercel.json schedule config
+- N-3: Wire ESPN rankings adapter into live pipeline (product decision)
+- N-4: Build model-owned projection pipeline (2–3 sprints, ML engineer)
+- N-5: Pick-confidence calibration feedback loop from settled results
+
+**Verify:** 54 tests pass across dfs-optimizer (23), free-first-ingest (4),
+free-score-persist (8), world-class-readiness (4), dfs-salaries (5),
+jarvis-weak-spots (10). npm run lint passes clean. No new typecheck errors.
+
+**Result:** DONE — committed, all tests green, all fixes verified.
