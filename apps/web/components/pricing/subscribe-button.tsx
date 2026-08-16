@@ -62,7 +62,7 @@ const GHOST_CLASSES =
  * durable CheckoutAttempt and 409s on any mismatch, so a non-UUID fallback is
  * safe. It only needs to be collision-resistant within one visit.
  */
-function newIntentId(): string {
+export function newIntentId(): string {
   const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
   if (c?.randomUUID) return c.randomUUID();
   return `ci_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 12)}`;
