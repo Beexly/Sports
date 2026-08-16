@@ -2024,6 +2024,30 @@ this sprint. Write findings (including "confirmed dormant, no action taken") to
 `handoff/PHASE15_SURFACE_SWEEP.md`, appending one section per task, never overwriting a prior task's
 section.
 
+### P15-0A — DAILY TRUTH: the permanent feedback loop from reality · STATUS: TODO · STRIKES: 0
+**Why (owner doctrine, 2026-08-16, Fable).** Every audit this sprint has been pre-launch
+introspection. World-class systems are not made reliable by more review — they are made reliable by
+telemetry and a DAILY confrontation with what actually happened. This product's entire premise is
+prediction quality, and nothing currently forces it to look at its own results every day. This task
+builds the instrument; it runs forever after launch.
+Fix: create `apps/web/app/api/ops/daily-truth/route.ts` (GET, protected by the SAME auth pattern as
+the existing gated ops routes — read `apps/web/app/api/ops/public-surface-truth/route.ts` first and
+reuse its `hasOpsAuth` gating for the detailed body). It assembles ONE JSON report for the last 24h
+from tables/loaders that ALREADY exist (read the real schema/loaders first, do not invent fields):
+picks published; picks settled + win rate over settled; CLV summary where measurable (reuse
+`loadClvCoverage`); calibration drift if the calibration-metrics cron has rows; scheduler liveness +
+settlement health (reuse the public-surface-truth internals, do not duplicate queries — extract or
+import); and yesterday-vs-today deltas where prior rows exist. Every number carries its denominator
+and an honest `null` + reason when unmeasurable — NEVER a fabricated or zero-filled value (same
+doctrine as P14-01). Then register it in `vercel.json` crons? NO — vercel.json edits are ALLOWED
+(it is not on the protected list) but keep it out of the cron schedule for now: add the route only;
+the owner wires the cron when prod is back (prepare-not-flip). Add a test file asserting: honest
+nulls when tables are empty, correct denominators with fixture data, and auth gating on the
+detailed body.
+Files (only these): `apps/web/app/api/ops/daily-truth/route.ts`, its test file.
+**VERIFY:** new tests pass; typecheck + lint clean; journal the exact loader/table names you reused
+so the claim "no invented fields" is checkable. Commit.
+
 ### P15-00 — Build the COVERAGE LEDGER: make "everything reviewed" a checkable fact, not a feeling · STATUS: TODO · STRIKES: 0
 **Why this exists (owner doctrine, 2026-08-16).** The owner has instructed repeatedly that EVERY part
 of this codebase must be reviewed/tested/audited — yet successive passes kept "discovering" areas
