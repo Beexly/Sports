@@ -99,20 +99,21 @@ A finding is BLOCKING only if it traces to a real task result. Perfectionism tha
 
 ---
 
-### 1.6 [BLOCKING] next-auth/@auth/core vulnerable advisories in the auth stack (not patched)
+### ~~1.6 [BLOCKING] next-auth/@auth/core vulnerable advisories~~ — CORRECTED 2026-08-16, ALREADY FIXED, not blocking
 
-**Traces to:** `handoff/AUDIT_FINDINGS.md` (GSE-SEC-001, GSE-SEC-002), P9 audit (DEPLOY_READINESS notes the auth stack re-resolves roles from DB each request, never fail-opens to ADMIN — the logic is sound, but the dependency is vulnerable).
-**Evidence:**
-- `apps/web/package.json` — next-auth `^5.0.0-beta.*`.
-- npm audit metadata (in `handoff/npm-audit.json`):
-  - GHSA-7rqj-j65f-68wh: @auth/core <0.41.3 — Email normalizer validates the address BEFORE Unicode normalization, allowing a homoglyph `@` bypass (CWE-180/CWE-285).
-  - GHSA-8fpg-xm3f-6cx3: next-auth 5.0.0-beta.* — configuration errors can populate the auth object with an error, making existence-based auth checks fail-open.
-  - GHSA-xmf8-cvqr-rfgj: @auth/core <0.41.3 — getToken() throws uncaught on malformed Bearer headers (DoS).
-- The auth *logic* is strong (roles re-resolved from DB every request; fail-closed; no ADMIN escalation). The risk is the **dependency**, not the logic.
+**This item was WRONG when written and is removed from BLOCKING.** It relied on `handoff/npm-audit.json`,
+a snapshot committed 2026-08-12 (`c766ecb2`) — a full day *before* commit `34182a4b` (2026-08-13,
+"fix(security): patch critical auth CVEs") actually patched this exact dependency. Verified directly,
+just now: root `package-lock.json` shows `@auth/core: "0.41.3"` (the patched version this item itself
+says is the fix target), and a fresh `npm audit --omit=dev --json` run right now shows **zero** hits for
+GHSA-7rqj-j65f-68wh, GHSA-8fpg-xm3f-6cx3, or GHSA-xmf8-cvqr-rfgj — all three are resolved. The fresh
+audit does show 2 unrelated HIGH advisories (Next.js major-version bump, transitive postcss) — both
+already known and already classified owner-gated/change-proposal elsewhere (`REMEDIATION_ROADMAP.md`,
+GSE-SEC-059/060/003), out of scope for this doc.
 
-**Why BLOCKING (auth integrity):** A homoglyph `@` bypass on the email allow-list, or a fail-open auth object from a config error, can bypass authentication entirely. For a product taking money, a known unpatched auth-stack advisory is a launch blocker.
-
-**Specific fix:** Upgrade next-auth + @auth/prisma-adapter + @auth/core to the patched line (≥0.41.3 / GA line). Requires a `package.json` change (change proposal gated) + full regression. Effort: M.
+**Lesson:** a read-only audit task read a stale artifact instead of re-running the check live. Applies
+directly to Phase 10's "confidently wrong claim" hunt doctrine — this is exactly that bug class, caught
+before it reached the owner as a false blocker.
 
 ---
 
@@ -271,7 +272,7 @@ These are short, specific, and explicitly owner-gated. No agent should perform t
 
 ## 5. VERIFY
 
-- **BLOCKING** (6 items): each traces to a real Phase 9.5 artifact or a direct commit (`9cfb91b1`, `cd4e77d6`, `2db4b9a3`) — not an assumption. P9.5-07 (legal, 27 findings), P9.5-08 (claims, 12 claims), P9.5-09 (observability), P9.5-10 (runbook), P9.5-11 (scale), DEPLOY_READINESS.md (DB migration + env contract), P9.5-06 (refund gap), P9.5-05 (entitlement tests).
+- **BLOCKING** (5 items — a 6th, next-auth/@auth/core, was corrected out 2026-08-16 as already-fixed; see 1.6): each traces to a real Phase 9.5 artifact or a direct commit (`9cfb91b1`, `cd4e77d6`, `2db4b9a3`) — not an assumption. P9.5-07 (legal, 27 findings), P9.5-08 (claims, 12 claims), P9.5-09 (observability), P9.5-10 (runbook), P9.5-11 (scale), DEPLOY_READINESS.md (DB migration + env contract), P9.5-06 (refund gap), P9.5-05 (entitlement tests).
 - **RISK ACCEPTED** (7 items): each is a gap the owner can knowingly accept at launch.
 - **POST-LAUNCH** (7 items): each is genuine post-launch work.
 - **ONLY THE OWNER CAN DO THESE** (13 items): all owner-gated by nature (legal sign-off, production keys, migration approval, real purchase, merge/deploy, canonical host).
