@@ -126,5 +126,17 @@ Here is the chain of evidence:
 
 1. **Add `SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` to `apps/web/.env.example`** with a comment explaining the no-op behavior when absent.
 2. **Add `HEALTH_ALERT_WEBHOOK_URL` to `apps/web/.env.example`** with a comment that setting it is required for the `health-alert` cron to deliver.
-3. **Verify `board-fill` route calls `captureError`** on failure (it was not checked — if it doesn't, Sentry won't see its failures).
+3. ~~Verify `board-fill` route calls `captureError` on failure~~ — **RESOLVED 2026-08-16 (Opus).** Checked: it did not. Fixed directly (mechanical, matches the existing `free-spine-health`/`calibration-metrics` pattern exactly): `board-fill/route.ts` now imports `captureError` from `@/lib/observability/sentry` and calls it in its catch block. Typecheck + lint clean.
 4. **Consider adding the `obs-tracing` and `obs-alerts` items in `integrity-ledger.ts`** (lines 340-361) to the "wired" state — currently both are `wiredStatus: "NO"`, confirming this report's findings.
+
+## 6. UNKNOWN resolved (2026-08-16, Opus, boolean-only Vercel env check — no values ever displayed or logged)
+
+- **`SENTRY_DSN` and `NEXT_PUBLIC_SENTRY_DSN` ARE set in Vercel production.** Sentry error tracking
+  is genuinely live, not a no-op — this changes §3's "3 AM board stop" answer materially: with the
+  board-fill fix above, a board-fill crash NOW reaches Sentry. Before the fix, it never would have,
+  even with the DSN configured, because the code path never called `captureError` at all.
+- **`HEALTH_ALERT_WEBHOOK_URL` is confirmed ABSENT in Vercel production.** The `health-alert` cron's
+  degraded-health detection is real, but its only delivery channel is silently dropped. Lower
+  severity now that Sentry covers the crash-visibility gap directly, but still a real gap if the
+  owner wants a push-style alert (Slack/email) rather than relying on someone checking Sentry or the
+  cockpit.
