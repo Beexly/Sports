@@ -1579,7 +1579,7 @@ sink later is config, not code.
 **SCOPE LIMIT:** if wiring one event would substantially restructure a component's data flow, skip that
 one, journal why, wire the rest.
 
-### P12-04 — Mobile and Safari have never been tested · STATUS: TODO · STRIKES: 0
+### P12-04 — Mobile and Safari have never been tested · STATUS: DOING · STRIKES: 0
 Evidence: `playwright.config.ts` declares exactly one project: `{ name: "desktop", ...devices["Desktop
 Chrome"], viewport: 1280x900 }`. Grepping this queue and `handoff/LAUNCH_BLOCKERS.md` for
 `mobile|safari|webkit|ios|responsive` returns zero real hits. Sports traffic is overwhelmingly mobile;
@@ -1648,6 +1648,130 @@ test proving the change is intentional and bounded.
 tests to prove no regression. typecheck + lint. Commit.
 **IF THE DATA IS EMPTY:** if `SnapCount` has no local rows, write the wiring + tests against fixtures and
 journal that live verification needs the cron to have run. Do NOT fabricate data.
+
+---
+
+# PHASE 13 — SECURITY HARDENING (from the 2026-08-16 adversarial assessment)
+
+**Source.** A six-lens adversarial security assessment (public attack surface / secrets posture /
+supply chain / browser-HTTP / autonomous-agent security / auth-entitlement). Findings were verified
+against real code, and several *corrected* earlier claims — notably the "105 unprotected routes"
+figure was a grep artifact (real: 60 anonymous-reachable, 40 unthrottled, ~34 of those harmless).
+
+**Already fixed directly, do NOT redo:** npm supply-chain controls (`.npmrc` strict-allow-scripts +
+`min-release-age`, `allowScripts` in package.json), the anonymous `?tier=ELITE` metric-definition
+leak, and the full-tree pre-push secret scan.
+
+**Boundaries for every task here:** never push, never merge, never deploy, never touch `.env*`,
+never modify `.npmrc`/`allowScripts`/`.githooks/` (those ARE the controls), never edit `.github/`,
+`packages/db/prisma/`, or `apps/web/lib/ai-control-plane/`. Commit locally. One task per session.
+
+### P13-01 — 10 Server Actions in the Jarvis memory module have zero authorization · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/lib/jarvis/memory/actions.ts` has `"use server"` at line 19 and exports
+`createMemoryCandidate`, `confirmMemory`, `rejectMemory`, `expireMemory`, `supersedeMemory`,
+`linkMemoryToDecision`, `linkMemoryToAgentRun` (+3 readers) with **no** `requireAdminActor()`,
+`auth()`, or role check anywhere. Its sibling `apps/web/lib/jarvis/ledgers.ts` guards every export
+(`:49, :57, :75, :81, :87`). The doctrine is written in its own consuming page,
+`apps/web/app/cockpit/memory/page.tsx:24-28`: *"a Server Action is its own POST endpoint (callable
+by action id) and is NOT covered by that guard. Every mutating action must re-check the
+session+role itself."* This module violates the rule its own caller documents. Impact if reachable:
+unauthenticated DB writes into the memory store that `apps/web/lib/cockpit/ask-jarvis.ts:35` reads
+back via `recallRelevantMemory` — i.e. a context-poisoning primitive against the agent, not just a
+data write.
+Fix: add `await requireAdminActor();` as the FIRST statement of the 7 mutators, importing from
+`@/lib/auth/actor` exactly as `ledgers.ts:25` does. **Leave the 3 read functions alone** —
+`recallRelevantMemory` is called server-side by ask-jarvis and guarding it will break Jarvis.
+**VERIFY:** test mocking `requireAdminActor` to throw, asserting each of the 7 mutators throws
+before touching `db`. Run existing `apps/web/__tests__/jarvis-memory-stages.test.ts`. typecheck +
+lint. Commit.
+**NOTE:** whether Next 14 registers these as publicly-callable action ids was NOT confirmed — treat
+exposure as unproven and the fix as cheap insurance either way. Say so in the journal; don't
+overclaim.
+
+### P13-02 — The repo's own bash guard lets any interpreter read .env · STATUS: TODO · STRIKES: 0
+Evidence: `scripts/guardrails/agent-bash-guard.mjs:58` — `DISPLAY_CMDS` is
+`(?:cat|less|more|head|tail|grep|rg|strings|xxd|od|base64|awk|sed|dotenv)\b`. `node`, `python`,
+`ruby`, `perl`, `deno`, `bun`, and `pwsh` are all absent, so
+`node -e "console.log(require('fs').readFileSync('.env','utf8'))"` is ALLOWED by the guard today
+(confirmed by running the guard binary — it returns ALLOWED).
+Fix: add those seven interpreters to `DISPLAY_CMDS`. Add three RULES entries: `git commit
+--no-verify`, `git config core.hooksPath`, and any write targeting `.githooks/`.
+**VERIFY:** extend the guard's existing test file so all ten strings are BLOCKED, **and** add a
+regression assertion that a commit message merely *describing* these commands is still ALLOWED. The
+DESIGN NOTE in that file correctly identifies over-triggering as how safety tools get switched off —
+do NOT broaden any rule to match prose. Commit.
+
+### P13-03 — Rate-limit and cache the public ops surface · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/app/api/ops/public-surface-truth/route.ts:47` is `force-dynamic`, `:674` sends
+`Cache-Control: no-store`, there is no `consumeRateLimit` anywhere in the file, it runs ~31 DB
+loaders per request, and `:324` calls `loadStripeWebhookHostsPosture()` →
+`apps/web/lib/ops/stripe-webhook-hosts.ts:119` `stripe.webhookEndpoints.list({limit:100})` **live on
+every anonymous GET**, unmemoized. Measured: 27.8KB / 1.59s per request vs 0.35s for cheap public
+routes. Two real costs: Neon pool exhaustion from one curl loop takes down the authenticated app,
+and Stripe read-quota pressure degrades `/api/subscriptions/checkout` — an anonymous attacker
+suppressing the revenue path without touching it.
+Fix: (a) add `consumeRateLimit` on the public (non-`hasOpsAuth`) branch, matching
+`apps/web/app/api/picks/[id]/explain/route.ts:86`; (b) move the Stripe call behind `hasOpsAuth`
+(preferred — no anonymous caller needs it) or wrap it in a module-level 10-min TTL cache.
+**VERIFY:** test asserting N+1 anonymous requests trigger exactly one Stripe call (or zero, if moved
+behind auth). typecheck + lint. Commit.
+**DO NOT** change which business fields are public — that is an owner decision, not a security one.
+
+### P13-04 — B2B API keys are written to Postgres in plaintext · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/lib/b2b/api-key-auth.ts:89-95` passes the raw secret as the rate-limit `key`;
+callers hand it the raw value (`apps/web/app/api/v1/signals/route.ts:26-27`,
+`probabilities/route.ts:22-23`); `apps/web/lib/community/durable-rate-limiter.ts:113` inserts it
+verbatim into `rate_limit_counters`. The interface it violates says so on its own line 56 ("Opaque
+key … HMAC fingerprint / internal id"), and both other call sites honor it.
+Fix: in `rateLimitB2b`, replace `key,` at `:91` with `key: fingerprintClientKey(key),` — the helper
+already exists and is exported at `apps/web/lib/api/public-form-rate-limit.ts:19`. One line;
+callers unchanged.
+**VERIFY:** test asserting the value passed to `limiter.consume` differs from the input and matches
+`/^[0-9a-f]{64}$/`. typecheck + lint. Commit.
+
+### P13-05 — CSP: make `unsafe-eval` dev-only and fix two silently-broken integrations · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/next.config.mjs:103` ships `'unsafe-eval'` in `script-src` in production. The
+recorded justification ("Stripe.js and Clarity require it", `handoff/BATTLE_TEST_LOG.md:308`) is
+**wrong** — the emitted production bundle has 0 `eval(` and 0 `new Function(`; the 6 `Function(`
+hits are `globalThis`-first short-circuits in `try/catch` or a `nomodule` polyfill chunk. It is
+`next dev`'s eval-source-map that needs it.
+Also broken and worth fixing in the same pass: `connect-src` omits Sentry
+(`https://*.ingest.sentry.io https://*.ingest.us.sentry.io`), so client-side error reporting will
+fail silently the moment a client DSN is set; and `apps/web/app/layout.tsx:246-252` loads
+`static.cloudflareinsights.com/beacon.min.js` which is **not** in `script-src` — either whitelist it
+(plus `cloudflareinsights.com` in `connect-src`) or delete the component. Do not keep analytics you
+believe exist but do not.
+Fix: build `script-src` conditionally so `'unsafe-eval'` is included only when
+`process.env.NODE_ENV !== "production"`. Add `poweredByHeader: false`.
+**VERIFY:** `NODE_ENV=production npm run build`, then assert the emitted header string contains no
+`unsafe-eval`. Run existing header tests. Commit.
+**DO NOT** attempt nonce-based CSP — that is owner-gated and explicitly deferred to the Next 16
+upgrade (on Next 14 it forces the whole app out of static rendering, and the one nonce-specific
+Next.js CVE is unpatchable on 14.x).
+**KEEP** `style-src 'unsafe-inline'` — 797 inline `style={{…}}` props across 145 files, and CSP
+nonces do not apply to style attributes.
+
+### P13-06 — `/api/sleeper/leagues` is an unauthenticated third-party proxy · STATUS: TODO · STRIKES: 0
+Evidence: `apps/web/app/api/sleeper/leagues/route.ts` has no auth, no rate limit, no cache, and
+passes `username` through raw — while its sibling `sleeper/league/route.ts:10-11` sanitizes with
+`.replace(/\D/g,"")`. This is **not** SSRF (`apps/web/lib/integrations/sleeper.ts:40` applies
+`encodeURIComponent`), it is free anonymous proxy abuse: two sequential upstream fetches per call at
+a 15s timeout with no result cache, burning function-seconds and risking Sleeper blocking your
+Vercel egress IPs — which would break fantasy for real users.
+Fix: add a per-IP `consumeRateLimit` and a short result cache.
+**VERIFY:** test asserting the 21st request in a window from one IP gets 429, and that two identical
+requests trigger one upstream fetch. typecheck + lint. Commit.
+
+### P13-07 — Dependency gate fails on Windows (ENOENT) · STATUS: TODO · STRIKES: 0
+Evidence: `scripts/guardrails/dependency-audit.mjs` exits 2 with `spawnSync npm ENOENT` on Windows —
+`execFileSync("npm", …)` without `shell: true` cannot resolve `npm.cmd`. It fails CLOSED (exit 2 =
+fail, not a false pass) and works on Linux CI, so this is developer ergonomics, not a hole — but it
+means the gate never runs locally, which is where it matters most right now given CI minutes are
+unavailable.
+Fix: one line — `shell: process.platform === "win32"`.
+**VERIFY:** the script runs to completion locally AND still exits non-zero when a critical/high
+production advisory is present (prove the second half; a gate that passes everything is worse than
+none). Commit.
 
 ---
 
