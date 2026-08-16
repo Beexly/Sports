@@ -1217,7 +1217,15 @@ needed, `npx playwright install chromium` (chromium only, not all browsers).
 Passed: homepage returns 200 (684ms) with a valid title, even with no local DATABASE_URL —
 confirms the app fails open gracefully (Prisma auth error logged, 200 still served), not a bug.
 
-### P9.5-00 — Price out The Odds API's paid tiers against real usage (READ-ONLY, no purchase) · STATUS: DONE · STRIKES: 0
+### P9.5-00 — Price out The Odds API's paid tiers against real usage (READ-ONLY, no purchase) · STATUS: DONE · STRIKES: 0 · VERIFIED-WITH-CORRECTIONS 2026-08-16 (see §8 of ODDS_API_TIER_DECISION.md)
+**Verification note (2026-08-16, Opus adversarial fact-check, 3 independent passes):** the report's
+recommendation (Business over Professional) is CONFIRMED and gets stronger once corrected, but its
+supporting math had real errors — wrong credit-per-call rule (2x understated settle burn), a "7
+sports at NFL peak" premise the actual season-window code proves never happens (true max is 6), and
+a headline "47% headroom" figure that never reconciled with the report's own numbers. All fixed in
+a §8 addendum, original sections left intact as audit trail. **Bigger open question the original
+report never raised: repo ops docs suggest `THE_ODDS_API_KEY` may already be deactivated in
+production (~2026-07-25) — confirm live Vercel state before treating this purchase as urgent.**
 **Context, already established — do not re-derive:** the account is on the free tier (500
 credits/month). At the live production cadence (`refresh-odds` every 15 min, `vercel.json`) with 3
 markets tracked (h2h/spreads/totals = 3 credits/call) and up to 3 sports in season at once, the
@@ -1256,7 +1264,7 @@ and returns 200 with the expected `<title>`.
 `handoff/E2E_BLOCKED.md` with the exact error output and what you tried, and **move immediately to
 P9.5-05**. Do NOT thrash; the launch-critical audit does not depend on this harness.
 
-### P9.5-02 — Anonymous visitor journey · STATUS: TODO · STRIKES: 0
+### P9.5-02 — Anonymous visitor journey · STATUS: DOING · STRIKES: 0
 Depends on P9.5-01. If that is BLOCKED, skip to P9.5-05.
 File: new `apps/web/e2e/journey-anonymous.spec.ts`.
 Walk what a first-time logged-out visitor sees: homepage, `/board`, `/picks`, one `/preview/...`

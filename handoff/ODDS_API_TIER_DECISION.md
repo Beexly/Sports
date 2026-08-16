@@ -161,3 +161,61 @@ Every number in this file is cited:
 - No overage billing / 429 / in-place upgrade → https://theoddsapi.com/pricing ("No overage billing… same API key… zero code changes").
 
 No purchase, signup, or payment action performed. This is read-only pricing research only.
+
+---
+
+## 8. INDEPENDENT VERIFICATION CORRECTIONS (2026-08-16, Opus adversarial fact-check)
+
+**This report's headline recommendation direction is CONFIRMED and gets STRONGER, not weaker.**
+But several numbers used to justify it were wrong and do not reconcile with each other even inside
+this document. Corrected via a 3-pass independent verification (live vendor pricing fetch, a
+from-scratch repo re-derivation, and a targeted odds-api.io check) before any spending decision.
+Original sections above are left unedited as the audit trail; treat the numbers below as the
+current, trustworthy ones.
+
+**Real errors found:**
+1. **`getScores` costs 2 credits, not 1.** The vendor's own docs: a request costs 2 credits when
+   `daysFrom` is present in the URL at all. `packages/data-ingestion/src/odds-api-client.ts:298-306`
+   never omits `daysFrom` (default `1`, and `settle-sport.ts:178` passes `2` explicitly) — so every
+   settle-picks call is billed at 2 credits, not the 1 this report assumed. Settle-picks burn is
+   really **336 credits/day** (7 sports x 2 x 24 cycles), not 168/day.
+2. **"7 sports at NFL peak" never actually happens.** Ran `isSportInSeason()` against
+   `SEASON_WINDOWS` (`config.ts:52-88`) for all 12 months: MLB's window (Mar-Oct) and NCAAB's window
+   (Nov-Apr) never overlap, so the true max simultaneous in-season count is **6, not 7**. Also: the
+   7th sport is **MLS, not WNBA** (cosmetic, but the original task brief had this wrong too).
+3. **Free tier is 25 req/day (~750/mo) per the live pricing page today, not 500 credits/month.**
+   This report's own §1 and §2 already stated two different numbers for this without reconciling
+   them; the 500 figure (sourced to an internal commit, not the vendor) is stale.
+4. **The headline "47% headroom" figure never reconciled with this report's own inputs** — it used
+   32,880 credits/mo for settle-picks in the recommendation math (line 133) while every other
+   section used 168/day x 30 = 5,040/mo (lines 84, 125). Neither matches the corrected 336/day x 30
+   = 10,080/mo figure. None of the three numbers derive from each other.
+5. **odds-api.io's paid tiers are priced in GBP, not USD.** Live page: Solo £49, Starter £99, Growth
+   £179, Pro £229/mo — this report listed $65/$129/$239/$299 with no currency label. Doesn't affect
+   the recommendation (odds-api.io isn't the tier being bought) but would mislead anyone budgeting
+   off it directly.
+
+**Corrected burn model** (3-market, 1-region, 15-min refresh, hourly settle, paid key live):
+| Scenario | refresh/day | settle/day | Combined/day | Combined/mo |
+|---|---|---|---|---|
+| Current (3 in-season) | 864 | 336 | 1,200 | 36,000 |
+| True peak (6 in-season, not 7) | 1,728 | 336 | 2,064 | 61,920 |
+
+- Professional (20,000/mo): exhausts in ~16.7 days at current load, ~9.7 days at true peak — still
+  fails a full month either way, same conclusion as the original report.
+- Business (200,000/mo): headroom at true peak recomputes to **~69%**, not the claimed 47% — Business
+  is even more comfortably sized than this report argued.
+
+**The one open question that actually matters before spending anything, which this report never
+raised:** `docs/ops/FREE_MODE_INGESTION_HEALTH.md:10` and `docs/ops/CURRENT_STATE.md:11` (both
+dated within the last ~2 weeks) state `THE_ODDS_API_KEY` was **intentionally deactivated around
+2026-07-25**, and both `refresh-odds` (`route.ts:60-71`) and `settle-picks` cron routes
+short-circuit to a zero-credit free path whenever no key is present. If that is still true today,
+**current actual production credit burn is $0** and this entire cost model describes a
+"if we turn the key back on" hypothetical, not live spend happening right now. This was not checked
+against live Vercel environment variables (no dashboard access from a repo read) — confirm directly
+before treating a Business-tier purchase as time-sensitive.
+
+**Bottom line: if/when the paid key goes live, buy Business over Professional — that call is solid
+and now has cleaner math behind it. Whether it needs to happen this week depends on confirming
+whether the key is actually on.**
