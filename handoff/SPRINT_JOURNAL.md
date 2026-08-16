@@ -2805,3 +2805,52 @@ Set STATUS DOING → worked task → set STATUS DONE with commit hash.
 Commit: a3fd8e93
 "P12-06: Add needs-autopsy candidate queue to cockpit losses page"
 
+### 2026-08-26T12:00:00Z · P12-07 — Correct the false "VERIFIED FIXED" claims in the audit trail · STATUS: DONE · STRIKES: 0
+
+Resumed P12-07 (was STATUS: TODO). Task: correct false/stale claims in the audit trail documents by re-deriving every number from live commands.
+
+**What was done:**
+
+1. **GSE-SEC-021 false FIXED claim** in `handoff/REMEDIATION_EXECUTION.md` (line 54):
+   - Claimed FIXED via commit `d4da1265` — "deleted case sets tier: FREE"
+   - Verification: `git show d4da1265 --stat` shows it touches only board/preview tier-gating files (GSE-SEC-025), ZERO refund-related code. `git show d4da1265 | grep -ic "refund\|charge"` returns 0.
+   - `grep -n "charge.refunded\|refund" apps/web/app/api/webhooks/stripe/route.ts` returns ZERO hits — no refund handler exists.
+   - Correction: status changed to OPEN. LAUNCH_BLOCKERS.md §1.2 correctly lists it as BLOCKING.
+
+2. **GSE-SEC-080 false FIXED claim** in `handoff/REMEDIATION_EXECUTION.md` (lines 69, 160):
+   - Claimed FIXED at `free-score-persist.ts:103` — "checkClearance gates fpl-api"
+   - Verification: `sed -n '95,110p' apps/web/lib/data-sources/free-score-persist.ts` shows the checkClearance at line 103 gates `source_id: "henrygd-ncaa"`, NOT `fpl-api`.
+   - Commit `b992f1c3` is titled "fix: GSE-SEC-050" and only touches henrygd-ncaa/MLB/BallDontLie/NHL gates.
+   - Correction: status changed to INFO (dormant). Original AUDIT_FINDINGS.md entry correctly notes fpl-api is dormant with zero production callers.
+
+3. **AUDIT_COVERAGE.md stale counts** (lines 18, 20, 22):
+   - npm audit: claimed "9 findings (2 critical, 6 high, 1 low)" — live `npm audit --omit=dev --json` shows 0 critical, 2 high.
+   - Rate-limit: claimed "8/176 routes throttled" — live grep shows 40/176.
+   - Test suite: claimed "full suite green (exit 0)" — `test-census-raw.txt` shows `npm error code 1`, TEST_CENSUS.md §0 records "Test suite exit code | 1".
+
+4. **AUDIT_FINDINGS.md stale claims** (lines 18, 28, 34, 39, 44):
+   - Executive summary: "2 CRITICAL advisories" → 0 critical (resolved in patched lock).
+   - Severity histogram: "Critical: 2" → "Critical: 0".
+   - TOP 10 items 1-2: marked CRITICAL → STALE/RESOLVED.
+   - Item 6: "8/176 routes throttled" → 40/176.
+
+**VERIFY:** All correction notes cite the exact live commands used to produce each number:
+- `git show d4da1265 --stat` and `git show d4da1265 | grep -ic "refund\|charge"` → 0
+- `grep -n "charge.refunded\|refund" apps/web/app/api/webhooks/stripe/route.ts` → 0 hits
+- `sed -n '95,110p' apps/web/lib/data-sources/free-score-persist.ts` → confirms henrygd-ncaa gate
+- `npm audit --omit=dev --json` → 0 critical, 2 high
+- `grep -rl 'rate-limit\|rateLimit\|consumeRateLimit\|@sports/util/rate' apps/web/app/api --include='route.ts' | wc -l` → 40
+- `grep "npm error code" handoff/test-census-raw.txt` → exit code 1
+
+**Result:** VERIFY passed. All corrections backed by live commands. Original text preserved (audit trail intact).
+
+**Files committed (exactly these):**
+- `handoff/REMEDIATION_EXECUTION.md`
+- `handoff/AUDIT_COVERAGE.md`
+- `handoff/AUDIT_FINDINGS.md`
+- `handoff/SPRINT_QUEUE.md` (STATUS TODO→DOING→DONE)
+
+Commits:
+- f1653bc3: "P12-07: correct false 'VERIFIED FIXED' claims in audit trail (2026-08-26)"
+- d20b9937: "P12-07: mark task STATUS DONE (audit trail corrections complete)"
+
