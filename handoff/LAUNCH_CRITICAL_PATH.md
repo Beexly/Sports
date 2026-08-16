@@ -68,6 +68,11 @@ week, not necessarily today.
 - Verify every substantive Laguna commit with real test runs, as established. Keep the artifact
   honest: the score tracks queue completion, never readiness. Prod status stays on it until #1 is
   confirmed fixed.
+- **RAISED BAR (2026-08-16, owner-mandated):** per-fix test runs prove the new tests pass — they do
+  NOT prove nothing else broke. Every ~5 verified commits, run the FULL apps/web vitest suite (not
+  just the new files) and journal the total. A cross-cutting regression that individual test files
+  can't see is exactly what this catches. Also enforce Laguna's new red-before-green rule: a bugfix
+  journal entry with no recorded failing-test output is unverified — treat it as such in the artifact.
 - Do NOT add new phases until Phase 14 and 15 are drained and the coverage-program tasks are
   queued. Breadth is now covered (P15 + coverage program). The failure mode to guard against has
   flipped: it is no longer "not enough queued" — it is queue sprawl diluting Laguna into

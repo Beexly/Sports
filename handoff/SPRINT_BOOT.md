@@ -78,6 +78,14 @@ Before flipping any STATUS to DONE, run these five. They are cheap and they are 
    sentence as the claim — "not re-run", "could not confirm", "inferred". A hedged true statement is
    infinitely more useful than a confident false one. You will not be punished for BLOCKED or for "I
    could not verify this". You will do real damage with a clean-looking DONE that is wrong.
+6. **RED BEFORE GREEN — a test that never failed proves nothing.** (Added 2026-08-16, owner-mandated
+   quality bar.) When your task fixes a bug, you MUST demonstrate the test catches it: after writing
+   the test, temporarily revert JUST the fix (stash or comment), run the test, journal the FAILING
+   output, restore the fix, run again, journal the passing output. A test that passes both with and
+   without the fix is decoration, not protection — it will wave through the exact regression it
+   exists to prevent. If the red step is impossible (pure-addition feature, no prior behavior), say
+   so explicitly in the journal instead of skipping silently. The journal entry for any bugfix task
+   without a recorded red-then-green sequence is INCOMPLETE.
 
 ---
 
