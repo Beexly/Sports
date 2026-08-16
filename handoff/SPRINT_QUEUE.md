@@ -1075,7 +1075,7 @@ Same-owner re-subscribes proceed in place. Tests: 13/13 in subscription-db.test.
 (including 2 new GSE-SEC-034 cases), 12/12 in push-subscribe-api.test.ts.
 Commit: 360d1185.
 
-### P8-11 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T22:45:00Z (commit TBD)
+### P8-11 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T22:45:00Z (commit 189f5f9e)
 Same as P8-02, next item. Target: GSE-SEC-015 (B2B API rate limit is process-local).
 
 P8-11 fixed **GSE-SEC-015** — B2B API rate limit is process-local. Source: `apps/web/lib/b2b/api-key-auth.ts:30`.
