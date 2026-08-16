@@ -1322,7 +1322,7 @@ what a paying customer would reasonably expect, that mismatch is a finding for
 `handoff/LAUNCH_BLOCKERS.md` — do not silently encode it as correct.
 **VERIFY:** tests pass; commit; any expectation mismatch written up as a finding.
 
-### P9.5-07 — Legal surface adequacy audit (READ-ONLY) · STATUS: TODO · STRIKES: 0
+### P9.5-07 — Legal surface adequacy audit (READ-ONLY) · STATUS: DONE · STRIKES: 0 · started: 2026-08-19T18:00:00Z · commit: 7dee35a4
 **LAUNCH-CRITICAL.** Read IN FULL: `apps/web/app/terms/`, `apps/web/app/privacy/`,
 `apps/web/app/responsible-play/`, `apps/web/app/about/`, `apps/web/app/contact/`, plus everything
 under `docs/compliance/` and `docs/legal/`. Write `handoff/LEGAL_SURFACE_AUDIT.md` assessing
@@ -1336,7 +1336,7 @@ Verdict per item: PRESENT / PARTIAL / ABSENT.
 **VERIFY:** every item has a verdict backed by a real citation. Header the file:
 "Coverage audit by a non-lawyer. Adequacy requires human legal review." Do not write legal text.
 
-### P9.5-08 — Public claims vs. actual behavior (truth audit, READ-ONLY) · STATUS: TODO · STRIKES: 0
+### P9.5-08 — Public claims vs. actual behavior (truth audit, READ-ONLY) · STATUS: DONE · STRIKES: 0
 **LAUNCH-CRITICAL.** The product's whole pitch is honesty, so a claim the code cannot back is both
 a trust failure and a potential deceptive-advertising problem. Grep the public surfaces (homepage,
 `/about`, pricing, `/accountability`, landing copy) for every quantitative or capability claim —
