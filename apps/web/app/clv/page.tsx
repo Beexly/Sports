@@ -9,6 +9,10 @@ import {
   loadPublicClvPolicy,
   type PublicClvPolicy,
 } from "@/lib/performance/public-clv-policy";
+import {
+  loadClvCoverage,
+  type ClvCoverage,
+} from "@/lib/performance/clv-coverage";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { glossaryEntry } from "@/lib/glossary";
 
@@ -37,6 +41,12 @@ export default async function ClvPage() {
     policyUnreachable = true;
     return null;
   });
+
+  // Load CLV coverage alongside the policy so a coverage hole can be
+  // labeled honestly next to the beat-close rate (see PATH_TO_PROVEN_EDGE.md §5.2:
+  // "A beat-close rate over <100% coverage is labeled partial, never the north-star").
+  // loadClvCoverage reuses the same db client shape as loadPublicClvPolicy.
+  const coverage = await loadClvCoverage(db).catch(() => null);
 
   const clv = glossaryEntry("clv");
 
@@ -94,7 +104,7 @@ export default async function ClvPage() {
               </p>
             </section>
           ) : policy?.canExposeClv ? (
-            <ClvScoreboard policy={policy} />
+            <ClvScoreboard policy={policy} coverage={coverage} />
           ) : (
             <ClvGatedState
               graded={policy?.gradedSampleSize ?? 0}
@@ -207,7 +217,7 @@ function ClvGatedState({
   );
 }
 
-function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
+function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage: ClvCoverage | null }) {
   return (
     <section data-testid="clv-scoreboard">
       <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
@@ -239,6 +249,25 @@ function ClvScoreboard({ policy }: { policy: PublicClvPolicy }) {
                   ? "Lower bound clears the 52.4% break-even line"
                   : "Range still includes 52.4% break-even. No settled-edge claim yet"}
               </span>
+            </div>
+          )}
+          {/* Coverage integrity note — surface the denominator behind the rate. */}
+          {coverage != null && coverage.settledEligible > 0 && (
+            <div
+              data-testid="clv-coverage"
+              className="mt-4 border-t border-mineral/40 pt-3"
+            >
+              <p className={`text-xs ${NUMERIC_TEXT_CLASS}`} data-testid="clv-coverage-rate">
+                {coverage.coverageRatePct != null
+                  ? `${coverage.coverageRatePct}% of ${coverage.settledEligible} settled picks graded against the close`
+                  : "coverage not yet measurable"}
+              </p>
+              {!coverage.invariantHolds && (
+                <p className="mt-1 text-[10px] leading-snug text-caution">
+                  The beat-close rate above is a partial sample until coverage reaches 100%.
+                  The ungraded picks are excluded from this count, not counted as losses.
+                </p>
+              )}
             </div>
           )}
         </div>
