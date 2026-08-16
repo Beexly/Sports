@@ -10,6 +10,9 @@ const nextConfig = {
   // `next build` OOMs on constrained builders. Keep eslint on for ship blockers.
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: false },
+  // Do not advertise the framework identity to attackers (drops the
+  // `X-Powered-By: Next.js` header). Security hardening, P13-05.
+  poweredByHeader: false,
   transpilePackages: [
     "@sports/db",
     "@sports/types",
@@ -78,17 +81,28 @@ const nextConfig = {
     // (e.g. SubscribeButton) are silently dead. We drop the directive in dev
     // so the e2e browser can load the bundle over HTTP.
     const isDev = process.env["NODE_ENV"] !== "production";
+    // `unsafe-eval` is needed only for `next dev`'s eval-source-map source maps
+    // (the production bundle has zero `eval(` / `new Function(` calls). Splitting
+    // it out of the production `script-src` is the security fix — see P13-05.
+    const scriptSrcProd =
+      "'self' 'unsafe-inline' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com https://static.cloudflareinsights.com";
+    const scriptSrcDev = `${scriptSrcProd} 'unsafe-eval'`;
+    // Sentry client-side error reporting: connect-src must allow the ingest
+    // endpoints or client DSN transport silently fails in production. Added
+    // alongside the existing clarity/stripe origins.
+    const connectSrc =
+      "'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://cloudflareinsights.com";
     const baseCsp = [
       "default-src 'self'",
       "base-uri 'self'",
       "form-action 'self'",
       "object-src 'none'",
       "frame-ancestors 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com",
+      `script-src ${isDev ? scriptSrcDev : scriptSrcProd}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data: https:",
-      "connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com",
+      `connect-src ${connectSrc}`,
       "frame-src https://js.stripe.com",
       "worker-src 'self' blob:",
     ];

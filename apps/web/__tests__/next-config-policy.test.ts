@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -128,5 +128,55 @@ describe("next.config.mjs — security policy", () => {
   it("bundles local FABLE docs for the public evidence route", () => {
     expect(src).toContain('"/fable"');
     expect(src).toContain('"../../docs/fable/**/*"');
+  });
+
+  // Helpers for production-CSP assertions: next.config.mjs reads NODE_ENV at
+  // import time, so we must re-import with NODE_ENV=production to observe the
+  // header string Next.js itself will emit under a production build.
+  async function prodRules(): Promise<HeaderRule[]> {
+    vi.resetModules();
+    // Stash NODE_ENV so the rest of the suite is unaffected.
+    const prev = process.env.NODE_ENV;
+    process.env.NODE_ENV = "production";
+    try {
+      const mod = (await import("../next.config.mjs")) as {
+        default: { headers?: () => Promise<HeaderRule[]> };
+      };
+      const rules = (await mod.default.headers?.()) as HeaderRule[] | undefined;
+      return rules ?? [];
+    } finally {
+      process.env.NODE_ENV = prev;
+    }
+  }
+  function cspForNonEmbed(rules: HeaderRule[]): string | undefined {
+    return rules
+      .filter((r) => r.source.includes("?!")) // non-embed rule carries the real CSP
+      .flatMap((r) => r.headers)
+      .find((h) => h.key.toLowerCase() === "content-security-policy")?.value;
+  }
+
+  it("production CSP forbids 'unsafe-eval' (dev-source-map only)", async () => {
+    // The production bundle has zero eval/new Function calls; keeping
+    // unsafe-eval in prod CSP widens the eval gadget surface for nothing.
+    const csp = cspForNonEmbed(await prodRules());
+    expect(csp).toBeDefined();
+    expect(csp!, `${csp} must not include unsafe-eval`).not.toContain("unsafe-eval");
+  });
+
+  it("production CSP allows Sentry ingest endpoints in connect-src", async () => {
+    const csp = cspForNonEmbed(await prodRules());
+    expect(csp).toBeDefined();
+    expect(csp!).toContain("*.ingest.sentry.io");
+    expect(csp!).toContain("*.ingest.us.sentry.io");
+  });
+
+  it("production CSP allows the Cloudflare Insights beacon script in script-src", async () => {
+    const csp = cspForNonEmbed(await prodRules());
+    expect(csp).toBeDefined();
+    expect(csp!).toContain("https://static.cloudflareinsights.com");
+  });
+
+  it("does not advertise framework identity (poweredByHeader off)", () => {
+    expect(nextConfig.poweredByHeader).toBe(false);
   });
 });
