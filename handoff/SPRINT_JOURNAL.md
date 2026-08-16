@@ -2485,3 +2485,74 @@ Round P10-04 complete.
 
 Next: per sprint rule, do NOT start P10-05 this run — stop after one task. STOP.
 
+---
+
+## 2026-08-16T13:45:00Z — P10-02 (Resume) — DONE
+
+**Task:** Resume P10-02 — Fresh blind re-audit of the original 15 domains (D1 Auth through D15 Types/coverage). Round 2 of the recurring battle-test. Re-run Phase 2's structure as if AUDIT_FINDINGS.md does not exist, read the actual current code fresh, form own findings first, THEN reconcile against AUDIT_FINDINGS.md.
+
+**Context on resume:** P10-02 was set to DOING in the working tree by an interrupted prior run. HEAD (commit 749258ed) already contained P10-02 marked DONE and added PHASE 12, but the working tree had reverted those (removed PHASE 12, flipped P10-02 to DOING) and written the Round 2 BATTLE_TEST_LOG content + GSE-SEC-081 re-verification note into AUDIT_FINDINGS.md — all uncommitted.
+
+**What I did:**
+- Verified the working tree's Round 2 P10-02 BATTLE_TEST_LOG section was complete: per-domain reconcile verdicts for all 15 domains (D1-D15), summary table, follow-up items (D5-NEW resolved, D13-NEW-2 still open), and independent verification of P10-03 claims (Odds API header auth CONFIRMED WRONG, FFC ADP terms revised from 404→200).
+- Restored SPRINT_QUEUE.md to HEAD (P10-02 was already DONE in HEAD; PHASE 12 preserved as committed).
+- Updated AUDIT_FINDINGS.md to reconcile Round 2 findings:
+  - GSE-SEC-076 (open-meteo): marked FIXED — `checkClearance` gate confirmed at `free-first-ingest.ts:147-161` (commit 5970f49e).
+  - GSE-SEC-078 (espn multi-source): marked FIXED — `checkClearance` gate confirmed at `multi-source-scores.ts:111` + line 403 + `checkSecondaryClearance` at lines 172/302/327/351/375 (commit 5970f49e).
+  - GSE-SEC-081 (odds API auth comment): re-verification note already present in working tree, preserved (still confirmed WRONG; no code change since filing).
+  - No new findings filed — highest GSE-SEC number remains 081; existing findings reconciled.
+- VERIFY: BATTLE_TEST_LOG.md states explicitly per domain "same as before" / "new finding" / "original finding no longer applies" — all 15 domains addressed (line 1240). ✓
+
+**Result:** DONE. 2 files committed (29057d38). 0 BLOCKED.
+
+**Commit:** 29057d38c15d427b0c5fc98eaae4842988cf123f
+"P10-02 Round 2: complete fresh blind re-audit of D1-D15, reconcile GSE-SEC-076/078 FIXED, GSE-SEC-081 still wrong"
+(handoff/BATTLE_TEST_LOG.md + handoff/AUDIT_FINDINGS.md | 2 files changed, 243 insertions(+), 2 deletions(-). secret-scan: OK — 2 files scanned, no secrets detected.)
+
+Next: Sprint rule — STOP after one task. Do not start P10-03 this run. STOP.
+
+
+---
+
+## 2026-08-16T13:55:00Z — P12-01 — DONE
+
+**Task:** A paying subscriber cannot cancel (published-promise violation).
+Render `<ManageSubscriptionButton />` on the dashboard for ANY user with a
+paid tier, not only inside the dunning `BillingNoticeBanner`.
+
+**What I did:**
+- Read the referenced files: `manage-subscription-button.tsx` (client
+  component, calls `/api/subscriptions/portal`), `billing-notice-banner.tsx`
+  (the ONLY render site for the button), `getBillingNotice` (returns null
+  for healthy subscriptions), `dashboard/page.tsx`, `entitlements.ts`,
+  `tier-access.ts`, and `packages/types/src/index.ts`.
+- Confirmed the bug: `BillingNoticeBanner` (with `ManageSubscriptionButton`)
+  renders ONLY when `billingNotice` is non-null — i.e., PAST_DUE/INCOMPLETE
+  subscriptions. A healthy PRO/ELITE/FANTASY subscriber sees no manage-billing
+  affordance, contradicting `/pricing` ("Cancel any time from your dashboard"),
+  `/terms` (same), and `/faq` ("Manage Billing button that opens the Stripe
+  customer portal").
+- Fix in `apps/web/app/dashboard/page.tsx`: added import of
+  `ManageSubscriptionButton`, and a new Billing section (data-testid
+  `billing-management-section`) gated on `entitlements.tier !== "FREE"` that
+  renders the button + descriptive copy ("Update your card, change your plan,
+  or cancel your subscription anytime via the Stripe customer portal").
+  The billing-notice banner and `getBillingNotice` are left unchanged.
+- New test: `apps/web/__tests__/dashboard-manage-billing.test.ts`
+  (4 tests, source-level pattern matching the existing dashboard tests).
+
+**VERIFY:**
+- `npx vitest run __tests__/dashboard-manage-billing.test.ts` → 4/4 passed.
+- Existing dashboard/billing/portal tests re-run → 45/45 passed
+  (dashboard-stat-card-a11y, dashboard-picks-tiles,
+  dashboard-performance-gate, dashboard-load-performance,
+  billing-notice, stripe-portal-session).
+- `npm run typecheck` → exit 0 (clean).
+- `npm run lint` → exit 0 (clean).
+
+**Commit:** 57aac052c4b7b041d4e4057ee17a3d3609b9b6fd
+"fix(P12-01): render ManageSubscriptionButton on dashboard for paid-tier subscribers"
+(apps/web/app/dashboard/page.tsx + apps/web/__tests__/dashboard-manage-billing.test.ts
+| 2 files changed, 79 insertions(+). secret-scan: OK — 2 files scanned, no secrets detected.)
+
+Next: Sprint rule — STOP after one task. Do not start P12-02 this run. STOP.

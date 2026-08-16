@@ -1527,7 +1527,7 @@ damage rather than technical severity.
 `.env*`, never flip a founder gate, never modify `.github/`, `packages/db/prisma/`, or
 `apps/web/lib/ai-control-plane/`. Commit locally per COMMIT DISCIPLINE. One task per session.
 
-### P12-01 — A paying subscriber cannot cancel (published-promise violation) · STATUS: TODO · STRIKES: 0
+### P12-01 — A paying subscriber cannot cancel (published-promise violation) · STATUS: DONE · STRIKES: 0
 **Highest customer/legal exposure in this phase.**
 Evidence (verified): `apps/web/components/ui/manage-subscription-button.tsx` is rendered ONLY by
 `apps/web/components/ui/billing-notice-banner.tsx:49`, which renders only at
