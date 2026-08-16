@@ -97,7 +97,7 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 |---|---|---|---|---|---|
 | 15 | GSE-SEC-033 | durable-write guard covers only two Stripe caps | `apps/web/lib/stripe.ts:393` verified — only checkout+webhook guarded | SAFE DIRECT | S |
 | 16 | GSE-SEC-034 | push upsert re-owns unique endpoint | `apps/web/lib/push/subscription-db.ts` — upsert no longer includes userId in update; ownership pre-check via findUnique refuses cross-user re-own with 409. Verified by tests. | **FIXED — see 360d1185** | S |
-| 17 | GSE-SEC-038 | cockpit task routes cast Prisma enums | `apps/web/app/api/cockpit/tasks/route.ts` verified — casts Prisma enums | SAFE DIRECT | S |
+| 17 | GSE-SEC-038 | cockpit task routes cast Prisma enums | `apps/web/app/api/cockpit/tasks/route.ts` — `as` casts on untrusted query/body input now validated via `narrowEnum()` against const enum sets; invalid values return 400 instead of reaching Prisma | SAFE DIRECT | **FIXED — see P8-13** | S |
 | 18 | GSE-SEC-042 | FreeStats stamps `fetchedAt=now` on cache hits | `apps/web/lib/data-sources/free-stats.ts:72` verified — `memoize` now returns the stored fetch timestamp; all four public methods use it, not `this.clock()` | FIXED — see 937a9151 | S
 | 19 | GSE-SEC-044 | published PENDING relabels confidence/grade/modelVersion | `apps/web/lib/proof/machine-proof.ts:5` verified — paper receipt for PENDING picks | SAFE DIRECT | M |
 | 20 | GSE-SEC-045 | signal-slate resets generatedAt on PENDING update | `apps/web/lib/bot-outbox/plan.ts:219` verified — idempotencyKey per pick+modelVersion | SAFE DIRECT | S |
