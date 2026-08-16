@@ -1372,7 +1372,7 @@ if paid ingestion 401s or the payment circuit opens.
 Where the repo supports no answer, write "NO PROCEDURE EXISTS" rather than inventing one.
 **VERIFY:** every procedure cites the real file or flag implementing it; gaps named explicitly.
 
-### P9.5-11 — Scale + limits sanity (READ-ONLY, generate no load) · STATUS: TODO · STRIKES: 0
+### P9.5-11 — Scale + limits sanity (READ-ONLY, generate no load) · STATUS: DONE · STRIKES: 0
 Do NOT run a load test against production or any live service. This is static analysis of ceilings.
 Write `handoff/SCALE_LIMITS.md` covering: the DB connection model (pooled/serverless driver, or
 would a spike exhaust connections — Neon has hard connection limits and prior notes record "Neon DB

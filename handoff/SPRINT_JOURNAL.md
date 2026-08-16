@@ -1,3 +1,45 @@
+### 2026-08-16T20:39:00Z · P9.5-11 · DONE · STRIKES: 0
+
+Action:
+1. Located the first TODO task in SPRINT_QUEUE.md: P9.5-11 — Scale + limits
+   sanity (READ-ONLY, generate no load). Set STATUS to DOING.
+2. Static analysis only — no load test was run against production or any live
+   service. Investigated:
+   a. DB connection model: PostgreSQL via Prisma, singleton client
+      (`packages/db/src/index.ts:236`), default `pg` driver with optional
+      `NEON_SERVERLESS_DRIVER=true` WebSocket adapter (off by default).
+      No `connection_limit` pool config anywhere in-repo.
+   b. Rate limiting: 176 route.ts files, 105 unprotected (40.3% coverage),
+      from `handoff/RATE_LIMIT_COVERAGE.md`. Rate limiter is in-memory per-
+      instance (`apps/web/lib/api/rate-limit.ts:19`); REDIS_URL present in
+      .env but not wired into rate-limit.ts.
+   c. Unbounded findMany (no `take`): daily-slate
+      (`apps/web/app/api/picks/daily-slate/route.ts:114`, date-filtered but
+      no row cap), cockpit/tasks/[id]/decisions (admin-only), admin/dashboard
+      pickSignalSnapshot (admin-only).
+   d. Vercel ceilings: Next.js 14, no `maxDuration`/`memory` overrides on
+      public routes (10s Hobby/15s Pro default), 1MB response cap, 1024MB
+      memory, 169 force-dynamic routes.
+3. Answered "if 10,000 people arrive in one hour, what breaks first?":
+   (1) per-instance in-memory rate limiter + 105 unprotected routes,
+   (2) DB connection exhaustion (no connection_limit, cold-start TCP storms),
+   (3) unbounded daily-slate findMany as daily pick count grows,
+   (4) Vercel 10s timeout on slow+unbound query,
+   (5) 1MB response cap.
+4. Wrote handoff/SCALE_LIMITS.md (352 lines) with every claim citing file:line
+   or .env key names; gaps named explicitly as NO PROCEDURE EXISTS.
+5. VERIFY: confirmed all ~15 key citations via grep/sed spot-checks
+   (singleton at line 236, daily-slate take=0 confirmed, middleware rate=0,
+   rate-limit.ts redis=0, no maxDuration on public routes, cron 300s confirmed,
+   dailyPickLimit=2/null at packages/types/src/index.ts:180).
+6. Committed: git add -f handoff/SCALE_LIMITS.md (handoff/ is gitignored,
+   force-add needed since 272 handoff files are already tracked).
+   Commit 90f96e87 — secret-scan OK.
+
+Result: DONE. Commit 90f96e87.
+
+---
+
 ### 2026-08-16T08:07:19Z · P9.5-04 · DONE · STRIKES: 0
 
 Resumed from DOING (prior run created the test file but never committed).
