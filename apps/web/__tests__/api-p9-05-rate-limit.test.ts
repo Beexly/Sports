@@ -134,7 +134,6 @@ function makeRequest(url: string): Request {
 }
 
 const SLATE_KEY = "AMERICANFOOTBALL_NFL:2026-07-02";
-const VALID_HASH = "a".repeat(64);
 
 // ─── /api/verify/slate ────────────────────────────────────────────────────────
 

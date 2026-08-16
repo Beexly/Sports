@@ -45,8 +45,6 @@ function makeReq(tierParam: string | null) {
   return { nextUrl: { searchParams } } as unknown as import("next/server").NextRequest;
 }
 
-const REAL_NODE_ENV = process.env.NODE_ENV;
-
 beforeEach(() => {
   vi.stubEnv("NODE_ENV", "test");
   vi.stubEnv("GSE_ALLOW_QUERY_TIER", "0");

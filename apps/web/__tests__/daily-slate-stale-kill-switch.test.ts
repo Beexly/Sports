@@ -71,7 +71,8 @@ function minutesAgo(m: number): Date {
 async function callSlate(): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();
   const mod = await import("@/app/api/picks/daily-slate/route");
-  const res = (await mod.GET()) as unknown as Response;
+  const req = new Request("http://localhost/api/picks/daily-slate");
+  const res = (await mod.GET(req as unknown as Parameters<typeof mod.GET>[0])) as unknown as Response;
   return { status: res.status, body: (await res.json()) as Record<string, unknown> };
 }
 

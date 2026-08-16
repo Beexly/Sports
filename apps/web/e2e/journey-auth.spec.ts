@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Response } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 /**
  * P9.5-03 — Signup + auth journey (e2e).
