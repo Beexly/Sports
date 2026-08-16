@@ -12,9 +12,9 @@
 | Metric                          | Count |
 |---|---|
 | Total `route.ts` files          | 176  |
-| Protected (has a rate-limit call) |  68  |
-| Unprotected (no rate-limit call)  | 108  |
-| **Coverage ratio**              | **68 / 176 = 38.6%** |
+| Protected (has a rate-limit call) |  71  |
+| Unprotected (no rate-limit call)  | 105  |
+| **Coverage ratio**              | **71 / 176 = 40.3%** |
 
 No middleware-based rate limiting exists (`apps/web/middleware.ts` contains zero rate-limit references).
 Rate limiting is applied per-route only, via the following helper functions:
@@ -117,6 +117,9 @@ apps/web/app/api/watchlist/unfollow/route.ts                   (consumeRateLimit
 apps/web/app/api/picks/daily-slate/route.ts                     (consumeRateLimit, IP-keyed)
 apps/web/app/api/sources/catalog/route.ts                       (consumeRateLimit, IP-keyed)
 apps/web/app/api/verify/route.ts                                (consumeRateLimit, IP-keyed)
+apps/web/app/api/verify/slate/route.ts                         (consumeRateLimit, IP-keyed)
+apps/web/app/api/proof/receipts/route.ts                        (consumeRateLimit, IP-keyed)
+apps/web/app/api/picks/[id]/audit/route.ts                     (consumeRateLimit, IP-keyed)
 [cont'd — see protected list below for the remaining routes matched by
 requirePremiumApiRateLimited in the intelligence/* batch above]
 ```
@@ -209,20 +212,11 @@ These are anonymous-callable and the highest-risk from an abuse/DoS standpoint.
 Key offenders that hit paid APIs or heavy compute:
 
 ```
-apps/web/app/api/board/passes/route.ts
 apps/web/app/api/brief/route.ts
 apps/web/app/api/decision-genome/route.ts
 apps/web/app/api/health/route.ts
 apps/web/app/api/health/synthetic-monitoring/route.ts
-apps/web/app/api/picks/[id]/audit/route.ts
 apps/web/app/api/proof/ledger/route.ts
-apps/web/app/api/proof/openapi.json/route.ts
-apps/web/app/api/proof/receipts/route.ts
-apps/web/app/api/proof/verification-spec.json/route.ts
-apps/web/app/api/receipts/[id]/route.ts
-apps/web/app/api/verify/slate/opening/route.ts
-apps/web/app/api/verify/slate/route.ts
-apps/web/app/api/weather/game/route.ts
 apps/web/app/api/watchlist/route.ts
 apps/web/app/api/airwave/* (4 routes)
 apps/web/app/api/blog/route.ts
@@ -258,13 +252,15 @@ serve premium data:
 
 | Route | Risk note |
 |---|---||
-| `apps/web/app/api/verify/slate/route.ts` | May trigger proof verification compute |
+| `apps/web/app/api/verify/slate/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 | `apps/web/app/api/verify/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 | `apps/web/app/api/sources/catalog/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 | `apps/web/app/api/picks/daily-slate/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 | `apps/web/app/api/clv/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 | `apps/web/app/api/picks/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 | `apps/web/app/api/board/state/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
+| `apps/web/app/api/proof/receipts/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
+| `apps/web/app/api/picks/[id]/audit/route.ts` | **NOW PROTECTED** — consumeRateLimit, IP-keyed, 60/min |
 
 ---
 
@@ -301,3 +297,15 @@ but it does NOT call any rate-limit function. Conversely, `v1/probabilities` and
 `v1/signals` use `rateLimitB2b` (a fourth helper from `@/lib/b2b/api-key-auth`) which was
 not in the initial grep pattern and have been added to the protected count. Net: 62
 protected after P9-01, 65 after P9-02/03, 68 after P9-04 (38.6%).
+
+**P9-05 update (2026-08-17):** Three more IP-keyed rate-limit wrappers were added to the
+next batch of highest-risk anonymous GET routes per the P9 sprint:
+- `apps/web/app/api/verify/slate/route.ts` — 60 req/min/IP (was anonymous, DB read + live Merkle root recomputation)
+- `apps/web/app/api/proof/receipts/route.ts` — 60 req/min/IP (was anonymous, DB findMany with nested includes + per-row verifyReceiptIntegrity)
+- `apps/web/app/api/picks/[id]/audit/route.ts` — 60 req/min/IP (was anonymous, DB read + CPU-heavy pre-mortem/fragility/death-clock computations)
+
+All three follow the same `consumeRateLimit` + `clientIp` pattern from
+`apps/web/app/api/verify/route.ts`. Tests written covering both the within-quota success
+path (200) and the quota-exceeded path (429 with Retry-After) for all three routes. Existing
+tests for each route (verify-slate-route.test.ts, proof-receipts-api.test.ts,
+audit-route-paywall.test.ts) continue to pass. Coverage is now 71/176 = 40.3%.

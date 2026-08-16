@@ -15,10 +15,22 @@ import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-pu
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Public, anonymous, DB-heavy route (findMany + count + per-pick selective
+  // filter). IP-keyed rate limit copied from the established pattern in
+  // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
+  const limit = consumeRateLimit("public-picks", clientIp(req), 60, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
+
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
