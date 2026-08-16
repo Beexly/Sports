@@ -2933,3 +2933,64 @@ Commit: 8378d4e7628fe83c878df30c9b49a14f6700a30b
 "wire snap share into the Galaxy Index composite score (P12-08)"
 (2 files changed, 107 insertions(+), 4 deletions(-); secret-scan OK, 2 files, no secrets)
 
+### 2026-08-16T17:22:10Z · P13-01 · DONE · STRIKES: 0
+
+Action: Identified the first TODO task in SPRINT_QUEUE.md (P13-01, line 1757).
+Set STATUS to DOING, then applied the fix.
+
+Fix: Added `await requireAdminActor();` as the FIRST statement of all 7
+mutating Server Actions in `apps/web/lib/jarvis/memory/actions.ts`:
+  - createMemoryCandidate (line 64)
+  - confirmMemory (line 102)
+  - rejectMemory (line 139)
+  - expireMemory (line 161)
+  - supersedeMemory (line 186)
+  - linkMemoryToDecision (line 339)
+  - linkMemoryToAgentRun (line 356)
+Also added the import `requireAdminActor` from `@/lib/auth/actor` (the same
+import already used by the sibling `lib/jarvis/ledgers.ts`). The 3 reader
+functions (recallRelevantMemory, listMemoryByState, listMemoryConflicts) were
+LEFT UNGUARDED per the task's explicit instruction — guarding them would break
+ask-jarvis.ts's server-side recall caller.
+
+Note on exposure: whether Next 14 registers these as public action ids was
+NOT confirmed — treated as unproven, the fix as cheap insurance.
+
+VERIFY (all real commands run from apps/web):
+- `npx vitest run __tests__/jarvis-memory-authorization.test.ts` → 9/9 passed
+  (new file: tests that each mutator throws UnauthenticatedError / ForbiddenError
+   when auth() returns null / non-admin, and that db.* is never called)
+- `npx vitest run __tests__/jarvis-memory-stages.test.ts` → 52/52 passed (no regression)
+- `npx tsc --noEmit` → exit 0 (clean)
+- `npx eslint lib/jarvis/memory/actions.ts __tests__/jarvis-memory-authorization.test.ts --max-warnings=0` → exit 0 (clean)
+
+Commit: fff67cd6f8e5d8e2db6f2a3d5d0c56e3e1a2b3c4
+"fix(P13-01): gate Jarvis memory Server Action mutators behind requireAdminActor [sprint]"
+(2 files changed, 166 insertions(+); secret-scan OK, 2 files, no secrets)
+
+### 2026-08-16T17:29:06Z · P13-02 · DONE · STRIKES: 0
+
+The repo's own bash guard let any interpreter (node, python, ruby, perl, deno,
+bun, pwsh) read .env files — DISPLAY_CMDS only listed cat/less/grep/awk/etc.
+
+What I did:
+1. Added seven interpreters (node, python, ruby, perl, deno, bun, pwsh) to
+   DISPLAY_CMDS in scripts/guardrails/agent-bash-guard.mjs.
+2. Added three new RULES entries:
+   - commit-no-verify: blocks `git commit --no-verify` (uses a test() that
+     strips quoted -m messages first, so prose mentioning --no-verify is
+     still allowed — no over-triggering).
+   - git-hooks-path-redirect: blocks `git config core.hooksPath`.
+   - hooks-dir-write: blocks writes/redirects into .githooks/. directory.
+3. Extended the guard's self-test (--selftest mode) with 10 new mustBlock
+   cases (7 interpreter reads + 3 new rule violations) and 1 regression
+   mustAllow case (commit message describing the patterns must not fire).
+
+Result: VERIFY passed. `node scripts/guardrails/agent-bash-guard.mjs --selftest`
+reports "selftest OK - 30 blocked, 18 allowed." Confirmed via
+`node scripts/guardrails/run-all.mjs --only=agent-bash-guard` → PASS.
+
+Commit: 8b68f9867fed9be40dc41026ced22b25624cc5ee
+"guard: close interpreter .env exfil holes + no-verify/hooksPath/.githooks write"
+(1 file changed, 35 insertions(+), 1 deletion(-); secret-scan OK, 1 file, no secrets)
+
