@@ -1312,7 +1312,7 @@ exists. Add only what is genuinely missing and say in the journal which assertio
 covered.
 **VERIFY:** `npx vitest run apps/web/__tests__/journey-entitlement-grant.test.ts` passes; commit.
 
-### P9.5-06 — Cancellation, downgrade, and refund path · STATUS: DONE · STRIKES: 0 · COMMIT (pending)
+### P9.5-06 — Cancellation, downgrade, and refund path · STATUS: DONE · STRIKES: 0 · commit ba60cf43
 **LAUNCH-CRITICAL.** Extend the P9.5-05 file or add a sibling.
 Assert: a cancelled subscription retains access until period end and only then revokes (revoking
 early triggers refunds and chargebacks); a failed payment follows the documented dunning/grace
