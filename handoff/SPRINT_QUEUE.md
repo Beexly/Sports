@@ -1624,7 +1624,7 @@ Fix: surface the coverage figure the codebase already computes, beside the rate,
 change how the rate is computed. Do NOT weaken or remove any existing gate.
 **VERIFY:** test asserting coverage renders alongside the rate. typecheck + lint. Commit.
 
-### P12-06 — Loss autopsies have no candidate queue (cherry-picking risk) · STATUS: TODO · STRIKES: 0
+### P12-06 — Loss autopsies have no candidate queue (cherry-picking risk) · STATUS: DOING · STRIKES: 0
 Evidence: the pipeline exists — `apps/web/lib/loss-autopsy/draft.ts`,
 `apps/web/app/api/admin/losses/[pickId]/draft/route.ts`, four read surfaces. But every entry point is
 keyed on a `pickId` the operator supplies, and `apps/web/app/cockpit/losses/page.tsx` reads
