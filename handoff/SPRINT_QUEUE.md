@@ -1048,7 +1048,7 @@ FREE with `spoofBlocked: true`). New test: `apps/web/lib/gse-stats/__tests__/ses
 (4 tests, all pass). `npx vitest run` on that file: 4 passed.
 Same as P8-02, next item.
 
-### P8-06 — Fix the next finding · STATUS: TODO · STRIKES: 0
+### P8-06 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Same as P8-02, next item.
 
 ### P8-07 — Fix the next finding · STATUS: TODO · STRIKES: 0

@@ -87,7 +87,7 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 9 | GSE-SEC-024 | advertised phase price vs Stripe `unit_amount` | `apps/web/lib/billing/price-ids.ts` — FIX DONE (P8-03): added `advertisedPhaseUnitAmountCents()` + `stripePriceAmountMatchesAd()`; `resolveCheckoutPriceId` in `stripe.ts` now fail-closed when Stripe's `unit_amount` ≠ advertised phase price. Verified by 7 new tests in `price-ids.test.ts`. | SAFE DIRECT | FIXED — see <commit> | S |
 | 10 | GSE-SEC-026 | rankingP on public board | `apps/web/lib/board/state.ts` verified — extractRankingFromFb now accepts isPremiumViewer and nulls rankingP/rankingSource for non-PREMIUM viewers (mirroring GSE-SEC-025 market redaction) | FIXED — see fc31f451 | S |
 | 11 | GSE-SEC-029 | .env.example hygiene | STALE — file does not exist (`apps/web/.env.example` not found); no secret leaked | STALE | S |
-| 12 | GSE-SEC-031 | /api/performance loads every settled pick | `apps/web/app/api/performance/route.ts:34` verified — loads all settled picks | SAFE DIRECT | S |
+| 12 | GSE-SEC-031 | /api/performance loads every settled pick | `apps/web/app/api/performance/route.ts` — findMany replaced with db.$queryRaw GROUP BY(s.name, p.result); O(sports×results) rows instead of O(picks) | FIXED — see P8-06 | S |
 | 13 | GSE-SEC-036 | env-controlled fetchers have no SSRF guard | `apps/web/lib/news/rss.ts:27` verified — NEWS_RSS_FEEDS fetch with no URL allow-list | SAFE DIRECT | S |
 | 14 | GSE-SEC-037 | public GSE v1 + roster POSTs, no schema | `apps/web/app/api/gse/v1/hydration/plan/route.ts:12` verified — POST with no zod schema | SAFE DIRECT | S |
 
