@@ -1564,7 +1564,7 @@ existing group (likely `COMPANY_LINKS`). One line.
 **VERIFY:** typecheck + lint clean; run any existing footer test; grep-confirm `/contact` appears in the
 footer source. Commit.
 
-### P12-03 — Nothing can answer "did anyone convert" · STATUS: TODO · STRIKES: 0
+### P12-03 — Nothing can answer "did anyone convert" · STATUS: DONE · STRIKES: 0
 Evidence: `apps/web/lib/analytics/events.ts:89-96` — `track()` is explicitly inert ("Intentionally inert
 for now — no network, no identity") with exactly ONE non-test caller in the whole app
 (`apps/web/components/gsn/waitlist-form.tsx:17`). ~20 typed funnel events are DECLARED and never fired

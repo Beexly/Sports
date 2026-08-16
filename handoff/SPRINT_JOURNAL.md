@@ -2588,3 +2588,56 @@ Commit: 8ffacbd32ce7eeec1f030a8833da6b41102da800
 apps/web/components/ui/footer.tsx | 1 file changed, 1 insertion(+). secret-scan: OK — 1 file scanned, no secrets detected."
 
 Next: STOP. One task this run.
+
+---
+
+### 2026-08-16T21:30:00Z · P12-03 — DONE · STRIKES: 0
+
+Found P12-03 as the first TODO task in SPRINT_QUEUE.md (top to bottom). Set
+STATUS to DOING, then wired the 4 declared-but-unfired pricing/conversion
+funnel events at their natural call sites. track() remains inert-by-default
+(no network call, no vendor env var).
+
+Action:
+1. Read apps/web/lib/analytics/events.ts — confirmed track() is a pure no-op
+   returning { event, context }; verified 4 funnel events declared but
+   never fired (pricing_page_view, upgrade_cta_click, checkout_start,
+   checkout_complete).
+2. Read apps/web/components/pricing/subscribe-button.tsx — only analytics
+   caller was waitlist-form.tsx (unrelated GSE funnel).
+3. Read apps/web/app/pricing/page.tsx — Server Component (no "use client").
+4. Read apps/web/app/api/webhooks/stripe/route.ts — checkout.session.completed
+   handler at line 128; syncSubscription uses tierFromPriceRef to resolve tier.
+5. Read existing test patterns: subscribe-button-disclosure.test.tsx (jsdom +
+   @testing-library/react), stripe-webhook-route.test.ts (mock layer).
+
+Files created:
+- apps/web/components/pricing/pricing-page-analytics.tsx — thin "use client"
+  component that fires track("pricing_page_view") on mount via useEffect.
+- apps/web/__tests__/analytics-instrumentation.test.tsx — 5 tests asserting
+  the right event + payload at each wired site (mock track).
+
+Files modified:
+- apps/web/components/pricing/subscribe-button.tsx — added track import;
+  fired "upgrade_cta_click" (intent, before network) and "checkout_start"
+  (immediately before POST to /api/subscriptions/checkout) in handleClick.
+- apps/web/app/api/webhooks/stripe/route.ts — added track import;
+  fired "checkout_complete" with tier resolved via tierFromPriceRef from
+  the retrieved subscription's price items, in the
+  checkout.session.completed case after syncSubscription.
+- apps/web/app/pricing/page.tsx — imported and rendered
+  <PricingPageAnalytics /> inside <main>.
+
+VERIFY (all pass):
+- npx vitest run __tests__/analytics-instrumentation.test.tsx — 5/5 PASS
+- npx vitest run __tests__/subscribe-button-disclosure.test.tsx — 5/5 PASS
+  (no regression)
+- npx vitest run __tests__/analytics-events.test.ts — 5/5 PASS (no regression)
+- npx tsc --noEmit (apps/web) — exit 0 (clean)
+- npx eslint on all 5 files --max-warnings=0 — clean
+
+Commit: f863d07a
+"Wire analytics funnel events at natural call sites (P12-03)"
+(5 files changed, 263 insertions(+), 2 new files)
+
+Result: DONE. Commit f863d07a. One task this run.
