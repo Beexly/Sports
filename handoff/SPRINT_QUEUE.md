@@ -1892,7 +1892,7 @@ projection or a live win-rate, push, merge, or deploy. Where a step writes prod 
 you BUILD and VERIFY it and write the one-command owner runbook — the owner runs it. Commit locally, one
 task per session. All the standing §NEVER rules still apply.
 
-### P14-01 — Build the public market-calibration baseline page (the proof that needs NO track record) · STATUS: TODO · STRIKES: 0
+### P14-01 — Build the public market-calibration baseline page (the proof that needs NO track record) · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T19:39:27Z
 **Why this is the highest-leverage task in the whole queue.** `apps/web/app/api/calibration/market-backtest/route.ts`
 and `.../elo-backtest/route.ts` are LIVE, public, unauthenticated endpoints backed by
 `apps/web/lib/calibration/market-backtest.ts` + `elo-backtest.ts`. They de-vig the CLOSING moneyline over
