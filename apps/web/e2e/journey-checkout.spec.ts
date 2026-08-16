@@ -129,9 +129,23 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       // Toggle to Annual and confirm the annual prices render too — proving
       // the phase-derived annual values flow through the client toggle as well,
       // not just monthly.
+      //
+      // `exact: true` is load-bearing, do not loosen it back to a substring
+      // regex. The previous `text=/\$99\/year/` matched TWO nodes — the price
+      // display AND the FTC auto-renew disclosure, which legitimately contains
+      // the price inside a sentence ("Auto-renews at $99/year until you
+      // cancel"). Playwright strict mode then fails the assertion. It was
+      // intermittent precisely because it is a race between those two nodes
+      // rendering: whichever run saw only one of them passed. Diagnosed
+      // 2026-08-16 after it was briefly mistaken for a WebKit product bug — the
+      // toggle itself works correctly on both Chrome and WebKit.
       await page.getByRole("group", { name: /Billing interval/i }).getByRole("button", { name: /Annual/i }).click();
-      await expect(page.locator("text=/\\$" + FOUNDING_PRICES.PRO_ANNUAL + "\\/year/")).toBeVisible();
-      await expect(page.locator("text=/\\$" + FOUNDING_PRICES.ELITE_ANNUAL + "\\/year/")).toBeVisible();
+      await expect(
+        page.getByText(`$${FOUNDING_PRICES.PRO_ANNUAL}/year`, { exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByText(`$${FOUNDING_PRICES.ELITE_ANNUAL}/year`, { exact: true }),
+      ).toBeVisible();
     });
   });
 
