@@ -1099,7 +1099,7 @@ Test file: apps/web/__tests__/b2b-rate-limit.test.ts (new, 5 tests):
 
 Verify: npx vitest run (from apps/web root) → 5/5 passed. tsc --noEmit clean. eslint --max-warnings=0 clean.
 
-### P8-12 — Fix the next finding · STATUS: DOING · STRIKES: 0
+### P8-12 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T23:15:00Z (commit c3d28f7a)
 Same as P8-02, next item.
 
 ### P8-13 — Fix the next finding · STATUS: TODO · STRIKES: 0

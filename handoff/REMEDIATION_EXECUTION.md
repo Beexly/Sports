@@ -107,7 +107,7 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 24 | GSE-SEC-052 | dual legal registries; nflverse blanket | `apps/web/lib/source-rights/index.ts` re-exports from `scraping/source-rights-registry.ts`; `packages/data-ingestion` has separate | NEEDS-OWNER (MIXED — collapsing registries touches sealed/docs; assert→checkClearance is SAFE DIRECT) | M |
 | 25 | GSE-SEC-053 | most records never get RightsSnapshot | `apps/web/lib/ingestion/` verified — RightsSnapshot missing on bulk inserts | NEEDS-OWNER (if persist columns) / SAFE DIRECT (wrap at boundaries) | L |
 | 26 | GSE-SEC-054 | attribution dropped; henrygd labeled ESPN | `apps/web/lib/data-sources/free-first-ingest.ts` verified — ESPN attribution overwrite at line 126 | SAFE DIRECT (stop overwrite); NEEDS-OWNER (persist attribution column) | S–M |
-| 27 | GSE-SEC-055 | DATA_RULES never consulted at wrap | `apps/web/lib/scraping/data-rules.ts:41` verified — DATA_RULES only used within module | SAFE DIRECT | S |
+| 27 | GSE-SEC-055 | DATA_RULES never consulted at wrap | `apps/web/lib/scraping/data-rules.ts:41` verified — DATA_RULES only used within module | SAFE DIRECT | S | FIXED — consult DATA_RULES in `wrapExtractedRecord` via `getDataRule()`; 6 tests added. commit c3d28f7a |
 | 28 | GSE-SEC-057 | untrusted user text interpolated into prompts | `apps/web/lib/pick-explainer/prompts.ts:113` verified — `${q}` template literal, no sanitization | SAFE DIRECT | S |
 | 29 | GSE-SEC-063 | /embed CSP is only frame-ancestors * | `apps/web/next.config.mjs:80` verified — /embed frame-ancestors * (INFO: intentional) | INFO — do not fix unless product intent changes | — |
 | 30 | GSE-SEC-065 | vercel.json vs next.config header drift | `vercel.json:99` vs `apps/web/next.config.mjs:103` verified — /embed frame headers differ | SAFE DIRECT | S |
@@ -176,8 +176,12 @@ The first OPEN SAFE DIRECT finding, ordered by severity × effort:
 3. **GSE-SEC-048** — fallback snapshot fabricates prediction-time fields
    - Severity: LOW · Effort: S · File: `apps/web/lib/airwave/intelligence-control-plane.ts`
 
-4. **GSE-SEC-055** — DATA_RULES never consulted at wrap
+4. **GSE-SEC-055** — DATA_RULES never consulted at wrap  ✅ FIXED (P8-12, commit c3d28f7a)
    - Severity: MEDIUM · Effort: S · File: `apps/web/lib/scraping/data-rules.ts:41`
+   - Fix: `wrapExtractedRecord()` now accepts an optional `dataCategory` param and
+     consults `DATA_RULES` via `getDataRule()` before wrapping. Unknown / blocked
+     (extractionAllowed=false or storageAllowed=false) categories are rejected.
+     Three live callers updated to pass `"fact"`.
 
 5. **GSE-SEC-057** — untrusted user text interpolated into prompts
    - Severity: MEDIUM · Effort: S · File: `apps/web/lib/pick-explainer/prompts.ts:113`

@@ -1215,3 +1215,94 @@ VERIFY:
 - GSE-SEC-042 marked FIXED in REMEDIATION_EXECUTION.md (line 172).
 - P8-04 marked DONE in SPRINT_QUEUE.md.
 - No git push, no --force, no secrets.
+
+### 2026-08-18T22:45:00Z · P8-11 · DONE · STRIKES: 0 · commits 189f5f9e + bd89a53a
+Resumed from prior interrupted session which had already set STATUS to DOING
+and applied the source/test edits. Task: Fix GSE-SEC-015 (B2B API rate limit is
+process-local). Source: `apps/web/lib/b2b/api-key-auth.ts`.
+
+Evidence: `rateLimitB2b` used a module-level `Map` (`const hits = new Map`) —
+each serverless instance had its own counter, resetting on cold start and
+scaling with instance count. No cross-instance enforcement.
+
+Fix: replaced the process-local Map with `PostgresDurableRateLimiter` from
+`@/lib/community/durable-rate-limiter` — an atomic
+`INSERT ... ON CONFLICT DO UPDATE ... WHERE count < limit` backed by the
+`rate_limit_counters` table, shared across all instances. In stub/test mode
+an `InMemoryDurableRateLimiter` is used (refuses to construct in production).
+The limiter throws `RateLimitStoreUnavailableError` on store failure, which
+`rateLimitB2b` translates to a 503 fail-closed response (never a silent
+allow). Routes `app/api/v1/probabilities/route.ts` and
+`app/api/v1/signals/route.ts` updated to `await rateLimitB2b(...)` and
+handle the new 429/503 status codes.
+
+Files committed:
+- apps/web/lib/b2b/api-key-auth.ts (modified)
+- apps/web/app/api/v1/probabilities/route.ts (modified)
+- apps/web/app/api/v1/signals/route.ts (modified)
+- apps/web/__tests__/b2b-rate-limit.test.ts (new, 5 tests)
+
+VERIFY:
+- `npx vitest run --root apps/web __tests__/b2b-rate-limit.test.ts` → 5/5 passed
+- Also ran selective-publish.test.ts (7/7 passed) — no regression in shared
+  `authorizeB2bApiKey` import
+- `npx tsc --noEmit` from apps/web → clean (exit 0)
+- `npx eslint lib/b2b/api-key-auth.ts app/api/v1/probabilities/route.ts app/api/v1/signals/route.ts __tests__/b2b-rate-limit.test.ts --max-warnings=0` → clean
+- Commit 189f5f9e confirmed via git rev-parse
+- GSE-SEC-015 marked FIXED in REMEDIATION_EXECUTION.md (line 83, commit 189f5f9e)
+- P8-11 marked DONE in SPRINT_QUEUE.md
+- secret-scan: OK — scanned 4 + 2 staged file(s), no secrets detected
+
+### 2026-08-18T23:15:00Z · P8-12 · DONE · STRIKES: 0 · commit c3d28f7a
+Resumed P8-12 (first TODO in SPRINT_QUEUE.md after P8-01..P8-11 all DONE/BLOCKED).
+
+Took the FIRST unfixed SAFE-DIRECT finding in REMEDIATION_EXECUTION.md by severity×effort
+ordering: GSE-SEC-055 — "DATA_RULES never consulted at wrap."
+
+Evidence: `wrapExtractedRecord()` in `apps/web/lib/scraping/clearance-engine.ts:346`
+accepted raw extracted data and only checked `clearance.allowed` and `rightsSnapshot` —
+it never called `getDataRule()` / `getAllowedDataCategories()` / `getBlockedDataCategories()`
+from `data-rules.ts`. DATA_RULES existed as a standalone registry (tested for shape in
+scraping-clearance.test.ts) but no extraction path actually consulted it at the wrap
+boundary. A caller extracting a blocked category (e.g. `personal_data`, `expression`,
+`graphic`) could silently wrap it into a production ExtractedRecord.
+
+Note: I also verified GSE-SEC-020 (HIGH, S — first entry) and GSE-SEC-033 (HIGH, S)
+before landing on GSE-SEC-055. Both were listed as OPEN in the register but the fixing
+code already exists in the working tree (backslash guard in callback-url-guard.ts;
+stripe-webhook-entitlement guard in the webhook route), so those register entries are
+stale and should be marked FIXED in a separate owner pass. I did NOT touch those files.
+
+Fix applied:
+- `apps/web/lib/scraping/clearance-engine.ts`: added optional `dataCategory?: DataFieldCategory`
+  parameter to `wrapExtractedRecord()`. When provided, calls `getDataRule(category)` and
+  throws if `extractionAllowed=false` or `storageAllowed=false`; also throws on unknown
+  categories. Added `data_category` field to the `ExtractedRecord` type (null when
+  undeclared — backward compatible). Imported `getDataRule` + `DataFieldCategory` from
+  `./data-rules`.
+- `apps/web/lib/fantasy/adp-source.ts:260`: pass `"fact"` (ADP data is factual).
+- `apps/web/lib/intelligence/expected-points.ts:233`: pass `"fact"` (statistical data).
+- `apps/web/lib/integrations/graded-pool.ts:367`: pass `"fact"` (player pool data).
+- `apps/web/__tests__/scraping-clearance.test.ts`: 6 new tests under "PROOF 10 —
+  wrapExtractedRecord consults DATA_RULES (GSE-SEC-055)": accept fact, reject expression,
+  reject personal_data, reject unknown category, backward-compat omit, rejection despite
+  allowed source.
+
+Files committed (git add -f for the gitignored handoff/ files):
+- apps/web/lib/scraping/clearance-engine.ts
+- apps/web/lib/fantasy/adp-source.ts
+- apps/web/lib/intelligence/expected-points.ts
+- apps/web/lib/integrations/graded-pool.ts
+- apps/web/__tests__/scraping-clearance.test.ts
+- handoff/SPRINT_QUEUE.md (P8-11 → DONE status)
+
+VERIFY:
+- `npx vitest run --root apps/web __tests__/scraping-clearance.test.ts` → 82/82 passed
+- `npx vitest run --root apps/web lib/fantasy/adp-source.test.ts lib/intelligence/expected-points.test.ts lib/integrations/graded-pool.test.ts` → 54/54 passed
+- `npx eslint --max-warnings=0` on all 5 source/test files → clean (exit 0)
+- `npx tsc --noEmit -p apps/web/tsconfig.json` → no errors in touched files
+- Commit c3d28f7a confirmed via git rev-parse
+- GSE-SEC-055 marked FIXED in REMEDIATION_EXECUTION.md (table row 27 + NEXT-TARGET item 4)
+- P8-12 marked DONE in SPRINT_QUEUE.md
+- secret-scan: OK — scanned 6 staged file(s), no secrets detected
+- No git push, no --force, no .env files, no sealed-tree edits
