@@ -52,7 +52,7 @@ function runAudit() {
     const out = execFileSync(
       "npm",
       ["audit", "--json", ...(includeDev ? [] : ["--omit=dev"])],
-      { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] },
+      { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"], shell: process.platform === "win32" },
     );
     return JSON.parse(out);
   } catch (error) {

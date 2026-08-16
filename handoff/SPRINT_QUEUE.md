@@ -1850,7 +1850,7 @@ Fix: add a per-IP `consumeRateLimit` and a short result cache.
 **VERIFY:** test asserting the 21st request in a window from one IP gets 429, and that two identical
 requests trigger one upstream fetch. typecheck + lint. Commit.
 
-### P13-07 — Dependency gate fails on Windows (ENOENT) · STATUS: TODO · STRIKES: 0
+### P13-07 — Dependency gate fails on Windows (ENOENT) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T22:15:00Z
 Evidence: `scripts/guardrails/dependency-audit.mjs` exits 2 with `spawnSync npm ENOENT` on Windows —
 `execFileSync("npm", …)` without `shell: true` cannot resolve `npm.cmd`. It fails CLOSED (exit 2 =
 fail, not a false pass) and works on Linux CI, so this is developer ergonomics, not a hole — but it
