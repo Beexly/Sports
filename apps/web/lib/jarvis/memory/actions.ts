@@ -19,6 +19,7 @@
 
 import { db } from "@sports/db";
 import { Prisma } from "@sports/db";
+import { requireAdminActor } from "@/lib/auth/actor";
 import { canTransition } from "./states";
 import { assertConfirmationAllowed } from "./guards";
 import {
@@ -61,6 +62,7 @@ export interface CreateMemoryCandidateInput {
  * The state is always 'candidate' — guards enforce this.
  */
 export async function createMemoryCandidate(input: CreateMemoryCandidateInput) {
+  await requireAdminActor();
   try {
     const record = await db.jarvisMemoryEvent.create({
       data: {
@@ -98,6 +100,7 @@ export async function createMemoryCandidate(input: CreateMemoryCandidateInput) {
  * Confirm a candidate memory. Requires ownerApproval for sensitive types.
  */
 export async function confirmMemory(id: string, ownerApproval: boolean = false) {
+  await requireAdminActor();
   try {
     const existing = await db.jarvisMemoryEvent.findUniqueOrThrow({ where: { id } });
 
@@ -134,6 +137,7 @@ export async function confirmMemory(id: string, ownerApproval: boolean = false) 
 }
 
 export async function rejectMemory(id: string) {
+  await requireAdminActor();
   try {
     const existing = await db.jarvisMemoryEvent.findUniqueOrThrow({ where: { id } });
 
@@ -156,6 +160,7 @@ export async function rejectMemory(id: string) {
 }
 
 export async function expireMemory(id: string) {
+  await requireAdminActor();
   try {
     const existing = await db.jarvisMemoryEvent.findUniqueOrThrow({ where: { id } });
 
@@ -185,6 +190,7 @@ export async function supersedeMemory(
   supersededId: string,
   newMemoryInput: CreateMemoryCandidateInput & { owner_approval?: boolean }
 ) {
+  await requireAdminActor();
   try {
     return await db.$transaction(async (tx) => {
       const old = await tx.jarvisMemoryEvent.findUniqueOrThrow({ where: { id: supersededId } });
@@ -332,6 +338,7 @@ export async function listMemoryConflicts() {
 // ── Link ──────────────────────────────────────────────────────────────────────
 
 export async function linkMemoryToDecision(memoryId: string, decisionId: string) {
+  await requireAdminActor();
   try {
     return await db.jarvisMemoryEvent.update({
       where: { id: memoryId },
@@ -353,6 +360,7 @@ export async function linkMemoryToDecision(memoryId: string, decisionId: string)
  * propagate; DB errors are wrapped as MemoryStoreUnavailableError.
  */
 export async function linkMemoryToAgentRun(memoryId: string, agentRunId: string) {
+  await requireAdminActor();
   try {
     // Validate the run exists before connecting — throws if not found.
     await db.subagentRun.findUniqueOrThrow({ where: { id: agentRunId } });
