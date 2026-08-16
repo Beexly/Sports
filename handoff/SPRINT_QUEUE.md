@@ -1297,7 +1297,7 @@ price or tier (the client must never choose what it pays — the server does).
 fail — that is EXPECTED. Assert the typed 503 fail-closed path instead and note it in the journal.
 Do NOT add a key to make it pass.
 
-### P9.5-05 — Entitlement-grant correctness (the money-in / product-out seam) · STATUS: DOING · STRIKES: 0
+### P9.5-05 — Entitlement-grant correctness (the money-in / product-out seam) · STATUS: DONE · STRIKES: 0 · COMMIT 881edda2
 **LAUNCH-CRITICAL. Start here if the e2e harness blocked.**
 Not a browser test — a focused integration test. File: new
 `apps/web/__tests__/journey-entitlement-grant.test.ts`.

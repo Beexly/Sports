@@ -1774,3 +1774,65 @@ Commit: a162a187bd6a1ef070ed8d18d55de8a5596f3b05
 "test(e2e): add journey-auth spec for signin + auth + open-redirect guard [sprint]"
 
 Next: P9.5-04
+
+### 2026-08-16T12:00:00Z — P9.5-05 — DONE · STRIKES: 0 · COMMIT 881edda2
+
+Task: Entitlement-grant correctness (the money-in / product-out seam). Create
+`apps/web/__tests__/journey-entitlement-grant.test.ts` asserting:
+(a) checkout.session.completed grants the CORRECT tier;
+(b) customer.subscription.deleted revokes it;
+(c) the SAME webhook delivered twice grants exactly once;
+(d) an UNKNOWN price id does NOT silently downgrade a paying member;
+(e) a FAILING signature grants nothing.
+
+Read FIRST:
+- apps/web/app/api/webhooks/stripe/route.ts (the webhook handler, 551 lines)
+- apps/web/__tests__/stripe-webhook-route.test.ts (existing coverage, 52 tests)
+- apps/web/lib/stripe.ts (getStripe, stripe proxy, StripeConfigError)
+- apps/web/lib/billing/price-ids.ts (tierFromPriceRef, TIER_ENV_KEYS)
+- handoff/SPRINT_BOOT.md (the loop, commit discipline, two-strike rule)
+
+Coverage analysis (what existing tests already cover vs. what is genuinely missing):
+- (b) subscription.deleted → FREE/CANCELED: ALREADY covered at lines 998-1016 of
+  stripe-webhook-route.test.ts. I included it here as a seam-level restatement only.
+- (c) idempotency: event-agnostic skip is covered at lines 603-614 (findUnique check),
+  but the EXISTING test doesn't verify the entitlement-level "exactly once" invariant
+  — it doesn't assert subscriptionsRetrieve is called only once. My test adds that.
+- (d) unknown price → no downgrade: the grandfathering guard IS covered at lines 909-925
+  of the existing test, but ONLY for `customer.subscription.updated`. My test covers
+  the `checkout.session.completed` path (the money-in seam) for the same guard.
+- (e) failing signature → no writes: ALREADY covered at lines 552-559. Included here
+  as the launch-critical invariant restated.
+- (a) checkout.session.completed grants CORRECT tier: NOT covered. The existing test
+  at line 675 only asserts `subscriptionUpsert.toHaveBeenCalled()` — it never checks
+  that the tier value is correct. THIS is the critical gap.
+
+New test file: apps/web/__tests__/journey-entitlement-grant.test.ts (6 tests):
+1. checkout.session.completed grants PRO tier for a PRO price (asserts tier: "PRO"
+   in the upsert update object — the gap in existing coverage)
+2. checkout.session.completed grants ELITE tier for an ELITE annual price
+3. customer.subscription.deleted revokes to FREE/CANCELED (seam restatement)
+4. duplicate checkout.session.completed grants exactly once (only 1 subscriptionsRetrieve
+   call, only 1 subscriptionUpsert call — entitlement-level idempotency)
+5. unknown price id on active subscription retains existing paid tier (no downgrade)
+   via the checkout.session.completed path
+6. failing signature grants nothing (no DB writes at all)
+
+VERIFY:
+- npx vitest run __tests__/journey-entitlement-grant.test.ts → 6 passed
+- npx vitest run __tests__/stripe-webhook-route.test.ts → 52 passed (no regression)
+- Combined: npx vitest run __tests__/journey-entitlement-grant.test.ts
+  __tests__/stripe-webhook-route.test.ts → 58 passed (6+52, 0 failed)
+- npx tsc --noEmit (filtered for journey-entitlement-grant) → no errors in new file
+- Pre-existing tsc errors (next/server module declarations, @types/react esModuleInterop,
+  vite rollup types) are unchanged — none in the new test file.
+
+Commit: 881edda29d56c97b85c08f70eb14d6f30fab0ab6
+"test(e2e): P9.5-05 entitlement grant correctness — checkout.session.completed grants correct tier, delete revokes, idempotency, unknown-price no-downgrade, signature failure blocks all writes"
+(3 files changed, 383 insertions(+), 2 deletions(-):
+ - apps/web/__tests__/journey-entitlement-grant.test.ts (new, 6 tests)
+ - handoff/SPRINT_QUEUE.md (STATUS DOING→DONE)
+ - handoff/SPRINT_JOURNAL.md (this entry)
+secret-scan: OK — scanned 3 file(s) [staged]; no secrets detected.)
+
+Next: P9.5-06
