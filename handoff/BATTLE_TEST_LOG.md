@@ -738,3 +738,58 @@ biting.
 
 ---
 
+## Round 1 — Closing Summary
+**Date:** 2026-08-17
+**Findings this round vs. previous:** This is Round 1, so there is no prior round to compare against for trend. Baseline established for future rounds.
+
+### Findings Tally
+| Finding ID | Source Task | Severity | Verdict |
+|---|---|---|---|
+| GSE-SEC-081 | P10-03 Claim 1 | MEDIUM-HIGH | VERIFIED WRONG — Odds API header auth claim contradicted by live probe + current vendor docs |
+| FFC ADP terms | P10-03 Claim 2 | Low | UNVERIFIED — FFC terms page returned 404; cannot confirm "once/day" contract |
+| nflverse ~40MB | P10-03 Claim 3 | Info | UNVERIFIED — internal perf claim, not re-measured (no load per constraints) |
+| D5-NEW | P10-02 | Low | PENDING FOLLOW-UP — waitlist-store.ts `$executeRawUnsafe` needs line-read |
+| D13-NEW-2 | P10-02 | Medium | PENDING FOLLOW-UP — brief + performance routes unprotected, no rate limit |
+| D15-NEW-1 | P10-02 | Low | PENDING FOLLOW-UP — 2 real `as any` casts in non-money paths |
+| hygiene-01 | P10-04 | Low | PENDING FOLLOW-UP — broad `handoff/` gitignore risk |
+| hygiene-02 | P10-04 | Info | PENDING FOLLOW-UP — two-agent duplicate status commits |
+| D9 improvement | P10-02 | — | GSE-SEC-078 FIXED — ESPN clearance now on all multi-source-scores paths |
+| D11 improvement | P10-02 | — | Vuln count 9→2 (next + postcss high only) |
+| D13 improvement | P10-02 | — | Rate-limit coverage 8/176 → 32/176 routes |
+| P8-08 regression | P10-01 | CRITICAL | REOPENED — GSE-SEC-033 has no git commit despite DONE status; task appended as P8-08-RESUME |
+
+**Summary:** Round 1 re-verified 62 DONE tasks (61 with verified commits, 1 regression — P8-08). Found
+1 proven-wrong claim (GSE-SEC-081), 2 unverified claims, 3 new follow-up items, and confirmed the
+P8-08 regression requiring P8-08-RESUME. Material improvements since original audit: GSE-SEC-078 fixed,
+supply-chain vulns reduced 9→2, rate-limit coverage 8→32 routes. No new committed work was
+introduced this round (P10 is read-only verification).
+
+### Round 2 — Reset
+Round 2 begins. P10-01, P10-02, P10-03, and P10-04 are reset to STATUS: TODO for independent
+re-derivation per the Phase 10 charter. P10-05 (this task) is marked DONE after this summary.
+P8-08-RESUME remains at STATUS: TODO (appended during Round 1's P10-01 findings).
+
+### P10-01 — Round 2 Reset
+**STATUS: TODO** (reset from DONE)
+Round 2 P10-01 must re-verify every DONE task in Phases 0-9 independently — including P8-08-RESUME
+(which is itself a Round 1 finding). This round starts from the current HEAD, NOT Round 1's conclusions.
+
+### P10-02 — Round 2 Reset
+**STATUS: TODO** (reset from DONE)
+Round 2 P10-02 must re-audit D1-D15 fresh, then reconcile against Round 1's findings. Pay special
+attention to: GSE-SEC-081 (now a new finding to confirm in Round 2), D5-NEW follow-up, D13-NEW-2.
+
+### P10-03 — Round 2 Reset
+**STATUS: TODO** (reset from DONE)
+Round 2 P10-03 must re-hunt confidently-wrong claims, including verifying GSE-SEC-081 against the
+vendor once more (independent of Round 1's probe) and checking D13-NEW-2's unprotected routes for
+any confident comments about external behavior.
+
+### P10-04 — Round 2 Reset
+**STATUS: TODO** (reset from DONE)
+Round 2 P10-04 must re-sweep working-tree hygiene, including verifying no regression from P8-08-RESUME's
+upcoming commit and that the broad `handoff/` gitignore has not silently swallowed new deliverables.
+
+### P10-05 — Round 1 Complete
+**STATUS: DONE** (this task)
+Round counter incremented to 2. Round 1 summary above. Proceeding to Round 2 (P10-01 reset above).
