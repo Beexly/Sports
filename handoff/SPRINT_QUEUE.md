@@ -1058,7 +1058,7 @@ Same as P8-02, next item.
 **RESUMING — GSE-SEC-033** (durable-write guard covers only two Stripe caps) is the first OPEN SAFE DIRECT finding. File: `apps/web/lib/stripe.ts:393`.
 Same as P8-02, next item.
 
-### P8-09 — Mid-backlog regression checkpoint · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T21:15:00Z (commit TBD)
+### P8-09 — Mid-backlog regression checkpoint · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T21:15:00Z (commit a56fe1dc)
 Re-run `CI=1 npm test > handoff/test-census-p8.txt 2>&1` and compare against `TEST_CENSUS.md`. Any
 NEW failure introduced by P8-02..08 is a regression YOU caused — find the commit
 (`git log --oneline` + `git show`), fix it, commit the fix.

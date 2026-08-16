@@ -1,4 +1,4 @@
-### 2026-08-18T21:05:00Z · P8-09 · DONE · STRIKES: 0 · commit TBD
+### 2026-08-18T21:05:00Z · P8-09 · DONE · STRIKES: 0 · commit a56fe1dc
 Mid-backlog regression checkpoint. Re-ran `CI=1 npm test > handoff/test-census-p8.txt 2>&1`
 (4,615 lines, 11,146 total tests) and compared against the P7-02 baseline
 (`handoff/test-census-raw.txt`, 4,717 lines, 11,066 total tests + `TEST_CENSUS.md` §1–§6).
@@ -33,8 +33,8 @@ The 16 remaining failures are all pre-existing (10 api-v1 shadow-seam, (a)) or
 environmental (6 files needing Postgres on localhost:5433, (c)). No P8 commit
 introduced any regression. Full comparison written to TEST_CENSUS.md §7.
 
-No new commits were needed (no regressions to fix). Committed the test-census-p8.txt
-raw output + TEST_CENSUS.md update + P8-09 DONE-in-queue + this journal entry together.
+No new code commits were needed (no regressions to fix). Committed the test-census-p8.txt
+raw output + TEST_CENSUS.md update + P8-09 DONE-in-queue + this journal entry as commit a56fe1dc.
 
 ### 2026-08-18T19:33:00Z · P8-05 · DONE (strikes 0)
 Same as P8-02, next item.
