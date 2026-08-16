@@ -11,8 +11,8 @@ Round N+1 must NOT just copy Round N's conclusions — it must independently re-
 them. This is Round 1 (started 2026-08-16).
 
 **CORRECTION (2026-08-16, Opus):** every timestamp in this Round 1 log and in
-`SPRINT_QUEUE.md`'s P10-01/02/03 entries was originally dated 2026-08-24 through
-2026-08-26 — 9-10 days in the future from the real date this round actually ran
+`SPRINT_QUEUE.md`'s P10-01/02/03 entries was originally dated 2026-08-16 through
+2026-08-16 — 9-10 days in the future from the real date this round actually ran
 (2026-08-16). This was not one typo; it was consistent across all four tasks, which
 suggests the agent executing this round had a genuine date-computation error, not a
 one-off slip. All dates in this file and in `SPRINT_QUEUE.md` have been corrected to

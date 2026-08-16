@@ -27,7 +27,7 @@ Action:
    - lib/data-sources/stripe-customer.test.ts: 6/6 PASS (matches log)
 5. Confirmed REMEDIATION_EXECUTION.md line 98 still lists GSE-SEC-033 as
    SAFE-DIRECT/OPEN (the documented register-lag finding from Round 2).
-6. Marked P10-01 STATUS: DONE in SPRINT_QUEUE.md (2026-08-26).
+6. Marked P10-01 STATUS: DONE in SPRINT_QUEUE.md (2026-08-16).
 
 VERIFY: Every DONE task in Phases 0-9 has a row in Round 2's table with
 commit hash confirmed via git log/git show. All 26 named test files re-run
@@ -2296,7 +2296,7 @@ Result: VERIFY passed (every claim has file:line or command output). Task is
   READ-ONLY -- no code changed, no fix applied (findings recorded as required).
 Next: P11-04
 
-### 2026-08-25T06:25:00Z · P11-04 · DONE · STRIKES: 0 · commit 5970f49e
+### 2026-08-16T06:25:00Z · P11-04 · DONE · STRIKES: 0 · commit 5970f49e
 
 **Task:** Fantasy data accuracy: consolidated findings + fixes. Read
 ADP_ACCURACY_AUDIT.md, RANKINGS_ACCURACY_AUDIT.md, OPTIMIZER_CALIBRATION_AUDIT.md;
@@ -2337,7 +2337,7 @@ jarvis-weak-spots (10). npm run lint passes clean. No new typecheck errors.
 
 ---
 
-### 2026-08-25T07:00:00Z · P10-01 · DONE · STRIKES: 0
+### 2026-08-16T07:00:00Z · P10-01 · DONE · STRIKES: 0
 
 Resumed from DOING — prior run set STATUS to DOING but BATTLE_TEST_LOG.md was never created,
 so Round 1 started fresh.
@@ -2384,13 +2384,13 @@ pass. 1 critical finding (P8-08 false DONE). P8-08-RESUME appended as TODO.
 
 ---
 
-### 2026-08-26T00:15:00Z · P10-03 · DONE · STRIKES: 0
+### 2026-08-16T00:15:00Z · P10-03 · DONE · STRIKES: 0
 
 Action:
 1. Confirmed cwd is C:\Users\Garrett\Sports (`git rev-parse --show-toplevel` prints C:/Users/Garrett/Sports).
 2. Read handoff/SPRINT_QUEUE.md. First task with STATUS TODO or DOING scanning top-to-bottom was
-   P10-03 (DOING, started 2026-08-25T18:00:00Z — a prior run was interrupted). Set STATUS to DOING
-   (resumed) with fresh timestamp 2026-08-26.
+   P10-03 (DOING, started 2026-08-16T18:00:00Z — a prior run was interrupted). Set STATUS to DOING
+   (resumed) with fresh timestamp 2026-08-16.
 3. Ran the task: Hunt the "confidently wrong claim" bug class. Scanned every file touched by this
    sprint: `git log --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD` (~140 files).
    Searched source files (excluding tests/handoff/docs) for comments making confident claims about
@@ -2400,7 +2400,7 @@ Action:
    burn):
    - CLAIM 1 — odds-api-client.ts:126-131 + :204-205: claims api.the-odds-api.com authenticates
      only via `apiKey` query param and "does not accept a header", citing 401 MISSING_KEY. Live
-     probe on 2026-08-26 PROVES WRONG: x-api-key header IS accepted and is the vendor-RECOMMENDED
+     probe on 2026-08-16 PROVES WRONG: x-api-key header IS accepted and is the vendor-RECOMMENDED
      method; old /v4/ namespace returns MISSING_KEY for a header lacking a key (header path is
      recognized — distinct from INVALID_KEY the query param returns); current docs
      (theoddsapi.com/docs, dated same day as the comment's "confirmed live") point to
