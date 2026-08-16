@@ -1450,7 +1450,7 @@ Read `apps/web/lib/fantasy/adp-source.ts` and its test file in full. Determine a
 **VERIFY:** every claim has a command or file:line behind it. Explicit PASS/FAIL/UNKNOWN per item
 above, no vague reassurance.
 
-### P11-02 — Rankings pipeline accuracy audit (READ-ONLY) · STATUS: TODO · STRIKES: 0
+### P11-02 — Rankings pipeline accuracy audit (READ-ONLY) · STATUS: DOING · STRIKES: 0
 Read `apps/web/lib/ranking/` in full, plus `apps/web/lib/calibration/holdout-ranking-report.ts`,
 `ranking-power-control.ts`, and `apps/web/lib/data-sources/free-adapters/espn-rankings.ts`.
 Write `handoff/RANKINGS_ACCURACY_AUDIT.md`:
