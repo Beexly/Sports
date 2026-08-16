@@ -1610,7 +1610,7 @@ requireDurableWriteStore / price-resolution empty) instead of hanging on Prisma 
 backoff. `npx playwright test --project=mobile --project=safari apps/web/e2e/journey-checkout.spec.ts`
 → 14 passed (7 per project), 0 failed. No app source code was changed.
 
-### P12-05 — Public CLV page publishes a rate without its coverage denominator · STATUS: TODO · STRIKES: 0
+### P12-05 — Public CLV page publishes a rate without its coverage denominator · STATUS: DOING · STRIKES: 0
 Evidence: `apps/web/app/clv/page.tsx:221-248` renders `{policy.beatCloseRatePct}% of
 {policy.gradedSampleSize} graded canonical picks` — denominator is GRADED picks, not SETTLED.
 `apps/web/lib/performance/public-clv-policy.ts` has no coverage field. Meanwhile
@@ -1668,9 +1668,38 @@ tests to prove no regression. typecheck + lint. Commit.
 **IF THE DATA IS EMPTY:** if `SnapCount` has no local rows, write the wiring + tests against fixtures and
 journal that live verification needs the cron to have run. Do NOT fabricate data.
 
-### P12-04-FOLLOWUP — Annual billing toggle appears broken on Safari/WebKit · STATUS: TODO · STRIKES: 0
-**Filed by the supervising instance 2026-08-16, exactly as P12-04 instructed** ("if a real
-mobile/Safari bug surfaces, journal it and append a new P12-04-FOLLOWUP task").
+### P12-04-FOLLOWUP-B — Annual billing toggle: RESOLVED, and it was NOT a product bug · STATUS: DONE · STRIKES: 0 · completed 2026-08-16 (commit 2d676f49)
+**Renamed to -B:** an earlier `P12-04-FOLLOWUP` (line ~1594, checkout e2e timeout) already existed —
+two different tasks briefly shared one id. This is the second one. Do not conflate them.
+
+**RESOLVED — do not work this task. Kept for the record because the wrong diagnosis is the lesson.**
+
+I filed this suspecting a WebKit product bug in the annual billing toggle. **That was wrong.** The
+toggle works correctly on Chrome AND WebKit. Root cause was an ambiguous test selector:
+`text=/\$99\/year/` matched TWO nodes — the price display AND the FTC auto-renew disclosure, which
+legitimately contains the price inside a sentence ("Auto-renews at $99/year until you cancel") —
+which trips Playwright strict mode. It looked intermittent because it is a race between those two
+nodes rendering, so whichever run saw only one of them passed. Fixed with exact-match `getByText`.
+
+**What actually caught the error:** this task's own step 1 — "run it on desktop Chrome; FAILS on both
+→ the test is wrong, not the app." It failed on Chrome, so it was the test. Writing the falsifying
+check INTO the task is what stopped a wrong hypothesis becoming a wrong fix. Keep doing that.
+
+**A real, separate problem was found while investigating and is also fixed in `2d676f49`:**
+`playwright.config.ts` had `DEV_FAKE_ADMIN=true` in the dev-server env (added to stop a checkout
+timeout). That makes every `auth()` return a synthetic ADMIN session (`lib/auth.ts:108`) entitled to
+ELITE (`lib/entitlements.ts:20`), so the whole e2e suite ran as a fully-entitled admin — which
+silently guts `journey-anonymous.spec.ts`, whose entire purpose is proving premium data does NOT
+reach an anonymous visitor. It is also the flag that legitimately blocks the production build
+(P7-07) because it bypasses the paywall. Removed. **Do not add it back** — see the comment in
+`playwright.config.ts`. AGENTS.md Law 9: never weaken a guard to make a test pass.
+
+**Still true and unaffected:** the Safari checkout fix (`65698430`, `da2b7ed4`) is real and stands —
+`crypto.randomUUID()` was genuinely unguarded and `POST /api/subscriptions/checkout` genuinely did
+not fire on WebKit before it. Two separate issues that happened to surface together.
+
+**Residual, low priority:** after the fix, 2 of 3 browser projects pass outright and 1 passes on
+retry (cold-compile timing, not correctness). Only worth chasing if it becomes noisy.
 
 **Already fixed, do NOT redo.** P12-04's new WebKit projects immediately found a real checkout bug —
 an unguarded `crypto.randomUUID()` that stopped Safari users subscribing at all. Fixed and verified
