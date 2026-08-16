@@ -1306,3 +1306,66 @@ VERIFY:
 - P8-12 marked DONE in SPRINT_QUEUE.md
 - secret-scan: OK — scanned 6 staged file(s), no secrets detected
 - No git push, no --force, no .env files, no sealed-tree edits
+
+---
+
+### 2026-08-19T00:00:00Z · P8-13 · DONE · STRIKES: 0 · commit 758dca07
+
+Task: Fix the next finding — GSE-SEC-038 (cockpit task routes cast Prisma enums).
+
+Skipped GSE-SEC-020 and GSE-SEC-033 (both listed OPEN in register but already
+fixed in code per P8-12 verification at journal line 1270-1274). Also skipped
+GSE-SEC-055 (fixed in P8-12 via commit c3d28f7a).
+
+Target: `apps/web/app/api/cockpit/tasks/route.ts` used unchecked `as` casts
+on untrusted user input:
+- GET: `statusParam as CockpitTaskStatus`, `agentParam as OperatorAgent`
+- POST: `body.assignedAgent as OperatorAgent`, `body.riskLevel as CockpitRiskLevel`,
+  `body.complianceStatus as CockpitComplianceStatus`
+
+Any invalid string from the query/body would flow through to Prisma and cause
+a runtime error (500) instead of a clean 400.
+
+Fix applied:
+- Removed `import type { OperatorAgent, CockpitTaskStatus, CockpitRiskLevel,
+  CockpitComplianceStatus } from "@prisma/client"` — replaced with local const
+  enum sets matching schema.prisma values (VALID_OPERATOR_AGENT,
+  VALID_COCKPIT_STATUS, VALID_RISK_LEVEL, VALID_COMPLIANCE_STATUS).
+- Added `narrowEnum(raw, set)` helper that returns the string only if it's a
+  member of the const set, or null otherwise.
+- Added `enumError(field, set)` helper that produces a 400 JSON body listing
+  accepted values.
+- GET: validates statusParam/agentParam via narrowEnum; returns 400 on
+  mismatch before calling db.cockpitTask.findMany.
+- POST: validates assignedAgent (required), riskLevel (optional, defaults
+  "LOW"), complianceStatus (optional, defaults "NOT_APPLICABLE"); returns
+  400 on any invalid enum value before calling db.cockpitTask.create.
+
+Test file created: `apps/web/__tests__/cockpit-tasks-route.test.ts` (11 tests):
+- GET rejects invalid status → 400, no db call
+- GET rejects invalid agent → 400, no db call
+- GET accepts valid status → delegates to findMany
+- GET accepts valid agent → delegates to findMany
+- GET with no params → no where filter
+- POST rejects invalid assignedAgent → 400
+- POST rejects invalid riskLevel → 400
+- POST rejects invalid complianceStatus → 400
+- POST with valid body → creates task with correct enum values
+- POST with omitted optional enums → uses defaults (LOW, NOT_APPLICABLE, 50)
+- POST non-admin → 403 before validation
+
+Files committed:
+- apps/web/app/api/cockpit/tasks/route.ts (modified)
+- apps/web/__tests__/cockpit-tasks-route.test.ts (new)
+- handoff/REMEDIATION_EXECUTION.md (GSE-SEC-038 marked FIXED)
+- handoff/SPRINT_QUEUE.md (P8-13 → DONE)
+
+VERIFY:
+- `npx vitest run __tests__/cockpit-tasks-route.test.ts` from apps/web/ → 11/11 passed
+- `npx tsc --noEmit -p tsconfig.json` from apps/web/ → no errors in touched files
+- `npx eslint --max-warnings=0` on both files → exit 0
+- Commits 758dca07 (source+test) and 14a8eae8 (handoff updates) confirmed via git rev-parse
+- GSE-SEC-038 marked FIXED in REMEDIATION_EXECUTION.md
+- P8-13 marked DONE in SPRINT_QUEUE.md
+- secret-scan: OK — scanned 4 staged file(s), no secrets detected
+- No git push, no --force, no .env files, no sealed-tree edits
