@@ -1536,6 +1536,14 @@ Evidence (verified): `apps/web/components/ui/manage-subscription-button.tsx` is 
 button appears only for PAST_DUE/INCOMPLETE accounts. Meanwhile `apps/web/app/pricing/page.tsx:206`
 (repeated at `:633`) publicly promises "Cancel any time from your dashboard", and
 `apps/web/app/terms/page.tsx:78-85` says the same.
+**THIRD and most specific promise (found 2026-08-16 in independent re-verification):**
+`apps/web/app/faq/page.tsx:118` states outright — "Your dashboard has a Manage Billing button that opens
+the Stripe customer portal. Update card, change tier, cancel, download invoices, all from there." That
+sentence is simply false for a healthy paying subscriber today. Exhaustively confirmed there is NO other
+cancellation path: the only caller of `/api/subscriptions/portal` in the whole app is
+`manage-subscription-button.tsx:13`, and that button has exactly one render site (the dunning banner).
+**Acceptance bar: all three surfaces (`/pricing`, `/terms`, `/faq`) must become true statements** — not
+merely "a button exists somewhere".
 Files (only these): `apps/web/app/dashboard/page.tsx`, plus a new test file.
 Fix: render `<ManageSubscriptionButton />` for ANY user with a paid tier — not only inside the dunning
 banner. The existing "Subscription active" block at `dashboard/page.tsx:251-277` is the right home; it
