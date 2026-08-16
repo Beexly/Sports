@@ -2186,7 +2186,7 @@ found it in `BATTLE_TEST_LOG.md`.
 **VERIFY:** `BATTLE_TEST_LOG.md` states explicitly, per domain, "same as before" or "new finding"
 or "original finding no longer applies" — no domain left unaddressed.
 
-### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: DOING · started: 2026-08-16T21:50:00Z · STRIKES: 0
+### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: DONE · started: 2026-08-16T21:50:00Z · STRIKES: 0 · completed: 2026-08-16T21:55:00Z
 This exact bug class has been found THREE times this session: a code comment or commit message
 makes a specific, confident technical claim about how something external behaves (a vendor's auth
 mechanism, what another code path does, what a library does on a given input) — and the claim is
