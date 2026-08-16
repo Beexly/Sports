@@ -28,6 +28,10 @@ import {
   getToolEntry,
   type ToolId,
 } from "./tool-registry";
+import {
+  getDataRule,
+  type DataFieldCategory,
+} from "./data-rules";
 
 // ─── Clearance types ──────────────────────────────────────────────────────────
 
@@ -65,6 +69,10 @@ export type ExtractedRecord = {
   readonly extraction_mode: ExtractionMode;
   readonly tool_name: ToolId;
   readonly rights_snapshot: RightsSnapshot;
+  /** Classification of the extracted data per DATA_RULES. Null when the caller
+   * did not declare a category (backward compatibility); present when the wrap
+   * invoked the data-rule check. */
+  readonly data_category: DataFieldCategory | null;
   readonly data: Record<string, unknown>;
 };
 
@@ -341,12 +349,26 @@ function finalize(
  * Wrap raw extracted data in the required ExtractedRecord envelope.
  * Only call this after checkClearance returns allowed=true.
  *
- * Throws if clearance was not granted.
+ * @param clearance       the ClearanceResult from checkClearance (must be allowed)
+ * @param sourceUrl        the URL the data was extracted from
+ * @param data             the extracted payload
+ * @param dataCategory     optional DataFieldCategory used to consult DATA_RULES.
+ *                         When provided, the record is rejected if that category
+ *                         is blocked from extraction or storage — closing the gap
+ *                         where DATA_RULES existed but was never consulted at the
+ *                         wrap boundary (GSE-SEC-055). When omitted, the data is
+ *                         wrapped without a category check (backward compat).
+ * @param now              extraction timestamp (defaults to new Date())
+ *
+ * Throws if clearance was not granted, if snapshot is missing, or (when
+ * dataCategory is supplied) if DATA_RULES blocks that category from
+ * extraction or storage.
  */
 export function wrapExtractedRecord(
   clearance: ClearanceResult,
   sourceUrl: string,
   data: Record<string, unknown>,
+  dataCategory?: DataFieldCategory,
   now = new Date(),
 ): ExtractedRecord {
   if (!clearance.allowed) {
@@ -358,6 +380,27 @@ export function wrapExtractedRecord(
   if (!clearance.rightsSnapshot) {
     throw new Error("Cannot wrap record: rights snapshot is missing.");
   }
+  if (dataCategory) {
+    const rule = getDataRule(dataCategory);
+    if (!rule) {
+      throw new Error(
+        `Cannot wrap record: unknown data category "${dataCategory}" passed to DATA_RULES. ` +
+        "Add the category to data-rules.ts before wrapping.",
+      );
+    }
+    if (!rule.extractionAllowed) {
+      throw new Error(
+        `Cannot wrap record: data category "${dataCategory}" is blocked from extraction ` +
+        `(extractionAllowed=false). ${rule.notes}`,
+      );
+    }
+    if (!rule.storageAllowed) {
+      throw new Error(
+        `Cannot wrap record: data category "${dataCategory}" is blocked from storage ` +
+        `(storageAllowed=false). ${rule.notes}`,
+      );
+    }
+  }
   return {
     source_id: clearance.source_id,
     source_url: sourceUrl,
@@ -365,6 +408,7 @@ export function wrapExtractedRecord(
     extraction_mode: clearance.mode,
     tool_name: clearance.tool_id,
     rights_snapshot: clearance.rightsSnapshot,
+    data_category: dataCategory ?? null,
     data,
   };
 }

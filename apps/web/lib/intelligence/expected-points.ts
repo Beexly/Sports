@@ -230,12 +230,14 @@ export async function loadExpectedPoints({
       if (rows.length === 0) { lastError = `no qualified rows for ${candidate}`; continue; }
       // Envelope: every extracted record carries the RightsSnapshot captured at
       // extraction time (mirrors adp-source.ts; throws if clearance were absent).
+      // The rows are factual statistics; pass the "fact" category so the DATA_RULES
+      // gate in wrapExtractedRecord is consulted — GSE-SEC-055.
       const record = wrapExtractedRecord(clearance, url, {
         season: candidate,
         throughWeek,
         sourceRows: records.length,
         rows,
-      });
+      }, "fact");
       return {
         generatedAt: new Date().toISOString(),
         status: "live",
