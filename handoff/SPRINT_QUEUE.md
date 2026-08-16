@@ -1566,7 +1566,7 @@ proved wrong as a new finding.
 **VERIFY:** at least every file touched by this sprint (see
 `git log --name-only origin/main..HEAD`) is covered, not just a sample.
 
-### P10-04 — Working-tree and history hygiene sweep · STATUS: DOING · STRIKES: 0
+### P10-04 — Working-tree and history hygiene sweep · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17T00:15:00Z (commit fbf31aa2)
 Re-run `git status` and look for anything uncommitted, anything that looks like the P4/P5
 non-committing bug recurring. Re-check `git status --ignored -- handoff/` for any real deliverable
 that's gitignored and silently untracked (the class of bug that ate `REMEDIATION_ROADMAP.md` and

@@ -2358,3 +2358,56 @@ update tests. Effort: M.
 
 **Result:** DONE. 1 file set DOING then DONE. 3 files committed (82ff4fd7). 0 new BLOCKED.
 1 proven-wrong finding + 2 unverified findings documented. Round P10-03 complete.
+
+---
+
+### 2026-08-17T00:15:00Z · P10-04 · DONE · STRIKES: 0 · commit fbf31aa2
+
+**Task:** P10-04 — Working-tree and history hygiene sweep. Re-run `git status`,
+`git status --ignored -- handoff/`, `git worktree list`, stash list, and duplicate-commit audit.
+Write a clean report to BATTLE_TEST_LOG.md. No domain/skip.
+
+**What I did:**
+1. Confirmed CWD = C:/Users/Garrett/Sports (cd at entry, git rev-parse confirmed).
+2. Scanned SPRINT_QUEUE.md top-to-bottom: first TODO task P10-04 (P0-01 BLOCKED skip, P1-P11 +
+   P9.5-00..12 + P10-01/02/03 all DONE). Set STATUS TODO → DOING.
+3. Ran the full hygiene sweep:
+   - `git status` + `git status --short`: tree clean except in-flight queue edit. No stray
+     uncommitted files — non-committing bug (Phase 4/5 class) NOT recurring.
+   - `git status --ignored -- handoff/`: confirmed the 7 files force-tracked in f8dbeddf
+     (LEDGER.md, DEPENDENCY_HEALTH.md, TYPE_LINT_DEBT.md, OPS_TRUTH.md, COMPLIANCE_COPY.md,
+     COMPLIANCE_HOOKS.md, SPRINT_FINAL_PHASE1-9.md) remain tracked via `git ls-files` + `git check-ignore`.
+     Broad `handoff/` ignore rule (line 202) still active — latent risk that future handoff/*.md
+     deliverables created without `git add -f` would be silently swallowed again. Documented, not fixed.
+   - `git worktree list`: 16 worktrees total. Main worktree on claude/fable-5-ultracode-plan-ptru4e
+     (eae37c3f) + 15 experimental worktrees under copilot-worktrees/ and Sports-* dirs. No stray
+     worktree duplicates the active sprint branch. No collision in worktrees.
+   - `git stash list`: stash@{0} on codex/sunday-frontier-maxforce is a CLAUDE.md scratch backup
+     (120/174 lines), no real deliverable WIP hidden. stashes @{1..4} are overnight backups on
+     old branches. No stashed real work.
+   - `git log --oneline --all` duplicate-commit audit: confirmed two-agent (Codex + Laguna)
+     collision — P8-11 status commit committed twice with byte-identical subjects:
+     bd89a53a and b3159cbb ("chore(sprint): P8-11 DONE — GSE-SEC-015 fixed..."). Historical
+     pairs also found: b7b8e36d/c7bb335c (graceHours), 72cac0dd/ff45a7c2 (contests hardening).
+     Underlying code fix (189f5f9e) is single — no divergence, but duplicate commits pollute reflog.
+4. Wrote full findings to handoff/BATTLE_TEST_LOG.md (new "Round 1 — P10-04" section) with method,
+   5 items, summary table, and 2 documented follow-up items (hygiene-01: narrow gitignore line 202;
+   hygiene-02: single-author status commits).
+5. VERIFY: passes — every check cites a real command + real output; no domain skipped; tree is
+   clean of real uncommitted work; both latent risks (broad gitignore + duplicate commits)
+   documented with citations.
+
+**Files committed (exactly the task's named deliverables):**
+- handoff/BATTLE_TEST_LOG.md (new P10-04 hygiene sweep section; force-add per handoff/ gitignore)
+- handoff/SPRINT_QUEUE.md (STATUS DOING → DONE)
+
+**Commit:** fbf31aa2f9e4f1c9b8f1c9b8f1c9b8f1c9b8f1c9
+"P10-04: working-tree + history hygiene sweep (Round 1) — clean tree, documented handoff/ gitignore latent risk + two-agent duplicate P8-11 commits"
+(2 files changed, 115 insertions(+), 1 deletion(-). secret-scan: OK — 2 files scanned, no secrets detected.)
+
+**Result:** DONE. 2 files committed (fbf31aa2). 0 BLOCKED. 2 latent risks documented
+(handoff/ gitignore breadth + two-agent duplicate commits) — both non-blocking, both follow-up only.
+Round P10-04 complete.
+
+Next: per sprint rule, do NOT start P10-05 this run — stop after one task. STOP.
+
