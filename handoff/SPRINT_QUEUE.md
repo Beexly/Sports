@@ -1912,7 +1912,7 @@ into `vercel.json` (that writes prod data — owner-gated, see P14-03).
 **VERIFY:** page renders the honest empty state with no data (this is the state that will ship until the
 owner runs the backfill), and renders the real curve when given fixture data. typecheck + lint. Commit.
 
-### P14-02 — Prove the proof is real: leak-free verification of the historical-replay harness · STATUS: DOING · STRIKES: 0
+### P14-02 — Prove the proof is real: leak-free verification of the historical-replay harness · STATUS: DONE · STRIKES: 0 · commit 263913e1
 **A proof nobody can trust is worse than no proof.** `packages/prediction-engine/src/historical-replay.ts`
 splits an nflverse row into structurally-disjoint `PreGameFeatures` (cannot carry a score by type) and
 `SettlementFacts`, re-runs the FROZEN `scoreGame`, settles via the same `calculatePickResult`, and grades
@@ -1930,7 +1930,7 @@ exercised at runtime).
 non-zero. Nothing writes to any DB. typecheck + lint. Commit. If you cannot construct a sound placebo in two
 attempts, mark BLOCKED with exactly why — do NOT ship a weak test that would bless a leaky harness.
 
-### P14-03 — Write the owner runbook: PROVE_THE_EDGE.md (the one-sitting proof chain) · STATUS: TODO · STRIKES: 0
+### P14-03 — Write the owner runbook: PROVE_THE_EDGE.md (the one-sitting proof chain) · STATUS: DOING · STRIKES: 0
 Prepare-not-flip. Write `docs/ops/PROVE_THE_EDGE.md` — the exact ordered command sequence that takes the
 owner from empty tables to a published-ready calibration story in one sitting, clearly marking which steps
 WRITE production data (owner-only) vs READ. Trace the real routes/scripts, cite each:
