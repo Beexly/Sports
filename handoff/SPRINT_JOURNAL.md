@@ -2711,5 +2711,6 @@ Files committed (exactly the 4 modified files):
 - handoff/SPRINT_QUEUE.md (STATUS DOING→DONE + RESULT annotation)
 - handoff/SPRINT_JOURNAL.md (this entry)
 
-Commit: <TBD>
+Commit: 67040640
+"fix(e2e): P12-04-FOLLOWUP stub-mode dev server so checkout e2e fails closed instead of timing out"
 
