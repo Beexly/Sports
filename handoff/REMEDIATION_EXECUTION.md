@@ -108,7 +108,7 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 25 | GSE-SEC-053 | most records never get RightsSnapshot | `apps/web/lib/ingestion/` verified — RightsSnapshot missing on bulk inserts | NEEDS-OWNER (if persist columns) / SAFE DIRECT (wrap at boundaries) | L |
 | 26 | GSE-SEC-054 | attribution dropped; henrygd labeled ESPN | `apps/web/lib/data-sources/free-first-ingest.ts` verified — ESPN attribution overwrite at line 126 | SAFE DIRECT (stop overwrite); NEEDS-OWNER (persist attribution column) | S–M |
 | 27 | GSE-SEC-055 | DATA_RULES never consulted at wrap | `apps/web/lib/scraping/data-rules.ts:41` verified — DATA_RULES only used within module | SAFE DIRECT | S | FIXED — consult DATA_RULES in `wrapExtractedRecord` via `getDataRule()`; 6 tests added. commit c3d28f7a |
-| 28 | GSE-SEC-057 | untrusted user text interpolated into prompts | `apps/web/lib/pick-explainer/prompts.ts:113` verified — `${q}` template literal, no sanitization | SAFE DIRECT | S |
+| 28 | GSE-SEC-057 | untrusted user text interpolated into prompts | SAFE DIRECT | **FIXED — see 779c7a4d** | S |
 | 29 | GSE-SEC-063 | /embed CSP is only frame-ancestors * | `apps/web/next.config.mjs:80` verified — /embed frame-ancestors * (INFO: intentional) | INFO — do not fix unless product intent changes | — |
 | 30 | GSE-SEC-065 | vercel.json vs next.config header drift | `vercel.json:99` vs `apps/web/next.config.mjs:103` verified — /embed frame headers differ | SAFE DIRECT | S |
 | 31 | GSE-SEC-066 | ACAO: * on OpenAPI doc only | `apps/web/app/api/v1/openapi/route.ts:70` verified — Access-Control-Allow-Origin * | SAFE DIRECT | S |

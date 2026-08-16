@@ -1108,7 +1108,7 @@ const enum sets in `apps/web/app/api/cockpit/tasks/route.ts`; invalid enum
 inputs now return 400 instead of reaching Prisma. New test file
 `apps/web/__tests__/cockpit-tasks-route.test.ts` (11 tests, all pass).
 
-### P8-14 — Fix the next finding · STATUS: TODO · STRIKES: 0
+### P8-14 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Same as P8-02, next item.
 
 ---

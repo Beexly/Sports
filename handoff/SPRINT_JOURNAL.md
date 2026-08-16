@@ -1366,6 +1366,49 @@ VERIFY:
 - `npx eslint --max-warnings=0` on both files → exit 0
 - Commits 758dca07 (source+test) and 14a8eae8 (handoff updates) confirmed via git rev-parse
 - GSE-SEC-038 marked FIXED in REMEDIATION_EXECUTION.md
-- P8-13 marked DONE in SPRINT_QUEUE.md
-- secret-scan: OK — scanned 4 staged file(s), no secrets detected
+|- P8-13 marked DONE in SPRINT_QUEUE.md
+|- secret-scan: OK — scanned 4 staged file(s), no secrets detected
+|- No git push, no --force, no .env files, no sealed-tree edits
+
+---
+
+### 2026-08-19T01:30:00Z · P8-14 · DONE · STRIKES: 0 · commit 779c7a4d
+
+Task: Fix the next finding — GSE-SEC-057 (untrusted user text interpolated into prompts).
+
+Skipped GSE-SEC-020 and GSE-SEC-033 (both listed OPEN in register but already
+fixed in code per P8-12/P8-13 verification). Also skipped GSE-SEC-044, 045, 046,
+047, 048 — verified each against current working tree; all either already fixed
+in code or have a different classification than the stale register entry.
+Landed on GSE-SEC-057 as the first genuinely OPEN SAFE DIRECT finding.
+
+Target: `apps/web/lib/pick-explainer/prompts.ts:113` — the user's free-text
+question was interpolated raw into the LLM prompt template via
+`The user specifically asked: "${q}"`. An attacker could break out of the
+double-quote-delimited slot (close the quote, inject new instructions, re-open
+context-fence delimiters like `=== CONTEXT ===`) to perform prompt injection.
+
+Fix applied:
+- Added `sanitizePromptInput(text)` to `apps/web/lib/pick-explainer/prompts.ts`.
+  It neutralizes: backslashes (escape sequences), double quotes (slot delimiter),
+  control characters (newline/tab/CR/null), and `=+ ` delimiter markers that
+  could shadow the `=== CONTEXT ===` / `=== END CONTEXT ===` fences.
+- `buildExplainUser()` now calls `sanitizePromptInput(q)` before interpolating
+  the question into the prompt template.
+- New test file `apps/web/__tests__/prompts-sanitizer.test.ts` (11 tests)
+  pinning the sanitizer and verifying the question cannot escape its slot.
+
+Files committed:
+- apps/web/lib/pick-explainer/prompts.ts (modified — added sanitizer, wired into buildExplainUser)
+- apps/web/__tests__/prompts-sanitizer.test.ts (new — 11 regression tests)
+- handoff/REMEDIATION_EXECUTION.md (GSE-SEC-057 marked FIXED)
+- handoff/SPRINT_QUEUE.md (P8-14 → DONE)
+
+VERIFY:
+- `npx vitest run __tests__/prompts-sanitizer.test.ts` → 11/11 passed
+- `npx vitest run __tests__/reader-registers.test.ts __tests__/academy-registers.test.ts` → 35/35 passed (no regressions)
+- Commit 779c7a4d confirmed via git rev-parse
+- GSE-SEC-057 marked FIXED in REMEDIATION_EXECUTION.md
+- P8-14 marked DONE in SPRINT_QUEUE.md
+- secret-scan: OK — scanned 2 staged file(s), no secrets detected
 - No git push, no --force, no .env files, no sealed-tree edits
