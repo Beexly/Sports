@@ -1360,7 +1360,7 @@ what is lost if it stays off. Then answer concretely: if the board silently stop
 the finding.
 **VERIFY:** every tool accounted for. Env var NAMES only, never values.
 
-### P9.5-10 — Incident response + rollback runbook · STATUS: TODO · STRIKES: 0
+### P9.5-10 — Incident response + rollback runbook · STATUS: DONE · STRIKES: 0
 **LAUNCH-CRITICAL.** Write `handoff/INCIDENT_RUNBOOK.md` from what the repo actually supports —
 read `vercel.json`, the cron routes, `scripts/deploy/`, and existing ops docs. Do not invent
 procedures.
