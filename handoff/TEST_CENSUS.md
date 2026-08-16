@@ -253,7 +253,7 @@ Every failing file listed in §3 appears in the `❯` lines of the raw output. T
 
 ## 7. P8-09 — REGRESSION CHECKPOINT (P8-02..P8-08)
 
-Generated: 2026-08-18T21:05:00Z
+Generated: 2026-08-16T21:05:00Z
 Command: `CI=1 npm test > handoff/test-census-p8.txt 2>&1`
 Raw output: `handoff/test-census-p8.txt` (4,615 lines)
 Baseline: `handoff/test-census-raw.txt` (4,717 lines) + `handoff/TEST_CENSUS.md` (§1–§6)

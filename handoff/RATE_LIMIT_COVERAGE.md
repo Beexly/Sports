@@ -298,7 +298,7 @@ but it does NOT call any rate-limit function. Conversely, `v1/probabilities` and
 not in the initial grep pattern and have been added to the protected count. Net: 62
 protected after P9-01, 65 after P9-02/03, 68 after P9-04 (38.6%).
 
-**P9-05 update (2026-08-17):** Three more IP-keyed rate-limit wrappers were added to the
+**P9-05 update (2026-08-16):** Three more IP-keyed rate-limit wrappers were added to the
 next batch of highest-risk anonymous GET routes per the P9 sprint:
 - `apps/web/app/api/verify/slate/route.ts` — 60 req/min/IP (was anonymous, DB read + live Merkle root recomputation)
 - `apps/web/app/api/proof/receipts/route.ts` — 60 req/min/IP (was anonymous, DB findMany with nested includes + per-row verifyReceiptIntegrity)

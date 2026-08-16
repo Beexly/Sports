@@ -128,9 +128,21 @@ to `/model grok` and retry — that is not cheating, it is the designed behavior
    `teia-cognitive-router`, `basilisk-ai`, `t3mp3st`, `mtrouter`, `freecad-api`,
    `laravel-crm-client` — **11 of 13 verified absent from npm** — and clone real projects from
    wrong-owner GitHub URLs. Confirmed fabricated. Ignore them entirely.
-8. **NEVER** spend money, create accounts, or sign up for tiers. The owner is unemployed.
-9. **NEVER** make outbound network calls that send repo contents anywhere.
-10. **NEVER** modify anything during PHASE 2 (the audit). Phase 2 is READ-ONLY except for files
+8. **NEVER GUESS TODAY'S DATE — read it.** Before writing ANY timestamp (queue `completed:`
+   fields, journal entries, "CORRECTION 2026-.." notes, report headers), run `date +%F` and use
+   what it prints. Do not infer the date from context, from another document, or from what the
+   sprint "feels like" it is.
+   **Why this is a hard rule:** this exact bug has recurred FOUR times. Rounds and reports were
+   stamped 2026-08-17 through 2026-08-26 while the real date was 2026-08-16 — up to ten days in
+   the future, including one task recorded as `completed` BEFORE it `started`, and 77 wrong
+   timestamps across 12 files that had to be bulk-corrected. It matters because the timestamp is
+   the ONLY tool for deciding which of two contradicting documents is newer, and right now the
+   most stale documents carried the latest dates. A confidently wrong date is the same failure
+   class as a confidently wrong claim: asserted without checking a source that was one command
+   away.
+9. **NEVER** spend money, create accounts, or sign up for tiers. The owner is unemployed.
+10. **NEVER** make outbound network calls that send repo contents anywhere.
+11. **NEVER** modify anything during PHASE 2 (the audit). Phase 2 is READ-ONLY except for files
     under `handoff/`.
 
 ---

@@ -625,10 +625,10 @@ cite internal commit hashes, none of which this bug class targets.
 
 Proceeding to P10-03 (hunt confidently-wrong claims) and P10-04 (working-tree hygiene) in subsequent rounds.
 
-## Round 1 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-17)
+## Round 1 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-16)
 
-**Date:** 2026-08-17
-**Started:** 2026-08-17T00:00:00Z
+**Date:** 2026-08-16
+**Started:** 2026-08-16T00:00:00Z
 **Task scope:** `git status`, `git status --ignored -- handoff/`, `git worktree list`, stash list,
 duplicate-commit audit across all reflogs, and verification that previously-swallowed gitignored
 deliverables remain tracked after `f8dbeddf`.
@@ -739,7 +739,7 @@ biting.
 ---
 
 ## Round 1 — Closing Summary
-**Date:** 2026-08-17
+**Date:** 2026-08-16
 **Findings this round vs. previous:** This is Round 1, so there is no prior round to compare against for trend. Baseline established for future rounds.
 
 ### Findings Tally

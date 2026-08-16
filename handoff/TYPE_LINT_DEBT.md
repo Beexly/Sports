@@ -1,6 +1,6 @@
 # Type + Lint Debt — P7-06
 
-Run: 2026-08-17 (session start)
+Run: 2026-08-16 (session start)
 
 ## Commands
 

@@ -19,7 +19,7 @@ the dependency tree: next-auth/@auth/core carry 2 CRITICAL advisories
 (homoglyph email bypass; fail-open auth object), next has a deserialization DoS,
 and the build chain (postcss) has an arbitrary-file-read advisory. Secondary
 
-**CORRECTION 2026-08-26 (verified live):** The executive summary claim "next-auth/@auth/core carry 2 CRITICAL advisories" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-26 yields **0 critical** — the next-auth/@auth/core advisories (GSE-SEC-001/002) were resolved in the patched lock (`@auth/core >=0.41.3`). Only 2 HIGH findings remain (GSE-SEC-059 Next 14.2.15, GSE-SEC-060 postcss transitive). The remaining dependency risk is HIGH, not CRITICAL.
+**CORRECTION 2026-08-16 (verified live):** The executive summary claim "next-auth/@auth/core carry 2 CRITICAL advisories" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-16 yields **0 critical** — the next-auth/@auth/core advisories (GSE-SEC-001/002) were resolved in the patched lock (`@auth/core >=0.41.3`). Only 2 HIGH findings remain (GSE-SEC-059 Next 14.2.15, GSE-SEC-060 postcss transitive). The remaining dependency risk is HIGH, not CRITICAL.
 risks: rate limiting covers a small fraction of API routes, CSP allows
 unsafe-inline/unsafe-eval, and three pre-existing tracked-debt failures keep CI
 red (model-freeze #419, api-v1-boundary #420, typecheck #421) — all documented,
@@ -29,22 +29,22 @@ none caused by this branch.
 
 Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 
-**CORRECTION 2026-08-26 (verified live):** The severity histogram "Critical: 2" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-26 yields **0 critical, 2 high**. The GSE-SEC-001/002 next-auth/@auth/core critical advisories were resolved (patched versions in the lock). Updated histogram: **0 Critical · 2 High · 5 Medium · 3 Low · 3 Info**.
+**CORRECTION 2026-08-16 (verified live):** The severity histogram "Critical: 2" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-16 yields **0 critical, 2 high**. The GSE-SEC-001/002 next-auth/@auth/core critical advisories were resolved (patched versions in the lock). Updated histogram: **0 Critical · 2 High · 5 Medium · 3 Low · 3 Info**.
 
 ## (3) TOP 10
 
 1. CRITICAL — next-auth/@auth/core advisories (homoglyph email bypass, fail-open auth object) — auth stack, unpatched.
 
-**CORRECTION 2026-08-26 (verified live):** GSE-SEC-001/002 are NOT still unpatched. The `npm audit` at the time of the audit was stale; the current lock file has the patched versions (`@auth/core >=0.41.3`). `npm audit --omit=dev --json` re-run on 2026-08-26 yields 0 critical. Updated severity: the CRITICAL label should be **STALE/RESOLVED**, not active.
+**CORRECTION 2026-08-16 (verified live):** GSE-SEC-001/002 are NOT still unpatched. The `npm audit` at the time of the audit was stale; the current lock file has the patched versions (`@auth/core >=0.41.3`). `npm audit --omit=dev --json` re-run on 2026-08-16 yields 0 critical. Updated severity: the CRITICAL label should be **STALE/RESOLVED**, not active.
 2. CRITICAL — next-auth beta-range config-error fail-open (GHSA-8fpg-xm3f-6cx3).
 
-**CORRECTION 2026-08-26 (verified live):** Same as GSE-SEC-001 — resolved in the patched lock. No longer critical.
+**CORRECTION 2026-08-16 (verified live):** Same as GSE-SEC-001 — resolved in the patched lock. No longer critical.
 3. HIGH — next deserialization DoS (GHSA-h25m-26qc-wcjf) + Image Optimizer DoS.
 4. HIGH — postcss arbitrary file read via sourceMappingURL (build chain).
 5. HIGH — fast-uri host-confusion + brace-expansion/nanoid DoS (transitive).
 6. MEDIUM — rate limiting on 8 of 176 API routes.
 
-**CORRECTION 2026-08-26 (verified live):** The rate-limit count "8 of 176 API routes" is STALE. `grep -rl 'rate-limit\|rateLimit\|consumeRateLimit\|@sports/util/rate' apps/web/app/api --include='route.ts' | wc -l` returns **40**, not 8. The gap is now 136 unthrottled (176 - 40), not 168.
+**CORRECTION 2026-08-16 (verified live):** The rate-limit count "8 of 176 API routes" is STALE. `grep -rl 'rate-limit\|rateLimit\|consumeRateLimit\|@sports/util/rate' apps/web/app/api --include='route.ts' | wc -l` returns **40**, not 8. The gap is now 136 unthrottled (176 - 40), not 168.
 7. MEDIUM — CSP script-src allows 'unsafe-inline' 'unsafe-eval'.
 8. MEDIUM — typecheck debt #421 touches autonomy executor allow-list (governance).
 9. MEDIUM — api-v1 route tree pre-promotion (#420, tracked debt, guard holds).
@@ -245,7 +245,7 @@ Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
 - **Location:** packages/data-ingestion/src/odds-api-client.ts:125-131 (doc comment on buildUrl) and :204-205 (inline comment at fetch call). Production base URL: packages/data-ingestion/src/config.ts:132.
 - **Claim (verbatim, :126-131):** "api.the-odds-api.com authenticates via an apiKey query parameter — it does NOT accept a header. A prior change moved auth to an X-API-Key header on the (different) odds-api/odds-api project say-so; against the real vendor that returns 401 {error_code:MISSING_KEY} on every request. Confirmed live 2026-08-15. Reverted to query-param auth." (inline :204 repeats it).
 - **Why it is wrong:**
-  1. The comment asserts header auth is unsupported. Live probe (2026-08-16, corrected from a "2026-08-26" typo — future-dated, caught and fixed by Opus 2026-08-16; bogus key, re-verified independently the same day) on BOTH api.the-odds-api.com/v4 (old hyphen domain, what the code uses) and api.theoddsapi.com (new non-hyphen domain per current docs) shows the x-api-key header IS accepted and IS the vendor RECOMMENDED method. On the old domain, header+nokey returns {error_code:MISSING_KEY}; query param returns {error_code:INVALID_KEY} — distinct codes, though on the old domain alone this is also consistent with the header simply being ignored (a true "recognized" proof would need a valid key). On the NEW domain, independently re-confirmed: header auth with a bogus key returns a detailed 401 whose body literally says "Provide a valid key via the x-api-key HTTP header (recommended)... Do not embed keys in URLs in production" — this is the strong, unambiguous confirmation. On the new domain the vendor says: Authenticate every request with your key in the x-api-key header.
+  1. The comment asserts header auth is unsupported. Live probe (2026-08-16, corrected from a "2026-08-16" typo — future-dated, caught and fixed by Opus 2026-08-16; bogus key, re-verified independently the same day) on BOTH api.the-odds-api.com/v4 (old hyphen domain, what the code uses) and api.theoddsapi.com (new non-hyphen domain per current docs) shows the x-api-key header IS accepted and IS the vendor RECOMMENDED method. On the old domain, header+nokey returns {error_code:MISSING_KEY}; query param returns {error_code:INVALID_KEY} — distinct codes, though on the old domain alone this is also consistent with the header simply being ignored (a true "recognized" proof would need a valid key). On the NEW domain, independently re-confirmed: header auth with a bogus key returns a detailed 401 whose body literally says "Provide a valid key via the x-api-key HTTP header (recommended)... Do not embed keys in URLs in production" — this is the strong, unambiguous confirmation. On the new domain the vendor says: Authenticate every request with your key in the x-api-key header.
   2. Vendor docs (theoddsapi.com/docs, last updated 2026-08-15 — the SAME date the comment claims confirmed live) state Base URL: https://api.theoddsapi.com, Authenticate via x-api-key header. Error table: 401 — Missing or unrecognized API key. Send your key in the x-api-key header. The comments inverse claim is wrong.
   3. Domain/path drift: code uses api.the-odds-api.com/v4 (config.ts:132). Current API is api.theoddsapi.com (no hyphen) at root namespace; the new domain explicitly rejects /v4/: {error:v4_paths_not_supported}. The /v4/ probe returns legacy MISSING_KEY/INVALID_KEY bodies; the new domain returns a different detail body shape. Code error-parsing at odds-api-client.ts:241-256 + odds-provider-adapter.ts:157-167 lumps 401/402/403 into one paymentOrAuth bucket — v4 retirement could mis-route the new body shape.
   4. x-requests-remaining / x-requests-used headers read at odds-api-client.ts:242-248 are documented on the paid /odds/ endpoint, NOT /sports/. Old /v4/sports/ no-auth probe had neither header present. New-namespace exposure unverified.

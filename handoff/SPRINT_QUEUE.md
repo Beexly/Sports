@@ -77,7 +77,7 @@ cronjob action=update job_id=783da73d7b5b provider=nous model=poolside/laguna-s-
 
 Search `config.yaml` for: `deepseek-chat`, `deepseek-reasoner` (retired 2026-07-24),
 `llama-3.3-70b-versatile`, `llama-3.1-8b-instant` (Groq retires 2026-08-16),
-`zai-glm-4.7` (Cerebras deprecates 2026-08-17).
+`zai-glm-4.7` (Cerebras deprecates 2026-08-16).
 **VERIFY:** `Select-String -Path "C:\Users\Garrett\AppData\Local\hermes\config.yaml" -Pattern "deepseek-chat|deepseek-reasoner|llama-3.3-70b-versatile|llama-3.1-8b-instant|zai-glm-4.7"` returns nothing.
 
 ### P0-05 — Start the gateway · STATUS: DONE · STRIKES: 0
@@ -829,7 +829,7 @@ check in the source to make a test pass.**
 **IF BLOCKED:** if it cannot pass without weakening the source fix, mark BLOCKED and write exactly
 which assertion is impossible and why. Do not force it.
 
-### P7-02 — Full test-suite census · STATUS: DONE · STRIKES: 0 · 2026-08-17T08:45:00Z
+### P7-02 — Full test-suite census · STATUS: DONE · STRIKES: 0 · 2026-08-16T08:45:00Z
 ```
 CI=1 npm test > handoff/test-census-raw.txt 2>&1
 ```
@@ -855,7 +855,7 @@ obsolete, mark BLOCKED and explain — removing coverage is an owner decision.
 Same rules as P7-03, next three category-(b). If (b) is exhausted, move to category (a), easiest
 first. Same never-delete-a-test rule.
 
-### P7-05 — Fix test failures, batch 3 · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17T15:30:00Z (commit 4eff18f8)
+### P7-05 — Fix test failures, batch 3 · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T15:30:00Z (commit 4eff18f8)
 Same rules, next three. If NO failures remain in (a) or (b), write "suite green except category (c)
 environmental" into `TEST_CENSUS.md` and mark DONE immediately.
 
@@ -881,7 +881,7 @@ artifact and is the ONE deletion you are permitted.
 **VERIFY:** `handoff/build-raw.txt` exists showing either a successful build or a documented failure
 with root cause.
 
-### P7-08 — Local bring-up runbook, verified · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17T16:15:00Z (commit c5f3d79f)
+### P7-08 — Local bring-up runbook, verified · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T16:15:00Z (commit c5f3d79f)
 The owner needs to actually RUN this app. Determine the minimal bring-up sequence by READING config
 and code. **Do NOT start a long-running dev server** — you cannot manage its lifecycle and it will
 hang your session.
@@ -929,7 +929,7 @@ mocks `db.game.findMany` without inspecting the `where` clause and is currently 
 rewrite its anonymous-viewer case to use a PREMIUM-tier fixture and assert the locked hint renders
 (not the false-absence text, and not the real selection/line). typecheck+lint clean, then commit.
 
-### P7-11 — Fix `/board` + homepage: public pick counts silently vary by viewer tier · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17T17:00:00Z (commit 11ab6160)
+### P7-11 — Fix `/board` + homepage: public pick counts silently vary by viewer tier · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T17:00:00Z (commit 11ab6160)
 Files (only these): `apps/web/lib/board/state.ts`, `apps/web/__tests__/board-gate-decisions.test.ts`.
 Evidence: `state.ts`'s `tierFilter` (added in the same `d4da1265` commit) DROPS premium rows from
 the published-pick query entirely for non-premium viewers, instead of only redacting the
@@ -970,7 +970,7 @@ map, not a leaderboard — an un-entitled viewer should see the game exists, jus
 **VERIFY:** add a test asserting an un-entitled viewer's slate never contains real confidence or
 reasoning text for a PREMIUM-tier pick. typecheck+lint clean, then commit.
 
-### P7-13 — Hoist the Stripe webhook's client read out of the signature try block · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T21:30:00Z
+### P7-13 — Hoist the Stripe webhook's client read out of the signature try block · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T21:30:00Z
 File (only this): `apps/web/app/api/webhooks/stripe/route.ts`.
 Evidence: `stripe.webhooks.constructEvent(...)` reads the `stripe` Proxy (from this session's
 `b606d4a8` fix) inside the try/catch meant to catch SIGNATURE failures. If `STRIPE_SECRET_KEY` is
@@ -985,7 +985,7 @@ entering the signature-verification block.
 **VERIFY:** add a test: unset `STRIPE_SECRET_KEY`, send a well-formed webhook request, assert the
 response is 503 (not 400) and the log names the correct env var. typecheck+lint clean, then commit.
 
-### P7-14 — Housekeeping batch (all trivial, no design decisions) · STATUS: DONE · STRIKES: 0 · started: 2026-08-18T10:00:00Z · completed: 2026-08-18T18:00:00Z
+### P7-14 — Housekeeping batch (all trivial, no design decisions) · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T10:00:00Z · completed: 2026-08-16T18:00:00Z
 Do these as one small commit each, or grouped if genuinely trivial:
 1. `handoff/PHASE1_SUMMARY.md` — scrub the absolute local path `C:/Users/Garrett/Sports` it leaks.
 2. `QUICKSTART.md` / `README.md` — both cite Postgres port `:5432`, but
@@ -1037,7 +1037,7 @@ Same as P8-02, next item.
 Commit: 937a9151 — `fix(GSE-SEC-042): stamp FreeStats fetchedAt with actual fetch time, not hit time`.
 3 new tests in `free-stats.test.ts` pass; no new tsc errors in the edited file.
 
-### P8-05 — Fix the next finding · STATUS: DONE · STRIKES: 0 · started: 2026-08-18T18:30:00Z · completed: 2026-08-18T19:33:00Z (commit 2d008e96)
+### P8-05 — Fix the next finding · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T18:30:00Z · completed: 2026-08-16T19:33:00Z (commit 2d008e96)
 Same as P8-02, next item.
 
 P8-05 fixed **GSE-SEC-018** (first SAFE-DIRECT finding in `REMEDIATION_EXECUTION.md` that
@@ -1058,7 +1058,7 @@ Same as P8-02, next item.
 **RESUMING — GSE-SEC-033** (durable-write guard covers only two Stripe caps) is the first OPEN SAFE DIRECT finding. File: `apps/web/lib/stripe.ts:393`.
 Same as P8-02, next item.
 
-### P8-09 — Mid-backlog regression checkpoint · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T21:15:00Z (commit a56fe1dc)
+### P8-09 — Mid-backlog regression checkpoint · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T21:15:00Z (commit a56fe1dc)
 Re-run `CI=1 npm test > handoff/test-census-p8.txt 2>&1` and compare against `TEST_CENSUS.md`. Any
 NEW failure introduced by P8-02..08 is a regression YOU caused — find the commit
 (`git log --oneline` + `git show`), fix it, commit the fix.
@@ -1075,7 +1075,7 @@ Same-owner re-subscribes proceed in place. Tests: 13/13 in subscription-db.test.
 (including 2 new GSE-SEC-034 cases), 12/12 in push-subscribe-api.test.ts.
 Commit: 360d1185.
 
-### P8-11 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T22:45:00Z (commit 189f5f9e)
+### P8-11 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T22:45:00Z (commit 189f5f9e)
 Same as P8-02, next item. Target: GSE-SEC-015 (B2B API rate limit is process-local).
 
 P8-11 fixed **GSE-SEC-015** — B2B API rate limit is process-local. Source: `apps/web/lib/b2b/api-key-auth.ts:30`.
@@ -1099,7 +1099,7 @@ Test file: apps/web/__tests__/b2b-rate-limit.test.ts (new, 5 tests):
 
 Verify: npx vitest run (from apps/web root) → 5/5 passed. tsc --noEmit clean. eslint --max-warnings=0 clean.
 
-### P8-12 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T23:15:00Z (commit c3d28f7a)
+### P8-12 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T23:15:00Z (commit c3d28f7a)
 Same as P8-02, next item.
 
 ### P8-13 — Fix the next finding · STATUS: DONE · STRIKES: 0 · commit 758dca07
@@ -1127,7 +1127,7 @@ origin/main — assess whether a single merge is realistic or it should be split
 **VERIFY:** each claim cites a real file. Explicitly answer: "if the owner merged and deployed this
 branch today, what breaks?"
 
-### P9-02 — Secret + PII sweep of everything this branch committed · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T14:30:00Z (commit 64eb7d99)
+### P9-02 — Secret + PII sweep of everything this branch committed · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T14:30:00Z (commit 64eb7d99)
 Several previously-gitignored `handoff/` files were force-added into git this session. Before this
 branch is ever pushed, verify nothing sensitive entered history.
 Use `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD` and `git ls-files
@@ -1159,7 +1159,7 @@ commit by an unrelated `git add`, not lost. Confirmed via `git log -- <file>` on
 21/21 real tests re-run and passing (verify-slate-route.test.ts, proof-receipts-api.test.ts,
 audit-route-paywall.test.ts). No code change needed, only this stale annotation.
 
-### P9-06 — Final sprint report · STATUS: DONE · STRIKES: 0 · completed: 2026-08-19T03:30:00Z
+### P9-06 — Final sprint report · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T03:30:00Z
 Write `handoff/SPRINT_FINAL.md`: every phase and task with DONE/BLOCKED, every commit hash with its
 one-line subject, final test census numbers, and a clearly separated section titled
 **"OWNER-GATED — NOTHING ELSE CAN PROCEED WITHOUT YOU"** listing only decisions that genuinely
@@ -1285,7 +1285,7 @@ than completing a real third-party login.
 **VERIFY:** test passes; commit. The open-redirect assertions are the security-valuable half — keep
 them even if the OAuth half proves untestable.
 
-### P9.5-04 — Checkout journey, Stripe TEST mode only · STATUS: DONE · STRIKES: 0 · started: 2026-08-19T00:00:00Z · done: 2026-08-16T00:00:00Z
+### P9.5-04 — Checkout journey, Stripe TEST mode only · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T00:00:00Z · done: 2026-08-16T00:00:00Z
 File: new `apps/web/e2e/journey-checkout.spec.ts`.
 Assert the pricing page renders real prices, and that clicking upgrade creates a checkout session
 and redirects to a Stripe-hosted URL — assert the redirect target's HOST only. Do NOT complete a
@@ -1322,7 +1322,7 @@ what a paying customer would reasonably expect, that mismatch is a finding for
 `handoff/LAUNCH_BLOCKERS.md` — do not silently encode it as correct.
 **VERIFY:** tests pass; commit; any expectation mismatch written up as a finding.
 
-### P9.5-07 — Legal surface adequacy audit (READ-ONLY) · STATUS: DONE · STRIKES: 0 · started: 2026-08-19T18:00:00Z · commit: 7dee35a4
+### P9.5-07 — Legal surface adequacy audit (READ-ONLY) · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T18:00:00Z · commit: 7dee35a4
 **LAUNCH-CRITICAL.** Read IN FULL: `apps/web/app/terms/`, `apps/web/app/privacy/`,
 `apps/web/app/responsible-play/`, `apps/web/app/about/`, `apps/web/app/contact/`, plus everything
 under `docs/compliance/` and `docs/legal/`. Write `handoff/LEGAL_SURFACE_AUDIT.md` assessing
@@ -1470,7 +1470,7 @@ Write `handoff/RANKINGS_ACCURACY_AUDIT.md`:
    any visible indicator to the viewer?
 **VERIFY:** explicit PASS/FAIL/UNKNOWN per item, each backed by file:line or a command run.
 
-### P11-03 — Optimizer calibration audit (READ-ONLY) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-23T05:14:00Z (commit 723ecfef)
+### P11-03 — Optimizer calibration audit (READ-ONLY) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-16T05:14:00Z (commit 723ecfef)
 Read `apps/web/lib/fantasy/dfs-optimizer.ts`, `apps/web/components/fantasy/lineup-optimizer.tsx`,
 `apps/web/components/fantasy/optimizer-workspace.tsx`, and their test files in full. Write
 `handoff/OPTIMIZER_CALIBRATION_AUDIT.md`:
@@ -1591,8 +1591,8 @@ app code in this task.** If a real mobile/Safari bug surfaces, journal it and ap
 `P12-04-FOLLOWUP` task at the end of this phase. A browser download may be needed
 (`npx playwright install webkit`); if it will not install in two attempts, mark BLOCKED and move on.
 
-### P12-04-FOLLOWUP — Checkout e2e timeout under local env (needs DB + Stripe key) · STATUS: DONE · STRIKES: 0 · started: 2026-08-23T20:00:00Z · resumed: 2026-08-24 · completed: 2026-08-24
-Found by: P12-04 (2026-08-23). The browser-based checkout test in `journey-checkout.spec.ts`
+### P12-04-FOLLOWUP — Checkout e2e timeout under local env (needs DB + Stripe key) · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T20:00:00Z · resumed: 2026-08-16 · completed: 2026-08-16
+Found by: P12-04 (2026-08-16). The browser-based checkout test in `journey-checkout.spec.ts`
 (Part A: "clicking Pro upgrade redirects to a Stripe-hosted URL, or fail-closes") times out on
 `page.waitForResponse` for POST /api/subscriptions/checkout under both mobile and safari projects.
 The API-level tests (Part B) pass 12/12. The browser test expects either a 200 (Stripe redirect)
@@ -1603,7 +1603,7 @@ arrives. No app code was changed in P12-04 (per task rules). This follow-up trac
 once the local environment has the required credentials.
 **VERIFY:** re-run the checkout e2e test with a local DB + STRIPE_SECRET_KEY configured; all
 assertions in journey-checkout.spec.ts pass on both mobile and safari projects.
-**RESULT (2026-08-24, resumed):** Fixed by configuring the Playwright webServer.env to
+**RESULT (2026-08-16, resumed):** Fixed by configuring the Playwright webServer.env to
 +stub-mode the dev server (`DATABASE_URL="stub"`, `STRIPE_SECRET_KEY=""`,
 `DEV_FAKE_ADMIN="true"`). The checkout route now fails closed instantly (503 via
 requireDurableWriteStore / price-resolution empty) instead of hanging on Prisma retry

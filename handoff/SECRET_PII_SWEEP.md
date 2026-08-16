@@ -1,6 +1,6 @@
 # SECRET + PII SWEEP — Branch `claude/fable-5-ultracode-plan-ptru4e`
 
-**Date:** 2026-08-18 (UTC)
+**Date:** 2026-08-16 (UTC)
 **Scope:** All files committed on this branch (`origin/claude/fable-5-ultracode-plan-ptru4e..HEAD`, 73 files) plus all git-tracked files under `handoff/` (265 files, including files force-added into git during this session).
 **Method:** Pattern scan (Stripe live/test keys, webhook secrets, AWS keys, GitHub/Slack/Discord tokens, JWTs, DB connection strings with embedded credentials, private keys, email addresses, US phone numbers, credit card numbers, absolute local Windows/macOS paths) plus targeted `git grep` for hard-coded secret values in source code and env files.
 **Report rule:** This document states LOCATION and KIND only — no secret values are reproduced.
