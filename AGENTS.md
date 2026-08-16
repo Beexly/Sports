@@ -43,7 +43,15 @@ Breaking one discards the run.
 5. **NEVER mark DONE** unless the Definition of Done commands actually passed.
 6. **NEVER `git commit --no-verify`.**
 7. **NEVER install a package, run a migration, or touch a database.** (Bare
-   `npm install` is fine — it is setup.)
+   dependency setup is fine — but use **`npm run setup`**, not `npm install`.
+   Since 2026-08-16 the repo ships `.npmrc` with `ignore-scripts=true` as a
+   security control: a malicious or typosquatted package must not be able to
+   execute arbitrary code on a machine holding live production credentials.
+   Bare `npm install` therefore no longer generates the Prisma client and will
+   leave you with a broken build. `npm run setup` installs, explicitly rebuilds
+   only the six packages that legitimately need it, then runs `db:generate`.
+   **Do NOT delete `.npmrc` or re-enable scripts to make something work** — if
+   setup fails, mark BLOCKED and report it.)
 8. **NEVER fabricate product data** — no mock picks, sample odds, placeholder win
    rates, invented benchmarks. Anywhere.
 9. **NEVER weaken a guard to make a test pass.** Never delete a phrase from a

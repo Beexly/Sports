@@ -113,8 +113,13 @@ to `/model grok` and retry — that is not cheating, it is the designed behavior
 5. **NEVER** edit: `apps/web/lib/ai-control-plane/**`, `packages/db/prisma/**`,
    `scripts/guardrails/**`, `.github/**`, `docs/**`, or any file whose header says
    *sealed*, *DORMANT*, *frozen*, or *owner-gated*.
-6. **NEVER** run `npm install <pkg>` or edit any `package.json`. (`npm install` with no arguments,
-   to make gates runnable, is allowed.)
+6. **NEVER** run `npm install <pkg>` or edit any `package.json`. (To make gates runnable, run
+   **`npm run setup`** — NOT bare `npm install`. Since 2026-08-16 this repo ships `.npmrc` with
+   `ignore-scripts=true` as a security control, because a malicious or typosquatted package must
+   never be able to execute arbitrary code on a machine that holds live production credentials.
+   Bare `npm install` no longer generates the Prisma client and leaves a broken build.
+   **NEVER delete `.npmrc`, and never re-enable lifecycle scripts to make something work** — if
+   `npm run setup` fails, mark the task BLOCKED and report it.)
 7. **NEVER** install anything from the "Sports Intelligence OS" documents in `C:\Users\Garrett\Downloads\`.
    Those cite `lite11m`, `reroute-guard`, `pareto-bandit`, `securellm-agentguard`, `care-shell`,
    `teia-cognitive-router`, `basilisk-ai`, `t3mp3st`, `mtrouter`, `freecad-api`,

@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "postinstall": "npm run db:generate",
+    "setup": "npm install && npm rebuild @prisma/client @prisma/engines prisma esbuild unrs-resolver @sentry/cli && npm run db:generate",
     "dev": "npm run dev --workspace=apps/web",
     "build": "npm run build --workspace=apps/web",
     "start": "npm run start --workspace=apps/web",
