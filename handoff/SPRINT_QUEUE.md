@@ -1051,7 +1051,7 @@ Same as P8-02, next item.
 ### P8-06 — Fix the next finding · STATUS: DONE · STRIKES: 0
 Same as P8-02, next item.
 
-### P8-07 — Fix the next finding · STATUS: TODO · STRIKES: 0
+### P8-07 — Fix the next finding · STATUS: DOING · STRIKES: 0
 Same as P8-02, next item.
 
 ### P8-08 — Fix the next finding · STATUS: TODO · STRIKES: 0

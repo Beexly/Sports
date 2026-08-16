@@ -88,8 +88,8 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 10 | GSE-SEC-026 | rankingP on public board | `apps/web/lib/board/state.ts` verified — extractRankingFromFb now accepts isPremiumViewer and nulls rankingP/rankingSource for non-PREMIUM viewers (mirroring GSE-SEC-025 market redaction) | FIXED — see fc31f451 | S |
 | 11 | GSE-SEC-029 | .env.example hygiene | STALE — file does not exist (`apps/web/.env.example` not found); no secret leaked | STALE | S |
 | 12 | GSE-SEC-031 | /api/performance loads every settled pick | `apps/web/app/api/performance/route.ts` — findMany replaced with db.$queryRaw GROUP BY(s.name, p.result); O(sports×results) rows instead of O(picks) | FIXED — see P8-06 | S |
-| 13 | GSE-SEC-036 | env-controlled fetchers have no SSRF guard | `apps/web/lib/news/rss.ts:27` verified — NEWS_RSS_FEEDS fetch with no URL allow-list | SAFE DIRECT | S |
-| 14 | GSE-SEC-037 | public GSE v1 + roster POSTs, no schema | `apps/web/app/api/gse/v1/hydration/plan/route.ts:12` verified — POST with no zod schema | SAFE DIRECT | S |
+| 13 | GSE-SEC-036 | env-controlled fetchers have no SSRF guard | `apps/web/lib/news/rss.ts:27` verified — already hardened by P5-11: `rss.ts` now imports `validateEndpointUrl` + `locationIsInternalTargetLocation` from `@sports/prediction-engine/src/ensemble/remote-model-client` and rejects private/loopback/cloud-metadata targets before fetch at rss.ts:213-231, with `redirect: "manual"` to close the redirect-to-internal-IP bypass. Classification was STALE — code superseded by P5-11 (commit 8d0cf610). | **FIXED — see 8d0cf610** | S |
+| 14 | GSE-SEC-037 | public GSE v1 + roster POSTs, no schema | `apps/web/app/api/gse/v1/hydration/plan/route.ts:12` verified — POST now validates body with zod `HydrationPlanSchema` (metricIds non-empty string[], entityIds string[], asOf ISO datetime); refuse-default 422 on bad shape, 400 on invalid JSON. Covered by `apps/web/__tests__/gse-v1-hydration-plan-schema.test.ts`. | **FIXED — see P8-07** | S |
 
 ### MEDIUM (remaining, from NOW/NEXT/LATER that are not sealed/owner-gated)
 
