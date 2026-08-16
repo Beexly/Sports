@@ -1075,8 +1075,29 @@ Same-owner re-subscribes proceed in place. Tests: 13/13 in subscription-db.test.
 (including 2 new GSE-SEC-034 cases), 12/12 in push-subscribe-api.test.ts.
 Commit: 360d1185.
 
-### P8-11 — Fix the next finding · STATUS: TODO · STRIKES: 0
-Same as P8-02, next item.
+### P8-11 — Fix the next finding · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T22:45:00Z (commit TBD)
+Same as P8-02, next item. Target: GSE-SEC-015 (B2B API rate limit is process-local).
+
+P8-11 fixed **GSE-SEC-015** — B2B API rate limit is process-local. Source: `apps/web/lib/b2b/api-key-auth.ts:30`.
+Evidence: `rateLimitB2b` used a module-level `Map` (`const hits = new Map`) — each serverless instance
+had its own counter, resetting on cold start and scaling with instance count.
+
+Fix: replaced the process-local Map with `PostgresDurableRateLimiter` (from
+`@/lib/community/durable-rate-limiter`) — an atomic `INSERT ... ON CONFLICT DO UPDATE ... WHERE count < limit`
+backed by the `rate_limit_counters` table, shared across all instances. In stub/test mode an
+`InMemoryDurableRateLimiter` is used (refuses to construct in production). The limiter throws
+`RateLimitStoreUnavailableError` on store failure, which `rateLimitB2b` translates to a 503 fail-closed
+response (never a silent allow). Routes `app/api/v1/probabilities/route.ts` and
+`app/api/v1/signals/route.ts` updated to `await rateLimitB2b(...)` and handle the new 429/503 status codes.
+
+Test file: apps/web/__tests__/b2b-rate-limit.test.ts (new, 5 tests):
+  - allows requests within quota and reports remaining
+  - returns 429 with Retry-After on the (limit+1)th request
+  - rate-limits keys independently (per-key)
+  - resets counter at window boundary
+  - fails closed with 503 when store unavailable
+
+Verify: npx vitest run (from apps/web root) → 5/5 passed. tsc --noEmit clean. eslint --max-warnings=0 clean.
 
 ### P8-12 — Fix the next finding · STATUS: TODO · STRIKES: 0
 Same as P8-02, next item.
