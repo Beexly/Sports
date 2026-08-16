@@ -12,6 +12,7 @@
 
 import { timingSafeEqual } from "node:crypto";
 import { db, isStubMode } from "@sports/db";
+import { fingerprintClientKey } from "@/lib/api/public-form-rate-limit";
 import {
   InMemoryDurableRateLimiter,
   PostgresDurableRateLimiter,
@@ -88,7 +89,7 @@ export async function rateLimitB2b(
   try {
     const decision: RateLimitDecision = await limiter.consume({
       scope: B2B_RATE_LIMIT_SCOPE,
-      key,
+      key: fingerprintClientKey(key),
       limit,
       windowMs,
       now,

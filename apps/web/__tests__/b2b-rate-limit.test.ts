@@ -14,6 +14,8 @@ import { describe, it, expect } from "vitest";
 import {
   InMemoryDurableRateLimiter,
   RateLimitStoreUnavailableError,
+  type DurableRateLimiter,
+  type RateLimitDecision,
 } from "@/lib/community/durable-rate-limiter";
 import { rateLimitB2b } from "@/lib/b2b/api-key-auth";
 
@@ -104,5 +106,34 @@ describe("b2b/api-key-auth rateLimitB2b (GSE-SEC-015)", () => {
       expect(result.status).toBe(503);
       expect(result.retryAfterSec).toBeGreaterThan(0);
     }
+  });
+
+  it("fingerprints the API key before passing it to the rate limiter (GSE-SEC-034)", async () => {
+    /** Capturing limiter: records the key handed to consume() instead of counting. */
+    class CapturingLimiter {
+      readonly durable = false;
+      capturedKey: string | undefined;
+      async consume(req: { key: string }): Promise<RateLimitDecision> {
+        this.capturedKey = req.key;
+        return {
+          allowed: true,
+          scope: req.key,
+          limit: 1,
+          windowMs: 1,
+          windowStart: new Date(),
+          count: 1,
+          retryAfterMs: 0,
+        };
+      }
+    }
+    const limiter = new CapturingLimiter();
+    const rawKey = "sk-test-secret-key-12345";
+    const r = await rateLimitB2b(rawKey, 60, 60_000, limiter as unknown as DurableRateLimiter);
+    expect(r.ok).toBe(true);
+
+    // The raw secret must NOT be passed through to the storage layer.
+    expect(limiter.capturedKey).toBeDefined();
+    expect(limiter.capturedKey).not.toBe(rawKey);
+    expect(limiter.capturedKey).toMatch(/^[0-9a-f]{40}$/);
   });
 });
