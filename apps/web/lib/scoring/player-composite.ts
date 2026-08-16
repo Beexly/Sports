@@ -5,6 +5,10 @@
  * 0–100 score with attributed drivers (so tools can say WHY and never disagree):
  *   - production: per-game PPR as a z-score vs the player's position (high conf).
  *   - workload:   touches/game — opportunity is value.
+ *   - snapShare:  offense snap share — disambiguates volume on the field vs on
+ *                 the stat sheet (a 15-touch game on 95% of snaps is a feature,
+ *                 a 15-touch game on 60% is a role). Folded in only when snap
+ *                 data exists, so the score is unchanged when it is absent.
  *   - momentum:   recent (last-4) form vs season (the movers signal).
  *   - availability: injury report + practice + concussion flag (discounted).
  *
@@ -25,6 +29,7 @@ export interface PlayerScoreRow {
   readonly seasonPpg: number;
   readonly recentPpg: number;
   readonly touchesPerGame: number;
+  readonly snapShare: number | null; // avg offense snap share (0–100) when snap data exists
   readonly drivers: readonly SignalContribution[];
 }
 
@@ -50,6 +55,10 @@ interface InjuryRow {
   readonly reportStatus: string | null;
   readonly practiceStatus: string | null;
   readonly primaryInjury: string | null;
+}
+interface SnapRow {
+  readonly playerId: string | null;
+  readonly offensePct: number | null;
 }
 
 const RECENT_N = 4;
@@ -83,6 +92,15 @@ interface PlayerAgg {
   ppr: { week: number; v: number }[];
   carries: number;
   receptions: number;
+}
+
+/**
+ * Maps an offense snap share (0–100) onto the composite's shared -1..1 scale,
+ * using 50% as the neutral baseline (a below-50% offensive role is negative;
+ * above-50% is positive). Clamped so outliers can't dominate a single signal.
+ */
+function snapShareValue(pct: number): number {
+  return clamp((pct - 50) / 50, -1, 1);
 }
 
 export async function loadPlayerCompositeScores(season: number, limit = 100): Promise<PlayerScoresReport> {
@@ -138,6 +156,23 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     if (!prev || inj.week > prev.week) latestInjury.set(inj.playerId, inj);
   }
 
+  // Snap counts: peak offense snap share per player for this season.
+  // offensePct is the player's share of the team's offensive snaps (0–100). Joined
+  // on playerId (the resolved gsis link); rows without a resolved playerId are
+  // skipped so we never attribute another player's snap share by name guesswork.
+  // Takes the peak (max) share, treating a single high-snap week as the player's
+  // established role ceiling — bounded by the signal weight below, not unbounded.
+  const snaps = (await db.snapCount.findMany({
+    where: { season },
+    select: { playerId: true, offensePct: true },
+  })) as SnapRow[] | null;
+  const snapShareByPlayer = new Map<string, number>();
+  for (const s of Array.isArray(snaps) ? snaps : []) {
+    if (!s.playerId || s.offensePct == null) continue;
+    const prev = snapShareByPlayer.get(s.playerId);
+    if (prev === undefined || s.offensePct > prev) snapShareByPlayer.set(s.playerId, s.offensePct);
+  }
+
   const result: PlayerScoreRow[] = [];
   for (const [playerId, a] of agg) {
     const meta = info.get(playerId);
@@ -148,11 +183,17 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     const sorted = [...a.ppr].sort((x, y) => x.week - y.week);
     const recentPpg = mean(sorted.slice(-RECENT_N).map((x) => x.v));
     const touchesPerGame = (a.carries + a.receptions) / Math.max(1, games);
+    const snapShare = snapShareByPlayer.get(playerId) ?? null;
 
     const signals: WeightedSignal[] = [
       { key: "production", value: base.std > 0 ? (seasonPpg - base.mean) / base.std : 0, weight: 3, confidence: 1 },
       { key: "workload", value: clamp((touchesPerGame - 10) / 8, -1, 1.5), weight: 1.5, confidence: 1 },
     ];
+    // Snap share is additive: only emitted when real snap data exists, so the
+    // score is byte-identical to before when snap data is absent.
+    if (snapShare !== null) {
+      signals.push({ key: "snapShare", value: snapShareValue(snapShare), weight: 1, confidence: 0.8 });
+    }
     if (games >= RECENT_N + 1) {
       signals.push({ key: "momentum", value: clamp((recentPpg - seasonPpg) / 5, -1.5, 1.5), weight: 1.5, confidence: 0.9 });
     }
@@ -171,6 +212,7 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
       seasonPpg: round2(seasonPpg),
       recentPpg: round2(recentPpg),
       touchesPerGame: round2(touchesPerGame),
+      snapShare: snapShare !== null ? round2(snapShare) : null,
       drivers: blended.contributions,
     });
   }
@@ -182,6 +224,6 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     generatedAt,
     playerCount: result.length,
     top: result.slice(0, limit),
-    note: "Galaxy Index: production (z vs position) + workload + momentum + availability, blended via the composite matrix. Single source of truth for all player tools.",
+    note: "Galaxy Index: production (z vs position) + workload + snap share + momentum + availability, blended via the composite matrix. Single source of truth for all player tools.",
   };
 }
