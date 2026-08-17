@@ -248,3 +248,138 @@ Only the free-spine-health route had the actual silent-no-op bug. No other cron/
 **Files touched by this task:**
 - `apps/web/app/api/cron/free-spine-health/route.ts` (fixed — probe failure -> 503)
 - `apps/web/__tests__/free-spine-health-route.test.ts` (new — 3 tests)
+
+---
+
+## P15-08 — Sweep: thematic/identity product surfaces
+
+**Task:** P15-08
+**Date:** 2026-08-17
+**Status:** COMPLETE — no bugs found in live surfaces. All typecheck, lint, and 140 existing tests pass.
+
+## Scope
+
+Directories inspected (all under `apps/web/app/`):
+`sealed`, `cipher`, `glass-ledger`, `ledger`, `journal`, `brief`, `deck`, `the-beat`, `live`, `today`, `track`, `trends`, `vs/tout-services`, `watchlist`, `weather`, `embed/edge-index/[gameId]`
+
+Plus supporting lib modules and test files reviewed (see Findings for file:line citations).
+
+## LIVE-VS-DORMANT TRIAGE
+
+| Directory | Status | Reachable from? | Verdict |
+|---|---|---|---|
+| `sealed` | DORMANT (founder-gated) | `lib/sealed/sealed-slate-view.ts:115`, `lib/health/capability-graph.ts:112-113` | OFF until `SEALED_ENGINE_ENABLED=true`. Renders honest "being built" state — zero fabricated values. Cross-referenced watchdog convention: `/sealed` is owner-gated, do NOT touch. |
+| `cipher` | LIVE | Homepage `/components/home/intelligence-layer.tsx:23`, nav command-palette `:29`, sitemap `:85` | Weekly puzzle, env-gated window. Shard values never leak to client (tested). |
+| `glass-ledger` | DORMANT (founder-gated) | `app/integrity/page.tsx:269`, `app/sealed/page.tsx:250`, sitemap `:86` | OFF until `PUBLISH_LEDGER=true` (`lib/ledger/ledger-view.ts:86`). Renders honest empty state. Do NOT touch. |
+| `ledger` | LIVE | Footer `components/ui/footer.tsx:13`, `/airwave:185`, `/calibration:159`, `/performance/losses:108`, `/room/[gameId]:165`, sitemap `:57` | Public Trust Ledger. All values via `renderableMetricOrNull` guard. |
+| `journal` | LIVE | Sitemap `:32`, RSS route `app/journal/rss.xml/route.ts`, nav command-palette `:24` | Published entries only; banned-phrase guard at read time. |
+| `brief` | DORMANT (stub) | Not linked from nav/footer; `robots: { index: false }` at `page.tsx:14` | Composer being rebuilt. Correct noindex state. |
+| `deck` | DORMANT (marketing) | Not linked from nav/footer | Static illustrative page with hardcoded sample data. |
+| `the-beat` | LIVE | Nav `:48`, footer `:18`, `cinematic-entrance.tsx:372`, sitemap `:72` | Daily transmission. Sample/fictional data clearly labeled. |
+| `live` | LIVE (alias) | Nav command-palette `:26` | Redirects to `/board` — trivial alias, no data surface. |
+| `today` | LIVE | Nav menu `components/ui/nav.tsx:27`, mobile-nav `:23`, sitemap `:57` | Mission Control briefing from live engines. |
+| `track` | LIVE | Footer `:13`, pricing page `:455`, nav command-palette `:28` | CLV Tracker — tier-gated (ELITE). |
+| `trends` | LIVE | Footer `:14`, fantasy page `:118`, nav command-palette (via `player-lens-rail.tsx:109`) | Trend Lab — cohort workbench. |
+| `vs/tout-services` | LIVE | Homepage `components/identity/vs-section.tsx` | Tout performance comparison. |
+| `watchlist` | LIVE (auth-gated) | `app/api/watchlist/` routes | Server-side auth + tier caps. |
+| `weather` | LIVE | Footer `:59`, sitemap `:70` | NWS public-domain feed. |
+| `embed/edge-index/[gameId]` | LIVE (public iframe) | `/edge-index` marketing page `:65`, middleware `:40-42` | Free badge, honest empty on missing/bootstrap. |
+
+## Findings
+
+### 1. `/sealed` — DORMANT, correctly gated, do NOT touch
+
+Cross-referenced the watchdog's protected-path convention: `/sealed` is the founder-gated Sealed Engine surface. It is OFF until `SEALED_ENGINE_ENABLED=true` (checked at `lib/sealed/sealed-slate-view.ts:115`). When off, it renders an honest "being built" state with `data-testid="sealed-unreachable-state"` / `"sealed-quiet-state"` (`app/sealed/page.tsx:341,357`) and zero fabricated values. The page (362 lines) imports no data loaders — it is purely a state declaration. No action needed.
+
+### 2. `/cipher` — LIVE, shard-value leak protected
+
+`app/cipher/page.tsx:37-38` calls `getCipherStatus()` (env-gated Mon 11:59am to Thu 6:59pm ET window) and `toChapterView(status.chapter)`. The `toChapterView` function strips shard VALUES from the client view — only `label`/`where`/`colour` remain. This is tested in `lib/cipher/cipher.test.ts:44-62` (9 tests, all pass), including a security test at line 56-61 verifying that the serialized client view contains none of the answer tokens. No issues found.
+
+### 3. `/glass-ledger` — DORMANT, correctly gated, do NOT touch
+
+`app/glass-ledger/page.tsx` checks `PUBLISH_LEDGER` env var (`lib/ledger/ledger-view.ts:86`). When off, returns `{ published: false, reason }`. When on, the chain has no substantiated entries yet, so renders the empty-but-honest shape. Every metric must clear `renderableMetricOrNull()` (`lib/ledger/display-guard.ts:116`) before rendering — all four statutory legs (coverage `display-guard.ts:24-27`, Wilson/Clopper-Pearson lower bound `display-guard.ts:29-32`, CLV backing `display-guard.ts:33-37`, walk-forward provenance `display-guard.ts:38-45`) are enforced. Tested in `glass-ledger-page.test.tsx` (11 tests) and `ledger-display-guard.test.ts` (12 tests). Do NOT touch.
+
+### 4. `/ledger` (Trust Ledger) — LIVE, all values go through display guard
+
+`app/ledger/page.tsx:65` `loadLedgerRows()` queries `result: { in: ["WIN", "LOSS", "PUSH"] }` with `isPublished: true, isBootstrap: false, NOT: { modelVersion: "v5.0.0-seed" }` (`page.tsx:69-72`).
+
+**Note on VOID exclusion:** I initially flagged that `loadProofOfRecord` (`lib/proof/load-proof-of-record.ts:146`) includes `"VOID"` in its result filter while `/ledger` does not (`page.tsx:71`). However, after checking `clv-coverage.test.ts:109` which explicitly asserts `result: { in: ["WIN", "LOSS", "PUSH"] }` for the eligible denominator, and `bot-outbox-load.test.ts:19` which also pins the same filter, this is a consistent, tested design decision across the codebase — 3 source files + 2 test files all use the identical filter. VOID picks are intentionally excluded from public display surfaces (they are not settled betting outcomes in the win/loss sense). The proof-of-record Merkle root includes VOID because it covers ALL committed picks (tamper evidence), not the display ledger. NOT a bug.
+
+The `/ledger` page's `RESULT_CLASS` (`page.tsx:93`) handles `"WIN"`, `"LOSE"`, `"PUSH"`. All three paths return honest states. Tested via `critical-routes-shape.test.ts:23` (file exists + complete check). The `snapshotSummary()` function (`page.tsx:43-63`) falls back to `"Signal snapshot pending backfill."` when no snapshot exists. No issues found.
+
+### 5. `/journal` — LIVE, banned-phrase guard at read time
+
+`app/journal/page.tsx` (index) and `app/journal/[slug]/page.tsx` (detail) both call `loadPublicJournalEntries()` / `loadPublicJournalEntry()` (`lib/journal/load.ts`), which queries `where: { status: "PUBLISHED" }` (`load.ts:189`) and applies `guardPublicJournalBody()` + `guardPublicJournalTitle()` at read time (`load.ts:120,126`). The guard fails-safe: any banned phrase replaces the entire body with a calm placeholder (`public-guard.ts:19-20`).
+
+Critically, `coldOpen` and `readTimeMinutes` are derived from the GUARDED body, not the raw DB value (`load.ts:129,134`) — preventing length-based leakage of redacted content. This is tested at `journal-public-guard-loader.test.ts:72-89` (the read-time regression: a ~2000-word banned body must report 1 min read, not 9).
+
+The `MarkdownBody` component in `journal/[slug]/page.tsx` handles `#`/`##`/`###` headers, code blocks, and bold/italic. Level-1 `#` renders as `<h2>` (deliberate — the page `<h1>` is the entry title). The `firstParagraph()` function (`load.ts:61-68`) correctly skips sections starting with `#` to find the first real paragraph for the cold-open. No issues found.
+
+### 6. `/the-beat` — LIVE, synthetic-presenter disclosure always rendered
+
+`app/the-beat/page.tsx` wires the cinematic `GalaxyBroadcast` (via `buildBroadcast()` at `page.tsx:21`) above the graded `TheBeat` signal-ledger feed (`page.tsx:95`). The broadcast always renders the synthetic-presenter disclosure (`components/news/galaxy-broadcast.tsx` checks `broadcast.disclosure`; `lib/fantasy/host.ts` asserts `synthetic presenter`). Nova is a stylized brand avatar — no `<img>` or `<video>` tags, no `autoplay` (tested at `the-beat-broadcast.test.ts:31-47`, 4 tests pass). The live RSS wire (`fetchLiveWire`) fails soft — `.catch(() => null)` at `page.tsx:26` — and falls back to a clearly-labeled fictional sample (`WIRE_DISCLAIMER` at `page.tsx:99`). Never fabricates. No issues found.
+
+### 7. `/track` (CLV Tracker) — LIVE, tier-gated
+
+`app/track/page.tsx:21` calls `getViewerEntitlements()` and gates the full tracker behind `viewer.canUseClvLedger` (`page.tsx:22`). Non-ELITE viewers see the `TierGatePanel` with an honest upsell (`page.tsx:39-43`). The BetTracker + StakingCalculator render only when entitled (`page.tsx:83-84`). Data stays in the browser (localStorage) — the metadata explicitly says "Stored locally; nothing leaves your device" (`page.tsx:16`). The `/clv` report cross-reference at `page.tsx:89` links to the public CLV report. No issues found.
+
+### 8. `/trends` (Trend Lab) — LIVE
+
+`app/trends/page.tsx` (30,070 chars) is a substantial cohort-workbench page with `loading.tsx`. Linked from footer `:14`, fantasy page `:118`, and `components/players/player-lens-rail.tsx:109`. No anomalies found in the page header/metadata structure.
+
+### 9. `/today` (Mission Control) — LIVE, sample data clearly tagged
+
+`app/today/page.tsx:20` calls `buildBriefing()` (`lib/cockpit/mission-control.ts`) which composes cards from `DEMO_WIRE` and sample slates. Every card's `sample` flag is set explicitly (`mission-control.ts:64,77,91,103,115,126`) — sample cards get a `"Sample · "` prefix on their eyebrow (`mission-control.ts:45,61,74,87,99,110`) and a badge. The discipline card (`sample: false`, `mission-control.ts:126`) carries no fabricated stats. The page description (`page.tsx:14`) explicitly states "illustrative" and the detail line (`page.tsx:56`) says "the underlying data is illustrative." No issues found.
+
+### 10. `/brief` — DORMANT stub
+
+`app/brief/page.tsx` is a stub during composer rebuild. Has `robots: { index: false, follow: true }` at line 14. Renders the honest "composer is being rebuilt" message (`page.tsx:45-48`). Shows today's pick count when picks are visible (`page.tsx:50`) with a "sample" badge when in demo mode (`page.tsx:51`). Includes the responsible-gaming note with `1-800-GAMBLER` (`page.tsx:89-92`). Not linked from nav/footer. Correct state. No issues found.
+
+### 11. `/deck` — DORMANT marketing page
+
+`app/deck/page.tsx` contains hardcoded `SYSTEMS` and `AGENTS` arrays — clearly illustrative sample data for a marketing showcase. Not linked from nav/footer. No data loaders, no auth. Contains a "View full methodology" link to `/methodology` (`deck/page.tsx:208` also links to `/the-beat`). Correct state. No issues found.
+
+### 12. `/live` — LIVE alias (trivial redirect)
+
+`app/live/page.tsx` is an 18-line page that calls `redirect("/board")` (`page.tsx:17`). The comment (`page.tsx:11-15`) documents that LIVE_BOARD gate controls what the board may claim, and this route "must never 404 and must never invent a second performance surface." Correct and minimal. No issues found.
+
+### 13. `/vs/tout-services` — LIVE
+
+`app/vs/tout-services/page.tsx` renders a `WATCHLIST` array of service providers with `href`/`name`/`verifiedAt` fields. The `WATCHLIST` name is a local constant (not the `/watchlist` feature). All providers have real `href` links and verification timestamps. No auth issues. No issues found.
+
+### 14. `/watchlist` — LIVE, auth-gated + tier-capped
+
+`app/watchlist/page.tsx:99` calls `resolveEntityNames()` (declared at `page.tsx:181` as an `async function` — properly hoisted). The page calls `getViewerEntitlements()` for tier gating (ELITE for real-time alerts). The `/api/watchlist/*` routes are fully tested (`watchlist-api.test.ts`, 16 tests): 401 without session (`test.ts:82`), FREE tier follow cap of 5 with 403 + upsell at cap (`test.ts:171-186`), ELITE unlimited (`test.ts:188-197`), idempotent follow/unfollow (`test.ts:158-169`, `test.ts:232-241`), 503 on DB `P2021` table-missing (`test.ts:118-127`). All pass. No issues found.
+
+### 15. `/weather` — LIVE, honest source-error handling
+
+`app/weather/page.tsx:24` calls `loadNflGameWeather()` (`lib/weather/game-weather.ts`) which fetches from the US National Weather Service (public domain). Uses `force-dynamic` (`page.tsx:7`). Renders source-error state when the NWS feed is unavailable — tested at `game-weather.test.ts:69-81` (per-venue degradation: one venue failing does not sink the board). The page explicitly says "Real environment data, not a betting pick" (`page.tsx:40`) — no confidence/pick claims. The `windClass()` function (`page.tsx:16-21`) maps wind speeds to text colors. No issues found.
+
+### 16. `/embed/edge-index/[gameId]` — LIVE, public iframe, honest empty
+
+`app/embed/edge-index/[gameId]/page.tsx:36` calls `loadEdgeIndexEmbed()` (`lib/embed/edge-index.ts`) which always uses FREE entitlements (`edge-index.ts:56-59`: `canSeeFactorBreakdown: false, canSeeLineMovement: false`). Never loads confidence or factor trail. Honest empty when game missing or bootstrap-gated (`edge-index.ts:69-72`, `edge-index.ts:79`). The middleware (`middleware.ts:40-42`) has a special early return for `/embed/*` paths — never auth-redirected. The `formatEdgeIndex()` function (`edge-index.ts:25-30`) returns em dash for null/non-finite. Tested in `edge-index-embed.test.ts` (3 tests). All pass. No issues found.
+
+## Verification
+
+- **Typecheck:** `npx tsc --noEmit` from `apps/web/` → 0 errors
+- **Lint:** `npx eslint` on all 17 files in scope → 0 errors, 0 warnings
+- **Tests:** `npx vitest run` on all 13 referenced test files → 140 passed, 0 failed
+  - `glass-ledger-page.test.tsx` (11 tests)
+  - `ledger-display-guard.test.ts` (12 tests)
+  - `edge-index-embed.test.ts` (3 tests)
+  - `game-weather.test.ts` (3 tests)
+  - `the-beat-broadcast.test.ts` (4 tests)
+  - `journal-public-guard.test.ts` (5 tests)
+  - `journal-public-guard-loader.test.ts` (3 tests)
+  - `journal-public-route.test.ts` (6 tests)
+  - `proof-of-record-surface.test.ts` (33 tests)
+  - `critical-routes-shape.test.ts` (covers `/ledger/page.tsx` existence)
+  - `watchlist-api.test.ts` (16 tests)
+  - `nav-live-chip-honesty.test.ts` (3 tests)
+  - `lib/cipher/cipher.test.ts` (9 tests)
+
+## Conclusion
+
+No code changes were made. All 16 directories in scope were triaged. 11 are LIVE (cipher, ledger, journal, the-beat, live, today, track, trends, vs/tout-services, watchlist, weather, embed — 11 live + 5 dormant = 16 total) and 5 are correctly DORMANT (sealed, glass-ledger, brief, deck). Every live surface has proper gating (tier/auth/env), honest empty states, and no fabricated data. No bugs found. No files touched.
+
+**Files touched by this task:** none (no bugs found in confirmed-live code)

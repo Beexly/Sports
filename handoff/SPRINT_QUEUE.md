@@ -2138,7 +2138,7 @@ the REST of this cluster for the same failure classes: a cron/worker that silent
 erroring loudly, or a background job with no failure alerting at all. **VERIFY:** typecheck + lint;
 cite file:line for any silent-failure path found and fixed. Commit.
 
-### P15-08 — Sweep: thematic/identity product surfaces · STATUS: TODO · STRIKES: 0
+### P15-08 — Sweep: thematic/identity product surfaces · STATUS: DONE · STRIKES: 0 · started: 2026-08-17 · resolved: 2026-08-17T11:42Z
 Directories: `apps/web/app/{sealed,cipher,glass-ledger,ledger,journal,brief,deck,the-beat,live,today,
 track,trends,vs,watchlist,weather,embed}`. Most exotic-name cluster in the app; expect a real mix of
 live product pages and dormant/thematic ones (`sealed` in particular — cross-reference against the
