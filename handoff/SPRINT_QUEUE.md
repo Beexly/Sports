@@ -2324,7 +2324,7 @@ not silent repetition). Then go back to P10-01 and start the next round. **This 
 Round counter incremented to 4. P10-01, P10-02, P10-03, P10-04 reset to STATUS: TODO for Round 4
 below. P8-08-RESUME remains DONE (verified in this round — guard exists in commit a56fe1dc).
 
-### P10-05 — Close Round 4 · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17
+### P10-05 — Close Round 4 · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17 (commit 0435a526)
 Round counter incremented to 5. P10-01, P10-02, P10-03, P10-04 reset to STATUS: TODO for Round 5
 (below). P8-08-RESUME remains DONE (commit 4e7326da, verified). Corrections to BATTLE_TEST_LOG.md:
 hygiene-04 RESOLVED (committed fd9489b1), hygiene-06 RESOLVED (guard now at :494,579 in committed tree),
