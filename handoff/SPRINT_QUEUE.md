@@ -1980,7 +1980,7 @@ that the registry deliberately refuses to bless a numeric cadence.
 **VERIFY:** a test asserting the covered surfaces render a freshness signal; the `/about` cadence claim no
 longer states an unenforced number. typecheck + lint. Commit.
 
-### P14-07 — Honest degradation must DETECT staleness, not just claim "not an outage" · STATUS: TODO · STRIKES: 0
+### P14-07 — Honest degradation must DETECT staleness, not just claim "not an outage" · STATUS: DONE · STRIKES: 0
 Under the dead-scheduler condition this session, the board showed "quiet board — not an outage" copy while it
 WAS an outage (20h stale). The honest-degradation logic must actually detect data-age > SLA and say
 "temporarily stale, refreshing" rather than implying the quiet is intentional. Locate the board/picks

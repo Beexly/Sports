@@ -7,7 +7,9 @@ import {
   type BoardHealthBadgeState,
   type BoardSuppressionReason,
 } from "@/lib/board/health";
+import { classifyDegradationCharacter, type DegradationCharacter } from "@/lib/board/degradation-character";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
 import { unevaluatedPassReason } from "./pass-reason";
 import {
   classifyBoardState,
@@ -56,6 +58,13 @@ export interface BoardStatePayload {
     health: BoardHealthBadgeState;
     /** Honest-empty classifier — refuse-default public fire claim */
     boardClass: ClassifiedBoardState;
+    /**
+     * User-facing character of the current empty/degraded state.
+     * Distinguishes genuinely-quiet (no eligible games, scheduler alive)
+     * from stale-refreshing (data past SLA, awaiting fresh ingestion).
+     * Never surfaces raw operator language.
+     */
+    degradationCharacter: DegradationCharacter;
   };
 }
 
@@ -129,6 +138,8 @@ function buildBoardMeta({
   suppressedReason,
   liveBoardOn = false,
   bootstrap = false,
+  schedulerLiveness = null,
+  staleDetected = false,
 }: {
   dataError?: "DB_UNREACHABLE";
   modelVersion: string;
@@ -138,6 +149,10 @@ function buildBoardMeta({
   /** Production default false — founder gate */
   liveBoardOn?: boolean;
   bootstrap?: boolean;
+  /** Scheduler liveness already assessed by the caller (async). */
+  schedulerLiveness?: { readonly status: "healthy" | "degraded" | "dead" | "unknown" } | null;
+  /** When the kill switch is OFF but zero rows loaded while data is past SLA. */
+  staleDetected?: boolean;
 }): BoardStatePayload["meta"] {
   const counts = rowCounts(rows);
   const health = buildBoardHealth({
@@ -155,11 +170,21 @@ function buildBoardMeta({
     dataError: dataError ?? null,
     suppressedReason: suppressedReason ?? null,
   });
+  const degradationCharacter = classifyDegradationCharacter({
+    staleSuppressed: suppressedReason === "STALE_DATA",
+    dbUnreachable: dataError === "DB_UNREACHABLE",
+    demoSuppressed: suppressedReason === "DEMO_DATA",
+    liveBoardOff: !liveBoardOn,
+    rowCount,
+    schedulerLiveness: schedulerLiveness?.status ?? null,
+    staleDetected,
+  });
   return {
     degradations: health.degradations,
     health: health.badge,
     isSampleData: false,
     boardClass,
+    degradationCharacter,
     ...(dataError ? { dataError } : {}),
     ...(suppressedReason ? { suppressedDemoData: true } : {}),
     traceId: health.traceId,
@@ -180,6 +205,34 @@ export async function loadBoardState(
   // Fail OPEN on a DB error so a transient blip can't black out a fresh board.
   const staleSuppressed =
     gates.forceNoBetIfStale && (await isPublicPicksSurfaceStale(now).catch(() => false));
+
+  // When suppressing for staleness, assess scheduler liveness to distinguish
+  // "genuinely quiet (scheduler alive, nothing to do)" from "stale-refreshing
+  // (data past SLA, scheduler may be dead)". This feeds the user-facing copy.
+  // assessed but never awaited (synchronous build needs the status now).
+  const schedulerLiveness = staleSuppressed
+    ? await assessSchedulerLiveness(now.getTime()).catch(() => null)
+    : null;
+
+  // When the kill switch is OFF but the board loads zero rows, we still must
+  // distinguish a genuinely-quiet slate from a stale-but-refreshing one. The
+  // dead-scheduler condition (2026-08-10 incident) proved the board can show
+  // "quiet board — not an outage" while data is 20h stale because zero rows
+  // loaded. Only check when rowCount === 0 to avoid the freshness query on a
+  // real slate.
+  const detectStaleWhenEmpty = async (): Promise<{
+    stale: boolean;
+    schedulerLiveness: { readonly status: "healthy" | "degraded" | "dead" | "unknown" } | null;
+  }> => {
+    const stale = await isPublicPicksSurfaceStale(now).catch(() => false);
+    if (stale) {
+      return {
+        stale: true,
+        schedulerLiveness: await assessSchedulerLiveness(now.getTime()).catch(() => null),
+      };
+    }
+    return { stale: false, schedulerLiveness: null };
+  };
 
   if (demoActive || staleSuppressed) {
     const emptyRows = {
@@ -207,6 +260,7 @@ export async function loadBoardState(
         suppressedReason: demoActive ? "DEMO_DATA" : "STALE_DATA",
         liveBoardOn: false,
         bootstrap: gates.isBootstrapMode,
+        schedulerLiveness,
       }),
     };
   }
@@ -392,6 +446,9 @@ export async function loadBoardState(
   }));
 
     const modelVersion = publishedToday[0]?.modelVersion ?? MODEL_VERSION;
+    const rowCount = scoringRows.length + publishedRows.length + gatedRows.length;
+    const staleInfo =
+      rowCount === 0 ? await detectStaleWhenEmpty() : { stale: false, schedulerLiveness: null };
     return {
       data: {
         sportsWatched: new Set([...scoringRows, ...publishedRows, ...gatedRows].map((row) => row.sport)).size,
@@ -411,6 +468,8 @@ export async function loadBoardState(
         rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
         liveBoardOn: false,
         bootstrap: gates.isBootstrapMode,
+        staleDetected: staleInfo.stale,
+        schedulerLiveness: staleInfo.schedulerLiveness ?? schedulerLiveness,
       }),
     };
   } catch {
