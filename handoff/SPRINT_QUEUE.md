@@ -2212,7 +2212,7 @@ Files (only these): `apps/web/components/ui/nav.tsx`, one new small component fi
 **VERIFY:** existing nav tests still pass (signed-in and signed-out states both still correct — this
 is the regression risk). typecheck + lint. Commit.
 
-### P16-04 — `/picks` makes HTTPS round-trips to its own origin during render · STATUS: TODO · STRIKES: 0
+### P16-04 — `/picks` makes HTTPS round-trips to its own origin during render · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T00:00:00Z · committed: 5787aa8d8d1e3cfb4f79cc7fc65c8d2d0eb88687
 Evidence to verify first: `apps/web/app/picks/page.tsx:76` and `:132` both `fetch()` the app's own
 public URL built from request headers (`getRequestOrigin()`, `:49-59`). A server component calling
 its own HTTP API pays full TLS + cold-start latency instead of calling the loader function directly,
@@ -2224,7 +2224,7 @@ Files (only these): `apps/web/app/picks/page.tsx`, its test file.
 **VERIFY:** existing picks tests pass; add one asserting no self-origin fetch occurs during render.
 typecheck + lint. Commit.
 
-### P16-05 — Test-coverage reality: 231 routes, 14 render-tested · STATUS: TODO · STRIKES: 0
+### P16-05 — Test-coverage reality: 231 routes, 16 render-tested · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T08:30:00Z · completed: 2026-08-17
 A coverage census found the app has **231 page routes** (not the ~130 previously assumed — three
 deep clusters were missed: `admin/statking/*` 19, `cockpit/*` 34, `stats/*` 25), plus 188 API route
 handlers. Of those 231: only **14 are render-tested** (a test actually imports the page component),

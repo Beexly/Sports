@@ -4264,3 +4264,116 @@ Action:
 
 Result: DONE. Commit 853a3fd0. This run did exactly ONE task (P16-03) and stopped.
 
+### 2026-08-17T08:26:53Z · P16-04 — `/picks` makes HTTPS round-trips to its own origin during render · DONE · STRIKES: 0 · commit 5787aa8d
+
+Resumed P16-04 from TODO (no prior DOING run). `date +%F` → 2026-08-17.
+
+Action:
+1. Confirmed cwd: `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+2. Read handoff/SPRINT_QUEUE.md — P16-04 was STATUS: TODO (top-to-bottom first).
+   Set STATUS to DOING.
+3. Read evidence: `apps/web/app/picks/page.tsx` lines 49-59 (`getRequestOrigin()`)
+   and `fetchPicks`/`fetchSlate` used `fetch(appUrl + "/api/picks")` — self-HTTP round-trip.
+   Read route handlers `@/app/api/picks/route.ts` and `@/app/api/picks/daily-slate/route.ts`:
+   both export `GET(req: NextRequest): Promise<NextResponse>`. Confirmed importable
+   without side effects (pattern already used in `audit-route-paywall.test.ts`).
+4. Implemented fix in `apps/web/app/picks/page.tsx`:
+   - Removed `getRequestOrigin()` (no longer needed — no URL construction)
+   - Added imports: `NextRequest` from `next/server`, `GET as getPicks` from
+     `@/app/api/picks/route`, `GET as getDailySlate` from
+     `@/app/api/picks/daily-slate/route`
+   - Added `buildRequest(pathname, params)` helper: constructs a `NextRequest`
+     with forwarded `cookie`, `x-forwarded-for`, `x-real-ip` headers so auth() and
+     the rate limiter (consumeRateLimit + clientIp) see the same context as the
+     HTTP self-fetch path
+   - Replaced `fetch(url, { cache: "no-store", headers: { cookie: ... } })` with
+     `getPicks(req)` and `fetch(url, { next: { revalidate: 1800 } })` with
+     `getDailySlate(req)` — in-process calls, no HTTP transport/TLS/cold-start
+   - Renamed `authenticated` param → `_authenticated` (unused: direct handler calls
+     don't participate in HTTP caching; handler is force-dynamic)
+5. Updated test file `apps/web/__tests__/picks-daily-limit-meta.test.ts`:
+   - Replaced assertions on `cache: "no-store"` / `cookie: headers().get("cookie")`
+     with assertions that the page forwards cookies via `buildRequest` and imports
+     the GET handlers directly (getPicks, getDailySlate)
+   - Replaced assertion on `next: { revalidate: 1800 }` with assertion that the
+     page imports and calls the route handlers directly (no `fetch(url` self-fetch)
+6. VERIFY (all run THIS session):
+   - `cd apps/web && npx vitest run` on 10 affected test files:
+     picks-daily-limit-meta, picks-states-conversion, picks-page-policy-gate,
+     picks-paywall-copy-truth, picks-demo-mode, nav-auth, nav-static-shell,
+     daily-slate-stale-kill-switch, critical-routes-shape, freshness-coverage
+     → 117 tests, 117 passed (0 failures)
+   - `git show 5787aa8d --stat` confirms 2 files (page.tsx + test file), 48 insertions,
+     38 deletions. secret-scan: OK, no secrets detected.
+7. Committed ONLY the two task-named files:
+   `git add apps/web/app/picks/page.tsx apps/web/__tests__/picks-daily-limit-meta.test.ts`
+   `git commit -m "fix(P16-04): eliminate self-fetching HTTPS round-trip on /picks page"`
+   → commit 5787aa8d8d1e3cfb4f79cc7fc65c8d2d0eb88687
+
+Re-derivation: all counts and exit codes from commands run THIS session.
+Commit hash verified via `git show 5787aa8d`.
+
+Result: DONE. Commit 5787aa8d. This run did exactly ONE task (P16-04) and stopped.
+
+---
+
+### 2026-08-17 · P16-05 — Test-coverage reality: 231 routes, 16 render-tested · DONE · STRIKES: 0
+
+Resumed from DOING (prior run started 2026-08-17T08:30:00Z, was interrupted).
+`date +%F` → 2026-08-17.
+
+Action:
+1. Confirmed cwd: `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+2. Confirmed P16-05 was the first DOING task top-to-bottom in SPRINT_QUEUE.md.
+   P16-04 was DONE (committed 5787aa8d), P16-05 was DOING (started 08:30Z),
+   P16-06 was DONE — P16-05 is next in queue order.
+3. Discovered the prior interrupted run had already created 5 smoke test files
+   as untracked, plus scratch scripts (classify*.js, *_tmp.txt) in the repo
+   root. I completed the 5 smoke tests, wrote the census, and cleaned up the
+   scratch files (not part of this task's deliverable).
+4. Fixed 1 test bug in the signin smoke test: `getByText("Sign in to")` (exact
+   match) → `getByText(/Sign in to/i)` (regex), because the actual rendered
+   heading is "Sign in to Galaxy Sports Edge" (BRAND_NAME = "Galaxy Sports Edge"
+   at apps/web/lib/brand.ts:16). Exact match was wrong, not the app.
+5. Fixed 1 lint error in about-page-smoke.test.tsx: removed unused `ReactNode`
+   import (line 3) — the test never used it (unlike pricing-page-smoke which
+   does use ReactNode in its motion mocks).
+6. Wrote handoff/ROUTE_COVERAGE_CENSUS.md with live-derived counts:
+   `find apps/web/app -name "page.tsx" -not -path "*/api/*" | wc -l` → 231 page
+   routes; `find apps/web/app/api -name "route.ts" | wc -l` → 177 API handlers
+   (brief cites 188 — discrepancy noted with method). Render-test classifier
+   (classify3.js, run once) yielded 16 render-tested / 111 weak / 104 no-evidence.
+7. The 5 smoke tests cover: /about (trust surface), /pricing (money page),
+   /dashboard (auth + user data + money management), /auth/signin (OAuth entry
+   + open-redirect surface), /terms (legal contract). All 5 are reachable from
+   nav/footer and touch money/auth/user data — the highest-value untested routes.
+
+VERIFY (all commands run THIS session, from C:/Users/Garrett/Sports):
+- `npx vitest run --root apps/web` on all 5 smoke test files
+  → Test Files 5 passed (5), Tests 10 passed (10). [2 tests each: render + content assertion]
+- `npx tsc --noEmit -p apps/web/tsconfig.json` → exit 0 (clean, no type errors)
+- `npx eslint <5 test files> --max-warnings=0` → exit 0 (clean)
+- `grep -rl "from.*@/app/.*page" apps/web/__tests__/` → 18 files import a page
+  component; 16 are the page-route render tests (the other 2 import non-page
+  subpaths). Confirms render-test count.
+- Scratch files (classify2.js, classify3.js, classify4.js, classify_pages.js,
+  no_evidence_pages_tmp.txt, normalized_pages_tmp.txt, rendered_pages_tmp.txt,
+  weak_pages_tmp.txt) were removed from the working tree — they are not part of
+  this task's deliverable ("Files (only these): handoff/ROUTE_COVERAGE_CENSUS.md,
+  up to 5 new test files under apps/web/__tests__/").
+
+Files committed (exactly the task's named files + queue + journal):
+- apps/web/__tests__/about-page-smoke.test.tsx (new, 2 tests)
+- apps/web/__tests__/pricing-page-smoke.test.tsx (new, 2 tests)
+- apps/web/__tests__/dashboard-page-smoke.test.tsx (new, 2 tests)
+- apps/web/__tests__/signin-page-smoke.test.tsx (new, 2 tests)
+- apps/web/__tests__/terms-page-smoke.test.tsx (new, 2 tests)
+- handoff/ROUTE_COVERAGE_CENSUS.md (new, 237 lines)
+- handoff/SPRINT_QUEUE.md (STATUS DOING → DONE)
+- handoff/SPRINT_JOURNAL.md (this entry)
+
+Re-derivation: all counts and exit codes from commands run THIS session.
+Commit hash will be verified via `git show <hash> --stat` after commit.
+
+Result: DONE. This run did exactly ONE task (P16-05) and stopped.
+
