@@ -2094,7 +2094,7 @@ specifically for MORE instances of the same pattern: a legal/trust page assertin
 code doesn't actually implement. **VERIFY:** typecheck + lint; any claim-vs-code mismatch found must
 cite both the asserting file:line and the missing enforcement. Commit.
 
-### P15-03 — Sweep: intelligence & analysis engines · STATUS: TODO · STRIKES: 0
+### P15-03 — Sweep: intelligence & analysis engines · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T00:00:00Z · resumed: 2026-08-17 · resolved: 2026-08-17T09:38:00Z
 Directories: `apps/web/app/{intelligence,decision-genome}`, `apps/web/lib/{intelligence,
 intelligence-graph,decision-genome,epistemic-twin,constellation,bias-mirror,pre-mortem,premortem,
 opportunity-engine,source-intelligence,resource-intelligence,reconstruction}`, `apps/web/app/{room,
@@ -2104,7 +2104,7 @@ to, does bad/missing input crash it or fail silently with a wrong-but-plausible 
 failure mode for an "intelligence" feature). **VERIFY:** typecheck + lint on touched files; report
 dormant vs live split in the findings doc. Commit only if you changed code.
 
-### P15-04 — Sweep: social & distribution bots · STATUS: TODO · STRIKES: 0
+### P15-04 — Sweep: social & distribution bots · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T09:41:26Z
 Directories: `apps/web/lib/{twitter-bot,discord-bot,bot-outbox,growth,affiliate,media-revenue,
 promotions,waitlist,reader-register}`. Security-relevant: bots that post externally are a
 reputational and secrets-handling risk even if content logic is fine. Check: do these ever actually
