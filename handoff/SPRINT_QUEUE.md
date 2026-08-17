@@ -2077,7 +2077,7 @@ Files (only these): `handoff/tools/coverage-ledger.mjs`, `handoff/COVERAGE_LEDGE
 `apps/web/app` equals `ls apps/web/app | wc -l` (state both numbers in the journal); spot-check 3
 known-touched items show Y and 3 known-untouched show N. Commit script + ledger together.
 
-### P15-01 — Sweep: public content & growth pages · STATUS: DOING · STRIKES: 0
+### P15-01 — Sweep: public content & growth pages · STATUS: DONE · STRIKES: 0
 Directories: `apps/web/app/{about,academy,blog,case-studies,changelog,faq,press,media-kit,newsletter,
 podcast,partners,contact,news-sitemap.xml,sitemap.ts,robots.ts}`. Check every page renders without
 error, has no dead links, and — given P14-06 found a stale-claim bug on `/about` already — check for
