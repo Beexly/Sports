@@ -2085,7 +2085,7 @@ the SAME pattern elsewhere: any page stating a cadence, count, or capability the
 enforce. **VERIFY:** typecheck + lint on touched files; if you fix a stale claim, cite the file:line
 that made the claim false. Commit.
 
-### P15-02 — Sweep: legal, compliance & trust surfaces · STATUS: TODO · STRIKES: 0
+### P15-02 — Sweep: legal, compliance & trust surfaces · STATUS: DONE · STRIKES: 0 · started: 2026-08-17 · finished: 2026-08-17
 Directories: `apps/web/app/{privacy,terms,responsible-play,integrity,how-to-verify-a-record,verify,
 proof,methodology}`, `apps/web/lib/{compliance,compliance-scanner,trust-claims.ts,legal-dates.ts}`.
 Given this sprint already found two real live compliance gaps (no age-gate despite Terms claiming one;
