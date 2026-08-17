@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
 
 /**
@@ -53,8 +54,20 @@ export function GeneratedPlate({ assetId, gradient, still, motion, className, ea
     <div aria-hidden="true" className={`pointer-events-none absolute inset-0 overflow-hidden ${className ?? ""}`}>
       <div className="absolute inset-0" style={{ background: bg }} />
       {stillSrc && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={stillSrc} alt="" className="absolute inset-0 h-full w-full object-cover opacity-90" loading={eager ? "eager" : "lazy"} decoding="async" />
+        <Image
+          src={stillSrc}
+          alt=""
+          // Presentational only — no layout shift, so fill + sizes is the safest
+          // fit for a decorative background plate. next/image applies AVIF/WebP
+          // + responsive resizing (configured at next.config.mjs:58-61) which the
+          // raw image element was bypassing (P16-02). `eager` maps to `priority`
+          // so the homepage hero LCP background is not lazy-gated.
+          fill
+          sizes="100vw"
+          priority={eager}
+          className="absolute inset-0 h-full w-full object-cover opacity-90"
+          style={{ width: "100%", height: "100%" }}
+        />
       )}
       {motionSrc && motionOk && (
         <video

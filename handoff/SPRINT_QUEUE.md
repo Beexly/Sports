@@ -2176,7 +2176,7 @@ Files (only these): `apps/web/app/page.tsx`, plus a small component file if Susp
 **VERIFY:** a test asserting the homepage renders its shell without awaiting the nflverse loader
 (mock it to hang/reject and assert the page still renders). typecheck + lint. Commit.
 
-### P16-02 — Every new visitor waits behind a 6MB video, then downloads 6MB more · STATUS: TODO · STRIKES: 0
+### P16-02 — Every new visitor waits behind a 6MB video, then downloads 6MB more · STATUS: DOING · STRIKES: 0 · started: 2026-08-17T00:00:00Z
 Evidence to verify first: `apps/web/components/landing/montage-entrance.tsx` (mounted
 `app/page.tsx:77`) renders a full-screen opaque overlay (`:146-156`) with poster
 `/brand/gse-reveal-poster.png` (~2.03MB) and `/brand/gse-reveal.mp4` (~3.97MB); `preload="metadata"`
