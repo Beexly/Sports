@@ -1956,7 +1956,7 @@ ingested-but-unread tables by (differentiator value / effort to surface).
 **VERIFY:** every "unused" claim is backed by a grep you ran showing zero non-test readers. Read-only, no code
 changes. Commit the report.
 
-### P14-05 — Wire ONE dead free-data table into a user-facing surface (additive, P12-08 pattern) · STATUS: TODO · STRIKES: 0
+### P14-05 — Wire ONE dead free-data table into a user-facing surface (additive, P12-08 pattern) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17
 Depends on P14-04's ranking. Take the top-ranked ingested-but-unread free table (likely `DepthChartEntry` →
 start/sit, or `PfrAdvStat`) and wire it into the projection/composite path the SAME additive way P12-08 wired
 snap share (`apps/web/lib/scoring/player-composite.ts`): a new signal that only participates when its data

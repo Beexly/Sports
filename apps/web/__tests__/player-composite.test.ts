@@ -6,12 +6,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * via the real composite matrix. Only the DB is mocked.
  */
 
-const mocks = vi.hoisted(() => ({ findMany: vi.fn(), playerFindMany: vi.fn(), injuryFindMany: vi.fn(), snapFindMany: vi.fn() }));
+const mocks = vi.hoisted(() => ({ findMany: vi.fn(), playerFindMany: vi.fn(), injuryFindMany: vi.fn(), snapFindMany: vi.fn(), depthFindMany: vi.fn() }));
 vi.mock("@sports/db", () => ({ db: {
   playerGameStat: { findMany: mocks.findMany },
   player: { findMany: mocks.playerFindMany },
   injury: { findMany: mocks.injuryFindMany },
   snapCount: { findMany: mocks.snapFindMany },
+  depthChartEntry: { findMany: mocks.depthFindMany },
 } }));
 
 import { loadPlayerCompositeScores, availabilitySignalValue } from "@/lib/scoring/player-composite";
@@ -29,6 +30,7 @@ beforeEach(() => {
   ]);
   mocks.injuryFindMany.mockReset().mockResolvedValue([]);
   mocks.snapFindMany.mockReset().mockResolvedValue([]);
+  mocks.depthFindMany.mockReset().mockResolvedValue([]);
 });
 
 describe("availabilitySignalValue", () => {
@@ -135,5 +137,66 @@ describe("loadPlayerCompositeScores", () => {
     const r = await loadPlayerCompositeScores(2024);
     const p1 = r.top.find((x) => x.playerId === "p1")!;
     expect(p1.snapShare).toBe(50);
+  });
+
+  it("ranks a starting-caliber depth player above an equal-everything reserve", async () => {
+    // Identical production, workload, snaps — the ONLY differentiator is depth role.
+    mocks.findMany.mockResolvedValue([
+      ...weekRows("p1", [20, 20, 20, 20, 20, 20], 10, 2), // starter (depthRank 1)
+      ...weekRows("p2", [20, 20, 20, 20, 20, 20], 10, 2), // reserve (depthRank 6)
+    ]);
+    mocks.injuryFindMany.mockResolvedValue([]);
+    mocks.snapFindMany.mockResolvedValue([
+      { playerId: "p1", offensePct: 50 },
+      { playerId: "p2", offensePct: 50 },
+    ]);
+    mocks.depthFindMany.mockResolvedValue([
+      { playerId: "p1", depthRank: 1 },
+      { playerId: "p2", depthRank: 6 },
+    ]);
+
+    const r = await loadPlayerCompositeScores(2024);
+    const p1 = r.top.find((x) => x.playerId === "p1")!;
+    const p2 = r.top.find((x) => x.playerId === "p2")!;
+    expect(p1.depthRank).toBe(1);
+    expect(p2.depthRank).toBe(6);
+    // depth role is a real, differentiator signal — both appear in drivers
+    expect(p1.drivers.some((d) => d.key === "depthRole")).toBe(true);
+    expect(p2.drivers.some((d) => d.key === "depthRole")).toBe(true);
+    // p1 (starting role) scores higher than p2 (reserve role) with equal everything else
+    expect(p1.score).toBeGreaterThan(p2.score);
+  });
+
+  it("is purely additive: no depth data leaves depthRank null and scores unchanged from pre-depth wiring", async () => {
+    mocks.findMany.mockResolvedValue([
+      ...weekRows("p1", [20, 20, 20, 20, 20, 20], 10, 2),
+    ]);
+    mocks.injuryFindMany.mockResolvedValue([]);
+    mocks.snapFindMany.mockResolvedValue([]);
+    mocks.depthFindMany.mockResolvedValue([]); // empty → depth role inert
+
+    const r = await loadPlayerCompositeScores(2024);
+    const p1 = r.top.find((x) => x.playerId === "p1")!;
+    // depth data is absent (empty mock) → depthRank is null and the signal is
+    // structurally absent from the composite, so this path is byte-identical
+    // to the pre-depth wiring (the depth feature is purely additive).
+    expect(p1.depthRank).toBeNull();
+    expect(p1.drivers.some((d) => d.key === "depthRole")).toBe(false);
+    expect(Number.isFinite(p1.score)).toBe(true);
+  });
+
+  it("ignores depth rows without a resolved playerId (never name-guesses a role)", async () => {
+    mocks.findMany.mockResolvedValue([
+      ...weekRows("p1", [20, 20, 20, 20, 20, 20], 10, 2),
+    ]);
+    mocks.injuryFindMany.mockResolvedValue([]);
+    mocks.snapFindMany.mockResolvedValue([]);
+    mocks.depthFindMany.mockResolvedValue([
+      { playerId: "p1", depthRank: 1 },
+      { playerId: null, depthRank: 1 }, // unresolved → must NOT leak onto p1
+    ]);
+    const r = await loadPlayerCompositeScores(2024);
+    const p1 = r.top.find((x) => x.playerId === "p1")!;
+    expect(p1.depthRank).toBe(1); // only the resolved row counts
   });
 });

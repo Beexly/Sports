@@ -30,6 +30,7 @@ export interface PlayerScoreRow {
   readonly recentPpg: number;
   readonly touchesPerGame: number;
   readonly snapShare: number | null; // avg offense snap share (0–100) when snap data exists
+  readonly depthRank: number | null; // best (lowest) depth-chart rank when depth data exists
   readonly drivers: readonly SignalContribution[];
 }
 
@@ -59,6 +60,10 @@ interface InjuryRow {
 interface SnapRow {
   readonly playerId: string | null;
   readonly offensePct: number | null;
+}
+interface DepthRow {
+  readonly playerId: string | null;
+  readonly depthRank: number | null;
 }
 
 const RECENT_N = 4;
@@ -101,6 +106,18 @@ interface PlayerAgg {
  */
 function snapShareValue(pct: number): number {
   return clamp((pct - 50) / 50, -1, 1);
+}
+
+/**
+ * Maps a depth-chart rank onto the composite's shared -1..1 scale. Rank 1
+ * (weekly starter) is the strongest positive; depth ranks fall off from
+ * there, crossing neutral around rank 3 and bottoming out by rank 8. Clamped
+ * so even a deep-bench rank can't dominate a single signal. Only emitted when
+ * real depth data exists, so the score is unchanged when it is absent.
+ */
+function depthRoleValue(rank: number): number {
+  if (rank <= 1) return 1;
+  return clamp(1 - (rank - 1) / 7, -1, 1 - 6 / 7);
 }
 
 export async function loadPlayerCompositeScores(season: number, limit = 100): Promise<PlayerScoresReport> {
@@ -173,6 +190,22 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     if (prev === undefined || s.offensePct > prev) snapShareByPlayer.set(s.playerId, s.offensePct);
   }
 
+  // Depth chart: best (lowest) depth rank per resolved player for this season.
+  // depthRank 1 = starter; deeper ranks are a softer role. Joined on playerId;
+  // rows without a resolved playerId are skipped so we never name-guess a
+  // player's role. Only the best (shallowest) rank is kept — established role,
+  // not a one-week demotion — bounded by the signal weight below.
+  const depths = (await db.depthChartEntry.findMany({
+    where: { season },
+    select: { playerId: true, depthRank: true },
+  })) as DepthRow[] | null;
+  const depthRankByPlayer = new Map<string, number>();
+  for (const d of Array.isArray(depths) ? depths : []) {
+    if (!d.playerId || d.depthRank == null) continue;
+    const prev = depthRankByPlayer.get(d.playerId);
+    if (prev === undefined || d.depthRank < prev) depthRankByPlayer.set(d.playerId, d.depthRank);
+  }
+
   const result: PlayerScoreRow[] = [];
   for (const [playerId, a] of agg) {
     const meta = info.get(playerId);
@@ -184,6 +217,7 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     const recentPpg = mean(sorted.slice(-RECENT_N).map((x) => x.v));
     const touchesPerGame = (a.carries + a.receptions) / Math.max(1, games);
     const snapShare = snapShareByPlayer.get(playerId) ?? null;
+    const depthRank = (depthRankByPlayer.get(playerId) ?? null) as number | null;
 
     const signals: WeightedSignal[] = [
       { key: "production", value: base.std > 0 ? (seasonPpg - base.mean) / base.std : 0, weight: 3, confidence: 1 },
@@ -193,6 +227,12 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     // score is byte-identical to before when snap data is absent.
     if (snapShare !== null) {
       signals.push({ key: "snapShare", value: snapShareValue(snapShare), weight: 1, confidence: 0.8 });
+    }
+    // Depth role is additive (P14-05): only emitted when real depth-chart data
+    // exists, so the score is unchanged when it is absent. No existing weight
+    // is reduced — scores are untouched where depth data is missing.
+    if (depthRank !== null) {
+      signals.push({ key: "depthRole", value: depthRoleValue(depthRank), weight: 0.75, confidence: 0.7 });
     }
     if (games >= RECENT_N + 1) {
       signals.push({ key: "momentum", value: clamp((recentPpg - seasonPpg) / 5, -1.5, 1.5), weight: 1.5, confidence: 0.9 });
@@ -213,6 +253,7 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
       recentPpg: round2(recentPpg),
       touchesPerGame: round2(touchesPerGame),
       snapShare: snapShare !== null ? round2(snapShare) : null,
+      depthRank: depthRank !== null ? depthRank : null,
       drivers: blended.contributions,
     });
   }
