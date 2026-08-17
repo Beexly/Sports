@@ -2048,7 +2048,7 @@ Files (only these): `apps/web/app/api/ops/daily-truth/route.ts`, its test file.
 **VERIFY:** new tests pass; typecheck + lint clean; journal the exact loader/table names you reused
 so the claim "no invented fields" is checkable. Commit.
 
-### P15-00 — Build the COVERAGE LEDGER: make "everything reviewed" a checkable fact, not a feeling · STATUS: TODO · STRIKES: 0
+### P15-00 — Build the COVERAGE LEDGER: make "everything reviewed" a checkable fact, not a feeling · STATUS: DONE · STRIKES: 0
 **Why this exists (owner doctrine, 2026-08-16).** The owner has instructed repeatedly that EVERY part
 of this codebase must be reviewed/tested/audited — yet successive passes kept "discovering" areas
 never opened. Root cause: no enumerated inventory with per-item state ever existed, so every phase

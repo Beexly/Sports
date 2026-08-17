@@ -3566,4 +3566,117 @@ Files to commit: all 12 source/test files + `handoff/SPRINT_QUEUE.md` (STATUS DO
 
 **Files committed:** `apps/web/__tests__/board-stale-kill-switch.test.ts`, `apps/web/app/board/page.tsx`, `apps/web/lib/board/state.ts`, `apps/web/lib/board/degradation-character.ts` (new), `handoff/SPRINT_QUEUE.md` (STATUS flip).
 
+---
 
+### 2026-08-17T08:25:30Z · P15-0A — DAILY TRUTH: the permanent feedback loop from reality · DONE · STRIKES: 0 · commit a6ebf00b
+
+Resumed P15-0A from DOING (a prior run had already authored both the route
+and test file as untracked files on disk; this run verified, fixed, and committed).
+
+**CWD confirmed:** `git rev-parse --show-toplevel` → `C:/Users/Garrett/Sports`. Date:
+`date +%F` → 2026-08-17.
+
+**Action:**
+1. Read the existing uncommitted files from a prior run:
+   - `apps/web/app/api/ops/daily-truth/route.ts` (345 lines)
+   - `apps/web/__tests__/ops-daily-truth.test.ts` (731 lines)
+2. Ran VERIFY before committing:
+   - `npx vitest run __tests__/ops-daily-truth.test.ts` → 16 tests, 2 FAILED
+   - `npx tsc --noEmit --project tsconfig.json` → 3 errors in route.ts:
+     - Line 120/125: `readonly ["WIN","LOSS","PUSH"]` not assignable to `PickResult[]`
+     - Line 204: `LoadablePerformanceClient` (only has `pick.count`) passed to
+       `loadClvCoverage` which requires `ClvCoverageClient` (needs `pick.count`
+       AND `pick.findFirst`)
+   - `npx eslint <both files> --max-warnings=0` → 2 warnings: `no-explicit-any`
+     on `as { [K in keyof any]: any }` in test
+3. Applied fixes (minimal, no guard/gate/security weakening):
+   a. route.ts: changed `const SETTLED_RESULTS = ["WIN","LOSS","PUSH"] as const` →
+      `("WIN" | "LOSS" | "PUSH")[]` so it satisfies Prisma's `PickResult[]` type.
+   b. route.ts: changed `loadClvCoverage(dbClient)` → `loadClvCoverage(db as never)`
+      (`db` is the full Prisma client; matches how public-surface-truth/route.ts
+      passes `db` to `loadSettlementHealth` and `loadCanonicalSamplePosture`).
+   c. test: added `defaultScheduler()` call in the stub-mode test — the route
+      calls `assessSchedulerLiveness()` unconditionally (line 271, not gated by
+      `isStubMode()`), so the mock must return a Promise, not undefined.
+   d. test: fixed `callIndex <= 2` → `callIndex === 1` in the settled-delta mock.
+      `Promise.all` invokes callbacks synchronously in order; the old condition
+      matched BOTH settledAt queries (today=15, yesterday should be 10, got 15).
+   e. test: replaced `as { [K in keyof any]: any }` with a typed `MockPick`
+      interface (`{ count, create, update, delete: ReturnType<typeof vi.fn> }`)
+      to clear the ESLint `no-explicit-any` warnings.
+4. Re-ran all three verification gates:
+   - `npx vitest run __tests__/ops-daily-truth.test.ts` → **16 passed (16)**, 64ms
+   - `npx tsc --noEmit --project tsconfig.json` → **exit 0** (clean for touched files)
+   - `npx eslint app/api/ops/daily-truth/route.ts __tests__/ops-daily-truth.test.ts --max-warnings=0` → **exit 0** (clean, no warnings)
+5. Verified commit hash: `git show a6ebf00b --stat` → 2 files, 1083 insertions (route 345
+   + test 738). Secret-scan: OK, no secrets detected.
+
+**Re-derivation:** every count and exit code above was produced by a command run
+THIS session. All test counts, typecheck, and lint results are verbatim from
+`npx` invocations in this run.
+
+**Uncertainty noted:** could not verify against live production (scheduler is dead
+per SPRINT_STATUS_NOW.md); all assertions use mocked DB loaders. The auth pattern
+(`hasOpsAuth` — timing-safe Bearer CRON_SECRET) is implemented in the route itself
+(not imported from a shared module), mirroring public-surface-truth/route.ts but
+not reusing a shared helper. A future task could extract this into a shared `lib`.
+
+**Commit:** `a6ebf00b` —
+"P15-0A: daily-truth ops route + 16 tests (read-only 24h truth report)"
+(2 files: route.ts + route.test.ts, 1083 insertions, secret-scan OK)
+
+Also committed queue STATUS flip (DOING→DONE) as part of a follow-up commit.
+
+This run did exactly ONE task (P15-0A) and stopped.
+
+
+
+---
+
+### 2026-08-17T08:36:49Z · P15-00 · DONE · STRIKES: 0
+
+Action:   Built the COVERAGE LEDGER inventory tool (P15-00), making "everything reviewed"
+a checkable fact per owner doctrine 2026-08-16.
+
+Resumed from: STATUS was DOING (top of Phase 15 queue, first TODO/DOING task top-to-bottom).
+
+Files (exactly the task's named deliverables):
+- handoff/tools/coverage-ledger.mjs (new — plain node, no deps)
+- handoff/COVERAGE_LEDGER.md (generated output)
+
+What the tool does (per P15-00 §1-3):
+1. Enumerates the full finite inventory:
+   - every top-level dir/file under apps/web/app (93 items)
+   - every subdir of apps/web/lib (147 lib + 13 lib-file = 160 items)
+   - every dir under packages/ (28 items)
+   - every top-level file/dir under scripts/ (90 items)
+   - apps/web/components subdirs (43 items)
+   → total inventory items: 413
+2. Per item computes:
+   - TOUCHED-THIS-SPRINT: `git log --name-only --pretty=format: 73def0bf..HEAD` run ONCE,
+     output cached in memory, matched per-item prefix. Result: 50 touched (Y).
+   - HAS-TESTS: scans each item for *.test.* or __tests__. Result: 48 tested (Y).
+   - REVIEWED: best-effort seeded from DONE-task "Files:" lines parsed from
+     SPRINT_QUEUE.md; defaults NONE. Result: 17 reviewed.
+3. Emits handoff/COVERAGE_LEDGER.md: one table row per item + totals + "OUTSIDE THE REPO"
+   section enumerating Vercel/GitHub/Neon/Stripe/DNS/OAuth surfaces.
+
+Protected trees (ai-control-plane, packages/db/prisma, scripts/guardrails, .github, docs)
+are LISTED for inventory only — never read, per §NEVER in SPRINT_BOOT.md.
+
+VERIFY (all run THIS session, re-derived not inherited):
+- `node handoff/tools/coverage-ledger.mjs` → exit 0, stdout: "Wrote handoff/COVERAGE_LEDGER.md"
+  + totals: 413 total, 50 touched, 48 tested, 17 reviewed.
+- `node --check handoff/tools/coverage-ledger.mjs` → exit 0 (no syntax errors).
+- `ls apps/web/app | wc -l` → 93 = ledger's apps/web/app count ✓ (self-verification
+  of the count reconciliation requirement).
+- Spot-check: api|board|auth = Y (touched); academy|blog|changelog = N (untouched). ✓
+- git check-ignore: both coverage-ledger.mjs and COVERAGE_LEDGER.md → exit 1 (NOT ignored) ✓.
+- git check-ignore handoff/*.log handoff/*.txt handoff/*.json → those patterns ARE
+  ignored, but *.mjs and *.md are tracked — correct per .gitignore (only scratch/log/json
+  under handoff/ is ignored, not .mjs or .md).
+
+Commit discipline: stage exactly the two named files. Queue STATUS DOING→DONE and
+journal entry committed together (handoff/*.md is tracked).
+
+Result: DONE. Commit pending.
