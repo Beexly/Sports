@@ -2266,7 +2266,7 @@ Kalshi public-markets spike (`scripts/spikes/kalshi-fairvalue-spike.mjs`). No ac
 **and a stale watchdog rule silently reverting real work.** One pass missed all of these. Assume
 the current tree has more of the same, and go find it.
 
-### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: TODO · STRIKES: 0 · Round 5
+### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DONE · STRIKES: 0 · Round 5 · completed: 2026-08-17T21:35:00Z
 For EVERY task in Phases 0-9 marked DONE, do not trust the STATUS field or the journal entry's
 prose. Independently confirm: (a) a real git commit exists whose diff matches what the task
 claimed to do — `git log --all --oneline --grep` or a manual `git show` search; (b) if the task

@@ -4878,3 +4878,33 @@ Corrections made to BATTLE_TEST_LOG.md:
 Result:   Round 4 closed. Round counter incremented 4→5. P10-01..04 reset to TODO for Round 5.
 Commits: 0435a526 (BATTLE_TEST_LOG.md + SPRINT_QUEUE.md round closeout), fad24ffe (queue completion note)
 Next:    Queue now has P10-01..P10-04 (Round 5) as the first TODO tasks.
+
+---
+
+### 2026-08-17T21:35:00Z · P10-01 — Round 5 · DONE · STRIKES: 0
+
+**P10-01 Round 5 — Audit the audit: re-verify every DONE task against its real commit.**
+
+Action:
+1. Confirmed cwd: `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date +%F` → 2026-08-17.
+2. Set P10-01 STATUS TODO → DOING in SPRINT_QUEUE.md.
+3. Read handoff/SPRINT_QUEUE.md in full (Phase 0-9 portion, lines 1-1172). Counted 88 DONE task headers (P0-01 BLOCKED, P0-07 BLOCKED, P7-07 BLOCKED excluded).
+4. Extracted 61 unique 7-hex commit hashes cited on Phase 0-9 DONE task lines. Ran `git cat-file -t <hash>` for each via `node $LOCALAPPDATA/Temp/verify_p10_05.cjs`. Result: 61/61 resolved. 0 unresolvable.
+5. Spot-checked `git show <hash> --stat | head -10` for 11 key tasks — all diffs matched the task claims.
+6. P8-08 special check: task line says STATUS: DONE with no commit hash. Round 1 found this; P8-08-RESUME (commit 4e7326da) implemented and committed the GSE-SEC-033 fix. Verified: `git show a56fe1dc -- apps/web/lib/stripe.ts | grep requireDurableWriteStore` → 3 guards (stripe-checkout:209, stripe-checkout:290, stripe-portal:451). `git show 4e7326da -- apps/web/__tests__/stripe-mutation-guard-invariant.test.ts` → new file, 4 tests.
+7. Re-ran all 22 named test files from current HEAD (de16faa5):
+   - 17 Phase 0-9 test files + 3 stripe tests (P8-08-RESUME) + journey-entitlement-grant (P9.5-05) + reconcile-entitlements + durable-write-store (fd9489b1) + model-advisor recommend (repo root)
+   - Total: 243 tests, ALL PASS, 0 failures.
+8. Verified GSE-SEC-081 status: `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment unchanged, still claims "does not accept a header" / "401 MISSING_KEY". Proven wrong in Rounds 1-4. Code is correct (query-param auth at line 128). STILL OPEN — flat across 5 rounds. NOT agent-fixable (requires live external probe).
+9. Verified hygiene-03 status: `git ls-files --others --exclude-standard handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md` → all 3 listed. No commits exist. STILL OPEN.
+10. Verified hygiene-04 status: `git show fd9489b1 --stat` → 7 files committed. `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -n getViewerEntitlements` → lines 12, 159 (bypass fixed). `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -n requireDurableWriteStore` → lines 36, 494, 579 (guard added). Tests re-run: reconcile-entitlements (30/30 PASS), durable-write-store (14/14 PASS). RESOLVED.
+11. Verified hygiene-06 status: `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -n requireDurableWriteStore` → 3 hits at lines 36, 494, 579. The CORRECTION text in REMEDIATION_EXECUTION.md row 15 cited :494,579. RESOLVED.
+12. Appended "## Round 5 — P10-01" section to BATTLE_TEST_LOG.md with full verification table.
+13. Set P10-01 STATUS DOING → DONE in SPRINT_QUEUE.md.
+
+Tests: 22 files re-run, 243 tests total, 0 failures.
+Commands: `git cat-file -t <hash>` (61 calls via node script), `npx vitest run <file>` (22 test files), `git show <hash> --stat` (spot checks), `git ls-files --others --exclude-standard` (hygiene-03)
+Result:   P10-01 Round 5 complete. All 61 Phase 0-9 commit hashes resolve. All 243 tests pass. GSE-SEC-081 flat across 5 rounds (still OPEN, not agent-fixable). hygiene-03 STILL OPEN (3 untracked .md files). hygiene-04 + hygiene-06 RESOLVED (fd9489b1). P8-08 stale annotation (no commit on task line, corrected by P8-08-RESUME 4e7326da).
+Commits: none (verification-only task, no source code changed). BATTLE_TEST_LOG.md change is a doc-append (not yet committed — no commit this run).
+No git push. No git --force. No .env opened.
+Next:    P10-02 Round 5 (next TODO task)
