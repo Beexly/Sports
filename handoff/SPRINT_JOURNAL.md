@@ -5036,3 +5036,34 @@ No git push. No git --force. No .env opened. No new findings pushed to a live sy
 Next:    SPRINT_QUEUE now exhausted of TODO/DOING Phase 0-9 tasks; P10-05 Round 5 is the next action (reset P10-01..04 to TODO for Round 6) — deferred to a future session. This task did exactly ONE task (P10-04 Round 5) and stopped per the "do exactly ONE task this run, then stop" directive.
 
 Note:     The 2-line uncommitted change in apps/web/components/fantasy/dfs-optimizer.tsx was LEFT UNCOMMITTED this run — P10-04 is a READ-ONLY audit task (its instructions: "Re-run git status and look for anything uncommitted" — it does NOT instruct committing discovered changes). That orphaned text reword is documented as hygiene-07 in the BATTLE_TEST_LOG.md report for a future task to either commit or revert. handoff/test-census-raw.txt is a regenerated test-census artifact (P7-02 output), also left uncommitted as it is not this task's deliverable.
+
+---
+
+## 2026-08-17 — P10-05 Round 5 Close
+
+**Timestamp:** 2026-08-17T18:07:13Z (date: `date +%F` → 2026-08-17, verified live)
+**Task:** P10-05 — Close the round, start the next one (Round 5 close)
+**Status:** DONE
+**HEAD:** ccb4a04f (at task start) → commit 13792f8e (at completion)
+
+**What I did:**
+1. Set P10-05 Round 5 close task STATUS to DOING in SPRINT_QUEUE.md (added new entry at end of queue).
+2. Verified Round 5 P10-01..P10-04 are all completed via git log (commits: 3f7777ba, a46696f9, dc20bb7b, 97033e9d, 10b95baa, ccb4a04f). All 6 Round 5 commits confirmed via `git log --oneline 0435a526..HEAD --format='%h %s'`.
+3. Verified P10-01..04 in SPRINT_QUEUE.md showed STATUS: DONE · Round 5.
+4. Independently re-derived carry-forward findings from live commands:
+   - `git log --all --oneline --format='%s' | sort | uniq -d | wc -l` → 35 (0 new, unchanged from Round 4)
+   - `git ls-files --others --exclude-standard handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md` → all 3 listed (hygiene-03 STILL OPEN)
+   - `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → GSE-SEC-081 comment unchanged in committed tree
+   - `git diff --name-only --diff-filter=U` → empty (no merge conflicts)
+   - `git status --short | grep -iE '\.env|secret|KEY'` → empty (no secret leaks, exit code 1 = no matches)
+5. Wrote Round 5 — P10-05 Close section to BATTLE_TEST_LOG.md with findings table (Round 4 vs Round 5), carry-forward items, working tree state, and round counter → 7.
+6. Reset P10-01..P10-04 to STATUS: TODO · Round 6 in SPRINT_QUEUE.md.
+7. Corrected old P10-05 Round 4 close entry: "(commit pending)" → "(commit 0435a526)" — verified via `git show --stat 0435a526` (resolves).
+
+**Result:** VERIFY PASS — `grep -n "^### P10-0" handoff/SPRINT_QUEUE.md` confirms P10-01..04 all STATUS: TODO for Round 6. BATTLE_TEST_LOG.md has "## Round 5 — P10-05 Close" section and "counter → 7" marker. All counts independently re-derived from commands run THIS session (2026-08-17) at HEAD ccb4a04f.
+
+**Commit:** 13792f8e — chore(battle-test): P10-05 Round 5 close. Files: handoff/BATTLE_TEST_LOG.md + handoff/SPRINT_QUEUE.md (2 files, 71 insertions(+), 5 deletions(-)). Verified via `git show --stat 13792f8e` (hash resolves, diff matches).
+
+**No git push.** No git --force. No .env opened. The pre-existing uncommitted files (dfs-optimizer.tsx text reword, test-census-raw.txt, 3 untracked .md deliverables, tools/hunt-claims.js) were NOT committed — they are not named deliverables of this task.
+
+**Next:** P10-01 Round 6 is the first STATUS: TODO task for the next session.
