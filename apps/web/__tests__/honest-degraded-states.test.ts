@@ -38,6 +38,7 @@ vi.mock("@/lib/proof/load-proof-of-record", () => ({ loadProofOfRecord: mocks.pr
 
 import BoardPage from "@/app/board/page";
 import HomePage from "@/app/page";
+import { NflverseLabDoor, NflverseLabDoorPlaceholder } from "@/components/landing/nflverse-lab-door";
 import ProofPage from "@/app/proof/page";
 import { db } from "@sports/db";
 import { MethodologySection, type TrustLedgerMetrics } from "@/components/ui/methodology-section";
@@ -122,6 +123,27 @@ function findByType(node: unknown, type: unknown): ElementNode | null {
     return findByType(node.props.children, type);
   }
   return null;
+}
+
+/** Walk the JSX tree and call any async component elements (e.g. NflverseLabDoor)
+ * so their resolved output is inlined for assertion. This mirrors what React's
+ * Suspense boundary would do at render time in a real RSC stream.
+ */
+async function resolveNflverseDoor(tree: unknown): Promise<unknown> {
+  if (tree == null || typeof tree === "boolean") return tree;
+  if (typeof tree === "string" || typeof tree === "number") return tree;
+  if (Array.isArray(tree)) {
+    return Promise.all(tree.map((child) => resolveNflverseDoor(child)));
+  }
+  if (isElement(tree)) {
+    if (tree.type === NflverseLabDoor) {
+      const resolved = await NflverseLabDoor();
+      return resolveNflverseDoor(resolved);
+    }
+    const children = await resolveNflverseDoor(tree.props.children);
+    return { ...tree, props: { ...tree.props, children } };
+  }
+  return tree;
 }
 
 // ── loader fixture builders ──────────────────────────────────────────────────
@@ -346,7 +368,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     mocks.boardState.mockResolvedValue(boardState({ dataError: "DB_UNREACHABLE" }));
     mocks.calibration.mockResolvedValue(calibration(0));
     mocks.nflverse.mockResolvedValue({ status: "source-error", sourceRows: 0 });
-    const tree = await HomePage();
+    const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
     // Board door + signal-vs-noise say "unavailable", not "Gate holding" / zeros.
@@ -373,7 +395,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     );
     mocks.calibration.mockResolvedValue(calibration(80));
     mocks.nflverse.mockResolvedValue({ status: "source-error", sourceRows: 0 });
-    const tree = await HomePage();
+    const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
     // Board healthy → its live copy still renders, NOT "unavailable".
@@ -388,6 +410,8 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const metrics = methodology?.props.metrics as TrustLedgerMetrics | undefined;
     expect(metrics).toBeDefined();
     expect(metrics?.playerRows).toBeUndefined();
+    // playerRows is now handled by Suspense (deferred nflverse load), not passed
+    // in the static board/calibration metrics object.
     expect(metrics).toEqual({ settled: 80, cleared: 2, gated: 1, lastRefresh: NOW });
   });
 
@@ -399,7 +423,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     mocks.boardState.mockResolvedValue(boardState({ suppressedReason: "STALE_DATA" }));
     mocks.calibration.mockResolvedValue(calibration(0));
     mocks.nflverse.mockResolvedValue({ status: "live", sourceRows: 1234 });
-    const tree = await HomePage();
+    const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
     expect(text).toContain("Live board data unavailable");
@@ -417,7 +441,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     mocks.boardState.mockResolvedValue(boardState({ suppressedReason: "DEMO_DATA" }));
     mocks.calibration.mockResolvedValue(calibration(0));
     mocks.nflverse.mockResolvedValue({ status: "live", sourceRows: 0 });
-    const tree = await HomePage();
+    const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
     expect(text).toContain("Live board data unavailable");
@@ -434,7 +458,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     );
     mocks.calibration.mockResolvedValue(calibration(120));
     mocks.nflverse.mockResolvedValue({ status: "live", sourceRows: 1234 });
-    const tree = await HomePage();
+    const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
     expect(text).toContain("2 cleared · 1 gated");
@@ -442,12 +466,14 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     expect(text).not.toContain("Live board data unavailable");
     expect(text).not.toContain("Live player data unavailable");
     // Healthy: the ledger band renders with the real operational metrics.
+    // playerRows is no longer in the static metrics — it is now rendered
+    // via the Suspense-bounded NflverseLabDoor component instead of
+    // being passed through MethodologySection.
     const methodology = findByType(tree, MethodologySection);
     expect(methodology?.props.metrics).toEqual({
       settled: 120,
       cleared: 2,
       gated: 1,
-      playerRows: 1234,
       lastRefresh: NOW,
     });
   });
@@ -457,7 +483,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     mocks.calibration.mockResolvedValue(calibration(0));
     // Live source but no rows yet — genuine warming, NOT a source error.
     mocks.nflverse.mockResolvedValue({ status: "live", sourceRows: 0 });
-    const tree = await HomePage();
+    const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
     expect(text).toContain("Gate holding. No forced action");
