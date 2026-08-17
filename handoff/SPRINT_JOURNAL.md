@@ -4128,3 +4128,81 @@ VERIFICATION:
 
 RESULT: DONE. Committed as 89c59634 (local, not pushed).
 
+---
+
+### 2026-08-17T07:42:00Z · P16-02 — DONE · STRIKES: 0 · commits 0a5370fa, 2696a941
+
+Task: Gate MontageEntrance cold-open on navigator.connection.saveData / slow
+effectiveType and prefers-reduced-motion; convert the hero still in
+GeneratedPlate from a raw <img> to next/image.
+
+Evidence verified first (all from commands run THIS session):
+- `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports
+- `date +%F` → 2026-08-17
+- `ls -la` confirmed asset sizes: signal-room-hero-a.webp ~2.00MB,
+  signal-room-hero.mp4 ~4.02MB, gse-reveal.mp4 ~3.97MB, gse-reveal-poster.png
+  ~2.03MB
+- SPRINT_QUEUE.md scanned top-to-bottom: P16-02 was the first TODO item.
+
+Action:
+1. Set SPRINT_QUEUE.md P16-02 STATUS → DOING.
+2. Modified apps/web/components/landing/montage-entrance.tsx:
+   - Added navigator.connection check in the useEffect (after the
+     prefers-reduced-motion guard). If saveData is true OR effectiveType is
+     slow-2g/2g, the effect returns early — no video preload, no overlay, the
+     visitor lands on the page immediately.
+   - prefers-reduced-motion still takes priority (accessibility always wins).
+3. Modified apps/web/components/immersive/generated-plate.tsx:
+   - Imported next/image (Image).
+   - Replaced the raw <img> (with eslint-disable @next/next/no-img-element)
+     with <Image fill sizes="100vw" priority={eager} ... /> so the configured
+     AVIF/WebP + responsive resizing pipeline engages instead of being
+     bypassed. The `eager` prop now maps to next/image `priority`.
+4. Created apps/web/__tests__/P16-02-cold-open-perf.test.tsx (10 tests):
+   - skip-on-saveData (renders nothing when navigator.connection.saveData=true)
+   - skip-on-reduced-motion (renders nothing when prefers-reduced-motion=reduce)
+   - skip-on-effectiveType slow-2g and 2g
+   - renders the video when saveData=false and effectiveType=4g (normal path
+     preserved)
+   - source-level: montage-entrance.tsx contains saveData and effectiveType
+     checks
+   - source-level: generated-plate.tsx imports next/image
+   - source-level: generated-plate.tsx has no raw <img> element
+   - source-level: generated-plate.tsx no longer needs eslint-disable
+     @next/next/no-img-element
+   - source-level: next.config.mjs has image formats [avif, webp]
+
+RED-BEFORE-GREEN: temporarily commented out the saveData/effectiveType guard
+  in montage-entrance.tsx and re-ran the test → 3 tests failed (video
+  rendered instead of being skipped), confirming the tests catch the regression.
+  Restored the guard → all 10 tests pass.
+
+VERIFY (all commands run THIS session):
+- `npx vitest run __tests__/P16-02-cold-open-perf.test.tsx`
+  → 10 passed (10), exit 0. [run at 07:42:20, green restored at 07:43:56]
+- `npx tsc --noEmit` (apps/web) → exit 0, clean.
+- `npx eslint components/landing/montage-entrance.tsx
+  components/immersive/generated-plate.tsx
+  __tests__/P16-02-cold-open-perf.test.tsx --max-warnings=0` → exit 0, no errors.
+- Regression check: re-ran slate-opening-page.test.tsx (13 pass),
+  homepage-suspense-nflverse.test.ts (6 pass) — all green, no regressions
+  from the GeneratedPlate edit.
+- Pre-existing failures (not caused by this task): 4 tests in
+  homepage-engine-centerpiece.test.ts, homepage-doctrine-hero.test.ts, and
+  homepage-content.test.ts assert on page.tsx content (e.g. "The Lab",
+  "loadNflverseUsagePulse") — these files were NOT touched by P16-02.
+
+git show 0a5370fa --stat → 4 files changed, 230 insertions(+), 4 deletions(-).
+  Staged and committed exactly: montage-entrance.tsx, generated-plate.tsx,
+  P16-02-cold-open-perf.test.tsx, SPRINT_QUEUE.md (STATUS).
+git show 2696a941 --stat → 1 file changed (SPRINT_QUEUE.md STATUS→DONE).
+
+Byte-size note for owner (from ls -la at this session):
+- gse-reveal.mp4: ~3.97MB (cold-open video)
+- gse-reveal-poster.png: ~2.03MB (cold-open poster)
+- signal-room-hero-a.webp: ~2.00MB (hero still, now via next/image)
+- signal-room-hero.mp4: ~4.02MB (hero motion)
+- signal-room-hero-b.webp: ~1.96MB (hero alt still)
+Asset re-encoding is a separate owner task (no ffmpeg/cwebp used; task was
+CODE ONLY).
+
