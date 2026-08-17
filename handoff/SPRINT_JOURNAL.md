@@ -1,3 +1,68 @@
+### 2026-08-17T16:52:28Z · P10-02 — Fresh blind re-audit of 15 security domains · DONE · STRIKES: 0 · commit a46696f9
+
+Resumed P10-02 from DOING (prior run had not started — queue showed STATUS: TODO
+before this session set it to DOING). Independently re-derived every fact from
+live commands, no inheritance from Round 1 (2026-08-16) or any prior session.
+
+Action:
+1. Confirmed cwd via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+   `date +%F` → 2026-08-17. Branch: claude/fable-5-ultracode-plan-ptru4e.
+2. Set P10-02 STATUS in SPRINT_QUEUE.md from TODO → DOING.
+3. For each domain D1-D15, ran targeted grep/sed/find/npm audit commands to read
+   the actual current code fresh, then reconciled against AUDIT_FINDINGS.md and
+   REMEDIATION_EXECUTION.md. Every count/citation below comes from a command
+   run THIS session.
+4. Wrote Round 5 P10-02 results (197 lines) into BATTLE_TEST_LOG.md as a new
+   section between the Round 1 P10-02 and Round 1 P10-03 sections.
+5. Set P10-02 STATUS back to DONE.
+6. Ran git-show verification on commit a46696f9 before citing it (step 6 of
+   self-verification protocol).
+
+Live-derived counts (commands run this session):
+- `find apps/web/app/api -name route.ts | wc -l` → 177 (was 176 in prior rounds)
+- `grep -rl 'consumeRateLimit' apps/web/app/api --include='route.ts' | wc -l` → 34
+- `npm audit --omit=dev --json` → 0 critical, 2 high
+- `grep -rn ': any\b\|as any' apps/web/ packages/ | grep -v tests | grep -v '^\s*//|^\s*\*' | wc -l` → 37 raw matches, of which 2 are real casts
+- `grep -rn '@ts-expect-error\|@ts-ignore' apps/web/ packages/ | grep -v tests | wc -l` → 0 in production
+- `grep -n 'requireDurableWriteStore' apps/web/lib/stripe.ts` → 3 guards (lines 209, 290, 451)
+- `grep -n 'requireDurableWriteStore' app/api/webhooks/stripe/route.ts` → 1 guard (line 62)
+- `grep -n 'requireDurableWriteStore' lib/billing/reconcile-entitlements.ts` → 2 guards (lines 494, 579)
+- `grep -c 'consumeRateLimit' app/api/brief/route.ts` → 0 (unprotected)
+- `grep -c 'consumeRateLimit' app/api/performance/route.ts` → 0 (unprotected)
+
+Domain verdicts (all 15 addressed, no domain left unaddressed):
+| Domain | Verdict | Evidence |
+|---|---|---|
+| D1 Auth/RBAC | SAME | maxAge 24h (auth.ts:38), role re-resolve on refresh (auth.ts:44-50), DEV_FAKE_ADMIN double-gated (auth.ts:104, middleware:82) |
+| D2 Payments | SAME — GSE-SEC-033 FIXED | 3 mutations all guarded (stripe.ts:209,290,451); webhook (route.ts:62); reconcile (494,579). createCustomer is dead export |
+| D3 Paywall | SAME — gap filed D13 | picks+board server-side tier-gated; brief+performance have no rate limit |
+| D4 Secrets | SAME | no leaks; guard:secrets exists; STRIPE_SECRET_KEY fail-closed |
+| D5 DB/Prisma | ORIGINAL NO LONGER APPLIES | 12/14 non-sealed raw-SQL sites verified safe; 2 unverified (waitlist-store.ts:134,165) |
+| D6 Input/SSRF | SAME — scope limit documented | validateEndpointUrl blocks IP literals only (line 226); rss.ts is sole caller, operator-configured URLs |
+| D7 Odds API | SAME — GSE-SEC-081 OPEN | Comment at odds-api-client.ts:126-131 is WRONG (header auth IS accepted per Round 1 live probe); code works anyway via query param |
+| D8 Pick lifecycle | SAME — partial | state machine not re-traced (same constraint as original) |
+| D9 Scraping rights | IMPROVED — GSE-SEC-078 FIXED | checkClearance on all ESPN paths (multi-source-scores.ts:111,403); GSE-SEC-076 FIXED (open-meteo gated); fpl-api dormant |
+| D10 AI control | SAME — sealed dir | lib/ai-control-plane/ sealed (contracts.ts:26); $queryRawUnsafe sites not read per CLAUDE.md |
+| D11 Dependencies | IMPROVED — 9→2 findings | npm audit: 0 critical, 2 high (next 14.2.15, postcss); both NEEDS-OWNER |
+| D12 Headers/CSP | SAME — stale correction | Original audit text says unsafe-eval in prod CSP; live read shows unsafe-eval is dev-only (next.config.mjs:88-101); unsafe-inline remains (GSE-SEC-007) |
+| D13 Rate limit | IMPROVED — 8→34 routes | brief+performance confirmed unprotected; 143/177 routes unprotected; XFF first-hop trust (GSE-SEC-070) |
+| D14 Logging/PII | SAME | 4 console.error in webhook, all log err.message only; generic client responses |
+| D15 Types/tests | SAME — 2 real casts | 37 grep hits, 35 are comment prose; 2 real any casts (settlement-breakdown.ts:17, data-table.tsx:31,38); 0 @ts-expect-error in prod |
+
+New items requiring follow-up:
+- D5-NEW-2: waitlist-store.ts:134,165 $executeRawUnsafe — UNVERIFIED (not line-read this session)
+- D6-NEW-2: SSRF hostname-to-private-IP resolution gap (low severity, operator-configured URLs)
+- D13-NEW-1: brief+performance routes unrate-limited (needs P9-03 treatment)
+- GSE-SEC-081: odds-api-client.ts comment still wrong, vendor deprecated /v4/ namespace
+
+VERIFY: every domain D1-D15 addressed with "SAME" / "NEW FINDING" / "IMPROVED" /
+"ORIGINAL NO LONGER APPLIES" verdict. No domain left unaddressed. ✓
+Files committed: handoff/BATTLE_TEST_LOG.md, handoff/SPRINT_QUEUE.md
+Commit a46696f9 verified via `git show a46696f9 --stat` → 2 files changed, 197 insertions.
+No source code changed — read-only audit task. No test files to re-run.
+
+Result: DONE. Commit a46696f91bd908d5676d40b2eb0fc13c9354e9dd.
+
 ### 2026-08-16T20:41:57Z · P14-02 — Prove the proof is real: leak-free verification of the historical-replay harness · DONE · STRIKES: 0 · commit 263913e1
 
 Resumed P14-02 from DOING (prior run had already authored the placebo test
