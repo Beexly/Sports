@@ -2266,7 +2266,7 @@ Kalshi public-markets spike (`scripts/spikes/kalshi-fairvalue-spike.mjs`). No ac
 **and a stale watchdog rule silently reverting real work.** One pass missed all of these. Assume
 the current tree has more of the same, and go find it.
 
-### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: TODO · STRIKES: 0 · Round 6 · (reset by P10-05 Round 5 close, 2026-08-17)
+### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DONE · STRIKES: 0 · Round 6 · (reset by P10-05 Round 5 close, 2026-08-17)
 For EVERY task in Phases 0-9 marked DONE, do not trust the STATUS field or the journal entry's
 prose. Independently confirm: (a) a real git commit exists whose diff matches what the task
 claimed to do — `git log --all --oneline --grep` or a manual `git show` search; (b) if the task
@@ -2395,3 +2395,42 @@ previous round (should trend down as the tree gets cleaner, not stay flat — fl
 not silent repetition). Then go back to P10-01 and start the next round. **This does not end.**
 **VERIFY:** the round counter incremented; P10-01 status reset to TODO for the next pass.
 
+
+### P15-01 — Inventory the authorized-but-inert GitHub app surface · STATUS: TODO · STRIKES: 0
+Garrett has 60+ GitHub apps authorized (CodeRabbit, Codacy, SonarQube Cloud, Snyk, Socket
+Security, GitGuardian, Codecov, Renovate, axe Linter, Qodo, HackerOne Code, CircleCI, and
+many unrelated). In-repo we have 9 workflows + `.github/dependabot.yml` and NOTHING else —
+no `.coderabbit.yaml`, `codecov.yml`, `sonar-project.properties`, `renovate.json`, `.snyk`,
+`socket.yml`. So the review army is authorized and inert.
+Produce `handoff/CI_INTEGRATION_INVENTORY.md`: for each app, (a) does it need an in-repo
+config to act, (b) does it need a repo secret Garrett must add, (c) does it cost money at
+our scale, (d) does it duplicate something we already run in `ci.yml`.
+**READ-ONLY. Do not add configs in this task, do not touch auth, do not add secrets.**
+**VERIFY:** every claim cites either a file path in this repo or the vendor's public docs URL.
+
+### P15-02 — Wire the zero-cost continuous audit stack (config only) · STATUS: TODO · STRIKES: 0
+Depends on P15-01. Add ONLY the config files for tools that are free at our scale and need
+no new secret: CodeRabbit, Codecov, Renovate, Socket. Scope them to run on pull_request
+only — never on push to a branch, never on a schedule that could fight the existing crons.
+Tune them DOWN before first use: the eventual PR carries ~290 commits and default settings
+would produce an unreadable flood. Prefer summary-level review over line-by-line nitpicks.
+**Do NOT add any tool requiring a paid seat or a secret Garrett has not already set.**
+**Do NOT enable auto-merge, auto-fix, or anything that writes to the repo unattended.**
+**VERIFY:** each config validated against the vendor's published schema; state plainly in the
+journal that NONE of this takes effect until a PR is opened — which remains Garrett's call.
+
+### P15-03 — Pre-PR self-review dry run · STATUS: TODO · STRIKES: 0
+Before any PR is opened, run locally the checks those bots will run remotely (lint, typecheck,
+full vitest, `npm audit`, existing a11y checks) and fix what they would flag. Goal: when the
+PR is finally opened, the free reviewers find little, so their output is signal instead of a
+290-commit wall of noise. This converts paid review work into free review work.
+**VERIFY:** paste real command output with pass/fail counts. Red-before-green for any fix.
+
+### P16-00 — HARD CAP on the battle-test loop · STATUS: TODO · STRIKES: 0 · PRIORITY: overrides P10-05
+P10-05 says "this does not end." It ends now. Rounds 1-5 re-audited the same ~150 tasks with
+falling yield; continuing is spend without return while the product still cannot take money.
+On finishing the CURRENT round, do NOT reset P10-01..04. Instead: write
+`handoff/LAUNCH_BLOCKERS_ONLY.md` listing every remaining item that actually blocks a paying
+customer, separated into (A) things an agent can do unattended and (B) things only Garrett can
+do. Then work ONLY list A, hardest-first. When list A is empty, STOP and idle — do not invent work.
+**VERIFY:** every list-A item names the file it touches; every list-B item names why it is owner-gated.
