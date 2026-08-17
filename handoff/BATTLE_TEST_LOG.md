@@ -2878,3 +2878,73 @@ hygiene-03 STILL OPEN — same bug class as Round 3 (untracked .md deliverables 
 3. **hygiene-06 (NEW):** `handoff/REMEDIATION_EXECUTION.md` row 15 claims stripe-reconcile guard exists at :494,579 but committed tree has zero. Committed artifact cites code state that does not exist.
 
 **VERIFY:** Every finding backed by command run THIS session. All grep -c against `git show HEAD:` vs working tree. No skip. The 6 uncommitted fixes confirmed identical to Round 3 findings (no source commits between 5f553c3d and HEAD per Round 3 P10-02).
+|
+## Round 4 — P10-05 Close: Round Summary + Corrections (2026-08-17)
+
+**Date:** 2026-08-17 · **HEAD:** d167739c (`chore(journal): P10-04 Round 4 hygiene sweep + hygiene-04 carryover journal entries`)
+
+**NOTE — P10-04 Round 4 was written when HEAD was 7689d189 (the STOP commit).** Three commits have landed since (fd9489b1, d30391b1, d167739c). This P10-05 re-verifies all Round 4 findings against the CURRENT committed tree, per the "re-derive, never inherit" protocol. Commands run THIS session:
+
+- `git log --oneline 7689d189..HEAD -- stat` — confirm what changed since P10-04 R4 was written
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` — verify guard count in committed tree
+- `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c getViewerEntitlements` — verify paywall fix committed
+- `git log --oneline fd9489b1 --follow -- apps/web/app/intelligence/engines/page.tsx apps/web/lib/billing/reconcile-entitlements.ts` — confirm hygiene-04 commit covers both fixes
+- `git ls-files --others --exclude-standard handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md` — re-check hygiene-03
+- `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` — re-check GSE-SEC-081 comment
+
+### Correction: hygiene-04 (RESOLVED — was reported STILL UNCOMMITTED)
+
+The P10-04 Round 4 entry (lines 2862-2863, 2876) reported the 6 uncommitted security fixes as "STILL UNCOMMITTED." This was accurate at the time (HEAD was 7689d189), but the fixes were committed 2 commits later:
+
+- `git log --oneline 7689d189..HEAD` → 3 commits, including `fd9489b1`
+- `fd9489b1` commit message: "fix(security): commit intelligence-engines paywall bypass + GSE-SEC-033 stripe-reconcile durable-write guard"
+- `git show fd9489b1 --stat` → 7 files changed, 135 insertions(+), 33 deletions(-)
+- `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c getViewerEntitlements` → 3 (page.tsx, registry.tsx, and the gate comment)
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` → 3 (import + 2 calls at lines 494, 579)
+
+**hygiene-04 is RESOLVED.** All 6 security fixes are now committed in `fd9489b1`.
+
+### Correction: hygiene-06 (RESOLVED — was reported NEW)
+
+The P10-04 Round 4 entry (line 2878) reported hygiene-06 as NEW: "REMEDIATION_EXECUTION.md row 15 claims stripe-reconcile guard exists at :494,579 but committed tree has zero."
+
+This was accurate at HEAD=7689d189 (the guard was in the working tree but not committed). After `fd9489b1`, the committed tree now HAS the guard:
+
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -n requireDurableWriteStore` → 3 hits at lines 36, 494, 579
+- Line 494: `requireDurableWriteStore("stripe-reconcile");` — at `reconcileEntitlements()` entry point
+- Line 579: `requireDurableWriteStore("stripe-reconcile");` — at `reconcileUserEntitlement()` entry point
+
+**hygiene-06 is RESOLVED.** The guard now exists in the committed tree at exactly the lines the CORRECTION text in REMEDIATION_EXECUTION.md row 15 cited.
+
+### carryover: hygiene-03 (STILL OPEN)
+
+3 untracked .md deliverables remain:
+- `git ls-files --others --exclude-standard handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md` → all 3 listed (confirmed untracked, not ignored)
+
+These permanent markdown deliverables were created by overnight agent runs and never staged. STILL OPEN. Recommendation: `git add` them in the next commit.
+
+### carryover: GSE-SEC-081 (STILL OPEN — flat across 4 rounds)
+
+The Odds API auth comment at `packages/data-ingestion/src/odds-api-client.ts:125-131` still claims the vendor "does not accept a header" — proven wrong by live probes in Rounds 1, 2, and 3. The comment is unchanged in the committed tree.
+
+- `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment says "api.the-odds-api.com authenticates via an apiKey query parameter — it does not accept a header"
+- `git log --oneline packages/data-ingestion/src/odds-api-client.ts` → 0 commits since the comment was written
+- Per P10-05's rule: flat across 3+ rounds → **flagged for the owner's attention. NOT an agent-fixable task (read-only comment + live external probe required).**
+
+### Round 4 findings count vs Round 3
+
+| Metric | Round 3 | Round 4 | Delta |
+|---|---|---|---|
+| New findings | 3 | 3 | same |
+| Carried-forward open | 2 (hygiene-03, GSE-SEC-081) | 2 (hygiene-03, GSE-SEC-081) | same |
+| Resolved this round | 0 | 2 (hygiene-04, hygiene-06 — committed post-Round-4 via fd9489b1) | +2 |
+| Duplicate commits | 35 | 35 | same |
+| Secret leaks | 0 | 0 | same |
+
+**Trend:** The non-committing bug (hygiene-04) was broken this round — the fixes were committed. GSE-SEC-081 remains the one flat finding across 4+ rounds. No new regressions introduced.
+
+### Round counter → 5
+
+P10-05 increments the round counter. P10-01, P10-02, P10-03, P10-04 reset to STATUS: TODO for Round 5 in SPRINT_QUEUE.md. P8-08-RESUME remains DONE (commit 4e7326da, verified).
+
+**Structural note:** Round 4's P10-04 was written and committed (3245bab5) BEFORE hygiene-04 was committed (fd9489b1). This created a window where the BATTLE_TEST_LOG reported fixes as unresolved that were then committed 2 commits later. The same-day journal entry (d167739c) noted the commit but did not update the battle-test log. **Recommendation:** P10-04 should always run as the LAST step in a round (after all commits are landed), or P10-05's correction pass should be treated as the authoritative round summary. The current pattern — P10-04 writes findings, then a later commit resolves them, then P10-05 corrects the stale text — is fragile and risks a future round reading stale "uncommitted" findings as real regressions.
