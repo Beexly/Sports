@@ -2135,3 +2135,122 @@ All ~140 source files from `git diff --name-only origin/main..HEAD` were scanned
 
 **VERIFY:** Every sprint-touched source file was examined this session. 13 claims found, 7 verified correct, 1 confirmed wrong (GSE-SEC-081), 1 verified correct (Kalshi — independently confirmed via live API probe), 1 unverified (internal perf), 1 N/A, 1 process claim. The one confidently-wrong claim (GSE-SEC-081) is independently confirmed for the THIRD consecutive round — same conclusion as Round 1 P10-03 and Round 2 P10-03, now with a fresh Round 3 live probe. No file/skip.
 
+---
+
+## Round 3 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-17)
+
+**Date:** `date +%F` → 2026-08-17
+**Started:** 2026-08-17T18:35:00Z
+**HEAD:** 4a646a9c (claude/fable-5-ultracode-plan-ptru4e, 203 commits ahead of origin/claude/fable-5-ultracode-plan-ptru4e)
+
+**Task scope (read-only hygiene):** Independent re-derivation of the working-tree + history hygiene sweep from current HEAD. NOT copying Round 2's conclusions. Checks: `git status --short`, `git status --ignored -- handoff/`, `git worktree list`, `git stash list`, duplicate-commit audit, uncommitted source changes, untracked deliverables, and a spot-check that any "already committed" claim in audit artifacts is actually TRUE in the committed tree (not the working tree).
+
+### Method (commands run THIS session from C:/Users/Garrett/Sports)
+- `git status --short` — list all uncommitted + untracked files
+- `git status --ignored -- handoff/` — confirm no .md file silently ignored
+- `git worktree list` — check for stray/duplicate worktrees
+- `git stash list` + `git stash show --stat` — check for hidden WIP
+- `git log --all --oneline --format='%s' | sort | uniq -d` — duplicate commit subjects
+- `git diff --stat HEAD` — uncommitted source vs. committed HEAD
+- `git show HEAD:<path> | grep -c <pattern>` — **CRITICAL:** verify committed-tree state independently of working-tree state for every "already guarded" claim in audit artifacts
+
+### Results
+
+#### Item 1 — Uncommitted source-code changes · NEW REGRESSION (5 source files + 2 test files)
+
+`git diff --stat HEAD` shows **6 source/test files with uncommitted changes** (zero were committed):
+
+1. `apps/web/app/intelligence/engines/page.tsx` (+62/-28 lines) — **Entitlement gating fix for premium engines.** Committed HEAD (line 147) calls `await active.load()` unconditionally — an anonymous visitor hitting `GET /intelligence/engines?engine=player-model` gets premium analytics rendered server-side, bypassing the API's `requirePremiumApiRateLimited` gate. The working-tree fix adds `getViewerEntitlements()` + `TierGatePanel` + a `canView` check before loading. **This is a live paywall-violation bug:** the page is linked from nav at `nav.tsx:35` and `nav.tsx:102`, so it's reachable by anonymous users. The fix is correct (fail-closed to FREE, mirrors the `/api/intelligence/*` route gate) but is NOT committed.
+
+2. `apps/web/app/intelligence/engines/registry.tsx` (+10 lines) — adds `premium: boolean` field to `EngineEntry`, default `true`, so the gating fix has something to check against. Uncommitted.
+
+3. `apps/web/lib/billing/reconcile-entitlements.ts` (+15/-1 lines) — adds `requireDurableWriteStore("stripe-reconcile")` at lines 494 and 579 (import + 2 calls in working tree). The GSE-SEC-033 fix. **Uncommitted.**
+
+4. `apps/web/app/api/cron/reconcile-entitlements/route.ts` (+36/-4 lines) — wraps the `reconcileEntitlements()` call in try/catch that returns 503 on `DurableWriteStoreUnavailableError`. Uncommitted.
+
+5. `packages/db/src/durable-write-guard.ts` (+1 line) — adds `"stripe-reconcile"` to `DURABLE_WRITE_CAPABILITIES`. Uncommitted.
+
+6. `apps/web/__tests__/durable-write-store.test.ts` — adds test for `stripe-reconcile` capability registration. Uncommitted.
+
+7. `apps/web/__tests__/reconcile-entitlements.test.ts` (+59/-15 lines) — adds mock for `requireDurableWriteStore` + `DurableWriteStoreUnavailableError` and test assertions. Uncommitted.
+
+**Conclusion:** This is a NON-COMMITTING BUG RECURRENCE (the exact class P4/P5/P10-04 is designed to catch). The GSE-SEC-033 `stripe-reconcile` guard and the intelligence-engines entitlement gate exist only in the working tree, never committed. This is the same pattern that stranded P4-05's fix for days — real security work sitting uncommitted until the next agent wipes it. Per P10-04's read-only scope, these are **flagged not fixed** — they need their own task with VERIFY + commit.
+
+**CRITICAL SUB-FINDING — a "confidently wrong" claim in committed audit artifacts (P10-03 bug class):** The P8-08-RESUME correction in `handoff/REMEDIATION_EXECUTION.md` (committed as `4e7326da`) states:
+
+> "...the reconcile path at `lib/billing/reconcile-entitlements.ts:494,579` (`stripe-reconcile`)."
+
+This claims the guard is **committed and live at those line numbers.** Independently re-derived THIS session:
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` → **0** (committed version has ZERO occurrences)
+- `git show HEAD:packages/db/src/durable-write-guard.ts | grep -c 'stripe-reconcile'` → **0** (committed version has ZERO occurrences)
+- `git show HEAD:apps/web/app/api/cron/reconcile-entitlements/route.ts | grep -c 'DurableWriteStoreUnavailableError'` → **0**
+
+The guard exists **ONLY in the working tree** (3 occurrences in reconcile-entitlements.ts). The `4e7326da` correction was written by P8-08-RESUME based on an **inherited/stale assertion** from the Round 1 BATTLE_TEST_LOG finding text (which referenced "line 393" — now a READ loop, not a write). The claim "reconcile path at :494,579 (`stripe-reconcile`)" was **copied forward from the audit-log prose without re-derivation** — the exact "confidently wrong claim" bug class P10-03 targets. The intelligence-engines page.tsx bug was **NOT detected by any prior round** because no prior round inspected this page's server-side data loading path for an anonymous paywall bypass.
+
+**Confidence:** VERIFIED — every number above comes from a `git show HEAD:` or `grep -c` command run this session. The claim in committed REMEDIATION_EXECUTION.md row 15 is FALSE — `reconcile-entitlements.ts:494,579` in the committed tree is the `confirmedSubscriptions` Set declaration and a `stripe.subscriptions.list` call, NOT a `requireDurableWriteStore` call.
+
+#### Item 2 — Gitignored handoff deliverables · CLEAN (no regression)
+
+Same as Round 2: `.gitignore` narrowed to `handoff/*.log`, `*.txt`, `*.stderr`, `*.json`, `_*`, `*.py` — no `.md` in the ignore list. `git ls-files --ignored --others --exclude-standard -- 'handoff/*.md'` → nothing. No .md file silently ignored.
+
+#### Item 3 — Stray/untracked deliverables · STILL BROKEN (hygiene-03, now 3 files)
+
+`git status --short` shows 3 untracked .md files (was 2 in Round 2):
+- `handoff/PROD_HEALTH_ALERT.md` (6526 bytes, modified 2026-08-17T13:03) — prod health alert, never `git add`ed
+- `handoff/SPRINT_STATUS_NOW.md` (5194 bytes, modified 2026-08-17T11:08) — sprint status summary, never `git add`ed
+- `handoff/HAIKU_WATCH.md` (3368 bytes, modified 2026-08-17T11:42) — **NEW since Round 2** (3rd untracked deliverable). Never `git add`ed.
+
+`git ls-files --error-unmatch` on all three → all return "not in the index file" (confirmed untracked, not ignored). These are permanent markdown deliverables created by overnight agent runs and never staged. **hygiene-03 STILL OPEN.**
+
+#### Item 4 — Worktrees · CLEAN (17 worktrees, all intentional)
+
+`git worktree list` → 17 worktrees. Only the primary `C:/Users/Garrett/Sports` is on the active sprint branch. All others are experimental/isolated branches. No stray worktree on the active sprint branch. No regression from Round 1/2.
+
+#### Item 5 — Stashes · CLEAN
+
+`git stash list` → 5 stashes, all scratch/backup edits (CLAUDE.md, overnight-presync, etc.). No real deliverable work hidden in stashes. No regression.
+
+#### Item 6 — Two-agent collision / duplicate commits · NO NEW DUPLICATES
+
+`git log --all --oneline --format='%s' | sort | uniq -d | wc -l` → **35 duplicate subjects** (all historical — includes P8-11 byte-identical pair bd89a53a + b3159cbb plus legacy settlement/contests pairs). **No NEW duplicate-byte-identical commits** since Round 2 — all 35 are pre-existing.
+
+Author breakdown of `origin/main..HEAD`: 284 Codex, 47 Claude, 2 GSE Sprint Executor, 1 Sprint Executor. The Codex/Claude collision pattern persists but has not produced new duplicate-byte-identical commits this round.
+
+#### Item 7 — P8-08-RESUME · CONFIRMED DONE (commit 4e7326da)
+
+`git show 4e7326da --stat` resolves. P8-08-RESUME is STATUS: DONE in queue. The `stripe-mutation-guard-invariant.test.ts` test file exists and was re-verified passing in Round 3 P10-01 (384/384 tests). **However:** the `stripe-reconcile` extension (see Item 1) is a SEPARATE uncommitted change that extends GSE-SEC-033 to the reconcile path — this was NOT part of P8-08-RESUME's scope (which covered `lib/stripe.ts` mutations only).
+
+#### Item 8 — Merge conflicts, secret leaks · CLEAN
+
+`git diff --name-only --diff-filter=U` → empty. No merge conflicts.
+`git status --short | grep -i '\.env\|secret\|KEY'` → empty. No secret leaks.
+
+#### Item 9 — Uncommitted handoff docs · NORMAL IN-FLIGHT STATE
+
+`M handoff/SPRINT_JOURNAL.md` (+46 lines) — in-flight journal edits. Tracked, normal.
+`M handoff/SPRINT_QUEUE.md` — the DOING→STATUS edit for this task. Tracked, normal.
+`M handoff/SPRINT_VIOLATIONS.md` (+3 lines) — guardrail log update. Tracked, normal.
+`M handoff/build-raw.txt` (2 lines) — build output. Tracked, normal.
+
+### Summary Table
+
+|| Check | Result |
+|---|---|---|
+| Uncommitted source-code changes | **6 files (4 source + 2 test) — NON-COMMITTING BUG RECURRENCE** | GSE-SEC-033 `stripe-reconcile` guard + intelligence-engines entitlement gate exist only in working tree, never committed. Both are real security fixes (fail-closed paywall + durable-write gate). Flagged, not fixed (P10-04 is read-only). |
+| False "already committed" claim | **CONFIRMED — P10-03 bug class** | REMEDIATION_EXECUTION.md row 15 (committed 4e7326da) claims `reconcile-entitlements.ts:494,579` has `stripe-reconcile` guard. `git show HEAD:` confirms ZERO occurrences — claim is false, copied from stale audit prose without re-derivation. |
+| Untracked .md deliverables | **3 untracked permanent .md files** | PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md, HAIKU_WATCH.md — hygiene-03 STILL OPEN |
+| Gitignored deliverables | CLEAN | No .md files silently ignored; .gitignore narrowed correctly |
+| Stray worktrees | NONE | All 17 are intentional; only primary on active branch |
+| Hidden stashed work | NONE | All 5 stashes are scratch/backup |
+| Two-agent duplicate commits | No NEW duplicates | 17 stale duplicates exist; P8-11 pair (bd89a53a+b3159cbb) still present |
+| P8-08-RESUME | DONE (commit 4e7326da) | Verified resolving; tests re-run passing in Round 3 P10-01 |
+| Merge conflicts | NONE | |
+| Secret leaks | NONE | |
+
+### New Follow-up Items
+
+1. **hygiene-04 (NEW):** The intelligence-engines paywall bypass + the `stripe-reconcile` durable-write guard are implemented but **uncommitted** — a direct recurrence of the P4/P5 non-committing bug. These are 2 separate tasks needing VERIFY + commit. The REMEDIATION_EXECUTION.md false-claim (GSE-SEC-033 "reconcile path at :494,579") must be corrected.
+2. **hygiene-03 (carryover):** 3 untracked .md deliverables (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md, HAIKU_WATCH.md) never `git add`ed.
+3. **hygiene-01 (carryover):** The narrowed `handoff/` gitignore prevents *ignoring* but not *forgetting to stage* — overnight agents must remember to `git add` new .md deliverables.
+
+**VERIFY:** Every claim above cites a `git show HEAD:` or `grep -c` command run this session. The committed tree has ZERO `stripe-reconcile` occurrences (proven via 3 independent `git show HEAD:` greps). The intelligence-engines page at committed HEAD calls `active.load()` with no entitlement check (proven via `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c 'getViewerEntitlements'` → 0).
