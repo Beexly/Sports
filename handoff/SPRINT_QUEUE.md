@@ -1943,7 +1943,7 @@ runbook must not imply the backfill alone proves an edge.
 **VERIFY:** every command cites a real file that exists; every "writes prod data" step is flagged owner-only.
 No command is executed by you. Commit.
 
-### P14-04 — Free-mode reality audit: is the live product actually compelling? (READ-ONLY) · STATUS: TODO · STRIKES: 0
+### P14-04 — Free-mode reality audit: is the live product actually compelling? (READ-ONLY) · STATUS: DONE · STRIKES: 0 · resumed+completed: 2026-08-17
 Strategic. The paid Odds API key is deactivated in prod (`docs/ops/FREE_MODE_INGESTION_HEALTH.md`), so the
 LIVE product runs free-mode-first. Nobody has asked whether free mode is COMPELLING or merely NOT-BROKEN.
 Trace, read-only: what an anonymous visitor actually gets with no paid key — which free sources feed the
