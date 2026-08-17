@@ -4775,4 +4775,4 @@ commit-fix task) should resolve hygiene-04.
 
 **Files modified this task:** `handoff/BATTLE_TEST_LOG.md`, `handoff/SPRINT_QUEUE.md` (P10-03 STATUS → DONE).
 
-**Commit:** d1b7f10a2b177464162ecf8cdb9f5227943fffa4 — `git add` on exactly handoff/BATTLE_TEST_LOG.md + handoff/SPRINT_QUEUE.md + handoff/SPRINT_JOURNAL.md. `git show d1b7f10a --stat` confirms 3 files changed, 189 insertions, 1 deletion. Secret scan: OK, no secrets detected.
+**Commit:** abd4f3f7e81246f648c7ff5851f6e2b95398a5d8 — `git add` on exactly handoff/BATTLE_TEST_LOG.md + handoff/SPRINT_QUEUE.md + handoff/SPRINT_JOURNAL.md. `git show abd4f3f7 --stat` confirms 3 files changed, 189 insertions, 1 deletion. Secret scan: OK, no secrets detected.
