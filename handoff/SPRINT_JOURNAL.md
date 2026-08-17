@@ -3480,3 +3480,59 @@ Result: P10-03 Round 2 complete. 9 claims found across 7 source files; 4 verifie
 
 Next: P10-04 (next TODO in queue — "Working-tree and history hygiene sweep").
 
+### 2026-08-17T00:47:Z · P14-05 — Wire DepthChartEntry into player composite (additive depthRole signal) · DONE · STRIKES: 0 · commit 87715b19
+
+Resumed from TODO (P14-04 completed 2026-08-17; its ranking named DepthChartEntry #1). `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date +%F` → 2026-08-17. Verify facts below are re-derived this session.
+
+Action:
+1. cwd confirmed via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+2. P14-04 ranking re-derived from journal line 3439: DepthChartEntry ranked #1 ingested-but-unread free table (recommended P14-05 target). handoff/FREE_MODE_AUDIT.md present (8470 bytes, mtime Aug 17 00:30).
+3. Wired DepthChartEntry into apps/web/lib/scoring/player-composite.ts following the P12-08 snap-share additive pattern:
+   - Added DepthRow interface + db.depthChartEntry.findMany (where season, select {playerId, depthRank}); best (lowest) depthRank kept per resolved playerId; rows without resolved playerId skipped (never name-guess a role).
+   - Added depthRoleValue(rank): rank 1 → +1, falloff clamped to [1-6/7, 1]=[-0.143, 1], neutral ~rank 3.
+   - depthRank added to PlayerScoreRow (required field) + result object. SIGNAL additive: pushed only when depthRank !== null, weight 0.75, confidence 0.7. NO existing weight reduced.
+4. Tests: added 3 cases to __tests__/player-composite.test.ts (mock depthChartEntry). Source commands re-run: `npx vitest run __tests__/player-composite.test.ts` → 9 passed (9 tests). `npx vitest run __tests__/player-index-route.test.ts` → 3 passed (3) — existing composite + projection/route tests green, no regression.
+5. Self-verification protocol applied:
+   (1) Re-derived counts: 9/9 and 3/3 from the vitest runner output THIS session (not inherited).
+   (2) GIT SHOW: `git show 87715b19 --stat` → 3 files changed, 106 insertions(+), 2 deletions(-) — only the two task files + queue flip; no .env/secret; no DORMANT/frozen/owner-gated paths touched.
+   (3) Additive claim tested by the absent-data case (depthRank null, no depthRole driver, score finite) AND the differentiator case (equal everything except depth → starter scores higher). Product behavior confirmed via the real composite matrix, not a weakened assertion.
+   (4) No guard/gate/security flag flipped or weakened; pure additive signal with bounded weight.
+   (5) Uncertainty noted: live data verification NOT possible this run — db.depthChartEntry has no production rows (cron never calls ingestDepthCharts except under ?mode=full, per P14-04 journal line 3437); tests run against fixtures. Live verification needs the cron. This is stated in the commit message and journal.
+6. Committed exactly the three task files (not the unrelated prior-run handoff files SPRINT_VIOLATIONS.md/build-raw.txt/PROD_HEALTH_ALERT.md/SPRINT_STATUS_NOW.md). `git add apps/web/lib/scoring/player-composite.ts apps/web/__tests__/player-composite.test.ts handoff/SPRINT_QUEUE.md` then commit. Secret scan passed pre-commit (3 files scanned, no secrets).
+
+Result: P14-05 DONE. DepthChartEntry (a dead, ingested-but-unread free table) is now a real, differentiator signal in the Galaxy Index composite, purely additive and inert where absent. Committed as 87715b19. Did NOT start a second task (HARD RULE).
+
+Next: P14-06 (next TODO in queue — freshness-truth coverage audit on top public surfaces).
+
+---
+
+### 2026-08-17T01:38:00Z · P14-06 — Freshness-truth coverage audit + close gaps on top public surfaces · DONE · STRIKES: 0
+
+Resumed from DOING (prior run was interrupted after applying all code changes but before committing).
+`git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date +%F` → 2026-08-17.
+
+**Audit (read-only) of top public surfaces for freshness signals:**
+- `/board` → had "Last refresh" tile but no `data-testid` for testability → added `data-testid="board-freshness"` to StateTile.
+- `/picks` → used `LineFreshnessBadge` but lacked a testable data-testid → added `data-testid="picks-freshness"`.
+- `/clv` → displayed rate/coverage but no freshness as-of → added "Last graded {date}" stamp using `coverage.latestGradedAt` (new field in clv-coverage.ts).
+- `/proof` → already had `data-testid="proof-freshness-stamp"` ("Board generated" timestamp) — confirmed present, no change needed.
+- `/ (home)` → TrustLedgerMetrics lacked `lastRefresh` → added field + rendering "Board data as-of" stamp via MethodologySection.
+
+**Cadence-claim fix (truth audit):**
+- `/about/page.tsx:18` and `/faq/page.tsx` previously claimed "ingested on a 30-minute cadence" / "every 30 minutes" — a specific number no public surface enforces visibly. Replaced with "on a regular schedule", matching the APPROVED `methodology.odds-ingestion` claim in `apps/web/lib/trust-claims.ts:98` (which explicitly states "No claim about update frequency in seconds").
+- `tout-comparison.tsx:39` had the same "ingested every 30 minutes" claim → fixed to match.
+- Pricing page (`pricing/page.tsx:223` "30-minute refresh loop during games") and `press/page.tsx:18` were NOT changed — the `/api/cron/refresh-odds/route.ts:10` comment confirms the 30-minute odds refresh IS the actual cron schedule in `vercel.json`, so those claims are substantiated.
+
+**Self-verification protocol applied:**
+1. RE-DERIVED, NEVER INHERIT: All counts from commands run THIS session:
+   - `npx vitest run --root apps/web __tests__/freshness-coverage.test.ts __tests__/clv-coverage.test.ts __tests__/honest-degraded-states.test.ts` → 3 files, 31 tests passed (9+10+12).
+   - `npx tsc --noEmit -p apps/web/tsconfig.json` → exit 0.
+   - `npx eslint <all touched files>` → exit 0 (only an informational `no-html-link-for-pages` notice, no errors).
+   - `npx vitest run --root apps/web __tests__/player-composite.test.ts __tests__/player-index-route.test.ts` → 12 passed (no regression from P14-05's DepthChartEntry wiring).
+2. No commit hashes cited as pre-existing evidence — this IS the new commit.
+3. No test falsified the hypothesis — all tests passed on first run.
+4. NO guard/gate/security flag weakened. Cadence claims changed from a false specific number to registry-approved non-numeric wording. No paywall, clearance, or auth logic touched.
+5. Uncertainty noted: `latestGradedAt` queries `db.pick.findFirst` on `clvCapturedAt` of graded picks — verified at test level with mocked DB (tests pass), but production rows depend on the CLV grading cron having run. Could not verify live production data (prod scheduler is dead per SPRINT_STATUS_NOW.md). This is a READ-ONLY freshness signal addition — no data was fabricated.
+
+Files to commit: all 12 source/test files + `handoff/SPRINT_QUEUE.md` (STATUS DONE) + `handoff/SPRINT_JOURNAL.md` (this entry).
+

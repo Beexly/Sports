@@ -177,7 +177,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
           <StateTile label="Gated today" value={String(state.gatedToday)} />
-          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} />
+          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
           <StateTile label="Model" value={state.modelVersion} />
         </section>
 
@@ -250,9 +250,9 @@ export default async function BoardPage(): Promise<JSX.Element> {
   );
 }
 
-function StateTile({ label, value }: { label: string; value: string }): JSX.Element {
+function StateTile({ label, value, dataTestid }: { label: string; value: string; dataTestid?: string }): JSX.Element {
   return (
-    <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2">
+    <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2" {...(dataTestid ? { "data-testid": dataTestid } : {})}>
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>
       <p className="mt-1 break-words text-lg font-semibold text-white">{value}</p>
     </div>

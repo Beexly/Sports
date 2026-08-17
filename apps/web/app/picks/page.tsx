@@ -517,7 +517,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                 // timestamp exists on today's picks (never a fake "just now").
                 const freshest = freshestLineTimestamp(picks);
                 return freshest ? (
-                  <div className="mb-4">
+                  <div className="mb-4" data-testid="picks-freshness">
                     <LineFreshnessBadge freshestIso={freshest} />
                   </div>
                 ) : null;

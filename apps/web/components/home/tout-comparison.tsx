@@ -36,7 +36,7 @@ const ROWS = [
   },
   {
     feature: "Source of truth",
-    galaxy: "Live odds from dozens of sportsbooks, ingested every 30 minutes",
+    galaxy: "Live odds from multiple sportsbooks on a regular schedule",
     galaxyOk: true,
     tout: "Often a single book or a screenshot",
     toutOk: false,

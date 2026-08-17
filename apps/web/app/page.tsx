@@ -299,6 +299,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   cleared,
                   gated,
                   ...(nflUnavailable ? {} : { playerRows: nflRows }),
+                  lastRefresh: state.lastRefresh,
                 }
           }
         />

@@ -33,19 +33,23 @@ export interface ClvCoverageInput {
   readonly healthyThresholdPct?: number;
   /** Coverage at/above this (but below healthy) is DEGRADED; below it is CRITICAL. Default 80. */
   readonly degradedThresholdPct?: number;
+  /** ISO timestamp of the most recently graded pick, or null. */
+  readonly latestGradedAt?: string | null;
 }
 
 export interface ClvCoverage {
   readonly settledEligible: number;
   readonly graded: number;
   readonly uncovered: number;
-  /** graded / settledEligible as a percent (one decimal). Null when no eligible picks. */
+  /** Coverage at or above this percent is HEALTHY. Default 95. */
   readonly coverageRatePct: number | null;
   readonly health: ClvCoverageHealth;
   /** True only when coverage is exactly 100% over a non-empty sample. */
   readonly invariantHolds: boolean;
   readonly operatorMessage: string;
   readonly remediation: readonly string[];
+  /** ISO timestamp of the most recently graded pick's CLV snapshot, or null. */
+  readonly latestGradedAt: string | null;
 }
 
 const HEALTHY_DEFAULT = 95;
@@ -78,6 +82,7 @@ export function evaluateClvCoverage(input: ClvCoverageInput): ClvCoverage {
       operatorMessage:
         "No settled, played, canonical picks yet. CLV coverage is not measurable until picks settle against real games.",
       remediation: [],
+      latestGradedAt: input.latestGradedAt ?? null,
     };
   }
 
@@ -114,6 +119,7 @@ export function evaluateClvCoverage(input: ClvCoverageInput): ClvCoverage {
     invariantHolds,
     operatorMessage,
     remediation,
+    latestGradedAt: input.latestGradedAt ?? null,
   };
 }
 
@@ -127,6 +133,11 @@ function clampPct(value: number | undefined, fallback: number): number {
 export interface ClvCoverageClient {
   pick: {
     count: (args: { where: Record<string, unknown> }) => Promise<number>;
+    findFirst: (args: {
+      where: Record<string, unknown>;
+      orderBy: Record<string, unknown>;
+      select: { clvCapturedAt: boolean };
+    }) => Promise<{ clvCapturedAt: Date | null } | null>;
   };
 }
 
@@ -140,6 +151,10 @@ export interface LoadClvCoverageInput {
  * published), non-seed picks whose game actually played (result WIN/LOSS/PUSH).
  * VOID is excluded — a cancelled game never had a close to beat, so it can't be a
  * coverage hole. Graded = eligible AND clvVerdict is set.
+ *
+ * The latestGradedAt timestamp comes from the most recently graded pick's
+ * clvCapturedAt field (the closing-line snapshot used for grading). It powers
+ * the public freshness signal on /clv.
  */
 export async function loadClvCoverage(
   db: ClvCoverageClient,
@@ -152,6 +167,12 @@ export async function loadClvCoverage(
     result: { in: ["WIN", "LOSS", "PUSH"] },
   } as const;
 
+  const latestGraded = await db.pick.findFirst({
+    where: { ...eligibleWhere, clvVerdict: { not: null } },
+    orderBy: { clvCapturedAt: "desc" },
+    select: { clvCapturedAt: true },
+  });
+
   const [settledEligible, graded] = await Promise.all([
     db.pick.count({ where: { ...eligibleWhere } }),
     db.pick.count({ where: { ...eligibleWhere, clvVerdict: { not: null } } }),
@@ -160,6 +181,7 @@ export async function loadClvCoverage(
   return evaluateClvCoverage({
     settledEligible,
     graded,
+    latestGradedAt: latestGraded?.clvCapturedAt ? latestGraded.clvCapturedAt.toISOString() : null,
     ...(input.healthyThresholdPct !== undefined
       ? { healthyThresholdPct: input.healthyThresholdPct }
       : {}),

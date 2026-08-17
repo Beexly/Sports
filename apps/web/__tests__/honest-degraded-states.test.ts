@@ -388,7 +388,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const metrics = methodology?.props.metrics as TrustLedgerMetrics | undefined;
     expect(metrics).toBeDefined();
     expect(metrics?.playerRows).toBeUndefined();
-    expect(metrics).toEqual({ settled: 80, cleared: 2, gated: 1 });
+    expect(metrics).toEqual({ settled: 80, cleared: 2, gated: 1, lastRefresh: NOW });
   });
 
   it("stale-suppressed board (degradation code, NO dataError) renders unavailable, not healthy zeros", async () => {
@@ -448,6 +448,7 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
       cleared: 2,
       gated: 1,
       playerRows: 1234,
+      lastRefresh: NOW,
     });
   });
 

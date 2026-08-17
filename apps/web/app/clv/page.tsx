@@ -268,6 +268,18 @@ function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage
                   The ungraded picks are excluded from this count, not counted as losses.
                 </p>
               )}
+              {coverage.latestGradedAt != null && (
+                <p
+                  data-testid="clv-freshness"
+                  className="mt-1 text-[10px] text-ion-3"
+                >
+                  Last graded {new Date(coverage.latestGradedAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+              )}
             </div>
           )}
         </div>

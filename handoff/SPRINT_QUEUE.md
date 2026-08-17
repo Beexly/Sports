@@ -1967,7 +1967,7 @@ change is intentional and bounded.
 proving no regression; if the table has no local rows, test against fixtures and journal that live
 verification needs the cron. Do NOT fabricate data. typecheck + lint. Commit.
 
-### P14-06 — Freshness-truth coverage audit + close the gaps on the top public surfaces · STATUS: TODO · STRIKES: 0
+### P14-06 — Freshness-truth coverage audit + close the gaps on the top public surfaces · STATUS: DONE · STRIKES: 0
 The "/about 30-min cadence vs 20h-stale board" contradiction (P9.5-08) is a symptom of freshness not being a
 guaranteed invariant. Machinery already exists: `apps/web/lib/data-reliability/public-freshness-gate.ts`,
 `apps/web/components/picks/line-freshness-badge.tsx`, `apps/web/lib/picks/line-freshness.ts`. First AUDIT
