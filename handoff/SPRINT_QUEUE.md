@@ -2024,7 +2024,7 @@ this sprint. Write findings (including "confirmed dormant, no action taken") to
 `handoff/PHASE15_SURFACE_SWEEP.md`, appending one section per task, never overwriting a prior task's
 section.
 
-### P15-0A — DAILY TRUTH: the permanent feedback loop from reality · STATUS: TODO · STRIKES: 0
+### P15-0A — DAILY TRUTH: the permanent feedback loop from reality · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T08:14:21Z
 **Why (owner doctrine, 2026-08-16, Fable).** Every audit this sprint has been pre-launch
 introspection. World-class systems are not made reliable by more review — they are made reliable by
 telemetry and a DAILY confrontation with what actually happened. This product's entire premise is
