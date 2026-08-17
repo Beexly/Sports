@@ -1462,3 +1462,104 @@ The remaining touched files (stripe.ts, auth.ts, clearance-engine.ts, b2b/api-ke
 
 **Round 2 complete.** P10-01, P10-02, P10-03 all independently re-derived. P10-04 (working-tree hygiene) is next. The one proven-wrong claim (GSE-SEC-081) remains uncorrected in code — it requires a non-trivial auth-method migration (query-param → header + domain update) beyond P10-03's read-only scope. The comments should be corrected at minimum.
 
+---
+
+## Round 2 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-17)
+
+**Date:** 2026-08-17
+**Started:** 2026-08-17T09:43:00Z
+**HEAD:** 5a6e2a9c (claude/fable-5-ultracode-plan-ptru4e, 194 commits ahead of origin)
+
+**Task scope:** `git status`, `git status --ignored -- handoff/`, `git worktree list`, stash list,
+duplicate-commit audit across all reflogs, verification that the .gitignore narrowing from Round 1
+has not silently swallowed new deliverables, and re-check of the P8-11 two-agent collision and
+P8-08-RESUME regression.
+
+### Method
+1. `git status --short` at repo top-level — look for uncommitted stray files, recurrence of P4/P5 non-committing bug.
+2. `git status --ignored -- handoff/` — confirm no real deliverable is gitignored and silently untracked.
+3. `git worktree list` — check for stray worktrees or the two-agent collision leaving divergent state.
+4. `git stash list` + `git stash show --stat` — check for WIP stashed as a disguise for uncommitted real work.
+5. `git log --all --oneline --format="%s" | sort | uniq -d` — grep for duplicate-byte-identical commits.
+6. Verify P8-08-RESUME still has no git commit (regression check from Round 1's P10-01 finding).
+7. Verify the 7 rescued deliverable files from Round 1 (commit f8dbeddf) are still tracked.
+8. Verify no .md files in handoff/ are silently ignored after the .gitignore narrowing (commit fbf31aa2).
+
+### Results
+
+#### Item 1 — Uncommitted / stray changes · PARTIAL (2 issues found)
+`git status --short` shows 6 items:
+- `M apps/web/app/intelligence/engines/page.tsx` (62-line diff) — in-progress change NOT part of P10-04; appears to be from a P8 or other task. Last committed version at a7bd5639. Not a P10-04 concern, but noted as in-flight.
+- `M apps/web/app/intelligence/engines/registry.tsx` (10-line diff) — same in-progress task. Not part of P10-04.
+- `M handoff/SPRINT_VIOLATIONS.md` (3-line addition) — guardrail violation log update. Tracked, uncommitted. Not a hygiene bug — this is the normal in-flight state edit.
+- `M handoff/build-raw.txt` (1-line diff) — build output, tracked. Not a hygiene bug.
+- `?? handoff/PROD_HEALTH_ALERT.md` — **UNTRACKED DELIVERABLE.** A markdown health-alert report (first line: "2026-08-16T13:39:57.0405259-05:00 PROD DEGRADED: scheduler=dead ageMin=1680 settlement=CRITICAL"). Not in any git history (`git log --all -- handoff/PROD_HEALTH_ALERT.md` returns nothing). **This is a new instance of the gitignore-swallowed-deliverable bug class** — a permanent markdown report that should be tracked but is sitting as an untracked file.
+- `?? handoff/SPRINT_STATUS_NOW.md` — **UNTRACKED DELIVERABLE.** A sprint-status summary report ("Sprint status — verified 2026-08-16 23:43 local (Opus)"). Not in any git history. **Same bug class as PROD_HEALTH_ALERT.md.**
+
+**No secret leaks** — `git status --short | grep -i '\.env\|secret\|KEY'` returns nothing.
+**No merge conflicts** — `git diff --name-only --diff-filter=U` returns nothing.
+
+**Conclusion:** The P4/P5 non-committing bug is **not recurring** (no source code changes sitting uncommitted without context). However, **two new untracked markdown deliverables** (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md) were found sitting in handoff/ without being tracked — a recurrence of the hygiene bug class P10-04 is designed to catch. These were created by an overnight agent run and never `git add`ed.
+
+#### Item 2 — Gitignored handoff deliverables · CLEAN (no regression)
+`.gitignore` was narrowed in Round 1 (commit fbf31aa2, "P10-04: working-tree + history hygiene sweep") from a blanket `handoff/` rule to specific patterns:
+```
+handoff/*.log
+handoff/*.txt
+handoff/*.stderr
+handoff/*.json
+handoff/_*
+handoff/*.py
+```
+No `.md` extension is in the ignore list — markdown reports are tracked by default.
+
+**Verification:** `git ls-files --ignored --others --exclude-standard -- 'handoff/*.md'` returns nothing → no .md file in handoff/ is silently ignored. All 7 rescued files from Round 1 (commit f8dbeddf) remain tracked:
+- handoff/LEDGER.md, DEPENDENCY_HEALTH.md, TYPE_LINT_DEBT.md, OPS_TRUTH.md, COMPLIANCE_COPY.md, COMPLIANCE_HOOKS.md, SPRINT_FINAL_PHASE1-9.md
+
+The narrowed rule is working correctly — no new deliverables are being silently swallowed by gitignore. The two untracked .md files (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md) are simply untracked (not ignored), meaning they were never `git add`ed by the creating agent.
+
+#### Item 3 — Worktrees · CLEAN
+`git worktree list` shows 17 worktrees. Only the primary `C:/Users/Garrett/Sports` is on the active sprint branch `claude/fable-5-ultracode-plan-ptru4e`. All other 16 are experimental/isolated branches (`beexly-*`, `galaxy-dynasty-*`, `gse-free-waitlist-gate`, `consensus-accuracy-engine`, `dfs-optimizer-edge`, detached `Sports_release_codex`). No stray worktree points at the active sprint branch or duplicates the current HEAD. No worktree collision to clean up. **No regression from Round 1.**
+
+#### Item 4 — Stashes · CLEAN (no real work hidden)
+`git stash list` shows 5 stashes. `git stash show --stat` for stash@{0} shows 1 file (`CLAUDE.md`, 120/174 lines changed) — a backup/scratch edit on `codex/sunday-frontier-maxforce-2026-07-05`. Stash@{1..4} are similarly overnight or pre-flight backups on old branches. **No stashed deliverable work** that would constitute a non-committing-bug recurrence. **No regression from Round 1.**
+
+#### Item 5 — Two-agent collision / duplicate commits · CONFIRMED (no new duplicates)
+`git log --all --oneline --format="%s" | sort | uniq -d` shows the following duplicated commit subjects (same subject appears in 2+ commits across all branches):
+- `chore(sprint): P8-11 DONE — GSE-SEC-015 fixed, register + queue updated [sprint]` — `bd89a53a` and `b3159cbb` (byte-identical, confirmed in Round 1)
+- `chore: update package-lock.json after npm install` — appears 2x
+- Several other pairs of identical subjects from historical Codex + Laguna collisions (settlement, contests, web, etc.)
+
+**No NEW duplicate commits** since Round 1. The P10-04 Round 1 entry (fbf31aa2) is itself a duplicate-status-style commit but was produced by a single author (Codex), not a collision. The two-agent collision pattern remains documented but **has not recurred** with new duplicates this round.
+
+#### Item 6 — P8-08-RESUME regression check · CONFIRMED (still unfixed)
+`git log --all --oneline --grep="P8-08-RESUME\|GSE-SEC-033"` returns nothing — **P8-08-RESUME has still not been committed.** The GSE-SEC-033 durable-write guard fix remains uncommitted, exactly as Round 1's P10-01 finding flagged. `handoff/SPRINT_QUEUE.md` line 2343 still shows P8-08-RESUME at STATUS: TODO. This is a **critical regression from the original P8-08 task** (which was marked DONE without a commit) — P8-08-RESUME was appended as a carryover task and is still pending.
+
+#### Item 7 — 7 rescued files still tracked · CONFIRMED
+`git ls-files --error-unmatch handoff/LEDGER.md handoff/DEPENDENCY_HEALTH.md handoff/TYPE_LINT_DEBT.md handoff/OPS_TRUTH.md handoff/COMPLIANCE_COPY.md handoff/COMPLIANCE_HOOKS.md handoff/SPRINT_FINAL_PHASE1-9.md` returns all 7 → confirmed tracked. No regression from Round 1's rescue commit f8dbeddf.
+
+### Summary Table
+
+| Check | Result |
+|---|---|
+| Uncommitted stray files | 2 real deliverables untracked (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md) + 2 in-progress non-P10-04 code changes |
+| Non-committing bug recurrence | NO — no source code changes sitting uncommitted without context |
+| Gitignored deliverables still swallowed | NONE — .gitignore narrowed; no .md files ignored; 7 Round 1 rescue files still tracked |
+| Two-agent duplicate commits | CONFIRMED existing (P8-11: bd89a53a + b3159cbb) — no new duplicates since Round 1 |
+| P8-08-RESUME regression | CONFIRMED — GSE-SEC-033 still has no git commit; still STATUS: TODO in queue |
+| Stray worktrees | NONE — all 17 are intentional; only main worktree on active branch |
+| Hidden stashed real work | NONE — all 5 stashes are scratch/backup edits |
+| Merge conflicts | NONE |
+| Secret leaks | NONE |
+
+### New Items Requiring Follow-up
+
+1. **hygiene-03 (NEW):** `handoff/PROD_HEALTH_ALERT.md` and `handoff/SPRINT_STATUS_NOW.md` are permanent markdown deliverables that were never `git add`ed — a recurrence of the gitignore-swallowed-deliverable bug class. Recommended: `git add handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md` in the next commit. (Not fixed in this run — P10-04 is read-only hygiene; these files may be mid-update by an overnight agent.)
+
+2. **P8-08-RESUME:** Still TODO, still uncommitted. GSE-SEC-033 fix not anchored to any git commit. Flagged again for Round 2's P8-08-RESUME task slot.
+
+3. **hygiene-01 (carryover):** The `handoff/` gitignore was narrowed in Round 1; no active victim, but overnight agents must remember to `git add` new .md deliverables. The narrowed rule prevents *ignoring* but not *forgetting to stage* — a process gap, not a .gitignore gap.
+
+**VERIFY:** All checks above cites real commands and real output. The working tree has no source-code non-committing bug, but two markdown deliverables were found untracked. No .md files in handoff/ are silently ignored. P8-08-RESUME remains unregistered in git. No new worktrees, stashes, conflicts, or secret leaks since Round 1.
+
+---

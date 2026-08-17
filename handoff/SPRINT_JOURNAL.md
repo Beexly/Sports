@@ -4377,3 +4377,29 @@ Commit hash will be verified via `git show <hash> --stat` after commit.
 
 Result: DONE. This run did exactly ONE task (P16-05) and stopped.
 
+---
+
+## P10-04 Round 2 — 2026-08-17T09:43:14Z
+
+**Task:** P10-04 — Working-tree and history hygiene sweep (Round 2, independent re-derivation)
+**Date run:** `date +%F` → 2026-08-17
+**Status:** DONE
+**Files modified:** handoff/BATTLE_TEST_LOG.md, handoff/SPRINT_QUEUE.md
+**Commit:** 70b687c5 (verified via `git show 70b687c5 --stat`: 2 files changed, 102 insertions(+), 1 deletion(-))
+
+**What I did:** Independent re-derivation of the working-tree/hygiene sweep for Round 2. Ran all checks from current HEAD 5a6e2a9c, NOT copying Round 1's conclusions.
+
+**Results (all commands run THIS session from C:/Users/Garrett/Sports):**
+- `git status --short` → 6 items (4 modified, 2 untracked). No source-code non-committing bug (P4/P5 bug NOT recurring). But 2 untracked .md deliverables found: handoff/PROD_HEALTH_ALERT.md and handoff/SPRINT_STATUS_NOW.md — both never `git add`ed by the overnight agent that created them. This is a recurrence of the gitignore-swallowed-deliverable bug class.
+- `git status --ignored -- handoff/` + `git ls-files --ignored --others --exclude-standard -- 'handoff/*.md'` → no .md files silently ignored. The .gitignore was narrowed in Round 1 (commit fbf31aa2) from `handoff/` blanket ignore to `handoff/*.log`, `*.txt`, `*.stderr`, `*.json`, `_*`, `*.py`. No .md in the ignore list.
+- All 7 rescued files from Round 1 (commit f8dbeddf) still tracked: `git ls-files --error-unmatch handoff/LEDGER.md handoff/DEPENDENCY_HEALTH.md handoff/TYPE_LINT_DEBT.md handoff/OPS_TRUTH.md handoff/COMPLIANCE_COPY.md handoff/COMPLIANCE_HOOKS.md handoff/SPRINT_FINAL_PHASE1-9.md` → 7 paths returned.
+- `git worktree list` → 17 worktrees. Only the primary worktree is on the active branch `claude/fable-5-ultracode-plan-ptru4e`. No stray worktree collision.
+- `git stash list` → 5 stashes, all scratch/backup edits (CLAUDE.md, overnight-presync, etc.). No real deliverable work hidden.
+- `git log --all --oneline --format="%s" | sort | uniq -d` → 17 duplicate-commit subjects found. The two-agent collision is still present: P8-11 has two byte-identical commits (bd89a53a + b3159cbb). No NEW duplicates since Round 1.
+- `git log --all --oneline --grep="P8-08-RESUME\|GSE-SEC-033"` → empty. P8-08-RESUME still STATUS: TODO, still uncommitted. GSE-SEC-033 fix has no git commit anchoring it. Critical regression from original P8-08.
+- `git diff --name-only --diff-filter=U` → empty. No merge conflicts.
+- `git status --short | grep -i '\.env\|secret\|KEY'` → empty. No secret leaks.
+
+**Conclusion:** No P4/P5 non-committing bug recurrence. No new gitignore-swallowed deliverables (the narrowed rule is working). But 2 .md deliverables (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md) were found untracked — flagged as hygiene-03 follow-up. P8-08-RESUME remains unfixed (no git commit). Two-agent collision (P8-11 duplicate) persists but no new incidents. Full report written to BATTLE_TEST_LOG.md, section "Round 2 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-17)".
+
+**Result:** DONE. This run did exactly ONE task (P10-04 Round 2) and stopped.
