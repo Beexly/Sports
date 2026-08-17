@@ -2131,7 +2131,7 @@ confirm the math matches its own documented formula/comment. **VERIFY:** run the
 if any directory has zero tests for a real live calculation, that itself is a finding — write one
 narrow regression test for the highest-risk function, don't attempt full coverage. Commit.
 
-### P15-07 — Sweep: ops, monitoring & background jobs · STATUS: TODO · STRIKES: 0
+### P15-07 — Sweep: ops, monitoring & background jobs · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17 (commit 38b82ec)
 Directories: `apps/web/lib/{ops,observability,synthetic-monitoring,health,cache,tasks,workers,cron,
 push}`. Given this sprint already found a dead scheduler and a rate-limit gap in one ops route, check
 the REST of this cluster for the same failure classes: a cron/worker that silently no-ops instead of

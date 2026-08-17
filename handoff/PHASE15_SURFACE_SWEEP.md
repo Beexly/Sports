@@ -192,3 +192,59 @@ No mathematical bugs found. No directory has zero test coverage for its core cal
 ## COMMIT NOTE
 
 P15-06 is a read-only sweep with no code changes — the findings are appended to this document only. Per task instructions ("write one narrow regression test for the highest-risk function" only applies when a directory has zero tests, which none do — so no new test files were needed).
+
+---
+
+# Appendix: P15-07 — Sweep: ops, monitoring & background jobs
+
+**Task:** P15-07
+**Status:** DONE (code fix committed in 38b82ec; journal + queue DONE-marking completed in this run)
+**Directories swept:** `apps/web/lib/{ops,observability,synthetic-monitoring,health,cache,tasks,workers,cron,push}` + `apps/web/app/api/cron/**/route.ts` + `apps/web/app/api/health/route.ts`
+
+## The bug found and fixed
+
+The P15-07 task targets the silent-no-op failure class: a background job/cron that returns HTTP 200 + `ok: true` even when its core work has completely failed, so the platform scheduler treats a dead run as healthy.
+
+**`apps/web/app/api/cron/free-spine-health/route.ts` (FIXED in commit 38b82ec)**
+
+The route computed `probeFailed` (all sports failed to return games) and used it to decide the `ok` field on the `IngestionRun` record (line 105, `failed: probeFailed`), but the HTTP response was unconditionally `200 + ok: true`. This meant:
+- The Vercel platform cron scheduler saw a 200 and treated the run as healthy.
+- Any Sentry-less local deploy (no alerting wired) would see only a `FAILED` IngestionRun row + a `console.warn` in server logs — no visible HTTP-level signal.
+- This is precisely the "silently no-ops instead of erroring loudly" pattern P15-07 targets.
+
+**Fix applied (commit 38b82ec):** Added a guard before the success-path return (lines 163-184): when `probeFailed` is true, return HTTP 503 + `{ ok: false, status: "probe_failed", probeFailed: true, error: "...", live, summary }`. The full diagnostic body is preserved. The `boardFill` sub-failure stays best-effort (it already has `captureError`).
+
+**Test added:** `apps/web/__tests__/free-spine-health-route.test.ts` (3 tests):
+- 401 without bearer secret
+- 200 + `ok: true` when the probe succeeds (games returned)
+- 503 + `ok: false` + `probeFailed: true` when every sport fails to return games
+
+**`npx vitest run __tests__/free-spine-health-route.test.ts` → 3 passed (3), 72ms.**
+
+## Broader sweep of the ops cluster — other crons/workers checked
+
+For each cron/worker in `apps/web/app/api/cron/` and each module under `apps/web/lib/{ops,observability,synthetic-monitoring,health,cache,tasks,workers,push}`, I checked whether the same silent-no-op pattern exists (returns 200 + ok:true unconditionally when core work fails):
+
+| File | Pattern | Verdict |
+|---|---|---|
+| `apps/web/app/api/cron/settle-picks/route.ts:217` | `ok: okCount === results.length` — reflects actual success count | NOT silent no-op |
+| `apps/web/app/api/cron/generate-drafts/route.ts:125` | `ok: true` but `generateDailyBrief` has no try/catch — a throw produces Next.js 500. Weekly/quiet-board failures caught+logged by design | NOT silent no-op |
+| `apps/web/app/api/cron/health-alert/route.ts:166` | `ok: true` but always includes `unhealthy` + `decisionReason` in body; ok means "cron ran" not "system healthy" | NOT silent no-op |
+| `apps/web/app/api/cron/prune-rate-limits/route.ts:48-55, 78-85` | Returns 503 on stub-mode DB and on store failure | WELL-DESIGNED |
+| `apps/web/app/api/cron/backfill-*/route.ts` | Returns `{ status: 400 }` / `{ status: 500 }` on failure | WELL-DESIGNED |
+| `apps/web/app/api/cron/calibration-metrics/route.ts:453` | Returns `{ ok: false }` on error with `{ status: 500 }` | WELL-DESIGNED |
+| `apps/web/app/api/health/route.ts:61,69` | `ok: allOk` + HTTP 503 when checks fail | WELL-DESIGNED |
+| `apps/web/lib/ops/scheduler-liveness.ts:100-172` | Never throws; always returns status string; distinguishes "scheduler dead" from "quiet board" (OP-003) | WELL-DESIGNED |
+| `apps/web/lib/synthetic-monitoring/dashboard.ts:391-401` | `runnerStatusFromArtifact` returns "paused" (not "healthy") when artifact absent | WELL-DESIGNED (OP-003 fix in place) |
+| `apps/web/lib/health/live-capability-probes.ts:108-231` | Every check branch sets `status: "ok"` or `status: "error"`; catch blocks set error with static detail | WELL-DESIGNED |
+| `apps/web/lib/observability/sentry.ts` | No-op when SENTRY_DSN absent — by design, documented | BY DESIGN |
+| `apps/web/lib/push/*` | Checked — no silent failure patterns | NO ISSUES |
+| `apps/web/lib/tasks/*` | Checked — task runtime catches+logs errors, does not silence them | NO ISSUES |
+
+## Conclusion
+
+Only the free-spine-health route had the actual silent-no-op bug. No other cron/worker in the ops/monitoring/background-jobs cluster exhibits the same failure class. The fix is committed (38b82ec), tests pass, and the broader sweep confirms no additional silent-no-op patterns in this cluster.
+
+**Files touched by this task:**
+- `apps/web/app/api/cron/free-spine-health/route.ts` (fixed — probe failure -> 503)
+- `apps/web/__tests__/free-spine-health-route.test.ts` (new — 3 tests)
