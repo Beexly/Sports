@@ -94,5 +94,17 @@ describe("freshness-truth coverage audit", () => {
       expect(faq).toContain("on a regular schedule");
       expect(faq).not.toMatch(/every 30 minutes|every 30 min|30-?minute refresh/i);
     });
+
+    it("/pricing FAQ does not state an unenforced numeric cadence", () => {
+      // P14-06 fixed the false-precision "30-minute refresh loop" cadence claim
+      // on /about and /faq but left it on /pricing. The real schedule lives in
+      // vercel.json as "*/15 * * * *" (every 15 minutes) and the trust-claims
+      // registry (methodology.odds-ingestion) explicitly blesses NO numeric
+      // cadence. This pin prevents the same unsupported figure from regressing.
+      const pricing = readWeb("app/pricing/page.tsx");
+      const banned = /30-?minute|every 30 min|every 30 minutes|30 minute/i;
+      expect(pricing).not.toMatch(banned);
+      expect(pricing).toContain("refreshed regularly during games");
+    });
   });
 });

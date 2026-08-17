@@ -220,7 +220,7 @@ const FAQ = [
   },
   {
     q: "Which sports are covered?",
-    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. The slate runs on a 30-minute refresh loop during games.",
+    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven with live odds refreshed regularly during games on a schedule the board gate enforces (candidate odds older than the freshness cap are refused the write).",
   },
 ] as const;
 
