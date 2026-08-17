@@ -4776,3 +4776,47 @@ commit-fix task) should resolve hygiene-04.
 **Files modified this task:** `handoff/BATTLE_TEST_LOG.md`, `handoff/SPRINT_QUEUE.md` (P10-03 STATUS → DONE).
 
 **Commit:** abd4f3f7e81246f648c7ff5851f6e2b95398a5d8 — `git add` on exactly handoff/BATTLE_TEST_LOG.md + handoff/SPRINT_QUEUE.md + handoff/SPRINT_JOURNAL.md. `git show abd4f3f7 --stat` confirms 3 files changed, 189 insertions, 1 deletion. Secret scan: OK, no secrets detected.
+
+---
+
+### 2026-08-17T21:15:00Z · P10-04 — Working-tree and history hygiene sweep · DONE · STRIKES: 0 · commit 3245bab5
+
+**STEP 0:** Confirmed cwd via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date +%F` → 2026-08-17.
+
+**STEP 1:** Scanned full SPRINT_QUEUE.md top-to-bottom. First TODO task: P10-04 (Round 4 reset). All P0-P9, P10-01/02/03/05, P11-P16 DONE. P7-07 BLOCKED. P10-04 was STATUS: TODO → set to DOING.
+
+**STEP 2-3:** Read-only hygiene sweep, re-derived THIS session from live tree (NOT inheriting Round 3 conclusions). Commands run:
+
+- `git status --short` → 6 modified source/test files + 3 untracked .md + 1 untracked .js
+- `git diff --stat HEAD` → 6 files: page.tsx (+62), registry.tsx (+10), reconcile-entitlements.ts (+15), route.ts (+36), durable-write-guard.ts (+1), 2 test files
+- `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c getViewerEntitlements` → 0 (committed tree) vs `grep -c` working tree → 7
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` → 0 (committed) vs working tree → 3
+- `git show HEAD:packages/db/src/durable-write-guard.ts | grep -c 'stripe-reconcile'` → 0 (committed) vs 1
+- `git show HEAD:apps/web/app/api/cron/reconcile-entitlements/route.ts | grep -c DurableWriteStoreUnavailableError` → 0 (committed) vs 2
+- `git show HEAD:apps/web/app/intelligence/engines/registry.tsx | grep -c 'premium:'` → 0 (committed) vs 2
+- `git ls-files --ignored --others --exclude-standard -- 'handoff/*.md'` → nothing (no .md gitignored)
+- `git ls-files --error-unmatch handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md` → all 3 untracked (exit 1)
+- `git worktree list` → 17 worktrees, only main on active branch
+- `git stash list` → 5 stashes, all scratch/backup (none deliverable)
+- `git log --all --oneline --format='%s' | sort | uniq -d | wc -l` → 35 (all historical, 0 new)
+- `git diff --name-only --diff-filter=U` → empty (no merge conflicts)
+- `git status --short | grep -i .env\|secret\|KEY` → empty (no secret leaks)
+- `git log --oneline -1 4e7326da` → resolves (P8-08-RESUME confirmed DONE)
+
+**Findings (all re-derived THIS session):**
+
+1. **NON-COMMITTING BUG RECURRENCE:** 6 security-fix files (intelligence-engines paywall bypass + GSE-SEC-033 stripe-reconcile guard + 2 test files) exist in working tree, correct but uncommitted for 2nd consecutive round. Intelligence-engines page.tsx calls active.load() with ZERO getViewerEntitlements in committed HEAD (grep -c → 0), letting anonymous visitors read premium analytics at /intelligence/engines.
+
+2. **CONFIDENTLY-WRONG CLAIM IN COMMITTED ARTIFACT:** REMEDIATION_EXECUTION.md row 15 (commit 4e7326da) claims stripe-reconcile guard at reconcile-entitlements.ts:494,579, but `git show HEAD:` grep -c → 0 for requireDurableWriteStore/durable-write-guard/reconcile route — guard exists ONLY in working tree. P10-03 bug class.
+
+3. **hygiene-03 STILL OPEN:** 3 untracked .md deliverables (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md, HAIKU_WATCH.md) never git-add-ed — 1st consecutive round unchanged, HAIKU_WATCH.md new since Round 3.
+
+4. **hygiene-04 (NEW, CRITICAL):** stripe-reconcile guard is a correct fix for GSE-SEC-033 that must be committed as a dedicated task (P10-04 is read-only). Flagged for follow-up.
+
+5. Worktrees CLEAN (17, all intentional). Stashes CLEAN. Merge conflicts NONE. Secret leaks NONE. Duplicate commits 35 historical, 0 new. P8-08-RESUME DONE (4e7326da verified).
+
+**STEP 4:** VERIFY passed (Round 4 P10-04 section in BATTLE_TEST_LOG.md confirmed present, STATUS DONE in SPRINT_QUEUE.md confirmed). `git add` on exactly handoff/BATTLE_TEST_LOG.md + handoff/SPRINT_QUEUE.md. Committed as 3245bab5. Secret-scan: OK. `git show 3245bab5 --stat` confirms 2 files changed, 108 insertions, 1 deletion.
+
+**NOTE:** Per P10-04's read-only scope and task instructions ("Read-only task — no source code committed. Findings in BATTLE_TEST_LOG.md only."), the 6 uncommitted security fixes were NOT committed — they are flagged as hygiene-04 follow-up for a dedicated task. Only the documentation (BATTLE_TEST_LOG.md findings + SPRINT_QUEUE.md STATUS flip) was committed. The intelligence-engines paywall bypass is a LIVE committed-tree bug that needs its own fix+commit task.
+
+**Commit:** 3245bab5c3c03be858c99b2f0548fe4a1d0e5694
