@@ -101,7 +101,7 @@ jobs:
       # RETAINED — a missing artifact fails the build.
       - name: Upload budget acceptance artifact (§10.9)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ai-budget-acceptance
           path: apps/web/test-artifacts/ai-budget-acceptance.json
