@@ -2278,7 +2278,7 @@ or a failing re-run is a real regression — reopen it as a new task at the END 
 STATUS TODO and a note citing which round found it.
 **VERIFY:** every DONE task in Phases 0-9 has a row in the round's table, no silent skips.
 
-### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: DOING · STRIKES: 0 · Round 3 (reset by P10-05 Round 2) · started: 2026-08-17
+### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: DONE · STRIKES: 0 · Round 3 (reset by P10-05 Round 2) · started: 2026-08-17 · completed: 2026-08-17T17:42:00Z (commit c2fbec4d)
 Re-run Phase 2's structure (D1 Auth through D15 Types/coverage) as if `handoff/AUDIT_FINDINGS.md`
 does not exist yet — read the actual current code fresh, form your own findings first, THEN open
 `AUDIT_FINDINGS.md` and reconcile: what did the original audit miss, what has changed since
