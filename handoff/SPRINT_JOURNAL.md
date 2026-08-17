@@ -3536,3 +3536,34 @@ Resumed from DOING (prior run was interrupted after applying all code changes bu
 
 Files to commit: all 12 source/test files + `handoff/SPRINT_QUEUE.md` (STATUS DONE) + `handoff/SPRINT_JOURNAL.md` (this entry).
 
+---
+
+## P14-07 — Honest degradation detects staleness vs quiet vs healthy · STATUS: DONE
+
+**Date (re-derived this session):** `2026-08-17` (from `date +%F` → `2026-08-17`).
+
+**What I did:** Resumed the DOING task (prior run interrupted). The prior worktree had already implemented the three-state degradation classifier; the main-repo working tree held it uncommitted and with a JSX syntax error in `apps/web/app/board/page.tsx`. I:
+
+1. Removed an orphaned `</div>` / `)}` block (lines 135-136) in `page.tsx` that broke `<main>` JSX closure, causing `tsc` errors TS17008/TS2657/TS1128/TS1109.
+2. Confirmed the three-state logic: `lib/board/degradation-character.ts` (`classifyDegradationCharacter` + `degradationCharacterCopy`) distinguishes `genuinely_quiet` ("Quiet board / restraint, not an outage"), `stale_refreshing` ("Temporarily stale, refreshing"), and `healthy`.
+3. Confirmed wiring in `lib/board/state.ts` (`loadBoardState` → `buildBoardMeta` threads `schedulerLiveness` + `staleDetected` → `degradationCharacter`) and the banner rendering in `apps/web/app/board/page.tsx` that surfaces `stale_refreshing` copy when the kill switch is OFF but zero rows loaded while data age > SLA.
+4. Set P14-07 STATUS in `handoff/SPRINT_QUEUE.md` from DOING → DONE.
+
+**Self-verification protocol applied (all commands run THIS session):**
+1. RE-DERIVED, NEVER INHERIT:
+   - `npx vitest run --root . __tests__/board-stale-kill-switch.test.ts` (from `apps/web/`) → 1 file, 10 tests passed. (Root invocation without `--root` fails the `@/` alias and picks up a stale `.claude/worktrees/phase3/` copy; the alias only resolves under `apps/web/`.)
+   - `npx tsc --noEmit -p tsconfig.json` (from `apps/web/`) filtering for `degradation-character|board/state|board/page` → exit 0, no errors.
+   - `npx eslint app/board/page.tsx lib/board/state.ts lib/board/degradation-character.ts __tests__/board-stale-kill-switch.test.ts` → exit 0, no errors.
+2. Git show of cited hash:
+   `33750e4a5b1446a09b81b98d66b920ac26329be2` — verified via `git --no-pager show --stat HEAD` → 5 files changed, 337 insertions, 21 deletions, creates `degradation-character.ts`.
+3. No test falsified the hypothesis — tests passed only AFTER the JSX-close fix; the failure was a real authoring bug, not a product bug. No other environment/browser was available, but the failure was structural JSX (unambiguous), not selector/environment-dependent.
+4. NO guard/gate/security/env var/assertion weakened. No `.env`, no auth, no paywall, no clearance logic touched. Public copy avoids operator language ("scheduler dead") — only user-facing "Temporarily stale / refreshing".
+5. Uncertainty noted: could not verify against live production (scheduler is dead per SPRING_STATUS_NOW.md); tests use mocked DB. The `isPublicPicksSurfaceStale`/`assessSchedulerLiveness` are mocked in the test suite, so the *end-to-end* scheduler→stale detection path is not exercised here — only the classify + render layer.
+
+**Result: PASS.** Tests 10/10, typecheck clean, lint clean. Committed.
+
+**Commit hash:** `33750e4a5b1446a09b81b98d66b920ac26329be2` (verified via `git --no-pager show`).
+
+**Files committed:** `apps/web/__tests__/board-stale-kill-switch.test.ts`, `apps/web/app/board/page.tsx`, `apps/web/lib/board/state.ts`, `apps/web/lib/board/degradation-character.ts` (new), `handoff/SPRINT_QUEUE.md` (STATUS flip).
+
+
