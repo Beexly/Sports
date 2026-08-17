@@ -2340,7 +2340,7 @@ Each of these is bounded, reversible, and cannot break the build. Journal every 
 
 ## REOPENED TASKS (from P10-01 Round 1, 2026-08-16)
 
-### P8-08-RESUME — Implement GSE-SEC-033 fix (durable-write guard on all Stripe caps) · STATUS: TODO · STRIKES: 0
+### P8-08-RESUME — Implement GSE-SEC-033 fix (durable-write guard on all Stripe caps) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17 (reopened by P10-01 R1; re-verified this run)
 **Found by:** P10-01 Round 1 (2026-08-16). The original P8-08 was marked DONE with STRIKES:0
 but has NO git commit. `git log --all --oneline --grep="033"` returns no fixing commit.
 `handoff/REMEDIATION_EXECUTION.md` line 98 still lists GSE-SEC-033 as SAFE-DIRECT / OPEN.
@@ -2352,6 +2352,26 @@ have shifted (stripe.ts:393 now points at a checkout-session listing loop, not a
 (P8-08) stated the durable-write guard covered only checkout + webhook. Add a guard so that
 ALL Stripe-mutating paths (not just checkout and webhook) flow through a single durable-write
 gate. Add test coverage. Commit. Update REMEDIATION_EXECUTION.md row 15 to FIXED.
-**VERIFY:** `npx vitest run <new-test-file>` passes; `git show <hash> --stat` resolves the
-commit that flips GSE-SEC-033 to FIXED in the execution register.
+
+**CORRECTION — DONE WITHOUT A NEW PRODUCT FIX (2026-08-17, independent re-verification):**
+The premise was re-derived from live commands and is **false for the current tree** — the fix
+already exists and is committed. `git diff --stat -- apps/web/lib/stripe.ts` shows NO uncommitted
+change, and `git log -S 'requireDurableWriteStore("stripe-portal")' --oneline -- apps/web/lib/stripe.ts`
+returns exactly `a56fe1dc`, which introduced the guard on every mutation path:
+  - `getOrCreateStripeCustomer` → guard("stripe-checkout") at stripe.ts:209
+  - `createCheckoutSession`      → guard("stripe-checkout") at stripe.ts:290
+  - `createPortalSession`        → requireDurableWriteStore("stripe-portal") at stripe.ts:451
+A repo-wide mutation scan (`grep -rnE "stripe\.[a-zA-Z_]+\.(create|update|del|cancel)\(" apps/web packages`,
+excluding tests + node_modules + the two STALE worktrees `.claude/worktrees/phase3` and `Sports/`)
+returns exactly those three mutation sites — all guarded. Webhook + reconcile paths are gated
+elsewhere (route.ts:62 `stripe-webhook-entitlement`; reconcile-entitlements.ts:494,579 `stripe-reconcile`).
+The "only two caps" claim came from asserting the stale worktree `Sports/apps/web/lib/stripe.ts`
+(unguarded, not this branch) or an out-of-date memory of line 393 (now a READ loop). Per the
+self-verification protocol ("re-derive, never inherit"; "a clean-looking DONE that is wrong is the
+actual damage"), this task did NOT fabricate a duplicate guard. Instead it (1) added
+`apps/web/__tests__/stripe-mutation-guard-invariant.test.ts` — 4 tests pinning the invariant that
+every Stripe mutation in lib/stripe.ts fails closed through the durable-write guard, ALL PASSING;
+and (2) corrected the stale REMEDIATION_EXECUTION.md row 15 to RESOLVED/FIXED with the re-derivation
+cited inline. The new test is the durable regression anchor: a future 4th unguarded mutation fails it.
+**VERIFY:** `npx vitest run __tests__/stripe-mutation-guard-invariant.test.ts __tests__/stripe-customer.test.ts __tests__/stripe-portal-session.test.ts` → 14 passed (4 new + 10 existing). `git show a56fe1dc -- apps/web/lib/stripe.ts | grep requireDurableWriteStore` shows the three guards were introduced in that commit.
 
