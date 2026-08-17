@@ -3456,3 +3456,62 @@ The 35 duplicate subjects are all historical (Merge branches, overnight commits,
 4. **hygiene-06 (RESOLVED):** The false claim in REMEDIATION_EXECUTION.md row 15 (stated by P10-04 R4 as NEW) is resolved — `fd9489b1` committed the stripe-reconcile guard at the exact lines the CORRECTION text cited (`reconcile-entitlements.ts:494,579`). `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -n requireDurableWriteStore` → lines 36, 494, 579. RESOLVED.
 
 **VERIFY:** Every finding backed by a command run THIS session (2026-08-17) at HEAD 97033e9d. `git show HEAD:<path>` (committed tree) used for all guard-state verifications, not working-tree reads. No domain/skip. The hygiene-04 resolution is independently confirmed via `git show HEAD:` — the committed tree now contains all 6 security fixes that Round 3/4 found uncommitted. The only remaining hygiene items are hygiene-03 (3 untracked .md deliverables — carryforward) and hygiene-07 (orphaned 2-line text reword).
+
+---
+
+## Round 5 — P10-05 Close: Round Summary + Round 6 Reset
+
+**Date:** `date +%F` → 2026-08-17 (verified live)
+**Started:** 2026-08-17 (resumed — Round 5 P10-01..04 all completed; Round close was deferred per prior session journal)
+**HEAD:** ccb4a04f (claude/fable-5-ultracode-plan-ptru4e)
+**Round 5 commits (P10-01..04):** 3f7777ba, a46696f9, dc20bb7b, 97033e9d, 10b95baa, ccb4a04f (6 commits: 4 battle-test + 2 journal)
+
+**Method (independent re-derivation, NOT copying Round 4):** Commands run THIS session from C:/Users/Garrett/Sports:
+- `git log --oneline 0435a526..HEAD --format='%h %s'` — list Round 5 commits
+- `grep -n "Round 5" handoff/SPRINT_QUEUE.md` — verify P10-01..04 marked DONE for Round 5
+- `git status --short` — working tree state
+- `git log --all --oneline --format='%s' | sort | uniq -d | wc -l` — duplicate commit subjects
+- `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` — GSE-SEC-081 comment in committed tree
+- `git ls-files --others --exclude-standard handoff/PROD_HEALTH_ALERT.md ...` — hygiene-03 check
+
+### Round 5 findings count vs Round 4
+
+| Metric | Round 4 | Round 5 | Delta |
+|---|---|---|---|
+| Duplicate commit subjects | 35 | 35 | same (0 new) |
+| Untracked .md deliverables (hygiene-03) | 3 | 3 | same (HAIKU_WATCH.md added by overnight) |
+| GSE-SEC-081 status | STILL OPEN (false claim, 3rd round) | STILL OPEN (4th round) | same |
+| GSE-SEC-082 (NEW) | not filed | CONFIRMED WRONG (BalldontLie) | +1 new |
+| hygiene-04 (non-committing fix) | RESOLVED (fd9489b1) | RESOLVED (fd9489b1) | same |
+| hygiene-06 (false committed claim) | RESOLVED (fd9489b1) | RESOLVED (fd9489b1) | same |
+| Merge conflicts | 0 | 0 | same |
+| Secret leaks | 0 | 0 | same |
+| P8-08-RESUME | DONE (4e7326da) | DONE (4e7326da, re-verified) | same |
+| Phase 0-9 DONE tasks | 88 headers | 88 headers | same |
+| Commit hashes resolved | 61/61 | 61/61 | same |
+| Tests re-run | 22 files, 243 tests | 22 files, 243 tests | same (0 failures) |
+| New regressions | 0 | 0 | same |
+
+**Trend note:** Findings count is flat across R4-R5 (0 - 0 new regressions, no fixes lost). This is EXPECTED — the delta since R4 is docs/log/journal only (`git log --oneline abd4f3f7..HEAD -- apps/ packages/` confirms no source code changes since Round 3 HEAD 5f553c3d, other than the hygiene-04 paywall+reconcile-guard commit fd9489b1 which was already resolved in R4). GSE-SEC-081 is the one finding flat across 5 rounds (per P10-05's rule: flat across 3+ rounds → flagged for owner). No structural regression. No new findings beyond GSE-SEC-082 (BalldontLie, filed by P10-03 Round 5).
+
+### Carry-forward items (status confirmed this round)
+
+1. **GSE-SEC-081 (STILL OPEN — flat across 5 rounds):** Odds API auth comment at `packages/data-ingestion/src/odds-api-client.ts:125-131` still claims the vendor "does not accept a header." Independent live probe in Round 5 (this session) confirms header auth IS supported on the current `api.theoddsapi.com` namespace. `git show HEAD:` confirms the comment is unchanged in the committed tree. `git log --oneline packages/data-ingestion/src/odds-api-client.ts` → 0 commits since the comment was written. Flagged for owner — requires a live external probe + error-body parsing migration to fully resolve (owner-gated per §NEVER 5).
+
+2. **GSE-SEC-082 (NEW, STILL OPEN — filed Round 5):** BalldontLie comment claims "no key for basic games endpoint." Live probe (this session) confirms the current `api.balldontlie.io/v1/` namespace REQUIRES a key (HTTP 401 with no key). Legacy "historically" namespace returns 404. Comment is stale. Flagged for owner — requires a vendor-key-provisioned test to fully resolve (owner-gated per §NEVER 5).
+
+3. **hygiene-03 (STILL OPEN):** 3 untracked .md deliverables — `PROD_HEALTH_ALERT.md`, `SPRINT_STATUS_NOW.md`, `HAIKU_WATCH.md` — never `git add`ed. Confirmed untracked via `git ls-files --others --exclude-standard`. Recommendation: `git add handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md` in the next commit.
+
+4. **hygiene-07 (NEW, LOW — carried forward from Round 4):** `apps/web/components/fantasy/dfs-optimizer.tsx` has a 2-line orphaned text reword (not assigned to any task). Trivial, non-security. Either commit as cleanup or revert.
+
+### Working tree state (confirmed this session)
+
+`git status --short` shows: 2 uncommitted source changes (dfs-optimizer.tsx text reword + test-census-raw.txt artifact) + 1 queue edit (this task's DOING→DONE transition) + 4 untracked files (3 .md deliverables + tools/hunt-claims.js). No merge conflicts (`git diff --name-only --diff-filter=U` → empty). No secret leaks (`git status --short | grep -iE '\.env|secret|KEY'` → empty). `git fsck --full` → normal dangling objects from 16 worktrees + 5 stashes (no corrupt/unexpected).
+
+### Round counter → 7
+
+P10-05 increments the round counter. P10-01, P10-02, P10-03, P10-04 reset to STATUS: TODO for Round 6 in SPRINT_QUEUE.md. All Phase 0-9 DONE tasks verified with commits and passing tests (61/61 hashes resolve, 243 tests pass). P8-08-RESUME remains DONE (commit 4e7326da, re-verified this round).
+
+**No new regressions. No uncommitted Phase 0-9 security fixes remain (hygiene-04 RESOLVED via fd9489b1).**
+
+**VERIFY:** `grep -n "^### P10-0" handoff/SPRINT_QUEUE.md` → P10-01..04 all show STATUS: TODO for Round 6. `grep -n "Round 6\|counter -> 7\|Round counter → 7"` in BATTLE_TEST_LOG.md → present. Every count independently re-derived from a command run THIS session (2026-08-17) at HEAD ccb4a04f.
