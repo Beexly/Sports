@@ -4848,3 +4848,33 @@ commit-fix task) should resolve hygiene-04.
 - apps/web/__tests__/reconcile-entitlements.test.ts (+40/-4) — mock + wire requireDurableWriteStore
 
 **Commit:** fd9489b1c9c04a0f0f6e6e557612738b407f7f7f4e
+
+### 2026-08-17T16:25:47Z · P10-05 Round 4 close · DONE · STRIKES: 0 · commit 0435a526
+Action:   Close Round 4 of the battle-test cycle and start Round 5. Updated BATTLE_TEST_LOG.md
+with a Round 4 closeout section containing corrections to stale findings, reset P10-01..P10-04
+to STATUS: TODO for Round 5 in SPRINT_QUEUE.md, and committed both files.
+
+Commands run THIS session (all re-derived from live tree, never inherited):
+  - `git log --oneline 7689d189..HEAD` → 3 commits (d167739c, fd9489b1, d30391b1) since P10-04 R4 was written
+  - `git show fd9489b1 --stat` → 7 files, 135 insertions(+), 33 deletions(-). Confirmed: fd9489b1 =
+    "fix(security): commit intelligence-engines paywall bypass + GSE-SEC-033 stripe-reconcile
+    durable-write guard"
+  - `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c getViewerEntitlements` → 3
+    (paywall gate committed in fd9489b1)
+  - `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` → 3
+    (import + 2 calls at lines 494, 579 — guard committed in fd9489b1)
+  - `git ls-files --others --exclude-standard handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md
+    handoff/HAIKU_WATCH.md` → all 3 listed (untracked, not ignored) — hygiene-03 STILL OPEN
+  - `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment
+    still says "does not accept a header" — GSE-SEC-081 STILL OPEN (flat across 4 rounds)
+
+Corrections made to BATTLE_TEST_LOG.md:
+  - hygiene-04: RESOLVED (was reported STILL UNCOMMITTED at Round 4 time; committed in fd9489b1)
+  - hygiene-06: RESOLVED (was reported NEW — REMEDIATION_EXECUTION.md row 15 claimed guard at
+    :494,579 but committed tree had zero; now committed tree HAS the guard at those lines)
+  - hygiene-03: STILL OPEN (3 untracked .md deliverables)
+  - GSE-SEC-081: STILL OPEN (flat across 4 rounds, flagged for owner — not agent-fixable)
+
+Result:   Round 4 closed. Round counter incremented 4→5. P10-01..04 reset to TODO for Round 5.
+Commits: 0435a526 (BATTLE_TEST_LOG.md + SPRINT_QUEUE.md round closeout), fad24ffe (queue completion note)
+Next:    Queue now has P10-01..P10-04 (Round 5) as the first TODO tasks.
