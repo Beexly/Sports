@@ -2196,7 +2196,7 @@ Files (only these): `montage-entrance.tsx`, `generated-plate.tsx`, their test fi
 **VERIFY:** tests for skip-on-saveData, skip-on-reduced-motion, and that the still renders through
 next/image. typecheck + lint. Commit.
 
-### P16-03 — `<Nav />` calls auth(), forcing 86 pages (including /pricing) out of static rendering · STATUS: TODO · STRIKES: 0
+### P16-03 — `<Nav />` calls auth(), forcing 86 pages (including /pricing) out of static rendering · STATUS: DONE · STRIKES: 0
 Evidence to verify first: `apps/web/components/ui/nav.tsx:95` `await auth()`. Session is JWT
 (`apps/web/lib/auth.ts:38`) so it is not a DB hit, but reading cookies during render opts the route
 out of static generation. 86 `page.tsx` files render `<Nav />`, including pure-marketing pages

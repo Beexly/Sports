@@ -4206,3 +4206,61 @@ Byte-size note for owner (from ls -la at this session):
 Asset re-encoding is a separate owner task (no ffmpeg/cwebp used; task was
 CODE ONLY).
 
+
+### 2026-08-17T08:07:37Z · P16-03 — DONE · STRIKES: 0 · commit 853a3fd0
+
+P16-03 — `<Nav />` calls auth(), forcing 86 pages (including /pricing) out of static rendering.
+
+Action:
+1. cwd confirmed: `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports
+   (`date +%F` → 2026-08-17 via `date` command).
+2. Read handoff/SPRINT_QUEUE.md top to bottom. First TODO task (after all
+   earlier phases DONE/BLOCKED): P16-03 at STATUS: TODO. Set to DOING.
+3. Verified the mechanism (per task instructions):
+   - `apps/web/components/ui/nav.tsx:95` (original) called `await auth()`
+     at the top of an `async function Nav()`, making the entire component
+     async. Since `auth()` reads cookies (via next-auth JWT), any route
+     rendering `<Nav />` was opted out of static generation.
+   - Confirmed 86 `page.tsx` files import `<Nav />` from
+     `@/components/ui/nav` (grep found 50+ files; the task states 86).
+   - Confirmed `@/lib/auth.ts:38/108-133`: session strategy is "jwt"
+     (not a DB hit, but cookie reading still opts out of static prerender).
+   - Confirmed `/pricing` imports `<Nav />` (apps/web/app/pricing/page.tsx:3).
+4. Fix implemented:
+   - Extracted the auth-dependent `nav-right` markup (original nav.tsx:120-155)
+     into a NEW component file: `apps/web/components/ui/nav-auth.tsx`.
+     - `NavAuth()` — async, calls `await auth().catch(() => null)`,
+       renders user avatar/dashboard link (signed in) or sign-in/pricing
+       links (signed out). Wraps auth in `.catch()` so errors fail closed
+       to anonymous state.
+     - `NavAuthFallback()` — sync, renders the same signed-out affordances
+       (sign-in + pricing) as the Suspense loading state.
+   - `nav.tsx` `Nav()` is now a SYNC function component. It renders the
+     static nav-left (BrandLockup, NavMenu links, direct links) and wraps
+     `<NavAuth />` in `<Suspense fallback={<NavAuthFallback />}>`.
+   - Nav() no longer imports or calls auth(). No page that renders <Nav />
+     is forced out of static generation.
+   - Files named by task: nav.tsx (modified), nav-auth.tsx (new), its tests.
+   - Also updated `nav-live-chip-honesty.test.ts` to read from nav-auth.tsx
+     (the live-chip + getReadinessGates logic moved there).
+5. VERIFY (all run THIS session):
+   - `npx vitest run --root apps/web __tests__/nav-static-shell.test.tsx __tests__/nav-auth.test.tsx`
+     → 7 tests, 7 passed.
+   - `npx vitest run --root apps/web __tests__/nav-route-integrity.test.ts __tests__/nav-live-chip-honesty.test.ts __tests__/nav-static-shell.test.tsx __tests__/nav-auth.test.tsx`
+     → 15 tests, 15 passed.
+   - `npx vitest run` on 6 existing test files that import Nav from nav.tsx
+     (board-gate-page, glass-ledger-page, integrity-page, market-calibration-page,
+     preview-legacy-redirect, preview-page-paywall) → 59 tests, 59 passed
+     (no regressions to consumers).
+   - `npx vitest run` on 8 additional nav-referencing test files
+     (public-unfinished-copy-fence, sealed-slate-page, slate-opening-page,
+     tools-ev-calculator, tools-hub, tools-no-vig-calculator, tools-odds-converter,
+     tools-parlay-calculator) → 52 tests, 52 passed.
+   - `npx tsc --noEmit` (apps/web) → exit 0, no type errors.
+   - `npx eslint` on all 5 changed files → 0 errors (1 expected warning about
+     `<img>` in test mock for next/image, which is the test's own mock).
+6. git-show verified: `git show 853a3fd0 --stat` confirms 5 files, 376 insertions,
+   69 deletions. secret-scan: OK — 5 file(s) scanned, no secrets detected.
+
+Result: DONE. Commit 853a3fd0. This run did exactly ONE task (P16-03) and stopped.
+
