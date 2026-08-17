@@ -4998,3 +4998,41 @@ Result:   P10-03 Round 5 complete. 87/87 sprint-touched source files scanned. 2 
 Commits: none (P10-03 is READ-ONLY — verification/audit only; AUDIT_FINDINGS.md and BATTLE_TEST_LOG.md edits are doc appends, not committed this run to keep this task's commit separate per protocol). The queue edit (resumed timestamp) is also uncommitted this run.
 No git push. No git --force. No .env opened. No new findings pushed to a live system.
 Next:    P10-04 Round 5 (next TODO task)
+
+### 2026-08-17T23:10:00Z · P10-04 Round 5 · DONE
+
+Action:   Working-tree + history hygiene sweep (Round 5). Independently re-derived all findings from current HEAD 97033e9d, NOT copying Round 3/4 conclusions (per "re-derive, never inherit" protocol).
+
+Commands (all run THIS session from C:/Users/Garrett/Sports):
+  - date +%F → 2026-08-17 (real date, not inferred)
+  - git rev-parse --show-toplevel → C:/Users/Garrett/Sports (confirmed inside repo, not home dir)
+  - git rev-parse --abbrev-ref HEAD → claude/fable-5-ultracode-plan-ptru4e (correct branch)
+  - git status --short → 2 uncommitted files: apps/web/components/fantasy/dfs-optimizer.tsx (2-line text reword) + handoff/test-census-raw.txt (regenerated artifact)
+  - git diff --stat HEAD → confirms only those 2 files; NOT the 6-file hygiene-04 recursion
+  - git status --ignored -- handoff/ → all ignored files are .log/.txt/.json/.stderr/.py — NO .md ignored; CLEAN
+  - git worktree list → 17 worktrees, only primary on active sprint branch; CLEAN
+  - git stash list → 5 stashes, all scratch/backup on old branches; CLEAN
+  - git log --all --oneline --format='%s' | sort | uniq -d | wc -l → 35 (all historical, 0 new this round)
+  - git diff --name-only --diff-filter=U → empty (no merge conflicts)
+  - git status --short | grep -iE '\.env|secret|KEY' → empty (no secret leaks)
+  - git ls-files --others --exclude-standard handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md → all 3 listed (untracked, not ignored) — hygiene-03 STILL OPEN
+  - git fsck --full → 5 dangling commits + several dangling blobs (normal, from 16 worktrees + 5 stashes; no corrupt/unexpected objects)
+  - git log --oneline -1 fd9489b1 → resolves: "fix(security): commit intelligence-engines paywall bypass + GSE-SEC-033 stripe-reconcile durable-write guard"
+  - git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c getViewerEntitlements → 3 (committed tree HAS the gate)
+  - git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore → 3 (committed tree HAS the guard at lines 36, 494, 579)
+  - git show HEAD:packages/db/src/durable-write-guard.ts | grep -c stripe-reconcile → 1 (committed tree HAS capability registration)
+  - git show HEAD:apps/web/app/intelligence/engines/registry.tsx | grep -c premium → 4 (committed tree HAS premium field)
+  - git log --oneline -1 4e7326da → resolves (P8-08-RESUME confirmed DONE)
+
+Result:   P10-04 Round 5 complete. Key finding: hygiene-04 (the 6-file non-committing bug from Rounds 3/4) is RESOLVED — fd9489b1 committed all 6 security fixes, confirmed via git show HEAD: (committed tree independent of working tree). hygiene-03 STILL OPEN (3 untracked .md deliverables: PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md, HAIKU_WATCH.md). hygiene-06 RESOLVED (REMEDIATION_EXECUTION.md row 15's stripe-reconcile claim now matches committed tree at lines 494,579). New item hygiene-07: orphaned 2-line text reword in dfs-optimizer.tsx (not assigned to any task). 35 historical duplicate-commit subjects (0 new this round). 17 worktrees, all intentional (none stray on active branch). 5 stashes, all scratch on old branches. No merge conflicts, no secret leaks.
+
+Verification: VERIFY = "clean report written to BATTLE_TEST_LOG.md" — PASS. Full Round 5 P10-04 findings appended to handoff/BATTLE_TEST_LOG.md. Every count/status independently re-derived from live commands THIS session.
+
+Commits: git show 10b95baa --stat → 2 files (124 lines BATTLE_TEST_LOG.md + 2 lines SPRINT_QUEUE.md), 125 insertions. Verified via git show --stat (hash resolves, diff matches).
+Commit: 10b95baa — chore(battle-test): P10-04 Round 5 — working-tree hygiene sweep, hygiene-04 confirmed resolved via fd9489b1, hygiene-03 carryforward, hygiene-07 orphaned text reword flagged [sprint]
+
+No git push. No git --force. No .env opened. No new findings pushed to a live system.
+
+Next:    SPRINT_QUEUE now exhausted of TODO/DOING Phase 0-9 tasks; P10-05 Round 5 is the next action (reset P10-01..04 to TODO for Round 6) — deferred to a future session. This task did exactly ONE task (P10-04 Round 5) and stopped per the "do exactly ONE task this run, then stop" directive.
+
+Note:     The 2-line uncommitted change in apps/web/components/fantasy/dfs-optimizer.tsx was LEFT UNCOMMITTED this run — P10-04 is a READ-ONLY audit task (its instructions: "Re-run git status and look for anything uncommitted" — it does NOT instruct committing discovered changes). That orphaned text reword is documented as hygiene-07 in the BATTLE_TEST_LOG.md report for a future task to either commit or revert. handoff/test-census-raw.txt is a regenerated test-census artifact (P7-02 output), also left uncommitted as it is not this task's deliverable.
