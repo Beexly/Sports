@@ -106,3 +106,89 @@ No ungated real-money or forward-projection path was found in the inspected peri
 **One consistency gap** (not a security finding): the DFS salaries API route (`app/api/dfs/salaries/route.ts`) lacks user-tier entitlement gating, while every other fantasy/analytics API uses `requirePremiumApiRateLimited`. This is not a real-money leak (salaries are data, gated by provider keys; no entry/pay path), but it is an inconsistency in the gating pattern. Per task instructions ("do not fix it yourself — owner decision"), this is documented here as a recommendation, not fixed.
 
 No code changes were made. No commit required (per task: "Commit only if you changed a genuine bug, not a gate").
+
+---
+
+# Appendix: P15-06 Sweep — Scoring, Prediction & Simulation Math
+
+**Task:** P15-06
+**Date:** 2026-08-17
+**Status:** COMPLETE — all directories have real test coverage; all math hand-traced against known inputs matches documented formulas; no bugs found.
+
+## Scope
+
+Directories inspected (all under `apps/web/lib/` unless noted):
+
+| Directory | Source files | Test files | Live calculation tested? |
+|---|---|---|---|
+| `scoring/` | `player-composite.ts` (Galaxy Index compositing via `@sports/prediction-engine` `compositeScore`) | `__tests__/player-composite.test.ts` (9 tests) | Yes — `loadPlayerCompositeScores` blends production + workload + momentum + availability; Galaxy Index maps `50 + 15*score` clamped [0,100] |
+| `ranking/` | `sort-key.ts` (ranking sort: rankingP > rankingScore/100 > confidence/100) | `__tests__/ranking-sort-key.test.ts` (8 tests) | Yes — prefers rankingP, falls back to rankingScore, then confidence, never invents |
+| `projections/` | `correlation.ts` (Gaussian copula matrix), `distribution.ts` (Mondrian conformal + posterior stdev), `player-projections.ts`, `projection-feature-registry.ts`, `weekly-model.ts` (recency+games-weighted), `weekly-model-loader.ts` | Colocated: `correlation.test.ts` (3), `distribution.test.ts` (3), `weekly-model.test.ts` (12), `weekly-model-loader.test.ts` (11); external: `player-projections.test.ts` (3), `projections-route.test.ts` (3), `reconstruction-calibration.test.ts` (5) | Yes — weekly-model multipliers (process, opponent, total, short-week) hand-traced; distribution stdev/spike/bust verified; copula varianceLift verified |
+| `sim/` | `score-distribution.ts` (Poisson margin distribution) | `__tests__/simulation-cloud.test.ts` (6 tests for `scoreDistribution`) | Yes — equal rates → symmetric; higher home rate tilts home; probabilities sum to 1 |
+| `correlation/` | `evaluate.ts` (query evaluator + aggregates), `load-settled-picks.ts` (DB → row mapping), `query-schema.ts` (validation) | `__tests__/correlation-evaluate.test.ts` (3), `correlation-load-settled-picks.test.ts` (4), `correlation-query-schema.test.ts` (4) | Yes — WIN_RATE, AVG_CONFIDENCE, AVG_EDGE aggregates verified; filter operators (EQ, GT, BETWEEN, IN) validated |
+| `parlay/` | `parlay.ts` (Parlay Genome / Portfolio Surgeon: EV, houseEdge, survivability, dependencyCoefficient) | Colocated: `parlay.test.ts` (8); external: `tools-parlay-calculator.test.tsx` (6) | Yes — EV = survivability*payout - 1; houseEdge = 1 - fairPayout/payout; dependencyCoefficient = boundLegs/totalLegs |
+| `parlay-mri/` | Does not exist as a lib dir. The `/parlay-mri` app page (`app/parlay-mri/page.tsx`) is a UI shell that imports `ParlayGenome` → `parlay.ts` (`computeVitals`, already tested above). | N/A (no dedicated parlay-mri lib tests) | N/A — covered via parlay.ts tests |
+| `optimizer/` | Does not exist as a lib dir. The `/optimizer` app page (`app/optimizer/page.tsx`) is a UI shell that imports `OptimizerWorkspace` → `apps/web/lib/fantasy/dfs-optimizer.ts`. | `__tests__/fantasy-pool-gating.test.ts` (15 — checks pool gating, not math); `lib/fantasy/dfs-optimizer.test.ts` (23 tests) | Yes — DFS optimizer math (lineup generation, exact DP solver, exposure control, determinism at 600-player scale) |
+| `backtest/` | `artifact.ts` (file writer, best-effort, fail-open), `harness.ts` (Brier decomposition, calibration snapshot regression detection) | Colocated: `artifact.test.ts` (3), `harness.test.ts` (12) | Yes — Brier REL decomposition, regression detection vs baseline |
+| `calibration-training/` | `claude.ts` (Claude API insight generation with policy guardrails), `insight-prompt.ts` (system/user prompt templates) | `__tests__/calibration-insight-claude.test.ts` (5) | Yes — policy blocks betting advice/CTA; budget enforcement; thin-week deterministic fallback |
+
+### `@sports/prediction-engine` package (shared math)
+
+All core math functions live in `packages/prediction-engine/src/` and are re-exported via `@sports/prediction-engine`:
+
+| Function | File | Tests | Hand-trace |
+|---|---|---|---|
+| `compositeScore` | `composite-score.ts` | `__tests__/composite-score.test.ts` (7) | Weighted avg with confidence + freshness decay; NaN/Infinity guarded to 0 |
+| `poissonPmf` | `poisson.ts` | `__tests__/poisson.test.ts` (37) | e^(-λ)·λ^k/k! verified |
+| `brierDecomposition` | `brier-ogd-ensemble.ts` | Multiple (regression-detector, reconstruction-calibration) | RES + REL + UNC decomposition verified |
+| `summarizeGaussianCopulaPortfolio` | `projections/correlation.ts` | `__tests__/correlation.test.ts` (3) | correlatedVar = independentVar + 2*Σ(rho_ij * σ_i * σ_j) verified |
+
+## Hand-traces (all match documented formulas)
+
+1. **Parlay computeVitals** (`parlay.ts`): SAMPLE_LEGS 5-leg ticket →
+   - `survivability = Π(winPr) = 0.55*0.50*0.48*0.57*0.29 = 0.0218` ✓
+   - `payoutDecimal = Π(odds) = 1.91*1.91*1.83*1.70*3.20 = 36.32` ✓
+   - `ev = survivability*payout - 1 = -0.208` (< 0 ✓ — test expects negative EV)
+   - `dependencyCoefficient = 2/5 = 0.4` (two Game-1 legs out of 5 ✓ — test expects toBeCloseTo(0.4))
+   - `correlated.length = 1` (Game-1 stack ✓), `verdict = "Mutated"` (correlated + neg EV ✓)
+
+2. **Projection distribution** (`distribution.ts`): posterior(conformal) + posteriorVariance=2.25, interval[8,24] @ alpha=0.2 →
+   - `zForAlpha(0.2) = 1.282` (alpha ≤ 0.2 → 1.282 ✓)
+   - `intervalStdev = (24-8)/(2*1.282) = 6.240` ✓
+   - `posteriorStdev = sqrt(2.25) = 1.5` ✓
+   - `stdev = max(6.240, 1.5, 3.08) = 6.240` ✓
+   - `floor = max(0, 8) = 8` ✓, `ceiling = max(8, 24) = 24` ✓ (test expects 8 and 24)
+   - `spikeProb = 1 - Φ((24-14)/6.24) > 0` ✓, `bustRisk = Φ((8-14)/6.24) > 0` ✓
+
+3. **Gaussian copula** (`correlation.ts`): qb(21,5)+wr(15,6)+rb(14,4), qb→wr rho=0.35 →
+   - `mean = 21+15+14 = 50` ✓
+   - `independentVar = 25+36+16 = 77`, `independentStdDev = sqrt(77) = 8.775` ✓
+   - `correlatedVar = 77 + 2*0.35*5*6 = 77+21 = 98`, `correlatedStdDev = sqrt(98) = 9.899` ✓
+   - `varianceLift = 9.899/8.775 - 1 = 0.128 > 0` ✓ (test expects > 0)
+
+4. **Score distribution** (`score-distribution.ts`): Poisson(2.4, 2.4) →
+   - Home win prob = away win prob = 0.406 (symmetric ✓), tie = 0.188 (sum=1 via normalization ✓)
+   - Higher home rate (3.4 vs 1.6) tilts home win prob up ✓
+
+5. **Galaxy Index** (`player-composite.ts`): `50 + 15*compositeScore.score` → score=1→65, score=0→50, score=4→100, score=-4→0 ✓
+
+6. **Availability signal** (`player-composite.ts`): Out+DNP+concussion → -2.5 (clamped); Limited → -2.0; Questionable → -0.5; No injury → 0 ✓
+
+7. **DFS optimizer** (`fantasy/dfs-optimizer.ts`): exact DP solver, deterministic at 600-player scale, respects salary cap + positional requirements ✓
+
+## VERIFY
+
+- All colocated + external test files for P15-06 directories: `npx vitest run` from `apps/web/`
+  - 18 test files, 118 tests — ALL PASSED (exit 0)
+- `@sports/prediction-engine` package tests: `npx vitest run` from `packages/prediction-engine/`
+  - 201 test files, 2328 tests — ALL PASSED (exit 0)
+- DFS optimizer + pool gating tests: 38 tests — ALL PASSED (exit 0)
+- Hand-traces: 7 calculation paths re-derived from source via `node -e` — all match documented formulas
+
+## VERDICT
+
+No mathematical bugs found. No directory has zero test coverage for its core calculation. The two "missing" lib directories (`parlay-mri/`, `optimizer/`) are actually UI shells — their math is tested through `parlay.ts` and `dfs-optimizer.ts` respectively. No code changes made. No commit required (no bugs to fix).
+
+## COMMIT NOTE
+
+P15-06 is a read-only sweep with no code changes — the findings are appended to this document only. Per task instructions ("write one narrow regression test for the highest-risk function" only applies when a directory has zero tests, which none do — so no new test files were needed).

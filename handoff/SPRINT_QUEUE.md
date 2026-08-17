@@ -2123,7 +2123,7 @@ important finding this task could produce — report it prominently, do not fix 
 decision), and flag it clearly in the findings doc. **VERIFY:** typecheck + lint only; no feature
 build-out. Commit only if you changed a genuine bug, not a gate.
 
-### P15-06 — Sweep: scoring, prediction & simulation math · STATUS: TODO · STRIKES: 0
+### P15-06 — Sweep: scoring, prediction & simulation math · STATUS: DONE · STRIKES: 0 · started: 2026-08-17
 Directories: `apps/web/lib/{scoring,ranking,projections,sim,correlation,parlay,parlay-mri,optimizer,
 backtest,calibration-training}`. This is quantitative code — check each has real test coverage (not
 just typecheck-passes), and hand-trace one calculation path per directory against a known input to
