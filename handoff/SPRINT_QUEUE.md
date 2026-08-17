@@ -2112,7 +2112,7 @@ run in production (cron-registered? env-key-gated?), and if so, is there any pat
 data reaches an outbound post? **VERIFY:** typecheck + lint; if you find live+unsafe, fix minimally and
 cite the exact injection/leak path. Commit.
 
-### P15-05 — Sweep: fantasy/DFS/contest periphery · STATUS: TODO · STRIKES: 0
+### P15-05 — Sweep: fantasy/DFS/contest periphery · STATUS: DONE · STRIKES: 0 · started: 2026-08-17 · completed: 2026-08-17
 Directories: `apps/web/app/{fantasy,contests,vault,house,gsn}`, `apps/web/lib/{dfs,contests,
 tournament,staking,sleeper,game-room,gsn,house,vault}`. **Cross-check against
 `project-gse-fantasy`/`project-gse-graded-pool-trunk` memory context: real-money fantasy is explicitly

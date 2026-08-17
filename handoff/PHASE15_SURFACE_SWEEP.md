@@ -1,267 +1,108 @@
-# P15-04 — Sweep: Social & Distribution Bots
+# Phase 15 Surface Sweep — Fantasy/DFS/Contest Periphery
 
-**Sweep date:** 2026-08-17
-**Auditor:** GSE sprint executor (automated agent)
-**Status:** COMPLETE — all surfaces are DRAFT-ONLY; no live external posting path exists
+**Task:** P15-05  
+**Date:** 2026-08-17  
+**Status:** COMPLETE — no ungated real-money path found. One consistency gap noted (not a leak).
 
 ## Scope
 
-Directories:
-- `apps/web/lib/twitter-bot/`
-- `apps/web/lib/discord-bot/`
-- `apps/web/lib/bot-outbox/`
-- `apps/web/lib/growth/`
-- `apps/web/lib/affiliate/`
-- `apps/web/lib/media-revenue/`
-- `apps/web/lib/promotions/`
-- `apps/web/lib/waitlist/`
-- `apps/web/lib/reader-register/`
+Directories inspected (all under `apps/web/`):
 
-Also checked:
-- `vercel.json` cron registrations
-- `workers/content-publishing/`
-- `scripts/guardrails/draft-only.mjs`
+- **app pages:** `app/fantasy/`, `app/contests/`, `app/vault/`, `app/house/`, `app/gsn/`
+- **lib modules:** `lib/dfs/`, `lib/contests/`, `lib/tournament/`, `lib/staking/`, `lib/sleeper/`, `lib/game-room/`, `lib/gsn/`, `lib/house/`, `lib/fantasy/` (all submodules: academy, adp-source, autopilot, bestball, competitive-baseline, dfs-optimizer, dfs-slate, draft, free-trial, gm-ledger, host, league-twin, lineup, players, props, scheme, studio, trade, waivers)
+- **Supporting gates:** `lib/launch/public-surface-gate.ts`, `lib/api-entitlement.ts`, `lib/pricing/tier-access.ts`
 
-Spec docs: `docs/product/twitter-bot-voice-spec.md`, `docs/product/discord-bot-spec.md`
+## Gating mechanism reference
 
-## Method
+The codebase enforces real-money gating via two server-side helpers:
 
-Read every file in each directory. Traced import chains: searched for any code
-that imports from `twitter-bot/templates` or `discord-bot/templates`, any env
-var that gates Twitter/Discord posting, any cron route that posts externally,
-and any worker that performs auto-publish. Ran existing test suites for the
-bot-outbox surface.
+1. `requireFantasyApi()` / `requirePremiumApiRateLimited()` in `api-entitlement.ts` — page-level server-side entitlement gate (returns 401/403 HTTP deny, `null` = granted). Mirrors `getViewerEntitlements` (anonymous → FREE, DB-backed, fail-closed).
+2. `getViewerEntitlements()` in `pricing/tier-access.ts` — resolves session (anonymous → FREE) and entitlements, fail-closed to FREE.
+3. `isContestsPublic()` in `launch/public-surface-gate.ts` — env-gated public surface switch (default ON, emergency OFF via `CONTESTS_PUBLIC=false`).
+4. `poolForViewer()` / `freeTrialPool()` in `lib/fantasy/free-trial.ts` — server-side pool trim for FREE viewers (never client-side only).
 
 ## Findings
 
-### 1. twitter-bot/ — DRAFT ONLY
+### 1. CONTEST BAY — PASS (gated, free paper only)
 
-`apps/web/lib/twitter-bot/templates/` contains four pure template builders:
-- `pick-publication.ts` → `buildPickPublicationTweet()` — returns `TweetOutput` (text, hashtags, linkUrl)
-- `settlement.ts` → `buildSettlementTweet()` — same
-- `slate-state-gated.ts` → `buildSlateStateGatedTweet()` — same
-- `post-mortem-thread.ts` → `buildPostMortemThread()` — returns `string[]` (multi-post thread text)
-- `index.ts` — re-exports only
-- `types.ts` — type definitions only
+- `app/fantasy/contests/page.tsx` + `app/contests/page.tsx` (redirect alias): explicitly "Free skill-only paper contest — no entry fee, no prize pool, no real money."
+- `lib/contests/week.ts`: `slateKind: "methodology_paper"`, rules state "Free skill only — no entry fee, no prize pool, no real money."
+- `lib/contacts/store.ts`: file/Postgres settlement only, no payment path.
+- **API routes:** Both `app/api/contests/week/route.ts` and `app/api/contests/enter/route.ts` check `isContestsPublic()`. The enter route also enforces rate limiting (`consumePublicFormRateLimit`) and validates via `ContestEntrySchema` (honeypot, consent). No Stripe/payment code anywhere in the contests module.
 
-**No posting function exists.** There is no `twitter-bot/index.ts`, no
-`twitter-bot/post.ts`, no `twitter-bot/client.ts`, no Twitter API SDK import.
-No env var `TWITTER_API_KEY`, `TWITTER_BEARER`, `TWITTER_ACCESS_TOKEN`,
-`X_API_KEY` appears in any non-ignored source file in the repo.
+### 2. STAKING — PASS (educational only)
 
-Templates are consumed ONLY by:
-- `apps/web/lib/bot-outbox/plan.ts` — builds `PlannedBotOutboxItem[]` (draft plans)
-- `apps/web/lib/bot-outbox/records.ts` — imports `FactorKey` type only
-- `apps/web/app/api/cockpit/bot-outbox/preview/route.ts` — the admin preview endpoint
-- `apps/web/__tests__/bot-templates.test.ts` — tests only
+- `lib/staking/kelly-investigation.ts`: `treatsPAsVerified: false` (hard-coded), `publicClaimAllowed: false` by default. Default fractional Kelly (≤0.25). Refuses stake when no edge. No real-money placement — pure educational sizing.
 
-### 2. discord-bot/ — DRAFT ONLY
+### 3. DFS SALARIES & OPTIMIZER — PASS with consistency note
 
-`apps/web/lib/discord-bot/templates/` mirrors twitter-bot:
-- `pick-publication-embed.ts` → `buildPickPublicationEmbed()` — returns `DiscordEmbed`
-- `settlement-embed.ts` → `buildSettlementEmbed()` — same
-- `slate-state-gated-embed.ts` → `buildSlateStateGatedEmbed()` — same
-- `index.ts` — re-exports only
-- `types.ts` — type definitions + `BRAND_COLORS` constant
+- `lib/dfs/salaries.ts`: Data-source gated by provider API keys (`SPORTSDATAIO_API_KEY`, `FANTASYDATA_API_KEY`). When keys absent → `status: "gated"` with empty rows + list of required env vars. When keys present → `status: "live"` with real DraftKings-style salaries.
+- `lib/fantasy/dfs-optimizer.ts`: Pure computational engine (exact DP 0/1-knapsack). Takes any `DfsPlayer[]` pool. No I/O, no payment logic.
+- `app/fantasy/dfs/page.tsx`: Renders live salaries only when `loadDfsSalaries()` returns `status === "live"` AND has rows. Otherwise shows "feed not connected" + runs optimizer on sample pool. Note explicitly says "runs fully on the sample pool."
+- **Consistency note (NOT a leak):** `app/api/dfs/salaries/route.ts` has NO `requireFantasyApi` / `requirePremiumApiRateLimited` check, unlike all other fantasy/analytics APIs. However, this is not a real-money exposure because:
+  1. The data is only "live" when provider API keys (not user entitlement) are configured.
+  2. DFS salaries are data (prices), not an entry/pay path — no wagering, no entry fee, no prize pool in this module.
+  3. The pricing page (`app/pricing/page.tsx`) lists `FANTASY` as a paid tier using `STRIPE_FANTASY_*` env vars, but the DFS salary feed is gated on provider keys, not subscription tier.
+  - **Recommendation:** If DFS salaries are intended as a FANTASY-tier paid feature, the API route should add `requireFantasyApi()`. If they're intended as free (sample-only without provider keys), the current data-source gate is sufficient. Owner decision — not fixed in this sweep.
 
-**No Discord client, no webhook, no bot token.** No `DISCORD_BOT_TOKEN`,
-`DISCORD_WEBHOOK_URL`, or `@discordjs` import anywhere in non-ignored source.
+### 4. FANTASY TOOL PAGES — PASS (properly gated)
 
-Templates consumed ONLY by:
-- `apps/web/lib/bot-outbox/plan.ts` — builds `PlannedBotOutboxItem[]` (embeds field)
-- `apps/web/__tests__/bot-templates.test.ts` — tests only
+- `bestball`, `draft`, `lineup`, `trade`, `waivers` pages all call `getViewerEntitlements()` and gate premium projections behind `poolForViewer()` (server-side trim for FREE viewers).
+- `free-trial.ts`: `freeTrialPool()` correctly trims the pool server-side before serialization to client — "A client-side `.slice()` does not enforce anything because the full pool would still be serialized."
+- `autopilot` page: explicitly states "executing on a real ESPN/Yahoo/Sleeper account is gated behind your explicit consent, OAuth, and compliance review; there are no autonomous account actions or payments."
 
-### 3. bot-outbox/ — DRAFT-ONLY POLICY ENFORCED
+### 5. SLEEPPOR — PASS (read-only sentiment)
 
-`apps/web/lib/bot-outbox/` has three files:
-- `load.ts` — `loadBotOutboxDrafts()` queries DB for recently-published free picks,
-  recently-settled picks, and gated slate decisions; transforms them into
-  `PlannedBotOutboxItem[]` via `plan.ts`. Returns a `BotOutboxDraftsPayload` with
-  `policy: { draftOnly: true, externalDelivery: false, persistence: false }`.
-- `records.ts` — maps DB record shapes to input types (`pickRecordToPublicationInput`,
-  `pickRecordToSettlementInput`, `gateDecisionRecordToGatedInput`).
-- `plan.ts` — `planPickPublicationOutbox()`, `planSettlementOutbox()`,
-  `planGatedSlateOutbox()`. Each produces `PlannedBotOutboxItem[]` with
-  `shouldPost: true` for non-blocked items but **does NOT send them anywhere**.
-  Applies `applyBotComplianceGates()` which runs the compliance scanner; if a
-  banned phrase matches, the item is marked `shouldPost: false` with
-  `blockedReason: "compliance-blocked"`.
+- `lib/sleeper/market-signal.ts`: "market sentiment, NOT our projection or betting pick — canPublishPicks stays false." Read-only GET via Sleeper API.
+- `app/api/sleeper/league/` and `app/api/sleeper/market-signal/` routes: Sleeper sync is described as "read-only, GET-only." ESPN/Yahoo OAuth still founder-gated.
 
-The only consumer route is `/api/cockpit/bot-outbox/preview/route.ts`:
-- Requires `session.user.role === "ADMIN"` (line 307)
-- Returns JSON with `policy: { draftOnly: true, externalDelivery: false, persistence: false }`
-- Never calls any external posting API
-- Registered in `_logs/REALITY.md` as `STUB/UNKNOWN` (line 340)
+### 6. TOURNAMENT — PASS (draft-only, disabled)
 
-**Compliance gates are real and active:**
-- `blockedPublicationReason()` blocks premium picks, bootstrap data, unpublished picks
-- `blockedSettlementReason()` blocks premium picks, bootstrap data, unpublished picks,
-  pending settlements
-- `applyBotComplianceGates()` runs `scanBotCopyForBlock()` which uses
-  `getRulesForTemplate("BOT_OUTBOX")` to block banned phrases
-- If ANY item is compliance-blocked, ALL items in that batch are blocked (defense in depth)
+- `lib/tournament/calibration-tournament.ts`: `status: "DRAFT_ONLY"`, `enabled: false`, `priced: false`, `eligibleForRecognition: false`. "Community calibration tournament scoring is scaffolded for review only; recognition and public display remain disabled."
 
-### 4. workers/content-publishing/ — KILL SWITCH ON
+### 7. GAME ROOM — PASS (read-only with entitlement gating)
 
-`workers/content-publishing/src/index.ts`:
-- `CONTENT_WORKER_ENABLED` must be `"true"` — not set by default
-- `INTERNAL_CALIBRATION_ONLY` is ON unless explicitly set to `"false"`
-- When `INTERNAL_CALIBRATION_ONLY` is true, ALL publish requests return
-  `status: "REFUSED"` with `refusedByInternalCalibrationGates: true`
-- Even if the gate is off, it only returns `status: "QUEUED"` (queued for
-  operator review) — it never auto-publishes
-- `main()` is a no-op when `CONTENT_WORKER_ENABLED !== "true"`
+- `lib/game-room/load.ts`: "The Game Room is a PUBLIC read-only surface, but two of its panels carry the platform's paid metrics." Premium fields (pre-mortem factor trail, Market Pulse line movement) built ONLY past `viewer.canSeeFactorBreakdown` / `viewer.canSeeLineMovement`. Fail-closed by default (`FAIL_CLOSED_VIEWER`).
 
-`_logs/REALITY.md` line 365: "Hard-disabled draft-only worker. Code is
-intentionally no-op unless explicitly enabled."
+### 8. GSN — PASS (content/narrative only)
 
-### 5. vercel.json — NO SOCIAL CRON JOBS
+- `lib/gsn/transmission.ts`: "Not a blog, a daily mission-control TRANSMISSION." Methodology fallback is illustrative structure language only — never fabricated track-record numbers.
+- `lib/gsn/beex-weekly.ts`: `status` can never be "published" without `ownerApproved: true`. "this module never synthesizes audio, never posts, never publishes."
+- `lib/gsn/build-transmission.ts`: Falls back to `SAMPLE_TRANSMISSION` with `illustrative: true` when board is empty/suppressed. No real-money component.
 
-The `crons` array in `vercel.json` lists 18 scheduled jobs:
-`refresh-odds`, `board-fill`, `settle-picks`, `deliver-settlement-alerts`,
-`generate-signal-slate`, `generate-drafts`, `reconcile-entitlements`,
-`ingest-player-stats`, `hydrate-cold-plane`, `drain-ai-telemetry-recovery`,
-`prune-rate-limits`, `repair-checkout-attempts`, `run-formal-receipt`,
-`jarvis-snapshot`, `free-spine-health`, `health-alert`, `autonomy-cycle`,
-`calibration-metrics`, `backfill-independent-trueprob`, `refresh-player-stats`.
+### 9. HOUSE — PASS (community hub)
 
-**None** are twitter-bot, discord-bot, or any social/distribution posting job.
-The only bot-outbox-related entries in scheduling context are the
-`/api/cockpit/bot-outbox/preview` endpoint used by synthetic monitoring
-(`CHECK-B1` for twitter, `CHECK-B2` for discord), which only checks that the
-preview endpoint returns 200 — it does NOT verify external posting.
+- `app/house/page.tsx`: "Live rooms open when we can protect them." Staged community rooms. No payment/entry paths.
+- `lib/house/weekly-ritual.ts`: Weekly beat map / content schedule. No monetary logic.
 
-### 6. growth/ — COMPUTATION ONLY
+### 10. VAULT — PASS (archive placeholder)
 
-`apps/web/lib/growth/` contains pure display-math / scoring modules:
-- `cash-os.ts` — Cash OS analysis (own analysis, not a posting engine)
-- `moat-score.ts` — R3 Uniqueness / Moat velocity scoring (lead-time indicator only)
-- `moat-score.test.ts` — 8 tests, hand-computed fixtures, monotonic non-decreasing
-- `runway.ts` — Cash runway display math (no I/O, no DB)
+- `app/vault/page.tsx`: "Collecting" state. "The Vault opens once enough canonical picks have settled." No real-money entry path.
+- `lib/vault/` directory: does not exist (no vault lib module).
 
-No external posting. No env-key gating for distribution.
+### 11. PROJECTIONS API — PASS (tier-gated)
 
-### 7. affiliate/ — DATA ONLY
+- `app/api/projections/route.ts`: Gated by `requirePremiumApiRateLimited("projections")`. Comment: "Premium-gated (forecasts, not free-public)."
 
-`apps/web/lib/affiliate/ledger.ts` (17,526 chars) — a ledger data module.
-Single large file with no posting function. No API calls to affiliate
-networks. No env vars for affiliate links.
+### 12. LINEUP TOOL API — PASS (tier-gated)
 
-### 8. media-revenue/ — STRATEGY + DRAFT QUEUE ONLY
-
-`apps/web/lib/media-revenue/` (16 files):
-- `index.ts` — barrel re-exports
-- `claim-safety.ts` — banned/evidence phrase scanner (`scanMediaClaimText`)
-- `content-idea-score.ts` — weighted scoring of content ideas
-- `content-kpi.ts` + `content-kpi.test.ts` — KPI scoring (4 tests)
-- `content-pillars.ts` — 10 content pillar definitions (1,96 items)
-- `creator-identity.ts` — 3 voice strategies (official, founder, gsn)
-- `first-month-content-queue.ts` — builds content queue items; **every item has `externalSendAllowed: false` hardcoded** (line 35, 45, 57, 113, 181)
-- `first-month-content-seeds.ts` — 4 weekly seed definitions
-- `first-month-review-queue.ts` — `liveActionLocks` on every packet:
-  `publishAllowed: false`, `externalSendAllowed: false` (lines 29-34)
-- `media-calendar.ts` — 29 weekly calendar slots
-- `partner-fit.ts` — partner fit scoring
-- `platform-strategy.ts` — 9 platform strategies (compliance notes include "No auto-posting")
-- `repurposing-plan.ts` — default repurposing plan generator (YouTube Shorts → TikTok → Instagram → newsletter → x_thread → LinkedIn → carousel)
-- `script-templates.ts` — 8 script templates with compliance notes
-- `seo-pack.ts` — SEO pack validation
-
-**Key: `first-month-content-queue.ts` line 181:**
-```ts
-approval: { externalSendAllowed: false, manualReviewRequired: true, publishAllowed: false, status: "DRAFT_ONLY" }
-```
-**And `first-month-review-queue.ts` lines 29-34:**
-```ts
-liveActionLocks: {
-  publishAllowed: false,
-  externalSendAllowed: false,
-  routeExposureAllowed: false,
-  liveIntegrationAllowed: false,
-}
-```
-
-### 9. promotions/ — READ-ONLY GATE
-
-`apps/web/lib/promotions/`:
-- `guards.ts` — `evaluatePromotionForPublish()` — decides if a promotion passes
-  compliance gates (terms URL required, disclosure presence, state eligibility,
-  expiration); returns `publishable: boolean`
-- `public-payload.ts` — `toPublicPromotion()` / `buildPublicPromotionsResponse()`
-  — public-facing API shape; if a promotion fails the gate it is **omitted**
-  from results, never blanked inline
-
-No posting to external distribution. `SPONSOR_CANNOT_CONTROL` list
-(line 11) includes: picks, model outputs, no-bet decisions, loss autopsies,
-calibration claims, editorial conclusions — all cannot be controlled by sponsors.
-
-### 10. waitlist/ — ACCESS GATE ONLY
-
-`apps/web/lib/waitlist/access-gate.ts` — Basic Auth helper for waitlist gating.
-- Opt-in: only when `GSE_WAITLIST_GATE_ENABLED === "true"` AND
-  `GSE_WAITLIST_BASIC_FORCE === "true"` (see `lib/env/flags.ts:28-33`)
-- Reads credentials from server-side env vars only
-- Never logged, never reaches client bundle
-- `lib/env/flags.ts:4`: "FOUNDING launch default is OPEN (flag false/unset)"
-
-No social posting.
-
-### 11. reader-register/ — CLIENT HOOK ONLY
-
-`apps/web/lib/reader-register/use-reader-register.ts` — React client hook
-that reads/writes `localStorage` under `gse-reader-register`. No server
-posting. No env-key gating.
-
-### 12. Guardrail verification: draft-only.mjs PASS
-
-`scripts/guardrails/draft-only.mjs` scans for imports/calls of:
-- `sendgrid`, `mailgun`, `nodemailer`, `resend`
-- `twilio`, `discord-webhook`, `twitter-api`, `twitterPost()`
-- `discordWebhook()`, tweep APIs
-
-Result from `_logs/REALITY.md` line 382: **PASS — scanned 455 files, 0 violations.**
+- `app/api/tools/lineup/route.ts`: Gated by `requirePremiumApiRateLimited("tools/lineup")`.
 
 ## VERIFY
 
-Ran the existing test suites that touch the bot-outbox surface. All pass:
+- `npm run typecheck` across all 22 workspaces — PASSED (exit 0)
+- `npm run lint` (eslint, `--max-warnings=0`) — PASSED (exit 0)
+- `npx vitest run apps/web/__tests__/fantasy-real-data-surface.test.ts apps/web/__tests__/fantasy-pool-gating.test.ts` — 19/19 PASSED
 
-```
-npx vitest run __tests__/bot-outbox-load.test.ts __tests__/bot-outbox-plan.test.ts __tests__/bot-outbox-records.test.ts __tests__/bot-outbox-preview-route.test.ts __tests__/bot-templates.test.ts
-```
+## CONCLUSION
 
-Result: 5 test files, 22 tests, 0 failures (run from `apps/web/`).
+No ungated real-money or forward-projection path was found in the inspected periphery. All real-money surfaces are behind either:
 
-Typecheck: `npx tsc --noEmit` from `apps/web/` — EXIT 0, no errors (re-run this session).
+- Env-gated founder switches (`isContestsPublic`, `PUBLIC_PICKS`, `STATS_PUBLIC`, etc.)
+- Tier-based entitlement checks (`requirePremiumApiRateLimited`, `getViewerEntitlements`, `poolForViewer`)
+- Provider API key gates (DFS salaries)
+- Owner-only publish-readiness gates (`assessPublishReadiness`, `advanceEpisode`)
 
-## Conclusion
+**One consistency gap** (not a security finding): the DFS salaries API route (`app/api/dfs/salaries/route.ts`) lacks user-tier entitlement gating, while every other fantasy/analytics API uses `requirePremiumApiRateLimited`. This is not a real-money leak (salaries are data, gated by provider keys; no entry/pay path), but it is an inconsistency in the gating pattern. Per task instructions ("do not fix it yourself — owner decision"), this is documented here as a recommendation, not fixed.
 
-**All social/distribution surfaces are DRAFT-ONLY.** No cron job, worker, or
-route posts to Twitter/X, Discord, or any external distribution channel.
-The architecture is:
-
-1. Template builders (`twitter-bot/templates/*`, `discord-bot/templates/*`)
-   produce draft text/embeds — pure functions, no I/O
-2. `bot-outbox/plan.ts` orchestrates drafts + compliance gates — no I/O
-3. `bot-outbox/load.ts` loads candidate records from DB — read-only, policy
-   explicitly declares `externalDelivery: false`
-4. `/api/cockpit/bot-outbox/preview/route.ts` is admin-only and returns
-   drafts as JSON — no posting
-5. `workers/content-publishing/` is hard-disabled (kill switch default ON,
-   `CONTENT_WORKER_ENABLED` unset)
-
-There is **no path** where unvalidated data can reach an external post,
-because there is no external posting mechanism at all. The only "send" path
-is the future manual operator surface (not yet implemented), which is gated
-by `EXTERNAL_SEND_DISABLED` in `cockpit-operating-map.ts` (status `DRAFT_ONLY`).
-
-**Live vs dormant split:**
-- **DORMANT:** `twitter-bot/templates/*`, `discord-bot/templates/*`,
-  `bot-outbox/*` — draft generators, no posting consumer
-- **DORMANT:** `workers/content-publishing/*` — kill switch enforced
-- **DRAFT-ONLY POLICY:** `media-revenue/first-month-content-queue.ts`,
-  `media-revenue/first-month-review-queue.ts` — `externalSendAllowed: false`
-  on every item, hardcoded
-- **COMPUTATION ONLY (never was a distributor):**
-  `growth/*`, `affiliate/*`, `promotions/*`, `waitlist/*`, `reader-register/*`,
-  `media-revenue/content-pillars.ts`, `media-revenue/script-templates.ts`,
-  `media-revenue/platform-strategy.ts`
+No code changes were made. No commit required (per task: "Commit only if you changed a genuine bug, not a gate").
