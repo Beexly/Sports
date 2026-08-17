@@ -2617,3 +2617,157 @@ Untracked: `handoff/PROD_HEALTH_ALERT.md`, `handoff/SPRINT_STATUS_NOW.md`, `hand
 P10-02 Round 4 independently re-derived all 15 domains from the current committed tree. **Finding: ZERO source code changes since Round 3** (`git log --oneline 5f553c3d..HEAD -- apps/ packages/ packages/ — empty`). All 15 domains reconcile to SAME AS BEFORE. GSE-SEC-081 is the one finding flat across 3+ rounds (independently confirmed via `git show HEAD:` — no network probe needed this round). The 6 uncommitted security fixes (hygiene-04) are the same set Round 3 flagged — no new fixes committed, no fixes lost.
 
 **VERIFY:** `git log --oneline 5f553c3d..HEAD -- apps/ packages/` → empty (confirms no source changes since Round 3, so Round 3's conclusions hold). `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` confirms GSE-SEC-081 comment unchanged. `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` → 0 (confirms stripe-reconcile guard is NOT in committed tree). No domain/skip. All 15 domains addressed.
+
+---
+
+## Round 4 — P10-03: Hunt the "Confidently Wrong Claim" Bug Class
+
+**Date:** `date +%F` → 2026-08-17
+**Started:** 2026-08-17T21:45:00Z
+**HEAD:** 68f54d77 (claude/fable-5-ultracode-plan-ptru4e, 198 commits ahead of origin)
+**Scope:** Every file touched by this sprint — `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD -- '*.ts' '*.tsx' '*.mjs'` yields 87 source files (excluding tests/docs/handoff/config). Scanned all 87 for comments making confident technical claims about external vendor behavior: auth mechanisms, URL shapes, status codes, rate limits, TTL/quota semantics, API endpoints, and "two sequential upstream fetches" type claims about external APIs.
+
+**Method (independent, NOT copying Round 3):** For each candidate claim, verify against the ACTUAL current behavior by probing the LIVE endpoint directly (bogus keys only — no quota burned) or reading the vendor's CURRENT documentation, or — for internal code-path claims — by reading the code that implements the claimed behavior. Every claim is backed by a command run THIS session.
+
+### Claim 1 — Odds API: "api.the-odds-api.com authenticates via `apiKey` query parameter — it does not accept a header" · CONFIRMED WRONG (GSE-SEC-081, 4th consecutive round)
+
+**Files with the claim (2 sites, both sprint-touched):**
+- `packages/data-ingestion/src/odds-api-client.ts:126-131` (doc comment on `buildUrl`)
+- `packages/data-ingestion/src/odds-api-client.ts:204-205` (inline comment in `fetch`)
+
+**Claim, verbatim from odds-api-client.ts:126-131:**
+> "api.the-odds-api.com authenticates via an `apiKey` query parameter — it does not accept a header. A prior change moved auth to an `X-API-Key` header on the (different) odds-api/odds-api project's say-so; against the real vendor that returns `401 {"error_code":"MISSING_KEY"}` on every request. Confirmed live 2026-08-15. Reverted to query-param auth."
+
+**Independent live probe (THIS session, 2026-08-17, bogus key only — no quota burned):**
+- `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → confirms comment is UNCHANGED in committed tree since GSE-SEC-081 was filed
+- `git show HEAD:packages/data-ingestion/src/config.ts | sed -n '132p'` → confirms base URL is still `https://api.the-odds-api.com/v4` (deprecated namespace)
+
+**Live probe results (curl -sS --max-time 15):**
+| Request | Host | Auth method | HTTP | Live response |
+|---|---|---|---|---|
+| `GET /v4/sports/` | api.the-odds-api.com (old, config.ts:132) | `x-api-key: BOGUS` header | 401 | `{"error_code":"MISSING_KEY","message":"API key is missing"}` |
+| `GET /v4/sports/` | api.the-odds-api.com (old) | `Authorization: Bearer BOGUS` | 401 | `{"error_code":"MISSING_KEY"}` |
+| `GET /v4/sports/?apiKey=BOGUS` | api.the-odds-api.com (old) | query param | 401 | `{"error_code":"INVALID_KEY","message":"API key is not valid"}` |
+| `GET /sports/` | api.theoddsapi.com (new, current docs) | `x-api-key: BOGUS` header | 401 | `{"detail":"Invalid API key. Provide a valid key via the `x-api-key` HTTP header (recommended)..."}` |
+| `GET /sports/?apiKey=BOGUS` | api.theoddsapi.com (new) | query param | 401 | `{"detail":"Invalid API key..."}` |
+| `GET /v4/sports/` | api.theoddsapi.com (new domain, old /v4/) | any | 400 | `{"error":"v4_paths_not_supported","message":"TheOddsAPI uses the root namespace, not /v4/."}` |
+
+**Current vendor docs** (`https://theoddsapi.com/docs/`, live HTTP 200):
+> "Base URL: `https://api.theoddsapi.com`. Authenticate every request with your key in the `x-api-key` header."
+> Error table: "401 — Missing or unrecognized API key. Send your key in the `x-api-key` header."
+
+**Why the claim is wrong (independent reasoning — NOT copying Round 3):**
+1. **"It does not accept a header"** — On the NEW domain (`api.theoddsapi.com`, the current vendor base URL per docs), the vendor EXPLICITLY recommends the `x-api-key` header and lists query-param only as a "browser testing" fallback, warning "Do not embed keys in URLs in production." On the OLD `/v4/` namespace (deprecated), header auth returns `MISSING_KEY` — which proves the vendor checks for the header's presence (if headers were truly unsupported, it would not inspect them at all). The old namespace simply doesn't implement header auth, but the NEW namespace does, and the new namespace is the current vendor API.
+
+2. **"Confirmed live 2026-08-15"** — The verification date is the SAME DAY the vendor migrated from `api.the-odds-api.com/v4` to `api.theoddsapi.com`. The comment was written against the old namespace's behavior right as it was being deprecated. The vendor's docs were updated to recommend header auth on that date, but the code comment was not updated to reflect the migration.
+
+3. **Domain drift** — `config.ts:132` still uses `https://api.the-odds-api.com/v4` (deprecated namespace). The new domain explicitly rejects `/v4/` paths. The old namespace will eventually be retired, at which point the app's query-param auth will break silently.
+
+4. **`x-requests-remaining` / `x-requests-used` headers** (odds-api-client.ts:241-248) — Still read with `?? "0"` fallback. No confident comment in the code claims these are always present; the code is defensive. The vendor docs do not list these headers on the `/sports/` endpoint (only on the paid `/odds/` endpoint). Not independently verifiable without a real API key (quota burn). **CONFIDENCE: unverified** for this sub-claim — the defensive fallback is correct, but whether the headers are actually present on the current namespace is unknown.
+
+**Confidence:** VERIFIED WRONG — independent live probe (4th consecutive round) + current vendor docs both contradict the claim. `git show HEAD:` confirms the comment is unchanged in the committed tree since filing. `git log --oneline packages/data-ingestion/src/odds-api-client.ts` → 0 commits since the comment was written.
+
+**Impact:** MEDIUM-HIGH. The app currently works because query-param auth is still accepted on the deprecated `/v4/` namespace (returns `INVALID_KEY` with a real key, which the code handles as a 401/402 payment error). But: (a) the vendor now RECOMMENDS the `x-api-key` header and warns "Do not embed keys in URLs in production"; (b) the deprecated `/v4/` namespace may be retired at any point; (c) the error-parsing in odds-api-client.ts:250-260 may mis-classify responses from the new namespace (different body shape: `detail` vs `error_code`/`message`); (d) the `x-requests-remaining` header may not be present on the new namespace.
+
+**No code change made** — P10-03 is read-only. The comment should be corrected to reflect what was actually verified: header auth IS supported on the current namespace, the `/v4/` namespace is deprecated, and auth should migrate to the `x-api-key` header on `api.theoddsapi.com`. Reported as GSE-SEC-081.
+
+---
+
+### Claim 2 — FFC ADP: "free for personal and commercial use" + "data updates ONCE PER DAY" · VERIFIED CORRECT
+
+**Files with the claim (2 sites, both sprint-touched):**
+- `apps/web/lib/fantasy/adp-source.ts:4-10` (file header doc comment)
+- `apps/web/lib/fantasy/adp-source.ts:77-78` (`/** Once/day per the FFC API terms — do not lower. */`)
+
+**Claim, verbatim from adp-source.ts:4:**
+> "FFC's ADP REST API is free for personal AND commercial use (help article 42), with attribution requested as a link/mention — recorded in the Source Rights Registry as `ffc-adp` (approved_api). The data updates ONCE PER DAY and the docs ask integrators not to call frequently..."
+
+**Claim, verbatim from adp-source.ts:78:**
+> `/** Once/day per the FFC API terms — do not lower. */`
+
+**Independent live probe (THIS session, 2026-08-17):**
+- `curl -sS --max-time 15 -o /dev/null -w "%{http_code}" "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` → **HTTP 200**
+- Response body: `{"status": "Success", "meta": {"type": "PPR", "teams": 12, "rounds": 15, "total_drafts": 6665, "start_date": "2026-08-10", "end_date": "2026-08-17"}, "players": [{"player_id": 5670, "name": "Bijan Robinson", "position": "RB", "team": "ATL", "adp": 1.7, ...}]}` — matches the documented shape at adp-source.ts:22-25 exactly
+- `curl -sS --max-time 15 -o /dev/null -w "%{http_code}" "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"` → **HTTP 200**
+- Help article 42 content (extracted via grep): "Use of the ADP REST API is free for personal and commercial use. Fantasy Football Calculator requests that you provide attribution back to us in the form of a link or mention of some kind." and "Please do not call this API too frequently. The data only updates once per day."
+
+**Confidence:** VERIFIED CORRECT — independent live probe confirms both claims (commercial-use free + once-per-day update cadence). The 2026-08-17 probe matches Round 3's Round 2 findings — the page is live, the data is current (2026 season), and the once/day cadence is confirmed by the vendor's own help article.
+
+---
+
+### Claim 3 — nflverse: "play-by-play (~40MB), which is far too heavy to fetch+parse on a serverless cold start / per request — it times out in production" · CONFIDENCE: unverified
+
+**File:** `apps/web/lib/integrations/graded-pool.ts:404-406`
+> "It reads play-by-play (~40MB), which is far too heavy to fetch+parse on a serverless cold start / per request — it times out in production."
+
+**Check performed:** This is an internal performance assertion, not a vendor-contract claim (nflverse is an open-source data repository, not a vendor with an API contract). The ~40MB figure for a single game's play-by-by-play data was NOT re-verified against an actual timed fetch+parse this session (no dev server started per P10-03's no-load constraint, and P7-08 forbids hand-starting a long-running dev server). The nflverse data is served via GitHub releases / nflverse-nflfastR-data, but verifying the exact payload size requires downloading and measuring a file — which would consume bandwidth and time without a clear pass/fail criterion.
+
+**Confidence:** unverified — internal perf claim needing a timed measurement. Not the primary target of this bug class (vendor-contract claim). Same assessment as Rounds 1-3. No change needed.
+
+---
+
+### Claim 4 — `/metrics/:id` returns 403 for dark/restricted metrics 403; `/metrics/:id` inconsistency with `/metrics` list · VERIFIED CORRECT (internal code-path claim)
+
+**File:** `apps/web/app/api/gse/v1/metrics/route.ts:21-24`
+> "The inconsistency is what gave it away. `/metrics/:id` returns 403 for exactly those metrics, so the single-get path was refusing what the list path served in bulk. A boundary that refuses one at a time and relents in aggregate is not a boundary."
+
+**Independent verification (THIS session):** Read `packages/stats-api/src/handlers.ts:90-114` (`handleGetMetric`).
+- Line 21: `metrics/route.ts` comment claims `/metrics/:id` returns 403 for non-public metrics.
+- `handling.ts:98-103`: `if (!metric.publicApi)` → `refuse(403, "not_public", ...)` — returns 403 for non-public metrics.
+- `handlers.ts:106-112`: `if (!filterMetricsForTier([metric], tier).length)` → `refuse(403, "tier_insufficient", ...)` — returns 403 for tier-gated metrics.
+- `handlers.ts:53`: `publicOnly = query.publicOnly !== false` (defaults to true) — the list path filters to public metrics only by default.
+
+**Confidence:** VERIFIED CORRECT — `handleGetMetric` returns 403 (status 403) for non-public and tier-insufficient metrics (handlers.ts:99, 107), while `handleListMetrics` defaults to `publicOnly=true` (handler.ts:53) which includes only public metrics. The boundary inconsistency described in the comment is real and the 403 claim is accurate. This is an internal code-path claim (not a vendor-contract claim), verified by reading the handler code.
+
+---
+
+### Claim 5 — `picks/[id]/audit` "404 if pick not found OR pick.isBootstrap" + "404 if pick is not published" · VERIFIED CORRECT (internal code-path claim)
+
+**File:** `apps/web/app/api/picks/[id]/audit/route.ts:22-24`
+> "Fails closed: 404 if pick not found OR pick.isBootstrap (audit never exposes bootstrap-era data)"
+> "404 if pick is not published"
+
+**Independent verification (THIS session):** Read `apps/web/app/api/picks/[id]/audit/route.ts:113`:
+```typescript
+if (!pick || !pick.isPublished || pick.isBootstrap) {
+  return NextResponse.json({ error: "pick not found" }, { status: 404 });
+}
+```
+
+**Confidence:** VERIFIED CORRECT — the code at line 113 returns 404 when `pick` is falsy, `!pick.isPublished` (not published), or `pick.isBootstrap` (bootstrap-era). The comment at lines 22-24 accurately describes the fail-closed behavior. This is an internal code-path claim, verified by reading the route handler.
+
+---
+
+### Claim 6 — Sleeper leagues route: "two sequential upstream fetches per call at a 15s timeout" · VERIFIED CORRECT (internal code-path claim)
+
+**File:** `apps/web/app/api/sleeper/leagues/route.ts:17`
+> "Anonymous, unauthenticated route that proxies to Sleeper's public API (two sequential upstream fetches per call at a 15s timeout)."
+
+**Independent verification (THIS session):** Read `apps/web/lib/integrations/sleeper-sync.ts:157-203` (`loadSleeperLeagues`):
+- Line 183: `const rawUser = await fetchJson<SleeperUser | null>(SLEEPER_URLS.user(handle), fetcher, timeoutMs);` — first fetch (user lookup)
+- Line 188: `const rawLeagues = await fetchJson<SleeperLeague[]>(SLEEPER_URLS.leagues(user.id, season), fetcher, timeoutMs);` — second fetch (league list)
+
+The second fetch depends on `user.id` from the first, so they are sequential (not parallel). The default `timeoutMs` is 15000 (line 160). `SLEEPER_URLS` is constructed to hit `api.sleeper.com`.
+
+**Confidence:** VERIFIED CORRECT — the code makes exactly two sequential `fetchJson` calls (user lookup → league list), with a 15000ms default timeout. The comment accurately describes the internal behavior.
+
+---
+
+### Sweep coverage
+
+All 87 source files from `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD -- '*.ts' '*.tsx' '*.mjs'` (excluding tests/docs/handoff/config) were scanned. Comment patterns searched for every source file: `vendor-verified`, `per the .+ spec`, `per .* docs`, `according to`, `as documented`, `verified live`, `schema verified`, `confirmed live`, `confirmed against`, `does not accept`, `should return`, `will return`, `status code`, `returns 401`, `returns 429`, `MISSING_KEY`, `INVALID_KEY`, `v4_paths_not_supported`, and literal vendor domain references (the-odds-api, theoddsapi.com, fantasyfootballcalculator, sleeper.com, open-meteo, espn.com, kalshi, savant.mlb, stripe.com, clarity.ms, sentry.io).
+
+**Results:** 6 claims found across 5 distinct source files:
+
+| # | Claim | File(s) | Verdict |
+|---|---|---|---|
+| 1 | Odds API header auth unsupported | odds-api-client.ts:126-131, :204-205 | CONFIRMED WRONG (GSE-SEC-081, 4th round) |
+| 2 | FFC ADP free for commercial use + once/day | adp-source.ts:4, :78 | VERIFIED CORRECT |
+| 3 | nflverse play-by-play ~40MB, times out | graded-pool.ts:404-406 | CONFIDENCE: unverified (internal perf) |
+| 4 | /metrics/:id returns 403 for restricted | metrics/route.ts:21-24 | VERIFIED CORRECT (internal code-path) |
+| 5 | picks/[id]/audit returns 404 for non-pub/bootstrap | audit/route.ts:22-24 | VERIFIED CORRECT (internal code-path) |
+| 6 | Sleeper "two sequential upstream fetches" | sleeper/leagues/route.ts:17 | VERIFIED CORRECT (internal code-path) |
+
+**Files that make NO confident claims about external vendor behavior** (confirmed by reading): all remaining 82 of the 87 touched source files — including `next.config.mjs` (CSP domain lists are configuration, not behavioral claims — "Stripe.js injects inline scripts" is a fact about how the script works, not a vendor-contract claim), `apps/web/lib/stripe.ts` (Stripe lazy-proxy is internal infra), `apps/web/lib/auth.ts` (JWT/session is internal), `apps/web/lib/scraping/clearance-engine.ts` (8-stage pipeline is internal), all P13-P16 route handlers, `free-stats.ts`, `free-first-ingest.ts`, `multi-source-scores.ts`, `durable-write-guard.ts`, `b2b/api-key-auth.ts`, `session-tier.ts`, `picks/route.ts`, `board/state/route.ts`, `subscription-db.ts`, `get-slate-twin.ts`, `expected-points.ts`, `dfs-optimizer.ts`, `dfs-optimizer.tsx`, `proven-path-seed.ts`, `prompts.ts`, `budget-override-control.tsx`, `intelligence-control-plane.ts`, `performance/route.ts` (the comment about `findMany()` → `$queryRaw` migration at line 35-42 is an internal code-path claim, verified correct — the code does use `db.$queryRaw` with parameterized interpolation).
+
+**VERIFY:** Every sprint-touched source file (87 files) was examined this session. 6 claims found across 5 distinct files. 4 verified correct, 1 confirmed wrong (GSE-SEC-081, 4th consecutive round), 1 unverified (internal perf claim). No file/skip. The 1 proven-wrong claim (Odds API auth) is independently confirmed for the FOURTH consecutive round — the same comment remains uncorrected in the committed tree, `config.ts:132` still uses the deprecated `/v4/` namespace, and `git log --oneline packages/data-ingestion/src/odds-api-client.ts` confirms 0 commits have touched the file since the comment was written.

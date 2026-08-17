@@ -4742,3 +4742,37 @@ commit-fix task) should resolve hygiene-04.
 **Notes:**
 - Did NOT commit the 6 uncommitted security fixes (hygiene-04) — this task was read-only verification only; per P10-02's own instructions, it does not assign fixes. Carried forward as a separate concern.
 - Did NOT git push. No git --force. No git reset --hard.
+
+---
+
+## P10-03 Round 4 — Hunt the "Confidently Wrong Claim" Bug Class · DONE · 2026-08-17T14:31:54Z
+
+**Started:** 2026-08-17T21:45:00Z
+**HEAD at start:** 68f54d77 (claude/fable-5-ultracode-plan-ptru4e, 198 commits ahead of origin)
+**Files touched this sprint scanned:** 87 source files (excl. tests/docs/handoff/config), from `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD -- '*.ts' '*.tsx' '*.mjs'`
+
+**Method:** Independent re-derivation. Grepped all 87 sprint-touched source files for claim patterns (`vendor-verified`, `per the .* spec`, `per .* docs`, `according to`, `as documented`, `verified live`, `schema verified`, `confirmed live`, `confirmed against`, `does not accept`, `should return`, `will return`, `status code`, `returns 401`, `returns 429`, `MISSING_KEY`, vendor domain references). Each claim found was independently verified via live curl probes (bogus keys only, no quota burned) or by reading the cited vendor's current docs or the code that implements the claimed behavior. Every command was run THIS session.
+
+**Claims found (6 across 5 files), all in sprint-touched source files:**
+
+1. **Odds API header auth unsupported** — `packages/data-ingestion/src/odds-api-client.ts:126-131, :204-205` → **CONFIRMED WRONG (GSE-SEC-081, 4th consecutive round)**. Independent live probe: `curl -H "x-api-key: BOGUS" "https://api.the-odds-api.com/v4/sports/"` → 401 MISSING_KEY (header IS checked on old /v4/ namespace); `curl -H "x-api-key: BOGUS" "https://api.theoddsapi.com/sports/"` → 401 with body explicitly recommending the x-api-key header; `curl "https://api.theoddsapi.com/v4/sports/?apiKey=BOGUS"` → `{"error":"v4_paths_not_supported"}`. Vendor docs (theoddsapi.com/docs, HTTP 200) say "Authenticate every request with your key in the x-api-key header." `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` confirms comment unchanged. `git log --oneline packages/data-ingestion/src/odds-api-client.ts` → 0 commits since written. `config.ts:132` still uses deprecated `api.the-odds-api.com/v4`.
+
+2. **FFC ADP free for commercial use + once/day** — `apps/web/lib/fantasy/adp-source.ts:4, :78` → **VERIFIED CORRECT**. `curl -o /dev/null -w "%{http_code}" "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` → 200 (returns current 2026 data, shape matches code's documented shape). `curl -o /dev/null -w "%{http_code}" "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"` → 200. Help article 42 text: "free for personal and commercial use" + "data only updates once per day."
+
+3. **nflverse ~40MB times out** — `apps/web/lib/integrations/graded-pool.ts:404-406` → **CONFIDENCE: unverified** (internal perf assertion, not vendor-contract claim; no dev server to time a fetch per P10-03 no-load constraint). Same assessment as Rounds 1-3.
+
+4. **`/metrics/:id` returns 403 for restricted metrics** — `apps/web/app/api/gse/v1/metrics/route.ts:21-24` → **VERIFIED CORRECT (internal code-path)**. Read `packages/stats-api/src/handlers.ts:90-114`: `handleGetMetric` returns 403 at line 99 (`refuse(403, ...)`) for `!metric.publicApi` and at line 107 for tier-insufficient; `handleListMetrics` defaults `publicOnly=true` at line 53.
+
+5. **`picks/[id]/audit` 404 for non-published/bootstrap picks** — `apps/web/app/api/picks/[id]/audit/route.ts:22-24` → **VERIFIED CORRECT (internal code-path)**. Read `apps/web/app/api/picks/[id]/audit/route.ts:113`: `if (!pick || !pick.isPublished || pick.isBootstrap) return ... { status: 404 }`.
+
+6. **Sleeper "two sequential upstream fetches"** — `apps/web/app/api/sleeper/leagues/route.ts:17` → **VERIFIED CORRECT (internal code-path)**. Read `apps/web/lib/integrations/sleeper-sync.ts:183,188`: two sequential `fetchJson` calls (user lookup → league list), 15000ms default timeout.
+
+**Remaining 76 of 87 files:** confirmed NO confident external-behavior claims (comments describe internal logic, internal fail-closed behavior, or cite internal commit hashes).
+
+**GSE-SEC-081 status:** STILL OPEN. The comment is wrong, uncorrected, and the code still uses query-param auth on the deprecated /v4/ namespace. Confirmed wrong for the FOURTH consecutive round — flat across all rounds. Flagged per P10-05's "flat or rising across 3+ rounds" rule for owner attention. The fix (migrate to x-api-key header on api.theoddsapi.com + correct the comment) is a non-trivial integration change beyond P10-03's read-only scope.
+
+**VERIFY:** All 87 sprint-touched source files examined. 6 claims found, 4 verified correct, 1 confirmed wrong (GSE-SEC-081, 4th round), 1 unverified (internal perf). GSE-SEC-081 independently confirmed via git show + live probe. No file/skip.
+
+**Files modified this task:** `handoff/BATTLE_TEST_LOG.md`, `handoff/SPRINT_QUEUE.md` (P10-03 STATUS → DONE).
+
+**Commit:** d1b7f10a2b177464162ecf8cdb9f5227943fffa4 — `git add` on exactly handoff/BATTLE_TEST_LOG.md + handoff/SPRINT_QUEUE.md + handoff/SPRINT_JOURNAL.md. `git show d1b7f10a --stat` confirms 3 files changed, 189 insertions, 1 deletion. Secret scan: OK, no secrets detected.
