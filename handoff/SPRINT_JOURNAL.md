@@ -4082,3 +4082,49 @@ against the actual source file.
 
 Next: P16-01
 
+---
+
+2026-08-17T12:30:06Z  P16-01  STATUS DONE  commit 89c59634
+
+TASK: Homepage blocks on downloading the ENTIRE nflverse archive to print one number.
+The homepage (force-dynamic route) awaited loadNflverseUsagePulse() in a blocking
+Promise.all, fetching the full nflverse archive (player_stats.csv.gz) on every cold start.
+
+WHAT I DID:
+1. STEP 0: Confirmed working directory — `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+2. STEP 1: Found P16-01 as the first DOING task (STATUS was DOING from prior interrupted run).
+3. STEP 2: Verified STATUS was already DOING (no-op needed for the DOING flip).
+4. STEP 3: Verified the cited evidence — `git show HEAD:apps/web/app/page.tsx` confirmed
+   line 36-40 at HEAD had `loadNflverseUsagePulse()` inside the blocking `Promise.all`.
+   Evidence was TRUE (not stale).
+5. Discovered the fix was ALREADY APPLIED by the prior run (uncommitted):
+   - `apps/web/app/page.tsx` had loadNflverseUsagePulse removed from Promise.all
+   - `apps/web/components/landing/nflverse-lab-door.tsx` (new) — Suspense-bounded component
+   - `apps/web/components/landing/door-card.tsx` (new) — extracted DoorCard
+   - `apps/web/__tests__/homepage-suspense-nflverse.test.ts` (new) — VERIFY test
+   - `apps/web/__tests__/honest-degraded-states.test.ts` (modified) — updated for Suspense
+6. Ran VERIFY: `npx vitest run __tests__/homepage-suspense-nflverse.test.ts` from
+   apps/web/ → initially 1 test failed. The test checked `page.tsx` for the string
+   `loadNflverseUsagePulse` (line 240), but the fix correctly moved that import into
+   `nflverse-lab-door.tsx`. Fixed the test assertion to check the correct file.
+7. Also fixed lint error: `_key` unused var in findByType → switched to Object.values().
+8. Re-ran VERIFY: `npx vitest run __tests__/homepage-suspense-nflverse.test.ts` → 6/6 passed.
+9. Ran regression: `npx vitest run __tests__/honest-degraded-states.test.ts` → 12/12 passed.
+10. Ran eslint on all 4 touched files → clean (only a pre-existing Pages-dir config warning).
+11. Staged exactly the P16-01 files (NOT the unrelated intelligence/engines/ changes which
+    belong to a different task).
+12. Committed: `git commit -m "fix(P16-01): ..."` → commit 89c59634.
+    Secret-scan: OK — 5 files scanned, no secrets detected.
+
+VERIFICATION:
+- VERIFY command: `cd apps/web && npx vitest run __tests__/homepage-suspense-nflverse.test.ts`
+  Result: 6 passed (385ms). Command run in THIS session.
+- Regression: `cd apps/web && npx vitest run __tests__/honest-degraded-states.test.ts`
+  Result: 12 passed. Command run in THIS session.
+- eslint: `npx eslint apps/web/app/page.tsx apps/web/components/landing/nflverse-lab-door.tsx
+  apps/web/components/landing/door-card.tsx apps/web/__tests__/homepage-suspense-nflverse.test.ts`
+  Result: exit 0, no errors. Command run in THIS session.
+- git show 89c59634 --stat → 5 files changed, 432 insertions(+), 107 deletions(-). Verified.
+
+RESULT: DONE. Committed as 89c59634 (local, not pushed).
+

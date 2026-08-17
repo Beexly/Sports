@@ -2158,7 +2158,7 @@ was static analysis, so STEP 1 OF EVERY TASK IS: open the cited file:line and co
 still true.** If a claim is wrong, mark the task BLOCKED with the correction; do not "fix" a
 non-problem. Red-before-green (BOOT rule 6) applies where a test is involved.*
 
-### P16-01 — Homepage blocks on downloading the ENTIRE nflverse archive to print one number · STATUS: TODO · STRIKES: 0
+### P16-01 — Homepage blocks on downloading the ENTIRE nflverse archive to print one number · STATUS: DONE · STRIKES: 0 · started: 2026-08-17 · completed: 2026-08-17 (commit 89c59634)
 Evidence to verify first: `apps/web/app/page.tsx:39` awaits `loadNflverseUsagePulse()` inside a
 blocking `Promise.all` on a `force-dynamic` route (`:26`) with no Suspense/loading.tsx. That loader
 (`apps/web/lib/nflverse/usage-pulse.ts:213-268`) fetches nflverse's combined ALL-SEASONS
