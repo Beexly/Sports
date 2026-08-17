@@ -12,6 +12,9 @@ import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import type { PublicPick, DailySlate, SubscriptionTier } from "@sports/types";
 import Link from "next/link";
 import { headers } from "next/headers";
+import { NextRequest } from "next/server";
+import { GET as getPicks } from "@/app/api/picks/route";
+import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 
 export const metadata: Metadata = {
   title: "Today's Signals — Galaxy Sports Edge",
@@ -46,51 +49,50 @@ interface PicksResponse {
   };
 }
 
-function getRequestOrigin(): string {
-  const h = headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host");
-  if (!host) {
-    return process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
-  }
-  const proto =
-    h.get("x-forwarded-proto") ??
-    (host.startsWith("localhost") || host.startsWith("127.0.0.1") ? "http" : "https");
-  return `${proto}://${host}`;
-}
-
 // ─────────────────────────────────────────────
 // Data fetching
 // ─────────────────────────────────────────────
+// Direct handler invocation instead of self-fetch HTTP round-trips.
+// Calling the route handlers' GET directly avoids the TLS + cold-start
+// overhead of a server-side fetch to the app's own origin. The handler
+// functions are importable without side effects (they take a NextRequest
+// and return a NextResponse), and auth() inside them reads the current
+// RSC context's cookies — same as the server component rendering this page.
+
+function buildRequest(pathname: string, params: URLSearchParams): NextRequest {
+  const h = headers();
+  const initHeaders = new Headers();
+  // Forward the forwarded-for / real-ip so the route handler's rate-limiter
+  // (consumeRateLimit + clientIp) sees the real client, not "anon".
+  const fwdFor = h.get("x-forwarded-for");
+  const realIp = h.get("x-real-ip");
+  if (fwdFor) initHeaders.set("x-forwarded-for", fwdFor);
+  if (realIp) initHeaders.set("x-real-ip", realIp);
+  const cookie = h.get("cookie");
+  if (cookie) initHeaders.set("cookie", cookie);
+  const url = `http://localhost${pathname}${params.toString() ? `?${params}` : ""}`;
+  return new NextRequest(url, { headers: initHeaders });
+}
 
 async function fetchPicks(
   sport?: string,
   date?: string,
   grade?: string,
-  authenticated = false
+  _authenticated = false
 ): Promise<PicksResponse> {
-  const appUrl = getRequestOrigin();
   const params = new URLSearchParams();
   if (sport) params.set("sport", sport);
   if (date) params.set("date", date);
   if (grade) params.set("grade", grade);
-  const url = `${appUrl}/api/picks${params.toString() ? `?${params}` : ""}`;
-  // Members must reach /api/picks with their session so the server tier
-  // gate returns their entitled view — and that response must never land
-  // in the shared data cache. Anonymous traffic keeps the cached fetch.
-  const res = authenticated
-    ? await fetch(url, {
-        cache: "no-store",
-        headers: { cookie: headers().get("cookie") ?? "" },
-      })
-    : await fetch(url, { next: { revalidate: 1800 } });
+  const req = buildRequest("/api/picks", params);
+  const res = await getPicks(req);
   if (!res.ok) {
-    const body = await res.json().catch(() => null) as {
+    const body = (await res.json().catch(() => null)) as {
       error?: string;
       bootstrapMode?: boolean;
       reason?: string;
       hint?: string;
     } | null;
-
     // Graceful dark states: bootstrap history, feature gate (PUBLIC_PICKS off),
     // or stale-data kill switch. Never throw an error page for intentional dark.
     if (
@@ -120,20 +122,17 @@ async function fetchPicks(
         },
       };
     }
-
     throw new Error(`Failed to fetch picks: ${res.status}`);
   }
-  return res.json() as Promise<PicksResponse>;
+  return (await res.json()) as PicksResponse;
 }
 
 async function fetchSlate(): Promise<DailySlate | null> {
   try {
-    const appUrl = getRequestOrigin();
-    const res = await fetch(`${appUrl}/api/picks/daily-slate`, {
-      next: { revalidate: 1800 },
-    });
+    const req = buildRequest("/api/picks/daily-slate", new URLSearchParams());
+    const res = await getDailySlate(req);
     if (!res.ok) return null;
-    const body = await res.json() as { success: boolean; data: DailySlate };
+    const body = (await res.json()) as { success: boolean; data: DailySlate };
     return body.data ?? null;
   } catch {
     return null;
