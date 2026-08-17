@@ -9,6 +9,8 @@ import { PageHero } from "@/components/ui/page-hero";
 import { SourceError } from "@/components/ui/source-error";
 import { Tabs } from "@/components/ui/tabs";
 import { getEngine, groupedEngines } from "./registry";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse loads (scoring-zone / team / proof) need headroom
@@ -132,28 +134,59 @@ function MoreEnginesSection(): JSX.Element {
   );
 }
 
+/**
+ * /intelligence/engines — browsable engine selector.
+ *
+ * SECURITY: every /api/intelligence/* route is gated server-side by
+ * requirePremiumApiRateLimited (PRO/ELITE only). This browser page loads
+ * the same engine data via active.load() on the SERVER — so it MUST mirror
+ * that gate. Without it, an anonymous visitor reads premium analytics by
+ * hitting ?engine=player-model directly, bypassing the API entitlement check
+ * entirely. The /intelligence/engines nav link itself stays public: the
+ * directory rail and engine descriptions render for everyone; only the DATA
+ * load is gated. Mirrors the room/[gameId] pattern (getViewerEntitlements
+ * at the page boundary, fail-closed to FREE).
+ */
 export default async function EnginesBrowserPage({ searchParams }: EnginesBrowserProps): Promise<JSX.Element> {
   const requested = searchParams?.engine;
   const active = getEngine(requested);
   const groups = groupedEngines();
 
-  // Load only the active engine's data — the browser is one engine at a time.
-  // The loader runs on the SERVER; we hand the plain, serializable result to the
-  // client <EngineView> keyed on the engine slug. The per-engine render fns
-  // (column render()/sortValue()) live in EngineView, never crossing the RSC
-  // boundary from here.
+  // Resolve entitlements server-side (anonymous → FREE, fail-closed) BEFORE
+  // loading any premium engine data. This mirrors the gate on the
+  // /api/intelligence/* routes — the browser must not render premium data
+  // for under-tier viewers.
+  const viewer = await getViewerEntitlements();
+  const canView = !active.premium || viewer.canSeePremiumPicks;
+
   let body: JSX.Element;
-  try {
-    const data = await active.load();
-    body = <EngineView engine={active.slug} data={data} />;
-  } catch (error) {
+  if (!canView) {
     body = (
-      <SourceError
-        variant="dark"
-        reason={`This engine could not load. ${error instanceof Error ? error.message : "UNKNOWN"}`}
+      <TierGatePanel
+        need="PRO"
+        surface={active.title}
+        blurb={engineGatedBlurb(active)}
       />
     );
+  } else {
+    // Load only the active engine's data — the browser is one engine at a time.
+    // The loader runs on the SERVER; we hand the plain, serializable result to the
+    // client <EngineView> keyed on the engine slug. The per-engine render fns
+    // (column render()/sortValue()) live in EngineView, never crossing the RSC
+    // boundary from here.
+    try {
+      const data = await active.load();
+      body = <EngineView engine={active.slug} data={data} />;
+    } catch (error) {
+      body = (
+        <SourceError
+          variant="dark"
+          reason={`This engine could not load. ${error instanceof Error ? error.message : "UNKNOWN"}`}
+        />
+      );
+    }
   }
+
 
   return (
     <div className="min-h-screen bg-carbon text-ion-white">
@@ -218,4 +251,9 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
       <Footer />
     </div>
   );
+}
+
+/** Honest "why is this gated" blurb for the TierGatePanel over each engine. */
+function engineGatedBlurb(active: { slug: string; title: string }): string {
+  return `${active.title} is a Pro-tier analytics engine. This is the same data served by the premium /api/intelligence/${active.slug} endpoint, gated for Pro and Elite members.`;
 }

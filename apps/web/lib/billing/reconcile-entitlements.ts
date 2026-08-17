@@ -33,7 +33,7 @@
 
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
-import { db } from "@sports/db";
+import { db, requireDurableWriteStore } from "@sports/db";
 import { tierForPriceId, tierFromPriceRef, type PaidTier, type ResolvedTier } from "@/lib/billing/price-ids";
 
 /** Stripe statuses that grant entitlement in this platform (mirrors entitlements.ts). */
@@ -486,6 +486,13 @@ async function downgradeStaleRows(
  * storm.
  */
 export async function reconcileEntitlements(): Promise<ReconcileSummary> {
+  // GSE-SEC-033: every persistence path that reconciles Stripe state into the local
+  // DB must first prove the store is durable. If writes would silently no-op (stub
+  // client or sentinel DATABASE_URL) the entire reconcile is meaningless — it would
+  // read authoritative Stripe state, attempt grants/downgrades, and report "ok" while
+  // nothing persisted. Fail closed instead.
+  requireDurableWriteStore("stripe-reconcile");
+
   const confirmedCustomerIds = new Set<string>();
   const confirmedSubscriptionIds = new Set<string>();
   const confirmedSubscriptions: Stripe.Subscription[] = [];
@@ -565,6 +572,12 @@ export async function reconcileEntitlements(): Promise<ReconcileSummary> {
  */
 export async function reconcileUserEntitlement(userId: string): Promise<void> {
   try {
+    // GSE-SEC-033: fail fast before any Stripe read when the local store can't
+    // durably persist a grant. The upsertGrant below would silently no-op on a
+    // stub client — and this function's "NEVER throws" contract still holds
+    // because the error is caught and logged, exactly like a Stripe hiccup.
+    requireDurableWriteStore("stripe-reconcile");
+
     const row = await db.subscription.findUnique({
       where: { userId },
       select: { stripeCustomerId: true, tier: true, status: true, stripeSubscriptionId: true },
