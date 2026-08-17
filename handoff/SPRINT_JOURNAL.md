@@ -4403,3 +4403,25 @@ Result: DONE. This run did exactly ONE task (P16-05) and stopped.
 **Conclusion:** No P4/P5 non-committing bug recurrence. No new gitignore-swallowed deliverables (the narrowed rule is working). But 2 .md deliverables (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md) were found untracked — flagged as hygiene-03 follow-up. P8-08-RESUME remains unfixed (no git commit). Two-agent collision (P8-11 duplicate) persists but no new incidents. Full report written to BATTLE_TEST_LOG.md, section "Round 2 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-17)".
 
 **Result:** DONE. This run did exactly ONE task (P10-04 Round 2) and stopped.
+
+---
+
+### 2026-08-17T15:25:45Z · P8-08-RESUME — GSE-SEC-033 durable-write guard on all Stripe caps · DONE · STRIKES: 0 · commit 4e7326da
+**Task premise (inherited, then re-derived):** the queue + P10-01 Round-1 note said the durable-write guard covered only checkout + webhook, and that GSE-SEC-033 was OPEN with no committing fix.
+**Date run:** `date +%F` → 2026-08-17
+**Status:** DONE (corrected — no new product code change was needed; the fix already exists and is committed)
+**Files modified:** apps/web/__tests__/stripe-mutation-guard-invariant.test.ts (NEW), handoff/REMEDIATION_EXECUTION.md (row 15 corrected), handoff/SPRINT_QUEUE.md (STATUS DOING→DONE)
+
+**What I did (re-derivation, never inheritance):**
+- `git diff --stat -- apps/web/lib/stripe.ts` → NO uncommitted change (guards already in committed tree, contradicting the "no commit" claim).
+- `git log -S 'requireDurableWriteStore("stripe-portal")' --oneline -- apps/web/lib/stripe.ts` → exactly `a56fe1dc` (confirmed via `git show a56fe1dc -- apps/web/lib/stripe.ts | grep requireDurableWriteStore` → 5 guard lines added).
+- `grep -rnE "stripe\.[a-zA-Z_]+\.(create|update|del|cancel)\(" apps/web packages` (excl tests, node_modules, stale worktrees `.claude/worktrees/phase3` and `Sports/`) → exactly 3 mutation sites: getOrCreateStripeCustomer (line 226), createCheckoutSession (line 333), createPortalSession (line 452).
+- Verified each is guarded: getOrCreateStripeCustomer guard("stripe-checkout") line 209; createCheckoutSession guard("stripe-checkout") line 290; createPortalSession requireDurableWriteStore("stripe-portal") line 451. Webhook gated at route.ts:62 (`stripe-webhook-entitlement`); reconcile at reconcile-entitlements.ts:494,579 (`stripe-reconcile`).
+
+**Result:** The finding was ALREADY RESOLVED and committed in a56fe1dc; the queue's "only two caps / no commit" claim was false for the live tree (it matched the stale unguarded worktree `Sports/apps/web/lib/stripe.ts` or a shifted line number). Per the self-verification protocol ("a clean-looking DONE that is wrong is the actual damage"), I did NOT fabricate a duplicate guard. Instead:
+  (1) Added `apps/web/__tests__/stripe-mutation-guard-invariant.test.ts` (4 tests) asserting every Stripe mutation in lib/stripe.ts fails closed through the durable-write guard. Ran `npx vitest run` on it + existing stripe-customer/-portal tests → 14 passed (4 new + 10 existing). This is the durable regression anchor: a future 4th unguarded mutation fails it.
+  (2) Corrected REMEDIATION_EXECUTION.md row 15 GSE-SEC-033 to RESOLVED/FIXED with the live re-derivation cited inline (audit-trail style — original line kept).
+  (3) Flipped SPRINT_QUEUE.md P8-08-RESUME STATUS DOING → DONE with a dated CORRECTION block.
+**Commit 4e7326da** verified via `git show --stat 4e7326da`: 3 files changed, 186 insertions(+), 3 deletions(-). Includes the new test file (161 lines).
+**Uncertainty stated:** I could not independently time-travel to confirm P8-08's original authoring intent, but the CURRENT tree state is unambiguously fully guarded (re-derived from live commands + a resolved commit hash), so no code change was appropriate. No secret, guard, or security flag was weakened or invented.
+**Result:** DONE. This run did exactly ONE task (P8-08-RESUME) and stopped.
