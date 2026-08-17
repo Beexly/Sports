@@ -4497,3 +4497,88 @@ Commit:  (pending — read-only findings file appended to BATTLE_TEST_LOG.md, wi
 Next:    P10-03 Round 3 (hunt confidently-wrong claims, independent re-derivation)
 
 ---
+
+### 2026-08-17T18:01:12Z · P10-03 · DONE · STRIKES: 0 · commit 4a646a9c
+Action:   P10-03 Round 3 — independently re-derive every confidently-wrong-claim bug class
+  across all sprint-touched source files. Read-only verification task: wrote findings to
+  handoff/BATTLE_TEST_LOG.md only. No production code changed.
+Commands: `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports; `date +%F` → 2026-08-17;
+  `git log --oneline 5f553c3d..HEAD` → empty (no commits since R2 P10-02 HEAD, same file set);
+  `grep -rn "vendor-verified|confirmed live|schema verified|does not accept|status code" ... *.ts *.mjs`
+  → 13 claims across 8 files; live probes via curl --max-time 15 with bogus keys:
+  - Odds API header auth: `curl -H "x-api-key: BOGUS" https://api.the-odds-api.com/v4/sports/` →
+    HTTP 401 {"error_code":"MISSING_KEY","message":"API key is missing"} (header IS read,
+    returns MISSING_KEY not INVALID_KEY — confirms vendor checks header presence);
+    `curl "https://api.the-odds-api.com/v4/sports/?apiKey=BOGUS"` → HTTP 401
+    {"error_code":"INVALID_KEY"}; `curl -H "x-api-key: BOGUS" https://api.theoddsapi.com/sports/`
+    → HTTP 401 {"detail":"... Send your key in the x-api-key header (recommended) ..."};
+    `curl "https://api.theoddsapi.com/v4/sports/"` → {"error":"v4_paths_not_supported"}
+    (deprecated namespace rejected by current domain); current docs at theoddsapi.com/docs
+    state "Base URL: https://api.theoddsapi.com; Authenticate every request with your key
+    in the x-api-key header."
+  - FFC ADP terms: `curl -o /dev/null -w "%{http_code}" help.fantasyfootballcalculator.com/...`
+    → 200; `curl fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026` → 259
+    players, real 2026 data (Bijan Robinson #1 @ 1.7 ADP)
+  - Sleeper docs: `curl docs.sleeper.com` → match "once per day at most ... 5MB"
+  - ESPN scores: all 7 sport paths → 200 (football/nfl, football/college-football,
+    basketball/nba, basketball/mens-college-basketball, baseball/mlb, hockey/nhl, soccer/usa.1)
+  - ESPN standings apis/v2: → 200; apis/site/v2: → 200; apis/v2 scoreboard: → 404
+    (confirms namespace distinction is real)
+  - ESPN rankings: college paths → 200; NFL/NBA → 404 (expected, handled by code)
+  - Open-Meteo: /en/license → 200; /en/terms → 200
+  - Kalshi API: `curl external-api.kalshi.com/trade-api/v2/events?series_ticker=KXNBAGAME`
+    → live events KXNBAGAME-26JUN03NYKSAS = "Game 1: New York at San Antonio" (matches
+    comment example EXACTLY); market tickers → KXNBAGAME-26JUN13NYKSAS-NYK (ends -NYK,
+    matching toIndependentFairValue comment at kalshi-client.ts:526)
+  - MLB Savant: /leaderboard/custom/json → 404; /leaderboard/custom?csv=true → 200
+Result:   13 claims found; 7 VERIFIED CORRECT; 1 CONFIRMED WRONG (GSE-SEC-081, Odds API
+  header auth — 3rd consecutive round independently confirming the comment is wrong);
+  1 VERIFIED CORRECT (Kalshi grammar — corrects R1's "unverified" assessment);
+  1 unverified (nflverse ~40MB internal perf, no timed run possible); 1 N/A (x-requests
+  headers — no confident code comment, code is defensive); 1 process/policy claim
+  (sports-data-candidates.ts workflow rule). GSE-SEC-081 remains unfixed in code
+  (read-only task, no code change). Findings appended to BATTLE_TEST_LOG.md.
+Commit:  4a646a9c — git show --stat confirms 213 insertions to BATTLE_TEST_LOG.md + 1
+  line to SPRINT_QUEUE.md (P10-03 DOING→DONE). Verified hash resolves.
+Next:    P10-04 Round 3 (working-tree + history hygiene sweep)
+
+---
+
+### 2026-08-17T18:35:00Z · P10-04 · DONE · STRIKES: 0 · Round 3
+**Action:** P10-04 Round 3 — Independent re-derivation of working-tree + history hygiene
+  from current HEAD (4a646a9c). Read-only task: wrote findings to
+  handoff/BATTLE_TEST_LOG.md only. No production code changed, no source code committed.
+**Commands run (this session, from C:/Users/Garrett/Sports):**
+  - `date +%F` → 2026-08-17
+  - `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports (confirmed inside repo)
+  - `git status --short` → 6 source/test files modified + 3 untracked .md + 4 handoff docs modified
+  - `git diff --stat HEAD` → apps/web/{__tests__/durable-write-store.test.ts, __tests__/reconcile-entitlements.test.ts, app/api/cron/reconcile-entitlements/route.ts, app/intelligence/engines/page.tsx, app/intelligence/engines/registry.tsx, lib/billing/reconcile-entitlements.ts} + packages/db/src/durable-write-guard.ts
+  - `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` → 0 (committed version has ZERO guards; working tree has 3 — NON-COMMITTING BUG)
+  - `git show HEAD:packages/db/src/durable-write-guard.ts | grep -c 'stripe-reconcile'` → 0 (committed version lacks it; working tree has it)
+  - `git show HEAD:apps/web/app/api/cron/reconcile-entitlements/route.ts | grep -c 'DurableWriteStoreUnavailableError'` → 0
+  - `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c getViewerEntitlements` → 0 (committed page has NO entitlement check; calls active.load() unconditionally — anonymous paywall bypass)
+  - `git show HEAD:apps/web/app/intelligence/engines/registry.tsx | grep -c premium` → 0 (committed version lacks premium field)
+  - `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c 'active.load'` → 1 (confirms the unguarded data loading)
+  - `git ls-files --error-unmatch handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/HAIKU_WATCH.md` → all 3 untracked (hygiene-03 still open)
+  - `git log --all --oneline --format='%s' | sort | uniq -d | wc -l` → 35 duplicate subjects (all historical, no new since Round 2)
+  - `git stash list` → 5 stashes, all scratch/backup
+  - `git worktree list` → 17 worktrees, all intentional, only primary on active branch
+  - `git diff --name-only --diff-filter=U` → empty (no merge conflicts)
+  - `git diff --name-only | grep -iE '\.env|secret|KEY'` → empty (no secret leaks)
+  - `git show 4e7326da --stat` → resolves (P8-08-RESUME DONE)
+  - `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c TierGatePanel` → 0 (confirmed committed version has no gate)
+  - `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c 'confirmedSubscriptions'` → 1 (line 494/579 in REMEDIATION_EXECUTION.md claims is actually a Set declaration, not a guard — CONFIRMED FALSE CLAIM)
+**Result:** DONE. Key findings:
+  1. NON-COMMITTING BUG RECURRENCE: 6 source/test files with real security fixes (stripe-reconcile
+     durable-write guard + intelligence-engines entitlement gating) exist only in working tree,
+     never committed. The intelligence-engines bug is a live paywall bypass (anonymous visitors
+     can read premium analytics via /intelligence/engines?engine=player-model).
+  2. FALSE CLAIM in committed REMEDIATION_EXECUTION.md (row 15, commit 4e7326da): claims
+     reconcile-entitlements.ts:494,579 has `stripe-reconcile` guard. `git show HEAD:` proves
+     ZERO occurrences — the guard was never committed, only exists in working tree.
+  3. hygiene-03 STILL OPEN: 3 untracked .md deliverables (PROD_HEALTH_ALERT.md,
+     SPRINT_STATUS_NOW.md, HAIKU_WATCH.md) never git-add-ed.
+  4. 35 duplicate commit subjects (all historical, no new). No worktree/stash/conflict/secret issues.
+  Findings written to BATTLE_TEST_LOG.md "Round 3 — P10-04" section. Only handoff docs committed.
+**Commit:** 5d13f167 — git show confirms 119 insertions to BATTLE_TEST_LOG.md + 1 line to SPRINT_QUEUE.md (P10-04 DOING→DONE). Verified hash resolves.
+**Next:** STOP — do not start P10-05 Round 4. Per HARD RULES, do exactly ONE task per run.
