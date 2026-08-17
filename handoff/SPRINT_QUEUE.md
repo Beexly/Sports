@@ -2266,7 +2266,7 @@ Kalshi public-markets spike (`scripts/spikes/kalshi-fairvalue-spike.mjs`). No ac
 **and a stale watchdog rule silently reverting real work.** One pass missed all of these. Assume
 the current tree has more of the same, and go find it.
 
-### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T06:30:00Z · completed: 2026-08-16T09:00:00Z
+### P10-01 — Audit the audit: re-verify every DONE task against its real commit · STATUS: DONE · STRIKES: 0 · Round 3 (reset by P10-05 Round 2) · completed: 2026-08-17
 For EVERY task in Phases 0-9 marked DONE, do not trust the STATUS field or the journal entry's
 prose. Independently confirm: (a) a real git commit exists whose diff matches what the task
 claimed to do — `git log --all --oneline --grep` or a manual `git show` search; (b) if the task
@@ -2278,7 +2278,7 @@ or a failing re-run is a real regression — reopen it as a new task at the END 
 STATUS TODO and a note citing which round found it.
 **VERIFY:** every DONE task in Phases 0-9 has a row in the round's table, no silent skips.
 
-### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: DONE · STRIKES: 0 · started: 2026-08-16T13:38:00Z · completed: 2026-08-16T13:39:00Z (commit pending)
+### P10-02 — Fresh blind re-audit of the original 15 domains · STATUS: TODO · STRIKES: 0 · Round 3 (reset by P10-05 Round 2)
 Re-run Phase 2's structure (D1 Auth through D15 Types/coverage) as if `handoff/AUDIT_FINDINGS.md`
 does not exist yet — read the actual current code fresh, form your own findings first, THEN open
 `AUDIT_FINDINGS.md` and reconcile: what did the original audit miss, what has changed since
@@ -2290,7 +2290,7 @@ found it in `BATTLE_TEST_LOG.md`.
 **VERIFY:** `BATTLE_TEST_LOG.md` states explicitly, per domain, "same as before" or "new finding"
 or "original finding no longer applies" — no domain left unaddressed.
 
-### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: DONE · started: 2026-08-16T21:50:00Z · STRIKES: 0 · completed: 2026-08-16T21:55:00Z
+### P10-03 — Hunt the "confidently wrong claim" bug class specifically · STATUS: TODO · STRIKES: 0 · Round 3 (reset by P10-05 Round 2)
 This exact bug class has been found THREE times this session: a code comment or commit message
 makes a specific, confident technical claim about how something external behaves (a vendor's auth
 mechanism, what another code path does, what a library does on a given input) — and the claim is
@@ -2304,7 +2304,7 @@ proved wrong as a new finding.
 **VERIFY:** at least every file touched by this sprint (see
 `git log --name-only origin/main..HEAD`) is covered, not just a sample.
 
-### P10-04 — Working-tree and history hygiene sweep · STATUS: DONE · STRIKES: 0 · Round 2 (2026-08-17)
+### P10-04 — Working-tree and history hygiene sweep · STATUS: TODO · STRIKES: 0 · Round 3 (reset by P10-05 Round 2)
 Re-run `git status` and look for anything uncommitted, anything that looks like the P4/P5
 non-committing bug recurring. Re-check `git status --ignored -- handoff/` for any real deliverable
 that's gitignored and silently untracked (the class of bug that ate `REMEDIATION_ROADMAP.md` and
@@ -2313,12 +2313,16 @@ two-agent collision (Codex + Laguna both committing) has caused any NEW duplicat
 since the last round.
 **VERIFY:** a clean report either way, written to `BATTLE_TEST_LOG.md`.
 
-### P10-05 — Close the round, start the next one · STATUS: DONE · STRIKES: 0
-Increment the round number. Summarize the round in `BATTLE_TEST_LOG.md`: findings count vs the
+### P10-05 — Close the round, start the next one · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17 (Round 2 close — reset P10-01..04 to TODO for Round 3)
+Increment the round number. Summarize the round in `handoff/BATTLE_TEST_LOG.md`: findings count vs the
 previous round (should trend down as the tree gets cleaner, not stay flat — flat or rising across
 3+ rounds means something structural is still wrong and deserves a note flagging it for Garrett,
 not silent repetition). Then go back to P10-01 and start the next round. **This does not end.**
 **VERIFY:** the round counter incremented; P10-01 status reset to TODO for the next pass.
+
+### P10-05 — Close Round 3 · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17
+Round counter incremented to 4. P10-01, P10-02, P10-03, P10-04 reset to STATUS: TODO for Round 4
+below. P8-08-RESUME remains DONE (verified in this round — guard exists in commit a56fe1dc).
 
 ---
 
