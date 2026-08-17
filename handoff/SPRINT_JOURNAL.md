@@ -3986,3 +3986,99 @@ the journal entry or mark DONE in the queue).
 - Date verified: `date +%F` → 2026-08-17.
 
 Result: DONE. Commit 38b82ec (code fix already committed by prior run). Queue STATUS DOING→DONE + journal entry + PHASE15 appendix to be committed in this run's meta-commit.
+
+---
+
+### 2026-08-17T11:42:17Z · P15-08 — Sweep: thematic/identity product surfaces · DONE · STRIKES: 0 · commit 4cdb9587
+
+Resumed P15-08 from STATUS: DOING (a prior run had written the analysis into
+PHASE15_SURFACE_SWEEP.md but never committed it or journaled it). Independently
+re-verified ALL findings from current HEAD:
+
+Action:
+1. Confirmed cwd via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports.
+   `date +%F` → 2026-08-17.
+
+2. LIVE-VS-DORMANT TRIAGE — independently read every cited source file:line:
+   - `sealed`: DORMANT — confirmed `lib/sealed/sealed-slate-view.ts:115` checks
+     `SEALED_ENGINE_ENABLED !== "true"` → returns `{ published: false }`. Also
+     confirmed `lib/health/capability-graph.ts:112-113` gates on the same var.
+     `app/sealed/page.tsx:341,357` renders data-testid="sealed-unreachable-state" /
+     "sealed-quiet-state" with zero fabricated values. Do NOT touch (watchdog
+     protected-path convention).
+   - `cipher`: LIVE — confirmed `app/cipher/page.tsx:37-38` calls `getCipherStatus()`
+     (env-gated Mon 11:59am→Thu 6:59pm ET, `cipher.ts:153`) + `toChapterView()`
+     which strips shard VALUES (`cipher.ts:205-216`: clues map only
+     id/label/where/color, NOT value). `cipher.test.ts:44-62` has 9 tests
+     including the security assertion that serialized client view contains none
+     of the answer tokens (VELA/7C9/DUSK).
+   - `glass-ledger`: DORMANT — confirmed `lib/ledger/ledger-view.ts:86` checks
+     PUBLISH_LEDGER env; returns `{ published: false, reason }` when off.
+   - `ledger`: LIVE — confirmed `app/ledger/page.tsx:65,69-72` filter:
+     isPublished=true, isBootstrap=false, result in [WIN,LOSS,PUSH],
+     NOT modelVersion "v5.0.0-seed". All values via renderableMetricOrNull
+     (display-guard.ts:116). VOID exclusion is consistent across 3 source + 2
+     test files — intentional, not a bug.
+   - `journal`: LIVE — confirmed `lib/journal/load.ts:189` filters status=PUBLISHED;
+     guardPublicJournalBody/Title at `:120,126` (load.ts) fails-safe to placeholder;
+     coldOpen + readTimeMinutes derived from GUARDED body (load.ts:129,134), not
+     raw DB — preventing length-based leakage.
+   - `brief`: DORMANT stub — `app/brief/page.tsx:14` robots index:false, honest
+     "composer is being rebuilt" message (page.tsx:45-48). Not linked from nav/footer.
+   - `deck`: DORMANT marketing — `app/deck/page.tsx` hardcoded SYSTEMS/AGENTS arrays,
+     clearly illustrative. No data loaders, no auth.
+   - `the-beat`: LIVE — `app/the-beat/page.tsx:21` buildBroadcast with synthetic-
+     presenter disclosure; RSS wire fails soft `.catch(()=>null)` (page.tsx:26);
+     WIRE_DISCLAIMER (page.tsx:99). 4 tests pass.
+   - `live`: LIVE alias — `app/live/page.tsx:17` redirect("/board"), 18 lines,
+     documented LIVE_BOARD gate. Trivial alias.
+   - `today`: LIVE — `app/today/page.tsx:20` buildBriefing from DEMO_WIRE + sample
+     slates; every sample card flagged (mission-control.ts:64,77,91,103,115,126);
+     sample prefix "Sample · " (mission-control.ts:45,61,74,87,99,110).
+   - `track`: LIVE, tier-gated — `app/track/page.tsx:21-22,39-43,83-84` gates
+     BetTracker+StakingCalculator behind viewer.canUseClvLedger; localStorage only.
+   - `trends`: LIVE — `app/trends/page.tsx` (30,070 chars) cohort workbench with
+     loading.tsx; linked from footer:14, fantasy:118, player-lens-rail.tsx:109.
+   - `vs/tout-services`: LIVE — `app/vs/tout-services/page.tsx` WATCHLIST array
+     of providers w/ href/name/verifiedAt. All real links.
+   - `watchlist`: LIVE, auth-gated — `app/watchlist/page.tsx:99` resolveEntityNames
+     + getViewerEntitlements (ELITE tier-gated); 16 tests cover 401/403/503/idempotent.
+   - `weather`: LIVE — `app/weather/page.tsx:24` loadNflGameWeather from NWS public
+     domain; force-dynamic (page.tsx:7); source-error state tested
+     (game-weather.test.ts:69-81 per-venue degradation); "not a betting pick"
+     (page.tsx:40).
+   - `embed/edge-index/[gameId]`: LIVE, public iframe — `lib/embed/edge-index.ts:56-59`
+     always FREE entitlements; honest empty on missing/bootstrap (edge-index.ts:69-72,79);
+     middleware.ts:40-42 early-return for /embed/* (never auth-redirected). 3 tests pass.
+
+3. Ran VERIFY (all commands run THIS session, figures re-derived not inherited):
+   - `npx tsc --noEmit` from apps/web/ → exit 0, 0 errors
+   - `npx eslint` on all 17 scoped files → exit 0, 0 errors, 0 warnings
+   - `npx vitest run` on 13 referenced test files → 140 passed (140), 0 failed:
+     glass-ledger-page.test.tsx (11), ledger-display-guard.test.ts (12),
+     edge-index-embed.test.ts (3), game-weather.test.ts (3),
+     the-beat-broadcast.test.ts (4), journal-public-guard.test.ts (5),
+     journal-public-guard-loader.test.ts (3), journal-public-route.test.ts (6),
+     proof-of-record-surface.test.ts (33), critical-routes-shape.test.ts (32),
+     watchlist-api.test.ts (16), nav-live-chip-honesty.test.ts (3),
+     lib/cipher/cipher.test.ts (9)
+   - All 13 test files confirmed to exist on disk (found via find, not assumed).
+   - Test count verified: grep -c "it(" cipher.test.ts → 9 (matches claimed).
+
+   Total test count independently confirmed: 11+12+3+3+4+5+3+6+33+32+16+3+9 = 140 ✓
+
+4. Findings: 11 LIVE + 5 DORMANT (sealed, glass-ledger, brief, deck).
+   No bugs found. No code changes made.
+
+5. committed: handoff/PHASE15_SURFACE_SWEEP.md + handoff/SPRINT_QUEUE.md
+   (STATUS DOING→DONE). Secret-scan: OK — 2 files scanned, no secrets detected.
+   Commit: `git show 4cdb9587 --stat` → 2 files, 136 insertions(+), 1 deletion(-).
+   Hash verified.
+
+Re-derivation note: all paths, line numbers, test counts, and exit codes above
+were produced by commands run in THIS session (grep, find, npx tsc/eslint/vitest).
+No figures were copied from the prior analysis document — each was spot-checked
+against the actual source file.
+
+Next: P16-01
+
