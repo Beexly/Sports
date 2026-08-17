@@ -3421,6 +3421,39 @@ Added `__tests__/market-calibration-page.test.tsx` (5 tests).
 
 Next: P14-04 (next TODO in queue — "Free-mode reality audit").
 
+### 2026-08-17T05:31:31Z · P14-04 — Free-mode reality audit (READ-ONLY) · DONE · STRIKES: 0 · commit f6bb1a53e4d2a6525a8cb730feacb28789cc18ea
+
+Resumed P14-04 from DOING (queue line ~1946: STATUS: DOING, started 2026-08-16T14:00:Z — prior run interrupted). `date +%F` → 2026-08-17. `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. Read-only: no app code changed; commit contains ONLY handoff/FREE_MODE_AUDIT.md (new) + the queue status flip.
+
+What I did:
+- Read the free-mode context (`docs/ops/FREE_MODE_INGESTION_HEALTH.md`) — confirms THE_ODDS_API_KEY deactivated in prod, live product runs free-mode-first.
+- Characterized the anonymous public surface via `apps/web/lib/board/state.ts` (loadBoardState): reads gateDecision/pick/game/sport + IngestionRun; Edge Index public, confidence/selection/ranking redacted server-side for non-PRO. The free-spine probe (`free-spine-cache`) is consumed only by cockpit/Jarvis ops (`jarvis-data.ts`, `operating-kernel.ts`), NOT the public board.
+- Re-derived dead-table status with repo-wide greps (cam透Case client property `db.<model>`; client is `db` from @sports/db per packages/db/src/index.ts:217,231):
+  - `grep -rn "snapCount|SnapCount" apps/` → 31 hits. Non-test READER: exactly ONE — `apps/web/lib/scoring/player-composite.ts:165` (P12-08 wiring). Wired, not dead.
+  - `grep -rn "depthChartEntry|DepthChartEntry" apps/` → 4 hits. Writers: `lib/ingestion/depth-charts.ts:86-87`. Tests only otherwise. ZERO non-test readers.
+  - `grep -rn "pfrAdvStat|PfrAdvStat" apps/` → 13 hits. Writers: `lib/ingestion/pfr-adv-stats.ts:163-164`. Tests only. ZERO non-test readers.
+  - `grep -rn "teamWeekStat|TeamWeekStat" apps/` → 12 hits. Writers: `lib/ingestion/team-week-stats.ts:106-107`. Tests only. ZERO non-test readers.
+  - Cross-check `grep -rn "depthChartEntry|pfrAdvStat|teamWeekStat" scripts/ workers/ packages/` → 0 hits (only schema.prisma definitions, not reads). Confirms dead everywhere, not just in apps/.
+- Read `apps/web/app/api/cron/refresh-player-stats/route.ts`: only `ingestSnapCounts` + `ingestDepthCharts` are called, and ONLY under `?mode=full` (lines 47,71-87). `ingestPfrAdvStats` / `ingestTeamWeekStats` are NEVER called from the cron route — they run only via their own tests. So two of the four are not merely unread, they are never even ingested in production.
+
+Result: P14-04 premise confirmed and extended. Of the four satellite free tables, SnapCount is now wired (P12-08, 1 reader); DepthChartEntry / PfrAdvStat / TeamWeekStat are dead (0 readers). Verdict: free mode is a coherent, non-broken betting-picks product, but NOT yet compelling as the owner's stated fantasy/start-sit primary — the richest free context tables are dark. Ranked (differentiator/effort): 1) DepthChartEntry (highest value, lowest effort — recommended P14-05 target), 2) PfrAdvStat, 3) SnapCount (already done), 4) TeamWeekStat.
+
+Self-verification (protocol):
+(1) RE-DERIVE — every count above came from a grep I ran this session; no figure inherited from the queue/other docs.
+(2) GIT SHOW — `git show f6bb1a53 --stat` confirms 2 files changed (FREE_MODE_AUDIT.md created + SPRINT_QUEUE.md), no source files. Secret scan passed pre-commit.
+(3) Not a product-bug hypothesis (read-only read; no failing test involved).
+(4) No guard/assertion weakened.
+(5) Uncertainty written in report §5: "zero readers" is static-grep-verified (high confidence) but not runtime-query-confirmed; "compelling" is my qualitative read, not a measured metric; free-spine probe role inferred from import graph, not runtime-confirmed.
+
+git show f6bb1a53:
+  f6bb1a53e4d2a6525a8cb730feacb28789cc18ea
+  Author: ...
+  2 files changed, 147 insertions(+), 1 deletion(-)
+   create mode 100644 handoff/FREE_MODE_AUDIT.md
+   (SPRINT_QUEUE.md: P14-04 DOING→DONE)
+
+Next: P14-05 (next TODO in queue, depends on this ranking — wire the top-ranked dead free table, DepthChartEntry, into the projection/composite path per P12-08 pattern).
+
 ### 2026-08-16T21:06:11Z · P10-03 Round 2 — Hunt the "confidently wrong claim" bug class · DONE · STRIKES: 0 · commit 1dcf93e6
 
 Resumed P10-03 Round 2 from DOING (prior run was interrupted). Queue entry at SPRINT_QUEUE.md:2189 showed STATUS: DOING, started 2026-08-16T21:50:00Z. `date +%F` → 2026-08-16. `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date -u +"%Y-%m-%dT%H:%M:%SZ"` → 2026-08-16T21:05:52Z.
