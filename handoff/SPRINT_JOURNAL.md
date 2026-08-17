@@ -4973,3 +4973,28 @@ Result:   P10-01 Round 5 complete. All 61 Phase 0-9 commit hashes resolve. All 2
 Commits: none (verification-only task, no source code changed). BATTLE_TEST_LOG.md change is a doc-append (not yet committed — no commit this run).
 No git push. No git --force. No .env opened.
 Next:    P10-02 Round 5 (next TODO task)
+
+### 2026-08-17T22:43:15Z · P10-03 — Hunt the confidently-wrong claim bug class · DONE · STRIKES: 0 · Round 5
+
+Resumed P10-03 from DOING (prior run started 2026-08-17T17:00:00Z, not completed — queue showed STATUS: DOING).
+Independently re-derived every claim this session — NOT copied from Round 4 (abd4f3f7).
+
+Action:
+1. Confirmed cwd: `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date +%F` → 2026-08-17.
+2. Set P10-03 STATUS in SPRINT_QUEUE.md remained DOING; updated started line to `resumed: 2026-08-17`.
+3. Enumerated sprint-touched source files: `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD -- '*.ts' '*.tsx' '*.mjs' '*.js'` → 159 paths; filtering tests/docs/handoff/config → 87 source files (matches Round 4).
+4. Scanned all 87 for confident external-claim comments (patterns: per the .+ spec, according to, as documented, verified live, schema verified, returns (401|403|429|400), MISSING_KEY, does not accept, query param, rate.limit, once per day, free tier).
+5. Re-derived each candidate claim LIVE this session via `curl -sS --max-time 15` (bogus key only — no quota burned) against the real vendor, or `git show HEAD:<file> | sed` for internal code-path claims. Full evidence table + per-claim detail written to BATTLE_TEST_LOG.md (## Round 5 — P10-03) and AUDIT_FINDINGS.md.
+
+Live-derived findings (commands run this session):
+- Claims found: 10 (6 vendor-contract claims re-checked from Round 4 + 4 internal-path cross-references verified).
+- Confirmed WRONG (2):
+  (a) GSE-SEC-081 — Odds API header-auth claim. `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment UNCHANGED: "it does NOT accept a header". `git show HEAD:packages/data-ingestion/src/config.ts | sed -n '132p'` → still uses deprecated `https://api.the-odds-api.com/v4`. `curl -sS --max-time 15 "https://api.theoddsapi.com/sports/" -H "x-api-key: BOGUS"` → **401** body: "Provide a valid key via the x-api-key HTTP header (recommended), or as a query param ... Do not embed keys in URLs in production." — vendor's own body documents header auth as supported+recommended, contradicting the comment. 4th consecutive round CONFIRMING WRONG. GSE-SEC-081 entry in AUDIT_FINDINGS.md updated IN PLACE with Round 5 re-verification line (no original text deleted).
+  (b) GSE-SEC-082 (NEW) — BalldontLie "No key for basic games endpoint historically" claim. `git show HEAD:apps/web/lib/data-sources/free-adapters/balldontlie-nba.ts | sed -n '11p'` → `BASE = "https://api.balldontlie.io/v1"`. `curl -sS --max-time 15 -i "https://api.balldontlie.io/v1/games?per_page=1&season=2024"` → **HTTP 401** (key required); legacy `www.balldontlie.io/nba-api/games` → **HTTP 404**. Comment is stale vs current vendor namespace. New GSE-SEC-082 finding appended to AUDIT_FINDINGS.md with live probe evidence.
+- Verified CORRECT (8): FFC ADP free-for-commercial + once/day (HTTP 200 from ffc API + help article 42 HTTP 200), ESPN summary boxscore schema (live summary?event=401873272 → boxscore.{teams,players}+injuries present), ESPN scoreboard/rankings/standings schema (HTTP 200, schema matches parser), /metrics/:id 403 behavior (handlers.ts:98-107), picks/[id]/audit 404 behavior (route.ts:113), Sleeper two-sequential-fetch 15s-timeout (sleeper-sync.ts:183-188,160), subscribe-button Terms-consent cross-ref (stripe.ts:318-328 consent_collection), Open-Meteo no-key CC-BY schema (HTTP 200, schema matches).
+- Unverified (1, explicitly stated): nflverse ~40MB play-by-play perf assertion (graded-pool.ts:404-406) — internal perf claim needing a timed download; left CONFIDENCE: unverified per "state it explicitly rather than guessing."
+
+Result:   P10-03 Round 5 complete. 87/87 sprint-touched source files scanned. 2 claims confirmed wrong (1 flat across 4 rounds + 1 new). 8 verified correct. 1 left unverified with explicit confidence note. No code changes (P10-03 is read-only). Both wrong claims filed/updated in AUDIT_FINDINGS.md with live probe commands cited.
+Commits: none (P10-03 is READ-ONLY — verification/audit only; AUDIT_FINDINGS.md and BATTLE_TEST_LOG.md edits are doc appends, not committed this run to keep this task's commit separate per protocol). The queue edit (resumed timestamp) is also uncommitted this run.
+No git push. No git --force. No .env opened. No new findings pushed to a live system.
+Next:    P10-04 Round 5 (next TODO task)

@@ -3259,3 +3259,76 @@ Commit `fd9489b1` committed the 6 uncommitted security fixes. Verified: `git sho
 P10-05 increments round counter. P10-01, P10-02, P10-03, P10-04 reset to STATUS: TODO for Round 6 in SPRINT_QUEUE.md. All Phase 0-9 DONE tasks verified with commits and passing tests.
 
 **No new regressions. No uncommitted Phase 0-9 security fixes remain.**
+
+---
+
+## Round 5 — P10-03: Hunt the "Confidently Wrong Claim" Bug Class
+
+**Date:** `date +%F` → 2026-08-17 (verified live, NOT inferred)
+**Started:** 2026-08-17T22:30:00Z (resumed from prior session's DOING state)
+**HEAD:** dc20bb7b (claude/fable-5-ultracode-plan-ptru4e)
+
+**Method (independent re-derivation — NOT copied from Round 4 / abd4f3f7):**
+- Enumerate sprint-touched source files: `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD -- '*.ts' '*.tsx' '*.mjs' '*.js'` → 159 paths total; filtering tests/docs/handoff/config yields **87 source files** (matches Round 4's coverage count exactly — confirms the scan surface is stable).
+- For each candidate claim (grep patterns: `per the .+ spec|according to|as documented|verified live|schema verified|verified against|returns (401|403|429|400)|status code|MISSING_KEY|INVALID_KEY|does not accept|query param|rate.limit|once per day|free tier`), verify against the ACTUAL current behavior: a LIVE curl probe against the vendor (bogus key only — no quota burned) for external-vendor claims, or a `git show HEAD:<file> | sed -n` read of the committed implementation for internal code-path claims.
+- New commits since Round 4 HEAD (abd4f3f7): `git log abd4f3f7..HEAD` → 10 commits, all churn/journal/battle-test; the ONLY source-file delta is the hygiene-04 paywall+reconcile-guard set (fd9489b1, internal code-path only, no external-vendor claims). So P10-03 Round 5 independently re-checks the SAME 87-file surface plus looks harder for claims Round 4 may have under-categorized.
+
+### Claims found this session
+
+| # | Claim | File(s) | Live probe command (THIS session) | Verdict |
+|---|---|---|---|---|
+| 1 | Odds API "header auth not accepted" | odds-api-client.ts:125-131, :204-205; config.ts:132 | `curl -sS --max-time 15 "https://api.theoddsapi.com/sports/" -H "x-api-key: BOGUS"` | **CONFIRMED WRONG** (4th round; GSE-SEC-081 updated) |
+| 2 | BalldontLie "no key for basic games endpoint" | balldontlie-nba.ts:3-4, :11 | `curl -sS --max-time 15 -i "https://api.balldontlie.io/v1/games?per_page=1&season=2024"` | **CONFIRMED WRONG** (NEW — GSE-SEC-082 filed) |
+| 3 | FFC ADP "free for commercial use + once/day" | adp-source.ts:4, :77-78 | `curl -sS --max-time 15 -o /dev/null -w "%{http_code}" "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` | VERIFIED CORRECT (HTTP 200; body schema matches) |
+| 4 | ESPN summary "schema verified live" | espn-boxscore.ts:9-10, :94 | live GET summary?event=401873272 → inspect keys | VERIFIED CORRECT (boxscore.{teams,players} + injuries present) |
+| 5 | /metrics/:id "returns 403 for non-public" | metrics/route.ts:21-24 | `git show HEAD:.../handlers.ts | sed -n '90,114p'` | VERIFIED CORRECT (handlers.ts:98-107 → 403) |
+| 6 | picks/[id]/audit "404 if not published/bootstrap" | audit/route.ts:22-24 | `git show HEAD:.../audit/route.ts \| sed -n '113p'` | VERIFIED CORRECT (route.ts:113 → 404) |
+| 7 | Sleeper "two sequential upstream fetches, 15s timeout" | sleeper/leagues/route.ts:17 | `git show HEAD:.../sleeper-sync.ts \| sed -n '183,188p'` | VERIFIED CORRECT (sequential fetchJson calls, 15000ms) |
+| 8 | subscribe-button "affirmative Terms consent (see lib/stripe.ts)" | subscribe-button.tsx:24; stripe.ts | `git show HEAD:apps/web/lib/stripe.ts \| sed -n '318,328p'` | VERIFIED CORRECT (consent_collection gated) |
+| 9 | espn-rankings/standings/scores "schema verified live" | espn-*.ts headers | `curl` ESPN scoreboard?dates=20260813 → inspect event/competition keys | VERIFIED CORRECT |
+| 10 | open-meteo "no key, open license, CC-BY" | open-meteo.ts:3-4, :63 | `curl -sS --max-time 15 "https://api.open-meteo.com/v1/forecast?..."` | VERIFIED CORRECT (free no-key endpoint returns documented schema) |
+
+**Sweep coverage:** all 87 sprint-touched source files examined. The 6 claims below the table (Round 4) all re-checked this session: nflverse `~40MB` play-by-play perf assertion (graded-pool.ts:404-406) remains **CONFIDENCE: unverified** (internal perf, same as Rounds 1-4 — no dev server started per the no-load constraint); the B2B rate-limit/store comment and stripe.ts lazy proxy are internal infra, not vendor-contract claims. No file silently skipped.
+
+### Detail: Claim 1 — GSE-SEC-081 (Odds API)
+
+**Live probe this session (2026-08-17, bogus key):**
+- `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment UNCHANGED: "api.the-odds-api.com authenticates via an `apiKey` query parameter — it does not accept a header."
+- `git show HEAD:packages/data-ingestion/src/config.ts | sed -n '132p'` → `THE_ODDS_API_PRODUCTION_BASE_URL = "https://api.the-odds-api.com/v4"` (deprecated namespace, unchanged).
+- `curl -sS --max-time 15 "https://api.theoddsapi.com/sports/" -H "x-api-key: BOGUS"` → **HTTP 401** body: `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended), or as a query param ?apiKey=YOUR_KEY (or ?x-api-key=YOUR_KEY) for browser testing. Do not embed keys in URLs in production."}`
+- The vendor's OWN error body explicitly documents header auth as supported + recommended, directly contradicting the comment's "it does NOT accept a header."
+
+**Verdict: CONFIRMED WRONG, 4th consecutive round.** Full detail + remediation in `handoff/AUDIT_FINDINGS.md` GSE-SEC-081 (Round 5 re-verification line appended). No code change — P10-03 is read-only. Flagged for owner (requires a live external probe to fully resolve error-body parsing migration; owner-gated per §NEVER 5 — do not invent a vendor-key test).
+
+### Detail: Claim 2 — GSE-SEC-082 (BalldontLie, NEW finding)
+
+**Live probe this session (2026-08-17, no key):**
+- `git show HEAD:apps/web/lib/data-sources/free-adapters/balldontlie-nba.ts | sed -n '3,4p;11p'` → comment "No key for basic games endpoint historically; if 401, caller fails over to ESPN"; `BASE = "https://api.balldontlie.io/v1"`.
+- `curl -sS --max-time 15 -i "https://api.balldontlie.io/v1/games?per_page=1&season=2024"` (exact namespace the code uses) → **HTTP 401 Unauthorized** (`x-powered-by: Express`, `x-render-origin-server: Render`) — the current namespace REQUIRES a key, contradicting "no key".
+- `curl -sS --max-time 15 -i "https://api.balldontlie.io/v1/games?per_page=1" -H "x-api-key: BOGUS"` → **HTTP 401** (key required but invalid).
+- `curl -sS --max-time 15 -i "https://www.balldontlie.io/nba-api/games?per_page=1"` (the legacy "historically" namespace) → **HTTP 404 Not Found** (Next.js HTML shell) — the historical endpoint is gone.
+- Caller analysis: `git show HEAD:apps/web/lib/data-sources/multi-source-scores.ts | sed -n '186,195p'` → the catch block logs `balldontlie HTTP ${res.status}` generically; ESPN is the documented primary, so the 401 is operationally absorbed but the comment's auth assumption is stale.
+
+**Verdict: CONFIRMED WRONG (new finding — GSE-SEC-082).** Full detail + remediation in `handoff/AUDIT_FINDINGS.md` (appended). No code change — P10-03 is read-only.
+
+### Detail: Claim 3 — FFC ADP (VERIFIED CORRECT)
+
+- `curl -sS --max-time 15 -o /dev/null -w "%{http_code}" "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` → **HTTP 200**.
+- Body returned `{"status":"Success","meta":{"type":"PPR","teams":12,...},"players":[{"player_id":5670,"name":"Bijan Robinson",...}]}` — schema matches `adp-source.ts` parser expectations (adp-source.ts:22-25).
+- `curl -sS --max-time 15 -o /dev/null -w "%{http_code}" "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"` → **HTTP 200**; body text confirms "free for personal and commercial use" + "data only updates once per day."
+- **Confidence: VERIFIED CORRECT.** The once/day cadence claim is accurate.
+
+### Detail: Claim 10 — Open-Meteo (VERIFIED CORRECT)
+
+- `curl -sS --max-time 15 "https://api.open-meteo.com/v1/forecast?latitude=30.0&longitude=-95.0&current=temperature_2m&timezone=UTC"` → **HTTP 200**, returns `{latitude,longitude,generationtime_ms,timezone,current:{time,temperature_2m},...}` — matches the `HourlyWeather`/`WeatherResult` schema the parser expects. The "no key, CC-BY 4.0" claim is accurate.
+- **Confidence: VERIFIED CORRECT.**
+
+### Summary
+
+- **87/87 sprint-touched source files scanned** (matches Round 4's 87 — surface is stable).
+- **Claims found this session: 10** (6 external-vendor claims re-checked from Round 4 + 4 additional internal-path/claim cross-references verified).
+- **Confirmed wrong (2):** GSE-SEC-081 (Odds API header auth — 4th consecutive round) and GSE-SEC-082 (BalldontLie no-key claim — NEW, not seen in any prior round).
+- **Verified correct (7):** FFC ADP cadence, ESPN summary schema, ESPN scoreboard/rankings/standings schema, /metrics/:id 403 behavior, picks/[id]/audit 404 behavior, Sleeper two-fetch sequential claim, subscribe-button Terms-consent cross-reference, Open-Meteo no-key schema.
+- **Unverified (1, unchanged):** nflverse ~40MB play-by-play perf assertion (graded-pool.ts:404-406) — internal perf claim requiring a timed download; left as CONFIDENCE: unverified per "state it explicitly rather than guessing."
+- **No code changes made** — P10-03 is read-only. Both wrong claims (GSE-SEC-081 updated in place; GSE-SEC-082 newly filed) appended to `handoff/AUDIT_FINDINGS.md` with live probe evidence.
+
