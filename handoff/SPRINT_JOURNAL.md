@@ -4582,3 +4582,48 @@ Next:    P10-04 Round 3 (working-tree + history hygiene sweep)
   Findings written to BATTLE_TEST_LOG.md "Round 3 — P10-04" section. Only handoff docs committed.
 **Commit:** 5d13f167 — git show confirms 119 insertions to BATTLE_TEST_LOG.md + 1 line to SPRINT_QUEUE.md (P10-04 DOING→DONE). Verified hash resolves.
 **Next:** STOP — do not start P10-05 Round 4. Per HARD RULES, do exactly ONE task per run.
+
+---
+
+### 2026-08-17T18:45:00Z · STOP — Queue exhausted, no actionable TODO/DOING task · STATUS: NOT STARTED
+
+**STEP 0 — repo confirmation:** `cd /d "$PWD" && git rev-parse --show-toplevel` → `C:/Users/Garrett/Sports` (confirmed inside repo root). `git branch --show-current` → `claude/fable-5-ultracode-plan-ptru4e`. `date +%F` → `2026-08-17`.
+
+**STEP 1 — find first TODO/DOING task in SPRINT_QUEUE.md:**
+
+Scanned the ENTIRE queue with `grep -n 'STATUS: TODO\|STATUS: DOING' handoff/SPRINT_QUEUE.md`. The ONLY match is a PROSE line at line 2324:
+```
+Round counter incremented to 4. P10-01, P10-02, P10-03, P10-04 reset to STATUS: TODO for Round 4
+```
+This line describes the intended effect of P10-05 Round 3 ("Close Round 3"), but the ACTUAL task HEADER lines for P10-01..P10-04 (lines 2269, 2281, 2293, 2307) all still read `STATUS: DONE · Round 3 (reset by P10-05 Round 2)`. The reset was NARRATED but NOT applied to the headers. No task header in the queue carries `STATUS: TODO` or `STATUS: DOING`.
+
+**Conflict resolution:** The Round 3 P10-04 journal entry (line 4584 of this file) explicitly states:
+> **Next: STOP — do not start P10-05 Round 4. Per HARD RULES, do exactly ONE task per run.**
+
+This STOP directive, issued by the prior run AFTER discovering a critical non-committing bug, takes precedence over the queue prose's Round-4 reset intention. The prior run made a deliberate decision: do NOT start Round 4 until the non-committing bug is addressed by the owner.
+
+**Critical finding (re-confirmed THIS session, per self-verification protocol — re-derive, never inherit):**
+
+`git status --short` shows 6 UNCOMMITTED source/test files with real security fixes from Round 3, never committed:
+
+1. `apps/web/app/intelligence/engines/page.tsx` — **anonymous paywall bypass fix** (anonymous visitors can read premium analytics via `?engine=player-model` on the committed HEAD; working tree adds `getViewerEntitlements()` check + `TierGatePanel`).
+2. `apps/web/app/intelligence/engines/registry.tsx` — adds `premium: boolean` field to `EngineEntry` (default `true`).
+3. `apps/web/lib/billing/reconcile-entitlements.ts` — adds `requireDurableWriteStore("stripe-reconcile")` to `reconcileEntitlements()` and `reconcileUserEntitlement()` (extends GSE-SEC-033 to the reconcile path).
+4. `apps/web/app/api/cron/reconcile-entitlements/route.ts` — adds `DurableWriteStoreUnavailableError` 503 fail-closed handling.
+5. `packages/db/src/durable-write-guard.ts` — adds `"stripe-reconcile"` to `DURABLE_WRITE_CAPABILITIES`.
+6. `apps/web/__tests__/durable-write-store.test.ts` + `apps/web/__tests__/reconcile-entitlements.test.ts` — test updates.
+
+Re-derived via `git show HEAD:` greps THIS session:
+- `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c 'getViewerEntitlements'` → **0** (committed tree has ZERO entitlement check on the page)
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c 'requireDurableWriteStore'` → **0** (committed tree has ZERO guard)
+- `git show HEAD:packages/db/src/durable-write-guard.ts | grep -c 'stripe-reconcile'` → **0** (committed tree has ZERO stripe-reconcile capability)
+
+These were flagged in Round 3 P10-04 ("NON-COMMITTING BUG RECURRENCE") but NOT committed, because P10-04 was a read-only hygiene task. They are NOT assigned to any queue task. Per HARD RULES: "never git push" — but committing LOCAL-verified work IS required ("DONE without a commit is not actually done"). However, these files are NOT named by any task in the queue, and the journal says STOP. Per HARD RULES item: "Do exactly ONE task this run, then stop" — there is no task to do.
+
+**hygiene-03:** 3 untracked `.md` deliverables still never git-add-ed: `handoff/HAIKU_WATCH.md`, `handoff/PROD_HEALTH_ALERT.md`, `handoff/SPRINT_STATUS_NOW.md` (pre-existing, flagged in Round 3 P10-04).
+
+**Decision:** STOP. The queue is exhausted (all task headers DONE, no actionable TODO/DOING). The prior run's STOP directive is respected. The 6 uncommitted security fixes are NOT committed this run because (a) no task in the queue assigns them, (b) the journal says STOP, (c) HARD RULES require committing only files named by the task — these are not named. They remain flagged in BATTLE_TEST_LOG.md Round 3 P10-04 section (lines 2140-2246) for owner action.
+
+**No commit this run.** No files changed. No git add. No git push. No git --force.
+
+**Next:** Owner must decide: (1) authorize committing the 6 uncommitted security fixes (paywall bypass + stripe-reconcile guard), or (2) proceed with Round 4 (reset P10-01..04 headers to TODO first). Either way requires owner decision at this STOP point.
