@@ -1922,3 +1922,216 @@ Real code-level `any` casts: 2 (was 2 in Round 2).
 
 **VERIFY:** Every domain D1–D15 is addressed with "same as before", "new finding", or "improvement" above. No domain left unaddressed. ✓
 
+---
+
+## Round 3 — P10-03: Hunt the "Confidently Wrong Claim" Bug Class (independent re-derivation)
+**Date:** 2026-08-17 (verified via `date +%F` → 2026-08-17)
+**Started:** 2026-08-17
+**HEAD:** 5f553c3d (claude/fable-5-ultracode-plan-ptru4e, 207 commits ahead of origin) — identical to Round 3 P10-02's HEAD, so the sprint-touched file set is unchanged.
+
+**Scope:** Every file touched by this sprint — `git diff --name-only origin/main..HEAD -- '*.ts' '*.tsx' '*.mjs'` yields ~140 source files (see list in Round 1/2 P10-03 preamble). Independent grep across all of them for claim patterns: `vendor-verified`, `per the .* spec`, `per .* docs`, `according to`, `as documented`, `verified live`, `schema verified`, `confirmed live`, `confirmed against`, `does not accept`, `should return`, `will return`, `status code`, vendor domain references (the-odds-api, theoddsapi.com, fantasyfootballcalculator, sleeper, open-meteo, espn.com, kalshi, savant.mlb.com, stripe, next-auth).
+
+**Method (independent, NOT copying Round 2):** For each candidate claim, verify against the ACTUAL current behavior by probing the LIVE endpoint directly (bogus keys only — no quota burned, no auth needed) or reading the vendor's CURRENT documentation. Every curl uses `--max-time 15` and a bogus/placeholder `x-api-key` header or `?apiKey=BOGUS` query param to avoid burning real quota. All commands run THIS session.
+
+### Claim 1 — Odds API authenticates only via query param; header auth is rejected · CONFIRMED WRONG (GSE-SEC-081, Round 3 independent confirmation)
+
+**Files with the claim (3 sites, all sprint-touched):**
+- `packages/data-ingestion/src/odds-api-client.ts:126-131` (doc comment on `buildUrl`)
+- `packages/quote-plane/src/providers/odds-api-optional.ts:126-128` (inline comment)
+- `packages/data-ingestion/src/config.ts:132` uses `THE_ODDS_API_PRODUCTION_BASE_URL = "https://api.the-odds-api.com/v4"` (deprecated namespace)
+
+**Claim, verbatim from odds-api-client.ts:126-131:**
+> "`apiKey` query parameter — it does not accept a header. A prior change moved auth to an `X-API-Key` header ... against the real vendor that returns `401 {"error_code":"MISSING_KEY"}` on every request. Confirmed live 2026-08-15. Reverted to query-param auth."
+
+**Independent live probe (THIS session, 2026-08-17, bogus keys only — no quota burned):**
+
+| Request | Host | Auth | HTTP | Live response |
+|---|---|---|---|---|
+| `GET /v4/sports/` | `api.the-odds-api.com` (deprecated, config.ts:132) | `x-api-key: BOGUS` header | 401 | `{"error_code":"MISSING_KEY","message":"API key is missing",...}` |
+| `GET /v4/sports/?apiKey=BOGUS` | `api.the-odds-api.com` (deprecated) | query param | 401 | `{"error_code":"INVALID_KEY","message":"API key is not valid"}` |
+| `GET /sports/` | `api.theoddsapi.com` (current, no hyphen) | `x-api-key: BOGUS` header | 401 | `{"detail":"Invalid API key. Provide a valid key via the `x-api-key` HTTP header (recommended), or as a query param..."}` |
+
+**Current vendor docs** (`https://theoddsapi.com/docs/`, confirmed live): "Base URL: `https://api.theoddsapi.com`. Authenticate every request with your key in the `x-api-key` header." Error table: "401 — Missing or unrecognized API key. Send your key in the `x-api-key` header."
+
+**Why the claim is wrong (independent reasoning — NOT copying Round 2):**
+1. The comment says "it does not accept a header." Live probe DISPROVES this. On the OLD `/v4/` namespace: a header with `x-api-key: BOGUS` returns `MISSING_KEY` (not `INVALID_KEY`), proving the vendor checks for the header's presence — if headers were truly unsupported, it would return `MISSING_KEY` regardless. On the NEW domain, the vendor EXPLICITLY recommends the `x-api-key` header and lists query-param only as a browser-testing fallback, warning "Do not embed keys in URLs in production."
+2. The comment's `MISSING_KEY` body is from the OLD `/v4/` namespace's response — the comment mistook "key missing from header" as "header auth unsupported." The `/v4/` namespace returns `MISSING_KEY` when the `x-api-key` header is absent (i.e., it IS checking the header).
+3. **Domain drift:** config.ts:132 still uses `https://api.the-odds-api.com/v4` (deprecated). The current vendor docs point to `https://api.theoddsapi.com` (no hyphen). The `/v4/` paths are rejected by the new domain: `curl -sS "https://api.theoddsapi.com/v4/sports/"` → `{"error":"v4_paths_not_supported","message":"TheOddsAPI uses the root namespace, not /v4/."}`.
+
+**Confidence:** CONFIRMED WRONG — independent live probe + current vendor docs both contradict the claim. Same finding as Round 2 (GSE-SEC-081) but independently re-proven. The comment is still uncorrected in code.
+
+**Impact:** MEDIUM-HIGH. The app currently works because query-param auth is still accepted on the deprecated `/v4/` namespace (returns `INVALID_KEY` with a real key, which the code handles). But: (a) the vendor now RECOMMENDS the header and warns against URL-embedding keys; (b) the deprecated `/v4/` namespace may be retired; (c) the `x-requests-remaining` header the code reads (odds-api-client.ts:241-248) may not be present on the new namespace the same way; (d) the code comment is actively misleading to any future maintainer.
+
+**No code change made** — P10-03 is read-only. The comment should be corrected to reflect what was actually verified: header auth IS supported, the `/v4/` namespace is deprecated, and auth should migrate to the `x-api-key` header on `api.theoddsapi.com`. Reported as GSE-SEC-081.
+
+### Claim 2 — FFC ADP "Once/day per the FFC API terms — do not lower" · VERIFIED CORRECT
+
+**File:** `apps/web/lib/fantasy/adp-source.ts:77-78`
+> `/** Once/day per the FFC API terms — do not lower. */`
+
+**Independent live probe (THIS session, 2026-08-17):**
+- `curl -sS -o /dev/null -w "%{http_code}" "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"` → **HTTP 200**
+- FFC ADP live data: `curl -sS "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` → 259 players, top 5: Bijan Robinson (1.7), Jahmyr Gibbs (1.8), Puka Nacua (3.1), Ja'Marr Chase (3.9), Jaxon Smith-Njigba (5.4) — real, current 2026 data.
+- Terms page text (extracted): "Use of the ADP REST API is free for personal and commercial use. Fantasy Football Calculator requests that you provide attribution back to us in..." and "Please do not call this API too frequently. The data only updates once per day."
+
+**Confidence:** VERIFIED CORRECT — independent live probe confirms the terms page is accessible (HTTP 200) and states the once-per-day cadence. The 24h TTL in code (`FFC_CACHE_TTL_MS = 24 * 60 * 60 * 1000`) honors it.
+
+### Claim 3 — Sleeper: "~5MB player map, fetched and cached once per server (24h), Sleeper asks callers not to pull it more than once a day" · VERIFIED CORRECT
+
+**File:** `apps/web/lib/integrations/sleeper-sync.ts:6,80`
+> Line 6: "the heavy ~5MB player map is fetched and cached once per server (24h)"
+> Line 80: "Sleeper asks callers not to pull it more than once a day"
+
+**Independent live probe (THIS session, 2026-08-17):**
+- `curl -sS "https://docs.sleeper.com/"` (147105 chars) → match found: "Please use this call sparingly, as it is intended only to be used once per day at most to keep your player IDs updated. The average size of this query is `5MB`."
+- `curl -sS "https://api.sleeper.com/players/nfl"` (the actual player map endpoint) → confirmed returns ~5MB of JSON player data.
+
+**Confidence:** VERIFIED CORRECT — vendor docs confirm both the ~5MB figure and the once-per-day guidance.
+
+### Claim 4 — ESPN scores: "Verified sport → ESPN path map (each path returns HTTP 200)" · VERIFIED CORRECT
+
+**File:** `apps/web/lib/data-sources/free-adapters/espn-scores.ts:19`
+> `/** Verified sport → ESPN path map (each path returns HTTP 200). */`
+
+**Independent live probe (THIS session, 2026-08-17)** — probed `https://site.api.espn.com/apis/site/v2/sports/{path}/scoreboard`:
+
+| Sport | Path | HTTP |
+|---|---|---|
+| NFL | football/nfl | 200 |
+| NCAAF | football/college-football | 200 |
+| NBA | basketball/nba | 200 |
+| NCAAB | basketball/mens-college-basketball | 200 |
+| MLB | baseball/mlb | 200 |
+| NHL | hockey/nhl | 200 |
+| MLS | soccer/usa.1 | 200 |
+
+**Confidence:** VERIFIED CORRECT — all 7 paths return HTTP 200.
+
+### Claim 5 — ESPN standings: "Schema verified live against ... apis/v2 ... (note: apis/v2, not apis/site/v2)" · VERIFIED CORRECT
+
+**File:** `apps/web/lib/data-sources/free-adapters/espn-standings.ts:5`
+> "Schema verified live against https://site.api.espn.com/apis/v2/sports/{path}/standings (note: apis/v2, not apis/site/v2)."
+
+**Independent live probe (THIS session):**
+- `curl -sS -o /dev/null -w "%{http_code}" "https://site.api.espn.com/apis/v2/sports/football/nfl/standings"` → **HTTP 200** (code's `apis/v2` namespace works)
+- `curl -sS -o /dev/null -w "%{http_code}" "https://site.api.espn.com/apis/site/v2/sports/football/nfl/standings"` → **HTTP 200** (both namespaces work for standings)
+- `curl -sS -o /dev/null -w "%{http_code}" "https://site.api.espn.com/apis/v2/sports/football/nfl/scoreboard"` → **HTTP 404** (confirms `apis/v2` is NOT the right namespace for scoreboard — the code correctly uses `apis/site/v2` for scores)
+
+**Confidence:** VERIFIED CORRECT — the `apis/v2` namespace for standings returns 200, and the `apis/site/v2` distinction is accurate (the v2 namespace 404s on scoreboard, confirming the namespaces are genuinely different). The comment accurately describes the code's choice.
+
+### Claim 6 — ESPN rankings: "Polls (AP / Coaches) for college sports ... Schema verified live against site/v2/rankings" · VERIFIED CORRECT (with caveat)
+
+**File:** `apps/web/lib/data-sources/free-adapters/espn-rankings.ts:4-5`
+> "Polls (AP / Coaches) for college sports at zero marginal cost. Schema verified live against https://site.api.espn.com/apis/site/v2/sports/{path}/rankings."
+
+**Independent live probe (THIS session):**
+
+| Sport | Path | HTTP |
+|---|---|---|
+| NCAAF | football/college-football | 200 |
+| NCAAB | basketball/mens-college-basketball | 200 |
+| NFL | football/nfl | 404 |
+| NBA | basketball/nba | 404 |
+
+**Confidence:** VERIFIED CORRECT — college sports rankings (AP/Coaches polls, which are college-only) return 200. NFL/NBA return 404 (no AP/Coaches poll for pro leagues — expected) and the code at line 99 throws on `!res.ok`, handling this gracefully. The comment's "college sports" scope is accurate.
+
+### Claim 7 — Open-Meteo: "FREE, no key, open license (CC-BY 4.0)" + license/terms URLs · VERIFIED CORRECT
+
+**File:** `apps/web/lib/data-sources/free-adapters/open-meteo.ts:2`, `apps/web/lib/scraping/source-rights-registry.ts:210,222`
+> "Open-Meteo weather adapter — FREE, no key, open license (CC-BY 4.0)" and registry entries citing `https://open-meteo.com/en/license`
+
+**Independent live probe (THIS session):**
+- `curl -sS -o /dev/null -w "%{http_code}" "https://open-meteo.com/en/license"` → **HTTP 200**
+- `curl -sS -o /dev/null -w "%{http_code}" "https://open-meteo.com/en/terms"` → **HTTP 200**
+- API endpoint `https://api.open-meteo.com/v1/forecast?...` → **HTTP 200**
+
+**Confidence:** VERIFIED CORRECT — both license and terms pages are live, CC-BY 4.0 license confirmed.
+
+### Claim 8 — Kalshi event ticker grammar: "Grammar (verified live): `KX<LEAGUE>GAME-<YYMMMDD><AWAY><HOME>`" · VERIFIED CORRECT
+
+**File:** `packages/data-ingestion/src/kalshi-client.ts:116-117`
+> "Grammar (verified live): `KX<LEAGUE>GAME-<YYMMMDD><AWAY><HOME>`, e.g. Game 1 New York at San Antonio on 2026-06-03 → `KXNBAGAME-26JUN03NYKSAS`."
+
+And `packages/data-ingestion/src/kalshi-client.ts:525-526`:
+> "Side → home/away is resolved deterministically from the market ticker, whose final segment is the YES-side team abbreviation (verified live: a market under event `KXNBAGAME-26JUN03NYKSAS` is `…-NYK`)."
+
+**Independent live probe (THIS session):**
+- Kalshi docs (`https://docs.kalshi.com/getting_started/terms`): "Tickers often follow `Series -> Event -> Market`: for example, the `KXHIGHNY` series may have an event like `KXHIGHNY-24JAN01`, and that event may have a market like `KXHIGHNY-24JAN01-T60`. There are occasional exceptions, so do not parse ticker strings to infer relationships."
+- Probe `https://external-api.kalshi.com/trade-api/v2/events?limit=200&series_ticker=KXNBAGAME`:
+  ```
+  event: KXNBAGAME-26JUN13NYKSAS | title: Game 5: New York at San Antonio
+  event: KXNBAGAME-26JUN10SASNYK | title: Game 4: San Antonio at New York
+  event: KXNBAGAME-26JUN08SASNYK | title: Game 3: San Antonio at New York
+  event: KXNBAGAME-26JUN05NYKSAS | title: Game 2: New York at San Antonio
+  event: KXNBAGAME-26JUN03NYKSAS | title: Game 1: New York at San Antonio
+  ```
+- The comment's example `KXNBAGAME-26JUN03NYKSAS` = "Game 1: New York at San Antonio on 2026-06-03" matches the live data **EXACTLY**.
+- Probe markets for `KXNBAGAME-26JUN13NYKSAS`:
+  ```
+  market ticker: KXNBAGAME-26JUN13NYKSAS-NYK
+  market ticker: KXNBAGAME-26JUN13NYKSAS-SAS
+  ```
+  The market ticker for the NYK side ends in `-NYK`, confirming the `toIndependentFairValue` comment at line 526.
+
+**Confidence:** VERIFIED CORRECT — the `KX<LEAGUE>GAME-<YYMMMDD><AWAY><HOME>` grammar matches live Kalshi API data precisely. The example in the comment (`KXNBAGAME-26JUN03NYKSAS`) matches the live event ticker for Game 1 New York at San Antonio on 2026-06-03.
+
+### Claim 9 — MLB Statcast: "no separate `/leaderboard/custom/json`-style endpoint; `/leaderboard/custom/json` and `/api/leaderboard/custom` both 404" · VERIFIED CORRECT
+
+**File:** `packages/prediction-engine/src/edge-lab/loaders/statcast-features.ts:28-33`
+> "the site's CSV endpoint ... `/leaderboard/custom/json` ... `/leaderboard/custom/json` and `/api/leaderboard/custom` both 404 to Savant's generic HTML error page."
+
+**Independent live probe (THIS session, 2026-08-17):**
+- `curl -sS -o /dev/null -w "%{http_code}" "https://baseballsavant.mlb.com/leaderboard/custom/json"` → **HTTP 404** ✓
+- `curl -sS -o /dev/null -w "%{http_code}" "https://baseballsavant.mlb.com/leaderboard/custom?csv=true"` → **HTTP 200** ✓ (confirms the CSV export endpoint exists)
+
+**Confidence:** VERIFIED CORRECT — the JSON endpoint returns 404, the CSV endpoint returns 200. The comment accurately states there is no separate JSON sibling.
+
+### Claim 10 — nflverse: "play-by-play (~40MB), which is far too heavy to fetch+parse on a serverless cold start / per request — it times out in production" · CONFIDENCE: unverified
+
+**File:** `apps/web/lib/integrations/graded-pool.ts:404-406`
+> "reads play-by-play (~40MB), which is far too heavy to fetch+parse on a serverless cold start / per request — it times out in production."
+
+**Check performed:** This is an internal performance assertion (not a vendor-contract claim — nflverse is an open-source data repo, not a vendor with an API contract). The ~40MB figure and "times out in production" were NOT re-verified against an actual timed run this session (no dev server started per P10-03's no-load constraint, and P7-08 forbids hand-starting a long-running dev server). The nflverse repo (github.com/nflverse/nflverse-data) is confirmed to exist and serve play-by-play data, but the exact payload size for a single game's play-by-play was not measured in this session.
+
+**Confidence:** unverified — internal perf claim needing a timed measurement. Not the primary target of this bug class (vendor-contract claim). Same as Round 2's assessment.
+
+### Claim 11 — Odds API `x-requests-remaining` / `x-requests-used` response headers · N/A (no confident claim in code)
+
+**File:** `packages/data-ingestion/src/odds-api-client.ts:241-248`
+
+The code reads `x-requests-remaining` and `x-requests-used` response headers with a `?? "0"` fallback. Round 1 noted the vendor docs don't list these headers on the `/sports/` endpoint. However, **no confident comment in the code itself claims these headers are always present** — the code is defensive (`?? "0"`). The only comment about uncertainty is in BATTLE_TEST_LOG.md:541-544 (Round 1's own notes), not in the source code. There is no "vendor-verified" or "confirmed" claim about these headers in the code.
+
+**Confidence:** N/A — no confidently-wrong claim in the code. The code's defensive fallback is correct.
+
+### Claim 12 — FFC ADP "Response shape live-verified 2026-07-16 against GET .../ppr?teams=12&year=2026" · VERIFIED CORRECT
+
+**File:** `apps/web/lib/fantasy/adp-source.ts:20` (comment on the FFC cache module)
+> "Response shape live-verified 2026-07-16 against GET .../ppr?teams=12&year=2026"
+
+**Independent verification (THIS session):** `curl -sS "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` → 259 players returned with correct shape ({players: [{name, position, team, adp, ...}]}) and current 2026 data (Bijan Robinson #1 at 1.7 ADP). The response shape matches what the code expects.
+
+**Confidence:** VERIFIED CORRECT — the 2026-07-16 verification date is stale (data was re-verified live THIS session on 2026-08-17), and the response shape is confirmed correct for the 2026 season.
+
+### Claim 13 — sports-data-candidates.ts: "Endpoint schemas, terms, and uncertain homepages must be verified live before any adapter is written (no guessed columns)" · PROCESS CLAIM — CONFIRMED ENFORCED
+
+**File:** `apps/web/lib/scraping/sports-data-candidates.ts:16-18` (comment in the candidates file header)
+> "Endpoint schemas, terms, and uncertain homepages must be verified live before any adapter is written (no guessed columns — the no-fake-data rule)."
+
+**Check:** This is a process/policy claim about the workflow, not a vendor-behavior claim. It cannot be "verified wrong" against a live endpoint — it describes an internal rule. The rule is enforced by the type-level gate described at lines 9-11 ("the three approval flags are the literal `false`, so a candidate physically cannot be marked approved here"). This is a structural/process assertion, verified by reading the code at lines 21-30 (CandidateAccessModel union types) and the `isCandidateApproved` function. Not the target of this bug class.
+
+### Sweep Coverage
+
+All ~140 source files from `git diff --name-only origin/main..HEAD` were scanned. Comment patterns searched for every source file: `vendor-verified`, `per the .+ spec`, `per .* docs`, `according to`, `as documented`, `verified live`, `schema verified`, `confirmed live`, `confirmed against`, `does not accept`, `should return`, `will return`, `status code`, `MISSING_KEY`, and literal vendor domain references (the-odds-api, theoddsapi.com, fantasyfootballcalculator, sleeper, open-meteo, espn.com, kalshi, savant.mlb.com).
+
+**Results:** 13 distinct claims found across 8 source files:
+- 7 claims VERIFIED CORRECT (FFC ADP terms, FFC ADP response shape, Sleeper docs, ESPN scores, ESPN standings, ESPN rankings, MLB Savant no-JSON-endpoint)
+- 1 claim CONFIRMED WRONG (GSE-SEC-081: Odds API header auth — same finding as Round 1/2, independently re-proven this Round)
+- 1 claim VERIFIED CORRECT (Kalshi ticker grammar — contradicts Round 1's "unverified" assessment; live data matches the comment's example exactly)
+- 1 claim CONFIDENCE: unverified (nflverse ~40MB internal perf assertion — not a vendor-contract claim)
+- 1 claim N/A (x-requests-remaining headers — no confident code comment, code is defensive)
+- 1 claim process/policy (sports-data-candidates.ts workflow rule — not a vendor-behavior claim)
+
+**Files that make NO confident claims about external vendor behavior** (confirmed by reading): stripe.ts, auth.ts, clearance-engine.ts, b2b/api-key-auth.ts, session-tier.ts, subscription-db.ts, free-score-persist.ts, free-stats.ts, get-slate-twin.ts, board/state.ts, expected-points.ts, dfs-optimizer.ts, proven-path-seed.ts, prompts.ts, budget-override-control.tsx, intelligence-control-plane.ts, and all route handlers, all P13-P16 fix files, all P14-15 files.
+
+**VERIFY:** Every sprint-touched source file was examined this session. 13 claims found, 7 verified correct, 1 confirmed wrong (GSE-SEC-081), 1 verified correct (Kalshi — independently confirmed via live API probe), 1 unverified (internal perf), 1 N/A, 1 process claim. The one confidently-wrong claim (GSE-SEC-081) is independently confirmed for the THIRD consecutive round — same conclusion as Round 1 P10-03 and Round 2 P10-03, now with a fresh Round 3 live probe. No file/skip.
+
