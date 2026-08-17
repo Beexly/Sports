@@ -2771,3 +2771,110 @@ All 87 source files from `git diff --name-only origin/claude/fable-5-ultracode-p
 **Files that make NO confident claims about external vendor behavior** (confirmed by reading): all remaining 82 of the 87 touched source files — including `next.config.mjs` (CSP domain lists are configuration, not behavioral claims — "Stripe.js injects inline scripts" is a fact about how the script works, not a vendor-contract claim), `apps/web/lib/stripe.ts` (Stripe lazy-proxy is internal infra), `apps/web/lib/auth.ts` (JWT/session is internal), `apps/web/lib/scraping/clearance-engine.ts` (8-stage pipeline is internal), all P13-P16 route handlers, `free-stats.ts`, `free-first-ingest.ts`, `multi-source-scores.ts`, `durable-write-guard.ts`, `b2b/api-key-auth.ts`, `session-tier.ts`, `picks/route.ts`, `board/state/route.ts`, `subscription-db.ts`, `get-slate-twin.ts`, `expected-points.ts`, `dfs-optimizer.ts`, `dfs-optimizer.tsx`, `proven-path-seed.ts`, `prompts.ts`, `budget-override-control.tsx`, `intelligence-control-plane.ts`, `performance/route.ts` (the comment about `findMany()` → `$queryRaw` migration at line 35-42 is an internal code-path claim, verified correct — the code does use `db.$queryRaw` with parameterized interpolation).
 
 **VERIFY:** Every sprint-touched source file (87 files) was examined this session. 6 claims found across 5 distinct files. 4 verified correct, 1 confirmed wrong (GSE-SEC-081, 4th consecutive round), 1 unverified (internal perf claim). No file/skip. The 1 proven-wrong claim (Odds API auth) is independently confirmed for the FOURTH consecutive round — the same comment remains uncorrected in the committed tree, `config.ts:132` still uses the deprecated `/v4/` namespace, and `git log --oneline packages/data-ingestion/src/odds-api-client.ts` confirms 0 commits have touched the file since the comment was written.
+
+---
+
+## Round 4 — P10-04: Working-Tree and History Hygiene Sweep (2026-08-17)
+
+**Date:** 2026-08-17 (from `date +%F`)
+**Started:** 2026-08-17T21:15:00Z
+**HEAD:** d56ed322 (claude/fable-5-ultracode-plan-ptru4e, 212 commits ahead of origin)
+**Task scope:** Independent re-derivation of working-tree + history hygiene from current HEAD. NOT copying Round 3 conclusions (lines 2140-2255). Commands run THIS session to form findings from the live tree first, then reconcile against Round 3 documented output.
+
+### Method (commands run THIS session from C:/Users/Garrett/Sports)
+- `git status --short` — list all uncommitted + untracked files
+- `git status --ignored -- handoff/` — confirm no .md silently ignored
+- `git worktree list` — check for stray worktrees
+- `git stash list` + `git stash show --stat` — check for hidden WIP
+- `git log --all --oneline --format='%s' | sort | uniq -d | wc -l` — duplicate commit subjects
+- `git diff --stat HEAD` — uncommitted source vs committed HEAD
+- `git show HEAD:<path> | grep -c <pattern>` — CRITICAL: verify committed-tree state independently of working-tree for every guard claim
+- `git ls-files --error-unmatch <untracked .md>` — confirm untracked-ness of .md deliverables
+
+### Results
+
+#### Item 1 — Uncommitted source-code changes: 6 files (NON-COMMITTING BUG RECURRENCE)
+
+`git diff --stat HEAD` shows exactly 6 source/test files modified, 0 committed:
+
+Two distinct security fixes, both correct, both uncommitted:
+
+1. **Intelligence-engines paywall bypass (LIVE BUG):** Committed HEAD page.tsx calls `active.load()` with ZERO getViewerEntitlements check. grep -c getViewerEntitlements on committed HEAD -> 0, working tree -> 7 (gate + TierGatePanel + comment). Anonymous visitors can read premium analytics at /intelligence/engines. The working-tree fix adds the gate.
+
+2. **Stripe-reconcile durable-write guard (GSE-SEC-033 extension):** Committed HEAD reconcile-entitlements.ts has ZERO requireDurableWriteStore calls (grep -c -> 0). Working tree has 3. Without this, a stub DB would let reconcile silently no-op while reporting ok.
+
+CRITICAL: grep -c counts against committed HEAD (git show HEAD:) vs working tree, all run THIS session:
+- apps/web/app/intelligence/engines/page.tsx: requireDurableWriteStore -> HEAD=0, WT=3
+- apps/web/app/intelligence/engines/registry.tsx: premium: -> HEAD=0, WT=2
+- apps/web/lib/billing/reconcile-entitlements.ts: requireDurableWriteStore -> HEAD=0, WT=3
+- apps/web/app/api/cron/reconcile-entitlements/route.ts: DurableWriteStoreUnavailableError -> HEAD=0, WT=2
+- packages/db/src/durable-write-guard.ts: stripe-reconcile -> HEAD=0, WT=1
+- apps/web/__tests__/durable-write-store.test.ts, reconcile-entitlements.test.ts: new tests, uncommitted
+
+**CRITICAL SUB-FINDING (confidently-wrong claim in committed artifact):**
+`handoff/REMEDIATION_EXECUTION.md` row 15 (committed as 4e7326da) claims the stripe-reconcile guard is at `reconcile-entitlements.ts:494,579`. Independently re-derived THIS session:
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` -> 0 (committed version has ZERO)
+- `git show HEAD:packages/db/src/durable-write-guard.ts | grep -c stripe-reconcile` -> 0 (committed has ZERO)
+- `git show HEAD:apps/web/app/api/cron/reconcile-entitlements/route.ts | grep -c DurableWriteStoreUnavailableError` -> 0 (committed has ZERO)
+The claim was written by P8-08-RESUME based on an inherited/stale assertion. The guard exists ONLY in the working tree.
+
+#### Item 2 — Gitignored handoff deliverables · CLEAN
+
+`git ls-files --ignored --others --exclude-standard -- 'handoff/*.md'` -> nothing. No .md file in handoff/ is silently ignored. `.gitignore` narrows to `handoff/*.log`, `*.txt`, `*.stderr`, `*.json`, `_*`, `*.py` — no .md extension ignored.
+
+#### Item 3 — Untracked .md deliverables · STILL BROKEN (hygiene-03, 3 files)
+
+`git ls-files --error-unmatch` confirms all 3 are NOT in the git index:
+- `handoff/PROD_HEALTH_ALERT.md` (7108 bytes, untracked)
+- `handoff/SPRINT_STATUS_NOW.md` (5194 bytes, untracked)
+- `handoff/HAIKU_WATCH.md` (4387 bytes, untracked)
+
+hygiene-03 STILL OPEN — same bug class as Round 3 (untracked .md deliverables never git-add-ed). HAIKU_WATCH.md is new since Round 3.
+
+#### Item 4 — Worktrees · CLEAN (17 worktrees, all intentional)
+
+`git worktree list` -> 17 worktrees. Only `C:/Users/Garrett/Sports` is on the active sprint branch. All 16 others are experimental/isolated branches. No stray worktree on active branch. No collision. No regression.
+
+#### Item 5 — Stashes · CLEAN
+
+`git stash list` -> 5 stashes. `git stash show --stat stash@{0}` shows 1 file (CLAUDE.md). Stashes @{1..4} are overnight backups on old branches. No stashed deliverable work.
+
+#### Item 6 — Two-agent collision / duplicate commits · 35 historical, 0 new
+
+`git log --all --oneline --format='%s' | sort | uniq -d | wc -l` -> 35. All historical. No NEW duplicates since Round 3.
+
+#### Item 7 — Merge conflicts · CLEAN
+
+`git diff --name-only --diff-filter=U` -> empty.
+
+#### Item 8 — Secret leaks · CLEAN
+
+`git status --short | grep -i .env\|secret\|KEY` -> empty.
+
+#### Item 9 — P8-08-RESUME · CONFIRMED DONE
+
+`git log --oneline -1 4e7326da` resolves. P8-08-RESUME STATUS: DONE. The stripe-mutation-guard-invariant.test.ts was re-verified passing in Round 4 (4 passed). The stripe-reconcile extension is OUTSIDE P8-08-RESUME scope (that task covered lib/stripe.ts mutations only).
+
+### Summary Table
+
+|| Check | Result |
+|---|---|---|
+| Uncommitted source-code changes | 6 files — NON-COMMITTING BUG RECURRENCE (2nd consecutive round) |
+| Non-committing bug detail | 2 security fixes (paywall bypass + stripe-reconcile guard) correct but uncommitted; 2 test files uncommitted |
+| False committed claim | CONFIRMED — REMEDIATION_EXECUTION.md row 15 claims stripe-reconcile guard at :494,579 but git show HEAD: -> 0 occurrences |
+| Gitignored .md deliverables | CLEAN — no .md silently ignored |
+| Untracked .md deliverables | 3 files — hygiene-03 STILL OPEN |
+| Two-agent duplicate commits | 35 historical — 0 new since Round 3 |
+| P8-08-RESUME | DONE (commit 4e7326da) — verified |
+| Stray worktrees | NONE — all 17 intentional |
+| Hidden stashed real work | NONE |
+| Merge conflicts | NONE |
+| Secret leaks | NONE |
+
+### New Follow-up Items
+
+1. **hygiene-04 (CRITICAL):** 6 uncommitted security-fix files (intelligence-engines paywall bypass + GSE-SEC-033 stripe-reconcile guard + 2 test files) remain in working tree. The paywall bypass is a LIVE bug in committed tree. These need VERIFY + commit as a dedicated task. P10-04 is read-only.
+2. **hygiene-03 (carryover, STILL OPEN):** 3 untracked .md deliverables (PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md, HAIKU_WATCH.md).
+3. **hygiene-06 (NEW):** `handoff/REMEDIATION_EXECUTION.md` row 15 claims stripe-reconcile guard exists at :494,579 but committed tree has zero. Committed artifact cites code state that does not exist.
+
+**VERIFY:** Every finding backed by command run THIS session. All grep -c against `git show HEAD:` vs working tree. No skip. The 6 uncommitted fixes confirmed identical to Round 3 findings (no source commits between 5f553c3d and HEAD per Round 3 P10-02).
