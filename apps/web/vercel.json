@@ -1,0 +1,154 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd ../.. && npm run db:generate && node scripts/deploy/migrate-if-configured.mjs && NODE_OPTIONS=--max-old-space-size=8192 npm run build --workspace=@sports/web",
+  "installCommand": "cd ../.. && npm install --include=dev",
+  "ignoreCommand": "cd ../.. && node scripts/vercel-skip-build.mjs",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "regions": [
+    "iad1"
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/refresh-odds",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/board-fill",
+      "schedule": "2,17,32,47 * * * *"
+    },
+    {
+      "path": "/api/cron/settle-picks",
+      "schedule": "20 * * * *"
+    },
+    {
+      "path": "/api/cron/deliver-settlement-alerts",
+      "schedule": "15 */3 * * *"
+    },
+    {
+      "path": "/api/cron/generate-signal-slate",
+      "schedule": "5,20,35,50 * * * *"
+    },
+    {
+      "path": "/api/cron/generate-drafts",
+      "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/cron/reconcile-entitlements",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/ingest-player-stats",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/hydrate-cold-plane",
+      "schedule": "30 9 * * *"
+    },
+    {
+      "path": "/api/cron/drain-ai-telemetry-recovery",
+      "schedule": "30 * * * *"
+    },
+    {
+      "path": "/api/cron/prune-rate-limits",
+      "schedule": "30 6 * * *"
+    },
+    {
+      "path": "/api/cron/repair-checkout-attempts",
+      "schedule": "30 8 * * *"
+    },
+    {
+      "path": "/api/cron/run-formal-receipt",
+      "schedule": "45 9 * * *"
+    },
+    {
+      "path": "/api/cron/jarvis-snapshot",
+      "schedule": "15 * * * *"
+    },
+    {
+      "path": "/api/cron/free-spine-health",
+      "schedule": "0 */2 * * *"
+    },
+    {
+      "path": "/api/cron/health-alert",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/autonomy-cycle",
+      "schedule": "7,22,37,52 * * * *"
+    },
+    {
+      "path": "/api/cron/calibration-metrics",
+      "schedule": "40 */6 * * *"
+    },
+    {
+      "path": "/api/cron/backfill-independent-trueprob",
+      "schedule": "10 */4 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-player-stats",
+      "schedule": "0,30 * * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/embed/:path*",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors *"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/((?!embed$|embed/).*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms https://scripts.clarity.ms https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://*.vercel-insights.com https://api.stripe.com; frame-src https://js.stripe.com; worker-src 'self' blob:; upgrade-insecure-requests"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(self \"https://js.stripe.com\")"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    }
+  ]
+}
