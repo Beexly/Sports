@@ -2426,7 +2426,7 @@ PR is finally opened, the free reviewers find little, so their output is signal 
 290-commit wall of noise. This converts paid review work into free review work.
 **VERIFY:** paste real command output with pass/fail counts. Red-before-green for any fix.
 
-### P16-00 — HARD CAP on the battle-test loop · STATUS: TODO · STRIKES: 0 · PRIORITY: overrides P10-05
+### P16-00 — HARD CAP on the battle-test loop · STATUS: DONE · STRIKES: 0 · started: 2026-08-17T22:29:34Z · completed: 2026-08-17T22:41:00Z · commit 1bd47fe7 · PRIORITY: overrides P10-05
 P10-05 says "this does not end." It ends now. Rounds 1-5 re-audited the same ~150 tasks with
 falling yield; continuing is spend without return while the product still cannot take money.
 On finishing the CURRENT round, do NOT reset P10-01..04. Instead: write
