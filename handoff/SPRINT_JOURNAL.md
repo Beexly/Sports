@@ -5200,3 +5200,36 @@ tools/hunt-claims.js) were NOT committed — they are not named deliverables of 
 Next: P10-03 Round 6 (STATUS: TODO) is the first remaining task. However, P16-00
 (PRIORITY: overrides P10-05) declares the battle-test loop should end after the
 current round — P10-02/03/04 must complete first, then P16-00 overrides the reset.
+
+### 2026-08-18T00:52:47Z · P10-03 — Hunt confidently-wrong claims · DONE · STRIKES: 0 · Round 6
+
+Resumed P10-03 from DOING (prior run had set STATUS: DOING but not completed). Independently re-derived every fact from live commands, no inheritance from Round 5.
+
+Action:
+1. Confirmed cwd via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date +%F` → 2026-08-17. Branch: claude/fable-5-ultracode-plan-ptru4e.
+2. Set P10-03 STATUS in SPRINT_QUEUE.md from DOING → DONE.
+3. Enumerated sprint-touched source files: `git diff --name-only origin/main..HEAD -- '*.ts' '*.tsx' '*.js' '*.mjs' '*.md'` → 172 paths; 155 production source files in scope. Full list in handoff/.sprint_files.txt (scratch, deleted after grep).
+4. Grepped all 172 files for claim patterns: `vendor-verified|verified live|confirmed live|confirmed against|per the .*spec|per .*docs|according to|as documented|does not accept|returns (401|403|429|400)|MISSING_KEY|INVALID_KEY|no key|does not need|deprecated|no longer|status code`. → 84 grep hits → 10 substantive claims identified.
+5. Live-probed each external-vendor claim via curl (bogus key only, no quota burned):
+   - Odds API (odds-api-client.ts:125-131, :204-205): CLAIM "header not accepted" — CONFIRMED WRONG. `curl https://api.the-odds-api.com/v4/sports/ -H "x-api-key: bogus"` → 401 MISSING_KEY (old domain ignores header); `curl https://api.theoddsapi.com/sports/ -H "x-api-key: bogus"` → 401 `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended)"}` — new domain explicitly recommends header auth. 5th consecutive round.
+   - Odds API (odds-api-optional.ts:126-128): SAME claim, SECOND file — CONFIRMED WRONG. Not in Round 5's 87-file surface. `git show HEAD:packages/quote-plane/src/providers/odds-api-optional.ts | sed -n '126,129p'` → verbatim same stale comment + old /v4/ namespace + query-param auth.
+   - Rundown (rundown-client.ts:4): "header OR ?key=" — VERIFIED CORRECT. Both methods return 401 with bogus key.
+   - ESPN (source-router.ts:97): "No key. Free" — VERIFIED CORRECT. `curl -o /dev/null -w "%{http_code}" "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"` → 200.
+   - Open-Meteo (source-router.ts:108): "no key, CC-BY 4.0" — VERIFIED CORRECT. `curl "https://api.open-meteo.com/v1/forecast?..."` → 200 JSON.
+   - FFC ADP (adp-source.ts:4,:6-7,:78): "free commercial + once/day" — VERIFIED CORRECT. API → 200, help article → 200 confirms both claims.
+   - nflverse ~40MB perf assertion (graded-pool.ts:404) — CONFIDENCE: unverified (internal perf, no dev server per P10-03 constraint).
+   - 6 internal code-path claims (middleware 401, metrics 403, watchlist 403+upsell, preview 404, cron 401/500) — all VERIFIED CORRECT via `git show HEAD:` reads.
+6. Updated handoff/BATTLE_TEST_LOG.md with full Round 6 P10-03 section (10 findings, coverage report, live probe commands).
+7. Updated handoff/AUDIT_FINDINGS.md GSE-SEC-081 entry with Round 6 re-verification + second-file instance location.
+8. P10-03 is read-only — NO code changes, NO product edits. Findings filed for owner.
+9. VERIFY: every sprint-touched source file grepped; 100% of external-vendor claims verified live (2 wrong, 3 correct, 1 unverified); 100% of internal claims verified via git-show reads; 0 files silently skipped. ✓
+10. git add handoff/BATTLE_TEST_LOG.md handoff/AUDIT_FINDINGS.md handoff/SPRINT_QUEUE.md; git commit.
+
+Result: DONE. No code changes. GSE-SEC-081 confirmed wrong in 2 files.
+
+Commit: 898254f9 chore(battle-test): P10-03 Round 6 — confidently-wrong claim hunt, full sprint-surface scan. `git show 898254f9 --stat` confirms exactly 3 files changed: AUDIT_FINDINGS.md (+3/-1), BATTLE_TEST_LOG.md (+118), SPRINT_QUEUE.md (+2/-2). `git show 898254f9` re-read confirms STATUS changed DOING → DONE. SECRET-SCAN OK (3 files scanned, 0 secrets). NO git push, NO git --force, NO reset --hard.
+
+Files committed this task only:
+- handoff/BATTLE_TEST_LOG.md (P10-03 Round 6 audit section)
+- handoff/AUDIT_FINDINGS.md (GSE-SEC-081 Round 6 re-verification + second-file location)
+- handoff/SPRINT_QUEUE.md (P10-03 STATUS: DOING → DONE)

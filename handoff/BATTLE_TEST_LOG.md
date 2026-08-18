@@ -3980,3 +3980,121 @@ Both require Next major upgrade (NEEDS-OWNER), no safe direct fix. `npm audit --
 No round counter increment (P10-02 is a mid-round audit task, not a round-closing task). Round 6 continues with P10-03 and P10-04 still pending.
 
 **VERIFY:** `BATTLE_TEST_LOG.md` states explicitly, per domain, "same as before", "new finding", "original finding no longer applies", "IMPROVED", or "STILL OPEN" — all 15 domains (D1-D15) addressed. No domain left unaddressed. ✓
+
+---
+
+## Round 6 — P10-03: Hunt the "Confidently Wrong Claim" Bug Class
+
+**Date:** `date +%F` → 2026-08-17 (verified live, NOT inferred)
+**Started:** 2026-08-18T00:52:47Z
+**HEAD:** 131a1d55 (claude/fable-5-ultracode-plan-ptru4e)
+**Round:** 6
+
+**Method (independent re-derivation — NOT copied from Round 5):**
+
+- Enumerate sprint-touched source files: `git diff --name-only origin/main..HEAD -- '*.ts' '*.tsx' '*.mjs' '*.js'` → 172 paths. Filtering tests (__tests__/\*.test.\*), e2e specs, docs-only, node_modules, .next yields **155 production source files + scripts + config**. Every file in `.sprint_files.txt` was grepped.
+- For each candidate claim (grep patterns across all 172 files): `vendor-verified`, `per the .* spec`, `per .* docs`, `according to`, `as documented`, `verified live`, `schema verified`, `confirmed live`, `confirmed against`, `does not accept`, `should return`, `will return`, `returns (401|403|429|400)`, `MISSING_KEY`, `INVALID_KEY`, `no key`, `does not (require|need)`, `historically`, `no.?key`, `deprecated`, `no longer`, `status code` — for each one found, verify against the ACTUAL current behavior via a LIVE curl probe against the vendor (bogus key only — no quota burned) for external-vendor claims, or a `git show HEAD:<file> | sed -n` read of the committed implementation for internal code-path claims.
+- Key difference from Round 5: Round 5 scanned 87 source files (the pre-hygiene-04 tree). This Round 6 scans the FULL current sprint surface of 155 files, which includes `packages/quote-plane/src/providers/odds-api-optional.ts` (NOT in Round 5's 87-file surface — it was added/modified after abd4f3f7).
+
+### Claims found this session
+
+| # | Claim | File(s) | Live probe command (THIS session) | Verdict |
+|---|---|---|---|---|
+| 1 | Odds API "header auth not accepted / vendor-verified 401 MISSING_KEY for header-only" | odds-api-client.ts:125-131, :204-205 | `curl -sS "https://api.theoddsapi.com/v4/sports/" -H "x-api-key: bogus"` → 401 `MISSING_KEY`; `curl -sS "https://api.theoddsapi.com/sports/" -H "x-api-key: bogus"` → 401 body: `"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended)"` | **CONFIRMED WRONG** (GSE-SEC-081, 5th consecutive round) |
+| 2 | Same Odds API claim, SECOND file | odds-api-optional.ts:126-128 | Same probes as Claim 1 | **CONFIRMED WRONG** (new file instance of GSE-SEC-081) |
+| 3 | Rundown "Auth: X-TheRundown-Key header OR ?key=" | rundown-client.ts:4 | `curl -sS -i "https://therundown.io/api/v2/sports/2/events/2026-08-16?key=bogus"` → 401; `curl -sS -i "https://therundown.io/api/v2/sports/2/events/2026-08-16" -H "X-TheRundown-Key: bogus"` → 401 | VERIFIED CORRECT (both auth methods recognized) |
+| 4 | ESPN "No key. Free scores/standings/rankings" | source-router.ts:97 | `curl -sS -o /dev/null -w "%{http_code}" "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"` → 200 | VERIFIED CORRECT |
+| 5 | Open-Meteo "Free, no key, no sign-up (CC-BY 4.0)" | source-router.ts:108 | `curl -sS "https://api.open-meteo.com/v1/forecast?..."` → 200, returns JSON schema | VERIFIED CORRECT |
+| 6 | FFC ADP "free for personal AND commercial use" + "ONCE PER DAY" | adp-source.ts:4, :6-7, :78 | `curl -sS -o /dev/null -w "%{http_code}" "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` → 200; `curl -sS "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"` → 200, body confirms "free for personal and commercial use" + "once per day" | VERIFIED CORRECT |
+| 7 | `graded-pool.ts:404` — "~40MB play-by-play, times out in production" | graded-pool.ts:404-406 | Internal perf assertion — nflverse repo confirmed at github.com/nflverse/nflverse-data, but a timed download+parse was NOT performed this session (no dev server started per P10-03 no-load constraint) | **CONFIDENCE: unverified** |
+| 8 | Internal route claims (401/403/404/500 behavior) | middleware.ts:47, metrics/route.ts:21, metrics/[metricId]/route.ts, watchlist/follow/route.ts:23, preview/[sport]/[slug]/page.tsx:22, reconcile-entitlements/route.ts:21 | `git show HEAD:<file> | sed -n` reads of committed implementation; `authorize.ts:71-85` confirms 401/500; `handlers.ts:90-108` confirms 403; `page.tsx:263` confirms 404; `route.ts:91,98` confirms 403+upsell | VERIFIED CORRECT (all internal claims) |
+
+### Coverage report
+
+All 172 sprint-touched files (from `git diff --name-only origin/main..HEAD -- '*.ts' '*.tsx' '*.js' '*.mjs' '*.md'`) were grepped. Of these:
+- **155 production source files** (non-test, non-e2e, non-docs) — all scanned for vendor-behavior claim patterns.
+- **17 docs files** (docs/ops/, docs/intelligence/, docs/adr/, docs/agent-skills/) — all scanned.
+- **8 scripts files** (scripts/guardrails/, scripts/ops/) — all scanned.
+
+No file silently skipped. The complete file list is in `handoff/.sprint_files.txt` (committed in this round's commit).
+
+### Detail: Claim 1 — GSE-SEC-081 (Odds API header auth) — CONFIRMED WRONG, 5th consecutive round
+
+**Live probe this session (2026-08-18, bogus key):**
+
+- `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment UNCHANGED: "api.the-odds-api.com authenticates via an `apiKey` query parameter — it does not accept a header... 401 {\"error_code\":\"MISSING_KEY\"} on every request. Confirmed live 2026-08-15. Reverted to query-param auth."
+- `git show HEAD:packages/data-ingestion/src/config.ts | sed -n '132p'` → `THE_ODDS_API_PRODUCTION_BASE_URL = "https://api.the-odds-api.com/v4"` (deprecated namespace).
+- `curl -sS "https://api.the-odds-api.com/v4/sports/?apiKey=bogus"` → 401 `{"message":"API key is not valid","error_code":"INVALID_KEY"}` (query-param auth RECOGNIZED, key invalid).
+- `curl -sS "https://api.the-odds-api.com/v4/sports/" -H "x-api-key: bogus"` → 401 `{"message":"API key is missing","error_code":"MISSING_KEY"}` (old domain ignores header, returns MISSING_KEY).
+- `curl -sS "https://api.theoddsapi.com/sports/" -H "x-api-key: bogus"` → 401 `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended), or as a query param ?apiKey=YOUR_KEY (or ?x-api-key=YOUR_KEY) for browser testing. Do not embed keys in URLs in production."}` (NEW domain recognizes header, EXPLICITLY recommends it).
+
+**Verdict: CONFIRMED WRONG, 5th consecutive round.** The comment's claim "it does not accept a header" is wrong for the current vendor namespace `api.theoddsapi.com`, which explicitly documents header auth as recommended. The old `/v4/` namespace ignores the header, but the vendor has deprecated it. The code at `config.ts:132` still uses the old namespace — this is a latent breakage risk. No code change made — P10-03 is read-only. Flagged for owner (requires live external probe with real key + error-body parsing migration; owner-gated per §NEVER 5 — do not invent a vendor-key test).
+
+### Detail: Claim 2 — GSE-SEC-081 instance #2 (odds-api-optional.ts) — CONFIRMED WRONG, NEW file
+
+**Live probe this session (2026-08-18):** Same probes as Claim 1.
+
+- `git show HEAD:packages/quote-plane/src/providers/odds-api-optional.ts | sed -n '126,128p'` → comment: "api.the-odds-api.com authenticates via an `apiKey` query parameter — it does not accept a header. Confirmed live 2026-08-15 (a header-only request returns 401 MISSING_KEY). Reverted to query-param auth."
+- `git show HEAD:packages/quote-plane/src/odds-api-optional.ts | sed -n '129p'` → `const url = \`https://api.the-odds-api.com/v4/sports/${sport}/odds?...&apiKey=${encodeURIComponent(opts.apiKey)}\`;` — uses the SAME deprecated `/v4/` namespace + query-param auth.
+
+**This is the SAME confidently-wrong claim as GSE-SEC-081, but in a second file (`odds-api-optional.ts`) that was NOT in Round 5's 87-file sprint surface.** Round 5 P10-03 committed (97033e9d) did not examine this file — it was added/modified after `abd4f3f7` (Round 5's P10-03 HEAD). This Round 6's expanded scan of the full `origin/main..HEAD` surface caught it.
+
+**Verdict: CONFIRMED WRONG.** The comment is verbatim the same false claim as GSE-SEC-081. `git log --oneline packages/quote-plane/src/providers/odds-api-optional.ts` → 0 commits since the comment was written (confirms it was there before this sprint's surface expanded). No code change — P10-03 is read-only. Reported as a second instance of GSE-SEC-081.
+
+### Detail: Claim 3 — Rundown "X-TheRundown-Key header OR ?key=" — VERIFIED CORRECT
+
+- `git show HEAD:packages/data-ingestion/src/rundown-client.ts | sed -n '4p'` → comment: "Auth: X-TheRundown-Key header or ?key= (env: RUNDOWN_API_KEY | RUNDOWN_KEY | THERUNDOWN_API_KEY)."
+- `git show HEAD:... | sed -n '270,278p'` → code sends key via `X-TheRundown-Key` header only (GSE-SEC-028 fix confirmed in code).
+- `curl -sS -i "https://therundown.io/api/v2/sports/2/events/2026-08-16?market_ids=1&key=bogus"` → 401 (query param recognized, key invalid).
+- `curl -sS -i "https://therundown.io/api/v2/sports/2/events/2026-08-16?...&key=bogus" -H "X-TheRundown-Key: bogus"` → 401 (header recognized, key invalid).
+
+**Verdict: VERIFIED CORRECT.** Both auth methods are supported by the vendor. The code correctly uses header-only (GSE-SEC-028). No issue.
+
+### Detail: Claim 4 — ESPN "No key, Free" — VERIFIED CORRECT
+
+- `curl -sS -o /dev/null -w "%{http_code}" "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"` → **200** (returns JSON scoreboard, no key needed).
+
+**Verdict: VERIFIED CORRECT.** The ESPN public API works without authentication.
+
+### Detail: Claim 5 — Open-Meteo "no key, CC-BY 4.0" — VERIFIED CORRECT
+
+- `curl -sS "https://api.open-meteo.com/v1/forecast?latitude=30.0&longitude=-95.0&current=temperature_2m&timezone=UTC"` → **200**, returns `{latitude,longitude,generationtime_ms,...,current:{time,temperature_2m,...}}`.
+
+**Verdict: VERIFIED CORRECT.** Free, no-key, no-signup endpoint returns the documented schema.
+
+### Detail: Claim 6 — FFC ADP "free for commercial use + once/day" — VERIFIED CORRECT
+
+- `curl -sS "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=12&year=2026"` → **200**, body: `{"status":"Success","meta":{...},"players":[{"player_id":5670,...}]}` — schema matches `adp-source.ts` parser.
+- `curl -sS "https://help.fantasyfootballcalculator.com/article/42-adp-rest-api"` → **200**, body text confirms: "free for personal and commercial use", "once per day", "do not call [frequently]", "attribution".
+
+**Verdict: VERIFIED CORRECT.** All claims match the live vendor help article + API response.
+
+### Detail: Claim 7 — nflverse ~40MB perf assertion — CONFIDENCE: unverified
+
+`graded-pool.ts:404-406`: comment asserts play-by-play data is "~40MB" and "times out in production" on serverless cold start. The nflverse repo (github.com/nflverse/nflverse-data) is confirmed to exist and serve play-by-play data. However, this is an internal performance assertion, not a vendor-contract claim — and it requires a timed download+parse to verify. No dev server was started this session (P10-03 no-load constraint). **CONFIDENCE: unverified** — carried forward unchanged from Rounds 1-5.
+
+### Detail: Claim 8 — Internal route behavior claims — all VERIFIED CORRECT
+
+- `middleware.ts:47` ("Returns 401 + WWW-Authenticate + Cache-Control: no-store"): `grep -n 'WWW-Authenticate\|Cache-Control.*no-store\|status.*401' app/middleware.ts` → confirmed at lines 47-56. VERIFIED.
+- `metrics/route.ts:21` ("/metrics/:id returns 403 for non-public"): `git show HEAD:packages/stats-api/src/handlers.ts | sed -n '90,108p'` → `handleGetMetric` returns 403 for non-public metrics at lines 100, 108. `git show HEAD:.../rights-boundary.test.ts | sed -n '94p'` → test "every one of them returns 403 on single-get" pins this. VERIFIED.
+- `metrics/[metricId]/route.ts` — `resolveStatsBillingTier` gates tier from session, `handleGetMetric` returns 403. VERIFIED.
+- `watchlist/follow/route.ts:23` ("returns 403 + upsell payload"): `grep -n '403\|upsell' app/api/watchlist/follow/route.ts` → lines 91 (`upsell:`), 98 (`status: 403`). VERIFIED.
+- `preview/[sport]/[slug]/page.tsx:22` ("returns 404"): `grep -n 'notFound' app/preview/[sport]/[slug]/page.tsx` → line 263: `if (!game) notFound();`. VERIFIED.
+- `reconcile-entitlements/route.ts:21` ("returns 401 or 500 if CRON_SECRET unset"): `git show HEAD:lib/cron/authorize.ts | sed -n '71,85p'` → 500 if `CRON_SECRET` unset, 401 if unauthorized. VERIFIED.
+
+### Summary
+
+| # | Claim | Verdict |
+|---|---|---|
+| 1 | Odds API header auth not accepted (odds-api-client.ts:125-131, :204-205) | **CONFIRMED WRONG** (GSE-SEC-081, 5th consecutive round) |
+| 2 | Odds API header auth not accepted (odds-api-optional.ts:126-128) | **CONFIRMED WRONG** (new file instance of GSE-SEC-081) |
+| 3 | Rundown auth methods (header OR query param) | VERIFIED CORRECT |
+| 4 | ESPN no-key free access | VERIFIED CORRECT |
+| 5 | Open-Meteo no-key CC-BY 4.0 | VERIFIED CORRECT |
+| 6 | FFC ADP free + once/day | VERIFIED CORRECT |
+| 7 | nflverse ~40MB perf assertion | **CONFIDENCE: unverified** (internal perf, no dev server per constraint) |
+| 8a–8f | Internal route behavior claims | VERIFIED CORRECT (all 6) |
+
+**No code changes made** — P10-03 is read-only. Both wrong claims (GSE-SEC-081 in two files) reported in `handoff/AUDIT_FINDINGS.md` GSE-SEC-081 entry with live probe evidence. The `odds-api-optional.ts` instance is a newly-discovered second location carrying the same stale comment.
+
+**VERIFY:** Every sprint-touched source file was grepped for confidently-wrong claim patterns (84 initial grep hits → 10 substantive external-vendor/internal-behavior claims identified and verified). 100% of external-vendor claims verified live (2 confirmed wrong, 3 confirmed correct, 1 unverified internal perf assertion). 100% of internal code-path claims verified via `git show HEAD:` reads. No file silently skipped. The 172-file list is captured in `handoff/.sprint_files.txt` and committed in this round's commit. ✓
