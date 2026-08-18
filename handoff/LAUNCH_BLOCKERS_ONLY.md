@@ -34,7 +34,7 @@ Probed via `curl -sS https://www.galaxysportsedge.com/api/ops/public-surface-tru
 
 ## A. Things an agent can do unattended
 
-### A1. Document the Sentry DSN + alert webhook env vars in `.env.example`
+### A1. Document the Sentry DSN + alert webhook env vars in `.env.example` · DONE · STRIKES: 0 · commit 2626d524
 
 **File touched:** `C:\Users\Garrett\Sports\.env.example` (repo root, non-sealed; 510 lines, no apps/web/.env.example exists)
 
@@ -131,7 +131,7 @@ The "30-minute cadence" claim on `/about` was already fixed by commit `3ea9ef63`
 
 ## SUMMARY
 
-- **List A (agent-doable): 1 item** — A1: document Sentry DSN + webhook env vars in `.env.example`
+- **List A (agent-doable): 0 items remaining** — A1 resolved (commit 2626d524: documented SENTRY_DSN, NEXT_PUBLIC_SENTRY_DSN, HEALTH_ALERT_WEBHOOK_URL in .env.example)
 - **List B (owner-gated): 5 items** — B1 age-gating (sealed schema), B2 refund-handler decision (revenue policy), B3 production migration (sealed DB), B4 Vercel webhook URL (dashboard-only), B5 merge+deploy decision
 - **Already resolved: 1 item** — 1.5 cadence claim (commit 3ea9ef63)
 - **Live production status:** scheduler healthy, settlement healthy, money path ready, calibration RED (model-quality gate, not a code blocker)
