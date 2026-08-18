@@ -3,6 +3,7 @@ import {
   captureLineSnapshots,
   captureLineSnapshotsIfEnabled,
   markClosingSnapshots,
+  markClosingSnapshotsIfEnabled,
   toLineSnapshotRows,
   type LineArchiveDb,
 } from "../line-archive.js";
@@ -270,6 +271,34 @@ describe("markClosingSnapshots", () => {
       updated: 0,
       error: "timeout",
     });
+  });
+});
+
+describe("markClosingSnapshotsIfEnabled — hard gate", () => {
+  it("no-ops with zero db calls when LINE_ARCHIVE_ENABLED is unset", async () => {
+    const db = mockDb();
+    const result = await markClosingSnapshotsIfEnabled(db, "game_1", new Date());
+    expect(result).toEqual({ enabled: false, updated: 0 });
+    expect(db.oddsLineSnapshot.findMany).not.toHaveBeenCalled();
+    expect(db.oddsLineSnapshot.update).not.toHaveBeenCalled();
+  });
+
+  it("invokes the closer when LINE_ARCHIVE_ENABLED=true", async () => {
+    process.env["LINE_ARCHIVE_ENABLED"] = "true";
+    const db = mockDb();
+    db.oddsLineSnapshot.findMany.mockResolvedValue([]);
+    const result = await markClosingSnapshotsIfEnabled(db, "game_1", new Date("2026-07-16T18:00:00Z"));
+    expect(result).toEqual({ enabled: true, updated: 0 });
+    expect(db.oddsLineSnapshot.findMany).toHaveBeenCalled();
+  });
+
+  it("never throws when the closer rejects", async () => {
+    process.env["LINE_ARCHIVE_ENABLED"] = "true";
+    const db = mockDb();
+    db.oddsLineSnapshot.findMany.mockRejectedValue(new Error("archive down"));
+    await expect(
+      markClosingSnapshotsIfEnabled(db, "game_1", new Date()),
+    ).resolves.toEqual({ enabled: true, updated: 0, error: "archive down" });
   });
 });
 

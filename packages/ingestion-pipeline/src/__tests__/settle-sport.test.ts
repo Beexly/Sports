@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /**
@@ -58,6 +58,8 @@ const mocks = vi.hoisted(() => ({
   decisionDeleteMany: vi.fn(),
   outboxDelete: vi.fn(),
   outboxDeleteMany: vi.fn(),
+  lineSnapFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+  lineSnapUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
 
 vi.mock("@sports/db", () => {
@@ -129,6 +131,10 @@ vi.mock("@sports/db", () => {
       pickSettlementEvent,
       settlementRun,
       postSettlementWork,
+      oddsLineSnapshot: {
+        findMany: mocks.lineSnapFindMany,
+        update: mocks.lineSnapUpdate,
+      },
     },
   };
 });
@@ -273,6 +279,8 @@ describe("settleSport", () => {
     mocks.openingLineFindUnique.mockResolvedValue({ spread: -3.5 });
     mocks.settleGameLogs.mockResolvedValue(undefined);
     mocks.snapshotUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.lineSnapFindMany.mockResolvedValue([]);
+    mocks.lineSnapUpdate.mockResolvedValue({});
   });
 
   it("grades SPREAD/TOTAL against the LOCKED line, not the drifted live line", async () => {
@@ -1116,6 +1124,45 @@ describe("settleSport", () => {
       expect(result.status).toBe("failed");
       expect(result.picksSettled).toBe(0);
       expect(result.outboxAppended).toBe(0);
+    });
+  });
+
+  describe("line-archive CLOSE tag (LINE_ARCHIVE_ENABLED)", () => {
+    const original = process.env["LINE_ARCHIVE_ENABLED"];
+
+    afterEach(() => {
+      if (original === undefined) delete process.env["LINE_ARCHIVE_ENABLED"];
+      else process.env["LINE_ARCHIVE_ENABLED"] = original;
+    });
+
+    it("does not touch oddsLineSnapshot when the flag is unset", async () => {
+      delete process.env["LINE_ARCHIVE_ENABLED"];
+      const result = await settleSport(SPORT, "key", gates());
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(mocks.lineSnapFindMany).not.toHaveBeenCalled();
+      expect(mocks.lineSnapUpdate).not.toHaveBeenCalled();
+    });
+
+    it("invokes markClosingSnapshots when the flag is true", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true";
+      const result = await settleSport(SPORT, "key", gates());
+      expect(result.status).toBe("success");
+      expect(mocks.lineSnapFindMany).toHaveBeenCalledWith({
+        where: {
+          gameId: "game-1",
+          capturedAt: { lte: new Date("2026-06-10T17:00:00.000Z") },
+        },
+      });
+    });
+
+    it("still settles when markClosingSnapshots rejects", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true";
+      mocks.lineSnapFindMany.mockRejectedValue(new Error("archive down"));
+      const result = await settleSport(SPORT, "key", gates());
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(result.gamesSettled).toBe(1);
     });
   });
 });

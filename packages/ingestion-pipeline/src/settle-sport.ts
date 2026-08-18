@@ -57,6 +57,7 @@ import {
   markPostSettlementWorkFailed,
   type PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";
+import { markClosingSnapshotsIfEnabled } from "./line-archive.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -575,6 +576,17 @@ export async function settleSport(
             game.id,
             "TEAM_GAME_LOG",
             settleErr,
+          );
+        }
+
+        // Line-archive CLOSE tag. No-op unless LINE_ARCHIVE_ENABLED=true.
+        // Never fails settlement — grading a pick matters more than tagging a line.
+        try {
+          await markClosingSnapshotsIfEnabled(db, game.id, game.commenceTime);
+        } catch (archiveErr) {
+          console.warn(
+            `${logPrefix} markClosingSnapshots failed for ${game.id}: ` +
+            `${archiveErr instanceof Error ? archiveErr.message : archiveErr}`,
           );
         }
 
