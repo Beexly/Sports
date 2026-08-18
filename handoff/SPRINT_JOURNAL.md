@@ -5496,3 +5496,40 @@ Uncertainty noted: the 13 remaining failures were NOT re-run per-file for exact 
 the 18-file vitest summary; they are grouped and root-caused as owner-gated dark-code/sealed
 guards, not product bugs (verified by stash test that they are pre-existing on HEAD). Full
 per-file enumeration available on request. Never git push; local-only commit.
+
+### 2026-08-17T22:41:00Z · P16-00 — HARD CAP on the battle-test loop · DONE · STRIKES: 0 · commit 1bd47fe7
+
+Started status: DOING (set P16-00 STATUS: DOING at 2026-08-17T22:29:34Z, prior task P15-03 was DONE).
+
+Action:
+1. Confirmed cwd: `git rev-parse --show-toplevel` -> `C:/Users/Garrett/Sports` (confirmed; never ran git outside it). `date +%F` -> `2026-08-17` (verified this session).
+2. STEP 1: Read handoff/SPRINT_QUEUE.md; searched `^### .*STATUS: (TODO|DOING)` -> found only P16-00 (line 2429) and P17-00 (line 2438) as TODO; P16-00 is first -> selected P16-00.
+3. STEP 2: Edited SPRINT_QUEUE.md: set P16-00 STATUS: TODO -> DOING with started timestamp.
+4. STEP 3: Task: write `handoff/LAUNCH_BLOCKERS_ONLY.md` listing every remaining item that blocks a paying customer, split (A) agent-doable / (B) owner-only.
+
+Re-derived ALL claims THIS session via live commands (never inherited):
+
+  a) Live prod health: `curl -sS https://www.galaxysportsedge.com/api/ops/public-surface-truth | python3 -c` — scheduler=healthy (1 min), settlement=HEALTHY (0/1617 overdue), checkoutCreatable=True, moneyPathReady=True, stripeSecretConfigured=True, webhookSecretConfigured=True, priceSlotsConfigured=6/6, gsePrimaryHealthy=True (only www.galaxysportsedge.com), calibrationStatus=RED (Brier 0.2563>0.22, ECE 0.0699>0.05), revenueLadder=FOUNDING (next: PROVEN, blocked by "Calibration not published").
+
+  b) 1.1 Age-gating: `sed -n '20,45p' packages/db/prisma/schema.prisma | grep -n "birthDate\|dateOfBirth"` -> no match (User model has no DoB field; only `minimumAge` on Promotion model). `grep -c "birthDate\|dateOfBirth" packages/db/prisma/schema.prisma` -> 0. Owner-gated: packages/db/prisma/ is sealed tree.
+
+  c) 1.2 Refund gap: `grep -c "charge.refunded" apps/web/app/api/webhooks/stripe/route.ts` -> 0 (no handler). `grep -n 'case "' apps/web/app/api/webhooks/stripe/route.ts` -> switch handles checkout.session.*, customer.subscription.*, invoice.payment_* only. `grep -n "REFUND GAP" apps/web/__tests__/journey-entitlement-grant.test.ts` -> line 509 (existing test documents the gap). Owner-gated: revenue-integrity policy decision.
+
+  d) 1.3 Entity-graph migration: `ls packages/db/prisma/migrations/20260813200000_add_entity_graph/migration.sql` -> present (87 lines, additive only). `git show 9cfb91b1 --stat` -> confirms commit; message says "migration NOT applied". `grep -rn "prisma.entity" apps/ packages/ --include="*.ts" | grep -v node_modules` -> no consumer code. `sed -n '186,210p' scripts/deploy/migrate-if-configured.mjs` -> fail-closed at line 191. Owner-gated: sealed DB tree + production deploy.
+
+  e) 1.4 Sentry DSN docs: `grep -c "SENTRY_DSN\|NEXT_PUBLIC_SENTRY_DSN\|HEALTH_ALERT_WEBHOOK_URL" .env.example` -> 0 (none documented). `grep -n "SENTRY_DSN\|NEXT_PUBLIC_SENTRY_DSN" apps/web/lib/observability/sentry.ts` -> lines 7-8, 30-31, 79-80 (code reads them; no-ops if absent). `grep -c "sentry\|SENTRY" .env.example` -> 0. Agent-doable: add 3 env var docs to root .env.example (non-sealed file).
+
+  f) 1.5 30-min cadence claim: `git log --oneline -1 3ea9ef63` -> confirmed fix commit (P14-06). `grep -n "Live odds from\|30-minute\|regular schedule" apps/web/app/about/page.tsx` -> line 18: "Live odds from multiple sportsbooks on a regular schedule." (no 30-minute). `grep -rn "30-minute cadence" apps/web/app/about/ apps/web/app/faq/ apps/web/app/tout-comparison/` -> exit 1 (nothing matches). **Already fixed — not a blocker.**
+
+Result: LAUNCH_BLOCKERS_ONLY.md written with List A = 1 item (A1: Sentry env var docs in .env.example), List B = 5 items (B1 age-gating sealed schema, B2 refund-handler revenue policy, B3 production DB migration sealed tree, B4 HEALTH_ALERT_WEBHOOK_URL Vercel dashboard-only, B5 merge+deploy decision).
+
+VERIFY (run this session):
+- List A item names its file: A1 has `**File touched:** C:\Users\Garrett\Sports\.env.example` — confirmed. ✓
+- List B items name owner-gate reason: B1 (sealed packages/db/prisma), B2 (revenue policy decision), B3 (sealed DB tree + prod deploy), B4 (Vercel dashboard secret), B5 (owner-gated merge/deploy) — confirmed. ✓
+- No secret values: `grep -n "sk_test\|sk_live\|sk-ant\|whsec_\|eyJ\|password" handoff/LAUNCH_BLOCKERS_ONLY.md` -> exit 1 (no matches). ✓
+- Every finding cites a command run this session: 25 command citations in the file. ✓
+
+Commits: `1bd47fe7` (LAUNCH_BLOCKERS_ONLY.md created, 137 insertions) + `703465c7` (SPRINT_QUEUE.md STATUS DONE).
+
+Uncertainty: The live prod health probe shows scheduler is now healthy (was dead per PROD_HEALTH_ALERT.md earlier Aug 17), and money path is ready (checkoutCreatable=True, moneyPathReady=True). Whether the calibration RED gate (Brier/ECE floors) is a true "paying customer" blocker vs. a product-policy gate was judged: performance stats are gated OFF by design (.env.example: PERFORMANCE_STATS_ENABLED=false) — a paying customer CAN subscribe and use the product; the calibration gate only blocks the performance-stats surface, not checkout. This is re-derived from the live probe, not inherited.
+
