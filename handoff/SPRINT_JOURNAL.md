@@ -5533,3 +5533,41 @@ Commits: `1bd47fe7` (LAUNCH_BLOCKERS_ONLY.md created, 137 insertions) + `703465c
 
 Uncertainty: The live prod health probe shows scheduler is now healthy (was dead per PROD_HEALTH_ALERT.md earlier Aug 17), and money path is ready (checkoutCreatable=True, moneyPathReady=True). Whether the calibration RED gate (Brier/ECE floors) is a true "paying customer" blocker vs. a product-policy gate was judged: performance stats are gated OFF by design (.env.example: PERFORMANCE_STATS_ENABLED=false) — a paying customer CAN subscribe and use the product; the calibration gate only blocks the performance-stats surface, not checkout. This is re-derived from the live probe, not inherited.
 
+
+### 2026-08-17T23:24:05Z · P17-00 — FRESH-EYES ROUND with a stronger model · DONE · STRIKES: 0 · commit 6a3389dce1ac84989192be0950fd224582aed4cb
+
+Started status: DOING (resumed P17-00; prior run interrupted — FRESH_EYES_ROUND.md was missing).
+
+Action:
+1. Confirmed cwd: `git rev-parse --show-toplevel` -> `C:/Users/Garrett/Sports` (verified at run start). `date +%F` -> `2026-08-17` (verified this session).
+2. STEP 1: searched `STATUS: (TODO|DOING)` in SPRINT_QUEUE.md -> found P17-00 at line 2438 as the sole DOING task -> selected P17-00.
+3. STEP 2: edited queue to add `resumed: 2026-08-17` marker (committed).
+4. STEP 3: task = fresh-eyes audit of sprint-touched code across 5 defect classes (a cross-file invariants, b silent-success paths, c mock-not-behavior tests, d under-leveraged dark code, e date/epoch bugs). Write findings to handoff/FRESH_EYES_ROUND.md.
+5. STEP 4 VERIFY + commit: ran 8 security-critical test files / 72 tests from apps/web (green, exit 0). Committed handoff/FRESH_EYES_ROUND.md + queue edit -> 6a3389dc. Then set STATUS DONE -> b0434539.
+
+RE-DERIVED ALL claims THIS session via live commands (never inherited):
+
+  a) Cross-file invariant (B): `grep -rnE "user\.tier|session\.tier" apps/web --include="*.ts" --include="*.tsx"` -> only `session.user.role!==\"ADMIN\"` role checks (not tier bypass). `/api/picks/[id]/audit/route.ts` line 91: `if (!pick ||!pick.isPublished||pick.isBootstrap) return 404` — enforced. `mapStripeStatus` line 556-558 default -> INCOMPLETE (fail-closed), never ACTIVE. `getUserEntitlements` db-unreachable -> getEntitlements("FREE"); DEV_FAKE_ADMIN hard-gated to NODE_ENV!=="production" (entitlements.ts lines 60-64). `playwright.config.ts` line 39: DEV_FAKE_ADMIN explicitly NOT set. `grep -n "default:" apps/web/app/api/webhooks/stripe/route.ts` -> line 257 `// Unhandled event type — ignore`. `grep -n "requirePremiumApiRateLimited" apps/web/app/api/intelligence/graded-pool/route.ts` -> PRO/ELITE-gated (owner-gated via pricing tier).
+
+  b) Silent-success (A): `grep -n "catch(() => \[\])" apps/web/app/api/v1/signals/route.ts` -> returns data:[] + null fields, honest. `grep -n "loadDurableFreeSpine" apps/web/lib/data-sources/free-spine-durable.ts` -> resolveBestFreeSpineSnapshot "Never fabricates a snap"; freeSpineWithinSla returns false when snap null. `grep -n "requireSpdx" apps/web/app/api/gse/v1/rights/classify-export/route.ts` -> 422 on missing SPDX, refuse-default.
+
+  c) Mock-not-behavior tests (C): `grep -nE "expect(row.tier)" apps/web/__tests__/journey-entitlement-grant.test.ts` -> asserts exact tier value (FREE/PRO/ELITE). `grep -nE "expect\(db.jarvisMemoryEvent.create\).not" apps/web/__tests__/jarvis-memory-authorization.test.ts` -> asserts DB not touched. Stripe webhook `grep -nE "expect\(mocks.subscriptionUpsert\).toHaveBeenCalledWith" apps/web/__tests__/stripe-webhook-route.test.ts` -> 9 callsite assertions with EXACT tier arg.
+
+  d) Under-leveraged dark code (D): `grep -n "ReplayableProvenanceStatus" apps/web/lib/calibration/replayable-provenance.ts` -> line 6: `="FLAGGED_OFF" | "SHADOW_READY"` status enum, tested (replayable-provenance.test.ts). `find apps/web/lib -name "*replay*"` -> shadow-route-replay.ts + decision-genome/decision-replay.ts (reachable, not dead). graded-pool route owner-gated via premium API entitlement (pricing tier, owner-gated).
+
+  e) Date/epoch (E): `grep -n "DEAD_THRESHOLD_MINUTES" apps/web/lib/ops/scheduler-liveness.ts` -> line 50: 180; age = Math.round((nowMs - completedAt)/60000). `grep -n "FREE_SPINE_DURABLE_SLA_MS" apps/web/lib/data-sources/free-spine-durable.ts` -> <=120min I8 SLA. `date +%F` -> 2026-08-17 (matches commit timestamp, no wrong-date bug).
+
+  Re-confirmed honest gap: `grep -c "charge.refunded" apps/web/app/api/webhooks/stripe/route.ts` -> 0 (no handler; B2 refund gap from P16-00). `grep -n "REFUND GAP" apps/web/__tests__/journey-entitlement-grant.test.ts` -> line 509 (documented honestly, not silently-encoded-as-correct).
+
+Test verification (run from apps/web/ so @/ alias resolves; repo-root run fails with "Failed to load url @/" — that is a config path-alias issue, NOT a code defect):
+  - `npx vitest run __tests__/jarvis-memory-authorization.test.ts` -> 9/9 passed
+  - `npx vitest run __tests__/stripe-mutation-guard-invariant.test.ts` -> 4/4 passed
+  - `npx vitest run __tests__/ops-daily-truth.test.ts` -> 16/16 passed
+  - `npx vitest run __tests__/ops-public-surface-truth-rate-limit.test.ts` -> 5/5 passed
+  - `npx vitest run __tests__/gse-v1-rate-limit.test.ts __tests__/gse-v1-hydration-plan-schema.test.ts __tests__/session-tier.test.ts __tests__/journey-entitlement-grant.test.ts __tests__/analytics-instrumentation.test.tsx __tests__/brand-safety-v2.test.ts __tests__/nav-auth.test.tsx __tests__/honest-degraded-states.test.ts` -> 8 files / 72 tests passed, 0 failed (exit 0)
+  - `node scripts/guardrails/em-dash-scan.mjs` -> PASS em-dash-scan 1/1 passed (P12-03-guardrail follow-up intact)
+  Aggregate: 0 failures across all security-critical suites. Run at 2026-08-17T23:20Z.
+
+Result: NO new defects found in classes (a)-(e). The sprint's guard-wiring is genuinely correct. One pre-existing honest gap re-confirmed: charge.refunded is unhandled (documented as B2 owner-gated; not fixed — read-only audit round). Deliverable: handoff/FRESH_EYES_ROUND.md (9790 bytes, all 5 class subsections). Committed 6a3389dc (findings + resumed marker), then b0434539 (queue STATUS DONE). `git show 6a3389dc --stat` and `git show b0434539 --stat` both confirmed before writing. Never git push; local-only.
+
+Uncertainty: the "NO new defects" verdict means the stronger model added no bug fixes — this is a valid fresh-eyes outcome (the prior-round fixes survived), but I verified it with live test runs rather than asserting from the weaker model's DONE marks. Did NOT re-examine every file the weaker model touched (378 files in the diff set are too broad for one round); scoped to the 5 defect classes on security-critical + highest-change surfaces. Full diff set available on request.
