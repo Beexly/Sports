@@ -5233,3 +5233,81 @@ Files committed this task only:
 - handoff/BATTLE_TEST_LOG.md (P10-03 Round 6 audit section)
 - handoff/AUDIT_FINDINGS.md (GSE-SEC-081 Round 6 re-verification + second-file location)
 - handoff/SPRINT_QUEUE.md (P10-03 STATUS: DOING → DONE)
+
+NOTE: The P10-03 journal entry above cites commit `898254f9` as the P10-03 Round 6 commit. This session's P10-04 hygiene sweep discovered that `898254f9` is ORPHANED (not reachable from any branch ref — `git for-each-ref --contains 898254f9` returns empty). The actual HEAD commit is `2656433b`, which is a `git commit --amend` of `898254f9` that added the SPRINT_JOURNAL.md entry that `898254f9` lacked. This is a two-agent collision artifact — see P10-04 Round 6 section in BATTLE_TEST_LOG.md (hygiene-08 finding).
+
+---
+
+### 2026-08-18T01:07:32Z · P10-04 — Working-tree and history hygiene sweep (Round 6) · DONE · STRIKES: 0 · commit 5e6f7d16
+
+Resumed P10-04 from DOING (set STATUS TODO→DOING at start of this session). This is Round 6 of the
+recurring hygiene sweep. Independently re-derived all facts from commands run THIS session — NOT
+copied from Round 5 (2026-08-17) or any prior session.
+
+Commands run THIS session (all from C:/Users/Garrett/Sports, confirmed via `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports):
+- `date +%F` → 2026-08-17
+- `date -u +%Y-%m-%dT%H:%M:%SZ` → 2026-08-18T01:00:17Z
+- `git rev-parse HEAD` → 2656433b (231 commits ahead of origin)
+- `git status --short` → 3 modified files: handoff/SPRINT_QUEUE.md (this task's STATUS edit), handoff/test-census-raw.txt (regenerated P7-02 artifact), apps/web/components/fantasy/dfs-optimizer.tsx (2-line text reword, orphaned WIP)
+- `git status --ignored -- handoff/` → all ignored files are .log/.txt/.stderr/.json/_*/.py (non-.md); no .md silently ignored
+- `git worktree list` → 17 worktrees, only 1 (main C:/Users/Garrett/Sports) on active branch claude/fable-5-ultracode-plan-ptru4e
+- `git stash list` → 5 stashes, all on unrelated branches
+- `git diff --name-only --diff-filter=U` → empty (no merge conflicts)
+- `git status --short | grep -iE '\.env|secret|KEY'` → empty (no secrets)
+- `git fsck --full` → 126 dangling objects (normal, from 16 worktrees + 5 stashes); `grep "corrupt|unexpected|error"` → empty (no corruption)
+- `git show HEAD:apps/web/app/intelligence/engines/page.tsx | grep -c getViewerEntitlements` → 3 (hygiene-04 re-verified: paywall gate IS in committed tree)
+- `git show HEAD:apps/web/lib/billing/reconcile-entitlements.ts | grep -c requireDurableWriteStore` → 3 (hygiene-04 re-verified: guard IS committed at lines 36, 494, 579)
+- `git show HEAD:packages/db/src/durable-write-guard.ts | grep -c stripe-reconcile` → 1 (hygiene-04 re-verified: capability registration IS committed)
+- `git log --oneline -1 fd9489b1` → resolves (hygiene-04 fix commit exists)
+- `git check-ignore handoff/HAIKU_WATCH.md handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/tools/hunt-claims.js` → exit 1 for all (NOT gitignored, just untracked)
+- `wc -l handoff/HAIKU_WATCH.md handoff/PROD_HEALTH_ALERT.md handoff/SPRINT_STATUS_NOW.md handoff/tools/hunt-claims.js` → 88/94/84/82 lines
+- `git for-each-ref --contains b15102b0` → empty (orphaned commit; two-agent collision)
+- `git for-each-ref --contains 898254f9` → empty (orphaned commit; two-agent collision)
+- `git merge-base --is-ancestor b15102b0 HEAD` → exit 1 (NOT ancestor of HEAD)
+- `git merge-base --is-ancestor 898254f9 HEAD` → exit 1 (NOT ancestor of HEAD)
+- `git diff b15102b0 131a1d55 --stat` → handoff/SPRINT_JOURNAL.md | 88 insertions
+- `git diff 898254f9 2656433b --stat` → handoff/SPRINT_JOURNAL.md | 33 insertions
+- `git log --all --oneline --format='%s' | sort | uniq -d | wc -l` → 35 (byte-identical duplicates, unchanged from Round 5)
+- `git diff 5970f49e HEAD -- apps/web/components/fantasy/dfs-optimizer.tsx` → empty (HEAD matches P11-04 commit; the 2-line reword is entirely uncommitted working-tree)
+
+Action:
+1. Set P10-04 STATUS in SPRINT_QUEUE.md from TODO → DOING.
+2. Ran full git inspection (10 commands above) for working-tree/hygiene sweep.
+3. Independently re-derived all counts — no inheritance from Round 5.
+4. Wrote full Round 6 P10-04 section (137 lines) into handoff/BATTLE_TEST_LOG.md
+   as the VERIFY deliverable.
+5. Set P10-04 STATUS back to DONE in SPRINT_QUEUE.md.
+6. Ran `git add handoff/BATTLE_TEST_LOG.md handoff/SPRINT_QUEUE.md && git commit`.
+   Committed ONLY the two files this task produced (the report + STATUS flip).
+   Left uncommitted: handoff/test-census-raw.txt (P7-02 carryover, not this task),
+   apps/web/components/fantasy/dfs-optimizer.tsx (orphaned WIP, hygiene-07 carryforward,
+   documented as finding — not fixed per read-only scope).
+7. Verified commit via `git show 5e6f7d16 --stat` → 2 files, 138 insertions, 1 deletion.
+   `git show 5e6f7d16 -- handoff/BATTLE_TEST_LOG.md` confirms "Round 6 — P10-04" present.
+   `git show 5e6f7d16 -- handoff/SPRINT_QUEUE.md` confirms STATUS: DONE.
+   Secret-scan: OK — 2 files scanned, 0 secrets. NO git push, NO git --force, NO reset --hard.
+
+Live-derived findings (commands run this session):
+- Uncommitted source changes: 1 (trivial 2-line text reword in dfs-optimizer.tsx, hygiene-07 carryover)
+- hygiene-03 STILL OPEN: 4 untracked handoff deliverables (PROD_HEALTH_ALERT.md 94 lines,
+  SPRINT_STATUS_NOW.md 84 lines, HAIKU_WATCH.md 88 lines, tools/hunt-claims.js 82 lines; NEW)
+- hygiene-04 STILL RESOLVED: all 6 security fixes in committed tree (re-verified via git show HEAD:)
+- hygiene-08 (NEW): two-agent collision RECURRED — 2 orphaned amend-based commits (b15102b0, 898254f9)
+  missed by Round 5's uniq -d detection; both unreachable from any ref
+- 35 byte-identical duplicates (historical, unchanged)
+- 0 new stray worktrees, 0 merge conflicts, 0 secret leaks
+- 126 dangling objects (normal, no corruption)
+
+Summary:
+- hygiene-03 worsened (3→4 untracked deliverables)
+- hygiene-08 NEW: collision recurred via amend-based orphans (detection gap in Round 5)
+- hygiene-04 confirmed RESOLVED
+- hygiene-07 confirmed still open (orphaned WIP)
+- hygiene-02 confirmed still open (P8-11 byte-identical double-commit)
+- Everything else CLEAN
+
+VERIFY: report written to BATTLE_TEST_LOG.md (138 lines, 9 checklist items all addressed).
+`git show 5e6f7d16 --stat` confirms 2 files committed. `git show 5e6f7d16 -- handoff/BATTLE_TEST_LOG.md | grep -c "Round 6 — P10-04"` → 1.
+STATUS: DONE.
+
+Result: DONE. Commit 5e6f7d16837a00ef8b25ac62b4c49c18205f6575.
