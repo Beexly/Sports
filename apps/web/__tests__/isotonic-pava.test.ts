@@ -41,6 +41,47 @@ describe("pava core", () => {
     const after = out.reduce((a, b) => a + b, 0);
     expect(after).toBeCloseTo(before, 12);
   });
+
+  it("returns an already-equal sequence unchanged", () => {
+    const y = [0.3, 0.3, 0.3, 0.3];
+    expect(pava(y)).toEqual(y);
+  });
+
+  it("pools to the weighted mean, not the arithmetic mean", () => {
+    // 0.9 > 0.1 → pool with weights 1 and 3 → (0.9*1 + 0.1*3)/4 = 0.3
+    // 0.3 < 0.8 → stop. Arithmetic mean of 0.9 and 0.1 would be 0.5.
+    const out = pava([0.9, 0.1, 0.8], [1, 3, 1]);
+    const expected = [0.3, 0.3, 0.8];
+    expect(out).toHaveLength(expected.length);
+    out.forEach((v, i) => expect(v).toBeCloseTo(expected[i]!, 12));
+  });
+
+  it("is nondecreasing across 200 random inputs", () => {
+    let seed = 20260818;
+    const rand = (): number => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 0x100000000;
+    };
+    for (let trial = 0; trial < 200; trial++) {
+      const n = 2 + Math.floor(rand() * 15);
+      const y = Array.from({ length: n }, () => rand());
+      const w = Array.from({ length: n }, () => 0.1 + rand() * 4);
+      const out = pava(y, w);
+      expect(out).toHaveLength(n);
+      for (let i = 1; i < out.length; i++) {
+        expect(out[i]!).toBeGreaterThanOrEqual(out[i - 1]! - 1e-12);
+      }
+    }
+  });
+
+  it("conserves weighted mass: sum w*out === sum w*in", () => {
+    const y = [0.9, 0.1, 0.2, 0.8];
+    const w = [1, 3, 2, 0.5];
+    const out = pava(y, w);
+    const before = y.reduce((acc, yi, i) => acc + yi * w[i]!, 0);
+    const after = out.reduce((acc, oi, i) => acc + oi * w[i]!, 0);
+    expect(after).toBeCloseTo(before, 9);
+  });
 });
 
 describe("fitIsotonicPava", () => {
