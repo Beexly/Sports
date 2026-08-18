@@ -2419,7 +2419,7 @@ would produce an unreadable flood. Prefer summary-level review over line-by-line
 **VERIFY:** each config validated against the vendor's published schema; state plainly in the
 journal that NONE of this takes effect until a PR is opened — which remains Garrett's call.
 
-### P15-03 — Pre-PR self-review dry run · STATUS: TODO · STRIKES: 0
+### P15-03 — Pre-PR self-review dry run · STATUS: DOING · STRIKES: 0 · started: 2026-08-17 (resumed 2026-08-18T03:13:58Z)
 Before any PR is opened, run locally the checks those bots will run remotely (lint, typecheck,
 full vitest, `npm audit`, existing a11y checks) and fix what they would flag. Goal: when the
 PR is finally opened, the free reviewers find little, so their output is signal instead of a
@@ -2434,3 +2434,24 @@ On finishing the CURRENT round, do NOT reset P10-01..04. Instead: write
 customer, separated into (A) things an agent can do unattended and (B) things only Garrett can
 do. Then work ONLY list A, hardest-first. When list A is empty, STOP and idle — do not invent work.
 **VERIFY:** every list-A item names the file it touches; every list-B item names why it is owner-gated.
+
+### P17-00 — FRESH-EYES ROUND with a stronger model · STATUS: TODO · STRIKES: 0 · PRIORITY: after P16-00
+Rounds 1-5 ran on `poolside/laguna-s-2.1:free`. As of 2026-08-17 the executor runs a model
+ladder (GLM 5.2 -> Nemotron 3 Ultra -> gpt-oss-20b -> Laguna). A stronger model must not
+simply re-confirm the weaker model's DONE marks — that wastes the upgrade entirely.
+Hunt specifically for the classes of defect a weaker model systematically MISSES:
+  (a) **Cross-file invariants** — a guard correct in isolation that a caller three files away
+      bypasses. Weak models check one file; check the call graph.
+  (b) **Silent-success paths** — anything that returns ok/healthy/[] when the underlying
+      thing failed. The 20h prod outage was exactly this: nothing screamed, so nothing looked
+      broken. Grep for masked catches, default-empty returns, fallbacks that hide errors.
+  (c) **Tests that assert the mock, not the behavior** — a passing suite proving nothing.
+  (d) **Under-leveraged work already in-tree but dark** — code built, gated off, forgotten.
+      See docs/decision-os-vision.md, the calibration/replay machinery, graded-pool.ts.
+  (e) **Skipped-not-done** — anything marked DONE whose VERIFY was weaker than its claim.
+Write findings to `handoff/FRESH_EYES_ROUND.md`, each with the file:line and the exact command
+that proves it. **Do NOT mass-reopen tasks.** Cite concrete evidence or say you found nothing —
+"I re-checked and found nothing new" is a valid, valuable result. Fabricated findings are worse
+than none. Same self-verification protocol applies: re-derive, never inherit.
+**VERIFY:** every finding cites a command run THIS session; every (d) item names the flag/env
+var gating it and whether flipping it is owner-gated.
