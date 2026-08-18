@@ -2408,7 +2408,7 @@ our scale, (d) does it duplicate something we already run in `ci.yml`.
 **READ-ONLY. Do not add configs in this task, do not touch auth, do not add secrets.**
 **VERIFY:** every claim cites either a file path in this repo or the vendor's public docs URL.
 
-### P15-02 — Wire the zero-cost continuous audit stack (config only) · STATUS: DOING · STRIKES: 0 · started: 2026-08-17T12:00:00Z
+### P15-02 — Wire the zero-cost continuous audit stack (config only) · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17T20:51:26Z (commit 2f3f9787)
 Depends on P15-01. Add ONLY the config files for tools that are free at our scale and need
 no new secret: CodeRabbit, Codecov, Renovate, Socket. Scope them to run on pull_request
 only — never on push to a branch, never on a schedule that could fight the existing crons.
