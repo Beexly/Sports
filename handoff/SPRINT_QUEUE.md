@@ -2396,7 +2396,7 @@ not silent repetition). Then go back to P10-01 and start the next round. **This 
 **VERIFY:** the round counter incremented; P10-01 status reset to TODO for the next pass.
 
 
-### P15-01 — Inventory the authorized-but-inert GitHub app surface · STATUS: TODO · STRIKES: 0
+### P15-01 — Inventory the authorized-but-inert GitHub app surface · STATUS: DONE · STRIKES: 0 · completed: 2026-08-17 (commit fb61bbdc)
 Garrett has 60+ GitHub apps authorized (CodeRabbit, Codacy, SonarQube Cloud, Snyk, Socket
 Security, GitGuardian, Codecov, Renovate, axe Linter, Qodo, HackerOne Code, CircleCI, and
 many unrelated). In-repo we have 9 workflows + `.github/dependabot.yml` and NOTHING else —

@@ -1,4 +1,77 @@
-### 2026-08-17T16:52:28Z · P10-02 — Fresh blind re-audit of 15 security domains · DONE · STRIKES: 0 · commit a46696f9
+### 2026-08-17T20:41:36Z · P15-01 — Inventory the authorized-but-inert GitHub app surface · DONE · STRIKES: 0 · commit fb61bbdc4fe4fc2ac780004c642840f68d1cc1ab
+
+Resumed P15-01 from STATUS: DOING (prior run had authored handoff/CI_INTEGRATION_INVENTORY.md
+but not committed it). This is a READ-ONLY research task producing a markdown report; no source
+code, .github/ content, auth, or secrets were touched.
+
+Action:
+1. Confirmed cwd via `git rev-parse --show-toplevel` -> C:/Users/Garrett/Sports.
+   `date +%F` -> 2026-08-17. Branch: claude/fable-5-ultracode-plan-ptru4e.
+2. STEP 2: set P15-01 STATUS in SPRINT_QUEUE.md from DOING -> DOING
+   (already DOING at session start; timestamped the in-progress mark).
+3. Read handoff/SPRINT_QUEUE.md (P15-01 task text, lines 2399-2409) and
+   handoff/GITHUB_SURFACE_AUDIT.md (the doc the inventory references, §2/#3).
+4. Re-derived every factual claim via live commands run THIS session (no
+   inheritance from P10-02 Round 5 or any prior session):
+   - `gh api repos/Beexly/Sports/branches/main/protection` -> 404
+     "Branch not protected" (matches inventory line 9).
+   - `gh api repos/Beexly/Sports/rulesets` -> `[]` (matches line 10).
+   - `gh api repos/Beexly/Sports/commits/main/check-runs` -> only
+     `github-actions` (completed/failure+skipped) and `socket-security`
+     (completed/success) reach completed (matches lines 12-16).
+   - `gh api repos/Beexly/Sports/commits/main/check-suites` -> 23 unique
+     app slugs enumerated (matches line 6 "23 is a FLOOR"). Slugs:
+     apollo-graphos, axe-linter, azure-boards, azure-pipelines, claude,
+     cloudflare-workers-and-pages, codacy-production, codecov, coderabbitai,
+     cubic-dev-ai, gitguardian, github-actions, google-cloud-build,
+     kilo-code-bot, mergify, posthog, render, renovate, socket-security,
+     sonarqubecloud, stainless-app, testdriverai, vercel (23, counted).
+     NOTE: Snyk and Qodo did NOT appear in check-suites (matches inventory
+     lines 183-188 "NOT installed" / 243-248 "NOT in enumeration").
+   - `gh api repos/Beexly/Sports/hooks` -> 1 live webhook: type=web,
+     name=codacy-production, active=true, url
+     https://app.codacy.com/events/gh/ca71ead2b94b4f40985bcfcbeb1dd801,
+     events=[pull_request,push,repository] (matches lines 127-133).
+   - `ls .github/workflows/` -> 9 files: ci.yml daily-smoke.yml
+     external-cron.yml external-watchdog.yml fable-evidence.yml
+     neon_workflow.yml nova-convergence-inventory.yml python-tests.yml
+     weekly-comparison.yml (matches inventory line 22-23 count).
+   - `cat .github/dependabot.yml` -> weekly grouped npm, monthly GH Actions,
+     monthly pip, open-pull-requests-limit 5 (matches inventory line 106
+     Renovate "FULL DUPLICATE of Dependabot" claim).
+   - In-repo config file existence check: `.gitguardian.yaml` FOUND;
+     `.codacy.yml`, `codacy.yml`, `socket.yml`, `renovate.json`,
+     `sonar-project.properties`, `.snyk`, `codecov.yml`, `.codecov.yml`,
+     `.axe-linter.yml`, `.circleci/config.yml`, `qodo.yml` all ABSENT
+     (matches inventory lines 77-79, 103, 118-119, 132, 162-163,
+     176-177, 193-194, 207-208, 236-237, 244, 265, 269).
+   - `grep -rn codacy .github/ scripts/ package.json` -> no matches (matches
+     inventory line 136 "not present in any workflow file").
+   - `grep -rn SONAR_TOKEN|CODECOV_TOKEN|SNYK_TOKEN|CODACY .github/ scripts/
+     package.json` -> no matches (matches inventory lines 8-9: CI dead,
+     no secrets configured).
+   - `grep socket .github/ package.json` -> no matches (matches inventory
+     line 77: socket.yml optional, not present).
+5. STEP 4 VERIFY: every claim in the report cites a file path in this repo
+   or a vendor docs URL. In-repo-file claims confirmed live above; cost/
+   duplicate claims cite vendor docs (Socket free tier, SonarCloud public-
+   only, Codecov discontinued-free-2025, CodeRabbit $24/dev/mo) and
+   .github/guardrail-script citations. No claim uncited. Re-ran the
+   inventory's structural claims: 23 apps, main unprotected (404), no
+   rulesets, 2 active apps, 9 workflows, 1 live webhook, 23 check-suites
+   all match.
+6. Committed ONLY handoff/CI_INTEGRATION_INVENTORY.md (the one file named
+   by the task). `git add` -> 302 insertions, create mode 100644.
+   Pre-commit secret-scan: OK - scanned 1 file(s), no secrets detected.
+   Commit verified: `git show fb61bbdc` -> 1 file changed, 302 insertions,
+   create mode 100644 handoff/CI_INTEGRATION_INVENTORY.md.
+7. STEP 2: set P15-01 STATUS DONE in SPRINT_QUEUE.md (timestamp + commit ref).
+8. STEP 5: appended this journal entry.
+
+Result: DONE. Commit fb61bbdc4fe4fc2ac780004c642840f68d1cc1ab verified via
+`git show --stat`. This run did exactly ONE task (P15-01) and stopped.
+
+---
 
 Resumed P10-02 from DOING (prior run had not started — queue showed STATUS: TODO
 before this session set it to DOING). Independently re-derived every fact from
