@@ -2435,7 +2435,7 @@ customer, separated into (A) things an agent can do unattended and (B) things on
 do. Then work ONLY list A, hardest-first. When list A is empty, STOP and idle — do not invent work.
 **VERIFY:** every list-A item names the file it touches; every list-B item names why it is owner-gated.
 
-### P17-00 — FRESH-EYES ROUND with a stronger model · STATUS: TODO · STRIKES: 0 · PRIORITY: after P16-00
+### P17-00 — FRESH-EYES ROUND with a stronger model · STATUS: DOING · STRIKES: 0 · PRIORITY: after P16-00 · started: 2026-08-17T22:41:30Z · resumed: 2026-08-17
 Rounds 1-5 ran on `poolside/laguna-s-2.1:free`. As of 2026-08-17 the executor runs a model
 ladder (GLM 5.2 -> Nemotron 3 Ultra -> gpt-oss-20b -> Laguna). A stronger model must not
 simply re-confirm the weaker model's DONE marks — that wastes the upgrade entirely.
