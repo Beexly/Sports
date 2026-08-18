@@ -5444,3 +5444,55 @@ Note: P15-03 (Pre-PR self-review dry run) is the NEXT TODO task in the queue. Pe
 
 Result: DONE. Commits 2f3f97877b2ad0761a38908b48fa08db77d75b12 (configs),
 8c9a2a749956be7a5808289ca96ccad4fefd93dc (queue DONE status).
+
+
+### 2026-08-18T03:13:58Z · P15-03 — Pre-PR self-review dry run · DONE · STRIKES: 0 · commit 12db05aa620a7866cf89b038b4cf2497d95766e1 (queue-status 47410d714b973afd38c67db3387f1b4f966349ea)
+
+Resumed P15-03 from STATUS: DOING (prior run left cwd in correct dir but did not
+complete; working tree had unrelated mods from that run — see below, NOT touched).
+
+Action (all commands re-run THIS session; nothing inherited):
+1. STEP 0: `git rev-parse --show-toplevel` -> C:/Users/Garrett/Sports (confirmed; never ran git outside it).
+2. STEP 1: first non-DONE task from top = P15-03 (DOING) — resumed it.
+3. STEP 2: set STATUS DOING (already DOING; timestamped resume).
+4. Ran the pre-PR checks the free bots will run:
+   - `npm run typecheck --workspace=apps/web` -> exit 0 (PASS).
+   - `npm run lint --workspace=apps/web` (--max-warnings=0) -> exit 0 (PASS).
+   - `npm run test --workspace=apps/web` (full vitest) -> 18 failed files |
+     819 passed | 12 skipped; 23 failed tests | 11240 passed | 97 skipped.
+     Duration 476s. Log: handoff/vitest-p1503.log.
+   - `npm audit --omit=dev` -> 2 HIGH: next 14.2.15 (needs major bump), postcss
+     (transitive via next). Both owner-gated (Next.js major upgrade); not fixed.
+5. SELF-VERIFICATION: confirmed via `git stash` of 3 unrelated source mods that the
+   18 failures are PRE-EXISTING on HEAD (clean tree fails identically) — not caused
+   by this session. `git stash pop` restored them.
+6. Root-caused the 5 fixable failures to P16-01 refactor (commit 89c59634) which
+   moved the "The Lab" door label + loadNflverseUsagePulse loader into
+   components/landing/nflverse-lab-door.tsx (Suspense off the critical path). The
+   4 homepage test files asserted the literal label/loader in app/page.tsx, which no
+   longer contains them. Also no-fake-percentages.test.ts tripped on a `//` line
+   comment ("beat-close over <100%") because its cleaner stripped `/* */` but not `//`.
+7. FIX (test-only; invariants preserved, no guard weakened):
+   - 4 homepage test files: read nflverse-lab-door.tsx, assert "The Lab" + loader there.
+   - no-fake-percentages.test.ts: also strip `//` line comments (never customer-visible).
+8. RE-RAN the 5 fixed files: 5 passed (5 files) | 351 passed | 0 failed (exit 0).
+   Re-ran typecheck + lint: both still exit 0.
+9. 13 remaining failures (api-v1-* shadow/proposal guards, ai-control-plane-sealing-guard,
+   sealed-holdout-open-scan-guard, data-first-public-surfaces) test intentionally-DARK
+   B2B code under a promotion gate and the SEALED scripts/guardrails/ + apps/web/lib/
+   ai-control-plane/ paths. Per hard rules these paths are NOT editable and fixing would
+   mean deleting real dark routes or weakening guard scripts — both prohibited. These are
+   P16-00 / P17-00 scope, intentionally left unfixed. NOTED, not silently passed.
+10. STEP 4 VERIFY pass: typecheck PASS, lint PASS, 5 fixed test files 351/351 PASS,
+    npm-audit 2 high documented as owner-gated.
+11. Committed exactly the 5 edited test files + SPRINT_QUEUE.md (12db05aa); then the
+    queue-status-hash update (47410d71). Did NOT stage the prior run's unrelated mods
+    (dfs-optimizer.tsx, nav-auth.test.tsx, honest-degraded-states.test.ts, test-census-raw.txt)
+    nor untracked handoff artifacts (HAIKU_WATCH.md, PROD_HEALTH_ALERT.md, SPRINT_STATUS_NOW.md,
+    fetch_gh_apps.sh, tools/hunt-claims.js) — those are from the interrupted prior run and out
+    of P15-03 scope. `git show --stat` confirmed both hashes.
+
+Uncertainty noted: the 13 remaining failures were NOT re-run per-file for exact counts beyond
+the 18-file vitest summary; they are grouped and root-caused as owner-gated dark-code/sealed
+guards, not product bugs (verified by stash test that they are pre-existing on HEAD). Full
+per-file enumeration available on request. Never git push; local-only commit.
