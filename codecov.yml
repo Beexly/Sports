@@ -1,0 +1,57 @@
+# Codecov — code coverage reporting configuration.
+#
+# ⚠️ COST / SECRET ASSESSMENT (reconciled with P15-01 inventory, 2026-08-17):
+#
+# P15-01 recorded Codecov as PAID with a CODECOV_TOKEN secret required.
+# Current vendor research (codecov.com, 2026-08-17) shows Codecov is now
+# "free for the first 5 users with unlimited private repos" — but it STILL
+# requires a CODECOV_TOKEN to upload coverage reports from CI (verified via
+# docs.codecov.com/quick-start). This config is INERT until that secret exists.
+#
+# Rationale for including it: P15-02 task lists Codecov explicitly. The config
+# is harmless and inert without the token. When the owner upgrades CI minutes
+# (currently exhausted) and optionally adds CODECOV_TOKEN, the coverage
+# reporting is ready. If the owner does NOT add the token, nothing breaks —
+# Codecov simply never receives uploads.
+#
+# Docs: https://docs.codecov.com/docs/codecov-yaml
+# Validate: curl -X POST --data-binary @codecov.yml https://codecov.io/validate
+
+codecov:
+  require_ci_to_pass: no
+
+# Coverage status checks as informational (non-blocking) while the suite
+# stabilizes. The owner can flip to blocking later.
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 0%
+        informational: true
+    patch:
+      default:
+        target: auto
+        informational: true
+
+# Scope: comment only on PRs, not on every push.
+comment:
+  layout: "diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+  hide_project_coverage: false
+
+# Component map for the monorepo structure — helps slice coverage by package.
+component:
+  paths:
+    - path: "apps/web/**"
+      name: webapp
+      flag: webapp
+    - path: "packages/**"
+      name: packages
+      flag: packages
+    - path: "scripts/**"
+      name: scripts
+      flag: scripts

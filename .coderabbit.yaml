@@ -1,0 +1,35 @@
+# CodeRabbit — AI code review configuration.
+#
+# ⚠️ COST ASSESSMENT (reconciled with P15-01 inventory, 2026-08-17):
+#   Free tier covers PR summarization + release notes across unlimited public
+#   and private repositories, but actual PR code reviews are $24/dev/month (Pro).
+#   For a zero-cost project, only the basic summary/chat free tier is available.
+#
+# This config is INERT until the owner installs the CodeRabbit GitHub App AND
+# upgrades to a paid tier. The free tier's limitations are documented above.
+# No repository secret is required (GitHub App auth only). Verified: P15-01
+# found CodeRabbit "INERT" — no in-repo config, no secret present.
+#
+# Tuned DOWN per sprint doctrine: ~290 commits on the eventual PR would produce
+# an unreadable flood. Profile is "quiet" (only the most important feedback).
+#
+# Scope: pull_request only (CodeRabbit's GitHub App default — it does not run
+# on push or schedule without explicit config).
+#
+# Schema verified against: https://docs.coderabbit.ai/reference/configuration
+# (last updated: August 11, 2026)
+language: "en-US"
+
+reviews:
+  profile: "quiet"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  review_details: false
+  auto_review:
+    enabled: true
+    drafts: false
+
+chat:
+  auto_reply: true
