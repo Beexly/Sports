@@ -2419,7 +2419,7 @@ would produce an unreadable flood. Prefer summary-level review over line-by-line
 **VERIFY:** each config validated against the vendor's published schema; state plainly in the
 journal that NONE of this takes effect until a PR is opened — which remains Garrett's call.
 
-### P15-03 — Pre-PR self-review dry run · STATUS: DOING · STRIKES: 0 · started: 2026-08-17 (resumed 2026-08-18T03:13:58Z)
+### P15-03 — Pre-PR self-review dry run · STATUS: DONE · STRIKES: 0 · completed: 2026-08-18T03:13:58Z (commit 12db05aa620a7866cf89b038b4cf2497d95766e1)
 Before any PR is opened, run locally the checks those bots will run remotely (lint, typecheck,
 full vitest, `npm audit`, existing a11y checks) and fix what they would flag. Goal: when the
 PR is finally opened, the free reviewers find little, so their output is signal instead of a
