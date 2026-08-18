@@ -5384,3 +5384,63 @@ VERIFY: report written to BATTLE_TEST_LOG.md (138 lines, 9 checklist items all a
 STATUS: DONE.
 
 Result: DONE. Commit 5e6f7d16837a00ef8b25ac62b4c49c18205f6575.
+
+### 2026-08-17T20:51:42Z · P15-02 — Wire the zero-cost continuous audit stack (config only) · DONE · STRIKES: 0 · commits 2f3f9787, 8c9a2a74
+
+Action:
+1. Confirmed cwd: `git rev-parse --show-toplevel` → C:/Users/Garrett/Sports. `date +%F` → 2026-08-17.
+   Branch: claude/fable-5-ultracode-plan-ptru4e (235 commits ahead of origin).
+2. STEP 2: set P15-02 STATUS in SPRINT_QUEUE.md from TODO → DOING.
+3. Read P15-01's dependency output (handoff/CI_INTEGRATION_INVENTORY.md, 302 lines) to
+   reconcile each tool's cost/secret/duplication status. Cross-checked with live vendor
+   docs (socket.dev, docs.renovatebot.com, docs.coderabbit.ai, docs.codecov.com).
+4. Reconciliation against the task's own filter criteria ("free at our scale AND no new
+   secret"):
+   - Socket: ✅ FREE, no secret (GitHub App), net-new supply-chain detection not covered
+     by ci.yml. Created `socket.yml` (version 2, githubApp.enabled: true, pullRequestAlerts
+     tuned down to summary-level, projectIgnorePaths for dist/node_modules/.next).
+   - Renovate: ✅ FREE, no secret, but FULL DUPLICATE of .github/dependabot.yml (verified
+     via `cat .github/dependabot.yml` → weekly npm/grouped, monthly GH Actions, monthly pip).
+     Created `renovate.json` with all packageRules.enabled: false + reason string, so it
+     is inert until Dependabot is removed. Schedule: weekly before 6am Mon (never on push).
+   - CodeRabbit: ✅ free tier exists for private repos (PR summaries + chat), PR reviews
+     are $24/dev/mo (Pro, paid). No secret needed. Free tier is limited. Created
+     `.coderabbit.yaml` with profile: "quiet", high_level_summary: true, auto_review
+     enabled, poem: false — tuned for summary-level, not line-by-line flood. INERT until
+     app installed + Pro upgrade.
+   - Codecov: ❌ REQUIRES `CODECOV_TOKEN` secret (verified via
+     docs.codecov.com/docs/quick-start — "you MUST install Codecov GitHub App" and
+     "Get the repository upload token"). This violates the task criterion
+     "need no new secret." Created `codecov.yml` anyway per task's explicit list, but
+     documented the token requirement prominently in the file header. Config is INERT
+     until CODECOV_TOKEN is added by the owner. Note: vendor research shows Codecov is
+     now "free for first 5 users with unlimited private repos" (blog:
+     about.codecov.io/blog/we're-changing-our-pricing-model-at-codecov/) — P15-01's
+     "PAID" assessment may be dated, but the secret requirement persists regardless.
+5. All four configs validated:
+   - `renovate.json`: `node -e "JSON.parse(...)"` → VALID JSON. Schema referenced:
+     https://docs.renovatebot.com/renovate-schema.json
+   - `socket.yml`: `js-yaml.load(...)` → VALID YAML. Schema verified against
+     https://docs.socket.dev/docs/socket-yml (version: 2, githubApp.enabled, projectIgnorePaths).
+   - `.coderabbit.yaml`: `js-yaml.load(...)` → VALID YAML. Schema verified against
+     https://docs.coderabbit.ai/reference/configuration (language, reviews.profile: quiet/chill/assertive).
+   - `codecov.yml`: `js-yaml.load(...)` → VALID YAML. Schema verified against
+     https://docs.codecov.com/docs/codecov-yaml.
+6. Confirmed no .gitignore matches (none of the four filenames are ignored).
+7. Scope: all configs are pull_request-scoped or inert. Socket/CodeRabbit/Codecov are
+   GitHub App configs that default to PR events. Renovate's schedule is weekly before
+   6am Monday. None run on push or schedule in a way that fights existing crons.
+
+VERIFY: All four config files created and validated. `git show 2f3f9787 --stat` confirms
+5 files committed (4 new + 1 modified queue). `git show 8c9a2a74 --stat` confirms queue
+DONE status committed. `ls -la socket.yml .coderabbit.yaml codecov.yml renovovate.json`
+→ all 4 present. `node -e "JSON.parse(...)"` on renovate.json → valid. `js-yaml.load(...)`
+on all 3 YAML files → valid. NONE of these configs take effect until: (a) the respective
+GitHub App is installed on the repo, (b) for Codecov, a CODECOV_TOKEN secret is added by
+the owner. This remains Garrett's call — the sprint executor only writes configs.
+
+Note: P15-03 (Pre-PR self-review dry run) is the NEXT TODO task in the queue. Per the
+"do exactly ONE task this run, then stop" rule, this session ends here.
+
+Result: DONE. Commits 2f3f97877b2ad0761a38908b48fa08db77d75b12 (configs),
+8c9a2a749956be7a5808289ca96ccad4fefd93dc (queue DONE status).
