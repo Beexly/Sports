@@ -32,8 +32,26 @@ copies now exist. Vercel reads `apps/web/vercel.json`. **Every guard we own read
 Consequence, verified: edit the live config and every check reports green; delete the root
 copy to tidy up and both guards hard-fail on a missing file. The trap is loaded both ways.
 Fix = a drift test asserting the two files stay identical, plus repointing both guards.
-A remote session has this written on `claude/cron-config-placement-verify-qsl19t`, unpushed,
-awaiting owner approval. **Do not duplicate that work.**
+A remote session has this written on `claude/cron-config-placement-verify-qsl19t`, now pushed as draft **PR #431**. **Do not duplicate that work.**
+
+**4. GITHUB ACTIONS HAS NOT RUN SINCE 2026-08-14 — added 2026-08-18 21:40 UTC.**
+The last 30 CI runs are **22 failed, 8 cancelled, 0 successful**, across `main`, both agent
+branches, and every dependabot branch. This is not test failure. Jobs complete in 2-4
+seconds with `runner_id: 0`, `runner_name: ""`, no steps recorded, and log downloads
+returning HTTP 404 — no runner is ever assigned. That signature means GitHub Actions cannot
+allocate minutes: a spending limit or exhausted included minutes. **No code change reaches
+it; it is a billing/settings action for the owner.**
+
+Consequence for anyone reading this document: **no guardrail, test, secret scan or trust
+gate has actually executed on any commit for four days** — including `01244552`. The checks
+report red without running, so there is no green history to regress from, and the
+`guards=22/25` baseline in `handoff/LEDGER.md` reflects local runs, not CI. Treat every
+"CI is red" signal as uninformative until runners come back. Verify locally instead, and
+say so explicitly when you do.
+
+Not affected: Vercel builds (PR #431's preview deployed fine) and Codacy (reported 0 issues
+on #431). Those are not Actions-based. Wiring more Actions-based review bots is wasted
+effort until minutes are restored.
 
 ---
 
@@ -68,19 +86,32 @@ Ledger state: `P1d-2` is stale-CLAIMED (recover per CONTINUOUS.md), `P1d-3` TODO
 - `deployment.sha` returns `null`, so the running commit cannot be identified from that
   endpoint. Unverified which commit is actually serving.
 
-### The cron fix is STILL FRAGILE — highest-value durable fix available
+### The cron fix — RESOLVED on `main` (corrected 2026-08-18 21:37 UTC)
 
 Production cron registration requires `apps/web/vercel.json` to exist inside the Vercel
-Root Directory (`apps/web`). **`origin/main` does not contain that file.** It exists only
-on the sprint branch (commit `8bd786ed`).
+Root Directory (`apps/web`). **That file is now on `origin/main`**, added by commit
+`01244552`, which is `main`'s current head. Re-verified:
 
-Consequence: **every deploy from `main` silently deregisters all 20 crons and kills the
-scheduler.** This already happened twice on 2026-08-17 — a ~20-hour outage, then a second
-~3-hour outage after ops commits landed on main at 18:27.
+    git cat-file -e origin/main:apps/web/vercel.json   # exit 0 — present
+    git log --oneline -1 origin/main                   # 0124455 fix(vercel): add apps/web/vercel.json
+    git show --stat 0124455                            # 1 file changed, 154 insertions
 
-Current production is healthy only because it was deployed from a temp directory with that
-file layered on top. That is not durable. Committing `apps/web/vercel.json` to `main`
-(4KB, zero logic) ends this class of outage permanently. **Owner-gated — not done.**
+The Root Directory is no longer an inference: Vercel's own bot payload on PR #431 carries
+`"rootDirectory":"apps/web"` verbatim.
+
+**What was stale.** This section previously read "`origin/main` does not contain that file.
+It exists only on the sprint branch (commit `8bd786ed`)." That was true when written and is
+now wrong. The LATE UPDATE at the top of this document already treats `01244552` as landed,
+so the two sections contradicted each other — the LATE UPDATE was right.
+
+Historical record, unchanged and still worth keeping: before that commit, **every deploy
+from `main` silently deregistered all 20 crons and killed the scheduler.** It happened twice
+on 2026-08-17 — a ~20-hour outage, then a second ~3-hour outage after ops commits landed on
+main at 18:27.
+
+**Follow-on defect, still open:** `01244552` COPIED rather than MOVED the config, leaving a
+byte-identical inert copy at the repo root that every guard reads. See LATE UPDATE item 3.
+Fix is committed in draft PR #431.
 
 ---
 
@@ -136,10 +167,16 @@ That file splits remaining launch blockers into list A (agent-doable) and list B
 battle-test loop was deliberately capped by P16-00 precisely so effort would move to it.
 
 Known owner-gated items carried forward from earlier sessions:
-- Stripe monthly/annual price-ID wiring — previously verified as a **FAIL / launch blocker**
+- ~~Stripe monthly/annual price-ID wiring — previously verified as a **FAIL / launch
+  blocker**~~ — **RESOLVED; the FAIL was stale.** Live probe of
+  `/api/ops/public-surface-truth` at 2026-08-18 21:37 UTC returns
+  `stripeSecretConfigured=true`, `webhookSecretConfigured=true`,
+  `envPriceSlotsConfigured=6/6` — PRO, ELITE and FANTASY at both month and annual all
+  report `envConfigured=true`. The original FAIL dates from a June verification that has
+  since been fixed. **Do not resurrect this claim without a fresh probe.**
 - No age gate at signup/checkout despite Terms claiming one
 - Sprint branch not merged to main
-- `apps/web/vercel.json` not on main (see above)
+- ~~`apps/web/vercel.json` not on main~~ — done, landed as `01244552` (see above)
 
 ---
 
