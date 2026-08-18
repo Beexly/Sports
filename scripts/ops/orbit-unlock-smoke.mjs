@@ -57,7 +57,11 @@ if (!DECIDERS.some((fn) => settleSrc.includes(fn))) {
 }
 
 // 3. vercel cron matrix — required high-leverage schedules
-const vercel = JSON.parse(readFileSync(join(root, "vercel.json"), "utf8"));
+// Live config = the one inside Vercel's Root Directory (apps/web). The repo-root
+// copy is inert; asserting against it would pass while production drifted.
+const vercel = JSON.parse(
+  readFileSync(join(root, "apps", "web", "vercel.json"), "utf8"),
+);
 const cronMap = Object.fromEntries(
   (vercel.crons || []).map((c) => [c.path, c.schedule]),
 );
