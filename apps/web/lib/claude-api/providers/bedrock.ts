@@ -22,6 +22,12 @@
 import { signRequest, awsUriEncode } from "./aws-sigv4";
 import type { ClaudeMessagesResult } from "../messages";
 
+// Error classes live outside `providers/` so consumers can classify
+// failures without importing a raw provider client. Re-exported here so
+// this module's public API is unchanged. See ../provider-errors.ts.
+import { BedrockConfigError, BedrockMessagesError } from "../provider-errors";
+export { BedrockConfigError, BedrockMessagesError };
+
 type Env = Record<string, string | undefined>;
 
 /** Bedrock request/response uses this fixed anthropic version string. */
@@ -55,29 +61,6 @@ export function isBedrockConfigured(env: Env = process.env): boolean {
  */
 export function isBedrockProviderSelected(env: Env = process.env): boolean {
   return env["CLAUDE_PROVIDER"]?.trim().toLowerCase() === "bedrock" && isBedrockConfigured(env);
-}
-
-export class BedrockConfigError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "BedrockConfigError";
-  }
-}
-
-export class BedrockMessagesError extends Error {
-  readonly status: number;
-  readonly durationMs: number;
-  readonly modelName: string;
-  constructor(
-    message: string,
-    args: { readonly status: number; readonly durationMs: number; readonly modelName: string },
-  ) {
-    super(message);
-    this.name = "BedrockMessagesError";
-    this.status = args.status;
-    this.durationMs = args.durationMs;
-    this.modelName = args.modelName;
-  }
 }
 
 /**

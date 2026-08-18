@@ -14,6 +14,12 @@
  */
 import type { ClaudeMessagesResult } from "../messages";
 
+// Error classes live outside `providers/` so consumers can classify
+// failures without importing a raw provider client. Re-exported here so
+// this module's public API is unchanged. See ../provider-errors.ts.
+import { CerebrasMessagesError } from "../provider-errors";
+export { CerebrasMessagesError };
+
 /** Free-tier default. gpt-oss-120b is on the Cerebras free trial as of 2026-06. */
 export const DEFAULT_CEREBRAS_MODEL = "gpt-oss-120b";
 
@@ -36,23 +42,6 @@ interface CerebrasChatResponse {
     readonly prompt_tokens?: number;
     readonly completion_tokens?: number;
   };
-}
-
-export class CerebrasMessagesError extends Error {
-  readonly status: number;
-  readonly durationMs: number;
-  readonly modelName: string;
-
-  constructor(
-    message: string,
-    args: { readonly status: number; readonly durationMs: number; readonly modelName: string },
-  ) {
-    super(message);
-    this.name = "CerebrasMessagesError";
-    this.status = args.status;
-    this.durationMs = args.durationMs;
-    this.modelName = args.modelName;
-  }
 }
 
 export async function callCerebrasMessages(

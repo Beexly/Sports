@@ -16,6 +16,12 @@
 import { parseServiceAccountJson, fetchAccessToken, type ServiceAccountKey } from "./google-oauth";
 import type { ClaudeMessagesResult } from "../messages";
 
+// Error classes live outside `providers/` so consumers can classify
+// failures without importing a raw provider client. Re-exported here so
+// this module's public API is unchanged. See ../provider-errors.ts.
+import { VertexConfigError, VertexMessagesError } from "../provider-errors";
+export { VertexConfigError, VertexMessagesError };
+
 type Env = Record<string, string | undefined>;
 
 const VERTEX_ANTHROPIC_VERSION = "vertex-2023-10-16";
@@ -43,29 +49,6 @@ export function isVertexConfigured(env: Env = process.env): boolean {
 
 export function isVertexProviderSelected(env: Env = process.env): boolean {
   return env["CLAUDE_PROVIDER"]?.trim().toLowerCase() === "vertex" && isVertexConfigured(env);
-}
-
-export class VertexConfigError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "VertexConfigError";
-  }
-}
-
-export class VertexMessagesError extends Error {
-  readonly status: number;
-  readonly durationMs: number;
-  readonly modelName: string;
-  constructor(
-    message: string,
-    args: { readonly status: number; readonly durationMs: number; readonly modelName: string },
-  ) {
-    super(message);
-    this.name = "VertexMessagesError";
-    this.status = args.status;
-    this.durationMs = args.durationMs;
-    this.modelName = args.modelName;
-  }
 }
 
 export function resolveVertexModelId(anthropicModelId: string, env: Env = process.env): string {
