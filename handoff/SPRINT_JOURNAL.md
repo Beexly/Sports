@@ -5571,3 +5571,29 @@ Test verification (run from apps/web/ so @/ alias resolves; repo-root run fails 
 Result: NO new defects found in classes (a)-(e). The sprint's guard-wiring is genuinely correct. One pre-existing honest gap re-confirmed: charge.refunded is unhandled (documented as B2 owner-gated; not fixed — read-only audit round). Deliverable: handoff/FRESH_EYES_ROUND.md (9790 bytes, all 5 class subsections). Committed 6a3389dc (findings + resumed marker), then b0434539 (queue STATUS DONE). `git show 6a3389dc --stat` and `git show b0434539 --stat` both confirmed before writing. Never git push; local-only.
 
 Uncertainty: the "NO new defects" verdict means the stronger model added no bug fixes — this is a valid fresh-eyes outcome (the prior-round fixes survived), but I verified it with live test runs rather than asserting from the weaker model's DONE marks. Did NOT re-examine every file the weaker model touched (378 files in the diff set are too broad for one round); scoped to the 5 defect classes on security-critical + highest-change surfaces. Full diff set available on request.
+
+### 2026-08-17T23:34:46Z · P16-00-A1 (List A) · DONE · STRIKES: 0 · commit 2626d524c3337d030ec282f9323ec8b88a728562
+
+Pre-step 0: Confirmed cwd `C:/Users/Garrett/Sports` via `git rev-parse --show-toplevel` (PASS — inside repo, not home). `date +%F` -> 2026-08-17. Branch: `claude/fable-5-ultracode-plan-ptru4e`.
+
+Step 1: Read handoff/LAUNCH_BLOCKERS_ONLY.md — List A contains ONE item (A1): add SENTRY_DSN, NEXT_PUBLIC_SENTRY_DSN, HEALTH_ALERT_WEBHOOK_URL to .env.example so a Vercel env rebuild from template cannot silently drop error visibility. P16-00 is already STATUS DONE (hard cap on battle-test loop); this is its sole remaining List A action.
+
+Step 2: VERIFY env var claims against code (all re-derived THIS session, not inherited from LAUNCH_BLOCKERS_ONLY.md):
+  - `grep -c "SENTRY_DSN|NEXT_PUBLIC_SENTRY_DSN|HEALTH_ALERT_WEBHOOK_URL" .env.example` -> 0 (none documented — gap confirmed)
+  - `grep -n "SENTRY_DSN|NEXT_PUBLIC_SENTRY_DSN" apps/web/lib/observability/sentry.ts` -> lines 7-8, 30-31, 79-80 (server reads SENTRY_DSN, client reads NEXT_PUBLIC_SENTRY_DSN; no-ops if absent)
+  - `grep -rn "HEALTH_ALERT_WEBHOOK_URL" apps/web/app/api/cron/health-alert/route.ts` -> line 11, 44 (POSTs payload if set; no-op if unset)
+
+Step 3: Added 22 lines to .env.example after the Analytics section (line 233), inserting:
+  - SENTRY_DSN="" (server-side, read by sentry.ts lines 30-31, 79-80)
+  - NEXT_PUBLIC_SENTRY_DSN="" (client-side, read by sentry.ts lines 8, 31, 80)
+  - HEALTH_ALERT_WEBHOOK_URL="" (health-alert cron, route.ts line 44)
+  Each with a comment explaining the consequence of leaving it unset (silent no-op / no crash visibility / no push alerts).
+
+Step 4: `git add .env.example` (only the file this task named). Secret scan: OK, no secrets detected.
+  `git commit -m "docs(obs): document SENTRY_DSN, NEXT_PUBLIC_SENTRY_DSN, HEALTH_ALERT_WEBHOOK_URL in .env.example"` -> commit 2626d524c3337d030ec282f9323ec8b88a728562
+
+Step 5: VERIFY commit via `git show 2626d524 --stat` -> 1 file changed, 22 insertions. `git show 2626d524 -- .env.example` confirms the diff adds exactly the 3 env vars + comments, no other lines touched.
+
+Note: Documentation-only change (no behavioral code change). typenet/lint not applicable to .env.example. No test file named by this task. The other uncommitted working-tree changes (test files, dfs-optimizer.tsx, package.json, handoff/test-census-raw.txt, handoff/SPRINT_VIOLATIONS.md) are pre-existing carryovers from prior sessions (hygiene-03/hygiene-07 from P10-04 Round 6 report) and were NOT touched by this task — only `.env.example` was staged and committed.
+
+Next: List A is now empty. Per P16-00 directive, STOP and idle — do not invent work.

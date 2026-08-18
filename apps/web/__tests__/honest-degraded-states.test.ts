@@ -38,7 +38,7 @@ vi.mock("@/lib/proof/load-proof-of-record", () => ({ loadProofOfRecord: mocks.pr
 
 import BoardPage from "@/app/board/page";
 import HomePage from "@/app/page";
-import { NflverseLabDoor, NflverseLabDoorPlaceholder } from "@/components/landing/nflverse-lab-door";
+import { NflverseLabDoor } from "@/components/landing/nflverse-lab-door";
 import ProofPage from "@/app/proof/page";
 import { db } from "@sports/db";
 import { MethodologySection, type TrustLedgerMetrics } from "@/components/ui/methodology-section";

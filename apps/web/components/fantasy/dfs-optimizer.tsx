@@ -117,7 +117,7 @@ export function DfsOptimizer() {
           </span>
           <p className="text-xs text-ion-1">
             Only <strong className="text-ion-white">{result.lineups.length} of {result.requested} requested</strong> lineups could be generated — the
-            salary-cap and uniqueness constraints are exhausted under the current locks/excludes. Loosen a lock or fade to unlock more combinations.
+            salary-cap and uniqueness constraints are exhausted under the current constraints/excludes. Relax a constraint or fade to unlock more combinations.
           </p>
         </div>
       )}

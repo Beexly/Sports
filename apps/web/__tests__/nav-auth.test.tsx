@@ -27,7 +27,7 @@ vi.mock("@/components/ui/mobile-nav", () => ({
 
 vi.mock("next/image", () => ({
   default: (props: { src: string; alt: string; width?: number; height?: number }) => (
-    <img src={props.src} alt={props.alt} width={props.width} height={props.height} />
+    <img src={props.src} alt={props.alt} width={props.width} height={props.height} /> // eslint-disable-line @next/next/no-img-element
   ),
 }));
 
