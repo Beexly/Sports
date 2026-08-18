@@ -61,7 +61,7 @@ baseline: typecheck=0  lint=0  guards=24/26 (api-v1-boundary expected FAIL; ai-t
 | H-4 | Bernoulli e-process (v3) | SUPERSEDED | 18:27 | Became v4 H-C |
 | H-5 | wire markClosingSnapshots (v3) | SUPERSEDED | 18:27 | Became v4 H-D |
 | H-A | fix isotonic PAV + lock tests | DONE | 18:27 | Algorithm already fixed in ba61b061; added equal/weighted/200-random/weighted-mass tests; 11/11 green; tsc=0 lint=0 |
-| H-B | cron-matrix-from-vercel.mjs generator | TODO | — | — |
+| H-B | cron-matrix-from-vercel.mjs generator | DONE | 18:30 | 20 crons from apps/web/vercel.json; DRIFT none vs root copy; 3/3 node:test; --check exit 0 |
 | H-C | Bernoulli e-process toolkit (unwired) | TODO | — | — |
 | H-D | wire markClosingSnapshots behind flag | TODO | — | — |
 | H-E | CLV + pick-universe census (read-only) | BLOCKED | 2026-08-18 22:45 | Same as H-1: Can't reach database server at `localhost:5433` |
