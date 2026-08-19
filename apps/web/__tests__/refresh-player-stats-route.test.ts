@@ -28,13 +28,14 @@ function req(url: string, auth?: string): Request {
 }
 
 describe("currentNflSeason", () => {
-  it("uses the calendar year from September onward", () => {
+  it("defaults to the completed REG floor, not a calendar rollover", () => {
+    // currentNflSeason → resolveFootballStatsSeason with no hasRegRows probe.
+    // latestCompletedNflSeasonFloor is max(2025, candidate), so pre-2026
+    // dates never drop below 2025 (same contract as nflverse-readiness).
+    expect(currentNflSeason(new Date("2025-03-01T00:00:00Z"))).toBe(2025);
+    expect(currentNflSeason(new Date("2025-08-31T00:00:00Z"))).toBe(2025);
     expect(currentNflSeason(new Date("2025-09-10T00:00:00Z"))).toBe(2025);
-    expect(currentNflSeason(new Date("2025-12-31T00:00:00Z"))).toBe(2025);
-  });
-  it("uses the prior year before September", () => {
-    expect(currentNflSeason(new Date("2025-03-01T00:00:00Z"))).toBe(2024);
-    expect(currentNflSeason(new Date("2025-08-31T00:00:00Z"))).toBe(2024);
+    expect(currentNflSeason(new Date("2026-09-15T00:00:00Z"))).toBe(2025);
   });
 });
 
@@ -77,7 +78,7 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
     });
-    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
       success: boolean;
@@ -111,7 +112,9 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(res.status).toBe(502);
   });
 
-  it("502s when an NGS variant reports a non-ok status", async () => {
+  it("keeps HTTP 200 when only a satellite fails (primary stamp is the SLA)", async () => {
+    // Route status is primaryOk ? 200 : 502. Satellite failure flips
+    // body.success to false but must not withhold the primary IngestionRun.
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
     });
@@ -122,7 +125,13 @@ describe("GET /api/cron/refresh-player-stats", () => {
           : { status: "ok", season, statType, rowsWritten: 5 },
       ),
     );
-    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
-    expect(res.status).toBe(502);
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      success: boolean;
+      ngs: { rushing: { status: string } };
+    };
+    expect(body.success).toBe(false);
+    expect(body.ngs.rushing.status).toBe("source-error");
   });
 });
