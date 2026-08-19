@@ -88,14 +88,14 @@ the only copy, and nobody else can verify or build on it.
 | H-E | CLV census on a Neon branch | hermes | UNPUSHED | output CSV on founder machine: docs/ops/calibration/2026-08-18-clv-census.csv, 1161 rows; Neon branch since deleted |
 | H-F | DOC_DRIFT.md audit | hermes | DONE | e668c4c4 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-G | Suppression curve vs random and oracle baselines | hermes | DONE | 63e84c32 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
-| H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | hermes | BLOCKED | evidence DISPROVEN 2026-08-19: cited 01868364 resolves to the H-C e-process commit, and REFUND_REVOKES_ACCESS appears nowhere in the backup tree (git log -S and git grep both empty). The reported handler is unlocated. Hermes must find the real commit in its local worktrees or the row reverts to OPEN for reimplementation |
+| H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | claude | DONE | e69aa93c on origin/hk/refund-revocation — REIMPLEMENTED by fleet after Hermes confirmed "never implemented". 19 new tests, 72/72, default-OFF structural. Adversarial review confirmed 1 major (active-subscription refund lock-in) + hardening list; revision is C-11 before any merge |
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
 | H-M | Cron no-op audit | hermes | DONE | cd5086f7 on origin/hermes/h-m-cron-audit; data-driven early-return proposal only, ~60/day off-season, 576/day figure withdrawn |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2; superseded by #369 single-seam version — the fix had been sitting mergeable in #369 for 12 days and was rebuilt twice for lack of a ledger |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
 | C-5 | PAVA forward-violation bug in calibration core | claude | DONE | 9627379 |
-| H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | UNPUSHED | hermes/h-q-singletons 14b74b5c local, 28/28 from apps/web; cqr hand-derivation confirmed negative qhat is correct CQR shrinkage, not a bug; push grant issued 2026-08-19 |
+| H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | DONE | 14b74b5c, merged via 3e997adf; full apps/web suite ZERO failures locally for the first time this session |
 | F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | DONE | 63e84c32 (sprint-backup tip) + cd5086f7 (h-m tip) both on origin, independently verified; grant spent |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
@@ -117,4 +117,8 @@ the only copy, and nobody else can verify or build on it.
 | S-1 | Evaluate TheSportsDB as a free schedules/results redundancy source (v1 key 123, 30 req/min; NOT an odds source) — must pass source-rights registry classification before any adapter work | — | OPEN | founder surfaced docs 2026-08-19; folds into H-S |
 | H-S | Free sports-data provider map (L-5 in the v8 queue): one doc, fixed schema, every candidate classified — odds sources separated HARD from schedules/results/stats sources, free-tier limits verified with at most 2 live calls each using documented public keys only, source-rights classification per CLAUDE.md for each. No signups, no credential creation, no adapters — map first | hermes | OPEN | candidate list from founder 2026-08-19: TheSportsDB, football-data.org (soccer only), OpenLigaDB (German leagues), MySportsFeeds, OrcaSports, public-apis indexes; plus incumbents The Odds API / TheRundown / ESPN for limit comparison |
 
+| C-10 | Guard hardening from fleet review: ledger guard fetch-by-sha in shallow CI (fabricated SHAs currently pass), api-v1 route walker must not honor SKIP_DIRS and must flag symlinks, promoted-routes listFiles must not throw on dangling symlinks — each fix carries the reviewer reproduction as a regression test | claude | CLAIMED | 5 findings confirmed by empirical reproduction, fix fleet dispatched |
+| C-11 | H-K revision per attackers: never revoke while Stripe subscription still active (retrieve + status check, log for human), log-only mode makes ZERO Stripe API calls, transient retrieve failure in enforce mode 500s (structural unresolvability still 200s), status guard on revoke write | claude | CLAIMED | base e69aa93c |
+| C-12 | Edge Roadmap + gate-split map committed | claude | DONE | #435 — docs/ops/edge/2026-08-19-edge-roadmap.md + calibration-gate-split-map.md |
+| F-5 | Founder reads the Edge Roadmap and picks the QUICK experiments to greenlight; enabler E1 (clean-room prod export) needs founder hands — agents cannot reach the DB | founder | OPEN | roadmap section 2-3; every experiment preregistered against CLV 52.4 percent under the e-process, kill criteria included |
 <!-- LEDGER:END -->
