@@ -203,8 +203,15 @@ describe("/picks — the server paywall is NOT weakened by the copy fix", () => 
     );
   });
 
-  it("still caps the query take to the entitled daily limit", () => {
-    expect(routeSrc).toMatch(/take:\s*entitlements\.dailyPickLimit\s*\?\?\s*200/);
+  it("still caps the RESPONSE to the entitled daily limit (C-31: cap moved after the filter)", () => {
+    // The old query-level cap (take: dailyPickLimit) under-delivered: the
+    // selective-publish filter ran after the take, so a FREE viewer could get
+    // 0-1 picks instead of their 2. The paywall invariant is response-level:
+    // a bounded over-fetch pool, then slice(0, dailyPickLimit) AFTER
+    // filter + rank. Both halves are pinned here.
+    expect(routeSrc).toMatch(/take:\s*entitlements\.dailyPickLimit\s*!=\s*null\s*\?\s*48\s*:\s*200/);
+    expect(routeSrc).toMatch(/rankedPicks\.slice\(0,\s*entitlements\.dailyPickLimit\)/);
+    expect(routeSrc).toMatch(/limitedPicks\.map/);
   });
 
   it("still gates confidence on the viewer entitlement, not the pick tier", () => {

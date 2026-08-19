@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { PricingPlans, type PlanView } from "@/components/pricing/pricing-plans";
 import {
@@ -635,6 +636,12 @@ export default function PricingPage() {
             No free trial. Every paid plan has a 3-day money-back window. Cancel any time
             from your dashboard. Prices shown are founding-member rates.
           </p>
+
+          {/* The one page selling access to picks was the one page without the
+              disclosure ~30 other pages render (C-31). Default variant only:
+              no includePastPerformance (implies a track record) and no
+              hardcoded age (terms defer to the viewer's jurisdiction). */}
+          <RiskDisclosure />
         </div>
       </main>
 

@@ -79,9 +79,9 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   },
   {
     key: "sample-signal",
-    displayName: "Every pick, free",
-    customerExplanation: "Every pick is free, with no daily limit and the open, honest verified record. Pro adds the confidence score, the full factor trail, line movement, and the tools.",
-    internalNote: "Picks de-paywalled (dailyPickLimit=null, canSeePremiumPicks=true for FREE). Confidence remains a Pro feature for FREE until the calibrated-honest display ships (Thread 2 / Step 3).",
+    displayName: "Daily free teaser",
+    customerExplanation: "Two picks a day free — the matchup and pick type — with the open, honest verified record. Pro unlocks the full board, the confidence score, the full factor trail, line movement, and the tools.",
+    internalNote: "FREE is a 2-pick/day teaser (packages/types: dailyPickLimit=2, canSeePremiumPicks=false). Earlier copy here claimed picks were de-paywalled, which never matched the shipped entitlements and overpromised the free tier (C-31).",
     minTier: "FREE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
 

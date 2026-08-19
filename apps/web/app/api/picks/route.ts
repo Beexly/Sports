@@ -125,7 +125,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         { confidence: "desc" },
         { generatedAt: "desc" },
       ],
-      take: entitlements.dailyPickLimit ?? 200,
+      // Over-fetch a bounded pool when the viewer has a daily limit: the
+      // selective-publish filter below can only REMOVE rows, so taking exactly
+      // the limit here meant a FREE user (limit 2) could receive 0-1 picks
+      // whenever fetched rows failed the filter. The real cap is applied
+      // AFTER filter + ranking (see limitedPicks).
+      take: entitlements.dailyPickLimit != null ? 48 : 200,
     })
     .catch(() => null);
   if (picks === null) {
@@ -168,12 +173,20 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
   const rankedPicks = [...filteredPicks].sort(comparePicksByRanking);
 
+  // Tier cap applied AFTER filter + rank so a limited viewer always gets their
+  // full allowance (best-ranked survivors), never fewer because the filter ate
+  // the pre-capped fetch.
+  const limitedPicks =
+    entitlements.dailyPickLimit != null
+      ? rankedPicks.slice(0, entitlements.dailyPickLimit)
+      : rankedPicks;
+
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
   // sample is insufficient/non-improving, so this is null-safe by construction.
   const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
 
-  const publicPicks: PublicPick[] = rankedPicks.map((pick) => {
+  const publicPicks: PublicPick[] = limitedPicks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
     // for a malformed/legacy blob (a handled "no factor trail" state) so a

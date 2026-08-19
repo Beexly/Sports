@@ -40,7 +40,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from multiple sportsbooks on a regular schedule, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick: the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
+        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from multiple sportsbooks on a regular schedule, scores every matchup for edge, and publishes a calibrated signal. Free gets a daily two-pick teaser — the matchup and pick type — plus the public Edge Index and the open verified record. Pro and Elite unlock the full board with the confidence rating and the complete factor trail behind each pick.",
       },
       {
         q: "How is this different from a tout service?",
@@ -86,7 +86,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What does Free get?",
-        a: "Every pick, free: the matchup and pick type on every signal, plus the Edge Index, the open verified record, and the full Academy. The confidence rating and the full factor trail are gated to Pro and Elite.",
+        a: "A daily two-pick teaser — the matchup and pick type — plus the Edge Index, the open verified record, and the full Academy. The full board, the confidence rating, and the factor trail are Pro and Elite.",
       },
       {
         q: "What does Pro get?",

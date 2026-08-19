@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { startOfDay, endOfDay } from "date-fns";
 import { getReadinessGates } from "@sports/prediction-engine";
 import {
   db,
@@ -75,10 +76,15 @@ export async function GET(req: NextRequest) {
     process.env["NODE_ENV"] === "production" ? { NOT: { modelVersion: "v5.0.0-seed" } } : {};
 
   // Shared published-pick filter for every count on this slate (matches /api/picks).
+  // The generatedAt day-bound mirrors /api/picks (route.ts): without it this
+  // "daily" slate counted EVERY pending published pick ever, so /picks rendered
+  // four irreconcilable numbers on one screen (C-31).
+  const slateDay = new Date();
   const baseWhere = {
     isPublished: true,
     result: "PENDING" as const,
     isBootstrap: false,
+    generatedAt: { gte: startOfDay(slateDay), lte: endOfDay(slateDay) },
     game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
     ...excludeSeedInProd,
   };
