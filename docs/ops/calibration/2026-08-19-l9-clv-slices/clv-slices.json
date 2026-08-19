@@ -1,0 +1,178 @@
+{
+  "analysis_date": "2026-08-19",
+  "source": "docs/calibration-proposals/2026-08-19-clv-forensics/{raw.json, ml-and-books.json, per-book.json}",
+  "graded_n": 909,
+  "spot_check_verified": "10/10, 0 mismatches",
+  "decided_only_beat_rates_market_x_month": {
+    "market_x_month": [
+      {
+        "month": "2026-06",
+        "market": "SPREAD",
+        "n_total": 159,
+        "n_decided": 49,
+        "n_matched": 110,
+        "beat": 30,
+        "lost": 19,
+        "beat_rate_decided": 0.6122,
+        "ci_lower": 0.4725,
+        "ci_upper": 0.7357
+      },
+      {
+        "month": "2026-06",
+        "market": "TOTAL",
+        "n_total": 154,
+        "n_decided": 118,
+        "n_matched": 36,
+        "beat": 73,
+        "lost": 45,
+        "beat_rate_decided": 0.6186,
+        "ci_lower": 0.5286,
+        "ci_upper": 0.7012
+      },
+      {
+        "month": "2026-06",
+        "market": "MONEYLINE",
+        "n_total": 37,
+        "n_decided": 35,
+        "n_matched": 2,
+        "beat": 1,
+        "lost": 34,
+        "beat_rate_decided": 0.0286,
+        "ci_lower": 0.0051,
+        "ci_upper": 0.1453
+      },
+      {
+        "month": "2026-07",
+        "market": "SPREAD",
+        "n_total": 229,
+        "n_decided": 100,
+        "n_matched": 129,
+        "beat": 10,
+        "lost": 90,
+        "beat_rate_decided": 0.1,
+        "ci_lower": 0.0552,
+        "ci_upper": 0.1744
+      },
+      {
+        "month": "2026-07",
+        "market": "TOTAL",
+        "n_total": 227,
+        "n_decided": 183,
+        "n_matched": 44,
+        "beat": 103,
+        "lost": 80,
+        "beat_rate_decided": 0.5628,
+        "ci_lower": 0.4904,
+        "ci_upper": 0.6327
+      },
+      {
+        "month": "2026-07",
+        "market": "MONEYLINE",
+        "n_total": 103,
+        "n_decided": 100,
+        "n_matched": 3,
+        "beat": 9,
+        "lost": 91,
+        "beat_rate_decided": 0.09,
+        "ci_lower": 0.0481,
+        "ci_upper": 0.1623
+      }
+    ],
+    "sport_limitation_note": "Sport-level aggregation requires DB join; by_month has no sport dimension. Spot check has n=10 (insufficient for per-sport inference)."
+  },
+  "total_deep_dive": {
+    "total_decided": {
+      "beat": 176,
+      "lost": 125,
+      "matched": 80,
+      "n_decided": 301,
+      "beat_rate": 0.5847,
+      "ci_lower": 0.5283,
+      "ci_upper": 0.639,
+      "clears_524_threshold": true
+    },
+    "total_spot_check_rows": [
+      {
+        "pick_id": "cmqa3snbu04fd10js4r25jzll",
+        "sport": "MLB",
+        "selection": "OVER 9.5",
+        "lock": 8.642857142857142,
+        "close": 9.454545454545455,
+        "close_minus_lock": 0.8116883116883127,
+        "verdict": "BEAT_CLOSE"
+      },
+      {
+        "pick_id": "cmqa3snae04f110jscuzovau6",
+        "sport": "MLB",
+        "selection": "UNDER 8.0",
+        "lock": 7.9375,
+        "close": 7.95,
+        "close_minus_lock": 0.012500000000000178,
+        "verdict": "LOST_TO_CLOSE"
+      },
+      {
+        "pick_id": "cmqa9i7s004mhyst6xrd3hkky",
+        "sport": "MLB",
+        "selection": "OVER 8.0",
+        "lock": 8,
+        "close": 8,
+        "close_minus_lock": 0,
+        "verdict": "MATCHED_CLOSE"
+      }
+    ],
+    "total_spot_check_note": "Only 3 TOTAL picks in 10-row spot check. Full close-lock distribution requires the 301 decided TOTAL picks from the DB."
+  },
+  "sign_flip_classification": {
+    "total_spread": 388,
+    "sign_flips": 57,
+    "toward_our_side": 40,
+    "away_from_our_side": 109,
+    "unchanged": 239,
+    "spot_check_sign_flips": [
+      {
+        "pick_id": "cmqa3snde04fp10js6ipyew8m",
+        "sport": "MLB",
+        "selection": "New York Mets -1.5",
+        "derived_side": "HOME",
+        "published_line": -1.5,
+        "lock_line": 1.5,
+        "close_line": -1.5,
+        "verdict": "CHECK"
+      },
+      {
+        "pick_id": "cmqbexwko053d11ay4ryhtm2u",
+        "sport": "MLB",
+        "selection": "Atlanta Braves -1.5",
+        "derived_side": "AWAY",
+        "published_line": 1.5,
+        "lock_line": 1.5,
+        "close_line": -0.4090909090909091,
+        "verdict": "SIGN_FLIP"
+      },
+      {
+        "pick_id": "cmqa9i80c04ntyst6zt14qe29",
+        "sport": "MLB",
+        "selection": "Cleveland Guardians -1.5",
+        "derived_side": "HOME",
+        "published_line": -1.5,
+        "lock_line": 1.5,
+        "close_line": -1.227272727272727,
+        "verdict": "SIGN_FLIP"
+      }
+    ]
+  },
+  "blocked_items": {
+    "lock_provenance_audit": {
+      "item": "Lock provenance audit (30 samples x 3 markets)",
+      "reason": "Requires JOIN of picks.lock_price/lock_line against odds_batch rows nearest generated_at. Local artifacts do not contain full odds_batch data.",
+      "required_query": "SELECT p.pick_id, p.pick_type, p.sport, p.lock_line, p.lock_price, p.published_line,\n       ob.spread AS batch_spread, ob.total AS batch_total, ob.home_price, ob.away_price,\n       ob.fetched_at,\n       CASE \n         WHEN ob.spread = p.lock_line THEN 'SINGLE_BOOK'\n         WHEN ABS(ob.spread - AVG(ob2.spread) OVER w) < 0.01 THEN 'BATCH_MEAN'\n         ELSE 'MODEL_DERIVED'\n       END AS classification\nFROM picks p\nJOIN odds_batch ob ON ob.game_id = p.game_id \n  AND ob.market = CASE p.pick_type WHEN 'SPREAD' THEN 'SPREADS' WHEN 'TOTAL' THEN 'TOTALS' ELSE 'H2H' END\n  AND ob.fetched_at <= p.generated_at\nLEFT JOIN LATERAL (\n  SELECT ob2.spread FROM odds_batch ob2 \n  WHERE ob2.game_id = p.game_id AND ob2.market = ob.market AND ob2.fetched_at = ob.fetched_at\n) ob2 ON true\nWHERE p.graded_verdict IN ('BEAT_CLOSE', 'LOST_TO_CLOSE')\n  AND p.clv_captured_at IS NOT NULL\n  AND p.graded_at >= '2026-06-01' AND p.graded_at < '2026-08-01'\nWINDOW w AS (PARTITION BY ob.game_id, ob.market)\nORDER BY p.pick_type, p.sport, p.graded_at\nLIMIT 30;",
+      "partial_evidence": "per_book_at_captured_at: 909 graded picks, 0 have odds at clv_captured_at. All 909 lock prices fail to find a batch match."
+    },
+    "ml_monster_lock_provenance": {
+      "item": "ML monster-lock provenance (59 locks < -1000)",
+      "reason": "Requires JOIN of picks.lock_price against odds_batch.home_price for ML picks. Local artifacts (ml-and-books.json) have lock/close pairs but no odds_batch data to verify.",
+      "required_query": "SELECT p.pick_id, p.selection, p.lock_price, p.published_line, p.close_price,\n       ob.home_price AS batch_home_price, ob.away_price AS batch_away_price,\n       ob.fetched_at, ob.book\nFROM picks p\nJOIN odds_batch ob ON ob.game_id = p.game_id \n  AND ob.market = 'H2H'\n  AND ABS(ob.home_price - p.lock_price) < 1\nWHERE p.pick_type = 'MONEYLINE' AND p.lock_price < -1000\nORDER BY p.lock_price;",
+      "partial_evidence": "59/140 ML locks < -1000. All 140 closes in [-500, 500]. Lock_min=-21200, lock_max=105. 1 lock at +105 (impossible for ML favorite). If no odds_batch row matches any of the 59 < -1000 locks, -27.4pp ML mean CLV is entirely an artifact."
+    }
+  }
+}
