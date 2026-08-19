@@ -178,6 +178,14 @@ resolves it server-side only, from `process.env`, never inlined):
   check. This CSP edit is scoped and low-risk engineering work once the host
   is known, but it cannot be written correctly without that confirmation.
 
+  *Checked 2026-08-19 night, negative result:* the-odds-api's public GitHub
+  org (`github.com/the-odds-api`) holds only 4 repos — `samples-nodejs`,
+  `samples-python`, `samples-php` (raw REST API client examples) and
+  `apps-script` (a Google Sheets guide). No widget-related code exists there.
+  The embed mechanism and script host must come from `the-odds-api.com/widget/`
+  itself (a live page, not fetchable from this read-only design pass) — this
+  does not change the open item, it rules out GitHub as a shortcut to it.
+
 ---
 
 ## 3. The `RevenueOffer` record
@@ -480,3 +488,19 @@ item 6 is test-writing against an already-well-modeled pattern. The
 remaining, larger effort (real vendor script, real CSP origin, real
 state/terms data, sealed-guard surface addition) is explicitly gated on the
 founder-review list in §5 and is not part of the following-day estimate.
+
+---
+
+## 9. Adjacent gap surfaced while researching this doc (not this feature)
+
+Nothing in `apps/web/lib/revenue/` currently records whether a click-through
+to a partner actually converted (signup, first deposit, etc.) — the model
+stops at "offer was shown/disclosed." Server-to-server (S2S) postback
+tracking — the affiliate network pings our server when a referred user
+converts, so we can attribute revenue back to a specific offer/surface — is
+the standard mechanism for that, and it's a real, separate gap from the
+widget itself: the widget only *shows* odds and links out; postback
+tracking is how we'd later know if it worked. Flagging for a future ledger
+row, not scoping into C-17 — it applies to every affiliate partner, not
+just this one, and needs its own design pass (webhook endpoint, HMAC/shared-
+secret verification, idempotency, which network(s) actually support it).
