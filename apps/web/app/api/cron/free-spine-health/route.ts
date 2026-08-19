@@ -154,6 +154,35 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 
+  // The probe's success IS the cron's success. A total probe failure (every
+  // sport empty + hard-failed) is the exact "silent no-op" failure class P15-07
+  // targets: returning 200 + ok:true here would make the platform scheduler
+  // and any Sentry-less local deploy believe the run succeeded. Surface a real
+  // 503 so failure is observable even without alerting infra wired. boardFill
+  // failure above stays best-effort (it has captureError).
+  if (probeFailed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        path: "free-spine-health",
+        status: "probe_failed",
+        probeFailed: true,
+        error: `free-spine probe: all ${live.length} sports failed to return games`,
+        oddsApiRequired: false as const,
+        elapsedMs: Date.now() - started,
+        live,
+        summary: {
+          freeCovered,
+          requireSpend,
+          criticalGaps: gaps.length,
+          sportsProbed: live.length,
+          sportsWithGames,
+        },
+      },
+      { status: 503 },
+    );
+  }
+
   return NextResponse.json({
     boardFill,
 

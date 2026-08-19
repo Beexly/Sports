@@ -39,12 +39,13 @@ export default async function BoardPage(): Promise<JSX.Element> {
   // payload never contains it at all. The refusal ITSELF is unconditional and
   // rendered for everyone; see PassListItem.
   const session = await auth();
-  const canSeeNoBetDetail = session?.user?.id
-    ? (await getUserEntitlements(session.user.id)).canSeeNoBetDetail
-    : false;
+  const viewerEntitlements = session?.user?.id
+    ? await getUserEntitlements(session.user.id)
+    : undefined;
+  const canSeeNoBetDetail = viewerEntitlements?.canSeeNoBetDetail ?? false;
 
   const [stateResult, passesResult, calibrationResult] = await Promise.all([
-    loadBoardState(),
+    loadBoardState(new Date(), viewerEntitlements),
     loadBoardPasses(new Date(), { includeNoBetDetail: canSeeNoBetDetail }),
     loadPublicCalibrationReport(),
   ]);
@@ -95,16 +96,29 @@ export default async function BoardPage(): Promise<JSX.Element> {
             }`}
           >
             {suppression.code === "STALE_DATA_SUPPRESSED" ? (
-              <>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-caution">
-                  Quiet board
-                </span>
-                <span className="break-words sm:ml-3">
-                  Model signals are quiet (no fresh published slate). This is
-                  restraint, not an outage — free tools and methodology stay open.
-                  Counts read zero until the next signal generation lands.
-                </span>
-              </>
+              stateResult.meta.degradationCharacter === "stale_refreshing" ? (
+                <>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-caution">
+                    Temporarily stale
+                  </span>
+                  <span className="break-words sm:ml-3">
+                    Board is temporarily stale — awaiting fresh data. The board
+                    reopens on the next real ingestion. Methodology and pricing
+                    stay available while it refreshes.
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-caution">
+                    Quiet board
+                  </span>
+                  <span className="break-words sm:ml-3">
+                    Model signals are quiet (no fresh published slate). This is
+                    restraint, not an outage — free tools and methodology stay
+                    open. Counts read zero until the next signal generation lands.
+                  </span>
+                </>
+              )
             ) : (
               <>
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orbital-cyan">
@@ -119,10 +133,33 @@ export default async function BoardPage(): Promise<JSX.Element> {
           </div>
         )}
 
-        {/* Honest-empty classifier — LIVE_BOARD off is not a quiet winning day */}
-        {stateResult.meta.boardClass.honestEmpty &&
-          !dbUnreachable &&
+        {/* Non-suppressed stale detection: kill switch is OFF but the board
+            loaded zero rows while data age exceeds the Refresh SLA. Surface a
+            truthful "temporarily stale, refreshing" message — NOT "quiet board"
+            which would imply an intentional empty slate. (CLAUDE.md honesty
+            rule: an outage must never wear the empty state's copy.) */
+          stateResult.meta.degradationCharacter === "stale_refreshing" &&
           !suppression && (
+            <div
+              data-testid="board-stale-refreshing-banner"
+              className="flex flex-col gap-2 border border-caution/40 bg-caution/[0.08] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center"
+            >
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-caution">
+                Temporarily stale
+              </span>
+              <span className="break-words sm:ml-3">
+                Board is temporarily stale — awaiting fresh data. The board
+                reopens on the next real ingestion. Methodology and pricing
+                stay available while it refreshes.
+              </span>
+            </div>
+          )}
+
+        {/* Honest-empty classifier — LIVE_BOARD off is not a quiet winning day */
+          stateResult.meta.boardClass.honestEmpty &&
+          !dbUnreachable &&
+          !suppression &&
+          stateResult.meta.degradationCharacter !== "stale_refreshing" && (
             <div
               data-testid="board-class-banner"
               className="flex flex-col gap-2 border border-orbital-cyan/30 bg-orbital-cyan/[0.06] px-4 py-3 text-sm text-ion-white sm:flex-row sm:items-center"
@@ -176,7 +213,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
           <StateTile label="Gated today" value={String(state.gatedToday)} />
-          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} />
+          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
           <StateTile label="Model" value={state.modelVersion} />
         </section>
 
@@ -249,9 +286,9 @@ export default async function BoardPage(): Promise<JSX.Element> {
   );
 }
 
-function StateTile({ label, value }: { label: string; value: string }): JSX.Element {
+function StateTile({ label, value, dataTestid }: { label: string; value: string; dataTestid?: string }): JSX.Element {
   return (
-    <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2">
+    <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2" {...(dataTestid ? { "data-testid": dataTestid } : {})}>
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>
       <p className="mt-1 break-words text-lg font-semibold text-white">{value}</p>
     </div>

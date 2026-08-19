@@ -12,8 +12,21 @@
  *     estimated. The visualization degrades honestly. A `dataNote` says so.
  *  4. Any failure (stubbed DB, query error, zero mappable games) falls back to
  *     the gated demo. Nothing is ever fabricated to fill the frame.
+ *  5. PAYWALL ENFORCEMENT (P7-12): the picks subquery is hard-filtered with the
+ *     same predicates every other gated page uses (isPublished, isBootstrap,
+ *     tier) — so premium picks never leak to anonymous/FREE viewers at the data
+ *     layer. Then `confidence` and `note` (reasoning) are redacted on the
+ *     resulting slate unless the viewer holds canSeeConfidence, mirroring the
+ *     per-API redaction in lib/board/state.ts. This is defense-in-depth: the
+ *     query filter is the primary gate, and the field redaction is the backup
+ *     so a missed predicate can never surface a paid metric on this surface.
  *
  * Server-only: imports the db client + the prediction-engine readiness gate.
+ *
+ * @param entitlements  Viewer entitlements, resolved server-side via
+ *                      getViewerEntitlements(). Defaults to FREE when omitted
+ *                      (preserves backward compatibility for callers that have
+ *                      not yet been migrated).
  */
 
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -21,6 +34,7 @@ import { loadBoardState } from "@/lib/board/state";
 import { db } from "@sports/db";
 import { buildH2hMarketRead, DRIFT_MOVING_PP } from "@/lib/market/game-market-read";
 import { WIDE_SPREAD_PP } from "@/lib/market/simulation-cloud-geometry";
+import { getEntitlements, type Entitlements } from "@sports/types";
 import {
   DEMO_SLATE, TIMELINE, LEAGUE_CENTERS,
   type TwinSlate, type TwinGame, type TwinLeague, type TwinVerdict, type TwinMarket, type TwinMarketKey,
@@ -30,11 +44,12 @@ const TLEN = TIMELINE.length;
 const c01 = (n: number) => Math.max(0, Math.min(1, n));
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
-export async function getSlateTwin(): Promise<TwinSlate> {
+export async function getSlateTwin(entitlements?: Entitlements): Promise<TwinSlate> {
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) return DEMO_SLATE; // gate closed → labelled demo
+  const ents = entitlements ?? getEntitlements("FREE");
   try {
-    const live = await buildLiveSlate();
+    const live = await buildLiveSlate(ents);
     return live ?? DEMO_SLATE;
   } catch {
     return DEMO_SLATE; // any failure → honest fallback, never fabricate
@@ -82,11 +97,16 @@ function spreadStats(odds: OddsRow[]): { vol: number | null; current: number | n
   return { vol: c01(Math.sqrt(variance) / 3), current: mean };
 }
 
-async function buildLiveSlate(): Promise<TwinSlate | null> {
+async function buildLiveSlate(entitlements: Entitlements): Promise<TwinSlate | null> {
   const now = new Date();
   // Cross-reference the live board so galaxy nodes carry real posture:
   // published picks light cyan, gated rows dim magenta, live games pulse.
   const horizon = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 4);
+
+  // P7-12 PAYWALL ENFORCEMENT: hard-filter the picks subquery with the same
+  // predicates every other gated page uses, so premium picks never leak to
+  // anonymous/FREE viewers at the data layer. (Mirrors apps/api/picks/route.ts.)
+  const premiumPicksVisible = entitlements.canSeePremiumPicks;
 
   // The board read and the game/odds/picks read are independent — run them in
   // parallel to halve the loader's tail latency (pure latency win, no behavior change).
@@ -97,7 +117,15 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
       include: {
         sport: true,
         odds: true,
-        picks: { orderBy: { generatedAt: "desc" }, take: 1 },
+        picks: {
+          where: {
+            isPublished: true,
+            isBootstrap: false, // never expose bootstrap-era picks publicly
+            ...(premiumPicksVisible ? {} : { tier: "FREE" as const }),
+          },
+          orderBy: { generatedAt: "desc" },
+          take: 1,
+        },
       },
       orderBy: { commenceTime: "asc" },
       take: 40,
@@ -183,8 +211,20 @@ async function buildLiveSlate(): Promise<TwinSlate | null> {
       verdict: pick ? verdictFromGrade(pick.pickGrade) : "NO-BET",
       markets,
       // No per-step history exists → hold the current value across the axis.
-      confidence: Array.from({ length: TLEN }, () => conf01),
-      note: (pick?.reasoning ?? "").trim().slice(0, 160) || "Tracked game: no qualifying signal yet.",
+      // P7-12 PAYWALL ENFORCEMENT: confidence is a Pro+ metric (canSeeConfidence).
+      // For non-premium viewers, zero it out so the viz ring and HUD never surface
+      // the numeric confidence value. The query filter above already limited picks
+      // to FREE-tier for non-premium viewers, but this field-level redaction is the
+      // defense-in-depth backup: a missed predicate or a free-tier pick with a
+      // high confidence score can never leak the paid metric.
+      ...(entitlements.canSeeConfidence
+        ? { confidence: Array.from({ length: TLEN }, () => conf01) }
+        : { confidence: Array.from({ length: TLEN }, () => 0) }),
+      // P7-12: note carries the pick's reasoning — a premium explainability field.
+      // Redact to a generic placeholder for non-premium viewers.
+      ...(entitlements.canSeeConfidence
+        ? { note: (pick?.reasoning ?? "").trim().slice(0, 160) || "Tracked game: no qualifying signal yet." }
+        : { note: "Signal tracked — detail unlocks with Pro" }),
       ...(oddsPath ? { oddsPath } : {}),
       ...(boardByGame.has(row.id)
         ? { boardStatus: boardByGame.get(row.id)!.status, gateReason: boardByGame.get(row.id)!.gateReason }

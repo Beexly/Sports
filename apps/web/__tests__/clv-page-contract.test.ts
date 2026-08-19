@@ -37,4 +37,26 @@ describe("/clv page contract", () => {
   it("carries a risk disclosure", () => {
     expect(src).toMatch(/RiskDisclosure/);
   });
+
+  it("loads CLV coverage to surface the denominator behind the beat-close rate", () => {
+    expect(src).toMatch(/loadClvCoverage/);
+  });
+
+  it("renders coverage alongside the beat-close rate (never the reverse)", () => {
+    // The coverage display must live inside ClvScoreboard (the allowed branch),
+    // not inside ClvGatedState (the gated branch) — coverage only matters once
+    // the rate is actually published.
+    const gatedStart = src.indexOf("function ClvGatedState");
+    const scoreboardStart = src.indexOf("function ClvScoreboard");
+    const gated = src.slice(gatedStart, scoreboardStart);
+    const scoreboard = src.slice(scoreboardStart);
+    expect(scoreboard).toMatch(/data-testid="clv-coverage"/);
+    expect(gated).not.toMatch(/data-testid="clv-coverage"/);
+  });
+
+  it("passes coverage through to ClvScoreboard", () => {
+    // The coverage prop must be wired into the scoreboard so the denominator
+    // is visible wherever the rate renders.
+    expect(src).toMatch(/<ClvScoreboard policy=\{policy\} coverage=\{coverage\} \/>/);
+  });
 });

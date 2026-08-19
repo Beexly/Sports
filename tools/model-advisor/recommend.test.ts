@@ -1,0 +1,124 @@
+import { describe, expect, it } from "vitest";
+import { MODEL_CATALOG } from "./catalog";
+import { recommendModel } from "./recommend";
+import type { TaskProfile } from "./types";
+
+describe("recommendModel", () => {
+  it("routes trivial local-only coding to a local model", () => {
+    const rec = recommendModel({ kind: "coding", complexity: 2, privacy: "local-only" });
+    expect(rec.tier).toBe("local");
+    expect(rec.primary.localRunnable).toBe(true);
+  });
+
+  it("routes multimodal work to Muse Glimmer locally", () => {
+    const rec = recommendModel({ kind: "multimodal", complexity: 4 });
+    expect(rec.primary.id).toBe("muse-glimmer-30b");
+    expect(rec.tier).toBe("local");
+  });
+
+  it("routes local agentic execution to Nemotron 3.5 Lightning", () => {
+    const rec = recommendModel({ kind: "agentic", complexity: 3, privacy: "local-only" });
+    expect(rec.tier).toBe("local");
+    expect(rec.primary.id).toBe("nemotron-3-5-lightning");
+    expect(rec.primary.roles).toContain("agentic-executor");
+  });
+
+  it("routes the hardest coding to an Anthropic frontier model", () => {
+    const rec = recommendModel({ kind: "coding", complexity: 10 });
+    expect(rec.tier).toBe("frontier");
+    expect(rec.primary.provider).toBe("Anthropic");
+  });
+
+  it("routes bulk work to the batch tier", () => {
+    const rec = recommendModel({ kind: "bulk", complexity: 5 });
+    expect(rec.tier).toBe("batch");
+  });
+
+  it("routes very large contexts to a long-context primary", () => {
+    const rec = recommendModel({
+      kind: "long-context",
+      complexity: 6,
+      contextTokens: 500_000,
+    });
+    expect(rec.primary.roles).toContain("long-context");
+    expect(rec.primary.contextTokens).toBeGreaterThanOrEqual(1_000_000);
+  });
+
+  it("routes complexity 1 coding to the small local coder", () => {
+    const rec = recommendModel({ kind: "coding", complexity: 1, privacy: "local-only" });
+    expect(rec.tier).toBe("local");
+    expect(rec.primary.id).toBe("qwen25-coder-7b");
+  });
+
+  it("clamps NaN complexity and still returns a real catalog entry", () => {
+    const rec = recommendModel({ kind: "coding", complexity: Number.NaN, privacy: "local-only" });
+    expect(rec.primary.localRunnable).toBe(true);
+    expect(MODEL_CATALOG.some((entry) => entry.id === rec.primary.id)).toBe(true);
+  });
+
+  it("throws a fixable error when the catalog is empty", () => {
+    expect(() => recommendModel({ kind: "coding", complexity: 1 }, [])).toThrow(
+      /catalog is empty/,
+    );
+  });
+
+  it("resolves picks from the provided catalog, not the module global", () => {
+    const fixtureLabel = "FIXTURE-HAIKU";
+    const substituted = MODEL_CATALOG.map((entry) =>
+      entry.id === "claude-haiku-4-5" ? { ...entry, label: fixtureLabel } : entry,
+    );
+    const rec = recommendModel({ kind: "bulk", complexity: 5 }, substituted);
+    expect(rec.tier).toBe("batch");
+    expect(rec.primary.id).toBe("claude-haiku-4-5");
+    expect(rec.primary.label).toBe(fixtureLabel);
+  });
+
+  it("never returns a non-local model when privacy is local-only", () => {
+    for (let complexity = 1; complexity <= 10; complexity++) {
+      const kinds: TaskProfile["kind"][] = [
+        "coding",
+        "reasoning",
+        "agentic",
+        "long-context",
+        "multimodal",
+        "bulk",
+      ];
+      for (const kind of kinds) {
+        const rec = recommendModel({ kind, complexity, privacy: "local-only" });
+        expect(rec.primary.localRunnable).toBe(true);
+        for (const fb of rec.fallbacks) expect(fb.localRunnable).toBe(true);
+      }
+    }
+  });
+
+  it("downgrades paid tiers to local when budget is free", () => {
+    const rec = recommendModel({ kind: "coding", complexity: 9, budget: "free" });
+    expect(rec.tier).toBe("local");
+    expect(rec.primary.localRunnable).toBe(true);
+  });
+});
+
+describe("MODEL_CATALOG integrity", () => {
+  it("has complete, verified-or-known entries only", () => {
+    expect(MODEL_CATALOG.length).toBeGreaterThan(0);
+    for (const entry of MODEL_CATALOG) {
+      expect(entry.id).not.toBe("");
+      expect(entry.label).not.toBe("");
+      expect(entry.license).not.toBe("");
+      expect(entry.roles.length).toBeGreaterThan(0);
+      expect(["verified", "known-real"]).toContain(entry.verification);
+    }
+  });
+
+  it("has unique ids", () => {
+    const ids = MODEL_CATALOG.map((m) => m.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("keeps local entries priced null (no fabricated pricing)", () => {
+    for (const entry of MODEL_CATALOG.filter((m) => m.localRunnable)) {
+      expect(entry.reportedInputUsdPerM).toBeNull();
+      expect(entry.reportedOutputUsdPerM).toBeNull();
+    }
+  });
+});

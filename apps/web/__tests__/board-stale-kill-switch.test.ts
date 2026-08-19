@@ -1,4 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  classifyDegradationCharacter,
+  degradationCharacterCopy,
+} from "@/lib/board/degradation-character";
 
 /**
  * Stale-Data Kill Switch — executed behavior for the public board loaders.
@@ -18,6 +22,16 @@ const mocks = vi.hoisted(() => ({
   forceNoBetIfStale: false,
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  isPublicPicksSurfaceStale: vi.fn<(now: Date) => Promise<boolean>>(),
+  assessSchedulerLiveness: vi.fn<(nowMs: number) => Promise<{
+    readonly status: "healthy" | "degraded" | "dead" | "unknown";
+    readonly ageMinutes: number | null;
+    readonly lastAnyIngestionSuccessAt: string | null;
+    readonly tightestExpectedGapMinutes: number;
+    readonly degradedThresholdMinutes: number;
+    readonly deadThresholdMinutes: number;
+    readonly operatorHint: string;
+  } | null>>(),
   gateDecisionFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   // `isSignalBoardSlateStale` (lib/data-reliability/public-freshness-gate.ts:108)
@@ -39,6 +53,14 @@ vi.mock("@sports/db", () => ({
   },
   isDemoPicksEnabled: () => false,
   isStubMode: () => false,
+}));
+
+vi.mock("@/lib/data-reliability/public-freshness-gate", () => ({
+  isPublicPicksSurfaceStale: (now: Date) => mocks.isPublicPicksSurfaceStale(now),
+}));
+
+vi.mock("@/lib/ops/scheduler-liveness", () => ({
+  assessSchedulerLiveness: (nowMs: number) => mocks.assessSchedulerLiveness(nowMs),
 }));
 
 vi.mock("@sports/prediction-engine", () => ({
@@ -63,6 +85,8 @@ describe("board loaders — stale-data kill switch", () => {
   beforeEach(() => {
     mocks.forceNoBetIfStale = false;
     mocks.ingestionRunFindFirst.mockReset();
+    mocks.isPublicPicksSurfaceStale.mockReset();
+    mocks.assessSchedulerLiveness.mockReset();
     mocks.gateDecisionFindMany.mockReset().mockResolvedValue([]);
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.pickFindFirst.mockReset().mockResolvedValue(null);
@@ -74,21 +98,31 @@ describe("board loaders — stale-data kill switch", () => {
   });
 
   describe("loadBoardState", () => {
-    it("flag OFF: loads normally and never queries ingestion freshness", async () => {
+    it("flag OFF + zero rows + fresh data: genuinely quiet (not stale)", async () => {
       mocks.forceNoBetIfStale = false;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(10_000) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
       const result = await loadBoardState(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
       expect(result.meta.isSampleData).toBe(false);
-      expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
+      expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
+      expect(result.meta.degradationCharacter).toBe("genuinely_quiet");
     });
 
     it("flag ON + stale: returns the demo-suppressed empty shape", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(241) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
+      mocks.assessSchedulerLiveness.mockResolvedValue({
+        status: "dead",
+        ageMinutes: 1200,
+        lastAnyIngestionSuccessAt: minutesBefore(1200).toISOString(),
+        tightestExpectedGapMinutes: 15,
+        degradedThresholdMinutes: 60,
+        deadThresholdMinutes: 180,
+        operatorHint: "test",
+      });
 
       const result = await loadBoardState(NOW);
 
@@ -107,41 +141,122 @@ describe("board loaders — stale-data kill switch", () => {
 
     it("flag ON + fresh: loads normally", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(10) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
       const result = await loadBoardState(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
-      expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
+      expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalled();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
 
     it("flag ON + DB error on freshness query: fails OPEN (loads normally)", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
+      mocks.isPublicPicksSurfaceStale.mockRejectedValue(new Error("db down"));
 
       const result = await loadBoardState(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
+
+    it("flag OFF + zero rows + stale data + scheduler dead: stale_refreshing", async () => {
+      mocks.forceNoBetIfStale = false;
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
+      mocks.assessSchedulerLiveness.mockResolvedValue({
+        status: "dead",
+        ageMinutes: 1200,
+        lastAnyIngestionSuccessAt: minutesBefore(1200).toISOString(),
+        tightestExpectedGapMinutes: 15,
+        degradedThresholdMinutes: 60,
+        deadThresholdMinutes: 180,
+        operatorHint: "test",
+      });
+
+      const result = await loadBoardState(NOW);
+
+      expect(result.meta.degradationCharacter).toBe("stale_refreshing");
+      const copy = degradationCharacterCopy(result.meta.degradationCharacter);
+      expect(copy.label).toBe("Temporarily stale");
+      expect(copy.message).toContain("awaiting fresh data");
+      expect(copy.message).not.toContain("not an outage");
+      expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
+      expect(mocks.assessSchedulerLiveness).toHaveBeenCalledOnce();
+    });
+
+    it("flag OFF + zero rows + fresh data + scheduler healthy: genuinely_quiet", async () => {
+      mocks.forceNoBetIfStale = false;
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
+
+      const result = await loadBoardState(NOW);
+
+      expect(result.meta.degradationCharacter).toBe("genuinely_quiet");
+      const copy = degradationCharacterCopy(result.meta.degradationCharacter);
+      expect(copy.label).toBe("Quiet board");
+      expect(copy.message).toContain("restraint, not an outage");
+      expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
+    });
+
+    it("classifyDegradationCharacter: three states produce distinct copy", () => {
+      const quiet = classifyDegradationCharacter({
+        staleSuppressed: false,
+        dbUnreachable: false,
+        demoSuppressed: false,
+        liveBoardOff: true,
+        rowCount: 0,
+        schedulerLiveness: null,
+        staleDetected: false,
+      });
+      expect(quiet).toBe("genuinely_quiet");
+      const stale = classifyDegradationCharacter({
+        staleSuppressed: false,
+        dbUnreachable: false,
+        demoSuppressed: false,
+        liveBoardOff: false,
+        rowCount: 0,
+        schedulerLiveness: { status: "dead" },
+        staleDetected: true,
+      });
+      expect(stale).toBe("stale_refreshing");
+      const healthy = classifyDegradationCharacter({
+        staleSuppressed: false,
+        dbUnreachable: false,
+        demoSuppressed: false,
+        liveBoardOff: false,
+        rowCount: 5,
+        schedulerLiveness: null,
+        staleDetected: false,
+      });
+      expect(healthy).toBe("healthy");
+
+      // Distinct, truthful public copy for each
+      const quietCopy = degradationCharacterCopy(quiet);
+      const staleCopy = degradationCharacterCopy(stale);
+      const healthyCopy = degradationCharacterCopy(healthy);
+      expect(quietCopy.label).not.toBe(staleCopy.label);
+      expect(staleCopy.label).toBe("Temporarily stale");
+      expect(healthyCopy.label).toBe("Live");
+      // The stale copy must never claim "not an outage"
+      expect(staleCopy.message).not.toContain("not an outage");
+      // The quiet copy must never claim "stale"
+      expect(quietCopy.message).not.toContain("stale");
+    });
   });
 
   describe("loadBoardPasses", () => {
-    it("flag OFF: loads normally and never queries ingestion freshness", async () => {
+    it("flag OFF + zero rows + fresh data: genuinely quiet", async () => {
       mocks.forceNoBetIfStale = false;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(10_000) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
       const result = await loadBoardPasses(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
-      expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
 
     it("flag ON + stale: returns the demo-suppressed empty passes", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(500) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
 
       const result = await loadBoardPasses(NOW);
 
@@ -152,12 +267,12 @@ describe("board loaders — stale-data kill switch", () => {
 
     it("flag ON + fresh: loads normally", async () => {
       mocks.forceNoBetIfStale = true;
-      mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesBefore(30) });
+      mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
       const result = await loadBoardPasses(NOW);
 
       expect(result.meta.suppressedDemoData).toBeUndefined();
-      expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
+      expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
       expect(mocks.gateDecisionFindMany).toHaveBeenCalled();
     });
   });

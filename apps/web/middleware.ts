@@ -12,8 +12,9 @@ import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
  * (full auth + role check).
  *
  * Waitlist gate: /waitlist and /waitlist/* are optionally protected by Basic Auth
- * when GSE_WAITLIST_GATE_ENABLED=true.  Credentials live in server-side env vars
- * only and are never exposed to the client.
+ * when GSE_WAITLIST_GATE_ENABLED=true AND GSE_WAITLIST_BASIC_FORCE=true (the
+ * force flag is the second kill-switch — see lib/env/flags.ts waitlistGated).
+ * Credentials live in server-side env vars only and are never exposed to the client.
  */
 
 // Routes that require authentication (redirect to signin if no cookie)

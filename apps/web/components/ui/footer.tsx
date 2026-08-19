@@ -40,6 +40,7 @@ const COMPANY_LINKS = [
   { label: "About", href: "/about" },
   { label: "Press", href: "/press" },
   { label: "FAQ", href: "/faq" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 const RESPONSIBLE_LINKS = [

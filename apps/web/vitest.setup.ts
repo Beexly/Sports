@@ -20,4 +20,12 @@ if (!process.env["CI"] && process.env["FORCE_REAL_PRISMA"] !== "true") {
   process.env["DATABASE_URL"] = "stub";
 }
 
+// The Stripe SDK is mocked in unit tests (vi.mock("stripe")), but stripe.ts now
+// guards STRIPE_SECRET_KEY at runtime — a dummy non-blank value lets the lazy
+// client construction proceed through the guard so `stripe.*` Proxy access in
+// unit tests doesn't throw StripeConfigError before reaching the mock.
+if (!process.env["STRIPE_SECRET_KEY"]) {
+  process.env["STRIPE_SECRET_KEY"] = "sk_test_dummy_for_unit_tests";
+}
+
 import "@testing-library/jest-dom";

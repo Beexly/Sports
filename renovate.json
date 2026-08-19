@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "gitAuthor": "Renovate Bot <noreply@github.com>",
+  "schedule": [
+    "before 6am on Monday"
+  ],
+  "prHourlyLimit": 1,
+  "prConcurrentLimit": 1,
+  "openPRsLimit": 1,
+  "ignoreDeps": [
+    "*@*.*.*"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "enabled": false,
+      "reason": "Dependabot (.github/dependabot.yml) already owns all ecosystems. Renovate is configured to defer. Re-enable individual ecosystems here if Dependabot is removed."
+    }
+  ]
+}

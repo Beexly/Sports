@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+# Pre-push guardrail (added 2026-08-16, security assessment): full-tree secret
+# scan before anything leaves this machine.
+#
+# WHY THIS EXISTS SEPARATELY FROM pre-commit:
+# `pre-commit` scans the STAGED INDEX ONLY. It structurally cannot catch a
+# secret that was committed with `--no-verify`, or committed on a branch or a
+# machine before that hook existed, or written into a tracked build artifact.
+# Pushing is the moment code stops being local, so it is the right place for a
+# whole-tree check.
+#
+# It is also, right now, the LAST automated gate: GitHub Actions minutes are
+# unavailable (see .github/workflows/external-cron.yml), so CI-side scanning is
+# not running.
+#
+# Measured cost: ~1.8s across 5,513 tracked files. Kept deliberately cheap --
+# a slow pre-push hook gets `--no-verify`'d within a week, which is worse than
+# no hook at all. `dependency-audit.mjs` is intentionally NOT here: it shells to
+# `npm audit`, needs network, and is slow.
+#
+# Known blind spot, inherited from the scanner: files >2MB are skipped.
+#
+# Emergency bypass is `git push --no-verify` -- but if this fires, the correct
+# response is almost always to ROTATE the exposed credential, not to bypass.
+
+node scripts/guardrails/secret-scan.mjs --all
+status=$?
+if [ "$status" -ne 0 ]; then
+  echo "" 1>&2
+  echo "pre-push: secret-scan blocked this push (see above)." 1>&2
+  echo "Do NOT bypass without rotating the credential -- once pushed, treat it as leaked." 1>&2
+  exit "$status"
+fi
+exit 0

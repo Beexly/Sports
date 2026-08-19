@@ -106,6 +106,10 @@ describe("no fake percentages on customer pages", () => {
       // Block comments (incl. JSDoc) are never customer-visible — a "~50%" in a
       // doc string explaining the math is not a rendered claim.
       .replace(/\/\*[\s\S]*?\*\//g, "")
+      // Line comments (// ...) are equally non-customer-visible. Strip them too,
+      // otherwise a "~50%" or "beat-close over <100%" in a code comment trips the
+      // tripwire while real rendered percentages are unaffected.
+      .replace(/\/\/[^\n]*/g, "")
       .replace(/\{[^{}]*\}/g, "")
       .replace(/className\s*=\s*"[^"]*"/g, "")
       .replace(/data-testid\s*=\s*"[^"]*"/g, "")

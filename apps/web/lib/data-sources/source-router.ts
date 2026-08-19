@@ -243,7 +243,7 @@ export const PLATFORM_SOURCES: readonly PlatformSource[] = [
     sports: ["ncaaf", "ncaab"],
     needs: ["scores", "results", "standings", "rankings", "schedules", "play_by_play", "team_stats", "player_stats"],
     registrySourceId: "henrygd-ncaa",
-    note: "Adapter + free-settlement path may call directly; router stays uncleared until registry entry. Self-host to drop public demo rate cap.",
+    note: "GSE-SEC-050: runtime checkClearance gates all fetches in multi-source-scores.ts and free-score-persist.ts; router stays uncleared until registry entry. Self-host to drop public demo rate cap.",
   },
   {
     id: "cfbd",

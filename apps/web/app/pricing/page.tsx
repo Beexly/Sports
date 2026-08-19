@@ -27,6 +27,7 @@ import {
 } from "@/lib/competitive/honesty-contrast";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
+import { PricingPageAnalytics } from "@/components/pricing/pricing-page-analytics";
 
 // ─────────────────────────────────────────────
 // Metadata — SEO-critical surface
@@ -219,7 +220,7 @@ const FAQ = [
   },
   {
     q: "Which sports are covered?",
-    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. The slate runs on a 30-minute refresh loop during games.",
+    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven with live odds refreshed regularly during games on a schedule the board gate enforces (candidate odds older than the freshness cap are refused the write).",
   },
 ] as const;
 
@@ -273,6 +274,7 @@ export default function PricingPage() {
       />
 
       <main id="main-content" className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
+        <PricingPageAnalytics />
         <ShootingStars />
         <div
           aria-hidden="true"

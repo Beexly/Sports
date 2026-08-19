@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { createPortalSession } from "@/lib/stripe";
-import { db } from "@sports/db";
+import { db, DurableWriteStoreUnavailableError } from "@sports/db";
 
 export async function POST(_req: NextRequest): Promise<NextResponse> {
   const session = await auth();
@@ -41,6 +41,17 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
     );
     return NextResponse.json({ url: portalSession.url });
   } catch (err) {
+    // Durable-write guard threw (GSE-SEC-033): the local store can't persist,
+    // so fail closed with a typed 503 — NO Stripe side effect leaked out.
+    if (err instanceof DurableWriteStoreUnavailableError) {
+      return NextResponse.json(
+        {
+          error: "Billing portal is temporarily unavailable.",
+          code: "durable_write_store_unavailable",
+        },
+        { status: 503 },
+      );
+    }
     // Log detail server-side; return a generic message to the client.
     const message = err instanceof Error ? err.message : "Portal error";
     console.error(`Portal session error: ${message}`);

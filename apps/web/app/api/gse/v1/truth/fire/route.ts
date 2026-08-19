@@ -14,6 +14,7 @@ import {
   FIRE_DEMO_SCENARIOS,
   type FireAuthorityInput,
 } from "@sports/prediction-engine";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -48,6 +49,17 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // External GSE v1 surface — stop a single caller from looping the fire
+  // authority evaluation (defense-in-depth; mirrors the consumeRateLimit call
+  // pattern on the authenticated checkout / explain routes). Limit copied from
+  // subscriptions/checkout (8/min is ample for a human operator console).
+  const limit = consumeRateLimit("gse-v1-truth-fire", clientIp(req), 8, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
   let body: Partial<FireAuthorityInput>;
   try {
     body = (await req.json()) as Partial<FireAuthorityInput>;

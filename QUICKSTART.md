@@ -49,8 +49,8 @@ docker compose -f docker\docker-compose.yml up -d
 Update `apps\web\.env.local`:
 
 ```
-DATABASE_URL=postgresql://sports:sports_dev_password@localhost:5432/sports_platform
-DIRECT_URL=postgresql://sports:sports_dev_password@localhost:5432/sports_platform
+DATABASE_URL=postgresql://sports:sports_dev_password@localhost:5433/sports_platform
+DIRECT_URL=postgresql://sports:sports_dev_password@localhost:5433/sports_platform
 FORCE_REAL_PRISMA=true
 NEXTAUTH_SECRET=REDACTED_ROTATE_VIA_ENV
 NEXTAUTH_URL=http://localhost:3000

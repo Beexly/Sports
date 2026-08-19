@@ -13,6 +13,16 @@ interface CockpitLossRow {
   readonly matchup: string;
 }
 
+interface CockpitLossCandidateRow {
+  readonly id: string;
+  readonly matchup: string;
+  readonly selection: string;
+  readonly confidence: number;
+  readonly edgeScore: number;
+  readonly modelVersion: string;
+  readonly settledAt: Date | null;
+}
+
 export const dynamic = "force-dynamic";
 
 async function loadRows(): Promise<CockpitLossRow[]> {
@@ -36,6 +46,38 @@ async function loadRows(): Promise<CockpitLossRow[]> {
   }));
 }
 
+/**
+ * Settled LOSS picks that have NO loss autopsy attached yet.
+ * Highest-confidence losses first — these are the ones a skeptic finds
+ * first, so they carry the most cherry-picking risk.
+ */
+async function loadCandidateRows(): Promise<CockpitLossCandidateRow[]> {
+  const rows = await db.pick
+    .findMany({
+      where: {
+        result: "LOSS",
+        lossAutopsy: null,
+        isPublished: true,
+      },
+      include: {
+        game: { select: { awayTeamName: true, homeTeamName: true } },
+      },
+      orderBy: { confidence: "desc" },
+      take: 50,
+    })
+    .catch(() => []);
+
+  return rows.map((pick) => ({
+    id: pick.id,
+    matchup: `${pick.game.awayTeamName} at ${pick.game.homeTeamName}`,
+    selection: pick.selection,
+    confidence: pick.confidence,
+    edgeScore: pick.edgeScore,
+    modelVersion: pick.modelVersion,
+    settledAt: pick.settledAt,
+  }));
+}
+
 function statusClass(status: string): string {
   switch (status) {
     case "PUBLISHED":
@@ -52,6 +94,7 @@ function statusClass(status: string): string {
 
 export default async function CockpitLossesPage(): Promise<JSX.Element> {
   const rows = await loadRows();
+  const candidates = await loadCandidateRows();
 
   // Lifecycle rollup derived from rows already loaded — no extra query.
   const lifecycle = { DRAFT: 0, PEER_REVIEW: 0, PUBLISHED: 0, RETRACTED: 0 };
@@ -80,6 +123,38 @@ export default async function CockpitLossesPage(): Promise<JSX.Element> {
           <StatusTile label="Retracted" value={String(lifecycle.RETRACTED)} tone="neutral" />
         </div>
       </header>
+
+      {candidates.length > 0 && (
+        <section className="rounded-lg border border-caution/40 bg-caution/5 p-4">
+          <h2 className="text-lg font-semibold text-ion-white">Needs Autopsy</h2>
+          <p className="mt-1 text-xs text-ion-3">
+            {candidates.length} settled loss{candidates.length !== 1 ? "es" : ""} with no autopsy — highest-confidence losses first.
+          </p>
+          <ul className="mt-3 flex flex-col gap-2">
+            {candidates.map((candidate) => (
+              <li key={candidate.id} className="rounded-lg border border-titanium/40 bg-obsidian/40 p-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="text-xs text-ion-3">{candidate.matchup}</div>
+                    <p className="mt-1 text-sm font-semibold text-ion-white">{candidate.selection}</p>
+                    <div className="mt-1 flex flex-wrap gap-3 text-[10px] text-ion-3">
+                      <span>Confidence {candidate.confidence}</span>
+                      <span>Edge {candidate.edgeScore}</span>
+                      <span>{candidate.modelVersion}</span>
+                    </div>
+                  </div>
+                  <Link
+                    href={`/cockpit/losses/${candidate.id}/draft`}
+                    className="rounded-md border border-titanium/40 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-ion-2 hover:bg-carbon/60"
+                  >
+                    Draft
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {rows.length === 0 ? (
         <div className="rounded-lg border border-titanium/40 bg-obsidian/50 p-6 text-sm text-ion-2">

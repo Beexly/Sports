@@ -16,6 +16,7 @@ import { SimulationCloud } from "@/components/observatory/simulation-cloud";
 import { ScoringReliabilityPanel } from "@/components/observatory/scoring-reliability-panel";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { getSlateTwin } from "@/lib/slate-twin/get-slate-twin";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { BRAND_NAME, SURFACES } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
@@ -55,7 +56,11 @@ const PREVIEW: ReadonlyArray<{ readonly title: string; readonly body: string; re
 ];
 
 export default async function ObservatoryPage() {
-  const [slate, calibration] = await Promise.all([getSlateTwin(), loadPublicCalibrationReport()]);
+  // P7-12: resolve the viewer's entitlements server-side so getSlateTwin can
+  // hard-filter premium picks from the data layer AND redact confidence/note
+  // for non-pro viewers. Anonymous/failure → fail-closed FREE.
+  const entitlements = await getViewerEntitlements();
+  const [slate, calibration] = await Promise.all([getSlateTwin(entitlements), loadPublicCalibrationReport()]);
   const live = slate.live;
   const plate = getPlate("observatory-market-field");
   return (

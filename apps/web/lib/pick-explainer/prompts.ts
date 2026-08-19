@@ -98,6 +98,27 @@ export interface ExplainPromptInput {
   readonly question?: string | null;
 }
 
+/**
+ * Sanitize untrusted user text before it is interpolated into a prompt.
+ *
+ * GSE-SEC-057: the user's question is injected into the system prompt, so it
+ * must not be able to break out of its quote-delimited slot or restructure the
+ * surrounding instruction. We neutralize:
+ *  - back-slash sequences (JSON-style escapes, \\n, \\t, etc.)
+ *  - double quotes (the delimiter wrapping the question)
+ *  - angle-bracketed delimiters that could shadow the context fence
+ *    (=== CONTEXT === / === END CONTEXT ===)
+ *  - control characters (newline, tab, carriage return, null, etc.)
+ */
+const PROMPT_DELIMITER_RE = /=+ /g;
+export function sanitizePromptInput(text: string): string {
+  return text
+    .replace(/\\/g, "\\\\") // escape backslashes first
+    .replace(/"/g, '\\"') // escape double quotes
+    .replace(/[\x00-\x1f\x7f]/g, " ") // strip control chars
+    .replace(PROMPT_DELIMITER_RE, " — ") // neutralize "=== " delimiter markers;
+}
+
 export function buildExplainUser(input: ExplainPromptInput): string {
   const parts: string[] = [
     "Explain, in plain language, why the engine surfaced this pick — which",
@@ -110,7 +131,8 @@ export function buildExplainUser(input: ExplainPromptInput): string {
   ];
   const q = input.question?.trim();
   if (q) {
-    parts.push("", `The user specifically asked: "${q}"`, "Answer it only if the context supports an answer; otherwise say the data does not cover it.");
+    const safeQ = sanitizePromptInput(q);
+    parts.push("", `The user specifically asked: "${safeQ}"`, "Answer it only if the context supports an answer; otherwise say the data does not cover it.");
   }
   return parts.join("\n");
 }

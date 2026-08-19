@@ -31,10 +31,13 @@ export interface StoredPushSubscriptionRow {
 export interface PushSubscriptionDb {
   pushSubscription: {
     findMany(args: { where: { userId: string } }): Promise<StoredPushSubscriptionRow[]>;
+    findUnique(args: {
+      where: { endpoint: string };
+    }): Promise<StoredPushSubscriptionRow | null>;
     upsert(args: {
       where: { endpoint: string };
       create: { userId: string; endpoint: string; p256dh: string; auth: string };
-      update: { userId: string; p256dh: string; auth: string };
+      update: { p256dh: string; auth: string; userId: string };
     }): Promise<StoredPushSubscriptionRow>;
     deleteMany(args: {
       where: { userId: string; endpoint: string };
@@ -76,6 +79,7 @@ export type PushSubscriptionDbResult<T> =
   | { readonly ok: true; readonly data: T }
   | { readonly ok: false; readonly reason: "table_missing" }
   | { readonly ok: false; readonly reason: "unreachable" }
+  | { readonly ok: false; readonly reason: "conflict"; readonly exists_for_user: string }
   | { readonly ok: false; readonly reason: "error"; readonly message: string };
 
 function failureFrom<T>(error: unknown): PushSubscriptionDbResult<T> {
@@ -102,9 +106,17 @@ export async function listPushSubscriptionsForUser(
 /**
  * Upsert keyed on `endpoint` (globally unique — it IS the push service's
  * per-device delivery address). Re-subscribing the same device refreshes
- * its keys in place rather than accumulating duplicate rows; a device
- * moving between accounts (rare, but possible on a shared browser) is
- * re-owned to the new `userId` rather than left orphaned on the old one.
+ * its keys in place rather than creating a duplicate row.
+ *
+ * GSE-SEC-034 FIX: the endpoint's `userId` is NOT re-owned on update.
+ * If the endpoint already exists under a DIFFERENT user, the call is refused
+ * with a `conflict` result (exists_for_user) — this prevents user B on a
+ * shared browser from hijacking user A's subscription endpoint, which would
+ * silently redirect user A's push notifications to user B's device.
+ *
+ * Only the SAME-owner case proceeds to upsert (refreshing p256dh/auth in
+ * place), matching the watchlist boundary pattern where operations are
+ * scoped to the caller's own records.
  */
 export async function upsertPushSubscription(
   dbArg: unknown,
@@ -115,10 +127,14 @@ export async function upsertPushSubscription(
 ): Promise<PushSubscriptionDbResult<StoredPushSubscriptionRow>> {
   const db = dbArg as PushSubscriptionDb;
   try {
+    const existing = await db.pushSubscription.findUnique({ where: { endpoint } });
+    if (existing && existing.userId !== userId) {
+      return { ok: false, reason: "conflict", exists_for_user: existing.userId };
+    }
     const row = await db.pushSubscription.upsert({
       where: { endpoint },
       create: { userId, endpoint, p256dh, auth },
-      update: { userId, p256dh, auth },
+      update: { p256dh, auth, userId },
     });
     return { ok: true, data: row };
   } catch (error) {

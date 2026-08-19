@@ -80,6 +80,10 @@ describe("evaluateDurableWriteStore", () => {
   it("registers stripe-checkout as a known capability", () => {
     expect(DURABLE_WRITE_CAPABILITIES).toContain("stripe-checkout");
   });
+
+  it("registers stripe-reconcile as a known capability (GSE-SEC-033)", () => {
+    expect(DURABLE_WRITE_CAPABILITIES).toContain("stripe-reconcile");
+  });
 });
 
 describe("DurableWriteStoreUnavailableError", () => {

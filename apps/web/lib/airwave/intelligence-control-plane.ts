@@ -32,7 +32,9 @@ import {
 type Env = Record<string, string | undefined>;
 
 export type IntelligenceControlPlane = {
-  readonly generatedAt: string;
+  readonly generatedAt: string | null;
+  /** Whether this is a live snapshot (at least one intake lane ACTIVE) or a fallback. */
+  readonly snapshotSource: "LIVE" | "FALLBACK";
   /** The base Airwave control plane (existing lanes, adapters, spreadsheet contract). */
   readonly base: AirwaveControlPlane;
   /** Source policy summary across all 10 Airwave source categories. */
@@ -123,8 +125,15 @@ export function readIntelligenceControlPlane(
     );
   }
 
+  // When the master switch is off and no lanes are ACTIVE, we are serving a
+  // fallback snapshot — not live intelligence. Do not fabricate a
+  // prediction-time timestamp; surface null + a FALLBACK marker so consumers
+  // know this is a default posture, not freshly-generated data.
+  const isFallback = !gates.airwaveEnabled;
+
   return {
-    generatedAt: now.toISOString(),
+    generatedAt: isFallback ? null : now.toISOString(),
+    snapshotSource: isFallback ? "FALLBACK" : "LIVE",
     base,
     sourcePolicySummary,
     channel87Contract,

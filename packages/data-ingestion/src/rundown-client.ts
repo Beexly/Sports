@@ -267,7 +267,9 @@ export async function fetchRundownEventsForSport(
     const d = new Date(`${startDate}T00:00:00.000Z`);
     d.setUTCDate(d.getUTCDate() + i);
     const date = d.toISOString().slice(0, 10);
-    const url = `${RUNDOWN_BASE}/sports/${sportId}/events/${date}?market_ids=1,2,3&main_line=true&hide_closed=true&key=${encodeURIComponent(apiKey)}`;
+    // GSE-SEC-028: API key sent via X-TheRundown-Key header only — not in the
+    // query string, which leaks into logs, referrers, and history.
+    const url = `${RUNDOWN_BASE}/sports/${sportId}/events/${date}?market_ids=1,2,3&main_line=true&hide_closed=true`;
     try {
       const res = await fetchImpl(url, {
         headers: {

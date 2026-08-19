@@ -80,13 +80,24 @@ describe("/dashboard — tier-gated picks", () => {
 });
 
 describe("/picks page — member data flow", () => {
-  it("forwards the session cookie with no-store for authenticated viewers", () => {
-    expect(picksPageSrc).toMatch(/cache:\s*"no-store"/);
-    expect(picksPageSrc).toMatch(/cookie:\s*headers\(\)\.get\("cookie"\)/);
+  it("forwards the session cookie for authenticated viewers via direct handler call", () => {
+    // The page calls the route handlers' GET directly (no self-fetch HTTP
+    // round-trip), forwarding the request cookie so auth() inside the handler
+    // resolves the same session the page component sees.
+    expect(picksPageSrc).toMatch(/cookie\s*=\s*h\.get\("cookie"\)/);
+    expect(picksPageSrc).toContain("getPicks");
+    expect(picksPageSrc).toContain("getDailySlate");
+    // No raw fetch() to the app's own origin remains.
+    expect(picksPageSrc).not.toMatch(/await\s+fetch\(url/);
   });
 
-  it("keeps the cached fetch for anonymous viewers", () => {
-    expect(picksPageSrc).toMatch(/next:\s*{\s*revalidate:\s*1800\s*}/);
+  it("calls the route handlers directly instead of self-fetching", () => {
+    // P16-04: the page imports and invokes the route GET handlers rather than
+    // making HTTPS round-trips to its own origin during SSR.
+    expect(picksPageSrc).toMatch(/import.*GET as getPicks.*from.*api\/picks\/route/);
+    expect(picksPageSrc).toMatch(/import.*GET as getDailySlate.*from.*api\/picks\/daily-slate\/route/);
+    expect(picksPageSrc).toContain("await getPicks(req)");
+    expect(picksPageSrc).toContain("await getDailySlate(req)");
   });
 
   it("passes the session flag into fetchPicks", () => {

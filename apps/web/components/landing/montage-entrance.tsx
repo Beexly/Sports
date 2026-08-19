@@ -15,8 +15,10 @@
  *    visitors can hear the sting. No unmuted autoplay is ever attempted.
  *  - Plays once per session (sessionStorage). `?intro=play` force-replays it
  *    (wired to the footer "Replay intro"); `?intro=skip` bypasses it.
- *  - Skippable on any key / backdrop click; the controls never skip.
+ *  - Skippable on any key / backdrop click; the controls stopPropagation separately.
  *  - prefers-reduced-motion → instant dissolve, no video, no audio.
+ *  - saveData / slow-2g/2g effectiveType → instant dissolve, no video download
+ *    (data-saver and metered-connection courtesy, P16-02).
  *  - Resilient: a load error or a max-duration guard dissolves gracefully so a
  *    visitor is never trapped behind the intro.
  */
@@ -76,6 +78,20 @@ export function MontageEntrance() {
     ).matches;
     // Accessibility always wins: reduced motion gets no cold-open.
     if (reduced) return;
+
+    // Data-saver / slow-network: skip the heavy video preload so visitors on
+    // metered connections or slow links (common on mobile) are not forced to
+    // download ~4MB before reaching the page. `effectiveType` is undefined on
+    // browsers/agents that don't implement Network Information; in that case we
+    // only check saveData so we never block a capable visitor.
+    if (typeof navigator !== "undefined" && "connection" in navigator) {
+      const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+      if (conn) {
+        if (conn.saveData === true) return;
+        // Treat 2g/slow-2g as not worth the cold-open bytes.
+        if (conn.effectiveType && (conn.effectiveType === "slow-2g" || conn.effectiveType === "2g")) return;
+      }
+    }
 
     const search = window.location.search;
     // ?intro=play force-replays the cold-open, overriding the once-per-session

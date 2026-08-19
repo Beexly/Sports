@@ -1,0 +1,72 @@
+name: External Watchdog (Galaxy Sports Edge)
+
+# Why this exists (added 2026-08-16, blind-spot sweep finding):
+# Every existing health signal for this product lives INSIDE the same
+# platform whose failure it's supposed to detect. /api/cron/health-alert
+# is itself a Vercel cron -- when the Vercel scheduler stops firing, the
+# alarm dies with it. That is exactly what happened: production sat with
+# a dead scheduler (schedulerLiveness: "dead") for ~20+ hours, fully
+# self-diagnosed in a public JSON endpoint, and paged no one, because
+# nothing OUTSIDE Vercel was ever watching.
+#
+# This workflow is deliberately NOT a scheduler backstop (that's
+# external-cron.yml, which is intentionally idle pending Actions billing
+# and requires CRON_SECRET). This is a pure, read-only health poll of the
+# ALREADY-PUBLIC, unauthenticated /api/ops/public-surface-truth endpoint.
+# No secrets required. If schedulerLiveness or settlement health is not
+# "ok"/healthy, the job fails -- which GitHub can notify on (email/Slack
+# per your notification settings) independent of whether Vercel itself
+# is able to tell anyone.
+#
+# This does not fix the scheduler. It fixes the fact that nobody would
+# otherwise find out it died.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  check-scheduler-health:
+    name: Poll public-surface-truth for scheduler/settlement health
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Fetch and evaluate live status
+        run: |
+          set -euo pipefail
+          response=$(curl -sS -o /tmp/status.json -w "%{http_code}" \
+            --location --max-time 30 \
+            "https://www.galaxysportsedge.com/api/ops/public-surface-truth")
+          echo "HTTP ${response}"
+
+          if [ "${response}" != "200" ]; then
+            echo "::error::public-surface-truth returned HTTP ${response}, not 200"
+            exit 1
+          fi
+
+          if command -v jq >/dev/null 2>&1; then
+            jq . /tmp/status.json
+          else
+            cat /tmp/status.json
+          fi
+
+          scheduler_status=$(jq -r '.schedulerLiveness.status // "unknown"' /tmp/status.json)
+          settlement_health=$(jq -r '.settlement.health // "unknown"' /tmp/status.json)
+          age_minutes=$(jq -r '.schedulerLiveness.ageMinutes // "unknown"' /tmp/status.json)
+
+          echo "schedulerLiveness.status = ${scheduler_status}"
+          echo "settlement.health = ${settlement_health}"
+          echo "schedulerLiveness.ageMinutes = ${age_minutes}"
+
+          fail=0
+          if [ "${scheduler_status}" != "ok" ]; then
+            echo "::error::Scheduler is not healthy: status=${scheduler_status}, ageMinutes=${age_minutes}"
+            fail=1
+          fi
+          if [ "${settlement_health}" = "CRITICAL" ]; then
+            echo "::error::Settlement health is CRITICAL"
+            fail=1
+          fi
+
+          exit "${fail}"

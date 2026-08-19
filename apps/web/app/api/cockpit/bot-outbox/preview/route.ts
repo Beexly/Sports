@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
   planGatedSlateOutbox,
   planPickPublicationOutbox,
@@ -301,17 +302,17 @@ function parseGatedSlatePayload(payload: unknown): BotGatedSlateInput | null {
   };
 }
 
-async function requireAdmin(): Promise<NextResponse | null> {
+async function requireAdmin(): Promise<{ userId: string } | NextResponse> {
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ success: false, error: "unauthorized" }, { status: 401 });
   }
-  return null;
+  return { userId: session.user.id };
 }
 
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = await requireAdmin();
-  if (denied) return denied;
+  if (denied instanceof NextResponse) return denied;
 
   const url = new URL(request.url);
   const lookbackMinutes = parsePositiveInteger(url.searchParams.get("lookbackMinutes")) ?? 60;
@@ -334,7 +335,18 @@ export async function GET(request: Request): Promise<NextResponse> {
 
 export async function POST(request: Request): Promise<NextResponse> {
   const denied = await requireAdmin();
-  if (denied) return denied;
+  if (denied instanceof NextResponse) return denied;
+
+  // Per-admin throttle on this bot-outbox preview planner (DB reads + planning).
+  // Defense-in-depth; same bucket pattern as subscriptions/checkout, keyed by
+  // admin id at 10/min (limit copied from subscriptions/checkout).
+  const limit = consumeRateLimit("cockpit-bot-outbox-preview", denied.userId, 10, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please slow down and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
 
   const body = (await request.json().catch(() => ({}))) as BotOutboxPreviewBody;
   const eventKind = parseEventKind(body.eventKind);

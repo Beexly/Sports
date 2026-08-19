@@ -16,15 +16,33 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  * the REAL cron route handler are exercised end-to-end.
  */
 
-const mocks = vi.hoisted(() => ({
-  subscriptionsList: vi.fn<(args: unknown) => Promise<{ data: unknown[]; has_more: boolean }>>(),
-  subscriptionsRetrieve: vi.fn<(id: string) => Promise<{ status: string }>>(),
-  findUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
-  findMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
-  upsert: vi.fn<(args: unknown) => Promise<unknown>>(),
-  update: vi.fn<(args: unknown) => Promise<unknown>>(),
-  updateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
-}));
+const mocks = vi.hoisted(() => {
+  /** Local mirror of DurableWriteStoreUnavailableError — passed through the @sports/db
+   *  mock so the cron route's `instanceof` check sees the SAME constructor tests use. */
+  class DurableWriteStoreUnavailableError extends Error {
+    readonly kind = "durable_write_store_unavailable" as const;
+    readonly httpStatus = 503 as const;
+    readonly capability: string;
+    readonly reason: string;
+    constructor(capability: string, reason: string, detail: string) {
+      super(`Durable write store unavailable for capability "${capability}": ${detail}`);
+      this.name = "DurableWriteStoreUnavailableError";
+      this.capability = capability;
+      this.reason = reason;
+    }
+  }
+  return {
+    subscriptionsList: vi.fn<(args: unknown) => Promise<{ data: unknown[]; has_more: boolean }>>(),
+    subscriptionsRetrieve: vi.fn<(id: string) => Promise<{ status: string }>>(),
+    findUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+    findMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+    upsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+    update: vi.fn<(args: unknown) => Promise<unknown>>(),
+    updateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+    requireDurableWriteStore: vi.fn<(capability: string) => void>(),
+    DurableWriteStoreUnavailableError,
+  };
+});
 
 vi.mock("@/lib/stripe", () => ({
   stripe: {
@@ -45,6 +63,8 @@ vi.mock("@sports/db", () => ({
       updateMany: mocks.updateMany,
     },
   },
+  requireDurableWriteStore: mocks.requireDurableWriteStore,
+  DurableWriteStoreUnavailableError: mocks.DurableWriteStoreUnavailableError,
 }));
 
 import { reconcileEntitlements, reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
@@ -87,6 +107,8 @@ beforeEach(() => {
   mocks.upsert.mockReset();
   mocks.update.mockReset();
   mocks.updateMany.mockReset();
+  mocks.requireDurableWriteStore.mockReset();
+  mocks.requireDurableWriteStore.mockReturnValue(undefined); // available by default
 
   process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] = PRO_PRICE;
   process.env["STRIPE_ELITE_MONTHLY_PRICE_ID"] = ELITE_PRICE;

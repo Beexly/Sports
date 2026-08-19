@@ -11,7 +11,10 @@ const pkg = JSON.parse(readFileSync(resolve(repoRoot, "package.json"), "utf8"));
 describe("eval contract runner", () => {
   it("is wired through the root package scripts", () => {
     expect(pkg.scripts["evals:contracts"]).toBe("node scripts/eval-contracts.mjs");
-    expect(pkg.scripts.guardrails).toContain("node scripts/eval-contracts.mjs");
+    // The `guardrails` script delegates to run-all.mjs — the actual chain is
+    // defined there, so verify eval-contracts is listed in that file.
+    const runAll = readFileSync(resolve(repoRoot, "scripts/guardrails/run-all.mjs"), "utf8");
+    expect(runAll).toContain("eval-contracts");
   });
 
   it("validates frontmatter, required sections, and numbered pass criteria", () => {

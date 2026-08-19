@@ -1,4 +1,19 @@
 import type { NewsItem, SignalType, Tier } from "./impact";
+import {
+  locationIsInternalTargetLocation,
+  validateEndpointUrl,
+} from "@sports/prediction-engine/src/ensemble/remote-model-client";
+
+/**
+ * SSRF guard for the RSS wire: feed URLs come from operator config (`$NEXT_PUBLIC_...`/env),
+ * so before we fetch we refuse any target whose host is a private/loopback/link-local IP
+ * literal or a cloud-metadata host — the standard SSRF escape hatch. We also fetch with
+ * `redirect: "manual"` and reject any 3xx whose Location points at one of those hosts,
+ * closing the redirect-to-internal-IP bypass. Relative redirects (same-origin) are safe.
+ *
+ * Reuses the prediction-engine's exported validators so the guard logic lives in one place
+ * and stays tested by the remote-model-client suite.
+ */
 
 /**
  * Live RSS wire — the first real crawler lane, dark-shipped.
@@ -194,13 +209,37 @@ export async function fetchLiveWire(
 
   const results = await Promise.allSettled(
     feeds.map(async (feed) => {
+      // SSRF choke point: refuse private/metadata IP literals before issuing.
+      const check = validateEndpointUrl(feed.url);
+      if (!check.ok) return [];
       const res = await fetch(feed.url, {
         headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+        redirect: "manual", // do NOT auto-follow; validate each hop ourselves
         next: { revalidate: 300 },
       });
-      if (!res.ok) return [];
-      const xml = await res.text();
+      // Reject 3xx redirects whose Location points at a private/metadata host
+      // (redirect-to-internal-IP SSRF bypass). Same-origin relative redirects
+      // are safe (skip check); absolute public redirects are re-validated then
+      // followed exactly once, still under redirect:"manual".
+      let xml: string;
+      if (res.status >= 300 && res.status < 400) {
+        const location = res.headers.get("location");
+        if (!location) return [];
+        if (locationIsInternalTargetLocation(location)) return [];
+        const recheck = validateEndpointUrl(location);
+        if (!recheck.ok) return [];
+        const followed = await fetch(location, {
+          headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
+          signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+          redirect: "manual",
+        });
+        if (!followed.ok) return [];
+        xml = await followed.text();
+      } else {
+        if (!res.ok) return [];
+        xml = await res.text();
+      }
       const items: NewsItem[] = [];
       for (const raw of parseRssItems(xml).slice(0, 40)) {
         const signal = classifySignal(raw.title);

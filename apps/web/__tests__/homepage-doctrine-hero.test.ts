@@ -8,6 +8,9 @@ function readRepoFile(path: string): string {
 
 describe("homepage doctrine hero", () => {
   const page = readRepoFile("apps/web/app/page.tsx");
+  const labDoor = readRepoFile(
+    "apps/web/components/landing/nflverse-lab-door.tsx"
+  );
   const layout = readRepoFile("apps/web/app/layout.tsx");
   const tokens = readRepoFile("apps/web/styles/design-tokens.css");
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
@@ -61,9 +64,12 @@ describe("homepage doctrine hero", () => {
   });
 
   it("routes the four doors from the front door with live, real-sourced stats", () => {
-    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
+    // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
+    // off the page's critical path via Suspense); the other three are inline.
+    for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
       expect(page).toContain(door);
     }
+    expect(labDoor).toContain("The Lab");
     expect(page).toMatch(/loadBoardState/);
     expect(page).toMatch(/calibration\.sampleSize/);
     expect(page).toMatch(/state\.publishedToday\.length/);

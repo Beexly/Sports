@@ -1,0 +1,276 @@
+# AUDIT FINDINGS — Sports Intelligence OS (read-only adversarial audit)
+
+Auditor: Hermes (overnight run, branch `claude/fable-5-ultracode-plan-ptru4e`)
+Date: 2026-08-12 (UTC 04:5x)
+Method: repo guardrails first (14 run, 13 pass), `npm audit --omit=dev` (9
+findings), then targeted code reads across D1–D15. Read-only: no source changed.
+
+---
+
+## (1) EXECUTIVE SUMMARY
+
+The repo's own posture is unusually strong: 13/14 guardrails pass, the auth
+stack re-resolves roles from the DB every request and never fail-opens to
+ADMIN, the Stripe webhook verifies signatures and defends against out-of-order
+and replayed events, the paywall is enforced in the SQL query (premium rows are
+never returned to FREE sessions), and the free-first data layer orders sources
+by marginal cost with a spend guard. The dominant risk is NOT app logic — it is
+the dependency tree: next-auth/@auth/core carry 2 CRITICAL advisories
+(homoglyph email bypass; fail-open auth object), next has a deserialization DoS,
+and the build chain (postcss) has an arbitrary-file-read advisory. Secondary
+
+**CORRECTION 2026-08-16 (verified live):** The executive summary claim "next-auth/@auth/core carry 2 CRITICAL advisories" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-16 yields **0 critical** — the next-auth/@auth/core advisories (GSE-SEC-001/002) were resolved in the patched lock (`@auth/core >=0.41.3`). Only 2 HIGH findings remain (GSE-SEC-059 Next 14.2.15, GSE-SEC-060 postcss transitive). The remaining dependency risk is HIGH, not CRITICAL.
+risks: rate limiting covers a small fraction of API routes, CSP allows
+unsafe-inline/unsafe-eval, and three pre-existing tracked-debt failures keep CI
+red (model-freeze #419, api-v1-boundary #420, typecheck #421) — all documented,
+none caused by this branch.
+
+## (2) SEVERITY HISTOGRAM
+
+Critical: 2 · High: 5 · Medium: 5 · Low: 3 · Info: 3
+
+**CORRECTION 2026-08-16 (verified live):** The severity histogram "Critical: 2" is STALE. `npm audit --omit=dev --json` re-run on 2026-08-16 yields **0 critical, 2 high**. The GSE-SEC-001/002 next-auth/@auth/core critical advisories were resolved (patched versions in the lock). Updated histogram: **0 Critical · 2 High · 5 Medium · 3 Low · 3 Info**.
+
+## (3) TOP 10
+
+1. CRITICAL — next-auth/@auth/core advisories (homoglyph email bypass, fail-open auth object) — auth stack, unpatched.
+
+**CORRECTION 2026-08-16 (verified live):** GSE-SEC-001/002 are NOT still unpatched. The `npm audit` at the time of the audit was stale; the current lock file has the patched versions (`@auth/core >=0.41.3`). `npm audit --omit=dev --json` re-run on 2026-08-16 yields 0 critical. Updated severity: the CRITICAL label should be **STALE/RESOLVED**, not active.
+2. CRITICAL — next-auth beta-range config-error fail-open (GHSA-8fpg-xm3f-6cx3).
+
+**CORRECTION 2026-08-16 (verified live):** Same as GSE-SEC-001 — resolved in the patched lock. No longer critical.
+3. HIGH — next deserialization DoS (GHSA-h25m-26qc-wcjf) + Image Optimizer DoS.
+4. HIGH — postcss arbitrary file read via sourceMappingURL (build chain).
+5. HIGH — fast-uri host-confusion + brace-expansion/nanoid DoS (transitive).
+6. MEDIUM — rate limiting on 8 of 176 API routes.
+
+**CORRECTION 2026-08-16 (verified live):** The rate-limit count "8 of 176 API routes" is STALE. `grep -rl 'rate-limit\|rateLimit\|consumeRateLimit\|@sports/util/rate' apps/web/app/api --include='route.ts' | wc -l` returns **40**, not 8. The gap is now 136 unthrottled (176 - 40), not 168.
+7. MEDIUM — CSP script-src allows 'unsafe-inline' 'unsafe-eval'.
+8. MEDIUM — typecheck debt #421 touches autonomy executor allow-list (governance).
+9. MEDIUM — api-v1 route tree pre-promotion (#420, tracked debt, guard holds).
+10. LOW — model-freeze debt #419 (process/evidence debt; guard honestly red).
+
+---
+
+## Findings register
+
+### [CRITICAL] GSE-SEC-001 — next-auth/@auth/core vulnerable; auth stack unpatched
+- OWASP / CWE: A06 / CWE-1104 (supply chain); CWE-180 (homoglyph), CWE-285/636 (fail-open)
+- Confidence: confirmed (npm audit metadata)
+- Location(s): `handoff/npm-audit.json`; `apps/web/lib/auth.ts:23-74` (NextAuth config)
+  - GHSA-7rqj-j65f-68wh: @auth/core <0.41.3 — Email normalizer validates the address BEFORE Unicode normalization, allowing a homoglyph `@` bypass (critical, CWE-180).
+  - GHSA-8fpg-xm3f-6cx3: next-auth 5.0.0-beta.* — configuration errors can populate the auth object with an error, making existence-based auth checks fail open.
+  - GHSA-xmf8-cvqr-rfgj: @auth/core <0.41.3 — getToken() throws uncaught on malformed Bearer headers (7.5 DoS).
+- Exploit / failure scenario: a crafted Google-adjacent email or a config error could bypass the email allow-list / role resolution; malformed Bearer headers 500 the session path.
+- Blast radius: all sign-in / session endpoints; account-takeover-adjacent.
+- Remediation sketch: upgrade next-auth + @auth/prisma-adapter + @auth/core to the patched line (≥0.41.3 / GA), re-run the full suite + agent:eval. Requires a change proposal (package.json touch).
+- Effort: M
+
+### [CRITICAL] GSE-SEC-002 — next-auth beta-range config-error fail-open (part of GSE-SEC-001 cluster, listed separately for severity)
+- Confidence: confirmed via npm audit (advisory directly names the range in use)
+- Location: `apps/web/package.json` (next-auth ^5.0.0-beta.*)
+- Same remediation as GSE-SEC-001. Effort: M
+
+### [HIGH] GSE-SEC-003 — next deserialization + Image Optimizer DoS
+- OWASP / CWE: A06 / CWE-502 (deserialization), CWE-400/770 (DoS)
+- Confidence: confirmed (npm audit)
+- Location: `apps/web/package.json` (next 14.x); advisories GHSA-h25m-26qc-wcjf (>=13.0.0 <15.0.8), GHSA-9g9p-9gw9-jx7f (<15.5.10)
+- Exploit: HTTP request deserialization can DoS self-hosted apps using insecure RSC; remotePatterns Image Optimizer config can be driven to DoS.
+- Blast radius: availability of the public site.
+- Remediation sketch: major Next upgrade (15.x+ patched) with a full regression run — change-proposal-gated.
+- Effort: L
+
+### [HIGH] GSE-SEC-004 — postcss arbitrary file read (build chain)
+- OWASP / CWE: A06 / CWE-22, CWE-200
+- Confidence: confirmed (npm audit), real-world exploitability low (requires attacker-controlled CSS comments in the build input)
+- Location: postcss <=8.5.11 via build tooling (dev tree)
+- Remediation: bump postcss ≥8.5.12 in devDeps; no runtime impact.
+- Effort: S
+
+### [HIGH] GSE-SEC-005 — transitive DoS cluster: fast-uri, brace-expansion, nanoid
+- OWASP / CWE: A06 / CWE-400/770 (CWE-436 for fast-uri host confusion)
+- Confidence: confirmed (npm audit; all via transitive deps)
+- Location: fast-uri (<=3.1.4, host confusion via backslash authority — SSRF-adjacent if a URL parser consumes attacker input), brace-expansion (<5.0.8), nanoid (<3.3.17)
+- Exploit: host-confusion can misroute URLs; brace-expansion/nanoid are algorithmic DoS.
+- Remediation: `npm audit fix` for the non-breaking subset + change proposal for majors; re-run guards.
+- Effort: S–M
+
+### [MEDIUM] GSE-SEC-006 — rate limiting covers 8 of 176 API routes
+- OWASP / CWE: A04 / CWE-770
+- Confidence: confirmed (grep: 8 route files import `@/lib/api/rate-limit`; 176 route.ts files exist)
+- Location: `apps/web/app/api/**` (only admin/losses draft, cockpit studio generate, human/roster-availability, intelligence/roster-advice, picks/[id]/explain, room/[gameId]/model-court, subscriptions/checkout, subscriptions/portal)
+- Exploit: unauthenticated or cheap endpoints without throttle (e.g., public GET boards, forms, any LLM surface added later) can be looped for DoS or denial-of-wallet once an LLM surface is behind them.
+- Blast radius: availability + spend.
+- Remediation sketch: apply `consumeRateLimit` to every public/unauthenticated POST and any LLM-backed route; add an explicit audit step in the route checklist.
+- Effort: M
+
+### [MEDIUM] GSE-SEC-007 — CSP allows 'unsafe-inline' 'unsafe-eval' in script-src
+- OWASP / CWE: A05 / CWE-79 (weakened XSS defense)
+- Confidence: confirmed (next.config, line 103)
+- Location: `apps/web/next.config.*` — `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms …`
+- Exploit: any injected inline script executes; eval-based payloads allowed. (XSS still needs a sink; CSP is defense-in-depth.)
+- Remediation sketch: tighten after removing inline scripts (nonce/hash-based) — Next App Router can emit nonces; change-proposal-gated.
+- Effort: M
+
+### [MEDIUM] GSE-SEC-008 — autonomy executor allow-list type debt (#421, tracked)
+- OWASP / CWE: governance — A04; CWE-285
+- Confidence: confirmed (tsc output; issue #421)
+- Location: `apps/web/lib/autonomy/execute-autonomy-cycle.ts:33` (`RUN_GENERATE_SIGNAL_SLATE` not in `AutonomyActionKind`), `lib/calibration/ranking-power-control.ts:227`, `lib/ops/proven-path-seed.ts:86` (`appliedPauseGroups` absent from options type)
+- Exploit / failure scenario: the "obvious" fixes widen the autonomous-actions allow-list (authorization change) or guess whether ranking pause groups should flow through this path — either could silently change what runs unattended.
+- Blast radius: autonomous execution authority.
+- Remediation sketch: owner design decision per issue #421, then a deliberate, reviewed change; do NOT mechanically add the key.
+- Effort: S (decision-gated)
+
+### [MEDIUM] GSE-SEC-009 — API v1 route tree exists pre-promotion (#420, tracked)
+- OWASP / CWE: governance — public-contract exposure
+- Confidence: confirmed (guard output; issue #420)
+- Location: `apps/web/app/api/v1/**` (openapi/, probabilities/, signals/) — the api-v1-boundary guard blocks accidental live routes until an owner-approved promotion exists.
+- Exploit: if a route were live, external consumers could depend on an unversioned contract. Guard currently holds (CI red = intentional).
+- Remediation sketch: decide remove-vs-promote per issue #420.
+- Effort: S (decision-gated)
+
+### [LOW] GSE-SEC-010 — model-freeze debt (#419, tracked)
+- OWASP / CWE: governance — data-integrity (retroactive re-labeling)
+- Confidence: confirmed (guard output; issue #419)
+- Location: `scripts/guardrails/model-freeze.mjs` — MODEL_VERSION v5.2.6 has no IMPLEMENTED CalibrationProposal.
+- Remediation: add the calibration artifact (option 1/2) or FROZEN marker (option 3, only if no scoring weights changed).
+- Effort: S
+
+### [LOW] GSE-SEC-011 — DEV_FAKE_ADMIN escape hatch exists (well-guarded)
+- OWASP / CWE: A01 (defense-in-depth concern)
+- Confidence: confirmed — but hard-gated in BOTH `middleware.ts:82` and `auth.ts:104` to `NODE_ENV !== "production"`.
+- Exploit: only if NODE_ENV is mis-set in prod AND DEV_FAKE_ADMIN=true; double gate makes this unlikely.
+- Remediation: none required; consider removing after launch.
+- Effort: S
+
+### [INFO] GSE-SEC-012 — /embed frames allowed from any origin (intentional)
+- `next.config.*:80` `frame-ancestors *` for /embed — DEC-017 free embed widgets. Content is non-auth public data; clickjacking surface is minimal. Documented intent; no action.
+
+### [INFO] GSE-SEC-013 — middleware does not cover /api/** (by design)
+- `middleware.ts:101-106` matcher excludes api/; every API route must self-auth. Sampled routes (picks, checkout, model-court) all call `auth()` server-side. Recommend the route-checklist audit step (see GSE-SEC-006).
+
+### [INFO] GSE-SEC-014 — auth cookie flags not re-asserted in middleware
+- NextAuth v5 manages cookie flags (HttpOnly, Secure, SameSite=Lax) at the provider level; middleware never sets them. Hypothesis: flags are correct by default; manual step to confirm: inspect Set-Cookie on a sign-in in a prod-like env.
+
+### [LOW] GSE-SEC-015 — B2B API rate limit is process-local (serverless caveat)
+- OWASP / CWE: A04 / CWE-770
+- Confidence: confirmed (code read)
+- Location: `apps/web/lib/b2b/api-key-auth.ts` — `rateLimitB2b` uses a module-level `Map`; on serverless (Vercel) each instance has its own counter, so the effective limit scales with instance count.
+- Exploit / failure scenario: not an exposure today (keys are the trust boundary and env-issued), but if self-serve key issuance is ever added, a key holder could exceed the intended throttle across instances.
+- Blast radius: B2B spend/availability.
+- Remediation sketch: move the counter to a durable store (Redis/DB) before any public key issuance; document the caveat in B2B_API.md.
+- Effort: S–M
+
+---
+
+## (4) COVERAGE LEDGER → handoff/AUDIT_COVERAGE.md
+
+## (5) PROPOSED REMEDIATION ROADMAP
+
+**Now (safe, no change proposal):**
+1. GSE-SEC-004 postcss bump (devDep, non-breaking).
+2. GSE-SEC-005 `npm audit fix` non-breaking subset; re-run guards + full suite.
+3. GSE-SEC-010 add the calibration artifact or FROZEN marker (#419) — decision needed first.
+4. GSE-SEC-006 add rate limiting to remaining public endpoints (code change, no schema).
+
+**Next (change proposal required):**
+5. GSE-SEC-001/002 next-auth + @auth/core upgrade (package.json + full regression).
+6. GSE-SEC-003 Next.js major upgrade (15.x patched) with full regression + preview deploy.
+7. GSE-SEC-007 CSP tightening (nonce-based script-src).
+8. GSE-SEC-008 autonomy allow-list design decision (#421).
+9. GSE-SEC-009 api-v1 remove-vs-promote decision (#420).
+
+**Later:**
+10. GSE-SEC-011 remove DEV_FAKE_ADMIN after launch.
+11. GSE-SEC-014 verify cookie flags in prod-like env; add explicit header test.
+
+---
+
+## GSE-SEC-076 — 080: Data-clearance coverage gap audit (P5-13)
+
+### [MEDIUM] GSE-SEC-076 — `open-meteo` fetched without `checkClearance` — STATUS: FIXED
+- **OWASP / CWE:** A04 / CWE-862 (missing authorization — missing runtime enforcement of a declared policy)
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/data-sources/free-first-ingest.ts:147` — `fetchWeatherFreeFirst()` calls `fetchWeather(latitude, longitude, opts)` with no preceding `checkClearance({ source_id: "open-meteo", ... })` call.
+- **Exploit / failure scenario:** The `open-meteo` entry in `source-rights-registry.ts` (source_id `open-meteo`, status `approved_open_license`) can be flipped to `permission_required` or have `storage_allowed` revoked, but this fetch site would continue hitting the API regardless. If the source's rights posture changes (e.g. commercial use restriction added), weather data would keep flowing into the prediction engine and downstream display without an enforced stop. The adapter has no `assertIngestible` call either — the registry entry is the only policy and nothing checks it at the call site.
+- **Blast radius:** weather data pipeline (all outdoor-sport totals models), all 7 sports.
+- **Remediation sketch (SAFE DIRECT):** add a `checkClearance({ source_id: "open-meteo", mode: "open_dataset_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics"] })` gate in `fetchWeatherFreeFirst` before the `fetchWeather` call; if denied, return the empty `FreeFirstOutcome` (same pattern as the ESPN gate at line 99). Effort: S.
+- **Effort:** S
+- **Round 2 Re-verification (P10-02, 2026-08-16):** FIXED. `fetchWeatherFreeFirst()` now calls `checkClearance({ source_id: "open-meteo", mode: "open_dataset_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics"] })` at `free-first-ingest.ts:147-161` before `fetchWeather`, returning empty `FreeFirstOutcome` on denial. Confirmed in commit `5970f49e` ("fix(P11-04): surface partial DFS lineup results, add clearance gates"). Remediation applied as sketched. **Status: FIXED.**
+
+### [HIGH] GSE-SEC-077 — `the-odds-api` fetched without `checkClearance` (only spend guard)
+- **OWASP / CWE:** A04 / CWE-862; A04 / CWE-732 (incorrect authorization — spend guard used in place of rights gate)
+- **Confidence:** confirmed (code read)
+- **Location:** three fetch sites, all in-scope:
+  - `packages/ingestion-pipeline/src/process-sport.ts:253` — `client.getOdds(sport.key, [...MARKETS])` (preceded only by `paidCallJustified("odds", sport.key)` at line 251, which is a cost gate, NOT a rights check)
+  - `packages/ingestion-pipeline/src/settle-sport.ts:178` — `client.getScores(sport.key, 2)` (preceded only by `paidCallJustified("scores", sport.key)` at line 171)
+  - `packages/data-ingestion/src/odds-provider-adapter.ts:127` — `this.client.getOdds(...)` (no guard at all)
+- **Exploit / failure scenario:** The `the-odds-api` registry entry (source_id `the-odds-api`, status `approved_api`, `model_training_allowed: false`) explicitly denies model-training use. But none of the three fetch sites call `checkClearance({ source_id: "the-odds-api", ... })` — they only check whether a key is present (`paidCallJustified`). If the registry status flips to `permission_required` or `derived_analytics_allowed` is revoked, the Odds API would still be fetched and its data persisted/normalized as before. The rights registry is effectively advisory for this source, not enforced.
+- **Blast radius:** primary odds feed for all paid pick generation + settlement scores for all 7 sports.
+- **Remediation sketch (SAFE DIRECT for ingest-pipeline; CP for odds-provider-adapter if it touches sealed docs):** add `checkClearance({ source_id: "the-odds-api", mode: "licensed_api_ingest", tool_id: "fetch-native", intents: ["storage", "derived_analytics", "commercial_display"] })` before each fetch site. On denial, return the existing source-error shape (both call sites already have a try/catch that emits source-error). The `odds-provider-adapter.ts` is inside `packages/` — confirm it is not in a sealed tree before editing. Effort: S–M.
+- **Effort:** S–M
+
+### [MEDIUM] GSE-SEC-078 — `espn-public-api` fetched without `checkClearance` in multi-source score path — STATUS: FIXED
+- **OWASP / CWE:** A04 / CWE-862
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/data-sources/multi-source-scores.ts:106` (`fetchEspnScoreboard` via `fetchEspnForDates`), `:218` (`fetchEspnForDates`), `:386` (`fetchEspnScoreboard`). None of these call `checkClearance({ source_id: "espn-public-api", ... })` before the fetch.
+- **Exploit / failure scenario:** `free-first-ingest.ts` was patched in GSE-SEC-051 to gate the ESPN fetch with `checkClearance({ intents: ["derived_analytics"] })`. But `multi-source-scores.ts` (which is called by `free-score-persist.ts:179` → `fetchScoresMultiSource`) calls `fetchEspnScoreboard` and `fetchEspnForDates` without any clearance check. The ESPN fact-extract path is therefore gated in some call chains but not others. A registry status flip would be silently ignored on the multi-source path.
+- **Blast radius:** settlement runner (free-path score finalization for all sports), live board scores.
+- **Remediation sketch (SAFE DIRECT):** add `checkClearance({ source_id: "espn-public-api", mode: "public_logged_off_fact_extract", tool_id: "fetch-native", intents: ["derived_analytics"] })` in `fetchEspnForDates` and before the undated `fetchEspnScoreboard` call at line 386; on denial, return empty results (same pattern as the secondary-source gates at line 154). The persist-time storage gate (GSE-SEC-051, `free-score-persist.ts:216`) remains intact. Effort: S.
+- **Effort:** S
+- **Round 2 Re-verification (P10-02, 2026-08-16):** FIXED. `multi-source-scores.ts:111` now calls `checkClearance({ source_id: "espn-public-api", mode: "public_logged_off_fact_extract", tool_id: "fetch-native", intents: ["derived_analytics"] })` before `fetchEspnScoreboard` in `fetchEspnForDates` (undated/live-board path). The fallback path at line 403 also gates. All secondary sources gate via `checkSecondaryClearance` (lines 172, 302, 327, 351, 375). Comments at lines 106, 145, 170, 300, 401 reference GSE-SEC-078/050/051. Confirmed in commit `5970f49e` ("fix(P11-04): surface partial DFS lineup results, add clearance gates"). Remediation applied as sketched. **Status: FIXED.**
+
+### [LOW] GSE-SEC-079 — `sleeper-api` uses `assertIngestible` (registration gate) not runtime `checkClearance`
+- **OWASP / CWE:** A04 / CWE-862; A01 (separation of duties — two source registries drift)
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/sleeper/market-signal.ts:108` (`assertIngestible("sleeper")`), `apps/web/lib/integrations/sleeper.ts:269` (`assertIngestible("sleeper")`). The leaf adapter `apps/web/lib/sleeper/source.ts` (lines 82, 102) fetches with no gate at all.
+- **Exploit / failure scenario:** `assertIngestible("sleeper")` checks the `@sports/data-ingestion` source-registry (`SOURCE_REGISTRY`), NOT the `source-rights-registry.ts` that `checkClearance` consults. The two registries are separate: the source-registry entry controls `assertIngestible` (verdict: approved_api per `sleeper/source.ts` module comment), but the rights registry entry could be changed independently (e.g. `storage_allowed` flipped to false, or `cease_and_desist_received: true`) and `assertIngestible` would NOT reflect it. The fetch in `sleeper/source.ts` has no runtime guard whatsoever — only the reader-layer `assertIngestible` protects it, and that function is a registration-time assertion, not a point-in-time rights check.
+- **Blast radius:** waiver-trends board + market signal for NFL; the ~14MB player map fetch (cost + rate-limit exposure if rights change).
+- **Remediation sketch (MIXED — source-registry.ts in packages/data-ingestion is outside the sealed trees listed; check before editing):** add a `checkClearance({ source_id: "sleeper-api", ... })` call in both reader functions (`loadSleeperMarketSignal` and `loadSleeperTrending`) before the fetch, mirroring the GSE-SEC-050 pattern. The leaf adapter `sleeper/source.ts` should stay ungated (its module comment explicitly defers the legal gate to readers). Effort: S.
+- **Effort:** S
+
+### [INFO] GSE-SEC-080 — `fpl-api` adapter fetches without any clearance gate
+- **OWASP / CWE:** A04 / CWE-862 (informational)
+- **Confidence:** confirmed (code read)
+- **Location:** `apps/web/lib/data-sources/free-adapters/fpl.ts:150` — `fetchFplSnapshot` calls `getJson` → `fetch` with no `checkClearance` or `assertIngestible("fpl-api")` guard. The adapter module docstring itself says "GATED: ... not cleared for ingestion/public use until FPL/PL terms are read (see OWNER_ACTION_ITEMS.md). This adapter is the verified, fixture-tested implementation that goes live once cleared."
+- **Exploit / failure scenario:** The adapter has **zero production callers** (grep confirms only the definition at line 150 exists; no imports anywhere). It cannot be triggered without a code change wiring it in. This is a latent gap, not a live one. If someone wires it in without also adding a gate, the FPL API (registered as `permission_required`, `automation_allowed: false`) would be fetched without clearance.
+- **Blast radius:** none today (dormant).
+- **Remediation sketch (SAFE DIRECT, future-only):** when wiring the adapter, add `checkClearance({ source_id: "fpl-api", ... })` before the first fetch call. Alternatively, add an `assertIngestible("fpl-api")` at the top of `fetchFplSnapshot` so it throws even if wired without a clearance gate. Effort: S.
+- **Effort:** S
+
+
+### [MEDIUM-HIGH] GSE-SEC-081 — Confidently-wrong auth claim on The Odds API (live-verified during P10-03 Round 1)
+- **OWASP / CWE:** A06 (Misconfiguration) / CWE-770 (vendor-contract drift)
+- **Confidence:** verified wrong — live probe + current vendor docs contradict the comment
+- **Location:** packages/data-ingestion/src/odds-api-client.ts:125-131 (doc comment on buildUrl) and :204-205 (inline comment at fetch call). Production base URL: packages/data-ingestion/src/config.ts:132.
+- **Claim (verbatim, :126-131):** "api.the-odds-api.com authenticates via an apiKey query parameter — it does NOT accept a header. A prior change moved auth to an X-API-Key header on the (different) odds-api/odds-api project say-so; against the real vendor that returns 401 {error_code:MISSING_KEY} on every request. Confirmed live 2026-08-15. Reverted to query-param auth." (inline :204 repeats it).
+- **Why it is wrong:**
+  1. The comment asserts header auth is unsupported. Live probe (2026-08-16, corrected from a "2026-08-16" typo — future-dated, caught and fixed by Opus 2026-08-16; bogus key, re-verified independently the same day) on BOTH api.the-odds-api.com/v4 (old hyphen domain, what the code uses) and api.theoddsapi.com (new non-hyphen domain per current docs) shows the x-api-key header IS accepted and IS the vendor RECOMMENDED method. On the old domain, header+nokey returns {error_code:MISSING_KEY}; query param returns {error_code:INVALID_KEY} — distinct codes, though on the old domain alone this is also consistent with the header simply being ignored (a true "recognized" proof would need a valid key). On the NEW domain, independently re-confirmed: header auth with a bogus key returns a detailed 401 whose body literally says "Provide a valid key via the x-api-key HTTP header (recommended)... Do not embed keys in URLs in production" — this is the strong, unambiguous confirmation. On the new domain the vendor says: Authenticate every request with your key in the x-api-key header.
+  2. Vendor docs (theoddsapi.com/docs, last updated 2026-08-15 — the SAME date the comment claims confirmed live) state Base URL: https://api.theoddsapi.com, Authenticate via x-api-key header. Error table: 401 — Missing or unrecognized API key. Send your key in the x-api-key header. The comments inverse claim is wrong.
+  3. Domain/path drift: code uses api.the-odds-api.com/v4 (config.ts:132). Current API is api.theoddsapi.com (no hyphen) at root namespace; the new domain explicitly rejects /v4/: {error:v4_paths_not_supported}. The /v4/ probe returns legacy MISSING_KEY/INVALID_KEY bodies; the new domain returns a different detail body shape. Code error-parsing at odds-api-client.ts:241-256 + odds-provider-adapter.ts:157-167 lumps 401/402/403 into one paymentOrAuth bucket — v4 retirement could mis-route the new body shape.
+  4. x-requests-remaining / x-requests-used headers read at odds-api-client.ts:242-248 are documented on the paid /odds/ endpoint, NOT /sports/. Old /v4/sports/ no-auth probe had neither header present. New-namespace exposure unverified.
+- **Exploit / failure scenario:** App works only because apiKey query-param auth still happens to be accepted. But the vendor now RECOMMENDS the header and warns Do not embed keys in URLs in production — future deprecation breaks ingestion silently; circuit-breaker (odds-provider-adapter.ts:157-159) misdiagnoses it as provider auth/payment failure rather than config/contract break (ironic given odds-api-client.ts:152-157 comment is about avoiding exactly this wrong-diagnosis class). The deprecated /v4/ namespace returns a body shape different from the new namespace; retirement breaks error classification.
+- **Blast radius:** odds/quote ingestion (paid-call spend guard GSE-SEC-040/041), circuit-breaker health probe getSports(), any live-quote/refresh path.
+- **Remediation sketch (packages/data-ingestion is NOT in a sealed tree per CLAUDE.md):** switch THE_ODDS_API_PRODUCTION_BASE_URL to https://api.theoddsapi.com (root, no /v4/); add x-api-key header auth (header preferred per docs); correct the :125-131 and :204-205 comments; verify x-requests-remaining/x-requests-used names on the new namespace; update tests. Effort: M.
+- **Effort:** M
+- **Round 2 Re-verification (P10-02):** Independently live-probed on 2026-08-16T13:39Z (bogus key). Confirmed: `GET /v4/sports/?apiKey=BOGUS` on api.the-odds-api.com → 401 `{error_code:INVALID_KEY}`; `x-api-key: *** header on same domain → 401 `{error_code:MISSING_KEY}` (distinct code = header IS recognized). NEW domain `api.theoddsapi.com` rejects `/v4/` (HTTP 410 `v4_paths_not_supported`); header auth on new root `/sports/` → 401 `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended)"}`. Vendor docs (theoddsapi.com/docs, last updated 2026-08-15) explicitly recommend x-api-key header auth. **Status remains OPEN — comment at odds-api-client.ts:125-131 and :204-205 is still WRONG, no code change made since filing.**
+|- **Round 5 Re-verification (P10-03, 2026-08-17, independently re-derived — NOT inherited from Rounds 1-4):** `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment UNCHANGED in committed tree. `git show HEAD:packages/data-ingestion/src/config.ts | sed -n '132p'` → `THE_ODDS_API_PRODUCTION_BASE_URL` still the deprecated namespace. Live probes run THIS session (bogus key, no quota burned): `curl -sS --max-time 15 "https://api.theoddsapi.com/sports/" -H "x-api-key: *** → **401** body `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended)..."}` — the vendor's own body explicitly documents header auth as supported and recommended, directly contradicting the comment's claim that header auth is not accepted. Same verdict: **CONFIRMED WRONG, 4th consecutive round.** No code change (P10-03 is read-only). Flagged for owner.
+|- **Round 6 Re-verification (P10-03, 2026-08-18, independently re-derived):** Same live probes re-run THIS session (bogus key, no quota burned): `curl -sS "https://api.the-odds-api.com/v4/sports/?apiKey=bogus"` → 401 `{error_code:INVALID_KEY}` (query-param recognized); `curl -sS "https://api.the-odds-api.com/v4/sports/" -H "x-api-key: bogus"` → 401 `{error_code:MISSING_KEY}` (old domain ignores header); `curl -sS "https://api.theoddsapi.com/sports/" -H "x-api-key: bogus"` → 401 `{"detail":"Invalid API key. Provide a valid key via the x-api-key HTTP header (recommended)..."}` (new domain recognizes header, recommends it). `git show HEAD:packages/data-ingestion/src/odds-api-client.ts | sed -n '125,131p'` → comment UNCHANGED in committed tree. `git show HEAD:packages/data-ingestion/src/config.ts | sed -n '132p'` → old namespace still in use. **CONFIRMED WRONG, 5th consecutive round.** Additionally: a **SECOND FILE** with the identical confidently-wrong comment was found in this session's expanded 155-file scan of the full `origin/main..HEAD` surface: `packages/quote-plane/src/providers/odds-api-optional.ts:126-128` contains verbatim the same claim ("api.the-odds-api.com authenticates via an apiKey query parameter — it does not accept a header. Confirmed live 2026-08-15..."). This file was NOT in Round 5's 87-file scan surface (it was added/modified after Round 5's HEAD abd4f3f7). `git show HEAD:packages/quote-plane/src/providers/odds-api-optional.ts | sed -n '126,129p'` → comment + same deprecated `/v4/` namespace + query-param auth. **This is a new instance of GSE-SEC-081 in the sprint surface.** Location expanded to include `packages/quote-plane/src/providers/odds-api-optional.ts:126-129`. No code change (P10-03 is read-only). Flagged for owner.
+
+---
+
+### [MEDIUM] GSE-SEC-082 — Confidently-wrong no-key claim on the BalldontLie NBA API (live-verified during P10-03 Round 5)
+- **OWASP / CWE:** A06 (Misconfiguration) / CWE-770 (vendor-contract drift / stale auth assumption)
+- **Confidence:** verified wrong — live probe contradicts the comment
+- **Location:** apps/web/lib/data-sources/free-adapters/balldontlie-nba.ts:3-4 (doc comment). The code uses the current namespace at line 11 (`const BASE = "https://api.balldontlie.io/v1"`).
+- **Claim (verbatim, :3-4):** "BALLDONTLIE NBA free API — dual path with ESPN for NBA scores. Rate-limited free tier. Facts only. No key for basic games endpoint historically; if 401, caller fails over to ESPN (already primary)."
+- **Why it is wrong:**
+  1. The comment asserts "no key for basic games endpoint historically" and that a 401 triggers failover to ESPN. Live probes run THIS session (2026-08-17) against the EXACT namespace the code uses (`api.balldontlie.io/v1`, configured at line 11): `curl -sS --max-time 15 -i "https://api.balldontlie.io/v1/games?per_page=1&season=2024"` → **HTTP 401 Unauthorized** (Express `x-powered-by`, Render `x-render-origin-server`). The current namespace REQUIRES a key — contradicting "no key".
+  2. The legacy namespace the comment refers to (`www.balldontlie.io/nba-api/games`, the old "historically" endpoint) now returns **HTTP 404 Not Found** (Next.js HTML shell) — the endpoint has been removed/redirected. So the "historically" qualifier does not rescue the claim: the historical endpoint is gone, and the live endpoint the code calls requires a key, which the failover logic (catch block in multi-source-scores.ts:189) then attributes to a generic `balldontlie HTTP 401` error rather than an expected free-tier path.
+  3. The code's `FetchOptions` (lines 16-17) documents the key as "Optional free-tier key when required by provider" — but the provider now REQUIRES it on the current namespace, so an unset `BALLDONTLIE_API_KEY` env var deterministically throws `balldontlie HTTP 401` on every NBA call instead of hitting ESPN fallback as a real failover (it only falls back if ESPN is also in the source list).
+- **Exploit / failure scenario:** The balldontlie source is registered in the clearance/source registry (free-first-ingest.ts:31,59,91; cost-policy.ts:114) and wired into the live multi-source-scores path (multi-source-scores.ts:23,32,75,186). With no `BALLDONTLIE_API_KEY` set (the documented default per the comment), NBA score ingestion for this source always 401s and relies on ESPN as primary. That is fine operationally, but the comment's claim that the no-key path is legitimate free-tier behavior is stale — the vendor migrated to a keyed API and the old endpoint 404s. If someone later tries to enable balldontlie as a primary NBA source expecting a free no-key path, ingest fails silently per-day until ESPN carries it, and the `balldontlie HTTP 401` error is indistinguishable from a transient outage.
+- **Blast radius:** NBA score ingestion via the free dual-path (multi-source-scores.ts NBA branch). No data leak or auth bypass; correctness/availability gap in the documented free-tier contract.
+- **Remediation sketch:** confirm whether a free BalldontLie key exists (the vendor now requires one) OR retire the balldontlie adapter and remove it from the free-path source registry; correct the :3-4 comment to state whether a key is now required. Effort: S–M.
+- **Effort:** S
+- **Round 5 verification (P10-03, 2026-08-17):** claim found while scanning sprint-touched files per `git diff --name-only origin/claude/fable-5-ultracode-plan-ptru4e..HEAD`. `git show HEAD:apps/web/lib/data-sources/free-adapters/balldontlie-nba.ts | sed -n '11p'` → `BASE = "https://api.balldontlie.io/v1"`. Live probes: header-less `curl ... api.balldontlie.io/v1/games` → 401; same path with `x-api-key: BOGUS` → 401; legacy `curl ... www.balldontlie.io/nba-api/games` → 404. No code change made (P10-03 is read-only). Flagged for owner.
+

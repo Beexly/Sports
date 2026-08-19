@@ -47,10 +47,22 @@ export function BudgetOverrideControl({
           reason,
         }),
       });
-      const payload = (await response.json().catch(() => ({}))) as OverrideResponse;
+      let payload: OverrideResponse;
+      try {
+        payload = (await response.json()) as OverrideResponse;
+      } catch {
+        setError(
+          `Override response from /api/cockpit/api-costs/override was not JSON (HTTP ${response.status}). Check the route and try again.`,
+        );
+        return;
+      }
 
       if (!response.ok || !payload.success) {
-        setError(payload.message ?? payload.error ?? "Override update failed.");
+        setError(
+          payload.message ??
+            payload.error ??
+            `Override update failed (HTTP ${response.status}). Add a reason ≥12 chars and retry.`,
+        );
         return;
       }
 

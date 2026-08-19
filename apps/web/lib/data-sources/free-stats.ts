@@ -17,7 +17,7 @@ import type { Sport } from "./source-router";
 
 export type Clock = () => number;
 
-type CacheEntry<T> = { readonly value: T; readonly expiresAt: number };
+type CacheEntry<T> = { readonly value: T; readonly expiresAt: number; readonly fetchedAt: number };
 
 export type FreeStatsResult<T> = {
   readonly data: T;
@@ -52,15 +52,15 @@ export class FreeStats {
     this.timeoutMs = opts.timeoutMs;
   }
 
-  private async memoize<T>(key: string, ttl: number, load: () => Promise<T>): Promise<{ value: T; cached: boolean }> {
+  private async memoize<T>(key: string, ttl: number, load: () => Promise<T>): Promise<{ value: T; cached: boolean; fetchedAt: number }> {
     const now = this.clock();
     const hit = this.cache.get(key);
     if (hit && hit.expiresAt > now) {
-      return { value: hit.value as T, cached: true };
+      return { value: hit.value as T, cached: true, fetchedAt: hit.fetchedAt };
     }
     const value = await load();
-    this.cache.set(key, { value, expiresAt: now + ttl });
-    return { value, cached: false };
+    this.cache.set(key, { value, expiresAt: now + ttl, fetchedAt: now });
+    return { value, cached: false, fetchedAt: now };
   }
 
   private opts() {
@@ -68,32 +68,32 @@ export class FreeStats {
   }
 
   async scores(sport: Sport): Promise<FreeStatsResult<readonly NormalizedGame[]>> {
-    const { value, cached } = await this.memoize(`scores:${sport}`, TTL.scores, () =>
+    const { value, cached, fetchedAt } = await this.memoize(`scores:${sport}`, TTL.scores, () =>
       fetchEspnScoreboard(sport, this.opts()),
     );
-    return { data: value, sourceId: "espn-public-api", cached, fetchedAt: this.clock() };
+    return { data: value, sourceId: "espn-public-api", cached, fetchedAt };
   }
 
   async rankings(sport: Sport): Promise<FreeStatsResult<readonly RankingPoll[]>> {
-    const { value, cached } = await this.memoize(`rankings:${sport}`, TTL.rankings, () =>
+    const { value, cached, fetchedAt } = await this.memoize(`rankings:${sport}`, TTL.rankings, () =>
       fetchEspnRankings(sport, this.opts()),
     );
-    return { data: value, sourceId: "espn-public-api", cached, fetchedAt: this.clock() };
+    return { data: value, sourceId: "espn-public-api", cached, fetchedAt };
   }
 
   async standings(sport: Sport): Promise<FreeStatsResult<Standings>> {
-    const { value, cached } = await this.memoize(`standings:${sport}`, TTL.standings, () =>
+    const { value, cached, fetchedAt } = await this.memoize(`standings:${sport}`, TTL.standings, () =>
       fetchEspnStandings(sport, this.opts()),
     );
-    return { data: value, sourceId: "espn-public-api", cached, fetchedAt: this.clock() };
+    return { data: value, sourceId: "espn-public-api", cached, fetchedAt };
   }
 
   async weather(latitude: number, longitude: number): Promise<FreeStatsResult<WeatherResult>> {
     const key = `weather:${latitude.toFixed(3)},${longitude.toFixed(3)}`;
-    const { value, cached } = await this.memoize(key, TTL.weather, () =>
+    const { value, cached, fetchedAt } = await this.memoize(key, TTL.weather, () =>
       fetchWeather(latitude, longitude, this.opts()),
     );
-    return { data: value, sourceId: "open-meteo", cached, fetchedAt: this.clock() };
+    return { data: value, sourceId: "open-meteo", cached, fetchedAt };
   }
 
   /** Test/ops helper. */

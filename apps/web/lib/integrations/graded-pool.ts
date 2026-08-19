@@ -364,9 +364,11 @@ export async function loadSleeperInjuryDisplay(fetcher: FetchLike): Promise<Slee
     }
     // Envelope: the extracted facts carry the RightsSnapshot captured at
     // extraction time (throws if clearance were not granted).
+    // flagged pool data is factual (player pool stats); pass "fact" so the
+    // DATA_RULES gate in wrapExtractedRecord is consulted — GSE-SEC-055.
     const record = wrapExtractedRecord(clearance, SLEEPER_PLAYERS_URL, {
       flagged: Object.fromEntries(byKey),
-    });
+    }, "fact");
     return { byKey, record };
   } catch {
     // enrichment only — a Sleeper failure never blocks the pool

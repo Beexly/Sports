@@ -40,7 +40,10 @@ export async function resolveStatsBillingTier(
 
   // 2) Query without session
   if (queryRaw) {
-    if (opts.allowQueryOnly || process.env.GSE_ALLOW_QUERY_TIER === "1") {
+    if (
+      (opts.allowQueryOnly || process.env.GSE_ALLOW_QUERY_TIER === "1") &&
+      process.env.NODE_ENV !== "production"
+    ) {
       return {
         tier: parseBillingTier(queryRaw),
         source: "query_dev",

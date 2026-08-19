@@ -15,18 +15,23 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  *     contract (which allow-lists this route) is unaffected.
  *   - At/above the floor: behavior is unchanged — the rate is present.
  *
+ * GSE-SEC-031: the route now uses a server-side SQL aggregation
+ * (db.$queryRaw with GROUP BY) instead of findMany loading every pick row.
+ * The mock returns pre-aggregated (sport, result, count) rows — exactly what
+ * the production query produces.
+ *
  * Mirrors the executed-handler + vi.mock("@sports/db") pattern from
  * picks-stale-kill-switch.test.ts.
  */
 
 const mocks = vi.hoisted(() => ({
   minSettledPicksForLearning: 100,
-  pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
+  queryRaw: vi.fn<(args: unknown) => Promise<unknown[]>>(),
 }));
 
 vi.mock("@sports/db", () => ({
   db: {
-    pick: { findMany: mocks.pickFindMany },
+    $queryRaw: mocks.queryRaw,
   },
 }));
 
@@ -41,20 +46,30 @@ vi.mock("@sports/prediction-engine", async (importOriginal) => {
   };
 });
 
-/** Build `count` settled picks for a single sport with `wins` wins. */
-function settledPicks(count: number, wins: number, sportName = "NFL"): unknown[] {
-  const out: unknown[] = [];
-  for (let i = 0; i < count; i++) {
-    out.push({
-      result: i < wins ? "WIN" : "LOSS",
-      game: { sport: { name: sportName } },
-    });
-  }
-  return out;
+/**
+ * Build pre-aggregated rows for one sport with the given win/loss/push
+ * counts. This is the shape the SQL GROUP BY query returns.
+ */
+function aggRows(
+  wins: number,
+  losses: number,
+  pushes: number,
+  sportName = "NFL"
+): Array<{ sport: string; result: string; count: number }> {
+  const rows: Array<{ sport: string; result: string; count: number }> = [];
+  if (wins > 0) rows.push({ sport: sportName, result: "WIN", count: wins });
+  if (losses > 0) rows.push({ sport: sportName, result: "LOSS", count: losses });
+  if (pushes > 0) rows.push({ sport: sportName, result: "PUSH", count: pushes });
+  return rows;
 }
 
-function pick(result: "WIN" | "LOSS" | "PUSH", sportName: string): unknown {
-  return { result, game: { sport: { name: sportName } } };
+/** Multi-sport fixture: 120 MLB picks (66 win/54 loss) + 7 NBA picks (0 win/7 loss). */
+function multiSportRows(): Array<{ sport: string; result: string; count: number }> {
+  return [
+    { sport: "MLB", result: "WIN", count: 66 },
+    { sport: "MLB", result: "LOSS", count: 54 },
+    { sport: "NBA", result: "LOSS", count: 7 },
+  ];
 }
 
 async function callPerformance(): Promise<{ status: number; body: Record<string, unknown> }> {
@@ -74,7 +89,7 @@ type PerfData = {
 describe("/api/performance — minimum-sample floor", () => {
   beforeEach(() => {
     mocks.minSettledPicksForLearning = 100;
-    mocks.pickFindMany.mockReset();
+    mocks.queryRaw.mockReset();
   });
 
   afterEach(() => {
@@ -83,7 +98,7 @@ describe("/api/performance — minimum-sample floor", () => {
 
   it("below floor: withholds the win rate (null) and flags insufficientSample", async () => {
     // 3 settled picks, 2 wins — would otherwise read "66.7%".
-    mocks.pickFindMany.mockResolvedValue(settledPicks(3, 2));
+    mocks.queryRaw.mockResolvedValue(aggRows(2, 1, 0));
 
     const { status, body } = await callPerformance();
     expect(status).toBe(200);
@@ -102,7 +117,7 @@ describe("/api/performance — minimum-sample floor", () => {
 
   it("at the floor: publishes the win rate normally", async () => {
     // Exactly 100 settled picks, 60 wins → 60.0%.
-    mocks.pickFindMany.mockResolvedValue(settledPicks(100, 60));
+    mocks.queryRaw.mockResolvedValue(aggRows(60, 40, 0));
 
     const { status, body } = await callPerformance();
     expect(status).toBe(200);
@@ -115,7 +130,7 @@ describe("/api/performance — minimum-sample floor", () => {
 
   it("above the floor: publishes the win rate normally", async () => {
     // 150 settled picks, 81 wins → 54.0%.
-    mocks.pickFindMany.mockResolvedValue(settledPicks(150, 81));
+    mocks.queryRaw.mockResolvedValue(aggRows(81, 69, 0));
 
     const { status, body } = await callPerformance();
     expect(status).toBe(200);
@@ -129,11 +144,7 @@ describe("/api/performance — minimum-sample floor", () => {
     // 120 MLB (over the floor) + 7 NBA (below it). Global = 127 >= 100, so
     // insufficientSample is false and MLB shows a rate — but NBA's "0% on 7"
     // must NOT publish; its count stays visible.
-    const rows = [
-      ...Array.from({ length: 120 }, (_, i) => pick(i < 66 ? "WIN" : "LOSS", "MLB")),
-      ...Array.from({ length: 7 }, () => pick("LOSS", "NBA")),
-    ];
-    mocks.pickFindMany.mockResolvedValue(rows);
+    mocks.queryRaw.mockResolvedValue(multiSportRows());
 
     const { body } = await callPerformance();
     const data = body["data"] as PerfData;
@@ -147,7 +158,7 @@ describe("/api/performance — minimum-sample floor", () => {
   });
 
   it("empty sample stays null (unchanged) and is flagged insufficient", async () => {
-    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.queryRaw.mockResolvedValue([]);
 
     const { status, body } = await callPerformance();
     expect(status).toBe(200);
@@ -155,5 +166,20 @@ describe("/api/performance — minimum-sample floor", () => {
     const data = body["data"] as PerfData;
     expect(data.overall.winRate).toBeNull();
     expect(data.insufficientSample).toBe(true);
+  });
+
+  it("GSE-SEC-031: query uses SQL GROUP BY (not findMany) — one row per sport+result, not one per pick", async () => {
+    mocks.queryRaw.mockResolvedValue(aggRows(2, 1, 0));
+
+    await callPerformance();
+
+    expect(mocks.queryRaw).toHaveBeenCalledTimes(1);
+    // The raw SQL query must contain a GROUP BY clause — the hallmark of the
+    // server-side aggregation that replaced the unbounded findMany.
+    const callArg = mocks.queryRaw.mock.calls[0][0];
+    const sqlString = typeof callArg === "string" ? callArg : String(callArg);
+    expect(sqlString).toMatch(/GROUP BY/i);
+    expect(sqlString).toMatch(/s\.name/i); // groups by sport name
+    expect(sqlString).toMatch(/p\.result/i); // and by result
   });
 });

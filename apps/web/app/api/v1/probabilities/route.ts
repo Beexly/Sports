@@ -20,9 +20,12 @@ export async function GET(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const key = extractB2bApiKey(req) ?? "";
-  const rl = rateLimitB2b(key, 30);
+  const rl = await rateLimitB2b(key, 30);
   if (!rl.ok) {
-    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+    return NextResponse.json(
+      { error: rl.status === 429 ? "Rate limit exceeded" : "Rate limit service unavailable" },
+      { status: rl.status },
+    );
   }
 
   if (isStubMode()) {

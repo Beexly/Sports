@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -19,7 +20,7 @@ import { SignalFragmentField } from "@/components/world/signal-fragment-field";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { loadNflverseUsagePulse } from "@/lib/nflverse/usage-pulse";
+import { NflverseLabDoor, NflverseLabDoorPlaceholder } from "@/components/landing/nflverse-lab-door";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 
@@ -33,10 +34,13 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage(): Promise<JSX.Element> {
-  const [stateResult, calibrationResult, nflversePulse] = await Promise.all([
+  // P16-01: loadNflverseUsagePulse() (a full-archive fetch) is deliberately
+  // NOT in this Promise.all. It is loaded inside the Suspense-bounded
+  // NflverseLabDoor component below so the page shell streams immediately
+  // instead of blocking on the nflverse archive.
+  const [stateResult, calibrationResult] = await Promise.all([
     loadBoardState(),
     loadPublicCalibrationReport(),
-    loadNflverseUsagePulse(),
   ]);
   const state = stateResult.data;
   const calibration = calibrationResult.data;
@@ -46,7 +50,6 @@ export default async function HomePage(): Promise<JSX.Element> {
   const gated = state.gatedTodayRows.length;
   const scoring = state.scoringNow.length;
   const settled = calibration.sampleSize;
-  const nflRows = nflversePulse.status === "live" ? nflversePulse.sourceRows : 0;
   // Honest degraded states. The loaders zero their counts on infra failure, a
   // shape byte-identical to a genuinely quiet board. Read the loader meta so an
   // outage is never dressed up as calm live truth ("Gate holding", "0 cleared ·
@@ -65,7 +68,6 @@ export default async function HomePage(): Promise<JSX.Element> {
   );
   const boardUnavailable =
     stateResult.meta.dataError === "DB_UNREACHABLE" || boardSuppressed;
-  const nflUnavailable = nflversePulse.status === "source-error";
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
@@ -168,20 +170,9 @@ export default async function HomePage(): Promise<JSX.Element> {
                 href="/board"
                 bar={boardUnavailable ? undefined : { a: cleared, b: gated }}
               />
-              <DoorCard
-                index={2}
-                label="The Lab"
-                decides="Who to trust this week, with every signal in one place."
-                stat={
-                  nflUnavailable
-                    ? "Live player data unavailable"
-                    : nflRows > 0
-                      ? `${nflRows.toLocaleString()} live player rows`
-                      : "Intake warming up"
-                }
-                action="Open the lab"
-                href="/players"
-              />
+              <Suspense fallback={<NflverseLabDoorPlaceholder />}>
+                <NflverseLabDoor />
+              </Suspense>
               <DoorCard
                 index={3}
                 label="Intelligence"
@@ -286,10 +277,10 @@ export default async function HomePage(): Promise<JSX.Element> {
         {/* The live-counts ledger band is a real operational readout. During a
             board outage/suppression its cleared/gated counts are zeroed, so we
             withhold the whole band rather than caption unverifiable zeros as
-            "Live counts". When only the nflverse source has errored, the board
-            counts stay real but the player metric is withheld, so an outage
-            never renders as the reassuring "Player intake / warming up". The
-            methodology cards below stay; they explain method, not live numbers. */}
+            "Live counts". The player-rows metric moved to the Suspense-bounded
+            NflverseLabDoor above (P16-01): nflverse errors surface there, not
+            here. The methodology cards below stay; they explain method, not
+            live numbers. */}
         <MethodologySection
           metrics={
             boardUnavailable
@@ -298,7 +289,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   settled,
                   cleared,
                   gated,
-                  ...(nflUnavailable ? {} : { playerRows: nflRows }),
+                  lastRefresh: state.lastRefresh,
                 }
           }
         />

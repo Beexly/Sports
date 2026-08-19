@@ -122,15 +122,28 @@ export class OddsApiClient {
     this.circuitBreaker = circuitBreaker ?? getOddsPaymentCircuitBreaker();
   }
 
-  private async fetch<T>(
-    path: string,
-    params: Record<string, string> = {}
-  ): Promise<OddsApiFetchResult<T>> {
+  /**
+   * Build the request URL. api.the-odds-api.com authenticates via an
+   * `apiKey` query parameter — it does not accept a header. A prior change
+   * moved auth to an `X-API-Key` header on the (different) odds-api/odds-api
+   * project's say-so; against the real vendor that returns
+   * `401 {"error_code":"MISSING_KEY"}` on every request. Confirmed live
+   * 2026-08-15. Reverted to query-param auth.
+   */
+  private buildUrl(path: string, params: Record<string, string> = {}): URL {
     const url = new URL(`${ODDS_API_BASE_URL}${path}`);
     url.searchParams.set("apiKey", this.apiKey);
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.set(key, value);
     }
+    return url;
+  }
+
+  private async fetch<T>(
+    path: string,
+    params: Record<string, string> = {}
+  ): Promise<OddsApiFetchResult<T>> {
+    const url = this.buildUrl(path, params);
 
     // Payment circuit: fail closed on prior 402 without burning more upstream calls.
     const circuit = this.circuitBreaker.tryAcquire();
@@ -188,6 +201,8 @@ export class OddsApiClient {
         // noStoreFetch: odds/scores MUST bypass Next's Data Cache — a cached
         // quota header + frozen bookmaker timestamps took the whole pipeline
         // down on 2026-07-10 (see no-store-fetch.ts).
+        // Auth is via the `apiKey` query param set in buildUrl (vendor-verified:
+        // api.the-odds-api.com returns 401 MISSING_KEY for header-only requests).
         response = await noStoreFetch(url.toString(), {
           signal: AbortSignal.timeout(ODDS_API_TIMEOUT_MS),
         });
@@ -204,6 +219,13 @@ export class OddsApiClient {
         );
       }
 
+      // GSE-SEC-041: a 429 (rate-limited / quota exhausted) is a signal to STOP,
+      // not a retryable transient error. Each retry on 429 spends another credit
+      // against a depleted quota, compounding the over-spend. Break immediately
+      // and throw the 429 out so callers see a rate-limited result.
+      if (response.status === 429) {
+        break;
+      }
       if (!isRetryableStatus(response.status) || attempt === this.retryOptions.maxRetries) {
         break;
       }

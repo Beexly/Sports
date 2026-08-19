@@ -81,9 +81,12 @@ describe("Structural invariants (GX-000/GG-001 shadow-only guarantees)", () => {
 
     const rootPkgPath = join(REPO_ROOT, "package.json");
     if (existsSync(rootPkgPath)) {
-      const rootPkg = JSON.parse(readFileSync(rootPkgPath, "utf8")) as { scripts?: Record<string, string> };
-      const chain = rootPkg.scripts?.["guardrails"] ?? "";
-      for (const guard of [
+      // The `guardrails` script delegates to run-all.mjs — the actual chain is
+      // defined there, so verify each guard is listed in that file.
+      const runAllPath = join(REPO_ROOT, "scripts/guardrails/run-all.mjs");
+      if (existsSync(runAllPath)) {
+        const chain = readFileSync(runAllPath, "utf8");
+        for (const guard of [
         "trust-gate",
         "model-freeze",
         "draft-only",
@@ -104,6 +107,7 @@ describe("Structural invariants (GX-000/GG-001 shadow-only guarantees)", () => {
       ]) {
         expect(chain, `guardrails chain is missing ${guard}`).toContain(guard);
       }
+    }
     }
   });
 

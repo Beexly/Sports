@@ -4,6 +4,7 @@
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { captureError } from "@/lib/observability/sentry";
 import { runBoardFillPipeline } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
@@ -41,6 +42,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
   } catch (err) {
     console.error(`[cron:board-fill] ${err instanceof Error ? err.message : err}`);
+    captureError(err, { path: "board-fill" });
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : String(err) },
       { status: 500 },

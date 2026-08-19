@@ -27,6 +27,12 @@ vi.mock("@sports/prediction-engine", () => ({
 
 import { loadBoardPasses } from "@/lib/board/passes";
 import { loadBoardState } from "@/lib/board/state";
+import { getEntitlements } from "@sports/types";
+
+// This suite exercises Gate Cam lane construction, not the paywall — pass a
+// PRO viewer so `market` reflects the real derived selection instead of the
+// tier-redacted "ALL_MARKETS" a FREE/anonymous viewer now receives.
+const proViewer = getEntitlements("PRO");
 
 const evaluatedAt = new Date("2026-05-22T15:30:00.000Z");
 
@@ -94,7 +100,7 @@ describe("board loaders with persisted gate decisions", () => {
       },
     ]);
 
-    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
 
     expect(result.meta.isSampleData).toBe(false);
     expect(result.data.openPicks).toBe(1);
@@ -167,5 +173,126 @@ describe("board loaders with persisted gate decisions", () => {
     const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
 
     expect(result.data.modelVersion).toBe("v5.0.0");
+  });
+
+  it("keeps identical pick counts for PRO and FREE viewers (no tier-based row drop)", async () => {
+    // Two picks: one FREE (tier="FREE"), one PREMIUM (tier="PREMIUM").
+    // Before the fix, the FREE viewer's query carried `tier: "FREE"` which dropped
+    // the premium row entirely, making openPicks vary by viewer tier.
+    const freePick = {
+      id: "pick_free",
+      gameId: "game_1",
+      selection: "BOS -1.5",
+      confidence: 68,
+      edgeScore: 60,
+      factorBreakdown: null,
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "FREE",
+      game: game(),
+    };
+    const premiumPick = {
+      id: "pick_premium",
+      gameId: "game_2",
+      selection: "LAD +2.0",
+      confidence: 82,
+      edgeScore: 75,
+      factorBreakdown: null,
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "PREMIUM",
+      game: game({ awayTeamName: "LAD", homeTeamName: "SF", currentEdgeIndex: 55 }),
+    };
+
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([freePick, premiumPick]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    const freeViewer = getEntitlements("FREE");
+    const proResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    const freeResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), freeViewer);
+
+    // Counts must be identical regardless of viewer tier.
+    expect(freeResult.data.openPicks).toBe(proResult.data.openPicks);
+    expect(freeResult.data.openPicks).toBe(2);
+    expect(freeResult.data.gatedToday).toBe(proResult.data.gatedToday);
+    expect(freeResult.data.sportsWatched).toBe(proResult.data.sportsWatched);
+
+    // Only the market field differs: PRO sees real selections, FREE sees "ALL_MARKETS".
+    // Every FREE-viewer row must be redacted to "ALL_MARKETS".
+    expect(freeResult.data.publishedToday.every((r) => r.market === "ALL_MARKETS")).toBe(true);
+    // PRO viewer must see at least one real selection (not all redacted).
+    expect(proResult.data.publishedToday.some((r) => r.market !== "ALL_MARKETS")).toBe(true);
+  });
+
+  it("redacts rankingP/rankingSource for FREE viewers (GSE-SEC-026)", async () => {
+    // rankingP and rankingSource are premium-only model internals.
+    // A FREE/anonymous viewer must never receive them.
+    const premiumPick = {
+      id: "pick_premium",
+      gameId: "game_2",
+      selection: "LAD +2.0",
+      confidence: 82,
+      edgeScore: 75,
+      factorBreakdown: {
+        consensusScore: 15,
+        marketDepthScore: 12,
+        edgeScore: 20,
+        rankingP: 0.723,
+        rankingSource: "independent_trueProb",
+        factors: [],
+      },
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "PREMIUM",
+      game: game({ awayTeamName: "LAD", homeTeamName: "SF", currentEdgeIndex: 55 }),
+    };
+
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([premiumPick]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    const freeViewer = getEntitlements("FREE");
+    const proResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    const freeResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), freeViewer);
+
+    // PRO viewer sees rankingP + rankingSource from the factor breakdown.
+    expect(proResult.data.publishedToday[0]?.rankingP).toBeCloseTo(0.723, 3);
+    expect(proResult.data.publishedToday[0]?.rankingSource).toBe("independent_trueProb");
+
+    // FREE viewer gets BOTH nulled out server-side.
+    expect(freeResult.data.publishedToday[0]?.rankingP).toBeNull();
+    expect(freeResult.data.publishedToday[0]?.rankingSource).toBeNull();
+  });
+
+  it("nulls rankingP for anonymous viewers (no entitlements)", async () => {
+    const premiumPick = {
+      id: "pick_1",
+      gameId: "game_1",
+      selection: "CHI -3.5",
+      confidence: 88,
+      edgeScore: 80,
+      factorBreakdown: {
+        consensusScore: 15,
+        marketDepthScore: 12,
+        edgeScore: 20,
+        rankingP: 0.912,
+        rankingSource: "blend_indep_conf",
+        factors: [],
+      },
+      generatedAt: evaluatedAt,
+      modelVersion: "v5.1.0",
+      tier: "PREMIUM",
+      game: game(),
+    };
+
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([premiumPick]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    // Anonymous = no entitlements passed -> isPremiumViewer defaults to false.
+    const anonymousResult = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"));
+    expect(anonymousResult.data.publishedToday[0]?.rankingP).toBeNull();
+    expect(anonymousResult.data.publishedToday[0]?.rankingSource).toBeNull();
   });
 });

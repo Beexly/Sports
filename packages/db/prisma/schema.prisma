@@ -3804,3 +3804,101 @@ model ComplianceException {
   @@index([status, controlId])
   @@map("compliance_exception")
 }
+
+// ============================================================
+// ENTITY GRAPH (ADR 005 — additive, not yet read by any surface)
+// Canonical reference for named things + typed, provenanced relations.
+// Doctrine: docs/brain/entity-graph.md
+// ============================================================
+
+enum EntityType {
+  player
+  team
+  coach
+  coordinator
+  league
+  season
+  game
+  venue
+  injury
+  practice_report
+  transaction
+  article
+  reporter
+  source
+  rumor_cluster
+  market
+  sportsbook
+  line
+  prop
+  model_output
+  pick
+  settlement
+  public_claim
+  fantasy_league
+  fantasy_team
+  fantasy_roster
+  fantasy_player
+  fantasy_matchup
+  fantasy_recommendation
+}
+
+model Entity {
+  id              String     @id @default(cuid())
+  entity_type     EntityType
+  canonical_name  String
+  /// Lowercased, punctuation-stripped resolution key ("A.J. Brown" -> "aj brown").
+  normalized_name String
+  /// "" means not sport-scoped (reporter, article, source). NOT nullable on
+  /// purpose: Postgres treats NULLs as distinct in a UNIQUE index, so a nullable
+  /// column here would silently permit duplicate canonical rows and defeat the
+  /// resolution invariant below.
+  sport           String     @default("")
+  /// Cross-source identity: { nflverse: "...", espn: "...", oddsApi: "..." }.
+  external_ids    Json?
+  /// Provenance tier per docs/brain/source-hierarchy.md (1 = most trusted).
+  source_tier     Int
+  /// Type-specific fields from the entity-graph doctrine tables.
+  attributes      Json?
+  first_seen_at   DateTime   @default(now())
+  last_seen_at    DateTime   @updatedAt
+
+  outgoing_edges EntityEdge[] @relation("EntityEdgeFrom")
+  incoming_edges EntityEdge[] @relation("EntityEdgeTo")
+
+  /// Resolution invariant: one canonical row per (type, normalized name, sport).
+  @@unique([entity_type, normalized_name, sport], map: "entities_type_name_sport_key")
+  @@index([entity_type])
+  @@index([sport])
+  @@index([last_seen_at])
+  @@map("entities")
+}
+
+model EntityEdge {
+  id             String    @id @default(cuid())
+  from_entity_id String
+  to_entity_id   String
+  /// belongs_to | plays | has | mentions | references | employs | plays_at ...
+  /// String rather than enum: the doctrine's relation list is still growing.
+  relation       String
+  /// Provenance is mandatory — an unsourced relationship is a fabricated one.
+  source_tier    Int
+  source_ref     String?
+  observed_at    DateTime
+  /// Temporal validity, so a trade does not delete history.
+  valid_from     DateTime?
+  valid_to       DateTime?
+  confidence     Int       @default(50)
+  metadata       Json?
+  created_at     DateTime  @default(now())
+
+  from_entity Entity @relation("EntityEdgeFrom", fields: [from_entity_id], references: [id], onDelete: Cascade)
+  to_entity   Entity @relation("EntityEdgeTo", fields: [to_entity_id], references: [id], onDelete: Cascade)
+
+  /// Re-ingesting the same observation is idempotent.
+  @@unique([from_entity_id, relation, to_entity_id, observed_at], map: "entity_edges_unique_observation")
+  @@index([from_entity_id, relation])
+  @@index([to_entity_id, relation])
+  @@index([observed_at])
+  @@map("entity_edges")
+}

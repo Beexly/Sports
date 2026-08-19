@@ -52,7 +52,8 @@ async function callRoute(): Promise<{ status: number; body: Record<string, unkno
     }),
   }));
   const mod = await import("@/app/api/sources/catalog/route");
-  const res = (await mod.GET()) as Response;
+  const req = new Request("http://localhost/api/sources/catalog");
+  const res = (await mod.GET(req as unknown as Parameters<typeof mod.GET>[0])) as Response;
   return { status: res.status, body: (await res.json()) as Record<string, unknown> };
 }
 

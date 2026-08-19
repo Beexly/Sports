@@ -252,6 +252,27 @@ describe("dfs optimizer", () => {
     }
   });
 
+  it("surfaces partial=true when fewer unique lineups are feasible than requested", () => {
+    // A deliberately tiny pool: 1 QB, 2 RB, 3 WR, 1 TE, 1 DST = exactly 1 unique
+    // feasible lineup (RB has 1 spare, so FLEX can swap the 2nd RB for a WR,
+    // giving 2 unique lineups max). Request 10 — the optimizer exhausts the
+    // feasible space early and must set partial=true.
+    const pool: DfsPlayer[] = [
+      mk("qb", "QB", "AAA", 8000, 20, 0.1),
+      mk("rb1", "RB", "AAA", 6000, 12, 0.1),
+      mk("rb2", "RB", "BBB", 5500, 11, 0.1),
+      mk("wr1", "WR", "AAA", 7000, 14, 0.1),
+      mk("wr2", "WR", "BBB", 6500, 13, 0.1),
+      mk("wr3", "WR", "CCC", 6000, 12, 0.1),
+      mk("te1", "TE", "AAA", 4000, 8, 0.1),
+      mk("dst1", "DST", "AAA", 3000, 6, 0.1),
+    ];
+    const res = generateLineups(base({ mode: "gpp" }), 10, 0.6, pool);
+    expect(res.requested).toBe(10);
+    expect(res.lineups.length).toBeLessThan(10);
+    expect(res.partial).toBe(true);
+  });
+
   it("contains no Math.random anywhere — the solver is fully deterministic", () => {
     const src = readFileSync(join(__dirname, "dfs-optimizer.ts"), "utf8");
     expect(src).not.toMatch(/Math\.random/);

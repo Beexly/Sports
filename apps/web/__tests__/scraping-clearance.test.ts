@@ -941,3 +941,73 @@ describe("RightsSnapshot — contract", () => {
     expect(result.rightsSnapshot!.snapshotted_at).toBe("2026-06-11T08:30:00.000Z");
   });
 });
+
+// ─── GSE-SEC-055: DATA_RULES consulted at the wrap boundary ───────────────────
+
+describe("PROOF 10 — wrapExtractedRecord consults DATA_RULES (GSE-SEC-055)", () => {
+  // Helper: build an allowed clearance for a real source.
+  function allowedClearance() {
+    return checkClearance({
+      source_id: "nflverse",
+      mode: "open_dataset_ingest",
+      tool_id: "fetch-native",
+      intents: ["storage"],
+    });
+  }
+
+  it("accepts an allowed category (fact) and records data_category", () => {
+    const clearance = allowedClearance();
+    expect(clearance.allowed).toBe(true);
+    const record = wrapExtractedRecord(
+      clearance,
+      "https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_2024.parquet",
+      { season: 2024, rows: 5432 },
+      "fact",
+    );
+    expect(record.data_category).toBe("fact");
+    expect(record.data).toMatchObject({ season: 2024, rows: 5432 });
+  });
+
+  it("rejects a blocked category (expression) at the wrap boundary", () => {
+    const clearance = allowedClearance();
+    expect(() =>
+      wrapExtractedRecord(clearance, "https://example.com/article", { body: "..." }, "expression"),
+    ).toThrow(/blocked from extraction/);
+  });
+
+  it("rejects a blocked category (personal_data) at the wrap boundary", () => {
+    const clearance = allowedClearance();
+    expect(() =>
+      wrapExtractedRecord(clearance, "https://example.com/users", { emails: [] }, "personal_data"),
+    ).toThrow(/blocked from extraction/);
+  });
+
+  it("rejects an unknown category string with a clear error", () => {
+    const clearance = allowedClearance();
+    expect(() =>
+      wrapExtractedRecord(clearance, "https://example.com/x", { x: 1 }, "bogus_category" as never),
+    ).toThrow(/unknown data category/);
+  });
+
+  it("omitting the category does not invoke the DATA_RULES check (backward compat)", () => {
+    const clearance = allowedClearance();
+    const record = wrapExtractedRecord(clearance, "https://example.com/x", { x: 1 });
+    expect(record.data_category).toBeNull();
+    expect(record.data).toMatchObject({ x: 1 });
+  });
+
+  it("throws for a blocked category even when the source itself is allowed", () => {
+    // Source rights and DATA_RULES are independent gates: an allowed source
+    // does NOT authorize extracting a blocked data category.
+    const clearance = allowedClearance();
+    expect(clearance.allowed).toBe(true);
+    expect(() =>
+      wrapExtractedRecord(
+        clearance,
+        "https://nflverse.example.com/roster",
+        { headshot: "base64..." },
+        "graphic",
+      ),
+    ).toThrow(/blocked from extraction/);
+  });
+});

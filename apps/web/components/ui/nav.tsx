@@ -1,10 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
-import { auth } from "@/lib/auth";
-import { MobileNav } from "@/components/ui/mobile-nav";
+import { Suspense } from "react";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 import { NavMenu } from "@/components/ui/nav-menu";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
 
 // Four doors, not ten. The 2026 IA condenses every public surface into four
 // primary doors — Board, Players, Intelligence, Fantasy & Daily — plus two
@@ -76,26 +74,20 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
   },
 ];
 
-function isEnvTrue(name: string): boolean {
-  return process.env[name]?.trim().toLowerCase() === "true";
-}
-
 /**
- * "Live Board" is a public trust claim. Only render when both:
- *   - LIVE_BOARD founder gate is on
- *   - canExposePublicPicks readiness gate is open
- * Otherwise hide — empty/off is honest; a green live chip while gated off is not.
+ * Nav — the Galaxy Sports Edge global navigation bar.
+ *
+ * P16-03: the auth-dependent right rail (NavAuth) was extracted into its own
+ * component file and wrapped in <Suspense>. Nav() is now a synchronous
+ * function component that never calls auth() — only shouldShowLiveBoardChip(),
+ * which is a synchronous env + readiness check. This lets all 86+ pages that
+ * render <Nav /> — including /pricing, /about, /faq — be statically
+ * prerendered. Only the session-aware right rail suspends, and its fallback
+ * (NavAuthFallback) mirrors the anonymous state so the page is never blank.
+ *
+ * Files: apps/web/components/ui/nav.tsx, apps/web/components/ui/nav-auth.tsx
  */
-function shouldShowLiveBoardChip(): boolean {
-  if (!isEnvTrue("LIVE_BOARD")) return false;
-  return getReadinessGates().canExposePublicPicks;
-}
-
-export async function Nav() {
-  const session = await auth().catch(() => null);
-  const user = session?.user ?? null;
-  const showLiveBoard = shouldShowLiveBoardChip();
-
+export function Nav() {
   return (
     <header className="nav">
       <div className="container nav-inner">
@@ -117,42 +109,9 @@ export async function Nav() {
           </nav>
         </div>
 
-        <div className="nav-right">
-          {showLiveBoard ? (
-            <span className="live-chip" data-testid="nav-live-chip">
-              <span className="dot" />
-              Live Board
-            </span>
-          ) : null}
-
-          <div className="desktop-auth">
-            {user ? (
-              <Link href="/dashboard" className="btn btn-ghost btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                <span style={{ display: "inline-flex", width: 22, height: 22, borderRadius: "50%", overflow: "hidden", background: "var(--titanium)" }}>
-                  {user.image ? (
-                    <Image src={user.image} alt={user.name ?? "User avatar"} width={22} height={22} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ) : (
-                    <span style={{ display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center", color: "var(--ion-white)", fontSize: 11, fontWeight: 600 }}>
-                      {user.name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? "U"}
-                    </span>
-                  )}
-                </span>
-                <span>{user.name ?? user.email}</span>
-              </Link>
-            ) : (
-              <>
-                <Link href="/auth/signin" className="btn btn-ghost btn-sm">
-                  Sign in
-                </Link>
-                <Link href="/pricing" className="btn btn-primary btn-sm">
-                  See plans
-                </Link>
-              </>
-            )}
-          </div>
-
-          <MobileNav />
-        </div>
+        <Suspense fallback={<NavAuthFallback />}>
+          <NavAuth />
+        </Suspense>
       </div>
     </header>
   );

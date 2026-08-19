@@ -12,6 +12,7 @@
  */
 import { fetchNflverse } from "@sports/data-ingestion";
 import { db, type Prisma } from "@sports/db";
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 
 export type PfrStatType = "pass" | "rec" | "rush";
@@ -115,6 +116,30 @@ export async function ingestPfrAdvStats(
 ): Promise<PfrAdvStatsIngestResult> {
   const now = options.now ?? new Date();
   const fetchTable: PfrFetcher = options.fetcher ?? fetchPfr;
+
+  // PFR-specific clearance: the pfr_advstats release is a separate rights
+  // entry (`pfr-advstats-via-nflverse`, permission_required) — NOT the generic
+  // nflverse CC-BY-4.0 envelope. Check it first; a denial blocks before any
+  // fetch or store. The generic nflverse gate still runs after, to capture the
+  // nflverse-side attribution snapshot for the data-access layer's own records.
+  const pfrClearance = checkClearance(
+    {
+      source_id: "pfr-advstats-via-nflverse",
+      mode: "open_dataset_ingest",
+      tool_id: "fetch-native",
+      intents: ["storage", "derived_analytics"],
+    },
+    now,
+  );
+  if (!pfrClearance.allowed) {
+    return {
+      status: "clearance-denied",
+      season,
+      statType,
+      rowsWritten: 0,
+      blocks: pfrClearance.blocks.map((b) => b.code),
+    };
+  }
 
   const gate = nflverseIngestionGate(now);
   if (!gate.ok) return { status: "clearance-denied", season, statType, rowsWritten: 0, blocks: gate.blocks };

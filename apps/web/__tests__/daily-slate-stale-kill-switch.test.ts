@@ -33,6 +33,7 @@ const mocks = vi.hoisted(() => ({
   pickFindFirst: vi.fn<(args?: unknown) => Promise<unknown>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
+  isPublicPicksSurfaceStale: vi.fn<() => Promise<boolean>>(),
   isStubMode: vi.fn<() => boolean>(),
   isDemoPicksEnabled: vi.fn<() => boolean>(),
   getSamplePicks: vi.fn<() => unknown[]>(),
@@ -46,6 +47,15 @@ vi.mock("@sports/db", () => ({
   isStubMode: mocks.isStubMode,
   isDemoPicksEnabled: mocks.isDemoPicksEnabled,
   getSamplePicks: mocks.getSamplePicks,
+}));
+
+// isPublicPicksSurfaceStale is the freshness gate the route calls directly.
+// Mock it per board-no-bet-detail.test.ts:34-36 precedent: the real
+// implementation now routes through resolveBoardSurface dual-mode logic and
+// may call db.pick.findFirst (unmocked shape here), causing false non-stale
+// resolution. Drive staleness through the gate directly instead.
+vi.mock("@/lib/data-reliability/public-freshness-gate", () => ({
+  isPublicPicksSurfaceStale: () => mocks.isPublicPicksSurfaceStale(),
 }));
 
 // Keep readiness real except for the two gates this route reads, so the
@@ -68,19 +78,21 @@ function minutesAgo(m: number): Date {
 async function callSlate(): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();
   const mod = await import("@/app/api/picks/daily-slate/route");
-  const res = (await mod.GET()) as unknown as Response;
+  const req = new Request("http://localhost/api/picks/daily-slate");
+  const res = (await mod.GET(req as unknown as Parameters<typeof mod.GET>[0])) as unknown as Response;
   return { status: res.status, body: (await res.json()) as Record<string, unknown> };
 }
 
 describe("/api/picks/daily-slate — stale-data kill switch", () => {
   beforeEach(() => {
     mocks.forceNoBetIfStale = false;
-    // Non-demo, non-stub: the route's normal "real data" path. The count is the
+    // Non-demo, non-stub: the route's normal \"real data\" path. The count is the
     // only DB read; give it a non-zero value so suppression is observable.
     mocks.pickCount.mockReset().mockResolvedValue(3);
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
     mocks.pickFindFirst.mockReset().mockResolvedValue(null);
     mocks.ingestionRunFindFirst.mockReset();
+    mocks.isPublicPicksSurfaceStale.mockReset();
     mocks.isStubMode.mockReset().mockReturnValue(false);
     mocks.isDemoPicksEnabled.mockReset().mockReturnValue(false);
     mocks.getSamplePicks.mockReset().mockReturnValue([]);
@@ -105,13 +117,13 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
     expect(data["lastUpdatedAt"]).not.toBeNull();
     // The freshness query must not run when the kill switch is off — this is
     // the byte-for-byte "no behavior change" guarantee.
-    expect(mocks.ingestionRunFindFirst).not.toHaveBeenCalled();
+    expect(mocks.isPublicPicksSurfaceStale).not.toHaveBeenCalled();
     expect(mocks.pickCount).toHaveBeenCalled();
   });
 
   it("flag ON + stale: returns a zeroed slate with no fresh timestamp", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(241) });
+    mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
 
     const { status, body } = await callSlate();
     const data = body["data"] as Record<string, unknown>;
@@ -130,7 +142,7 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
 
   it("flag ON + never-succeeded ingestion is treated as stale (zeroed slate)", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockResolvedValue(null);
+    mocks.isPublicPicksSurfaceStale.mockResolvedValue(true);
 
     const { status, body } = await callSlate();
     const data = body["data"] as Record<string, unknown>;
@@ -143,7 +155,7 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
 
   it("flag ON + fresh: serves the slate normally", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+    mocks.isPublicPicksSurfaceStale.mockResolvedValue(false);
 
     const { status, body } = await callSlate();
     const data = body["data"] as Record<string, unknown>;
@@ -152,13 +164,13 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
     expect(body["success"]).toBe(true);
     expect(data["totalPicks"]).toBe(3);
     expect(data["lastUpdatedAt"]).not.toBeNull();
-    expect(mocks.ingestionRunFindFirst).toHaveBeenCalledOnce();
+    expect(mocks.isPublicPicksSurfaceStale).toHaveBeenCalledOnce();
     expect(mocks.pickCount).toHaveBeenCalled();
   });
 
   it("flag ON + DB error on freshness query: fails OPEN (serves the slate)", async () => {
     mocks.forceNoBetIfStale = true;
-    mocks.ingestionRunFindFirst.mockRejectedValue(new Error("db down"));
+    mocks.isPublicPicksSurfaceStale.mockRejectedValue(new Error("db down"));
 
     const { status, body } = await callSlate();
     const data = body["data"] as Record<string, unknown>;

@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
 import { upsertPushSubscription } from "@/lib/push/subscription-db";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { parsePushSubscriptionInput } from "@/lib/push/validation";
 import { badRequestResponse, pushDbErrorResponse, unauthorizedResponse } from "@/lib/push/http";
+import { csrfOriginCheck } from "@/lib/auth/csrf-origin-guard";
 
 /**
  * POST /api/push/subscribe — register (or refresh) a browser's Web Push
@@ -20,9 +22,34 @@ import { badRequestResponse, pushDbErrorResponse, unauthorizedResponse } from "@
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request): Promise<NextResponse> {
+  // CSRF: reject cross-origin state-changing requests. Push subscriptions
+  // are browser-only (the Web Push API is unavailable outside a browser
+  // context), so a missing or mismatched Origin is never a legitimate caller.
+  const csrf = csrfOriginCheck(
+    request.headers.get("origin"),
+    request.headers.get("referer"),
+  );
+  if (!csrf.ok) {
+    return NextResponse.json(
+      { success: false, error: csrf.reason },
+      { status: 403 },
+    );
+  }
+
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) return unauthorizedResponse();
+
+  // Per-user throttle on this DB-write endpoint: stop one account from looping
+  // subscription upserts (defense-in-depth; same bucket pattern as checkout /
+  // explain). Limit copied from subscriptions/checkout (10/min is ample).
+  const limit = consumeRateLimit("push-subscribe", userId, 10, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please slow down and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
 
   let body: unknown;
   try {
@@ -36,7 +63,21 @@ export async function POST(request: Request): Promise<NextResponse> {
   const { endpoint, keys } = parsed.data;
 
   const result = await upsertPushSubscription(db, userId, endpoint, keys.p256dh, keys.auth);
-  if (!result.ok) return pushDbErrorResponse(result);
+  if (!result.ok) {
+    if (result.reason === "conflict") {
+      // GSE-SEC-034: endpoint already exists under a different user — refuse
+      // to re-own. Do NOT echo which user owns it (information leak); return a
+      // generic 409 so the caller can retry with their own device endpoint.
+      return NextResponse.json(
+        {
+          success: false,
+          error: "A subscription with this endpoint already exists for another account.",
+        },
+        { status: 409 },
+      );
+    }
+    return pushDbErrorResponse(result);
+  }
 
   return NextResponse.json({
     success: true,

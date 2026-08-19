@@ -98,7 +98,14 @@ export async function GET(request: Request) {
     });
   }
 
-  // ── Paid path (enrichment scores via Odds API) ───────────────────────────
+  // Settlement is backward-looking (grading games already played) and free —
+  // unlike refresh (forward-looking, billed), it must NEVER season-gate.
+  // workers/data-refresh/src/index.ts:88 and settle-sport.ts:83-85 make this
+  // contract explicit: refresh uses getInSeasonSports(), settlement always
+  // uses SUPPORTED_SPORTS, "so the two settlement paths can never drift."
+  // A prior change gated this on getInSeasonSports() too, which meant an
+  // MLB World Series game (played in November, after MLB's in-season window)
+  // could never settle on the paid path. Reverted 2026-08-15.
   const sportsToProcess = requestedSport
     ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
     : SUPPORTED_SPORTS;

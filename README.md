@@ -48,16 +48,16 @@ an admin login. They assume Postgres is available locally; everything past
 ### 2. Install + env
 
 ```bash
-cp .env.example .env.local
+cp .env.example apps/web/.env.local
 npm install
 ```
 
-Fill in `.env.local`. The minimum to open the cockpit locally:
+Fill in `apps/web/.env.local`. The minimum to open the cockpit locally:
 
 ```env
 # required for local cockpit
-DATABASE_URL="postgresql://user:password@localhost:5432/sports_platform"
-DIRECT_URL="postgresql://user:password@localhost:5432/sports_platform"
+DATABASE_URL="postgresql://user:***@localhost:5433/sports_platform"
+DIRECT_URL="postgresql://user:***@localhost:5433/sports_platform"
 NEXTAUTH_SECRET="<openssl rand -base64 32>"
 NEXTAUTH_URL="http://localhost:3000"
 GOOGLE_CLIENT_ID="<from Google Cloud Console>"

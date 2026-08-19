@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { getStripe, StripeConfigError, stripe } from "@/lib/stripe";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { tierFromPriceRef } from "@/lib/billing/price-ids";
+import { track } from "@/lib/analytics/events";
 
 // IMPORTANT: This route must receive the raw body for Stripe signature verification.
 // Next.js App Router does not parse the body automatically for route handlers.
@@ -15,10 +16,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
   }
 
+  // Acquire the Stripe client OUTSIDE the signature-try block: a missing
+  // STRIPE_SECRET_KEY makes the `stripe` Proxy throw StripeConfigError on
+  // property access (e.g. `stripe.webhooks`), which would otherwise land in the
+  // catch below and be misreported as a signature failure (400 "Invalid
+  // signature"). constructEvent needs only the webhook secret, not the API
+  // key, so fail CLOSED here with a 503 naming the correct env var.
+  let stripeClient: Stripe;
+  try {
+    stripeClient = getStripe();
+  } catch (err) {
+    if (err instanceof StripeConfigError) {
+      console.error(`Stripe webhook config error: ${err.message}`);
+      return NextResponse.json(
+        { error: "Stripe is not configured (STRIPE_SECRET_KEY is missing or blank)" },
+        { status: 503 }
+      );
+    }
+    throw err;
+  }
+
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = stripeClient.webhooks.constructEvent(
       body,
       signature,
       process.env["STRIPE_WEBHOOK_SECRET"]!
@@ -109,12 +130,23 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       // Fires when a user completes checkout. The subscription record may not
       // have the subscriptionId yet — retrieve and sync it now.
       const session = event.data.object as Stripe.Checkout.Session;
+      let completedTier: string | null = null;
       if (session.subscription) {
         const subscription = await stripe.subscriptions.retrieve(
           session.subscription as string
         );
+        // Classify the tier from the subscription's price items for the
+        // checkout_complete analytics event (inert no-op until a provider
+        // is wired — never collects PII, tier is a public plan name).
+        const priceObj = subscription.items.data[0]?.price;
+        const priceId = typeof priceObj === "string" ? priceObj : priceObj?.id;
+        const lookupKey = typeof priceObj === "string" ? null : priceObj?.lookup_key ?? null;
+        completedTier = tierFromPriceRef(priceId, lookupKey);
         await syncSubscription(subscription);
       }
+      // Conversion signal — a checkout session completed and entitlement was
+      // synced (or attempted). Inert no-op until a provider is wired.
+      track("checkout_complete", { tier: completedTier ?? "UNKNOWN" });
       // Reconcile the durable CheckoutAttempt (Phase 1P). Best-effort by
       // design: an unknown attempt id (pre-rollout session, replay, manual
       // Dashboard checkout) is a warn, never a webhook failure — the

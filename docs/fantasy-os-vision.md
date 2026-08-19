@@ -69,6 +69,49 @@ auto-published.)
 - **League sync (Sleeper/ESPN/Yahoo)** needs OAuth/keys → scaffolded, founder-wired.
 - Reduced-motion, accessibility, and lint/types/tests-green, same as decision-OS.
 
+## Build status (verified 2026-08-15)
+Status reflects what is actually committed and testable, not the original wish list.
+Source: file existence + test counts + clearance gating in the repo at `ec8acddc`
+(`feat(web): complete finished products; keep foundation dark`) and
+`f9c5ff5d` (`fix(web): zero unfinished public product surfaces`).
+
+Legend: **BUILT** = shipped, tested, surfaced, founder/legally gated as designed.
+**PARTIAL** = engine present + tested, but gated behind a founder-gated real-data
+feed (projections) or OAuth; not live as paying advice. **NOT BUILT** = only
+described in the vision, no committed code.
+
+| System / Tool | Status | What's committed | Gate |
+|---|---|---|---|
+| **League Twin** | BUILT (gated layer) | `lib/fantasy/league-twin.ts` + 8 tests + `league-twin-galaxy.tsx` + `/fantasy/league-twin` | Advice tier waits on live projections; spatial view renders a real Sleeper roster |
+| **GM Ledger + Process Grade** | BUILT | `lib/fantasy/gm-ledger.ts` + 6 tests (real SHA-256 Merkle root, inclusion proof, tamper detect) + `gm-ledger-view.tsx` + `/fantasy/gm-ledger` | Live decision history needs user roster events |
+| **GM Academy** | BUILT (gated) | `lib/fantasy/academy.ts` + 11 tests + `gm-academy.tsx` + `/fantasy/academy` | Teaches off committed Ledger decisions |
+| **GM Autopilot** | BUILT (gated surface) | `lib/fantasy/autonomy.ts` + 6 tests + `gm-autopilot.tsx` + `/fantasy/autopilot` | L2–L4 `founderGated` in code; proposes/records, never autonomous account writes |
+| **Draft Assistant** | BUILT | `lib/fantasy/draft.ts` + 21 tests + `draft-assistant.tsx` + `/fantasy/draft` | Tiers/VOR/scarce ADP run on cleared or illustrative pool depending on provider flag |
+| **Waiver & FAAB Advisor** | BUILT (gated) | `lib/fantasy/waivers.ts` + 5 tests + `waiver-board.tsx` + `/fantasy/waivers` | Needs roster sync + projections + market context |
+| **Lineup Optimizer / Start-Sit** | BUILT | `lib/fantasy/lineup.ts` + 6 tests + `lineup-optimizer.tsx` + `/fantasy/lineup` | Gated on live projections until backtest clears |
+| **Trade Analyzer** | BUILT | `lib/fantasy/trade.ts` + 6 tests + `trade-analyzer.tsx` + `/fantasy/trade` | Needs live player values + roster context |
+| **DFS Lineup MRI** | BUILT | `lib/fantasy/dfs-optimizer.ts` + 22 tests + `dfs-optimizer.tsx` + `/fantasy/dfs` | Salaries/projections stay gated; solver verified |
+| **Best Ball** | BUILT | `lib/fantasy/bestball.ts` + 16 tests + `bestball-board.tsx` + `/fantasy/bestball` | Illustrative pool now; real the moment projections flip |
+| **Scheme & Coaching Intelligence** | BUILT | `lib/fantasy/scheme.ts` + 7 tests + `scheme-intel.tsx` + `/fantasy/scheme` | Cascades fantasy value from coaching changes |
+| **Pick'em Edge / Props** | BUILT | `lib/fantasy/props.ts` + 10 tests + `props-edge.tsx` + `/fantasy/props` | Alt-line EV + entry math; needs live pick'em lines |
+| **Bye-Week Planner** | BUILT (folded in) | No standalone file; bye logic lives in `draft.ts` and `bestball.ts` (enrichment) + surfaced on the Draft/Best Ball pages | — |
+| **Contest Bay (pick'em paper)** | BUILT | `lib/contests/` + 9 tests (`contests-paper-board.test.ts`) + `/fantasy/contests` | Free skill-only paper board; no entry fee, no prize pool, no real money |
+| **DFS contest** | NOT BUILT | Referenced in the vision ("DFS … surfaces"); only the optimizer exists, not a contest entry/product | Held at the design layer |
+| **Squares** | NOT BUILT | No committed squares product; the word appears only as statistical terminology (chi-square) and UI copy ("wrong read, right result. The most dangerous square") | Deferred + founder/legal-gated |
+| **Survivor** | NOT BUILT | No committed survivor product; "survivor" appears only as a DB pre-filter comment | Deferred |
+| **Best Ball tooling** | BUILT | See row above | — |
+| **Read-only league sync (Sleeper)** | BUILT (live) | `lib/integrations/sleeper.ts` + `sleeper-sync.ts` + `sleeper-connect.tsx` (read-only, GET-only) + `/fantasy/connect` | ESPN/Yahoo OAuth still founder-gated; Sleeper is public read-only |
+| **Studio Brief / weekly media** | BUILT | `lib/fantasy/studio.ts` + 4 tests + `studio.ts` + `studio-brief.tsx` + `/fantasy/studio` | Drafts only; humans ship — never auto-publishes |
+| **The Beat (news triage)** | BUILT | `lib/fantasy/host.ts` + 9 tests + `the-beat/page.tsx` | News triage into the OS |
+| **DK CSV import** | BUILT | `lib/fantasy/dk-import.ts` + 6 tests + `dk-import-panel.tsx` | DFS salary ingestion |
+| **Free trial (depth-limited, server-side)** | BUILT | `lib/fantasy/free-trial.ts` + 8 tests | Enforced server-side; paid rows never serialized to client |
+
+**Net:** the two first-of-a-kind systems (League Twin, GM Ledger + Process Grade) are
+BUILT and tested; the full tool table is BUILT and tested; the real-money/chance
+surfaces (DFS contest, Squares, Survivor) are NOT BUILT — exactly as the doctrine
+gates require (real-money and squares ship only as designed experiences behind
+founder + legal/compliance review, never autonomously).
+
 ## Architecture
 
 Routes under `/fantasy/*`; shared illustrative data + pure logic in `lib/fantasy/`;
