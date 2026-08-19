@@ -49,6 +49,15 @@ function tmpStorePath(tag: string): string {
   return p;
 }
 
+// Each POST impersonates a distinct client: the route's public-form limit
+// (5/60s per IP) is durable Postgres in CI, which resetRateLimits() cannot
+// clear — a shared "anon" key made every POST after the fifth flap on the
+// 60s window boundary. TEST-NET-3 addresses, one per call.
+let ipSeq = 0;
+function nextClientIp(): string {
+  return `203.0.113.${++ipSeq}`;
+}
+
 afterEach(async () => {
   cleanup();
   resetRateLimits(); // keep the public-route rate limiter deterministic across tests
@@ -169,7 +178,7 @@ describe("POST /api/waitlist (local handler)", () => {
   function request(body: unknown): Request {
     return new Request("http://localhost/api/waitlist", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-forwarded-for": nextClientIp() },
       body: JSON.stringify(body),
     });
   }
@@ -201,7 +210,7 @@ describe("POST /api/waitlist (local handler)", () => {
     const res = await POST(
       new Request("http://localhost/api/waitlist", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-forwarded-for": nextClientIp() },
         body: "{not json",
       }),
     );
@@ -319,7 +328,7 @@ describe("submit-timing anti-bot guard (route)", () => {
   function req(body: unknown): Request {
     return new Request("http://localhost/api/waitlist", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-forwarded-for": nextClientIp() },
       body: JSON.stringify(body),
     });
   }
@@ -539,7 +548,7 @@ describe("honeypot anti-spam (route: A7)", () => {
   function request(body: unknown): Request {
     return new Request("http://localhost/api/waitlist", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-forwarded-for": nextClientIp() },
       body: JSON.stringify(body),
     });
   }

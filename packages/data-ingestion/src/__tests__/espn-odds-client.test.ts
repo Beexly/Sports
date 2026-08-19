@@ -3,14 +3,17 @@ import { fetchEspnOddsForSport } from "../espn-odds-client.js";
 
 describe("fetchEspnOddsForSport", () => {
   it("maps scoreboard + core odds into OddsApiEvent (h2h required)", async () => {
+    // The client drops events outside -6h..+21d of real now, so a fixed
+    // fixture date ages out of the window and silently empties events.
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
     const scoreboard = {
       events: [
         {
           id: "401",
-          date: "2026-08-10T23:00:00Z",
+          date: commenceSoon,
           competitions: [
             {
-              date: "2026-08-10T23:00:00Z",
+              date: commenceSoon,
               status: { type: { state: "pre", completed: false } },
               competitors: [
                 {
