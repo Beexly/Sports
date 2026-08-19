@@ -53,6 +53,19 @@ nothing below produces work, exit silently.
 6. **Re-arm**: if the 50-minute one-shot chain is broken (no pending send_later),
    re-arm it with the standard check-in message.
 
+## Token hygiene (added mid-night, founder-flagged)
+
+Unsubscribed from #435 PR activity at 08:03 UTC — each push was firing 4-5
+bot-echo wakes (Vercel building/ready, CodeRabbit draft-skip, duplicate
+owner-held AI-transport-boundary + guardrails CI), each one a full billed
+turn for zero new information. Do NOT re-subscribe. The hourly backstop
+sweep (step 4 above) already checks #435 CI directly — that's sufficient;
+it just doesn't react in real time, which is fine overnight.
+Also: batch related ledger/doc edits into ONE commit+push instead of
+pushing after every micro-edit — every push was the trigger for the wake
+cascade above, so fewer pushes = proportionally fewer echoes even before
+the unsubscribe.
+
 ## Hard rules (unchanged tonight)
 
 Push only to `claude/cron-config-placement-verify-qsl19t` (+ integrate-by-merge).
