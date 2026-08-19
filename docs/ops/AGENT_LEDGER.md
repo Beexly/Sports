@@ -82,21 +82,21 @@ the only copy, and nobody else can verify or build on it.
 | H-G | Suppression curve vs random and oracle baselines | hermes | UNPUSHED | local branch on founder machine, 63e84c32 |
 | H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | hermes | UNPUSHED | local branch on founder machine, 01868364 |
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
-| H-M | Cron no-op audit | hermes | BLOCKED | report proposes gating producer crons on publication flags; unsafe, see review 2026-08-19 |
+| H-M | Cron no-op audit | hermes | UNPUSHED | revised per review: data-driven early-return only (no-game-in-horizon skip, mirrors process-sport.ts quiet-board); ~60/day saved off-season, 0 in-season, 576/day flag-off figure withdrawn; hermes/h-m-cron-audit cd5086f7, local worktree |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2 |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
 | C-5 | PAVA forward-violation bug in calibration core | claude | DONE | 9627379 |
 | H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | OPEN | — |
-| F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | OPEN | — |
+| F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | OPEN | APPROVED 2026-08-19; row closes when the backup branches exist on origin |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
 | C-3 | Declare appliedPauseGroups + RUN_GENERATE_SIGNAL_SLATE | claude | DONE | 1d39021 |
 | C-4 | Agent ledger + guard | claude | DONE | 65e6474 |
 | X-1 | signup-workflow scaffolding | copilot | CANCELLED | fabricated feature; auth is Google OAuth only via PrismaAdapter, no signup flow exists |
 | X-2 | Delete CLAUDE_PROVIDER to fix AI routing | browser | CANCELLED | diagnosis wrong; unknown value yields zero cloud attempts and falls through to Anthropic direct, pinned by provider-mode-failsafe.test.ts |
-| F-1 | Rotate the Anthropic key found in CLAUDE_PROVIDER | founder | OPEN | — |
-| F-2 | Decide REFUND_REVOKES_ACCESS default | founder | OPEN | — |
-| F-3 | Promote or remove apps/web/app/api/v1 | founder | OPEN | — |
+| F-1 | Rotate the Anthropic key found in CLAUDE_PROVIDER | browser | OPEN | decision made (fable): rotate now; browser agent executes with founder watching, script in session log 2026-08-19 |
+| F-2 | Decide REFUND_REVOKES_ACCESS default | founder | OPEN | decision made (fable): stays OFF through H-K merge; flip to true after ONE observed production refund revokes correctly in logs; the env flip itself is a hands task |
+| F-3 | Promote or remove apps/web/app/api/v1 | claude | CLAIMED | — |
 
 <!-- LEDGER:END -->
