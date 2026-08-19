@@ -39,8 +39,10 @@ Honesty about protectability, because false comfort here is fatal:
    can copy the idea in a weekend; they cannot buy May–August 2026. Every
    day of operation widens this permanently. This is the core moat and it
    compounds automatically.
-2. **The incentive structure.** Zero-affiliate (decision F-6, resolved
-   below) is the claim capital can't copy without abandoning its revenue.
+2. **The incentive structure.** No sportsbook/DFS affiliate revenue
+   (decision F-6, resolved below) is the claim capital can't copy without
+   abandoning its revenue — the general non-gambling partner program is a
+   separate, non-conflicted line and is not part of this pledge.
 3. **The negative knowledge.** L-15/L-16 proved book-shade screens,
    copy-the-sharp-book signals, and steam-chasing are noise at public-data
    cadence. Competitors SELL those. We know they are noise, with
@@ -113,12 +115,21 @@ NFL season (kickoff ~Sep 10) is the single largest acquisition window of
 the year. The plan's whole sequencing exists to be live, honest, and
 NFL-ready before Week 1.
 
-**F-6 resolved — recommendation: zero-affiliate, permanently.** The intel
-corpus stakes the moat on it, the red team named straddling as the fatal
-outcome, and the proof-layer identity collapses if we're paid to route
-losers to books. Kill C-17/R-7; the widget key stays unused; "we never
-send you to a sportsbook" becomes a published, dated pledge on the site.
-(Founder's call, but the plan is written for this branch.)
+**F-6 DECIDED 2026-08-20: no sportsbook or DFS affiliate revenue,
+permanently — not a blanket ban on partnerships.** The intel corpus stakes
+the moat on the conflict of getting paid to route losers to books, and the
+red team named straddling as the fatal outcome; the proof-layer identity
+collapses only in that specific category, where the operator profits when
+the user loses money betting. It does not extend to non-gambling partner
+categories (creator tools, sports-data APIs, cloud/AI tools, local
+sponsors) that carry no such conflict and that the codebase already
+separates by risk class (`HIGH_RISK_PARTNER_CATEGORIES = [sportsbook,
+dfs]`). C-17 (sportsbook odds widget) and R-7 (sportsbook affiliate
+applications) are killed; the widget key stays unused; the general
+disclosed-partner program (`/partners`, zero live partners today) stays
+intact under its existing structural-separation and compliance guards.
+"We do not carry sportsbook or DFS affiliate links" is now a published,
+dated pledge on `/how-we-make-money` and `/terms`.
 
 ## 6. Execution — 30/60/90, mapped to agents
 
@@ -126,8 +137,8 @@ send you to a sportsbook" becomes a published, dated pledge on the site.
 archive + NFL collection go live. Hermes: L-17 (edge verdict, either way)
 and L-18 (BookGrade/PulseScore numbers). Claude: C-31 fixes, then the
 BookGrade + Glass Ledger public pages from L-18 output. Founder: deploy
-approval, F-6 sign-off, trademark filing for "Galaxy Sports Edge" +
-"TruthMetrics" + "Glass Ledger."
+approval, trademark filing for "Galaxy Sports Edge" + "TruthMetrics" +
+"Glass Ledger." F-6 DECIDED — no code path pending on it.
 
 **Days 8–30:** NFL Week-1 launch: Line DNA for every NFL game, Consensus
 Clock on the slate, fantasy content engine on, daily honest-record posts

@@ -12,11 +12,17 @@ import { BRAND_NAME } from "@/lib/brand";
  *
  * Context: the founder ruling (2026-07-16, reports/agent-handoffs/
  * ACTIVE_AGENT_RELAY.md "FOUNDER RULINGS") turned affiliate revenue ON
- * under a disclosed-conflict model — not "no affiliate ever," but never
- * without disclosure, never without structural separation between pick
- * generation and partner economics, and never with the absolute
- * "our number is only right because we're unbiased" framing that a plain
- * disclosed-conflict admission makes unnecessary and untrue.
+ * under a disclosed-conflict model for partner links generally. Refined
+ * 2026-08-20 (ledger F-6): sportsbook and DFS affiliate/commission links
+ * specifically are OFF, permanently — that category is the one where the
+ * operator gets paid more when a user loses money betting, which is a
+ * different and worse conflict than a generic paid partner link. The
+ * general disclosed-partner model (non-gambling categories — creator
+ * tools, sports-data APIs, cloud/AI tools, local sponsors; see /partners)
+ * continues under the same structural-separation and disclosure rules.
+ * Never with the absolute "our number is only right because we're
+ * unbiased" framing that a plain disclosed-conflict admission makes
+ * unnecessary and untrue.
  *
  * Rules for this page (do not relax without a founder ruling):
  *   - No invented numbers. Every figure this page could show lives on
@@ -44,8 +50,12 @@ const REVENUE_SOURCES = [
     body: `${BRAND_NAME} is a subscription product first. Pro and Elite unlock the full board, confidence scores, and the deeper tools; Free stays a real product with a public Edge Index and the same published track record. Subscription revenue is what the business is built to run on.`,
   },
   {
-    title: "Partner links: additive, licensed, and labeled",
-    body: "Some pages may also carry links to licensed sportsbook operators. If you click one and it leads to signing up, the operator may pay a commission. Nothing about a partner relationship changes what you see on the board: the pick model runs the same regardless of who is or isn't a partner.",
+    title: "No sportsbook or DFS affiliate links. Permanently.",
+    body: "GSE does not carry sportsbook or daily-fantasy affiliate or commission links, and will not. A company that gets paid more when its own users lose money betting cannot credibly claim its picks are unbiased — so we don't put ourselves in that position.",
+  },
+  {
+    title: "A separate, disclosed partner program for non-gambling tools",
+    body: "Some pages may carry paid partner links in non-gambling categories — creator tools, sports-data APIs, cloud and AI tools, local sponsors — covered by the standards on /partners. If a link leads to a signup and pays a commission, it's labeled. Nothing about any partner relationship changes what you see on the board: the pick model runs the same regardless of who is or isn't a partner.",
   },
 ] as const;
 
@@ -98,15 +108,16 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-4 font-display text-display-xl text-balance text-ion-white">
-                Subscriptions come first. Partner links are additive and labeled.
+                Subscriptions come first. No sportsbook affiliate links, ever.
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                {BRAND_NAME} runs on subscriptions. Some pages may also carry
-                links to licensed sportsbook operators that pay a commission
-                when they lead to a signup. This page explains both, plainly,
-                and how the two are kept apart.
+                {BRAND_NAME} runs on subscriptions. We do not carry sportsbook
+                or DFS affiliate links, and never will. Some pages may carry
+                disclosed, non-gambling partner links instead. This page
+                explains all of it, plainly, and how it's kept apart from the
+                model.
               </p>
             </Reveal>
           </div>
@@ -118,10 +129,10 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
             <Reveal>
               <p className="eyebrow">Where the money comes from</p>
               <h2 className="mt-3 font-display text-display-lg text-balance text-ion-white">
-                Two sources. One of them is primary.
+                Subscriptions primary. One category ruled out. One kept, disclosed.
               </h2>
             </Reveal>
-            <Stagger className="mt-8 grid gap-5 md:grid-cols-2" step={100}>
+            <Stagger className="mt-8 grid gap-5 md:grid-cols-3" step={100}>
               {REVENUE_SOURCES.map((item, index) => (
                 <article key={item.title} className="surface-card p-6">
                   <span
@@ -135,11 +146,12 @@ export default function HowWeMakeMoneyPage(): JSX.Element {
             </Stagger>
             <Reveal delay={120}>
               <p className="mx-auto mt-6 max-w-3xl text-sm leading-6 text-ion-1">
-                We don&apos;t currently have any live partner links. The operator
-                registry that has to approve one before it can appear
-                publicly has zero approved partners today. This page describes
-                the policy those links will follow whenever that changes, so
-                the policy exists before the first link does.
+                We don&apos;t currently have any live partner links, sportsbook,
+                DFS, or otherwise. The operator registry that has to approve
+                a non-gambling partner before it can appear publicly has zero
+                approved partners today. This page describes the policy any
+                future non-gambling link will follow — and the one category
+                that isn&apos;t on the table at all.
               </p>
             </Reveal>
           </div>

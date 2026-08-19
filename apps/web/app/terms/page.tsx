@@ -99,12 +99,14 @@ export default function TermsPage() {
               terminate accounts that abuse the Service.
             </Para>
 
-            <Heading>7. Promotions and affiliate links</Heading>
+            <Heading>7. Promotions and partner links</Heading>
             <Para>
-              The Service may surface promotional offers from third-party
-              sportsbooks. Where applicable, these are disclosed as affiliate
-              links. {BRAND_NAME} does not control those third parties and is
-              not responsible for their offers, terms, or practices.
+              {BRAND_NAME} does not carry sportsbook or daily-fantasy
+              affiliate or commission links, and will not. The Service may
+              surface disclosed partner links in other, non-gambling
+              categories (see /partners for the standards those follow).
+              {BRAND_NAME} does not control those third parties and is not
+              responsible for their offers, terms, or practices.
             </Para>
 
             <Heading>8. Disclaimers</Heading>

@@ -40,7 +40,7 @@ describe("/terms smoke", () => {
       "4. Eligibility",
       "5. Subscriptions and billing",
       "6. Acceptable use",
-      "7. Promotions and affiliate links",
+      "7. Promotions and partner links",
       "8. Disclaimers",
       "9. Changes",
       "10. Contact",
