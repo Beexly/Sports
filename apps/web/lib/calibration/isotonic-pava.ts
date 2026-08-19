@@ -64,15 +64,22 @@ export function pava(y: number[], w?: number[]): number[] {
       }
       j = L - 1;
     }
-    // Re-check the merged block against its RIGHT neighbor before advancing.
-    // The previous `i = right[i] + 1` skipped that comparison, so
-    // pava([0.9, 0.1, 0.2, 0.8]) pooled (0.9, 0.1) -> 0.5 and then never saw
-    // 0.5 > 0.2, returning a NON-monotone result from a function whose whole
-    // contract is monotonicity. Landing on the block's right edge makes the
-    // next loop iteration test merged-mean vs next element; i still strictly
-    // increases every pass (pooling always extends right past the old i), so
-    // termination is unaffected.
-    i = right[i] ?? i;
+    // Re-scan from the merged block's LEFT edge instead of jumping past it.
+    //
+    // The previous `i = Math.max(i, right[i]) + 1` advanced beyond the block that
+    // had just been merged, so a block whose new pooled mean violated against its
+    // SUCCESSOR was never re-examined. pava([0.9, 0.1, 0.2, 0.8]) returned
+    // [0.5, 0.5, 0.2, 0.8] — merging 0.9 and 0.1 into 0.5, then never comparing
+    // 0.5 against 0.2. A decreasing output defeats the entire purpose of isotonic
+    // regression, and this function calibrates the confidence scores the product
+    // sells.
+    //
+    // The inner loop only ever walked backwards (j = L - 1), so the forward
+    // violation had nowhere to be caught. Restarting at L is correct because all
+    // indices inside a block share a mean, so the scan walks the block in O(len)
+    // and then tests the real boundary. It terminates: each merge strictly
+    // reduces the block count, and between merges `i` only advances.
+    i = left[i] ?? i;
   }
   return mean;
 }

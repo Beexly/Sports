@@ -19,12 +19,7 @@ import { SignalFragmentField } from "@/components/world/signal-fragment-field";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import { Suspense } from "react";
-import {
-  NflverseLabDoor,
-  NflverseLabDoorPlaceholder,
-} from "@/components/landing/nflverse-lab-door";
-import { DoorCard } from "@/components/landing/door-card";
+import { loadNflverseUsagePulse } from "@/lib/nflverse/usage-pulse";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 
@@ -38,9 +33,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage(): Promise<JSX.Element> {
-  const [stateResult, calibrationResult] = await Promise.all([
+  const [stateResult, calibrationResult, nflversePulse] = await Promise.all([
     loadBoardState(),
     loadPublicCalibrationReport(),
+    loadNflverseUsagePulse(),
   ]);
   const state = stateResult.data;
   const calibration = calibrationResult.data;
@@ -50,6 +46,7 @@ export default async function HomePage(): Promise<JSX.Element> {
   const gated = state.gatedTodayRows.length;
   const scoring = state.scoringNow.length;
   const settled = calibration.sampleSize;
+  const nflRows = nflversePulse.status === "live" ? nflversePulse.sourceRows : 0;
   // Honest degraded states. The loaders zero their counts on infra failure, a
   // shape byte-identical to a genuinely quiet board. Read the loader meta so an
   // outage is never dressed up as calm live truth ("Gate holding", "0 cleared ·
@@ -68,6 +65,7 @@ export default async function HomePage(): Promise<JSX.Element> {
   );
   const boardUnavailable =
     stateResult.meta.dataError === "DB_UNREACHABLE" || boardSuppressed;
+  const nflUnavailable = nflversePulse.status === "source-error";
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
@@ -170,9 +168,20 @@ export default async function HomePage(): Promise<JSX.Element> {
                 href="/board"
                 bar={boardUnavailable ? undefined : { a: cleared, b: gated }}
               />
-              <Suspense fallback={<NflverseLabDoorPlaceholder />}>
-                <NflverseLabDoor />
-              </Suspense>
+              <DoorCard
+                index={2}
+                label="The Lab"
+                decides="Who to trust this week, with every signal in one place."
+                stat={
+                  nflUnavailable
+                    ? "Live player data unavailable"
+                    : nflRows > 0
+                      ? `${nflRows.toLocaleString()} live player rows`
+                      : "Intake warming up"
+                }
+                action="Open the lab"
+                href="/players"
+              />
               <DoorCard
                 index={3}
                 label="Intelligence"
@@ -282,16 +291,16 @@ export default async function HomePage(): Promise<JSX.Element> {
             never renders as the reassuring "Player intake / warming up". The
             methodology cards below stay; they explain method, not live numbers. */}
         <MethodologySection
-        metrics={
-          boardUnavailable
-            ? undefined
-            : {
-                settled,
-                cleared,
-                gated,
-                lastRefresh: state.lastRefresh,
-              }
-        }
+          metrics={
+            boardUnavailable
+              ? undefined
+              : {
+                  settled,
+                  cleared,
+                  gated,
+                  ...(nflUnavailable ? {} : { playerRows: nflRows }),
+                }
+          }
         />
 
         <section data-testid="homepage-responsible-close" className="gw-nebula px-4 py-14 sm:px-6 lg:px-8">
@@ -305,7 +314,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* Founding waitlist - public lead capture (API /api/waitlist; no gate flip) */}
+        {/* Founding waitlist: public lead capture (API /api/waitlist; no gate flip) */}
         <section
           id="founding-waitlist"
           data-testid="homepage-waitlist"
@@ -330,5 +339,75 @@ export default async function HomePage(): Promise<JSX.Element> {
       <ObservatoryBeacon />
       <Footer />
     </div>
+  );
+}
+
+/* ── Signal-map door. A console cell ─────────────────────────────────── */
+function DoorCard({
+  index,
+  label,
+  decides,
+  stat,
+  action,
+  href,
+  accent = false,
+  bar,
+}: {
+  index: number;
+  label: string;
+  decides: string;
+  stat: string;
+  action: string;
+  href: string;
+  accent?: boolean;
+  /** Optional two-segment micro-bar: shows magnitude, not just text. */
+  bar?: { a: number; b: number };
+}): JSX.Element {
+  const showBar = bar && bar.a + bar.b > 0;
+  const aPct = showBar ? Math.round((bar.a / (bar.a + bar.b)) * 100) : 0;
+  return (
+    <Reveal delay={index * 70} className="flex">
+      <Link
+        href={href}
+        className="group relative flex w-full flex-col gap-4 bg-eclipse p-6 transition-colors duration-300 hover:bg-carbon"
+      >
+        {/* accent rail. Draws across the top on hover (left origin) */}
+        <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-mineral" />
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-orbital-cyan transition-transform duration-500 ease-out group-hover:scale-x-100"
+        />
+
+        {/* header rail. Index + status dot */}
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[10px] tracking-[0.3em] text-ion-2 tabular-nums">
+            {String(index).padStart(2, "0")}
+          </span>
+          <span
+            aria-hidden
+            className={`h-1.5 w-1.5 rounded-full ${accent ? "bg-orbital-cyan" : "bg-soft-ultraviolet"} opacity-60 transition-opacity group-hover:opacity-100`}
+          />
+        </div>
+
+        <p className="font-display text-2xl font-semibold leading-tight text-ion-white">{label}</p>
+        <p className="flex-1 text-sm leading-6 text-ion-1">{decides}</p>
+
+        {/* live readout */}
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-orbital-cyan tabular-nums">{stat}</p>
+
+        {/* micro-bar: show the split, do not just say it */}
+        {showBar && (
+          <span aria-hidden className="flex h-1 overflow-hidden rounded-full bg-mineral">
+            <span className="h-full bg-orbital-cyan" style={{ width: `${aPct}%` }} />
+            <span className="h-full flex-1 bg-plasma/70" />
+          </span>
+        )}
+
+        <p className="flex items-center gap-1.5 border-t border-mineral/70 pt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-2 transition-colors group-hover:text-ion-white">
+          {action}
+          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        </p>
+      </Link>
+    </Reveal>
   );
 }

@@ -12,7 +12,7 @@ import { NextRequest } from "next/server";
 
 const mocks = vi.hoisted(() => ({
   auth: vi.fn<() => Promise<{ user?: { id: string; email?: string; name?: string | null } } | null>>(),
-  resolveCheckoutPriceId: vi.fn<(tier: string, interval: string) => string>(),
+  resolveCheckoutPriceId: vi.fn<(tier: string, interval: string) => Promise<string>>(),
   getOrCreateStripeCustomer: vi.fn<(userId: string, email: string, name?: string | null) => Promise<string>>(),
   createCheckoutSession: vi.fn<(args: unknown) => Promise<{ id: string; url: string | null }>>(),
   retrieveOpenCheckoutSessionUrl: vi.fn<(sessionId: string) => Promise<string | null>>(),
@@ -124,7 +124,7 @@ describe("POST /api/subscriptions/checkout", () => {
     process.env["NEXT_PUBLIC_APP_URL"] = "https://app.example.com";
 
     mocks.auth.mockResolvedValue({ user });
-    mocks.resolveCheckoutPriceId.mockReturnValue("price_pro_monthly");
+    mocks.resolveCheckoutPriceId.mockResolvedValue("price_pro_monthly");
     mocks.getOrCreateStripeCustomer.mockResolvedValue("cus_123");
     mocks.retrieveOpenCheckoutSessionUrl.mockResolvedValue(null);
     mocks.createCheckoutSession.mockResolvedValue({ id: "cs_123", url: "https://checkout.stripe.com/s/123" });
@@ -153,7 +153,7 @@ describe("POST /api/subscriptions/checkout", () => {
   });
 
   it("returns 503 when the price is not configured", async () => {
-    mocks.resolveCheckoutPriceId.mockReturnValue("");
+    mocks.resolveCheckoutPriceId.mockResolvedValue("");
     const res = await POST(checkoutRequest({ tier: "ELITE", interval: "year" }));
     expect(res.status).toBe(503);
     expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
@@ -375,7 +375,7 @@ describe("POST /api/subscriptions/checkout", () => {
       dbMock.attemptCreate.mockRejectedValue(p2002());
       // Existing attempt was made for PRO/month; this request asks ELITE/year.
       dbMock.attemptFindUnique.mockResolvedValue(liveAttempt());
-      mocks.resolveCheckoutPriceId.mockReturnValue("price_elite_annual");
+      mocks.resolveCheckoutPriceId.mockResolvedValue("price_elite_annual");
 
       const res = await POST(
         checkoutRequest({ tier: "ELITE", interval: "year", clientIntentId: INTENT_ID }),

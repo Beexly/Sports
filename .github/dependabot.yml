@@ -1,17 +1,6 @@
-# Dependabot — keep dependency CVEs from going unnoticed again.
-#
-# Context: on 2026-08-12 the production tree carried 2 critical + 6 high
-# advisories (including a fail-open auth advisory in the library gating the
-# paywall) while CI stayed green, because nothing was watching. The CI gate is
-# scripts/guardrails/dependency-audit.mjs; this file is the other half — it
-# opens the PRs that let us fix things before they become criticals.
 version: 2
-
 updates:
-  # ----------------------------------------------------------------------
-  # npm — grouped to keep PR volume survivable for a solo maintainer.
-  # Security updates are NOT grouped: they land as individual, obvious PRs.
-  # ----------------------------------------------------------------------
+  # npm dependencies — weekly, grouped to reduce PR noise
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -19,50 +8,36 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-    commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
     groups:
-      # Routine patch/minor noise, batched into one reviewable PR.
-      minor-and-patch:
-        patterns:
-          - "*"
+      production-deps:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      dev-deps:
+        dependency-type: "development"
         update-types:
           - "minor"
           - "patch"
     ignore:
-      # Majors are migrations, not dependency bumps. next 14 -> 16 in
-      # particular is tracked separately; see the waiver in
-      # scripts/guardrails/dependency-audit.mjs.
+      # Major updates require explicit human review for a solo founder
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps)"
 
-  # ----------------------------------------------------------------------
-  # GitHub Actions — the CI supply chain is part of the attack surface.
-  # ----------------------------------------------------------------------
+  # GitHub Actions — keep runners and actions current
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "monday"
     open-pull-requests-limit: 3
     labels:
       - "dependencies"
       - "ci"
     commit-message:
       prefix: "chore(ci)"
-
-  # ----------------------------------------------------------------------
-  # Python sidecar (gse-ml-service) — research service, low cadence.
-  # ----------------------------------------------------------------------
-  - package-ecosystem: "pip"
-    directory: "/gse-ml-service"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "python"
-    commit-message:
-      prefix: "chore(deps-py)"

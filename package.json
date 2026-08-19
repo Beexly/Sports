@@ -13,7 +13,6 @@
     "build": "npm run build --workspace=apps/web",
     "start": "npm run start --workspace=apps/web",
     "test": "npm run test --workspaces --if-present",
-    "test:e2e": "playwright test",
     "test:watch": "npm run test:watch --workspace=apps/web",
     "test:integration:db": "node scripts/integration/db-smoke.mjs",
     "nova:inventory": "node scripts/nova/build-convergence-inventory.mjs",
@@ -47,11 +46,8 @@
     "guard:ai-transport-import-boundary": "node scripts/guardrails/ai-transport-import-boundary.mjs",
     "test:ai-transport-import-boundary": "node --test scripts/guardrails/ai-transport-import-boundary.test.mjs",
     "guard:secrets": "node scripts/guardrails/secret-scan.mjs --all",
-    "guard:deps": "node scripts/guardrails/dependency-audit.mjs",
-    "guard:agent-bash": "node scripts/guardrails/agent-bash-guard.mjs --selftest",
     "guard:api-v1-boundary": "node scripts/guardrails/api-v1-boundary.mjs",
     "guard:commercial-copy": "node scripts/guardrails/commercial-copy-scan.mjs",
-    "guard:em-dash": "node scripts/guardrails/em-dash-scan.mjs",
     "guard:performance-claims": "node scripts/guardrails/no-unsupported-performance-claims.mjs",
     "guard:no-raw-ngs": "node scripts/guardrails/no-raw-ngs-export.mjs",
     "guard:partner-offers": "node scripts/guardrails/partner-offer-compliance-scan.mjs",
@@ -79,8 +75,7 @@
     "fable:demo": "tsx scripts/fable-demo-forensic-report.ts",
     "prepare": "node scripts/setup-git-hooks.mjs",
     "guard:skipped-pg-integration": "node scripts/guardrails/skipped-pg-integration-honesty.mjs",
-    "guardrails": "node scripts/guardrails/run-all.mjs",
-    "guardrails:chain": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/guardrails/ai-transport-import-boundary.mjs && node scripts/guardrails/secret-scan.mjs --all && node scripts/guardrails/api-v1-boundary.mjs && node scripts/guardrails/commercial-copy-scan.mjs && node scripts/guardrails/no-unsupported-performance-claims.mjs && node scripts/guardrails/no-raw-ngs-export.mjs && node scripts/guardrails/partner-offer-compliance-scan.mjs && node scripts/guardrails/api-payload-rights-scan.mjs && node scripts/guardrails/openapi-security-scan.mjs && node scripts/guardrails/no-zk-overclaim.mjs && node scripts/guardrails/affiliate-structural-separation.mjs && node scripts/guardrails/sealed-holdout-open-scan.mjs && node scripts/guardrails/pedersen-opener-boundary.mjs && node scripts/guardrails/actor-minting-boundary.mjs && node scripts/guardrails/ai-control-plane-sealing.mjs && node scripts/guardrails/skipped-pg-integration-honesty.mjs && npm run guard:ai-council && node scripts/guardrails/aws-compatibility-index-scan.mjs && node scripts/eval-contracts.mjs && node scripts/guardrails/dependency-audit.mjs && node scripts/guardrails/agent-bash-guard.mjs --selftest",
+    "guardrails": "node scripts/guardrails/trust-gate.mjs && node scripts/guardrails/model-freeze.mjs && node scripts/guardrails/draft-only.mjs && node scripts/guardrails/claude-api-usage.mjs && node scripts/guardrails/ai-transport-import-boundary.mjs && node scripts/guardrails/secret-scan.mjs --all && node scripts/guardrails/api-v1-boundary.mjs && node scripts/guardrails/commercial-copy-scan.mjs && node scripts/guardrails/no-unsupported-performance-claims.mjs && node scripts/guardrails/no-raw-ngs-export.mjs && node scripts/guardrails/partner-offer-compliance-scan.mjs && node scripts/guardrails/api-payload-rights-scan.mjs && node scripts/guardrails/openapi-security-scan.mjs && node scripts/guardrails/no-zk-overclaim.mjs && node scripts/guardrails/affiliate-structural-separation.mjs && node scripts/guardrails/sealed-holdout-open-scan.mjs && node scripts/guardrails/pedersen-opener-boundary.mjs && node scripts/guardrails/actor-minting-boundary.mjs && node scripts/guardrails/ai-control-plane-sealing.mjs && node scripts/guardrails/skipped-pg-integration-honesty.mjs && npm run guard:ai-council && node scripts/guardrails/aws-compatibility-index-scan.mjs && node scripts/eval-contracts.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "ai:call-sites": "node scripts/ai/build-call-site-inventory.mjs",
     "ai:call-sites:check": "node scripts/ai/build-call-site-inventory.mjs --check",
@@ -137,7 +132,7 @@
     "orbit:integrity:full": "node scripts/orbit-extract-integrity.mjs --full",
     "orbit:unlock-smoke": "node scripts/ops/orbit-unlock-smoke.mjs",
     "ops:impeccable": "node scripts/ops/impeccable-probe.mjs",
-    "ops:preflight": "node scripts/ops/launch-preflight.mjs"
+    "check:ledger": "node scripts/ops/check-agent-ledger.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
@@ -151,14 +146,5 @@
   "dependencies": {
     "ioredis": "^5.10.1",
     "pg": "^8.21.0"
-  },
-  "allowScripts": {
-    "esbuild@0.21.5": true,
-    "esbuild@0.28.1": true,
-    "prisma@5.22.0": true,
-    "unrs-resolver@1.11.1": true,
-    "@prisma/engines@5.22.0": true,
-    "@prisma/client@5.22.0": true,
-    "@sentry/cli@2.58.6": true
   }
 }

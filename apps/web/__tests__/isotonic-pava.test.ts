@@ -107,3 +107,85 @@ describe("fitIsotonicPava", () => {
     expect(applyIsotonic(0.2, m)).toBeLessThanOrEqual(applyIsotonic(0.8, m) + 1e-9);
   });
 });
+
+describe("pava — properties the algorithm must satisfy (regression for the forward-violation bug)", () => {
+  // pava([0.9, 0.1, 0.2, 0.8]) used to return [0.5, 0.5, 0.2, 0.8]: after
+  // merging a violating pair, the scan jumped PAST the merged block, so a new
+  // pooled mean was never re-checked against its successor. A decreasing output
+  // from an isotonic fit is a correctness bug in the calibration core, so these
+  // pin the algorithm's defining properties, not one example.
+
+  // Deterministic LCG so failures reproduce; Math.random would flake.
+  function lcg(seed: number): () => number {
+    let s = seed >>> 0;
+    return () => {
+      s = (s * 1664525 + 1013904223) >>> 0;
+      return s / 2 ** 32;
+    };
+  }
+
+  /** Textbook O(n^2) reference: repeatedly merge the first violating pair. */
+  function referencePava(y: number[], w: number[]): number[] {
+    const blocks = y.map((v, i) => ({ sum: v * w[i]!, w: w[i]!, len: 1 }));
+    let merged = true;
+    while (merged) {
+      merged = false;
+      for (let i = 0; i + 1 < blocks.length; i++) {
+        const a = blocks[i]!;
+        const b = blocks[i + 1]!;
+        if (a.sum / a.w > b.sum / b.w + 1e-15) {
+          blocks.splice(i, 2, { sum: a.sum + b.sum, w: a.w + b.w, len: a.len + b.len });
+          merged = true;
+          break;
+        }
+      }
+    }
+    const out: number[] = [];
+    for (const b of blocks) for (let k = 0; k < b.len; k++) out.push(b.sum / b.w);
+    return out;
+  }
+
+  it("the exact failing case: descend-then-recover merges to one flat block", () => {
+    // toBeCloseTo, not toEqual: the pooled mean arrives as (0.5*2 + 0.2)/3 =
+    // 0.39999999999999997 in binary floating point. The block structure is the
+    // assertion that matters; exact decimal literals are not representable.
+    const out = pava([0.9, 0.1, 0.2, 0.8], [1, 1, 1, 1]);
+    expect(out[0]).toBeCloseTo(0.4, 12);
+    expect(out[1]).toBeCloseTo(0.4, 12);
+    expect(out[2]).toBeCloseTo(0.4, 12);
+    expect(out[3]).toBeCloseTo(0.8, 12);
+    expect(out[0]).toBe(out[1]);
+    expect(out[1]).toBe(out[2]);
+  });
+
+  it("fuzz: output is nondecreasing, weight-mean preserving, and matches the reference", () => {
+    const rand = lcg(0xc0ffee);
+    for (let trial = 0; trial < 200; trial++) {
+      const n = 1 + Math.floor(rand() * 40);
+      const y = Array.from({ length: n }, () => rand());
+      const w = Array.from({ length: n }, () => 0.5 + rand() * 2);
+      const out = pava(y.slice(), w.slice());
+      const ref = referencePava(y, w);
+
+      for (let i = 1; i < n; i++) {
+        expect(out[i]!).toBeGreaterThanOrEqual(out[i - 1]! - 1e-9);
+      }
+      // Weighted mean is invariant under pool-adjacent-violators merging.
+      const wm = (v: number[]) => v.reduce((acc, x, i) => acc + x * w[i]!, 0);
+      expect(wm(out)).toBeCloseTo(wm(y), 6);
+      for (let i = 0; i < n; i++) {
+        expect(out[i]!).toBeCloseTo(ref[i]!, 9);
+      }
+    }
+  });
+
+  it("already-sorted input passes through untouched", () => {
+    const y = [0.1, 0.2, 0.2, 0.9];
+    expect(pava(y.slice(), [1, 1, 1, 1])).toEqual(y);
+  });
+
+  it("strictly decreasing input collapses to the global weighted mean", () => {
+    const out = pava([0.9, 0.7, 0.4, 0.1], [1, 1, 1, 1]);
+    for (const v of out) expect(v).toBeCloseTo(0.525, 12);
+  });
+});

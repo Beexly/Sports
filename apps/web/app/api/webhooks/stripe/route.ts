@@ -198,6 +198,10 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       break;
     }
 
+    // Stripe also emits invoice.paid (newer alias of payment_succeeded on many
+    // accounts). Same entitlement sync — handle both so Dashboard can enable
+    // either event without silent no-ops.
+    case "invoice.paid":
     case "invoice.payment_succeeded": {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {

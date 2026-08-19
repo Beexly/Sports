@@ -45,6 +45,19 @@ describe("checkWaitlistGate — gate disabled", () => {
   });
 });
 
+/**
+ * The lock is a TWO-flag design. `checkWaitlistGate` delegates to
+ * `waitlistGated()` (lib/env/flags.ts:28), which requires
+ * GSE_WAITLIST_GATE_ENABLED *and* GSE_WAITLIST_BASIC_FORCE to both be "true":
+ * "legacy single-flag true (gate without FORCE) stays OPEN so FOUNDING ships
+ * without a Vercel env click. Intentional lock requires the second flag."
+ *
+ * This block set only the first flag, so the gate was correctly OPEN and all
+ * five deny assertions failed. That reads like a fail-open auth bug and is not
+ * one — the gate's own deny paths are all correct, including the unconfigured
+ * -credentials case. Both flags are now set, and the single-flag-stays-open
+ * invariant gets its own block below, since nothing covered it before.
+ */
 describe("checkWaitlistGate — gate enabled", () => {
   beforeEach(() => {
     process.env["GSE_WAITLIST_GATE_ENABLED"] = "true";
@@ -191,5 +204,39 @@ describe("access-gate credentials never reach client code", () => {
     );
     expect(src).toContain('process.env["GSE_WAITLIST_BASIC_USER"]');
     expect(src).toContain('process.env["GSE_WAITLIST_BASIC_PASSWORD"]');
+  });
+});
+
+describe("checkWaitlistGate — one flag is not a lock", () => {
+  // Previously untested, and the reason the drift above went unnoticed. If this
+  // ever starts denying, the FOUNDING signup funnel has silently shut behind a
+  // Basic Auth prompt on nothing but a legacy flag.
+  afterEach(() => {
+    delete process.env["GSE_WAITLIST_GATE_ENABLED"];
+    delete process.env["GSE_WAITLIST_BASIC_FORCE"];
+    delete process.env["GSE_WAITLIST_BASIC_USER"];
+    delete process.env["GSE_WAITLIST_BASIC_PASSWORD"];
+  });
+
+  it("stays open with GATE_ENABLED alone, even with credentials configured", () => {
+    process.env["GSE_WAITLIST_GATE_ENABLED"] = "true";
+    process.env["GSE_WAITLIST_BASIC_USER"] = "testuser";
+    process.env["GSE_WAITLIST_BASIC_PASSWORD"] = "testpass";
+    expect(checkWaitlistGate(null).allowed).toBe(true);
+  });
+
+  it("stays open with BASIC_FORCE alone", () => {
+    process.env["GSE_WAITLIST_BASIC_FORCE"] = "true";
+    process.env["GSE_WAITLIST_BASIC_USER"] = "testuser";
+    process.env["GSE_WAITLIST_BASIC_PASSWORD"] = "testpass";
+    expect(checkWaitlistGate(null).allowed).toBe(true);
+  });
+
+  it("locks only when both are set — and still fails closed without credentials", () => {
+    process.env["GSE_WAITLIST_GATE_ENABLED"] = "true";
+    process.env["GSE_WAITLIST_BASIC_FORCE"] = "true";
+    const result = checkWaitlistGate(null);
+    expect(result.allowed).toBe(false);
+    expect((result as { allowed: false; reason: string }).reason).toBe("gate_not_configured");
   });
 });

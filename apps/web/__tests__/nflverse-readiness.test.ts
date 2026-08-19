@@ -81,15 +81,32 @@ function missingFetcher(): (input: string | URL | Request) => Promise<Response> 
 }
 
 describe("nflverse trend readiness", () => {
-  it("selects the latest inspection season before the next NFL season is active", () => {
+  it("never advertises a season that has not produced REG rows yet", () => {
+    // `latestNflverseInspectionSeason` delegates to `resolveFootballStatsSeason`
+    // WITHOUT a `hasRegRows` probe, so it always returns the completed REG floor.
+    // That is deliberate — the docstring is explicit that it must "never invent
+    // current-season completeness" — and it is the no-fake-data / no-stale-data
+    // rule applied to season selection.
+    //
+    // This case previously asserted 2026 for a September 2026 date, encoding a
+    // CALENDAR rollover. The implementation gates on DATA, not the date: on
+    // 2026-09-10 the 2026 season has barely kicked off and has no completed REG
+    // rows, so reporting 2026 would advertise stats that do not exist. The old
+    // expectation contradicted the design, and the test's own title only ever
+    // described the June case.
+    //
+    // Advancing to a newer season is the caller's job, by passing `hasRegRows`.
+
+    // Mid-offseason: last completed season.
     expect(latestNflverseInspectionSeason(new Date("2026-06-05T12:00:00Z"))).toBe(2025);
-    // Sept 2026: labelled current is 2026, but without a REG-rows probe the
-    // completed floor stays at 2025 (resolveFootballStatsSeason defaults to
-    // completedFloor — see nflverse-season.ts:59-66, 29-34). The 2026 REG
-    // season has not yet produced REAL REG rows, so the integrity contract
-    // floors to 2025. (currentNflSeasonLabel correctly returns 2026 — that is
-    // tested separately in nflverse-id-crosswalk.test.ts:70-78.)
+
+    // Days into the new season: still the last COMPLETED season, not the
+    // in-progress one. This is the assertion that matters.
     expect(latestNflverseInspectionSeason(new Date("2026-09-10T12:00:00Z"))).toBe(2025);
+
+    // Deep into the season, and even past its end, the unprobed default still
+    // refuses to claim completeness for a season it has not verified.
+    expect(latestNflverseInspectionSeason(new Date("2026-12-20T12:00:00Z"))).toBe(2025);
   });
 
   it("fetches real trend-plan dependencies without treating source rows as published trends", async () => {

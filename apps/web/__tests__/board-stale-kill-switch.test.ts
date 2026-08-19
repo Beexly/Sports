@@ -34,6 +34,13 @@ const mocks = vi.hoisted(() => ({
   } | null>>(),
   gateDecisionFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
+  // `isSignalBoardSlateStale` (lib/data-reliability/public-freshness-gate.ts:108)
+  // makes two `db.pick.findFirst` calls. Without this, it throws, and the route's
+  // deliberate `.catch(() => false)` fail-open swallows the throw into "fresh" —
+  // so the kill switch silently did nothing and the surface returned 200.
+  // Default null = no recent published pick and no upcoming one = signal slate
+  // stale, which is the state these tests intend.
+  pickFindFirst: vi.fn<(args?: unknown) => Promise<unknown>>(),
   gameFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
 }));
 
@@ -41,7 +48,7 @@ vi.mock("@sports/db", () => ({
   db: {
     ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
     gateDecision: { findMany: mocks.gateDecisionFindMany },
-    pick: { findMany: mocks.pickFindMany },
+    pick: { findMany: mocks.pickFindMany, findFirst: mocks.pickFindFirst },
     game: { findMany: mocks.gameFindMany },
   },
   isDemoPicksEnabled: () => false,
@@ -82,6 +89,7 @@ describe("board loaders — stale-data kill switch", () => {
     mocks.assessSchedulerLiveness.mockReset();
     mocks.gateDecisionFindMany.mockReset().mockResolvedValue([]);
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
+    mocks.pickFindFirst.mockReset().mockResolvedValue(null);
     mocks.gameFindMany.mockReset().mockResolvedValue([]);
   });
 

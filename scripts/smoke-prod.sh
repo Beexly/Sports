@@ -100,7 +100,14 @@ for path in "${!CANONICAL_EXPECTED[@]}"; do
 done
 
 bold "6. External cron workflow state"
-wf_json=$(curl -sS --max-time 6 "https://api.github.com/repos/Beexly/Sports/actions/workflows" 2>/dev/null || echo "{}")
+# Private repos need auth to list workflows. Actions injects GITHUB_TOKEN;
+# unauthenticated calls look like "workflow missing" and falsely fail CI (WATCH).
+gh_tok="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
+if [ -n "$gh_tok" ]; then
+  wf_json=$(curl -sS --max-time 8     -H "Authorization: Bearer $gh_tok"     -H "Accept: application/vnd.github+json"     "https://api.github.com/repos/Beexly/Sports/actions/workflows" 2>/dev/null || echo "{}")
+else
+  wf_json=$(curl -sS --max-time 6     -H "Accept: application/vnd.github+json"     "https://api.github.com/repos/Beexly/Sports/actions/workflows" 2>/dev/null || echo "{}")
+fi
 compact_wf_json=$(printf "%s" "$wf_json" | tr -d '\n\r\t ')
 if printf "%s" "$compact_wf_json" | grep -q '"path":".github/workflows/external-cron.yml"'; then
   if printf "%s" "$compact_wf_json" | grep -q '"state":"active"[^}]*"path":".github/workflows/external-cron.yml"\|"path":".github/workflows/external-cron.yml"[^}]*"state":"active"'; then
@@ -108,13 +115,18 @@ if printf "%s" "$compact_wf_json" | grep -q '"path":".github/workflows/external-
   else
     state="found - External Cron (Galaxy Sports Edge)"
   fi
+elif [ -z "$gh_tok" ]; then
+  # Local/unauth: cannot prove private workflow existence — soft warn only
+  state="unauth-skip"
 else
   state="no-cron-workflow-found"
 fi
 case "$state" in
   active*)              ok "external cron: $state" ;;
+  found*)               ok "external cron: $state" ;;
+  unauth-skip)          warn "external cron: no GITHUB_TOKEN — skipped private workflow probe" ;;
   disabled_inactivity*) fail "external cron: $state — GitHub disabled it. Re-enable in Actions tab." ;;
-  no-cron*)             warn "external cron workflow not found via API" ;;
+  no-cron*)             fail "external cron workflow not found (authenticated API) — .github/workflows/external-cron.yml missing?" ;;
   *)                    warn "external cron state: $state" ;;
 esac
 

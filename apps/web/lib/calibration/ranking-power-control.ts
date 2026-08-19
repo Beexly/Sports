@@ -221,11 +221,10 @@ export function buildRankingPowerControl(
     readonly defaultDelta?: number;
     readonly liveResOverride?: number;
     /**
-     * Ranking groups currently paused, e.g. ["nhl|ml", "nba|total"]. Sourced from
-     * the durable pause config (`loadRankingPauseApply()`), which itself honors
-     * SELECTIVE_PAUSE_GROUPS. Omitted means "nothing paused" — the caller in
-     * proven-path-seed already degrades to [] when the durable read fails, so a
-     * missing value must never be read as "pause everything".
+     * Group keys whose ranking power is paused. Read at line ~227 to build the
+     * pause set, and already passed by lib/ops/proven-path-seed.ts — the
+     * declaration was simply never added, so `tsc` failed on both the read and
+     * the call site. Declaring it changes no behaviour.
      */
     readonly appliedPauseGroups?: readonly string[];
   },
