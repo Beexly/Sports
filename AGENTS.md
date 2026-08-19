@@ -9,19 +9,33 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**UPDATED 2026-08-20 — `handoff/LEDGER.md` and `docs/ops/hermes/CONTINUOUS.md`
+below are FROZEN artifacts of an earlier session (last touched 2026-08-17/18).
+They are not the live coordination system. Do not resume work from them.**
+
+The live, multi-agent ledger — shared by Hermes, Copilot, the browser agent,
+and Claude sessions — is **`docs/ops/AGENT_LEDGER.md`**. It is validated by
+`scripts/ops/check-agent-ledger.mjs` (real exit code — never pipe it away) and
+enforced in CI. Read its own "Rules" section before touching a row: claim
+before starting, never edit a row you do not own, `DONE` requires a
+resolvable commit SHA or `#PR`, `UNPUSHED` if you cannot push.
+
 ```
-1. Open handoff/LEDGER.md
-2. First task marked TODO -> mark CLAIMED with the time
-3. Do exactly that task, nothing else
-4. Run its Definition of Done
-5. Mark DONE or BLOCKED with ONE line of evidence
-6. If it produced code, commit it
-7. Go to 1
+1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
+2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
+   it is the current build task list when one has been issued
+3. First unclaimed row you can do -> claim it (Owner + Status: CLAIMED) in
+   the SAME commit that begins the work
+4. Do exactly that task, nothing else
+5. Run its Definition of Done / the repo guards (see WORKING RULES)
+6. Mark DONE (with a real SHA) or BLOCKED (with the exact error), one line
+7. Commit; push only if explicitly told to for this session — otherwise
+   stay UNPUSHED and say so
+8. Go to 1
 ```
 
-Never ask what to do next — the ledger knows. If every row is DONE or BLOCKED, open
-`docs/ops/hermes/CONTINUOUS.md` and take the next phase, or its STANDING ORDERS, which
-never run out. The owner is asleep. The ledger is how you talk to them.
+Never ask what to do next — the ledger knows. The owner is asleep or busy.
+The ledger is how you talk to them, and to every other agent working here.
 
 ---
 
@@ -29,7 +43,10 @@ never run out. The owner is asleep. The ledger is how you talk to them.
 
 Breaking one discards the run.
 
-1. **NEVER `git push`.** Commit locally. The owner reviews and pushes.
+1. **NEVER `git push` unless the owner said so for this session.** Default is
+   commit locally, the owner reviews and pushes. If the owner has explicitly
+   told you to push tonight, push only to the branch named, never to `main`
+   directly unless that too was explicit.
 2. **NEVER modify:** `packages/db/prisma/schema.prisma` · `packages/db/prisma/migrations/**` ·
    `.github/workflows/**` · `scripts/guardrails/**` · `.claude/**` · any `.env*` ·
    `package-lock.json` · `.gitignore` · `.githooks/**` · `apps/web/lib/ai-control-plane/**`
