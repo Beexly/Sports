@@ -134,6 +134,46 @@ regularized regression; fit α, don't guess it.
 
 ---
 
+## Citation verification (done independently, 2026-08-19)
+
+Both load-bearing citations were checked against primary sources rather than
+taken on trust. Both are real. One of them cuts against us.
+
+### Bickel & Kim (2014) — VERIFIED, and the finding is worse for us than quoted
+*Re-examining the efficiency of the Major League Baseball over-under betting
+market*, **Applied Financial Economics, Vol. 24, No. 18** —
+doi:10.1080/09603107.2014.925052.
+
+The adversary cited this only for the methodological point (you need real prices,
+not assumed ones). The paper's actual conclusion goes further, and against our
+hypothesis: *"Previous research in this area was unable to correctly test market
+efficiency because a data-set including the odds at which wagers were placed was
+unavailable. Using a data-set that includes both run lines and money lines, they
+found **little evidence that the over-under market is inefficient**."*
+
+**Consequence:** the single paper that justifies our price-space CLV fix is also
+the paper that, having done exactly that fix properly, found the MLB over-under
+market broadly efficient. This is a genuine prior update *downward* on C-22 and
+on the 58.5% totals signal. It does not kill the work — our angle (weather-park
+interaction, umpire zone, bullpen fatigue at the distribution tails) is not what
+they tested, and a full predictive distribution can price alternates a mean-based
+study never examined — but it means we are hunting in a field a competent study
+already swept. Reflect this in the prior, not in the enthusiasm.
+
+### Perez-Lebel, Le Morvan & Varoquaux (2023) — VERIFIED, with usable reference code
+*Beyond calibration: estimating the grouping loss of modern neural networks*,
+**ICLR 2023**, arXiv:2210.16315. Open-source estimator published at
+`github.com/aperezlebel/beyond_calibration`.
+
+The abstract independently confirms our audit finding E-A: grouping loss concerns
+*"samples with the same confidence scores but different true posterior
+probabilities"* — the spread of true posteriors inside a score bin, **not**
+outcome variance. The adversary's `Var(y|p)` formula measures the wrong quantity.
+**C-21 should use the authors' published estimator rather than reimplementing
+from a description.**
+
+---
+
 ## Immediate consequences for open ledger rows
 
 - **C-15 / C-20**: re-grading the historical census IN PLACE is now forbidden
