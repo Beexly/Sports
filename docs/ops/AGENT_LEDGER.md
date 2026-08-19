@@ -110,6 +110,8 @@ the only copy, and nobody else can verify or build on it.
 | C-6 | Drive PR #369 to green and merge (invoice.paid alias, auth-aware smoke, single-seam checkout mock) | claude | DONE | #369 |
 | R-1 | Rotate the ~25 Hermes .env credentials exposed in a session transcript (Fireworks, Together, DeepSeek, OpenRouter x2, Vercel first); delete the browser agent's own mistyped 401 gateway key | browser | OPEN | APPROVED (fable) 2026-08-19; these are the real exposure, not the phantom sk-ant key |
 | R-2 | Set JYNX_MODE=auto in Production+Preview (belt-and-braces so a future CLAUDE_PROVIDER deletion is genuinely inert) | browser | OPEN | APPROVED (fable) 2026-08-19 |
-| R-3 | Redeploy and confirm contentPlanPrimary flips off cerebras_free to the OpenRouter secondary (CEREBRAS_API_KEY removed; live surface still shows the old plan) | browser | OPEN | — |
+| R-3 | Redeploy and confirm contentPlanPrimary flips off cerebras_free to the OpenRouter secondary (CEREBRAS_API_KEY removed; live surface still shows the old plan) | browser | OPEN | ELEVATED 2026-08-19: this redeploy ALSO activates THE_ODDS_API_KEY (truth surface shows oddsKeyPresent false — env saved after the b71f7e2 build) — NFL odds path for preseason; do it first |
+| R-4 | Verify TheRundown 429s stop after THE_ODDS_API_KEY activates (dashboard request log clean for 1h); if 429s persist, report cadence for review — do not change any cron | browser | OPEN | 429 observed on /api/v2/sports/11/events/2026-08-20 at 05:22 UTC while ingestion still succeeded same minute (partial throttle, not blackout) |
+| S-1 | Evaluate TheSportsDB as a free schedules/results redundancy source (v1 key 123, 30 req/min; NOT an odds source) — must pass source-rights registry classification before any adapter work | — | OPEN | founder surfaced docs 2026-08-19; parked until post-launch, settlement redundancy is the only near-term use |
 
 <!-- LEDGER:END -->
