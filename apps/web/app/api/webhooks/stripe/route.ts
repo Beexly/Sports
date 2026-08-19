@@ -153,16 +153,17 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
-      await db.subscription.updateMany({
-        where: { stripeSubscriptionId: subscription.id },
-        data: {
-          status: "CANCELED",
-          tier: "FREE",
-          canceledAt: new Date(),
-          // Clear the dunning anchor — a canceled row is no longer past-due.
-          pastDueSince: null,
-        },
-      });
+      await revokeSubscriptionAccess(subscription.id);
+      break;
+    }
+
+    case "charge.refunded": {
+      // Refund-driven revocation (H-K), gated behind REFUND_REVOKES_ACCESS.
+      // Fail-safe bias is absolute: any ambiguity — partial refund, missing
+      // amounts, unresolvable invoice/subscription, flag not exactly on —
+      // mutates NOTHING and logs what would have happened.
+      const charge = event.data.object as Stripe.Charge;
+      await handleChargeRefunded(charge);
       break;
     }
 
@@ -230,6 +231,150 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       // Unhandled event type — ignore
       break;
   }
+}
+
+/**
+ * REFUND_REVOKES_ACCESS — kill switch for refund-driven entitlement revocation.
+ * DEFAULT OFF is a hard requirement: absent, empty, "false", "1", "yes" — every
+ * value except a trimmed, case-insensitive "true" — leaves the handler in
+ * LOG-ONLY mode, which records what WOULD happen and mutates nothing. Mirrors
+ * the house envFlag convention (lib/ops/autonomy-posture.ts).
+ */
+function refundRevokesAccessEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env["REFUND_REVOKES_ACCESS"]?.trim().toLowerCase() === "true";
+}
+
+/**
+ * CANONICAL terminal downgrade for a subscription id — the ONE write path that
+ * drops an entitlement row to FREE/CANCELED. `customer.subscription.deleted`
+ * and (flag-gated) full-refund revocation both flow through here so there is
+ * never a second, hand-rolled revocation write to drift. Keyed on
+ * stripeSubscriptionId: a row that has since moved to a NEWER subscription
+ * (resubscribe/upgrade) matches nothing and is inherently protected — a stale
+ * id can never revoke a paying member's current access.
+ */
+async function revokeSubscriptionAccess(
+  stripeSubscriptionId: string,
+): Promise<{ count: number }> {
+  return db.subscription.updateMany({
+    where: { stripeSubscriptionId },
+    data: {
+      status: "CANCELED",
+      tier: "FREE",
+      canceledAt: new Date(),
+      // Clear the dunning anchor — a canceled row is no longer past-due.
+      pastDueSince: null,
+    },
+  });
+}
+
+/**
+ * charge.refunded — revoke access on a FULL refund of a subscription charge,
+ * gated behind REFUND_REVOKES_ACCESS (default OFF = log-only).
+ *
+ * FAIL-SAFE DECISIONS (money path — when in doubt, revoke NOTHING and log):
+ *   - FULL means Stripe positively reports `refunded === true` AND
+ *     `amount_refunded === amount` with both amounts known-positive numbers.
+ *     Partial refunds, zero/missing amounts, or an unset refunded flag are
+ *     NEVER full — log-only regardless of the flag.
+ *   - The charge must resolve charge → invoice → subscription. A charge with
+ *     no invoice (one-off payment), an invoice with no subscription, or a
+ *     failed invoice retrieve resolves to NOTHING: we log and ack — we never
+ *     guess a subscription from customer id or metadata. A resolution failure
+ *     deliberately does NOT 500: a Stripe retry storm cannot make an
+ *     unresolvable charge resolvable, and the miss is surfaced loudly for a
+ *     human instead of silently retried into oblivion.
+ *   - Enforcement writes go through `revokeSubscriptionAccess` — the SAME
+ *     canonical path as `customer.subscription.deleted`. A write failure there
+ *     propagates → 500 → Stripe redelivers (the event is not yet recorded), so
+ *     a positively-confirmed revocation is retried durably, never lost.
+ *   - Replays/duplicates are absorbed by the route-level webhookEvent dedup.
+ */
+async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
+  const enforce = refundRevokesAccessEnabled();
+  const mode = enforce ? "ENFORCE" : "LOG-ONLY (REFUND_REVOKES_ACCESS off)";
+
+  // Classify the refund. Anything short of a positively-confirmed full refund
+  // is treated as partial/ambiguous and never revokes.
+  const amount = charge.amount;
+  const amountRefunded = charge.amount_refunded;
+  const amountsKnown =
+    typeof amount === "number" &&
+    typeof amountRefunded === "number" &&
+    Number.isFinite(amount) &&
+    Number.isFinite(amountRefunded) &&
+    amount > 0;
+  const isFullRefund = charge.refunded === true && amountsKnown && amountRefunded === amount;
+
+  // Resolve charge → invoice → subscription. Resolved in BOTH modes so
+  // log-only records the exact subscription that WOULD have been revoked.
+  const invoiceId =
+    typeof charge.invoice === "string" ? charge.invoice : charge.invoice?.id ?? null;
+  if (!invoiceId) {
+    console.warn(
+      `[stripe] charge.refunded ${charge.id} [${mode}]: no invoice on charge ` +
+        `(one-off payment?) — no resolvable subscription, revoking nothing (never guess).`,
+    );
+    return;
+  }
+
+  let subscriptionId: string | null = null;
+  try {
+    const invoice = await stripe.invoices.retrieve(invoiceId);
+    subscriptionId =
+      typeof invoice.subscription === "string"
+        ? invoice.subscription
+        : invoice.subscription?.id ?? null;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error(
+      `[stripe] charge.refunded ${charge.id} [${mode}]: failed to retrieve invoice ` +
+        `${invoiceId} (${message}) — cannot resolve a subscription, revoking nothing (fail-safe).`,
+    );
+    return;
+  }
+
+  if (!subscriptionId) {
+    console.warn(
+      `[stripe] charge.refunded ${charge.id} [${mode}]: invoice ${invoiceId} has no ` +
+        `subscription — revoking nothing (never guess).`,
+    );
+    return;
+  }
+
+  if (!isFullRefund) {
+    // Partial/ambiguous refund: LOG-ONLY ALWAYS, flag regardless.
+    console.warn(
+      `[stripe] charge.refunded ${charge.id} [${mode}]: PARTIAL/ambiguous refund ` +
+        `(refunded=${String(charge.refunded)}, amount_refunded=${String(amountRefunded)} of ` +
+        `${String(amount)}) for subscription ${subscriptionId} — partial refunds never revoke.`,
+    );
+    return;
+  }
+
+  if (!enforce) {
+    console.warn(
+      `[stripe] charge.refunded ${charge.id} [${mode}]: FULL refund of subscription ` +
+        `${subscriptionId} — WOULD revoke access (tier FREE / status CANCELED via the ` +
+        `canonical path). Mutating nothing: REFUND_REVOKES_ACCESS is not "true".`,
+    );
+    return;
+  }
+
+  // ENFORCE: full refund, resolved subscription, flag exactly on.
+  const revoked = await revokeSubscriptionAccess(subscriptionId);
+  if (revoked.count === 0) {
+    console.warn(
+      `[stripe] charge.refunded ${charge.id} [ENFORCE]: FULL refund of subscription ` +
+        `${subscriptionId} matched no DB row (unknown or superseded subscription) — ` +
+        `nothing revoked.`,
+    );
+    return;
+  }
+  console.warn(
+    `[stripe] charge.refunded ${charge.id} [ENFORCE]: FULL refund — revoked access for ` +
+      `subscription ${subscriptionId} via the canonical revocation path.`,
+  );
 }
 
 /** OR-lookup for a session's attempt: metadata attempt id and/or session id. */
