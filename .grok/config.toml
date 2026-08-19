@@ -1,0 +1,24 @@
+# Project-scoped Grok Build config — permissions only (per Grok docs, project
+# scope carries mcp_servers/plugins/permission). Behavioral law lives in
+# AGENTS.md + CLAUDE.md, which Grok Build reads natively with zero setup.
+[permission]
+allow = [
+  "Read",
+  "Grep",
+  "Bash(git status*)", "Bash(git diff*)", "Bash(git log*)", "Bash(git show*)",
+  "Bash(git fetch*)", "Bash(git add *)", "Bash(git commit*)",
+  "Bash(git checkout*)", "Bash(git branch*)",
+  "Bash(git push -u origin hermes/*)", "Bash(git push origin hermes/*)",
+  "Bash(npx vitest*)", "Bash(npx tsc*)", "Bash(npm run *)", "Bash(npm test*)",
+  "Bash(node scripts/ops/*)", "Bash(node scripts/guardrails/*)",
+]
+deny = [
+  "Bash(git push origin main*)", "Bash(git push -f*)", "Bash(git push --force*)",
+  "Bash(rm -rf*)",
+  "Bash(*prisma migrate*)", "Bash(*prisma db push*)",
+  "Bash(npm install-scripts approve*)",
+  "Edit(packages/db/prisma/**)", "Edit(.github/**)",
+  "Edit(scripts/guardrails/**)", "Edit(apps/web/lib/ai-control-plane/**)",
+  "Edit(**/.env*)", "Edit(package-lock.json)",
+  "Read(**/.env*)",
+]

@@ -1,0 +1,4 @@
+# Custom sandbox profile for GSE work. Launch with: grok --sandbox gse
+[profiles.gse]
+extends = "workspace"
+deny = ["**/.env", "**/.env.*", "**/*.pem", "**/.ssh/**"]
