@@ -9,7 +9,19 @@ sealed paths untouched, every metric ships with its honesty block.
 Launch items first. The research item is LAST and must not start until B-6
 and B-7 are done or blocked.
 
-## B-6 — Glass Ledger: make the promise true (three branches, in order)
+## B-6 — BLOCKED on founder, not on you. Skip to B-7.
+
+The in-memory/JSON-file store on `hermes/b6a-chain-append` would have
+shipped a fake chain (module state does not survive a Vercel serverless
+cold start — verified: process-sport.ts runs inside
+apps/web/app/api/cron/refresh-odds/route.ts). The real fix is a new
+Prisma model, a sealed path. Full root-cause + the exact proposed schema
+is in `docs/ops/edge/2026-08-20-ledger-chain-durability-proposal.md` —
+read it, but do not implement the migration yourself. Do NOT retry the
+process-sport.ts anchor patch; the anchor was never the real bug. B-6a/b/c
+stay BLOCKED until the founder reviews. Proceed directly to B-7 below.
+
+## B-6 (original spec, for reference once unblocked) — Glass Ledger: make the promise true (three branches, in order)
 
 The /glass-ledger copy promises a linked chain ("each entry points to the one
 written just before it") that does not run yet. Verified gaps: the edge-lab
