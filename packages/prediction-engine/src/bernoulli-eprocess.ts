@@ -1,48 +1,18 @@
 /**
  * Bernoulli e-process toolkit — R&D, dark, unwired.
  *
- * Test-martingale for a simple alternative against a known Bernoulli null
- * mean y0 (typically the market-implied win probability). Increment:
- *
- *   1 + λ (X − y0)
- *
- * where X ∈ {0,1} is the settled outcome and λ is a predictable bet size
- * with 0 < λ < 1/y0 so every factor stays strictly positive.
- *
- * Ville: under H0 (E[X] = y0) the product M is a nonnegative martingale
- * with M_0 = 1, so P(sup M ≥ 1/α) ≤ α under continuous monitoring.
- *
- * pHat is the model's probability. It is accepted so a caller can form a
- * predictable λ from it (Kelly-style), but it does not enter the increment
- * itself — the increment is a bet against y0, not a calibration residual.
+ * Two APIs live here:
+ *   1. v5 likelihood-ratio (eStep / eProcess / mixtureEProcess) — the
+ *      contract in HERMES_HANDOFF_V5.
+ *   2. v4 betting increment (bettingEStep / bettingEProcess) — kept so
+ *      the earlier Ville suite still pins that martingale.
  *
  * Do not import this from a live path. Do not flip any gate.
  */
+
 export type BernoulliOutcome = 0 | 1;
 
-export type EStepInput = {
-  readonly pHat: number;
-  readonly y: BernoulliOutcome;
-  readonly y0: number;
-  readonly lambda: number;
-  /** Previous wealth. Default 1. */
-  readonly M0?: number;
-};
-
-export type EStepResult = {
-  readonly M: number;
-  readonly logM: number;
-  readonly factor: number;
-};
-
-export type MixtureEProcessResult = {
-  readonly M: number;
-  readonly logM: number;
-  readonly supM: number;
-  readonly n: number;
-};
-
-function isUnitIntervalOpen(v: number): boolean {
+function isOpenUnit(v: number): boolean {
   return Number.isFinite(v) && v > 0 && v < 1;
 }
 
@@ -51,18 +21,125 @@ function isOutcome(y: number): y is BernoulliOutcome {
 }
 
 /**
- * One wealth update. Refuses (returns null) on non-positive factor or
- * out-of-range inputs rather than silently leaving the martingale family.
+ * One likelihood-ratio factor.
+ *   y === 1 → pHat / pMkt
+ *   y === 0 → (1 − pHat) / (1 − pMkt)
+ * Identical forecasts (pHat === pMkt) return exactly 1.
  */
-export function eStep(input: EStepInput): EStepResult | null {
+export function eStep(pHat: number, pMkt: number, y: BernoulliOutcome): number | null {
+  if (!isOpenUnit(pHat) || !isOpenUnit(pMkt) || !isOutcome(y)) return null;
+  const factor = y === 1 ? pHat / pMkt : (1 - pHat) / (1 - pMkt);
+  if (!(factor > 0) || !Number.isFinite(factor)) return null;
+  return factor;
+}
+
+export type EProcessResult = {
+  readonly series: readonly number[];
+  readonly logSeries: readonly number[];
+  readonly supM: number;
+  readonly M: number;
+  readonly logM: number;
+  readonly n: number;
+};
+
+/**
+ * Running product M_t = Π eStep, accumulated in log space.
+ * Ville cares about sup_t M_t, not only the terminal value.
+ */
+export function eProcess(
+  pHats: readonly number[],
+  pMkts: readonly number[],
+  ys: readonly BernoulliOutcome[],
+): EProcessResult | null {
+  if (pHats.length !== pMkts.length || pMkts.length !== ys.length) return null;
+  if (ys.length === 0) {
+    return { series: [], logSeries: [], supM: 1, M: 1, logM: 0, n: 0 };
+  }
+  const series: number[] = [];
+  const logSeries: number[] = [];
+  let logM = 0;
+  let supM = 1;
+  for (let i = 0; i < ys.length; i++) {
+    const factor = eStep(pHats[i]!, pMkts[i]!, ys[i]!);
+    if (factor === null) return null;
+    logM += Math.log(factor);
+    const M = Math.exp(logM);
+    if (!Number.isFinite(M) || !(M > 0)) return null;
+    series.push(M);
+    logSeries.push(logM);
+    if (M > supM) supM = M;
+  }
+  return {
+    series,
+    logSeries,
+    supM,
+    M: series[series.length - 1]!,
+    logM,
+    n: ys.length,
+  };
+}
+
+export type MixtureProcessResult = {
+  readonly series: readonly number[];
+  readonly supM: number;
+  readonly M: number;
+  readonly n: number;
+};
+
+/**
+ * Average of K e-processes at each t: M_mix,t = (1/K) Σ_k M_k,t.
+ * Each process is a running-wealth series (already exponentiated).
+ */
+export function mixtureEProcess(
+  processes: readonly (readonly number[])[],
+): MixtureProcessResult | null {
+  if (processes.length === 0) return null;
+  const n = processes[0]!.length;
+  for (const p of processes) {
+    if (p.length !== n) return null;
+  }
+  if (n === 0) return { series: [], supM: 1, M: 1, n: 0 };
+  const k = processes.length;
+  const series: number[] = [];
+  let supM = Number.NEGATIVE_INFINITY;
+  for (let t = 0; t < n; t++) {
+    let sum = 0;
+    for (const p of processes) {
+      const v = p[t]!;
+      if (!Number.isFinite(v)) return null;
+      sum += v;
+    }
+    const mix = sum / k;
+    series.push(mix);
+    if (mix > supM) supM = mix;
+  }
+  return { series, supM, M: series[n - 1]!, n };
+}
+
+/* ------------------------------------------------------------------ */
+/* v4 betting increment — kept, renamed, unwired                      */
+/* ------------------------------------------------------------------ */
+
+export type BettingEStepInput = {
+  readonly pHat: number;
+  readonly y: BernoulliOutcome;
+  readonly y0: number;
+  readonly lambda: number;
+  readonly M0?: number;
+};
+
+export type BettingEStepResult = {
+  readonly M: number;
+  readonly logM: number;
+  readonly factor: number;
+};
+
+export function bettingEStep(input: BettingEStepInput): BettingEStepResult | null {
   const { pHat, y, y0, lambda } = input;
   const M0 = input.M0 ?? 1;
-  if (!isUnitIntervalOpen(pHat) || !isUnitIntervalOpen(y0)) return null;
-  if (!isOutcome(y)) return null;
+  if (!isOpenUnit(pHat) || !isOpenUnit(y0) || !isOutcome(y)) return null;
   if (!Number.isFinite(lambda) || lambda <= 0) return null;
   if (!Number.isFinite(M0) || M0 <= 0) return null;
-  // Strict positivity: 1 + λ(X − y0) > 0 for both X=0 and X=1.
-  // Worst case is X=0 → 1 − λ y0 > 0 → λ < 1/y0.
   if (lambda >= 1 / y0) return null;
   const factor = 1 + lambda * (y - y0);
   if (!(factor > 0) || !Number.isFinite(factor)) return null;
@@ -71,22 +148,25 @@ export function eStep(input: EStepInput): EStepResult | null {
   return { M, logM: Math.log(M), factor };
 }
 
-/**
- * Product e-process over a settled sequence. lambdas[i] must be predictable
- * (a function of information available before y[i]). Lengths must match.
- */
-export function mixtureEProcess(
+export type BettingEProcessResult = {
+  readonly M: number;
+  readonly logM: number;
+  readonly supM: number;
+  readonly n: number;
+};
+
+export function bettingEProcess(
   pHats: readonly number[],
   ys: readonly BernoulliOutcome[],
   y0: number,
   lambdas: readonly number[],
-): MixtureEProcessResult | null {
+): BettingEProcessResult | null {
   if (pHats.length !== ys.length || ys.length !== lambdas.length) return null;
   if (ys.length === 0) return { M: 1, logM: 0, supM: 1, n: 0 };
   let M = 1;
   let supM = 1;
   for (let i = 0; i < ys.length; i++) {
-    const step = eStep({
+    const step = bettingEStep({
       pHat: pHats[i]!,
       y: ys[i]!,
       y0,
@@ -100,7 +180,6 @@ export function mixtureEProcess(
   return { M, logM: Math.log(M), supM, n: ys.length };
 }
 
-/** Mulberry32 — deterministic, no extra dependency. */
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return () => {

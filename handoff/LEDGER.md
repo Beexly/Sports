@@ -62,7 +62,7 @@ baseline: typecheck=0  lint=0  guards=24/26 (api-v1-boundary expected FAIL; ai-t
 | H-5 | wire markClosingSnapshots (v3) | SUPERSEDED | 18:27 | Became v4 H-D |
 | H-A | fix isotonic PAV + lock tests | DONE | 18:27 | Algorithm already fixed in ba61b061; added equal/weighted/200-random/weighted-mass tests; 11/11 green; tsc=0 lint=0 |
 | H-B | cron-matrix-from-vercel.mjs generator | DONE | 18:30 | 20 crons from apps/web/vercel.json; DRIFT none vs root copy; 3/3 node:test; --check exit 0 |
-| H-C | Bernoulli e-process toolkit (unwired) | DONE | 18:33 | eStep + mixtureEProcess; 5/5 tests; H0 Ville holds; median picks to supM>=100 at 55% vs 50% = 752 (lambda=0.2, 398/400 hits) |
+| H-C | Bernoulli e-process toolkit (unwired) | DONE | 19:28 | v5 LR eStep/eProcess/mixture + log-space; v4 betting kept as bettingEStep; 13/13 tests; H0 Ville holds; median picks to supM>=100 at 55% vs 50% = 756 |
 | H-D | wire markClosingSnapshots behind flag | DONE | 18:37 | markClosingSnapshotsIfEnabled no-op unless LINE_ARCHIVE_ENABLED=true; settle-sport swallows archive errors; 54/54 settle+archive tests; tsc=0 lint=0 |
 | H-E | CLV + pick-universe census (read-only) | BLOCKED | 2026-08-18 22:45 | Can't reach database server at `localhost:5433`. Retroactive CLV grading: UNKNOWN — no SELECT possible. |
 | H-F | DOC_DRIFT.md | DONE | 18:41 | handoff/DOC_DRIFT.md; seed+schedule+16 missing paths proved by test -f; CRON_MATRIX cadence table stale vs live vercel.json |
