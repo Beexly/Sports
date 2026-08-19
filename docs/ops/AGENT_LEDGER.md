@@ -3,6 +3,14 @@
 One row per unit of work. **Every agent working on this repo reads this file first,
 claims its row, and writes its evidence when done.**
 
+**Also read the live truth surface before acting:**
+`https://www.galaxysportsedge.com/api/ops/public-surface-truth` — deployment SHA,
+gates, credit stack, Jynx lane plan, calibration. On 2026-08-19 it disproved a
+"leaked Anthropic key" alarm (the value was Vercel placeholder text; the real
+value is `auto`) and would have prevented a week-old open PR (#369) from being
+rebuilt twice by different agents. Dashboards and prose reports drift; this
+endpoint and this ledger are the two ground truths.
+
 Validated by `scripts/ops/check-agent-ledger.mjs`, which runs in CI via
 `apps/web/__tests__/agent-ledger.test.ts`. A malformed or dishonest row fails the
 build.
@@ -84,7 +92,7 @@ the only copy, and nobody else can verify or build on it.
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
 | H-M | Cron no-op audit | hermes | UNPUSHED | revised per review: data-driven early-return only (no-game-in-horizon skip, mirrors process-sport.ts quiet-board); ~60/day saved off-season, 0 in-season, 576/day flag-off figure withdrawn; hermes/h-m-cron-audit cd5086f7, local worktree |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
-| H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2 |
+| H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2; superseded by #369 single-seam version — the fix had been sitting mergeable in #369 for 12 days and was rebuilt twice for lack of a ledger |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
 | C-5 | PAVA forward-violation bug in calibration core | claude | DONE | 9627379 |
 | H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | OPEN | — |
@@ -94,9 +102,13 @@ the only copy, and nobody else can verify or build on it.
 | C-3 | Declare appliedPauseGroups + RUN_GENERATE_SIGNAL_SLATE | claude | DONE | 1d39021 |
 | C-4 | Agent ledger + guard | claude | DONE | 65e6474 |
 | X-1 | signup-workflow scaffolding | copilot | CANCELLED | fabricated feature; auth is Google OAuth only via PrismaAdapter, no signup flow exists |
-| X-2 | Delete CLAUDE_PROVIDER to fix AI routing | browser | CANCELLED | diagnosis wrong; unknown value yields zero cloud attempts and falls through to Anthropic direct, pinned by provider-mode-failsafe.test.ts |
-| F-1 | Rotate the Anthropic key found in CLAUDE_PROVIDER | browser | OPEN | decision made (fable): rotate now; browser agent executes with founder watching, script in session log 2026-08-19 |
+| X-2 | Delete CLAUDE_PROVIDER to fix AI routing | browser | CANCELLED | doubly wrong. (1) Original diagnosis false: value is "auto", not a key. (2) Deletion is NOT inert in production: with clouds configured and no JYNX_MODE, empty -> mode "anthropic" -> zero cloud attempts -> CASH Anthropic, dropping the azure/vertex credit lanes that "auto" selects. provider-mode-failsafe.test.ts covers UNRECOGNISED values only — citing it for deletion was a category error (fable). Prerequisite for any future deletion: set JYNX_MODE=auto first |
+| F-1 | Rotate the Anthropic key found in CLAUDE_PROVIDER | browser | CANCELLED | false premise: live truth surface returns claudeProvider "auto"; the sk-ant-api03-aB text was a Vercel placeholder misread, then propagated by the orchestrator. No Anthropic key was ever exposed there. Browser agent correctly refused the rotation script |
 | F-2 | Decide REFUND_REVOKES_ACCESS default | founder | OPEN | decision made (fable): stays OFF through H-K merge; flip to true after ONE observed production refund revokes correctly in logs; the env flip itself is a hands task |
 | F-3 | Promote or remove apps/web/app/api/v1 | claude | CLAIMED | — |
+| C-6 | Drive PR #369 to green and merge (invoice.paid alias, auth-aware smoke, single-seam checkout mock) | claude | DONE | #369 |
+| R-1 | Rotate the ~25 Hermes .env credentials exposed in a session transcript (Fireworks, Together, DeepSeek, OpenRouter x2, Vercel first); delete the browser agent's own mistyped 401 gateway key | browser | OPEN | APPROVED (fable) 2026-08-19; these are the real exposure, not the phantom sk-ant key |
+| R-2 | Set JYNX_MODE=auto in Production+Preview (belt-and-braces so a future CLAUDE_PROVIDER deletion is genuinely inert) | browser | OPEN | APPROVED (fable) 2026-08-19 |
+| R-3 | Redeploy and confirm contentPlanPrimary flips off cerebras_free to the OpenRouter secondary (CEREBRAS_API_KEY removed; live surface still shows the old plan) | browser | OPEN | — |
 
 <!-- LEDGER:END -->
