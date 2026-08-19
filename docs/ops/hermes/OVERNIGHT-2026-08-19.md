@@ -67,6 +67,34 @@ is whether the INPUTS are market quotes or model output. Deliver, as JSON + ters
    through zero, movement is real) or is the lock the wrong side's number (artifact)?
    Count both classes.
 
+## L-11 — verify the pasted affiliate-tooling research list (only if L-8/L-9 done first)
+
+Founder pasted a DeepSeek research summary naming ~20 affiliate/partnership/
+revenue-tooling repos. Read `docs/ops/edge/2026-08-19-affiliate-tooling-research-triage.md`
+first — it explains why: several claims in that summary carry the classic
+hallucination signature (hyper-precise unverifiable stats like "$0→$4M...
+$20/mo... 14+ months" or "$16.02 revenue potential"). Nothing from that list
+gets trusted or adopted until independently checked. Verify, don't summarize
+what DeepSeek already claimed.
+
+For each name below: search GitHub, confirm the repo/org actually exists,
+record the real owner/org, star count, last-commit date, license, and
+primary language — and flag if DeepSeek's description doesn't roughly match
+what you find (wrong stack claimed, wrong feature set, or straight-up
+doesn't exist).
+
+Refferq · Income Generator Hub · MCP SuperAssistant Automation · SponsorFit ·
+ClawMarketing / growth-os · GreenRobot Ad Server · VoucherBoost (Voucherswell) ·
+OpenPartner (openpartner.dev) · xAmplify OpenSource PRM · Google Meridian ·
+OpenAttribution · Inpact · Analytify · Droploop · mangosqueezy · Numok · Dub ·
+PubliFlow · Cashier SaaS Metrics · Revenue Metrics Dashboard ·
+prathammahajan/affiliate-management-system · cpanova/cpa-network
+
+Output one table (name, exists Y/N, real URL, stars, last commit, stack,
+verdict: real-and-matches / real-but-exaggerated / does-not-exist) to
+`hermes/l11-affiliate-tooling-verification` (new branch, push grant same
+rules as L-7/L-9/L-10). No adoption decisions — just ground truth.
+
 ## L-10 — free-provider live probes (only after L-9, if night remains)
 
 Extends H-S. For each H-S candidate whose registry-compatible status allows it
