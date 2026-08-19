@@ -15,12 +15,12 @@ import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere
 export const metadata: Metadata = {
   title: "Today's Board",
   description:
-    "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
+    "Model-signal board, gated games, and calibration posture from Galaxy Sports Edge. Quiet when the slate is empty — free tools stay open. Not a PROVEN track record while eligibility is RED.",
   alternates: { canonical: "/board" },
   openGraph: {
     title: "Today's Board",
     description:
-      "Live board state, published picks, gated games, and calibration status from the Galaxy Sports Edge scoring pipeline.",
+      "Model-signal board, gated games, and calibration posture from Galaxy Sports Edge. Quiet when the slate is empty — free tools stay open. Not a PROVEN track record while eligibility is RED.",
   },
 };
 
@@ -97,12 +97,12 @@ export default async function BoardPage(): Promise<JSX.Element> {
             {suppression.code === "STALE_DATA_SUPPRESSED" ? (
               <>
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-caution">
-                  Board paused
+                  Quiet board
                 </span>
                 <span className="break-words sm:ml-3">
-                  Live data did not clear the freshness check, so the board is
-                  held rather than showing a stale slate. Counts read zero until
-                  fresh data lands.
+                  Model signals are quiet (no fresh published slate). This is
+                  restraint, not an outage — free tools and methodology stay open.
+                  Counts read zero until the next signal generation lands.
                 </span>
               </>
             ) : (
@@ -283,6 +283,13 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
           {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
         </span>
       </div>
+      {row.rankingP !== null && (
+        <p className="mt-3 font-mono text-xs text-ion-1">
+          rankingP {row.rankingP.toFixed(3)}
+          {row.rankingSource ? ` · ${row.rankingSource}` : ""}
+          <span className="text-ion-3"> — model sort key, not verified ROI</span>
+        </p>
+      )}
       {row.confidence !== null && (
         <p className="mt-3 text-sm text-ion-1">Confidence label available on the pick view.</p>
       )}

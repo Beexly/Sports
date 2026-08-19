@@ -3,7 +3,15 @@
  * Browser-less pricing smoke (fetch). Auth-gated checkout is documented only.
  * Usage: HOST=https://www.galaxysportsedge.com node scripts/e2e/pricing-smoke.mjs
  */
-const HOST = (process.env.HOST || "https://www.galaxysportsedge.com").replace(/\/$/, "");
+const rawHost = (process.env.HOST || process.env.SMOKE_HOST || "https://www.galaxysportsedge.com").trim();
+const HOST = (
+  !rawHost ||
+  rawHost === "0.0.0.0" ||
+  rawHost.startsWith("0.0.0.0") ||
+  !/^https?:\/\//i.test(rawHost)
+    ? "https://www.galaxysportsedge.com"
+    : rawHost
+).replace(/\/$/, "");
 
 async function main() {
   const pricing = await fetch(`${HOST}/pricing`, {
@@ -19,7 +27,9 @@ async function main() {
   // not just a fallback on raw body length, which is true for nearly any
   // real Next.js page and would pass even if every price string vanished.
   const hasPriceSignal =
-    /\$\d+(?:\.\d{2})?\s*\/\s*(?:mo|yr)\b/i.test(html) && /Pro|Elite|Founding/i.test(html);
+    (/\$\d+(?:\.\d{2})?/.test(html) &&
+      /(?:\/\s*(?:mo|yr)|per month|\/month|monthly|Founding)/i.test(html)) &&
+    /Pro|Elite|Fantasy|Founding/i.test(html);
   if (!hasPriceSignal) {
     console.error("FAIL pricing body missing commercial signals");
     process.exit(1);

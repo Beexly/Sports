@@ -1,0 +1,13 @@
+# Keep build context (and therefore the image) free of local build residue.
+#
+# __pycache__ is not cosmetic here: this service has already been bitten once by stale
+# bytecode masking a module's real behaviour (see README). Copying a host __pycache__
+# into the image would let a previous revision's .pyc win over the source next to it.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+.git/
+.gitignore

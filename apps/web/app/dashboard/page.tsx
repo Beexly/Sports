@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
+import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance-gate";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
@@ -13,6 +14,7 @@ import { BRAND_NAME } from "@/lib/brand";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +31,7 @@ type TodayPick = {
   isFeatured: boolean;
   result: string;
   generatedAt: Date;
+  factorBreakdown?: unknown;
   game: {
     homeTeamName: string;
     awayTeamName: string;
@@ -65,6 +68,7 @@ export default async function DashboardPage({
 
   const user = session.user;
   const gates = getReadinessGates();
+  const effectivePerf = await resolveEffectivePerformanceGate();
   const recentSince = subDays(new Date(), 14);
   const stubMode = isStubMode();
   const demoActive = isDemoPicksEnabled() && stubMode;
@@ -117,9 +121,14 @@ export default async function DashboardPage({
           ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
-        orderBy: [{ isFeatured: "desc" }, { confidence: "desc" }],
-        take: entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1),
+        orderBy: [{ generatedAt: "desc" }],
+        take: entitlements.canSeePremiumPicks ? 24 : (entitlements.dailyPickLimit ?? 1),
       })
+      .then((rows) =>
+        [...rows]
+          .sort(comparePicksByRanking)
+          .slice(0, entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1)),
+      )
       .catch(() => [] as unknown[]) as Promise<TodayPick[]>,
     db.pick
       .count({
@@ -159,7 +168,7 @@ export default async function DashboardPage({
   ]);
 
   const performancePolicy = evaluatePublicPerformancePolicy({
-    canExposePerformanceStats: gates.canExposePerformanceStats,
+    canExposePerformanceStats: effectivePerf.canExposePerformanceStats,
     minSettledPicksForLearning: gates.minSettledPicksForLearning,
     canonicalSettledCount,
     bootstrapCount: bootstrapSettledCount,

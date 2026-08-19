@@ -25,7 +25,7 @@ import { SurgeCount, HashMaterialize, GateBar } from "@/components/engine/engine
 export const metadata: Metadata = {
   title: "The Sealed Engine: Watch the Machine Commit",
   description:
-    "Live telemetry from the pick engine: what it swept, what it declined, what it sealed behind receipts before kickoff. Proof you can check, with the recipe kept where it belongs.",
+    "Engine telemetry from the pick engine: what it swept, what it declined, what it sealed behind receipts before kickoff. Proof you can check, with the recipe kept where it belongs.",
   alternates: { canonical: "/engine" },
 };
 
@@ -50,16 +50,26 @@ export default async function SealedEnginePage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow flex items-center gap-2">
-                <span className="live-dot" aria-hidden />
+                {!story.unreachable && !quietDay ? (
+                  <span className="live-dot" aria-hidden />
+                ) : (
+                  <span
+                    aria-hidden
+                    className="inline-block h-1.5 w-1.5 rounded-full bg-ion-3"
+                  />
+                )}
                 The Sealed Engine
               </p>
               <h1 className="mt-4 font-display text-display-xl text-balance">
                 Watch the machine <span className="gw-chrome-plasma">commit</span>.
               </h1>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-ion-1">
-                Not how it thinks. What it is willing to sign. Everything below
-                is live: the sweep, the gate, the seals. The recipe stays in
-                the vault; the commitments are yours to check.
+                Not how it thinks. What it is willing to sign.{" "}
+                {story.unreachable
+                  ? "Telemetry is temporarily unreachable — that is a feed issue, not a verdict."
+                  : quietDay
+                    ? "Nothing on the wire yet today; quiet is restraint, not brokenness."
+                    : "Below: live sweep, gate, and seals. The recipe stays in the vault; commitments are yours to check."}
               </p>
             </Reveal>
           </div>

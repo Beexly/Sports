@@ -20,6 +20,14 @@ export type AutonomyActionKind =
   | "RUN_FREE_SETTLE"
   | "RUN_FREE_SPINE_HEALTH"
   | "RUN_REFRESH_ODDS_FREE"
+  | "RUN_GENERATE_DRAFTS"
+  | "RUN_CALIBRATION_METRICS"
+  // Referenced by EXECUTABLE_CRON_TARGETS in execute-autonomy-cycle.ts and
+  // already approved in AUTONOMY_SAFE_CRON_TARGETS, but never added here — so
+  // the map entry failed `satisfies Partial<Record<AutonomyActionKind, string>>`.
+  // NOTE: planAutonomyCycle does not emit this kind yet, so the entry stays
+  // unreachable at runtime; this only makes the half-landed wiring type-legal.
+  | "RUN_GENERATE_SIGNAL_SLATE"
   | "ATTACK_RCA_WAVE_A"
   | "ATTACK_RCA_WAVE_B"
   | "ESCALATE_DISPUTES"
@@ -248,6 +256,26 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
     }
   }
 
+  // Public picks kill switch (FORCE_NO_BET_IF_STALE / auto-on with PUBLIC_PICKS)
+  // requires IngestionRun SUCCESS with oddsInserted > 0 within 240m Refresh SLA.
+  // free-spine SUCCESS alone is NOT enough (G4 empty-odds trap). When the public
+  // surface is open, keep the paid odds path warm via allow-listed refresh-odds.
+  if (obs.publicPicksEnabled) {
+    severity = worse(severity, "P1");
+    actions.push({
+      kind: "RUN_REFRESH_ODDS_FREE",
+      priority: 880,
+      severity: "P1",
+      title: "Refresh odds for public-picks kill switch",
+      detail:
+        "PUBLIC_PICKS open — surface stays dark until odds-inserting SUCCESS within 240m. " +
+        "Invoke refresh-odds (may spend THE_ODDS_API_KEY). free-spine SLA alone cannot clear this gate.",
+      target: "/api/cron/refresh-odds",
+      requiresOwner: false,
+      autonomousSafe: true,
+    });
+  }
+
   if (!obs.databaseOk) {
     severity = worse(severity, "P0");
     actions.push({
@@ -320,6 +348,28 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
       autonomousSafe: true,
     });
   }
+
+  // ── Allow-listed housekeeping (never flips gates; fills remaining maxActions) ─
+  actions.push({
+    kind: "RUN_CALIBRATION_METRICS",
+    priority: 120,
+    severity: "P3",
+    title: "Refresh calibration metrics + versioned map",
+    detail: "Internal-only Brier/ECE/reliability fit. Does not publish or flip CALIBRATION_ADJUSTMENTS.",
+    target: "/api/cron/calibration-metrics",
+    requiresOwner: false,
+    autonomousSafe: true,
+  });
+  actions.push({
+    kind: "RUN_GENERATE_DRAFTS",
+    priority: 100,
+    severity: "P3",
+    title: "Generate content drafts (free-lane first)",
+    detail: "Jynx free-lane drafts only; never auto-publishes public blog/picks claims.",
+    target: "/api/cron/generate-drafts",
+    requiresOwner: false,
+    autonomousSafe: true,
+  });
 
   if (actions.filter((a) => a.severity !== "OK").length === 0) {
     actions.push({

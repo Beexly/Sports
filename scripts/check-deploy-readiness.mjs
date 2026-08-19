@@ -343,7 +343,10 @@ async function checkRedis() {
 
 header("Deploy config");
 function checkVercelConfig() {
-  const path = join(repoRoot, "vercel.json");
+  // Vercel reads crons/headers ONLY from the vercel.json inside its Root Directory
+  // (apps/web). A copy at the repo root is inert — validating it reports green
+  // while the live config drifts. See apps/web/__tests__/vercel-config-drift.test.ts
+  const path = join(repoRoot, "apps", "web", "vercel.json");
   if (!existsSync(path)) {
     bad("vercel.json present");
     return;

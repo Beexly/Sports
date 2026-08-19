@@ -39,23 +39,23 @@ export type IndependentEdgeAgreement =
  * itself": real edge is the gap between an estimate the market has NOT absorbed
  * and the market price, refereed by a second independent market.
  *
- * `priced` is false in the current wire-in: the assessment is SURFACED in the
- * glass box (and persisted for CLV grading) but does NOT yet move the confidence
- * score. Letting it move confidence is a deliberate, founder-gated MODEL_VERSION
- * step. The honest default with no independent estimate is no `independentEdge`
- * at all — the scorer behaves exactly as before.
+ * When `priced` is true, independents drove the ranking path (rankingScore /
+ * rankingP) used for generation sort and selective publish (MODEL_VERSION step).
+ * When false, the assessment is SURFACED in the glass box only. The honest
+ * default with no independent estimate is no `independentEdge` at all.
  */
 export interface IndependentEdgeSummary {
   decision: IndependentEdgeDecision;
   agreement: IndependentEdgeAgreement;
-  marketFairProb: number;       // sportsbook de-vigged fair prob for the side, 0–1
+  /** Sportsbook de-vigged fair for the side; null when no real book (never invent 0.5). */
+  marketFairProb: number | null;
   trueProb: number | null;      // independent blended estimate, 0–1
-  rawEdge: number;              // trueProb − marketFairProb
+  rawEdge: number;              // trueProb − marketFairProb (or vs 0.5 when market null)
   shrunkEdge: number;           // rawEdge after evidence/agreement shrink
   expectedClv: number;          // honest expectation of beating the close, prob pts
   conviction: number;           // 0–100 glass-box conviction
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
-  priced: boolean;              // false = surfaced, not yet in the confidence math
+  priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
 }
 
@@ -76,8 +76,18 @@ export interface FactorBreakdown {
   // Schedule density (v5)
   scheduleStressScore?: number; // ±5: compressed schedule fatigue signal
   dataQualityScore?: number;   // 0–100: overall data trust score (always public)
-  // Independent-edge layer — surfaced, not yet priced (see IndependentEdgeSummary)
+  // Independent-edge layer — may be priced into ranking when trueProb finite (see priced)
   independentEdge?: IndependentEdgeSummary | null;
+  /**
+   * Ranking win probability used for sort / selective / bake-off (0–1).
+   * Always a probability — never edge/rawEdge/edgeScore.
+   * Finite trueProb → trueProb or blend; else confidence/100.
+   */
+  rankingP?: number | null;
+  /** How rankingP was derived: confidence | independent_trueProb | blend_indep_conf */
+  rankingSource?: "confidence" | "independent_trueProb" | "blend_indep_conf" | null;
+  /** De-vig sportsbook fair for the chosen side (0–1) — selective edge filter / market bake-off. */
+  marketFairProb?: number | null;
   factors: FactorDetail[];     // human-readable factor list
 }
 
@@ -505,7 +515,13 @@ export interface ScoredPick {
   line: number;
 
   // Scoring
-  confidence: number;      // 0–100
+  confidence: number;      // 0–100 (heuristic UX; market-echo components)
+  /**
+   * Ranking score 0–100 for generation sort + selective path.
+   * Equals confidence when independents absent; when trueProb finite (incl. PASS),
+   * derived from independent trueProb (blend). Prefer this over confidence for ranking.
+   */
+  rankingScore?: number;
   edgeScore: number;       // 0–100
   consensusPct: number;    // 0.0–1.0
   /**

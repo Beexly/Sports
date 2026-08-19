@@ -22,7 +22,7 @@ import { FormulaPlaque } from "@/components/tools/formula-plaque";
 export const metadata: Metadata = {
   title: "Free Betting Calculators: EV, No-Vig, Odds, Parlay",
   description:
-    "Free, formula-transparent betting calculators: expected value, no-vig fair odds, American/decimal converter, and parlay math. No account, no paywall, no affiliate links — every result shows its formula.",
+    "Free calculators: EV, no-vig, odds converter, parlay, line movement, and CLV. No account, no paywall, no affiliate links, no track-record claims — every result shows its formula.",
   alternates: { canonical: "/tools" },
 };
 
@@ -58,6 +58,22 @@ const CALCULATORS = [
     formula: "combined = odds₁ × odds₂ × ... × oddsₙ",
     accentBar: "bg-orbital-cyan",
     accentText: "text-orbital-cyan",
+  },
+  {
+    title: "Line Movement",
+    href: "/tools/line-movement",
+    body: "Enter an open price and a current price. See implied-probability shift — pure arithmetic, no sharp/public claims.",
+    formula: "Δimpl = impl(current) − impl(open)",
+    accentBar: "bg-plasma",
+    accentText: "text-plasma-glow",
+  },
+  {
+    title: "CLV Calculator",
+    href: "/tools/clv-calculator",
+    body: "Closing-line value in basis points from your decision price vs the close. Your prices only — not a Galaxy track-record claim.",
+    formula: "CLV bps = 10000 × (1/close − 1/decision)",
+    accentBar: "bg-ultraviolet",
+    accentText: "text-ultraviolet-glow",
   },
 ] as const;
 
@@ -96,9 +112,9 @@ export default function ToolsHubPage(): JSX.Element {
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                Four small, free tools for the math behind a bet: expected
-                value, no-vig fair odds, odds conversion, and parlay
-                combining. No account, no email, no affiliate link — every
+                Six free tools for the math behind a bet: expected value, no-vig
+                fair odds, odds conversion, parlay combining, line
+                movement, and closing-line value. No account, no email, no affiliate link — every
                 result shows the formula that produced it.
               </p>
             </Reveal>

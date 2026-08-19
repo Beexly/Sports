@@ -91,3 +91,31 @@ export type {
   TryOpenSlatePort,
 } from "./open-via-sql.js";
 
+export {
+  buildIndependentFairValues,
+  getOrFitEloRatings,
+  loadSportResultGamesForElo,
+  sportKeyToKalshiLeague,
+  guessKalshiTeamAbbr,
+} from "./build-independent-fair-values.js";
+export type {
+  IndependentFairValueBuildInput,
+  EloRatingsCache,
+} from "./build-independent-fair-values.js";
+export {
+  resolveKalshiTeamAbbr,
+  normalizeTeamKey,
+} from "./kalshi-team-abbr.js";
+
+export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
+export type { SignalSlateResult } from "./generate-signal-slate.js";
+
+export { runBoardFillPipeline } from "./board-fill.js";
+export type { BoardFillResult } from "./board-fill.js";
+
+export { seedGamesFromEspn } from "./seed-games-from-espn.js";
+export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
+
+export { backfillIndependentTrueProb } from "./backfill-independent-trueprob.js";
+export type { BackfillIndependentResult } from "./backfill-independent-trueprob.js";
+

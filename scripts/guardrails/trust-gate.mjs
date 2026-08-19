@@ -132,6 +132,23 @@ const ALLOWLISTED_DEFINITION_LINES = new Map([
       /^\s*const unsafePickSlang\s*=/,
     ],
   ],
+  [
+    // The REQUIRED risk-disclosure footer on evidence-pack drafts. It reads
+    // "Not PROVEN. No guaranteed outcome. Past results do not guarantee future
+    // results." — every occurrence of "guarantee" here is NEGATED, and the
+    // sentence exists precisely to DENY the claim this rule bans.
+    //
+    // Allowlisted rather than reworded on purpose. The obvious "fix" (swap
+    // guarantee -> provides/delivers) yields "No provided outcome. Past results
+    // do not provide future results", which is incoherent AND strips a
+    // responsible-gambling disclaimer to satisfy a regex — weakening user-facing
+    // risk language to make a trust guardrail quiet is the exact inversion of
+    // what this guardrail is for. The scanner is substring-based and has no
+    // negation handling; this is the same context-aware exemption already used
+    // for the fixtures above.
+    "apps/web/lib/content-engine/build-draft.ts",
+    [/Past results do not guarantee future results/],
+  ],
 ]);
 
 // "lock" is banned ONLY as betting slang for a guaranteed pick (a lock, lock of

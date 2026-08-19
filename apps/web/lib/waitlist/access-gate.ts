@@ -5,9 +5,12 @@
  * server.  The middleware imports and calls `checkWaitlistGate`.
  *
  * Gate is opt-in: it only activates when GSE_WAITLIST_GATE_ENABLED === "true".
+ * FOUNDING launch default is OPEN (flag false/unset). Never force Basic Auth for public funnel.
  * Credentials are read exclusively from server-side env vars; they are never
  * logged and never reach the client bundle.
  */
+
+import { waitlistGated } from "@/lib/env/flags";
 
 export type GateResult =
   | { allowed: true }
@@ -22,7 +25,7 @@ export type GateResult =
  *                    allowed: false with a reason to return a 401.
  */
 export function checkWaitlistGate(authHeader: string | null): GateResult {
-  const enabled = process.env["GSE_WAITLIST_GATE_ENABLED"] === "true";
+  const enabled = waitlistGated();
   if (!enabled) return { allowed: true };
 
   const expectedUser = process.env["GSE_WAITLIST_BASIC_USER"];

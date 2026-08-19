@@ -138,7 +138,7 @@ export function buildGroundedContext(input: GroundingInput): GroundedContext {
       const ie = fb.independentEdge;
       lines.push(
         `  ★ Independent edge (${ie.sources.join(", ") || "none"}): decision ${ie.decision}, ` +
-          `agreement ${ie.agreement}, market fair ${(ie.marketFairProb * 100).toFixed(1)}%, ` +
+          `agreement ${ie.agreement}, market fair ${ie.marketFairProb == null ? "n/a" : `${(ie.marketFairProb * 100).toFixed(1)}%`}, ` +
           `independent ${ie.trueProb == null ? "n/a" : `${(ie.trueProb * 100).toFixed(1)}%`}, ` +
           `expected CLV ${fmtSigned(ie.expectedClv * 100)}pp, priced=${ie.priced}.`,
       );

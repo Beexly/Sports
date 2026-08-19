@@ -28,7 +28,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "A Sports Intelligence Operating System",
   description:
-    "Galaxy Sports Edge turns the market's noise into structured signal. A live board, no-bet gating, and receipts for all of it. We detect. You decide.",
+    "Galaxy Sports Edge turns market noise into structured signal: free calculators, methodology, paper contests, and a gated board that refuses forced action until the sample is honest. We detect. You decide.",
   alternates: { canonical: "/" },
 };
 
@@ -117,20 +117,21 @@ export default async function HomePage(): Promise<JSX.Element> {
             </Reveal>
             <Reveal delay={150}>
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                Real sportsbook data, structured into picks you can check, and the
-                discipline to know when not to bet.
+                Free tools and transparent process first. The public board opens
+                only when the slate is honest, and the discipline to know when
+                not to bet is always on.
               </p>
             </Reveal>
             <Reveal delay={220}>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link href="/board" className="btn-primary min-h-11 px-6 py-3">
-                  Enter today&apos;s board
+                <Link href="/tools" className="btn-primary min-h-11 px-6 py-3">
+                  Free calculators
                 </Link>
                 <Link
-                  href="/the-beat"
+                  href="/methodology"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-6 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-ion-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
                 >
-                  Watch The Beat
+                  How the engine works
                 </Link>
               </div>
             </Reveal>
@@ -313,7 +314,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* Founding waitlist — public lead capture (API /api/waitlist; no gate flip) */}
+        {/* Founding waitlist: public lead capture (API /api/waitlist; no gate flip) */}
         <section
           id="founding-waitlist"
           data-testid="homepage-waitlist"

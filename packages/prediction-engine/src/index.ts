@@ -75,9 +75,10 @@ export type {
   ClvGrade,
 } from "./clv-capture.js";
 // Edge engine — surfaces a pick only where INDEPENDENT estimators (Poisson model,
-// Kalshi exchange) diverge from the sportsbook fair value AND agree with each
-// other. The fix for "the market grading itself." Pure; not yet wired into live
-// scoring (a deliberate MODEL_VERSION step, founder-gated).
+// Kalshi exchange, FPI, ClubElo, Dixon–Coles, …) diverge from the sportsbook fair
+// value AND are not contradicted by a referee. Wired into moneyline scoring via
+// context.independentFairValues + deriveRankingProbability (MODEL_VERSION ≥ v5.2.0).
+// Pure functions; no I/O. Founder-gated only for map activation / floors, not assessEdge.
 export {
   assessEdge,
   SPEAK_EDGE,
@@ -202,6 +203,62 @@ export type {
   PoissonFairValueInput,
   PoissonFairValue,
 } from "./team-rates.js";
+// Dixon–Coles τ(ρ) soccer independent (market-free; TeamGameLog λ + low-score corr).
+export {
+  dixonColesTau,
+  jointScoreMatrixDixonColes,
+  dixonColesMoneylineProbabilities,
+  dixonColesIndependentFairValue,
+  isDixonColesValidSport,
+  clampDixonColesRho,
+  DEFAULT_DIXON_COLES_RHO,
+} from "./dixon-coles.js";
+export type {
+  DixonColesFairValueInput,
+  DixonColesFairValue,
+} from "./dixon-coles.js";
+export {
+  deriveRankingProbability,
+} from "./ranking-prob.js";
+export type {
+  RankingProbSource,
+  RankingProbResult,
+} from "./ranking-prob.js";
+export {
+  fitEloRatingsFromResults,
+  eloFairValueFromRatings,
+  eloHomeWinFromRatings,
+} from "./elo-from-results.js";
+export type { EloResultGame } from "./elo-from-results.js";
+// ESPN PowerIndex → independent win probability (logistic). Model-fair only.
+export {
+  powerIndexToWinProbs,
+  powerIndexToIndependentFairValue,
+  sigmoidMargin,
+  resolvePowerIndexSport,
+  POWERINDEX_MARGIN_SCALE,
+  POWERINDEX_HFA,
+} from "./espn-powerindex.js";
+export type {
+  PowerIndexSport,
+  PowerIndexLogisticInput,
+  PowerIndexLogisticResult,
+} from "./espn-powerindex.js";
+// MLB / general standings win% → independent ML fair value.
+export {
+  standingsWinPctToWinProbs,
+  standingsWinPctToIndependentFairValue,
+} from "./standings-strength.js";
+export type { StandingsStrengthInput } from "./standings-strength.js";
+// NFL opponent-adjusted EPA → independent ML fair value.
+export {
+  nflEpaToWinProbs,
+  nflEpaToIndependentFairValue,
+  NFL_EPA_MARGIN_SCALE,
+  NFL_EPA_HFA,
+  NFL_EPA_MIN_GAMES,
+} from "./nfl-epa-fair-value.js";
+export type { NflEpaFairValueInput } from "./nfl-epa-fair-value.js";
 // R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
 // NOT wired into live scoring; built for the future human-gated MODEL_VERSION
 // calibration that turns the confidence score into a calibrated win probability.
@@ -239,6 +296,20 @@ export {
 // R&D — temperature scaling (one-parameter overconfidence softener). Not live.
 export { fitTemperature, applyTemperature } from "./temperature-scaling.js";
 export type { TemperatureModel } from "./temperature-scaling.js";
+
+// R&D — log-loss optimization + isotonic diagnostics (offline; apply OFF).
+export {
+  meanLogLossAtTemperature,
+  temperatureLogLossGradient,
+  fitTemperatureNewton,
+  diagnoseLogLoss,
+  holdoutLogLoss,
+  logLoss,
+  meanLogLoss,
+} from "./log-loss-optimize.js";
+export type { LogLossSliceReport } from "./log-loss-optimize.js";
+export { debugIsotonicCalibration } from "./isotonic-debug.js";
+export type { IsotonicDebugReport } from "./isotonic-debug.js";
 export type {
   CalibrationMethod,
   CalibratorFit,
@@ -1113,3 +1184,201 @@ export {
   type SizeAfterCalibrationResult,
 } from "./calibration-kelly-bridge.js";
 
+// R&D — online Brier OGD convex ensemble (binary probs). Shadow only; no live gate flips.
+export {
+  runBrierOgdEnsemble,
+  equalWeightBlend,
+  projectProbabilitySimplex,
+  equalSimplexWeights,
+} from "./brier-ogd-ensemble.js";
+export type {
+  BrierOgdMemberProbs,
+  BrierOgdSample,
+  BrierOgdOptions,
+  BrierOgdStep,
+  BrierOgdReport,
+} from "./brier-ogd-ensemble.js";
+
+// R&D — RES-aware Beta + OCO (online Beta log-loss, Hedge adaptive-δ, full pipeline). Shadow only.
+export {
+  applyOnlineBeta,
+  runOnlineBetaRecalibration,
+  fitResAwareBeta,
+} from "./online-beta-recalibration.js";
+export type {
+  OnlineBetaParams,
+  OnlineBetaOptions,
+  OnlineBetaStep,
+  OnlineBetaReport,
+  ResCalibratorOptions,
+  ResCalibratorReport,
+} from "./online-beta-recalibration.js";
+export {
+  expertLossAtDelta,
+  runAdaptiveDeltaHedge,
+} from "./adaptive-delta-hedge.js";
+export type {
+  DeltaExpertSample,
+  AdaptiveDeltaOptions,
+  AdaptiveDeltaStep,
+  AdaptiveDeltaReport,
+} from "./adaptive-delta-hedge.js";
+export {
+  runOcoPipeline,
+  runOcoPipelineFromSingleP,
+} from "./oco-pipeline.js";
+export type {
+  OcoMemberSample,
+  OcoPipelineOptions,
+  OcoPipelineStep,
+  OcoPipelineReport,
+} from "./oco-pipeline.js";
+
+// R&D — sliding-window Online Beta OGD + Hedge adaptive-δ analysis (shadow).
+export {
+  runOnlineBetaSlidingWindow,
+  analyzeSlidingWindowOgd,
+} from "./online-beta-sliding-window.js";
+export type {
+  SlidingWindowBetaOptions,
+  SlidingWindowOgdMetrics,
+} from "./online-beta-sliding-window.js";
+export { analyzeAdaptiveDeltaHedge } from "./adaptive-delta-analysis.js";
+export type { HedgeAdaptiveDeltaAnalysis } from "./adaptive-delta-analysis.js";
+
+// ── R&D shadow modules (2026-08-10 research spec) ────────────────────────────
+// Pure, deterministic, seeded. None reads a gate, env var, DB or network, and
+// none is wired into live scoring — they exist to be measured in shadow first.
+
+// Sequential Monte Carlo latent team strength — a direct Murphy-RES
+// (resolution/discrimination) lever: time-evolving independent probabilities
+// with genuine posterior uncertainty instead of point estimates.
+export {
+  TeamStrengthFilter,
+  stableSigmoid,
+  softplus,
+  // Serialization: lets the filter survive a serverless cold start instead of being
+  // reconstructed empty (and stuck at ~0.5, unable to learn) on every invocation.
+  FILTER_SNAPSHOT_VERSION,
+} from "./team-strength-filter.js";
+export type {
+  ResamplingScheme,
+  TeamStrengthFilterOptions,
+  TeamIntervention,
+  TeamPosterior,
+  StrengthUpdateReport,
+  FilterDiagnostics,
+  FilterStateSnapshot,
+} from "./team-strength-filter.js";
+
+// Information-theoretic selective-publication gate, in bits. The closed-form
+// counterpart of the spec's VIB bit-threshold gate — no neural network needed.
+// NOTE the realised-vs-prior distinction: the prior-only measure rewards
+// confidence regardless of accuracy, so only the realised form is anti-gaming.
+export {
+  binaryEntropyBits,
+  binaryCrossEntropyBits,
+  priorOnlyEdgeBits,
+  realisedEdgeBits,
+  priorOnlyInformationGainBits,
+  realisedInformationGainBits,
+  empiricalBaseRate,
+  gateInformationEdge,
+  permutationNullBandBits,
+  DEFAULT_INFORMATION_EDGE_THRESHOLD_BITS,
+} from "./information-edge-bits.js";
+export type {
+  EdgeCandidate,
+  InformationEdgeBasis,
+  InformationEdgeOptions,
+  InformationEdgeVerdict,
+  InformationEdgeNullBand,
+  PermutationNullBandOptions,
+} from "./information-edge-bits.js";
+
+// Kelly staking robust to Knightian uncertainty in p: worst-case log-growth
+// over a Beta confidence set. Includes a self-contained exact regularised
+// incomplete beta + quantile (no scipy).
+export {
+  betaCdf,
+  betaPdf,
+  betaQuantile,
+  betaConfidenceSet,
+  robustKellyFraction,
+  sweepEffectiveSampleSize,
+  DEFAULT_ROBUST_ALPHA,
+} from "./robust-kelly.js";
+export type {
+  BetaConfidenceSet,
+  RobustKellyInput,
+  RobustKellyResult,
+} from "./robust-kelly.js";
+
+// Anytime-valid forecast-SKILL test vs the market (likelihood-ratio E-process).
+// Complements anytime-ledger.ts, which tests betting PROFITABILITY: this one
+// needs no odds/stake model and speaks directly to calibration + resolution.
+// High evidence here is skill vs the market's probabilities only — NOT proof of
+// profitability and NOT a licence to claim PROVEN.
+export {
+  forecastSkillEProcess,
+  initForecastSkillFold,
+  foldForecastSkillPick,
+  summarizeForecastSkillFold,
+  DEFAULT_FORECAST_SKILL_ALPHA,
+  DEFAULT_FORECAST_SKILL_EPSILON,
+  DEFAULT_FORECAST_SKILL_MIN_PICKS,
+  CONSERVATIVE_EVIDENCE_THRESHOLD,
+} from "./forecast-skill-eprocess.js";
+export type {
+  ForecastSkillPoint,
+  ForecastSkillOptions,
+  ForecastSkillVerdict,
+  ForecastSkillResult,
+  ForecastSkillFoldState,
+} from "./forecast-skill-eprocess.js";
+
+// Shadow ensemble orchestrator — see the module header for the full "why". Not
+// wired into any live/publishing path; SHADOW ONLY.
+export {
+  LiveOrchestrator,
+} from "./pipeline/live-orchestrator.js";
+export type {
+  OrchestratorOptions,
+  OrchestratorGameContext,
+  ShadowSignalObservation,
+  OrchestratorSettlementResult,
+} from "./pipeline/live-orchestrator.js";
+
+// BAEE — shadow-mode-only ensemble weight learner. Not wired for blending.
+export { BAEEEnsemble } from "./ensemble/baee-ensemble.js";
+
+// Stable team-name -> filter-index mapping. Append-only ON PURPOSE: reusing an
+// index silently transfers one team's learned posterior to another, and nothing
+// downstream can detect it. See the module header.
+export {
+  createTeamIndexRegistry,
+  assignTeamIndex,
+  lookupTeamIndex,
+  normalizeTeamKey,
+  teamCount,
+  isValidTeamIndexRegistry,
+  DEFAULT_TEAM_CAPACITY,
+} from "./team-index-registry.js";
+export type { TeamIndexRegistry, AssignTeamIndexResult } from "./team-index-registry.js";
+
+// Consecutive-day Brier health check. Pure/DB-agnostic — see
+// apps/web/lib/ops/calibration-regression-snapshot.ts for the DB-backed series builder.
+export { checkCalibrationHealth } from "./calibration-monitor.js";
+export type { CalibrationHealthResult } from "./calibration-monitor.js";
+
+// Calibration-snapshot regression comparison. Pure/DB-agnostic — reuses
+// brierDecomposition rather than a second Brier/RES calculator.
+export {
+  buildCalibrationSnapshot,
+  checkForRegression,
+} from "./regression-detector.js";
+export type {
+  CalibrationSnapshot,
+  RegressionCheckOptions,
+  RegressionVerdict,
+} from "./regression-detector.js";

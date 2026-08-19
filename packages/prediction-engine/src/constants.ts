@@ -1,10 +1,26 @@
 // Model version — bump when scoring logic changes.
+// v5.2.6 (2026-08-10): market-anchored live eligibility p (0.55 shrunk-indep +
+// 0.45 real book fair) + fixed evidence shrink α=0.88; pick-card priced badge.
+// Dual-objective selective retained. Maps/PERFORMANCE_STATS still OFF.
+// v5.2.5 (2026-08-10): dual-objective selective (RES under Brier cap); live
+// eligibility blend 0.7 indep / 0.3 conf; softer discrimination stretch (1.12 /
+// standings 1.1). Maps/PERFORMANCE_STATS still OFF.
+// v5.2.4 (2026-08-10): RES unlock — live eligibility prefers independent trueProb
+// over market; never invent marketFairProb=0.5; sharpness-weighted independent blend;
+// RPCP selective δ sweep to 0.25. Maps/PERFORMANCE_STATS still OFF.
+// v5.2.3 (2026-08-10): free open extractors into independent path —
+// MLB Stats API standings win% logistic; NFL opponent-adjusted EPA/play from
+// TeamGameEfficiency (nflverse) when rows exist. No FastAPI dual stack.
+// Maps/AUTO_PUBLISH/PERFORMANCE_STATS still OFF. ESPN free odds tertiary live.
+// v5.2.2 (2026-08-09): Dixon–Coles soccer independent; Kalshi ESPN abbr aliases +
+// ET wall-clock ticker fragments; 12h start skew on series match.
+// v5.2.1 (2026-08-09): ranking uses trueProb whenever finite (incl. PASS),
+// independentWeight 0.7; persist marketFairProb + rankingP; honest pIndependent
+// load; Kalshi team maps; FPI exact match; selective consumes rankingP.
+// Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.
+// v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-// Heuristic scoring weights are unchanged; the change is that calibrated
-// P(win) is applied at the display/conviction boundary when the audited
-// CALIBRATION_ADJUSTMENTS_ENABLED env gate is on. See
-// docs/calibration-proposals/2026-06-22-calibration-activation-v5.1.0.md.
-export const MODEL_VERSION = "v5.1.0";
+export const MODEL_VERSION = "v5.2.6";
 
 // ============================================================
 // Confidence thresholds

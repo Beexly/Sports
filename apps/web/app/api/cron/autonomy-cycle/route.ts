@@ -5,12 +5,12 @@
  * Auth: CRON_SECRET.
  *
  * Default: dry-run plan only (safe). Set AUTONOMY_EXECUTE=true to invoke
- * free-spine-health / settle-picks when the pure planner queues them.
+ * allow-listed free-path crons (safe-cron-targets.ts) when the planner queues them.
  * Never flips LAWS. Never runs ownerQueue items.
  */
 
 import { NextResponse } from "next/server";
-import { cronAuthError } from "@/lib/cron/authorize";
+import { cronAuthError, cronAuthErrorBearerOnly } from "@/lib/cron/authorize";
 import { computeLiveCapabilityProbes } from "@/lib/health/live-capability-probes";
 import { classifyHealthAlertSnapshot } from "@/lib/ops/health-alert-decision";
 import {
@@ -23,6 +23,7 @@ import {
   executeAutonomyCycle,
   resolveAutonomyBaseUrl,
 } from "@/lib/autonomy/execute-autonomy-cycle";
+import { AUTONOMY_MAX_ACTIONS_PER_CYCLE } from "@/lib/autonomy/safe-cron-targets";
 import { getReadinessGates } from "@sports/prediction-engine";
 import {
   freeSpineSnapAgeMs,
@@ -38,15 +39,19 @@ function envFlag(name: string): boolean {
 }
 
 export async function GET(request: Request): Promise<NextResponse> {
-  const denied = cronAuthError(request);
-  if (denied) return denied;
-
   const started = Date.now();
   const url = new URL(request.url);
   const forceExecute = url.searchParams.get("execute") === "1";
   const forceDry = url.searchParams.get("dryRun") === "1";
   const executeEnabled = forceExecute || (envFlag("AUTONOMY_EXECUTE") && !forceDry);
   const dryRun = !executeEnabled;
+
+  // When execute is live, require Bearer so spoofed x-vercel-cron cannot drive acts.
+  // Dry-run plan may still use dual auth (platform header) for observability.
+  const denied = executeEnabled
+    ? cronAuthErrorBearerOnly(request)
+    : cronAuthError(request);
+  if (denied) return denied;
 
   const deploymentSha =
     process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ??
@@ -124,7 +129,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     baseUrl: resolveAutonomyBaseUrl(),
     cronSecret,
     dryRun,
-    maxActions: 2,
+    maxActions: AUTONOMY_MAX_ACTIONS_PER_CYCLE,
   });
 
   if (cycle.failedCount > 0) {

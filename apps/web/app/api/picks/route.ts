@@ -11,8 +11,10 @@ import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
 } from "@/lib/data-reliability/public-freshness-gate";
+import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export const dynamic = "force-dynamic";
 
@@ -118,12 +120,48 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
   }
 
+  // Selective publish (default ON): prefer priced rankingP over confidence.
+  const filteredPicks = (
+    await Promise.all(
+      picks.map(async (pick) => {
+        let rankingP: number | null = null;
+        let rankingScore: number | null = null;
+        let marketImpliedProb: number | null = null;
+        if (pick.factorBreakdown && typeof pick.factorBreakdown === "object") {
+          const fb = pick.factorBreakdown as Record<string, unknown>;
+          if (typeof fb["rankingP"] === "number" && Number.isFinite(fb["rankingP"])) {
+            rankingP = fb["rankingP"] as number;
+          }
+          if (typeof fb["marketFairProb"] === "number" && Number.isFinite(fb["marketFairProb"])) {
+            marketImpliedProb = fb["marketFairProb"] as number;
+          }
+          // rankingScore 0–100 mirror when rankingP present
+          if (rankingP != null) rankingScore = Math.round(rankingP * 100);
+        }
+        const ok = await passesPublicSelectiveFilterAsync({
+          confidence: pick.confidence,
+          rankingP,
+          rankingScore,
+          edgeScore: pick.edgeScore,
+          pickType: pick.pickType,
+          sportKey: pick.game?.sport?.key ?? null,
+          marketImpliedProb,
+        });
+        return ok ? pick : null;
+      }),
+    )
+  ).filter((p): p is NonNullable<typeof p> => p != null);
+
+  // Display order must match generation ranking law (rankingP, not confidence).
+  // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
+  const rankedPicks = [...filteredPicks].sort(comparePicksByRanking);
+
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
   // sample is insufficient/non-improving, so this is null-safe by construction.
   const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
 
-  const publicPicks: PublicPick[] = picks.map((pick) => {
+  const publicPicks: PublicPick[] = rankedPicks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
     // for a malformed/legacy blob (a handled "no factor trail" state) so a

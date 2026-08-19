@@ -14,9 +14,9 @@ import Link from "next/link";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Today's Board: Sports Picks With Reasoning Attached",
+  title: "Today's Signals — Galaxy Sports Edge",
   description:
-    "Signals scored against the live board: spread, total, moneyline, with the full factor trail behind every pick. NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS. No certainty theater, just the reasoning.",
+    "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark — no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
   alternates: { canonical: "/picks" },
 };
 
@@ -410,14 +410,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
-                  ? "The board is paused while fresh odds land."
+                  ? "Quiet board — waiting on fresh odds (not broken)."
                   : "Public picks are still gated. LIVE_BOARD stays off until founder enable."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
-                  ? "Our freshness guard holds the board rather than show you " +
-                    "lines that have gone stale. It reopens automatically on the " +
-                    "next successful odds refresh — no stale data, ever."
+                  ? "This is the honesty guard: we hide picks when odds are past the refresh " +
+                    "window or no games are insertable. The board reopens on the next real " +
+                    "odds insert — never on stale lines. Methodology and pricing stay available."
                   : "We're building up odds and settlement history before we " +
                     "publish picks. That keeps the record clean and weak signals " +
                     "off the board."}
@@ -476,7 +476,10 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               active SPORT filter when one is applied, so an empty board never
               blames "this date" when a sport filter is what emptied it. */}
           {!fetchError && !bootstrapState && picks.length === 0 && !lockedByPaywall && (
-            <div className="rounded-xl border border-titanium bg-carbon/60 p-12 text-center">
+            <div
+              data-testid="picks-quiet-empty"
+              className="rounded-xl border border-titanium bg-carbon/60 p-12 text-center"
+            >
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-titanium">
                 <svg
                   className="h-7 w-7 text-ion-2"
@@ -500,8 +503,8 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </h2>
               <p className="mt-2 text-sm text-ion-3">
                 {activeSportLabel
-                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date. Try another sport or another date.`
-                  : "We only publish when the stack earns it. Some slates don't clear the gates. That's the point."}
+                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date (quiet board / no published signals). Try another sport or date.`
+                  : "Quiet board for this date: no published signals cleared the gate. Awaiting fresh odds or eligible games — not an outage."}
               </p>
             </div>
           )}

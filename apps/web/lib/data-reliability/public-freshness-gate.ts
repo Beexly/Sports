@@ -25,6 +25,7 @@
 
 import { db } from "@sports/db";
 import { classifyRefreshFreshness } from "./refresh-sla";
+import { resolveBoardSurface } from "@/lib/board/board-surface-policy";
 
 /**
  * Structured 503 body for a surface darkened by the stale-data kill switch.
@@ -38,17 +39,31 @@ export function staleDataGateResponse(featureName: string): {
   error: string;
   reason: "stale_data";
   bootstrapMode: false;
+  boardSurface: "market" | "signal";
   hint: string;
 } {
+  const surface = resolveBoardSurface();
+  if (surface === "signal") {
+    return {
+      error: `${featureName} is temporarily dark: quiet board / awaiting fresh model slate.`,
+      reason: "stale_data",
+      bootstrapMode: false,
+      boardSurface: "signal",
+      hint:
+        "Signal board quiet: no recent generation and no upcoming published model signals (7d). " +
+        "This is not a book-odds outage. Model signals only — never labeled as book lines. " +
+        "Reopens when generate-drafts / settle pipeline publishes a fresh slate.",
+    };
+  }
   return {
-    error: `${featureName} is temporarily dark: awaiting fresh odds data.`,
+    error: `${featureName} is temporarily dark: quiet board / awaiting fresh odds.`,
     reason: "stale_data",
     bootstrapMode: false,
+    boardSurface: "market",
     hint:
-      "The stale-data kill switch (FORCE_NO_BET_IF_STALE) suppressed this surface because " +
-      "the last odds-inserting ingestion run is older than the Refresh SLA. It reopens " +
-      "automatically on the next successful ingestion — check /api/health and recent " +
-      "ingestion runs, not the environment flags.",
+      "Market board quiet: last odds-inserting run older than Refresh SLA. " +
+      "Reopens on next successful odds insert (oddsInserted>0). Do not lower the SLA. " +
+      "Set PUBLIC_BOARD_SURFACE=signal for model-signal board (slate-fresh, not book lines).",
   };
 }
 
@@ -71,18 +86,67 @@ export function staleDataGateResponse(featureName: string): {
  * per-sport freshness check (suppress only the stale sport's picks) is a
  * planned follow-up; this global check is intentionally the coarse first cut.
  */
-export async function isPublicPicksSurfaceStale(now: Date = new Date()): Promise<boolean> {
+/** Market board: last odds-inserting SUCCESS within Refresh SLA. */
+export async function isMarketBoardOddsStale(now: Date = new Date()): Promise<boolean> {
   const lastSuccessRun = await db.ingestionRun.findFirst({
-    // Requires a run that actually INSERTED ODDS. An empty-but-200 Odds API
-    // response is recorded as SUCCESS with oddsInserted=0; without this filter
-    // that empty run resets the freshness clock and the public picks surface
-    // reads "fresh" while no real odds flowed (G4). oddsInserted > 0 means only
-    // a run that brought in real odds counts as fresh.
     where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
     orderBy: { completedAt: "desc" },
     select: { completedAt: true },
   });
-
   const lastSuccessAt = lastSuccessRun?.completedAt ?? null;
   return classifyRefreshFreshness(lastSuccessAt, now).status === "stale";
+}
+
+/**
+ * Signal board: slate usable without book odds.
+ * Fresh if EITHER:
+ *   (a) a published non-seed pick was generated within Refresh SLA, OR
+ *   (b) there is a published non-seed PENDING pick on a game commencing within
+ *       the next 7 days (model signal still relevant even if odds pipeline quiet).
+ * Never certifies book lines. LIVE_BOARD still odds-gated separately.
+ */
+export async function isSignalBoardSlateStale(now: Date = new Date()): Promise<boolean> {
+  const lastPick = await db.pick.findFirst({
+    where: {
+      isPublished: true,
+      isBootstrap: false,
+      NOT: { modelVersion: "v5.0.0-seed" },
+    },
+    orderBy: { generatedAt: "desc" },
+    select: { generatedAt: true },
+  });
+  const lastAt = lastPick?.generatedAt ?? null;
+  if (classifyRefreshFreshness(lastAt, now).status !== "stale") {
+    return false;
+  }
+
+  // Upcoming published model signals keep the board open during quiet odds cycles
+  const horizon = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const upcoming = await db.pick.findFirst({
+    where: {
+      isPublished: true,
+      isBootstrap: false,
+      result: "PENDING",
+      NOT: { modelVersion: "v5.0.0-seed" },
+      game: {
+        commenceTime: { gte: now, lte: horizon },
+      },
+    },
+    select: { id: true },
+  });
+  return upcoming == null;
+}
+
+/**
+ * Public picks surface stale check — dual mode via PUBLIC_BOARD_SURFACE.
+ * market (default): oddsInserted>0 SLA
+ * signal: published pick generation SLA
+ */
+export async function isPublicPicksSurfaceStale(now: Date = new Date()): Promise<boolean> {
+  const oddsStale = await isMarketBoardOddsStale(now);
+  const surface = resolveBoardSurface(process.env, { oddsFresh: !oddsStale });
+  if (surface === "signal") {
+    return isSignalBoardSlateStale(now);
+  }
+  return oddsStale;
 }

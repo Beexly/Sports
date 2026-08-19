@@ -6,11 +6,57 @@ export {
   impliedYesProbability,
   devigTwoSided,
   toIndependentFairValue,
+  eventTickerMatchesGame,
   type KalshiLeague,
   type KalshiGameRef,
   type KalshiSideFairValue,
   type KalshiFairValue,
+  type KalshiLeagueCode,
+  sportKeyToKalshiLeagueCode,
+  gameSeriesForLeague,
 } from "./kalshi-client.js";
+export {
+  KALSHI_SERIES,
+  KALSHI_GAME_SERIES,
+  leagueToSportCode,
+  constructedEventSeriesStem,
+  toKalshiDateFragment,
+  toKalshiTimeFragment,
+  MAX_MARKET_START_SKEW_MS,
+  KALSHI_TICKER_TZ,
+  parseKalshiEventTail,
+  type KalshiSportCode,
+} from "./kalshi-series.js";
+export {
+  ClubEloClient,
+  ClubEloError,
+  isClubEloSport,
+  normalizeClubName,
+  clubEloLookupName,
+  fixtureRowToTwoWay,
+  ratingsToTwoWay,
+  getSharedClubEloClient,
+  resetClubEloClientForTests,
+} from "./clubelo-client.js";
+export {
+  PolymarketIndependentClient,
+  PolymarketIndependentError,
+  isPolymarketIndependentEnabled,
+  gammaMarketToIndependent,
+  teamMatchTokens,
+  POLYMARKET_GAMMA_BASE,
+} from "./polymarket-independent-client.js";
+export {
+  sportKeyToPowerIndexLeague,
+  fetchEspnPowerIndexPage,
+  fetchEspnTeamMetaMap,
+  loadEspnPowerIndexMap,
+  lookupTeamFpi,
+  getCachedEspnPowerIndexMap,
+  defaultPowerIndexSeason,
+  EspnPowerIndexError,
+  type EspnPowerIndexLeague,
+} from "./espn-powerindex-client.js";
 export { DataNormalizer } from "./normalizer.js";
 export {
   enrichGameContext,
@@ -161,3 +207,50 @@ export {
   resolveFreshnessThresholdMs,
   type FreshnessMode,
 } from "./freshness-schedule.js";
+
+export {
+  normalizeComparableText,
+  findMatchingTeamInText,
+  parseSportsScore,
+} from "./team-text-match.js";
+
+export {
+  resolveRundownApiKey,
+  rundownApiKeyPresence,
+  fetchRundownEventsForSport,
+  rundownEventToOddsApiEvent,
+  RUNDOWN_SPORT_IDS,
+  RUNDOWN_API_KEY_ENV_NAMES,
+} from "./rundown-client.js";
+export type { RundownFetchResult, RundownApiKeyEnvName } from "./rundown-client.js";
+
+export {
+  resolveOddsApiKey,
+  oddsApiKeyPresence,
+  ODDS_API_KEY_ENV_NAMES,
+} from "./odds-api-key.js";
+export type { OddsApiKeyEnvName } from "./odds-api-key.js";
+
+export {
+  fetchEspnOddsForSport,
+  ESPN_ODDS_SPORT_MAP,
+} from "./espn-odds-client.js";
+export type { EspnOddsFetchResult } from "./espn-odds-client.js";
+
+export {
+  parseEspnScoreboardForSeed,
+  fetchEspnSeedGamesForSport,
+  fetchAllEspnSeedGames,
+  SHORT_TO_ODDS_SPORT,
+  sportMetaForKey,
+} from "./espn-schedule-seed.js";
+export type { ShortSportKey, EspnSeedGame } from "./espn-schedule-seed.js";
+
+export {
+  fetchMlbStandings,
+  buildMlbWinPctLookup,
+  lookupMlbWinPct,
+  fetchMlbCompletedGamesForDate,
+  fetchMlbRecentCompletedGames,
+} from "./mlb-statsapi-client.js";
+export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";

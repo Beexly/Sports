@@ -40,9 +40,10 @@ describe("scoreMoneylinePick — independent-edge wire-in (honest, additive)", (
     // The structured field is absent, and no Independent Edge factor is added.
     expect(pick.factorBreakdown.independentEdge).toBeUndefined();
     expect(pick.factorBreakdown.factors.some((f) => f.name.startsWith("Independent Edge"))).toBe(false);
+    expect(pick.rankingScore).toBe(pick.confidence);
   });
 
-  it("surfaces a SPEAK when two independent estimators confirm the book is soft — WITHOUT moving confidence", () => {
+  it("prices SPEAK into rankingScore while keeping heuristic confidence stable", () => {
     const baseline = ml(scoreGame(makeInput(undefined)));
     const withEdge = ml(
       scoreGame(
@@ -61,21 +62,26 @@ describe("scoreMoneylinePick — independent-edge wire-in (honest, additive)", (
     expect(ie!.expectedClv).toBeGreaterThan(0);
     expect(ie!.sources).toEqual(["kalshi", "poisson"]);
 
-    // SURFACED, NOT PRICED: confidence, edgeScore, tier and the publish gate are
-    // all identical to the no-independent-edge baseline.
-    expect(ie!.priced).toBe(false);
+    // MODEL_VERSION v5.2.1: ranking path priced; heuristic confidence unchanged.
+    expect(ie!.priced).toBe(true);
     expect(withEdge.confidence).toBe(baseline.confidence);
     expect(withEdge.edgeScore).toBe(baseline.edgeScore);
     expect(withEdge.tier).toBe(baseline.tier);
+    expect(withEdge.rankingScore).toBeDefined();
+    // ranking blends independent trueProb with confidence → moves vs baseline ranking
+    expect(withEdge.rankingScore).not.toBe(baseline.rankingScore ?? baseline.confidence);
+    expect(withEdge.factorBreakdown.fairProbability).toBeTruthy();
+    expect(withEdge.factorBreakdown.fairProbability!).toBeGreaterThan(0.5);
+    expect(withEdge.factorBreakdown.marketFairProb).toBeTruthy();
+    expect(withEdge.factorBreakdown.rankingP).toBeTruthy();
+    expect(withEdge.factorBreakdown.rankingSource).not.toBe("confidence");
 
-    // It rides the glass-box factor trail at weight 0 (visible, not scored).
     const factor = withEdge.factorBreakdown.factors.find((f) => f.name.startsWith("Independent Edge"));
     expect(factor).toBeTruthy();
-    expect(factor!.weight).toBe(0);
     expect(factor!.impact).toBe("positive");
   });
 
-  it("PASSES (surfaced) when an independent referee sides with the sportsbook — our model is the outlier", () => {
+  it("PASS edge claim still prices trueProb into ranking (v5.2.1 demotion path)", () => {
     const withEdge = ml(
       scoreGame(
         makeInput([
@@ -87,8 +93,13 @@ describe("scoreMoneylinePick — independent-edge wire-in (honest, additive)", (
     const ie = withEdge.factorBreakdown.independentEdge;
     expect(ie!.agreement).toBe("CONTRADICTS");
     expect(ie!.decision).toBe("PASS");
-    expect(ie!.priced).toBe(false);
+    // Edge claim is PASS, but ranking still uses blended trueProb when finite
+    // so overpriced favorites can demote (RES polarity).
+    expect(ie!.trueProb).not.toBeNull();
+    expect(ie!.priced).toBe(true);
     expect(ie!.rationale).toMatch(/outlier|sides with the sportsbook/i);
+    expect(withEdge.factorBreakdown.rankingSource).not.toBe("confidence");
+    expect(withEdge.rankingScore).not.toBe(withEdge.confidence);
   });
 
   it("ignores a source that has no quote for the chosen side (null), never guessing", () => {

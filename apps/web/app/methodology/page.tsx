@@ -46,6 +46,9 @@ const STACK = [
 ] as const;
 
 const CHANGELOG = [
+  ["v5.2.2", "Dixon–Coles soccer independent + Kalshi ESPN/ET match polarity; ranking math from v5.2.1 unchanged."],
+  ["v5.2.1", "Ranking uses independent model P whenever finite (incl. PASS); bake-off never treats edge as a win probability; positive separation required."],
+  ["v5.2", "Independent estimators priced into ranking path; edge is never used as a win probability."],
   ["v5.0", "Bootstrap-canonical gating and settled-only learning policy."],
   ["v4.0", "Expanded factor snapshot storage for public audit trails."],
   ["v3.0", "Added schedule stress, rest, and cross-market checks."],
@@ -68,7 +71,7 @@ const MARKET_READS = [
     title: "Did we beat the close?",
     body: "Closing line value grades whether the price we locked beat where the market closed: the leading indicator of a real edge that sharp bettors trust, and the one number tout services never show. Published under the same gate as the win rate.",
     href: "/clv",
-    cta: "See our CLV",
+    cta: "CLV methodology (gated until sample)",
   },
 ] as const;
 
@@ -242,6 +245,55 @@ export default function MethodologyPage(): JSX.Element {
                   </Link>
                 </article>
               ))}
+            </Stagger>
+          </div>
+        </section>
+
+        {/* Ranking probability vs edge vs confidence */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                Ranking law
+              </p>
+              <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+                Ranking probability, confidence, and edge are not the same thing.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
+                Calibration and board ranking use a win probability — never a signed
+                edge gap dressed up as a probability. While live floors are still red,
+                we do not claim PROVEN performance or ROI.
+              </p>
+            </Reveal>
+            <Stagger className="mt-8 grid gap-5 md:grid-cols-3" step={100}>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Confidence</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  A 0–100 composite of market and matchup factors. Useful for UX and
+                  gates. Alone it often echoes the books, so discrimination can stay near
+                  noise until independents price in.
+                </p>
+              </article>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Ranking probability</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  The probability used for sort, selective publish, and calibration
+                  bake-offs. When independent estimators yield a finite true probability,
+                  ranking uses that (or a blend with confidence) — including when the
+                  edge claim is PASS. SPEAK/LEAN is the glass-box edge claim, not the
+                  ranking gate. Without independents, ranking falls back to confidence
+                  on the 0–1 scale.
+                </p>
+              </article>
+              <article className="surface-card p-6">
+                <h3 className="text-lg font-semibold text-white">Edge is not a probability</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-300">
+                  Edge is the gap between an independent true probability and the
+                  market's fair price — a signed difference, not P(side wins). Edge
+                  can filter and explain; it never enters Brier, resolution, or separation
+                  as if it were a win probability.
+                </p>
+              </article>
             </Stagger>
           </div>
         </section>

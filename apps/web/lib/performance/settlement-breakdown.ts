@@ -6,11 +6,14 @@
  * (strict findMany stubs kept breaking production deploys #300–#306).
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SettlementBreakdownClient = {
   pick: {
     // Prisma's findMany generics are incompatible with hand-rolled stubs.
     // Runtime only needs findMany; shape is validated by usage below.
+    // The disable sits HERE, on the line that actually declares the `any`s —
+    // it was previously one line above the type alias, where it suppressed
+    // nothing, which is why these two warnings kept failing lint.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     findMany: (args: any) => Promise<any[]>;
   };
 };

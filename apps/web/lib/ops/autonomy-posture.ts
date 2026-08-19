@@ -2,9 +2,23 @@
  * Public-safe autonomy executor posture (no secrets, no network).
  *
  * Answers: "will the planner actually ACT, or only dry-run?"
- * Default is dry-run — AUTONOMY_EXECUTE must be true to invoke free crons.
+ * Default is dry-run — AUTONOMY_EXECUTE must be true to invoke allow-listed crons.
  * Free-path ABSENT-only: never flips LAWS; never claims execution without env.
+ *
+ * Allow-list SoT: lib/autonomy/safe-cron-targets.ts (must match executor).
  */
+
+import {
+  AUTONOMY_EXECUTE_HINT_OFF,
+  AUTONOMY_EXECUTE_HINT_ON,
+  AUTONOMY_FREE_SPINE_SLA_MINUTES,
+  AUTONOMY_SAFE_CRON_TARGETS,
+} from "@/lib/autonomy/safe-cron-targets";
+
+export {
+  AUTONOMY_FREE_SPINE_SLA_MINUTES,
+  AUTONOMY_SAFE_CRON_TARGETS,
+} from "@/lib/autonomy/safe-cron-targets";
 
 export type Env = Record<string, string | undefined>;
 
@@ -20,13 +34,6 @@ export interface AutonomyPosture {
   readonly operatorHint: string;
 }
 
-const SAFE_CRON_TARGETS = [
-  "/api/cron/free-spine-health",
-  "/api/cron/settle-picks",
-] as const;
-
-export const AUTONOMY_FREE_SPINE_SLA_MINUTES = 120;
-
 function envFlag(env: Env, name: string): boolean {
   return env[name]?.trim().toLowerCase() === "true";
 }
@@ -35,20 +42,11 @@ export function loadAutonomyPosture(env: Env = process.env): AutonomyPosture {
   const executeEnabled = envFlag(env, "AUTONOMY_EXECUTE");
   const defaultDryRun = !executeEnabled;
 
-  let operatorHint: string;
-  if (executeEnabled) {
-    operatorHint =
-      "AUTONOMY_EXECUTE=true — planner may invoke free-spine-health + settle-picks (autonomousSafe only). Owner-queue still never auto-runs.";
-  } else {
-    operatorHint =
-      "Default dry-run: autonomy-cycle plans only. Set AUTONOMY_EXECUTE=true to close plan→act for free-spine + settle (I9).";
-  }
-
   return {
     executeEnabled,
     defaultDryRun,
     freeSpineSlaMinutes: AUTONOMY_FREE_SPINE_SLA_MINUTES,
-    safeCronTargets: SAFE_CRON_TARGETS,
-    operatorHint,
+    safeCronTargets: AUTONOMY_SAFE_CRON_TARGETS,
+    operatorHint: executeEnabled ? AUTONOMY_EXECUTE_HINT_ON : AUTONOMY_EXECUTE_HINT_OFF,
   };
 }

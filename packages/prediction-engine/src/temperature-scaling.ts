@@ -42,6 +42,7 @@ export function applyTemperature(p: number, T: number): number {
 
 /**
  * Fit T by minimizing mean log loss on samples (grid + refine).
+ * Prefer fitTemperatureNewton from log-loss-optimize.ts for Newton polish.
  * Returns null if fewer than 2 samples or no class diversity.
  */
 export function fitTemperature(
@@ -66,10 +67,12 @@ export function fitTemperature(
     return sum / samples.length;
   }
 
+  // Log-spaced grid covers soft (T>1) and sharp (T<1) regimes evenly in log-T
   let bestT = 1;
   let best = meanLogLoss(1);
   for (let i = 0; i <= steps; i++) {
-    const T = tMin + ((tMax - tMin) * i) / steps;
+    const u = i / steps;
+    const T = tMin * Math.exp(Math.log(tMax / tMin) * u);
     const loss = meanLogLoss(T);
     if (loss < best) {
       best = loss;
@@ -77,9 +80,11 @@ export function fitTemperature(
     }
   }
 
-  // Local refine around best
-  const span = (tMax - tMin) / steps;
-  for (const T of [bestT - span / 2, bestT + span / 2]) {
+  // Local refine around best (linear neighborhood)
+  const span = bestT * 0.15;
+  for (let k = -4; k <= 4; k++) {
+    if (k === 0) continue;
+    const T = bestT + (span * k) / 4;
     if (T <= 0 || T > tMax * 1.1) continue;
     const loss = meanLogLoss(T);
     if (loss < best) {

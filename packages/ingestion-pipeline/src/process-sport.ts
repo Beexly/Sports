@@ -30,6 +30,9 @@ import {
   enrichGameContext,
   getAtsForm,
   getHeadToHeadForm,
+  resolveRundownApiKey,
+  fetchRundownEventsForSport,
+  fetchEspnOddsForSport,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
@@ -39,6 +42,10 @@ import {
   buildPickProofReceipt,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
+import {
+  buildIndependentFairValues,
+  type EloRatingsCache,
+} from "./build-independent-fair-values.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
@@ -73,6 +80,12 @@ export interface ProcessSportResult {
   error?: string;
   /** Set when the cycle did no work for a benign, classified reason (e.g. "quiet_board"). */
   note?: string;
+  /** Odds rows written this cycle (drives oddsInserting kill-switch clock). */
+  oddsInserted?: number;
+  /** Upstream quote provider tag for this cycle. */
+  provider?: string;
+  /** Raw events accepted before freshness filter. */
+  eventsCount?: number;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -191,13 +204,86 @@ export async function processSport(
   try {
     const client = new OddsApiClient(apiKey);
     const normalizer = new DataNormalizer();
-
-    const { data: events, remainingRequests } = await client.getOdds(sport.key, [...MARKETS]);
     const fetchedAt = new Date();
+
+    let events: import("@sports/types").OddsApiEvent[] = [];
+    let remainingRequests: number | null = null;
+    // Sentinel used when only free paths are configured (no real Odds key).
+    const oddsKeyIsSentinel =
+      !apiKey ||
+      apiKey === "rundown-free-path" ||
+      apiKey === "espn-free-path" ||
+      apiKey === "absent";
+    let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
+
+    if (!oddsKeyIsSentinel) {
+      try {
+        const primary = await client.getOdds(sport.key, [...MARKETS]);
+        events = primary.data as import("@sports/types").OddsApiEvent[];
+        remainingRequests = primary.remainingRequests ?? null;
+      } catch (primaryErr) {
+        console.warn(
+          `${logPrefix} ${sport.key}: Odds API primary failed — ` +
+            `${primaryErr instanceof Error ? primaryErr.message : primaryErr}`,
+        );
+        events = [];
+      }
+    }
+
+    // Free dual-path: TheRundown when primary empty/fail and key present (never invent).
+    let rundownAttemptNote: string | null = null;
+    let espnAttemptNote: string | null = null;
+    if (events.length === 0) {
+      const rundownKey = resolveRundownApiKey();
+      if (rundownKey) {
+        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.events.length > 0) {
+          events = rd.events;
+          oddsProviderTag = "therundown";
+          console.log(
+            `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
+              (rd.error ? ` (note: ${rd.error})` : ""),
+          );
+        } else {
+          oddsProviderTag = "therundown-empty";
+          rundownAttemptNote = rd.error ?? "rundown empty: no bookmaker lines";
+          console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rundownAttemptNote}`);
+        }
+      } else {
+        rundownAttemptNote = "rundown key ABSENT";
+      }
+    }
+
+    // Free tertiary path: ESPN public odds (zero keys) when Odds+Rundown empty.
+    // Never invents — soft-fails empty. Community routing: pseudo-r/Public-ESPN-API.
+    if (events.length === 0) {
+      try {
+        const espn = await fetchEspnOddsForSport(sport.key);
+        if (espn.events.length > 0) {
+          events = espn.events;
+          oddsProviderTag = "espn_public";
+          console.log(
+            `${logPrefix} ${sport.key}: ESPN public free path ${events.length} events` +
+              (espn.error ? ` (note: ${espn.error})` : ""),
+          );
+        } else {
+          oddsProviderTag =
+            oddsProviderTag === "therundown-empty" || oddsProviderTag === "none"
+              ? "espn_public-empty"
+              : oddsProviderTag;
+          espnAttemptNote = espn.error ?? "espn odds empty";
+          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
+        }
+      } catch (espnErr) {
+        espnAttemptNote =
+          espnErr instanceof Error ? espnErr.message : String(espnErr);
+        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
+      }
+    }
 
     try {
       await recordSourceSnapshot({
-        provider: "the-odds-api",
+        provider: oddsProviderTag,
         sourceKind: "ODDS_EVENTS",
         sport: sport.key,
         ingestionRunId: run.id,
@@ -212,7 +298,8 @@ export async function processSport(
     }
 
     console.log(
-      `${logPrefix} ${sport.key}: ${events.length} events, ${remainingRequests} requests remaining`
+      `${logPrefix} ${sport.key}: ${events.length} events via ${oddsProviderTag}` +
+        (remainingRequests != null ? `, ${remainingRequests} odds-api remaining` : ""),
     );
 
     if (!normalizer.validateFreshness(fetchedAt)) {
@@ -255,7 +342,16 @@ export async function processSport(
             `fresh bookmaker update (newestUpdateAgeMin=${d.newestAgeMinutes ?? "none"}); ` +
             "skipped without alarm"
         );
-        return { sport: sport.key, status: "success", games: 0, picks: 0, note: "quiet_board" };
+        return {
+          sport: sport.key,
+          status: "success",
+          games: 0,
+          picks: 0,
+          oddsInserted: 0,
+          provider: oddsProviderTag,
+          eventsCount: events.length,
+          note: "quiet_board",
+        };
       }
 
       throw new Error(
@@ -351,6 +447,8 @@ export async function processSport(
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
+    // Elo ratings fitted once per sport/day within this cycle (no fabricated ratings).
+    const eloCache: EloRatingsCache = new Map();
 
     // gameId -> per-kind book-line dispersion at lock, filled in the game loop
     // and read at pick creation (a separate loop over scoredPicks below).
@@ -451,6 +549,28 @@ export async function processSport(
 
       const freshnessMinutes = (Date.now() - fetchedAt.getTime()) / 60_000;
 
+      // Independent estimators (Kalshi / FPI / ClubElo / Dixon–Coles / Poisson / Elo;
+      // never book-echo). Empty → conf ranking; finite trueProb → rankingP priced
+      // (v5.2.1+; incl. PASS). SPEAK/LEAN is the glass-box edge claim only.
+      let independentFairValues: import("@sports/types").IndependentMarketFairValue[] = [];
+      try {
+        independentFairValues = await buildIndependentFairValues(
+          {
+            sportKey: sport.key,
+            homeTeam: game.homeTeam,
+            awayTeam: game.awayTeam,
+            commenceTime: game.commenceTime,
+            now: () => fetchedAt,
+          },
+          eloCache,
+        );
+      } catch (indepErr) {
+        console.warn(
+          `${logPrefix} Independent fair-values failed for ${game.externalId}: ` +
+          `${indepErr instanceof Error ? indepErr.message : indepErr}`,
+        );
+      }
+
       const context: GameContextInput = {
         openingSpread: enrichedGame?.openingSpread ?? avgSpread,
         currentSpread: avgSpread,
@@ -477,6 +597,9 @@ export async function processSport(
         hasTotalMarket: totalOdds.length > 0,
         hasH2HMarket,
         shadowEvidence: buildMissingContextEvidence(fetchedAt),
+        ...(independentFairValues.length > 0
+          ? { independentFairValues }
+          : {}),
       };
 
       oddsInputs.push({
@@ -709,11 +832,25 @@ export async function processSport(
       `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})`
     );
 
+    const emptyNote =
+      oddsInserted === 0 && Object.keys(gameRecords).length === 0
+        ? events.length === 0
+          ? `no_events via ${oddsProviderTag}` +
+            (rundownAttemptNote ? ` (${rundownAttemptNote})` : "") +
+            (espnAttemptNote ? ` [${espnAttemptNote}]` : "")
+          : "no_games_after_normalize"
+        : oddsInserted === 0
+          ? "odds_zero_after_insert_path"
+          : undefined;
     return {
       sport: sport.key,
       status: "success",
       games: Object.keys(gameRecords).length,
       picks: picksGenerated,
+      oddsInserted,
+      provider: oddsProviderTag,
+      eventsCount: events.length,
+      note: emptyNote,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -727,6 +864,14 @@ export async function processSport(
     await notifyOwner(
       `GSE ingestion FAILED\nsport: ${sport.key}\n${message}`,
     );
-    return { sport: sport.key, status: "failed", games: 0, picks: 0, error: message };
+    return {
+      sport: sport.key,
+      status: "failed",
+      games: 0,
+      picks: 0,
+      oddsInserted: 0,
+      eventsCount: 0,
+      error: message,
+    };
   }
 }

@@ -58,6 +58,7 @@ import {
   consensusEvidenceCaption,
   isBookmakerConsensusClaim,
 } from "@/lib/claims/public-consensus-claim";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 // Per-viewer gating means this page can never be served from a shared static /
 // full-route cache — a cached Pro render would hand the paid metrics to the next
@@ -93,8 +94,9 @@ async function loadGameForSlug(sportId: string, slug: string) {
               ? { NOT: { modelVersion: "v5.0.0-seed" } }
               : {}),
           },
-          orderBy: { confidence: "desc" },
-          take: 1,
+          // Wide window — pick best by rankingP after load (not confidence alone).
+          orderBy: { generatedAt: "desc" },
+          take: 8,
         },
       },
     });
@@ -112,12 +114,18 @@ async function loadGameForSlug(sportId: string, slug: string) {
 
 type LoadedGame = NonNullable<Awaited<ReturnType<typeof loadGameForSlug>>>;
 
+function bestPublishedPick(game: LoadedGame): LoadedGame["picks"][number] | null {
+  if (!game.picks.length) return null;
+  const sorted = [...game.picks].sort(comparePicksByRanking);
+  return sorted[0] ?? null;
+}
+
 function toMatchupInput(
   sportName: string,
   game: LoadedGame,
   canSeeConfidence: boolean,
 ): MatchupPreviewInput {
-  const raw = game.picks[0] ?? null;
+  const raw = bestPublishedPick(game);
   const base = {
     sport: sportName,
     homeTeam: game.homeTeamName,
@@ -168,7 +176,7 @@ function toMatchupInput(
  * (selection + line) stay in the SERP snippet without leaking the number.
  */
 function freeSafeDescription(sportName: string, game: LoadedGame): string {
-  const raw = game.picks[0] ?? null;
+  const raw = bestPublishedPick(game);
   const sportUpper = sportName.toUpperCase();
   const lead = raw
     ? `${raw.selection} ${raw.pickType === "MONEYLINE" ? "ML" : raw.line}.`
@@ -248,7 +256,7 @@ export default async function PreviewPage({ params }: Props) {
 
   const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
   const preview = buildMatchupPreview(input);
-  const pick = game.picks[0] ?? null;
+  const pick = bestPublishedPick(game);
 
   const gameDate = new Date(game.commenceTime);
   const formattedDate = gameDate.toLocaleDateString("en-US", {

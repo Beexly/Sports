@@ -29,7 +29,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, getInSeasonSports, resolveRundownApiKey, resolveOddsApiKey } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "./process-sport.js";
 import { freezeSlateCommitments, type SlateFreezeResult } from "./freeze-slate-commitments.js";
@@ -44,6 +44,12 @@ export interface RefreshOddsSportResult {
   readonly sport: string;
   readonly ok: boolean;
   readonly error?: string;
+  readonly oddsInserted?: number;
+  readonly provider?: string;
+  readonly eventsCount?: number;
+  readonly games?: number;
+  readonly picks?: number;
+  readonly note?: string;
 }
 
 export interface RefreshOddsResult {
@@ -89,32 +95,43 @@ export interface RefreshOddsOptions {
 /**
  * Runs one full odds-refresh cycle.
  *
- * Soft-fails (ok:false) if `THE_ODDS_API_KEY` is missing or ODDS_PROVIDER=offline
- * rather than inventing quotes.
+ * Soft-fail only when ODDS_PROVIDER=offline. Free paths:
+ *   1) THE_ODDS_API_KEY (+ aliases)
+ *   2) Rundown free dual-path
+ *   3) ESPN public odds (zero keys) — tertiary, never invents
  * @throws {UnsupportedSportError} if `opts.sport` matches no supported sport.
  */
 export async function refreshOdds(
   opts: RefreshOddsOptions = {},
 ): Promise<RefreshOddsResult> {
-  const apiKey = process.env["THE_ODDS_API_KEY"]?.trim() ?? "";
+  const apiKey = resolveOddsApiKey();
   const startedAt = Date.now();
 
-  // Soft-fail when the paid odds provider is offline (missing key / unpaid).
-  // Do not invent quotes; callers (cron) get ok:false with an explicit error
-  // instead of an uncaught throw. Gate integrity stays refusal-native.
-  if (!apiKey || process.env["ODDS_PROVIDER"]?.trim().toLowerCase() === "offline") {
-    const reason = !apiKey
-      ? "THE_ODDS_API_KEY missing — odds provider offline; refusing to invent quotes"
-      : "ODDS_PROVIDER=offline — refusing to invent quotes";
+  // Soft-fail only when ODDS_PROVIDER=offline forces refuse.
+  // ESPN free path always available — never invent quotes; soft-fail empty.
+  const rundownKey = resolveRundownApiKey();
+  if (process.env["ODDS_PROVIDER"]?.trim().toLowerCase() === "offline") {
     return {
       ok: false,
       elapsedMs: Date.now() - startedAt,
       okCount: 0,
       totalCount: 0,
-      results: [{ sport: "_", ok: false, error: reason }],
+      results: [{ sport: "_", ok: false, error: "ODDS_PROVIDER=offline — refusing to invent quotes" }],
       freeze: [],
     };
   }
+  // processSport accepts empty Odds key → Rundown → ESPN public free path.
+  const processKey =
+    apiKey || (rundownKey ? "rundown-free-path" : "espn-free-path");
+  const rundownOnly = !apiKey && Boolean(rundownKey);
+  // Free Rundown: longer inter-sport gap to avoid 429 cascading across sports.
+  // ESPN-only path: moderate gap (scoreboard+N odds calls per sport).
+  const interSportPauseMs = rundownOnly
+    ? Math.max(INTER_SPORT_PAUSE_MS, 2000)
+    : !apiKey
+      ? Math.max(INTER_SPORT_PAUSE_MS, 1500)
+      : INTER_SPORT_PAUSE_MS;
+  let skipRundownSports = false;
 
   const gates = getReadinessGates();
   const requestedSport = opts.sport ?? null;
@@ -133,16 +150,86 @@ export async function refreshOdds(
   const results: RefreshOddsSportResult[] = [];
 
   for (const sport of sportsToProcess) {
+    if (skipRundownSports && rundownOnly) {
+      // Still try ESPN when Rundown 429 cascade — do not skip tertiary free path.
+      try {
+        const res = await processSport(
+          sport,
+          "espn-free-path",
+          gates,
+          "[cron:refresh-odds]",
+        );
+        results.push(
+          res.status === "success"
+            ? {
+                sport: sport.key,
+                ok: true,
+                oddsInserted: res.oddsInserted ?? 0,
+                provider: res.provider,
+                eventsCount: res.eventsCount,
+                games: res.games,
+                picks: res.picks,
+                note:
+                  (res.note ?? "") +
+                  " (rundown 429 cascade → ESPN free path)",
+              }
+            : {
+                sport: sport.key,
+                ok: false,
+                error: res.error ?? "ingestion failed",
+                oddsInserted: res.oddsInserted ?? 0,
+                provider: res.provider,
+                eventsCount: res.eventsCount,
+                note: res.note,
+              },
+        );
+      } catch (err) {
+        results.push({
+          sport: sport.key,
+          ok: false,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+      await new Promise((r) => setTimeout(r, interSportPauseMs));
+      continue;
+    }
     try {
       // processSport NEVER throws on a provider/normalization failure — it
       // catches internally and RESOLVES { status: "failed", error }. Inspect
       // the returned status so a failed sport is recorded as ok:false (and the
       // Healthchecks success ping cannot fire falsely on a silent failure).
-      const res = await processSport(sport, apiKey, gates, "[cron:refresh-odds]");
+      const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
+      const note = res.note ?? "";
+      if (
+        rundownOnly &&
+        (note.includes("429") || note.includes("rate_limited") || res.provider === "therundown-empty")
+      ) {
+        // Only cascade-skip when the empty note is rate-limit, not honest empty board.
+        if (note.includes("429") || note.includes("rate_limited")) {
+          skipRundownSports = true;
+        }
+      }
       results.push(
         res.status === "success"
-          ? { sport: sport.key, ok: true }
-          : { sport: sport.key, ok: false, error: res.error ?? "ingestion failed" },
+          ? {
+              sport: sport.key,
+              ok: true,
+              oddsInserted: res.oddsInserted ?? 0,
+              provider: res.provider,
+              eventsCount: res.eventsCount,
+              games: res.games,
+              picks: res.picks,
+              note: res.note,
+            }
+          : {
+              sport: sport.key,
+              ok: false,
+              error: res.error ?? "ingestion failed",
+              oddsInserted: res.oddsInserted ?? 0,
+              provider: res.provider,
+              eventsCount: res.eventsCount,
+              note: res.note,
+            },
       );
     } catch (err) {
       results.push({
@@ -152,7 +239,7 @@ export async function refreshOdds(
       });
     }
     // Brief pause to avoid bursting the upstream API quota.
-    await new Promise((r) => setTimeout(r, INTER_SPORT_PAUSE_MS));
+    await new Promise((r) => setTimeout(r, interSportPauseMs));
   }
 
   // Freeze slate commitments (commit-reveal) for the sports just processed —

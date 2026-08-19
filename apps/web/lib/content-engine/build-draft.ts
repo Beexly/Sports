@@ -432,3 +432,145 @@ export function createCockpitContentTask(input: {
  * Re-export the decision union so callers don't have to import from types.
  */
 export type { ContentReviewDecision };
+
+
+export interface WhyBoardQuietInput {
+  readonly darkReason: string;
+  readonly boardSurface: "market" | "signal" | string;
+  readonly oddsInsertAgeMinutes: number | null;
+  readonly publishedPickCount: number;
+  readonly gameCount: number;
+  readonly calibrationStatus: "GREEN" | "RED" | "UNKNOWN" | string;
+  readonly generatedBy: string;
+  readonly slug: string;
+  readonly sources: readonly ContentSourceRecord[];
+}
+
+/**
+ * Honest quiet-board explainer — DRAFT only, no invent slate, no PROVEN.
+ */
+export function buildWhyBoardQuietDraft(
+  input: WhyBoardQuietInput,
+): ContentDraftRecord {
+  const lines: string[] = [
+    "# Why the board is quiet",
+    "",
+    "This is an operator-reviewed draft. It only uses platform gate state — it never invents picks, odds, or ROI.",
+    "",
+    `## Dark reason`,
+    "",
+    `- Code: \`${input.darkReason}\``,
+    `- Board surface mode: **${input.boardSurface}**`,
+    `- Games on calendar window: **${input.gameCount}**`,
+    `- Published non-seed picks today: **${input.publishedPickCount}**`,
+  ];
+  if (input.oddsInsertAgeMinutes !== null) {
+    lines.push(
+      `- Last odds-insert age: **${input.oddsInsertAgeMinutes}m** (Refresh SLA is 240m for market board)`,
+    );
+  } else {
+    lines.push("- Last odds-insert age: **unknown / none yet**");
+  }
+  lines.push(
+    `- Calibration eligibility: **${input.calibrationStatus}** (performance stays unpublished while RED)`,
+    "",
+    "## What this is not",
+    "",
+    "- Not an outage claim unless ops health says so",
+    "- Not a PROVEN track record",
+    "- Not free book odds when the Odds key is absent (ABSENT-only free path)",
+    "",
+    "Quiet board = model/gate posture. See methodology and free tools while the public slate stays dark.",
+  );
+
+  return buildContentDraft({
+    templateKey: "WHY_BOARD_QUIET",
+    slug: input.slug,
+    bodyLines: lines,
+    sources: input.sources,
+    generatedBy: input.generatedBy,
+    visibilityOverride: "PUBLIC",
+    metadata: {
+      darkReason: input.darkReason,
+      boardSurface: input.boardSurface,
+      oddsInsertAgeMinutes: input.oddsInsertAgeMinutes,
+      publishedPickCount: input.publishedPickCount,
+      gameCount: input.gameCount,
+      calibrationStatus: input.calibrationStatus,
+    },
+  });
+}
+
+export interface EvidencePackMatchupInput {
+  readonly home: string;
+  readonly away: string;
+  readonly selection: string;
+  readonly rankingP: number | null;
+  readonly rankingSource: string | null;
+  readonly independentSources: readonly string[];
+  readonly calibrationStatus: string;
+  readonly generatedBy: string;
+  readonly slug: string;
+  readonly sources: readonly ContentSourceRecord[];
+}
+
+/**
+ * Matchup evidence pack — not-PROVEN footer always; rankingP only when finite.
+ */
+export function buildEvidencePackMatchupDraft(
+  input: EvidencePackMatchupInput,
+): ContentDraftRecord {
+  const lines: string[] = [
+    `# Evidence pack: ${input.away} @ ${input.home}`,
+    "",
+    `Selection under review: **${input.selection}**`,
+    "",
+  ];
+  if (input.rankingP !== null && Number.isFinite(input.rankingP)) {
+    lines.push(
+      `Model rankingP: **${input.rankingP.toFixed(3)}**` +
+        (input.rankingSource ? ` (source: ${input.rankingSource})` : ""),
+      "",
+      "rankingP is a sort key for model ranking — not verified ROI and not a public win probability claim while eligibility is RED.",
+      "",
+    );
+  } else {
+    lines.push(
+      "rankingP: **not priced** on this candidate (no invent).",
+      "",
+    );
+  }
+  if (input.independentSources.length > 0) {
+    lines.push(
+      `Independent fair-value sources present: ${input.independentSources.join(", ")}`,
+      "",
+    );
+  } else {
+    lines.push("Independent fair-value sources: **none attached**", "");
+  }
+  lines.push(
+    `Calibration eligibility: **${input.calibrationStatus}**`,
+    "",
+    "## Footer (required)",
+    "",
+    "Not PROVEN. No guaranteed outcome. Past results do not guarantee future results. This draft is for review only and is not a public performance claim.",
+  );
+
+  return buildContentDraft({
+    templateKey: "EVIDENCE_PACK_MATCHUP",
+    slug: input.slug,
+    bodyLines: lines,
+    sources: input.sources,
+    generatedBy: input.generatedBy,
+    visibilityOverride: "INTERNAL",
+    metadata: {
+      home: input.home,
+      away: input.away,
+      selection: input.selection,
+      rankingP: input.rankingP,
+      rankingSource: input.rankingSource,
+      independentSources: [...input.independentSources],
+      calibrationStatus: input.calibrationStatus,
+    },
+  });
+}

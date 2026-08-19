@@ -19,10 +19,12 @@ import { persistFreeSpineSnapshot } from "@/lib/data-sources/free-spine-durable"
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
 import { probeNflverseSourceCurrency } from "@sports/data-ingestion";
 import { captureError } from "@/lib/observability/sentry";
+import { resolveOddsApiKey, resolveRundownApiKey } from "@sports/data-ingestion";
+import { runBoardFillPipeline } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
@@ -137,7 +139,24 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
   }
 
+    // Autonomous board fill when quote keys exist (no founder click; same process).
+  let boardFill: Awaited<ReturnType<typeof runBoardFillPipeline>> | null = null;
+  try {
+    const hasOdds = Boolean(resolveOddsApiKey()) || Boolean(resolveRundownApiKey());
+    if (hasOdds || true /* always attempt signal path */) {
+      // Always attempt signal slate; odds path no-ops honestly when keys absent.
+      boardFill = await runBoardFillPipeline({ logPrefix: "[cron:free-spine:board-fill]" });
+    }
+  } catch (bfErr) {
+    captureError(bfErr, { path: "free-spine-health", stage: "board-fill" });
+    console.warn(
+      `[free-spine-health] board-fill failed: ${bfErr instanceof Error ? bfErr.message : bfErr}`,
+    );
+  }
+
   return NextResponse.json({
+    boardFill,
+
     ok: true,
     path: "free-spine-health",
     oddsApiRequired: false as const,

@@ -9,6 +9,7 @@ import {
   type BriefPromotionInput,
   type BriefTaskInput,
 } from "@/lib/brief/compose";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 /**
  * /cockpit/brief — the operator's morning packet, rebuilt on real rows.
@@ -29,9 +30,10 @@ export default async function CockpitBriefPage() {
       .findMany({
         where: { isPublished: true, generatedAt: { gte: startOfDay(now), lte: endOfDay(now) } },
         include: { game: { include: { sport: { select: { name: true } } } } },
-        orderBy: { confidence: "desc" },
-        take: 50,
+        orderBy: { generatedAt: "desc" },
+        take: 80,
       })
+      .then((rows) => [...rows].sort(comparePicksByRanking).slice(0, 50))
       .catch(() => []),
     db.pick
       .findMany({

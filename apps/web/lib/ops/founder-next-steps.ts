@@ -15,12 +15,24 @@ export interface FounderNextStep {
     | "content"
     | "statking"
     | "billing"
-    | "analytics";
+    | "analytics"
+    | "growth"
+    | "research"
+    | "credits";
   readonly priority: "P0" | "P1" | "P2";
   readonly action: string;
 }
 
 export interface FounderNextStepsInput {
+  /**
+   * Platform cron scheduler diagnosis (lib/ops/scheduler-liveness.ts).
+   * "dead" means no cron of any cadence has completed successfully well past
+   * its loosest interval — the scheduler itself, not the data, is the
+   * problem. Distinct from (and usually explains) overduePending / stale
+   * odds / frozen calibration below, so it surfaces first when present.
+   */
+  readonly schedulerStatus?: "healthy" | "degraded" | "dead" | "unknown";
+  readonly schedulerAgeMinutes?: number | null;
   readonly overduePending: number | null;
   readonly settlementHealth: string | null;
   readonly freeLaneConfigured: boolean;
@@ -56,6 +68,21 @@ export interface FounderNextStepsInput {
   readonly freeSpineRequireSpend?: number | null;
   /** When true, surface optional analytics (default off — reduces noise). */
   readonly includeOptionalAnalytics?: boolean;
+  /** Waitlist public lead capture closed by Basic Auth gate. */
+  readonly waitlistGateEnabled?: boolean;
+  /** Non-seed settled sample vs code floor (optional). */
+  readonly nonSeedSettled?: number | null;
+  readonly nonSeedFloorProven?: number;
+  /** Last odds-inserting SUCCESS outside Refresh SLA (kill switch dark). */
+  readonly oddsInsertingStale?: boolean;
+  /** market | signal — dual board mode */
+  readonly boardSurface?: "market" | "signal";
+  /** Signal slate quiet (no recent model picks) */
+  readonly signalSlateStale?: boolean;
+  readonly calibrationEligibilityStatus?: "GREEN" | "RED" | null;
+  readonly calibrationPublished?: boolean;
+  readonly calibrationAutoPublish?: boolean;
+  readonly remainingToFloor?: number | null;
 }
 
 /**
@@ -63,6 +90,20 @@ export interface FounderNextStepsInput {
  */
 export function buildFounderNextSteps(input: FounderNextStepsInput): readonly FounderNextStep[] {
   const steps: FounderNextStep[] = [];
+
+  if (input.schedulerStatus === "dead") {
+    const age = input.schedulerAgeMinutes;
+    steps.push({
+      id: "scheduler-dead",
+      domain: "deploy",
+      priority: "P0",
+      action:
+        `Platform cron scheduler looks dead — no cron of any cadence has succeeded in ` +
+        `${age != null ? `${age}m` : "a long time"}. This is almost certainly the root cause of ` +
+        "any staleness below, not a data problem. Check Vercel dashboard → Cron Jobs for the " +
+        "production deployment, then fire a founder one-shot with CRON_SECRET to confirm the routes still work.",
+    });
+  }
 
   if (input.overduePending !== null && input.overduePending > 0) {
     steps.push({
@@ -158,11 +199,138 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
   }
 
   if (input.canExposePublicPicks) {
+    const surface = input.boardSurface ?? "market";
+    if (surface === "signal") {
+      if (input.signalSlateStale) {
+        steps.push({
+          id: "signal-slate-regenerate",
+          domain: "product_gates",
+          priority: "P0",
+          action:
+            "PUBLIC_PICKS ON + signal board: model slate quiet — run generate-signal-slate cron (independents only; no book invent). Reopens when published PENDING signals exist for upcoming games.",
+        });
+      } else {
+        steps.push({
+          id: "public-picks-signal-on",
+          domain: "product_gates",
+          priority: "P0",
+          action:
+            "PUBLIC_PICKS ON + signal board live — model signals only (never book labels). PERFORMANCE_STATS stays OFF while eligibility RED.",
+        });
+      }
+      if (input.oddsInsertingStale) {
+        steps.push({
+          id: "market-odds-stale-optional",
+          domain: "product_gates",
+          priority: "P1",
+          action:
+            "Market odds insert outside Refresh SLA — market board stays dark. Optional: restore THE_ODDS_API_KEY quota for book labels; signal path does not need it.",
+        });
+      }
+    } else if (input.oddsInsertingStale) {
+      steps.push({
+        id: "public-picks-odds-stale",
+        domain: "product_gates",
+        priority: "P0",
+        action:
+          "PUBLIC_PICKS ON but last odds insert is outside Refresh SLA — market board dark. Confirm THE_ODDS_API_KEY quota; OR rely on auto signal board (PUBLIC_BOARD_SURFACE unset + odds stale).",
+      });
+    } else {
+      steps.push({
+        id: "public-picks-on",
+        domain: "product_gates",
+        priority: "P0",
+        action: "PUBLIC_PICKS is ON — confirm proof bar + settlement healthy before marketing. PERFORMANCE_STATS still requires GREEN eligibility.",
+      });
+    }
+  }
+
+  if (input.waitlistGateEnabled === true) {
     steps.push({
-      id: "public-picks-on",
+      id: "waitlist-open-funnel",
+      domain: "growth",
+      priority: "P1",
+      action:
+        "Waitlist Basic Auth is locking lead capture — FOUNDING open: set GSE_WAITLIST_GATE_ENABLED=false (or unset) on Production; code default is open when flag is not true.",
+    });
+  }
+
+  const floor = input.nonSeedFloorProven ?? 100;
+  const remaining = input.remainingToFloor;
+  if (typeof remaining === "number" && remaining > 0) {
+    steps.push({
+      id: "accumulate-nonseed-settled",
       domain: "product_gates",
-      priority: "P0",
-      action: "PUBLIC_PICKS is ON — confirm proof bar + settlement healthy before marketing.",
+      priority: "P2",
+      action: `Canonical settled short by ${remaining} (floor ${floor}) — settle-picks accumulates; never invent sample.`,
+    });
+  } else if (input.calibrationEligibilityStatus === "RED") {
+    steps.push({
+      id: "calibration-metrics-below-floor",
+      domain: "product_gates",
+      priority: "P1",
+      action:
+        "Sample floor met but calibration eligibility RED — wait for live Brier/ECE/Murphy floors + streak (calibration-metrics cron). Do not claim PROVEN.",
+    });
+  } else if (
+    input.calibrationEligibilityStatus === "GREEN" &&
+    !input.calibrationPublished &&
+    !input.calibrationAutoPublish
+  ) {
+    steps.push({
+      id: "enable-calibration-auto-publish",
+      domain: "product_gates",
+      priority: "P1",
+      action:
+        "Eligibility GREEN. One-time: set CALIBRATION_AUTO_PUBLISH=true (or CALIBRATION_PUBLISHED=true). No weekly ceremony after that.",
+    });
+  } else if (input.calibrationAutoPublish && input.calibrationEligibilityStatus === "GREEN") {
+    steps.push({
+      id: "calibration-unattended",
+      domain: "product_gates",
+      priority: "P2",
+      action: "Auto-publish policy ON + eligibility GREEN — performance path unattended. No founder click required.",
+    });
+  } else if (typeof input.nonSeedSettled === "number" && input.nonSeedSettled < floor) {
+    steps.push({
+      id: "accumulate-nonseed-settled",
+      domain: "product_gates",
+      priority: "P2",
+      action: `Non-seed settled ${input.nonSeedSettled}/${floor} — machine accumulates via settle-picks; do not invent sample or claim PROVEN.`,
+    });
+  }
+
+
+  // Content archives: free-lane can fill; thin archives leave distribution empty.
+  if (input.podcastEpisodes < 3 || input.newsletterIssues < 4) {
+    steps.push({
+      id: "content-archives-thin",
+      domain: "content",
+      priority: "P2",
+      action:
+        "Content archives thin — generate 1 podcast + 1 newsletter via free-lane (Cerebras), human-review, publish only brand-safe issues. No invent stats.",
+    });
+  }
+
+  // Credits / Action Packs — pure founder portal work (code already multi-cloud).
+  if (input.anyCloudConfigured) {
+    steps.push({
+      id: "claim-remaining-credits",
+      domain: "credits",
+      priority: "P2",
+      action:
+        "Cloud maps ready — claim remaining Action Pack / startup credits (Neon, Vercel, Anthropic, Azure) and record in CREDITS.md. Code already routes free-lane first.",
+    });
+  }
+
+  // Machina research platform — optional external leverage (noise-gated).
+  if (input.includeOptionalAnalytics === true) {
+    steps.push({
+      id: "machina-cli-login",
+      domain: "research",
+      priority: "P2",
+      action:
+        "Optional: machina login on your machine → org/project use → paste workflow/agent/skills list JSON so agents can harvest pods (see docs/ops/machina/MACHINA_CLI_FOUNDER.md).",
     });
   }
 

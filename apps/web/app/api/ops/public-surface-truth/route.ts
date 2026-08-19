@@ -11,11 +11,27 @@ import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown"
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
+import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reliability/public-freshness-gate";
+import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
 import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
+import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
+import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
+import { aciPublicPosture } from "@/lib/calibration/aci-durable";
+import { loadProvenPathSurface } from "@/lib/ops/proven-path-seed";
+import { buildMurphyResSnapshot } from "@/lib/calibration/murphy-res-definition";
+import { conformalRdPosture } from "@/lib/calibration/conformal-calibration";
+import { ISOTONIC_ALTERNATIVES } from "@/lib/calibration/isotonic-alternatives";
+import { loadMapBakeoff, summarizeMapBakeoff } from "@/lib/ops/map-bakeoff-durable";
+import { productBoardSurfaces } from "@/lib/product/board-surfaces";
+import { rankingPauseApplyPosture } from "@/lib/calibration/ranking-pause-apply";
+import { selectiveRuntimePosture } from "@/lib/calibration/selective-publish-runtime";
+import { loadRankingPauseApply } from "@/lib/ops/ranking-pause-durable";
+import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
+import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -23,6 +39,10 @@ import {
   resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
 import { timingSafeEqual } from "node:crypto";
+import {
+  oddsApiKeyPresence,
+  rundownApiKeyPresence,
+} from "@sports/data-ingestion";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -67,6 +87,26 @@ const MAIN_FEATURE_MARKERS = [
   "founder-queue-low-noise",
   "waitlist-posture-ops-surface",
   "free-spine-parallel-probes",
+  "canonical-sample-ops-truth",
+  "odds-inserting-freshness-ops",
+  "calibration-eligibility-engine",
+  "calibration-auto-publish-policy",
+  "ranking-surface-sort",
+  "independent-ranking-v5.2.2",
+  "public-dark-reason-taxonomy",
+  "news-rss-curated-defaults",
+  "b2b-signals-rankingp",
+  "tools-line-movement",
+  "session-leverage-atlas",
+  "ranking-power-control-plane",
+  "rpcp-conformal-bridge-offline",
+  "product-board-surfaces-posture",
+  "ranking-pause-apply-default-off",
+  "why-board-quiet-draft",
+  "b2b-experimental-openapi",
+  "pick-card-rankingp",
+  "generate-signal-slate",
+  "signal-board-launch-path",
 ] as const;
 
 function hasOpsAuth(request: Request): boolean {
@@ -85,7 +125,7 @@ function hasOpsAuth(request: Request): boolean {
 
 /**
  * Surface truth snapshot.
- * - Public: gates, storage modes, settlement band counts, deploymentSha.
+ * - Public: gates, storage modes, settlement band counts, deploymentSha, sample.
  * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
  */
 export async function GET(request: Request) {
@@ -132,6 +172,147 @@ export async function GET(request: Request) {
     settlement = null;
   }
 
+  // Canonical sample via loadPublicPerformancePolicy — not commencedTotal.
+  let sample: Awaited<ReturnType<typeof loadCanonicalSamplePosture>> | null = null;
+  if (!isStubMode()) {
+    try {
+      sample = await loadCanonicalSamplePosture(db, {
+        commencedTotal: settlement?.commencedTotal ?? 0,
+        canExposePerformanceStats: gates.canExposePerformanceStats,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+      });
+    } catch {
+      sample = null;
+    }
+  }
+
+  // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
+  // Dual-path visibility: keys present + last zero-odds SUCCESS (often quiet/empty provider).
+  const oddsKeySlot = oddsApiKeyPresence();
+  const rundownKeySlot = rundownApiKeyPresence();
+  let oddsInserting: {
+    lastSuccessAt: string | null;
+    ageMinutes: number | null;
+    withinRefreshSla: boolean | null;
+    oddsInserted: number | null;
+    sport: string | null;
+    dualPath: {
+      oddsKeyPresent: boolean;
+      oddsMatchedEnv: string | null;
+      rundownKeyPresent: boolean;
+      rundownMatchedEnv: string | null;
+      /** Zero-key ESPN public odds tertiary path (always code-available). */
+      espnPublicTertiary: true;
+    };
+    lastZeroOddsSuccessAt: string | null;
+    lastZeroOddsSport: string | null;
+    lastZeroOddsNote: string | null;
+    operatorHint: string;
+  } = {
+    lastSuccessAt: null,
+    ageMinutes: null,
+    withinRefreshSla: null,
+    oddsInserted: null,
+    sport: null,
+    dualPath: {
+      oddsKeyPresent: oddsKeySlot.present,
+      oddsMatchedEnv: oddsKeySlot.matchedEnv,
+      rundownKeyPresent: rundownKeySlot.present,
+      rundownMatchedEnv: rundownKeySlot.matchedEnv,
+      espnPublicTertiary: true,
+    },
+    lastZeroOddsSuccessAt: null,
+    lastZeroOddsSport: null,
+    lastZeroOddsNote: null,
+    operatorHint:
+      "No odds-inserting SUCCESS found yet. Market board stays dark until oddsInserted>0 within Refresh SLA. Signal board is independent.",
+  };
+  if (!isStubMode()) {
+    try {
+      const [run, zeroRun] = await Promise.all([
+        db.ingestionRun.findFirst({
+          where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
+          orderBy: { completedAt: "desc" },
+          select: { completedAt: true, oddsInserted: true, sport: true },
+        }),
+        db.ingestionRun.findFirst({
+          where: {
+            status: "SUCCESS",
+            oddsInserted: 0,
+            sport: { not: "free-spine" },
+          },
+          orderBy: { completedAt: "desc" },
+          select: { completedAt: true, oddsInserted: true, sport: true, errorMessage: true },
+        }),
+      ]);
+      if (zeroRun?.completedAt) {
+        oddsInserting.lastZeroOddsSuccessAt = zeroRun.completedAt.toISOString();
+        oddsInserting.lastZeroOddsSport = zeroRun.sport ?? null;
+        const err = (zeroRun.errorMessage ?? "").toLowerCase();
+        const rateLimited =
+          err.includes("429") ||
+          err.includes("rate_limited") ||
+          err.includes("rate limit");
+        oddsInserting.lastZeroOddsNote = rateLimited
+          ? "Recent SUCCESS with oddsInserted=0 — provider HTTP 429 / rate_limited. Does NOT advance market kill-switch clock. Wait out free-tier window or set THE_ODDS_API_KEY (dual path)."
+          : "Recent SUCCESS with oddsInserted=0 (quiet board, empty provider events, or mapping drop) — does NOT advance market kill-switch clock.";
+      }
+      if (run?.completedAt) {
+        const ageMinutes = Math.round((Date.now() - run.completedAt.getTime()) / 60000);
+        const withinRefreshSla = ageMinutes <= 240;
+        const zeroErr = (zeroRun?.errorMessage ?? "").toLowerCase();
+        const rateLimited =
+          zeroErr.includes("429") ||
+          zeroErr.includes("rate_limited") ||
+          zeroErr.includes("rate limit");
+        let keyHint = !oddsKeySlot.present && !rundownKeySlot.present
+          ? " No Odds/Rundown keys visible — ESPN public free path still available (tertiary)."
+          : !oddsKeySlot.present && rundownKeySlot.present
+            ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT; ESPN public tertiary if Rundown empty/429.`
+            : oddsKeySlot.present
+              ? ` Odds key present (${oddsKeySlot.matchedEnv}).`
+              : "";
+        if (rateLimited && !oddsKeySlot.present) {
+          keyHint +=
+            " Rundown free-tier 429 active — cascade to ESPN public odds (zero keys) or wait cool-off / add THE_ODDS_API_KEY.";
+        }
+        oddsInserting = {
+          ...oddsInserting,
+          lastSuccessAt: run.completedAt.toISOString(),
+          ageMinutes,
+          withinRefreshSla,
+          oddsInserted: run.oddsInserted ?? null,
+          sport: run.sport ?? null,
+          operatorHint: withinRefreshSla
+            ? `Last odds insert ${ageMinutes}m ago (within 240m SLA).${keyHint}`
+            : `Last odds insert ${ageMinutes}m ago (outside 240m SLA) — market board dark until refresh-odds inserts odds again (quiet/empty SUCCESS does not clear this).${keyHint} Signal board independent.`,
+        };
+      } else {
+        const keyHint = !oddsKeySlot.present && !rundownKeySlot.present
+          ? "No quote keys visible."
+          : rundownKeySlot.present
+            ? `Rundown key present (${rundownKeySlot.matchedEnv}) but no oddsInserted>0 run yet — provider empty/mapping, 429, or multi-day lag.`
+            : `Odds key present (${oddsKeySlot.matchedEnv}) but no oddsInserted>0 run yet.`;
+        oddsInserting = {
+          ...oddsInserting,
+          operatorHint: `${keyHint} Market board stays dark until oddsInserted>0. Signal board independent.`,
+        };
+      }
+    } catch {
+      /* leave default */
+    }
+  }
+
+  // Distinguishes "platform cron stopped firing" from "quiet board" — see
+  // lib/ops/scheduler-liveness.ts for the 2026-08-10 incident this exists for.
+  const schedulerLiveness = await assessSchedulerLiveness().catch(() => null);
+
+  // Ingestion failsafe (see traffic-heartbeat.ts). This is the most-requested
+  // API route in production (~every 7 min), which makes it the best available
+  // trigger while both schedulers are down. Fire-and-forget: never awaited,
+  // never allowed to fail this response.
+  void maybeRunTrafficHeartbeat().catch(() => undefined);
+
   const creditStack = loadCreditStackPosture();
   const billingMoney = loadBillingMoneyPosture();
   const autonomy = loadAutonomyPosture();
@@ -146,7 +327,6 @@ export async function GET(request: Request) {
   }
   const jynx = creditStack.jynx;
 
-  // I3/I8: resolve free-spine BEFORE founder queue so coverage gaps / SLA land in steps.
   let freeSpine: {
     present: boolean;
     source: "process" | "durable" | "none";
@@ -175,7 +355,6 @@ export async function GET(request: Request) {
     slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
   };
   try {
-    // I3: prefer fresh process RAM; if cold/stale, load Neon durable and pick fresher.
     const { snap, source } = await resolveBestFreeSpineSnapshot();
     if (snap) {
       const ageMs = freeSpineSnapAgeMs(snap);
@@ -202,7 +381,44 @@ export async function GET(request: Request) {
     /* honest empty */
   }
 
+  // Calibration eligibility + publish policy (durable; never invent metrics).
+  let calibrationEligibility: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["eligibility"] | null = null;
+  let calibrationPublish: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["publish"] | null = null;
+  if (!isStubMode()) {
+    try {
+      const cal = await loadCalibrationOpsSurface({
+        canonicalSettled: sample?.canonicalSettled ?? 0,
+        minSettledForLearning:
+          sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
+        settlementHealthy: settlement?.health === "HEALTHY",
+      });
+      calibrationEligibility = cal.eligibility;
+      calibrationPublish = cal.publish;
+    } catch {
+      calibrationEligibility = null;
+      calibrationPublish = null;
+    }
+  }
+
+  // Ladder + public performance only when published AND eligibility GREEN.
+  const effectivePerformanceStats =
+    calibrationPublish?.canExposePerformanceStats === true;
+  const calibrationPublished = effectivePerformanceStats;
+
+  const oddsStaleForSurface = await isMarketBoardOddsStale().catch(() => true);
+  const boardSurface = boardSurfacePosture(process.env, { oddsFresh: !oddsStaleForSurface });
+  const signalSlateStale =
+    boardSurface.surface === "signal"
+      ? await isSignalBoardSlateStale().catch(() => true)
+      : false;
+
   const founderNextSteps = buildFounderNextSteps({
+    schedulerStatus: schedulerLiveness?.status,
+    schedulerAgeMinutes: schedulerLiveness?.ageMinutes ?? null,
     overduePending: settlement?.overduePending ?? null,
     settlementHealth: settlement?.health ?? null,
     freeLaneConfigured: creditStack.freeLaneConfigured,
@@ -228,19 +444,35 @@ export async function GET(request: Request) {
     freeSpineWithinSla: freeSpine.withinSla,
     freeSpineCriticalGaps: freeSpine.criticalGaps,
     freeSpineRequireSpend: freeSpine.requireSpend,
+    waitlistGateEnabled: waitlist.gateEnabled,
+    nonSeedSettled: sample?.canonicalSettled ?? null,
+    nonSeedFloorProven: sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
+    oddsInsertingStale: oddsInserting.withinRefreshSla === false,
+    boardSurface: boardSurface.surface,
+    signalSlateStale,
+    calibrationEligibilityStatus: calibrationEligibility?.status ?? null,
+    calibrationPublished,
+    calibrationAutoPublish: calibrationPublish?.autoPublish ?? false,
+    remainingToFloor: sample?.remainingToFloor ?? null,
   });
 
-  // Proof-gated ladder — never invents calibration/CLV; never flips gates.
+  // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
-    canonicalSettled: settlement?.commencedTotal ?? 0,
-    calibrationPublished: false,
+    canonicalSettled: sample?.canonicalSettled ?? 0,
+    calibrationPublished,
     clvBeatCloseRate: null,
     settlementHealthy: settlement?.health === "HEALTHY",
-    boardNotSuppressed: false,
+    boardNotSuppressed:
+      boardSurface.surface === "signal"
+        ? signalSlateStale === false
+        : oddsInserting.withinRefreshSla === true,
     liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
     publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
-    performanceStatsEnabled: process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+    performanceStatsEnabled: effectivePerformanceStats,
+    minSettledProven: gates.minSettledPicksForLearning,
   });
+
+  const productBoards = productBoardSurfaces(process.env);
 
   return NextResponse.json(
     {
@@ -263,24 +495,160 @@ export async function GET(request: Request) {
         contestsPublic: isContestsPublic(),
         canExposePublicPicks: gates.canExposePublicPicks,
         isBootstrapMode: gates.isBootstrapMode,
+        canExposePerformanceStats: effectivePerformanceStats,
+        envPerformanceStatsEnabled: gates.canExposePerformanceStats,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+        calibrationPublished,
       },
       contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
-      /** Public-safe lead-capture gate posture (booleans only). */
       waitlist,
       settlement,
+      /**
+       * Canonical sample (publish/learning SoT).
+       * commenced ≠ settled. Excludes bootstrap + modelVersion v5.0.0-seed.
+       * settle = grade; filter = these counts; publish = eligibility GREEN + policy (AUTO_PUBLISH or PUBLISHED).
+       */
+      sample,
+      oddsInserting,
+      calibrationEligibility: calibrationEligibility
+        ? {
+            status: calibrationEligibility.status,
+            reasons: calibrationEligibility.reasons,
+            n: calibrationEligibility.n,
+            brier: calibrationEligibility.brier,
+            ece: calibrationEligibility.ece,
+            mce: calibrationEligibility.mce,
+            murphy: calibrationEligibility.murphy,
+            floors: calibrationEligibility.floors,
+            consecutiveGreen: calibrationEligibility.consecutiveGreen,
+            streakRequired: calibrationEligibility.streakRequired,
+            modelVersion: calibrationEligibility.modelVersion,
+            dateRange: calibrationEligibility.dateRange,
+            generatedAt: calibrationEligibility.generatedAt,
+            operatorHint: calibrationEligibility.operatorHint,
+          }
+        : null,
+      calibrationPublish: calibrationPublish
+        ? {
+            published: calibrationPublish.published,
+            publishedEffective: calibrationPublish.publishedEffective ?? calibrationPublish.published,
+            source: calibrationPublish.source,
+            autoPublish: calibrationPublish.autoPublish,
+            autoUnpublish: calibrationPublish.autoUnpublish,
+            canExposePerformanceStats: calibrationPublish.canExposePerformanceStats,
+            operatorHint: calibrationPublish.operatorHint,
+          }
+        : null,
       content: {
         podcastEpisodes: listEpisodes().length,
         newsletterIssues: listIssues().length,
       },
-      /** Public-safe AI cost posture — booleans only, never secrets. */
       creditStack,
-      /** Public-safe money path posture — booleans + lookup keys only, never secrets. */
       billingMoney,
-      /** Public-safe Stripe webhook host audit (URLs only). */
       stripeWebhookHosts,
-      /** Public-safe autonomy executor posture — dry-run default, free crons only. */
       autonomy,
+      boardSurface: boardSurfacePosture(process.env, {
+        oddsFresh: oddsInserting?.withinRefreshSla === true,
+      }),
+      /** STATKING / HELM / PICKPILOT / CLUBHOUSE / GSE board honesty map. */
+      productBoards: {
+        surfaces: productBoards.surfaces,
+        liveProductionIds: productBoards.liveProductionIds,
+        darkByLawIds: productBoards.darkByLawIds,
+        designPreviewOnly: productBoards.designPreviewOnly,
+        operatorHint: productBoards.operatorHint,
+      },
+      aciPosture: aciPublicPosture(),
+      ...(await (async () => {
+        const surface = await loadProvenPathSurface();
+        const murphySnap =
+          calibrationEligibility?.murphy != null &&
+          calibrationEligibility.brier != null
+            ? buildMurphyResSnapshot({
+                brier: calibrationEligibility.brier,
+                reliability: calibrationEligibility.murphy.reliability,
+                resolution: calibrationEligibility.murphy.resolution,
+                uncertainty: calibrationEligibility.murphy.uncertainty,
+              })
+            : null;
+        const durablePause = await loadRankingPauseApply();
+        const pausePosture = rankingPauseApplyPosture(
+          process.env,
+          surface?.plan ?? null,
+          durablePause,
+        );
+        const selectivePosture = selectiveRuntimePosture(
+          process.env,
+          surface?.plan ?? null,
+          durablePause,
+        );
+        return {
+          provenPath: surface?.plan ?? null,
+          provenPathProjection: surface?.projection ?? null,
+          /** Ranking Power Control Plane — residual + operatorHint for founder ops. */
+          rankingPower: surface?.rankingPowerPosture ?? {
+            present: false,
+            bestScore: null,
+            rankingSignal: null,
+            pathViable: null,
+            liveRes: null,
+            projectedRes: null,
+            deltaRes: null,
+            pauseGroupCount: null,
+            independentCoverage: null,
+            primaryBottleneck: null,
+            mapsApplyGateOpen: null,
+            residualOperatorHint: null,
+            operatorHint: "Ranking Power Control Plane not seeded.",
+            rankingPolarityLaw: "positive_separation_required",
+          },
+          /** Offline conformal bridge posture (never eligibility). */
+          rpcpConformalBridge: surface?.conformalBridgeEnv ?? {
+            computeEnabled: false,
+            productFlags: {
+              conformalAbstainEnabled: false,
+              calibrationAdjustmentsEnabled: false,
+              autoPublish: false,
+            },
+            unlocksProven: false,
+            raisesRes: false,
+            operatorHint:
+              "RPCP–conformal bridge default offline (not seeded).",
+          },
+          /** Pause list apply — default OFF; plan pause is advisory until RANKING_PAUSE_APPLY. */
+          rankingPauseApply: pausePosture,
+          selectiveRuntime: selectivePosture,
+          // Top-level polarity glance (also nested under provenPath*)
+          rankingPolarityLaw:
+            surface?.plan?.rankingPolarityLaw ?? "positive_separation_required",
+          bestScore: surface?.plan?.bestScore ?? null,
+          bestSeparation: surface?.projection?.bestSeparation ?? null,
+          pathViable: surface?.projection?.pathViable ?? null,
+          murphyExplain: murphySnap?.explain ?? null,
+          murphyRes: murphySnap,
+          conformalRd: conformalRdPosture(process.env),
+          isotonicAlternatives: ISOTONIC_ALTERNATIVES.map((a) => ({
+            situation: a.situation,
+            prefer: a.prefer,
+            module: a.existingModule,
+            raisesRes: a.raisesRes,
+          })),
+          mapBakeoff: summarizeMapBakeoff(await loadMapBakeoff()),
+        };
+      })()),
+      mapVsCanonical: {
+        canonicalSettled: sample?.canonicalSettled ?? null,
+        mapN: calibrationEligibility?.n ?? null,
+        note:
+          "canonicalSettled includes WIN|LOSS|PUSH; map n is learning-eligible WIN|LOSS only (eligibleForLearning). Gap is expected — see docs/ops/SAMPLE_N_VS_MAP_N.md",
+      },
+      bayesianRd: {
+        adjustmentsEnabled: false,
+        hierarchicalEbTau: true,
+        dirichletProcessInPath: false,
+        note: "Bayesian/hierarchical MAP Platt is offline R&D only (EB τ clamped). Eligibility stays frequentist. DP clustering not in prod path.",
+      },
       freeSpine,
       policy: PUBLIC_NAV_POLICY,
       law: {
@@ -288,14 +656,18 @@ export async function GET(request: Request) {
         statsDefault: "dark",
         contestsDefault: "public free paper skill",
         refuseEphemeralWrites: true,
+        rankingPauseApplyDefault: "off",
+        mapsDefault: "off",
       },
       founderNextSteps,
+      schedulerLiveness,
       revenueLadder: {
         currentStep: revenueLadder.currentStep,
         nextStep: revenueLadder.nextStep,
         canHonestlyMonetizePublicTrackRecord: revenueLadder.canHonestlyMonetizePublicTrackRecord,
         operatorMessage: revenueLadder.operatorMessage,
         blockersToNext: revenueLadder.blockersToNext,
+        milestones: revenueLadder.milestones,
       },
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },

@@ -74,6 +74,28 @@ vi.mock("@sports/data-ingestion", () => ({
   enrichGameContext: mocks.enrichGameContext,
   getAtsForm: mocks.getAtsForm,
   getHeadToHeadForm: mocks.getHeadToHeadForm,
+  // Independent fill path (Kalshi / ESPN FPI / team rates) — honest nulls in unit tests.
+  getTeamScoringRecords: vi.fn().mockResolvedValue([]),
+  getLeagueAverageScored: vi.fn().mockResolvedValue(null),
+  KalshiClient: vi.fn().mockImplementation(() => ({
+    getFairValue: vi.fn().mockResolvedValue(null),
+  })),
+  toIndependentFairValue: vi.fn().mockReturnValue({
+    source: "kalshi",
+    homeFairProb: null,
+    awayFairProb: null,
+  }),
+  sportKeyToPowerIndexLeague: vi.fn().mockReturnValue(null),
+  getCachedEspnPowerIndexMap: vi.fn().mockResolvedValue(new Map()),
+  lookupTeamFpi: vi.fn().mockReturnValue(null),
+  defaultPowerIndexSeason: vi.fn().mockReturnValue(2025),
+  sportKeyToKalshiLeagueCode: vi.fn().mockReturnValue(null),
+  resolveRundownApiKey: vi.fn().mockReturnValue(""),
+  fetchRundownEventsForSport: vi.fn().mockResolvedValue({ events: [], remaining: null }),
+  fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
+  resolveOddsApiKey: vi.fn().mockReturnValue("key"),
+  oddsApiKeyPresence: vi.fn().mockReturnValue({ present: true, matchedEnv: "THE_ODDS_API_KEY" }),
+  rundownApiKeyPresence: vi.fn().mockReturnValue({ present: false, matchedEnv: null }),
 }));
 
 vi.mock("@sports/prediction-engine", async () => {
@@ -87,6 +109,12 @@ vi.mock("@sports/prediction-engine", async () => {
     scoreGames: mocks.scoreGames,
     buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
     selectionIsHomeSide: actual.selectionIsHomeSide,
+    // Independent fair-value builders — null-safe stubs (network off in unit tests).
+    isPoissonValidSport: actual.isPoissonValidSport ?? (() => false),
+    poissonIndependentFairValue: vi.fn().mockReturnValue(null),
+    fitEloRatingsFromResults: vi.fn().mockReturnValue(new Map()),
+    eloFairValueFromRatings: vi.fn().mockReturnValue(null),
+    powerIndexToIndependentFairValue: vi.fn().mockReturnValue(null),
   };
 });
 
@@ -181,15 +209,27 @@ describe("processSport", () => {
     );
   });
 
-  it("marks the run FAILED and returns status failed when the odds API errors", async () => {
+  it("soft-fails Odds API and succeeds empty when Rundown is also ABSENT (dual free-path)", async () => {
+    // Dual-path law: primary Odds API failure must not hard-fail the sport when
+    // a free fallback is attempted. With Rundown key ABSENT and no events, the
+    // honest outcome is SUCCESS with oddsInserted=0 (does not advance kill-switch).
     mocks.getOdds.mockRejectedValue(new Error("quota exhausted"));
+    mocks.normalizeGames.mockReturnValue([]);
+    mocks.normalizeOdds.mockReturnValue([]);
+    mocks.scoreGames.mockReturnValue([]);
 
     const result = await processSport(SPORT, "key", gates());
 
-    expect(result).toMatchObject({ status: "failed", error: "quota exhausted" });
+    expect(result).toMatchObject({
+      status: "success",
+      games: 0,
+      picks: 0,
+      oddsInserted: 0,
+    });
+    expect(result.note).toMatch(/no_events/);
     expect(mocks.ingestionRunUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ status: "FAILED", errorMessage: "quota exhausted" }),
+        data: expect.objectContaining({ status: "SUCCESS", oddsInserted: 0 }),
       })
     );
     expect(mocks.pickUpsert).not.toHaveBeenCalled();

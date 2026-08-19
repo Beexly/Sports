@@ -61,6 +61,59 @@ export function parseFeedConfig(raw: string | undefined): RssFeedConfig[] {
   return feeds;
 }
 
+
+/**
+ * Curated free sports RSS catalog (sports-skills harvest).
+ * Opt-in via NEWS_RSS_USE_CURATED_DEFAULTS=true when NEWS_RSS_FEEDS is empty.
+ * Headlines only; never invent signals.
+ */
+export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
+  {
+    url: "https://www.espn.com/espn/rss/nfl/news",
+    source: "ESPN NFL",
+    tier: "Aggregator",
+    team: "NFL",
+  },
+  {
+    url: "https://www.espn.com/espn/rss/nba/news",
+    source: "ESPN NBA",
+    tier: "Aggregator",
+    team: "NBA",
+  },
+  {
+    url: "https://www.espn.com/espn/rss/mlb/news",
+    source: "ESPN MLB",
+    tier: "Aggregator",
+    team: "MLB",
+  },
+  {
+    url: "https://www.espn.com/espn/rss/soccer/news",
+    source: "ESPN FC",
+    tier: "Aggregator",
+    team: "Soccer",
+  },
+  {
+    url: "https://feeds.bbci.co.uk/sport/football/rss.xml",
+    source: "BBC Sport Football",
+    tier: "Aggregator",
+    team: "Soccer",
+  },
+  {
+    url: "https://www.skysports.com/rss/12040",
+    source: "Sky Sports Football",
+    tier: "Aggregator",
+    team: "Soccer",
+  },
+] as const;
+
+/** Env string form of curated catalog (founder can paste into NEWS_RSS_FEEDS). */
+export function curatedNewsRssEnvString(): string {
+  return CURATED_SPORTS_NEWS_RSS.map(
+    (f) => `${f.url}|${f.source}|${f.tier}|${f.team}`,
+  ).join(";");
+}
+
+
 /** Minimal RSS 2.0 / Atom item extraction. No deps; headlines only. */
 export function parseRssItems(
   xml: string,
@@ -130,7 +183,13 @@ function headlineId(source: string, title: string): string {
 export async function fetchLiveWire(
   now: Date = new Date(),
 ): Promise<NewsItem[] | null> {
-  const feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
+  let feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
+  if (
+    feeds.length === 0 &&
+    process.env["NEWS_RSS_USE_CURATED_DEFAULTS"]?.trim() === "true"
+  ) {
+    feeds = [...CURATED_SPORTS_NEWS_RSS];
+  }
   if (feeds.length === 0) return null;
 
   const results = await Promise.allSettled(

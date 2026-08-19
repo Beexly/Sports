@@ -553,9 +553,13 @@ describe("scoreGame — context integration", () => {
     }
   });
 
-  it("modelVersion is v5.1.0", () => {
+  it("modelVersion is stamped from the MODEL_VERSION constant", () => {
     const picks = scoreGame(makeOddsInput());
-    expect(picks[0]?.modelVersion).toBe("v5.1.0");
+    // Assert against the constant rather than a hard-coded literal: the literal
+    // silently went stale when MODEL_VERSION was bumped v5.2.2 -> v5.2.6 in
+    // 5387ac6, leaving this red. What matters is that scoring STAMPS the
+    // current version, not which string that happens to be.
+    expect(picks[0]?.modelVersion).toBe(MODEL_VERSION);
   });
 });
 

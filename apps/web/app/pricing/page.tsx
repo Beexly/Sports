@@ -185,14 +185,13 @@ const COMPARISON_FEATURES = [
 ] as const;
 
 // Fantasy mirrors Free on the betting columns (it adds no betting depth) and unlocks
-// the fantasy suite — so the table tells the honest "Free teaser + the fantasy suite"
-// story. The picks are the PAID product (Thread 1 reversed): FREE and FANTASY get a
-// 2-pick daily teaser without the confidence number (the server enforces exactly
-// this — dailyPickLimit:2, canSeeConfidence:false); the full board + confidence
-// unlock with Pro. Cells must never advertise more than the server grants.
+// the fantasy suite. Public picks stay founder-gated until calibration + PUBLIC_PICKS;
+// free cells must not invent a live daily teaser while the board is dark. Paid tiers
+// describe the product when the public surface is open. Cells must never advertise
+// more than honesty allows while eligibility is RED.
 const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
-  FREE: ["2/day teaser", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Preview"],
-  FANTASY: ["2/day teaser", "Sampler", true, false, false, "Counts only", false, false, false, false, false, false, true, true, true],
+  FREE: ["When public picks open", "Tools + Academy", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Preview"],
+  FANTASY: ["When public picks open", "Tools + Fantasy suite", true, false, false, "Counts only", false, false, false, false, false, false, true, true, true],
   PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
   ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
 };
@@ -241,7 +240,7 @@ const productJsonLd = {
   "@type": "Product",
   name: `${BRAND_NAME} Membership`,
   description:
-    "Sports decision intelligence: a free daily sample, with the full board, confidence ratings, factor trails, and alerts on the paid tiers.",
+    "Sports decision intelligence: free calculators, methodology, and paper contests now; full board, confidence ratings, factor trails, and alerts on paid tiers when the public sample is honest.",
   brand: { "@type": "Brand", name: BRAND_NAME },
   offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
     "@type": "Offer",

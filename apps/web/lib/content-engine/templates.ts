@@ -232,6 +232,59 @@ export const CONTENT_TEMPLATES: Readonly<Record<string, ContentTemplate>> = {
     defaultVisibility: "INTERNAL",
     reviewOwner: "AVA",
   },
+
+  WHY_BOARD_QUIET: {
+    key: "WHY_BOARD_QUIET",
+    contentType: "METHODOLOGY_EDUCATION",
+    title: "Why the board is quiet",
+    description:
+      "Honest explainer when quiet board / selective empty / stale odds dark the surface. Uses only gate reasons and ops truth — never fabricates slate.",
+    requiredSources: ["DAILY_BRIEF"],
+    allowedData: [
+      "board.darkReason",
+      "board.surface",
+      "odds.insertAgeMinutes",
+      "settlement.health",
+    ],
+    prohibitedClaimIds: [
+      "banned.guaranteed-outcome",
+      "banned.sure-thing",
+      "banned.verified-roi",
+    ],
+    requiresAffiliateDisclosure: false,
+    requiresResponsibleGaming: true,
+    requiresPerformanceGate: false,
+    defaultVisibility: "PUBLIC",
+    reviewOwner: "AVA",
+  },
+
+  EVIDENCE_PACK_MATCHUP: {
+    key: "EVIDENCE_PACK_MATCHUP",
+    contentType: "MATCHUP_PREVIEW",
+    title: "Matchup evidence pack",
+    description:
+      "Polyseer/Octagon-shaped brief: cited sources only, independent fair-value summary when present, rankingP, and explicit not-PROVEN footer. No invented stats, no whale/arb language.",
+    requiredSources: ["ODDS", "PICK", "METHODOLOGY"],
+    allowedData: [
+      "game.home",
+      "game.away",
+      "pick.selection",
+      "pick.rankingP",
+      "independent.sources",
+      "board.surface",
+      "calibration.status",
+    ],
+    prohibitedClaimIds: [
+      "banned.guaranteed-outcome",
+      "banned.sure-thing",
+      "banned.verified-roi",
+    ],
+    requiresAffiliateDisclosure: false,
+    requiresResponsibleGaming: true,
+    requiresPerformanceGate: false,
+    defaultVisibility: "INTERNAL",
+    reviewOwner: "AVA",
+  },
 };
 
 export function listTemplates(): readonly ContentTemplate[] {

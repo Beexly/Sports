@@ -162,6 +162,25 @@ describe("autonomy operating kernel", () => {
     expect(plan.autonomousQueue.some((a) => a.kind === "RUN_FREE_SPINE_HEALTH")).toBe(false);
   });
 
+  it("PUBLIC_PICKS open queues RUN_REFRESH_ODDS_FREE for kill-switch warmth", () => {
+    const plan = planAutonomyCycle(
+      baseObs({
+        publicPicksEnabled: true,
+        freeSpineAgeMinutes: 20,
+        ingestionOk: true,
+        ingestionAgeMinutes: 20,
+        settlementBand: "HEALTHY",
+        settlementOverdue: 0,
+        canonicalSettled: 100,
+      }),
+    );
+    const odds = plan.autonomousQueue.find((a) => a.kind === "RUN_REFRESH_ODDS_FREE");
+    expect(odds).toBeDefined();
+    expect(odds!.autonomousSafe).toBe(true);
+    expect(odds!.target).toBe("/api/cron/refresh-odds");
+    expect(odds!.detail).toMatch(/kill switch|oddsInserted|240/i);
+  });
+
   // LAWS: never suggest flipping public gates from the autonomous queue.
   it("closed public gates stay HOLD only — no autonomous gate flip (LAWS)", () => {
     const plan = planAutonomyCycle(baseObs({ liveBoardEnabled: false, publicPicksEnabled: false }));
