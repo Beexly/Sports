@@ -81,22 +81,22 @@ the only copy, and nobody else can verify or build on it.
 
 | ID | Title | Owner | Status | Evidence |
 |---|---|---|---|---|
-| H-A | Isotonic PAV calibration | hermes | UNPUSHED | local branch on founder machine, 62e32730 |
-| H-B | Cron matrix generator | hermes | UNPUSHED | local branch on founder machine, 4b961782 |
-| H-C | E-process sequential test | hermes | UNPUSHED | local branch on founder machine, f53b229e |
-| H-D | markClosingSnapshots behind a flag | hermes | UNPUSHED | local branch on founder machine, 0a447f98 |
+| H-A | Isotonic PAV calibration | hermes | DONE | 62e32730 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
+| H-B | Cron matrix generator | hermes | DONE | 4b961782 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
+| H-C | E-process sequential test | hermes | DONE | f53b229e on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
+| H-D | markClosingSnapshots behind a flag | hermes | DONE | 0a447f98 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-E | CLV census on a Neon branch | hermes | UNPUSHED | output CSV on founder machine: docs/ops/calibration/2026-08-18-clv-census.csv, 1161 rows; Neon branch since deleted |
-| H-F | DOC_DRIFT.md audit | hermes | UNPUSHED | local branch on founder machine, e668c4c4 |
-| H-G | Suppression curve vs random and oracle baselines | hermes | UNPUSHED | local branch on founder machine, 63e84c32 |
-| H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | hermes | UNPUSHED | local branch on founder machine, 01868364 |
+| H-F | DOC_DRIFT.md audit | hermes | DONE | e668c4c4 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
+| H-G | Suppression curve vs random and oracle baselines | hermes | DONE | 63e84c32 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
+| H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | hermes | BLOCKED | evidence DISPROVEN 2026-08-19: cited 01868364 resolves to the H-C e-process commit, and REFUND_REVOKES_ACCESS appears nowhere in the backup tree (git log -S and git grep both empty). The reported handler is unlocated. Hermes must find the real commit in its local worktrees or the row reverts to OPEN for reimplementation |
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
-| H-M | Cron no-op audit | hermes | UNPUSHED | revised per review: data-driven early-return only (no-game-in-horizon skip, mirrors process-sport.ts quiet-board); ~60/day saved off-season, 0 in-season, 576/day flag-off figure withdrawn; hermes/h-m-cron-audit cd5086f7, local worktree |
+| H-M | Cron no-op audit | hermes | DONE | cd5086f7 on origin/hermes/h-m-cron-audit; data-driven early-return proposal only, ~60/day off-season, 576/day figure withdrawn |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2; superseded by #369 single-seam version — the fix had been sitting mergeable in #369 for 12 days and was rebuilt twice for lack of a ledger |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
 | C-5 | PAVA forward-violation bug in calibration core | claude | DONE | 9627379 |
-| H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | OPEN | — |
-| F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | OPEN | APPROVED 2026-08-19; row closes when the backup branches exist on origin |
+| H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | UNPUSHED | hermes/h-q-singletons 14b74b5c local, 28/28 from apps/web; cqr hand-derivation confirmed negative qhat is correct CQR shrinkage, not a bug; push grant issued 2026-08-19 |
+| F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | DONE | 63e84c32 (sprint-backup tip) + cd5086f7 (h-m tip) both on origin, independently verified; grant spent |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
 | C-3 | Declare appliedPauseGroups + RUN_GENERATE_SIGNAL_SLATE | claude | DONE | 1d39021 |
