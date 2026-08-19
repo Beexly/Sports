@@ -31,4 +31,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run smoke test
+        env:
+          # Required for private-repo workflow list (section 6 of smoke-prod.sh).
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash scripts/smoke-prod.sh
