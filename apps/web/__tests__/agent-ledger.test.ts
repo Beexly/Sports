@@ -37,16 +37,18 @@ function row(over: Partial<Row> = {}): Row {
 }
 
 /**
- * Never touch git in unit tests — resolution is injected, and `shallow` is pinned.
+ * Never touch git or the network in unit tests — resolution AND the shallow
+ * fetch-by-sha fallback are injected, and `shallow` is pinned.
  *
- * Pinning `shallow` matters: left to default, the guard probes the host repo, so
- * these assertions would flip depending on whether the checkout running them
- * happened to be shallow. A test whose verdict depends on its environment is
- * worse than no test. RESOLVES_NOT therefore means "full history, and the commit
- * genuinely is not there" — the case where a missing SHA is real evidence.
+ * Pinning matters: left to default, the guard probes the host repo (and, when
+ * shallow, fetches from its origin), so these assertions would flip depending on
+ * the environment running them. A test whose verdict depends on its environment
+ * is worse than no test. RESOLVES_NOT therefore means "full history, and the
+ * commit genuinely is not there" — the case where a missing SHA is real
+ * evidence. `fetchSha: null` models a repo with no origin remote.
  */
-const RESOLVES = { resolveSha: () => true, shallow: false };
-const RESOLVES_NOT = { resolveSha: () => false, shallow: false };
+const RESOLVES = { resolveSha: () => true, shallow: false, fetchSha: null };
+const RESOLVES_NOT = { resolveSha: () => false, shallow: false, fetchSha: null };
 
 describe("agent ledger — the real file", () => {
   it("is valid", () => {
@@ -138,14 +140,14 @@ describe("agent ledger — DONE must be falsifiable", () => {
     // within hours (about 1 in 27 abbreviated SHAs contain no letter). The guard
     // now resolves every hex-run candidate and accepts the row if ANY names a
     // real commit.
-    const isReal = { resolveSha: (s: string) => s === "9627379", shallow: false };
+    const isReal = { resolveSha: (s: string) => s === "9627379", shallow: false, fetchSha: null };
     expect(validate([row({ status: "DONE", evidence: "9627379" })], isReal)).toEqual([]);
   });
 
   it("a date stamp next to a real SHA neither fails nor shadows it", () => {
     // First-match parsing would have picked 20260818, failed to resolve it, and
     // failed the row despite the genuine SHA sitting right there.
-    const isReal = { resolveSha: (s: string) => s === "abc1234", shallow: false };
+    const isReal = { resolveSha: (s: string) => s === "abc1234", shallow: false, fetchSha: null };
     expect(
       validate([row({ status: "DONE", evidence: "released 20260818, commit abc1234" })], isReal),
     ).toEqual([]);
@@ -217,16 +219,58 @@ describe("agent ledger — ownership and vocabulary", () => {
   });
 });
 
-describe("agent ledger — shallow clones cannot prove absence", () => {
+describe("agent ledger — shallow clones fetch by SHA instead of shrugging", () => {
   // CI's `test` job uses a bare actions/checkout@v4, which defaults to
-  // fetch-depth: 1 — exactly one commit. Resolving SHAs strictly there would
-  // fail every historical row and make this guard a permanent red light for a
-  // condition it invented. .github/** is owner-gated, so the guard adapts.
+  // fetch-depth: 1 — exactly one commit. A local miss there proves nothing, but
+  // origin can still adjudicate: GitHub serves fetch-by-sha, so the guard pulls
+  // the cited commit (`git fetch --depth=1 origin <sha>`) and retries. Routing
+  // every shallow miss to "unverified" instead — the old behavior — made the
+  // SHA check DEAD in the only environment that enforces the ledger: a
+  // fabricated DONE SHA sailed through CI. .github/** is owner-gated, so the
+  // guard adapts rather than the workflow.
   const doneRow = [row({ id: "C-1", title: "shipped thing", status: "DONE", evidence: "657a7f1" })];
 
-  it("does NOT fail an unresolvable SHA when history is truncated", () => {
+  it("FAILS a fabricated SHA in a shallow clone when origin cannot serve it", () => {
+    // The CI reproduction, encoded forever: shallow checkout, SHA does not
+    // resolve locally, and the fetch-by-sha comes back empty because origin
+    // never had the commit. That is a fabricated DONE — a violation, not an
+    // "unverified" shrug.
+    const v = validate(doneRow, {
+      resolveSha: () => false,
+      shallow: true,
+      fetchSha: () => false,
+    });
+    expect(v.join("\n")).toMatch(/origin does not serve/);
+  });
+
+  it("passes when the fetch-by-sha recovers the commit and it then resolves", () => {
+    // Genuine historical evidence in a shallow clone: the first resolve misses
+    // (truncated history), the fetch pulls the commit, the retry resolves.
+    let fetched = false;
+    const v = validate(doneRow, {
+      resolveSha: () => fetched,
+      shallow: true,
+      fetchSha: () => {
+        fetched = true;
+        return true;
+      },
+    });
+    expect(v).toEqual([]);
+  });
+
+  it("a successful fetch alone is not enough — the retry must resolve too", () => {
+    // fetchSha returning true only says the transfer succeeded; the verdict
+    // still belongs to `git cat-file`.
+    const v = validate(doneRow, { resolveSha: () => false, shallow: true, fetchSha: () => true });
+    expect(v.join("\n")).toMatch(/origin does not serve/);
+  });
+
+  it("degrades to unverified ONLY with no origin remote (true offline)", () => {
+    // fetchSha: null models a repo with no origin — absence genuinely cannot
+    // be tested there, so the SHA is reported as unverified, never silently
+    // dropped.
     const unverified: Array<{ id: string; sha: string }> = [];
-    const v = validate(doneRow, { resolveSha: () => false, shallow: true, unverified });
+    const v = validate(doneRow, { resolveSha: () => false, shallow: true, fetchSha: null, unverified });
     expect(v).toEqual([]);
     expect(unverified).toEqual([{ id: "C-1", sha: "657a7f1" }]);
   });
@@ -234,7 +278,7 @@ describe("agent ledger — shallow clones cannot prove absence", () => {
   it("DOES fail the same row when the clone has full history", () => {
     // The strict check must survive: on a complete clone, a missing commit is
     // real evidence that the work was never committed.
-    const v = validate(doneRow, { resolveSha: () => false, shallow: false });
+    const v = validate(doneRow, { resolveSha: () => false, shallow: false, fetchSha: null });
     expect(v.join("\n")).toMatch(/none resolve to a commit/);
   });
 
@@ -247,7 +291,7 @@ describe("agent ledger — shallow clones cannot prove absence", () => {
         row({ id: "B", title: "same work", status: "DONE", evidence: "—", line: 2 }),
         row({ id: "C", title: "third", owner: "gemini", line: 3 }),
       ],
-      { resolveSha: () => false, shallow: true },
+      { resolveSha: () => false, shallow: true, fetchSha: null },
     );
     expect(v.join("\n")).toMatch(/duplicate Title/);
     expect(v.join("\n")).toMatch(/DONE requires Evidence/);

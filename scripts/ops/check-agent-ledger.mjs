@@ -17,7 +17,12 @@
  *     and a report citing work that was never committed have shipped this week. A
  *     SHA in the Evidence column is resolved against the repo with `git cat-file`;
  *     a hash that does not exist fails the build. This is the check that makes
- *     "I finished it" falsifiable.
+ *     "I finished it" falsifiable. In a shallow clone (CI's test job holds one
+ *     commit) a local miss is not proof of absence, so the guard fetches the
+ *     cited SHA from origin (`git fetch --depth=1 origin <sha>` — GitHub serves
+ *     fetch-by-sha) and retries; a SHA origin does not have IS a violation.
+ *     Only a repo with no origin remote at all (true offline) degrades to an
+ *     "unverified" warning instead of a verdict.
  *   - CLAIMED BY NOBODY / DONE BY NOBODY. A row that reports progress with no owner
  *     cannot be chased.
  *
@@ -124,8 +129,16 @@ function shaExists(sha, cwd) {
  * the commit does not exist — it is evidence that this clone cannot see it. CI's
  * `test` job uses a bare `actions/checkout@v4`, which defaults to `fetch-depth: 1`
  * and therefore holds exactly one commit; only the `model-freeze` job sets
- * `fetch-depth: 0`. Resolving SHAs strictly there would fail every historical row
- * and make this guard a permanent red light for a condition it invented.
+ * `fetch-depth: 0`.
+ *
+ * Shallowness does NOT excuse the check, though. GitHub serves fetch-by-sha, so
+ * a shallow clone with an origin remote can pull exactly the cited commit
+ * (`git fetch --depth=1 origin <sha>`) and adjudicate for real. A SHA that
+ * origin cannot serve either was never pushed or is wrong — a violation. Only a
+ * repo with no origin remote at all (true offline) routes to "unverified",
+ * because there absence genuinely cannot be tested. Without the fetch fallback,
+ * a fabricated DONE SHA would pass in CI — the one environment that enforces
+ * the ledger.
  *
  * `.github/**` is owner-gated, so the fix belongs here rather than in the
  * workflow.
@@ -143,12 +156,45 @@ function isShallowRepo(cwd) {
   }
 }
 
+/** True when this repo has an `origin` remote to fetch missing SHAs from. */
+function hasOriginRemote(cwd) {
+  try {
+    execFileSync("git", ["remote", "get-url", "origin"], { cwd, stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Fetch exactly one commit by hash from origin. GitHub serves fetch-by-sha, so
+ * this lets a shallow clone adjudicate a SHA its truncated history cannot see.
+ * Returns false when origin does not have the commit.
+ */
+function fetchShaFromOrigin(sha, cwd) {
+  try {
+    execFileSync("git", ["fetch", "--quiet", "--depth=1", "origin", sha], {
+      cwd,
+      stdio: "ignore",
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * @param opts.resolveSha - inject for tests; defaults to a real `git cat-file`.
  *   Pass `null` to skip resolution entirely.
  * @param opts.shallow - inject for tests; defaults to probing the real repo.
- *   When true, a SHA that fails to resolve is reported as unverifiable rather
- *   than as a violation — see `isShallowRepo`.
+ *   When true, a SHA that fails to resolve locally is fetched by hash from
+ *   origin and re-resolved before any verdict — see `isShallowRepo`.
+ * @param opts.fetchSha - inject for tests, exactly like resolveSha, so unit
+ *   tests never touch the network; defaults to a real
+ *   `git fetch --depth=1 origin <sha>` when the repo has an origin remote.
+ *   Pass `null` to model a repo with NO origin remote (true offline): only
+ *   then does an unresolvable SHA degrade to "unverified" instead of a
+ *   violation.
  * @param opts.unverified - optional array; collects `{ id, sha }` for SHAs that
  *   could not be checked, so the caller can report coverage honestly.
  */
@@ -156,6 +202,12 @@ export function validate(rows, opts = {}) {
   const violations = [];
   const resolveSha = opts.resolveSha === undefined ? (s) => shaExists(s, REPO_ROOT) : opts.resolveSha;
   const shallow = opts.shallow === undefined ? isShallowRepo(REPO_ROOT) : opts.shallow;
+  const fetchSha =
+    opts.fetchSha !== undefined
+      ? opts.fetchSha
+      : shallow && hasOriginRemote(REPO_ROOT)
+        ? (s) => fetchShaFromOrigin(s, REPO_ROOT)
+        : null;
   const unverified = opts.unverified ?? [];
 
   const seenIds = new Map();
@@ -244,8 +296,18 @@ export function validate(rows, opts = {}) {
         if (candidates.length > 0 && resolveSha) {
           const anyResolves = candidates.some((c) => resolveSha(c));
           if (!anyResolves && !pr) {
-            // Absence only proves absence when the clone holds full history.
-            if (shallow) {
+            // A shallow clone's local miss is not proof of absence — but origin
+            // can still adjudicate: fetch the cited SHA by hash and re-resolve.
+            if (shallow && fetchSha) {
+              const recovered = candidates.some((c) => fetchSha(c) && resolveSha(c));
+              if (!recovered) {
+                violations.push(
+                  `${where}: DONE cites ${candidates.join(", ")} — none resolve locally, and origin ` +
+                    `does not serve any of them. Either the work was never committed or the hash is wrong.`,
+                );
+              }
+            } else if (shallow) {
+              // No origin remote: truly offline, absence cannot be tested here.
               unverified.push({ id: row.id, sha: candidates[0] });
             } else {
               violations.push(
@@ -295,10 +357,13 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     // Never silent: a run that verified less than it appears to must say so,
     // otherwise a green line reads as "every DONE is proven" when it is not.
     console.warn(
-      `[agent-ledger] shallow clone — ${unverified.length} DONE SHA(s) not verifiable here: ` +
-        `${unverified.map((u) => `${u.id}:${u.sha}`).join(", ")}`,
+      `[agent-ledger] shallow clone with NO origin remote — ${unverified.length} DONE SHA(s) not ` +
+        `verifiable offline: ${unverified.map((u) => `${u.id}:${u.sha}`).join(", ")}`,
     );
-    console.warn(`[agent-ledger] run \`git fetch --unshallow\` for a full check.\n`);
+    console.warn(
+      `[agent-ledger] with an origin remote these would be fetched by hash and adjudicated; ` +
+        `add one (or run from a full clone) for a full check.\n`,
+    );
   }
   if (violations.length > 0) {
     console.error(`[agent-ledger] FAIL — ${violations.length} violation(s):\n`);
