@@ -31,9 +31,19 @@ export function VerifyPickButton({ receiptHash }: VerifyPickButtonProps): JSX.El
           setState({ status: "error", message: "Receipt not found." });
           return;
         }
+        // No fabricated timestamps, ever: if the verify service does not
+        // return the frozen-at time, report that honestly rather than
+        // substituting "now" as if it were the commitment time.
+        if (!data.frozenAt) {
+          setState({
+            status: "error",
+            message: "Receipt found, but its committed timestamp was unavailable. Try again.",
+          });
+          return;
+        }
         setState({
           status: "ready",
-          frozenAt: data.frozenAt ?? new Date().toISOString(),
+          frozenAt: data.frozenAt,
           modelVersion: data.modelVersion,
         });
       } catch (err) {
@@ -44,8 +54,6 @@ export function VerifyPickButton({ receiptHash }: VerifyPickButtonProps): JSX.El
       setExpanded(!expanded);
     }
   };
-
-  const shortHash = `${receiptHash.slice(0, 10)}…`;
 
   return (
     <div className="mt-2">

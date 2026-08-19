@@ -29,6 +29,7 @@ const COMPANY_LINKS = [
   { label: "Verify a Receipt", href: "/verify" },
   { label: "Accountability", href: "/accountability" },
   { label: "FABLE Evidence Lab", href: "/fable" },
+  { label: "Kill Ledger", href: "/kill-ledger" },
   { label: "Receipts · Calibration", href: "/performance" },
   { label: "Closing Line Value", href: "/clv" },
   { label: "Methodology", href: "/methodology" },

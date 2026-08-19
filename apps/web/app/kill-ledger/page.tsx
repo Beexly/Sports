@@ -19,7 +19,6 @@
  */
 
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -65,11 +64,11 @@ const ENTRIES: readonly Entry[] = [
     title: "Market-level close-prediction",
     dated: "2026-08-19",
     mechanism:
-      "A Ridge model on 5-fold grouped cross-validation by game, predicting the change in median Shin no-vig probability from entry snapshot to closing line. Features: entry probability only, alpha = 1.0, pre-registered. 241 MLB clean-close games, pre-close totals.",
+      "A Ridge model on 5-fold grouped cross-validation by game, predicting the change in median Shin no-vig probability from entry snapshot to closing line. The pre-registered model used the full pre-entry feature set (alpha = 1.0); a post-hoc entry-probability-only Ridge was run as the diagnostic that exposed the artifact. 776 entry-window labels across 216 games, drawn from the 241-game clean-close corpus.",
     rule:
       "Pre-registered decision threshold: grouped-CV Spearman r ≥ 0.15 continue; r < 0.10 stop, no appeal.",
     observed:
-      "Totals grouped-CV Spearman r = 0.490. That number looks promising, but it is a textbook corr(X, Y−X) artifact: corr(p_entry, p_close) = 0.40, so corr(p_entry, Δ) = −0.51 by identity. A Ridge on p_entry alone matches the full model (r = 0.503, R² = 0.284). Moneyline grouped-CV r = 0.091 with negative R². Mean absolute deviation of Δ from zero is 1.35 percentage points.",
+      "Totals grouped-CV Spearman r = 0.490. That number looks promising, but it is a textbook corr(X, Y−X) artifact: corr(p_entry, p_close) = 0.40, so corr(p_entry, Δ) = −0.51 by identity. A Ridge on p_entry alone matches the full model (r = 0.503, R² = 0.284). Moneyline grouped-CV r = 0.091 with negative R². Totals no-vig P(over) itself sits in a narrow band around 50% (standard deviation 1.35 percentage points), which is what makes the artifact dominate.",
     verdict:
       "Kill. The apparent signal is measurement error dressed up as forecast skill. There is no tradable close-prediction edge at public-data cadence on this corpus.",
     evidence: "docs/ops/hermes/l15-close-pred-feasibility/RESULTS.md",
@@ -181,14 +180,15 @@ function EntryCard({ entry }: { entry: Entry }): JSX.Element {
       </section>
 
       <footer className="mt-6 border-t border-mineral pt-4">
-        <Link
-          href={`https://github.com/BeeXly/Sports/blob/origin/claude/cron-config-placement-verify-qsl19t/${entry.evidence}`}
-          className="text-sm font-semibold text-orbital-cyan hover:underline"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          {entry.evidenceLabel} →
-        </Link>
+        {/* Repo is private, so a hyperlink would be dead for the public.
+            Cite the evidence artifact by its repository path instead — the
+            path is stable, and the full document is available on request. */}
+        <p className="text-xs leading-5 text-ion-2">
+          {entry.evidenceLabel}:{" "}
+          <code className="rounded bg-mineral/40 px-1.5 py-0.5 font-mono text-[11px] text-ion-1">
+            {entry.evidence}
+          </code>
+        </p>
       </footer>
     </article>
   );
@@ -217,7 +217,7 @@ export default function KillLedgerPage(): JSX.Element {
             be favorable.
           </p>
           <p className="mt-3 text-sm text-ion-2">
-            Every entry below is a strategy that competitors sell or imply.
+            Every entry below is a strategy commonly sold in this industry.
             None of them survived our tests.
           </p>
         </header>

@@ -29,6 +29,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { ReliabilityChart } from "@/components/calibration/reliability-chart";
+import { MetricHonesty } from "@/components/ui/metric-honesty";
 import { BRAND_NAME } from "@/lib/brand";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { loadMarketCalibrationBacktest } from "@/lib/calibration/market-backtest";
@@ -225,6 +226,14 @@ export default async function MarketCalibrationPage() {
         <div className="mt-12 space-y-12">
           <MarketSection market={market} />
           <EloSection elo={elo} />
+        </div>
+
+        <div className="mt-12">
+          <MetricHonesty
+            measures="How well the MARKET's own de-vigged closing prices are calibrated against real outcomes - the ECE and Brier on this page belong to the market baseline, not to any GSE model."
+            doesNotMeasure="Any independent forecasting skill by GSE. A market ECE near zero says the closing line is honest about itself; it says nothing about whether anyone can beat it."
+            caveat="This baseline exists so every future model claim has something honest to be measured against."
+          />
         </div>
 
         <div className="mt-12 rounded-2xl border border-mineral bg-eclipse/30 p-6">

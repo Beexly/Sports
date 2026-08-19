@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { VerifyPickButton } from "@/components/picks/verify-pick-button";
 
@@ -14,6 +14,9 @@ const okFetch = () =>
   } as Response);
 
 describe("VerifyPickButton", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
   it("renders nothing when receiptHash is null", () => {
     const { container } = render(<VerifyPickButton receiptHash={null} />);
     expect(container.innerHTML).toBe("");

@@ -35,7 +35,7 @@ export default function BookGradePage(): JSX.Element {
   const sortedBurs = [...PULSE_SCORE_V1].sort((a, b) => b.burs - a.burs);
 
   const honestyBlock = {
-    measures: "How far each book's closing price historically sat from the cross-book consensus close, on MLB totals markets, averaged across 241 clean-close games.",
+    measures: "How far each book's pre-close prices historically sat from the cross-book consensus close, on MLB totals markets, averaged across 241 clean-close games.",
     doesNotMeasure: "Which side to bet, whether a book is beatable, or whether a price is wrong. It is a quality score, not a betting signal.",
     caveat: "Totals only. Spread-market BPQI is not shown here because spread numbers differ across books for non-vig reasons. A same-line filter is required before spread BPQI can be treated as price quality.",
   };

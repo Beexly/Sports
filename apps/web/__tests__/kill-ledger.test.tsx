@@ -61,3 +61,17 @@ describe("/kill-ledger", () => {
     }
   });
 });
+
+describe("kill-ledger specific entries", () => {
+  it("renders exactly the four pre-registered kills by id", async () => {
+    const fs = await import("fs/promises");
+    const path = await import("path");
+    const src = await fs.readFile(
+      path.resolve(__dirname, "../app/kill-ledger/page.tsx"), "utf8");
+    for (const id of ["l15", "l16a", "l16b", "l17"]) {
+      expect(src).toContain(`id: "${id}"`);
+    }
+    expect(src).toContain("r = 0.091");
+    expect(src).toContain("r ≥ 0.15 continue; r < 0.10 stop");
+  });
+});
