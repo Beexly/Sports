@@ -50,7 +50,16 @@ export type SupportedSportKey =
 type SeasonWindow = { readonly startMonth: number; readonly endMonth: number };
 
 const SEASON_WINDOWS: Record<SupportedSportKey, SeasonWindow> = {
-  americanfootball_nfl: { startMonth: 9, endMonth: 2 },
+  // August included deliberately. Regular-season Week 1 lines are posted well
+  // before September, and a Sep→Feb window meant the refresh skipped NFL for the
+  // whole of August — the exact weeks the market is warming up. Measured cost of
+  // this fix: the L-14 census (2026-08-20) found NFL's last odds snapshot was
+  // 2026-06-17 and ZERO clean closes, while 84 future NFL games sat in the DB
+  // with no odds attached.
+  // NOTE: this does NOT pick up preseason games. The Odds API serves those under
+  // a separate `americanfootball_nfl_preseason` key, which we do not ingest —
+  // see the ledger row on the key-to-sport mapping that work needs.
+  americanfootball_nfl: { startMonth: 8, endMonth: 2 },
   americanfootball_ncaaf: { startMonth: 8, endMonth: 1 },
   basketball_nba: { startMonth: 10, endMonth: 6 },
   basketball_ncaab: { startMonth: 11, endMonth: 4 },
