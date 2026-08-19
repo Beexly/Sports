@@ -639,7 +639,7 @@ export default function PricingPage() {
 
           {/* The one page selling access to picks was the one page without the
               disclosure ~30 other pages render (C-31). Default variant only:
-              no includePastPerformance (implies a track record) and no
+              no includePastPerformance (implies a performance history) and no
               hardcoded age (terms defer to the viewer's jurisdiction). */}
           <RiskDisclosure />
         </div>
