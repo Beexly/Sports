@@ -67,6 +67,10 @@ machine. Hermes is instructed never to push, so its deliverables sit on a local
 branch whose SHAs no other clone can resolve. That is not `DONE`: one laptop is
 the only copy, and nobody else can verify or build on it.
 
+## Hermes runner note (2026-08-19)
+
+Gateway lane unavailable: `%LOCALAPPDATA%/hermes/.env` has `VERCEL_API_KEY` (platform token), not `AI_GATEWAY_API_KEY` (what the AI SDK reads). Per v6 preflight: do not mint a key or add a payment method. Queue stays on OpenRouter.
+
 ## Ledger
 
 <!-- LEDGER:BEGIN -->
@@ -82,7 +86,7 @@ the only copy, and nobody else can verify or build on it.
 | H-G | Suppression curve vs random and oracle baselines | hermes | UNPUSHED | local branch on founder machine, 63e84c32 |
 | H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | hermes | UNPUSHED | local branch on founder machine, 01868364 |
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
-| H-M | Cron no-op audit | hermes | BLOCKED | report proposes gating producer crons on publication flags; unsafe, see review 2026-08-19 |
+| H-M | Cron no-op audit | hermes | UNPUSHED | hermes/h-m-cron-audit + docs/ops/proposals/2026-08-19-cron-early-return.md; flag-guards replaced with 504h horizon early-return; ~60/day off-season not 576 |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2 |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
