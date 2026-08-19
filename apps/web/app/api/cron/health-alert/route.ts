@@ -6,14 +6,16 @@
  *
  * Actions (all best-effort, never throw the cron):
  *  1. Evaluate live probes via computeLiveCapabilityProbes()
- *  2. Decide whether to alert (transition or 4h quiet window)
+ *  2. Decide whether to alert (stateless escalation ladder — see health-alert-decision)
  *  3. Plan autonomy cycle (pure) — P0 settlement drain, free-spine, gates
  *  4. If HEALTH_ALERT_WEBHOOK_URL is set, POST a short JSON payload (+ autonomy severity)
  *  5. Always return a machine-readable result for logs / external monitors
  *
- * State is process-local (same limitation as free-spine cache). Multi-instance
- * may re-alert within the quiet window on a different isolate — acceptable for
- * v1; external UptimeRobot on /api/health is the zero-code backup.
+ * NO PROCESS-LOCAL STATE. This used to hold `lastState` in a module-level `let`,
+ * which a serverless cold start silently reset — every tick then looked like a
+ * fresh healthy->unhealthy transition, so the 4h quiet window never actually held
+ * in production. The decision is now derived from observables (ingestion age and
+ * wall clock); see the ladder note in lib/ops/health-alert-decision.ts.
  */
 
 import { NextResponse } from "next/server";
@@ -21,8 +23,7 @@ import { cronAuthError } from "@/lib/cron/authorize";
 import { computeLiveCapabilityProbes } from "@/lib/health/live-capability-probes";
 import {
   classifyHealthAlertSnapshot,
-  decideHealthAlert,
-  type HealthAlertState,
+  decideHealthAlertStateless,
 } from "@/lib/ops/health-alert-decision";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { db } from "@sports/db";
@@ -33,17 +34,61 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-let lastState: HealthAlertState = {
-  lastAlertAt: null,
-  lastUnhealthy: false,
-  lastReason: null,
+/**
+ * Outcome of an alert delivery attempt.
+ *
+ * `configured` is reported separately from `delivered` on purpose. The previous
+ * shape returned a bare `false` for both "no webhook URL set" and "the POST
+ * failed", so a production deployment with no alerting configured at all was
+ * indistinguishable in the logs and the JSON from one that was healthy. A
+ * monitor that cannot page anyone, and does not say so, is worse than no
+ * monitor — it manufactures confidence. Now the caller can tell them apart.
+ */
+type WebhookOutcome = {
+  readonly configured: boolean;
+  readonly delivered: boolean;
+  readonly status: number | null;
+  readonly error: string | null;
 };
 
-async function postWebhook(payload: Record<string, unknown>): Promise<boolean> {
+/**
+ * Human-readable one-liner carried alongside the structured fields.
+ *
+ * Discord rejects a payload with no `content`/`embeds`, and Slack rejects one
+ * with no `text`/`blocks` — both with a 400. The old payload had neither, so the
+ * two most likely webhook targets a solo operator would reach for could not work
+ * even once the URL was set. Both keys are cheap; carrying them makes one URL
+ * work for Discord, Slack, or ntfy without a per-vendor branch here.
+ */
+function summarize(input: {
+  unhealthy: boolean;
+  reason: string;
+  decisionReason: string;
+  ingestionAgeMinutes: number | null;
+  deploymentSha: string | null;
+  autonomySeverity: string | null;
+}): string {
+  const head = input.unhealthy ? "🔴 GSE UNHEALTHY" : "🟢 GSE recovered";
+  const age =
+    input.ingestionAgeMinutes === null ? "n/a" : `${input.ingestionAgeMinutes}m`;
+  const line = [
+    head,
+    `reason: ${input.reason}`,
+    `ingestion age: ${age}`,
+    `severity: ${input.autonomySeverity ?? "n/a"}`,
+    `deploy: ${input.deploymentSha ?? "unknown"}`,
+    `trigger: ${input.decisionReason}`,
+    "https://www.galaxysportsedge.com/api/health",
+  ].join("\n");
+  // Discord hard-caps `content` at 2000 characters and 400s past it.
+  return line.length > 1800 ? `${line.slice(0, 1797)}...` : line;
+}
+
+async function postWebhook(payload: Record<string, unknown>): Promise<WebhookOutcome> {
   const url =
     process.env["HEALTH_ALERT_WEBHOOK_URL"]?.trim() ||
     process.env["ALERT_WEBHOOK_URL"]?.trim();
-  if (!url) return false;
+  if (!url) return { configured: false, delivered: false, status: null, error: null };
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -51,12 +96,16 @@ async function postWebhook(payload: Record<string, unknown>): Promise<boolean> {
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(8_000),
     });
-    return res.ok;
+    return {
+      configured: true,
+      delivered: res.ok,
+      status: res.status,
+      error: res.ok ? null : `HTTP ${res.status}`,
+    };
   } catch (err) {
-    console.warn(
-      `[health-alert] webhook failed: ${err instanceof Error ? err.message : String(err)}`,
-    );
-    return false;
+    const error = err instanceof Error ? err.message : String(err);
+    console.warn(`[health-alert] webhook failed: ${error}`);
+    return { configured: true, delivered: false, status: null, error };
   }
 }
 
@@ -71,7 +120,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   const started = Date.now();
   const probes = await computeLiveCapabilityProbes();
   const snap = classifyHealthAlertSnapshot(probes);
-  const decision = decideHealthAlert(snap, lastState);
+  const decision = decideHealthAlertStateless(snap);
 
   const deploymentSha =
     process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ??
@@ -124,9 +173,30 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 
-  let webhookPosted = false;
+  const observedAt = new Date().toISOString();
+  let webhook: WebhookOutcome = {
+    configured: false,
+    delivered: false,
+    status: null,
+    error: null,
+  };
+
   if (decision.shouldAlert) {
-    webhookPosted = await postWebhook({
+    const summary = summarize({
+      unhealthy: snap.unhealthy,
+      reason: snap.reason,
+      decisionReason: decision.reason,
+      ingestionAgeMinutes: snap.ingestionAgeMinutes,
+      deploymentSha,
+      autonomySeverity: autonomy?.severity ?? null,
+    });
+
+    webhook = await postWebhook({
+      // Vendor-compatible keys first: `content` for Discord, `text` for Slack.
+      // ntfy ignores both and renders the body, so one URL serves all three.
+      content: summary,
+      text: summary,
+      // Structured fields retained verbatim for machine consumers.
       type: "gse.health_alert",
       status: snap.unhealthy ? "unhealthy" : "healthy",
       reason: snap.reason,
@@ -135,31 +205,32 @@ export async function GET(request: Request): Promise<NextResponse> {
       settlementUnavailable: snap.settlementUnavailable,
       checks: probes.checks,
       deploymentSha,
-      observedAt: new Date().toISOString(),
+      observedAt,
       healthUrl: "https://www.galaxysportsedge.com/api/health",
       autonomySeverity: autonomy?.severity ?? null,
       autonomyHeadline: autonomy?.headline ?? null,
       autonomyTopActions: autonomy?.actions.slice(0, 3).map((a) => a.title) ?? [],
     });
 
-    lastState = {
-      lastAlertAt: new Date().toISOString(),
-      lastUnhealthy: snap.unhealthy,
-      lastReason: snap.reason,
-    };
+    if (!webhook.configured) {
+      // Escalated from silence to console.error: an alert fired and reached
+      // nobody. This is a monitoring outage in its own right and must be
+      // greppable, not inferred from a missing line.
+      console.error(
+        "[health-alert] BLIND: alert fired but no webhook configured " +
+          "(set HEALTH_ALERT_WEBHOOK_URL or ALERT_WEBHOOK_URL). " +
+          `reason=${snap.reason}`,
+      );
+    } else if (!webhook.delivered) {
+      console.error(
+        `[health-alert] UNDELIVERED: webhook rejected the alert (${webhook.error}). reason=${snap.reason}`,
+      );
+    }
 
     console.warn(
-      `[health-alert] ALERT: ${snap.reason} (webhook=${webhookPosted ? "posted" : "skipped"}) ` +
+      `[health-alert] ALERT: ${snap.reason} (webhook=${webhook.delivered ? "delivered" : webhook.configured ? "failed" : "unconfigured"}) ` +
         `autonomy=${autonomy?.severity ?? "n/a"}`,
     );
-  } else if (!snap.unhealthy && lastState.lastUnhealthy) {
-    // Recovery transition — update state so next degradation re-alerts
-    lastState = {
-      lastAlertAt: lastState.lastAlertAt,
-      lastUnhealthy: false,
-      lastReason: "recovered",
-    };
-    console.info("[health-alert] recovered — status healthy");
   }
 
   return NextResponse.json({
@@ -172,8 +243,14 @@ export async function GET(request: Request): Promise<NextResponse> {
     snapReason: snap.reason,
     ingestionAgeMinutes: snap.ingestionAgeMinutes,
     settlementUnavailable: snap.settlementUnavailable,
-    webhookPosted,
-    lastState,
+    webhookConfigured: webhook.configured,
+    webhookPosted: webhook.delivered,
+    webhookStatus: webhook.status,
+    webhookError: webhook.error,
+    // True whenever an alert fired and reached nobody — the single field an
+    // external monitor should watch to detect that alerting itself is down.
+    alertDeliveryFailed: decision.shouldAlert && !webhook.delivered,
+    observedAt,
     autonomy: autonomy
       ? {
           version: autonomy.version,
