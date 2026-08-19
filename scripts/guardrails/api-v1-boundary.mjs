@@ -66,10 +66,37 @@ function isEnvFile(filePath) {
   return name === ".env" || name.startsWith(".env.") || name.endsWith(".env") || name.endsWith(".env.example");
 }
 
+/**
+ * Routes promoted on 2026-08-19 (docs/ops/api-v1-promotion/2026-08-19-api-v1-promotion.md).
+ *
+ * Kept as a literal here rather than imported from
+ * apps/web/lib/api/v1/promoted-routes.ts because this guardrail must stay
+ * dependency-free and runnable by bare `node`. api-v1-boundary-guard.test.ts
+ * asserts the two lists are identical, so they cannot drift apart in silence.
+ */
+const PROMOTED_ROUTES = new Set(["openapi/route.ts", "probabilities/route.ts", "signals/route.ts"]);
+
 async function scanRouteTree(root, hits) {
   const routeTree = resolve(root, "apps/web/app/api/v1");
-  if (existsSync(routeTree)) {
-    hits.push(violation("api-v1-route-tree", rel(root, routeTree), "API v1 route tree exists before promotion."));
+  if (!existsSync(routeTree)) return;
+
+  // Pre-promotion this flagged the tree's mere existence. The three promoted
+  // routes are live, key-authed, rate-limited B2B surfaces that shipped through
+  // review (#388, 5e87691d) — so the boundary MOVED rather than lifted: it is
+  // now "no route beyond the promoted set". Any new file under app/api/v1 still
+  // fails here, which is the accidental-surface risk this guard was built for.
+  const files = await walkFiles(routeTree);
+  for (const file of files) {
+    const routePath = rel(routeTree, file);
+    if (PROMOTED_ROUTES.has(routePath)) continue;
+    hits.push(
+      violation(
+        "api-v1-unapproved-route",
+        rel(root, file),
+        `API v1 route "${routePath}" is not in the promoted set. Promotion requires an owner-approved record ` +
+          `(see docs/ops/api-v1-promotion/) and an update to PROMOTED_ROUTES here and in apps/web/lib/api/v1/promoted-routes.ts.`,
+      ),
+    );
   }
 }
 

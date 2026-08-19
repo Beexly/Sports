@@ -9,6 +9,7 @@ import {
   validateApiV1DormantDurableAdapterInterface,
   type ApiV1DormantDurableAdapterInterface,
 } from "@/lib/api/v1";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const apiV1RouteTree = path.join(repoRoot, "apps/web/app/api/v1");
@@ -111,7 +112,7 @@ describe("API v1 dormant durable adapter interface", () => {
       migrationNames: migrationNames(),
       moduleSourceText: read(sourcePath),
       prismaSchemaText: read(prismaSchemaPath),
-      routeTreeExists: fs.existsSync(apiV1RouteTree),
+      routeTreeExists: unapprovedApiV1RouteTreeExists(apiV1RouteTree),
     });
 
     expect(report.ok).toBe(true);

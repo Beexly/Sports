@@ -10,6 +10,7 @@ import {
   type ApiV1ProposedModel,
   type ApiV1ProposedModelName,
 } from "@/lib/api/v1";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const prismaSchemaPath = path.join(repoRoot, "packages/db/prisma/schema.prisma");
@@ -46,7 +47,7 @@ describe("API v1 database schema proposal", () => {
     const report = validateApiV1DatabaseSchemaProposal(API_V1_DATABASE_SCHEMA_PROPOSAL, {
       migrationNames: migrationNames(),
       prismaSchemaText: read(prismaSchemaPath),
-      routeTreeExists: fs.existsSync(apiV1RouteTree),
+      routeTreeExists: unapprovedApiV1RouteTreeExists(apiV1RouteTree),
     });
 
     expect(report.ok).toBe(true);
@@ -63,7 +64,7 @@ describe("API v1 database schema proposal", () => {
     expect(schema).not.toContain("model ApiV1AuditEvent ");
     expect(schema).not.toContain("model ApiV1QuotaMonth ");
     expect(migrationNames().filter((name) => /api[_-]?v1/i.test(name))).toEqual([]);
-    expect(fs.existsSync(apiV1RouteTree)).toBe(false);
+    expect(unapprovedApiV1RouteTreeExists(apiV1RouteTree)).toBe(false);
     expect(API_V1_DATABASE_SCHEMA_PROPOSAL.envVarsIntroduced).toEqual([]);
     expect(API_V1_DATABASE_SCHEMA_PROPOSAL.applyCommand).toBeNull();
     expect(API_V1_DATABASE_SCHEMA_PROPOSAL.migrationDirectoryName).toBeNull();

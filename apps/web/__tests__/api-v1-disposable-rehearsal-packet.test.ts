@@ -20,6 +20,7 @@ import {
   type ApiV1PromotionApprovalEvidence,
   type ApiV1ShadowConsumerRecord,
 } from "@/lib/api/v1";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const apiV1SourceDir = path.join(repoRoot, "apps/web/lib/api/v1");
@@ -88,7 +89,7 @@ function migrationNames(): string[] {
 function cleanRehearsalValidation() {
   return validateApiV1DisposableDbRehearsalPlan(API_V1_DISPOSABLE_DB_REHEARSAL_PLAN, {
     migrationNames: migrationNames(),
-    routeTreeExists: fs.existsSync(apiV1RouteTree),
+    routeTreeExists: unapprovedApiV1RouteTreeExists(apiV1RouteTree),
     sourceText: fs.readFileSync(path.join(apiV1SourceDir, "durable-rehearsal-plan.ts"), "utf8"),
   });
 }
@@ -110,7 +111,7 @@ describe("API v1 disposable rehearsal packet", () => {
       rehearsalValidation: cleanRehearsalValidation(),
       inspection: {
         migrationNames: migrationNames(),
-        routeTreeExists: fs.existsSync(apiV1RouteTree),
+        routeTreeExists: unapprovedApiV1RouteTreeExists(apiV1RouteTree),
       },
     });
     const packet = buildApiV1DisposableRehearsalPacket(readiness);

@@ -10,6 +10,7 @@ import {
   simulateApiV1DurableFixtureScenario,
   type ApiV1DurableFixtureScenario,
 } from "@/lib/api/v1";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const sourcePath = path.join(repoRoot, "apps/web/lib/api/v1/durable-fixture-simulator.ts");
@@ -50,7 +51,8 @@ describe("API v1 durable fixture simulator", () => {
       schemaVersion: "api-v1-durable-fixture-simulator-v1",
       source: "local_synthetic_fixture",
     });
-    expect(fs.existsSync(apiV1RouteTree)).toBe(false);
+    // Post-promotion: promoted routes are expected; strays are not.
+    expect(unapprovedApiV1RouteTreeExists(apiV1RouteTree)).toBe(false);
   });
 
   it("replays edge-case fixtures for suspended, expired, quota-exhausted, and malformed-audit cases", () => {

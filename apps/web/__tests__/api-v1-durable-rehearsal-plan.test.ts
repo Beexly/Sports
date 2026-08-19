@@ -7,6 +7,7 @@ import {
   validateApiV1DisposableDbRehearsalPlan,
   type ApiV1DisposableDbRehearsalPlan,
 } from "@/lib/api/v1";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const sourcePath = path.join(repoRoot, "apps/web/lib/api/v1/durable-rehearsal-plan.ts");
@@ -56,7 +57,7 @@ describe("API v1 disposable database rehearsal plan", () => {
   it("validates cleanly against the current route-free and migration-free repo state", () => {
     const report = validateApiV1DisposableDbRehearsalPlan(API_V1_DISPOSABLE_DB_REHEARSAL_PLAN, {
       migrationNames: migrationNames(),
-      routeTreeExists: fs.existsSync(apiV1RouteTree),
+      routeTreeExists: unapprovedApiV1RouteTreeExists(apiV1RouteTree),
       sourceText: fs.readFileSync(sourcePath, "utf8"),
     });
 

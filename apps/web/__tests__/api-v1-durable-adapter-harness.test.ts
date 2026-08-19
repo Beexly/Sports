@@ -12,6 +12,7 @@ import {
   type ApiV1QuotaAuditInput,
   type ApiV1ShadowConsumerRecord,
 } from "@/lib/api/v1";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const apiV1RouteTree = path.join(repoRoot, "apps/web/app/api/v1");
@@ -163,7 +164,8 @@ describe("API v1 durable adapter conformance harness", () => {
         : "",
     ].join("\n");
 
-    expect(fs.existsSync(apiV1RouteTree)).toBe(false);
+    // Post-promotion: promoted routes are expected; strays are not.
+    expect(unapprovedApiV1RouteTreeExists(apiV1RouteTree)).toBe(false);
     expect(migrationNames().filter((name) => /api[_-]?v1/i.test(name))).toEqual([]);
     expect(schema).not.toContain("model ApiV1Consumer ");
     expect(schema).not.toContain("model ApiV1AuditEvent ");

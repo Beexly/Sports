@@ -1,5 +1,5 @@
-import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 import { describe, expect, it } from "vitest";
 
@@ -90,7 +90,10 @@ describe("API v1 shadow route harness", () => {
       evidenceId: "ev_1",
       summary: "Public-safe evidence summary.",
     });
-    expect(existsSync(join(process.cwd(), "app/api/v1"))).toBe(false);
+    // Post-promotion (docs/ops/api-v1-promotion/2026-08-19): the three promoted
+    // B2B routes are expected to exist. What must stay absent is an UNAPPROVED
+    // route — the accidental-surface risk this assertion was written to catch.
+    expect(unapprovedApiV1RouteTreeExists(join(process.cwd(), "app/api/v1"))).toBe(false);
   });
 
   it("fails closed on missing auth while still recording a denied usage event", () => {

@@ -1,9 +1,10 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
+import { PROMOTED_API_V1_ROUTES } from "@/lib/api/v1/promoted-routes";
 
 type ApiV1BoundaryViolation = {
   readonly id: string;
@@ -41,6 +42,32 @@ describe("API v1 boundary guard", () => {
     expect(hits).toEqual([]);
   });
 
+  it("keeps the guardrail's promoted list identical to the library's", async () => {
+    // The guardrail carries its own literal copy so it stays dependency-free and
+    // runnable by bare node. That duplication is only safe if drift is impossible
+    // to miss: a route promoted in one place but not the other would either fail
+    // the build on a legitimate route or, worse, wave through an unapproved one.
+    const guardSource = readFileSync(
+      path.join(repoRoot, "scripts/guardrails/api-v1-boundary.mjs"),
+      "utf8"
+    );
+    const literal = guardSource.match(/const PROMOTED_ROUTES = new Set\(\[([^\]]*)\]\)/);
+    expect(literal).not.toBeNull();
+    const guardList = [...literal![1]!.matchAll(/"([^"]+)"/g)].map((m) => m[1]!).sort();
+    expect(guardList).toEqual([...PROMOTED_API_V1_ROUTES].sort());
+  });
+
+  it("promotes exactly the three reviewed routes, and no others", async () => {
+    // Pins the promoted set itself. Widening it is a decision that requires an
+    // owner-approved record (docs/ops/api-v1-promotion/), so it must not be
+    // possible to slip an extra route in as an incidental edit.
+    expect([...PROMOTED_API_V1_ROUTES].sort()).toEqual([
+      "openapi/route.ts",
+      "probabilities/route.ts",
+      "signals/route.ts",
+    ]);
+  });
+
   it("passes a minimal shadow-only temp repo", async () => {
     const guard = await loadGuard();
     const root = await tempRepo();
@@ -52,7 +79,13 @@ describe("API v1 boundary guard", () => {
   it("blocks route, schema, migration, env, DB import, env read, and network violations", async () => {
     const guard = await loadGuard();
     const root = await tempRepo();
-    mkdirSync(path.join(root, "apps/web/app/api/v1"), { recursive: true });
+    // Post-promotion the tree itself is legitimate, so the accidental-surface
+    // case is an UNAPPROVED route file rather than a bare directory.
+    mkdirSync(path.join(root, "apps/web/app/api/v1/rogue"), { recursive: true });
+    writeFileSync(
+      path.join(root, "apps/web/app/api/v1/rogue/route.ts"),
+      'export async function GET() { return new Response("rogue"); }\n'
+    );
     mkdirSync(path.join(root, "packages/db/prisma/migrations/20260704000000_api_v1_live"), { recursive: true });
     writeFileSync(
       path.join(root, "packages/db/prisma/schema.prisma"),
@@ -77,7 +110,7 @@ describe("API v1 boundary guard", () => {
     const hits = await guard.collectApiV1BoundaryViolations(root);
     expect(hits.map((hit) => hit.id)).toEqual(
       expect.arrayContaining([
-        "api-v1-route-tree",
+        "api-v1-unapproved-route",
         "api-v1-prisma-model",
         "api-v1-migration",
         "api-v1-env-var",

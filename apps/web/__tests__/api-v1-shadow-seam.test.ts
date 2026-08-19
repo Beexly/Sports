@@ -1,5 +1,5 @@
-import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 import { describe, expect, it } from "vitest";
 
@@ -235,6 +235,8 @@ describe("API v1 shadow OpenAPI draft", () => {
       expect(path.get["x-gse-shadow-only"]).toBe(true);
       expect(path.get["x-gse-required-scopes"].length).toBeGreaterThan(0);
     });
-    expect(existsSync(join(process.cwd(), "app/api/v1"))).toBe(false);
+    // Post-promotion: the promoted routes exist by design. Only an UNAPPROVED
+    // route surface would represent the drift this assertion guards against.
+    expect(unapprovedApiV1RouteTreeExists(join(process.cwd(), "app/api/v1"))).toBe(false);
   });
 });
