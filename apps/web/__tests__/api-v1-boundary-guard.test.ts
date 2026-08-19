@@ -1,10 +1,10 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
-import { PROMOTED_API_V1_ROUTES } from "@/lib/api/v1/promoted-routes";
+import { PROMOTED_API_V1_ROUTES, unapprovedApiV1RouteTreeExists } from "@/lib/api/v1/promoted-routes";
 
 type ApiV1BoundaryViolation = {
   readonly id: string;
@@ -120,5 +120,57 @@ describe("API v1 boundary guard", () => {
         "api-v1-network-call",
       ])
     );
+  });
+
+  it("flags a route hidden inside a SKIP_DIRS-named directory (build/)", async () => {
+    // walkFiles skips {node_modules,.git,.next,dist,build,coverage} — sane for
+    // repo-wide scans, but under app/api/v1 Next.js serves build/route.ts as a
+    // live endpoint. The route-tree scan must descend EVERY directory.
+    const guard = await loadGuard();
+    const root = await tempRepo();
+    mkdirSync(path.join(root, "apps/web/app/api/v1/build"), { recursive: true });
+    writeFileSync(
+      path.join(root, "apps/web/app/api/v1/build/route.ts"),
+      'export async function GET() { return new Response("hidden"); }\n'
+    );
+
+    const hits = await guard.collectApiV1BoundaryViolations(root);
+    const routeHits = hits.filter((hit) => hit.id === "api-v1-unapproved-route");
+    expect(routeHits.map((hit) => hit.file)).toContain("apps/web/app/api/v1/build/route.ts");
+  });
+
+  it("flags a symlinked route as api-v1-symlink-entry", async () => {
+    // A symlink dirent is neither isFile() nor isDirectory(), so walkFiles used
+    // to drop it silently and a symlinked rogue route passed the guard clean.
+    // Any symlink under the promoted route tree is itself a violation.
+    const guard = await loadGuard();
+    const root = await tempRepo();
+    mkdirSync(path.join(root, "apps/web/app/api/v1/rogue"), { recursive: true });
+    writeFileSync(
+      path.join(root, "outside-route.ts"),
+      'export async function GET() { return new Response("rogue"); }\n'
+    );
+    symlinkSync(
+      path.join(root, "outside-route.ts"),
+      path.join(root, "apps/web/app/api/v1/rogue/route.ts")
+    );
+
+    const hits = await guard.collectApiV1BoundaryViolations(root);
+    const symlinkHits = hits.filter((hit) => hit.id === "api-v1-symlink-entry");
+    expect(symlinkHits.map((hit) => hit.file)).toContain("apps/web/app/api/v1/rogue/route.ts");
+  });
+});
+
+describe("promoted-routes symlink safety", () => {
+  it("treats a dangling symlink as an unapproved entry without throwing", async () => {
+    // listFiles used statSync, which FOLLOWS symlinks and throws ENOENT on a
+    // dangling one — a single dangling symlink crashed every caller (ten api-v1
+    // suites plus the readiness probe) instead of producing a verdict. The
+    // symlink must surface AS an entry, which the promoted set never contains.
+    const tree = await mkdtemp(path.join(tmpdir(), "api-v1-promoted-"));
+    symlinkSync(path.join(tree, "does-not-exist.ts"), path.join(tree, "dangling.ts"));
+
+    expect(() => unapprovedApiV1RouteTreeExists(tree)).not.toThrow();
+    expect(unapprovedApiV1RouteTreeExists(tree)).toBe(true);
   });
 });
