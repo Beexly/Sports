@@ -26,7 +26,16 @@ describe("/cockpit picks glance — Session A implementation", () => {
 
   it("queries the day's picks for the operator list", () => {
     expect(src).toMatch(/todaysOperatorPicks/);
-    expect(src).toMatch(/orderBy:\s*\[\{\s*isFeatured:\s*"desc"\s*\}/);
+    // Featured picks must reach the operator prominently. The page stopped
+    // sorting featured-first in the DB query and instead derives a dedicated
+    // `featuredOperatorPicks` list (page.tsx:83) that is surfaced on its own
+    // (`featuredCount` at :277, "Featured today: N" at :541). That is the same
+    // guarantee by a clearer route, so assert the outcome rather than the
+    // discarded query shape.
+    expect(src).toMatch(
+      /featuredOperatorPicks\s*=\s*todaysOperatorPicks\.filter\([\s\S]{0,40}?isFeatured/
+    );
+    expect(src).toMatch(/featuredCount=\{featuredOperatorPicks\.length\}/);
   });
 
   it("computes a per-sport slate breakdown from todaysOperatorPicks", () => {

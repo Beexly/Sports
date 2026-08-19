@@ -23,7 +23,11 @@ describe("/api/cockpit/jarvis/trend — contract", () => {
   });
 
   it("emits no-store cache headers (admin trend is always fresh)", () => {
-    expect(src).toMatch(/Cache-Control[^"]*no-store/);
+    // The route DOES set no-store (route.ts:68). `[^"]*` could never match the
+    // ordinary object-literal form `"Cache-Control": "no-store"` because a quote
+    // sits between the two halves — the assertion failed on correct code. Allow
+    // the punctuation that separates a header name from its value.
+    expect(src).toMatch(/Cache-Control["'\s:]*no-store/);
   });
 
   it("never returns 503 — synthesis failures fall back to the existing buffer", () => {

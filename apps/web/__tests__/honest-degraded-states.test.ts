@@ -218,15 +218,21 @@ afterEach(() => {
 describe("/board — honest suppression banner replaces the dead sample-data banner", () => {
   const DEAD_COPY = "Showing deterministic sample board data";
 
-  it("stale-suppressed board shows the honest 'Board paused' banner, not sample-data copy", async () => {
+  it("stale-suppressed board shows an honest quiet-board banner, not sample-data copy", async () => {
     mocks.boardState.mockResolvedValue(boardState({ suppressedReason: "STALE_DATA" }));
     const tree = await BoardPage();
     const ids = testIdsOf(tree);
     const text = textOf(tree);
 
     expect(ids.has("board-suppression-banner")).toBe(true);
-    expect(text).toContain("Board paused");
-    expect(text).toContain("freshness check");
+    // The headline was rewritten from "Board paused" to "Quiet board", with copy
+    // that is strictly more honest: it names the cause, refuses to call restraint
+    // an outage, and says what stays open. Pinning the old wording would have
+    // pressured a future editor to regress the copy to satisfy a test, so assert
+    // the substance the banner must carry, not one phrasing of it.
+    expect(text).toContain("Quiet board");
+    expect(text).toMatch(/no fresh published slate/i);
+    expect(text).toMatch(/not an outage/i);
     // The dead banner and its "sample data" promise must be gone.
     expect(text).not.toContain(DEAD_COPY);
     expect(text).not.toContain("Preview mode");

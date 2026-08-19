@@ -53,8 +53,17 @@ describe("/dashboard — tier-gated picks", () => {
   });
 
   it("applies the FREE daily pick limit to the query take", () => {
+    // Assert the FREE branch this test is named for, not the premium constant.
+    // The query now fetches 24 for premium and slices to 6 for display; the FREE
+    // path is byte-identical (`dailyPickLimit ?? 1` in both the take and the
+    // slice), so the paywall is intact. Pinning the premium fetch size made a
+    // display-side change look like a gating regression.
     expect(dashboardSrc).toMatch(
-      /take:\s*entitlements\.canSeePremiumPicks\s*\?\s*6\s*:\s*\(entitlements\.dailyPickLimit\s*\?\?\s*1\)/
+      /take:\s*entitlements\.canSeePremiumPicks\s*\?\s*\d+\s*:\s*\(entitlements\.dailyPickLimit\s*\?\?\s*1\)/
+    );
+    // And the FREE limit must still bound what is actually rendered.
+    expect(dashboardSrc).toMatch(
+      /\.slice\(\s*0,\s*entitlements\.canSeePremiumPicks\s*\?\s*\d+\s*:\s*\(entitlements\.dailyPickLimit\s*\?\?\s*1\)\s*\)/
     );
   });
 
