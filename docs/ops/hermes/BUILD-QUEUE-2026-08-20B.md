@@ -52,8 +52,19 @@ archive holds ≥7 days of games — put the check in the page loader, render
 
 ## R-9 — Grok engine, synthetic-first (LAST; research tail)
 
-Per docs/ops/edge/2026-08-20-grok-stack-audit.md. Build in
-`packages/prediction-engine/src/research/` (new dir, non-sealed):
+Per docs/ops/edge/2026-08-20-grok-stack-audit.md (+ round-2 addendum). Build in
+`packages/prediction-engine/src/research/` (new dir, non-sealed), and follow
+the HOUSE FILTER CONVENTIONS from the existing
+`packages/prediction-engine/src/team-strength-filter.ts` exactly — pure,
+seeded/deterministic, snapshot/restore for serverless, log-space weights,
+ESS-triggered systematic resampling, degeneracy handling that never emits
+NaN, shadow/priced:false status. Do not invent a second style. Layering per
+the audited spec: particles carry discrete assignments; linear coefficients
+via Laplace approximation to the NB likelihood (warm-started Newton, analytic
+Hessian) optionally wrapped in a cubature update; Liu-West on LOG-scale
+variance components, applied after weighting and BEFORE resampling (order is
+load-bearing). Grok's sandbox artifacts are spec references only — never
+import or trust its code or results.
 negative-binomial hierarchical model (team/pitcher/park/umpire effects),
 Rao-Blackwellized particle filter with Liu-West on variance components,
 fractional e-process with FIXED λ=0.3 as primary and adaptive-λ as a
@@ -64,6 +75,22 @@ fixed-λ capital exceeds 20 in ≤ α·seeds runs (α=0.05); an engine failing
 this is discarded, not tuned until it passes; (2) planted-edge recovery
 beats the open-loop baseline. Report both numbers in RESULTS.md. The
 sandbox result Grok reported (capital 896) must not be cited anywhere.
+
+## R-10 — DML causal prototype (after R-9; shadow-only)
+
+Double Machine Learning (Chernozhukov et al. 2018) on ONE treatment:
+starting-QB out/limited, NFL, from nflverse injury data. IRM/AIPW form,
+XGBoost-or-equivalent nuisances, 5-fold TIME-AWARE cross-fitting (never mix
+future into nuisance training), strict as-of feature discipline. Outcome:
+win indicator. Controls: team-strength posterior mean/variance from the
+existing filter, rest, travel, opponent strength. Mandatory diagnostics:
+overlap/positivity (trim extreme propensities), placebo treatment test,
+sensitivity-to-unobserved-confounding bounds. Deliverable is a RESULTS.md
+estimate with CI plus a comparison against the TeamIntervention magnitude
+the filter currently applies for the same event — NOT a public claim, NOT a
+pick input. Shadow-only until it clears the same replay standards as
+everything else. SUTVA is violated in sports (game-script interference) —
+state that limitation in the results rather than pretending it away.
 
 ## After the queue
 

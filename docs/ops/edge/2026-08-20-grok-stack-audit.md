@@ -77,3 +77,21 @@ claim:
 Queued as R-9 (Hermes, synthetic-first, after launch work). If the future
 prospective track ever opens, this engine arrives already null-validated —
 which is the only way an "edge discovery" system is allowed to exist at GSE.
+
+## Round-2 addendum (2026-08-20, founder departing)
+
+Grok's second round added correct implementation depth (Liu-West
+moment-matching with the after-weighting/before-resampling ordering, Laplace
+approximation for the non-conjugate NB conditional, CKF mechanics) and one
+verified ground-truth: `packages/prediction-engine/src/team-strength-filter.ts`
+already exists in-repo (42KB bootstrap particle filter, TeamIntervention,
+snapshot/restore, seeded, shadow status — verified by inspection, not taken
+on trust). Consequences: R-9 amended to extend the house filter conventions
+rather than invent a parallel style. Its DML causal-inference proposal is
+real, mature methodology with honestly stated limitations; adopted as R-10,
+shadow-only, one treatment (QB out), time-aware cross-fitting, mandatory
+overlap/placebo/sensitivity diagnostics, output compared against the
+filter's existing intervention magnitudes — never a public claim. Grok's
+own-sandbox "implemented and verified" artifacts (CKF demo, RBPF capital
+plots) remain spec references only; nothing is imported, nothing is cited
+as evidence. Rejections from round 1 all stand unchanged.
