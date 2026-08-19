@@ -41,36 +41,41 @@ describe("newIntentId — checkout intent id must never throw", () => {
     expect(newIntentId()).toBe("11111111-2222-3333-4444-555555555555");
   });
 
-  it("does NOT throw when crypto is entirely absent (the WebKit failure mode)", () => {
+  /**
+   * REGRESSION (C-31 fix 5): the old fallback minted a non-UUID `ci_...` id.
+   * The server's CLIENT_INTENT_ID_RE accepts UUIDs only, so every browser
+   * without randomUUID hard-400ed and could NEVER complete checkout. The fix
+   * returns null so the caller omits the field and the server's token-less
+   * branch mints its own intent. These tests now pin null, not `ci_`.
+   */
+  it("returns null when crypto is entirely absent (the WebKit failure mode)", () => {
     setCrypto(undefined);
     expect(() => newIntentId()).not.toThrow();
-    expect(newIntentId()).toMatch(/^ci_[0-9a-z]+_[0-9a-z]+$/);
+    expect(newIntentId()).toBeNull();
   });
 
-  it("does NOT throw when crypto exists but randomUUID does not (Safari < 15.4)", () => {
-    // Safari shipped `crypto` long before it shipped `crypto.randomUUID`, so
-    // this — not a missing `crypto` — is the realistic older-iOS shape.
+  it("returns null when crypto exists but randomUUID does not (Safari < 15.4)", () => {
+    // Safari shipped `crypto` long before `crypto.randomUUID`, so this — not a
+    // missing `crypto` — is the realistic older-iOS shape.
     setCrypto({ getRandomValues: () => new Uint8Array(8) });
     expect(() => newIntentId()).not.toThrow();
-    expect(newIntentId()).toMatch(/^ci_/);
+    expect(newIntentId()).toBeNull();
   });
 
-  it("fallback ids are distinct across calls within one visit", () => {
-    // The id only needs to be collision-resistant within a single visit: the
-    // server owns the durable CheckoutAttempt and 409s on a mismatch. But two
-    // clicks must not collide, or the second would silently reuse the first
-    // click's Stripe session.
-    setCrypto(undefined);
-    const ids = new Set(Array.from({ length: 200 }, () => newIntentId()));
-    expect(ids.size).toBe(200);
-  });
-
-  it("always returns a non-empty string regardless of crypto shape", () => {
+  it("never returns a non-UUID string the server would reject with a 400", () => {
+    const UUID_RE =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     for (const shape of [undefined, null, {}, { randomUUID: undefined }]) {
       setCrypto(shape);
       const id = newIntentId();
-      expect(typeof id).toBe("string");
-      expect(id.length).toBeGreaterThan(0);
+      expect(id === null || UUID_RE.test(id)).toBe(true);
     }
+  });
+
+  it("still returns the real UUID unchanged when randomUUID works", () => {
+    setCrypto({ randomUUID: () => "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" });
+    const id = newIntentId();
+    expect(id).not.toBeNull();
+    expect(id).toMatch(/^[0-9a-f-]{36}$/);
   });
 });

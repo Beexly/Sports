@@ -59,13 +59,25 @@ const GHOST_CLASSES =
  * site was the only unguarded browser-side one.
  *
  * The id is only a per-visit "same click retried" hint; the server owns the
- * durable CheckoutAttempt and 409s on any mismatch, so a non-UUID fallback is
- * safe. It only needs to be collision-resistant within one visit.
+ * durable CheckoutAttempt and 409s on any mismatch.
+ *
+ * C-31 fix 5: the original fallback minted a NON-UUID `ci_...` id, but the
+ * server's CLIENT_INTENT_ID_RE is UUID-only, so it 400ed every request from a
+ * browser lacking randomUUID — turning a swallowed TypeError into a hard
+ * checkout failure for exactly the same users. Returns null now; the caller
+ * omits the field and the server's token-less branch takes over.
  */
-export function newIntentId(): string {
+export function newIntentId(): string | null {
   const c = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
   if (c?.randomUUID) return c.randomUUID();
-  return `ci_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 12)}`;
+  // No randomUUID (Safari < 15.4, older Chrome, any insecure context). The
+  // previous `ci_...` fallback was NOT a UUID, and the server's
+  // CLIENT_INTENT_ID_RE accepts UUIDs only — so every such browser hard-400ed
+  // and could never check out at all. Return null and omit the field instead:
+  // createCheckoutAttempt already has a token-less branch that mints its own
+  // intent. Widening the server regex would be the wrong fix — it would let a
+  // low-entropy client id become a durable idempotency token.
+  return null;
 }
 
 export function SubscribeButton({
@@ -89,7 +101,7 @@ export function SubscribeButton({
   // back the same Stripe session. Keyed by (tier, interval) so a surviving
   // component whose plan/interval props change NEVER reuses an intent id with
   // different Stripe parameters (the server would 409 that anyway).
-  const intentRef = useRef<{ key: string; id: string } | null>(null);
+  const intentRef = useRef<{ key: string; id: string | null } | null>(null);
 
   // Interval-appropriate recurring amount, pulled from the pricing-phases source
   // (never hardcoded). Falls back to the amount shown on the plan if a price prop
@@ -110,13 +122,21 @@ export function SubscribeButton({
       if (!intentRef.current || intentRef.current.key !== intentKey) {
         intentRef.current = { key: intentKey, id: newIntentId() };
       }
+      const intentId = intentRef.current.id;
       // Checkout attempt initiated — the durable CheckoutAttempt is about to be
       // minted server-side. Inert no-op until a provider is wired.
       track("checkout_start", { tier, interval });
       const res = await fetch("/api/subscriptions/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier, interval, clientIntentId: intentRef.current.id }),
+        // Omit clientIntentId entirely when the browser has no randomUUID —
+        // sending null/a non-UUID is a 400. The server then treats this as a
+        // token-less request and mints its own durable intent.
+        body: JSON.stringify({
+          tier,
+          interval,
+          ...(intentId !== null ? { clientIntentId: intentId } : {}),
+        }),
       });
 
       if (res.status === 401) {
