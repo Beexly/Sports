@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleListMetrics } from "@sports/stats-api";
+import { resolveStatsBillingTier } from "@/lib/gse-stats/session-tier";
 
 export const dynamic = "force-dynamic";
 
@@ -29,13 +30,17 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const sp = req.nextUrl.searchParams;
+  // Same doctrine as `publicOnly` above: tier comes from the SESSION, never from
+  // `?tier=`. An anonymous caller must not be able to self-declare ELITE.
+  // (Security assessment, 2026-08-16.)
+  const resolved = await resolveStatsBillingTier(req);
   const result = handleListMetrics({
     sport: sp.get("sport") ?? undefined,
     family: sp.get("family") ?? undefined,
     status: sp.get("status") ?? undefined,
     publicOnly: true,
     q: sp.get("q") ?? undefined,
-    tier: sp.get("tier") ?? "FREE",
+    tier: resolved.tier,
   });
   if (!result.ok) {
     return NextResponse.json(

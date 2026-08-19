@@ -23,6 +23,7 @@ const REPO_ROOT = resolve(__dirname, "..", "..", "..");
 describe("checkWaitlistGate — gate disabled", () => {
   beforeEach(() => {
     delete process.env["GSE_WAITLIST_GATE_ENABLED"];
+    delete process.env["GSE_WAITLIST_BASIC_FORCE"];
     delete process.env["GSE_WAITLIST_BASIC_USER"];
     delete process.env["GSE_WAITLIST_BASIC_PASSWORD"];
   });
@@ -70,6 +71,22 @@ describe("checkWaitlistGate — gate enabled", () => {
     delete process.env["GSE_WAITLIST_BASIC_FORCE"];
     delete process.env["GSE_WAITLIST_BASIC_USER"];
     delete process.env["GSE_WAITLIST_BASIC_PASSWORD"];
+  });
+
+  it("stays OPEN when the gate flag is set but BASIC_FORCE is not (FOUNDING default)", () => {
+    delete process.env["GSE_WAITLIST_BASIC_FORCE"];
+    const result = checkWaitlistGate(null);
+    expect(result.allowed).toBe(true);
+  });
+
+  it("fails CLOSED when gate + force are on but credentials are unset", () => {
+    delete process.env["GSE_WAITLIST_BASIC_USER"];
+    delete process.env["GSE_WAITLIST_BASIC_PASSWORD"];
+    const result = checkWaitlistGate(basicAuthHeader("testuser", "testpass"));
+    expect(result.allowed).toBe(false);
+    expect((result as { allowed: false; reason: string }).reason).toBe(
+      "gate_not_configured"
+    );
   });
 
   it("denies request with no Authorization header", () => {

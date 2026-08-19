@@ -19,7 +19,8 @@ async function callGet(): Promise<{
   (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prisma = undefined;
   (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prismaStubMode = undefined;
   const mod = await import("@/app/api/picks/daily-slate/route");
-  const res = (await mod.GET()) as unknown as Response;
+  const req = new Request("http://localhost/api/picks/daily-slate");
+  const res = (await mod.GET(req as unknown as Parameters<typeof mod.GET>[0])) as unknown as Response;
   return {
     status: res.status,
     body: (await res.json()) as {

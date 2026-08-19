@@ -1,21 +1,52 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
+// ── Hoisted mock for @sports/db ─────────────────────────────────────────────────
 const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn() }));
 vi.mock("@sports/db", () => ({ db: { pfrAdvStat: { deleteMany: mocks.deleteMany, createMany: mocks.createMany } } }));
+
+// ── Hoisted mock for nflverseIngestionGate ───────────────────────────────────────
 vi.mock("@/lib/ingestion/nflverse-gate", async (importActual) => {
   const actual = await importActual<typeof import("@/lib/ingestion/nflverse-gate")>();
   return { ...actual, nflverseIngestionGate: vi.fn(actual.nflverseIngestionGate) };
 });
+
+// ── Hoisted mock for clearance engine ────────────────────────────────────────────
+// P4-05 added a PFR-specific checkClearance gate for `pfr-advstats-via-nflverse`
+// (status: permission_required, automation_allowed: false in the real registry).
+// In unit tests the happy path must proceed, so we mock checkClearance to return
+// allowed=true for both `pfr-advstats-via-nflverse` and `nflverse`. Individual
+// tests can override the mock to simulate denial.
+const cmocks = vi.hoisted(() => ({ checkClearance: vi.fn() }));
+vi.mock("@/lib/scraping/clearance-engine", () => ({ checkClearance: cmocks.checkClearance }));
 
 import { ingestPfrAdvStats } from "@/lib/ingestion/pfr-adv-stats";
 import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 
 const NOW = new Date("2026-06-15T12:00:00.000Z");
 
+/** Build a minimal allowed ClearanceResult for the given source_id. */
+function allowedClearance(source_id: string) {
+  return {
+    allowed: true,
+    requiresReview: false,
+    source_id,
+    mode: "open_dataset_ingest" as const,
+    tool_id: "fetch-native" as const,
+    intents: [] as readonly string[],
+    blocks: [] as readonly { code: string; message: string }[],
+    warnings: [] as readonly string[],
+    rightsSnapshot: { source_id, source_url: "https://github.com/nflverse/nflverse-data", status: "approved_open_license" },
+    checkedAt: NOW.toISOString(),
+  };
+}
+
 beforeEach(() => {
   mocks.deleteMany.mockReset();
   mocks.createMany.mockReset();
   (nflverseIngestionGate as Mock).mockClear();
+  (cmocks.checkClearance as Mock).mockImplementation((req: { source_id?: string }) =>
+    allowedClearance(req.source_id ?? "nflverse"),
+  );
   mocks.createMany.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
 });
 

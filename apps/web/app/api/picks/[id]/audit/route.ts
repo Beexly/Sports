@@ -27,6 +27,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { buildPickPremortemNote } from "@/lib/premortem/build";
@@ -47,8 +48,8 @@ interface RouteContext {
 }
 
 export async function GET(
-  _req: NextRequest,
-  context: RouteContext
+  req: NextRequest,
+  context: RouteContext,
 ): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
@@ -69,6 +70,18 @@ export async function GET(
 
   const tier = entitlements?.tier ?? "FREE";
   const canSeeDetail = tier === "PRO" || tier === "ELITE";
+
+  // Public, anonymous, DB-heavy route (DB read + CPU-heavy pre-mortem/fragility
+  // / death-clock computations on the PRO/ELITE branch). IP-keyed rate limit
+  // copied from the established pattern in apps/web/app/api/verify/route.ts
+  // (consumeRateLimit + clientIp).
+  const rl = consumeRateLimit("public-pick-audit", clientIp(req), 60, 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
+  }
 
   // Load pick + adjacent forensic rows.
   // We only audit picks that are (a) published, (b) non-bootstrap.

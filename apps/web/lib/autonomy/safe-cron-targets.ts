@@ -15,7 +15,12 @@ export const AUTONOMY_SAFE_CRON_TARGETS = [
   "/api/cron/refresh-odds",
   "/api/cron/generate-drafts",
   "/api/cron/calibration-metrics",
-  "/api/cron/generate-signal-slate",
+  // "/api/cron/generate-signal-slate" removed per the #421 resolution. This list and
+  // EXECUTABLE_CRON_TARGETS are checked against each other at load time precisely
+  // because they must agree; the planner has no RUN_GENERATE_SIGNAL_SLATE action, so
+  // permitting the path granted a capability nothing could use. The cron route itself
+  // is unaffected and still runs on its own schedule — only the autonomy planner's
+  // permission to invoke it is withdrawn. Restore both entries together if wired.
 ] as const;
 
 export type AutonomySafeCronTarget = (typeof AUTONOMY_SAFE_CRON_TARGETS)[number];

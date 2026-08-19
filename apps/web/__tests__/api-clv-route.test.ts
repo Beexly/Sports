@@ -34,7 +34,8 @@ vi.mock("@sports/prediction-engine", async (importOriginal) => {
 async function callClv(): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();
   const mod = await import("@/app/api/clv/route");
-  const res = await mod.GET();
+  const req = new Request("http://localhost/api/clv");
+  const res = await mod.GET(req as unknown as Parameters<typeof mod.GET>[0]);
   return { status: res.status, body: (await res.json()) as Record<string, unknown> };
 }
 

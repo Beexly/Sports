@@ -1,3 +1,4 @@
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 import {
   assertIngestible,
   fetchWithFailover,
@@ -176,6 +177,33 @@ export async function loadNflversePressureCoverage({
   cacheTtlMs?: number;
   fetcher?: FetchLike;
 } = {}): Promise<NflversePressureCoverage> {
+  // PFR-specific clearance: pfr_advstats is a separate rights entry
+  // (`pfr-advstats-via-nflverse`, permission_required, automation_allowed=false)
+  // — NOT the generic nflverse CC-BY-4.0 envelope. A denial blocks before any fetch.
+  const clearance = checkClearance({
+    source_id: "pfr-advstats-via-nflverse",
+    mode: "open_dataset_ingest",
+    tool_id: "fetch-native",
+    intents: ["derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    return {
+      generatedAt: new Date().toISOString(),
+      status: "source-error",
+      season,
+      seasonType: "REG",
+      sourceRows: 0,
+      qbPressure: [],
+      coverage: [],
+      canPublishProjections: false,
+      blockReason:
+        "PFR advanced charting is gated: pfr-advstats-via-nflverse requires permission " +
+        "and is not cleared for automated extraction. The board shows an empty state " +
+        "instead of unlicensed charting.",
+      sourceUrls: { pass: nflverseUrl("pfr_advstats", season, "pass"), def: nflverseUrl("pfr_advstats", season, "def") },
+      error: clearance.blocks.map((b) => b.code).join(", "),
+    };
+  }
   assertIngestible("nflverse");
 
   const now = Date.now();

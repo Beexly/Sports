@@ -35,6 +35,11 @@ import {
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+// The only cron in vercel.json without an explicit ceiling — it inherited the
+// platform default, so a large backlog could time out mid-DELETE and leave the
+// table growing, which is the exact unbounded growth this route exists to stop.
+// The DELETE is idempotent, so a retry on the next scheduled run is safe.
+export const maxDuration = 60;
 
 export async function GET(request: Request) {
   const denied = cronAuthError(request);

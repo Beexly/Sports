@@ -71,23 +71,25 @@ describe("Customer dashboard performance gate", () => {
   it("performance API only queries the DB AFTER the gate check", () => {
     const src = read("app/api/performance/route.ts");
     const gateIdx = src.indexOf("canExposePerformanceStats");
-    const dbIdx = src.indexOf("db.pick");
+    const dbIdx = src.indexOf("db.$queryRaw");
     expect(gateIdx).toBeGreaterThan(-1);
     expect(dbIdx).toBeGreaterThan(-1);
     expect(
       gateIdx < dbIdx,
-      "Gate check must precede any db.pick query so the gate-off branch never hits the DB"
+      "Gate check must precede any db query so the gate-off branch never hits the DB"
     ).toBe(true);
   });
 
   it("performance API filters isBootstrap=false when the gate is open", () => {
     const src = read("app/api/performance/route.ts");
-    expect(src).toMatch(/isBootstrap:\s*false/);
+    // GSE-SEC-031 fix: query moved to server-side SQL GROUP BY, so the filter
+    // appears as a SQL boolean clause rather than a Prisma where-object key.
+    expect(src).toMatch(/"isBootstrap"\s*=\s*false/);
   });
 
   it("performance API filters isPublished=true when the gate is open", () => {
     const src = read("app/api/performance/route.ts");
-    expect(src).toMatch(/isPublished:\s*true/);
+    expect(src).toMatch(/"isPublished"\s*=\s*true/);
   });
 
   it("picks API returns 503 when canExposePublicPicks gate is off", () => {

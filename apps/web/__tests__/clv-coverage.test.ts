@@ -20,6 +20,7 @@ describe("CLV coverage invariant", () => {
     expect(c.coverageRatePct).toBeNull();
     expect(c.invariantHolds).toBe(false);
     expect(c.remediation).toEqual([]);
+    expect(c.latestGradedAt).toBeNull();
   });
 
   it("holds the invariant only at 100% coverage over a non-empty sample", () => {
@@ -71,6 +72,17 @@ describe("CLV coverage invariant", () => {
     expect(c.invariantHolds).toBe(true);
   });
 
+  it("passes latestGradedAt through as null when not provided", () => {
+    const c = evaluateClvCoverage(base({ settledEligible: 40, graded: 40 }));
+    expect(c.latestGradedAt).toBeNull();
+  });
+
+  it("passes latestGradedAt through when provided", () => {
+    const ts = "2026-07-02T12:30:00.000Z";
+    const c = evaluateClvCoverage(base({ settledEligible: 40, graded: 40, latestGradedAt: ts }));
+    expect(c.latestGradedAt).toBe(ts);
+  });
+
   it("loads coverage from the pick table over eligible (played, canonical) picks only", async () => {
     const calls: Array<Record<string, unknown>> = [];
     const db = {
@@ -80,6 +92,7 @@ describe("CLV coverage invariant", () => {
           // First call = eligible denominator; second = graded subset.
           return where["clvVerdict"] ? 18 : 20;
         },
+        findFirst: async () => null, // no graded picks in this mock
       },
     };
     const c = await loadClvCoverage(db);
@@ -87,6 +100,7 @@ describe("CLV coverage invariant", () => {
     expect(c.graded).toBe(18);
     expect(c.uncovered).toBe(2);
     expect(c.coverageRatePct).toBe(90);
+    expect(c.latestGradedAt).toBeNull();
 
     // The denominator must exclude VOID and bootstrap/seed picks.
     const eligibleWhere = calls[0]!;

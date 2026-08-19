@@ -267,6 +267,28 @@ jobs:
   # 6. Composite guardrails job — convenience target for local + branch
   #    protection rules.
   # --------------------------------------------------------------
+  dependency-audit:
+    name: Dependency audit (critical/high CVEs in prod deps)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # `npm ci --no-audit` elsewhere only silences the install-time report; npm
+      # install never fails a build on CVEs. This job is the actual gate.
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Fail on unwaived critical/high advisories
+        run: node scripts/guardrails/dependency-audit.mjs
+
   api-v1-boundary:
     name: API v1 boundary (shadow stack)
     runs-on: ubuntu-latest

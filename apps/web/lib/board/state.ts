@@ -1,12 +1,15 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
+import type { Entitlements } from "@sports/types";
 import {
   buildBoardHealth,
   type BoardDegradation,
   type BoardHealthBadgeState,
   type BoardSuppressionReason,
 } from "@/lib/board/health";
+import { classifyDegradationCharacter, type DegradationCharacter } from "@/lib/board/degradation-character";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
 import { unevaluatedPassReason } from "./pass-reason";
 import {
   classifyBoardState,
@@ -55,6 +58,13 @@ export interface BoardStatePayload {
     health: BoardHealthBadgeState;
     /** Honest-empty classifier — refuse-default public fire claim */
     boardClass: ClassifiedBoardState;
+    /**
+     * User-facing character of the current empty/degraded state.
+     * Distinguishes genuinely-quiet (no eligible games, scheduler alive)
+     * from stale-refreshing (data past SLA, awaiting fresh ingestion).
+     * Never surfaces raw operator language.
+     */
+    degradationCharacter: DegradationCharacter;
   };
 }
 
@@ -79,7 +89,10 @@ export function redactBoardConfidence(payload: BoardStatePayload): BoardStatePay
   };
 }
 
-function extractRankingFromFb(fb: unknown): {
+function extractRankingFromFb(
+  fb: unknown,
+  isPremiumViewer: boolean,
+): {
   rankingP: number | null;
   rankingSource: string | null;
 } {
@@ -92,6 +105,11 @@ function extractRankingFromFb(fb: unknown): {
       : null;
   const rs = rec["rankingSource"];
   const rankingSource = typeof rs === "string" && rs.trim() ? rs.trim() : null;
+  // rankingP / rankingSource are premium-only model internals (the ranking
+  // win-probability used for generation sort + selective publish). They must
+  // never reach a non-PRO viewer. Null them out server-side alongside the
+  // market/selection redaction above. (GSE-SEC-026)
+  if (!isPremiumViewer) return { rankingP: null, rankingSource: null };
   return { rankingP, rankingSource };
 }
 
@@ -120,6 +138,8 @@ function buildBoardMeta({
   suppressedReason,
   liveBoardOn = false,
   bootstrap = false,
+  schedulerLiveness = null,
+  staleDetected = false,
 }: {
   dataError?: "DB_UNREACHABLE";
   modelVersion: string;
@@ -129,6 +149,10 @@ function buildBoardMeta({
   /** Production default false — founder gate */
   liveBoardOn?: boolean;
   bootstrap?: boolean;
+  /** Scheduler liveness already assessed by the caller (async). */
+  schedulerLiveness?: { readonly status: "healthy" | "degraded" | "dead" | "unknown" } | null;
+  /** When the kill switch is OFF but zero rows loaded while data is past SLA. */
+  staleDetected?: boolean;
 }): BoardStatePayload["meta"] {
   const counts = rowCounts(rows);
   const health = buildBoardHealth({
@@ -146,18 +170,31 @@ function buildBoardMeta({
     dataError: dataError ?? null,
     suppressedReason: suppressedReason ?? null,
   });
+  const degradationCharacter = classifyDegradationCharacter({
+    staleSuppressed: suppressedReason === "STALE_DATA",
+    dbUnreachable: dataError === "DB_UNREACHABLE",
+    demoSuppressed: suppressedReason === "DEMO_DATA",
+    liveBoardOff: !liveBoardOn,
+    rowCount,
+    schedulerLiveness: schedulerLiveness?.status ?? null,
+    staleDetected,
+  });
   return {
     degradations: health.degradations,
     health: health.badge,
     isSampleData: false,
     boardClass,
+    degradationCharacter,
     ...(dataError ? { dataError } : {}),
     ...(suppressedReason ? { suppressedDemoData: true } : {}),
     traceId: health.traceId,
   };
 }
 
-export async function loadBoardState(now = new Date()): Promise<BoardStatePayload> {
+export async function loadBoardState(
+  now = new Date(),
+  entitlements?: Entitlements,
+): Promise<BoardStatePayload> {
   const gates = getReadinessGates();
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
@@ -168,6 +205,34 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
   // Fail OPEN on a DB error so a transient blip can't black out a fresh board.
   const staleSuppressed =
     gates.forceNoBetIfStale && (await isPublicPicksSurfaceStale(now).catch(() => false));
+
+  // When suppressing for staleness, assess scheduler liveness to distinguish
+  // "genuinely quiet (scheduler alive, nothing to do)" from "stale-refreshing
+  // (data past SLA, scheduler may be dead)". This feeds the user-facing copy.
+  // assessed but never awaited (synchronous build needs the status now).
+  const schedulerLiveness = staleSuppressed
+    ? await assessSchedulerLiveness(now.getTime()).catch(() => null)
+    : null;
+
+  // When the kill switch is OFF but the board loads zero rows, we still must
+  // distinguish a genuinely-quiet slate from a stale-but-refreshing one. The
+  // dead-scheduler condition (2026-08-10 incident) proved the board can show
+  // "quiet board — not an outage" while data is 20h stale because zero rows
+  // loaded. Only check when rowCount === 0 to avoid the freshness query on a
+  // real slate.
+  const detectStaleWhenEmpty = async (): Promise<{
+    stale: boolean;
+    schedulerLiveness: { readonly status: "healthy" | "degraded" | "dead" | "unknown" } | null;
+  }> => {
+    const stale = await isPublicPicksSurfaceStale(now).catch(() => false);
+    if (stale) {
+      return {
+        stale: true,
+        schedulerLiveness: await assessSchedulerLiveness(now.getTime()).catch(() => null),
+      };
+    }
+    return { stale: false, schedulerLiveness: null };
+  };
 
   if (demoActive || staleSuppressed) {
     const emptyRows = {
@@ -195,6 +260,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         suppressedReason: demoActive ? "DEMO_DATA" : "STALE_DATA",
         liveBoardOn: false,
         bootstrap: gates.isBootstrapMode,
+        schedulerLiveness,
       }),
     };
   }
@@ -217,6 +283,13 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     ...excludeSeedInProd,
   };
 
+  // Server-side tier gate (CLAUDE.md rule #3 — no frontend-only paywalls).
+  // The `market` field on each BoardStateRow carries pick.selection (e.g. "Chiefs -3.5"),
+  // which embeds the paid selection + line. For viewers without canSeePremiumPicks,
+  // keep every row in the query so counts are identical for all viewers, but redact
+  // the `market`/selection field to "ALL_MARKETS" at the row level (see mapping below).
+  const isPremiumViewer = entitlements?.canSeePremiumPicks ?? false;
+
   const { start, end } = todayBounds();
   try {
     const decisions = await db.gateDecision.findMany({
@@ -238,7 +311,9 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         gameId: decision.gameId,
         matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
         sport: decision.game.sport.name,
-        market: decision.pick?.selection ?? "ALL_MARKETS",
+        market: isPremiumViewer
+          ? (decision.pick?.selection ?? "ALL_MARKETS")
+          : "ALL_MARKETS",
         status:
           decision.status === "PUBLISHED"
             ? "PUBLISHED_TODAY"
@@ -247,7 +322,7 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
               : "SCORING_NOW",
         edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
         confidence: decision.confidence ?? decision.pick?.confidence ?? null,
-        ...extractRankingFromFb(decision.pick?.factorBreakdown),
+        ...extractRankingFromFb(decision.pick?.factorBreakdown, isPremiumViewer),
         gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
         updatedAt: decision.evaluatedAt.toISOString(),
       }));
@@ -322,11 +397,11 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
     gameId: pick.gameId,
     matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
     sport: pick.game.sport.name,
-    market: pick.selection,
+    market: isPremiumViewer ? pick.selection : "ALL_MARKETS",
     status: "PUBLISHED_TODAY",
     edgeIndex: toEdgeIndex(pick.game.currentEdgeIndex ?? pick.edgeScore),
     confidence: pick.confidence,
-    ...extractRankingFromFb(pick.factorBreakdown),
+    ...extractRankingFromFb(pick.factorBreakdown, isPremiumViewer),
     gateReason: null,
     updatedAt: pick.generatedAt.toISOString(),
   }));
@@ -371,6 +446,9 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
   }));
 
     const modelVersion = publishedToday[0]?.modelVersion ?? MODEL_VERSION;
+    const rowCount = scoringRows.length + publishedRows.length + gatedRows.length;
+    const staleInfo =
+      rowCount === 0 ? await detectStaleWhenEmpty() : { stale: false, schedulerLiveness: null };
     return {
       data: {
         sportsWatched: new Set([...scoringRows, ...publishedRows, ...gatedRows].map((row) => row.sport)).size,
@@ -390,6 +468,8 @@ export async function loadBoardState(now = new Date()): Promise<BoardStatePayloa
         rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
         liveBoardOn: false,
         bootstrap: gates.isBootstrapMode,
+        staleDetected: staleInfo.stale,
+        schedulerLiveness: staleInfo.schedulerLiveness ?? schedulerLiveness,
       }),
     };
   } catch {

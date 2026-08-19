@@ -39,6 +39,13 @@ export interface TrustLedgerMetrics {
    * counts" caption. When undefined the player stat is dropped from the band.
    */
   readonly playerRows?: number;
+  /**
+   * Board data as-of timestamp — the freshness signal that accompanies every
+   * live count so a reader can judge how fresh the numbers are. Mirrors the
+   * "Last refresh" tile on /board; omitted (undefined) when board data is
+   * unavailable so no false timestamp is ever surfaced.
+   */
+  readonly lastRefresh?: string;
 }
 
 const ITEMS: readonly MethodologyItem[] = [
@@ -206,6 +213,20 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
             <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
               Live counts · the numbers below explain how each one is produced
             </p>
+            {metrics.lastRefresh && (
+              <p
+                data-testid="homepage-freshness"
+                className="mt-1 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3"
+              >
+                Board data as-of{" "}
+                <time dateTime={metrics.lastRefresh}>
+                  {new Date(metrics.lastRefresh).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}
+                </time>
+              </p>
+            )}
           </div>
         )}
 

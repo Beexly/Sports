@@ -1,4 +1,5 @@
 import { assertIngestible, decodeDatasetText, fetchWithFailover, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks } from "./qb-consensus";
 
@@ -105,6 +106,31 @@ export async function loadRushingContact({
   timeoutMs = 15000,
   fetcher = fetch,
 }: { season?: number; timeoutMs?: number; fetcher?: FetchLike } = {}): Promise<RushingContact> {
+  // PFR-specific clearance: pfr_advstats is a separate rights entry
+  // (`pfr-advstats-via-nflverse`, permission_required, automation_allowed=false)
+  // — NOT the generic nflverse CC-BY-4.0 envelope. A denial blocks before any fetch.
+  const clearance = checkClearance({
+    source_id: "pfr-advstats-via-nflverse",
+    mode: "open_dataset_ingest",
+    tool_id: "fetch-native",
+    intents: ["derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    return {
+      generatedAt: new Date().toISOString(),
+      status: "source-error",
+      season: 0,
+      sourceRows: 0,
+      rows: [],
+      canPublishProjections: false,
+      note:
+        "PFR advanced rushing charting is gated: pfr-advstats-via-nflverse requires " +
+        "permission and is not cleared for automated extraction. The board shows an " +
+        "empty state instead of unlicensed charting.",
+      sourceUrl: PFR_RUSH_SEASON_URL,
+      error: clearance.blocks.map((b) => b.code).join(", "),
+    };
+  }
   assertIngestible("nflverse");
   try {
     // One combined all-seasons file; decodeDatasetText passes plain CSV through.

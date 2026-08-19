@@ -38,6 +38,13 @@ vi.mock("stripe", () => {
   return { default: StripeMock };
 });
 
+// GSE-SEC-033: createCheckoutSession now calls requireDurableWriteStore
+// before any Stripe SDK call — mock @sports/db so the guard passes by default.
+const requireDurableWriteStoreMock = vi.hoisted(() => vi.fn<(capability: string) => void>());
+vi.mock("@sports/db", () => ({
+  requireDurableWriteStore: requireDurableWriteStoreMock,
+}));
+
 import { createCheckoutSession } from "@/lib/stripe";
 import { CheckoutAttemptIdError } from "@/lib/billing/checkout-attempt";
 
@@ -78,6 +85,8 @@ describe("createCheckoutSession — negative-option compliance", () => {
       id: "cs_test_123",
       url: "https://checkout.stripe.com/pay/cs_test_123",
     } as Stripe.Checkout.Session);
+    requireDurableWriteStoreMock.mockReset();
+    requireDurableWriteStoreMock.mockReturnValue(undefined); // available by default
   });
 
   afterEach(() => {
@@ -191,6 +200,70 @@ describe("createCheckoutSession — negative-option compliance", () => {
         createCheckoutSession({ ...ARGS, attemptId: "" }),
       ).rejects.toBeInstanceOf(CheckoutAttemptIdError);
       expect(stripeMocks.create).not.toHaveBeenCalled();
+    });
+  });
+
+  // GSE-SEC-033: createCheckoutSession must fail CLOSED before any Stripe SDK
+  // call when the durable write store is unavailable.
+  class DurableWriteStoreUnavailableError extends Error {
+    readonly kind = "durable_write_store_unavailable" as const;
+    readonly httpStatus = 503 as const;
+    readonly capability: string;
+    readonly reason: string;
+    constructor(capability: string, reason: string, detail: string) {
+      super(`Durable write store unavailable for capability "${capability}": ${detail}`);
+      this.name = "DurableWriteStoreUnavailableError";
+      this.capability = capability;
+      this.reason = reason;
+    }
+  }
+
+  describe("durable-write guard (GSE-SEC-033)", () => {
+    it("STUB MODE: throws before the Stripe SDK is called (fail closed)", async () => {
+      requireDurableWriteStoreMock.mockImplementation(() => {
+        throw new DurableWriteStoreUnavailableError(
+          "stripe-checkout",
+          "stub_client_active",
+          "stub client active",
+        );
+      });
+
+      await expect(createCheckoutSession({ ...ARGS })).rejects.toThrow(
+        DurableWriteStoreUnavailableError,
+      );
+
+      expect(requireDurableWriteStoreMock).toHaveBeenCalledWith("stripe-checkout");
+      expect(stripeMocks.create).not.toHaveBeenCalled();
+    });
+
+    it("DATABASE_URL NOT DURABLE: throws before the Stripe SDK is called (fail closed)", async () => {
+      requireDurableWriteStoreMock.mockImplementation(() => {
+        throw new DurableWriteStoreUnavailableError(
+          "stripe-checkout",
+          "database_url_not_durable",
+          "DATABASE_URL is unset or sentinel",
+        );
+      });
+
+      await expect(createCheckoutSession({ ...ARGS })).rejects.toThrow(
+        DurableWriteStoreUnavailableError,
+      );
+
+      expect(requireDurableWriteStoreMock).toHaveBeenCalledWith("stripe-checkout");
+      expect(stripeMocks.create).not.toHaveBeenCalled();
+    });
+
+    it("guard runs BEFORE the Stripe call (call order)", async () => {
+      let guardCalled = false;
+      requireDurableWriteStoreMock.mockImplementation(() => {
+        guardCalled = true;
+      });
+
+      await createCheckoutSession({ ...ARGS });
+
+      expect(guardCalled).toBe(true);
+      expect(requireDurableWriteStoreMock).toHaveBeenCalledWith("stripe-checkout");
+      expect(stripeMocks.create).toHaveBeenCalledTimes(1);
     });
   });
 });

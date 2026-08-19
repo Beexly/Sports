@@ -68,6 +68,9 @@ describe("actor-minting boundary guard", () => {
       scripts: Record<string, string>;
     };
     expect(pkg.scripts["guard:actor-minting"]).toContain("actor-minting-boundary.mjs");
-    expect(pkg.scripts["guardrails"]).toContain("actor-minting-boundary.mjs");
+    // The `guardrails` script delegates to run-all.mjs — the actual chain is
+    // defined there, so verify the guard is listed in that file.
+    const runAll = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"), "utf8");
+    expect(runAll).toContain("actor-minting-boundary.mjs");
   });
 });

@@ -152,8 +152,28 @@ async function main() {
 
   if (d.gates?.statsPublic === false) ok(`STATS_PUBLIC=false`);
   else hard(`STATS_PUBLIC=${d.gates?.statsPublic} (must be false pre-proof)`);
-  if (d.gates?.canExposePublicPicks === false) ok(`publicPicks=false`);
-  else hard(`publicPicks=${d.gates?.canExposePublicPicks} (must be false pre-proof)`);
+  // P1b-2: PUBLIC_PICKS is INFORMATIONAL, not a launch blocker. Publishing a pick
+  // is not claiming a track record — the honesty boundary is STATS_PUBLIC and
+  // PERFORMANCE_STATS (the record gates), both checked below. The operator enabled
+  // PUBLIC_PICKS deliberately; either state is acceptable pre-proof.
+  if (d.gates?.canExposePublicPicks === true) {
+    ok(`publicPicks=true (informational — not a track-record claim; STATS_PUBLIC/PERFORMANCE_STATS gate the record)`);
+  } else {
+    ok(`publicPicks=${d.gates?.canExposePublicPicks} (informational — either state acceptable pre-proof)`);
+  }
+
+  // PERFORMANCE_STATS is the genuine record gate. Exposing it while calibration
+  // eligibility is not GREEN would publish a track record without proof.
+  const eligibilityStatus = d.calibrationEligibilityStatus ?? null;
+  const perfStats = d.gates?.canExposePerformanceStats;
+  if (perfStats === true && eligibilityStatus !== "GREEN") {
+    hard(`PERFORMANCE_STATS=true while calibration eligibility=${eligibilityStatus} (not GREEN — record exposed without proof)`);
+  } else if (perfStats === true) {
+    ok(`PERFORMANCE_STATS=true with eligibility=${eligibilityStatus} (GREEN — record gate satisfied)`);
+  } else {
+    ok(`PERFORMANCE_STATS=${perfStats} (closed — record not exposed pre-proof)`);
+  }
+
 
   const credit = d.creditStack || {};
   ok(

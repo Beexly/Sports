@@ -19,6 +19,12 @@ const source = readFileSync(
   resolve(__dirname, "..", "app", "page.tsx"),
   "utf8"
 );
+// The nflverse usage-pulse loader moved into the NflverseLabDoor component
+// (P16-01, off the page's critical path via Suspense).
+const labDoorSource = readFileSync(
+  resolve(__dirname, "..", "components", "landing", "nflverse-lab-door.tsx"),
+  "utf8"
+);
 const lower = source.toLowerCase();
 
 describe("Homepage — Phase 2 trust invariants", () => {
@@ -67,7 +73,7 @@ describe("Homepage — Phase 2 trust invariants", () => {
     // never to fabricated rows.
     expect(source).toMatch(/loadBoardState/);
     expect(source).toMatch(/loadPublicCalibrationReport/);
-    expect(source).toMatch(/loadNflverseUsagePulse/);
+    expect(labDoorSource).toMatch(/loadNflverseUsagePulse/);
     expect(source).toContain("Gate holding");
     expect(source).toContain("Intake warming up");
     expect(source).toContain("Calibration sample building");

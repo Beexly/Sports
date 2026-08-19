@@ -9,7 +9,8 @@ async function callRoute(path: string): Promise<{ status: number; body: Record<s
   (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prisma = undefined;
   (globalThis as unknown as { prisma?: unknown; prismaStubMode?: boolean }).prismaStubMode = undefined;
   const mod = await import(path);
-  const res = (await mod.GET()) as Response;
+  const req = new Request("http://localhost/");
+  const res = (await mod.GET(req as unknown as Parameters<typeof mod.GET>[0])) as Response;
   return { status: res.status, body: (await res.json()) as Record<string, unknown> };
 }
 

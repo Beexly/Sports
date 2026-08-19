@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { verifyReceiptIntegrity } from "@/lib/proof/receipt-proof";
 import { SITE_URL } from "@/lib/seo/site-url";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 /**
  * GET /api/proof/receipts — the enumerable, machine-verifiable record.
@@ -30,8 +31,19 @@ export const dynamic = "force-dynamic";
 const DEFAULT_LIMIT = 25;
 const MAX_LIMIT = 100;
 
-export async function GET(request: Request): Promise<NextResponse> {
-  const url = new URL(request.url);
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Public, anonymous, DB-heavy route (findMany with nested includes + per-row
+  // verifyReceiptIntegrity calls). IP-keyed rate limit copied from the established
+  // pattern in apps/web/app/api/verify/route.ts (consumeRateLimit + clientIp).
+  const rl = consumeRateLimit("public-proof-receipts", clientIp(req), 60, 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
+  }
+
+  const url = new URL(req.url);
   const rawLimit = Number(url.searchParams.get("limit"));
   const limit =
     Number.isFinite(rawLimit) && rawLimit > 0

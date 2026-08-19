@@ -23,6 +23,7 @@ import { fetchMlbScheduleScores } from "./free-adapters/mlb-statsapi";
 import { fetchBalldontlieScores } from "./free-adapters/balldontlie-nba";
 import { fetchNhlWebScores } from "./free-adapters/nhl-web-api";
 import { compactEspnDateRanges } from "./settlement-score-dates";
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 
 export type ScoreSourceId =
   | "espn-public-api"
@@ -102,6 +103,22 @@ async function fetchEspnForDates(
   const errors: string[] = [];
   if (espnKeys.length === 0) {
     try {
+      // GSE-SEC-078: enforce ESPN clearance on the undated (live board) path.
+      // The ESPN fact-extract path is gated in free-first-ingest.ts (GSE-SEC-051)
+      // but multi-source-scores.ts called fetchEspnScoreboard directly without
+      // any checkClearance — so a registry status flip (e.g. storage_allowed
+      // revoked) would be silently ignored on this code path.
+      const espnClearance = checkClearance({
+        source_id: "espn-public-api",
+        mode: "public_logged_off_fact_extract",
+        tool_id: "fetch-native",
+        intents: ["derived_analytics"],
+      });
+      if (!espnClearance.allowed) {
+        const blockCodes = espnClearance.blocks.map((b) => b.code).join(", ");
+        errors.push(`espn-public-api: clearance-denied [${blockCodes}]`);
+        return { games: [], errors, params: [] };
+      }
       const games = await fetchEspnScoreboard(sport, { fetchImpl });
       return { games: [...games], errors, params: [] };
     } catch (e) {
@@ -124,6 +141,24 @@ async function fetchEspnForDates(
   return { games: mergeGames(chunks), errors, params };
 }
 
+/**
+ * GSE-SEC-050: Runtime clearance gate for secondary (non-ESPN) score sources.
+ *
+ * henrygd-ncaa / mlb-statsapi / balldontlie-nba / nhl-web-api are candidates
+ * in sports-data-candidates.ts with inMainRegistry=false — they have NO row in
+ * source-rights-registry.ts, so checkClearance returns SOURCE_NOT_REGISTERED
+ * and the fetch is refused rather than treated as a compile-time-only
+ * "cleared:false" comment.
+ */
+function checkSecondaryClearance(source: ScoreSourceId) {
+  return checkClearance({
+    source_id: source,
+    mode: "public_logged_off_fact_extract",
+    tool_id: "fetch-native",
+    intents: ["storage", "derived_analytics"],
+  });
+}
+
 async function fetchSecondaryForIsoDays(
   source: ScoreSourceId,
   sport: Sport,
@@ -131,6 +166,16 @@ async function fetchSecondaryForIsoDays(
   fetchImpl?: typeof fetch,
 ): Promise<{ games: NormalizedGame[]; errors: string[] }> {
   const errors: string[] = [];
+
+  // GSE-SEC-050: gate before any network call — secondary sources are not
+  // registered in the rights registry, so clearance will deny.
+  const clearance = checkSecondaryClearance(source);
+  if (!clearance.allowed) {
+    const blockCodes = clearance.blocks.map((b) => b.code).join(", ");
+    errors.push(`${source}: clearance-denied [${blockCodes}]`);
+    return { games: [], errors };
+  }
+
   const days = isoKeys.length > 0 ? isoKeys : [new Date().toISOString().slice(0, 10)];
   const chunks: NormalizedGame[][] = [];
 
@@ -252,7 +297,13 @@ export async function fetchScoresMultiSource(
         errors.push("espn-public-api: empty board");
         continue;
       }
+      // GSE-SEC-050: clearance gate before fetch.
       if (source === "henrygd-ncaa") {
+        const clearance = checkSecondaryClearance(source);
+        if (!clearance.allowed) {
+          errors.push(`henrygd-ncaa: clearance-denied [${clearance.blocks.map((b) => b.code).join(", ")}]`);
+          continue;
+        }
         const path = sport === "ncaab" ? HENRYGD_PATHS.mbb : HENRYGD_PATHS.cfb;
         const ncaa = await fetchHenrygdScoreboard(path, { fetchImpl: opts.fetchImpl });
         if (ncaa.length > 0) {
@@ -272,6 +323,12 @@ export async function fetchScoresMultiSource(
         continue;
       }
       if (source === "mlb-statsapi") {
+        // GSE-SEC-050: clearance gate before fetch.
+        const clearance = checkSecondaryClearance(source);
+        if (!clearance.allowed) {
+          errors.push(`mlb-statsapi: clearance-denied [${clearance.blocks.map((b) => b.code).join(", ")}]`);
+          continue;
+        }
         const games = await fetchMlbScheduleScores({ fetchImpl: opts.fetchImpl });
         if (games.length > 0) {
           return {
@@ -290,6 +347,12 @@ export async function fetchScoresMultiSource(
         continue;
       }
       if (source === "balldontlie-nba") {
+        // GSE-SEC-050: clearance gate before fetch.
+        const clearance = checkSecondaryClearance(source);
+        if (!clearance.allowed) {
+          errors.push(`balldontlie-nba: clearance-denied [${clearance.blocks.map((b) => b.code).join(", ")}]`);
+          continue;
+        }
         const games = await fetchBalldontlieScores({ fetchImpl: opts.fetchImpl });
         if (games.length > 0) {
           return {
@@ -308,6 +371,12 @@ export async function fetchScoresMultiSource(
         continue;
       }
       if (source === "nhl-web-api") {
+        // GSE-SEC-050: clearance gate before fetch.
+        const clearance = checkSecondaryClearance(source);
+        if (!clearance.allowed) {
+          errors.push(`nhl-web-api: clearance-denied [${clearance.blocks.map((b) => b.code).join(", ")}]`);
+          continue;
+        }
         const games = await fetchNhlWebScores({ fetchImpl: opts.fetchImpl });
         if (games.length > 0) {
           return {
@@ -330,6 +399,28 @@ export async function fetchScoresMultiSource(
   }
 
   try {
+    // GSE-SEC-078: enforce ESPN clearance on the final undated fallback path.
+    const espnClearance = checkClearance({
+      source_id: "espn-public-api",
+      mode: "public_logged_off_fact_extract",
+      tool_id: "fetch-native",
+      intents: ["derived_analytics"],
+    });
+    if (!espnClearance.allowed) {
+      const blockCodes = espnClearance.blocks.map((b) => b.code).join(", ");
+      errors.push(`espn-public-api: clearance-denied [${blockCodes}]`);
+      return {
+        sport,
+        primary: chain[0] ?? null,
+        used: null,
+        attempted,
+        games: [],
+        failover: attempted.length > 1,
+        errors,
+        oddsApiRequired: false,
+        datesRequested: [],
+      };
+    }
     const games = await fetchEspnScoreboard(sport, { fetchImpl: opts.fetchImpl });
     return {
       sport,

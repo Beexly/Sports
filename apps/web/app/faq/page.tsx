@@ -40,7 +40,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from dozens of sportsbooks every 30 minutes, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick: the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
+        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from multiple sportsbooks on a regular schedule, scores every matchup for edge, and publishes a calibrated signal. Free gets every pick: the matchup and pick type on all of them. Pro and Elite add the confidence rating and the full factor trail behind each one.",
       },
       {
         q: "How is this different from a tout service?",
@@ -48,7 +48,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Which sports are covered?",
-        a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven on a 30-minute refresh loop during games.",
+        a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven with live odds refreshed regularly during games.",
       },
       {
         q: "What's the philosophy behind it?",

@@ -384,6 +384,17 @@ export function metrics(lu: Lineup): LineupMetrics {
 export type GenResult = {
   readonly lineups: ReadonlyArray<{ players: Lineup; metrics: LineupMetrics }>;
   readonly exposure: ReadonlyArray<{ id: string; name: string; pos: DfsPos; count: number; pct: number }>;
+  /** Number of unique lineups the caller requested (input `count`). */
+  readonly requested: number;
+  /**
+   * True when fewer unique feasible lineups could be found than requested.
+   * The optimizer never emits duplicates — if the exposure pressure or
+   * salary-stack constraints exhaust the solution space before `count`
+   * lineups are produced, generation stops early and `partial` is set.
+   * Callers should surface this so the user knows the result is truncated,
+   * not a bug in the count.
+   */
+  readonly partial: boolean;
 };
 
 const EXPOSURE_DECAY = 0.97;
@@ -442,5 +453,5 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     })
     .sort((a, b) => b.count - a.count);
 
-  return { lineups, exposure };
+  return { lineups, exposure, requested: count, partial: lineups.length < count };
 }

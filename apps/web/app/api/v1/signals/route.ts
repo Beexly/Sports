@@ -24,9 +24,12 @@ export async function GET(req: Request): Promise<NextResponse> {
     );
   }
   const key = extractB2bApiKey(req) ?? "";
-  const rl = rateLimitB2b(key);
+  const rl = await rateLimitB2b(key);
   if (!rl.ok) {
-    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+    return NextResponse.json(
+      { error: rl.status === 429 ? "Rate limit exceeded" : "Rate limit service unavailable" },
+      { status: rl.status },
+    );
   }
 
   const gates = getReadinessGates();

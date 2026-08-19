@@ -32,6 +32,7 @@ import {
 } from "./free-settlement";
 import { uniqueScoreboardDates } from "./settlement-score-dates";
 import { recordFreeIngestionRun } from "./free-ingestion-run";
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 
 const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -91,7 +92,23 @@ function finalMatchesGame(
   return null;
 }
 
+/**
+ * GSE-SEC-050: loadHenry fetches henrygd-ncaa which is NOT registered in
+ * source-rights-registry.ts (candidates list, inMainRegistry=false).
+ * A runtime checkClearance must gate the fetch — deny blocks before any
+ * network call.
+ */
 async function loadHenry(free: Sport): Promise<readonly NcaaGame[]> {
+  // GSE-SEC-050: gate before fetch — henrygd-ncaa has no rights-registry row.
+  const clearance = checkClearance({
+    source_id: "henrygd-ncaa",
+    mode: "public_logged_off_fact_extract",
+    tool_id: "fetch-native",
+    intents: ["storage", "derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    return [];
+  }
   try {
     if (free === "ncaaf") return await fetchHenrygdScoreboard(HENRYGD_PATHS.cfb);
     if (free === "ncaab") return await fetchHenrygdScoreboard(HENRYGD_PATHS.mbb);
@@ -190,6 +207,21 @@ export async function persistFreeScores(options?: {
         }
         if (!hit) continue;
         matched++;
+
+        // GSE-SEC-051: ESPN (espn-public-api) has storage_allowed=false in the rights
+        // registry. The scores above were sourced from ESPN via fetchScoresMultiSource;
+        // before writing them into the Game table (a storage intent), confirm clearance.
+        // If storage is denied, skip the DB write — facts may still be used transiently
+        // but must not be persisted.
+        const persistClearance = checkClearance({
+          source_id: "espn-public-api",
+          mode: "public_logged_off_fact_extract",
+          tool_id: "fetch-native",
+          intents: ["storage"],
+        });
+        if (!persistClearance.allowed) {
+          continue;
+        }
 
         // Do not blank existing scores with null; only write concrete scores.
         const res = await db.game.updateMany({

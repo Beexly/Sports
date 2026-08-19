@@ -87,8 +87,8 @@ describe("GET /api/board/state — confidence paywall", () => {
   it("redacts confidence for anonymous viewers", async () => {
     mocks.auth.mockResolvedValue(null);
     mocks.loadBoardState.mockResolvedValue(payload([row({ confidence: 74 })]));
-
-    const res = await GET();
+    const req = new Request("http://localhost/api/board/state");
+    const res = await GET(req as unknown as Parameters<typeof GET>[0]);
     const body = await res.json();
 
     expect(body.success).toBe(true);
@@ -100,8 +100,8 @@ describe("GET /api/board/state — confidence paywall", () => {
     mocks.auth.mockResolvedValue({ user: { id: "free-user" } });
     mocks.getUserEntitlements.mockResolvedValue({ canSeeConfidence: false });
     mocks.loadBoardState.mockResolvedValue(payload([row({ confidence: 88 })]));
-
-    const res = await GET();
+    const req = new Request("http://localhost/api/board/state");
+    const res = await GET(req as unknown as Parameters<typeof GET>[0]);
     const body = await res.json();
 
     expect(body.data.publishedToday[0].confidence).toBeNull();
@@ -112,8 +112,8 @@ describe("GET /api/board/state — confidence paywall", () => {
     mocks.auth.mockResolvedValue({ user: { id: "pro-user" } });
     mocks.getUserEntitlements.mockResolvedValue({ canSeeConfidence: true });
     mocks.loadBoardState.mockResolvedValue(payload([row({ confidence: 88 })]));
-
-    const res = await GET();
+    const req = new Request("http://localhost/api/board/state");
+    const res = await GET(req as unknown as Parameters<typeof GET>[0]);
     const body = await res.json();
 
     expect(body.data.publishedToday[0].confidence).toBe(88);
@@ -122,8 +122,8 @@ describe("GET /api/board/state — confidence paywall", () => {
   it("keeps non-confidence board data public after redaction", async () => {
     mocks.auth.mockResolvedValue(null);
     mocks.loadBoardState.mockResolvedValue(payload([row({ confidence: 74, edgeIndex: 61 })]));
-
-    const res = await GET();
+    const req = new Request("http://localhost/api/board/state");
+    const res = await GET(req as unknown as Parameters<typeof GET>[0]);
     const body = await res.json();
 
     const published = body.data.publishedToday[0];

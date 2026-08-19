@@ -106,6 +106,22 @@ export function DfsOptimizer() {
 
       <DkImportPanel onImport={onImport} onReset={onReset} imported={imported} />
 
+      {/* partial-result notice — the optimizer never emits duplicates, so a
+          shortfall means the slate's constraints (locks/excludes/salary/stack)
+          exhausted the feasible solution space before `count` lineups. Surface
+          this so the user knows it is NOT a count bug. */
+      result?.partial && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-caution/30 bg-caution/5 px-4 py-3">
+          <span className="rounded-full bg-caution px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
+            partial
+          </span>
+          <p className="text-xs text-ion-1">
+            Only <strong className="text-ion-white">{result.lineups.length} of {result.requested} requested</strong> lineups could be generated — the
+            salary-cap and uniqueness constraints are exhausted under the current constraints/excludes. Relax a constraint or fade to unlock more combinations.
+          </p>
+        </div>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-[1.35fr_1.05fr]">
         {/* lineups */}
         <div className="space-y-4">

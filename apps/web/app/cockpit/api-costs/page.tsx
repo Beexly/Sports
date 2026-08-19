@@ -1,11 +1,20 @@
 import Link from "next/link";
 import { BudgetOverrideControl } from "./budget-override-control";
+import { RoutingLegibility, type RoutingRow } from "./routing-legibility";
 import { StatusTile } from "@/components/cockpit/status-tile";
 import {
   loadClaudeApiCostsDashboard,
   type ClaudeApiCostSurfaceSummary,
 } from "@/lib/claude-api/dashboard";
 import type { ClaudeBudgetStatus } from "@/lib/claude-api/cost-monitor";
+import {
+  ALL_SURFACES,
+  SURFACE_RECOMMENDED,
+  activeTierForSurface,
+  resolveModelCatalog,
+} from "@/lib/claude-api/model-router";
+import { surfaceEconomics } from "@/lib/claude-api/model-economics";
+import { FREE_LANE_SURFACES } from "@/lib/claude-api/free-lane-policy";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +28,7 @@ const STATUS_STYLES: Readonly<Record<ClaudeBudgetStatus, string>> = {
 
 export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
   const dashboard = await loadClaudeApiCostsDashboard();
+  const routingRows = buildRoutingRows();
 
   return (
     <div className="flex flex-col gap-6">
@@ -92,6 +102,8 @@ export default async function CockpitApiCostsPage(): Promise<JSX.Element> {
         </div>
       </section>
 
+      <RoutingLegibility rows={routingRows} />
+
       <section className="rounded-lg border border-titanium/40 bg-obsidian/60 p-4">
         <h2 className="text-sm font-semibold text-ion-white">Recent Errors</h2>
         {dashboard.recentErrors.length === 0 ? (
@@ -148,4 +160,31 @@ function formatUsd(value: number): string {
     currency: "USD",
     maximumFractionDigits: 2,
   }).format(value);
+}
+
+/**
+ * Build the routing-legibility rows from the live routing modules. Every value
+ * is real: active/recommended tiers come from model-router's exported maps,
+ * blended $/Mtok comes from the vendored models.dev snapshot via
+ * surfaceEconomics(), and free-lane eligibility comes from free-lane-policy.
+ */
+function buildRoutingRows(): readonly RoutingRow[] {
+  const economics = surfaceEconomics();
+  const catalog = resolveModelCatalog();
+  return ALL_SURFACES.map((surface) => {
+    const row = economics.find((entry) => entry.surface === surface);
+    const activeTier = row?.activeTier ?? activeTierForSurface(surface);
+    const recommendedTier = row?.recommendedTier ?? SURFACE_RECOMMENDED[surface];
+    return {
+      surface,
+      activeTier,
+      recommendedTier,
+      activeModelId: catalog[activeTier],
+      recommendedModelId: catalog[recommendedTier],
+      activeBlendedUsdPerM: row?.activeBlended ?? 0,
+      recommendedBlendedUsdPerM: row?.recommendedBlended ?? 0,
+      savingsFraction: row?.savingsFraction ?? null,
+      freeLaneEligible: FREE_LANE_SURFACES.has(surface),
+    };
+  });
 }

@@ -30,6 +30,7 @@ export async function GET(): Promise<NextResponse> {
     data: control,
     intelligence: {
       generatedAt: intelligence.generatedAt,
+      snapshotSource: intelligence.snapshotSource,
       sourcePolicySummary: intelligence.sourcePolicySummary,
       channel87Summary: intelligence.channel87Summary,
       gseOutputReadiness: intelligence.gseOutputReadiness,

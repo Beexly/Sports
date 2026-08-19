@@ -161,6 +161,35 @@ export async function captureLineSnapshotsIfEnabled(
   return { enabled: true, ...result };
 }
 
+export interface MarkClosingSnapshotsIfEnabledResult extends MarkClosingSnapshotsResult {
+  enabled: boolean;
+}
+
+/**
+ * HARD GATE for the settle-time CLOSE tag. No-ops (zero DB interaction)
+ * unless LINE_ARCHIVE_ENABLED=true. Never throws — archive failures must
+ * not fail settlement.
+ */
+export async function markClosingSnapshotsIfEnabled(
+  dbArg: unknown,
+  gameId: string,
+  asOf: Date,
+): Promise<MarkClosingSnapshotsIfEnabledResult> {
+  if (!isLineArchiveEnabled()) {
+    return { enabled: false, updated: 0 };
+  }
+  try {
+    const result = await markClosingSnapshots(dbArg, gameId, asOf);
+    return { enabled: true, ...result };
+  } catch (err) {
+    return {
+      enabled: true,
+      updated: 0,
+      error: err instanceof Error ? err.message : String(err),
+    };
+  }
+}
+
 export interface MarkClosingSnapshotsResult {
   updated: number;
   error?: string;

@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { db } from "@sports/db";
 import { merkleRootFromLeafHashes } from "@sports/prediction-engine";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 /**
  * Public slate-commitment verification — the anti-cherry-pick endpoint.
@@ -32,9 +33,20 @@ function sha256Hex(input: string): string {
 /** e.g. "AMERICANFOOTBALL_NFL:2026-09-14" — uppercase sport key + UTC day. */
 const SLATE_KEY_SHAPE = /^[A-Z][A-Z0-9_]*:\d{4}-\d{2}-\d{2}$/;
 
-export async function GET(request: Request) {
+export async function GET(req: NextRequest) {
+  // Public, anonymous, CPU-heavy route (DB read + live Merkle root recomputation).
+  // IP-keyed rate limit copied from the established pattern in
+  // apps/web/app/api/verify/route.ts (consumeRateLimit + clientIp).
+  const limit = consumeRateLimit("public-verify-slate", clientIp(req), 60, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
+
   const slateKey =
-    new URL(request.url).searchParams.get("slateKey")?.trim().toUpperCase() ?? "";
+    new URL(req.url).searchParams.get("slateKey")?.trim().toUpperCase() ?? "";
   if (!SLATE_KEY_SHAPE.test(slateKey)) {
     return NextResponse.json(
       {

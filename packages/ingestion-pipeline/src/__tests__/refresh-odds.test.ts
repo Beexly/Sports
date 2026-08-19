@@ -163,6 +163,46 @@ describe("refreshOdds", () => {
     ]);
   });
 
+  it("stops starting new sports once the Odds API reports a near-exhausted credit budget", async () => {
+    mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1], SPORTS[2]]);
+    mocks.processSport.mockResolvedValueOnce({
+      status: "success",
+      oddsApiRemainingRequests: 5, // below the 10-credit safety threshold
+    });
+    // Only ONE mocked resolution is provided on purpose — if the loop wrongly
+    // called processSport again for nba/mlb, that call would hang on an
+    // unconfigured mock and this test would time out, catching the regression.
+
+    const result = await runWithTimers(refreshOdds());
+
+    expect(mocks.processSport).toHaveBeenCalledTimes(1);
+    expect(result.results).toEqual([
+      expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
+      expect.objectContaining({
+        sport: "basketball_nba",
+        ok: false,
+        note: "odds_api_low_quota_skip",
+      }),
+      expect.objectContaining({
+        sport: "baseball_mlb",
+        ok: false,
+        note: "odds_api_low_quota_skip",
+      }),
+    ]);
+  });
+
+  it("does NOT stop early when remaining credits are comfortably above the threshold", async () => {
+    mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1]]);
+    mocks.processSport
+      .mockResolvedValueOnce({ status: "success", oddsApiRemainingRequests: 400 })
+      .mockResolvedValueOnce({ status: "success", oddsApiRemainingRequests: 397 });
+
+    const result = await runWithTimers(refreshOdds());
+
+    expect(mocks.processSport).toHaveBeenCalledTimes(2);
+    expect(result.results.every((r) => r.ok)).toBe(true);
+  });
+
   it("honors a RESOLVED { status: 'failed' } result (processSport never throws on provider failure)", async () => {
     // processSport catches provider/normalization failures internally and
     // RESOLVES { status: "failed", error } — it does not throw. The loop must

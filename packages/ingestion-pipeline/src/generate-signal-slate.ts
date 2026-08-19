@@ -278,13 +278,21 @@ export async function generateSignalSlate(opts?: {
       };
 
       if (existing) {
-        await db.pick.update({
-          where: { id: existing.id },
+        // Race-safe update (GSE-SEC-043): scope to result:"PENDING" so a
+        // concurrent settle cannot have its freshly-graded result overwritten.
+        // Matches the updateMany pattern in settle-sport.ts / free-settlement-runner.ts.
+        const updated = await db.pick.updateMany({
+          where: { id: existing.id, result: "PENDING" },
           data: {
             ...shared,
             generatedAt: now,
           },
         });
+        if (updated.count === 0) {
+          // Pick was settled between our findUnique and here — frozen, skip.
+          picksSkipped += 1;
+          continue;
+        }
       } else {
         await db.pick.create({
           data: {

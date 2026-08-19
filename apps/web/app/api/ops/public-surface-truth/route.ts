@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
 import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
@@ -129,8 +130,27 @@ function hasOpsAuth(request: Request): boolean {
  * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
  */
 export async function GET(request: Request) {
-  const gates = getReadinessGates();
   const detailed = hasOpsAuth(request);
+
+  // Anonymous GETs hit ~31 DB loaders and (when STIPE_SECRET_KEY is set) a live
+  // Stripe API call every request. Rate-limit the public (non-authenticated)
+  // branch to prevent pool exhaustion / Stripe read-quota abuse. Authenticated
+  // operator calls are CRON_SECRET-gated already and are not throttled here.
+  if (!detailed) {
+    const limit = consumeRateLimit("public-ops-surfaces", clientIp(request as NextRequest), 60, 60_000);
+    if (!limit.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many requests. Please wait and try again.",
+          code: "rate_limited",
+        },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      );
+    }
+  }
+
+  const gates = getReadinessGates();
   const deploymentSha =
     process.env.VERCEL_GIT_COMMIT_SHA?.trim() ||
     process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.trim() ||
@@ -317,13 +337,18 @@ export async function GET(request: Request) {
   const billingMoney = loadBillingMoneyPosture();
   const autonomy = loadAutonomyPosture();
   const waitlist = loadWaitlistPosture();
+  // Gated behind hasOpsAuth: the live Stripe webhook list hit is operator-only.
+  // Anonymous callers have no use for it and each call reads quota + spawns a
+  // network round-trip on EVERY anonymous GET (~every 7 min in production).
   let stripeWebhookHosts: Awaited<
     ReturnType<typeof loadStripeWebhookHostsPosture>
   > = null;
-  try {
-    stripeWebhookHosts = await loadStripeWebhookHostsPosture();
-  } catch {
-    stripeWebhookHosts = null;
+  if (detailed) {
+    try {
+      stripeWebhookHosts = await loadStripeWebhookHostsPosture();
+    } catch {
+      stripeWebhookHosts = null;
+    }
   }
   const jynx = creditStack.jynx;
 
@@ -546,7 +571,7 @@ export async function GET(request: Request) {
       },
       creditStack,
       billingMoney,
-      stripeWebhookHosts,
+      ...(detailed ? { stripeWebhookHosts } : {}),
       autonomy,
       boardSurface: boardSurfacePosture(process.env, {
         oddsFresh: oddsInserting?.withinRefreshSla === true,

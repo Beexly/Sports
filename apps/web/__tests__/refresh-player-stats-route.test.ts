@@ -108,7 +108,7 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "source-error", season: 2024, playersUpserted: 0, statsUpserted: 0, error: "down",
     });
-    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
     expect(res.status).toBe(502);
   });
 
@@ -126,6 +126,9 @@ describe("GET /api/cron/refresh-player-stats", () => {
       ),
     );
     const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
+    // Deliberate contract: the HTTP status mirrors the PRIMARY ingestion only
+    // (a failed satellite must not 502-and-retry the whole cron); the body
+    // carries success=false and the failing satellite's status.
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
       success: boolean;

@@ -3,6 +3,10 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const pageSource = readFileSync(resolve(__dirname, "..", "app", "page.tsx"), "utf8");
+const labDoorSource = readFileSync(
+  resolve(__dirname, "..", "components", "landing", "nflverse-lab-door.tsx"),
+  "utf8"
+);
 
 describe("Homepage data-first signal contract", () => {
   it("does not wire the legacy annotated sample signal into the public homepage", () => {
@@ -15,7 +19,7 @@ describe("Homepage data-first signal contract", () => {
     // never fabricated literals.
     expect(pageSource).toMatch(/\bloadBoardState\b/);
     expect(pageSource).toMatch(/\bloadPublicCalibrationReport\b/);
-    expect(pageSource).toMatch(/\bloadNflverseUsagePulse\b/);
+    expect(labDoorSource).toMatch(/\bloadNflverseUsagePulse\b/);
     expect(pageSource).toContain("state.publishedToday.length");
     expect(pageSource).toContain("state.gatedTodayRows.length");
     expect(pageSource).toContain("state.scoringNow.length");
@@ -23,12 +27,15 @@ describe("Homepage data-first signal contract", () => {
   });
 
   it("routes the four doors instead of dumping every surface on the front page", () => {
-    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
+    // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
+    // off the page's critical path via Suspense); the other three are inline.
+    for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
       expect(pageSource).toContain(door);
     }
+    expect(labDoorSource).toContain("The Lab");
     expect(pageSource).toContain("DoorCard");
     expect(pageSource).toContain('href="/board"');
-    expect(pageSource).toContain('href="/players"');
+    expect(labDoorSource).toContain('href="/players"');
     expect(pageSource).toContain('href="/fantasy"');
   });
 

@@ -30,7 +30,13 @@ export const EXECUTABLE_CRON_TARGETS = {
   RUN_REFRESH_ODDS_FREE: "/api/cron/refresh-odds",
   RUN_GENERATE_DRAFTS: "/api/cron/generate-drafts",
   RUN_CALIBRATION_METRICS: "/api/cron/calibration-metrics",
-  RUN_GENERATE_SIGNAL_SLATE: "/api/cron/generate-signal-slate",
+  // RUN_GENERATE_SIGNAL_SLATE deliberately absent — see #421 resolution.
+  // `AutonomyActionKind` has no such member, so the planner cannot emit it and the
+  // executor could never reach this entry. Adding the member to satisfy the compiler
+  // would widen what autonomous execution is permitted to do in order to enable an
+  // action nothing produces — granting an unusable capability on the one boundary
+  // that governs unattended execution. Re-add here AND in AUTONOMY_SAFE_CRON_TARGETS
+  // together, in one reviewed change, if the kernel is ever taught to plan slates.
 } as const satisfies Partial<Record<AutonomyActionKind, string>>;
 
 /** Soft load-time check: EXECUTABLE paths must equal SAFE allow-list. */

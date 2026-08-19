@@ -8,6 +8,9 @@ function readRepoFile(path: string): string {
 
 describe("homepage engine centerpiece", () => {
   const page = readRepoFile("apps/web/app/page.tsx");
+  const labDoor = readRepoFile(
+    "apps/web/components/landing/nflverse-lab-door.tsx"
+  );
   const curve = readRepoFile("apps/web/components/home/calibration-curve.tsx");
 
   it("leads with the thesis and routes to the four doors", () => {
@@ -15,9 +18,12 @@ describe("homepage engine centerpiece", () => {
     expect(page).toContain("Galaxy turns it into");
     expect(page).toContain("We detect. You decide.");
     expect(page).toContain("Pick the decision you came to make.");
-    for (const door of ["Board", "The Lab", "Intelligence", "Fantasy & Daily"]) {
+    // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
+    // off the page's critical path via Suspense); the other three are inline.
+    for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
       expect(page).toContain(door);
     }
+    expect(labDoor).toContain("The Lab");
   });
 
   it("does not render fabricated ledger or settlement examples", () => {
@@ -45,7 +51,7 @@ describe("homepage engine centerpiece", () => {
   it("uses real data paths — every number comes from a loader, none fabricated", () => {
     expect(page).toMatch(/\bloadBoardState\b/);
     expect(page).toMatch(/\bloadPublicCalibrationReport\b/);
-    expect(page).toMatch(/\bloadNflverseUsagePulse\b/);
+    expect(labDoor).toMatch(/\bloadNflverseUsagePulse\b/);
     expect(page).toContain("calibration.sampleSize");
     expect(page).toContain("state.publishedToday.length");
   });

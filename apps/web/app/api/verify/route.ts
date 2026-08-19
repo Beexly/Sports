@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { db } from "@sports/db";
 import { hashLeaf, parseCanonicalPayload } from "@sports/prediction-engine";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 /**
  * Public Proof-of-Record verification — the skeptic's endpoint.
@@ -27,8 +28,19 @@ function sha256Hex(input: string): string {
   return createHash("sha256").update(input, "utf8").digest("hex");
 }
 
-export async function GET(request: Request) {
-  const hash = new URL(request.url).searchParams.get("hash")?.trim().toLowerCase() ?? "";
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Public, anonymous, DB-heavy route (receipt lookup + game include).
+  // IP-keyed rate limit copied from the established pattern in
+  // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
+  const limit = consumeRateLimit("public-proof-verify", clientIp(req), 60, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
+
+  const hash = new URL(req.url).searchParams.get("hash")?.trim().toLowerCase() ?? "";
   if (!/^[0-9a-f]{64}$/.test(hash)) {
     return NextResponse.json(
       { found: false, error: "Provide a 64-character SHA-256 receipt hash (?hash=...)." },

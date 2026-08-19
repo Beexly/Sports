@@ -7,14 +7,17 @@ describe("vercel platform cron auth", () => {
     process.env = { ...prev };
   });
 
-  it("accepts x-vercel-cron on VERCEL=1 without bearer", () => {
+  it("accepts x-vercel-cron on VERCEL=1 only when route opts into dual mode", () => {
     process.env["VERCEL"] = "1";
     process.env["CRON_SECRET"] = "secret";
     const req = new Request("https://example.com/api/cron/board-fill", {
       headers: { "x-vercel-cron": "1" },
     });
     expect(isVercelPlatformCron(req)).toBe(true);
-    expect(cronAuthError(req)).toBeNull();
+    // Default mode is bearer_only (GSE-SEC-016): platform header alone is rejected.
+    expect(cronAuthError(req)?.status).toBe(401);
+    // Explicit dual opt-in is the only way to authorize via the platform header.
+    expect(cronAuthError(req, { mode: "dual" })).toBeNull();
   });
 
   it("rejects spoofed x-vercel-cron off Vercel", () => {

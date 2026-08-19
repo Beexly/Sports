@@ -257,13 +257,16 @@ export async function loadFfcAdp({
     if (parsed.rows.length === 0) throw new Error("FFC ADP payload contained no usable rows");
 
     // 2. Envelope — every extracted record carries the RightsSnapshot.
+    // The ADP snapshot is factual data (player rankings/order); wrap it through
+    // the DATA_RULES gate so a future caller can never wrap a blocked category
+    // (expression, personal_data, etc.) by accident — GSE-SEC-055.
     const record = wrapExtractedRecord(clearance, url, {
       format,
       season,
       teams,
       meta: parsed.meta,
       players: parsed.rows,
-    });
+    }, "fact");
 
     const value: FfcAdp = {
       status: "live",

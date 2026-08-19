@@ -22,6 +22,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { DurableWriteStoreUnavailableError } from "@sports/db";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { reconcileEntitlements } from "@/lib/billing/reconcile-entitlements";
 
@@ -34,16 +35,29 @@ export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
-  const summary = await reconcileEntitlements();
+  try {
+    const summary = await reconcileEntitlements();
 
-  return NextResponse.json({
-    // `ok` reflects a clean pass: any Stripe/DB error means some checks were
-    // skipped fail-safe (nothing wrongly revoked) and the operator should look.
-    ok: summary.errors === 0,
-    checked: summary.checked,
-    granted: summary.granted,
-    downgraded: summary.downgraded,
-    errors: summary.errors,
-    listReliable: summary.listReliable,
-  });
+    return NextResponse.json({
+      // `ok` reflects a clean pass: any Stripe/DB error means some checks were
+      // skipped fail-safe (nothing wrongly revoked) and the operator should look.
+      ok: summary.errors === 0,
+      checked: summary.checked,
+      granted: summary.granted,
+      downgraded: summary.downgraded,
+      errors: summary.errors,
+      listReliable: summary.listReliable,
+    });
+  } catch (err) {
+    if (err instanceof DurableWriteStoreUnavailableError) {
+      // GSE-SEC-033: the durable store can't persist — fail closed at the cron
+      // boundary with a typed 503 so the operator sees it on the next review,
+      // rather than a misleading "ok:true" from writes that silently no-oped.
+      return NextResponse.json(
+        { ok: false, error: "durable write store unavailable" },
+        { status: 503 },
+      );
+    }
+    throw err;
+  }
 }

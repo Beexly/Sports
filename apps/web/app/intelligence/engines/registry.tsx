@@ -69,6 +69,14 @@ export interface EngineEntry {
   /** Per-engine "How we read it" term/definition pairs (rendered via MetricExplainer). */
   readonly explainer?: readonly MetricTerm[];
   /**
+   * Whether this engine's data is gated behind a paid tier (PRO/ELITE).
+   * The /api/intelligence/* routes enforce this server-side via
+   * requirePremiumApiRateLimited; the /intelligence/engines BROWSER must
+   * mirror that gate so anonymous visitors cannot read premium analytics
+   * by loading the data server-side, bypassing the API entitlement check.
+   */
+  readonly premium: boolean;
+  /**
    * Load the engine data (reused loader, unchanged). Returns a SERIALIZABLE
    * payload (plain row objects + meta) — the server page hands it straight to
    * the client EngineView keyed on `slug`.
@@ -86,6 +94,7 @@ function engine<T>(spec: {
   api: string;
   sourceIds: readonly string[];
   explainer?: readonly MetricTerm[];
+  premium?: boolean;
   load: () => Promise<T>;
 }): EngineEntry {
   return {
@@ -97,6 +106,7 @@ function engine<T>(spec: {
     api: spec.api,
     sourceIds: spec.sourceIds,
     explainer: spec.explainer,
+    premium: spec.premium ?? true,
     load: spec.load as () => Promise<unknown>,
   };
 }

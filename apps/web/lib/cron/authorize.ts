@@ -8,16 +8,23 @@ import {
 /**
  * Shared cron authorization (HTTP SoT).
  *
- * Accepts EITHER (mode "dual", default — board-fill / odds / free-spine):
- *   1) Authorization: Bearer <CRON_SECRET|CRON_SECRET_PREVIOUS>
+ * Accepts EITHER (mode "dual" — board-fill / odds / free-spine and other
+ * read-only probes only):
+ *   1) Authorization: Bearer <CRON_...OUS>
  *   2) Vercel Cron platform: x-vercel-cron: 1 when VERCEL=1
  *
- * Mode "bearer_only" (autonomy execute path and other sensitive crons):
- *   Bearer required. Platform header alone is rejected so spoofed
- *   x-vercel-cron cannot force AUTONOMY_EXECUTE cycles.
+ * Default mode (no options passed) is "bearer_only" (GSE-SEC-016):
+ *   Only the Bearer secret authorizes. The spoofed x-vercel-cron header is
+ *   NOT accepted unless a route explicitly opts into "dual" mode. This makes
+ *   side-effecting crons safe by default and turns the platform header into an
+ *   explicit, per-route decision rather than a default bypass.
+ *
+ * Mode "dual" is reserved for read-only health-probe crons that must run from
+ * the Vercel cron runner with no injected Authorization header. Routes that
+ * execute mutations MUST NOT use dual.
  *
  * Env CRON_REQUIRE_BEARER=true forces bearer_only globally (founder opt-in
- * when Vercel is confirmed to inject Authorization: Bearer $CRON_SECRET).
+ * when Vercel is confirmed to inject Authorization: Bearer ***).
  *
  * Spoof note: x-vercel-cron is NOT a cryptographic proof of Vercel origin.
  * Prefer Bearer for anything that executes side effects beyond data refresh.
@@ -35,9 +42,16 @@ function globalRequireBearer(): boolean {
   return process.env["CRON_REQUIRE_BEARER"]?.trim().toLowerCase() === "true";
 }
 
+/**
+ * Resolve effective auth mode.
+ *
+ * Default is "bearer_only" so that any caller not explicitly opting into
+ * "dual" mode is not spoofable by x-vercel-cron (GSE-SEC-016). CRON_REQUIRE_BEARER=true
+ * forces bearer_only globally regardless of the requested mode.
+ */
 function resolveMode(mode?: CronAuthMode): CronAuthMode {
   if (globalRequireBearer()) return "bearer_only";
-  return mode ?? "dual";
+  return mode ?? "bearer_only";
 }
 
 /**

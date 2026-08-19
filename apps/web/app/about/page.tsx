@@ -15,7 +15,7 @@ const PRINCIPLES = [
     eyebrow: "01 · Data is source of truth",
     title: "Every pick traces to a real line.",
     body:
-      "Live odds from dozens of sportsbooks, ingested on a 30-minute cadence. The model's view of a matchup is always reconcilable to the markets it was pulled from. No synthesized numbers. No back-tested narratives masquerading as live signal.",
+      "Live odds from multiple sportsbooks on a regular schedule. The model's view of a matchup is always reconcilable to the markets it was pulled from. No synthesized numbers. No back-tested narratives masquerading as live signal.",
   },
   {
     eyebrow: "02 · Reasoning is published",

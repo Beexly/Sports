@@ -154,4 +154,29 @@ describe("Intelligence Control Plane", () => {
       expect(json).not.toContain("AIRWAVE_SIRIUSXM_LEGAL_ACK=true");
     });
   });
+
+  describe("snapshot source / generatedAt fabrication", () => {
+    it("marks the default (master off) snapshot as FALLBACK with null generatedAt", () => {
+      const plane = readIntelligenceControlPlane(emptyEnv);
+      expect(plane.snapshotSource).toBe("FALLBACK");
+      expect(plane.generatedAt).toBeNull();
+    });
+
+    it("marks a master-on snapshot as LIVE with a real generatedAt", () => {
+      const fixedNow = new Date("2026-06-05T10:00:00.000Z");
+      const plane = readIntelligenceControlPlane(
+        { ...fullEnv, AIRWAVE_ENABLED: "true" },
+        fixedNow,
+      );
+      expect(plane.snapshotSource).toBe("LIVE");
+      expect(plane.generatedAt).toBe("2026-06-05T10:00:00.000Z");
+    });
+
+    it("serialised fallback snapshot does not fabricate a prediction-time timestamp", () => {
+      const plane = readIntelligenceControlPlane(emptyEnv);
+      const json = JSON.parse(JSON.stringify(plane)) as Record<string, unknown>;
+      expect(json["snapshotSource"]).toBe("FALLBACK");
+      expect(json["generatedAt"]).toBeNull();
+    });
+  });
 });

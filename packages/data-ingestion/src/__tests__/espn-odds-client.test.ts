@@ -3,14 +3,15 @@ import { fetchEspnOddsForSport } from "../espn-odds-client.js";
 
 describe("fetchEspnOddsForSport", () => {
   it("maps scoreboard + core odds into OddsApiEvent (h2h required)", async () => {
+    const futureIso = new Date(Date.now() + 2 * 3600000).toISOString();
     const scoreboard = {
       events: [
         {
           id: "401",
-          date: "2026-08-10T23:00:00Z",
+          date: futureIso,
           competitions: [
             {
-              date: "2026-08-10T23:00:00Z",
+              date: futureIso,
               status: { type: { state: "pre", completed: false } },
               competitors: [
                 {

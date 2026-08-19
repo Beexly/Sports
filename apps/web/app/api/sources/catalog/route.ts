@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   CONTEXT_INTELLIGENCE_SOURCES,
   DATA_SOURCE_STACK,
@@ -11,6 +11,7 @@ import {
 } from "@/lib/data-sources/catalog";
 import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
 import { providerStatuses, readinessSummary } from "@/lib/integrations/providers";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,18 @@ const STATUS_ORDER: readonly SourceStatus[] = [
 
 const COST_ORDER: readonly DataSourceCard["cost"][] = ["free", "low-cost", "paid-optional", "owned", "licensed"];
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Public, anonymous route that loads 4 large NFLverse datasets sequentially
+  // (each potentially fetching external provider data). IP-keyed rate limit
+  // copied from the established pattern in apps/web/app/api/nflverse/injuries/route.ts
+  // (consumeRateLimit + clientIp).
+  const limit = consumeRateLimit("public-source-catalog", clientIp(req), 60, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
   const liveEvidence = await loadSourceLiveEvidence();
   const providers = providerStatuses().map((provider) => ({
     key: provider.key,

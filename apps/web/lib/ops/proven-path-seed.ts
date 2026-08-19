@@ -8,6 +8,7 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { captureError } from "@/lib/observability/sentry";
 import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import { projectProvenPathMetrics } from "@/lib/calibration/projected-proven-metrics";
 import { toProvenPathPickRows } from "@/lib/calibration/proven-path-rows";
@@ -76,7 +77,8 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
       if (durablePause?.enabled && Array.isArray(durablePause.groups)) {
         appliedPauseGroups = durablePause.groups;
       }
-    } catch {
+    } catch (err) {
+      captureError(err, { path: "proven-path-seed", stage: "loadRankingPauseApply" });
       appliedPauseGroups = [];
     }
 
@@ -85,7 +87,8 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
       rankingPower = buildRankingPowerControl(rows, {
         appliedPauseGroups,
       });
-    } catch {
+    } catch (err) {
+      captureError(err, { path: "proven-path-seed", stage: "buildRankingPowerControl" });
       rankingPower = null;
     }
 
@@ -110,7 +113,8 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
       conformalBridge,
       conformalBridgeEnv,
     };
-  } catch {
+  } catch (err) {
+    captureError(err, { path: "proven-path-seed", stage: "loadProvenPathSurface" });
     return null;
   }
 }

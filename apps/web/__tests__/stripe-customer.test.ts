@@ -38,8 +38,11 @@ const dbMocks = vi.hoisted(() => ({
   upsert: vi.fn<(args: unknown) => Promise<unknown>>(),
 }));
 
+const requireDurableWriteStoreMock = vi.hoisted(() => vi.fn<(capability: string) => void>());
+
 vi.mock("@sports/db", () => ({
   db: { subscription: { findUnique: dbMocks.findUnique, upsert: dbMocks.upsert } },
+  requireDurableWriteStore: requireDurableWriteStoreMock,
 }));
 
 import { getOrCreateStripeCustomer } from "@/lib/stripe";
@@ -50,6 +53,8 @@ describe("getOrCreateStripeCustomer", () => {
     dbMocks.findUnique.mockReset();
     dbMocks.upsert.mockReset();
     dbMocks.upsert.mockResolvedValue({ id: "s_1" });
+    requireDurableWriteStoreMock.mockReset();
+    requireDurableWriteStoreMock.mockReturnValue(undefined); // available by default
   });
 
   it("returns the stored customer id and creates NOTHING when one already exists", async () => {
@@ -102,5 +107,73 @@ describe("getOrCreateStripeCustomer", () => {
       expect.objectContaining({ email: "c@d.com", name: undefined, metadata: { userId: "user_2" } }),
       { idempotencyKey: "gse-customer-user_2" },
     );
+  });
+
+  // GSE-SEC-033: durable-write guard must cover customer creation — an external
+  // Stripe side effect gated by a local DB upsert. Fail closed before any SDK call.
+  class DurableWriteStoreUnavailableError extends Error {
+    readonly kind = "durable_write_store_unavailable" as const;
+    readonly httpStatus = 503 as const;
+    readonly capability: string;
+    readonly reason: string;
+    constructor(capability: string, reason: string, detail: string) {
+      super(`Durable write store unavailable for capability "${capability}": ${detail}`);
+      this.name = "DurableWriteStoreUnavailableError";
+      this.capability = capability;
+      this.reason = reason;
+    }
+  }
+
+  it("STUB MODE: throws before any Stripe SDK call is made (fail closed)", async () => {
+    requireDurableWriteStoreMock.mockImplementation(() => {
+      throw new DurableWriteStoreUnavailableError(
+        "stripe-checkout",
+        "stub_client_active",
+        "stub client active",
+      );
+    });
+
+    await expect(getOrCreateStripeCustomer("user_1", "a@b.com", "Ada")).rejects.toThrow(
+      DurableWriteStoreUnavailableError,
+    );
+
+    expect(requireDurableWriteStoreMock).toHaveBeenCalledWith("stripe-checkout");
+    expect(stripeMocks.customersCreate).not.toHaveBeenCalled();
+    expect(dbMocks.upsert).not.toHaveBeenCalled();
+  });
+
+  it("DATABASE_URL NOT DURABLE: throws before any Stripe SDK call is made (fail closed)", async () => {
+    requireDurableWriteStoreMock.mockImplementation(() => {
+      throw new DurableWriteStoreUnavailableError(
+        "stripe-checkout",
+        "database_url_not_durable",
+        "DATABASE_URL is unset or sentinel",
+      );
+    });
+
+    await expect(getOrCreateStripeCustomer("user_1", "a@b.com", "Ada")).rejects.toThrow(
+      DurableWriteStoreUnavailableError,
+    );
+
+    expect(requireDurableWriteStoreMock).toHaveBeenCalledWith("stripe-checkout");
+    expect(stripeMocks.customersCreate).not.toHaveBeenCalled();
+    expect(dbMocks.upsert).not.toHaveBeenCalled();
+  });
+
+  it("guard runs BEFORE the DB lookup and any Stripe call (call order)", async () => {
+    let guardCalled = false;
+    requireDurableWriteStoreMock.mockImplementation(() => {
+      guardCalled = true;
+    });
+    // Provide an existing customer so the function returns the stored id
+    // without calling stripe.customers.create.
+    dbMocks.findUnique.mockResolvedValue({ stripeCustomerId: "cus_existing" });
+
+    await getOrCreateStripeCustomer("user_1", "a@b.com", "Ada");
+
+    expect(guardCalled).toBe(true);
+    expect(requireDurableWriteStoreMock).toHaveBeenCalledWith("stripe-checkout");
+    expect(dbMocks.findUnique).toHaveBeenCalled();
+    expect(stripeMocks.customersCreate).not.toHaveBeenCalled();
   });
 });

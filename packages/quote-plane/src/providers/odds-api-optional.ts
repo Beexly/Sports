@@ -101,11 +101,17 @@ export function oddsApiEventsToLines(
   return out;
 }
 
+/** The fetch signature this provider accepts for injection (tests / adapters). */
+export type OddsApiOptionalFetch = (
+  url: string,
+  init?: { headers?: Record<string, string> },
+) => Promise<{ ok: boolean; json: () => Promise<unknown> }>;
+
 export function createOddsApiOptionalProvider(opts: {
   apiKey?: string | null;
   /** Offline / test fixtures */
   fixtures?: readonly OddsApiEvent[];
-  fetchImpl?: (url: string) => Promise<{ ok: boolean; json: () => Promise<unknown> }>;
+  fetchImpl?: OddsApiOptionalFetch;
 }): QuoteProvider {
   return {
     id: "the_odds_api",
@@ -117,12 +123,15 @@ export function createOddsApiOptionalProvider(opts: {
       if (opts.fixtures) return oddsApiEventsToLines(opts.fixtures);
       if (!opts.apiKey) return []; // key missing → empty, not fake
       const sport = req.sport || "americanfootball_nfl";
+      // api.the-odds-api.com authenticates via an `apiKey` query parameter —
+      // it does not accept a header. Confirmed live 2026-08-15 (a header-only
+      // request returns 401 MISSING_KEY). Reverted to query-param auth.
       const url = `https://api.the-odds-api.com/v4/sports/${sport}/odds?regions=us&markets=h2h&oddsFormat=american&apiKey=${encodeURIComponent(opts.apiKey)}`;
       try {
-        const fetchImpl =
+        const fetchImpl: OddsApiOptionalFetch =
           opts.fetchImpl ??
-          (async (u: string) => {
-            const r = await fetch(u);
+          (async (u: string, init?: { headers?: Record<string, string> }) => {
+            const r = await fetch(u, { headers: init?.headers });
             return { ok: r.ok, json: () => r.json() };
           });
         const res = await fetchImpl(url);

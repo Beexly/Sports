@@ -1,0 +1,55 @@
+npm notice run sports-prediction-platform@1.0.0 build
+npm notice run npm run build --workspace=apps/web
+npm notice run @sports/web@1.0.0 build
+npm notice run node scripts/build-web.mjs
+  ▲ Next.js 14.2.35
+  - Environments: .env.local, .env
+  - Experiments (use with caution):
+    · instrumentationHook
+    · outputFileTracingRoot
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+../../node_modules/require-in-the-middle/index.js
+Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+
+Import trace for requested module:
+../../node_modules/require-in-the-middle/index.js
+../../node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+../../node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+../../node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+../../node_modules/@opentelemetry/instrumentation/build/esm/index.js
+../../node_modules/@sentry/node/build/cjs/integrations/tracing/postgresjs.js
+../../node_modules/@sentry/node/build/cjs/index.js
+../../node_modules/@sentry/nextjs/build/cjs/index.server.js
+./lib/observability/sentry.ts
+
+   Skipping validation of types
+   Linting ...
+   Collecting page data ...
+Error: DEV_FAKE_ADMIN must be unset in production — it grants ELITE to the dev-admin session and would bypass the paywall. Unset it and redeploy.
+    at C:\Users\Garrett\Sports\apps\web\.next\server\app\api\blog\route.js:1:5254
+    at 54934 (C:\Users\Garrett\Sports\apps\web\.next\server\app\api\blog\route.js:1:5402)
+    at t (C:\Users\Garrett\Sports\apps\web\.next\server\webpack-runtime.js:1:143)
+    at 52560 (C:\Users\Garrett\Sports\apps\web\.next\server\app\api\blog\route.js:1:1256)
+    at t (C:\Users\Garrett\Sports\apps\web\.next\server\webpack-runtime.js:1:143)
+    at r (C:\Users\Garrett\Sports\apps\web\.next\server\app\api\blog\route.js:1:5999)
+    at C:\Users\Garrett\Sports\apps\web\.next\server\app\api\blog\route.js:1:6070
+    at t.X (C:\Users\Garrett\Sports\apps\web\.next\server\webpack-runtime.js:1:1291)
+    at C:\Users\Garrett\Sports\apps\web\.next\server\app\api\blog\route.js:1:6012
+    at Object.<anonymous> (C:\Users\Garrett\Sports\apps\web\.next\server\app\api\blog\route.js:1:6098)
+
+> Build error occurred
+Error: Failed to collect page data for /api/blog
+    at C:\Users\Garrett\Sports\node_modules\next\dist\build\utils.js:1269:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  type: 'Error'
+}
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path C:\Users\Garrett\Sports\apps\web
+npm error workspace @sports/web@1.0.0
+npm error location C:\Users\Garrett\Sports\apps\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c node scripts/build-web.mjs

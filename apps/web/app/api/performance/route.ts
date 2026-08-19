@@ -31,42 +31,48 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // excluded so a dev-only seed never inflates customer-facing stats
   // when an operator flips PERFORMANCE_STATS_ENABLED in a non-prod
   // environment to test the surface.
-  const picks = await db.pick.findMany({
-    where: {
-      result: { in: ["WIN", "LOSS", "PUSH"] },
-      isPublished: true,
-      isBootstrap: false,
-      NOT: { modelVersion: "v5.0.0-seed" },
-      ...(sport ? { game: { sport: { name: { contains: sport, mode: "insensitive" as const } } } } : {}),
-    },
-    // Aggregate-only read: select EXACTLY the two fields the per-sport tally
-    // needs (result + sport name) rather than include-ing every Pick column and
-    // full Game rows for hundreds/thousands of settled picks. Prisma groupBy
-    // can't group by a relation field (game.sport.name is a join, not a Pick
-    // scalar), so this narrowed select is the correct minimal-transfer shape —
-    // identical output, far less data over the wire.
-    select: {
-      result: true,
-      game: { select: { sport: { select: { name: true } } } },
-    },
-  });
+  //
+  // GSE-SEC-031 fix: this query previously used db.pick.findMany(), which
+  // loaded EVERY settled pick row into the Node process and aggregated in
+  // JavaScript — O(picks) data transfer that grows unbounded as the pick
+  // count scales toward 10k+. Instead, we push the GROUP BY to the database
+  // so it returns one row per (sport, result) combination — O(sports × results)
+  // rows regardless of how many picks exist. Prisma's groupBy cannot group by
+  // a relation field (game.sport.name is a join, not a Pick scalar), so we use
+  // a parameterized raw SQL query. The ${sportPattern} interpolation is safely
+  // parameterized by Prisma's tagged template (never string-concatenated).
+  const sportPattern = sport ? `%${sport}%` : null;
+  const rows = await db.$queryRaw<
+    Array<{ sport: string; result: string; count: number }>
+  >`
+    SELECT s.name AS sport, p.result, COUNT(*)::int AS count
+    FROM picks p
+    JOIN games g ON p."gameId" = g.id
+    JOIN sports s ON g."sportId" = s.id
+    WHERE p.result IN ('WIN', 'LOSS', 'PUSH')
+      AND p."isPublished" = true
+      AND p."isBootstrap" = false
+      AND p."modelVersion" <> 'v5.0.0-seed'
+      AND (CAST(${sportPattern} AS TEXT) IS NULL OR s.name ILIKE ${sportPattern})
+    GROUP BY s.name, p.result
+  `;
 
-  // Aggregate by sport
+  // Fold the (sport, result, count) rows into the per-sport tally.
   const bySport: Record<
     string,
     { sport: string; wins: number; losses: number; pushes: number; total: number }
   > = {};
 
-  for (const pick of picks) {
-    const sportName = pick.game.sport.name;
+  for (const row of rows) {
+    const sportName = row.sport;
     if (!bySport[sportName]) {
       bySport[sportName] = { sport: sportName, wins: 0, losses: 0, pushes: 0, total: 0 };
     }
     const entry = bySport[sportName]!;
-    entry.total++;
-    if (pick.result === "WIN") entry.wins++;
-    else if (pick.result === "LOSS") entry.losses++;
-    else if (pick.result === "PUSH") entry.pushes++;
+    entry.total += row.count;
+    if (row.result === "WIN") entry.wins += row.count;
+    else if (row.result === "LOSS") entry.losses += row.count;
+    else if (row.result === "PUSH") entry.pushes += row.count;
   }
 
   const stats = Object.values(bySport).map((s) => ({
