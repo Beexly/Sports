@@ -202,7 +202,9 @@ describe("P9.5-05 — Entitlement grant correctness (journey)", () => {
     expect(res.status).toBe(200);
     expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { stripeSubscriptionId: "sub_123" },
+        // C-11 no-re-stamp guard: an already-CANCELED row must not be
+        // re-stamped, or the original canceledAt would be overwritten.
+        where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
         data: expect.objectContaining({
           tier: "FREE",
           status: "CANCELED",
@@ -360,7 +362,9 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     expect(res.status).toBe(200);
     expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { stripeSubscriptionId: "sub_123" },
+        // C-11 no-re-stamp guard: an already-CANCELED row must not be
+        // re-stamped, or the original canceledAt would be overwritten.
+        where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
         data: expect.objectContaining({
           status: "CANCELED",
           tier: "FREE",

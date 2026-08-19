@@ -437,7 +437,7 @@ async function handleChargeRefunded(charge: Stripe.Charge): Promise<void> {
       `[stripe] charge.refunded ${charge.id} [ENFORCE]: FULL refund on LIVE ` +
         `subscription — human review required. Subscription ${subscriptionId} is ` +
         `"${subscription.status}" in Stripe, not dead — revoking NOTHING (a terminal ` +
-        `revoke here would lock a paying member to FREE). Review the refund and, if ` +
+        `revoke here would strand a paying member on FREE). Review the refund and, if ` +
         `intended, cancel the subscription in Stripe so the normal deleted-event ` +
         `path revokes access.`,
     );
