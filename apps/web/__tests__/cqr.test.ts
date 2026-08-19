@@ -10,6 +10,17 @@ describe("CQR", () => {
   });
 
   it("expands intervals by qhat", () => {
+    // Fixture: every y sits 0.5 inside [q_lo, q_hi].
+    // s_i = max(q_lo_i - y_i, y_i - q_hi_i) = max(-0.5, -0.5) = -0.5
+    // n=5, alpha=0.1 → rank = ceil(0.9*(5+1))-1 = 5, clamped to n-1 = 4
+    // qhat = sorted(s)[4] = -0.5
+    // Negative qhat is valid CQR: calibration residuals are all negative
+    // (intervals were too wide), so test intervals shrink:
+    //   lo = q_lo - (-0.5) = q_lo + 0.5
+    //   hi = q_hi + (-0.5) = q_hi - 0.5
+    // Implementation matches Romano, Patterson, Candès 2019 and its own
+    // docstring. This is not a PAVA-style math bug. Do not clip qhat to 0
+    // without a product decision.
     const yCal = [1, 2, 3, 4, 5];
     const qLoCal = [0.5, 1.5, 2.5, 3.5, 4.5];
     const qHiCal = [1.5, 2.5, 3.5, 4.5, 5.5];
@@ -21,9 +32,9 @@ describe("CQR", () => {
       qHiCal,
       0.1,
     );
-    expect(qhat).toBeGreaterThanOrEqual(0);
-    expect(lo[0]!).toBeLessThanOrEqual(10);
-    expect(hi[0]!).toBeGreaterThanOrEqual(12);
+    expect(qhat).toBe(-0.5);
+    expect(lo[0]!).toBe(10.5);
+    expect(hi[0]!).toBe(11.5);
   });
 
   it("does not unlock PROVEN", () => {

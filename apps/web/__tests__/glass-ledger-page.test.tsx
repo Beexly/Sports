@@ -6,7 +6,7 @@ import type { SubstantiatedMetric } from "@/lib/ledger/display-guard";
  * /ledger — The Glass Ledger (handoff §2 Phase 2). Pins the founder gate and
  * the honesty guarantees:
  *
- *   - PUBLISH_LEDGER unset (the default): an honest "being built" state —
+ *   - PUBLISH_LEDGER unset (the default): an honest "sealed" state —
  *     the sealed-vault design — with NO numbers anywhere — not a
  *     digit-percent pattern, not the phrase "win rate" (calibration is the
  *     lead, never win-rate framing), and zero rendered
@@ -56,12 +56,16 @@ afterEach(() => {
 });
 
 describe("/ledger — PUBLISH_LEDGER unset (default): honest unpublished state", () => {
-  it("renders the exact 'being built' headline and no numbers anywhere", async () => {
+  it("renders the exact sealed headline and no numbers anywhere", async () => {
     vi.unstubAllEnvs();
     const { container } = render(await LedgerPage());
     const text = container.textContent ?? "";
 
-    expect(text).toContain("The Glass Ledger is being built — nothing is published yet.");
+    // Align with UNPUBLISHED_HEADLINE in app/glass-ledger/page.tsx. Do not
+    // put an em dash into copy from this test — the page already has one.
+    expect(text).toContain(
+      "The Glass Ledger is sealed — nothing is published until the founder flips PUBLISH_LEDGER.",
+    );
     expect(text).not.toMatch(DIGIT_PERCENT);
     expect(text.toLowerCase()).not.toContain("win rate");
   });

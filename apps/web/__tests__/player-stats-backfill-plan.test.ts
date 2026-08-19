@@ -69,16 +69,19 @@ describe("planPlayerStatsRun", () => {
     expect(steady.missingSeasons).toEqual([]);
   });
 
-  it("re-anchors the window when the NFL season rolls over", async () => {
-    // All of 2020-2025 persisted, but it is now September 2026: season 2026
-    // becomes current and missing, so the cron backfills it automatically.
+  it("does not re-anchor onto an unverified in-progress season", async () => {
+    // Same completed-REG-floor design as nflverse-readiness.test.ts.
+    // currentNflSeason() → resolveFootballStatsSeason() with no hasRegRows
+    // probe, so September 2026 still resolves to 2025. Calendar rollover is
+    // not enough to advertise a season with no REG rows.
     mocks.findMany.mockResolvedValue(
       [2020, 2021, 2022, 2023, 2024, 2025].map((season) => ({ season })),
     );
     const plan = await planPlayerStatsRun(new Date("2026-09-15T12:00:00Z"));
-    expect(plan.mode).toBe("backfill");
-    expect(plan.season).toBe(2026);
-    expect(plan.targetSeasons).toEqual([2021, 2022, 2023, 2024, 2025, 2026]);
-    expect(plan.missingSeasons).toEqual([2026]);
+    expect(plan.mode).toBe("steady-state");
+    expect(plan.season).toBe(2025);
+    expect(plan.targetSeasons).toEqual([2020, 2021, 2022, 2023, 2024, 2025]);
+    expect(plan.missingSeasons).toEqual([]);
+    expect(plan.backfillComplete).toBe(true);
   });
 });

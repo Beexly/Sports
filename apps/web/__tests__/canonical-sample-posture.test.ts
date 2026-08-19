@@ -42,7 +42,9 @@ describe("loadCanonicalSamplePosture", () => {
       },
     );
     expect(sample.remainingToFloor).toBe(0);
-    expect(sample.operatorHint).toMatch(/founder YES/);
+    expect(sample.operatorHint).toMatch(/meets learning floor 100/);
+    expect(sample.operatorHint).toMatch(/PROVEN still requires eligibility GREEN/);
+    expect(sample.operatorHint).toMatch(/sample alone is not enough/);
   });
 });
 
