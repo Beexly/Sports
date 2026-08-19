@@ -949,7 +949,7 @@ describe("POST /api/webhooks/stripe", () => {
   });
 
   describe("customer.subscription.deleted", () => {
-    it("downgrades to FREE / CANCELED and stamps canceledAt", async () => {
+    it("downgrades to FREE / CANCELED and stamps canceledAt — skipping already-CANCELED rows", async () => {
       mocks.constructEvent.mockReturnValue(
         stripeEvent("customer.subscription.deleted", stripeSubscription())
       );
@@ -958,7 +958,10 @@ describe("POST /api/webhooks/stripe", () => {
 
       expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { stripeSubscriptionId: "sub_123" },
+          // status guard: an already-CANCELED row is never re-stamped — a later
+          // revocation for the same id must not shift the audited canceledAt.
+          // For this (first-delete) caller the guard is harmless idempotence.
+          where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
           data: expect.objectContaining({
             status: "CANCELED",
             tier: "FREE",
@@ -1035,8 +1038,10 @@ describe("POST /api/webhooks/stripe", () => {
   describe("charge.refunded — refund revocation behind REFUND_REVOKES_ACCESS (H-K)", () => {
     // The canonical terminal downgrade — the EXACT write customer.subscription.deleted
     // performs. Refund revocation must flow through the same path, never a second one.
+    // The status guard skips already-CANCELED rows so a later distinct-id refund can
+    // never re-stamp canceledAt on a row that already carries the audited timestamp.
     const CANONICAL_REVOKE = {
-      where: { stripeSubscriptionId: "sub_123" },
+      where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
       data: {
         status: "CANCELED",
         tier: "FREE",
@@ -1057,14 +1062,26 @@ describe("POST /api/webhooks/stripe", () => {
       };
     }
 
-    /** Arm a charge.refunded event and the invoice → subscription resolution. */
+    /**
+     * Arm a charge.refunded event, the invoice → subscription resolution, AND
+     * the live-status check (`subscriptions.retrieve`). `subStatus` defaults to
+     * "canceled" — the genuinely-dead state in which revocation is permitted —
+     * so tests exercising the revoke path get it; live-subscription tests pass
+     * an alive status explicitly. Arming is free: log-only tests additionally
+     * assert these mocks were NEVER CALLED despite being armed.
+     */
     function armRefundEvent(
       charge: Record<string, unknown> = stripeCharge(),
       id = "evt_refund_1",
       subscriptionId: string | null = "sub_123",
+      subStatus = "canceled",
     ): void {
       mocks.constructEvent.mockReturnValue(stripeEvent("charge.refunded", charge, id));
       mocks.invoicesRetrieve.mockResolvedValue({ id: "in_1", subscription: subscriptionId });
+      mocks.subscriptionsRetrieve.mockResolvedValue({
+        id: subscriptionId ?? "sub_123",
+        status: subStatus,
+      });
     }
 
     function expectNoEntitlementMutation(): void {
@@ -1072,12 +1089,18 @@ describe("POST /api/webhooks/stripe", () => {
       expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
     }
 
+    /** Log-only must cost nothing: not one Stripe API call, armed or not. */
+    function expectZeroStripeApiCalls(): void {
+      expect(mocks.invoicesRetrieve).not.toHaveBeenCalled();
+      expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
+    }
+
     afterEach(() => {
       // Never leak the enforcement flag into other suites in this worker.
       delete process.env["REFUND_REVOKES_ACCESS"];
     });
 
-    it("flag ABSENT: a clean full refund logs what WOULD happen and mutates NOTHING (default OFF is hard)", async () => {
+    it("flag ABSENT: a clean full refund logs the payload facts, mutates NOTHING, and makes ZERO Stripe API calls (default OFF is hard AND free)", async () => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
       try {
         armRefundEvent();
@@ -1086,10 +1109,13 @@ describe("POST /api/webhooks/stripe", () => {
 
         expect(res.status).toBe(200);
         expectNoEntitlementMutation();
-        // Log-only still RESOLVES the target so the log names the exact subscription.
-        expect(mocks.invoicesRetrieve).toHaveBeenCalledWith("in_1");
-        expect(warn).toHaveBeenCalledWith(expect.stringContaining("WOULD revoke"));
-        expect(warn).toHaveBeenCalledWith(expect.stringContaining("sub_123"));
+        // Log-only must cost nothing: the invoice REFERENCE comes straight from
+        // the payload — never a retrieve — and the status check never runs.
+        expectZeroStripeApiCalls();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("enforcement disabled"));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("ch_1"));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("in_1"));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("1499"));
         // Acked and recorded — log-only is a handled outcome, not an error.
         expect(mocks.webhookEventCreate).toHaveBeenCalled();
       } finally {
@@ -1097,7 +1123,7 @@ describe("POST /api/webhooks/stripe", () => {
       }
     });
 
-    it('flag "false": same — full refund mutates nothing', async () => {
+    it('flag "false": same — full refund mutates nothing and calls nothing', async () => {
       process.env["REFUND_REVOKES_ACCESS"] = "false";
       const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
       try {
@@ -1107,14 +1133,31 @@ describe("POST /api/webhooks/stripe", () => {
 
         expect(res.status).toBe(200);
         expectNoEntitlementMutation();
-        expect(warn).toHaveBeenCalledWith(expect.stringContaining("WOULD revoke"));
+        expectZeroStripeApiCalls();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("enforcement disabled"));
+      } finally {
+        warn.mockRestore();
+      }
+    });
+
+    it("flag off: an EXPANDED invoice object logs its id from the payload — still zero Stripe API calls", async () => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        armRefundEvent(stripeCharge({ invoice: { id: "in_expanded" } }), "evt_refund_exp");
+
+        const res = await POST(webhookRequest());
+
+        expect(res.status).toBe(200);
+        expectNoEntitlementMutation();
+        expectZeroStripeApiCalls();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("in_expanded"));
       } finally {
         warn.mockRestore();
       }
     });
 
     it.each(["1", "yes", "on", "enabled"])(
-      'flag %j never enables enforcement — only a trimmed "true" does',
+      'flag %j never enables enforcement — only a trimmed "true" does — and stays call-free',
       async (value) => {
         process.env["REFUND_REVOKES_ACCESS"] = value;
         const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
@@ -1125,21 +1168,24 @@ describe("POST /api/webhooks/stripe", () => {
 
           expect(res.status).toBe(200);
           expectNoEntitlementMutation();
+          expectZeroStripeApiCalls();
         } finally {
           warn.mockRestore();
         }
       },
     );
 
-    it("flag ON: a FULL refund revokes via the CANONICAL path — exactly once, same write as subscription.deleted", async () => {
+    it("flag ON + subscription CANCELED in Stripe: a FULL refund revokes via the CANONICAL path — exactly once, same write as subscription.deleted", async () => {
       process.env["REFUND_REVOKES_ACCESS"] = "true";
       const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
       try {
-        armRefundEvent();
+        armRefundEvent(stripeCharge(), "evt_refund_1", "sub_123", "canceled");
 
         const res = await POST(webhookRequest());
 
         expect(res.status).toBe(200);
+        // The live-status guard actually ran: the subscription was re-retrieved.
+        expect(mocks.subscriptionsRetrieve).toHaveBeenCalledWith("sub_123");
         expect(mocks.subscriptionUpdateMany).toHaveBeenCalledTimes(1);
         expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
           expect.objectContaining(CANONICAL_REVOKE),
@@ -1150,6 +1196,53 @@ describe("POST /api/webhooks/stripe", () => {
         warn.mockRestore();
       }
     });
+
+    it("flag ON + subscription incomplete_expired: also genuinely dead — revokes once", async () => {
+      process.env["REFUND_REVOKES_ACCESS"] = "true";
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        armRefundEvent(stripeCharge(), "evt_refund_incexp", "sub_123", "incomplete_expired");
+
+        const res = await POST(webhookRequest());
+
+        expect(res.status).toBe(200);
+        expect(mocks.subscriptionUpdateMany).toHaveBeenCalledTimes(1);
+        expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
+          expect.objectContaining(CANONICAL_REVOKE),
+        );
+      } finally {
+        warn.mockRestore();
+      }
+    });
+
+    it.each(["active", "trialing", "past_due", "unpaid", "paused", "incomplete"])(
+      "flag ON: FULL refund on a LIVE subscription (%s) revokes NOTHING — human-review escalation, ack 200 (lock-in guard)",
+      async (liveStatus) => {
+        process.env["REFUND_REVOKES_ACCESS"] = "true";
+        const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+        try {
+          armRefundEvent(stripeCharge(), `evt_refund_live_${liveStatus}`, "sub_123", liveStatus);
+
+          const res = await POST(webhookRequest());
+
+          expect(res.status).toBe(200);
+          // A terminal revoke here would let the out-of-order resurrection
+          // guard swallow the next PAID renewal — a paying member locked to
+          // FREE. Nothing may be mutated.
+          expectNoEntitlementMutation();
+          expect(error).toHaveBeenCalledWith(
+            expect.stringContaining("refund on LIVE subscription — human review required"),
+          );
+          expect(error).toHaveBeenCalledWith(expect.stringContaining("ch_1"));
+          expect(error).toHaveBeenCalledWith(expect.stringContaining("sub_123"));
+          expect(error).toHaveBeenCalledWith(expect.stringContaining(liveStatus));
+          // Handled outcome: acked and recorded, no retry storm.
+          expect(mocks.webhookEventCreate).toHaveBeenCalled();
+        } finally {
+          error.mockRestore();
+        }
+      },
+    );
 
     it('a trimmed " true " (whitespace) also counts as on — envFlag convention', async () => {
       process.env["REFUND_REVOKES_ACCESS"] = " true ";
@@ -1170,7 +1263,7 @@ describe("POST /api/webhooks/stripe", () => {
       { refunded: false, amount_refunded: 500 },
       // Defensive: refunded=true but amounts disagree — treat as NOT full.
       { refunded: true, amount_refunded: 1498 },
-    ])("flag ON: PARTIAL refund (%j) is log-only ALWAYS — no mutation", async (overrides) => {
+    ])("flag ON: PARTIAL refund (%j) is log-only ALWAYS — no mutation, no API spend", async (overrides) => {
       process.env["REFUND_REVOKES_ACCESS"] = "true";
       const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
       try {
@@ -1180,6 +1273,9 @@ describe("POST /api/webhooks/stripe", () => {
 
         expect(res.status).toBe(200);
         expectNoEntitlementMutation();
+        // A partial refund can never revoke, so resolving it would be a
+        // pure-waste API call — and a needless transient-500 surface.
+        expectZeroStripeApiCalls();
         expect(warn).toHaveBeenCalledWith(expect.stringContaining("PARTIAL"));
       } finally {
         warn.mockRestore();
@@ -1227,7 +1323,7 @@ describe("POST /api/webhooks/stripe", () => {
       }
     });
 
-    it("flag ON: invoice with NO subscription — never guess, no mutation", async () => {
+    it("flag ON: invoice with NO subscription — STRUCTURAL: never guess, no mutation, no status check, ack 200", async () => {
       process.env["REFUND_REVOKES_ACCESS"] = "true";
       const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
       try {
@@ -1237,13 +1333,17 @@ describe("POST /api/webhooks/stripe", () => {
 
         expect(res.status).toBe(200);
         expectNoEntitlementMutation();
+        // Structural dead-end: nothing to status-check, so no retrieve either.
+        expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
         expect(warn).toHaveBeenCalledWith(expect.stringContaining("no subscription"));
+        // Retries cannot cure a subscription-less invoice — recorded, not retried.
+        expect(mocks.webhookEventCreate).toHaveBeenCalled();
       } finally {
         warn.mockRestore();
       }
     });
 
-    it("flag ON: invoice retrieve FAILURE revokes nothing, acks 200, and records the event (fail-safe, no retry storm)", async () => {
+    it("flag ON: invoices.retrieve THROWS — TRANSIENT: 500 with the event UNRECORDED so Stripe redelivers", async () => {
       process.env["REFUND_REVOKES_ACCESS"] = "true";
       const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
       try {
@@ -1254,11 +1354,43 @@ describe("POST /api/webhooks/stripe", () => {
 
         const res = await POST(webhookRequest());
 
-        expect(res.status).toBe(200);
+        // A transient outage must NOT be absorbed as log-and-200: recording the
+        // event would let dedup permanently consume a legitimate revocation.
+        expect(res.status).toBe(500);
         expectNoEntitlementMutation();
-        expect(error).toHaveBeenCalledWith(expect.stringContaining("fail-safe"));
-        expect(mocks.webhookEventCreate).toHaveBeenCalled();
+        expect(mocks.webhookEventCreate).not.toHaveBeenCalled();
       } finally {
+        error.mockRestore();
+      }
+    });
+
+    it("flag ON: subscriptions.retrieve THROWS — TRANSIENT: 500 unrecorded; the REDELIVERY (retrieve healthy) then revokes", async () => {
+      process.env["REFUND_REVOKES_ACCESS"] = "true";
+      const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        armRefundEvent(stripeCharge(), "evt_refund_sub_down", "sub_123", "canceled");
+        // First delivery: the status check dies mid-outage.
+        mocks.subscriptionsRetrieve.mockRejectedValueOnce(new Error("stripe 503"));
+
+        const first = await POST(webhookRequest());
+
+        expect(first.status).toBe(500);
+        expectNoEntitlementMutation();
+        expect(mocks.webhookEventCreate).not.toHaveBeenCalled();
+
+        // Stripe redelivers the SAME event id. It was never recorded, so dedup
+        // does not swallow it, and with the API healthy the revocation lands.
+        const second = await POST(webhookRequest());
+
+        expect(second.status).toBe(200);
+        expect(mocks.subscriptionUpdateMany).toHaveBeenCalledTimes(1);
+        expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
+          expect.objectContaining(CANONICAL_REVOKE),
+        );
+        expect(mocks.webhookEventCreate).toHaveBeenCalledTimes(1);
+      } finally {
+        warn.mockRestore();
         error.mockRestore();
       }
     });
@@ -1278,6 +1410,34 @@ describe("POST /api/webhooks/stripe", () => {
         expect(mocks.subscriptionUpdateMany).toHaveBeenCalledTimes(1);
         expect(mocks.subscriptionUpsert).not.toHaveBeenCalled();
         expect(warn).toHaveBeenCalledWith(expect.stringContaining("matched no DB row"));
+      } finally {
+        warn.mockRestore();
+      }
+    });
+
+    it("flag ON: a row that is ALREADY CANCELED is not re-stamped — the status guard yields count 0 and the handler acks", async () => {
+      process.env["REFUND_REVOKES_ACCESS"] = "true";
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      try {
+        // A second, DISTINCT-event-id refund arrives for a subscription whose
+        // row already carries status CANCELED (+ audited canceledAt). The
+        // canonical WHERE's `status: { not: "CANCELED" }` filters it out, so
+        // the DB reports count 0 — canceledAt is never shifted.
+        mocks.subscriptionUpdateMany.mockResolvedValue({ count: 0 });
+        armRefundEvent(stripeCharge(), "evt_refund_restamp", "sub_123", "canceled");
+
+        const res = await POST(webhookRequest());
+
+        expect(res.status).toBe(200);
+        expect(mocks.subscriptionUpdateMany).toHaveBeenCalledTimes(1);
+        // The guard is IN the write — not post-hoc handler logic.
+        expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
+          }),
+        );
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("nothing re-stamped"));
+        expect(mocks.webhookEventCreate).toHaveBeenCalled();
       } finally {
         warn.mockRestore();
       }
