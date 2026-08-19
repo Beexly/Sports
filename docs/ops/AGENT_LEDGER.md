@@ -84,7 +84,7 @@ the only copy, and nobody else can verify or build on it.
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
 | H-M | Cron no-op audit | hermes | BLOCKED | report proposes gating producer crons on publication flags; unsafe, see review 2026-08-19 |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
-| H-O | Repair the @/lib/stripe test mock | — | OPEN | — |
+| H-O | Repair the @/lib/stripe test mock | claude | CLAIMED | — |
 | H-P | Triage the 73 CI test failures | — | OPEN | — |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |

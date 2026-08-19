@@ -24,6 +24,19 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/stripe", () => ({
   getStripePriceId: mocks.getStripePriceId,
+  // The route resolves prices through `resolveCheckoutPriceId` (lib/stripe.ts:64),
+  // which superseded the direct `getStripePriceId` call but was never added to
+  // this factory — so every test that reached the price lookup died on
+  // `No "resolveCheckoutPriceId" export is defined on the "@/lib/stripe" mock`.
+  //
+  // Delegating to the existing `getStripePriceId` spy rather than introducing a
+  // second seam keeps `getStripePriceId` the one place a test configures a price:
+  // the `mockReturnValue("")` -> 503 case, the `not.toHaveBeenCalled()` assertion
+  // on the already-subscribed short-circuit, and
+  // `toHaveBeenCalledWith("PRO", "month")` all keep working untouched. The real
+  // function is async, so the delegate is too.
+  resolveCheckoutPriceId: async (tier: string, interval: string) =>
+    mocks.getStripePriceId(tier, interval),
   getOrCreateStripeCustomer: mocks.getOrCreateStripeCustomer,
   createCheckoutSession: mocks.createCheckoutSession,
   retrieveOpenCheckoutSessionUrl: mocks.retrieveOpenCheckoutSessionUrl,
