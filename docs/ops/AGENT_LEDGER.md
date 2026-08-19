@@ -87,7 +87,7 @@ the only copy, and nobody else can verify or build on it.
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2 |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
 | C-5 | PAVA forward-violation bug in calibration core | claude | DONE | 9627379 |
-| H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | CLAIMED | — |
+| H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | UNPUSHED | hermes/h-q-singletons 14b74b5c; five singletons test-only. CQR qhat=-0.5 is correct (s_i=-0.5, rank clamp 4); not a math bug. |
 | F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | OPEN | APPROVED 2026-08-19; row closes when the backup branches exist on origin |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
