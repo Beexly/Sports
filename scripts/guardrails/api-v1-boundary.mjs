@@ -76,6 +76,48 @@ function isEnvFile(filePath) {
  */
 const PROMOTED_ROUTES = new Set(["openapi/route.ts", "probabilities/route.ts", "signals/route.ts"]);
 
+/**
+ * Dedicated walker for the promoted route tree. Deliberately NOT walkFiles:
+ * the shared walker skips SKIP_DIRS (so e.g. app/api/v1/build/route.ts would
+ * be served by Next yet invisible to this guard) and silently drops symlink
+ * dirents (so a symlinked route.ts would pass clean). Under the promoted
+ * route tree, EVERY directory is descended regardless of name, and every
+ * non-regular entry — any symlink (file, directory, valid, or dangling) or
+ * other special dirent — is itself a violation.
+ */
+async function walkRouteTree(routeTree, dir, root, files, hits) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const full = join(dir, entry.name);
+    if (entry.isSymbolicLink()) {
+      hits.push(
+        violation(
+          "api-v1-symlink-entry",
+          rel(root, full),
+          `Symlink "${rel(routeTree, full)}" found under the promoted API v1 route tree. ` +
+            "A symlink here (file or directory, valid or dangling) is never legitimate.",
+        ),
+      );
+      continue;
+    }
+    if (entry.isDirectory()) {
+      await walkRouteTree(routeTree, full, root, files, hits);
+      continue;
+    }
+    if (entry.isFile()) {
+      files.push(full);
+      continue;
+    }
+    hits.push(
+      violation(
+        "api-v1-nonfile-entry",
+        rel(root, full),
+        `Non-regular entry "${rel(routeTree, full)}" (not a file or directory) found under the promoted API v1 route tree.`,
+      ),
+    );
+  }
+}
+
 async function scanRouteTree(root, hits) {
   const routeTree = resolve(root, "apps/web/app/api/v1");
   if (!existsSync(routeTree)) return;
@@ -85,7 +127,8 @@ async function scanRouteTree(root, hits) {
   // review (#388, 5e87691d) — so the boundary MOVED rather than lifted: it is
   // now "no route beyond the promoted set". Any new file under app/api/v1 still
   // fails here, which is the accidental-surface risk this guard was built for.
-  const files = await walkFiles(routeTree);
+  const files = [];
+  await walkRouteTree(routeTree, routeTree, root, files, hits);
   for (const file of files) {
     const routePath = rel(routeTree, file);
     if (PROMOTED_ROUTES.has(routePath)) continue;

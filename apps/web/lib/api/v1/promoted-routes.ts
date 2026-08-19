@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -29,13 +29,22 @@ export const PROMOTED_API_V1_ROUTES: readonly string[] = [
   "signals/route.ts",
 ];
 
-/** Recursively list files under a directory, as paths relative to it. */
+/**
+ * Recursively list entries under a directory, as paths relative to it.
+ *
+ * Walks with dirents (lstat semantics) rather than statSync: statSync FOLLOWS
+ * symlinks and throws ENOENT on a dangling one, which would crash every
+ * caller instead of producing a verdict. A symlink dirent — file or
+ * directory, valid or dangling — is never followed or stat'ed; it is
+ * returned AS an entry path itself, so `unapprovedApiV1Routes` flags it as
+ * unapproved (a symlink under the promoted route tree is never legitimate).
+ * Any other non-file, non-directory dirent is likewise returned as an entry.
+ */
 function listFiles(dir: string, prefix = ""): string[] {
   const out: string[] = [];
-  for (const name of readdirSync(dir)) {
-    const full = join(dir, name);
-    const relPath = prefix === "" ? name : `${prefix}/${name}`;
-    if (statSync(full).isDirectory()) out.push(...listFiles(full, relPath));
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const relPath = prefix === "" ? entry.name : `${prefix}/${entry.name}`;
+    if (entry.isDirectory()) out.push(...listFiles(join(dir, entry.name), relPath));
     else out.push(relPath);
   }
   return out;
