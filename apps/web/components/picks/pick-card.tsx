@@ -9,6 +9,7 @@ import type {
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 import { AskWhy } from "./ask-why";
+import { VerifyPickButton } from "./verify-pick-button";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -212,6 +213,9 @@ export function PickCard({
           </span>
         </Link>
       )}
+
+      {/* Verify button: reveals the full hash, committed timestamp, and a link to /verify */}
+      {pick.receiptHash && <VerifyPickButton receiptHash={pick.receiptHash} />}
 
       {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
       <div className="flex items-center justify-stretch sm:justify-end">
