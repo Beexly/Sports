@@ -64,5 +64,6 @@ baseline: typecheck=0  lint=0  guards=24/26 (api-v1-boundary expected FAIL; ai-t
 | H-B | cron-matrix-from-vercel.mjs generator | DONE | 18:30 | 20 crons from apps/web/vercel.json; DRIFT none vs root copy; 3/3 node:test; --check exit 0 |
 | H-C | Bernoulli e-process toolkit (unwired) | DONE | 19:28 | v5 LR eStep/eProcess/mixture + log-space; v4 betting kept as bettingEStep; 13/13 tests; H0 Ville holds; median picks to supM>=100 at 55% vs 50% = 756 |
 | H-D | wire markClosingSnapshots behind flag | DONE | 18:37 | markClosingSnapshotsIfEnabled no-op unless LINE_ARCHIVE_ENABLED=true; settle-sport swallows archive errors; 54/54 settle+archive tests; tsc=0 lint=0 |
-| H-E | CLV + pick-universe census (read-only) | BLOCKED | 2026-08-18 22:45 | Can't reach database server at `localhost:5433`. Retroactive CLV grading: UNKNOWN — no SELECT possible. |
+| H-E | CLV + pick-universe census (read-only) | BLOCKED | 19:15 | hermes_ro exists on gse-postgres/neondb but is a member of neon_superuser; INSERT is not permission-denied (fails NOT NULL). neondb_owner cannot REVOKE neon_superuser. Retroactive CLV: UNKNOWN. |
 | H-F | DOC_DRIFT.md | DONE | 18:41 | handoff/DOC_DRIFT.md; seed+schedule+16 missing paths proved by test -f; CRON_MATRIX cadence table stale vs live vercel.json |
+| H-G | suppression curve vs random + oracle | DONE | 19:29 | DROP semantics (selective-publish-runtime.ts:133). curveAtRates/randomBaseline/oracleBaseline/curveGap. Seed 20260818. 8/8 tests. Real-data run blocked on H-E export. |
