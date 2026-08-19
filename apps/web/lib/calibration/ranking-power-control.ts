@@ -220,6 +220,13 @@ export function buildRankingPowerControl(
     readonly minGroupN?: number;
     readonly defaultDelta?: number;
     readonly liveResOverride?: number;
+    /**
+     * Group keys whose ranking power is paused. Read at line ~227 to build the
+     * pause set, and already passed by lib/ops/proven-path-seed.ts — the
+     * declaration was simply never added, so `tsc` failed on both the read and
+     * the call site. Declaring it changes no behaviour.
+     */
+    readonly appliedPauseGroups?: readonly string[];
   },
 ): RankingPowerControl {
   const minGroupN = options?.minGroupN ?? 20;

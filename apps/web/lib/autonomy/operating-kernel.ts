@@ -22,6 +22,12 @@ export type AutonomyActionKind =
   | "RUN_REFRESH_ODDS_FREE"
   | "RUN_GENERATE_DRAFTS"
   | "RUN_CALIBRATION_METRICS"
+  // Referenced by EXECUTABLE_CRON_TARGETS in execute-autonomy-cycle.ts and
+  // already approved in AUTONOMY_SAFE_CRON_TARGETS, but never added here — so
+  // the map entry failed `satisfies Partial<Record<AutonomyActionKind, string>>`.
+  // NOTE: planAutonomyCycle does not emit this kind yet, so the entry stays
+  // unreachable at runtime; this only makes the half-landed wiring type-legal.
+  | "RUN_GENERATE_SIGNAL_SLATE"
   | "ATTACK_RCA_WAVE_A"
   | "ATTACK_RCA_WAVE_B"
   | "ESCALATE_DISPUTES"
