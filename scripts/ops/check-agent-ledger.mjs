@@ -108,12 +108,45 @@ function shaExists(sha, cwd) {
 }
 
 /**
+ * True when this working copy has truncated history.
+ *
+ * This matters because in a shallow clone a missing commit is not evidence that
+ * the commit does not exist — it is evidence that this clone cannot see it. CI's
+ * `test` job uses a bare `actions/checkout@v4`, which defaults to `fetch-depth: 1`
+ * and therefore holds exactly one commit; only the `model-freeze` job sets
+ * `fetch-depth: 0`. Resolving SHAs strictly there would fail every historical row
+ * and make this guard a permanent red light for a condition it invented.
+ *
+ * `.github/**` is owner-gated, so the fix belongs here rather than in the
+ * workflow.
+ */
+function isShallowRepo(cwd) {
+  try {
+    return (
+      execFileSync("git", ["rev-parse", "--is-shallow-repository"], {
+        cwd,
+        encoding: "utf8",
+      }).trim() === "true"
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
  * @param opts.resolveSha - inject for tests; defaults to a real `git cat-file`.
- *   Pass `null` to skip resolution entirely (e.g. a shallow clone with no history).
+ *   Pass `null` to skip resolution entirely.
+ * @param opts.shallow - inject for tests; defaults to probing the real repo.
+ *   When true, a SHA that fails to resolve is reported as unverifiable rather
+ *   than as a violation — see `isShallowRepo`.
+ * @param opts.unverified - optional array; collects `{ id, sha }` for SHAs that
+ *   could not be checked, so the caller can report coverage honestly.
  */
 export function validate(rows, opts = {}) {
   const violations = [];
   const resolveSha = opts.resolveSha === undefined ? (s) => shaExists(s, REPO_ROOT) : opts.resolveSha;
+  const shallow = opts.shallow === undefined ? isShallowRepo(REPO_ROOT) : opts.shallow;
+  const unverified = opts.unverified ?? [];
 
   const seenIds = new Map();
   const seenTitles = new Map();
@@ -196,10 +229,15 @@ export function validate(rows, opts = {}) {
           break;
         }
         if (sha && resolveSha && !resolveSha(sha)) {
-          violations.push(
-            `${where}: DONE cites commit ${sha}, which does not exist in this repository. ` +
-              `Either the work was never committed or the hash is wrong.`,
-          );
+          // Absence only proves absence when the clone holds full history.
+          if (shallow) {
+            unverified.push({ id: row.id, sha });
+          } else {
+            violations.push(
+              `${where}: DONE cites commit ${sha}, which does not exist in this repository. ` +
+                `Either the work was never committed or the hash is wrong.`,
+            );
+          }
         }
         break;
       }
@@ -224,17 +262,35 @@ export function checkLedgerFile(path = DEFAULT_LEDGER, opts = {}) {
   return [...errors, ...validate(rows, opts)];
 }
 
+/** Same as checkLedgerFile, but also reports which SHAs could not be checked. */
+export function inspectLedgerFile(path = DEFAULT_LEDGER, opts = {}) {
+  if (!existsSync(path)) return { violations: [`ledger not found at ${path}`], rows: [], unverified: [] };
+  const { rows, errors } = parseLedger(readFileSync(path, "utf8"));
+  const unverified = [];
+  const violations = [...errors, ...validate(rows, { ...opts, unverified })];
+  return { violations, rows, unverified };
+}
+
 // CLI
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
   const target = process.argv[2] ? resolve(process.argv[2]) : DEFAULT_LEDGER;
-  const violations = checkLedgerFile(target);
+  const { violations, rows, unverified } = inspectLedgerFile(target);
+  if (unverified.length > 0) {
+    // Never silent: a run that verified less than it appears to must say so,
+    // otherwise a green line reads as "every DONE is proven" when it is not.
+    console.warn(
+      `[agent-ledger] shallow clone — ${unverified.length} DONE SHA(s) not verifiable here: ` +
+        `${unverified.map((u) => `${u.id}:${u.sha}`).join(", ")}`,
+    );
+    console.warn(`[agent-ledger] run \`git fetch --unshallow\` for a full check.\n`);
+  }
   if (violations.length > 0) {
     console.error(`[agent-ledger] FAIL — ${violations.length} violation(s):\n`);
     for (const v of violations) console.error(`  ${v}`);
     console.error("\nSee the Rules section of docs/ops/AGENT_LEDGER.md.");
     process.exit(1);
   }
-  const { rows } = parseLedger(readFileSync(target, "utf8"));
   const byStatus = STATUSES.map((s) => `${s}=${rows.filter((r) => r.status === s).length}`).join(" ");
-  console.log(`[agent-ledger] OK — ${rows.length} rows (${byStatus})`);
+  const coverage = unverified.length > 0 ? ` [${unverified.length} SHA(s) unverified]` : "";
+  console.log(`[agent-ledger] OK — ${rows.length} rows (${byStatus})${coverage}`);
 }

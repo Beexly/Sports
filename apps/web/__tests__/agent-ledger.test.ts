@@ -36,9 +36,17 @@ function row(over: Partial<Row> = {}): Row {
   };
 }
 
-/** Never touch git in unit tests — resolution is injected. */
-const RESOLVES = { resolveSha: () => true };
-const RESOLVES_NOT = { resolveSha: () => false };
+/**
+ * Never touch git in unit tests — resolution is injected, and `shallow` is pinned.
+ *
+ * Pinning `shallow` matters: left to default, the guard probes the host repo, so
+ * these assertions would flip depending on whether the checkout running them
+ * happened to be shallow. A test whose verdict depends on its environment is
+ * worse than no test. RESOLVES_NOT therefore means "full history, and the commit
+ * genuinely is not there" — the case where a missing SHA is real evidence.
+ */
+const RESOLVES = { resolveSha: () => true, shallow: false };
+const RESOLVES_NOT = { resolveSha: () => false, shallow: false };
 
 describe("agent ledger — the real file", () => {
   it("is valid", () => {
@@ -183,6 +191,44 @@ describe("agent ledger — ownership and vocabulary", () => {
     const v = validate([row({ status: "CANCELLED", evidence: "—" })], RESOLVES);
     expect(v.join("\n")).toMatch(/CANCELLED requires a reason/);
     expect(validate([row({ status: "CANCELLED", evidence: "fabricated feature" })], RESOLVES)).toEqual([]);
+  });
+});
+
+describe("agent ledger — shallow clones cannot prove absence", () => {
+  // CI's `test` job uses a bare actions/checkout@v4, which defaults to
+  // fetch-depth: 1 — exactly one commit. Resolving SHAs strictly there would
+  // fail every historical row and make this guard a permanent red light for a
+  // condition it invented. .github/** is owner-gated, so the guard adapts.
+  const doneRow = [row({ id: "C-1", title: "shipped thing", status: "DONE", evidence: "657a7f1" })];
+
+  it("does NOT fail an unresolvable SHA when history is truncated", () => {
+    const unverified: Array<{ id: string; sha: string }> = [];
+    const v = validate(doneRow, { resolveSha: () => false, shallow: true, unverified });
+    expect(v).toEqual([]);
+    expect(unverified).toEqual([{ id: "C-1", sha: "657a7f1" }]);
+  });
+
+  it("DOES fail the same row when the clone has full history", () => {
+    // The strict check must survive: on a complete clone, a missing commit is
+    // real evidence that the work was never committed.
+    const v = validate(doneRow, { resolveSha: () => false, shallow: false });
+    expect(v.join("\n")).toMatch(/does not exist in this repository/);
+  });
+
+  it("still enforces every non-SHA rule while shallow", () => {
+    // Degrading SHA resolution must not degrade anything else, or a shallow CI
+    // run silently becomes a much weaker gate than it appears.
+    const v = validate(
+      [
+        row({ id: "A", title: "same work", status: "DONE", evidence: "657a7f1" }),
+        row({ id: "B", title: "same work", status: "DONE", evidence: "—", line: 2 }),
+        row({ id: "C", title: "third", owner: "gemini", line: 3 }),
+      ],
+      { resolveSha: () => false, shallow: true },
+    );
+    expect(v.join("\n")).toMatch(/duplicate Title/);
+    expect(v.join("\n")).toMatch(/DONE requires Evidence/);
+    expect(v.join("\n")).toMatch(/unknown Owner/);
   });
 });
 
