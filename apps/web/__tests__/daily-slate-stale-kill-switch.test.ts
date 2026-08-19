@@ -24,6 +24,13 @@ const mocks = vi.hoisted(() => ({
   // or the route throws synchronously ("findMany is not a function") before its
   // own .catch() can engage.
   pickFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
+  // `isSignalBoardSlateStale` (lib/data-reliability/public-freshness-gate.ts:108)
+  // makes two `db.pick.findFirst` calls. Without this, it throws, and the route's
+  // deliberate `.catch(() => false)` fail-open swallows the throw into "fresh" —
+  // so the kill switch silently did nothing and the surface returned 200.
+  // Default null = no recent published pick and no upcoming one = signal slate
+  // stale, which is the state these tests intend.
+  pickFindFirst: vi.fn<(args?: unknown) => Promise<unknown>>(),
   ingestionRunFindFirst:
     vi.fn<(args: unknown) => Promise<{ completedAt: Date | null } | null>>(),
   isStubMode: vi.fn<() => boolean>(),
@@ -33,7 +40,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    pick: { count: mocks.pickCount, findMany: mocks.pickFindMany },
+    pick: { count: mocks.pickCount, findMany: mocks.pickFindMany, findFirst: mocks.pickFindFirst },
     ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
   },
   isStubMode: mocks.isStubMode,
@@ -72,6 +79,7 @@ describe("/api/picks/daily-slate — stale-data kill switch", () => {
     // only DB read; give it a non-zero value so suppression is observable.
     mocks.pickCount.mockReset().mockResolvedValue(3);
     mocks.pickFindMany.mockReset().mockResolvedValue([]);
+    mocks.pickFindFirst.mockReset().mockResolvedValue(null);
     mocks.ingestionRunFindFirst.mockReset();
     mocks.isStubMode.mockReset().mockReturnValue(false);
     mocks.isDemoPicksEnabled.mockReset().mockReturnValue(false);
