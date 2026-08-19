@@ -45,14 +45,24 @@ const BEGIN = "<!-- LEDGER:BEGIN -->";
 const END = "<!-- LEDGER:END -->";
 
 /**
- * A bare hex SHA, or a `#123` PR reference.
+ * Hex runs that might be commit SHAs, and `#123` PR references.
  *
- * The SHA pattern requires at least one hex *letter*. Without that, an all-digit
- * run like a `20260818` date stamp inside a prose evidence note parses as a
- * commit and the guard reports a confident, wrong failure — which is exactly the
- * kind of noise that trains people to ignore a guard.
+ * SHA_RE is deliberately permissive (any 7-40 hex run, digits-only included) and
+ * the DONE check resolves EVERY candidate, succeeding if any one names a real
+ * commit. Two prior heuristics both produced confident, wrong verdicts:
+ *
+ *   - Plain first-match parsing read the date stamp `20260818` in a prose note
+ *     as a commit and failed the row.
+ *   - "Require a hex letter" (the fix for that) then rejected commit 9627379 —
+ *     a REAL seven-digit SHA. Roughly 1 in 27 abbreviated SHAs contain no
+ *     letter; the guard cried wolf on genuine evidence within hours.
+ *
+ * Spelling cannot distinguish a date from a SHA. Resolution can: a real SHA
+ * resolves via `git cat-file`, a date stamp does not. So candidates are only
+ * *candidates* — `git cat-file` is the judge, and prose around them is free to
+ * contain dates, counts, and row totals.
  */
-const SHA_RE = /\b(?=[0-9a-f]{7,40}\b)[0-9a-f]*[a-f][0-9a-f]*\b/;
+const SHA_RE = /\b[0-9a-f]{7,40}\b/g;
 const PR_RE = /#\d+/;
 
 /**
@@ -220,23 +230,29 @@ export function validate(rows, opts = {}) {
           violations.push(`${where}: DONE requires Evidence — a commit SHA or #PR, not a claim of completion`);
           break;
         }
-        const sha = row.evidence.match(SHA_RE)?.[0];
+        const candidates = [...row.evidence.matchAll(SHA_RE)].map((m) => m[0]);
         const pr = row.evidence.match(PR_RE)?.[0];
-        if (!sha && !pr) {
+        if (candidates.length === 0 && !pr) {
           violations.push(
             `${where}: DONE Evidence "${row.evidence}" contains no commit SHA (7+ hex) or #PR reference`,
           );
           break;
         }
-        if (sha && resolveSha && !resolveSha(sha)) {
-          // Absence only proves absence when the clone holds full history.
-          if (shallow) {
-            unverified.push({ id: row.id, sha });
-          } else {
-            violations.push(
-              `${where}: DONE cites commit ${sha}, which does not exist in this repository. ` +
-                `Either the work was never committed or the hash is wrong.`,
-            );
+        // Any ONE resolving candidate is sufficient evidence; a date stamp
+        // sitting next to a real SHA must not fail the row (nor, first-match
+        // style, shadow it).
+        if (candidates.length > 0 && resolveSha) {
+          const anyResolves = candidates.some((c) => resolveSha(c));
+          if (!anyResolves && !pr) {
+            // Absence only proves absence when the clone holds full history.
+            if (shallow) {
+              unverified.push({ id: row.id, sha: candidates[0] });
+            } else {
+              violations.push(
+                `${where}: DONE cites ${candidates.join(", ")} — none resolve to a commit in this ` +
+                  `repository. Either the work was never committed or the hash is wrong.`,
+              );
+            }
           }
         }
         break;

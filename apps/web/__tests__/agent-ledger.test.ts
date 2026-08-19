@@ -121,7 +121,7 @@ describe("agent ledger — DONE must be falsifiable", () => {
   it("rejects DONE citing a commit that does not exist in the repo", () => {
     // The strongest check: a plausible-looking hash that resolves to nothing.
     const v = validate([row({ status: "DONE", evidence: "deadbeef" })], RESOLVES_NOT);
-    expect(v.join("\n")).toMatch(/does not exist in this repository/);
+    expect(v.join("\n")).toMatch(/none resolve to a commit/);
   });
 
   it("accepts DONE citing a resolvable commit", () => {
@@ -132,10 +132,33 @@ describe("agent ledger — DONE must be falsifiable", () => {
     expect(validate([row({ status: "DONE", evidence: "#431" })], RESOLVES_NOT)).toEqual([]);
   });
 
-  it("does not mistake a date stamp for a commit SHA", () => {
-    // Regression: `20260818` is 8 valid hex characters. Reading it as a commit
-    // produced a confident, wrong failure — the kind that teaches people to
-    // ignore a guard. A SHA must contain at least one hex letter.
+  it("accepts an all-digit SHA that resolves — spelling is not the judge, git is", () => {
+    // Regression, round two. The first date-stamp fix required a hex letter in
+    // the SHA — and then commit 9627379, a REAL seven-digit SHA, was rejected
+    // within hours (about 1 in 27 abbreviated SHAs contain no letter). The guard
+    // now resolves every hex-run candidate and accepts the row if ANY names a
+    // real commit.
+    const isReal = { resolveSha: (s: string) => s === "9627379", shallow: false };
+    expect(validate([row({ status: "DONE", evidence: "9627379" })], isReal)).toEqual([]);
+  });
+
+  it("a date stamp next to a real SHA neither fails nor shadows it", () => {
+    // First-match parsing would have picked 20260818, failed to resolve it, and
+    // failed the row despite the genuine SHA sitting right there.
+    const isReal = { resolveSha: (s: string) => s === "abc1234", shallow: false };
+    expect(
+      validate([row({ status: "DONE", evidence: "released 20260818, commit abc1234" })], isReal),
+    ).toEqual([]);
+  });
+
+  it("a date stamp ALONE is still not DONE evidence on a full clone", () => {
+    // A date does not resolve, so it is not evidence — the original complaint
+    // stands, it just gets adjudicated by git instead of by spelling.
+    const v = validate([row({ status: "DONE", evidence: "shipped 20260818" })], RESOLVES_NOT);
+    expect(v.join("\n")).toMatch(/none resolve/);
+  });
+
+  it("UNPUSHED prose with a date stamp stays clean (no resolution requirement)", () => {
     const v = validate([row({ status: "UNPUSHED", evidence: "branch hermes-census-20260818, 1161 rows" })], RESOLVES_NOT);
     expect(v).toEqual([]);
   });
@@ -212,7 +235,7 @@ describe("agent ledger — shallow clones cannot prove absence", () => {
     // The strict check must survive: on a complete clone, a missing commit is
     // real evidence that the work was never committed.
     const v = validate(doneRow, { resolveSha: () => false, shallow: false });
-    expect(v.join("\n")).toMatch(/does not exist in this repository/);
+    expect(v.join("\n")).toMatch(/none resolve to a commit/);
   });
 
   it("still enforces every non-SHA rule while shallow", () => {
