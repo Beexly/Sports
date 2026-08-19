@@ -80,7 +80,7 @@ the only copy, and nobody else can verify or build on it.
 | H-E | CLV census on a Neon branch | hermes | UNPUSHED | output CSV on founder machine: docs/ops/calibration/2026-08-18-clv-census.csv, 1161 rows; Neon branch since deleted |
 | H-F | DOC_DRIFT.md audit | hermes | UNPUSHED | local branch on founder machine, e668c4c4 |
 | H-G | Suppression curve vs random and oracle baselines | hermes | UNPUSHED | local branch on founder machine, 63e84c32 |
-| H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | hermes | UNPUSHED | local branch on founder machine, 01868364 |
+| H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | hermes | BLOCKED | H-K was never implemented: cited commit 01868364 resolves to H-C e-process work ([hermes-H-C] v5 likelihood-ratio e-process + log-space mixture), and REFUND_REVOKES_ACCESS appears nowhere in any source file or backup tree (git log --all -S and git grep across all refs return zero code matches — only the ledger row itself mentions the symbol). The reported handler is unlocated. Reimplementation required. |
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
 | H-M | Cron no-op audit | hermes | UNPUSHED | revised per review: data-driven early-return only (no-game-in-horizon skip, mirrors process-sport.ts quiet-board); ~60/day saved off-season, 0 in-season, 576/day flag-off figure withdrawn; hermes/h-m-cron-audit cd5086f7, local worktree |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
