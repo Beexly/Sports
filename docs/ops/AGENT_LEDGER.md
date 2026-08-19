@@ -89,7 +89,7 @@ the only copy, and nobody else can verify or build on it.
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
 | C-3 | Declare appliedPauseGroups + RUN_GENERATE_SIGNAL_SLATE | claude | DONE | 1d39021 |
-| C-4 | Agent ledger + guard | claude | CLAIMED | — |
+| C-4 | Agent ledger + guard | claude | DONE | 65e6474 |
 | X-1 | signup-workflow scaffolding | copilot | CANCELLED | fabricated feature; auth is Google OAuth only via PrismaAdapter, no signup flow exists |
 | X-2 | Delete CLAUDE_PROVIDER to fix AI routing | browser | CANCELLED | diagnosis wrong; unknown value yields zero cloud attempts and falls through to Anthropic direct, pinned by provider-mode-failsafe.test.ts |
 | F-1 | Rotate the Anthropic key found in CLAUDE_PROVIDER | founder | OPEN | — |
