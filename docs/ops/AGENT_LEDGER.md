@@ -85,7 +85,7 @@ the only copy, and nobody else can verify or build on it.
 | H-M | Cron no-op audit | hermes | BLOCKED | report proposes gating producer crons on publication flags; unsafe, see review 2026-08-19 |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2 |
-| H-P | Triage the 73 CI test failures | — | OPEN | — |
+| H-P | Triage the 73 CI test failures | claude | CLAIMED | — |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
 | C-3 | Declare appliedPauseGroups + RUN_GENERATE_SIGNAL_SLATE | claude | DONE | 1d39021 |
