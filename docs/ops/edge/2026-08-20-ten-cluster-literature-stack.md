@@ -393,3 +393,74 @@ Prediction-market signals are informational inputs, not investment advice. GSE�
 Papers read in full or near-full this session: Efron & Morris (1975); Ramdas et al. SAVI (arXiv:2210.01948); Waudby-Smith & Ramdas betting abstract/intro; Grünwald et al. Safe Testing (arXiv:1906.07801, through GRO/GROW); Kalshi rate-limit docs. Remaining items cited from abstracts, published summaries, and GSE’s already citation-audited 2026-08-19 dossier.
 
 A follow-up pass independently opened James–Stein (1961) Berkeley PDF, Efron–Morris (1975), Efron Tweedie (2011), SAVI/Safe Testing/WSR/Shafer arXiv HTML, Levitt (2004) PDF, Hayashi–Yoshida (2005), and Aktuğ–Torul pridis.pdf. It did **not** open Shin JPE 1991, Ottaviani–Sørensen 2008, or Bickel–Kim 2014 full texts (abstracts + reconstructions only), nor Hasbrouck (1995) JoF (2000 restatement used). Clusters 5–10 were out of that pass’s scope. Corrections from it are already folded into §§1–4 above.
+
+---
+
+## DeepSeek share intake (read bottom-up)
+
+Sources (advisory only, not adopted unverified):
+
+- [vve2iwzhw8xhcie96e](https://chat.deepseek.com/share/vve2iwzhw8xhcie96e) — long adversary/facts/MVE trail; last useful turns are 88–94 (JS recipes, outside-the-box audit, web-search “trail”).
+- [rxdfhmsbacki247ao5](https://chat.deepseek.com/share/rxdfhmsbacki247ao5) — originated the ten-cluster list (msg 86); last turns 88–94 are GitHub-search hygiene, a Hermes protocol, and an orchestration prompt that tries to **write James-Stein into the frozen MVE**.
+
+Puppeteer rule: DeepSeek audits math; it does not amend the freeze. Placement below is adopt / gate / reject.
+
+### Cluster 1 — James-Stein
+
+| DeepSeek claim | Verdict | Why |
+|---|---|---|
+| Operational unequal-n shrinker is Efron–Morris 1975 §3: \(B_i=D_i/(A+D_i)\) | **ADOPT** (already in this note) | Matches the paper. |
+| Method-of-moments \(\hat A=\max(0,(\sum(X_i-\bar X)^2-\sum D_i)/k)\) then \(\hat\theta_i=\bar X+(1-B_i)(X_i-\bar X)\) | **GATE** | Right family. Freeze \(\hat A\) estimator *before* first MVE game if we amend the model. Do not invent a second A-hat during the run. |
+| Limited translation \(c\approx 1.5\) | **GATE** | Named hyperparameter from Efron–Morris limited-translation. If used, freeze \(c\) in the prereg amendment. |
+| `bayesbio::unequalVarShrink` (R) | **READ, don’t import** | Useful reference implementation. Production path stays TypeScript in `nb-rbpf.ts`. |
+| Mix equal-variance \((p-2)\sigma_i^2/\sum(\theta_j-\bar\theta)^2\) **and** \(B_i=\sigma_i^2/(\tau^2+\sigma_i^2)\) in one protocol (share 2, msg 92) | **REJECT** | Internally inconsistent. Use only §3. |
+| Arcsine as \(\arcsin\sqrt{p}\) with \(D_i\approx 1/(4n)\) | **HOLD** | Related to, **not the same as**, Efron–Morris \(\sqrt n\arcsin(2y-1)\) (unit variance). For **NB run totals**, neither is primary: work on the log-mean / linear predictor. |
+| Shrink **market-orthogonal residuals**, not raw team MLEs | **ADOPT** | This is the key move that stops a market echo. |
+| Meta-shrink **cross-book market prices** toward a grand mean, then use that as \(m_t\) | **REJECT for MVE** | Different experiment. Risks reopening L-16 (per-book shading) as an “edge.” If ever run, it is a new prereg, not H-F5. |
+| Feasibility gate: mean \(\lvert q-m\rvert < 0.01\) ⇒ kill as echo; \(\ge 0.02\) and corr\(\ge 0.10\) ⇒ proceed | **ADOPT as pre-flight** | Diagnostic, not an e-process change. Must be labeled PILOT if run on already-settled 241 games. Does **not** feed the certification e-process. |
+
+**OWNER_GATE:** Putting Efron–Morris inside H-F5 is a **model amendment**. Prereg v2 already froze “hierarchical posterior predictive.” Amending is legal **only before first computation**. After the cycle starts, it is a second experiment.
+
+### Cluster 2 — e-process
+
+| DeepSeek claim | Verdict | Why |
+|---|---|---|
+| \(\lambda\in(-1/(1-m),1/m)\); 0.3 is inside for \(m\in[0.4,0.6]\) | **ADOPT** | WSR constraint. Exclude games with \(m\) so extreme that 0.3 is illegal. |
+| Predictable plug-in empirical-Bernstein \(\lambda_t\) from WSR B.1 | **REJECT for this cycle** | That \(\lambda_t\) is for confidence sequences. Changing \(\lambda\) unfreezes the MVE. |
+| Side-adaptive OVER iff \(q>m\) else UNDER | **ALREADY FROZEN** | Prereg v2. Do not re-derive. |
+| Run e-process with \(q=m\) as a “market calibration index” | **REJECT as MVE** | Different null. Interesting as a **trust diagnostic** (cluster 6/7), not certification of skill. |
+| Live e-process alerts as trading signals | **REJECT** | Doctrine: no fade product from monitoring. |
+
+GitHub hygiene from share 2 msg 88: search `eprocess` hits Windows kernel EPROCESS. Use `e-value`, `e-process` + `Ville`, `test martingale`, `anytime-valid`, repo-scoped `Beexly/Sports`.
+
+### Cluster 3 — efficiency / FLB
+
+| DeepSeek claim | Verdict |
+|---|---|
+| Shin (1993) empirical \(z\approx 2\%\) | **PARK** — useful if we ever estimate \(z\); frozen MVE only **applies** Shin-devig, it does not estimate \(z\). |
+| Bickel–Kim full tables still closed | **UNCHANGED** — still the gap. Do not claim juice-by-total interactions either way. |
+
+### Cluster 6 — microstructure / trust products
+
+Share 1 msg 92–94 invents/renames CCT, LIS, Market Calibration Index, and calls BPQI “novel.”
+
+| Claim | Verdict |
+|---|---|
+| BPQI is a novel named metric | **REJECT the novelty claim.** L-18 already shipped BookGrade from totals BPQI. |
+| Consensus Clock / time-to-consensus / Line DNA | **ALREADY NAMED** as trust metrics, not edge. Do not mint CCT/LIS as public product names without FABLE. |
+| SimpleFunctions (Kalshi/Polymarket Brier dashboards) | **SCAN** — competitor for calibration **publication**, prediction-market venue, not picks. |
+| OddsFlow, Match Terminal, Tipsterizer white-label | **SCAN** — trust-business comps. Differentiation is receipts + Kill Ledger, not “white-label” as a launch item. |
+| Negative knowledge as a commercial asset (L-15/16/17) | **ADOPT as positioning** — already Kill Ledger doctrine. |
+
+### Cluster 10 — prediction markets
+
+SimpleFunctions + “PM calibration scorecards” belong here as **what to persist at lock** so we can publish a PM-vs-book calibration later. Not an MVE input.
+
+### What not to do with share 2 msg 94
+
+That “final orchestration prompt” tries to make Hermes **implement JS inside the frozen MVE and run it**. That is coder work, and it quietly amends prereg v2. Orchestrator posture:
+
+1. Confirm `mve-eprocess.ts` is on the executing branch (formula already frozen).
+2. Founder-only: amend prereg for Efron–Morris **or** run H-F5 as written (current `NbRbpf` without extra JS wrapper).
+3. If amending: freeze \(A\)-hat, \(c\), transform, and the \(\lvert q-m\rvert\) pre-flight in the same amendment, before any game is scored.
+4. Do not dispatch a build of meta-shrinkage, CCT/LIS, white-label APIs, or live e-process alerts.
