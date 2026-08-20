@@ -35,6 +35,7 @@ const COMPANY_LINKS = [
   { label: "Methodology", href: "/methodology" },
   { label: "Integrity", href: "/integrity" },
   { label: "How We Make Money", href: "/how-we-make-money" },
+  { label: "Affiliate Pledge", href: "/pledge" },
   { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },
   { label: "Founding waitlist", href: "/#founding-waitlist" },

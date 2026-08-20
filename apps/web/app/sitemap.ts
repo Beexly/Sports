@@ -28,6 +28,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/house", priority: 0.8, changeFrequency: "weekly" },
   { path: "/methodology", priority: 0.8, changeFrequency: "monthly" },
   { path: "/how-we-make-money", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/pledge", priority: 0.6, changeFrequency: "monthly" },
   { path: "/performance", priority: 0.7, changeFrequency: "daily" },
   { path: "/journal", priority: 0.7, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.7, changeFrequency: "monthly" },
