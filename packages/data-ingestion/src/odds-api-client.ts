@@ -11,6 +11,7 @@ import {
   type Market,
   type SupportedSportKey,
 } from "./config.js";
+import type { OddsIngestKey } from "./nfl-preseason-map.js";
 import { noStoreFetch } from "./no-store-fetch.js";
 import {
   getOddsPaymentCircuitBreaker,
@@ -271,7 +272,7 @@ export class OddsApiClient {
   }
 
   async getOdds(
-    sportKey: SupportedSportKey,
+    sportKey: OddsIngestKey,
     markets: Market[],
     // Optional override of the default US-region request — e.g. the Pinnacle
     // closing-line leg (packages/ingestion-pipeline/src/pinnacle-line-archive.ts)
@@ -296,7 +297,7 @@ export class OddsApiClient {
   }
 
   async getScores(
-    sportKey: SupportedSportKey,
+    sportKey: OddsIngestKey,
     daysFrom: number = 1
   ): Promise<OddsApiFetchResult<OddsApiScore[]>> {
     return this.fetch<OddsApiScore[]>(`/sports/${sportKey}/scores`, {

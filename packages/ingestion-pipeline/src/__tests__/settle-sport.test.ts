@@ -143,6 +143,11 @@ vi.mock("@sports/data-ingestion", () => ({
   OddsApiClient: vi.fn().mockImplementation(() => ({ getScores: mocks.getScores })),
   DataNormalizer: vi.fn().mockImplementation(() => ({ normalizeScores: mocks.normalizeScores })),
   settleGameLogs: mocks.settleGameLogs,
+  NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
+  NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
+  isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
+  remapPreseasonRows: vi.fn().mockReturnValue({ remapped: [], unmatched: 0 }),
+  mergeFeedRowsById: vi.fn((primary: unknown[]) => primary),
 }));
 
 vi.mock("@sports/prediction-engine", () => ({

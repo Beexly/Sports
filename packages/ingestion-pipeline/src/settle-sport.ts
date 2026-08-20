@@ -29,6 +29,11 @@ import {
   OddsApiClient,
   DataNormalizer,
   settleGameLogs,
+  NFL_PRESEASON_ODDS_KEY,
+  NFL_CANONICAL_SPORT_KEY,
+  isNflPreseasonFetchWindow,
+  remapPreseasonRows,
+  mergeFeedRowsById,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey } from "@sports/data-ingestion";
 import {
@@ -176,7 +181,39 @@ export async function settleSport(
           `free sources cover scores; paid getScores proceeding on paid path (key present).`,
       );
     }
-    const { data: scores } = await client.getScores(sport.key, 2);
+    let scores = (await client.getScores(sport.key, 2)).data;
+    if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow()) {
+      try {
+        const preseason = await client.getScores(NFL_PRESEASON_ODDS_KEY, 2);
+        const existingRows = await db.game.findMany({
+          where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
+          select: {
+            externalId: true,
+            homeTeamName: true,
+            awayTeamName: true,
+            commenceTime: true,
+          },
+        });
+        const candidates = existingRows.map((g) => ({
+          externalId: g.externalId,
+          homeTeam: g.homeTeamName,
+          awayTeam: g.awayTeamName,
+          commenceTime: g.commenceTime,
+        }));
+        const { remapped, unmatched } = remapPreseasonRows(preseason.data, candidates);
+        if (unmatched > 0) {
+          console.warn(
+            `${logPrefix} ${sport.key}: preseason score map skipped ${unmatched} unmatched rows`,
+          );
+        }
+        scores = mergeFeedRowsById(scores, remapped);
+      } catch (preseasonErr) {
+        console.warn(
+          `${logPrefix} ${sport.key}: preseason scores fetch failed — ` +
+            `${preseasonErr instanceof Error ? preseasonErr.message : preseasonErr}`,
+        );
+      }
+    }
     const normalized = normalizer.normalizeScores(scores);
 
     // DURABLE settlement-run identity (hardening 6.1): created-or-retrieved

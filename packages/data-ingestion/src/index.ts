@@ -238,6 +238,22 @@ export {
 export type { EspnOddsFetchResult } from "./espn-odds-client.js";
 
 export {
+  NFL_PRESEASON_ODDS_KEY,
+  NFL_CANONICAL_SPORT_KEY,
+  NFL_PRESEASON_COMMENCE_MATCH_MS,
+  isNflPreseasonFetchWindow,
+  nflTeamsMatch,
+  matchPreseasonRowToExistingGame,
+  remapPreseasonRows,
+  mergeFeedRowsById,
+} from "./nfl-preseason-map.js";
+export type {
+  OddsIngestKey,
+  ExistingGameMatch,
+  PreseasonFeedRow,
+} from "./nfl-preseason-map.js";
+
+export {
   parseEspnScoreboardForSeed,
   fetchEspnSeedGamesForSport,
   fetchAllEspnSeedGames,
