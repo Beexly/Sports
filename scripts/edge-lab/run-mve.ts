@@ -10,9 +10,9 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { PrismaClient } from "@prisma/client";
+import { Client as PgClient } from "pg";
 import { shinDevig } from "../../packages/prediction-engine/src/shin-devig.js";
-import { NbRbpf } from "../../packages/prediction-engine/src/research/nb-rbpf.js";
+import { MveModelJs } from "../../packages/prediction-engine/src/research/mve-model-js.js";
 import {
   MVE_N_PARTICLES,
   MVE_SEED,
@@ -163,81 +163,96 @@ function renderResults(input: {
   return lines.join("\n");
 }
 
-async function main(): Promise<void> {
-  const prisma = new PrismaClient();
+async function getConnStr(): Promise<string> {
+  // Dynamically obtain the hermes_ro connection string from neonctl.
+  // Avoids hard-coding secrets and uses the read-only role.
   try {
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-    } catch (err) {
-      const raw = err instanceof Error ? err.message : String(err);
-      const redacted = raw.replace(/\S+:\/\/\S+/g, "[redacted-url]");
-      console.error(`run-mve: Postgres unreachable: ${redacted}`);
-      process.exit(2);
-    }
-    const gamesRaw = await prisma.game.findMany({
-      where: {
-        sport: { key: "baseball_mlb" },
-        status: "FINAL",
-        homeScore: { not: null },
-        awayScore: { not: null },
-        commenceTime: { gte: CORPUS_FROM, lt: CORPUS_TO },
-      },
-      select: {
-        id: true,
-        homeTeamName: true,
-        awayTeamName: true,
-        commenceTime: true,
-        homeScore: true,
-        awayScore: true,
-      },
-      orderBy: { commenceTime: "asc" },
-    });
+    const { execSync } = await import("node:child_process");
+    return execSync(
+      "neon connection-string --project-id summer-brook-99380762 --role-name hermes_ro main 2>/dev/null",
+      { encoding: "utf-8" }
+    ).trim();
+  } catch (err) {
+    throw new Error(
+      `run-mve: cannot obtain Neon connection string: ${err instanceof Error ? err.message : String(err)}`
+    );
+  }
+}
 
-    const games: GameRow[] = gamesRaw.flatMap((g) => {
+async function main(): Promise<void> {
+  const connStr = await getConnStr();
+  const pgClient = new PgClient({
+    connectionString: connStr,
+    ssl: { rejectUnauthorized: false },
+  });
+  try {
+    await pgClient.connect();
+  } catch (err) {
+    const raw = err instanceof Error ? err.message : String(err);
+    const redacted = raw.replace(/\S+:\/\/\S+/g, "[redacted-url]");
+    console.error(`run-mve: Postgres unreachable: ${redacted}`);
+    process.exit(2);
+  }
+
+  try {
+    // --- Load candidate games ---
+    const gamesRaw: GameRow[] = (
+      await pgClient.query(
+        `SELECT g.id, g."homeTeamName" as "homeTeamName", g."awayTeamName" as "awayTeamName",
+                g."commenceTime" as "commenceTime", g."homeScore" as "homeScore", g."awayScore" as "awayScore"
+         FROM "games" g
+         JOIN "sports" s ON s.id = g."sportId"
+         WHERE s.key = $1
+           AND g."status"::text = $2
+           AND g."homeScore" IS NOT NULL
+           AND g."awayScore" IS NOT NULL
+           AND g."commenceTime" >= $3::date
+           AND g."commenceTime" < $4::date
+         ORDER BY g."commenceTime" ASC`,
+        ["baseball_mlb", "FINAL", CORPUS_FROM, CORPUS_TO],
+      )
+    ).rows as GameRow[];
+
+    const games = gamesRaw.flatMap((g) => {
       if (g.homeScore == null || g.awayScore == null) return [];
       return [
         {
           id: g.id,
           homeTeamName: g.homeTeamName,
           awayTeamName: g.awayTeamName,
-          commenceTime: g.commenceTime,
+          commenceTime: new Date(g.commenceTime),
           homeScore: g.homeScore,
           awayScore: g.awayScore,
         },
       ];
     });
 
+    // --- Load odds for those games ---
     const ids = games.map((g) => g.id);
-    const oddsRaw: OddsRow[] =
-      ids.length === 0
-        ? []
-        : await prisma.odds.findMany({
-            where: {
-              gameId: { in: ids },
-              market: "TOTALS",
-            },
-            select: {
-              gameId: true,
-              bookmaker: true,
-              fetchedAt: true,
-              total: true,
-              overPrice: true,
-              underPrice: true,
-            },
-          });
+    let oddsRaw: OddsRow[] = [];
+    if (ids.length > 0) {
+      const placeholders = ids.map((_, i) => `$${i + 1}`).join(",");
+      oddsRaw = (
+        await pgClient.query(
+          `SELECT "gameId", "bookmaker", "fetchedAt", "total", "overPrice", "underPrice"
+           FROM "odds"
+           WHERE "gameId" IN (${placeholders})
+             AND "market" = 'TOTALS'::"OddsMarket"`,
+          ids,
+        )
+      ).rows as OddsRow[];
+      // Convert fetchedAt strings to Date
+      oddsRaw = oddsRaw.map((o) => ({
+        ...o,
+        fetchedAt: o.fetchedAt instanceof Date ? o.fetchedAt : new Date(o.fetchedAt),
+      }));
+    }
 
     const teamNames = [...new Set(games.flatMap((g) => [g.homeTeamName, g.awayTeamName]))].sort();
     const teamIndex = new Map(teamNames.map((n, i) => [n, i] as const));
     const nTeams = Math.max(teamNames.length, 1);
 
-    const filter = new NbRbpf({
-      seed: MVE_SEED,
-      nTeams,
-      nPitchers: 1,
-      nParks: nTeams,
-      nUmpires: 1,
-      nParticles: MVE_N_PARTICLES,
-    });
+    const model = new MveModelJs(MVE_SEED);
 
     const observations: { qOver: number; mOver: number; y: number; line: number }[] = [];
     let excluded = 0;
@@ -262,13 +277,13 @@ async function main(): Promise<void> {
         y,
         line: entry.line,
       };
-      const qOver = filter.predictOver(synthetic);
+      const qOver = model.predictOver(synthetic);
       if (y === entry.line) {
         pushes += 1;
       } else {
         observations.push({ qOver, mOver: entry.mOver, y, line: entry.line });
       }
-      filter.update(synthetic);
+      model.update(synthetic);
     }
 
     const path = runSideAdaptivePath(observations);
@@ -297,7 +312,7 @@ async function main(): Promise<void> {
     writeFileSync(resolve(outDir, "path.json"), JSON.stringify(payload, null, 2), "utf8");
     console.log(`run-mve: graded=${payload.graded} excluded=${excluded} outcome=${outcome} final=${path.finalCapital.toFixed(6)}`);
   } finally {
-    await prisma.$disconnect();
+    await pgClient.end();
   }
 }
 

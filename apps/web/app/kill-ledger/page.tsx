@@ -125,6 +125,22 @@ const ENTRIES: readonly Entry[] = [
     evidence: "docs/ops/hermes/l17-path-geometry/RESULTS.md",
     evidenceLabel: "L-17 evidence",
   },
+  {
+    id: "h-f5",
+    label: "H-F5",
+    title: "Fundamentals-vs-market MLB totals e-process",
+    dated: "2026-08-20",
+    mechanism:
+      "Hierarchical negative-binomial walk-forward outcome model (team/pitcher/park/umpire effects, James-Stein shrinkage across groups) versus the Shin-de-vigged cross-book median over-probability at the 6–3h entry window. Side-adaptive asymmetric fractional e-process, lambda = 0.3, one predictable bet per game. The bet side is chosen per game before the outcome: q_t > m_t → OVER, q_t ≤ m_t → UNDER (ties UNDER).",
+    rule:
+      "Pre-registered decision rules: checkpoints every 50 graded picks starting at n=50; certification E >= 20 at a scheduled checkpoint; kill E <= 0.10 at any checkpoint; early abort capital < 0.01 after 50 graded picks; final capital <= 2 closes the program. Entry quality bar: book-quoted inside the 6–3h window, age <= 15 min, from >= 3 books — games failing this are excluded and the count is reported.",
+    observed:
+      "655 candidate FINAL MLB totals games in the L-14 window (2026-05-22 to 2026-08-21). 298 excluded (insufficient bookmaker depth, stale quotes, or missing 6–3h-window quote). 20 pushes (y = line, not graded). 337 graded bets. Capital peaked at 4.890 at bet 43 (crossed the 2-capital threshold), then collapsed monotonically. Kill checkpoint fired at n=100 with capital 0.0204 (≤ 0.10 threshold). Final capital = 0.000001. Max drawdown = 1.000 (from peak). Crossings: 2 = true, 5/10/20 = false. Frozen model hash (SHA-256 of 5-file MANIFEST): ec15120bbfdb01997417f377c5c11b8ee547254cb8263f544dbe02966a607de8.",
+    verdict:
+      "Kill. The pre-registered binding outcome fired: capital crossed 2 but the e-process then collapsed and hit the kill threshold at checkpoint n=100. The fundamentals-vs-market MLB totals edge program is closed for good. No rerun, no retune, no second window, no alternate lambda or e-process variant was computed.",
+    evidence: "docs/ops/hermes/hf5-mve/RESULTS.md",
+    evidenceLabel: "H-F5 evidence",
+  },
 ];
 
 const killLedgerJsonLd = {
