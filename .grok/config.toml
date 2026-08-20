@@ -10,7 +10,7 @@ allow = [
   "Bash(git checkout*)", "Bash(git branch*)",
   "Bash(git push -u origin hermes/*)", "Bash(git push origin hermes/*)",
   "Bash(npx vitest*)", "Bash(npx tsc*)", "Bash(npm run *)", "Bash(npm test*)",
-  "Bash(node scripts/ops/*)", "Bash(node scripts/guardrails/*)",
+  "Bash(node scripts/*)", "Bash(npx tsx scripts/*)",
 ]
 deny = [
   "Bash(git push origin main*)", "Bash(git push -f*)", "Bash(git push --force*)",

@@ -1,4 +1,8 @@
 # Custom sandbox profile for GSE work. Launch with: grok --sandbox gse
+# NOTE: sandbox deny is filesystem-level and applies to child processes, so
+# .env must NOT be denied here — node scripts load DATABASE_URL etc. at
+# runtime (H-F5 needs the DB). The model itself still cannot read or edit
+# .env: that is enforced at the permission layer in .grok/config.toml.
 [profiles.gse]
 extends = "workspace"
-deny = ["**/.env", "**/.env.*", "**/*.pem", "**/.ssh/**"]
+deny = ["**/*.pem", "**/.ssh/**"]

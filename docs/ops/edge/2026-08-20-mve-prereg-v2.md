@@ -19,11 +19,21 @@ docs/ops/hermes/FINAL-RUN-2026-08-20.md for the full validity argument.
   bet side chosen per game from the model before outcome (predictable,
   one bet per game); q_bet, m_bet = model and de-vigged market
   probabilities of the bet side; W_t = bet side hit.
-  (Amendment vs DeepSeek draft: DeepSeek's form was over-side-only,
+  (Amendment vs DeepSeek's first draft: that form was over-side-only,
   which is blind to under-side edges and loses on them in expectation;
   the side-adaptive form keeps the identical supermartingale validity
   under the per-side composite null and is one process, no
-  multiplicity.)
+  multiplicity. DeepSeek round-3 review verdict, 2026-08-20: PROVEN —
+  "a predictable side-selection rule combined with the asymmetric
+  increment yields a nonnegative supermartingale under the composite
+  null"; side-adaptive adopted as the primary specification.)
+- SIDE-SELECTION RULE (frozen, deterministic): with q_t = model over
+  probability and m_t = de-vigged market over probability at entry —
+  if q_t > m_t bet the OVER; if q_t <= m_t bet the UNDER (ties go
+  UNDER). For an OVER bet: q_bet = q_t, m_bet = m_t, W_t = 1 iff the
+  total goes over. For an UNDER bet: q_bet = 1 − q_t, m_bet = 1 − m_t,
+  W_t = 1 iff the total goes under. No other selection rule may be
+  used or computed.
 - Null: for each game, the market's quoted (de-vigged) probability of
   the bet side is an upper bound on its true probability.
 - Model probability: hierarchical posterior predictive; hyperparameters
@@ -66,10 +76,10 @@ Shin-de-vigged no-vig entry market at 6–3h window.
 Disclosure language (verbatim, side-adaptive amendment applied):
 
 > "This test uses the side-adaptive asymmetric fractional e-process for
-> the composite null that the market's quoted probability of each bet
-> side is an upper bound on its true probability. The e-process capital
-> starts at 1 and accumulates evidence against this null. Certification
-> requires E_n >= 20 at a scheduled checkpoint. Kills are published
-> immediately. Historical back-test results are not evidence; this is a
-> forward-looking test. All hyperparameters, entry windows, and the
-> model hash were frozen before the experiment began."
+> the composite null that the market probability is an upper bound. The
+> e-process capital starts at 1 and accumulates evidence against this
+> null. Certification requires E_n >= 20 at a scheduled checkpoint.
+> Kills are published immediately. Historical back-test results are not
+> evidence; this is a forward-looking test. All hyperparameters, entry
+> windows, side selection, and the model hash were frozen before the
+> experiment began."
