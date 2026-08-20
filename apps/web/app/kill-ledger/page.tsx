@@ -124,12 +124,6 @@ const ENTRIES: readonly Entry[] = [
   },
 ];
 
-const EXPECTED_EVIDENCE_PATHS = [
-  "docs/ops/hermes/l15-close-pred-feasibility/RESULTS.md",
-  "docs/ops/hermes/l16-book-microstructure/RESULTS.md",
-  "docs/ops/hermes/l17-path-geometry/RESULTS.md",
-];
-
 function EntryCard({ entry }: { entry: Entry }): JSX.Element {
   return (
     <article
