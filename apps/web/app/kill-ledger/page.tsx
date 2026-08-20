@@ -233,7 +233,8 @@ export default function KillLedgerPage(): JSX.Element {
             result whether it helps us or hurts us.
           </p>
           <p className="mt-3 text-base font-semibold text-ion-white">
-            We test things so you do not have to learn the hard way.
+            These are things we tested and found not to work. We publish them
+            so you do not pay for the same mistakes.
           </p>
         </section>
 
