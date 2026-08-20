@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
@@ -9,8 +10,10 @@ import { EvidenceMetric, formatLedgerDate, LayerCard, OwnerGatedClaimCard } from
 
 export function FableEvidenceLab({
   evidenceSummary,
+  proofDashboard,
 }: {
   readonly evidenceSummary: FablePublicSummary;
+  readonly proofDashboard?: ReactNode;
 }) {
   const statusCounts = evidenceSummary.claimStatusCounts.filter((row) => row.count > 0);
   const riskCounts = evidenceSummary.sourceRiskCounts.filter((row) => row.count > 0);
@@ -49,6 +52,8 @@ export function FableEvidenceLab({
             </Link>
           </div>
         </header>
+
+        {proofDashboard}
 
         <section className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {PROOF_LAYERS.map((layer, index) => (
