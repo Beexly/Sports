@@ -51,6 +51,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/calibration", priority: 0.7, changeFrequency: "weekly" },
   { path: "/fable", priority: 0.6, changeFrequency: "weekly" },
   { path: "/kill-ledger", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/bookgrade", priority: 0.6, changeFrequency: "monthly" },
   { path: "/changelog", priority: 0.5, changeFrequency: "weekly" },
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
