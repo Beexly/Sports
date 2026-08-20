@@ -32,7 +32,7 @@ Build seat: Grok Build. Date: 2026-08-20. Base:
 | H-F4 | DONE | 2d850547 | origin/hermes/hf4-honest-posts |
 | H-F5 | BLOCKED | 0035e3b4 | origin/hermes/hf5-mve |
 | H-F6 | DONE | a3ee39cd | origin/hermes/hf6-seo |
-| H-F7 | DONE | counts in ledger row | origin/hermes/hf7-archive |
+| H-F7 | DONE | 38b2bb8a | origin/hermes/hf7-archive |
 
 ## Founder-gated remainder
 
