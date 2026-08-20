@@ -14,8 +14,9 @@
  * verdict, and a link to the evidence doc path.
  *
  * Copy rules: no banned claim words. Every entry names its pre-registered
- * threshold. Closing line: "We test things so you don't have to learn the
- * hard way."
+ * threshold. Closing line is the charter-mandated wording: "These are
+ * things we tested and found not to work. We publish them so you do not
+ * pay for the same mistakes."
  */
 
 import type { Metadata } from "next";
