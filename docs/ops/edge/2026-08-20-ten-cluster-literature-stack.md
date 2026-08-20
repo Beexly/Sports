@@ -7,6 +7,8 @@ GitHub search: `github__search_code` + `github__search_repositories` across all 
 
 This note does **not** reopen the frozen MVE. It says what the papers require, what the repo already has, and which GitHub libraries are real implementations rather than title-matches.
 
+**Builders:** do not implement from this survey or from DeepSeek shares. Open [`2026-08-20-mve-builder-brief.md`](./2026-08-20-mve-builder-brief.md) — one formula, one file list, one order of operations.
+
 ---
 
 ## How the ten areas fit together
