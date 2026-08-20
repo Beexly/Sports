@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { BRAND_NAME } from "@/lib/brand";
 import { loadFablePublicSummary } from "@/lib/fable/public-summary";
 import { FableEvidenceLab } from "./fable-content";
+import { ProofDashboard } from "./proof-dashboard";
 
 export const metadata: Metadata = {
   title: `FABLE Evidence Lab | ${BRAND_NAME}`,
@@ -24,5 +25,10 @@ export const metadata: Metadata = {
 };
 
 export default function FableEvidenceLabPage() {
-  return <FableEvidenceLab evidenceSummary={loadFablePublicSummary()} />;
+  return (
+    <FableEvidenceLab
+      evidenceSummary={loadFablePublicSummary()}
+      proofDashboard={<ProofDashboard />}
+    />
+  );
 }
