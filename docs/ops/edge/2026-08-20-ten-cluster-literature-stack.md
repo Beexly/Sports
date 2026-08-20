@@ -69,7 +69,9 @@ Three load-bearing results for GSE:
 
 They also introduce **limited translation** so one extreme component (Clemente) is not over-shrunk. Component risk of raw JS can be as large as k/4 times the MLE; limited translation caps that.
 
-**Efron (2010), *Large-Scale Inference*.** The same hierarchy at thousands of tests: estimate the prior from the ensemble, then shrink. False-discovery and empirical-Bayes posteriors are the large-k sequel, not a replacement for the unequal-variance formula.
+**Efron (2010), *Large-Scale Inference*.** The same hierarchy at thousands of tests: estimate the prior from the ensemble, then shrink. Tweedie’s formula recovers James–Stein when the log-marginal is quadratic and sampling variance is **common**. The 2011 Tweedie paper (and the LSI pages inspected in the follow-up pass) do **not** specify `D_i/(A+D_i)` or an arcsine. Unequal-n is Efron–Morris §3, not LSI.
+
+**James & Stein (1961) unequal-σ existence.** Display (41) in the Berkeley paper is an existence bound for uncorrelated coordinates with known unequal variances. It does **not** recommend an analogue of the constant `p−2`, and it never treats binomials or the arcsine. The operational unequal-n estimator is Efron–Morris §3, not a drop-in from 1961. Secondary recipes `B_i = σ̂_i²/(τ̂²+σ̂_i²)` (Said 2017) are the practical form; they are not stated in the three named papers.
 
 **Fay & Herriot (1979)** is the small-area version with a regression mean: `θ_i = x_i'β + u_i`. Same B_i algebra, covariates in the target. For GSE that is “shrink team/pitcher residuals **after** park/weather/market are partialled out.”
 
@@ -140,6 +142,8 @@ E[I | p] is linear in p, ≤ 1 at p = 0 and at p = m, hence ≤ 1 on the whole c
 
 λ = 0.3 is GRO-insurance (fractional Kelly / not betting the farm), not a power-optimal GROW mixture. A GROW mixture over unknown edge size is P-F in the 2026-08-19 dossier — power, not validity. Do not compute it on the frozen cycle.
 
+Waudby-Smith & Ramdas: each round’s λ_t(m) must be **predictable** and lie in the generally asymmetric interval `(-1/(1−m), 1/m)` so `1 + λ_t(m)(X_t − m)` stays nonnegative. None of the four SAVI papers uses the single term “asymmetric fractional e-variable”; GSE’s name is a construction, not a literature label. Grünwald et al. distinguish **optional continuation** (multiply study-level conditional e-variables) from data-level **optional stopping**, which needs a sequentially decomposable specification; a stopping time on a finer filtration than the one used to build E_(m) can destroy the conditional e-variable property.
+
 ### What GitHub has (GSE)
 
 Several **different** e-process kernels. They are not interchangeable.
@@ -169,15 +173,15 @@ There is **no** public repo that implements the side-adaptive asymmetric fractio
 
 ## 3. Market efficiency and favorite-longshot bias
 
-**Shin (1991), JPE.** Bookmakers facing a fraction of informed bettors optimally shade longshot odds; FLB is an equilibrium pricing rule, not a “mistake.” Shin-devig is therefore the right fair-price extractor (already in `shin-devig.ts`, used by the MVE runner).
+**Shin (1991), JPE** — *The optimality of the favorite-longshot bias in racetrack betting* — is the paper on this list. A second 1991 Shin paper, *Optimal Betting Odds against Insider Traders* (*Economic Journal* 101(408)), is the square-root pricing result (posted-price ratio equals the square root of the win-probability ratio). Do not conflate them. Empirical insider-share (`z`) estimation is Shin (1993), not 1991. Shin-devig in `shin-devig.ts` implements the insider-pricing extractor; that is the right fair-price step for the MVE runner.
 
-**Ottaviani & Sørensen (2008).** Survey: FLB appears in parimutuels and fixed-odds; explanations split between informed-trader (Shin), risk-loving bettors, and bookmaker profit-max (Levitt).
+**Ottaviani & Sørensen (2008 / 2005 working paper).** Survey plus the parimutuel-vs-fixed-odds comparative static: adverse selection is worse on longshots in fixed-odds (Glosten–Milgrom markup); the insider-share comparative static can reverse in parimutuel markets.
 
-**Levitt (2004), *Economic Journal*.** Gambling markets are **not** organized like financial markets. Books do not have to balance; they set prices to exploit public bias. Cross-book disagreement can persist even if the consensus is efficient.
+**Levitt (2004), *Economic Journal*.** Gambling markets are **not** organized like financial markets. Books do not have to balance. NFL spreads, 2001–02 contest: 60.6% of 19,770 wagers on favorites; visiting favorites take 68.2% of bets and cover 47.8%; home underdogs cover 57.7%. Bettors win 49.45% of bets; expected gross profit rises from 5.0% to 6.16% versus a balanced book. This is **quantity shading on spreads**, not MLB totals or moneyline FLB.
 
-**Bickel & Kim (2014), *Applied Financial Economics* 24(18):1229–1234.** Strongest prior against a totals **mean** edge. They used **both run lines and money lines** (actual juice, not an assumed −110). Result: little evidence the MLB O/U market is inefficient. Earlier papers that ignored juice can **flip** conclusions. This is why the 2026-08-19 dossier ranked “grade TOTAL/SPREAD CLV in price space” as P-A.
+**Bickel & Kim (2014), *Applied Financial Economics* 24(18):1229–1234.** Strongest prior against a totals **mean** edge. They used **both run lines and money lines** (actual juice, not an assumed −110). Result: little evidence the MLB O/U market is inefficient. Earlier papers that ignored juice can **flip** conclusions. This is why the 2026-08-19 dossier ranked “grade TOTAL/SPREAD CLV in price space” as P-A. Full tables were not opened in the follow-up pass, so it is unverified whether they tested FLB-by-odds-bin or juice-by-total interactions versus a global efficiency null.
 
-They did **not** test: 6–3h vs close path, book-level outliers, pitcher/park/weather interactions, first-half totals, prediction-market divergence, or a hierarchical residual after shrinking team effects. Surviving signal, if any, lives in those interactions — not in re-fighting their mean-efficiency result.
+None of these four papers jointly tests, on MLB totals: insider-FLB statics, Levitt quantity shading, and juice-by-total interactions. Surviving signal, if any, lives in those gaps — plus 6–3h path, book-level outliers, pitcher/park, PM divergence, and hierarchical residuals after shrinkage.
 
 ### GitHub
 
@@ -192,9 +196,24 @@ They did **not** test: 6–3h vs close path, book-level outliers, pitcher/park/w
 
 **Hayashi & Yoshida (2005).** Covariance of **non-synchronously** observed processes. Books and exchanges do not tick together; naive lagged covariance is biased. Any lead-lag job on 15-minute Odds snapshots needs HY (or a synchronized clock), not Pearson correlation of last quotes.
 
-**Aktu et al. (2026), “Price Discovery Across Political Prediction Markets.”** [PDF](https://web.bogazici.edu.tr/torul/pridis.pdf). Hasbrouck / Gonzalo–Granger / Putninš on 5-minute data: **Polymarket + Betfair jointly ≈ 85% of information share; no dealer sportsbook exceeds 11%; books are followers.** Horizon-dependent leadership between the two exchanges.
+**Aktuğ & Torul (2026), “Price Discovery Across Political Prediction Markets.”** [PDF](https://web.bogazici.edu.tr/torul/pridis.pdf). 2024 Trump-win contracts, six-market 5-minute Hasbrouck VECM (n = 16,460). They handle asynchronicity with a 5-minute last-observation grid, 30-minute forward-fill, and a fresh-quote filter — **not** Hayashi–Yoshida.
 
-If GSE’s archive is sportsbook quotes, it is mostly a **follower tape**. Edge research that never sees an exchange or prediction market is structurally downstream.
+Six-market IS midpoints (Cholesky bounds in brackets where reported):
+
+| Venue | IS midpoint |
+|---|---|
+| Polymarket | 0.475 [0.375, 0.576] |
+| Betfair | 0.371 [0.267, 0.474] |
+| BetOnline | 0.110 |
+| Bovada | 0.059 |
+| Unibet | 0.044 |
+| William Hill | 0.024 |
+
+DEX + exchange + sportsbook composite: IS midpoints 64.2% / 33.0% / 5.1%. Gonzalo–Granger component share on the sportsbook composite is **−24.3%** (systematic follower). The “nearly 85%” headline is Polymarket+Betfair in this **clean six-market full sample**. In the October–November **Kalshi window** the analogous 85% is Polymarket (43.8%) + Kalshi (40.9%); Betfair’s midpoint falls to 5.7%. Pinnacle’s ILS in that window is ~0.14 (speed, not information). IS midpoints are a **ranking**, not precise quantities: in the 7-market spec Polymarket’s 90% bootstrap CI is [1.8%, 84.4%].
+
+Horizon: Polymarket leads at 5-min (IS 0.429 vs Betfair 0.282); Betfair leads at 15-min and coarser (0.418 / 0.476 / 0.432). Sharp books / William Hill stay in a 3–6% band at every frequency. Marketable prices change in 5.4% of 5-minute bins on Betfair and 1.1% on Polymarket, versus **0.1–0.4%** on sportsbooks; forward-fill then produces a run of exact-zero innovations and a single catch-up jump. Authors warn that election contracts are a sideline for sportsbooks, so low IS conflates venue organization with inattention.
+
+If GSE’s archive is sportsbook quotes, it is mostly a **follower tape**. Edge research that never sees an exchange or prediction market is structurally downstream. Do not treat a 15-minute Odds API grid as Hayashi–Yoshida.
 
 ### GitHub
 
@@ -372,3 +391,5 @@ Prediction-market signals are informational inputs, not investment advice. GSE�
 | `"asymmetric fractional"` global code | **0** | Construction is GSE-local |
 
 Papers read in full or near-full this session: Efron & Morris (1975); Ramdas et al. SAVI (arXiv:2210.01948); Waudby-Smith & Ramdas betting abstract/intro; Grünwald et al. Safe Testing (arXiv:1906.07801, through GRO/GROW); Kalshi rate-limit docs. Remaining items cited from abstracts, published summaries, and GSE’s already citation-audited 2026-08-19 dossier.
+
+A follow-up pass independently opened James–Stein (1961) Berkeley PDF, Efron–Morris (1975), Efron Tweedie (2011), SAVI/Safe Testing/WSR/Shafer arXiv HTML, Levitt (2004) PDF, Hayashi–Yoshida (2005), and Aktuğ–Torul pridis.pdf. It did **not** open Shin JPE 1991, Ottaviani–Sørensen 2008, or Bickel–Kim 2014 full texts (abstracts + reconstructions only), nor Hasbrouck (1995) JoF (2000 restatement used). Clusters 5–10 were out of that pass’s scope. Corrections from it are already folded into §§1–4 above.
