@@ -56,9 +56,9 @@ const SEASON_WINDOWS: Record<SupportedSportKey, SeasonWindow> = {
   // this fix: the L-14 census (2026-08-20) found NFL's last odds snapshot was
   // 2026-06-17 and ZERO clean closes, while 84 future NFL games sat in the DB
   // with no odds attached.
-  // NOTE: this does NOT pick up preseason games. The Odds API serves those under
-  // a separate `americanfootball_nfl_preseason` key, which we do not ingest —
-  // see the ledger row on the key-to-sport mapping that work needs.
+  // Preseason odds are NOT this window. The Odds API serves them under
+  // `americanfootball_nfl_preseason`; H-F3 maps that key onto existing NFL
+  // games (July–August only). Do not add it to SUPPORTED_SPORTS.
   americanfootball_nfl: { startMonth: 8, endMonth: 2 },
   americanfootball_ncaaf: { startMonth: 8, endMonth: 1 },
   basketball_nba: { startMonth: 10, endMonth: 6 },

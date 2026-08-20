@@ -33,6 +33,11 @@ import {
   resolveRundownApiKey,
   fetchRundownEventsForSport,
   fetchEspnOddsForSport,
+  NFL_PRESEASON_ODDS_KEY,
+  NFL_CANONICAL_SPORT_KEY,
+  isNflPreseasonFetchWindow,
+  remapPreseasonRows,
+  mergeFeedRowsById,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
@@ -257,6 +262,53 @@ export async function processSport(
           const primary = await client.getOdds(sport.key, [...MARKETS]);
           events = primary.data as import("@sports/types").OddsApiEvent[];
           remainingRequests = primary.remainingRequests ?? null;
+          if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow(fetchedAt)) {
+            try {
+              const preseason = await client.getOdds(NFL_PRESEASON_ODDS_KEY, [...MARKETS]);
+              if (preseason.remainingRequests != null) {
+                remainingRequests = preseason.remainingRequests;
+              }
+              const existingRows = await db.game.findMany({
+                where: {
+                  sport: { key: NFL_CANONICAL_SPORT_KEY },
+                  commenceTime: {
+                    gte: new Date(fetchedAt.getTime() - 2 * 24 * 60 * 60 * 1000),
+                    lte: new Date(fetchedAt.getTime() + 21 * 24 * 60 * 60 * 1000),
+                  },
+                },
+                select: {
+                  externalId: true,
+                  homeTeamName: true,
+                  awayTeamName: true,
+                  commenceTime: true,
+                },
+              });
+              const candidates = [
+                ...existingRows.map((g) => ({
+                  externalId: g.externalId,
+                  homeTeam: g.homeTeamName,
+                  awayTeam: g.awayTeamName,
+                  commenceTime: g.commenceTime,
+                })),
+                ...normalizer.normalizeGames(events),
+              ];
+              const { remapped, unmatched } = remapPreseasonRows(
+                preseason.data as OddsApiEvent[],
+                candidates,
+              );
+              if (unmatched > 0) {
+                console.warn(
+                  `${logPrefix} ${sport.key}: preseason map skipped ${unmatched} unmatched Odds API events`,
+                );
+              }
+              events = mergeFeedRowsById(events, remapped);
+            } catch (preseasonErr) {
+              console.warn(
+                `${logPrefix} ${sport.key}: preseason odds fetch failed — ` +
+                  `${preseasonErr instanceof Error ? preseasonErr.message : preseasonErr}`,
+              );
+            }
+          }
         } catch (primaryErr) {
           console.warn(
             `${logPrefix} ${sport.key}: Odds API primary failed — ` +
