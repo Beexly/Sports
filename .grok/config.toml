@@ -11,12 +11,20 @@ allow = [
   "Bash(git push -u origin hermes/*)", "Bash(git push origin hermes/*)",
   "Bash(npx vitest*)", "Bash(npx tsc*)", "Bash(npm run *)", "Bash(npm test*)",
   "Bash(node scripts/*)", "Bash(npx tsx scripts/*)",
+  # FOUNDER OVERRIDE 2026-08-20 (F-11) of the charter's "no agent touches
+  # Vercel" rule, narrowed to deploy + read-status only. Everything that
+  # could mutate env or destroy the project stays denied below.
+  "Bash(vercel --prod*)", "Bash(vercel deploy --prod*)",
+  "Bash(vercel ls*)", "Bash(vercel inspect*)", "Bash(vercel logs*)",
 ]
 deny = [
   "Bash(git push origin main*)", "Bash(git push -f*)", "Bash(git push --force*)",
   "Bash(rm -rf*)",
   "Bash(*prisma migrate*)", "Bash(*prisma db push*)",
   "Bash(npm install-scripts approve*)",
+  # Vercel: deploy yes, mutate/destroy never (F-11 is scoped to shipping).
+  "Bash(vercel env*)", "Bash(vercel remove*)", "Bash(vercel rm*)",
+  "Bash(vercel project rm*)", "Bash(vercel domains*)", "Bash(vercel alias*)",
   "Edit(packages/db/prisma/**)", "Edit(.github/**)",
   "Edit(scripts/guardrails/**)", "Edit(apps/web/lib/ai-control-plane/**)",
   "Edit(**/.env*)", "Edit(package-lock.json)",
