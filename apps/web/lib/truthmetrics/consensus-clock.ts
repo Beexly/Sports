@@ -287,8 +287,6 @@ function newtonStep(
   tHours: number[],
   dVals: number[],
 ): number | null {
-  const n = tHours.length;
-
   // RSS at λ and at λ+ε.
   const eps = lambda * 1e-6;
   const rss0 = rssAt(lambda, tHours, dVals);

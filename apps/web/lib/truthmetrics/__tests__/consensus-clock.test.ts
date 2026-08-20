@@ -9,10 +9,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { LineSnapshot } from "@/lib/truthmetrics/line-snapshot";
-import {
-  computeConsensusClock,
-  type ConsensusClockResult,
-} from "@/lib/truthmetrics/consensus-clock";
+import { computeConsensusClock } from "@/lib/truthmetrics/consensus-clock";
 
 const KICKOFF = "2026-09-10T20:00:00.000Z";
 

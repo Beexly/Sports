@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import BookGradePage from "@/app/bookgrade/page";
 import {
   BOOKGRADE_V1,
-  PULSE_SCORE_V1,
   BOOKGRADE_PROVENANCE,
 } from "@/lib/truthmetrics/bookgrade-v1";
 
