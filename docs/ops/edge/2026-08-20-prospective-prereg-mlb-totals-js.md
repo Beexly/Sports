@@ -109,20 +109,36 @@ deviation is a new model and requires a new hash and a new pre-registration.
      degree of freedom, and an unfrozen degree of freedom is how an e-process
      gets quietly tuned.
    - Apply the **positive-part James-Stein estimator, multiple-sample-size
-     variant**, per group-level parameter `i` within each shrinkage family:
+     variant**, per group-level parameter `i` within each shrinkage family.
+     The binding operational form is **Efron-Morris (1975) section 3**, the
+     unequal-sample-size shrinker:
 
      ```
-     theta_hat_i = theta_bar
-                 + max(0, 1 - ((p - 2) * sigma_i^2) / sum_j (theta_j - theta_bar)^2)
-                   * (theta_i - theta_bar)
+     theta_hat_i = theta_bar + (1 - B_i) * (theta_i - theta_bar)
+     B_i        = D_i / (A_hat + D_i)
+     A_hat      = max(0, tau2_hat)          # positive part
      ```
 
-     where `theta_bar` is the precision-weighted grand mean of the family,
-     `p` is the number of parameters in that family, and `sigma_i^2` is that
-     parameter's own sampling variance (`1/(4 n_i)` under both transforms
-     above). Using `sigma_i^2` rather than a single pooled `sigma^2` is what
-     makes small-sample parameters shrink harder, which is the intended
-     multiple-sample-size behavior.
+     where `D_i = sigma_i^2` is parameter `i`'s own sampling variance
+     (`1/(4 n_i)` under both transforms above), `A_hat` is the estimated prior
+     variance of the family, and `theta_bar` is the precision-weighted grand
+     mean. `B_i` is the shrinkage weight: large sampling variance (small
+     `n_i`) gives `B_i` near 1 and pulls the estimate hard toward the family
+     mean, which is the intended multiple-sample-size behavior.
+
+     **Recorded because it changes the arithmetic.** The founder's charter
+     writes the shrinkage factor as
+     `max(0, 1 - ((p-2) * sigma^2) / sum_j (theta_j - theta_bar)^2)`. That is
+     the **equal-variance special case**; the two forms coincide when every
+     `n_i` is equal. The unequal-variance display in James and Stein (1961) is
+     an existence bound for known unequal variances, not an operational
+     estimator, and it prescribes no analogue of the constant `p - 2`. Efron
+     (2010) and Tweedie recover James-Stein only under **common** sampling
+     variance, and supply neither the arcsine nor the unequal-n layer. So the
+     charter's formula stands as the equal-variance case, and Efron-Morris
+     section 3 is what the code implements. Source:
+     `docs/ops/edge/2026-08-20-ten-cluster-literature-stack.md`, James-Stein
+     section (Grok background pass, 2026-08-20).
    - **`p >= 3` is required** for shrinkage to apply. A family with `p < 3` is
      left unshrunk (identity), because the James-Stein dominance result does
      not hold below three parameters. This is stated so the code cannot
@@ -179,6 +195,28 @@ the side is chosen predictably and only one process is ever run, there is no
 multiplicity correction to make and none is applied. The miss term is
 `(1 - q_bet)`, **not** `(1 - q_bet) / (1 - m_bet)`; the latter is the point-null
 form and is invalid here.
+
+**Three disclosures about this e-variable, recorded so nobody has to discover
+them later.**
+
+1. *The name is ours.* None of Ramdas-Grunwald-Vovk-Shafer (2023),
+   Waudby-Smith-Ramdas (2024), Grunwald-de Heide-Koolen (2024) or Shafer
+   (2021) uses the phrase "asymmetric fractional e-variable". It is a
+   house name for the increment above, not a citation. Public copy must never
+   imply the term is established literature.
+2. *The nonnegativity condition is satisfied by construction.*
+   Waudby-Smith-Ramdas require a predictable `lambda` in
+   `(-1/(1-m), 1/m)` so capital stays nonnegative. Our increment's minimum
+   over both outcomes is `1 - lambda * max(q_bet, 1) = 1 - lambda = 0.7 > 0`,
+   independent of `m_bet`, so `lambda = 0.3` satisfies the condition for every
+   game with no per-game check needed.
+3. *Why certification happens only at scheduled checkpoints.* Grunwald et al.
+   separate optional **continuation** (multiplying study-level e-variables)
+   from data-level optional **stopping**, which needs a sequentially
+   decomposable model; stopping on a finer filtration than the one that built
+   the process can break validity. Certifying only at pre-scheduled `n` keeps
+   the stopping rule on the coarse filtration the protocol declared in
+   advance. That is the reason for the rule in section 6, not squeamishness.
 
 ## 5. Frozen model hash (procedure, not a placeholder)
 
