@@ -18,3 +18,4 @@ export * from "./compliance";
 export * from "./readiness";
 export * from "./templates";
 export * from "./build-draft";
+export * from "./honest-record";
