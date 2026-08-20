@@ -10,11 +10,15 @@ import {
   PLEDGE_VIOLATION,
   PLEDGE_WHY,
 } from "@/lib/pledge/affiliate-free";
+import { jsonLdScript } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site-url";
+
+const PLEDGE_DESCRIPTION =
+  "Galaxy Sports Edge does not carry sportsbook or DFS affiliate or commission links, and never will.";
 
 export const metadata: Metadata = {
   title: `Affiliate pledge · ${BRAND_NAME}`,
-  description:
-    "Galaxy Sports Edge does not carry sportsbook or DFS affiliate or commission links, and never will.",
+  description: PLEDGE_DESCRIPTION,
   alternates: { canonical: "/pledge" },
   openGraph: {
     title: `Affiliate pledge · ${BRAND_NAME}`,
@@ -23,11 +27,28 @@ export const metadata: Metadata = {
     url: "/pledge",
     type: "website",
   },
+  twitter: {
+    card: "summary",
+    title: `Affiliate pledge · ${BRAND_NAME}`,
+    description: PLEDGE_DESCRIPTION,
+  },
+};
+
+const pledgeJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: `Affiliate pledge · ${BRAND_NAME}`,
+  description: PLEDGE_DESCRIPTION,
+  url: `${SITE_URL}/pledge`,
 };
 
 export default function PledgePage(): JSX.Element {
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(pledgeJsonLd) }}
+      />
       <Nav />
       <main id="main-content" className="mx-auto flex max-w-3xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
         <header className="border-b border-mineral pb-10">
