@@ -645,6 +645,41 @@ model SlateCommitment {
   @@map("slate_commitments")
 }
 
+// Glass Ledger — durable append-only hash chain (F-9 / B-6a).
+// PURE math lives in packages/prediction-engine/src/edge-lab/ledger-chain.ts;
+// this table is the serverless-safe persistence the in-memory store could not
+// be. One public chain (`chainId = glass-v1`). Hashed payload is EXACTLY the
+// committed fields of a pick or settlement entry (never entryType/chainId/
+// canonVersion — those are projections). No FK to Pick: deleting a pick must
+// not delete history. No native enum: TEXT + CHECK so the migration is
+// IF NOT EXISTS re-appliable (watchlist doctrine). Application code never
+// UPDATE/DELETE these rows. Gated at runtime by LEDGER_CHAIN_ENABLED
+// (default OFF). Founder applies the migration; code fails open if the
+// table is absent. See docs/ops/edge/2026-08-20-f9-ledger-chain-entry-ruling.md.
+model LedgerChainEntry {
+  id           String   @id @default(cuid())
+  chainId      String   @default("glass-v1") @db.VarChar(32)
+  seq          Int
+  prevHash     String   @db.VarChar(64)
+  entryHash    String   @db.VarChar(64)
+  entryType    String // "PICK" | "SETTLEMENT"
+  pickId       String
+  payload      String   @db.Text // canonical JSON of committed fields (no entryHash)
+  hashAlg      String   @default("sha256") @db.VarChar(16)
+  canonVersion Int      @default(1)
+  modelVersion String?
+  occurredAt   DateTime
+  createdAt    DateTime @default(now())
+
+  @@unique([chainId, seq])
+  @@unique([chainId, entryHash])
+  @@unique([chainId, entryType, pickId])
+  @@index([pickId])
+  @@index([occurredAt])
+  @@index([createdAt])
+  @@map("ledger_chain_entries")
+}
+
 model GateDecision {
   id           String             @id @default(cuid())
   gameId       String

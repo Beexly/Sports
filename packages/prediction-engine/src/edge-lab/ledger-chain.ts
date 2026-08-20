@@ -216,15 +216,29 @@ export function nextLinkage(chain: LedgerChain): ChainLinkage {
   return { seq: chain.length, prevHash: tip.entryHash };
 }
 
-// ───────────────────────────── append API ─────────────────────────────
+/**
+ * Canonical JSON of a pick's committed fields — the exact preimage
+ * `entryHash` covers. Persistence stores this string as `payload`.
+ */
+export function pickCommittedPayload(p: PickEntryInput): string {
+  return canonicalJson(pickCommittedFields(p));
+}
 
 /**
- * Append a pick entry. Validates field shape, verifies seq/prevHash linkage
- * against the chain's current tip, enforces the publish-before-kickoff
- * invariant, computes entryHash, and returns a NEW chain (the old one is
- * untouched — there is no in-place mutation anywhere in this module).
+ * Canonical JSON of a settlement's committed fields — the exact preimage
+ * `entryHash` covers. Persistence stores this string as `payload`.
  */
-export function appendPick(chain: LedgerChain, pick: PickEntryInput): LedgerChain {
+export function settlementCommittedPayload(s: SettlementEntryInput): string {
+  return canonicalJson(settlementCommittedFields(s));
+}
+
+/**
+ * Validate a pick's field shape + publish-before-kickoff, compute entryHash.
+ * Does NOT check seq/prevHash against a chain — that is `appendPick` /
+ * the durable store's linkage step. Split so a DB adapter can mint from
+ * a tail row without synthesizing a phantom in-memory chain.
+ */
+export function mintPickEntry(pick: PickEntryInput): LedgerPickEntry {
   assertNonEmptyString("pickId", pick.pickId);
   assertNonEmptyString("sport", pick.sport);
   assertNonEmptyString("market", pick.market);
@@ -238,21 +252,6 @@ export function appendPick(chain: LedgerChain, pick: PickEntryInput): LedgerChai
   assertSeqShape(pick.seq);
   assertHex64("prevHash", pick.prevHash);
 
-  const expected = nextLinkage(chain);
-  if (pick.seq !== expected.seq) {
-    throw new LedgerIntegrityError(
-      `seq gap: the chain's next entry must be seq ${expected.seq}, got ${pick.seq} for pick ${pick.pickId}`,
-      "SEQ_GAP",
-      pick.seq,
-    );
-  }
-  if (pick.prevHash !== expected.prevHash) {
-    throw new LedgerIntegrityError(
-      `prevHash mismatch at seq ${pick.seq}: expected ${expected.prevHash}, got ${pick.prevHash}`,
-      "PREV_HASH_MISMATCH",
-      pick.seq,
-    );
-  }
   if (Date.parse(pick.decisionAt) >= Date.parse(pick.kickoffAt)) {
     throw new LedgerIntegrityError(
       `publish-before-kickoff invariant violated for pick ${pick.pickId}: decisionAt (${pick.decisionAt}) ` +
@@ -262,18 +261,16 @@ export function appendPick(chain: LedgerChain, pick: PickEntryInput): LedgerChai
     );
   }
 
-  const entryHash = sha256Hex(canonicalJson(pickCommittedFields(pick)));
-  const entry: LedgerPickEntry = Object.freeze({ ...pick, entryHash });
-  return Object.freeze([...chain, entry]);
+  const entryHash = sha256Hex(pickCommittedPayload(pick));
+  return Object.freeze({ ...pick, entryHash });
 }
 
 /**
- * Append a settlement entry. Same linkage/shape verification as appendPick,
- * plus: the settlement's pickId must already reference a pick entry earlier
- * in this same chain (settlements and picks share one seq/prevHash counter —
- * there is no separate settlements chain).
+ * Validate a settlement's field shape and the paired closing/CLV contract,
+ * compute entryHash. Does NOT check seq/prevHash or UNKNOWN_PICK — those
+ * stay on `appendSettlement` / the durable store.
  */
-export function appendSettlement(chain: LedgerChain, settlement: SettlementEntryInput): LedgerChain {
+export function mintSettlementEntry(settlement: SettlementEntryInput): LedgerSettlement {
   assertNonEmptyString("pickId", settlement.pickId);
   assertIsoInstant("settledAt", settlement.settledAt);
   if (!OUTCOMES.has(settlement.outcome)) {
@@ -281,10 +278,6 @@ export function appendSettlement(chain: LedgerChain, settlement: SettlementEntry
       `ledger-chain: outcome must be one of WIN|LOSS|PUSH|VOID, got ${JSON.stringify(settlement.outcome)}`,
     );
   }
-  // clvBps is DERIVED from the closing price — one without the other is a
-  // fabrication vector: a posted CLV with no closing price to re-derive it
-  // from would hash/verify fine while the open verifier silently skips it.
-  // Both together, or both null.
   if ((settlement.closingPriceDecimal === null) !== (settlement.clvBps === null)) {
     throw new TypeError(
       `ledger-chain: closingPriceDecimal and clvBps must be present together or both null ` +
@@ -301,6 +294,46 @@ export function appendSettlement(chain: LedgerChain, settlement: SettlementEntry
   assertSeqShape(settlement.seq);
   assertHex64("prevHash", settlement.prevHash);
 
+  const entryHash = sha256Hex(settlementCommittedPayload(settlement));
+  return Object.freeze({ ...settlement, entryHash });
+}
+
+// ───────────────────────────── append API ─────────────────────────────
+
+/**
+ * Append a pick entry. Validates field shape, verifies seq/prevHash linkage
+ * against the chain's current tip, enforces the publish-before-kickoff
+ * invariant, computes entryHash, and returns a NEW chain (the old one is
+ * untouched — there is no in-place mutation anywhere in this module).
+ */
+export function appendPick(chain: LedgerChain, pick: PickEntryInput): LedgerChain {
+  const entry = mintPickEntry(pick);
+  const expected = nextLinkage(chain);
+  if (pick.seq !== expected.seq) {
+    throw new LedgerIntegrityError(
+      `seq gap: the chain's next entry must be seq ${expected.seq}, got ${pick.seq} for pick ${pick.pickId}`,
+      "SEQ_GAP",
+      pick.seq,
+    );
+  }
+  if (pick.prevHash !== expected.prevHash) {
+    throw new LedgerIntegrityError(
+      `prevHash mismatch at seq ${pick.seq}: expected ${expected.prevHash}, got ${pick.prevHash}`,
+      "PREV_HASH_MISMATCH",
+      pick.seq,
+    );
+  }
+  return Object.freeze([...chain, entry]);
+}
+
+/**
+ * Append a settlement entry. Same linkage/shape verification as appendPick,
+ * plus: the settlement's pickId must already reference a pick entry earlier
+ * in this same chain (settlements and picks share one seq/prevHash counter —
+ * there is no separate settlements chain).
+ */
+export function appendSettlement(chain: LedgerChain, settlement: SettlementEntryInput): LedgerChain {
+  const entry = mintSettlementEntry(settlement);
   const expected = nextLinkage(chain);
   if (settlement.seq !== expected.seq) {
     throw new LedgerIntegrityError(
@@ -326,9 +359,6 @@ export function appendSettlement(chain: LedgerChain, settlement: SettlementEntry
       settlement.seq,
     );
   }
-
-  const entryHash = sha256Hex(canonicalJson(settlementCommittedFields(settlement)));
-  const entry: LedgerSettlement = Object.freeze({ ...settlement, entryHash });
   return Object.freeze([...chain, entry]);
 }
 

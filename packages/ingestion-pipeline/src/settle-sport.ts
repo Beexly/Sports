@@ -58,6 +58,12 @@ import {
   type PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";
 import { markClosingSnapshotsIfEnabled } from "./line-archive.js";
+import {
+  americanToDecimalOrNull,
+  appendSettlementToChain,
+  isLedgerChainEnabled,
+  pairedClosingFields,
+} from "./ledger-chain-store.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -450,6 +456,7 @@ export async function settleSport(
           // there is no close or no lock to compare.
           const workDelegate = db.postSettlementWork as unknown as PostSettlementWorkDelegate;
 
+          let closeAmerican: number | null = null;
           if (closingSnapshot?.capturedAt) {
             try {
               const grade = gradePickClv({
@@ -462,6 +469,7 @@ export async function settleSport(
                 close: closingSnapshot,
               });
               if (grade) {
+                closeAmerican = typeof grade.closePrice === "number" ? grade.closePrice : null;
                 await db.pick.update({
                   where: { id: pick.id },
                   data: {
@@ -489,6 +497,50 @@ export async function settleSport(
             // work as done with honest semantics rather than leaving a
             // forever-PENDING row.
             await markPostSettlementWorkDone(workDelegate, pick.id, "CLV_GRADE", settledAt);
+          }
+
+          // Glass Ledger chain append (F-9 / B-6a). Default OFF. Fail-open —
+          // a chain skip must never block settlement. CLV on the chain is
+          // only posted when BOTH a decimal lock and a decimal close exist;
+          // otherwise both-null (never a one-sided CLV).
+          if (isLedgerChainEnabled()) {
+            try {
+              const outcome =
+                result === "WIN" || result === "LOSS" || result === "PUSH" || result === "VOID"
+                  ? result
+                  : null;
+              if (outcome) {
+                const lockAmerican =
+                  typeof pick.clvLockPrice === "number" ? pick.clvLockPrice : null;
+                const paired = pairedClosingFields(
+                  americanToDecimalOrNull(lockAmerican),
+                  americanToDecimalOrNull(closeAmerican),
+                );
+                const chained = await appendSettlementToChain(db, {
+                  pickId: pick.id,
+                  settledAt: settledAt.toISOString(),
+                  outcome,
+                  closingPriceDecimal: paired.closingPriceDecimal,
+                  clvBps: paired.clvBps,
+                });
+                if (
+                  !chained.ok &&
+                  chained.skipped !== "already_present" &&
+                  chained.skipped !== "flag_off" &&
+                  chained.skipped !== "unknown_pick"
+                ) {
+                  console.warn(
+                    `${logPrefix} Ledger chain settlement-append skipped for ${pick.id}: ` +
+                      `${chained.skipped}${chained.message ? ` (${chained.message})` : ""}`,
+                  );
+                }
+              }
+            } catch (chainErr) {
+              console.warn(
+                `${logPrefix} Ledger chain settlement-append failed for pick ${pick.id}: ` +
+                  `${chainErr instanceof Error ? chainErr.message : chainErr}`,
+              );
+            }
           }
 
           // Record settlement outcome in the PickSignalSnapshot — real result tied

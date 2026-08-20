@@ -109,6 +109,11 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
       description: "Enumerable JSON list of every SETTLED pick receipt (paginated). Each row carries the leaf preimage so you can recompute its hash and verify it independently; pre-kickoff/unsettled receipts are never listed.",
     },
     {
+      rel: "ledger-chain",
+      url: `${base}/api/proof/ledger-chain`,
+      description: "Append-only hash chain of pick + settlement entries in the shape scripts/edge-lab/recompute.ts consumes. Empty chain is {entries:[], note}, never 404. No performance numbers.",
+    },
+    {
       rel: "self",
       url: `${base}/api/proof/ledger`,
       description: "This document as JSON — the machine-readable ledger snapshot and verification map.",

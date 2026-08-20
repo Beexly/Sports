@@ -65,6 +65,11 @@ import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
 import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
+import {
+  americanToDecimalOrNull,
+  appendPickToChain,
+  isLedgerChainEnabled,
+} from "./ledger-chain-store.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -886,6 +891,42 @@ export async function processSport(
             },
             update: {}, // immutable — a frozen receipt is never rewritten
           });
+
+          // Glass Ledger chain append (F-9 / B-6a). Default OFF — zero DB
+          // when LEDGER_CHAIN_ENABLED is not the literal "true". Fail-open:
+          // a chain skip must never block the receipt or the pick.
+          if (isLedgerChainEnabled()) {
+            try {
+              const priceDecimal = americanToDecimalOrNull(entryOdds);
+              const kickoff = oddsInputs.find((o) => o.gameId === pick.gameId)?.commenceTime;
+              const decisionAt = pick.dataFreshnessAt;
+              if (priceDecimal && kickoff && decisionAt) {
+                const chained = await appendPickToChain(db, {
+                  pickId: upsertedPick.id,
+                  sport: sport.name,
+                  market: String(pick.pickType),
+                  selection: pick.selection,
+                  priceDecimal,
+                  book: "consensus",
+                  decisionAt: new Date(decisionAt).toISOString(),
+                  kickoffAt: new Date(kickoff).toISOString(),
+                  modelVersion: pick.modelVersion,
+                  featureSnapshotHash: receipt.contentHash,
+                });
+                if (!chained.ok && chained.skipped !== "already_present" && chained.skipped !== "flag_off") {
+                  console.warn(
+                    `${logPrefix} Ledger chain pick-append skipped for ${upsertedPick.id}: ` +
+                      `${chained.skipped}${chained.message ? ` (${chained.message})` : ""}`,
+                  );
+                }
+              }
+            } catch (chainErr) {
+              console.warn(
+                `${logPrefix} Ledger chain pick-append failed for pick ${upsertedPick.id}: ` +
+                  `${chainErr instanceof Error ? chainErr.message : chainErr}`,
+              );
+            }
+          }
         }
       } catch (receiptErr) {
         // Non-fatal: proof-receipt failure must never kill a pick

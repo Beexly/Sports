@@ -99,6 +99,40 @@ export function buildProofOpenApiSpec(opts: BuildProofOpenApiOptions = {}) {
           },
         },
       },
+      "/api/proof/ledger-chain": {
+        get: {
+          operationId: "getProofLedgerChain",
+          summary: "Hash-chained pick + settlement export for the open recompute verifier.",
+          description:
+            "Streams the Glass Ledger chain in the exact {entries:[...]} shape scripts/edge-lab/recompute.ts consumes. Empty chain returns 200 with entries:[] and an honest note, never 404. Does not emit performance numbers.",
+          parameters: [
+            {
+              name: "limit",
+              in: "query",
+              required: false,
+              description: "Page size, 1–500 (default 200).",
+              schema: { type: "integer", minimum: 1, maximum: 500, default: 200 },
+            },
+            {
+              name: "afterSeq",
+              in: "query",
+              required: false,
+              description: "Return entries with seq greater than this cursor.",
+              schema: { type: "integer", minimum: -1 },
+            },
+          ],
+          responses: {
+            "200": {
+              description: "A page of chain entries (empty list when none exist yet).",
+              content: { "application/json": { schema: { $ref: "#/components/schemas/LedgerChainExport" } } },
+            },
+            "503": {
+              description: "The chain store is temporarily unavailable (DB outage). Not a verdict of non-existence.",
+              content: { "application/json": { schema: { $ref: "#/components/schemas/ServiceError" } } },
+            },
+          },
+        },
+      },
       "/api/proof/verification-spec.json": {
         get: {
           operationId: "getVerificationSpec",
@@ -185,6 +219,16 @@ export function buildProofOpenApiSpec(opts: BuildProofOpenApiOptions = {}) {
             payload: { type: "string", description: "The leaf preimage: recompute sha256('leaf:'+pickId+':'+payload)." },
           },
           required: ["pickId", "contentHash", "verified", "payload"],
+        },
+        LedgerChainExport: {
+          type: "object",
+          properties: {
+            entries: { type: "array", items: { type: "object" } },
+            count: { type: "integer", minimum: 0 },
+            nextSeq: { type: ["integer", "null"] },
+            note: { type: "string" },
+          },
+          required: ["entries", "count", "note"],
         },
         VerifyResult: {
           type: "object",

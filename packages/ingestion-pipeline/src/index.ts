@@ -81,6 +81,24 @@ export { bookLineDispersion } from "./book-dispersion.js";
 export type { DispersionPickType, BookOddsRow } from "./book-dispersion.js";
 export { freezeSlateCommitments, mintSlatePedersenAggregate } from "./freeze-slate-commitments.js";
 export type { SlateFreezeResult } from "./freeze-slate-commitments.js";
+export {
+  GLASS_LEDGER_CHAIN_ID,
+  LEDGER_CHAIN_CANON_VERSION,
+  americanToDecimalOrNull,
+  appendPickToChain,
+  appendSettlementToChain,
+  isLedgerChainEnabled,
+  isLedgerTableMissingError,
+  loadLedgerChain,
+  pairedClosingFields,
+} from "./ledger-chain-store.js";
+export type {
+  LedgerChainAppendResult,
+  LedgerChainDb,
+  LedgerChainLoadResult,
+  PersistPickInput,
+  PersistSettlementInput,
+} from "./ledger-chain-store.js";
 export { planSlateOpeningFromDb } from "./slate-opening-reader.js";
 export {
   planSlateOpeningFromSql,

@@ -1122,6 +1122,34 @@ export {
   type LedgerHead,
 } from "./honesty/glass-receipts.js";
 
+// Glass Ledger hash-chain math (pure; persistence is ingestion-pipeline)
+export {
+  GENESIS_HASH,
+  LedgerIntegrityError,
+  appendPick,
+  appendSettlement,
+  mintPickEntry,
+  mintSettlementEntry,
+  pickCommittedPayload,
+  settlementCommittedPayload,
+  nextLinkage,
+  verifyChain,
+  chainDigest,
+  computeClvBps,
+  isSettlement,
+} from "./edge-lab/ledger-chain.js";
+export type {
+  LedgerPickEntry,
+  LedgerSettlement,
+  LedgerEntry,
+  LedgerChain,
+  PickEntryInput,
+  SettlementEntryInput,
+  ChainLinkage,
+  ChainVerification,
+  ChainDigest,
+} from "./edge-lab/ledger-chain.js";
+
 // Fire authority — dual-asOf + cal + LIVE_BOARD + selective composition (pure)
 export {
   evaluateFireAuthority,

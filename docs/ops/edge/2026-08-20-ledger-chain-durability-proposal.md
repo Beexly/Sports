@@ -1,7 +1,11 @@
 # Glass Ledger chain persistence — sealed-path proposal (B-6a)
 
-**Status: proposal only, not implemented. Requires founder review before any
-migration lands — `packages/db/prisma/schema.prisma` is sealed.**
+**Status: AMENDED AND APPROVED (F-9, 2026-08-20).** The original model below
+is retained as the proposal-of-record. The frozen schema, concurrency law,
+and hash-contract constraints are in
+`docs/ops/edge/2026-08-20-f9-ledger-chain-entry-ruling.md`. The in-memory
+store on `hermes/b6a-chain-append` stays discarded. Migration FILE may land;
+`prisma migrate deploy` is still founder-applied and is not this ruling.
 
 ## What went wrong in the first attempt
 
