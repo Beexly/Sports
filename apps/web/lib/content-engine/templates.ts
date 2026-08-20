@@ -285,6 +285,32 @@ export const CONTENT_TEMPLATES: Readonly<Record<string, ContentTemplate>> = {
     defaultVisibility: "INTERNAL",
     reviewOwner: "AVA",
   },
+
+  HONEST_RECORD_DAILY: {
+    key: "HONEST_RECORD_DAILY",
+    contentType: "BLOG_POST",
+    title: "Daily honest record",
+    description:
+      "Yesterday's settled W/L/Push counts (or an honest empty), one Kill Ledger rotation, and one BookGrade/PulseScore highlight with its interpretation line. Draft-only.",
+    requiredSources: ["METHODOLOGY"],
+    allowedData: [
+      "performance.yesterdayWinLossPush",
+      "killLedger.rotationFeature",
+      "bookgrade.highlight",
+      "pulsescore.highlight",
+    ],
+    prohibitedClaimIds: [
+      "banned.guaranteed-outcome",
+      "banned.sure-thing",
+      "banned.verified-track-record",
+      "banned.guaranteed-profit",
+    ],
+    requiresAffiliateDisclosure: false,
+    requiresResponsibleGaming: true,
+    requiresPerformanceGate: false,
+    defaultVisibility: "INTERNAL",
+    reviewOwner: "AVA",
+  },
 };
 
 export function listTemplates(): readonly ContentTemplate[] {
