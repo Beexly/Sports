@@ -65,8 +65,15 @@ function nextInt(rng: { state: number }, n: number): number {
   return Math.floor(nextRandom(rng) * n);
 }
 
-/** Inverse-CDF draw from NB2(μ, φ): var = μ + μ²/φ. */
-function drawNb(rng: { state: number }, mu: number, phi: number): number {
+/**
+ * Inverse-CDF draw from NB2(μ, φ): var = μ + μ²/φ.
+ *
+ * Exported so the NB2 moment identity can be asserted directly rather than
+ * inferred from downstream behaviour. That identity is the whole reason φ is a
+ * load-bearing constant: VMR = var/μ = 1 + μ/φ, so φ alone decides how fat the
+ * scoring tail is. See `__tests__/nb2-dispersion-property.test.ts`.
+ */
+export function drawNb(rng: { state: number }, mu: number, phi: number): number {
   const p = phi / (phi + mu);
   // Gamma(φ, (1-p)/p) then Poisson — Johnk/Marsaglia via sum of exponentials is
   // heavy; for small baseball-scale μ we walk the CDF. Hard-cap at 40.
