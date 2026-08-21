@@ -33,26 +33,16 @@ type Env = Record<string, string | undefined>;
 /** Bedrock request/response uses this fixed anthropic version string. */
 const BEDROCK_ANTHROPIC_VERSION = "bedrock-2023-05-31";
 
-export interface BedrockConfig {
-  readonly region: string;
-  readonly accessKeyId: string;
-  readonly secretAccessKey: string;
-  readonly sessionToken?: string;
-}
-
-/** Resolve AWS credentials + region from the environment, or null if incomplete. */
-export function bedrockConfig(env: Env = process.env): BedrockConfig | null {
-  const region = (env["AWS_BEDROCK_REGION"] ?? env["AWS_REGION"])?.trim();
-  const accessKeyId = env["AWS_ACCESS_KEY_ID"]?.trim();
-  const secretAccessKey = env["AWS_SECRET_ACCESS_KEY"]?.trim();
-  if (!region || !accessKeyId || !secretAccessKey) return null;
-  const sessionToken = env["AWS_SESSION_TOKEN"]?.trim();
-  return { region, accessKeyId, secretAccessKey, ...(sessionToken ? { sessionToken } : {}) };
-}
-
-export function isBedrockConfigured(env: Env = process.env): boolean {
-  return bedrockConfig(env) !== null;
-}
+// Config resolution lives outside `providers/` so routing code can read
+// "is this provider configured?" without importing a raw provider client.
+// Re-exported here so this module's public API is unchanged. See ../provider-config.ts.
+import {
+  bedrockConfig,
+  isBedrockConfigured,
+  type BedrockConfig,
+} from "../provider-config";
+export { bedrockConfig, isBedrockConfigured };
+export type { BedrockConfig };
 
 /**
  * Explicit opt-in: Bedrock is used ONLY when the operator sets

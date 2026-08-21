@@ -13,7 +13,7 @@
  * ids — Vertex ids (e.g. `claude-3-5-sonnet-v2@20241022`) are supplied via a
  * verified `VERTEX_MODEL_MAP`; an unmapped model throws rather than guesses.
  */
-import { parseServiceAccountJson, fetchAccessToken, type ServiceAccountKey } from "./google-oauth";
+import { fetchAccessToken, type ServiceAccountKey } from "../google-oauth";
 import type { ClaudeMessagesResult } from "../messages";
 
 // Error classes live outside `providers/` so consumers can classify
@@ -27,25 +27,16 @@ type Env = Record<string, string | undefined>;
 const VERTEX_ANTHROPIC_VERSION = "vertex-2023-10-16";
 const CLOUD_PLATFORM_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
 
-export interface VertexConfig {
-  readonly project: string;
-  readonly region: string;
-  readonly key: ServiceAccountKey;
-}
-
-export function vertexConfig(env: Env = process.env): VertexConfig | null {
-  const project = env["GOOGLE_VERTEX_PROJECT"]?.trim();
-  const region = env["GOOGLE_VERTEX_REGION"]?.trim();
-  const saJson = env["GOOGLE_APPLICATION_CREDENTIALS_JSON"]?.trim();
-  if (!project || !region || !saJson) return null;
-  const key = parseServiceAccountJson(saJson);
-  if (!key) return null;
-  return { project, region, key };
-}
-
-export function isVertexConfigured(env: Env = process.env): boolean {
-  return vertexConfig(env) !== null;
-}
+// Config resolution lives outside `providers/` so routing code can read
+// "is this provider configured?" without importing a raw provider client.
+// Re-exported here so this module's public API is unchanged. See ../provider-config.ts.
+import {
+  vertexConfig,
+  isVertexConfigured,
+  type VertexConfig,
+} from "../provider-config";
+export { vertexConfig, isVertexConfigured };
+export type { VertexConfig };
 
 export function isVertexProviderSelected(env: Env = process.env): boolean {
   return env["CLAUDE_PROVIDER"]?.trim().toLowerCase() === "vertex" && isVertexConfigured(env);
