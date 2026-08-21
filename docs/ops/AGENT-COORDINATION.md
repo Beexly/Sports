@@ -90,6 +90,46 @@ Ranked. Take the top unclaimed one; announce it in your PR title so we don't col
 7. **Watchdog contract test + workflow schedule-literal lint** [S each] — the `.github/**` line edits
    are founder-only (sealed), but **the tests are yours to write**.
 
+### ⛔ BLOCKED — clearance gap on live pick inputs (needs founder verification)
+
+**Do not "fix" this by gating it. Read this first.**
+
+`packages/ingestion-pipeline/src/build-independent-fair-values.ts` makes **zero**
+`checkClearance` / `assertIngestible` calls, yet calls **Kalshi** (`:186-187`,
+`KalshiClient.getFairValue`) and **ClubElo** (`:226`, `tryClubEloFairValue`). It is in
+the **live pick path** — `generate-signal-slate.ts:144` — so these feed the
+`independentFairValue` signal behind pick confidence.
+
+That the *gap* exists is **VERIFIED** (grep returns no clearance calls). What is **NOT
+verified** is the rights status of the two sources:
+
+- **Kalshi** — a research pass reported that its data ToS requires prior written consent
+  for commercial use/redistribution. I could not confirm this myself: `kalshi.com/terms`
+  returns HTTP 429, and the data-ToS PDF is font-embedded so text extraction failed. It
+  remains **[ANALYST], not [VERIFIED]**.
+- **ClubElo** — no terms/license found anywhere on the site. Absence of a stated license
+  is **not a grant**, but it is also not a documented prohibition.
+
+**Why gating was deliberately NOT done:** registering both as `permission_required` and
+enforcing would make `checkClearance` deny them, dropping two independent sources out of
+live pick confidence. The pipeline degrades gracefully (each source soft-fails to `null`
+and is simply omitted), so it would not break — but it **would silently change model
+inputs on an unverified rights reading**. That is the SBR mistake in reverse: SBR was
+wrongly marked *approved* on thin evidence; marking these *denied* on equally thin
+evidence is the same error with the opposite sign.
+
+**Founder decision required, in this order:**
+1. Confirm Kalshi's data terms (open the PDF locally, or email Kalshi). If commercial use
+   needs consent → register `permission_required` and gate.
+2. Email ClubElo's maintainer (Lars Schiefler) for terms. Until answered, treat as
+   undetermined.
+3. Once status is settled, the gate itself is small: add `checkClearance` inside the two
+   existing `try` blocks and return `null` on denial — the soft-fail path already exists.
+
+**Interim posture:** the gap is documented, not silently tolerated. Ungated calls to
+external sources on a live commercial path remain a real compliance exposure and should
+be resolved before any paid-acquisition push.
+
 ### Founder-gated (do NOT attempt)
 Stripe scope-clarification letter · `CRYPTO_PAYMENTS_ENABLED` rail · PROVEN flag flip
 (`PUBLIC_PICKS_ENABLED` + `CANONICAL_HISTORY_ENABLED`) · MoneyPuck permission email · Neon prod
