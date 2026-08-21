@@ -66,21 +66,34 @@ Stripe + keep the crypto rail as insurance. **Not** a #1-slot emergency.
 
 Ranked by *survival then revenue*, not by ease. Items 1–2 gate the whole paid business.
 
-0. **[BLOCKING PRECONDITION — do before ANY other build] Merge PR #446 (`8d712e1b`).** It is **NOT
-   merged** — `git merge-base --is-ancestor 8d712e1b origin/main` returns NO, and
-   `grep -n 'limit=' apps/web/lib/data-sources/free-adapters/espn-scores.ts` returns **zero hits** on
-   this branch. T11 (item 2) builds its backfill lane on that exact fetcher. Build it unmerged and the
-   backfill silently truncates busy boards. *(Second time #446 has been a trap: it first patched dead
-   code, and now it sits on an unmerged sibling branch.)*
+0. ~~**[BLOCKING PRECONDITION] Merge PR #446.**~~ ✅ **DONE 2026-08-21 21:12Z — ALL BLOCKERS CLEARED.**
+   **The merge queue is empty. `main` is green. Nothing is gated on a merge button any more.**
+
+   | PR | What | Merged as |
+   |---|---|---|
+   | #447 | **T12 import boundary — 8 violations → 0.** The repo-wide CI red is GONE. | `e742a1af` |
+   | #446 | ESPN `limit=1000` on all three scoreboard fetchers (incl. the live settlement path) | `2da6f4e0` |
+   | #441 | build-segfault / placeholder `DATABASE_URL` stub | `e7dd6222` |
+   | #445 | this handoff + build specs | `3fa20887` |
+   | #448 | de-vig oracle + Parlay MRI v1 (queue item 7) | `4455c96f` |
+
+   **Verified on `main`:** import-boundary guard OK (0 violations, 2138 files);
+   `espn-scores.ts` carries `limit=1000`; prediction-engine 2399 tests pass; `tsc` exit 0.
+
+   → **START AT ITEM 1.** Do not wait for any merge. If you need something merged, push a PR and
+   say so — do not stall.
 1. **[VERIFIED] Age gate — the real #1; launch blocker for all paid acquisition.** No DOB field
    anywhere on the `User` model (`awk '/^model User /,/^}/' packages/db/prisma/schema.prisma` → zero
    hits), no 21+ gate at signup/checkout, despite 21+ messaging everywhere. Server-side DOB + 21+
    verification. ~1–2 days. Every ad platform requires it.
-2. **[ANALYST] T11 settlement backfill** (`docs/ops/2026-08-21-settlement-backfill-spec.md`, on the
-   overnight branch). `daysFrom 2→3` at `settle-sport.ts:184,187` **[VERIFIED: both lines are exactly
-   as cited, and The Odds API documents max daysFrom = 3, so 2→3 is legal]** + a free-source backfill
-   lane + health metric. Fixes the CRITICAL 86/1739 overdue backlog. Free-source only, no live DB in
-   tests, deploy is founder's. **Requires item 0 first.**
+2. **[ANALYST] T11 settlement backfill** (`docs/ops/2026-08-21-settlement-backfill-spec.md`, on branch
+   `origin/claude/overnight-2026-08-21` — read it with
+   `git show origin/claude/overnight-2026-08-21:docs/ops/2026-08-21-settlement-backfill-spec.md`).
+   `daysFrom 2→3` at `settle-sport.ts:184,187` **[VERIFIED: both lines are exactly as cited, and The
+   Odds API documents max daysFrom = 3, so 2→3 is legal]** + a free-source backfill lane + health
+   metric. Fixes the CRITICAL 86/1739 overdue backlog. Free-source only, no live DB in tests, deploy
+   is founder's. **✅ Item 0 is DONE — `espn-scores.ts` on `main` already carries `limit=1000`, so
+   build directly against it. Nothing blocks this.**
    - **[DRIFTED — delete spec step B.4]** "Terminal VOID for >14-day unresolvable picks can reuse
      existing VOID conventions" is false: the only VOID path
      (`free-settlement.ts:292-306`, `voidReason:'POSTPONED_OR_CANCELLED'`) is gated by
