@@ -1,4 +1,4 @@
-import { assertIngestible, getSource, parseCsv } from "@sports/data-ingestion";
+import { assertIngestible, getSource, isIngestible, parseCsv } from "@sports/data-ingestion";
 
 /**
  * NHL advanced stats via MoneyPuck (free CSV, credit required) — the first
@@ -189,17 +189,33 @@ export async function loadMoneyPuckNhl({
   fetcher?: FetchLike;
   now?: Date;
 } = {}): Promise<MoneyPuckNhl> {
-  assertIngestible("moneypuck");
   const attribution = getSource("moneypuck")?.attributionText ?? null;
-
   const resolved = season ?? defaultSeason(now);
+  const sUrl = skatersUrl(resolved);
+  const gUrl = goaliesUrl(resolved);
+  const tUrl = teamsUrl(resolved);
+  if (!isIngestible("moneypuck")) {
+    return {
+      generatedAt: now.toISOString(),
+      status: "source-error",
+      season: resolved,
+      seasonLabel: `${resolved}-${String((resolved + 1) % 100).padStart(2, "0")}`,
+      sourceRows: 0,
+      skaters: [],
+      goalies: [],
+      teams: [],
+      canPublishPicks: false,
+      note: "MoneyPuck is non-commercial. The NHL route stays dark until written permission exists.",
+      attribution,
+      sourceUrls: { skaters: sUrl, goalies: gUrl, teams: tUrl },
+      error: "moneypuck-permission-required",
+    };
+  }
+  assertIngestible("moneypuck");
   const live = fetcher === fetch;
   const nowMs = now.getTime();
   if (cacheTtlMs > 0 && live && cache && cache.expiresAt > nowMs) return cache.value;
 
-  const sUrl = skatersUrl(resolved);
-  const gUrl = goaliesUrl(resolved);
-  const tUrl = teamsUrl(resolved);
   try {
     const [skaterRecords, goalieRecords, teamRecords] = await Promise.all([
       fetchCsv(sUrl, fetcher, timeoutMs, "name"),
