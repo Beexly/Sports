@@ -17,87 +17,32 @@
  */
 import type { ClaudeMessagesResult } from "../messages";
 
+// Error classes live outside `providers/` so consumers can classify
+// failures without importing a raw provider client. Re-exported here so
+// this module's public API is unchanged. See ../provider-errors.ts.
+import { AzureFoundryConfigError, AzureFoundryMessagesError } from "../provider-errors";
+export { AzureFoundryConfigError, AzureFoundryMessagesError };
+
 type Env = Record<string, string | undefined>;
 
 const ANTHROPIC_VERSION = "2023-06-01";
 
-export interface AzureFoundryConfig {
-  /** Full Messages endpoint, e.g. https://myres.services.ai.azure.com/anthropic/v1/messages */
-  readonly messagesUrl: string;
-  readonly apiKey: string;
-}
-
-function normalizeMessagesUrl(baseRaw: string): string {
-  const base = baseRaw.trim().replace(/\/+$/, "");
-  if (base.endsWith("/v1/messages")) return base;
-  if (base.endsWith("/anthropic")) return `${base}/v1/messages`;
-  if (base.endsWith("/anthropic/v1")) return `${base}/messages`;
-  // Full Foundry host without path
-  if (/^https:\/\/[a-zA-Z0-9.-]+\.services\.ai\.azure\.com$/i.test(base)) {
-    return `${base}/anthropic/v1/messages`;
-  }
-  // Last resort: append standard path
-  return `${base}/anthropic/v1/messages`;
-}
-
-/**
- * Resolve endpoint from either:
- * - AZURE_FOUNDRY_BASE_URL (https://…/anthropic or full host)
- * - AZURE_FOUNDRY_RESOURCE (resource name only)
- * plus AZURE_FOUNDRY_API_KEY.
- */
-export function azureFoundryConfig(env: Env = process.env): AzureFoundryConfig | null {
-  const apiKey = env["AZURE_FOUNDRY_API_KEY"]?.trim();
-  if (!apiKey) return null;
-
-  const baseRaw = env["AZURE_FOUNDRY_BASE_URL"]?.trim();
-  const resource = env["AZURE_FOUNDRY_RESOURCE"]?.trim();
-
-  let messagesUrl: string | null = null;
-  if (baseRaw) {
-    if (!/^https:\/\//i.test(baseRaw)) return null;
-    messagesUrl = normalizeMessagesUrl(baseRaw);
-  } else if (resource) {
-    // Resource name only — no protocol/host injection of untrusted full URLs.
-    if (!/^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(resource)) return null;
-    messagesUrl = `https://${resource}.services.ai.azure.com/anthropic/v1/messages`;
-  }
-
-  if (!messagesUrl) return null;
-  return { messagesUrl, apiKey };
-}
-
-export function isAzureFoundryConfigured(env: Env = process.env): boolean {
-  return azureFoundryConfig(env) !== null && Boolean(env["AZURE_FOUNDRY_MODEL_MAP"]?.trim());
-}
+// Config resolution (and its private URL-normalizer) lives outside `providers/`
+// so routing code can read "is this provider configured?" without importing a raw
+// provider client. Re-exported here so this module's public API is unchanged.
+// See ../provider-config.ts.
+import {
+  azureFoundryConfig,
+  isAzureFoundryConfigured,
+  type AzureFoundryConfig,
+} from "../provider-config";
+export { azureFoundryConfig, isAzureFoundryConfigured };
+export type { AzureFoundryConfig };
 
 /** CLAUDE_PROVIDER=azure or azure-foundry + full config. */
 export function isAzureFoundryProviderSelected(env: Env = process.env): boolean {
   const p = env["CLAUDE_PROVIDER"]?.trim().toLowerCase() ?? "";
   return (p === "azure" || p === "azure-foundry") && isAzureFoundryConfigured(env);
-}
-
-export class AzureFoundryConfigError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AzureFoundryConfigError";
-  }
-}
-
-export class AzureFoundryMessagesError extends Error {
-  readonly status: number;
-  readonly durationMs: number;
-  readonly modelName: string;
-  constructor(
-    message: string,
-    args: { readonly status: number; readonly durationMs: number; readonly modelName: string },
-  ) {
-    super(message);
-    this.name = "AzureFoundryMessagesError";
-    this.status = args.status;
-    this.durationMs = args.durationMs;
-    this.modelName = args.modelName;
-  }
 }
 
 /**

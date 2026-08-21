@@ -53,8 +53,16 @@ describe("ESPN scores adapter (free, facts-only)", () => {
 
   it("targets a specific date slate when given dates (required to verify past finals)", () => {
     expect(espnScoreboardUrl("ncaaf")).not.toContain("dates="); // current scoreboard by default
-    expect(espnScoreboardUrl("ncaaf", "20251213")).toContain("?dates=20251213");
+    expect(espnScoreboardUrl("ncaaf", "20251213")).toContain("dates=20251213");
     expect(espnScoreboardUrl("nfl", "20251207-20251208")).toContain("dates=20251207-20251208");
+  });
+
+  it("always sends an explicit limit so busy settlement boards never truncate", () => {
+    // ESPN's default page silently drops games on heavy dates; this is the settlement scores
+    // path, so a truncated board leaves finals unsettled. Both dated and undated must carry it.
+    expect(espnScoreboardUrl("ncaaf")).toContain("limit=1000");
+    expect(espnScoreboardUrl("ncaaf", "20251213")).toContain("limit=1000");
+    expect(espnScoreboardUrl("mls", "20251207-20251208")).toContain("limit=1000");
   });
 
   it("is defensive against missing fields", () => {
