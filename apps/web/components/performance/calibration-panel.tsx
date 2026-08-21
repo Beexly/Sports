@@ -73,7 +73,6 @@ const VERDICT_META: Record<
 };
 
 function ReliabilityRow({ bucket }: { bucket: Bucket }) {
-  const observedWidth = `${Math.round(bucket.observedWinRate * 100)}%`;
   const expectedLeft = `${Math.round(bucket.expectedWinRate * 100)}%`;
   const empty = bucket.sampleSize === 0;
   // Min-sample floor: a bucket below the publish threshold must NEVER show a
@@ -81,13 +80,16 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   // Withhold the observed bar, the percentage, and the CI; show only the
   // sample-progress so the reader sees it is still collecting.
   const publishable = bucket.sufficientSample;
+  const decidedN = bucket.wins + bucket.losses;
+  const decidedRate = decidedN > 0 ? bucket.wins / decidedN : 0;
+  const observedWidth = `${Math.round(decidedRate * 100)}%`;
   const ci =
     publishable && bucket.clopperPearsonLow != null && bucket.clopperPearsonHigh != null
       ? {
-          point: bucket.observedWinRate,
+          point: decidedRate,
           low: bucket.clopperPearsonLow,
           high: bucket.clopperPearsonHigh,
-          n: bucket.wins + bucket.losses,
+          n: decidedN,
           alpha: 0.05,
         }
       : null;
@@ -113,7 +115,7 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
       <span
         className={`w-14 shrink-0 text-right text-xs font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}
       >
-        {publishable ? formatRatioAsPercent(bucket.observedWinRate) : STAT_PLACEHOLDER}
+        {publishable ? formatRatioAsPercent(decidedRate) : STAT_PLACEHOLDER}
       </span>
       <span
         className={`hidden w-28 shrink-0 text-right text-[11px] text-ion-2 sm:inline-block ${NUMERIC_TEXT_CLASS}`}
@@ -163,15 +165,11 @@ export async function CalibrationPanel() {
   const meta = VERDICT_META[d.trend];
   const collecting = data.isCollecting || data.sampleSize === 0;
 
-  // Overall observed rate = bucket rates weighted by bucket sample size. Only
-  // buckets that clear the publish floor contribute, so a thin sub-30 bucket
-  // never leaks an unsupported win rate into the headline / HonestBand.
-  const publishableBuckets = data.buckets.filter((b) => b.sufficientSample);
-  const decided = publishableBuckets.reduce((s, b) => s + b.sampleSize, 0);
-  const overallObserved =
-    decided > 0
-      ? publishableBuckets.reduce((s, b) => s + b.observedWinRate * b.sampleSize, 0) / decided
-      : 0;
+  // Headline rate is decided picks only (wins / decided), matching the
+  // Clopper-Pearson band. Withhold the band below 30 decided so a 2-pick
+  // sample cannot render as a trustworthy interval.
+  const decided = data.population.decided;
+  const overallObserved = decided > 0 ? data.population.wins / decided : 0;
 
   // Discrimination's low/high readout is computed at a LOWER floor than the
   // publish floor (MIN_DISCRIMINATION_SAMPLE=20 < MIN_PUBLISH_BUCKET_SAMPLE=30):
@@ -266,16 +264,16 @@ export async function CalibrationPanel() {
         </div>
       </div>
 
-      {/* The honest band — Wilson interval + reliability + limitation flags.
-          Back the band with `decided` (the sample behind overallObserved — only
-          publishable ≥30 buckets), NOT data.sampleSize (all settled picks), so the
-          95% interval and its "over N settled picks" caption match the rate. And
-          withhold the band entirely when nothing is publishable (decided === 0):
-          otherwise overallObserved defaults to 0 and the panel would publish a
-          fabricated "0% win rate, High reliability". */}
-      {decided > 0 && (
+      {/* Honest band uses Clopper-Pearson on the decided population. */}
+      {decided >= 30 && (
         <div className="px-6 pb-6">
-          <HonestBand observedRate={overallObserved} sampleSize={decided} />
+          <HonestBand
+            observedRate={overallObserved}
+            sampleSize={decided}
+            intervalLow={data.headlineClopperPearsonLow}
+            intervalHigh={data.headlineClopperPearsonHigh}
+            method="clopper-pearson"
+          />
         </div>
       )}
 
@@ -291,7 +289,9 @@ export async function CalibrationPanel() {
       </div>
 
       <div className="border-t border-titanium px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-ion-2">{data.disclaimer}</p>
+        <p className="text-[11px] leading-relaxed text-ion-2">
+          {data.publicMessage} {data.disclaimer}
+        </p>
         {data.modelVersions.length > 0 && (
           <p className={`mt-1 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}>
             Model version{data.modelVersions.length === 1 ? "" : "s"}: {data.modelVersions.join(", ")}
