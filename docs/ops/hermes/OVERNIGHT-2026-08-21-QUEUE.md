@@ -1,7 +1,7 @@
 # OVERNIGHT QUEUE — 2026-08-21
 
     MAX_CYCLES=30
-    CYCLE=7
+    CYCLE=8
     STALL_THRESHOLD=3
     BRANCH=claude/overnight-2026-08-21
     STOP_FILE=handoff/.stop
@@ -155,7 +155,7 @@ Read-only: fetch the endpoint, then trace the settle path in code
 fix. **Do not attempt the fix** — it likely needs DB access.
 **Done when:** the diagnosis file exists and names a specific code path with file:line.
 
-### T6 · DONE ·  next commit · box 2 cycles
+### T6 · DONE · 968f8ffd · box 2 cycles
 Add a visible provenance line to `apps/web/app/bookgrade/page.tsx` and
 `apps/web/app/kill-ledger/page.tsx` stating plainly that the figures are transcribed from an
 internal study whose raw computation is not published, and are not an independent audit of

@@ -1,6 +1,6 @@
 # OVERNIGHT REPORT — 2026-08-21
 
-**VERDICT: in progress · 7 done · 0 blocked · 8 commits · MVE ARMED · 1 findings**
+**VERDICT: in progress · 8 done · 0 blocked · 9 commits · MVE ARMED · 1 findings**
 
 <!-- The line above is the whole report for a founder reading half-asleep.
      Every cycle REWRITES it, then appends its row below.
