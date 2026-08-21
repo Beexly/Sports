@@ -1,7 +1,7 @@
 # OVERNIGHT QUEUE — 2026-08-21
 
     MAX_CYCLES=30
-    CYCLE=1
+    CYCLE=2
     STALL_THRESHOLD=3
     BRANCH=claude/overnight-2026-08-21
     STOP_FILE=handoff/.stop
@@ -67,7 +67,7 @@ the composite-null form, per `mve-eprocess.ts` and prereg v2. Doc-only — the c
 right. Note in the commit that only the doc was wrong.
 **Done when:** `grep -c '(1-q)/(1-m)' docs/ops/hermes/FINAL-RUN-2026-08-20.md` returns 0.
 
-### T5 · TODO · box 2 cycles
+### T5 · CLAIMED · box 2 cycles
 Wire the ledger guard into CI. In `package.json`, **prepend** to `scripts.guardrails`:
 `node scripts/ops/check-agent-ledger.mjs && node scripts/ops/check-agent-ledger-selftest.mjs && `
 **Position is load-bearing** — it is a 23-link `&&` chain, so appending means any upstream
