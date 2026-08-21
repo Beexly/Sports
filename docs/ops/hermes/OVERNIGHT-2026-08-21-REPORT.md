@@ -1,6 +1,6 @@
 # OVERNIGHT REPORT — 2026-08-21
 
-**VERDICT: in progress · 11 done · 0 blocked · 16 commits · MVE ARMED · 1 findings**
+**VERDICT: in progress · 11 done · 0 blocked · 22 commits · MVE ARMED · 1 findings**
 
 <!-- The line above is the whole report for a founder reading half-asleep.
      Every cycle REWRITES it, then appends its row below.
@@ -36,6 +36,7 @@ cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"  # expect 0
 |||| 7 | T9 (settlement backlog diagnosis) | curl truth surface (CRITICAL 86/1739 overdue) + grep -c settle-sport.ts:184 (returns 5) | 0 | Diagnosis file written naming settle-sport.ts:184 (daysFrom=2 score-fetch window) as the failing path; proposed fix as direction only
 ||| 10 | T8 (hf5-mve AUDIT.md) | test -f docs/ops/hermes/hf5-mve/AUDIT.md && grep -c "DIFFERENT SEAT REQUIRED" (returns 14) | 0 | AUDIT.md covers all 9 points: formula, side-selection, walk-forward call ordering, entry bar, push, one-bet, checkpoints, outcome, NbRbpf swap; 14 DIFFERENT SEAT REQUIRED flags for T2-owned sections |
 ||| 11 | T10 (GitHub research sweeps) | web_search across 6 axes × 4 gaps + negative-space queries | 0 | 6 findings recorded (3× score 4, 1× score 5, 1× score 3) + 3 negative-space entries; T13 enqueued with 4 apply tasks |
+||| 11 | T11/T12/T13 (not yet started — T11 REVENUE-CRITICAL backfill, T12 make-main-green, T13 sweep-apply enqueued) | progress check only | 0 | T6-T10 complete; T11/T12/T13 remain TODO |
 ||| 8 | T7 (D_i discrepancy note) | test -f docs/ops/edge/2026-08-21-di-discrepancy-note.md && grep -c "Form A is binding" (returns 1) | 0 | Note records both forms; Form A (s^2/n_i) is binding empirical form; FLAG ONLY, spec not amended |
 
 ## Blockers for the founder
