@@ -335,7 +335,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       const devFakeAdmin = devState.devFakeAdmin === true;
 
       const res = await request.post("/api/subscriptions/checkout", {
-        data: { tier: "PRO", interval: "month" },
+        data: { tier: "PRO", interval: "month", dateOfBirth: "1990-01-15" },
       });
 
       if (devFakeAdmin) {
