@@ -228,7 +228,7 @@ Apply the top GitHub sweep findings to the four open gaps, in priority order:
 
 ---
 
-### T10 · DONE · 52954d56 · box: remaining cycles · standing task
+### T10 · DONE · 88ec6621 · box: remaining cycles · standing task
 GitHub research sweeps. See `docs/ops/edge/2026-08-21-github-sweep.md` for the output
 scoring rubric. **Score 4–5 → append a concrete apply task to this queue as `TODO`.**
 That enqueue step is the whole point — findings that sit in a file are worthless.
