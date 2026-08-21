@@ -31,7 +31,7 @@ import { resolve } from "node:path";
 /** Fixed freeze manifest. Adding or removing a path is a protocol change. */
 export const MANIFEST = Object.freeze([
   "packages/prediction-engine/src/research/mve-eprocess.ts",
-  "packages/prediction-engine/src/research/mve-model-js.ts",
+  "packages/prediction-engine/src/research/efron-morris-js.ts",
   "scripts/edge-lab/run-mve.ts",
   "docs/ops/edge/2026-08-20-mve-prereg-v2.md",
   "docs/ops/edge/2026-08-20-prospective-prereg-mlb-totals-js.md",

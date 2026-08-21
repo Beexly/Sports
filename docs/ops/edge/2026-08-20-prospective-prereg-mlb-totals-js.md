@@ -75,94 +75,185 @@ voids the track.**
 
 ## 3. Model specification (frozen)
 
-The outcome model is a hierarchical count model with James-Stein shrinkage on
-its group-level parameters. Implementation must match this section exactly; a
-deviation is a new model and requires a new hash and a new pre-registration.
+**Amended 2026-08-21, before any MVE observation was graded (Amendment v2.2 —
+supersedes the 2026-08-20 text of this section in full).** The original text of
+this section named six feature families (starting pitcher FIP/xFIP, bullpen
+recent usage, park factor, weather forecast, umpire plate zone history, and
+rest/travel). A repo-wide schema and pipeline check on 2026-08-20 found four of
+those six — pitcher, bullpen usage tied to a starter, park factor, weather, and
+umpire — structurally unreachable from any real `Game` row today: no
+`Player`/pitcher join exists on `Game` anywhere in production, no
+`Stadium`/`Venue`/`Park` model exists in the schema at all, MLB weather is never
+fetched or persisted for any game, and umpire is present only as an
+always-`false` shadow flag the real pipeline never populates. There is no way to
+build the original spec tonight without fabricating values for those four
+families, which CLAUDE.md's Non-Negotiable Rules #1 and #2 (no fake data, no
+fabricated stats) forbid outright, independent of charter fidelity. This
+amendment replaces the model with the largest one that is real, buildable
+tonight, and does not touch any of those four families. It is recorded before
+this cycle's first observation is graded, per the reopening condition already
+established by Amendment v2.1.
 
-1. **Outcome target:** total runs scored in the game.
-2. **Model form:** hierarchical Poisson regression on total runs, or separately
-   on home and away runs with the game total as their sum. Over-dispersion may
-   be handled by a negative-binomial link **only if that choice is recorded in
-   the frozen hash before the track opens**; it may not be selected after
-   seeing prospective outcomes.
-3. **Feature inputs, all strictly pre-game and all observable at entry time:**
-   - team rolling offensive and defensive metrics, last 30 days
-   - starting pitcher FIP/xFIP and recent form
-   - bullpen recent usage: pitches thrown in the prior 3 days
-   - park factor
-   - weather forecast: temperature, wind, humidity
-   - umpire plate zone history
-   - rest days, travel distance, home/away
-   No feature may use information timestamped after the entry moment. Any
-   feature unavailable at entry for a given game is imputed by its frozen
-   group mean, and the imputation is logged per game.
-4. **Shrinkage construction:**
-   - Transform each group-level metric to an approximately normal, roughly
-     variance-stabilized scale before shrinking:
-     - **proportion metrics** (rates bounded in [0,1]): arc-sine,
-       `y = arcsin(sqrt(p))` with `Var(y) ~ 1/(4n)`;
-     - **count-rate metrics** (runs, strikeouts, pitch counts): square-root
-       (Anscombe) transform, `y = sqrt(x + 3/8)` with `Var(y) ~ 1/(4n)`.
-     The transform assigned to each metric is fixed in the frozen metric table
-     and may not be chosen at runtime. This split is recorded explicitly
-     because "convert to approximately normal scale" is otherwise a researcher
-     degree of freedom, and an unfrozen degree of freedom is how an e-process
-     gets quietly tuned.
-   - Apply the **positive-part James-Stein estimator, multiple-sample-size
-     variant**, per group-level parameter `i` within each shrinkage family.
-     The binding operational form is **Efron-Morris (1975) section 3**, the
-     unequal-sample-size shrinker:
+1. **Outcome target:** total runs scored in the game,
+   `y = homeScore + awayScore`. A single scalar per completed game. No
+   home/away split, no other outcome metric.
 
-     ```
-     theta_hat_i = theta_bar + (1 - B_i) * (theta_i - theta_bar)
-     B_i        = D_i / (A_hat + D_i)
-     A_hat      = max(0, tau2_hat)          # positive part
-     ```
+2. **Model form:** a team-level empirical-Bayes shrinkage estimator of each
+   team's historical "game total" tendency, feeding a two-parameter
+   negative-binomial (NB2) tail probability. This is the negative-binomial link
+   permitted by this section's original point 2, chosen and frozen here, before
+   the track opens. It replaces the six-feature hierarchical Poisson/NB
+   regression this section previously named.
 
-     where `D_i = sigma_i^2` is parameter `i`'s own sampling variance
-     (`1/(4 n_i)` under both transforms above), `A_hat` is the estimated prior
-     variance of the family, and `theta_bar` is the precision-weighted grand
-     mean. `B_i` is the shrinkage weight: large sampling variance (small
-     `n_i`) gives `B_i` near 1 and pulls the estimate hard toward the family
-     mean, which is the intended multiple-sample-size behavior.
+3. **Feature inputs — the only inputs this model may use, all strictly
+   pre-game:**
+   - Each team's own history of total runs (`homeScore + awayScore`) from
+     games it has already played earlier in this walk-forward, at the moment
+     the current game is scored. Nothing else.
+   - **No pitcher, bullpen, park, weather, or umpire input of any kind** — not
+     modeled, not approximated, not imputed by a placeholder constant. These
+     four feature families are what the schema check found them to be: absent
+     from the schema entirely (pitcher, park, weather) or present only as an
+     always-`false` shadow flag never populated by the production pipeline
+     (umpire). Wiring a constant "group mean" in their place would not add
+     real signal — every game would receive the identical value — which is a
+     fabricated feature no matter how it is labeled, and is exactly what rules
+     #1/#2 prohibit. **Do not implement a fallback that imputes any of these
+     four.**
+   - `restDaysHome`/`restDaysAway`, `isBackToBackHome`/`isBackToBackAway`,
+     `scheduleDensityHome`/`scheduleDensityAway` (on `Game`, computed by
+     `context-enrichment.ts` from real `TeamGameLog` history) are confirmed
+     real, populated, and reachable — but are **explicitly out of scope for
+     this cycle.** The shrinkage estimator in point 7 below operates on one
+     scalar group mean per team; this section defines no mechanism for a
+     second covariate to enter it, and inventing one tonight — the same night
+     the transform, the shrinkage formula, and the citation are also being
+     corrected — would itself be an unfrozen research degree of freedom. These
+     three fields are named here as the first candidate for the next
+     amendment, to be designed and frozen only after this cycle is graded.
 
-     **Recorded because it changes the arithmetic.** The founder's charter
-     writes the shrinkage factor as
-     `max(0, 1 - ((p-2) * sigma^2) / sum_j (theta_j - theta_bar)^2)`. That is
-     the **equal-variance special case**; the two forms coincide when every
-     `n_i` is equal. The unequal-variance display in James and Stein (1961) is
-     an existence bound for known unequal variances, not an operational
-     estimator, and it prescribes no analogue of the constant `p - 2`. Efron
-     (2010) and Tweedie recover James-Stein only under **common** sampling
-     variance, and supply neither the arcsine nor the unequal-n layer. So the
-     charter's formula stands as the equal-variance case, and Efron-Morris
-     section 3 is what the code implements. Source:
-     `docs/ops/edge/2026-08-20-ten-cluster-literature-stack.md`, James-Stein
-     section (Grok background pass, 2026-08-20).
-   - **`p >= 3` is required** for shrinkage to apply. A family with `p < 3` is
-     left unshrunk (identity), because the James-Stein dominance result does
-     not hold below three parameters. This is stated so the code cannot
-     silently shrink a two-parameter family and call it James-Stein.
-   - Back-transform before use: `p = sin(theta_hat)^2` for arc-sine families,
-     `x = theta_hat^2 - 3/8` for square-root families.
-5. **Online update:** the model is refit after every completed game using past
-   data only. Shrinkage targets, family means and shrinkage factors are
-   recomputed from the expanding history only. No future game, and no game from
-   the same slate, may inform a pick on that slate.
-6. **Over probability:** from the posterior predictive distribution of total
-   runs under the shrunk model,
+4. **Transform: square-root (Anscombe), `y = sqrt(x + 3/8)`,
+   `Var(y) ~ 1/(4n)` per observation** — the count-rate-metric row this section
+   already froze on 2026-08-20. Not arc-sine (that row is for proportion
+   metrics; this model uses none). Not `log(x + 0.5)` — a transform that was
+   never in this section's frozen metric table and does not carry the same
+   `Var(y) ~ 1/(4n)` property the shrinkage formula in point 7 assumes.
+
+5. **Per-team observation and pooled variance, walk-forward** (only games
+   already completed before the current one; the current game and any
+   later-commencing game are never used):
 
    ```
-   q_t^O = P(total runs > L | shrunk model)
+   X_i = mean( sqrt(y_g + 3/8) )   over team i's own past games g
+         where y_g = homeScore_g + awayScore_g of game g
+         (undefined if n_i = 0; see point 7's degenerate case)
+
+   s^2 = pooled sample variance of sqrt(y_g + 3/8) across ALL teams' past
+         games combined, up to the current game
+         (frozen fallback: if fewer than 8 past games exist league-wide,
+         s^2 = 0.04)
+
+   D_i = s^2 / n_i        # team i's sampling variance; undefined if n_i = 0
    ```
 
-   with `L` the entry line. For a half-run line this is unambiguous. For an
-   integer line, the push mass `P(total = L)` is excluded from both sides and
-   the game is handled per the push rule in section 2.
-7. **Determinism:** any stochastic step (sampling, particle counts, seeds) is
-   seeded from a constant recorded in the frozen hash. Re-running the model on
-   the same inputs must reproduce `q_t` bit-for-bit. A model that cannot
-   reproduce its own probabilities cannot be audited and may not open a track.
+6. **Grand mean:** `Xbar` is the **simple, unweighted arithmetic mean** of
+   `X_i` across the `k` teams with `n_i >= 1`. (This section's earlier text
+   called this a "precision-weighted grand mean"; that description does not
+   match Efron-Morris (1975) section 3's actual formula for the unequal-`n`
+   case, nor the worked example in point 9 below, and is corrected here. Using
+   a precision-weighted mean instead of the simple mean will not reproduce the
+   locked `theta` values in point 9.)
+
+7. **Shrinkage — Efron-Morris (1975) section 3, unequal-sample-size,
+   positive-part**, exactly as already frozen elsewhere in this section:
+
+   ```
+   k       = number of teams with n_i >= 1 at this point in the walk-forward
+   A_hat   = max(0, (sum_i (X_i - Xbar)^2 - sum_i D_i) / k)     # k >= 3 required
+   B_i     = D_i / (A_hat + D_i)          # if A_hat + D_i == 0, B_i = 1
+   theta_i = Xbar + (1 - B_i) * (X_i - Xbar)
+   ```
+
+   - `k >= 3` is required for shrinkage to apply, unchanged from this
+     section's original rule. If `k < 3`, every team is left unshrunk:
+     `theta_i = X_i`.
+   - If `n_i = 0` for a team, there is no observation to shrink: treat
+     `X_i` as `Xbar` and `B_i = 1` (full shrinkage to the grand mean). This is
+     the correct degenerate case of this same real estimator, not a
+     group-mean imputation of a missing feature.
+   - **No limited-translation cap.** A cap of this shape is real in the
+     Efron-Morris literature, but it comes from the 1971/1972 papers, is
+     table-driven and tunable by a parameter `s ∈ [0,1]`, and has no universal
+     constant. A fixed `c = 1.5 * sqrt(D_i)` cap is not supported by the cited
+     source, and the literature dossier's own verdict on it is **GATE, not
+     ADOPT**, pending a separate amendment. Dropped for this cycle. `theta_i`
+     is used exactly as computed above, with no post-hoc adjustment.
+
+8. **Back-transform and game-level mean**, computed walk-forward, before the
+   current game's outcome is available:
+
+   ```
+   mu = max(MU_FLOOR, ((theta_home + theta_away) / 2) ^ 2 - 3/8)
+   ```
+
+   using this section's own square-root back-transform
+   (`x = theta_hat^2 - 3/8`), applied once to the average of the two teams'
+   shrunk values. **Not `exp()`** — that is only correct for a log transform,
+   which this section does not use. `MU_FLOOR` is a small positive constant
+   (e.g. `0.5`) recorded in code and covered by the frozen model hash, guarding
+   the NB2 tail helper against a non-positive mean; every game where the floor
+   binds is logged.
+
+9. **Over probability:** NB2, dispersion `phi = 12` fixed (matching the
+   existing particle filter's initialization — an over-dispersion choice
+   recorded here, satisfying this section's requirement that any
+   negative-binomial link be chosen and frozen before the track opens):
+
+   ```
+   q_t^O = nbOverProb(mu, phi, L)
+   ```
+
+   using the existing NB2 tail helper in
+   `packages/prediction-engine/src/research/nb-rbpf.ts`, **exported** (it is
+   currently module-private) and called directly — not reimplemented. `L` is
+   the entry line from section 2 (the median line across qualifying books at
+   entry, never the closing line).
+
+10. **Online update:** recomputed after every completed game using only that
+    game's and all earlier games' data, in strict `commenceTime` order. A
+    team's own current game is never in its own history at the moment `theta`
+    is computed for that game, and no later-commencing game is ever in an
+    earlier game's history. No same-slate leakage.
+
+11. **Determinism:** this model is closed-form arithmetic — no sampling, no
+    particle filter, no seed anywhere in the path from game history to `q_t`.
+    It reproduces `q_t` bit-for-bit on the same inputs by construction; no
+    seed needs to be recorded.
+
+12. **Locked worked example** (required unit test, tolerance `1e-3` on
+    `theta`):
+
+    ```
+    k = 4 teams, X = [2.1, 2.2, 2.0, 2.4], n = [4, 20, 4, 8], s^2 = 0.04
+    D = [0.01, 0.002, 0.01, 0.005]
+    Xbar = 2.175
+    sum (X - Xbar)^2 = 0.0875
+    sum D = 0.027
+    A_hat = max(0, (0.0875 - 0.027) / 4) = 0.015125
+    B = [0.398010, 0.116788, 0.398010, 0.248447]
+    theta = [2.129851, 2.197080, 2.069652, 2.344099]
+    ```
+
+    These `theta` values correct the worked example previously circulated in
+    `docs/ops/edge/2026-08-20-mve-builder-brief.md`: its `D_i`, `Xbar`,
+    `sum(X-Xbar)^2`, `sum D_i` and `B_i` all check out against this same
+    arithmetic, but its stated final `theta` values do not follow from its own
+    formula — they are off by roughly 15x, 35x and 113x this section's 1e-3
+    tolerance on three of the four teams. Any test fixture locking `theta`
+    must use the values above.
+
+Sections 2 (entry and market probability) and 4 (side selection and the
+e-process) are unchanged by this amendment.
 
 ## 4. Side selection and the e-process (frozen)
 

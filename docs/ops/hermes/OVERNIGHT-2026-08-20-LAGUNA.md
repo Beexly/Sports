@@ -66,93 +66,145 @@ stop and write BLOCKED.
 
 ## LANE A — the MVE. Highest value. Start here.
 
-### A1. Implement the James-Stein outcome layer (does NOT need a database)
+### A1. Implement the team-level Efron-Morris outcome layer (does NOT need a database)
 
-Do this FIRST, before any database work, so a connectivity blocker cannot waste
-the whole night.
+**Single authority for the model: section 3 of
+`docs/ops/edge/2026-08-20-prospective-prereg-mlb-totals-js.md`, as amended
+2026-08-21 (Amendment v2.2). Read it in full before writing code.** It replaces
+the pitcher/bullpen/park/weather/umpire feature list this file used to point
+you at — that list is confirmed unbuildable tonight without fabricating data.
+`docs/ops/edge/2026-08-20-mve-builder-brief.md` (PR #439) is background and
+implementation detail only — its file layout and runner-loop shape are useful,
+but wherever it conflicts with the amended section 3 (its limited-translation
+cap, its `log` transform, its own worked-example `theta` values), **section 3
+governs, not the brief.**
 
-Build `packages/prediction-engine/src/research/mve-model-js.ts` implementing
-section 3 of `docs/ops/edge/2026-08-20-prospective-prereg-mlb-totals-js.md`
-(on PR #438's branch). Binding points, all frozen:
+**Before touching any code, confirm the gating condition:** check the ledger,
+`docs/ops/hermes/hf5-mve/RESULTS.md`, and any capital-path file for evidence
+that an MVE observation has already been graded on this branch or any branch
+that fed it. If one has, **stop** — do not proceed with this amendment, write
+BLOCKED with the evidence, and escalate to the founder; Amendment v2.1 (and
+now v2.2) both close further amendment once a single observation is graded.
+The 2026-08-20 ground state above states zero observations exist, but that
+note is now a day old — re-verify it yourself before relying on it.
 
-- Hierarchical Poisson on total runs (or on home/away runs, summed). A
-  negative-binomial link is permitted ONLY if that choice is recorded in the
-  frozen hash before anything runs.
-- **Shrinkage is Efron-Morris (1975) section 3**, the unequal-sample-size form:
-  `theta_hat_i = theta_bar + (1 - B_i)(theta_i - theta_bar)` with
-  `B_i = D_i / (A_hat + D_i)`, `D_i = sigma_i^2 = 1/(4 n_i)`, and
-  `A_hat = max(0, tau2_hat)` for the positive part.
-  **Do not implement the charter's `(p-2) * sigma^2 / sum(...)` factor as the
-  general case.** That is the equal-variance special case; the two agree only
-  when every `n_i` is equal. The unequal-variance display in James-Stein (1961)
-  is an existence bound, not an operational estimator, and names no analogue of
-  `p - 2`. This correction came from the dossier and is now binding in the
-  pre-registration.
-- `p >= 3` required for shrinkage to apply. A family with `p < 3` is left
-  unshrunk (identity). Do not silently shrink a two-parameter family and call it
-  James-Stein.
-- Arc-sine for proportion metrics (`Var ~ 1/(4n)`), sqrt/Anscombe for count-rate
-  metrics. The per-metric assignment is a frozen table in code, never a runtime
-  choice.
-- Shrink team and pitcher effects **after** park, weather and market are
-  partialled out (Fay-Herriot shape: shrink residuals, not raw rates). Shrinking
-  toward a grand mean that still contains park and weather signal throws away
-  the only thing that could differ from the market.
-- Refit online from expanding history only. No same-slate leakage: no game on a
-  slate may inform a pick on that slate.
-- `q_t^O = P(total runs > L)` from the posterior predictive at the entry line.
-- Deterministic: seeded, and reproducible bit-for-bit on the same inputs. A
-  model that cannot reproduce its own probabilities cannot be audited.
+Build `packages/prediction-engine/src/research/efron-morris-js.ts` implementing
+section 3 exactly. Binding points, all frozen:
 
-Then point the runner's `q_t` source at it, replacing `NbRbpf`, and stop pinning
-`nPitchers` / `nUmpires` / `park`. Wire the real features the schema can serve.
-For any feature the data cannot serve tonight, impute the frozen group mean
-**and log the imputation per game**, then state plainly in your report which
-features were imputed for how many games. An imputed feature is honest. A
-silently absent one is not.
+- Team-level shrinkage of each team's own history of game totals
+  (`homeScore + awayScore`), **square-root (Anscombe) transformed**
+  (`y = sqrt(x + 3/8)`), not `log`.
+- **Efron-Morris (1975) section 3**, unequal-sample-size, positive-part:
+  `theta_i = Xbar + (1 - B_i)(X_i - Xbar)`, `B_i = D_i / (A_hat + D_i)`,
+  `A_hat = max(0, (sum_i(X_i - Xbar)^2 - sum_i D_i) / k)`. `Xbar` is the
+  **simple, unweighted mean** across the `k` teams with `n_i >= 1` — not
+  precision-weighted.
+- `k >= 3` required for shrinkage to apply; below that, `theta_i = X_i`
+  (or `Xbar` if `n_i = 0`, with `B_i = 1`).
+- **No limited-translation cap.** Do not implement one. It is mis-cited,
+  un-frozen, and the literature dossier's own verdict on it is GATE, not
+  ADOPT.
+- Back-transform: `mu = max(MU_FLOOR, ((theta_home + theta_away) / 2)^2 - 3/8)`
+  — the section's own square-root back-transform, applied once to the
+  home/away average. **Not `exp()`.** `MU_FLOOR` (e.g. `0.5`) guards
+  `nbOverProb` against a non-positive mean; log every game where it binds.
+- `phi = 12` fixed. `q_t^O = nbOverProb(mu, phi, L)` using the existing NB2
+  tail helper in `nb-rbpf.ts`.
+- **Export `nbOverProb` from `nb-rbpf.ts`** (currently module-private, line
+  131 — add the `export` keyword). Call it directly. Do not reimplement a
+  second PMF.
+- **Do not implement a placeholder/imputation fallback for pitcher, bullpen,
+  park, weather, or umpire.** These are not occasionally missing — they are
+  structurally absent from every game today. A frozen "group mean" for a
+  feature that is identical on every game is fabricated data, not a richer
+  model. Section 3's earlier text permitted imputation for occasionally-absent
+  features; that permission does not apply to these four, and does not survive
+  this amendment for them.
+- **Do not wire in `restDaysHome/Away`, `isBackToBackHome/Away`, or
+  `scheduleDensityHome/Away`** this cycle, even though they are real and
+  reachable. Section 3 defines no mechanism for a second covariate to enter
+  this shrinkage estimator; leave them out and note them in your report as the
+  named first candidate for the next amendment.
 
-Unit tests required, and they must include: `B_i` goes to 1 as `n_i` goes to 0;
-`B_i` goes to 0 as `n_i` grows; `p < 3` returns identity; positive part clamps at
-`A_hat = 0`; and the back-transforms round-trip.
+Unit tests required in
+`packages/prediction-engine/src/research/efron-morris-js.test.ts`, and they
+must include: the locked worked example from section 3 point 12
+(`theta = [2.129851, 2.197080, 2.069652, 2.344099]`, tolerance `1e-3` — **not**
+the builder brief's `[2.145, 2.197, 2.105, 2.231]`, which is arithmetically
+wrong for 3 of 4 teams); `k < 3` returns identity; `n_i = 0` returns `Xbar`
+with `B_i = 1`; `A_hat` floors at 0; the Anscombe back-transform round-trips;
+`mu` stays positive (`MU_FLOOR` binds correctly) on a constructed low-scoring
+input.
 
-**If you cannot finish A1 tonight, that is an acceptable outcome. Do NOT run the
-MVE with `NbRbpf` in order to have something to show.** Amendment v2.1 forbids
-it, and certifying one model while intending to trade another is the exact
-failure this entire protocol exists to prevent.
+Then point the runner's `q_t` source at it. Order of operations in
+`scripts/edge-lab/run-mve.ts` (unchanged from the builder brief — this part of
+it is correct and independently verified to preserve walk-forward causal
+validity):
+
+```
+for each game in commenceTime order:
+  entry = entryForGame(...)          // existing: 6-3h, >=3 books, <=15 min, Shin, median line
+  if entry is null: excluded++; continue
+  qOver = efronMorrisQOver(home, away, entry.line, pastGames)   // reads history only, never this game's y
+  y = homeScore + awayScore
+  if y == line: pushes++; record past game; continue
+  observations.push({ qOver, mOver: entry.mOver, y, line })
+  record this game into pastGames    // AFTER qOver — walk-forward, never before
+```
+
+`filter.predictOver`/`NbRbpf` may still run for a logged diagnostic column, but
+the e-process uses this module's `qOver` only. Prefer skipping the particle
+path entirely this cycle if it is extra work — one `q`, no dual model.
+
+**If you cannot finish A1 tonight, that is an acceptable outcome. Do NOT run
+the MVE with `NbRbpf`, and do NOT run it with the original six-feature spec
+using imputed placeholders, in order to have something to show.** Both are
+prohibited — the first by Amendment v2.1/v2.2, the second by CLAUDE.md rules
+#1/#2.
 
 ### A2. Database triage (bounded: 30 minutes, then move on)
 
-The runtime connection string points at localhost and fails `28P01`. A previous
-seat also failed against the Neon host. In order, try the unpooled variable, the
-pooled and direct Neon hosts, and the read-only `hermes_ro` role used for the
-H-F7 archive count. Print no secret and no fragment of one.
+The runtime connection string points at localhost and fails `28P01`. A
+previous seat also failed against the Neon host. In order, try the unpooled
+variable, the pooled and direct Neon hosts, and the read-only `hermes_ro` role
+used for the H-F7 archive count. Print no secret and no fragment of one.
 
-If none connect: write BLOCKED with the exact error codes, stop Lane A, and move
-to Lane B. **Invent nothing.** No capital, no `n`, no exclusion count, no
+If none connect: write BLOCKED with the exact error codes, stop Lane A, and
+move to Lane B. **Invent nothing.** No capital, no `n`, no exclusion count, no
 "approximate" or "expected" anything.
 
 ### A3. Freeze the hash
 
-Once A1 lands and the runner points at it, run
-`node scripts/edge-lab/freeze-model-hash.mjs`. It exits 1 and names the missing
-files until the manifest is complete. When it exits 0, paste the composite digest
-into section 5 of the prospective pre-registration, replacing "NOT RECORDED", and
-commit it in the same change.
+`freeze-model-hash.mjs`'s `MANIFEST` already names
+`packages/prediction-engine/src/research/efron-morris-js.ts` (renamed from the
+old `mve-model-js.ts` placeholder in the same commit as this amendment — no
+action needed on the manifest itself). Once A1 lands and the runner points at
+it, run `node scripts/edge-lab/freeze-model-hash.mjs`. It exits 1 and names any
+missing manifest files until the manifest is complete. When it exits 0, paste
+the composite digest into section 5 of
+`docs/ops/edge/2026-08-20-prospective-prereg-mlb-totals-js.md`, replacing "NOT
+RECORDED", and commit it in the same change.
 
 ### A4. Run ONE cycle
 
 One. Ever.
 
+- Re-confirm the gating condition from A1 one more time immediately before
+  running: zero observations graded, Amendment v2.2 committed. If either is no
+  longer true, stop and escalate instead of running.
 - Do not retune anything after seeing the path.
-- Do not compute an alternate window, lambda, side rule, or variant, not even
-  diagnostically, not even "just to check".
+- Do not compute an alternate window, lambda, side rule, transform, or
+  variant, not even diagnostically, not even "just to check".
 - Do not re-run because you dislike the number.
 - Apply the pre-drafted binding outcome: KILL to the Kill Ledger, or
   CERTIFY_DRAFT to the prospective pre-registration, or "did not certify, did
   not survive". No middle state may persist.
 - Report: final capital, `n` graded, the chronological capital path, max
   drawdown, crossings at 2 / 5 / 10 / 20, exclusion count with reasons, push
-  count, and the imputed-feature counts from A1.
+  count, and explicit confirmation that no feature was imputed as a
+  placeholder constant this cycle (the only inputs are each team's own real
+  historical game totals) — and that rest-days/schedule-density were left out
+  by design, logged as the next amendment's first candidate.
 
 ---
 

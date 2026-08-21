@@ -67,7 +67,7 @@ test("a missing file yields no digest and is reported by path", () => {
 
 test("the real manifest names the model, the e-process, the runner and both protocol docs", () => {
   assert.ok(MANIFEST.includes("packages/prediction-engine/src/research/mve-eprocess.ts"));
-  assert.ok(MANIFEST.includes("packages/prediction-engine/src/research/mve-model-js.ts"));
+  assert.ok(MANIFEST.includes("packages/prediction-engine/src/research/efron-morris-js.ts"));
   assert.ok(MANIFEST.includes("scripts/edge-lab/run-mve.ts"));
   assert.ok(MANIFEST.includes("docs/ops/edge/2026-08-20-mve-prereg-v2.md"));
   assert.ok(MANIFEST.includes("docs/ops/edge/2026-08-20-prospective-prereg-mlb-totals-js.md"));
