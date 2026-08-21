@@ -14,7 +14,11 @@ function mockDb(seq: number[]) {
 describe("loadCanonicalSamplePosture", () => {
   it("exposes canonical settled and excludes bootstrap from ladder N", async () => {
     const sample = await loadCanonicalSamplePosture(
-      mockDb([42, 20, 18, 4, 11, 900, 50, 40]),
+      // Order matches the db.pick.count sequence in loadCanonicalSamplePosture:
+      // settled, WIN, LOSS, PUSH, VOID, PENDING, bootstrapSettled, recent, recentBootstrap.
+      // (VOID was added by the Clopper-Pearson work — decided-only rates need voids
+      // counted in the population but excluded from the rate.)
+      mockDb([42, 20, 18, 4, 3, 11, 900, 50, 40]),
       {
         commencedTotal: 1478,
         canExposePerformanceStats: false,
@@ -26,6 +30,8 @@ describe("loadCanonicalSamplePosture", () => {
     expect(sample.canonicalWins).toBe(20);
     expect(sample.canonicalLosses).toBe(18);
     expect(sample.canonicalPushes).toBe(4);
+    // VOID is counted upstream (it belongs in the population, not the decided
+    // rate) but CanonicalSamplePosture deliberately doesn't surface it.
     expect(sample.canonicalPending).toBe(11);
     expect(sample.bootstrapSettled).toBe(900);
     expect(sample.remainingToFloor).toBe(58);
@@ -34,7 +40,8 @@ describe("loadCanonicalSamplePosture", () => {
 
   it("remainingToFloor is zero when above learning floor", async () => {
     const sample = await loadCanonicalSamplePosture(
-      mockDb([150, 70, 70, 10, 5, 0, 20, 0]),
+      // settled, WIN, LOSS, PUSH, VOID, PENDING, bootstrapSettled, recent, recentBootstrap
+      mockDb([150, 70, 70, 10, 2, 5, 0, 20, 0]),
       {
         commencedTotal: 200,
         canExposePerformanceStats: false,

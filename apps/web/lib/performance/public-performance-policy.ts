@@ -55,6 +55,19 @@ export interface PublicPerformancePolicy {
   /** 95% Clopper-Pearson lower/upper on the decided win rate (percent). Null when gated or no decided picks. */
   readonly publicWinRateCiLowPct: number | null;
   readonly publicWinRateCiHighPct: number | null;
+  /**
+   * Fully-rendered band label, e.g. "95% CP 52.1–68.3%".
+   *
+   * Built HERE rather than in the page on purpose. The confidence level is a
+   * property of the interval we actually computed (derived from `band.alpha`),
+   * so it must travel with the interval — if alpha ever changes, the label
+   * follows automatically instead of silently lying.
+   *
+   * It also keeps customer surfaces free of hardcoded percentage literals, which
+   * the `no-fake-percentages` tripwire (correctly) refuses to distinguish from
+   * outcome claims. Pages render this string; they never assemble it.
+   */
+  readonly publicWinRateCiLabel: string | null;
   readonly publicWinRateBoundMethod: "clopper-pearson";
   readonly modelVersions: readonly string[];
   readonly publicRecord: string;
@@ -184,6 +197,11 @@ export function evaluatePublicPerformancePolicy(
     publicWinRate: allowed ? winRate : null,
     publicWinRateCiLowPct: band ? Math.round(band.low * 1000) / 10 : null,
     publicWinRateCiHighPct: band ? Math.round(band.high * 1000) / 10 : null,
+    publicWinRateCiLabel: band
+      ? `${Math.round((1 - band.alpha) * 1000) / 10}% CP ${
+          Math.round(band.low * 1000) / 10
+        }–${Math.round(band.high * 1000) / 10}%`
+      : null,
     publicWinRateBoundMethod: "clopper-pearson",
     modelVersions,
     publicRecord: record,
