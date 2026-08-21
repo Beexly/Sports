@@ -80,7 +80,7 @@ two fixture ledgers to a temp dir, spawn `check-agent-ledger.mjs` against each w
 **Done when:** `node scripts/ops/check-agent-ledger-selftest.mjs; echo "EXIT=$?"` prints
 `EXIT=0`, and `node -e "const s=require('./package.json').scripts.guardrails; process.exit(s.startsWith('node scripts/ops/check-agent-ledger.mjs')?0:1)"; echo "EXIT=$?"` prints `EXIT=0`.
 
-### T1 · DONE · 8acd0e30, 9b8e0f1c · box 2 cycles
+### T1 · DONE · 8acd0e30, 165d8473 · box 2 cycles
 Merge `origin/hermes/hf5-mve`. Exactly one conflict expected, on `docs/ops/AGENT_LEDGER.md`'s
 append line — union-resolve it (keep both rows, keep `DONE`, per the established convention).
 Brings `mve-eprocess.ts`, `mve-eprocess.test.ts`, `scripts/edge-lab/run-mve.ts`.
@@ -89,7 +89,7 @@ Brings `mve-eprocess.ts`, `mve-eprocess.test.ts`, `scripts/edge-lab/run-mve.ts`.
 returns 1 **and** the missing-file count in its output is 1 (was 3), and
 `node scripts/ops/check-agent-ledger.mjs; echo "EXIT=$?"` prints `EXIT=0`.
 
-### T2 · TODO · box 8 cycles
+### T2 · CLAIMED · box 8 cycles
 Implement `packages/prediction-engine/src/research/efron-morris-js.ts` per **Amendment v2.2,
 section 3** of `docs/ops/edge/2026-08-20-prospective-prereg-mlb-totals-js.md`. Read that
 section in full first. Binding points:
