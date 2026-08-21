@@ -128,7 +128,13 @@ export function parseEspnScoreboard(json: EspnScoreboard, sport: Sport): Normali
  */
 export function espnScoreboardUrl(sport: Sport, dates?: string): string {
   const base = `https://site.api.espn.com/apis/site/v2/sports/${ESPN_PATHS[sport]}/scoreboard`;
-  return dates ? `${base}?dates=${encodeURIComponent(dates)}` : base;
+  // ESPN's scoreboard returns a small default page and silently truncates busy boards (CFB
+  // Saturdays, multi-league soccer days). This is the settlement scores path, so a dropped final
+  // leaves its pick unsettled — force the full board with an explicit limit (dated and undated).
+  const params = new URLSearchParams();
+  if (dates) params.set("dates", dates);
+  params.set("limit", "1000");
+  return `${base}?${params.toString()}`;
 }
 
 export type FetchOptions = { readonly fetchImpl?: typeof fetch; readonly timeoutMs?: number; readonly dates?: string };

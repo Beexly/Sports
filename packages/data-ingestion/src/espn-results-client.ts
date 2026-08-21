@@ -20,6 +20,12 @@ import { noStoreFetch } from "./no-store-fetch.js";
 const ESPN_BASE_URL = "https://site.api.espn.com/apis/site/v2/sports";
 const ESPN_TIMEOUT_MS = 15 * 1000;
 
+// ESPN's scoreboard endpoint returns a small default page and silently truncates the event
+// list on busy dates (CFB Saturdays, multi-league soccer days). This is the settlement scores
+// path, so a truncated board means completed games never receive final scores and stay
+// unsettled. An explicit high limit forces the full board.
+const ESPN_SCOREBOARD_LIMIT = 1000;
+
 export type EspnLeague = "nfl" | "nba" | "mlb" | "nhl" | "ncaaf" | "ncaab";
 
 /** Map an internal league key to ESPN's {sport}/{league} path segments. */
@@ -210,9 +216,11 @@ export class EspnResultsClient {
    */
   async getResults(league: EspnLeague, dateYyyymmdd?: string): Promise<EspnGameResult[]> {
     const { sport, league: leaguePath } = LEAGUE_PATH[league];
-    const query = dateYyyymmdd ? `?dates=${encodeURIComponent(dateYyyymmdd)}` : "";
+    const params = new URLSearchParams();
+    if (dateYyyymmdd) params.set("dates", dateYyyymmdd);
+    params.set("limit", String(ESPN_SCOREBOARD_LIMIT));
     const payload = await this.get<EspnScoreboardResponse>(
-      `/${sport}/${leaguePath}/scoreboard${query}`,
+      `/${sport}/${leaguePath}/scoreboard?${params.toString()}`,
     );
     return parseEspnScoreboard(payload, league);
   }
