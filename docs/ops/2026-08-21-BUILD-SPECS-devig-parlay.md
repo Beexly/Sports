@@ -5,10 +5,17 @@ reimplement in TS; **cite the source in a header comment** (`Ported from penalty
 github.com/martineastwood/penaltyblog`). `implied.py` is pure numpy/scipy (no Cython); the joint-PMF
 math lives in the Cython core `models/probabilities.pyx` + `models/utils.pxd`.
 
-> **PROVENANCE CAVEAT [do first]:** every golden number below was *self-derived* by re-executing the
-> extracted formulas in pure Python (no numpy/scipy in the sandbox). Before treating any fixture as
-> CI-blocking, install `penaltyblog` and confirm its real scipy `ridder`/`brentq` path reproduces
-> these values at ≤1e-9. [VERIFY, S]
+> **✅ PROVENANCE CAVEAT RESOLVED — fixtures are VERIFIED, safe to make CI-blocking.**
+> `penaltyblog` 1.12.0 (commit `5ebd602`) was pip-installed editable into a fresh venv with
+> **numpy 2.4.6 / scipy 1.17.1**, building the real Cython extension
+> (`probabilities.cpython-311-x86_64-linux-gnu.so`) — so the genuine `scipy.optimize.ridder`/`brentq`
+> solvers ran, not a pure-Python re-derivation.
+> - **De-vig, all 3 markets × 7 methods: max abs diff 1.01e-12** (three orders of magnitude inside the
+>   1e-9 threshold; residuals are solver-tolerance noise). Every method sums to 1.0 within 1e-9 and
+>   `margin == sum(1/odds)-1` exactly.
+> - **Bivariate Poisson: exact float64 match (diff = 0.0)** from the compiled Cython
+>   `compute_bivariate_poisson_probabilities`, independently cross-checked against a from-scratch
+>   convolution (max diff 3.5e-17).
 
 ---
 
@@ -120,9 +127,25 @@ export function bivariatePoissonPmf(x, y, lam1, lam2, lam3): number {
 
 ### Golden fixtures → `test/fixtures/bivariate-poisson.golden.json` (atol 1e-9)
 
-**Set1** λ1=1.5, λ2=1.0, λ3=0.3: `P00=0.06081006262521797`, `P10=0.09121509393782695`,
-`P01=0.06081006262521797`, `P11=0.10945811...` (pull the full grid from the `wq1y08sf2.output` artifact
-before it expires; regenerate via the PMF above and pin).
+**Set1** λ1=1.5, λ2=1.0, λ3=0.3 — **full 4×4 grid, VERIFIED exact against compiled penaltyblog**
+(rows = x = home, cols = y = away):
+
+| x\y | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| **0** | 0.060810062625217973 | 0.060810062625217973 | 0.030405031312608979 | 0.010135010437536328 |
+| **1** | 0.091215093937826952 | 0.10945811272539234 | 0.06385056575647885 | 0.024324025050087184 |
+| **2** | 0.068411320453370214 | 0.095775848634718302 | 0.064306641226167985 | 0.027820603651037213 |
+| **3** | 0.034205660226685121 | 0.054729056362696177 | 0.041730905476555835 | — |
+
+> ⚠️ **TEST-VECTOR HAZARD — read before using Set1 as your only fixture.** `P01 == P00` exactly here.
+> That is **correct**, not a bug: at (0,0) and (0,1) only the `k=0` term contributes, so
+> `P00 = e^-(λ1+λ2+λ3)` and `P01 = e^-(λ1+λ2+λ3)·λ2`; because **λ2 was chosen as exactly 1.0** (the
+> multiplicative identity) they collapse onto each other, while `P10 = e^-2.8·1.5` correctly differs.
+> **Consequence: a λ1/λ2-transposition bug in a TS port would pass this vector undetected.** Add a
+> second fixture with λ2 ≠ 1.0 (e.g. λ1=1.7, λ2=1.2, λ3=0.25) before trusting the port.
+
+> **Grid truncation:** a 4×4 grid captures only **85.8%** of the probability mass. Use
+> `maxGoals` ≈ 10–15, or `normalize:true` is mandatory.
 
 **Scope boundary (document in-module):** v1 is **same-match** correlation only (SGP legs within one game).
 Cross-game parlay correlation is a separate, larger problem — do NOT claim it in v1. Ship as

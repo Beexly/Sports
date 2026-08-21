@@ -27,26 +27,73 @@ durably in the companion doc `docs/ops/2026-08-21-BUILD-SPECS-devig-parlay.md`.
 
 ---
 
+## 0-A. VERIFICATION SWEEP RESULT (read this before trusting anything below)
+
+An adversarial sweep re-checked this document's own load-bearing claims (workflow `w4lfzwsun`,
+4 lanes + synthesis). **36 claims checked: 22 CONFIRMED, 7 CORRECTED, 4 REFUTED, 2 DRIFTED,
+1 UNVERIFIABLE — ≈37% defect rate.** Corrections are already applied below.
+
+**The critical shape of that number: every single [VERIFIED] claim held. All 13 defects were in the
+[ANALYST] and [COUNSEL] tiers.** So the tag system works — build freely on VERIFIED, re-check ANALYST
+before it becomes load-bearing. *A model that reads this doc flat, ignoring tags, will ship real errors.*
+
+### The payments finding was OVERSTATED — and it had wrongly displaced a verified item
+
+The original Item 1 ranked a **[COUNSEL]** claim (which this doc's own preamble defines as *"not legal
+advice and not a fact"*) **above** a **[VERIFIED]** one. That is precisely the failure the trust model
+exists to prevent, occurring inside the document that introduces it. Corrected: the age gate is #1.
+
+What survived and what collapsed, on re-fetch of the primary sources:
+- **Survives:** the Stripe bullet is real, quoted correctly, and *is* in the **Prohibited** tier (not
+  the Restricted/due-diligence tier). Paddle mirrors it near-verbatim. Real, counsel-worthy risk.
+- **[REFUTED] The omitted qualifier.** The bullet reads "sports forecasting or odds-making **with a
+  monetary or material prize**." That qualifier is textually load-bearing (adjacent bullets carry it
+  independently) and the original write-up **omitted it**. GSE holds no stakes and pays no prize.
+- **[REFUTED] "PayPal repeats it"** — backwards. PayPal's gambling clause sits under **"Activities
+  Requiring Approval"** (the friendlier tier), and its text requires **both** an entry fee **and** a prize.
+- **[REFUTED] Live counter-evidence.** **actionnetwork.com** — a competitor named in GSE's own market
+  research — serves a live `pk_live_` **Stripe** key on a page selling "Expert Picks."
+- **[CORRECTED] The "90–180 day freeze"** is not documented Stripe policy. Stripe's Services Agreement
+  describes Reserves only in open-ended discretionary terms. The day-count comes from high-risk-merchant
+  brokers who sell fund-recovery services.
+
+**Net:** genuine ambiguity with real enforcement-inconsistency risk → written scope-clarification to
+Stripe + keep the crypto rail as insurance. **Not** a #1-slot emergency.
+
+---
+
 ## 1. TOP CRITICAL PATH — do in this order
 
 Ranked by *survival then revenue*, not by ease. Items 1–2 gate the whole paid business.
 
-1. **[COUNSEL] Payments rail — the only true company-ender.** Stripe's Prohibited Businesses list
-   bans "sports forecasting or odds-making with a monetary or material prize" with **no approval
-   path**; PayPal/Paddle/Lemon Squeezy repeat it. **Stripe is GSE's only rail.** Failure mode: a
-   delayed automated risk review freezes funds 90–180 days — fatal for a pre-revenue solo founder.
-   → Counsel review now; **pull the already-owner-approved Coinbase Commerce crypto rail forward**
-   (`handoff/claude/overnight-2026-07-01/CRYPTO-PAYMENTS-SPEC.md`, dark behind `CRYPTO_PAYMENTS_ENABLED`)
-   — it sidesteps card-network MCC classification. Do NOT sequence it "after first Stripe checkout."
-2. **[VERIFIED] Age gate — launch blocker for all paid acquisition.** No DOB capture on the `User`
-   model, no 21+ gate at signup/checkout, despite 21+ messaging everywhere. Server-side DOB + 21+
+0. **[BLOCKING PRECONDITION — do before ANY other build] Merge PR #446 (`8d712e1b`).** It is **NOT
+   merged** — `git merge-base --is-ancestor 8d712e1b origin/main` returns NO, and
+   `grep -n 'limit=' apps/web/lib/data-sources/free-adapters/espn-scores.ts` returns **zero hits** on
+   this branch. T11 (item 2) builds its backfill lane on that exact fetcher. Build it unmerged and the
+   backfill silently truncates busy boards. *(Second time #446 has been a trap: it first patched dead
+   code, and now it sits on an unmerged sibling branch.)*
+1. **[VERIFIED] Age gate — the real #1; launch blocker for all paid acquisition.** No DOB field
+   anywhere on the `User` model (`awk '/^model User /,/^}/' packages/db/prisma/schema.prisma` → zero
+   hits), no 21+ gate at signup/checkout, despite 21+ messaging everywhere. Server-side DOB + 21+
    verification. ~1–2 days. Every ad platform requires it.
-3. **[ANALYST] T11 settlement backfill** (`docs/ops/2026-08-21-settlement-backfill-spec.md`, on the
-   overnight branch). `daysFrom 2→3` at `settle-sport.ts:184,187` + a free-source backfill lane for
-   picks older than the paid window + health metric. Fixes the CRITICAL 86/1739 overdue backlog.
-   Free-source only, no live DB in tests, deploy is founder's. **Reuse the ESPN settlement path fixed
-   in PR #446** (`espn-scores.ts:espnScoreboardUrl`). Recommend NO auto-VOID of >14-day picks (keep
-   PENDING-with-flag — a wrong terminal state on the public record is worse than a stale pending).
+2. **[ANALYST] T11 settlement backfill** (`docs/ops/2026-08-21-settlement-backfill-spec.md`, on the
+   overnight branch). `daysFrom 2→3` at `settle-sport.ts:184,187` **[VERIFIED: both lines are exactly
+   as cited, and The Odds API documents max daysFrom = 3, so 2→3 is legal]** + a free-source backfill
+   lane + health metric. Fixes the CRITICAL 86/1739 overdue backlog. Free-source only, no live DB in
+   tests, deploy is founder's. **Requires item 0 first.**
+   - **[DRIFTED — delete spec step B.4]** "Terminal VOID for >14-day unresolvable picks can reuse
+     existing VOID conventions" is false: the only VOID path
+     (`free-settlement.ts:292-306`, `voidReason:'POSTPONED_OR_CANCELLED'`) is gated by
+     `findPostponedMatch` (:377-395) requiring **positive** postponement evidence — there is no
+     give-up fallback to reuse. Keep PENDING-with-flag.
+   - **[CORRECTED — build this]** The **dated** ESPN fetch loop in `multi-source-scores.ts:130-141` —
+     precisely the path backfill uses — has **no `checkClearance` call**, while the undated board
+     (:111-121) and final fallback (:401-435) do. Gate it as part of T11.
+3. **[COUNSEL — REVISED DOWN from #1, see §0-A] Payments rail: a real ambiguity, not a proven
+   company-ender.** Counsel-worthy; **not** a reason to reorder everything. Send Stripe a **written
+   scope-clarification** describing GSE's exact mechanics (sells analysis; holds no stakes, pays no
+   prize), and keep the Coinbase Commerce rail (`CRYPTO-PAYMENTS-SPEC.md`, dark behind
+   `CRYPTO_PAYMENTS_ENABLED`) as **insurance**, built in parallel rather than as an emergency migration.
 4. **[VERIFIED] Flip the PROVEN pipeline — AFTER T11.** The pipeline + public CLV ledger are built
    and **dark** (`public-clv-policy.ts` encodes 52.4% break-even + Wilson CIs; `app/clv/page.tsx` is
    live). Flip `PUBLIC_PICKS_ENABLED` + `CANONICAL_HISTORY_ENABLED` to start settled-pick accrual
@@ -70,8 +117,8 @@ test, per-sport dispersion estimator, registry consolidation.
 
 | # | Risk | Tag | Pre-condition it imposes |
 |---|---|---|---|
-| 1 | Stripe single-rail prohibition | COUNSEL | No paid-scaling push until counsel clears the rail + crypto fallback exists |
-| 2 | No server-side age verification | VERIFIED | No paid ads of any kind until the age gate ships |
+| 1 | No server-side age verification | **VERIFIED** | No paid ads of any kind until the age gate ships |
+| 2 | Stripe rail ambiguity (**revised down** — see §0-A; prize qualifier omitted, PayPal claim refuted, competitor live on Stripe) | COUNSEL | Written scope-clarification to Stripe; crypto rail built in parallel as insurance |
 | 3 | PROVEN-page overclaim (bare win-rate at n~100) | COUNSEL | No public track record until the CI/calibration layer + publication policy exist |
 | 4 | Leaky-bucket economics (~150–200 active payers = ramen; ~10–15%/mo est. churn, no category benchmark) | ANALYST | Growth must be a *continuous* funnel (300–1,500 free signups/mo), annual-anchored — not a one-time launch |
 | 5 | Chargebacks trigger the Stripe flag (Visa 0.65/0.9/1.8%, MC ~1.5%+100/mo) | ANALYST | Chargeback-defense pack before scaling: reminders, clear descriptor, one-click cancel, Radar |
@@ -101,12 +148,18 @@ is read by `checkClearance`. Findings:
   in `clv-calibration.ts` (backtest-only). → document an explicit backtest-only exemption or carve them out.
 - **[ANALYST] open-meteo:** conflicting verdicts (`paid-required` vs `approved_open_license`). Adopt the
   safer `paid-required` reading (free tier is non-commercial); fund it or gate the caller.
-- **[ANALYST] Ungated hosts feeding pick generation:** `build-independent-fair-values.ts` calls Kalshi
-  (`external-api.kalshi.com`), ClubElo (`api.clubelo.com`), and ESPN PowerIndex with **zero clearance
-  checks** — feeding the `independentFairValue` confidence-calibration signal. Kalshi/Polymarket are in
-  **neither** registry despite three live paths (incl. the 30-min quote-plane cron behind the Elite CLV
-  ledger). `weather.gov`, `statsapi.mlb.com` similarly ungated/registry-missing. `fetch-failover.ts`
-  silently relays "cleared" GitHub sources through `ghproxy.net` (unreviewed third party).
+- **[VERIFIED] Ungated hosts feeding pick confidence — the solid half.** `build-independent-fair-values.ts`
+  calls **Kalshi** (:167-192, :472-474) and **ClubElo** (:226-240, :486-489) with **zero `checkClearance`**
+  in either the builder or the client files, and neither host is in the canonical registry. These feed the
+  `independentFairValue` confidence-calibration signal. Gate + register both.
+  - **[REFUTED] `weather.gov` is NOT in that file.** `grep -rn weather packages/ingestion-pipeline/src/build-independent-fair-values.ts`
+    → **zero hits**. The real caller is `apps/web/lib/weather/game-weather.ts:111,198`. Fix the attribution;
+    the registry-coverage point still stands for that file.
+  - **[CORRECTED] Kalshi/Polymarket "three live paths"** conflated two vendors. Kalshi's REST client has
+    exactly **one** live call site; a second provider (`packages/quote-plane/src/providers/kalshi-trade-api.ts:98`,
+    zero `checkClearance`) is exported but **has no caller**. Register both; the exposure is smaller than stated.
+  - `statsapi.mlb.com` registry-missing and `fetch-failover.ts` relaying "cleared" GitHub sources through
+    `ghproxy.net` (unreviewed third party) both stand.
 - **[VERIFIED] Guards that HELD:** football-data.co.uk (`approved_public_logged_off` affirmed by
   direct multi-page check — robots open, the one purpose clause fits GSE), the-odds-api (both registries
   agree, licensed), and the hard-law boundaries (sportsbook internals, StatsBomb non-commercial). The
@@ -167,8 +220,12 @@ Each item is self-contained: what, where, validation gate, size. Merged from all
   (no stated terms — email maintainer) but gate now; weather.gov → mirror into canonical registry.
 - **New clean open sources [ANALYST, license-verified this session]:** Wyscout/Pappalardo (CC-BY-4.0),
   idsse-data (CC-BY-4.0), SkillCorner (MIT), EWF (CC-BY-SA-4.0), jfjelstul/worldcup (CC-BY-SA-4.0),
-  Lahman DB (CC-BY-SA-3.0), FiveThirtyEight (CC-BY-4.0), OpenLigaDB (ODbL — explicitly allows "betting
-  games"), Reep register (CC0 entity-mapping), Wikidata (CC0), droher/boxball (Retrosheet Parquet).
+  Lahman DB (CC-BY-SA-3.0), FiveThirtyEight (CC-BY-4.0), OpenLigaDB (ODbL), Reep register (CC0
+  entity-mapping), Wikidata (CC0), droher/boxball (Retrosheet Parquet).
+  - **[VERIFIED by re-fetch]** Wyscout/Pappalardo (CC-BY-4.0), FiveThirtyEight (CC-BY-4.0), Lahman.
+  - **[CORRECTED] OpenLigaDB "explicitly allows betting games" is a mistranslation.** ODbL is confirmed,
+    but the phrase renders *Tippspiele* — free **prediction-pool / pick'em** contests, **not** wagering.
+    Do not cite it as a betting-use grant. ODbL share-alike caveat still applies.
 - **Vendor_candidate (address US-majors closing-line gap):** SportsDataIO, SportMonks,
   Football-Data.org odds add-on — run the free questionnaire; purchase is founder-gated.
 - **Verify-pending (register nothing yet):** StatsBomb, ImpectAPI (research-license pattern), clubelo,
@@ -226,8 +283,9 @@ owns/is authorized to assess and (b) facts behind already-approved endpoints, sp
 - **Does the consumer paywall hold?** [ANALYST] Yes — genuinely server-side; premium rows never leave
   the query for FREE viewers; Stripe webhook/checkout are reference-grade. **Gap:** the B2B v1 API leaks
   Pro-gated confidence under one shared key.
-- **Are secrets clean?** [ANALYST] Yes — no tracked env files/live keys; one suspicious hit was a
-  confirmed false positive in a base64 image blob.
+- **Are secrets clean?** **[VERIFIED — and cleaner than first reported]** `node scripts/guardrails/secret-scan.mjs --all`
+  → `OK - scanned 5677 file(s) [all-tracked] (24 file(s) >2MB not scanned); no secrets detected.`, **exit 0.
+  Zero hits** — not "one flagged then dismissed." (The earlier base64-image-blob story was wrong.)
 - **Is "nobody publishes calibration" true?** [ANALYST] No — PropsBot.AI self-publishes on 218k picks
   (unaudited). True only of the six named leaders. **The open lane is *verified/credible* calibration.**
 - **Real differentiators?** [ANALYST] Own-picks CLV ledger + a *verified* track record. Confidence
