@@ -56,9 +56,11 @@ describe("legal source registry", () => {
   });
 
   it("clears the new open/public-domain sources", () => {
-    for (const id of ["nws-weather", "retrosheet", "lahman-db", "openfootball", "moneypuck", "cricsheet"]) {
+    for (const id of ["nws-weather", "retrosheet", "lahman-db", "openfootball", "cricsheet"]) {
       expect(isIngestible(id)).toBe(true);
     }
+    expect(isIngestible("moneypuck")).toBe(false);
+    expect(getSource("moneypuck")?.commercialUse).toBe(false);
     expect(getSource("nws-weather")?.commercialUse).toBe(true);
     expect(getSource("openfootball")?.license.spdx).toBe("CC0-1.0");
     expect(attributionFor("retrosheet")).toMatch(/Retrosheet/);
