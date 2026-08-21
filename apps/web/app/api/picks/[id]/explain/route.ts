@@ -182,7 +182,11 @@ export async function POST(
     });
   } catch (err) {
     if (err instanceof PickExplanationError) {
-      const status = err.kind === "BUDGET" ? 503 : 422;
+      // BUDGET and UPSTREAM are both "the explainer cannot serve you right now",
+      // not "your request was unprocessable" — 503 tells a caller to retry, 422
+      // tells them not to bother. Every PickExplanationError message is authored
+      // here; none carries upstream response text (see GSE-SEC-071 in explain.ts).
+      const status = err.kind === "BUDGET" || err.kind === "UPSTREAM" ? 503 : 422;
       return NextResponse.json({ error: err.message, kind: err.kind }, { status });
     }
     return NextResponse.json({ error: "explanation failed" }, { status: 500 });

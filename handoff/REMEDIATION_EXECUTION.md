@@ -152,7 +152,9 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 
 > A proposed edit rewrote this row's evidence string to `split[','](0)`. Not applied: that is not valid JavaScript (it indexes `split` by a string, then calls the result), so it would have replaced a correct citation with an uninterpretable one — and the row it described was already closed.
 
-| 48 | GSE-SEC-071 | pick-explain forwards raw Claude error bodies | `apps/web/app/api/picks/[id]/explain/route.ts:186` verified — err.message forwarded | SAFE DIRECT | S |
+| 48 | GSE-SEC-071 | pick-explain forwards raw Claude error bodies | `apps/web/lib/pick-explainer/explain.ts` — **fixed**, see correction below | FIXED (`claude/pick-explain-error-disclosure`) | S |
+
+**CORRECTION 2026-08-21 (verified live):** The row's file citation pointed at the wrong layer. `route.ts` only returns `err.message` for a typed `PickExplanationError`; the leak was one level down, at `explain.ts` — its catch block rewrapped `error.message` verbatim, and `ClaudeMessagesError` is constructed as `Claude API error: ${status} - ${await response.text()}` (`messages.ts:90`), i.e. the **raw upstream Anthropic body**. So request ids, org/quota detail and internal error text reached any authenticated caller of the explain endpoint. Fixed: the catch block now sends the full error to Sentry (the upstream status was already ledgered as `HTTP_<status>`) and throws a generic message with kind `UPSTREAM`, which the route answers 503 rather than 422 — an outage is retryable, "unprocessable" is not. Pinned by `lib/pick-explainer/explain-error-disclosure.test.ts` (8 tests over statuses 400/401/429/500/529), mutation-tested: restoring the old line fails 7 of the 8.
 | 49 | GSE-SEC-072 | promo publish gate does not enforce 21+ | `apps/web/app/api/promotions/route.ts:1` verified — no age gate | SAFE DIRECT | S |
 | 50 | GSE-SEC-073 | no product-level 21+ gate; ledger over-claims | `apps/web/lib/ledger/` + `apps/web/lib/brand.ts:41` verified — legal contact but no age gate | SAFE DIRECT (copy); ledger may be docs-sealed | S |
 

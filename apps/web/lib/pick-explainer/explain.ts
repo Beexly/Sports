@@ -10,6 +10,7 @@ import {
   evaluateClaudeBudgetUsage,
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
+import { captureError } from "@/lib/observability/sentry";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
@@ -168,8 +169,27 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
         errorKind: `HTTP_${error.status}`,
       });
     }
+
+    // SECURITY (GSE-SEC-071): do NOT put `error.message` on the thrown error.
+    // `ClaudeMessagesError` is constructed as
+    // `Claude API error: ${status} - ${await response.text()}` (messages.ts), so its
+    // message carries the RAW upstream Anthropic response body — request ids,
+    // account/quota detail, model names, internal error text. The route returns
+    // `err.message` verbatim to the caller, which would hand all of that to any
+    // authenticated user who can hit the explain endpoint.
+    //
+    // The detail is not lost: the status is already ledgered above as
+    // `HTTP_<status>`, and the full error goes to Sentry here. The CALLER gets a
+    // generic message, which is all a caller can act on anyway.
+    captureError(error, {
+      surface: SURFACE,
+      upstreamStatus: error instanceof ClaudeMessagesError ? error.status : null,
+      modelName: error instanceof ClaudeMessagesError ? error.modelName : null,
+    });
+
     throw new PickExplanationError(
-      error instanceof Error ? error.message : "Pick explanation failed.",
+      "The explainer is temporarily unavailable. Please try again shortly.",
+      "UPSTREAM",
     );
   }
 }
