@@ -187,6 +187,32 @@ model swap.
 and mark the T2-related sections as needing a different seat.
 **Done when:** the file exists and covers all listed points.
 
+### T11 · TODO · box 6 cycles · **REVENUE-CRITICAL — highest-leverage task in this queue**
+Implement the settlement backfill per the full spec:
+`docs/ops/2026-08-21-settlement-backfill-spec.md`. Read it in full first — it carries
+hard constraints (NO live DB/network during build or verify; laptop `.env` holds
+PRODUCTION credentials; no schema changes; free score sources only). Root cause is
+proven: `settle-sport.ts:184` `daysFrom=2` makes >3-day-old PENDING picks permanently
+unsettleable — the public truth endpoint's CRITICAL 86/1739 is this bug, on the exact
+surface the product sells. Three parts: (A) daysFrom 2→3, (B) backfill lane through
+the existing free score sources + existing grading, (C) confirm settlement-health
+reflects it. Deploy and first live run are the founder's — you build and prove with
+mocked tests only.
+**Done when:** all four "Done when" items in the spec pass with real exit codes, and
+the report row states no live connection was made.
+
+### T12 · TODO · box 4 cycles · make main green
+Fix the `ai-transport-import-boundary` violations that have kept CI red since
+17b06990 (2026-08-06). Run `node scripts/guardrails/ai-transport-import-boundary.mjs`
+and read its output: it names each violating file and the rule. Refactor each violator
+to import through the sanctioned transport layer — find an existing compliant call
+site and copy its exact pattern; do not invent a new one, do not touch the guard
+itself, do not add allowlist entries. These are the last failures standing between
+this branch and a fully green PR (the Build fix is PR #441, already verified).
+**Done when:** the guardrail script exits 0, `npm run guardrails` completes through
+that link, tsc exits 0 in touched packages, and the full test suite for touched
+packages exits 0.
+
 ### T10 · TODO · box: remaining cycles · standing task
 GitHub research sweeps. See `docs/ops/edge/2026-08-21-github-sweep.md` for the output
 contract, the six axes, the validated search terms, the banned collision terms, and the
