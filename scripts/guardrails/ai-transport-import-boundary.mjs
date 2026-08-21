@@ -492,6 +492,12 @@ export function analyzeSource(relPath, text) {
 const OPERATOR_SCRIPT_ALLOWLIST = new Set([
   "scripts/check-deploy-readiness.mjs",
   "scripts/rotate-anthropic-key.mjs",
+  // Manually-run free-lane smoke probe: an operator pastes prod env and runs it to
+  // confirm the Cerebras lane answers (exit 0/1/2). Same class as the two above —
+  // it is not reachable from the app, is never imported, and issues no application
+  // inference. It needs the literal endpoint precisely because it is verifying that
+  // endpoint end-to-end, which the adapter layer cannot do for it.
+  "scripts/ops/smoke-free-lane.mjs",
 ]);
 
 /** Files exempt from the LIVE repo scan (not from analyzeSource itself). */
