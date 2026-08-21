@@ -1409,3 +1409,15 @@ export {
   lambdasFromAttackDefense,
 } from "./parlay/correlationAdjuster.js";
 export type { SameMatchLeg, ParlayEvaluation } from "./parlay/correlationAdjuster.js";
+
+// Per-sport NB2 dispersion estimation — OFFLINE/research evidence only.
+// Deliberately not wired into live scoring: changing a constant a priced path
+// uses is MODEL_VERSION-affecting and is the founder's call. Consume from a
+// runner or report. Returns a VERDICT first ("poisson" for NHL-like data) so a
+// caller cannot mistake a noise-fit for a real dispersion.
+export {
+  estimatePhi,
+  impliedVmr,
+  MIN_SAMPLES_FOR_DISPERSION,
+} from "./dispersion/estimate-phi.js";
+export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
