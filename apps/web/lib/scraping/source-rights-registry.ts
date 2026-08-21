@@ -467,6 +467,49 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "Manual UX research, feature taxonomy, field taxonomy, and competitor analysis are ALLOWED. " +
       "Outreach via support@scores24.live or personal-data@scores24.live required before any automation.",
   },
+  {
+    source_id: "mlb-statsapi",
+    source_name: "MLB Stats API (statsapi.mlb.com)",
+    source_url: "https://statsapi.mlb.com",
+    terms_url: "https://gdx.mlb.com/components/copyright.txt",
+    robots_url: "https://statsapi.mlb.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "official_league_site",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "none",
+    copyright_expression_risk: "high",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-21",
+    reviewed_by: "internal",
+    evidence_urls: ["https://gdx.mlb.com/components/copyright.txt"],
+    unlock_condition:
+      "Prior written authorization from MLB Advanced Media (MLBAM) for commercial/bulk use.",
+    vendor_contact: null,
+    notes:
+      "MLBAM copyright notice, verified verbatim 2026-08-21: 'Only individual, non-commercial, " +
+      "non-bulk use of the Materials is permitted' and 'any other use of the Materials is " +
+      "prohibited without prior written authorization'; authorized users are further barred from " +
+      "'using the Materials in any commercial manner other than as expressly authorized by " +
+      "MLBAM.' This product's use is bulk (scheduled ingestion), commercial (paid subscriptions), " +
+      "and redistributive (derived signals feed published picks) — all three prohibited without " +
+      "authorization. FOUNDER ACTION: packages/data-ingestion/src/mlb-statsapi-client.ts calls " +
+      "this endpoint directly and does NOT route through checkClearance() or wrapExtractedRecord() " +
+      "— it predates this registry entry and is not currently gated by it. Registering the source " +
+      "here does not by itself stop that client; wiring the client through the Clearance Engine, " +
+      "and deciding whether to seek MLBAM authorization or replace the source (ESPN/nflverse " +
+      "already cleared elsewhere in this codebase cover overlapping data), is a founder decision " +
+      "flagged separately, not made by this commit.",
+  },
 
   // ── Permission required ──────────────────────────────────────────────────────
   {
