@@ -8,7 +8,7 @@
  * never under-covers, which is what a PROVEN page needs.
  */
 
-import { clopperPearsonInterval as clopperPearsonLowHigh } from "../../../../packages/prediction-engine/src/edge-lab/stats";
+import { clopperPearsonInterval as clopperPearsonLowHigh } from "@sports/prediction-engine";
 
 export interface ClopperPearsonPresentation {
   /** Point estimate p̂ = successes / n, in 0..1. */
