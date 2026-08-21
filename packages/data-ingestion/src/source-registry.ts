@@ -236,6 +236,27 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     datasets: ["matches", "clubs", "leagues"],
     docsUrl: "https://github.com/openfootball",
   },
+  kalshi: {
+    id: "kalshi",
+    provider: "KalshiEx LLC",
+    kind: "public-api",
+    license: {
+      spdx: null,
+      name: "Kalshi Developer Agreement v1.1",
+      url: "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
+    },
+    commercialUse: false,
+    attributionRequired: false,
+    attributionText: null,
+    robotsRespected: true,
+    rateLimit: "Token-bucket per API tier; exponential backoff on 429.",
+    verdict: "paid-required",
+    reason:
+      "Developer Agreement v1.1 §3 limits API use to facilitating a member's own trading on the Exchange; §3.1 bans collecting/caching/aggregating/storing API data except for that purpose and bans sharing with third parties without prior written authorization. GSE independentFairValue is commercial derived analytics, not own-account trading. Written grant required before ingest.",
+    baseUrl: "https://external-api.kalshi.com/trade-api/v2",
+    datasets: ["markets", "events", "orderbook"],
+    docsUrl: "https://docs.kalshi.com/welcome",
+  },
   moneypuck: {
     id: "moneypuck",
     provider: "MoneyPuck",

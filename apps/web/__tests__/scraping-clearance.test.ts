@@ -127,6 +127,29 @@ describe("Source rights registry — registry shape", () => {
     const permRequired = getSourcesByStatus("permission_required");
     const ids = permRequired.map((s) => s.source_id);
     expect(ids).toContain("scores24-live");
+    expect(ids).toContain("kalshi");
+  });
+
+  it("kalshi is permission_required — Developer Agreement v1.1 own-trading only", () => {
+    const entry = getSourceRightsEntry("kalshi");
+    expect(entry).toBeDefined();
+    expect(entry!.status).toBe("permission_required");
+    expect(entry!.automation_allowed).toBe(false);
+    expect(entry!.commercial_display_allowed).toBe(false);
+    expect(entry!.storage_allowed).toBe(false);
+    expect(entry!.derived_analytics_allowed).toBe(false);
+    expect(entry!.model_training_allowed).toBe(false);
+    expect(entry!.terms_url).toBe("https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf");
+    expect(entry!.unlock_condition).toMatch(/written authorization/i);
+    expect(entry!.notes).toMatch(/own trading/i);
+    const result = checkClearance({
+      source_id: "kalshi",
+      mode: "licensed_api_ingest",
+      tool_id: "fetch-native",
+      intents: ["derived_analytics", "storage"],
+    });
+    expect(result.allowed).toBe(false);
+    expect(result.blocks.length).toBeGreaterThan(0);
   });
 
   it("ffc-adp is approved_api — commercial display allowed, attribution + once/day cache required", () => {
