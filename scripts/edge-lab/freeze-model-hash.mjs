@@ -94,6 +94,8 @@ function main(argv) {
   return 0;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+import { fileURLToPath } from "node:url";
+const _me = fileURLToPath(import.meta.url);
+if (process.argv[1] && process.argv[1] === _me) {
   process.exit(main(process.argv.slice(2)));
 }

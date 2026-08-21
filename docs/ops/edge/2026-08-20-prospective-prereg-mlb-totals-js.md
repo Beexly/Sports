@@ -311,7 +311,7 @@ them later.**
 
 ## 5. Frozen model hash (procedure, not a placeholder)
 
-**Frozen model hash: NOT RECORDED — the model of section 3 is not implemented.**
+**Frozen model hash: `61865dc9d922b12241810995ba6a261db48d33937881531e4669a17ab6cabff4`**
 
 The hash is not a number someone types in later from memory. It is produced
 mechanically by `scripts/edge-lab/freeze-model-hash.mjs`, which SHA-256s each

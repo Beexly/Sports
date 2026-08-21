@@ -38,12 +38,36 @@ $LogFile    = Join-Path $RepoRoot "handoff\RUNNER.log"
 # If a flag is wrong for your build, this is the ONE line to change.
 $HermesArgs = @("--cli", "--yolo", "--in", $RepoRoot)
 
+# WHICH QUEUE THIS RUNNER DRIVES.
+#
+# This used to be hardcoded to RESUME.md + handoff/LEDGER.md, which silently
+# sent the agent to the OLD workflow no matter which queue you meant to run.
+# Launching it during the 2026-08-21 overnight run would have abandoned that
+# queue's remaining tasks and worked something else entirely, with --yolo set
+# so nothing would have stopped to ask. Point it at the queue you mean.
+#
+# Set $QueueDoc to the queue this run should work. Both files it names must
+# exist or preflight refuses to launch (see $RequiredFiles below).
+$QueueDoc = "docs/ops/hermes/OVERNIGHT-2026-08-21-QUEUE.md"
+
+# ABSOLUTE paths in the prompt, deliberately.
+#
+# Relative paths failed in practice on 2026-08-21: preflight's Test-Path found
+# all three files from $RepoRoot and hermes still reported "does not exist" for
+# two of them, having read a third from the same directory. Whatever --in does,
+# it is not reliably the root that the agent's file reads resolve against, and
+# an agent that cannot read its own queue burns a run per cooldown looking
+# healthy. Absolute paths remove the question entirely.
+$QueueAbs  = (Join-Path $RepoRoot ($QueueDoc -replace '/', '\'))
+$AgentsAbs = (Join-Path $RepoRoot "AGENTS.md")
+$ClaudeAbs = (Join-Path $RepoRoot "CLAUDE.md")
+
 # ONE LINE, deliberately. A multi-line string does not survive PowerShell's
 # handoff to a native .exe - the argument arrives mangled or empty, hermes
 # treats it as no prompt at all, and drops into its interactive TUI where it
-# waits forever for a human. The full instructions live in RESUME.md; this line
-# only has to point the agent at them.
-$Prompt = "Read docs/ops/hermes/RESUME.md and follow it exactly. Then read AGENTS.md for your laws. Recover any CLAIMED task in handoff/LEDGER.md, then work the loop continuously without stopping and without asking questions."
+# waits forever for a human. The full instructions live in the queue doc; this
+# line only has to point the agent at them. Keep it ASCII-only.
+$Prompt = "Your working directory is $RepoRoot. Read the file at $QueueAbs in full and follow its THE LOOP section exactly, one task per cycle. Then read $AgentsAbs and $ClaudeAbs for your laws. The queue's NON-NEGOTIABLE section overrides anything you think would be better. Recover any CLAIMED task per that file's interrupted-CLAIMED rule. Use absolute paths under $RepoRoot for every file you read or write. Report only what a command's real exit code proves; if you cannot verify something, write BLOCKED with the actual error text. Work the loop continuously without stopping and without asking questions."
 
 # A run shorter than this means the agent died on startup, not on context.
 $FastFailSeconds = 60
@@ -82,10 +106,14 @@ Write-Log "stop with: New-Item handoff\.stop"
 # loop relaunches it every 10 seconds, all night, doing nothing that was asked
 # for. Catch it here, before the burn.
 
+# Preflight refuses to launch if any of these is missing. The queue doc is in
+# the list because launching without it is the failure this runner exists to
+# prevent: the agent starts, finds no instructions, and burns a run looking
+# healthy while doing nothing useful.
 $RequiredFiles = @(
     "AGENTS.md",
-    "docs\ops\hermes\RESUME.md",
-    "docs\ops\hermes\CONTINUOUS.md"
+    "CLAUDE.md",
+    ($QueueDoc -replace '/', '\')
 )
 
 $branch = (& git rev-parse --abbrev-ref HEAD 2>$null)
