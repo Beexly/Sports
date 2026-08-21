@@ -17,6 +17,12 @@
  */
 import type { ClaudeMessagesResult } from "../messages";
 
+// Error classes live outside `providers/` so consumers can classify
+// failures without importing a raw provider client. Re-exported here so
+// this module's public API is unchanged. See ../provider-errors.ts.
+import { AzureFoundryConfigError, AzureFoundryMessagesError } from "../provider-errors";
+export { AzureFoundryConfigError, AzureFoundryMessagesError };
+
 type Env = Record<string, string | undefined>;
 
 const ANTHROPIC_VERSION = "2023-06-01";
@@ -75,29 +81,6 @@ export function isAzureFoundryConfigured(env: Env = process.env): boolean {
 export function isAzureFoundryProviderSelected(env: Env = process.env): boolean {
   const p = env["CLAUDE_PROVIDER"]?.trim().toLowerCase() ?? "";
   return (p === "azure" || p === "azure-foundry") && isAzureFoundryConfigured(env);
-}
-
-export class AzureFoundryConfigError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AzureFoundryConfigError";
-  }
-}
-
-export class AzureFoundryMessagesError extends Error {
-  readonly status: number;
-  readonly durationMs: number;
-  readonly modelName: string;
-  constructor(
-    message: string,
-    args: { readonly status: number; readonly durationMs: number; readonly modelName: string },
-  ) {
-    super(message);
-    this.name = "AzureFoundryMessagesError";
-    this.status = args.status;
-    this.durationMs = args.durationMs;
-    this.modelName = args.modelName;
-  }
 }
 
 /**
