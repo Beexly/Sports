@@ -44,6 +44,16 @@ describe("BookGrade page", () => {
     expect(screen.getByText(/Totals only/)).toBeTruthy();
   });
 
+  it("renders the provenance line for hand-transcribed figures", () => {
+    render(<BookGradePage />);
+    expect(screen.getByTestId("bookgrade-provenance-line")).toHaveTextContent(
+      /transcribed from an internal study whose raw computation is not published/
+    );
+    expect(screen.getByTestId("bookgrade-provenance-line")).toHaveTextContent(
+      /not an independent audit of the named sportsbooks/
+    );
+  });
+
   it("does not contain banned claim words", () => {
     render(<BookGradePage />);
     const banned = ["exploitable", "fade", "guaranteed", "beat the book"];

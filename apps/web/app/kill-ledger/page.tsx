@@ -238,6 +238,14 @@ export default function KillLedgerPage(): JSX.Element {
           </p>
         </header>
 
+        <section data-testid="kill-ledger-provenance-line" className="rounded-2xl border border-mineral bg-eclipse/40 p-4">
+          <p className="text-xs leading-5 text-ion-2">
+            These figures are transcribed from an internal study whose raw
+            computation is not published. They are not an independent audit of
+            the named sportsbooks.
+          </p>
+        </section>
+
         <section data-testid="kill-ledger-entries">
           {ENTRIES.map((entry) => (
             <EntryCard key={entry.id} entry={entry} />

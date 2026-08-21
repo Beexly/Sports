@@ -93,6 +93,14 @@ export default function BookGradePage(): JSX.Element {
           </p>
         </section>
 
+        <section data-testid="bookgrade-provenance-line" className="rounded-2xl border border-mineral bg-eclipse/40 p-4">
+          <p className="text-xs leading-5 text-ion-2">
+            These figures are transcribed from an internal study whose raw
+            computation is not published. They are not an independent audit of
+            the named sportsbooks.
+          </p>
+        </section>
+
         <section className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-2xl border border-mineral bg-eclipse/40 p-6">
             <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-ion-2">
