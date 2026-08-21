@@ -35,6 +35,45 @@ describe("computeCalibration", () => {
     const report = computeCalibration([{ id: "a", confidence: 72, result: "WIN" }]);
     expect(report.discrimination.trend).toBe("insufficient-data");
   });
+
+  it("counts voids in the population but not the win-rate denominator", () => {
+    const report = computeCalibration([
+      { id: "a", confidence: 72, result: "WIN" },
+      { id: "b", confidence: 74, result: "LOSS" },
+      { id: "c", confidence: 76, result: "VOID" },
+      { id: "d", confidence: 61, result: "PENDING" },
+    ]);
+    expect(report.sampleSize).toBe(2);
+    expect(report.population).toEqual({
+      wins: 1,
+      losses: 1,
+      pushes: 0,
+      voids: 1,
+      pending: 1,
+      decided: 2,
+    });
+    expect(report.headlineClopperPearsonLow).toBeTypeOf("number");
+    expect(report.headlineClopperPearsonHigh).toBeTypeOf("number");
+    expect(report.headlineClopperPearsonLow!).toBeLessThan(0.5);
+    expect(report.headlineClopperPearsonHigh!).toBeGreaterThan(0.5);
+    expect(report.disclaimer).toMatch(/clopper-pearson/i);
+    expect(report.disclaimer).toMatch(/population/i);
+  });
+
+  it("builds five equal-mass quantile bins from settled confidence", () => {
+    const picks = Array.from({ length: 10 }, (_, i) => ({
+      id: `p${i}`,
+      confidence: 50 + i * 5,
+      result: i % 2 === 0 ? ("WIN" as const) : ("LOSS" as const),
+    }));
+    const report = computeCalibration(picks);
+    expect(report.quantileBuckets).toHaveLength(5);
+    expect(report.quantileBuckets.every((bin) => bin.sampleSize === 2)).toBe(true);
+    expect(report.quantileBuckets[0]?.label).toBe("Q1");
+    expect(report.quantileBuckets[0]?.confidenceMax).toBeLessThanOrEqual(
+      report.quantileBuckets[4]?.confidenceMin ?? 100,
+    );
+  });
 });
 
 describe("computeDiscrimination", () => {
@@ -54,6 +93,12 @@ describe("computeDiscrimination", () => {
     delta: 0,
     brierScore: 0,
     sufficientSample: sampleSize >= 30,
+    wins: Math.round(observedWinRate * sampleSize),
+    losses: sampleSize - Math.round(observedWinRate * sampleSize),
+    pushes: 0,
+    voids: 0,
+    clopperPearsonLow: null,
+    clopperPearsonHigh: null,
   });
 
   it("reports insufficient-data with fewer than two populated buckets", () => {
@@ -126,6 +171,12 @@ describe("computeCalibrationProposals", () => {
           delta: -0.35,
           brierScore: 0.28,
           sufficientSample: false,
+          wins: 5,
+          losses: 7,
+          pushes: 0,
+          voids: 0,
+          clopperPearsonLow: null,
+          clopperPearsonHigh: null,
         },
       ])
     ).toEqual([]);
@@ -143,6 +194,12 @@ describe("computeCalibrationProposals", () => {
         delta: -0.22,
         brierScore: 0.24,
         sufficientSample: true,
+        wins: 21,
+        losses: 19,
+        pushes: 0,
+        voids: 0,
+        clopperPearsonLow: 0.37,
+        clopperPearsonHigh: 0.67,
       },
     ]);
 

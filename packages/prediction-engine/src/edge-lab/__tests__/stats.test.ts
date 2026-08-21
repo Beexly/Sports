@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   betaInv,
   binomialCoverage,
+  clopperPearsonInterval,
   clopperPearsonLowerBound,
   regularizedIncompleteBeta,
   wilsonInterval,
@@ -127,6 +128,43 @@ describe("clopperPearsonLowerBound", () => {
     expect(() => clopperPearsonLowerBound(11, 10)).toThrow(RangeError);
     expect(() => clopperPearsonLowerBound(1, 10, 0)).toThrow(RangeError);
     expect(() => clopperPearsonLowerBound(1, 10, 1)).toThrow(RangeError);
+  });
+});
+
+describe("clopperPearsonInterval", () => {
+  it("n=0 is an uninformative band, not a rate", () => {
+    expect(clopperPearsonInterval(0, 0)).toEqual({ lower: 0, upper: 1, center: 0.5 });
+  });
+
+  it("k=0 pins the lower tail at 0; k=n pins the upper tail at 1", () => {
+    const none = clopperPearsonInterval(0, 10);
+    expect(none.lower).toBe(0);
+    expect(none.upper).toBeLessThan(1);
+    expect(none.center).toBe(0);
+    const all = clopperPearsonInterval(10, 10);
+    expect(all.upper).toBe(1);
+    expect(all.lower).toBeGreaterThan(0);
+    expect(all.center).toBe(1);
+  });
+
+  it("two-sided 90% lower matches the one-sided 95% lower bound", () => {
+    const oneSided = clopperPearsonLowerBound(55, 100, 0.05);
+    const twoSided90 = clopperPearsonInterval(55, 100, 0.1);
+    expect(twoSided90.lower).toBeCloseTo(oneSided, 10);
+  });
+
+  it("is nested: 99% contains 95% contains the point", () => {
+    const a95 = clopperPearsonInterval(55, 100, 0.05);
+    const a99 = clopperPearsonInterval(55, 100, 0.01);
+    expect(a99.lower).toBeLessThan(a95.lower);
+    expect(a99.upper).toBeGreaterThan(a95.upper);
+    expect(a95.lower).toBeLessThan(a95.center);
+    expect(a95.upper).toBeGreaterThan(a95.center);
+  });
+
+  it("throws on the same invalid inputs as the lower bound", () => {
+    expect(() => clopperPearsonInterval(1.5, 10)).toThrow(RangeError);
+    expect(() => clopperPearsonInterval(1, 10, 0)).toThrow(RangeError);
   });
 });
 

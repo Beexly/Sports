@@ -4,7 +4,7 @@ import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance-gate";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
-import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
+
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
 import { ManageSubscriptionButton } from "@/components/ui/manage-subscription-button";
@@ -106,6 +106,7 @@ export default async function DashboardPage({
     canonicalWins,
     canonicalLosses,
     canonicalPushes,
+    canonicalVoids,
     canonicalPendingCount,
     bootstrapSettledCount,
     recentTotalCount,
@@ -153,6 +154,7 @@ export default async function DashboardPage({
     db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
     db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
     db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
+    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
     db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
     db.pick
       .count({
@@ -177,6 +179,7 @@ export default async function DashboardPage({
     canonicalWins,
     canonicalLosses,
     canonicalPushes,
+    canonicalVoids,
     recentTotalCount,
     recentBootstrapCount,
   });
@@ -191,11 +194,12 @@ export default async function DashboardPage({
     performanceVisible &&
     performancePolicy.publicWinRate !== null &&
     performancePolicy.publicWinRate >= 55;
-  const winRateWilson =
-    performanceVisible && performancePolicy.publicWinRate !== null
-      ? wilsonInterval(canonicalWins, canonicalWins + canonicalLosses)
+  const winRateSubtext =
+    performanceVisible &&
+    performancePolicy.publicWinRateCiLowPct !== null &&
+    performancePolicy.publicWinRateCiHighPct !== null
+      ? `95% CP ${performancePolicy.publicWinRateCiLowPct}–${performancePolicy.publicWinRateCiHighPct}%`
       : null;
-  const winRateSubtext = winRateWilson ? `Wilson band ${formatWilsonPct(winRateWilson, 0)}` : null;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">

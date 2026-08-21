@@ -291,6 +291,7 @@ export async function loadJarvisAssessment(): Promise<{
     canonicalWins,
     canonicalLosses,
     canonicalPushes,
+    canonicalVoids: voidCount,
     recentTotalCount: recentTotal,
     recentBootstrapCount: recentBootstrap,
   });

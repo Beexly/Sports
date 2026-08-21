@@ -910,6 +910,15 @@ export {
   type LimitationFlag,
 } from "./model-limitations.js";
 
+// Exact binomial interval — conservative counterpart to Wilson. Used by the
+// public performance / calibration CI layer so a headline rate is never a
+// bare point estimate.
+export {
+  clopperPearsonLowerBound,
+  clopperPearsonInterval,
+} from "./edge-lab/stats.js";
+export type { ClopperPearsonInterval } from "./edge-lab/stats.js";
+
 export {
   noVigFromAmericanPrices,
   consensusNoVig,
