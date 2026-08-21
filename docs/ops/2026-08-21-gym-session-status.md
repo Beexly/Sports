@@ -8,7 +8,7 @@ touched unilaterally.
 
 | PR | What | State |
 |---|---|---|
-| **#446** | ESPN scoreboard fetch now sends explicit `limit=1000` — busy dates (CFB Saturdays, multi-league soccer) were silently truncating the free schedule seed, dropping games before settlement ever saw them. | data-ingestion **296/296 tests green**, tsc 0. Draft, subscribed. |
+| **#446** | Explicit `limit=1000` on **both** ESPN scoreboard clients — busy dates (CFB Saturdays, multi-league soccer) silently truncated the boards. `espn-schedule-seed` (slate opener) dropped games from the `Game` table; **`espn-results-client` is the settlement scores path**, so truncation there left completed games without final scores → unsettled. Only the request URL changed — no settlement *wiring* (that's founder-gated / MODEL_VERSION-affecting). | data-ingestion **297/297 tests green**, tsc 0. Draft, subscribed. |
 
 ## 🟢 Ready for your merge click (verified green, I don't merge to main)
 
