@@ -146,7 +146,12 @@ listed here for audit completeness; P8-02+ should skip to the next OPEN entry.
 | 44 | GSE-SEC-061 | next-auth prerelease caret | `apps/web/package.json:36` verified — next-auth ^5.0.0-beta.22 | NEEDS-OWNER (package.json pin) | S |
 | 45 | GSE-SEC-062 | eval:prompts fetches promptfoo@latest | `package.json:28` verified — npx promptfoo@latest | NEEDS-OWNER (package.json pin) | S |
 | 46 | GSE-SEC-069 | /api/auth/[...nextauth] unthrottled | `apps/web/app/api/auth/[...nextauth]/route.ts` verified — no rate limit | NEEDS-OWNER (WAF or NextAuth config) | S |
-| 47 | GSE-SEC-070 | IP limiters trust first XFF hop | `apps/web/lib/api/rate-limit.ts:60` verified — split(',')[0] trusts first hop | SAFE DIRECT | S |
+| 47 | GSE-SEC-070 | IP limiters trust first XFF hop | `apps/web/lib/api/rate-limit.ts` — **fixed**, see correction below | FIXED (`a3c8d0f6`) | S |
+
+**CORRECTION 2026-08-21 (verified live):** This finding is **FIXED**, not OPEN. `grep -n "split(',')\[0\]" apps/web/lib/api/rate-limit.ts` returns nothing — the leftmost-hop read no longer exists. `clientIp()` now prefers platform-set headers (`x-vercel-forwarded-for`, `x-real-ip`, which the edge writes and a client cannot forge), then reads `x-forwarded-for` from the **right** — proxies *append*, so with `TRUSTED_PROXY_HOPS` (default 1) the Nth entry from the end is the address our nearest trusted proxy actually observed — and falls back to a single shared `"anon"` bucket rather than minting a private allowance for an unidentifiable caller. Shipped in #459 (`a3c8d0f6`) with `looksLikeIp()` shape validation; the pre-existing test that asserted the old behaviour ("prefers the first x-forwarded-for entry") was rewritten to pin the new spec rather than weakened. Excluded from SAFE-DIRECT "next finding" selection.
+
+> A proposed edit rewrote this row's evidence string to `split[','](0)`. Not applied: that is not valid JavaScript (it indexes `split` by a string, then calls the result), so it would have replaced a correct citation with an uninterpretable one — and the row it described was already closed.
+
 | 48 | GSE-SEC-071 | pick-explain forwards raw Claude error bodies | `apps/web/app/api/picks/[id]/explain/route.ts:186` verified — err.message forwarded | SAFE DIRECT | S |
 | 49 | GSE-SEC-072 | promo publish gate does not enforce 21+ | `apps/web/app/api/promotions/route.ts:1` verified — no age gate | SAFE DIRECT | S |
 | 50 | GSE-SEC-073 | no product-level 21+ gate; ledger over-claims | `apps/web/lib/ledger/` + `apps/web/lib/brand.ts:41` verified — legal contact but no age gate | SAFE DIRECT (copy); ledger may be docs-sealed | S |
