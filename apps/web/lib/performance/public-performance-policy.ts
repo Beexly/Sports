@@ -9,7 +9,13 @@
  *   2. canonicalSettledCount < min → blocked, INSUFFICIENT_CANONICAL_SAMPLE
  *   3. every recent pick bootstrap → blocked, ALL_RECENT_PICKS_BOOTSTRAP
  *   4. otherwise → allowed
+ *
+ * Headline rate is wins / (wins + losses). Pushes and voids are population,
+ * not rate. The published interval is Clopper-Pearson exact, never a bare
+ * point estimate.
  */
+
+import { clopperPearsonInterval } from "./clopper-pearson-interval";
 
 export type PublicPerformanceBlocker =
   | "GATE_OFF_PERFORMANCE_STATS"
@@ -25,6 +31,10 @@ export interface PublicPerformancePolicyInput {
   readonly canonicalWins: number;
   readonly canonicalLosses: number;
   readonly canonicalPushes: number;
+  /** VOID settled picks — counted in population, never in the win-rate denominator. */
+  readonly canonicalVoids?: number;
+  /** Model versions present in the sample. Empty when the loader did not pin. */
+  readonly modelVersions?: readonly string[];
   readonly recentTotalCount?: number;
   readonly recentBootstrapCount?: number;
 }
@@ -39,11 +49,18 @@ export interface PublicPerformancePolicy {
   readonly canonicalWins: number;
   readonly canonicalLosses: number;
   readonly canonicalPushes: number;
+  readonly canonicalVoids: number;
   readonly eligibleForRateCount: number;
   readonly publicWinRate: number | null;
+  /** 95% Clopper-Pearson lower/upper on the decided win rate (percent). Null when gated or no decided picks. */
+  readonly publicWinRateCiLowPct: number | null;
+  readonly publicWinRateCiHighPct: number | null;
+  readonly publicWinRateBoundMethod: "clopper-pearson";
+  readonly modelVersions: readonly string[];
   readonly publicRecord: string;
   readonly publicMessage: string;
   readonly operatorMessage: string;
+  readonly disclaimer: string;
   readonly minimumRequirements: readonly string[];
 }
 
@@ -74,13 +91,15 @@ export function evaluatePublicPerformancePolicy(
   }
 
   const eligibleForRate = input.canonicalWins + input.canonicalLosses;
+  const canonicalVoids = input.canonicalVoids ?? 0;
+  const modelVersions = input.modelVersions ?? [];
   const winRate =
     eligibleForRate > 0
       ? Math.round((input.canonicalWins / eligibleForRate) * 1000) / 10
       : null;
   const record = `${input.canonicalWins}W-${input.canonicalLosses}L${
     input.canonicalPushes > 0 ? `-${input.canonicalPushes}P` : ""
-  }`;
+  }${canonicalVoids > 0 ? `-${canonicalVoids}V` : ""}`;
 
   const allowed = blockers.length === 0;
   const primary = blockers[0] ?? null;
@@ -142,6 +161,14 @@ export function evaluatePublicPerformancePolicy(
       `canonical=${input.canonicalSettledCount} sample/min=${input.canonicalSettledCount}/${minCanonical}.`;
   }
 
+  const band =
+    allowed && eligibleForRate > 0
+      ? clopperPearsonInterval(input.canonicalWins, eligibleForRate)
+      : null;
+
+  const disclaimer =
+    "Win rate is decided picks only (wins / (wins + losses)). Pushes and voids count in the population, not the rate. The band is a 95% Clopper-Pearson exact interval, not a prediction. Past performance does not guarantee future results.";
+
   return {
     canExposePerformanceStats: allowed,
     blockers,
@@ -152,11 +179,17 @@ export function evaluatePublicPerformancePolicy(
     canonicalWins: input.canonicalWins,
     canonicalLosses: input.canonicalLosses,
     canonicalPushes: input.canonicalPushes,
+    canonicalVoids,
     eligibleForRateCount: eligibleForRate,
     publicWinRate: allowed ? winRate : null,
+    publicWinRateCiLowPct: band ? Math.round(band.low * 1000) / 10 : null,
+    publicWinRateCiHighPct: band ? Math.round(band.high * 1000) / 10 : null,
+    publicWinRateBoundMethod: "clopper-pearson",
+    modelVersions,
     publicRecord: record,
     publicMessage,
     operatorMessage,
+    disclaimer,
     minimumRequirements,
   };
 }
@@ -197,6 +230,7 @@ export async function loadPublicPerformancePolicy(
     canonicalWins,
     canonicalLosses,
     canonicalPushes,
+    canonicalVoids,
     pendingCount,
     bootstrapCount,
     recentTotalCount,
@@ -206,6 +240,7 @@ export async function loadPublicPerformancePolicy(
     db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...notSeed } }),
     db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...notSeed } }),
     db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...notSeed } }),
+    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...notSeed } }),
     db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...notSeed } }),
     db.pick.count({ where: { isBootstrap: true, ...settledFilter } }),
     db.pick.count({ where: { generatedAt: { gte: recentSince } } }),
@@ -219,6 +254,7 @@ export async function loadPublicPerformancePolicy(
     canonicalWins,
     canonicalLosses,
     canonicalPushes,
+    canonicalVoids,
     pendingCount,
     bootstrapCount,
     recentTotalCount,

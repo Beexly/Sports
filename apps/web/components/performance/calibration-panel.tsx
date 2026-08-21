@@ -1,6 +1,6 @@
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { HonestBand } from "@/components/performance/honest-band";
-import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
+import { formatClopperPearsonPct } from "@/lib/performance/clopper-pearson-interval";
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
@@ -81,11 +81,16 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
   // Withhold the observed bar, the percentage, and the CI; show only the
   // sample-progress so the reader sees it is still collecting.
   const publishable = bucket.sufficientSample;
-  // Per-bucket honesty: deciles of a modest settled set are SMALL samples, so each
-  // observed rate carries a wide 95% band. Show it rather than imply false precision.
-  const ci = publishable
-    ? wilsonInterval(Math.round(bucket.observedWinRate * bucket.sampleSize), bucket.sampleSize)
-    : null;
+  const ci =
+    publishable && bucket.clopperPearsonLow != null && bucket.clopperPearsonHigh != null
+      ? {
+          point: bucket.observedWinRate,
+          low: bucket.clopperPearsonLow,
+          high: bucket.clopperPearsonHigh,
+          n: bucket.wins + bucket.losses,
+          alpha: 0.05,
+        }
+      : null;
   return (
     <div className="flex items-center gap-3 py-2" data-testid="reliability-row">
       <span className={`w-14 shrink-0 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
@@ -113,7 +118,7 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
       <span
         className={`hidden w-28 shrink-0 text-right text-[11px] text-ion-2 sm:inline-block ${NUMERIC_TEXT_CLASS}`}
       >
-        {ci ? `95% ${formatWilsonPct(ci)}` : ""}
+        {ci ? `95% CP ${formatClopperPearsonPct(ci)}` : ""}
       </span>
       <span
         className={`w-16 shrink-0 text-right text-[11px] text-ion-2 ${NUMERIC_TEXT_CLASS}`}
@@ -251,6 +256,14 @@ export async function CalibrationPanel() {
             <ReliabilityRow key={b.label} bucket={b} />
           ))}
         </div>
+        <h3 className="mb-3 mt-8 text-xs font-semibold uppercase tracking-widest text-ion-2">
+          Equal-mass confidence quantiles
+        </h3>
+        <div className="divide-y divide-titanium/60">
+          {data.quantileBuckets.map((b) => (
+            <ReliabilityRow key={b.label} bucket={b} />
+          ))}
+        </div>
       </div>
 
       {/* The honest band — Wilson interval + reliability + limitation flags.
@@ -278,10 +291,12 @@ export async function CalibrationPanel() {
       </div>
 
       <div className="border-t border-titanium px-6 py-3">
-        <p className="text-[11px] leading-relaxed text-ion-2">
-          {data.publicMessage} Calibration is evidence only. It never auto-adjusts
-          the model. Past performance does not guarantee future results.
-        </p>
+        <p className="text-[11px] leading-relaxed text-ion-2">{data.disclaimer}</p>
+        {data.modelVersions.length > 0 && (
+          <p className={`mt-1 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}>
+            Model version{data.modelVersions.length === 1 ? "" : "s"}: {data.modelVersions.join(", ")}
+          </p>
+        )}
       </div>
     </section>
   );

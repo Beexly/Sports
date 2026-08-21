@@ -7,6 +7,8 @@ export interface CalibrationReportPayload {
     updatedAt: string;
     isCollecting: boolean;
     publicMessage: string;
+    /** Distinct modelVersion values in this sample. Empty when gated or no rows. */
+    modelVersions: readonly string[];
   };
   meta: { gated: boolean; isSampleData: boolean };
 }
@@ -24,6 +26,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         isCollecting: true,
         publicMessage:
           "Building calibration history from settled canonical picks. Public metrics stay dark until eligibility GREEN and publish policy.",
+        modelVersions: [],
       },
       meta: { gated: true, isSampleData: false },
     };
@@ -36,7 +39,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
       where: {
         isPublished: true,
         isBootstrap: false,
-        result: { in: ["WIN", "LOSS", "PUSH"] },
+        result: { in: ["WIN", "LOSS", "PUSH", "VOID"] },
         signalSnapshot: { is: { eligibleForLearning: true } },
         NOT: { modelVersion: "v5.0.0-seed" },
       },
@@ -54,6 +57,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         updatedAt: now.toISOString(),
         isCollecting: true,
         publicMessage: "Calibration is temporarily unavailable; building history from settled canonical picks.",
+        modelVersions: [],
       },
       meta: { gated: false, isSampleData: false },
     };
@@ -70,6 +74,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
   }));
 
   const report = computeCalibration(input);
+  const modelVersions = [...new Set(picks.map((pick) => pick.modelVersion).filter(Boolean))].sort();
 
   return {
     data: {
@@ -80,6 +85,7 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         report.sampleSize === 0
           ? "Building calibration history from settled canonical picks."
           : "Calibration is computed from settled canonical picks only.",
+      modelVersions,
     },
     meta: { gated: false, isSampleData: false },
   };

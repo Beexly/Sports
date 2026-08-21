@@ -6,6 +6,8 @@
  * human operator can review before any deliberate model-version bump.
  */
 
+import { clopperPearsonInterval } from "@/lib/performance/clopper-pearson-interval";
+
 export type CalibrationProposalKind =
   | "CONFIDENCE_SHIFT"
   | "WEIGHT_ADJUSTMENT"
@@ -48,6 +50,24 @@ export interface CalibrationBucket {
    * public renderer gates on this flag; see MIN_PUBLISH_BUCKET_SAMPLE.
    */
   readonly sufficientSample: boolean;
+  /** Decided (WIN/LOSS) counts used for the binomial interval. Pushes/voids are population. */
+  readonly wins: number;
+  readonly losses: number;
+  readonly pushes: number;
+  readonly voids: number;
+  /** 95% Clopper-Pearson on decided picks. Null when no decided picks. */
+  readonly clopperPearsonLow: number | null;
+  readonly clopperPearsonHigh: number | null;
+}
+
+export interface CalibrationPopulation {
+  readonly wins: number;
+  readonly losses: number;
+  readonly pushes: number;
+  readonly voids: number;
+  readonly pending: number;
+  /** wins + losses — the win-rate denominator. */
+  readonly decided: number;
 }
 
 /**
@@ -85,11 +105,17 @@ export interface CalibrationDiscrimination {
 
 export interface CalibrationReport {
   readonly buckets: readonly CalibrationBucket[];
+  /** Equal-mass confidence bins (same settled sample as `buckets`). */
+  readonly quantileBuckets: readonly CalibrationBucket[];
   readonly proposals: readonly CalibrationProposal[];
   readonly sampleSize: number;
+  readonly population: CalibrationPopulation;
+  readonly headlineClopperPearsonLow: number | null;
+  readonly headlineClopperPearsonHigh: number | null;
   readonly brierScore: number | null;
   readonly discrimination: CalibrationDiscrimination;
   readonly note: string;
+  readonly disclaimer: string;
 }
 
 export interface ProjectionCalibrationInput {
@@ -234,6 +260,95 @@ function resultToOutcome(result: CalibrationPickInput["result"]): number | null 
   return null;
 }
 
+const QUANTILE_BIN_COUNT = 5;
+
+const CALIBRATION_DISCLAIMER =
+  "Win rate uses decided picks only. Pushes and voids count in the population, not the rate. Per-bin bands are 95% Clopper-Pearson intervals. Calibration is evidence, not a prediction. Past performance does not guarantee future results.";
+
+type ScoredRow = { pick: CalibrationPickInput; outcome: number };
+
+function emptyBucket(label: string, confidenceMin: number, confidenceMax: number): CalibrationBucket {
+  return {
+    label,
+    confidenceMin,
+    confidenceMax,
+    sampleSize: 0,
+    observedWinRate: 0,
+    expectedWinRate: round((confidenceMin + confidenceMax) / 200),
+    delta: 0,
+    brierScore: 0,
+    sufficientSample: false,
+    wins: 0,
+    losses: 0,
+    pushes: 0,
+    voids: 0,
+    clopperPearsonLow: null,
+    clopperPearsonHigh: null,
+  };
+}
+
+function scoreBucket(
+  label: string,
+  confidenceMin: number,
+  confidenceMax: number,
+  rows: readonly ScoredRow[],
+): CalibrationBucket {
+  if (rows.length === 0) return emptyBucket(label, confidenceMin, confidenceMax);
+
+  const wins = rows.filter((row) => row.pick.result === "WIN").length;
+  const losses = rows.filter((row) => row.pick.result === "LOSS").length;
+  const pushes = rows.filter((row) => row.pick.result === "PUSH").length;
+  const voids = rows.filter((row) => row.pick.result === "VOID").length;
+  const decided = wins + losses;
+  const band = decided > 0 ? clopperPearsonInterval(wins, decided) : null;
+
+  const observed = rows.reduce((sum, row) => sum + row.outcome, 0) / rows.length;
+  const expected =
+    rows.reduce((sum, row) => sum + expectedFromConfidence(row.pick.confidence), 0) / rows.length;
+  const brier =
+    rows.reduce((sum, row) => {
+      const expectedProb = expectedFromConfidence(row.pick.confidence);
+      return sum + (expectedProb - row.outcome) ** 2;
+    }, 0) / rows.length;
+
+  return {
+    label,
+    confidenceMin,
+    confidenceMax,
+    sampleSize: rows.length,
+    observedWinRate: round(observed),
+    expectedWinRate: round(expected),
+    delta: round(observed - expected),
+    brierScore: round(brier),
+    sufficientSample: rows.length >= MIN_PUBLISH_BUCKET_SAMPLE,
+    wins,
+    losses,
+    pushes,
+    voids,
+    clopperPearsonLow: band ? round(band.low) : null,
+    clopperPearsonHigh: band ? round(band.high) : null,
+  };
+}
+
+function quantileBucketsFromSettled(settled: readonly ScoredRow[]): CalibrationBucket[] {
+  if (settled.length === 0) {
+    return Array.from({ length: QUANTILE_BIN_COUNT }, (_, i) =>
+      emptyBucket(`Q${i + 1}`, 0, 100),
+    );
+  }
+  const sorted = [...settled].sort((a, b) => a.pick.confidence - b.pick.confidence);
+  const bins: CalibrationBucket[] = [];
+  for (let i = 0; i < QUANTILE_BIN_COUNT; i++) {
+    const start = Math.floor((i * sorted.length) / QUANTILE_BIN_COUNT);
+    const end = Math.floor(((i + 1) * sorted.length) / QUANTILE_BIN_COUNT);
+    const rows = sorted.slice(start, end);
+    const min = rows[0]?.pick.confidence ?? 0;
+    const max = rows[rows.length - 1]?.pick.confidence ?? 100;
+    bins.push(scoreBucket(`Q${i + 1}`, min, max, rows));
+  }
+  return bins;
+}
+
 function bucketFor(confidence: number): (typeof BUCKETS)[number] {
   // Buckets are contiguous via exclusive upper boundaries (the NEXT bucket's
   // min): a value belongs to bucket i when it is below bucket i+1's floor. This
@@ -251,47 +366,29 @@ function bucketFor(confidence: number): (typeof BUCKETS)[number] {
 export function computeCalibration(input: readonly CalibrationPickInput[] = []): CalibrationReport {
   const settled = input
     .map((pick) => ({ pick, outcome: resultToOutcome(pick.result) }))
-    .filter((entry): entry is { pick: CalibrationPickInput; outcome: number } => entry.outcome !== null);
+    .filter((entry): entry is ScoredRow => entry.outcome !== null);
 
-  const buckets: CalibrationBucket[] = [];
-  for (const bucket of BUCKETS) {
+  const wins = input.filter((pick) => pick.result === "WIN").length;
+  const losses = input.filter((pick) => pick.result === "LOSS").length;
+  const population: CalibrationPopulation = {
+    wins,
+    losses,
+    pushes: input.filter((pick) => pick.result === "PUSH").length,
+    voids: input.filter((pick) => pick.result === "VOID").length,
+    pending: input.filter((pick) => pick.result === "PENDING").length,
+    decided: wins + losses,
+  };
+  const headline =
+    population.decided > 0
+      ? clopperPearsonInterval(population.wins, population.decided)
+      : null;
+
+  const buckets: CalibrationBucket[] = BUCKETS.map((bucket) => {
     const rows = settled.filter(({ pick }) => bucketFor(pick.confidence).label === bucket.label);
-    if (rows.length === 0) {
-      buckets.push({
-        label: bucket.label,
-        confidenceMin: bucket.min,
-        confidenceMax: bucket.max,
-        sampleSize: 0,
-        observedWinRate: 0,
-        expectedWinRate: round((bucket.min + bucket.max) / 200),
-        delta: 0,
-        brierScore: 0,
-        sufficientSample: false,
-      });
-      continue;
-    }
+    return scoreBucket(bucket.label, bucket.min, bucket.max, rows);
+  });
 
-    const observed = rows.reduce((sum, row) => sum + row.outcome, 0) / rows.length;
-    const expected =
-      rows.reduce((sum, row) => sum + expectedFromConfidence(row.pick.confidence), 0) / rows.length;
-    const brier =
-      rows.reduce((sum, row) => {
-        const expectedProb = expectedFromConfidence(row.pick.confidence);
-        return sum + (expectedProb - row.outcome) ** 2;
-      }, 0) / rows.length;
-
-    buckets.push({
-      label: bucket.label,
-      confidenceMin: bucket.min,
-      confidenceMax: bucket.max,
-      sampleSize: rows.length,
-      observedWinRate: round(observed),
-      expectedWinRate: round(expected),
-      delta: round(observed - expected),
-      brierScore: round(brier),
-      sufficientSample: rows.length >= MIN_PUBLISH_BUCKET_SAMPLE,
-    });
-  }
+  const quantileBuckets = quantileBucketsFromSettled(settled);
 
   const proposals = computeCalibrationProposals(buckets);
   const discrimination = computeDiscrimination(buckets);
@@ -307,14 +404,19 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
 
   return {
     buckets,
+    quantileBuckets,
     proposals,
     sampleSize: settled.length,
+    population,
+    headlineClopperPearsonLow: headline ? round(headline.low) : null,
+    headlineClopperPearsonHigh: headline ? round(headline.high) : null,
     brierScore,
     discrimination,
     note:
       settled.length === 0
         ? "No settled canonical picks were provided. Calibration remains collecting."
         : "Calibration is evidence only. Proposals require human review and a model-version bump.",
+    disclaimer: CALIBRATION_DISCLAIMER,
   };
 }
 
