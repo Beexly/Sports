@@ -73,7 +73,12 @@ Always pair a domain word with a method word. `shrinkage` alone is noise;
 
 | url | axis | what it is | score | gap it touches | action enqueued |
 |---|---|---|---|---|---|
-| *(none yet)* | | | | | |
+| https://github.com/small-area-estimation/Heteroscedastic-Fay-Herriot | Code | REML fitting algorithm for heteroscedastic Fay-Herriot (HFH) model with usage example and synthetic data | 5 | Gap 4: rest-days/schedule-density Fay-Herriot regression-mean shrinkage | T13 · enqueue to apply HFH to rest-days feature, adapt to NB2 context |
+| https://github.com/broxtronix/pymultiscale/blob/master/pymultiscale/anscombe.py | Code | Exact inverse Anscombe transform with bias correction for Poisson-Gaussian noise (Makitalo 2012) | 4 | Gap 3: back-transform Jensen-gap bias | T13 · enqueue to evaluate exact inverse as bias-corrected back-transform alternative |
+| https://github.com/gu-mi/NBGOF | Code | R package for NB goodness-of-fit tests and NB dispersion models | 4 | Gap 1: phi=12 NB2 dispersion never re-derived | T13 · enqueue to evaluate NBGOF dispersion estimators for empirical phi |
+| https://github.com/stan-dev/rstanarm/blob/master/vignettes/pooling.Rmd | Code | rstanarm vignette: Baseball Hits (Efron and Morris 1975) — the exact same shrinkage model family | 4 | Gap 1 + Gap 2: pooled variance on baseball count data | T13 · enqueue to cross-check s2=0.04 fallback against stan-dev/rstanarm bball2006 fixture |
+| https://github.com/thebioengineer/TidyX | Code | James-Stein shrinkage estimator applied to player batting averages | 4 | Gap 2: Anscombe pooled variance threshold | T13 · enqueue to compare shrinkage-to-means implementation |
+| https://github.com/muneebalam/Hockey/blob/master/NHL/Posts/CBJ%20Bayesian%20evaluation.ipynb | User | NHL empirical Bayes evaluation notebook referencing baseball empirical Bayes | 3 | Gap 2 + Gap 4: empirical Bayes sports repo curation | Record only — background on sports EB practitioners |
 
 ## Negative-space log
 
@@ -82,4 +87,6 @@ what the market does not publish.
 
 | query | axis | returned | interpretation |
 |---|---|---|---|
-| *(none yet)* | | | |
+| `site:github.com sports betting "closing line value" "e-process" "anytime valid"` | Issues+Commits | 0 results | Negative-space: no GitHub repo (issues, commits, or code) references "e-process" + "anytime valid" + sports/CLV together. The conformal/e-variable literature is concentrated on arXiv + papers, not GitHub implementations in sports. This confirms the e-process approach is not replicated in public sports code — it is genuinely novel in this context. |
+| `site:github.com MLB "total runs" "Poisson" "over under" prediction` | Code | 0 results | Negative-space: no GitHub repo implements an MLB total-runs Poisson or NB model with "over under" prediction in its title/description. Sports prediction repos on GitHub are dominated by soccer xG and NBA point-spreads, not MLB totals. |
+| `"s²" OR "sigma squared" "Anscombe" "pooled variance" OR "0.04" baseball site:github.com` | Code | 0 relevant results | Negative-space: no GitHub repo addresses the specific s²=0.04 fallback / 8-game threshold for Anscombe pooled variance on baseball count data. The constant is internal to this project's prereg. |

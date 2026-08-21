@@ -1,7 +1,7 @@
 # OVERNIGHT QUEUE — 2026-08-21
 
     MAX_CYCLES=30
-    CYCLE=10
+    CYCLE=11
     STALL_THRESHOLD=3
     BRANCH=claude/overnight-2026-08-21
     STOP_FILE=handoff/.stop
@@ -213,9 +213,23 @@ this branch and a fully green PR (the Build fix is PR #441, already verified).
 that link, tsc exits 0 in touched packages, and the full test suite for touched
 packages exits 0.
 
-### T10 · CLAIMED · box: remaining cycles · standing task
+### T13 · TODO · box 2 cycles · enqueued from T10 sweep
+
+Apply the top GitHub sweep findings to the four open gaps, in priority order:
+
+1. **Gap 4 (rest-days/fay-herriot)** — `small-area-estimation/Heteroscedastic-Fay-Herriot` (score 5). Evaluate the HFH REML fitting algorithm as the admitting mechanism for rest-days/schedule-density into the empirical-Bayes model. Adapt to NB2 context (not a swap of the core shrinkage — this is a feature admission path).
+2. **Gap 1 (NB2 dispersion phi=12)** — `gu-mi/NBGOF` (score 4). Evaluate its dispersion estimator functions as a replacement for the hard-coded `phi=12` in `nb-rbpf.ts:263`. If an estimator is found, write a unit test comparing it to the frozen `phi=12`.
+3. **Gap 3 (back-transform Jensen gap)** — `broxtronix/pymultiscale` (score 4). Evaluate the exact inverse Anscombe transform (Makitalo 2012) as a bias-corrected alternative to `backTransform()` at `efron-morris-js.ts:139`. Write a test comparing the two on the locked fixture.
+4. **Gap 2 (s²=0.04, 8-game threshold)** — `stan-dev/rstanarm` `bball2006` fixture + `thebioengineer/TidyX` (score 4). Cross-check the s²=0.04 fallback and the 8-game threshold against an independent batting-average shrinkage implementation.
+
+**Hard constraints:** No live DB calls. No new paid API. Unit tests only with mocked or fixture data. Do NOT amend frozen specs — flag contradictions loudly, do not act on them.
+
+**Done when:** all four evaluation tests exit 0, `node scripts/ops/check-agent-ledger.mjs; echo "EXIT=$?"` exits 0, and the sweep file rows show "evaluated" in the action column.
+
+---
+
+### T10 · DONE · 52954d56 · box: remaining cycles · standing task
 GitHub research sweeps. See `docs/ops/edge/2026-08-21-github-sweep.md` for the output
-contract, the six axes, the validated search terms, the banned collision terms, and the
 scoring rubric. **Score 4–5 → append a concrete apply task to this queue as `TODO`.**
 That enqueue step is the whole point — findings that sit in a file are worthless.
 
