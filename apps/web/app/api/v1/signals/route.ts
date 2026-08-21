@@ -5,8 +5,8 @@
 
 import { NextResponse } from "next/server";
 import {
-  authorizeB2bApiKey,
   extractB2bApiKey,
+  resolveB2bKeyScope,
   rateLimitB2b,
 } from "@/lib/b2b/api-key-auth";
 import { db, isStubMode } from "@sports/db";
@@ -17,7 +17,9 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET(req: Request): Promise<NextResponse> {
-  if (!authorizeB2bApiKey(req)) {
+  // Scope decides whether this key may see PREMIUM rows. A bare key is FREE-only.
+  const scope = resolveB2bKeyScope(req);
+  if (scope === null) {
     return NextResponse.json(
       { error: "Unauthorized — provide x-api-key (GSE_B2B_API_KEYS)" },
       { status: 401 },
@@ -55,6 +57,9 @@ export async function GET(req: Request): Promise<NextResponse> {
         isPublished: true,
         isBootstrap: false,
         NOT: { modelVersion: "v5.0.0-seed" },
+        // Tier gate: only a :premium-scoped key sees PREMIUM rows. Without this the
+        // route emitted Pro-gated confidence + factorBreakdown for the whole board.
+        ...(scope === "premium" ? {} : { tier: "FREE" as const }),
       },
       orderBy: { generatedAt: "desc" },
       take: 50,
