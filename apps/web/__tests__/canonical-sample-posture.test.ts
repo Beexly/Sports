@@ -3,7 +3,7 @@ import { loadCanonicalSamplePosture, isCalibrationPublished } from "@/lib/ops/ca
 
 /**
  * Mirrors loadPublicPerformancePolicy count order:
- * settled, wins, losses, pushes, pending, bootstrap, recentTotal, recentBootstrap
+ * settled, wins, losses, pushes, voids, pending, bootstrap, recentTotal, recentBootstrap
  */
 function mockDb(seq: number[]) {
   const count = vi.fn();
@@ -14,7 +14,7 @@ function mockDb(seq: number[]) {
 describe("loadCanonicalSamplePosture", () => {
   it("exposes canonical settled and excludes bootstrap from ladder N", async () => {
     const sample = await loadCanonicalSamplePosture(
-      mockDb([42, 20, 18, 4, 11, 900, 50, 40]),
+      mockDb([42, 20, 18, 4, 0, 11, 900, 50, 40]),
       {
         commencedTotal: 1478,
         canExposePerformanceStats: false,
@@ -34,7 +34,7 @@ describe("loadCanonicalSamplePosture", () => {
 
   it("remainingToFloor is zero when above learning floor", async () => {
     const sample = await loadCanonicalSamplePosture(
-      mockDb([150, 70, 70, 10, 5, 0, 20, 0]),
+      mockDb([150, 70, 70, 10, 0, 5, 0, 20, 0]),
       {
         commencedTotal: 200,
         canExposePerformanceStats: false,

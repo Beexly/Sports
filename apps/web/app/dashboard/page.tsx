@@ -198,7 +198,7 @@ export default async function DashboardPage({
     performanceVisible &&
     performancePolicy.publicWinRateCiLowPct !== null &&
     performancePolicy.publicWinRateCiHighPct !== null
-      ? `95% CP ${performancePolicy.publicWinRateCiLowPct}–${performancePolicy.publicWinRateCiHighPct}%`
+      ? `CP ${performancePolicy.publicWinRateCiLowPct}–${performancePolicy.publicWinRateCiHighPct}%`
       : null;
 
   return (
