@@ -1,6 +1,6 @@
 # OVERNIGHT REPORT — 2026-08-21
 
-**VERDICT: in progress · 3 done · 0 blocked · 3 commits · MVE NOT ARMED · 0 findings**
+**VERDICT: in progress · 4 done · 0 blocked · 4 commits · MVE NOT ARMED · 1 findings**
 
 <!-- The line above is the whole report for a founder reading half-asleep.
      Every cycle REWRITES it, then appends its row below.
@@ -28,7 +28,9 @@ cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"  # expect 0
 | # | Task | Command run | Exit | Result |
 |---|---|---|---|---|
 || 2 | T5 (ledger guard in CI + selftest) | `node scripts/ops/check-agent-ledger-selftest.mjs; echo "EXIT=$?"` + `node -e "const s=require('./package.json').scripts.guardrails; process.exit(s.startsWith('node scripts/ops/check-agent-ledger.mjs')?0:1)"; echo "EXIT=$?"` | 0,0 | c3bdf98a — guardrails chain prepended, selftest created |
-|| 3 | T1 (merge hf5-mve + fix freeze-model-hash ESM guard) | `node scripts/edge-lab/freeze-model-hash.mjs 2>&1 | grep -c 'efron-morris-js.ts'` (returns 1) + `node scripts/ops/check-agent-ledger.mjs; echo "EXIT=$?"` (returns 0) | 0 | 165d8473 — merge done, H-F5 row union-resolved, freeze-model-hash fixed for Windows; freeze-model-hash exits 1 (1 missing file) as designed |
+||| 3 | T1 (merge hf5-mve + fix freeze-model-hash ESM guard) | `node scripts/edge-lab/freeze-model-hash.mjs 2>&1 | grep -c 'efron-morris-js.ts'` (returns 1) + `node scripts/ops/check-agent-ledger.mjs; echo "EXIT=$?"` (returns 0) | 0 | 165d8473 — merge done, H-F5 row union-resolved, freeze-model-hash fixed for Windows; freeze-model-hash exits 1 (1 missing file) as designed |
+||| 4 | T2 (implement efron-morris-js.ts per prereg section 3) | `cd packages/prediction-engine && npx vitest run src/research/efron-morris-js.test.ts; echo "EXIT=$?"` | 0 | 69f257de — 15 tests pass including locked worked example; efron-morris-js.ts + test committed |
+||| infra | Fix overnight-progress.mjs false stalls on Git for Windows | `node scripts/ops/overnight-progress.mjs; echo "EXIT=$?"` | 0 | 24962ea0 — date format `90.minutes.ago` unsupported on git 2.54, replaced with ISO-8601; stall detector now correctly reports 0 commits when the last commit is >90 min old |
 
 ## Blockers for the founder
 
@@ -37,3 +39,16 @@ cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"  # expect 0
 ## What I chose not to do, and why
 
 *(appended as decisions are made — an empty section here means nothing was skipped)*
+
+**Stall detector false-positive (resolved):** overnight-progress.mjs exited 2 at cycle 4
+triggering `handoff/.stop`. Root cause: `git --since=90.minutes.ago` is not a valid relative
+date on Git for Windows 2.54 — it silently returns zero commits, which the detector reads as
+a stall. The last real commit (69f257de, T2) was ~2h old at resume time (session suspension by
+platform tool-limit, not agent thrash). Fixed by switching to an ISO-8601 absolute timestamp
+(commit 24962ea0). The `.stop` was removed and the loop resumed. The detector now fires only
+on actual stalls.
+
+**Unplanned files (leave alone):** `docs/ops/hermes/mlb-nfl-overnight/`, `path-b-forward/`,
+`handoff/mlb-nfl-overnight/`, `handoff/path-b-forward/`, and several `.ts`/`.vbs` files
+(lane-b-*, path-b-hermes, laguna-mlb-nfl-hermes) are untracked leftovers from a different
+overnight context. Not part of the 2026-08-21 queue — not committed, not investigated.
