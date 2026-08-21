@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { parseEspnScoreboardForSeed } from "../espn-schedule-seed.js";
+import {
+  ESPN_SCOREBOARD_LIMIT,
+  fetchEspnSeedGamesForSport,
+  parseEspnScoreboardForSeed,
+} from "../espn-schedule-seed.js";
 
 describe("parseEspnScoreboardForSeed", () => {
   it("maps ESPN events to Odds sport keys with espn: external ids", () => {
@@ -33,5 +37,30 @@ describe("parseEspnScoreboardForSeed", () => {
       events: [{ id: "", date: "2026-08-09T16:00Z" }, { id: "1", date: "bad" }],
     });
     expect(games).toEqual([]);
+  });
+});
+
+describe("fetchEspnSeedGamesForSport", () => {
+  it("requests every scoreboard board with an explicit limit so busy dates never truncate", async () => {
+    const urls: string[] = [];
+    const fakeFetch = (async (input: string | URL) => {
+      urls.push(String(input));
+      return { ok: true, json: async () => ({ events: [] }) } as Response;
+    }) as unknown as typeof fetch;
+
+    const { error } = await fetchEspnSeedGamesForSport("mlb", {
+      fetchImpl: fakeFetch,
+      now: new Date("2026-08-21T00:00:00Z"),
+      horizonDays: 0,
+    });
+
+    expect(error).toBeNull();
+    expect(urls.length).toBeGreaterThan(0);
+    // Every request — including the undated "now" board — carries the limit.
+    for (const url of urls) {
+      expect(url).toContain(`limit=${ESPN_SCOREBOARD_LIMIT}`);
+    }
+    expect(urls.some((url) => !url.includes("dates="))).toBe(true);
+    expect(urls.some((url) => url.includes("dates="))).toBe(true);
   });
 });
