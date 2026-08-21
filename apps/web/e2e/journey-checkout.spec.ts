@@ -157,6 +157,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
 
       const upgradeBtn = page.getByRole("button", { name: /Subscribe to Pro/i });
       await expect(upgradeBtn).toBeVisible();
+      await upgradeBtn.locator("..").getByLabel(/date of birth/i).fill("1990-01-15");
       // Set up the response listener BEFORE clicking so we don't miss the
       // POST that the SubscribeButton fires on click. A generous timeout
       // accounts for a cold dev-server compile + DB/prisma warmup on a slow
@@ -261,6 +262,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
         data: {
           tier: "PRO",
           interval: "month",
+          dateOfBirth: "1990-01-15",
           priceId: "price_evil_client_supplied",
         },
       });
@@ -291,7 +293,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       request,
     }) => {
       const res = await request.post("/api/subscriptions/checkout", {
-        data: { tier: "PRO", interval: "month" },
+        data: { tier: "PRO", interval: "month", dateOfBirth: "1990-01-15" },
       });
 
       const body = await res.json();
