@@ -125,7 +125,7 @@ not `.skip`/`.todo`. The fixture is the arbiter, not your claim about your own w
 **Done when:** `cd packages/prediction-engine && npx vitest run src/research/efron-morris-js.test.ts; echo "EXIT=$?"`
 prints `EXIT=0`.
 
-### T3 · CLAIMED · box 1 cycle
+### T3 · DONE · 6b6d375e · box 1 cycle
 Export `nbOverProb` from `packages/prediction-engine/src/research/nb-rbpf.ts` line 131 — add
 the `export` keyword, one word. Sole internal caller is line 282 and is unaffected. Do not
 reimplement a second PMF anywhere.

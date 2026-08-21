@@ -1,6 +1,6 @@
 # OVERNIGHT REPORT — 2026-08-21
 
-**VERDICT: in progress · 4 done · 0 blocked · 4 commits · MVE NOT ARMED · 1 findings**
+**VERDICT: in progress · 5 done · 0 blocked · 5 commits · MVE NOT ARMED · 1 findings**
 
 <!-- The line above is the whole report for a founder reading half-asleep.
      Every cycle REWRITES it, then appends its row below.
@@ -31,6 +31,7 @@ cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"  # expect 0
 ||| 3 | T1 (merge hf5-mve + fix freeze-model-hash ESM guard) | `node scripts/edge-lab/freeze-model-hash.mjs 2>&1 | grep -c 'efron-morris-js.ts'` (returns 1) + `node scripts/ops/check-agent-ledger.mjs; echo "EXIT=$?"` (returns 0) | 0 | 165d8473 — merge done, H-F5 row union-resolved, freeze-model-hash fixed for Windows; freeze-model-hash exits 1 (1 missing file) as designed |
 ||| 4 | T2 (implement efron-morris-js.ts per prereg section 3) | `cd packages/prediction-engine && npx vitest run src/research/efron-morris-js.test.ts; echo "EXIT=$?"` | 0 | 69f257de — 15 tests pass including locked worked example; efron-morris-js.ts + test committed |
 ||| infra | Fix overnight-progress.mjs false stalls on Git for Windows | `node scripts/ops/overnight-progress.mjs; echo "EXIT=$?"` | 0 | 24962ea0 — date format `90.minutes.ago` unsupported on git 2.54, replaced with ISO-8601; stall detector now correctly reports 0 commits when the last commit is >90 min old |
+||| 5 | T3 (export nbOverProb from nb-rbpf.ts) | `cd packages/prediction-engine && npx tsc --noEmit; echo "EXIT=$?"` | 0 | 6b6d375e — added `export` keyword to line 131; tsc clean, sole caller at line 282 unaffected |
 
 ## Blockers for the founder
 
