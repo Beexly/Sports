@@ -2,7 +2,7 @@
 #
 # WHY THIS EXISTS
 # A coding agent cannot run for 48 hours in one session: its context fills and the
-# harness cuts it. That is survivable here because handoff/LEDGER.md holds the state.
+# harness cuts it. That is survivable here because docs/ops/AGENT_LEDGER.md holds the state.
 # Every task is CLAIMED before work starts and DONE/BLOCKED before the next begins,
 # so a fresh session resumes losslessly. What was missing was something to restart it.
 #
@@ -43,7 +43,7 @@ $HermesArgs = @("--cli", "--yolo", "--in", $RepoRoot)
 # treats it as no prompt at all, and drops into its interactive TUI where it
 # waits forever for a human. The full instructions live in RESUME.md; this line
 # only has to point the agent at them.
-$Prompt = "Read docs/ops/hermes/RESUME.md and follow it exactly. Then read AGENTS.md for your laws. Recover any CLAIMED task in handoff/LEDGER.md, then work the loop continuously without stopping and without asking questions."
+$Prompt = "Read docs/ops/hermes/RESUME.md and follow it exactly. Then read AGENTS.md for your laws. Recover any CLAIMED task in docs/ops/AGENT_LEDGER.md, then work the loop continuously without stopping and without asking questions."
 
 # A run shorter than this means the agent died on startup, not on context.
 $FastFailSeconds = 60
@@ -74,7 +74,7 @@ Write-Log "stop with: New-Item handoff\.stop"
 # PREFLIGHT.
 #
 # RUN 3 on 2026-08-13 is why this block exists. Hermes launched cleanly, found
-# neither docs\ops\hermes\RESUME.md nor handoff\LEDGER.md - they were on a branch
+# neither docs\ops\hermes\RESUME.md nor docs\ops\AGENT_LEDGER.md - they were on a branch
 # this checkout was not sitting on - concluded there was no backlog to work,
 # went looking for work elsewhere on the disk, and spent 17 minutes auditing an
 # unrelated project. It ran 999 seconds, so the fast-fail guard below never
@@ -85,7 +85,7 @@ Write-Log "stop with: New-Item handoff\.stop"
 $RequiredFiles = @(
     "AGENTS.md",
     "docs\ops\hermes\RESUME.md",
-    "docs\ops\hermes\CONTINUOUS.md"
+    "docs\ops\AGENT_LEDGER.md"
 )
 
 $branch = (& git rev-parse --abbrev-ref HEAD 2>$null)
@@ -99,16 +99,11 @@ foreach ($rel in $RequiredFiles) {
 if ($missing.Count -gt 0) {
     Write-Log "PREFLIGHT FAILED - not launching."
     foreach ($rel in $missing) { Write-Log ("  missing: " + $rel) }
-    Write-Log "These files ARE the agent's instructions and backlog. Without them"
+    Write-Log "These files ARE the agent's instructions and live ledger. Without them"
     Write-Log "it has nothing to work from and will invent its own task list."
-    Write-Log "They live on branch claude/fable-5-ultracode-plan-ptru4e. MERGE it,"
-    Write-Log "do not check it out - this branch may hold commits that branch does"
-    Write-Log "not, and switching hides them. From this repo root:"
-    Write-Log "  git add -A"
-    Write-Log "  git commit -m 'wip: uncommitted work from a cut-off run'"
-    Write-Log "  git fetch origin claude/fable-5-ultracode-plan-ptru4e"
-    Write-Log "  git merge origin/claude/fable-5-ultracode-plan-ptru4e --no-edit"
-    Write-Log "(--no-edit matters: without it git opens vim and waits forever.)"
+    Write-Log "AGENT_LEDGER.md lives on origin/main. Fetch and merge main, do not"
+    Write-Log "check out a frozen hermes branch. Do not resume from handoff/LEDGER.md"
+    Write-Log "or docs/ops/hermes/CONTINUOUS.md - those files still exist and are stale."
     Write-Log "Then start this runner again."
     exit 1
 }
