@@ -60,7 +60,7 @@ the same.
 
 ## TASKS
 
-### T4 · CLAIMED · box 1 cycle
+### T4 · DONE · fe382ed4 · box 1 cycle
 Fix `docs/ops/hermes/FINAL-RUN-2026-08-20.md` line ~98. It still prints the **point-null**
 miss term `E_t = 1 + 0.3(Y·q/m + (1-Y)(1-q)/(1-m) - 1)`. The frozen form is `(1 - q_bet)`,
 the composite-null form, per `mve-eprocess.ts` and prereg v2. Doc-only — the code was always

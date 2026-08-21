@@ -1,6 +1,6 @@
 # OVERNIGHT REPORT — 2026-08-21
 
-**VERDICT: not started · 0 done · 0 blocked · 0 commits · MVE NOT ARMED · 0 findings**
+**VERDICT: in progress · 1 done · 0 blocked · 1 commit · MVE NOT ARMED · 0 findings**
 
 <!-- The line above is the whole report for a founder reading half-asleep.
      Every cycle REWRITES it, then appends its row below.
@@ -27,7 +27,7 @@ cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"  # expect 0
 
 | # | Task | Command run | Exit | Result |
 |---|---|---|---|---|
-| — | (loop has not started) | — | — | — |
+|| 1 | T4 (fix point-null doc term) | `grep -c '(1-q)/(1-m)' docs/ops/hermes/FINAL-RUN-2026-08-20.md` | 1 (0 matches = pass) | fe382ed4 — composite-null form applied, doc-only |
 
 ## Blockers for the founder
 
