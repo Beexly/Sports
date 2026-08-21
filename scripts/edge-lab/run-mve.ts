@@ -12,10 +12,15 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PrismaClient } from "@prisma/client";
 import { shinDevig } from "../../packages/prediction-engine/src/shin-devig.js";
-import { NbRbpf } from "../../packages/prediction-engine/src/research/nb-rbpf.js";
+import { nbOverProb } from "../../packages/prediction-engine/src/research/nb-rbpf.js";
 import {
-  MVE_N_PARTICLES,
-  MVE_SEED,
+  anscombe,
+  backTransform,
+  shrinkEfronMorris,
+  pooledVariance,
+  NB2_PHI,
+} from "../../packages/prediction-engine/src/research/efron-morris-js.js";
+import {
   bindingOutcome,
   runSideAdaptivePath,
   type MveBindingOutcome,
@@ -228,17 +233,13 @@ async function main(): Promise<void> {
 
     const teamNames = [...new Set(games.flatMap((g) => [g.homeTeamName, g.awayTeamName]))].sort();
     const teamIndex = new Map(teamNames.map((n, i) => [n, i] as const));
-    const nTeams = Math.max(teamNames.length, 1);
 
-    const filter = new NbRbpf({
-      seed: MVE_SEED,
-      nTeams,
-      nPitchers: 1,
-      nParks: nTeams,
-      nUmpires: 1,
-      nParticles: MVE_N_PARTICLES,
-    });
+    // Per-team history of Anscombe-transformed past totals.
+    // Walk-forward: compute qOver from history, then record y into history AFTER.
+    const teamHistory = new Map<string, number[]>();
+    for (const name of teamNames) teamHistory.set(name, []);
 
+    const allTransformedGames: number[] = [];
     const observations: { qOver: number; mOver: number; y: number; line: number }[] = [];
     let excluded = 0;
     let pushes = 0;
@@ -249,26 +250,47 @@ async function main(): Promise<void> {
         excluded += 1;
         continue;
       }
-      const home = teamIndex.get(game.homeTeamName) ?? 0;
-      const away = teamIndex.get(game.awayTeamName) ?? 0;
       const y = game.homeScore + game.awayScore;
-      const synthetic = {
-        home,
-        away,
-        pitcherHome: 0,
-        pitcherAway: 0,
-        park: home,
-        umpire: 0,
-        y,
-        line: entry.line,
-      };
-      const qOver = filter.predictOver(synthetic);
+
+      // Walk-forward order: compute qOver from PAST history only, then record.
+      // Build per-team TeamHistory from the history accumulated so far.
+      const teams: { team: string; n: number; transformedMean: number }[] = [];
+      for (const name of teamNames) {
+        const hist = teamHistory.get(name) ?? [];
+        if (hist.length >= 1) {
+          teams.push({
+            team: name,
+            n: hist.length,
+            transformedMean: hist.reduce((a, b) => a + b, 0) / hist.length,
+          });
+        } else {
+          teams.push({ team: name, n: 0, transformedMean: 0 });
+        }
+      }
+
+      // Pooled variance across all teams' past games combined.
+      const s2 = pooledVariance(allTransformedGames);
+
+      // Shrink each team's mean toward the grand mean.
+      const shrunk = shrinkEfronMorris(teams, s2);
+      const homeResult = shrunk[teamIndex.get(game.homeTeamName) ?? 0]!;
+      const awayResult = shrunk[teamIndex.get(game.awayTeamName) ?? 0]!;
+
+      // Back-transform to mu, then compute over-probability.
+      const mu = backTransform(homeResult.thetaI, awayResult.thetaI);
+      const qOver = nbOverProb(mu, NB2_PHI, entry.line);
+
       if (y === entry.line) {
         pushes += 1;
       } else {
         observations.push({ qOver, mOver: entry.mOver, y, line: entry.line });
       }
-      filter.update(synthetic);
+
+      // Record this game's total into both teams' history (after computing qOver).
+      const t = anscombe(y);
+      teamHistory.get(game.homeTeamName)!.push(t);
+      teamHistory.get(game.awayTeamName)!.push(t);
+      allTransformedGames.push(t);
     }
 
     const path = runSideAdaptivePath(observations);
