@@ -136,6 +136,10 @@ export function createKalshiTradeProvider(
           },
         ];
       }
+      // Fail-closed: Kalshi Developer Agreement v1.1 §3/§3.1 (own-trading only).
+      // Flip only after source-rights-registry `kalshi` is approved_written_permission.
+      const kalshiLiveNetworkCleared = false;
+      if (!kalshiLiveNetworkCleared) return [];
       const res = await fetchImpl(
         `/markets/${encodeURIComponent(ticker)}/orderbook`,
       );
@@ -170,5 +174,5 @@ export const KALSHI_PROVIDER_META = {
   oddsApiRequired: false as const,
   authForPublicOrderbook: false,
   rightsNote:
-    "Check Kalshi API ToS + commercial redistribution before prod money path",
+    "Kalshi Developer Agreement v1.1 §3/§3.1: API use is own-trading only; live network defaults off until written authorization",
 } as const;

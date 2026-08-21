@@ -32,6 +32,7 @@ import {
   sportKeyToKalshiLeagueCode,
   getSharedClubEloClient,
   isClubEloSport,
+  isIngestible,
   isPolymarketIndependentEnabled,
   PolymarketIndependentClient,
   fetchMlbStandings,
@@ -183,6 +184,10 @@ async function tryKalshiFairValue(
     homeAbbr,
   };
   try {
+    // Kalshi Developer Agreement v1.1 §3 / §3.1 — own-trading only. Fail closed.
+    // Web twin: checkClearance({ source_id: "kalshi", ... }) in the rights registry.
+    // packages/* cannot import apps/web; isIngestible is the package-side gate.
+    if (!isIngestible("kalshi")) return null;
     const client = new KalshiClient({ now: input.now });
     const fv = await client.getFairValue(game);
     const indep = toIndependentFairValue(fv, homeAbbr, awayAbbr);

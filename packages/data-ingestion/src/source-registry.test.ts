@@ -61,6 +61,13 @@ describe("legal source registry", () => {
     }
     expect(isIngestible("moneypuck")).toBe(false);
     expect(getSource("moneypuck")?.commercialUse).toBe(false);
+    expect(isIngestible("kalshi")).toBe(false);
+    expect(getSource("kalshi")?.commercialUse).toBe(false);
+    expect(getSource("kalshi")?.verdict).toBe("paid-required");
+    expect(getSource("kalshi")?.license.url).toBe(
+      "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
+    );
+    expect(() => assertIngestible("kalshi")).toThrow(/paid-required/);
     expect(getSource("nws-weather")?.commercialUse).toBe(true);
     expect(getSource("openfootball")?.license.spdx).toBe("CC0-1.0");
     expect(attributionFor("retrosheet")).toMatch(/Retrosheet/);
