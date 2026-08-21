@@ -213,7 +213,7 @@ this branch and a fully green PR (the Build fix is PR #441, already verified).
 that link, tsc exits 0 in touched packages, and the full test suite for touched
 packages exits 0.
 
-### T10 · TODO · box: remaining cycles · standing task
+### T10 · CLAIMED · box: remaining cycles · standing task
 GitHub research sweeps. See `docs/ops/edge/2026-08-21-github-sweep.md` for the output
 contract, the six axes, the validated search terms, the banned collision terms, and the
 scoring rubric. **Score 4–5 → append a concrete apply task to this queue as `TODO`.**
