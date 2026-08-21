@@ -167,7 +167,7 @@ in the repo. It is the only finding in the audit with exposure outside the build
 **Done when:** `cd apps/web && npx vitest run __tests__/bookgrade.test.tsx; echo "EXIT=$?"`
 prints `EXIT=0` with the new test present.
 
-### T7 · TODO · box 1 cycle
+### T7 · CLAIMED · box 1 cycle
 Record the `D_i` discrepancy. **FLAG ONLY — do not amend the frozen spec.**
 Prereg section 3 point 5 computes `D_i = s²/n_i` (empirical). Ledger row C-64 froze
 `D_i = 1/(4 n_i)` (theoretical). These agree only if `s² = 0.25`; the locked fixture uses
