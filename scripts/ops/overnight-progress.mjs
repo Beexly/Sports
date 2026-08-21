@@ -97,13 +97,19 @@ function main() {
   const blocked = (text.match(/^### \S+ · BLOCKED/gm) ?? []).length;
 
   // Progress = commits on the branch in the recent window. `git log` is the oracle.
+  const now = Date.now();
+  const cutoff = new Date(now - 90 * 60 * 1000).toISOString();
   let recentCommits = 0;
   let head = "unknown";
   try {
     head = git(["rev-parse", "--short", "HEAD"]);
     // Count commits authored in the last 90 minutes on this branch.
-    // `--` terminates option parsing: defence in depth behind assertSafeRef.
-    const out = git(["log", "--since=90.minutes.ago", "--oneline", branch, "--"]);
+    // Use an absolute ISO timestamp for `--since` instead of a git-relative
+    // date string (e.g. "90.minutes.ago"), which is not portable across git
+    // versions — Git for Windows 2.54 silently treats it as a non-match and
+    // returns zero commits, producing false stall detections. ISO-8601 is
+    // universally understood by git.
+    const out = git(["log", `--since=${cutoff}`, "--oneline", branch, "--"]);
     recentCommits = out ? out.split("\n").filter(Boolean).length : 0;
   } catch {
     // A branch that does not exist yet is cycle 0, not a stall.
