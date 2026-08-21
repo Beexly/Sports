@@ -54,10 +54,34 @@ Nothing else from the ~70-repo set needs another look. What follows is the settl
 
 | Source | Coverage | License / rights | Status |
 |---|---|---|---|
-| `flancast90/sportsbookreview-scraper` | MLB **and** NFL/NBA/NHL, 2011–2021, open+close totals | MIT (code); underlying data is uncopyrightable facts, publicly downloadable — `approved_public_logged_off` | Real, adopt. **Was under-reported as MLB-only in round 1 — it covers all four major US sports.** Frozen archive, nothing past 2021. |
+| `flancast90/sportsbookreview-scraper` | MLB, NFL, NBA, NHL, 2011–2021, open+close totals | MIT (**scraper code only**) | **`excluded` — corrected 2026-08-21, do not use.** See below. |
 | `openfootball` (via `sport.db`) | Soccer match data, actively maintained | CC0 | Found, not yet registered |
 | `martj42/international_results` (via `sport.db.more`) | International soccer results, 1872–2024 | CC0 | Found, not yet registered |
 | `OpenLigaDB` (via `sport.db.more`) | German soccer, free/no-auth API | ODbL (share-alike) | Found; needs legal read before registering |
+
+### Correction — the SBR archive was misclassified. This was previously marked "adopt."
+
+An earlier pass classified `flancast90/sportsbookreview-scraper`'s underlying source
+(sportsbookreview.com) as `approved_public_logged_off` based on `robots.txt` alone. A later
+multi-sport re-score checked the site's actual **Terms of Use** directly and found an explicit
+ban with a real dollar figure attached. **Verified independently, verbatim, from the primary
+source before writing this correction** — the same standard applied to the `statsapi.mlb.com`
+finding:
+
+> "Use any data mining, bots, or similar data gathering and extraction tools on the Site" —
+> prohibited.
+>
+> "You hereby stipulate to and agree to pay liquidated damages of **$5,000**" for automated
+> monitoring/reproduction of the site, plus a **$100-per-occurrence** clause for other
+> violations, plus reimbursement of the publisher's collection costs and attorney's fees.
+
+The MIT license on the scraper repo covers only the author's code — it grants zero rights to
+SBR's data, and `robots.txt` permitting a path says nothing about a site's Terms of Use, which
+is the actual controlling document. **Corrected status: `excluded`, not `permission_required`.**
+Not registered in `source-rights-registry.ts` (checked before writing this doc) and not merged
+to `main` anywhere — this was caught before it reached production or the compliance registry.
+Do not use the committed archive files, do not run the scraper, and do not cite this as an
+"adopt now" source in any future summary.
 
 **No source found in either round supplies rights-clear MLB/NFL/NBA/NHL closing lines for
 2022–2026.** That window has to come from a vendor relationship (The Odds API's own historical
@@ -121,9 +145,13 @@ be appended here, not reported as a fifth separate pass.
 
 ## The actual bottom line
 
-One rights-clear historical dataset (SBR, 4 sports, 2011–2021). One strong but unlicensed
-methodology reference (`Overlay`). A handful of reusable code patterns, two of which — the ESPN
-`limit` param and the settlement-engine reference — matter *today* because they touch work
-already in progress. Two vendor questions worth a direct email, not a search. Everything else
-across ~70 repos is either noise, a toy project, or a warning label. That is a complete,
+**Zero rights-clear historical datasets found across ~70 repos** — the one candidate (SBR,
+4 sports, 2011–2021) is `excluded` per the correction above. One strong but unlicensed
+methodology reference (`Overlay`), whose real strength turned out to be its soccer model and
+cross-sport CLV/EV gate, not MLB or NFL as earlier passes implied. A handful of reusable code
+patterns, two of which — the ESPN `limit` param and the settlement-engine reference — matter
+*today* because they touch work already in progress. Two vendor questions worth a direct email,
+not a search. Everything else across ~70 repos is either noise, a toy project, or a warning
+label — several of which (the Underdog/DraftKings evasion pipeline) span all four major US
+sports equally, not just MLB. That is a complete,
 convergent picture — not a gap that another sweep will meaningfully close.
