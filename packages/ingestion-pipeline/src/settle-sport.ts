@@ -14,7 +14,7 @@
  * it settles.
  *
  * Steps (per sport):
- *   1. Fetch recent scores from The Odds API (daysFrom=2)
+ *   1. Fetch recent scores from The Odds API (daysFrom=3, API max)
  *   2. For each COMPLETED game with PENDING picks: mark FINAL + record scores
  *   3. Settle each pending pick via calculatePickResult() (pure, unit-tested)
  *   4. Record the outcome into the immutable PickSignalSnapshot (idempotent)
@@ -89,6 +89,9 @@ function paidCallJustified(
   // odds: no free odds source is cleared today → paid is always justified.
   return true;
 }
+
+/** The Odds API scores endpoint max `daysFrom` is 3. Using 2 left a permanent ratchet. */
+export const PAID_SCORES_DAYS_FROM = 3;
 
 export interface SettleSportConfig {
   key: SupportedSportKey;
@@ -181,10 +184,10 @@ export async function settleSport(
           `free sources cover scores; paid getScores proceeding on paid path (key present).`,
       );
     }
-    let scores = (await client.getScores(sport.key, 2)).data;
+    let scores = (await client.getScores(sport.key, PAID_SCORES_DAYS_FROM)).data;
     if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow()) {
       try {
-        const preseason = await client.getScores(NFL_PRESEASON_ODDS_KEY, 2);
+        const preseason = await client.getScores(NFL_PRESEASON_ODDS_KEY, PAID_SCORES_DAYS_FROM);
         const existingRows = await db.game.findMany({
           where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
           select: {

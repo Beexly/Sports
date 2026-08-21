@@ -417,6 +417,11 @@ describe("settleSport", () => {
     expect(mocks.gameUpdate).not.toHaveBeenCalled();
   });
 
+  it("fetches paid scores with daysFrom=3 (Odds API max)", async () => {
+    await settleSport(SPORT, "key", gates());
+    expect(mocks.getScores).toHaveBeenCalledWith(SPORT.key, 3);
+  });
+
   it("returns status failed (never throws) when the scores API errors", async () => {
     mocks.getScores.mockRejectedValue(new Error("rate limited"));
 
