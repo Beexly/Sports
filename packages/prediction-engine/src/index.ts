@@ -1382,3 +1382,21 @@ export type {
   RegressionCheckOptions,
   RegressionVerdict,
 } from "./regression-detector.js";
+
+// De-vig oracle — seven-method reference (penaltyblog MIT). Fair probabilities
+// feed the pick pipeline as calibration *inputs* only; they never bypass scoring.
+export { devig, bisectRoot } from "./devig/oracle.js";
+export type { DevigMethod, DevigResult } from "./devig/oracle.js";
+
+// Parlay MRI v1 — same-match bivariate Poisson correlation. priced:false until
+// correlated survivability beats naive on a walk-forward against book SGP quotes.
+export {
+  PARLAY_MRI_PRICED,
+  PARLAY_MRI_SCOPE,
+  poissonPmf as bivariatePoissonComponentPmf,
+  bivariatePoissonPmf,
+  buildScoreGrid,
+  evaluateParlay,
+  lambdasFromAttackDefense,
+} from "./parlay/correlationAdjuster.js";
+export type { SameMatchLeg, ParlayEvaluation } from "./parlay/correlationAdjuster.js";
