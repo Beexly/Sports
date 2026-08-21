@@ -128,7 +128,7 @@ export function logNbPmf(y: number, mu: number, phi: number): number {
   return Number.isFinite(v) ? v : -1e12;
 }
 
-function nbOverProb(mu: number, phi: number, line: number): number {
+export function nbOverProb(mu: number, phi: number, line: number): number {
   let cdf = 0;
   for (let y = 0; y <= Math.floor(line); y++) {
     const lp = logNbPmf(y, mu, phi);
