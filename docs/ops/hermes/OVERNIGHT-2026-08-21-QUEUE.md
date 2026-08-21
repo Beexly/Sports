@@ -131,7 +131,7 @@ the `export` keyword, one word. Sole internal caller is line 282 and is unaffect
 reimplement a second PMF anywhere.
 **Done when:** `cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"` prints `EXIT=0`.
 
-### T-ARM · CLAIMED · box 2 cycles · **THIS IS THE NIGHT'S OBJECTIVE**
+### T-ARM · DONE · 5e7763e2 · box 2 cycles · **THIS IS THE NIGHT'S OBJECTIVE**
 Point `scripts/edge-lab/run-mve.ts`'s `q_t` source at the new `efron-morris-js` module,
 replacing `NbRbpf`. Keep the existing `entryForGame` entry-quality logic, exclusion counting
 and RESULTS writer untouched. **Preserve the walk-forward order exactly:** compute `qOver`
