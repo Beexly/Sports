@@ -1,7 +1,7 @@
 # OVERNIGHT QUEUE — 2026-08-21
 
     MAX_CYCLES=30
-    CYCLE=2
+    CYCLE=3
     STALL_THRESHOLD=3
     BRANCH=claude/overnight-2026-08-21
     STOP_FILE=handoff/.stop
@@ -80,7 +80,7 @@ two fixture ledgers to a temp dir, spawn `check-agent-ledger.mjs` against each w
 **Done when:** `node scripts/ops/check-agent-ledger-selftest.mjs; echo "EXIT=$?"` prints
 `EXIT=0`, and `node -e "const s=require('./package.json').scripts.guardrails; process.exit(s.startsWith('node scripts/ops/check-agent-ledger.mjs')?0:1)"; echo "EXIT=$?"` prints `EXIT=0`.
 
-### T1 · TODO · box 2 cycles
+### T1 · CLAIMED · box 2 cycles
 Merge `origin/hermes/hf5-mve`. Exactly one conflict expected, on `docs/ops/AGENT_LEDGER.md`'s
 append line — union-resolve it (keep both rows, keep `DONE`, per the established convention).
 Brings `mve-eprocess.ts`, `mve-eprocess.test.ts`, `scripts/edge-lab/run-mve.ts`.
