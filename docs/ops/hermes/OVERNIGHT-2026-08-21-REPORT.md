@@ -1,6 +1,6 @@
 # OVERNIGHT REPORT — 2026-08-21
 
-**VERDICT: in progress · 6 done · 0 blocked · 7 commits · MVE ARMED · 1 findings**
+**VERDICT: in progress · 7 done · 0 blocked · 8 commits · MVE ARMED · 1 findings**
 
 <!-- The line above is the whole report for a founder reading half-asleep.
      Every cycle REWRITES it, then appends its row below.
@@ -33,6 +33,7 @@ cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"  # expect 0
 ||| infra | Fix overnight-progress.mjs false stalls on Git for Windows | `node scripts/ops/overnight-progress.mjs; echo "EXIT=$?"` | 0 | 24962ea0 — date format `90.minutes.ago` unsupported on git 2.54, replaced with ISO-8601; stall detector now correctly reports 0 commits when the last commit is >90 min old |
 ||| 5 | T3 (export nbOverProb from nb-rbpf.ts) | `cd packages/prediction-engine && npx tsc --noEmit; echo "EXIT=$?"` | 0 | 6b6d375e — added `export` keyword to line 131; tsc clean, sole caller at line 282 unaffected |
 ||| 6 | T-ARM (wire Efron-Morris qOver into run-mve.ts, freeze model hash) | `node scripts/edge-lab/freeze-model-hash.mjs; echo "EXIT=$?"` + `node scripts/edge-lab/freeze-model-hash.mjs --check <digest>; echo "EXIT=$?"` | 0,1 | 5e7763e2 — run-mve.ts wired to efron-morris-js module (shrinkEfronMorris + backTransform + nbOverProb), NbRbpf particle path deleted, walk-forward order preserved; freeze-model-hash exits 0 with all 5 manifest files; composite digest 61865dc9...d3279 recorded in prereg section 5; MVE armed. --check note: self-referential hash — replacing "NOT RECORDED" changes the prereg file which is in the manifest, so the 4 code-file digests are stable but the prereg digest changes (documented in session notes)
+|||| 7 | T9 (settlement backlog diagnosis) | curl truth surface (CRITICAL 86/1739 overdue) + grep -c settle-sport.ts:184 (returns 5) | 0 | Diagnosis file written naming settle-sport.ts:184 (daysFrom=2 score-fetch window) as the failing path; proposed fix as direction only
 
 ## Blockers for the founder
 

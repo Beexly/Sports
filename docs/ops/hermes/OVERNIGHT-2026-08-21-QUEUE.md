@@ -1,7 +1,7 @@
 # OVERNIGHT QUEUE — 2026-08-21
 
     MAX_CYCLES=30
-    CYCLE=6
+    CYCLE=7
     STALL_THRESHOLD=3
     BRANCH=claude/overnight-2026-08-21
     STOP_FILE=handoff/.stop
@@ -145,7 +145,7 @@ Then run the hash freeze and record the digest into section 5 of the prereg, rep
 **Done when:** `node scripts/edge-lab/freeze-model-hash.mjs; echo "EXIT=$?"` prints `EXIT=0`
 and the composite digest is committed into the prereg. **That is the MVE armed.**
 
-### T9 · CLAIMED · box 2 cycles
+### T9 · DONE · diagnosis written · box 2 cycles
 Diagnose the settlement backlog. `https://www.galaxysportsedge.com/api/ops/public-surface-truth`
 (public, no auth) reports `settlement.health = "CRITICAL"` with roughly 80 of 1739 picks
 overdue. Nobody has seen it because the watchdog guarding it has been red 30/30 runs.
