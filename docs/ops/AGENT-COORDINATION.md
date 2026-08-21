@@ -49,27 +49,51 @@ STALE. Both are done.**
 
 ## 3. What to build next (from `docs/ops/2026-08-21-MASTER-HANDOFF.md` §1)
 
-Work top-down. Each is independent enough to start without the others.
+### ✅ THE CRITICAL PATH IS COMPLETE (2026-08-21 22:25Z)
 
-1. **Age gate** — no DOB field exists on the `User` model (verified: zero hits in
-   `packages/db/prisma/schema.prisma`). Needs a DOB field + **server-side** 21+ verification at
-   signup and at subscription checkout. It is the launch blocker for all paid acquisition.
-   ⚠️ `prisma/schema.prisma` + `migrations/**` are normally **sealed** — build the app-side logic and
-   validation, and if a migration is genuinely required, **flag it in the PR body** rather than
-   stalling.
-2. **T11 settlement backfill** — spec:
-   `git show origin/claude/overnight-2026-08-21:docs/ops/2026-08-21-settlement-backfill-spec.md`.
-   Still unbuilt (`settle-sport.ts:184` is still `getScores(sport.key, 2)`).
-   - `daysFrom` 2 → 3 at `settle-sport.ts:184` and `:187` (The Odds API documents max 3, so this is legal)
-   - free-source backfill lane for picks older than the paid window + a health metric that reflects it
-   - **DROP spec step B.4** (auto-VOID >14-day picks): there is no generic VOID path to reuse — the only
-     one (`free-settlement.ts:292-306`) requires positive postponement evidence. Keep PENDING-with-flag.
-   - **Also gate** the dated ESPN fetch loop at `multi-source-scores.ts:130-141` — it has no
-     `checkClearance` call, unlike the undated paths.
-   - Free-source only. No live DB in tests. Deployment is the founder's.
-3. **Calibration CI layer** — gates the PROVEN milestone. Clopper-Pearson interval on the headline
-   number, per-bin bands, quantile binning, full population including voids, version pinning.
-   Publishing a bare "58% win rate" at n≈100 is an FTC overclaim risk.
+Every buildable item on handoff §1 is merged. Do **not** rebuild these:
+
+| Item | PR | SHA |
+|---|---|---|
+| 1. Age gate (server-side 21+ at checkout) | #452 | `f75d43b4` |
+| 2. T11 settlement backfill + daysFrom=3 + dated ESPN clearance | #451 | `cd9f467b` |
+| 5. MoneyPuck rights downgrade (route dark) | #453 | `bead91ec` |
+| 6. Calibration CI layer (Clopper-Pearson) | #454 | `efe25f2f` |
+| 7. De-vig oracle + Parlay MRI v1 | #448 | `4455c96f` |
+| — regression repair after #454 | #456 | `eb212632` |
+
+`main` is green: **11493 tests passing, 0 failing**, `tsc` exit 0, import-boundary guard 0 violations.
+
+⚠️ **Post-merge lesson — run the FULL suite, not just your PR's tests.** #454 passed its own tests but
+broke two others on `main`: it tripped the `no-fake-percentages` brand-safety tripwire (a literal
+`95%` beside win-rate context) and shifted a positional `mockDb` sequence by inserting a `VOID`
+`pick.count`. Both were caught only by running the whole `apps/web` suite after merge. Do the same.
+
+### Next buildable items (handoff §4 develop queue)
+
+Ranked. Take the top unclaimed one; announce it in your PR title so we don't collide.
+
+1. **B2B v1 API tier scoping** [VERIFIED leak, S] — `/api/v1/signals` and `/api/v1/probabilities`
+   filter on `isPublished`/`isBootstrap`/`modelVersion` only, with **no tier filter**, then emit
+   `modelConfidence`/`pModel` unconditionally — Pro-gated confidence on ALL picks, under one shared
+   static key. Add per-key scopes or a tier filter.
+2. **Durable rate limiting on public routes** [S] — `lib/api/rate-limit.ts` is an in-memory
+   per-process token bucket (its own docstring admits it); a Postgres-backed limiter already exists
+   for B2B. Swap it in and handle `x-forwarded-for` via a trusted proxy.
+3. **NB2 dispersion property test** [S] — research-only. Monte-Carlo assert `Var = μ + μ²/φ` and that
+   empirical VMR lands ≈2.15 at league mean. This is the test that would have caught `φ=12`.
+4. **Per-sport dispersion estimator** [M] — offline `estimate-phi.ts` (method-of-moments, floored) over
+   settled `TeamGameLog`. Makes NHL fall to Poisson automatically instead of by hardcoded assumption.
+5. **Clearance-surface hardening** [M] — register the ungated hosts (Kalshi, ClubElo) that feed
+   `build-independent-fair-values.ts` with zero `checkClearance`.
+6. **Clean-source registry batch** [S] — the license-verified open sources in handoff §5.
+7. **Watchdog contract test + workflow schedule-literal lint** [S each] — the `.github/**` line edits
+   are founder-only (sealed), but **the tests are yours to write**.
+
+### Founder-gated (do NOT attempt)
+Stripe scope-clarification letter · `CRYPTO_PAYMENTS_ENABLED` rail · PROVEN flag flip
+(`PUBLIC_PICKS_ENABLED` + `CANONICAL_HISTORY_ENABLED`) · MoneyPuck permission email · Neon prod
+string rotation · `User.dateOfBirth` Prisma migration · running the MVE.
 
 ---
 
