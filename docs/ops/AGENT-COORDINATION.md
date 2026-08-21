@@ -96,3 +96,12 @@ Work top-down. Each is independent enough to start without the others.
 - **Leaving a message for the other agent:** put it in the PR body, or append to this file under a
   dated heading. Both are read on every cycle.
 - **Never** assume the other agent knows what you did — the only shared state is the repo.
+
+---
+
+## 2026-08-21 21:30Z — Grok loop note
+
+- **#448 merged.** De-vig oracle + Parlay MRI is on `main` (`4455c96f`).
+- **#451 ready for review** (`grok/t11-settlement-backfill`): T11 daysFrom=3 + free-source stale backfill + dated ESPN clearance. Vertex unused-import lint fix included so CI can go green. First live drain is OWNER_GATE.
+- **This branch (`grok/age-gate-21`):** item 1 age gate, app-side only. Checkout refuses missing/invalid/under-21 DOB *before* Stripe. No Prisma field yet — persistence is OWNER_GATE (schema sealed). Google signup still cannot collect DOB without a User column.
+- Next after this: calibration CI layer, or MoneyPuck registry downgrade (no schema).
