@@ -130,6 +130,82 @@ pull Foi's `tuni.fi` reference. Not required to build. **Do not loop back into G
 
 <!-- SYNTH-VERDICT-ANCHOR -->
 
-## Public-API / data-sourcing sweep (`w0x0c0j6b`)
+## Public-API / data-sourcing sweep (`w0x0c0j6b`) — COMPLETE
 
-_(Pending — the "stop fighting The Odds API" sweep + GitHub-leverage audit fill this in.)_
+The "stop fighting The Odds API" sweep across public-API directories, free-odds sources, and
+per-sport stats APIs. **Split verdict, no hedging.**
+
+### THE WIN — soccer closing lines are now FREE and rights-clean
+
+**football-data.co.uk** publishes free CSVs with **real closing columns** — `B365C` (Bet365 close),
+**`PSC` (Pinnacle close)**, `MaxC`/`AvgC` (market max/avg close), plus closing O/U 2.5 and Asian
+handicap — across ~22–25 leagues, **2021/22 → 2025/26**, behind no login and no click-through
+contract (only a liability disclaimer; no ToS clause barring automation or commercial reuse).
+
+- **This removes The Odds API dependence for the entire soccer leg**, and even recovers **Pinnacle's
+  soccer closing line for free** (`PSC`) — which matters because Pinnacle's own public API closed to
+  the public in July 2025.
+- **Rights class: `approved_public_logged_off`.** Extract fact values + timestamps + source reference
+  into a RightsSnapshot, attribute "football-data.co.uk", and **do NOT mirror the raw CSVs wholesale**
+  (the site claims © over the compilation — facts are fine per Feist, the compilation is not).
+
+### THE HARD TRUTH — US majors closing lines: NO free/open source exists (confirmed to bedrock)
+
+Every "free" US closing-line dataset in circulation traces to a **poisoned root**: the Kaggle
+NBA/NFL/MLB/NHL odds sets, the FinnedAI sportsbookreview-scraper, OddsPortal's archive, and Princeton
+DSS **all derive from sportsbookreview.com / SportsBookReviewsOnline — GSE's known-EXCLUDED source
+($5,000 ToS).** This is the SBR reversal repeating: an MIT scraper license or a Kaggle "CC0" tag is
+the **wrapper**, not the source's rights; the uploader never held the right to relicense SBR data.
+Facts aren't copyrightable (Feist), but the binding constraint is the **source's contractual ToS**,
+and every free US path fails it.
+
+→ **US closing lines still require a LICENSED vendor.** "Stop fighting a single paid vendor" is
+achievable as a **vendor swap / diversification**, not a free escape. Strongest non-SBR candidate:
+**SportsGameOdds** (published commercial terms, free "Amateur" tier, built-in settlement, 4 US majors
++ soccer) — trial it as the diversification target off The Odds API. (SportsDataIO advertises closing
+lines but is paid/enterprise; **API-Sports is cheap but its ToS does NOT grant publishing rights for
+betting use — red flag.**)
+
+### Per-sport source table
+
+| Sport | Closing lines | Scores / settlement | Distributions |
+|---|---|---|---|
+| **Soccer** | ✅ **football-data.co.uk** (free, `approved_public_logged_off`) | openfootball (CC0), footballcsv (CC0), schochastics (ODC-BY, 1.2M matches), martj42 (CC0) + football-data.co.uk FT/HT | derive from final scores |
+| **MLB** | ❌ licensed vendor only | **Retrosheet** (`approved_open_license`, attribution) 2022-25; 2026 in-season lags → needs live pair | Retrosheet run distributions |
+| **NFL** | ❌ licensed vendor only | **nflverse/nflfastR** (CC-BY-4.0, already cleared) | nflfastR points |
+| **NBA** | ❌ licensed vendor only | ⚠ STRUCTURAL GAP — stats.nba.com ToU forbids "any gambling activity"; balldontlie paid; ESPN internal `commercial_display=false` → use vendor scores | — |
+| **NHL** | ❌ licensed vendor only | ⚠ STRUCTURAL GAP — api-web.nhle.com bans commercial; **MoneyPuck is NON-COMMERCIAL (correction below)** → use vendor scores | — |
+
+### Register-now list (rights-clean, additive) — recommended, NOT yet applied
+
+Prepared for founder review; **not committed to `source-rights-registry.ts` autonomously** (rights
+changes carry the SBR-error history — these want your eyes):
+
+- **football-data.co.uk → `approved_public_logged_off`** (soccer closing lines — highest-value find; facts+timestamps+source-ref only, don't mirror CSVs).
+- **Retrosheet → `approved_open_license`** (MLB run distributions + settlement; display the verbatim required attribution on every derived surface; pair with a live source for in-season 2026).
+- **footballcsv → `approved_open_license`** (CC0; net-new from the awesome-list crawl).
+- **schochastics/football-data → `approved_open_license`** (ODC-BY, 1.2M results 1888-2023; attribution).
+- **openfootball / martj42 → `approved_open_license`** (CC0; confirm/keep).
+- **OpenLigaDB → `approved_open_license` WITH ODbL SHARE-ALIKE CAVEAT** (German leagues; facts as inputs, don't redistribute a derived DB or you trigger copyleft).
+- **⚠ CORRECTION to verify in the registry:** **MoneyPuck** was previously flagged "already cleared" —
+  it is **non-commercial → `permission_required`, a hard blocker.** Check the current registry entry.
+- **Keep EXCLUDED / vendor_candidate:** Kaggle US odds sets, OddsPortal, Princeton DSS, FinnedAI = `excluded` (SBR trap); MoneyPuck, StatsBomb = `permission_required` (non-commercial); stats.nba.com, api-web.nhle.com, MLB Stats API, Baseball Savant = `permission_required`; SportsGameOdds / SportsDataIO / API-Sports = `vendor_candidate` until a signed contract promotes them to `approved_api`.
+
+### GitHub leverage — reconciling the two verdicts
+
+- **For METHODOLOGY: DONE** (per `w9gm4h0s6`) — the in-file code-content axis was the last un-run
+  modality; it has been run.
+- **For DATASETS: NOT maximally leveraged** — but the remaining upside is **bounded to soccer +
+  settlement breadth, NOT US closing lines.** GitHub doesn't index CSV/parquet blobs, so code-search
+  is structurally *blind to datasets*; three modalities remain un-run: (1) **awesome-list transitive
+  crawl** (highest value — one probe already yielded footballcsv, schochastics, Fjelstul, BrazilianFootball);
+  (2) **org release-asset / GHCR inspection** (boxball prebuilt Retrosheet Parquet, nflverse-data assets);
+  (3) **gist + dependents-graph sweep**. These are consistent, not contradictory: methodology is
+  exhausted; dataset-discovery has three blind spots.
+- **The US closing-line DECISION is DONE regardless** — no volume of GitHub crawling launders SBR/
+  OddsPortal/sportsbook rights. That is a licensed-vendor problem, settled.
+
+**One more pass (optional, bounded):** a single orchestrated pass led by the awesome-list transitive
+crawl + GHCR release-assets + gist/dependents sweep would extend soccer/settlement coverage only.
+Teed up for a cheaper model per your standing preference — **not run on Opus** given the bounded upside
+and that the soccer win (football-data.co.uk) is already banked.
