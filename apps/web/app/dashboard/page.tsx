@@ -194,12 +194,11 @@ export default async function DashboardPage({
     performanceVisible &&
     performancePolicy.publicWinRate !== null &&
     performancePolicy.publicWinRate >= 55;
-  const winRateSubtext =
-    performanceVisible &&
-    performancePolicy.publicWinRateCiLowPct !== null &&
-    performancePolicy.publicWinRateCiHighPct !== null
-      ? `95% CP ${performancePolicy.publicWinRateCiLowPct}–${performancePolicy.publicWinRateCiHighPct}%`
-      : null;
+  // The band label is assembled by evaluatePublicPerformancePolicy() so the
+  // confidence level travels with the interval it describes. Never rebuild it here.
+  const winRateSubtext = performanceVisible
+    ? performancePolicy.publicWinRateCiLabel
+    : null;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
