@@ -179,6 +179,76 @@ function fetchShaFromOrigin(sha, cwd) {
     });
     return true;
   } catch {
+    // Fetch-by-hash is not universally served. GitHub rejects a `want` for an
+    // object it has not advertised as a ref tip unless the repo enables
+    // allowAnySHA1InWant, so a perfectly real commit fails here purely for
+    // sitting mid-branch — this project's CI checkout is a 1-commit-deep
+    // clone (actions/checkout@v4's default). Widening the clone is the
+    // fallback.
+    return widenOriginRefs(cwd);
+  }
+}
+
+/**
+ * Widen a shallow clone once per process, then let the caller re-resolve.
+ *
+ * Two DIFFERENT reasons a shallow clone misses a real commit, found by
+ * testing against this project's actual ledger rather than assuming one
+ * cause: depth (some cited commits sit ~750 commits back on main) AND branch
+ * scope (some cited commits exist ONLY on a still-open feature branch, e.g. a
+ * Hermes task branch never merged to main — `git fetch --unshallow` widens
+ * just the currently-checked-out ref's history and does not reach these at
+ * all, regardless of depth). A fixed --depth=N alone was tried first and
+ * rejected for the same reason depth-only failed: a guard whose depth
+ * constant goes stale as the branch grows is the same kind of guard that
+ * cries wolf.
+ *
+ * Fetching every advertised branch tip with generous depth in one call —
+ * verified against the real GitHub origin from a genuinely shallow clone —
+ * solves both: breadth covers branch-only commits, depth=1000 comfortably
+ * covers this project's full history (~760 commits) with room to grow.
+ * Memoised because this is the expensive path and every unresolved SHA in
+ * the ledger would otherwise re-run it.
+ */
+let _widened = null;
+function widenOriginRefs(cwd) {
+  if (_widened !== null) return _widened;
+  try {
+    execFileSync(
+      "git",
+      ["fetch", "--quiet", "--depth=1000", "origin", "+refs/heads/*:refs/remotes/origin/*"],
+      { cwd, stdio: "ignore" },
+    );
+    _widened = true;
+  } catch {
+    _widened = false;
+  }
+  return _widened;
+}
+
+/**
+ * Can we reach origin at all right now?
+ *
+ * This is the distinction the guard was missing. A failed fetch previously
+ * meant two very different things collapsed into one verdict: "origin does
+ * not have this commit" (a real violation) and "we could not talk to origin"
+ * (an infrastructure problem that says nothing about the evidence).
+ * Conflating them makes the guard cry wolf, and a guard that cries wolf gets
+ * switched off.
+ *
+ * `ls-remote` only lists advertised refs, so it is a clean connectivity
+ * probe: it succeeds whenever the remote is reachable and authorised,
+ * independent of whether any particular object is served.
+ */
+function originReachable(cwd) {
+  try {
+    execFileSync("git", ["ls-remote", "--exit-code", "--quiet", "origin", "HEAD"], {
+      cwd,
+      stdio: "ignore",
+      timeout: 20_000,
+    });
+    return true;
+  } catch {
     return false;
   }
 }
@@ -301,10 +371,18 @@ export function validate(rows, opts = {}) {
             if (shallow && fetchSha) {
               const recovered = candidates.some((c) => fetchSha(c) && resolveSha(c));
               if (!recovered) {
-                violations.push(
-                  `${where}: DONE cites ${candidates.join(", ")} — none resolve locally, and origin ` +
-                    `does not serve any of them. Either the work was never committed or the hash is wrong.`,
-                );
+                // Distinguish "origin does not have it" from "we could not
+                // reach origin". Only the first is evidence about the ledger;
+                // the second is an infrastructure fact and must not be
+                // reported as a fabricated SHA.
+                if (opts.originUp === undefined ? originReachable(REPO_ROOT) : opts.originUp) {
+                  violations.push(
+                    `${where}: DONE cites ${candidates.join(", ")} — none resolve locally, and origin ` +
+                      `does not serve any of them. Either the work was never committed or the hash is wrong.`,
+                  );
+                } else {
+                  unverified.push({ id: row.id, sha: candidates[0] });
+                }
               }
             } else if (shallow) {
               // No origin remote: truly offline, absence cannot be tested here.
