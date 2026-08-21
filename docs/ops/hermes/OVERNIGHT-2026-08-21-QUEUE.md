@@ -1,7 +1,7 @@
 # OVERNIGHT QUEUE — 2026-08-21
 
     MAX_CYCLES=30
-    CYCLE=9
+    CYCLE=10
     STALL_THRESHOLD=3
     BRANCH=claude/overnight-2026-08-21
     STOP_FILE=handoff/.stop
@@ -177,7 +177,7 @@ binding, and why. Date it. This is the template for how a frozen-spec conflict g
 document, never silently pick.
 **Done when:** the note exists and states the empirical form is binding.
 
-### T8 · CLAIMED · box 3 cycles
+### T8 · DONE · next commit · box 3 cycles
 Write `docs/ops/hermes/hf5-mve/AUDIT.md`: formula vs pre-registration, side-selection rule,
 walk-forward causality (answer with the **call ordering** as evidence, not an assurance),
 entry-price bar (6–3h, ≤15 min, ≥3 books, ESPN excluded, exclusions counted), push handling,
