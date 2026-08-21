@@ -1,6 +1,6 @@
 # OVERNIGHT REPORT — 2026-08-21
 
-**VERDICT: in progress · 1 done · 0 blocked · 1 commit · MVE NOT ARMED · 0 findings**
+**VERDICT: in progress · 2 done · 0 blocked · 2 commits · MVE NOT ARMED · 0 findings**
 
 <!-- The line above is the whole report for a founder reading half-asleep.
      Every cycle REWRITES it, then appends its row below.
@@ -27,7 +27,7 @@ cd packages/prediction-engine && npx vitest run; echo "EXIT=$?"  # expect 0
 
 | # | Task | Command run | Exit | Result |
 |---|---|---|---|---|
-|| 1 | T4 (fix point-null doc term) | `grep -c '(1-q)/(1-m)' docs/ops/hermes/FINAL-RUN-2026-08-20.md` | 1 (0 matches = pass) | fe382ed4 — composite-null form applied, doc-only |
+|| 2 | T5 (ledger guard in CI + selftest) | `node scripts/ops/check-agent-ledger-selftest.mjs; echo "EXIT=$?"` + `node -e "const s=require('./package.json').scripts.guardrails; process.exit(s.startsWith('node scripts/ops/check-agent-ledger.mjs')?0:1)"; echo "EXIT=$?"` | 0,0 | c3bdf98a — guardrails chain prepended, selftest created |
 
 ## Blockers for the founder
 
