@@ -48,8 +48,88 @@ finding is a *language gap*, not a missing library.
 
 ---
 
-## Axes 2–4 — Issues/discussions · Commits/users · Negative-space critic
+## Axes 2–5 — Issues/discussions · Commits · Users · Negative-space (COMPLETE)
 
-_(Pending — filled in by the coverage workflow synthesis. See below.)_
+Two independent workflows covered these axes (one adversarial, one code-content-first). **They
+converge:** after an explicitly adversarial pass, **zero credible contradiction** to any of the four
+fixes survived; **zero commits anywhere revert in the direction of our fixes.** Three of the four came
+out *stronger*; one sport was reclassified.
+
+### THE HEADLINE — one material correction: NHL should NOT use NB2
+
+The single finding that *changes the build* (code-content axis, `sports-quant-platform/tests/test_overdispersion.py`,
+an asserting test file):
+
+- **Empirical NHL goal dispersion ≈ 1.01 (Poisson-exact) over 52,540 team-matches** — commented
+  *"Poisson exacto, no debe llevar k."* Independently echoed by three other tested repos (JonnyParlay
+  puts NHL points in a `POISSON_STATS` set; Omega returns `'poisson'` for goal rate; NewJerzzy flags
+  NHL lowest-variance).
+- Our fix #4 bundled **MLB + NHL** together as "NB2." **That bundle is wrong.** MLB genuinely
+  overdisperses (**same file: MLB dispersion 2.21, k≈3.8 — which *corroborates* φ≈3.7**); NHL does not.
+  Forcing NB2 onto NHL goals inflates tail variance with no empirical basis → systematically mis-prices
+  NHL totals/tail props.
+- **Action:** split the per-sport switch — **NB2 for MLB, Poisson for NHL.** Cleanest form: **estimate
+  dispersion per-sport from settled data**, which makes NHL fall to ~Poisson automatically. Validate
+  GSE's own historical NHL variance-to-mean before shipping.
+
+This is also the answer to *"was the research hyper-focused?"* — **yes, on MLB**, and the very act of
+widening to the code-content/commit axes is what caught the wrong assumption (NHL≡MLB) the MLB-centric
+depth had papered over. The hyper-focus was real; this pass is its correction.
+
+### The four fixes stand — now consensus, not a bespoke bet
+
+| Fix | Verdict | Independent corroboration |
+|---|---|---|
+| **#1 Anscombe inverse 3/8→1/8** | **Confirmed** (with a documentation nuance) | Two tested codebases (`pymultiscale`, CaImAn `gat.py`) literally encode *forward 3/8, unbiased-inverse 1/8*; pymultiscale has the naive `−3/8` **commented out and replaced**. Whole Makitalo–Foi population (IMC_Denoise, CRIkit2, phasorpy) agrees. JOSS #257/Warton 2018: bias bites hardest exactly in the low-count regime where runs (~4)/goals (~2.5) live → high-impact, not cosmetic. **Nuance:** field best practice is the *exact* Makitalo–Foi **LUT**; `1/8` is the asymptotic closed form — correct-and-sufficient at run-scale means, document as asymptotic, adopt the LUT only if low-count buckets (team-innings, low totals) ever feed the transform. |
+| **#2 NB2 φ=12→≈3.7** | **Confirmed — most-corroborated, with root cause** | statsmodels #9031 (+tf/probability #372, scipy #13292): NB dispersion is parameterized 3 incompatible ways (α vs θ=1/α vs φ) + NB1-vs-NB2 confusion → **a φ 3.3× too high is the classic parameterization-mismatch symptom = the most likely provenance of the bug.** Arithmetic: φ=4.3/1.15≈3.74. Sabermetrics method-of-moments fits on real MLB runs cluster r≈3.9–4.85 (φ=12 far outside; 3.7 at the low-scoring edge). Committed test asserts MLB k≈3.8. goalmodel's `upsilon.ml` commit moved from *fixed*→*data-estimated* dispersion; penaltyblog v1.6.1 had to **harden NB loss convergence** (wrong-φ is a documented silent failure mode). **Tuning note:** 3.7 = low-scoring edge; ~4.0–4.1 may fit modern league-average — sensitivity check, not a blocker. |
+| **#3 D_i = 1/(4n), retire s²=0.04** | **Confirmed** | `steins-estimator` (canonical Efron–Morris 45-at-bat set) uses the *theoretical* stabilized variance ~1/(4n) precisely because empirical per-unit variances are unreliable at small n. `ebbr` confirms the prior should be **fit from data**, not hardcoded. |
+| **#4 raise MIN_GAMES; wire efron-morris to HEAD** | **Confirmed** (softest — a threshold judgment) | RNA-seq dispersion literature: per-unit estimates at 3–6 replicates are unreliable → empirical-Bayes moderation. Small-n (45 at-bats) is exactly the regime shrinkage is designed for, so MIN_GAMES=8 is too low to trust empirical variances. |
+
+### Adopt vs build — the whole field is R/Python; GSE is TypeScript
+
+There is **no maintained TS package** for NB dispersion, EB/James-Stein shrinkage, or Dixon-Coles. So
+for almost everything, *"adopt vs build" = "reimplement in TS, validated against an R/Python oracle."*
+You cannot `npm install` your way out. Exactly **one** genuine adoption candidate:
+
+- **ADOPT — penaltyblog (Python, MIT — verify LICENSE file):** its `implied` module ships **7 tested
+  de-vig methods** (Shin, multiplicative, power, …) returning fair probs + stripped margin. GSE has
+  **no maintained library for the Elite CLV/de-vig ledger** today. Adopt as a thin Python sidecar, or
+  port its ~10-line closed-form formulas to TS with its outputs as **golden fixtures**. Also the soccer
+  Dixon-Coles oracle.
+- **ORACLE ONLY (offline, don't vendor):** `glm.nb` (R/MASS, GPL) to fit MLB/NHL dispersion and confirm
+  φ empirically; `goalmodel` (R, GPL-3) Dixon-Coles + `upsilon.ml` estimator pattern.
+- **PORT PATTERN:** `jpf5046/basic_betting_model/scoring_dist.py` — pure-Python `lgamma`-based NB PMF,
+  *"no numpy/scipy, deterministic"* — the exact shape for GSE's dependency-free TS count-tail primitive.
+  (`SlipEdge` learns dispersion from residuals — an alternative that lets NHL fall to ~Poisson automatically.)
+- **REFERENCE ONLY / SKIP:** ebbr (wrong family), edgeR (genomics/GPL), regista (dominated by penaltyblog).
+  TS repos (`techmari/dixon-coles-optimizer.ts`, Zeo `james-stein.ts`) have **no LICENSE = all-rights-reserved**
+  → design references, do not copy.
+- **⚠ COMPLIANCE FLAG:** `baseballr` PR #410/#411 added a **stealth-chromote Akamai 403 bypass** for
+  stats.ncaa.org. **Do NOT adopt or replicate** — it is anti-bot evasion, violating CLAUDE.md Legal
+  Scraping Posture. Judge stats.ncaa.org by its own controls (→ `blocked_technical_controls`/`permission_required`),
+  route any NCAA need through the Clearance Engine.
+- **One open gap with no adopt candidate:** the **NFL non-normal-margin / key-numbers 3–7 tail step** —
+  nflverse is data/EPA/sim infra only (nflseedR's default game model is Gaussian-margin). NFL tail must
+  remain **first-party**.
+
+### Is GitHub research DONE? — YES, by a concrete definition
+
+**DONE = every GitHub search modality run to yield-exhaustion.** Eight modalities: repo/topic · issues ·
+discussions · packages · commits · users · negative-space · **in-file code-content search by exact
+method name.** Modalities 1–7 were covered across the prior sweeps. Modality 8 (code-content) was **the
+one genuinely-unexhausted axis** — prior "repo search is exhausted" was *modality-limited* (repo-name
+search structurally cannot match statistics buried in file bodies under generic repo names). This pass
+**ran it** (`search_code` per exact method name per sport) and it surfaced ~10 relevant repos none of
+the prior sweeps reported — **including the decisive NHL-dispersion test file.** No 8th modality remains.
+
+**Only honest remaining gaps are OFF-GitHub and structurally unreachable by any GitHub tool:**
+(1) Kaggle notebooks/datasets (MLB/NHL run-distribution NB fits); (2) academic replication artifacts on
+university pages (Foi's `tuni.fi` MATLAB for the *exact* Anscombe inverse); (3) non-English / GitLab /
+Codeberg football open-data communities. **Optional** belt-and-suspenders: one targeted Kaggle search +
+pull Foi's `tuni.fi` reference. Not required to build. **Do not loop back into GitHub.**
 
 <!-- SYNTH-VERDICT-ANCHOR -->
+
+## Public-API / data-sourcing sweep (`w0x0c0j6b`)
+
+_(Pending — the "stop fighting The Odds API" sweep + GitHub-leverage audit fill this in.)_
