@@ -50,12 +50,24 @@ $HermesArgs = @("--cli", "--yolo", "--in", $RepoRoot)
 # exist or preflight refuses to launch (see $RequiredFiles below).
 $QueueDoc = "docs/ops/hermes/OVERNIGHT-2026-08-21-QUEUE.md"
 
+# ABSOLUTE paths in the prompt, deliberately.
+#
+# Relative paths failed in practice on 2026-08-21: preflight's Test-Path found
+# all three files from $RepoRoot and hermes still reported "does not exist" for
+# two of them, having read a third from the same directory. Whatever --in does,
+# it is not reliably the root that the agent's file reads resolve against, and
+# an agent that cannot read its own queue burns a run per cooldown looking
+# healthy. Absolute paths remove the question entirely.
+$QueueAbs  = (Join-Path $RepoRoot ($QueueDoc -replace '/', '\'))
+$AgentsAbs = (Join-Path $RepoRoot "AGENTS.md")
+$ClaudeAbs = (Join-Path $RepoRoot "CLAUDE.md")
+
 # ONE LINE, deliberately. A multi-line string does not survive PowerShell's
 # handoff to a native .exe - the argument arrives mangled or empty, hermes
 # treats it as no prompt at all, and drops into its interactive TUI where it
 # waits forever for a human. The full instructions live in the queue doc; this
 # line only has to point the agent at them. Keep it ASCII-only.
-$Prompt = "Read $QueueDoc in full and follow its THE LOOP section exactly, one task per cycle. Then read AGENTS.md and CLAUDE.md for your laws. Its NON-NEGOTIABLE section overrides anything you think would be better. Recover any CLAIMED task per that file's interrupted-CLAIMED rule. Report only what a command's real exit code proves; if you cannot verify something, write BLOCKED with the actual error text. Work the loop continuously without stopping and without asking questions."
+$Prompt = "Your working directory is $RepoRoot. Read the file at $QueueAbs in full and follow its THE LOOP section exactly, one task per cycle. Then read $AgentsAbs and $ClaudeAbs for your laws. The queue's NON-NEGOTIABLE section overrides anything you think would be better. Recover any CLAIMED task per that file's interrupted-CLAIMED rule. Use absolute paths under $RepoRoot for every file you read or write. Report only what a command's real exit code proves; if you cannot verify something, write BLOCKED with the actual error text. Work the loop continuously without stopping and without asking questions."
 
 # A run shorter than this means the agent died on startup, not on context.
 $FastFailSeconds = 60
