@@ -13,7 +13,7 @@
  * ids — Vertex ids (e.g. `claude-3-5-sonnet-v2@20241022`) are supplied via a
  * verified `VERTEX_MODEL_MAP`; an unmapped model throws rather than guesses.
  */
-import { fetchAccessToken, type ServiceAccountKey } from "../google-oauth";
+import { fetchAccessToken } from "../google-oauth";
 import type { ClaudeMessagesResult } from "../messages";
 
 // Error classes live outside `providers/` so consumers can classify
