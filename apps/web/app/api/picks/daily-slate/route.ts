@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { jsonNoStore } from "@/lib/api/no-store";
 import type { NextRequest } from "next/server";
 import { startOfDay, endOfDay } from "date-fns";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
   // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
   const limit = consumeRateLimit("public-daily-slate", clientIp(req), 60, 60_000);
   if (!limit.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
       { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
   if (gates.forceNoBetIfStale) {
     const stale = await isPublicPicksSurfaceStale().catch(() => false);
     if (stale) {
-      return NextResponse.json({
+      return jsonNoStore({
         success: true,
         data: {
           date: new Date().toISOString().slice(0, 10),
@@ -143,7 +143,7 @@ export async function GET(req: NextRequest) {
   // it non-null.
   const recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
 
-  return NextResponse.json({
+  return jsonNoStore({
     success: true,
     data: {
       date: new Date().toISOString().slice(0, 10),
