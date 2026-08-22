@@ -1374,6 +1374,16 @@ export type {
   KaunitzScan,
 } from "./edge-lab/kaunitz-outlier.js";
 
+// Rushing yards given attempts, not calendar games. Independent p.
+export {
+  RUSH_HB_METHOD_TAG,
+  fitYardsPerAttemptPrior,
+  posteriorYardsPerAttempt,
+  probOverRushYardsGivenAttempts,
+  probOverRushYards,
+} from "./edge-lab/props-hb-rush.js";
+export type { RushSample } from "./edge-lab/props-hb-rush.js";
+
 // X4 math — Kalshi two-way vs Shin book. Log-only; priced:false.
 export {
   KALSHI_BOOK_METHOD_TAG,
