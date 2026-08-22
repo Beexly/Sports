@@ -1476,6 +1476,13 @@ export {
 } from "./edge-lab/props-hb-rush-td.js";
 export type { RushTdSample } from "./edge-lab/props-hb-rush-td.js";
 
+// Line shop: one p, N posted Americans, take the largest juice-floor surplus.
+export {
+  LINE_SHOP_METHOD_TAG,
+  shopPostedPrices,
+} from "./edge-lab/props-line-shop.js";
+export type { ShopBook, ShopPick, ShopDenied } from "./edge-lab/props-line-shop.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
