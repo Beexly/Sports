@@ -1384,6 +1384,19 @@ export {
 } from "./edge-lab/props-hb-rush.js";
 export type { RushSample } from "./edge-lab/props-hb-rush.js";
 
+// Anytime TD given touches (rush att + rec), not calendar games. Independent p.
+export {
+  ATD_HB_METHOD_TAG,
+  fitTdPerTouchPrior,
+  pooledTdPerTouch,
+  posteriorTdPerTouch,
+  tdProbZero,
+  tdProbZeroPoisson,
+  probAnytimeTdGivenTouches,
+  probAnytimeTd,
+} from "./edge-lab/props-hb-atd.js";
+export type { TouchTdSample } from "./edge-lab/props-hb-atd.js";
+
 // X4 math — Kalshi two-way vs Shin book. Log-only; priced:false.
 export {
   KALSHI_BOOK_METHOD_TAG,
