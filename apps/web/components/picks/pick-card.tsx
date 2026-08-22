@@ -8,6 +8,7 @@ import type {
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
+import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
 import Link from "next/link";
@@ -326,6 +327,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
           {typeof breakdown.marketFairProb === "number" && Number.isFinite(breakdown.marketFairProb) && (
             <p className="mt-1 text-[10px] text-ion-3">
               Market fair (de-vig): {(breakdown.marketFairProb * 100).toFixed(1)}%
+              <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
             </p>
           )}
         </div>
