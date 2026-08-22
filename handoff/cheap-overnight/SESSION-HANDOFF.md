@@ -35,13 +35,13 @@ Branch `hermes/covariate-bus` → `origin/hermes/covariate-bus` at `5a1790dc`
   vendor `cpoe` / `ryoe` — all y-axis, explicitly absent from the bus type.
 - Honesty: returns `{ value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" }`
   — weekly mean, not arrival sep. Tagged via `COVARIATE_BUS_METHOD_TAG = "covariate_bus_v1"`.
-- Tests: 13 tests in `__tests__/covariate-bus.test.ts` covering leak (week t
+- Tests: 16 tests in `__tests__/covariate-bus.test.ts` covering leak (week t
   not used for week t), week 0 dropped, missing→null, finite sep≥0, y-axis
   fields absent by construction.
 - Barrel exports in `packages/prediction-engine/src/index.ts`.
 
 ### PR 2 — SEP bind — PR #548
-Branch `hermes/ngs-sep-adot-catch` → `origin/hermes/ngs-sep-adot-catch` at `3b8c9b50`
+Branch `hermes/ngs-sep-adot-catch` → `origin/hermes/ngs-sep-adot-catch` at `2dd13d53` (6 commits)
 
 `packages/prediction-engine/src/edge-lab/props-hb-adot-sep-bind.ts` — binds the bus
 into the aDOT×SEP catch model.
@@ -72,8 +72,9 @@ The 2 failures are pre-existing and unrelated:
 - `metric-source-payload-rights.test.ts` — ENOENT for
   `C:\Users\apps\web\lib\scraping\source-rights-registry.ts`.
 
-All edge-lab tests pass (covariate-bus, props-hb-adot-sep, props-hb-adot-sep-bind,
-props-hb-adot-catch, props-hb-catch — 27 tests in the targeted run).
+All edge-lab tests pass (covariate-bus 16, props-hb-adot-sep-bind 6,
+props-hb-adot-sep 3, props-hb-adot-catch 5 — 40 tests in the targeted run).
+Full edge-lab suite: 642 passed across 62 files.
 
 ## Next up (not started)
 

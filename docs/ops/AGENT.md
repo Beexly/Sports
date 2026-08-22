@@ -21,7 +21,7 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 ### 2026-08-22 13:30 CT | Hermes P1 (covariate bus + SEP bind) | CLEAN
 - PR 1 (#547, hermes/covariate-bus): covariate-bus.ts — pure/leak-safe/week=0 dropped/null→fail-closed/weekly_ngs_mean grain. 13 tests.
 - PR 2 (#548, hermes/ngs-sep-adot-catch, rebased on PR 1): props-hb-adot-sep-bind.ts — sepForKickoff → AdotSepCatchSample, null→DROPPED (never 3.0 yards). 6 tests. Barrel exports in index.ts.
-- Full suite: 2870 passed / 2 failed (2872) across 265 files — 2 failures pre-existing ENOENT path mismatches, unrelated to this slice.
+- Full suite: 2870 passed / 2 failed (2872) across 265 files — 2 failures pre-existing ENOENT path mismatches, unrelated to this slice. Edge-lab subset: 642 passed across 62 files.
 - Next: xYAC bind (props-hb-air-yac.ts). 3 fails → BLOCKED, move next.
 
 ## Now (2026-08-22 16:40 CT)
