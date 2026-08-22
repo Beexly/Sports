@@ -670,6 +670,7 @@ export async function processSport(
             awayTeam: game.awayTeam,
             commenceTime: game.commenceTime,
             now: () => fetchedAt,
+            spreadHome: avgSpread,
           },
           eloCache,
         );

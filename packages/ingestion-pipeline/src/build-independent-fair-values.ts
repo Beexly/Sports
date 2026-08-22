@@ -8,6 +8,8 @@
  *  4) ClubElo soccer (Fixtures W/D/L → 2-way, else rating logistic)
  *  5) Rate-model independent: Dixon–Coles on soccer (not double-counted with Poisson);
  *     independent Poisson on icehockey / baseball
+ *  5b) Skellam ATS cover from the same λ when a home spread is supplied
+ *      (soccer/hockey/baseball). Moneyline ranking ignores this row.
  *  6) MLB Stats API standings win% logistic (free official; summer Brier lever)
  *  7) Elo fitted from chronological TeamGameLog results
  *  8) Polymarket Gamma internal estimator — ONLY when INDEPENDENT_POLYMARKET=1
@@ -44,6 +46,8 @@ import {
   poissonIndependentFairValue,
   isDixonColesValidSport,
   dixonColesIndependentFairValue,
+  skellamCoverFairValue,
+  SKELLAM_COVER_SOURCE,
   fitEloRatingsFromResults,
   eloFairValueFromRatings,
   powerIndexToIndependentFairValue,
@@ -67,6 +71,11 @@ export type IndependentFairValueBuildInput = {
   readonly now?: () => Date;
   /** Skip live network independents (Kalshi / ESPN / ClubElo / Polymarket) — tests. */
   readonly skipNetworkIndependents?: boolean;
+  /**
+   * Posted home spread (negative = home favourite). Used only as the ATS
+   * *question* for Skellam cover; λ still comes from TeamGameLog rates.
+   */
+  readonly spreadHome?: number | null;
 };
 
 /**
@@ -500,6 +509,7 @@ export async function buildIndependentFairValues(
   }
 
   // 5) Poisson from real TeamGameLog rates (valid sports only).
+  let matchupLambdas: { lambdaHome: number; lambdaAway: number } | null = null;
   if (isPoissonValidSport(input.sportKey)) {
     try {
       const [homeRecords, awayRecords, leagueAvg] = await Promise.all([
@@ -529,6 +539,7 @@ export async function buildIndependentFairValues(
             leagueAvgScored: leagueAvg,
           });
           if (dc) {
+            matchupLambdas = { lambdaHome: dc.lambdaHome, lambdaAway: dc.lambdaAway };
             out.push({
               source: "dixon_coles",
               homeFairProb: dc.homeFairProb,
@@ -544,6 +555,7 @@ export async function buildIndependentFairValues(
               leagueAvgScored: leagueAvg,
             });
             if (poisson) {
+              matchupLambdas = { lambdaHome: poisson.lambdaHome, lambdaAway: poisson.lambdaAway };
               out.push({
                 source: "poisson",
                 homeFairProb: poisson.homeFairProb,
@@ -560,6 +572,7 @@ export async function buildIndependentFairValues(
             leagueAvgScored: leagueAvg,
           });
           if (poisson) {
+            matchupLambdas = { lambdaHome: poisson.lambdaHome, lambdaAway: poisson.lambdaAway };
             out.push({
               source: "poisson",
               homeFairProb: poisson.homeFairProb,
@@ -571,6 +584,29 @@ export async function buildIndependentFairValues(
       }
     } catch {
       // Soft-fail: null opinion is honest.
+    }
+  }
+
+  // 5b) Skellam ATS cover from the same λ — soccer/hockey/baseball only.
+  // Spread is the book's question; rates stay independent of the line.
+  if (
+    matchupLambdas &&
+    input.spreadHome != null &&
+    Number.isFinite(input.spreadHome)
+  ) {
+    const cover = skellamCoverFairValue({
+      sportKey: input.sportKey,
+      lambdaHome: matchupLambdas.lambdaHome,
+      lambdaAway: matchupLambdas.lambdaAway,
+      spreadHome: input.spreadHome,
+    });
+    if (cover) {
+      out.push({
+        source: SKELLAM_COVER_SOURCE,
+        homeFairProb: cover.homeFairProb,
+        awayFairProb: cover.awayFairProb,
+        capturedAt: now().toISOString(),
+      });
     }
   }
 
