@@ -1423,6 +1423,33 @@ export {
 } from "./edge-lab/props-hb-adot-catch.js";
 export type { AdotBucket, AdotCatchSample, BucketedCatchFit } from "./edge-lab/props-hb-adot-catch.js";
 
+// Receiving yards as air-caught + YAC convolution. Independent p only.
+// Does not ingest a new Odds market and does not touch ox-alpha ingest files.
+export {
+  AIR_YAC_METHOD_TAG,
+  fitAirYacPriors,
+  posteriorAirYac,
+  nbPredictiveCdf,
+  nbPredictivePmf,
+  convolveSurvival,
+  probOverYardsGivenReceptions,
+  probOverReceivingYards,
+} from "./edge-lab/props-hb-air-yac.js";
+export type {
+  AirYacSample,
+  AirYacPriors,
+  AirYacPosteriors,
+} from "./edge-lab/props-hb-air-yac.js";
+
+// Posted-price juice floor. e = p − q is not +EV at −110.
+export {
+  JUICE_FLOOR_METHOD_TAG,
+  BREAK_EVEN_MINUS_110,
+  postedBreakEven,
+  edgeClearsPosted,
+} from "./edge-lab/props-juice-floor.js";
+export type { JuiceFloorResult, JuiceFloorDenied } from "./edge-lab/props-juice-floor.js";
+
 // Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
 export {
   RUSH_TD_HB_METHOD_TAG,

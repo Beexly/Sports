@@ -29,7 +29,9 @@ export interface NflverseQbAgeRow {
   readonly qbAge: number | null;
   readonly qbAgeBucket: "34+" | "30-33" | "under-30" | "unknown";
   readonly passAttempts: number;
+  readonly teamTargets: number;
   readonly rbTargets: number;
+  /** RB targets as a share of TEAM targets (not QB pass attempts). */
   readonly rbTargetShare: number | null;
 }
 
@@ -170,6 +172,11 @@ function buildQbAgeRows({
     if (qbRows.length === 0) continue;
     const startingQb = qbRows.sort((a, b) => toNumber(b["attempts"]) - toNumber(a["attempts"]))[0]!;
     const passAttempts = qbRows.reduce((sum, row) => sum + toNumber(row["attempts"]), 0);
+    /** team_targets = sum of every player's targets on the team for the week.
+     * In nflverse player_stats: target_share = player_targets / team_targets,
+     * so team_targets = sum(targets) across all players on the team. We use
+     * the raw sum (not QB pass attempts) as the denominator for rbTargetShare. */
+    const teamTargets = teamRows.reduce((sum, row) => sum + toNumber(row["targets"]), 0);
     const rbTargets = teamRows
       .filter((row) => row["position"] === "RB")
       .reduce((sum, row) => sum + toNumber(row["targets"]), 0);
@@ -183,8 +190,9 @@ function buildQbAgeRows({
       qbAge: age,
       qbAgeBucket: qbAgeBucket(age),
       passAttempts,
+      teamTargets,
       rbTargets,
-      rbTargetShare: passAttempts > 0 ? rbTargets / passAttempts : null,
+      rbTargetShare: teamTargets > 0 ? rbTargets / teamTargets : null,
     });
   }
 

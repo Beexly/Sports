@@ -5,6 +5,8 @@ import {
   PROPS_HB_SOURCE,
 } from "../props-priced-edge.js";
 import { fitGroupPrior, posteriorRate, probOver } from "../props-hb.js";
+import { americanToImpliedProbability, removeVig } from "../../scoring.js";
+import { shinDevig } from "../../shin-devig.js";
 
 describe("pricePropAgainstMarket", () => {
   it("refuses to rank on confidence when the book quote is missing", () => {
@@ -34,7 +36,26 @@ describe("pricePropAgainstMarket", () => {
     expect(r.qOver).toBeCloseTo(0.5, 8);
     expect(r.edgeOver).toBeCloseTo(0.08, 8);
     expect(r.overround).toBeGreaterThan(1);
+    expect(r.qMethod).toBe("shin");
     expect(r.priced).toBe(false);
+  });
+
+  it("uses Shin q, not proportional split, on a favourite–longshot two-way", () => {
+    const quote = { overAmerican: -250, underAmerican: 180 };
+    const overRaw = americanToImpliedProbability(quote.overAmerican);
+    const underRaw = americanToImpliedProbability(quote.underAmerican);
+    const proportional = removeVig(overRaw, underRaw).home;
+    const shinQ = shinDevig([overRaw, underRaw]).probabilities[0];
+    expect(typeof shinQ).toBe("number");
+    if (shinQ === undefined) throw new Error("expected Shin q[0]");
+    expect(Math.abs(shinQ - proportional)).toBeGreaterThan(1e-4);
+
+    const r = pricePropAgainstMarket(0.7, quote);
+    expect(r.ok).toBe(true);
+    if (!r.ok) throw new Error("expected priced");
+    expect(r.qMethod).toBe("shin");
+    expect(r.qOver).toBeCloseTo(shinQ, 8);
+    expect(r.qOver).not.toBeCloseTo(proportional, 4);
   });
 
   it("fail-closes a one-sided quote instead of inventing q", () => {
