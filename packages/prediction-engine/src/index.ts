@@ -1384,6 +1384,19 @@ export {
 } from "./edge-lab/props-hb-rush.js";
 export type { RushSample } from "./edge-lab/props-hb-rush.js";
 
+// Anytime TD given touches (rush att + rec), not calendar games. Independent p.
+export {
+  ATD_HB_METHOD_TAG,
+  fitTdPerTouchPrior,
+  pooledTdPerTouch,
+  posteriorTdPerTouch,
+  tdProbZero,
+  tdProbZeroPoisson,
+  probAnytimeTdGivenTouches,
+  probAnytimeTd,
+} from "./edge-lab/props-hb-atd.js";
+export type { TouchTdSample } from "./edge-lab/props-hb-atd.js";
+
 // Catch rate by aDOT bucket. Independent p. Not a new Odds market.
 export {
   ADOT_CATCH_METHOD_TAG,
