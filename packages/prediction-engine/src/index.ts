@@ -1553,6 +1553,19 @@ export {
 } from "./edge-lab/props-hb-int.js";
 export type { IntSample } from "./edge-lab/props-hb-int.js";
 
+// Pass TDs | attempts. Distinct from ATD/rec-TD/rush-TD and from pass yards.
+export {
+  PASS_TD_HB_METHOD_TAG,
+  fitPassTdPerAttemptPrior,
+  pooledPassTdPerAttempt,
+  passTdProbZeroPoisson,
+  posteriorPassTdPerAttempt,
+  passTdProbZero,
+  probPassTdGivenAttempts,
+  probPassTd,
+} from "./edge-lab/props-hb-pass-td.js";
+export type { PassTdSample } from "./edge-lab/props-hb-pass-td.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
