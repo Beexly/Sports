@@ -1450,6 +1450,19 @@ export {
 } from "./edge-lab/props-juice-floor.js";
 export type { JuiceFloorResult, JuiceFloorDenied } from "./edge-lab/props-juice-floor.js";
 
+// Receiving TDs given targets, not ATD-given-touches. Independent p.
+export {
+  REC_TD_HB_METHOD_TAG,
+  fitRecTdPerTargetPrior,
+  pooledRecTdPerTarget,
+  posteriorRecTdPerTarget,
+  recTdProbZero,
+  recTdProbZeroPoisson,
+  probRecTdGivenTargets,
+  probRecTd,
+} from "./edge-lab/props-hb-rec-td.js";
+export type { RecTdSample } from "./edge-lab/props-hb-rec-td.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
