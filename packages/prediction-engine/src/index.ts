@@ -1424,6 +1424,7 @@ export {
 export type { AdotBucket, AdotCatchSample, BucketedCatchFit } from "./edge-lab/props-hb-adot-catch.js";
 
 // Receiving yards as air-caught + YAC convolution. Independent p only.
+// Does not ingest a new Odds market and does not touch ox-alpha ingest files.
 export {
   AIR_YAC_METHOD_TAG,
   fitAirYacPriors,
