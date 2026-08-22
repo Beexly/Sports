@@ -1148,6 +1148,13 @@ export {
   type PickReceipt,
   type LedgerHead,
 } from "./honesty/glass-receipts.js";
+export { compareDevigMethods } from "./honesty/devig-method-compare.js";
+export type {
+  DevigMethodCompare,
+  DevigMethodName,
+  MethodFair,
+  TwoWayBook,
+} from "./honesty/devig-method-compare.js";
 export {
   commitPick,
   revealPick,
