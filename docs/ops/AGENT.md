@@ -84,6 +84,11 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 |
 | - Next: bind air+YAC onto `props-hb-air-yac.ts` via the covariate bus; then xYAC/vendor models stay y-axis only. See SESSION-HANDOFF.md (cheap-overnight).
 |
+### 2026-08-22 ~15:10 CT | Hermes (ox-alpha) | CLEAN
+|- PR 4 — CPOE Comp Bind (#553): OPEN, CI running. Branch hermes/covariate-cpoe-comp @ 18666980, rebased onto origin/main (c2cfc153, post-#549 merge). Conflict in index.ts resolved (kept YAC + CPOE exports).
+|- `props-hb-cpoe-comp-bind.ts`: bindCpoeCompSamples pulls avgTimeToThrow + avgIntendedAirYards from covariate bus + GSE-CPOE into BoundCompSample. Fail-closed on null/non-finite. 9/9 tests green. tsc clean.
+|- All #547/#548/#549 MERGED. Next bind on list: SACKS (props-hb-sacks.ts via bus). 3 fails → BLOCKED, skip.
+|
 ### 2026-08-22 ~12:30 CT | Hermes / ox-alpha | CLEAN
 |- **PR 1 Covariate Bus (#547):** OPEN, CI green. Branch hermes/covariate-bus @ 5a1790dc pushed to origin. Tests 16/16. tsc clean.
 |- **PR 2 SEP Bind (#548):** PR created from hermes/ngs-sep-adot-catch (rebased on bus 5a1790dc). Tests 6/6. CI green. Barrel exports in index.ts for bindSepSamples/boundSepSamples.
