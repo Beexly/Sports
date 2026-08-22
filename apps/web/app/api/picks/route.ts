@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { jsonNoStore } from "@/lib/api/no-store";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
   const limit = consumeRateLimit("public-picks", clientIp(req), 60, 60_000);
   if (!limit.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
       { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
-    return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+    return jsonNoStore(bootstrapGateResponse("Public picks"), { status: 503 });
   }
 
   // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   if (gates.forceNoBetIfStale) {
     const stale = await isPublicPicksSurfaceStale().catch(() => false);
     if (stale) {
-      return NextResponse.json(staleDataGateResponse("Public picks"), { status: 503 });
+      return jsonNoStore(staleDataGateResponse("Public picks"), { status: 503 });
     }
   }
 
@@ -134,7 +135,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     })
     .catch(() => null);
   if (picks === null) {
-    return NextResponse.json(bootstrapGateResponse("Public picks"), { status: 503 });
+    return jsonNoStore(bootstrapGateResponse("Public picks"), { status: 503 });
   }
 
   // Selective publish (default ON): prefer priced rankingP over confidence.
@@ -303,7 +304,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
   const hitDailyLimit = totalAvailableToday > publicPicks.length;
 
-  return NextResponse.json({
+  return jsonNoStore({
     success: true,
     data: publicPicks,
     meta: {
