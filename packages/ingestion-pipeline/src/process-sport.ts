@@ -72,6 +72,7 @@ import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
 import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
 import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ingest.js";
+import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 
@@ -254,6 +255,7 @@ export async function processSport(
       apiKey === "espn-free-path" ||
       apiKey === "absent";
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
+    const eventOddsByExternalId = new Map<string, unknown>();
 
     if (!oddsKeyIsSentinel) {
       // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
@@ -329,13 +331,18 @@ export async function processSport(
       }
 
       // Licensed event-odds (player props). Default OFF. Hard credit cap.
-      // Never historical. Never throws. Does not persist (schema sealed).
+      // Never historical. Never throws. Persistence uses OddsLineSnapshot
+      // string market/side (no new table) when LINE_ARCHIVE is on.
       if (events.length > 0) {
         const eventOddsReport = await ingestEventOddsIfEnabled({
           client: client as unknown as EventOddsClient,
           sportKey: sport.key,
           eventIds: events.map((event) => event.id).filter((id): id is string => Boolean(id)),
         });
+        for (const snap of eventOddsReport.snapshots) {
+          const id = eventOddsId(snap as { id?: string });
+          if (id) eventOddsByExternalId.set(id, snap);
+        }
         if (eventOddsReport.enabled && eventOddsReport.fetched > 0) {
           console.log(`${logPrefix} ${sport.key}: event-odds ${eventOddsReport.reason}`);
         }
@@ -599,11 +606,13 @@ export async function processSport(
       // unless LINE_ARCHIVE_ENABLED=true, and never throws, so it can never block
       // or fail this refresh path. Persists odds already fetched above; adds no
       // new Odds API calls.
+      const propSnap = eventOddsByExternalId.get(game.externalId);
+      const propRows = propSnap ? toPropLineSnapshotRows(propSnap as PropEventLike) : [];
       await captureLineSnapshotsIfEnabled({
         db,
         gameId: gameRecord.id,
         capturedAt: fetchedAt,
-        rows: toLineSnapshotRows(gameOdds),
+        rows: [...toLineSnapshotRows(gameOdds), ...propRows],
       });
 
       // Capture the book-line dispersion (max−min across books) per kind NOW,

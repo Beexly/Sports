@@ -33,13 +33,16 @@
 import type { NormalizedOdds } from "@sports/types";
 
 export type LineArchivePhase = "OPEN" | "INTERIM" | "CLOSE";
+/** Featured markets. Player props use a string `player_*|<slug>` (see prop-line-rows). */
 export type LineArchiveMarket = "SPREAD" | "MONEYLINE" | "TOTAL";
 
 /** One book's price (+ optional line) for one side of one market — exactly
- *  what the refresh cycle already fetched, no derived/invented values. */
+ *  what the refresh cycle already fetched, no derived/invented values.
+ *  `market` is a string so player props can persist without a schema change:
+ *  `player_receptions|justin_jefferson`. Featured rows still use LineArchiveMarket. */
 export interface LineSnapshotRow {
   readonly book: string;
-  readonly market: LineArchiveMarket;
+  readonly market: string;
   readonly side: string;
   /** Price at capture, in the source's native odds format (this platform
    *  requests American odds — see data-ingestion ODDS_FORMAT). */
