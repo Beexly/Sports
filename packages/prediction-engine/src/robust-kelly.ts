@@ -1,5 +1,13 @@
 /**
- * Robust Kelly under Knightian uncertainty in p (research spec Part XI) — shadow.
+ * Robust Kelly under Knightian uncertainty in p — shadow.
+ *
+ * Technique actually implemented: treat p as unknown in Knight's sense (1921),
+ * put a Beta(p·n+1, (1−p)·n+1) credible set around the point estimate, take the
+ * lower α-quantile as the worst-case win probability for a backed bet, and run
+ * standard Kelly (Kelly 1956) at that p_worst. That is a maximin (Gilboa &
+ * Schmeidler 1989) over a Bayesian parameter-uncertainty set (Baker & McHale
+ * 2013), not a variance haircut — fractional Kelly and the unit cap live in
+ * kelly.ts / bankroll.ts and still treat p as known.
  *
  * RELATION TO bankroll.ts (which this module does NOT modify or replace).
  * `bankroll.ts` is the money-management surface: it takes a win probability, decimal
@@ -26,7 +34,7 @@
  * `fullKellyFraction` is reused directly rather than re-deriving f = (p(b+1) − 1)/b.
  *
  * THE CONFIDENCE SET. Around the central estimate p we place a Beta credible set with
- * the spec's pseudo-count parameterisation, driven by an effective sample size n:
+ * Laplace +1 pseudo-counts (Beta-Bernoulli conjugate), driven by an effective sample size n:
  *
  *     a = p·n + 1,   b = (1 − p)·n + 1
  *
@@ -85,11 +93,12 @@
  * priced into a live user-facing stake, and as with kelly.ts/bankroll.ts none of it is
  * a recommendation to bet.
  *
- * References:
- *   - Kelly, J. L. (1956). "A New Interpretation of Information Rate."
- *   - Knight, F. (1921). "Risk, Uncertainty and Profit" (risk vs. unmeasured uncertainty).
- *   - Baker & McHale (2013). "Optimal betting under parameter uncertainty."
- *   - Gilboa & Schmeidler (1989). "Maxmin expected utility with non-unique prior."
+ * References (cite the methods this file runs, not an internal spec):
+ *   - Knight, F. H. (1921). Risk, Uncertainty and Profit. (unmeasured uncertainty in p)
+ *   - Kelly, J. L. (1956). "A New Interpretation of Information Rate." Bell System Technical Journal 35(4).
+ *   - Gilboa, I. & Schmeidler, D. (1989). "Maxmin expected utility with non-unique prior." J. Math. Econ. 18(2).
+ *   - Baker, R. D. & McHale, I. G. (2013). "Optimal betting under parameter uncertainty: improving the Kelly criterion." Decision Analysis 10(3).
+ *   - MacLean, L. C., Thorp, E. O. & Ziemba, W. T. (2011). The Kelly Capital Growth Investment Criterion.
  */
 
 import { fullKellyFraction } from "./kelly.js";
