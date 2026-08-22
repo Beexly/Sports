@@ -1359,6 +1359,21 @@ export {
 } from "./edge-lab/props-hb-catch.js";
 export type { CatchSample, BetaPrior, BetaPosterior } from "./edge-lab/props-hb-catch.js";
 
+// Kaunitz X1 math — named-book Shin q ≥ τ below the cross-book median.
+// Log-only; priced:false. Not wired into process-sport (ox-alpha owns q ingest).
+export {
+  KAUNITZ_METHOD_TAG,
+  DEFAULT_KAUNITZ_TAU,
+  MIN_KAUNITZ_BOOKS,
+  scanKaunitzOutliers,
+} from "./edge-lab/kaunitz-outlier.js";
+export type {
+  KaunitzBookQuote,
+  KaunitzBookRead,
+  KaunitzFlag,
+  KaunitzScan,
+} from "./edge-lab/kaunitz-outlier.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
