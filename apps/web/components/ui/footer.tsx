@@ -73,7 +73,7 @@ const SOCIAL_LINKS = [
 ].filter((link) => link.href);
 
 export function Footer() {
-  // Contests only when public (default on; CONTESTS_PUBLIC=false emergency dark).
+  // Contests only when CONTESTS_PUBLIC=true (default dark).
   const productLinks = isContestsPublic()
     ? [
         ...PRODUCT_LINKS.slice(0, 9),
