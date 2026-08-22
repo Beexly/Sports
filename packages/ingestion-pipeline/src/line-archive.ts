@@ -62,11 +62,19 @@ interface StoredSnapshot {
 /** Minimal Prisma-delegate-shaped surface this module depends on. */
 export interface LineArchiveDb {
   oddsLineSnapshot: {
-    count(args: { where: { gameId: string; market: string } }): Promise<number>;
-    createMany(args: { data: Record<string, unknown>[] }): Promise<{ count: number }>;
+    /** Batch existence check — replaces N per-market `count()` calls.
+     *  Returns one row per distinct market that already has snapshots for
+     *  `gameId`, so callers can classify OPEN vs INTERIM without a round-trip
+     *  per market (the N+1 that would melt Neon on a 16-game Sunday slate). */
     findMany(args: {
-      where: { gameId: string; capturedAt?: { lte: Date } };
+      where: {
+        gameId: string;
+        market?: readonly string[];
+        capturedAt?: { lte: Date };
+      };
+      select?: { market?: boolean };
     }): Promise<StoredSnapshot[]>;
+    createMany(args: { data: Record<string, unknown>[] }): Promise<{ count: number }>;
     update(args: { where: { id: string }; data: { phase: LineArchivePhase } }): Promise<unknown>;
   };
 }
@@ -112,12 +120,21 @@ export async function captureLineSnapshots(
   try {
     // Phase is per (gameId, market) — a single capture call can span multiple
     // markets (spread + moneyline + total rows together), so classify once
-    // per distinct market rather than once per row.
+    // per distinct market rather than once per row. BATCH the existence check
+    // into a single findMany over the distinct markets — NOT one count() per
+    // market. On a 16-game Sunday slate with player props (one market per
+    // player-slug), the N+1 count() pattern would melt Neon.
     const markets = Array.from(new Set(rows.map((row) => row.market)));
     const phaseByMarket = new Map<string, LineArchivePhase>();
+    // Batch: one findMany returning any existing snapshots for these markets
+    // — replaces N count() calls (the N+1 that melts Neon on a dense slate).
+    const existing = await db.oddsLineSnapshot.findMany({
+      where: { gameId, market: markets },
+      select: { market: true },
+    });
+    const seenMarkets = new Set(existing.map((r) => r.market));
     for (const market of markets) {
-      const existing = await db.oddsLineSnapshot.count({ where: { gameId, market } });
-      phaseByMarket.set(market, existing === 0 ? "OPEN" : "INTERIM");
+      phaseByMarket.set(market, seenMarkets.has(market) ? "INTERIM" : "OPEN");
     }
 
     const data = rows.map((row) => ({
