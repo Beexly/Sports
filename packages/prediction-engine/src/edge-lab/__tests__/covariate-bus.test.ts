@@ -22,6 +22,9 @@ function rx(o: Partial<CovariateRow>): CovariateRow {
     avgIntendedAirYards: 8.4,
     pctAttemptsGte8Defenders: 0.54,
     avgTimeToLos: 2.2,
+    avgYac: 4.3,
+    avgExpectedYac: null,
+    expectedRushYards: null,
     ...o,
   };
 }
@@ -141,5 +144,31 @@ describe("sepForKickoff", () => {
     expect(cell!.value).toBe(2.7);
     // Truth-header check: weekly mean grain — not an arrival separation.
     expect(cell!.provenance).toBe("weekly_ngs_mean");
+  });
+});
+
+describe("avgYac covariate", () => {
+  it("returns the weekly NGS mean yac-per-reception, week t for t+1", () => {
+    const rows = [
+      rx({ week: 1, avgYac: 3.8 }),
+      rx({ week: 3, avgYac: 4.7 }),
+    ];
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 5, "receiving", "avgYac");
+    expect(cell).not.toBeNull();
+    expect(cell!.value).toBe(4.7);
+    expect(cell!.grain).toBe("week_t_for_tplus1");
+    expect(cell!.provenance).toBe("weekly_ngs_mean");
+  });
+
+  it("fails closed when avgYac is null on the prior row", () => {
+    const rows = [rx({ week: 2, avgYac: null })];
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 3, "receiving", "avgYac");
+    expect(cell).toBeNull();
+  });
+
+  it("drops week=0 (season aggregate) for avgYac too", () => {
+    const rows = [rx({ week: 0, avgYac: 99 })];
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 1, "receiving", "avgYac");
+    expect(cell).toBeNull();
   });
 });

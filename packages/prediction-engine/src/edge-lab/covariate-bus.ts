@@ -26,8 +26,10 @@
  *   - `avgExpectedYac`               (receiving NGS proprietary model)
  *   - `expectedRushYards` / `ryoe`   (rushing NGS proprietary model)
  *   - vendor `cpoe`                  (published CPOE)
- *   The bus exposes none of the above; it only emits the covariate fields
- *   listed under `CovariateField`.
+ * The bus exposes none of the above; it only emits the covariate fields
+ * listed under `CovariateField` (avgYac included — it is the per-reception
+ * YAC mean, a process/scheme signal, not the per-target arrival YAC the y-axis
+ * model fits).
  *
  * Pure. No I/O. No Prisma. No model inference.
  */
@@ -58,10 +60,18 @@ export interface CovariateRow {
   readonly avgTimeToThrow: number | null; // seconds, weekly mean
   readonly aggressiveness: number | null; // % throws into tight coverage (<1 yd)
   readonly avgIntendedAirYards: number | null; // yards per attempt, weekly mean
-  // ── rushing ───────────────────────────────────────────────
+  // ── rushing ─────────────────────────────────────────────────────────────
   /** % of rushing attempts facing 8+ defenders in the box. */
   readonly pctAttemptsGte8Defenders: number | null;
   readonly avgTimeToLos: number | null; // seconds from snap to LOS crossing, weekly mean
+  // ── yac (receiving, covariate) ─────────────────────────────────────────────
+  /** Average yards-after-catch per reception (weekly NGS mean). NOT per-target arrival YAC. */
+  readonly avgYac: number | null;
+  // ── receiving vendor y-axis (NEVER exposed as p) ──────────────────────────
+  /** NFL NGS proprietary xYAC. Y-axis only — the bus never emits this as a covariate. */
+  readonly avgExpectedYac: number | null;
+  /** NFL NGS rush-yards-over-expected. Y-axis only. */
+  readonly expectedRushYards: number | null;
 }
 
 /**
@@ -77,7 +87,8 @@ export type CovariateField =
   | "aggressiveness"
   | "avgIntendedAirYards"
   | "pctAttemptsGte8Defenders"
-  | "avgTimeToLos";
+  | "avgTimeToLos"
+  | "avgYac";
 
 /** Grain + provenance tag so callers never mistake a weekly mean for a
  * single-frame measurement. Honest header on every emitted cell. */
