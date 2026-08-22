@@ -5,6 +5,7 @@ import { describe, it, expect } from "vitest";
 import {
   isTransientDbError,
   classifyMigrateStatus,
+  classifyAppliedVsRepo,
   backoffMs,
   MAX_MIGRATE_ATTEMPTS,
 } from "../../../scripts/deploy/migrate-if-configured.mjs";
@@ -70,6 +71,38 @@ describe("classifyMigrateStatus — the fail-closed pooled-endpoint verdict", ()
     expect(classifyMigrateStatus("")).toBe("unknown");
     // @ts-expect-error — guards the null/undefined path
     expect(classifyMigrateStatus(undefined)).toBe("unknown");
+  });
+});
+
+describe("classifyAppliedVsRepo", () => {
+  it("is up-to-date when every repo folder is in the applied set", () => {
+    const r = classifyAppliedVsRepo(
+      ["20260716120000_add_odds_line_snapshots", "20260813200000_add_entity_graph"],
+      ["20260716120000_add_odds_line_snapshots", "20260813200000_add_entity_graph"],
+    );
+    expect(r.verdict).toBe("up-to-date");
+    expect(r.missing).toEqual([]);
+  });
+
+  it("is pending when the repo has a migration the table does not", () => {
+    const r = classifyAppliedVsRepo(
+      ["20260716120000_add_odds_line_snapshots"],
+      ["20260716120000_add_odds_line_snapshots", "20260813200000_add_entity_graph"],
+    );
+    expect(r.verdict).toBe("pending");
+    expect(r.missing).toEqual(["20260813200000_add_entity_graph"]);
+  });
+
+  it("ignores extra applied rows and the lockfile", () => {
+    const r = classifyAppliedVsRepo(
+      ["a", "legacy_row"],
+      ["a", "migration_lock.toml"],
+    );
+    expect(r.verdict).toBe("up-to-date");
+  });
+
+  it("is unknown on empty repo list so the caller fail-closes", () => {
+    expect(classifyAppliedVsRepo(["a"], []).verdict).toBe("unknown");
   });
 });
 
