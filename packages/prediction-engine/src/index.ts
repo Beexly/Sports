@@ -184,18 +184,25 @@ export {
   poissonConsistencyScore,
   assertTeamRatesAvailable,
 } from "./poisson.js";
-// Skellam margin / cover — first-party, not live-wired. Hockey/baseball/soccer
-// only (same sport gate as Poisson). NFL key-number mixture is a different module.
+// Skellam margin / cover — hockey/baseball/soccer (same sport gate as Poisson).
+// Live: source "skellam_cover" on SPREAD rankingP only. NFL key-numbers are separate.
 export {
   skellamPmf,
   skellamCdf,
   skellamPmfGrid,
   skellamCoverProbabilities,
+  skellamCoverFairValue,
   isSkellamValidSport,
   DEFAULT_SKELLAM_MAX_GOALS,
   SKELLAM_SPORT_PREFIXES,
+  SKELLAM_COVER_SOURCE,
 } from "./skellam.js";
-export type { SkellamCoverInput, SkellamCoverProbabilities, SkellamPmfPoint } from "./skellam.js";
+export type {
+  SkellamCoverInput,
+  SkellamCoverProbabilities,
+  SkellamCoverFairValue,
+  SkellamPmfPoint,
+} from "./skellam.js";
 // #11 — team scoring rates computed from REAL stored final scores (no new
 // provider, no fabricated λ) → an INDEPENDENT Poisson fair value that slots into
 // the edge engine as a 2nd estimator. Pure; the ingestion-cron wiring +

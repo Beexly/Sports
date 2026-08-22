@@ -21,6 +21,7 @@ import {
 } from "./constants.js";
 import { computeGameContext } from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
+import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -474,15 +475,6 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
 
-  const factors: FactorDetail[] = [
-    consensusFactor,
-    depthFactor,
-    edgeFactor,
-    ...(volatilityFactor ? [volatilityFactor] : []),
-    ...contextFactors,
-    ...shadowEvidenceFactors,
-  ];
-
   const confidence = Math.round(
     clamp(
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
@@ -494,6 +486,49 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   );
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+
+  const skellamIndependents = (input.context?.independentFairValues ?? []).filter(
+    (fv) => fv.source === SKELLAM_COVER_SOURCE,
+  );
+  const independentEdgeRaw = assessIndependentEdge(
+    skellamIndependents.length > 0 ? skellamIndependents : undefined,
+    homeIsChosen,
+    fairProb,
+    dataQualityScore,
+    twoSidedImpliedSum >= 1,
+  );
+  const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
+    independentWeight: 0.7,
+    rankOnAnyTrueProb: true,
+  });
+  const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
+    ? { ...independentEdgeRaw, priced: rank.priced }
+    : null;
+  const independentEdgeFactors: FactorDetail[] = independentEdge
+    ? [
+        {
+          name: `Independent Edge (${independentEdge.sources.join(", ")})`,
+          impact:
+            independentEdge.decision === "PASS"
+              ? "neutral"
+              : independentEdge.shrunkEdge > 0
+                ? "positive"
+                : "negative",
+          description: independentEdge.rationale,
+          weight: rank.priced ? Math.round((rank.rankingScore - confidence) || 0) : 0,
+        },
+      ]
+    : [];
+
+  const factors: FactorDetail[] = [
+    consensusFactor,
+    depthFactor,
+    edgeFactor,
+    ...(volatilityFactor ? [volatilityFactor] : []),
+    ...contextFactors,
+    ...shadowEvidenceFactors,
+    ...independentEdgeFactors,
+  ];
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
@@ -532,14 +567,13 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
-  const confPSpread = Math.min(1 - 1e-6, Math.max(1e-6, confidence / 100));
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
     marketDepthScore: depthScore,
     edgeScore: edgeComponentScore,
     marketPriceShapeScore: edgeComponentScore,
-    trueEvScore: null,
-    fairProbability: null,
+    trueEvScore: rank.priced && independentEdge ? independentEdge.shrunkEdge : null,
+    fairProbability: rank.priced ? rank.rankingP : null,
     lineMovementScore,
     volatilityPenalty,
     headToHeadScore: headToHeadScore !== 0 ? headToHeadScore : undefined,
@@ -548,8 +582,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     crossMarketScore: crossMarketScore !== 0 ? crossMarketScore : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
     dataQualityScore,
-    rankingP: confPSpread,
-    rankingSource: "confidence", // no independent ATS model yet
+    independentEdge: independentEdge ?? undefined,
+    rankingP: rank.rankingP,
+    rankingSource: rank.source,
     marketFairProb: fairProb,
     factors,
   };
@@ -566,7 +601,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     // chosenSpread is away-perspective for away picks while settlement reads home.
     line: avgSpread,
     confidence,
-    rankingScore: confidence, // no independent ML edge on spreads yet
+    rankingScore: rank.rankingScore,
     edgeScore,
     consensusPct,
     marketFairProb: fairProb,
@@ -834,7 +869,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   // rankingScore uses trueProb whenever finite (incl. PASS) — v5.2.1 ranking law.
   // Heuristic confidence stays as the market-echo composite for UX continuity.
   const independentEdgeRaw = assessIndependentEdge(
-    input.context?.independentFairValues,
+    input.context?.independentFairValues?.filter((fv) => fv.source !== SKELLAM_COVER_SOURCE),
     homeIsChosen,
     fairProb,
     dataQualityScore,
