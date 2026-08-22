@@ -2,12 +2,25 @@ import { describe, expect, it } from "vitest";
 import {
   resolveRundownApiKey,
   rundownEventToOddsApiEvent,
+  RUNDOWN_AFFILIATE_BOOK_KEYS,
   RUNDOWN_SPORT_IDS,
 } from "../rundown-client.js";
 
 describe("rundown-client", () => {
-  it("maps NFL sport id", () => {
+  it("maps sport ids from the published V2 sports list (NHL≠NCAAB, MLS≠EPL)", () => {
     expect(RUNDOWN_SPORT_IDS.americanfootball_nfl).toBe(2);
+    expect(RUNDOWN_SPORT_IDS.basketball_ncaab).toBe(5);
+    expect(RUNDOWN_SPORT_IDS.icehockey_nhl).toBe(6);
+    expect(RUNDOWN_SPORT_IDS.soccer_usa_mls).toBe(10);
+    expect(RUNDOWN_SPORT_IDS.soccer_epl).toBe(11);
+  });
+
+  it("maps documented affiliate IDs to Odds-API book keys", () => {
+    expect(RUNDOWN_AFFILIATE_BOOK_KEYS["19"]).toBe("draftkings");
+    expect(RUNDOWN_AFFILIATE_BOOK_KEYS["23"]).toBe("fanduel");
+    expect(RUNDOWN_AFFILIATE_BOOK_KEYS["22"]).toBe("betmgm");
+    expect(RUNDOWN_AFFILIATE_BOOK_KEYS["3"]).toBe("pinnacle");
+    expect(RUNDOWN_AFFILIATE_BOOK_KEYS["25"]).toBe("kalshi");
   });
 
   it("resolves key from env aliases", () => {
@@ -36,7 +49,83 @@ describe("rundown-client", () => {
     );
     expect(ev).not.toBeNull();
     expect(ev!.home_team).toBe("Kansas City Chiefs");
+    expect(ev!.bookmakers[0]!.key).toBe("pinnacle");
     expect(ev!.bookmakers[0]!.markets[0]!.outcomes[0]!.name).toBe("Kansas City Chiefs");
+  });
+
+  it("parses V2 markets[] (the live events endpoint) into named books", () => {
+    const ev = rundownEventToOddsApiEvent(
+      {
+        event_id: "816efd1e5767d7133b5bc70c77173a18",
+        event_date: "2026-01-15T00:00:00Z",
+        teams: [
+          { team_id: 145, name: "Los Angeles", is_away: true, is_home: false },
+          { team_id: 153, name: "Boston", is_away: false, is_home: true },
+        ],
+        markets: [
+          {
+            market_id: 1,
+            name: "moneyline",
+            participants: [
+              {
+                id: 145,
+                name: "Los Angeles Lakers",
+                lines: [
+                  {
+                    value: "",
+                    prices: {
+                      "19": { price: 150, is_main_line: true, updated_at: "2026-01-14T22:30:00Z" },
+                      "23": { price: 155, is_main_line: true },
+                    },
+                  },
+                ],
+              },
+              {
+                id: 153,
+                name: "Boston Celtics",
+                lines: [
+                  {
+                    value: "",
+                    prices: {
+                      "19": { price: -180, is_main_line: true, updated_at: "2026-01-14T22:30:00Z" },
+                      "23": { price: -185, is_main_line: true },
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      "basketball_nba",
+    );
+    expect(ev).not.toBeNull();
+    const keys = ev!.bookmakers.map((b) => b.key).sort();
+    expect(keys).toEqual(["draftkings", "fanduel"]);
+    const dk = ev!.bookmakers.find((b) => b.key === "draftkings")!;
+    const ml = dk.markets.find((m) => m.key === "h2h")!;
+    const home = ml.outcomes.find((o) => o.name === "Boston")!;
+    const away = ml.outcomes.find((o) => o.name === "Los Angeles")!;
+    expect(home.price).toBe(-180);
+    expect(away.price).toBe(150);
+  });
+
+  it("drops the 0.0001 off-the-board sentinel", () => {
+    const ev = rundownEventToOddsApiEvent(
+      {
+        event_id: "e-otb",
+        teams: [
+          { name: "Home", is_home: true },
+          { name: "Away", is_away: true },
+        ],
+        lines: {
+          "19": { moneyline: { home: 0.0001, away: 0.0001 } },
+        },
+      },
+      "basketball_nba",
+    );
+    expect(ev).not.toBeNull();
+    expect(ev!.bookmakers).toEqual([]);
   });
 });
 

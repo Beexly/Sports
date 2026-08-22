@@ -146,6 +146,16 @@ export {
   type FailoverReason,
 } from "./odds-failover.js";
 export {
+  THIN_FILL_MIN_BOOKMAKERS,
+  THIN_FILL_COMMENCE_MATCH_MS,
+  eventBookmakerCount,
+  eventsBelowBookmakerThreshold,
+  eventTeamsMatch,
+  matchSecondaryEventToPrimary,
+  mergeBookmakersIntoPrimary,
+  type ThinFillMergeResult,
+} from "./odds-event-merge.js";
+export {
   OfflineStatsProvider,
   RegistryStatsProvider,
   createStatsProviders,
@@ -205,6 +215,16 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export {
+  PredExonClient,
+  PredExonError,
+  isPredExonIngestEnabled,
+  PREDEXON_BASE,
+  PREDEXON_KEY_HEADER,
+  PREDEXON_SOURCE_ID,
+  type PredExonKalshiMarket,
+  type PredExonKalshiMarketsPage,
+} from "./predexon-client.js";
 export { SharpApiClient, SharpApiError, isSharpApiIngestEnabled, SHARP_API_BASE, SHARP_API_SOURCE_ID } from "./sharp-api-client.js";
 export {
   ProphetXMarketDataClient,
@@ -250,6 +270,7 @@ export {
   fetchRundownEventsForSport,
   rundownEventToOddsApiEvent,
   RUNDOWN_SPORT_IDS,
+  RUNDOWN_AFFILIATE_BOOK_KEYS,
   RUNDOWN_API_KEY_ENV_NAMES,
 } from "./rundown-client.js";
 export type { RundownFetchResult, RundownApiKeyEnvName } from "./rundown-client.js";

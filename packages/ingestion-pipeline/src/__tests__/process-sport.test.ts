@@ -41,6 +41,15 @@ const mocks = vi.hoisted(() => ({
   pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  resolveRundownApiKey: vi.fn<() => string>(),
+  fetchRundownEventsForSport: vi.fn<(sport: string, key: string) => Promise<{ events: unknown[]; remaining: number | null }>>(),
+  eventsBelowBookmakerThreshold: vi.fn<(events: unknown[], min?: number) => unknown[]>(),
+  mergeBookmakersIntoPrimary: vi.fn<(primary: unknown[], secondary: unknown[], min?: number) => {
+    events: unknown[];
+    filledGameIds: string[];
+    unmatchedSecondary: number;
+    skippedWellCovered: number;
+  }>(),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -95,8 +104,11 @@ vi.mock("@sports/data-ingestion", () => ({
   getSharedClubEloClient: vi.fn(),
   isClubEloSport: vi.fn().mockReturnValue(false),
   isIngestible: vi.fn().mockReturnValue(false),
-  resolveRundownApiKey: vi.fn().mockReturnValue(""),
-  fetchRundownEventsForSport: vi.fn().mockResolvedValue({ events: [], remaining: null }),
+  resolveRundownApiKey: mocks.resolveRundownApiKey,
+  fetchRundownEventsForSport: mocks.fetchRundownEventsForSport,
+  eventsBelowBookmakerThreshold: mocks.eventsBelowBookmakerThreshold,
+  mergeBookmakersIntoPrimary: mocks.mergeBookmakersIntoPrimary,
+  THIN_FILL_MIN_BOOKMAKERS: 2,
   fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
   NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
   NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
@@ -207,6 +219,69 @@ describe("processSport", () => {
     mocks.pickFindUnique.mockResolvedValue(null);
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
+    mocks.resolveRundownApiKey.mockReturnValue("");
+    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+    mocks.eventsBelowBookmakerThreshold.mockImplementation((events: unknown[], min = 2) =>
+      (events as { bookmakers?: unknown[] }[]).filter((e) => (e.bookmakers?.length ?? 0) < min),
+    );
+    mocks.mergeBookmakersIntoPrimary.mockImplementation((primary: unknown[]) => ({
+      events: primary,
+      filledGameIds: [],
+      unmatchedSecondary: 0,
+      skippedWellCovered: 0,
+    }));
+  });
+
+  it("does not call Rundown when every primary event already has two books", async () => {
+    mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+    mocks.getOdds.mockResolvedValue({
+      data: [
+        {
+          id: "odds-1",
+          home_team: "Chiefs",
+          away_team: "Bills",
+          commence_time: "2026-08-23T17:00:00Z",
+          bookmakers: [{ key: "fanduel" }, { key: "betmgm" }],
+        },
+      ],
+      remainingRequests: 400,
+    });
+
+    await processSport(SPORT, "key", gates());
+
+    expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+  });
+
+  it("calls Rundown only to thin-fill when a primary event has one book", async () => {
+    mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+    const primary = {
+      id: "odds-1",
+      home_team: "Chiefs",
+      away_team: "Bills",
+      commence_time: "2026-08-23T17:00:00Z",
+      bookmakers: [{ key: "fanduel" }],
+    };
+    const secondary = {
+      id: "rundown-1",
+      home_team: "Chiefs",
+      away_team: "Bills",
+      commence_time: "2026-08-23T17:00:00Z",
+      bookmakers: [{ key: "betmgm" }],
+    };
+    mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [secondary], remaining: 19 });
+    mocks.mergeBookmakersIntoPrimary.mockReturnValue({
+      events: [{ ...primary, bookmakers: [{ key: "fanduel" }, { key: "betmgm" }] }],
+      filledGameIds: ["odds-1"],
+      unmatchedSecondary: 0,
+      skippedWellCovered: 0,
+    });
+
+    await processSport(SPORT, "key", gates());
+
+    expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+    expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledWith(SPORT.key, "rundown-key");
+    expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledWith([primary], [secondary], 2);
   });
 
   it("runs the happy path and marks the IngestionRun SUCCESS with counts", async () => {
