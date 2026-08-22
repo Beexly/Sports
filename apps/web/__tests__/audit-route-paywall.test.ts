@@ -31,6 +31,14 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
+// This file's subject is not rate limiting, and its @sports/db mock has no
+// $queryRawUnsafe / isStubMode surface for the durable limiter. Allow-all so
+// the code under test decides the response; the limiter itself is covered by
+// api-p9-04 / api-p9-05 / b2b-rate-limit.
+vi.mock("@/lib/api/public-form-rate-limit", () => ({
+  consumePublicFormRateLimit: vi.fn(async () => ({ ok: true, backend: "memory" })),
+}));
+
 vi.mock("@sports/db", () => ({
   db: {
     pick: { findUnique: mocks.pickFindUnique },
