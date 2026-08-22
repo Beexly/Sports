@@ -146,6 +146,16 @@ export {
   type FailoverReason,
 } from "./odds-failover.js";
 export {
+  THIN_FILL_MIN_BOOKMAKERS,
+  THIN_FILL_COMMENCE_MATCH_MS,
+  eventBookmakerCount,
+  eventsBelowBookmakerThreshold,
+  eventTeamsMatch,
+  matchSecondaryEventToPrimary,
+  mergeBookmakersIntoPrimary,
+  type ThinFillMergeResult,
+} from "./odds-event-merge.js";
+export {
   OfflineStatsProvider,
   RegistryStatsProvider,
   createStatsProviders,
