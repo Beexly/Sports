@@ -1463,6 +1463,19 @@ export {
 } from "./edge-lab/props-hb-rec-td.js";
 export type { RecTdSample } from "./edge-lab/props-hb-rec-td.js";
 
+// Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
+export {
+  RUSH_TD_HB_METHOD_TAG,
+  fitRushTdPerAttemptPrior,
+  pooledRushTdPerAttempt,
+  posteriorRushTdPerAttempt,
+  rushTdProbZero,
+  rushTdProbZeroPoisson,
+  probRushTdGivenAttempts,
+  probRushTd,
+} from "./edge-lab/props-hb-rush-td.js";
+export type { RushTdSample } from "./edge-lab/props-hb-rush-td.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
