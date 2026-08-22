@@ -1359,6 +1359,21 @@ export {
 } from "./edge-lab/props-hb-catch.js";
 export type { CatchSample, BetaPrior, BetaPosterior } from "./edge-lab/props-hb-catch.js";
 
+// Kaunitz X1 math — named-book Shin q ≥ τ below the cross-book median.
+// Log-only; priced:false. Not wired into process-sport (ox-alpha owns q ingest).
+export {
+  KAUNITZ_METHOD_TAG,
+  DEFAULT_KAUNITZ_TAU,
+  MIN_KAUNITZ_BOOKS,
+  scanKaunitzOutliers,
+} from "./edge-lab/kaunitz-outlier.js";
+export type {
+  KaunitzBookQuote,
+  KaunitzBookRead,
+  KaunitzFlag,
+  KaunitzScan,
+} from "./edge-lab/kaunitz-outlier.js";
+
 // Rushing yards given attempts, not calendar games. Independent p.
 export {
   RUSH_HB_METHOD_TAG,

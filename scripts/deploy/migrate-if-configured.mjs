@@ -93,6 +93,28 @@ export const MAX_MIGRATE_ATTEMPTS = 4;
  * @param {string} text combined stdout+stderr of `prisma migrate status`
  * @returns {"up-to-date" | "pending" | "unknown"}
  */
+/**
+ * Compare repo migration directory names to `_prisma_migrations.migration_name`
+ * rows. Missing repo folders in the table → pending. Extra applied rows are
+ * fine (history). Unknown empty inputs stay unknown so the caller fail-closes.
+ * @param {readonly string[]} appliedNames
+ * @param {readonly string[]} repoDirNames
+ * @returns {{ verdict: "up-to-date" | "pending" | "unknown"; missing: string[] }}
+ */
+export function classifyAppliedVsRepo(appliedNames, repoDirNames) {
+  if (!Array.isArray(appliedNames) || !Array.isArray(repoDirNames)) {
+    return { verdict: "unknown", missing: [] };
+  }
+  const repo = repoDirNames.filter(
+    (n) => typeof n === "string" && n.length > 0 && n !== "migration_lock.toml" && !n.startsWith("."),
+  );
+  if (repo.length === 0) return { verdict: "unknown", missing: [] };
+  const applied = new Set(appliedNames.filter((n) => typeof n === "string" && n.length > 0));
+  const missing = repo.filter((n) => !applied.has(n));
+  if (missing.length) return { verdict: "pending", missing };
+  return { verdict: "up-to-date", missing: [] };
+}
+
 export function classifyMigrateStatus(text) {
   if (!text) return "unknown";
   const haystack = text.toLowerCase();
@@ -135,6 +157,27 @@ function checkMigrateStatusViaPooledEndpoint() {
   if (result.stdout) process.stdout.write(result.stdout);
   if (result.stderr) process.stderr.write(result.stderr);
   return classifyMigrateStatus(`${result.stdout ?? ""}\n${result.stderr ?? ""}`);
+}
+
+/**
+ * Prisma's rust engine cannot bind IPv4-first and Vercel builds often cannot
+ * open :5432 even when Neon is awake (HTTP/MCP still works). This check uses
+ * `@neondatabase/serverless` over TLS 443 to read `_prisma_migrations` and
+ * compare to the repo. VERIFY, do not skip. Not MIGRATE_GATE_ALLOW_UNVERIFIED.
+ * @returns {"up-to-date" | "pending" | "unknown"}
+ */
+function checkMigrateStatusViaNeonHttp() {
+  const result = spawnSync(
+    process.execPath,
+    ["scripts/deploy/neon-http-migration-parity.mjs"],
+    { encoding: "utf8", env: process.env },
+  );
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  const code = result.status ?? 1;
+  if (code === 0) return "up-to-date";
+  if (code === 2) return "pending";
+  return "unknown";
 }
 
 function runMigrateWithRetry() {
@@ -188,13 +231,19 @@ function runMigrateWithRetry() {
         `[migrate-if-configured] could not reach the DB via the DIRECT endpoint after ` +
           `${MAX_MIGRATE_ATTEMPTS} attempts — verifying schema parity via the POOLED endpoint…`
       );
-      const verdict = checkMigrateStatusViaPooledEndpoint();
+      let verdict = checkMigrateStatusViaPooledEndpoint();
+      if (verdict !== "up-to-date") {
+        console.warn(
+          `[migrate-if-configured] pooled Prisma status verdict=${verdict} — trying Neon HTTP (443) parity check…`,
+        );
+        verdict = checkMigrateStatusViaNeonHttp();
+      }
       if (verdict === "up-to-date") {
         console.warn(
-          `[migrate-if-configured] pooled-endpoint check confirms ZERO pending migrations — ` +
-            `this deploy is schema-safe; proceeding. ACTION REQUIRED: DIRECT_URL is unreachable ` +
-            `from the build network, so the next deploy that carries a migration WILL fail this ` +
-            `gate until DIRECT_URL is fixed.`
+          `[migrate-if-configured] parity check confirms ZERO pending migrations — ` +
+            `this deploy is schema-safe; proceeding. ACTION REQUIRED: Prisma still cannot ` +
+            `open :5432 from this build network, so the next deploy that carries a migration ` +
+            `WILL fail this gate until DIRECT_URL/TCP from Vercel to Neon is fixed.`
         );
         return 0;
       }
