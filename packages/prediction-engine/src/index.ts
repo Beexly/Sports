@@ -1627,6 +1627,17 @@ export {
 } from "./edge-lab/props-hb-sacks.js";
 export type { SackSample } from "./edge-lab/props-hb-sacks.js";
 
+// Kneel-out / hurry-up garbage-time remaining-attempt adjustment (C2.1 / H0.2).
+// Script/end-state volume only — not a new HB family. HYPOTHESIS. priced:false.
+export {
+  KNEEL_GARBAGE_METHOD_TAG,
+  evaluateKneelGarbage,
+} from "./edge-lab/nfl-kneel-garbage.js";
+export type {
+  KneelGarbageInput,
+  KneelGarbageResult,
+} from "./edge-lab/nfl-kneel-garbage.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
