@@ -35,5 +35,7 @@ describe("free settle response contract", () => {
     expect(route).toMatch(/clvRepair:\s*free\.clvRepair/);
     expect(route).toMatch(/snapshotRepair:\s*free\.snapshotRepair/);
     expect(route).toMatch(/teamGameLogRepair:\s*free\.teamGameLogRepair/);
+    expect(route).toMatch(/path === "free"/);
+    expect(route).toMatch(/forceFree \|\| !hasOddsApiKey\(apiKey\)/);
   });
 });
