@@ -16,11 +16,78 @@
  */
 
 import { clopperPearsonInterval } from "./clopper-pearson-interval";
+import type { PublicClvPolicy } from "./public-clv-policy";
 
 export type PublicPerformanceBlocker =
   | "GATE_OFF_PERFORMANCE_STATS"
   | "INSUFFICIENT_CANONICAL_SAMPLE"
   | "ALL_RECENT_PICKS_BOOTSTRAP";
+
+/**
+ * The complete headline-slot vocabulary, as a runtime value (see
+ * SCHEDULER_LIVENESS_STATUSES for the precedent) — a claim-governance surface
+ * benefits from the same runtime-checkable contract as an external one.
+ */
+export const PERFORMANCE_HEADLINE_KINDS = ["CLV_BEAT_CLOSE", "NOT_READY"] as const;
+
+/**
+ * What the dashboard headline slot may legally contain.
+ *
+ * Win rate is NOT a member of this union, on purpose. AI prediction sites
+ * near-universally lead with win rate; win rate is gameable by pick selection
+ * and easy to fabricate, while closing-line value (did the price we locked
+ * beat where the market closed?) is the sharp-credible signal touts almost
+ * never publish. The headline slot leads with CLV or admits it has nothing —
+ * it can never silently fall back to a win-rate number, because this type has
+ * no case that carries one.
+ */
+export type PerformanceHeadlineKind = (typeof PERFORMANCE_HEADLINE_KINDS)[number];
+
+export interface PerformanceHeadlineMetric {
+  readonly kind: PerformanceHeadlineKind;
+  /** Present only when kind === "CLV_BEAT_CLOSE". */
+  readonly beatCloseRatePct: number | null;
+  readonly beatCloseCiLowPct: number | null;
+  readonly beatCloseCiHighPct: number | null;
+  readonly gradedSampleSize: number;
+  /** True only when the 95% lower bound clears the 52.4% vig break-even. */
+  readonly clearsBreakEven: boolean;
+  /** Rendered string; surfaces show this verbatim rather than reassembling it. */
+  readonly label: string;
+}
+
+/**
+ * Pure derivation, deliberately reading ONLY the CLV policy — never win/loss
+ * counts. That is what makes "the headline slot can never contain win-rate"
+ * a structural guarantee instead of a convention: there is no code path here
+ * that could substitute one for the other, because this function has no
+ * access to win-rate inputs at all.
+ */
+function deriveHeadlineMetric(clv: PublicClvPolicy | null | undefined): PerformanceHeadlineMetric {
+  if (!clv || !clv.canExposeClv || clv.beatCloseRatePct === null) {
+    return {
+      kind: "NOT_READY",
+      beatCloseRatePct: null,
+      beatCloseCiLowPct: null,
+      beatCloseCiHighPct: null,
+      gradedSampleSize: clv?.gradedSampleSize ?? 0,
+      clearsBreakEven: false,
+      label:
+        "Closing-line performance is still accruing. No headline number is shown before it can be honestly backed.",
+    };
+  }
+  return {
+    kind: "CLV_BEAT_CLOSE",
+    beatCloseRatePct: clv.beatCloseRatePct,
+    beatCloseCiLowPct: clv.beatCloseCiLowPct,
+    beatCloseCiHighPct: clv.beatCloseCiHighPct,
+    gradedSampleSize: clv.gradedSampleSize,
+    clearsBreakEven: clv.clearsBreakEven,
+    label:
+      `Beat the close on ${clv.beatCloseRatePct}% of ${clv.gradedSampleSize} graded picks ` +
+      `(95% CI ${clv.beatCloseCiLowPct}-${clv.beatCloseCiHighPct}%).`,
+  };
+}
 
 export interface PublicPerformancePolicyInput {
   readonly canExposePerformanceStats: boolean;
@@ -37,6 +104,12 @@ export interface PublicPerformancePolicyInput {
   readonly modelVersions?: readonly string[];
   readonly recentTotalCount?: number;
   readonly recentBootstrapCount?: number;
+  /**
+   * The CLV policy result, when the caller has loaded one (typically via
+   * `loadPublicClvPolicy`). Optional and backward-compatible: omitting it
+   * yields `headlineMetric.kind === "NOT_READY"`, never a fabricated value.
+   */
+  readonly clv?: PublicClvPolicy | null;
 }
 
 export interface PublicPerformancePolicy {
@@ -69,6 +142,13 @@ export interface PublicPerformancePolicy {
    */
   readonly publicWinRateCiLabel: string | null;
   readonly publicWinRateBoundMethod: "clopper-pearson";
+  /**
+   * The headline slot: a CLV beat-close rate, or an explicit NOT_READY —
+   * never win-rate. `publicWinRate` above stays available as a SECONDARY
+   * field for existing consumers; any surface rendering it must render this
+   * headline above it (never win-rate alone).
+   */
+  readonly headlineMetric: PerformanceHeadlineMetric;
   readonly modelVersions: readonly string[];
   readonly publicRecord: string;
   readonly publicMessage: string;
@@ -203,6 +283,7 @@ export function evaluatePublicPerformancePolicy(
         }–${Math.round(band.high * 1000) / 10}%`
       : null,
     publicWinRateBoundMethod: "clopper-pearson",
+    headlineMetric: deriveHeadlineMetric(input.clv),
     modelVersions,
     publicRecord: record,
     publicMessage,

@@ -233,6 +233,11 @@ async function tryClubEloFairValue(
 ): Promise<IndependentMarketFairValue | null> {
   if (!isClubEloSport(input.sportKey)) return null;
   try {
+    // Package-side twin of the web registry row. Current verdict is
+    // use-with-caution (ingestible + attribution). Flip source-registry
+    // to paid-required after a Lars decline and this path fail-closes
+    // without another code change. Do not treat API timeout as denial.
+    if (!isIngestible("clubelo")) return null;
     const client = getSharedClubEloClient(input.now);
     return await client.getFairValue({
       homeTeam: input.homeTeam,

@@ -45,7 +45,16 @@ const RENDERED_BASENAMES = new Set([
 ]);
 const NON_PUBLIC_TOP_DIRS = new Set(["api", "admin", "cockpit"]);
 const NUMERIC_CLAIM_PATTERNS = [
-  ["percent-performance", /\b\d{1,3}(?:\.\d+)?%\s*(?:win|hit|roi|accuracy|success)\b/i],
+  // The `\+?` closes a real gap (S2, 2026-08-22): "60%+ win rate" is the
+  // classic sportsbook-tout ceiling-exceeding framing, and the plain "%"
+  // version of this pattern did not match it — the "+" sat between the
+  // percent sign and the required whitespace, so `%\s*` never fired.
+  // Confirmed before the fix: /%(\s*)(?:win|hit|...)/i.test("60%+ win rate")
+  // === false. The fixed pattern still requires the keyword to directly
+  // follow (optional "+" then optional whitespace), so legitimate CI-band
+  // copy like "95% CP 52.1-68.3%" and unrelated "15% off" promo copy are
+  // unaffected — neither is followed by win/hit/roi/accuracy/success.
+  ["percent-performance", /\b\d{1,3}(?:\.\d+)?%\+?\s*(?:win|hit|roi|accuracy|success)\b/i],
   ["percent-performance", /\b(?:win|hit|success)(?:\s|-)rate of \d{1,3}(?:\.\d+)?%/i],
   ["units-won", /\b(?:up|won|\+)\s?\d+(?:\.\d+)?\s?units\b/i],
   ["streak-claim", /\b(?:hit|won|cash(?:ed)?) \d+ of (?:the )?last \d+\b/i],
