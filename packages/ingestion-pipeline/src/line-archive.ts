@@ -220,10 +220,9 @@ export interface MarkClosingSnapshotsResult {
  * (market, book, side) as "CLOSE". Idempotent — rows already tagged CLOSE
  * are skipped.
  *
- * NOTE: this is exported but NOT wired into any caller yet. Wiring it into
- * settle-sport.ts (so it fires when a game settles) is a follow-up; this
- * function exists so that work can land later without touching this module
- * again. Never throws — any DB error is caught and returned as `{ error }`.
+ * Wired into settle-sport.ts via markClosingSnapshotsIfEnabled (hermes-H-D,
+ * commit 0a447f98). Never throws — any DB error is caught and returned as
+ * `{ error }`.
  */
 export async function markClosingSnapshots(
   dbArg: unknown,
