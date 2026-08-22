@@ -99,6 +99,29 @@ describe("evaluateKneelGarbage", () => {
     expect(r.priced).toBe(false);
   });
 
+  it("spreadLine is optional and inert — NaN or omitted never refuses", () => {
+    // spreadLine is accepted as context only; the module never infers
+    // favorite/underdog from its sign. NaN or missing must be a no-op.
+    const withNaN = evaluateKneelGarbage(base({ spreadLine: Number.NaN }));
+    const without = evaluateKneelGarbage(
+      (() => {
+        const { spreadLine: _s, ...rest } = base();
+        return rest;
+      })(),
+    );
+    expect(withNaN.priced).toBe(false);
+    expect(without.priced).toBe(false);
+    // Both should classify as "normal" (mid-game, no score pressure) — neither
+    // refuses on the spread.
+    expect(withNaN.ok).toBe(true);
+    if (!withNaN.ok) throw new Error("expected ok");
+    expect(without.ok).toBe(true);
+    if (!without.ok) throw new Error("expected ok");
+    expect(withNaN.regime).toBe("normal");
+    expect(without.regime).toBe("normal");
+    expect(KNEEL_GARBAGE_METHOD_TAG).toBe("nfl_kneel_garbage_v1");
+  });
+
   it("priced === false always, methodTag frozen", () => {
     expect(KNEEL_GARBAGE_METHOD_TAG).toBe("nfl_kneel_garbage_v1");
     const rows: KneelGarbageInput[] = [

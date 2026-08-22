@@ -39,7 +39,14 @@ const HURRY_SECONDS_PER_PLAY = 14;
 const HURRY_PASS_RATE = 0.92;
 
 export type KneelGarbageInput = {
-  readonly spreadLine: number; // nflverse PBP spread_line: HOME-framed, + = home favored
+  /**
+   * nflverse PBP `spread_line` (HOME-framed, + = home favored). Accepted for
+   * context only — the classification never infers favorite/underdog from its
+   * sign (see `posteamType`); this module is fail-closed on the possession-side
+   * label the caller provides. Optional so callers without a mapped spread can
+   * still classify; `NaN` or omitted is a no-op here.
+   */
+  readonly spreadLine?: number;
   readonly scoreDifferential: number; // offense minus defense at play start
   readonly gameSecondsRemaining: number;
   readonly playType: string; // e.g. qb_kneel, pass, run, no_play
@@ -98,8 +105,9 @@ function ok(
  */
 export function evaluateKneelGarbage(input: KneelGarbageInput): KneelGarbageResult {
   if (input == null || typeof input !== "object") return deny("bad_input");
-  const { spreadLine, scoreDifferential, gameSecondsRemaining, playType, posteamType } = input;
-  if (!Number.isFinite(spreadLine)) return deny("bad_input");
+  const { scoreDifferential, gameSecondsRemaining, playType, posteamType } = input;
+  // spreadLine is accepted as context but intentionally NOT used in classification —
+  // the module never infers favorite/underdog from its sign (see KneelGarbageInput).
   if (!Number.isFinite(scoreDifferential)) return deny("bad_input");
   if (typeof playType !== "string" || playType.length === 0) return deny("bad_input");
   if (typeof posteamType !== "string" || !POSTEAM_TYPES.has(posteamType)) return deny("bad_input");
