@@ -1,16 +1,9 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   loadDashboardPerformance,
   type DashboardLoaderDb,
   type DashboardRecentPick,
 } from "@/lib/dashboard/load-performance";
-
-vi.mock("@/lib/performance/clopper-pearson-interval", () => ({
-  clopperPearsonInterval: (successes: number, n: number) =>
-    n > 0
-      ? { point: successes / n, low: 0.4, high: 0.7, n, alpha: 0.05 }
-      : null,
-}));
 
 const NOW = new Date("2026-05-18T12:00:00Z");
 
