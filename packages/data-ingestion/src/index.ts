@@ -205,6 +205,15 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export {
+  PredExonClient,
+  PredExonError,
+  isPredExonIngestEnabled,
+  PREDEXON_BASE,
+  PREDEXON_SOURCE_ID,
+  type PredExonKalshiMarket,
+  type PredExonKalshiMarketsPage,
+} from "./predexon-client.js";
 export * from "./config.js";
 export {
   freshnessMode,
