@@ -74,3 +74,70 @@ describe("PredExon client fail-closed", () => {
     expect(init.headers?.[PREDEXON_KEY_HEADER]).toBe("test-not-a-real-key");
   });
 });
+
+describe("PredExon market selection — series_ticker, not search", () => {
+  const ENV = { PREDEXON_INGEST: "true", PREDEXON_API_KEY: "test-not-a-real-key" };
+
+  function okFetch() {
+    return vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ markets: [], pagination: { has_more: false } }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  }
+
+  function urlOf(fetchImpl: ReturnType<typeof okFetch>): URL {
+    return new URL(fetchImpl.mock.calls[0]![0] as string);
+  }
+
+  it("sends series_ticker so a sport is selected by series, not by title text", async () => {
+    const fetchImpl = okFetch();
+    const client = new PredExonClient(ENV, fetchImpl as unknown as typeof fetch);
+    await client.listKalshiMarkets({ seriesTicker: "KXNFLGAME", status: "open" });
+
+    const url = urlOf(fetchImpl);
+    expect(url.searchParams.get("series_ticker")).toBe("KXNFLGAME");
+    expect(url.searchParams.get("status")).toBe("open");
+    // Selecting by series must NOT smuggle in a title search: live API returns
+    // inflation contracts for search=nfl and zero rows for search=KXNFLGAME.
+    expect(url.searchParams.get("search")).toBeNull();
+  });
+
+  it("supports event_ticker and ticker for single-game / single-side lookups", async () => {
+    const fetchImpl = okFetch();
+    const client = new PredExonClient(ENV, fetchImpl as unknown as typeof fetch);
+    await client.listKalshiMarkets({
+      eventTicker: "KXMLBGAME-26AUG212210CHCSEA",
+      ticker: "KXMLBGAME-26AUG212210CHCSEA-CHC",
+    });
+
+    const url = urlOf(fetchImpl);
+    expect(url.searchParams.get("event_ticker")).toBe("KXMLBGAME-26AUG212210CHCSEA");
+    expect(url.searchParams.get("ticker")).toBe("KXMLBGAME-26AUG212210CHCSEA-CHC");
+  });
+
+  it("omits every selector we were not asked for", async () => {
+    const fetchImpl = okFetch();
+    const client = new PredExonClient(ENV, fetchImpl as unknown as typeof fetch);
+    await client.listKalshiMarkets({});
+
+    const url = urlOf(fetchImpl);
+    for (const p of ["series_ticker", "event_ticker", "ticker", "search", "status"]) {
+      expect(url.searchParams.get(p), `${p} should be absent`).toBeNull();
+    }
+    expect(url.searchParams.get("limit")).toBe("20");
+  });
+});
+
+describe("PredExon series constants match what the live catalog serves", () => {
+  it("reuses KALSHI_GAME_SERIES — no second, drifting source of series tickers", async () => {
+    const { KALSHI_GAME_SERIES } = await import("../kalshi-series.js");
+    // Verified live 2026-08-22: series_ticker=KXNFLGAME and =KXMLBGAME each
+    // returned open per-game two-sided markets for that day's slate. If anyone
+    // renames these constants, the PredExon path silently returns nothing —
+    // so pin the exact strings that were confirmed against the vendor.
+    expect(KALSHI_GAME_SERIES.nfl).toContain("KXNFLGAME");
+    expect(KALSHI_GAME_SERIES.mlb).toContain("KXMLBGAME");
+  });
+});
