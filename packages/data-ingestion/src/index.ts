@@ -1,4 +1,9 @@
-export { OddsApiClient, OddsApiError } from "./odds-api-client.js";
+export {
+  OddsApiClient,
+  OddsApiError,
+  type OddsApiHistoricalSnapshot,
+  type OddsApiParticipant,
+} from "./odds-api-client.js";
 export {
   KalshiClient,
   KalshiError,
