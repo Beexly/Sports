@@ -118,6 +118,24 @@ export const GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES = [
     attribution_text: null,
     commercial_display_allowed: false,
     derived_analytics_allowed: false,
+    evidence_urls: [
+      "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
+      "https://kalshi.com/developer-agreement",
+    ],
+    model_training_allowed: false,
+    notes:
+      "Kalshi Developer Agreement v1.1 §3 own-trading-only. Commercial derived analytics " +
+      "fail closed until written authorization. Fixture keeps metric policies conservative.",
+    source_id: "kalshi",
+    source_name: "Kalshi Exchange API (KalshiEx LLC)",
+    status: "permission_required",
+    storage_allowed: false,
+  },
+  {
+    attribution_required: false,
+    attribution_text: null,
+    commercial_display_allowed: false,
+    derived_analytics_allowed: false,
     evidence_urls: ["https://www.scores24.live/"],
     model_training_allowed: false,
     notes: "Permission required before automation, storage, display, modeling, or derived analytics.",
