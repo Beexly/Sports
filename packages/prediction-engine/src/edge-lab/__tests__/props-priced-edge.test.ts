@@ -46,6 +46,8 @@ describe("pricePropAgainstMarket", () => {
     const underRaw = americanToImpliedProbability(quote.underAmerican);
     const proportional = removeVig(overRaw, underRaw).home;
     const shinQ = shinDevig([overRaw, underRaw]).probabilities[0];
+    expect(typeof shinQ).toBe("number");
+    if (shinQ === undefined) throw new Error("expected Shin q[0]");
     expect(Math.abs(shinQ - proportional)).toBeGreaterThan(1e-4);
 
     const r = pricePropAgainstMarket(0.7, quote);

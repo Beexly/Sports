@@ -129,6 +129,8 @@ export function pricePropAgainstMarket(
   const qOver = shin.probabilities[0];
   const qUnder = shin.probabilities[1];
   if (
+    qOver === undefined ||
+    qUnder === undefined ||
     shin.probabilities.length !== 2 ||
     !finiteProb(qOver) ||
     !finiteProb(qUnder) ||
