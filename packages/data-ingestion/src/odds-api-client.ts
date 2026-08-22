@@ -336,7 +336,7 @@ export class OddsApiClient {
     sportKey: OddsIngestKey,
     eventId: string,
     markets: readonly string[],
-    options?: { regions?: string; bookmakers?: readonly string[] }
+    options?: { regions?: string; bookmakers?: readonly string[]; includeLinks?: boolean }
   ): Promise<OddsApiFetchResult<OddsApiEvent>> {
     const params: Record<string, string> = {
       regions: options?.regions ?? ODDS_REGION,
@@ -346,6 +346,9 @@ export class OddsApiClient {
     };
     if (options?.bookmakers && options.bookmakers.length > 0) {
       params["bookmakers"] = options.bookmakers.join(",");
+    }
+    if (options?.includeLinks === true) {
+      params["includeLinks"] = "true";
     }
     return this.fetch<OddsApiEvent>(
       `/sports/${sportKey}/events/${eventId}/odds`,
@@ -394,6 +397,33 @@ export class OddsApiClient {
     }
     return this.fetch<OddsApiHistoricalSnapshot>(
       `/historical/sports/${sportKey}/odds`,
+      params
+    );
+  }
+
+  /**
+   * Historical *event* odds (player props after 2023-05-03). Paid; 10× credits.
+   * Not called from production ingest — opt-in research only.
+   */
+  async getHistoricalEventOdds(
+    sportKey: OddsIngestKey,
+    eventId: string,
+    dateIso: string,
+    markets: readonly string[],
+    options?: { regions?: string; bookmakers?: readonly string[] }
+  ): Promise<OddsApiFetchResult<OddsApiHistoricalSnapshot>> {
+    const params: Record<string, string> = {
+      regions: options?.regions ?? ODDS_REGION,
+      markets: markets.join(","),
+      oddsFormat: ODDS_FORMAT,
+      dateFormat: "iso",
+      date: dateIso,
+    };
+    if (options?.bookmakers && options.bookmakers.length > 0) {
+      params["bookmakers"] = options.bookmakers.join(",");
+    }
+    return this.fetch<OddsApiHistoricalSnapshot>(
+      `/historical/sports/${sportKey}/events/${eventId}/odds`,
       params
     );
   }

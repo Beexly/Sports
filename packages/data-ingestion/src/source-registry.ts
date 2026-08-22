@@ -105,7 +105,7 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     verdict: "licensed",
     reason: "Commercial use in user-facing analytics is permitted; never re-expose odds as our own feed/API.",
     baseUrl: "https://api.the-odds-api.com",
-    datasets: ["odds", "scores", "events", "event-odds", "event-markets", "historical-odds", "participants"],
+    datasets: ["odds", "scores", "events", "event-odds", "event-markets", "historical-odds", "historical-event-odds", "participants"],
     docsUrl: "https://the-odds-api.com/",
   },
   sleeper: {
