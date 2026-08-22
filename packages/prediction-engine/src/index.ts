@@ -1566,6 +1566,17 @@ export {
 } from "./edge-lab/props-hb-pass-td.js";
 export type { PassTdSample } from "./edge-lab/props-hb-pass-td.js";
 
+// Sacks | dropbacks. Bounded Beta-Binomial (sacks cannot exceed dropbacks).
+export {
+  SACK_HB_METHOD_TAG,
+  fitSackPrior,
+  posteriorSack,
+  betaBinomialProbOverSacks,
+  probOverSacks,
+  scoreSacksOver,
+} from "./edge-lab/props-hb-sacks.js";
+export type { SackSample } from "./edge-lab/props-hb-sacks.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
