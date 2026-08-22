@@ -89,5 +89,14 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 |- **PR 2 SEP Bind (#548):** PR created from hermes/ngs-sep-adot-catch (rebased on bus 5a1790dc). Tests 6/6. CI green. Barrel exports in index.ts for bindSepSamples/boundSepSamples.
 |- **PR 3 YAC Bind (#549):** OPEN, CI re-running after fix. Branch hermes/covariate-yac-bind @ 4d0b7781 pushed to origin. Tests 7/7 + air-yac 8/8. Barrel exports in index.ts for bindYacSamples/boundYacSamples. Fix commit 4d0b7781 added avgYac to sep-bind test fixture (TS2322 CovariateRow assignability).
 |- **Honest posture kept:** the site is a window; no chrome built. avgSeparation bound from bus weekly mean (not arrival), fail-closed, never 3.0 yards. avgYac bound from bus weekly mean (not per-target arrival YAC).
-|- Next: Bind #4 INT (aggressiveness/avgTimeToThrow → props-hb-int.ts). 3 fails → BLOCKED, skip to next. See SESSION-HANDOFF.md.
+| - Next: Bind #4 INT (aggressiveness/avgTimeToThrow → props-hb-int.ts). 3 fails → BLOCKED, skip to next. See SESSION-HANDOFF.md.
+|
+### 2026-08-22 17:21 CT | Hermes (stealth/ox-alpha) | CLEAN
+|- Merged H0 branches (#555 validation harness + #557 kneel/garbage-time + #556 TPRR) into hermes/ox-alpha-rush-attempts-volume @ 0e0cef25. All three PRs were OPEN with green CI; branch was 3 commits ahead of origin/main.
+|- H0.1 (#555): `knownAtWeek` field, `L2` layer, `CovariateLayer` type, `P_SIDE_COVARIATE_REGISTRY` constant + `assertPSideHasNoMarketProp` q-contamination test. Extended `CovariateCell` with `{ layer, knownAtWeek }`. 19/19 tests green.
+|- H0.2 (#557): `nfl-kneel-garbage.ts` — `evaluateKneelGarbage` for kneel-out / hurry-up garbage-time remaining-dropback adjustment. C2.1 / H0.2 doctrine. 8/8 tests green.
+|- H0.4 (#556): `est-routes-tprr.ts` — `estRoutesTprr` snap×dropback route proxy + targets-per-est-route (L1 exposure denominator). 5/5 tests green.
+|- Full verification: 39 tests green (19+8+5+7 for the 4 affected test files), `tsc --noEmit` clean on packages/prediction-engine.
+|- `props-hb-air-yac-bind.ts` updated: `bindYacSamples` now takes `CovariateCell` from the bus instead of reconstructing `{value, grain, provenance}`.
+|- Next: H0 complete on this branch. Proceed to next flagship slice per doctrine H0 §1-#3 (validation harness was H0 #1, now landed; kneel is H0 #2, now landed). Per gap map §7, the bus is on main — do not rewrite. Next bind is qb_hit + air + GSE-CPOE → completions on a fresh origin/main worktree.
 |

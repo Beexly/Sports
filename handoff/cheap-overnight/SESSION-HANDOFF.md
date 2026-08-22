@@ -61,9 +61,23 @@ Contract:
 - `tsc --noEmit` on `packages/prediction-engine`: clean
 
 ## Next priority — Bind #4: INT
-- Target: `props-hb-int.ts` — bind passing `aggressiveness` + `avgTimeToThrow` via the bus.
-- Fail-closed: null on either → drop sample.
-- Three fails on any file → BLOCKED that file, skip to next bind. Never idle.
+|- Target: `props-hb-int.ts` — bind passing `aggressiveness` + `avgTimeToThrow` via the bus.
+|- Fail-closed: null on either → drop sample.
+|- Three fails on any file → BLOCKED that file, skip to next bind. Never idle.
+|
+## Completed this turn (17:21 CT)
+|- Merged `hermes/h0-validation-harness` (PRs #555, #556, #557 — all green CI, all OPEN) into this branch @ `0e0cef25`.
+|- H0.1 validation harness landed: `CovariateLayer`, `knownAtWeek`, `P_SIDE_COVARIATE_REGISTRY`, `assertPSideHasNoMarketProp` q-contamination guard. 19/19 + 16/16 tests green.
+|- H0.2 kneel/garbage-time landed: `nfl-kneel-garbage.ts` `evaluateKneelGarbage` (C2.1 doctrine). 8/8 tests green.
+|- H0.4 TPRR landed: `est-routes-tprr.ts` `estRoutesTprr` L1 exposure proxy. 5/5 tests green.
+|- `props-hb-air-yac-bind.ts` now accepts `CovariateCell` from the bus (not a reconstructed object).
+|- 39 affected tests green. `tsc --noEmit` clean. Push pending.
+|
+## Next
+|- H0 top-down complete on this branch: #1 validation harness, #2 kneel/garbage-time, #4 TPRR — all landed, all green CI.
+|- #553 CPOE-comp bind is already MERGED (H0 #3 / completions). Not a second covariate bus.
+|- Push this branch to origin. No further work needed for H0 slices unless new branch from origin/main.
+|- #525 serving SHA `544d0148` — slug/cap unchanged.
 
 ## Constraints (do not violate)
 - Do NOT edit `C:\Users\Garrett\Sports` (main worktree) — work only in worktrees.
