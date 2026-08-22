@@ -1228,6 +1228,17 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Fair Skill Brier (Wang et al.): BrS − (B−1)/B so binary ATD and K-way
+// yards ladders are comparable. Not Murphy BSS vs grouped climatology.
+export {
+  FAIR_SKILL_BRIER_METHOD_TAG,
+  indifferenceBrier,
+  originalBrier,
+  originalBrierFromBinaryUnit,
+  fairSkillBrier,
+  meanFairSkillBrier,
+} from "./edge-lab/fair-skill-brier.js";
+
 // Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
 // player → position → league EB with empirical 1/n observation-noise
 // calibration, and market-priced e = p − q (never κ = |2p−1|).
