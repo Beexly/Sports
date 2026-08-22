@@ -17,6 +17,13 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Do not market PUBLIC_PICKS as PROVEN/CLV.
 - Phone: email Baxley.Garrett@gmail.com only on BLOCK / FAKE-EDGE / OWNER_GATE.
 
+## Now (2026-08-22 13:30 CT)
+### 2026-08-22 13:30 CT | Hermes P1 (covariate bus + SEP bind) | CLEAN
+- PR 1 (#547, hermes/covariate-bus): covariate-bus.ts — pure/leak-safe/week=0 dropped/null→fail-closed/weekly_ngs_mean grain. 13 tests.
+- PR 2 (#548, hermes/ngs-sep-adot-catch, rebased on PR 1): props-hb-adot-sep-bind.ts — sepForKickoff → AdotSepCatchSample, null→DROPPED (never 3.0 yards). 6 tests. Barrel exports in index.ts.
+- Full suite: 2870 passed / 2 failed (2872) across 265 files — 2 failures pre-existing ENOENT path mismatches, unrelated to this slice.
+- Next: xYAC bind (props-hb-air-yac.ts). 3 fails → BLOCKED, move next.
+
 ## Now (2026-08-22 16:40 CT)
 ### 2026-08-22 16:40 CT | Hermes P1 (ox-alpha) | CLEAN
 - PR ship: covariate bus (IP) + SEP bind — both pushed to origin/hermes/ngs-sep-adot-catch.
