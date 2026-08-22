@@ -1228,6 +1228,32 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Hierarchical-Bayes props specialist + market-priced e = p − q (never κ).
+export {
+  fitGroupPrior,
+  posteriorRate,
+  probOver as propsHbProbOver,
+  probOverContinuous,
+  shrinkageReport,
+} from "./edge-lab/props-hb.js";
+export type {
+  RateSample,
+  GammaPrior,
+  GammaPosterior,
+  ShrinkageRow,
+} from "./edge-lab/props-hb.js";
+export {
+  PROPS_HB_SOURCE,
+  pricePropAgainstMarket,
+  confidenceFromPOver,
+} from "./edge-lab/props-priced-edge.js";
+export type {
+  PropBookQuote,
+  PricedPropEdge,
+  UnpricedPropEdge,
+  PropEdgeResult,
+} from "./edge-lab/props-priced-edge.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).

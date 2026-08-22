@@ -8,7 +8,12 @@
  * combination where edge × payout is maximised — the leverage nobody surfaces).
  *
  * Pure functions, illustrative lines. Live line ingestion is founder-gated.
+ *
+ * Edge is e = p − q against a two-way book, never confidence κ = |2p−1|.
+ * Without a quote, `edge` is 0 (unpriced) — we do not rank chalk as value.
  */
+
+import { pricePropAgainstMarket } from "../../../../packages/prediction-engine/src/edge-lab/props-priced-edge.js";
 
 export type Market = "Pass Yds" | "Rush Yds" | "Rec Yds" | "Receptions" | "Pass TD" | "Rush+Rec";
 
@@ -32,6 +37,9 @@ export type Prop = {
   readonly sigma: number;
   /** alternate lines the book offers, each with its payout multiplier */
   readonly alts: readonly AltLine[];
+  /** Two-way American Over/Under. Absent → unpriced (edge = 0). */
+  readonly overAmerican?: number;
+  readonly underAmerican?: number;
 };
 
 // --- distribution math ----------------------------------------------------
@@ -70,8 +78,14 @@ export type PropRead = {
   readonly side: Side;
   /** P(our recommended side hits) on the posted line */
   readonly pSide: number;
-  /** 0..1 — how far our read is from a coin flip; the conviction of the call */
+  /**
+   * Calibrated edge e = p − q vs a vig-stripped book, or 0 when unpriced.
+   * Never |2p−1|.
+   */
   readonly edge: number;
+  /** |2p−1| — conviction, not value. Do not rank on this. */
+  readonly conviction: number;
+  readonly priced: boolean;
   /** the most valuable alt line for our side: maximises EV = p×mult − 1 */
   readonly bestAlt: { line: number; mult: number; pSide: number; ev: number } | null;
   /** plain-language read */
@@ -87,7 +101,20 @@ export function readProp(prop: Prop): PropRead {
   const pOver = probOver(prop.line, prop.mean, prop.sigma);
   const side: Side = pOver >= 0.5 ? "over" : "under";
   const pSide = side === "over" ? pOver : 1 - pOver;
-  const edge = Math.abs(pOver - 0.5) * 2;
+  const conviction = Math.abs(pOver - 0.5) * 2;
+
+  let edge = 0;
+  let priced = false;
+  if (prop.overAmerican != null && prop.underAmerican != null) {
+    const pricedRead = pricePropAgainstMarket(pOver, {
+      overAmerican: prop.overAmerican,
+      underAmerican: prop.underAmerican,
+    });
+    if (pricedRead.ok) {
+      edge = pricedRead.edgeOver;
+      priced = true;
+    }
+  }
 
   // best alt: for our recommended side, which alt line maximises EV per $1?
   let bestAlt: PropRead["bestAlt"] = null;
@@ -99,14 +126,13 @@ export function readProp(prop: Prop): PropRead {
 
   const gap = Math.round((prop.mean - prop.line) * 10) / 10;
   const dir = side === "over" ? "above" : "below";
-  const note =
-    edge >= 0.5
-      ? `Strong ${side.toUpperCase()}: our model lands ${Math.abs(gap)} ${dir} the line.`
-      : edge >= 0.28
-        ? `Lean ${side.toUpperCase()}: ${Math.round(pSide * 100)}% to hit on our number.`
-        : `Near coin-flip: only ${Math.round(pSide * 100)}%; skip unless the alt pays.`;
+  const note = !priced
+    ? `Unpriced: no two-way book quote, so this is not an edge. Conviction ${Math.round(conviction * 100)}%.`
+    : Math.abs(edge) >= 0.05
+      ? `Priced ${side.toUpperCase()}: e=${(edge * 100).toFixed(1)} pts vs vig-stripped book (${Math.abs(gap)} ${dir} the line).`
+      : `Near market: e=${(edge * 100).toFixed(1)} pts; skip unless the alt pays.`;
 
-  return { prop, pOver, side, pSide, edge, bestAlt, note };
+  return { prop, pOver, side, pSide, edge, conviction, priced, bestAlt, note };
 }
 
 // --- entry builder (power play: all picks must hit) -----------------------
