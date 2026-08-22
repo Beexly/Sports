@@ -38,6 +38,9 @@ import {
   isNflPreseasonFetchWindow,
   remapPreseasonRows,
   mergeFeedRowsById,
+  eventsBelowBookmakerThreshold,
+  mergeBookmakersIntoPrimary,
+  THIN_FILL_MIN_BOOKMAKERS,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
@@ -339,11 +342,12 @@ export async function processSport(
       }
     }
 
-    // Free dual-path: TheRundown when primary empty/fail and key present (never invent).
+    // TheRundown: full replace when primary empty; thin-fill when some games
+    // sit under MIN_BOOKMAKERS. Never dual-pull a fully covered slate.
     let rundownAttemptNote: string | null = null;
     let espnAttemptNote: string | null = null;
+    const rundownKey = resolveRundownApiKey();
     if (events.length === 0) {
-      const rundownKey = resolveRundownApiKey();
       if (rundownKey) {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.events.length > 0) {
@@ -360,6 +364,26 @@ export async function processSport(
         }
       } else {
         rundownAttemptNote = "rundown key ABSENT";
+      }
+    } else if (rundownKey && eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0) {
+      try {
+        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.events.length > 0) {
+          const merged = mergeBookmakersIntoPrimary(events, rd.events, THIN_FILL_MIN_BOOKMAKERS);
+          events = merged.events;
+          if (merged.filledGameIds.length > 0) {
+            oddsProviderTag = `${oddsProviderTag}+therundown-thin`;
+            console.log(
+              `${logPrefix} ${sport.key}: rundown thin-fill ${merged.filledGameIds.length} games` +
+                (rd.error ? ` (note: ${rd.error})` : ""),
+            );
+          }
+        }
+      } catch (thinErr) {
+        console.warn(
+          `${logPrefix} ${sport.key}: rundown thin-fill failed — ` +
+            `${thinErr instanceof Error ? thinErr.message : thinErr}`,
+        );
       }
     }
 
