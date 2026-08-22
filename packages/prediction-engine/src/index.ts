@@ -1528,6 +1528,24 @@ export {
 } from "./edge-lab/props-hb-adot-sep.js";
 export type { SepBucket, AdotSepCell, AdotSepCatchSample, AdotSepFit } from "./edge-lab/props-hb-adot-sep.js";
 
+// Covariate bus: leak-safe NGS weekly-mean → next-game input features (p path).
+// Pure, no I/O. Does NOT surface vendor expected/yoe y-axis metrics.
+export {
+  COVARIATE_BUS_TAG,
+  covariateKey,
+  latestPriorRow,
+  nextGameCovariate,
+  sepForKickoff,
+} from "./edge-lab/covariate-bus.js";
+export type {
+  CovariateRow,
+  CovariateField,
+  CovariateCell,
+  CovariateGrain,
+  CovariateProvenance,
+  StatType,
+} from "./edge-lab/covariate-bus.js";
+
 // Fire gate: Shin e AND posted juice must both clear. priced:false.
 export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
 export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
