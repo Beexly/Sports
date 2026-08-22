@@ -1148,6 +1148,13 @@ export {
   type PickReceipt,
   type LedgerHead,
 } from "./honesty/glass-receipts.js";
+export {
+  commitPick,
+  revealPick,
+  publicCommitPick,
+  isPublicPicksEnabled,
+} from "./honesty/commit-reveal.js";
+export type { PickCommitment, PickCommitmentBody } from "./honesty/commit-reveal.js";
 
 // Fire authority — dual-asOf + cal + LIVE_BOARD + selective composition (pure)
 export {
