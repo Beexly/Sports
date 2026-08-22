@@ -162,6 +162,7 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   cronEntry("/api/cron/calibration-metrics", "40 */6 * * *"),
   cronEntry("/api/cron/backfill-independent-trueprob", "10 */4 * * *"),
   cronEntry("/api/cron/refresh-player-stats", "0,30 * * * *"),
+  cronEntry("/api/cron/backfill-team-efficiency", "15 7 * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */
