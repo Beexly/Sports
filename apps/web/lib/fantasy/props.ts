@@ -13,7 +13,7 @@
  * Without a quote, `edge` is 0 (unpriced) — we do not rank chalk as value.
  */
 
-import { pricePropAgainstMarket } from "../../../../packages/prediction-engine/src/edge-lab/props-priced-edge.js";
+import { pricePropAgainstMarket } from "@sports/prediction-engine";
 
 export type Market = "Pass Yds" | "Rush Yds" | "Rec Yds" | "Receptions" | "Pass TD" | "Rush+Rec";
 
