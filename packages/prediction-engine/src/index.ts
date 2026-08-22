@@ -1463,6 +1463,17 @@ export {
 } from "./edge-lab/props-hb-rec-td.js";
 export type { RecTdSample } from "./edge-lab/props-hb-rec-td.js";
 
+// Passing yards given attempts, not calendar games. Independent p only.
+// Exposure = attempts (Poisson trials of yardage), not games.
+export {
+  PASS_YARDS_HB_METHOD_TAG,
+  fitPassYardsPerAttemptPrior,
+  posteriorPassYardsPerAttempt,
+  probOverPassYards,
+  probOverPassYardsGivenAttempts,
+} from "./edge-lab/props-hb-pass-yards.js";
+export type { PassYardsSample } from "./edge-lab/props-hb-pass-yards.js";
+
 // Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
 export {
   RUSH_TD_HB_METHOD_TAG,
