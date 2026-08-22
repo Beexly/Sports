@@ -1228,6 +1228,29 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Grouped climatology — score the props specialist against position×week
+// naive rates, not the pooled dummy. Positive BSS vs grouped is skill;
+// beating pooled while losing to grouped is grouping-loss, not edge.
+export {
+  GROUPED_CLIMATOLOGY_METHOD_TAG,
+  DEFAULT_MIN_CELL_N,
+  brierMean,
+  brierSkillScore,
+  fitGroupedClimatology,
+  predictGrouped,
+  scoreAgainstClimatology,
+} from "./edge-lab/grouped-climatology.js";
+export type {
+  BinaryOutcome,
+  ClimatologySource,
+  ClimTrainRow,
+  CellRate,
+  GroupedClimatology,
+  GroupedPrediction,
+  ScoredCase,
+  ClimatologyScorecard,
+} from "./edge-lab/grouped-climatology.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
