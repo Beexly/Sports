@@ -1384,6 +1384,15 @@ export {
 } from "./edge-lab/props-hb-rush.js";
 export type { RushSample } from "./edge-lab/props-hb-rush.js";
 
+// Rush attempts volume (count), not yards and not calendar games. Independent p.
+export {
+  RUSH_ATTEMPTS_HB_METHOD_TAG,
+  fitRushAttemptsPrior,
+  posteriorRushAttempts,
+  probOverRushAttempts,
+} from "./edge-lab/props-hb-rush-attempts.js";
+export type { RushAttemptsSample } from "./edge-lab/props-hb-rush-attempts.js";
+
 // Anytime TD given touches (rush att + rec), not calendar games. Independent p.
 export {
   ATD_HB_METHOD_TAG,
