@@ -18,7 +18,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
-import { consumeRateLimit } from "@/lib/api/rate-limit";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
@@ -82,12 +82,20 @@ export async function POST(
 
   // Per-user throttle in front of the paid Claude call: the shared monthly
   // budget gate alone can't stop one caller from looping this endpoint and
-  // draining the org-wide budget for everyone (denial-of-wallet).
-  const limit = consumeRateLimit("pick-explain", session.user.id, 10, 5 * 60 * 1000);
+  // draining the org-wide budget for everyone (denial-of-wallet). This one is
+  // the most important limiter in the file set to make DURABLE: in-memory it
+  // was 10-per-5min PER WARM INSTANCE, so the wallet guard scaled with
+  // horizontal scale — the exact spend it exists to bound. Fail-closed 503 on
+  // store failure is unambiguous on a money path: never let a paid Claude call
+  // through unmetered. The user id is fingerprinted by the helper before it
+  // reaches the counters table (never stored raw).
+  const limit = await consumePublicFormRateLimit("pick-explain", session.user.id, 10, 5 * 60 * 1000);
   if (!limit.ok) {
     return NextResponse.json(
-      { error: "Too many requests. Please wait a moment before asking again." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      limit.status === 429
+        ? { error: "Too many requests. Please wait a moment before asking again." }
+        : { error: "Rate limit service unavailable. Please retry shortly." },
+      { status: limit.status, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
   }
 

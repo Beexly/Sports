@@ -1228,9 +1228,11 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
-// Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus the
+// Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
+// player → position → league EB with empirical 1/n observation-noise
+// calibration, market-priced e = p − q (never κ = |2p−1|), and the
 // observation-process layer: mean-dependent φ(μ), shrunken QL, idcap,
-// recency discount, regime-shift band, expected surplus. No market covariate.
+// recency discount, regime-shift band, expected surplus.
 export {
   fitGroupPrior,
   posteriorRate,
@@ -1245,11 +1247,47 @@ export type {
   ShrinkageRow,
 } from "./edge-lab/props-hb.js";
 export {
+  gammaFromMoments,
+  fitVarianceDecomposition,
+  fitGroupPriorCalibrated,
+  scaleObservation,
+  posteriorRateCalibrated,
+  fitNestedPriors,
+  fitNestedPriorsLeaveOneOut,
+  priorForGroup,
+  scoreNestedPlayer,
+  shrinkageReportNested,
+  fitNestedByStat,
+} from "./edge-lab/props-hb-nested.js";
+export type {
+  GroupedRateSample,
+  VarianceMethod,
+  VarianceDecomposition,
+  NestedGroupPrior,
+  NestedFit,
+  NestedShrinkageRow,
+} from "./edge-lab/props-hb-nested.js";
+export {
+  PROPS_HB_SOURCE,
+  pricePropAgainstMarket,
+  confidenceFromPOver,
+} from "./edge-lab/props-priced-edge.js";
+export type {
+  PropBookQuote,
+  PricedPropEdge,
+  UnpricedPropEdge,
+  PropEdgeResult,
+} from "./edge-lab/props-priced-edge.js";
+export {
   fitMeanVariance,
   fitMeanVarianceFromGameLogs,
   phiForMean,
   shrinkQuasiLikelihood,
-  scaleObservation,
+  // scaleObservation is NOT re-exported here — props-hb-nested.js already
+  // exports a function of that name with identical semantics (divide
+  // total/games by clamped φ). Both modules keep their own local copy for
+  // internal use; the barrel surfaces exactly one to avoid a duplicate-export
+  // compile error.
   posteriorRateObs,
   posteriorRateMeanVar,
   capGameLog,
