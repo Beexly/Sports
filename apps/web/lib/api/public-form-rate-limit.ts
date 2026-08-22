@@ -1,7 +1,12 @@
 /**
- * Durable rate limit for public forms (waitlist, contest enter).
- * Uses Postgres rate_limit_counters so serverless multi-instance cannot bypass.
- * Keys are sha256 fingerprints — never raw IP (privacy).
+ * Durable rate limit for public endpoints — originally forms (waitlist,
+ * contest enter), now also the public pick reads (/api/picks, daily-slate,
+ * [id]/audit) and the per-user explain wallet guard.
+ * Uses Postgres rate_limit_counters so serverless multi-instance cannot bypass:
+ * the in-memory limiter is per-process, which on serverless makes the real
+ * quota (limit × warm instances), not (limit).
+ * Keys are sha256 fingerprints — never a raw IP or user id (privacy).
+ * Stub/test mode falls back to the in-memory limiter so suites need no DB.
  */
 
 import { createHash } from "node:crypto";
