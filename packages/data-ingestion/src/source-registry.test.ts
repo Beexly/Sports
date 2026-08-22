@@ -98,6 +98,9 @@ describe("legal source registry", () => {
         "pro-football-reference",
         "nfelo",
         "open-meteo",
+        "sportsbookish",
+        "smartstake-mlb-props",
+        "sportsbook-software-json-api",
         "huggingface-kalshi-api-dump",
         "convokit-sportsbook-reddit",
         "sharp-api",
@@ -106,7 +109,9 @@ describe("legal source registry", () => {
         "pinnacle-unofficial",
       ]),
     );
-    expect(cleared).toEqual(expect.arrayContaining(["predexon", "novig-public-csv"]));
+    expect(cleared).toEqual(
+      expect.arrayContaining(["therundown", "predexon", "novig-public-csv"]),
+    );
     // No source can be both.
     expect(cleared.some((id) => blocked.includes(id))).toBe(false);
   });
