@@ -53,9 +53,19 @@ export function estRoutesTprr(input: EstRoutesInput): EstRoutesResult {
   }
   const estRoutes =
     (input.playerOffenseSnaps * input.teamDropbacks) / input.teamOffenseSnaps;
+  // targets, if provided, must be a non-negative finite count — a negative
+  // target count is bad data and must not flow through as a negative TPRR.
+  const targets =
+    input.targets !== undefined ? input.targets : undefined;
+  if (
+    targets !== undefined &&
+    (!Number.isFinite(targets) || targets < 0)
+  ) {
+    return { ok: false, methodTag: tag, priced: false, refuse: "bad_input" };
+  }
   const tprr =
-    input.targets !== undefined && Number.isFinite(input.targets) && estRoutes > 0
-      ? input.targets / estRoutes
+    targets !== undefined && Number.isFinite(targets) && estRoutes > 0
+      ? targets / estRoutes
       : null;
   return {
     ok: true,

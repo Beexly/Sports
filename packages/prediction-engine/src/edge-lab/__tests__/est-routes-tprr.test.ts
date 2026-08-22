@@ -54,6 +54,32 @@ describe("estRoutesTprr", () => {
     ).toBe(false);
   });
 
+  it("refuses negative targets (bad data, no negative TPRR)", () => {
+    const r = estRoutesTprr({
+      playerOffenseSnaps: 40,
+      teamOffenseSnaps: 70,
+      teamDropbacks: 35,
+      targets: -8,
+    });
+    expect(r.ok).toBe(false);
+    if (r.ok) throw new Error("expected refuse");
+    expect(r.refuse).toBe("bad_input");
+    expect(r.priced).toBe(false);
+  });
+
+  it("refuses non-finite targets (NaN)", () => {
+    const r = estRoutesTprr({
+      playerOffenseSnaps: 40,
+      teamOffenseSnaps: 70,
+      teamDropbacks: 35,
+      targets: Number.NaN,
+    });
+    expect(r.ok).toBe(false);
+    if (r.ok) throw new Error("expected refuse");
+    expect(r.refuse).toBe("bad_input");
+    expect(r.priced).toBe(false);
+  });
+
   it("leaves tprr null when targets are omitted", () => {
     const r = estRoutesTprr({
       playerOffenseSnaps: 40,
