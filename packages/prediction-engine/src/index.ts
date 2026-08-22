@@ -1450,6 +1450,32 @@ export {
 } from "./edge-lab/props-juice-floor.js";
 export type { JuiceFloorResult, JuiceFloorDenied } from "./edge-lab/props-juice-floor.js";
 
+// Receiving TDs given targets, not ATD-given-touches. Independent p.
+export {
+  REC_TD_HB_METHOD_TAG,
+  fitRecTdPerTargetPrior,
+  pooledRecTdPerTarget,
+  posteriorRecTdPerTarget,
+  recTdProbZero,
+  recTdProbZeroPoisson,
+  probRecTdGivenTargets,
+  probRecTd,
+} from "./edge-lab/props-hb-rec-td.js";
+export type { RecTdSample } from "./edge-lab/props-hb-rec-td.js";
+
+// Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
+export {
+  RUSH_TD_HB_METHOD_TAG,
+  fitRushTdPerAttemptPrior,
+  pooledRushTdPerAttempt,
+  posteriorRushTdPerAttempt,
+  rushTdProbZero,
+  rushTdProbZeroPoisson,
+  probRushTdGivenAttempts,
+  probRushTd,
+} from "./edge-lab/props-hb-rush-td.js";
+export type { RushTdSample } from "./edge-lab/props-hb-rush-td.js";
+
 // Line shop: one p, N posted Americans, take the largest juice-floor surplus.
 export {
   LINE_SHOP_METHOD_TAG,
