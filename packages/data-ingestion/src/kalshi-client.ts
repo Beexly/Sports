@@ -35,6 +35,7 @@ import {
   parseKalshiEventTail,
   type KalshiLeagueCode,
 } from "./kalshi-series.js";
+import { gateKalshiListing } from "./kalshi-listing-quote.js";
 
 // Public Trade API. Despite the host, this serves all Kalshi markets.
 const KALSHI_BASE_URL = "https://external-api.kalshi.com/trade-api/v2";
@@ -59,7 +60,7 @@ export interface KalshiGameRef {
   readonly homeAbbr: string;
 }
 
-/** Minimal shape of a Kalshi market we read. Prices are `*_dollars` strings in [0,1]. */
+/** Minimal shape of a Kalshi market we read. Dollars in [0,1] or cents 0–100. */
 interface KalshiMarketRaw {
   readonly ticker: string;
   readonly event_ticker?: string;
@@ -68,7 +69,12 @@ interface KalshiMarketRaw {
   readonly status?: string;
   readonly yes_bid_dollars?: string;
   readonly yes_ask_dollars?: string;
+  readonly no_bid_dollars?: string;
   readonly last_price_dollars?: string;
+  readonly yes_bid?: string | number;
+  readonly yes_ask?: string | number;
+  readonly no_bid?: string | number;
+  readonly last_price?: string | number;
   readonly occurrence_datetime?: string;
 }
 
@@ -151,18 +157,19 @@ function isLiveMarket(market: KalshiMarketRaw): boolean {
 }
 
 /**
- * Market-implied YES probability from a quote. Prefer the bid/ask mid; fall back
- * to the last trade. Returns null when there is no live quote at all.
+ * Market-implied YES probability from a listing. Two-way mid only:
+ * yes_bid+yes_ask, or yes_bid + (1 − no_bid). Never last_price (a trade
+ * print). Returns null when there is no interior two-way quote.
  */
 export function impliedYesProbability(market: KalshiMarketRaw): number | null {
-  const bid = Number(market.yes_bid_dollars);
-  const ask = Number(market.yes_ask_dollars);
-  const last = Number(market.last_price_dollars);
-  if (Number.isFinite(bid) && Number.isFinite(ask) && bid > 0 && ask > 0) {
-    return (bid + ask) / 2;
-  }
-  if (Number.isFinite(last) && last > 0) return last;
-  return null;
+  const g = gateKalshiListing({
+    yesBid: market.yes_bid_dollars ?? market.yes_bid,
+    yesAsk: market.yes_ask_dollars ?? market.yes_ask,
+    noBid: market.no_bid_dollars ?? market.no_bid,
+    last: market.last_price_dollars ?? market.last_price,
+    status: market.status,
+  });
+  return g.usable ? g.q : null;
 }
 
 /**
