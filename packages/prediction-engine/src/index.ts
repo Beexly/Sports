@@ -1230,7 +1230,7 @@ export {
 
 // Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
 // player → position → league EB with empirical 1/n observation-noise
-// calibration. Statistical core only: no market/spread covariate, no pricing.
+// calibration, and market-priced e = p − q (never κ = |2p−1|).
 export {
   fitGroupPrior,
   posteriorRate,
@@ -1265,6 +1265,17 @@ export type {
   NestedFit,
   NestedShrinkageRow,
 } from "./edge-lab/props-hb-nested.js";
+export {
+  PROPS_HB_SOURCE,
+  pricePropAgainstMarket,
+  confidenceFromPOver,
+} from "./edge-lab/props-priced-edge.js";
+export type {
+  PropBookQuote,
+  PricedPropEdge,
+  UnpricedPropEdge,
+  PropEdgeResult,
+} from "./edge-lab/props-priced-edge.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
