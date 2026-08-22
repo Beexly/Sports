@@ -9,6 +9,7 @@
  */
 
 import type { OddsApiEvent, OddsApiBookmaker, OddsApiMarket } from "@sports/types";
+import { assertIngestible } from "./source-registry.js";
 
 const RUNDOWN_BASE = "https://therundown.io/api/v2";
 
@@ -244,6 +245,7 @@ export async function fetchRundownEventsForSport(
     readonly fetchImpl?: typeof fetch;
   },
 ): Promise<RundownFetchResult> {
+  assertIngestible("therundown");
   const sportId = RUNDOWN_SPORT_IDS[sportKey];
   if (sportId == null) {
     return { events: [], remaining: null, error: `rundown: no sport_id map for ${sportKey}` };
