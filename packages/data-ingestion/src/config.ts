@@ -200,4 +200,9 @@ export const ODDS_API_BASE_URL = resolveOddsApiBaseUrl();
 
 // Region preference for odds format
 export const ODDS_REGION = "us";
+/**
+ * Odds API DFS region (DraftKings / FanDuel DFS). Indicative prices, not
+ * sportsbook books. Licensed same vendor. Never the default ingest region.
+ */
+export const ODDS_DFS_REGION = "us_dfs";
 export const ODDS_FORMAT = "american";

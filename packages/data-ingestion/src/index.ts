@@ -225,6 +225,11 @@ export {
   NOVIG_CSV_SOURCE_ID,
   type NovigPublicCsvIndex,
 } from "./novig-client.js";
+export {
+  DFS_ODDS_BOOKS,
+  fetchDfsOddsIfEnabled,
+  isDfsOddsEnabled,
+} from "./dfs-odds.js";
 export * from "./config.js";
 export {
   freshnessMode,
