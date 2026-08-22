@@ -12,8 +12,7 @@
 | PR 2 — sep bind | `C:\Users\Garrett\Sports-bus-sep` | `hermes/ngs-sep-adot-catch` |
 | PR 3 — yac bind | `C:\Users\Garrett\Sports-bus-yac` | `hermes/covariate-yac-bind` |
 
-`hermes/ngs-sep-adot-catch` rebases on bus commit `5a1790dc` (bus is a strict ancestor).
-`hermes/covariate-yac-bind` rebases on bus commit `5a1790dc` + sep bind.
+|`hermes/covariate-yac-bind` rebases on bus commit `5a1790dc` + sep bind.
 
 ## What shipped this turn
 
@@ -43,10 +42,10 @@ Contract:
 - `bindSepSamples` returns ok/no-prior-row results; `boundSepSamples` collects only bound samples.
 - Barrel exports in `index.ts`: `SEP_BIND_METHOD_TAG`, `bindSepSamples`, `boundSepSamples`, `SepBindRequest`, `SepBindResult`. `priced: false`.
 
-### PR 3 — YAC Bind: #549 (pushed, PR OPEN, CI running)
+### PR 3 — YAC Bind: #549 ✅ (CI re-running after fix, OPEN)
 - **File:** `packages/prediction-engine/src/edge-lab/props-hb-air-yac-bind.ts`
 - **Tests:** `__tests__/props-hb-air-yac-bind.test.ts` — 7/7 green locally
-- **Commit:** `7738dbfc` on `origin/hermes/covariate-yac-bind`
+- **Commits:** `7738dbfc` (feat) + `4d0b7781` (fix: add avgYac default to sep-bind test fixture for CovariateRow compat, pushed to origin)
 
 Contract:
 - `bindYacSamples(rows, requests)` feeds `avgYac` (weekly NGS mean per reception) from the covariate bus into `BoundAirYacSample` (extends `AirYacSample` with `avgYac: CovariateCell`).

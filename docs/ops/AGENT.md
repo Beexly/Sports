@@ -85,8 +85,9 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 | - Next: bind air+YAC onto `props-hb-air-yac.ts` via the covariate bus; then xYAC/vendor models stay y-axis only. See SESSION-HANDOFF.md (cheap-overnight).
 |
 ### 2026-08-22 ~12:30 CT | Hermes / ox-alpha | CLEAN
-|- **PR 1 Covariate Bus (#547):** OPEN, CI green. Branch hermes/covariate-bus @ 25b5583f pushed to origin. Tests 13/13. tsc clean.
-|- **PR 2 SEP Bind (#548):** PR created from hermes/ngs-sep-adot-catch (rebased on bus 25b5583f). Tests 6/6. CI running. Barrel exports in index.ts for bindSepSamples/boundSepSamples.
-|- **Honest posture kept:** the site is a window; no chrome built. avgSeparation bound from bus weekly mean (not arrival), fail-closed, never 3.0 yards.
-|- Next: Bind #2 air+YAC (avgYac from bus → props-hb-air-yac.ts). Then Bind #3 INT (aggressiveness/avgTimeToThrow → props-hb-int.ts). 3 fails → BLOCKED, skip to next. See SESSION-HANDOFF.md.
+|- **PR 1 Covariate Bus (#547):** OPEN, CI green. Branch hermes/covariate-bus @ 5a1790dc pushed to origin. Tests 16/16. tsc clean.
+|- **PR 2 SEP Bind (#548):** PR created from hermes/ngs-sep-adot-catch (rebased on bus 5a1790dc). Tests 6/6. CI green. Barrel exports in index.ts for bindSepSamples/boundSepSamples.
+|- **PR 3 YAC Bind (#549):** OPEN, CI re-running after fix. Branch hermes/covariate-yac-bind @ 4d0b7781 pushed to origin. Tests 7/7 + air-yac 8/8. Barrel exports in index.ts for bindYacSamples/boundYacSamples. Fix commit 4d0b7781 added avgYac to sep-bind test fixture (TS2322 CovariateRow assignability).
+|- **Honest posture kept:** the site is a window; no chrome built. avgSeparation bound from bus weekly mean (not arrival), fail-closed, never 3.0 yards. avgYac bound from bus weekly mean (not per-target arrival YAC).
+|- Next: Bind #4 INT (aggressiveness/avgTimeToThrow → props-hb-int.ts). 3 fails → BLOCKED, skip to next. See SESSION-HANDOFF.md.
 |
