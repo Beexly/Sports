@@ -1230,7 +1230,9 @@ export {
 
 // Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
 // player → position → league EB with empirical 1/n observation-noise
-// calibration, and market-priced e = p − q (never κ = |2p−1|).
+// calibration, market-priced e = p − q (never κ = |2p−1|), and the
+// observation-process layer: mean-dependent φ(μ), shrunken QL, idcap,
+// recency discount, regime-shift band, expected surplus.
 export {
   fitGroupPrior,
   posteriorRate,
@@ -1276,6 +1278,33 @@ export type {
   UnpricedPropEdge,
   PropEdgeResult,
 } from "./edge-lab/props-priced-edge.js";
+export {
+  fitMeanVariance,
+  fitMeanVarianceFromGameLogs,
+  phiForMean,
+  shrinkQuasiLikelihood,
+  // scaleObservation is NOT re-exported here — props-hb-nested.js already
+  // exports a function of that name with identical semantics (divide
+  // total/games by clamped φ). Both modules keep their own local copy for
+  // internal use; the barrel surfaces exactly one to avoid a duplicate-export
+  // compile error.
+  posteriorRateObs,
+  posteriorRateMeanVar,
+  capGameLog,
+  discountGameLog,
+  aggregateGameLog,
+  regimeShift,
+  expectedExcess,
+} from "./edge-lab/props-hb-obs.js";
+export type {
+  CountFamily,
+  MeanVarianceFit,
+  GameCount,
+  PlayerGameLog,
+  GameLogOptions,
+  RegimeDirection,
+  RegimeShift,
+} from "./edge-lab/props-hb-obs.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
