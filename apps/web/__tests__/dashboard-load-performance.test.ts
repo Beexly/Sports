@@ -1,37 +1,47 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import {
   loadDashboardPerformance,
   type DashboardLoaderDb,
   type DashboardRecentPick,
 } from "@/lib/dashboard/load-performance";
 
+vi.mock("@/lib/performance/clopper-pearson-interval", () => ({
+  clopperPearsonInterval: (successes: number, n: number) =>
+    n > 0
+      ? { point: successes / n, low: 0.4, high: 0.7, n, alpha: 0.05 }
+      : null,
+}));
+
 const NOW = new Date("2026-05-18T12:00:00Z");
+
+function resultIn(where: Record<string, unknown>, values: string[]): boolean {
+  const result = where.result as { in?: unknown } | string | undefined;
+  if (!result || typeof result !== "object" || !Array.isArray(result.in)) return false;
+  const set = new Set(result.in.map(String));
+  return values.length === set.size && values.every((v) => set.has(v));
+}
+
+/** Dispatch count() by the WHERE clause, never by call order. */
+function countKey(where: Record<string, unknown>): string {
+  if (where.generatedAt && where.isBootstrap === true) return "recentBootstrap";
+  if (where.generatedAt) return "recentTotal";
+  if (where.isBootstrap === true && resultIn(where, ["WIN", "LOSS", "PUSH"])) {
+    return "bootstrapSettled";
+  }
+  if (where.result === "VOID") return "canonicalVoids";
+  if (where.result === "PENDING") return "canonicalPending";
+  if (where.result === "WIN") return "canonicalWins";
+  if (where.result === "LOSS") return "canonicalLosses";
+  if (where.result === "PUSH") return "canonicalPushes";
+  if (resultIn(where, ["WIN", "LOSS", "PUSH"])) return "canonicalSettled";
+  return "unknown";
+}
 
 function mockDb(opts: {
   recentPicks?: DashboardRecentPick[];
   counts: Partial<Record<string, number>>;
 }): { db: DashboardLoaderDb; calls: { where: Record<string, unknown> }[] } {
   const calls: { where: Record<string, unknown> }[] = [];
-  // Sequence of count() calls per loadDashboardPerformance:
-  //  0: canonicalSettledCount
-  //  1: canonicalWins
-  //  2: canonicalLosses
-  //  3: canonicalPushes
-  //  4: canonicalPending
-  //  5: bootstrapSettled
-  //  6: recentTotal
-  //  7: recentBootstrap
-  const keys = [
-    "canonicalSettled",
-    "canonicalWins",
-    "canonicalLosses",
-    "canonicalPushes",
-    "canonicalPending",
-    "bootstrapSettled",
-    "recentTotal",
-    "recentBootstrap",
-  ] as const;
-  let idx = 0;
 
   const db: DashboardLoaderDb = {
     pick: {
@@ -41,8 +51,8 @@ function mockDb(opts: {
       },
       count: async ({ where }) => {
         calls.push({ where });
-        const k = keys[idx++];
-        return opts.counts[k as string] ?? 0;
+        const k = countKey(where as Record<string, unknown>);
+        return opts.counts[k] ?? 0;
       },
     },
   };
@@ -115,6 +125,59 @@ describe("loadDashboardPerformance", () => {
     });
     expect(result.policy.canExposePerformanceStats).toBe(true);
     expect(result.policy.publicWinRate).toBe(57.9);
+    expect(result.policy.bootstrapCount).toBe(0);
+    expect(result.policy.canonicalVoids).toBe(0);
+  });
+
+  it("does not shift VOID into pending/bootstrap/recent when those counts differ", async () => {
+    const { db } = mockDb({
+      counts: {
+        canonicalSettled: 100,
+        canonicalWins: 55,
+        canonicalLosses: 40,
+        canonicalPushes: 5,
+        canonicalVoids: 7,
+        canonicalPending: 3,
+        bootstrapSettled: 11,
+        recentTotal: 20,
+        recentBootstrap: 4,
+      },
+    });
+    const result = await loadDashboardPerformance(db, {
+      canExposePerformanceStats: true,
+      minSettledPicksForLearning: 25,
+      now: NOW,
+    });
+    expect(result.policy.canonicalVoids).toBe(7);
+    expect(result.policy.pendingCount).toBe(3);
+    expect(result.policy.bootstrapCount).toBe(11);
+    expect(result.policy.pendingCount).not.toBe(7);
+    expect(result.policy.bootstrapCount).not.toBe(3);
+  });
+
+  it("treats an all-bootstrap recent window as a distinct count pair, not a positional leftover", async () => {
+    const { db } = mockDb({
+      counts: {
+        canonicalSettled: 100,
+        canonicalWins: 55,
+        canonicalLosses: 40,
+        canonicalPushes: 5,
+        canonicalVoids: 7,
+        canonicalPending: 3,
+        bootstrapSettled: 11,
+        recentTotal: 8,
+        recentBootstrap: 8,
+      },
+    });
+    const result = await loadDashboardPerformance(db, {
+      canExposePerformanceStats: true,
+      minSettledPicksForLearning: 25,
+      now: NOW,
+    });
+    expect(result.policy.bootstrapCount).toBe(11);
+    expect(result.policy.primaryReason).toBe("ALL_RECENT_PICKS_BOOTSTRAP");
+    expect(result.policy.canExposePerformanceStats).toBe(false);
+    expect(result.policy.operatorMessage).toMatch(/entirely bootstrap/i);
   });
 
   it("always blocks when the readiness gate is off, regardless of sample size", async () => {
