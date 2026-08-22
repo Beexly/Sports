@@ -205,6 +205,36 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export {
+  PredExonClient,
+  PredExonError,
+  isPredExonIngestEnabled,
+  PREDEXON_BASE,
+  PREDEXON_KEY_HEADER,
+  PREDEXON_SOURCE_ID,
+  type PredExonKalshiMarket,
+  type PredExonKalshiMarketsPage,
+} from "./predexon-client.js";
+export { SharpApiClient, SharpApiError, isSharpApiIngestEnabled, SHARP_API_BASE, SHARP_API_SOURCE_ID } from "./sharp-api-client.js";
+export {
+  ProphetXMarketDataClient,
+  ProphetXError,
+  isProphetXMarketDataEnabled,
+  PROPHETX_MARKET_DATA_BASE,
+  PROPHETX_SOURCE_ID,
+} from "./prophetx-client.js";
+export {
+  NovigRestClient,
+  NovigPublicCsvClient,
+  NovigError,
+  isNovigRestEnabled,
+  isNovigPublicCsvEnabled,
+  NOVIG_REST_BASE,
+  NOVIG_CSV_BASE,
+  NOVIG_REST_SOURCE_ID,
+  NOVIG_CSV_SOURCE_ID,
+  type NovigPublicCsvIndex,
+} from "./novig-client.js";
 export * from "./config.js";
 export {
   freshnessMode,

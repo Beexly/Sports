@@ -91,6 +91,68 @@ export function gotoConversion(rawImplied: readonly number[]): number[] {
   return normalized.map(round6);
 }
 
+export interface PowerDevigResult {
+  readonly probabilities: number[];
+  /**
+   * Power k such that Σ p_i^k = 1. Overround books need k > 1 (longshots
+   * shrink faster than favourites). Underround books need 0 < k < 1.
+   */
+  readonly k: number;
+  readonly booksum: number;
+}
+
+/**
+ * Power de-vig: find k > 0 with Σ p_i^k = 1, then renormalise.
+ *
+ * This is the vendor "POWER" method (SharpAPI documents it as their default).
+ * GSE owns a first-party implementation so a paid SharpAPI key is not required
+ * to *compare* power vs Shin vs multiplicative — see Hegarty & Whelan 2025:
+ * multiplicative invents longshot value; power and Shin do not in the same way.
+ *
+ * Balanced books (booksum ≤ 1 + ε and ≥ 1 − ε) return k = 1 unchanged.
+ * Degenerate / empty input returns zeros. Pure, no I/O.
+ */
+export function powerDevig(rawImplied: readonly number[]): PowerDevigResult {
+  const booksum = rawImplied.reduce((acc, p) => acc + p, 0);
+  if (rawImplied.length === 0 || booksum <= 0 || rawImplied.some((p) => !Number.isFinite(p) || p < 0)) {
+    return { probabilities: rawImplied.map(() => 0), k: 0, booksum: round6(Math.max(0, booksum)) };
+  }
+  if (Math.abs(booksum - 1) <= 1e-9) {
+    return { probabilities: rawImplied.map(round6), k: 1, booksum: round6(booksum) };
+  }
+
+  const positives = rawImplied.map((p) => Math.max(0, p));
+  const powerSum = (k: number): number =>
+    positives.reduce((acc, p) => acc + (p === 0 ? 0 : p ** k), 0);
+
+  // Σ p^k is decreasing in k for p ∈ (0, 1). Bracket a root of Σ p^k − 1 = 0.
+  let lo = 1e-6;
+  let hi = 32;
+  if (booksum > 1) {
+    lo = 1;
+    while (powerSum(hi) > 1 && hi < 256) hi *= 2;
+  } else {
+    hi = 1;
+    while (powerSum(lo) < 1 && lo > 1e-8) lo /= 2;
+  }
+
+  let k = 1;
+  for (let i = 0; i < 80; i++) {
+    k = (lo + hi) / 2;
+    if (powerSum(k) > 1) lo = k;
+    else hi = k;
+  }
+
+  const powered = positives.map((p) => (p === 0 ? 0 : p ** k));
+  const total = powered.reduce((a, b) => a + b, 0);
+  const normalized = total > 0 ? powered.map((p) => p / total) : powered;
+  return {
+    probabilities: normalized.map(round6),
+    k: round6(k),
+    booksum: round6(booksum),
+  };
+}
+
 function round6(x: number): number {
   return Number(x.toFixed(6));
 }
