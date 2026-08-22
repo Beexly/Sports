@@ -100,9 +100,13 @@ describe("legal source registry", () => {
         "open-meteo",
         "huggingface-kalshi-api-dump",
         "convokit-sportsbook-reddit",
+        "sharp-api",
+        "prophetx",
+        "novig",
+        "pinnacle-unofficial",
       ]),
     );
-    expect(cleared).toEqual(expect.arrayContaining(["predexon"]));
+    expect(cleared).toEqual(expect.arrayContaining(["predexon", "novig-public-csv"]));
     // No source can be both.
     expect(cleared.some((id) => blocked.includes(id))).toBe(false);
   });
