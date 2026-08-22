@@ -1536,6 +1536,8 @@ export {
   latestPriorRow,
   nextGameCovariate,
   sepForKickoff,
+  P_SIDE_COVARIATE_REGISTRY,
+  assertPSideHasNoMarketProp,
 } from "./edge-lab/covariate-bus.js";
 export type {
   CovariateRow,
@@ -1543,6 +1545,7 @@ export type {
   CovariateCell,
   CovariateGrain,
   CovariateProvenance,
+  CovariateLayer,
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
