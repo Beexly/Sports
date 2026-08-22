@@ -1228,6 +1228,50 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Fair Skill Brier (Wang et al.): BrS − (B−1)/B so binary ATD and K-way
+// yards ladders are comparable. Not Murphy BSS vs grouped climatology.
+export {
+  FAIR_SKILL_BRIER_METHOD_TAG,
+  indifferenceBrier,
+  originalBrier,
+  originalBrierFromBinaryUnit,
+  fairSkillBrier,
+  meanFairSkillBrier,
+} from "./edge-lab/fair-skill-brier.js";
+
+// Grouped climatology — score the props specialist against position×week
+// naive rates, not the pooled dummy. Positive BSS vs grouped is skill;
+// beating pooled while losing to grouped is grouping-loss, not edge.
+export {
+  GROUPED_CLIMATOLOGY_METHOD_TAG,
+  DEFAULT_MIN_CELL_N,
+  brierMean,
+  brierSkillScore,
+  fitGroupedClimatology,
+  predictGrouped,
+  scoreAgainstClimatology,
+} from "./edge-lab/grouped-climatology.js";
+export type {
+  BinaryOutcome,
+  ClimatologySource,
+  ClimTrainRow,
+  CellRate,
+  GroupedClimatology,
+  GroupedPrediction,
+  ScoredCase,
+  ClimatologyScorecard,
+} from "./edge-lab/grouped-climatology.js";
+
+// Market consensus q (Bradley-Terry futures + logit blend). q only — never
+// re-anchor independent p toward the market (Mania 3rd-place α=0.90 is a
+// Brier win, not an edge).
+export {
+  bradleyTerryPair,
+  consensusMarketQ,
+  marketReanchorResidual,
+} from "./edge-lab/market-consensus-q.js";
+export type { LabeledQ, ConsensusQ, ReanchorResidual } from "./edge-lab/market-consensus-q.js";
+
 // Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
 // player → position → league EB with empirical 1/n observation-noise
 // calibration, market-priced e = p − q (never κ = |2p−1|), and the
@@ -1305,6 +1349,15 @@ export type {
   RegimeDirection,
   RegimeShift,
 } from "./edge-lab/props-hb-obs.js";
+export {
+  CATCH_HB_METHOD_TAG,
+  fitCatchPrior,
+  posteriorCatch,
+  betaBinomialProbOver,
+  probOverReceptions,
+  scoreReceptionsOver,
+} from "./edge-lab/props-hb-catch.js";
+export type { CatchSample, BetaPrior, BetaPosterior } from "./edge-lab/props-hb-catch.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
