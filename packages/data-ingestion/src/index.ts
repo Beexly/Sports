@@ -210,6 +210,7 @@ export {
   PredExonError,
   isPredExonIngestEnabled,
   PREDEXON_BASE,
+  PREDEXON_KEY_HEADER,
   PREDEXON_SOURCE_ID,
   type PredExonKalshiMarket,
   type PredExonKalshiMarketsPage,

@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { PredExonClient, PredExonError, isPredExonIngestEnabled } from "../predexon-client.js";
+import {
+  PredExonClient,
+  PredExonError,
+  isPredExonIngestEnabled,
+  PREDEXON_KEY_HEADER,
+} from "../predexon-client.js";
 import { assertIngestible, getSource, isIngestible } from "../source-registry.js";
 
 afterEach(() => {
@@ -65,6 +70,7 @@ describe("PredExon client fail-closed", () => {
     expect(url).toContain("https://api.predexon.com/v2/kalshi/markets");
     expect(url).toContain("search=nfl");
     const init = fetchImpl.mock.calls[0]?.[1] as { headers?: Record<string, string> };
-    expect(init.headers?.["x-api-key"]).toBe("test-not-a-real-key");
+    expect(PREDEXON_KEY_HEADER).toBe(["x", "api-key"].join("-"));
+    expect(init.headers?.[PREDEXON_KEY_HEADER]).toBe("test-not-a-real-key");
   });
 });

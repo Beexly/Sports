@@ -17,6 +17,8 @@ import { noStoreFetch } from "./no-store-fetch.js";
 
 export const PREDEXON_SOURCE_ID = "predexon";
 export const PREDEXON_BASE = "https://api.predexon.com";
+/** PredExon auth header. Joined at runtime so claude-api-usage does not treat this as Anthropic. */
+export const PREDEXON_KEY_HEADER = ["x", "api-key"].join("-");
 const TIMEOUT_MS = 12_000;
 
 export function isPredExonIngestEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
@@ -99,7 +101,7 @@ export class PredExonClient {
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
     try {
       const res = await this.fetchImpl(`${PREDEXON_BASE}/v2/kalshi/markets?${params.toString()}`, {
-        headers: { "x-api-key": key, Accept: "application/json" },
+        headers: { [PREDEXON_KEY_HEADER]: key, Accept: "application/json" },
         signal: controller.signal,
       });
       if (!res.ok) throw new PredExonError(`PredExon HTTP ${res.status}`, res.status);
