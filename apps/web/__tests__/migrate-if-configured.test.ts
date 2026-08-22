@@ -1,3 +1,6 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, it, expect } from "vitest";
 // Import the pure classification helpers from the deploy script (plain .mjs,
 // run directly in the Vercel build). The script guards its main() behind an
@@ -113,5 +116,13 @@ describe("backoffMs", () => {
     expect(backoffMs(3)).toBe(20000);
     expect(backoffMs(4)).toBe(20000); // clamped to the last step
     expect(MAX_MIGRATE_ATTEMPTS).toBe(4);
+  });
+});
+
+describe("Neon HTTP parity module resolve", () => {
+  it("loads @neondatabase/serverless from packages/db (Vercel root scripts cannot)", () => {
+    const dbPkg = join(dirname(fileURLToPath(import.meta.url)), "../../../packages/db/package.json");
+    const req = createRequire(dbPkg);
+    expect(typeof req("@neondatabase/serverless").neon).toBe("function");
   });
 });
