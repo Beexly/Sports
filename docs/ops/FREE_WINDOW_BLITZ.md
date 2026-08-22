@@ -26,7 +26,7 @@ producing chat. The window closes; the scripts do not.
 | 1,048,576 context | The killer feature. A worker can hold an entire package + the data dictionary + the doc section at once — so give it **whole-file context and one narrow job**, never a repo crawl. |
 | 131k max output | Big enough to emit a complete generated file in one shot. Size tasks to one file. |
 | Tools + JSON, mandatory max reasoning | Real agent work is in scope, and structured output is reliable — use JSON task cards. |
-| Retained, not trained | Safe-ish, **not** safe for crown-jewel IP. See §3. |
+| **Stealth-program terms: content IS shared with the anonymous provider AND used to train, evaluate and improve their models** | **This is the binding constraint on the entire plan.** See §3 — it is NOT "retained, not trained." |
 | One anonymous provider | It can vanish mid-task with no notice. **Every task must be small, committed, and restartable.** |
 
 **Design conclusion:** a wide, shallow, idempotent queue of file-scoped tasks with
@@ -44,26 +44,58 @@ script-based verification. Not a deep autonomous agent loop.
 **The rule that makes this work:** a free worker never makes a decision that is expensive
 to reverse. It produces *drafts and artifacts*; the gates stay with the paid tier and CI.
 
-## 3. IP safety on free/anonymous endpoints (nobody else has flagged this — it matters)
+## 3. IP EXPOSURE — READ BEFORE SENDING ONE TOKEN TO A FREE ENDPOINT
 
-Our moat is not the code. It is the **edge catalog and the genealogy of what we tested and
-what survived** (doctrine C8.2). That is precisely the thing that must not leak.
+### 3a. The correction that changes the plan
 
-**Hard rules for the window:**
-1. **Send the task, never the thesis.** A worker gets its one file, the exact spec for that
-   file, and the paths it needs. It does NOT get `EDGE_SUPREMACY_DOCTRINE.md`,
-   `EDGE_FACTORY_MASTERPLAN.md`, or `EDGE_CATALOG.md` wholesale.
-2. **Never paste VALIDATED edge entries** — the mechanism, the magnitude, and which ones
-   survived — into any free or anonymous endpoint. Hypothesis-tier mechanical work is fine;
-   the survivor list is the crown jewel.
-3. **No secrets, ever** (already a `CLAUDE.md` non-negotiable, restated because the surface
-   is new): no `.env`, no keys, no prod hostnames, no DB URLs in a worker prompt.
-4. **Models that TRAIN on free inputs are banned from this repo outright** — per the
-   research that means Poolside Laguna and Thinking Machines Inkling. "Retained, not
-   trained" (Ox Alpha, GLM) is the minimum bar; training-on-input is disqualifying no
-   matter how good the coding score.
+Circulating summaries of Ox Alpha say *"trains on your prompts: No — retained, not
+trained."* **The OpenRouter Stealth Program terms say the opposite.** Per
+`openrouter.ai/terms/stealth`:
+
+- *"your User Content may be collected by us and shared with the Stealth Provider"* (§1)
+- the provider receives content *"for the sole purpose of enabling the Stealth Provider(s)
+  to **train, evaluate, and improve** those Stealth Model(s)"* (§4)
+- OpenRouter takes a *"non-exclusive, irrevocable, perpetual, transferable, worldwide,
+  fully paid-up, royalty-free license"* over User Content, sublicensed to that provider
+- the AUP prohibits submitting data subject to safeguarding or distribution limits
+
+**Conclusion: stealth models are a training-on-input endpoint operated by a party we
+cannot name.** Free inference is paid for with our data. That is a legitimate trade — for
+the right data. It is a catastrophic trade for the moat.
+
+*Verify these terms yourself before the first batch; they govern everything below, and I
+am relying on a fetch of that page rather than counsel.*
+
+### 3b. Classify the data, then the endpoint follows
+
+Free compute is only free when what it sees costs nothing to leak. So classify first:
+
+| Class | What's in it | Where it may go |
+|---|---|---|
+| **PUBLIC** | nflverse field schemas and column semantics, open methodology (BDB/academic), boilerplate, test scaffolding, formatting, docstrings, generated-doc prose | **Any free endpoint, including stealth.** Leakage costs us nothing — it's already public. |
+| **INTERNAL** | repo architecture, generic app/infra code, non-edge utilities | No-training endpoints only. Not stealth. |
+| **CROWN** | `EDGE_CATALOG.md` (above all, which hypotheses SURVIVED), the doctrine's class map, GSE-CPOE/RYOE/xYAC methodology, the covariate bus and share-core design, mining grids, calibration/CLV results, the genealogy library | **Paid/contractual endpoints only — never any free tier, ever.** This is the company. |
+
+The moat is not the code; it is **which edges we tested and which survived** (doctrine
+C8.2). A competitor with our validated survivor list needs no other document.
+
+### 3c. Hard rules for the window
+1. **Send the task, never the thesis.** A worker gets one file, its exact spec, and the
+   paths it needs — never `EDGE_SUPREMACY_DOCTRINE.md`, `EDGE_FACTORY_MASTERPLAN.md`, or
+   `EDGE_CATALOG.md` wholesale.
+2. **Never send CROWN-class content to any free endpoint**, and never paste validated edge
+   entries — mechanism, magnitude, or survivor status — anywhere free.
+3. **No secrets, ever** (a `CLAUDE.md` non-negotiable, restated because the surface is
+   new): no `.env`, no keys, no prod hostnames, no DB URLs in a worker prompt.
+4. **Endpoints that train on inputs get PUBLIC-class work only.** By the terms above that
+   now includes stealth/Ox Alpha, alongside Poolside Laguna and Thinking Machines Inkling.
+   Do not assume any free tier is no-training — **read its terms, don't trust a table.**
 5. Anything touching the clearance engine, source-rights registry, or license
-   classification is **judgment tier** — it never goes to a free worker at all.
+   classification is judgment tier — it never goes to a free worker at all.
+6. **Re-scope Tier 0 accordingly:** the generated data dictionary is mostly PUBLIC (nflverse
+   field semantics) → fine for stealth. The repo map is INTERNAL. The covariate-bus scaffold
+   generator is CROWN-adjacent → build it on the paid tier. Slice the substrate work along
+   the class boundary before fanning it out, not after.
 
 ## 4. The queue — how to slice work for slow, wide, mortal workers
 
@@ -110,13 +142,25 @@ fight over one working tree. One PR per card or per small group of cards; **I me
 worker: id, card, artifact, verify-status, PR. Monitoring cost is what caps fleet size —
 this is the file that raises the cap. Do not read twelve transcripts.
 
+**Fleet composition — maximize free agents WITHIN the class boundary (§3b):**
+Run as many free workers as the PUBLIC-class queue can feed — that queue is large (field
+semantics, boilerplate, tests, docs, per-source inventories) and it is genuinely the
+majority of Tier 0 by volume. Free agents are capped by *what they may safely see*, not by
+appetite. Grow the free tier by growing the PUBLIC-class queue: every generated artifact
+that turns proprietary exploration into public-shaped mechanical work moves more of the
+sprint into the free lane. That is the compounding move.
+
 **Kill / fallback ladder** (when the window closes or the provider degrades):
-1. `z-ai/glm-5.2:free` — best free fallback, faster, retained-not-trained.
+1. `z-ai/glm-5.2:free` — best free fallback on capability. **Verify its data terms
+   independently before trusting it with anything above PUBLIC class**; the Ox Alpha
+   correction in §3a is exactly the error to avoid repeating.
 2. NVIDIA Nemotron Ultra `:free` — only if we accept their logging of free-endpoint data.
-3. **Never** Laguna / Inkling on this repo (train on inputs — §3.4).
+3. **Never** Laguna / Inkling above PUBLIC class (train on inputs — §3c.4).
 4. Paid DeepSeek Flash is a *speed and reliability* upgrade, **not an intelligence
    upgrade** — if Ox is GLM-5.3-class, Flash is a step down in capability. Do not buy it
    expecting better thinking; buy it only if throughput reliability is the blocker.
+5. **CROWN-class work never enters this ladder at all** — it stays on paid/contractual
+   endpoints regardless of how the free tier evolves.
 
 **Continuity requirement:** by the time the window closes, every asset must be committed
 and every generator must run without any free model in the loop. Nothing we build this week
