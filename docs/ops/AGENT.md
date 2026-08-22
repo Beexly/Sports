@@ -84,10 +84,45 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 |
 | - Next: bind air+YAC onto `props-hb-air-yac.ts` via the covariate bus; then xYAC/vendor models stay y-axis only. See SESSION-HANDOFF.md (cheap-overnight).
 |
+### 2026-08-22 ~15:30 CT | Hermes (ox-alpha) | CLEAN
+|- PR 4 — CPOE Comp Bind (#553): MERGED. Branch hermes/covariate-cpoe-comp @ c7c8ca37, pushed to origin. CI green (Test+tsc+Build all SUCCESS). 9/9 tests green. All 658 edge-lab tests pass (64 files).
+|- PR 1 (#547), #2 (#548), #3 (#549): ALL MERGED. PR 4 (#553): MERGED.
+|- Doctrine H0: 4 flagship covariate binds complete (bus, sep, yac, cpoe-comp).
+|  Remaining H0 slices (#555 harness, #557 kneel, #556 TPRR) on grok/** — do NOT touch.
+|- Next: H0 #4 TPRR — await grok/h0-est-routes (#556) landing; spawn hermes/h0-tprr from origin/main if #556 confirmed not proceeding. No second TPRR covariate bind.
+|- No DONE.md STOP. Watchdog stays live.
+|
 ### 2026-08-22 ~12:30 CT | Hermes / ox-alpha | CLEAN
 |- **PR 1 Covariate Bus (#547):** OPEN, CI green. Branch hermes/covariate-bus @ 5a1790dc pushed to origin. Tests 16/16. tsc clean.
 |- **PR 2 SEP Bind (#548):** PR created from hermes/ngs-sep-adot-catch (rebased on bus 5a1790dc). Tests 6/6. CI green. Barrel exports in index.ts for bindSepSamples/boundSepSamples.
 |- **PR 3 YAC Bind (#549):** OPEN, CI re-running after fix. Branch hermes/covariate-yac-bind @ 4d0b7781 pushed to origin. Tests 7/7 + air-yac 8/8. Barrel exports in index.ts for bindYacSamples/boundYacSamples. Fix commit 4d0b7781 added avgYac to sep-bind test fixture (TS2322 CovariateRow assignability).
 |- **Honest posture kept:** the site is a window; no chrome built. avgSeparation bound from bus weekly mean (not arrival), fail-closed, never 3.0 yards. avgYac bound from bus weekly mean (not per-target arrival YAC).
 |- Next: Bind #4 INT (aggressiveness/avgTimeToThrow → props-hb-int.ts). 3 fails → BLOCKED, skip to next. See SESSION-HANDOFF.md.
+
+### 2026-08-22 ~16:30 CST | Hermes (ox-alpha) | CLEAN
+- **PR 4 — CPOE Comp Bind (#553) Qodo follow-up:** pushed commit `e22eb2b7` to origin/hermes/covariate-cpoe-comp. CI already GREEN before; re-running to confirm 11/11 tests green post-fix.
+- Qodo P2/P1 addressed:
+  - `gseCpoe` on `BoundCompSample` changed from raw `number` to `CovariateCell`
+    (`{ value, grain: "week_t_for_tplus1", provenance: "expected_metric_v1" }`)
+    — consumers can now distinguish GSE-CPOE from vendor CPOE.
+  - `CovariateProvenance` extended to `"weekly_ngs_mean" | "expected_metric_v1"`.
+  - `CpoeCompBindRequest.gseCpoeAsOfWeek` added: must be non-zero integer,
+    strictly `< kickoffWeek`. Season-level (week=0) CPOE refused as
+    `cpoe_as_of_boundary` — same boundary as bus week=0 rule.
+  - New refuse code `cpoe_as_of_boundary` added to `CpoeCompBindResult` union.
+- All 34 edge-lab tests green (bus 16, sep 6, yac 7, cpoe 11).
+- No DONE.md STOP. Watchdog stays live.
+- Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) is OPEN/GREEN. Do NOT start
+  a second TPRR covariate bind; await merge or handoff. Three fails → BLOCKED.
 |
+
+### 2026-08-22 17:00 CT | Hermes (ox-alpha) | CLEAN — REBASE onto origin/main post-#554
+- PR 4 (#553) rebased onto origin/main (8b898981, post-#554 fleet foundation):
+  - Branch was based on c2cfc153 (pre-#554), causing kernel files (conformance.ts, contract.ts, etc.) to appear as DELETIONS in PR diff.
+  - `git rebase --onto origin/main c2cfc153` — 6 commits applied cleanly onto main.
+  - Pure diff now (6 files: cpoe-comp bind+test, covariate-bus.ts +2, index.ts +16, docs). Kernel files preserved.
+  - Pushed with --force-with-lease to origin/hermes/covariate-cpoe-comp.
+- CI: 20/20 checks PASS, 0 failures. 660/660 edge-lab tests pass (64 files).
+- PR #553: OPEN, mergeable (was UNSTABLE before rebase, now CLEAN).
+- No DONE.md STOP. Watchdog stays live.
+- Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) OPEN/GREEN on main. Do NOT start a second TPRR bind.
