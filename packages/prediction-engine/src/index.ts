@@ -1546,6 +1546,12 @@ export type {
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
+// SEP bind: couples the covariate bus (sepForKickoff) to the aDOT×SEP catch
+// sample. Fail-closed on null — never invents 3.0 yards. Honest weekly-mean
+// grain forwarded verbatim. priced:false.
+export { SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples } from "./edge-lab/props-hb-adot-sep-bind.js";
+export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep-bind.js";
+
 // Fire gate: Shin e AND posted juice must both clear. priced:false.
 export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
 export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
