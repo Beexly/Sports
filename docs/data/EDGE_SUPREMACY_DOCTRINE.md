@@ -4,13 +4,17 @@
 priced; every magnitude is a prior until it passes the masterplan's validation gates (§6
 there). The clearance engine gates every new source. Same rules, bigger map.
 
-**FIRST, IN STONE — NFL IS THE FLAGSHIP AND NOTHING HERE DILUTES IT.**
-The Edge Factory Masterplan continues at full priority, exactly as scoped: every P2 slice,
-the mining engine, the share core, the pre-kickoff freshness edges. This doctrine does not
-reallocate one token away from it. What this doctrine does is name the *other seven classes
-of edge* that exist in this domain — classes that are attacked with **code that runs free
-forever and cheap batch agents**, not with the attention currently pointed at NFL depth.
-Supremacy = depth × breadth × class coverage. Multiplication, not substitution.
+**FIRST, IN STONE — NFL IS THE PRIORITY, AND THIS DOCTRINE UPGRADES THE NFL ATTACK
+DIRECTLY.** The Edge Factory Masterplan is not frozen — it is re-armed. Every one of the
+eight classes below fires at NFL first, and the NFL execution queue is re-cut in the H0
+Battle Order to absorb the new weapons: the kneel model, the ladder and boost scanners,
+the closing-line forecaster, the incentive calendar and rule-change sprint, exact SGP
+pricing — these are NFL edges, and they enter the NFL queue ranked against the existing
+P2 slices by expected CLV per token before kickoff (~Sep 10). What does NOT change is the
+masterplan's discipline (gates, lifecycle, legality) and NFL's claim on the deepest stack.
+Other leagues run *copies* of the machine only after the NFL machine is live, and exist to
+settle the proof ladder daily — never to compete with NFL for attention. Supremacy = the
+deepest NFL attack ever built × every class × every board.
 
 **The thesis, stated once:** a posted price can only be wrong for a finite number of
 reasons. Enumerate the reasons completely, build a standing machine against every one of
@@ -224,23 +228,40 @@ the machine, not a division of NFL attention: run the clearance engine on that l
 sources, point the fleet at its rule book and data, let the scanners cover its board.
 Live leagues additionally settle picks daily, which feeds the proof ladder (≥100 settled +
 published calibration) and the genealogy library at a cadence NFL's weekly calendar cannot.
-NFL keeps the deepest Class-2 stack; every league gets all eight classes. Depth everywhere,
-because depth is machinery, and machinery replicates.
+NFL keeps the deepest Class-2 stack; every league gets all eight classes. Sequencing is
+explicit: no copy spins up until the NFL machine is live end-to-end (H1) — the first
+agent, the first scanner, and the first validated edge all belong to NFL. Depth
+everywhere, because depth is machinery, and machinery replicates.
 
 ---
 
 ## Horizons
 
-**H0 — now → NFL kickoff (~Sep 10). NFL masterplan P2 continues untouched, plus, in
-parallel on cheap/code tracks:**
-1. C2.1 kneel/garbage-time model (small, pays week 1)
-2. C3.1 alt-ladder coherence scanner + C3.5 boost scanner (code once, free forever)
-3. C5.1 incentive calendar skeleton + C5.3 rule-change watchlist (this season's changes
-   re-estimated before the public catches up)
-4. C6.2 closing-line forecaster v0 from the archive (it directly manufactures CLV — the
-   proof metric)
-5. Hypothesis-fleet pilot: one batch, one class (C4 or C5), structured cards, one
-   verifier pass — proves the production line
+**H0 — THE UNIFIED NFL BATTLE ORDER (now → kickoff ~Sep 10).** One queue, all NFL, all
+eight classes merged with the masterplan's P2 slices and ranked by expected CLV per token
+before week 1. This SUPERSEDES the masterplan §7 ordering — same slices, new weapons
+folded in and jumping the line where they earn it:
+
+1. Validation harness + provenance/`known_at` tags + q-contamination test (unchanged prereq)
+2. **C2.1 kneel/garbage-time model** — jumps the line: small build, fixes the *shape* of
+   attempt and pass-yds props for every favorite, pays from the first kickoff
+3. Weekly NGS SEP covariate (pipe-cleaner slice; proves the covariate bus end-to-end)
+4. est-routes / TPRR exposure offset (volume beats rate — upgrades every receiving prop)
+5. Change-point role detector + vacancy elasticity (weeks 1–6 are its harvest window)
+6. **C3.1 ladder-coherence + C3.5 boost scanners on the NFL board** — coded once before
+   kickoff, then run every day of the season at zero marginal cost
+7. **C6.2 closing-line forecaster v0** from our own archive — it manufactures CLV, which
+   is literally the PROVEN-milestone metric on the pricing ladder
+8. **C5.1 incentive calendar + C5.3 rule-change sprint on this offseason's NFL changes** —
+   whatever the league changed is mispriced right now, and stays mispriced for weeks
+9. Dirichlet-multinomial share core (structural; prerequisite for #12)
+10. RZ-share bifurcation into recTD/rushTD (#538/#539)
+11. Remaining masterplan covariates (qb_hit/air/shotgun on completions, GSE-xYAC, wind/temp)
+12. **C7.1 exact NFL SGP pricing** off the joint simulation (after #9) — the softest big
+    market in the industry, attacked with the NFL stack first
+Standing, alongside the queue: the mining engine and the hypothesis fleet, with the
+**first batches pointed exclusively at NFL** (C4 × NFL, C5 × NFL data slices) — no other
+league sees an agent until the NFL machine is live.
 
 **H1 — season 1:** full C3/C4/C6 build-out, book dossiers (C8.1), exact SGP (C7.1),
 steam classifier (C3.4), settlement matrix (C3.6), fleet at steady cadence, second league
@@ -264,6 +285,7 @@ and simulations — the safest data we have because we made it.
 
 Treating any class as "the" edge (the classes hedge each other's decay); letting fleet
 output skip the validation bench (unvalidated volume is anti-moat); spending premium
-tokens on work a scanner or cheap agent can do; pausing Class-2 NFL depth for anything in
-this document; and ever describing breadth as an alternative to depth again — the machine
+tokens on work a scanner or cheap agent can do; deprioritizing NFL for anything in this
+document — new classes enter the NFL queue, they never queue ahead of it in another
+league; and ever describing breadth as an alternative to depth again — the machine
 replicates, attention doesn't, and the plan is built on that distinction.
