@@ -1276,6 +1276,15 @@ export type {
   UnpricedPropEdge,
   PropEdgeResult,
 } from "./edge-lab/props-priced-edge.js";
+export {
+  CATCH_HB_METHOD_TAG,
+  fitCatchPrior,
+  posteriorCatch,
+  betaBinomialProbOver,
+  probOverReceptions,
+  scoreReceptionsOver,
+} from "./edge-lab/props-hb-catch.js";
+export type { CatchSample, BetaPrior, BetaPosterior } from "./edge-lab/props-hb-catch.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
