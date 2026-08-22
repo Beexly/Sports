@@ -134,6 +134,36 @@ describe("renderLlmsTxt — llmstxt.org format + honesty", () => {
     const txt = renderLlmsTxt(buildMachineProof({ now: FIXED_NOW, siteUrl: TEST_BASE }));
     expect(txt).toMatch(/Publication is ON\. Substantiated seasons: 0/);
   });
+
+  // S8 — llms.txt `## Optional` section (llmstxt.org convention).
+  it("carries a ## Optional section as the LAST section, before the Generated stamp", () => {
+    const doc = buildMachineProof({ now: FIXED_NOW, siteUrl: TEST_BASE });
+    const txt = renderLlmsTxt(doc);
+    expect(doc.optional.length).toBeGreaterThan(0);
+    expect(txt).toContain("## Optional");
+
+    const optionalIdx = txt.indexOf("## Optional");
+    const neverDoesIdx = txt.indexOf("## What this service will never do");
+    const generatedIdx = txt.indexOf("Generated:");
+    expect(neverDoesIdx).toBeGreaterThan(-1);
+    expect(optionalIdx).toBeGreaterThan(neverDoesIdx);
+    expect(generatedIdx).toBeGreaterThan(optionalIdx);
+  });
+
+  it("every Optional link is absolute under the injected base URL", () => {
+    const doc = buildMachineProof({ now: FIXED_NOW, siteUrl: TEST_BASE });
+    for (const link of doc.optional) {
+      expect(link.url.startsWith(TEST_BASE)).toBe(true);
+    }
+  });
+
+  it("Optional section does not drift from the Proof API JSON — same snapshot, two renderings", () => {
+    const doc = buildMachineProof({ now: FIXED_NOW, siteUrl: TEST_BASE });
+    const txt = renderLlmsTxt(doc);
+    for (const link of doc.optional) {
+      expect(txt).toContain(link.url);
+    }
+  });
 });
 
 describe("route handlers", () => {
