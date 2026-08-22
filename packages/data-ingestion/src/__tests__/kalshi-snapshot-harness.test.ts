@@ -106,8 +106,8 @@ describe("Kalshi snapshot harness — 429 backoff contract", () => {
 
     // Snapshot returned successfully after one retry
     expect(fv.sides).toHaveLength(2);
-    expect(fv.sides[0].fairProb).toBeCloseTo(0.365, 6);
-    expect(fv.sides[1].fairProb).toBeCloseTo(0.635, 6);
+    expect(fv.sides[0]!.fairProb).toBeCloseTo(0.365, 6);
+    expect(fv.sides[1]!.fairProb).toBeCloseTo(0.635, 6);
 
     // Exactly one backoff occurred (429 on attempt 0 → sleep → retry on attempt 1)
     expect(delays).toHaveLength(1);
