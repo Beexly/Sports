@@ -66,6 +66,13 @@ vi.mock("@sports/prediction-engine", async (importOriginal) => {
     ...actual,
     getReadinessGates: () => ({
       canExposePerformanceStats: false,
+      // These cases isolate the STALE kill switch, so the public-picks gate
+      // must be open — otherwise the route short-circuits to its 503 and the
+      // staleness behaviour under test never runs. This was previously
+      // absent (and harmless) only because daily-slate never checked
+      // canExposePublicPicks; that omission was the bug. Gate-closed
+      // behaviour lives in public-picks-gate-parity.test.ts.
+      canExposePublicPicks: true,
       forceNoBetIfStale: mocks.forceNoBetIfStale,
     }),
   };
