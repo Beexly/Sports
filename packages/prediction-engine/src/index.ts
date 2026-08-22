@@ -1410,6 +1410,19 @@ export type {
   KalshiBookResult,
 } from "./edge-lab/kalshi-book-divergence.js";
 
+// Catch rate by aDOT bucket. Independent p. Not a new Odds market.
+export {
+  ADOT_CATCH_METHOD_TAG,
+  SHORT_ADOT_MAX,
+  INTERMEDIATE_ADOT_MAX,
+  adotOf,
+  bucketAdot,
+  fitAdotCatchPriors,
+  posteriorAdotCatch,
+  probOverReceptionsByAdot,
+} from "./edge-lab/props-hb-adot-catch.js";
+export type { AdotBucket, AdotCatchSample, BucketedCatchFit } from "./edge-lab/props-hb-adot-catch.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
