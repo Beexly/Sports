@@ -1558,6 +1558,22 @@ export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep
 export { YAC_BIND_METHOD_TAG, bindYacSamples, boundYacSamples } from "./edge-lab/props-hb-air-yac-bind.js";
 export type { YacBindRequest, YacBindResult, BoundAirYacSample } from "./edge-lab/props-hb-air-yac-bind.js";
 
+// CPOE completion bind: couples the covariate bus (avgTimeToThrow + avgIntendedAirYards)
+// + GSE-CPOE to the completions | attempts model. Fail-closed — drops samples
+// when any covariate is missing. Never exposes vendor expected/y-axis metrics.
+// priced:false.
+export {
+  CPOE_COMP_BIND_METHOD_TAG,
+  GSE_CPOE_PROVENANCE,
+  bindCpoeCompSamples,
+  boundCpoeCompSamples,
+} from "./edge-lab/props-hb-cpoe-comp-bind.js";
+export type {
+  CpoeCompBindRequest,
+  CpoeCompBindResult,
+  BoundCompSample,
+} from "./edge-lab/props-hb-cpoe-comp-bind.js";
+
 // Fire gate: Shin e AND posted juice must both clear. priced:false.
 export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
 export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
