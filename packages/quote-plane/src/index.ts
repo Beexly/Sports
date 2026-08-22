@@ -5,6 +5,7 @@ export * from "./providers/model-prior";
 export * from "./providers/polymarket-gamma";
 export * from "./providers/kalshi-trade-api";
 export * from "./pm-quote-gate";
+export * from "./kalshi-taker-friction";
 export * from "./providers/odds-api-optional";
 export * from "./aggregate";
 export * from "./cache/ttl-cache";
