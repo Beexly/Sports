@@ -28,33 +28,37 @@
 - **File:** `packages/prediction-engine/src/edge-lab/props-hb-air-yac-bind.ts`
 - **Tests:** `__tests__/props-hb-air-yac-bind.test.ts` — 7/7 green
 
-### PR 4 — CPOE Completion Bind: #553 ✅ OPEN (CI running)
-- **File:** `packages/prediction-engine/src/edge-lab/props-hb-cpoe-comp-bind.ts`
-- **Tests:** `__tests__/props-hb-cpoe-comp-bind.test.ts` — 9/9 green locally
-- **Commit:** `18666980` on `origin/hermes/covariate-cpoe-comp`
-- **Rebased onto origin/main** (post-#549 merge c2cfc153). Conflict in index.ts resolved: kept BOTH
-  YAC bind exports (from main) + CPOE-comp bind exports (from branch).
+### PR 4 — CPOE Completion Bind: #553 ✅ MERGED (CI green)
+|- **File:** `packages/prediction-engine/src/edge-lab/props-hb-cpoe-comp-bind.ts`
+|- **Tests:** `__tests__/props-hb-cpoe-comp-bind.test.ts` — 9/9 green
+|- **Commit:** `c7c8ca37` on `origin/hermes/covariate-cpoe-comp` (pushed)
+|- **Rebased onto origin/main** (post-#549 merge c2cfc153). Conflict in index.ts resolved: kept BOTH
+|  YAC bind exports (from main) + CPOE-comp bind exports (from branch).
 
 Contract:
-- `bindCpoeCompSamples(rows, requests)` pulls `avgTimeToThrow` + `avgIntendedAirYards`
-  from the leak-safe covariate bus (week t → t+1, week=0 excluded, fail-closed) and
-  combines them with GSE-CPOE (our own PBP-fit metric) into `BoundCompSample`.
-- Fail-closed: bus null on either field → sample DROPPED, never invented. Non-finite
-  GSE-CPOE → dropped.
-- Honest header: weekly NGS means emitted with `{ value, grain: "week_t_for_tplus1",
-  provenance: "weekly_ngs_mean" }`. Vendor `cpoe` / `expectedCompletionPct` are y-axis
-  only and never read.
-- Barrel exports in `index.ts`. `priced: false`. Pure, no I/O, no Prisma.
+|- `bindCpoeCompSamples(rows, requests)` pulls `avgTimeToThrow` + `avgIntendedAirYards`
+|  from the leak-safe covariate bus (week t → t+1, week=0 excluded, fail-closed) and
+|  combines them with GSE-CPOE (our own PBP-fit metric) into `BoundCompSample`.
+|- Fail-closed: bus null on either field → sample DROPPED, never invented. Non-finite
+|  GSE-CPOE → dropped.
+|- Honest header: weekly NGS means emitted with `{ value, grain: "week_t_for_tplus1",
+|  provenance: "weekly_ngs_mean" }`. Vendor `cpoe` / `expectedCompletionPct` are y-axis
+|  only and never read.
+|- Barrel exports in `index.ts`. `priced: false`. Pure, no I/O, no Prisma.
 
 ## Verification
-- `npx vitest run` props-hb-cpoe-comp-bind.test.ts: 9/9 pass
-- `npx vitest run` covariate-bus + comp + sep-bind + yac-bind + adot-sep: 49/49 pass
-- `tsc --noEmit` on `packages/prediction-engine`: clean
+|- `npx vitest run` props-hb-cpoe-comp-bind.test.ts: 9/9 pass
+|- `npx vitest run` edge-lab __tests__/: 658/658 pass (64 files)
+|- `tsc --noEmit` on `packages/prediction-engine`: clean
 
-## Next priority — Bind #5: SACKS
-- Target: `props-hb-sacks.ts` — bind `avgIntendedAirYards` + `qbHit` via the bus.
-- Fail-closed: null on any field → drop sample.
-- Three fails on any file → BLOCKED that file, skip to next bind. Never idle.
+## Next priority — H0 #4 TPRR
+|- The 4 flagship covariate binds (#547 bus, #548 sep, #549 yac, #553 cpoe-comp) are
+|  complete. Remaining H0 flagship slices (#555 validation harness, #557 kneel/garbage,
+|  #556 TPRR) are on `grok/**` branches — do NOT touch (another Grok session is live).
+|- H0 #4 TPRR: spawn `hermes/h0-tprr` from origin/main once grok/h0-est-routes (#556)
+|  lands or confirms it is not proceeding. If #556 is green and waiting, do NOT start a
+|  second TPRR bind — wait for the merge or handoff confirmation.
+|- Three fails on any file → BLOCKED that file, skip to next bind. Never idle.
 
 ## Constraints (do not violate)
 - Do NOT edit `C:\Users\Garrett\Sports` (main worktree) — work only in worktrees.

@@ -84,10 +84,13 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 |
 | - Next: bind air+YAC onto `props-hb-air-yac.ts` via the covariate bus; then xYAC/vendor models stay y-axis only. See SESSION-HANDOFF.md (cheap-overnight).
 |
-### 2026-08-22 ~15:10 CT | Hermes (ox-alpha) | CLEAN
-|- PR 4 — CPOE Comp Bind (#553): OPEN, CI running. Branch hermes/covariate-cpoe-comp @ 18666980, rebased onto origin/main (c2cfc153, post-#549 merge). Conflict in index.ts resolved (kept YAC + CPOE exports).
-|- `props-hb-cpoe-comp-bind.ts`: bindCpoeCompSamples pulls avgTimeToThrow + avgIntendedAirYards from covariate bus + GSE-CPOE into BoundCompSample. Fail-closed on null/non-finite. 9/9 tests green. tsc clean.
-|- All #547/#548/#549 MERGED. Next bind on list: SACKS (props-hb-sacks.ts via bus). 3 fails → BLOCKED, skip.
+### 2026-08-22 ~15:30 CT | Hermes (ox-alpha) | CLEAN
+|- PR 4 — CPOE Comp Bind (#553): MERGED. Branch hermes/covariate-cpoe-comp @ c7c8ca37, pushed to origin. CI green (Test+tsc+Build all SUCCESS). 9/9 tests green. All 658 edge-lab tests pass (64 files).
+|- PR 1 (#547), #2 (#548), #3 (#549): ALL MERGED. PR 4 (#553): MERGED.
+|- Doctrine H0: 4 flagship covariate binds complete (bus, sep, yac, cpoe-comp).
+|  Remaining H0 slices (#555 harness, #557 kneel, #556 TPRR) on grok/** — do NOT touch.
+|- Next: H0 #4 TPRR — await grok/h0-est-routes (#556) landing; spawn hermes/h0-tprr from origin/main if #556 confirmed not proceeding. No second TPRR covariate bind.
+|- No DONE.md STOP. Watchdog stays live.
 |
 ### 2026-08-22 ~12:30 CT | Hermes / ox-alpha | CLEAN
 |- **PR 1 Covariate Bus (#547):** OPEN, CI green. Branch hermes/covariate-bus @ 5a1790dc pushed to origin. Tests 16/16. tsc clean.
