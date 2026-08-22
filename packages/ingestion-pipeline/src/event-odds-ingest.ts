@@ -13,8 +13,30 @@
  */
 
 export const DEFAULT_EVENT_ODDS_BOOKS = ["draftkings", "fanduel", "betmgm"] as const;
-export const DEFAULT_EVENT_ODDS_MARKETS = ["player_pass_tds", "player_points"] as const;
+/** Mixed default when the sport is unknown. Prefer {@link defaultEventOddsMarkets}. */
+export const DEFAULT_EVENT_ODDS_MARKETS = [
+  "player_pass_tds",
+  "player_points",
+  "player_receptions",
+] as const;
+export const NFL_EVENT_ODDS_MARKETS = ["player_pass_tds", "player_receptions"] as const;
+export const NBA_EVENT_ODDS_MARKETS = ["player_points"] as const;
 export const DEFAULT_EVENT_ODDS_CREDIT_CAP = 8;
+
+/**
+ * Sport-aware live event-odds keys. Receptions is the props-HB validated
+ * count. Does not include historical* (10× credits).
+ */
+export function defaultEventOddsMarkets(sportKey: string): readonly string[] {
+  const k = sportKey.toLowerCase();
+  if (k.includes("americanfootball") || k.includes("nfl") || k.includes("ncaaf")) {
+    return NFL_EVENT_ODDS_MARKETS;
+  }
+  if (k.includes("basketball") || k.includes("nba") || k.includes("ncaab")) {
+    return NBA_EVENT_ODDS_MARKETS;
+  }
+  return DEFAULT_EVENT_ODDS_MARKETS;
+}
 
 export interface EventOddsFetchResult<T = unknown> {
   readonly data: T;
@@ -97,7 +119,7 @@ export async function ingestEventOddsIfEnabled(
     };
   }
 
-  const markets = args.markets ?? DEFAULT_EVENT_ODDS_MARKETS;
+  const markets = args.markets ?? defaultEventOddsMarkets(args.sportKey);
   const bookmakers = args.bookmakers ?? DEFAULT_EVENT_ODDS_BOOKS;
   const snapshots: unknown[] = [];
   let fetched = 0;
