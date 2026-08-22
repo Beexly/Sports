@@ -49,6 +49,12 @@ export interface MachineProofDoc {
   };
   /** Where the method and data-rights are documented. */
   readonly references: readonly ProofLink[];
+  /**
+   * llmstxt.org's `## Optional` section: secondary citable surfaces a
+   * context-constrained reader can skip without losing the verification
+   * thesis. Rendered LAST, exactly so a truncating reader drops these first.
+   */
+  readonly optional: readonly ProofLink[];
   /** Hard refusals — the things this service will never emit. */
   readonly neverDoes: readonly string[];
   /** ISO-8601 stamp of when this snapshot was generated. */
@@ -139,6 +145,13 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
     { rel: "responsible-play", url: `${base}/responsible-play`, description: "Limits and variance guidance. Signals are not certainty." },
   ];
 
+  const optional: readonly ProofLink[] = [
+    { rel: "academy", url: `${base}/academy`, description: "Educational material on the methodology and terms used across the platform." },
+    { rel: "tools", url: `${base}/tools`, description: "Standalone calculators (EV, no-vig, parlay) usable independent of any pick." },
+    { rel: "podcast", url: `${base}/podcast`, description: "Episode archive discussing methodology and market context." },
+    { rel: "newsletter", url: `${base}/newsletter`, description: "Issue archive; same substantiation rules as every other public surface." },
+  ];
+
   return {
     service: "Galaxy Sports Edge — Proof API",
     summary:
@@ -147,6 +160,7 @@ export function buildMachineProof(opts: BuildMachineProofOptions = {}): MachineP
     ledger,
     verify: { method: verifyMethod, links: verifyLinks },
     references,
+    optional,
     neverDoes: NEVER_DOES,
     generatedAt: now.toISOString(),
   };
@@ -201,6 +215,18 @@ export function renderLlmsTxt(doc: MachineProofDoc): string {
   lines.push("");
   for (const n of doc.neverDoes) lines.push(`- ${n}`);
   lines.push("");
+
+  // llmstxt.org convention: Optional is the LAST section, precisely so a
+  // context-constrained reader can truncate here without losing anything the
+  // verification thesis depends on.
+  if (doc.optional.length > 0) {
+    lines.push("## Optional");
+    lines.push("");
+    for (const link of doc.optional) {
+      lines.push(`- [${link.rel}](${link.url}): ${link.description}`);
+    }
+    lines.push("");
+  }
 
   lines.push(`Generated: ${doc.generatedAt}`);
   lines.push("");

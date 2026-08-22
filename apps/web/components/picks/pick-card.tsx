@@ -8,6 +8,7 @@ import type {
 } from "@sports/types";
 import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS } from "@sports/types";
 import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
+import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
@@ -329,6 +330,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
               <p className="mt-1 text-[10px] text-ion-3">
                 Market fair ({breakdown.marketFairMethod ?? "de-vig"}):{" "}
                 {(breakdown.marketFairProb * 100).toFixed(1)}%
+                <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
               </p>
               <DevigMethodDisclosure
                 proportional={breakdown.marketFairProb}
