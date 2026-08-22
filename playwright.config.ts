@@ -12,14 +12,17 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: true,
   retries: 1,
-  timeout: 60_000,
+  // Cold `next dev` compile of / has been measured at 70s+ locally. Keep the
+  // paywall assertions; give navigation room so the first pass is not a flake.
+  workers: 1,
+  timeout: 120_000,
   reporter: [["list"]],
   use: {
     baseURL: process.env["E2E_BASE_URL"] ?? "http://localhost:3000",
     trace: "off",
     screenshot: "off",
     actionTimeout: 15_000,
-    navigationTimeout: 30_000,
+    navigationTimeout: 90_000,
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 900 } } },
@@ -50,6 +53,11 @@ export default defineConfig({
     env: {
       DATABASE_URL: "stub",
       STRIPE_SECRET_KEY: "",
+      // Auth.js requires a secret to construct a session even for anonymous
+      // visitors. Dummy only — not DEV_FAKE_ADMIN (that would entitle the
+      // browser as ELITE and gut journey-anonymous).
+      NEXTAUTH_SECRET: "e2e-not-a-production-secret",
+      AUTH_SECRET: "e2e-not-a-production-secret",
     },
     // A cold `next dev` compile of this app's home route has run past two
     // minutes before; give it real headroom rather than a flaky retry.
