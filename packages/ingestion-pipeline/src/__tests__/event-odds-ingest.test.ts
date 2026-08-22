@@ -2,11 +2,23 @@ import { describe, expect, it } from "vitest";
 import {
   DEFAULT_EVENT_ODDS_BOOKS,
   DEFAULT_EVENT_ODDS_CREDIT_CAP,
+  NFL_EVENT_ODDS_MARKETS,
+  NBA_EVENT_ODDS_MARKETS,
+  defaultEventOddsMarkets,
   eventOddsCreditCap,
   ingestEventOddsIfEnabled,
   isEventOddsIngestEnabled,
   type EventOddsClient,
 } from "../event-odds-ingest.js";
+
+describe("defaultEventOddsMarkets — receptions on NFL, not a mixed NBA key", () => {
+  it("asks for player_receptions on NFL and not on NBA", () => {
+    expect(defaultEventOddsMarkets("americanfootball_nfl")).toEqual([...NFL_EVENT_ODDS_MARKETS]);
+    expect(NFL_EVENT_ODDS_MARKETS).toContain("player_receptions");
+    expect(defaultEventOddsMarkets("basketball_nba")).toEqual([...NBA_EVENT_ODDS_MARKETS]);
+    expect(NBA_EVENT_ODDS_MARKETS).not.toContain("player_receptions");
+  });
+});
 
 function fakeClient(calls: string[] = []): EventOddsClient {
   return {
@@ -41,10 +53,12 @@ describe("event-odds ingest — default OFF, hard credit cap", () => {
   it("caps getEventOdds calls and uses licensed US books", async () => {
     const calls: string[] = [];
     const books: string[][] = [];
+    const marketsSeen: string[][] = [];
     const client = {
-      async getEventOdds(_sport: string, eventId: string, _markets: readonly string[], options?: { bookmakers?: readonly string[] }) {
+      async getEventOdds(_sport: string, eventId: string, markets: readonly string[], options?: { bookmakers?: readonly string[] }) {
         calls.push(eventId);
         books.push([...(options?.bookmakers ?? [])]);
+        marketsSeen.push([...markets]);
         return { data: { id: eventId } as never, remainingRequests: 10, usedRequests: 1 };
       },
     } as EventOddsClient;
@@ -59,6 +73,7 @@ describe("event-odds ingest — default OFF, hard credit cap", () => {
     expect(report.skipped).toBe(2);
     expect(calls).toEqual(["e1", "e2", "e3"]);
     expect(books[0]).toEqual([...DEFAULT_EVENT_ODDS_BOOKS]);
+    expect(marketsSeen[0]).toEqual([...NFL_EVENT_ODDS_MARKETS]);
   });
 
   it("does not throw when a single event fetch fails", async () => {
