@@ -38,7 +38,12 @@
  * Grain: every emitted cell carries `{ value, grain: "week_t_for_tplus1",
  * provenance: "weekly_ngs_mean" }` for the bus fields, so the y-axis model
  * can tell the weekly mean is not a per-play frame. GSE-CPOE carries its own
- * `expected_metric_v1` provenance.
+ * `expected_metric_v1` provenance as a CovariateCell.
+ *
+ * As-of boundary: `gseCpoeAsOfWeek` must be strictly less than `kickoffWeek`
+ * AND non-zero (week=0 is the season aggregate). A season-level result or any
+ * at-week value is refused — GSE-CPOE must be computed through the same
+ * prior-window boundary as the bus fields.
  *
  * Company posture (Galaxy Sports Edge): independent p with process, then
  * e = p − q. The site is a window — we do NOT build chrome. This bind is the
@@ -79,6 +84,12 @@ export interface CpoeCompBindRequest {
    * absolute completion %; a negative value means below expected.
    */
   readonly gseCpoe: number;
+  /**
+   * The season-week through which `gseCpoe` was computed.
+   * Must be an integer, non-zero (week=0 is the season aggregate), and
+   * strictly less than `kickoffWeek`. Enforces the as-of boundary.
+   */
+  readonly gseCpoeAsOfWeek: number;
 }
 
 /**
@@ -92,8 +103,11 @@ export interface BoundCompSample extends CompSample {
   readonly avgTimeToThrow: CovariateCell;
   /** Weekly NGS mean intended air yards per attempt, week t for game t+1. */
   readonly avgIntendedAirYards: CovariateCell;
-  /** GSE-CPOE (our PBP-fit), completion% over expected. */
-  readonly gseCpoe: number;
+  /**
+   * GSE-CPOE (our PBP-fit), completion% over expected — signed pp.
+   * Provenance-tagged so consumers distinguish it from vendor CPOE.
+   */
+  readonly gseCpoe: CovariateCell;
 }
 
 /**
@@ -114,7 +128,7 @@ export type CpoeCompBindResult =
       readonly ok: false;
       readonly methodTag: typeof CPOE_COMP_BIND_METHOD_TAG;
       readonly priced: false;
-      readonly refuse: "no_prior_row" | "null_ttt" | "null_air_yards" | "non_finite_cpoe";
+      readonly refuse: "no_prior_row" | "null_ttt" | "null_air_yards" | "non_finite_cpoe" | "cpoe_as_of_boundary";
     };
 
 /**
@@ -122,11 +136,15 @@ export type CpoeCompBindResult =
  * covariate bus) + GSE-CPOE into a batch of completion samples.
  *
  * For each request:
- *   1. `latestPriorRow(rows, gsisId, season, "passing", kickoffWeek)` —
- *      a single strict-prior scan (week=0 excluded). If null → refuse.
- *   2. Read `avgTimeToThrow` / `avgIntendedAirYards` off that single row;
+ *   1. GSE-CPOE as-of guard: `gseCpoeAsOfWeek` must be a non-zero integer
+ *      strictly less than `kickoffWeek`. Otherwise → refuse
+ *      `cpoe_as_of_boundary`. Non-finite `gseCpoe` → refuse
+ *      `non_finite_cpoe`.
+ *   2. `latestPriorRow(rows, gsisId, season, "passing", kickoffWeek)` — a
+ *      single strict-prior scan (week=0 excluded). If null → refuse
+ *      `no_prior_row`.
+ *   3. Read `avgTimeToThrow` / `avgIntendedAirYards` off that single row;
  *      non-finite/null → refuse with the specific code.
- *   3. GSE-CPOE non-finite → refuse.
  *   4. Otherwise → build the BoundCompSample.
  *
  * One row scan per request (not two). Refuse codes are diagnostic, never
@@ -137,9 +155,26 @@ export function bindCpoeCompSamples(
   requests: readonly CpoeCompBindRequest[],
 ): CpoeCompBindResult[] {
   const out: CpoeCompBindResult[] = [];
-  const CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+  const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+  const CPOE_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: GSE_CPOE_PROVENANCE };
   for (const req of requests) {
-    // GSE-CPOE guard: non-finite → refuse, never invent.
+    // GSE-CPOE as-of boundary: must be strictly prior to kickoff week AND
+    // not the season-level aggregate (week=0). Season-level CPOE would leak the
+    // season total into the prediction.
+    if (
+      !Number.isInteger(req.gseCpoeAsOfWeek) ||
+      req.gseCpoeAsOfWeek === 0 ||
+      req.gseCpoeAsOfWeek >= req.kickoffWeek
+    ) {
+      out.push({
+        ok: false,
+        methodTag: CPOE_COMP_BIND_METHOD_TAG,
+        priced: false,
+        refuse: "cpoe_as_of_boundary",
+      });
+      continue;
+    }
+    // GSE-CPOE value guard: non-finite → refuse, never invent.
     if (!Number.isFinite(req.gseCpoe)) {
       out.push({
         ok: false,
@@ -197,9 +232,9 @@ export function bindCpoeCompSamples(
       sample: {
         attempts: req.comp.attempts,
         completions: req.comp.completions,
-        avgTimeToThrow: { ...CELL, value: ttt },
-        avgIntendedAirYards: { ...CELL, value: aiy },
-        gseCpoe: req.gseCpoe,
+        avgTimeToThrow: { ...BUS_CELL, value: ttt },
+        avgIntendedAirYards: { ...BUS_CELL, value: aiy },
+        gseCpoe: { ...CPOE_CELL, value: req.gseCpoe },
       },
     });
   }

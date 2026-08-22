@@ -37,6 +37,7 @@ function req(o: Partial<CpoeCompBindRequest>): CpoeCompBindRequest {
     kickoffWeek: 3,
     comp: { attempts: 35, completions: 24 },
     gseCpoe: 5.7,
+    gseCpoeAsOfWeek: 2,
     ...o,
   };
 }
@@ -57,13 +58,14 @@ describe("cpoe-comp-bind contract", () => {
       ngsRow({ week: 2, avgTimeToThrow: 2.3, avgIntendedAirYards: 7.1 }),
       ngsRow({ week: 3, avgTimeToThrow: 5.0, avgIntendedAirYards: 12.0 }), // same-week — ignored
     ];
-    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoe: 5.7 })]);
+    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoe: 5.7, gseCpoeAsOfWeek: 2 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(true);
     if (!results[0]!.ok) throw new Error("expected ok");
     expect(results[0]!.sample.avgTimeToThrow.value).toBe(2.3);
     expect(results[0]!.sample.avgIntendedAirYards.value).toBe(7.1);
-    expect(results[0]!.sample.gseCpoe).toBe(5.7);
+    expect(results[0]!.sample.gseCpoe.value).toBe(5.7);
+    expect(results[0]!.sample.gseCpoe.provenance).toBe("expected_metric_v1");
     expect(results[0]!.sample.avgTimeToThrow.grain).toBe("week_t_for_tplus1");
     expect(results[0]!.sample.avgTimeToThrow.provenance).toBe("weekly_ngs_mean");
     expect(results[0]!.priced).toBe(false);
@@ -71,25 +73,25 @@ describe("cpoe-comp-bind contract", () => {
 
   it("FAILS CLOSED: no prior passing row → sample dropped", () => {
     const rows = [ngsRow({ week: 0, avgTimeToThrow: 2.6 })]; // only aggregate
-    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 1 })]);
+    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoeAsOfWeek: 2 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
-    expect(boundCpoeCompSamples(rows, [req({ kickoffWeek: 1 })])).toEqual([]);
+    expect(boundCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoeAsOfWeek: 2 })])).toEqual([]);
   });
 
   it("FAILS CLOSED: null avgTimeToThrow on prior row → dropped, never invented", () => {
     const rows = [ngsRow({ week: 2, avgTimeToThrow: null })];
-    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3 })]);
+    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoeAsOfWeek: 2 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("null_ttt");
-    expect(boundCpoeCompSamples(rows, [req({ kickoffWeek: 3 })])).toEqual([]);
+    expect(boundCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoeAsOfWeek: 2 })])).toEqual([]);
   });
 
   it("FAILS CLOSED: null avgIntendedAirYards on prior row → dropped", () => {
     const rows = [ngsRow({ week: 2, avgIntendedAirYards: null })];
-    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3 })]);
+    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoeAsOfWeek: 2 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("null_air_yards");
@@ -97,19 +99,33 @@ describe("cpoe-comp-bind contract", () => {
 
   it("FAILS CLOSED: non-finite GSE-CPOE → dropped", () => {
     const rows = [ngsRow({ week: 2, avgTimeToThrow: 2.3, avgIntendedAirYards: 7.1 })];
-    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoe: NaN })]);
+    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoe: NaN, gseCpoeAsOfWeek: 2 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("non_finite_cpoe");
   });
 
+  it("FAILS CLOSED: GSE-CPOE as-of boundary — gseCpoeAsOfWeek >= kickoffWeek → dropped", () => {
+    const rows = [ngsRow({ week: 2, avgTimeToThrow: 2.3, avgIntendedAirYards: 7.1 })];
+    // Same-week CPOE (week 3 == kickoffWeek 3) — leak, refuse.
+    const results = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoeAsOfWeek: 3 })]);
+    expect(results.length).toBe(1);
+    expect(results[0]!.ok).toBe(false);
+    expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("cpoe_as_of_boundary");
+    // Season-level (week 0) — also refuse.
+    const results2 = bindCpoeCompSamples(rows, [req({ kickoffWeek: 3, gseCpoeAsOfWeek: 0 })]);
+    expect(results2[0]!.ok).toBe(false);
+    expect(isDenied(results2[0]!) ? results2[0]!.refuse : "ok").toBe("cpoe_as_of_boundary");
+  });
+
   it("preserves attempts/completions on the bound sample", () => {
     const rows = [ngsRow({ week: 2, avgTimeToThrow: 2.3, avgIntendedAirYards: 7.1 })];
-    const samples = boundCpoeCompSamples(rows, [req({ kickoffWeek: 3, comp: { attempts: 40, completions: 28 }, gseCpoe: -3.2 })]);
+    const samples = boundCpoeCompSamples(rows, [req({ kickoffWeek: 3, comp: { attempts: 40, completions: 28 }, gseCpoe: -3.2, gseCpoeAsOfWeek: 2 })]);
     expect(samples.length).toBe(1);
     expect(samples[0]!.attempts).toBe(40);
     expect(samples[0]!.completions).toBe(28);
-    expect(samples[0]!.gseCpoe).toBe(-3.2);
+    expect(samples[0]!.gseCpoe.value).toBe(-3.2);
+    expect(samples[0]!.gseCpoe.provenance).toBe("expected_metric_v1");
   });
 
   it("never exposes vendor y-axis (avgExpectedYac / expectedRushYards) — type-enforced", () => {
@@ -127,6 +143,8 @@ describe("cpoe-comp-bind contract", () => {
     expect(sample.avgTimeToThrow.provenance).toBe("weekly_ngs_mean");
     expect(sample.avgIntendedAirYards.grain).toBe("week_t_for_tplus1");
     expect(sample.avgIntendedAirYards.provenance).toBe("weekly_ngs_mean");
+    expect(sample.gseCpoe.grain).toBe("week_t_for_tplus1");
+    expect(sample.gseCpoe.provenance).toBe("expected_metric_v1");
   });
 
   it("drops only the failing sample, keeps the rest", () => {
@@ -136,7 +154,7 @@ describe("cpoe-comp-bind contract", () => {
     ];
     const requests: CpoeCompBindRequest[] = [
       req({ gsisId: "00-0000001-1", kickoffWeek: 3, comp: { attempts: 30, completions: 20 } }),
-      req({ gsisId: "00-0000002-2", kickoffWeek: 1, comp: { attempts: 25, completions: 15 } }), // week 0 only → dropped
+      req({ gsisId: "00-0000002-2", kickoffWeek: 3, comp: { attempts: 25, completions: 15 } }), // week 0 only → dropped
     ];
     const results = bindCpoeCompSamples(rows, requests);
     expect(results.length).toBe(2);
@@ -146,5 +164,17 @@ describe("cpoe-comp-bind contract", () => {
     const bound = boundCpoeCompSamples(rows, requests);
     expect(bound.length).toBe(1);
     expect(bound[0]!.avgTimeToThrow.value).toBe(2.5);
+  });
+
+  it("GSE-CPOE cell carries provenance, not a bare float", () => {
+    const rows = [ngsRow({ week: 2, avgTimeToThrow: 2.3, avgIntendedAirYards: 7.1 })];
+    const samples = boundCpoeCompSamples(rows, [req({ kickoffWeek: 3 })]);
+    expect(samples.length).toBe(1);
+    const cell = samples[0]!.gseCpoe;
+    // Cell is { value, grain, provenance } — not a bare number.
+    expect(typeof cell).toBe("object");
+    expect(cell).toHaveProperty("value");
+    expect(cell).toHaveProperty("grain", "week_t_for_tplus1");
+    expect(cell).toHaveProperty("provenance", "expected_metric_v1");
   });
 });
