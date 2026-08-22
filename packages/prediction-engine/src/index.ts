@@ -1483,6 +1483,52 @@ export {
 } from "./edge-lab/props-line-shop.js";
 export type { ShopBook, ShopPick, ShopDenied } from "./edge-lab/props-line-shop.js";
 
+// NGS as measurement (SEP / CPOE / RYOE / xYAC). Not live p. priced:false.
+export {
+  NGS_MEASURE_METHOD_TAG,
+  measureSeparationAgainstNgs,
+  measureExpectedAgainstNgs,
+} from "./edge-lab/ngs-measurement-loop.js";
+export type {
+  SepPrediction,
+  SepTruth,
+  SepMeasurement,
+  ExpectedFamily,
+  ExpectedMeasurement,
+} from "./edge-lab/ngs-measurement-loop.js";
+
+// Catch rate by aDOT × NGS separation. Independent p. Not a new Odds market.
+export {
+  ADOT_SEP_METHOD_TAG,
+  TIGHT_SEP_MAX,
+  bucketSep,
+  adotSepCell,
+  fitAdotSepCatchPriors,
+  posteriorAdotSepCatch,
+} from "./edge-lab/props-hb-adot-sep.js";
+export type { SepBucket, AdotSepCell, AdotSepCatchSample, AdotSepFit } from "./edge-lab/props-hb-adot-sep.js";
+
+// Fire gate: Shin e AND posted juice must both clear. priced:false.
+export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
+export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
+
+// Snap / injury exposure, not calendar games. Independent p path. priced:false.
+export {
+  SNAP_EXPOSURE_METHOD_TAG,
+  snapShare,
+  pooledSnapShare,
+  expectedSnapsNext,
+} from "./edge-lab/props-hb-snap-exposure.js";
+export type { SnapSample, SnapShare, SnapDenied } from "./edge-lab/props-hb-snap-exposure.js";
+
+// Intelligence cockpit → log-only player features. priced:false until hold-out.
+export { RESEARCH_LOG_METHOD_TAG, playerResearchLog } from "./edge-lab/player-research-log.js";
+export type { ResearchFeatureInput, ResearchLog, ResearchDenied } from "./edge-lab/player-research-log.js";
+
+// NFL EPA independent path: interpret TeamGameEfficiency COUNT. priced:false.
+export { NFL_EPA_PATH_TAG, nflEpaPathStatus } from "./edge-lab/nfl-epa-path.js";
+export type { EpaPathStatus } from "./edge-lab/nfl-epa-path.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
