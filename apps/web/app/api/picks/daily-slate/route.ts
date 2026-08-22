@@ -1,7 +1,7 @@
 import { jsonNoStore } from "@/lib/api/no-store";
 import type { NextRequest } from "next/server";
 import { startOfDay, endOfDay } from "date-fns";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import {
   db,
   isStubMode,
@@ -36,6 +36,25 @@ export async function GET(req: NextRequest) {
   }
 
   const gates = getReadinessGates();
+
+  // Public-picks gate — the SAME gate /api/picks enforces, and it was missing
+  // here. This route read getReadinessGates() but only ever consulted
+  // forceNoBetIfStale, so with PUBLIC_PICKS_ENABLED=false /api/picks went dark
+  // (503) while this endpoint kept answering 200 with totalPicks,
+  // premiumPickCount, freePickCount, sportBreakdown and a freshly stamped
+  // lastUpdatedAt. That is the shape of the board — exactly what the gate
+  // exists to withhold — served from the surface the gate was supposed to
+  // close. Two public pick endpoints must not disagree about whether picks
+  // are public.
+  //
+  // 503 (not a zeroed 200) so the contract matches /api/picks byte for byte.
+  // The only consumer, fetchSlate() in app/picks/page.tsx, already does
+  // `if (!res.ok) return null` inside a try/catch, so the SlateBar degrades to
+  // its no-slate state rather than rendering fabricated zeros.
+  if (!gates.canExposePublicPicks) {
+    return jsonNoStore(bootstrapGateResponse("Public picks"), { status: 503 });
+  }
+
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
   // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). The /picks
