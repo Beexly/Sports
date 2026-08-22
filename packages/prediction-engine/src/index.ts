@@ -888,6 +888,24 @@ export type {
   GseMetricValidationResult,
   GseMetricValidationStatus,
 } from "./nfl/metric-validation.js";
+export {
+  NFL_KEY_NUMBERS,
+  NFL_SIGNED_KEY_NUMBERS,
+  MIN_SAMPLES_FOR_MARGIN_MIXTURE,
+  continuousDensity,
+  coverProbability,
+  fitNflMarginMixture,
+  homeCoverProbability,
+  keyMassAt,
+  marginsFromTeamGameRecords,
+  mixtureCdf,
+} from "./nfl/margin-mixture-model.js";
+export type {
+  CoverProbability,
+  KeyNumberMass,
+  MarginMixtureVerdict,
+  NflMarginMixtureFit,
+} from "./nfl/margin-mixture-model.js";
 // Universal signal ledger — the persistent "weight everything" accumulation layer
 // that bridges stored ledger rows to the composer (NOT wired into the live score).
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
@@ -1137,6 +1155,13 @@ export type {
   MethodFair,
   TwoWayBook,
 } from "./honesty/devig-method-compare.js";
+export {
+  commitPick,
+  revealPick,
+  publicCommitPick,
+  isPublicPicksEnabled,
+} from "./honesty/commit-reveal.js";
+export type { PickCommitment, PickCommitmentBody } from "./honesty/commit-reveal.js";
 
 // Fire authority — dual-asOf + cal + LIVE_BOARD + selective composition (pure)
 export {
