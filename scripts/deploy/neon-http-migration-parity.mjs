@@ -22,23 +22,6 @@ const here = dirname(fileURLToPath(import.meta.url));
 const dbPkg = join(here, "..", "..", "packages", "db", "package.json");
 const { neon } = createRequire(dbPkg)("@neondatabase/serverless");
 
-const url =
-  process.env.DATABASE_URL ||
-  process.env.POSTGRES_PRISMA_URL ||
-  process.env.POSTGRES_URL ||
-  "";
-
-if (!url) {
-  console.error("[neon-http-parity] no DATABASE_URL / POSTGRES_PRISMA_URL / POSTGRES_URL");
-  process.exit(1);
-}
-
-const source = process.env.DATABASE_URL
-  ? "DATABASE_URL"
-  : process.env.POSTGRES_PRISMA_URL
-    ? "POSTGRES_PRISMA_URL"
-    : "POSTGRES_URL";
-
 const migrationsDir = join(
   dirname(fileURLToPath(import.meta.url)),
   "..",
@@ -59,15 +42,38 @@ try {
   process.exit(1);
 }
 
+// Prefer vanilla Neon URLs. DATABASE_URL is often a Prisma pooled string that
+// auth-fails on the HTTP driver (dpl_6vVep5kQb4S5bP5XktZrQei4TXdB:
+// "password authentication failed for user 'neondb_owner'"). Skip prisma://.
+// Never print the URL.
+const candidates = [
+  ["POSTGRES_URL", process.env.POSTGRES_URL],
+  ["POSTGRES_PRISMA_URL", process.env.POSTGRES_PRISMA_URL],
+  ["DATABASE_URL", process.env.DATABASE_URL],
+].filter(([, v]) => typeof v === "string" && v.length > 0 && !v.startsWith("prisma://"));
+
+if (candidates.length === 0) {
+  console.error("[neon-http-parity] no DATABASE_URL / POSTGRES_PRISMA_URL / POSTGRES_URL");
+  process.exit(1);
+}
+
 let applied = [];
-try {
-  const sql = neon(url);
-  const rows = await sql`SELECT migration_name FROM "_prisma_migrations" WHERE finished_at IS NOT NULL`;
-  applied = rows.map((r) => String(r.migration_name ?? "")).filter(Boolean);
-} catch (err) {
-  console.error(
-    `[neon-http-parity] HTTP query failed via ${source}: ${err?.message ?? err}`,
-  );
+let source = candidates[0][0];
+let lastErr = "";
+for (const [name, url] of candidates) {
+  source = name;
+  try {
+    const sql = neon(url);
+    const rows = await sql`SELECT migration_name FROM "_prisma_migrations" WHERE finished_at IS NOT NULL`;
+    applied = rows.map((r) => String(r.migration_name ?? "")).filter(Boolean);
+    lastErr = "";
+    break;
+  } catch (err) {
+    lastErr = String(err?.message ?? err);
+    console.error(`[neon-http-parity] HTTP query failed via ${name}: ${lastErr}`);
+  }
+}
+if (lastErr) {
   process.exit(1);
 }
 
