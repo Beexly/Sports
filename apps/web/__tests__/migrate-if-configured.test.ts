@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, it, expect } from "vitest";
 // Import the pure classification helpers from the deploy script (plain .mjs,
 // run directly in the Vercel build). The script guards its main() behind an
@@ -9,6 +11,7 @@ import {
   backoffMs,
   MAX_MIGRATE_ATTEMPTS,
 } from "../../../scripts/deploy/migrate-if-configured.mjs";
+import { loadNeonServerless } from "../../../scripts/deploy/neon-http-migration-parity.mjs";
 
 describe("isTransientDbError", () => {
   it("treats Neon cold-start / connectivity failures as transient (retryable)", () => {
@@ -113,5 +116,27 @@ describe("backoffMs", () => {
     expect(backoffMs(3)).toBe(20000);
     expect(backoffMs(4)).toBe(20000); // clamped to the last step
     expect(MAX_MIGRATE_ATTEMPTS).toBe(4);
+  });
+});
+
+describe("Neon HTTP driver resolve (Vercel #526/#527 production miss)", () => {
+  const repoRoot = join(__dirname, "..", "..", "..");
+  const dbPkg = join(repoRoot, "packages", "db", "package.json");
+
+  it("declares @neondatabase/serverless on @sports/db, not only as a nested import from scripts/deploy", () => {
+    const pkg = JSON.parse(readFileSync(dbPkg, "utf8"));
+    expect(pkg.dependencies["@neondatabase/serverless"]).toBeTruthy();
+  });
+
+  it("resolves the driver from packages/db when that workspace is installed", () => {
+    const nested = join(repoRoot, "packages", "db", "node_modules", "@neondatabase", "serverless");
+    const hoisted = join(repoRoot, "node_modules", "@neondatabase", "serverless");
+    if (!existsSync(nested) && !existsSync(hoisted)) {
+      // Worktree without install — the require-from-db-package.json path is still the contract.
+      expect(existsSync(dbPkg)).toBe(true);
+      return;
+    }
+    const loaded = loadNeonServerless(repoRoot);
+    expect(typeof loaded.neon).toBe("function");
   });
 });

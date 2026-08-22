@@ -8,70 +8,91 @@
  * packages/db/prisma/migrations. Never prints connection strings.
  *
  * Exit: 0 up-to-date, 2 pending, 1 unknown/error.
+ *
+ * Resolve the driver from packages/db (where it is declared). A bare ESM
+ * import from scripts/deploy/ only walks scripts/ → repo root node_modules
+ * and misses the workspace install. That ERR_MODULE_NOT_FOUND failed
+ * production deploys of #526 (65ddcc6d) and #527 (07b0aed7).
  */
 import { readdirSync } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { classifyAppliedVsRepo } from "./migrate-if-configured.mjs";
 
-const url =
-  process.env.DATABASE_URL ||
-  process.env.POSTGRES_PRISMA_URL ||
-  process.env.POSTGRES_URL ||
-  "";
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
-if (!url) {
-  console.error("[neon-http-parity] no DATABASE_URL / POSTGRES_PRISMA_URL / POSTGRES_URL");
-  process.exit(1);
+/** CJS resolve starting at the @sports/db workspace, then walking up. */
+export function loadNeonServerless(root = repoRoot) {
+  const requireDb = createRequire(join(root, "packages/db/package.json"));
+  return requireDb("@neondatabase/serverless");
 }
 
-const source = process.env.DATABASE_URL
-  ? "DATABASE_URL"
-  : process.env.POSTGRES_PRISMA_URL
-    ? "POSTGRES_PRISMA_URL"
-    : "POSTGRES_URL";
+const migrationsDir = join(repoRoot, "packages", "db", "prisma", "migrations");
 
-const migrationsDir = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "..",
-  "packages",
-  "db",
-  "prisma",
-  "migrations",
-);
+export async function checkParity() {
+  const url =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
+    process.env.POSTGRES_URL ||
+    "";
 
-let repo = [];
-try {
-  repo = readdirSync(migrationsDir, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name);
-} catch (err) {
-  console.error(`[neon-http-parity] cannot read migrations dir: ${err?.message ?? err}`);
-  process.exit(1);
-}
+  if (!url) {
+    console.error("[neon-http-parity] no DATABASE_URL / POSTGRES_PRISMA_URL / POSTGRES_URL");
+    return 1;
+  }
 
-let applied = [];
-try {
-  const sql = neon(url);
-  const rows = await sql`SELECT migration_name FROM "_prisma_migrations" WHERE finished_at IS NOT NULL`;
-  applied = rows.map((r) => String(r.migration_name ?? "")).filter(Boolean);
-} catch (err) {
-  console.error(
-    `[neon-http-parity] HTTP query failed via ${source}: ${err?.message ?? err}`,
+  const source = process.env.DATABASE_URL
+    ? "DATABASE_URL"
+    : process.env.POSTGRES_PRISMA_URL
+      ? "POSTGRES_PRISMA_URL"
+      : "POSTGRES_URL";
+
+  let repo = [];
+  try {
+    repo = readdirSync(migrationsDir, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
+  } catch (err) {
+    console.error(`[neon-http-parity] cannot read migrations dir: ${err?.message ?? err}`);
+    return 1;
+  }
+
+  let neon;
+  try {
+    ({ neon } = loadNeonServerless(repoRoot));
+  } catch (err) {
+    console.error(
+      `[neon-http-parity] cannot resolve @neondatabase/serverless from packages/db: ${err?.message ?? err}`,
+    );
+    return 1;
+  }
+
+  let applied = [];
+  try {
+    const sql = neon(url);
+    const rows = await sql`SELECT migration_name FROM "_prisma_migrations" WHERE finished_at IS NOT NULL`;
+    applied = rows.map((r) => String(r.migration_name ?? "")).filter(Boolean);
+  } catch (err) {
+    console.error(
+      `[neon-http-parity] HTTP query failed via ${source}: ${err?.message ?? err}`,
+    );
+    return 1;
+  }
+
+  const { verdict, missing } = classifyAppliedVsRepo(applied, repo);
+  console.log(
+    `[neon-http-parity] source=${source} verdict=${verdict} repo=${repo.length} applied=${applied.length}`,
   );
-  process.exit(1);
+  if (missing.length) {
+    console.error(`[neon-http-parity] missing from db: ${missing.join(",")}`);
+  }
+
+  if (verdict === "up-to-date") return 0;
+  if (verdict === "pending") return 2;
+  return 1;
 }
 
-const { verdict, missing } = classifyAppliedVsRepo(applied, repo);
-console.log(
-  `[neon-http-parity] source=${source} verdict=${verdict} repo=${repo.length} applied=${applied.length}`,
-);
-if (missing.length) {
-  console.error(`[neon-http-parity] missing from db: ${missing.join(",")}`);
+if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+  process.exit(await checkParity());
 }
-
-if (verdict === "up-to-date") process.exit(0);
-if (verdict === "pending") process.exit(2);
-process.exit(1);
