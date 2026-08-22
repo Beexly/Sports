@@ -2,10 +2,11 @@
  * Price a hierarchical-Bayes prop probability against a two-way book quote.
  *
  * The specialist in props-hb.ts answers P(X > line) from player-week counts.
- * This module is the missing market half: vig-strip the book's Over/Under
- * American prices, then fire on calibrated edge e = p − q — NEVER on
- * confidence κ = max(p, 1−p). A 90% favorite already priced at 90% has
- * ~0 edge. Ranking on κ is scores24's fatal error.
+ * This module is the missing market half: Shin-devig the book's Over/Under
+ * American prices (not proportional split — that leaves favourite–longshot
+ * bias in q), then fire on e = p − q — NEVER on confidence κ = max(p, 1−p).
+ * A 90% favorite already priced at 90% has ~0 edge. Ranking on κ is scores24's
+ * fatal error.
  *
  * Fail-closed: one-sided quotes, non-finite p, or a sub-vig / empty book
  * produce no priced edge. `priced` stays false until a prop-line archive
@@ -14,7 +15,8 @@
  * Pure, deterministic, no I/O.
  */
 
-import { americanToImpliedProbability, removeVig } from "../scoring.js";
+import { americanToImpliedProbability } from "../scoring.js";
+import { shinDevig } from "../shin-devig.js";
 
 export const PROPS_HB_SOURCE = "props_hb" as const;
 
@@ -28,10 +30,14 @@ export type PricedPropEdge = {
   readonly source: typeof PROPS_HB_SOURCE;
   /** Independent P(over) from the HB posterior-predictive. */
   readonly pOver: number;
-  /** Book de-vigged P(over). */
+  /** Book de-vigged P(over) via Shin (not proportional split). */
   readonly qOver: number;
   /** e = p − q. Positive = model hotter on the over than the book. */
   readonly edgeOver: number;
+  /** q is Shin, not removeVig. Proportional split leaves favourite–longshot bias. */
+  readonly qMethod: "shin";
+  /** Shin insider share z. Diagnostic only. */
+  readonly shinZ: number;
   /** Book two-way overround before vig strip. Must be ≥ 1 to be consistent. */
   readonly overround: number;
   /**
@@ -119,7 +125,28 @@ export function pricePropAgainstMarket(
     };
   }
 
-  const { home: qOver } = removeVig(overRaw, underRaw);
+  const shin = shinDevig([overRaw, underRaw]);
+  const qOver = shin.probabilities[0];
+  const qUnder = shin.probabilities[1];
+  if (
+    qOver === undefined ||
+    qUnder === undefined ||
+    shin.probabilities.length !== 2 ||
+    !finiteProb(qOver) ||
+    !finiteProb(qUnder) ||
+    Math.abs(qOver + qUnder - 1) > 1e-6
+  ) {
+    return {
+      ok: false,
+      source: PROPS_HB_SOURCE,
+      pOver,
+      qOver: null,
+      edgeOver: null,
+      priced: false,
+      reason: "Shin de-vig did not return a two-way probability",
+    };
+  }
+
   return {
     ok: true,
     source: PROPS_HB_SOURCE,
@@ -127,6 +154,8 @@ export function pricePropAgainstMarket(
     qOver,
     edgeOver: pOver - qOver,
     overround,
+    qMethod: "shin",
+    shinZ: shin.z,
     priced: false,
   };
 }

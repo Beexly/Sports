@@ -73,6 +73,8 @@ describe("nflverse usage pulse", () => {
       qbAgeBucket: "34+",
       passAttempts: 32,
       rbTargets: 8,
+      teamTargets: 19, // 0 (QB) + 8 (RB) + 11 (WR)
+      rbTargetShare: 8 / 19, // rb targets / team targets, NOT / pass attempts
     });
   });
 
