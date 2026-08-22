@@ -24,7 +24,11 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   const url = new URL(request.url);
   const maxSeason = currentNflSeason() + 1;
-  const from = Number(url.searchParams.get("from") ?? MIN_SEASON);
+  // Cron (no query) refreshes the CURRENT season only. Historical crawl is
+  // still `?from=1999&to=…` in 2-season chunks. Unparameterized default used
+  // to be 1999, so a scheduled hit would rewrite 1999–2000 forever and never
+  // fill the live EPA path (TeamGameEfficiency is empty in production).
+  const from = Number(url.searchParams.get("from") ?? currentNflSeason());
   const toParam = url.searchParams.get("to");
   const to = toParam ? Number(toParam) : currentNflSeason();
   if (
