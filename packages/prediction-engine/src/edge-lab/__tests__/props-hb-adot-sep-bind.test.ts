@@ -63,8 +63,6 @@ function isDenied(r: SepBindResult): r is Extract<SepBindResult, { ok: false }> 
   return !r.ok;
 }
 
-// ... existing describe block
-
   it("FAILS CLOSED: no prior per-game row → sample dropped, never 3.0 yards", () => {
     const rows = [ngsRow({ week: 0, avgSeparation: 3.0 })]; // only aggregate
     const results = bindSepSamples(rows, [req({ kickoffWeek: 1 })]);
