@@ -98,4 +98,20 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 |- **PR 3 YAC Bind (#549):** OPEN, CI re-running after fix. Branch hermes/covariate-yac-bind @ 4d0b7781 pushed to origin. Tests 7/7 + air-yac 8/8. Barrel exports in index.ts for bindYacSamples/boundYacSamples. Fix commit 4d0b7781 added avgYac to sep-bind test fixture (TS2322 CovariateRow assignability).
 |- **Honest posture kept:** the site is a window; no chrome built. avgSeparation bound from bus weekly mean (not arrival), fail-closed, never 3.0 yards. avgYac bound from bus weekly mean (not per-target arrival YAC).
 |- Next: Bind #4 INT (aggressiveness/avgTimeToThrow → props-hb-int.ts). 3 fails → BLOCKED, skip to next. See SESSION-HANDOFF.md.
+
+### 2026-08-22 ~16:30 CST | Hermes (ox-alpha) | CLEAN
+- **PR 4 — CPOE Comp Bind (#553) Qodo follow-up:** pushed commit `e22eb2b7` to origin/hermes/covariate-cpoe-comp. CI already GREEN before; re-running to confirm 11/11 tests green post-fix.
+- Qodo P2/P1 addressed:
+  - `gseCpoe` on `BoundCompSample` changed from raw `number` to `CovariateCell`
+    (`{ value, grain: "week_t_for_tplus1", provenance: "expected_metric_v1" }`)
+    — consumers can now distinguish GSE-CPOE from vendor CPOE.
+  - `CovariateProvenance` extended to `"weekly_ngs_mean" | "expected_metric_v1"`.
+  - `CpoeCompBindRequest.gseCpoeAsOfWeek` added: must be non-zero integer,
+    strictly `< kickoffWeek`. Season-level (week=0) CPOE refused as
+    `cpoe_as_of_boundary` — same boundary as bus week=0 rule.
+  - New refuse code `cpoe_as_of_boundary` added to `CpoeCompBindResult` union.
+- All 34 edge-lab tests green (bus 16, sep 6, yac 7, cpoe 11).
+- No DONE.md STOP. Watchdog stays live.
+- Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) is OPEN/GREEN. Do NOT start
+  a second TPRR covariate bind; await merge or handoff. Three fails → BLOCKED.
 |

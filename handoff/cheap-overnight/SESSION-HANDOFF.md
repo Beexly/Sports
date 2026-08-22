@@ -28,27 +28,29 @@
 - **File:** `packages/prediction-engine/src/edge-lab/props-hb-air-yac-bind.ts`
 - **Tests:** `__tests__/props-hb-air-yac-bind.test.ts` — 7/7 green
 
-### PR 4 — CPOE Completion Bind: #553 ✅ MERGED (CI green)
+### PR 4 — CPOE Completion Bind: #553 ✅ OPEN (CI green, Qodo fixes pushed)
 |- **File:** `packages/prediction-engine/src/edge-lab/props-hb-cpoe-comp-bind.ts`
-|- **Tests:** `__tests__/props-hb-cpoe-comp-bind.test.ts` — 9/9 green
-|- **Commit:** `c7c8ca37` on `origin/hermes/covariate-cpoe-comp` (pushed)
+|- **Tests:** `__tests__/props-hb-cpoe-comp-bind.test.ts` — 11/11 green
+|- **Commit:** `e22eb2b7` on `origin/hermes/covariate-cpoe-comp` (pushed)
 |- **Rebased onto origin/main** (post-#549 merge c2cfc153). Conflict in index.ts resolved: kept BOTH
 |  YAC bind exports (from main) + CPOE-comp bind exports (from branch).
 
 Contract:
 |- `bindCpoeCompSamples(rows, requests)` pulls `avgTimeToThrow` + `avgIntendedAirYards`
 |  from the leak-safe covariate bus (week t → t+1, week=0 excluded, fail-closed) and
-|  combines them with GSE-CPOE (our own PBP-fit metric) into `BoundCompSample`.
-|- Fail-closed: bus null on either field → sample DROPPED, never invented. Non-finite
-|  GSE-CPOE → dropped.
+|  combines them with GSE-CPOE (our own PBP-fit metric, provenance-tagged
+|  `expected_metric_v1` as a CovariateCell) into `BoundCompSample`.
+|- Fail-closed: bus null on either field → sample DROPPED, never invented.
+|  Non-finite GSE-CPOE → dropped. `gseCpoeAsOfWeek >= kickoffWeek` or week=0
+|  → dropped as `cpoe_as_of_boundary` (season-level CPOE refused).
 |- Honest header: weekly NGS means emitted with `{ value, grain: "week_t_for_tplus1",
 |  provenance: "weekly_ngs_mean" }`. Vendor `cpoe` / `expectedCompletionPct` are y-axis
-|  only and never read.
+|  only and never read. GSE-CPOE is a `CovariateCell`, never a bare float.
 |- Barrel exports in `index.ts`. `priced: false`. Pure, no I/O, no Prisma.
 
 ## Verification
-|- `npx vitest run` props-hb-cpoe-comp-bind.test.ts: 9/9 pass
-|- `npx vitest run` edge-lab __tests__/: 658/658 pass (64 files)
+|- `npx vitest run` props-hb-cpoe-comp-bind.test.ts: 11/11 pass
+|- `npx vitest run` edge-lab __tests__/: 34/34 pass (bus 16 + sep 6 + yac 7 + cpoe 11)
 |- `tsc --noEmit` on `packages/prediction-engine`: clean
 
 ## Next priority — H0 #4 TPRR
