@@ -17,6 +17,17 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Do not market PUBLIC_PICKS as PROVEN/CLV.
 - Phone: email Baxley.Garrett@gmail.com only on BLOCK / FAKE-EDGE / OWNER_GATE.
 
+## Now (2026-08-22 16:40 CT)
+### 2026-08-22 16:40 CT | Hermes P1 (ox-alpha) | CLEAN
+- PR ship: covariate bus (IP) + SEP bind — both pushed to origin/hermes/ngs-sep-adot-catch.
+- covariate-bus.ts: pure, leak-safe, week=0 dropped, null→fail-closed, weekly_ngs_mean grain,
+  y-axis fields (expectedCompletionPct/avgExpectedYac/expectedRushYards/cpoe/ryoe) absent by construction. 13 tests.
+- props-hb-adot-sep-bind.ts: binds sepForKickoff into aDOT×SEP samples, drops on null (never 3.0 yards). 6 tests.
+- Barrel exports: SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples, SepBindRequest, SepBindResult.
+- All 639 tests pass (62 files). SESSION-HANDOFF.md + AGENT.md updated.
+- Next: xYAC bind (props-hb-air-yac.ts), volume T + YAC split via bus. 3 fails → BLOCKED, move next.
+- No DONE.md STOP. Watchdog 24188 stays live.
+
 ## Now (2026-08-22 01:38 CT)
 ### 2026-08-22 01:38 CT | Chief of Staff | OWNER_GATE + BLOCK + FAKE-EDGE
 - Odds /v4/sports 401; remaining file 0/0. Neon P1001. Public picks model_signal n=0.

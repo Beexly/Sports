@@ -1,63 +1,57 @@
-# Session Handoff — Covariate Bus + SEP Bind
+# Overnight Handoff — 2026-08-22 (covariate bus + SEP bind)
 
-## Identity
-- **Session:** `stealth/ox-alpha` — Galaxy Sports Edge (independent `p` with process, then `e = p − q`).
-- **Stance:** The site is a window. We do NOT build chrome. No Odds market ingestion. `priced: false` throughout.
-- **Serving SHA:** `873f3151` (origin/main). #525 is on ancestor `544d0148` — slug/cap NOT redone.
+## Context
 
-## Worktrees
-| Purpose | Path | Branch |
-|---|---|---|
-| PR 1 — covariate bus | `C:\Users\Garrett\Sports-bus` | `hermes/covariate-bus` |
-| PR 2 — sep bind | `C:\Users\Garrett\Sports-bus-sep` | `hermes/ngs-sep-adot-catch` |
+Galaxy Sports Edge posture: independent p with process, then e = p − q.
+The site is a window — we do NOT build chrome. This slice implements the
+**covariate bus (IP)** and the **SEP bind** as pure, leak-safe, fail-closed
+feature plumbing — no Odds market ingestion, no y-axis fields as p.
 
-`hermes/ngs-sep-adot-catch` rebases on bus commit `25b5583f` (bus is a strict ancestor).
+## PRs shipped (origin/hermes/ngs-sep-adot-catch, pushed)
 
-## What shipped this turn
+### PR 1 — covariate bus (IP)
+`packages/prediction-engine/src/edge-lab/covariate-bus.ts` — pure, no I/O, no Prisma.
 
-### PR 1 — Covariate Bus (IP): #547 ✅ (CI green, pushed, OPEN)
-- **File:** `packages/prediction-engine/src/edge-lab/covariate-bus.ts`
-- **Tests:** `__tests__/covariate-bus.test.ts` — 13/13 green
-- **Commit:** `25b5583f` on `origin/hermes/covariate-bus`
+- Key: `gsisId + season + week + statType` (receiving | passing | rushing).
+- `week=0` (season aggregate) → dropped unconditionally, never selected as next-game X.
+- Leak-safe: `sepForKickoff(rows, gsisId, season, kickoffWeek)` uses latest
+  `1..kickoffWeek-1` receiving row. No same-week. No future. null → fail-closed.
+- Fields: receiving `avgSeparation`/`avgCushion`/`airYardsShare`; passing
+  `avgTimeToThrow`/`aggressiveness`/`avgIntendedAirYards`; rushing
+  `pctAttemptsGte8Defenders`/`avgTimeToLos`.
+- NEVER as p: `expectedCompletionPct`, `avgExpectedYac`, `expectedRushYards`,
+  vendor `cpoe`/`ryoe` — all y-axis, explicitly absent from the bus type.
+- Honesty: returns `{ value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" }`
+  — weekly mean, not arrival sep. Tagged via `COVARIATE_BUS_METHOD_TAG = "covariate_bus_v1"`.
+- Tests: 13 tests in `__tests__/covariate-bus.test.ts` covering leak (week t
+  not used for week t), week 0 dropped, missing→null, finite sep≥0, y-axis
+  fields absent by construction.
 
-Contract:
-- Row key: `gsisId | season | week | statType` (`receiving` | `passing` | `rushing`).
-- `week=0` (season aggregate) dropped unconditionally — never a next-game covariate.
-- Leak-safe: `sepForKickoff(rows, gsisId, season, kickoffWeek)` uses latest `1..kickoffWeek-1` row only. No same-week, no future. `null` → `null` (fail-closed, no impute).
-- Returns `{ value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" }` — never a bare float pretending to be arrival sep.
-- Exposes ONLY covariate fields. Never as `p`: `expectedCompletionPct`, `avgExpectedYac`, `expectedRushYards`, vendor `cpoe`, `ryoe` — y-axis only.
-- Barrel exports in `index.ts`. `priced: false`. Pure, no I/O, no Prisma.
+### PR 2 — SEP bind (hermes/ngs-sep-adot-catch)
+`packages/prediction-engine/src/edge-lab/props-hb-adot-sep-bind.ts` — binds the bus
+into the aDOT×SEP catch model.
 
-### PR 2 — SEP Bind: #548 (pushed, PR OPEN, CI running)
-- **File:** `packages/prediction-engine/src/edge-lab/props-hb-adot-sep-bind.ts`
-- **Tests:** `__tests__/props-hb-adot-sep-bind.test.ts` — 6/6 green locally
-- **Commits:** `7e966783` + `69ab88a7` on `origin/hermes/ngs-sep-adot-catch`
+- `bindSepSamples(rows, requests)` — caller supplies `SepBindRequest` (gsisId,
+  season, kickoffWeek, adot sample). Bus value forwarded verbatim.
+- If `sepForKickoff` returns null → sample DROPPED (`ok:false`, `refuse:"no_prior_row"`).
+  Never invents 3.0 yards. Never imputes.
+- `boundSepSamples()` convenience filter; `priced:false` on every result.
+- Honesty header in file: weekly NGS mean forwarded, not arrival separation.
+- Barrel exports in `packages/prediction-engine/src/index.ts`:
+  `SEP_BIND_METHOD_TAG`, `bindSepSamples`, `boundSepSamples`,
+  `SepBindRequest`, `SepBindResult`.
+- Tests: 6 tests in `__tests__/props-hb-adot-sep-bind.test.ts` covering leak-safe
+  selection (not 99, not 5.0), fail-closed on no prior row / null separation,
+  aDOT field preservation, end-to-end aDOT×SEP priors.
 
-Contract:
-- `bindSepSamples(rows, requests)` feeds `sepForKickoff` into `AdotSepCatchSample`.
-- Honest header on the bind file: weekly mean ≠ catch frame. Grain forwarded verbatim.
-- Fail-closed: bus returns `null` → sample DROPPED, never imputed, never 3.0 yards.
-- `bindSepSamples` returns ok/no-prior-row results; `boundSepSamples` collects only bound samples.
-- Barrel exports in `index.ts`: `SEP_BIND_METHOD_TAG`, `bindSepSamples`, `boundSepSamples`, `SepBindRequest`, `SepBindResult`. `priced: false`.
+## Test results
+All 639 tests pass across 62 test files (vitest 2.1.9, 6.70s).
 
-## Verification
-- `npx vitest run` covariate-bus.test.ts: 13/13 pass
-- `npx vitest run` props-hb-adot-sep-bind.test.ts: 6/6 pass (+ sep.test.ts 3/3)
-- `tsc --noEmit` on `packages/prediction-engine`: clean
+## Next up (not started)
+- xYAC bind: `props-hb-air-yac.ts` needs the covariate bus for volume T + YAC
+  split. Next bind on the list after SEP.
+- If three fails on one file → BLOCKED, move to next bind.
 
-## Next priority — Bind #2: air+YAC (gap map §4, L2 covariate)
-- Target: `props-hb-air-yac.ts` — bind `avgYac` (weekly NGS mean) via the covariate bus as a covariate.
-  - Gap map says: `avgYac` → covariate → bind onto `air-yac`. `yacAboveExpected` → y-axis (GSE-xYAC referee). So the bus field is `avgYac` only.
-  - `AirYacSample` currently has `{ receptions, airYards, yac }`. The bind enriches each sample with `avgYac` from `nextGameCovariate(rows, gsisId, season, kickoffWeek, "receiving", "avgYac")`.
-- Then Bind #3: `props-hb-int.ts` — bind passing `aggressiveness` / `avgTimeToThrow`.
-- Three fails on any file → BLOCKED that file, skip to next bind. Never idle.
-
-## Next priority — Bind #3: INT (gap map §3)
-- Target: `props-hb-int.ts` — bind passing `aggressiveness` + `avgTimeToThrow` via the bus.
-- Fail-closed: null on either → drop sample.
-
-## Constraints (do not violate)
-- Do NOT edit `C:\Users\Garrett\Sports` (main worktree) — work only in worktrees.
-- Do NOT touch schema, `.github`, Odds, scrape.
-- Gap map: `C:\Users\Garrett\Sports-p0\docs\data\PROP_COVARIATE_GAP.md` (read-only).
-- #525 is on serving SHA `544d0148` — slug/cap not redone.
+## Watchdog
+Watchdog pid 24188 stays live (per AGENT.md). Do not start a second Hermes.
+No DONE.md STOP written.
