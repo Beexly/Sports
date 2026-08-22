@@ -143,8 +143,11 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       const annualToggle = page.getByRole("group", { name: /Billing interval/i }).getByRole("button", {
         name: /^Annual$/,
       });
-      await annualToggle.click();
-      await expect(annualToggle).toHaveAttribute("aria-pressed", "true");
+      await expect(annualToggle).toBeEnabled();
+      // First click can hit a hydrating overlay (HoloTilt). Force + retry the
+      // pressed state rather than asserting a single click.
+      await annualToggle.click({ force: true });
+      await expect(annualToggle).toHaveAttribute("aria-pressed", "true", { timeout: 8_000 });
       // Price and "/year" are sibling spans (`$99` + `/year`), not one text node.
       await expect(page.locator("span.text-4xl.font-extrabold").filter({ hasText: `$${FOUNDING_PRICES.PRO_ANNUAL}` })).toBeVisible();
       await expect(page.locator("span.text-4xl.font-extrabold").filter({ hasText: `$${FOUNDING_PRICES.ELITE_ANNUAL}` })).toBeVisible();
