@@ -1228,7 +1228,44 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
-// Hierarchical-Bayes props specialist + market-priced e = p − q (never κ).
+// Grouped climatology — score the props specialist against position×week
+// naive rates, not the pooled dummy. Positive BSS vs grouped is skill;
+// beating pooled while losing to grouped is grouping-loss, not edge.
+export {
+  GROUPED_CLIMATOLOGY_METHOD_TAG,
+  DEFAULT_MIN_CELL_N,
+  brierMean,
+  brierSkillScore,
+  fitGroupedClimatology,
+  predictGrouped,
+  scoreAgainstClimatology,
+} from "./edge-lab/grouped-climatology.js";
+export type {
+  BinaryOutcome,
+  ClimatologySource,
+  ClimTrainRow,
+  CellRate,
+  GroupedClimatology,
+  GroupedPrediction,
+  ScoredCase,
+  ClimatologyScorecard,
+} from "./edge-lab/grouped-climatology.js";
+
+// Market consensus q (Bradley-Terry futures + logit blend). q only — never
+// re-anchor independent p toward the market (Mania 3rd-place α=0.90 is a
+// Brier win, not an edge).
+export {
+  bradleyTerryPair,
+  consensusMarketQ,
+  marketReanchorResidual,
+} from "./edge-lab/market-consensus-q.js";
+export type { LabeledQ, ConsensusQ, ReanchorResidual } from "./edge-lab/market-consensus-q.js";
+
+// Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
+// player → position → league EB with empirical 1/n observation-noise
+// calibration, market-priced e = p − q (never κ = |2p−1|), and the
+// observation-process layer: mean-dependent φ(μ), shrunken QL, idcap,
+// recency discount, regime-shift band, expected surplus.
 export {
   fitGroupPrior,
   posteriorRate,
@@ -1243,6 +1280,27 @@ export type {
   ShrinkageRow,
 } from "./edge-lab/props-hb.js";
 export {
+  gammaFromMoments,
+  fitVarianceDecomposition,
+  fitGroupPriorCalibrated,
+  scaleObservation,
+  posteriorRateCalibrated,
+  fitNestedPriors,
+  fitNestedPriorsLeaveOneOut,
+  priorForGroup,
+  scoreNestedPlayer,
+  shrinkageReportNested,
+  fitNestedByStat,
+} from "./edge-lab/props-hb-nested.js";
+export type {
+  GroupedRateSample,
+  VarianceMethod,
+  VarianceDecomposition,
+  NestedGroupPrior,
+  NestedFit,
+  NestedShrinkageRow,
+} from "./edge-lab/props-hb-nested.js";
+export {
   PROPS_HB_SOURCE,
   pricePropAgainstMarket,
   confidenceFromPOver,
@@ -1253,6 +1311,33 @@ export type {
   UnpricedPropEdge,
   PropEdgeResult,
 } from "./edge-lab/props-priced-edge.js";
+export {
+  fitMeanVariance,
+  fitMeanVarianceFromGameLogs,
+  phiForMean,
+  shrinkQuasiLikelihood,
+  // scaleObservation is NOT re-exported here — props-hb-nested.js already
+  // exports a function of that name with identical semantics (divide
+  // total/games by clamped φ). Both modules keep their own local copy for
+  // internal use; the barrel surfaces exactly one to avoid a duplicate-export
+  // compile error.
+  posteriorRateObs,
+  posteriorRateMeanVar,
+  capGameLog,
+  discountGameLog,
+  aggregateGameLog,
+  regimeShift,
+  expectedExcess,
+} from "./edge-lab/props-hb-obs.js";
+export type {
+  CountFamily,
+  MeanVarianceFit,
+  GameCount,
+  PlayerGameLog,
+  GameLogOptions,
+  RegimeDirection,
+  RegimeShift,
+} from "./edge-lab/props-hb-obs.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
