@@ -1,30 +1,36 @@
 /**
- * Instrumented (randomized-publication) e-processes — Part II of the CEPT
- * paper (docs/research/cept/HONEST_CEPT.md, §7–§8), executable form.
+ * Instrumented (randomized-publication) e-processes.
+ *
+ * Anytime-valid sequential tests in the sense of Ville (1939) and the
+ * testing-by-betting / e-process literature (Ramdas, Grünwald, Vovk, Shafer;
+ * Waudby-Smith & Ramdas). Two processes, both nonnegative supermartingales
+ * under their stated nulls, with P(sup M ≥ 1/α) ≤ α for every stopping rule.
  *
  * WHY THIS MODULE EXISTS. forecast-skill-eprocess.ts scores our probabilities
- * against the market's on the transcript of published picks. Theorem 7 of the
- * paper proves a hard limit on ALL such transcript statistics: a forecaster
- * with genuine knowledge and zero influence, and a forecaster with zero
- * knowledge whose predictions come true BECAUSE they are published (echo),
- * generate identical data. No statistic computed from (covariates, published
- * forecast, outcome) can tell them apart. The escape is a design change, not a
- * cleverer statistic: randomize WHICH forecast gets published with a known
- * coin. This module owns the two e-processes that coin makes possible:
+ * against the market's on the transcript of published picks. A hard limit on
+ * ALL such transcript statistics: a forecaster with genuine knowledge and zero
+ * influence, and a forecaster with zero knowledge whose predictions come true
+ * BECAUSE they are published (echo), generate identical data. No statistic
+ * computed from (covariates, published forecast, outcome) can tell them apart.
+ * The escape is a design change, not a cleverer statistic: randomize WHICH
+ * forecast gets published with a known coin. This module owns the two
+ * e-processes that coin makes possible:
  *
- *   1. VALUE (Theorem 9): does publishing the candidate slate CAUSE better
- *      reward than publishing the baseline slate — knowledge and influence
- *      combined, valid under every possible reaction of the world?
- *   2. SHIFT (Remark 13): does the OUTCOME LAW itself depend on which slate
- *      was published, WITHIN each forecast context? Growth here is
- *      anytime-valid evidence of performativity (echo/influence). Value with
- *      NO shift is evidence the value came from prediction, not influence.
- *      This is the separation Theorem 7 proves impossible without the coin.
- *      Stratification is load-bearing: an echo world can leave the two arms'
- *      MARGINAL win rates identical (echoing a rule whose average is the
- *      baseline's rate) while the conditional-on-forecast laws differ
- *      maximally, so the caller supplies a stratum per round (bucketed
- *      candidate forecast) and all counts are kept per arm x stratum.
+ *   1. VALUE: does publishing the candidate slate CAUSE better reward than
+ *      publishing the baseline slate — knowledge and influence combined,
+ *      valid under every possible reaction of the world? Implemented as an
+ *      exponential supermartingale of a Horvitz–Thompson / IPW score with
+ *      Hoeffding's RANGE constant (not a variance proxy).
+ *   2. SHIFT: does the OUTCOME LAW itself depend on which slate was published,
+ *      WITHIN each forecast context? Growth here is anytime-valid evidence of
+ *      performativity (echo/influence). Value with NO shift is evidence the
+ *      value came from prediction, not influence. This is the separation that
+ *      is impossible without the coin. Stratification is load-bearing: an echo
+ *      world can leave the two arms' MARGINAL win rates identical (echoing a
+ *      rule whose average is the baseline's rate) while the conditional-on-
+ *      forecast laws differ maximally, so the caller supplies a stratum per
+ *      round (bucketed candidate forecast) and all counts are kept per arm x
+ *      stratum. The SHIFT factor is a mixture likelihood-ratio e-value.
  *
  * These answer DIFFERENT questions and are reported separately, never merged —
  * same discipline as the skill/profit/self-honesty triple.
@@ -38,7 +44,7 @@
  *     S_t = Z_t R_t / pi_t - (1 - Z_t) R_t / (1 - pi_t)
  *
  * satisfies E[S_t | F_{t-1}] = Delta_t = E[R_t(1) - R_t(0) | F_{t-1}] exactly
- * (Lemma 8 — design independence of Z_t is the whole proof). Given F_{t-1},
+ * (Horvitz–Thompson / IPW: design independence of Z_t is the whole proof). Given F_{t-1},
  * S_t lives in [-B/(1-pi_t), B/pi_t], an interval of width
  * w_t = B / (pi_t (1 - pi_t)). Hoeffding's lemma then licenses the e-factor
  *
@@ -76,6 +82,14 @@
  *
  * Predictability rules both processes: every quantity used at round t
  * (lambda_t, the arm estimates, pi_t) is fixed before Y_t resolves.
+ *
+ * References:
+ *   - Ville, J. (1939). Étude critique de la notion de collectif.
+ *   - Horvitz, D. G. & Thompson, D. J. (1952). "A generalization of sampling without replacement from a finite universe." JASA 47(260).
+ *   - Hoeffding, W. (1963). "Probability inequalities for sums of bounded random variables." JASA 58(301). (range constant w²/8)
+ *   - Ramdas, A., Grünwald, P., Vovk, V. & Shafer, G. (2023). "Game-theoretic statistics and safe anytime-valid inference." Statistical Science 38(4).
+ *   - Waudby-Smith, I. & Ramdas, A. (2024). "Estimating means of bounded random variables by betting." J. R. Statist. Soc. B 86(1).
+ *   - Shafer, G. & Vovk, V. (2019). Game-Theoretic Foundations for Probability and Finance.
  */
 
 const LN_TWO_SIDED_EPS = 1e-12;
