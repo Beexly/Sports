@@ -1238,6 +1238,84 @@ export {
 } from "./edge-lab/market-consensus-q.js";
 export type { LabeledQ, ConsensusQ, ReanchorResidual } from "./edge-lab/market-consensus-q.js";
 
+// Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
+// player → position → league EB with empirical 1/n observation-noise
+// calibration, market-priced e = p − q (never κ = |2p−1|), and the
+// observation-process layer: mean-dependent φ(μ), shrunken QL, idcap,
+// recency discount, regime-shift band, expected surplus.
+export {
+  fitGroupPrior,
+  posteriorRate,
+  probOver as propsHbProbOver,
+  probOverContinuous,
+  shrinkageReport,
+} from "./edge-lab/props-hb.js";
+export type {
+  RateSample,
+  GammaPrior,
+  GammaPosterior,
+  ShrinkageRow,
+} from "./edge-lab/props-hb.js";
+export {
+  gammaFromMoments,
+  fitVarianceDecomposition,
+  fitGroupPriorCalibrated,
+  scaleObservation,
+  posteriorRateCalibrated,
+  fitNestedPriors,
+  fitNestedPriorsLeaveOneOut,
+  priorForGroup,
+  scoreNestedPlayer,
+  shrinkageReportNested,
+  fitNestedByStat,
+} from "./edge-lab/props-hb-nested.js";
+export type {
+  GroupedRateSample,
+  VarianceMethod,
+  VarianceDecomposition,
+  NestedGroupPrior,
+  NestedFit,
+  NestedShrinkageRow,
+} from "./edge-lab/props-hb-nested.js";
+export {
+  PROPS_HB_SOURCE,
+  pricePropAgainstMarket,
+  confidenceFromPOver,
+} from "./edge-lab/props-priced-edge.js";
+export type {
+  PropBookQuote,
+  PricedPropEdge,
+  UnpricedPropEdge,
+  PropEdgeResult,
+} from "./edge-lab/props-priced-edge.js";
+export {
+  fitMeanVariance,
+  fitMeanVarianceFromGameLogs,
+  phiForMean,
+  shrinkQuasiLikelihood,
+  // scaleObservation is NOT re-exported here — props-hb-nested.js already
+  // exports a function of that name with identical semantics (divide
+  // total/games by clamped φ). Both modules keep their own local copy for
+  // internal use; the barrel surfaces exactly one to avoid a duplicate-export
+  // compile error.
+  posteriorRateObs,
+  posteriorRateMeanVar,
+  capGameLog,
+  discountGameLog,
+  aggregateGameLog,
+  regimeShift,
+  expectedExcess,
+} from "./edge-lab/props-hb-obs.js";
+export type {
+  CountFamily,
+  MeanVarianceFit,
+  GameCount,
+  PlayerGameLog,
+  GameLogOptions,
+  RegimeDirection,
+  RegimeShift,
+} from "./edge-lab/props-hb-obs.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).

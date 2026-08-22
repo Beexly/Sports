@@ -19,6 +19,7 @@ export type FairMethodTag =
   | "median_consensus_v1"
   | "model_prior_v1"
   | "prediction_market_raw_v1"
+  | "prediction_market_mid_v2"
   | "shin_devig_v1"
   | "unknown";
 

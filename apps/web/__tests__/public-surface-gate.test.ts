@@ -23,11 +23,15 @@ describe("isStatsPublic", () => {
 });
 
 describe("isContestsPublic", () => {
-  it("defaults public (complete free paper product)", () => {
+  it("defaults dark", () => {
     delete process.env.CONTESTS_PUBLIC;
+    expect(isContestsPublic()).toBe(false);
+  });
+  it("opt-in true", () => {
+    process.env.CONTESTS_PUBLIC = "true";
     expect(isContestsPublic()).toBe(true);
   });
-  it("emergency dark", () => {
+  it("rejects falsey", () => {
     process.env.CONTESTS_PUBLIC = "false";
     expect(isContestsPublic()).toBe(false);
   });

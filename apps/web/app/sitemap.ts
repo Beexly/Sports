@@ -3,7 +3,7 @@ import { loadPublicJournalEntries } from "@/lib/journal/load";
 import { SITE_URL } from "@/lib/seo/site-url";
 import { slugify } from "@/lib/seo/sports-jsonld";
 import { db } from "@sports/db";
-import { isStatsPublic } from "@/lib/launch/public-surface-gate";
+import { isContestsPublic, isStatsPublic } from "@/lib/launch/public-surface-gate";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
 
@@ -74,8 +74,6 @@ const ROUTES: ReadonlyArray<{
   { path: "/fantasy", priority: 0.6, changeFrequency: "weekly" },
   { path: "/the-beat", priority: 0.6, changeFrequency: "weekly" },
   { path: "/gsn", priority: 0.5, changeFrequency: "weekly" },
-  { path: "/fantasy/contests", priority: 0.6, changeFrequency: "weekly" },
-  { path: "/contests", priority: 0.65, changeFrequency: "daily" },
   { path: "/podcast", priority: 0.6, changeFrequency: "weekly" },
   { path: "/newsletter", priority: 0.6, changeFrequency: "weekly" },
   { path: "/tools", priority: 0.85, changeFrequency: "weekly" },
@@ -143,6 +141,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           { path: "/stats/ask", priority: 0.5, changeFrequency: "weekly" as const },
           { path: "/stats/proof", priority: 0.5, changeFrequency: "weekly" as const },
           { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" as const },
+        ] as const)
+      : []),
+    ...(isContestsPublic()
+      ? ([
+          { path: "/fantasy/contests", priority: 0.6, changeFrequency: "weekly" as const },
+          { path: "/contests", priority: 0.65, changeFrequency: "daily" as const },
         ] as const)
       : []),
   ];
