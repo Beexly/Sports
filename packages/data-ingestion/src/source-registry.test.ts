@@ -88,8 +88,17 @@ describe("legal source registry", () => {
     const blocked = forbiddenSources().map((s) => s.id);
     expect(cleared).toEqual(expect.arrayContaining(["nflverse", "the-odds-api", "sleeper"]));
     expect(blocked).toEqual(
-      expect.arrayContaining(["espn-hidden-api", "pro-football-reference", "nfelo", "open-meteo"]),
+      expect.arrayContaining([
+        "espn-hidden-api",
+        "pro-football-reference",
+        "nfelo",
+        "open-meteo",
+        "sportsbookish",
+        "smartstake-mlb-props",
+        "sportsbook-software-json-api",
+      ]),
     );
+    expect(cleared).toEqual(expect.arrayContaining(["therundown"]));
     // No source can be both.
     expect(cleared.some((id) => blocked.includes(id))).toBe(false);
   });
