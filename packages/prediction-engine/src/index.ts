@@ -1228,6 +1228,16 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Market consensus q (Bradley-Terry futures + logit blend). q only — never
+// re-anchor independent p toward the market (Mania 3rd-place α=0.90 is a
+// Brier win, not an edge).
+export {
+  bradleyTerryPair,
+  consensusMarketQ,
+  marketReanchorResidual,
+} from "./edge-lab/market-consensus-q.js";
+export type { LabeledQ, ConsensusQ, ReanchorResidual } from "./edge-lab/market-consensus-q.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
