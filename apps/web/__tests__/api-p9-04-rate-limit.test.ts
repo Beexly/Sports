@@ -17,11 +17,28 @@ import { resetRateLimits } from "@/lib/api/rate-limit";
 
 // ─── Unified mock setup ───────────────────────────────────────────────────
 
+// Faithful shim of the durable limiter's CONSUME_SQL upsert (atomic
+// insert-or-increment bounded by $4, RETURNING count; empty rows = denied,
+// and a denied request does NOT increment — mirroring the WHERE clause).
+// daily-slate now uses the Postgres-backed limiter, and this file's job is to
+// test rate limiting for real — so emulate the store instead of mocking the
+// limiter away.
+const rlStore = vi.hoisted(() => ({ counters: new Map<string, number>() }));
+
 const dbMock = vi.hoisted(() => ({
   pickProofReceipt: { findFirst: vi.fn() },
   pick: { count: vi.fn(), findMany: vi.fn() },
   agentReceipt: { findUnique: vi.fn() },
   slateCommitment: { findUnique: vi.fn() },
+  $queryRawUnsafe: vi.fn(
+    async (_sql: string, scope: string, key: string, windowStart: Date, limit: number) => {
+      const k = `${scope}|${key}|${windowStart.getTime()}`;
+      const next = (rlStore.counters.get(k) ?? 0) + 1;
+      if (next > limit) return [];
+      rlStore.counters.set(k, next);
+      return [{ count: next }];
+    },
+  ),
 }));
 
 const predictionEngineMocks = vi.hoisted(() => ({
@@ -180,6 +197,7 @@ describe("/api/picks/daily-slate — rate limiting", () => {
   beforeEach(() => {
     vi.resetModules();
     resetRateLimits();
+    rlStore.counters.clear();
     dbMock.pick.count.mockResolvedValue(0);
     dbMock.pick.findMany.mockResolvedValue([]);
   });
