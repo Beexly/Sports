@@ -1397,6 +1397,19 @@ export {
 } from "./edge-lab/props-hb-atd.js";
 export type { TouchTdSample } from "./edge-lab/props-hb-atd.js";
 
+// X4 math — Kalshi two-way vs Shin book. Log-only; priced:false.
+export {
+  KALSHI_BOOK_METHOD_TAG,
+  DEFAULT_KALSHI_BOOK_TAU,
+  scanKalshiVsBooks,
+} from "./edge-lab/kalshi-book-divergence.js";
+export type {
+  KalshiTwoWay,
+  NamedBookTwoWay,
+  KalshiBookFlag,
+  KalshiBookResult,
+} from "./edge-lab/kalshi-book-divergence.js";
+
 // Catch rate by aDOT bucket. Independent p. Not a new Odds market.
 export {
   ADOT_CATCH_METHOD_TAG,
