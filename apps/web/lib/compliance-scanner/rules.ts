@@ -16,8 +16,10 @@
  * Add to the decision log when modifying.
  */
 
+import { normalizeForComplianceScan } from "./normalize";
+
 export type RuleSeverity = "block" | "warn" | "info";
-export type RuleLayer = 1 | 2 | 3;
+export type RuleLayer = 1 | 2 | 3 | 4;
 
 export interface ComplianceRule {
   id: string;
@@ -197,7 +199,109 @@ export const LAYER_3_TOUT_AND_BAIT: ComplianceRule[] = [
 ];
 
 /**
- * Combined ruleset — all three layers.
+ * LAYER 4 — Payments-processor underwriting vocabulary.
+ *
+ * Warn-only scan for gambling/betting-coded copy on paid-product surfaces
+ * (`/pricing`, `/clv`, `/methodology`, `/dashboard`) that a processor
+ * underwriter could read as sports-betting risk. NEVER `block` — this
+ * layer must not change Studio / Journal / waitlist / bot-outbox gates.
+ *
+ * Opt-in via `PAYMENTS_SURFACE` (see TEMPLATE_SPECIFIC_RULES) or
+ * `scanPaymentsSurfaceCopy`. Not part of `ALL_RULES`.
+ */
+export const LAYER_4_PAYMENTS_UNDERWRITING: ComplianceRule[] = [
+  {
+    id: "L4-GAMBLING-OPERATOR",
+    layer: 4,
+    severity: "warn",
+    pattern: /\b(gambling|gamblers?|gambles?|casinos?|sportsbooks?|bookmakers?|bookies?)\b/i,
+    message:
+      "Payments underwriting: gambling-operator vocabulary. Processors treat casino / sportsbook / gambling copy as high-risk MCC signal.",
+    suggestion:
+      "Describe the product as a scored decision board or subscription research tool, not a gambling venue.",
+  },
+  {
+    id: "L4-WAGERING",
+    layer: 4,
+    severity: "warn",
+    pattern: /\bwager(?:s|ed|ing)?\b/i,
+    message:
+      "Payments underwriting: 'wager' / 'wagering' is processor-coded gambling language.",
+    suggestion: "Prefer 'paper contest', 'no prizes', or 'subscription' framing.",
+  },
+  {
+    id: "L4-SPORTS-BETTING",
+    layer: 4,
+    severity: "warn",
+    pattern: /\bsports[\s-]?betting\b/i,
+    message:
+      "Payments underwriting: 'sports betting' is a restricted-category phrase for card networks.",
+    suggestion: "Use 'sports decisioning' or name the specific surface (board, ledger, CLV).",
+  },
+  {
+    id: "L4-BETTING-AS-PRODUCT",
+    layer: 4,
+    severity: "warn",
+    pattern: /\bbetting\b/i,
+    message:
+      "Payments underwriting: standalone 'betting' on a paid surface reads as a betting product.",
+    suggestion: "Name the artifact (factor trail, line movement, board) without 'betting' as the category.",
+  },
+  {
+    id: "L4-BET-VOCAB",
+    layer: 4,
+    severity: "warn",
+    pattern: /\b(bets?|bettors?)\b/i,
+    message:
+      "Payments underwriting: 'bet' / 'bets' / 'bettor' is wagering vocabulary, even in tracker or No-Bet copy.",
+    suggestion: "Prefer 'pick', 'position', 'reader', or 'logged close' depending on the surface.",
+  },
+  {
+    id: "L4-STAKE-BANKROLL",
+    layer: 4,
+    severity: "warn",
+    pattern: /\b(bankroll|staking)\b/i,
+    message:
+      "Payments underwriting: bankroll / staking language implies wager sizing.",
+    suggestion: "If the tool is educational, call it a 'sizing calculator' without bankroll framing.",
+  },
+  {
+    id: "L4-MONEYLINE-MARKET",
+    layer: 4,
+    severity: "warn",
+    pattern: /\b(moneylines?|over\/under|o\/u|bet slips?|unit bets?)\b/i,
+    message:
+      "Payments underwriting: sportsbook market vocabulary (moneyline, O/U, bet slip).",
+    suggestion: "On paid marketing surfaces, prefer 'price', 'total', or 'ticket' without sportsbook jargon.",
+  },
+  {
+    id: "L4-PARLAY",
+    layer: 4,
+    severity: "warn",
+    pattern: /\bparlays?\b/i,
+    message:
+      "Payments underwriting: 'parlay' is a wagering product name, including branded uses like Parlay MRI.",
+    suggestion: "Keep the product, but flag the word on processor-facing copy reviews.",
+  },
+  {
+    id: "L4-PLACE-BET-CTA",
+    layer: 4,
+    severity: "warn",
+    pattern: /\b(place (?:a |your )?bets?|click to bet|bet now|deposit to (?:bet|wager)|odds[\s-]?making)\b/i,
+    message:
+      "Payments underwriting: bet-placement or odds-making CTA. Reads as facilitating wagers.",
+    suggestion: "Never invite a deposit-to-bet or place-a-bet action on these surfaces.",
+  },
+];
+
+/** Alias used by the payments-surface scanner and its tests. */
+export const PAYMENTS_SURFACE_RULES: ComplianceRule[] = LAYER_4_PAYMENTS_UNDERWRITING;
+
+/**
+ * Combined ruleset — layers 1–3 only.
+ *
+ * Layer 4 is warn-only and opt-in so existing Studio / Journal / waitlist /
+ * bot-outbox scans keep the same block-gate behavior.
  */
 export const ALL_RULES: ComplianceRule[] = [
   ...LAYER_1_PLATFORM_BANS,
@@ -249,6 +353,9 @@ export const TEMPLATE_SPECIFIC_RULES: Record<string, ComplianceRule[]> = {
       suggestion: "State what the settled data showed, then cite the evidence.",
     },
   ],
+
+  // Paid-product surfaces: extra underwriting vocabulary, warn-only.
+  PAYMENTS_SURFACE: LAYER_4_PAYMENTS_UNDERWRITING,
 };
 
 /**
@@ -256,4 +363,42 @@ export const TEMPLATE_SPECIFIC_RULES: Record<string, ComplianceRule[]> = {
  */
 export function getRulesForTemplate(templateKind: string): ComplianceRule[] {
   return [...ALL_RULES, ...(TEMPLATE_SPECIFIC_RULES[templateKind] ?? [])];
+}
+
+function statelessPattern(pattern: RegExp): RegExp {
+  return new RegExp(pattern.source, pattern.flags.replace("g", ""));
+}
+
+export interface PaymentsSurfaceFlag {
+  readonly id: string;
+  readonly layer: 4;
+  readonly severity: "warn";
+  readonly match: string;
+  readonly message: string;
+  readonly suggestion: string | null;
+}
+
+/**
+ * Scan copy with Layer 4 only. Hits are always `warn`; this function never
+ * applies layers 1–3 and never returns `block`.
+ */
+export function scanPaymentsSurfaceCopy(text: string): PaymentsSurfaceFlag[] {
+  const flags: PaymentsSurfaceFlag[] = [];
+  const scanTarget = normalizeForComplianceScan(text);
+  for (const rule of LAYER_4_PAYMENTS_UNDERWRITING) {
+    // Layer 4 is warn-only by contract. Skip anything that is not `warn`
+    // so a mislabeled rule can never become a publish/checkout block.
+    if (rule.severity !== "warn") continue;
+    const match = statelessPattern(rule.pattern).exec(scanTarget);
+    if (!match) continue;
+    flags.push({
+      id: rule.id,
+      layer: 4,
+      severity: "warn",
+      match: match[0],
+      message: rule.message,
+      suggestion: rule.suggestion,
+    });
+  }
+  return flags;
 }
