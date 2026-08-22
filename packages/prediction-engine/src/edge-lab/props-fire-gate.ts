@@ -59,7 +59,7 @@ export function firePostedProp(
     return { ok: false, fire: false, methodTag: tag, priced: false, refuse: "bad_p" };
   }
 
-  const shopBooks: ShopBook[] =
+  const shopBooks: readonly ShopBook[] =
     books.length > 0
       ? books
       : quote && Number.isFinite(quote.overAmerican) && quote.overAmerican !== 0

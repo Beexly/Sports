@@ -8,6 +8,7 @@ describe("firePostedProp", () => {
     expect(r.ok).toBe(true);
     if (!r.ok) throw new Error("expected ok");
     expect(r.fire).toBe(false);
+    if (r.fire) throw new Error("expected closed");
     expect(r.refuse).toBe("no_book_clears");
     expect(r.priced).toBe(false);
   });
