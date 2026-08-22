@@ -215,6 +215,16 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export {
+  PredExonClient,
+  PredExonError,
+  isPredExonIngestEnabled,
+  PREDEXON_BASE,
+  PREDEXON_KEY_HEADER,
+  PREDEXON_SOURCE_ID,
+  type PredExonKalshiMarket,
+  type PredExonKalshiMarketsPage,
+} from "./predexon-client.js";
 export { SharpApiClient, SharpApiError, isSharpApiIngestEnabled, SHARP_API_BASE, SHARP_API_SOURCE_ID } from "./sharp-api-client.js";
 export {
   ProphetXMarketDataClient,
