@@ -349,6 +349,33 @@ describe("licensed extra endpoints (props / historical / participants)", () => {
     expect(url.searchParams.get("markets")).toBe("h2h");
   });
 
+  it("getHistoricalEventOdds hits /historical/sports/{sport}/events/{id}/odds", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      ok({ timestamp: "2023-11-29T22:45:00Z", previous_timestamp: null, next_timestamp: null, data: {} })
+    );
+    await client.getHistoricalEventOdds(
+      "americanfootball_nfl",
+      "evt1",
+      "2023-11-29T22:45:00Z",
+      ["player_pass_tds"],
+    );
+    const url = new URL(spy.mock.calls[0]![0] as string);
+    expect(url.pathname).toContain(
+      "/historical/sports/americanfootball_nfl/events/evt1/odds",
+    );
+    expect(url.searchParams.get("date")).toBe("2023-11-29T22:45:00Z");
+    expect(url.searchParams.get("markets")).toBe("player_pass_tds");
+  });
+
+  it("getEventOdds includeLinks=true is opt-in", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(ok({ id: "evt1" }));
+    await client.getEventOdds("americanfootball_nfl", "evt1", ["player_pass_tds"], {
+      includeLinks: true,
+    });
+    const url = new URL(spy.mock.calls[0]![0] as string);
+    expect(url.searchParams.get("includeLinks")).toBe("true");
+  });
+
   it("getParticipants hits /participants", async () => {
     const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(ok([]));
     await client.getParticipants("americanfootball_nfl");

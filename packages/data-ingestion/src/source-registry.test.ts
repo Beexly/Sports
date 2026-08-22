@@ -68,6 +68,11 @@ describe("legal source registry", () => {
       "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
     );
     expect(() => assertIngestible("kalshi")).toThrow(/paid-required/);
+    expect(isIngestible("clubelo")).toBe(true);
+    expect(getSource("clubelo")?.verdict).toBe("use-with-caution");
+    expect(getSource("clubelo")?.commercialUse).toBe(false);
+    expect(getSource("clubelo")?.attributionRequired).toBe(true);
+    expect(attributionFor("clubelo")).toMatch(/ClubElo/i);
     expect(getSource("nws-weather")?.commercialUse).toBe(true);
     expect(getSource("openfootball")?.license.spdx).toBe("CC0-1.0");
     expect(attributionFor("retrosheet")).toMatch(/Retrosheet/);
@@ -96,9 +101,13 @@ describe("legal source registry", () => {
         "sportsbookish",
         "smartstake-mlb-props",
         "sportsbook-software-json-api",
+        "sharp-api",
+        "prophetx",
+        "novig",
+        "pinnacle-unofficial",
       ]),
     );
-    expect(cleared).toEqual(expect.arrayContaining(["therundown"]));
+    expect(cleared).toEqual(expect.arrayContaining(["therundown", "novig-public-csv"]));
     // No source can be both.
     expect(cleared.some((id) => blocked.includes(id))).toBe(false);
   });
