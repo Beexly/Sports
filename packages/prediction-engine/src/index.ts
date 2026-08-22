@@ -1130,6 +1130,13 @@ export {
   type PickReceipt,
   type LedgerHead,
 } from "./honesty/glass-receipts.js";
+export { compareDevigMethods } from "./honesty/devig-method-compare.js";
+export type {
+  DevigMethodCompare,
+  DevigMethodName,
+  MethodFair,
+  TwoWayBook,
+} from "./honesty/devig-method-compare.js";
 
 // Fire authority — dual-asOf + cal + LIVE_BOARD + selective composition (pure)
 export {
