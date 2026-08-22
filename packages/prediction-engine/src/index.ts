@@ -1538,6 +1538,7 @@ export {
   sepForKickoff,
   P_SIDE_COVARIATE_REGISTRY,
   assertPSideHasNoMarketProp,
+  lookupFieldMeta,
 } from "./edge-lab/covariate-bus.js";
 export type {
   CovariateRow,

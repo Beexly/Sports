@@ -7,6 +7,7 @@ import {
   sepForKickoff,
   P_SIDE_COVARIATE_REGISTRY,
   assertPSideHasNoMarketProp,
+  lookupFieldMeta,
   type CovariateRow,
   type CovariateLayer,
 } from "../covariate-bus.js";
@@ -200,5 +201,25 @@ describe("H0.1 known_at + q-contamination", () => {
       { layer: "MARKET_PROP" },
     ];
     expect(() => assertPSideHasNoMarketProp(poisoned)).toThrow(/MARKET_PROP/);
+  });
+
+  it("nextGameCovariate stamps layer/provenance from the registry, not a hardcoded literal", () => {
+    // The cell's layer + provenance must come from P_SIDE_COVARIATE_REGISTRY.
+    // This prevents registry/runtime drift (Codacy finding).
+    const rows = [rx({ week: 3, avgSeparation: 2.2 })];
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 5, "receiving", "avgSeparation");
+    expect(cell).not.toBeNull();
+    const meta = lookupFieldMeta("avgSeparation");
+    expect(cell!.layer).toBe(meta.layer);
+    expect(cell!.provenance).toBe(meta.honesty);
+    // And the registry must agree with the cell.
+    expect(cell!.layer).toBe("L2");
+    expect(cell!.provenance).toBe("weekly_ngs_mean");
+  });
+
+  it("registry covers every CovariateField (no unregistered covariate)", () => {
+    // Every field in the CovariateField union must have a registry entry;
+    // otherwise lookupFieldMeta throws (fail-closed against q-contamination).
+    expect(() => P_SIDE_COVARIATE_REGISTRY.forEach((e) => lookupFieldMeta(e.field))).not.toThrow();
   });
 });

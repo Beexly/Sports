@@ -179,6 +179,25 @@ export function latestPriorRow(
  * `null` (fail-closed — does not impute, does not cross the same-week
  * boundary).
  */
+/**
+ * Look up the registry entry for a covariate field. The registry is the
+ * single source of truth for `layer` and `provenance` — `nextGameCovariate`
+ * must never hardcode these, or CI's q-contamination walk and the runtime
+ * cell can drift (Codacy finding).
+ */
+export function lookupFieldMeta(
+  field: CovariateField,
+): { readonly layer: CovariateLayer; readonly honesty: CovariateProvenance } {
+  const hit = P_SIDE_COVARIATE_REGISTRY.find((e) => e.field === field);
+  if (hit === undefined) {
+    // Every CovariateField must be registered. Fail-closed if it's not —
+    // a missing registration is a q-contamination hazard (a field with no
+    // declared layer could silently default to MARKET_PROP upstream).
+    throw new Error(`covariate field "${field}" is not registered in P_SIDE_COVARIATE_REGISTRY`);
+  }
+  return hit;
+}
+
 export function nextGameCovariate(
   rows: readonly CovariateRow[],
   gsisId: string,
@@ -191,11 +210,12 @@ export function nextGameCovariate(
   if (row === null) return null; // no history before kickoff — fail closed
   const raw = row[field];
   if (raw === null || !Number.isFinite(raw)) return null;
+  const meta = lookupFieldMeta(field);
   return {
     value: raw,
     grain: "week_t_for_tplus1",
-    provenance: "weekly_ngs_mean",
-    layer: "L2",
+    provenance: meta.honesty,
+    layer: meta.layer,
     knownAtWeek: row.week,
   };
 }
