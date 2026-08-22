@@ -140,10 +140,14 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       // rendering: whichever run saw only one of them passed. Diagnosed
       // 2026-08-16 after it was briefly mistaken for a WebKit product bug — the
       // toggle itself works correctly on both Chrome and WebKit.
-      await page.getByRole("group", { name: /Billing interval/i }).getByRole("button", { name: /Annual/i }).click();
+      const annualToggle = page.getByRole("group", { name: /Billing interval/i }).getByRole("button", {
+        name: /^Annual$/,
+      });
+      await annualToggle.click();
+      await expect(annualToggle).toHaveAttribute("aria-pressed", "true");
       // Price and "/year" are sibling spans (`$99` + `/year`), not one text node.
-      await expect(page.locator("span.text-4xl", { hasText: `$${FOUNDING_PRICES.PRO_ANNUAL}` })).toBeVisible();
-      await expect(page.locator("span.text-4xl", { hasText: `$${FOUNDING_PRICES.ELITE_ANNUAL}` })).toBeVisible();
+      await expect(page.locator("span.text-4xl.font-extrabold").filter({ hasText: `$${FOUNDING_PRICES.PRO_ANNUAL}` })).toBeVisible();
+      await expect(page.locator("span.text-4xl.font-extrabold").filter({ hasText: `$${FOUNDING_PRICES.ELITE_ANNUAL}` })).toBeVisible();
     });
   });
 
