@@ -10,6 +10,22 @@
  *   - Key from env `PREDEXON_API_KEY` only. Never commit, log, or print it.
  *   - assertIngestible("predexon") before any network.
  *   - No orders. No Kalshi Trade API. No HuggingFace API dumps.
+ *
+ * VERIFIED AGAINST THE LIVE API 2026-08-22 (this client was originally written
+ * from docs alone). Findings that the shape below encodes:
+ *
+ *   1. `search` matches the market TITLE, not the ticker. `search=nfl` returns
+ *      inflation contracts ("i-nfl-ation"), and `search=KXNFLGAME` returns
+ *      ZERO. Selecting a sport by `search` would feed CPI markets into a sports
+ *      pipeline — fabricated data by CLAUDE.md #1/#2. Use `seriesTicker`.
+ *   2. `series_ticker=KXNFLGAME` / `KXMLBGAME` returns live open per-game
+ *      two-sided markets for the current slate. Those are exactly the series
+ *      constants `KALSHI_GAME_SERIES` (kalshi-series.ts) already declares, so
+ *      the existing league→series mapping ports over unchanged.
+ *   3. Prices are DOLLARS (0–1), not Kalshi's native cents — matching the
+ *      `*_dollars` convention `impliedYesProbability` already expects. Sides of
+ *      a pair sum to ~1.00 (0.90/0.11 observed), so `devigTwoSided` still has
+ *      real overround to remove.
  */
 
 import { assertIngestible } from "./source-registry.js";
@@ -83,7 +99,17 @@ export class PredExonClient {
   ) {}
 
   async listKalshiMarkets(query: {
+    /**
+     * Free-text match against the market TITLE. Verified against the live API
+     * 2026-08-22: `search=nfl` returns CPI contracts, because "nfl" is a
+     * substring of "inflation". Never use this to select a sport — use
+     * `seriesTicker`.
+     */
     readonly search?: string;
+    /** Kalshi series, e.g. KXNFLGAME / KXMLBGAME (see KALSHI_GAME_SERIES). */
+    readonly seriesTicker?: string;
+    readonly eventTicker?: string;
+    readonly ticker?: string;
     readonly status?: "open" | "closed";
     readonly limit?: number;
   } = {}): Promise<PredExonKalshiMarketsPage | null> {
@@ -94,6 +120,9 @@ export class PredExonClient {
 
     const params = new URLSearchParams();
     if (query.search) params.set("search", query.search);
+    if (query.seriesTicker) params.set("series_ticker", query.seriesTicker);
+    if (query.eventTicker) params.set("event_ticker", query.eventTicker);
+    if (query.ticker) params.set("ticker", query.ticker);
     if (query.status) params.set("status", query.status);
     params.set("limit", String(Math.min(100, Math.max(1, query.limit ?? 20))));
 
