@@ -35,6 +35,14 @@ describe("/api/picks/daily-slate", () => {
   beforeEach(() => {
     process.env["DATABASE_URL"] = "stub";
     process.env["DEMO_PICKS_ENABLED"] = "true";
+    // These cases exercise the slate's COUNTING logic, which only runs once
+    // picks are public. That precondition used to be implicit because the
+    // route never checked canExposePublicPicks — the bug this now states
+    // explicitly. Gate-closed behaviour is covered in
+    // public-picks-gate-parity.test.ts; do not drop this line to make a
+    // content assertion pass.
+    process.env["PUBLIC_PICKS_ENABLED"] = "true";
+    process.env["CANONICAL_HISTORY_ENABLED"] = "true";
   });
 
   it("returns 10 total pick count under stub+demo mode", async () => {

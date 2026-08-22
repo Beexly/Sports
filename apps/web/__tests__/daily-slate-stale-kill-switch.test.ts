@@ -39,6 +39,14 @@ const mocks = vi.hoisted(() => ({
   getSamplePicks: vi.fn<() => unknown[]>(),
 }));
 
+// This file's subject is not rate limiting, and its @sports/db mock has no
+// $queryRawUnsafe / isStubMode surface for the durable limiter. Allow-all so
+// the code under test decides the response; the limiter itself is covered by
+// api-p9-04 / api-p9-05 / b2b-rate-limit.
+vi.mock("@/lib/api/public-form-rate-limit", () => ({
+  consumePublicFormRateLimit: vi.fn(async () => ({ ok: true, backend: "memory" })),
+}));
+
 vi.mock("@sports/db", () => ({
   db: {
     pick: { count: mocks.pickCount, findMany: mocks.pickFindMany, findFirst: mocks.pickFindFirst },
@@ -66,6 +74,13 @@ vi.mock("@sports/prediction-engine", async (importOriginal) => {
     ...actual,
     getReadinessGates: () => ({
       canExposePerformanceStats: false,
+      // These cases isolate the STALE kill switch, so the public-picks gate
+      // must be open — otherwise the route short-circuits to its 503 and the
+      // staleness behaviour under test never runs. This was previously
+      // absent (and harmless) only because daily-slate never checked
+      // canExposePublicPicks; that omission was the bug. Gate-closed
+      // behaviour lives in public-picks-gate-parity.test.ts.
+      canExposePublicPicks: true,
       forceNoBetIfStale: mocks.forceNoBetIfStale,
     }),
   };
