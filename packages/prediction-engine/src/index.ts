@@ -1374,8 +1374,56 @@ export type {
   KaunitzScan,
 } from "./edge-lab/kaunitz-outlier.js";
 
+// Rushing yards given attempts, not calendar games. Independent p.
+export {
+  RUSH_HB_METHOD_TAG,
+  fitYardsPerAttemptPrior,
+  posteriorYardsPerAttempt,
+  probOverRushYardsGivenAttempts,
+  probOverRushYards,
+} from "./edge-lab/props-hb-rush.js";
+export type { RushSample } from "./edge-lab/props-hb-rush.js";
+
+// Anytime TD given touches (rush att + rec), not calendar games. Independent p.
+export {
+  ATD_HB_METHOD_TAG,
+  fitTdPerTouchPrior,
+  pooledTdPerTouch,
+  posteriorTdPerTouch,
+  tdProbZero,
+  tdProbZeroPoisson,
+  probAnytimeTdGivenTouches,
+  probAnytimeTd,
+} from "./edge-lab/props-hb-atd.js";
+export type { TouchTdSample } from "./edge-lab/props-hb-atd.js";
+
+// X4 math — Kalshi two-way vs Shin book. Log-only; priced:false.
+export {
+  KALSHI_BOOK_METHOD_TAG,
+  DEFAULT_KALSHI_BOOK_TAU,
+  scanKalshiVsBooks,
+} from "./edge-lab/kalshi-book-divergence.js";
+export type {
+  KalshiTwoWay,
+  NamedBookTwoWay,
+  KalshiBookFlag,
+  KalshiBookResult,
+} from "./edge-lab/kalshi-book-divergence.js";
+
+// Catch rate by aDOT bucket. Independent p. Not a new Odds market.
+export {
+  ADOT_CATCH_METHOD_TAG,
+  SHORT_ADOT_MAX,
+  INTERMEDIATE_ADOT_MAX,
+  adotOf,
+  bucketAdot,
+  fitAdotCatchPriors,
+  posteriorAdotCatch,
+  probOverReceptionsByAdot,
+} from "./edge-lab/props-hb-adot-catch.js";
+export type { AdotBucket, AdotCatchSample, BucketedCatchFit } from "./edge-lab/props-hb-adot-catch.js";
+
 // Receiving yards as air-caught + YAC convolution. Independent p only.
-// Does not ingest a new Odds market and does not touch ox-alpha ingest files.
 export {
   AIR_YAC_METHOD_TAG,
   fitAirYacPriors,
