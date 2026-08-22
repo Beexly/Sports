@@ -128,6 +128,7 @@ describe("Source rights registry — registry shape", () => {
     const ids = permRequired.map((s) => s.source_id);
     expect(ids).toContain("scores24-live");
     expect(ids).toContain("kalshi");
+    expect(ids).toContain("clubelo");
   });
 
   it("kalshi is permission_required — Developer Agreement v1.1 own-trading only", () => {
@@ -144,6 +145,26 @@ describe("Source rights registry — registry shape", () => {
     expect(entry!.notes).toMatch(/own trading/i);
     const result = checkClearance({
       source_id: "kalshi",
+      mode: "licensed_api_ingest",
+      tool_id: "fetch-native",
+      intents: ["derived_analytics", "storage"],
+    });
+    expect(result.allowed).toBe(false);
+    expect(result.blocks.length).toBeGreaterThan(0);
+  });
+
+  it("clubelo is permission_required until Lars confirms commercial cite-author use", () => {
+    const entry = getSourceRightsEntry("clubelo");
+    expect(entry).toBeDefined();
+    expect(entry!.status).toBe("permission_required");
+    expect(entry!.automation_allowed).toBe(false);
+    expect(entry!.attribution_required).toBe(true);
+    expect(entry!.attribution_text).toMatch(/ClubElo/i);
+    expect(entry!.vendor_contact).toBe("clubelo@schiefler.com");
+    expect(entry!.unlock_condition).toMatch(/Lars Schiefler/i);
+    expect(entry!.notes).toMatch(/timed out/i);
+    const result = checkClearance({
+      source_id: "clubelo",
       mode: "licensed_api_ingest",
       tool_id: "fetch-native",
       intents: ["derived_analytics", "storage"],

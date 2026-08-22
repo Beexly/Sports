@@ -257,6 +257,27 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     datasets: ["markets", "events", "orderbook"],
     docsUrl: "https://docs.kalshi.com/welcome",
   },
+  clubelo: {
+    id: "clubelo",
+    provider: "ClubElo (Lars Schiefler)",
+    kind: "public-api",
+    license: {
+      spdx: null,
+      name: "ClubElo About (cite-author; live grant unverified)",
+      url: "https://clubelo.com/About",
+    },
+    commercialUse: false,
+    attributionRequired: true,
+    attributionText: "Club Elo ratings via ClubElo / Lars Schiefler (clubelo.com).",
+    robotsRespected: true,
+    rateLimit: "Public CSV; cache daily ratings; do not hammer api.clubelo.com.",
+    verdict: "use-with-caution",
+    reason:
+      "PROBED 2026-08-21: api.clubelo.com timed out from the founder network; clubelo.com/About is an SPA without live terms prose. Wayback 2023-01-17 About permitted reuse of calculations/rankings with citation. That archive is not a live commercial grant and is not a prohibition. Verdict stays use-with-caution (ingestible, attributed) so the existing CSV client is not killed on silence. Flip to paid-required if Lars declines; flip to cleared-with-attribution only after written confirmation.",
+    baseUrl: "http://api.clubelo.com",
+    datasets: ["ratings", "fixtures"],
+    docsUrl: "https://clubelo.com/About",
+  },
   moneypuck: {
     id: "moneypuck",
     provider: "MoneyPuck",
