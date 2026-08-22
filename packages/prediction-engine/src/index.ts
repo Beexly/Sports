@@ -1529,6 +1529,30 @@ export type { ResearchFeatureInput, ResearchLog, ResearchDenied } from "./edge-l
 export { NFL_EPA_PATH_TAG, nflEpaPathStatus } from "./edge-lab/nfl-epa-path.js";
 export type { EpaPathStatus } from "./edge-lab/nfl-epa-path.js";
 
+// Completions | attempts. Bounded Beta-Binomial. Distinct from pass yards | attempts.
+export {
+  COMP_HB_METHOD_TAG,
+  fitCompletionPrior,
+  posteriorCompletion,
+  betaBinomialProbOverCompletions,
+  probOverCompletions,
+  scoreCompletionsOver,
+} from "./edge-lab/props-hb-comp.js";
+export type { CompSample } from "./edge-lab/props-hb-comp.js";
+
+// INTs | attempts. Rare counts on the same exposure. Poisson fallback when no φ.
+export {
+  INT_HB_METHOD_TAG,
+  fitIntPerAttemptPrior,
+  pooledIntPerAttempt,
+  intProbZeroPoisson,
+  posteriorIntPerAttempt,
+  intProbZero,
+  probIntGivenAttempts,
+  probInt,
+} from "./edge-lab/props-hb-int.js";
+export type { IntSample } from "./edge-lab/props-hb-int.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
