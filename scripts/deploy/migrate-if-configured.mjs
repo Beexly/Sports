@@ -48,6 +48,7 @@
  * schema change — REMOVE the env var immediately after use.
  */
 import { spawnSync } from "node:child_process";
+import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 /**
@@ -167,10 +168,19 @@ function checkMigrateStatusViaPooledEndpoint() {
  * @returns {"up-to-date" | "pending" | "unknown"}
  */
 function checkMigrateStatusViaNeonHttp() {
+  const dbNodeModules = join(process.cwd(), "packages", "db", "node_modules");
   const result = spawnSync(
     process.execPath,
     ["scripts/deploy/neon-http-migration-parity.mjs"],
-    { encoding: "utf8", env: process.env },
+    {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        NODE_PATH: [dbNodeModules, process.env.NODE_PATH].filter(Boolean).join(
+          process.platform === "win32" ? ";" : ":",
+        ),
+      },
+    },
   );
   if (result.stdout) process.stdout.write(result.stdout);
   if (result.stderr) process.stderr.write(result.stderr);

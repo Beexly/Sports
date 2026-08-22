@@ -10,10 +10,17 @@
  * Exit: 0 up-to-date, 2 pending, 1 unknown/error.
  */
 import { readdirSync } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { neon } from "@neondatabase/serverless";
 import { classifyAppliedVsRepo } from "./migrate-if-configured.mjs";
+
+// Root scripts cannot `import "@neondatabase/serverless"` — it lives on
+// @sports/db, and Vercel production builds fail with ERR_MODULE_NOT_FOUND
+// (dpl_BiFxdsRTCiCAzQ56sjrEcHAg8qyZ). Resolve from packages/db/package.json.
+const here = dirname(fileURLToPath(import.meta.url));
+const dbPkg = join(here, "..", "..", "packages", "db", "package.json");
+const { neon } = createRequire(dbPkg)("@neondatabase/serverless");
 
 const url =
   process.env.DATABASE_URL ||
