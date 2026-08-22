@@ -104,7 +104,9 @@ describe("Kalshi snapshot harness — 429 backoff contract", () => {
       homeAbbr: "SAS",
     });
 
-    // Snapshot returned successfully after one retry
+    // Snapshot returned successfully after one retry.
+    // toHaveLength(2) guarantees both indices exist; the non-null assertions
+    // satisfy noUncheckedIndexedAccess (T-Q3a typecheck fix).
     expect(fv.sides).toHaveLength(2);
     expect(fv.sides[0]!.fairProb).toBeCloseTo(0.365, 6);
     expect(fv.sides[1]!.fairProb).toBeCloseTo(0.635, 6);
