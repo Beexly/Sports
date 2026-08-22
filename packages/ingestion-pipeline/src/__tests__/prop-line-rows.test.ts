@@ -2,8 +2,32 @@ import { describe, expect, it } from "vitest";
 import {
   decodePropMarket,
   encodePropMarket,
+  slugPlayer,
   toPropLineSnapshotRows,
 } from "../prop-line-rows.js";
+
+describe("slugPlayer", () => {
+  it("collides A.J. Brown and AJ Brown", () => {
+    expect(slugPlayer("A.J. Brown")).toBe(slugPlayer("AJ Brown"));
+    expect(slugPlayer("A.J. Brown")).toBe(slugPlayer("Aj Brown"));
+  });
+
+  it("produces a single slug for Ja'Marr Chase", () => {
+    expect(slugPlayer("Ja'Marr Chase")).toBe("jamarr_chase");
+  });
+
+  it("drops generational suffixes jr/sr/ii/iii/iv", () => {
+    expect(slugPlayer("Justin Jefferson Jr.")).toBe("justin_jefferson");
+    expect(slugPlayer("Aaron Donald Sr.")).toBe("aaron_donald");
+    expect(slugPlayer("Joe Mixon II")).toBe("joe_mixon");
+    expect(slugPlayer("Trent Williams III")).toBe("trent_williams");
+    expect(slugPlayer("Davante Adams IV")).toBe("davante_adams");
+  });
+
+  it("strips diacritics via NFD", () => {
+    expect(slugPlayer("José Peréz")).toBe("jose_perez");
+  });
+});
 
 describe("encode / decode", () => {
   it("puts the player in market so OPEN is per player-prop", () => {
@@ -70,7 +94,7 @@ describe("toPropLineSnapshotRows", () => {
     });
     expect(rows).toHaveLength(1);
     expect(rows[0]?.side).toBe("over");
-    expect(rows[0]?.market).toBe("player_receptions|a_j_brown");
+    expect(rows[0]?.market).toBe("player_receptions|aj_brown");
   });
 
   it("skips outcomes with no player description", () => {

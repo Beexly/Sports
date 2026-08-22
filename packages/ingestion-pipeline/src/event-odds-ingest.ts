@@ -60,6 +60,10 @@ export interface EventOddsIngestArgs {
   readonly env?: Record<string, string | undefined>;
   readonly markets?: readonly string[];
   readonly bookmakers?: readonly string[];
+  /** Optional kickoff time per event id. When provided, events are processed
+   *  sooner-first so the credit cap does not starve late kickoffs on a dense
+   *  slate (e.g. Sunday 16-game). Events with a missing time sort last. */
+  readonly commenceByEventId?: Record<string, Date>;
 }
 
 export interface EventOddsIngestReport {
@@ -84,6 +88,33 @@ export function eventOddsCreditCap(
   const n = Number(env["EVENT_ODDS_CREDIT_CAP"]);
   if (Number.isFinite(n) && n >= 0) return Math.floor(n);
   return DEFAULT_EVENT_ODDS_CREDIT_CAP;
+}
+
+/**
+ * Order event ids so the credit cap does not starve late kickoffs on a dense
+ * slate (Sunday 16-game). Returns a NEW array; does not mutate the input.
+ *
+ * Sort: sooner commenceTime first. Events with a missing time sort AFTER all
+ * events with known times, preserving input order among themselves (stable).
+ *
+ * Called from `process-sport.ts` to build the slice the cap will actually
+ * burn on — early games first, so late games are not preempted.
+ *
+ * Tests: sooner first; missing times last (stable). No DB/network side effects.
+ */
+export function orderEventIdsForCreditCap(
+  eventIds: readonly string[],
+  commenceByEventId: Record<string, Date> | undefined,
+): string[] {
+  if (!commenceByEventId) return [...eventIds];
+  return [...eventIds].sort((a, b) => {
+    const ta = commenceByEventId[a];
+    const tb = commenceByEventId[b];
+    if (ta && tb) return ta.getTime() - tb.getTime(); // sooner first
+    if (ta && !tb) return -1; // known before unknown
+    if (!ta && tb) return 1; // unknown after known
+    return 0; // both missing — stable, keep input order
+  });
 }
 
 /**
@@ -126,7 +157,9 @@ export async function ingestEventOddsIfEnabled(
   let failed = 0;
   let remainingRequests: number | null = null;
 
-  for (const eventId of args.eventIds) {
+  // Kickoff-sorted so the credit cap does not starve late games on a dense slate.
+  const orderedIds = orderEventIdsForCreditCap(args.eventIds, args.commenceByEventId);
+  for (const eventId of orderedIds) {
     if (fetched >= cap) break;
     try {
       const result = await args.client.getEventOdds(args.sportKey, eventId, markets, {
