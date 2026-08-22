@@ -1228,7 +1228,9 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
-// Hierarchical-Bayes props specialist + market-priced e = p − q (never κ).
+// Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
+// player → position → league EB with empirical 1/n observation-noise
+// calibration, and market-priced e = p − q (never κ = |2p−1|).
 export {
   fitGroupPrior,
   posteriorRate,
@@ -1242,6 +1244,27 @@ export type {
   GammaPosterior,
   ShrinkageRow,
 } from "./edge-lab/props-hb.js";
+export {
+  gammaFromMoments,
+  fitVarianceDecomposition,
+  fitGroupPriorCalibrated,
+  scaleObservation,
+  posteriorRateCalibrated,
+  fitNestedPriors,
+  fitNestedPriorsLeaveOneOut,
+  priorForGroup,
+  scoreNestedPlayer,
+  shrinkageReportNested,
+  fitNestedByStat,
+} from "./edge-lab/props-hb-nested.js";
+export type {
+  GroupedRateSample,
+  VarianceMethod,
+  VarianceDecomposition,
+  NestedGroupPrior,
+  NestedFit,
+  NestedShrinkageRow,
+} from "./edge-lab/props-hb-nested.js";
 export {
   PROPS_HB_SOURCE,
   pricePropAgainstMarket,
