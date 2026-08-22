@@ -1228,6 +1228,17 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Fair Skill Brier (Wang et al.): BrS − (B−1)/B so binary ATD and K-way
+// yards ladders are comparable. Not Murphy BSS vs grouped climatology.
+export {
+  FAIR_SKILL_BRIER_METHOD_TAG,
+  indifferenceBrier,
+  originalBrier,
+  originalBrierFromBinaryUnit,
+  fairSkillBrier,
+  meanFairSkillBrier,
+} from "./edge-lab/fair-skill-brier.js";
+
 // Grouped climatology — score the props specialist against position×week
 // naive rates, not the pooled dummy. Positive BSS vs grouped is skill;
 // beating pooled while losing to grouped is grouping-loss, not edge.
