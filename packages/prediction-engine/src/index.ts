@@ -1441,6 +1441,15 @@ export type {
   AirYacPosteriors,
 } from "./edge-lab/props-hb-air-yac.js";
 
+// Posted-price juice floor. e = p − q is not +EV at −110.
+export {
+  JUICE_FLOOR_METHOD_TAG,
+  BREAK_EVEN_MINUS_110,
+  postedBreakEven,
+  edgeClearsPosted,
+} from "./edge-lab/props-juice-floor.js";
+export type { JuiceFloorResult, JuiceFloorDenied } from "./edge-lab/props-juice-floor.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
