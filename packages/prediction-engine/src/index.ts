@@ -1374,6 +1374,19 @@ export type {
   KaunitzScan,
 } from "./edge-lab/kaunitz-outlier.js";
 
+// X4 math — Kalshi two-way vs Shin book. Log-only; priced:false.
+export {
+  KALSHI_BOOK_METHOD_TAG,
+  DEFAULT_KALSHI_BOOK_TAU,
+  scanKalshiVsBooks,
+} from "./edge-lab/kalshi-book-divergence.js";
+export type {
+  KalshiTwoWay,
+  NamedBookTwoWay,
+  KalshiBookFlag,
+  KalshiBookResult,
+} from "./edge-lab/kalshi-book-divergence.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
