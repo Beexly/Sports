@@ -45,11 +45,15 @@ export async function GET(request: Request) {
 
   const apiKey = process.env["THE_ODDS_API_KEY"]?.trim();
   const requestedSport = new URL(request.url).searchParams.get("sport");
+  // Owner drain: ?path=free uses ESPN/henrygd even when THE_ODDS_API_KEY is set.
+  // Paid getScores is daysFrom=3 and cannot grade older overdue picks; scores
+  // are covered free (GSE-SEC-039). Default cron with a key still uses odds-api.
+  const forceFree = new URL(request.url).searchParams.get("path") === "free";
   const startedAt = Date.now();
   const gates = getReadinessGates();
   // ── Free path: no paid Odds key required ─────────────────────────────────
   // Negated type guard, so `apiKey` narrows to `string` for the paid path below.
-  if (!hasOddsApiKey(apiKey)) {
+  if (forceFree || !hasOddsApiKey(apiKey)) {
     // Snapshot overdue before STP so burn-rate can tell whether this cycle drained the band.
     let priorOverdueCount: number | undefined;
     try {
@@ -99,6 +103,10 @@ export async function GET(request: Request) {
       alertDrain,
       requestedSport: requestedSport ?? null,
     });
+  }
+
+  if (!hasOddsApiKey(apiKey)) {
+    return NextResponse.json({ error: "THE_ODDS_API_KEY missing" }, { status: 500 });
   }
 
   // Settlement is backward-looking (grading games already played) and free —

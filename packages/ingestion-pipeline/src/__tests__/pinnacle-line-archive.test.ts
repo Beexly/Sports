@@ -48,7 +48,6 @@ afterEach(() => {
 
 function mockDb(): LineArchiveDb & {
   oddsLineSnapshot: {
-    count: ReturnType<typeof vi.fn>;
     createMany: ReturnType<typeof vi.fn>;
     findMany: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
@@ -56,9 +55,8 @@ function mockDb(): LineArchiveDb & {
 } {
   return {
     oddsLineSnapshot: {
-      count: vi.fn().mockResolvedValue(0),
       createMany: vi.fn().mockResolvedValue({ count: 0 }),
-      findMany: vi.fn(),
+      findMany: vi.fn().mockResolvedValue([]),
       update: vi.fn(),
     },
   };
@@ -111,7 +109,7 @@ describe("capturePinnacleLineSnapshotsIfEnabled — double gate", () => {
     expect(result).toEqual({ enabled: false, persisted: 0, gamesArchived: 0 });
     expect(fetchOdds).not.toHaveBeenCalled();
     expect(normalizeOdds).not.toHaveBeenCalled();
-    expect(db.oddsLineSnapshot.count).not.toHaveBeenCalled();
+    expect(db.oddsLineSnapshot.findMany).not.toHaveBeenCalled();
     expect(db.oddsLineSnapshot.createMany).not.toHaveBeenCalled();
   });
 
@@ -267,7 +265,7 @@ describe("capturePinnacleLineSnapshotsIfEnabled — enabled: request + storage",
     });
 
     expect(result).toEqual({ enabled: true, persisted: 0, gamesArchived: 0 });
-    expect(db.oddsLineSnapshot.count).not.toHaveBeenCalled();
+    expect(db.oddsLineSnapshot.findMany).not.toHaveBeenCalled();
     expect(db.oddsLineSnapshot.createMany).not.toHaveBeenCalled();
   });
 
@@ -350,9 +348,12 @@ describe("capturePinnacleLineSnapshotsIfEnabled — failure isolation", () => {
     enableBothFlags();
     const db = mockDb();
     // ext_1 fails, ext_2 succeeds — captureLineSnapshots isolates per-game failures.
-    db.oddsLineSnapshot.count
+    // captureLineSnapshots now uses a batched findMany (not count) for phase
+    // classification, so mock findMany to reject on the first game and resolve
+    // on the second.
+    db.oddsLineSnapshot.findMany
       .mockRejectedValueOnce(new Error("connection reset"))
-      .mockResolvedValueOnce(0);
+      .mockResolvedValueOnce([]);
     db.oddsLineSnapshot.createMany.mockResolvedValue({ count: 2 });
     const fetchOdds = vi.fn().mockResolvedValue({ data: [{ raw: true }] });
     const normalizeOdds = vi

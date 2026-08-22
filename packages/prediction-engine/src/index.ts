@@ -1472,6 +1472,17 @@ export {
 } from "./edge-lab/props-hb-rec-td.js";
 export type { RecTdSample } from "./edge-lab/props-hb-rec-td.js";
 
+// Passing yards given attempts, not calendar games. Independent p only.
+// Exposure = attempts (Poisson trials of yardage), not games.
+export {
+  PASS_YARDS_HB_METHOD_TAG,
+  fitPassYardsPerAttemptPrior,
+  posteriorPassYardsPerAttempt,
+  probOverPassYards,
+  probOverPassYardsGivenAttempts,
+} from "./edge-lab/props-hb-pass-yards.js";
+export type { PassYardsSample } from "./edge-lab/props-hb-pass-yards.js";
+
 // Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
 export {
   RUSH_TD_HB_METHOD_TAG,
@@ -1517,6 +1528,39 @@ export {
 } from "./edge-lab/props-hb-adot-sep.js";
 export type { SepBucket, AdotSepCell, AdotSepCatchSample, AdotSepFit } from "./edge-lab/props-hb-adot-sep.js";
 
+// Covariate bus: leak-safe NGS weekly-mean → next-game input features (p path).
+// Pure, no I/O. Does NOT surface vendor expected/yoe y-axis metrics.
+export {
+  COVARIATE_BUS_TAG,
+  covariateKey,
+  latestPriorRow,
+  nextGameCovariate,
+  sepForKickoff,
+  P_SIDE_COVARIATE_REGISTRY,
+  assertPSideHasNoMarketProp,
+} from "./edge-lab/covariate-bus.js";
+export type {
+  CovariateRow,
+  CovariateField,
+  CovariateCell,
+  CovariateGrain,
+  CovariateProvenance,
+  CovariateLayer,
+  StatType,
+} from "./edge-lab/covariate-bus.js";
+
+// SEP bind: couples the covariate bus (sepForKickoff) to the aDOT×SEP catch
+// sample. Fail-closed on null — never invents 3.0 yards. Honest weekly-mean
+// grain forwarded verbatim. priced:false.
+export { SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples } from "./edge-lab/props-hb-adot-sep-bind.js";
+export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep-bind.js";
+
+// YAC bind: couples the covariate bus (avgYac) to the air+YAC model.
+// Fail-closed on null — never invents YAC. Honest weekly-mean grain forwarded
+// verbatim. priced:false.
+export { YAC_BIND_METHOD_TAG, bindYacSamples, boundYacSamples } from "./edge-lab/props-hb-air-yac-bind.js";
+export type { YacBindRequest, YacBindResult, BoundAirYacSample } from "./edge-lab/props-hb-air-yac-bind.js";
+
 // Fire gate: Shin e AND posted juice must both clear. priced:false.
 export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
 export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
@@ -1529,6 +1573,10 @@ export {
   expectedSnapsNext,
 } from "./edge-lab/props-hb-snap-exposure.js";
 export type { SnapSample, SnapShare, SnapDenied } from "./edge-lab/props-hb-snap-exposure.js";
+
+// Est-routes / TPRR proxy from CC-BY snaps + PBP dropbacks. L1 exposure. priced:false.
+export { EST_ROUTES_METHOD_TAG, estRoutesTprr } from "./edge-lab/est-routes-tprr.js";
+export type { EstRoutesInput, EstRoutesResult } from "./edge-lab/est-routes-tprr.js";
 
 // Intelligence cockpit → log-only player features. priced:false until hold-out.
 export { RESEARCH_LOG_METHOD_TAG, playerResearchLog } from "./edge-lab/player-research-log.js";
@@ -1574,6 +1622,28 @@ export {
   probPassTd,
 } from "./edge-lab/props-hb-pass-td.js";
 export type { PassTdSample } from "./edge-lab/props-hb-pass-td.js";
+
+// Sacks | dropbacks. Bounded Beta-Binomial (sacks cannot exceed dropbacks).
+export {
+  SACK_HB_METHOD_TAG,
+  fitSackPrior,
+  posteriorSack,
+  betaBinomialProbOverSacks,
+  probOverSacks,
+  scoreSacksOver,
+} from "./edge-lab/props-hb-sacks.js";
+export type { SackSample } from "./edge-lab/props-hb-sacks.js";
+
+// Kneel-out / hurry-up garbage-time remaining-attempt adjustment (C2.1 / H0.2).
+// Script/end-state volume only — not a new HB family. HYPOTHESIS. priced:false.
+export {
+  KNEEL_GARBAGE_METHOD_TAG,
+  evaluateKneelGarbage,
+} from "./edge-lab/nfl-kneel-garbage.js";
+export type {
+  KneelGarbageInput,
+  KneelGarbageResult,
+} from "./edge-lab/nfl-kneel-garbage.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until

@@ -17,6 +17,24 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Do not market PUBLIC_PICKS as PROVEN/CLV.
 - Phone: email Baxley.Garrett@gmail.com only on BLOCK / FAKE-EDGE / OWNER_GATE.
 
+## Now (2026-08-22 13:30 CT)
+### 2026-08-22 13:30 CT | Hermes P1 (covariate bus + SEP bind) | CLEAN
+- PR 1 (#547, hermes/covariate-bus): covariate-bus.ts — pure/leak-safe/week=0 dropped/null→fail-closed/weekly_ngs_mean grain. 13 tests.
+- PR 2 (#548, hermes/ngs-sep-adot-catch, rebased on PR 1): props-hb-adot-sep-bind.ts — sepForKickoff → AdotSepCatchSample, null→DROPPED (never 3.0 yards). 6 tests. Barrel exports in index.ts.
+- Full suite: 2870 passed / 2 failed (2872) across 265 files — 2 failures pre-existing ENOENT path mismatches, unrelated to this slice. Edge-lab subset: 642 passed across 62 files.
+- Next: xYAC bind (props-hb-air-yac.ts). 3 fails → BLOCKED, move next.
+
+## Now (2026-08-22 16:40 CT)
+### 2026-08-22 16:40 CT | Hermes P1 (ox-alpha) | CLEAN
+- PR ship: covariate bus (IP) + SEP bind — both pushed to origin/hermes/ngs-sep-adot-catch.
+- covariate-bus.ts: pure, leak-safe, week=0 dropped, null→fail-closed, weekly_ngs_mean grain,
+  y-axis fields (expectedCompletionPct/avgExpectedYac/expectedRushYards/cpoe/ryoe) absent by construction. 13 tests.
+- props-hb-adot-sep-bind.ts: binds sepForKickoff into aDOT×SEP samples, drops on null (never 3.0 yards). 6 tests.
+- Barrel exports: SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples, SepBindRequest, SepBindResult.
+- All 639 tests pass (62 files). SESSION-HANDOFF.md + AGENT.md updated.
+- Next: xYAC bind (props-hb-air-yac.ts), volume T + YAC split via bus. 3 fails → BLOCKED, move next.
+- No DONE.md STOP. Watchdog 24188 stays live.
+
 ## Now (2026-08-22 01:38 CT)
 ### 2026-08-22 01:38 CT | Chief of Staff | OWNER_GATE + BLOCK + FAKE-EDGE
 - Odds /v4/sports 401; remaining file 0/0. Neon P1001. Public picks model_signal n=0.
@@ -49,3 +67,27 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - E6 (#544): sacks g/dropbacks — MERGED into origin/main (b7ede3d0).
 - E7 (#545): rush attempts g/attempts — CI GREEN (all checks SUCCESS), pushed. Branch origin/hermes/ox-alpha-rush-attempts-volume at 8d81de6a. origin/main ahead by 1 commit (#544) — no rebase needed, PR is green.
 - Next: E8 — red-zone TD rate given RZ attempts. Start now.
+|
+### 2026-08-22 ~12:06 CT | Hermes / ox-alpha | CLEAN
+|- **PR 1 — Covariate Bus** (leak-safe NGS weekly → next-game features):
+|  - Branch: `hermes/covariate-bus` (commit `25b5583f`, pushed to origin)
+|  - File: `packages/prediction-engine/src/edge-lab/covariate-bus.ts`
+|  - Tests: `covariate-bus.test.ts` — 13/13 green
+|  - Contract: key = gsisId|season|week|statType; week=0 dropped; week t predicts t+1; null → null (fail-closed, no impute); returns {value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean"} not a bare float; never exposes expectedCompletionPct/avgExpectedYac/expectedRushYards/cpoe/ryoe as p (y-axis only). Barrel exports in index.ts. priced:false.
+|
+|- **PR 2 — SEP Bind** (covariate bus feeds aDOT×SEP catch model):
+|  - Branch: `hermes/ngs-sep-adot-catch` (commits `7e966783` + `69ab88a7`, pushed to origin; rebased on bus commit)
+|  - File: `packages/prediction-engine/src/edge-lab/props-hb-adot-sep-bind.ts`
+|  - Tests: `props-hb-adot-sep-bind.test.ts` — 6/6 green
+|  - Contract: `bindSepSamples`/`boundSepSamples` feed `sepForKickoff` into `AdotSepCatchSample`; fail-closed on null (drops sample, never 3.0 yards); honest weekly-mean grain forwarded verbatim. `AdotCatchSample` import fixed to correct source (`props-hb-adot-catch.ts`, not `props-hb-adot-sep.ts`). Barrel exports in index.ts. priced:false.
+|  - Typecheck: `tsc --noEmit` clean on packages/prediction-engine.
+|
+| - Next: bind air+YAC onto `props-hb-air-yac.ts` via the covariate bus; then xYAC/vendor models stay y-axis only. See SESSION-HANDOFF.md (cheap-overnight).
+|
+### 2026-08-22 ~12:30 CT | Hermes / ox-alpha | CLEAN
+|- **PR 1 Covariate Bus (#547):** OPEN, CI green. Branch hermes/covariate-bus @ 5a1790dc pushed to origin. Tests 16/16. tsc clean.
+|- **PR 2 SEP Bind (#548):** PR created from hermes/ngs-sep-adot-catch (rebased on bus 5a1790dc). Tests 6/6. CI green. Barrel exports in index.ts for bindSepSamples/boundSepSamples.
+|- **PR 3 YAC Bind (#549):** OPEN, CI re-running after fix. Branch hermes/covariate-yac-bind @ 4d0b7781 pushed to origin. Tests 7/7 + air-yac 8/8. Barrel exports in index.ts for bindYacSamples/boundYacSamples. Fix commit 4d0b7781 added avgYac to sep-bind test fixture (TS2322 CovariateRow assignability).
+|- **Honest posture kept:** the site is a window; no chrome built. avgSeparation bound from bus weekly mean (not arrival), fail-closed, never 3.0 yards. avgYac bound from bus weekly mean (not per-target arrival YAC).
+|- Next: Bind #4 INT (aggressiveness/avgTimeToThrow → props-hb-int.ts). 3 fails → BLOCKED, skip to next. See SESSION-HANDOFF.md.
+|

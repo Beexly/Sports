@@ -8,8 +8,44 @@ import {
   eventOddsCreditCap,
   ingestEventOddsIfEnabled,
   isEventOddsIngestEnabled,
+  orderEventIdsForCreditCap,
   type EventOddsClient,
 } from "../event-odds-ingest.js";
+
+describe("orderEventIdsForCreditCap", () => {
+  it("returns the same ids (no mutation) when commenceByEventId is undefined", () => {
+    const ids = ["a", "b", "c"];
+    expect(orderEventIdsForCreditCap(ids, undefined)).toEqual(["a", "b", "c"]);
+    expect(ids).toEqual(["a", "b", "c"]); // input not mutated
+  });
+
+  it("sorts sooner commenceTime first", () => {
+    const t1 = new Date("2026-08-23T13:00:00Z");
+    const t2 = new Date("2026-08-23T16:00:00Z");
+    const t3 = new Date("2026-08-23T20:00:00Z");
+    const ids = ["late", "early", "mid"];
+    const commence = { late: t3, early: t1, mid: t2 };
+    expect(orderEventIdsForCreditCap(ids, commence)).toEqual(["early", "mid", "late"]);
+  });
+
+  it("puts events with missing times AFTER all known times (stable)", () => {
+    const t1 = new Date("2026-08-23T13:00:00Z");
+    const t2 = new Date("2026-08-23T16:00:00Z");
+    const ids = ["known_a", "unknown", "known_b", "also_unknown"];
+    const commence = { known_a: t1, known_b: t2 };
+    expect(orderEventIdsForCreditCap(ids, commence)).toEqual([
+      "known_a",
+      "known_b",
+      "unknown",
+      "also_unknown",
+    ]);
+  });
+
+  it("is stable when all commenceTimes are missing (matches input order)", () => {
+    const ids = ["x", "y", "z"];
+    expect(orderEventIdsForCreditCap(ids, {})).toEqual(["x", "y", "z"]);
+  });
+});
 
 describe("defaultEventOddsMarkets — receptions on NFL, not a mixed NBA key", () => {
   it("asks for player_receptions on NFL and not on NBA", () => {

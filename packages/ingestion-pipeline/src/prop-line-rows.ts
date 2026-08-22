@@ -43,10 +43,29 @@ export interface PropEventLike {
   readonly bookmakers?: readonly PropBookmakerLike[];
 }
 
-function slugPlayer(name: string): string {
+/**
+ * Slug a player name for use in `market = "<oddsApiKey>|<playerSlug>"`.
+ *
+ * Two-way pairing depends on slug collisions: "A.J. Brown" and "AJ Brown" must
+ * produce the SAME slug, otherwise the two sides of one market land in separate
+ * market strings and the edge (`e = p − q`) is computed against a phantom book.
+ *
+ * Normalization:
+ *   1. Unicode NFD decompose + strip combining marks (é → e, ñ → n).
+ *   2. Strip `.` and `'` so punctuation is not part of the slug.
+ *   3. Lowercase.
+ *   4. Drop generational suffixes (jr, sr, ii, iii, iv) — they are not part of
+ *      the Odds API outcome description and would split identical players.
+ *   5. Collapse non-alphanumeric runs to a single `_` and trim leading/trailing.
+ */
+export function slugPlayer(name: string): string {
   return name
     .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // strip combining diacritics
+    .replace(/[.\']/g, "")
     .toLowerCase()
+    .replace(/\b(jr|sr|ii|iii|iv)\b/g, "")
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "");
 }

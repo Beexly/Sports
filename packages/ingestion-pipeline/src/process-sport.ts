@@ -334,10 +334,20 @@ export async function processSport(
       // Never historical. Never throws. Persistence uses OddsLineSnapshot
       // string market/side (no new table) when LINE_ARCHIVE is on.
       if (events.length > 0) {
+        // Kickoff-sorted so the credit cap does not starve late games on a
+        // dense slate (Sunday 16-game). commenceByEventId maps each Odds API
+        // event id to its commence_time — events with a missing time sort last.
+        const commenceByEventId: Record<string, Date> = {};
+        for (const event of events) {
+          if (event.id && event.commence_time) {
+            commenceByEventId[event.id] = new Date(event.commence_time);
+          }
+        }
         const eventOddsReport = await ingestEventOddsIfEnabled({
           client: client as unknown as EventOddsClient,
           sportKey: sport.key,
           eventIds: events.map((event) => event.id).filter((id): id is string => Boolean(id)),
+          commenceByEventId,
         });
         for (const snap of eventOddsReport.snapshots) {
           const id = eventOddsId(snap as { id?: string });
