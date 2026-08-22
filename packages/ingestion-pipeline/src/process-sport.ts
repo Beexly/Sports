@@ -68,6 +68,7 @@ import { recordSourceSnapshot } from "./source-snapshot.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
 import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
+import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ingest.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 
@@ -322,6 +323,19 @@ export async function processSport(
           `${logPrefix} ${sport.key}: paid odds fetch refused by spend guard — ` +
             `free sources cover scores; skipping The Odds API.`,
         );
+      }
+
+      // Licensed event-odds (player props). Default OFF. Hard credit cap.
+      // Never historical. Never throws. Does not persist (schema sealed).
+      if (events.length > 0) {
+        const eventOddsReport = await ingestEventOddsIfEnabled({
+          client: client as unknown as EventOddsClient,
+          sportKey: sport.key,
+          eventIds: events.map((event) => event.id).filter((id): id is string => Boolean(id)),
+        });
+        if (eventOddsReport.enabled && eventOddsReport.fetched > 0) {
+          console.log(`${logPrefix} ${sport.key}: event-odds ${eventOddsReport.reason}`);
+        }
       }
     }
 
