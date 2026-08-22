@@ -1228,6 +1228,44 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
+// player → position → league EB with empirical 1/n observation-noise
+// calibration. Statistical core only: no market/spread covariate, no pricing.
+export {
+  fitGroupPrior,
+  posteriorRate,
+  probOver as propsHbProbOver,
+  probOverContinuous,
+  shrinkageReport,
+} from "./edge-lab/props-hb.js";
+export type {
+  RateSample,
+  GammaPrior,
+  GammaPosterior,
+  ShrinkageRow,
+} from "./edge-lab/props-hb.js";
+export {
+  gammaFromMoments,
+  fitVarianceDecomposition,
+  fitGroupPriorCalibrated,
+  scaleObservation,
+  posteriorRateCalibrated,
+  fitNestedPriors,
+  fitNestedPriorsLeaveOneOut,
+  priorForGroup,
+  scoreNestedPlayer,
+  shrinkageReportNested,
+  fitNestedByStat,
+} from "./edge-lab/props-hb-nested.js";
+export type {
+  GroupedRateSample,
+  VarianceMethod,
+  VarianceDecomposition,
+  NestedGroupPrior,
+  NestedFit,
+  NestedShrinkageRow,
+} from "./edge-lab/props-hb-nested.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
