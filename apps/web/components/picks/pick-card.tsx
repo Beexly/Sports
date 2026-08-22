@@ -11,6 +11,7 @@ import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
+import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -325,10 +326,17 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
             </span>
           </p>
           {typeof breakdown.marketFairProb === "number" && Number.isFinite(breakdown.marketFairProb) && (
-            <p className="mt-1 text-[10px] text-ion-3">
-              Market fair (de-vig): {(breakdown.marketFairProb * 100).toFixed(1)}%
-              <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
-            </p>
+            <>
+              <p className="mt-1 text-[10px] text-ion-3">
+                Market fair ({breakdown.marketFairMethod ?? "de-vig"}):{" "}
+                {(breakdown.marketFairProb * 100).toFixed(1)}%
+                <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
+              </p>
+              <DevigMethodDisclosure
+                proportional={breakdown.marketFairProb}
+                shin={breakdown.marketFairShinProb}
+              />
+            </>
           )}
         </div>
       )}

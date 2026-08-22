@@ -87,3 +87,18 @@ export function compareDevigMethods(book: TwoWayBook): DevigMethodCompare | null
     longshotSide: side,
   };
 }
+
+/**
+ * Shin fair for one already-chosen side of a two-way book, for display beside
+ * the proportional `marketFairProb` scoring reports. Returns null on a
+ * degenerate book so the surface renders nothing rather than an invented p.
+ */
+export function shinFairForSide(
+  book: TwoWayBook,
+  homeIsChosen: boolean,
+): number | null {
+  const compare = compareDevigMethods(book);
+  if (!compare) return null;
+  const p = homeIsChosen ? compare.shin.home : compare.shin.away;
+  return Number.isFinite(p) ? p : null;
+}

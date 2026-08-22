@@ -22,6 +22,7 @@ import {
 import { computeGameContext } from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
+import { shinFairForSide } from "./honesty/devig-method-compare.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -421,6 +422,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     spreadOdds.length;
   const fair = removeVig(homeImpliedAvg, awayImpliedAvg);
   const fairProb = homeIsChosen ? fair.home : fair.away;
+  const fairShinProb = shinFairForSide(
+    { homeImplied: homeImpliedAvg, awayImplied: awayImpliedAvg },
+    homeIsChosen,
+  );
   // Overround for the inconsistent-market guard in computeEdgeScore.
   const twoSidedImpliedSum = homeImpliedAvg + awayImpliedAvg;
 
@@ -586,6 +591,8 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     rankingP: rank.rankingP,
     rankingSource: rank.source,
     marketFairProb: fairProb,
+    marketFairMethod: "proportional",
+    marketFairShinProb: fairShinProb,
     factors,
   };
 
@@ -679,6 +686,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const fair = removeVig(overImpliedAvg, underImpliedAvg);
   const fairProb = overIsChosen ? fair.home : fair.away;
+  const fairShinProb = shinFairForSide(
+    { homeImplied: overImpliedAvg, awayImplied: underImpliedAvg },
+    overIsChosen,
+  );
   // Overround for the inconsistent-market guard in computeEdgeScore.
   const twoSidedImpliedSum = overImpliedAvg + underImpliedAvg;
 
@@ -767,6 +778,8 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     rankingP: Math.min(1 - 1e-6, Math.max(1e-6, confidence / 100)),
     rankingSource: "confidence", // no independent total model yet
     marketFairProb: fairProb,
+    marketFairMethod: "proportional",
+    marketFairShinProb: fairShinProb,
     factors,
   };
 
@@ -814,6 +827,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const fair = removeVig(avgHomeImplied, avgAwayImplied);
   const homeIsChosen = fair.home > fair.away;
   const fairProb = homeIsChosen ? fair.home : fair.away;
+  const fairShinProb = shinFairForSide(
+    { homeImplied: avgHomeImplied, awayImplied: avgAwayImplied },
+    homeIsChosen,
+  );
   const consensusPct = fairProb; // for ML, fair prob IS the consensus signal
 
   // Need strong conviction on ML — higher threshold
@@ -979,6 +996,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     rankingP: rank.rankingP,
     rankingSource: rank.source,
     marketFairProb: fairProb,
+    marketFairMethod: "proportional",
+    marketFairShinProb: fairShinProb,
     factors,
   };
 
