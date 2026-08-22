@@ -1359,6 +1359,19 @@ export {
 } from "./edge-lab/props-hb-catch.js";
 export type { CatchSample, BetaPrior, BetaPosterior } from "./edge-lab/props-hb-catch.js";
 
+// Anytime TD given touches (rush att + rec), not calendar games. Independent p.
+export {
+  ATD_HB_METHOD_TAG,
+  fitTdPerTouchPrior,
+  pooledTdPerTouch,
+  posteriorTdPerTouch,
+  tdProbZero,
+  tdProbZeroPoisson,
+  probAnytimeTdGivenTouches,
+  probAnytimeTd,
+} from "./edge-lab/props-hb-atd.js";
+export type { TouchTdSample } from "./edge-lab/props-hb-atd.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
