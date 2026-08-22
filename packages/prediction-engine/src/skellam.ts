@@ -10,8 +10,10 @@
  * Implementation is the finite convolution of the two Poisson PMFs, which is
  * exact Skellam on {−maxGoals..maxGoals} and avoids overflow in I_|k|(2√(λh λa)).
  *
- * NOT WIRED. Callers must supply real λ from TeamGameLog rates. Returning null
- * is the honest default (same law as poissonIndependentFairValue).
+ * Live wire: ingestion emits `{ source: "skellam_cover" }` into
+ * independentFairValues; scoring uses it for SPREAD rankingP only
+ * (heuristic confidence stays market-echo). Callers must supply real λ.
+ * Returning null is the honest default.
  *
  * References:
  *   Skellam, J. G. (1946). "The frequency distribution of the difference
@@ -26,6 +28,9 @@ import { isPoissonValidSport } from "./team-rates.js";
 export const DEFAULT_SKELLAM_MAX_GOALS = 20;
 
 export const SKELLAM_SPORT_PREFIXES = ["soccer", "icehockey", "baseball"] as const;
+
+/** Independent ATS source id. Moneyline ranking must ignore this row. */
+export const SKELLAM_COVER_SOURCE = "skellam_cover";
 
 export function isSkellamValidSport(sportKey: string): boolean {
   return isPoissonValidSport(sportKey);
@@ -159,5 +164,29 @@ export function skellamCoverProbabilities(
     push: round6(push),
     coverage: round6(coverage),
     expectedMargin: round6(lambdaHome - lambdaAway),
+  };
+}
+
+export interface SkellamCoverFairValue {
+  readonly homeFairProb: number;
+  readonly awayFairProb: number;
+  readonly push: number;
+}
+
+/**
+ * 2-way ATS fair (push mass removed, sides renormalised) — same bridge as
+ * poissonIndependentFairValue dropping draws. Null when no decisive cover mass.
+ */
+export function skellamCoverFairValue(
+  input: SkellamCoverInput & { readonly sportKey?: string },
+): SkellamCoverFairValue | null {
+  const cover = skellamCoverProbabilities(input);
+  if (!cover) return null;
+  const twoWay = cover.homeCover + cover.awayCover;
+  if (!(twoWay > 0)) return null;
+  return {
+    homeFairProb: round6(cover.homeCover / twoWay),
+    awayFairProb: round6(cover.awayCover / twoWay),
+    push: cover.push,
   };
 }
