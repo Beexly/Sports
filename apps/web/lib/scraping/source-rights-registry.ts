@@ -478,6 +478,52 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
 
   // ── Permission required ──────────────────────────────────────────────────────
   {
+    source_id: "clubelo",
+    source_name: "ClubElo (Lars Schiefler)",
+    source_url: "https://clubelo.com",
+    terms_url: "https://clubelo.com/About",
+    robots_url: "https://clubelo.com/robots.txt",
+    jurisdiction: "DE",
+    source_type: "sports_data_api",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Club Elo ratings via ClubElo / Lars Schiefler (clubelo.com).",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-21",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://clubelo.com/About",
+      "http://api.clubelo.com",
+      "https://web.archive.org/web/20230117120000/http://clubelo.com/About",
+    ],
+    unlock_condition:
+      "Written confirmation from Lars Schiefler (clubelo@schiefler.com) that commercial " +
+      "analytics use of ClubElo ratings/CSV, with citation, is permitted. A 2023-01-17 " +
+      "Wayback About page said calculations/rankings may be reused with citation — that " +
+      "archive is not a live grant. Do not treat API silence as denial or as clearance.",
+    vendor_contact: "clubelo@schiefler.com",
+    notes:
+      "PROBED 2026-08-21 from the founder's local network. api.clubelo.com timed out " +
+      "(curl 28, 12s and 20s) — same class of API-subdomain unreachability the cloud " +
+      "container saw, so this is not cloud-egress-only. clubelo.com/About returned HTTP 200 " +
+      "but the live document is an SPA dump of results, not terms prose. Wayback 2023-01-17 " +
+      "About: reuse of calculations/rankings with citation. Existing GSE CSV client stays " +
+      "on the documented-ungated interim path until Lars replies; this row records the " +
+      "undetermined commercial grant so a later verdict flip does not require rediscovery.",
+  },
+
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
     source_id: "scores24-live",
     source_name: "Scores24.live (Kiito OÜ)",
     source_url: "https://scores24.live",

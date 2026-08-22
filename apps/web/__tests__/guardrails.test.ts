@@ -284,6 +284,32 @@ describe("guardrail-hardening: full public-surface sweep has teeth", () => {
     const r = runGuardInSandbox("scripts/guardrails/commercial-copy-scan.mjs");
     expect(r.status).toBe(0);
   }, GUARD_TEST_TIMEOUT_MS);
+
+  // S2 (honest-ceiling): "60%+ win rate" is the classic sportsbook-tout
+  // ceiling-exceeding framing. Before this fix, `%\s*(?:win|...)` did not
+  // match it — the "+" between the percent sign and the keyword defeated
+  // the whitespace-only pattern, so the exact phrasing the doctrine most
+  // wants stopped slipped straight through the existing sweep.
+  it("no-unsupported-performance-claims FAILS on a '60%+ win rate' plant (the '+' suffix gap)", () => {
+    plantPage("apps/web/app/__fixture__", "We hit 60%+ win rate this season.");
+    const r = runGuardInSandbox("scripts/guardrails/no-unsupported-performance-claims.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("percent-performance");
+    expect(r.stderr).toContain("__fixture__/page.tsx");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("no-unsupported-performance-claims still FAILS on the plain '68% win rate' form (no regression)", () => {
+    plantPage("apps/web/app/__fixture__", "68% win rate over the last month.");
+    const r = runGuardInSandbox("scripts/guardrails/no-unsupported-performance-claims.mjs");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("percent-performance");
+  }, GUARD_TEST_TIMEOUT_MS);
+
+  it("no-unsupported-performance-claims stays quiet on the legitimate CI-band phrasing", () => {
+    plantPage("apps/web/app/__fixture__", "95% CP 52.1-68.3%. Past performance does not guarantee future results.");
+    const r = runGuardInSandbox("scripts/guardrails/no-unsupported-performance-claims.mjs");
+    expect(r.status).toBe(0);
+  }, GUARD_TEST_TIMEOUT_MS);
 });
 
 describe("guardrail-hardening: secret-scan rule coverage (O-4.x)", () => {
