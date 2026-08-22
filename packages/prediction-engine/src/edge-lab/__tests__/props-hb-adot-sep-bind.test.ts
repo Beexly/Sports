@@ -24,8 +24,6 @@ function ngsRow(o: Partial<CovariateRow>): CovariateRow {
     pctAttemptsGte8Defenders: 0.54,
     avgTimeToLos: 2.2,
     avgYac: 4.3,
-    avgExpectedYac: null,
-    expectedRushYards: null,
     ...o,
   };
 }
