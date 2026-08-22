@@ -255,6 +255,7 @@ export {
   fetchRundownEventsForSport,
   rundownEventToOddsApiEvent,
   RUNDOWN_SPORT_IDS,
+  RUNDOWN_AFFILIATE_BOOK_KEYS,
   RUNDOWN_API_KEY_ENV_NAMES,
 } from "./rundown-client.js";
 export type { RundownFetchResult, RundownApiKeyEnvName } from "./rundown-client.js";
