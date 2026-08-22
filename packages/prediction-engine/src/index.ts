@@ -1228,6 +1228,16 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
+// Market consensus q (Bradley-Terry futures + logit blend). q only — never
+// re-anchor independent p toward the market (Mania 3rd-place α=0.90 is a
+// Brier win, not an edge).
+export {
+  bradleyTerryPair,
+  consensusMarketQ,
+  marketReanchorResidual,
+} from "./edge-lab/market-consensus-q.js";
+export type { LabeledQ, ConsensusQ, ReanchorResidual } from "./edge-lab/market-consensus-q.js";
+
 // Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
 // player → position → league EB with empirical 1/n observation-noise
 // calibration, market-priced e = p − q (never κ = |2p−1|), and the
