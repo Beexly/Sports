@@ -113,8 +113,17 @@ ClubElo *denied* on equally thin evidence is the same error with the opposite si
   and `quote-plane` `kalshi-trade-api.ts`) with `checkClearance`; denial returns null /
   `[]` on the existing soft-fail path. Unlock is written authorization from KalshiEx
   LLC covering commercial derived-analytics use — not Exchange membership alone.
-- **ClubElo** — no terms/license found anywhere on the site. Absence of a stated license
+- **ClubElo** — no live terms/license found on the site. Absence of a stated license
   is **not a grant**, but it is also not a documented prohibition.
+  **Probe 2026-08-21 (Grok, founder network):** `api.clubelo.com` curl 28 timeout
+  (12s and 20s); `clubelo.com/About` HTTP 200 SPA (no terms prose). Wayback
+  2023-01-17 About: reuse of calculations/rankings with citation
+  (`clubelo@schiefler.com`). Registered `clubelo` as web-registry
+  `permission_required` (Clearance Engine denies product exposure) and
+  package-registry `use-with-caution` (existing CSV independent stays on;
+  `isIngestible("clubelo")` is wired so a later verdict flip fail-closes).
+  Draft email is local-only (`gse-data-scout/data/CLUBELO-LARS-EMAIL-DRAFT.md`);
+  OWNER_GATE to send. Do not mark denied on silence.
 
 **Founder decision required, in this order:**
 1. ~~Confirm Kalshi's data terms.~~ **DONE 2026-08-21.** PDF verified; registered
