@@ -28,9 +28,10 @@
  * passLocation, down, ydstogo, yardline100, shotgun, noHuddle). NGS's vendor
  * `expectedCompletionPct` / `cpoe` are y-axis only and are NEVER read here.
  *
- * Fail-closed: if the covariate bus returns null for either `avgTimeToThrow`
- * or `avgIntendedAirYards` (no prior passing history, null field, or only a
- * week=0 aggregate row), the sample is DROPPED. It is NOT imputed. The
+ * Fail-closed: if the covariate bus has no prior passing row for the player
+ * (no prior-game history, or only a week=0 aggregate row), or if the prior
+ * row's `avgTimeToThrow` / `avgIntendedAirYards` is null/non-finite, the
+ * sample is DROPPED. It is NOT imputed. The
  * completions cell is allowed to have fewer samples — fewer than noise is
  * still honest.
  *
@@ -48,7 +49,6 @@
 
 import {
   latestPriorRow,
-  nextGameCovariate,
   type CovariateCell,
   type CovariateRow,
 } from "./covariate-bus.js";
@@ -72,7 +72,12 @@ export interface CpoeCompBindRequest {
   readonly kickoffWeek: number;
   /** The completion sample (attempts/completions) to enrich. */
   readonly comp: CompSample;
-  /** GSE-CPOE value for the passer (completion% over expected), 0..100 scale. */
+  /**
+   * GSE-CPOE for the passer — completion percentage points over expected.
+   * Defined as `100 × mean(complete − P̂(complete))`, so signed values
+   * (typically ~−20..+20 pp; theoretical range −100..+100). NOT an
+   * absolute completion %; a negative value means below expected.
+   */
   readonly gseCpoe: number;
 }
 
@@ -112,25 +117,27 @@ export type CpoeCompBindResult =
       readonly refuse: "no_prior_row" | "null_ttt" | "null_air_yards" | "non_finite_cpoe";
     };
 
-const ZERO_ANGLE = 0; // air yards is symmetric about 0 (behind LOS = negative)
-
 /**
  * Bind NGS weekly-mean `avgTimeToThrow`, `avgIntendedAirYards` (from the
  * covariate bus) + GSE-CPOE into a batch of completion samples.
  *
  * For each request:
- *   1. `nextGameCovariate(rows, gsisId, season, kickoffWeek, "passing",
- *      "avgTimeToThrow")` — strictly-prior passing row, week=0 excluded.
- *   2. `nextGameCovariate(..., "avgIntendedAirYards")` — same strict-prior rule.
- *   3. If either cell is null/non-finite → DROP (fail-closed).
- *   4. If GSE-CPOE is non-finite → DROP (fail-closed).
- *   5. Otherwise → build the BoundCompSample with the bus cells + GSE-CPOE.
+ *   1. `latestPriorRow(rows, gsisId, season, "passing", kickoffWeek)` —
+ *      a single strict-prior scan (week=0 excluded). If null → refuse.
+ *   2. Read `avgTimeToThrow` / `avgIntendedAirYards` off that single row;
+ *      non-finite/null → refuse with the specific code.
+ *   3. GSE-CPOE non-finite → refuse.
+ *   4. Otherwise → build the BoundCompSample.
+ *
+ * One row scan per request (not two). Refuse codes are diagnostic, never
+ * guesses — fail-closed, no imputation.
  */
 export function bindCpoeCompSamples(
   rows: readonly CovariateRow[],
   requests: readonly CpoeCompBindRequest[],
 ): CpoeCompBindResult[] {
   const out: CpoeCompBindResult[] = [];
+  const CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
   for (const req of requests) {
     // GSE-CPOE guard: non-finite → refuse, never invent.
     if (!Number.isFinite(req.gseCpoe)) {
@@ -143,53 +150,42 @@ export function bindCpoeCompSamples(
       continue;
     }
 
-    const ttt = nextGameCovariate(
+    // Single strict-prior scan — not one per covariate field.
+    const row = latestPriorRow(
       rows,
       req.gsisId,
       req.season,
-      req.kickoffWeek,
       "passing",
-      "avgTimeToThrow",
+      req.kickoffWeek,
     );
-    if (ttt === null) {
-      // Distinguish "no prior passing row" from "row exists but field is null".
-      const row = latestPriorRow(
-        rows,
-        req.gsisId,
-        req.season,
-        "passing",
-        req.kickoffWeek,
-      );
+    if (row === null) {
       out.push({
         ok: false,
         methodTag: CPOE_COMP_BIND_METHOD_TAG,
         priced: false,
-        refuse: row === null ? "no_prior_row" : "null_ttt",
+        refuse: "no_prior_row",
       });
       continue;
     }
 
-    const aiy = nextGameCovariate(
-      rows,
-      req.gsisId,
-      req.season,
-      req.kickoffWeek,
-      "passing",
-      "avgIntendedAirYards",
-    );
-    if (aiy === null) {
-      const row = latestPriorRow(
-        rows,
-        req.gsisId,
-        req.season,
-        "passing",
-        req.kickoffWeek,
-      );
+    const ttt = row.avgTimeToThrow;
+    if (ttt === null || !Number.isFinite(ttt)) {
       out.push({
         ok: false,
         methodTag: CPOE_COMP_BIND_METHOD_TAG,
         priced: false,
-        refuse: row === null ? "no_prior_row" : "null_air_yards",
+        refuse: "null_ttt",
+      });
+      continue;
+    }
+
+    const aiy = row.avgIntendedAirYards;
+    if (aiy === null || !Number.isFinite(aiy)) {
+      out.push({
+        ok: false,
+        methodTag: CPOE_COMP_BIND_METHOD_TAG,
+        priced: false,
+        refuse: "null_air_yards",
       });
       continue;
     }
@@ -201,8 +197,8 @@ export function bindCpoeCompSamples(
       sample: {
         attempts: req.comp.attempts,
         completions: req.comp.completions,
-        avgTimeToThrow: ttt,
-        avgIntendedAirYards: aiy,
+        avgTimeToThrow: { ...CELL, value: ttt },
+        avgIntendedAirYards: { ...CELL, value: aiy },
         gseCpoe: req.gseCpoe,
       },
     });

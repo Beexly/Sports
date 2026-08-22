@@ -112,17 +112,21 @@ describe("cpoe-comp-bind contract", () => {
     expect(samples[0]!.gseCpoe).toBe(-3.2);
   });
 
-  it("never exposes vendor y-axis (avgExpectedYac / expectedRushYards) — type enforces", () => {
+  it("never exposes vendor y-axis (avgExpectedYac / expectedRushYards) — type-enforced", () => {
     const rows = [ngsRow({ week: 2, avgTimeToThrow: 2.3, avgIntendedAirYards: 7.1 })];
     const samples = boundCpoeCompSamples(rows, [req({ kickoffWeek: 3 })]);
     expect(samples.length).toBe(1);
-    const cell = samples[0]!.avgTimeToThrow;
-    expect(cell.value).toBe(2.3);
-    expect(cell.provenance).toBe("weekly_ngs_mean");
-    // BoundCompSample has no avgExpectedYac field — compile-time proof that
-    // vendor y-axis metrics never enter the completions p-path.
-    expect("avgExpectedYac" in cell).toBe(false);
-    expect("expectedRushYards" in cell).toBe(false);
+    const sample = samples[0]!;
+    // BoundCompSample has only: attempts, completions, avgTimeToThrow,
+    // avgIntendedAirYards, gseCpoe. The vendor y-axis fields never enter.
+    expect("avgExpectedYac" in sample).toBe(false);
+    expect("expectedRushYards" in sample).toBe(false);
+    expect("expectedCompletionPct" in sample).toBe(false);
+    // The covariate cells carry honest grain/provenance, not a bare float.
+    expect(sample.avgTimeToThrow.grain).toBe("week_t_for_tplus1");
+    expect(sample.avgTimeToThrow.provenance).toBe("weekly_ngs_mean");
+    expect(sample.avgIntendedAirYards.grain).toBe("week_t_for_tplus1");
+    expect(sample.avgIntendedAirYards.provenance).toBe("weekly_ngs_mean");
   });
 
   it("drops only the failing sample, keeps the rest", () => {
