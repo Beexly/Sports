@@ -84,7 +84,19 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 |
 | - Next: bind air+YAC onto `props-hb-air-yac.ts` via the covariate bus; then xYAC/vendor models stay y-axis only. See SESSION-HANDOFF.md (cheap-overnight).
 |
-### 2026-08-22 ~15:30 CT | Hermes (ox-alpha) | CLEAN
+### 2026-08-22 ~22:10 CT | Hermes (ox-alpha) | CLEAN — PR #553 MERGED
+|- PR 4 — CPOE Completion Bind (#553): MERGED into origin/main at 2026-08-22T22:10:52Z.
+|  Merge commit `0285b992` is now HEAD of origin/main.
+|- All 4 flagship covariate binds complete:
+|  - #547 covariate-bus.ts (leak-safe weekly→next-game NGS features) — MERGED
+|  - #548 props-hb-adot-sep-bind.ts (aDOT×SEP catch model fed by bus) — MERGED
+|  - #549 props-hb-air-yac-bind.ts (air+YAC model fed by bus) — MERGED
+|  - #553 props-hb-cpoe-comp-bind.ts (completions|attempts fed by bus + GSE-CPOE) — MERGED
+|- Serving SHA: `0285b992` on origin/main. #525 ancestors intact at `544d0148`.
+|- Remaining H0 flagship slices (#555 validation harness, #557 kneel/garbage, #556 TPRR)
+|  are on `grok/**` branches — do NOT touch (parallel Grok session live).
+|
+|### 2026-08-22 ~15:30 CT | Hermes (ox-alpha) | CLEAN
 |- PR 4 — CPOE Comp Bind (#553): MERGED. Branch hermes/covariate-cpoe-comp @ c7c8ca37, pushed to origin. CI green (Test+tsc+Build all SUCCESS). 9/9 tests green. All 658 edge-lab tests pass (64 files).
 |- PR 1 (#547), #2 (#548), #3 (#549): ALL MERGED. PR 4 (#553): MERGED.
 |- Doctrine H0: 4 flagship covariate binds complete (bus, sep, yac, cpoe-comp).

@@ -3,7 +3,7 @@
 ## Identity
 - **Session:** `stealth/ox-alpha` — Galaxy Sports Edge (independent `p` with process, then `e = p − q`).
 - **Stance:** The site is a window. We do NOT build chrome. No Odds market ingestion. `priced: false` throughout.
-- **Serving SHA:** `c2cfc153` (origin/main, post-#549 merge). #525 is on ancestor `544d0148` — slug/cap NOT redone.
+|- **Serving SHA:** `0285b992` (origin/main, post-#553 merge). #525 is on ancestor `544d0148` — slug/cap NOT redone.
 
 ## Worktrees
 || Purpose | Path | Branch |
@@ -28,7 +28,7 @@
 - **File:** `packages/prediction-engine/src/edge-lab/props-hb-air-yac-bind.ts`
 - **Tests:** `__tests__/props-hb-air-yac-bind.test.ts` — 7/7 green
 
-### PR 4 — CPOE Completion Bind: #553 ✅ OPEN (CI green, Qodo fixes pushed)
+### PR 4 — CPOE Completion Bind: #553 ✅ MERGED
 |- **File:** `packages/prediction-engine/src/edge-lab/props-hb-cpoe-comp-bind.ts`
 |- **Tests:** `__tests__/props-hb-cpoe-comp-bind.test.ts` — 11/11 green
 |- **Commit:** `e22eb2b7` on `origin/hermes/covariate-cpoe-comp` (pushed)
@@ -53,11 +53,11 @@ Contract:
 |- Barrel exports in `index.ts`. `priced: false`. Pure, no I/O, no Prisma.
 
 ## Verification
-|- `npx vitest run` props-hb-cpoe-comp-bind.test.ts: 11/11 pass
-|- `npx vitest run` edge-lab __tests__/: 660/660 pass (full suite, 64 files; bus 16 + sep 6 + yac 7 + cpoe 11)
-|- CI: 20/20 GitHub checks PASS, 0 failures (Test+type-check+lint+Prisma all green)
-|- PR #553 mergeable: was UNSTABLE (diverged from main via kernel file deletions), now CLEAN/MERGEABLE after rebase
-|- `tsc --noEmit` on `packages/prediction-engine`: clean
+| - `npx vitest run` props-hb-cpoe-comp-bind.test.ts: 11/11 pass
+| - `npx vitest run` edge-lab __tests__/: 660/660 pass (full suite, 64 files; bus 16 + sep 6 + yac 7 + cpoe 11)
+| - CI: 20/20 GitHub checks PASS, 0 failures (Test+type-check+lint+Prisma all green)
+| - PR #553 MERGED at 2026-08-22T22:10:52Z (merge commit `0285b992` into origin/main)
+| - `tsc --noEmit` on `packages/prediction-engine`: clean
 
 ## Next priority — H0 #4 TPRR
 |- The 4 flagship covariate binds (#547 bus, #548 sep, #549 yac, #553 cpoe-comp) are
