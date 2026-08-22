@@ -1552,6 +1552,12 @@ export type {
 export { SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples } from "./edge-lab/props-hb-adot-sep-bind.js";
 export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep-bind.js";
 
+// YAC bind: couples the covariate bus (avgYac) to the air+YAC model.
+// Fail-closed on null — never invents YAC. Honest weekly-mean grain forwarded
+// verbatim. priced:false.
+export { YAC_BIND_METHOD_TAG, bindYacSamples, boundYacSamples } from "./edge-lab/props-hb-air-yac-bind.js";
+export type { YacBindRequest, YacBindResult, BoundAirYacSample } from "./edge-lab/props-hb-air-yac-bind.js";
+
 // Fire gate: Shin e AND posted juice must both clear. priced:false.
 export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
 export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
