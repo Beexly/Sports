@@ -39,7 +39,9 @@ export type AnalyticsEvent =
   | "audit_offer_clicked"
   | "transparency_read"
   | "research_brief_clicked"
-  | "claim_gate_hit";
+  | "claim_gate_hit"
+  // Cookieless AI-referral bucketing (see lib/analytics/ai-referral.ts).
+  | "ai_referral";
 
 /** What each event means and why it matters — the documented contract. */
 export const ANALYTICS_EVENTS: Readonly<Record<AnalyticsEvent, string>> = {
@@ -71,6 +73,8 @@ export const ANALYTICS_EVENTS: Readonly<Record<AnalyticsEvent, string>> = {
   transparency_read: "Visitor read the backtest-truth/transparency section: trust engagement.",
   research_brief_clicked: "Visitor clicked into the research-brief lane: research intent.",
   claim_gate_hit: "Draft copy was blocked by the compliance scanner: no-claim guard signal.",
+  ai_referral:
+    "A visit arrived with a Referer header matching a known AI assistant (see classifyAiReferrer). Aggregate signal only — no per-visitor identity, no cookie.",
 };
 
 export interface AnalyticsContext {
