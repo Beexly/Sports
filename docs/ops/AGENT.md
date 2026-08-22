@@ -115,3 +115,14 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) is OPEN/GREEN. Do NOT start
   a second TPRR covariate bind; await merge or handoff. Three fails → BLOCKED.
 |
+
+### 2026-08-22 17:00 CT | Hermes (ox-alpha) | CLEAN — REBASE onto origin/main post-#554
+- PR 4 (#553) rebased onto origin/main (8b898981, post-#554 fleet foundation):
+  - Branch was based on c2cfc153 (pre-#554), causing kernel files (conformance.ts, contract.ts, etc.) to appear as DELETIONS in PR diff.
+  - `git rebase --onto origin/main c2cfc153` — 6 commits applied cleanly onto main.
+  - Pure diff now (6 files: cpoe-comp bind+test, covariate-bus.ts +2, index.ts +16, docs). Kernel files preserved.
+  - Pushed with --force-with-lease to origin/hermes/covariate-cpoe-comp.
+- CI: 20/20 checks PASS, 0 failures. 660/660 edge-lab tests pass (64 files).
+- PR #553: OPEN, mergeable (was UNSTABLE before rebase, now CLEAN).
+- No DONE.md STOP. Watchdog stays live.
+- Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) OPEN/GREEN on main. Do NOT start a second TPRR bind.

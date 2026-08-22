@@ -32,8 +32,12 @@
 |- **File:** `packages/prediction-engine/src/edge-lab/props-hb-cpoe-comp-bind.ts`
 |- **Tests:** `__tests__/props-hb-cpoe-comp-bind.test.ts` — 11/11 green
 |- **Commit:** `e22eb2b7` on `origin/hermes/covariate-cpoe-comp` (pushed)
-|- **Rebased onto origin/main** (post-#549 merge c2cfc153). Conflict in index.ts resolved: kept BOTH
-|  YAC bind exports (from main) + CPOE-comp bind exports (from branch).
+|- **Rebased onto origin/main** (8b898981, post-#554 fleet foundation). Previously based on
+|  c2cfc153 (pre-#554), which caused #554 kernel files (conformance.ts, contract.ts, numeric.ts,
+|  GRIND_WORK_ORDER.md, etc.) to appear as DELETIONS in the PR diff.
+|  `git rebase --onto origin/main c2cfc153` — 6 commits applied cleanly.
+|  Result: pure 6-file diff (cpoe-comp bind+test, covariate-bus.ts +2, index.ts +16, docs).
+|  Kernel files preserved. No spurious deletions. Pushed with `(--force-with-lease)`.
 
 Contract:
 |- `bindCpoeCompSamples(rows, requests)` pulls `avgTimeToThrow` + `avgIntendedAirYards`
@@ -50,7 +54,9 @@ Contract:
 
 ## Verification
 |- `npx vitest run` props-hb-cpoe-comp-bind.test.ts: 11/11 pass
-|- `npx vitest run` edge-lab __tests__/: 34/34 pass (bus 16 + sep 6 + yac 7 + cpoe 11)
+|- `npx vitest run` edge-lab __tests__/: 660/660 pass (full suite, 64 files; bus 16 + sep 6 + yac 7 + cpoe 11)
+|- CI: 20/20 GitHub checks PASS, 0 failures (Test+type-check+lint+Prisma all green)
+|- PR #553 mergeable: was UNSTABLE (diverged from main via kernel file deletions), now CLEAN/MERGEABLE after rebase
 |- `tsc --noEmit` on `packages/prediction-engine`: clean
 
 ## Next priority — H0 #4 TPRR
