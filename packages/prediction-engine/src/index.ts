@@ -184,6 +184,18 @@ export {
   poissonConsistencyScore,
   assertTeamRatesAvailable,
 } from "./poisson.js";
+// Skellam margin / cover — first-party, not live-wired. Hockey/baseball/soccer
+// only (same sport gate as Poisson). NFL key-number mixture is a different module.
+export {
+  skellamPmf,
+  skellamCdf,
+  skellamPmfGrid,
+  skellamCoverProbabilities,
+  isSkellamValidSport,
+  DEFAULT_SKELLAM_MAX_GOALS,
+  SKELLAM_SPORT_PREFIXES,
+} from "./skellam.js";
+export type { SkellamCoverInput, SkellamCoverProbabilities, SkellamPmfPoint } from "./skellam.js";
 // #11 — team scoring rates computed from REAL stored final scores (no new
 // provider, no fabricated λ) → an INDEPENDENT Poisson fair value that slots into
 // the edge engine as a 2nd estimator. Pure; the ingestion-cron wiring +
@@ -932,9 +944,19 @@ export {
 export {
   shinDevig,
   gotoConversion,
+  powerDevig,
   impliedFromDecimalOdds,
   type ShinResult,
+  type PowerDevigResult,
 } from "./shin-devig.js";
+export {
+  conformalMarginSet,
+  marginSetCovers,
+  splitConformalQuantile,
+  MIN_SAMPLES_MARGIN_SET,
+  DEFAULT_MARGIN_SET_ALPHA,
+} from "./conformal-margin-set.js";
+export type { MarginCalibrationRow, MarginPredictionSet } from "./conformal-margin-set.js";
 // Build-queue #4 — ML independent estimator scaffold (kyleskom concept).
 // Gradient-boosted stumps inference + honesty gate. Fed into independentFairValues
 // ONLY after calibration proves it (same law as Poisson / Elo estimators).
