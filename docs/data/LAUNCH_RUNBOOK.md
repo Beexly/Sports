@@ -10,12 +10,23 @@ on this branch; `kernel/slots/` NOT yet populated — Wave K1 in flight on the f
    PUBLIC-class card not dispatched by then is built at paid cost or not at all.
 2. **NFL kickoff ~Sep 10** (`docs/data/EDGE_SUPREMACY_DOCTRINE.md` §H0).
 
-**Card inventory (6 decks on disk, 73 cards):** CARDS_SCANNERS (10), CARDS_CLOSING_LINE
+**Card inventory (7 decks on disk, 81 cards):** CARDS_SCANNERS (10), CARDS_CLOSING_LINE
 (9), CARDS_INCENTIVE_CALENDAR (9), CARDS_SHARE_CORE_WIRING (10), CARDS_EDGE_VALIDATE
-(17), CARDS_LAUNCH_QA (18). 9 PUBLIC · 64 INTERNAL/CROWN. **NOTE:** a seventh deck
-(`CARDS_PROOF_LADDER.md`) was planned but is NOT on disk — the PROOF gate below is
-covered by existing infra + owner actions + one grading hotfix card Claude must author;
-if the deck exists elsewhere, reconcile before dispatch.
+(17), CARDS_LAUNCH_QA (18), CARDS_PROOF_LADDER (8). 11 PUBLIC · 70 INTERNAL/CROWN.
+
+**CARDS_PROOF_LADDER landed a live, real grading bug — this is not a hypothetical.**
+PL1 (CRITICAL): the free-settlement path matches finals by team-pair + calendar-day
+only, no game ID anywhere in the chain (`apps/web/lib/data-sources/free-settlement.ts`,
+`settlePendingPicks()` L281-334). A same-day doubleheader (the canonical case — common
+in August/September MLB pennant-race scheduling, i.e. right now) produces two finals
+under one `matchupKey`; the code takes `candidates[0]` and silently grades whichever
+game sorted first — with zero test coverage, zero anomaly, zero hold. Concrete repro in
+the deck: a real doubleheader split (Astros 4-2 Game 1, Rangers 6-1 Game 2) grades a
+Game-2 pick as a WIN off Game 1's score. This is a published, real-money-adjacent,
+silently-wrong grade sitting in the settlement path today. PL1/PL2/PL3 (all INTERNAL,
+Grok/Hermes) run BEFORE any other card in this deck and before any settlement-volume
+scale-up elsewhere — see Gate 2 below, which now supersedes the placeholder "Claude
+authors a GR card" language from the original synthesis pass.
 
 ---
 
@@ -65,18 +76,30 @@ What closes it:
 1. **Scheduler decision** — OWNER-ACTION, Garrett #1. The one RED spine item (preflight
    audit). Nothing else in this gate matters until it's made.
 2. **CRON_SECRET** set + LQ16 makes `deploy:ready` honest about it.
-3. **Grading fixes BEFORE settlement scale-up** (grading audit verdict): the paid
-   odds-api path is safe to grade (exact game identity, locked-line, idempotent
-   transactional settles); the free/backfill path is NOT — team ±2-day matching
-   (`apps/web/lib/data-sources/free-settlement.ts:289,389`) can grade the wrong game of
-   a series/doubleheader, settle before the game is played, and single-source-VOID
-   suspended games. Launch posture: (a) `THE_ODDS_API_KEY` is in `deploy:ready`
-   REQUIRED (`scripts/check-deploy-readiness.mjs:92-110`), so prod resolves
-   `selectSettlementPath === "odds-api"` (`apps/web/lib/settlement/path-select.ts`) —
-   verify, don't assume; (b) **Claude authors a GR-series hotfix card** hardening
-   `free-settlement.ts` + `settle-backfill.ts` (exact-game identity, no pre-final
-   settles, no single-source VOID) — Grok lane implements — because no deck on disk
-   covers it (the missing CARDS_PROOF_LADDER scope).
+3. **Grading fixes BEFORE settlement scale-up** — now a concrete, ready-to-implement
+   deck (`CARDS_PROOF_LADDER.md` PL1/PL2/PL3), not a placeholder:
+   - **PL1 (CRITICAL, run first):** same-day/doubleheader rematch grades against
+     `candidates[0]` — an arbitrary final — because matching is team-pair + calendar-day
+     only, no game ID (`free-settlement.ts` `settlePendingPicks()` L281-334, reused by
+     `runFreePathSettlement`, `backfillStaleSettlement`, and
+     `historical-settlement-backfill.ts` — the exposure is not one-place). Fix: HELD +
+     `AMBIGUOUS_MATCH` when candidates disagree, additive-only, zero schema change.
+   - **PL2 (HIGH):** PR #550's `?path=free` forced-drain can now run against the same
+     game as the paid path in the same window; each writes `Game.homeScore/awayScore`
+     from its own source with no cross-path comparison — whichever path runs second
+     silently overwrites the row, contradicting an already-settled pick. Fix: refuse to
+     overwrite a FINAL score with a conflicting cross-path value; new
+     `SCORE_MISMATCH_CROSS_PATH` anomaly, human-reviewed, never auto-resolved.
+   - **PL3 (MEDIUM):** the PROVEN-gate signal in the free-path autonomy response reads
+     `learning?.nEligible` (this cycle's batch, typically single digits) into a slot
+     every other caller treats as the cumulative settled count — so the self-audit
+     signal CLAUDE.md's Autonomous Loop Protocol tells an agent to read can report
+     "3/100" forever even after the true cumulative count has cleared 100.
+   - Launch posture unchanged: `THE_ODDS_API_KEY` is in `deploy:ready` REQUIRED
+     (`scripts/check-deploy-readiness.mjs:92-110`), so prod resolves
+     `selectSettlementPath === "odds-api"` (paid path, structurally safer) — verify,
+     don't assume; PL1/PL2/PL3 harden the free/backfill path regardless, since
+     `?path=free` (PR #550) makes it reachable in prod on demand, not just as a fallback.
 4. **Gate ladder flips** (Garrett #7): `CANONICAL_HISTORY_ENABLED` → derived history →
    `PUBLIC_PICKS_ENABLED` → `PERFORMANCE_STATS_ENABLED`; `FORCE_NO_BET_IF_STALE=true`
    week 1.
@@ -134,7 +157,10 @@ EV16/EV17, SC9, IC/SC bus registration.
 share-core SC2 usage-matrix once SC1-research merges.
 
 **CLAUDE:**
-- Author the GR grading hotfix card(s) against `free-settlement.ts` / `settle-backfill.ts`.
+- Grading hotfix cards are AUTHORED (`CARDS_PROOF_LADDER.md` PL1/PL2/PL3, ready to
+  dispatch) — Grok/Hermes implement against `free-settlement.ts` / `root-cause-analysis.ts`
+  / `free-settlement-runner.ts` / `settle-sport.ts` per the deck; Claude spot-audits the
+  PL1 fix specifically before it merges (it changes live grading behavior).
 - SC9 boost/promo clearance research (scanners deck — judgment lane, Opus only).
 - Decisions this week: IC layer-label ("L3") confirmation · IC1 CROWN routing confirm ·
   EV16/EV17 locus recommendation to Garrett · spot-audit 2–3 green-lane merges/day.
@@ -341,12 +367,15 @@ judgment that live data actually supports going public.**
    nothing fires at game-day cadence and every watchdog rides the same dead scheduler.
    *Mitigation:* Garrett #1/#2 (only he can act) · LQ16 makes `deploy:ready` honest
    about CRON_SECRET · LQ18 proves liveness · Garrett #6 puts a monitor off-stack.
-2. **Mis-grading via the free/backfill path.** Team ±2-day matching can grade the wrong
-   game of a doubleheader, settle pre-game, single-source-VOID suspended games —
-   real-money trust damage on day 1. *Mitigation:* paid-path law verified
-   (`path-select.ts` + `THE_ODDS_API_KEY` in deploy:ready REQUIRED) · GR hotfix card
-   (Claude authors — the missing PROOF_LADDER deck's scope) · settlement scale-up
-   blocked until merged.
+2. **Mis-grading via the free/backfill path — CONFIRMED, not hypothetical.**
+   `CARDS_PROOF_LADDER.md` PL1 traced a concrete repro: team+calendar-day matching with
+   no game ID grades a doubleheader pick against the wrong game's final,
+   `candidates[0]`, zero test coverage. PL2 adds a second live path: `?path=free`
+   (PR #550) can silently overwrite an already-settled game's score from a
+   disagreeing source. *Mitigation:* PL1/PL2/PL3 (INTERNAL, Grok/Hermes, run before
+   any other card in the deck) · paid-path law verified (`path-select.ts` +
+   `THE_ODDS_API_KEY` in deploy:ready REQUIRED) · settlement scale-up (PL4/PL5) blocked
+   until PL1-PL3 merge.
 3. **Fabricated-stat leak through guard holes.** Proven SAFE_CONTEXT bypass ("68% win
    rate across 500 settled picks" passes), unscanned components/workers/route.ts
    surfaces, and three ungated LLM output paths. *Mitigation:* LQ11 (numeric-pass

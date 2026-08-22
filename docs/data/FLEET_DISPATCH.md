@@ -30,12 +30,13 @@ sequentially, resolve toward the union, then write **ONE integration commit** wi
 barrel exports (every deck forbids per-card index.ts edits for exactly this reason).
 `docs/data/FLEET_STATUS.md` does not exist yet — first dispatch creates it.
 
-Six decks on disk (73 cards): `CARDS_SCANNERS` (SC1–SC10, scanners),
+Seven decks on disk (81 cards): `CARDS_SCANNERS` (SC1–SC10, scanners),
 `CARDS_CLOSING_LINE` (CL1–CL9), `CARDS_INCENTIVE_CALENDAR` (IC1–IC9),
 `CARDS_SHARE_CORE_WIRING` (SC1–SC10, share-core — note the SC prefix collision with the
 scanners deck; always name the deck when dispatching), `CARDS_EDGE_VALIDATE` (EV1–EV17),
-`CARDS_LAUNCH_QA` (LQ1–LQ18). `CARDS_PROOF_LADDER.md` was planned but is NOT on disk —
-grading-fix scope is a Claude-authored GR card series (see Wave 1).
+`CARDS_LAUNCH_QA` (LQ1–LQ18), `CARDS_PROOF_LADDER` (PL1–PL8 — grading-correctness fixes,
+run PL1/PL2/PL3 before anything else in this deck AND before any settlement-volume work
+elsewhere; PL1 is a confirmed live bug, not a hypothetical — see Wave 1).
 
 ---
 
@@ -59,12 +60,22 @@ notes force:
 Gate per card: `npx vitest run src/edge-lab/kernel/__tests__/<key>.test.ts && npx tsc
 --noEmit` + conformance where required + cross-family verify of the ATTACK list.
 
-**Wave 1 — grading fixes (before settlement scale-up).** No deck covers this; Claude
-authors GR cards against `apps/web/lib/data-sources/free-settlement.ts` (:289/:389
-±2-day matching) + `apps/web/lib/data-sources/settle-backfill.ts`. Until they land:
-verify prod grades on the paid path only (`apps/web/lib/settlement/path-select.ts`;
-`THE_ODDS_API_KEY` is in deploy:ready REQUIRED) and treat any free-path/backfill
-canonical settle as a stop condition. Implement GR cards the moment Claude posts them.
+**Wave 1 — grading fixes (before settlement scale-up). DISPATCH THIS FIRST, ahead of
+everything else in this file** — `CARDS_PROOF_LADDER.md` PL1 is a confirmed live bug,
+not a hypothetical: `settlePendingPicks()` (`free-settlement.ts` L281-334) matches
+finals by team-pair + calendar-day only, no game ID, so a same-day doubleheader (common
+in August/September MLB — i.e. now) produces two finals under one `matchupKey` and the
+code silently grades against `candidates[0]`, whichever sorted first. Zero test
+coverage today. PL2 (HIGH) and PL3 (MEDIUM) are real but lower blast-radius — full specs,
+fix code, and tests are written in the deck; dispatch PL1→PL2→PL3 in order, each gated
+by its own Verify command, before PL4-PL8 (settlement-throughput/calibration-page/CLV
+cards in the same deck) and before ANY settlement-volume scale-up in other decks. Until
+PL1 merges: verify prod grades on the paid path only
+(`apps/web/lib/settlement/path-select.ts`; `THE_ODDS_API_KEY` is in deploy:ready
+REQUIRED) and treat any free-path/backfill canonical settle as a stop condition (§5.7).
+PL1's fix changes live grading behavior — Claude spot-audits it specifically before merge,
+same as any p-side change, even though the deck routes it INTERNAL/Grok-Hermes for
+implementation.
 
 **Wave 2 — edge-validate bench.** Now: EV12, EV13, EV14 (unblocked), EV1 (research),
 EV2 → EV3 → EV4/EV5/EV6 (typed against the frozen contract — NOT blocked on Wave K).
@@ -118,7 +129,7 @@ never enter the repo, a prompt, or any free surface.
 | SHARE_CORE | none | SC1–SC5 | SC6–SC10 (deck header itself is CROWN — never paste it) | — |
 | EDGE_VALIDATE | none | EV1–EV17 (all; real-candidate REPORTS are CROWN) | (outputs only) | EV6 promotion sign-off |
 | LAUNCH_QA | LQ8, LQ9, LQ10, LQ11, LQ12 | LQ1–LQ7, LQ13–LQ18 | none | LQ7/owner decisions |
-| GR (grading) | none | implementation after Claude authors | — | card authoring |
+| PROOF_LADDER | PL6, PL7 | PL1–PL5, PL8 | none | PL1 fix spot-audit before merge |
 
 Hermes preferred assignments: EV10/EV11, IC8, share-core SC2/SC6 support — the
 covariate-binds lane. Cross-family verification is mandatory everywhere: verifier ≠
