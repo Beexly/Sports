@@ -312,3 +312,47 @@ describe("GSE-SEC-041: 429 does not trigger retries (outbound quota stop)", () =
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("licensed extra endpoints (props / historical / participants)", () => {
+  const ok = (body: unknown) =>
+    new Response(JSON.stringify(body), {
+      status: 200,
+      headers: { "x-requests-remaining": "50", "x-requests-used": "2" },
+    });
+
+  it("getEventOdds hits /events/{id}/odds with open market keys and US books", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(ok({ id: "evt1" }));
+    await client.getEventOdds("americanfootball_nfl", "evt1", ["player_pass_tds"], {
+      bookmakers: ["draftkings", "fanduel", "betmgm"],
+    });
+    const url = new URL(spy.mock.calls[0]![0] as string);
+    expect(url.pathname).toContain("/sports/americanfootball_nfl/events/evt1/odds");
+    expect(url.searchParams.get("markets")).toBe("player_pass_tds");
+    expect(url.searchParams.get("bookmakers")).toBe("draftkings,fanduel,betmgm");
+  });
+
+  it("getEventMarkets hits /events/{id}/markets", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(ok({ id: "evt1" }));
+    await client.getEventMarkets("basketball_nba", "evt1");
+    const url = new URL(spy.mock.calls[0]![0] as string);
+    expect(url.pathname).toContain("/sports/basketball_nba/events/evt1/markets");
+  });
+
+  it("getHistoricalOdds requires date and uses /historical/sports/{sport}/odds", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      ok({ timestamp: "2023-11-29T22:45:00Z", previous_timestamp: null, next_timestamp: null, data: [] })
+    );
+    await client.getHistoricalOdds("americanfootball_nfl", "2023-11-29T22:45:00Z", ["h2h"]);
+    const url = new URL(spy.mock.calls[0]![0] as string);
+    expect(url.pathname).toContain("/historical/sports/americanfootball_nfl/odds");
+    expect(url.searchParams.get("date")).toBe("2023-11-29T22:45:00Z");
+    expect(url.searchParams.get("markets")).toBe("h2h");
+  });
+
+  it("getParticipants hits /participants", async () => {
+    const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(ok([]));
+    await client.getParticipants("americanfootball_nfl");
+    const url = new URL(spy.mock.calls[0]![0] as string);
+    expect(url.pathname).toContain("/sports/americanfootball_nfl/participants");
+  });
+});
