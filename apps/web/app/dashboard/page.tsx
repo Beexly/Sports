@@ -4,6 +4,7 @@ import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance-gate";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
+import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
 
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
@@ -170,6 +171,16 @@ export default async function DashboardPage({
     getBillingNotice(user.id),
   ]);
 
+  // Loaded independently, not folded into the Promise.all array above: that
+  // array's correctness already depends on strict positional ordering
+  // (documented failure mode — see dashboard-load-performance.test.ts), and
+  // the CLV policy has its own dedicated loader. Fail OPEN to the same
+  // gated/NOT_READY shape on a DB error rather than losing the whole page.
+  const clvPolicy = await loadPublicClvPolicy(db, {
+    canExposePerformanceStats: effectivePerf.canExposePerformanceStats,
+    minGradedForPublic: gates.minSettledPicksForLearning,
+  }).catch(() => null);
+
   const performancePolicy = evaluatePublicPerformancePolicy({
     canExposePerformanceStats: effectivePerf.canExposePerformanceStats,
     minSettledPicksForLearning: gates.minSettledPicksForLearning,
@@ -182,6 +193,7 @@ export default async function DashboardPage({
     canonicalVoids,
     recentTotalCount,
     recentBootstrapCount,
+    clv: clvPolicy,
   });
 
   const performanceVisible = performancePolicy.canExposePerformanceStats;
@@ -199,6 +211,12 @@ export default async function DashboardPage({
   const winRateSubtext = performanceVisible
     ? performancePolicy.publicWinRateCiLabel
     : null;
+  // S1 — the headline slot: CLV beat-close rate, or an explicit not-ready
+  // state. Rendered above win-rate on purpose (never in place of it — win
+  // rate stays as a secondary field below). See headlineMetric's own
+  // docstring for why: win rate is gameable by pick selection, CLV is the
+  // sharp-credible signal touts almost never show.
+  const headline = performancePolicy.headlineMetric;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -299,6 +317,18 @@ export default async function DashboardPage({
               <div className="w-full max-w-xs">
                 <ManageSubscriptionButton />
               </div>
+            </div>
+          )}
+
+          {performanceVisible && (
+            <div
+              data-testid="performance-headline"
+              className="mb-4 rounded-xl border border-mineral bg-carbon/60 p-4"
+            >
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ion-2">
+                Headline
+              </p>
+              <p className={`mt-1.5 text-sm text-ion-white ${NUMERIC_TEXT_CLASS}`}>{headline.label}</p>
             </div>
           )}
 
