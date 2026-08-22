@@ -10,7 +10,8 @@ import {
 } from "@sports/db";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
-import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
+import { clientIp } from "@/lib/api/rate-limit";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -27,11 +28,16 @@ export async function GET(req: NextRequest) {
   // Public, anonymous, DB-heavy route (multiple count + findMany aggregates).
   // IP-keyed rate limit copied from the established pattern in
   // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
-  const limit = consumeRateLimit("public-daily-slate", clientIp(req), 60, 60_000);
+  // Durable (Postgres) limiter — same swap and same rationale as /api/picks:
+  // the in-memory bucket was per-process, so the effective quota multiplied by
+  // warm-instance count on serverless.
+  const limit = await consumePublicFormRateLimit("public-daily-slate", clientIp(req), 60, 60_000);
   if (!limit.ok) {
     return jsonNoStore(
-      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      limit.status === 429
+        ? { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" }
+        : { success: false, error: "Rate limit service unavailable. Please retry shortly.", code: "rate_limit_store_unavailable" },
+      { status: limit.status, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
   }
 

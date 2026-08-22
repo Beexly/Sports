@@ -16,19 +16,26 @@ import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-pu
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
-import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
+import { clientIp } from "@/lib/api/rate-limit";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   // Public, anonymous, DB-heavy route (findMany + count + per-pick selective
-  // filter). IP-keyed rate limit copied from the established pattern in
-  // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
-  const limit = consumeRateLimit("public-picks", clientIp(req), 60, 60_000);
+  // filter). DURABLE (Postgres) rate limit: the previous in-memory limiter was
+  // per-process, so on serverless the real ceiling was 60/min × warm-instance
+  // count — horizontal scale silently multiplied the quota. Same limiter the
+  // B2B and public-form routes already run in production. Fail-closed 503 when
+  // the store is unreachable is honest here: this route needs the same DB for
+  // its content, so "limiter store down" already means "no picks to serve".
+  const limit = await consumePublicFormRateLimit("public-picks", clientIp(req), 60, 60_000);
   if (!limit.ok) {
     return jsonNoStore(
-      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      limit.status === 429
+        ? { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" }
+        : { success: false, error: "Rate limit service unavailable. Please retry shortly.", code: "rate_limit_store_unavailable" },
+      { status: limit.status, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
   }
 
