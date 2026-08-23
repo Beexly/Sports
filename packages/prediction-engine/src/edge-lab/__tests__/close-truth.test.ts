@@ -368,3 +368,95 @@ describe("close-truth — batch: one bad row drops, good rows bind", () => {
     expect(result.refusals[0]!.refuse).toBe("one_sided");
   });
 });
+
+describe("close-truth — opener/close with special characters", () => {
+  it("opener preserves apostrophe + unicode in player slug (o'brien-josé)", () => {
+    const rows = [
+      row({ book: "draftkings", side: "over", price: -110, line: 6.5, phase: "OPEN", capturedAt: "2024-09-20T11:00:00Z", market: "receptions|o'brien-josé" }),
+      row({ book: "draftkings", side: "under", price: -110, line: 6.5, phase: "OPEN", capturedAt: "2024-09-20T11:00:00Z", market: "receptions|o'brien-josé" }),
+    ];
+    const result = openerTruthForGame({ rows, gameId: GAME_ID, commenceTime: COMMENCE });
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected ok");
+    expect(result.truths).toHaveLength(1);
+    expect(result.truths[0]!.family).toBe("receptions");
+    expect(result.truths[0]!.playerSlug).toBe("o'brien-josé");
+    expect(result.truths[0]!.market).toBe("receptions|o'brien-josé");
+    // -110/-110 devig must be unaffected by the special-char slug.
+    expect(result.truths[0]!.qOver).toBeCloseTo(0.5, 2);
+  });
+
+  it("close preserves book name with special chars (hyphen, digit, underscore)", () => {
+    const rows = [
+      row({ book: "draft-kings_2024", side: "over", price: -110, line: 6.5, phase: "CLOSE", capturedAt: "2024-09-20T12:00:00Z" }),
+      row({ book: "draft-kings_2024", side: "under", price: -110, line: 6.5, phase: "CLOSE", capturedAt: "2024-09-20T12:00:00Z" }),
+    ];
+    const result = closeTruthForGame({ rows, gameId: GAME_ID, commenceTime: COMMENCE });
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected ok");
+    expect(result.truths).toHaveLength(1);
+    expect(result.truths[0]!.book).toBe("draft-kings_2024");
+    expect(result.truths[0]!.source).toBe("phase_close");
+  });
+
+  it("opener + close carry gameId with special chars (spaces, #, parens, @)", () => {
+    const gid = "NFL 2024 #00-0030501 (H@A)";
+    const rows = [
+      row({ book: "fanduel", side: "over", price: -110, line: 6.5, phase: "OPEN", capturedAt: "2024-09-20T11:00:00Z", gameId: gid }),
+      row({ book: "fanduel", side: "under", price: -100, line: 6.5, phase: "OPEN", capturedAt: "2024-09-20T11:00:00Z", gameId: gid }),
+    ];
+    const opener = openerTruthForGame({ rows, gameId: gid, commenceTime: COMMENCE });
+    expect(opener.ok).toBe(true);
+    if (!opener.ok) throw new Error("expected ok");
+    expect(opener.truths).toHaveLength(1);
+    expect(opener.truths[0]!.gameId).toBe(gid);
+    expect(opener.truths[0]!.book).toBe("fanduel");
+
+    // Same rows shifted to CLOSE phase — gameId still threads through to the close truth.
+    const closeRows: ArchiveRow[] = [
+      row({ book: "fanduel", side: "over", price: -110, line: 6.5, phase: "CLOSE", capturedAt: "2024-09-20T12:00:00Z", gameId: gid }),
+      row({ book: "fanduel", side: "under", price: -100, line: 6.5, phase: "CLOSE", capturedAt: "2024-09-20T12:00:00Z", gameId: gid }),
+    ];
+    const closer = closeTruthForGame({ rows: closeRows, gameId: gid, commenceTime: COMMENCE });
+    expect(closer.ok).toBe(true);
+    if (!closer.ok) throw new Error("expected ok");
+    expect(closer.truths).toHaveLength(1);
+    expect(closer.truths[0]!.gameId).toBe(gid);
+    expect(closer.truths[0]!.source).toBe("phase_close");
+  });
+
+  it("opener decodes family oddsApiKey with special chars (hyphens, underscores, digits)", () => {
+    const rows = [
+      row({ book: "draftkings", side: "over", price: -110, line: 6.5, phase: "OPEN", capturedAt: "2024-09-20T11:00:00Z", market: "pass_yards_2024-qb|ja'marr-chase" }),
+      row({ book: "draftkings", side: "under", price: -110, line: 6.5, phase: "OPEN", capturedAt: "2024-09-20T11:00:00Z", market: "pass_yards_2024-qb|ja'marr-chase" }),
+    ];
+    const result = openerTruthForGame({ rows, gameId: GAME_ID, commenceTime: COMMENCE });
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected ok");
+    expect(result.truths).toHaveLength(1);
+    expect(result.truths[0]!.family).toBe("pass_yards_2024-qb");
+    expect(result.truths[0]!.playerSlug).toBe("ja'marr-chase");
+    expect(result.truths[0]!.market).toBe("pass_yards_2024-qb|ja'marr-chase");
+    // -110/-110 devig unaffected by special chars in family/slug.
+    expect(result.truths[0]!.qOver).toBeCloseTo(0.5, 2);
+  });
+
+  it("close computes correct qOver for special-char market via Shin devig (manual match)", () => {
+    const rows = [
+      row({ book: "bet365", side: "over", price: -130, line: 6.5, phase: "CLOSE", capturedAt: "2024-09-20T12:00:00Z", market: "receptions|jalen_hurts-II" }),
+      row({ book: "bet365", side: "under", price: +110, line: 6.5, phase: "CLOSE", capturedAt: "2024-09-20T12:00:00Z", market: "receptions|jalen_hurts-II" }),
+    ];
+    const result = closeTruthForGame({ rows, gameId: GAME_ID, commenceTime: COMMENCE });
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected ok");
+    expect(result.truths).toHaveLength(1);
+    expect(result.truths[0]!.playerSlug).toBe("jalen_hurts-II");
+    // qOver must equal the manual Shin devig of the (-130, +110) book — special
+    // chars in the slug must never perturb the price pipeline.
+    const decOver = americanToDecimal(-130);
+    const decUnder = americanToDecimal(110);
+    const devigged = shinDevig([decOver!, decUnder!]);
+    expect(result.truths[0]!.qOver).toBeCloseTo(devigged!.probs[0]!, 6);
+    expect(result.truths[0]!.overround).toBeCloseTo(1 / decOver! + 1 / decUnder!, 6);
+  });
+});

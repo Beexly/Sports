@@ -192,6 +192,8 @@ export class NbRbpf {
   readonly resampling: ResamplingScheme;
   readonly liuWestDelta: number;
   readonly seed: number;
+  /** Log-scale intercept, stored as a class-level constant after validation. */
+  readonly intercept: number;
 
   /** Discrete type assignments, particle-major then unit. */
   private assignments: Int32Array;

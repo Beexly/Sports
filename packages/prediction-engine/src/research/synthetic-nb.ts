@@ -66,7 +66,7 @@ function nextInt(rng: { state: number }, n: number): number {
 }
 
 /** Inverse-CDF draw from NB2(μ, φ): var = μ + μ²/φ. */
-function drawNb(rng: { state: number }, mu: number, phi: number): number {
+export function drawNb(rng: { state: number }, mu: number, phi: number): number {
   const p = phi / (phi + mu);
   // Gamma(φ, (1-p)/p) then Poisson — Johnk/Marsaglia via sum of exponentials is
   // heavy; for small baseball-scale μ we walk the CDF. Hard-cap at 40.

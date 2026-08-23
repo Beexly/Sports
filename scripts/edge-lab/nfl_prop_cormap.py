@@ -285,25 +285,53 @@ def analyze(stats, games):
         }
 
     pass_atts = [v["pass_att"] for v in team_games.values()]
+    rush_atts = [v["rush_att"] for v in team_games.values()]
     totals = [v["total_line"] for v in team_games.values() if v["total_line"]]
     spreads = [v["spread_line"] for v in team_games.values() if v["spread_line"] != 0]
     t_to_pa = [(v["total_line"], v["pass_att"]) for v in team_games.values() if v["total_line"]]
     s_to_pa = [(v["spread_line"], v["pass_att"]) for v in team_games.values() if v["spread_line"]]
     tot_to_db = [(v["total_line"], v["dropbacks_proxy"]) for v in team_games.values() if v["total_line"]]
+    t_to_totalplays = [(v["total_line"], v["pass_att"] + v["rush_att"]) for v in team_games.values() if v["total_line"]]
+    # pass:run ratio vs total_line (script elasticity)
+    pr_to_total = [(v["total_line"], (v["pass_att"] / (v["pass_att"] + v["rush_att"])) if (v["pass_att"] + v["rush_att"]) else 0)
+                   for v in team_games.values() if v["total_line"]]
+    # high vs low total-line bin: does a high-total game lift ALL receivers' targets (shared script)?
+    sorted_t = sorted(totals)
+    hi_cut = quantile(sorted_t, 0.75)
+    lo_cut = quantile(sorted_t, 0.25)
+    hi_targets, lo_targets = [], []
+    for (season, week, team), players in by_game.items():
+        tg = team_games.get((season, week, team))
+        if not tg or not tg["total_line"]:
+            continue
+        recs = [p["targets"] for p in players if p["pos"] in ("WR", "TE")]
+        if not recs:
+            continue
+        if tg["total_line"] >= hi_cut:
+            hi_targets.extend(recs)
+        elif tg["total_line"] <= lo_cut:
+            lo_targets.extend(recs)
 
     out["B_game_script"] = {
         "n_team_games": len(team_games),
-        "team_pass_attempts_sd": round(std_pct(pass_atts), 1),
+        "team_pass_attempts_mean": round(mean(pass_atts), 1),
+        "team_pass_attempts_sd": round(math.sqrt(sum((x-mean(pass_atts))**2 for x in pass_atts)/(len(pass_atts)-1)), 1),
+        "team_pass_attempts_cv_pct": round(100*math.sqrt(sum((x-mean(pass_atts))**2 for x in pass_atts)/(len(pass_atts)-1))/mean(pass_atts), 1),
+        "team_pass_attempts_range": [round(min(pass_atts), 1), round(max(pass_atts), 1)],
         "corr_total_line_vs_pass_attempts": round(pearson([t[0] for t in t_to_pa], [t[1] for t in t_to_pa]), 3),
         "corr_spread_vs_pass_attempts": round(pearson([s[0] for s in s_to_pa], [s[1] for s in s_to_pa]), 3),
         "corr_total_line_vs_dropbacks": round(pearson([t[0] for t in tot_to_db], [t[1] for t in tot_to_db]), 3),
-        "team_pass_attempts_mean": round(mean(pass_atts), 1),
-        "team_pass_attempts_range": [round(min(pass_atts), 1), round(max(pass_atts), 1)],
-        "interpretation": ("Team pass volume (dropbacks) is strongly driven by the game script — total_line "
-                           "(over/under) and spread. A higher total and being a smaller favorite → more dropbacks → "
-                           "more targets/receptions for EVERY receiver on both teams. The independent-p model only "
-                           "conditions on per-player rest/weather covariates, NOT on the shared script draw "
-                           "(plays/PROE/pace), so it cannot co-move a game's receiver props with the script."),
+        "corr_total_line_vs_total_plays": round(pearson([t[0] for t in t_to_totalplays], [t[1] for t in t_to_totalplays]), 3),
+        "corr_total_line_vs_pass_run_ratio": round(pearson([t[0] for t in pr_to_total], [t[1] for t in pr_to_total]), 3),
+        "high_total_line_mean_targets": round(mean(hi_targets), 2) if hi_targets else None,
+        "low_total_line_mean_targets": round(mean(lo_targets), 2) if lo_targets else None,
+        "high_minus_low_target_delta": round(mean(hi_targets) - mean(lo_targets), 3) if hi_targets and lo_targets else None,
+        "total_line_quartile_bins": {"q25": round(lo_cut, 1), "q75": round(hi_cut, 1)},
+        "interpretation": ("Game script (total_line, spread) drives team pass volume & pass:run ratio, which in turn "
+                           "lifts the volume envelope for EVERY receiver on the field on BOTH sides. High-total-line "
+                           "games raise per-receiver target counts by ~{delta} targets vs low-total games. props-hb.ts "
+                           "conditions only on per-player rest/weather covariates — NOT on this shared script draw, so "
+                           "it cannot co-move a game's entire receiver-prop slate with the script.").format(delta=mean(hi_targets) - mean(lo_targets) if hi_targets and lo_targets else 0),
     }
 
     # ── C. Team-total (shared envelope) variance decomposition ────────────────

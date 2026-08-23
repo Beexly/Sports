@@ -89,13 +89,13 @@ describe("shrinkLogMeans limited translation (tol 1e-9)", () => {
     ];
     const s2 = 0.04;
     const theta = shrinkLogMeans(units, s2);
-    const d1 = s2 / units[0].n; // 0.04
+    const d1 = s2 / units[0]!.n; // 0.04
     const cap = MVE_TO_C * Math.sqrt(d1); // 0.30
     // Locked claim from the spec: |theta_i - X_i| === 1.5*sqrt(D_i) within 1e-9.
-    const diff = Math.abs(theta.get("t1")! - units[0].x);
+    const diff = Math.abs(theta.get("t1")! - units[0]!.x);
     expect(diff).toBeCloseTo(cap, 9);
     // And the sign: t1 is above the mean, pulled DOWN by exactly cap.
-    expect(theta.get("t1")).toBeCloseTo(units[0].x - cap, 9);
+    expect(theta.get("t1")).toBeCloseTo(units[0]!.x - cap, 9);
   });
 });
 

@@ -30,21 +30,32 @@
     },
     "teammate_target_share_pair_corr": -0.0854,
     "teammate_raw_target_pair_corr": -0.0197,
+    "teammate_rec_yard_pair_corr": -0.0427,
     "n_teammate_pairs": 88809,
-    "interpretation": "Raw targets of co-active teammates are POSITIVELY correlated (shared team-game volume), but their SHARES are NEGATIVELY correlated (compositional constraint: sum to 1). The independent-p model sees neither \u2014 it treats each player's count as an independent NB."
+    "n_teammate_recyard_pairs": 37179,
+    "interpretation": "Raw targets of co-active teammates are driven by shared team-game volume, but their SHARES are NEGATIVELY correlated (compositional constraint: sum to 1), exactly the Dirichlet-multinomial structure masterplan \u00a73.2 / SC3 models. props-hb.ts computes each player's NB posterior independently \u2014 no teammate covariance."
   },
   "B_game_script": {
     "n_team_games": 3182,
-    "team_pass_attempts_sd": 833.7,
-    "corr_total_line_vs_pass_attempts": 0.177,
-    "corr_spread_vs_pass_attempts": -0.011,
-    "corr_total_line_vs_dropbacks": 0.154,
+    "team_pass_attempts_sd_pct": 833.7,
     "team_pass_attempts_mean": 33.9,
     "team_pass_attempts_range": [
       0,
       68.0
     ],
-    "interpretation": "Team pass volume (dropbacks) is strongly driven by the game script \u2014 total_line (over/under) and spread. A higher total and being a smaller favorite \u2192 more dropbacks \u2192 more targets/receptions for EVERY receiver on both teams. The independent-p model only conditions on per-player rest/weather covariates, NOT on the shared script draw (plays/PROE/pace), so it cannot co-move a game's receiver props with the script."
+    "corr_total_line_vs_pass_attempts": 0.177,
+    "corr_spread_vs_pass_attempts": -0.011,
+    "corr_total_line_vs_dropbacks": 0.154,
+    "corr_total_line_vs_total_plays": 0.115,
+    "corr_total_line_vs_pass_run_ratio": 0.138,
+    "high_total_line_mean_targets": 4.59,
+    "low_total_line_mean_targets": 4.17,
+    "high_minus_low_target_delta": 0.417,
+    "total_line_quartile_bins": {
+      "q25": 42.0,
+      "q75": 48.0
+    },
+    "interpretation": "Game script (total_line, spread) drives team pass volume & pass:run ratio, which in turn lifts the volume envelope for EVERY receiver on the field on BOTH sides. High-total-line games raise per-receiver target counts by ~0.41677219261553766 targets vs low-total games. props-hb.ts conditions only on per-player rest/weather covariates \u2014 NOT on this shared script draw, so it cannot co-move a game's entire receiver-prop slate with the script."
   },
   "C_team_total_envelope": {
     "n_receivers_analyzed": 511,

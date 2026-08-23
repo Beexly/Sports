@@ -167,7 +167,7 @@ describe("MVE James-Stein shrinkage (Amendment v2.1)", () => {
         { home: 0, away: 1, pitcherHome: 0, pitcherAway: 1, park: 0, umpire: 0, y: 15, line: 8.5 },
       ];
       for (const g of games) { model.predictOver(g); model.update(g); }
-      const qPredictFirst = model.predictOver(games[0]);
+      const qPredictFirst = model.predictOver(games[0]!);
       // The model has seen 5 games of y=15; predictOver should now give high q.
       expect(qPredictFirst).toBeGreaterThan(0.5);
     });
