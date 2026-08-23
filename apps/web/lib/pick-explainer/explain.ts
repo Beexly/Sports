@@ -131,7 +131,7 @@ export async function explainPick(options: ExplainPickOptions): Promise<PickExpl
       cache: { system: true },
     });
 
-    const failures = evaluatePickExplanationPolicy(result.text);
+    const failures = evaluatePickExplanationPolicy(result.text, grounded.context);
     if (failures.length > 0) {
       await ledger({
         modelName: result.modelName,
