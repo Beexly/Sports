@@ -40,7 +40,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What is Galaxy Sports Edge?",
-        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from multiple sportsbooks on a regular schedule, scores every matchup for edge, and publishes a calibrated signal. Free gets a daily two-pick teaser — the matchup and pick type — plus the public Edge Index and the open verified record. Pro and Elite unlock the full board with the confidence rating and the complete factor trail behind each pick.",
+        a: "A sports intelligence platform. Galaxy Sports Edge pulls in live odds from multiple sportsbooks on a regular schedule, scores every matchup for edge, and publishes each signal with the work shown. Free gets a daily two-pick teaser — the matchup and pick type — plus the public Edge Index and the public, verifiable record. Pro and Elite unlock the full board with the confidence rating and the complete factor trail behind each pick.",
       },
       {
         q: "How is this different from a tout service?",
@@ -86,11 +86,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "What does Free get?",
-        a: "A daily two-pick teaser — the matchup and pick type — plus the Edge Index, the open verified record, and the full Academy. The full board, the confidence rating, and the factor trail are Pro and Elite.",
+        a: "A daily two-pick teaser — the matchup and pick type — plus the Edge Index, the public, verifiable record, and the full Academy. The full board, the confidence rating, and the factor trail are Pro and Elite.",
       },
       {
         q: "What does Pro get?",
-        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every signal, every day, with the calibrated confidence rating and full factor trail on each one. Plus line-movement intel on every pick.`,
+        a: `$${phase.pro.monthly}/month, or $${phase.pro.annual}/year. Every signal, every day, with the confidence rating and full factor trail on each one. Plus line-movement intel on every pick.`,
       },
       {
         q: "What does Elite get?",
