@@ -1595,6 +1595,14 @@ export type { ResearchFeatureInput, ResearchLog, ResearchDenied } from "./edge-l
 export { NFL_EPA_PATH_TAG, nflEpaPathStatus } from "./edge-lab/nfl-epa-path.js";
 export type { EpaPathStatus } from "./edge-lab/nfl-epa-path.js";
 
+// NFL weekly change-point / regime detector. Leak-safe, week t for t+1. priced:false.
+export {
+  NFL_CHANGEPOINT_METHOD_TAG,
+  detectRegimeShift,
+  weeklyPerformancesFromGames,
+} from "./edge-lab/nfl-change-point.js";
+export type { ChangePointFlag, ChangePointOptions, WeeklyPerformance } from "./edge-lab/nfl-change-point.js";
+
 // Completions | attempts. Bounded Beta-Binomial. Distinct from pass yards | attempts.
 export {
   COMP_HB_METHOD_TAG,
