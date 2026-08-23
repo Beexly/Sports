@@ -107,6 +107,9 @@ const REQUIRED = [
   "STRIPE_ELITE_MONTHLY_PRICE_ID",
   "STRIPE_ELITE_ANNUAL_PRICE_ID",
   "NEXT_PUBLIC_APP_URL",
+  "CRON_SECRET",
+  "STRIPE_FANTASY_MONTHLY_PRICE_ID",
+  "STRIPE_FANTASY_ANNUAL_PRICE_ID",
 ];
 
 header("Environment variables");
@@ -125,6 +128,9 @@ const KNOWN_SENSITIVE = new Set([
   "STRIPE_PRO_ANNUAL_PRICE_ID",
   "STRIPE_ELITE_MONTHLY_PRICE_ID",
   "STRIPE_ELITE_ANNUAL_PRICE_ID",
+  "CRON_SECRET",
+  "STRIPE_FANTASY_MONTHLY_PRICE_ID",
+  "STRIPE_FANTASY_ANNUAL_PRICE_ID",
 ]);
 
 // True when we loaded a local env file (e.g. the output of `vercel env pull`).
@@ -158,6 +164,21 @@ if (sensitiveUnverifiable > 0) {
       `For an authoritative check run this in the Vercel build or a CI job with the env injected; ` +
       `otherwise confirm via runtime side-effects (the cron hitting The Odds API, the Stripe TEST subscribe cycle).${COLOR.reset}`
   );
+}
+
+// ── Elite alert channels ────────────────────────────────────────────────
+// Launching with these dark is a legal owner choice (deliveries queue as
+// retryable, never fail loudly) — WARN, never a hard failure. An invisible
+// dark channel is the actual bug this section closes.
+header("Elite alert channels");
+for (const key of ["RESEND_API_KEY", "ALERTS_EMAIL_FROM", "NEXT_PUBLIC_VAPID_PUBLIC_KEY", "VAPID_PRIVATE_KEY", "VAPID_SUBJECT"]) {
+  const v = process.env[key];
+  if (v) {
+    const redacted = v.length > 12 ? `${v.slice(0, 8)}…${v.slice(-4)}` : "(short)";
+    ok(key, redacted);
+  } else {
+    warn(key, "Elite graded-alert channel dark; deliveries queue as retryable, never fail loudly");
+  }
 }
 
 // ── Postgres ─────────────────────────────────────────────────────────────
