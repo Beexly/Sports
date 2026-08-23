@@ -191,7 +191,7 @@ function buildBoardMeta({
   };
 }
 
-export async function loadBoardState(
+async function loadBoardStateInner(
   now = new Date(),
   entitlements?: Entitlements,
 ): Promise<BoardStatePayload> {
@@ -501,4 +501,24 @@ export async function loadBoardState(
       }),
     };
   }
+}
+
+/**
+ * Viewer-facing redaction: confidence is PRO+ (canSeeConfidence). Mirrors the
+ * rankingP pattern (GSE-SEC-026): redact inside the loader so no caller can
+ * forget. Entitlement-less/internal callers already receive rankingP nulled;
+ * confidence now follows the same rule.
+ */
+export function applyViewerRedaction(
+  payload: BoardStatePayload,
+  entitlements?: Entitlements,
+): BoardStatePayload {
+  return entitlements?.canSeeConfidence === true ? payload : redactBoardConfidence(payload);
+}
+
+export async function loadBoardState(
+  now = new Date(),
+  entitlements?: Entitlements,
+): Promise<BoardStatePayload> {
+  return applyViewerRedaction(await loadBoardStateInner(now, entitlements), entitlements);
 }

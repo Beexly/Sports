@@ -23,7 +23,8 @@ vi.mock("@/lib/board/state", async (importOriginal) => {
 });
 
 import { GET } from "@/app/api/board/state/route";
-import { redactBoardConfidence } from "@/lib/board/state";
+import { redactBoardConfidence, applyViewerRedaction } from "@/lib/board/state";
+import { getEntitlements } from "@sports/types";
 
 function row(overrides: Partial<BoardStateRow> = {}): BoardStateRow {
   return {
@@ -158,5 +159,42 @@ describe("redactBoardConfidence", () => {
     const redacted = redactBoardConfidence(input);
     expect(redacted.data.publishedToday[0]!.confidence).toBeNull();
     expect(redacted.data.publishedToday[0]!.gateReason).toBe("Market depth below publish threshold.");
+  });
+});
+
+describe("applyViewerRedaction (LQ4 — centralized seam inside loadBoardState)", () => {
+  function threeLanes(): BoardStatePayload {
+    const input = payload([]);
+    input.data.scoringNow = [row({ id: "s1", status: "SCORING_NOW", confidence: 55 })];
+    input.data.publishedToday = [row({ id: "p1", confidence: 74 })];
+    input.data.gatedTodayRows = [row({ id: "g1", status: "GATED_TODAY", confidence: 33 })];
+    return input;
+  }
+
+  it("nulls confidence in all three lanes when entitlements is undefined (internal/entitlement-less caller)", () => {
+    const redacted = applyViewerRedaction(threeLanes(), undefined);
+    expect(redacted.data.scoringNow[0]!.confidence).toBeNull();
+    expect(redacted.data.publishedToday[0]!.confidence).toBeNull();
+    expect(redacted.data.gatedTodayRows[0]!.confidence).toBeNull();
+  });
+
+  it("nulls confidence for a FREE viewer", () => {
+    const redacted = applyViewerRedaction(threeLanes(), getEntitlements("FREE"));
+    expect(redacted.data.scoringNow[0]!.confidence).toBeNull();
+    expect(redacted.data.publishedToday[0]!.confidence).toBeNull();
+    expect(redacted.data.gatedTodayRows[0]!.confidence).toBeNull();
+  });
+
+  it("leaves confidence intact for a PRO viewer", () => {
+    const redacted = applyViewerRedaction(threeLanes(), getEntitlements("PRO"));
+    expect(redacted.data.scoringNow[0]!.confidence).toBe(55);
+    expect(redacted.data.publishedToday[0]!.confidence).toBe(74);
+    expect(redacted.data.gatedTodayRows[0]!.confidence).toBe(33);
+  });
+
+  it("does not mutate the input payload", () => {
+    const input = threeLanes();
+    applyViewerRedaction(input, undefined);
+    expect(input.data.publishedToday[0]!.confidence).toBe(74);
   });
 });
