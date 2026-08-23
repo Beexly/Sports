@@ -60,6 +60,8 @@ export interface CovariateRow {
   readonly avgTimeToThrow: number | null; // seconds, weekly mean
   readonly aggressiveness: number | null; // % throws into tight coverage (<1 yd)
   readonly avgIntendedAirYards: number | null; // yards per attempt, weekly mean
+  readonly avgCompletedAirYards: number | null; // yards per completion, weekly mean
+  readonly avgAirYardsDifferential: number | null; // intended minus completed, weekly mean
   // ── rushing ─────────────────────────────────────────────────────────────
   /** % of rushing attempts facing 8+ defenders in the box. */
   readonly pctAttemptsGte8Defenders: number | null;
@@ -86,6 +88,8 @@ export type CovariateField =
   | "avgTimeToThrow"
   | "aggressiveness"
   | "avgIntendedAirYards"
+  | "avgCompletedAirYards"
+  | "avgAirYardsDifferential"
   | "pctAttemptsGte8Defenders"
   | "avgTimeToLos"
   | "avgYac";

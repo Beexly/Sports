@@ -20,6 +20,8 @@ function rx(o: Partial<CovariateRow>): CovariateRow {
     avgTimeToThrow: 2.6,
     aggressiveness: 19.2,
     avgIntendedAirYards: 8.4,
+    avgCompletedAirYards: 6.7,
+    avgAirYardsDifferential: 1.7,
     pctAttemptsGte8Defenders: 0.54,
     avgTimeToLos: 2.2,
     avgYac: 4.3,

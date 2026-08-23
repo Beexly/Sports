@@ -21,6 +21,8 @@ function ngsRow(o: Partial<CovariateRow>): CovariateRow {
     avgTimeToThrow: 2.6,
     aggressiveness: 19.2,
     avgIntendedAirYards: 8.4,
+    avgCompletedAirYards: null,
+    avgAirYardsDifferential: null,
     pctAttemptsGte8Defenders: null,
     avgTimeToLos: null,
     avgYac: null,
