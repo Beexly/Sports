@@ -59,6 +59,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/board/gate", priority: 0.7, changeFrequency: "daily" },
   { path: "/today", priority: 0.7, changeFrequency: "daily" },
   { path: "/track", priority: 0.6, changeFrequency: "daily" },
+  { path: "/track/platform", priority: 0.5, changeFrequency: "daily" },
   { path: "/trends", priority: 0.6, changeFrequency: "daily" },
   { path: "/parlay-mri", priority: 0.7, changeFrequency: "weekly" },
   { path: "/academy", priority: 0.7, changeFrequency: "weekly" },
