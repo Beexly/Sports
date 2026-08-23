@@ -21,6 +21,7 @@ import {
   type ModelCourtMode,
   type RefusalKind,
 } from "@/lib/intelligence-graph/model-court/prompts";
+import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 
 export interface ModelCourtLensContext {
   readonly kind: UserLens;
@@ -135,6 +136,7 @@ export async function answerModelCourtQuestion(
   }
 
   try {
+    const promptUser = buildPromptUser(input);
     const result = await callClaude({
       apiKey: options.apiKey,
       fetchImpl: options.fetchImpl,
@@ -142,10 +144,17 @@ export async function answerModelCourtQuestion(
       maxTokens: 1200,
       temperature: 0.1,
       system: SYSTEM_PROMPT,
-      user: buildPromptUser(input),
+      user: promptUser,
       cache: { system: true },
     });
-    const policyFailures = evaluateModelCourtAnswerPolicy(result.text);
+    // Residual (accepted for launch): promptUser embeds the user's raw QUESTION
+    // alongside the grounded node/slate data, so a number the user seeds ("did
+    // you hit 68%?") is whitelisted for echo. That's an echo of the user's own
+    // text, not a fabricated MODEL stat, and the tout-shaped families (win
+    // rate/ROI/+EV) stay banned outright by EV_PATTERNS regardless of
+    // grounding. Splitting context-only grounding out of the prelude builders
+    // is a follow-up, not required for this gate.
+    const policyFailures = evaluateModelCourtAnswerPolicy(result.text, promptUser);
     if (policyFailures.length > 0) {
       await maybeRecordModelCourtUsage({
         input,
@@ -225,7 +234,7 @@ export function detectModelCourtRefusal(input: ModelCourtAnswerInput): RefusalKi
   return null;
 }
 
-export function evaluateModelCourtAnswerPolicy(bodyMarkdown: string): string[] {
+export function evaluateModelCourtAnswerPolicy(bodyMarkdown: string, groundingText?: string): string[] {
   const failures: string[] = [];
   const text = bodyMarkdown.trim();
 
@@ -249,6 +258,10 @@ export function evaluateModelCourtAnswerPolicy(bodyMarkdown: string): string[] {
   }
   if (matchesAny(text, COMPETITOR_PATTERNS)) {
     failures.push("COMPETITOR_COMPARE");
+  }
+  if (groundingText !== undefined) {
+    const allowed = extractNumericClaims(groundingText).map((c) => c.value);
+    if (!validateNumericClaims(text, { allowed }).grounded) failures.push("UNGROUNDED_NUMERIC");
   }
 
   return failures;
