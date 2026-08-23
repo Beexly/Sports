@@ -1483,6 +1483,20 @@ export {
 } from "./edge-lab/props-hb-pass-yards.js";
 export type { PassYardsSample } from "./edge-lab/props-hb-pass-yards.js";
 
+// Pass-yards air-yards-diff bind: couples the covariate bus
+// (avgAirYardsDifferential) into the passing-yards | attempts model.
+// Fail-closed on null/non-finite — never imputes. priced:false.
+export {
+  PASS_AIR_YARDS_DIFF_BIND_METHOD_TAG,
+  bindPassAirYardsDiffSamples,
+  boundPassAirYardsDiffSamples,
+} from "./edge-lab/props-hb-pass-ayd-bind.js";
+export type {
+  PassAirYardsDiffBindRequest,
+  PassAirYardsDiffBindResult,
+  BoundPassYardsSample,
+} from "./edge-lab/props-hb-pass-ayd-bind.js";
+
 // Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
 export {
   RUSH_TD_HB_METHOD_TAG,
