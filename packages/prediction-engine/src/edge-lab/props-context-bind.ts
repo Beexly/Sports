@@ -38,7 +38,10 @@
  */
 
 import type { GameRow } from "./game-row.js";
-import type { GameWeatherForecast } from "./features/nfl-weather.js";
+import {
+  type GameWeatherForecast,
+  totalSuppressionIndex,
+} from "./features/nfl-weather.js";
 import { NFL_TEAM_UTC_OFFSET, bodyClockShiftHours } from "./features/nfl-body-clock.js";
 
 /** Method tag for provenance stamping — mirrors IC3/IC4 tag convention. */
@@ -154,32 +157,23 @@ export function bindTeamContext(args: {
 
   const decisionMs = kickoffMs - leadMs;
 
-  // --- Team resolution: alias + zone lookup. ---
-  const team = canonicalTeam(request.team);
-  const opponent = canonicalTeam(request.opponentTeam);
-  const teamOffset = NFL_TEAM_UTC_OFFSET[team];
-  const oppOffset = NFL_TEAM_UTC_OFFSET[opponent];
-  if (teamOffset === undefined || oppOffset === undefined) {
-    return refuse("unknown_team", "body_clock_shift_h");
-  }
-
-  // --- Venue = home team's zone (body-clock convention). ---
-  // After the guard above, both are concrete numbers; capture as `number`
-  // so the closure (emitCell) reads narrowed values without re-checking.
-  const homeOffset: number = teamOffset;
-  const awayOffset: number = oppOffset;
-  const venueOffset: number = request.isHome ? homeOffset : awayOffset;
-
   // --- rest_days: latest completed game (scores present) involving the team,
   //     strictly before the decision cutoff, by end time. ---
+  // Canonicalize the request team so the scan matches relocated schedule codes
+  // (e.g. a canonical LV request finds a prior game logged as OAK).
+  const canonTeam = canonicalTeam(request.team);
   let prevEnd: number | null = null;
   for (const g of schedule) {
-    if (g.homeTeam !== team && g.awayTeam !== team) continue;
+    const gHome = canonicalTeam(g.homeTeam);
+    const gAway = canonicalTeam(g.awayTeam);
+    if (gHome !== canonTeam && gAway !== canonTeam) continue;
     if (g.homeScore === null || g.awayScore === null) continue;
     const startMs = Date.parse(g.startTime);
     if (!Number.isFinite(startMs)) continue;
     const endMs = startMs + GAME_DURATION_MS;
-    if (endMs <= decisionMs) {
+    // Strict <: a game ending exactly at the decision cutoff is NOT strictly
+    // pre-cutoff and cannot feed rest_days (honest as-of boundary).
+    if (endMs < decisionMs) {
       if (prevEnd === null || endMs > prevEnd) prevEnd = endMs;
     }
   }
@@ -210,7 +204,13 @@ export function bindTeamContext(args: {
       return null;
     }
     if (field === "body_clock_shift_h") {
-      // teamOffset/oppOffset resolved above; unknown_team already checked.
+      // unknown_team only fails if body_clock_shift_h is actually requested.
+      // venue = home team's zone (body-clock convention).
+      const teamOff = NFL_TEAM_UTC_OFFSET[canonicalTeam(request.team)];
+      const oppOff = NFL_TEAM_UTC_OFFSET[canonicalTeam(request.opponentTeam)];
+      if (teamOff === undefined || oppOff === undefined) {
+        return refuse("unknown_team", "body_clock_shift_h");
+      }
       return null;
     }
     if (field === "wx_total_suppression") {
@@ -241,6 +241,10 @@ export function bindTeamContext(args: {
       };
     }
     if (field === "body_clock_shift_h") {
+      // validated in validateField — team/opp offsets are concrete here.
+      const homeOffset: number = NFL_TEAM_UTC_OFFSET[canonicalTeam(request.team)]!;
+      const awayOffset: number = NFL_TEAM_UTC_OFFSET[canonicalTeam(request.opponentTeam)]!;
+      const venueOffset: number = request.isHome ? homeOffset : awayOffset;
       return {
         field,
         value: bodyClockShiftHours(homeOffset, venueOffset),
@@ -250,7 +254,7 @@ export function bindTeamContext(args: {
         layer: "L3",
       };
     }
-    // wx_total_suppression
+    // wx_total_suppression — validated in validateField: dome ok, outdoor fields present.
     const wxNow = wx!;
     if (wxNow.isDome) {
       return {
@@ -262,14 +266,16 @@ export function bindTeamContext(args: {
         layer: "L3",
       };
     }
-    const windFactor = Math.min(1, Math.max(0, (wxNow.windMph ?? 0) / 25));
-    const precipFactor = Math.min(1, Math.max(0, (wxNow.precipProbPct ?? 0) / 100));
-    const tempF = wxNow.tempF!;
-    const coldFactor: number = tempF <= 20 ? 1 : tempF >= 50 ? 0 : (50 - tempF) / 30;
-    const suppression = 0.6 * windFactor + 0.25 * precipFactor + 0.15 * coldFactor;
+    // Outdoor: all three fields guaranteed non-null by validateField.
+    const value = totalSuppressionIndex({
+      isDome: false,
+      windMph: wxNow.windMph!,
+      precipProbPct: wxNow.precipProbPct!,
+      tempF: wxNow.tempF!,
+    });
     return {
       field,
-      value: Math.min(1, Math.max(0, suppression)),
+      value,
       grain: "pregame_for_kickoff",
       provenance: "forecast_pre_cutoff",
       knownAtIso: iso(Date.parse(wxNow.forecastIssuedAt)),

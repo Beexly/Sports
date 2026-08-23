@@ -297,7 +297,7 @@ describe("bindTeamContext — body_clock_shift_h", () => {
   });
 
   // Attack #3: "XYZ" refuses unknown_team
-  it("unknown team abbreviation refuses unknown_team", () => {
+  it("unknown team abbreviation refuses unknown_team when body_clock_shift_h requested", () => {
     const kickoff = Date.parse("2021-10-10T17:00:00.000Z");
     const result = bindTeamContext({
       schedule: [], weatherByGame: new Map(),
@@ -307,7 +307,7 @@ describe("bindTeamContext — body_clock_shift_h", () => {
         kickoffIso: kickoffIsoFrom(kickoff),
         isHome: true,
         opponentTeam: "KC",
-        fields: ["rest_days", "body_clock_shift_h"],
+        fields: ["body_clock_shift_h"],
       },
     });
     expect(result.ok).toBe(false);
@@ -592,31 +592,50 @@ describe("bindTeamContext — all-or-refuse", () => {
     }
   });
 
-  it("knownAtIso differs for all three fields when wx issued before decision cutoff", () => {
-    const prevStart = Date.parse("2021-10-10T17:00:00.000Z");
+  it("unknown team refused ONLY when body_clock_shift_h is requested, not for rest_days alone", () => {
+    // Attack: rest_days requested alone with an unknown team should NOT refuse
+    // unknown_team — it has no prior game, so it refuses no_prior_game instead.
+    const kickoff = Date.parse("2021-09-12T17:00:00.000Z");
+    const result = bindTeamContext({
+      schedule: [], weatherByGame: new Map(),
+      request: {
+        team: "XYZ",
+        gameId: "g_xyz_rest",
+        kickoffIso: kickoffIsoFrom(kickoff),
+        isHome: true,
+        opponentTeam: "KC",
+        fields: ["rest_days"],
+      },
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.refuse).toBe("no_prior_game");
+      expect(result.field).toBe("rest_days");
+    }
+  });
+
+  it("prior game ending exactly at decision cutoff is NOT counted for rest_days (strict <)", () => {
+    // Prior game ends exactly at decisionMs — must be excluded (strict <).
     const kickoff = Date.parse("2021-10-17T17:00:00.000Z");
     const decisionMs = kickoff - DECISION_LEAD_MS;
-    const wxIssued = decisionMs - 3600_000; // 1h before cut-off
-    const wx: GameWeatherForecast = {
-      forecastIssuedAt: new Date(wxIssued).toISOString(),
-      isDome: false, windMph: 10, precipProbPct: 20, tempF: 70,
-    };
+    // prevEnd = decisionMs - 0 means the prior game's start was decisionMs - 4h.
+    const prevStart = decisionMs - GAME_DURATION_MS;
     const result = bindTeamContext({
       schedule: [game(prevStart, "NE", "BUF", 24, 20)],
-      weatherByGame: new Map([["g_diff", wx]]),
+      weatherByGame: new Map(),
       request: {
         team: "NE",
-        gameId: "g_diff",
+        gameId: "g_exact_boundary",
         kickoffIso: kickoffIsoFrom(kickoff),
         isHome: true,
         opponentTeam: "BUF",
-        fields: ["rest_days", "body_clock_shift_h", "wx_total_suppression"],
+        fields: ["rest_days"],
       },
     });
-    expect(result.ok).toBe(true);
-    if (result.ok) {
-      const known = result.cells.map((c) => c.knownAtIso);
-      expect(new Set(known).size).toBe(3);
+    // prevEnd === decisionMs, so the strict < excludes it → no_prior_game.
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.refuse).toBe("no_prior_game");
     }
   });
 });
