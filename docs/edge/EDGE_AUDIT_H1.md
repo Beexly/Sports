@@ -20,3 +20,14 @@ B. Timeout usage / drive-level timeout spend. timeout references only network-ti
 C. Play-level formation / motion / pre-snap shift (would need new ingestion table). Not present. NO DATA PATH.
 
 HONESTY: all 5 candidate angles reference existing interfaces/types (GameScriptRow, GameScriptCell, Drive, DrivePlay). No fabricated backtests, no invented numbers, no mock picks. priced:false holds (bind module does not price; drives module is pure aggregation). BLOCKED candidates A/B/C documented honestly rather than invented.
+
+[swarm-R05] SPECIAL-TEAMS EDGE EXTENSION — BEYOND KICKOFF RETURNS (2026-08-23)
+Verified data-path audit (packages/prediction-engine/src + packages/data-ingestion/src grep):
+1) Punt-return yards: NO DATA PATH. Only drives.ts:55 (PUNT result) + nflverse-pbp-mapper.ts:248-257 (play_type=punt, driveHasPunt flag); no return-yard column in ingestion.
+2) Punter net average: NO DATA PATH — no punter-level aggregation feed ingested (only yardline_100 per play difference approximates, not explicit).
+3) Field-position battle (starting field position delta): COMPUTABLE — drives.ts:70 startYardline100 + :131 finalized per-drive; delta = opponent's start after punt/kickoff; joinable to kickoff-return-yards-bind.ts:56 (WP grain). Real interface exists.
+4) Blocked kicks: NO DATA PATH — BLOCKED references in code are activation/status terms (evidence-readiness-matrix.ts:78, remote-model-client.ts:40), not special-teams event records; no blocked_kick feed.
+5) Fake-punt / fake-FG tendency: NO DATA PATH — only punt/field_goal/field_goal_result play types mapped; no formation / fake-flag column in ingestion.
+6) Weather interaction on ST units: NO DATA PATH — data-ingestion/src weather references are only season windows (config.ts:43) and calendar windows; no meteorological feed (wind/temp/precip) wired.
+7) Existing H1 Edge #5 (kickoff return yards): COMPUTABLE — bind lines 56/89/128/260 (kickoff-return-yards-bind.ts + kickoff-return-yards.ts); already covered by R04.
+VERDICT: 2 COMPUTABLE (field-position delta; H1 #5 existing), 5 NO DATA PATH. priced:false preserved; no market-echo confidence/100 used; no fabricated backtests.
