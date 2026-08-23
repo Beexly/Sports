@@ -170,11 +170,14 @@ export interface IncentiveResult {
  *
  * Because full standings tracking requires cross-game aggregation beyond a
  * single GameRow's scope, this v0 module provides the rule-change covariates
- * (which are pure schedule facts) and the week-based incentive flags
- * (divisional, week-17) that require no aggregation. The clinched/eliminated
- * flags are computed via a caller-supplied standings snapshot keyed by team,
- * which the caller assembles from prior games — this keeps the module leak-free
- * and pure (no I/O to fetch standings) while making the covariate available.
+ * (which are pure schedule facts) and the week-based incentive flag
+ * (week-17) that require no aggregation. The clinched/eliminated flags and
+ * the divisional-matchup flag are computed via caller-supplied snapshots
+ * (a standings map and a team -> division map respectively, both assembled
+ * by the caller from prior games / the schedule) — this keeps the module
+ * leak-free and pure (no I/O) while making the covariates available. Both
+ * fail closed (0 / not-clinched / not-eliminated) when their snapshot is
+ * absent or the team is unmapped, never fabricating a positive.
  */
 export function buildIncentiveCalendarRows(
   games: readonly GameRow[],
@@ -182,6 +185,9 @@ export function buildIncentiveCalendarRows(
   opts: {
     /** Optional precomputed standings: { wins, losses, ties } per team, from PRIOR games only. */
     readonly standings?: Map<string, { readonly wins: number; readonly losses: number; readonly ties: number }>;
+    /** Optional team -> division-label map. Required to compute `incentive:divisional`;
+     *  without it the flag fails closed to 0 rather than fabricating a value. */
+    readonly divisions?: Map<string, string>;
     /** Weeks from the end of the season that count as "late-season incentive" (default 4). */
     readonly playoffRaceWeeks?: number;
   } = {},
@@ -194,6 +200,7 @@ export function buildIncentiveCalendarRows(
 
   const playoffRaceWeeks = opts.playoffRaceWeeks ?? PLAYOFF_RACE_WEEKS;
   const standings = opts.standings ?? new Map();
+  const divisions = opts.divisions;
   // Max wins any team can reach this season (for clinch/eliminate computation).
   // NFL regular season is 17 games; a team can win at most 17.
   const MAX_SEASON_WINS = NFL_SEASON_WEEKS;
@@ -243,8 +250,13 @@ export function buildIncentiveCalendarRows(
       ingest(`rule:${rule.code}`, active);
     }
 
-    // Week-based incentive flags (no aggregation needed).
-    const divisional = week >= 1 && week <= NFL_SEASON_WEEKS ? 1 : 0;
+    // Divisional-matchup flag: requires a caller-supplied team -> division map
+    // (GameRow carries no division field). Fails closed to 0 (unknown, not
+    // "not divisional") when the map is absent or either team is unmapped —
+    // this must never fabricate a positive.
+    const homeDiv = divisions?.get(g.homeTeam);
+    const awayDiv = divisions?.get(g.awayTeam);
+    const divisional = homeDiv !== undefined && homeDiv === awayDiv ? 1 : 0;
 
     // Standings-derived incentive flags (uses caller-supplied prior-game standings).
     const homeStanding = standings.get(g.homeTeam);

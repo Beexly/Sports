@@ -248,21 +248,54 @@ describe("buildIncentiveCalendarRows — late-season flags", () => {
     ];
     const store = new AsOfFeatureStore();
     const { rows } = buildIncentiveCalendarRows(games, store);
-    // Both should emit rows; late-season is captured via week_17 flag and
-    // the structural divisional flag. The module doesn't have a separate
-    // "late_season" feature key but week_17 and divisional cover the late
-    // signal.
+    // Both should emit rows; late-season is captured via the week_17 flag.
     expect(rows).toHaveLength(2);
     expect(rows[0]!.features.get("incentive:week_17")).toBe(0);
     expect(rows[1]!.features.get("incentive:week_17")).toBe(0);
   });
 
-  it("week_14 is late-season (plays into week_17 flag for week 17)", () => {
+  it("divisional flag fails closed to 0 with no divisions map supplied", () => {
     const games = [
-      game(0, 24, 20, 1.9, 2.1, 2021, 15, 98),  // week 15 = late season
+      game(0, 24, 20, 1.9, 2.1, 2021, 15, 98, { homeTeam: "A", awayTeam: "B" }),
     ];
     const store = new AsOfFeatureStore();
     const { rows } = buildIncentiveCalendarRows(games, store);
+    expect(rows[0]!.features.get("incentive:divisional")).toBe(0);
+  });
+
+  it("divisional flag is 1 when both teams map to the same division", () => {
+    const games = [
+      game(0, 24, 20, 1.9, 2.1, 2021, 15, 98, { homeTeam: "A", awayTeam: "B" }),
+    ];
+    const store = new AsOfFeatureStore();
+    const divisions = new Map([
+      ["A", "AFC East"],
+      ["B", "AFC East"],
+    ]);
+    const { rows } = buildIncentiveCalendarRows(games, store, { divisions });
     expect(rows[0]!.features.get("incentive:divisional")).toBe(1);
+  });
+
+  it("divisional flag is 0 when teams map to different divisions", () => {
+    const games = [
+      game(0, 24, 20, 1.9, 2.1, 2021, 15, 98, { homeTeam: "A", awayTeam: "B" }),
+    ];
+    const store = new AsOfFeatureStore();
+    const divisions = new Map([
+      ["A", "AFC East"],
+      ["B", "NFC West"],
+    ]);
+    const { rows } = buildIncentiveCalendarRows(games, store, { divisions });
+    expect(rows[0]!.features.get("incentive:divisional")).toBe(0);
+  });
+
+  it("divisional flag fails closed to 0 when only one team is mapped", () => {
+    const games = [
+      game(0, 24, 20, 1.9, 2.1, 2021, 15, 98, { homeTeam: "A", awayTeam: "B" }),
+    ];
+    const store = new AsOfFeatureStore();
+    const divisions = new Map([["A", "AFC East"]]);
+    const { rows } = buildIncentiveCalendarRows(games, store, { divisions });
+    expect(rows[0]!.features.get("incentive:divisional")).toBe(0);
   });
 });
