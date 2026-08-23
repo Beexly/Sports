@@ -66,7 +66,9 @@ describe("detectRegimeShift", () => {
     // Baseline: ~0 mean. Recent: all negative.
     const diffs = [1, -1, 2, -2, -20, -20, -20, -20, -20, -20];
     const result = detectRegimeShift(diffs, { window: 6, minHistory: 4 }) as RegimeDetection;
-    expect(result.cusum).toBe(0); // upper CUSUM doesn't fire on negative drift
+    expect(result.cusum).toBeGreaterThan(0); // negative tail fires
+    expect(result.shiftFlag).toBe(1);
+    expect(result.direction).toBe("down");
   });
 
   it("does NOT fire on a stable sequence (no shift)", () => {
@@ -104,18 +106,12 @@ describe("detectRegimeShift", () => {
     expect(result!.shiftFlag).toBe(0);
   });
 
-  it("direction is 'none' when cusum exceeds h but recent mean equals baseline", () => {
-    // Construct a case where cusum > h but recentMeanDiff is exactly 0.
-    // This is hard to construct naturally, so we test the logic path directly:
-    // baseline mean = 0, sigma0 small, recent = [k, k, k, k, k, k] where k > 0.
-    // Each z = k/sigma0. If k/sigma0 - 0.5 > 5/sigma0 → cusum accumulates.
-    // recentMeanDiff = k > 0 → direction = "up". True "none" direction at cusum > h
-    // only happens when recentMeanDiff is exactly 0 but cusum > h, which can't happen
-    // (if mean diff is 0, z sums to 0 over the window, cusum can't exceed 0 + k*window).
-    // So we verify that direction is never "none" when shiftFlag is 1 with non-zero diff:
+  it("direction is 'up' when recent window diverges upward and exceeds h", () => {
+    // recentMeanDiff > 0 and the upward CUSUM tail dominates → direction "up".
     const diffs = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1];
     const result = detectRegimeShift(diffs, { window: 6, minHistory: 4 }) as RegimeDetection;
     expect(result.recentMeanDiff).toBeGreaterThan(0);
+    expect(result.direction).toBe("up");
   });
 });
 
@@ -133,13 +129,9 @@ describe("buildRegimeDetectionRows", () => {
       window: 6,
       minHistory: 2,
     });
-    // g0 and g1: at least one side lacks history → thinHistory.
+    // g0, g1: at least one side lacks history (1 < minHistory 2) → thinHistory.
     expect(skipped.thinHistory).toBe(2);
-    // g2: both A and B have 1 prior game (< minHistory 2) → still thinHistory.
-    // Wait — after g0 and g1 are processed, A has [4, 4] and B has [-4, -4].
-    // g2's prior history for A = [4,4] (length 2 >= minHistory 2). For B = [-4,-4] (length 2).
-    // So g2 should be featured. Let's check:
-    expect(skipped.thinHistory).toBe(2);
+    // g2: both A and B have 2 prior diffs → featured.
     expect(rows.length).toBe(1);
     expect(rows[0]!.id).toBe("g2");
   });
@@ -240,7 +232,7 @@ describe("buildRegimeDetectionRows", () => {
     const auditEntries = store.servedAudit.filter((r) => r.entityId === "g2");
     expect(auditEntries.length).toBe(REGIME_FEATURE_KEYS.length);
     for (const entry of auditEntries) {
-      expect(Date.parse(entry.observedAt)).toBeLessThanOrEqual(Date.parse(featured.decisionAt));
+      expect(Date.parse(entry.observedAt)).toBeLessThan(Date.parse(featured.decisionAt));
     }
   });
 

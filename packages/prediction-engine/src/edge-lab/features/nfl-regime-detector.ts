@@ -20,19 +20,21 @@
  *     game so the AsOfFeatureStore's audit tripwire genuinely covers these
  *     features.
  *
- * THE DETECTOR (one-sided CUSUM on standardized residuals)
+ * THE DETECTOR (two-sided CUSUM on standardized residuals)
  *   For a team's last `window` completed-game point differentials d_1..d_n:
  *     - baseline mean mu0, sd sigma0 from the PRE-window history (or the full
  *       pre-decision history if fewer than `warmup` games exist).
  *     - standardized residual: z_i = (d_i - mu0) / sigma0  (sigma0 floored at
  *       a positive minimum to avoid division-by-near-zero blowups).
- *     - one-sided upper CUSUM: S_0 = 0; S_i = max(0, S_{i-1} + z_i - k).
+ *     - two-sided CUSUM: S_0 = 0; S+_i = max(0, S+_{i-1} + z_i - k),
+ *       S-_i = max(0, S-_{i-1} - z_i - k). The dominant tail (max(S+, S-)) is
+ *       the shift magnitude.
  *     - k = 0.5 (standard CUSUM reference value / half-standard-deviation band).
  *   The final CUSUM S_n is the shift magnitude. A regime shift is DECLARED when
  *     S_n > h  (h = 5 by default; h/k ~ 10, a high-specificity threshold).
- *   Direction: "up" if the recent mean exceeds mu0, "down" otherwise — derived
- *   from the sign of the recent-window mean relative to mu0, NOT from the
- *   CUSUM sign alone, so a strong negative drift still resolves to a direction.
+ *   Direction: "up" if the dominant CUSUM tail is positive, "down" if negative —
+ *   derived from the CUSUM sign, so a strong negative drift resolves to a
+ *   direction.
  *
  * This is a DETECTION, not a forecast: a shift flag at the decision instant
  * means "the team's performance distribution has demonstrably changed over the
@@ -62,6 +64,10 @@ export const REGIME_FEATURE_KEYS = [
   "regime:shift_flag",
   "regime:direction",
   "regime:recent_mean_diff",
+  "regime:cusum_away",
+  "regime:shift_flag_away",
+  "regime:recent_mean_diff_away",
+  "regime:direction_away",
 ] as const;
 
 /** Decision cutoff: features frozen this long before kickoff (mirrors siblings). */
@@ -95,11 +101,11 @@ export interface RegimeDetectorOptions {
 
 /** The detector's verdict on one team's history. */
 export interface RegimeDetection {
-  /** Final one-sided upper CUSUM statistic (>= 0). */
+  /** Final two-sided CUSUM statistic (= max(S+, S-), >= 0). */
   readonly cusum: number;
   /** 1 when the CUSUM exceeds the decision interval (regime shift declared), 0 otherwise. */
   readonly shiftFlag: 0 | 1;
-  /** "up" | "down" | "none" — direction of the shift vs the baseline. */
+  /** "up" | "down" | "none" — direction of the dominant CUSUM tail. */
   readonly direction: "up" | "down" | "none";
   /** Signed difference: recent-window mean minus baseline mean. */
   readonly recentMeanDiff: number;
@@ -112,6 +118,8 @@ export interface RegimeDetectResult {
     readonly tie: number;
     readonly noOdds: number;
     readonly thinHistory: number;
+    /** Prior game's end was not strictly before the decision cutoff. */
+    readonly notKnowableInTime: number;
   };
 }
 
@@ -149,7 +157,7 @@ export function detectRegimeShift(
   // window's last game; we need at least 2 points for a baseline sd.
   const baselineEnd = Math.max(0, diffs.length - window);
   const baseline = diffs.slice(0, baselineEnd);
-  const recent = diffs.slice(baselineEnd);
+  let recentWindow: readonly number[] = diffs.slice(baselineEnd);
 
   // Need at least 2 baseline points for a meaningful sd, or fall back to using
   // the entire pre-window history as both baseline and window (degenerate but
@@ -162,37 +170,37 @@ export function detectRegimeShift(
     const var0 = baseline.reduce((s, d) => s + (d - mu0) ** 2, 0) / baseline.length;
     sigma0 = Math.sqrt(var0);
   } else if (diffs.length >= 2) {
-    // Fallback: use the full history as baseline (every point is its own
-    // baseline; CUSUM still measures cumulative deviation from the overall mean).
+    // Fallback: use the full history as the baseline window.
     mu0 = diffs.reduce((a, b) => a + b, 0) / diffs.length;
     const var0 = diffs.reduce((s, d) => s + (d - mu0) ** 2, 0) / diffs.length;
     sigma0 = Math.sqrt(var0);
-    // In fallback mode, the window is the full history.
-    baseline.splice(0, baseline.length); // clear
+    recentWindow = diffs; // full history is the CUSUM window in fallback mode
   } else {
     return null;
   }
 
   sigma0 = Math.max(sigma0, minSigma);
 
-  // One-sided upper CUSUM over the recent window.
-  let s = 0;
-  for (const d of recent) {
+  // Two-sided CUSUM: track positive (up) and negative (down) cumulative sums.
+  // The dominant tail (whichever exceeds h) sets the shift magnitude and
+  // direction, so strong downward shifts resolve to "down" and are reachable.
+  let sUp = 0;
+  let sDown = 0;
+  for (const d of recentWindow) {
     const z = (d - mu0) / sigma0;
-    s = Math.max(0, s + z - k);
+    sUp = Math.max(0, sUp + z - k);
+    sDown = Math.max(0, sDown - z - k);
   }
-  const cusum = s;
+  const cusum = Math.max(sUp, sDown);
 
-  // Direction: sign of the recent mean relative to baseline mean.
-  const recentMean = recent.reduce((a, b) => a + b, 0) / recent.length;
+  // Direction: from the dominant tail. If neither tail exceeds h, no shift.
+  const recentMean = recentWindow.reduce((a, b) => a + b, 0) / recentWindow.length;
   const recentMeanDiff = recentMean - mu0;
   const direction =
     cusum > h
-      ? recentMeanDiff > 0
+      ? sUp >= sDown
         ? "up"
-        : recentMeanDiff < 0
-          ? "down"
-          : "none"
+        : "down"
       : "none";
 
   return {
@@ -208,14 +216,14 @@ export function detectRegimeShift(
  *
  * For each game, gathers the featured team's (and opponent's) completed-game
  * point differentials from ALL prior games strictly before the decision cutoff,
- * runs the CUSUM detector, and ingests the four covariates through the
+ * runs the CUSUM detector, and ingests the covariates through the
  * AsOfFeatureStore at the honest knowable-at instant (end of the last
  * constituent game).
  *
  * The detector is symmetric: home and away teams are each evaluated independently
- * against their own baselines, producing four feature cells per side. The EvalRow
- * carries the HOME team's detection (the modeled side), but both sides' staleness
- * is ingested so a downstream caller can build a relative regime-staleness diff.
+ * against their own baselines, producing feature cells for both sides. The EvalRow
+ * carries the HOME team's detection (the modeled side), but both sides' covariates
+ * are ingested so a downstream caller can build a relative regime-staleness diff.
  */
 export function buildRegimeDetectionRows(
   games: readonly GameRow[],
@@ -235,10 +243,7 @@ export function buildRegimeDetectionRows(
   const teamHistory = new Map<string, { diff: number; endMs: number }[]>();
 
   const rows: EvalRow[] = [];
-  const skipped = { noScores: 0, tie: 0, noOdds: 0, thinHistory: 0 };
-
-  const window = opts.window ?? 6;
-  const minHistory = opts.minHistory ?? 4;
+  const skipped = { noScores: 0, tie: 0, noOdds: 0, thinHistory: 0, notKnowableInTime: 0 };
 
   for (const g of sorted) {
     const startMs = Date.parse(g.startTime);
@@ -306,7 +311,7 @@ export function buildRegimeDetectionRows(
       // cutoff. If a prior game's end is at/after the cutoff (shouldn't happen
       // for properly time-ordered NFL games), fail closed.
       if (observedAtMs >= decisionMs) {
-        skipped.thinHistory += 1;
+        skipped.notKnowableInTime += 1;
         return;
       }
       const observedAt = new Date(observedAtMs).toISOString();
@@ -325,6 +330,7 @@ export function buildRegimeDetectionRows(
       ingest("regime:cusum_away", awayRegime.cusum);
       ingest("regime:shift_flag_away", awayRegime.shiftFlag);
       ingest("regime:recent_mean_diff_away", awayRegime.recentMeanDiff);
+      ingest("regime:direction_away", awayRegime.direction === "up" ? 1 : awayRegime.direction === "down" ? -1 : 0);
 
       const decisionAt = new Date(decisionMs).toISOString();
       rows.push({
