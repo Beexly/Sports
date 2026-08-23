@@ -195,3 +195,11 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Fleet drafts parked `tmp/fleet/` (C4.NFL.1–6, C5.NFL.1–4). Verifier/catalog rewrite not started. `Sports-h01` left clean (untracked fleet removed).
 - Next: squash-merge #555, then 557/556 if green, then EDGE_CATALOG from a new origin/main worktree. Stay off ingest/shin/Sports cwd/Hermes.
 
+
+### 2026-08-23 ~11:55 CT | Hermes / ox-alpha | CLEAN
+- Edge wave salvage commit `01a07c2c` on hermes/h1-qb-pressures-edge, PUSHED.
+- 21 subagents (2 waves of edge builders + research) hit Nous HTTP 524s; stopped all. Salvaged 6 binds off disk: aggressiveness→passTD, cay→passYards, passerRating→passTD, ryoePerAtt→rushTD, avgSeparation→catches, rpoe→rushTD (+ tests + barrel).
+- Fixed: mangled test factories (CRLF), gsid typo, 2 wrong batch assertions, missing backtest describe suite, stash-pop conflicts in AGENT.md/SESSION-HANDOFF.md (kept both sides).
+- Verified: typecheck 0 errors, lint PASS, edge-lab 1120/1120 green. Also landed earlier: d993ca2a H2-ayd bind, fd688f17 promptfoo pin.
+- Research artifact: handoff/EDGE_RESEARCH_NEXT_5.md (next edges: tackles, pass attempts, QB hits, completions-allowed, missed tackles).
+- Lesson: max ~3 concurrent Nous :free children — larger fan-outs die at ~60K ctx on Cloudflare 120s timeout.
