@@ -36,7 +36,7 @@
 
 export const COVARIATE_BUS_METHOD_TAG = "covariate_bus_v1" as const;
 
-export type StatType = "receiving" | "passing" | "rushing";
+export type StatType = "receiving" | "passing" | "rushing" | "defense";
 
 /**
  * Normalized NGS weekly-mean row. The data-ingestion parsers
@@ -69,6 +69,9 @@ export interface CovariateRow {
   // ── yac (receiving, covariate) ─────────────────────────────────────────────
   /** Average yards-after-catch per reception (weekly NGS mean). NOT per-target arrival YAC. */
   readonly avgYac: number | null;
+  // ── defense (PFR advstats def) ──────────────────────────────────────────────
+  /** Weekly PFR mean: pressures (hurries + hits + sacks) per dropback faced. H1 Edge #1. */
+  readonly pressureRate: number | null;
   // ── receiving vendor y-axis (NEVER exposed as p) ──────────────────────────
   /** NFL NGS proprietary xYAC. Y-axis only — the bus never emits this as a covariate. */
   readonly avgExpectedYac: number | null;
@@ -92,12 +95,13 @@ export type CovariateField =
   | "avgAirYardsDifferential"
   | "pctAttemptsGte8Defenders"
   | "avgTimeToLos"
-  | "avgYac";
+  | "avgYac"
+  | "pressureRate";
 
 /** Grain + provenance tag so callers never mistake a weekly mean for a
  * single-frame measurement. Honest header on every emitted cell. */
 export type CovariateGrain = "week_t_for_tplus1";
-export type CovariateProvenance = "weekly_ngs_mean" | "expected_metric_v1";
+export type CovariateProvenance = "weekly_ngs_mean" | "weekly_pfr_def_mean" | "expected_metric_v1";
 
 export interface CovariateCell {
   readonly value: number;

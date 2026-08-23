@@ -1694,6 +1694,30 @@ export {
 } from "./edge-lab/props-hb-sacks.js";
 export type { SackSample } from "./edge-lab/props-hb-sacks.js";
 
+// H1 Edge #1 — QB Pressures (hurries + hits + sacks). Books price sacks only;
+// pressures capture QB disruption (~5% edge). PFR advstats def side.
+export {
+  PRESSURES_HB_METHOD_TAG,
+  fitPressurePrior,
+  posteriorPressure,
+  betaBinomialProbOverPressures,
+  probOverPressures,
+  scorePressuresOver,
+} from "./edge-lab/props-hb-pressures.js";
+export type { PressureSample } from "./edge-lab/props-hb-pressures.js";
+
+// Pressure-rate covariate bind: PFR weekly mean pressure-rate → PressureSample.
+export {
+  PRESSURE_RATE_BIND_METHOD_TAG,
+  bindPressureSamples,
+  boundPressureSamples,
+} from "./edge-lab/props-hb-pressure-rate-bind.js";
+export type {
+  PressureBindRequest,
+  PressureBindResult,
+  BoundPressureSample,
+} from "./edge-lab/props-hb-pressure-rate-bind.js";
+
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
 // ~50 settled samples. Do not invert Σ (no Markowitz).
