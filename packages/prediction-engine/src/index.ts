@@ -1603,6 +1603,21 @@ export {
 } from "./edge-lab/nfl-change-point.js";
 export type { ChangePointFlag, ChangePointOptions, WeeklyPerformance } from "./edge-lab/nfl-change-point.js";
 
+// Ladder + boost scanners: softness map across a market's price ladder.
+// Detects where model p diverges from market q. Does NOT fire live p. priced:false.
+export {
+  LADDER_BOOST_METHOD_TAG,
+  scanLadderBoost,
+  scanBoostOpportunities,
+} from "./edge-lab/ladder-boost-scanners.js";
+export type {
+  LadderLevel,
+  LadderLevelScan,
+  SoftnessMapResult,
+  SoftnessMapOptions,
+  BoostOpportunity,
+} from "./edge-lab/ladder-boost-scanners.js";
+
 // Completions | attempts. Bounded Beta-Binomial. Distinct from pass yards | attempts.
 export {
   COMP_HB_METHOD_TAG,
