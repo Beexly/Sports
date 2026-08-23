@@ -12,7 +12,7 @@ Contact: hq@galaxysportsedge.com
 Location: The Woodlands, Texas area · remote-first product
 
 /* SITE */
-Standards: publish-before-kickoff · CLV-audited, gate-until-defensible record · honesty gates
+Standards: publish-before-kickoff · CLV-backed proof · honesty gates
 Law: finish · dark · or refuse the write
 Doctrine: We detect. You decide.
 Stack: free-first data · Jynx credit routing · durable Postgres on public writes

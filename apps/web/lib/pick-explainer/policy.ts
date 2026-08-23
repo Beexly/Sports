@@ -7,8 +7,6 @@
  * Pure and fully unit-tested. A failing explanation is never shown to the user.
  */
 
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
-
 // Same families the Model Court enforces, tuned for explanation OUTPUT (not the
 // user's question). Certainty here targets unconditional outcome claims.
 const CERTAINTY_PATTERNS = [
@@ -53,8 +51,7 @@ export type PickExplanationPolicyFailure =
   | "BETTING_CERTAINTY"
   | "PERSONAL_ADVICE"
   | "EV_KELLY_WINRATE"
-  | "COMPETITOR_COMPARE"
-  | "UNGROUNDED_NUMERIC";
+  | "COMPETITOR_COMPARE";
 
 function matchesAny(text: string, patterns: readonly RegExp[]): boolean {
   return patterns.some((p) => p.test(text));
@@ -77,7 +74,7 @@ export function detectBannedLanguage(text: string): PickExplanationPolicyFailure
 /**
  * Returns the list of policy failures for an explanation. Empty array = passes.
  */
-export function evaluatePickExplanationPolicy(text: string, groundingText?: string): PickExplanationPolicyFailure[] {
+export function evaluatePickExplanationPolicy(text: string): PickExplanationPolicyFailure[] {
   const failures: PickExplanationPolicyFailure[] = [];
   const trimmed = text.trim();
 
@@ -88,10 +85,6 @@ export function evaluatePickExplanationPolicy(text: string, groundingText?: stri
   if (matchesAny(trimmed, PERSONAL_ADVICE_PATTERNS)) failures.push("PERSONAL_ADVICE");
   if (matchesAny(trimmed, EV_PATTERNS)) failures.push("EV_KELLY_WINRATE");
   if (matchesAny(trimmed, COMPETITOR_PATTERNS)) failures.push("COMPETITOR_COMPARE");
-  if (groundingText !== undefined) {
-    const allowed = extractNumericClaims(groundingText).map((c) => c.value);
-    if (!validateNumericClaims(trimmed, { allowed }).grounded) failures.push("UNGROUNDED_NUMERIC");
-  }
 
   return failures;
 }

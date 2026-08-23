@@ -159,54 +159,63 @@ test.describe("P9.5-03 — signup + auth journey", () => {
   });
 
   test.describe("callbackUrl open-redirect guard", () => {
-    function assertLoggedOutStaysOnSignin(finalUrl: string, input: string) {
-      const u = new URL(finalUrl);
-      expect(
-        u.origin,
-        `callbackUrl="${input}" left origin: ${finalUrl}`,
-      ).toMatch(/https?:\/\/localhost:3000/);
-      expect(
-        u.hostname,
-        `callbackUrl="${input}" must not land on an attacker host`,
-      ).not.toBe("evil.com");
-      // Logged-out visitors stay on the sign-in form. Post-auth redirect uses
-      // safeCallbackUrl() (unit-tested). The query string may still contain the
-      // raw param — that is not a navigation to evil.com.
-      expect(u.pathname, `callbackUrl="${input}" should stay on sign-in while logged out`).toBe(
-        "/auth/signin",
-      );
-    }
-
-    test("external callbackUrl variants never navigate off-origin while logged out", async ({
+    test("external callbackUrl variants never redirect off-origin after signin", async ({
       page,
     }) => {
+      // Every malicious callbackUrl must resolve to a same-origin destination
+      // (the signin page redirects signed-in users to safeCallbackUrl(), which
+      // falls back to /dashboard for anything that isn't a safe relative path).
       for (const { input, description } of MALICIOUS_CALLBACK_URLS) {
         const signinUrl = `/auth/signin?callbackUrl=${encodeURIComponent(input)}`;
+
+        // Navigate and let Playwright follow the redirect chain.
         await page.goto(signinUrl, { waitUntil: "domcontentloaded" });
-        assertLoggedOutStaysOnSignin(page.url(), `${input} (${description})`);
+
+        const finalUrl = page.url();
+
+        expect(
+          finalUrl,
+          `callbackUrl="${input}" (${description}) redirected off-origin to: ${finalUrl}`,
+        ).toContain("localhost:3000");
+
+        // Specifically assert evil.com never appears as the target host.
+        expect(finalUrl, `callbackUrl="${input}" (${description}) must not land on evil.com`).not.toContain(
+          "evil.com",
+        );
       }
     });
 
-    test("safe relative callbackUrl keeps the logged-out visitor on sign-in", async ({ page }) => {
+    test("safe relative callbackUrl is honored", async ({ page }) => {
+      // A legitimate same-origin callbackUrl should redirect to that path,
+      // not to the default /dashboard.
       await page.goto("/auth/signin?callbackUrl=/dashboard", { waitUntil: "domcontentloaded" });
-      const u = new URL(page.url());
-      expect(u.origin).toMatch(/https?:\/\/localhost:3000/);
-      expect(u.pathname).toBe("/auth/signin");
-      expect(u.searchParams.get("callbackUrl")).toBe("/dashboard");
+
+      const finalUrl = page.url();
+      expect(finalUrl, "safe callbackUrl=/dashboard should land on /dashboard").toContain(
+        "localhost:3000/dashboard",
+      );
     });
 
-    test("callbackUrl=/\\evil.com stays on sign-in (backslash variant)", async ({ page }) => {
+    test("callbackUrl=/\\evil.com is rejected (backslash variant)", async ({ page }) => {
+      // Explicitly assert the backslash variant from the task spec.
       await page.goto("/auth/signin?callbackUrl=%2F%5Cevil.com", {
         waitUntil: "domcontentloaded",
       });
-      assertLoggedOutStaysOnSignin(page.url(), "/\\evil.com");
+
+      const finalUrl = page.url();
+      expect(finalUrl).toContain("localhost:3000");
+      expect(finalUrl).not.toContain("evil.com");
     });
 
-    test("callbackUrl=https://evil.com stays on sign-in", async ({ page }) => {
+    test("callbackUrl=https://evil.com is rejected", async ({ page }) => {
+      // Explicitly assert the absolute-URL variant from the task spec.
       await page.goto("/auth/signin?callbackUrl=https%3A%2F%2Fevil.com", {
         waitUntil: "domcontentloaded",
       });
-      assertLoggedOutStaysOnSignin(page.url(), "https://evil.com");
+
+      const finalUrl = page.url();
+      expect(finalUrl).toContain("localhost:3000");
+      expect(finalUrl).not.toContain("evil.com");
     });
   });
 });

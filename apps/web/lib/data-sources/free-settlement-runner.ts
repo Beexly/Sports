@@ -63,7 +63,6 @@ import {
   drainPendingSnapshotOutcomes,
 } from "@/lib/settlement/free-path-snapshot";
 import { uniqueScoreboardDates } from "./settlement-score-dates";
-import { loadPublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
@@ -325,7 +324,7 @@ export async function runFreePathSettlement(options?: {
             ageHours,
             graceHours,
             outcomeStatus: "HELD",
-            holdReason: o.reason,
+            holdReason: "DISPUTED",
             settlementPath: "free",
           });
           continue;
@@ -334,39 +333,6 @@ export async function runFreePathSettlement(options?: {
         if (!row) continue;
 
         const written = await db.$transaction(async (tx) => {
-          if (o.homeScore != null && o.awayScore != null) {
-            // PR #550's ?path=free (forceFree) lets this free path run even when
-            // THE_ODDS_API_KEY is present, so it can now race the paid path
-            // (settle-sport.ts) against the SAME game in the SAME rough window.
-            // Read the game's CURRENT score fresh, inside this transaction,
-            // BEFORE settling anything — never blind-overwrite a FINAL score
-            // that disagrees with the one we're about to grade against, and
-            // never grade the pick against a score we're about to refuse to
-            // write to the Game row either (that would settle the pick
-            // against a different score than the one the Game row records —
-            // a fresh inconsistency, not a fix). A genuine cross-path
-            // disagreement needs a human, not a silent last-write-wins clobber
-            // of whatever pick(s) were already settled against the first score.
-            const current = await tx.game.findUnique({
-              where: { id: row.game.id },
-              select: { homeScore: true, awayScore: true, status: true },
-            });
-            const conflicts =
-              current?.status === "FINAL" &&
-              current.homeScore != null &&
-              current.awayScore != null &&
-              (current.homeScore !== o.homeScore || current.awayScore !== o.awayScore);
-            if (conflicts) {
-              console.warn(
-                `[free-settle] SCORE_MISMATCH_CROSS_PATH game=${row.game.id} ` +
-                  `existing=${current!.homeScore}-${current!.awayScore} ` +
-                  `incoming(free)=${o.homeScore}-${o.awayScore} — refusing to settle or ` +
-                  `overwrite; pick=${o.pickId} left PENDING for human review.`,
-              );
-              return { count: 0 };
-            }
-          }
-
           const updated = await tx.pick.updateMany({
             where: { id: o.pickId, result: "PENDING" },
             data: { result: o.result, settledAt },
@@ -585,31 +551,6 @@ export async function runFreePathSettlement(options?: {
       ? summarizeLearningBatch(settlementsToLearningSamples(gradedForLearning))
       : null;
 
-  // Cumulative canonical-settled count for the PROVEN-gate signal. NOT
-  // learning?.nEligible — that is THIS CYCLE's freshly-graded batch only
-  // (typically single digits per hourly run), while every other
-  // planAutonomyCycle caller (autonomy-cycle/route.ts, health-alert/route.ts)
-  // treats this slot as the running cumulative total against the ≥100 floor
-  // (buildRevenueReadiness in operating-kernel.ts). Wiring the per-cycle batch
-  // in here made the self-audit signal CLAUDE.md's Autonomous Loop Protocol
-  // tells an agent to read report "3/100" forever, even long after the true
-  // cumulative count had cleared 100. Non-fatal: a query failure degrades to
-  // null, matching the other two callers' safe default.
-  let canonicalSettled: number | null = null;
-  try {
-    const policy = await loadPublicPerformancePolicy(db, {
-      canExposePerformanceStats:
-        process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
-      minSettledPicksForLearning: 100,
-    });
-    canonicalSettled = policy.canonicalSettledCount;
-  } catch (canonicalErr) {
-    console.warn(
-      `[free-settle] cumulative canonicalSettled lookup failed (degrading to null): ` +
-        `${canonicalErr instanceof Error ? canonicalErr.message : canonicalErr}`,
-    );
-  }
-
   const autonomy = planAutonomyCycle({
     observedAt: new Date().toISOString(),
     deploymentSha: process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ?? null,
@@ -632,7 +573,7 @@ export async function runFreePathSettlement(options?: {
     draftOnly: process.env["LIVE_BOARD"]?.trim().toLowerCase() !== "true",
     boardSuppressed: true,
     openPicks: null,
-    canonicalSettled,
+    canonicalSettled: learning?.nEligible ?? null,
     minSettledForLearning: 100,
   });
 

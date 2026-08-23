@@ -83,3 +83,54 @@ Disclosure language (verbatim, side-adaptive amendment applied):
 > evidence; this is a forward-looking test. All hyperparameters, entry
 > windows, side selection, and the model hash were frozen before the
 > experiment began."
+
+---
+
+## Amendment v2.1 — model spec bound to James-Stein shrinkage
+
+Recorded 2026-08-20, **before any computation on the corpus**. Legitimate as
+a pre-registration amendment for exactly that reason and no other: ledger C-59
+established that the MVE cycle was BLOCKED before its first observation (runtime
+`DATABASE_URL` pointed at localhost, `pg` returned `28P01`, no Neon URL in env),
+that no capital, `n`, or exclusion count exists, and that no alternate window,
+lambda or variant was computed. Once a single observation is graded, this
+section is closed and no further amendment is permissible.
+
+**What changes.** Section "MVE pre-registration" above specifies the model
+probability only as "hierarchical posterior predictive; hyperparameters frozen
+before the walk-forward or updated strictly online". The founder's charter
+directive of 2026-08-20 binds that loose phrase to a specific estimator: the
+model producing `q_t` must be the **hierarchical James-Stein shrunk outcome
+model** specified in section 3 of
+`docs/ops/edge/2026-08-20-prospective-prereg-mlb-totals-js.md` — positive-part
+James-Stein, multiple-sample-size variant, arc-sine transform for proportion
+metrics and square-root (Anscombe) for count-rate metrics, `p >= 3` required
+for shrinkage to apply, refit online from the expanding history only.
+
+**What does not change.** Nothing else. The e-process form, lambda = 0.3, the
+6–3h entry window, the entry-quality bar, the frozen side-selection rule, the
+checkpoint cadence, the certification and kill thresholds, the early-abort rule
+and the reporting requirements are all unchanged and remain as frozen above.
+
+**Honest note on the artifacts already on `hermes/hf5-mve` (0035e3b4).** They
+were read directly rather than taken on report. `mve-eprocess.ts` implements
+the frozen side-adaptive increment, the frozen side-selection rule and the
+binding-outcome function correctly, and is unaffected by this amendment. The
+runner `scripts/edge-lab/run-mve.ts` is prediction-clean in its ordering
+(`predictOver` is called before `update`, and `predictOver` reads only the unit
+indices and the line, never the realized total). But its `q_t` source is
+`NbRbpf`, a negative-binomial Rao-Blackwellized particle filter, **not** a
+James-Stein shrunk model, and the game records it feeds that filter are
+degenerate against the charter's feature list: `nPitchers: 1`, `nUmpires: 1`,
+`pitcherHome`/`pitcherAway`/`umpire` all pinned to 0 and `park` aliased to the
+home-team index, so starting pitcher, bullpen usage, park factor, weather,
+umpire, rest and travel are absent entirely. The e-process module therefore
+stands as frozen; **the model half of the runner does not satisfy the amended
+spec and must be replaced before the one cycle is executed.**
+
+**Consequence if this amendment is ignored.** A certification produced by
+`NbRbpf` would license a prospective track on `NbRbpf`, not on the James-Stein
+model. Certifying one model and then trading another is not a technicality; it
+is the failure mode this whole protocol exists to prevent. Either the MVE runs
+the amended model, or the prospective pre-registration must be rewritten around
+whatever model actually produced the certification.

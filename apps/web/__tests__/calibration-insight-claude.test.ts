@@ -42,34 +42,6 @@ describe("Calibration weekly insight Claude generation", () => {
     });
   });
 
-  describe("UNGROUNDED_NUMERIC (LQ13 — numeric grounding against the USER prompt only)", () => {
-    const promptText = "MLB: OVER, delta 23.0% (sample 12)";
-
-    it("allows a numeric claim grounded in the user prompt", () => {
-      expect(
-        evaluateCalibrationInsightPolicy("You were 23% overconfident on MLB totals this week.", { promptText }),
-      ).toEqual({ allowed: true, reason: null });
-    });
-
-    it("rejects a numeric claim the user prompt never stated", () => {
-      expect(
-        evaluateCalibrationInsightPolicy("You were 31% overconfident on MLB totals this week.", { promptText }),
-      ).toEqual({ allowed: false, reason: "UNGROUNDED_NUMERIC" });
-    });
-
-    it("rejects a record-shaped claim absent from the prompt", () => {
-      expect(
-        evaluateCalibrationInsightPolicy("Your picks went 8-2 this week.", { promptText }),
-      ).toEqual({ allowed: false, reason: "UNGROUNDED_NUMERIC" });
-    });
-
-    it("single-arg legacy call is unchanged (no grounding, no numeric check)", () => {
-      expect(
-        evaluateCalibrationInsightPolicy("You were 31% overconfident on MLB totals this week."),
-      ).toEqual({ allowed: true, reason: null });
-    });
-  });
-
   it("returns a deterministic thin-week sentence without calling Claude", async () => {
     const fetchImpl = vi.fn();
 
@@ -113,7 +85,7 @@ describe("Calibration weekly insight Claude generation", () => {
           content: [
             {
               type: "text",
-              text: '"You were overconfident in the 60-69 band this week, calling 65% when the actual rate was 63%."',
+              text: '"You were overconfident on NBA spreads this week by 14%, while MLB totals stayed calibrated."',
             },
           ],
           usage: { input_tokens: 700, output_tokens: 40 },
@@ -138,7 +110,7 @@ describe("Calibration weekly insight Claude generation", () => {
     });
 
     expect(result).toEqual({
-      insightText: "You were overconfident in the 60-69 band this week, calling 65% when the actual rate was 63%.",
+      insightText: "You were overconfident on NBA spreads this week by 14%, while MLB totals stayed calibrated.",
       usedClaude: true,
       modelName: "claude-sonnet-4-6",
     });

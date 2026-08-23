@@ -16,19 +16,7 @@
  * No fabricated numbers — counts come from persisted picks and real commence times.
  */
 
-/**
- * The complete settlement-health vocabulary, as a runtime value — same reason as
- * `SCHEDULER_LIVENESS_STATUSES`: the external watchdog string-compares this band
- * in shell, where a TypeScript union has no reach.
- */
-export const SETTLEMENT_HEALTH_BANDS = [
-  "NO_DATA",
-  "HEALTHY",
-  "DEGRADED",
-  "CRITICAL",
-] as const;
-
-export type SettlementHealthBand = (typeof SETTLEMENT_HEALTH_BANDS)[number];
+export type SettlementHealthBand = "NO_DATA" | "HEALTHY" | "DEGRADED" | "CRITICAL";
 
 export interface SettlementHealthInput {
   /** Published, non-seed picks whose game has already started (result irrelevant). */

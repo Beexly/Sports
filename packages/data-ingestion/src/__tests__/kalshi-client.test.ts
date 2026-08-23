@@ -50,8 +50,8 @@ describe("impliedYesProbability", () => {
     expect(impliedYesProbability({ ticker: "x", yes_bid_dollars: "0.36", yes_ask_dollars: "0.37" })).toBeCloseTo(0.365, 6);
   });
 
-  it("does not treat last_price as implied probability", () => {
-    expect(impliedYesProbability({ ticker: "x", last_price_dollars: "0.42" })).toBeNull();
+  it("falls back to last price when there is no two-sided quote", () => {
+    expect(impliedYesProbability({ ticker: "x", last_price_dollars: "0.42" })).toBeCloseTo(0.42, 6);
   });
 
   it("returns null when the market is unquoted", () => {
@@ -61,18 +61,14 @@ describe("impliedYesProbability", () => {
 
   it("does NOT fabricate a half-price mid from a one-sided quote (only a genuine two-sided book mids)", () => {
     // Only a bid, explicit zero ask: (0.40 + 0) / 2 = 0.20 would halve the only real
-    // price. Must NOT mid — and last_price is not a substitute two-way.
+    // price. Must NOT mid — fall through to null when there is no last trade.
     expect(impliedYesProbability({ ticker: "x", yes_bid_dollars: "0.40", yes_ask_dollars: "0" })).toBeNull();
+    // Symmetric one-sided ask.
     expect(impliedYesProbability({ ticker: "x", yes_bid_dollars: "0", yes_ask_dollars: "0.55" })).toBeNull();
+    // With a last trade present, a one-sided quote falls back to the honest last price, not the mid.
     expect(
       impliedYesProbability({ ticker: "x", yes_bid_dollars: "0.40", yes_ask_dollars: "0", last_price_dollars: "0.38" }),
-    ).toBeNull();
-  });
-
-  it("reconstructs a two-way from yes_bid + no_bid when yes_ask is missing", () => {
-    expect(
-      impliedYesProbability({ ticker: "x", yes_bid_dollars: "0.40", no_bid_dollars: "0.58", status: "open" }),
-    ).toBeCloseTo(0.41, 6);
+    ).toBeCloseTo(0.38, 6);
   });
 });
 

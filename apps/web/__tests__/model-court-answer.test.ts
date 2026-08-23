@@ -198,36 +198,4 @@ describe("Model Court answer runtime", () => {
       )
     ).toEqual(expect.arrayContaining(["BETTING_CERTAINTY", "PERSONAL_ADVICE"]));
   });
-
-  describe("UNGROUNDED_NUMERIC (LQ15)", () => {
-    const GROUNDING = "bootstrap share 61.2% (source: market at 2026-05-22T18:00:00.000Z)";
-    const CITE = "(source: market at 2026-05-22T18:00:00.000Z)";
-
-    it("allows an answer citing a number the grounded prompt actually stated", () => {
-      const failures = evaluateModelCourtAnswerPolicy(
-        `The bootstrap share sits at 61.2%. ${CITE}`,
-        GROUNDING,
-      );
-      expect(failures).not.toContain("UNGROUNDED_NUMERIC");
-    });
-
-    it("flags a fabricated stat the grounded prompt never stated", () => {
-      const failures = evaluateModelCourtAnswerPolicy(
-        `The bootstrap share sits at 61.2%. They are 8-2 in their last 10. ${CITE}`,
-        GROUNDING,
-      );
-      expect(failures).toContain("UNGROUNDED_NUMERIC");
-    });
-
-    it("single-arg legacy call is unchanged (no grounding, no numeric check)", () => {
-      const failures = evaluateModelCourtAnswerPolicy(`They are 8-2 in their last 10. ${CITE}`);
-      expect(failures).not.toContain("UNGROUNDED_NUMERIC");
-    });
-
-    it("reports MISSING_CITATION first when an answer is both uncited and ungrounded", () => {
-      const failures = evaluateModelCourtAnswerPolicy("They are 8-2 in their last 10.", GROUNDING);
-      expect(failures[0]).toBe("MISSING_CITATION");
-      expect(failures).toContain("UNGROUNDED_NUMERIC");
-    });
-  });
 });

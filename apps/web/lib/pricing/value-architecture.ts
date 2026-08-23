@@ -122,7 +122,7 @@ export const VALUE_TIERS: readonly ValueTier[] = [
       "Premium Academy and briefings",
     ],
     whyNextTier:
-      "Elite adds the alerts and the ledger: email and push when a followed pick grades — the alert carries the settled result, never a prediction — plus the closing-line-value tracker that grades every entry price. You act sooner and see whether the timing paid.",
+      "Elite adds the alerts and the ledger: real-time email and push the moment a signal posts, plus the closing-line-value tracker that grades every entry price. You act sooner and see whether the timing paid.",
   },
   {
     id: "ELITE",

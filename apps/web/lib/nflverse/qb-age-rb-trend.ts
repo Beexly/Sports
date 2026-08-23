@@ -7,7 +7,6 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 interface TeamWeekUsage {
   attempts: number;
-  teamTargets: number;
   rbTargets: number;
 }
 
@@ -21,9 +20,7 @@ interface QbAgeObservationMeta {
   readonly qbAge: number;
   readonly gameDate: string;
   readonly passAttempts: number;
-  readonly teamTargets: number;
   readonly rbTargets: number;
-  /** RB targets as a share of TEAM targets (not QB pass attempts). */
   readonly rbTargetShare: number;
 }
 
@@ -51,7 +48,7 @@ export interface QbAgeRbTrendReport {
     readonly start: number | null;
     readonly end: number | null;
   };
-  readonly metric: "running back targets / team targets";
+  readonly metric: "running back targets / team pass attempts";
   readonly feature: "starting QB age";
   readonly minSampleSize: number;
   readonly alpha: number;
@@ -103,9 +100,8 @@ function teamWeekUsageMap(playerStats: readonly CsvRecord[]): Map<string, TeamWe
     const team = row["recent_team"];
     if (!season || !week || !team) continue;
     const key = `${season}|${week}|${team}`;
-    const usage = map.get(key) ?? { attempts: 0, teamTargets: 0, rbTargets: 0 };
+    const usage = map.get(key) ?? { attempts: 0, rbTargets: 0 };
     usage.attempts += toNumber(row["attempts"]);
-    usage.teamTargets += toNumber(row["targets"]);
     if (row["position"] === "RB") usage.rbTargets += toNumber(row["targets"]);
     map.set(key, usage);
   }
@@ -142,7 +138,7 @@ function buildObservations({
         skippedMissingTeamStats += 1;
         continue;
       }
-      if (teamWeek.teamTargets < 1) {
+      if (teamWeek.attempts < 1) {
         skippedNoPassAttempts += 1;
         continue;
       }
@@ -151,7 +147,7 @@ function buildObservations({
         skippedMissingQbBirthDate += 1;
         continue;
       }
-      const rbTargetShare = teamWeek.rbTargets / teamWeek.teamTargets;
+      const rbTargetShare = teamWeek.rbTargets / teamWeek.attempts;
       observations.push({
         metric: rbTargetShare,
         features: { qbAge },
@@ -165,7 +161,6 @@ function buildObservations({
           qbAge,
           gameDate: game["gameday"] ?? "",
           passAttempts: teamWeek.attempts,
-          teamTargets: teamWeek.teamTargets,
           rbTargets: teamWeek.rbTargets,
           rbTargetShare,
         },
@@ -262,7 +257,7 @@ export async function loadQbAgeRbTrendReport({
         schedules: schedules.length,
       },
       seasonRange: seasonRange(observations),
-      metric: "running back targets / team targets",
+      metric: "running back targets / team pass attempts",
       feature: "starting QB age",
       minSampleSize,
       alpha,
@@ -283,7 +278,7 @@ export async function loadQbAgeRbTrendReport({
       status: "source-error",
       sourceRows: { playerStats: 0, players: 0, schedules: 0 },
       seasonRange: { start: null, end: null },
-      metric: "running back targets / team targets",
+      metric: "running back targets / team pass attempts",
       feature: "starting QB age",
       minSampleSize,
       alpha,

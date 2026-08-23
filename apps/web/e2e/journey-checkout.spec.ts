@@ -86,7 +86,6 @@ const FAIL_CLOSED_CODES = [
 ];
 
 function isFailClosed(body: { error?: string; code?: string }, status: number): boolean {
-  if (status === 401) return true;
   return (
     (status === 502 || status === 503) &&
     (FAIL_CLOSED_CODES.some((c) => body.code === c) || (typeof body.error === "string" && body.error.length > 0))
@@ -140,17 +139,13 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       // rendering: whichever run saw only one of them passed. Diagnosed
       // 2026-08-16 after it was briefly mistaken for a WebKit product bug — the
       // toggle itself works correctly on both Chrome and WebKit.
-      const annualToggle = page.getByRole("group", { name: /Billing interval/i }).getByRole("button", {
-        name: /^Annual$/,
-      });
-      await expect(annualToggle).toBeEnabled();
-      // First click can hit a hydrating overlay (HoloTilt). Force + retry the
-      // pressed state rather than asserting a single click.
-      await annualToggle.click({ force: true });
-      await expect(annualToggle).toHaveAttribute("aria-pressed", "true", { timeout: 8_000 });
-      // Price and "/year" are sibling spans (`$99` + `/year`), not one text node.
-      await expect(page.locator("span.text-4xl.font-extrabold").filter({ hasText: `$${FOUNDING_PRICES.PRO_ANNUAL}` })).toBeVisible();
-      await expect(page.locator("span.text-4xl.font-extrabold").filter({ hasText: `$${FOUNDING_PRICES.ELITE_ANNUAL}` })).toBeVisible();
+      await page.getByRole("group", { name: /Billing interval/i }).getByRole("button", { name: /Annual/i }).click();
+      await expect(
+        page.getByText(`$${FOUNDING_PRICES.PRO_ANNUAL}/year`, { exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByText(`$${FOUNDING_PRICES.ELITE_ANNUAL}/year`, { exact: true }),
+      ).toBeVisible();
     });
   });
 
@@ -162,7 +157,6 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
 
       const upgradeBtn = page.getByRole("button", { name: /Subscribe to Pro/i });
       await expect(upgradeBtn).toBeVisible();
-      await upgradeBtn.locator("..").getByLabel(/date of birth/i).fill("1990-01-15");
       // Set up the response listener BEFORE clicking so we don't miss the
       // POST that the SubscribeButton fires on click. A generous timeout
       // accounts for a cold dev-server compile + DB/prisma warmup on a slow
@@ -196,9 +190,9 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
         // rendered a proximate [role="alert"] error. The window stays on
         // /pricing — no card is ever collected.
         expect(
-          [401, 502, 503],
-          "fail-closed checkout must return 401 (unauth) or 502/503, not " + apiStatus,
-        ).toContain(apiStatus);
+          apiStatus,
+          "fail-closed checkout must return 502 or 503, not " + apiStatus,
+        ).toBe(503);
 
         // The URL must remain our own — never redirected off-origin. This is
         // the PRIMARY invariant: fail-closed means NO redirect off /pricing.
@@ -241,14 +235,9 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
         data: { tier: "ENTERPRISE", interval: "month" },
       });
 
-      expect(
-        [400, 401],
-        "non-allow-listed tier must be rejected (401 if unauthenticated, else 400)",
-      ).toContain(res.status());
+      expect(res.status(), "non-allow-listed tier must be rejected").toBe(400);
       const body = await res.json();
-      if (res.status() === 400) {
-        expect(body.error).toMatch(/invalid tier/i);
-      }
+      expect(body.error).toMatch(/invalid tier/i);
     });
 
     test("refuses a request with a missing tier (400)", async ({ request }) => {
@@ -256,14 +245,9 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
         data: { interval: "month" },
       });
 
-      expect(
-        [400, 401],
-        "missing tier must be rejected (401 if unauthenticated, else 400)",
-      ).toContain(res.status());
+      expect(res.status(), "missing tier must be rejected").toBe(400);
       const body = await res.json();
-      if (res.status() === 400) {
-        expect(body.error).toMatch(/invalid tier/i);
-      }
+      expect(body.error).toMatch(/invalid tier/i);
     });
 
     test("ignores a client-supplied price / priceId — the server resolves its own price", async ({
@@ -277,7 +261,6 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
         data: {
           tier: "PRO",
           interval: "month",
-          dateOfBirth: "1990-01-15",
           priceId: "price_evil_client_supplied",
         },
       });
@@ -308,7 +291,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       request,
     }) => {
       const res = await request.post("/api/subscriptions/checkout", {
-        data: { tier: "PRO", interval: "month", dateOfBirth: "1990-01-15" },
+        data: { tier: "PRO", interval: "month" },
       });
 
       const body = await res.json();
@@ -321,9 +304,9 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
         // This is EXPECTED locally and must never involve a real Stripe side
         // effect or leak an internal error string to the client.
         expect(
-          [401, 502, 503],
-          "fail-closed must be 401 (unauth) or 502/503, never a 200 with a leaked price",
-        ).toContain(res.status());
+          res.status(),
+          "fail-closed must be a 502 or 503, never a 200 with a leaked price",
+        ).toBe(503);
         expect(isFailClosed(body, res.status())).toBe(true);
         // Never leak internal connection strings or raw Stripe error text.
         const raw = JSON.stringify(body);
@@ -350,7 +333,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       const devFakeAdmin = devState.devFakeAdmin === true;
 
       const res = await request.post("/api/subscriptions/checkout", {
-        data: { tier: "PRO", interval: "month", dateOfBirth: "1990-01-15" },
+        data: { tier: "PRO", interval: "month" },
       });
 
       if (devFakeAdmin) {

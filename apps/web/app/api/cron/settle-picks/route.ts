@@ -27,7 +27,6 @@ import {
 } from "@/lib/settlement-outbox/worker";
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
-import { backfillStaleSettlement, type BackfillResult } from "@/lib/data-sources/settle-backfill";
 import { hasOddsApiKey } from "@/lib/settlement/path-select";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
@@ -45,15 +44,11 @@ export async function GET(request: Request) {
 
   const apiKey = process.env["THE_ODDS_API_KEY"]?.trim();
   const requestedSport = new URL(request.url).searchParams.get("sport");
-  // Owner drain: ?path=free uses ESPN/henrygd even when THE_ODDS_API_KEY is set.
-  // Paid getScores is daysFrom=3 and cannot grade older overdue picks; scores
-  // are covered free (GSE-SEC-039). Default cron with a key still uses odds-api.
-  const forceFree = new URL(request.url).searchParams.get("path") === "free";
   const startedAt = Date.now();
   const gates = getReadinessGates();
   // ── Free path: no paid Odds key required ─────────────────────────────────
   // Negated type guard, so `apiKey` narrows to `string` for the paid path below.
-  if (forceFree || !hasOddsApiKey(apiKey)) {
+  if (!hasOddsApiKey(apiKey)) {
     // Snapshot overdue before STP so burn-rate can tell whether this cycle drained the band.
     let priorOverdueCount: number | undefined;
     try {
@@ -71,7 +66,6 @@ export async function GET(request: Request) {
       graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
       ...(priorOverdueCount !== undefined ? { priorOverdueCount } : {}),
     });
-    const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks:free]");
 
     let alertDrain: OutboxDrainSummary | null = null;
     try {
@@ -96,17 +90,12 @@ export async function GET(request: Request) {
       teamGameLogRepair: free.teamGameLogRepair,
       scoreDates: free.scoreDates,
       rca: free.rca,
-      staleBackfill,
       bootstrapMode: gates.isBootstrapMode,
       free,
       freeScores,
       alertDrain,
       requestedSport: requestedSport ?? null,
     });
-  }
-
-  if (!hasOddsApiKey(apiKey)) {
-    return NextResponse.json({ error: "THE_ODDS_API_KEY missing" }, { status: 500 });
   }
 
   // Settlement is backward-looking (grading games already played) and free —
@@ -165,8 +154,6 @@ export async function GET(request: Request) {
     });
     await new Promise((r) => setTimeout(r, 750));
   }
-
-  const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]");
 
   let freeze: SlateFreezeResult[] = [];
   try {
@@ -249,16 +236,5 @@ export async function GET(request: Request) {
     clvRepair,
     snapshotRepair,
     teamGameLogRepair,
-    staleBackfill,
   });
-}
-
-async function runStaleBackfillSafe(logPrefix: string): Promise<BackfillResult | { error: string }> {
-  try {
-    return await backfillStaleSettlement({ db: db as never });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.warn(`${logPrefix} stale backfill failed: ${message}`);
-    return { error: message };
-  }
 }

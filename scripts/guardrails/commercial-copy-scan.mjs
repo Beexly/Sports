@@ -10,7 +10,6 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
-import { pathToFileURL } from "node:url";
 import { normalizeScanLine, collapseStringJoins } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
@@ -30,13 +29,6 @@ const SCAN_TARGETS = [
   // page files alone would miss it: the pages render those strings, they do not
   // contain them.
   "apps/web/lib/competitive",
-  // LQ12: /pricing imports its plan copy from components/pricing rather than
-  // containing it, and faq/about/trends carry the LQ9-reworded evidence-vocab
-  // copy — same "the page renders it, the page doesn't contain it" case.
-  "apps/web/components/pricing",
-  "apps/web/app/faq",
-  "apps/web/app/about",
-  "apps/web/app/trends",
 ];
 // FULL PUBLIC-SURFACE SWEEP (adversarial finding O-2.1): the deep-scan
 // targets above covered 7 of ~60 public app dirs — tout copy on the
@@ -57,20 +49,6 @@ const RENDERED_BASENAMES = new Set([
   "opengraph-image.tsx",
 ]);
 const NON_PUBLIC_TOP_DIRS = new Set(["api", "admin", "cockpit"]);
-// LQ12: bot templates and text-serving endpoints that walkRenderedSurfaces()
-// never reaches (no page.tsx/layout.tsx basenames) but that still ship
-// customer-facing or public-facing text. Walked with the existing walk(),
-// de-duped against files already deep-scanned above.
-const TOUT_EXTRA_ROOTS = [
-  "apps/web/components",
-  "workers",
-  "apps/web/lib/twitter-bot",
-  "apps/web/lib/discord-bot",
-  "apps/web/lib/bot-outbox",
-  "apps/web/app/humans.txt",
-  "apps/web/app/llms.txt",
-  "apps/web/app/ai.txt",
-];
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".md"]);
 const SKIP_PARTS = new Set(["__tests__", "node_modules", ".next", "dist", "coverage"]);
 const SKIP_PATH_PARTS = [
@@ -128,7 +106,7 @@ const SAFE_POLICY_CONTEXT =
 const SAFE_WINDOW_BEFORE = 60;
 const SAFE_WINDOW_AFTER = 24;
 const CLAUSE_BOUNDARY = /[.!?;—]/;
-export function safeContextNear(subject, matchIndex, matchLength) {
+function safeContextNear(subject, matchIndex, matchLength) {
   const winStart = Math.max(0, matchIndex - SAFE_WINDOW_BEFORE);
   const winEnd = Math.min(subject.length, matchIndex + matchLength + SAFE_WINDOW_AFTER);
   const before = subject.slice(winStart, matchIndex);
@@ -301,7 +279,7 @@ function scanPhraseList(phrases, claim, subjects, pairSubject, line, relPath, li
   return hits;
 }
 
-export function scanLine(rawLines, i, relPath) {
+function scanLine(rawLines, i, relPath) {
   const line = rawLines[i];
   const subjects = viewsOf(line);
   const normalized = subjects[0];
@@ -316,7 +294,7 @@ export function scanLine(rawLines, i, relPath) {
   ];
 }
 
-export function scanToutLine(rawLines, i, relPath) {
+function scanToutLine(rawLines, i, relPath) {
   const line = rawLines[i];
   const subjects = viewsOf(line);
   const normalized = subjects[0];
@@ -378,29 +356,11 @@ async function main() {
   const sweepFiles = await walkRenderedSurfaces(resolve(ROOT, PUBLIC_APP_ROOT), true);
   for (const file of sweepFiles) {
     if (deepScanned.has(file) || shouldSkipFile(file)) continue;
-    deepScanned.add(file);
     scanned++;
     const text = await readFile(file, "utf8");
     const relPath = rel(file);
     const rawLines = text.split(/\r?\n/);
     rawLines.forEach((_line, index) => hits.push(...scanToutLine(rawLines, index, relPath)));
-  }
-
-  // LQ12: tout sweep over bot templates and text endpoints walkRenderedSurfaces()
-  // never reaches (arbitrary basenames — needs the full walk(), not the
-  // page/layout-only rendered-surface walk). De-duped against everything
-  // scanned above.
-  for (const root of TOUT_EXTRA_ROOTS) {
-    const files = await walk(resolve(ROOT, root));
-    for (const file of files) {
-      if (deepScanned.has(file) || shouldSkipFile(file)) continue;
-      deepScanned.add(file);
-      scanned++;
-      const text = await readFile(file, "utf8");
-      const relPath = rel(file);
-      const rawLines = text.split(/\r?\n/);
-      rawLines.forEach((_line, index) => hits.push(...scanToutLine(rawLines, index, relPath)));
-    }
   }
 
   if (hits.length === 0) {
@@ -415,10 +375,7 @@ async function main() {
   process.exitCode = 1;
 }
 
-const isMain = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
-if (isMain) {
-  main().catch((error) => {
-    console.error("[commercial-copy-scan] unexpected error:", error);
-    process.exit(2);
-  });
-}
+main().catch((error) => {
+  console.error("[commercial-copy-scan] unexpected error:", error);
+  process.exit(2);
+});

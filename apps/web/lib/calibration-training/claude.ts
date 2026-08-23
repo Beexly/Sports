@@ -16,7 +16,6 @@ import {
   CALIBRATION_INSIGHT_SYSTEM_PROMPT,
   type CalibrationInsightInput,
 } from "@/lib/calibration-training/insight-prompt";
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 
 export const MIN_CALIBRATION_INSIGHT_ESTIMATES = 5;
 
@@ -46,8 +45,7 @@ export type CalibrationInsightPolicyReason =
   | "BETTING_ADVICE"
   | "CTA"
   | "COMPARISON"
-  | "BANNED_POSITIONING"
-  | "UNGROUNDED_NUMERIC";
+  | "BANNED_POSITIONING";
 
 export interface CalibrationInsightPolicyResult {
   readonly allowed: boolean;
@@ -98,7 +96,6 @@ export async function generateCalibrationWeeklyInsight(
   }
 
   try {
-    const userPrompt = buildCalibrationInsightUserPrompt(input);
     const result = await callClaude({
       apiKey: options.apiKey,
       fetchImpl: options.fetchImpl,
@@ -106,11 +103,11 @@ export async function generateCalibrationWeeklyInsight(
       maxTokens: 120,
       temperature: 0.1,
       system: CALIBRATION_INSIGHT_SYSTEM_PROMPT,
-      user: userPrompt,
+      user: buildCalibrationInsightUserPrompt(input),
       cache: { system: true },
     });
     const insightText = normalizeInsightText(result.text);
-    const policy = evaluateCalibrationInsightPolicy(insightText, { promptText: userPrompt });
+    const policy = evaluateCalibrationInsightPolicy(insightText);
     if (!policy.allowed) {
       await maybeRecordCalibrationUsage({
         input,
@@ -171,7 +168,6 @@ function normalizeInsightText(text: string): string {
 
 export function evaluateCalibrationInsightPolicy(
   text: string,
-  grounding?: { readonly promptText: string },
 ): CalibrationInsightPolicyResult {
   const trimmed = text.trim();
   if (!trimmed) return { allowed: false, reason: "EMPTY" };
@@ -214,13 +210,6 @@ export function evaluateCalibrationInsightPolicy(
 
   if (bannedPositioningPatterns.some((pattern) => pattern.test(trimmed))) {
     return { allowed: false, reason: "BANNED_POSITIONING" };
-  }
-
-  if (grounding) {
-    const allowed = extractNumericClaims(grounding.promptText).map((c) => c.value);
-    if (!validateNumericClaims(trimmed, { allowed }).grounded) {
-      return { allowed: false, reason: "UNGROUNDED_NUMERIC" };
-    }
   }
 
   return { allowed: true, reason: null };

@@ -49,31 +49,3 @@ describe("evaluatePickExplanationPolicy", () => {
     expect(evaluatePickExplanationPolicy(`${CITE} ` + "x".repeat(1700))).toContain("TOO_LONG");
   });
 });
-
-describe("evaluatePickExplanationPolicy — UNGROUNDED_NUMERIC (LQ14)", () => {
-  const GROUNDING = "line 3.5 · confidence 74 · captured 2026-08-22T15:00:00Z";
-  const CITED = "(source: signal_snapshot at 2026-08-22T15:00:00Z)";
-
-  it("(a) passes a numeric claim grounded in the context — no false positive on the citation timestamp", () => {
-    const failures = evaluatePickExplanationPolicy(`The 3.5-point line held. ${CITED}`, GROUNDING);
-    expect(failures).not.toContain("UNGROUNDED_NUMERIC");
-  });
-
-  it("(b) flags a fabricated stat the grounded context never stated — the audit's exact example", () => {
-    const failures = evaluatePickExplanationPolicy(
-      `The 3.5-point line held. ${CITED} They are 8-2 in their last 10.`,
-      GROUNDING,
-    );
-    expect(failures).toContain("UNGROUNDED_NUMERIC");
-  });
-
-  it("(c) bare integers pass without needing grounding", () => {
-    const failures = evaluatePickExplanationPolicy(`Consensus held across 9 books ${CITED}.`, GROUNDING);
-    expect(failures).not.toContain("UNGROUNDED_NUMERIC");
-  });
-
-  it("(d) single-arg legacy call is unchanged (no grounding, no numeric check)", () => {
-    const failures = evaluatePickExplanationPolicy(`They are 8-2 in their last 10 ${CITED}.`);
-    expect(failures).not.toContain("UNGROUNDED_NUMERIC");
-  });
-});

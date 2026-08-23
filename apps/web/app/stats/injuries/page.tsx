@@ -67,7 +67,7 @@ export default function Page() {
       <p className="-mt-4 text-sm text-ion-1">
         The players whose role, usage, or trend is moving most: the changes worth acting on before the market catches up.
       </p>
-      <Badge tone="warn">Graded-alert email &amp; push delivery is an Elite feature and owner-gated; this is the underlying signal layer.</Badge>
+      <Badge tone="warn">Real-time email &amp; push delivery is an Elite feature and owner-gated; this is the underlying signal layer.</Badge>
       <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2">Top {risers.length} by trend score</p>
       {risers.length === 0 ? (
         <p className="-mt-4 border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1">No players in the current snapshot, so no movers to rank yet.</p>

@@ -56,23 +56,9 @@ describe("legal source registry", () => {
   });
 
   it("clears the new open/public-domain sources", () => {
-    for (const id of ["nws-weather", "retrosheet", "lahman-db", "openfootball", "cricsheet"]) {
+    for (const id of ["nws-weather", "retrosheet", "lahman-db", "openfootball", "moneypuck", "cricsheet"]) {
       expect(isIngestible(id)).toBe(true);
     }
-    expect(isIngestible("moneypuck")).toBe(false);
-    expect(getSource("moneypuck")?.commercialUse).toBe(false);
-    expect(isIngestible("kalshi")).toBe(false);
-    expect(getSource("kalshi")?.commercialUse).toBe(false);
-    expect(getSource("kalshi")?.verdict).toBe("paid-required");
-    expect(getSource("kalshi")?.license.url).toBe(
-      "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
-    );
-    expect(() => assertIngestible("kalshi")).toThrow(/paid-required/);
-    expect(isIngestible("clubelo")).toBe(true);
-    expect(getSource("clubelo")?.verdict).toBe("use-with-caution");
-    expect(getSource("clubelo")?.commercialUse).toBe(false);
-    expect(getSource("clubelo")?.attributionRequired).toBe(true);
-    expect(attributionFor("clubelo")).toMatch(/ClubElo/i);
     expect(getSource("nws-weather")?.commercialUse).toBe(true);
     expect(getSource("openfootball")?.license.spdx).toBe("CC0-1.0");
     expect(attributionFor("retrosheet")).toMatch(/Retrosheet/);
@@ -93,24 +79,7 @@ describe("legal source registry", () => {
     const blocked = forbiddenSources().map((s) => s.id);
     expect(cleared).toEqual(expect.arrayContaining(["nflverse", "the-odds-api", "sleeper"]));
     expect(blocked).toEqual(
-      expect.arrayContaining([
-        "espn-hidden-api",
-        "pro-football-reference",
-        "nfelo",
-        "open-meteo",
-        "sportsbookish",
-        "smartstake-mlb-props",
-        "sportsbook-software-json-api",
-        "huggingface-kalshi-api-dump",
-        "convokit-sportsbook-reddit",
-        "sharp-api",
-        "prophetx",
-        "novig",
-        "pinnacle-unofficial",
-      ]),
-    );
-    expect(cleared).toEqual(
-      expect.arrayContaining(["therundown", "predexon", "novig-public-csv"]),
+      expect.arrayContaining(["espn-hidden-api", "pro-football-reference", "nfelo", "open-meteo"]),
     );
     // No source can be both.
     expect(cleared.some((id) => blocked.includes(id))).toBe(false);

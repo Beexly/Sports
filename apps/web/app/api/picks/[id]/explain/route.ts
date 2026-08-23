@@ -18,7 +18,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
-import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
@@ -82,20 +82,12 @@ export async function POST(
 
   // Per-user throttle in front of the paid Claude call: the shared monthly
   // budget gate alone can't stop one caller from looping this endpoint and
-  // draining the org-wide budget for everyone (denial-of-wallet). This one is
-  // the most important limiter in the file set to make DURABLE: in-memory it
-  // was 10-per-5min PER WARM INSTANCE, so the wallet guard scaled with
-  // horizontal scale — the exact spend it exists to bound. Fail-closed 503 on
-  // store failure is unambiguous on a money path: never let a paid Claude call
-  // through unmetered. The user id is fingerprinted by the helper before it
-  // reaches the counters table (never stored raw).
-  const limit = await consumePublicFormRateLimit("pick-explain", session.user.id, 10, 5 * 60 * 1000);
+  // draining the org-wide budget for everyone (denial-of-wallet).
+  const limit = consumeRateLimit("pick-explain", session.user.id, 10, 5 * 60 * 1000);
   if (!limit.ok) {
     return NextResponse.json(
-      limit.status === 429
-        ? { error: "Too many requests. Please wait a moment before asking again." }
-        : { error: "Rate limit service unavailable. Please retry shortly." },
-      { status: limit.status, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      { error: "Too many requests. Please wait a moment before asking again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
   }
 
@@ -190,11 +182,7 @@ export async function POST(
     });
   } catch (err) {
     if (err instanceof PickExplanationError) {
-      // BUDGET and UPSTREAM are both "the explainer cannot serve you right now",
-      // not "your request was unprocessable" — 503 tells a caller to retry, 422
-      // tells them not to bother. Every PickExplanationError message is authored
-      // here; none carries upstream response text (see GSE-SEC-071 in explain.ts).
-      const status = err.kind === "BUDGET" || err.kind === "UPSTREAM" ? 503 : 422;
+      const status = err.kind === "BUDGET" ? 503 : 422;
       return NextResponse.json({ error: err.message, kind: err.kind }, { status });
     }
     return NextResponse.json({ error: "explanation failed" }, { status: 500 });

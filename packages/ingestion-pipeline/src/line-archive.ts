@@ -33,16 +33,13 @@
 import type { NormalizedOdds } from "@sports/types";
 
 export type LineArchivePhase = "OPEN" | "INTERIM" | "CLOSE";
-/** Featured markets. Player props use a string `player_*|<slug>` (see prop-line-rows). */
 export type LineArchiveMarket = "SPREAD" | "MONEYLINE" | "TOTAL";
 
 /** One book's price (+ optional line) for one side of one market — exactly
- *  what the refresh cycle already fetched, no derived/invented values.
- *  `market` is a string so player props can persist without a schema change:
- *  `player_receptions|justin_jefferson`. Featured rows still use LineArchiveMarket. */
+ *  what the refresh cycle already fetched, no derived/invented values. */
 export interface LineSnapshotRow {
   readonly book: string;
-  readonly market: string;
+  readonly market: LineArchiveMarket;
   readonly side: string;
   /** Price at capture, in the source's native odds format (this platform
    *  requests American odds — see data-ingestion ODDS_FORMAT). */
@@ -62,19 +59,11 @@ interface StoredSnapshot {
 /** Minimal Prisma-delegate-shaped surface this module depends on. */
 export interface LineArchiveDb {
   oddsLineSnapshot: {
-    /** Batch existence check — replaces N per-market `count()` calls.
-     *  Returns one row per distinct market that already has snapshots for
-     *  `gameId`, so callers can classify OPEN vs INTERIM without a round-trip
-     *  per market (the N+1 that would melt Neon on a 16-game Sunday slate). */
-    findMany(args: {
-      where: {
-        gameId: string;
-        market?: readonly string[];
-        capturedAt?: { lte: Date };
-      };
-      select?: { market?: boolean };
-    }): Promise<StoredSnapshot[]>;
+    count(args: { where: { gameId: string; market: string } }): Promise<number>;
     createMany(args: { data: Record<string, unknown>[] }): Promise<{ count: number }>;
+    findMany(args: {
+      where: { gameId: string; capturedAt?: { lte: Date } };
+    }): Promise<StoredSnapshot[]>;
     update(args: { where: { id: string }; data: { phase: LineArchivePhase } }): Promise<unknown>;
   };
 }
@@ -120,21 +109,12 @@ export async function captureLineSnapshots(
   try {
     // Phase is per (gameId, market) — a single capture call can span multiple
     // markets (spread + moneyline + total rows together), so classify once
-    // per distinct market rather than once per row. BATCH the existence check
-    // into a single findMany over the distinct markets — NOT one count() per
-    // market. On a 16-game Sunday slate with player props (one market per
-    // player-slug), the N+1 count() pattern would melt Neon.
+    // per distinct market rather than once per row.
     const markets = Array.from(new Set(rows.map((row) => row.market)));
     const phaseByMarket = new Map<string, LineArchivePhase>();
-    // Batch: one findMany returning any existing snapshots for these markets
-    // — replaces N count() calls (the N+1 that melts Neon on a dense slate).
-    const existing = await db.oddsLineSnapshot.findMany({
-      where: { gameId, market: markets },
-      select: { market: true },
-    });
-    const seenMarkets = new Set(existing.map((r) => r.market));
     for (const market of markets) {
-      phaseByMarket.set(market, seenMarkets.has(market) ? "INTERIM" : "OPEN");
+      const existing = await db.oddsLineSnapshot.count({ where: { gameId, market } });
+      phaseByMarket.set(market, existing === 0 ? "OPEN" : "INTERIM");
     }
 
     const data = rows.map((row) => ({
@@ -220,9 +200,10 @@ export interface MarkClosingSnapshotsResult {
  * (market, book, side) as "CLOSE". Idempotent — rows already tagged CLOSE
  * are skipped.
  *
- * Wired into settle-sport.ts via markClosingSnapshotsIfEnabled (hermes-H-D,
- * commit 0a447f98). Never throws — any DB error is caught and returned as
- * `{ error }`.
+ * NOTE: this is exported but NOT wired into any caller yet. Wiring it into
+ * settle-sport.ts (so it fires when a game settles) is a follow-up; this
+ * function exists so that work can land later without touching this module
+ * again. Never throws — any DB error is caught and returned as `{ error }`.
  */
 export async function markClosingSnapshots(
   dbArg: unknown,

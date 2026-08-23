@@ -56,32 +56,16 @@ export interface HonestBandProps {
   readonly observedRate: number;
   /** Settled sample size behind the rate. */
   readonly sampleSize: number;
-  /** Optional exact interval (Clopper-Pearson). When omitted, Wilson from assessUncertainty. */
-  readonly intervalLow?: number | null;
-  readonly intervalHigh?: number | null;
-  readonly method?: "wilson" | "clopper-pearson";
 }
 
-export function HonestBand({
-  observedRate,
-  sampleSize,
-  intervalLow,
-  intervalHigh,
-  method = "wilson",
-}: HonestBandProps) {
+export function HonestBand({ observedRate, sampleSize }: HonestBandProps) {
   const d: UncertaintyDisclosure = assessUncertainty({
     probability: observedRate,
     sampleSize,
   });
   const meta = RELIABILITY_COPY[d.reliability];
-  const low = intervalLow ?? d.intervalLow;
-  const high = intervalHigh ?? d.intervalHigh;
-  const lowPct = Math.round(low * 100);
-  const widthPct = Math.max(1, Math.round((high - low) * 100));
-  const methodLabel =
-    method === "clopper-pearson"
-      ? "The honest band: 95% Clopper-Pearson interval, not a point claim"
-      : "The honest band: 95% interval, not a point claim";
+  const lowPct = Math.round(d.intervalLow * 100);
+  const widthPct = Math.max(1, Math.round(d.intervalWidth * 100));
 
   return (
     <div
@@ -90,7 +74,7 @@ export function HonestBand({
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-ion-2">
-          {methodLabel}
+          The honest band: 95% interval, not a point claim
         </p>
         <span
           className={`text-[11px] font-semibold uppercase tracking-widest ${meta.tone}`}
@@ -104,11 +88,11 @@ export function HonestBand({
       ) : (
         <>
           <p className={`mt-3 text-sm text-ion ${NUMERIC_TEXT_CLASS}`}>
-            {formatRatioAsPercent(low)} ·{" "}
+            {formatRatioAsPercent(d.intervalLow)} ·{" "}
             <span className="font-semibold text-ion-white">
               {formatRatioAsPercent(d.probability)}
             </span>{" "}
-            · {formatRatioAsPercent(high)}
+            · {formatRatioAsPercent(d.intervalHigh)}
             <span className="ml-2 text-xs text-ion-2">
               over {formatCount(sampleSize)} settled picks
             </span>

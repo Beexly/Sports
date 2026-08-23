@@ -21,7 +21,7 @@ const PRINCIPLES = [
     eyebrow: "02 · Reasoning is published",
     title: "If the work can't be shown, it doesn't ship.",
     body:
-      "Each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the confidence the model assigned — calibration is measured against settled results, never assumed. You see the inputs. You decide what to do with them.",
+      "Each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the calibrated confidence the model assigned. You see the inputs. You decide what to do with them.",
   },
   {
     eyebrow: "03 · Outcomes are uncertain",
@@ -60,8 +60,8 @@ export default function AboutPage() {
             </p>
             <p className="mt-5 max-w-2xl text-lg text-ion-1">
               {BRAND_NAME} ingests live odds across dozens of sportsbooks,
-              scores every matchup for edge, and publishes a fully-reasoned
-              signal alongside every factor that drove it. The
+              scores every matchup for edge, and publishes a calibrated,
+              fully-reasoned signal alongside every factor that drove it. The
               bar is simple: if it can&apos;t be explained, it doesn&apos;t
               get published.
             </p>

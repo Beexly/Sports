@@ -73,7 +73,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
           <TierGatePanel
             need="PRO"
             surface="The Trend Lab"
-            blurb="The full cohort workbench (sample sizes, hit rates, p-values, and the trends that survive scrutiny) is a Pro surface. Free members keep the board, the Academy, and the public, verifiable record."
+            blurb="The full cohort workbench (sample sizes, hit rates, p-values, and the trends that survive scrutiny) is a Pro surface. Free members keep the board, the Academy, and the public verified record."
           />
         </main>
         <Footer />
@@ -377,7 +377,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
               </p>
               <h2 className="mt-2 text-2xl font-semibold text-ion-white">No synthetic p-values.</h2>
             </div>
-            {workbench.renderableTrends.length > 0 ? (
+            {workbench.topTrends.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[760px] text-left text-sm">
                   <caption className="sr-only">Published trends that cleared the observation and significance gates</caption>
@@ -389,12 +389,10 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                       <th scope="col" className="px-4 py-3">Baseline</th>
                       <th scope="col" className="px-4 py-3">Delta</th>
                       <th scope="col" className="px-4 py-3">p-value</th>
-                      <th scope="col" className="px-4 py-3">Next-event prob.</th>
-                      <th scope="col" className="px-4 py-3">Caveat</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-mineral">
-                    {workbench.renderableTrends.map((trend) => (
+                    {workbench.topTrends.map((trend) => (
                       <tr key={`${trend.feature}-${trend.cohort}`}>
                         <td className="px-4 py-3 font-semibold text-ion-white">{trend.cohort}</td>
                         <td className="px-4 py-3 font-mono text-ion">{trend.n}</td>
@@ -404,10 +402,6 @@ export default async function TrendsPage(): Promise<JSX.Element> {
                           {(trend.relativeDelta * 100).toFixed(1)}%
                         </td>
                         <td className="px-4 py-3 font-mono text-ion">{trend.pValue.toExponential(2)}</td>
-                        <td className="px-4 py-3 font-mono text-ion">
-                          {trend.calibratedProbability.toFixed(3)}
-                        </td>
-                        <td className="px-4 py-3 text-xs leading-5 text-ion-1">{trend.regressionCaveat}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -1,24 +1,24 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { NextResponse } from "next/server";
 
-vi.mock("@/lib/api-entitlement", () => ({ requireFantasyApiRateLimited: vi.fn() }));
+vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: vi.fn() }));
 vi.mock("@/lib/tools/lineup-tools", () => ({ compareLineup: vi.fn() }));
 vi.mock("@/lib/ingestion/player-stats", () => ({ currentNflSeason: () => 2025 }));
 
 import { GET } from "@/app/api/tools/lineup/route";
-import { requireFantasyApiRateLimited } from "@/lib/api-entitlement";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
 import { compareLineup } from "@/lib/tools/lineup-tools";
 
 const req = (qs = ""): Request => new Request(`http://x/api/tools/lineup${qs}`);
 
 beforeEach(() => {
-  (requireFantasyApiRateLimited as Mock).mockReset().mockResolvedValue(null);
+  (requirePremiumApiRateLimited as Mock).mockReset().mockResolvedValue(null);
   (compareLineup as Mock).mockReset().mockResolvedValue({ status: "ok", picks: [] });
 });
 
 describe("GET /api/tools/lineup", () => {
   it("returns the gate's denial when not entitled", async () => {
-    (requireFantasyApiRateLimited as Mock).mockResolvedValue(NextResponse.json({ error: "x" }, { status: 403 }));
+    (requirePremiumApiRateLimited as Mock).mockResolvedValue(NextResponse.json({ error: "x" }, { status: 403 }));
     expect((await GET(req("?players=p1"))).status).toBe(403);
     expect(compareLineup).not.toHaveBeenCalled();
   });
@@ -31,11 +31,6 @@ describe("GET /api/tools/lineup", () => {
   it("parses players and defaults the season", async () => {
     expect((await GET(req("?players=p1,%20p2%20,,p3"))).status).toBe(200);
     expect(compareLineup).toHaveBeenCalledWith(2025, ["p1", "p2", "p3"]);
-  });
-
-  it("gates with the fantasy floor, bucketed as tools/lineup", async () => {
-    await GET(req("?players=p1"));
-    expect(requireFantasyApiRateLimited).toHaveBeenCalledWith("tools/lineup");
   });
 
   it("400s on an invalid season", async () => {

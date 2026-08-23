@@ -1,0 +1,70 @@
+{
+  "provenance": {
+    "source": "nflverse player_stats.csv.gz + games.csv (CC-BY-4.0)",
+    "attribution": "Data via nflverse, licensed CC BY 4.0",
+    "seasons": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "independent_p_model": "props-hb.ts Gamma-Poisson per-player shrinkage; one player-prop at a time, no cross-player/script/total covariance",
+    "note": "Descriptive correlations only; priced:false; not a CLV claim."
+  },
+  "A_compositional": {
+    "team_games_with_>1_targeted_catcher": 3198,
+    "team_target_share_sum_stats": {
+      "mean": 0.9914,
+      "min": 0.7879,
+      "max": 1.0,
+      "median": 1.0,
+      "sd_pct": 2.18,
+      "note": "Share sums to ~1.0 => shares are compositional (constrained simplex)."
+    },
+    "team_target_sum_stats_targets": {
+      "mean": 32.3,
+      "min": 3.0,
+      "max": 68.0
+    },
+    "teammate_target_share_pair_corr": -0.0854,
+    "teammate_raw_target_pair_corr": -0.0197,
+    "n_teammate_pairs": 88809,
+    "interpretation": "Raw targets of co-active teammates are POSITIVELY correlated (shared team-game volume), but their SHARES are NEGATIVELY correlated (compositional constraint: sum to 1). The independent-p model sees neither \u2014 it treats each player's count as an independent NB."
+  },
+  "B_game_script": {
+    "n_team_games": 3182,
+    "team_pass_attempts_sd": 833.7,
+    "corr_total_line_vs_pass_attempts": 0.177,
+    "corr_spread_vs_pass_attempts": -0.011,
+    "corr_total_line_vs_dropbacks": 0.154,
+    "team_pass_attempts_mean": 33.9,
+    "team_pass_attempts_range": [
+      0,
+      68.0
+    ],
+    "interpretation": "Team pass volume (dropbacks) is strongly driven by the game script \u2014 total_line (over/under) and spread. A higher total and being a smaller favorite \u2192 more dropbacks \u2192 more targets/receptions for EVERY receiver on both teams. The independent-p model only conditions on per-player rest/weather covariates, NOT on the shared script draw (plays/PROE/pace), so it cannot co-move a game's receiver props with the script."
+  },
+  "C_team_total_envelope": {
+    "n_receivers_analyzed": 511,
+    "target_count_r2_mean": 0.1306,
+    "target_count_r2_median": 0.096,
+    "target_count_r2_pct_above_0.1": 48.7,
+    "target_count_r2_pct_above_0.2": 24.9,
+    "share_r2_mean": 0.0636,
+    "interpretation": "A sizable fraction of each receiver's game-to-game target-count variance is explained by the TEAM's dropback volume (the shared envelope that the independent-p model replaces with a season-average rate). The residual share-variance (which the Dirichlet share core in masterplan \u00a73.2 models) is compositional across teammates."
+  },
+  "D_cross_market_samegame": {
+    "n_obs_qb_rec_targets": 19061,
+    "corr_receiver_targets_vs_qb_pass_yards": 0.142,
+    "n_obs_teammate_target_pairs": 49280,
+    "corr_teammate_target_counts": -0.034,
+    "interpretation": "Same-game, same-team props are correlated through the shared game state (QB volume \u2192 all receivers; compositional share \u2192 teammates). Each is an edge opportunity the independent-p model's per-prop probOver cannot see. A single 'e = p - q' is computed for each market in isolation."
+  },
+  "correlations_missed_by_independent_p": {
+    "multi_player_teammate": "target shares sum to 1 (Dirichlet-compositional); teammates negatively correlated on share, positively on same-game raw counts. props-hb.ts computes each player's NB posterior independently \u2014 no teammate covariance.",
+    "game_script": "team pass attempts correlate with total_line r=0.177, with spread r=-0.011. Script (plays/PROE/pace) is a shared driver of all pass-catcher volumes; not in props-hb.ts.",
+    "team_total": "team dropback volume explains 13.1% (mean) / 9.6% (median) of receiver target-count variance \u2014 the season-average rate props-hb.ts conditions on ignores this per-game envelope."
+  }
+}

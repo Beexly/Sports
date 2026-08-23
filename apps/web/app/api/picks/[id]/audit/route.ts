@@ -27,8 +27,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
-import { clientIp } from "@/lib/api/rate-limit";
-import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { buildPickPremortemNote } from "@/lib/premortem/build";
@@ -73,16 +72,14 @@ export async function GET(
   const canSeeDetail = tier === "PRO" || tier === "ELITE";
 
   // Public, anonymous, DB-heavy route (DB read + CPU-heavy pre-mortem/fragility
-  // / death-clock computations on the PRO/ELITE branch). Durable (Postgres)
-  // limiter — the in-memory bucket was per-process, so the effective quota
-  // multiplied by warm-instance count on serverless.
-  const rl = await consumePublicFormRateLimit("public-pick-audit", clientIp(req), 60, 60_000);
+  // / death-clock computations on the PRO/ELITE branch). IP-keyed rate limit
+  // copied from the established pattern in apps/web/app/api/verify/route.ts
+  // (consumeRateLimit + clientIp).
+  const rl = consumeRateLimit("public-pick-audit", clientIp(req), 60, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
-      rl.status === 429
-        ? { error: "Too many requests. Please wait and try again.", code: "rate_limited" }
-        : { error: "Rate limit service unavailable. Please retry shortly.", code: "rate_limit_store_unavailable" },
-      { status: rl.status, headers: { "Retry-After": String(rl.retryAfterSec) } },
+      { error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
     );
   }
 

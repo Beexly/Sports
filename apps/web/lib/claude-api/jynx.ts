@@ -28,13 +28,9 @@ import {
   isFreeLaneEnabled,
   shouldUseFreeLane,
 } from "./free-lane-policy";
-// Pure env-shape checks — no transport, no provider client, no vendor SDK.
-// See ./provider-config.ts for why these live outside `providers/`.
-import {
-  isBedrockConfigured,
-  isVertexConfigured,
-  isAzureFoundryConfigured,
-} from "./provider-config";
+import { isBedrockConfigured } from "./providers/bedrock";
+import { isVertexConfigured } from "./providers/vertex";
+import { isAzureFoundryConfigured } from "./providers/azure-foundry";
 
 export type JynxCloud = "bedrock" | "azure" | "vertex";
 export type JynxLane = "cerebras_free" | JynxCloud | "anthropic_direct";

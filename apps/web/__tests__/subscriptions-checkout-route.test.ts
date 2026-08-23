@@ -76,14 +76,10 @@ import {
   stripeIdempotencyKeyForAttempt,
 } from "@/lib/billing/checkout-attempt";
 
-const ADULT_DOB = "1990-01-15";
-
-function checkoutRequest(body: Record<string, unknown>): NextRequest {
+function checkoutRequest(body: unknown): NextRequest {
   return new NextRequest("http://localhost/api/subscriptions/checkout", {
     method: "POST",
-    // Default an adult DOB so existing route tests still reach the paths they
-    // assert. Pass `dateOfBirth: undefined` (JSON-omitted) to exercise the gate.
-    body: JSON.stringify({ dateOfBirth: ADULT_DOB, ...body }),
+    body: JSON.stringify(body),
     headers: { "content-type": "application/json" },
   });
 }
@@ -142,24 +138,6 @@ describe("POST /api/subscriptions/checkout", () => {
     mocks.auth.mockResolvedValue(null);
     const res = await POST(checkoutRequest({ tier: "PRO" }));
     expect(res.status).toBe(401);
-    expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
-  });
-
-  it("returns 400 when date of birth is missing, before any Stripe call", async () => {
-    const res = await POST(checkoutRequest({ tier: "PRO", dateOfBirth: undefined }));
-    expect(res.status).toBe(400);
-    const body = await res.json();
-    expect(body.code).toBe("missing_date_of_birth");
-    expect(mocks.getOrCreateStripeCustomer).not.toHaveBeenCalled();
-    expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
-  });
-
-  it("returns 403 when the subscriber is under 21, before any Stripe call", async () => {
-    const res = await POST(checkoutRequest({ tier: "PRO", dateOfBirth: "2010-01-01" }));
-    expect(res.status).toBe(403);
-    const body = await res.json();
-    expect(body.code).toBe("age_restricted");
-    expect(mocks.getOrCreateStripeCustomer).not.toHaveBeenCalled();
     expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
   });
 

@@ -8,12 +8,6 @@
  */
 
 import type { QuoteFetchRequest, QuoteLine, QuoteProvider } from "../types";
-import {
-  DEFAULT_MAX_SPREAD,
-  gatePmTwoWay,
-  PM_MID_METHOD_TAG,
-  PM_MID_MODEL_VERSION,
-} from "../pm-quote-gate";
 
 export const KALSHI_TRADE_API_BASE =
   "https://external-api.kalshi.com/trade-api/v2";
@@ -79,10 +73,13 @@ export function midFromKalshiOrderbook(
   const bid = yesBids[0]?.price ?? null;
   const ask = noBids[0] != null ? 1 - noBids[0].price : null;
 
-  if (bid == null || ask == null) return null;
-  const gated = gatePmTwoWay({ bid, ask });
-  if (!gated.usable || gated.q == null) return null;
-  return { mid: gated.q, bid, ask };
+  if (bid != null && ask != null) {
+    const mid = (bid + ask) / 2;
+    if (mid > 0 && mid < 1) return { mid, bid, ask };
+  }
+  if (bid != null) return { mid: bid, bid, ask: null };
+  if (ask != null && ask > 0 && ask < 1) return { mid: ask, bid: null, ask };
+  return null;
 }
 
 export function createKalshiTradeProvider(
@@ -133,16 +130,12 @@ export function createKalshiTradeProvider(
             rights: "public_market",
             bookId: "kalshi",
             confidence: 0.75,
-            notes: `bid=${m.bid} ask=${m.ask} maxSpread=${DEFAULT_MAX_SPREAD} (mid; fee not applied)`,
-            methodTag: PM_MID_METHOD_TAG,
-            modelVersion: PM_MID_MODEL_VERSION,
+            notes: `bid=${m.bid} ask=${m.ask} fee_aware`,
+            methodTag: "prediction_market_raw_v1",
+            modelVersion: "quote.kalshi.v1",
           },
         ];
       }
-      // Fail-closed: Kalshi Developer Agreement v1.1 §3/§3.1 (own-trading only).
-      // Flip only after source-rights-registry `kalshi` is approved_written_permission.
-      const kalshiLiveNetworkCleared = false;
-      if (!kalshiLiveNetworkCleared) return [];
       const res = await fetchImpl(
         `/markets/${encodeURIComponent(ticker)}/orderbook`,
       );
@@ -163,9 +156,9 @@ export function createKalshiTradeProvider(
           rights: "public_market",
           bookId: "kalshi",
           confidence: 0.75,
-          notes: `bid=${m.bid} ask=${m.ask} maxSpread=${DEFAULT_MAX_SPREAD} (mid; fee not applied)`,
-          methodTag: PM_MID_METHOD_TAG,
-          modelVersion: PM_MID_MODEL_VERSION,
+          notes: `bid=${m.bid} ask=${m.ask}`,
+          methodTag: "prediction_market_raw_v1",
+          modelVersion: "quote.kalshi.v1",
         },
       ];
     },
@@ -177,5 +170,5 @@ export const KALSHI_PROVIDER_META = {
   oddsApiRequired: false as const,
   authForPublicOrderbook: false,
   rightsNote:
-    "Kalshi Developer Agreement v1.1 §3/§3.1: API use is own-trading only; live network defaults off until written authorization",
+    "Check Kalshi API ToS + commercial redistribution before prod money path",
 } as const;

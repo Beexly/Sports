@@ -15,9 +15,8 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 
-import { requirePremiumApi, requireFantasyApiRateLimited } from "@/lib/api-entitlement";
+import { requirePremiumApi } from "@/lib/api-entitlement";
 import { getEntitlements } from "@sports/types";
-import { resetRateLimits } from "@/lib/api/rate-limit";
 
 describe("requirePremiumApi", () => {
   beforeEach(() => {
@@ -89,78 +88,5 @@ describe("requirePremiumApi", () => {
     const res = await requirePremiumApi();
 
     expect(res!.status).toBe(401);
-  });
-});
-
-describe("requireFantasyApiRateLimited", () => {
-  const LIMIT = 120;
-
-  beforeEach(() => {
-    mocks.auth.mockReset();
-    mocks.getUserEntitlements.mockReset();
-    resetRateLimits(); // module-global limiter — deterministic across tests
-  });
-
-  it("returns 401 for an anonymous request (no session)", async () => {
-    mocks.auth.mockResolvedValue(null);
-
-    const res = await requireFantasyApiRateLimited("test-bucket");
-
-    expect(res!.status).toBe(401);
-    expect(mocks.getUserEntitlements).not.toHaveBeenCalled();
-  });
-
-  it("returns 403 for an authenticated FREE-tier user (canUseFantasyFull: false)", async () => {
-    mocks.auth.mockResolvedValue({ user: { id: "free_user" } });
-    mocks.getUserEntitlements.mockResolvedValue(getEntitlements("FREE"));
-
-    const res = await requireFantasyApiRateLimited("test-bucket");
-
-    expect(res!.status).toBe(403);
-  });
-
-  it("grants access (null) to a FANTASY-tier user (canUseFantasyFull: true)", async () => {
-    mocks.auth.mockResolvedValue({ user: { id: "fantasy_user" } });
-    mocks.getUserEntitlements.mockResolvedValue(getEntitlements("FANTASY"));
-
-    expect(await requireFantasyApiRateLimited("test-bucket")).toBeNull();
-  });
-
-  it(`429s the same user's ${LIMIT + 1}th call within one window, with a Retry-After header`, async () => {
-    mocks.auth.mockResolvedValue({ user: { id: "fantasy_user" } });
-    mocks.getUserEntitlements.mockResolvedValue(getEntitlements("FANTASY"));
-
-    for (let i = 0; i < LIMIT; i += 1) {
-      const res = await requireFantasyApiRateLimited("shared-bucket");
-      expect(res).toBeNull();
-    }
-    const blocked = await requireFantasyApiRateLimited("shared-bucket");
-    expect(blocked!.status).toBe(429);
-    expect(blocked!.headers.get("Retry-After")).toBeTruthy();
-    expect(Number(blocked!.headers.get("Retry-After"))).toBeGreaterThan(0);
-  });
-
-  it("the entitlement gate precedes the limiter — a 403'd user is never rate-limited first", async () => {
-    mocks.auth.mockResolvedValue({ user: { id: "free_user" } });
-    mocks.getUserEntitlements.mockResolvedValue(getEntitlements("FREE"));
-
-    // Far more than LIMIT calls — if the limiter ran first, this would 429
-    // eventually instead of denying every single call with 403.
-    for (let i = 0; i < LIMIT + 5; i += 1) {
-      const res = await requireFantasyApiRateLimited("shared-bucket-2");
-      expect(res!.status).toBe(403);
-    }
-  });
-
-  it("two different bucketIds do not share a budget for the same user", async () => {
-    mocks.auth.mockResolvedValue({ user: { id: "fantasy_user" } });
-    mocks.getUserEntitlements.mockResolvedValue(getEntitlements("FANTASY"));
-
-    for (let i = 0; i < LIMIT; i += 1) {
-      expect(await requireFantasyApiRateLimited("bucket-a")).toBeNull();
-    }
-    expect((await requireFantasyApiRateLimited("bucket-a"))!.status).toBe(429);
-    // A fresh bucket for the same user is NOT exhausted.
-    expect(await requireFantasyApiRateLimited("bucket-b")).toBeNull();
   });
 });

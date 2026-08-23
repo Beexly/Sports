@@ -2,16 +2,11 @@
  * Jynx error taxonomy — pure helpers for docs, tests, and operators.
  * Failover hops only on these classes; everything else aborts the chain.
  */
-import {
-  AzureFoundryConfigError,
-  AzureFoundryMessagesError,
-  BedrockConfigError,
-  BedrockMessagesError,
-  CerebrasMessagesError,
-  VertexConfigError,
-  VertexMessagesError,
-} from "./provider-errors";
+import { CerebrasMessagesError } from "./providers/cerebras";
 import { OpenAiCompatError } from "./openai-compat";
+import { BedrockConfigError, BedrockMessagesError } from "./providers/bedrock";
+import { AzureFoundryConfigError, AzureFoundryMessagesError } from "./providers/azure-foundry";
+import { VertexConfigError, VertexMessagesError } from "./providers/vertex";
 
 export type JynxErrorLane =
   | "free_cerebras"

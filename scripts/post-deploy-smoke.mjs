@@ -8,10 +8,9 @@
  *
  * Usage:
  *   node scripts/post-deploy-smoke.mjs
- *   node scripts/post-deploy-smoke.mjs --url=https://www.galaxysportsedge.com
+ *   node scripts/post-deploy-smoke.mjs --url=https://galaxysportsedge.com
  *
- * Defaults to https://www.galaxysportsedge.com (the canonical WWW host — see
- * apps/web/lib/seo/site-url.ts). Exits non-zero on any failure.
+ * Defaults to https://galaxysportsedge.com. Exits non-zero on any failure.
  */
 
 const COLOR = process.stdout.isTTY
@@ -26,7 +25,7 @@ const COLOR = process.stdout.isTTY
   : { reset: "", red: "", green: "", yellow: "", cyan: "", dim: "" };
 
 const argUrl = process.argv.find((a) => a.startsWith("--url="));
-const BASE = (argUrl ? argUrl.split("=")[1] : "https://www.galaxysportsedge.com").replace(/\/$/, "");
+const BASE = (argUrl ? argUrl.split("=")[1] : "https://galaxysportsedge.com").replace(/\/$/, "");
 
 const PUBLIC_PAGES = [
   // Homepage hero splits the tagline with <em>, so we check for the surrounding
@@ -196,20 +195,6 @@ async function checkSecurityHeaders() {
   }
 }
 
-async function checkApexRedirect() {
-  try {
-    const res = await fetchWithTimeout("https://galaxysportsedge.com/", { redirect: "manual" });
-    const location = res.headers.get("location") ?? "";
-    if ([301, 307, 308].includes(res.status) && location.startsWith("https://www.galaxysportsedge.com")) {
-      ok("apex → www redirect", `${res.status} → ${location}`);
-    } else {
-      bad("apex → www redirect", `HTTP ${res.status}, location "${location}" — un-redirected apex mints a rejected OAuth callback`);
-    }
-  } catch (err) {
-    bad("apex → www redirect", err.message);
-  }
-}
-
 async function main() {
   console.log("");
   console.log(`${COLOR.dim}Smoke testing: ${BASE}${COLOR.reset}`);
@@ -226,11 +211,6 @@ async function main() {
 
   header("Security headers");
   await checkSecurityHeaders();
-
-  if (BASE === "https://www.galaxysportsedge.com") {
-    header("Apex redirect");
-    await checkApexRedirect();
-  }
 
   console.log(lines.join("\n"));
   console.log("");

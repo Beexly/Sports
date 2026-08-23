@@ -1,0 +1,95 @@
+{
+  "title": "H1 NFL Prop Market Gaps — Research Findings",
+  "workspace": "C:/Users/Garrett/Sports-h0-next",
+  "scope": "Player prop lines offered by sportsbooks, backed by free NFLVerse (CC-BY-4.0) data, NOT in H0 binds or EDGE_FACTORY §4 catalog, weakly modeled publicly.",
+  "methodology_sources": {
+    "primary": [
+      "docs/nflverse-data-catalog.md (local)",
+      "packages/data-ingestion/src/nflverse-source.ts (NFLVERSE_CATALOG, offense-only filter)",
+      "docs/STAT_INTAKE_COVERAGE_MATRIX.md",
+      "docs/data/EDGE_FACTORY_MASTERPLAN.md (§4 edge catalog E-A1..E-G5)",
+      "docs/ops/hermes/EDGE-HUNT-LAUNCH.md (H0 completed binds)",
+      "docs/data/CARDS_EDGE_VALIDATE.md EV1 (prop close archive absent)"
+    ],
+    "nflverse_release_assets_verified_by_curl": [
+      "github.com/nflverse/nflverse-data/releases/tag/player_stats",
+      "player_stats.csv (offense: includes sack_fumbles_lost, rushing_fumbles_lost, receiving_fumbles_lost, special_teams_tds, sacks)",
+      "player_stats_def_2023.csv (def_tackles_solo, def_sacks, def_qb_hits, def_interceptions, def_pass_defended, def_fumbles_forced, def_fumble_recovery_own/opp, def_tackles_for_loss)",
+      "player_stats_kicking_2023.csv (fg_made, fg_att, fg_pct, fg_made_20_29..fg_made_60_, pat_made, gwfg_*)",
+      "advstats_week_def_2023.csv (pfr_advstats def: def_ints, def_targets, def_completions_allowed, def_times_pressured, def_pressures, def_sacks, def_tackles_combined)"
+    ],
+    "osint_source_blocked": "start.me/p/GLQNK7/copy-of-osint4all is login-gated (verified via web_extract + browser_exec: title 'Sign in - start.me') and has no Wayback Machine snapshot (CDX API returns empty). OSINT-relevant NFL public data sources confirmed directly: NFLVerse CC-BY-4.0, NOAA/NWS METAR (US public domain), OverTheCap (public)."
+  },
+  "core_gap": "Local adapter ingests ONLY offense player_stats_week (QB/RB/WR/TE/FB). NFLVerse publish player_stats_def + player_stats_kicking as free CC-BY-4.0 assets but they are NOT in NFLVERSE_CATALOG. EDGE_FACTORY §4 covers offensive skill props + QB-sacked sacks + wind/refs incidentally; has NO defensive-player or kicking/special-teams prop models. H0 binds are all offensive.",
+  "findings": [
+    {
+      "id": "H1-1",
+      "prop_line": "Defensive tackles (solo/combined) over/under — player X O/U Y tackles",
+      "data_source": "player_stats_def (def_tackles_solo, def_tackles_with_assist, def_tackles_for_loss) + snap_counts (defensive snap share), depth_charts (role), schedules (opponent run rate, spread/total game script), pbp (tackle_for_loss events). Join gsis_id.",
+      "gap_in_coverage": "player_stats_def not in NFLVERSE_CATALOG; §4-E-E1 is team-level DVP (offense vs position) not a per-player tackle model; quantgalore/nfl-props covers receptions only. No defensive volume model anywhere in §4.",
+      "estimated_edge_strength": "HIGH",
+      "edge_justification": "Books price on raw tackle averages; real driver is snap-opportunity (snap share x script x opponent run rate) — measurable, sign-stable, weakly-priced defensive market."
+    },
+    {
+      "id": "H1-2",
+      "prop_line": "Defensive sacks (pass-rusher) over/under — player X O/U Y sacks",
+      "data_source": "player_stats_def (def_sacks, def_sack_yards, def_qb_hits) + pfr_advstats def (def_times_pressured, def_times_blitzed, def_times_hurried), snap_counts, schedules (spread/total to derive opponent pass-rate). Join gsis_id.",
+      "gap_in_coverage": "§4-E-A3 'sacks props' = QB-sacked (offense) only; explicitly 'O-line reputation is the market's anchor'. §4-E-E3 pressure chains = opponent pressure shaping QB's line. Neither models the defensive pass-rusher's own sack total; player_stats_def not ingested.",
+      "estimated_edge_strength": "HIGH",
+      "edge_justification": "Masterplan itself flags pressure traits stick across O-lines; hit rate regresses but opportunity (snaps x opponent dropbacks x blitz rate) is fully CC-BY and unpriced. High-limit star market."
+    },
+    {
+      "id": "H1-3",
+      "prop_line": "First TD scorer — will player X score the FIRST touchdown (binary / head-to-head first-score)",
+      "data_source": "pbp (scoring sequence: scoring, play_type=TD, yardline_100, goal_to_go, half_seconds_remaining, ordered by time), depth_charts (starter status), player_stats/snap_counts (first-half target & rush share, target_share), schedules (script: total/spread -> favorite scores first). Join gsis_id.",
+      "gap_in_coverage": "§4 mentions anytime-TD only (§3.5 joint sim; §4-E-C4 red-zone bifurcation feeds rush-TD, not first-TD sequence). Neither H0 nor §4 enumerates FIRST-TD-scorer sequence pricing. Public repos model reception proportions/A TD not first-score ordering.",
+      "estimated_edge_strength": "MEDIUM-HIGH",
+      "edge_justification": "Books price on season-long TD% priors, ignoring goal-line/red-zone role + script ordering. First scorer is strongly scripted; sign-stable for goal-line backs/TEs. Popular prop -> real CLV surface."
+    },
+    {
+      "id": "H1-4",
+      "prop_line": "Kicker FG made / attempts / FG% (incl. by distance bucket) over/under",
+      "data_source": "player_stats_kicking (fg_made, fg_att, fg_pct, fg_made_20_29..fg_made_60_, fg_missed_*, pat_made, pat_att, gwfg_att/made). Layer schedules (roof, surface, temp, wind), pbp FG events (kick_distance, blocked flag) for opponent FG-block rate, depth_charts/team red-zone TD share. Join team+season+week.",
+      "gap_in_coverage": "player_stats_kicking NOT in NFLVERSE_CATALOG; §4 mentions kickers only incidentally (§4-E-D2 wind 'kicker effects', §4-E-D4 altitude 'kick distance') — no FG-volume/make-probability model. STAT_INTAKE COVERAGE_MATRIX lists no kicking type.",
+      "estimated_edge_strength": "MEDIUM",
+      "edge_justification": "FG volume strongly scripted (blowout fewer attempts; trailing foul-trade more FG) + weather-conditioned (dome/x wind). Books use raw averages + generic wind. Real signal but low line limits cap exploit."
+    },
+    {
+      "id": "H1-5",
+      "prop_line": "Defensive passes defended (PD) over/under — player X O/U Y PD",
+      "data_source": "player_stats_def (def_pass_defended, def_targets, def_completions_allowed, def_completion_pct) + depth_charts (CB/S role) + snap_counts (snap share). Join gsis_id.",
+      "gap_in_coverage": "No per-player PD model in §4. §4-E-E5 'coverage-shell proxy' is a team (pass_location + opponent aDOT-allowed) fingerprint, not per-player PD opportunity. player_stats_def not ingested. Public repos: receptions-only.",
+      "estimated_edge_strength": "MEDIUM",
+      "edge_justification": "PD more frequent/stable than INT; def_targets + snap share set opportunity floor books under-weight. Less public sharp money than offense -> softer lines. Moderate signal."
+    },
+    {
+      "id": "H1-6",
+      "prop_line": "Player fumbles (lost / forced / recovered) over/under",
+      "data_source": "player_stats (sack_fumbles, sack_fumbles_lost, rushing_fumbles, rushing_fumbles_lost, receiving_fumbles, receiving_fumbles_lost) + player_stats_def (def_fumbles_forced, def_fumbles, def_fumble_recovery_own, def_fumble_recovery_opp) + snap_counts (exposure) + pbp fumble events + injuries/weather (wet-ball). Join gsis_id.",
+      "gap_in_coverage": "§4-E-D3 only: 'Modest cold/precip...fumble effects; verify' — no fumble model. H0 had 'sack-ttt' (time-to-throw->pressure) but NOT a fumble-lost/forced prop. Not modeled anywhere.",
+      "estimated_edge_strength": "LOW-MEDIUM",
+      "edge_justification": "Fumbles are low-frequency/largely luck; but sack-fumbles (QB) & rush-fumbles scale with pressure exposure (§4-E-A3/E-E3 signal) + snap volume + wet conditions + team ball-security philosophy — weak, sign-fragile. Supplement, not primary."
+    },
+    {
+      "id": "H1-7",
+      "prop_line": "Defensive interceptions over/under — DB X O/U Y INTs",
+      "data_source": "player_stats_def (def_interceptions, def_interception_yards, def_targets, def_pass_defended) + pfr_advstats def (def_completions_allowed, def_targets) + depth_charts (CB/S role+starter). Join gsis_id.",
+      "gap_in_coverage": "No DB-INT prop model in §4. Only INT mentions: H0 INT bind (QB THROWS int) and §4-E-E3 'INT mix shifts' (pass-rush pressure -> QB INT thrown). Both offensive-QB direction. Defensive DB interceptions caught is unwired.",
+      "estimated_edge_strength": "LOW",
+      "edge_justification": "INTs are the noisiest single-game stat — rare, tip/luck-driven; books know it. def_pass_defended (H1-5) is the stable input; INT itself ~ coin-flip on targets. Edge only for extreme target-volume CBs in soft games."
+    },
+    {
+      "id": "H1-8",
+      "prop_line": "Returner / special-teams scoring TD over/under (return TDs)",
+      "data_source": "player_stats (special_teams_tds flag) + pbp return events (return, return_touchdown, touchback, kick_distance, kick_blocked) + depth_charts (returner role) + opponent kickoff/punt coverage rates from pbp. NOTE: return YARDS (pr_yds/kr_yds) are NOT in player_stats/offense header and NFL's separate returns feed is NOT in the ingested bundles.",
+      "gap_in_coverage": "player_stats_kicking not ingested; offense player_stats only carries special_teams_tds (0/1 flag), not return yardage. §4 silent on return props. No returns model.",
+      "estimated_edge_strength": "LOW",
+      "edge_justification": "Very low frequency; books price return TDs as lotto. Signal (returner role + opponent coverage + wind/hang time) thin. Include for completeness / low-limit darts."
+    }
+  ],
+  "priority_recommendation": "H1-1 Defensive tackles and H1-2 Defensive sacks first: biggest market volume, cleanest data (def_sacks/def_sacks_solo + def_qb_hits already in player_stats_def), largest pricing gap, and the masterplan itself (§4-E-A3) already proves pressure/sack pricing inefficiencies exist on the offensive side — the defensive side is the uncovered mirror. Both gated only on onboarding player_stats_def (one catalog entry, CC-BY-4.0).",
+  "validation_blockers": [
+    "No prop-line close archive: docs/data/CARDS_EDGE_VALIDATE.md EV1 states no qClose feed exists for prop families; CLV referee cannot run -> all findings remain HYPOTHESIS until The Odds API prop feed lands.",
+    "player_stats_def / player_stats_kicking not yet in NFLVERSE_CATALOG -> need ingestion + persistence (founder-gated MODEL_VERSION step). pbp_participation & ftn_charting remain CC-BY-SA (rights-hold) -> use E-C1 est_routes proxy / E-E3 pressure proxies instead."
+  ]
+}

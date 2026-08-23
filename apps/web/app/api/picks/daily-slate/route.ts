@@ -1,7 +1,7 @@
-import { jsonNoStore } from "@/lib/api/no-store";
+import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { startOfDay, endOfDay } from "date-fns";
-import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import { getReadinessGates } from "@sports/prediction-engine";
 import {
   db,
   isStubMode,
@@ -10,8 +10,7 @@ import {
 } from "@sports/db";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
-import { clientIp } from "@/lib/api/rate-limit";
-import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -28,39 +27,15 @@ export async function GET(req: NextRequest) {
   // Public, anonymous, DB-heavy route (multiple count + findMany aggregates).
   // IP-keyed rate limit copied from the established pattern in
   // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
-  // Durable (Postgres) limiter — same swap and same rationale as /api/picks:
-  // the in-memory bucket was per-process, so the effective quota multiplied by
-  // warm-instance count on serverless.
-  const limit = await consumePublicFormRateLimit("public-daily-slate", clientIp(req), 60, 60_000);
+  const limit = consumeRateLimit("public-daily-slate", clientIp(req), 60, 60_000);
   if (!limit.ok) {
-    return jsonNoStore(
-      limit.status === 429
-        ? { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" }
-        : { success: false, error: "Rate limit service unavailable. Please retry shortly.", code: "rate_limit_store_unavailable" },
-      { status: limit.status, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    return NextResponse.json(
+      { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
   }
 
   const gates = getReadinessGates();
-
-  // Public-picks gate — the SAME gate /api/picks enforces, and it was missing
-  // here. This route read getReadinessGates() but only ever consulted
-  // forceNoBetIfStale, so with PUBLIC_PICKS_ENABLED=false /api/picks went dark
-  // (503) while this endpoint kept answering 200 with totalPicks,
-  // premiumPickCount, freePickCount, sportBreakdown and a freshly stamped
-  // lastUpdatedAt. That is the shape of the board — exactly what the gate
-  // exists to withhold — served from the surface the gate was supposed to
-  // close. Two public pick endpoints must not disagree about whether picks
-  // are public.
-  //
-  // 503 (not a zeroed 200) so the contract matches /api/picks byte for byte.
-  // The only consumer, fetchSlate() in app/picks/page.tsx, already does
-  // `if (!res.ok) return null` inside a try/catch, so the SlateBar degrades to
-  // its no-slate state rather than rendering fabricated zeros.
-  if (!gates.canExposePublicPicks) {
-    return jsonNoStore(bootstrapGateResponse("Public picks"), { status: 503 });
-  }
-
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
   // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). The /picks
@@ -75,7 +50,7 @@ export async function GET(req: NextRequest) {
   if (gates.forceNoBetIfStale) {
     const stale = await isPublicPicksSurfaceStale().catch(() => false);
     if (stale) {
-      return jsonNoStore({
+      return NextResponse.json({
         success: true,
         data: {
           date: new Date().toISOString().slice(0, 10),
@@ -168,7 +143,7 @@ export async function GET(req: NextRequest) {
   // it non-null.
   const recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
 
-  return jsonNoStore({
+  return NextResponse.json({
     success: true,
     data: {
       date: new Date().toISOString().slice(0, 10),

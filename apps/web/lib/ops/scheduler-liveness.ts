@@ -49,23 +49,7 @@ const DEGRADED_THRESHOLD_MINUTES = 60;
  */
 const DEAD_THRESHOLD_MINUTES = 180;
 
-/**
- * The complete liveness vocabulary, as a runtime value.
- *
- * Exported as an array, not just a type union, because the consumers that matter
- * most are OUTSIDE TypeScript: `.github/workflows/external-watchdog.yml` polls the
- * public JSON surface and string-compares `.schedulerLiveness.status` in shell.
- * A type union cannot constrain a shell literal; an exported array can be asserted
- * against one in a test. See `__tests__/github-workflow-contract.test.ts`.
- */
-export const SCHEDULER_LIVENESS_STATUSES = [
-  "healthy",
-  "degraded",
-  "dead",
-  "unknown",
-] as const;
-
-export type SchedulerLivenessStatus = (typeof SCHEDULER_LIVENESS_STATUSES)[number];
+export type SchedulerLivenessStatus = "healthy" | "degraded" | "dead" | "unknown";
 
 export interface SchedulerLivenessResult {
   readonly status: SchedulerLivenessStatus;

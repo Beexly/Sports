@@ -73,7 +73,6 @@ export async function loadDashboardPerformance(
     canonicalWins,
     canonicalLosses,
     canonicalPushes,
-    canonicalVoids,
     canonicalPendingCount,
     bootstrapSettledCount,
     recentTotalCount,
@@ -103,7 +102,6 @@ export async function loadDashboardPerformance(
     db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, NOT: { modelVersion: "v5.0.0-seed" } } }),
     db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, NOT: { modelVersion: "v5.0.0-seed" } } }),
     db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, NOT: { modelVersion: "v5.0.0-seed" } } }),
-    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, NOT: { modelVersion: "v5.0.0-seed" } } }),
     db.pick.count({
       where: { result: "PENDING", isPublished: true, isBootstrap: false, NOT: { modelVersion: "v5.0.0-seed" } },
     }),
@@ -127,7 +125,6 @@ export async function loadDashboardPerformance(
     canonicalWins,
     canonicalLosses,
     canonicalPushes,
-    canonicalVoids,
     recentTotalCount,
     recentBootstrapCount,
   });

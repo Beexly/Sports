@@ -2,7 +2,6 @@ export { processSport } from "./process-sport.js";
 export type { SportConfig, ProcessSportResult } from "./process-sport.js";
 export {
   settleSport,
-  PAID_SCORES_DAYS_FROM,
   SCORELESS_COMPLETED_ANOMALY,
   SCORELESS_REVIEW_THRESHOLD,
 } from "./settle-sport.js";

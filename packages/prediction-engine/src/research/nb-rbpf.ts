@@ -50,6 +50,7 @@ export interface NbRbpfOptions {
   readonly essThreshold?: number;
   readonly resampling?: ResamplingScheme;
   readonly liuWestDelta?: number;
+  readonly intercept?: number;
 }
 
 export interface NbRbpfSnapshot {
@@ -236,6 +237,7 @@ export class NbRbpf {
       throw new RangeError(`NbRbpf: liuWestDelta must lie in (0, 1], received ${liuWestDelta}`);
     }
     this.liuWestDelta = liuWestDelta;
+    this.intercept = requireFinite(options.intercept ?? Math.log(8.5), "intercept");
 
     const assignLen = this.nParticles * this.assignStride();
     this.assignments = new Int32Array(assignLen);
@@ -263,7 +265,7 @@ export class NbRbpf {
       this.logPhi[p] = Math.log(12);
       this.logRidge[p] = Math.log(4);
       const bOff = p * BETA_DIM;
-      this.beta[bOff] = Math.log(8.5);
+      this.beta[bOff] = this.intercept;
       this.logWeights[p] = 0;
     }
     this.weightBuf.fill(1 / this.nParticles);
