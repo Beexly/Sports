@@ -38,9 +38,10 @@
  * The bind forwards the weekly means verbatim and never crosses the same-week
  * boundary.
  *
- * Fail-closed: if `nextGameCovariate(..., "rushing", "pctAttemptsGte8Defenders")`
- * returns null (no prior per-game history, null/non-finite field, or only a
- * week=0 aggregate row), the sample is DROPPED. It is NOT imputed.
+ * Fail-closed: if `latestPriorRow(..., "rushing", kickoffWeek)`
+ * returns null (no prior per-game history, or only a week=0 aggregate row),
+ * or if the prior row's `pctAttemptsGte8Defenders` / `avgTimeToLos` is
+ * null/non-finite, the sample is DROPPED. It is NOT imputed.
  *
  * Company posture (Galaxy Sports Edge): independent p with process, then
  * e = p − q. The site is a window — we do NOT build chrome. This bind is the
@@ -50,7 +51,7 @@
  */
 
 import {
-  nextGameCovariate,
+  latestPriorRow,
   type CovariateCell,
   type CovariateRow,
 } from "./covariate-bus.js";
@@ -113,37 +114,42 @@ export type RushYardsBindResult =
  * `BoundRushSample`s.
  *
  * For each request:
- *   1. `nextGameCovariate(rows, gsisId, season, kickoffWeek, "rushing", "pctAttemptsGte8Defenders")`
- *      — strictly-prior per-game rushing row, week=0 excluded, fail-closed.
- *      The bus itself returns `null` if the prior row is absent OR if the
- *      field is null/non-finite — both are `no_prior_row`.
- *   2. Same for `avgTimeToLos` — single strict-prior scan per field.
- *   3. If both cells are non-null → build the sample. If either is null →
- *      DROP the sample (fail-closed, never imputed).
+ *   1. `latestPriorRow(rows, gsisId, season, "rushing", kickoffWeek)` — one
+ *      strict-prior scan (week=0 excluded, week >= kickoffWeek excluded).
+ *   2. If no prior row → refuse `no_prior_row` (fail-closed).
+ *   3. Read `pctAttemptsGte8Defenders` and `avgTimeToLos` directly from that row.
+ *      If either is null/non-finite → refuse `no_prior_row` (fail-closed,
+ *      never imputed).
+ *   4. If both are valid → build the sample with the bus's cell metadata
+ *      (grain + provenance) as CovariateCells.
  *
- * The bus's `nextGameCovariate` returns `null` for both "no prior row" and
- * "field null/non-finite on the prior row" — the bind cannot distinguish those
- * cases and collapses both to `no_prior_row`. This is fail-closed by design:
- * the caller never sees a null/non-finite covariate cell reach the model.
+ * The bus's `nextGameCovariate` returns a complete `CovariateCell` — we use the
+ * same cell template (`BUS_CELL`) so any future bus provenance evolution
+ * propagates via a single source of truth on the bus. The value comes directly
+ * from the row we already scanned, avoiding a second O(N) scan per field.
  *
  * The 8-in-the-box share and time-to-LOS are weekly MEANS, NOT per-carry
  * frame measurements — every emitted cell carries its grain and provenance.
  */
+
+/** Cell template matching the covariate bus's contract — single source of truth. */
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+
 export function bindRushYardsSamples(
   rows: readonly CovariateRow[],
   requests: readonly RushYardsBindRequest[],
 ): RushYardsBindResult[] {
   const out: RushYardsBindResult[] = [];
   for (const req of requests) {
-    const boxCell: CovariateCell | null = nextGameCovariate(
+    // Single strict-prior scan — not one per covariate field.
+    const row = latestPriorRow(
       rows,
       req.gsisId,
       req.season,
-      req.kickoffWeek,
       "rushing",
-      "pctAttemptsGte8Defenders",
+      req.kickoffWeek,
     );
-    if (boxCell === null) {
+    if (row === null) {
       out.push({
         ok: false,
         methodTag: RUSH_YARDS_BIND_METHOD_TAG,
@@ -153,15 +159,20 @@ export function bindRushYardsSamples(
       continue;
     }
 
-    const tlosCell: CovariateCell | null = nextGameCovariate(
-      rows,
-      req.gsisId,
-      req.season,
-      req.kickoffWeek,
-      "rushing",
-      "avgTimeToLos",
-    );
-    if (tlosCell === null) {
+    // Read both fields from the single prior row; fail-closed on null/non-finite.
+    const boxShare = row.pctAttemptsGte8Defenders;
+    if (boxShare === null || !Number.isFinite(boxShare)) {
+      out.push({
+        ok: false,
+        methodTag: RUSH_YARDS_BIND_METHOD_TAG,
+        priced: false,
+        refuse: "no_prior_row",
+      });
+      continue;
+    }
+
+    const tlos = row.avgTimeToLos;
+    if (tlos === null || !Number.isFinite(tlos)) {
       out.push({
         ok: false,
         methodTag: RUSH_YARDS_BIND_METHOD_TAG,
@@ -179,10 +190,11 @@ export function bindRushYardsSamples(
         // Realized model inputs — passed through unchanged.
         attempts: req.rush.attempts,
         yards: req.rush.yards,
-        // Weekly NGS mean share of rush attempts vs 8+ in the box.
-        pctAttemptsGte8Defenders: { value: boxCell.value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" },
+        // Weekly NGS mean share of rush attempts vs 8+ in the box — cell
+        // metadata forwarded from the bus contract template.
+        pctAttemptsGte8Defenders: { ...BUS_CELL, value: boxShare },
         // Weekly NGS mean time-to-LOS (seconds).
-        avgTimeToLos: { value: tlosCell.value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" },
+        avgTimeToLos: { ...BUS_CELL, value: tlos },
       },
     });
   }

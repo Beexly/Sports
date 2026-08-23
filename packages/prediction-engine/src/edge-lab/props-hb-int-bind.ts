@@ -35,9 +35,10 @@
  * The bind forwards the weekly means verbatim and never crosses the same-week
  * boundary.
  *
- * Fail-closed: if `nextGameCovariate(..., "passing", field)` returns null
- * (no prior per-game history, null/non-finite field, or only a week=0
- * aggregate row), the sample is DROPPED. It is NOT imputed.
+ * Fail-closed: if `latestPriorRow(..., "passing", kickoffWeek)`
+ * returns null (no prior per-game history, or only a week=0 aggregate row),
+ * or if the prior row's `avgTimeToThrow` / `aggressiveness` is null/non-finite,
+ * the sample is DROPPED. It is NOT imputed.
  *
  * Company posture (Galaxy Sports Edge): independent p with process, then
  * e = p − q. The site is a window — we do NOT build chrome. This bind is the
@@ -47,7 +48,7 @@
  */
 
 import {
-  nextGameCovariate,
+  latestPriorRow,
   type CovariateCell,
   type CovariateRow,
 } from "./covariate-bus.js";
@@ -115,30 +116,41 @@ export type IntBindResult =
  * `BoundIntSample`s.
  *
  * For each request:
- *   1. `nextGameCovariate(rows, gsisId, season, kickoffWeek, "passing", "avgTimeToThrow")`
- *      — strictly-prior per-game passing row, week=0 excluded, fail-closed.
- *   2. Same for `aggressiveness` — single strict-prior scan per field.
- *   3. If both cells are non-null → build the sample. If either is null →
- *      DROP the sample (fail-closed, never imputed).
+ *   1. `latestPriorRow(rows, gsisId, season, "passing", kickoffWeek)` — one
+ *      strict-prior scan (week=0 excluded, week >= kickoffWeek excluded).
+ *   2. If no prior row → refuse `no_prior_row` (fail-closed).
+ *   3. Read `avgTimeToThrow` and `aggressiveness` directly from that row.
+ *      If either is null/non-finite → refuse `no_prior_row` (fail-closed,
+ *      never imputed).
+ *   4. If both are valid → build the sample with the bus's cell metadata
+ *      (grain + provenance) as CovariateCells.
+ *
+ * The bus's cell template (`BUS_CELL`) is the single source of truth for
+ * grain/provenance. The value comes directly from the row we already scanned,
+ * avoiding a second O(N) scan per field.
  *
  * The weekly means are NOT per-play frame measurements — every emitted cell
  * carries its grain and provenance.
  */
+
+/** Cell template matching the covariate bus's contract — single source of truth. */
+const BUS_CELL: CovariateCell = { value: 0, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+
 export function bindIntSamples(
   rows: readonly CovariateRow[],
   requests: readonly IntBindRequest[],
 ): IntBindResult[] {
   const out: IntBindResult[] = [];
   for (const req of requests) {
-    const tttCell: CovariateCell | null = nextGameCovariate(
+    // Single strict-prior scan — not one per covariate field.
+    const row = latestPriorRow(
       rows,
       req.gsisId,
       req.season,
-      req.kickoffWeek,
       "passing",
-      "avgTimeToThrow",
+      req.kickoffWeek,
     );
-    if (tttCell === null) {
+    if (row === null) {
       out.push({
         ok: false,
         methodTag: INT_BIND_METHOD_TAG,
@@ -148,15 +160,20 @@ export function bindIntSamples(
       continue;
     }
 
-    const aggCell: CovariateCell | null = nextGameCovariate(
-      rows,
-      req.gsisId,
-      req.season,
-      req.kickoffWeek,
-      "passing",
-      "aggressiveness",
-    );
-    if (aggCell === null) {
+    // Read both fields from the single prior row; fail-closed on null/non-finite.
+    const ttt = row.avgTimeToThrow;
+    if (ttt === null || !Number.isFinite(ttt)) {
+      out.push({
+        ok: false,
+        methodTag: INT_BIND_METHOD_TAG,
+        priced: false,
+        refuse: "no_prior_row",
+      });
+      continue;
+    }
+
+    const agg = row.aggressiveness;
+    if (agg === null || !Number.isFinite(agg)) {
       out.push({
         ok: false,
         methodTag: INT_BIND_METHOD_TAG,
@@ -174,10 +191,10 @@ export function bindIntSamples(
         // Realized model inputs — passed through unchanged.
         attempts: req.int.attempts,
         ints: req.int.ints,
-        // Weekly NGS mean time-to-throw (seconds).
-        avgTimeToThrow: { value: tttCell.value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" },
-        // Weekly NGS % throws into <1 yd separation.
-        aggressiveness: { value: aggCell.value, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" },
+        // Weekly NGS mean time-to-throw (seconds) — cell metadata from bus contract.
+        avgTimeToThrow: { ...BUS_CELL, value: ttt },
+        // Weekly NGS % throws into <1 yd separation — cell metadata from bus contract.
+        aggressiveness: { ...BUS_CELL, value: agg },
       },
     });
   }
