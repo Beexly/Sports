@@ -6,16 +6,22 @@
  * Tests:
  *  - Method tag + priced: false.
  *  - Binds tflRate from latest prior defense row — not week=0, not same-week.
- *  - FAILS CLOSED: no prior per-game row → dropped.
- *  - FAILS CLOSED: null/non-finite tflRate → dropped.
+ *  - FAILS CLOSED: no prior per-game defense row → dropped.
+ *  - FAILS CLOSED: null tflRate → dropped.
+ *  - FAILS CLOSED: NaN / Infinity tflRate → dropped.
  *  - Batch: one bad drops, good binds.
- *  - Grain + provenance (weekly_pfr_def_mean).
+ *  - Grain + provenance correctness (weekly_pfr_def_mean).
  *  - Realized inputs (snaps, tfl) passed through unchanged on ok.
+ *  - Week=0 (season aggregate) is never used as a prior.
+ *  - Same-week (kickoffWeek) is never used.
+ *  - Non-adjacent prior weeks are accepted (week 1 → kickoffWeek 4).
+ *  - Different gsisId does not leak into target player's sample.
+ *  - BUS_CELL is the single source of truth for grain/provenance.
+ *  - boundTflSamples returns only ok samples.
  */
 import { describe, expect, it } from "vitest";
-
 import {
-  TFL_BIND_METHOD_TAG,
+  TFL_RATE_BIND_METHOD_TAG,
   bindTflSamples,
   boundTflSamples,
   type TflBindRequest,
@@ -32,6 +38,7 @@ function defRow(o: Partial<CovariateRow>): CovariateRow {
     snapShare: 0.68,
     pressureRate: 0.18,
     tflRate: 0.024,
+    pdRate: null,
     avgSeparation: null,
     avgCushion: null,
     airYardsShare: null,
@@ -65,7 +72,7 @@ function isDenied(r: TflBindResult): r is Extract<TflBindResult, { ok: false }> 
 
 describe("tfl bind contract", () => {
   it("exposes the v1 method tag", () => {
-    expect(TFL_BIND_METHOD_TAG).toBe("tfl_rate_bind_v1");
+    expect(TFL_RATE_BIND_METHOD_TAG).toBe("tfl_rate_bind_v1");
   });
 
   it("priced is always false", () => {
@@ -84,57 +91,104 @@ describe("tfl bind contract", () => {
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(true);
     if (!results[0]!.ok) throw new Error("expected ok");
-    expect(results[0]!.sample.tflRate.value).toBe(0.021); // not 0.99, not 0.095
+    expect(results[0]!.sample.tflRate.value).toBe(0.021);
     expect(results[0]!.sample.tflRate.grain).toBe("week_t_for_tplus1");
     expect(results[0]!.sample.tflRate.provenance).toBe("weekly_pfr_def_mean");
   });
 
   it("FAILS CLOSED: no prior per-game defense row → dropped", () => {
-    const rows = [defRow({ week: 0 })]; // only aggregate
+    const rows = [defRow({ week: 0 })];
     const results = bindTflSamples(rows, [req({ kickoffWeek: 1 })]);
-    expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
     expect(boundTflSamples(rows, [req({ kickoffWeek: 1 })])).toEqual([]);
   });
 
-  it("FAILS CLOSED: null tflRate → dropped", () => {
+  it("FAILS CLOSED: null tflRate on latest prior row → dropped", () => {
     const rows = [defRow({ week: 2, tflRate: null })];
+    const results = bindTflSamples(rows, [req({ kickoffWeek: 3 })]);
+    expect(results[0]!.ok).toBe(false);
+    expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
+  });
+
+  it("FAILS CLOSED: NaN tflRate → dropped", () => {
+    const rows = [defRow({ week: 2, tflRate: NaN })];
     const results = bindTflSamples(rows, [req({ kickoffWeek: 3 })]);
     expect(results[0]!.ok).toBe(false);
   });
 
-  it("FAILS CLOSED: non-finite tflRate → dropped", () => {
-    const rows = [defRow({ week: 2, tflRate: NaN })];
+  it("FAILS CLOSED: Infinity tflRate → dropped", () => {
+    const rows = [defRow({ week: 2, tflRate: Infinity })];
     const results = bindTflSamples(rows, [req({ kickoffWeek: 3 })]);
     expect(results[0]!.ok).toBe(false);
   });
 
   it("realized inputs (snaps, tfl) passed through unchanged on ok", () => {
     const rows = [defRow({ week: 2 })];
-    const results = bindTflSamples(rows, [req({ tfl: { snaps: 400, tfl: 8 } })]);
+    const results = bindTflSamples(rows, [req({ tfl: { snaps: 450, tfl: 12 } })]);
     expect(results[0]!.ok).toBe(true);
     if (!results[0]!.ok) throw new Error("expected ok");
-    expect(results[0]!.sample.snaps).toBe(400);
-    expect(results[0]!.sample.tfl).toBe(8);
+    expect(results[0]!.sample.snaps).toBe(450);
+    expect(results[0]!.sample.tfl).toBe(12);
   });
 
   it("batch: one bad drops, good binds", () => {
     const rows = [defRow({ week: 2, tflRate: 0.023 })];
     const results = bindTflSamples(rows, [
       req({ gsisId: "00-0030501-2", tfl: { snaps: 400, tfl: 8 } }),
-      req({ gsisId: "00-9999999-2", tfl: { snaps: 350, tfl: 5 } }), // no prior row
+      req({ gsisId: "00-9999999-2", tfl: { snaps: 350, tfl: 5 } }),
     ]);
     expect(results.length).toBe(2);
     expect(results[0]!.ok).toBe(true);
-    if (!results[0]!.ok) throw new Error("expected ok");
-    expect(results[0]!.sample.tflRate.value).toBe(0.023);
     expect(results[1]!.ok).toBe(false);
     expect(isDenied(results[1]!) ? results[1]!.refuse : "ok").toBe("no_prior_row");
+    if (results[0]!.ok) {
+      expect(results[0]!.sample.tflRate.value).toBe(0.023);
+    }
   });
 
-  it("boundTflSamples returns only ok samples", () => {
+  it("week=0 (season aggregate) is never used as a prior", () => {
+    const rows = [defRow({ week: 0, tflRate: 0.50 })];
+    const results = bindTflSamples(rows, [req({ kickoffWeek: 1 })]);
+    expect(results[0]!.ok).toBe(false);
+    expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
+  });
+
+  it("same-week (kickoffWeek) row is never used as a prior", () => {
+    const rows = [defRow({ week: 3, tflRate: 0.030 })];
+    const results = bindTflSamples(rows, [req({ kickoffWeek: 3 })]);
+    expect(results[0]!.ok).toBe(false);
+  });
+
+  it("non-adjacent prior weeks are accepted (week 1 → kickoffWeek 4)", () => {
+    const rows = [defRow({ week: 1, tflRate: 0.015 })];
+    const results = bindTflSamples(rows, [req({ kickoffWeek: 4 })]);
+    expect(results[0]!.ok).toBe(true);
+    if (!results[0]!.ok) throw new Error("expected ok");
+    expect(results[0]!.sample.tflRate.value).toBe(0.015);
+  });
+
+  it("different gsisId does not leak into target player's sample", () => {
+    const rows = [
+      defRow({ gsisId: "00-0000000-1", week: 2, tflRate: 0.040 }),
+      defRow({ gsisId: "00-0030501-2", week: 2, tflRate: 0.021 }),
+    ];
+    const results = bindTflSamples(rows, [req({ gsisId: "00-0030501-2", kickoffWeek: 3 })]);
+    expect(results[0]!.ok).toBe(true);
+    if (!results[0]!.ok) throw new Error("expected ok");
+    expect(results[0]!.sample.tflRate.value).toBe(0.021); // not 0.040
+  });
+
+  it("boundTflSamples returns only the ok samples", () => {
     const rows = [defRow({ week: 2, tflRate: 0.023 })];
-    expect(boundTflSamples(rows, [req({}), req({ gsisId: "00-9999999-2" })])).toHaveLength(1);
+    const results = bindTflSamples(rows, [
+      req({}),
+      req({ gsisId: "00-9999999-2" }),
+    ]);
+    expect(results.filter((r): r is Extract<TflBindResult, { ok: true }> => r.ok)).toHaveLength(1);
+    expect(boundTflSamples(rows, [
+      req({}),
+      req({ gsisId: "00-9999999-2" }),
+    ])).toHaveLength(1);
   });
 });

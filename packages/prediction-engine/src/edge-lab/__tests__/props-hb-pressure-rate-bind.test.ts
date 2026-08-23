@@ -46,6 +46,8 @@ function defenseRow(o: Partial<CovariateRow>): CovariateRow {
     avgYac: null,
     pressureRate: 0.18,
     snapShare: null,
+    tflRate: null,
+    pdRate: null,
     avgExpectedYac: null,
     expectedRushYards: null,
     ...o,

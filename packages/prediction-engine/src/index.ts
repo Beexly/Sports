@@ -1741,12 +1741,14 @@ export {
   fitTflPrior,
   posteriorTfl,
   betaBinomialProbOverTfl,
+  probOverTfl,
+  scoreTflOver,
 } from "./edge-lab/props-hb-tfl.js";
 export type { TflSample } from "./edge-lab/props-hb-tfl.js";
 
 // TFL covariate bind: PFR weekly TFL rate → TflSample.
 export {
-  TFL_BIND_METHOD_TAG,
+  TFL_RATE_BIND_METHOD_TAG,
   bindTflSamples,
   boundTflSamples,
 } from "./edge-lab/props-hb-tfl-bind.js";
@@ -1763,12 +1765,14 @@ export {
   fitPdPrior,
   posteriorPd,
   betaBinomialProbOverPd,
+  probOverPd,
+  scorePdOver,
 } from "./edge-lab/props-hb-pd.js";
 export type { PdSample } from "./edge-lab/props-hb-pd.js";
 
 // PD covariate bind: PFR weekly PD rate → PdSample.
 export {
-  PD_BIND_METHOD_TAG,
+  PD_RATE_BIND_METHOD_TAG,
   bindPdSamples,
   boundPdSamples,
 } from "./edge-lab/props-hb-pd-bind.js";

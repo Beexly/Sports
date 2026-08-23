@@ -59,7 +59,9 @@ function toCatch(s: TflSample): CatchSample {
  * a 0% TFL defender. fitCatchPrior asserts targets > 0.
  */
 export function fitTflPrior(samples: readonly TflSample[]): BetaPrior | null {
-  return fitCatchPrior(samples.map(toCatch));
+  const valid = samples.filter((s) => s.snaps > 0 && s.tfl >= 0 && s.tfl <= s.snaps);
+  if (valid.length === 0) return null;
+  return fitCatchPrior(valid.map(toCatch));
 }
 
 /** Conjugate Beta update: TFL + (snaps - TFL). Parameter order matches

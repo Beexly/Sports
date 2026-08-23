@@ -31,6 +31,8 @@ function defRow(o: Partial<CovariateRow>): CovariateRow {
     week: 1,
     statType: "defense",
     snapShare: 0.68,
+    tflRate: null,
+    pdRate: null,
     avgSeparation: null,
     avgCushion: null,
     airYardsShare: null,
