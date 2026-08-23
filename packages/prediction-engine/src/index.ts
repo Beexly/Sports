@@ -1574,6 +1574,34 @@ export type {
   BoundCompSample,
 } from "./edge-lab/props-hb-cpoe-comp-bind.js";
 
+// Rush-yards bind: couples the covariate bus (pctAttemptsGte8Defenders + avgTimeToLos)
+// to the rushing-yards | attempts model. Fail-closed on null — never invents stacking.
+// Honest weekly-mean grain forwarded verbatim. priced:false.
+export {
+  RUSH_YARDS_BIND_METHOD_TAG,
+  bindRushYardsSamples,
+  boundRushYardsSamples,
+} from "./edge-lab/props-hb-rush-yards-bind.js";
+export type {
+  RushYardsBindRequest,
+  RushYardsBindResult,
+  BoundRushSample,
+} from "./edge-lab/props-hb-rush-yards-bind.js";
+
+// INT bind: couples the covariate bus (avgTimeToThrow + aggressiveness) to the
+// interceptions | attempts model. Fail-closed on null — never invents risk.
+// Honest weekly-mean grain forwarded verbatim. priced:false.
+export {
+  INT_BIND_METHOD_TAG,
+  bindIntSamples,
+  boundIntSamples,
+} from "./edge-lab/props-hb-int-bind.js";
+export type {
+  IntBindRequest,
+  IntBindResult,
+  BoundIntSample,
+} from "./edge-lab/props-hb-int-bind.js";
+
 // Fire gate: Shin e AND posted juice must both clear. priced:false.
 export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
 export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
