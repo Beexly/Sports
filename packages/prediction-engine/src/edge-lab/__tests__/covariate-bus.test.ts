@@ -30,6 +30,8 @@ function rx(o: Partial<CovariateRow>): CovariateRow {
     tflRate: 0.18,
     pdRate: null,
     intRate: 0.045,
+    fumbleRate: 0.012,
+    airYardsPerAttempt: 6.5,
     avgExpectedYac: null,
     expectedRushYards: null,
     ...o,

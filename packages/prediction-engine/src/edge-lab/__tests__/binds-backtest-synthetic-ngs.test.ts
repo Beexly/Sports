@@ -107,6 +107,8 @@ function baseRow(o: Partial<CovariateRow>): CovariateRow {
     avgYac: 4.3,
     pressureRate: null,
     intRate: null,
+    fumbleRate: null,
+    airYardsPerAttempt: null,
     snapShare: null,
     tflRate: null,
     pdRate: null,
@@ -210,7 +212,7 @@ function buildSyntheticRows(
       rows.push(
         receivingRow({ gsisId, season: SEASON, week: w, avgCushion: opts?.injectNulls && w === 4 ? null : c }),
         passingRow({
-          gsid: gsisId, // placeholder — fixed below
+          gsisId, // placeholder — fixed below
         } as CovariateRow),
       );
       // Overwrite the passing row with correct values (clean construction).
@@ -230,7 +232,7 @@ function buildSyntheticRows(
 /* ── Order-preserving extractors (results[i] ↔ players[i]) ── */
 function extractCatchCushions(rows: CovariateRow[], players: SyntheticPlayer[]) {
   const requests: CatchCushionBindRequest[] = players.map((p) => ({
-    gsid: p.gsid,
+    gsisId: p.gsisId,
     season: SEASON,
     kickoffWeek: KICKOFF_WEEK,
     catch: { targets: 8, receptions: 6 },

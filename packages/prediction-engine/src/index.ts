@@ -1706,6 +1706,27 @@ export {
 } from "./edge-lab/props-hb-int.js";
 export type { IntSample } from "./edge-lab/props-hb-int.js";
 
+// H2 Edge — Fumbles | touches. Beta-Binomial over touches (bounded).
+export {
+  FUMBLE_HB_METHOD_TAG,
+  fitFumblePrior,
+  fumblePosterior,
+  probOverFumble,
+} from "./edge-lab/props-hb-fumble.js";
+export type { FumbleSample } from "./edge-lab/props-hb-fumble.js";
+
+// Fumble-rate covariate bind: PFR weekly mean fumble rate.
+export {
+  FUMBLE_BIND_METHOD_TAG,
+  bindFumbleSamples,
+  boundFumbleSamples,
+} from "./edge-lab/props-hb-fumble-bind.js";
+export type {
+  FumbleBindRequest,
+  FumbleBindResult,
+  BoundFumbleSample,
+} from "./edge-lab/props-hb-fumble-bind.js";
+
 // Pass TDs | attempts. Distinct from ATD/rec-TD/rush-TD and from pass yards.
 export {
   PASS_TD_HB_METHOD_TAG,
