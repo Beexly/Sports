@@ -73,7 +73,7 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
     expect(res.overall.verdict).toBe("PARKED");
     expect(res.shuffle.verdict).toBe("PASS");
     expect(res.shuffle.detail).toContain("e=");
-    expect(res.overall.detail || res.overall.reason).toContain("e=");
+    expect(res.overall.reason).toContain("e=");
   });
 
   it("e-value grows on true signal and decays on noise (deterministic PRNG)", () => {
