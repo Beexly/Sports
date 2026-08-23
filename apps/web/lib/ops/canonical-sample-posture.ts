@@ -60,3 +60,74 @@ export async function loadCanonicalSamplePosture(
 export function isCalibrationPublished(env: Record<string, string | undefined> = process.env): boolean {
   return env["CALIBRATION_PUBLISHED"]?.trim().toLowerCase() === "true";
 }
+
+export interface CanonicalSampleBySport {
+  readonly sportKey: string;
+  readonly displayName: string;
+  readonly canonicalSettled: number;
+  readonly canonicalWins: number;
+  readonly canonicalLosses: number;
+  readonly canonicalPushes: number;
+  /**
+   * Set only when this sport's counts could not be loaded. When present, the
+   * numeric fields above are a safe placeholder (0), NOT a real "no settled
+   * picks" result — never render them without checking this field first.
+   * Mirrors this module's own "never fabricate a total" rule: a failed query
+   * must surface as a failure, not silently coerce to an indistinguishable
+   * zero.
+   */
+  readonly error?: string;
+}
+
+/**
+ * Per-sport breakdown of the same canonical-settled definition
+ * `loadPublicPerformancePolicy` uses, scoped by `game.sport.key`.
+ *
+ * One `Promise.all` group PER SPORT (four counts each), and each sport's
+ * group is isolated in its own try/catch — a failing sport reports `error`
+ * on its own row instead of rejecting the whole batch and blanking the
+ * others.
+ */
+export async function loadCanonicalSampleBySport(
+  db: LoadablePerformanceClient & { pick: { count: (args: Record<string, unknown>) => Promise<number> } },
+  sports: readonly { key: string; displayName: string }[],
+): Promise<readonly CanonicalSampleBySport[]> {
+  // Identical filter shape to loadPublicPerformancePolicy's settledFilter +
+  // isBootstrap:false + notSeed — drifting this definition would make
+  // sum(bySport[*].canonicalSettled) disagree with the cumulative total.
+  const notSeed = { NOT: { modelVersion: "v5.0.0-seed" } };
+
+  return Promise.all(
+    sports.map(async (sport): Promise<CanonicalSampleBySport> => {
+      const scope = { game: { sport: { key: sport.key } } };
+      try {
+        const [canonicalSettled, canonicalWins, canonicalLosses, canonicalPushes] = await Promise.all([
+          db.pick.count({
+            where: { result: { in: ["WIN", "LOSS", "PUSH"] }, isPublished: true, isBootstrap: false, ...notSeed, ...scope },
+          }),
+          db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...notSeed, ...scope } }),
+          db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...notSeed, ...scope } }),
+          db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...notSeed, ...scope } }),
+        ]);
+        return {
+          sportKey: sport.key,
+          displayName: sport.displayName,
+          canonicalSettled,
+          canonicalWins,
+          canonicalLosses,
+          canonicalPushes,
+        };
+      } catch (err) {
+        return {
+          sportKey: sport.key,
+          displayName: sport.displayName,
+          canonicalSettled: 0,
+          canonicalWins: 0,
+          canonicalLosses: 0,
+          canonicalPushes: 0,
+          error: err instanceof Error ? err.message : String(err),
+        };
+      }
+    }),
+  );
+}
