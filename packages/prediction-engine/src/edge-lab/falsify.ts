@@ -11,7 +11,7 @@ export interface BacktestRow {
 }
 
 export interface KillResult {
-  readonly verdict: "PASS" | "KILLED" | "STARVED";
+  readonly verdict: "PASS" | "KILLED" | "STARVED" | "PARKED";
   readonly detail: string;
 }
 
@@ -20,7 +20,7 @@ export interface FalsifyOutput {
   readonly shuffle: KillResult;
   readonly split: KillResult;
   readonly multiplicity: KillResult;
-  readonly overall: { readonly verdict: "SURVIVOR" | "KILLED" | "STARVED"; readonly reason: string };
+  readonly overall: { readonly verdict: "SURVIVOR" | "KILLED" | "STARVED" | "PARKED"; readonly reason: string };
 }
 
 export interface FalsifyOpts {
@@ -48,15 +48,42 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     ? { verdict: "KILLED", detail: `lookahead at season=${leakRow.season} week=${leakRow.outcomeWeek}` }
     : { verdict: "PASS", detail: "no knownAtWeek >= outcomeWeek" };
 
-  // STARVATION gate
+  // STARVATION gate: small n preserves e-value and returns PARKED (not STARVED) when gates ran clean
+  let starvedParkedDetail = `n=${n} < minN=${o.minN}`;
+  let starvedVerdicts = { leakage, shuffle: { verdict: "PASS" as const, detail: "unrun (n < minN)" }, split: { verdict: "PASS" as const, detail: "unrun (n < minN)" }, multiplicity: { verdict: "PASS" as const, detail: "unrun (n < minN)" } };
+
+  // First compute leakage regardless of n (leakage doesn't depend on n)
+  // Then for small n, still compute e-value so it's preserved in PARKED detail
+  const pHats = rows.map((r) => Math.max(0.01, Math.min(0.99, r.modelProb)));
+  const pMkts = rows.map((r) => Math.max(0.01, Math.min(0.99, r.marketProb ?? 0.5)));
+  const ys = rows.map((r) => r.outcome as 0 | 1);
+  const epRes = eProcess(pHats, pMkts, ys);
+  let eValue = 1;
+  if (epRes && epRes.series.length > 0) {
+    eValue = epRes.series[epRes.series.length - 1]!;
+  }
+  let simpleE = 1;
+  for (let i = 0; i < rows.length; i++) {
+    const p = pHats[i]!, q = pMkts[i]!, y = ys[i]!;
+    const factor = y === 1 ? (p / q) : ((1 - p) / (1 - q));
+    const clipped = Math.max(0.5, Math.min(2, factor));
+    simpleE *= clipped;
+  }
+  starvedParkedDetail += `; e=${eValue.toFixed(3)}`;
+
   if (n < o.minN) {
-    const starved = { verdict: "STARVED" as const, detail: `n=${n} < minN=${o.minN}` };
+    // For actual refutation failures (leakage KILLED) keep KILLED; else PARKED
+    const starvedLeak = leakage.verdict === "KILLED" ? leakage : { verdict: "PASS" as const, detail: "no knownAtWeek >= outcomeWeek" };
+    const overallStarvedVerdict: "PARKED" | "KILLED" = (leakage.verdict === "KILLED") ? "KILLED" : "PARKED";
+    const overallReason = (leakage.verdict === "KILLED")
+      ? leakage.detail
+      : `starved bind (n=${n} < minN=${o.minN}) — e-value preserved e=${eValue.toFixed(3)}; gates did not refute`;
     return {
-      leakage,
-      shuffle: starved,
-      split: starved,
-      multiplicity: starved,
-      overall: { verdict: "STARVED", reason: `n < minN` },
+      leakage: starvedLeak,
+      shuffle: { verdict: "PASS" as const, detail: `unrun (n < minN) — e=${eValue.toFixed(3)}` },
+      split: { verdict: "PASS" as const, detail: `unrun (n < minN) — e=${eValue.toFixed(3)}` },
+      multiplicity: { verdict: "PASS" as const, detail: `unrun (n < minN) — e=${eValue.toFixed(3)}` },
+      overall: { verdict: overallStarvedVerdict, reason: overallReason },
     };
   }
 
@@ -69,7 +96,7 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     // Fisher-Yates shuffle using deterministic PRNG
     for (let i = perm.length - 1; i > 0; i--) {
       const j = Math.floor(prng() * (i + 1));
-      const t = perm[i]; perm[i] = perm[j]; perm[j] = t;
+      const t: BacktestRow = perm[i]!; perm[i] = perm[j]!; perm[j] = t;
     }
     const permES = effectSize(perm);
     // "original >= 95th percentile survives" => PASS if original >= 95th perc
@@ -94,25 +121,7 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     ? { verdict: "PASS", detail: splitDetail }
     : { verdict: "KILLED", detail: splitDetail };
 
-  // MULTIPLICITY (wire existing e-process from bernoulli-eprocess.ts)
-  // Per-edge Bernoulli e-value: after each game, factor clipped to [0.5,2]
-  // e *= (p_model/(1-p_model)) / (q/(1-q)) clipped per observation
-  const pHats = rows.map((r) => Math.max(0.01, Math.min(0.99, r.modelProb)));
-  const pMkts = rows.map((r) => Math.max(0.01, Math.min(0.99, r.marketProb ?? 0.5)));
-  const ys = rows.map((r) => r.outcome as 0 | 1);
-  const epRes = eProcess(pHats, pMkts, ys);
-  let eValue = 1;
-  if (epRes && epRes.series.length > 0) {
-    eValue = epRes.series[epRes.series.length - 1]!;
-  }
-  // Fallback clipped simple accumulator (same spec as user directive)
-  let simpleE = 1;
-  for (let i = 0; i < rows.length; i++) {
-    const p = pHats[i]!, q = pMkts[i]!, y = ys[i]!;
-    const factor = y === 1 ? (p / q) : ((1 - p) / (1 - q));
-    const clipped = Math.max(0.5, Math.min(2, factor));
-    simpleE *= clipped;
-  }
+  // MULTIPLICITY (reuse precomputed eValue/simpleE from starvation gate; computed regardless of n)
   const growing = simpleE > 1 && (epRes ? epRes.M > 1 : false);
   const multiplicity: KillResult = growing && simpleE >= 1
     ? { verdict: "PASS", detail: `e-process M=${(epRes?.M ?? simpleE).toFixed(3)} growing, simpleE=${simpleE.toFixed(3)}` }

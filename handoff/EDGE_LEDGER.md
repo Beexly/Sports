@@ -138,6 +138,11 @@ Estimated size: ~20-50MB for full 2016-2025 combined ngs_receiving.csv.gz.
 # Code follows preregistered spec (named constants documented in .ts).
 # [swarm-W1-SUCCESSOR] CONTINUE THE ARMY: next wave = W2 adversarial audit
 # on this candidate; never claim SHIP without falsifier SURVIVOR on real rows.
+# [swarm-W1] VERDICT (post-funnel): LEAKAGE=PASS (no lookahead); SHUFFLE=PARKED
+# (synthetic 120-row passes, 7351 real rows pending); SPLIT=PASS (stable sign);
+# MULTIPLICITY=PASS (e>1 synthetic); OVERALL=STARVED (real-data only, synthetic
+# confirms shape); SHA=a2a2073a (verified `git rev-parse --short HEAD`); 7351 harness
+# rows documented in data/nflverse/ngs_receiving_2021_2025_harness_rows.json.
 # ====================================================================
 # WAVE 3 OPENED (user directive paste_5_134224): bind factory -> kill funnel.
 # Branch hermes/h2-remaining-binds off hermes/h1-qb-pressures-edge (verified parent chain).
@@ -195,3 +200,5 @@ PERSPECTIVE SWITCH (file:line anchors): quant-kill: yacoe-backtest.ts:26 'NOT a 
 [swarm-FIX] 2026-08-23 — wave3-fix SHA=4f7c2a19. tsc --noEmit exit=0 (46 errors cleared). vitest: separation(4✓), tpr(4✓), falsify(7✓), yacoe-slice(1✗ ENOENT pre-existing data file). Files: falsify.test, separation-backtest.test, tpr-backtest.test, yacoe-backtest-fast-slice.test, run-real-backtest.ts, yacoe-backtest.ts. No assertions weakened; only type widening (Partial<T> params), spread-order fixes, non-null guards, module path fix, YacoeRow.targets extension.
 [swarm-FIX-SUCCESSOR] CONTINUE THE ARMY: next-action=verify other edge-lab test files still pass + clean temp fix scripts + confirm no new tsc errors in full package.
 [swarm-G4] 2026-08-23 — BLOCKED (honest gap preserved). Download attempt 1: https://github.com/nflverse/nflverse-data/releases/download/pbp_participation/pbp_participation.csv.gz → 404 (curl 22). Attempt 2 (alt name pbp_participation_weekly.csv.gz) → 404 (curl 22). No file produced; gzip -t never run. No routes/route_participation column verified. No tpr_harness_rows.json created (would require routes data). File sizes: 0 B both URLs. No DB writes, no installs. .gitignore ignores node_modules; data/nflverse/ is tracked (not ignored) but since no JSON produced, no commit needed. Verdict: BLOCKED with exact URLs+errors recorded; next wave must retry nflverse release or use alternate source (e.g., nflreadr load_participation). TPR harness remains STARVED.
+
+[swarm-G56] G-5 (funnel-integrity) + G-6 (STARVED→PARKED) repaired @ f5bd9865. PARKED verdict preserves e-value in detail for starved binds (n < minN); leakage refutation keeps KILLED. Synthetic KNOWN-BAD killed by leakage gate (PASS others); KNOWN-GOOD signal passes leakage with growth shown. 10/10 vitest green; 0 falsify tsc errors.

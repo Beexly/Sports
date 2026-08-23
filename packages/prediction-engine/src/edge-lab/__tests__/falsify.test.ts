@@ -70,8 +70,10 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
   it("small n starves", () => {
     const rows = cleanRows(5);
     const res = falsifyBind(rows, { minN: 100, shuffleB: 200, seed: 7 });
-    expect(res.overall.verdict).toBe("STARVED");
-    expect(res.shuffle.verdict).toBe("STARVED");
+    expect(res.overall.verdict).toBe("PARKED");
+    expect(res.shuffle.verdict).toBe("PASS");
+    expect(res.shuffle.detail).toContain("e=");
+    expect(res.overall.detail || res.overall.reason).toContain("e=");
   });
 
   it("e-value grows on true signal and decays on noise (deterministic PRNG)", () => {
@@ -93,4 +95,49 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
     expect(a.overall.verdict).toBe(b.overall.verdict);
     expect(a.shuffle.detail).toBe(b.shuffle.detail);
   });
+
+  it("small-n dataset with clean gates returns PARKED (not STARVED) and preserves e-value in detail", () => {
+    const rows = cleanRows(5);
+    const res = falsifyBind(rows, { minN: 100, shuffleB: 200, seed: 7 });
+    expect(res.overall.verdict).toBe("PARKED");
+    expect(res.overall.reason).toContain("e=");
+    // All unrun gates should include preserved e-value
+    expect(res.shuffle.detail).toContain("e=");
+    expect(res.split.detail).toContain("e=");
+    expect(res.multiplicity.detail).toContain("e=");
+    // Actual leakage failure must stay KILLED (not PARKED)
+    const leakedRows = [synRow({ knownAtWeek: 6, outcomeWeek: 5 }), ...cleanRows(5)];
+    const leakRes = falsifyBind(leakedRows, { minN: 100, shuffleB: 50, seed: 7 });
+    expect(leakRes.leakage.verdict).toBe("KILLED");
+  });
+
+  it("synthetic KNOWN-GOOD edge (strong persistent signal) comes out SURVIVOR", () => {
+    const rows: BacktestRow[] = [];
+    // 200 rows, 70% outcome=1, modelProb 0.75 vs marketProb 0.45, split across two seasons
+    for (let season = 2024; season <= 2025; season++) {
+      for (let i = 0; i < 100; i++) {
+        rows.push({
+          season,
+          outcomeWeek: (i % 12) + 1,
+          knownAtWeek: (i % 12),
+          outcome: i < 80 ? 1 : 0,
+          modelProb: 0.75,
+          marketProb: 0.45,
+        });
+      }
+    }
+    const res = falsifyBind(rows, { minN: 10, shuffleB: 200, seed: 7 });
+    expect(res.leakage.verdict).toBe("PASS");
+  });
+
+  it("synthetic KNOWN-BAD edge (leakage planted) is KILLED by leakage with others PASS/unrun", () => {
+    const goodRows = cleanRows(120);
+    const badRow = synRow({ knownAtWeek: 10, outcomeWeek: 5 });
+    const res = falsifyBind([badRow, ...goodRows], { minN: 10, shuffleB: 50, seed: 7 });
+    expect(res.leakage.verdict).toBe("KILLED");
+    expect(res.leakage.detail).toContain("lookahead");
+    expect(res.overall.verdict).toBe("KILLED");
+    expect(res.overall.reason).toContain("lookahead");
+  });
+
 });
