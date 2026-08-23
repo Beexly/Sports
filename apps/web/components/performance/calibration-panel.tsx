@@ -8,6 +8,7 @@ import {
   formatCount,
   formatRatioAsPercent,
 } from "@/lib/format/stat";
+import { formatRelative } from "@/lib/utils";
 
 /**
  * Calibration & Discrimination panel — the public "proof, not promises" surface.
@@ -297,6 +298,16 @@ export async function CalibrationPanel() {
             Model version{data.modelVersions.length === 1 ? "" : "s"}: {data.modelVersions.join(", ")}
           </p>
         )}
+        {/* data.updatedAt is stamped server-side (now.toISOString()) at request
+            time in report.ts — including in the isCollecting/gated branches —
+            so this is always present and never a build-time or client-side
+            Date() call that would silently lie about freshness. */}
+        <p
+          className={`mt-1 text-[11px] text-ion-3 ${NUMERIC_TEXT_CLASS}`}
+          data-testid="calibration-updated-at"
+        >
+          Updated {formatRelative(data.updatedAt)}
+        </p>
       </div>
     </section>
   );
