@@ -8,6 +8,7 @@ export interface YacoeRow {
   readonly yacAboveExpected: number;
   readonly avgExpectedYac: number;
   readonly targetShare: number;
+  readonly targets?: number;
 }
 
 export interface RollingSignalResult {

@@ -2,14 +2,9 @@
 import { describe, expect, it } from "vitest";
 import { falsifyBind, type BacktestRow, type FalsifyOutput } from "../falsify.js";
 
-function synRow(overrides: Partial<BacktestRow> & { season: number; outcomeWeek: number; knownAtWeek: number }): BacktestRow {
+function synRow(overrides: Partial<BacktestRow>): BacktestRow {
   return {
-    season: 2024,
-    outcomeWeek: 5,
-    knownAtWeek: 4,
-    outcome: 1,
-    modelProb: 0.65,
-    marketProb: 0.5,
+    season: 2024, outcomeWeek: 5, knownAtWeek: 4, outcome: 1, modelProb: 0.65, marketProb: 0.5,
     ...overrides,
   } as BacktestRow;
 }

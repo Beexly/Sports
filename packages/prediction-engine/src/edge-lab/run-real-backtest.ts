@@ -28,7 +28,7 @@ export interface CorrelationResult {
 
 // Simple deterministic Spearman via rank order (seed only affects tie-break, not ranking here)
 function spearmanRankCorr(a: number[], b: number[]): number {
-  const pairs = a.map((v, i) => ({ a: v, b: b[i] }));
+  const pairs = a.map((v, i) => ({ a: v, b: b[i]! }));
   pairs.sort((p, q) => (p.a === q.a ? p.b - q.b : p.a - q.a));
   // Actually compute via rank comparison on paired arrays
   const rank = (arr: number[]): number[] => {
@@ -40,7 +40,7 @@ function spearmanRankCorr(a: number[], b: number[]): number {
   const ra = rank(a);
   const rb = rank(b);
   const n = a.length;
-  const d2 = ra.reduce((s, r, i) => s + (r - rb[i]) ** 2, 0);
+  const d2 = ra.reduce((s, r, i) => s + (r - rb[i]!) ** 2, 0);
   return 1 - (6 * d2) / (n * (n * n - 1));
 }
 

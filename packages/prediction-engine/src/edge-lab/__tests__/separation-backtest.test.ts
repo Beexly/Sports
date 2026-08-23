@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { computeSeparationBacktest, type SeparationRow } from "../separation-backtest.js";
 
-function synRow(overrides: Partial<SeparationRow> & { playerId: string; week: number; season: number }): SeparationRow {
+function synRow(overrides: Partial<SeparationRow>): SeparationRow {
   return { playerId: "SYN-SEP-001", season: 2024, week: 1, avgSeparation: 3.0, targets: 5, ...overrides } as SeparationRow;
 }
 
@@ -14,15 +14,15 @@ describe("separation-backtest — SYNTHETIC property tests", () => {
       synRow({ avgSeparation: 1.0, targets: 1 }),
     ];
     const res = computeSeparationBacktest(rows, 2);
-    expect(res[0].rollingWeightedMeanSeparation).toBeCloseTo((5.0 * 20 + 1.0) / 21, 4);
-    expect(res[0].signal).not.toBeNull();
+    expect(res[0]!.rollingWeightedMeanSeparation).toBeCloseTo((5.0 * 20 + 1.0) / 21, 4);
+    expect(res[0]!.signal).not.toBeNull();
   });
 
   it("minSample gate nulls when total targets < 30", () => {
     const rows = [synRow({ avgSeparation: 4.5, targets: 5 })];
     const res = computeSeparationBacktest(rows, 30);
-    expect(res[0].rollingWeightedMeanSeparation).toBeNull();
-    expect(res[0].signal).toBeNull();
+    expect(res[0]!.rollingWeightedMeanSeparation).toBeNull();
+    expect(res[0]!.signal).toBeNull();
   });
 
   it("determinism: same SYNTHETIC input => same output", () => {
@@ -32,8 +32,8 @@ describe("separation-backtest — SYNTHETIC property tests", () => {
     ];
     const a = computeSeparationBacktest(rows, 2);
     const b = computeSeparationBacktest(rows, 2);
-    expect(a[0].rollingWeightedMeanSeparation).toBeCloseTo(b[0].rollingWeightedMeanSeparation!, 6);
-    expect(a[0].signal).toBeCloseTo(b[0].signal!, 6);
+    expect(a[0]!.rollingWeightedMeanSeparation).toBeCloseTo(b[0]!.rollingWeightedMeanSeparation!, 6);
+    expect(a[0]!.signal).toBeCloseTo(b[0]!.signal!, 6);
   });
 
   it("signal positive for above-league SYNTHETIC players", () => {

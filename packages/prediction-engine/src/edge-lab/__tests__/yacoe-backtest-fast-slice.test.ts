@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { runRealBacktest } from '../edge-lab/run-real-backtest';
+import { runRealBacktest } from '../run-real-backtest';
 
 describe('YACoe real backtest — fast slice', () => {
   it('runs on small slice without error', () => {
