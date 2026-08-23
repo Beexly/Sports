@@ -256,16 +256,36 @@ export async function settleSport(
       // state that score-verification / settlement / backtest consumers read as
       // the result. Gate the whole data object: an empty update is a harmless
       // no-op that preserves the existing recorded score and status.
-      await db.game.update({
-        where: { id: game.id },
-        data: bothScores
-          ? {
-              homeScore: score.homeScore,
-              awayScore: score.awayScore,
-              status: "FINAL" as const,
-            }
-          : {},
-      });
+      //
+      // Also never overwrite a FINAL score with a DIFFERENT non-null score.
+      // The free path (?path=free / forceFree, PR #550) can settle this same
+      // game from ESPN/henrygd in the same rough window as this paid-path run;
+      // last-write-wins would silently contradict whatever pick(s) were
+      // already settled against the score currently on the row.
+      const conflicts =
+        bothScores &&
+        game.status === "FINAL" &&
+        game.homeScore != null &&
+        game.awayScore != null &&
+        (game.homeScore !== score.homeScore || game.awayScore !== score.awayScore);
+      if (conflicts) {
+        console.warn(
+          `${logPrefix} ${sport.key}: SCORE_MISMATCH_CROSS_PATH game=${game.id} ` +
+            `existing=${game.homeScore}-${game.awayScore} incoming(paid)=${score.homeScore}-${score.awayScore} ` +
+            `— refusing to overwrite; game row untouched.`,
+        );
+      } else {
+        await db.game.update({
+          where: { id: game.id },
+          data: bothScores
+            ? {
+                homeScore: score.homeScore,
+                awayScore: score.awayScore,
+                status: "FINAL" as const,
+              }
+            : {},
+        });
+      }
 
       // ── Settlement evidence (Phase 1E) ─────────────────────────────────
       // A completed-but-scoreless sighting on a still-open game is recorded
@@ -326,8 +346,14 @@ export async function settleSport(
       }
 
       // The inline null-check (not the bothScores boolean) is what narrows the
-      // score types to `number` for the settlement math below.
-      if (score.homeScore !== null && score.awayScore !== null) {
+      // score types to `number` for the settlement math below. Also gated on
+      // !conflicts: when this run's score disagrees with an already-FINAL Game
+      // row (cross-path mismatch, see the game.update guard above), we must
+      // NOT grade any pick against the score we just refused to write to the
+      // Game row — that would settle picks against a different score than the
+      // one the Game row records, a fresh inconsistency worse than the
+      // original bug. Hold everything for this game until a human resolves it.
+      if (score.homeScore !== null && score.awayScore !== null && !conflicts) {
         // Real scores arrived: RESOLVE any open SCORELESS_COMPLETED anomaly
         // for this game (it was feed lag after all, or the owner review is
         // now moot). Resolution marks state/reason/timestamp only —

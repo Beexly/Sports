@@ -333,6 +333,39 @@ export async function runFreePathSettlement(options?: {
         if (!row) continue;
 
         const written = await db.$transaction(async (tx) => {
+          if (o.homeScore != null && o.awayScore != null) {
+            // PR #550's ?path=free (forceFree) lets this free path run even when
+            // THE_ODDS_API_KEY is present, so it can now race the paid path
+            // (settle-sport.ts) against the SAME game in the SAME rough window.
+            // Read the game's CURRENT score fresh, inside this transaction,
+            // BEFORE settling anything — never blind-overwrite a FINAL score
+            // that disagrees with the one we're about to grade against, and
+            // never grade the pick against a score we're about to refuse to
+            // write to the Game row either (that would settle the pick
+            // against a different score than the one the Game row records —
+            // a fresh inconsistency, not a fix). A genuine cross-path
+            // disagreement needs a human, not a silent last-write-wins clobber
+            // of whatever pick(s) were already settled against the first score.
+            const current = await tx.game.findUnique({
+              where: { id: row.game.id },
+              select: { homeScore: true, awayScore: true, status: true },
+            });
+            const conflicts =
+              current?.status === "FINAL" &&
+              current.homeScore != null &&
+              current.awayScore != null &&
+              (current.homeScore !== o.homeScore || current.awayScore !== o.awayScore);
+            if (conflicts) {
+              console.warn(
+                `[free-settle] SCORE_MISMATCH_CROSS_PATH game=${row.game.id} ` +
+                  `existing=${current!.homeScore}-${current!.awayScore} ` +
+                  `incoming(free)=${o.homeScore}-${o.awayScore} — refusing to settle or ` +
+                  `overwrite; pick=${o.pickId} left PENDING for human review.`,
+              );
+              return { count: 0 };
+            }
+          }
+
           const updated = await tx.pick.updateMany({
             where: { id: o.pickId, result: "PENDING" },
             data: { result: o.result, settledAt },

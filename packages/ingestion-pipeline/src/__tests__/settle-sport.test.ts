@@ -385,6 +385,51 @@ describe("settleSport", () => {
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
   });
 
+  it("never overwrites a FINAL score with a conflicting cross-path value (PL2)", async () => {
+    // The game was already settled FINAL 24-20 (e.g. by the free path via
+    // ?path=free — PR #550). This paid-path run now sees a DIFFERENT score
+    // for the same externalId (a data disagreement, not a scoreless drop).
+    // The existing FINAL 24-20 must be preserved, never silently clobbered.
+    mocks.gameFindUnique.mockResolvedValue(
+      dbGame([pendingPick()], { status: "FINAL", homeScore: 24, awayScore: 20 }),
+    );
+    mocks.normalizeScores.mockReturnValue([
+      completedScore({ homeScore: 23, awayScore: 20 }),
+    ]);
+
+    const result = await settleSport(SPORT, "key", gates());
+
+    // No write at all — the conflict guard skips db.game.update entirely
+    // rather than issuing a no-op write, unlike the scoreless-drop case above.
+    expect(mocks.gameUpdate).not.toHaveBeenCalled();
+
+    // The pick must NOT be graded against the conflicting incoming score
+    // either — settling it while the Game row keeps the OLD score would be a
+    // fresh inconsistency worse than the original bug (the row and the
+    // pick's result would disagree about which score is real).
+    expect(mocks.calculatePickResult).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ status: "success", gamesSettled: 0, picksSettled: 0 });
+  });
+
+  it("re-confirming the SAME score twice via the same path is a harmless write (no false positive)", async () => {
+    // The game is already FINAL 27-20 (matching completedScore()'s default).
+    // A same-path re-run seeing the identical score must NOT be treated as a
+    // conflict — the guard only fires on a genuine disagreement.
+    mocks.gameFindUnique.mockResolvedValue(
+      dbGame([pendingPick()], { status: "FINAL", homeScore: 27, awayScore: 20 }),
+    );
+
+    await settleSport(SPORT, "key", gates());
+
+    expect(mocks.gameUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: "game-1" },
+        data: { homeScore: 27, awayScore: 20, status: "FINAL" },
+      }),
+    );
+  });
+
   it("is idempotent: a pick already settled by a concurrent run is skipped", async () => {
     // The race loser's updateMany matches 0 rows (no longer PENDING).
     mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
