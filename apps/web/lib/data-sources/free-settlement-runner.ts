@@ -324,7 +324,7 @@ export async function runFreePathSettlement(options?: {
             ageHours,
             graceHours,
             outcomeStatus: "HELD",
-            holdReason: "DISPUTED",
+            holdReason: o.reason,
             settlementPath: "free",
           });
           continue;

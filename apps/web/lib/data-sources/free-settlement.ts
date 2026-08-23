@@ -288,6 +288,37 @@ export function settlePendingPicks(
     const candidates = finals.filter(
       (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 2 && finalMatchesPick(pick, f),
     );
+
+    // Same-day rematch guard (e.g. an MLB doubleheader): two DIFFERENT completed
+    // games between the same two teams can both fall inside the date-tolerance
+    // window and both satisfy finalMatchesPick, producing more than one candidate.
+    // If every candidate's oriented score agrees, they're redundant records of the
+    // SAME game (no behavior change). If they disagree, we cannot tell which final
+    // belongs to this pick — HOLD for audit rather than silently grading against
+    // whichever candidate happened to sort first.
+    if (candidates.length > 1) {
+      const orientedCandidates = candidates
+        .map((f) => ({ final: f, oriented: orientToPickHome(pick, f) }))
+        .filter(
+          (c): c is { final: TrustedFinal; oriented: { homeScore: number; awayScore: number } } =>
+            c.oriented !== null,
+        );
+      if (orientedCandidates.length > 0) {
+        const first = orientedCandidates[0]!.oriented;
+        const allAgree = orientedCandidates.every(
+          (c) => c.oriented.homeScore === first.homeScore && c.oriented.awayScore === first.awayScore,
+        );
+        if (!allAgree) {
+          return {
+            pickId: pick.pickId,
+            status: "HELD",
+            reason: "AMBIGUOUS_MATCH",
+            sources: candidates.flatMap((c) => c.sources),
+          };
+        }
+      }
+    }
+
     const final = candidates[0];
     if (!final) {
       const pp = findPostponedMatch(pick, postponedCandidates);
@@ -354,7 +385,7 @@ export type SettlementOutcome =
       sources: readonly string[];
       voidReason: "POSTPONED_OR_CANCELLED";
     }
-  | { pickId: string; status: "HELD"; reason: "DISPUTED"; sources: readonly string[] }
+  | { pickId: string; status: "HELD"; reason: "DISPUTED" | "AMBIGUOUS_MATCH"; sources: readonly string[] }
   | { pickId: string; status: "PENDING"; reason: "NO_FINAL" | "ORIENT_FAIL" };
 
 /** ESPN/MLB status text that means the contest did not produce a final score. */
