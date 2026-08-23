@@ -38,4 +38,20 @@ describe("free settle response contract", () => {
     expect(route).toMatch(/get\("path"\) === "free"/);
     expect(route).toMatch(/forceFree \|\| !hasOddsApiKey\(apiKey\)/);
   });
+
+  it("autonomy canonicalSettled is wired from the cumulative loader, not this cycle's learning batch (PL3)", () => {
+    const runner = readFileSync(
+      resolve(__dirname, "../lib/data-sources/free-settlement-runner.ts"),
+      "utf8",
+    );
+    // The bug: wiring THIS CYCLE's freshly-graded batch count into a slot
+    // every other planAutonomyCycle caller treats as the running cumulative
+    // total against the ≥100 PROVEN floor.
+    expect(runner).not.toMatch(/canonicalSettled:\s*learning\?\.nEligible/);
+    // The fix: the cumulative loader is called before planAutonomyCycle is
+    // constructed, and its count feeds the canonicalSettled slot.
+    expect(runner).toMatch(/loadPublicPerformancePolicy\(/);
+    expect(runner).toMatch(/canonicalSettled\s*=\s*policy\.canonicalSettledCount/);
+    expect(runner).toMatch(/canonicalSettled,\s*\n\s*minSettledForLearning: 100,/);
+  });
 });

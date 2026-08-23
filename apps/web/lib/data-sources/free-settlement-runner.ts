@@ -63,6 +63,7 @@ import {
   drainPendingSnapshotOutcomes,
 } from "@/lib/settlement/free-path-snapshot";
 import { uniqueScoreboardDates } from "./settlement-score-dates";
+import { loadPublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
@@ -584,6 +585,31 @@ export async function runFreePathSettlement(options?: {
       ? summarizeLearningBatch(settlementsToLearningSamples(gradedForLearning))
       : null;
 
+  // Cumulative canonical-settled count for the PROVEN-gate signal. NOT
+  // learning?.nEligible — that is THIS CYCLE's freshly-graded batch only
+  // (typically single digits per hourly run), while every other
+  // planAutonomyCycle caller (autonomy-cycle/route.ts, health-alert/route.ts)
+  // treats this slot as the running cumulative total against the ≥100 floor
+  // (buildRevenueReadiness in operating-kernel.ts). Wiring the per-cycle batch
+  // in here made the self-audit signal CLAUDE.md's Autonomous Loop Protocol
+  // tells an agent to read report "3/100" forever, even long after the true
+  // cumulative count had cleared 100. Non-fatal: a query failure degrades to
+  // null, matching the other two callers' safe default.
+  let canonicalSettled: number | null = null;
+  try {
+    const policy = await loadPublicPerformancePolicy(db, {
+      canExposePerformanceStats:
+        process.env["PERFORMANCE_STATS_ENABLED"]?.trim().toLowerCase() === "true",
+      minSettledPicksForLearning: 100,
+    });
+    canonicalSettled = policy.canonicalSettledCount;
+  } catch (canonicalErr) {
+    console.warn(
+      `[free-settle] cumulative canonicalSettled lookup failed (degrading to null): ` +
+        `${canonicalErr instanceof Error ? canonicalErr.message : canonicalErr}`,
+    );
+  }
+
   const autonomy = planAutonomyCycle({
     observedAt: new Date().toISOString(),
     deploymentSha: process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ?? null,
@@ -606,7 +632,7 @@ export async function runFreePathSettlement(options?: {
     draftOnly: process.env["LIVE_BOARD"]?.trim().toLowerCase() !== "true",
     boardSuppressed: true,
     openPicks: null,
-    canonicalSettled: learning?.nEligible ?? null,
+    canonicalSettled,
     minSettledForLearning: 100,
   });
 
