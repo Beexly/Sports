@@ -73,7 +73,7 @@ export default async function TrendsPage(): Promise<JSX.Element> {
           <TierGatePanel
             need="PRO"
             surface="The Trend Lab"
-            blurb="The full cohort workbench (sample sizes, hit rates, p-values, and the trends that survive scrutiny) is a Pro surface. Free members keep the board, the Academy, and the public verified record."
+            blurb="The full cohort workbench (sample sizes, hit rates, p-values, and the trends that survive scrutiny) is a Pro surface. Free members keep the board, the Academy, and the public, verifiable record."
           />
         </main>
         <Footer />
