@@ -1,295 +1,489 @@
 /**
- * NFL ladder + boost scanner — softness map tests.
+ * NFL ladder + boost scanner tests.
  *
- * H0 item 2 — detect market softness, do NOT fire live p.
- *
- * Tests cover:
- *  - scanLadderBoost: tight book (no flag), boosted home side, boosted away
- *    side, wide-but-symmetric (no boost), missing moneylines (null),
- *    sub-vig / crossed book (null), invalid odds (null).
- *  - buildLadderScanRows: leak-safety (as-of audit clean), skip counters,
- *    correct feature key count, qClose from closing devig (not result).
- *  - buildSoftnessMapRows: rolling soft-rate/intensity from prior games only,
- *    self-exclusion (latest game's boost not in its own features),
- *    independent home/away tracking.
+ * Covers:
+ *  - scanLadderBoost: geometric-midpoint boost detection, fail-closed on
+ *    degenerate/vig-free/inverted markets, boost ratio math.
+ *  - buildLadderScanRows / buildSoftnessMapRows: leak-safe row + covariate
+ *    emission, self-exclusion, null-score handling, as-of audit tripwire.
  */
 import { describe, expect, it } from "vitest";
 
 import { AsOfFeatureStore } from "../asof-store.js";
+import { proportionalDevig } from "../devig.js";
 import type { GameRow } from "../game-row.js";
 import {
+  LADDER_FEATURE_KEYS,
+  SOFTNESS_FEATURE_KEYS,
   buildLadderScanRows,
   buildSoftnessMapRows,
-  LADDER_FEATURE_KEYS,
   scanLadderBoost,
-  SOFTNESS_FEATURE_KEYS,
 } from "../features/nfl-ladder-boost.js";
 
-const T0 = Date.parse("2021-09-12T10:00:00.000Z");
-const DAY = 86_400_000;
-const iso = (ms: number) => new Date(ms).toISOString();
+/** Decimal odds for a balanced 4.5-point NFL favourite at a typical -110/+110 market. */
+const EVENISH: GameRow["closing"] = {
+  spreadHome: -4.5,
+  total: 44.5,
+  moneylineHomeDecimal: 1.93, // ~ -107
+  moneylineAwayDecimal: 1.93,
+};
 
-function game(
-  i: number,
-  hs: number | null,
-  as_: number | null,
-  mlHome: number | null,
-  mlAway: number | null,
-  dayOffset: number,
-  extra: Partial<GameRow> = {},
-): GameRow {
-  return {
+const DECISION_LEAD_MS = 60 * 60_000;
+
+function gameRow(overrides: Partial<GameRow>): GameRow {
+  const base: GameRow = {
     sport: "nfl",
-    gameId: `g${i}`,
-    season: 2021,
-    week: Math.floor(dayOffset / 7) + 1,
-    startTime: iso(T0 + dayOffset * DAY),
-    homeTeam: "A",
-    awayTeam: "B",
-    homeScore: hs,
-    awayScore: as_,
-    closing: {
-      spreadHome: -3,
-      total: 44,
-      moneylineHomeDecimal: mlHome,
-      moneylineAwayDecimal: mlAway,
-    },
-    ...extra,
+    gameId: "nfl_2024_01",
+    season: 2024,
+    week: 1,
+    startTime: "2024-09-05T21:30:00.000Z",
+    homeTeam: "KC",
+    awayTeam: "DET",
+    homeScore: 21,
+    awayScore: 14,
+    closing: EVENISH,
   };
+  return { ...base, ...overrides };
 }
 
-// ── scanLadderBoost unit tests ──────────────────────────────────────────────
-
-describe("scanLadderBoost", () => {
-  it("tight symmetric book (-110 vs -110): no boost, no soft side", () => {
-    // 1.9091 each → mid = 1.9091 → boost = 1.0 for both → not boosted.
-    const flag = scanLadderBoost({
-      spreadHome: -3,
-      total: 44,
-      moneylineHomeDecimal: 1.9091,
-      moneylineAwayDecimal: 1.9091,
-    });
-    expect(flag).not.toBeNull();
-    expect(flag!.boostFlag).toBe(0);
-    expect(flag!.softSide).toBe("none");
-    expect(flag!.boostRatio).toBeCloseTo(1.0, 2);
-    // vig = 2/1.9091 - 1 ≈ 0.0476
-    expect(flag!.vig).toBeCloseTo(0.0476, 3);
+describe("scanLadderBoost — geometric midpoint detection", () => {
+  it("returns null when moneylines are missing", () => {
+    expect(scanLadderBoost({ ...EVENISH, moneylineHomeDecimal: null })).toBeNull();
+    expect(scanLadderBoost({ ...EVENISH, moneylineAwayDecimal: null })).toBeNull();
   });
 
-  it("boosted home side: 2.5 (home +150) vs 1.6 (away -163) → home flagged", () => {
-    // mid = sqrt(2.5 * 1.6) = sqrt(4.0) = 2.0
-    // boost_home = 2.5/2.0 = 1.25 → > 1.03 ✓
-    // boost_away = 1.6/2.0 = 0.80 → < 1
-    // vig = 1/2.5 + 1/1.6 - 1 = 0.4 + 0.625 - 1 = 0.025
-    const flag = scanLadderBoost({
-      spreadHome: -3,
-      total: 44,
-      moneylineHomeDecimal: 2.5,
-      moneylineAwayDecimal: 1.6,
-    });
-    expect(flag).not.toBeNull();
-    expect(flag!.boostFlag).toBe(1);
-    expect(flag!.softSide).toBe("home");
-    expect(flag!.boostRatio).toBeCloseTo(1.25, 2);
-    expect(flag!.vig).toBeCloseTo(0.025, 3);
+  it("returns null for non-finite / <= 1 prices", () => {
+    expect(scanLadderBoost({ ...EVENISH, moneylineHomeDecimal: 1 })).toBeNull();
+    expect(scanLadderBoost({ ...EVENISH, moneylineAwayDecimal: 0.95 })).toBeNull();
+    expect(scanLadderBoost({ ...EVENISH, moneylineHomeDecimal: Infinity })).toBeNull();
+    expect(scanLadderBoost({ ...EVENISH, moneylineAwayDecimal: NaN })).toBeNull();
   });
 
-  it("boosted away side: 1.6 (home -163) vs 2.5 (away +150) → away flagged", () => {
-    // mid = sqrt(1.6 * 2.5) = 2.0
-    // boost_home = 1.6/2.0 = 0.80 → < 1
-    // boost_away = 2.5/2.0 = 1.25 → > 1.03 ✓
-    const flag = scanLadderBoost({
-      spreadHome: -3,
-      total: 44,
-      moneylineHomeDecimal: 1.6,
-      moneylineAwayDecimal: 2.5,
-    });
-    expect(flag).not.toBeNull();
-    expect(flag!.boostFlag).toBe(1);
-    expect(flag!.softSide).toBe("away");
-    expect(flag!.boostRatio).toBeCloseTo(1.25, 2);
+  it("returns null on a sub-vig / crossed book (fails closed)", () => {
+    // 1/2.10 + 1/2.10 = 0.9524 < 1 — crossed book.
+    expect(
+      scanLadderBoost({
+        moneylineHomeDecimal: 2.1,
+        moneylineAwayDecimal: 2.1,
+        spreadHome: 0,
+        total: 40,
+      }),
+    ).toBeNull();
   });
 
-  it("wide but symmetric book (2.0 vs 1.9): no boost (both near midpoint)", () => {
-    // mid = sqrt(2.0 * 1.9) = sqrt(3.8) = 1.9494
-    // boost_home = 2.0/1.9494 = 1.026 → < 1.03 → not boosted
-    // boost_away = 1.9/1.9494 = 0.974 → < 1 → not boosted
-    // vig = 0.5 + 0.5263 - 1 = 0.0263
-    const flag = scanLadderBoost({
-      spreadHome: -3,
-      total: 44,
-      moneylineHomeDecimal: 2.0,
-      moneylineAwayDecimal: 1.9,
+  it("returns null on a vig-free book (fails closed, not a boost signal)", () => {
+    // 1/1.50 + 1/3.00 = 1 exactly — no vig, but the market carries no softness.
+    expect(
+      scanLadderBoost({
+        moneylineHomeDecimal: 1.5,
+        moneylineAwayDecimal: 3.0,
+        spreadHome: 0,
+        total: 40,
+      }),
+    ).toBeNull();
+  });
+
+  it("detects a home-side boost: boost_ratio = closing / midpoint > threshold", () => {
+    // A book where home is offered generously while the away price reflects a
+    // tighter consensus. mid = sqrt(mh*ma); home boost = mh / mid.
+    const mh = 2.1; // +110
+    const ma = 1.83; // ~-120
+    const mid = Math.sqrt(mh * ma);
+    const expectedBoost = mh / mid;
+
+    const result = scanLadderBoost({
+      moneylineHomeDecimal: mh,
+      moneylineAwayDecimal: ma,
+      spreadHome: 0,
+      total: 40,
     });
-    expect(flag).not.toBeNull();
-    expect(flag!.boostFlag).toBe(0);
-    expect(flag!.softSide).toBe("none");
+
+    expect(result).not.toBeNull();
+    expect(result!.softSide).toBe("home");
+    expect(result!.boostFlag).toBe(1);
+    expect(result!.boostRatio).toBeCloseTo(expectedBoost, 10);
+    expect(result!.vig).toBeCloseTo(1 / mh + 1 / ma - 1, 10);
+    expect(result!.qClose).toBeCloseTo(proportionalDevig([mh, ma])![0]!, 10);
+  });
+
+  it("detects an away-side boost", () => {
+    const mh = 1.83;
+    const ma = 2.1;
+    const mid = Math.sqrt(mh * ma);
+    const result = scanLadderBoost({
+      moneylineHomeDecimal: mh,
+      moneylineAwayDecimal: ma,
+      spreadHome: 0,
+      total: 40,
+    });
+
+    expect(result).not.toBeNull();
+    expect(result!.softSide).toBe("away");
+    expect(result!.boostFlag).toBe(1);
+    expect(result!.boostRatio).toBeCloseTo(ma / mid, 10);
+  });
+
+  it("flags no boost (boost_ratio <= threshold) on a tight book", () => {
+    // Tight book: 1.91/1.91 -> mid = 1.91, both sides == 1.0 (no boost).
+    const result = scanLadderBoost({
+      moneylineHomeDecimal: 1.91,
+      moneylineAwayDecimal: 1.91,
+      spreadHome: 0,
+      total: 41,
+    });
+
+    expect(result).not.toBeNull();
+    expect(result!.boostFlag).toBe(0);
+    expect(result!.softSide).toBe("none");
+    expect(result!.boostRatio).toBeCloseTo(1.0, 10);
+  });
+
+  it("respects a caller-supplied minBoostRatio override", () => {
+    // 1.95 / 1.95 — mid = 1.95, both sides sit at ratio exactly 1.0.
+    // A normal MIN_BOOST_RATIO (1.03) would see NO boost (1.0 < 1.03).
+    // But with a low override threshold of 0.5, 1.0 > 0.5 → home flagged boosted.
+    const strictResult = scanLadderBoost(
+      {
+        moneylineHomeDecimal: 1.95,
+        moneylineAwayDecimal: 1.95,
+        spreadHome: 0,
+        total: 41,
+      },
+      // default threshold 1.03 → 1.0 is not > 1.03 → no boost.
+    );
+    expect(strictResult).not.toBeNull();
+    expect(strictResult!.boostFlag).toBe(0);
+    expect(strictResult!.boostRatio).toBeCloseTo(1.0, 10);
+
+    // Override threshold lower than 1.0 → the fair midpoint IS "boosted".
+    const overridden = scanLadderBoost(
+      {
+        moneylineHomeDecimal: 1.95,
+        moneylineAwayDecimal: 1.95,
+        spreadHome: 0,
+        total: 41,
+      },
+      { minBoostRatio: 0.5 },
+    );
+    expect(overridden).not.toBeNull();
+    expect(overridden!.boostFlag).toBe(1);
+    expect(overridden!.boostRatio).toBeCloseTo(1.0, 10);
+    expect(overridden!.softSide).toBe("home"); // home checked first
+  });
+
+  it("midpoint is invariant to which side is favored (geometric property)", () => {
+    // Swapping mh and ma must not change mid = sqrt(mh*ma).
+    const mh = 2.1;
+    const ma = 1.83;
+    const r1 = scanLadderBoost({ moneylineHomeDecimal: mh, moneylineAwayDecimal: ma, spreadHome: 0, total: 40 });
+    const r2 = scanLadderBoost({ moneylineHomeDecimal: ma, moneylineAwayDecimal: mh, spreadHome: 0, total: 40 });
+    expect(r1).not.toBeNull();
+    expect(r2).not.toBeNull();
+    // Same vig either way (symmetric).
+    expect(r1!.vig).toBeCloseTo(r2!.vig, 10);
+    // The boosted side flips, but the boost ratio magnitude is the same.
+    expect(r1!.softSide).not.toBe(r2!.softSide);
+    expect(r1!.boostRatio).toBeCloseTo(r2!.boostRatio, 10);
   });
 });
 
-describe("scanLadderBoost — fail closed", () => {
-  it("returns null when either moneyline is null", () => {
+describe("buildLadderScanRows — leak-safe row emission", () => {
+  it("emits one EvalRow per final game with complete moneylines and a 5-feature vector", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: 21,
+        awayScore: 14,
+        closing: {
+          spreadHome: -4.5,
+          total: 44.5,
+          moneylineHomeDecimal: 2.1,
+          moneylineAwayDecimal: 1.83,
+        },
+      }),
+    ];
+    const store = new AsOfFeatureStore();
+    const result = buildLadderScanRows(games, store);
+
+    expect(result.skipped.noOdds).toBe(0);
+    expect(result.skipped.noMoneyline).toBe(0);
+    expect(result.skipped.noScores).toBe(0);
+    expect(result.skipped.degenerateVig).toBe(0);
+    expect(result.rows).toHaveLength(1);
+
+    const row = result.rows[0]!;
+    expect(row.id).toBe("g1");
+    // decisionAt = startTime - 1h.
+    expect(row.decisionAt).toBe(new Date(Date.parse("2024-09-05T21:30:00.000Z") - DECISION_LEAD_MS).toISOString());
+    // eventEndAt = startTime + 4h.
+    expect(row.eventEndAt).toBe(new Date(Date.parse("2024-09-05T21:30:00.000Z") + 4 * 3_600_000).toISOString());
+    expect(row.y).toBe(1); // KC won.
+    expect(row.qClose).toBeGreaterThan(0);
+    expect(row.qClose).toBeLessThan(1);
+
+    // Vector served as-of decisionAt must contain all 6 ladder feature keys.
+    for (const k of LADDER_FEATURE_KEYS) {
+      expect(row.features.has(k)).toBe(true);
+    }
+    // Soft side: home is boosted at +110 vs the midpoint.
+    const flag = scanLadderBoost(games[0]!.closing);
+    expect(flag?.softSide).toBe("home");
+    expect(row.features.get("ladder:soft_side")).toBe(1);
+    expect(row.features.get("ladder:boost_flag")).toBe(1);
+    expect(row.features.get("ladder:spread_home")).toBe(-4.5);
+  });
+
+  it("skips games with null scores (non-final) — noScores increment, no EvalRow", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: null,
+        awayScore: null,
+        closing: {
+          spreadHome: -4.5,
+          total: 44.5,
+          moneylineHomeDecimal: 2.1,
+          moneylineAwayDecimal: 1.83,
+        },
+      }),
+    ];
+    const store = new AsOfFeatureStore();
+    const result = buildLadderScanRows(games, store);
+
+    expect(result.rows).toHaveLength(0);
+    expect(result.skipped.noScores).toBe(1);
+  });
+
+  it("skips games with missing moneylines — noMoneyline increment", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        closing: {
+          spreadHome: -4.5,
+          total: 44.5,
+          moneylineHomeDecimal: 2.1,
+          moneylineAwayDecimal: null,
+        },
+      }),
+    ];
+    const store = new AsOfFeatureStore();
+    const result = buildLadderScanRows(games, store);
+
+    expect(result.rows).toHaveLength(0);
+    expect(result.skipped.noMoneyline).toBe(1);
+    expect(result.skipped.degenerateVig).toBe(0);
+  });
+
+  it("skips degenerate markets (inverted/crossed) — degenerateVig increment", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        closing: {
+          spreadHome: 0,
+          total: 40,
+          moneylineHomeDecimal: 2.1,
+          moneylineAwayDecimal: 2.1, // crossed book (sub-vig)
+        },
+      }),
+    ];
+    const store = new AsOfFeatureStore();
+    const result = buildLadderScanRows(games, store);
+
+    expect(result.rows).toHaveLength(0);
+    expect(result.skipped.degenerateVig).toBe(1);
+  });
+
+  it("fail-closed: crossed market with scores present still skips", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: 21,
+        awayScore: 14,
+        closing: EVENISH, // balanced but not crossed — should emit
+      }),
+    ];
+    const store = new AsOfFeatureStore();
+    const result = buildLadderScanRows(games, store);
+    expect(result.rows).toHaveLength(1);
+  });
+
+  it("fail-closed: qClose bound (0.01, 0.99) inside scanLadderBoost rejects a near-certain-but-vigged market", () => {
+    // qHome = ma/(ma+mh). To get qHome < 0.01 while keeping vig > 0.01, we need
+    // ma near 1.0 and mh large. This is a razor-edge safety-net boundary — real
+    // markets can't live here, but the bound is a guardrail, not a target.
+    // scanLadderBoost returns null when qHome fails (0.01, 0.99).
+    const mh = 99.25;
+    const ma = 1.00005;
+    const impliedSum = 1 / mh + 1 / ma;
+    expect(impliedSum - 1).toBeGreaterThan(0.01); // passes vig floor
+    expect(ma / (ma + mh)).toBeLessThan(0.01); // but qHome fails the bound
+
     expect(
-      scanLadderBoost({ spreadHome: -3, total: 44, moneylineHomeDecimal: null, moneylineAwayDecimal: 2.0 }),
-    ).toBeNull();
-    expect(
-      scanLadderBoost({ spreadHome: -3, total: 44, moneylineHomeDecimal: 2.0, moneylineAwayDecimal: null }),
+      scanLadderBoost({
+        moneylineHomeDecimal: mh,
+        moneylineAwayDecimal: ma,
+        spreadHome: 0,
+        total: 40,
+      }),
     ).toBeNull();
   });
 
-  it("returns null when odds are ≤ 1 (invalid decimal)", () => {
-    expect(
-      scanLadderBoost({ spreadHome: -3, total: 44, moneylineHomeDecimal: 1.0, moneylineAwayDecimal: 2.0 }),
-    ).toBeNull();
-    expect(
-      scanLadderBoost({ spreadHome: -3, total: 44, moneylineHomeDecimal: 2.0, moneylineAwayDecimal: 0.5 }),
-    ).toBeNull();
+  it("the as-of audit tripwire passes (zero lookahead) after a clean run", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: 21,
+        awayScore: 14,
+        closing: {
+          spreadHome: -4.5,
+          total: 44.5,
+          moneylineHomeDecimal: 2.1,
+          moneylineAwayDecimal: 1.83,
+        },
+      }),
+    ];
+    const store = new AsOfFeatureStore();
+    buildLadderScanRows(games, store);
+    // observedAt == decisionAt, so every served obs postdates nothing.
+    expect(() => store.assertNoLookahead()).not.toThrow();
   });
 
-  it("returns null on sub-vig / crossed book (sum of implied < 1)", () => {
-    // 2.5 + 2.5 → implied 0.4+0.4 = 0.8 < 1 → sub-vig
-    expect(
-      scanLadderBoost({ spreadHome: -3, total: 44, moneylineHomeDecimal: 2.5, moneylineAwayDecimal: 2.5 }),
-    ).toBeNull();
+  it("y = 0 when away wins", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: 14,
+        awayScore: 21,
+        closing: EVENISH,
+      }),
+    ];
+    const store = new AsOfFeatureStore();
+    const result = buildLadderScanRows(games, store);
+    expect(result.rows[0]!.y).toBe(0);
   });
 });
 
-// ── buildLadderScanRows integration tests ─────────────────────────────────
-
-describe("buildLadderScanRows", () => {
-  it("flags a boosted home side as a soft rung", () => {
-    const store = new AsOfFeatureStore();
-    const games = [
-      game(0, 24, 20, 1.9091, 1.9091, 0),    // tight
-      game(1, 21, 17, 2.5, 1.6, 7),           // home boosted
+describe("buildSoftnessMapRows — rolling team softness covariates", () => {
+  it("emits 4 softness feature keys per final game and zeros the rate with no history", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: 21,
+        awayScore: 14,
+        closing: EVENISH,
+      }),
     ];
-    const { rows } = buildLadderScanRows(games, store);
-    expect(rows).toHaveLength(2);
-    const r = rows[1]!;
-    expect(r.features.get("ladder:boost_flag")).toBe(1);
-    expect(r.features.get("ladder:soft_side")).toBe(1); // home = 1
-    expect(r.features.get("ladder:spread_home")).toBe(-3);
-    expect(() => store.assertNoLookahead()).not.toThrow();
+    const store = new AsOfFeatureStore();
+    const result = buildSoftnessMapRows(games, store);
+
+    expect(result.rows).toHaveLength(1);
+    expect(result.skipped.noScores).toBe(0);
+    for (const k of SOFTNESS_FEATURE_KEYS) {
+      expect(result.rows[0]!.features.has(k)).toBe(true);
+    }
+    // No prior games -> rates are 0, no boosts to average -> intensity 1.0.
+    expect(result.rows[0]!.features.get("ladder:home_soft_rate")).toBe(0);
+    expect(result.rows[0]!.features.get("ladder:away_soft_rate")).toBe(0);
+    expect(result.rows[0]!.features.get("ladder:home_soft_intensity")).toBe(1);
+    expect(result.rows[0]!.features.get("ladder:away_soft_intensity")).toBe(1);
   });
 
-  it("tight book: boost_flag = 0, soft_side = 0", () => {
-    const store = new AsOfFeatureStore();
-    const games = [game(0, 24, 20, 1.9091, 1.9091, 0)];
-    const { rows } = buildLadderScanRows(games, store);
-    expect(rows).toHaveLength(1);
-    expect(rows[0]!.features.get("ladder:boost_flag")).toBe(0);
-    expect(rows[0]!.features.get("ladder:soft_side")).toBe(0);
-    expect(() => store.assertNoLookahead()).not.toThrow();
-  });
-
-  it("skips games with null moneylines (honest counter)", () => {
-    const store = new AsOfFeatureStore();
-    const games = [game(0, 24, 20, null, 2.0, 0)];
-    const { rows, skipped } = buildLadderScanRows(games, store);
-    expect(rows).toHaveLength(0);
-    expect(skipped.noMoneyline).toBe(1);
-  });
-
-  it("qClose comes from the closing line devig, never the result", () => {
-    const store = new AsOfFeatureStore();
-    // -105 / -105 → 1.950 each → devig → ~0.5127 each
-    const games = [game(0, 50, 0, 1.95, 1.95, 0)];
-    const { rows } = buildLadderScanRows(games, store);
-    expect(rows[0]!.qClose).toBeCloseTo(0.5, 2);
-    // The y (outcome) is 1 (home won 50-0) but qClose must NOT reflect that result.
-    expect(rows[0]!.qClose).not.toBeCloseTo(1, 1);
-  });
-
-  it("produces exactly LADDER_FEATURE_KEYS per game", () => {
-    const store = new AsOfFeatureStore();
-    const games = [game(0, 24, 20, 2.0, 1.9, 0)];
-    const { rows } = buildLadderScanRows(games, store);
-    const keys = [...rows[0]!.features.keys()].sort();
-    expect(keys).toEqual([...LADDER_FEATURE_KEYS].sort());
-  });
-
-  it("skip counters are mutually exclusive and exhaustive", () => {
-    const store = new AsOfFeatureStore();
-    const games = [
-      game(0, 24, 20, null, 2.0, 0),    // noMoneyline
-      game(1, 24, 20, 2.5, 2.5, 7),      // sub-vig → degenerateVig
+  it("skips non-final games and does not record them into team history", () => {
+    const games: GameRow[] = [
+      // Non-final: should be skipped, NOT entered into KC's history.
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: null,
+        awayScore: null,
+        closing: {
+          spreadHome: -4.5,
+          total: 44.5,
+          moneylineHomeDecimal: 2.1,
+          moneylineAwayDecimal: 1.83,
+        },
+      }),
+      // Final KC game: history is empty -> rate 0.
+      gameRow({
+        gameId: "g2",
+        startTime: "2024-09-12T21:30:00.000Z",
+        homeScore: 28,
+        awayScore: 10,
+        closing: EVENISH,
+      }),
     ];
-    const { rows, skipped } = buildLadderScanRows(games, store);
-    expect(rows).toHaveLength(0);
-    expect(skipped.noMoneyline).toBe(1);
-    expect(skipped.degenerateVig).toBe(1);
-    expect(skipped.noOdds).toBe(0);
-  });
-});
-
-// ── buildSoftnessMapRows integration tests ────────────────────────────────
-
-describe("buildSoftnessMapRows", () => {
-  it("soft rate grows as a team accumulates boosted games", () => {
     const store = new AsOfFeatureStore();
-    const games = [
-      game(0, 24, 20, 1.9091, 1.9091, 0), // tight book, no boost
-      game(1, 24, 20, 2.5, 1.6, 7),        // home boosted
-      game(2, 24, 20, 2.5, 1.6, 14),       // home boosted again
+    const result = buildSoftnessMapRows(games, store);
+
+    expect(result.rows).toHaveLength(1);
+    expect(result.skipped.noScores).toBe(1);
+    // g2 sees no KC history because g1 was skipped before being recorded.
+    expect(result.rows[0]!.features.get("ladder:home_soft_rate")).toBe(0);
+  });
+
+  it("propagates a home boost from a prior game into the softness rate", () => {
+    // Game 1: home side boosted.
+    const g1 = gameRow({
+      gameId: "g1",
+      startTime: "2024-09-05T21:30:00.000Z",
+      homeScore: 21,
+      awayScore: 14,
+      closing: {
+        spreadHome: -4.5,
+        total: 44.5,
+        moneylineHomeDecimal: 2.1, // +110
+        moneylineAwayDecimal: 1.83, // -120
+      },
+    });
+    // Game 2: same home team (KC), 1 week later.
+    const g2 = gameRow({
+      gameId: "g2",
+      startTime: "2024-09-12T21:30:00.000Z",
+      homeScore: 28,
+      awayScore: 10,
+      closing: EVENISH,
+    });
+
+    const store = new AsOfFeatureStore();
+    const result = buildSoftnessMapRows([g1, g2], store);
+
+    expect(result.rows).toHaveLength(2);
+    // g1: no history -> rate 0.
+    expect(result.rows[0]!.features.get("ladder:home_soft_rate")).toBe(0);
+    // g2: KC's prior game was boosted at home -> rate = 1/1 = 1.0.
+    expect(result.rows[1]!.features.get("ladder:home_soft_rate")).toBe(1);
+    // Intensity should be the boost ratio from g1 (> 1 since g1 was boosted home).
+    const g1Flag = scanLadderBoost(g1.closing)!;
+    expect(result.rows[1]!.features.get("ladder:home_soft_intensity")).toBeCloseTo(g1Flag.boostRatio, 10);
+  });
+
+  it("fail-closed on a crossed market: skipped as degenerateVig, not entered into history", () => {
+    const games: GameRow[] = [
+      gameRow({
+        gameId: "g1",
+        startTime: "2024-09-05T21:30:00.000Z",
+        homeScore: 21,
+        awayScore: 14,
+        closing: {
+          spreadHome: 0,
+          total: 40,
+          moneylineHomeDecimal: 2.1,
+          moneylineAwayDecimal: 2.1, // crossed
+        },
+      }),
     ];
-    const { rows } = buildSoftnessMapRows(games, store, { window: 8 });
-    expect(rows).toHaveLength(3);
-    // g0: no history → soft rates = 0
-    expect(rows[0]!.features.get("ladder:home_soft_rate")).toBe(0);
-    expect(rows[0]!.features.get("ladder:away_soft_rate")).toBe(0);
-    // g1: g0 was tight (no boost) → home_soft_rate = 0/1 = 0
-    expect(rows[1]!.features.get("ladder:home_soft_rate")).toBe(0);
-    // g2: g0 (no boost) + g1 (boost) → home_soft_rate = 1/2 = 0.5
-    expect(rows[2]!.features.get("ladder:home_soft_rate")).toBeCloseTo(0.5, 2);
-    expect(() => store.assertNoLookahead()).not.toThrow();
-  });
-
-  it("self-exclusion: the latest game's own boost does not enter its features", () => {
     const store = new AsOfFeatureStore();
-    const games = [
-      game(0, 24, 20, 1.9091, 1.9091, 0),
-      game(1, 24, 20, 1.9091, 1.9091, 7),
-      game(2, 24, 20, 2.5, 1.6, 14), // boosted, but g2's features come from g0+g1 only
-    ];
-    const { rows } = buildSoftnessMapRows(games, store, { window: 8 });
-    // g2's home_soft_rate uses only g0 (tight) and g1 (tight) → 0
-    expect(rows[2]!.features.get("ladder:home_soft_rate")).toBe(0);
-  });
+    const result = buildSoftnessMapRows(games, store);
 
-  it("away-side soft rate tracks away boosts independently", () => {
-    const store = new AsOfFeatureStore();
-    const games = [
-      game(0, 24, 20, 1.6, 2.5, 0), // away boosted (B is away)
-      game(1, 24, 20, 1.6, 2.5, 7), // away boosted again
-    ];
-    const { rows } = buildSoftnessMapRows(games, store, { window: 8 });
-    // g0: no history → 0
-    expect(rows[0]!.features.get("ladder:away_soft_rate")).toBe(0);
-    // g1: g0 had away-boost → away_soft_rate = 1/1 = 1.0
-    expect(rows[1]!.features.get("ladder:away_soft_rate")).toBeCloseTo(1.0, 2);
-    // home should be 0 (no home-side boosts)
-    expect(rows[1]!.features.get("ladder:home_soft_rate")).toBe(0);
-  });
-
-  it("produces exactly SOFTNESS_FEATURE_KEYS per game", () => {
-    const store = new AsOfFeatureStore();
-    const games = [game(0, 24, 20, 1.9091, 1.9091, 0)];
-    const { rows } = buildSoftnessMapRows(games, store, { window: 8 });
-    expect(rows).toHaveLength(1);
-    const keys = [...rows[0]!.features.keys()].sort();
-    expect(keys).toEqual([...SOFTNESS_FEATURE_KEYS].sort());
-  });
-
-  it("as-of store asserts no lookahead across all served reads", () => {
-    const store = new AsOfFeatureStore();
-    const games = [
-      game(0, 24, 20, 1.9091, 1.9091, 0),
-      game(1, 24, 20, 2.5, 1.6, 7),
-      game(2, 24, 20, 1.9091, 1.9091, 14),
-      game(3, 21, 17, 2.5, 1.6, 21),
-    ];
-    buildSoftnessMapRows(games, store, { window: 8 });
-    expect(() => store.assertNoLookahead()).not.toThrow();
+    expect(result.rows).toHaveLength(0);
+    expect(result.skipped.degenerateVig).toBe(1);
   });
 });

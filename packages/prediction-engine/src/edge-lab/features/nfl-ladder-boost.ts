@@ -22,14 +22,14 @@
  *
  * ── Boost detection algorithm ──
  * 1. De-vig both sides of the closing moneyline to recover the market's
- *    consensus-implied probabilities q_home and q_away.
- * 2. The "consensus price" for the home side (if it were fair) would be
- *    the decimal odds implied by q_home (no vig): fair_home = 1/q_home.
- *    Same for away: fair_away = 1/q_away.
- * 3. A side is "boosted" when its closing decimal odds significantly exceed
- *    its fair-implied decimal odds — the book is offering more than its own
- *    consensus says is fair. The boost ratio is closing/fair (>1 = boosted).
- * 4. The softness score is the maximum boost ratio across both sides (the
+ *    consensus-implied probabilities q_home and q_away (sum to 1, no vig).
+ * 2. The no-vig fair decimal for each side is fair = 1/q. The geometric
+ *    midpoint mid = sqrt(mh * ma) is the unbiased reference price — invariant
+ *    to which side is favored — and is what the boost ratio compares against.
+ * 3. A side is "boosted" when its closing decimal odds exceed the geometric
+ *    midpoint by more than MIN_BOOST_RATIO — the book is offering more than
+ *    its own consensus implies. The boost ratio is closing/mid (>1 = boosted).
+ * 4. The softness score is the max boost ratio across both sides (the
  *    ladder's weakest rung), thresholded against MIN_BOOST_RATIO.
  *
  * ── Leak safety ──
@@ -83,6 +83,7 @@ export interface LadderScanResult {
   readonly skipped: {
     readonly noOdds: number;
     readonly noMoneyline: number;
+    readonly noScores: number;
     readonly inverted: number;
     readonly degenerateVig: number;
     readonly ambiguousBoost: number;
@@ -208,6 +209,7 @@ export function buildLadderScanRows(
   const skipped = {
     noOdds: 0,
     noMoneyline: 0,
+    noScores: 0,
     inverted: 0,
     degenerateVig: 0,
     ambiguousBoost: 0,
@@ -247,6 +249,13 @@ export function buildLadderScanRows(
       continue;
     }
 
+    // Non-final games carry no outcome — skip (the model must never see a game
+    // whose result is unknowable; y here would be fabricated).
+    if (g.homeScore === null || g.awayScore === null) {
+      skipped.noScores += 1;
+      continue;
+    }
+
     const ingest = (featureKey: string, value: number): void =>
       store.ingest({ entityId: g.gameId, featureKey, value, observedAt, source: "nfl-ladder-boost" });
 
@@ -266,7 +275,7 @@ export function buildLadderScanRows(
       decisionAt,
       eventEndAt: new Date(startMs + GAME_DURATION_MS).toISOString(),
       features: store.vector(g.gameId, LADDER_FEATURE_KEYS, decisionAt),
-      y: g.homeScore !== null && g.awayScore !== null ? (g.homeScore > g.awayScore ? 1 : 0) : 0,
+      y: g.homeScore > g.awayScore ? 1 : 0,
       qClose: q,
     });
   }
@@ -295,6 +304,7 @@ export function buildSoftnessMapRows(
   const skipped = {
     noOdds: 0,
     noMoneyline: 0,
+    noScores: 0,
     inverted: 0,
     degenerateVig: 0,
     ambiguousBoost: 0,
@@ -318,6 +328,13 @@ export function buildSoftnessMapRows(
     const q = flag.qClose;
     if (!(q > 0.01 && q < 0.99)) {
       skipped.noOdds += 1;
+      continue;
+    }
+
+    // Non-final games carry no outcome — skip and record into team history
+    // only if final (self-exclusion on incomplete games).
+    if (g.homeScore === null || g.awayScore === null) {
+      skipped.noScores += 1;
       continue;
     }
 
@@ -356,10 +373,9 @@ export function buildSoftnessMapRows(
       decisionAt,
       eventEndAt: new Date(startMs + GAME_DURATION_MS).toISOString(),
       features: store.vector(g.gameId, SOFTNESS_FEATURE_KEYS, decisionAt),
-      y: g.homeScore !== null && g.awayScore !== null ? (g.homeScore > g.awayScore ? 1 : 0) : 0,
+      y: g.homeScore > g.awayScore ? 1 : 0,
       qClose: q,
     });
-
     // Record this game's boost into history AFTER evaluating (self-exclusion).
     // Store the boost ratio if THIS team's side was the boosted one, else 0.
     const pushOrInit = (team: string, boosted: number, map: Map<string, number[]>): void => {
