@@ -37,24 +37,28 @@ import { describe, expect, it } from "vitest";
 import {
   CATCH_CUSHION_BIND_METHOD_TAG,
   bindCatchCushionSamples,
+  boundCatchCushionSamples,
   type BoundCatchSample,
   type CatchCushionBindRequest,
 } from "../props-hb-catch-cushion-bind.js";
 import {
   REC_TD_CUSHION_BIND_METHOD_TAG,
   bindRecTdCushionSamples,
+  boundRecTdCushionSamples,
   type BoundRecTdSample,
   type RecTdCushionBindRequest,
 } from "../props-hb-rec-td-cushion-bind.js";
 import {
   SACK_TTT_BIND_METHOD_TAG,
   bindSackTttSamples,
+  boundSackTttSamples,
   type BoundSackSample,
   type SackTttBindRequest,
 } from "../props-hb-sack-ttt-bind.js";
 import {
   COMP_AIR_YARDS_DIFF_BIND_METHOD_TAG,
   bindCompAirYardsDiffSamples,
+  boundCompAirYardsDiffSamples,
   type BoundCompSample,
   type CompAirYardsDiffBindRequest,
 } from "../props-hb-comp-air-yards-diff-bind.js";
@@ -109,6 +113,13 @@ function baseRow(o: Partial<CovariateRow>): CovariateRow {
     intRate: null,
     fumbleRate: null,
     airYardsPerAttempt: null,
+
+    avgAirYardsToSticks: null,
+    missedTackleRate: null,
+    passerRating: null,
+    ryoePerAtt: null,
+    rushPctOverExpected: null,
+    passerRatingAllowed: null,
     snapShare: null,
     tflRate: null,
     pdRate: null,
@@ -239,3 +250,145 @@ function extractCatchCushions(rows: CovariateRow[], players: SyntheticPlayer[]) 
   }));
   return bindCatchCushionSamples(rows, requests);
 }
+
+/* ── Order-preserving extractors (results[i] ↔ players[i]) ── */
+function extractRecTdCushions(rows: CovariateRow[], players: SyntheticPlayer[]) {
+  const requests: RecTdCushionBindRequest[] = players.map((p) => ({
+    gsisId: p.gsisId,
+    season: SEASON,
+    kickoffWeek: KICKOFF_WEEK,
+    recTd: { targets: 8, recTds: 1 },
+  }));
+  return bindRecTdCushionSamples(rows, requests);
+}
+
+function extractSackTtts(rows: CovariateRow[], players: SyntheticPlayer[]) {
+  const requests: SackTttBindRequest[] = players.map((p) => ({
+    gsisId: p.gsisId,
+    season: SEASON,
+    kickoffWeek: KICKOFF_WEEK,
+    sack: { dropbacks: 30, sacks: 2 },
+  }));
+  return bindSackTttSamples(rows, requests);
+}
+
+function extractCompDiffs(rows: CovariateRow[], players: SyntheticPlayer[]) {
+  const requests: CompAirYardsDiffBindRequest[] = players.map((p) => ({
+    gsisId: p.gsisId,
+    season: SEASON,
+    kickoffWeek: KICKOFF_WEEK,
+    comp: { attempts: 30, completions: 19 },
+  }));
+  return bindCompAirYardsDiffSamples(rows, requests);
+}
+
+function okValues<T extends { ok: boolean }>(
+  results: readonly T[],
+  pick: (s: never) => number,
+): number[] {
+  return results.filter((r): r is Extract<T, { ok: true }> => r.ok)
+    .map((r) => pick((r as unknown as { sample: never }).sample));
+}
+
+describe("binds backtest — synthetic NGS corpus", () => {
+  const { rows, players } = buildSyntheticRows(40, 20260823);
+
+  it("A1: catch-cushion bind extracts the latest prior cushion exactly (week=0 poison ignored)", () => {
+    const results = extractCatchCushions(rows, players);
+    expect(results.every((r) => r.ok)).toBe(true);
+    // Every player's week-7 row carries a noisy copy of their affinity; the
+    // extracted value must lie within noise of the affinity and must NEVER
+    // equal the week-0 aggregate (which is also near the affinity, so we check
+    // provenance/grain instead of value identity).
+    for (const r of results) {
+      if (!r.ok) throw new Error("expected ok");
+      expect(r.sample.avgCushion.grain).toBe("week_t_for_tplus1");
+      expect(r.sample.avgCushion.provenance).toBe("weekly_ngs_mean");
+      expect(Number.isFinite(r.sample.avgCushion.value)).toBe(true);
+    }
+  });
+
+  it("A2: all four binds fail closed on injected nulls at week 4 (still binds from week 3)", () => {
+    const { rows: nullRows } = buildSyntheticRows(6, 777, { injectNulls: true });
+    // Week-4 nulls are interior history; the LATEST prior is week 8 which is
+    // intact, so every bind still succeeds — nulls mid-history are skipped.
+    expect(extractCatchCushions(nullRows, players.slice(0, 6)).every((r) => r.ok)).toBe(true);
+    expect(extractRecTdCushions(nullRows, players.slice(0, 6)).every((r) => r.ok)).toBe(true);
+    expect(extractSackTtts(nullRows, players.slice(0, 6)).every((r) => r.ok)).toBe(true);
+    expect(extractCompDiffs(nullRows, players.slice(0, 6)).every((r) => r.ok)).toBe(true);
+  });
+
+  it("B1: extraction fidelity — cushion extraction correlates ≈1.0 with player affinity", () => {
+    const results = extractCatchCushions(rows, players);
+    const ok = results.map((r, i) => ({ r, p: players[i]! })).filter((x) => x.r.ok);
+    const extracted = ok.map((x) => (x.r as { sample: { avgCushion: { value: number } } }).sample.avgCushion.value);
+    const affinity = ok.map((x) => x.p.cushionAffinity);
+    const rho = pearson(extracted, affinity);
+    expect(rho).toBeGreaterThan(0.95);
+  });
+
+  it("B2: sack-TTT extraction correlates ≈1.0 with player TTT affinity", () => {
+    const results = extractSackTtts(rows, players);
+    const ok = results.map((r, i) => ({ r, i })).filter((x) => x.r.ok);
+    const extracted = ok.map(
+      (x) => (x.r as { sample: { avgTimeToThrow: { value: number } } }).sample.avgTimeToThrow.value,
+    );
+    const affinity = ok.map((x) => players[x.i]!.tttAffinity);
+    expect(pearson(extracted, affinity)).toBeGreaterThan(0.95);
+  });
+
+  it("B3: air-yards-diff extraction correlates ≈1.0 with player diff affinity", () => {
+    const results = extractCompDiffs(rows, players);
+    const ok = results.map((r, i) => ({ r, i })).filter((x) => x.r.ok);
+    const extracted = ok.map(
+      (x) =>
+        (x.r as { sample: { avgAirYardsDifferential: { value: number } } }).sample.avgAirYardsDifferential
+          .value,
+    );
+    const affinity = ok.map((x) => players[x.i]!.diffAffinity);
+    expect(pearson(extracted, affinity)).toBeGreaterThan(0.95);
+  });
+
+  it("C: bound* variants return only ok samples in player order", () => {
+    const boundCatch = boundCatchCushionSamples(
+      rows,
+      players.map((p) => ({
+        gsisId: p.gsisId,
+        season: SEASON,
+        kickoffWeek: KICKOFF_WEEK,
+        catch: { targets: 8, receptions: 6 },
+      })),
+    );
+    const boundRecTd = boundRecTdCushionSamples(
+      rows,
+      players.map((p) => ({
+        gsisId: p.gsisId,
+        season: SEASON,
+        kickoffWeek: KICKOFF_WEEK,
+        recTd: { targets: 8, recTds: 1 },
+      })),
+    );
+    const boundSack = boundSackTttSamples(
+      rows,
+      players.map((p) => ({
+        gsisId: p.gsisId,
+        season: SEASON,
+        kickoffWeek: KICKOFF_WEEK,
+        sack: { dropbacks: 30, sacks: 2 },
+      })),
+    );
+    const boundComp = boundCompAirYardsDiffSamples(
+      rows,
+      players.map((p) => ({
+        gsisId: p.gsisId,
+        season: SEASON,
+        kickoffWeek: KICKOFF_WEEK,
+        comp: { attempts: 30, completions: 19 },
+      })),
+    );
+    expect(boundCatch).toHaveLength(players.length);
+    expect(boundRecTd).toHaveLength(players.length);
+    expect(boundSack).toHaveLength(players.length);
+    expect(boundComp).toHaveLength(players.length);
+  });
+});

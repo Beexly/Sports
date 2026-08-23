@@ -42,6 +42,13 @@ function defRow(overrides: { week: number; fumbleRate: number | null; gsisId?: s
     intRate: null,
     fumbleRate: overrides.fumbleRate,
     airYardsPerAttempt: null,
+
+    avgAirYardsToSticks: null,
+    missedTackleRate: null,
+    passerRating: null,
+    ryoePerAtt: null,
+    rushPctOverExpected: null,
+    passerRatingAllowed: null,
     avgExpectedYac: null,
     expectedRushYards: null,
   } as CovariateRow;

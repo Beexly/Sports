@@ -1497,6 +1497,21 @@ export type {
   BoundPassYardsSample,
 } from "./edge-lab/props-hb-pass-ayd-bind.js";
 
+// Completed-air-yards (depth-of-target realized in completions) covariate
+// bind: couples the covariate bus (avgCompletedAirYards) into the
+// passing-yards model. Fail-closed on null/non-finite — never imputes.
+// priced:false.
+export {
+  PASS_CAY_BIND_METHOD_TAG,
+  bindPassCaySamples,
+  boundPassCaySamples,
+} from "./edge-lab/props-hb-cay-bind.js";
+export type {
+  PassCayBindRequest,
+  PassCayBindResult,
+  BoundPassYardsCaySample,
+} from "./edge-lab/props-hb-cay-bind.js";
+
 // Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
 export {
   RUSH_TD_HB_METHOD_TAG,
@@ -1566,6 +1581,22 @@ export type {
 export { SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples } from "./edge-lab/props-hb-adot-sep-bind.js";
 export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep-bind.js";
 
+// Catch-separation bind: couples the covariate bus (avgSeparation on
+// CovariateRow) into the catches/receptions model (props-hb-catch). H2 Edge:
+// books price catches on target volume but miss separation. Fail-closed on
+// null/non-finite — never imputes. Honest weekly-mean grain forwarded verbatim.
+// priced:false.
+export {
+  CATCH_SEPARATION_BIND_METHOD_TAG,
+  bindCatchSeparationSamples,
+  boundCatchSeparationSamples,
+} from "./edge-lab/props-hb-separation-bind.js";
+export type {
+  CatchSeparationBindRequest,
+  CatchSeparationBindResult,
+  BoundSeparationCatchSample,
+} from "./edge-lab/props-hb-separation-bind.js";
+
 // YAC bind: couples the covariate bus (avgYac) to the air+YAC model.
 // Fail-closed on null — never invents YAC. Honest weekly-mean grain forwarded
 // verbatim. priced:false.
@@ -1588,6 +1619,37 @@ export type {
   BoundCompSample,
 } from "./edge-lab/props-hb-cpoe-comp-bind.js";
 
+// Passer-rating bind: couples the covariate bus (PR 1 weekly NGS passerRating)
+// to the pass-TDs | attempts model (props-hb-pass-td). Fail-closed on null /
+// non-finite. Honest weekly-mean grain forwarded verbatim. priced:false. H2 Edge.
+export {
+  PASSER_RATING_BIND_METHOD_TAG,
+  bindPasserRatingSamples,
+  boundPasserRatingSamples,
+} from "./edge-lab/props-hb-passer-rating-bind.js";
+export type {
+  PasserRatingBindRequest,
+  PasserRatingBindResult,
+  BoundPassTdSample,
+} from "./edge-lab/props-hb-passer-rating-bind.js";
+
+// Aggressiveness bind: couples the covariate bus weekly NGS `aggressiveness`
+// (% throws into tight coverage, <1 yd) into the pass-TDs | attempts model
+// (props-hb-pass-td). A QB forcing throws into tight windows has higher TD
+// variance AND higher INT risk — the market doesn't separate the two.
+// Fail-closed on null/non-finite. Honest weekly-mean grain forwarded verbatim.
+// priced:false. H2 Edge.
+export {
+  AGGRESSIVENESS_BIND_METHOD_TAG,
+  bindAggressivenessSamples,
+  boundAggressivenessSamples,
+} from "./edge-lab/props-hb-aggressiveness-bind.js";
+export type {
+  AggressivenessBindRequest,
+  AggressivenessBindResult,
+  BoundAggressivenessPassTdSample,
+} from "./edge-lab/props-hb-aggressiveness-bind.js";
+
 // Rush-yards bind: couples the covariate bus (pctAttemptsGte8Defenders + avgTimeToLos)
 // to the rushing-yards | attempts model. Fail-closed on null — never invents stacking.
 // Honest weekly-mean grain forwarded verbatim. priced:false.
@@ -1601,6 +1663,36 @@ export type {
   RushYardsBindResult,
   BoundRushSample,
 } from "./edge-lab/props-hb-rush-yards-bind.js";
+
+// RYOE bind: couples the covariate bus (ryoePerAtt) to the rush-TD model.
+// Efficiency signal the books miss: positive RYOE/att implies more TDs on
+// the same volume, including red-zone carries. Fail-closed on null/non-finite.
+// priced:false.
+export {
+  RYOE_BIND_METHOD_TAG,
+  bindRyoeSamples,
+  boundRyoeSamples,
+} from "./edge-lab/props-hb-ryoe-bind.js";
+export type {
+  RyoeBindRequest,
+  RyoeBindResult,
+  BoundRushTdSample,
+} from "./edge-lab/props-hb-ryoe-bind.js";
+
+// RPOE bind: couples the covariate bus (rushPctOverExpected) to the rush-TD
+// model. Efficiency-over-expectation signal the books miss: a RB exceeding
+// expected yards on a high % of carries hits holes better, including in the
+// red zone. Fail-closed on null/non-finite. priced:false.
+export {
+  RPOE_BIND_METHOD_TAG,
+  bindRpoeSamples,
+  boundRpoeSamples,
+} from "./edge-lab/props-hb-rpoe-bind.js";
+export type {
+  RpoeBindRequest,
+  RpoeBindResult,
+  BoundRpoRushTdSample,
+} from "./edge-lab/props-hb-rpoe-bind.js";
 
 // Kickoff return yards | returns (Gamma-Poisson). Books price return TDs only —
 // return YARDS are the uncovered edge. See H1 Edge #5 — Tier 1 Special Teams.

@@ -48,6 +48,13 @@ function ngsRow(o: Partial<CovariateRow>): CovariateRow {
     intRate: null,
     fumbleRate: null,
     airYardsPerAttempt: null,
+
+    avgAirYardsToSticks: null,
+    missedTackleRate: null,
+    passerRating: null,
+    ryoePerAtt: null,
+    rushPctOverExpected: null,
+    passerRatingAllowed: null,
     snapShare: null,
     tflRate: null,
     pdRate: null,
