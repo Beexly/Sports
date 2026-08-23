@@ -1,32 +1,30 @@
 /**
- * INT covariate bind tests.
+ * Sack-TTT covariate bind tests.
  *
  * H0 item 6 — remaining process covariates from PROP_COVARIATE_GAP.
  *
- * This bind couples `avgTimeToThrow` and `aggressiveness` (from the
- * covariate bus) into `IntSample` enrichments for the INT model.
+ * This bind couples `avgTimeToThrow` (from the covariate bus) into `SackSample`
+ * enrichments for the sacks model (props-hb-sacks).
  *
  * Tests cover:
  *  - Method tag + priced: false invariant.
- *  - Binds both covariates from the latest prior passing row — not week=0,
- *    not same-week.
+ *  - Binds avgTimeToThrow from latest prior passing row — not week=0, not same-week.
  *  - FAILS CLOSED: no prior per-game row → sample dropped.
  *  - FAILS CLOSED: null avgTimeToThrow → dropped.
- *  - FAILS CLOSED: null aggressiveness → dropped.
  *  - Non-finite values → dropped.
  *  - Batch: one bad row drops, good rows bind.
  *  - Grain + provenance correctness.
- *  - Realized inputs (attempts, ints) passed through unchanged.
+ *  - Realized inputs (dropbacks, sacks) passed through unchanged.
  */
 import { describe, expect, it } from "vitest";
 
 import {
-  INT_BIND_METHOD_TAG,
-  bindIntSamples,
-  boundIntSamples,
-  type IntBindRequest,
-  type IntBindResult,
-} from "../props-hb-int-bind.js";
+  SACK_TTT_BIND_METHOD_TAG,
+  bindSackTttSamples,
+  boundSackTttSamples,
+  type SackTttBindRequest,
+  type SackTttBindResult,
+} from "../props-hb-sack-ttt-bind.js";
 import type { CovariateRow } from "../covariate-bus.js";
 
 function ngsRow(o: Partial<CovariateRow>): CovariateRow {
@@ -35,12 +33,12 @@ function ngsRow(o: Partial<CovariateRow>): CovariateRow {
     season: 2024,
     week: 1,
     statType: "passing",
-    avgSeparation: null,
-    avgCushion: null,
-    airYardsShare: null,
     avgTimeToThrow: 2.6,
     aggressiveness: 19.2,
     avgIntendedAirYards: 8.4,
+    avgSeparation: null,
+    avgCushion: null,
+    airYardsShare: null,
     avgCompletedAirYards: null,
     avgAirYardsDifferential: null,
     pctAttemptsGte8Defenders: null,
@@ -52,70 +50,58 @@ function ngsRow(o: Partial<CovariateRow>): CovariateRow {
   };
 }
 
-function req(o: Partial<IntBindRequest>): IntBindRequest {
+function req(o: Partial<SackTttBindRequest>): SackTttBindRequest {
   return {
     gsisId: "00-0030501-2",
     season: 2024,
     kickoffWeek: 3,
-    int: { attempts: 35, ints: 1 },
+    sack: { dropbacks: 35, sacks: 2 },
     ...o,
   };
 }
 
-function isDenied(r: IntBindResult): r is Extract<IntBindResult, { ok: false }> {
+function isDenied(r: SackTttBindResult): r is Extract<SackTttBindResult, { ok: false }> {
   return !r.ok;
 }
 
-describe("int bind contract", () => {
+describe("sack-ttt bind contract", () => {
   it("exposes the v1 method tag", () => {
-    expect(INT_BIND_METHOD_TAG).toBe("int_bind_v1");
+    expect(SACK_TTT_BIND_METHOD_TAG).toBe("sack_ttt_bind_v1");
   });
 
   it("priced is always false", () => {
     const rows = [ngsRow({ week: 2 })];
-    const results = bindIntSamples(rows, [req({})]);
+    const results = bindSackTttSamples(rows, [req({})]);
     expect(results[0]!.priced).toBe(false);
   });
 
-  it("binds both covariates from latest prior passing row — not week=0, not same-week", () => {
+  it("binds avgTimeToThrow from latest prior passing row — not week=0, not same-week", () => {
     const rows = [
       ngsRow({ week: 0, avgTimeToThrow: 99 }), // season aggregate — poison
-      ngsRow({ week: 2, avgTimeToThrow: 2.3, aggressiveness: 18.5 }),
-      ngsRow({ week: 3, avgTimeToThrow: 5.0, aggressiveness: 25.0 }), // same-week — ignored
+      ngsRow({ week: 2, avgTimeToThrow: 2.3 }),
+      ngsRow({ week: 3, avgTimeToThrow: 5.0 }), // same-week — ignored
     ];
-    const results = bindIntSamples(rows, [req({ kickoffWeek: 3 })]);
+    const results = bindSackTttSamples(rows, [req({ kickoffWeek: 3 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(true);
     if (!results[0]!.ok) throw new Error("expected ok");
     expect(results[0]!.sample.avgTimeToThrow.value).toBe(2.3); // not 99, not 5.0
-    expect(results[0]!.sample.aggressiveness.value).toBe(18.5); // not 25.0
     expect(results[0]!.sample.avgTimeToThrow.grain).toBe("week_t_for_tplus1");
     expect(results[0]!.sample.avgTimeToThrow.provenance).toBe("weekly_ngs_mean");
-    expect(results[0]!.sample.aggressiveness.grain).toBe("week_t_for_tplus1");
-    expect(results[0]!.sample.aggressiveness.provenance).toBe("weekly_ngs_mean");
   });
 
   it("FAILS CLOSED: no prior per-game row → sample dropped", () => {
     const rows = [ngsRow({ week: 0 })]; // only aggregate
-    const results = bindIntSamples(rows, [req({ kickoffWeek: 1 })]);
+    const results = bindSackTttSamples(rows, [req({ kickoffWeek: 1 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
-    // The caller never sees an invention:
-    expect(boundIntSamples(rows, [req({ kickoffWeek: 1 })])).toEqual([]);
+    expect(boundSackTttSamples(rows, [req({ kickoffWeek: 1 })])).toEqual([]);
   });
 
   it("FAILS CLOSED: null avgTimeToThrow on the latest prior row → dropped", () => {
     const rows = [ngsRow({ week: 2, avgTimeToThrow: null })];
-    const results = bindIntSamples(rows, [req({ kickoffWeek: 3 })]);
-    expect(results.length).toBe(1);
-    expect(results[0]!.ok).toBe(false);
-    expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
-  });
-
-  it("FAILS CLOSED: null aggressiveness on the latest prior row → dropped", () => {
-    const rows = [ngsRow({ week: 2, aggressiveness: null })];
-    const results = bindIntSamples(rows, [req({ kickoffWeek: 3 })]);
+    const results = bindSackTttSamples(rows, [req({ kickoffWeek: 3 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
@@ -123,55 +109,55 @@ describe("int bind contract", () => {
 
   it("FAILS CLOSED: non-finite avgTimeToThrow → dropped", () => {
     const rows = [ngsRow({ week: 2, avgTimeToThrow: NaN })];
-    const results = bindIntSamples(rows, [req({ kickoffWeek: 3 })]);
+    const results = bindSackTttSamples(rows, [req({ kickoffWeek: 3 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
   });
 
-  it("FAILS CLOSED: non-finite aggressiveness → dropped", () => {
-    const rows = [ngsRow({ week: 2, aggressiveness: Infinity })];
-    const results = bindIntSamples(rows, [req({ kickoffWeek: 3 })]);
+  it("FAILS CLOSED: non-finite avgTimeToThrow Infinity → dropped", () => {
+    const rows = [ngsRow({ week: 2, avgTimeToThrow: Infinity })];
+    const results = bindSackTttSamples(rows, [req({ kickoffWeek: 3 })]);
     expect(results.length).toBe(1);
     expect(results[0]!.ok).toBe(false);
     expect(isDenied(results[0]!) ? results[0]!.refuse : "ok").toBe("no_prior_row");
   });
 
-  it("realized inputs (attempts, ints) passed through unchanged on ok", () => {
+  it("realized inputs (dropbacks, sacks) passed through unchanged on ok", () => {
     const rows = [ngsRow({ week: 2 })];
-    const results = bindIntSamples(rows, [req({ int: { attempts: 40, ints: 2 } })]);
+    const results = bindSackTttSamples(rows, [req({ sack: { dropbacks: 40, sacks: 3 } })]);
     expect(results[0]!.ok).toBe(true);
     if (!results[0]!.ok) throw new Error("expected ok");
-    expect(results[0]!.sample.attempts).toBe(40);
-    expect(results[0]!.sample.ints).toBe(2);
+    expect(results[0]!.sample.dropbacks).toBe(40);
+    expect(results[0]!.sample.sacks).toBe(3);
   });
 
   it("batch: one bad row drops, good rows bind", () => {
     const rows = [
-      ngsRow({ week: 2, avgTimeToThrow: 2.5, aggressiveness: 20.0 }),
+      ngsRow({ week: 2, avgTimeToThrow: 2.7 }),
     ];
-    const results = bindIntSamples(rows, [
-      req({ gsisId: "00-0030501-2", int: { attempts: 30, ints: 0 } }),
-      req({ gsisId: "00-9999999-2", int: { attempts: 25, ints: 1 } }), // no prior row
+    const results = bindSackTttSamples(rows, [
+      req({ gsisId: "00-0030501-2", sack: { dropbacks: 32, sacks: 1 } }),
+      req({ gsisId: "00-9999999-2", sack: { dropbacks: 28, sacks: 3 } }), // no prior row
     ]);
     expect(results.length).toBe(2);
     expect(results[0]!.ok).toBe(true);
     if (!results[0]!.ok) throw new Error("expected ok");
-    expect(results[0]!.sample.avgTimeToThrow.value).toBe(2.5);
+    expect(results[0]!.sample.avgTimeToThrow.value).toBe(2.7);
     expect(results[1]!.ok).toBe(false);
     expect(isDenied(results[1]!) ? results[1]!.refuse : "ok").toBe("no_prior_row");
   });
 
-  it("boundIntSamples returns only the ok samples", () => {
+  it("boundSackTttSamples returns only the ok samples", () => {
     const rows = [
-      ngsRow({ week: 2, avgTimeToThrow: 2.7, aggressiveness: 17.5 }),
+      ngsRow({ week: 2, avgTimeToThrow: 2.9 }),
     ];
-    const results = bindIntSamples(rows, [
+    const results = bindSackTttSamples(rows, [
       req({}),
       req({ gsisId: "00-9999999-2" }), // no prior
     ]);
-    expect(results.filter((r): r is Extract<IntBindResult, { ok: true }> => r.ok)).toHaveLength(1);
-    expect(boundIntSamples(rows, [
+    expect(results.filter((r): r is Extract<SackTttBindResult, { ok: true }> => r.ok)).toHaveLength(1);
+    expect(boundSackTttSamples(rows, [
       req({}),
       req({ gsisId: "00-9999999-2" }),
     ])).toHaveLength(1);
