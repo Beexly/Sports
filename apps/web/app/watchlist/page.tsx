@@ -15,7 +15,7 @@ import type { WatchlistEntry } from "@/lib/watchlist/types";
 export const metadata: Metadata = {
   title: "Watchlist: Follow Teams & Players",
   description:
-    "Follow a team or player. Elite members get real-time alerts when a followed pick grades — never before, only on the settled result.",
+    "Follow a team or player. Elite members get alerts when a followed pick grades — never before, only on the settled result.",
   alternates: { canonical: "/watchlist" },
 };
 
@@ -211,7 +211,7 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
         </p>
       ) : (
         <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
-          Elite members get real-time email &amp; push alerts when a followed team&apos;s or
+          Elite members get email &amp; push alerts when a followed team&apos;s or
           player&apos;s pick grades — never before it&apos;s settled.{" "}
           <Link href="/pricing" className="text-ultraviolet-glow underline-offset-4 hover:underline">
             See Elite →

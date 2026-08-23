@@ -3,8 +3,8 @@
 import { usePushSubscription } from "@/lib/push/use-push-subscription";
 
 /**
- * Elite real-time push alert opt-in — a small, static (no motion/animation)
- * control backing the "real-time email & push alerts" feature (CLAUDE.md's
+ * Elite push alert opt-in — a small, static (no motion/animation)
+ * control backing the "email & push alerts when a pick grades" feature (CLAUDE.md's
  * tier table). Every state is honest: it never claims "subscribed" unless
  * the server actually confirmed the subscription, and it never hides an
  * unsupported-browser or permission-denied state behind a generic message
@@ -37,7 +37,7 @@ export function PushAlertOptIn(): JSX.Element | null {
     return (
       <p role="status" className="text-sm text-ion-3">
         Notifications are blocked for this site. Enable them in your browser
-        settings to get real-time push alerts.
+        settings to get push alerts when your followed picks grade.
       </p>
     );
   }
