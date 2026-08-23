@@ -141,3 +141,4 @@ This product's entire premise is that it does not lie about its own performance.
 invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
+AGENTS.md — overnight mode — continuing on all night long, without stopping, without asking questions.

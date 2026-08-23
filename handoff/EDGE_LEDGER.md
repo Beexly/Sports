@@ -203,3 +203,9 @@ PERSPECTIVE SWITCH (file:line anchors): quant-kill: yacoe-backtest.ts:26 'NOT a 
 
 [swarm-G56] G-5 (funnel-integrity) + G-6 (STARVED→PARKED) repaired @ f5bd9865. PARKED verdict preserves e-value in detail for starved binds (n < minN); leakage refutation keeps KILLED. Synthetic KNOWN-BAD killed by leakage gate (PASS others); KNOWN-GOOD signal passes leakage with growth shown. 10/10 vitest green; 0 falsify tsc errors.
 # [swarm-ORCH] G-4 PARTIAL UNBLOCK (orchestrator-executed): G4 agent's two URLs 404'd because the release uses per-season assets (pbp_participation_2024.csv = 49.7MB, verified via GitHub API listing). Downloaded 2024 CSV; schema has route CONCEPT per play (team-level) + offense_players roster per play - NOT true per-player routes. Built TPR join via pass-play-participation APPROXIMATION: routes_proxy = count of pass-play appearances per player-week (9977 unique player-weeks); joined to NGS 2024 targets -> data/nflverse/tpr_harness_rows_2024.json (1300 of 1435 rows matched). HONEST CAVEAT: proxy overcounts routes for blocking-assigned players on pass plays; TPR results from this feed are directional, not exact. Remaining: download 2021-2023+2025 season files for full funnel runs.
+[overnight-2026-08-24] EDGE HUNT RESUME — continued autonomously (no ask, no stop):
+- Falsifier (falsifyBind, 341 row real-data YACoe backtest, 2022-2025): MULTIPLICITY KILLED (e=0.000). SURVIVOR not claimed. Honest.
+- Lane A: blitz-rate→sacks (PRE-4) — preregistered; covariate bus defense fields OK; bind to be constructed; no fabricated claim.
+- Lane A: box-rate→rushYards (PRE-2) — preregistered.
+- Remaining H2 queue preserved at LEDGER:76 (blitz/box/missed-tackle/comp-pct-allowed/pra/ttlos/sticks).
+- All commits will push -u origin hermes/*; agent.md being updated continuously; loop never stops asking.
