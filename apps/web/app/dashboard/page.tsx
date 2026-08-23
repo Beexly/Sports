@@ -286,7 +286,7 @@ export default async function DashboardPage({
                 Confidence scores, the full factor trail, and line movement are now live on
                 every pick.
                 {entitlements.tier === "ELITE"
-                  ? " Real-time email and push alerts are included with Elite."
+                  ? " Email and push alerts on your followed picks — delivered when they grade — are included with Elite."
                   : ""}
               </p>
               <Link
