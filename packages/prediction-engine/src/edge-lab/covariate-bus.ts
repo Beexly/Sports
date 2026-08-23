@@ -78,6 +78,8 @@ export interface CovariateRow {
   readonly tflRate: number | null;
   /** Weekly PFR mean: pass deflections (PD) rate per target faced. H1 Edge #3. */
   readonly pdRate: number | null;
+  /** Weekly PFR mean: INT rate per target faced. H2 Edge. */
+  readonly intRate: number | null;
   // ── receiving vendor y-axis (NEVER exposed as p) ──────────────────────────
   /** NFL NGS proprietary xYAC. Y-axis only — the bus never emits this as a covariate. */
   readonly avgExpectedYac: number | null;
@@ -105,7 +107,8 @@ export type CovariateField =
   | "pressureRate"
   | "snapShare"
   | "tflRate"
-  | "pdRate";
+  | "pdRate"
+  | "intRate";
 
 /** Grain + provenance tag so callers never mistake a weekly mean for a
  * single-frame measurement. Honest header on every emitted cell. */

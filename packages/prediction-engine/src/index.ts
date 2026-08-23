@@ -1697,16 +1697,12 @@ export {
 } from "./edge-lab/props-hb-comp.js";
 export type { CompSample } from "./edge-lab/props-hb-comp.js";
 
-// INTs | attempts. Rare counts on the same exposure. Poisson fallback when no φ.
+// H2 Edge — Interceptions | attempts. Beta-Binomial over attempts.
 export {
   INT_HB_METHOD_TAG,
-  fitIntPerAttemptPrior,
-  pooledIntPerAttempt,
-  intProbZeroPoisson,
-  posteriorIntPerAttempt,
-  intProbZero,
-  probIntGivenAttempts,
-  probInt,
+  fitIntPrior,
+  intPosterior,
+  probOverInt,
 } from "./edge-lab/props-hb-int.js";
 export type { IntSample } from "./edge-lab/props-hb-int.js";
 
@@ -1759,12 +1755,11 @@ export type {
 } from "./edge-lab/props-hb-tfl-bind.js";
 
 // H1 Edge #3 — Pass Deflections (PD). Books rarely price PD directly;
-// when they do, they miss the target-adjusted rate. Beta-Binomial over targets.
+// when they do, they miss the target-adjusted rate. Gamma-Poisson over games.
 export {
   PD_HB_METHOD_TAG,
   fitPdPrior,
   posteriorPd,
-  betaBinomialProbOverPd,
   probOverPd,
   scorePdOver,
 } from "./edge-lab/props-hb-pd.js";

@@ -45,6 +45,7 @@ function defRow(o: Partial<CovariateRow>): CovariateRow {
     avgTimeToLos: null,
     avgYac: null,
     pressureRate: null,
+    intRate: null,
     avgExpectedYac: null,
     expectedRushYards: null,
     ...o,
