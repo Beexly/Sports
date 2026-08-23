@@ -1694,6 +1694,28 @@ export {
 } from "./edge-lab/props-hb-sacks.js";
 export type { SackSample } from "./edge-lab/props-hb-sacks.js";
 
+// H1 Edge #2 — TFL (tackles for loss). Mispriced as a sack prop.
+// Beta-Binomial over defensive snaps.
+export {
+  TFL_HB_METHOD_TAG,
+  fitTflPrior,
+  posteriorTfl,
+  betaBinomialProbOverTfl,
+} from "./edge-lab/props-hb-tfl.js";
+export type { TflSample } from "./edge-lab/props-hb-tfl.js";
+
+// TFL covariate bind: PFR weekly TFL rate → TflSample.
+export {
+  TFL_BIND_METHOD_TAG,
+  bindTflSamples,
+  boundTflSamples,
+} from "./edge-lab/props-hb-tfl-bind.js";
+export type {
+  TflBindRequest,
+  TflBindResult,
+  BoundTflSample,
+} from "./edge-lab/props-hb-tfl-bind.js";
+
 // H1 Edge #4 — Defensive snap share %. PFR defensive snap count → share,
 // role signal priced implicitly via volume props. Gamma-Poisson posterior.
 export {

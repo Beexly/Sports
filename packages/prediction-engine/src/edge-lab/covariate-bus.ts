@@ -74,6 +74,8 @@ export interface CovariateRow {
   readonly pressureRate: number | null;
   /** Weekly PFR defensive snap share: fraction of team defensive snaps the player appeared in. H1 Edge #4. */
   readonly snapShare: number | null;
+  /** Weekly PFR mean: TFL (tackles for loss) rate per defensive game. H1 Edge #2. */
+  readonly tflRate: number | null;
   // ── receiving vendor y-axis (NEVER exposed as p) ──────────────────────────
   /** NFL NGS proprietary xYAC. Y-axis only — the bus never emits this as a covariate. */
   readonly avgExpectedYac: number | null;
@@ -98,7 +100,9 @@ export type CovariateField =
   | "pctAttemptsGte8Defenders"
   | "avgTimeToLos"
   | "avgYac"
-  | "pressureRate";
+  | "pressureRate"
+  | "snapShare"
+  | "tflRate";
 
 /** Grain + provenance tag so callers never mistake a weekly mean for a
  * single-frame measurement. Honest header on every emitted cell. */

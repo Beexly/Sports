@@ -27,6 +27,7 @@ function rx(o: Partial<CovariateRow>): CovariateRow {
     avgYac: 4.3,
     pressureRate: 0.18,
     snapShare: 0.62,
+    tflRate: 0.18,
     avgExpectedYac: null,
     expectedRushYards: null,
     ...o,
