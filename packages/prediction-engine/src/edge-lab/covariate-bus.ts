@@ -72,6 +72,8 @@ export interface CovariateRow {
   // ── defense (PFR advstats def) ──────────────────────────────────────────────
   /** Weekly PFR mean: pressures (hurries + hits + sacks) per dropback faced. H1 Edge #1. */
   readonly pressureRate: number | null;
+  /** Weekly PFR defensive snap share: fraction of team defensive snaps the player appeared in. H1 Edge #4. */
+  readonly snapShare: number | null;
   // ── receiving vendor y-axis (NEVER exposed as p) ──────────────────────────
   /** NFL NGS proprietary xYAC. Y-axis only — the bus never emits this as a covariate. */
   readonly avgExpectedYac: number | null;

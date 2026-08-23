@@ -1694,6 +1694,28 @@ export {
 } from "./edge-lab/props-hb-sacks.js";
 export type { SackSample } from "./edge-lab/props-hb-sacks.js";
 
+// H1 Edge #4 — Defensive snap share %. PFR defensive snap count → share,
+// role signal priced implicitly via volume props. Gamma-Poisson posterior.
+export {
+  DEF_SNAP_SHARE_HB_METHOD_TAG,
+  fitDefSnapSharePrior,
+  posteriorDefSnapShare,
+  probOverDefSnapShare,
+} from "./edge-lab/props-hb-def-snap-share.js";
+export type { DefSnapShareSample } from "./edge-lab/props-hb-def-snap-share.js";
+
+// Defensive snap-share covariate bind: PFR weekly snap share → DefSnapShareSample.
+export {
+  DEF_SNAP_SHARE_BIND_METHOD_TAG,
+  bindSnapShareSamples,
+  boundSnapShareSamples,
+} from "./edge-lab/props-hb-def-snap-share-bind.js";
+export type {
+  SnapShareBindRequest,
+  SnapShareBindResult,
+  BoundDefSnapShareSample,
+} from "./edge-lab/props-hb-def-snap-share-bind.js";
+
 // H1 Edge #1 — QB Pressures (hurries + hits + sacks). Books price sacks only;
 // pressures capture QB disruption (~5% edge). PFR advstats def side.
 export {

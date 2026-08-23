@@ -45,6 +45,7 @@ function ngsRow(o: Partial<CovariateRow>): CovariateRow {
     avgTimeToLos: null,
     avgYac: null,
     pressureRate: null,
+    snapShare: null,
     avgExpectedYac: null,
     expectedRushYards: null,
     ...o,
