@@ -80,6 +80,11 @@ export interface CovariateRow {
   // ── yac (receiving, covariate) ─────────────────────────────────────────────
   /** Average yards-after-catch per reception (weekly NGS mean). NOT per-target arrival YAC. */
   readonly avgYac: number | null;
+  /**
+   * Weekly NGS mean: yards-after-catch above expectation per reception. H2 Edge — rec TDs.
+   * Optional so existing CovariateRow literals remain valid; absent = unknown (binds fail closed).
+   */
+  readonly yacAboveExpected?: number | null;
   // ── defense (PFR advstats def) ──────────────────────────────────────────────
   /** Weekly PFR mean: pressures (hurries + hits + sacks) per dropback faced. H1 Edge #1. */
   readonly pressureRate: number | null;
@@ -128,6 +133,7 @@ export type CovariateField =
   | "pctAttemptsGte8Defenders"
   | "avgTimeToLos"
   | "avgYac"
+  | "yacAboveExpected"
   | "pressureRate"
   | "snapShare"
   | "tflRate"
@@ -204,8 +210,8 @@ export function nextGameCovariate(
 ): CovariateCell | null {
   const row = latestPriorRow(rows, gsisId, season, statType, kickoffWeek);
   if (row === null) return null; // no history before kickoff — fail closed
-  const raw = row[field];
-  if (raw === null || !Number.isFinite(raw)) return null;
+  const raw: number | null | undefined = row[field];
+  if (raw === null || raw === undefined || !Number.isFinite(raw)) return null;
   return { value: raw, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
 }
 
