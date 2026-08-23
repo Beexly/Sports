@@ -1588,6 +1588,46 @@ export type {
   BoundRushSample,
 } from "./edge-lab/props-hb-rush-yards-bind.js";
 
+// Kickoff return yards | returns (Gamma-Poisson). Books price return TDs only —
+// return YARDS are the uncovered edge. See H1 Edge #5 — Tier 1 Special Teams.
+export {
+  KICKOFF_RETURN_YARDS_METHOD_TAG,
+  fitKickoffReturnYardsPrior,
+  fitKickoffReturnAttemptsPrior,
+  posteriorKickoffReturnYards,
+  posteriorKickoffReturnAttempts,
+  probOverKickoffReturnYardsGivenReturns,
+  probOverKickoffReturnYards,
+  probOverKickoffReturnAttempts,
+} from "./edge-lab/kickoff-return-yards.js";
+export type {
+  KickoffReturnSample,
+  KickoffReturnAttemptsSample,
+} from "./edge-lab/kickoff-return-yards.js";
+
+// Kickoff return-yards game-script covariate bind (pre-game win probability).
+// Game-script WP asymmetry: high-WP teams return more conservatively, low-WP
+// teams more aggressively. Same-week pre-game spread is leak-safe (known at
+// kickoff). Fail-closed — never imputes 0.5. priced:false.
+export {
+  KICKOFF_RETURN_YARDS_BIND_METHOD_TAG,
+  DEFAULT_KICKOFF_SCRIPT_ELASTICITY,
+  bindKickoffReturnYardsSamples,
+  boundKickoffReturnYardsSamples,
+  winProbForKickoff,
+  scriptAdjustedPosterior,
+  scriptProbOverKickoffReturnYards,
+} from "./edge-lab/kickoff-return-yards-bind.js";
+export type {
+  GameScriptRow,
+  GameScriptCell,
+  GameScriptGrain,
+  GameScriptProvenance,
+  KickoffReturnYardsBindRequest,
+  KickoffReturnYardsBindResult,
+  BoundKickoffReturnSample,
+} from "./edge-lab/kickoff-return-yards-bind.js";
+
 // INT bind: couples the covariate bus (avgTimeToThrow + aggressiveness) to the
 // interceptions | attempts model. Fail-closed on null — never invents risk.
 // Honest weekly-mean grain forwarded verbatim. priced:false.
@@ -1715,6 +1755,28 @@ export type {
   TflBindResult,
   BoundTflSample,
 } from "./edge-lab/props-hb-tfl-bind.js";
+
+// H1 Edge #3 — Pass Deflections (PD). Books rarely price PD directly;
+// when they do, they miss the target-adjusted rate. Beta-Binomial over targets.
+export {
+  PD_HB_METHOD_TAG,
+  fitPdPrior,
+  posteriorPd,
+  betaBinomialProbOverPd,
+} from "./edge-lab/props-hb-pd.js";
+export type { PdSample } from "./edge-lab/props-hb-pd.js";
+
+// PD covariate bind: PFR weekly PD rate → PdSample.
+export {
+  PD_BIND_METHOD_TAG,
+  bindPdSamples,
+  boundPdSamples,
+} from "./edge-lab/props-hb-pd-bind.js";
+export type {
+  PdBindRequest,
+  PdBindResult,
+  BoundPdSample,
+} from "./edge-lab/props-hb-pd-bind.js";
 
 // H1 Edge #4 — Defensive snap share %. PFR defensive snap count → share,
 // role signal priced implicitly via volume props. Gamma-Poisson posterior.

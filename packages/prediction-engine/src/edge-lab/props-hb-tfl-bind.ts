@@ -22,7 +22,7 @@ import {
 } from "./covariate-bus.js";
 import type { TflSample } from "./props-hb-tfl.js";
 
-export const TFL_BIND_METHOD_TAG = "tfl_rate_bind_v1" as const;
+export const TFL_RATE_BIND_METHOD_TAG = "tfl_rate_bind_v1" as const;
 
 export interface TflBindRequest {
   readonly gsisId: string;
@@ -59,20 +59,20 @@ export function bindTflSamples(
   for (const req of requests) {
     const row = latestPriorRow(rows, req.gsisId, req.season, "defense", req.kickoffWeek);
     if (row === null) {
-      out.push({ ok: false, methodTag: TFL_BIND_METHOD_TAG, priced: false, refuse: "no_prior_row" });
+      out.push({ ok: false, methodTag: TFL_RATE_BIND_METHOD_TAG, priced: false, refuse: "no_prior_row" });
       continue;
     }
 
-    // Read tflRate directly from the prior row; fail-closed on null/non-finite.
+    // Read tflRate directly from the single prior row; fail-closed on null/non-finite.
     const rate = row.tflRate;
     if (rate === null || !Number.isFinite(rate)) {
-      out.push({ ok: false, methodTag: TFL_BIND_METHOD_TAG, priced: false, refuse: "no_prior_row" });
+      out.push({ ok: false, methodTag: TFL_RATE_BIND_METHOD_TAG, priced: false, refuse: "no_prior_row" });
       continue;
     }
 
     out.push({
       ok: true,
-      methodTag: TFL_BIND_METHOD_TAG,
+      methodTag: TFL_RATE_BIND_METHOD_TAG,
       priced: false,
       sample: { snaps: req.tfl.snaps, tfl: req.tfl.tfl, tflRate: { ...BUS_CELL, value: rate } },
     });
