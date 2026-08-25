@@ -85,11 +85,19 @@ export async function GET(req: Request): Promise<NextResponse> {
         id: p.id,
         sport: p.game?.sport?.key ?? null,
         market: p.pickType,
+        // Field gate: pModel is confidence/100 and rankingP is the model's
+        // ranking probability — both PRO-gated ("Free — 2 picks/day teaser, NO
+        // confidence scores"). A free-scope key gets null even on the FREE-tier
+        // rows the row filter above lets it see, mirroring
+        // app/api/picks/route.ts. Keys are kept and set to null rather than
+        // dropped: this is a published response shape and existing consumers
+        // read `.pModel` / `.rankingP` directly. `_sort` below is computed from
+        // the underlying values, so ordering is unaffected by this shaping.
         pModel:
-          typeof p.confidence === "number"
+          scope === "premium" && typeof p.confidence === "number"
             ? Math.min(1, Math.max(0, p.confidence / 100))
             : null,
-        rankingP,
+        rankingP: scope === "premium" ? rankingP : null,
         rankingSource,
         marketFairProb,
         modelVersion: p.modelVersion,
