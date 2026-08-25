@@ -2,7 +2,13 @@
  * Founder / ops: enable durable RANKING_PAUSE_APPLY without Vercel env redeploy.
  *
  * POST { enabled: true|false, groups?: string[] }
- * Auth: Bearer CRON_SECRET or x-vercel-cron (same dual auth as other ops).
+ *
+ * Auth: Bearer CRON_SECRET ONLY. `cronAuthError(request)` with no options
+ * resolves to mode "bearer_only" (GSE-SEC-016), so the spoofable `x-vercel-cron`
+ * header does NOT authorize here — and must never be allowed to: this POST
+ * mutates durable ranking-pause state, and lib/cron/authorize.ts reserves the
+ * "dual" mode for read-only health probes. Do not add `{ mode: "dual" }` here.
+ * (This header previously described dual auth; the code has never granted it.)
  *
  * Does NOT flip PERFORMANCE_STATS / maps / PROVEN.
  */
