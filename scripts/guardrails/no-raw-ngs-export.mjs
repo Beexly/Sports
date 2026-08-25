@@ -9,8 +9,15 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const ROOT = resolve(process.cwd());
+// Minimum-coverage floor. Observed on origin/main @ bb0e7dfc0 (2026-08-25):
+// this guard scans 1736 files. Set at roughly half — well below refactor churn,
+// well above what survives a SCAN_TARGETS root disappearing. See
+// min-scan-floor.mjs: without it, the `catch { continue }` in main() turns a
+// renamed root into "scanned 0 file(s), OK, exit 0".
+const MIN_SCANNED_FILES = 850;
 const SCAN_TARGETS = [
   "apps/web/app",
   "apps/web/components",
@@ -98,6 +105,14 @@ async function main() {
       text.split(/\r?\n/).forEach((line, index) => hits.push(...scanLine(line, relPath, index + 1)));
     }
   }
+
+  assertScanFloor({
+    guard: "no-raw-ngs-export",
+    root: ROOT,
+    roots: SCAN_TARGETS,
+    scanned,
+    floor: MIN_SCANNED_FILES,
+  });
 
   if (hits.length === 0) {
     console.log(`[no-raw-ngs-export] OK - scanned ${scanned} file(s); no raw NGS/export claims.`);
