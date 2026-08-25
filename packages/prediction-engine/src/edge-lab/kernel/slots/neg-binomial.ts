@@ -89,6 +89,20 @@ const NEAR_POISSON_R = 1e6;
 const CDF_SATURATION_TOL = 1e-15;
 
 /**
+ * The other saturation trigger is the NUMERICAL fixed point: a tail term too
+ * small to move the running sum at all (`next === previous`, which includes an
+ * underflowed `term === 0`). Because NB tail terms decrease monotonically past
+ * the mode, no later term can move it either. Summing thousands of terms
+ * accumulates ~1e-14 of rounding, so the running total typically stalls a few
+ * ulp BELOW 1 and the `1 − 1e-15` trigger alone would never fire.
+ *
+ * A stall is only accepted as "all the mass is in" when the total is already
+ * within this tolerance of 1. Stalling further away means the tail genuinely
+ * has not been accounted for, and that is a NO_CONVERGENCE error, not a result.
+ */
+const CDF_STALL_TOL = 1e-9;
+
+/**
  * Hard ceiling on the cumulative table. A negative binomial whose mass has not
  * closed within five million integer steps is outside anything this engine
  * prices (that would be a mean in the millions), and silently truncating it
@@ -272,11 +286,27 @@ export const makeNegBinomial: MakeNegBinomialFn = (
     const term = pmfAt(index);
     const next = previous + term;
     cumulative.push(next);
-    // Two saturation triggers: unit mass reached to double precision, or the
-    // tail has underflowed to exactly zero past the bulk (which happens for
-    // small p long before the running sum can round up to 1).
-    if (next >= 1 - CDF_SATURATION_TOL || (term === 0 && next > 0.5)) {
+
+    // Saturation trigger 1: unit mass reached to double precision.
+    // Saturation trigger 2: the numerical fixed point described on
+    // `CDF_STALL_TOL` — the sum can no longer move, and it stalled close enough
+    // to 1 that the unaccounted tail is below 1e-9.
+    const stalled = next === previous;
+    if (next >= 1 - CDF_SATURATION_TOL || (stalled && next >= 1 - CDF_STALL_TOL)) {
+      // PINNED TO EXACTLY 1. The shortfall here is at most 1e-9 (in practice a
+      // few ulp of accumulated rounding), and a cdf must reach 1 at the top of
+      // its support for `quantile(1)` to be well defined. Pinning moves the
+      // value by less than the 1e-7 pmf/cdf-consistency tolerance the
+      // conformance suite enforces, so it cannot mask a real defect.
+      cumulative[index] = 1;
       saturated = true;
+      return true;
+    }
+    if (stalled) {
+      throw new KernelError(
+        "NO_CONVERGENCE",
+        `negative binomial cdf stalled at ${next} before accumulating unit mass (r=${r}, p=${p})`,
+      );
     }
     return true;
   }
