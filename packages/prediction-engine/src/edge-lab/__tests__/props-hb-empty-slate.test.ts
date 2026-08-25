@@ -49,7 +49,7 @@ import { describe, expect, it } from "vitest";
 import { fitGroupPrior, type GammaPrior, type RateSample } from "../props-hb.js";
 import { fitAirYacPriors, type AirYacSample } from "../props-hb-air-yac.js";
 import { fitCompletionPrior, type CompSample } from "../props-hb-comp.js";
-import { fitIntPerAttemptPrior, type IntSample } from "../props-hb-int.js";
+import { fitIntPrior, type IntSample } from "../props-hb-int.js";
 import { fitPassTdPerAttemptPrior, type PassTdSample } from "../props-hb-pass-td.js";
 import { fitSackPrior, type SackSample } from "../props-hb-sacks.js";
 import type { BetaPrior } from "../props-hb-catch.js";
@@ -278,56 +278,98 @@ describe("EV14 · fitCompletionPrior — empty slate and degenerate dispersion",
   });
 });
 
-// ── family 4: props-hb-int.ts · fitIntPerAttemptPrior ──────────────────────
+// ── family 4: props-hb-int.ts · fitIntPrior ────────────────────────────────
+//
+// RE-POINTED at the #597/#598 merge, not rewritten in spirit. This block was
+// authored against `fitIntPerAttemptPrior` — a Gamma-Poisson prior on INTs per
+// attempt. The other branch replaced the INT family's model with a
+// Beta-Binomial over attempts (INT ≤ attempts is a bounded outcome, so the
+// binomial form is the right one) and deleted that export. Each branch
+// typechecked alone; only the merge saw a test importing a symbol the other
+// branch had removed.
+//
+// The CONTRACT pinned here is model-agnostic — an empty slate and a degenerate
+// spread must return null, never a fabricated prior — so the block is
+// re-pointed at `fitIntPrior` rather than dropped. Every expectation below was
+// MEASURED against the new implementation before being written down; none was
+// carried over on faith from the Gamma form. The one Gamma-specific assertion
+// (hand-derived alpha = 3.6 / beta = 60) is replaced by the property that
+// actually holds for the Beta fit and carries the same meaning: the fit is
+// mean-preserving, so its implied rate must land on the pooled INT rate.
 
-describe("EV14 · fitIntPerAttemptPrior — empty slate and degenerate dispersion", () => {
+describe("EV14 · fitIntPrior — empty slate and degenerate dispersion", () => {
   it("returns null for an empty slate", () => {
     const emptySlate: readonly IntSample[] = [];
-    pinEmptySlate(emptySlate, fitIntPerAttemptPrior);
+    pinEmptySlate(emptySlate, fitIntPrior);
   });
 
-  it("returns null for 8 passers at an IDENTICAL INT-per-attempt rate", () => {
-    // 1 INT on 30 attempts ⇒ 1/30 for every passer; zero between-player
-    // variance, so there is no extra-Poisson dispersion to fit. Callers fall
-    // back to the pooled mean via intProbZeroPoisson, per the module header.
+  it("returns null for 8 defenders at an IDENTICAL INT-per-attempt rate", () => {
+    // 1 INT on 30 attempts ⇒ 1/30 for every defender; zero between-player
+    // variance, so there is no extra-binomial dispersion to fit. Callers fall
+    // back to the pooled rate with no shrinkage.
     const identical = repeat(8, { attempts: 30, ints: 1 });
     expect(identical).toHaveLength(8);
-    expect(fitIntPerAttemptPrior(identical)).toBeNull();
+    expect(fitIntPrior(identical)).toBeNull();
   });
 
-  it("returns null for a single-passer slate", () => {
-    expect(fitIntPerAttemptPrior([{ attempts: 30, ints: 1 }])).toBeNull();
+  it("returns null for a single-defender slate", () => {
+    expect(fitIntPrior([{ attempts: 30, ints: 1 }])).toBeNull();
   });
 
   it("returns null for a slate with zero interceptions anywhere", () => {
-    expect(fitIntPerAttemptPrior(repeat(4, { attempts: 30, ints: 0 }))).toBeNull();
+    expect(fitIntPrior(repeat(4, { attempts: 30, ints: 0 }))).toBeNull();
   });
 
   it("DOES fit a real prior on a dispersed slate — proving null is a live branch", () => {
-    // Four passers, 100 attempts each, INT rates 0.02 / 0.10 / 0.02 / 0.10:
-    //   m           = 24 / 400 = 0.06
-    //   var(rate_i) = mean(0.04², 0.04², 0.04², 0.04²) = 0.0016
-    //   samplingVar = mean(0.02/100, 0.10/100, 0.02/100, 0.10/100) = 0.0006
-    //   v_between   = 0.0016 - 0.0006 = 0.001
-    //   alpha       = 0.06² / 0.001 = 3.6
-    //   beta        = 0.06  / 0.001 = 60
+    // Four defenders, 100 attempts each, INT rates 0.02 / 0.10 / 0.02 / 0.10.
+    // Pooled rate m = 24 / 400 = 0.06. The method-of-moments Beta fit matches
+    // the pooled mean by construction, so alpha/(alpha+beta) must be exactly m
+    // — an invariant of the estimator, not a transcribed constant.
     const dispersed: readonly IntSample[] = [
       { attempts: 100, ints: 2 },
       { attempts: 100, ints: 10 },
       { attempts: 100, ints: 2 },
       { attempts: 100, ints: 10 },
     ];
-    const prior = fitIntPerAttemptPrior(dispersed);
+    const prior = fitIntPrior(dispersed);
     expect(prior).not.toBeNull();
-    const fitted = prior as GammaPrior;
-    expect(fitted.alpha).toBeCloseTo(3.6, PRECISION);
-    expect(fitted.beta).toBeCloseTo(60, PRECISION);
-    expect(fitted.alpha / fitted.beta).toBeCloseTo(0.06, PRECISION);
+    const fitted = prior as BetaPrior;
+    expect(fitted.alpha).toBeGreaterThan(0);
+    expect(fitted.beta).toBeGreaterThan(0);
+    expect(Number.isFinite(fitted.alpha)).toBe(true);
+    expect(Number.isFinite(fitted.beta)).toBe(true);
+    expect(fitted.alpha / (fitted.alpha + fitted.beta)).toBeCloseTo(0.06, PRECISION);
   });
 
-  it("throws rather than imputing on a zero-attempt or NaN row", () => {
-    expect(() => fitIntPerAttemptPrior([{ attempts: 0, ints: 0 }])).toThrow(RangeError);
-    expect(() => fitIntPerAttemptPrior([{ attempts: 30, ints: Number.NaN }])).toThrow(RangeError);
+  it("refuses rather than imputing on a poisoned (non-finite) row", () => {
+    expect(() => fitIntPrior([{ attempts: 30, ints: Number.NaN }])).toThrow(RangeError);
+    expect(() => fitIntPrior([{ attempts: Number.NaN, ints: 1 }])).toThrow(RangeError);
+    expect(() => fitIntPrior([{ attempts: Number.POSITIVE_INFINITY, ints: 1 }])).toThrow(
+      RangeError,
+    );
+  });
+
+  it("refuses a poisoned row even when the surviving rows would happily fit", () => {
+    // The hazard a single-poisoned-row test cannot catch, and the reason the
+    // guard lives in fitIntPrior rather than in its delegate: a predicate
+    // filter (`attempts > 0 && ints >= 0`) is FALSE for NaN, so the bad row is
+    // silently discarded and a clean-looking prior is still returned from the
+    // survivors — a reported result over data that was quietly thrown away.
+    expect(() =>
+      fitIntPrior([
+        { attempts: 100, ints: 2 },
+        { attempts: 100, ints: 10 },
+        { attempts: 30, ints: Number.NaN },
+      ]),
+    ).toThrow(RangeError);
+  });
+
+  it("drops a zero-opportunity row without refusing it — no targets faced is not corrupt data", () => {
+    // Deliberately NOT the RangeError path above. `attempts === 0` is an honest
+    // observation (healthy scratch, no targets faced), so it is filtered out;
+    // a slate of only such rows is "no data" ⇒ null, never a fabricated prior.
+    expect(fitIntPrior([{ attempts: 0, ints: 0 }])).toBeNull();
+    expect(fitIntPrior(repeat(3, { attempts: 0, ints: 0 }))).toBeNull();
   });
 });
 
@@ -452,7 +494,7 @@ describe("EV14 · cross-family empty-slate sweep", () => {
     { name: "fitGroupPrior", call: () => fitGroupPrior([]) },
     { name: "fitAirYacPriors", call: () => fitAirYacPriors([]) },
     { name: "fitCompletionPrior", call: () => fitCompletionPrior([]) },
-    { name: "fitIntPerAttemptPrior", call: () => fitIntPerAttemptPrior([]) },
+    { name: "fitIntPrior", call: () => fitIntPrior([]) },
     { name: "fitPassTdPerAttemptPrior", call: () => fitPassTdPerAttemptPrior([]) },
     { name: "fitSackPrior", call: () => fitSackPrior([]) },
   ];
@@ -462,7 +504,7 @@ describe("EV14 · cross-family empty-slate sweep", () => {
       "fitGroupPrior",
       "fitAirYacPriors",
       "fitCompletionPrior",
-      "fitIntPerAttemptPrior",
+      "fitIntPrior",
       "fitPassTdPerAttemptPrior",
       "fitSackPrior",
     ]);

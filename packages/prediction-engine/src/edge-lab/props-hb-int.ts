@@ -57,8 +57,27 @@ function toCatch(s: IntSample): CatchSample {
  * Zero-attempt games are not valid samples — they have zero opportunity.
  * fitCatchPrior asserts targets > 0, so filter them first.
  * Also filters any sample where ints > attempts (invalid by definition).
+ *
+ * REFUSES a non-finite row rather than filtering it. There is a real
+ * difference between a row that carries no opportunity and a row that carries
+ * no meaning: `attempts === 0` is an honest observation (healthy scratch, no
+ * targets faced) and is dropped, but a NaN/Infinity `attempts` or `ints` is
+ * corrupt input — a parser miss, or a rate divided by a zero snap count. A
+ * plain `s.attempts > 0 && s.ints >= 0` predicate is false for NaN, so a
+ * filter SILENTLY DISCARDS a poisoned row and then fits a prior from the
+ * survivors, reporting a clean result over data it quietly threw away. That is
+ * imputation by omission. `fitCatchPrior` already throws RangeError on a
+ * non-finite sample; pre-filtering was reaching around that guard, so the
+ * check is restored here, where the row is still attributable.
  */
 export function fitIntPrior(samples: readonly IntSample[]): BetaPrior | null {
+  for (const s of samples) {
+    if (!Number.isFinite(s.attempts) || !Number.isFinite(s.ints)) {
+      throw new RangeError(
+        `fitIntPrior: sample must be finite (got attempts=${s.attempts}, ints=${s.ints})`,
+      );
+    }
+  }
   const valid = samples.filter(
     (s) => s.attempts > 0 && s.ints >= 0 && s.ints <= s.attempts
   );
