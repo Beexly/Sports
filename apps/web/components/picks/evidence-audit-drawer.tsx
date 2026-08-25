@@ -24,6 +24,7 @@ import type {
   AuditPayloadSummary,
 } from "@sports/types";
 import Link from "next/link";
+import { useModalFocus } from "@/lib/a11y/use-modal-focus";
 
 interface EvidenceAuditDrawerProps {
   pickId: string;
@@ -65,19 +66,6 @@ interface FragilityView {
   }[];
   readonly weakness: string;
 }
-
-/**
- * Everything inside the drawer a Tab can land on, in document order. Used to
- * wrap focus at the dialog boundary — see the focus-management effect below.
- */
-const FOCUSABLE_SELECTOR = [
-  "a[href]",
-  "button:not([disabled])",
-  "input:not([disabled])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  '[tabindex]:not([tabindex="-1"])',
-].join(",");
 
 export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps) {
   const [open, setOpen] = useState(false);
@@ -128,69 +116,23 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
   const handleClose = useCallback(() => setOpen(false), []);
 
-  // Escape to close + the full modal focus contract.
-  //
-  // aria-modal="true" already tells assistive tech the rest of the page is
-  // inert. Two things have to hold for that promise to be true for a
-  // keyboard-only user, and neither did:
-  //
-  //   TRAP    — Tab used to walk straight out of the drawer into the board
-  //             behind it, so the user was interacting with content their
-  //             screen reader insists is not there (WCAG 2.4.3).
-  //   RESTORE — on close, focus was dropped on <body>, so the next Tab
-  //             restarted at the top of the document. On a 20-card board that
-  //             is the whole page re-tabbed to get back to the pick you were
-  //             reading (WCAG 2.4.3).
+  // Trap Tab inside the drawer and hand focus back to the trigger on close.
+  // aria-modal="true" (below) tells assistive tech the board behind is inert;
+  // without this the keyboard walked straight into it. See the hook's docstring.
+  useModalFocus(open, dialogRef, closeBtnRef);
+
+  // Escape to close + body-scroll lock while the drawer is open.
   useEffect(() => {
     if (!open) return;
-
-    // Whatever had focus when the drawer opened — normally the trigger button,
-    // but not necessarily (the drawer can be opened from anywhere focus is).
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        return;
-      }
-      if (e.key !== "Tab") return;
-
-      const root = dialogRef.current;
-      if (!root) return;
-      const focusable = Array.from(
-        root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-      );
-      if (focusable.length === 0) return;
-
-      const first = focusable[0]!;
-      const last = focusable[focusable.length - 1]!;
-      const active = document.activeElement;
-      const inside = active instanceof Node && root.contains(active);
-
-      if (e.shiftKey) {
-        if (!inside || active === first) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else if (!inside || active === last) {
-        e.preventDefault();
-        first.focus();
-      }
+      if (e.key === "Escape") setOpen(false);
     };
-
     window.addEventListener("keydown", onKey);
-    // Focus the close button on open for keyboard users
-    closeBtnRef.current?.focus();
-    // Lock body scroll while drawer is open
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
-      // Hand focus back where it came from. Guarded on isConnected so a
-      // trigger that unmounted while the drawer was open (a board refresh)
-      // never throws here.
-      if (previouslyFocused?.isConnected) previouslyFocused.focus();
     };
   }, [open]);
 
