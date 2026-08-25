@@ -4,6 +4,7 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { captureError } from "@/lib/observability/sentry";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
   getCurrentMonthClaudeSpendUsd,
@@ -16,7 +17,7 @@ import {
   JOURNAL_DRAFTING_SYSTEM_PROMPT,
 } from "@/lib/journal/prompts";
 import { scanModelJournalMarkdown } from "@/lib/journal/compliance";
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims, type GroundedValue } from "@/lib/claude-api/numeric-guard";
 import type { JournalWeekData } from "@/lib/journal/week-data";
 
 /**
@@ -118,6 +119,7 @@ export async function generateModelJournalDraftMarkdown(
     });
     return result.text;
   } catch (error) {
+    if (error instanceof ModelJournalGenerationError) throw error;
     if (error instanceof ClaudeMessagesError) {
       await maybeRecordJournalUsage({
         options,
@@ -129,7 +131,22 @@ export async function generateModelJournalDraftMarkdown(
         errorKind: `HTTP_${error.status}`,
       });
     }
-    throw new ModelJournalGenerationError(error instanceof Error ? error.message : "Model Journal draft failed.");
+
+    // SECURITY (GSE-SEC-071, ported from explainPick): `ClaudeMessagesError.message`
+    // is `Claude API error: ${status} - ${await response.text()}` — the RAW upstream
+    // body. `app/api/cockpit/journal/route.ts` returns `error.message` verbatim in a
+    // 503, so re-wrapping it here forwarded request ids and account/quota detail to
+    // the caller. Admin-only, but the leak is the same shape. The status is already
+    // ledgered as `HTTP_<status>`; the full error goes to Sentry.
+    captureError(error, {
+      surface: "MODEL_JOURNAL_DRAFT",
+      upstreamStatus: error instanceof ClaudeMessagesError ? error.status : null,
+      modelName: error instanceof ClaudeMessagesError ? error.modelName : null,
+    });
+
+    throw new ModelJournalGenerationError(
+      "Model Journal drafting is temporarily unavailable. Please try again shortly.",
+    );
   }
 }
 
@@ -160,15 +177,21 @@ export function evaluateModelJournalDraftPolicy(
   // not just the narrow banned-phrase regexes. Only runs when the caller supplies
   // grounding (generation time); the length/phrase checks stay standalone.
   if (grounding) {
-    const allowed = [
-      ...extractNumericClaims(grounding.promptText).map((c) => c.value),
-      grounding.counts.settledPicks,
-      grounding.counts.wins,
-      grounding.counts.losses,
-      grounding.counts.pushes,
-      grounding.counts.publicLossAutopsies,
+    // The prompt TEXT grounds its own numbers (the guard reads each number's kind
+    // off its label); the weekly tallies are handed over as explicitly typed
+    // `count` values so a W-L record in the draft can be checked against the real
+    // wins and losses. See lib/claude-api/numeric-guard.ts.
+    //
+    // ONLY wins and losses. The old flattened list also spliced in settledPicks,
+    // pushes and publicLossAutopsies, which bought nothing — a bare integer is
+    // never extracted as a claim — while letting the draft assemble a FABRICATED
+    // record out of two unrelated tallies ("11-2" from 11 settled and 2 autopsies)
+    // and have it pass. A record may only be checked against a real record.
+    const counts: readonly GroundedValue[] = [
+      { value: grounding.counts.wins, kind: "count" },
+      { value: grounding.counts.losses, kind: "count" },
     ];
-    if (!validateNumericClaims(text, { allowed }).grounded) {
+    if (!validateNumericClaims(text, { text: grounding.promptText, values: counts }).grounded) {
       failures.push("UNGROUNDED_NUMERIC");
     }
   }
