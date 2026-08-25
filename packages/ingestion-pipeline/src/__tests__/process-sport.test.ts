@@ -131,6 +131,11 @@ vi.mock("@sports/prediction-engine", async () => {
     scoreGames: mocks.scoreGames,
     buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
     selectionIsHomeSide: actual.selectionIsHomeSide,
+    // The REAL grader and the REAL lock-selection rule, for the published-terms
+    // tests below. Those grade the row this pipeline actually wrote; a stubbed
+    // grader would only prove the stub agrees with itself.
+    selectGradingLine: actual.selectGradingLine,
+    calculatePickResult: actual.calculatePickResult,
     // Independent fair-value builders — null-safe stubs (network off in unit tests).
     isPoissonValidSport: actual.isPoissonValidSport ?? (() => false),
     poissonIndependentFairValue: vi.fn().mockReturnValue(null),
@@ -145,6 +150,7 @@ vi.mock("../source-snapshot.js", () => ({
 }));
 
 import { processSport, pickSelectionSide } from "../process-sport.js";
+import { calculatePickResult, selectGradingLine } from "@sports/prediction-engine";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
 
@@ -751,6 +757,263 @@ describe("processSport", () => {
 
       warnSpy.mockRestore();
     });
+  });
+});
+
+/**
+ * FINDING 2 — the pick the customer sees must be the pick that gets graded.
+ *
+ * Settlement grades SPREAD/TOTAL against the write-once CLV lock
+ * (`selectGradingLine` → `clvLockLine ?? line`, settle-sport.ts). The refresh
+ * cycle used to rewrite `selection`, `line`, `reasoning` and `reasoningShort`
+ * on every pass while the row was PENDING, so the published artifact walked
+ * away from the number it would be settled at:
+ *
+ *   Tue  created at consensus -3.0 → clvLockLine = -3.0, card "Chiefs -3.0"
+ *   Thu  consensus moves to -4.5   → card "Chiefs -4.5", lock still -3.0
+ *   Chiefs win by 4 → we book a WIN at -3.0; every customer who opened /picks
+ *                     after Thursday saw -4.5, which LOST.
+ *
+ * Grading at lock time is correct and is NOT changed here. What is fixed is the
+ * published artifact drifting off it. These tests run the real pipeline write
+ * path and then grade the row it produced with the real grader.
+ */
+describe("published bet terms are write-once (Finding 2 — display must equal the graded line)", () => {
+  /** The number a customer reads off a card — parsed back out of `selection`. */
+  function displayedNumber(selection: string): number {
+    const match = selection.match(/[+-]?\d+(?:\.\d+)?$/);
+    expect(match, `no number in selection "${selection}"`).toBeTruthy();
+    return Number(match![0]);
+  }
+
+  beforeEach(() => {
+    // This describe sits OUTSIDE `describe("processSport")`, so the reset in that
+    // block's beforeEach does not reach it. Reset here or call history leaks in
+    // from earlier tests and `mock.calls[0]` reads someone else's write.
+    for (const mock of Object.values(mocks)) mock.mockReset();
+
+    mocks.ingestionRunCreate.mockResolvedValue({ id: "run-1" });
+    mocks.ingestionRunUpdate.mockResolvedValue({});
+    mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 400 });
+    mocks.validateFreshness.mockReturnValue(true);
+    mocks.validateOddsFreshness.mockReturnValue(true);
+    mocks.freshGameIds.mockReturnValue(new Set());
+    mocks.normalizeGames.mockReturnValue([normalizedGame()]);
+    mocks.normalizeOdds.mockReturnValue([]);
+    mocks.sportUpsert.mockResolvedValue({ id: "sport-1" });
+    mocks.gameUpsert.mockResolvedValue({ id: "game-1" });
+    mocks.gameFindUnique.mockResolvedValue({ id: "game-1" });
+    mocks.enrichGameContext.mockResolvedValue(undefined);
+    mocks.getAtsForm.mockResolvedValue(null);
+    mocks.getHeadToHeadForm.mockResolvedValue(null);
+    mocks.pickCreate.mockResolvedValue({ id: "pick-1" });
+    mocks.oddsCreateMany.mockResolvedValue({ count: 0 });
+    mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
+    mocks.snapshotUpsert.mockResolvedValue({});
+    mocks.resolveRundownApiKey.mockReturnValue("");
+    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+    mocks.eventsBelowBookmakerThreshold.mockReturnValue([]);
+    mocks.mergeBookmakersIntoPrimary.mockImplementation((primary: unknown[]) => ({
+      events: primary,
+      filledGameIds: [],
+      unmatchedSecondary: 0,
+      skippedWellCovered: 0,
+    }));
+  });
+
+  it("a refresh never rewrites selection / line / reasoning on a PENDING pick", async () => {
+    mocks.scoreGames.mockReturnValue([scoredPick({ selection: "Chiefs -4.5", line: -4.5 })]);
+    mocks.pickFindUnique.mockResolvedValue({
+      id: "pick-1",
+      result: "PENDING",
+      selection: "Chiefs -3.0",
+    });
+    mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
+
+    await processSport(SPORT, "key", gates());
+
+    const upd = mocks.pickUpdateMany.mock.calls[0]![0] as { data: Record<string, unknown> };
+    // The four published-bet fields. `line` is what `selectGradingLine` falls
+    // back to for legacy rows and what the TOTAL card prints; `selection` is the
+    // SPREAD card's only number; the two reasoning strings QUOTE the handicap.
+    expect(upd.data).not.toHaveProperty("selection");
+    expect(upd.data).not.toHaveProperty("line");
+    expect(upd.data).not.toHaveProperty("reasoning");
+    expect(upd.data).not.toHaveProperty("reasoningShort");
+    // Genuinely live fields still refresh — freezing the bet is not freezing the row.
+    expect(upd.data).toHaveProperty("confidence");
+    expect(upd.data).toHaveProperty("bookmakerCount");
+  });
+
+  it("mints display, lock and graded line as ONE value at creation", async () => {
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({
+        selection: "Chiefs -3.0",
+        line: -3,
+        // The engine's real reasoning QUOTES the handicap (scoring.ts), which is
+        // why it is frozen with the other published terms.
+        reasoning: "Chiefs -3.0 backed by 83% of 6 bookmakers.",
+      }),
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+
+    await processSport(SPORT, "key", gates());
+
+    const created = (mocks.pickCreate.mock.calls[0]![0] as { data: Record<string, unknown> }).data;
+    expect(created["clvLockLine"]).toBe(-3);
+    expect(created["line"]).toBe(created["clvLockLine"]);
+    expect(displayedNumber(created["selection"] as string)).toBe(created["line"]);
+    expect(created["reasoning"]).toContain("-3.0");
+  });
+
+  it("END-TO-END: after the consensus moves, the number on the card is still the number settlement grades", async () => {
+    // ── Tuesday: the pick is published at the consensus -3.0. ──
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({
+        selection: "Chiefs -3.0",
+        line: -3,
+        reasoning: "Chiefs -3.0 backed by 83% of 6 bookmakers.",
+        reasoningShort: "83% of bookmakers favor Chiefs -3.0.",
+      }),
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+
+    await processSport(SPORT, "key", gates());
+
+    const created = (mocks.pickCreate.mock.calls[0]![0] as { data: Record<string, unknown> }).data;
+    // The stored row, exactly as the DB now holds it.
+    const row = {
+      selection: created["selection"] as string,
+      line: created["line"] as number,
+      reasoning: created["reasoning"] as string,
+      clvLockLine: created["clvLockLine"] as number | null,
+    };
+    expect(row.clvLockLine).toBe(-3);
+
+    // ── Thursday: the market moves to -4.5 and the refresh cycle runs again. ──
+    // Clear BOTH write mocks: the create-path cycle above also calls updateMany
+    // first (it returns count 0 before falling through to create), so reading
+    // `calls[0]` below would read Tuesday's payload and the test would pass
+    // against pre-fix code.
+    mocks.pickCreate.mockClear();
+    mocks.pickUpdateMany.mockClear();
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({
+        selection: "Chiefs -4.5",
+        line: -4.5,
+        reasoning: "Chiefs -4.5 backed by 91% of 6 bookmakers.",
+        reasoningShort: "91% of bookmakers favor Chiefs -4.5.",
+      }),
+    ]);
+    mocks.pickFindUnique.mockResolvedValue({
+      id: "pick-1",
+      result: "PENDING",
+      selection: row.selection,
+    });
+    mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
+
+    await processSport(SPORT, "key", gates());
+
+    // Apply the refresh payload to the stored row, the way Postgres would.
+    const upd = (mocks.pickUpdateMany.mock.calls[0]![0] as { data: Record<string, unknown> }).data;
+    Object.assign(row, upd);
+
+    // The published bet is untouched by the move.
+    expect(row.selection).toBe("Chiefs -3.0");
+    expect(row.line).toBe(-3);
+    expect(row.reasoning).toContain("-3.0");
+    expect(row.clvLockLine).toBe(-3);
+
+    // ── Saturday: Chiefs win 24-20 (by 4). Settlement grades the LOCK. ──
+    const gradingLine = selectGradingLine(row);
+    // THE FINDING-2 INVARIANT: the number a customer reads off the card is the
+    // number settlement grades. Asserted at settlement time, on the real row.
+    expect(displayedNumber(row.selection)).toBe(gradingLine);
+
+    const graded = calculatePickResult(
+      "SPREAD",
+      row.selection,
+      gradingLine,
+      "Chiefs",
+      24,
+      20,
+      "americanfootball_nfl",
+      "Bills",
+    );
+    // Grading the DISPLAYED number and grading the LOCKED number must not be
+    // two different bets. Pre-fix the card read "Chiefs -4.5" (4 - 4.5 < 0 =
+    // LOSS) while we booked this WIN at -3.0.
+    const gradedAtDisplayed = calculatePickResult(
+      "SPREAD",
+      row.selection,
+      displayedNumber(row.selection),
+      "Chiefs",
+      24,
+      20,
+      "americanfootball_nfl",
+      "Bills",
+    );
+    expect(graded).toBe("WIN");
+    expect(gradedAtDisplayed).toBe(graded);
+  });
+
+  it("END-TO-END (TOTAL): the printed total and the graded total stay one number", async () => {
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "TOTAL", selection: "OVER 45.0", line: 45 }),
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
+
+    await processSport(SPORT, "key", gates());
+    const created = (mocks.pickCreate.mock.calls[0]![0] as { data: Record<string, unknown> }).data;
+    const row = {
+      selection: created["selection"] as string,
+      line: created["line"] as number,
+      clvLockLine: created["clvLockLine"] as number | null,
+    };
+
+    // The total drifts up to 48.5 on the next cycle. Clear the create-cycle's
+    // own updateMany call first — see the SPREAD test above.
+    mocks.pickCreate.mockClear();
+    mocks.pickUpdateMany.mockClear();
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "TOTAL", selection: "OVER 48.5", line: 48.5 }),
+    ]);
+    mocks.pickFindUnique.mockResolvedValue({
+      id: "pick-1",
+      result: "PENDING",
+      selection: row.selection,
+    });
+    mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
+
+    await processSport(SPORT, "key", gates());
+    Object.assign(
+      row,
+      (mocks.pickUpdateMany.mock.calls[0]![0] as { data: Record<string, unknown> }).data,
+    );
+
+    // A TOTAL card prints BOTH `selection` and `line`; they must agree with each
+    // other and with the lock, or the same card contradicts itself.
+    expect(row.selection).toBe("OVER 45.0");
+    expect(row.line).toBe(45);
+    expect(displayedNumber(row.selection)).toBe(selectGradingLine(row));
+    expect(row.line).toBe(selectGradingLine(row));
+
+    // A 45-point final pushes at the printed number — and is graded a PUSH.
+    expect(
+      calculatePickResult(
+        "TOTAL",
+        row.selection,
+        selectGradingLine(row),
+        "Chiefs",
+        24,
+        21,
+        "americanfootball_nfl",
+        "Bills",
+      ),
+    ).toBe("PUSH");
   });
 });
 
