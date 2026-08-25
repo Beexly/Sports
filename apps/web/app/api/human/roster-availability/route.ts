@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { loadRosterAvailability } from "@/lib/human-performance/availability";
-import { consumeRateLimit } from "@/lib/api/rate-limit";
+import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 const MAX_PLAYERS = 40;
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const fwd = request.headers.get("x-forwarded-for");
-  const ip = fwd ? fwd.split(",")[0]!.trim() : (request.headers.get("x-real-ip") ?? "anon");
-  const limit = consumeRateLimit("human-roster-availability", ip, 20, 5 * 60 * 1000);
+  // Shared clientIp(): the leftmost x-forwarded-for entry is caller-supplied, so
+  // reading it here would hand every forged header its own compute allowance.
+  const limit = consumeRateLimit("human-roster-availability", clientIp(request), 20, 5 * 60 * 1000);
   if (!limit.ok) {
     return NextResponse.json(
       { success: false, error: "Too many requests. Please wait a moment." },

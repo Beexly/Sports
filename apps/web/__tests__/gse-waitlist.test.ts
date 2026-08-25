@@ -183,8 +183,18 @@ describe("POST /api/waitlist (local handler)", () => {
     });
   }
 
-  it("queues a valid consented lead, then reports duplicates", async () => {
-    process.env.GSE_WAITLIST_STORE_PATH = tmpStorePath("route");
+  /**
+   * SPEC CHANGE (enumeration): the duplicate branch used to answer
+   * `{ ok: true, status: "already_queued" }`, which turned this endpoint into
+   * an oracle — anyone could POST an address and learn from the response
+   * whether it was already on the founding waitlist (and silently enroll it if
+   * it was not). The response is now identical for both cases; `duplicate`
+   * still decides server-side whether a welcome email is sent. Byte-identity
+   * is pinned in detail in waitlist-enumeration-oracle.test.ts.
+   */
+  it("queues a valid consented lead and answers duplicates identically (no oracle)", async () => {
+    const storePath = tmpStorePath("route");
+    process.env.GSE_WAITLIST_STORE_PATH = storePath;
 
     const ok = await POST(request(VALID_LEAD));
     expect(ok.status).toBe(200);
@@ -192,8 +202,11 @@ describe("POST /api/waitlist (local handler)", () => {
     expect(okBody).toEqual({ ok: true, status: "queued" });
 
     const dup = await POST(request(VALID_LEAD));
+    expect(dup.status).toBe(ok.status);
     const dupBody = await dup.json();
-    expect(dupBody).toEqual({ ok: true, status: "already_queued" });
+    expect(dupBody).toEqual(okBody);
+    // The duplicate was still recognised server-side: no second row.
+    expect(await createWaitlistStore(storePath).list()).toHaveLength(1);
   });
 
   it("rejects a submission without consent (422)", async () => {
