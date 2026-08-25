@@ -8,7 +8,18 @@
  *   - "inline"  — one short paragraph
  *   - "compact" — even smaller, footer-style
  *   - "card"    — bordered block with heading
+ *
+ * The helpline number is READ FROM `lib/brand.ts` (HELPLINE), never retyped.
+ * After the footer this component is the most common carrier of the helpline,
+ * and on several surfaces — /dashboard and /pricing among them — it is the
+ * ONLY carrier, because those pages render it without rendering <Footer />.
+ * A literal here could therefore drift from the brand constant and publish a
+ * wrong number on exactly the pages that matter most.
+ * `__tests__/disclosure-surface.test.ts` pins that no file under app/ or
+ * components/ hardcodes a helpline number instead of importing HELPLINE.
  */
+
+import { HELPLINE } from "@/lib/brand";
 
 export interface RiskDisclosureProps {
   variant?: "inline" | "compact" | "card";
@@ -21,7 +32,7 @@ export interface RiskDisclosureProps {
 const BODY =
   "Sports wagering is real risk. Only stake what you can afford to lose " +
   "without changing your week. If you or someone you know has a gambling " +
-  "problem, call 1-800-GAMBLER.";
+  `problem, call ${HELPLINE.number}.`;
 
 const PAST = " Past performance does not guarantee future results.";
 
