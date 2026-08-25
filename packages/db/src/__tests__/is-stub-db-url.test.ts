@@ -57,6 +57,16 @@ describe("isStubDbUrl — treats stub/placeholder URLs as stub (true)", () => {
   it("a sentinel surrounded by whitespace → true (trim then exact match)", () => {
     expect(isStubDbUrl("  stub  ")).toBe(true);
   });
+
+  it("the exact URL CI's build job passes → true", () => {
+    // .github/workflows/ci.yml, job `build`, step "Build Next.js app".
+    // That job has no Postgres service container, so this URL points at a
+    // closed port. Pinned verbatim: if CI's placeholder is ever reworded, this
+    // fails and whoever changes it learns the build depends on it.
+    expect(
+      isStubDbUrl("postgresql://placeholder:placeholder@localhost:5432/placeholder")
+    ).toBe(true);
+  });
 });
 
 describe("isStubDbUrl — treats real connection strings as live (false)", () => {
@@ -81,5 +91,26 @@ describe("isStubDbUrl — treats real connection strings as live (false)", () =>
 
   it('"dummy" without the ":dummy" pair → false (requires the exact "dummy:dummy")', () => {
     expect(isStubDbUrl("postgresql://dummy@localhost:5432/db")).toBe(false);
+  });
+
+  // The placeholder arm is a credentials-PAIR match, not a bare substring.
+  // These three are the cases that would turn it into a production outage:
+  // a live database misread as a stub drops every write while reporting success.
+  it('a real DB whose HOST contains "placeholder" → false', () => {
+    expect(
+      isStubDbUrl("postgresql://u:p@placeholder-db.example.com:5432/sports")
+    ).toBe(false);
+  });
+
+  it('a real DB whose PASSWORD contains "placeholder" → false', () => {
+    expect(
+      isStubDbUrl("postgresql://admin:placeholder123@db.example.com:5432/sports")
+    ).toBe(false);
+  });
+
+  it('a real DB whose NAME is "placeholder" → false', () => {
+    expect(
+      isStubDbUrl("postgresql://admin:s3cret@db.example.com:5432/placeholder")
+    ).toBe(false);
   });
 });

@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { NextResponse } from "next/server";
 import { loadDfsSalaries, resetDfsSalariesCacheForTests } from "@/lib/dfs/salaries";
+
+vi.mock("@/lib/api-entitlement", () => ({ requireFantasyApi: vi.fn() }));
 
 function json(body: unknown): Response {
   return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
@@ -89,8 +92,32 @@ describe("dfs salaries (multi-source, reconciled)", () => {
     expect(fd?.status).toBe("live");
   });
 
-  it("serves the dfs salaries API", async () => {
+  it("returns the gate's 401 denial for an anonymous caller", async () => {
     vi.resetModules();
+    const { requireFantasyApi } = await import("@/lib/api-entitlement");
+    (requireFantasyApi as ReturnType<typeof vi.fn>).mockResolvedValue(
+      NextResponse.json({ error: "auth required" }, { status: 401 }),
+    );
+    const mod = await import("@/app/api/dfs/salaries/route");
+    const response = (await mod.GET()) as Response;
+    expect(response.status).toBe(401);
+  });
+
+  it("returns the gate's 403 denial for an under-tier viewer", async () => {
+    vi.resetModules();
+    const { requireFantasyApi } = await import("@/lib/api-entitlement");
+    (requireFantasyApi as ReturnType<typeof vi.fn>).mockResolvedValue(
+      NextResponse.json({ error: "fantasy tier required" }, { status: 403 }),
+    );
+    const mod = await import("@/app/api/dfs/salaries/route");
+    const response = (await mod.GET()) as Response;
+    expect(response.status).toBe(403);
+  });
+
+  it("serves the dfs salaries API once the gate grants access", async () => {
+    vi.resetModules();
+    const { requireFantasyApi } = await import("@/lib/api-entitlement");
+    (requireFantasyApi as ReturnType<typeof vi.fn>).mockResolvedValue(null);
     const mod = await import("@/app/api/dfs/salaries/route");
     const response = (await mod.GET()) as Response;
     const body = (await response.json()) as Record<string, unknown>;

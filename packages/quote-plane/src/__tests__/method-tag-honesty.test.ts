@@ -116,13 +116,13 @@ describe("provider methodTag stamps", () => {
     expect(lines[0]!.modelVersion).toBe("quote.gamma.v1");
   });
 
-  it("kalshi stamps prediction_market_raw_v1", async () => {
+  it("kalshi stamps prediction_market_mid_v2 (two-way mid, not last trade)", async () => {
     const p = createKalshiTradeProvider({
       fixtures: { T: { yes: [[0.55, 10]], no: [[0.44, 10]] } },
     });
     const lines = await p.fetchQuotes({ sport: "NFL", eventId: "T" });
-    expect(lines[0]!.methodTag).toBe("prediction_market_raw_v1");
-    expect(lines[0]!.modelVersion).toBe("quote.kalshi.v1");
+    expect(lines[0]!.methodTag).toBe("prediction_market_mid_v2");
+    expect(lines[0]!.modelVersion).toBe("quote.pm-gate.v2");
   });
 
   it("odds api two-way stamps two_way_devig_v1", () => {

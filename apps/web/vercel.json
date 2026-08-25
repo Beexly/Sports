@@ -88,6 +88,10 @@
     {
       "path": "/api/cron/refresh-player-stats",
       "schedule": "0,30 * * * *"
+    },
+    {
+      "path": "/api/cron/backfill-team-efficiency",
+      "schedule": "15 7 * * *"
     }
   ],
   "headers": [

@@ -32,6 +32,7 @@ import {
   classifyStripeSessionCreateError,
   transitionForOutcome,
 } from "@/lib/billing/stripe-outcome";
+import { assertAtLeast21 } from "@/lib/auth/age-gate";
 
 const CheckoutSchema = z.object({
   tier: z.enum(["FANTASY", "PRO", "ELITE"]),
@@ -41,6 +42,8 @@ const CheckoutSchema = z.object({
   // of the generic invalid-tier message. All idempotency guarantees live
   // server-side in the CheckoutAttempt row — this is only a correlation hint.
   clientIntentId: z.string().optional(),
+  // Server-side 21+ gate. Never trust a client "I am 21" boolean.
+  dateOfBirth: z.string().optional(),
 });
 
 // Checkout charges USD only today (pricing-phases amounts are USD).
@@ -70,6 +73,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const { tier, interval } = parsed.data;
+  const age = assertAtLeast21(parsed.data.dateOfBirth);
+  if (!age.ok) {
+    const status = age.code === "age_restricted" ? 403 : 400;
+    return NextResponse.json({ error: age.error, code: age.code }, { status });
+  }
   const clientIntentId = parsed.data.clientIntentId ?? null;
   if (clientIntentId !== null && !isValidClientIntentId(clientIntentId)) {
     return NextResponse.json(

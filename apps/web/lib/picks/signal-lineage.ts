@@ -48,6 +48,30 @@ export interface LineageVerdict {
 const RIGHTS_BLOCKED: ReadonlySet<string> = new Set(["blocked_technical_controls", "excluded", "permission_required"]);
 
 /**
+ * ADDITIVE to `auditSignalLineage` — does not change `publicSafe` or
+ * `violations` there. `freshnessMinutes` alone cannot say whether a factor is
+ * too old: staleness is per-tier (see `tier-ttl.ts`'s TIER_TTL_MATRIX), so a
+ * caller who wants to know which active factors have breached THEIR tier's
+ * TTL calls this separately, passing the per-factor game-day-injury context
+ * it alone knows (the lineage engine has no notion of "today's game").
+ */
+export function staleActiveFactors(
+  factors: readonly SignalFactor[],
+  isStaleForTier: (
+    tier: SourceTier,
+    ageMinutes: number,
+    context?: { readonly isGameDayInjury?: boolean },
+  ) => boolean,
+  isGameDayInjuryFor: (factor: SignalFactor) => boolean = () => false,
+): readonly SignalFactor[] {
+  return factors.filter(
+    (f) =>
+      f.active &&
+      isStaleForTier(f.sourceTier, f.freshnessMinutes, { isGameDayInjury: isGameDayInjuryFor(f) }),
+  );
+}
+
+/**
  * Audit a pick's factor lineage. The ACTIVE factors are what backs the pick, so the
  * laws apply to them: ≤ Tier 2, rights-clean, not contradictory (active + blocked),
  * and each carries an honest weakness.

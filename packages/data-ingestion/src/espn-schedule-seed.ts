@@ -151,6 +151,13 @@ export function espnHorizonDateKeys(now: Date, horizonDays: number): string[] {
   return [...new Set(keys)];
 }
 
+/**
+ * ESPN's scoreboard endpoint returns a small default page and silently truncates the
+ * event list on busy dates (CFB Saturdays, multi-league soccer days). An explicit high
+ * limit forces the full board so games are never dropped before reaching the Game table.
+ */
+export const ESPN_SCOREBOARD_LIMIT = 1000;
+
 export async function fetchEspnSeedGamesForSport(
   short: ShortSportKey,
   opts?: {
@@ -172,7 +179,10 @@ export async function fetchEspnSeedGamesForSport(
   const errors: string[] = [];
 
   for (const dates of dateKeys) {
-    const url = dates ? `${base}?dates=${dates}` : base;
+    const params = new URLSearchParams();
+    if (dates) params.set("dates", dates);
+    params.set("limit", String(ESPN_SCOREBOARD_LIMIT));
+    const url = `${base}?${params.toString()}`;
     try {
       const res = await fetchImpl(url, {
         headers: { Accept: "application/json" },

@@ -184,6 +184,25 @@ export {
   poissonConsistencyScore,
   assertTeamRatesAvailable,
 } from "./poisson.js";
+// Skellam margin / cover — hockey/baseball/soccer (same sport gate as Poisson).
+// Live: source "skellam_cover" on SPREAD rankingP only. NFL key-numbers are separate.
+export {
+  skellamPmf,
+  skellamCdf,
+  skellamPmfGrid,
+  skellamCoverProbabilities,
+  skellamCoverFairValue,
+  isSkellamValidSport,
+  DEFAULT_SKELLAM_MAX_GOALS,
+  SKELLAM_SPORT_PREFIXES,
+  SKELLAM_COVER_SOURCE,
+} from "./skellam.js";
+export type {
+  SkellamCoverInput,
+  SkellamCoverProbabilities,
+  SkellamCoverFairValue,
+  SkellamPmfPoint,
+} from "./skellam.js";
 // #11 — team scoring rates computed from REAL stored final scores (no new
 // provider, no fabricated λ) → an INDEPENDENT Poisson fair value that slots into
 // the edge engine as a 2nd estimator. Pure; the ingestion-cron wiring +
@@ -888,6 +907,24 @@ export type {
   GseMetricValidationResult,
   GseMetricValidationStatus,
 } from "./nfl/metric-validation.js";
+export {
+  NFL_KEY_NUMBERS,
+  NFL_SIGNED_KEY_NUMBERS,
+  MIN_SAMPLES_FOR_MARGIN_MIXTURE,
+  continuousDensity,
+  coverProbability,
+  fitNflMarginMixture,
+  homeCoverProbability,
+  keyMassAt,
+  marginsFromTeamGameRecords,
+  mixtureCdf,
+} from "./nfl/margin-mixture-model.js";
+export type {
+  CoverProbability,
+  KeyNumberMass,
+  MarginMixtureVerdict,
+  NflMarginMixtureFit,
+} from "./nfl/margin-mixture-model.js";
 // Universal signal ledger — the persistent "weight everything" accumulation layer
 // that bridges stored ledger rows to the composer (NOT wired into the live score).
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
@@ -910,6 +947,15 @@ export {
   type LimitationFlag,
 } from "./model-limitations.js";
 
+// Exact binomial interval — conservative counterpart to Wilson. Used by the
+// public performance / calibration CI layer so a headline rate is never a
+// bare point estimate.
+export {
+  clopperPearsonLowerBound,
+  clopperPearsonInterval,
+} from "./edge-lab/stats.js";
+export type { ClopperPearsonInterval } from "./edge-lab/stats.js";
+
 export {
   noVigFromAmericanPrices,
   consensusNoVig,
@@ -923,9 +969,19 @@ export {
 export {
   shinDevig,
   gotoConversion,
+  powerDevig,
   impliedFromDecimalOdds,
   type ShinResult,
+  type PowerDevigResult,
 } from "./shin-devig.js";
+export {
+  conformalMarginSet,
+  marginSetCovers,
+  splitConformalQuantile,
+  MIN_SAMPLES_MARGIN_SET,
+  DEFAULT_MARGIN_SET_ALPHA,
+} from "./conformal-margin-set.js";
+export type { MarginCalibrationRow, MarginPredictionSet } from "./conformal-margin-set.js";
 // Build-queue #4 — ML independent estimator scaffold (kyleskom concept).
 // Gradient-boosted stumps inference + honesty gate. Fed into independentFairValues
 // ONLY after calibration proves it (same law as Poisson / Elo estimators).
@@ -1121,6 +1177,20 @@ export {
   type PickReceipt,
   type LedgerHead,
 } from "./honesty/glass-receipts.js";
+export { compareDevigMethods } from "./honesty/devig-method-compare.js";
+export type {
+  DevigMethodCompare,
+  DevigMethodName,
+  MethodFair,
+  TwoWayBook,
+} from "./honesty/devig-method-compare.js";
+export {
+  commitPick,
+  revealPick,
+  publicCommitPick,
+  isPublicPicksEnabled,
+} from "./honesty/commit-reveal.js";
+export type { PickCommitment, PickCommitmentBody } from "./honesty/commit-reveal.js";
 
 // Glass Ledger hash-chain math (pure; persistence is ingestion-pipeline)
 export {
@@ -1185,6 +1255,472 @@ export {
   type UnifiedPrefireDecision,
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
+
+// Fair Skill Brier (Wang et al.): BrS − (B−1)/B so binary ATD and K-way
+// yards ladders are comparable. Not Murphy BSS vs grouped climatology.
+export {
+  FAIR_SKILL_BRIER_METHOD_TAG,
+  indifferenceBrier,
+  originalBrier,
+  originalBrierFromBinaryUnit,
+  fairSkillBrier,
+  meanFairSkillBrier,
+} from "./edge-lab/fair-skill-brier.js";
+
+// Grouped climatology — score the props specialist against position×week
+// naive rates, not the pooled dummy. Positive BSS vs grouped is skill;
+// beating pooled while losing to grouped is grouping-loss, not edge.
+export {
+  GROUPED_CLIMATOLOGY_METHOD_TAG,
+  DEFAULT_MIN_CELL_N,
+  brierMean,
+  brierSkillScore,
+  fitGroupedClimatology,
+  predictGrouped,
+  scoreAgainstClimatology,
+} from "./edge-lab/grouped-climatology.js";
+export type {
+  BinaryOutcome,
+  ClimatologySource,
+  ClimTrainRow,
+  CellRate,
+  GroupedClimatology,
+  GroupedPrediction,
+  ScoredCase,
+  ClimatologyScorecard,
+} from "./edge-lab/grouped-climatology.js";
+
+// Market consensus q (Bradley-Terry futures + logit blend). q only — never
+// re-anchor independent p toward the market (Mania 3rd-place α=0.90 is a
+// Brier win, not an edge).
+export {
+  bradleyTerryPair,
+  consensusMarketQ,
+  marketReanchorResidual,
+} from "./edge-lab/market-consensus-q.js";
+export type { LabeledQ, ConsensusQ, ReanchorResidual } from "./edge-lab/market-consensus-q.js";
+
+// Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
+// player → position → league EB with empirical 1/n observation-noise
+// calibration, market-priced e = p − q (never κ = |2p−1|), and the
+// observation-process layer: mean-dependent φ(μ), shrunken QL, idcap,
+// recency discount, regime-shift band, expected surplus.
+export {
+  fitGroupPrior,
+  posteriorRate,
+  probOver as propsHbProbOver,
+  probOverContinuous,
+  shrinkageReport,
+} from "./edge-lab/props-hb.js";
+export type {
+  RateSample,
+  GammaPrior,
+  GammaPosterior,
+  ShrinkageRow,
+} from "./edge-lab/props-hb.js";
+export {
+  gammaFromMoments,
+  fitVarianceDecomposition,
+  fitGroupPriorCalibrated,
+  scaleObservation,
+  posteriorRateCalibrated,
+  fitNestedPriors,
+  fitNestedPriorsLeaveOneOut,
+  priorForGroup,
+  scoreNestedPlayer,
+  shrinkageReportNested,
+  fitNestedByStat,
+} from "./edge-lab/props-hb-nested.js";
+export type {
+  GroupedRateSample,
+  VarianceMethod,
+  VarianceDecomposition,
+  NestedGroupPrior,
+  NestedFit,
+  NestedShrinkageRow,
+} from "./edge-lab/props-hb-nested.js";
+export {
+  PROPS_HB_SOURCE,
+  pricePropAgainstMarket,
+  confidenceFromPOver,
+} from "./edge-lab/props-priced-edge.js";
+export type {
+  PropBookQuote,
+  PricedPropEdge,
+  UnpricedPropEdge,
+  PropEdgeResult,
+} from "./edge-lab/props-priced-edge.js";
+export {
+  fitMeanVariance,
+  fitMeanVarianceFromGameLogs,
+  phiForMean,
+  shrinkQuasiLikelihood,
+  // scaleObservation is NOT re-exported here — props-hb-nested.js already
+  // exports a function of that name with identical semantics (divide
+  // total/games by clamped φ). Both modules keep their own local copy for
+  // internal use; the barrel surfaces exactly one to avoid a duplicate-export
+  // compile error.
+  posteriorRateObs,
+  posteriorRateMeanVar,
+  capGameLog,
+  discountGameLog,
+  aggregateGameLog,
+  regimeShift,
+  expectedExcess,
+} from "./edge-lab/props-hb-obs.js";
+export type {
+  CountFamily,
+  MeanVarianceFit,
+  GameCount,
+  PlayerGameLog,
+  GameLogOptions,
+  RegimeDirection,
+  RegimeShift,
+} from "./edge-lab/props-hb-obs.js";
+export {
+  CATCH_HB_METHOD_TAG,
+  fitCatchPrior,
+  posteriorCatch,
+  betaBinomialProbOver,
+  probOverReceptions,
+  scoreReceptionsOver,
+} from "./edge-lab/props-hb-catch.js";
+export type { CatchSample, BetaPrior, BetaPosterior } from "./edge-lab/props-hb-catch.js";
+
+// Kaunitz X1 math — named-book Shin q ≥ τ below the cross-book median.
+// Log-only; priced:false. Not wired into process-sport (ox-alpha owns q ingest).
+export {
+  KAUNITZ_METHOD_TAG,
+  DEFAULT_KAUNITZ_TAU,
+  MIN_KAUNITZ_BOOKS,
+  scanKaunitzOutliers,
+} from "./edge-lab/kaunitz-outlier.js";
+export type {
+  KaunitzBookQuote,
+  KaunitzBookRead,
+  KaunitzFlag,
+  KaunitzScan,
+} from "./edge-lab/kaunitz-outlier.js";
+
+// Rushing yards given attempts, not calendar games. Independent p.
+export {
+  RUSH_HB_METHOD_TAG,
+  fitYardsPerAttemptPrior,
+  posteriorYardsPerAttempt,
+  probOverRushYardsGivenAttempts,
+  probOverRushYards,
+} from "./edge-lab/props-hb-rush.js";
+export type { RushSample } from "./edge-lab/props-hb-rush.js";
+
+// Rush attempts volume (count), not yards and not calendar games. Independent p.
+export {
+  RUSH_ATTEMPTS_HB_METHOD_TAG,
+  fitRushAttemptsPrior,
+  posteriorRushAttempts,
+  probOverRushAttempts,
+} from "./edge-lab/props-hb-rush-attempts.js";
+export type { RushAttemptsSample } from "./edge-lab/props-hb-rush-attempts.js";
+
+// Anytime TD given touches (rush att + rec), not calendar games. Independent p.
+export {
+  ATD_HB_METHOD_TAG,
+  fitTdPerTouchPrior,
+  pooledTdPerTouch,
+  posteriorTdPerTouch,
+  tdProbZero,
+  tdProbZeroPoisson,
+  probAnytimeTdGivenTouches,
+  probAnytimeTd,
+} from "./edge-lab/props-hb-atd.js";
+export type { TouchTdSample } from "./edge-lab/props-hb-atd.js";
+
+// X4 math — Kalshi two-way vs Shin book. Log-only; priced:false.
+export {
+  KALSHI_BOOK_METHOD_TAG,
+  DEFAULT_KALSHI_BOOK_TAU,
+  scanKalshiVsBooks,
+} from "./edge-lab/kalshi-book-divergence.js";
+export type {
+  KalshiTwoWay,
+  NamedBookTwoWay,
+  KalshiBookFlag,
+  KalshiBookResult,
+} from "./edge-lab/kalshi-book-divergence.js";
+
+// Catch rate by aDOT bucket. Independent p. Not a new Odds market.
+export {
+  ADOT_CATCH_METHOD_TAG,
+  SHORT_ADOT_MAX,
+  INTERMEDIATE_ADOT_MAX,
+  adotOf,
+  bucketAdot,
+  fitAdotCatchPriors,
+  posteriorAdotCatch,
+  probOverReceptionsByAdot,
+} from "./edge-lab/props-hb-adot-catch.js";
+export type { AdotBucket, AdotCatchSample, BucketedCatchFit } from "./edge-lab/props-hb-adot-catch.js";
+
+// Receiving yards as air-caught + YAC convolution. Independent p only.
+// Does not ingest a new Odds market and does not touch ox-alpha ingest files.
+export {
+  AIR_YAC_METHOD_TAG,
+  fitAirYacPriors,
+  posteriorAirYac,
+  nbPredictiveCdf,
+  nbPredictivePmf,
+  convolveSurvival,
+  probOverYardsGivenReceptions,
+  probOverReceivingYards,
+} from "./edge-lab/props-hb-air-yac.js";
+export type {
+  AirYacSample,
+  AirYacPriors,
+  AirYacPosteriors,
+} from "./edge-lab/props-hb-air-yac.js";
+
+// Posted-price juice floor. e = p − q is not +EV at −110.
+export {
+  JUICE_FLOOR_METHOD_TAG,
+  BREAK_EVEN_MINUS_110,
+  postedBreakEven,
+  edgeClearsPosted,
+} from "./edge-lab/props-juice-floor.js";
+export type { JuiceFloorResult, JuiceFloorDenied } from "./edge-lab/props-juice-floor.js";
+
+// Receiving TDs given targets, not ATD-given-touches. Independent p.
+export {
+  REC_TD_HB_METHOD_TAG,
+  fitRecTdPerTargetPrior,
+  pooledRecTdPerTarget,
+  posteriorRecTdPerTarget,
+  recTdProbZero,
+  recTdProbZeroPoisson,
+  probRecTdGivenTargets,
+  probRecTd,
+} from "./edge-lab/props-hb-rec-td.js";
+export type { RecTdSample } from "./edge-lab/props-hb-rec-td.js";
+
+// Passing yards given attempts, not calendar games. Independent p only.
+// Exposure = attempts (Poisson trials of yardage), not games.
+export {
+  PASS_YARDS_HB_METHOD_TAG,
+  fitPassYardsPerAttemptPrior,
+  posteriorPassYardsPerAttempt,
+  probOverPassYards,
+  probOverPassYardsGivenAttempts,
+} from "./edge-lab/props-hb-pass-yards.js";
+export type { PassYardsSample } from "./edge-lab/props-hb-pass-yards.js";
+
+// Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
+export {
+  RUSH_TD_HB_METHOD_TAG,
+  fitRushTdPerAttemptPrior,
+  pooledRushTdPerAttempt,
+  posteriorRushTdPerAttempt,
+  rushTdProbZero,
+  rushTdProbZeroPoisson,
+  probRushTdGivenAttempts,
+  probRushTd,
+} from "./edge-lab/props-hb-rush-td.js";
+export type { RushTdSample } from "./edge-lab/props-hb-rush-td.js";
+
+// Line shop: one p, N posted Americans, take the largest juice-floor surplus.
+export {
+  LINE_SHOP_METHOD_TAG,
+  shopPostedPrices,
+} from "./edge-lab/props-line-shop.js";
+export type { ShopBook, ShopPick, ShopDenied } from "./edge-lab/props-line-shop.js";
+
+// NGS as measurement (SEP / CPOE / RYOE / xYAC). Not live p. priced:false.
+export {
+  NGS_MEASURE_METHOD_TAG,
+  measureSeparationAgainstNgs,
+  measureExpectedAgainstNgs,
+} from "./edge-lab/ngs-measurement-loop.js";
+export type {
+  SepPrediction,
+  SepTruth,
+  SepMeasurement,
+  ExpectedFamily,
+  ExpectedMeasurement,
+} from "./edge-lab/ngs-measurement-loop.js";
+
+// Catch rate by aDOT × NGS separation. Independent p. Not a new Odds market.
+export {
+  ADOT_SEP_METHOD_TAG,
+  TIGHT_SEP_MAX,
+  bucketSep,
+  adotSepCell,
+  fitAdotSepCatchPriors,
+  posteriorAdotSepCatch,
+} from "./edge-lab/props-hb-adot-sep.js";
+export type { SepBucket, AdotSepCell, AdotSepCatchSample, AdotSepFit } from "./edge-lab/props-hb-adot-sep.js";
+
+// Covariate bus: leak-safe NGS weekly-mean → next-game input features (p path).
+// Pure, no I/O. Does NOT surface vendor expected/yoe y-axis metrics.
+export {
+  COVARIATE_BUS_TAG,
+  covariateKey,
+  latestPriorRow,
+  nextGameCovariate,
+  sepForKickoff,
+} from "./edge-lab/covariate-bus.js";
+export type {
+  CovariateRow,
+  CovariateField,
+  CovariateCell,
+  CovariateGrain,
+  CovariateProvenance,
+  StatType,
+} from "./edge-lab/covariate-bus.js";
+
+// SEP bind: couples the covariate bus (sepForKickoff) to the aDOT×SEP catch
+// sample. Fail-closed on null — never invents 3.0 yards. Honest weekly-mean
+// grain forwarded verbatim. priced:false.
+export { SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples } from "./edge-lab/props-hb-adot-sep-bind.js";
+export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep-bind.js";
+
+// YAC bind: couples the covariate bus (avgYac) to the air+YAC model.
+// Fail-closed on null — never invents YAC. Honest weekly-mean grain forwarded
+// verbatim. priced:false.
+export { YAC_BIND_METHOD_TAG, bindYacSamples, boundYacSamples } from "./edge-lab/props-hb-air-yac-bind.js";
+export type { YacBindRequest, YacBindResult, BoundAirYacSample } from "./edge-lab/props-hb-air-yac-bind.js";
+
+// CPOE completion bind: couples the covariate bus (avgTimeToThrow + avgIntendedAirYards)
+// + GSE-CPOE to the completions | attempts model. Fail-closed — drops samples
+// when any covariate is missing. Never exposes vendor expected/y-axis metrics.
+// priced:false.
+export {
+  CPOE_COMP_BIND_METHOD_TAG,
+  GSE_CPOE_PROVENANCE,
+  bindCpoeCompSamples,
+  boundCpoeCompSamples,
+} from "./edge-lab/props-hb-cpoe-comp-bind.js";
+export type {
+  CpoeCompBindRequest,
+  CpoeCompBindResult,
+  BoundCompSample,
+} from "./edge-lab/props-hb-cpoe-comp-bind.js";
+
+// Rush-yards bind: couples the covariate bus (pctAttemptsGte8Defenders + avgTimeToLos)
+// to the rushing-yards | attempts model. Fail-closed on null — never invents stacking.
+// Honest weekly-mean grain forwarded verbatim. priced:false.
+export {
+  RUSH_YARDS_BIND_METHOD_TAG,
+  bindRushYardsSamples,
+  boundRushYardsSamples,
+} from "./edge-lab/props-hb-rush-yards-bind.js";
+export type {
+  RushYardsBindRequest,
+  RushYardsBindResult,
+  BoundRushSample,
+} from "./edge-lab/props-hb-rush-yards-bind.js";
+
+// INT bind: couples the covariate bus (avgTimeToThrow + aggressiveness) to the
+// interceptions | attempts model. Fail-closed on null — never invents risk.
+// Honest weekly-mean grain forwarded verbatim. priced:false.
+export {
+  INT_BIND_METHOD_TAG,
+  bindIntSamples,
+  boundIntSamples,
+} from "./edge-lab/props-hb-int-bind.js";
+export type {
+  IntBindRequest,
+  IntBindResult,
+  BoundIntSample,
+} from "./edge-lab/props-hb-int-bind.js";
+
+// Fire gate: Shin e AND posted juice must both clear. priced:false.
+export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";
+export type { FireOpen, FireClosed, FireDenied } from "./edge-lab/props-fire-gate.js";
+
+// Snap / injury exposure, not calendar games. Independent p path. priced:false.
+export {
+  SNAP_EXPOSURE_METHOD_TAG,
+  snapShare,
+  pooledSnapShare,
+  expectedSnapsNext,
+} from "./edge-lab/props-hb-snap-exposure.js";
+export type { SnapSample, SnapShare, SnapDenied } from "./edge-lab/props-hb-snap-exposure.js";
+
+// Intelligence cockpit → log-only player features. priced:false until hold-out.
+export { RESEARCH_LOG_METHOD_TAG, playerResearchLog } from "./edge-lab/player-research-log.js";
+export type { ResearchFeatureInput, ResearchLog, ResearchDenied } from "./edge-lab/player-research-log.js";
+
+// NFL EPA independent path: interpret TeamGameEfficiency COUNT. priced:false.
+export { NFL_EPA_PATH_TAG, nflEpaPathStatus } from "./edge-lab/nfl-epa-path.js";
+export type { EpaPathStatus } from "./edge-lab/nfl-epa-path.js";
+
+// NFL weekly change-point / regime detector. Leak-safe, week t for t+1. priced:false.
+export {
+  NFL_CHANGEPOINT_METHOD_TAG,
+  detectRegimeShift,
+  weeklyPerformancesFromGames,
+} from "./edge-lab/nfl-change-point.js";
+export type { ChangePointFlag, ChangePointOptions, WeeklyPerformance } from "./edge-lab/nfl-change-point.js";
+
+// Ladder + boost scanners: softness map across a market's price ladder.
+// Detects where model p diverges from market q. Does NOT fire live p. priced:false.
+export {
+  LADDER_BOOST_METHOD_TAG,
+  scanLadderBoost,
+  scanBoostOpportunities,
+} from "./edge-lab/ladder-boost-scanners.js";
+export type {
+  LadderLevel,
+  LadderLevelScan,
+  SoftnessMapResult,
+  SoftnessMapOptions,
+  BoostOpportunity,
+} from "./edge-lab/ladder-boost-scanners.js";
+
+// Completions | attempts. Bounded Beta-Binomial. Distinct from pass yards | attempts.
+export {
+  COMP_HB_METHOD_TAG,
+  fitCompletionPrior,
+  posteriorCompletion,
+  betaBinomialProbOverCompletions,
+  probOverCompletions,
+  scoreCompletionsOver,
+} from "./edge-lab/props-hb-comp.js";
+export type { CompSample } from "./edge-lab/props-hb-comp.js";
+
+// INTs | attempts. Rare counts on the same exposure. Poisson fallback when no φ.
+export {
+  INT_HB_METHOD_TAG,
+  fitIntPerAttemptPrior,
+  pooledIntPerAttempt,
+  intProbZeroPoisson,
+  posteriorIntPerAttempt,
+  intProbZero,
+  probIntGivenAttempts,
+  probInt,
+} from "./edge-lab/props-hb-int.js";
+export type { IntSample } from "./edge-lab/props-hb-int.js";
+
+// Pass TDs | attempts. Distinct from ATD/rec-TD/rush-TD and from pass yards.
+export {
+  PASS_TD_HB_METHOD_TAG,
+  fitPassTdPerAttemptPrior,
+  pooledPassTdPerAttempt,
+  passTdProbZeroPoisson,
+  posteriorPassTdPerAttempt,
+  passTdProbZero,
+  probPassTdGivenAttempts,
+  probPassTd,
+} from "./edge-lab/props-hb-pass-td.js";
+export type { PassTdSample } from "./edge-lab/props-hb-pass-td.js";
+
+// Sacks | dropbacks. Bounded Beta-Binomial (sacks cannot exceed dropbacks).
+export {
+  SACK_HB_METHOD_TAG,
+  fitSackPrior,
+  posteriorSack,
+  betaBinomialProbOverSacks,
+  probOverSacks,
+  scoreSacksOver,
+} from "./edge-lab/props-hb-sacks.js";
+export type { SackSample } from "./edge-lab/props-hb-sacks.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
@@ -1410,3 +1946,33 @@ export type {
   RegressionCheckOptions,
   RegressionVerdict,
 } from "./regression-detector.js";
+
+// De-vig oracle — seven-method reference (penaltyblog MIT). Fair probabilities
+// feed the pick pipeline as calibration *inputs* only; they never bypass scoring.
+export { devig, bisectRoot } from "./devig/oracle.js";
+export type { DevigMethod, DevigResult } from "./devig/oracle.js";
+
+// Parlay MRI v1 — same-match bivariate Poisson correlation. priced:false until
+// correlated survivability beats naive on a walk-forward against book SGP quotes.
+export {
+  PARLAY_MRI_PRICED,
+  PARLAY_MRI_SCOPE,
+  poissonPmf as bivariatePoissonComponentPmf,
+  bivariatePoissonPmf,
+  buildScoreGrid,
+  evaluateParlay,
+  lambdasFromAttackDefense,
+} from "./parlay/correlationAdjuster.js";
+export type { SameMatchLeg, ParlayEvaluation } from "./parlay/correlationAdjuster.js";
+
+// Per-sport NB2 dispersion estimation — OFFLINE/research evidence only.
+// Deliberately not wired into live scoring: changing a constant a priced path
+// uses is MODEL_VERSION-affecting and is the founder's call. Consume from a
+// runner or report. Returns a VERDICT first ("poisson" for NHL-like data) so a
+// caller cannot mistake a noise-fit for a real dispersion.
+export {
+  estimatePhi,
+  impliedVmr,
+  MIN_SAMPLES_FOR_DISPERSION,
+} from "./dispersion/estimate-phi.js";
+export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";

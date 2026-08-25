@@ -9,20 +9,50 @@
  */
 
 import type { OddsApiEvent, OddsApiBookmaker, OddsApiMarket } from "@sports/types";
+import { assertIngestible } from "./source-registry.js";
 
 const RUNDOWN_BASE = "https://therundown.io/api/v2";
 
-/** Sport key (Odds API style) → TheRundown sport_id */
+/**
+ * Sport key (Odds API style) → TheRundown sport_id.
+ * IDs from GET /api/v2/sports (no auth) as published in docs.therundown.io
+ * OpenAPI 3.1, retrieved 2026-08-22. NHL is 6, NCAAB is 5 — the previous map
+ * had those (and MLS/EPL) swapped, so failover was querying the wrong sport.
+ */
 export const RUNDOWN_SPORT_IDS: Record<string, number> = {
-  americanfootball_nfl: 2,
   americanfootball_ncaaf: 1,
+  americanfootball_nfl: 2,
   baseball_mlb: 3,
   basketball_nba: 4,
-  icehockey_nhl: 5,
-  basketball_ncaab: 6,
-  soccer_epl: 10,
-  soccer_usa_mls: 11,
+  basketball_ncaab: 5,
+  icehockey_nhl: 6,
+  soccer_usa_mls: 10,
+  soccer_epl: 11,
 };
+
+/**
+ * Affiliate IDs from the unauthenticated GET /api/v2/affiliates example in the
+ * same OpenAPI document (2026-08-22). Unknown IDs stay `rundown_${id}` — we
+ * never invent a book name. Kalshi here is Rundown's licensed feed, not the
+ * Kalshi Trade API (Dev Agreement §3 still blocks that path).
+ */
+export const RUNDOWN_AFFILIATE_BOOK_KEYS: Readonly<Record<string, string>> = {
+  "2": "bovada",
+  "3": "pinnacle",
+  "4": "sportbettingag",
+  "6": "betonlineag",
+  "11": "lowvig",
+  "19": "draftkings",
+  "22": "betmgm",
+  "23": "fanduel",
+  "24": "thescorebet",
+  "25": "kalshi",
+  "28": "hardrockbet",
+};
+
+function affiliateBookKey(affiliateId: string): string {
+  return RUNDOWN_AFFILIATE_BOOK_KEYS[affiliateId] ?? `rundown_${affiliateId}`;
+}
 
 /** Env names checked for free dual-path Rundown key (first non-empty wins). */
 export const RUNDOWN_API_KEY_ENV_NAMES = [
@@ -72,13 +102,15 @@ function todayIsoUtc(d = new Date()): string {
   return d.toISOString().slice(0, 10);
 }
 
+/**
+ * OpenAPI: 0.0001 means off-the-board, not a real price. Drop it.
+ * Live American prices are integers like -110 / +150.
+ */
 function americanFromPrice(p: unknown): number | null {
-  if (typeof p === "number" && Number.isFinite(p)) return Math.round(p);
-  if (typeof p === "string" && p.trim()) {
-    const n = Number(p);
-    if (Number.isFinite(n)) return Math.round(n);
-  }
-  return null;
+  const n = typeof p === "number" ? p : typeof p === "string" && p.trim() ? Number(p) : NaN;
+  if (!Number.isFinite(n)) return null;
+  if (Math.abs(n) < 0.01) return null;
+  return Math.round(n);
 }
 
 type Loose = Record<string, unknown>;
@@ -112,16 +144,19 @@ export function rundownEventToOddsApiEvent(raw: unknown, sportKey: string): Odds
     new Date().toISOString();
 
   const bookmakers: OddsApiBookmaker[] = [];
-  // lines_by_affiliate / markets / lines shapes
-  const lines = (e["lines"] ?? e["markets"] ?? e["odds"] ?? null) as unknown;
+  const marketsField = e["markets"];
+  const linesField = e["lines"] ?? e["odds"] ?? null;
 
-  if (lines && typeof lines === "object" && !Array.isArray(lines)) {
-    for (const [aff, blob] of Object.entries(lines as Record<string, unknown>)) {
+  // V2 (current events endpoint): markets[] with participants[].lines[].prices[affiliateId]
+  if (Array.isArray(marketsField) && marketsField.some(isV2Market)) {
+    bookmakers.push(...v2MarketsToBookmakers(marketsField, home, away));
+  } else if (linesField && typeof linesField === "object" && !Array.isArray(linesField)) {
+    for (const [aff, blob] of Object.entries(linesField as Record<string, unknown>)) {
       const bm = lineBlobToBookmaker(String(aff), blob, home, away);
       if (bm) bookmakers.push(bm);
     }
-  } else if (Array.isArray(lines)) {
-    for (const m of lines) {
+  } else if (Array.isArray(linesField)) {
+    for (const m of linesField) {
       const bm = lineBlobToBookmaker("default", m, home, away);
       if (bm) bookmakers.push(bm);
     }
@@ -215,12 +250,111 @@ function lineBlobToBookmaker(
   }
 
   if (markets.length === 0) return null;
+  const bookKey = affiliateBookKey(key);
   return {
-    key: `rundown_${key}`,
-    title: `Rundown ${key}`,
+    key: bookKey,
+    title: bookKey,
     last_update: new Date().toISOString(),
     markets,
   };
+}
+
+function isV2Market(raw: unknown): boolean {
+  if (!raw || typeof raw !== "object") return false;
+  const m = raw as Loose;
+  return Array.isArray(m["participants"]) && (m["market_id"] != null || typeof m["name"] === "string");
+}
+
+function v2MarketKey(name: unknown): "h2h" | "spreads" | "totals" | null {
+  const n = String(name ?? "").toLowerCase();
+  if (n === "moneyline" || n === "h2h") return "h2h";
+  if (n === "handicap" || n === "spread" || n === "spreads") return "spreads";
+  if (n === "totals" || n === "total") return "totals";
+  return null;
+}
+
+function v2MarketsToBookmakers(
+  markets: readonly unknown[],
+  homeTeam: string,
+  awayTeam: string,
+): OddsApiBookmaker[] {
+  type MarketKey = "h2h" | "spreads" | "totals";
+  type Acc = { outcomes: Map<string, { name: string; price: number; point?: number }>; last: string };
+  const byAff = new Map<string, Map<MarketKey, Acc>>();
+
+  const touch = (aff: string, marketKey: MarketKey, name: string, price: number, point: number | undefined, updated: string) => {
+    let marketsMap = byAff.get(aff);
+    if (!marketsMap) {
+      marketsMap = new Map();
+      byAff.set(aff, marketsMap);
+    }
+    let acc = marketsMap.get(marketKey);
+    if (!acc) {
+      acc = { outcomes: new Map(), last: updated };
+      marketsMap.set(marketKey, acc);
+    }
+    acc.outcomes.set(name, point === undefined ? { name, price } : { name, price, point });
+    if (updated) acc.last = updated;
+  };
+
+  for (const raw of markets) {
+    if (!raw || typeof raw !== "object") continue;
+    const market = raw as Loose;
+    const marketKey = v2MarketKey(market["name"]);
+    if (!marketKey) continue;
+    const participants = Array.isArray(market["participants"]) ? (market["participants"] as Loose[]) : [];
+    for (const p of participants) {
+      const rawName = String(p["name"] ?? "");
+      let outcomeName = rawName;
+      if (marketKey === "totals") {
+        const lower = rawName.toLowerCase();
+        if (lower.startsWith("over")) outcomeName = "Over";
+        else if (lower.startsWith("under")) outcomeName = "Under";
+        else continue;
+      } else {
+        const lower = rawName.toLowerCase();
+        if (lower.includes(homeTeam.toLowerCase()) || homeTeam.toLowerCase().includes(lower)) outcomeName = homeTeam;
+        else if (lower.includes(awayTeam.toLowerCase()) || awayTeam.toLowerCase().includes(lower)) outcomeName = awayTeam;
+        else continue;
+      }
+      const lineRows = Array.isArray(p["lines"]) ? (p["lines"] as Loose[]) : [];
+      for (const line of lineRows) {
+        const pointRaw = line["value"];
+        const pointNum = pointRaw === "" || pointRaw == null ? undefined : Number(pointRaw);
+        const point = pointNum !== undefined && Number.isFinite(pointNum) ? pointNum : undefined;
+        const prices = line["prices"];
+        if (!prices || typeof prices !== "object") continue;
+        for (const [aff, blob] of Object.entries(prices as Record<string, unknown>)) {
+          if (!blob || typeof blob !== "object") continue;
+          const pr = blob as Loose;
+          const price = americanFromPrice(pr["price"]);
+          if (price == null) continue;
+          const updated = String(pr["updated_at"] ?? new Date().toISOString());
+          touch(aff, marketKey, outcomeName, price, marketKey === "h2h" ? undefined : point, updated);
+        }
+      }
+    }
+  }
+
+  const out: OddsApiBookmaker[] = [];
+  for (const [aff, marketsMap] of byAff) {
+    const apiMarkets: OddsApiMarket[] = [];
+    let last = new Date().toISOString();
+    for (const [mkey, acc] of marketsMap) {
+      const outcomes = [...acc.outcomes.values()];
+      if (outcomes.length < 2) continue;
+      last = acc.last || last;
+      apiMarkets.push({
+        key: mkey,
+        last_update: acc.last,
+        outcomes,
+      });
+    }
+    if (apiMarkets.length === 0) continue;
+    const bookKey = affiliateBookKey(aff);
+    out.push({ key: bookKey, title: bookKey, last_update: last, markets: apiMarkets });
+  }
+  return out;
 }
 
 
@@ -244,6 +378,7 @@ export async function fetchRundownEventsForSport(
     readonly fetchImpl?: typeof fetch;
   },
 ): Promise<RundownFetchResult> {
+  assertIngestible("therundown");
   const sportId = RUNDOWN_SPORT_IDS[sportKey];
   if (sportId == null) {
     return { events: [], remaining: null, error: `rundown: no sport_id map for ${sportKey}` };

@@ -121,6 +121,42 @@ describe("evaluatePublicPerformancePolicy", () => {
     });
     expect(p.canExposePerformanceStats).toBe(true);
     expect(p.publicWinRate).toBeNull();
+    expect(p.publicWinRateCiLowPct).toBeNull();
+    expect(p.publicWinRateCiHighPct).toBeNull();
+  });
+
+  it("attaches a Clopper-Pearson band to a publishable headline rate", () => {
+    const p = evaluatePublicPerformancePolicy(base);
+    expect(p.publicWinRate).toBe(57.9);
+    expect(p.publicWinRateBoundMethod).toBe("clopper-pearson");
+    expect(p.publicWinRateCiLowPct).toBeTypeOf("number");
+    expect(p.publicWinRateCiHighPct).toBeTypeOf("number");
+    expect(p.publicWinRateCiLowPct!).toBeLessThan(p.publicWinRate!);
+    expect(p.publicWinRateCiHighPct!).toBeGreaterThan(p.publicWinRate!);
+    expect(p.canonicalVoids).toBe(0);
+  });
+
+  it("counts voids in the record without changing the decided rate", () => {
+    const p = evaluatePublicPerformancePolicy({
+      ...base,
+      canonicalVoids: 7,
+      modelVersions: ["v1.2.0"],
+    });
+    expect(p.publicWinRate).toBe(57.9);
+    expect(p.publicRecord).toMatch(/7V/);
+    expect(p.modelVersions).toEqual(["v1.2.0"]);
+    expect(p.disclaimer).toMatch(/clopper-pearson/i);
+    expect(p.disclaimer).toMatch(/past performance does not guarantee future results/i);
+  });
+
+  it("withholds the interval when the performance gate is closed", () => {
+    const p = evaluatePublicPerformancePolicy({
+      ...base,
+      canExposePerformanceStats: false,
+    });
+    expect(p.publicWinRate).toBeNull();
+    expect(p.publicWinRateCiLowPct).toBeNull();
+    expect(p.publicWinRateCiHighPct).toBeNull();
   });
 
   // ── Brand-safety invariants ───────────────────────────────────────────────

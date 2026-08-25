@@ -40,6 +40,20 @@ export function isStubDbUrl(url: string | undefined): boolean {
   if (trimmed === "") return true;
   if (trimmed.startsWith("changeme")) return true;
   if (trimmed.includes("dummy:dummy")) return true;
+  // CI's `build` job passes
+  // postgresql://placeholder:placeholder@localhost:5432/placeholder with no
+  // Postgres service container, so nothing is listening on that port. Without
+  // this arm the predicate returns false, the REAL client is constructed, and
+  // `next build` opens a live connection attempt for every DB-backed page it
+  // prerenders -- 53 failed connections through Prisma's native query engine in
+  // a measured local run, for a database that provably does not exist.
+  //
+  // Matched as a credentials PAIR, exactly like dummy:dummy above, rather than
+  // a bare "placeholder" substring. A real connection string whose host or
+  // password merely contains the word would otherwise be classified as a stub,
+  // and a stub in production silently drops every write while jobs report
+  // success -- the precise failure is-stub-db-url.test.ts exists to prevent.
+  if (trimmed.includes("placeholder:placeholder")) return true;
   if (trimmed === "stub" || trimmed === "none") return true;
   return false;
 }

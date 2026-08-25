@@ -11,6 +11,7 @@ import {
   type Market,
   type SupportedSportKey,
 } from "./config.js";
+import type { OddsIngestKey } from "./nfl-preseason-map.js";
 import { noStoreFetch } from "./no-store-fetch.js";
 import {
   getOddsPaymentCircuitBreaker,
@@ -32,6 +33,19 @@ export interface OddsApiFetchResult<T> {
   data: T;
   remainingRequests: number;
   usedRequests: number;
+}
+
+/** Paid historical `/v4/historical/sports/{sport}/odds` envelope. */
+export interface OddsApiHistoricalSnapshot {
+  readonly timestamp: string;
+  readonly previous_timestamp: string | null;
+  readonly next_timestamp: string | null;
+  readonly data: OddsApiEvent[];
+}
+
+export interface OddsApiParticipant {
+  readonly id: string;
+  readonly full_name: string;
 }
 
 interface OddsApiRetryOptions {
@@ -271,7 +285,7 @@ export class OddsApiClient {
   }
 
   async getOdds(
-    sportKey: SupportedSportKey,
+    sportKey: OddsIngestKey,
     markets: Market[],
     // Optional override of the default US-region request — e.g. the Pinnacle
     // closing-line leg (packages/ingestion-pipeline/src/pinnacle-line-archive.ts)
@@ -296,7 +310,7 @@ export class OddsApiClient {
   }
 
   async getScores(
-    sportKey: SupportedSportKey,
+    sportKey: OddsIngestKey,
     daysFrom: number = 1
   ): Promise<OddsApiFetchResult<OddsApiScore[]>> {
     return this.fetch<OddsApiScore[]>(`/sports/${sportKey}/scores`, {
@@ -311,5 +325,113 @@ export class OddsApiClient {
     return this.fetch<OddsApiEvent[]>(`/sports/${sportKey}/events`, {
       dateFormat: "iso",
     });
+  }
+
+  /**
+   * Extra / player-prop markets for one event. Same licensed vendor as getOdds.
+   * `markets` is an open string list because prop keys are not in the featured
+   * Market union (player_pass_tds, player_points, …).
+   */
+  async getEventOdds(
+    sportKey: OddsIngestKey,
+    eventId: string,
+    markets: readonly string[],
+    options?: { regions?: string; bookmakers?: readonly string[]; includeLinks?: boolean }
+  ): Promise<OddsApiFetchResult<OddsApiEvent>> {
+    const params: Record<string, string> = {
+      regions: options?.regions ?? ODDS_REGION,
+      markets: markets.join(","),
+      oddsFormat: ODDS_FORMAT,
+      dateFormat: "iso",
+    };
+    if (options?.bookmakers && options.bookmakers.length > 0) {
+      params["bookmakers"] = options.bookmakers.join(",");
+    }
+    if (options?.includeLinks === true) {
+      params["includeLinks"] = "true";
+    }
+    return this.fetch<OddsApiEvent>(
+      `/sports/${sportKey}/events/${eventId}/odds`,
+      params
+    );
+  }
+
+  /** Recently seen market keys per book for one event. Costs 1 credit. */
+  async getEventMarkets(
+    sportKey: OddsIngestKey,
+    eventId: string,
+    options?: { regions?: string; bookmakers?: readonly string[] }
+  ): Promise<OddsApiFetchResult<OddsApiEvent>> {
+    const params: Record<string, string> = {
+      regions: options?.regions ?? ODDS_REGION,
+      dateFormat: "iso",
+    };
+    if (options?.bookmakers && options.bookmakers.length > 0) {
+      params["bookmakers"] = options.bookmakers.join(",");
+    }
+    return this.fetch<OddsApiEvent>(
+      `/sports/${sportKey}/events/${eventId}/markets`,
+      params
+    );
+  }
+
+  /**
+   * Historical featured-market snapshot. Paid plans only; 10 credits × region × market.
+   * Does not run in production ingest — callers must opt in.
+   */
+  async getHistoricalOdds(
+    sportKey: OddsIngestKey,
+    dateIso: string,
+    markets: Market[],
+    options?: { regions?: string; bookmakers?: readonly string[] }
+  ): Promise<OddsApiFetchResult<OddsApiHistoricalSnapshot>> {
+    const params: Record<string, string> = {
+      regions: options?.regions ?? ODDS_REGION,
+      markets: markets.join(","),
+      oddsFormat: ODDS_FORMAT,
+      dateFormat: "iso",
+      date: dateIso,
+    };
+    if (options?.bookmakers && options.bookmakers.length > 0) {
+      params["bookmakers"] = options.bookmakers.join(",");
+    }
+    return this.fetch<OddsApiHistoricalSnapshot>(
+      `/historical/sports/${sportKey}/odds`,
+      params
+    );
+  }
+
+  /**
+   * Historical *event* odds (player props after 2023-05-03). Paid; 10× credits.
+   * Not called from production ingest — opt-in research only.
+   */
+  async getHistoricalEventOdds(
+    sportKey: OddsIngestKey,
+    eventId: string,
+    dateIso: string,
+    markets: readonly string[],
+    options?: { regions?: string; bookmakers?: readonly string[] }
+  ): Promise<OddsApiFetchResult<OddsApiHistoricalSnapshot>> {
+    const params: Record<string, string> = {
+      regions: options?.regions ?? ODDS_REGION,
+      markets: markets.join(","),
+      oddsFormat: ODDS_FORMAT,
+      dateFormat: "iso",
+      date: dateIso,
+    };
+    if (options?.bookmakers && options.bookmakers.length > 0) {
+      params["bookmakers"] = options.bookmakers.join(",");
+    }
+    return this.fetch<OddsApiHistoricalSnapshot>(
+      `/historical/sports/${sportKey}/events/${eventId}/odds`,
+      params
+    );
+  }
+
+  /** Participant whitelist (team or player). Does not return roster PBP. */
+  async getParticipants(
+    sportKey: SupportedSportKey
+  ): Promise<OddsApiFetchResult<OddsApiParticipant[]>> {
+    return this.fetch<OddsApiParticipant[]>(`/sports/${sportKey}/participants`);
   }
 }

@@ -1,13 +1,31 @@
 /**
  * Bernoulli e-process toolkit — R&D, dark, unwired.
  *
- * Two APIs live here:
- *   1. v5 likelihood-ratio (eStep / eProcess / mixtureEProcess) — the
- *      contract in HERMES_HANDOFF_V5.
- *   2. v4 betting increment (bettingEStep / bettingEProcess) — kept so
- *      the earlier Ville suite still pins that martingale.
+ * Two APIs live here, both anytime-valid e-processes in Ville's sense:
+ *
+ *   1. Likelihood-ratio (eStep / eProcess / mixtureEProcess). One factor is
+ *      the sequential LR of a Bernoulli forecast against a market (or other)
+ *      null: y=1 → pHat/pMkt, y=0 → (1−pHat)/(1−pMkt). Under y ~ Bernoulli(pMkt)
+ *      each factor has conditional mean 1, so the running product M_t is a
+ *      nonnegative martingale and Ville's inequality gives
+ *      P(exists t: M_t ≥ 1/α) ≤ α. `supM` is the statistic, not only terminal M.
+ *      `mixtureEProcess` averages K already-exponentiated wealth paths
+ *      (e-value averaging).
+ *
+ *   2. Betting increment (bettingEStep / bettingEProcess). Capital update
+ *      M ← M · (1 + λ (y − y0)) with predictable λ < 1/y0 so the factor stays
+ *      positive — the testing-by-betting step. Kept so the Ville suite still
+ *      pins that martingale.
  *
  * Do not import this from a live path. Do not flip any gate.
+ *
+ * References:
+ *   - Ville, J. (1939). Étude critique de la notion de collectif. Gauthier-Villars.
+ *   - Shafer, G. & Vovk, V. (2019). Game-Theoretic Foundations for Probability and Finance. Wiley.
+ *   - Ramdas, A., Ruf, J., Larsson, M. & Koolen, W. (2020). "Admissible anytime-valid sequential inference via supermartingales."
+ *   - Ramdas, A., Grünwald, P., Vovk, V. & Shafer, G. (2023). "Game-theoretic statistics and safe anytime-valid inference." Statistical Science 38(4).
+ *   - Waudby-Smith, I. & Ramdas, A. (2024). "Estimating means of bounded random variables by betting." J. R. Statist. Soc. B 86(1).
+ *   - Vovk, V. & Wang, R. (2021). "E-values: Calibration, combination and applications." Ann. Statist. 49(3).
  */
 
 export type BernoulliOutcome = 0 | 1;

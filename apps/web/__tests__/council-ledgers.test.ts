@@ -581,9 +581,18 @@ describe("buildLiveLedgerStatus", () => {
   it("returns connected posture with counts when db succeeds", async () => {
     const { db } = await import("@sports/db");
     vi.mocked(db.agentHandoff.count).mockResolvedValue(5);
-    vi.mocked(db.subagentRun.count)
-      .mockResolvedValueOnce(12)   // total
-      .mockResolvedValueOnce(3);   // pending_review
+    // Preventive: dispatch by WHERE, not Promise.all order. Nothing currently
+    // wrong — the old mockResolvedValueOnce chain matched ledger-types.ts:147-151.
+    // A third subagentRun.count() between total and pending_review would
+    // silently shift those values (same class as B1 dashboard VOID mock).
+    vi.mocked(db.subagentRun.count).mockImplementation(
+      (args?: { where?: { parent_review_status?: string } }) => {
+        if (args?.where?.parent_review_status) {
+          return Promise.resolve(3);
+        }
+        return Promise.resolve(12);
+      },
+    );
 
     const status = await buildLiveLedgerStatus();
     expect(status.storeAvailable).toBe(true);

@@ -216,6 +216,39 @@ export function clopperPearsonLowerBound(successes: number, n: number, alpha: nu
   return betaInv(alpha, successes, n - successes + 1);
 }
 
+export interface ClopperPearsonInterval {
+  readonly lower: number;
+  readonly upper: number;
+  /** Raw successes/n. Degenerate n=0 reports 0.5 (no claim, not a rate). */
+  readonly center: number;
+}
+
+/**
+ * Two-sided Clopper-Pearson exact binomial interval.
+ *
+ * lower = BetaInv(α/2, k, n−k+1)  (0 when k=0)
+ * upper = BetaInv(1−α/2, k+1, n−k) (1 when k=n)
+ *
+ * Default α=0.05 is a 95% interval. The existing one-sided lower bound
+ * equals this interval's lower tail at α=0.10 (same 5% tail).
+ */
+export function clopperPearsonInterval(
+  successes: number,
+  n: number,
+  alpha: number = ALPHA_ONE_SIDED_95,
+): ClopperPearsonInterval {
+  assertValidCounts(successes, n);
+  if (!(alpha > 0 && alpha < 1)) {
+    throw new RangeError(`alpha must be in (0, 1) (got alpha=${alpha})`);
+  }
+  if (n === 0) return { lower: 0, upper: 1, center: 0.5 };
+  const center = successes / n;
+  const tail = alpha / 2;
+  const lower = successes === 0 ? 0 : betaInv(tail, successes, n - successes + 1);
+  const upper = successes === n ? 1 : betaInv(1 - tail, successes + 1, n - successes);
+  return { lower, upper, center };
+}
+
 export interface BinomialCoverage {
   readonly fired: number;
   readonly eligible: number;

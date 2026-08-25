@@ -15,6 +15,8 @@ import type { NormalizedOdds } from "@sports/types";
  *   - flag unset: captureLineSnapshotsIfEnabled never touches the db
  *   - flag on: phase is OPEN on the first capture per (gameId, market),
  *     INTERIM thereafter
+ *   - captureLineSnapshots uses ONE batched findMany (not N count() calls)
+ *     — the N+1 that would melt Neon on a dense slate
  *   - markClosingSnapshots re-tags only the latest pre-kickoff row per
  *     (market, book, side)
  *   - any db rejection is caught and returned as `{ error }`, never thrown
@@ -36,17 +38,15 @@ afterEach(() => {
 
 function mockDb(): LineArchiveDb & {
   oddsLineSnapshot: {
-    count: ReturnType<typeof vi.fn>;
-    createMany: ReturnType<typeof vi.fn>;
     findMany: ReturnType<typeof vi.fn>;
+    createMany: ReturnType<typeof vi.fn>;
     update: ReturnType<typeof vi.fn>;
   };
 } {
   return {
     oddsLineSnapshot: {
-      count: vi.fn(),
-      createMany: vi.fn(),
       findMany: vi.fn(),
+      createMany: vi.fn(),
       update: vi.fn(),
     },
   };
@@ -68,9 +68,8 @@ describe("captureLineSnapshotsIfEnabled — hard gate", () => {
     });
 
     expect(result).toEqual({ enabled: false, persisted: 0 });
-    expect(db.oddsLineSnapshot.count).not.toHaveBeenCalled();
-    expect(db.oddsLineSnapshot.createMany).not.toHaveBeenCalled();
     expect(db.oddsLineSnapshot.findMany).not.toHaveBeenCalled();
+    expect(db.oddsLineSnapshot.createMany).not.toHaveBeenCalled();
     expect(db.oddsLineSnapshot.update).not.toHaveBeenCalled();
   });
 
@@ -85,13 +84,13 @@ describe("captureLineSnapshotsIfEnabled — hard gate", () => {
     });
 
     expect(result).toEqual({ enabled: false, persisted: 0 });
-    expect(db.oddsLineSnapshot.count).not.toHaveBeenCalled();
+    expect(db.oddsLineSnapshot.findMany).not.toHaveBeenCalled();
   });
 
   it("persists and delegates to captureLineSnapshots when LINE_ARCHIVE_ENABLED=true", async () => {
     process.env["LINE_ARCHIVE_ENABLED"] = "true";
     const db = mockDb();
-    db.oddsLineSnapshot.count.mockResolvedValue(0);
+    db.oddsLineSnapshot.findMany.mockResolvedValue([]);
     db.oddsLineSnapshot.createMany.mockResolvedValue({ count: ROWS.length });
 
     const result = await captureLineSnapshotsIfEnabled({
@@ -106,10 +105,11 @@ describe("captureLineSnapshotsIfEnabled — hard gate", () => {
   });
 });
 
-describe("captureLineSnapshots — phase classification", () => {
+describe("captureLineSnapshots — phase classification (batched findMany)", () => {
   it("tags rows OPEN when this is the first snapshot ever for (gameId, market)", async () => {
     const db = mockDb();
-    db.oddsLineSnapshot.count.mockResolvedValue(0);
+    // Batch findMany returns empty — no prior snapshots exist → OPEN
+    db.oddsLineSnapshot.findMany.mockResolvedValue([]);
     db.oddsLineSnapshot.createMany.mockResolvedValue({ count: ROWS.length });
 
     const result = await captureLineSnapshots({
@@ -120,8 +120,11 @@ describe("captureLineSnapshots — phase classification", () => {
     });
 
     expect(result).toEqual({ persisted: ROWS.length });
-    expect(db.oddsLineSnapshot.count).toHaveBeenCalledWith({
-      where: { gameId: "game_1", market: "SPREAD" },
+    // SINGLE findMany, not one count() per market
+    expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
+    expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
+      where: { gameId: "game_1", market: ["SPREAD"] },
+      select: { market: true },
     });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
     expect(data).toHaveLength(ROWS.length);
@@ -132,7 +135,10 @@ describe("captureLineSnapshots — phase classification", () => {
 
   it("tags rows INTERIM when a snapshot already exists for (gameId, market)", async () => {
     const db = mockDb();
-    db.oddsLineSnapshot.count.mockResolvedValue(2); // prior snapshots exist
+    // Batch findMany returns a row for SPREAD → it already existed → INTERIM
+    db.oddsLineSnapshot.findMany.mockResolvedValue([
+      { id: "prev", market: "SPREAD", book: "fanduel", side: "home", phase: "OPEN", capturedAt: new Date() },
+    ]);
     db.oddsLineSnapshot.createMany.mockResolvedValue({ count: ROWS.length });
 
     await captureLineSnapshots({
@@ -142,6 +148,11 @@ describe("captureLineSnapshots — phase classification", () => {
       rows: ROWS,
     });
 
+    expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
+    expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
+      where: { gameId: "game_1", market: ["SPREAD"] },
+      select: { market: true },
+    });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
     for (const row of data) {
       expect(row.phase).toBe("INTERIM");
@@ -150,11 +161,10 @@ describe("captureLineSnapshots — phase classification", () => {
 
   it("classifies phase independently per market within one call", async () => {
     const db = mockDb();
-    // SPREAD has no prior snapshots (OPEN); MONEYLINE already has one (INTERIM).
-    db.oddsLineSnapshot.count.mockImplementation(
-      async ({ where }: { where: { market: string } }) =>
-        where.market === "SPREAD" ? 0 : 1,
-    );
+    // Batch findMany returns only MONEYLINE (already exists) — SPREAD is OPEN
+    db.oddsLineSnapshot.findMany.mockResolvedValue([
+      { id: "prev_ml", market: "MONEYLINE", book: "fanduel", side: "home", phase: "OPEN", capturedAt: new Date() },
+    ]);
     db.oddsLineSnapshot.createMany.mockResolvedValue({ count: 2 });
 
     const mixedRows = [
@@ -169,6 +179,12 @@ describe("captureLineSnapshots — phase classification", () => {
       rows: mixedRows,
     });
 
+    // ONE findMany call with BOTH markets — not two count() calls
+    expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
+    expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
+      where: { gameId: "game_1", market: ["SPREAD", "MONEYLINE"] },
+      select: { market: true },
+    });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
     const spreadRow = data.find((r: { market: string }) => r.market === "SPREAD");
     const mlRow = data.find((r: { market: string }) => r.market === "MONEYLINE");
@@ -186,7 +202,7 @@ describe("captureLineSnapshots — phase classification", () => {
     });
 
     expect(result).toEqual({ persisted: 0 });
-    expect(db.oddsLineSnapshot.count).not.toHaveBeenCalled();
+    expect(db.oddsLineSnapshot.findMany).not.toHaveBeenCalled();
     expect(db.oddsLineSnapshot.createMany).not.toHaveBeenCalled();
   });
 });
@@ -194,7 +210,7 @@ describe("captureLineSnapshots — phase classification", () => {
 describe("captureLineSnapshots — failure isolation", () => {
   it("returns { error } instead of throwing when the db rejects", async () => {
     const db = mockDb();
-    db.oddsLineSnapshot.count.mockRejectedValue(new Error("connection reset"));
+    db.oddsLineSnapshot.findMany.mockRejectedValue(new Error("connection reset"));
 
     await expect(
       captureLineSnapshots({
@@ -209,7 +225,7 @@ describe("captureLineSnapshots — failure isolation", () => {
   it("captureLineSnapshotsIfEnabled also never throws on a rejecting db", async () => {
     process.env["LINE_ARCHIVE_ENABLED"] = "true";
     const db = mockDb();
-    db.oddsLineSnapshot.count.mockRejectedValue(new Error("pool exhausted"));
+    db.oddsLineSnapshot.findMany.mockRejectedValue(new Error("pool exhausted"));
 
     await expect(
       captureLineSnapshotsIfEnabled({

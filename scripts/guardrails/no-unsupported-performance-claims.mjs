@@ -10,6 +10,7 @@
 
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
+import { pathToFileURL } from "node:url";
 import { normalizeScanLine, collapseStringJoins } from "./scan-normalize.mjs";
 
 const ROOT = resolve(process.cwd());
@@ -45,7 +46,16 @@ const RENDERED_BASENAMES = new Set([
 ]);
 const NON_PUBLIC_TOP_DIRS = new Set(["api", "admin", "cockpit"]);
 const NUMERIC_CLAIM_PATTERNS = [
-  ["percent-performance", /\b\d{1,3}(?:\.\d+)?%\s*(?:win|hit|roi|accuracy|success)\b/i],
+  // The `\+?` closes a real gap (S2, 2026-08-22): "60%+ win rate" is the
+  // classic sportsbook-tout ceiling-exceeding framing, and the plain "%"
+  // version of this pattern did not match it — the "+" sat between the
+  // percent sign and the required whitespace, so `%\s*` never fired.
+  // Confirmed before the fix: /%(\s*)(?:win|hit|...)/i.test("60%+ win rate")
+  // === false. The fixed pattern still requires the keyword to directly
+  // follow (optional "+" then optional whitespace), so legitimate CI-band
+  // copy like "95% CP 52.1-68.3%" and unrelated "15% off" promo copy are
+  // unaffected — neither is followed by win/hit/roi/accuracy/success.
+  ["percent-performance", /\b\d{1,3}(?:\.\d+)?%\+?\s*(?:win|hit|roi|accuracy|success)\b/i],
   ["percent-performance", /\b(?:win|hit|success)(?:\s|-)rate of \d{1,3}(?:\.\d+)?%/i],
   ["units-won", /\b(?:up|won|\+)\s?\d+(?:\.\d+)?\s?units\b/i],
   ["streak-claim", /\b(?:hit|won|cash(?:ed)?) \d+ of (?:the )?last \d+\b/i],
@@ -82,6 +92,52 @@ const CLAIMS = [
 
 const SAFE_CONTEXT =
   /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|sample|window|model version|settled|threshold|public-claim approval)\b/i;
+
+// Numeric pass exemption: SAFE_CONTEXT minus the evidence vocabulary
+// (settled/sample/window/threshold/model version) — those are evidence
+// NOUNS a tout can borrow, not negations. Clause-scoped, never line-wide.
+const NUMERIC_SAFE_CONTEXT =
+  /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|public-claim approval)\b/i;
+
+// O-3.x remainder (ported from commercial-copy-scan.mjs's safeContextNear):
+// the numeric-pass exemption must be CLAUSE-scoped around the match, not
+// line-wide — one evidence word anywhere on the line used to excuse every
+// hardcoded stat on it, which is exactly the bug this hardens (a fabricated
+// "68% win rate across 500 settled picks" borrowed "settled" from clear
+// across the sentence to exempt itself).
+const SAFE_WINDOW_BEFORE = 60;
+const SAFE_WINDOW_AFTER = 24;
+const CLAUSE_BOUNDARY = /[.!?;—]/;
+export function numericSafeContextNear(subject, matchIndex, matchLength) {
+  const winStart = Math.max(0, matchIndex - SAFE_WINDOW_BEFORE);
+  const winEnd = Math.min(subject.length, matchIndex + matchLength + SAFE_WINDOW_AFTER);
+  const before = subject.slice(winStart, matchIndex);
+  const after = subject.slice(matchIndex + matchLength, winEnd);
+  const lastBoundary = Math.max(
+    before.lastIndexOf("."), before.lastIndexOf("!"),
+    before.lastIndexOf("?"), before.lastIndexOf(";"), before.lastIndexOf("—"),
+  );
+  const beforeClause = lastBoundary >= 0 ? before.slice(lastBoundary + 1) : before;
+  const firstBoundary = after.search(CLAUSE_BOUNDARY);
+  const afterClause = firstBoundary >= 0 ? after.slice(0, firstBoundary) : after;
+  return NUMERIC_SAFE_CONTEXT.test(`${beforeClause} ${afterClause}`);
+}
+
+// Numeric-sweep extra roots (claims audit findings 2/5/7): bot output and
+// text-serving surfaces that are NOT rendered app/ route files, so
+// walkRenderedSurfaces() never reaches them, but a hardcoded stat in a tweet
+// template or a humans.txt-style text endpoint is the same fabrication.
+const NUMERIC_EXTRA_ROOTS = [
+  "apps/web/components",
+  "workers",
+  "apps/web/lib/twitter-bot",
+  "apps/web/lib/discord-bot",
+  "apps/web/lib/bot-outbox",
+  "apps/web/lib/proof",
+  "apps/web/app/humans.txt",
+  "apps/web/app/llms.txt",
+  "apps/web/app/ai.txt",
+];
 
 function rel(filePath) {
   return relative(ROOT, filePath).split(sep).join("/");
@@ -134,7 +190,7 @@ function pairSubjectOf(rawLines, i) {
     : null;
 }
 
-function scanLine(rawLines, i, relPath) {
+export function scanLine(rawLines, i, relPath) {
   const line = rawLines[i];
   const subjects = viewsOf(line);
   const normalized = subjects[0];
@@ -159,7 +215,7 @@ function scanLine(rawLines, i, relPath) {
   return hits;
 }
 
-function scanNumericClaimLine(rawLines, i, relPath) {
+export function scanNumericClaimLine(rawLines, i, relPath) {
   const line = rawLines[i];
   const subjects = viewsOf(line);
   const normalized = subjects[0];
@@ -167,14 +223,24 @@ function scanNumericClaimLine(rawLines, i, relPath) {
   const pairSubject = pairSubjectOf(rawLines, i);
   const hits = [];
   for (const [label, pattern] of NUMERIC_CLAIM_PATTERNS) {
-    const inline = subjects.some((subj) => pattern.test(subj) && !SAFE_CONTEXT.test(subj));
-    if (inline) {
+    let inlineHit = false;
+    for (const subj of subjects) {
+      const m = pattern.exec(subj);
+      if (m && !numericSafeContextNear(subj, m.index, m[0].length)) {
+        inlineHit = true;
+        break;
+      }
+    }
+    if (inlineHit) {
       hits.push({ claim: `hardcoded-numeric:${label}`, file: relPath, line: i + 1, snippet: line.trim().slice(0, 220) });
       continue;
     }
     // A stat split across a line break ("68%\n win rate") re-forms in the pair.
-    if (pairSubject !== null && pattern.test(pairSubject) && !SAFE_CONTEXT.test(pairSubject)) {
-      hits.push({ claim: `hardcoded-numeric:${label}`, file: relPath, line: i + 1, snippet: pairSubject.trim().slice(0, 220) });
+    if (pairSubject !== null) {
+      const m = pattern.exec(pairSubject);
+      if (m && !numericSafeContextNear(pairSubject, m.index, m[0].length)) {
+        hits.push({ claim: `hardcoded-numeric:${label}`, file: relPath, line: i + 1, snippet: pairSubject.trim().slice(0, 220) });
+      }
     }
   }
   return hits;
@@ -229,13 +295,37 @@ async function main() {
   // route file (deep-scanned files also get the numeric pass — a literal
   // stat is a violation in the commercial dirs too).
   const sweepFiles = await walkRenderedSurfaces(resolve(ROOT, PUBLIC_APP_ROOT), true);
+  const sweptOrDeepScanned = new Set(deepScanned);
   for (const file of sweepFiles) {
     if (shouldSkipFile(file)) continue;
     if (!deepScanned.has(file)) scanned++;
+    sweptOrDeepScanned.add(file);
     const text = await readFile(file, "utf8");
     const relPath = rel(file);
     const rawLines = text.split(/\r?\n/);
     rawLines.forEach((_line, index) => hits.push(...scanNumericClaimLine(rawLines, index, relPath)));
+  }
+
+  // Numeric-sweep extra roots: bot templates / text-serving endpoints that
+  // walkRenderedSurfaces() never reaches (not app/ route files at all).
+  for (const target of NUMERIC_EXTRA_ROOTS) {
+    const abs = resolve(ROOT, target);
+    let targetStat;
+    try {
+      targetStat = await stat(abs);
+    } catch {
+      continue;
+    }
+    const files = targetStat.isDirectory() ? await walk(abs) : [abs];
+    for (const file of files) {
+      if (sweptOrDeepScanned.has(file) || shouldSkipFile(file)) continue;
+      sweptOrDeepScanned.add(file);
+      scanned++;
+      const text = await readFile(file, "utf8");
+      const relPath = rel(file);
+      const rawLines = text.split(/\r?\n/);
+      rawLines.forEach((_line, index) => hits.push(...scanNumericClaimLine(rawLines, index, relPath)));
+    }
   }
 
   if (hits.length === 0) {
@@ -250,7 +340,10 @@ async function main() {
   process.exitCode = 1;
 }
 
-main().catch((error) => {
-  console.error("[no-unsupported-performance-claims] unexpected error:", error);
-  process.exit(2);
-});
+const isMain = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
+if (isMain) {
+  main().catch((error) => {
+    console.error("[no-unsupported-performance-claims] unexpected error:", error);
+    process.exit(2);
+  });
+}

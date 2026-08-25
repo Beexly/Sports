@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { shinDevig, gotoConversion, impliedFromDecimalOdds } from "../shin-devig.js";
+import { shinDevig, gotoConversion, impliedFromDecimalOdds, powerDevig } from "../shin-devig.js";
 
 const sum = (xs: readonly number[]) => xs.reduce((a, b) => a + b, 0);
 
@@ -67,5 +67,40 @@ describe("gotoConversion", () => {
     expect(sum(fair)).toBeCloseTo(1, 5);
     const booksum = sum(raw);
     expect(fair[0]!).not.toBeCloseTo(raw[0]! / booksum, 4);
+  });
+});
+
+describe("powerDevig", () => {
+  it("returns fair probabilities that sum to 1 with k > 1 on an overround book", () => {
+    const raw = impliedFromDecimalOdds([1.5, 2.5]);
+    const { probabilities, k, booksum } = powerDevig(raw);
+    expect(sum(probabilities)).toBeCloseTo(1, 5);
+    expect(k).toBeGreaterThan(1);
+    expect(booksum).toBeGreaterThan(1);
+    expect(probabilities[0]!).toBeGreaterThan(probabilities[1]!);
+  });
+
+  it("leaves a margin-free book unchanged with k = 1", () => {
+    const { probabilities, k } = powerDevig([0.5, 0.5]);
+    expect(probabilities).toEqual([0.5, 0.5]);
+    expect(k).toBe(1);
+  });
+
+  it("shrinks the longshot more than multiplicative (Hegarty-style honesty)", () => {
+    const raw = impliedFromDecimalOdds([1.15, 6.0]); // heavy favourite + longshot, with juice
+    const booksum = sum(raw);
+    const multiplicative = raw.map((p) => p / booksum);
+    const { probabilities } = powerDevig(raw);
+    // Power (k>1) penalises the longshot relative to proportional de-vig.
+    expect(probabilities[1]!).toBeLessThan(multiplicative[1]!);
+    expect(probabilities[0]!).toBeGreaterThan(multiplicative[0]!);
+  });
+
+  it("handles a 3-way market and refuses non-finite / negative input", () => {
+    const raw = impliedFromDecimalOdds([2.0, 3.5, 4.0]);
+    const { probabilities } = powerDevig(raw);
+    expect(sum(probabilities)).toBeCloseTo(1, 5);
+    expect(powerDevig([-0.1, 0.5]).k).toBe(0);
+    expect(powerDevig([]).probabilities).toEqual([]);
   });
 });

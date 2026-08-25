@@ -43,31 +43,21 @@ describe("moneypuck nhl", () => {
     resetMoneyPuckNhlCacheForTests();
   });
 
-  it("ranks all-situation skaters by xGoals and computes goals-over-expected", async () => {
-    const nhl = await loadMoneyPuckNhl({ season: 2025, fetcher: mockFetch(), cacheTtlMs: 0 });
-
-    expect(nhl.status).toBe("live");
-    expect(nhl.season).toBe(2025);
-    expect(nhl.seasonLabel).toBe("2025-26");
-    expect(nhl.canPublishPicks).toBe(false);
-    expect(nhl.attribution).toMatch(/moneypuck/i);
-
-    // Sorted by xG; Fred (<20 g) and the 5on5 row excluded -> 3 skaters.
-    expect(nhl.skaters.map((s) => s.name)).toEqual(["Volume Vic", "Elite Eddie", "Lucky Larry"]);
-    const larry = nhl.skaters.find((s) => s.name === "Lucky Larry");
-    expect(larry?.goalsOverExpected).toBe(15); // 25 goals - 10 xG
-    expect(nhl.teams[0]?.team).toBe("BOS");
-
-    // Goalies ranked by GSAx (xGA - GA); the 5-game backup is excluded.
-    expect(nhl.goalies.map((g) => g.name)).toEqual(["Wall Wally", "Sieve Steve"]);
-    expect(nhl.goalies[0]?.gsax).toBe(20); // 120 xGA - 100 GA
+  it("stays dark until MoneyPuck grants commercial permission", async () => {
+    const fetcher = mockFetch();
+    const nhl = await loadMoneyPuckNhl({ season: 2025, fetcher, cacheTtlMs: 0 });
+    expect(nhl.status).toBe("source-error");
+    expect(nhl.error).toBe("moneypuck-permission-required");
+    expect(nhl.skaters).toHaveLength(0);
+    expect(fetcher).not.toHaveBeenCalled();
   });
 
-  it("guards against MoneyPuck's HTML error page for a missing season", async () => {
+  it("does not fetch when the registry forbids commercial ingest", async () => {
     const fetcher = vi.fn(async () => new Response("<html><body>Not found</body></html>", { status: 200, headers: { "content-type": "text/html" } }));
     const nhl = await loadMoneyPuckNhl({ season: 1999, fetcher, cacheTtlMs: 0 });
     expect(nhl.status).toBe("source-error");
-    expect(nhl.skaters).toHaveLength(0);
+    expect(nhl.error).toBe("moneypuck-permission-required");
+    expect(fetcher).not.toHaveBeenCalled();
   });
 
   it("serves the moneypuck nhl API", async () => {

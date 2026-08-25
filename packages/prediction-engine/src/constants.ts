@@ -20,7 +20,9 @@
 // Bake-off: polarity + coverage gates. Maps/AUTO_PUBLISH still OFF.
 // v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
-export const MODEL_VERSION = "v5.2.6";
+// v5.2.7 (2026-08-22): Skellam ATS cover → SPREAD rankingP on Poisson sports.
+// Heuristic confidence / composite weights UNCHANGED. Maps still OFF.
+export const MODEL_VERSION = "v5.2.7";
 
 // ============================================================
 // Confidence thresholds

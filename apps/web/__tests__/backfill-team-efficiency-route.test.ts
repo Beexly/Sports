@@ -42,4 +42,11 @@ describe("GET /api/cron/backfill-team-efficiency", () => {
     const body = (await res.json()) as { nextFrom: number | null };
     expect(body.nextFrom).toBeNull();
   });
+
+  it("defaults to the current NFL season so a cron hit fills the live EPA path", async () => {
+    const res = await GET(req("", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(ingestTeamEfficiency).toHaveBeenCalledTimes(1);
+    expect(ingestTeamEfficiency).toHaveBeenCalledWith(2025);
+  });
 });

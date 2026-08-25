@@ -77,6 +77,7 @@ describe("content engine — templates", () => {
     expect(keys).toContain("MODEL_ACCOUNTABILITY_NOTE");
     expect(keys).toContain("METHODOLOGY_EXPLAINER");
     expect(keys).toContain("WHAT_CHANGED_SINCE_REFRESH");
+    expect(keys).toContain("HONEST_RECORD_DAILY");
   });
 
   it("promotion roundup requires disclosure + RG + terms source", () => {

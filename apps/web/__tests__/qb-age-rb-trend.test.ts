@@ -11,16 +11,22 @@ const PLAYER_STATS = [
   "player_id,player_display_name,position,recent_team,season,week,season_type,attempts,targets",
   "old-qb-1,Old QB 1,QB,OLD1,2024,1,REG,40,0",
   "old-rb-1,Old RB 1,RB,OLD1,2024,1,REG,0,20",
+  "old-wr-1,Old WR 1,WR,OLD1,2024,1,REG,0,40",
   "old-qb-2,Old QB 2,QB,OLD2,2024,1,REG,40,0",
   "old-rb-2,Old RB 2,RB,OLD2,2024,1,REG,0,22",
+  "old-wr-2,Old WR 2,WR,OLD2,2024,1,REG,0,38",
   "old-qb-3,Old QB 3,QB,OLD3,2024,1,REG,40,0",
   "old-rb-3,Old RB 3,RB,OLD3,2024,1,REG,0,18",
+  "old-wr-3,Old WR 3,WR,OLD3,2024,1,REG,0,42",
   "young-qb-1,Young QB 1,QB,YNG1,2024,1,REG,40,0",
   "young-rb-1,Young RB 1,RB,YNG1,2024,1,REG,0,4",
+  "young-wr-1,Young WR 1,WR,YNG1,2024,1,REG,0,76",
   "young-qb-2,Young QB 2,QB,YNG2,2024,1,REG,40,0",
   "young-rb-2,Young RB 2,RB,YNG2,2024,1,REG,0,5",
+  "young-wr-2,Young WR 2,WR,YNG2,2024,1,REG,0,75",
   "young-qb-3,Young QB 3,QB,YNG3,2024,1,REG,40,0",
   "young-rb-3,Young RB 3,RB,YNG3,2024,1,REG,0,3",
+  "young-wr-3,Young WR 3,WR,YNG3,2024,1,REG,0,77",
 ].join("\n");
 
 const PLAYERS = [
@@ -86,12 +92,15 @@ describe("QB-age RB target-share trend report", () => {
     const oldQbTrend = report.trends.find((trend) => trend.cohort === "QB age 34+");
 
     expect(report.status).toBe("live");
+    expect(report.metric).toBe("running back targets / team targets");
     expect(report.quality.observationsUsed).toBe(6);
     expect(report.quality.skippedMissingTeamStats).toBe(6);
     expect(report.seasonRange).toEqual({ start: 2024, end: 2024 });
     expect(oldQbTrend?.n).toBe(3);
-    expect(oldQbTrend?.cohortMean).toBeCloseTo(0.5, 2);
-    expect(oldQbTrend?.baselineMean).toBeCloseTo(0.1, 2);
+    // Old QBs: RB targets 20/60, 22/60, 18/60 → mean ≈ 0.333
+    expect(oldQbTrend?.cohortMean).toBeCloseTo(1 / 3, 2);
+    // Young QBs: RB targets 4/80, 5/80, 3/80 → mean ≈ 0.05
+    expect(oldQbTrend?.baselineMean).toBeCloseTo(0.05, 2);
     expect(oldQbTrend?.relativeDelta).toBeGreaterThan(3);
     expect(report.canPowerScoring).toBe(false);
     expect(report.boundary).toContain("not a betting pick");

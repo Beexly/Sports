@@ -3,7 +3,8 @@
 //
 // Computes a *fractional* Kelly stake recommendation for a pick,
 // expressed in "units" relative to a 100-unit bankroll. The classic
-// Kelly criterion sizes bets according to the player's edge:
+// Kelly criterion (Kelly 1956) sizes bets according to the player's
+// edge, treating the win probability p as known:
 //
 //     f* = (b·p - q) / b
 //
@@ -12,9 +13,10 @@
 //   q = 1 - p
 //   b = decimal odds payout - 1  (e.g. -110 → 0.909, +200 → 2.0)
 //
-// Full Kelly is theoretically growth-optimal but is also notoriously
-// volatile in practice. We apply two safety mechanisms that the
-// professional sports-betting literature converges on:
+// Full Kelly is growth-optimal for a known p but is notoriously
+// volatile (Thorp 2006; MacLean, Thorp & Ziemba 2011). This module
+// applies two *variance* defenses; it does NOT haircut p for Knightian
+// uncertainty (that Beta-credible-set worst case lives in robust-kelly.ts):
 //
 //   1. Fractional Kelly (default 0.25) — scales the stake down 4×
 //      to reduce variance at a small cost to long-run growth.
@@ -31,10 +33,14 @@
 //
 // References:
 //   - Kelly, J. L. (1956). "A New Interpretation of Information Rate."
+//     Bell System Technical Journal 35(4).
 //   - Thorp, E. O. (2006). "The Kelly Criterion in Blackjack, Sports
-//     Betting, and the Stock Market."
-//   - Standard fractional Kelly practice — Aaron Brown, "Red-Blooded
-//     Risk" (2011), discussing variance reduction at fractional sizes.
+//     Betting, and the Stock Market." In: Handbook of Asset and Liability
+//     Management.
+//   - MacLean, L. C., Thorp, E. O. & Ziemba, W. T. (2011). The Kelly
+//     Capital Growth Investment Criterion. (fractional Kelly)
+//   - Brown, A. (2011). Red-Blooded Risk. (variance reduction at
+//     fractional sizes)
 // ============================================================
 
 import type { ScoredPick } from "@sports/types";

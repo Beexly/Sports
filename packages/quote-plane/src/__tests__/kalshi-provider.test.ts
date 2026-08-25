@@ -29,6 +29,27 @@ describe("Kalshi trade API provider", () => {
     expect(m!.mid).toBeLessThan(0.6);
   });
 
+  it("refuses the live orderbook path while kalshi is permission_required", async () => {
+    let liveHits = 0;
+    const p = createKalshiTradeProvider({
+      fetchImpl: async () => {
+        liveHits += 1;
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ yes: [[0.55, 10]], no: [[0.44, 10]] }),
+        };
+      },
+    });
+    const lines = await p.fetchQuotes({
+      sport: "NFL",
+      eventId: "NFL-DEMO",
+      market: "binary_pm",
+    });
+    expect(lines).toEqual([]);
+    expect(liveHits).toBe(0);
+  });
+
   it("fetches offline fixtures without API key", async () => {
     const p = createKalshiTradeProvider({
       fixtures: {

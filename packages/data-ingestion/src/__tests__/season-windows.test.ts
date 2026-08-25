@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from "vitest";
 
-import { isSportInSeason, getInSeasonSports } from "../config.js";
+import { isSportInSeason, getInSeasonSports, SUPPORTED_SPORTS } from "../config.js";
+import { NFL_PRESEASON_ODDS_KEY } from "../nfl-preseason-map.js";
 
 /**
  * Regression cover for the L-14 census finding (2026-08-20): NFL's last odds
@@ -47,6 +48,11 @@ describe("season windows", () => {
     expect(keys).not.toContain("basketball_nba");
     expect(keys).not.toContain("icehockey_nhl");
     expect(keys).not.toContain("basketball_ncaab");
+  });
+
+  it("never lists the NFL preseason Odds API key as a board sport", () => {
+    expect(SUPPORTED_SPORTS.map((s) => s.key)).not.toContain(NFL_PRESEASON_ODDS_KEY);
+    expect(getInSeasonSports(AUGUST).map((s) => s.key)).not.toContain(NFL_PRESEASON_ODDS_KEY);
   });
 
   it("still honours the ODDS_REFRESH_ALL_SPORTS backfill override", () => {

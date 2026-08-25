@@ -9,7 +9,7 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
-import type { PublicPick, DailySlate, SubscriptionTier } from "@sports/types";
+import { getEntitlements, type PublicPick, type DailySlate, type SubscriptionTier } from "@sports/types";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
@@ -149,16 +149,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
   const session = await auth();
   const entitlements = session?.user?.id
     ? await getUserEntitlements(session.user.id)
-    : {
-        tier: "FREE" as const,
-        canSeePremiumPicks: false,
-        canSeeConfidence: false,
-        canSeeLineMovement: false,
-        canSeeFactorBreakdown: false,
-        canSeeEdgeScore: true,
-        canGetAlerts: false,
-        dailyPickLimit: 2 as number | null,
-      };
+    : getEntitlements("FREE");
 
   const isPro = entitlements.tier === "PRO" || entitlements.tier === "ELITE";
   // Teaser-board viewers: anyone WITHOUT the full paid board (FREE and
@@ -564,7 +555,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
             <div className="mt-8 rounded-xl border border-ultraviolet/30 bg-ultraviolet/10 p-4 text-center">
               <p className="text-xs text-ultraviolet">
-                Want real-time email and push alerts on every signal?{" "}
+                Want email + push alerts when your followed picks grade?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
                   {`Upgrade to Elite · $${phase.elite.monthly}/mo`}
                 </Link>

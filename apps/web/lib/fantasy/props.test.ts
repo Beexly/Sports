@@ -29,8 +29,11 @@ describe("props edge", () => {
     expect(Number.isFinite(r.pOver)).toBe(true);
     expect(Number.isFinite(r.pSide)).toBe(true);
     expect(Number.isFinite(r.edge)).toBe(true);
+    expect(Number.isFinite(r.conviction)).toBe(true);
     expect(r.note).not.toContain("NaN");
     expect(r.side).toBe("over");
+    expect(r.priced).toBe(false);
+    expect(r.edge).toBe(0);
   });
 
   it("recommends OVER when our number clears the line, UNDER when below", () => {
@@ -38,9 +41,27 @@ describe("props edge", () => {
     expect(readProp(mk({ mean: 35 })).side).toBe("under");
   });
 
-  it("edge is zero at a coin flip and approaches 1 for a lock", () => {
-    expect(readProp(mk({ mean: 50 })).edge).toBeCloseTo(0, 2);
-    expect(readProp(mk({ mean: 130, sigma: 10 })).edge).toBeGreaterThan(0.95);
+  it("unpriced lines have edge 0; conviction still tracks |2p−1|", () => {
+    const coin = readProp(mk({ mean: 50 }));
+    expect(coin.priced).toBe(false);
+    expect(coin.edge).toBe(0);
+    expect(coin.conviction).toBeCloseTo(0, 2);
+    const lock = readProp(mk({ mean: 130, sigma: 10 }));
+    expect(lock.priced).toBe(false);
+    expect(lock.edge).toBe(0);
+    expect(lock.conviction).toBeGreaterThan(0.95);
+  });
+
+  it("prices e = p − q vs an even book and does not treat 90% chalk as value", () => {
+    const even = readProp(mk({ mean: 58, sigma: 20, overAmerican: -110, underAmerican: -110 }));
+    expect(even.priced).toBe(true);
+    expect(even.edge).toBeCloseTo(even.pOver - 0.5, 5);
+    const chalk = readProp(
+      mk({ mean: 90, sigma: 8, line: 50, overAmerican: -900, underAmerican: 700 }),
+    );
+    expect(chalk.priced).toBe(true);
+    expect(chalk.conviction).toBeGreaterThan(0.7);
+    expect(Math.abs(chalk.edge)).toBeLessThan(chalk.conviction / 5);
   });
 
   it("picks the alt line that maximises EV for our side", () => {

@@ -180,12 +180,14 @@ screenshots/
 test-results/
 playwright-report/
 
-# Ignore local .claude config, but DO track shared project commands and the
-# project-wide agent safety policy (permissions deny/ask + PreToolUse guard).
+# Ignore local .claude config, but DO track shared project commands, the
+# project-wide agent safety policy (permissions deny/ask + PreToolUse guard),
+# and vendored delegation skills every agent seat needs.
 # settings.local.json stays ignored — that is the per-developer override file.
 .claude/*
 !.claude/commands/
 !.claude/settings.json
+!.claude/skills/
 
 # Local session helper scripts — never commit
 *.bat

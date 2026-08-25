@@ -82,6 +82,19 @@ export function scoreSourceChain(sport: Sport): readonly ScoreSourceId[] {
   }
 }
 
+function espnPublicScoreboardClearance(): { allowed: boolean; blockCodes: string } {
+  const espnClearance = checkClearance({
+    source_id: "espn-public-api",
+    mode: "public_logged_off_fact_extract",
+    tool_id: "fetch-native",
+    intents: ["derived_analytics"],
+  });
+  return {
+    allowed: espnClearance.allowed,
+    blockCodes: espnClearance.blocks.map((b) => b.code).join(", "),
+  };
+}
+
 function mergeGames(parts: readonly (readonly NormalizedGame[])[]): NormalizedGame[] {
   const byId = new Map<string, NormalizedGame>();
   for (const part of parts) {
@@ -104,19 +117,9 @@ async function fetchEspnForDates(
   if (espnKeys.length === 0) {
     try {
       // GSE-SEC-078: enforce ESPN clearance on the undated (live board) path.
-      // The ESPN fact-extract path is gated in free-first-ingest.ts (GSE-SEC-051)
-      // but multi-source-scores.ts called fetchEspnScoreboard directly without
-      // any checkClearance — so a registry status flip (e.g. storage_allowed
-      // revoked) would be silently ignored on this code path.
-      const espnClearance = checkClearance({
-        source_id: "espn-public-api",
-        mode: "public_logged_off_fact_extract",
-        tool_id: "fetch-native",
-        intents: ["derived_analytics"],
-      });
+      const espnClearance = espnPublicScoreboardClearance();
       if (!espnClearance.allowed) {
-        const blockCodes = espnClearance.blocks.map((b) => b.code).join(", ");
-        errors.push(`espn-public-api: clearance-denied [${blockCodes}]`);
+        errors.push(`espn-public-api: clearance-denied [${espnClearance.blockCodes}]`);
         return { games: [], errors, params: [] };
       }
       const games = await fetchEspnScoreboard(sport, { fetchImpl });
@@ -128,6 +131,13 @@ async function fetchEspnForDates(
   }
 
   const params = compactEspnDateRanges(espnKeys);
+  // GSE-SEC-078: the dated loop is the backfill path. It previously skipped
+  // checkClearance while the undated board and final fallback gated.
+  const espnClearance = espnPublicScoreboardClearance();
+  if (!espnClearance.allowed) {
+    errors.push(`espn-public-api: clearance-denied [${espnClearance.blockCodes}]`);
+    return { games: [], errors, params };
+  }
   const chunks: NormalizedGame[][] = [];
   // Serial ranges keep ESPN friendly under cron; cap already applied upstream.
   for (const dates of params) {
@@ -400,15 +410,9 @@ export async function fetchScoresMultiSource(
 
   try {
     // GSE-SEC-078: enforce ESPN clearance on the final undated fallback path.
-    const espnClearance = checkClearance({
-      source_id: "espn-public-api",
-      mode: "public_logged_off_fact_extract",
-      tool_id: "fetch-native",
-      intents: ["derived_analytics"],
-    });
+    const espnClearance = espnPublicScoreboardClearance();
     if (!espnClearance.allowed) {
-      const blockCodes = espnClearance.blocks.map((b) => b.code).join(", ");
-      errors.push(`espn-public-api: clearance-denied [${blockCodes}]`);
+      errors.push(`espn-public-api: clearance-denied [${espnClearance.blockCodes}]`);
       return {
         sport,
         primary: chain[0] ?? null,

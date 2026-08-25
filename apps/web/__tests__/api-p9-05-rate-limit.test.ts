@@ -17,11 +17,26 @@ import { resetRateLimits } from "@/lib/api/rate-limit";
 
 // ─── Unified mock setup (shared across all three routes) ──────────────────────
 
+// Faithful shim of the durable limiter's CONSUME_SQL upsert — the audit route
+// now uses the Postgres-backed limiter, and this file's job is to test rate
+// limiting for real, so emulate the store rather than mock the limiter away.
+// Denied requests do not increment (mirrors the SQL WHERE count < $4).
+const rlStore = vi.hoisted(() => ({ counters: new Map<string, number>() }));
+
 const dbMock = vi.hoisted(() => ({
   slateCommitment: { findUnique: vi.fn() },
   pickProofReceipt: { findMany: vi.fn() },
   pick: { findUnique: vi.fn() },
   sourceSnapshot: { findMany: vi.fn() },
+  $queryRawUnsafe: vi.fn(
+    async (_sql: string, scope: string, key: string, windowStart: Date, limit: number) => {
+      const k = `${scope}|${key}|${windowStart.getTime()}`;
+      const next = (rlStore.counters.get(k) ?? 0) + 1;
+      if (next > limit) return [];
+      rlStore.counters.set(k, next);
+      return [{ count: next }];
+    },
+  ),
 }));
 
 const predictionEngineMocks = vi.hoisted(() => ({
@@ -84,6 +99,9 @@ const typesMocks = vi.hoisted(() => ({
 // Mock modules that the three routes depend on.
 vi.mock("@sports/db", () => ({
   db: dbMock,
+  // Non-stub so the audit route's durable limiter takes the Postgres path and
+  // exercises the $queryRawUnsafe shim above instead of the in-memory fallback.
+  isStubMode: () => false,
 }));
 
 vi.mock("@sports/prediction-engine", () => ({
@@ -224,6 +242,7 @@ describe("/api/picks/[id]/audit — rate limiting", () => {
   beforeEach(() => {
     vi.resetModules();
     resetRateLimits();
+    rlStore.counters.clear();
     // Return a published, non-bootstrap pick so the route reaches the FREE branch (200).
     dbMock.pick.findUnique.mockResolvedValue({
       id: "pick-1",

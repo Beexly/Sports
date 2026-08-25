@@ -95,7 +95,23 @@ describe("EspnResultsClient", () => {
     expect(results[0]?.winnerAbbr).toBe("SAS");
     const calls = fetchImpl.mock.calls as unknown as Array<[string, RequestInit]>;
     expect(calls[0]?.[0]).toBe(
-      "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260603",
+      "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20260603&limit=1000",
+    );
+  });
+
+  it("always sends an explicit limit so busy boards never truncate (dated and undated)", async () => {
+    const fetchImpl = vi.fn(async () => new Response(JSON.stringify(COMPLETED_SCOREBOARD), { status: 200 }));
+    const client = new EspnResultsClient({ fetchImpl });
+
+    await client.getResults("mlb", "20260603");
+    await client.getResults("mlb");
+
+    const calls = fetchImpl.mock.calls as unknown as Array<[string, RequestInit]>;
+    expect(calls[0]?.[0]).toContain("limit=1000");
+    expect(calls[0]?.[0]).toContain("dates=20260603");
+    // Undated board still carries the limit.
+    expect(calls[1]?.[0]).toBe(
+      "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?limit=1000",
     );
   });
 

@@ -14,7 +14,7 @@
  * it settles.
  *
  * Steps (per sport):
- *   1. Fetch recent scores from The Odds API (daysFrom=2)
+ *   1. Fetch recent scores from The Odds API (daysFrom=3, API max)
  *   2. For each COMPLETED game with PENDING picks: mark FINAL + record scores
  *   3. Settle each pending pick via calculatePickResult() (pure, unit-tested)
  *   4. Record the outcome into the immutable PickSignalSnapshot (idempotent)
@@ -29,6 +29,11 @@ import {
   OddsApiClient,
   DataNormalizer,
   settleGameLogs,
+  NFL_PRESEASON_ODDS_KEY,
+  NFL_CANONICAL_SPORT_KEY,
+  isNflPreseasonFetchWindow,
+  remapPreseasonRows,
+  mergeFeedRowsById,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey } from "@sports/data-ingestion";
 import {
@@ -90,6 +95,9 @@ function paidCallJustified(
   // odds: no free odds source is cleared today → paid is always justified.
   return true;
 }
+
+/** The Odds API scores endpoint max `daysFrom` is 3. Using 2 left a permanent ratchet. */
+export const PAID_SCORES_DAYS_FROM = 3;
 
 export interface SettleSportConfig {
   key: SupportedSportKey;
@@ -182,7 +190,39 @@ export async function settleSport(
           `free sources cover scores; paid getScores proceeding on paid path (key present).`,
       );
     }
-    const { data: scores } = await client.getScores(sport.key, 2);
+    let scores = (await client.getScores(sport.key, PAID_SCORES_DAYS_FROM)).data;
+    if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow()) {
+      try {
+        const preseason = await client.getScores(NFL_PRESEASON_ODDS_KEY, PAID_SCORES_DAYS_FROM);
+        const existingRows = await db.game.findMany({
+          where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
+          select: {
+            externalId: true,
+            homeTeamName: true,
+            awayTeamName: true,
+            commenceTime: true,
+          },
+        });
+        const candidates = existingRows.map((g) => ({
+          externalId: g.externalId,
+          homeTeam: g.homeTeamName,
+          awayTeam: g.awayTeamName,
+          commenceTime: g.commenceTime,
+        }));
+        const { remapped, unmatched } = remapPreseasonRows(preseason.data, candidates);
+        if (unmatched > 0) {
+          console.warn(
+            `${logPrefix} ${sport.key}: preseason score map skipped ${unmatched} unmatched rows`,
+          );
+        }
+        scores = mergeFeedRowsById(scores, remapped);
+      } catch (preseasonErr) {
+        console.warn(
+          `${logPrefix} ${sport.key}: preseason scores fetch failed — ` +
+            `${preseasonErr instanceof Error ? preseasonErr.message : preseasonErr}`,
+        );
+      }
+    }
     const normalized = normalizer.normalizeScores(scores);
 
     // DURABLE settlement-run identity (hardening 6.1): created-or-retrieved
@@ -222,16 +262,36 @@ export async function settleSport(
       // state that score-verification / settlement / backtest consumers read as
       // the result. Gate the whole data object: an empty update is a harmless
       // no-op that preserves the existing recorded score and status.
-      await db.game.update({
-        where: { id: game.id },
-        data: bothScores
-          ? {
-              homeScore: score.homeScore,
-              awayScore: score.awayScore,
-              status: "FINAL" as const,
-            }
-          : {},
-      });
+      //
+      // Also never overwrite a FINAL score with a DIFFERENT non-null score.
+      // The free path (?path=free / forceFree, PR #550) can settle this same
+      // game from ESPN/henrygd in the same rough window as this paid-path run;
+      // last-write-wins would silently contradict whatever pick(s) were
+      // already settled against the score currently on the row.
+      const conflicts =
+        bothScores &&
+        game.status === "FINAL" &&
+        game.homeScore != null &&
+        game.awayScore != null &&
+        (game.homeScore !== score.homeScore || game.awayScore !== score.awayScore);
+      if (conflicts) {
+        console.warn(
+          `${logPrefix} ${sport.key}: SCORE_MISMATCH_CROSS_PATH game=${game.id} ` +
+            `existing=${game.homeScore}-${game.awayScore} incoming(paid)=${score.homeScore}-${score.awayScore} ` +
+            `— refusing to overwrite; game row untouched.`,
+        );
+      } else {
+        await db.game.update({
+          where: { id: game.id },
+          data: bothScores
+            ? {
+                homeScore: score.homeScore,
+                awayScore: score.awayScore,
+                status: "FINAL" as const,
+              }
+            : {},
+        });
+      }
 
       // ── Settlement evidence (Phase 1E) ─────────────────────────────────
       // A completed-but-scoreless sighting on a still-open game is recorded
@@ -292,8 +352,14 @@ export async function settleSport(
       }
 
       // The inline null-check (not the bothScores boolean) is what narrows the
-      // score types to `number` for the settlement math below.
-      if (score.homeScore !== null && score.awayScore !== null) {
+      // score types to `number` for the settlement math below. Also gated on
+      // !conflicts: when this run's score disagrees with an already-FINAL Game
+      // row (cross-path mismatch, see the game.update guard above), we must
+      // NOT grade any pick against the score we just refused to write to the
+      // Game row — that would settle picks against a different score than the
+      // one the Game row records, a fresh inconsistency worse than the
+      // original bug. Hold everything for this game until a human resolves it.
+      if (score.homeScore !== null && score.awayScore !== null && !conflicts) {
         // Real scores arrived: RESOLVE any open SCORELESS_COMPLETED anomaly
         // for this game (it was feed lag after all, or the owner review is
         // now moot). Resolution marks state/reason/timestamp only —

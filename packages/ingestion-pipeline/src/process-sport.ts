@@ -33,6 +33,14 @@ import {
   resolveRundownApiKey,
   fetchRundownEventsForSport,
   fetchEspnOddsForSport,
+  NFL_PRESEASON_ODDS_KEY,
+  NFL_CANONICAL_SPORT_KEY,
+  isNflPreseasonFetchWindow,
+  remapPreseasonRows,
+  mergeFeedRowsById,
+  eventsBelowBookmakerThreshold,
+  mergeBookmakersIntoPrimary,
+  THIN_FILL_MIN_BOOKMAKERS,
 } from "@sports/data-ingestion";
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
@@ -63,6 +71,8 @@ import { recordSourceSnapshot } from "./source-snapshot.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
 import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
+import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ingest.js";
+import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 import {
@@ -250,6 +260,7 @@ export async function processSport(
       apiKey === "espn-free-path" ||
       apiKey === "absent";
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
+    const eventOddsByExternalId = new Map<string, unknown>();
 
     if (!oddsKeyIsSentinel) {
       // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
@@ -262,6 +273,53 @@ export async function processSport(
           const primary = await client.getOdds(sport.key, [...MARKETS]);
           events = primary.data as import("@sports/types").OddsApiEvent[];
           remainingRequests = primary.remainingRequests ?? null;
+          if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow(fetchedAt)) {
+            try {
+              const preseason = await client.getOdds(NFL_PRESEASON_ODDS_KEY, [...MARKETS]);
+              if (preseason.remainingRequests != null) {
+                remainingRequests = preseason.remainingRequests;
+              }
+              const existingRows = await db.game.findMany({
+                where: {
+                  sport: { key: NFL_CANONICAL_SPORT_KEY },
+                  commenceTime: {
+                    gte: new Date(fetchedAt.getTime() - 2 * 24 * 60 * 60 * 1000),
+                    lte: new Date(fetchedAt.getTime() + 21 * 24 * 60 * 60 * 1000),
+                  },
+                },
+                select: {
+                  externalId: true,
+                  homeTeamName: true,
+                  awayTeamName: true,
+                  commenceTime: true,
+                },
+              });
+              const candidates = [
+                ...existingRows.map((g) => ({
+                  externalId: g.externalId,
+                  homeTeam: g.homeTeamName,
+                  awayTeam: g.awayTeamName,
+                  commenceTime: g.commenceTime,
+                })),
+                ...normalizer.normalizeGames(events),
+              ];
+              const { remapped, unmatched } = remapPreseasonRows(
+                preseason.data as OddsApiEvent[],
+                candidates,
+              );
+              if (unmatched > 0) {
+                console.warn(
+                  `${logPrefix} ${sport.key}: preseason map skipped ${unmatched} unmatched Odds API events`,
+                );
+              }
+              events = mergeFeedRowsById(events, remapped);
+            } catch (preseasonErr) {
+              console.warn(
+                `${logPrefix} ${sport.key}: preseason odds fetch failed — ` +
+                  `${preseasonErr instanceof Error ? preseasonErr.message : preseasonErr}`,
+              );
+            }
+          }
         } catch (primaryErr) {
           console.warn(
             `${logPrefix} ${sport.key}: Odds API primary failed — ` +
@@ -276,13 +334,42 @@ export async function processSport(
             `free sources cover scores; skipping The Odds API.`,
         );
       }
+
+      // Licensed event-odds (player props). Default OFF. Hard credit cap.
+      // Never historical. Never throws. Persistence uses OddsLineSnapshot
+      // string market/side (no new table) when LINE_ARCHIVE is on.
+      if (events.length > 0) {
+        // Kickoff-sorted so the credit cap does not starve late games on a
+        // dense slate (Sunday 16-game). commenceByEventId maps each Odds API
+        // event id to its commence_time — events with a missing time sort last.
+        const commenceByEventId: Record<string, Date> = {};
+        for (const event of events) {
+          if (event.id && event.commence_time) {
+            commenceByEventId[event.id] = new Date(event.commence_time);
+          }
+        }
+        const eventOddsReport = await ingestEventOddsIfEnabled({
+          client: client as unknown as EventOddsClient,
+          sportKey: sport.key,
+          eventIds: events.map((event) => event.id).filter((id): id is string => Boolean(id)),
+          commenceByEventId,
+        });
+        for (const snap of eventOddsReport.snapshots) {
+          const id = eventOddsId(snap as { id?: string });
+          if (id) eventOddsByExternalId.set(id, snap);
+        }
+        if (eventOddsReport.enabled && eventOddsReport.fetched > 0) {
+          console.log(`${logPrefix} ${sport.key}: event-odds ${eventOddsReport.reason}`);
+        }
+      }
     }
 
-    // Free dual-path: TheRundown when primary empty/fail and key present (never invent).
+    // TheRundown: full replace when primary empty; thin-fill when some games
+    // sit under MIN_BOOKMAKERS. Never dual-pull a fully covered slate.
     let rundownAttemptNote: string | null = null;
     let espnAttemptNote: string | null = null;
+    const rundownKey = resolveRundownApiKey();
     if (events.length === 0) {
-      const rundownKey = resolveRundownApiKey();
       if (rundownKey) {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.events.length > 0) {
@@ -299,6 +386,26 @@ export async function processSport(
         }
       } else {
         rundownAttemptNote = "rundown key ABSENT";
+      }
+    } else if (rundownKey && eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0) {
+      try {
+        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.events.length > 0) {
+          const merged = mergeBookmakersIntoPrimary(events, rd.events, THIN_FILL_MIN_BOOKMAKERS);
+          events = merged.events;
+          if (merged.filledGameIds.length > 0) {
+            oddsProviderTag = `${oddsProviderTag}+therundown-thin`;
+            console.log(
+              `${logPrefix} ${sport.key}: rundown thin-fill ${merged.filledGameIds.length} games` +
+                (rd.error ? ` (note: ${rd.error})` : ""),
+            );
+          }
+        }
+      } catch (thinErr) {
+        console.warn(
+          `${logPrefix} ${sport.key}: rundown thin-fill failed — ` +
+            `${thinErr instanceof Error ? thinErr.message : thinErr}`,
+        );
       }
     }
 
@@ -514,11 +621,13 @@ export async function processSport(
       // unless LINE_ARCHIVE_ENABLED=true, and never throws, so it can never block
       // or fail this refresh path. Persists odds already fetched above; adds no
       // new Odds API calls.
+      const propSnap = eventOddsByExternalId.get(game.externalId);
+      const propRows = propSnap ? toPropLineSnapshotRows(propSnap as PropEventLike) : [];
       await captureLineSnapshotsIfEnabled({
         db,
         gameId: gameRecord.id,
         capturedAt: fetchedAt,
-        rows: toLineSnapshotRows(gameOdds),
+        rows: [...toLineSnapshotRows(gameOdds), ...propRows],
       });
 
       // Capture the book-line dispersion (max−min across books) per kind NOW,
@@ -609,6 +718,7 @@ export async function processSport(
             awayTeam: game.awayTeam,
             commenceTime: game.commenceTime,
             now: () => fetchedAt,
+            spreadHome: avgSpread,
           },
           eloCache,
         );

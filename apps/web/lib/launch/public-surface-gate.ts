@@ -13,11 +13,6 @@ function truthy(raw: string | undefined): boolean {
   return v === "1" || v === "true" || v === "yes" || v === "on";
 }
 
-function falsy(raw: string | undefined): boolean {
-  const v = (raw ?? "").trim().toLowerCase();
-  return v === "0" || v === "false" || v === "no" || v === "off";
-}
-
 /**
  * Galaxy StatKing (`/stats/*`) — still foundation / snapshot pipeline.
  * Default OFF. Opt-in only: STATS_PUBLIC=true when readiness + rights clear.
@@ -27,13 +22,11 @@ export function isStatsPublic(): boolean {
 }
 
 /**
- * Contest Bay (`/fantasy/contests`) — free paper skill board is a complete product.
- * Default ON. Emergency dark: CONTESTS_PUBLIC=false.
+ * Contest Bay (`/fantasy/contests`) — free paper skill board.
+ * Default OFF. Opt-in only: CONTESTS_PUBLIC=true.
  */
 export function isContestsPublic(): boolean {
-  if (falsy(process.env.CONTESTS_PUBLIC)) return false;
-  // default public — free skill paper product is finished
-  return true;
+  return truthy(process.env.CONTESTS_PUBLIC);
 }
 
 /**
@@ -41,7 +34,7 @@ export function isContestsPublic(): boolean {
  */
 export const PUBLIC_NAV_POLICY = {
   stats: "opt-in STATS_PUBLIC — foundation until rights+live feeds clear",
-  contests: "default-public free paper skill (no prizes, no fees)",
+  contests: "opt-in CONTESTS_PUBLIC — paper skill stays dark until founder opens it",
   podcast: "episode archive complete — public",
   newsletter: "issue archive + subscribe form complete — public",
   observatory: "readiness-sealed complete — public",

@@ -88,6 +88,20 @@ export interface FactorBreakdown {
   rankingSource?: "confidence" | "independent_trueProb" | "blend_indep_conf" | null;
   /** De-vig sportsbook fair for the chosen side (0–1) — selective edge filter / market bake-off. */
   marketFairProb?: number | null;
+  /**
+   * Which de-vig method produced `marketFairProb`. Proportional (multiplicative)
+   * is what every scoring path uses today; naming it stops the card presenting a
+   * method-dependent estimate as if it were the market's one true price.
+   */
+  marketFairMethod?: "proportional" | null;
+  /**
+   * The same market and side re-de-vigged with Shin's method. Shin models
+   * insider money and corrects the favourite–longshot bias proportional leaves
+   * in, so the two disagree most on lopsided books — at −2000/+1100 the
+   * underdog's fair moves ~1.5pt, wider than most edges we would ever claim.
+   * Null when the book is degenerate. Display only: no scoring path reads this.
+   */
+  marketFairShinProb?: number | null;
   factors: FactorDetail[];     // human-readable factor list
 }
 

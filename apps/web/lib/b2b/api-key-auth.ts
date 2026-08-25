@@ -28,18 +28,57 @@ export function extractB2bApiKey(req: Request): string | null {
   return h.trim() || null;
 }
 
-export function authorizeB2bApiKey(req: Request, env: Record<string, string | undefined> = process.env): boolean {
-  const presented = extractB2bApiKey(req);
-  if (!presented) return false;
-  const raw = env["GSE_B2B_API_KEYS"]?.trim() ?? "";
-  if (!raw) return false;
-  const keys = raw.split(",").map((k) => k.trim()).filter(Boolean);
+/**
+ * What a B2B key is allowed to see.
+ *
+ * - `free`    — FREE-tier picks only. This is the DEFAULT for a bare key.
+ * - `premium` — the full board, including PREMIUM rows.
+ *
+ * Why the default is `free` (fail-closed): the v1 routes previously filtered only
+ * on isPublished/isBootstrap/modelVersion and emitted `confidence` +
+ * `factorBreakdown` unconditionally, so ANY key holder received Pro-gated
+ * confidence on PREMIUM picks. `Pick.tier` already exists (`@default(FREE)`) — the
+ * query simply never used it. Granting premium now requires saying so explicitly.
+ *
+ * Config (`GSE_B2B_API_KEYS`, comma-separated). A `:premium` suffix opts a key up:
+ *   GSE_B2B_API_KEYS=partnerkey:premium,readonlykey
+ * `readonlykey` sees FREE rows; `partnerkey` sees everything. A bare key list keeps
+ * working exactly as before — it just no longer leaks the premium board.
+ */
+export type B2bKeyScope = "free" | "premium";
+
+const PREMIUM_SUFFIX = ":premium";
+
+function constantTimeEquals(presented: string, candidate: string): boolean {
   const a = Buffer.from(presented);
-  for (const k of keys) {
-    const b = Buffer.from(k);
-    if (a.length === b.length && timingSafeEqual(a, b)) return true;
+  const b = Buffer.from(candidate);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/**
+ * Resolve the scope for the presented key, or null when it is not authorized.
+ * Prefer this over `authorizeB2bApiKey` in any route that returns tiered data.
+ */
+export function resolveB2bKeyScope(
+  req: Request,
+  env: Record<string, string | undefined> = process.env,
+): B2bKeyScope | null {
+  const presented = extractB2bApiKey(req);
+  if (!presented) return null;
+  const raw = env["GSE_B2B_API_KEYS"]?.trim() ?? "";
+  if (!raw) return null;
+
+  for (const entry of raw.split(",").map((k) => k.trim()).filter(Boolean)) {
+    const isPremium = entry.toLowerCase().endsWith(PREMIUM_SUFFIX);
+    const key = isPremium ? entry.slice(0, -PREMIUM_SUFFIX.length).trim() : entry;
+    if (!key) continue;
+    if (constantTimeEquals(presented, key)) return isPremium ? "premium" : "free";
   }
-  return false;
+  return null;
+}
+
+export function authorizeB2bApiKey(req: Request, env: Record<string, string | undefined> = process.env): boolean {
+  return resolveB2bKeyScope(req, env) !== null;
 }
 
 const B2B_RATE_LIMIT_SCOPE = "b2b:api-key";

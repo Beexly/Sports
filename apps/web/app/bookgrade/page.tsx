@@ -15,12 +15,35 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MetricHonesty } from "@/components/ui/metric-honesty";
 import { BRAND_NAME } from "@/lib/brand";
 import { BOOKGRADE_V1, PULSE_SCORE_V1, BOOKGRADE_PROVENANCE } from "@/lib/truthmetrics/bookgrade-v1";
+import { jsonLdScript } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site-url";
+
+const BOOKGRADE_DESCRIPTION =
+  "Per-book price quality vs consensus close and book update reliability, from the 241-game MLB clean-close corpus.";
 
 export const metadata: Metadata = {
   title: `BookGrade · ${BRAND_NAME}`,
-  description:
-    "Per-book price quality vs consensus close and book update reliability, from the 241-game MLB clean-close corpus.",
+  description: BOOKGRADE_DESCRIPTION,
   alternates: { canonical: "/bookgrade" },
+  openGraph: {
+    title: `BookGrade · ${BRAND_NAME}`,
+    description: BOOKGRADE_DESCRIPTION,
+    url: "/bookgrade",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: `BookGrade · ${BRAND_NAME}`,
+    description: BOOKGRADE_DESCRIPTION,
+  },
+};
+
+const bookgradeJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: `BookGrade · ${BRAND_NAME}`,
+  description: BOOKGRADE_DESCRIPTION,
+  url: `${SITE_URL}/bookgrade`,
 };
 
 export const dynamic = "force-static";
@@ -42,6 +65,10 @@ export default function BookGradePage(): JSX.Element {
 
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(bookgradeJsonLd) }}
+      />
       <Nav />
 
       <main id="main-content" className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">

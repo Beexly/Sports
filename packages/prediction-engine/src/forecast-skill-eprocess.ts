@@ -45,7 +45,8 @@
  * [floor, 1-floor], and degrades to <= 1 — the SAFE direction — outside it; the
  * derivation is in mitigation (2) below, and the suite pins both halves
  * exactly rather than by simulation.) So M_T is a nonnegative
- * (super)MARTINGALE with M_0 = 1, and Ville's inequality gives
+ * (super)MARTINGALE with M_0 = 1, and Ville's inequality (Ville 1939;
+ * Ramdas–Grünwald–Vovk–Shafer anytime-valid e-processes) gives
  *
  *     P( exists T : M_T >= 1/alpha ) <= alpha
  *
@@ -230,6 +231,15 @@
  * init + fold-each + summarize, so the streaming trajectory IS the batch
  * trajectory by construction rather than by parallel implementation (and the
  * exact equality is additionally pinned in the suite).
+ *
+ * References:
+ *   - Ville, J. (1939). Étude critique de la notion de collectif. Gauthier-Villars.
+ *     (P(sup M ≥ 1/α) ≤ α for a nonnegative supermartingale with M_0 = 1)
+ *   - Wald, A. (1947). Sequential Analysis. (sequential likelihood ratio)
+ *   - Ramdas, A., Ruf, J., Larsson, M. & Koolen, W. (2020). "Admissible anytime-valid sequential inference via supermartingales."
+ *   - Ramdas, A., Grünwald, P., Vovk, V. & Shafer, G. (2023). "Game-theoretic statistics and safe anytime-valid inference." Statistical Science 38(4).
+ *   - Waudby-Smith, I. & Ramdas, A. (2024). "Estimating means of bounded random variables by betting." J. R. Statist. Soc. B 86(1).
+ *   - Shafer, G. & Vovk, V. (2019). Game-Theoretic Foundations for Probability and Finance.
  */
 
 import type { CalibrationSample } from "./probability-calibration.js";
@@ -374,7 +384,7 @@ export const DEFAULT_FORECAST_SKILL_ALPHA = 0.05;
 export const DEFAULT_FORECAST_SKILL_EPSILON = 0.05;
 export const DEFAULT_FORECAST_SKILL_FLOOR = 1e-6;
 export const DEFAULT_FORECAST_SKILL_MIN_PICKS = 30;
-/** The spec's very conservative threshold: M >= 100, i.e. alpha = 0.01. */
+/** Conservative Ville threshold: M >= 100, i.e. delivered alpha = 0.01. */
 export const CONSERVATIVE_EVIDENCE_THRESHOLD = 100;
 
 function clampTo(x: number, lo: number, hi: number): number {

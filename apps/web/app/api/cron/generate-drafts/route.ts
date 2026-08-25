@@ -37,6 +37,12 @@ import {
   type SlateSummary,
   type WeeklyRecapSummary,
 } from "@/lib/content-engine/build-draft";
+import {
+  buildHonestRecordDraft,
+  rotateBookGradeHighlight,
+  rotateKillLedgerFeature,
+  type YesterdaySettledRecord,
+} from "@/lib/content-engine/honest-record";
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
 import { classifyPublicDarkHint } from "@/lib/public/dark-reason";
 import { contentDraftToCreateData } from "@/lib/content-engine/persist-draft";
@@ -122,7 +128,19 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 
-  return NextResponse.json({ ok: true, daily, weeklyRecap, quietBoard });
+  // Daily honest-record is independent of the slate brief: yesterday's settled
+  // counts (or an honest empty), one Kill Ledger rotation, one BookGrade
+  // highlight. Isolated catch so a persist failure never fails the route.
+  let honestRecord: DraftOutcome | null = null;
+  try {
+    honestRecord = await generateHonestRecord(now);
+  } catch (err) {
+    console.error(
+      `[cron:generate-drafts] honest-record draft failed: ${err instanceof Error ? err.message : err}`,
+    );
+  }
+
+  return NextResponse.json({ ok: true, daily, weeklyRecap, quietBoard, honestRecord });
 }
 
 async function generateDailyBrief(
@@ -342,6 +360,91 @@ async function generateQuietBoardDraft(
     slug,
     created: true,
     reason: "DRAFT quiet-board honesty",
+  });
+}
+
+async function generateHonestRecord(now: Date): Promise<DraftOutcome> {
+  const yesterday = subDays(now, 1);
+  const dateIso = yesterday.toISOString().slice(0, 10);
+  const slug = `honest-record-${dateIso}`;
+
+  const existing = await db.contentDraft
+    .findFirst({ where: { slug }, select: { id: true } })
+    .catch(() => null);
+  if (existing) {
+    return { slug, created: false, skipped: true, reason: "already generated" };
+  }
+
+  const yStart = startOfDay(yesterday);
+  const yEnd = endOfDay(yesterday);
+  const canonicalSettledWhere = {
+    isPublished: true,
+    isBootstrap: false,
+    NOT: { modelVersion: "v5.0.0-seed" },
+    settledAt: { gte: yStart, lte: yEnd },
+  } as const;
+
+  let winCount = 0;
+  let lossCount = 0;
+  let pushCount = 0;
+  try {
+    [winCount, lossCount, pushCount] = await Promise.all([
+      db.pick.count({ where: { ...canonicalSettledWhere, result: "WIN" } }),
+      db.pick.count({ where: { ...canonicalSettledWhere, result: "LOSS" } }),
+      db.pick.count({ where: { ...canonicalSettledWhere, result: "PUSH" } }),
+    ]);
+  } catch {
+    // Table-absent / stub: honest empty. Never invent a record.
+    winCount = 0;
+    lossCount = 0;
+    pushCount = 0;
+  }
+
+  const settled: YesterdaySettledRecord = {
+    dateIso,
+    winCount,
+    lossCount,
+    pushCount,
+  };
+  const settledCount = winCount + lossCount + pushCount;
+
+  const sources: ContentSourceRecord[] = [
+    {
+      sourceType: "METHODOLOGY",
+      sourceLabel: "Kill Ledger + BookGrade public catalog",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: "Rotation from published /kill-ledger and /bookgrade catalogs.",
+    },
+    {
+      sourceType: "PICK",
+      sourceLabel: "Settled canonical picks (yesterday UTC window)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes:
+        settledCount === 0
+          ? "Zero settled canonical picks yesterday — honest empty, no fabricated record."
+          : `W ${winCount} / L ${lossCount} / Push ${pushCount}, bootstrap + seed excluded.`,
+    },
+  ];
+
+  const record = buildHonestRecordDraft({
+    yesterday: settled,
+    killLedger: rotateKillLedgerFeature(yesterday),
+    bookGrade: rotateBookGradeHighlight(yesterday),
+    generatedBy: "cron:generate-drafts",
+    slug,
+    sources,
+  });
+
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
+    slug,
+    created: true,
+    reason: settledCount === 0 ? "DRAFT honest-empty" : "DRAFT",
   });
 }
 

@@ -1,4 +1,9 @@
-export { OddsApiClient, OddsApiError } from "./odds-api-client.js";
+export {
+  OddsApiClient,
+  OddsApiError,
+  type OddsApiHistoricalSnapshot,
+  type OddsApiParticipant,
+} from "./odds-api-client.js";
 export {
   KalshiClient,
   KalshiError,
@@ -15,6 +20,15 @@ export {
   sportKeyToKalshiLeagueCode,
   gameSeriesForLeague,
 } from "./kalshi-client.js";
+export {
+  KALSHI_LISTING_METHOD_TAG,
+  DEFAULT_LISTING_MAX_SPREAD,
+  kalshiPriceToUnit,
+  yesAskFromNoBid,
+  gateKalshiListing,
+  gateKalshiLastOrCandle,
+} from "./kalshi-listing-quote.js";
+export type { ListingRefuse, ListingSource, ListingQuote } from "./kalshi-listing-quote.js";
 export {
   KALSHI_SERIES,
   KALSHI_GAME_SERIES,
@@ -141,6 +155,16 @@ export {
   type FailoverReason,
 } from "./odds-failover.js";
 export {
+  THIN_FILL_MIN_BOOKMAKERS,
+  THIN_FILL_COMMENCE_MATCH_MS,
+  eventBookmakerCount,
+  eventsBelowBookmakerThreshold,
+  eventTeamsMatch,
+  matchSecondaryEventToPrimary,
+  mergeBookmakersIntoPrimary,
+  type ThinFillMergeResult,
+} from "./odds-event-merge.js";
+export {
   OfflineStatsProvider,
   RegistryStatsProvider,
   createStatsProviders,
@@ -200,6 +224,41 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export {
+  PredExonClient,
+  PredExonError,
+  isPredExonIngestEnabled,
+  PREDEXON_BASE,
+  PREDEXON_KEY_HEADER,
+  PREDEXON_SOURCE_ID,
+  type PredExonKalshiMarket,
+  type PredExonKalshiMarketsPage,
+} from "./predexon-client.js";
+export { SharpApiClient, SharpApiError, isSharpApiIngestEnabled, SHARP_API_BASE, SHARP_API_SOURCE_ID } from "./sharp-api-client.js";
+export {
+  ProphetXMarketDataClient,
+  ProphetXError,
+  isProphetXMarketDataEnabled,
+  PROPHETX_MARKET_DATA_BASE,
+  PROPHETX_SOURCE_ID,
+} from "./prophetx-client.js";
+export {
+  NovigRestClient,
+  NovigPublicCsvClient,
+  NovigError,
+  isNovigRestEnabled,
+  isNovigPublicCsvEnabled,
+  NOVIG_REST_BASE,
+  NOVIG_CSV_BASE,
+  NOVIG_REST_SOURCE_ID,
+  NOVIG_CSV_SOURCE_ID,
+  type NovigPublicCsvIndex,
+} from "./novig-client.js";
+export {
+  DFS_ODDS_BOOKS,
+  fetchDfsOddsIfEnabled,
+  isDfsOddsEnabled,
+} from "./dfs-odds.js";
 export * from "./config.js";
 export {
   freshnessMode,
@@ -220,6 +279,7 @@ export {
   fetchRundownEventsForSport,
   rundownEventToOddsApiEvent,
   RUNDOWN_SPORT_IDS,
+  RUNDOWN_AFFILIATE_BOOK_KEYS,
   RUNDOWN_API_KEY_ENV_NAMES,
 } from "./rundown-client.js";
 export type { RundownFetchResult, RundownApiKeyEnvName } from "./rundown-client.js";
@@ -236,6 +296,22 @@ export {
   ESPN_ODDS_SPORT_MAP,
 } from "./espn-odds-client.js";
 export type { EspnOddsFetchResult } from "./espn-odds-client.js";
+
+export {
+  NFL_PRESEASON_ODDS_KEY,
+  NFL_CANONICAL_SPORT_KEY,
+  NFL_PRESEASON_COMMENCE_MATCH_MS,
+  isNflPreseasonFetchWindow,
+  nflTeamsMatch,
+  matchPreseasonRowToExistingGame,
+  remapPreseasonRows,
+  mergeFeedRowsById,
+} from "./nfl-preseason-map.js";
+export type {
+  OddsIngestKey,
+  ExistingGameMatch,
+  PreseasonFeedRow,
+} from "./nfl-preseason-map.js";
 
 export {
   parseEspnScoreboardForSeed,

@@ -7,6 +7,11 @@
  * Rights: api_tos / public_market — attribute Polymarket; check commercial ToS before prod money path
  *
  * Network fetch is injectable so tests stay offline.
+ *
+ * Honesty: Gamma `outcomePrices` are last/index prints, not a two-way book.
+ * {@link gateLastTradeOnly} refuses them as priced q. This adapter stays
+ * discovery-only (INDEPENDENT_POLYMARKET default OFF). Do not treat Gamma
+ * last prices as Kalshi-style mids.
  */
 
 import type { QuoteFetchRequest, QuoteLine, QuoteProvider } from "../types";
@@ -81,7 +86,7 @@ export function gammaMarketToLines(
     rights: "public_market" as const,
     bookId: "polymarket",
     confidence: 0.7,
-    notes: m.question,
+    notes: `${m.question ?? "gamma"} (last/index print; not a two-way mid)`,
     // Continuous CLV law: method must match open vs close
     methodTag: "prediction_market_raw_v1",
     modelVersion: "quote.gamma.v1",

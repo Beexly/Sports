@@ -112,12 +112,24 @@ describe("consumeRateLimit", () => {
 });
 
 describe("clientIp", () => {
-  it("prefers the first x-forwarded-for entry", () => {
+  // SPEC CHANGE (security): this previously asserted the FIRST x-forwarded-for
+  // entry. That entry is client-controlled — proxies APPEND, so a caller who sends
+  // their own `X-Forwarded-For` keeps it at position 0 and can rotate it to mint
+  // unlimited rate-limit buckets. The old expectation pinned that bypass. We now
+  // trust platform-set headers first, then read x-forwarded-for from the right.
+  it("prefers the platform-set x-real-ip over a client-forwardable chain", () => {
     const req = reqWithHeaders({
       "x-forwarded-for": "203.0.113.7, 70.41.3.18, 150.172.238.178",
       "x-real-ip": "10.0.0.1",
     });
-    expect(clientIp(req)).toBe("203.0.113.7");
+    expect(clientIp(req)).toBe("10.0.0.1");
+  });
+
+  it("reads x-forwarded-for from the right so a prepended entry cannot forge the key", () => {
+    const req = reqWithHeaders({
+      "x-forwarded-for": "203.0.113.7, 70.41.3.18, 150.172.238.178",
+    });
+    expect(clientIp(req)).toBe("150.172.238.178");
   });
 
   it("falls back to x-real-ip when x-forwarded-for is absent", () => {

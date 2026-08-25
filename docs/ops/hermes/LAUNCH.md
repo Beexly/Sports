@@ -39,24 +39,52 @@ itself via `npm install` and checks every Hermes commit. The prompts ban
 
 You have no budget, so the default engine is the one with no meter:
 
-**PRIMARY (free, unlimited): local Ollama.**
+**NEW — as of 2026-08-22, try this first: `stealth/ox-alpha` on OpenRouter.**
+A stealth/unbranded model appeared on OpenRouter on 2026-08-21 (provider name
+literally "stealth" — nobody has confirmed who built it; community fingerprinting
+points at a Chinese lab, GLM/Z.ai family being the leading guess). Reported specs:
+1,048,576 token context, 131,072 max output, multimodal (text/image/video), pitched
+specifically at coding and long-horizon agentic work, currently free with rate
+limits high enough that OpenCode is calling it "near unlimited." Set:
+```
+Base URL: https://openrouter.ai/api/v1
+Model:    stealth/ox-alpha
+```
+(Your OpenRouter key already works — same account as the free routes below.)
+
+**Two things this doc has to flag, not just skip:**
+- **The free window is temporary.** Coverage says "free for the next week" (from
+  2026-08-21) — not a permanent tier. If an overnight run leans on it, check
+  openrouter.ai/stealth/ox-alpha before each session in case it's gone or gated.
+- **It's an anonymous, unverified provider.** The "your data isn't used for
+  training" claim is self-reported by "stealth," not independently confirmed.
+  Fine for this repo's read-only-audit / local-diff workflow (nothing here is
+  live user data), not a precedent for routing production traffic through it —
+  that's a separate, bigger decision.
+- **Not verified from here, same as everything else in this file:** I have not
+  run a task through it myself, and I don't know Hermes' own CLI flag or config
+  syntax for pointing it at a custom OpenRouter model/base-URL — that's whatever
+  Hermes' own settings mechanism is on your machine. The Base URL + Model string
+  above are what OpenRouter/OpenCode publish; wiring them into Hermes itself is
+  the one step I can't do from this session.
+
+**FALLBACK (free, unlimited): local Ollama.**
 ```bash
 ollama pull qwen3-coder:30b
 ```
-No rate limit, no credit card, runs all night. Slower per token than a hosted route,
-but an overnight job doesn't care about latency — it cares about not dying at 2am.
+No rate limit, no credit card, runs all night, slower per token. Good backstop if
+Ox Alpha's free window closes mid-run.
 
-**SECONDARY (free, hosted, rate-capped): OpenRouter free routes.**
+**FALLBACK (free, hosted, rate-capped): OpenRouter free routes.**
 `poolside/laguna-s-2.1:free` (262K ctx) and `nvidia/nemotron-3.5-lightning:free`
 (1M ctx) are both verified $0/$0 — **but** with no credits the cap is **50 requests
-per day**, and an agent loop burns that in under an hour. Free-tier OpenRouter is
-fine for testing a single task in the evening, not for the overnight run.
+per day**, and an agent loop burns that in under an hour.
 
 **OPTIONAL accelerator ($10, once, only when you have it):** $10 lifetime credit
-raises OpenRouter's free-route cap to 1,000/day, which fits a full overnight run on
-Laguna. This is a nice-to-have, not a requirement — do not spend money you need.
+raises OpenRouter's free-route cap to 1,000/day. Not a requirement — do not spend
+money you need. (Moot for Ox Alpha itself while its own free window holds.)
 
-If a task keeps failing on the local model, that's usually signal the task spec is
+If a task keeps failing on the model in use, that's usually signal the task spec is
 thin, not that you need a bigger model. Paste me the task number and the journal
 error and I'll rewrite the spec.
 

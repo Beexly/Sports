@@ -14,8 +14,9 @@
  * verdict, and a link to the evidence doc path.
  *
  * Copy rules: no banned claim words. Every entry names its pre-registered
- * threshold. Closing line: "We test things so you don't have to learn the
- * hard way."
+ * threshold. Closing line is the charter-mandated wording: "These are
+ * things we tested and found not to work. We publish them so you do not
+ * pay for the same mistakes."
  */
 
 import type { Metadata } from "next";
@@ -23,6 +24,8 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
+import { jsonLdScript } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site-url";
 
 export const metadata: Metadata = {
   title: `Kill Ledger · ${BRAND_NAME}`,
@@ -40,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: `Kill Ledger · ${BRAND_NAME}`,
     description:
-      "We publish failed strategies so you do not have to learn the hard way.",
+      "These are things we tested and found not to work. We publish them so you do not pay for the same mistakes.",
   },
 };
 
@@ -124,6 +127,21 @@ const ENTRIES: readonly Entry[] = [
   },
 ];
 
+const killLedgerJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: `Kill Ledger · ${BRAND_NAME}`,
+  description:
+    "These are things we tested and found not to work. We publish them so you do not pay for the same mistakes.",
+  url: `${SITE_URL}/kill-ledger`,
+  itemListElement: ENTRIES.map((entry, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: `${entry.label} ${entry.title}`,
+    url: `${SITE_URL}/kill-ledger#${entry.id}`,
+  })),
+};
+
 function EntryCard({ entry }: { entry: Entry }): JSX.Element {
   return (
     <article
@@ -191,6 +209,10 @@ function EntryCard({ entry }: { entry: Entry }): JSX.Element {
 export default function KillLedgerPage(): JSX.Element {
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(killLedgerJsonLd) }}
+      />
       <Nav />
 
       <main id="main-content" className="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
@@ -233,7 +255,8 @@ export default function KillLedgerPage(): JSX.Element {
             result whether it helps us or hurts us.
           </p>
           <p className="mt-3 text-base font-semibold text-ion-white">
-            We test things so you do not have to learn the hard way.
+            These are things we tested and found not to work. We publish them
+            so you do not pay for the same mistakes.
           </p>
         </section>
 

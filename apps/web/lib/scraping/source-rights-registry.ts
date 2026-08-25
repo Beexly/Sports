@@ -429,6 +429,101 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
 
   // ── Permission required ──────────────────────────────────────────────────────
   {
+    source_id: "kalshi",
+    source_name: "Kalshi Exchange API (KalshiEx LLC)",
+    source_url: "https://kalshi.com",
+    terms_url: "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
+    robots_url: null,
+    jurisdiction: "US",
+    source_type: "sports_data_api",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "low",
+    copyright_expression_risk: "medium",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-21",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://assets.kalshi.com/Kalshi-Developer-Agreement.pdf",
+      "https://kalshi.com/developer-agreement",
+      "https://docs.kalshi.com/welcome",
+    ],
+    unlock_condition:
+      "Prior written authorization from KalshiEx LLC covering collection, caching, " +
+      "storage, and derived-analytics use of API market data for a commercial product " +
+      "that is not the member's own trading on the Exchange (Developer Agreement v1.1 " +
+      "§3 and §3.1). Exchange membership and API-key issuance do not grant this use.",
+    vendor_contact: "https://kalshi.com/developer-agreement",
+    notes:
+      "VERIFIED 2026-08-21 against the live PDF at assets.kalshi.com " +
+      "(Last-Modified 2023-11-09, Developer Agreement v1.1). §3: 'Use of Kalshi APIs " +
+      "is expressly limited to facilitating a members own trading on the Exchange; all " +
+      "other usages are disallowed and may result in account suspension.' §3.1: " +
+      "'Collecting, caching, aggregating, or storing data or content accessed via the " +
+      "API except for purposes of facilitating your own trading on Kalshi. You may not " +
+      "share such data or content with third parties in any manner without prior " +
+      "written authorization from Kalshi.' §3.5 also bans access for benchmarking or " +
+      "competitive purposes. GSE pick-confidence / independentFairValue is commercial " +
+      "derived analytics, not own-account trading — fail closed until written grant.",
+  },
+
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
+    source_id: "clubelo",
+    source_name: "ClubElo (Lars Schiefler)",
+    source_url: "https://clubelo.com",
+    terms_url: "https://clubelo.com/About",
+    robots_url: "https://clubelo.com/robots.txt",
+    jurisdiction: "DE",
+    source_type: "sports_data_api",
+    status: "permission_required",
+    automation_allowed: false,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Club Elo ratings via ClubElo / Lars Schiefler (clubelo.com).",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-21",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://clubelo.com/About",
+      "http://api.clubelo.com",
+      "https://web.archive.org/web/20230117120000/http://clubelo.com/About",
+    ],
+    unlock_condition:
+      "Written confirmation from Lars Schiefler (clubelo@schiefler.com) that commercial " +
+      "analytics use of ClubElo ratings/CSV, with citation, is permitted. A 2023-01-17 " +
+      "Wayback About page said calculations/rankings may be reused with citation — that " +
+      "archive is not a live grant. Do not treat API silence as denial or as clearance.",
+    vendor_contact: "clubelo@schiefler.com",
+    notes:
+      "PROBED 2026-08-21 from the founder's local network. api.clubelo.com timed out " +
+      "(curl 28, 12s and 20s) — same class of API-subdomain unreachability the cloud " +
+      "container saw, so this is not cloud-egress-only. clubelo.com/About returned HTTP 200 " +
+      "but the live document is an SPA dump of results, not terms prose. Wayback 2023-01-17 " +
+      "About: reuse of calculations/rankings with citation. Existing GSE CSV client stays " +
+      "on the documented-ungated interim path until Lars replies; this row records the " +
+      "undetermined commercial grant so a later verdict flip does not require rediscovery.",
+  },
+
+  // ── Permission required ──────────────────────────────────────────────────────
+  {
     source_id: "scores24-live",
     source_name: "Scores24.live (Kiito OÜ)",
     source_url: "https://scores24.live",

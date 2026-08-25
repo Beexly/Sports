@@ -256,10 +256,19 @@ export function planAutonomyCycle(obs: AutonomyObservation): AutonomyPlan {
     }
   }
 
-  // Public picks kill switch (FORCE_NO_BET_IF_STALE / auto-on with PUBLIC_PICKS)
-  // requires IngestionRun SUCCESS with oddsInserted > 0 within 240m Refresh SLA.
-  // free-spine SUCCESS alone is NOT enough (G4 empty-odds trap). When the public
-  // surface is open, keep the paid odds path warm via allow-listed refresh-odds.
+  // Public picks kill switch. FORCE_NO_BET_IF_STALE is a SEPARATE, independent
+  // flag — it does NOT auto-arm with PUBLIC_PICKS. platform-config.ts reads it
+  // straight from the env with default false, and public-freshness-gate.ts is
+  // only ever consulted when getReadinessGates().forceNoBetIfStale is true. So
+  // PUBLIC_PICKS on with FORCE_NO_BET_IF_STALE off performs NO freshness check
+  // and stale picks stay publishable — the two must be flipped together.
+  // (An earlier version of this comment claimed "auto-on with PUBLIC_PICKS";
+  // that was wrong, and believing it is how a stale board ships.)
+  //
+  // Once armed, the gate requires an IngestionRun SUCCESS with oddsInserted > 0
+  // within the 240m Refresh SLA. free-spine SUCCESS alone is NOT enough (G4
+  // empty-odds trap), so a freshly-flipped surface stays dark until the paid
+  // odds path runs — keep it warm via allow-listed refresh-odds.
   if (obs.publicPicksEnabled) {
     severity = worse(severity, "P1");
     actions.push({

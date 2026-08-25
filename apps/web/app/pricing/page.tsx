@@ -64,7 +64,7 @@ const FREE_FEATURES = [
   { label: "Confidence rating on every pick (Pro)", included: false },
   { label: "Factor trail & evidence audit (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
-  { label: "Real-time alerts (Elite)", included: false },
+  { label: "Graded-pick alerts (Elite)", included: false },
   { label: "Line-value tracker + staking toolkit (Elite)", included: false },
 ] as const;
 
@@ -87,12 +87,12 @@ const PRO_FEATURES = [
   { label: "Line-movement intel", included: true },
   { label: "Trend Lab: full cohort workbench", included: true },
   { label: "Parlay MRI: the portfolio surgeon", included: true },
-  { label: "Real-time alerts (Elite)", included: false },
+  { label: "Graded-pick alerts (Elite)", included: false },
   { label: "Line-value tracker + staking toolkit (Elite)", included: false },
 ] as const;
 
 const ELITE_FEATURES = [
-  { label: "Real-time email + push alerts on every signal", included: true },
+  { label: "Email + push alerts when a pick you follow settles", included: true },
   { label: "Line-value tracker: your glass-box bet tracker", included: true },
   { label: "Staking calculator: Kelly-aware sizing", included: true },
   { label: "First access to new intelligence surfaces", included: true },
@@ -114,7 +114,7 @@ const FANTASY_FEATURES = [
   { label: "The Academy: full training floor", included: true },
   { label: "Betting depth: factor trail & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
-  { label: "Real-time alerts (Elite)", included: false },
+  { label: "Graded-pick alerts (Elite)", included: false },
 ] as const;
 
 const PLANS: PlanView[] = [
@@ -161,7 +161,7 @@ const PLANS: PlanView[] = [
     annual: phase.elite.annual,
     annualSavingsPct: annualSavingsPct(phase.elite),
     annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "The professional toolkit: everything in Pro, plus real-time alerts and a line-value tracker for post-close review.",
+    description: "The professional toolkit: everything in Pro, plus graded-pick alerts and a line-value tracker for post-close review.",
     badge: "The professional toolkit",
     cta: "Subscribe to Elite",
     features: [...ELITE_FEATURES],
@@ -179,7 +179,7 @@ const COMPARISON_FEATURES = [
   "Line-movement intel",
   "Trend Lab",
   "Parlay MRI",
-  "Real-time alerts",
+  "Graded-pick alerts",
   "Line-value tracker + staking toolkit",
   "The Academy",
   "Public record",
@@ -454,7 +454,7 @@ export default function PricingPage() {
                 hex={BRAND_COLORS.softUltraviolet}
                 doors={[
                   { label: "Line-value tracker + staking toolkit", href: "/track" },
-                  { label: "Real-time alerts", href: "/dashboard" },
+                  { label: "Graded-pick alerts", href: "/dashboard" },
                   { label: "New surfaces, first", href: "/changelog" },
                 ]}
               />

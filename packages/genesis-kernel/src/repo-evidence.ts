@@ -69,7 +69,7 @@ export const REPO_EVIDENCE: readonly GenesisCapability[] = [
     executionProfiles: [{ placement: "CLOUD_JOB", estimatedCostUsd: 0.015, estimatedLatencyMs: 2500 }],
     policy: { requiresClearance: false, publicationBoundary: "COCKPIT_DRAFT", dataClass: "INTERNAL_NON_PERSONAL" },
     economics: { costUsdPerCall: 0.015, latencyMsP50: 2500 },
-    tests: ["apps/web/lib/claude-api/providers/vertex.test.ts", "apps/web/lib/claude-api/providers/google-oauth.test.ts"],
+    tests: ["apps/web/lib/claude-api/providers/vertex.test.ts", "apps/web/lib/claude-api/google-oauth.test.ts"],
     provenance: {
       evidence: ["apps/web/lib/claude-api/providers/vertex.ts (callVertexClaudeMessages, isVertexProviderSelected)"],
       verifiedAt: VERIFIED_AT,

@@ -13,6 +13,7 @@
 export type SettlementRootCauseCode =
   | "NO_TRUSTED_FINAL"
   | "DISPUTED_SCORES"
+  | "AMBIGUOUS_MATCHUP"
   | "TEAM_ORIENT_FAIL"
   | "WITHIN_GRACE"
   | "OVERDUE_NO_SCORE"
@@ -42,7 +43,7 @@ export interface SettlementRcaInput {
   readonly graceHours: number;
   readonly outcomeStatus: "SETTLED" | "HELD" | "PENDING" | "WRITE_FAILED";
   readonly pendingReason?: PendingReason;
-  readonly holdReason?: "DISPUTED";
+  readonly holdReason?: "DISPUTED" | "AMBIGUOUS_MATCH";
   readonly confirmation?: "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED";
   readonly settlementPath?: "free" | "odds-api";
   readonly oddsKeyPresentButFreeExpected?: boolean;
@@ -85,6 +86,7 @@ export interface SettlementRcaReport {
 const CODE_CATEGORY: Record<SettlementRootCauseCode, FishboneCategory> = {
   NO_TRUSTED_FINAL: "DATA_SOURCE",
   DISPUTED_SCORES: "DATA_SOURCE",
+  AMBIGUOUS_MATCHUP: "MATCHING",
   TEAM_ORIENT_FAIL: "MATCHING",
   WITHIN_GRACE: "TIMING",
   OVERDUE_NO_SCORE: "DATA_SOURCE",
@@ -105,6 +107,7 @@ const CODE_WAVE: Record<SettlementRootCauseCode, "A" | "B" | "C" | "D"> = {
   SINGLE_SOURCE_POLICY_HOLD: "B",
   // C: expert / multi-source conflict
   DISPUTED_SCORES: "C",
+  AMBIGUOUS_MATCHUP: "C",
   PATH_MISCONFIG: "C",
   // D: not actionable yet / unknown
   WITHIN_GRACE: "D",
@@ -137,6 +140,14 @@ function fiveWhysFor(code: SettlementRootCauseCode): readonly string[] {
         "Why not auto-settled? Law forbids settling DISPUTED blindly.",
         "Why in backlog? Exception queue has no owner decision yet.",
         "Root: multi-source conflict requiring human/evidence resolution.",
+      ];
+    case "AMBIGUOUS_MATCHUP":
+      return [
+        "Why HELD? More than one trusted final matched this pick's team-pair and date, with disagreeing scores.",
+        "Why more than one match? Matching is team-pair + calendar-day only — no game/event ID in the join.",
+        "Why does that produce two candidates? A same-day rematch (e.g. an MLB doubleheader) is two real games under one matchup key.",
+        "Why not auto-settled against the first candidate? Grading against an arbitrary final risks settling the wrong game.",
+        "Root: resolve by game/event ID, not team+date — filed as a follow-up; until then this holds for manual audit.",
       ];
     case "TEAM_ORIENT_FAIL":
       return [
@@ -211,6 +222,12 @@ function remediationFor(code: SettlementRootCauseCode): readonly string[] {
         "Compare source scores; wait for feed correction or record owner decision.",
         "Never force-settle DISPUTED without evidence receipt.",
       ];
+    case "AMBIGUOUS_MATCHUP":
+      return [
+        "Manually confirm which final matches this pick's actual game (check kickoff time, not just date).",
+        "Never force-settle against an arbitrary candidate — resolve by game ID before grading.",
+        "Consider threading a real per-game identifier through the match path as a follow-up fix.",
+      ];
     case "TEAM_ORIENT_FAIL":
       return [
         "Add/verify team alias normalisation for the home token.",
@@ -244,6 +261,8 @@ function summaryFor(code: SettlementRootCauseCode, ageHours: number): string {
       return `Overdue with no usable score (${ageHours.toFixed(1)}h).`;
     case "DISPUTED_SCORES":
       return "Held: multi-source score dispute.";
+    case "AMBIGUOUS_MATCHUP":
+      return "Held: same-day rematch matched more than one final with disagreeing scores.";
     case "TEAM_ORIENT_FAIL":
       return "Final found but home-team orientation failed.";
     case "PATH_MISCONFIG":
@@ -273,6 +292,8 @@ export function classifySettlementRootCause(input: SettlementRcaInput): Settleme
     code = "PATH_MISCONFIG";
   } else if (input.outcomeStatus === "WRITE_FAILED") {
     code = "WRITE_RACE_LOST";
+  } else if (input.holdReason === "AMBIGUOUS_MATCH") {
+    code = "AMBIGUOUS_MATCHUP";
   } else if (input.outcomeStatus === "HELD" || input.holdReason === "DISPUTED") {
     code = "DISPUTED_SCORES";
   } else if (input.outcomeStatus === "SETTLED") {
