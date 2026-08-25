@@ -69,7 +69,18 @@ export interface LineArchiveDb {
     findMany(args: {
       where: {
         gameId: string;
-        market?: readonly string[];
+        /**
+         * Prisma filter shape, NOT a bare array. `market` is a scalar `String`
+         * column (schema.prisma:459), so the only valid multi-value filter is
+         * `{ in: [...] }` — Prisma's own generated type is
+         * `string | StringFilter<"OddsLineSnapshot">`, which a `string[]` does
+         * not satisfy. This interface previously declared `readonly string[]`,
+         * and because the call site casts `db as LineArchiveDb`, tsc validated
+         * against this declaration instead of Prisma's and the mismatch was
+         * invisible. Keep this in the Prisma shape so the cast cannot hide the
+         * next one.
+         */
+        market?: { in: string[] };
         capturedAt?: { lte: Date };
       };
       select?: { market?: boolean };
@@ -129,7 +140,7 @@ export async function captureLineSnapshots(
     // Batch: one findMany returning any existing snapshots for these markets
     // — replaces N count() calls (the N+1 that melts Neon on a dense slate).
     const existing = await db.oddsLineSnapshot.findMany({
-      where: { gameId, market: markets },
+      where: { gameId, market: { in: markets } },
       select: { market: true },
     });
     const seenMarkets = new Set(existing.map((r) => r.market));

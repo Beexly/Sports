@@ -123,7 +123,7 @@ describe("captureLineSnapshots — phase classification (batched findMany)", () 
     // SINGLE findMany, not one count() per market
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
-      where: { gameId: "game_1", market: ["SPREAD"] },
+      where: { gameId: "game_1", market: { in: ["SPREAD"] } },
       select: { market: true },
     });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
@@ -150,7 +150,7 @@ describe("captureLineSnapshots — phase classification (batched findMany)", () 
 
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
-      where: { gameId: "game_1", market: ["SPREAD"] },
+      where: { gameId: "game_1", market: { in: ["SPREAD"] } },
       select: { market: true },
     });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
@@ -182,7 +182,7 @@ describe("captureLineSnapshots — phase classification (batched findMany)", () 
     // ONE findMany call with BOTH markets — not two count() calls
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledTimes(1);
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
-      where: { gameId: "game_1", market: ["SPREAD", "MONEYLINE"] },
+      where: { gameId: "game_1", market: { in: ["SPREAD", "MONEYLINE"] } },
       select: { market: true },
     });
     const data = db.oddsLineSnapshot.createMany.mock.calls[0]?.[0].data;
@@ -370,5 +370,43 @@ describe("toLineSnapshotRows", () => {
       ]),
     );
     expect(rows).toHaveLength(6);
+  });
+});
+
+/**
+ * TYPE-LEVEL REGRESSION — the runtime doubles below cannot catch this class.
+ *
+ * `captureLineSnapshots` receives `db as LineArchiveDb`, so `tsc` validates the
+ * query against the hand-written interface in line-archive.ts, NOT against
+ * Prisma. When that interface declared `market?: readonly string[]`, the module
+ * shipped `where: { gameId, market: markets }` — a bare array — and every check
+ * stayed green: the interface, the call and these expectations all agreed with
+ * each other and all disagreed with Prisma.
+ *
+ * `market` is a scalar `String` column (schema.prisma:459). Prisma's generated
+ * filter type is `string | StringFilter<"OddsLineSnapshot">`, which a `string[]`
+ * does not satisfy, so at runtime the query engine throws
+ * PrismaClientValidationError. That throw happens BEFORE `createMany`, is
+ * swallowed by the try/catch, and the caller discards the return value — so the
+ * failure mode was total and silent: flip LINE_ARCHIVE_ENABLED=true and zero
+ * snapshots are ever written, nothing is logged, and `markClosingSnapshots`
+ * then finds no rows to tag CLOSE.
+ *
+ * The assignment below is the guard. It is a compile-time assertion — if the
+ * interface drifts from Prisma's real filter shape again, `npm run typecheck`
+ * fails here rather than production failing silently.
+ */
+describe("line-archive — the where-clause matches Prisma's real filter type", () => {
+  it("LineArchiveDb's findMany filter is assignable to Prisma's WhereInput", async () => {
+    type FindManyArgs = Parameters<LineArchiveDb["oddsLineSnapshot"]["findMany"]>[0];
+    const markets: string[] = ["SPREAD", "MONEYLINE"];
+    const where: FindManyArgs["where"] = { gameId: "game_1", market: { in: markets } };
+
+    // The load-bearing line: Prisma's own generated type must accept this.
+    const { Prisma } = await import("@prisma/client");
+    void Prisma;
+    const asPrismaFilter: import("@prisma/client").Prisma.OddsLineSnapshotWhereInput = where;
+
+    expect(asPrismaFilter).toEqual({ gameId: "game_1", market: { in: markets } });
   });
 });
