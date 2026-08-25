@@ -15,7 +15,13 @@
 
 services:
   odds-api-mock:
-    image: node:22-alpine
+    # Node 20 to match the repo pin (.node-version): the major every CI job runs
+    # and the major all four application images use. This mock had drifted to
+    # node:22-alpine, so failure-injection results were observed against a
+    # runtime nothing else here runs. mock-odds-api.mjs imports only node:http,
+    # which behaves the same on both majors.
+    # Enforced by scripts/guardrails/node-container-parity.mjs.
+    image: node:20-alpine
     container_name: gse_odds_api_mock
     working_dir: /app
     volumes:
