@@ -4,7 +4,7 @@ import {
   scanStudioContent,
   type StudioAssetDraft,
 } from "@/lib/studio/build-assets";
-import { validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims, type GroundedValue } from "@/lib/claude-api/numeric-guard";
 import {
   estimateClaudeCostUsd,
   evaluateClaudeBudgetUsage,
@@ -140,7 +140,7 @@ export async function callClaudeForStudioAsset(
 export function evaluateStudioGeneratedBodyPolicy(
   templateKind: CreatorAssetKind,
   body: string,
-  groundedValues?: readonly number[]
+  groundedValues?: readonly GroundedValue[]
 ): string[] {
   const failures: string[] = [];
   const text = body.trim();
@@ -159,7 +159,7 @@ export function evaluateStudioGeneratedBodyPolicy(
     }
   }
 
-  if (groundedValues !== undefined && !validateNumericClaims(text, { allowed: groundedValues }).grounded) {
+  if (groundedValues !== undefined && !validateNumericClaims(text, { values: groundedValues }).grounded) {
     failures.push("UNGROUNDED_NUMERIC");
   }
 

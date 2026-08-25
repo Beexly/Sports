@@ -12,7 +12,7 @@ import {
   type RuleSeverity,
 } from "@/lib/compliance-scanner/rules";
 import { normalizeForComplianceScan } from "@/lib/compliance-scanner/normalize";
-import { extractNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { extractNumericClaims, type GroundedValue } from "@/lib/claude-api/numeric-guard";
 import {
   STUDIO_TEMPLATES,
   type ClaudePrompt,
@@ -153,30 +153,53 @@ export function serializeNodeGameData(node: GameIntelligenceNode): string {
  * Every value below is read off the verified node — the signed value and its
  * magnitude are the SAME real number. Nothing the node does not hold is added.
  */
-export function buildStudioNumericGrounding(node: GameIntelligenceNode): readonly number[] {
+export function buildStudioNumericGrounding(
+  node: GameIntelligenceNode,
+): readonly GroundedValue[] {
   const mp = node.marketPulse;
   const eh = node.evidenceHealth;
-  const values: number[] = [
-    ...extractNumericClaims(serializeNodeGameData(node)).map((claim) => claim.value),
-    mp.bookmakerCoverage,
-    mp.publishedPickCount,
-    eh.score,
-    eh.sourceCount,
-    eh.averageTrust,
-    eh.staleCount,
-    eh.bootstrapCount,
-  ];
+  // Claims extracted from the serialized node keep the kind their LABEL gave
+  // them. Flattening them to bare numbers — which this builder used to do — is
+  // exactly what discards the meaning: a number then grounds any claim that
+  // shares its digits, whatever the copy says that number *is*.
+  const values: GroundedValue[] = extractNumericClaims(serializeNodeGameData(node)).map(
+    (claim) => ({ value: claim.value, kind: claim.kind }),
+  );
+
+  // Structured values, typed by what they are. Tallies are `count`; scores,
+  // indices and lines read as bare numbers in prose, which the claim extractor
+  // types `magnitude`. Where a body writes one of these as a percentage
+  // ("72% confidence") the kinds are incompatible and the claim is refused —
+  // the fail-closed direction, and the one this gate exists to take.
+  const push = (value: number, kind: GroundedValue["kind"]): void => {
+    values.push({ value, kind });
+  };
+
+  push(mp.bookmakerCoverage, "count");
+  push(mp.publishedPickCount, "count");
+  push(eh.sourceCount, "count");
+  push(eh.staleCount, "count");
+  push(eh.bootstrapCount, "count");
+  push(eh.score, "magnitude");
+  push(eh.averageTrust, "magnitude");
 
   for (const value of [mp.edgeIndex, mp.lineMovementSpread, mp.lineMovementTotal]) {
-    if (value !== null) values.push(value, Math.abs(value));
+    if (value !== null) {
+      push(value, "magnitude");
+      push(Math.abs(value), "magnitude");
+    }
   }
 
   for (const pick of node.picks) {
-    values.push(pick.confidence, pick.edgeScore);
+    push(pick.confidence, "magnitude");
+    push(pick.edgeScore, "magnitude");
     // The pick's own line lives inside the selection string ("Boston Celtics -4.5").
     for (const token of pick.selection.match(/-?\d+(?:\.\d+)?/g) ?? []) {
       const parsed = Number(token);
-      if (Number.isFinite(parsed)) values.push(parsed, Math.abs(parsed));
+      if (Number.isFinite(parsed)) {
+        push(parsed, "magnitude");
+        push(Math.abs(parsed), "magnitude");
+      }
     }
   }
 

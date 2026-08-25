@@ -1230,6 +1230,11 @@ type StatusGroup = { status: string; _count: number };
 
 interface StatusGroupingTable {
   groupBy(args: { by: ["status"]; _count: true }): Promise<StatusGroup[]>;
+  /** A targeted count alongside the grouped read. `groupBy` folds by status
+   *  alone, so a question like "how many are SUPPRESSED *for this reason*"
+   *  cannot be answered from the grouping and needs its own predicate.
+   *  Shape matches Prisma's generated `count({ where })` → number. */
+  count(args: { where: Record<string, unknown> }): Promise<number>;
 }
 
 interface CountingDb {

@@ -244,14 +244,33 @@ describe("Studio Claude generation", () => {
 
     it("excludes the template system prompt's example statistics from the grounding set", () => {
       const grounded = buildStudioNumericGrounding(makeNode());
+      // The set is typed GroundedValues now, not bare numbers — a value grounds
+      // a claim only when the KINDS are compatible too. These assertions read
+      // the value out so they still test membership, and the kind is pinned
+      // separately below.
+      const values = grounded.map((g) => g.value);
 
       // 7.5 / 8.5 exist only in the FANTASY_ANGLE system prompt's illustration.
-      expect(grounded).not.toContain(7.5);
-      expect(grounded).not.toContain(8.5);
+      expect(values).not.toContain(7.5);
+      expect(values).not.toContain(8.5);
       // The node's own verified values are there.
-      expect(grounded).toContain(4.5); // the pick's line, inside "Boston Celtics -4.5"
-      expect(grounded).toContain(1.5); // |line movement (spread)| = |-1.5|
-      expect(grounded).toContain(71); // Edge Index
+      expect(values).toContain(4.5); // the pick's line, inside "Boston Celtics -4.5"
+      expect(values).toContain(1.5); // |line movement (spread)| = |-1.5|
+      expect(values).toContain(71); // Edge Index
+    });
+
+    it("types the structured values so a number cannot ground an unrelated claim", () => {
+      const grounded = buildStudioNumericGrounding(makeNode());
+      const kindsOf = (v: number): string[] =>
+        grounded.filter((g) => g.value === v).map((g) => g.kind);
+
+      // A line is a magnitude and only a magnitude: it must not be borrowable
+      // to justify a record or a percentage that happens to share its digits.
+      expect(kindsOf(4.5)).toContain("magnitude");
+      expect(kindsOf(4.5)).not.toContain("record");
+      expect(kindsOf(4.5)).not.toContain("rate");
+      // Tallies are counts, which is a genuinely different thing.
+      expect(kindsOf(makeNode().evidenceHealth.sourceCount)).toContain("count");
     });
 
     it("rejects a prop line the model borrowed from its own system prompt", async () => {
