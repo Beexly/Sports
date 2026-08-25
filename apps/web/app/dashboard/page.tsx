@@ -51,7 +51,14 @@ export default async function DashboardPage({
 
   if (!session?.user?.id) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-obsidian text-ion-1">
+      // <main id="main-content"> — the signed-in branch below already renders
+      // one, but this gate branch (what an expired session actually lands on)
+      // did not, leaving the root layout's "Skip to content" link pointing at
+      // nothing (WCAG 2.4.1). Semantics only; no visual delta.
+      <main
+        id="main-content"
+        className="flex min-h-screen items-center justify-center bg-obsidian text-ion-1"
+      >
         <div className="rounded-2xl border border-mineral bg-carbon/60 p-8 text-center">
           <h1 className="text-2xl font-black tracking-tight text-ion-white">Sign in required</h1>
           <p className="mt-2 text-sm text-ion-1">
@@ -64,7 +71,7 @@ export default async function DashboardPage({
             Continue to sign in
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 

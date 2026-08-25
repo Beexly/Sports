@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+
+/**
+ * Distinct page title (WCAG 2.4.2) — see the note on /auth/signin. Landing here
+ * with the homepage's title gave no signal that sign-in had failed at all.
+ */
+export const metadata: Metadata = {
+  title: "Sign-in problem",
+};
 
 export default function AuthErrorPage({
   searchParams,
@@ -20,7 +29,14 @@ export default function AuthErrorPage({
     errorMessages["Default"]!;
 
   return (
-    <div className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-obsidian px-4 py-12">
+    // <main id="main-content"> — the root layout's "Skip to content" link
+    // targets #main-content on every page; without the anchor the first Tab
+    // stop here moved focus nowhere (WCAG 2.4.1). Semantics only: <main> and
+    // <div> are both display:block and the flex class sets display anyway.
+    <main
+      id="main-content"
+      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-obsidian px-4 py-12"
+    >
       {/* Atmosphere — same calm deep-space plate as /auth/signin */}
       <GeneratedPlate assetId="intro-galaxy" className="-z-10 opacity-20" />
 
@@ -63,6 +79,6 @@ export default function AuthErrorPage({
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
