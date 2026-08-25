@@ -98,9 +98,19 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     { wins: 0, losses: 0, pushes: 0, total: 0 }
   );
 
-  // Settled denominator for the floor: all decided picks (wins + losses +
-  // pushes). Below the floor we withhold every published rate.
-  const settledCount = overall.wins + overall.losses + overall.pushes;
+  // Floor denominator: DECIDED picks only. The floor exists to stop a thin
+  // sample from publishing a rate, so it has to count the picks that rate is
+  // actually computed over — and a push is in neither half of that ratio.
+  //
+  // This previously added `overall.pushes`, which let a push-padded sample carry
+  // a thin decided count over the floor. Worked example at the default floor of
+  // 100: 52W / 44L / 6 PUSH counted 102 and published 52/96 = 54.2% off 96
+  // decided picks — while the per-slice branch a few lines below (already
+  // decided-only) withheld that same 54.2% for the sport it came from. One
+  // response cannot both publish and withhold the same number for the same
+  // reason. Strictly a tightening: decided <= decided + pushes, so this can only
+  // delay a rate's first appearance, never expose one earlier.
+  const settledCount = overall.wins + overall.losses;
   const insufficientSample = settledCount < minSettledFloor;
 
   const overallWinRate =
