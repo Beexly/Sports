@@ -33,6 +33,8 @@ import {
   transitionForOutcome,
 } from "@/lib/billing/stripe-outcome";
 import { assertAtLeast21 } from "@/lib/auth/age-gate";
+import { requireAppUrl } from "@/lib/config/app-url";
+import { MissingProductionEnvError } from "@/lib/config/require-env";
 
 const CheckoutSchema = z.object({
   tier: z.enum(["FANTASY", "PRO", "ELITE"]),
@@ -87,6 +89,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
       { status: 400 },
     );
+  }
+
+  // Resolve the return origin BEFORE any Stripe or DB side effect. In production
+  // with NEXT_PUBLIC_APP_URL unset this throws instead of silently emitting
+  // `http://localhost:3000/dashboard?upgraded=true` as Stripe's success_url — a
+  // URL that resolves only on a developer's laptop. Checked here, the worst case
+  // is a customer who cannot START checkout plus a 503 naming the variable;
+  // checked later (or never), the worst case is a CHARGED customer staring at
+  // connection-refused, concluding payment failed, and filing a chargeback.
+  let appUrl: string;
+  try {
+    appUrl = requireAppUrl();
+  } catch (err) {
+    if (err instanceof MissingProductionEnvError) {
+      console.error(`Checkout config error: ${err.message}`);
+      return NextResponse.json(
+        {
+          error: "Checkout is not configured (NEXT_PUBLIC_APP_URL is missing or blank)",
+          code: "app_url_not_configured",
+        },
+        { status: 503 },
+      );
+    }
+    throw err;
   }
 
   // Env price IDs preferred; fallback to Stripe lookup_key (gse-*-monthly/annual).
@@ -321,7 +347,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
     let checkoutSession;
     try {
       checkoutSession = await createCheckoutSession({
