@@ -279,16 +279,43 @@ describe("/api/health — capabilities (OP-003, additive)", () => {
   });
 
   it("includes a capabilityGraph with the full 15-node epistemic-twin seed registry (P2, additive)", async () => {
+    // The graph is now OPERATOR-ONLY: each entry's `reasons[]` republishes the
+    // leaf probe reason VERBATIM (provenanceReasons in @sports/epistemic-twin's
+    // adapt-op003), which is one of the two paths by which the Stripe
+    // misconfiguration strings and raw probe errors were reaching anonymous
+    // callers — see health-disclosure.test.ts. This assertion is unchanged in
+    // substance (it still pins the full 15-node composition); it just has to
+    // present a credential to be shown the graph.
     dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+    vi.stubEnv("CRON_SECRET", "health-route-test-cron-secret");
+    vi.stubEnv("CRON_SECRET_PREVIOUS", "");
+    vi.stubEnv("CRON_REQUIRE_BEARER", "");
 
     const { GET } = await import("@/app/api/health/route");
-    const res = await GET();
+    const res = await GET(
+      new Request("http://localhost/api/health", {
+        headers: { authorization: "Bearer health-route-test-cron-secret" },
+      }),
+    );
     const body = await res.json();
 
+    expect(body.detail).toBe("operator");
     expect(Array.isArray(body.capabilityGraph)).toBe(true);
     expect(body.capabilityGraph).toHaveLength(15);
     const ids = body.capabilityGraph.map((e: { capabilityId: string }) => e.capabilityId);
     expect(ids).toEqual(expect.arrayContaining(["db:primary", "source:nflverse", "route:/nflverse"]));
+  });
+
+  it("withholds the capabilityGraph from an anonymous caller", async () => {
+    // The other half of the case above: same handler, no credential.
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({ completedAt: minutesAgo(10) });
+
+    const { GET } = await import("@/app/api/health/route");
+    const res = await GET(new Request("http://localhost/api/health"));
+    const body = await res.json();
+
+    expect(body.detail).toBe("public");
+    expect(body).not.toHaveProperty("capabilityGraph");
   });
 
   it("a non-healthy capability does not flip ok/allOk or the HTTP status", async () => {
