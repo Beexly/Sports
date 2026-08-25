@@ -117,6 +117,16 @@ function makeTable(rows: Row[], uniqueKeys: string[] = []) {
     },
     count: async (args: { where: Record<string, unknown> }) =>
       rows.filter((r) => matches(r, args.where)).length,
+    // Mirrors real Prisma: emits a row ONLY for statuses that actually occur.
+    // Empty groups are absent, which is precisely what the caller must zero-fill.
+    groupBy: async (_args: { by: ["status"]; _count: true }) => {
+      const tally = new Map<string, number>();
+      for (const r of rows) {
+        const status = r["status"] as string;
+        tally.set(status, (tally.get(status) ?? 0) + 1);
+      }
+      return [...tally].map(([status, _count]) => ({ status, _count }));
+    },
     deleteMany: async (args: { where: Record<string, unknown> }) => {
       let count = 0;
       for (let i = rows.length - 1; i >= 0; i--) {
@@ -689,16 +699,107 @@ describe("honest drain health (6.7)", () => {
     const health = await getSettlementOutboxHealth(
       {
         pickSettlementDelivery: {
-          count: async () => {
+          groupBy: async () => {
             throw new Error("no table");
           },
         },
-        pickSettlementEvent: { count: async () => 0, findMany: async () => [] },
+        pickSettlementEvent: { groupBy: async () => [], findMany: async () => [] },
       },
       NOW,
     );
     expect(health.ok).toBe(false);
     expect(health.reasons.join(" ")).toContain("no table");
+  });
+
+  it("health issues one grouped query per table, not one count per status", async () => {
+    const calls: string[] = [];
+    const db = makeDb({
+      deliveries: [
+        {
+          id: "d-1",
+          eventId: "evt-1",
+          userId: "u",
+          channel: "push",
+          destinationId: "s",
+          idempotencyKey: "k",
+          status: "DELIVERED",
+          attemptCount: 1,
+          claimVersion: 1,
+          attemptHistory: [],
+          createdAt: NOW,
+        },
+      ],
+    });
+    for (const table of ["pickSettlementDelivery", "pickSettlementEvent"] as const) {
+      const raw = db[table].groupBy;
+      db[table].groupBy = async (args) => {
+        calls.push(`${table}.groupBy`);
+        return raw(args);
+      };
+      db[table].count = async () => {
+        calls.push(`${table}.count`);
+        throw new Error("count() must not be used by health — use groupBy");
+      };
+    }
+
+    const health = await getSettlementOutboxHealth(db, NOW);
+
+    expect(health.ok).toBe(true);
+    expect(calls.filter((c) => c.endsWith(".count"))).toEqual([]);
+    expect(calls.filter((c) => c.endsWith(".groupBy"))).toEqual([
+      "pickSettlementDelivery.groupBy",
+      "pickSettlementEvent.groupBy",
+    ]);
+  });
+
+  it("a status with zero rows still reports 0 — groupBy omits empty groups", async () => {
+    // Only DELIVERED exists, so groupBy returns exactly one row. Every other
+    // status must still be present as 0; a vanished key would turn "zero
+    // failures" into "no data" for anything reading this.
+    const db = makeDb({
+      deliveries: [
+        {
+          id: "d-1",
+          eventId: "evt-1",
+          userId: "u",
+          channel: "push",
+          destinationId: "s",
+          idempotencyKey: "k",
+          status: "DELIVERED",
+          attemptCount: 1,
+          claimVersion: 1,
+          attemptHistory: [],
+          createdAt: NOW,
+        },
+      ],
+    });
+
+    const health = await getSettlementOutboxHealth(db, NOW);
+
+    expect(health.deliveryCounts["DELIVERED"]).toBe(1);
+    for (const status of [
+      "PENDING",
+      "CLAIMED",
+      "RETRYABLE_FAILED",
+      "SUPPRESSED",
+      "NO_RECIPIENT",
+      "PERMANENT_FAILED",
+      "DEAD_LETTER",
+    ]) {
+      expect(health.deliveryCounts[status], `deliveryCounts.${status}`).toBe(0);
+    }
+    for (const status of [
+      "PENDING",
+      "EXPANDED",
+      "DELIVERED",
+      "COMPLETED_WITH_FAILURES",
+      "FAILED",
+    ]) {
+      expect(health.eventCounts[status], `eventCounts.${status}`).toBe(0);
+    }
+    // And the zeros are real keys, not undefined reads.
+    expect(Object.keys(health.deliveryCounts)).toContain("DEAD_LETTER");
+    expect(Object.keys(health.eventCounts)).toContain("FAILED");
   });
 });
 
