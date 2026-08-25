@@ -1,5 +1,6 @@
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { CountUp } from "@/components/ui/count-up";
+import { LocalTime } from "@/components/ui/local-time";
 import { getClaim } from "@/lib/trust-claims";
 
 /**
@@ -219,12 +220,22 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
                 className="mt-1 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3"
               >
                 Board data as-of{" "}
-                <time dateTime={metrics.lastRefresh}>
-                  {new Date(metrics.lastRefresh).toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
-                </time>
+                {/*
+                  The stamp resolves on the VIEWER's clock via <LocalTime>.
+                  Formatted here — a SERVER component, with no TZ set for the Node
+                  runtime — it printed the server's UTC wall clock, and because the
+                  call carried no `timeZoneName` the wrong number shipped with no
+                  unit attached to it. A reader in New York saw the homepage's
+                  freshness signal stamped four hours into the future, which reads
+                  as broken on the one line whose job is to say the data is fresh.
+                  Only the DISPLAY moved; `lastRefresh` itself is untouched, so
+                  nothing that judges freshness from it changed.
+                */}
+                <LocalTime
+                  iso={metrics.lastRefresh}
+                  format="clock"
+                  label="Board data as-of"
+                />
               </p>
             )}
           </div>

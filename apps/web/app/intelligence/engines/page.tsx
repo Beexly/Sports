@@ -51,8 +51,14 @@ const MORE_ENGINES: readonly MoreEngine[] = [
   },
   {
     name: "Graded Pool",
+    // "...that drives every fantasy tool when the founder enables it" described
+    // an internal approval step, on a page whose entire job is to tell a reader
+    // what they can use today. The replacement states only the customer-visible
+    // facts: the pool is real and inspectable through the gated API (which the
+    // apiLabel beside it already says), and it is not wired into the fantasy
+    // tools yet. No date is claimed, because none is committed.
     summary:
-      "Composes the model + xFP + team environment (real schemeFit from neutral-script offensive EPA) + QB-forward passing signal into a real graded pool that drives every fantasy tool when the founder enables it.",
+      "Composes the model + xFP + team environment (real schemeFit from neutral-script offensive EPA) + QB-forward passing signal into a real graded pool. Inspectable through the gated API; it does not drive the fantasy tools yet.",
     api: "/api/intelligence/graded-pool",
     apiLabel: "API (gated)",
   },
@@ -98,7 +104,7 @@ function MoreEnginesSection(): JSX.Element {
             {MORE_ENGINES.length} engines without a standalone board
           </span>
           <span className="mt-1 block max-w-3xl text-sm leading-6 text-ion-1">
-            POST-only, founder-gated, or rendered on the player boards under /players. Expand to browse them.
+            POST-only, gated, or rendered on the player boards under /players. Expand to browse them.
           </span>
         </span>
         <span

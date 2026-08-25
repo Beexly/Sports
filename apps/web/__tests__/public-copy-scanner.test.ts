@@ -118,6 +118,12 @@ const CUSTOMER_SURFACES = [
   "app/performance/page.tsx",
   "app/preview/[sport]/[slug]/page.tsx",
   "app/room/[gameId]/page.tsx",
+  "app/intelligence/engines/page.tsx",
+  "app/clv/page.tsx",
+  "app/podcast/page.tsx",
+  "app/newsletter/page.tsx",
+  "app/fantasy/contests/page.tsx",
+  "components/ui/methodology-section.tsx",
   "components/picks/pick-card.tsx",
   "components/picks/line-freshness-badge.tsx",
   "components/pricing/subscribe-button.tsx",
@@ -158,6 +164,15 @@ describe("internal identifiers never reach customer-facing copy", () => {
   it("catches the copy that shipped to /board", () => {
     const shipped = `const empty = "No public fires - LIVE_BOARD / gate held by law.";`;
     expect(findInternalIdentifiers(shipped)).toHaveLength(1);
+  });
+
+  it("catches the copy that shipped to /intelligence/engines", () => {
+    // The third surface of the same defect, deferred by #624 and closed here.
+    // "when the founder enables it" describes an internal approval step, on a
+    // page whose whole job is to tell a customer what they can use today.
+    const shipped = `const summary = "Composes the model into a real graded pool that drives every fantasy tool when the founder enables it.";`;
+    const hits = findInternalIdentifiers(shipped);
+    expect(hits.some((h) => h.includes("founder enables"))).toBe(true);
   });
 
   it("catches flag names it has never been told about", () => {

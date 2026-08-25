@@ -52,6 +52,7 @@ export interface LocalTimeProps {
 const SKELETON_WIDTH: Record<LocalTimeFormat, string> = {
   kickoff: "w-[10.5rem]",
   "date-long": "w-[12rem]",
+  "date-short": "w-[6rem]",
   clock: "w-[5.5rem]",
   stamp: "w-[8.5rem]",
 };
