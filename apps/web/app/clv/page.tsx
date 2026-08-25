@@ -13,6 +13,7 @@ import {
   loadClvCoverage,
   type ClvCoverage,
 } from "@/lib/performance/clv-coverage";
+import { LocalTime } from "@/components/ui/local-time";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { glossaryEntry } from "@/lib/glossary";
 
@@ -273,11 +274,20 @@ function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage
                   data-testid="clv-freshness"
                   className="mt-1 text-[10px] text-ion-3"
                 >
-                  Last graded {new Date(coverage.latestGradedAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                  {/*
+                    Resolved on the VIEWER's clock via <LocalTime>. Formatted
+                    here — a SERVER component with no TZ set for the Node runtime
+                    — this was the server's UTC calendar date, which is already
+                    the next day for a reader east of UTC. Only the DISPLAY
+                    moved: `latestGradedAt` itself is untouched, so nothing that
+                    computes coverage or freshness from it changed.
+                  */}
+                  Last graded{" "}
+                  <LocalTime
+                    iso={coverage.latestGradedAt}
+                    format="date-short"
+                    label="Last graded"
+                  />
                 </p>
               )}
             </div>

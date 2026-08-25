@@ -44,9 +44,26 @@ interface PicksResponse {
     totalAvailableToday?: number;
     hitDailyLimit?: boolean;
   };
+  /**
+   * The gate state the customer-facing empty block renders from.
+   *
+   * It deliberately does NOT carry the API's `hint`. That field is an operator
+   * diagnostic — `bootstrapGateResponse()` fills it with
+   * "Founder-gated closed (e.g. PUBLIC_PICKS_ENABLED / PERFORMANCE_STATS_ENABLED)
+   * ... see /api/ops/public-surface-truth gates" — and this object is one
+   * `{bootstrapState.hint}` away from putting that in front of every visitor to
+   * the primary nav destination. Nothing here read it: not rendered, not logged,
+   * not branched on. So it is not carried at all, which is a stronger guarantee
+   * than a rule about not printing it — a field that is not in the render state
+   * cannot be printed by accident, and adding it back is now a type change
+   * someone has to make on purpose.
+   *
+   * If an operator diagnostic is ever wanted, log it where it is READ (in the
+   * route handler, which already has the whole gate response) rather than
+   * routing it through the object the page renders from.
+   */
   bootstrap?: {
     message: string;
-    hint?: string;
     /** Which gate darkened the board: history-gated launch vs stale-data pause. */
     kind: "gated" | "stale";
   };
@@ -89,11 +106,13 @@ async function fetchPicks(
   const req = buildRequest("/api/picks", params);
   const res = await getPicks(req);
   if (!res.ok) {
+    // Only the fields this page actually consumes are declared. The gate
+    // response also carries an operator `hint` naming the closed flags; it is
+    // deliberately left off so `body.hint` does not even compile here.
     const body = (await res.json().catch(() => null)) as {
       error?: string;
       bootstrapMode?: boolean;
       reason?: string;
-      hint?: string;
     } | null;
     // Graceful dark states: bootstrap history, feature gate (PUBLIC_PICKS off),
     // or stale-data kill switch. Never throw an error page for intentional dark.
@@ -119,7 +138,6 @@ async function fetchPicks(
         },
         bootstrap: {
           message: body.error ?? "Today's Board is collecting live history.",
-          hint: body.hint,
           kind,
         },
       };
