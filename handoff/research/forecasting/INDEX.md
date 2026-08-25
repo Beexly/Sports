@@ -13,15 +13,25 @@ gaps, undervalued items, and polish needs.
 | `review-academic-bibliography.md` | Adversarial audit of the bibliography: citation spot-checks (wrong arXiv IDs flagged), missing literature, formula corrections (EV detector vig handling, CLV normalization), stronger variants. |
 | `review-platform-catalog.md` | Adversarial audit of the sweep: verdict re-checks, missed platforms (Kalshi, INFER, exchanges), API auth/rate-limit details, zero-cost opportunities. |
 
-## Implementation status (2026-08-25)
+## Implementation status (2026-08-25, complete)
 
 - **Shipped**: `packages/prediction-engine/src/edge-lab/features/log-odds-pool.ts`
   (+ test) — geometric-mean-of-odds pooling with Satopää-style extremization.
 - **Shipped**: `feature-exposure.ts` (+ test) — Numerai-style SRCC exposure per
   feature column (Top-8 item #4, promoted by the review pass).
 - **Shipped**: `extremization-tuner.ts` (+ test) — Brier-optimized γ grid
-  search with flat-optimum diagnostic (review-pass item #1's missing piece).
-  All three: tsc 0 errors, 25/25 tests green.
+  search with flat-optimum diagnostic.
+- **Shipped**: `recency-weighted.ts` (+ test) — exponential-decay recency
+  weighting over time-ordered forecasts; λ=1 reduces to flat mean + plain
+  median; honest `dropped` reporting incl. zero-weight sources (Top-8 #2).
+- **Shipped**: consensus geometric mode — `computeConsensus(..., { mode:
+  "geometric" })` pools via logOddsPool; default arithmetic behavior byte-for-
+  byte unchanged (wiring gap from review-platform-aggregation.md closed).
+- **Shipped**: `mmc-contribution.ts` (+ test) — Numerai-style MMC: rank →
+  gaussianize → project out consensus → correlate residual with outcome;
+  nulls for degenerate/absorbed streams (documented limit: a source that IS
+  the whole consensus gets an honest null). Complements brier-ogd-ensemble.
+  All modules: tsc 0 errors, 50/50 tests green across the six suites.
 
 ## Review-pass corrections that supersede the original reports
 
@@ -35,14 +45,17 @@ gaps, undervalued items, and polish needs.
   normalization explodes on longshots — use the corrected variants in the
   review file before implementing either.
 
-## Next candidates (per re-ranked roadmap in review-platform-aggregation.md)
+## Remaining next candidates
 
-1. ~~γ tuning loop~~ → shipped as extremization-tuner.ts.
-2. Recency-weighted median aggregation (Top-8 #2, unchanged).
-3. Wire logOddsPool + tuner into consensus.ts as an optional geometric-mean
-   mode (wiring gap, not implementation gap).
-4. MMC-style orthogonalized contribution metric for brier-ogd-ensemble
-   (review-promoted to #4).
+1. Feed extremization-tuner output into consensus geometric mode (per-dataset γ
+   instead of hardcoded 1).
+2. Wire mmc-contribution into earned-weight/Brier-OGD weight updates as a
+   tiebreaker for herd-tracking sources.
+3. Live-data lane per review-platform-catalog.md zero-cost list: Manifold
+   `/v0/markets` and Polymarket Gamma reads feeding clv-capture/hawkes-steam.
+4. Bibliography's corrected EV-detector (vig-stripped) and CLV tracker
+   (absolute normalization, N>30 gating) — implement only from the review
+   file's stronger variants, not the original formulas.
 
 ## How to consume this directory
 
