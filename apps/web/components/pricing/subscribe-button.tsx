@@ -185,7 +185,14 @@ export function SubscribeButton({
           autoComplete="bday"
           value={dateOfBirth}
           onChange={(e) => setDateOfBirth(e.target.value)}
-          className="rounded-lg border border-ion-3/40 bg-void px-3 py-2 text-sm text-ion-1"
+          // `border-ion-4/40` used to sit here, but the `ion` scale stops at
+          // ion-3 — the class compiled to nothing and this required 21+ field
+          // fell back to Tailwind's default border. ion-3/60 composites to
+          // #5E6578 on bg-void: 3.46:1, clearing the 3:1 WCAG floor for a
+          // control boundary. (A parallel branch made the same dead-class
+          // repair at /40, an opacity nobody measured; keeping the measured
+          // one, since /40 is the lighter border of the two.)
+          className="rounded-lg border border-ion-3/60 bg-void px-3 py-2 text-sm text-ion-1"
         />
       </label>
       <button
@@ -217,6 +224,15 @@ export function SubscribeButton({
         Cancel anytime.{" "}
         <Link href="/terms" className="underline hover:text-ion-2">
           Terms
+        </Link>
+        {" · "}
+        {/* This control collects a date of birth for the server-side 21+ gate
+            (lib/auth/age-gate.ts), so the privacy notice belongs on the SAME
+            proximate line as Terms. /pricing does render <Footer />, which
+            links Privacy — but far below the fold, nowhere near the point
+            where personal data is actually entered. */}
+        <Link href="/privacy" className="underline hover:text-ion-2">
+          Privacy
         </Link>
         .
       </p>
