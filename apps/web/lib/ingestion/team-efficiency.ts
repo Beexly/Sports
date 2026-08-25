@@ -149,13 +149,28 @@ export async function ingestTeamEfficiency(
     }
   }
 
-    // Never wipe existing rows on an empty upstream response (transient
-  // outage / empty mirror): preserve what's there and report a source-error.
+  // EMPTY RESULT NEVER DELETES. An empty `data` means the fetch succeeded
+  // structurally but yielded no usable plays (transient nflverse outage, an
+  // empty/partial mirror, a season not yet published). Wiping the season on
+  // that signal would trade good stored rows for nothing, so we preserve what
+  // is there and report source-error. Only a run that actually holds
+  // replacement rows is allowed to replace the season.
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, games: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.teamGameEfficiency.deleteMany({ where: { season } });
-  const created = data.length > 0 ? await db.teamGameEfficiency.createMany({ data }) : null;
+
+  // ATOMIC REPLACE — delete and insert commit together or not at all. Issued
+  // as two separate awaits, a timeout between them (this route is
+  // maxDuration=300 and a full play-by-play season is heavy) leaves the
+  // season's rows deleted and never re-inserted, emptying the table the live
+  // EPA path reads until the next daily tick; a retry re-enters the same
+  // delete-first path, so it cannot self-heal. `skipDuplicates` stops a manual
+  // `?from=&to=` crawl racing the daily cron from aborting on the
+  // @@unique([team, gameKey]) constraint (P2002).
+  const [, created] = await db.$transaction([
+    db.teamGameEfficiency.deleteMany({ where: { season } }),
+    db.teamGameEfficiency.createMany({ data, skipDuplicates: true }),
+  ]);
 
   return { status: "ok", season, rowsWritten: created?.count ?? data.length, games: teamsByGame.size };
 }
