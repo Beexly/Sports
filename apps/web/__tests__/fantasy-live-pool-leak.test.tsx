@@ -208,6 +208,39 @@ describe.each(POOL_PAGES)("$route — live graded pool is entitlement-gated", ({
   });
 });
 
+/**
+ * /fantasy/studio needs its own proof. Its brief is a top-N DIGEST, so the paid-depth
+ * rows never appear in the output for ANY viewer — which means an output assertion
+ * cannot tell a gated page from an ungated one. The leak is nonetheless real: the page
+ * used to hand the whole untrimmed live pool to the generator. So assert on the POOL
+ * THE GENERATOR ACTUALLY RECEIVES, which is the value the gate governs.
+ */
+describe("/fantasy/studio — the brief is generated from the GATED pool", () => {
+  it("an anonymous viewer's brief is generated from the trial subset, not the full pool", async () => {
+    vi.resetModules();
+    const seen: Array<readonly Player[] | undefined> = [];
+    const real = await vi.importActual<typeof import("@/lib/fantasy/studio")>("@/lib/fantasy/studio");
+    vi.doMock("@/lib/fantasy/studio", () => ({
+      generateWeeklyBrief: (pool?: readonly Player[]) => {
+        seen.push(pool);
+        return real.generateWeeklyBrief(pool);
+      },
+    }));
+    const { default: Page } = await import("@/app/fantasy/studio/page");
+    await Page();
+    const pools = seen.filter((p): p is readonly Player[] => Boolean(p));
+    expect(pools.length).toBeGreaterThan(0);
+    for (const pool of pools) {
+      // the trial subset (top FREE_BOARD_DEPTH per position), never the whole live pool
+      expect(pool.length).toBe(FREE_BOARD_DEPTH * POSITIONS.length);
+      expect(pool.length).toBeLessThan(LIVE_POOL.length);
+      expect(pool.every((p) => !PAID_MARKER.test(p.name))).toBe(true);
+    }
+    vi.doUnmock("@/lib/fantasy/studio");
+    vi.resetModules();
+  });
+});
+
 describe("buildLeagueTwin cannot silently go live", () => {
   it("defaults to the illustrative universe even under a registered live feed", async () => {
     const { buildLeagueTwin } = await import("@/lib/fantasy/league-twin");
