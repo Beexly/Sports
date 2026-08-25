@@ -92,10 +92,18 @@ export function SubscribeButton({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dateOfBirth, setDateOfBirth] = useState("");
+  // True ONLY while the client-side 21+ check is what is blocking checkout —
+  // never for server/network errors, which are not the date field's fault and
+  // must not mark it invalid.
+  const [dobInvalid, setDobInvalid] = useState(false);
+  const dobRef = useRef<HTMLInputElement>(null);
   // Unique id so assistive tech can announce the recurring-billing disclosure as
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
   const disclosureId = useId();
+  // Same reasoning for the error banner: it has to be addressable so the date
+  // field can point at it with aria-describedby.
+  const errorId = useId();
   // Per-visit checkout-intent HINT (Phase 1P). The server owns the durable
   // CheckoutAttempt — this UUID only lets it recognize "same click retried"
   // (double-click, network blip, reload-and-retry within this mount) and hand
@@ -115,9 +123,17 @@ export function SubscribeButton({
   async function handleClick() {
     setError(null);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
+      // The refusal has to reach a non-sighted buyer as more than "there is a
+      // problem somewhere". Mark the offending field invalid, wire the message
+      // to it as its description, and put the cursor in it — otherwise a
+      // keyboard/screen-reader user clicks Subscribe, nothing visibly happens,
+      // and the product is simply unbuyable (WCAG 3.3.1).
+      setDobInvalid(true);
       setError("Enter your date of birth. You must be 21 or older to subscribe.");
+      dobRef.current?.focus();
       return;
     }
+    setDobInvalid(false);
     setLoading(true);
     // Intent signal — the user committed to moving up a tier (before the
     // network round-trip). Inert no-op until a provider is wired.
@@ -177,21 +193,24 @@ export function SubscribeButton({
         {/* `border-ion-4/40` compiled to nothing: the ion scale defines only
             DEFAULT/1/2/3 (tailwind.config.ts), so the required 21+ input on the
             checkout path fell back to Tailwind's default border. ion-3 is the
-            dimmest ion that actually exists. */}
+            dimmest ion that actually exists, and /60 composites to #5E6578 on
+            bg-void: 3.46:1, clearing the 3:1 WCAG floor for a control boundary.
+            Two branches found this independently; /60 is the measured one. */}
         <input
+          ref={dobRef}
           type="date"
           name="dateOfBirth"
           required
           autoComplete="bday"
           value={dateOfBirth}
-          onChange={(e) => setDateOfBirth(e.target.value)}
-          // `border-ion-4/40` used to sit here, but the `ion` scale stops at
-          // ion-3 — the class compiled to nothing and this required 21+ field
-          // fell back to Tailwind's default border. ion-3/60 composites to
-          // #5E6578 on bg-void: 3.46:1, clearing the 3:1 WCAG floor for a
-          // control boundary. (A parallel branch made the same dead-class
-          // repair at /40, an opacity nobody measured; keeping the measured
-          // one, since /40 is the lighter border of the two.)
+          aria-invalid={dobInvalid || undefined}
+          aria-describedby={dobInvalid ? errorId : undefined}
+          onChange={(e) => {
+            // Editing the field clears the invalid state immediately — an
+            // aria-invalid that outlives the mistake is its own bug.
+            setDobInvalid(false);
+            setDateOfBirth(e.target.value);
+          }}
           className="rounded-lg border border-ion-3/60 bg-void px-3 py-2 text-sm text-ion-1"
         />
       </label>
@@ -239,6 +258,7 @@ export function SubscribeButton({
 
       {error && (
         <p
+          id={errorId}
           role="alert"
           className="rounded-lg border border-alert/60 bg-alert/10 px-3 py-2 text-xs text-alert"
         >
