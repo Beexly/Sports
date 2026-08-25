@@ -80,6 +80,8 @@
     "prepare": "node scripts/setup-git-hooks.mjs",
     "guard:skipped-pg-integration": "node scripts/guardrails/skipped-pg-integration-honesty.mjs",
     "guard:agent-bash": "node scripts/guardrails/agent-bash-guard.mjs --selftest",
+    "guard:node-version-parity": "node scripts/guardrails/node-version-parity.mjs",
+    "test:node-version-parity": "node --test scripts/guardrails/node-version-parity.test.mjs",
     "ops:tasks": "node scripts/check-operator-tasks.mjs",
     "ops:runbook": "node scripts/ops/owner-runbook.mjs",
     "launch:ready": "node scripts/check-launch-readiness.mjs",
