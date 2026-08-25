@@ -181,6 +181,36 @@ if (sensitiveUnverifiable > 0) {
 // retryable, never fail loudly) — WARN, never a hard failure. An invisible
 // dark channel is the actual bug this section closes.
 header("Elite alert channels");
+
+// The MASTER SWITCH dominates every per-channel key below: with it off, no
+// alert is delivered at all no matter how perfectly Resend and VAPID are
+// configured. It was previously unchecked here, so a deploy could ship the
+// $24.99 Elite tier — which is SOLD on alerts — with its alert layer inert
+// and nothing anywhere saying so. Now the state is stated out loud on every
+// readiness run, so "off" is a deliberate choice rather than an accident.
+// Still a WARN, not a hard failure: shipping deliberately dark is a legal
+// owner choice, exactly like a dark channel below.
+{
+  const raw = process.env["WATCHLIST_ALERTS_ENABLED"];
+  // isWatchlistAlertsEnabled() is an EXACT === "true" match, so "TRUE"/"1"/
+  // "yes" all read as OFF. That near-miss looks configured and behaves dark,
+  // which is the worst of both — call it out separately.
+  if (raw === "true") {
+    ok("WATCHLIST_ALERTS_ENABLED", "true — graded alerts are LIVE");
+  } else if (raw !== undefined && raw !== "" && raw !== "false") {
+    warn(
+      "WATCHLIST_ALERTS_ENABLED",
+      `"${raw}" is NOT the exact string "true" — alerts read as OFF (see isWatchlistAlertsEnabled)`,
+    );
+  } else {
+    warn(
+      "WATCHLIST_ALERTS_ENABLED",
+      `${raw === undefined ? "unset" : `"${raw}"`} — ALL graded alerts are OFF; Elite ($24.99/mo, sold on alerts) ` +
+        "delivers nothing. Settlement events defer as PENDING (bounded at 24h) and outbox health reports degraded",
+    );
+  }
+}
+
 for (const key of ["RESEND_API_KEY", "ALERTS_EMAIL_FROM", "NEXT_PUBLIC_VAPID_PUBLIC_KEY", "VAPID_PRIVATE_KEY", "VAPID_SUBJECT"]) {
   const v = process.env[key];
   if (v) {

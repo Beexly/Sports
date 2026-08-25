@@ -38,5 +38,10 @@ paper skill), and proof tools at https://www.galaxysportsedge.com
 — Galaxy Sports Edge
 We detect. You decide.
 `;
-  return sendAlertEmail(to, subject, body, env);
+  // "waitlist", NOT the default watchlist-alert context: this recipient
+  // follows no team and may not even have an account, so the alert footer's
+  // "you follow this team / unfollow at /watchlist" would be fabricated copy
+  // pointing at a route that does nothing for them. The waitlist context
+  // advertises the opt-out that is real here — a mailto a human honors.
+  return sendAlertEmail(to, subject, body, env, "waitlist");
 }

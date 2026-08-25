@@ -1,4 +1,19 @@
 /**
+ * ⚠ SUPERSEDED PATH — READ THIS FIRST (audit signpost, nothing removed).
+ *
+ * `notifyWatchlistFollowersForGradedPick` has ZERO production callers. The
+ * claim below that it "is invoked by the settlement OUTBOX WORKER" is NO
+ * LONGER TRUE: apps/web/lib/settlement-outbox/worker.ts does its own
+ * expansion and per-recipient delivery and never imports this module. The
+ * only importer left is this file's own test.
+ *
+ * Live path: settle-sport.ts appends a PickSettlementEvent in the
+ * settlement transaction → the deliver-settlement-alerts cron →
+ * settlement-outbox/worker.ts. Read that for real behavior. Retained, not
+ * resurrected (standing no-removals rule).
+ *
+ * ── original module doc follows ────────────────────────────────────────
+ *
  * Watchlist — the settlement-side caller.
  *
  * This is the piece that was missing before this module existed:
