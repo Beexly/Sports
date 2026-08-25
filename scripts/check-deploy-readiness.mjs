@@ -17,6 +17,10 @@
  *   - Postgres reachable (TCP + SELECT 1 via DATABASE_URL)
  *   - The Odds API key valid (/v4/sports endpoint)
  *   - Stripe secret key valid (/v1/account)
+ *   - Every Stripe price (pro/elite/fantasy × monthly/annual) resolves AND its
+ *     unit_amount, recurring interval and currency match the advertised pricing
+ *     phase (apps/web/lib/pricing/pricing-phases.ts) — a mismatch is a FAILURE,
+ *     because checkout fails closed on it (GSE-SEC-024) and 503s.
  *   - Anthropic API key valid (/v1/messages with a 1-token ping)
  *   - Redis reachable (PING — only if `ioredis` is installed)
  *   - Vercel cron schedule present in vercel.json
@@ -28,6 +32,12 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import {
+  STRIPE_PRICE_ENV_MATRIX,
+  loadPriceIdHelpers,
+  evaluateStripePrice,
+} from "./lib/stripe-price-check.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const repoRoot = resolve(__dirname, "..");
@@ -251,26 +261,62 @@ async function checkStripe() {
     bad("Stripe secret key", err.message);
   }
 
-  // Confirm the four tiered price IDs resolve.
-  for (const which of [
-    "STRIPE_PRO_MONTHLY_PRICE_ID",
-    "STRIPE_PRO_ANNUAL_PRICE_ID",
-    "STRIPE_ELITE_MONTHLY_PRICE_ID",
-    "STRIPE_ELITE_ANNUAL_PRICE_ID",
-  ]) {
-    const id = process.env[which];
+  // Confirm every tiered price ID resolves AND charges the advertised amount.
+  //
+  // "Resolves" is not enough. `apps/web/lib/stripe.ts` fails CLOSED when a
+  // Stripe price's unit_amount disagrees with the advertised pricing phase
+  // (GSE-SEC-024) — checkout returns an empty price id and the route 503s. So a
+  // price that resolves but charges the wrong figure is a TOTAL revenue outage
+  // that this gate previously printed in green. Compare here, and FAIL.
+  //
+  // The comparison is the same helper the runtime guard uses, imported from
+  // apps/web/lib/billing/price-ids.ts — never reimplemented — so the deploy
+  // gate and checkout can never drift apart on what "correct" means.
+  let helpers;
+  try {
+    helpers = await loadPriceIdHelpers(repoRoot);
+  } catch (err) {
+    bad(
+      "Stripe price validation",
+      `cannot load apps/web/lib/billing/price-ids.ts — prices NOT verified against the advertised phase: ${err.message}`
+    );
+    return;
+  }
+
+  for (const { env: which, tier, interval, legacyEnv } of STRIPE_PRICE_ENV_MATRIX) {
+    // Resolve exactly the way checkoutPriceId() does: the tier×interval var
+    // first, then the legacy monthly-only var where one still applies.
+    const usingLegacy = !process.env[which] && Boolean(legacyEnv) && Boolean(process.env[legacyEnv]);
+    const raw = process.env[which] ?? (legacyEnv ? process.env[legacyEnv] : undefined);
+    // An unset var is NOT quietly fine — it is already reported above by the
+    // REQUIRED loop (all six price vars are in REQUIRED), so skipping here only
+    // avoids double-reporting the same miss. There is no path where a missing
+    // price var produces an all-green run.
+    if (!raw) continue;
+    // Each var may hold a COMMA-SEPARATED list: the FIRST id is what checkout
+    // charges new members; the rest are historical ids kept so grandfathered
+    // members still classify to their tier. Only the FIRST is amount-checked —
+    // the historical ids are *supposed* to sit at older, lower phase prices.
+    const ids = helpers.splitPriceIds(raw);
+    const id = ids[0];
     if (!id) continue;
+    // Say WHICH var the checked value came from: a green line labelled
+    // STRIPE_PRO_MONTHLY_PRICE_ID that was actually read out of the legacy
+    // STRIPE_PRO_PRICE_ID would otherwise read as "the new var is set".
+    const via = usingLegacy ? ` · via legacy ${legacyEnv}` : "";
+    const grandfathered = ids.length > 1 ? ` · +${ids.length - 1} grandfathered id(s) retained` : "";
     try {
       const res = await fetch(`https://api.stripe.com/v1/prices/${id}`, {
         headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
       });
       if (!res.ok) {
-        bad(which, `HTTP ${res.status}`);
+        bad(which, `HTTP ${res.status} fetching ${id}${via}`);
         continue;
       }
       const price = await res.json();
-      const amount = (price.unit_amount / 100).toFixed(2);
-      ok(which, `$${amount}/${price.recurring?.interval ?? "?"}`);
+      const verdict = evaluateStripePrice({ helpers, tier, interval, price });
+      if (verdict.ok) ok(which, `${verdict.detail}${via}${grandfathered}`);
+      else bad(which, `${verdict.detail}${via}`);
     } catch (err) {
       bad(which, err.message);
     }
