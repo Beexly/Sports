@@ -166,6 +166,17 @@ export function covariateKey(gsisId: string, season: number, week: number, statT
  *
  * Returns the single latest qualifying row (by week), or `null` when no
  * per-game history exists before kickoff (fail-closed).
+ *
+ * NON-FINITE WEEKS FAIL CLOSED, and that needs its own test rather than falling
+ * out of the ordering comparison. Every comparison against NaN is false, so
+ * `r.week >= kickoffWeek` does not REJECT a NaN week — it ADMITS it. A guard
+ * written only as an ordering test is fail-OPEN on precisely the values that
+ * carry no ordering, so a poisoned week (a parser emitting NaN, a rate divided
+ * by a zero snap count) would walk through the leak wall and become evidence
+ * for a game it may postdate. Both sides are therefore checked for finiteness
+ * up front: a non-finite `kickoffWeek` has no defined "before", so nothing is
+ * eligible; a non-finite `r.week` cannot be located in time, so it is never
+ * evidence for anything.
  */
 export function latestPriorRow(
   rows: readonly CovariateRow[],
@@ -174,11 +185,13 @@ export function latestPriorRow(
   statType: StatType,
   kickoffWeek: number,
 ): CovariateRow | null {
+  if (!Number.isFinite(kickoffWeek)) return null;
   let best: CovariateRow | null = null;
   for (const r of rows) {
     if (r.gsisId !== gsisId) continue;
     if (r.season !== season) continue;
     if (r.statType !== statType) continue;
+    if (!Number.isFinite(r.week)) continue; // poisoned row — never evidence
     if (r.week === 0) continue; // season aggregate — never a next-game X
     if (r.week <= 0 || r.week >= kickoffWeek) continue; // leak-safe: strictly prior
     if (best === null || r.week > best.week) best = r;
