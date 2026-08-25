@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { ContestEntrySchema } from "@/lib/contests/types";
 import { enterContest } from "@/lib/contests/store";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import { clientIp } from "@/lib/api/rate-limit";
 import { isContestsPublic } from "@/lib/launch/public-surface-gate";
 
 export const runtime = "nodejs";
@@ -12,11 +13,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Not found" }, { status: 404 });
   }
 
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "anon";
-  const rl = await consumePublicFormRateLimit("contest-enter", ip, 8, 60_000);
+  // clientIp(), never a hand-rolled leftmost x-forwarded-for read: that entry is
+  // client-supplied, so a forged header would mint a fresh bucket per entry.
+  const rl = await consumePublicFormRateLimit("contest-enter", clientIp(req), 8, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many entries — try again shortly." },
