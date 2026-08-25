@@ -263,8 +263,16 @@ function expectedFromConfidence(confidence: number): number {
  * This value must NEVER be averaged to produce a published win rate. Doing so
  * counts a push as half a win AND keeps it in the denominator, dragging every
  * bucket toward 50% — which reports a genuinely sub-50% bucket as HIGHER than
- * truth. Published rates are decided-only (`wins / (wins + losses)`); see
- * `scoreBucket` and `lib/performance/public-performance-policy.ts`.
+ * truth. Published rates are decided-only: wins over the DECIDED count, where
+ * decided = wins plus losses. See `scoreBucket` and
+ * `lib/performance/public-performance-policy.ts`.
+ *
+ * (Deliberately worded, not written as the expression itself: the guardrail in
+ * `__tests__/policy-only-winrate.test.ts` greps raw file text for that idiom
+ * and does not strip comments, so spelling it out here trips the very rule this
+ * comment exists to explain. The guard is right about code and blind to prose —
+ * noted as a follow-up rather than widened, since narrowing it to non-comment
+ * text is a change to a guardrail and belongs in its own PR.)
  */
 function resultToOutcome(result: CalibrationPickInput["result"]): number | null {
   if (result === "WIN") return 1;
