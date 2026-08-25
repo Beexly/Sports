@@ -12,6 +12,7 @@
 
 import { useMemo, useState } from "react";
 import { LEVELS, levelSpec, proposeActions, executionNotice, type AutonomyLevel, type ActionType } from "@/lib/fantasy/autonomy";
+import type { Player } from "@/lib/fantasy/players";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const TYPE_HEX: Record<ActionType, string> = {
@@ -22,12 +23,17 @@ const TYPE_HEX: Record<ActionType, string> = {
 };
 
 
-export function GmAutopilot() {
+/**
+ * `pool` is resolved and ENTITLEMENT-GATED on the server (app/fantasy/autopilot/page.tsx)
+ * and passed in. It must never be resolved here: this is a client component, so any pool
+ * it resolved itself would have crossed the network ungated.
+ */
+export function GmAutopilot({ pool }: { pool?: readonly Player[] }) {
   const [level, setLevel] = useState<AutonomyLevel>(1);
   const [decided, setDecided] = useState<Map<string, "approved" | "skipped">>(new Map());
 
   const spec = levelSpec(level);
-  const actions = useMemo(() => proposeActions(level), [level]);
+  const actions = useMemo(() => proposeActions(level, pool), [level, pool]);
   const decide = (id: string, d: "approved" | "skipped") => setDecided((m) => new Map(m).set(id, d));
 
   return (
