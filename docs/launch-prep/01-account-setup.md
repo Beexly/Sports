@@ -137,15 +137,24 @@ You do **not** need this for the 30-day silent collection period — the paywall
 
 ---
 
-## Step 10 — Redis (Upstash, free tier) (~5 min)
+## Step 10 — Redis — SKIP THIS STEP
 
-Used for the BullMQ background worker queue.
+**No application code reads `REDIS_URL`.** This step used to tell the operator to
+provision an Upstash database to back a job queue that has never existed in this
+repo — there is no queue and no broker; scheduling is Vercel Cron hitting
+`/api/cron/*` routes (`apps/web/vercel.json`). Provisioning a cache server here
+buys the deployment nothing and changes no behavior.
 
-1. Sign up at https://upstash.com.
-2. Create a Redis database, free tier, same region as Vercel (us-east-1).
-3. Copy the `REDIS_URL` connection string. Use the **TLS** version (`rediss://`).
+The only consumers of the variable are `docker/oracle-vps/compose.yml` (the
+optional self-hosted worker stack, not the Vercel deployment) and an opt-in
+reachability probe in `scripts/check-deploy-readiness.mjs`.
 
-**Produces:** `REDIS_URL`.
+**Caveat before you skip:** that same script still lists `REDIS_URL` in its
+`REQUIRED` array and hard-fails without it, so `npm run deploy:ready` will go red
+until that array is corrected. Set any placeholder value to get the script green
+if you need it today; do not buy a database for it.
+
+**Produces:** nothing the application uses.
 
 ---
 

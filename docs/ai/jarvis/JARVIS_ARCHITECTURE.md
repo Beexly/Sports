@@ -40,9 +40,10 @@ Honest per-phase status from `intelligence-state.ts`. WIRED means the behavior r
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  DATABASE + WORKERS (operational ground truth)                   │
-│  PostgreSQL / Prisma · BullMQ + Redis · The Odds API ingestion   │
-│  picks ledger · settlement records · gate flags                  │
+│  DATABASE + SCHEDULED JOBS (operational ground truth)            │
+│  PostgreSQL / Prisma · Vercel Cron → /api/cron/* · The Odds API  │
+│  ingestion · picks ledger · settlement records · gate flags      │
+│  (no queue and no broker — see docs/architecture.md)             │
 └───────────────────────────────┬──────────────────────────────────┘
                                 │ read on every cockpit load
 ┌───────────────────────────────▼──────────────────────────────────┐
