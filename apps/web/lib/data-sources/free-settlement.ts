@@ -105,6 +105,13 @@ function toTrusted(g: ComparableGame, confirmation: Confirmation, sources: strin
 
 // ── Pick settlement ──────────────────────────────────────────────────────────────────
 
+/**
+ * How far a trusted final's calendar date may sit from the pick's game date and still
+ * be considered the same contest. Covers source date-convention skew (UTC vs local
+ * rollover) and a next-day resume — not a wider search.
+ */
+export const SETTLEMENT_DATE_TOLERANCE_DAYS = 2;
+
 export type PendingPick = {
   readonly pickId: string;
   readonly pickType: PickType;
@@ -118,13 +125,33 @@ export type PendingPick = {
   readonly gameDateIso: string;
 };
 
-/** Token equality or containment (handles "LAD" vs "Los Angeles Dodgers" via abbr path). */
+/**
+ * Exact normalized-token equality.
+ *
+ * Substring containment (`a.includes(b) || b.includes(a)`) is deliberately NOT used.
+ * `normalizeTeamToken` strips every separator, so a containment test has no word
+ * boundary left to respect and silently binds unrelated franchises:
+ *
+ *   "sox"        ⊂ "chicagowhitesox"  → a Red Sox pick matches a White Sox final
+ *   "as"         ⊂ "houstonastros"    → an Athletics pick matches an Astros final
+ *   "as"         ⊂ "texasrangers"     → an Athletics pick matches a Rangers final
+ *   "chicago"    ⊂ "chicagocubs"      → a White Sox pick matches a Cubs final
+ *   "lac" (abbr) ⊂ "lachargers"       → a Chargers pick matches a Clippers final
+ *   "michigan"   ⊂ "michiganstate"    → the classic college collision
+ *
+ * `settlePendingPicks` accepts any final within ±2 calendar days, so the neighbouring
+ * game usually IS on the board — those are wrong SETTLEMENTS, not just wrong matches,
+ * and a wrong settlement publishes another team's scoreline into the track record.
+ *
+ * Both sides of the comparison are already expanded into full-string / nickname /
+ * abbreviation / alias variants by `expandTeamMatchTokens` + `finalSideTokens`, so
+ * equality is exactly what that expansion was built to support (it is the abbr field,
+ * not containment, that binds "LAD" to "Los Angeles Dodgers"). An identifier we cannot
+ * match exactly must fail CLOSED — the pick stays PENDING and RCA reports it.
+ */
 export function teamTokensMatch(a: string, b: string): boolean {
   if (!a || !b) return false;
-  if (a === b || a.includes(b) || b.includes(a)) return true;
-  // Require short tokens (abbrs) to match as whole-token containment only when len>=2
-  // already covered by includes. No fuzzy beyond that.
-  return false;
+  return a === b;
 }
 
 /** Multi-word city / place prefixes common in US pro sports display names. */
@@ -191,9 +218,49 @@ const TOKEN_ALIASES: Readonly<Record<string, readonly string[]>> = {
 
 
 /**
+ * Minimum length for a FRAGMENT token (one this module infers by splitting a display
+ * name), as opposed to the verbatim string a source actually published or a curated
+ * alias. Three-letter fragments are not identities: "Sox" is shared by Boston and
+ * Chicago, and under exact matching both sides emit it, so the fragment alone would
+ * bind a Red Sox pick to a White Sox final. Every team that loses a fragment here
+ * still carries its full string, its two-word nickname, its abbreviation and its
+ * alias entries, so nothing legitimate stops matching.
+ */
+const MIN_FRAGMENT_TOKEN_LENGTH = 4;
+
+/**
+ * League / school qualifiers that several clubs share and none is identified by.
+ * Dropped from FRAGMENT emission only — a source that publishes one of these as a
+ * team's whole name still keeps it as a verbatim token.
+ *
+ *  - "state"  — "Michigan State", "Ohio State", "Penn State" all emit it (ncaaf/ncaab)
+ *  - "united" — an MLS club suffix, not a club
+ *  - "city"   — a place qualifier ("Sporting Kansas City", "… City FC/SC")
+ *  - "team"   — "Washington Football Team"
+ *
+ * Shorter shared suffixes ("fc", "sc", "cf") and the two-letter state codes ESPN uses
+ * to disambiguate colleges ("Miami (FL)" / "Miami (OH)") are already excluded by
+ * MIN_FRAGMENT_TOKEN_LENGTH.
+ */
+const NON_IDENTIFYING_FRAGMENTS: ReadonlySet<string> = new Set([
+  "state",
+  "united",
+  "city",
+  "team",
+]);
+
+/**
  * Expand a team display string into match tokens:
  * full normalized string, last-word / last-two-words nicknames, city-stripped
  * nickname, and a small alias table for known short forms (A's, D-backs, …).
+ *
+ * Two classes of token, deliberately treated differently:
+ *   VERBATIM — the full normalized input, and every curated TOKEN_ALIASES entry.
+ *              These are things a source actually said or that we have explicitly
+ *              mapped, so they are kept whatever their length ("SF", "as", "oak").
+ *   FRAGMENT — anything this function infers by splitting words off the input.
+ *              An inference is only admitted when it is long enough and specific
+ *              enough to identify one franchise (see the two constants above).
  */
 export function expandTeamMatchTokens(name: string): string[] {
   const full = normalizeTeamToken(name);
@@ -205,9 +272,16 @@ export function expandTeamMatchTokens(name: string): string[] {
     .filter(Boolean);
   const out = new Set<string>([full]);
 
+  const addFragment = (raw: string): void => {
+    const token = normalizeTeamToken(raw);
+    if (token.length < MIN_FRAGMENT_TOKEN_LENGTH) return;
+    if (NON_IDENTIFYING_FRAGMENTS.has(token)) return;
+    out.add(token);
+  };
+
   if (words.length >= 2) {
-    out.add(normalizeTeamToken(words[words.length - 1]!));
-    out.add(normalizeTeamToken(words.slice(-2).join(" ")));
+    addFragment(words[words.length - 1]!);
+    addFragment(words.slice(-2).join(" "));
   }
 
   // Strip known multi-word city prefixes → leftover nickname tokens
@@ -215,20 +289,21 @@ export function expandTeamMatchTokens(name: string): string[] {
     if (lower.startsWith(city + " ")) {
       const rest = lower.slice(city.length).trim();
       if (rest) {
-        out.add(normalizeTeamToken(rest));
+        addFragment(rest);
         const rw = rest.split(/\s+/).filter(Boolean);
-        if (rw.length >= 1) out.add(normalizeTeamToken(rw[rw.length - 1]!));
-        if (rw.length >= 2) out.add(normalizeTeamToken(rw.slice(-2).join(" ")));
+        if (rw.length >= 1) addFragment(rw[rw.length - 1]!);
+        if (rw.length >= 2) addFragment(rw.slice(-2).join(" "));
       }
     }
   }
 
   // Single leading city word strip (Chicago Cubs → cubs) when ≥2 words
   if (words.length >= 2) {
-    out.add(normalizeTeamToken(words.slice(1).join(" ")));
+    addFragment(words.slice(1).join(" "));
   }
 
-  // Alias expansion (two passes so reverse maps connect)
+  // Alias expansion (two passes so reverse maps connect). Alias values are curated
+  // identifiers, so they are admitted verbatim — that is how "as"/"oak"/"bos" survive.
   for (let pass = 0; pass < 2; pass++) {
     for (const tok of [...out]) {
       const al = TOKEN_ALIASES[tok];
@@ -246,32 +321,66 @@ function finalSideTokens(side: { name: string; abbr: string }): string[] {
   ].filter(Boolean);
 }
 
-/** Does this trusted final involve both of the pick's teams (name OR abbr, either orientation)? */
-export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
-  const pickHome = expandTeamMatchTokens(pick.homeTeam);
-  const pickAway = expandTeamMatchTokens(pick.awayTeam);
-  if (pickHome.length === 0 || pickAway.length === 0) return false;
-  const finalTokens = [...finalSideTokens(f.home), ...finalSideTokens(f.away)];
-  const homeOk = pickHome.some((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
-  const awayOk = pickAway.some((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
-  return homeOk && awayOk;
+/** How the final's stored sides line up with the pick's. */
+export type MatchOrientation = "SAME" | "FLIPPED";
+
+function sidesShareAToken(a: readonly string[], b: readonly string[]): boolean {
+  return a.some((t) => b.some((u) => teamTokensMatch(t, u)));
 }
 
-/** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */
+/**
+ * Resolve the pick↔final orientation, or null when it cannot be resolved UNIQUELY.
+ *
+ * Both sides must line up side-by-side: either the pick's home matches the final's
+ * home AND the pick's away matches the final's away, or both match crosswise. This
+ * replaces the previous "does each pick team appear ANYWHERE in the final" test,
+ * which pooled the final's two sides into one token bag — so a pick whose BOTH teams
+ * matched a SINGLE side of some other game satisfied it. Worked example, all real
+ * MLB strings: a "Chicago White Sox vs Chicago Cubs" pick against a "Milwaukee
+ * Brewers vs Chicago Cubs" final matched, because the White Sox alias "chicago"
+ * reached "chicagocubs" and "cubs" reached the same side — the pick then settled
+ * against the Brewers' scoreline.
+ *
+ * Refusing when BOTH orientations hold matters just as much: that means a pick team
+ * matched both sides of the final, so there is no evidence for which way round to
+ * grade. `orientToPickHome` previously tested home-first and RETURNED on the first
+ * hit, latching onto an orientation it had not established — the same first-candidate
+ * latch that produced cross-series binding in the market bridge. Ambiguity now fails
+ * CLOSED: the pick stays PENDING and RCA surfaces it, rather than being graded with a
+ * coin-flip orientation.
+ */
+export function resolveMatchOrientation(
+  pick: PendingPick,
+  f: TrustedFinal,
+): MatchOrientation | null {
+  const pickHome = expandTeamMatchTokens(pick.homeTeam);
+  const pickAway = expandTeamMatchTokens(pick.awayTeam);
+  if (pickHome.length === 0 || pickAway.length === 0) return null;
+  const finalHome = finalSideTokens(f.home);
+  const finalAway = finalSideTokens(f.away);
+
+  const same = sidesShareAToken(pickHome, finalHome) && sidesShareAToken(pickAway, finalAway);
+  const flipped = sidesShareAToken(pickHome, finalAway) && sidesShareAToken(pickAway, finalHome);
+  // Neither orientation holds → not this game. Both hold → ambiguous. Refuse either way.
+  if (same === flipped) return null;
+  return same ? "SAME" : "FLIPPED";
+}
+
+/** Does this trusted final involve both of the pick's teams, on opposite sides? */
+export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
+  return resolveMatchOrientation(pick, f) !== null;
+}
+
+/** Orient final scores to the pick's home team. Returns null if the orientation is not unique. */
 export function orientToPickHome(
   pick: PendingPick,
   f: TrustedFinal,
 ): { homeScore: number; awayScore: number } | null {
-  const pickHomeTokens = expandTeamMatchTokens(pick.homeTeam);
-  const homeTokens = finalSideTokens(f.home);
-  const awayTokens = finalSideTokens(f.away);
-  if (pickHomeTokens.some((ph) => homeTokens.some((t) => teamTokensMatch(ph, t)))) {
-    return { homeScore: f.home.score, awayScore: f.away.score };
-  }
-  if (pickHomeTokens.some((ph) => awayTokens.some((t) => teamTokensMatch(ph, t)))) {
-    return { homeScore: f.away.score, awayScore: f.home.score };
-  }
-  return null;
+  const orientation = resolveMatchOrientation(pick, f);
+  if (orientation === null) return null;
+  return orientation === "SAME"
+    ? { homeScore: f.home.score, awayScore: f.away.score }
+    : { homeScore: f.away.score, awayScore: f.home.score };
 }
 
 /**
@@ -285,9 +394,27 @@ export function settlePendingPicks(
 ): SettlementOutcome[] {
   const postponedCandidates = options.postponedCandidates ?? [];
   return picks.map((pick): SettlementOutcome => {
-    const candidates = finals.filter(
-      (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 2 && finalMatchesPick(pick, f),
+    const pickDate = pick.gameDateIso.slice(0, 10);
+    const withinTolerance = finals.filter(
+      (f) => daysApart(f.date, pickDate) <= SETTLEMENT_DATE_TOLERANCE_DAYS && finalMatchesPick(pick, f),
     );
+
+    // Use the date the pick already carries. The ±2-day tolerance exists for source
+    // date-convention skew, not to widen the join: in every daily-schedule league a
+    // series is 3-4 games between the SAME two teams on CONSECUTIVE days, so all of
+    // them fall inside the tolerance and satisfy the team match. Judged on teams
+    // alone, an ordinary Friday pick has Saturday's and Sunday's finals as equal
+    // candidates — either grading it off the wrong night's score, or (once the
+    // same-day-rematch guard below sees the disagreement) holding every game of
+    // every series as AMBIGUOUS_MATCH so it never settles at all.
+    //
+    // So when the board has a final on the pick's OWN calendar date, only those are
+    // eligible. This is strictly a narrowing — it can never admit a final the ±2-day
+    // filter had already rejected — and it deliberately does not reach past an
+    // on-date ambiguity: a true doubleheader leaves two same-date candidates, which
+    // stay ambiguous and stay HELD.
+    const sameDay = withinTolerance.filter((f) => daysApart(f.date, pickDate) === 0);
+    const candidates = sameDay.length > 0 ? sameDay : withinTolerance;
 
     // Same-day rematch guard (e.g. an MLB doubleheader): two DIFFERENT completed
     // games between the same two teams can both fall inside the date-tolerance
