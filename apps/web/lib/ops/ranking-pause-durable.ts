@@ -8,6 +8,10 @@ import { db, isStubMode } from "@sports/db";
 
 export const RANKING_PAUSE_DURABLE_SCOPE = "ops.ranking.pause-apply";
 
+function errMessage(err: unknown): string {
+  return err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+}
+
 export type RankingPauseDurableSnap = {
   readonly enabled: boolean;
   readonly groups: readonly string[];
@@ -16,10 +20,29 @@ export type RankingPauseDurableSnap = {
   readonly note: string;
 };
 
+/**
+ * Outcome of a durable write. Mirrors the `"ok" | "stub" | "error"` shape
+ * `persistDurableFreeSpine` already uses so callers read the same three states
+ * everywhere.
+ */
+export type RankingPauseWriteResult = "ok" | "stub" | "error";
+
+/**
+ * Persist the durable pause snapshot.
+ *
+ * RETURNS AN OUTCOME instead of `void`. It previously ended in a bare
+ * "best-effort" catch and returned nothing, so a failed write was
+ * indistinguishable from a successful one — and the only caller
+ * (`POST /api/ops/ranking-pause-apply`) went on to answer `{ ok: true, durable:
+ * snap }`, echoing back a snapshot that had never been stored. This is a
+ * SUPPRESSION control: the founder reads "applied", the other isolates read the
+ * DB, find nothing, and keep publishing the groups that were supposed to be
+ * paused. "Best-effort" is not an acceptable posture for a kill switch.
+ */
 export async function persistRankingPauseApply(
   snap: RankingPauseDurableSnap,
-): Promise<void> {
-  if (isStubMode()) return;
+): Promise<RankingPauseWriteResult> {
+  if (isStubMode()) return "stub";
   try {
     await db.jarvisMemoryEvent.create({
       data: {
@@ -39,11 +62,26 @@ export async function persistRankingPauseApply(
         owner_approval: true,
       },
     });
-  } catch {
-    /* best-effort */
+    return "ok";
+  } catch (err) {
+    console.error(
+      `[ops:ranking-pause] persistRankingPauseApply FAILED (enabled=${snap.enabled} ` +
+        `groups=${snap.groups.length} setBy=${snap.setBy}): ${errMessage(err)}. ` +
+        "The durable pause was NOT stored — other isolates will keep the previous posture.",
+    );
+    return "error";
   }
 }
 
+/**
+ * Newest durable pause snapshot, or null.
+ *
+ * `null` means "no durable pause is in force", which is the LESS restrictive
+ * answer — so a read failure must not be mistaken for a deliberate absence.
+ * The verdict is unchanged (callers already treat null as "env decides"), but a
+ * thrown query is now logged so an operator can tell a real "no pause set" from
+ * a database that could not answer.
+ */
 export async function loadRankingPauseApply(): Promise<RankingPauseDurableSnap | null> {
   if (isStubMode()) return null;
   try {
@@ -69,7 +107,11 @@ export async function loadRankingPauseApply(): Promise<RankingPauseDurableSnap |
       setBy: typeof s.setBy === "string" ? s.setBy : "unknown",
       note: typeof s.note === "string" ? s.note : "",
     };
-  } catch {
+  } catch (err) {
+    console.error(
+      `[ops:ranking-pause] loadRankingPauseApply FAILED: ${errMessage(err)}. ` +
+        "Reporting 'no durable pause' — this is a read failure, not proof of absence.",
+    );
     return null;
   }
 }

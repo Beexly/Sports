@@ -23,6 +23,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { logEntitlementFailClosed } from "@/lib/entitlement-observability";
 import { getEntitlements, type Entitlements } from "@sports/types";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 
@@ -69,7 +70,12 @@ async function evaluateGate(
   let userId: string | undefined;
   try {
     userId = (await auth())?.user?.id;
-  } catch {
+  } catch (error) {
+    // Treating an auth() EXCEPTION as "anonymous" is the right fail-closed
+    // verdict, but it used to be indistinguishable from a logged-out visitor:
+    // a broken session store answered every paying member with a 401 and left
+    // no trace of why. Verdict unchanged, now audible.
+    logEntitlementFailClosed("api-entitlement:auth", undefined, error);
     userId = undefined;
   }
 
@@ -86,7 +92,12 @@ async function evaluateGate(
   let entitlements: Entitlements;
   try {
     entitlements = await getUserEntitlements(userId);
-  } catch {
+  } catch (error) {
+    // Fail closed (unchanged) — and say so. `getUserEntitlements` only rethrows
+    // errors it did NOT classify as an unreachable database, so anything
+    // arriving here is an unrecognized infrastructure fault worth an operator's
+    // attention rather than a silent 403 for a paying subscriber.
+    logEntitlementFailClosed("api-entitlement:gate", userId, error);
     entitlements = getEntitlements("FREE"); // fail closed
   }
 
