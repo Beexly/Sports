@@ -3,7 +3,9 @@
 Two jobs, run in this order, on separate nights (or back-to-back if you're awake):
 
 1. **`AUDIT_PROMPT.md`** — 28 read-only probes. Hermes changes no source, only writes
-   reports into `handoff/` (which is gitignored).
+   reports into `handoff/`. Those reports are TRACKED, not ignored — only
+   scratch/log output is ignored (`handoff/` patterns: `*.log`, `*.txt`,
+   `*.stderr`, `*.json`, `*.py`, `_*`).
 2. **`BUILD_QUEUE.md`** — 11 tasks: six zero-risk reports/single-line changes, five
    code tasks. One commit each, no push.
 
@@ -147,10 +149,12 @@ write a journal as they go, so an interrupted run is still readable.
 cat handoff/AUDIT_FINDINGS.md      # the register — spot-check file:line refs
 cat handoff/AUDIT_COVERAGE.md      # what it could not check
 cat handoff/JOURNAL.md
-git status --short                 # MUST print nothing (handoff/ is gitignored)
+git status --short                 # MUST show ONLY handoff/ paths
 ```
-If `git status` prints anything, the agent broke its read-only contract. Discard
-(`git checkout -- .`) and tell me.
+The audit's own reports are tracked files, so `git status` is EXPECTED to list
+them. The read-only contract is that nothing OUTSIDE `handoff/` appears. If any
+other path shows up, the agent broke the contract — discard (`git checkout -- .`)
+and tell me.
 
 **After the build run:**
 ```bash
