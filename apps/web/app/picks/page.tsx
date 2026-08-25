@@ -13,6 +13,7 @@ import { getEntitlements, type PublicPick, type DailySlate, type SubscriptionTie
 import Link from "next/link";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
+import { copyClientIpHeaders } from "@/lib/api/rate-limit";
 import { GET as getPicks } from "@/app/api/picks/route";
 import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 
@@ -62,12 +63,11 @@ interface PicksResponse {
 function buildRequest(pathname: string, params: URLSearchParams): NextRequest {
   const h = headers();
   const initHeaders = new Headers();
-  // Forward the forwarded-for / real-ip so the route handler's rate-limiter
-  // (consumeRateLimit + clientIp) sees the real client, not "anon".
-  const fwdFor = h.get("x-forwarded-for");
-  const realIp = h.get("x-real-ip");
-  if (fwdFor) initHeaders.set("x-forwarded-for", fwdFor);
-  if (realIp) initHeaders.set("x-real-ip", realIp);
+  // Relay the forwarding headers verbatim so the route handler's rate limiter
+  // (consumeRateLimit + clientIp) sees the real client, not "anon". The header
+  // names live in lib/api/rate-limit.ts with clientIp() itself — one module
+  // decides what a client IP is, and this is a copy, never a parse.
+  copyClientIpHeaders(h, initHeaders);
   const cookie = h.get("cookie");
   if (cookie) initHeaders.set("cookie", cookie);
   const url = `http://localhost${pathname}${params.toString() ? `?${params}` : ""}`;
