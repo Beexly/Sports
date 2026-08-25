@@ -58,6 +58,8 @@ const GUARDS = [
   ["eval-contracts", ["node", "scripts/eval-contracts.mjs"]],
   ["dependency-audit", ["node", "scripts/guardrails/dependency-audit.mjs"]],
   ["agent-bash-guard", ["node", "scripts/guardrails/agent-bash-guard.mjs", "--selftest"]],
+  ["node-version-parity-test", ["node", "--test", "scripts/guardrails/node-version-parity.test.mjs"]],
+  ["node-version-parity", ["node", "scripts/guardrails/node-version-parity.mjs"]],
 ];
 
 function flag(name) {
