@@ -648,7 +648,20 @@ export async function settleSport(
         // Line-archive CLOSE tag. No-op unless LINE_ARCHIVE_ENABLED=true.
         // Never fails settlement — grading a pick matters more than tagging a line.
         try {
-          await markClosingSnapshotsIfEnabled(db, game.id, game.commenceTime);
+          // markClosingSnapshotsIfEnabled has its own internal catch and cannot
+          // throw — the outer try alone was unreachable dead code that read as
+          // instrumentation. The real failure signal is the returned `error`.
+          const closeTag = await markClosingSnapshotsIfEnabled(
+            db,
+            game.id,
+            game.commenceTime,
+          );
+          if (closeTag.error) {
+            console.warn(
+              `${logPrefix} markClosingSnapshots failed for ${game.id}: ` +
+              `${closeTag.error}`,
+            );
+          }
         } catch (archiveErr) {
           console.warn(
             `${logPrefix} markClosingSnapshots failed for ${game.id}: ` +

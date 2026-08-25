@@ -316,7 +316,16 @@ export async function GET(request: Request): Promise<NextResponse> {
       ).catch(() => undefined);
     }
 
-    await persistCalibrationMetrics(payload);
+    // Capture the durable-write outcome so a 200 body carries the truth: a
+    // failed persist used to be indistinguishable from a healthy cycle.
+    const persist = await persistCalibrationMetrics(payload);
+    if (persist === "error") {
+      console.error(
+        `[cron:calibration-metrics] durable metrics persist FAILED — ` +
+        `n=${payload.n} status=${payload.status} generatedAt=${payload.generatedAt}; ` +
+        `eligibility streak cannot advance this cycle`,
+      );
+    }
 
     // Offline Bayesian bake-off artifact (internal only; never publish/adjustments).
     if (payload.status === "ok" && samples.length >= 50) {
@@ -445,6 +454,8 @@ export async function GET(request: Request): Promise<NextResponse> {
         autoPublish: publish.autoPublish,
       },
       skippedDuplicate,
+      /** Durable-write outcome for this cycle: "ok" | "stub" | "error". */
+      persist,
       artifact: "durable:ops.calibration.metrics",
       provenPathRows: provenRows.length,
     });
