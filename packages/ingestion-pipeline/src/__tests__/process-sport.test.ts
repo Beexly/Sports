@@ -650,7 +650,15 @@ describe("processSport", () => {
   });
 
   it("promotes elite plays when the gate is on", async () => {
-    mocks.scoreGames.mockReturnValue([scoredPick({ pickGrade: "ELITE_PLAY", confidence: 90 })]);
+    // `scoreGames` is mocked, so this pick is synthetic and its fields need only
+    // be internally legal for the gate under test. `edgeScore` is pinned at the
+    // honest-market Edge Index ceiling because Featured promotion now also
+    // refuses a pick claiming a pricing edge the engine cannot honestly produce
+    // (see isFeaturedPromotionEligible in @sports/types); leaving the default 61
+    // here would make this test assert the ceiling guard rather than the gate.
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickGrade: "ELITE_PLAY", confidence: 90, edgeScore: 50 }),
+    ]);
 
     await processSport(SPORT, "key", gates({ canPromoteFeaturedPicks: true }));
 

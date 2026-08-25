@@ -75,10 +75,72 @@ export function blendIndependentHomeFair(
   return { homeP: clamp01(homeP), sources: pairs.map((p) => p.s) };
 }
 
-function pickGradeFromConfidence(confidence: number): "STRONG_PLAY" | "SOLID_PLAY" | "LEAN" {
+export type SignalGrade = "STRONG_PLAY" | "SOLID_PLAY" | "LEAN";
+
+/**
+ * Signal-slate grading — DELIBERATELY NOT `computePickGrade` from `@sports/types`.
+ *
+ * The market board grades on TWO axes: the composite confidence AND the Edge
+ * Index — the priced advantage of the book's number against the engine's
+ * de-vigged fair probability. The signal slate has no book line at all
+ * (`marketFairProb: null`, `bookmakerCount: 0`), so there is no Edge Index to
+ * grade against. Feeding the composite grader what this file writes into
+ * `edgeScore` would return LEAN for every signal pick no matter how strong the
+ * model is, because these two `edgeScore` values are not the same quantity:
+ *
+ *   market board  edgeScore = Edge Index, 50 = fair price (see
+ *                             HONEST_MARKET_EDGE_INDEX_MAX in @sports/types)
+ *   signal slate  edgeScore = round((trueProb − 0.5) × 100), 0–50 points of
+ *                             model conviction above a coin flip
+ *
+ * One database column, two meanings. The customer-visible consequence is that
+ * "Strong Play" means confidence ≥ 80 from independent models with no market
+ * involved here, and confidence ≥ 75 AND Edge Index ≥ 65 on the market board.
+ * `signalGradeDisclosure()` states that on the pick itself so the two labels are
+ * not silently conflated on one site.
+ *
+ * Collapsing the two ladders onto one scale is an OWNER decision — it re-labels
+ * every signal pick and it depends on the unresolved question of what the Edge
+ * Index scale should be. This function is the documented divergence, not an
+ * oversight; `grade-ladder-cross-pipeline.test.ts` pins both halves.
+ */
+export function pickGradeFromConfidence(confidence: number): SignalGrade {
   if (confidence >= 80) return "STRONG_PLAY";
   if (confidence >= 65) return "SOLID_PLAY";
   return "LEAN";
+}
+
+/**
+ * The one sentence that keeps a signal-board grade from being read as a market-
+ * board grade. Written onto the pick's `reasoning`, which is customer-visible.
+ */
+export function signalGradeDisclosure(grade: SignalGrade): string {
+  return (
+    `Grade "${grade}" is confidence-only: with no book line there is no Edge Index, ` +
+    `so this pick is NOT graded on the market board's confidence+Edge Index ladder.`
+  );
+}
+
+/**
+ * The customer-visible `reasoning` string for a signal-board pick. Extracted so
+ * the grade disclosure is testable at runtime rather than asserted by grepping
+ * this file — a wiring claim nobody executes is a wiring claim nobody keeps.
+ */
+export function buildSignalReasoning(input: {
+  readonly chosenTeam: string;
+  readonly trueProb: number;
+  readonly sourcesLabel: string;
+  readonly rankingP: number;
+  readonly grade: SignalGrade;
+}): string {
+  const pct = Math.round(input.trueProb * 100);
+  return (
+    `Model signal (no book line): ${input.chosenTeam} priced at ${pct}% ` +
+    `by independent sources [${input.sourcesLabel}]. Not a sportsbook quote. ` +
+    `RankingP=${input.rankingP.toFixed(3)}. ` +
+    `Eligibility RED forbids PROVEN/performance claims. ` +
+    signalGradeDisclosure(input.grade)
+  );
 }
 
 /**
@@ -230,10 +292,13 @@ export async function generateSignalSlate(opts?: {
     };
 
     const selection = `${chosenTeam} ML (model signal)`;
-    const reasoning =
-      `Model signal (no book line): ${chosenTeam} priced at ${Math.round(trueProb * 100)}% ` +
-      `by independent sources [${sourcesLabel}]. Not a sportsbook quote. RankingP=${rankingP.toFixed(3)}. ` +
-      `Eligibility RED forbids PROVEN/performance claims.`;
+    const reasoning = buildSignalReasoning({
+      chosenTeam,
+      trueProb,
+      sourcesLabel,
+      rankingP,
+      grade: pickGrade,
+    });
     const reasoningShort = `${chosenTeam} model signal @ ${Math.round(trueProb * 100)}% (${sourcesLabel}).`;
 
     try {
