@@ -17,10 +17,32 @@ gaps, undervalued items, and polish needs.
 
 - **Shipped**: `packages/prediction-engine/src/edge-lab/features/log-odds-pool.ts`
   (+ test) — geometric-mean-of-odds pooling with Satopää-style extremization.
-  This is Top-8 item #1 from the methodology report.
-- **Next candidates** (pending review-pass corrections): extremized γ grid-search
-  tuning on historical predictions; recency-weighted median aggregation;
-  Spearman feature-exposure tracking in calibration-monitor.
+- **Shipped**: `feature-exposure.ts` (+ test) — Numerai-style SRCC exposure per
+  feature column (Top-8 item #4, promoted by the review pass).
+- **Shipped**: `extremization-tuner.ts` (+ test) — Brier-optimized γ grid
+  search with flat-optimum diagnostic (review-pass item #1's missing piece).
+  All three: tsc 0 errors, 25/25 tests green.
+
+## Review-pass corrections that supersede the original reports
+
+- Manifold is **CPMM** (constant-product), not LMSR — the methodology report's
+  LMSR section and Top-8 #5 are wrong; see review-platform-aggregation.md.
+- Waudby-Smith & Ramdas citation ID is arXiv **2010.09686**, venue JRSS B —
+  the bibliography's 2412.21125 is wrong; see review-academic-bibliography.md.
+- PredictionBook is retired (not low-activity); INFER was missed entirely —
+  see review-platform-catalog.md.
+- EV-detector formula in the bibliography ignores vig removal; CLV tracker
+  normalization explodes on longshots — use the corrected variants in the
+  review file before implementing either.
+
+## Next candidates (per re-ranked roadmap in review-platform-aggregation.md)
+
+1. ~~γ tuning loop~~ → shipped as extremization-tuner.ts.
+2. Recency-weighted median aggregation (Top-8 #2, unchanged).
+3. Wire logOddsPool + tuner into consensus.ts as an optional geometric-mean
+   mode (wiring gap, not implementation gap).
+4. MMC-style orthogonalized contribution metric for brier-ogd-ensemble
+   (review-promoted to #4).
 
 ## How to consume this directory
 
