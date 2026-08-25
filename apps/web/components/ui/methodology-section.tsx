@@ -227,8 +227,7 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
                       nothing for the reader to correct by. This block renders on
                       the homepage. */}
                   {formatCentralTime(new Date(metrics.lastRefresh))} {CT_SUFFIX}
-                </time>
-              </p>
+                </time>              </p>
             )}
           </div>
         )}

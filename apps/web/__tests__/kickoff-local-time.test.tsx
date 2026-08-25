@@ -34,6 +34,17 @@ const REPO_ROOT = resolve(__dirname, "..", "..", "..");
 const WEB = resolve(REPO_ROOT, "apps/web");
 const readWeb = (rel: string): string => readFileSync(resolve(WEB, rel), "utf8");
 
+/**
+ * Strip comments before scanning for the banned call shapes. Fixed sites carry
+ * comments naming the call that used to be there — that prose is the record of
+ * the defect, not the defect.
+ */
+function stripComments(source: string): string {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/(^|[^:])\/\/[^\n]*/g, "$1 ");
+}
+
 /** Surfaces that pin Central explicitly at server render. */
 const CENTRAL_SURFACES = [
   "components/picks/pick-card.tsx",
@@ -56,7 +67,7 @@ afterEach(() => {
 describe("headline surfaces pin an explicit zone at server render", () => {
   for (const rel of CENTRAL_SURFACES) {
     it(`${rel} never formats with an unzoned toLocale* call`, () => {
-      const src = readWeb(rel);
+      const src = stripComments(readWeb(rel));
       // The exact call shape that produced the UTC wall clock: a toLocale*
       // with timeZoneName but no timeZone. Pinning CENTRAL_TZ (or any
       // explicit timeZone) is the fix; the bare shape must not return.
