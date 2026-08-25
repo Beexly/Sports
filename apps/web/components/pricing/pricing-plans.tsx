@@ -83,7 +83,7 @@ export function PricingPlans({
                   <span
                     className={[
                       "rounded-full px-3 py-0.5 text-xs font-semibold",
-                      isPro ? "bg-brand-600 text-white" : "bg-ultraviolet text-white",
+                      isPro ? "bg-brand-700 text-white" : "bg-ultraviolet-deep text-white",
                     ].join(" ")}
                   >
                     {plan.badge}
@@ -182,7 +182,7 @@ function ToggleButton({
       aria-pressed={active}
       className={[
         "min-h-11 rounded-full px-5 py-1.5 text-sm font-semibold transition-colors",
-        active ? "bg-brand-600 text-white" : "text-ion-2 hover:text-ion-1",
+        active ? "bg-brand-700 text-white" : "text-ion-2 hover:text-ion-1",
       ].join(" ")}
     >
       {children}

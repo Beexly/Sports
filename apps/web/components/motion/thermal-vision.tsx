@@ -14,6 +14,32 @@
 
 import { useEffect, useState } from "react";
 
+/**
+ * Should the ThermalVision toggle be mounted at all?
+ *
+ * The docstring above describes a heatmap driven by `data-thermal` attributes.
+ * That binding does not exist: no element anywhere under `app/` or
+ * `components/` carries a `data-thermal` attribute, and `ThermalBadge` — the
+ * piece that would paint per-pick temperature — has zero importers. Toggling
+ * the control today does exactly one thing: paints a faint
+ * `mix-blend-mode: overlay` gradient over the viewport. It does not turn the
+ * interface into a confidence heatmap.
+ *
+ * So this is an unfinished development affordance, not a shipped feature — and
+ * it was mounting a ~25px cyan pill at `fixed bottom-6 left-6` over the
+ * bottom-left of EVERY page at EVERY breakpoint. On a phone, minutes before
+ * kickoff, that reads as a leftover dev toggle floating on top of the product.
+ *
+ * Nothing is removed: the component, its overlay and ThermalBadge all stay
+ * intact so the data binding can be finished. It is simply not mounted in
+ * production until then.
+ */
+export function shouldMountThermalVision(
+  nodeEnv: string | undefined = process.env.NODE_ENV,
+): boolean {
+  return nodeEnv !== "production";
+}
+
 export function ThermalVision({
   active = false,
   onToggle,
@@ -40,7 +66,10 @@ export function ThermalVision({
         type="button"
         onClick={toggle}
         aria-pressed={enabled}
-        className="fixed bottom-6 left-6 z-50 flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all duration-300"
+        // Hidden below `md` even in development: on a phone this pill sits on
+        // top of real content in the bottom-left corner with nothing to move
+        // it out of the way.
+        className="fixed bottom-6 left-6 z-50 hidden items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-all duration-300 md:flex"
         style={{
           borderColor: enabled ? "rgba(255,56,199,0.5)" : "rgba(0,229,255,0.3)",
           background: enabled ? "rgba(255,56,199,0.1)" : "rgba(0,229,255,0.06)",

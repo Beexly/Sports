@@ -74,20 +74,8 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
   },
 ];
 
-/**
- * Nav — the Galaxy Sports Edge global navigation bar.
- *
- * P16-03: the auth-dependent right rail (NavAuth) was extracted into its own
- * component file and wrapped in <Suspense>. Nav() is now a synchronous
- * function component that never calls auth() — only shouldShowLiveBoardChip(),
- * which is a synchronous env + readiness check. This lets all 86+ pages that
- * render <Nav /> — including /pricing, /about, /faq — be statically
- * prerendered. Only the session-aware right rail suspends, and its fallback
- * (NavAuthFallback) mirrors the anonymous state so the page is never blank.
- *
- * Files: apps/web/components/ui/nav.tsx, apps/web/components/ui/nav-auth.tsx
- */
-export function Nav() {
+/** The bar itself. `right` is the only part that varies. */
+function NavChrome({ right }: { right: React.ReactNode }) {
   return (
     <header className="nav">
       <div className="container nav-inner">
@@ -109,10 +97,57 @@ export function Nav() {
           </nav>
         </div>
 
-        <Suspense fallback={<NavAuthFallback />}>
-          <NavAuth />
-        </Suspense>
+        {right}
       </div>
     </header>
   );
+}
+
+/**
+ * Nav — the Galaxy Sports Edge global navigation bar.
+ *
+ * P16-03 extracted the auth-dependent right rail (NavAuth) into its own file
+ * and wrapped it in <Suspense>. Nav() is a synchronous function component that
+ * never calls auth() itself — only shouldShowLiveBoardChip(), a synchronous env
+ * + readiness check.
+ *
+ * CORRECTION (verified against next@14.2.35, no PPR): that Suspense boundary
+ * does NOT keep the surrounding page statically prerenderable. In
+ * `dist/server/app-render/dynamic-rendering.js`, `trackDynamicDataAccessed()`
+ * sets `store.revalidate = 0` BEFORE it throws the DynamicServerError, and
+ * `app-render.js` then copies that store value onto `metadata.revalidate`,
+ * which `dist/build/index.js` reads as `hasDynamicData`. Suspending (or
+ * swallowing) the throw therefore cannot restore static generation: the
+ * cookie read has already marked the render dynamic. Partial Prerendering is
+ * the feature that would make the claim true, and `experimental.ppr` is not
+ * enabled in next.config.mjs. The Suspense boundary is still worth keeping —
+ * it streams the shell before the session resolves — it just is not a
+ * static-generation guarantee, so do not treat it as one.
+ *
+ * Files: apps/web/components/ui/nav.tsx, apps/web/components/ui/nav-auth.tsx
+ */
+export function Nav() {
+  return (
+    <NavChrome
+      right={
+        <Suspense fallback={<NavAuthFallback />}>
+          <NavAuth />
+        </Suspense>
+      }
+    />
+  );
+}
+
+/**
+ * NavSkeleton — the same bar, painted with the anonymous right rail directly.
+ *
+ * For loading boundaries. A `loading.tsx` is rendered as a Suspense FALLBACK,
+ * and the fallback subtree is part of the route's render: calling auth() (and
+ * therefore cookies()) from inside it would add a dynamic data access to every
+ * segment the boundary covers, for a rail the visitor sees for a few hundred
+ * milliseconds. NavAuthFallback is what <Nav /> paints during that same window
+ * anyway, so the skeleton and the loaded page are pixel-identical here.
+ */
+export function NavSkeleton() {
+  return <NavChrome right={<NavAuthFallback />} />;
 }
