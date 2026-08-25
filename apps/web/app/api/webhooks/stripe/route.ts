@@ -247,13 +247,29 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
         // and the subsequent updated-event resurrection guard (which requires
         // existing.status === "CANCELED") no longer matches, restoring paid tier
         // permanently on a subscription that is dead in Stripe.
+        //
+        // INCOMPLETE is excluded for the opposite reason: it has never been paid
+        // at all. The PAST_DUE grace window (PAST_DUE_GRACE_DAYS) exists to keep
+        // a MEMBER IN GOOD STANDING online while Stripe retries a renewal that
+        // used to work. A Stripe subscription sits in `incomplete` until its
+        // FIRST charge succeeds, and a declined first charge fires
+        // invoice.payment_failed — so promoting INCOMPLETE here handed a full
+        // grace period of paid access to someone whose card never cleared once,
+        // repeatable with a fresh account. A first payment that later succeeds
+        // arrives as customer.subscription.updated and activates the row there;
+        // nothing legitimate needs this promotion.
+        const NEVER_GRANT_GRACE = ["CANCELED", "INCOMPLETE"] as const;
         await db.$transaction([
           db.subscription.updateMany({
-            where: { stripeSubscriptionId: subId, pastDueSince: null, status: { not: "CANCELED" } },
+            where: {
+              stripeSubscriptionId: subId,
+              pastDueSince: null,
+              status: { notIn: [...NEVER_GRANT_GRACE] },
+            },
             data: { pastDueSince: new Date() },
           }),
           db.subscription.updateMany({
-            where: { stripeSubscriptionId: subId, status: { not: "CANCELED" } },
+            where: { stripeSubscriptionId: subId, status: { notIn: [...NEVER_GRANT_GRACE] } },
             data: { status: "PAST_DUE" },
           }),
         ]);
