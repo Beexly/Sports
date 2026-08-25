@@ -137,7 +137,11 @@ export function PricingPlans({
                 {plan.id === "FREE" ? (
                   <Link
                     href="/auth/signin"
-                    className="block w-full rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
+                    // min-h-11 + flex centering: the Free CTA is the sign-up door
+                    // on the pricing page and sat under the 44px touch-target
+                    // floor that ToggleButton above and SubscribeButton beside it
+                    // already hold. Still full-width and centered on desktop.
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
                   >
                     {plan.cta}
                   </Link>
