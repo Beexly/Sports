@@ -37,6 +37,18 @@ const SCAN_TARGETS = [
   "apps/web/app/faq",
   "apps/web/app/about",
   "apps/web/app/trends",
+  // Same case again: /pricing's Free bullets now live in
+  // lib/pricing/free-tier-features.ts, because one of them (Contest Bay) is
+  // only true while its public-surface gate is open and therefore cannot be a
+  // static const on the page. Copy that moves OUT of a deep-scanned directory
+  // must take the scan with it, or relocating a claim becomes a way to escape
+  // the guard. Scoped to the file (SCAN_TARGETS accepts files as well as
+  // directories) rather than all of lib/pricing, whose other modules are
+  // config/identifier surfaces — phase ids like "PROVEN", the
+  // GRANDFATHER_GUARANTEE constant name, the "clv-tracking" feature key —
+  // that the word list reads as claims. Widening to the whole directory is a
+  // separate cleanup, not a licence to leave this file unscanned.
+  "apps/web/lib/pricing/free-tier-features.ts",
 ];
 // FULL PUBLIC-SURFACE SWEEP (adversarial finding O-2.1): the deep-scan
 // targets above covered 7 of ~60 public app dirs — tout copy on the

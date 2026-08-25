@@ -9,6 +9,19 @@ import { BRAND_NAME } from "@/lib/brand";
  * runtime (no DB), so it stays fast and can't leak gated data. A future Node-
  * runtime version can render the live Brier / win-rate / CLV once canonical
  * history exists; until then the proof posture is the message.
+ *
+ * COPY RULE — the card must claim no more than the page it advertises.
+ * A share card travels into a feed WITHOUT the page's gate state beside it,
+ * so it is the worst place to assert a level of support we do not hold.
+ * This card used to read "Calibrated confidence, Brier-scored against real
+ * outcomes" / "Calibrated, not just confident." — but the isotonic/PAVA
+ * calibrator is an identity passthrough until CALIBRATION_ADJUSTMENTS_ENABLED
+ * is set (packages/prediction-engine/src/calibration-apply.ts,
+ * platform-config.ts: default false), and /performance itself renders the
+ * gated bootstrap state while PERFORMANCE_STATS_ENABLED is off. The card now
+ * mirrors the page's own vetted metadata: every finished pick counted, the
+ * public number gated until the settled sample can carry it.
+ * Pinned by apps/web/__tests__/share-card-claim-truth.test.ts.
  */
 
 export const runtime = "edge";
@@ -110,7 +123,7 @@ export default async function Image() {
             maxWidth: 940,
           }}
         >
-          Calibrated confidence, Brier-scored against real outcomes, and every loss posted, never deleted.
+          Every finished pick counted, wins and losses alike. The public number stays gated until the settled sample can carry it.
         </div>
 
         {/* Footer principle */}
@@ -129,7 +142,7 @@ export default async function Image() {
             paddingTop: 28,
           }}
         >
-          <span>Calibrated, not just confident.</span>
+          <span>Gated until it&apos;s defensible.</span>
           <span style={{ color: "#5FD9A3" }}>galaxysportsedge.com/performance</span>
         </div>
       </div>
