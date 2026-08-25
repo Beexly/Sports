@@ -15,7 +15,7 @@
  * length L keeps the within-block dependence intact, so the resampling
  * distribution picks up the Σ_{h>=1} γ(h) terms and the interval widens to
  * something honest. (The unit tests prove this: on an AR(1) series with
- * φ = 0.9 the L = 25 interval is materially wider than the L = 1 interval.)
+ * φ = 0.9 the L = 50 interval is materially wider than the L = 1 interval.)
  *
  * ALGORITHM (exactly as the contract specifies — no wrapping, no centring)
  *   1. n = values.length, L = blockLength, B = ceil(n / L).
@@ -33,6 +33,20 @@
  *      bootstrap estimate of E[statistic] and carries the bootstrap's own bias;
  *      reporting it as the point estimate would silently change what the number
  *      means.)
+ *
+ * KNOWN LIMITATION OF THE MANDATED (NON-WRAPPING) FORM — documented, not hidden
+ * Because starts are drawn from {0 … n − L} without wrapping, observation i is
+ * eligible for min(i + 1, L, n − L + 1, n − i) of the admissible blocks: the
+ * observations near BOTH ends of the series appear in strictly fewer blocks
+ * than the interior ones. E*[resample statistic] is therefore a slightly
+ * end-down-weighted version of the sample statistic. The tilt is O(L / n) and
+ * disappears as L/n → 0 (the regime the method is defined for); at large L/n —
+ * say L = 60 on n = 150 — it can exceed the interval half-width, so the
+ * percentile band may sit entirely to one side of `point`. The circular block
+ * bootstrap (Politis & Romano) removes this by wrapping, which this contract
+ * explicitly forbids. The interval is NOT recentred on `point` to paper over
+ * it: recentring would fabricate coverage the resampling distribution does not
+ * support. Both behaviours are pinned by tests. Choose L ≪ n.
  *
  * PURITY
  * The only randomness is `options.rng`. The input array is never mutated and a
@@ -171,7 +185,13 @@ export const blockBootstrap: BlockBootstrapFn = (
     assertFinite(values[i]!, `values[${i}]`);
   }
 
-  const point = statistic(values);
+  // Defensive copy: `statistic` is caller-supplied and the most natural
+  // statistics to bootstrap (median, trimmed mean, any quantile) sort in place.
+  // Handing it `values` directly would reorder the CALLER's array — and this is
+  // a time-ordered series, so a silent reorder destroys the very
+  // autocorrelation the block form exists to preserve, corrupting every
+  // resample drawn afterwards.
+  const point = statistic(values.slice());
   if (!Number.isFinite(point)) {
     throw new KernelError(
       "NOT_FINITE",
