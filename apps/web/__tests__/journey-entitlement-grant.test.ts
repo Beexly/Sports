@@ -424,7 +424,10 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     mocks.constructEvent.mockReturnValue(
       stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
     );
-    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+    // The authoritative re-check in the payment_failed handler asks Stripe for
+    // the CURRENT status: this scenario is a subscription Stripe really does
+    // report as in dunning, so the guarded write below is the one under test.
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "past_due" }));
 
     const res = await POST(webhookRequest());
 
@@ -455,7 +458,10 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     mocks.constructEvent.mockReturnValue(
       stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
     );
-    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+    // The authoritative re-check in the payment_failed handler asks Stripe for
+    // the CURRENT status: this scenario is a subscription Stripe really does
+    // report as in dunning, so the guarded write below is the one under test.
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "past_due" }));
 
     await POST(webhookRequest());
 
@@ -495,7 +501,10 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     mocks.constructEvent.mockReturnValue(
       stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
     );
-    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+    // The authoritative re-check in the payment_failed handler asks Stripe for
+    // the CURRENT status: this scenario is a subscription Stripe really does
+    // report as in dunning, so the guarded write below is the one under test.
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "past_due" }));
 
     const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
