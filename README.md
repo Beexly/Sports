@@ -39,11 +39,42 @@ an admin login. They assume Postgres is available locally; everything past
 
 ### 1. Prerequisites
 
-- Node.js >= 20, npm >= 10
+- **Node.js 20** (see [Node version](#node-version) — newer majors pass locally
+  and fail CI), npm >= 10
 - A local Postgres instance (Docker, Homebrew, or `docker compose up postgres`
   from `docker/`)
 - A Google OAuth client (only required for sign-in; takes ~3 min in Google
   Cloud Console — set the redirect to `http://localhost:3000/api/auth/callback/google`)
+
+#### Node version
+
+**Every CI job runs Node 20.** `.nvmrc` pins it, so:
+
+```bash
+nvm use            # or: fnm use / asdf install
+node --version     # expect v20.x
+```
+
+This matters more than it looks. `engines.node` says `>=20.0.0`, so npm stays
+quiet on Node 21/22/24 and the whole local suite — `npm test`, `npm run
+typecheck`, `npm run lint`, `npm run guardrails` — goes green on a runtime CI
+never uses. Anything that touches an API added after Node 20 then fails in CI
+and nowhere else. Verified examples of that gap: `module.registerHooks` and
+native TypeScript type-stripping (`node foo.ts`) both work on v22.22.2 and
+throw on v20.20.2.
+
+`npm run guard:node-version-parity` checks that the pins agree and scans
+Node-executed sources for post-20 APIs. It prints a NOTICE whenever the runtime
+you are on differs from the CI pin; `--strict-runtime` turns that into a
+failure. Its API list is hand-maintained and partial — **running the checks on
+Node 20 is the real verification**, the guard is only a fast tripwire.
+
+If your Node 20 lives somewhere other than your version manager's default, put
+it in front for a single command rather than switching globally:
+
+```bash
+PATH=/path/to/node20/bin:$PATH npm test
+```
 
 ### 2. Install + env
 
