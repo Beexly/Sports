@@ -5,7 +5,7 @@
  * persisted.
  */
 
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 import { detectBannedLanguage } from "@/lib/pick-explainer/policy";
 
 export const LOSS_ROOT_CAUSES = [
@@ -89,8 +89,9 @@ export function parseLossAutopsyDraft(raw: string, groundingText?: string): Loss
   if (!CITATION.test(body)) failures.push("MISSING_CITATION");
   if (detectBannedLanguage([headline, body].join("\n")).length > 0) failures.push("BANNED_LANGUAGE");
   if (groundingText !== undefined) {
-    const allowed = extractNumericClaims(groundingText).map((c) => c.value);
-    if (!validateNumericClaims([headline, body].join("\n"), { allowed }).grounded) {
+    // Hand the guard the grounding TEXT, not a flattened list of values — the
+    // KIND of each number lives in its label. See lib/claude-api/numeric-guard.ts.
+    if (!validateNumericClaims([headline, body].join("\n"), { text: groundingText }).grounded) {
       failures.push("UNGROUNDED_NUMERIC");
     }
   }
