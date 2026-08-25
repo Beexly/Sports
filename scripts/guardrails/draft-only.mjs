@@ -31,8 +31,12 @@ const WHITELIST_FILES = new Set([
   "packages/db/prisma/schema.prisma",
   "packages/db/prisma/seed.ts",
   "scripts/guardrails/draft-only.mjs",
-  // Founder-approved exception (see CLAUDE.md's Elite tier — "real-time
-  // email & push alerts"): this is a per-USER transactional notification
+  // Founder-approved exception (see CLAUDE.md's Elite tier — "graded-pick
+  // email & push alerts"). The earlier "real-time email & push alerts" wording
+  // this comment cited was retired by ff4626fec / PR #587 as an unbacked
+  // delivery-speed claim. The exception does NOT rest on that wording; it rests
+  // on the substantive grounds below, which are unchanged:
+  // this is a per-USER transactional notification
   // channel, not the autonomous social/email/SMS content-publishing path
   // this guardrail exists to catch. It is triple-gated (WATCHLIST_ALERTS_ENABLED
   // kill switch, GRADED-only picks, Elite-only recipients — see
