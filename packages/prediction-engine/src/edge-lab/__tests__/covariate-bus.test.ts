@@ -187,3 +187,52 @@ describe("avgYac covariate", () => {
     expect(cell).toBeNull();
   });
 });
+
+describe("latestPriorRow — non-finite weeks fail CLOSED (leak wall)", () => {
+  // Regression: the ordering guard `week >= kickoffWeek` cannot reject a NaN,
+  // because every comparison against NaN is false. Before the finite checks
+  // were added, a NaN/undefined kickoffWeek ADMITTED week-17 rows as
+  // "strictly prior" — future data leaking into a pre-kickoff covariate.
+  const future = rx({ week: 17, avgSeparation: 99 });
+
+  it("rejects every row when kickoffWeek is NaN", () => {
+    expect(latestPriorRow([future], future.gsisId, 2024, "receiving", NaN)).toBeNull();
+  });
+
+  it("rejects every row when kickoffWeek is undefined at runtime", () => {
+    const kickoff = undefined as unknown as number;
+    expect(latestPriorRow([future], future.gsisId, 2024, "receiving", kickoff)).toBeNull();
+  });
+
+  it("rejects every row when kickoffWeek is Infinity", () => {
+    // Infinity would otherwise admit the whole season as "prior".
+    expect(
+      latestPriorRow([future], future.gsisId, 2024, "receiving", Number.POSITIVE_INFINITY),
+    ).toBeNull();
+  });
+
+  it("skips a poisoned NaN-week row but still returns a legitimate prior row", () => {
+    const poisoned = rx({ week: NaN, avgSeparation: 99 });
+    const legit = rx({ week: 3, avgSeparation: 2.2 });
+    const row = latestPriorRow([poisoned, legit], legit.gsisId, 2024, "receiving", 5);
+    expect(row?.week).toBe(3);
+    expect(row?.avgSeparation).toBe(2.2);
+  });
+
+  it("a NaN-week row alone yields null rather than becoming the best row", () => {
+    const poisoned = rx({ week: NaN, avgSeparation: 99 });
+    expect(latestPriorRow([poisoned], poisoned.gsisId, 2024, "receiving", 5)).toBeNull();
+  });
+
+  it("nextGameCovariate inherits the closed wall (no future value surfaces)", () => {
+    const cell = nextGameCovariate(
+      [future],
+      future.gsisId,
+      2024,
+      NaN,
+      "receiving",
+      "avgSeparation",
+    );
+    expect(cell).toBeNull();
+  });
+});

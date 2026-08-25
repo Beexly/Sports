@@ -1,8 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { computeTprBacktest, type TprRow } from "../tpr-backtest.js";
 
-function row(overrides: Partial<TprRow>): TprRow {
-  return { playerId: "SYNTH-001", season: 2024, week: 1, targets: 0, routes: 0, ...overrides } as TprRow;
+/**
+ * `targets` and `routes` are the two fields with no sensible default — they are
+ * what each case actually varies — so they stay required. The identity fields
+ * go through `Partial` rather than being intersected in as required: as
+ * required they would force every call site to restate the very defaults this
+ * helper exists to supply, and would make the spread below a guaranteed
+ * overwrite of the literal that precedes it.
+ */
+function row(overrides: Partial<TprRow> & Pick<TprRow, "targets" | "routes">): TprRow {
+  return { playerId: "SYNTH-001", season: 2024, week: 1, ...overrides };
 }
 
 describe("tpr-backtest — SYNTHETIC property tests", () => {
@@ -21,7 +29,7 @@ describe("tpr-backtest — SYNTHETIC property tests", () => {
     const a = computeTprBacktest(rows);
     const b = computeTprBacktest(rows);
     expect(a[0]!.smoothedRate).toBe(b[0]!.smoothedRate);
-    expect(a.map((r) => r.signal!)).toEqual(b.map((r) => r.signal!));
+    expect(a.map((r) => r.signal)).toEqual(b.map((r) => r.signal));
   });
   it("signal = smoothed rate minus season baseline (SYNTHETIC)", () => {
     // 2 rows same player/season; season total = 30 targets / 60 routes => baseline ~0.467
