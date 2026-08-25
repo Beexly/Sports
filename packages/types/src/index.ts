@@ -19,6 +19,9 @@ export type RiskLevel =
 
 export * from "./ladder.js";
 export * from "./heartbeat.js";
+// The Edge Index scale and the pick-grade ladder each live in exactly one file.
+export * from "./edge-index.js";
+export * from "./pick-grade.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -213,16 +216,11 @@ export function getEntitlements(tier: SubscriptionTier): Entitlements {
 // ============================================================
 // Pick grade helpers
 // ============================================================
-
-export function computePickGrade(
-  confidence: number,
-  edgeScore: number
-): PickGrade {
-  if (confidence >= 85 && edgeScore >= 80) return "ELITE_PLAY";
-  if (confidence >= 75 && edgeScore >= 65) return "STRONG_PLAY";
-  if (confidence >= 65 && edgeScore >= 50) return "SOLID_PLAY";
-  return "LEAN";
-}
+//
+// `computePickGrade`, `GRADE_THRESHOLDS`, `isFeaturedPromotionEligible` and
+// `UNPRICED_MAX_GRADE` moved to ./pick-grade.ts and are re-exported above.
+// They used to live here as bare literals duplicated against a `GRADE_THRESHOLDS`
+// constant in @sports/prediction-engine that nothing read. One ladder now.
 
 export const PICK_GRADE_LABELS: Record<PickGrade, { label: string; color: string; bgColor: string }> = {
   ELITE_PLAY:  { label: "Elite Play",  color: "text-plasma",     bgColor: "bg-plasma/10"     },

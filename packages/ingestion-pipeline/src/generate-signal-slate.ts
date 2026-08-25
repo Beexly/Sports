@@ -20,7 +20,9 @@ import type {
   FactorBreakdown,
   IndependentEdgeSummary,
   IndependentMarketFairValue,
+  PickGrade,
 } from "@sports/types";
+import { computePickGrade } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
 
 export type SignalSlateResult = {
@@ -75,10 +77,27 @@ export function blendIndependentHomeFair(
   return { homeP: clamp01(homeP), sources: pairs.map((p) => p.s) };
 }
 
-function pickGradeFromConfidence(confidence: number): "STRONG_PLAY" | "SOLID_PLAY" | "LEAN" {
-  if (confidence >= 80) return "STRONG_PLAY";
-  if (confidence >= 65) return "SOLID_PLAY";
-  return "LEAN";
+/**
+ * Grade a signal-slate pick through THE shared grading function.
+ *
+ * This file used to run its own third ladder (confidence ≥ 80 → STRONG_PLAY,
+ * ≥ 65 → SOLID_PLAY), writing the same words into the same `pickGrade` column
+ * the market board writes, with different cut-points and no market involved at
+ * all. One site, one word, two meanings.
+ *
+ * Signal picks have no book line — `bookmakerCount: 0`, `marketFairProb: null`
+ * — so there is no Edge Index to grade against. That is expressed by passing
+ * `null`, which `computePickGrade` handles explicitly: confidence rungs apply,
+ * and the result is capped at `UNPRICED_MAX_GRADE` because the rungs above it
+ * are claims about the PRICE and there is no price to make them about.
+ *
+ * Net effect versus the retired local ladder: a confidence ≥ 80 signal now
+ * grades SOLID_PLAY instead of STRONG_PLAY. Strictly more conservative — no
+ * signal pick gains a rung, and one class of pick loses the rung it should never
+ * have been able to claim without a market.
+ */
+export function gradeSignalPick(confidence: number): PickGrade {
+  return computePickGrade(confidence, null);
 }
 
 /**
@@ -185,7 +204,7 @@ export async function generateSignalSlate(opts?: {
     const chosenTeam = homeChosen ? homeTeam : awayTeam;
     const rankingP = trueProb;
     const edgePts = Math.max(0, Math.round((trueProb - 0.5) * 100));
-    const pickGrade = pickGradeFromConfidence(confidence);
+    const pickGrade = gradeSignalPick(confidence);
     const tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
     const sources = blend.sources;
     const sourcesLabel = sources.join(", ");

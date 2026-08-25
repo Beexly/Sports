@@ -22,7 +22,15 @@
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
 // v5.2.7 (2026-08-22): Skellam ATS cover → SPREAD rankingP on Poisson sports.
 // Heuristic confidence / composite weights UNCHANGED. Maps still OFF.
-export const MODEL_VERSION = "v5.2.7";
+// v5.3.0 (2026-08-25): Edge Index published on its FULL honest range —
+// EdgeIndex = clamp(round(100 + 2000 × rawEdge), 0, 100), so 100 is a fair
+// price and ~50 an ordinary −110/−110 two-way. The retired half scale put a
+// fair price at 50 and left 50–100 structurally unreachable. Confidence,
+// tier, ranking and every composite weight are UNCHANGED — only the published
+// index and the grades keyed off it move. Stored values stamped ≤ v5.2.7 are on
+// the half scale; convert with legacyHalfScaleToCurrent (@sports/types).
+// See docs/calibration-proposals/2026-08-25-edge-index-full-scale-v5.3.0.md.
+export const MODEL_VERSION = "v5.3.0";
 
 // ============================================================
 // Confidence thresholds
@@ -33,12 +41,13 @@ export const MIN_PUBLISH_CONFIDENCE = 50;
 // ============================================================
 // Pick grade thresholds
 // ============================================================
-export const GRADE_THRESHOLDS = {
-  ELITE_PLAY:  { confidence: 85, edge: 80 },
-  STRONG_PLAY: { confidence: 75, edge: 65 },
-  SOLID_PLAY:  { confidence: 65, edge: 50 },
-  // Below these = LEAN
-} as const;
+// SINGLE SOURCE OF TRUTH: the ladder lives in `@sports/types`' `pick-grade.ts`,
+// beside `computePickGrade` — the one function that turns a (confidence,
+// Edge Index) pair into a grade. It was declared here too, with the same numbers
+// duplicated as bare literals inside `computePickGrade`; nothing ever read this
+// copy, so editing it changed no grade. Re-exported, not redeclared, so the
+// historical import path resolves to the one live definition.
+export { GRADE_THRESHOLDS } from "@sports/types";
 
 // ============================================================
 // Scoring component weights (sum to 100 max)
