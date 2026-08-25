@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -18,7 +19,10 @@ export default async function AdminPage() {
   ] = await Promise.all([
     db.user.count(),
     db.subscription.count({ where: { status: { in: ["ACTIVE", "TRIALING"] }, tier: { not: "FREE" } } }),
-    db.pick.count({ where: { generatedAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } } }),
+    // "Today" is the ONE platform day (UTC calendar day — lib/time/day-boundary.ts).
+    // Was `setHours(0,0,0,0)`, which anchored this operator count on the AMBIENT
+    // process timezone while sibling surfaces used an explicit UTC midnight.
+    db.pick.count({ where: { generatedAt: { gte: utcDayWindow(new Date()).start } } }),
     db.ingestionRun.findFirst({ orderBy: { startedAt: "desc" } }),
     db.blogPost.count({ where: { status: "PUBLISHED" } }),
   ]);

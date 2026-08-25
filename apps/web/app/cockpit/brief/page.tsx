@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@sports/db";
-import { startOfDay, endOfDay, subDays } from "date-fns";
+import { subDays } from "date-fns";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 import {
   composeBrief,
   type BriefPickInput,
@@ -24,11 +25,13 @@ export const dynamic = "force-dynamic";
 
 export default async function CockpitBriefPage() {
   const now = new Date();
+  // ONE day definition (UTC calendar day — lib/time/day-boundary.ts).
+  const today = utcDayWindow(now);
 
   const [pickRows, settledRows, movedGames, promoRows, taskRows] = await Promise.all([
     db.pick
       .findMany({
-        where: { isPublished: true, generatedAt: { gte: startOfDay(now), lte: endOfDay(now) } },
+        where: { isPublished: true, generatedAt: { gte: today.start, lte: today.endInclusive } },
         include: { game: { include: { sport: { select: { name: true } } } } },
         orderBy: { generatedAt: "desc" },
         take: 80,

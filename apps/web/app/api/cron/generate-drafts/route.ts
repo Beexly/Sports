@@ -27,7 +27,8 @@
 
 import { NextResponse } from "next/server";
 import { db } from "@sports/db";
-import { startOfDay, endOfDay, subDays } from "date-fns";
+import { subDays } from "date-fns";
+import { utcDayKey, utcDayWindow } from "@/lib/time/day-boundary";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { getReadinessGates } from "@sports/prediction-engine";
 import {
@@ -98,8 +99,15 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   const now = new Date();
-  const dayStart = startOfDay(now);
-  const dayEnd = endOfDay(now);
+  // ONE day definition (UTC calendar day — lib/time/day-boundary.ts). This
+  // route's per-day IDEMPOTENCY SLUGS were already UTC keys
+  // (`toISOString().slice(0, 10)`) while the content windows they describe came
+  // from a runtime-local date-fns day. Under a non-UTC process timezone a draft
+  // slugged for one day summarised a different day's picks — and the
+  // "already generated today" short-circuit keyed off the other day again.
+  const today = utcDayWindow(now);
+  const dayStart = today.start;
+  const dayEnd = today.endInclusive;
 
   const daily = await generateDailyBrief(now, dayStart, dayEnd);
 
@@ -148,7 +156,7 @@ async function generateDailyBrief(
   dayStart: Date,
   dayEnd: Date,
 ): Promise<DraftOutcome> {
-  const isoDate = now.toISOString().slice(0, 10);
+  const isoDate = utcDayKey(now);
   const slug = `daily-slate-brief-${isoDate}`;
 
   const existing = await db.contentDraft
@@ -214,7 +222,7 @@ async function generateDailyBrief(
 }
 
 async function generateWeeklyRecap(now: Date, dayStart: Date): Promise<DraftOutcome> {
-  const isoDate = now.toISOString().slice(0, 10);
+  const isoDate = utcDayKey(now);
   const slug = `weekly-transparency-recap-${isoDate}`;
 
   const existing = await db.contentDraft
@@ -293,7 +301,7 @@ async function generateQuietBoardDraft(
   dayStart: Date,
   dayEnd: Date,
 ): Promise<DraftOutcome> {
-  const isoDate = now.toISOString().slice(0, 10);
+  const isoDate = utcDayKey(now);
   const slug = `why-board-quiet-${isoDate}`;
 
   const existing = await db.contentDraft
@@ -364,8 +372,10 @@ async function generateQuietBoardDraft(
 }
 
 async function generateHonestRecord(now: Date): Promise<DraftOutcome> {
-  const yesterday = subDays(now, 1);
-  const dateIso = yesterday.toISOString().slice(0, 10);
+  // Yesterday's platform day — same shared UTC definition, so the slug key and
+  // the settled-at window below cannot describe different days.
+  const yesterdayDay = utcDayWindow(now, -1);
+  const dateIso = yesterdayDay.key;
   const slug = `honest-record-${dateIso}`;
 
   const existing = await db.contentDraft
@@ -375,8 +385,8 @@ async function generateHonestRecord(now: Date): Promise<DraftOutcome> {
     return { slug, created: false, skipped: true, reason: "already generated" };
   }
 
-  const yStart = startOfDay(yesterday);
-  const yEnd = endOfDay(yesterday);
+  const yStart = yesterdayDay.start;
+  const yEnd = yesterdayDay.endInclusive;
   const canonicalSettledWhere = {
     isPublished: true,
     isBootstrap: false,
@@ -434,8 +444,8 @@ async function generateHonestRecord(now: Date): Promise<DraftOutcome> {
 
   const record = buildHonestRecordDraft({
     yesterday: settled,
-    killLedger: rotateKillLedgerFeature(yesterday),
-    bookGrade: rotateBookGradeHighlight(yesterday),
+    killLedger: rotateKillLedgerFeature(yesterdayDay.start),
+    bookGrade: rotateBookGradeHighlight(yesterdayDay.start),
     generatedBy: "cron:generate-drafts",
     slug,
     sources,
