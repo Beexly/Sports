@@ -33,12 +33,13 @@ export const MIN_PUBLISH_CONFIDENCE = 50;
 // ============================================================
 // Pick grade thresholds
 // ============================================================
-export const GRADE_THRESHOLDS = {
-  ELITE_PLAY:  { confidence: 85, edge: 80 },
-  STRONG_PLAY: { confidence: 75, edge: 65 },
-  SOLID_PLAY:  { confidence: 65, edge: 50 },
-  // Below these = LEAN
-} as const;
+// SINGLE SOURCE OF TRUTH: the ladder is defined in `@sports/types`, next to
+// `computePickGrade` — the only function that turns (confidence, edgeScore)
+// into a grade. It used to be declared here as well, with the same numbers
+// duplicated as bare literals inside `computePickGrade`; nothing ever read this
+// copy, so editing it changed no grade. Re-exported (not redeclared) so the
+// historical import path keeps working against the one live definition.
+export { GRADE_THRESHOLDS } from "@sports/types";
 
 // ============================================================
 // Scoring component weights (sum to 100 max)
