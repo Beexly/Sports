@@ -24,7 +24,7 @@ The pasted sales-psychology funnel is half useful, half **toxic to our brand**. 
 - **ADOPT (honest, and stronger):**
   - Real **social proof = the cryptographically-verifiable track record** (`proof-of-record.ts`) — more
     convincing AND honest than any tout claim.
-  - Honest **loss-aversion via feature gating** (Free: 1 pick/day, no confidence scores) — already the model.
+  - Honest **loss-aversion via feature gating** (Free: capped daily teaser, no confidence scores) — already the model.
   - **Tier anchoring** (Elite/Pro/Free already priced); **reciprocity** (free public calibration + track record);
     **authority** via published methodology, not hype.
 - **REJECT (these are BANNED by our copy scanners / honesty doctrine):**

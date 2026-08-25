@@ -9,6 +9,9 @@ during the silent-collection phase (before `PUBLIC_PICKS_ENABLED=true`).
 **Reply-to:** `hq@galaxysportsedge.com` — every reply lands in my inbox
 **Brand-safety:** No banned phrases (per Brand Use Pack §8). No win-rate claims.
 **Stack target:** Resend / Postmark / Loops — any provider with personalization.
+**Prices:** re-check every figure against `apps/web/lib/pricing/pricing-phases.ts`
+before a send. These templates quote the FOUNDING rung; the ladder advances by
+operator action, and a sent email cannot be corrected.
 
 ---
 
@@ -175,7 +178,7 @@ the future is settled.
 
 **Subject (A):** The board is open. First signals are live.
 **Subject (B):** {{first_name}}, the Signal Feed just opened.
-**Preheader:** Free plan gets one signal a day. Pro and Elite unlock everything.
+**Preheader:** Free plan gets the daily signal teaser. Pro and Elite unlock everything.
 
 ---
 
@@ -189,14 +192,15 @@ NBA, NCAAB, MLB, NHL, MLS), 30-minute refresh loop.
 
 **See today's signals:** https://galaxysportsedge.com/picks
 
-You're on the Free plan, which gets one signal per day — the
-highest-Edge-Index signal of the slate, with the matchup and pick type
+You're on the Free plan, which gets the daily teaser — the two
+highest-Edge-Index signals of the slate, with the matchup and pick type
 visible but the confidence rating and factor trail gated.
 
 If you want to see every signal with its reasoning attached:
 https://galaxysportsedge.com/pricing
 
-Pro is $19/mo. Elite is $49/mo. Every paid plan has a 7-day refund window.
+Pro is $14.99/mo ($99/yr). Elite is $24.99/mo ($179/yr). Every paid plan
+has a 7-day refund window.
 
 That's the whole pitch. The product does the talking from here.
 

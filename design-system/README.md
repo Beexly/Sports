@@ -14,7 +14,7 @@ Galaxy Sports Edge is a production-grade sports picks platform with:
 - **Real odds ingestion** from dozens of sportsbooks (every 30 min)
 - **Algorithmic pick scoring** with calibrated 0–100 confidence + edge scoring
 - **Transparent methodology** — every pick exposes its factor breakdown
-- **Subscription tiers** (Free / Pro $19 / Elite $49)
+- **Subscription tiers** (Free / Fantasy / Pro / Elite — amounts live in `apps/web/lib/pricing/pricing-phases.ts`, never in a mock)
 - **AI-assisted content & insight panels** (data-backed, never source of truth)
 - **Published track record** — wins, losses, pushes, all public
 
@@ -82,7 +82,7 @@ preview/                 ← Design System tab cards
 | Hero / marketing | **Cinematic editorial** | *"Data-driven sports picks, powered by real odds."* |
 | Pick cards / UI | **Terminal-precise** | *"EDGE 72 · CONF 81% · 5pt sharp move"* |
 | Reasoning copy | **Analyst notes** | *"Sharp money on the under since open. Three-book consensus."* |
-| Paywall / upgrade | **Direct, no manipulation** | *"Unlock confidence scores and full reasoning. $19/mo."* |
+| Paywall / upgrade | **Direct, no manipulation** | *"Unlock confidence scores and full reasoning."* — bind any price in the copy to the phase module, never type one |
 | Errors / empty | **Brief, honest** | *"No picks for this date. Picks generate when games are scheduled."* |
 | Disclaimer | **Plain, serious** | *"We do not guarantee outcomes. Please gamble responsibly."* |
 
