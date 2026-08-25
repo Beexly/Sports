@@ -47,15 +47,23 @@ gaps, undervalued items, and polish needs.
 
 ## Remaining next candidates
 
-1. Feed extremization-tuner output into consensus geometric mode (per-dataset γ
-   instead of hardcoded 1).
-2. Wire mmc-contribution into earned-weight/Brier-OGD weight updates as a
-   tiebreaker for herd-tracking sources.
-3. Live-data lane per review-platform-catalog.md zero-cost list: Manifold
-   `/v0/markets` and Polymarket Gamma reads feeding clv-capture/hawkes-steam.
-4. Bibliography's corrected EV-detector (vig-stripped) and CLV tracker
-   (absolute normalization, N>30 gating) — implement only from the review
-   file's stronger variants, not the original formulas.
+1. ~~Feed extremization-tuner output into consensus geometric mode~~ → shipped
+   2026-08-25 (evening): `computeConsensus(..., { mode: "geometric",
+   extremizationGamma })`; γ fail-closed validation; arithmetic path untouched.
+2. ~~Wire mmc-contribution into earned-weight/Brier-OGD weight updates~~ →
+   shipped 2026-08-25 (evening): `mmc-tiebreak.ts` post-hoc multiplicative tilt
+   `w' ∝ w·exp(λ·MMC)` with simplex re-projection; λ=0 exact identity; null-MMC
+   members excluded honestly. Fixture lesson recorded: deterministic alternating
+   outcome streams make every column share one rank order → MMC correctly nulls;
+   fixtures need genuine rank divergence.
+3. Live-data lane per review-platform-catalog.md zero-cost list — groundwork
+   shipped 2026-08-25 (evening): `market-quote-adapters.ts` pure parsers for
+   Manifold `/v0/markets` (BINARY `probability`) and Polymarket Gamma
+   (`outcomePrices`/book), both live-verified no-auth on 2026-08-25. Remaining:
+   a fetch script + persistence and wiring into clv-capture/hawkes-steam.
+4. Bibliography's corrected EV-detector and CLV tracker → shipped 2026-08-25
+   (evening) as `ev-detector.ts` (proportional devig + EV-per-unit + Kelly) and
+   `clv-tracker.ts` (absolute CLV, N>30 gate, stake-weighted mean/z).
 
 ## How to consume this directory
 
