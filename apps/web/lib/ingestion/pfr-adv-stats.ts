@@ -160,8 +160,14 @@ export async function ingestPfrAdvStats(
   if (data.length === 0) {
     return { status: "source-error", season, statType, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.pfrAdvStat.deleteMany({ where: { season, statType } });
-  const created = data.length > 0 ? await db.pfrAdvStat.createMany({ data }) : null;
+  // ATOMIC (season, statType) REPLACE — see snap-counts.ts for the full
+  // rationale. As two separate awaits, a failure between them leaves this
+  // season+statType slice DELETED and never re-inserted, and a retry re-enters
+  // the same delete-first path so it cannot self-heal.
+  const [, created] = await db.$transaction([
+    db.pfrAdvStat.deleteMany({ where: { season, statType } }),
+    db.pfrAdvStat.createMany({ data }),
+  ]);
 
   return { status: "ok", season, statType, rowsWritten: created?.count ?? data.length };
 }
