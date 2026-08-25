@@ -122,6 +122,10 @@ export interface ProcessSportResult {
   provider?: string;
   /** Raw events accepted before freshness filter. */
   eventsCount?: number;
+  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
+  lineSnapshotsPersisted?: number;
+  /** Games whose line-archive capture reported an error this cycle. */
+  lineArchiveErrors?: number;
   /** The-Odds-API's own x-requests-remaining from this cycle's primary call,
    *  when one was made. Lets a multi-sport caller stop early instead of
    *  blindly burning the rest of a near-exhausted monthly credit budget. */
@@ -605,6 +609,11 @@ export async function processSport(
     // MONEYLINE is stored per side (home/away are not complementary).
     const dispersionByGame = new Map<string, GameDispersion>();
 
+    // Glass-Ledger line-archive outcome for this cycle. Surfaced on the result
+    // so refresh-odds reports it instead of silently swallowing archive errors.
+    let lineSnapshotsPersisted = 0;
+    let lineArchiveErrors = 0;
+
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
@@ -618,12 +627,22 @@ export async function processSport(
       // new Odds API calls.
       const propSnap = eventOddsByExternalId.get(game.externalId);
       const propRows = propSnap ? toPropLineSnapshotRows(propSnap as PropEventLike) : [];
-      await captureLineSnapshotsIfEnabled({
+      const lineArchive = await captureLineSnapshotsIfEnabled({
         db,
         gameId: gameRecord.id,
         capturedAt: fetchedAt,
         rows: [...toLineSnapshotRows(gameOdds), ...propRows],
       });
+      lineSnapshotsPersisted += lineArchive.persisted;
+      if (lineArchive.error) {
+        // The callee never throws; it reports failure in `error`. Discarding it
+        // meant a broken archive looked byte-identical to a disabled one.
+        lineArchiveErrors++;
+        console.warn(
+          `${logPrefix} ${sport.key}: line-archive capture failed for game ` +
+          `${gameRecord.id} — ${lineArchive.error}`,
+        );
+      }
 
       // Capture the book-line dispersion (max−min across books) per kind NOW,
       // while every book's line for this game is in hand. It is the CLV
@@ -1040,6 +1059,8 @@ export async function processSport(
       provider: oddsProviderTag,
       eventsCount: events.length,
       note: emptyNote,
+      lineSnapshotsPersisted,
+      lineArchiveErrors,
       oddsApiRemainingRequests: remainingRequests ?? undefined,
     };
   } catch (err) {
