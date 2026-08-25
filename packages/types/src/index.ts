@@ -260,7 +260,18 @@ export interface OddsApiOutcome {
 
 export interface OddsApiMarket {
   key: "h2h" | "spreads" | "totals";
-  last_update: string;
+  /**
+   * UPSTREAM market timestamp — NEVER the local clock.
+   *
+   * Optional because free-path adapters (ESPN public JSON, TheRundown v1 blobs)
+   * expose no per-market update time. Those adapters MUST omit this field rather
+   * than substitute `new Date()`: a locally-stamped timestamp is always "fresh"
+   * by construction, which defeats the anti-tautology freshness gate in
+   * `DataNormalizer.freshGameIds` and can resurrect a days-stale primary book as
+   * a fresh 2-book consensus. `undefined` correctly reads as
+   * not-provably-fresh (fail-safe).
+   */
+  last_update?: string;
   outcomes: OddsApiOutcome[];
 }
 
@@ -271,6 +282,8 @@ export interface OddsApiBookmaker {
    * Optional in practice: real payloads have arrived without the
    * bookmaker-level timestamp. Consumers must fall back to the market-level
    * `last_update` (also upstream truth) before treating a row as unparseable.
+   *
+   * UPSTREAM truth only — never the local clock (see `OddsApiMarket.last_update`).
    */
   last_update?: string;
   markets: OddsApiMarket[];
