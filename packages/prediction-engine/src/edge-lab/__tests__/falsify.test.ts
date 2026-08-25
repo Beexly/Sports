@@ -46,16 +46,57 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
     expect(res.leakage.detail).toContain("lookahead");
   });
 
-  it("pure-noise outcomes fail shuffle", () => {
-    // Random outcomes independent of any model => shuffle should kill
+  it("SHUFFLE GATE IS FAIL-OPEN ON ZERO-EFFECT DATA (documented defect)", () => {
+    /**
+     * The old fixture was not noise. It set
+     *   outcome:   i % 3 === 0 ? 1 : 0
+     *   modelProb: i % 3 === 0 ? 0.8 : 0.2
+     * so modelProb was a DETERMINISTIC FUNCTION of outcome — a perfect
+     * in-sample predictor. The shuffle gate correctly returned PASS, and the
+     * assertion (`["PASS","KILLED"].includes(...)`) accepted that without
+     * complaint, so a test named "pure-noise outcomes fail shuffle" was in fact
+     * demonstrating the opposite and passing. Nothing anywhere checked that the
+     * shuffle gate can kill.
+     *
+     * Genuine noise: modelProb varies on a 5-cycle, outcome on a 2-cycle. The
+     * periods are coprime, so across 120 rows every modelProb level meets both
+     * outcomes equally often and the association is exactly zero by
+     * construction — deterministic, and honestly uninformative.
+     */
     const noise: BacktestRow[] = [];
     for (let i = 0; i < 120; i++) {
-      // Mean effect near 0 but row-level signal random => shuffle kills
-      noise.push(synRow({ outcome: i % 3 === 0 ? 1 : 0, modelProb: i % 3 === 0 ? 0.8 : 0.2, marketProb: 0.5 }));
+      noise.push(
+        synRow({
+          outcome: (i % 2) as 0 | 1,
+          modelProb: 0.3 + (i % 5) * 0.1,
+          marketProb: 0.5,
+        }),
+      );
     }
     const res = falsifyBind(noise, { minN: 10, shuffleB: 200, seed: 42 });
-    expect(["PASS", "KILLED"].includes(res.shuffle.verdict)).toBe(true);
+
+    /**
+     * THIS ASSERTION RECORDS A DEFECT, NOT DESIRED BEHAVIOUR.
+     *
+     * On genuinely zero-association data the gate returns PASS — it cannot kill
+     * pure noise, which is the one thing a permutation test exists to do.
+     *
+     * The cause is a tie comparison at falsify.ts:102:
+     *     if (Math.abs(origES) >= Math.abs(permES)) survive++;
+     * PASS requires `survive >= 0.95 * shuffleB`. When the true effect is zero,
+     * every permutation reproduces the same effect size, so `origES === permES`
+     * and the `>=` counts EVERY permutation as a survival: 200/200 → PASS. The
+     * conventional permutation p-value counts the opposite tail
+     * (#{|permES| >= |origES|}) and would report p ≈ 1 here, i.e. KILLED.
+     *
+     * Left as PASS deliberately rather than "fixed" in a test: changing `>=` to
+     * `>` alters the verdict of every bind that has been through this funnel,
+     * including the YACoe kill, so it is the owner's call, not a test edit.
+     * Flip this assertion to KILLED in the same change that fixes the gate.
+     */
+    expect(res.shuffle.verdict).toBe("PASS");
     expect(res.shuffle.detail).toContain("original effect=");
+    expect(res.shuffle.detail).toContain("200/200");
   });
 
   it("sign-flipped second half fails split", () => {
@@ -83,7 +124,10 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
     expect(sigRes.multiplicity.verdict).toBe("PASS");
 
     // Noise => multiplicity KILLED (e decays)
-    const noise = cleanRows(150).map((r) => ({ ...r, modelProb: 0.5, marketProb: 0.5, outcome: Math.random() > 0.5 ? 1 : 0 }));
+    // Seeded: this asserts a specific verdict, so a random draw made it a coin
+    // flip on CI. Alternating outcomes give a mean effect of ~0 deterministically,
+    // which is exactly the "no edge" condition the multiplicity gate should kill.
+    const noise = cleanRows(150).map((r, i) => ({ ...r, modelProb: 0.5, marketProb: 0.5, outcome: (i % 2 === 0 ? 1 : 0) as 0 | 1 }));
     const noiseRes = falsifyBind(noise, { minN: 10, shuffleB: 50, seed: 42 });
     expect(noiseRes.multiplicity.verdict).toBe("KILLED");
   });
