@@ -174,15 +174,21 @@ export function covariateKey(gsisId: string, season: number, week: number, statT
  * per-game history exists before kickoff (fail-closed).
  *
  * NON-FINITE WEEKS FAIL CLOSED, and that needs its own test rather than falling
- * out of the ordering comparison. Every comparison against NaN is false, so
- * `r.week >= kickoffWeek` does not REJECT a NaN week — it ADMITS it. A guard
- * written only as an ordering test is fail-OPEN on precisely the values that
- * carry no ordering, so a poisoned week (a parser emitting NaN, a rate divided
- * by a zero snap count) would walk through the leak wall and become evidence
- * for a game it may postdate. Both sides are therefore checked for finiteness
- * up front: a non-finite `kickoffWeek` has no defined "before", so nothing is
- * eligible; a non-finite `r.week` cannot be located in time, so it is never
- * evidence for anything.
+ * out of the ordering comparison. Every comparison against NaN is false, so an
+ * ordering-only guard (`r.week >= kickoffWeek`) does not REJECT a NaN week — it
+ * ADMITS it. A guard written only as an ordering test is fail-OPEN on precisely
+ * the values that carry no ordering. With `kickoffWeek` NaN/undefined that made
+ * week-17 data pass as "strictly prior", leaking the future into a pre-kickoff
+ * covariate and silently invalidating every backtest built on top of this call.
+ * The same hole admits a poisoned row week (a parser emitting NaN, a rate
+ * divided by a zero snap count), which would walk through the leak wall and
+ * become evidence for a game it may postdate.
+ *
+ * Both sides are therefore checked for finiteness up front, BEFORE the ordering
+ * checks, precisely so that a non-finite week can never reach a comparison that
+ * would let it through: a non-finite `kickoffWeek` has no defined "before", so
+ * nothing is eligible; a non-finite `r.week` cannot be located in time, so it is
+ * never evidence for anything.
  */
 export function latestPriorRow(
   rows: readonly CovariateRow[],
@@ -191,6 +197,7 @@ export function latestPriorRow(
   statType: StatType,
   kickoffWeek: number,
 ): CovariateRow | null {
+  // A non-finite kickoff week has no defined "before", so nothing is eligible.
   if (!Number.isFinite(kickoffWeek)) return null;
   let best: CovariateRow | null = null;
   for (const r of rows) {

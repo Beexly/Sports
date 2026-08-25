@@ -247,6 +247,56 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     );
   });
 
+  // A resumable Stripe state must revoke ACCESS without stamping the TERMINAL
+  // status. The webhook's out-of-order resurrection guard refuses to re-grant a
+  // row it finds CANCELED, so writing CANCELED for `paused`/`incomplete` locks
+  // the member out permanently: they resume, Stripe sends `active`, the guard
+  // swallows it, and they pay while stuck on FREE. handleChargeRefunded already
+  // treats these statuses as LIVE for exactly this reason.
+  for (const [remote, expected] of [
+    ["paused", "PAUSED"],
+    ["incomplete", "INCOMPLETE"],
+  ] as const) {
+    it(`revokes access for Stripe "${remote}" as ${expected}, never terminal CANCELED`, async () => {
+      mocks.findMany.mockResolvedValue([
+        { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+      ]);
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: remote });
+
+      const summary = await reconcileEntitlements();
+
+      expect(summary.downgraded).toBe(1);
+      const call = mocks.updateMany.mock.calls.at(-1)?.[0] as {
+        data: { tier: string; status: string; canceledAt?: Date };
+      };
+      // Access is still revoked: tier FREE, and the status is outside the
+      // granting set (ACTIVE / TRIALING / PAST_DUE-in-grace).
+      expect(call.data.tier).toBe("FREE");
+      expect(call.data.status).toBe(expected);
+      expect(call.data.status).not.toBe("CANCELED");
+      // Not "canceled at" anything — a resumable row must not read as dead.
+      expect(call.data.canceledAt).toBeUndefined();
+    });
+  }
+
+  it("still stamps terminal CANCELED (with canceledAt) for genuinely dead statuses", async () => {
+    for (const remote of ["canceled", "incomplete_expired"] as const) {
+      mocks.updateMany.mockClear();
+      mocks.findMany.mockResolvedValue([
+        { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+      ]);
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status: remote });
+
+      await reconcileEntitlements();
+
+      const call = mocks.updateMany.mock.calls.at(-1)?.[0] as {
+        data: { status: string; canceledAt?: Date };
+      };
+      expect(call.data.status, `${remote} is terminal`).toBe("CANCELED");
+      expect(call.data.canceledAt).toBeInstanceOf(Date);
+    }
+  });
+
   it("downgrades when Stripe reports the subscription absent (resource_missing)", async () => {
     mocks.findMany.mockResolvedValue([
       { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "ELITE" },

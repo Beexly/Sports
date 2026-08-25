@@ -1,5 +1,5 @@
 # MORNING BRIEF — 2026-08-23 (Operation 100%, written early, updated at each checkpoint)
-Status: Garrett away. Runner restarts sessions; REGISTER (handoff/LAUNCH_GAP_REGISTER.md) + this file are memory.
+Status: Garrett away. Runner restarts sessions; REGISTER (handoff/OPERATION_100_RUN_REGISTER.md — this run's G-rows; renamed 2026-08-25 from handoff/LAUNCH_GAP_REGISTER.md, which a second, unrelated launch-readiness register now occupies) + this file are memory.
 
 ## SCOREBOARD
 edges built: 8 · killed: 4 legacy · SURVIVED: 0 yet (YACoe candidate in funnel now) · pre-registered: 8

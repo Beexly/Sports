@@ -158,7 +158,7 @@ export function PricingPlans({
         })}
       </div>
 
-      {/* Founding-member grandfather guarantee — the loyalty + urgency hook */}
+      {/* Founding-member grandfathered-pricing note — the loyalty + urgency hook */}
       <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-brand-400">
         {grandfatherNote}
       </p>

@@ -9,6 +9,8 @@ import { PageHero } from "@/components/ui/page-hero";
 import { SourceError } from "@/components/ui/source-error";
 import { PlayerLensRail } from "@/components/players/player-lens-rail";
 import { PLAYER_VIEWS, resolvePlayerView, type ViewResult } from "@/lib/players/views";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { PlayerCard } from "@/components/cards/player-card";
 import { STAT_PLACEHOLDER } from "@/lib/format/stat";
@@ -113,13 +115,36 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
   const requested = searchParams?.view;
   const view = resolvePlayerView(requested);
 
+  /**
+   * SERVER-SIDE GATE, BEFORE THE LOAD.
+   *
+   * Player Lab renders on the server, so each view is a second door onto the
+   * same loader its `jsonHref` route serves — and those routes require PRO or
+   * FANTASY. Only `dfs` used to check, which left ten doors open: an anonymous
+   * `/players?view=opportunity` returned the PRO-gated table as HTML while
+   * `/api/intelligence/receiving-opportunity` refused the identical request.
+   *
+   * The check runs BEFORE `view.load()` on purpose. Loading first and hiding
+   * after would still bill the paid provider fetch for a viewer who may not
+   * see the result — the denial-of-wallet reasoning already written into
+   * `app/api/dfs/salaries/route.ts`. `getViewerEntitlements` fails closed to
+   * FREE, so an auth or DB error denies rather than admits.
+   */
+  const viewer = await getViewerEntitlements();
+  const entitled =
+    view.requires === "public" ||
+    (view.requires === "premium" && viewer.canSeePremiumPicks) ||
+    (view.requires === "fantasy" && viewer.canUseFantasyFull);
+
   // Load only the active view's data — the lab is one view at a time.
   let result: ViewResult | null = null;
   let loadError: string | null = null;
-  try {
-    result = await view.load();
-  } catch (error) {
-    loadError = error instanceof Error ? error.message : "UNKNOWN";
+  if (entitled) {
+    try {
+      result = await view.load();
+    } catch (error) {
+      loadError = error instanceof Error ? error.message : "UNKNOWN";
+    }
   }
 
   return (
@@ -159,7 +184,20 @@ export default async function PlayersPage({ searchParams }: PlayersPageProps): P
           }))}
         />
 
-        {loadError || !result || result.status === "source-error" ? (
+        {!entitled ? (
+          /* Gate rendered IN PLACE of the content — `result` is still null here
+             because the loader never ran, so there is nothing to leak into the
+             HTML even accidentally. */
+          <TierGatePanel
+            need="PRO"
+            surface={`Player Lab — ${view.label}`}
+            blurb={
+              view.requires === "fantasy"
+                ? "The DFS salary board is part of the fantasy suite. Members see every slate row; the public view stops at a teaser."
+                : "This lens reads the same licensed rows the API serves to members. Free accounts get the public surfaces; members get the full table."
+            }
+          />
+        ) : loadError || !result || result.status === "source-error" ? (
           <SourceError
             variant="dark"
             reason={
