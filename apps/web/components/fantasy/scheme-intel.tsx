@@ -9,13 +9,18 @@
 
 import { useState } from "react";
 import { SCHEME_SCENARIOS, applyScheme } from "@/lib/fantasy/scheme";
-import { POS_HEX } from "@/lib/fantasy/players";
+import { POS_HEX, type Player } from "@/lib/fantasy/players";
 import { BRAND_COLORS } from "@/lib/brand";
 
-export function SchemeIntel() {
+/**
+ * `pool` is resolved and ENTITLEMENT-GATED on the server (app/fantasy/scheme/page.tsx)
+ * and passed in. It must never be resolved here: this is a client component, so any
+ * pool it resolved itself would have crossed the network ungated.
+ */
+export function SchemeIntel({ pool }: { pool?: readonly Player[] }) {
   const [id, setId] = useState(SCHEME_SCENARIOS[0]!.id);
   const scenario = SCHEME_SCENARIOS.find((s) => s.id === id)!;
-  const cascade = applyScheme(scenario);
+  const cascade = applyScheme(scenario, pool);
   const maxDelta = Math.max(...cascade.impacts.map((i) => Math.abs(i.deltaPct)), 1);
 
   return (
