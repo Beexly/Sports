@@ -13,15 +13,28 @@
 
 ## Rollback Checklist
 
+> **Full version: [`ROLLBACK.md`](ROLLBACK.md)** — migration reversibility table,
+> what each kill switch actually does when flipped off, and how to confirm recovery.
+> Read that one during an incident; this is the summary.
+
 1. In Vercel dashboard → Deployments → find previous successful production deployment → Promote to Production.
 2. Or: `vercel rollback` (CLI) if available.
-3. Confirm DATABASE_URL / secrets still match the rolled-back code (schema compatibility).
-4. Re-run health checks.
+3. Schema compatibility: Promote does **not** re-run the build, so it does not roll
+   migrations back. Every migration is additive (guarded by
+   `apps/web/__tests__/migration-additivity.test.ts`), so an older app against a
+   newer schema is a safe state. See `ROLLBACK.md` §3.
+4. Re-run health checks — and `node scripts/post-deploy-smoke.mjs`, which is the
+   only thing that checks whether pages actually render. Confirm the rollback landed
+   via `deployment.sha` on `/api/health`.
 5. Announce in internal notes if user-facing impact occurred.
 
 ## Incident Checklist (Severity Order)
 
-1. **Contain**: Disable public surfaces if needed (LIVE_BOARD=off, feature flags).
+1. **Contain**: Disable public surfaces if needed — `PUBLIC_PICKS_ENABLED=false`
+   (not `LIVE_BOARD`, which gates nothing on the public board; see `ROLLBACK.md` §4).
+   A flag change needs a redeploy to take effect, so for a bad deploy, Promote is
+   faster. Do **not** use `WATCHLIST_ALERTS_ENABLED` as a kill switch until PR #632
+   lands — flipping it off writes permanent `SUPPRESSED` rows.
 2. **Assess**: Check Vercel logs, GitHub Actions, Neon metrics, PostHog (if enabled).
 3. **Communicate**: Internal only until severity confirmed.
 4. **Fix**: Prefer hotfix PR with full CI; avoid direct main commits.
