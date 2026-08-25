@@ -50,17 +50,118 @@ export function impliedProbabilityToAmerican(p: number): number {
 }
 
 /**
- * Average a set of same-side American prices CORRECTLY: convert each to implied
- * probability, average the probabilities, convert the mean back to a
- * representative American price. Averaging American prices directly across books
- * that straddle pick'em produces invalid prices that map to absurd implied
- * probabilities and poison CLV. Returns null for an empty set.
+ * Widest magnitude any mainstream US book actually posts on a two-way market
+ * (±10000 ≈ 99.01% / 0.99% implied). Beyond this a "price" is an artifact of
+ * the math, not a market.
+ *
+ * This bound exists because `impliedProbabilityToAmerican` only clamps the
+ * PROBABILITY to [1e-6, 1-1e-6], which still admits prices near ∓100,000,000,
+ * and because `clv-capture.ts` (`gradePickClv`) takes whatever `lockPrice` it
+ * is handed with no bound of its own. An unbounded artifact therefore lands
+ * straight in the CLV ledger and biases the beat-close rate — observed as
+ * recorded lock prices near −21200 against closes that never left ±390.
  */
-export function averageAmericanPrices(prices: readonly number[]): number | null {
-  if (prices.length === 0) return null;
-  const meanImplied =
-    prices.reduce((s, price) => s + americanToImpliedProbability(price), 0) / prices.length;
-  return impliedProbabilityToAmerican(meanImplied);
+export const MAX_ABS_AMERICAN_PRICE = 10_000;
+
+/**
+ * Plausibility bound for a computed American price. Clamps magnitude to
+ * `MAX_ABS_AMERICAN_PRICE` so no pathological input can ever be *recorded* as
+ * a price. Clamping (rather than returning null) is deliberate: callers treat
+ * a non-null price as "we have a quote", and several assert non-null by
+ * construction — silently turning a quote into null would move the failure
+ * downstream instead of containing it here.
+ */
+export function boundAmericanPrice(price: number): number {
+  if (!Number.isFinite(price)) return -MAX_ABS_AMERICAN_PRICE;
+  return clamp(price, -MAX_ABS_AMERICAN_PRICE, MAX_ABS_AMERICAN_PRICE);
+}
+
+function meanOf(values: readonly number[]): number {
+  return values.reduce((s, v) => s + v, 0) / values.length;
+}
+
+/**
+ * Average a set of same-side American prices CORRECTLY.
+ *
+ * Two separate things are going on here; keep them apart when reading:
+ *
+ * 1. AVERAGING HAPPENS IN PROBABILITY SPACE, NOT AMERICAN SPACE. American odds
+ *    are discontinuous across ±100, so averaging books that straddle pick'em
+ *    produces invalid prices (`avg(-102, +105) = +2` is not a price) that map
+ *    to absurd implied probabilities and poison CLV. This is deliberate and
+ *    load-bearing — do not "simplify" it back to a plain mean.
+ *
+ * 2. THE AVERAGE IS TAKEN OVER *FAIR* (DE-VIGGED) PROBABILITIES when the
+ *    counterpart side is available. With-vig probabilities carry each book's
+ *    hold, so a plain mean of them is hold-weighted: high-hold books drag the
+ *    consensus toward the favourite, inflating heavy-favourite prices. We
+ *    de-vig each book's two-way pair with `removeVig`, average in fair space,
+ *    and then re-apply the mean observed overround.
+ *
+ * The re-apply step is NOT a no-op and NOT an oversight. De-vig → average →
+ * re-vig differs from a raw mean exactly when books differ in hold, which is
+ * the bias being corrected. It is required because the return value is
+ * consumed as an OFFERED market price, not as a fair probability:
+ * `computeEdgeScore(pickedSideFairProb, pickedSideAvgPrice)` computes
+ * `fairProb - impliedProbability(avgPrice)`, so returning a de-vigged price
+ * would make every moneyline edge identically ~0, and `entryPrice` /
+ * the rendered price would stop being a price anyone could actually bet.
+ *
+ * Without `counterpartPrices` the overround is simply not observable — one
+ * side of a two-way market cannot reveal its own vig — so that path CANNOT
+ * de-vig and does not pretend to. It keeps the probability-space mean and
+ * relies on `boundAmericanPrice`. Callers that hold both sides should pass
+ * them; callers that legitimately hold only one side (e.g. a display-only
+ * consensus) get the bound as the guard.
+ *
+ * Either way the result passes through `boundAmericanPrice`, so a pathological
+ * book quote can never be recorded as a lock price.
+ *
+ * Returns null when no finite price is supplied (empty set, or all non-finite).
+ */
+export function averageAmericanPrices(
+  prices: readonly number[],
+  counterpartPrices?: readonly number[]
+): number | null {
+  const side = prices.filter((p) => Number.isFinite(p));
+  if (side.length === 0) return null;
+
+  const sideImplied = side.map(americanToImpliedProbability);
+  const counterpart = (counterpartPrices ?? []).filter((p) => Number.isFinite(p));
+
+  // No counterpart → vig is unobservable → bound only (see docblock).
+  if (counterpart.length === 0) {
+    return boundAmericanPrice(impliedProbabilityToAmerican(meanOf(sideImplied)));
+  }
+
+  const counterpartImplied = counterpart.map(americanToImpliedProbability);
+
+  // Pair per book when both sides line up 1:1 (the normal case: one row per
+  // bookmaker carries both prices). When they don't — a book quoting only one
+  // side gets filtered out of one array — fall back to de-vigging the two
+  // means. Coarser, still fair-space, never mispairs two different books.
+  const fairProbs: number[] = [];
+  const overrounds: number[] = [];
+  if (sideImplied.length === counterpartImplied.length) {
+    for (let i = 0; i < sideImplied.length; i++) {
+      const p = sideImplied[i]!;
+      const q = counterpartImplied[i]!;
+      fairProbs.push(removeVig(p, q).home);
+      overrounds.push(p + q);
+    }
+  } else {
+    const p = meanOf(sideImplied);
+    const q = meanOf(counterpartImplied);
+    fairProbs.push(removeVig(p, q).home);
+    overrounds.push(p + q);
+  }
+
+  const meanFairProb = meanOf(fairProbs);
+  const meanOverround = meanOf(overrounds);
+  // Back onto the market scale (see docblock). A sub-1.0 overround is an
+  // inconsistent market; `computeEdgeScore`'s twoSidedImpliedSum guard is what
+  // refuses to credit edge there, so we do not silently "fix" it here.
+  return boundAmericanPrice(impliedProbabilityToAmerican(meanFairProb * meanOverround));
 }
 
 // ============================================================
@@ -843,8 +944,14 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   // averaging American prices across the ±100 discontinuity mints an invalid
   // entry price that would then mis-grade CLV against the close. Non-null by
   // construction — h2hOdds is non-empty here and every price is present.
+  // The counterpart side is passed so the average is taken over DE-VIGGED
+  // probabilities (see averageAmericanPrices): a plain mean of with-vig
+  // probabilities is hold-weighted and inflates heavy favourites, and the
+  // result is bounded so a pathological book quote can never be recorded as
+  // the lock price the CLV ledger grades against.
   const avgPrice = averageAmericanPrices(
     h2hOdds.map((o) => (homeIsChosen ? o.homePrice! : o.awayPrice!)),
+    h2hOdds.map((o) => (homeIsChosen ? o.awayPrice! : o.homePrice!)),
   )!;
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct, "win-probability");

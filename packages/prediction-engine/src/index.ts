@@ -5,6 +5,8 @@ export {
   americanToImpliedProbability,
   removeVig,
   averageAmericanPrices,
+  boundAmericanPrice,
+  MAX_ABS_AMERICAN_PRICE,
   clamp,
   toEdgeIndex,
 } from "./scoring.js";
