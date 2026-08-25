@@ -31,6 +31,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/pledge", priority: 0.6, changeFrequency: "monthly" },
   { path: "/performance", priority: 0.7, changeFrequency: "daily" },
   { path: "/journal", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/blog", priority: 0.7, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.7, changeFrequency: "monthly" },
   { path: "/observatory", priority: 0.6, changeFrequency: "weekly" },
   { path: "/airwave", priority: 0.6, changeFrequency: "weekly" },
@@ -126,10 +127,26 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
   }
 }
 
+/** Published blog posts — the same PUBLISHED filter the /blog index uses. */
+async function loadBlogPosts(): Promise<
+  ReadonlyArray<{ slug: string; publishedAt: Date | null; updatedAt: Date }>
+> {
+  try {
+    return await db.blogPost.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: { publishedAt: "desc" },
+      select: { slug: true, publishedAt: true, updatedAt: true },
+    });
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
-  const [journalEntries, previewRoutes] = await Promise.all([
+  const [journalEntries, blogPosts, previewRoutes] = await Promise.all([
     loadPublicJournalEntries(),
+    loadBlogPosts(),
     loadPreviewGames(),
   ]);
 
@@ -179,5 +196,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...podcastRoutes, ...newsletterRoutes, ...journalRoutes, ...previewRoutes];
+  const blogRoutes = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: post.publishedAt ?? post.updatedAt,
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...podcastRoutes,
+    ...newsletterRoutes,
+    ...journalRoutes,
+    ...blogRoutes,
+    ...previewRoutes,
+  ];
 }
