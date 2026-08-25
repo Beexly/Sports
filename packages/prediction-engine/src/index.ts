@@ -27,6 +27,10 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult, selectGradingLine, selectionIsHomeSide } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// The published-line rule: the customer-visible / locked / graded handicap is the
+// nearest line a book actually posted, never the raw consensus mean (which makes
+// PUSH structurally unreachable for spreads and totals). See published-line.ts.
+export { snapToPostedLine, formatPublishedLine } from "./published-line.js";
 // Historical backfill settlement engine — re-run the FROZEN model on past games
 // using ONLY pre-game data, then settle vs the known result (no-lookahead by design).
 export {
