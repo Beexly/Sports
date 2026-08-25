@@ -2,7 +2,10 @@
 #
 # Runs the free infrastructure that otherwise costs money:
 #   - ncaa-api : self-hosted henrygd NCAA API (drops the public 5 req/sec cap)
-#   - redis    : BullMQ queue store ($0, replaces Upstash/managed Redis)
+#   - redis    : general-purpose Redis ($0, replaces Upstash/managed Redis).
+#                NOTE: no application code reads REDIS_URL today, and `bullmq`
+#                is installed nowhere in this repo. This is capacity for a
+#                future queue, not a running one. See workers/README.md.
 #   - ollama   : local OpenAI-compatible LLM for the internal-LLM tier ($0 inference)
 #   - caddy    : reverse proxy with automatic Let's Encrypt TLS
 #
@@ -71,9 +74,21 @@ services:
       - ncaa-api
       - ollama
 
-  # ── BullMQ workers ─────────────────────────────────────────────────────────
+  # ── Standalone workers (aspirational — NOT a queue, NOT currently working) ──
   # Dockerfiles live under workers/<name>/Dockerfile (context = repo root).
   # Add DATABASE_URL + any worker-specific vars to .env before bringing up.
+  #
+  # These are NOT consumers of a job queue: there is no BullMQ anywhere in this
+  # repo. They are `setTimeout` loops and run-once stubs. This is also the ONLY
+  # compose file that references them — docker/docker-compose.yml (the dev
+  # stack) does not. Production scheduling is 21 Vercel crons in
+  # apps/web/vercel.json.
+  #
+  # KNOWN BROKEN: every CMD below is `npx ts-node --esm src/index.ts`, which
+  # fails on Node 20 with ERR_UNKNOWN_FILE_EXTENSION, and the data-refresh
+  # deps stage never copies packages/stats-api/package.json despite
+  # @sports/stats-api being a declared dependency. Fix both before `up`.
+  # Full inventory and the open delete/keep/wire-up decision: workers/README.md.
 
   worker-data-refresh:
     build: { context: ../.., dockerfile: workers/data-refresh/Dockerfile }
