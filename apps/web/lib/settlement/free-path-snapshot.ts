@@ -8,6 +8,8 @@ import {
   recordPickSettlementSnapshot,
   markPostSettlementWorkDone,
   markPostSettlementWorkFailed,
+  retryablePostSettlementWorkWhere,
+  type PostSettlementWorkClaimWhere,
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -74,13 +76,18 @@ export async function recordFreePathSnapshot(
 }
 
 /**
- * Repair drain: complete PENDING SNAPSHOT_OUTCOME for already-settled picks.
+ * Repair drain: complete owed SNAPSHOT_OUTCOME work for already-settled picks.
+ *
+ * Claims PENDING rows AND FAILED rows still under the attempt cap. FAILED used
+ * to be terminal here, so one transient error permanently dropped that pick out
+ * of the calibration inputs. Rows at/over the cap are never re-selected; that is
+ * the terminal state. See @sports/ingestion-pipeline post-settlement-work.
  */
 export async function drainPendingSnapshotOutcomes(
   db: FreePathSnapshotDb & {
     postSettlementWork: {
       findMany: (args: {
-        where: { status: string; kind: string };
+        where: PostSettlementWorkClaimWhere;
         take: number;
         orderBy: { createdAt: "asc" };
         select: { subjectId: true };
@@ -110,7 +117,7 @@ export async function drainPendingSnapshotOutcomes(
   const take = options.take ?? 80;
   const settledAt = options.now ?? new Date();
   const pending = await db.postSettlementWork.findMany({
-    where: { status: "PENDING", kind: "SNAPSHOT_OUTCOME" },
+    where: retryablePostSettlementWorkWhere("SNAPSHOT_OUTCOME"),
     take,
     orderBy: { createdAt: "asc" },
     select: { subjectId: true },

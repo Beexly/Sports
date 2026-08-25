@@ -42,11 +42,15 @@ export type {
 } from "./settlement-decisions.js";
 export {
   enqueuePostSettlementWork,
+  exhaustedPostSettlementWorkWhere,
   markPostSettlementWorkDone,
   markPostSettlementWorkFailed,
   POST_SETTLEMENT_WORK_KINDS,
+  POST_SETTLEMENT_WORK_MAX_ATTEMPTS,
+  retryablePostSettlementWorkWhere,
 } from "./post-settlement-work.js";
 export type {
+  PostSettlementWorkClaimWhere,
   PostSettlementWorkKind,
   PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";

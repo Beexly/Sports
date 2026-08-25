@@ -119,17 +119,48 @@ export async function computeLiveCapabilityProbes(): Promise<LiveCapabilityProbe
     checks["database"] = { status: "error", detail: "database unreachable" };
   }
 
-  // Last ingestion run check — must be a SUCCESS run, not any run.
-  // A FAILED run that started recently should not report healthy.
+  // Last ingestion run check — must be an ODDS-INSERTING SUCCESS run, not any
+  // run and not merely any SUCCESS run.
+  //
+  // WHY `oddsInserted: { gt: 0 }` IS LOAD-BEARING. `status: "SUCCESS"` on its
+  // own is a forgeable liveness signal: three writers legitimately stamp SUCCESS
+  // with `oddsInserted: 0` —
+  //   • ingestion-pipeline/process-sport.ts, quiet-board skip (nothing to price)
+  //   • ingestion-pipeline/process-sport.ts, main path when no odds came back
+  //   • data-sources/free-ingestion-run.ts, called every 2h by
+  //     /api/cron/free-spine-health with `oddsInserted: 0` HARDCODED and gated
+  //     only on a free ESPN score probe.
+  // So a total paid-odds outage still produced a minutes-old SUCCESS row; this
+  // probe computed an ingestion age near zero; `classifyHealthAlertSnapshot`
+  // escalates only above 90m, so the only pager stayed silent — while stored
+  // odds aged past MAX_CANDIDATE_ODDS_AGE_MS (6h) and the board emptied for
+  // every paying subscriber.
+  //
+  // The predicate below is now identical to every other IngestionRun freshness
+  // consumer, so the pager cannot disagree with the public surfaces:
+  //   • lib/data-reliability/public-freshness-gate.ts  isMarketBoardOddsStale
+  //   • lib/engine/load-engine-story.ts                lastSuccess
+  //   • lib/statking/king-standard-loader.ts           lastIngestionRun
+  //   • app/api/ops/public-surface-truth/route.ts      oddsInserting
+  //
+  // KNOWN CONSEQUENCE, stated rather than hidden: under free mode (no paid
+  // THE_ODDS_API_KEY) there is no odds-inserting run by construction, so this
+  // check reports error. That is honest — the market board is already dark in
+  // free mode via isMarketBoardOddsStale. If free mode should be able to signal
+  // "the free spine is alive", that belongs on its OWN capability key; never by
+  // relaxing this paid-odds freshness predicate back to bare SUCCESS.
   try {
     const lastSuccessRun = await db.ingestionRun.findFirst({
-      where: { status: "SUCCESS" },
+      where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
       orderBy: { completedAt: "desc" },
       select: { completedAt: true },
     });
 
     if (!lastSuccessRun || !lastSuccessRun.completedAt) {
-      checks["ingestion"] = { status: "error", detail: "No successful runs recorded" };
+      checks["ingestion"] = {
+        status: "error",
+        detail: "No odds-inserting successful runs recorded",
+      };
     } else {
       const ageMs = Date.now() - lastSuccessRun.completedAt.getTime();
       const ageMinutes = Math.round(ageMs / (1000 * 60));
