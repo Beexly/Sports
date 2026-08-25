@@ -141,6 +141,18 @@ export interface PlayerView {
   readonly explainer?: ReadonlyArray<MetricTerm>;
   /** JSON export href (kept from each old page's hero). */
   readonly jsonHref: string;
+  /**
+   * Entitlement floor, mirroring the gate on `jsonHref`.
+   *
+   * Player Lab renders server-side, so every view here is a second door onto
+   * the same loader its JSON twin serves. When only `dfs` resolved
+   * entitlements, the other ten doors were open: `/players?view=opportunity`
+   * returned the PRO-gated receiving-opportunity table to an anonymous
+   * visitor, rendered into HTML, while `/api/intelligence/receiving-opportunity`
+   * refused the identical request. A per-view floor keeps the two doors in
+   * step — if you add a view, set this to whatever its route requires.
+   */
+  readonly requires: "public" | "premium" | "fantasy";
   /** Resolve the view's data + presentation. */
   readonly load: () => Promise<ViewResult>;
 }
@@ -676,6 +688,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       },
     ],
     jsonHref: "/api/nflverse/player-lab",
+    requires: "premium",
     load: loadProductionView,
   },
   {
@@ -692,6 +705,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6-9, ○ under 6. Sample-size only." },
     ],
     jsonHref: "/api/nflverse/snap-share",
+    requires: "premium",
     load: loadSnapsView,
   },
   {
@@ -708,6 +722,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "The read", definition: "Opportunity ≫ production = buy-low (positive regression); production ≫ opportunity = sell-high." },
     ],
     jsonHref: "/api/intelligence/receiving-opportunity",
+    requires: "premium",
     load: loadOpportunityView,
   },
   {
@@ -724,6 +739,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "RYOE/att", definition: "Rush yards over expected per attempt: production above what the blocking and box gave." },
     ],
     jsonHref: "/api/nflverse/next-gen-stats",
+    requires: "premium",
     load: loadNextGenView,
   },
   {
@@ -740,6 +756,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Rating allowed", definition: "Passer rating allowed in coverage, target-weighted. Lower = a defender you can't throw at." },
     ],
     jsonHref: "/api/nflverse/pressure-coverage",
+    requires: "premium",
     load: loadTrenchesView,
   },
   {
@@ -755,6 +772,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Priors, not proof", definition: "Treat these as scouting priors to weigh against production; they don't decide anything alone." },
     ],
     jsonHref: "/api/nflverse/combine",
+    requires: "premium",
     load: loadCombineView,
   },
   {
@@ -770,6 +788,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Consensus", definition: "QBR and CPOE as within-pool percentiles. We surface disagreement (results vs accuracy) rather than averaging it away." },
     ],
     jsonHref: "/api/nflverse/qbr",
+    requires: "premium",
     load: loadQbrView,
   },
   {
@@ -787,6 +806,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Stab", definition: "Stat Stability Grade: ● 10+ games, ◐ 6-9, ○ under 6. Sample-size only; thin samples are where edge signals mislead most." },
     ],
     jsonHref: "/api/nflverse/edge-signals",
+    requires: "premium",
     load: loadEdgeView,
   },
   {
@@ -802,6 +822,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Practice status", definition: "Did Not Participate / Limited / Full: the practice signal behind the designation." },
     ],
     jsonHref: "/api/nflverse/injuries",
+    requires: "premium",
     load: loadInjuriesView,
   },
   {
@@ -817,6 +838,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "What it is", definition: "Crowd sentiment and a breaking-news tell, not a projection. The first non-nflverse feed in the registry." },
     ],
     jsonHref: "/api/sleeper/market-signal",
+    requires: "public",
     load: loadMarketView,
   },
   {
@@ -832,6 +854,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
       { term: "Check", definition: "agree = feeds within tolerance; single = one source; disagree = mismatch flagged with the spread." },
     ],
     jsonHref: "/api/dfs/salaries",
+    requires: "fantasy",
     load: loadDfsView,
   },
 ];
