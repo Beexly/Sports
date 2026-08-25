@@ -5,8 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
 import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
-import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";
-import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
@@ -452,8 +451,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
                   ? "Quiet board, waiting on fresh odds (not broken)."
-                  : "Public picks are still gated. The board is closed until the data checks pass."}
-              </h2>
+                  : "Public picks are still gated. The board is closed until the data checks pass."}              </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
                   ? "This is the honesty guard: we hide picks when odds are past the refresh " +
@@ -633,7 +631,6 @@ function SlateBar({ slate }: { slate: DailySlate }) {
   const lastUpdated = slate.lastUpdatedAt
     ? `${formatCentralTime(new Date(slate.lastUpdatedAt))} ${CT_SUFFIX}`
     : null;
-
   return (
     <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(194,46,26,0.12)]">
       <div className="flex flex-wrap items-center gap-3">
@@ -663,11 +660,10 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         )}
 
         {/* Last updated */}
-        {lastUpdated && (
+        {lastUpdatedIso && (
           <div className="ml-auto flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(255,77,46,0.6)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
-          </div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>          </div>
         )}
       </div>
 

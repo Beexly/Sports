@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { LocalTime } from "@/components/ui/local-time";
 import { loadGameRoom } from "@/lib/game-room/load";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
@@ -99,7 +100,12 @@ export default async function GameRoomPage({
                     </div>
                     <div className="text-left sm:text-right">
                       <p className="font-mono text-xs text-orbital-cyan">{item.status}</p>
-                      <p className="mt-1 text-xs text-ion-3">{item.fetchedAt.slice(0, 16).replace("T", " ")}</p>
+                      {/* Was a raw ISO slice ("2025-09-07 17:00") — an
+                          unlabelled UTC stamp with no zone on it at all.
+                          <LocalTime> resolves it on the VIEWER's clock. */}
+                      <p className="mt-1 text-xs text-ion-3">
+                        <LocalTime iso={item.fetchedAt} format="stamp" label="Captured" />
+                      </p>
                     </div>
                   </li>
                 ))}

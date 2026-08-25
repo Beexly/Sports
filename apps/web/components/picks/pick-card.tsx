@@ -19,8 +19,7 @@ import {
   consensusEvidenceCaption,
   isBookmakerConsensusClaim,
   type PublicConsensusPick,
-} from "@/lib/claims/public-consensus-claim";
-import Link from "next/link";
+} from "@/lib/claims/public-consensus-claim";import Link from "next/link";
 
 // ─────────────────────────────────────────────
 // Main PickCard
@@ -68,7 +67,6 @@ export function PickCard({
     minute: "2-digit",
     timeZoneName: "short",
   });
-
   const riskInfo = RISK_LEVEL_LABELS[pick.riskLevel];
 
   const freshnessAge = pick.dataFreshnessAt
@@ -127,7 +125,13 @@ export function PickCard({
 
       {/* Matchup */}
       <div>
-        <p className="text-xs text-ion-1">{gameTime}</p>
+        <p className="text-xs text-ion-1">
+          <LocalTime
+            iso={pick.game.commenceTime}
+            format="kickoff"
+            label="Kickoff"
+          />
+        </p>
         <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="text-sm font-semibold text-white">{pick.game.awayTeam}</p>
