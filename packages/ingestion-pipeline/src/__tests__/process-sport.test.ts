@@ -42,7 +42,16 @@ const mocks = vi.hoisted(() => ({
   pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
-  fetchRundownEventsForSport: vi.fn<(sport: string, key: string) => Promise<{ events: unknown[]; remaining: number | null }>>(),
+  // Mirrors the real RundownFetchResult: `complete` reports whether EVERY day
+  // in the requested span was actually read. A mock that omits it would model a
+  // contract the adapter does not have.
+  fetchRundownEventsForSport: vi.fn<(sport: string, key: string) => Promise<{
+    events: unknown[];
+    remaining: number | null;
+    complete: boolean;
+    failedDays: readonly string[];
+    error?: string;
+  }>>(),
   eventsBelowBookmakerThreshold: vi.fn<(events: unknown[], min?: number) => unknown[]>(),
   mergeBookmakersIntoPrimary: vi.fn<(primary: unknown[], secondary: unknown[], min?: number) => {
     events: unknown[];
@@ -220,7 +229,12 @@ describe("processSport", () => {
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
     mocks.resolveRundownApiKey.mockReturnValue("");
-    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+    mocks.fetchRundownEventsForSport.mockResolvedValue({
+      events: [],
+      remaining: null,
+      complete: true,
+      failedDays: [],
+    });
     mocks.eventsBelowBookmakerThreshold.mockImplementation((events: unknown[], min = 2) =>
       (events as { bookmakers?: unknown[] }[]).filter((e) => (e.bookmakers?.length ?? 0) < min),
     );
@@ -269,7 +283,12 @@ describe("processSport", () => {
       bookmakers: [{ key: "betmgm" }],
     };
     mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
-    mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [secondary], remaining: 19 });
+    mocks.fetchRundownEventsForSport.mockResolvedValue({
+      events: [secondary],
+      remaining: 19,
+      complete: true,
+      failedDays: [],
+    });
     mocks.mergeBookmakersIntoPrimary.mockReturnValue({
       events: [{ ...primary, bookmakers: [{ key: "fanduel" }, { key: "betmgm" }] }],
       filledGameIds: ["odds-1"],
@@ -321,6 +340,74 @@ describe("processSport", () => {
     );
     expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it("refuses to replace the whole board with a TRUNCATED Rundown slate", async () => {
+    // The failure this pins: the primary is empty, so Rundown becomes the board
+    // for this sport. If Rundown could only read part of its day span (one day
+    // 500'd, or a 429 aborted the remaining fan-out), the games on the unread
+    // days are simply absent — yet the events it DID return look like a
+    // perfectly ordinary slate. Written through, the run reports SUCCESS,
+    // oddsInserted > 0 advances the public freshness clock, and the missing
+    // games are indistinguishable from games that were never scheduled.
+    // `events.length > 0` cannot detect this; only the adapter's own
+    // completeness signal can.
+    mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+    mocks.getOdds.mockResolvedValue({ data: [], remainingRequests: 400 });
+    const truncatedSlate = {
+      id: "rundown-1",
+      home_team: "Chiefs",
+      away_team: "Bills",
+      commence_time: "2026-08-23T17:00:00Z",
+      bookmakers: [{ key: "betmgm" }, { key: "fanduel" }],
+    };
+    mocks.fetchRundownEventsForSport.mockResolvedValue({
+      events: [truncatedSlate],
+      remaining: null,
+      complete: false,
+      failedDays: ["2026-08-24"],
+      error: "partial (1/2 days unread): 2026-08-24:HTTP 500",
+    });
+    mocks.normalizeGames.mockReturnValue([]);
+    mocks.normalizeOdds.mockReturnValue([]);
+    mocks.scoreGames.mockReturnValue([]);
+
+    const result = await processSport(SPORT, "key", gates());
+
+    // The truncated slate never became the board.
+    expect(mocks.normalizeGames).toHaveBeenCalledWith([]);
+    expect(mocks.normalizeOdds).toHaveBeenCalledWith([], expect.any(Date));
+    expect(result.eventsCount).toBe(0);
+    expect(result.provider).not.toMatch(/^therundown$/);
+    // Nothing was written, so the freshness clock does not advance on it.
+    expect(result.oddsInserted).toBe(0);
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+  });
+
+  it("still uses a COMPLETE Rundown slate to replace an empty board", async () => {
+    // Guard against over-correcting: the refusal above must be about
+    // truncation, not about Rundown. A fully-read span still fills the board.
+    mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+    mocks.getOdds.mockResolvedValue({ data: [], remainingRequests: 400 });
+    const fullSlate = {
+      id: "rundown-1",
+      home_team: "Chiefs",
+      away_team: "Bills",
+      commence_time: "2026-08-23T17:00:00Z",
+      bookmakers: [{ key: "betmgm" }, { key: "fanduel" }],
+    };
+    mocks.fetchRundownEventsForSport.mockResolvedValue({
+      events: [fullSlate],
+      remaining: null,
+      complete: true,
+      failedDays: [],
+    });
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(mocks.normalizeGames).toHaveBeenCalledWith([fullSlate]);
+    expect(result.eventsCount).toBe(1);
+    expect(result.provider).toBe("therundown");
   });
 
   it("rejects stale data — freshness failure fails the run (no-stale-data rule)", async () => {

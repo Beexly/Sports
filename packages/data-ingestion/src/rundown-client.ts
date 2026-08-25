@@ -14,6 +14,15 @@ import { assertIngestible } from "./source-registry.js";
 const RUNDOWN_BASE = "https://therundown.io/api/v2";
 
 /**
+ * Per-request ceiling. `fetch` does not impose one that is short enough for a
+ * cron path, and this client fans out one request per day of the span, all
+ * serially — so a single hung socket held the ingest job open until the
+ * platform killed it, which silently produces no board at all. Matches the
+ * 12–15s ceiling every other upstream client in this package already uses.
+ */
+const RUNDOWN_TIMEOUT_MS = 12_000;
+
+/**
  * Sport key (Odds API style) → TheRundown sport_id.
  * IDs from GET /api/v2/sports (no auth) as published in docs.therundown.io
  * OpenAPI 3.1, retrieved 2026-08-22. NHL is 6, NCAAB is 5 — the previous map
@@ -362,6 +371,22 @@ export type RundownFetchResult = {
   readonly events: OddsApiEvent[];
   readonly remaining: number | null;
   readonly error?: string;
+  /**
+   * True only when EVERY day in the requested span was fetched successfully.
+   *
+   * The fan-out below skips a day that 4xx/5xx'd, timed out, or threw, and
+   * breaks out of the loop entirely on a 429. `events` is then a TRUNCATED view
+   * of the span — the games on the failed days are simply missing, and nothing
+   * in the payload says so. Callers that use this result to REPLACE a slate
+   * (rather than to add books to games they already have) must refuse an
+   * incomplete result: writing a truncated slate as if it were the whole board
+   * drops real games while the run reports SUCCESS and the freshness clock
+   * advances on the survivors. A stringly-typed `error: "partial: …"` that the
+   * caller can only log is not a usable signal, which is why this is a boolean.
+   */
+  readonly complete: boolean;
+  /** The days (YYYY-MM-DD) that could not be fetched. Empty iff `complete`. */
+  readonly failedDays: readonly string[];
 };
 
 export async function fetchRundownEventsForSport(
@@ -376,21 +401,32 @@ export async function fetchRundownEventsForSport(
      */
     readonly daySpan?: number;
     readonly fetchImpl?: typeof fetch;
+    /** Per-request ceiling (default RUNDOWN_TIMEOUT_MS). Test seam. */
+    readonly timeoutMs?: number;
   },
 ): Promise<RundownFetchResult> {
   assertIngestible("therundown");
   const sportId = RUNDOWN_SPORT_IDS[sportKey];
   if (sportId == null) {
-    return { events: [], remaining: null, error: `rundown: no sport_id map for ${sportKey}` };
+    return {
+      events: [],
+      remaining: null,
+      error: `rundown: no sport_id map for ${sportKey}`,
+      complete: false,
+      failedDays: [],
+    };
   }
   const startDate = options?.date ?? todayIsoUtc();
   const envSpanRaw = Number(process.env["RUNDOWN_DAY_SPAN"] ?? "");
   const defaultSpan = Number.isFinite(envSpanRaw) && envSpanRaw > 0 ? envSpanRaw : 2;
   const daySpan = Math.min(10, Math.max(1, options?.daySpan ?? defaultSpan));
   const fetchImpl = options?.fetchImpl ?? fetch;
+  const timeoutMs = Math.max(1, options?.timeoutMs ?? RUNDOWN_TIMEOUT_MS);
   const all: OddsApiEvent[] = [];
   const seen = new Set<string>();
   const errors: string[] = [];
+  // Every requested day we did NOT successfully read. Drives `complete` below.
+  const failedDays: string[] = [];
   let rateLimited = false;
 
   for (let i = 0; i < daySpan; i++) {
@@ -412,14 +448,22 @@ export async function fetchRundownEventsForSport(
           "X-TheRundown-Key": apiKey,
         },
         cache: "no-store",
+        signal: AbortSignal.timeout(timeoutMs),
       });
       if (!res.ok) {
         if (res.status === 429) {
           rateLimited = true;
           errors.push(`${date}:HTTP 429 rate_limited (abort remaining days)`);
+          // This day AND every remaining day of the span go unread.
+          for (let j = i; j < daySpan; j++) {
+            const d2 = new Date(`${startDate}T00:00:00.000Z`);
+            d2.setUTCDate(d2.getUTCDate() + j);
+            failedDays.push(d2.toISOString().slice(0, 10));
+          }
           break;
         }
         errors.push(`${date}:HTTP ${res.status}`);
+        failedDays.push(date);
         continue;
       }
       const body = (await res.json()) as Loose;
@@ -433,9 +477,14 @@ export async function fetchRundownEventsForSport(
         }
       }
     } catch (err) {
+      // Transport failure, timeout, or a 2xx whose body would not parse — the
+      // day is unread either way, so it counts against completeness.
       errors.push(`${date}:${err instanceof Error ? err.message : String(err)}`);
+      failedDays.push(date);
     }
   }
+
+  const complete = failedDays.length === 0;
 
   if (all.length === 0) {
     return {
@@ -444,11 +493,17 @@ export async function fetchRundownEventsForSport(
       error: errors.length
         ? `rundown empty (${daySpan}d): ${errors.slice(0, 4).join("; ")}`
         : `rundown empty (${daySpan}d): no bookmaker lines`,
+      complete,
+      failedDays,
     };
   }
   return {
     events: all,
     remaining: null,
-    error: errors.length ? `partial: ${errors.slice(0, 3).join("; ")}` : undefined,
+    error: complete
+      ? undefined
+      : `partial (${failedDays.length}/${daySpan} days unread): ${errors.slice(0, 3).join("; ")}`,
+    complete,
+    failedDays,
   };
 }

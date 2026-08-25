@@ -367,12 +367,28 @@ export async function processSport(
     if (events.length === 0) {
       if (rundownKey) {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
-        if (rd.events.length > 0) {
+        if (rd.events.length > 0 && !rd.complete) {
+          // FAIL CLOSED. This branch REPLACES the entire slate for the sport,
+          // so a truncated day-span here is not "some data is better than
+          // none" — it is a board that silently omits every game on the days
+          // Rundown failed to serve, written as though it were the whole
+          // slate. The run would then report SUCCESS, oddsInserted > 0 would
+          // advance the public freshness clock, and the missing games would be
+          // indistinguishable from games that simply are not scheduled.
+          // Refusing lets the ESPN tertiary path (and the next cycle) try
+          // again. The thin-fill branch below is deliberately NOT gated this
+          // way: it only ADDS bookmakers to games we already hold, so a short
+          // day-span there means fewer fills, never a missing game.
+          oddsProviderTag = "therundown-incomplete";
+          rundownAttemptNote =
+            `rundown incomplete — refusing partial board replacement ` +
+            `(unread days: ${rd.failedDays.join(", ") || "unknown"}): ${rd.error ?? ""}`;
+          console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
+        } else if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
           console.log(
-            `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
-              (rd.error ? ` (note: ${rd.error})` : ""),
+            `${logPrefix} ${sport.key}: rundown free path ${events.length} events`,
           );
         } else {
           oddsProviderTag = "therundown-empty";
