@@ -2,7 +2,9 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
 // ── Hoisted mock for @sports/db ─────────────────────────────────────────────────
 const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn() }));
-vi.mock("@sports/db", () => ({ db: { pfrAdvStat: { deleteMany: mocks.deleteMany, createMany: mocks.createMany } } }));
+vi.mock("@sports/db", () => ({ db: {
+  $transaction: (ops: readonly Promise<unknown>[]) => Promise.all(ops),
+   pfrAdvStat: { deleteMany: mocks.deleteMany, createMany: mocks.createMany } } }));
 
 // ── Hoisted mock for nflverseIngestionGate ───────────────────────────────────────
 vi.mock("@/lib/ingestion/nflverse-gate", async (importActual) => {

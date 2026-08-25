@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
 const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn() }));
-vi.mock("@sports/db", () => ({ db: { nextGenStat: { deleteMany: mocks.deleteMany, createMany: mocks.createMany } } }));
+vi.mock("@sports/db", () => ({ db: {
+  $transaction: (ops: readonly Promise<unknown>[]) => Promise.all(ops),
+   nextGenStat: { deleteMany: mocks.deleteMany, createMany: mocks.createMany } } }));
 vi.mock("@/lib/ingestion/nflverse-gate", async (importActual) => {
   const actual = await importActual<typeof import("@/lib/ingestion/nflverse-gate")>();
   return { ...actual, nflverseIngestionGate: vi.fn(actual.nflverseIngestionGate) };
