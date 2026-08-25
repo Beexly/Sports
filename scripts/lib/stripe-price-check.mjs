@@ -57,11 +57,19 @@ export const STRIPE_PRICE_ENV_MATRIX = Object.freeze([
  * runtime checkout guard share one definition of the advertised amount.
  *
  * The module lives in TypeScript and imports its pricing source of truth via
- * the `@/` path alias, so two things are arranged here:
- *   1. Node's native type stripping loads the `.ts` (Node >= 22.18; earlier
- *      Node cannot, and this throws — the caller must then FAIL, never skip).
+ * the `@/` path alias, so two things are arranged here FOR PLAIN NODE — the ops
+ * script's runtime:
+ *   1. Node's native type stripping loads the `.ts` (on by default from Node
+ *      22.18).
  *   2. A tiny in-thread resolve hook maps `@/…` → `apps/web/…` so the alias
- *      resolves outside webpack/vitest.
+ *      resolves outside webpack/vitest. `node:module.registerHooks` landed in
+ *      Node 22.15, so neither is available on Node 20.
+ *
+ * Both are arranged only when the runtime offers them. A host that already
+ * understands TypeScript and the `@/` alias — Vitest/Vite, which is how this
+ * predicate is tested, and which CI runs on Node 20 — needs neither and imports
+ * the .ts directly. If the import then fails, that is a hard error: the caller
+ * must FAIL, never skip.
  *
  * Throws on any failure. Callers must treat a throw as a hard readiness
  * FAILURE: a gate that cannot verify the charged amount has not verified it.
@@ -77,18 +85,19 @@ export async function loadPriceIdHelpers(repoRoot) {
     throw new Error(`price-ids.ts not found at ${target}`);
   }
 
+  // Node's own type-stripping and the `@/` resolve hook are only needed when
+  // this lib runs under PLAIN Node — the ops script the operator invokes. Under
+  // a host that already understands TypeScript and the `@/` alias (Vitest/Vite,
+  // whose config aliases `@` to apps/web), `import()` resolves the .ts on its
+  // own, including on Node 20 where `node:module.registerHooks` does not exist
+  // at all. So arrange the hooks when the runtime offers them and otherwise
+  // fall through to the import — a runtime that can do neither still throws
+  // below, with the Node-version diagnostic, so the gate can never degrade into
+  // a silent "couldn't check, looks fine".
   const { registerHooks } = await import("node:module");
-  if (typeof registerHooks !== "function") {
-    throw new Error(
-      `node:module.registerHooks unavailable on Node ${process.version} — ` +
-        "re-run this check on Node >= 22.18 (registerHooks landed in 22.15 and " +
-        "TypeScript type-stripping is on by default from 22.18; both are needed " +
-        "to load the billing helpers)",
-    );
-  }
 
   // Register once per process — repeated calls would stack duplicate hooks.
-  if (!hooksRegistered) {
+  if (typeof registerHooks === "function" && !hooksRegistered) {
     registerHooks({
       resolve(specifier, context, nextResolve) {
         if (specifier.startsWith("@/")) {
@@ -125,6 +134,20 @@ export async function loadPriceIdHelpers(repoRoot) {
   let mod;
   try {
     mod = await import(pathToFileURL(target).href);
+  } catch (err) {
+    if (typeof registerHooks !== "function") {
+      // Plain Node too old to strip types or to install the `@/` resolve hook.
+      // Surface that as the readiness failure it is — never as a skip.
+      throw new Error(
+        `could not load ${target} on Node ${process.version} ` +
+          `(${err instanceof Error ? err.message : String(err)}) — ` +
+          "node:module.registerHooks is unavailable here, so re-run this check on " +
+          "Node >= 22.18 (registerHooks landed in 22.15 and TypeScript type-stripping " +
+          "is on by default from 22.18; both are needed to load the billing helpers " +
+          "under plain Node)",
+      );
+    }
+    throw err;
   } finally {
     process.emitWarning = realEmitWarning;
   }
