@@ -262,7 +262,7 @@ counted. **You are counting. You are not deleting.**
 
 **FILES YOU MAY TOUCH**
 ```
-handoff/INVENTORY.md      (create — handoff/ is gitignored; this is a report, not repo content)
+handoff/INVENTORY.md      (create — a tracked report, not repo content)
 ```
 
 **WHAT TO BUILD**
@@ -296,7 +296,7 @@ use. **Recommend nothing. Delete nothing.**
 **DEFINITION OF DONE**
 ```bash
 test -f handoff/INVENTORY.md && echo OK
-git status --short          # must print nothing (handoff/ is gitignored)
+git status --short          # must show ONLY handoff/INVENTORY.md
 ```
 No commit. Journal it as DONE with `-` for the commit hash.
 

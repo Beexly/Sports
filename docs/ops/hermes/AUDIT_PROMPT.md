@@ -16,9 +16,11 @@ Break any of these and the entire run is discarded.
 No edits, no deletes, no renames, no `npm install`, no `git add`, no `git commit`,
 no `git push`, no `git checkout`, no `git stash`. The only files you create or write
 are `handoff/AUDIT_FINDINGS.md`, `handoff/AUDIT_COVERAGE.md`, and
-`handoff/JOURNAL.md`. The `handoff/` directory is gitignored, so at the end
-`git status --short` must print **nothing at all**. If it prints anything, you
-modified something you should not have.
+`handoff/JOURNAL.md`. Those files are TRACKED (the only ignored `handoff/`
+patterns are `*.log`, `*.txt`, `*.stderr`, `*.json`, `*.py`, `_*`), so at the end
+`git status --short` will list them — that is correct. What it must **not**
+list is any path outside `handoff/`. If it does, you modified something you
+should not have.
 
 **RULE 2 — No evidence, no finding.**
 A finding is only real if you can paste a **file path, a line number, and the actual
@@ -580,7 +582,8 @@ Not "how many findings." The four things that make this run worth the electricit
 
 1. Every finding has a real `file:line` and a real pasted line.
 2. Every gap is declared in `AUDIT_COVERAGE.md` rather than quietly skipped.
-3. `git status --short` prints nothing at the end (`handoff/` is gitignored).
+3. `git status --short` lists only `handoff/` paths at the end — your reports
+   are tracked files, so seeing them is expected; anything else is a breach.
 4. Nothing in the report is invented, inferred, or softened.
 
 A report with **four** BLOCKER findings that are all real and all reproducible beats a
