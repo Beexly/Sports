@@ -2,8 +2,8 @@
  * OpenAPI 3.1 contract for the read-only Proof API — /api/proof/openapi.json.
  *
  * Pins the invariants that keep the contract trustworthy and read-only:
- *   - It is OpenAPI 3.1, points at the canonical host, and documents exactly
- *     the three live proof endpoints.
+ *   - It is OpenAPI 3.1, points at the canonical host, and documents the
+ *     live proof endpoints.
  *   - Every operation is a GET and there is NO security scheme — the record is
  *     public and nothing here can mutate state.
  */
@@ -27,10 +27,11 @@ describe("buildProofOpenApiSpec", () => {
     expect(spec.servers[0]!.url).toBe(TEST_BASE);
   });
 
-  it("documents the three live proof endpoints", () => {
+  it("documents the live proof endpoints", () => {
     const spec = buildProofOpenApiSpec({ siteUrl: TEST_BASE });
     expect(Object.keys(spec.paths).sort()).toEqual([
       "/api/proof/ledger",
+      "/api/proof/ledger-chain",
       "/api/proof/receipts",
       "/api/proof/verification-spec.json",
       "/api/verify",

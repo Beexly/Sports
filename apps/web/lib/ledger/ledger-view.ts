@@ -15,12 +15,13 @@
  * Clopper-Pearson lower bound, CLV backing, and walk-forward provenance,
  * or it renders nothing.
  *
- * Today there is no live ledger chain to read from — the append-only
- * hash-chained pick store (`freeze-slate-commitments.ts`, `pick-proof-
- * receipt.ts`) has not accumulated substantiated entries yet. So even with
- * the flag on, this always resolves to the empty-but-honest shape below.
- * Wiring `seasons` / `calibration` / `significance` to the real chain is a
- * follow-up once it has live entries to show — NOT part of this build.
+ * Durable chain rows now exist (`ledger_chain_entries`, F-9) and the raw
+ * export is `/api/proof/ledger-chain`. This view still does not render
+ * season / calibration / significance numbers from those rows: every cell
+ * must still clear `renderableMetricOrNull()` (coverage, lower bound, CLV
+ * backing, walk-forward provenance). Chain bytes are not a performance
+ * claim. So even with PUBLISH_LEDGER on, this resolves to the empty-but-
+ * honest shape below until substantiated aggregates exist.
  */
 
 import type { SubstantiatedMetric } from "./display-guard";
