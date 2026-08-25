@@ -71,6 +71,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, posix, relative, resolve, sep } from "node:path";
 import { createRequire } from "node:module";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const require = createRequire(import.meta.url);
 // TypeScript ships CJS; createRequire gives a bulletproof default import.
@@ -80,6 +81,12 @@ const ROOT = resolve(process.cwd());
 
 const SCAN_DIRS = ["apps", "packages", "workers", "scripts"];
 const SCAN_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs"]);
+// Minimum-coverage floor. Observed on origin/main @ bb0e7dfc0 (2026-08-25):
+// this guard scans 2223 files. Set at roughly half — well below refactor churn,
+// well above what survives a SCAN_DIRS root disappearing. See min-scan-floor.mjs:
+// without it, the `catch { continue }` in main() turns a renamed root into
+// "scanned 0 file(s), OK, exit 0".
+const MIN_SCANNED_FILES = 1100;
 
 /**
  * PERMANENT adapter files: the transport definition plus the exact per-provider
@@ -560,6 +567,14 @@ async function main() {
       }
     }
   }
+
+  assertScanFloor({
+    guard: "ai-transport-import-boundary",
+    root: ROOT,
+    roots: SCAN_DIRS,
+    scanned,
+    floor: MIN_SCANNED_FILES,
+  });
 
   if (hits.length === 0) {
     console.log(

@@ -26,8 +26,16 @@
 import { spawnSync } from "node:child_process";
 import { readFileSync, statSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const ROOT = resolve(process.cwd());
+
+// Minimum-coverage floor for --all, the CI gate. Observed on origin/main @
+// bb0e7dfc0 (2026-08-25): 5909 tracked files scanned. Set at roughly half.
+// Only --all gets a floor: `staged` legitimately scans 0 files (nothing
+// staged) and `paths` scans exactly what it was handed, so forcing either to
+// fail would be wrong. See min-scan-floor.mjs.
+const MIN_SCANNED_FILES_ALL = 2900;
 
 // Each rule: a regex that matches a real secret (long tail required so that
 // provider PREFIX strings used in code — e.g. "sk-ant-admin01-" in the key
@@ -198,6 +206,14 @@ function main() {
   }
 
   const mode = scanAll ? "all-tracked" : argPaths.length ? "paths" : "staged";
+  if (scanAll) {
+    assertScanFloor({
+      guard: "secret-scan",
+      root: ROOT,
+      scanned,
+      floor: MIN_SCANNED_FILES_ALL,
+    });
+  }
   // Never silently truncate coverage: name what was not scanned.
   const largeNote = skippedLarge > 0 ? ` (${skippedLarge} file(s) >2MB not scanned)` : "";
   if (allHits.length === 0) {

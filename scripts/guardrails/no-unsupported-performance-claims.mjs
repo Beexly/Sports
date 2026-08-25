@@ -12,8 +12,16 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 import { normalizeScanLine, collapseStringJoins } from "./scan-normalize.mjs";
+import { assertScanFloor } from "./min-scan-floor.mjs";
 
 const ROOT = resolve(process.cwd());
+// Minimum-coverage floor. Observed on origin/main @ bb0e7dfc0 (2026-08-25):
+// this guard scans 445 files across the deep targets, the rendered-surface
+// sweep and the numeric-sweep extra roots. Set at roughly half — well below
+// refactor churn, well above what survives a scan root disappearing. See
+// min-scan-floor.mjs: without it, the `catch { continue }` in main() turns a
+// renamed root into "scanned 0 file(s), OK, exit 0".
+const MIN_SCANNED_FILES = 200;
 const SCAN_TARGETS = [
   "apps/web/app/media-kit",
   "apps/web/app/partners",
@@ -327,6 +335,14 @@ async function main() {
       rawLines.forEach((_line, index) => hits.push(...scanNumericClaimLine(rawLines, index, relPath)));
     }
   }
+
+  assertScanFloor({
+    guard: "no-unsupported-performance-claims",
+    root: ROOT,
+    roots: [...SCAN_TARGETS, PUBLIC_APP_ROOT, ...NUMERIC_EXTRA_ROOTS],
+    scanned,
+    floor: MIN_SCANNED_FILES,
+  });
 
   if (hits.length === 0) {
     console.log(`[no-unsupported-performance-claims] OK - scanned ${scanned} file(s); no unsupported performance claims.`);
