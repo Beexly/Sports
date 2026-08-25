@@ -292,9 +292,13 @@ function quotesFor(market: Market): readonly (readonly BookPrices[])[] {
 describe.each(ARMS)(
   "Edge Index invariant — $pickType on a consistent heterogeneous market",
   ({ market, pickType, blockedBy }) => {
-    const dependency = blockedBy
-      ? ` [expected to fail on main until ${blockedBy} lands]`
-      : "";
+    // `blockedBy` records which probability-space-averaging fix this arm depends
+    // on. That fix is now PRESENT on this branch (ported from
+    // claude/fix-american-odds-averaging), so these arms pass here. The note is
+    // kept because it is the load-bearing coupling: if the arithmetic-mean
+    // averaging is ever reintroduced at that call site, this arm is the test
+    // that fails, and the reader should know where to look.
+    const dependency = blockedBy ? ` [depends on probability-space averaging: ${blockedBy}]` : "";
 
     it("its fixtures are heterogeneous and every book is internally consistent", () => {
       for (const [i, quotes] of quotesFor(market).entries()) {
