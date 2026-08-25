@@ -14,7 +14,7 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
-import { validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims, type GroundedValue } from "@/lib/claude-api/numeric-guard";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { jynxComplete } from "@/lib/claude-api/jynx-complete";
 import {
@@ -61,6 +61,53 @@ export interface BlogGenerationPolicyResult {
   readonly reason: BlogGenerationPolicyReason | null;
 }
 
+/**
+ * What the numeric guard is allowed to treat as "this number came from real data".
+ *
+ * `dataText` is the PICKS DATA block ONLY — deliberately NOT the assembled user
+ * prompt. The prompt wraps the data in formatting requirements ("4-6 paragraphs",
+ * "3-5 relevant tags") whose numbers are record-shaped, so grounding on the whole
+ * prompt whitelists 3/4/5/6 and lets the model launder a fabricated record
+ * ("Boston is 4-6 as a road favorite") through the platform's own instructions.
+ * An instruction is not evidence.
+ */
+export interface BlogNumericGrounding {
+  /** The PICKS DATA block the model was given. Never the surrounding prompt. */
+  readonly dataText: string;
+  /**
+   * Structured numeric values read straight off the pick records (the source of
+   * truth). Needed because a signed line renders as "-3.5" and the claim
+   * extractor skips a digit preceded by "-", so the real line would otherwise be
+   * absent from the grounding set while legitimate copy ("laying 3.5") reads as
+   * fabricated. Both the signed value and its magnitude are the SAME real
+   * number — nothing the picks do not actually hold is added here.
+   *
+   * Typed as `magnitude`, which is the kind the claim extractor assigns to a
+   * bare number in prose, and `COMPATIBLE_KINDS.magnitude` is `["magnitude"]`
+   * alone. So a line grounds "laying 3.5" and grounds nothing else — it cannot
+   * be borrowed to justify a record, a percentage, or a money figure that
+   * happens to share the digits.
+   */
+  readonly values: readonly GroundedValue[];
+}
+
+/**
+ * Derives the data-only grounding set for a blog generation. Callers must build
+ * it from the pick records, never from the prompt they assembled.
+ */
+export function buildBlogNumericGrounding(
+  input: ContentGenerationInput,
+  picksDataBlock: string,
+): BlogNumericGrounding {
+  return {
+    dataText: picksDataBlock,
+    values: input.picks.flatMap((pick): readonly GroundedValue[] => [
+      { value: pick.line, kind: "magnitude" },
+      { value: Math.abs(pick.line), kind: "magnitude" },
+    ]),
+  };
+}
+
 /** True when model id is a Claude Anthropic id (billable at Claude rates). */
 function isAnthropicClaudeModel(modelName: string): boolean {
   return modelName.startsWith("claude-") || modelName.includes("anthropic");
@@ -77,6 +124,9 @@ export async function generateBlogPost(
   }
 
   const dateDisplay = format(new Date(input.date), "MMMM d, yyyy");
+  // The DATA block — the model's only source of truth, and the only text the
+  // numeric guard grounds on. Kept as its own binding so it can be handed to the
+  // guard without the surrounding prompt instructions.
   const picksSummary = input.picks
     .map(
       (p, i) =>
@@ -168,7 +218,12 @@ Respond ONLY with valid JSON in this exact format:
       throw new Error("Could not parse JSON from Claude response");
     }
 
-    const policy = evaluateGeneratedBlogPolicy(parsed, { promptText: userPrompt });
+    // GROUNDING: validate numbers against the PICKS DATA block only — never the
+    // assembled `userPrompt`, which also carries this file's own formatting
+    // requirements ("4-6 paragraphs", "3-5 relevant tags"). Those are
+    // record-shaped, so grounding on the prompt let the platform's instructions
+    // whitelist 3/4/5/6 for the model to echo back as a team record.
+    const policy = evaluateGeneratedBlogPolicy(parsed, buildBlogNumericGrounding(input, picksSummary));
     if (!policy.allowed) {
       await maybeRecordBlogUsage({
         options,
@@ -237,7 +292,7 @@ function parseGeneratedBlogResponse(text: string): ParsedBlogGeneration {
 
 export function evaluateGeneratedBlogPolicy(
   post: ParsedBlogGeneration,
-  grounding?: { readonly promptText: string },
+  grounding?: BlogNumericGrounding,
 ): BlogGenerationPolicyResult {
   const fields = [
     post.title,
@@ -277,12 +332,21 @@ export function evaluateGeneratedBlogPolicy(
   }
 
   // Numeric grounding: every stat-shaped number in the copy must have appeared in
-  // the source prompt (the model's only data). Blocks a hallucinated stat before it
-  // could ever be persisted/published. Only runs when the caller supplies grounding.
+  // the PICKS DATA the model was given (the model's only source of truth). Blocks a
+  // hallucinated stat before it could ever be persisted/published. Only runs when
+  // the caller supplies grounding.
   if (grounding) {
     // Grounding TEXT, not flattened values — the kind of each number lives in
-    // its label. See lib/claude-api/numeric-guard.ts.
-    if (!validateNumericClaims(publicText, { text: grounding.promptText }).grounded) {
+    // its label, and flattening is exactly what discarded the meaning. See
+    // lib/claude-api/numeric-guard.ts. The text is `dataText` (the PICKS DATA
+    // block) and never the assembled prompt: see BlogNumericGrounding above for
+    // why an instruction is not evidence.
+    if (
+      !validateNumericClaims(publicText, {
+        text: grounding.dataText,
+        values: grounding.values,
+      }).grounded
+    ) {
       return { allowed: false, reason: "UNGROUNDED_NUMERIC" };
     }
   }
