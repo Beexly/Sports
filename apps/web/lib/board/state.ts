@@ -16,6 +16,7 @@ import {
   type ClassifiedBoardState,
 } from "./classify-board-state";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -113,14 +114,13 @@ function extractRankingFromFb(
   return { rankingP, rankingSource };
 }
 
-function todayBounds(): { start: Date; end: Date } {
-
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  return { start, end };
-}
+// "Today" is the ONE platform day (UTC calendar day) — see
+// lib/time/day-boundary.ts, and `utcDayWindow(now)` at its use site below. The
+// local helper this replaced anchored on `setHours(0,0,0,0)` (the AMBIENT
+// process timezone) AND read `new Date()` internally, ignoring the `now` this
+// module is handed — so /board's `lastRefresh` label and its "gated today" /
+// "published today" windows could come from two different clock reads on two
+// different days, and no test could pin the boundary.
 
 function rowCounts(rows: Pick<BoardStateData, "scoringNow" | "publishedToday" | "gatedTodayRows">) {
   return {
@@ -290,7 +290,7 @@ async function loadBoardStateInner(
   // the `market`/selection field to "ALL_MARKETS" at the row level (see mapping below).
   const isPremiumViewer = entitlements?.canSeePremiumPicks ?? false;
 
-  const { start, end } = todayBounds();
+  const { start, end } = utcDayWindow(now);
   try {
     const decisions = await db.gateDecision.findMany({
       where: {

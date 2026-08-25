@@ -20,7 +20,14 @@ describe("/cockpit today's-picks chip", () => {
 
   it("queries today's pick count from db.pick", () => {
     expect(src).toMatch(/todayPicksForOperator/);
-    expect(src).toMatch(/db\.pick[\s\S]{0,200}startOfDay/);
+    // The day window must come from the ONE shared platform definition
+    // (lib/time/day-boundary.ts), not a hand-rolled local-midnight helper.
+    // Pinning the shared symbol is a stronger guard than the old
+    // date-fns `startOfDay` it replaced: that one anchored on the ambient
+    // process timezone, so the chip could count a different day than the
+    // board it sits above.
+    expect(src).toMatch(/db\.pick[\s\S]{0,200}today\.start/);
+    expect(src).toMatch(/from "@\/lib\/time\/day-boundary"/);
   });
 
   it("annotates the chip with '(sample)' when demoActive", () => {

@@ -5,8 +5,8 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { getEntitlements, type PublicPick, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
-import { startOfDay, endOfDay } from "date-fns";
 import { parseDateParam } from "@/lib/parse-date-param";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import {
   isPublicPicksSurfaceStale,
@@ -73,6 +73,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
   // Guard against malformed `?date=` values producing an Invalid Date query.
   const targetDate = parseDateParam(dateParam);
+  // THE day window for this request. ONE definition (the UTC calendar day — see
+  // lib/time/day-boundary.ts), resolved once and reused by BOTH the pick query
+  // and the `totalAvailableToday` count below, so the FREE tier's "2 picks/day"
+  // teaser and the "N picks published today" number it is measured against can
+  // never describe different days.
+  //
+  // ENTITLEMENT NOTE: this is the boundary at which the free teaser rolls over.
+  // It is byte-identical to the runtime-local date-fns window it replaces under
+  // the production runtime (Vercel functions run TZ=UTC), so this PINS the live
+  // behaviour rather than moving it. Moving the reset to an ET sports day is an
+  // owner decision — see the note in lib/time/day-boundary.ts.
+  const targetDay = utcDayWindow(targetDate);
 
   // Production seed-row exclusion (defense-in-depth). The dev seed writes
   // synthetic rows tagged modelVersion="v5.0.0-seed"; in production there
@@ -109,8 +121,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         isBootstrap: false, // never expose bootstrap-era picks publicly
         ...excludeSeedInProd, // prod-only: drop dev seed rows (no-op in dev/test)
         generatedAt: {
-          gte: startOfDay(targetDate),
-          lte: endOfDay(targetDate),
+          gte: targetDay.start,
+          lte: targetDay.endInclusive,
         },
         // Server-side tier gate
         ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
@@ -318,8 +330,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           isBootstrap: false,
           ...excludeSeedInProd, // prod-only: keep the count consistent with the slate
           generatedAt: {
-            gte: startOfDay(targetDate),
-            lte: endOfDay(targetDate),
+            gte: targetDay.start,
+            lte: targetDay.endInclusive,
           },
           game: gameFilter,
         },
@@ -336,7 +348,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       total: publicPicks.length,
       totalAvailableToday,
       hitDailyLimit,
-      date: targetDate.toISOString().split("T")[0],
+      date: targetDay.key,
       canSeeConfidence: entitlements.canSeeConfidence,
       canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
       containsSeedData,

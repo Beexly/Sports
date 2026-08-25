@@ -21,7 +21,10 @@ const src = readFileSync(resolve(repoRoot, "app/cockpit/page.tsx"), "utf8");
 describe("/cockpit picks glance — Session A implementation", () => {
   it("queries today's picks count for the header chip", () => {
     expect(src).toMatch(/todayPicksForOperator/);
-    expect(src).toMatch(/db\.pick[\s\S]{0,250}startOfDay/);
+    // Day window from the ONE shared platform definition — see
+    // lib/time/day-boundary.ts and the note in cockpit-today-picks-chip.test.ts.
+    expect(src).toMatch(/db\.pick[\s\S]{0,250}today\.start/);
+    expect(src).toMatch(/from "@\/lib\/time\/day-boundary"/);
   });
 
   it("queries the day's picks for the operator list", () => {
