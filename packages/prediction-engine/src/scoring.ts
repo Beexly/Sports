@@ -8,6 +8,7 @@ import type {
   FactorDetail,
   IndependentMarketFairValue,
   IndependentEdgeSummary,
+  IndependentSourceQuote,
 } from "@sports/types";
 import { computePickGrade } from "@sports/types";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
@@ -180,10 +181,26 @@ function assessIndependentEdge(
   if (!fairValues || fairValues.length === 0) return null;
 
   const independents: IndependentEstimate[] = [];
+  // Quote quality of the sources that ACTUALLY contributed, resolved to the side
+  // being scored. Agreement between sources multiplies conviction (SOLO ×0.6 →
+  // CONFIRMS ×1.0), so whether an agreeing source was a deep book or a wide,
+  // noisy one is exactly the thing a later review needs — and it used to be
+  // discarded at ingestion, leaving the question unanswerable. Carried, not
+  // scored: nothing below reads these values.
+  const sourceQuotes: IndependentSourceQuote[] = [];
   for (const fv of fairValues) {
     const prob = homeIsChosen ? fv.homeFairProb : fv.awayFairProb;
     if (prob == null || !Number.isFinite(prob) || prob < 0 || prob > 1) continue;
     independents.push({ source: fv.source, prob });
+    const q = fv.quote;
+    if (q) {
+      sourceQuotes.push({
+        source: fv.source,
+        spread: (homeIsChosen ? q.homeSpread : q.awaySpread) ?? null,
+        overround: q.overround ?? null,
+        quoteSource: (homeIsChosen ? q.homeQuoteSource : q.awayQuoteSource) ?? null,
+      });
+    }
   }
   if (independents.length === 0) return null;
 
@@ -207,6 +224,10 @@ function assessIndependentEdge(
     sources: independents.map((e) => e.source),
     priced: false, // surfaced in the glass box; not yet in the confidence math
     rationale: a.rationale,
+    // Omitted entirely when no contributing source is a quoted market (a pure
+    // model blend has no bid/ask) — an empty array would imply we looked and
+    // found nothing quotable, which is a different claim.
+    ...(sourceQuotes.length > 0 ? { sourceQuotes } : {}),
   };
 }
 

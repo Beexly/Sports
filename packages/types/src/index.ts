@@ -57,6 +57,36 @@ export interface IndependentEdgeSummary {
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
   priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
+  /**
+   * Quote quality of each contributing source that is a QUOTED MARKET, for the
+   * side this summary is about. Omitted when no contributing source is a quoted
+   * market (a pure model blend — Elo/Poisson/FPI have no bid/ask).
+   *
+   * Why it is here: agreement drives a confidence multiplier (SOLO vs CONFIRMS),
+   * so a thin, wide-spread quote that happens to agree can promote a pick on
+   * noise. These are MEASURED values carried from ingestion, never derived; they
+   * do not change any score today. Because FactorBreakdown is persisted to the
+   * `factorBreakdown` Json column, they make that question answerable AFTER the
+   * fact instead of being destroyed at ingestion.
+   */
+  sourceQuotes?: IndependentSourceQuote[];
+}
+
+/**
+ * Measured quote quality for one independent source, on one side of one game.
+ * Every field is a value the ingestion layer already computed — nothing here is
+ * derived, smoothed, or defaulted. Null means "this source does not publish it",
+ * not "assume it is fine".
+ */
+export interface IndependentSourceQuote {
+  /** Matches the estimator's `source` tag, e.g. "kalshi". */
+  source: string;
+  /** Two-way bid/ask spread on this side's leg, in probability units (0–1). */
+  spread?: number | null;
+  /** Sum of the source's raw implied probabilities BEFORE de-vig (1.0 = balanced). */
+  overround?: number | null;
+  /** How the two-way quote was formed, e.g. "yes_bid_ask". Provenance only. */
+  quoteSource?: string | null;
 }
 
 export interface FactorBreakdown {
@@ -394,6 +424,32 @@ export interface IndependentMarketFairValue {
   homeFairProb?: number | null;
   awayFairProb?: number | null;
   capturedAt?: string;            // ISO; the CLV "as-of" timestamp
+  /**
+   * Quote quality MEASURED at ingestion, carried through instead of discarded.
+   * Absent for model estimators (Elo/Poisson/FPI have no bid/ask). Present for a
+   * quoted market so a thin, wide-spread quote stays distinguishable from a deep
+   * one after the bridge — the two are otherwise identical here, and agreement
+   * between sources drives a confidence multiplier. Never fabricated: a field is
+   * null when the source does not publish it.
+   */
+  quote?: IndependentFairValueQuote | null;
+}
+
+/**
+ * Per-side quote quality for one independent market fair value. Pure carriage of
+ * values the ingestion layer already computed — no derivation, no defaults.
+ */
+export interface IndependentFairValueQuote {
+  /** Two-way bid/ask spread on the HOME leg, probability units; null if unquoted. */
+  homeSpread?: number | null;
+  /** Two-way bid/ask spread on the AWAY leg, probability units; null if unquoted. */
+  awaySpread?: number | null;
+  /** Sum of the two raw implied probabilities BEFORE de-vig (1.0 = balanced book). */
+  overround?: number | null;
+  /** How the home leg's two-way quote was formed, e.g. "yes_bid_ask". */
+  homeQuoteSource?: string | null;
+  /** How the away leg's two-way quote was formed, e.g. "yes_bid_no_bid_complement". */
+  awayQuoteSource?: string | null;
 }
 
 // ============================================================
