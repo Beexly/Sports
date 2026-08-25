@@ -391,7 +391,7 @@ function answerWorkers(summary: OwnerSummary): JarvisAnswer {
     `Data ingestion: ${dataReliability?.status ?? "UNKNOWN"} — ${dataReliability?.oneLiner ?? "status unknown"}`,
     `Settlement: ${settlement?.status ?? "UNKNOWN"} — ${settlement?.oneLiner ?? "status unknown"}`,
     "All agents: DRAFT_ONLY — no external actions without human approval.",
-    "Workers: BullMQ + Redis queue. Check /admin/dashboard for last run timestamps.",
+    "Scheduling: 21 Vercel crons (apps/web/vercel.json) with a GitHub Actions backstop. Check /admin/dashboard for last run timestamps.",
   ];
 
   const bothGreen =

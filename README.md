@@ -84,7 +84,8 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 # required for AI-generated content
 ANTHROPIC_API_KEY="sk-ant-..."
 
-# required for BullMQ workers
+# Local docker-compose only. No application code reads REDIS_URL — it is used
+# solely by scripts/check-deploy-readiness.mjs as a reachability probe.
 REDIS_URL="redis://localhost:6379"
 ```
 
@@ -193,7 +194,10 @@ packages/prediction-engine  Core scoring + readiness gates
 packages/data-ingestion     The Odds API adapter + normalizer
 packages/ingestion-pipeline Shared per-sport ingestion entry point
 packages/types              Shared TypeScript types
-workers/                    BullMQ workers (data-refresh, picks, content)
+workers/                    Standalone long-running workers (setTimeout loops,
+                            not a broker queue). NOT deployed: absent from
+                            docker-compose and run only via npm run workers:*.
+                            Production scheduling is 21 Vercel crons.
 docker/                     Postgres + Redis compose, app Dockerfile
 docs/                       Architecture + ops runbook
 ```
