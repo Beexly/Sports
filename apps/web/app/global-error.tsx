@@ -1,23 +1,26 @@
 "use client";
 
 import { useEffect } from "react";
+import { BRAND_COLORS, BRAND_NAME } from "@/lib/brand";
 import { captureError, initObservability } from "@/lib/observability/sentry";
 
 /**
- * Root-layout error boundary.
+ * Last-resort error boundary.
  *
- * `app/error.tsx` renders INSIDE the root layout, so it cannot catch a throw
- * from the root layout itself (fonts, JSON-LD, analytics gating, the shell).
- * Only `global-error.tsx` can — and without one, Next falls through to its own
- * unstyled default error page: a white screen with black system text and the
- * brand nowhere in sight.
+ * `app/error.tsx` is nested INSIDE the root layout, so it can only catch errors
+ * thrown by a page or a nested layout. When the ROOT layout itself throws —
+ * font loading, a bad env read, a JSON-LD build — React unmounts the whole tree
+ * and `app/error.tsx` never renders. Next.js then falls back to its own
+ * unstyled default, which in production is a bare white page reading
+ * "Application error: a server-side exception has occurred". That is the one
+ * place in the journey where a customer could see an unbranded framework
+ * string, so this file covers it.
  *
- * global-error REPLACES the root layout when it renders, so it has to ship its
- * own <html>/<body>. That also means no design tokens, no next/font and no
- * globals.css are guaranteed to be present — everything here is inline and
- * self-sufficient, using the literal palette values (obsidian #05070B,
- * ion-white #F5F7FF, alert #FF6470) rather than token classes that may not
- * have loaded.
+ * `global-error.tsx` REPLACES the root layout, which means globals.css was
+ * never loaded and no Tailwind class or CSS variable resolves here. Every style
+ * is therefore inline, and the palette is read from the brand source rather
+ * than hardcoded. The digest is the only detail shown in production — never a
+ * stack trace, never a raw message.
  */
 export default function GlobalError({
   error,
@@ -25,15 +28,19 @@ export default function GlobalError({
 }: {
   error: Error & { digest?: string };
   reset: () => void;
-}) {
+}): JSX.Element {
   useEffect(() => {
+    // This boundary replaces the root layout, so the observability init that
+    // normally runs there never ran — a root-layout throw is precisely the
+    // error most worth reporting and the one least likely to have a client
+    // already configured. Init here before capturing.
     initObservability();
-    console.error("[app] global error boundary caught:", error);
+    console.error("[app] root layout error boundary caught:", error);
     captureError(error, { digest: error.digest, scope: "global-error" });
   }, [error]);
 
   const isProd = process.env.NODE_ENV === "production";
-  const detail = isProd
+  const visibleDetail = isProd
     ? error.digest
       ? `Reference: ${error.digest}`
       : "A correlation id was not generated for this error."
@@ -48,70 +55,53 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: 24,
-          background: "#05070B",
-          color: "#F5F7FF",
+          padding: "1.5rem",
+          background: BRAND_COLORS.obsidianBlack,
+          color: BRAND_COLORS.ionWhite,
           fontFamily:
-            "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+            "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         }}
       >
-        <div
-          style={{
-            maxWidth: 560,
-            width: "100%",
-            borderRadius: 16,
-            border: "1px solid rgba(255,100,112,0.3)",
-            background: "rgba(255,100,112,0.08)",
-            padding: 32,
-            textAlign: "center",
-          }}
-        >
+        <main style={{ maxWidth: "34rem", textAlign: "center" }}>
           <p
             style={{
               margin: 0,
-              fontSize: 11,
+              fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+              fontSize: "0.625rem",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
-              color: "#FF6470",
-              fontWeight: 700,
+              color: BRAND_COLORS.orbitalCyan,
             }}
           >
-            Galaxy Sports Edge
+            {BRAND_NAME}
           </p>
-          <h1 style={{ margin: "12px 0 0", fontSize: 20, fontWeight: 700 }}>
+          <h1 style={{ margin: "1rem 0 0", fontSize: "1.5rem", lineHeight: 1.2 }}>
             Something broke on my side.
           </h1>
-          <p
-            style={{
-              margin: "8px 0 0",
-              fontSize: 14,
-              lineHeight: 1.6,
-              color: "#AEB7D2",
-            }}
-          >
-            The page failed before it could render. Hit retry, or head home. The
-            observatory has the trace either way.
+          <p style={{ margin: "0.75rem 0 0", fontSize: "0.875rem", lineHeight: 1.6, opacity: 0.8 }}>
+            The whole page failed to start, not just one panel. Hit retry, or head
+            home. The observatory has the trace either way.
           </p>
           <pre
             style={{
-              margin: "12px 0 0",
+              margin: "1rem 0 0",
+              padding: "0.75rem",
               overflowX: "auto",
-              borderRadius: 8,
-              background: "rgba(13,17,23,0.7)",
-              padding: 12,
-              fontSize: 11,
-              color: "#9AA3C0",
+              borderRadius: "0.5rem",
+              background: "rgba(245, 247, 255, 0.06)",
+              fontSize: "0.6875rem",
               textAlign: "left",
+              opacity: 0.75,
             }}
           >
-            {detail}
+            {visibleDetail}
           </pre>
           <div
             style={{
-              marginTop: 20,
+              marginTop: "1.25rem",
               display: "flex",
               flexWrap: "wrap",
-              gap: 8,
+              gap: "0.5rem",
               justifyContent: "center",
             }}
           >
@@ -119,37 +109,38 @@ export default function GlobalError({
               type="button"
               onClick={() => reset()}
               style={{
-                minHeight: 44,
-                borderRadius: 8,
-                border: "1px solid rgba(255,100,112,0.3)",
-                background: "rgba(255,100,112,0.2)",
-                color: "#F5F7FF",
-                padding: "10px 18px",
-                fontSize: 14,
-                fontWeight: 600,
+                minHeight: "44px",
+                padding: "0.5rem 1rem",
+                borderRadius: "0.5rem",
+                border: "none",
                 cursor: "pointer",
+                fontSize: "0.875rem",
+                fontWeight: 600,
+                background: BRAND_COLORS.orbitalCyan,
+                color: BRAND_COLORS.obsidianBlack,
               }}
             >
               Retry
             </button>
+            {/* A plain anchor, not next/link: the router tree is gone here. */}
             <a
               href="/"
               style={{
-                minHeight: 44,
+                minHeight: "44px",
                 display: "inline-flex",
                 alignItems: "center",
-                borderRadius: 8,
-                border: "1px solid rgba(255,100,112,0.3)",
-                color: "#AEB7D2",
-                padding: "10px 18px",
-                fontSize: 14,
+                padding: "0.5rem 1rem",
+                borderRadius: "0.5rem",
+                border: `1px solid ${BRAND_COLORS.orbitalCyan}`,
+                fontSize: "0.875rem",
                 textDecoration: "none",
+                color: BRAND_COLORS.orbitalCyan,
               }}
             >
               Home
             </a>
           </div>
-        </div>
+        </main>
       </body>
     </html>
   );
