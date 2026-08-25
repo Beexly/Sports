@@ -65,7 +65,15 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What's the Edge Index?",
-        a: "A calibrated 0-100 confidence rating on every signal. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth. A 71 Edge Index still loses ~29 times in 100. Variance is described, not hidden.",
+        // Copy-truth note (source: packages/prediction-engine/src/scoring.ts).
+        // `toEdgeIndex` is identity-with-clamp, so NOTHING fits this number to
+        // settled results; the fitted-sounding adjective was removed here for
+        // that reason. The index is a fixed linear rendering of `rawEdge` =
+        // de-vigged fair probability minus the implied probability of the
+        // offered price, both read off the SAME books. Any sentence turning an
+        // index value into a win or loss rate is unbacked: no code anywhere
+        // maps one to the other. See __tests__/edge-index-copy-truth.test.ts.
+        a: "A 0-100 rendering of a single arithmetic gap: the no-vig fair probability the books imply for the side we picked, minus the probability implied by the price actually offered on that side. It is not a probability the pick wins, and nothing fits it to settled results. Because both halves of that comparison are read off the same books, the vig those books charge moves the number, so read it as a market-shape reading next to the factor trail, not as a forecast.",
       },
       {
         q: "What's Eclipse Gate?",
