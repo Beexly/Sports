@@ -87,7 +87,7 @@ describe("/picks — backend outage is a distinct, honest state (item 3)", () =>
   });
 
   it("outage copy is textually and visually distinct from the deliberate gate copy", () => {
-    // The gate is a policy decision ("still gated" / "collecting"); the outage
+    // The gate is a policy decision ("collecting" / "not open yet"); the outage
     // is a transient fault. Neither may borrow the other's wording or palette.
     expect(gateBlock).toMatch(/still gated|collecting/i);
     expect(outageBlock).not.toMatch(/still gated|collecting/i);
@@ -147,7 +147,19 @@ describe("/picks — empty/gated state fabricates nothing (item 2)", () => {
   });
 
   it("the gated empty state is honest and carries no invented record/number", () => {
-    expect(gateBlock).toMatch(/still gated/i);
+    // BOTH gate branches must tell the reader the board is deliberately dark —
+    // the stale-odds pause and the history gate each say so in their own words,
+    // and each explicitly refuses to let a deliberate hold read as a fault.
+    //
+    // This used to pin the single literal "still gated", which lived in the very
+    // sentence that leaked the env-var name LIVE_BOARD and the internal phrase
+    // "founder enable" to every free visitor (see the internal-identifier rule
+    // in public-copy-scanner.test.ts). Rewriting that sentence into customer
+    // language must not be able to drop the disclosure along with it, so the pin
+    // moved onto the disclosure itself rather than onto one wording of it.
+    expect(gateBlock).toMatch(/waiting on fresh odds/i); // stale-odds branch
+    expect(gateBlock).toMatch(/not open yet/i); // history-gate branch
+    expect(gateBlock.match(/\(not broken\)/g) ?? []).toHaveLength(2);
     // No fabricated win rate / record / accuracy number in the dark state.
     expect(gateBlock).not.toMatch(/\d{1,3}\s*%/);
     expect(gateBlock).not.toMatch(/win\s*rate|record:|accuracy/i);

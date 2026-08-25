@@ -5,6 +5,8 @@ import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
 import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
+import { LocalTime } from "@/components/ui/local-time";
+import { isRealInstant } from "@/lib/time/local-time";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
@@ -401,7 +403,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
                   ? "Quiet board — waiting on fresh odds (not broken)."
-                  : "Public picks are still gated. LIVE_BOARD stays off until founder enable."}
+                  : "Board not open yet — we're building the settled record first (not broken)."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
@@ -576,13 +578,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
 function SlateBar({ slate }: { slate: DailySlate }) {
   const record = slate.recentRecord;
-  const lastUpdated = slate.lastUpdatedAt
-    ? new Date(slate.lastUpdatedAt).toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        timeZoneName: "short",
-      })
-    : null;
+  // The "Updated" stamp resolves on the VIEWER's clock via <LocalTime>.
+  // Formatted here — a SERVER component with no TZ set — it printed the
+  // server's UTC clock, so a bettor in New York read a slate stamped hours in
+  // the future and could reasonably conclude the board was broken.
+  const lastUpdatedIso =
+    slate.lastUpdatedAt && isRealInstant(slate.lastUpdatedAt)
+      ? slate.lastUpdatedAt
+      : null;
 
   return (
     <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
@@ -613,10 +616,12 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         )}
 
         {/* Last updated */}
-        {lastUpdated && (
+        {lastUpdatedIso && (
           <div className="ml-auto flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(0,229,255,0.6)]" aria-hidden="true" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
+              Updated <LocalTime iso={lastUpdatedIso} format="clock" label="Slate updated" />
+            </span>
           </div>
         )}
       </div>

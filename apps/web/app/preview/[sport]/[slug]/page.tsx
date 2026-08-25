@@ -58,6 +58,7 @@ import {
 import { resolveSportParam } from "@/lib/preview/sport-resolution";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
+import { LocalTime } from "@/components/ui/local-time";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import type { PickType } from "@sports/db";
 import {
@@ -266,18 +267,13 @@ export default async function PreviewPage({ params }: Props) {
   const preview = buildMatchupPreview(input);
   const pick = bestPublishedPick(game);
 
-  const gameDate = new Date(game.commenceTime);
-  const formattedDate = gameDate.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-  const formattedTime = gameDate.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    timeZoneName: "short",
-  });
+  // Only the ISO instant reaches the markup; <LocalTime> resolves the wall
+  // clock on the VIEWER's device. Formatting here — a SERVER component with no
+  // TZ set — printed the server's UTC clock to every reader, and for a late
+  // kickoff that pushed the DATE a day forward too (an 8:20 PM ET Sunday game
+  // is Monday in UTC). The `<time dateTime>` attribute and the SportsEvent
+  // JSON-LD `startDate` both keep the exact instant for crawlers.
+  const gameStartIso = new Date(game.commenceTime).toISOString();
 
   return (
     <>
@@ -297,12 +293,15 @@ export default async function PreviewPage({ params }: Props) {
         {/* Header */}
         <header className="space-y-2">
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
-            {resolution.sport.name.toUpperCase()} · {formattedDate}
+            {resolution.sport.name.toUpperCase()} ·{" "}
+            <LocalTime iso={gameStartIso} format="date-long" label="Game date" />
           </p>
           <h1 className="text-3xl font-bold text-ion-white">
             {game.awayTeamName} vs {game.homeTeamName}
           </h1>
-          <p className="text-ion-2">{formattedTime}</p>
+          <p className="text-ion-2">
+            <LocalTime iso={gameStartIso} format="clock" label="Kickoff" />
+          </p>
         </header>
 
         {/* Model lean */}
