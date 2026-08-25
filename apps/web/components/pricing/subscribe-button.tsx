@@ -205,6 +205,14 @@ export function SubscribeButton({
         <Link href="/terms" className="underline hover:text-ion-2">
           Terms
         </Link>
+        {" · "}
+        {/* Privacy sits on the SAME proximate line as Terms: this is the
+            control that starts the paid relationship, and /pricing's <Footer />
+            links Privacy far below the fold, nowhere near the point of
+            commitment. */}
+        <Link href="/privacy" className="underline hover:text-ion-2">
+          Privacy
+        </Link>
         .
       </p>
 
