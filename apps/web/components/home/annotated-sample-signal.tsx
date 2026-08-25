@@ -30,13 +30,20 @@ const CALLOUTS_RIGHT = [
     label: "04 · Factor trail",
     body: "Every factor the model weighed: market consensus, line movement, book depth, freshness, intelligence layers. You read what the model read.",
   },
+  // Copy-truth note (source: packages/prediction-engine/src/scoring.ts).
+  // The chip below this callout renders the Edge Index, not the confidence
+  // score, so the label says Edge Index. `toEdgeIndex` is identity-with-clamp:
+  // nothing fits the index to settled results, which is why the
+  // fitted-sounding adjective is gone. No code maps an index value to a win or
+  // loss rate, so the variance line must not quantify one.
+  // See apps/web/__tests__/edge-index-copy-truth.test.ts.
   {
-    label: "05 · Confidence rating",
-    body: "A calibrated 0-100 Edge Index. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth.",
+    label: "05 · Edge Index",
+    body: "The 0-100 Edge Index: the no-vig fair probability the books imply for this side, minus the probability implied by the price offered on it. Not a probability the pick wins, and not fitted to settled results.",
   },
   {
     label: "06 · Variance line",
-    body: "Every pick carries the reminder that even a 64% confidence signal still loses 36 of 100 times. Variance is described, not hidden.",
+    body: "Every pick carries the reminder that the index is one input and the outcome stays uncertain. Variance is described, not hidden.",
   },
 ] as const;
 
@@ -425,7 +432,7 @@ function SampleCard() {
           textAlign: "center",
         }}
       >
-        A 71-confidence signal still loses ~29 of 100. Treat as one input.
+        The Edge Index is not a probability the pick wins. Treat as one input.
       </p>
     </article>
   );
