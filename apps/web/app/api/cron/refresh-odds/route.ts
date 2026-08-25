@@ -7,14 +7,21 @@
  * `@sports/ingestion-pipeline`'s `refreshOdds()` (which itself calls
  * `processSport()`) so the two execution paths can never drift.
  *
- * Schedule is declared in `vercel.json` at the repo root: every 30 minutes
- * (the "every-30th-minute" cron pattern — written in prose here, not as the
- * literal cron string, because a literal star-slash sequence inside a block
- * comment terminates the comment early and breaks the build; that exact
- * mistake shipped once already, so it isn't getting a second chance).
- * This cadence is required so candidate odds stay inside the board gate's
+ * Schedule is declared in `apps/web/vercel.json` — the ONLY copy Vercel reads,
+ * because cron schedules are loaded from the project's Root Directory. (The
+ * repo-root vercel.json is an inert byte-identical duplicate; see
+ * `__tests__/vercel-config-drift.test.ts`.) The declared cadence is every
+ * fifteenth minute — written in prose here, not as the literal cron string,
+ * because a literal star-slash sequence inside a block comment terminates the
+ * comment early and breaks the build; that exact mistake shipped once already,
+ * so it isn't getting a second chance.
+ *
+ * This cadence keeps candidate odds well inside the board gate's
  * MAX_CANDIDATE_ODDS_AGE_MS (6 hours) in `load-gate-slate.ts`. Do NOT widen
  * the 6h gate to hide a slow cron; keep this comment in sync with vercel.json.
+ * `__tests__/cron-schedule-manifest.test.ts` pins the declared cadence against
+ * `lib/ops/cron-schedule-manifest.ts`, so the real number is asserted there
+ * rather than trusted from this prose.
  * The optional long-running worker still uses REFRESH_INTERVAL_MS = 30m.
  *
  * Authentication: Vercel invokes the route with
