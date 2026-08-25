@@ -526,3 +526,50 @@ describe("neg-binomial — fit/make round trip", () => {
     }
   });
 });
+
+describe("makeNegBinomial — a rejected value is never memoized", () => {
+  // Regression. `growOne` appended the running sum to the memo table BEFORE
+  // deciding whether to keep it, so a NO_CONVERGENCE throw escaped with the
+  // stalled partial still in the table. The second call at that index found it
+  // memoized, never re-grew, and returned it as a fact — so `cdf(0)` threw the
+  // first time and returned 0 the second. The wrong answer is the fail-open
+  // one: a caller that catches and retries gets a plausible number instead of
+  // the error it should have seen again.
+  const NON_CONVERGING = { r: 1e6, p: 0.05 } as const;
+
+  it("cdf(0) throws identically on the first and second call", () => {
+    const dist = makeNegBinomial(NON_CONVERGING);
+    expect(() => dist.cdf(0)).toThrow(KernelError);
+    expect(() => dist.cdf(0)).toThrow(KernelError);
+  });
+
+  it("stays throwing across many repeats — no call ever yields a number", () => {
+    const dist = makeNegBinomial(NON_CONVERGING);
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      let returned: number | null = null;
+      try {
+        returned = dist.cdf(0);
+      } catch (e) {
+        expect(e).toBeInstanceOf(KernelError);
+        expect((e as KernelError).code).toBe("NO_CONVERGENCE");
+      }
+      expect(returned).toBeNull();
+    }
+  });
+
+  it("quantile after a thrown cdf throws too, rather than reading the partial", () => {
+    const dist = makeNegBinomial(NON_CONVERGING);
+    expect(() => dist.cdf(0)).toThrow(KernelError);
+    expect(() => dist.quantile(0.5)).toThrow(KernelError);
+  });
+
+  it("a converging distribution is unaffected — the memo still works", () => {
+    // Guards against "fixing" the leak by disabling memoization: the table must
+    // still be built once and reused, so repeated calls agree exactly.
+    const dist = makeNegBinomial({ r: 4, p: 0.4 });
+    const first = dist.cdf(12);
+    expect(dist.cdf(12)).toBe(first);
+    expect(dist.cdf(12)).toBe(first);
+    expect(Number.isFinite(first)).toBe(true);
+  });
+});

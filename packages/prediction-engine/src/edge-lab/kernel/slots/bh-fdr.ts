@@ -1,14 +1,20 @@
 /**
- * SLOT `bh-fdr` + `ess` — the mining engine's statistical spine.
+ * SLOT `bh-fdr` — multiplicity control for the mining engine.
  *
- * Two functions live here because they answer the two questions that decide
- * whether a "discovered" edge is real:
+ * `benjaminiHochberg` answers the first of the two questions that decide
+ * whether a "discovered" edge is real: of the many hypotheses in a
+ * pre-registered grid, which survive multiplicity control at a stated
+ * false-discovery rate?
  *
- *   1. `benjaminiHochberg` — of the many hypotheses in a pre-registered grid,
- *      which survive multiplicity control at a stated false-discovery rate?
- *   2. `effectiveSampleSize` — how much INDEPENDENT evidence do the surviving
- *      rows actually carry, once clustering (many rows from one player-season)
- *      is accounted for?
+ * The second question — how much INDEPENDENT evidence do the surviving rows
+ * actually carry, once clustering (many rows from one player-season) is
+ * accounted for — is `effectiveSampleSize`, which now lives in its own file
+ * (`./ess.js`) alongside the m₀ unbalanced-design proof and its degenerate-case
+ * policy. The contract heads this section "SLOT `bh-fdr` + `ess`", which is why
+ * both once lived here; the split follows the one-slot-per-file rule the rest of
+ * `slots/` obeys. It is re-exported below so existing importers are unaffected,
+ * and so there is exactly ONE implementation of the frozen type rather than two
+ * that can drift apart.
  *
  * ── 1. BENJAMINI–HOCHBERG (1995) STEP-UP ────────────────────────────────────
  *
@@ -54,43 +60,12 @@
  *
  * ── 2. CLUSTER-ADJUSTED EFFECTIVE SAMPLE SIZE ───────────────────────────────
  *
- *     ess = n / (1 + (m̄ − 1) · ρ),      designEffect = n / ess
- *
- * with m̄ = n / k the mean cluster size and ρ the one-way ANOVA (unbalanced)
- * intraclass correlation over k clusters:
- *
- *     MSB = Σ_i n_i (ȳ_i − ȳ)² / (k − 1)
- *     MSW = Σ_i Σ_j (y_ij − ȳ_i)² / (n − k)
- *     m0  = ( n − Σ_i n_i² / n ) / (k − 1)          [unbalanced-design correction]
- *     ρ   = (MSB − MSW) / (MSB + (m0 − 1) · MSW),   clamped to [0, 1]
- *
- * The clamp is mandated by the contract: the ANOVA estimator is unbiased and so
- * takes negative values when the true ICC is near zero, and ρ < 0 would inflate
- * ess ABOVE n — i.e. claim more independent information than rows exist. ρ > 1
- * is likewise outside the parameter space. Clamping is the conservative,
- * fail-closed choice; the raw estimate is not exposed because no caller of a
- * minimum-sample gate should be able to use a negative one.
- *
- * DEGENERATE CASES (explicit policy, not accident):
- *   - k = 1 (a single cluster): between-cluster variation is unidentifiable —
- *     MSB has zero degrees of freedom. Policy: ρ = 1, giving
- *     ess = n / (1 + (n − 1)) = 1 and designEffect = n. One cluster supplies at
- *     most one independent unit; assuming independence here is exactly the error
- *     this function exists to prevent.
- *   - n = k (every cluster a singleton): MSW has zero degrees of freedom, but
- *     m̄ = 1 so (m̄ − 1) · ρ = 0 for any ρ and ess = n exactly. Policy: report
- *     ρ = 0 implicitly, ess = n, designEffect = 1. This is the genuinely
- *     independent case, not an approximation.
- *   - zero total variance (MSB = MSW = 0, every value identical): the ratio is
- *     0/0 and ρ is undefined — the limit is 1 approaching along MSW → 0 and 0
- *     approaching along MSB → 0. Policy: ρ = 1 (conservative; matches the
- *     MSW = 0 branch, where identical values within clusters do mean k
- *     independent units).
- *   - MSB = 0 with MSW > 0 and m0 = 1: the estimate is strictly negative, so the
- *     clamp applies and ρ = 0.
- *
- * Because ρ ∈ [0, 1] and m̄ >= 1, the denominator lies in [1, m̄] and therefore
- * ess ∈ [k, n] ⊂ (0, n] for every admissible input, as the contract requires.
+ * Lives in `./ess.js` and is re-exported at the bottom of this file. Its own
+ * header carries the estimator, the m0 unbalanced-design correction with the
+ * Cauchy-Schwarz argument for why the naive mean cluster size always overstates
+ * ess, and the degenerate-case policy for k = 1, n = k, and zero total variance.
+ * That documentation is deliberately NOT duplicated here: a second copy of a
+ * numeric policy is a second thing to forget to update.
  */
 
 import {
@@ -98,10 +73,7 @@ import {
   assertFinite,
   assertNonEmpty,
   assertProbability,
-  assertSameLength,
   type BenjaminiHochbergFn,
-  type EffectiveSampleSize,
-  type EffectiveSampleSizeFn,
   type FdrResult,
 } from "../contract.js";
 
@@ -165,113 +137,17 @@ export const benjaminiHochberg: BenjaminiHochbergFn = (pValues, alpha): FdrResul
   return { qValues, rejected, threshold };
 };
 
+
 // ─────────────────────────────────────────────────────────────────────────────
-// Cluster-adjusted effective sample size
+// Cluster-adjusted effective sample size — implementation moved to `./ess.js`
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Distinct key per cluster id that never collides across the number/string union. */
-function clusterKey(id: string | number, label: string): string {
-  if (typeof id === "number") {
-    assertFinite(id, label);
-    return `n:${id}`;
-  }
-  return `s:${id}`;
-}
-
-export const effectiveSampleSize: EffectiveSampleSizeFn = (
-  values,
-  clusterIds,
-): EffectiveSampleSize => {
-  assertSameLength(values, clusterIds, "values", "clusterIds");
-  assertNonEmpty(values, "values");
-
-  const n = values.length;
-
-  // Pass 1 — group, count, and sum. Cluster means are formed from sums rather
-  // than from sums of squares so the within-cluster sum of squares can be taken
-  // in a numerically stable second pass.
-  const keyToCluster = new Map<string, number>();
-  const counts: number[] = [];
-  const sums: number[] = [];
-  const clusterOf: number[] = new Array<number>(n);
-  let grandSum = 0;
-
-  for (let i = 0; i < n; i += 1) {
-    const v = values[i] as number;
-    assertFinite(v, `values[${i}]`);
-    const key = clusterKey(clusterIds[i] as string | number, `clusterIds[${i}]`);
-    let c = keyToCluster.get(key);
-    if (c === undefined) {
-      c = counts.length;
-      keyToCluster.set(key, c);
-      counts.push(0);
-      sums.push(0);
-    }
-    clusterOf[i] = c;
-    counts[c] = (counts[c] as number) + 1;
-    sums[c] = (sums[c] as number) + v;
-    grandSum += v;
-  }
-
-  const k = counts.length;
-  const mBar = n / k;
-  const grandMean = grandSum / n;
-
-  let rho: number;
-  if (k === 1) {
-    // Single cluster: ICC unidentifiable. Conservative policy (see header).
-    rho = 1;
-  } else if (n === k) {
-    // All singleton clusters: (m̄ − 1) = 0, so ρ cannot affect ess. Report the
-    // independent case exactly.
-    rho = 0;
-  } else {
-    const means: number[] = new Array<number>(k);
-    let ssBetween = 0;
-    let sumSqSizes = 0;
-    for (let c = 0; c < k; c += 1) {
-      const nc = counts[c] as number;
-      const mean = (sums[c] as number) / nc;
-      means[c] = mean;
-      const d = mean - grandMean;
-      ssBetween += nc * d * d;
-      sumSqSizes += nc * nc;
-    }
-
-    let ssWithin = 0;
-    for (let i = 0; i < n; i += 1) {
-      const d = (values[i] as number) - (means[clusterOf[i] as number] as number);
-      ssWithin += d * d;
-    }
-
-    const msb = ssBetween / (k - 1);
-    const msw = ssWithin / (n - k);
-    const m0 = (n - sumSqSizes / n) / (k - 1);
-    const denominator = msb + (m0 - 1) * msw;
-
-    if (denominator > 0) {
-      const raw = (msb - msw) / denominator;
-      // Contract-mandated clamp to the parameter space [0, 1]; see header for
-      // why a negative ANOVA estimate must not be passed through.
-      rho = raw < 0 ? 0 : raw > 1 ? 1 : raw;
-    } else if (msw > 0) {
-      // denominator = 0 with msw > 0 forces msb = 0 and m0 = 1, so the raw
-      // estimate is −msw / 0⁻ → negative; the clamp gives 0.
-      rho = 0;
-    } else {
-      // msb = msw = 0: no variance anywhere, ρ undefined. Conservative limit.
-      rho = 1;
-    }
-  }
-
-  const ess = n / (1 + (mBar - 1) * rho);
-
-  // Defensive: unreachable for admissible input because ρ ∈ [0,1] and m̄ >= 1
-  // bound the denominator in [1, m̄]. Kept so a future edit cannot leak an
-  // out-of-range ess into a minimum-sample gate.
-  if (!Number.isFinite(ess) || ess <= 0 || ess > n) {
-    throw new KernelError("DOMAIN", `ess must lie in (0, ${n}], computed ${ess}`);
-  }
-
-  return { ess, designEffect: n / ess };
-};
+/**
+ * Re-exported so the two halves of the contract's combined "SLOT `bh-fdr` +
+ * `ess`" section stay importable from one place, WITHOUT a second copy of the
+ * algorithm existing. Two implementations of a frozen type is the failure mode
+ * this re-export exists to prevent: they start identical, one gets a fix, and
+ * from then on the gate a caller hits depends on which file they happened to
+ * import from.
+ */
+export { effectiveSampleSize } from "./ess.js";

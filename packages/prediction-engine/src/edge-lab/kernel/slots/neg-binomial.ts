@@ -285,8 +285,17 @@ export const makeNegBinomial: MakeNegBinomialFn = (
     const previous = index === 0 ? 0 : cumulative[index - 1]!;
     const term = pmfAt(index);
     const next = previous + term;
-    cumulative.push(next);
 
+    // NOTHING IS APPENDED BEFORE THE VERDICT IS KNOWN. `cumulative` is the
+    // memo every later call reads, so appending first and validating second
+    // leaves a rejected value behind: the throw below would escape with the
+    // stalled partial already in the table, and a SECOND call at that index
+    // would find it memoized, skip growing, and return it as a fact. The same
+    // call then answers differently depending on whether it is the first —
+    // and the later, wrong answer is the fail-open one, because a caller that
+    // catches the error and retries gets a plausible number instead of the
+    // error. Each branch below appends exactly what it has decided to keep.
+    //
     // Saturation trigger 1: unit mass reached to double precision.
     // Saturation trigger 2: the numerical fixed point described on
     // `CDF_STALL_TOL` — the sum can no longer move, and it stalled close enough
@@ -298,7 +307,7 @@ export const makeNegBinomial: MakeNegBinomialFn = (
       // its support for `quantile(1)` to be well defined. Pinning moves the
       // value by less than the 1e-7 pmf/cdf-consistency tolerance the
       // conformance suite enforces, so it cannot mask a real defect.
-      cumulative[index] = 1;
+      cumulative.push(1);
       saturated = true;
       return true;
     }
@@ -308,6 +317,7 @@ export const makeNegBinomial: MakeNegBinomialFn = (
         `negative binomial cdf stalled at ${next} before accumulating unit mass (r=${r}, p=${p})`,
       );
     }
+    cumulative.push(next);
     return true;
   }
 
