@@ -80,9 +80,21 @@ function aggregateRows(rows: readonly CorrelationPickRow[], aggregate: Correlati
   if (aggregate === "COUNT") return rows.length;
   if (rows.length === 0) return 0;
   if (aggregate === "WIN_RATE") {
-    return round(rows.filter((row) => row.result === "WIN").length / rows.length);
+    // Decided-only denominator. `rows` explicitly includes PUSH (see
+    // CorrelationPickRow.result and load-settled-picks.ts, which selects
+    // result IN (WIN, LOSS, PUSH)), so dividing by rows.length counted every
+    // push as a loss. Matches the house idiom in
+    // `lib/performance/public-performance-policy.ts` (eligibleForRate).
+    // Worked example — 56W / 40L / 4 PUSH: 56/100 = 0.560 (old, under-sells)
+    // vs 56/96 = 0.583 (decided-only, correct).
+    const wins = rows.filter((row) => row.result === "WIN").length;
+    const losses = rows.filter((row) => row.result === "LOSS").length;
+    const decided = wins + losses;
+    return decided > 0 ? round(wins / decided) : 0;
   }
   if (aggregate === "PUSH_RATE") {
+    // PUSH_RATE intentionally keeps the FULL denominator: it reports what share
+    // of the whole population pushed, so pushes must stay in it.
     return round(rows.filter((row) => row.result === "PUSH").length / rows.length);
   }
   if (aggregate === "AVG_CONFIDENCE") {
