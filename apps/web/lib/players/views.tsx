@@ -20,6 +20,7 @@ import { loadNflverseEdgeSignals } from "@/lib/nflverse/edge-signals";
 import { loadNflverseInjuryReport } from "@/lib/nflverse/injury-report";
 import { loadSleeperMarketSignal } from "@/lib/sleeper/market-signal";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 
 /**
  * Player Lab view registry (SERVER).
@@ -575,7 +576,21 @@ async function loadMarketView(): Promise<ViewResult> {
 
 // ── DFS ───────────────────────────────────────────────────────────────────────
 
+/**
+ * Public teaser depth for the licensed DFS board, matching `/fantasy/dfs`
+ * (`dfs!.rows.slice(0, 24)`). The FULL reconciled board is paid-provider data
+ * sold with the fantasy suite: `/api/dfs/salaries` gates it behind
+ * `requireFantasyApi()` (FANTASY | PRO | ELITE).
+ *
+ * Player Lab previously rendered `dfs.rows` in full with no gate, so an
+ * anonymous visitor could read the entire paid board at `/players?view=dfs`
+ * and skip the API gate entirely. Same data, same tier, same rule — the page
+ * shows the teaser to unentitled viewers and the full board to entitled ones.
+ */
+const DFS_PUBLIC_TEASER_ROWS = 24;
+
 async function loadDfsView(): Promise<ViewResult> {
+  const viewer = await getViewerEntitlements(); // fails closed to FREE
   const dfs = await loadDfsSalaries();
   if (dfs.status !== "live" || dfs.rows.length === 0) {
     const reason =
@@ -594,6 +609,9 @@ async function loadDfsView(): Promise<ViewResult> {
     };
   }
   const connectedLive = dfs.providers.filter((p) => p.status === "live").length;
+  const full = viewer.canUseFantasyFull;
+  const rows = full ? dfs.rows : dfs.rows.slice(0, DFS_PUBLIC_TEASER_ROWS);
+  const truncated = rows.length < dfs.rows.length;
   return {
     status: "live",
     windowLabel: `DraftKings · ${dfs.date}`,
@@ -606,8 +624,12 @@ async function loadDfsView(): Promise<ViewResult> {
         eyebrow: `DraftKings salaries · ${dfs.date}`,
         title: `Reconciled across ${connectedLive} feed${connectedLive === 1 ? "" : "s"}`,
         blurb: "DK salaries via licensed DFS providers, reconciled across feeds. A salary is trusted when feeds agree; disagreement is flagged. Filter by position.",
-        footnote: `${dfs.discrepancies} disagreement${dfs.discrepancies === 1 ? "" : "s"} flagged across ${dfs.rows.length} salaries.`,
-        rows: dfs.rows,
+        // Say plainly that this is a teaser and how deep it goes — an unlabeled
+        // truncated table would read as the whole slate.
+        footnote: truncated
+          ? `Showing the top ${rows.length} of ${dfs.rows.length} salaries. ${dfs.discrepancies} disagreement${dfs.discrepancies === 1 ? "" : "s"} flagged across the full board, which unlocks with the fantasy suite.`
+          : `${dfs.discrepancies} disagreement${dfs.discrepancies === 1 ? "" : "s"} flagged across ${dfs.rows.length} salaries.`,
+        rows,
         enumOptions: distinctOptions(dfs.rows, (r) => r.position),
         showRank: true,
         minWidth: 640,
