@@ -12,6 +12,7 @@ import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
+import { LocalTime } from "@/components/ui/local-time";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -46,15 +47,9 @@ export function PickCard({
   canSeeEdgeScore,
   canSeeFactorBreakdown,
 }: PickCardProps) {
-  const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    timeZoneName: "short",
-  });
-
+  // Kickoff is rendered by <LocalTime>, a client leaf, so it resolves on the
+  // VIEWER's clock. Formatting it here (a SERVER component with no TZ set)
+  // baked the server's UTC wall clock into the HTML for every visitor.
   const riskInfo = RISK_LEVEL_LABELS[pick.riskLevel];
 
   const freshnessAge = pick.dataFreshnessAt
@@ -95,7 +90,13 @@ export function PickCard({
 
       {/* Matchup */}
       <div>
-        <p className="text-xs text-ion-1">{gameTime}</p>
+        <p className="text-xs text-ion-1">
+          <LocalTime
+            iso={pick.game.commenceTime}
+            format="kickoff"
+            label="Kickoff"
+          />
+        </p>
         <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="text-sm font-semibold text-white">{pick.game.awayTeam}</p>

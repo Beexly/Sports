@@ -174,6 +174,10 @@ export function SubscribeButton({
     <div className="flex flex-col gap-2">
       <label className="flex flex-col gap-1 text-[11px] leading-relaxed text-ion-3">
         Date of birth (21+)
+        {/* `border-ion-4/40` compiled to nothing: the ion scale defines only
+            DEFAULT/1/2/3 (tailwind.config.ts), so the required 21+ input on the
+            checkout path fell back to Tailwind's default border. ion-3 is the
+            dimmest ion that actually exists. */}
         <input
           type="date"
           name="dateOfBirth"
@@ -181,7 +185,7 @@ export function SubscribeButton({
           autoComplete="bday"
           value={dateOfBirth}
           onChange={(e) => setDateOfBirth(e.target.value)}
-          className="rounded-lg border border-ion-4/40 bg-void px-3 py-2 text-sm text-ion-1"
+          className="rounded-lg border border-ion-3/40 bg-void px-3 py-2 text-sm text-ion-1"
         />
       </label>
       <button
