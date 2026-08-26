@@ -38,20 +38,24 @@
 
 **The honest gaps.** [VERIFIED]
 
-- **Revenue is $0 until Stripe goes live.** The Fantasy CTA returns a graceful 503
-  without the live price IDs. Every other blocker is downstream of this one.
-- **The proof ladder is at FOUNDING.** Settled record ~50.9%; CLV unproven publicly;
-  PROVEN needs ≥100 settled + published calibration; ESTABLISHED needs ≥500 + CLV ≥52.4%.
+- ~~Revenue $0 until Stripe goes live / CTA 503s~~ **CORRECTED same day:** the live
+  `/api/ops/public-surface-truth` probe reports checkout **healthy — Stripe secret +
+  6/6 price slots + webhook secret configured**. Remaining owner check: confirm the
+  keys are LIVE-mode (not test) and run one real checkout.
+- **The proof ladder is at FOUNDING — but the sample floor is long passed.**
+  **Canonical settled = 1,470** (754W–713L–3P, ≈51.4%). PROVEN is now blocked by
+  **calibration eligibility RED** (settlement not healthy · Brier 0.2466 > 0.22 ·
+  ECE 0.0590 > 0.05 at n=791), not by sample size.
 - **Owner-gated infra is pending:** `prisma migrate deploy` (proof receipts +
   slate-commitment tables), THE_ODDS_API_KEY decision, orphan `sports-db` Neon project.
 - **MVE is blocked on a working `DATABASE_URL`** (C-59) — the one-shot edge experiment
   is frozen and waiting on founder hands, not on more research.
-- **CLOSE-stamp liveness is an open observation** (C-62): if CLOSE counts stay 0 after
-  the next MLB settle cycle, the close-stamp path is broken and the CLV ledger's
-  denominator is at risk.
-- **Local-machine risk:** the working clone (`projects/Sports`) sits on
-  `hermes/w2-audit-settlement`, and **no such branch exists on origin** — that audit
-  work is unpushed and dies with the laptop. Push it first, before anything else.
+- ~~CLOSE-stamp liveness open (C-62)~~ **RESOLVED GREEN same day** — see the
+  evening update below: CLOSE stamps are writing (MLB 986 · NFL 624 · MLS 839).
+- ~~Unpushed local branch~~ **CORRECTED same day:** `hermes/w2-audit-settlement`
+  IS on origin at `43b161ec` (the morning read used this container's restricted
+  fetch refspec — origin actually holds 772 branches). Remaining local-machine
+  action: confirm the laptop clone's HEAD isn't ahead of `43b161ec`.
 
 ---
 
@@ -218,3 +222,54 @@ auto-suppression · in-season fantasy suite converting · CLV sample compounding
 *This document follows the house convention: it states what is, what's next, and who
 holds each key. Nothing here overrides `CANONICAL.md`, the founder gates, or the
 locked decisions — it sequences them.*
+
+---
+
+## Evening update — 2026-08-26, from live prod + Neon evidence
+
+Same-day verification pass against production (`/api/ops/public-surface-truth`,
+`/api/health`) and the live `gse-postgres` database (read-only SQL). Everything
+below is [VERIFIED] against those primary sources.
+
+**Resolved / corrected since the morning read:**
+
+1. **C-62 CLOSE-stamp liveness: GREEN.** `odds_line_snapshots` CLOSE counts:
+   MLB 986 · NFL 624 · MLS 839 (all were 0 at H-F7). `markClosingSnapshotsIfEnabled`
+   works; the CLV denominator path is proven. NCAAF CLOSE=0 is expected (no settled
+   cycle under the flag yet).
+2. **`hermes/w2-audit-settlement` is on origin** (`43b161ec`) — morning "unpushed"
+   claim was an artifact of this container's restricted fetch refspec.
+3. **Stripe checkout probes healthy in prod** — secret + 6/6 price slots + webhook
+   secret configured. Owner check remaining: LIVE-mode confirmation + one real checkout.
+4. **Canonical settled = 1,470** (754W–713L–3P) — the 100-pick learning floor is
+   history. PROVEN's actual blockers: settlement health + Brier/ECE floors
+   (calibration eligibility RED: Brier 0.2466 > 0.22, ECE 0.0590 > 0.05, n=791).
+
+**New findings (the real fires):**
+
+5. **Settlement CRITICAL — root cause identified: game-identity fragmentation.**
+   82 of 2,020 commenced picks overdue. The same physical game exists as up to
+   three `Game` rows: an odds-source hash id (short team names), and two ESPN
+   conventions — `espn:baseball_mlb:<id>` (`espn-odds-client.ts:361`) vs
+   `espn:mlb:<id>` (`espn-schedule-seed.ts:121`, upserted by
+   `seed-games-from-espn.ts` with no cross-source matching). Scores finalize one
+   row; picks hang PENDING on the others, stuck `SCHEDULED` forever. Settlement
+   itself is alive (280 picks settled since Aug 22; last settle minutes ago) —
+   only the fragmented rows starve. Fix in progress on this branch.
+6. **Line archive stalled since 2026-08-22 16:31Z.** Both archive paths (ingest
+   OPEN/INTERIM capture and settle CLOSE stamps) stopped in the same minute while
+   ingestion kept succeeding against the same DB — the only shared gate is the
+   `LINE_ARCHIVE_ENABLED` env flag. **Owner: check that flag in Vercel Production
+   env (expected `"true"`)**; it was likely dropped in the Aug 22/23 redeploy to
+   `bb0e7dfc`. Every day it stays off starves the CLV ledger.
+7. **Ingestion is healthy** (odds inserting every cycle, THE_ODDS_API_KEY alive,
+   Rundown + ESPN tertiary configured) — the morning plan's "Odds-API decision"
+   framing was stale; the dual-path is already live.
+8. **MVE run: one permission from done.** The frozen runner (`hermes/hf5-mve` @
+   `0035e3b4`) is verified read-only against the DB; deps are installed in this
+   container; the only missing piece is a `DATABASE_URL` (the harness correctly
+   refuses to hand out the privileged connection string). Owner options: grant the
+   Neon connection-string permission in-session, or run
+   `npx tsx scripts/edge-lab/run-mve.ts` locally on the branch with the env set.
+9. **Orphan `sports-db` Neon project confirmed still alive** (dormant since
+   Jun 10). Deletion is irreversible → stays a founder click.
