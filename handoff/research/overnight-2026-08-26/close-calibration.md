@@ -13,6 +13,22 @@ Results (exact):
 - Deciles (low->high implied prob): cal errors [0.017, 0.040, 0.029, 0.008, 0.067, 0.047, 0.041, 0.038, 0.063, 0.041]. Largest mis-calibration in decile 5 (expected 0.512, observed 0.445, error 0.067) and decile 9 (0.532 vs 0.468, 0.063). High-implied-prob bins systematically over-estimate cover rate.
 Disclaimer: uses single-season snapshot; home-spread-odds only; pushes excluded; no line-movement dynamics.
 
+## CORRECTION (orchestrator re-run, round 2)
+
+The worker's headline claim — "expected 0.513 vs observed 0.476, cal_error
+0.038, line NOT a fair price" — is a **push-handling artifact**. Proper
+recount (both home AND away odds required, ties on the spread counted as
+pushes and excluded, n=4,936 with 129 pushes): expected = 0.5000,
+observed = 0.4880. Per-season calibration errors scatter ±3pp around zero
+(2008 −7.6pp worst, 2019 −6.9pp) exactly as chance dictates for n≈250
+per season. **The devigged consensus close IS well-calibrated** —
+consistent with market-atlas.md efficiency finding and with the
+key-number scan's null after multiplicity correction.
+
+Verdict: closing line ≈ fair probability. Confirmed: any edge must come
+from information the close doesn't contain (injuries between line-set and
+kickoff, weather, lineup news) or from beating the vig elsewhere.
+
 ## TASK B — CPOE Persistence + Market Residual (COMPLETED round 2, orchestrator)
 
 play_by_play_2023.csv.gz re-downloaded clean (19.2MB, gzip verified, 49,666
