@@ -31,6 +31,12 @@ The four lane reports below are the verified file:line map this fix was built
 from (4-reader investigation, 2026-08-26). Lane order: settlement path map,
 game writers, identity utilities, blast radius.
 
+**PRE-FIX SNAPSHOT NOTICE:** the lane reports were captured at `bb0e7dfc`
+(main, before this branch's fix landed). Statements inside them like "no
+dedup/merge utility exists" or "no fix code exists" describe THAT snapshot —
+they are the evidence the fix was designed from, superseded by the fix summary
+above wherever the two disagree.
+
 
 ## Lane report: agent0
 

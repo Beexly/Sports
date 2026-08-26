@@ -33,11 +33,40 @@ if (!inPath) {
 }
 
 type Row = { confidence: number; y: 0 | 1; t: string | number; pickType?: string };
-const parsed = JSON.parse(readFileSync(inPath, "utf8")) as Row[] | { rows: Row[] };
-const rows: Row[] = Array.isArray(parsed) ? parsed : parsed.rows;
-if (!Array.isArray(rows) || rows.length === 0) {
+const parsed = JSON.parse(readFileSync(inPath, "utf8")) as unknown;
+const rawRows = Array.isArray(parsed)
+  ? parsed
+  : (parsed as { rows?: unknown }).rows;
+if (!Array.isArray(rawRows) || rawRows.length === 0) {
   console.error("fit-real-sample: no rows in input");
   process.exit(2);
+}
+
+// Validate every row — malformed confidence/y/t must fail loudly, never
+// flow into the fit as NaN and print plausible-looking garbage metrics.
+const rows: Row[] = [];
+for (const [i, r] of (rawRows as Record<string, unknown>[]).entries()) {
+  const confidence = Number(r["confidence"]);
+  const y = Number(r["y"]);
+  const t = Number(r["t"]);
+  if (!Number.isFinite(confidence) || confidence < 0 || confidence > 100) {
+    console.error(`fit-real-sample: row ${i}: confidence out of [0,100]: ${String(r["confidence"])}`);
+    process.exit(2);
+  }
+  if (y !== 0 && y !== 1) {
+    console.error(`fit-real-sample: row ${i}: y must be 0 or 1: ${String(r["y"])}`);
+    process.exit(2);
+  }
+  if (!Number.isFinite(t)) {
+    console.error(`fit-real-sample: row ${i}: non-finite t: ${String(r["t"])}`);
+    process.exit(2);
+  }
+  rows.push({
+    confidence,
+    y: y as 0 | 1,
+    t,
+    ...(typeof r["pickType"] === "string" ? { pickType: r["pickType"] } : {}),
+  });
 }
 
 const samples: TimestampedCalibrationSample[] = rows.map((r) => ({
@@ -52,6 +81,14 @@ function brier(list: readonly { p: number; y: 0 | 1 }[]): number {
 }
 
 const { train, test } = timeHoldoutSplit(samples, 0.7);
+if (train.length === 0 || test.length === 0) {
+  // A degenerate split would report held-out metrics of 0 for every model —
+  // refuse rather than print numbers no observation backs.
+  console.error(
+    `fit-real-sample: need a non-empty train AND test split (got train=${train.length}, test=${test.length}; supply more rows)`,
+  );
+  process.exit(2);
+}
 const cir = centeredIsotonicCalibration(train);
 const pava = isotonicCalibration(train);
 
@@ -72,11 +109,12 @@ for (const b of reliabilityCurve(testRaw, 8)) {
   if (b.count > 0) console.log(`  ${fmt(b.meanForecast)} → ${fmt(b.observedRate)}  (${b.count})`);
 }
 
+// Same clamped normalization as the overall metrics — never a second path.
 const byType = new Map<string, { p: number; y: 0 | 1 }[]>();
-for (const r of rows) {
+for (const [i, r] of rows.entries()) {
   const k = r.pickType ?? "ALL";
   const arr = byType.get(k) ?? [];
-  arr.push({ p: r.confidence / 100, y: r.y });
+  arr.push({ p: samples[i]!.p, y: r.y });
   byType.set(k, arr);
 }
 console.log("");

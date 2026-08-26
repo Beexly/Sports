@@ -66,8 +66,18 @@ Held-out reliability (raw): 0.574→0.457 (n=138) · 0.673→0.564 (n=243) ·
    re-run at each ~250 new settled picks and before any C6 flip
    (`calibratedEce ≤ rawEce` re-confirmation was 0.0371 vs 0.1318 here).
 
-**Reproduce:** export `(confidence, y, t, pickType)` for settled
-non-bootstrap WIN/LOSS picks (read-only role; SQL-over-HTTP works from
-restricted containers: `POST https://<endpoint-host>/sql` with the
-`Neon-Connection-String` header), then run the driver in
-`scripts/calibration-offline/` against the exported JSON.
+**Execution record (2026-08-26 session):** input = 1,469 rows exported from
+`gse-postgres` via `SELECT confidence, CASE WHEN result='WIN' THEN 1 ELSE 0
+END AS y, extract(epoch FROM "generatedAt")::bigint AS t, "pickType" FROM
+picks WHERE result IN ('WIN','LOSS') AND "settledAt" IS NOT NULL AND
+"isBootstrap" = false AND confidence IS NOT NULL ORDER BY "generatedAt"`
+(read-only `hermes_ro`, SQL-over-HTTP). Fit command:
+`npx tsx scripts/calibration-offline/fit-real-sample.ts --in <export.json>`;
+the numbers in this report are that command's observed stdout, transcribed
+verbatim (n=1469 train=1028 test=441). The export itself is ephemeral session
+data — re-running the SELECT above regenerates it; results will shift as new
+picks settle, which is the point of the re-fit cadence.
+
+**Reproduce:** run the SELECT above into a JSON file (`{"rows":[...]}` or a
+bare array), then
+`npx tsx scripts/calibration-offline/fit-real-sample.ts --in <file.json>`.

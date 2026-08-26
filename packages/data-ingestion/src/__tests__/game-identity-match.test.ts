@@ -166,4 +166,30 @@ describe("remapOrKeepFeedRows", () => {
     expect(rows[0]!.id).toBe("1073abdc2b9688872b92c195a7fda87d");
     expect(rows[1]!.id).toBe("espn:baseball_mlb:401816676");
   });
+
+  it("bridges city-style existing rows onto ESPN displayName events", () => {
+    // TheRundown-created row ("San Francisco") vs ESPN fallback event — the
+    // prod duplicate pair. The general matcher must resolve it.
+    const cityGames: ExistingGameMatch[] = [
+      {
+        externalId: "abc123abc123abc123abc123abc123ab",
+        homeTeam: "San Francisco",
+        awayTeam: "Cincinnati",
+        commenceTime: new Date("2026-08-26T01:45:00Z"),
+      },
+    ];
+    const { rows, remapped } = remapOrKeepFeedRows([feedRow], cityGames);
+    expect(remapped).toBe(1);
+    expect(rows[0]!.id).toBe("abc123abc123abc123abc123abc123ab");
+  });
+
+  it("a row carrying an existing id claims it — later rows cannot remap onto the same id", () => {
+    const selfRow = { ...feedRow, id: "1073abdc2b9688872b92c195a7fda87d" };
+    const rival = { ...feedRow, id: "espn:baseball_mlb:999000111" };
+    const { rows, remapped } = remapOrKeepFeedRows([selfRow, rival], games);
+    expect(remapped).toBe(0);
+    expect(rows[0]!.id).toBe("1073abdc2b9688872b92c195a7fda87d");
+    expect(rows[1]!.id).toBe("espn:baseball_mlb:999000111");
+    expect(new Set(rows.map((r) => r.id)).size).toBe(2);
+  });
 });

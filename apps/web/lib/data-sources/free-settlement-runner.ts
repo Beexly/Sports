@@ -201,11 +201,19 @@ export async function runFreePathSettlement(options?: {
     }
 
     try {
+      // overdueOnly pushes the overdue predicate into the QUERY so an overdue
+      // pick can never fall outside the bounded read; oldest-first makes the
+      // 1500-row window deterministic and drains the health band first.
+      const overdueCutoff = new Date(now.getTime() - graceHours * 60 * 60 * 1000);
       const loadedRows = await db.pick.findMany({
         where: {
           result: "PENDING",
-          game: { sport: { key: sport.key } },
+          game: {
+            sport: { key: sport.key },
+            ...(options?.overdueOnly ? { commenceTime: { lt: overdueCutoff } } : {}),
+          },
         },
+        orderBy: { game: { commenceTime: "asc" } },
         select: {
           id: true,
           pickType: true,

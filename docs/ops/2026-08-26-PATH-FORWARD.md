@@ -29,9 +29,10 @@
   Ball engine, $49/yr Founding Fantasy tier wired through types → Prisma → entitlements
   → Stripe checkout → server-side depth-limited free trial. Weekly-projection model v1
   exists, gated behind its backtest (`canPublishProjections:false`).
-- **The proof machinery is running:** line archive live and writing (37,402 snapshots
-  and growing mid-query — C-62), MVE e-process pre-registered and frozen before any
-  computation (C-51/C-59), calibration pipeline + export tooling in place.
+- **The proof machinery is built** — line archive (37,402 snapshots; **stalled
+  since Aug 22 16:31Z pending the env-flag restore** — evening update item 6),
+  MVE e-process (**executed same day → KILL**, evening update), calibration
+  pipeline + export tooling in place.
 - **Process capital:** the agent ledger, coordination law, skills packs, and the
   seat system (build seat + verifier separation) — this is a company that can absorb
   agent-hours without corrupting itself.
@@ -47,9 +48,12 @@
   **calibration eligibility RED** (settlement not healthy · Brier 0.2466 > 0.22 ·
   ECE 0.0590 > 0.05 at n=791), not by sample size.
 - **Owner-gated infra is pending:** `prisma migrate deploy` (proof receipts +
-  slate-commitment tables), THE_ODDS_API_KEY decision, orphan `sports-db` Neon project.
-- **MVE is blocked on a working `DATABASE_URL`** (C-59) — the one-shot edge experiment
-  is frozen and waiting on founder hands, not on more research.
+  slate-commitment tables), `LINE_ARCHIVE_ENABLED` restore, orphan `sports-db`
+  Neon project. ~~THE_ODDS_API_KEY decision~~ **superseded same day** — the key
+  is live and the dual-path is healthy (evening update item 7).
+- ~~MVE blocked on DATABASE_URL (C-59)~~ **EXECUTED same day → outcome KILL**
+  (`docs/ops/hermes/hf5-mve/EXECUTION-AFFIDAVIT-2026-08-26.md`); pending the
+  independent cross-model audit before the public Kill Ledger entry.
 - ~~CLOSE-stamp liveness open (C-62)~~ **RESOLVED GREEN same day** — see the
   evening update below: CLOSE stamps are writing (MLB 986 · NFL 624 · MLS 839).
 - ~~Unpushed local branch~~ **CORRECTED same day:** `hermes/w2-audit-settlement`
@@ -90,7 +94,7 @@ below is sequenced toward that — nothing in this plan trades the ambition down
 home-league drafting peaks late August through Labor Day — the highest-intent
 fantasy traffic of the entire year is on the doorstep *right now*, and the soft-launch
 plan (`docs/strategy/fantasy-launch/LAUNCH_PLAN.md`) counted on converting into this
-exact window. Every day the Stripe CTA 503s costs irreplaceable founding members.
+exact window. Every day without a confirmed LIVE checkout costs irreplaceable founding members.
 
 ---
 
@@ -106,10 +110,10 @@ around them.
 |---|--------|----------|-----------|
 | 0 | `git push -u origin hermes/w2-audit-settlement` from the local clone | Preserves the settlement audit | (local machine) |
 | 1 | **Stripe LIVE**: live keys, `npm run stripe:seed`, paste all **6** price IDs (Pro/Elite/Fantasy × monthly/annual), live webhook + matching `STRIPE_WEBHOOK_SECRET` | **All revenue** | `STRIPE_GO_LIVE_CHECKLIST.md` |
-| 2 | **THE_ODDS_API_KEY decision**: paid tier, **or** blank it to activate the coded free-settle path (present-but-dead does *not* free-path) | Settlement → settled-pick volume → the ladder | `OPERATOR.md` §1 |
+| 2 | **Restore `LINE_ARCHIVE_ENABLED=true`** in Vercel Production env (archive stalled since Aug 22 16:31Z; the Odds-API key itself is live and healthy) | CLV ledger accumulation | evening update item 6 |
 | 3 | `prisma migrate deploy` on next DB-reachable deploy | Proof receipts + slate-commitment tables | `START_HERE.md` |
 | 4 | Flip `PROJECTIONS_PROVIDER` to the real nflverse graded pool | Draft tools live on real data with freshness badge | `LAUNCH_PLAN.md` prereq 2 |
-| 5 | Supply working `DATABASE_URL` to the MVE branch and re-run one cycle, no retuning | The pre-registered edge experiment (C-59) | `hermes/hf5-mve` |
+| 5 | ~~MVE run~~ **DONE (evening): outcome KILL** — commission the independent cross-model audit, then publish Kill Ledger entry #5 | Closes the MLB-totals edge program honestly | `hf5-mve/EXECUTION-AFFIDAVIT` |
 | 6 | Delete orphan `sports-db` Neon project; confirm `check-deploy-readiness.mjs` green in prod | Cost + config hygiene | `START_HERE.md` |
 
 ### 4b. Agent lanes (parallel, draft-only where public-facing)
@@ -210,12 +214,12 @@ auto-suppression · in-season fantasy suite converting · CLV sample compounding
 
 | Metric | Now | Horizon 0 exit | Horizon 1 exit |
 |---|---|---|---|
-| Founding subscriptions | 0 (CTA 503) | first cohort banked | converting weekly |
-| Settled canonical picks | pre-ladder | settlement running | **≥100 → PROVEN** |
-| CLV ledger sample | archive live, CLOSE=0 (pending C-62) | close-stamps proven | compounding toward 500 |
-| Published calibration | gated | backtest staged | live with freshness stamp |
+| Founding subscriptions | 0 (Stripe probes healthy; LIVE-mode unconfirmed) | first cohort banked | converting weekly |
+| Settled canonical picks | **1,470** (82 overdue; fix on PR #675) | settlement HEALTHY post-deploy | **PROVEN via eligibility GREEN** |
+| CLV ledger sample | close-stamps GREEN; archive stalled (flag) | archive resumed | compounding toward 500 |
+| Published calibration | eligibility RED (Brier/ECE floors) | PAVA fit staged (held-out ECE 0.037) | live with freshness stamp |
 | Draft-tool activation | soft-launched | real-data drafts served | in-season suite live |
-| MVE e-process | pre-registered, blocked | one clean cycle run | checkpoints per pre-reg |
+| MVE e-process | **executed → KILL** (audit pending) | kill published (entry #5) | program closed with receipts |
 
 ---
 

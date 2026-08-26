@@ -58,7 +58,7 @@ Hard non-goals: Multica/GPL agent platforms, GPU foundation train, Polymarket wi
 ## Wave 4 — founder intake 2026-08-26 (queued, unreviewed)
 
 Same lens applies at review time: **pattern** | **dependency** | **skill-doc** | **ignore**.
-Descriptions fetched at queue time; adoption decided at review, founder-gated to WIRE.
+Descriptions WebFetched from each repo/abs page at queue time (2026-08-26 session); adoption decided at review, founder-gated to WIRE.
 
 51. AlkaiDynamics/Substrate-Mechanics — founder-org: pre-geometric tensor-field physics framework + QuTiP sims — off-domain — review as founder IP
 52. AlkaiDynamics/BURGAMOTS — founder-org: PINN (DeepXDE) planetary-forcing solar/atmospheric model, TS/React — off-domain; PINN method notes only
@@ -74,25 +74,25 @@ Descriptions fetched at queue time; adoption decided at review, founder-gated to
 
 ## Wave 5 — founder paper intake 2026-08-26 (33 arXiv papers, classified)
 
-Classified by an 11-lane fetch sweep + lens rules (pattern needs a portable method with a named GSE angle).
+Classified by a 7-batch WebFetch sweep over the arXiv abs pages (2026-08-26 session; verdicts persisted from the run journal) + lens rules (pattern needs a portable method with a named GSE angle). Titles are truncated at ~95 chars — the arXiv id is the canonical reference.
 Note: many were "NFL" keyword collisions (No-Free-Lunch, nerve-fiber-layer, neural-feedback-loop, negative-federated-learning) — classified honestly as ignore.
 
-62. arXiv:2405.07226 — Separable Power of Classical and Quantum Learning Protocols Through the Lens of No-Free-Lunch T — ignore — none — quantum learning theory; keyword collision on 'NFL' (No-Free-Lunch, not football)
-63. arXiv:2403.04146 — FL-GUARD: A Holistic Framework for Run-Time Detection and Recovery of Negative Federated Learni — ignore — none — federated learning systems work; 'NFL' here means Negative Federated Learning, no GSE fit
+62. arXiv:2405.07226 — Separable Power of Classical and Quantum Learning Protocols Through the Lens of No-Free-Lunch T… — ignore — none — quantum learning theory; keyword collision on 'NFL' (No-Free-Lunch, not football)
+63. arXiv:2403.04146 — FL-GUARD: A Holistic Framework for Run-Time Detection and Recovery of Negative Federated Learni… — ignore — none — federated learning systems work; 'NFL' here means Negative Federated Learning, no GSE fit
 64. arXiv:2306.03481 — Transition Role of Entangled Data in Quantum Machine Learning — ignore — none — quantum machine learning theory, no portable method for GSE
 65. arXiv:2303.05774 — NFL Career Success as Predicted by NFL Scouting Combine — skill-doc (medium) — Reference for fantasy projections: cautions agents against weighting Combine/athletic-testing features for long-horizon player value; useful prior on which rookie signals carry projection information
 66. arXiv:2510.07297 — Agentic generative AI for media content discovery at the National Football League — skill-doc (low) — Ops-side reference: query decomposition plus semantic caching pattern for agent fleets querying GSE's historical picks/odds database; no modeling content
 67. arXiv:2603.03613 — Empirical Evaluation of No Free Lunch Violations in Permutation-Based Optimization — skill-doc (low) — Cautionary reference for GSE eval harness design: model/algorithm rankings can be artifacts of benchmark construction, so backtests and agent evals should vary objective formulation before trusting rankings. No directly portable method.
-68. arXiv:2603.25901 — Decoding Defensive Coverage Responsibilities in American Football Using Factorized Attention Ba — pattern (medium) — Directly portable to GSE fantasy player tracking/movement models: factorized attention over multi-agent trajectories for matchup/coverage inference, feeding WR/CB matchup features into projections and DFS optimization; contingent on tracking-data access.
+68. arXiv:2603.25901 — Decoding Defensive Coverage Responsibilities in American Football Using Factorized Attention Ba… — pattern (medium) — Directly portable to GSE fantasy player tracking/movement models: factorized attention over multi-agent trajectories for matchup/coverage inference, feeding WR/CB matchup features into projections and DFS optimization; contingent on tracking-data access.
 69. arXiv:2503.04638 — No Forgetting Learning: Buffer-free Continual Learning Classification — ignore — none — 'NFL' here means No Forgetting Learning; vision continual-learning method with no sports or prediction-market fit.
 70. arXiv:2410.00145 — Constraint-Aware Refinement for Safety Verification of Neural Feedback Loops — ignore — none — 'NFL' is neural feedback loops; control-systems safety verification, no GSE fit.
-71. arXiv:2406.03663 — A Hybrid Deep Learning Classification of Perimetric Glaucoma Using Peripapillary Nerve Fiber La — ignore — none — 'NFL' is nerve fiber layer; ophthalmology diagnostics, no GSE fit.
+71. arXiv:2406.03663 — A Hybrid Deep Learning Classification of Perimetric Glaucoma Using Peripapillary Nerve Fiber La… — ignore — none — 'NFL' is nerve fiber layer; ophthalmology diagnostics, no GSE fit.
 72. arXiv:2402.10979 — SportsMetrics: Blending Text and Numerical Data to Understand Information Fusion in LLMs — skill-doc (medium) — Reference for ops/evals: GSE's Claude content layer must not fabricate stats; SportsMetrics-style adversarial tasks inform eval harness design for LLM numeric fidelity on game data.
 73. arXiv:1905.03710 — Bilinear discriminant feature line analysis for image feature extraction — ignore — no fit
 74. arXiv:1805.01271 — NFL Injuries Before and After the 2011 Collective Bargaining Agreement (CBA) — skill-doc (low) — Background note for fantasy projections/content: cautions against naive causal claims about league rule changes and injury rates; no portable method.
 75. arXiv:2206.13222 — ML-Based Approach for NFL Defensive Pass Interference Prediction Using GPS Tracking Data — skill-doc (low) — Reference for player tracking/movement modeling: documents limits of positional data for rare-event penalty prediction and the recall-first filter pipeline idea; GSE lacks the GPS data to port it directly.
-76. arXiv:1906.03339 — next-gen-scraPy: Extracting NFL Tracking Data from Images to Evaluate Quarterbacks and Pass Def — pattern (medium) — Port the CPAE-style above-expectation modeling (GAM expected-completion surfaces) into fantasy QB/defense projections and factor trails; the image-scraping component itself must go through the Scraping Clearance Engine and is likely rights-gated.
-77. arXiv:1906.11373 — Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracki — pattern (medium) — Portable to the fantasy domain's player tracking/movement models: unsupervised GMM clustering with soft probabilistic assignments could auto-label defensive schemes and roles as features for projections and matchup-adjusted DFS optimization.
+76. arXiv:1906.03339 — next-gen-scraPy: Extracting NFL Tracking Data from Images to Evaluate Quarterbacks and Pass Def… — pattern (medium) — Port the CPAE-style above-expectation modeling (GAM expected-completion surfaces) into fantasy QB/defense projections and factor trails; the image-scraping component itself must go through the Scraping Clearance Engine and is likely rights-gated.
+77. arXiv:1906.11373 — Unsupervised Methods for Identifying Pass Coverage Among Defensive Backs with NFL Player Tracki… — pattern (medium) — Portable to the fantasy domain's player tracking/movement models: unsupervised GMM clustering with soft probabilistic assignments could auto-label defensive schemes and roles as features for projections and matchup-adjusted DFS optimization.
 78. arXiv:2606.24443 — Verifiable Auto-Formalization of Mathematics Using a Relaxed Natural Formal Language — ignore — no fit
 79. arXiv:2505.23703 — Let's Reason Formally: Natural-Formal Hybrid Reasoning Enhances LLM's Math Capability — ignore — no fit
 80. arXiv:2406.17947 — Do they mean 'us'? Interpreting Referring Expressions in Intergroup Bias — skill-doc (low) — Reference note for content/responsible-gaming agents: the finding that LLMs handle linguistic descriptions of win probabilities better than raw numbers is relevant to how GSE content prompts phrase confidence/probability, and fan-bias framing informs tone guidelines.

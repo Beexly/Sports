@@ -43,6 +43,27 @@ Candidates 691 · excluded 334 (entry quality) · pushes 20 · graded 337.
 Checkpoints: n=50 E=0.0055 → kill (threshold 0.10); E≈0 thereafter; early
 abort triggered (capital < 0.01 after 50).
 
+**Binding outcome vs diagnostics:** the binding protocol outcome is determined
+at the n=50 checkpoint (kill threshold breached + early-abort condition met).
+The frozen runner itself emits the full 337-bet capital path and later
+checkpoints as part of its fixed output format; those post-abort rows are
+runner-emitted diagnostics, not additional protocol evidence, and
+`RESULTS-2026-08-26-executed.md` is that runner output **verbatim and
+unedited** — hand-editing frozen output would be a worse protocol violation
+than carrying its diagnostics.
+
+**Cohort note for the auditor (text-vs-code discrepancy, predates execution):**
+the prereg v2 prose heading says "retrospective walk-forward, 241 games" — the
+estimated eligible cohort when the text was written (2026-08-20). The frozen
+runner — finalized after the text as the executable form — defines the cohort
+by RULE (MLB FINAL totals games, fixed window `CORPUS_FROM 2026-05-22` →
+`CORPUS_TO 2026-08-21`, entry-quality filters), not by a 241-game list. At
+execution the rule selected 691 candidates / 337 graded; the growth is the
+corpus filling in between text-writing and code-freeze. No parameter was
+chosen post-hoc, the window is outcome-blind, and the result was adverse
+(KILL), so no favorable-selection concern arises in either direction — but
+the independent audit should confirm this reading before publication.
+
 ## Protocol status
 
 - Per prereg v2: kill threshold + early abort → **publish the kill (fifth Kill
