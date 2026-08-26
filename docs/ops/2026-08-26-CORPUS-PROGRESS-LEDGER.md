@@ -40,7 +40,7 @@ tested, typechecked, on the PR branch — not just specced.
 | 8 | Harnessed-elaboration claim verification | 2606.24443 | `numeric-guard.ts` v2 | ⏳ QUEUED — relation-level claims, not just value-membership |
 | 9 | CPAE GAM surface | 1906.03339 | fantasy QB/defense factors | ⏳ QUEUED — nflverse aggregates only (image-scraping path is rights-gated, not pursued) |
 | 10 | GMM coverage clustering | 1906.11373 | matchup covariates | ⏳ QUEUED — participation/NGS aggregates |
-| 11 | DFS percentile benchmark harness | 2309.15253 | `percentile-benchmark.ts` | ⏳ QUEUED — the rule fix (row 1) shipped; the validation harness itself has not |
+| 11 | DFS percentile benchmark harness | 2309.15253 | `percentile-benchmark.ts` | ✅ **SHIPPED (pure core)** — `fieldPercentile` (mean-rank + 10k-resample bootstrap CI), `randomFeasibleLineups` (seeded random-lineup control, post-hoc salary filter, `partial` flag), `settleLineupFpts` (throws on a missing actual rather than silent-zeroing a scratch); 17 unit tests, mulberry32-seeded. The rule fix (row 1) shipped earlier this session. Still queued: `dk-scoring.ts` actuals mapper on nflverse aggregates, the DK contest-results CSV import, and the weekly script — each needs real data plumbing, tracked as separate increments |
 | 12 | Plan-caching read-only query lane | 2510.07297 + 2508.17157 (SportSQL) | ops query surface | ⏳ QUEUED — merge: SportSQL's eval-harness cliff becomes the admission gate for GridMind's plan-caching blueprint |
 | 13 | Security co-violation checklist ordering | 2607.12089 | `audit-secrets`/`audit-stripe` | ⏳ QUEUED |
 | 14 | Fail-closed LLM-judge cross-reference | 2606.28570 | `content-engine/` (build-draft → persist-draft) | ⏳ QUEUED |
