@@ -91,8 +91,12 @@ describe("blog content generator", () => {
       // The real line is carried structurally: "-3.5" is invisible to the claim
       // extractor (a digit preceded by "-"), so copy saying "laying 3.5" must
       // still be recognised as the platform's own number.
-      expect(grounding.values).toContain(3.5);
-      expect(grounding.values).toContain(-3.5);
+      //
+      // Carried as typed GroundedValues, not bare numbers: the line grounds a
+      // `magnitude` claim and only a magnitude claim, so it cannot be borrowed
+      // to justify a record or a percentage that happens to share the digits.
+      expect(grounding.values).toContainEqual({ value: 3.5, kind: "magnitude" });
+      expect(grounding.values).toContainEqual({ value: -3.5, kind: "magnitude" });
     });
 
     it("rejects a record that appears only in the prompt's formatting requirements", async () => {
