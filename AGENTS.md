@@ -141,3 +141,41 @@ This product's entire premise is that it does not lie about its own performance.
 invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
+
+---
+
+## Knowledge Bases
+
+- **Claude Academy corpus**: `docs/CLAUDE-ACADEMY-PLAYBOOK.md` (this repo) — indexed
+  map of all 755 academy.claude.com pages (courses, use-cases by department, tutorials
+  by product, master index). Full page texts live outside the repo at
+  `C:\Users\Garrett\academy-corpus\` (owner machine only — when that path is absent,
+  work from the playbook's titles and summaries alone; never invent page contents).
+  When a task touches Claude usage, prompting, API/MCP/agents/Cowork patterns: check
+  the playbook's Scope Router first, then read only the referenced file(s).
+- **Sonnet operating prompt**: `docs/agent-prompts/SONNET-MAX-LEVERAGE-PROMPT.md` —
+  the owner-authorized operating prompt for autonomous Sonnet sessions in this repo
+  (boot sequence, laws, tooling map, academy routing, backlog).
+
+## SESSION FINDINGS INDEX (updated 2026-08-25) — where recent Hermes work lives
+
+Any agent looking for recent findings/audits/tests: read these first, in this order.
+Artifacts marked **(hermes branch)** exist only on `origin/hermes/w2-audit-settlement`
+— read them with `git show origin/hermes/w2-audit-settlement:<path>` after
+`git fetch origin hermes/w2-audit-settlement`.
+
+| Artifact | What it holds |
+|---|---|
+| `docs/ops/AGENT_LEDGER.md` | Live multi-agent ledger (canonical state) |
+| `handoff/EDGE_LEDGER.md` **(hermes branch)** | Edge-hunt ledger: preregistered binds (PRE-1..PRE-7 built), falsifier verdicts (YACoe real-data KILLED on multiplicity, e=0.000), R36 honest STARVED |
+| `handoff/EDGE_RESEARCH_NEXT_5.md` **(hermes branch)** | Next H1/H2 prop-opportunity research + built-edge registry + framework primitives map |
+| `handoff/HANDOFF-2026-08-23.md` **(hermes branch)** | H0 night handoff: PRs #562/#563/#564/#572/#594, roadmap status |
+| `handoff/INVENTORY.md` **(hermes branch)** | Agent tooling audit (unused skills/commands) |
+| `handoff/leverage/00-LEVERAGE-INDEX.md` | Resource-dump synthesis index (dumps 01–08) |
+| `handoff/leverage/07-immediate-wins-2026-08-24.md` **(hermes branch)** | Executable $0 wins distillation |
+| `data/nflverse/yacoe_real_backtest_results.json` **(hermes branch)** | First REAL-data result: prior-season YACoe→next-season r≈0.40 val / 0.43 holdout (n=107/84) — persistence signal, NOT a betting edge |
+
+Standing facts: falsifier funnel is BUILT and WIRED (leakage/shuffle/split/multiplicity
+via bernoulli-eprocess). Lane A queue empty. Remaining known gaps: comp-pct-allowed &
+blitz-rate bus fields (PFR def source needed), routes data only a proxy
+(pbp_participation approximation). Never claim SHIP without falsify SURVIVOR.
