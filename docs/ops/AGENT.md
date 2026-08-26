@@ -126,3 +126,80 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - PR #553: OPEN, mergeable (was UNSTABLE before rebase, now CLEAN).
 - No DONE.md STOP. Watchdog stays live.
 - Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) OPEN/GREEN on main. Do NOT start a second TPRR bind.
+
+### 2026-08-22 11:16 CT | Grok CLI | CLEAN (steer)
+- Pasted `docs/ops/hermes/DEEP-STATS-OX-ALPHA.md` into the live Ox Alpha query-file (`RESUME-OX-ALPHA.md`). E-queue aborted; E1–E7 already green/merged.
+- Watchdog pid 24188 stays. Recycle Hermes child only so the next same-watchdog session loads deep-stats. No second process.
+- Source of truth: Sports-p0 `PROP_COVARIATE_GAP.md` + `HERMES-DEEP-PROP-PROMPT.md`. Worktree must be `C:\Users\Garrett\Sports-hz`.
+- Next: Hermes P1 three docs + CHECKPOINT STOP FOR GROK. Grok CLI watches CHECKPOINT.md.
+
+### 2026-08-22 11:26 CT | Grok CLI | FAKE-EDGE (steer)
+- CHECKPOINT.md STOP FOR GROK: yes in Sports-hz. Claimed METRIC_TAXONOMY / PROP_FORMULA_MAP / TENHZ_PROXY_TABLE. **Files ABSENT.** Only CHECKPOINT + copied PROP_COVARIATE_GAP.
+- Not APPROVE. STEER.md written. Recycle Hermes child onto STEER resume. Watchdog 24188 stays. No P2.
+- Next: real three P1 files on disk, then STOP FOR GROK again.
+
+### 2026-08-22 11:29 CT | Grok CLI | CLEAN (launch freeze)
+- 110% = honest `e=p−q` or NO-BET on the live board. Not 10Hz. Not taxonomy.
+- Merged #525 squash `544d0148`. Live `/api/picks` is still consensus (scoring.ts). Ingest fresh; settlement critically behind.
+- Parked deep-stats. Hermes next: `hermes/honest-board-no-consensus`. Watchdog stays. No second process.
+- Next: Grok reviews that PR; founder Odds remaining before any event-odds.
+
+### 2026-08-22 11:37 CT | Grok CLI | CLEAN (factory)
+- Approved plan: company = EDGE. No week-clock. Bus then binds. Window last.
+- Serving SHA **544d0148** (#525 live). Ingest fresh. Settlement still behind. `/api/picks` still consensus (window, not this slice).
+- Hermes session 11 aborted off honest-board. Next query-file = covariate-bus contract. Watchdog 24188 stays.
+- Next: merge #542/#545 if CI green; Hermes types bus.
+
+### 2026-08-22 13:41 CT | Grok CLI | CLEAN (factory)
+- Parallel Grok lives — will not touch `grok/**` or #546.
+- Squash-merged #547 bus `8fb2c414`. Leak rule reviewed: week 0 dropped, week < kickoff only, fail-closed, vendor xYAC/xRY not in CovariateField.
+- #548 now CONFLICTING. #549 still typecheck red. Hermes next: rebase 548, not a new bus.
+- Watchdog 24188 stays. No second Hermes.
+
+### 2026-08-22 14:22 CT | Grok CLI | CLEAN (H0)
+- Adopted: masterplan Class 2 on main; doctrine eight classes; **H0 is the NFL queue** (not beside it). Fleet NFL-only.
+- Merged #548 sep bind `2151ebec`. Rebased #549 onto that main (dropped stacked sep commits); pushed. CI still running.
+- Next: merge 549 when Test green. Then H0 #1 harness, #2 kneel. No more #11 slices. No grok/**.
+
+### 2026-08-22 13:45 CT | Grok CLI 01a02964 | CLEAN (align + q ops)
+- Aligned with parallel Grok **01a0261d** plan (de-vig origin → factory): `e=p−q`, bus then binds, Shin on two-way mids, window last. Serving SHA **8fb2c414** (#547 bus live).
+- **Their lane:** Sports cwd, ox-alpha ingest, Hermes watchdog 24188, rebase **#548**, fix **#549**. q math: `shinDevig` / de-vig oracle (#448). Do not duplicate.
+- **This lane:** isolated `origin/main` worktrees. Settlement: rotated Production+GitHub CRON_SECRET (not printed), #550 `path=free` settled 67 overdue; 1 NFL `cmt0vk365019rn7remwapyblx` OVERDUE_NO_SCORE. Odds remaining ~18101. Flags LINE_ARCHIVE / EVENT_ODDS / FORCE_NO_BET = true.
+- **q fire:** compose existing `firePostedProp` (already Shin, not proportional) on lock-time two-way. Will not touch `shin-devig.ts`, `devig/oracle.ts`, event-odds-ingest, line-archive, schema, or Hermes.
+- Next: 01a0261d rebase #548. 01a02964 lock-snapshot reader + Shin fire compose from a new worktree. Founder: leftover NFL score when a final exists.
+
+### 2026-08-22 14:05 CT | Grok CLI 01a02964 | CLEAN (adopt doctrine)
+- Finished de-vig align (01a0261d). Duplicate 13:45 block collapsed.
+- Adopted on `origin/main`: `docs/data/EDGE_FACTORY_MASTERPLAN.md` (Class 2) + `docs/data/EDGE_SUPREMACY_DOCTRINE.md`. **§H0 SUPERSEDES masterplan §7.** NFL is the only queue. Kneel/scanners/CL-forecaster/incentive calendar are H0 items 2/6/7/8, not side tracks. Hypothesis fleet NFL-only until H1.
+- Lanes unchanged: 01a0261d owns Hermes / #548 rebase / #549. This session does not touch shin-devig, oracle, ingest, Sports cwd.
+- Next (H0 top-down): 01a0261d lands #548 (H0.3 SEP pipe-cleaner). 01a02964 H0.1 validation harness + H0.2 kneel/garbage-time from origin/main worktrees. Fleet batch-0 = C4×NFL + C5×NFL cards only after those slices are started. Everything HYPOTHESIS until §6 gates.
+
+### 2026-08-22 14:20 CT | Grok CLI 01a02964 | CLEAN (checkpoint)
+- Current tasks closed: de-vig align + doctrine adopt. Duplicate AGENT block already collapsed.
+- `origin/main` now **2151ebec** — **#548 SEP bind merged** (H0.3 pipe-cleaner landed by 01a0261d). Docs present: EDGE_FACTORY_MASTERPLAN.md, EDGE_SUPREMACY_DOCTRINE.md. §H0 is the NFL queue.
+- Next this session: H0.1 validation harness (`known_at` + MARKET_PROP fail-CI) from origin/main worktree. Then H0.2 kneel. Fleet NFL-only after H0.1 is on a branch. Stay off ingest / shin / Hermes / Sports cwd.
+
+### 2026-08-22 14:52 CT | Grok CLI 01a02964 | CLEAN (unstall → H0.1)
+- Diagnosis: idle, not blocked on Hermes. Last turn was a checkpoint; #548 and #549 already on main (`c2cfc153`). Sports-hz CHECKPOINT.md is stale P1 — other session watches Hermes.
+- Adopted: masterplan + supremacy doctrine. §H0 is the NFL queue.
+- Pushed **#555** `grok/h0-validation-harness`: knownAtWeek + L2 layer + MARKET_PROP fail-CI. Next after CI: H0.2 kneel/garbage-time. No wait on Hermes.
+
+### 2026-08-22 14:55 CT | Grok CLI 01a02964 | CLEAN (parallel H0)
+- Unstall: idle, not Hermes-blocked. #548+#549 on main. Test green on **#555**; Build was pending.
+- Parallel: H0.2 kneel subagent worktree; fleet-0 C4×NFL + C5×NFL hypothesis cards (no repo). Verify one pass when they return.
+- Next: squash-merge #555 when Build green. Then H0.2 PR. Stay off ingest/shin/Sports cwd/Hermes.
+
+### 2026-08-22 ~15:15 CT | Grok CLI 01a02964 | CLEAN (founder STOP)
+- Safe stop. **No merge this turn.** Handoff: `C:\Users\Garrett\tmp\H0-STOP-HANDOFF.md`.
+- **#555** H0.1 Test+Build SUCCESS, CLEAN — unmerged. **#557** kneel + **#556** est-routes open, Test was still IN_PROGRESS.
+- Fleet drafts parked `tmp/fleet/` (C4.NFL.1–6, C5.NFL.1–4). Verifier/catalog rewrite not started. `Sports-h01` left clean (untracked fleet removed).
+- Next: squash-merge #555, then 557/556 if green, then EDGE_CATALOG from a new origin/main worktree. Stay off ingest/shin/Sports cwd/Hermes.
+
+
+### 2026-08-23 ~11:55 CT | Hermes / ox-alpha | CLEAN
+- Edge wave salvage commit `01a07c2c` on hermes/h1-qb-pressures-edge, PUSHED.
+- 21 subagents (2 waves of edge builders + research) hit Nous HTTP 524s; stopped all. Salvaged 6 binds off disk: aggressiveness→passTD, cay→passYards, passerRating→passTD, ryoePerAtt→rushTD, avgSeparation→catches, rpoe→rushTD (+ tests + barrel).
+- Fixed: mangled test factories (CRLF), gsid typo, 2 wrong batch assertions, missing backtest describe suite, stash-pop conflicts in AGENT.md/SESSION-HANDOFF.md (kept both sides).
+- Verified: typecheck 0 errors, lint PASS, edge-lab 1120/1120 green. Also landed earlier: d993ca2a H2-ayd bind, fd688f17 promptfoo pin.
+- Research artifact: handoff/EDGE_RESEARCH_NEXT_5.md (next edges: tackles, pass attempts, QB hits, completions-allowed, missed tackles).
+- Lesson: max ~3 concurrent Nous :free children — larger fan-outs die at ~60K ctx on Cloudflare 120s timeout.
