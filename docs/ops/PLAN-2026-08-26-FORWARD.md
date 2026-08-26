@@ -68,7 +68,12 @@ data + the market's measured break-even. Everything below re-ranks when it lands
    archive exists at all — C-62)
 2. `npx tsx scripts/edge-lab/run-shadow-falsifier.ts` with a real DATABASE_URL — the ShadowSignal
    readout (C-73; the fastest real independent-probability test the operation owns)
-3. The Odds API signup → live multibook feed (Hermes queue item; enables CLV going forward)
+3. **The Odds API historical-odds pull** — NO SIGNUP NEEDED: the founder has held the paid
+   subscription for months and `THE_ODDS_API_KEY` has been live in Vercel production since R-6
+   (2026-08-19, founder hands, `oddsKeyPresent=true` verified on the live truth surface). The
+   actual unlock is the paid plan's **historical odds endpoints**, never yet pulled — multibook
+   historical closes, far richer than the consensus-only Lee Sharpe data. Run the fetch where the
+   key lives (founder machine or a production one-off); agents' containers do not carry the key.
 4. Decide the falsify.ts merge: this branch's version supersedes Hermes's (C-74 verified theirs
    and went stricter) — merge PR #672 first, then hermes branch resolves on ours.
 
@@ -95,6 +100,33 @@ data + the market's measured break-even. Everything below re-ranks when it lands
   killed enough retrospective ground; the next real information arrives with live games.
 - **A SURVIVOR from any first run is treated as suspect** until it replicates on a disjoint
   sample and survives the converter-vacuity check (the YACoe lesson, C-69).
+
+## 6 · Corrections log
+
+**2026-08-26 (same day, founder-caught):** v1 of this plan said "The Odds API signup" as founder
+action #3. WRONG — the founder has held the paid subscription for months; `THE_ODDS_API_KEY` has
+been live in Vercel production since R-6 (2026-08-19, founder-executed, `oddsKeyPresent=true`
+re-verified against the live truth surface today). The bad line was copied verbatim from Hermes's
+overnight handoff queue without checking the ledger — the exact C-45 drift failure the ledger
+exists to prevent. **Standing rule from this incident: no plan item sourced from an agent handoff
+enters this document until checked against `docs/ops/AGENT_LEDGER.md` and, where it concerns live
+state, the truth surface.** The item is corrected above to the real gap (historical-odds
+endpoints, never pulled).
+
+**Seat-reliability note (same incident):** Hermes, self-reportedly running on a free fallback
+model (`thinkingmachines/inkling-small` after its primary failed), then posted three "direct
+answers" of which two were confidently false repo-state claims: it declared
+`scripts/edge-lab/run-shadow-falsifier.ts` nonexistent (it exists — committed `102b0e7bc`, C-73,
+tracked in HEAD of `claude/sonnet-max-leverage-prompt-433yia`) and declared "no PR #672 exists"
+(it is open at Beexly/Sports#672). Both errors came from checking only its own branch and having
+no GitHub API access, stated as repo-wide fact. Its third answer (reading hf7-archive/RESULTS.md)
+was a **stale-file read from 2026-08-20, not a fresh query** — it does NOT answer C-62, which asks
+whether NFL CLOSE is still 0 *now*. Consequence, added to §3's seat table by reference: **Hermes
+repo-state and PR-state assertions are treated as unverified until checked against the actual
+branches; only its committed data artifacts and math (which the C-75 second wave independently
+recomputes) carry weight.**
+
+---
 
 *Every claim above traces to a ledger row or committed document; nothing here is aspiration
 dressed as fact.*
