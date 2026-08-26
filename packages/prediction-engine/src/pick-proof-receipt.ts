@@ -57,8 +57,31 @@ export interface PickProofInput {
    * Absent commits as "none" — never invents a method.
    */
   readonly marketFairMethodTag?: string | null;
+  /**
+   * Honest tag for where `entryOdds`/`line` came from — e.g. "single_book" or
+   * "consensus_average_7books" (see `deriveClvPriceSource`). The platform's
+   * published price is a cross-book consensus average (scoring.ts), never a
+   * single tagged book's quote; without this the receipt implied a specific
+   * book quote it never actually committed to. Absent commits as "none" —
+   * never invents a source; older receipts predate this field and are
+   * unaffected (their `fields` never had it either).
+   */
+  readonly priceSource?: string | null;
   /** ISO timestamp the pick + odds snapshot were frozen at (must be before kickoff). */
   readonly asOf: string;
+}
+
+/**
+ * Derive an honest price-source tag from `bookmakerCount` alone — a real,
+ * already-computed field (scoring.ts's market-depth inputs), never invented.
+ * A single quoted book is labeled distinctly from a cross-book consensus
+ * average; an unknown or zero count commits "none" via `PickProofInput`
+ * rather than guessing.
+ */
+export function deriveClvPriceSource(bookmakerCount: number): string | null {
+  if (!Number.isFinite(bookmakerCount) || bookmakerCount <= 0) return null;
+  if (Math.round(bookmakerCount) === 1) return "single_book";
+  return `consensus_average_${Math.round(bookmakerCount)}books`;
 }
 
 export interface PickProofReceipt {
@@ -114,6 +137,10 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
       i.marketFairMethodTag == null || !String(i.marketFairMethodTag).trim()
         ? "none"
         : String(i.marketFairMethodTag).trim(),
+    priceSource:
+      i.priceSource == null || !String(i.priceSource).trim()
+        ? "none"
+        : String(i.priceSource).trim(),
     asOf: i.asOf,
   };
 }

@@ -4,6 +4,7 @@ import {
   covariateKey,
   latestPriorRow,
   nextGameCovariate,
+  provenanceForStatType,
   sepForKickoff,
   type CovariateRow,
 } from "../covariate-bus.js";
@@ -25,6 +26,19 @@ function rx(o: Partial<CovariateRow>): CovariateRow {
     pctAttemptsGte8Defenders: 0.54,
     avgTimeToLos: 2.2,
     avgYac: 4.3,
+    pressureRate: 0.18,
+    snapShare: 0.62,
+    tflRate: 0.18,
+    pdRate: null,
+    intRate: 0.045,
+    fumbleRate: 0.012,
+    airYardsPerAttempt: 6.5,
+    avgAirYardsToSticks: null,
+    missedTackleRate: null,
+    passerRating: null,
+    ryoePerAtt: null,
+    rushPctOverExpected: null,
+    passerRatingAllowed: null,
     avgExpectedYac: null,
     expectedRushYards: null,
     ...o,
@@ -111,6 +125,26 @@ describe("nextGameCovariate", () => {
     const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 2, "passing", "aggressiveness");
     expect(cell).not.toBeNull();
     expect(cell!.value).toBe(22.5);
+  });
+
+  it("stamps PFR provenance on defense rows — never a false NGS source claim", () => {
+    // Regression: the helper used to hardcode provenance: "weekly_ngs_mean" for
+    // every statType. Once "defense" (PFR advstats-def) joined StatType, that
+    // hardcode would have labelled PFR numbers as NGS — a false source claim on
+    // the honesty header every derived output carries.
+    const rows = [rx({ week: 1, statType: "defense" as const, pressureRate: 0.21 })];
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 2, "defense", "pressureRate");
+    expect(cell).not.toBeNull();
+    expect(cell!.value).toBe(0.21);
+    expect(cell!.provenance).toBe("weekly_pfr_def_mean");
+    expect(cell!.provenance).not.toBe("weekly_ngs_mean");
+  });
+
+  it("keeps NGS provenance for every non-defense statType", () => {
+    for (const statType of ["receiving", "passing", "rushing"] as const) {
+      expect(provenanceForStatType(statType)).toBe("weekly_ngs_mean");
+    }
+    expect(provenanceForStatType("defense")).toBe("weekly_pfr_def_mean");
   });
 });
 

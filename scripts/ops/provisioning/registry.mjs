@@ -43,7 +43,7 @@ export const REGISTRY = [
     automation: "supervised_browser",
     verification: "captcha_likely",
     envTargets: ["CEREBRAS_API_KEY", "CONTENT_FREE_LANE_ENABLED"],
-    doneWhen: "verify-credit-stack.mjs exit 0 with contentPlanPrimary=cerebras_free",
+    doneWhen: "verify-credit-stack.mjs exit 0 with contentPlanPrimary=free_lane",
     traps: [],
     notes: "Primary free lane (gpt-oss-120b). Headless attempt allowed first; expect Turnstile wall.",
   },

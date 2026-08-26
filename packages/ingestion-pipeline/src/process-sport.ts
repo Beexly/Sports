@@ -48,6 +48,7 @@ import {
   scoreGames,
   buildPickSignalSnapshot,
   buildPickProofReceipt,
+  deriveClvPriceSource,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
 import {
@@ -975,6 +976,10 @@ export async function processSport(
               edgeScore: pick.edgeScore,
               modelProb: null,
               modelVersion: pick.modelVersion,
+              // Honest tag for entryOdds/line's origin — pick.line is a cross-book
+              // consensus average (scoring.ts), never a single tagged book's quote.
+              // Derived only from bookmakerCount, a real already-computed field.
+              priceSource: deriveClvPriceSource(pick.bookmakerCount),
               asOf: pick.dataFreshnessAt.toISOString(),
             },
             sha256Hex,

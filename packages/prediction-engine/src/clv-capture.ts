@@ -62,6 +62,15 @@ export interface ClosingSnapshot {
    * retained for backward compatibility with existing callers and tests.)
    */
   readonly bookmakerCount: number;
+  /**
+   * Age (ms) of the newest pre-kickoff batch relative to kickoff — reported
+   * EVEN when that batch was refused as over-age (M-F7), so a stale-close
+   * refusal is distinguishable from "no odds before kickoff at all" in every
+   * stored grade record. `null` only when no pre-kickoff rows exist. This is
+   * the closeAgeMs observability the C-29 review demanded: the measurement the
+   * bound depends on must never be silently censored.
+   */
+  readonly closeAgeMs: number | null;
 }
 
 export type ClvKind = "POINTS" | "PROBABILITY";
@@ -82,21 +91,37 @@ function avg(values: readonly number[]): number | null {
 }
 
 /**
+ * Maximum age of "the close" relative to kickoff (M-F7). If the newest odds
+ * batch before kickoff is OLDER than this, the feed had been dead for many
+ * refresh cycles and that batch is not a closing line — it is whatever the
+ * market looked like hours earlier. Grading CLV against it would fabricate a
+ * close, so the derivation returns the empty snapshot instead (CLV verdict
+ * stays null — "we never invent a close"). Refresh cadence is at most a few
+ * hours off-peak, so six hours means multiple consecutive missed cycles.
+ */
+export const MAX_CLOSE_AGE_MS = 6 * 60 * 60 * 1000;
+
+/**
  * Derive the closing-line snapshot for a game: the most recent odds batch at or
  * before `commenceTime`, averaged across books. Returns an all-null snapshot
  * (capturedAt null) when no odds were recorded before kickoff — in which case we
- * cannot honestly grade CLV.
+ * cannot honestly grade CLV — or when the newest pre-kickoff batch is older than
+ * the close-age bound (a stale batch is not a close; M-F7). The two refusals are
+ * distinguishable via `closeAgeMs`: null = no pre-kickoff odds at all; a value
+ * above the bound = a stale close was seen and refused.
  */
 export function deriveClosingSnapshotFromOdds(
   rows: readonly ClosingOddsRow[],
   commenceTime: Date,
+  opts: { readonly maxCloseAgeMs?: number } = {},
 ): ClosingSnapshot {
   const cutoff = commenceTime.getTime();
-  const eligible = rows.filter(
+  const maxAge = opts.maxCloseAgeMs ?? MAX_CLOSE_AGE_MS;
+  const preKickoff = rows.filter(
     (r) => r.fetchedAt instanceof Date && r.fetchedAt.getTime() <= cutoff,
   );
 
-  const empty: ClosingSnapshot = {
+  const empty: Omit<ClosingSnapshot, "closeAgeMs"> = {
     spreadHome: null,
     total: null,
     mlHomePrice: null,
@@ -104,11 +129,16 @@ export function deriveClosingSnapshotFromOdds(
     capturedAt: null,
     bookmakerCount: 0,
   };
-  if (eligible.length === 0) return empty;
+  if (preKickoff.length === 0) return { ...empty, closeAgeMs: null };
 
   // The close = the single latest batch (max fetchedAt) before kickoff.
-  const latestTs = Math.max(...eligible.map((r) => r.fetchedAt.getTime()));
-  const closingBatch = eligible.filter((r) => r.fetchedAt.getTime() === latestTs);
+  // Its age is computed BEFORE the bound is applied, so a stale refusal still
+  // records how stale — never silently censored (C-29 lesson).
+  const latestTs = Math.max(...preKickoff.map((r) => r.fetchedAt.getTime()));
+  const closeAgeMs = cutoff - latestTs;
+  if (closeAgeMs > maxAge) return { ...empty, closeAgeMs };
+
+  const closingBatch = preKickoff.filter((r) => r.fetchedAt.getTime() === latestTs);
 
   const spreads = closingBatch
     .filter((r) => r.market === "SPREADS" && r.spread != null)
@@ -140,6 +170,7 @@ export function deriveClosingSnapshotFromOdds(
     // Cross-market row count (see ClosingSnapshot.bookmakerCount): counts every
     // bookmaker-market row in the closing batch, not distinct books.
     bookmakerCount: closingBatch.length,
+    closeAgeMs,
   };
 }
 
