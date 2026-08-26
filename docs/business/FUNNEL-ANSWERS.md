@@ -10,7 +10,9 @@ nobody maintains is a counter that never reaches eight.
 
 **Status: no weeks on record.** This file has never been run. That is a true statement
 about the business, not a placeholder — the funnel has never been measured, which is
-the blind spot the library was written to close.
+the blind spot the library was written to close. NORTHSTAR says the same thing in its
+own closing line: *"except the funnel question, which is the one measurement this repo
+has never taken. That is the point."*
 
 ---
 
@@ -19,8 +21,16 @@ the blind spot the library was written to close.
 > **Eight consecutive no-signal weeks trigger a 20,000-foot session on
 > product-market fit — the honest one, not a feature discussion.**
 
-Pre-committed means the rules below were fixed before any data existed, so they cannot
-be renegotiated by the person reading a run of bad weeks. Written on 2026-08-26.
+That is not this file's invention. It is NORTHSTAR §7, *Stop-losses (pre-committed)*,
+verbatim: *"If the funnel question returns 'no signal' for 8 consecutive weeks,
+Track R's roadmap gets its own 20k-ft session — the honest one about product-market
+fit, not features."* (`docs/ops/PLAN-2026-08-26-NORTHSTAR.md`, arriving on
+[#672](https://github.com/Beexly/Sports/pull/672).) What this file adds is the
+counter, and the rules below that make the counter unambiguous — a stop-loss with
+nowhere to accumulate is a stop-loss that never fires.
+
+Pre-committed means those rules were fixed before any data existed, so they cannot be
+renegotiated by the person reading a run of bad weeks. Written on 2026-08-26.
 
 **What counts as a no-signal week.** Exactly one thing: the **Signal or noise** section
 of that week's answer did not conclude *signal*. Two cases both count —

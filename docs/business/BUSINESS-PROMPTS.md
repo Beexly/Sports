@@ -15,8 +15,9 @@ fabrication explicitly, one task per prompt.
 
 That standard applies to this document too. Every path and artifact these ten
 prompts ask you to paste has been resolved against this repository — see
-[**Path index**](#path-index--verified-against-this-repo) at the bottom. Two of
-them do not exist here, and the index says which and what to paste instead.
+[**Path index**](#path-index--verified-against-this-repo) at the bottom. Two of them
+are not on `main` yet; the index says which, where they land, and what to paste in
+the meantime.
 
 ---
 
@@ -98,6 +99,11 @@ answers so it fires on its own rather than needing someone to notice.
 Your ladder gates PROVEN on ≥100 settled picks plus published calibration, and
 ESTABLISHED on verified CLV ≥52.4%. Current evidence says the second may never
 trigger. R2 says that is survivable *only if it is planned for*.
+
+That premise got firmer on 2026-08-26, which makes this prompt more urgent rather
+than less: the historical game-level space is now a measured null, and the closing
+spread is not measurably biased. Beating a ≥52.4% CLV threshold has to come from
+somewhere that has not been tested yet. Run this prompt as though the answer is no.
 
 ```
 <pricing_current>
@@ -324,6 +330,23 @@ Your kill ledger is a content engine that no competitor can run. Every dead
 hypothesis is an article they cannot write, because writing it would cost them
 their own credibility.
 
+**As of 2026-08-26 this prompt has a backlog rather than a candidate.** C-75's second
+wave — the first real falsifier campaign this program has run against real data, on a
+now acceptance-tested instrument (C-76) — returned zero survivors across 8+ full
+strategies at 845–6,868 games each. Home/road ATS, overs/unders, divisional and
+spread-magnitude ATS, home moneyline, the CPOE bind, and both Week-1 battle-plan
+candidates are KILLED or too thin to gate. The records land on
+[#672](https://github.com/Beexly/Sports/pull/672):
+`docs/ops/edge/2026-08-26-hermes-second-wave-verification.md` and
+`docs/ops/edge/2026-08-26-edge-program-verification.md`.
+
+Two things to hold precisely when writing from them. First, the scope: what is
+measured-null is the **historical game-level ATS/totals/moneyline space**, not
+"sports betting." Door B — independent modelProb into props — is untested, not dead.
+Second, the strongest line in the material is the one about the instrument: every
+verdict this program produced before that day came from a falsifier broken in four
+distinct ways, and it says so itself. A competitor cannot publish that paragraph.
+
 ```
 <killed_hypothesis>
 [Paste the full record: what was tested, the preregistration, n, the result,
@@ -386,9 +409,9 @@ scheduled task rather than typed.
 
 ```
 <state>
-[Paste docs/ops/CURRENT_STATE.md — and docs/ops/OPEN_LEDGER.md for the queue.
-The source library said `docs/ops/STATE.md`; that path does not exist here.
-See the path index below.]
+[Paste docs/ops/STATE.md — it carries its own FOUNDER QUEUE (max 3) section.
+Not on main until PR #672 merges; until then paste docs/ops/CURRENT_STATE.md
+plus docs/ops/OPEN_LEDGER.md for the queue. See the path index below.]
 </state>
 
 <week>
@@ -436,29 +459,40 @@ treats a missing document as a present one.
 | #10 | Truth surface | **VERIFIED.** `apps/web/app/api/ops/public-surface-truth/`, `apps/web/app/api/ops/daily-truth/`. |
 | #10 | Ledger | **VERIFIED.** `docs/ops/AGENT_LEDGER.md`, checked by `npm run check:ledger` → `scripts/ops/check-agent-ledger.mjs`. |
 | #1 | The answer log and its stop-loss | **CREATED.** `docs/business/FUNNEL-ANSWERS.md`. Prompt #1's own note asks for the trigger to live in the same file as the answers; it now does. |
-| #10 | `docs/ops/STATE.md` | **ABSENT.** No such file, tracked or untracked. The live equivalent per `docs/ops/CANONICAL.md` is `docs/ops/CURRENT_STATE.md` (ground truth) plus `docs/ops/OPEN_LEDGER.md` (the queue). Prompt #10 has been repointed at those two. |
-| #1, #4, #7, #9, #10 | NORTHSTAR — §4 calendar, §5 two live tracks, §6 winning at 90 days, the "By Sept 3" list, blind-spot #4, R2 | **ABSENT.** `git grep -i northstar` over the whole tree returns two hits, both about a Titanfall 2 mod in an old resource dump. The operating document itself is founder-held and is not in version control. |
+| #10 | `docs/ops/STATE.md` | **ARRIVES ON [#672](https://github.com/Beexly/Sports/pull/672).** Not on `main` today; added by that PR as an 82-line one-pager with a `FOUNDER QUEUE (max 3)` section — exactly the shape prompt #10 expects. Until it merges, the nearest live equivalents per `docs/ops/CANONICAL.md` are `docs/ops/CURRENT_STATE.md` plus `docs/ops/OPEN_LEDGER.md`. |
+| #1, #4, #7, #9, #10 | NORTHSTAR — §4 calendar, §5 two live tracks, §6 winning at 90 days, blind-spot #4, R2 | **ARRIVES ON [#672](https://github.com/Beexly/Sports/pull/672)** as `docs/ops/PLAN-2026-08-26-NORTHSTAR.md`. Not on `main` today. Section numbering matches what these prompts ask for exactly — see the map below. |
 
-### What the NORTHSTAR gap actually costs
+### The NORTHSTAR section map, verified
 
-Five of the ten prompts open by asking the founder to paste a section of a document
-git does not hold. Those prompts still work — the founder has the document — but two
-properties the rest of this repo takes for granted do not hold for them:
+Five of the ten prompts open by asking for a section of NORTHSTAR. It is not on
+`main`, which is why the row above does not say VERIFIED — but it is not
+founder-held-and-uncommitted either: it lands on
+[#672](https://github.com/Beexly/Sports/pull/672) as
+`docs/ops/PLAN-2026-08-26-NORTHSTAR.md`, 159 lines. Its section numbering matches
+what these prompts ask for, checked line by line against that branch:
 
-- **The paste cannot be diffed against a commit.** There is no way to check later
-  which version of §4 produced a given answer, so a capture-readiness review (#7) or
-  a pre-mortem (#9) cannot be re-derived from the record.
-- **A wrong paste is undetectable.** Every other artifact in the table above can be
-  re-read from the tree if an answer looks off. NORTHSTAR cannot.
+| Prompt asks for | NORTHSTAR section | Verified |
+|---|---|---|
+| blind-spot #4, "revenue reality went unexamined" | `## 2 · What we were missing (the blind-spot ledger)`, item 4 | Reads *"Revenue reality went unexamined. Today produced zero sentences about paying users, funnel, or churn."* — the library quotes it exactly. |
+| R2, "the product never waits on the edge" | `## 1 · The three reframes`, R2 | Reads *"R2 — The product never waits on the edge."* Exact. |
+| §4 calendar, the "By Sept 3" list (#7) | `## 4 · The campaign calendar (NFL-anchored, dates are real)` | Present. |
+| §5 two live tracks (#9) | `## 5 · The edge program, reduced to two live tracks (everything else parked)` | Present. |
+| §6 winning at 90 days (#9) | `## 6 · Definition of winning, 90 days out (Nov 26)` | Present. |
+| the eight-week stop-loss (#1) | `## 7 · Stop-losses (pre-committed)` | Reads *"If the funnel question returns 'no signal' for 8 consecutive weeks, Track R's roadmap gets its own 20k-ft session — the honest one about product-market fit, not features."* |
 
-This is a finding, not a task. Committing NORTHSTAR is a founder call — it is the
-operating document, it may hold things that should not be in a repo, and nothing in
-this library requires it. But the prompts that depend on it are, until then, the only
-ones here whose inputs are unverifiable, and that is worth knowing before acting on
-their output at fifteen minutes a day.
+So every premise this library states about NORTHSTAR is confirmed against the real
+document rather than taken on trust. Its closing line is the library's own thesis
+verbatim: *"except the funnel question, which is the one measurement this repo has
+never taken. That is the point."*
 
-The same applies to `SONNET-MAX-LEVERAGE-PROMPT.md`, which the accompanying kit cites
-for its §5 never-modify list and §7.3 verify block. It is not in this repo either.
+**One property still does not hold until #672 merges.** While NORTHSTAR and
+`docs/ops/STATE.md` live only on an unmerged branch, a paste from either cannot be
+diffed against `main`, so an answer produced from them cannot be re-derived from the
+record later. That is a reason to merge #672, not a reason to change these prompts.
+
+`SONNET-MAX-LEVERAGE-PROMPT.md` is the one artifact still genuinely absent
+everywhere — the accompanying kit cites it for its §5 never-modify list and §7.3
+verify block, and it is on no branch in this repository.
 
 ---
 

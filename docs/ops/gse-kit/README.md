@@ -77,24 +77,33 @@ denies force-push to main specifically, the kit denies force-push generally.
 Evaluation is deny → ask → allow, first match wins, so a merged list behaves as the
 union of the denies. That direction is safe. Confirm it is what you want anyway.
 
-### 2. The Stop hook's librarian check is a silent no-op in this repo
+### 2. The Stop hook's librarian check is inert today and arms itself on #672
 
 `gate-session-close.sh` guards its STATE.md currency check behind
-`if [ -f docs/ops/STATE.md ]`. That file does not exist here — the live equivalent
-per `docs/ops/CANONICAL.md` is `docs/ops/CURRENT_STATE.md`. So the check fails open:
-it never fires, never errors, and reports nothing. Installed as-is, the hook would
-enforce the verify block (typecheck / ledger / eval), but the "a session that ends
-without updating STATE.md has not finished" law would quietly not exist.
+`if [ -f docs/ops/STATE.md ]`. That file does not exist on `main`, so the check fails
+open: it never fires, never errors, and reports nothing. Installed against `main`
+today, the hook would enforce the verify block (typecheck / ledger / eval) while the
+"a session that ends without updating STATE.md has not finished" law quietly did not
+exist.
 
-Two honest fixes, both founder calls: repoint the hook at `docs/ops/CURRENT_STATE.md`,
-or create `docs/ops/STATE.md` as the file the operating prompt already assumes. Doing
-neither is also a choice — just not a silent one, now that it is written down.
+**That changes on its own.** [#672](https://github.com/Beexly/Sports/pull/672) adds
+`docs/ops/STATE.md` — an 82-line one-pager with a `FOUNDER QUEUE (max 3)` section,
+exactly the file the hook and the kit's session-close skill both assume. The moment
+that PR merges, the guard starts passing and the check goes live.
 
-This is the same gap the business library's
+So the fix is not to repoint the hook at `docs/ops/CURRENT_STATE.md`. It is to merge
+#672 and let the hook do what it was written to do. What is worth knowing in advance
+is the transition itself: this check moves from silently-inert to actively-blocking as
+a **side effect of merging an unrelated PR**, announcing nothing on the way. A session
+that ended fine yesterday starts refusing to close today, citing a librarian duty that
+was dormant the whole time. That is not a bug — it is the hook working — but it is the
+kind of change that costs an hour if nobody wrote it down first.
+
+Both halves of this are the same gap the business library's
 [path index](../../business/BUSINESS-PROMPTS.md#path-index--verified-against-this-repo)
-records from the other direction, and it is a fair example of what prompt #7 means by
-"the single item most likely to be silently broken right now": it would not announce
-its own failure.
+records from the other direction, and together they are a fair example of what prompt
+#7 means by "the single item most likely to be silently broken right now": inert, then
+live, and it would not announce either.
 
 ### 3. The Stop hook would block every session close on day one
 
@@ -132,9 +141,16 @@ unrelated to whatever the session was doing. The escape hatch
 (`.claude/.stop-override`) would carry the load from the first turn onward, which is
 how an escape hatch stops being exceptional and becomes the routine.
 
-Reconcile the fixture against `vercel.json` — or `vercel.json` against the fixture —
-until `npm run agent:eval` exits 0. Then arm the hook. A gate that is red before it
-is armed teaches nobody anything except how to bypass it.
+This is already tracked. [#672](https://github.com/Beexly/Sports/pull/672) carries
+ledger row **C-63**, which names the same fixture/`vercel.json` mismatch, found
+independently while running the §7.3 verify block, and leaves it OPEN on purpose:
+cron edits are CI-minutes-sensitive and "deserve their own deliberate pass, not a
+drive-by." That reasoning is sound and this file does not argue with it.
+
+It does mean the ordering is fixed, though: C-63 has to close before the Stop hook is
+armed, or the hook's first act is to block every session over a row someone already
+decided not to fix yet. A gate that is red before it is armed teaches nobody anything
+except how to bypass it.
 
 #### One method note, earned the hard way
 
