@@ -20,9 +20,10 @@
 (Next up after those: historical-odds pull with existing key; weekly funnel answer.)
 
 ## In flight
-- C-75 second wave (Claude recomputes all Hermes R&D): stalled at ~2/16 agents (journal frozen
-  24min, no live process) — resumed via Workflow resumeFromRunId (cached results reused), running
-  again in background as of ~14:58 UTC.
+- C-75 second wave (Claude recomputes all Hermes R&D): was stalled at ~2/16 agents (journal frozen
+  24min, no live process) — resumed via Workflow resumeFromRunId at ~14:58 UTC; at ~15:29 UTC is
+  ~10/16 agents returned, actively progressing. Landing steps (verdict doc, spot-recompute 2
+  headline numbers, ledger DONE, battle-plan ARM-GATE update) queued for the moment it completes.
 - C-76 DONE (falsifier acceptance harness, queue #3): planted-edge/noise/inverted @ n=100/1k/5k,
   9/9 green, c7ec6e1f6. Independent of the second wave — the instrument now has its own permanent
   known-good/known-bad acceptance suite per NORTHSTAR §2.
