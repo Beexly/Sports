@@ -279,3 +279,38 @@ below is [VERIFIED] against those primary sources.
    `npx tsx scripts/edge-lab/run-mve.ts` locally on the branch with the env set.
 9. **Orphan `sports-db` Neon project confirmed still alive** (dormant since
    Jun 10). Deletion is irreversible → stays a founder click.
+
+---
+
+## Night update — 2026-08-26: the full corpus is extracted, not just triaged
+
+Per the founder's "DO NOT HYPER FOCUS — everything we need is in the corpus +
+the workspace" directive, every one of the 44 queued wave-4/5 items has now
+been read in FULL TEXT (ar5iv/PDF, appendices included) by an 8-agent
+extraction fleet, and the June workspace dump has been mined against current
+code. Artifacts: `docs/ops/edge/2026-08-26-paper-spec-*.md` (6 implementable
+specs), `docs/ops/edge/extraction/2026-08-26-group-*.md` (5 group dossiers),
+`docs/ops/2026-08-26-WORKSPACE-DUMP-EXTRACTION.md`, with all triage
+corrections applied inline in `ORBIT_NEXT_50.md`.
+
+**What the deep read changed (the triage missed real value):**
+
+- **FL-GUARD (row 63) was the biggest miss:** dismissed as an "NFL collision",
+  it is the run-time negative-update guard for the C6 calibration
+  apply/rollback decision — the exact governance gap the re-fit cadence has.
+- Ten more rows corrected or materially re-scoped (66, 69, 74, 78, 80, 82, 85,
+  88, 91, 93 + wave-4 59/60/65/75 sharpened); the remaining verdicts survived
+  full-text scrutiny with citable disqualifiers.
+- **Highest-value port queue (offline R&D, edge-lab law, ~2–4 days each):**
+  1. RLVR empirical-rate teacher + 3-way convergence test (2607.00164) — turns
+     the Brier-floor diagnosis into affirmative proof of where resolution must
+     come from; 2. FL-GUARD negative-update guard into `calibration-monitor`;
+  3. phase-bucketed ECE audit + in-game soccer lane (1906.05029);
+  4. numeric-fidelity auditor for the content layer (2402.10979);
+  5. DFS percentile benchmark (2309.15253) — its extraction already produced a
+     shipped correctness fix (the optimizer now enforces DK's two-game rule).
+- **Workspace dump:** already in main (`docs/ops/archive/root-museum/`,
+  byte-identical) — the gold is the still-unbuilt retention layer (honest
+  daily digest for Free/Pro, winback + dunning before first founding renewals,
+  per-entity OG proof cards) and one unresolved founder decision open since
+  June: the free-tier factor-trail tease.

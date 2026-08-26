@@ -64,7 +64,7 @@ docker/             — Docker configs
 Pricing follows a **named, proof-gated ladder** (single source of truth:
 `apps/web/lib/pricing/pricing-phases.ts`). Founding rates are live; each step-up is
 triggered by a verified milestone and ships added value. Founding members are
-grandfathered for life. See `COMPETITIVE_PRICING_AND_PACKAGING.md`.
+grandfathered for life. See `docs/ops/archive/root-museum/COMPETITIVE_PRICING_AND_PACKAGING.md`.
 
 | Tier | Founding rate (live) | Access |
 |---|---|---|
