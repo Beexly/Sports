@@ -37,6 +37,7 @@ import {
   NFL_CANONICAL_SPORT_KEY,
   isNflPreseasonFetchWindow,
   remapPreseasonRows,
+  remapOrKeepFeedRows,
   mergeFeedRowsById,
   eventsBelowBookmakerThreshold,
   mergeBookmakersIntoPrimary,
@@ -412,6 +413,50 @@ export async function processSport(
         if (espn.events.length > 0) {
           events = espn.events;
           oddsProviderTag = "espn_public";
+          // Game-identity dedup: a fallback tick must not mint
+          // `espn:{oddsKey}:{id}` rows for games that already exist under the
+          // provider-hash (or espn:{short}) convention from earlier ticks —
+          // the paid settlement path matches scores by externalId only, so a
+          // duplicate row strands its picks PENDING forever. Remap fallback
+          // events onto existing rows by team + commence; unmatched events
+          // keep their espn ids (genuinely new games).
+          try {
+            const existingRows = await db.game.findMany({
+              where: {
+                sport: { key: sport.key },
+                commenceTime: {
+                  gte: new Date(fetchedAt.getTime() - 2 * 24 * 60 * 60 * 1000),
+                  lte: new Date(fetchedAt.getTime() + 21 * 24 * 60 * 60 * 1000),
+                },
+              },
+              select: {
+                externalId: true,
+                homeTeamName: true,
+                awayTeamName: true,
+                commenceTime: true,
+              },
+            });
+            const { rows: remappedEvents, remapped } = remapOrKeepFeedRows(
+              events,
+              existingRows.map((g) => ({
+                externalId: g.externalId,
+                homeTeam: g.homeTeamName,
+                awayTeam: g.awayTeamName,
+                commenceTime: g.commenceTime,
+              })),
+            );
+            events = remappedEvents;
+            if (remapped > 0) {
+              console.log(
+                `${logPrefix} ${sport.key}: espn fallback remapped ${remapped} events onto existing game rows`,
+              );
+            }
+          } catch (remapErr) {
+            console.warn(
+              `${logPrefix} ${sport.key}: espn fallback identity remap failed — ` +
+                `${remapErr instanceof Error ? remapErr.message : remapErr}`,
+            );
+          }
           console.log(
             `${logPrefix} ${sport.key}: ESPN public free path ${events.length} events` +
               (espn.error ? ` (note: ${espn.error})` : ""),

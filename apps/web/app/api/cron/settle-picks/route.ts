@@ -168,6 +168,41 @@ export async function GET(request: Request) {
 
   const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]");
 
+  // Overdue recovery (game-identity fragmentation): the paid path matches
+  // scores by externalId only, so picks on Game rows minted under a different
+  // convention (espn:{short}:*, espn:{oddsKey}:*, TheRundown ids) can never
+  // settle above — they age past grace forever and drive settlement health
+  // CRITICAL. The free-path settler matches by team tokens + date instead, so
+  // run it here restricted to already-overdue picks. It only fires when the
+  // health probe reports overdue picks, adds no work to a healthy cycle, and
+  // never touches in-grace picks the paid path will settle next round.
+  let overdueRecovery:
+    | { picksSettled: number; picksHeld: number; sports: unknown[] }
+    | { error: string }
+    | null = null;
+  try {
+    const health = await loadSettlementHealth(db, {
+      graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
+    });
+    if (health.overduePending > 0) {
+      const recovery = await runFreePathSettlement({
+        sportKey: requestedSport,
+        graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
+        priorOverdueCount: health.overduePending,
+        overdueOnly: true,
+      });
+      overdueRecovery = {
+        picksSettled: recovery.picksSettled,
+        picksHeld: recovery.picksHeld,
+        sports: recovery.sports,
+      };
+    }
+  } catch (recoveryErr) {
+    const message = recoveryErr instanceof Error ? recoveryErr.message : String(recoveryErr);
+    console.warn(`[cron:settle-picks] overdue recovery pass failed: ${message}`);
+    overdueRecovery = { error: message };
+  }
+
   let freeze: SlateFreezeResult[] = [];
   try {
     freeze = await freezeSlateCommitments(
@@ -250,6 +285,7 @@ export async function GET(request: Request) {
     snapshotRepair,
     teamGameLogRepair,
     staleBackfill,
+    overdueRecovery,
   });
 }
 

@@ -105,6 +105,34 @@ export function remapPreseasonRows<T extends PreseasonFeedRow>(
   return { remapped, unmatched };
 }
 
+/**
+ * Generic cross-convention remap (game-identity dedup): rows whose
+ * (teams, commence) match an existing Game row take that row's externalId, so
+ * the downstream upsert UPDATES the existing row instead of minting a
+ * duplicate under a new convention (`espn:{oddsKey}:*` vs provider hash).
+ * Unmatched rows are KEPT verbatim — genuinely new games are still created.
+ * Same matcher + window as the NFL preseason remap; sport_key is untouched.
+ */
+export function remapOrKeepFeedRows<T extends PreseasonFeedRow>(
+  rows: readonly T[],
+  games: readonly ExistingGameMatch[],
+): { rows: T[]; remapped: number } {
+  const outRows: T[] = [];
+  let remapped = 0;
+  const claimed = new Set<string>();
+  for (const row of rows) {
+    const game = matchPreseasonRowToExistingGame(row, games);
+    if (!game || claimed.has(game.externalId) || game.externalId === row.id) {
+      outRows.push(row);
+      continue;
+    }
+    claimed.add(game.externalId);
+    remapped += 1;
+    outRows.push({ ...row, id: game.externalId });
+  }
+  return { rows: outRows, remapped };
+}
+
 export function mergeFeedRowsById<T extends { id: string }>(
   primary: readonly T[],
   extra: readonly T[],
