@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { BRIEF_RESPONSIBLE_GAMING_NOTE } from "@/lib/brief/compose";
+import { HELPLINE } from "@/lib/brand";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
@@ -88,7 +89,7 @@ export default async function BriefStub() {
         )}
         <p className="mt-6 rounded-lg border border-titanium bg-carbon/40 px-4 py-3 text-xs text-ion-2">
           {BRIEF_RESPONSIBLE_GAMING_NOTE} For problem-gambling help in the US,
-          call <strong>1-800-GAMBLER</strong>.
+          call <strong>{HELPLINE.number}</strong>.
         </p>
         <Link href="/" className="mt-4 inline-block rounded-lg bg-plasma px-4 py-2 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow">
           ← Home

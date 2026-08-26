@@ -1,5 +1,6 @@
 import { gunzipSync } from "node:zlib";
-import { fetchWithFailover, nflverseUrl, parseCsv, withMirrors, type NflverseDatasetKey } from "@sports/data-ingestion";
+import { assertIngestible, fetchWithFailover, nflverseUrl, parseCsv, withMirrors, type NflverseDatasetKey } from "@sports/data-ingestion";
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 
 /**
@@ -270,6 +271,42 @@ export function resetNflversePlayerLabCacheForTests(): void {
   playerLabCache = null;
 }
 
+/**
+ * The explicit empty boundary state. Used for BOTH a source failure and a rights
+ * block, so every consumer's existing honest-empty rendering applies unchanged —
+ * no rows, no fabricated production, and a `blockReason` that says which it was.
+ */
+function emptyPlayerLab(
+  season: number,
+  blockReason: string,
+  error: string,
+): NflversePlayerLab {
+  const emptyLeaders = { RB: [], WR: [], TE: [] } as const;
+  return {
+    generatedAt: new Date().toISOString(),
+    status: "source-error",
+    season,
+    throughWeek: null,
+    seasonType: "REG",
+    sourceRows: 0,
+    seasonRows: 0,
+    leaders: emptyLeaders,
+    defenseVsPosition: emptyLeaders,
+    canPublishProjections: false,
+    blockReason,
+    sourceUrls: {
+      playerStats: nflverseUrl("player_stats_week", season),
+      rosters: nflverseUrl("rosters", season),
+    },
+    error,
+  };
+}
+
+const RIGHTS_GATED_BLOCK_REASON =
+  "The nflverse Production Lab is rights-gated: the Source Rights Registry did not " +
+  "clear this extraction for customer display. The product shows an empty state " +
+  "instead of data we do not hold the rights to publish.";
+
 export async function loadNflversePlayerLab({
   season = latestNflverseInspectionSeason(),
   timeoutMs = 15000,
@@ -281,12 +318,51 @@ export async function loadNflversePlayerLab({
   cacheTtlMs?: number;
   fetcher?: FetchLike;
 } = {}): Promise<NflversePlayerLab> {
+  // ── Rights gate (CLAUDE.md, Legal Scraping Posture) ────────────────────────
+  // Every extraction job passes checkClearance() BEFORE it runs, and a result with
+  // allowed=false stops the job. This runs ahead of the cache read on purpose: a
+  // rights posture that changes (registry status tightened, technical controls
+  // detected, a cease-and-desist recorded) must stop the lab from serving a warm
+  // cache too, not just from re-fetching.
+  //
+  // INTENT — declared as what this surface ACTUALLY does with the rows, not the
+  // weakest intent that would clear. The lab is customer-facing (the Pro/Elite
+  // /api/nflverse/player-lab route and the public /players board), so it declares
+  // `commercial_display` alongside `derived_analytics`. Declaring only the
+  // analytics intent would let a display-restricted source through the gate — the
+  // failure mode the xFP display boundary (expected-points-display.ts) exists to
+  // prevent. nflverse is approved_open_license with commercial_display_allowed=true,
+  // so this clears today; the point is that the registry now decides, not silence.
+  const clearance = checkClearance({
+    source_id: "nflverse",
+    mode: "open_dataset_ingest",
+    tool_id: "fetch-native",
+    intents: ["commercial_display", "derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    return emptyPlayerLab(
+      season,
+      RIGHTS_GATED_BLOCK_REASON,
+      `rights-gated: ${clearance.blocks.map((b) => b.code).join(", ") || "NOT_CLEARED"}`,
+    );
+  }
+  // Legacy source-registry verdict, the same belt-and-braces every sibling
+  // nflverse loader carries. Reported as the rights-gated empty state rather than
+  // thrown, so this module keeps its "never throw, always return a state" contract.
+  try {
+    assertIngestible("nflverse");
+  } catch (error) {
+    return emptyPlayerLab(
+      season,
+      RIGHTS_GATED_BLOCK_REASON,
+      `rights-gated: ${error instanceof Error ? error.message : "NOT_INGESTIBLE"}`,
+    );
+  }
+
   const now = Date.now();
   if (cacheTtlMs > 0 && fetcher === fetch && playerLabCache && playerLabCache.expiresAt > now) {
     return playerLabCache.value;
   }
-
-  const emptyLeaders = { RB: [], WR: [], TE: [] } as const;
 
   try {
     const stats = await fetchCsvTable({ key: "player_stats_week", season, fetcher, timeoutMs });
@@ -317,24 +393,10 @@ export async function loadNflversePlayerLab({
     if (cacheTtlMs > 0 && fetcher === fetch) playerLabCache = { expiresAt: now + cacheTtlMs, value };
     return value;
   } catch (error) {
-    return {
-      generatedAt: new Date().toISOString(),
-      status: "source-error",
+    return emptyPlayerLab(
       season,
-      throughWeek: null,
-      seasonType: "REG",
-      sourceRows: 0,
-      seasonRows: 0,
-      leaders: emptyLeaders,
-      defenseVsPosition: emptyLeaders,
-      canPublishProjections: false,
-      blockReason:
-        "The nflverse Production Lab could not load source rows. The product must show an empty state instead of fabricated production data.",
-      sourceUrls: {
-        playerStats: nflverseUrl("player_stats_week", season),
-        rosters: nflverseUrl("rosters", season),
-      },
-      error: error instanceof Error ? error.message : "UNKNOWN",
-    };
+      "The nflverse Production Lab could not load source rows. The product must show an empty state instead of fabricated production data.",
+      error instanceof Error ? error.message : "UNKNOWN",
+    );
   }
 }

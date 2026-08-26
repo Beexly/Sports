@@ -120,7 +120,7 @@ async function SignedInWatchlist({ userId }: { userId: string }) {
         {!result.ok ? (
           <DegradedState reason={result.reason} />
         ) : result.data.length === 0 ? (
-          <EmptyState />
+          <EmptyState hasSuggestions={suggestions.length > 0} />
         ) : (
           <ul className="flex flex-col gap-3" data-testid="watchlist-entries">
             {result.data.map((entry) => (
@@ -163,8 +163,12 @@ function WatchlistRow({ entry, displayName }: { entry: WatchlistEntry; displayNa
     <li className="flex items-center justify-between gap-4 rounded-xl border border-mineral bg-titanium/40 px-4 py-3">
       <div>
         <p className="text-sm font-semibold text-ion-white">{displayName}</p>
+        {/* Honest at the point of confusion: player follows are tracked and
+            kept, but graded alerts fan out from TEAM follows only (picks
+            carry no player reference). Say so here rather than let the
+            member infer an alert that will never arrive. */}
         <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-          {entry.entityType === "TEAM" ? "Team" : "Player"}
+          {entry.entityType === "TEAM" ? "Team" : "Player · tracked, no graded alerts"}
         </p>
       </div>
       <FollowButton
@@ -204,15 +208,23 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
   return (
     <section className="mb-8 rounded-2xl border border-ultraviolet/30 bg-ultraviolet/[0.06] p-6">
       <h2 className="text-sm font-semibold text-ion-white">Graded alerts</h2>
+      {/* Copy is scoped to what the delivery path can actually do: the
+          settlement outbox materializes recipients from TEAM follows only
+          (a Pick carries no player reference — see the expansion query in
+          lib/settlement-outbox/worker.ts). Promising player alerts here was
+          a silent broken promise: a player-follower never even entered the
+          recipient set, so not one row recorded the omission. Pinned by
+          __tests__/watchlist-alert-copy-contract.test.ts. */}
       {canGetAlerts ? (
         <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
-          As an Elite member you&apos;ll get alerts for what you follow — but only once a pick
-          is graded (win, loss, push, or void). We never alert on an ungraded tip.
+          As an Elite member you&apos;ll get email &amp; push alerts for the teams you
+          follow — but only once a pick is graded (win, loss, push, or void). We never
+          alert on an ungraded tip.
         </p>
       ) : (
         <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
-          Elite members get email &amp; push alerts when a followed team&apos;s or
-          player&apos;s pick grades — never before it&apos;s settled.{" "}
+          Elite members get email &amp; push alerts when a followed team&apos;s pick
+          grades — never before it&apos;s settled.{" "}
           <Link href="/pricing" className="text-ultraviolet-glow underline-offset-4 hover:underline">
             See Elite →
           </Link>
@@ -222,7 +234,18 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
   );
 }
 
-function EmptyState() {
+/**
+ * Zero-follow state for a brand-new account.
+ *
+ * `hasSuggestions` is NOT decoration. The "Suggested teams" section below this
+ * card only renders when `suggestions.length > 0`, and the FollowButton exists
+ * on NO other surface in the product — so on a fresh install (zero Team rows)
+ * or a failed team load, "Start with a suggested team below" pointed a new
+ * member at something that was not on the page and at an action they had no
+ * way to take anywhere else. That is the first thing a new account sees on this
+ * surface, so it says what is actually true instead.
+ */
+function EmptyState({ hasSuggestions }: { hasSuggestions: boolean }) {
   return (
     <div
       data-testid="watchlist-empty"
@@ -235,7 +258,18 @@ function EmptyState() {
         Follow a team or player and it lives here — one place to keep track of
         what you care about across the board.
       </p>
-      <p className="mt-1.5 text-xs text-ion-2">Start with a suggested team below.</p>
+      {hasSuggestions ? (
+        <p className="mt-1.5 text-xs text-ion-2">Start with a suggested team below.</p>
+      ) : (
+        <p
+          data-testid="watchlist-no-suggestions"
+          className="mx-auto mt-1.5 max-w-md text-xs leading-relaxed text-ion-2"
+        >
+          No teams have loaded yet, so there is nothing to suggest right now.
+          Teams appear here as soon as the roster data lands — nothing is broken
+          and nothing is lost.
+        </p>
+      )}
     </div>
   );
 }

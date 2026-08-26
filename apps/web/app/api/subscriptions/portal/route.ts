@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import { createPortalSession } from "@/lib/stripe";
 import { db, DurableWriteStoreUnavailableError } from "@sports/db";
+import { requireAppUrl } from "@/lib/config/app-url";
+import { MissingProductionEnvError } from "@/lib/config/require-env";
 
 export async function POST(_req: NextRequest): Promise<NextResponse> {
   const session = await auth();
@@ -32,7 +34,26 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const appUrl = process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000";
+  // Same fail-closed guard as checkout: the portal's `return_url` is where Stripe
+  // sends a customer after they cancel or update a subscription. A localhost
+  // fallback in production strands them on connection-refused with no error
+  // anywhere on our side. Fail loudly, naming the variable, before calling Stripe.
+  let appUrl: string;
+  try {
+    appUrl = requireAppUrl();
+  } catch (err) {
+    if (err instanceof MissingProductionEnvError) {
+      console.error(`Billing portal config error: ${err.message}`);
+      return NextResponse.json(
+        {
+          error: "Billing portal is not configured (NEXT_PUBLIC_APP_URL is missing or blank)",
+          code: "app_url_not_configured",
+        },
+        { status: 503 },
+      );
+    }
+    throw err;
+  }
 
   try {
     const portalSession = await createPortalSession(

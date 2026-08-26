@@ -1,8 +1,10 @@
 import {
   buildStudioAssetDraft,
+  buildStudioNumericGrounding,
   scanStudioContent,
   type StudioAssetDraft,
 } from "@/lib/studio/build-assets";
+import { validateNumericClaims, type GroundedValue } from "@/lib/claude-api/numeric-guard";
 import {
   estimateClaudeCostUsd,
   evaluateClaudeBudgetUsage,
@@ -75,7 +77,17 @@ export async function callClaudeForStudioAsset(
       user: dryRun.prompt.user,
       cache: { system: true },
     });
-    const policyFailures = evaluateStudioGeneratedBodyPolicy(input.templateKind, result.text);
+    // GROUNDING: validate every stat-shaped number against the node's GAME DATA
+    // only. Studio bodies are persisted to CreatorAsset and exported by creators,
+    // and the templates explicitly ask for "the actual numbers" — without this a
+    // fabricated factor score, prop line or win rate ships as platform-attributed
+    // copy. Never ground on the template's system prompt: those carry example
+    // statistics of exactly this shape.
+    const policyFailures = evaluateStudioGeneratedBodyPolicy(
+      input.templateKind,
+      result.text,
+      buildStudioNumericGrounding(input.node),
+    );
     if (policyFailures.length > 0) {
       await maybeRecordStudioUsage({
         input,
@@ -118,9 +130,17 @@ export async function callClaudeForStudioAsset(
   }
 }
 
+/**
+ * @param groundedValues the numbers the node actually holds, from
+ *   `buildStudioNumericGrounding(node)`. When supplied, every stat-shaped number
+ *   in the body must be one of them — a fabricated statistic must never reach a
+ *   persisted CreatorAsset. Omitted = shape/compliance checks only (route-level
+ *   shape tests); the generation path always supplies it.
+ */
 export function evaluateStudioGeneratedBodyPolicy(
   templateKind: CreatorAssetKind,
-  body: string
+  body: string,
+  groundedValues?: readonly GroundedValue[]
 ): string[] {
   const failures: string[] = [];
   const text = body.trim();
@@ -137,6 +157,10 @@ export function evaluateStudioGeneratedBodyPolicy(
     if (flag.severity === "block") {
       failures.push(flag.id);
     }
+  }
+
+  if (groundedValues !== undefined && !validateNumericClaims(text, { values: groundedValues }).grounded) {
+    failures.push("UNGROUNDED_NUMERIC");
   }
 
   return failures;

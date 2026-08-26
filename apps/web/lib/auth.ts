@@ -3,6 +3,9 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@sports/db";
 import { isAsciiEmail, canonicalEmail } from "@/lib/auth/email-guard";
+import { requireProductionEnvUnlessSkipped } from "@/lib/config/require-env";
+import { resolveAuthRedirect } from "@/lib/auth/callback-url-guard";
+import { SITE_URL } from "@/lib/seo/site-url";
 
 export type UserRole = "USER" | "ADMIN";
 
@@ -24,19 +27,69 @@ export function isAdminEmail(email: string | null | undefined): boolean {
   return list.includes(canonicalEmail(email));
 }
 
+/**
+ * Google OAuth credential, or a hard failure in production.
+ *
+ * `?? "dev-noop"` booted the app green with a provider registered under a
+ * credential Google has never heard of: the homepage and pricing worked, then
+ * the FIRST user to click "Sign in with Google" got "Error 401: invalid_client"
+ * — rendered on accounts.google.com, so nothing 500s here and nothing is logged.
+ * Nobody can create an account and the deploy still looks healthy. That is the
+ * exact silent-degradation shape `NEXTAUTH_SECRET` already refuses.
+ *
+ * The `"dev-noop"` placeholder is preserved verbatim outside production: it is a
+ * load-bearing sentinel elsewhere (`app/api/dev/state/route.ts` and
+ * `lib/cockpit/jarvis-data.ts` both read it as "credential not really set"), and
+ * local dev must keep booting without Google credentials.
+ *
+ * Uses the SKIP_ENV_VALIDATION-aware variant because this is evaluated at module
+ * scope: CI builds the app with no Google vars and NODE_ENV=production
+ * (.github/workflows/ci.yml already sets SKIP_ENV_VALIDATION=true for exactly
+ * this), and a build machine serves no users. A real deploy sets no such flag,
+ * so it fails loudly and immediately instead of at a customer's first sign-in.
+ */
+const OAUTH_PLACEHOLDER = "dev-noop";
+
+function googleOAuthCredential(variable: string): string {
+  return requireProductionEnvUnlessSkipped(
+    variable,
+    OAUTH_PLACEHOLDER,
+    "Google sign-in (no user can create an account without it)",
+  );
+}
+
 const config: NextAuthConfig = {
   adapter: PrismaAdapter(db),
   trustHost: true,
   providers: [
     GoogleProvider({
-      clientId: process.env["GOOGLE_CLIENT_ID"] ?? "dev-noop",
-      clientSecret: process.env["GOOGLE_CLIENT_SECRET"] ?? "dev-noop",
+      clientId: googleOAuthCredential("GOOGLE_CLIENT_ID"),
+      clientSecret: googleOAuthCredential("GOOGLE_CLIENT_SECRET"),
     }),
   ],
   // Bound token lifetime so any stale claim (role, entitlement) self-heals within
   // a day even on the paths that don't re-resolve it — defense-in-depth for revocation.
   session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
   callbacks: {
+    /**
+     * Post-sign-in / post-sign-out destination gate.
+     *
+     * NextAuth v5 supplies a same-origin default when this callback is absent,
+     * but leaving it absent means the ONE invariant that stops
+     * `/api/auth/signin?callbackUrl=https://evil.example` from phishing through
+     * our own domain lives in a `5.0.0-beta` dependency, untested by this repo
+     * and free to change on the next bump. `trustHost: true` (above) also means
+     * `baseUrl` here is request-derived, so the check is worth owning.
+     *
+     * `resolveAuthRedirect` enforces the same-origin rule explicitly and adds
+     * the control-character rejection the upstream default does not have. It
+     * rebases relative paths onto the REQUEST origin (so local dev and preview
+     * deployments still redirect to themselves) and additionally accepts an
+     * absolute URL on the canonical `SITE_URL` origin.
+     */
+    async redirect({ url, baseUrl }) {
+      return resolveAuthRedirect(url, baseUrl, SITE_URL);
+    },
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;

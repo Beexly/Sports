@@ -10,6 +10,7 @@ import { NextResponse } from "next/server";
 import { validateWaitlistLead } from "@/lib/gse/waitlist-validation";
 import { selectWaitlistStore } from "@/lib/gse/waitlist-store";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import { clientIp } from "@/lib/api/rate-limit";
 import { sendWaitlistWelcomeEmail } from "@/lib/gse/waitlist-welcome-email";
 
 export const runtime = "nodejs";
@@ -31,11 +32,11 @@ function isTooFast(body: unknown): boolean {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "anon";
-  const rl = await consumePublicFormRateLimit("waitlist", ip, 5, 60_000);
+  // Rate-limit key MUST come from clientIp(): the leftmost x-forwarded-for entry
+  // is client-controlled, so parsing it here would let a caller mint a fresh
+  // bucket per request — unbounded rows AND one outbound welcome email per
+  // unique address.
+  const rl = await consumePublicFormRateLimit("waitlist", clientIp(request), 5, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many requests" },
@@ -76,10 +77,14 @@ export async function POST(request: Request): Promise<NextResponse> {
       });
     }
 
-    return NextResponse.json(
-      { ok: true, status: duplicate ? "already_queued" : "queued" },
-      { status: 200 },
-    );
+    // ENUMERATION: the response is byte-identical for a new and an existing
+    // address. It previously returned "already_queued" for a duplicate, which
+    // made this endpoint an oracle — anyone could confirm whether a given
+    // address is on the founding waitlist (and silently enroll it when it was
+    // not). `duplicate` still decides whether the welcome email is sent; it just
+    // never leaves the server. The form does not read `status` (it branches on
+    // `ok` alone — components/gsn/waitlist-form.tsx), so the UX is unchanged.
+    return NextResponse.json({ ok: true, status: "queued" }, { status: 200 });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "";
     const unavailable = /unavailable|durable database/i.test(msg);

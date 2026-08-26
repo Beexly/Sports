@@ -1,6 +1,6 @@
 # CRON matrix (generated from vercel.json)
 
-Generated: 2026-08-18T23:31:32.217Z
+Generated: 2026-08-25T19:51:07.448Z
 
 Default SoT: `apps/web/vercel.json` (the file Vercel actually reads).
 Compared against: `vercel.json`.
@@ -27,8 +27,9 @@ Compared against: `vercel.json`.
 | `/api/cron/calibration-metrics` | `40 */6 * * *` |
 | `/api/cron/backfill-independent-trueprob` | `10 */4 * * *` |
 | `/api/cron/refresh-player-stats` | `0,30 * * * *` |
+| `/api/cron/backfill-team-efficiency` | `15 7 * * *` |
 
-**Count:** 20 scheduled routes in apps/web/vercel.json.
+**Count:** 21 scheduled routes in apps/web/vercel.json.
 
 **DRIFT:** none — both vercel.json copies agree.
 

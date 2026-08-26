@@ -20,10 +20,27 @@
  *                     → DEAD_LETTER (attempt cap reached — escalated as a
  *                       durable OutboxDeadLetterReceipt owner work item)
  *   PENDING → SUPPRESSED | NO_RECIPIENT at expansion (honest POLICY
- *   terminals: tier-ineligible / alerts disabled / nothing to send to), or
- *   SUPPRESSED (payload_expired) when the maximum payload age passes. An
- *   entitlements lookup FAILURE is neither: expansion defers (event stays
- *   PENDING and retries) — an infra exception never becomes SUPPRESSED.
+ *   terminals: tier-ineligible / nothing to send to), or SUPPRESSED
+ *   (payload_expired) when the maximum payload age passes. An entitlements
+ *   lookup FAILURE is neither: expansion defers (event stays PENDING and
+ *   retries) — an infra exception never becomes SUPPRESSED.
+ *
+ * THE GLOBAL KILL SWITCH IS A DEFERRAL, NOT A VERDICT (WATCHLIST_ALERTS_-
+ *   ENABLED). It used to be written as a terminal SUPPRESSED/alerts_disabled
+ *   row, which chained into permanent, silent, unrecoverable loss:
+ *   SUPPRESSED is terminal → never re-claimed; the completion sweep saw no
+ *   PERMANENT_FAILED/DEAD_LETTER children and closed the parent DELIVERED
+ *   with deliveredAt set; health counts only dead letters, retryables and
+ *   old pendings, so the queue answered ok/HTTP 200. Every Elite subscriber
+ *   received nothing, forever, against a green dashboard — and turning the
+ *   flag on later backfilled nothing, because the events were already
+ *   terminal. Now: while the switch is off, expansion is SKIPPED and the
+ *   event stays PENDING (zero I/O, nothing written), bounded by the same
+ *   OUTBOX_MAX_PAYLOAD_AGE_HOURS cap that governs stale payloads — so
+ *   enabling the flag inside that window really does deliver the backlog,
+ *   and a permanently-off flag cannot grow an unbounded queue. Past the cap
+ *   the alert is stale news and no longer owed, and the honest
+ *   alerts_disabled terminal is written then (and only then).
  *
  * LEASE FENCING (6.5): every claim writes a fresh leaseToken/leaseOwner/
  *   leaseExpiresAt and bumps claimVersion; every result write is scoped to
@@ -254,7 +271,10 @@ export interface OutboxDeps {
   readonly getEntitlements: (userId: string) => Promise<{ canGetAlerts: boolean }>;
   readonly sendPush: (
     subscription: { endpoint: string; p256dh: string; auth: string },
-    payload: { title: string; body: string },
+    /** `url` is the frozen deep link — public/sw.js reads `parsed.url` and
+     *  falls back to "/", so omitting it opened the homepage instead of the
+     *  graded pick. */
+    payload: { title: string; body: string; url?: string },
   ) => Promise<WebPushSendResult>;
   readonly sendEmail: (to: string, subject: string, body: string) => Promise<EmailSendResult>;
   readonly pushConfigured: () => boolean;
@@ -311,6 +331,12 @@ export interface OutboxDrainSummary {
   /** Deliveries suppressed because the payload exceeded the maximum age
    *  (6.5) — already included in `suppressed`. */
   expiredPayload: number;
+  /** Events whose expansion was DEFERRED this pass because the global kill
+   *  switch (WATCHLIST_ALERTS_ENABLED) is off. These stay PENDING and are
+   *  owed — they are NOT suppressed, NOT expanded, and NOT counted as
+   *  expandedEvents. A non-zero value means the queue is holding real work
+   *  behind a flag, which getSettlementOutboxHealth reports as degraded. */
+  deferredAlertsDisabled: number;
   skippedRace: number;
   lostLease: number;
   /** Events completed with every child terminal (both flavors). */
@@ -414,6 +440,7 @@ export async function drainSettlementOutbox(
     suppressed: 0,
     noRecipient: 0,
     expiredPayload: 0,
+    deferredAlertsDisabled: 0,
     skippedRace: 0,
     lostLease: 0,
     completedEvents: 0,
@@ -488,10 +515,15 @@ export async function drainSettlementOutbox(
       try {
         const created = await expandEvent(db, deps, event, now);
         if (created !== null) {
-          summary.expandedEvents++;
-          summary.deliveriesMaterialized += created.materialized;
-          summary.suppressed += created.suppressed;
-          summary.noRecipient += created.noRecipient;
+          if (created.kind === "deferred_alerts_disabled") {
+            // Held behind the kill switch, still owed. Nothing was written.
+            summary.deferredAlertsDisabled++;
+          } else {
+            summary.expandedEvents++;
+            summary.deliveriesMaterialized += created.materialized;
+            summary.suppressed += created.suppressed;
+            summary.noRecipient += created.noRecipient;
+          }
         }
       } catch (err) {
         summary.errors.push(`expand ${event.id}: ${errorMessage(err)}`);
@@ -761,16 +793,23 @@ interface ExpansionResult {
   noRecipient: number;
 }
 
+/** What one expansion attempt did. `deferred_alerts_disabled` wrote NOTHING
+ *  and left the event PENDING — it is work still owed, never a verdict. */
+type ExpansionOutcome =
+  | ({ readonly kind: "expanded" } & ExpansionResult)
+  | { readonly kind: "deferred_alerts_disabled" };
+
 /** Expands one PENDING event: freeze the payload, materialize the
  *  settlement-time recipient set into delivery rows (idempotent via the
  *  unique idempotencyKey + skipDuplicates), and move the event to EXPANDED
- *  (or straight to DELIVERED for non-decisive/no-recipient events). */
+ *  (or straight to DELIVERED for non-decisive/no-recipient events).
+ *  Returns null when a concurrent expander won the race. */
 async function expandEvent(
   db: SettlementOutboxDb,
   deps: OutboxDeps,
   event: OutboxEventRow,
   now: Date,
-): Promise<ExpansionResult | null> {
+): Promise<ExpansionOutcome | null> {
   // VOID settlements are receipts, not alerts (GRADED-only doctrine).
   if (event.result !== "WIN" && event.result !== "LOSS" && event.result !== "PUSH") {
     const closed = await db.pickSettlementEvent.updateMany({
@@ -783,7 +822,31 @@ async function expandEvent(
         channelOutcomes: { skipped: "non_decisive_result", result: event.result },
       },
     });
-    return closed.count === 1 ? { materialized: 0, suppressed: 0, noRecipient: 0 } : null;
+    return closed.count === 1
+      ? { kind: "expanded", materialized: 0, suppressed: 0, noRecipient: 0 }
+      : null;
+  }
+
+  // ── GLOBAL KILL SWITCH: defer, never terminate ──────────────────────────
+  // WATCHLIST_ALERTS_ENABLED being off means "not right now", not "never".
+  // Writing a terminal SUPPRESSED row here made the loss permanent and
+  // invisible (see this module's header), so instead the event simply stays
+  // PENDING and is retried on the next drain — zero I/O, nothing written,
+  // fully recoverable the moment the founder flips the flag on.
+  //
+  // Bounded by the SAME cap that governs stale payloads: once the event is
+  // older than OUTBOX_MAX_PAYLOAD_AGE_HOURS the alert is stale news and no
+  // longer owed, so we stop deferring and fall through to normal expansion,
+  // which records the honest alerts_disabled policy terminal below. That
+  // ceiling is what keeps a permanently-off flag from growing an unbounded
+  // PENDING backlog, while a deliberately-off flag still shows up as a
+  // visible, non-green queue (getSettlementOutboxHealth) rather than as
+  // silent, unrecoverable deletion.
+  if (
+    !deps.alertsEnabled() &&
+    now.getTime() - event.settledAt.getTime() <= OUTBOX_MAX_PAYLOAD_AGE_MS
+  ) {
+    return { kind: "deferred_alerts_disabled" };
   }
 
   const pick = await db.pick.findUnique({
@@ -843,6 +906,19 @@ async function expandEvent(
   const teamIds = [pick.game.homeTeamId, pick.game.awayTeamId].filter(
     (id): id is string => id !== null,
   );
+  // TEAM follows only — and that limit is REAL, not an oversight to widen
+  // casually. A Watchlist row may be entityType TEAM or PLAYER (the follow
+  // API accepts both), but a Pick carries no player reference at all: it
+  // belongs to a Game, its types are SPREAD / MONEYLINE / TOTAL (no player
+  // props exist in the schema), and `Player` has no relation to `Game` or
+  // `Pick`. The only available bridge is `Player.recentTeam` — a nullable,
+  // denormalized, NFL-only team abbreviation — and joining on it would
+  // announce "your player's pick graded" for a game-level pick the player
+  // has no stake in. That is a fabricated association (CLAUDE.md rule #2),
+  // so PLAYER followers honestly never match here. The /watchlist copy was
+  // corrected to stop promising player alerts; see
+  // __tests__/watchlist-alert-copy-contract.test.ts, which fails if the two
+  // drift apart again.
   const followers =
     teamIds.length === 0
       ? []
@@ -977,7 +1053,7 @@ async function expandEvent(
     },
   });
   if (moved.count === 0) return null; // a concurrent expander won — rows deduped
-  return { materialized: created.count, suppressed, noRecipient };
+  return { kind: "expanded", materialized: created.count, suppressed, noRecipient };
 }
 
 interface DeliveryOutcome {
@@ -1029,7 +1105,11 @@ async function deliverOne(
     }
     const result = await deps.sendPush(
       { endpoint: sub.endpoint, p256dh: sub.p256dh, auth: sub.auth },
-      { title: "GalaxySportsEdge — pick graded", body: message },
+      // `url` makes the notification CLICKABLE to the pick: public/sw.js
+      // reads `parsed.url` and falls back to "/", so without it every
+      // notificationclick opened the homepage — the deep link was frozen at
+      // expansion for exactly this and then never sent.
+      { title: "GalaxySportsEdge — pick graded", body: message, url: deepLink },
     );
     if (result.sent) return { status: "DELIVERED" };
     if (result.classification === "expired") {
@@ -1118,6 +1198,17 @@ export interface OutboxHealth {
   readonly oldestPendingAgeMs: number | null;
   readonly deliveryCounts: Record<string, number>;
   readonly eventCounts: Record<string, number>;
+  /** True when the global kill switch (WATCHLIST_ALERTS_ENABLED) is off, so
+   *  NOTHING is being delivered to Elite subscribers regardless of how
+   *  clean every other counter looks. Never absent from a health answer:
+   *  this is the single condition most likely to be true in production and
+   *  it used to be completely invisible here. */
+  readonly alertsGloballyDisabled: boolean;
+  /** Deliveries already written terminal with lastErrorCode
+   *  "alerts_disabled". These are NOT re-claimable (SUPPRESSED is terminal)
+   *  and will never be retried by flipping the flag — they need an owner
+   *  backfill decision, so they stay visible instead of aging out silently. */
+  readonly alertsDisabledSuppressed: number;
 }
 
 const HEALTH_DELIVERY_STATUSES = [
@@ -1132,9 +1223,22 @@ const HEALTH_DELIVERY_STATUSES = [
 ];
 const HEALTH_EVENT_STATUSES = ["PENDING", "EXPANDED", "DELIVERED", "COMPLETED_WITH_FAILURES", "FAILED"];
 
+/** One row per distinct status. Shape verified against Prisma's generated
+ *  `PickSettlement{Event,Delivery}GroupByArgs`: `by: ["status"]` with
+ *  `_count: true` yields `{ status, _count: number }`. */
+type StatusGroup = { status: string; _count: number };
+
+interface StatusGroupingTable {
+  groupBy(args: { by: ["status"]; _count: true }): Promise<StatusGroup[]>;
+  /** A targeted count alongside the grouped read. `groupBy` folds by status
+   *  alone, so a question like "how many are SUPPRESSED *for this reason*"
+   *  cannot be answered from the grouping and needs its own predicate.
+   *  Shape matches Prisma's generated `count({ where })` → number. */
+  count(args: { where: Record<string, unknown> }): Promise<number>;
+}
+
 interface CountingDb {
-  pickSettlementEvent: {
-    count(args: { where: Record<string, unknown> }): Promise<number>;
+  pickSettlementEvent: StatusGroupingTable & {
     findMany(args: {
       where: Record<string, unknown>;
       orderBy: Record<string, unknown>;
@@ -1142,31 +1246,54 @@ interface CountingDb {
       select: Record<string, unknown>;
     }): Promise<Array<{ createdAt: Date }>>;
   };
-  pickSettlementDelivery: {
-    count(args: { where: Record<string, unknown> }): Promise<number>;
-  };
+  pickSettlementDelivery: StatusGroupingTable;
+}
+
+/** Fold a grouped result into a dense record. `groupBy` returns NO row for a
+ *  status with zero rows, so every expected status is pre-seeded to 0: a
+ *  missing key would read as "no data" where the truth is "zero". Statuses
+ *  outside the expected list are still surfaced rather than dropped. */
+function densifyStatusCounts(
+  groups: StatusGroup[],
+  expected: readonly string[],
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const status of expected) counts[status] = 0;
+  for (const group of groups) {
+    counts[group.status] = (counts[group.status] ?? 0) + group._count;
+  }
+  return counts;
 }
 
 /** Per-state counts, queue depth and oldest-pending age. `ok` is false when
- *  the health query itself fails or dead letters exist; `degraded` when
- *  retryable backlog or old pendings exist. Absence of evidence is never
- *  green: a thrown query returns ok:false. */
+ *  the health query itself fails, dead letters exist, or the global kill
+ *  switch is holding real work behind it; `degraded` when retryable
+ *  backlog, old pendings, the kill switch, or historical alerts_disabled
+ *  suppressions exist. Absence of evidence is never green: a thrown query
+ *  returns ok:false.
+ *
+ *  `alertsEnabled` is injectable so the disabled path is testable — it
+ *  defaults to the same env read the worker uses. A queue that delivers
+ *  nothing because a flag is off is NOT healthy, and reporting it green is
+ *  exactly how every Elite alert went missing against a 200 response. */
 export async function getSettlementOutboxHealth(
   dbArg: unknown,
   now: Date = new Date(),
   maxPendingAgeMs: number = 6 * 60 * 60 * 1000,
+  alertsEnabled: () => boolean = isWatchlistAlertsEnabled,
 ): Promise<OutboxHealth> {
   const db = dbArg as CountingDb;
   const reasons: string[] = [];
+  const alertsGloballyDisabled = !alertsEnabled();
   try {
-    const deliveryCounts: Record<string, number> = {};
-    for (const status of HEALTH_DELIVERY_STATUSES) {
-      deliveryCounts[status] = await db.pickSettlementDelivery.count({ where: { status } });
-    }
-    const eventCounts: Record<string, number> = {};
-    for (const status of HEALTH_EVENT_STATUSES) {
-      eventCounts[status] = await db.pickSettlementEvent.count({ where: { status } });
-    }
+    // One grouped scan per table instead of eleven sequential counts. This is
+    // load reduction, not a behaviour change: the returned shape is identical.
+    const [deliveryGroups, eventGroups] = await Promise.all([
+      db.pickSettlementDelivery.groupBy({ by: ["status"], _count: true }),
+      db.pickSettlementEvent.groupBy({ by: ["status"], _count: true }),
+    ]);
+    const deliveryCounts = densifyStatusCounts(deliveryGroups, HEALTH_DELIVERY_STATUSES);
+    const eventCounts = densifyStatusCounts(eventGroups, HEALTH_EVENT_STATUSES);
     const oldest = await db.pickSettlementEvent.findMany({
       where: { status: { in: ["PENDING", "EXPANDED"] } },
       orderBy: { createdAt: "asc" },
@@ -1193,15 +1320,45 @@ export async function getSettlementOutboxHealth(
       reasons.push(`${deliveryCounts["RETRYABLE_FAILED"]} deliveries awaiting retry`);
     }
 
+    // The kill switch, stated out loud. Deferred events are the PENDING
+    // events being held behind it — real work, owed, delivering nothing.
+    const deferredEvents = eventCounts["PENDING"] ?? 0;
+    if (alertsGloballyDisabled) {
+      reasons.push(
+        `watchlist alerts are globally OFF (WATCHLIST_ALERTS_ENABLED != "true") — ` +
+          `${deferredEvents} settlement event(s) deferred; NOTHING is being delivered ` +
+          `to Elite subscribers`,
+      );
+    }
+
+    // Terminal rows written by the pre-fix disabled path (or past the
+    // payload cap). These never retry — surfacing them is the only way an
+    // owner learns a backfill is owed.
+    const alertsDisabledSuppressed = await db.pickSettlementDelivery.count({
+      where: { status: "SUPPRESSED", lastErrorCode: "alerts_disabled" },
+    });
+    if (alertsDisabledSuppressed > 0) {
+      reasons.push(
+        `${alertsDisabledSuppressed} deliveries are terminally suppressed as ` +
+          `alerts_disabled and will NEVER retry — owner backfill decision required`,
+      );
+    }
+
     const deadLetters = (deliveryCounts["DEAD_LETTER"] ?? 0) > 0;
     return {
-      ok: !deadLetters,
+      // A deliberately-off switch on an IDLE queue is degraded-but-ok (loud
+      // without crying wolf). The moment real events queue up behind it,
+      // the queue is genuinely not ok and the cron answers 503 instead of a
+      // green 200 while delivering nothing.
+      ok: !deadLetters && !(alertsGloballyDisabled && deferredEvents > 0),
       degraded: reasons.length > 0,
       reasons,
       queueDepth,
       oldestPendingAgeMs,
       deliveryCounts,
       eventCounts,
+      alertsGloballyDisabled,
+      alertsDisabledSuppressed,
     };
   } catch (err) {
     return {
@@ -1212,6 +1369,8 @@ export async function getSettlementOutboxHealth(
       oldestPendingAgeMs: null,
       deliveryCounts: {},
       eventCounts: {},
+      alertsGloballyDisabled,
+      alertsDisabledSuppressed: 0,
     };
   }
 }

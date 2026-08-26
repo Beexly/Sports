@@ -1,4 +1,5 @@
 import { db } from "@sports/db";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 
 /**
  * The Sealed Engine loader — today's decision story as TELEMETRY AND
@@ -75,16 +76,12 @@ const OFFICIAL_PICK_FILTER = {
   NOT: { modelVersion: "v5.0.0-seed" },
 } as const;
 
-/** [start, end) of the UTC calendar day containing `now`. */
-function utcDayBounds(now: Date): { start: Date; end: Date; key: string } {
-  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
-  return { start, end, key: start.toISOString().slice(0, 10) };
-}
-
 export async function loadEngineStory(now = new Date()): Promise<EngineStory> {
   const generatedAt = now.toISOString();
-  const { start, end, key } = utcDayBounds(now);
+  // [start, end) of the platform day containing `now` — the ONE shared UTC
+  // definition (lib/time/day-boundary.ts). This file used to carry its own
+  // private copy of the same maths.
+  const { start, end, key } = utcDayWindow(now);
 
   try {
     const [runs, lastSuccess, gateRows, receiptsToday, latestReceipt, slates, totalSettled] =

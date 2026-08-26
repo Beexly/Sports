@@ -12,7 +12,7 @@
 
 import { getReadinessGates } from "@sports/prediction-engine";
 import { db, isStubMode } from "@sports/db";
-import { startOfDay, endOfDay } from "date-fns";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 import { loadJarvisAssessment } from "../cockpit/jarvis-data";
 import { JARVIS_VERSION } from "../cockpit/jarvis";
 import { buildOwnerSummary } from "../cockpit/owner-summary";
@@ -51,6 +51,8 @@ function countByUrgency(items: readonly OwnerAttentionItem[]) {
  */
 export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
   const now = new Date();
+  // ONE day definition (UTC calendar day — lib/time/day-boundary.ts).
+  const today = utcDayWindow(now);
   const gates = getReadinessGates();
   const stub = isStubMode();
 
@@ -69,7 +71,7 @@ export async function loadCommandCenterFeed(): Promise<CommandCenterFeed> {
       todayPickCount = await db.pick.count({
         where: {
           isPublished: true,
-          generatedAt: { gte: startOfDay(now), lte: endOfDay(now) },
+          generatedAt: { gte: today.start, lte: today.endInclusive },
         },
       });
       dbReachable = true;

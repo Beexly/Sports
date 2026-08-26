@@ -166,40 +166,44 @@ export default async function MarketCalibrationPage() {
   // Fetch both loaders. Each already returns an honest "no-data" state when
   // HistoricalGame has no rows, so there is no fabrication path here. We catch
   // at the loader level so a single DB blip does not take down the whole page.
-  const market = await loadMarketCalibrationBacktest().catch(() => ({
-    status: "no-data" as const,
-    generatedAt: new Date().toISOString(),
-    sampleSize: 0,
-    seasonsCovered: 0,
-    seasonRange: null,
-    baseRate: 0,
-    brier: 0,
-    reliability: 0,
-    resolution: 0,
-    ece: 0,
-    curve: [],
-    note: "The market-baseline endpoint could not be reached. No data is shown.",
-  }));
-  const elo = await loadEloVsMarketBacktest().catch(() => ({
-    status: "no-data" as const,
-    generatedAt: new Date().toISOString(),
-    comparisonSampleSize: 0,
-    seasonRange: null,
-    elo: {
+  // Concurrent, not sequential: the two reads are independent, so awaiting one
+  // after the other doubled this page's server render time for no reason.
+  const [market, elo] = await Promise.all([
+    loadMarketCalibrationBacktest().catch(() => ({
+      status: "no-data" as const,
+      generatedAt: new Date().toISOString(),
       sampleSize: 0,
-      accuracy: 0,
+      seasonsCovered: 0,
+      seasonRange: null,
+      baseRate: 0,
       brier: 0,
       reliability: 0,
       resolution: 0,
       ece: 0,
-      baseRate: 0,
       curve: [],
-      teamsRated: 0,
-    },
-    market: { sampleSize: 0, brier: 0, reliability: 0, resolution: 0, ece: 0, baseRate: 0 },
-    betterCalibrated: "tie" as const,
-    note: "The Elo-vs-market endpoint could not be reached. No data is shown.",
-  }));
+      note: "The market-baseline endpoint could not be reached. No data is shown.",
+    })),
+    loadEloVsMarketBacktest().catch(() => ({
+      status: "no-data" as const,
+      generatedAt: new Date().toISOString(),
+      comparisonSampleSize: 0,
+      seasonRange: null,
+      elo: {
+        sampleSize: 0,
+        accuracy: 0,
+        brier: 0,
+        reliability: 0,
+        resolution: 0,
+        ece: 0,
+        baseRate: 0,
+        curve: [],
+        teamsRated: 0,
+      },
+      market: { sampleSize: 0, brier: 0, reliability: 0, resolution: 0, ece: 0, baseRate: 0 },
+      betterCalibrated: "tie" as const,
+      note: "The Elo-vs-market endpoint could not be reached. No data is shown.",
+    })),
+  ]);
 
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">

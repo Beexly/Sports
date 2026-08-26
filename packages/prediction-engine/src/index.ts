@@ -5,6 +5,8 @@ export {
   americanToImpliedProbability,
   removeVig,
   averageAmericanPrices,
+  boundAmericanPrice,
+  MAX_ABS_AMERICAN_PRICE,
   clamp,
   toEdgeIndex,
 } from "./scoring.js";
@@ -25,6 +27,10 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult, selectGradingLine, selectionIsHomeSide } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// The published-line rule: the customer-visible / locked / graded handicap is the
+// nearest line a book actually posted, never the raw consensus mean (which makes
+// PUSH structurally unreachable for spreads and totals). See published-line.ts.
+export { snapToPostedLine, formatPublishedLine } from "./published-line.js";
 // Historical backfill settlement engine — re-run the FROZEN model on past games
 // using ONLY pre-game data, then settle vs the known result (no-lookahead by design).
 export {
@@ -1483,6 +1489,35 @@ export {
 } from "./edge-lab/props-hb-pass-yards.js";
 export type { PassYardsSample } from "./edge-lab/props-hb-pass-yards.js";
 
+// Pass-yards air-yards-diff bind: couples the covariate bus
+// (avgAirYardsDifferential) into the passing-yards | attempts model.
+// Fail-closed on null/non-finite — never imputes. priced:false.
+export {
+  PASS_AIR_YARDS_DIFF_BIND_METHOD_TAG,
+  bindPassAirYardsDiffSamples,
+  boundPassAirYardsDiffSamples,
+} from "./edge-lab/props-hb-pass-ayd-bind.js";
+export type {
+  PassAirYardsDiffBindRequest,
+  PassAirYardsDiffBindResult,
+  BoundPassYardsSample,
+} from "./edge-lab/props-hb-pass-ayd-bind.js";
+
+// Completed-air-yards (depth-of-target realized in completions) covariate
+// bind: couples the covariate bus (avgCompletedAirYards) into the
+// passing-yards model. Fail-closed on null/non-finite — never imputes.
+// priced:false.
+export {
+  PASS_CAY_BIND_METHOD_TAG,
+  bindPassCaySamples,
+  boundPassCaySamples,
+} from "./edge-lab/props-hb-cay-bind.js";
+export type {
+  PassCayBindRequest,
+  PassCayBindResult,
+  BoundPassYardsCaySample,
+} from "./edge-lab/props-hb-cay-bind.js";
+
 // Rushing TDs given rush attempts, not ATD-given-touches. Independent p.
 export {
   RUSH_TD_HB_METHOD_TAG,
@@ -1552,6 +1587,22 @@ export type {
 export { SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples } from "./edge-lab/props-hb-adot-sep-bind.js";
 export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep-bind.js";
 
+// Catch-separation bind: couples the covariate bus (avgSeparation on
+// CovariateRow) into the catches/receptions model (props-hb-catch). H2 Edge:
+// books price catches on target volume but miss separation. Fail-closed on
+// null/non-finite — never imputes. Honest weekly-mean grain forwarded verbatim.
+// priced:false.
+export {
+  CATCH_SEPARATION_BIND_METHOD_TAG,
+  bindCatchSeparationSamples,
+  boundCatchSeparationSamples,
+} from "./edge-lab/props-hb-separation-bind.js";
+export type {
+  CatchSeparationBindRequest,
+  CatchSeparationBindResult,
+  BoundSeparationCatchSample,
+} from "./edge-lab/props-hb-separation-bind.js";
+
 // YAC bind: couples the covariate bus (avgYac) to the air+YAC model.
 // Fail-closed on null — never invents YAC. Honest weekly-mean grain forwarded
 // verbatim. priced:false.
@@ -1574,6 +1625,37 @@ export type {
   BoundCompSample,
 } from "./edge-lab/props-hb-cpoe-comp-bind.js";
 
+// Passer-rating bind: couples the covariate bus (PR 1 weekly NGS passerRating)
+// to the pass-TDs | attempts model (props-hb-pass-td). Fail-closed on null /
+// non-finite. Honest weekly-mean grain forwarded verbatim. priced:false. H2 Edge.
+export {
+  PASSER_RATING_BIND_METHOD_TAG,
+  bindPasserRatingSamples,
+  boundPasserRatingSamples,
+} from "./edge-lab/props-hb-passer-rating-bind.js";
+export type {
+  PasserRatingBindRequest,
+  PasserRatingBindResult,
+  BoundPassTdSample,
+} from "./edge-lab/props-hb-passer-rating-bind.js";
+
+// Aggressiveness bind: couples the covariate bus weekly NGS `aggressiveness`
+// (% throws into tight coverage, <1 yd) into the pass-TDs | attempts model
+// (props-hb-pass-td). A QB forcing throws into tight windows has higher TD
+// variance AND higher INT risk — the market doesn't separate the two.
+// Fail-closed on null/non-finite. Honest weekly-mean grain forwarded verbatim.
+// priced:false. H2 Edge.
+export {
+  AGGRESSIVENESS_BIND_METHOD_TAG,
+  bindAggressivenessSamples,
+  boundAggressivenessSamples,
+} from "./edge-lab/props-hb-aggressiveness-bind.js";
+export type {
+  AggressivenessBindRequest,
+  AggressivenessBindResult,
+  BoundAggressivenessPassTdSample,
+} from "./edge-lab/props-hb-aggressiveness-bind.js";
+
 // Rush-yards bind: couples the covariate bus (pctAttemptsGte8Defenders + avgTimeToLos)
 // to the rushing-yards | attempts model. Fail-closed on null — never invents stacking.
 // Honest weekly-mean grain forwarded verbatim. priced:false.
@@ -1587,6 +1669,76 @@ export type {
   RushYardsBindResult,
   BoundRushSample,
 } from "./edge-lab/props-hb-rush-yards-bind.js";
+
+// RYOE bind: couples the covariate bus (ryoePerAtt) to the rush-TD model.
+// Efficiency signal the books miss: positive RYOE/att implies more TDs on
+// the same volume, including red-zone carries. Fail-closed on null/non-finite.
+// priced:false.
+export {
+  RYOE_BIND_METHOD_TAG,
+  bindRyoeSamples,
+  boundRyoeSamples,
+} from "./edge-lab/props-hb-ryoe-bind.js";
+export type {
+  RyoeBindRequest,
+  RyoeBindResult,
+  BoundRushTdSample,
+} from "./edge-lab/props-hb-ryoe-bind.js";
+
+// RPOE bind: couples the covariate bus (rushPctOverExpected) to the rush-TD
+// model. Efficiency-over-expectation signal the books miss: a RB exceeding
+// expected yards on a high % of carries hits holes better, including in the
+// red zone. Fail-closed on null/non-finite. priced:false.
+export {
+  RPOE_BIND_METHOD_TAG,
+  bindRpoeSamples,
+  boundRpoeSamples,
+} from "./edge-lab/props-hb-rpoe-bind.js";
+export type {
+  RpoeBindRequest,
+  RpoeBindResult,
+  BoundRpoRushTdSample,
+} from "./edge-lab/props-hb-rpoe-bind.js";
+
+// Kickoff return yards | returns (Gamma-Poisson). Books price return TDs only —
+// return YARDS are the uncovered edge. See H1 Edge #5 — Tier 1 Special Teams.
+export {
+  KICKOFF_RETURN_YARDS_METHOD_TAG,
+  fitKickoffReturnYardsPrior,
+  fitKickoffReturnAttemptsPrior,
+  posteriorKickoffReturnYards,
+  posteriorKickoffReturnAttempts,
+  probOverKickoffReturnYardsGivenReturns,
+  probOverKickoffReturnYards,
+  probOverKickoffReturnAttempts,
+} from "./edge-lab/kickoff-return-yards.js";
+export type {
+  KickoffReturnSample,
+  KickoffReturnAttemptsSample,
+} from "./edge-lab/kickoff-return-yards.js";
+
+// Kickoff return-yards game-script covariate bind (pre-game win probability).
+// Game-script WP asymmetry: high-WP teams return more conservatively, low-WP
+// teams more aggressively. Same-week pre-game spread is leak-safe (known at
+// kickoff). Fail-closed — never imputes 0.5. priced:false.
+export {
+  KICKOFF_RETURN_YARDS_BIND_METHOD_TAG,
+  DEFAULT_KICKOFF_SCRIPT_ELASTICITY,
+  bindKickoffReturnYardsSamples,
+  boundKickoffReturnYardsSamples,
+  winProbForKickoff,
+  scriptAdjustedPosterior,
+  scriptProbOverKickoffReturnYards,
+} from "./edge-lab/kickoff-return-yards-bind.js";
+export type {
+  GameScriptRow,
+  GameScriptCell,
+  GameScriptGrain,
+  GameScriptProvenance,
+  KickoffReturnYardsBindRequest,
+  KickoffReturnYardsBindResult,
+  BoundKickoffReturnSample,
+} from "./edge-lab/kickoff-return-yards-bind.js";
 
 // INT bind: couples the covariate bus (avgTimeToThrow + aggressiveness) to the
 // interceptions | attempts model. Fail-closed on null — never invents risk.
@@ -1657,18 +1809,35 @@ export {
 } from "./edge-lab/props-hb-comp.js";
 export type { CompSample } from "./edge-lab/props-hb-comp.js";
 
-// INTs | attempts. Rare counts on the same exposure. Poisson fallback when no φ.
+// H2 Edge — Interceptions | attempts. Beta-Binomial over attempts.
 export {
   INT_HB_METHOD_TAG,
-  fitIntPerAttemptPrior,
-  pooledIntPerAttempt,
-  intProbZeroPoisson,
-  posteriorIntPerAttempt,
-  intProbZero,
-  probIntGivenAttempts,
-  probInt,
+  fitIntPrior,
+  intPosterior,
+  probOverInt,
 } from "./edge-lab/props-hb-int.js";
 export type { IntSample } from "./edge-lab/props-hb-int.js";
+
+// H2 Edge — Fumbles | touches. Beta-Binomial over touches (bounded).
+export {
+  FUMBLE_HB_METHOD_TAG,
+  fitFumblePrior,
+  fumblePosterior,
+  probOverFumble,
+} from "./edge-lab/props-hb-fumble.js";
+export type { FumbleSample } from "./edge-lab/props-hb-fumble.js";
+
+// Fumble-rate covariate bind: PFR weekly mean fumble rate.
+export {
+  FUMBLE_BIND_METHOD_TAG,
+  bindFumbleSamples,
+  boundFumbleSamples,
+} from "./edge-lab/props-hb-fumble-bind.js";
+export type {
+  FumbleBindRequest,
+  FumbleBindResult,
+  BoundFumbleSample,
+} from "./edge-lab/props-hb-fumble-bind.js";
 
 // Pass TDs | attempts. Distinct from ATD/rec-TD/rush-TD and from pass yards.
 export {
@@ -1693,6 +1862,99 @@ export {
   scoreSacksOver,
 } from "./edge-lab/props-hb-sacks.js";
 export type { SackSample } from "./edge-lab/props-hb-sacks.js";
+
+// H1 Edge #2 — TFL (tackles for loss). Mispriced as a sack prop.
+// Beta-Binomial over defensive snaps.
+export {
+  TFL_HB_METHOD_TAG,
+  fitTflPrior,
+  posteriorTfl,
+  betaBinomialProbOverTfl,
+  probOverTfl,
+  scoreTflOver,
+} from "./edge-lab/props-hb-tfl.js";
+export type { TflSample } from "./edge-lab/props-hb-tfl.js";
+
+// TFL covariate bind: PFR weekly TFL rate → TflSample.
+export {
+  TFL_RATE_BIND_METHOD_TAG,
+  bindTflSamples,
+  boundTflSamples,
+} from "./edge-lab/props-hb-tfl-bind.js";
+export type {
+  TflBindRequest,
+  TflBindResult,
+  BoundTflSample,
+} from "./edge-lab/props-hb-tfl-bind.js";
+
+// H1 Edge #3 — Pass Deflections (PD). Books rarely price PD directly;
+// when they do, they miss the target-adjusted rate. Gamma-Poisson over games.
+export {
+  PD_HB_METHOD_TAG,
+  fitPdPrior,
+  posteriorPd,
+  probOverPd,
+  scorePdOver,
+} from "./edge-lab/props-hb-pd.js";
+export type { PdSample } from "./edge-lab/props-hb-pd.js";
+
+// PD covariate bind: PFR weekly PD rate → PdSample.
+export {
+  PD_RATE_BIND_METHOD_TAG,
+  bindPdSamples,
+  boundPdSamples,
+} from "./edge-lab/props-hb-pd-bind.js";
+export type {
+  PdBindRequest,
+  PdBindResult,
+  BoundPdSample,
+} from "./edge-lab/props-hb-pd-bind.js";
+
+// H1 Edge #4 — Defensive snap share %. PFR defensive snap count → share,
+// role signal priced implicitly via volume props. Gamma-Poisson posterior.
+export {
+  DEF_SNAP_SHARE_HB_METHOD_TAG,
+  fitDefSnapSharePrior,
+  posteriorDefSnapShare,
+  probOverDefSnapShare,
+} from "./edge-lab/props-hb-def-snap-share.js";
+export type { DefSnapShareSample } from "./edge-lab/props-hb-def-snap-share.js";
+
+// Defensive snap-share covariate bind: PFR weekly snap share → DefSnapShareSample.
+export {
+  DEF_SNAP_SHARE_BIND_METHOD_TAG,
+  bindSnapShareSamples,
+  boundSnapShareSamples,
+} from "./edge-lab/props-hb-def-snap-share-bind.js";
+export type {
+  SnapShareBindRequest,
+  SnapShareBindResult,
+  BoundDefSnapShareSample,
+} from "./edge-lab/props-hb-def-snap-share-bind.js";
+
+// H1 Edge #1 — QB Pressures (hurries + hits + sacks). Books price sacks only;
+// pressures capture QB disruption (~5% edge). PFR advstats def side.
+export {
+  PRESSURES_HB_METHOD_TAG,
+  fitPressurePrior,
+  posteriorPressure,
+  betaBinomialProbOverPressures,
+  probOverPressures,
+  scorePressuresOver,
+} from "./edge-lab/props-hb-pressures.js";
+export type { PressureSample } from "./edge-lab/props-hb-pressures.js";
+
+// Pressure-rate covariate bind: PFR weekly mean pressure-rate → PressureSample.
+export {
+  PRESSURE_RATE_BIND_METHOD_TAG,
+  bindPressureSamples,
+  boundPressureSamples,
+} from "./edge-lab/props-hb-pressure-rate-bind.js";
+export type {
+  PressureBindRequest,
+  PressureBindResult,
+  BoundPressureSample,
+} from "./edge-lab/props-hb-pressure-rate-bind.js";
 
 // Portfolio Kelly layer (Session 2) — size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until

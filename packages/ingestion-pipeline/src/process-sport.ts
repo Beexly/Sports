@@ -67,6 +67,7 @@ import type {
   SignalCategory,
   OddsApiEvent,
 } from "@sports/types";
+import { isFeaturedPromotionEligible } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
@@ -122,6 +123,10 @@ export interface ProcessSportResult {
   provider?: string;
   /** Raw events accepted before freshness filter. */
   eventsCount?: number;
+  /** Line-archive snapshot rows persisted this cycle (0 when LINE_ARCHIVE_ENABLED is off). */
+  lineSnapshotsPersisted?: number;
+  /** Games whose line-archive capture reported an error this cycle. */
+  lineArchiveErrors?: number;
   /** The-Odds-API's own x-requests-remaining from this cycle's primary call,
    *  when one was made. Lets a multi-sport caller stop early instead of
    *  blindly burning the rest of a near-exhausted monthly credit budget. */
@@ -605,6 +610,11 @@ export async function processSport(
     // MONEYLINE is stored per side (home/away are not complementary).
     const dispersionByGame = new Map<string, GameDispersion>();
 
+    // Glass-Ledger line-archive outcome for this cycle. Surfaced on the result
+    // so refresh-odds reports it instead of silently swallowing archive errors.
+    let lineSnapshotsPersisted = 0;
+    let lineArchiveErrors = 0;
+
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
@@ -618,12 +628,22 @@ export async function processSport(
       // new Odds API calls.
       const propSnap = eventOddsByExternalId.get(game.externalId);
       const propRows = propSnap ? toPropLineSnapshotRows(propSnap as PropEventLike) : [];
-      await captureLineSnapshotsIfEnabled({
+      const lineArchive = await captureLineSnapshotsIfEnabled({
         db,
         gameId: gameRecord.id,
         capturedAt: fetchedAt,
         rows: [...toLineSnapshotRows(gameOdds), ...propRows],
       });
+      lineSnapshotsPersisted += lineArchive.persisted;
+      if (lineArchive.error) {
+        // The callee never throws; it reports failure in `error`. Discarding it
+        // meant a broken archive looked byte-identical to a disabled one.
+        lineArchiveErrors++;
+        console.warn(
+          `${logPrefix} ${sport.key}: line-archive capture failed for game ` +
+          `${gameRecord.id} — ${lineArchive.error}`,
+        );
+      }
 
       // Capture the book-line dispersion (max−min across books) per kind NOW,
       // while every book's line for this game is in hand. It is the CLV
@@ -781,12 +801,15 @@ export async function processSport(
     let picksGenerated = 0;
 
     for (const pick of scoredPicks) {
-      // Fields refreshed on every cycle (confidence, odds, reasoning).
+      // Fields refreshed on every cycle (confidence, grade, market depth).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.
+      //
+      // selection / line / reasoning / reasoningShort are NOT here. See
+      // publishedTerms below: those four are the published bet, and settlement
+      // grades the write-once lock, so refreshing them published a bet we do
+      // not grade.
       const pickUpdateData = {
-        selection: pick.selection,
-        line: pick.line,
         confidence: pick.confidence,
         edgeScore: pick.edgeScore,
         consensusPct: pick.consensusPct,
@@ -794,19 +817,63 @@ export async function processSport(
         tier: pick.tier,
         pickGrade: pick.pickGrade,
         riskLevel: pick.riskLevel,
-        reasoning: pick.reasoning,
-        reasoningShort: pick.reasoningShort,
         factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
         modelVersion: pick.modelVersion,
         dataFreshnessAt: pick.dataFreshnessAt,
       };
 
+      // The PUBLISHED BET TERMS — write-once at creation, exactly like the CLV
+      // lock they are minted alongside.
+      //
+      // Settlement grades SPREAD/TOTAL against `clvLockLine` (selectGradingLine),
+      // which is create-only. When these four drifted on every refresh, the row
+      // the customer read stopped being the row we graded:
+      //
+      //   Tue: created at consensus -3.0 → clvLockLine = -3.0, card "Chiefs -3.0"
+      //   Thu: consensus moves to -4.5  → card now "Chiefs -4.5", line = -4.5,
+      //                                    lock still -3.0
+      //   Chiefs win by 4 → graded at -3.0 = WIN; every customer who opened
+      //   /picks after Thursday saw -4.5 and lost.
+      //
+      // The drift is directional, not random: the model follows the market, so
+      // the lock is the earlier and better number and the published record is
+      // inflated. Settlement is doing the doctrinally correct thing (grade at
+      // pick time); the artifact is what has to stop moving. Freezing here fixes
+      // every surface at once — /api/picks, /picks, /cockpit/settlement-hold,
+      // RSS, receipts — rather than needing a drift guard bolted onto each.
+      //
+      // The reasoning prose is frozen with them because it QUOTES the handicap
+      // ("Chiefs -3.0 backed by 83% of 6 bookmakers"); leaving it live would
+      // reintroduce the same contradiction one field over. It is the argument we
+      // made when we published the pick, which is what a track record should keep.
+      //
+      // KNOWN RESIDUAL, stated rather than hidden: `reasoning` also ends with
+      // "Confidence: N/100 (GRADE)", and `confidence`/`pickGrade` ARE still
+      // refreshed above. So a Pro card can show a live confidence badge next to
+      // frozen prose quoting the publish-time one. Neither number is wrong —
+      // they are as-of different instants — but they can visibly disagree. This
+      // is deliberately the lesser evil: the alternative is prose quoting a
+      // handicap we do not grade, which is an actual truth defect rather than a
+      // cosmetic one. (The FREE teaser `reasoningShort` carries no confidence
+      // figure, so it cannot disagree at all.) Resolving it properly means
+      // separating the publish-time argument from the live scoreboard inside the
+      // prose — a scoring-copy change, not an ingestion one.
+      const publishedTerms = {
+        selection: pick.selection,
+        line: pick.line,
+        reasoning: pick.reasoning,
+        reasoningShort: pick.reasoningShort,
+      };
+
       // Featured promotion gate: only auto-promote when explicitly enabled.
       // In bootstrap mode, no pick is featured — grades are uncalibrated.
+      // The pick-quality half now lives in `isFeaturedPromotionEligible`
+      // (@sports/types), which carries the reachability caveat: the grades it
+      // requires sit above the Edge Index's honest-market ceiling, so on a
+      // correctly priced market this half is unsatisfiable. That is asserted,
+      // not assumed — see grade-ladder-reachability.test.ts.
       const isFeatured =
-        gates.canPromoteFeaturedPicks &&
-        (pick.pickGrade === "ELITE_PLAY" ||
-          (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
+        gates.canPromoteFeaturedPicks && isFeaturedPromotionEligible(pick);
 
       // A SETTLED pick is frozen: once it has a WIN/LOSS/PUSH result, the
       // refresh cycle must never rewrite its selection/line/confidence/grade/
@@ -857,6 +924,18 @@ export async function processSport(
             ...pickUpdateData,
             // Re-evaluate featured status on each refresh when promotion is enabled.
             isFeatured,
+            // DELIBERATELY NOT HEALED HERE. A row created BEFORE this change can
+            // already carry a `selection`/`line` that drifted off its write-once
+            // `clvLockLine`. Freezing stops the drift going forward but does not
+            // retro-correct those rows, and this loop is the wrong place to try:
+            // pulling `line` back onto the lock without also rewriting
+            // `selection` fixes nothing a customer can see (a SPREAD card renders
+            // only `selection`) and makes a TOTAL card self-contradictory —
+            // "OVER 48.5" over "Line: 47". Reconstructing a published `selection`
+            // is a deliberate, auditable backfill, not a side effect of a refresh
+            // cycle — which is precisely the behaviour this change exists to stop.
+            // Tracked as follow-up; the affected set is bounded and self-draining
+            // (every such row settles within days).
           },
         });
 
@@ -895,7 +974,8 @@ export async function processSport(
               isFeatured,
               // CLV lock snapshot — the line/price we ACTUALLY published at, captured
               // once at creation. Absent from the updateMany above, so the refresh
-              // cycle can never overwrite it (Pick.line itself IS mutated each cycle).
+              // cycle can never overwrite it. `Pick.line` is now frozen alongside it
+              // (see publishedTerms), so the two agree for the row's whole life.
               // Moneyline `pick.line` holds the American price; spread/total `pick.line`
               // holds the points line. Graded against the closing line at settlement.
               clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
@@ -911,6 +991,9 @@ export async function processSport(
                 dispersionByGame.get(pick.gameId),
               ),
               ...pickUpdateData,
+              // Minted in the same write as clvLockLine above, from the same
+              // `pick.line`, so display == lock == graded line from birth.
+              ...publishedTerms,
             },
           });
         }
@@ -1040,6 +1123,8 @@ export async function processSport(
       provider: oddsProviderTag,
       eventsCount: events.length,
       note: emptyNote,
+      lineSnapshotsPersisted,
+      lineArchiveErrors,
       oddsApiRemainingRequests: remainingRequests ?? undefined,
     };
   } catch (err) {

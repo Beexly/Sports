@@ -51,6 +51,7 @@ const GUARDS = [
   ["sealed-holdout-open-scan", ["node", "scripts/guardrails/sealed-holdout-open-scan.mjs"]],
   ["pedersen-opener-boundary", ["node", "scripts/guardrails/pedersen-opener-boundary.mjs"]],
   ["actor-minting-boundary", ["node", "scripts/guardrails/actor-minting-boundary.mjs"]],
+  ["client-ip-boundary", ["node", "scripts/guardrails/client-ip-boundary.mjs"]],
   ["ai-control-plane-sealing", ["node", "scripts/guardrails/ai-control-plane-sealing.mjs"]],
   ["skipped-pg-integration-honesty", ["node", "scripts/guardrails/skipped-pg-integration-honesty.mjs"]],
   ["ai-council", ["npm", "run", "guard:ai-council"]],
@@ -58,6 +59,8 @@ const GUARDS = [
   ["eval-contracts", ["node", "scripts/eval-contracts.mjs"]],
   ["dependency-audit", ["node", "scripts/guardrails/dependency-audit.mjs"]],
   ["agent-bash-guard", ["node", "scripts/guardrails/agent-bash-guard.mjs", "--selftest"]],
+  ["node-version-parity-test", ["node", "--test", "scripts/guardrails/node-version-parity.test.mjs"]],
+  ["node-version-parity", ["node", "scripts/guardrails/node-version-parity.mjs"]],
 ];
 
 function flag(name) {

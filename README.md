@@ -1,6 +1,6 @@
 # Sports Intelligence OS
 
-[![CI](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml/badge.svg)](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml)
+[![CI](https://github.com/Beexly/Sports/actions/workflows/ci.yml/badge.svg)](https://github.com/Beexly/Sports/actions/workflows/ci.yml)
 
 Sports picks platform with real data ingestion, AI-assisted prediction
 ranking, subscription paywalls, content generation, and an internal operator
@@ -39,11 +39,42 @@ an admin login. They assume Postgres is available locally; everything past
 
 ### 1. Prerequisites
 
-- Node.js >= 20, npm >= 10
+- **Node.js 20** (see [Node version](#node-version) — newer majors pass locally
+  and fail CI), npm >= 10
 - A local Postgres instance (Docker, Homebrew, or `docker compose up postgres`
   from `docker/`)
 - A Google OAuth client (only required for sign-in; takes ~3 min in Google
   Cloud Console — set the redirect to `http://localhost:3000/api/auth/callback/google`)
+
+#### Node version
+
+**Every CI job runs Node 20.** `.nvmrc` pins it, so:
+
+```bash
+nvm use            # or: fnm use / asdf install
+node --version     # expect v20.x
+```
+
+This matters more than it looks. `engines.node` says `>=20.0.0`, so npm stays
+quiet on Node 21/22/24 and the whole local suite — `npm test`, `npm run
+typecheck`, `npm run lint`, `npm run guardrails` — goes green on a runtime CI
+never uses. Anything that touches an API added after Node 20 then fails in CI
+and nowhere else. Verified examples of that gap: `module.registerHooks` and
+native TypeScript type-stripping (`node foo.ts`) both work on v22.22.2 and
+throw on v20.20.2.
+
+`npm run guard:node-version-parity` checks that the pins agree and scans
+Node-executed sources for post-20 APIs. It prints a NOTICE whenever the runtime
+you are on differs from the CI pin; `--strict-runtime` turns that into a
+failure. Its API list is hand-maintained and partial — **running the checks on
+Node 20 is the real verification**, the guard is only a fast tripwire.
+
+If your Node 20 lives somewhere other than your version manager's default, put
+it in front for a single command rather than switching globally:
+
+```bash
+PATH=/path/to/node20/bin:$PATH npm test
+```
 
 ### 2. Install + env
 
@@ -84,7 +115,8 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 # required for AI-generated content
 ANTHROPIC_API_KEY="sk-ant-..."
 
-# required for BullMQ workers
+# Local docker-compose only. No application code reads REDIS_URL — it is used
+# solely by scripts/check-deploy-readiness.mjs as a reachability probe.
 REDIS_URL="redis://localhost:6379"
 ```
 
@@ -193,12 +225,19 @@ packages/prediction-engine  Core scoring + readiness gates
 packages/data-ingestion     The Odds API adapter + normalizer
 packages/ingestion-pipeline Shared per-sport ingestion entry point
 packages/types              Shared TypeScript types
-workers/                    BullMQ workers (data-refresh, picks, content)
+workers/                    Standalone long-running workers (setTimeout loops,
+                            not a broker queue). NOT deployed: absent from
+                            docker-compose and run only via npm run workers:*.
+                            Production scheduling is 21 Vercel crons.
 docker/                     Postgres + Redis compose, app Dockerfile
 docs/                       Architecture + ops runbook
 ```
 
-See `handoff.md` for the full per-phase history.
+There is no root `handoff.md`. Per-phase history lives in the tracked `handoff/`
+directory — start at [`handoff/00-READ-CANONICAL.md`](handoff/00-READ-CANONICAL.md),
+which routes you to the actual doc source of truth
+([`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md)) and warns that the dated
+session handoffs beside it are museum pieces, not plans to execute.
 
 
 ## Orbit unlock (process capital)

@@ -3,6 +3,7 @@ import { Shell, Cards, HeroStat, StatusRibbon } from "../_components";
 import { FilterBar } from "../_client";
 import { rankPlayers, loadPlayers } from "@/lib/statking/product";
 import { glossaryEntry } from "@/lib/glossary";
+import { STAT_PLACEHOLDER } from "@/lib/format/stat";
 export const metadata = {
   title: "Player Database: Every Tracked NFL Player",
   description: "Browse the full StatKing player universe with usage, efficiency, role, and fantasy edge.",
@@ -14,6 +15,13 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
   const filter = searchParams?.filter ?? "All";
   const filtered = filter === "All" ? players : players.filter(p => p.position === filter);
   const top3 = filtered.slice(0, 3);
+  // An empty snapshot divides by zero and renders the literal string "NaN%" in
+  // a customer-facing stat card. Missing data takes the em-dash placeholder
+  // (lib/format/stat.ts doctrine) — never "NaN", never a fabricated 0%.
+  const avgConfidence =
+    all.length > 0
+      ? `${Math.round(all.reduce((a, p) => a + p.data_confidence, 0) / all.length)}%`
+      : STAT_PLACEHOLDER;
 
   return (
     <Shell title="Player Database">
@@ -22,8 +30,17 @@ export default function Page({ searchParams }: { searchParams?: { filter?: strin
         { label: "Players", value: all.length },
         { label: "Teams", value: new Set(all.map(p => p.team)).size },
         { label: "Positions", value: new Set(all.map(p => p.position)).size },
-        { label: "Avg confidence", value: Math.round(all.reduce((a, p) => a + p.data_confidence, 0) / all.length) + "%" }
+        { label: "Avg confidence", value: avgConfidence }
       ]} />
+      {all.length === 0 && (
+        <p
+          data-testid="stats-players-empty"
+          className="border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1"
+        >
+          The player snapshot is empty — no players have loaded yet. Nothing is
+          broken; this page fills in on the next sync cycle.
+        </p>
+      )}
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Filter by position</p>
         <FilterBar

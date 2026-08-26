@@ -16,20 +16,22 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { getChapterByWeek, getCipherStatus, normalizeAnswer } from "@/lib/cipher/cipher";
-import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import {
+  consumePublicFormRateLimit,
+  fingerprintClientKey,
+} from "@/lib/api/public-form-rate-limit";
+import { clientIp } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 // ── Per-IP rate limit (durable Postgres via public-form helper) ───────────
+// The key comes from the shared clientIp() helper. The local version of this
+// function read the LEFTMOST x-forwarded-for entry, which the caller controls:
+// rotating that header minted a fresh bucket per attempt and removed the brute
+// force ceiling entirely.
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_ATTEMPTS = 8;
-
-function clientIp(req: NextRequest): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip") ?? "anon";
-}
 
 function sha256(s: string): string {
   return createHash("sha256").update(s).digest("hex");
@@ -107,8 +109,16 @@ export async function POST(req: NextRequest) {
   }
 
   const reward = issueReward(chapter.week);
-  // Win log for human fulfillment / auditing. No PII, no grant performed here.
-  console.info(`[cipher] week ${chapter.week} solved · reward ${reward.kind}:${reward.value} · ip ${ip}`);
+  // Win log for human fulfillment / auditing. No grant performed here.
+  // The client IP is a personal identifier under GDPR/CCPA and Vercel retains
+  // stdout, so it is NEVER logged raw — only the same peppered SHA-256
+  // fingerprint the rate limiter keys on (lib/api/public-form-rate-limit.ts),
+  // truncated. That still lets an operator correlate two solves from one source
+  // without putting an IP in the log store.
+  const ipFingerprint = fingerprintClientKey(ip).slice(0, 12);
+  console.info(
+    `[cipher] week ${chapter.week} solved · reward ${reward.kind}:${reward.value} · ipFingerprint ${ipFingerprint}`,
+  );
 
   return NextResponse.json({
     ok: true,

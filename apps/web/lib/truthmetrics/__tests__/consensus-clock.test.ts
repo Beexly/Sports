@@ -239,13 +239,59 @@ describe("computeConsensusClock — exponential fit", () => {
     expect(r1.snapshotHash).not.toBe(r2.snapshotHash);
   });
 
-  it("sorts dispersion series by time ascending before fitting", () => {
-    // Same data as decayingLineGame(8,...) but shuffled order.
+  it("fit is order-invariant while the snapshot hash is order-sensitive", () => {
+    // Same data as decayingLineGame(8,...) but in a DETERMINISTIC permutation.
+    // A `sort(() => Math.random() - 0.5)` comparator was used here: it is both
+    // non-uniform and free to return the identity permutation, in which case
+    // the test compared a list against itself and proved nothing. A seeded
+    // mulberry32 Fisher–Yates shuffle gives the same permutation on every run,
+    // and reversal guarantees a strictly non-identity order.
     const snaps = decayingLineGame(8, 0.1, 0.001, 0.5);
-    const shuffled = [...snaps].sort(() => Math.random() - 0.5);
+
+    function mulberry32(seed: number): () => number {
+      let a = seed >>> 0;
+      return () => {
+        a = (a + 0x6d2b79f5) >>> 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    const rand = mulberry32(20260910);
+    const shuffled = [...snaps];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
+    }
+    // Guard the premise: the permutation must actually reorder the series,
+    // otherwise this test degenerates into comparing a list with itself.
+    expect(shuffled.map((s) => s.capturedAt)).not.toEqual(
+      snaps.map((s) => s.capturedAt),
+    );
+
+    const reversed = [...snaps].reverse();
+
     const r1 = computeConsensusClock("g1", KICKOFF, snaps);
     const r2 = computeConsensusClock("g1", KICKOFF, shuffled);
+    const r3 = computeConsensusClock("g1", KICKOFF, reversed);
+
+    // The old title claimed the library "sorts dispersion series by time
+    // ascending before fitting". Deleting that sort does NOT change lambda or
+    // R² — a least-squares fit over a point set is order-invariant by
+    // construction — so no assertion on lambda/R² can ever prove the sort
+    // happened. Retitled to what the body can actually prove, plus the one
+    // genuinely order-SENSITIVE output (snapshotHash), which does bite.
     expect(r1.lambda).toBeCloseTo(r2.lambda!, 5);
     expect(r1.rSquared).toBeCloseTo(r2.rSquared!, 5);
+    expect(r1.lambda).toBeCloseTo(r3.lambda!, 5);
+    expect(r1.rSquared).toBeCloseTo(r3.rSquared!, 5);
+    // And the fit must be a real one, not two matching nulls/NaNs.
+    expect(Number.isFinite(r1.lambda!)).toBe(true);
+    expect(Number.isFinite(r1.rSquared!)).toBe(true);
+    // snapshotHash is computed over the input array as given, so a reordered
+    // input must produce a different receipt.
+    expect(r2.snapshotHash).not.toBe(r1.snapshotHash);
+    expect(r3.snapshotHash).not.toBe(r1.snapshotHash);
   });
 });

@@ -31,9 +31,10 @@
  *  - `pctAttemptsGte8Defenders` is a weekly MEAN share, NOT a per-carry
  *    frame measurement. Every emitted cell carries its grain and provenance
  *    so the y-axis model can tell the difference.
- *  - `expectedRushYards` / `ryoePerAtt` (vendor / vendor-residual): y-axis
- *    only, GSE-RYOE referee. The bus never emits them; the bind never reads
- *    them.
+ *  - `expectedRushYards` (vendor / vendor-residual): y-axis only, GSE-RYOE
+ *    referee. The bus never emits it; this bind never reads it.
+ *  - `ryoePerAtt` (RYOE per attempt): H2 Edge efficiency covariate — see
+ *    props-hb-ryoe-bind. Promoted from y-axis-only to a p-path covariate.
  *
  * The bind forwards the weekly means verbatim and never crosses the same-week
  * boundary.

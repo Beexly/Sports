@@ -48,9 +48,40 @@ describe("correlation evaluator", () => {
     expect(result.groups).toHaveLength(1);
     expect(result.groups[0]?.key).toBe("pickType:SPREAD");
     expect(result.groups[0]?.aggregates.COUNT).toBe(25);
-    expect(result.groups[0]?.aggregates.WIN_RATE).toBe(0.4);
+    // 10W / 10L / 5 PUSH. WIN_RATE is decided-only: 10 / (10 + 10) = 0.5.
+    // This assertion previously read 0.4 — 10/25, which silently counted each
+    // push as a loss. COUNT and PUSH_RATE keep the full 25-row denominator.
+    expect(result.groups[0]?.aggregates.WIN_RATE).toBe(0.5);
     expect(result.groups[0]?.aggregates.PUSH_RATE).toBe(0.2);
     expect(result.groups[0]?.aggregates.AVG_EDGE).toBe(4);
+  });
+
+  it("excludes pushes from WIN_RATE but keeps them in COUNT and PUSH_RATE", () => {
+    // 56W / 40L / 4 PUSH. Decided rate is 56 / 96 = 0.583; dividing by all 100
+    // rows yields 0.56, which under-reports the true decided win rate.
+    const rows = Array.from({ length: 100 }, (_, index) =>
+      row({
+        pickType: "SPREAD",
+        result: index < 56 ? "WIN" : index < 96 ? "LOSS" : "PUSH",
+        edgeScore: 4,
+      })
+    );
+
+    const result = evaluateCorrelationQuery(query, rows);
+
+    expect(result.groups[0]?.aggregates.COUNT).toBe(100);
+    expect(result.groups[0]?.aggregates.WIN_RATE).toBe(0.583);
+    expect(result.groups[0]?.aggregates.WIN_RATE).not.toBe(0.56);
+    expect(result.groups[0]?.aggregates.PUSH_RATE).toBe(0.04);
+  });
+
+  it("reports a 0 WIN_RATE rather than NaN when every row in a group pushed", () => {
+    const rows = Array.from({ length: 25 }, () => row({ pickType: "SPREAD", result: "PUSH" }));
+
+    const result = evaluateCorrelationQuery(query, rows);
+
+    expect(result.groups[0]?.aggregates.WIN_RATE).toBe(0);
+    expect(result.groups[0]?.aggregates.PUSH_RATE).toBe(1);
   });
 
   it("returns a blocker when no group clears the sample-size gate", () => {

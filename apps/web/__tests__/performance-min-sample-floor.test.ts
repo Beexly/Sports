@@ -168,6 +168,48 @@ describe("/api/performance — minimum-sample floor", () => {
     expect(data.insufficientSample).toBe(true);
   });
 
+  it("counts the floor in DECIDED picks — pushes must not carry a thin sample over it", async () => {
+    // 52W / 44L / 6 PUSH in one sport.
+    //
+    // Decided = 52 + 44 = 96. The published rate is 52/96 = 54.166…% → 54.2%.
+    // Pushes are not in that denominator (winRatePct and the policy module are
+    // both explicit about it), so the floor must be measured on the same 96
+    // picks the rate is measured on.
+    //
+    // Counting pushes toward the floor gives 52 + 44 + 6 = 102 >= 100, which
+    // publishes an overall 54.2% derived from 96 decided picks — while the
+    // per-sport branch of THIS SAME RESPONSE withholds the identical 54.2% for
+    // NFL because 96 < 100. One response cannot both publish and withhold the
+    // same number for the same reason.
+    mocks.queryRaw.mockResolvedValue(aggRows(52, 44, 6));
+
+    const { body } = await callPerformance();
+    const data = body["data"] as PerfData;
+
+    expect(data.insufficientSample).toBe(true);
+    expect(data.overall.winRate).toBeNull();
+    // Counts stay visible — they are facts; only the derived rate is withheld.
+    expect(data.overall.wins).toBe(52);
+    expect(data.overall.losses).toBe(44);
+    expect(data.overall.pushes).toBe(6);
+    // The per-sport slice was already decided-only, and stays withheld.
+    expect(data.bySport[0]?.winRate).toBeNull();
+  });
+
+  it("a decided sample at the floor still publishes with pushes alongside it", async () => {
+    // 55W / 45L / 8 PUSH → decided = 100, exactly at the floor → 55.0%.
+    // Pushes neither block publication nor enter the rate.
+    mocks.queryRaw.mockResolvedValue(aggRows(55, 45, 8));
+
+    const { body } = await callPerformance();
+    const data = body["data"] as PerfData;
+
+    expect(data.insufficientSample).toBe(false);
+    expect(data.overall.winRate).toBe(55);
+    expect(data.overall.pushes).toBe(8);
+    expect(data.bySport[0]?.winRate).toBe(55);
+  });
+
   it("GSE-SEC-031: query uses SQL GROUP BY (not findMany) — one row per sport+result, not one per pick", async () => {
     mocks.queryRaw.mockResolvedValue(aggRows(2, 1, 0));
 

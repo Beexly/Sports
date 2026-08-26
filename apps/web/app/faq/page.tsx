@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME } from "@/lib/brand";
+import { BRAND_NAME, HELPLINE } from "@/lib/brand";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 
@@ -65,7 +65,15 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What's the Edge Index?",
-        a: "A calibrated 0-100 confidence rating on every signal. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth. A 71 Edge Index still loses ~29 times in 100. Variance is described, not hidden.",
+        // Copy-truth note (source: packages/prediction-engine/src/scoring.ts).
+        // `toEdgeIndex` is identity-with-clamp, so NOTHING fits this number to
+        // settled results; the fitted-sounding adjective was removed here for
+        // that reason. The index is a fixed linear rendering of `rawEdge` =
+        // de-vigged fair probability minus the implied probability of the
+        // offered price, both read off the SAME books. Any sentence turning an
+        // index value into a win or loss rate is unbacked: no code anywhere
+        // maps one to the other. See __tests__/edge-index-copy-truth.test.ts.
+        a: "A 0-100 rendering of a single arithmetic gap: the no-vig fair probability the books imply for the side we picked, minus the probability implied by the price actually offered on that side. It is not a probability the pick wins, and nothing fits it to settled results. Because both halves of that comparison are read off the same books, the vig those books charge moves the number, so read it as a market-shape reading next to the factor trail, not as a forecast.",
       },
       {
         q: "What's Eclipse Gate?",
@@ -132,7 +140,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "Is sports betting risky?",
-        a: "Yes. Real risk. Only stake what you can afford to lose without changing your week. If you or someone you know has a gambling problem, call 1-800-GAMBLER. The /responsible-play page has resources and self-exclusion options.",
+        a: `Yes. Real risk. Only stake what you can afford to lose without changing your week. If you or someone you know has a gambling problem, call ${HELPLINE.number}. The /responsible-play page has resources and self-exclusion options.`,
       },
       {
         q: "Should I bet every signal?",

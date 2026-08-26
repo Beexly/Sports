@@ -1,6 +1,5 @@
 import { jsonNoStore } from "@/lib/api/no-store";
 import type { NextRequest } from "next/server";
-import { startOfDay, endOfDay } from "date-fns";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import {
   db,
@@ -12,6 +11,7 @@ import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 
 /**
  * Daily slate API — stub-safe and demo-aware.
@@ -63,6 +63,16 @@ export async function GET(req: NextRequest) {
 
   const demoActive = isStubMode() && isDemoPicksEnabled();
 
+  // ONE day definition for this whole response (the UTC calendar day — see
+  // lib/time/day-boundary.ts), resolved ONCE from a single clock read and used
+  // for BOTH the counts below and the `date` label the route returns.
+  // Previously the counts came from a runtime-local date-fns
+  // `startOfDay`/`endOfDay` window while the label was a UTC `toISOString()`
+  // slice, and each `date` label re-read the clock — two different day
+  // definitions inside one response body, invisible only while the process
+  // timezone happens to be UTC.
+  const today = utcDayWindow(new Date());
+
   // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). The /picks
   // page reads this slate alongside /api/picks; without this guard the SlateBar
   // would still count published rows and stamp a fresh "updated now" even when
@@ -78,7 +88,7 @@ export async function GET(req: NextRequest) {
       return jsonNoStore({
         success: true,
         data: {
-          date: new Date().toISOString().slice(0, 10),
+          date: today.key,
           totalGames: 0,
           totalPicks: 0,
           premiumPickCount: 0,
@@ -104,12 +114,11 @@ export async function GET(req: NextRequest) {
   // The generatedAt day-bound mirrors /api/picks (route.ts): without it this
   // "daily" slate counted EVERY pending published pick ever, so /picks rendered
   // four irreconcilable numbers on one screen (C-31).
-  const slateDay = new Date();
   const baseWhere = {
     isPublished: true,
     result: "PENDING" as const,
     isBootstrap: false,
-    generatedAt: { gte: startOfDay(slateDay), lte: endOfDay(slateDay) },
+    generatedAt: { gte: today.start, lte: today.endInclusive },
     game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
     ...excludeSeedInProd,
   };
@@ -171,7 +180,7 @@ export async function GET(req: NextRequest) {
   return jsonNoStore({
     success: true,
     data: {
-      date: new Date().toISOString().slice(0, 10),
+      date: today.key,
       totalGames,
       totalPicks,
       premiumPickCount,

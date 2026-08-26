@@ -35,6 +35,7 @@ const mocks = vi.hoisted(() => ({
   subscriptionUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   subscriptionUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  subscriptionFindFirst: vi.fn<(args: unknown) => Promise<unknown>>(),
   checkoutAttemptUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   requireDurableWriteStore: vi.fn<(capability: string) => void>(),
   getStripe: vi.fn<() => Stripe>(),
@@ -63,6 +64,7 @@ vi.mock("@sports/db", () => ({
       upsert: mocks.subscriptionUpsert,
       updateMany: mocks.subscriptionUpdateMany,
       findUnique: mocks.subscriptionFindUnique,
+      findFirst: mocks.subscriptionFindFirst,
     },
     checkoutAttempt: {
       updateMany: mocks.checkoutAttemptUpdateMany,
@@ -71,6 +73,7 @@ vi.mock("@sports/db", () => ({
 }));
 
 import { POST } from "@/app/api/webhooks/stripe/route";
+import { getUserEntitlements } from "@/lib/entitlements";
 
 const PRO_MONTHLY = "price_pro_monthly_test";
 const ELITE_ANNUAL = "price_elite_annual_test";
@@ -114,6 +117,7 @@ describe("P9.5-05 — Entitlement grant correctness (journey)", () => {
     mocks.subscriptionUpsert.mockReset();
     mocks.subscriptionUpdateMany.mockReset();
     mocks.subscriptionFindUnique.mockReset();
+    mocks.subscriptionFindFirst.mockReset();
     mocks.checkoutAttemptUpdateMany.mockReset();
     mocks.requireDurableWriteStore.mockReset();
     mocks.requireDurableWriteStore.mockReturnValue(undefined);
@@ -134,6 +138,7 @@ describe("P9.5-05 — Entitlement grant correctness (journey)", () => {
     mocks.subscriptionUpsert.mockResolvedValue({ id: "s_1" });
     mocks.subscriptionUpdateMany.mockResolvedValue({ count: 1 });
     mocks.subscriptionFindUnique.mockResolvedValue(null);
+    mocks.subscriptionFindFirst.mockResolvedValue(null);
     mocks.checkoutAttemptUpdateMany.mockResolvedValue({ count: 1 });
   });
 
@@ -320,6 +325,7 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     mocks.subscriptionUpsert.mockReset();
     mocks.subscriptionUpdateMany.mockReset();
     mocks.subscriptionFindUnique.mockReset();
+    mocks.subscriptionFindFirst.mockReset();
     mocks.checkoutAttemptUpdateMany.mockReset();
     mocks.requireDurableWriteStore.mockReset();
     mocks.requireDurableWriteStore.mockReturnValue(undefined);
@@ -340,6 +346,7 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     mocks.subscriptionUpsert.mockResolvedValue({ id: "s_1" });
     mocks.subscriptionUpdateMany.mockResolvedValue({ count: 1 });
     mocks.subscriptionFindUnique.mockResolvedValue(null);
+    mocks.subscriptionFindFirst.mockResolvedValue(null);
     mocks.checkoutAttemptUpdateMany.mockResolvedValue({ count: 1 });
   });
 
@@ -424,7 +431,10 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     mocks.constructEvent.mockReturnValue(
       stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
     );
-    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+    // The authoritative re-check in the payment_failed handler asks Stripe for
+    // the CURRENT status: this scenario is a subscription Stripe really does
+    // report as in dunning, so the guarded write below is the one under test.
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "past_due" }));
 
     const res = await POST(webhookRequest());
 
@@ -435,7 +445,7 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
         where: {
           stripeSubscriptionId: "sub_123",
           pastDueSince: null,
-          status: { not: "CANCELED" },
+          status: { notIn: ["CANCELED", "INCOMPLETE"] },
         },
         data: { pastDueSince: expect.any(Date) },
       })
@@ -455,7 +465,10 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     mocks.constructEvent.mockReturnValue(
       stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
     );
-    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+    // The authoritative re-check in the payment_failed handler asks Stripe for
+    // the CURRENT status: this scenario is a subscription Stripe really does
+    // report as in dunning, so the guarded write below is the one under test.
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "past_due" }));
 
     await POST(webhookRequest());
 
@@ -468,7 +481,10 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     // The status flip to PAST_DUE still runs (it has no pastDueSince: null where).
     expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
+        where: {
+          stripeSubscriptionId: "sub_123",
+          status: { notIn: ["CANCELED", "INCOMPLETE"] },
+        },
         data: { status: "PAST_DUE" },
       })
     );
@@ -478,35 +494,60 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
    * 4. A late invoice.payment_failed AFTER subscription.deleted does NOT resurrect access.
    *
    * Stripe may deliver a burst of dunning events after the cancel event. The
-   * terminal-CANCELED guard (status: { not: "CANCELED" } in the WHERE) ensures a
-   * late payment_failed cannot flip a CANCELED row back to PAST_DUE (which is
-   * access-granting in getUserEntitlements).
+   * never-grant-grace guard (status: { notIn: [...] } in the WHERE) ensures a
+   * late payment_failed cannot flip a terminal row back to PAST_DUE — which is
+   * access-granting in getUserEntitlements for PAST_DUE_GRACE_DAYS.
+   *
+   * INCOMPLETE is in that list alongside CANCELED for a different reason worth
+   * stating: an INCOMPLETE subscription is one whose FIRST charge never cleared,
+   * so it has never been paid for. Granting it a past-due grace window would
+   * hand out days of paid access on the strength of a payment that failed — the
+   * grace period exists to protect a lapsed paying customer, not to front
+   * access to one who never paid at all.
    */
   it("a late invoice.payment_failed AFTER subscription.deleted cannot resurrect access", async () => {
     mocks.subscriptionUpdateMany.mockImplementation(async (args) => {
       const w = (args as { where?: Record<string, unknown> }).where || {};
-      const statusNot = w["status"] as { not?: string } | undefined;
-      const statusGuard = statusNot?.not;
-      // If the row is CANCELED and the WHERE excludes CANCELED, it must not match.
-      if (statusGuard === "CANCELED") return { count: 0 };
+      const guard = w["status"] as
+        | { not?: string; notIn?: readonly string[] }
+        | undefined;
+      // Model BOTH operators. A mock that understands only `not` treats a
+      // `notIn` guard as absent and reports the update as having matched — it
+      // would pass a route that had dropped the guard entirely, which is the
+      // one thing this test exists to catch.
+      const excluded =
+        guard?.notIn !== undefined
+          ? guard.notIn
+          : guard?.not !== undefined
+            ? [guard.not]
+            : [];
+      // The row is CANCELED: it must not match a WHERE that excludes CANCELED.
+      if (excluded.includes("CANCELED")) return { count: 0 };
       return { count: 1 };
     });
 
     mocks.constructEvent.mockReturnValue(
       stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
     );
-    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription());
+    // The authoritative re-check in the payment_failed handler asks Stripe for
+    // the CURRENT status: this scenario is a subscription Stripe really does
+    // report as in dunning, so the guarded write below is the one under test.
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "past_due" }));
 
     const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
-    // The PAST_DUE status flip is guarded by status: { not: "CANCELED" }.
     const pastDueCall = mocks.subscriptionUpdateMany.mock.calls.find(
       (call) =>
         (call[0] as { data?: Record<string, unknown> }).data?.["status"] === "PAST_DUE"
     );
     expect(pastDueCall).toBeDefined();
     const where = (pastDueCall![0] as { where?: Record<string, unknown> }).where;
-    expect(where?.["status"]).toEqual({ not: "CANCELED" });
+    expect(where?.["status"]).toEqual({ notIn: ["CANCELED", "INCOMPLETE"] });
+    // Assert membership as well as shape, so a reordering of the list is not a
+    // failure but a silent DROP of either terminal status is.
+    const excludedStatuses = (where?.["status"] as { notIn: readonly string[] }).notIn;
+    expect(excludedStatuses).toContain("CANCELED");
+    expect(excludedStatuses).toContain("INCOMPLETE");
   });
 
   /**
@@ -549,5 +590,84 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     );
     // Documented as a launch-blocking finding: a refunded paying customer keeps
     // access until their subscription status otherwise changes.
+  });
+
+  /**
+   * REGRESSION — Stripe `unpaid` must not buy 7 more days of paid access.
+   *
+   * `unpaid` is where Stripe lands a subscription once its smart-retry schedule
+   * is EXHAUSTED: every attempt to collect has failed and Stripe has stopped
+   * trying. It is the END of dunning, not dunning itself.
+   *
+   * The webhook used to map it to PAST_DUE — the ONE db status that opens the
+   * 7-day grace window in lib/entitlements.ts. So the member who definitively
+   * did not pay got a full week of premium for free, and reconcile-entitlements
+   * (which already classifies `unpaid` as a downgrade) disagreed with the
+   * webhook about the very same Stripe status.
+   *
+   * This asserts the END STATE, not just the string: the row the webhook writes
+   * is fed to the REAL getUserEntitlements where-clause, and the member must
+   * come back FREE.
+   */
+  it("REGRESSION: Stripe 'unpaid' (retries exhausted) writes a NON-granting status and yields FREE entitlements", async () => {
+    mocks.constructEvent.mockReturnValue(
+      stripeEvent("customer.subscription.updated", stripeSubscription({ status: "unpaid" }))
+    );
+    // The handler deliberately re-retrieves by id rather than trusting the
+    // embedded snapshot (out-of-order delivery), so arm the retrieve too.
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSubscription({ status: "unpaid" }));
+
+    const res = await POST(webhookRequest());
+    expect(res.status).toBe(200);
+
+    // 1. The written status is terminal + non-access, and specifically NOT the
+    //    grace-granting PAST_DUE.
+    const upsertArg = mocks.subscriptionUpsert.mock.calls[0]?.[0] as {
+      update: { status: string; tier: string; pastDueSince?: Date | null };
+    };
+    expect(upsertArg.update.status).toBe("CANCELED");
+    expect(upsertArg.update.status).not.toBe("PAST_DUE");
+
+    // 2. The END STATE. Replay the exact row the webhook just wrote through the
+    //    REAL getUserEntitlements query semantics (ACTIVE/TRIALING grant; or
+    //    PAST_DUE within the grace window grants). A tier-PRO row in this status
+    //    must match NOTHING → FREE.
+    const writtenRow = {
+      userId: "user_1",
+      // Deliberately pinned to a PAID tier so the STATUS alone decides the
+      // outcome. (The webhook also drops tier→FREE on a CANCELED sync, but
+      // relying on that would make this test pass for the wrong reason: it
+      // would go green even if the status regressed to PAST_DUE.)
+      tier: "PRO",
+      status: upsertArg.update.status,
+      // Most generous possible anchor for the member: stamped right now, so if
+      // the status were PAST_DUE the grace window would be wide open. It is the
+      // STATUS that must deny access here, not a stale timestamp.
+      pastDueSince: new Date(),
+    };
+    mocks.subscriptionFindFirst.mockImplementation(async (args: unknown) => {
+      const where = (args as { where: { OR: Array<Record<string, unknown>> } }).where;
+      const matches = where.OR.some((clause) => {
+        const statusClause = clause["status"];
+        if (typeof statusClause === "string") {
+          if (writtenRow.status !== statusClause) return false;
+        } else {
+          const inList = (statusClause as { in: string[] }).in;
+          if (!inList.includes(writtenRow.status)) return false;
+        }
+        const pastDue = clause["pastDueSince"] as { gte: Date } | undefined;
+        if (pastDue) {
+          if (writtenRow.pastDueSince == null) return false;
+          if (writtenRow.pastDueSince < pastDue.gte) return false;
+        }
+        return true;
+      });
+      return matches ? { tier: writtenRow.tier } : null;
+    });
+
+    const entitlements = await getUserEntitlements("user_1");
+    expect(entitlements.tier).toBe("FREE");
+    expect(entitlements.canSeePremiumPicks).toBe(false);
+    expect(entitlements.canSeeConfidence).toBe(false);
   });
 });

@@ -2,6 +2,7 @@ import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 import { unevaluatedPassReason } from "./pass-reason";
+import { utcDayKey, utcDayWindow } from "@/lib/time/day-boundary";
 
 /**
  * The auditable trail behind a refusal. Every field here is REAL data already
@@ -66,13 +67,14 @@ export interface BoardPassesPayload {
   meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
 }
 
-function todayBounds(): { start: Date; end: Date } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  return { start, end };
-}
+// "Today" is the ONE platform day (UTC calendar day) — see
+// lib/time/day-boundary.ts. The local helper this replaced got it wrong twice:
+// it anchored on `setHours(0,0,0,0)` (the AMBIENT process timezone, not a
+// stated convention) and it called `new Date()` internally, ignoring the `now`
+// this function is handed. So the payload's `date` label — derived from `now` —
+// and the query window — derived from a second, later clock read — could
+// describe two different days across midnight, and no test could pin the
+// boundary because it followed the runner's zone.
 
 // The reason for a no-published-pick row lives in ./pass-reason.ts, shared with
 // loadBoardState — /board renders both lanes at once and they can describe the
@@ -96,7 +98,7 @@ export async function loadBoardPasses(
 
   if (demoActive || staleSuppressed) {
     return {
-      data: { date: now.toISOString().slice(0, 10), passes: [] },
+      data: { date: utcDayKey(now), passes: [] },
       meta: { isSampleData: false, suppressedDemoData: true },
     };
   }
@@ -113,7 +115,7 @@ export async function loadBoardPasses(
       : {}),
   };
 
-  const { start, end } = todayBounds();
+  const { start, end } = utcDayWindow(now);
   try {
     const gateDecisions = await db.gateDecision.findMany({
       where: {
@@ -129,7 +131,7 @@ export async function loadBoardPasses(
     if (gateDecisions.length > 0) {
       return {
         data: {
-          date: now.toISOString().slice(0, 10),
+          date: utcDayKey(now),
           passes: gateDecisions.map((decision): PassListRow => ({
             id: decision.id,
             gameId: decision.gameId,
@@ -178,12 +180,12 @@ export async function loadBoardPasses(
     }));
 
     return {
-      data: { date: now.toISOString().slice(0, 10), passes },
+      data: { date: utcDayKey(now), passes },
       meta: { isSampleData: false },
     };
   } catch {
     return {
-      data: { date: now.toISOString().slice(0, 10), passes: [] },
+      data: { date: utcDayKey(now), passes: [] },
       meta: { isSampleData: false, dataError: "DB_UNREACHABLE" },
     };
   }

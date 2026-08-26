@@ -72,7 +72,19 @@ async function main() {
 
   // ── 1. Health ───────────────────────────────────────────────────────────
   section(1, "Health (/api/health)");
-  const health = await get("/api/health");
+  // /api/health now grades its disclosure: ok/status/deployment.sha and the
+  // check + capability STATUS enums stay public, but checks[].detail,
+  // capabilities[].reason, capabilityGraph and schedulerLiveness are
+  // operator-only (Bearer CRON_SECRET or an ADMIN session) — those free-text
+  // fields were publishing live Stripe/env misconfiguration and raw probe error
+  // text to anonymous callers. Send the same bearer step 5 already uses so an
+  // operator preflight keeps the full picture. Without CRON_SECRET every read
+  // below degrades honestly (blank detail, no graph line), never fails.
+  const health = await get("/api/health", {
+    headers: process.env.CRON_SECRET?.trim()
+      ? { Authorization: `Bearer ${process.env.CRON_SECRET.trim()}` }
+      : {},
+  });
   const h = health.json || {};
   const hOk = health.status === 200 && h.ok === true;
   const hStatus = h.status || "(none)";

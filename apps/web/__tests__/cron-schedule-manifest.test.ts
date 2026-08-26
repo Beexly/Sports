@@ -86,8 +86,16 @@ describe("findCronEntry", () => {
 
 describe("CRON_MANIFEST vs vercel.json (drift guard)", () => {
   it("matches every cron path + schedule declared in vercel.json, in order", () => {
-    const repoRoot = path.resolve(__dirname, "..", "..", "..");
-    const vercelJsonPath = path.join(repoRoot, "vercel.json");
+    // Read apps/web/vercel.json, NOT the repo-root copy. Vercel reads cron
+    // schedules only from the project's Root Directory (apps/web); the root
+    // copy is inert. Validating the manifest against the inert file means
+    // asserting agreement with a config production never loads.
+    //
+    // It is also the only copy guaranteed to exist: vercel-config-drift.test.ts
+    // explicitly permits deleting the root duplicate as a valid end state, and
+    // reading it here turned that blessed cleanup into an ENOENT crash in a
+    // different suite.
+    const vercelJsonPath = path.resolve(__dirname, "..", "vercel.json");
     const vercelJson = JSON.parse(fs.readFileSync(vercelJsonPath, "utf8")) as {
       crons: ReadonlyArray<{ path: string; schedule: string }>;
     };

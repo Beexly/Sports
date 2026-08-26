@@ -117,6 +117,16 @@ function makeTable(rows: Row[], uniqueKeys: string[] = []) {
     },
     count: async (args: { where: Record<string, unknown> }) =>
       rows.filter((r) => matches(r, args.where)).length,
+    // Mirrors real Prisma: emits a row ONLY for statuses that actually occur.
+    // Empty groups are absent, which is precisely what the caller must zero-fill.
+    groupBy: async (_args: { by: ["status"]; _count: true }) => {
+      const tally = new Map<string, number>();
+      for (const r of rows) {
+        const status = r["status"] as string;
+        tally.set(status, (tally.get(status) ?? 0) + 1);
+      }
+      return [...tally].map(([status, _count]) => ({ status, _count }));
+    },
     deleteMany: async (args: { where: Record<string, unknown> }) => {
       let count = 0;
       for (let i = rows.length - 1; i >= 0; i--) {
@@ -281,6 +291,28 @@ describe("expansion (6.4/6.6)", () => {
     expect(db._tables.deliveries.rows.length).toBe(countAfterFirst);
   });
 
+  it("the push payload carries the frozen deep link so the notification opens the pick, not the homepage", async () => {
+    const db = seedFollowerWorld();
+    const pushPayloads: Array<{ title: string; body: string; url?: string }> = [];
+    await drainSettlementOutbox(
+      db,
+      eliteDeps({
+        sendPush: async (_sub, payload) => {
+          pushPayloads.push(payload);
+          return { sent: true, detail: "sent", classification: "sent" };
+        },
+      }),
+      NOW,
+    );
+    expect(pushPayloads).toHaveLength(1);
+    const sent = pushPayloads[0];
+    // public/sw.js reads `parsed.url` and falls back to "/" — without this
+    // the notification click landed on the homepage, not the graded pick.
+    expect(sent?.url).toBeDefined();
+    expect(sent?.url).toContain("/picks?gameId=game-1");
+    expect(sent?.url?.startsWith("http")).toBe(true);
+  });
+
   it("a VOID settlement completes with zero deliveries — receipts, not alerts", async () => {
     const db = makeDb({ events: [decisiveEvent({ result: "VOID" })], picks: [pickRow()] });
     const summary = await drainSettlementOutbox(db, eliteDeps(), NOW);
@@ -345,6 +377,145 @@ describe("expansion (6.4/6.6)", () => {
     });
     await drainSettlementOutbox(db, eliteDeps(), NOW);
     expect(db._tables.deliveries.rows.length).toBe(before);
+  });
+});
+
+/**
+ * The global kill switch (WATCHLIST_ALERTS_ENABLED) — the blind spot this
+ * block closes. Every other test in this file passes `alertsEnabled: () =>
+ * true`, so the disabled path — the DEFAULT in .env.example, and very likely
+ * the live state — was never exercised at all.
+ *
+ * The defect it hid: "globally disabled" was written as a TERMINAL policy
+ * verdict (SUPPRESSED / alerts_disabled). SUPPRESSED is in
+ * TERMINAL_DELIVERY_STATUSES, so those rows were never re-claimable; the
+ * completion sweep then saw no failed children and closed the parent
+ * DELIVERED with deliveredAt set; and health counts only dead letters,
+ * retryables and old pendings, so the queue reported ok/HTTP 200. Every
+ * Elite subscriber got nothing, forever, against a green dashboard — and
+ * turning the flag on later could not backfill, because the events were
+ * already terminal.
+ *
+ * A kill switch is a DEFERRAL, not a delivery verdict.
+ */
+describe("global kill switch — WATCHLIST_ALERTS_ENABLED (deferral, not terminal loss)", () => {
+  it("defers expansion instead of writing terminal rows, and flipping the flag on actually delivers the SAME event", async () => {
+    const db = seedFollowerWorld();
+    const disabled = await drainSettlementOutbox(
+      db,
+      eliteDeps({ alertsEnabled: () => false }),
+      NOW,
+    );
+
+    // Nothing terminal was written: no delivery rows at all, and the parent
+    // is still PENDING. The alert is OWED, not lost.
+    expect(db._tables.deliveries.rows).toHaveLength(0);
+    expect(disabled.suppressed).toBe(0);
+    expect(disabled.expandedEvents).toBe(0);
+    expect(disabled.deferredAlertsDisabled).toBe(1);
+    const event = db._tables.events.rows[0] as Row;
+    expect(event["status"]).toBe("PENDING");
+    expect(event["deliveredAt"]).toBeUndefined();
+    expect(event["completedAt"]).toBeUndefined();
+
+    // The founder flips the switch on inside the payload window → the SAME
+    // event expands and really delivers. (Pre-fix this was impossible: the
+    // event was already closed DELIVERED with terminal SUPPRESSED children,
+    // so enabling the flag backfilled nothing.)
+    const later = new Date(NOW.getTime() + 60 * 60 * 1000);
+    const enabled = await drainSettlementOutbox(db, eliteDeps(), later);
+    expect(enabled.expandedEvents).toBe(1);
+    expect(enabled.delivered).toBe(2);
+    expect(event["status"]).toBe("DELIVERED");
+  });
+
+  it("stops deferring once the event passes the 24h payload cap — the backlog is bounded, and the terminal is honest", async () => {
+    const stale = new Date(NOW.getTime() - OUTBOX_MAX_PAYLOAD_AGE_MS - 60_000);
+    const db = seedFollowerWorld({
+      events: [decisiveEvent({ settledAt: stale, createdAt: stale })],
+    });
+    const summary = await drainSettlementOutbox(
+      db,
+      eliteDeps({ alertsEnabled: () => false }),
+      NOW,
+    );
+
+    // Past the cap the alert is stale news and no longer owed — the same
+    // doctrine as payload_expired. It becomes terminal HERE and only here,
+    // so a permanently-off flag cannot grow an unbounded PENDING backlog.
+    expect(summary.deferredAlertsDisabled).toBe(0);
+    expect(summary.expandedEvents).toBe(1);
+    expect(summary.suppressed).toBe(2);
+    for (const row of db._tables.deliveries.rows) {
+      expect(row["status"]).toBe("SUPPRESSED");
+      expect(row["lastErrorCode"]).toBe("alerts_disabled");
+      expect(row["lastErrorClass"]).toBe("policy");
+    }
+  });
+
+  it("health is NOT clean while alerts are globally disabled and work is deferred", async () => {
+    const db = makeDb({ events: [decisiveEvent()] });
+    const health = await getSettlementOutboxHealth(
+      db,
+      NOW,
+      6 * 60 * 60 * 1000,
+      () => false,
+    );
+    expect(health.alertsGloballyDisabled).toBe(true);
+    expect(health.degraded).toBe(true);
+    // Something is actually queued behind the switch → not ok, so the cron
+    // route answers 503 instead of a green 200 while delivering nothing.
+    expect(health.ok).toBe(false);
+    expect(health.reasons.join(" ")).toContain("WATCHLIST_ALERTS_ENABLED");
+  });
+
+  it("an idle queue with alerts off is degraded-but-ok — visible without crying wolf", async () => {
+    const db = makeDb({});
+    const health = await getSettlementOutboxHealth(db, NOW, 6 * 60 * 60 * 1000, () => false);
+    expect(health.alertsGloballyDisabled).toBe(true);
+    expect(health.degraded).toBe(true);
+    expect(health.ok).toBe(true);
+  });
+
+  it("surfaces already-written alerts_disabled suppressions — the silent historical loss stays visible", async () => {
+    const db = makeDb({
+      deliveries: [
+        {
+          id: "d-1",
+          eventId: "evt-1",
+          userId: "u",
+          channel: "push",
+          destinationId: "none",
+          idempotencyKey: "k-1",
+          status: "SUPPRESSED",
+          lastErrorCode: "alerts_disabled",
+          attemptCount: 0,
+          claimVersion: 0,
+          attemptHistory: [],
+          createdAt: NOW,
+        },
+        {
+          id: "d-2",
+          eventId: "evt-1",
+          userId: "u",
+          channel: "email",
+          destinationId: "none",
+          idempotencyKey: "k-2",
+          status: "SUPPRESSED",
+          lastErrorCode: "alerts_disabled",
+          attemptCount: 0,
+          claimVersion: 0,
+          attemptHistory: [],
+          createdAt: NOW,
+        },
+      ],
+    });
+    // The flag is back ON — but the historical rows are terminal and will
+    // never be retried, so they must stay visible for an owner backfill.
+    const health = await getSettlementOutboxHealth(db, NOW, 6 * 60 * 60 * 1000, () => true);
+    expect(health.alertsDisabledSuppressed).toBe(2);
+    expect(health.degraded).toBe(true);
+    expect(health.reasons.join(" ")).toContain("alerts_disabled");
   });
 });
 
@@ -689,16 +860,107 @@ describe("honest drain health (6.7)", () => {
     const health = await getSettlementOutboxHealth(
       {
         pickSettlementDelivery: {
-          count: async () => {
+          groupBy: async () => {
             throw new Error("no table");
           },
         },
-        pickSettlementEvent: { count: async () => 0, findMany: async () => [] },
+        pickSettlementEvent: { groupBy: async () => [], findMany: async () => [] },
       },
       NOW,
     );
     expect(health.ok).toBe(false);
     expect(health.reasons.join(" ")).toContain("no table");
+  });
+
+  it("health issues one grouped query per table, not one count per status", async () => {
+    const calls: string[] = [];
+    const db = makeDb({
+      deliveries: [
+        {
+          id: "d-1",
+          eventId: "evt-1",
+          userId: "u",
+          channel: "push",
+          destinationId: "s",
+          idempotencyKey: "k",
+          status: "DELIVERED",
+          attemptCount: 1,
+          claimVersion: 1,
+          attemptHistory: [],
+          createdAt: NOW,
+        },
+      ],
+    });
+    for (const table of ["pickSettlementDelivery", "pickSettlementEvent"] as const) {
+      const raw = db[table].groupBy;
+      db[table].groupBy = async (args) => {
+        calls.push(`${table}.groupBy`);
+        return raw(args);
+      };
+      db[table].count = async () => {
+        calls.push(`${table}.count`);
+        throw new Error("count() must not be used by health — use groupBy");
+      };
+    }
+
+    const health = await getSettlementOutboxHealth(db, NOW);
+
+    expect(health.ok).toBe(true);
+    expect(calls.filter((c) => c.endsWith(".count"))).toEqual([]);
+    expect(calls.filter((c) => c.endsWith(".groupBy"))).toEqual([
+      "pickSettlementDelivery.groupBy",
+      "pickSettlementEvent.groupBy",
+    ]);
+  });
+
+  it("a status with zero rows still reports 0 — groupBy omits empty groups", async () => {
+    // Only DELIVERED exists, so groupBy returns exactly one row. Every other
+    // status must still be present as 0; a vanished key would turn "zero
+    // failures" into "no data" for anything reading this.
+    const db = makeDb({
+      deliveries: [
+        {
+          id: "d-1",
+          eventId: "evt-1",
+          userId: "u",
+          channel: "push",
+          destinationId: "s",
+          idempotencyKey: "k",
+          status: "DELIVERED",
+          attemptCount: 1,
+          claimVersion: 1,
+          attemptHistory: [],
+          createdAt: NOW,
+        },
+      ],
+    });
+
+    const health = await getSettlementOutboxHealth(db, NOW);
+
+    expect(health.deliveryCounts["DELIVERED"]).toBe(1);
+    for (const status of [
+      "PENDING",
+      "CLAIMED",
+      "RETRYABLE_FAILED",
+      "SUPPRESSED",
+      "NO_RECIPIENT",
+      "PERMANENT_FAILED",
+      "DEAD_LETTER",
+    ]) {
+      expect(health.deliveryCounts[status], `deliveryCounts.${status}`).toBe(0);
+    }
+    for (const status of [
+      "PENDING",
+      "EXPANDED",
+      "DELIVERED",
+      "COMPLETED_WITH_FAILURES",
+      "FAILED",
+    ]) {
+      expect(health.eventCounts[status], `eventCounts.${status}`).toBe(0);
+    }
+    // And the zeros are real keys, not undefined reads.
+    expect(Object.keys(health.deliveryCounts)).toContain("DEAD_LETTER");
+    expect(Object.keys(health.eventCounts)).toContain("FAILED");
   });
 });
 

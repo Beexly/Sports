@@ -9,9 +9,11 @@ export {
   KalshiError,
   toKalshiEventTicker,
   impliedYesProbability,
+  impliedYesQuote,
   devigTwoSided,
   toIndependentFairValue,
   eventTickerMatchesGame,
+  type KalshiImpliedQuote,
   type KalshiLeague,
   type KalshiGameRef,
   type KalshiSideFairValue,
@@ -115,6 +117,12 @@ export {
   type SeparationTruth,
   type CpoeTruth,
 } from "./nflverse-ngs.js";
+export {
+  parsePfrDef,
+  pfrDefToCovariateRows,
+  type PfrDefRow,
+  type PfrDefCovariateRow,
+} from "./nflverse-pfr-def.js";
 export {
   NFLVERSE_TREND_PLANS,
   getNflverseTrendPlan,

@@ -128,8 +128,12 @@ export function deriveClosingSnapshotFromOdds(
   // non-price that maps to ~0.98 implied probability and fabricates the CLV
   // verdict that gates the ESTABLISHED pricing phase. averageAmericanPrices
   // converts → prob → mean → back. Spread/total are continuous; plain avg is fine.
-  const mlHome = averageAmericanPrices(homePrices);
-  const mlAway = averageAmericanPrices(awayPrices);
+  // Each side is passed its counterpart so the average is taken over DE-VIGGED
+  // probabilities and the result is plausibility-bounded — the close must be
+  // built on the same basis as the lock price it is graded against, or the
+  // beat-close rate picks up a systematic bias.
+  const mlHome = averageAmericanPrices(homePrices, awayPrices);
+  const mlAway = averageAmericanPrices(awayPrices, homePrices);
 
   return {
     spreadHome: avg(spreads),

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
+import { LocalTime } from "@/components/ui/local-time";
 import { listIssues } from "@/lib/newsletter/issues";
 
 export const metadata: Metadata = {
@@ -48,7 +49,18 @@ export default function NewsletterPage() {
                   <article key={issue.slug} className="surface-card p-5">
                     <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2">
                       Issue {String(issue.number).padStart(3, "0")} ·{" "}
-                      {new Date(issue.publishedAt).toLocaleDateString()}
+                      {/*
+                        Was a bare `toLocaleDateString()` during SERVER render:
+                        no locale AND no timeZone, so the whole archive carried
+                        the server's calendar dates. Issue 003 publishes at
+                        16:00Z, which is already the NEXT day in Tokyo — every
+                        reader east of UTC was shown the wrong day.
+                      */}
+                      <LocalTime
+                        iso={issue.publishedAt}
+                        format="date-short"
+                        label="Published"
+                      />
                     </p>
                     <h3 className="mt-2 text-xl font-semibold text-ion-white">
                       <Link href={`/newsletter/${issue.slug}`} className="hover:text-orbital-cyan">

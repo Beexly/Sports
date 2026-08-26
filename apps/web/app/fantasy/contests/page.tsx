@@ -4,6 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { loadCurrentContestWeek, leaderboard, resolveContestStorageMode } from "@/lib/contests/store";
 import { ContestEntryForm } from "@/components/contests/contest-entry-form";
+import { LocalTime } from "@/components/ui/local-time";
 import { notFound } from "next/navigation";
 import { isContestsPublic } from "@/lib/launch/public-surface-gate";
 
@@ -42,7 +43,17 @@ export default async function ContestBayPage() {
                 Status · {week.status}
               </span>
               <span className="rounded-full border border-mineral px-3 py-1">
-                Closes · {new Date(week.locksAt).toLocaleString()}
+                {/*
+                  The entry DEADLINE. It was `toLocaleString()` with no arguments
+                  at all during SERVER render — no locale, no timeZone, no zone
+                  name — so every contestant read the server's UTC wall clock as
+                  though it were their own, with nothing on it to say otherwise.
+                  A contestant who trusts a closing time that is hours off misses
+                  the window entirely, which is the whole product. <LocalTime>
+                  resolves it on their clock and always labels the zone.
+                */}
+                Closes ·{" "}
+                <LocalTime iso={week.locksAt} format="kickoff" label="Entries close" />
               </span>
               <span className="rounded-full border border-mineral px-3 py-1">
                 {week.games.length} games
@@ -70,7 +81,8 @@ export default async function ContestBayPage() {
                     <div>
                       <p className="font-semibold text-ion-white">{g.label}</p>
                       <p className="text-xs text-ion-2">
-                        Kickoff {new Date(g.kickoff).toLocaleString()}
+                        Kickoff{" "}
+                        <LocalTime iso={g.kickoff} format="kickoff" label="Kickoff" />
                       </p>
                     </div>
                     <span className="font-mono text-xs uppercase tracking-wider text-ion-2">
@@ -92,9 +104,9 @@ export default async function ContestBayPage() {
               <h2 className="font-display text-2xl text-ion-white">Enter this week</h2>
               {storageMode === "unavailable" ? (
                 <p className="mt-6 border border-mineral bg-eclipse/40 p-6 text-ion-1">
-                  Entries are paused on this host because durable storage is not configured
-                  (production requires DATABASE_URL). We refuse to accept entries that would
-                  vanish on the next serverless cold start.
+                  Entries are paused here because this host has no durable storage
+                  attached, so an entry would vanish on the next cold start. We
+                  will not take an entry we cannot keep.
                 </p>
               ) : week.status === "open" ? (
                 <div className="mt-6">
@@ -132,7 +144,7 @@ export default async function ContestBayPage() {
                               : `${row.correct}/${row.total}`}
                           </td>
                           <td className="px-3 py-2 text-xs text-ion-2">
-                            {new Date(row.enteredAt).toLocaleString()}
+                            <LocalTime iso={row.enteredAt} format="stamp" label="Entered" />
                           </td>
                         </tr>
                       ))}

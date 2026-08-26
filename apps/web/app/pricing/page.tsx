@@ -22,6 +22,7 @@ import {
   EMOTIONAL_VALUE,
 } from "@/lib/pricing/value-architecture";
 import { getFeature } from "@/lib/pricing/feature-gates";
+import { freeTierFeatures } from "@/lib/pricing/free-tier-features";
 import {
   honestyContrastStrip,
   WHY_PAY_FOR_HONESTY_LEAD,
@@ -52,21 +53,11 @@ export const metadata: Metadata = {
 // Feature matrix (static) + phase-derived prices
 // ─────────────────────────────────────────────
 
-const FREE_FEATURES = [
-  // Honesty: public picks board is founder-gated until calibration is published.
-  // Free still delivers tools, Academy, and transparent process — not invented free picks.
-  { label: "Free calculators & intelligence tools (no account wall)", included: true },
-  { label: "The Academy: full training floor", included: true },
-  { label: "Public methodology + calibration status (building honestly)", included: true },
-  { label: "Contest Bay paper skills (no fees, no prizes, no wagering)", included: true },
-  { label: "Founding waitlist for early operator updates", included: true },
-  { label: "The full daily board, every signal (Pro)", included: false },
-  { label: "Confidence rating on every pick (Pro)", included: false },
-  { label: "Factor trail & evidence audit (Pro)", included: false },
-  { label: "Trend Lab + Parlay MRI (Pro)", included: false },
-  { label: "Graded-pick alerts (Elite)", included: false },
-  { label: "Line-value tracker + staking toolkit (Elite)", included: false },
-] as const;
+// Free bullets live in lib/pricing/free-tier-features.ts because one of them
+// (Contest Bay) is only true while its public gate is open. Honesty: the public
+// picks board is founder-gated until calibration is published; Free still
+// delivers tools, Academy, and transparent process — not invented free picks.
+// See that module's docstring and __tests__/free-tier-gate-coupling.test.ts.
 
 const PRO_FEATURES = [
   // Honesty leads, deliberately. The product's claim is that it refuses to
@@ -117,56 +108,63 @@ const FANTASY_FEATURES = [
   { label: "Graded-pick alerts (Elite)", included: false },
 ] as const;
 
-const PLANS: PlanView[] = [
-  {
-    id: "FREE",
-    name: "Free",
-    monthly: null,
-    annual: null,
-    annualSavingsPct: null,
-    annualMonthly: null,
-    description: "Tools, Academy, and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
-    badge: null,
-    cta: "Start free",
-    features: [...FREE_FEATURES],
-  },
-  {
-    id: "FANTASY",
-    name: "Fantasy",
-    monthly: phase.fantasy.monthly,
-    annual: phase.fantasy.annual,
-    annualSavingsPct: annualSavingsPct(phase.fantasy),
-    annualMonthly: annualMonthlyEquivalent(phase.fantasy),
-    description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data. Roster construction, stacks, and bye structure, with the reasoning.",
-    badge: "Draft season",
-    cta: "Subscribe to Fantasy",
-    features: [...FANTASY_FEATURES],
-  },
-  {
-    id: "PRO",
-    name: "Pro",
-    monthly: phase.pro.monthly,
-    annual: phase.pro.annual,
-    annualSavingsPct: annualSavingsPct(phase.pro),
-    annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself — plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
-    badge: "Recommended",
-    cta: "Subscribe to Pro",
-    features: [...PRO_FEATURES],
-  },
-  {
-    id: "ELITE",
-    name: "Elite",
-    monthly: phase.elite.monthly,
-    annual: phase.elite.annual,
-    annualSavingsPct: annualSavingsPct(phase.elite),
-    annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "The professional toolkit: everything in Pro, plus graded-pick alerts and a line-value tracker for post-close review.",
-    badge: "The professional toolkit",
-    cta: "Subscribe to Elite",
-    features: [...ELITE_FEATURES],
-  },
-];
+/**
+ * Built per render (not a module constant) because the Free bullets read a
+ * public-surface gate — see lib/pricing/free-tier-features.ts. Prices still
+ * come from the pricing phase, the single source of truth checkout reads.
+ */
+function buildPlans(): PlanView[] {
+  return [
+    {
+      id: "FREE",
+      name: "Free",
+      monthly: null,
+      annual: null,
+      annualSavingsPct: null,
+      annualMonthly: null,
+      description: "Tools, Academy, and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
+      badge: null,
+      cta: "Start free",
+      features: freeTierFeatures(),
+    },
+    {
+      id: "FANTASY",
+      name: "Fantasy",
+      monthly: phase.fantasy.monthly,
+      annual: phase.fantasy.annual,
+      annualSavingsPct: annualSavingsPct(phase.fantasy),
+      annualMonthly: annualMonthlyEquivalent(phase.fantasy),
+      description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data. Roster construction, stacks, and bye structure, with the reasoning.",
+      badge: "Draft season",
+      cta: "Subscribe to Fantasy",
+      features: [...FANTASY_FEATURES],
+    },
+    {
+      id: "PRO",
+      name: "Pro",
+      monthly: phase.pro.monthly,
+      annual: phase.pro.annual,
+      annualSavingsPct: annualSavingsPct(phase.pro),
+      annualMonthly: annualMonthlyEquivalent(phase.pro),
+      description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself — plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
+      badge: "Recommended",
+      cta: "Subscribe to Pro",
+      features: [...PRO_FEATURES],
+    },
+    {
+      id: "ELITE",
+      name: "Elite",
+      monthly: phase.elite.monthly,
+      annual: phase.elite.annual,
+      annualSavingsPct: annualSavingsPct(phase.elite),
+      annualMonthly: annualMonthlyEquivalent(phase.elite),
+      description: "The professional toolkit: everything in Pro, plus graded-pick alerts and a line-value tracker for post-close review.",
+      badge: "The professional toolkit",
+      cta: "Subscribe to Elite",
+      features: [...ELITE_FEATURES],
+    },
+  ];
+}
 
 const COMPARISON_FEATURES = [
   "Signals per day",
@@ -237,22 +235,30 @@ const faqJsonLd = {
 
 // Product/Offer structured data: real phase prices only (single source of
 // truth: pricing-phases.ts). Free tier omitted (no offer); prices in USD.
-const productJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  name: `${BRAND_NAME} Membership`,
-  description:
-    "Sports decision intelligence: free calculators, methodology, and paper contests now; full board, confidence ratings, factor trails, and alerts on paid tiers when the public sample is honest.",
-  brand: { "@type": "Brand", name: BRAND_NAME },
-  offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
-    "@type": "Offer",
-    name: `${p.name} (monthly)`,
-    price: p.monthly,
-    priceCurrency: "USD",
-    url: "/pricing",
-    availability: "https://schema.org/InStock",
-  })),
-};
+// The description names only always-on free surfaces — an earlier version said
+// "paper contests now", which is Contest Bay, and that is opt-in behind
+// CONTESTS_PUBLIC (404 while it is off). Structured data is customer-facing
+// copy: it feeds search results, so it is held to the same bar as the page.
+function buildProductJsonLd(plans: readonly PlanView[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${BRAND_NAME} Membership`,
+    description:
+      "Sports decision intelligence: free calculators, methodology, and the Academy now; full board, confidence ratings, factor trails, and alerts on paid tiers when the public sample is honest.",
+    brand: { "@type": "Brand", name: BRAND_NAME },
+    offers: plans
+      .filter((p) => p.monthly !== null)
+      .map((p) => ({
+        "@type": "Offer",
+        name: `${p.name} (monthly)`,
+        price: p.monthly,
+        priceCurrency: "USD",
+        url: "/pricing",
+        availability: "https://schema.org/InStock",
+      })),
+  };
+}
 
 // ─────────────────────────────────────────────
 // Page
@@ -260,6 +266,10 @@ const productJsonLd = {
 
 export default function PricingPage() {
   const grandfatherNote = `${phase.name}-member rate. ${LIFETIME_PRICE_NOTE}`;
+  // Built here, not at module scope: the Free bullets read a public-surface
+  // gate, so they must be resolved per render rather than frozen at import.
+  const plans = buildPlans();
+  const productJsonLd = buildProductJsonLd(plans);
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -310,7 +320,7 @@ export default function PricingPage() {
 
           {/* Plans with billing toggle */}
           <div className="mt-14">
-            <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
+            <PricingPlans plans={plans} grandfatherNote={grandfatherNote} />
           </div>
 
           {/* Evidence strip: inspect before you pay. The proof surfaces ARE
@@ -468,12 +478,16 @@ export default function PricingPage() {
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
                   <tr className="border-b border-titanium">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2"
+                    >
                       Feature
                     </th>
-                    {PLANS.map((plan) => (
+                    {plans.map((plan) => (
                       <th
                         key={plan.id}
+                        scope="col"
                         className={[
                           "px-4 py-3 text-center text-sm font-bold",
                           plan.id === "PRO"
@@ -502,7 +516,20 @@ export default function PricingPage() {
                         i % 2 === 0 ? "bg-carbon/20" : "",
                       ].join(" ")}
                     >
-                      <td className="px-4 py-3 text-ion-2">{feature}</td>
+                      {/* Row header, not a bare cell. As a <td> every
+                          "Included"/"Not included" marker in the row was
+                          announced with no idea WHICH feature it belonged to —
+                          60 disconnected checkmarks. `scope="row"` restores the
+                          association (WCAG 1.3.1). `text-left font-normal`
+                          pins the <th> UA defaults (bold + centered) back to
+                          exactly what the <td> rendered, so this is a
+                          semantics-only change with no visual delta. */}
+                      <th
+                        scope="row"
+                        className="px-4 py-3 text-left font-normal text-ion-2"
+                      >
+                        {feature}
+                      </th>
                       {(["FREE", "FANTASY", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (

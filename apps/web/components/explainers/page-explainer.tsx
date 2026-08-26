@@ -18,6 +18,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { getExplainer, type PageExplainer } from "@/lib/explainers/registry";
+import { useModalFocus } from "@/lib/a11y/use-modal-focus";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export function PageExplainerAuto() {
@@ -72,13 +73,20 @@ export function PageExplainer({ explainer }: { explainer: PageExplainer }) {
 function ExplainerModal({ explainer, onClose }: { explainer: PageExplainer; onClose: () => void }) {
   const [i, setI] = useState(0);
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
   const beats = explainer.beats;
   const beat = beats[i]!;
   const onFirst = i === 0;
   const onLast = i === beats.length - 1;
 
+  // Trap Tab inside the guide and return focus to the launcher on close. This
+  // modal is mounted from the ROOT LAYOUT, so it is the first dialog most
+  // visitors meet — on "/" and on "/board", both paid-conversion surfaces.
+  // aria-modal="true" (below) claims the page behind is inert; without the trap
+  // the keyboard simply walked into it. See the hook's docstring.
+  useModalFocus(true, dialogRef, closeRef);
+
   useEffect(() => {
-    closeRef.current?.focus();
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
@@ -95,6 +103,7 @@ function ExplainerModal({ explainer, onClose }: { explainer: PageExplainer; onCl
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[120] flex items-end justify-center p-4 sm:items-center"
       role="dialog"
       aria-modal="true"
