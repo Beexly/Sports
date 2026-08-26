@@ -26,6 +26,10 @@
 - C-76 DONE (falsifier acceptance harness, queue #3): planted-edge/noise/inverted @ n=100/1k/5k,
   9/9 green, c7ec6e1f6. Independent of the second wave — the instrument now has its own permanent
   known-good/known-bad acceptance suite per NORTHSTAR §2.
+- C-77: queue #4 (Murphy decomposition) was ALREADY DONE pre-session — `brierDecomposition`
+  (probability-calibration.ts, since 98ae6c7ae) — no build needed, closed as a verification-only
+  correction. The queue itself had an unverified handoff-style claim; standing rule applies to
+  our own docs too, not just Hermes's.
 - SONNET SEAT ACTIVE: orders at docs/agent-prompts/SONNET-EXECUTION-ORDERS-2026-08-26.md
   (CLAUDE-MAX verification protocol adopted; --dangerously-skip-permissions and --bare REJECTED).
 - Week-1 battle plan: docs/ops/edge/2026-08-26-WEEK1-BATTLE-PLAN.md (3 candidates + ARM-GATES).

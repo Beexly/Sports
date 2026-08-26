@@ -65,8 +65,12 @@ Murphy decomposition belongs in `packages/prediction-engine` with tests, per the
    full test files, founder-armed only. DeepSeek red-team pass on both preregs before freezing.
 3. **Falsifier acceptance harness** as a permanent test: planted edge + pure noise + inverted at
    n ∈ {100, 1k, 5k} — the instrument-first law made executable.
-4. **Murphy decomposition** as a tested pure module in `packages/prediction-engine` (reliability /
-   resolution / uncertainty, verified against a hand-computed fixture). Supersedes the Hermes stub.
+4. ~~**Murphy decomposition**~~ — CLOSED 2026-08-26, no build needed. It already existed:
+   `brierDecomposition` (`packages/prediction-engine/src/probability-calibration.ts:324`, committed
+   98ae6c7ae, 26 days before this queue was written) is the real thing, already wired into ops
+   tooling three layers up (`apps/web/lib/calibration/{murphy-res-definition,segmented-murphy,
+   murphy-components-explore}.ts`). This queue line was itself an unverified handoff-style claim —
+   see ledger C-77. Hermes's stub stays quarantined; nothing superseded it because nothing needed to.
 5. **Lock-price provenance capture** at pick creation (write-once book quote + source + timestamp).
 6. STATE.md current at every session end; ledger rows per SONNET-MAX-LEVERAGE §3.
 
