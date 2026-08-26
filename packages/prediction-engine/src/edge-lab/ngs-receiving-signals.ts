@@ -10,6 +10,23 @@
  * `n`, already joined — which removes the usual ambiguity about where `n` comes
  * from.
  *
+ * ATTRIBUTION (required by the clearance verdict for source_id "nflverse"):
+ *   Data from nflverse (https://github.com/nflverse), CC-BY-4.0.
+ * Acquired via the licensed nflverse mirror, NOT by scraping nextgenstats.nfl.com.
+ * checkClearance() 2026-08-26: nflverse allowed=true; nextgenstats.nfl.com
+ * allowed=false (SOURCE_NOT_REGISTERED). See
+ * reports/rights/2026-08-26-scraped-sources-clearance-memo.md.
+ *
+ * TRUNCATED POPULATION — a stated design decision, not an accident of the feed.
+ * NGS publishes a weekly row only for player-weeks clearing a volume threshold:
+ * the minimum weekly `targets` value anywhere in the file is 5, and there are no
+ * zero-target rows. So the league baseline computed from these rows is the mean
+ * and spread of QUALIFIED receivers, not of the league. modelProb is therefore
+ * scoped to the qualified population and says so. This is close to aligned with
+ * the spec rather than opposed to it: players below the threshold are exactly the
+ * population where n < minimum_n should return null anyway. But it is a real
+ * distributional bound and must not be read as league-wide.
+ *
  * LAW: zero market data. No line, price, spread, total, consensus, devig or
  * confidence is read here or reachable from here. `priced: false` by
  * construction.
@@ -27,9 +44,17 @@
  *    14,731 rows (8.5%) are summaries. Aggregating without filtering counts
  *    every player-season twice. Use weekly rows OR summary rows, never both.
  * 2. `avg_separation` is ALREADY an average, so combining weeks needs a
- *    target-WEIGHTED mean. Measured against NGS's own week-0 summary over 1,251
- *    player-seasons, weighting cuts mean absolute error 15.0% versus an
- *    unweighted mean-of-means (0.1195 vs 0.1407 yards).
+ *    target-WEIGHTED mean. Measured against NGS's own week-0 summary:
+ *      - over all 1,251 player-seasons: weighting cuts mean absolute error
+ *        15.0% (0.1195 vs 0.1407 yards)
+ *      - over the 85 player-seasons (6.8%) whose weekly rows ACTUALLY SUM to
+ *        the season summary: weighting is EXACT — MAE 0.00017 vs 0.0523, a
+ *        99.68% reduction, the residue being float rounding.
+ *    The 15% figure UNDERSTATES the case. NGS emits a weekly row only for weeks
+ *    a player cleared a threshold (minimum weekly targets observed = 5; there
+ *    are no zero-target weekly rows), so for 93.2% of player-seasons the weekly
+ *    sum is short of the season total and BOTH reconstructions carry the same
+ *    missing-week error. Corrected after an adversarial recompute.
  * 3. NGS begins in 2016. Earlier seasons are ABSENT, not zero — a null coerced
  *    to 0.0 would manufacture signal out of absence.
  */

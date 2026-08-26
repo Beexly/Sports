@@ -2236,12 +2236,13 @@ export { computeSeparationBacktest } from "./edge-lab/separation-backtest.js";
 export type { SeparationRow, SeparationBacktestResult } from "./edge-lab/separation-backtest.js";
 export { computeTprBacktest } from "./edge-lab/tpr-backtest.js";
 export type { TprRow, TprBacktestRow } from "./edge-lab/tpr-backtest.js";
-export { runRealBacktest, DEFAULT_NGS_ROWS_PATH } from "./edge-lab/run-real-backtest.js";
-export type {
-  BacktestConfig,
-  PlayerSeasonSignal,
-  CorrelationResult,
-} from "./edge-lab/run-real-backtest.js";
+// run-real-backtest.ts is deliberately NOT exported here. It does file I/O
+// (node:fs / node:path), and this barrel is reachable from client components
+// via apps/web/lib/fantasy/props.ts -> components/fantasy/props-edge.tsx, so
+// exporting it broke the production build with "Can't resolve 'fs'" and an
+// UnhandledSchemeError on "node:path". The barrel is the PRODUCT surface and
+// must stay client-safe; a file-reading research runner is a CLI/test tool and
+// is deep-imported by the tests that need it.
 
 export {
   aggregateModelProb,
@@ -2259,3 +2260,17 @@ export type {
   AggregateOpts,
   AggregationResult,
 } from "./edge-lab/modelprob-aggregation.js";
+
+export {
+  aggregateSeasonSignals,
+  pairConsecutiveSeasons,
+  isWeeklyRow,
+  isSeasonSummaryRow,
+  NgsSeasonRangeError,
+  NGS_SEASON_SUMMARY_WEEK,
+  NGS_FIRST_SEASON,
+} from "./edge-lab/ngs-receiving-signals.js";
+export type {
+  NgsReceivingRow,
+  PlayerSeasonReceivingSignal,
+} from "./edge-lab/ngs-receiving-signals.js";

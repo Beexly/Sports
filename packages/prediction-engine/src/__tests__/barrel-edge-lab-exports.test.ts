@@ -31,21 +31,26 @@ describe("edge-lab public surface via the barrel", () => {
     expect(engine.CONSISTENCY_Z_THRESHOLD).toBe(2.5);
   });
 
-  it("exports the backtest runners", () => {
+  it("exports the PURE backtest computations", () => {
     expect(typeof engine.computeYacoeSignal).toBe("function");
     expect(typeof engine.computeSeparationBacktest).toBe("function");
     expect(typeof engine.computeTprBacktest).toBe("function");
-    expect(typeof engine.runRealBacktest).toBe("function");
   });
 
-  it("anchors the NGS rows path at the repo root, not the process cwd", () => {
-    // Regression guard: the default was cwd-relative, so vitest (cwd =
-    // packages/prediction-engine) resolved it under the package and threw
-    // ENOENT regardless of where the artifact lived.
-    expect(engine.DEFAULT_NGS_ROWS_PATH.endsWith(
-      "data/nflverse/ngs_receiving_2021_2025_harness_rows.json",
-    )).toBe(true);
-    expect(engine.DEFAULT_NGS_ROWS_PATH).not.toContain("packages/prediction-engine/data");
+  it("stays CLIENT-SAFE: no file-I/O module reaches the barrel", () => {
+    // This barrel is reachable from a client component
+    // (apps/web/lib/fantasy/props.ts -> components/fantasy/props-edge.tsx), so
+    // anything importing node:fs / node:path here fails the production build
+    // with "Can't resolve 'fs'". That is exactly what exporting
+    // run-real-backtest.ts did. Deep-import it in tests instead.
+    expect(engine).not.toHaveProperty("runRealBacktest");
+    expect(engine).not.toHaveProperty("DEFAULT_NGS_ROWS_PATH");
+  });
+
+  it("exports the pure NGS receiving signal layer", () => {
+    expect(typeof engine.aggregateSeasonSignals).toBe("function");
+    expect(engine.NGS_SEASON_SUMMARY_WEEK).toBe(0);
+    expect(engine.NGS_FIRST_SEASON).toBe(2016);
   });
 
   it("exports the independent modelProb aggregator", () => {

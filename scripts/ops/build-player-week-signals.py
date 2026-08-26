@@ -37,7 +37,8 @@ def main() -> int:
 
     # Fail loudly rather than silently emitting a market-contaminated signal.
     consumed = {"season", "season_type", "week", "receiver_player_id",
-                "receiver_player_name", "posteam", "pass_attempt", "air_yards"}
+                "receiver_player_name", "posteam", "pass_attempt", "air_yards",
+                "two_point_attempt"}
     for col in consumed:
         if col not in fieldnames:
             print(f"MISSING: play-by-play column {col}", file=sys.stderr)
@@ -55,6 +56,13 @@ def main() -> int:
         if row.get("season_type") != "REG":
             continue
         if row.get("pass_attempt") != "1":
+            continue
+        # Two-point conversion targets are NOT targets by NFL/NGS convention.
+        # Including them was a real defect, caught by an adversarial recompute:
+        # 36 of the 37 disagreements against NGS 2023 were exactly 2-pt plays.
+        # Excluding them takes exact agreement 97.14% -> 99.92% and mean delta
+        # +0.0286 -> +0.0008.
+        if row.get("two_point_attempt") == "1":
             continue
         pid = (row.get("receiver_player_id") or "").strip()
         if not pid or pid == "NA":

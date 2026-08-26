@@ -6,7 +6,7 @@
 import { describe, expect, it } from "vitest";
 import { classifyWeek1Capture } from "@/lib/ops/week1-capture-posture";
 
-const ARMED = { lineArchiveEnabled: true, closeStampedLast7d: 5 };
+const ARMED = { lineArchiveEnabled: true, closeStampedLast7d: 5, snapshotsLast7d: 900 };
 
 describe("classifyWeek1Capture", () => {
   it("LIVE when NFL odds landed in the last hour", () => {
@@ -37,24 +37,42 @@ describe("classifyWeek1Capture", () => {
       nflOddsRowsLast24h: 900,
       lineArchiveEnabled: false,
       closeStampedLast7d: 0,
+      snapshotsLast7d: 0,
     });
     expect(p.state).toBe("LIVE");
     expect(p.week1Recoverable).toBe(false);
     expect(p.hint).toContain("LINE_ARCHIVE_ENABLED is OFF");
   });
 
-  it("does not cry wolf about zero CLOSE rows while the archive is armed", () => {
-    // CLOSE is stamped at settle time, so zero is correct before the first
-    // settle. Warning here would train the operator to ignore the field.
+  it("does not cry wolf about zero CLOSE on a genuinely quiet board", () => {
+    // Nothing captured means nothing to stamp. Warning here would train the
+    // operator to ignore the field.
     const p = classifyWeek1Capture({
       nflOddsRowsLastHour: 10,
       nflOddsRowsLast24h: 100,
       lineArchiveEnabled: true,
       closeStampedLast7d: 0,
+      snapshotsLast7d: 0,
     });
     expect(p.week1Recoverable).toBe(true);
-    expect(p.hint).toContain("expected until the first settle");
-    expect(p.hint).not.toContain("LINE_ARCHIVE_ENABLED is OFF");
+    expect(p.hint).toContain("Expected on a quiet board");
+  });
+
+  it("FLAGS the measured production state: snapshots accumulating, CLOSE never stamped", () => {
+    // hf7-archive/RESULTS.md 2026-08-20: NFL 9,768 INTERIM / 0 CLOSE.
+    // The archive is on and piling up while the close is never captured —
+    // a CLV track with no closing line. This must NOT read as recoverable.
+    const p = classifyWeek1Capture({
+      nflOddsRowsLastHour: 45,
+      nflOddsRowsLast24h: 900,
+      lineArchiveEnabled: true,
+      closeStampedLast7d: 0,
+      snapshotsLast7d: 9_768,
+    });
+    expect(p.state).toBe("LIVE");
+    expect(p.week1Recoverable).toBe(false);
+    expect(p.hint).toContain("ZERO CLOSE-stamped");
+    expect(p.hint).toContain("FREE settlement path never stamps CLOSE");
   });
 
   it("reports both failures at once when odds are dark AND the archive is off", () => {
@@ -63,6 +81,7 @@ describe("classifyWeek1Capture", () => {
       nflOddsRowsLast24h: 0,
       lineArchiveEnabled: false,
       closeStampedLast7d: 0,
+      snapshotsLast7d: 0,
     });
     expect(p.state).toBe("DARK");
     expect(p.week1Recoverable).toBe(false);

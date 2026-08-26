@@ -276,6 +276,7 @@ export async function GET(request: Request) {
         nflOddsRowsLast24h: rows24h,
         lineArchiveEnabled: week1Capture.lineArchiveEnabled,
         closeStampedLast7d: closes,
+        snapshotsLast7d: snaps,
       });
       week1Capture = {
         ...week1Capture,

@@ -24,6 +24,30 @@ treated as a priority ordering only, exactly as the brief instructed.
 - **Rows counted here: 14,731** data rows (+1 header). Seasons 2016–2025.
   season_type: REG 14,104 / POST 627.
 - Licence: CC-BY-4.0 via nflverse redistribution (see `nflverse-ngs.ts` header).
+- **Attribution (required):** Data from nflverse (https://github.com/nflverse), CC-BY-4.0.
+- **Clearance, on the record:** `checkClearance()` run 2026-08-26 —
+  `nflverse` **allowed=true** (attribution warning only). The direct site
+  `nextgenstats.nfl.com` returns **allowed=false / SOURCE_NOT_REGISTERED**, as do
+  `pro-football-reference.com` and `predictions.draftkings.com`. Nothing was
+  scraped; this is the licensed mirror the registry already prescribes, and it
+  carries ten seasons / nine t→t+1 pairs versus the direct site's eight/seven.
+  Memo: `reports/rights/2026-08-26-scraped-sources-clearance-memo.md`.
+
+## Population bound — NGS is threshold-filtered
+
+NGS publishes a weekly row only for player-weeks clearing a volume threshold.
+Measured: the minimum weekly `targets` value in the entire file is **5**, and
+there are **no zero-target rows**. Two consequences, both stated rather than
+discovered later:
+
+1. The league baseline (μ, σ) is that of **qualified** receivers, not the league.
+   `modelProb` is scoped to the qualified population accordingly. This is close
+   to aligned with the spec — sub-threshold players are exactly where
+   `n < minimum_n` should return `null` — but it is a real distributional bound.
+2. It is also why the "15% weighting improvement" was wrong: for 93.2% of
+   player-seasons the weekly rows do not sum to the season total, so both
+   reconstructions carried the same missing-week error. See the corrected
+   trap-2 table above.
 
 ## The three traps, measured rather than assumed
 
@@ -42,8 +66,24 @@ Measured against NGS's own `week == 0` summary over **1,251 player-seasons**:
 | target-weighted (correct) | 0.0673 | 0.3155 | **0.1195** |
 | unweighted mean-of-means | 0.0885 | 0.3354 | 0.1407 |
 
-Target-weighting reduces mean absolute error by **15.0%**. The weighting is
-measurably right, not merely theoretically right.
+Target-weighting reduces mean absolute error by **15.0%** across all 1,251.
+
+**CORRECTED after adversarial recompute — 15.0% understates it.** NGS emits a
+weekly row only for weeks a player cleared a threshold (minimum weekly targets
+observed = 5; no zero-target weekly rows exist), so for 93.2% of player-seasons
+the weekly rows do not sum to the season total and BOTH reconstructions carry
+the same missing-week error. On the **85 player-seasons (6.8%) whose weekly rows
+actually do sum to the summary**, target-weighting is **exact**:
+
+| aggregation | mean abs err (n=85) |
+|---|---|
+| target-weighted | **0.00017** (float rounding) |
+| unweighted mean-of-means | 0.0523 |
+| reduction | **99.68%** |
+
+So NGS's week-0 summary IS the target-weighted mean. The trap is real and the
+handling is right; the original 15% figure was measuring missing weeks, not
+weighting.
 
 **Trap 3 — NGS begins in 2016.** Pre-2016 is absent, not zero.
 `aggregateSeasonSignals` throws `NgsSeasonRangeError` rather than letting a
@@ -92,7 +132,27 @@ pairs**, n = 76–89 players per pair.
 | **mean** | | **+0.588** | **+0.504** |
 
 **Both survivors persist at player level, and the sign is stable in all nine
-pairs.** Neither is dropped.
+pairs.** Neither is dropped. Independently recomputed by an adversarial red team
+from the raw gz with no shared code path: +0.5878 / +0.5038, every pair matching
+to 4 decimal places. Robustness checks it ran that failed to break the result:
+tie handling (targets is 89.1% tied; ordinal vs midrank moves the mean 0.0018),
+position confound (WR-only: sep +0.5739, targets +0.5146, so not a WR-vs-TE
+artifact), and Fisher-z vs arithmetic averaging (immaterial).
+
+**BOUND THIS NUMBER — it describes a survivor subpopulation, not receivers.**
+Season-*t* qualifiers are joined to season *t+1* only when the player is ALSO in
+NGS's qualified set that year; 32.8% are not (760 of 1,131 survive). Adding back
+the 197 dropouts who do have *t+1* weekly data:
+
+| population | avg_separation | targets |
+|---|---|---|
+| qualified-survivor join (reported above) | **+0.588** (n 76-89) | +0.504 |
+| survivorship-corrected | **+0.512** (n 101-114) | +0.541 |
+| unfiltered weekly population | **+0.427** (n 136-153) | — |
+
+Persistence is real at every level, but it decays as the population widens. Use
++0.512 for a corrected player-level figure and +0.427 for the full receiver
+population — not +0.588, which is the most flattering of the three.
 
 ### The magnitude correction that matters
 

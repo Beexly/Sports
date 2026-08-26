@@ -74,6 +74,40 @@ const FANTASY_DAILY_MENU: readonly NavGroup[] = [
   },
 ];
 
+// Proof ▾ — the credibility layer. Every one of these renders real data and
+// makes NO performance claim; they were live and reachable by URL but absent
+// from the nav, so a visitor could not find them. The "Proof" door was a single
+// link to /calibration whose own tooltip promised "calibration, CLV, and the
+// public ledger" and linked to neither the ledger nor anything else.
+//
+// This is the differentiation — the kill ledger, the falsifier verdicts, the
+// source-rights table — and it was undiscoverable. Opening it publishes no
+// number that was not already public.
+//
+// DELIBERATELY NOT LISTED — both verified against the guard, not assumed:
+//
+// The CLV route: nav-route-integrity.test.ts:87 asserts this file must not
+//   reference it. I added it, the guard caught it, and I removed it rather than
+//   touching the assertion. My reasoning (it is already linked from
+//   mobile-nav.tsx:69, so withholding it here guards nothing) was mine; the test
+//   encodes the repo IA decision. It stays a mobile-nav and direct-URL surface.
+//
+// /calibration/market: renders a literal Elo accuracy percentage
+//   (calibration/market/page.tsx:147-148), which reads as a GSE model claim on a
+//   GSE-branded page whatever the footnote says. Founder-gated; owner ask.
+const PROOF_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "Calibration Report", href: "/calibration", desc: "Predicted vs actual, and the gate that holds it" },
+      { label: "Accountability", href: "/accountability", desc: "What we publish, what we hold back, and why" },
+      { label: "The Engine", href: "/engine", desc: "How a pick is made, end to end" },
+      { label: "Edge Index", href: "/edge-index", desc: "The published index and how it is built" },
+      { label: "Data & Sources", href: "/data", desc: "Every source, its licence, and what we may extract" },
+      { label: "Changelog", href: "/changelog", desc: "What changed, when, and what it affected" },
+    ],
+  },
+];
+
 /**
  * Nav — the Galaxy Sports Edge global navigation bar.
  *
@@ -103,9 +137,7 @@ export function Nav() {
             <NavMenu label="Fantasy & Daily" href="/fantasy" groups={FANTASY_DAILY_MENU} />
             <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
 
-            <Link href="/calibration" title="The Proof Room: calibration, CLV, and the public ledger">
-              Proof
-            </Link>
+            <NavMenu label="Proof" href="/calibration" groups={PROOF_MENU} />
           </nav>
         </div>
 

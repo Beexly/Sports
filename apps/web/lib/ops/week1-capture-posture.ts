@@ -21,6 +21,7 @@ export interface Week1CaptureInput {
   readonly nflOddsRowsLast24h: number;
   readonly lineArchiveEnabled: boolean;
   readonly closeStampedLast7d: number;
+  readonly snapshotsLast7d: number;
 }
 
 export interface Week1CapturePosture {
@@ -31,7 +32,7 @@ export interface Week1CapturePosture {
 }
 
 export function classifyWeek1Capture(input: Week1CaptureInput): Week1CapturePosture {
-  const { nflOddsRowsLastHour, nflOddsRowsLast24h, lineArchiveEnabled, closeStampedLast7d } = input;
+  const { nflOddsRowsLastHour, nflOddsRowsLast24h, lineArchiveEnabled, closeStampedLast7d, snapshotsLast7d } = input;
 
   const state: NflCaptureState =
     nflOddsRowsLastHour > 0 ? "LIVE" : nflOddsRowsLast24h > 0 ? "QUIET" : "DARK";
@@ -53,9 +54,19 @@ export function classifyWeek1Capture(input: Week1CaptureInput): Week1CapturePost
     hints.push(
       "LINE_ARCHIVE_ENABLED is OFF — OPEN/INTERIM/CLOSE snapshots are NOT being written. Week-1 closing lines are unrecoverable after kickoff. Founder flip required.",
     );
+  } else if (closeStampedLast7d === 0 && snapshotsLast7d > 0) {
+    // MEASURED 2026-08-20 (docs/ops/hermes/hf7-archive/RESULTS.md): NFL 9,768
+    // INTERIM rows and ZERO CLOSE; MLB 11,174 INTERIM and ZERO CLOSE. So the
+    // archive is demonstrably ON and accumulating, and CLOSE has still never
+    // been stamped. That combination is NOT the benign "waiting for the first
+    // settle" case — snapshots are piling up while the close is never captured,
+    // which is precisely a CLV track with no closing line.
+    hints.push(
+      `Archive ON and accumulating (${snapshotsLast7d} snapshot rows in 7d) but ZERO CLOSE-stamped — snapshots are piling up while the close is never captured. Known causes: the FREE settlement path never stamps CLOSE (it has no line-archive call at all), and CLOSE requires a pre-kickoff row with capturedAt <= commenceTime. Investigate before Week 1.`,
+    );
   } else if (closeStampedLast7d === 0) {
     hints.push(
-      "Archive ON but 0 CLOSE-stamped rows in 7d — markClosingSnapshots runs at settle time, so this is expected until the first settle after a captured game.",
+      "Archive ON, no snapshots yet in 7d — nothing to stamp CLOSE onto. Expected on a quiet board.",
     );
   }
 
@@ -63,7 +74,10 @@ export function classifyWeek1Capture(input: Week1CaptureInput): Week1CapturePost
     state,
     // DARK odds or an inert archive each independently mean Week 1 is not being
     // captured in a form that can be reconstructed later.
-    week1Recoverable: state !== "DARK" && lineArchiveEnabled,
+    // A close that is never stamped is a CLV track with no closing line, so it
+    // counts against recoverability exactly like dark odds do.
+    week1Recoverable:
+      state !== "DARK" && lineArchiveEnabled && !(snapshotsLast7d > 0 && closeStampedLast7d === 0),
     hint: hints.join(" "),
   };
 }
