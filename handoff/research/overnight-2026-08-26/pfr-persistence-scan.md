@@ -19,3 +19,12 @@ Method: season-level mean aggregated; Spearman r between t and t+1 aligned by se
 ## Interpretation / Falsifier Priority
 Stable metrics (r>0.5, meaningful n) are candidates for future covariate binds. Unstable metrics suggest low year-to-year persistence and may not reward falsifier runs.
 Disclaimer repeated: correlation ≠ predictive edge; descriptive persistence only.
+
+## QBR Team Persistence & Margin Correlation (ESPN qbr_week_level.csv, REG only, 2018+)
+
+Method: scripts/ops/build-qbr-harness.py produces data/nflverse/qbr_harness_rows.jsonl (team-week QBR, 4269 rows, REG only, season>=2018). Year-over-year TEAM persistence: mean season QBR t vs t+1 aligned by season shift; same-season QBR vs point-margin uses pbp score_differential_post averaged per team-season.
+
+Results (correlation disclaimers MANDATORY):
+- QBR persistence Spearman ρ = 0.3736, Pearson r = 0.3792 (223 pair shifts, 2019-2024).
+- QBR vs point-margin: Pearson r = 0.7829, Spearman ρ = 0.7692 (n=90 pairs). Strong descriptive association; no predictive-edge claim.
+- Caveats: REG only; ESPN proprietary metric; team-level aggregation only; no cross-vendor validation; correlation ≠ predictive edge; SCAN ONLY.
