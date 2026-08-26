@@ -33,9 +33,53 @@ function defaultOpts(o?: FalsifyOpts): Required<FalsifyOpts> {
   return { minN: 100, shuffleB: 200, seed: 42, ...o };
 }
 
+/**
+ * Outcome base rate relative to the market, averaged over rows.
+ *
+ * Retained for REPORTING only. It does not read `modelProb`, so it says nothing
+ * about whether the model has skill — it is a property of the outcome column.
+ * It must never again be the statistic a kill test decides on; see
+ * `meanLogLikRatio`.
+ */
 function effectSize(rows: readonly BacktestRow[]): number {
   const sum = rows.reduce((a, r) => a + (r.outcome - (r.marketProb ?? 0.5)), 0);
   return sum / rows.length;
+}
+
+/**
+ * Mean per-row log-likelihood ratio of the model against the market — the
+ * statistic the e-process is built on, averaged so it is comparable across
+ * sample sizes.
+ *
+ *   LLR = (1/n) Σ [ y·log(p/q) + (1−y)·log((1−p)/(1−q)) ]
+ *
+ * Positive → the model's probabilities beat the market's on the realized
+ * outcomes. Negative → worse than the market.
+ *
+ * This is the piece that was missing: a kill test built on `effectSize` alone
+ * cannot see `modelProb` at all, so it returns identical verdicts for a
+ * pure-noise model, a perfect oracle and a perfectly inverted one, and can
+ * never refute anything.
+ */
+function meanLogLikRatio(
+  ys: readonly (0 | 1)[],
+  pHats: readonly number[],
+  pMkts: readonly number[],
+): number {
+  if (ys.length === 0) return 0;
+  let acc = 0;
+  for (let i = 0; i < ys.length; i++) {
+    const p = pHats[i]!, q = pMkts[i]!, y = ys[i]!;
+    acc += y === 1 ? Math.log(p / q) : Math.log((1 - p) / (1 - q));
+  }
+  return acc / ys.length;
+}
+
+/** True when every outcome is identical — label permutation is then vacuous. */
+function outcomesAreConstant(ys: readonly (0 | 1)[]): boolean {
+  if (ys.length === 0) return true;
+  const first = ys[0]!;
+  return ys.every((y) => y === first);
 }
 
 export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): FalsifyOutput {
@@ -87,49 +131,130 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     };
   }
 
-  // SHUFFLE (permutation test, deterministic seeded PRNG)
-  const origES = effectSize(rows);
-  const prng = mulberry32(o.seed);
-  let survive = 0;
-  for (let b = 0; b < o.shuffleB; b++) {
-    const perm = [...rows];
-    // Fisher-Yates shuffle using deterministic PRNG
-    for (let i = perm.length - 1; i > 0; i--) {
-      const j = Math.floor(prng() * (i + 1));
-      const t: BacktestRow = perm[i]!; perm[i] = perm[j]!; perm[j] = t;
+  // SHUFFLE — label-permutation test, deterministic seeded PRNG.
+  //
+  // The null is "the model's probabilities carry no information about the
+  // outcomes", so the OUTCOME LABELS are permuted against fixed (modelProb,
+  // marketProb) pairs. Permuting whole rows instead — as this did previously —
+  // leaves any row-set mean unchanged, which made the comparison `abs(x) >= abs(x)`
+  // and the test incapable of ever firing.
+  //
+  // One-sided by design: a two-sided |statistic| comparison would credit a
+  // perfectly ANTI-predictive model, which is the opposite of what an edge funnel
+  // should accept.
+  const origES = effectSize(rows); // reported for context only — not the decision
+  const origStat = meanLogLikRatio(ys, pHats, pMkts);
+  const degenerateOutcomes = outcomesAreConstant(ys);
+  let shuffle: KillResult;
+  if (degenerateOutcomes) {
+    // Every permutation equals the original, so the test carries zero
+    // information. Saying PASS here would be the same silent rubber-stamp the
+    // permute-the-rows bug produced. STARVED is the honest verdict.
+    shuffle = {
+      verdict: "STARVED",
+      detail:
+        `outcome vector is constant (all ${ys[0] ?? 0}) — label permutation is ` +
+        `vacuous, test carries no information; modelLLR=${origStat.toFixed(4)}/row`,
+    };
+  } else {
+    const prng = mulberry32(o.seed);
+    const permYs: (0 | 1)[] = [...ys];
+    let survive = 0;
+    for (let b = 0; b < o.shuffleB; b++) {
+      // Fisher-Yates over the LABELS, deterministic PRNG
+      for (let i = permYs.length - 1; i > 0; i--) {
+        const j = Math.floor(prng() * (i + 1));
+        const t = permYs[i]!; permYs[i] = permYs[j]!; permYs[j] = t;
+      }
+      const permStat = meanLogLikRatio(permYs, pHats, pMkts);
+      if (origStat >= permStat) survive++;
     }
-    const permES = effectSize(perm);
-    // "original >= 95th percentile survives" => PASS if original >= 95th perc
-    if (Math.abs(origES) >= Math.abs(permES)) survive++;
+    const p95 = o.shuffleB * 0.95;
+    shuffle = survive >= p95
+      ? {
+          verdict: "PASS",
+          detail:
+            `model LLR=${origStat.toFixed(4)}/row beats ${survive}/${o.shuffleB} ` +
+            `label permutations (>= p95); baseRateEffect=${origES.toFixed(3)}`,
+        }
+      : {
+          verdict: "KILLED",
+          detail:
+            `model LLR=${origStat.toFixed(4)}/row beats only ${survive}/${o.shuffleB} ` +
+            `label permutations (< p95); baseRateEffect=${origES.toFixed(3)}`,
+        };
   }
-  const p95 = (o.shuffleB * 0.95);
-  const shuffle: KillResult = survive >= p95
-    ? { verdict: "PASS", detail: `original effect=${origES.toFixed(3)} survives ${survive}/${o.shuffleB} perm > p95` }
-    : { verdict: "KILLED", detail: `original effect=${origES.toFixed(3)} fails shuffle (${survive}/${o.shuffleB})` };
 
-  // SPLIT STABILITY: split rows chronologically into two halves by row count (not season)
+  // SPLIT STABILITY: chronological halves, compared on the MODEL-AWARE statistic.
+  //
+  // Previously this compared `effectSize` per half, which asks only whether the
+  // OUTCOME BASE RATE sits on the same side of the market in both halves — a
+  // property of the outcome column that a model cannot influence. What the gate
+  // is for is whether the MODEL's edge holds up across time, so both halves are
+  // now scored with the same per-row LLR the shuffle test uses.
   const sorted = [...rows].sort((a, b) => (a.season - b.season) || (a.outcomeWeek - b.outcomeWeek) || (a.knownAtWeek - b.knownAtWeek));
   const mid = Math.floor(sorted.length / 2);
-  const firstHalf = sorted.slice(0, mid);
-  const secondHalf = sorted.slice(mid);
-  const esA = effectSize(firstHalf);
-  const esB = effectSize(secondHalf);
+  const halfStat = (rs: readonly BacktestRow[]): number =>
+    meanLogLikRatio(
+      rs.map((r) => r.outcome as 0 | 1),
+      rs.map((r) => Math.max(0.01, Math.min(0.99, r.modelProb))),
+      rs.map((r) => Math.max(0.01, Math.min(0.99, r.marketProb ?? 0.5))),
+    );
+  const esA = halfStat(sorted.slice(0, mid));
+  const esB = halfStat(sorted.slice(mid));
   const sameSign = (esA > 0 ? 1 : esA < 0 ? -1 : 0) === (esB > 0 ? 1 : esB < 0 ? -1 : 0);
-  const splitPass = sameSign;
-  const splitDetail = `firstHalf=${esA.toFixed(3)} secondHalf=${esB.toFixed(3)} signMatch=${sameSign}`;
-  const split: KillResult = splitPass
+  const splitDetail =
+    `firstHalfLLR=${esA.toFixed(4)} secondHalfLLR=${esB.toFixed(4)} signMatch=${sameSign}`;
+  const split: KillResult = sameSign
     ? { verdict: "PASS", detail: splitDetail }
     : { verdict: "KILLED", detail: splitDetail };
 
   // MULTIPLICITY (reuse precomputed eValue/simpleE from starvation gate; computed regardless of n)
+  //
+  // NOTE ON THE STATISTIC — this gate reads TERMINAL wealth `M`, not the running
+  // maximum `supM`. bernoulli-eprocess.ts's own header states the Ville result as
+  // `P(exists t: M_t >= 1/alpha) <= alpha` and says "supM is the statistic, not
+  // only terminal M". A bind whose wealth crosses the threshold early and then
+  // decays therefore lands here as KILLED on its terminal value.
+  //
+  // That direction is CONSERVATIVE — it can over-kill, never over-pass — so it is
+  // left in force. What is not acceptable is erasing the crossing from the record:
+  // a run that peaked at supM=3e24 previously reported only "e-value decayed
+  // M=0.000", which reads as "never had evidence" and is indistinguishable from a
+  // bind that never moved. `supM` is now carried in the detail either way.
+  // Whether the DECISION should switch to supM is a separate, deliberate call —
+  // see docs/ops/edge/2026-08-26-falsifier-kill-test-audit.md.
+  const supM = epRes?.supM ?? simpleE;
   const growing = simpleE > 1 && (epRes ? epRes.M > 1 : false);
   const multiplicity: KillResult = growing && simpleE >= 1
-    ? { verdict: "PASS", detail: `e-process M=${(epRes?.M ?? simpleE).toFixed(3)} growing, simpleE=${simpleE.toFixed(3)}` }
-    : { verdict: "KILLED", detail: `e-value decayed M=${(epRes?.M ?? simpleE).toFixed(3)} (not growing/survivor)` };
+    ? {
+        verdict: "PASS",
+        detail:
+          `e-process M=${(epRes?.M ?? simpleE).toFixed(3)} growing ` +
+          `(peak supM=${supM.toExponential(3)}), simpleE=${simpleE.toFixed(3)}`,
+      }
+    : {
+        verdict: "KILLED",
+        detail:
+          `e-value decayed M=${(epRes?.M ?? simpleE).toFixed(3)} (not growing/survivor; ` +
+          `peak supM=${supM.toExponential(3)} — decision reads terminal M, not supM)`,
+      };
 
-  const allPass = [leakage, shuffle, split, multiplicity].every((k) => k.verdict === "PASS");
-  const overallVerdict = allPass ? "SURVIVOR" : "KILLED";
-  const reason = allPass ? "all 4 PASS" : [leakage, shuffle, split, multiplicity].filter((k) => k.verdict === "KILLED").map((k) => k.detail).join("; ");
+  // A gate that could not discriminate is NOT a gate that passed. Ordering:
+  // any KILLED refutes outright; otherwise an uninformative (STARVED) gate means
+  // the funnel never actually tested the bind, which is PARKED, not SURVIVOR.
+  const gates = [leakage, shuffle, split, multiplicity];
+  const killed = gates.filter((k) => k.verdict === "KILLED");
+  const starved = gates.filter((k) => k.verdict === "STARVED");
+  const overallVerdict: FalsifyOutput["overall"]["verdict"] =
+    killed.length > 0 ? "KILLED" : starved.length > 0 ? "PARKED" : "SURVIVOR";
+  const reason =
+    killed.length > 0
+      ? killed.map((k) => k.detail).join("; ")
+      : starved.length > 0
+        ? `gates did not refute, but ${starved.length} gate(s) carried no information: ` +
+          starved.map((k) => k.detail).join("; ")
+        : "all 4 PASS";
 
   return {
     leakage,
