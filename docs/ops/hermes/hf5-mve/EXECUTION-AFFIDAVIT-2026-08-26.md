@@ -31,6 +31,57 @@ the mirror via env. The mirror is row-exact:
 - Launcher: a 3-line wrapper setting DATABASE_URL then importing the runner
   unchanged (`run-mve-local.mts`, reproduced below). No experiment code touched.
 
+### Provenance evidence — VERIFIED post-run by a second model (2026-08-26)
+
+Both claims below were asserted by the executor and have since been checked
+independently. Commands and observed outputs:
+
+**1. Runner byte-unmodified** — `git diff --stat origin/hermes/hf5-mve --
+scripts/edge-lab/run-mve.ts packages/prediction-engine/src/research/mve-eprocess.ts
+packages/prediction-engine/src/research/nb-rbpf.ts
+packages/prediction-engine/src/shin-devig.ts` → **empty output** (no
+differences). The only worktree modification is `RESULTS.md`, which the runner
+itself writes. Digests of the executed files:
+
+```
+ec0ce66dbdf5c65053fe3b73b0b73d40d525df4f8cb67a4a1a1fb5dcedf27a46  scripts/edge-lab/run-mve.ts
+8e20e39d5623f2f0d4d3b94787715b9bbae83becd93b39da58bfb9c1041e690e  packages/prediction-engine/src/research/mve-eprocess.ts
+```
+
+**2. Mirror row-exact** — an identical md5 content digest was computed over the
+prod source (read-only `hermes_ro`, SQL-over-HTTP) and over the local mirror the
+runner actually read, covering every column the runner consumes, with
+timestamps digested as epoch seconds so client formatting cannot mask a
+difference. Re-runnable as `scripts/edge-lab/verify-mirror-digest.py` (read-only
+both sides; connection strings come from env, never the repo). Observed:
+
+| relation | prod | mirror | |
+|---|---|---|---|
+| games (corpus) | `691:e13dfc363d4c17d9423e9ce824fd1058` | `691:e13dfc363d4c17d9423e9ce824fd1058` | MATCH |
+| odds (TOTALS, corpus) | `198922:6f63074ab8e653032a869e1925414ab4` | `198922:6f63074ab8e653032a869e1925414ab4` | MATCH |
+
+Digest expression (run verbatim against both, with the corpus subquery from
+this document's Transport section):
+
+```sql
+-- games
+SELECT count(*)::text || ':' || md5(string_agg(
+  id || '|' || "homeTeamName" || '|' || "awayTeamName" || '|' ||
+  extract(epoch from "commenceTime")::bigint || '|' ||
+  "homeScore" || '|' || "awayScore", ',' ORDER BY id))
+FROM games WHERE id IN (<corpus>);
+-- odds
+SELECT count(*)::text || ':' || md5(string_agg(
+  id || '|' || "gameId" || '|' || bookmaker || '|' ||
+  coalesce(total::text,'~') || '|' || coalesce("overPrice"::text,'~') || '|' ||
+  coalesce("underPrice"::text,'~') || '|' ||
+  extract(epoch from "fetchedAt")::bigint, ',' ORDER BY id))
+FROM odds WHERE market = 'TOTALS' AND "gameId" IN (<corpus>);
+```
+
+The transport therefore changed the wire, not the bytes: the frozen runner read
+the same rows it would have read against prod directly.
+
 ```ts
 process.env["DATABASE_URL"] = "postgresql://<local-mirror>";
 process.env["DIRECT_URL"] = "postgresql://<local-mirror>";
