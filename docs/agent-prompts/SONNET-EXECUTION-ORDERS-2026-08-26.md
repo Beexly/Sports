@@ -72,3 +72,29 @@ Murphy decomposition belongs in `packages/prediction-engine` with tests, per the
 
 Parked / founder-gated: everything in STATE.md's founder queue; anything touching sealed paths;
 arming any live track (founder YES only); all public claims (C-32, until an e-process crosses 20).
+
+## 6 · Claude-native optimization (founder-ordered: "optimize based off claude trainings and claude prompts")
+
+The repo already carries the assets — use them, do not re-derive:
+
+- **Academy corpus routing** (`docs/CLAUDE-ACADEMY-PLAYBOOK.md`, 755-page index; routing protocol
+  in SONNET-MAX-LEVERAGE-PROMPT §9): match the task to the Scope Router, open at most one
+  referenced entry per lookup, degrade gracefully when full texts (owner-side) are absent —
+  titles + summaries only, NEVER invented contents.
+- **Standing consults, moments they bind** (from §9's list): `steering-long-sessions` at session
+  start · `the-explore-plan-code-commit-workflow` per task · `context-management` when context
+  grows (offload state to the ledger, start clean) · `using-subagents-effectively` before any
+  fan-out · `trust-it-verifying-unsupervised-runs` before declaring any session complete.
+- **Prompt-writing standard** for every prompt Sonnet authors — subagent briefs, prereg wording,
+  runner instructions: the five Academy pillars (`being-clear-and-direct`, `being-specific`,
+  `structure-with-xml-tags`, `providing-examples`, `system-prompts`). Concretely: state the exact
+  artifact + path + current/target behavior; required-evidence format (file:line); the MISSING-
+  not-fabricate clause verbatim; one task per prompt.
+- **Production Anthropic-API prompt changes** (GSN's own prompts): `/tune-prompts` first, then
+  `npm run guard:claude-api` — never freehand (SONNET-MAX-LEVERAGE §7.2 law). Offline prompt
+  optimization lives in `scripts/dspy-gse/` + `docs/agent-skills/dspy-gepa/`.
+- **Evals**: extending `npm run agent:eval` follows `a-typical-eval-workflow` + `code-based-grading`
+  — code-graded always; model-graded only for subjective quality.
+- **Session economics** (C-24 + CLAUDE-MAX §5): fresh session near iteration limits; subagents get
+  narrow questions + turn caps; effort tiers matched to the task (max reasoning reserved for gate
+  design and statistical rulings, low for mechanical sweeps).
