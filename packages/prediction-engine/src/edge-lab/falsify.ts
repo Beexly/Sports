@@ -62,13 +62,15 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
   if (epRes && epRes.series.length > 0) {
     eValue = epRes.series[epRes.series.length - 1]!;
   }
-  let simpleE = 1;
+  let logSimpleE = 0;
   for (let i = 0; i < rows.length; i++) {
     const p = pHats[i]!, q = pMkts[i]!, y = ys[i]!;
     const factor = y === 1 ? (p / q) : ((1 - p) / (1 - q));
     const clipped = Math.max(0.5, Math.min(2, factor));
-    simpleE *= clipped;
+    logSimpleE += Math.log(clipped);
   }
+  const simpleE = Math.exp(logSimpleE);
+  const logSimpleEVal = logSimpleE;
   starvedParkedDetail += `; e=${eValue.toFixed(3)}`;
 
   if (n < o.minN) {
@@ -122,10 +124,13 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     : { verdict: "KILLED", detail: splitDetail };
 
   // MULTIPLICITY (reuse precomputed eValue/simpleE from starvation gate; computed regardless of n)
-  const growing = simpleE > 1 && (epRes ? epRes.M > 1 : false);
-  const multiplicity: KillResult = growing && simpleE >= 1
-    ? { verdict: "PASS", detail: `e-process M=${(epRes?.M ?? simpleE).toFixed(3)} growing, simpleE=${simpleE.toFixed(3)}` }
-    : { verdict: "KILLED", detail: `e-value decayed M=${(epRes?.M ?? simpleE).toFixed(3)} (not growing/survivor)` };
+  const logThreshold = Math.log(20);
+  const logMVal = epRes ? epRes.logM : logSimpleEVal;
+  const cappedM = Math.min(Math.exp(logMVal), 1e308);
+  const growing = logMVal > 0 && (epRes ? epRes.M > 1 : simpleE > 1);
+  const multiplicity: KillResult = growing && logMVal > logThreshold
+    ? { verdict: "PASS", detail: `e-process logM=${logMVal.toFixed(3)} M=${cappedM.toFixed(3)} growing, simpleE=${Math.min(simpleE, 1e308).toFixed(3)} logSimpleE=${logSimpleEVal.toFixed(3)}` }
+    : { verdict: "KILLED", detail: `e-value decayed logM=${logMVal.toFixed(3)} M=${cappedM.toFixed(3)} (not growing/survivor) logSimpleE=${logSimpleEVal.toFixed(3)}` };
 
   const allPass = [leakage, shuffle, split, multiplicity].every((k) => k.verdict === "PASS");
   const overallVerdict = allPass ? "SURVIVOR" : "KILLED";

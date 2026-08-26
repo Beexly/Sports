@@ -40,7 +40,7 @@ for (const [season, sv] of seasonValues) {
   medians.set(season, { yac: median(sv.yac), sep: median(sv.sep), expYac: median(sv.expYac), targets: median(sv.targets) });
 }
 
-function buildBind(name: string, getPrior: (s:any)=>number, getOutcome: (s:any,med:any)=>number, medKey: 'yac'|'sep'|'expYac'): any {
+function buildBind(name: string, getPrior: (s: { sumSep: number; n: number; sumExpYac: number; targets: number }) => number, getOutcome: (s: { sumSep: number; n: number; sumExpYac: number; targets: number }, med: number) => number, medKey: 'yac' | 'sep' | 'expYac' | 'targets'): { name: string; rows: BacktestRow[] } {
   const rows: BacktestRow[] = [];
   for (const [pid, seasons] of agg) {
     const list = [...seasons.keys()].sort((a,b)=>a-b);
@@ -51,7 +51,7 @@ function buildBind(name: string, getPrior: (s:any)=>number, getOutcome: (s:any,m
       if (next !== prev+1) continue;
       const priorVal = getPrior(prevS);
       const nextVal = getPrior(nextS);
-      const med = medians.get(next)?.[medKey as keyof typeof medians extends Map ? any : any] ?? 0;
+      const med = medians.get(next)?.[medKey] ?? 0;
       const outcome = getOutcome(nextS, med);
       // Normalize signal to [0.01, 0.99] for modelProb
       const z = (priorVal - med) / Math.max(Math.abs(priorVal - med), 0.1);
