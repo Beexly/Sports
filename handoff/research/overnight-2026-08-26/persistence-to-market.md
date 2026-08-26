@@ -18,16 +18,17 @@ Median split, min 14 games next season. Seasons 2018–2024 pairs.
 | REC ybc_r (targets-weighted) | 223 | **−0.1279** | 0.4704 (n=112) | 0.5069 (n=111) |
 | REC adot (targets-weighted) | 223 | −0.1189 | 0.4801 (n=112) | 0.4971 (n=111) |
 | Team pass attempts/game | 213 | +0.0416 | 0.4950 (n=107) | 0.4792 (n=106) |
+| QB pressure_pct (max row) | 213 | −0.1051 | 0.4731 (n=109) | 0.5019 (n=104) |
+| DEF yds_tgt allowed (tgt-weighted) | 223 | +0.1222 | 0.4999 (n=112) | 0.4771 (n=111) |
 
-## Honest reading
+## Honest reading (round 2, five signals)
 
-1. ybc_r: negative rank correlation (−0.13) means HIGH yards-before-catch
-   teams covered slightly LESS the following season. Both halves sit below
-   the −110 breakeven of 52.4%, and the spread between halves (~3.6pp) is
-   within noise for n≈110 per side (SE ≈ 4.7pp). No bettable gap.
-2. adot: same shape, weaker. Nothing.
-3. Pass volume (the targets-SURVIVOR analog at team level): r≈+0.04,
-   halves differ by 1.6pp. Dead.
+Same story across all five mappings: every half-split lands within ±1 SE of
+the 52.38% breakeven (SE≈4.7pp at n≈110), gaps between halves range
+1.7–3.7pp — all within noise. Direction is intriguingly consistent
+(soft/easy metrics like low pressure faced and low yds_tgt allowed point
+toward slightly better next-season covers; explosive-metric teams regress)
+but the magnitudes are far too small to bet.
 
 ## Verdict
 
