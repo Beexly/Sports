@@ -1564,6 +1564,7 @@ export {
   covariateKey,
   latestPriorRow,
   nextGameCovariate,
+  provenanceForStatType,
   sepForKickoff,
 } from "./edge-lab/covariate-bus.js";
 export type {

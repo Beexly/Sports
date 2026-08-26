@@ -193,12 +193,27 @@ export function latestPriorRow(
 }
 
 /**
+ * Which vendor a weekly mean actually came from, keyed off the stat type the
+ * row was filed under. `defense` rows are PFR advstats-def; everything else is
+ * NFL NGS.
+ *
+ * This exists because provenance is an honesty header, not decoration: a cell
+ * carrying `weekly_ngs_mean` when the number came from PFR is a false source
+ * claim, and it is the kind of claim that propagates silently into every
+ * derived output. Hardcoding one vendor here would mislabel every defense
+ * covariate the moment a caller passed `"defense"`.
+ */
+export function provenanceForStatType(statType: StatType): CovariateProvenance {
+  return statType === "defense" ? "weekly_pfr_def_mean" : "weekly_ngs_mean";
+}
+
+/**
  * Pull a single covariate field from the latest prior-game row.
  *
  * Returns `{ value, grain, provenance }` when a finite field value is
  * available on the latest eligible week `t < kickoffWeek` row, otherwise
  * `null` (fail-closed — does not impute, does not cross the same-week
- * boundary).
+ * boundary). Provenance is derived from `statType`, never assumed.
  */
 export function nextGameCovariate(
   rows: readonly CovariateRow[],
@@ -212,7 +227,11 @@ export function nextGameCovariate(
   if (row === null) return null; // no history before kickoff — fail closed
   const raw: number | null | undefined = row[field];
   if (raw === null || raw === undefined || !Number.isFinite(raw)) return null;
-  return { value: raw, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+  return {
+    value: raw,
+    grain: "week_t_for_tplus1",
+    provenance: provenanceForStatType(statType),
+  };
 }
 
 /**
