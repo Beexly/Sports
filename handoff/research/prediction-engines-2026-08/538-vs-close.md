@@ -42,11 +42,17 @@ Elo as a covariate rather than a price-beater:
 | Design | n | Pearson r vs close residual |
 |---|---|---|
 | Prior-season final Elo diff → next-season cover margin | 434 | −0.015 |
-| Same-season final Elo diff (updated through season t) → that season's cover margin | 420 | **+0.279** |
+| Same-season final Elo diff (updated through season t) → that season's cover margin | 420 | +0.279 |
+| **Mid-season pre-game Elo diff (weekly replay, HFA included) → same-game cover margin** | 3,144 | **+0.042** |
 
-Reading: stale Elo adds nothing the spread doesn't know. END-OF-SEASON
-Elo correlates +0.28 with cover margin — but that is largely mechanical
-(Elo updates ON results; late-season ratings already embed most margins).
-The honest feature test is mid-season Elo at week k vs weeks k+1..k+4
-residuals, which requires re-running their forecast.py per week — queued,
-not claimed here. No edge claim from either number.
+The definitive test is the third row: a faithful weekly replay of their
+forecast.py (K=20, HFA=65, 1/3 reversion) over 2002–2016 joined to our
+closing lines. Mid-season Elo explains ~0.2% of cover-margin variance —
+the close already contains everything Elo knows. This is the honest,
+definitive version of the feature test; the +0.279 row was endogenous
+(final ratings include the game being predicted).
+
+Verdict: DEAD AS AN EDGE, ALIVE AS A REFERENCE/FEATURE SOURCE — but the
+feature value is ≈ zero against closes. Kept for ensemble priors and as
+the calibration reference. Replay script outputs in
+data/fivethirtyeight/elo_replay_2002_2016.pkl.
