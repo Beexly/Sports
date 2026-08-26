@@ -55,27 +55,38 @@ Hermes commit `43b161ecb` also landed skeleton modules (`scoring/murphy_decompos
 STUBS, quarantined per NORTHSTAR §3 — do not build on them until independently reviewed; the real
 Murphy decomposition belongs in `packages/prediction-engine` with tests, per the queue below.
 
-## 5 · THE QUEUE (execute top-down; one ledger row per unit; §7.3 verify block per commit)
+## 5 · THE QUEUE — CLOSED 2026-08-26 ~15:55 UTC. All 6 items resolved (done, corrected, or revised).
 
-1. **Land the C-75 second wave** when the background workflow completes: commit the verdict doc,
-   apply the 7-point protocol to its own headline numbers (spot-recompute at least two), close
-   C-75 in the ledger, update STATE.md and the battle plan's ARM-GATE statuses.
-2. **Build the two live e-process runners, dark** (battle-plan Candidates 1 & 2): frozen rules
-   files (λ Kelly-derived, one-sided, entry conditions exact), write-once entry-price capture,
-   full test files, founder-armed only. DeepSeek red-team pass on both preregs before freezing.
-3. **Falsifier acceptance harness** as a permanent test: planted edge + pure noise + inverted at
-   n ∈ {100, 1k, 5k} — the instrument-first law made executable.
-4. ~~**Murphy decomposition**~~ — CLOSED 2026-08-26, no build needed. It already existed:
+1. ~~**Land the C-75 second wave**~~ — **DONE.** 23 agents (grew from planned 16), landed with an
+   independent Sonnet spot-check of 2 headline numbers before treating it as confirmed (protocol
+   §2.2). Verdict doc: `docs/ops/edge/2026-08-26-hermes-second-wave-verification.md`. Headline:
+   nothing survives — every testable historical hypothesis KILLED or PARKED under the repaired
+   falsifier. Ledger: C-75.
+2. ~~**Build the two live e-process runners, dark**~~ — **REVISED, NOT EXECUTED.** C-75 killed
+   Candidate 1 and killed/starved Candidate 2 (see verification doc + the rewritten battle plan).
+   Building founder-armed live infrastructure for a dead signal would misrepresent the evidence.
+   Ledger: C-79. Battle plan rewritten in place rather than silently dropped.
+3. ~~**Falsifier acceptance harness**~~ — **DONE.** `falsify.acceptance.test.ts`, 9/9 green,
+   planted-edge/noise/inverted @ n=100/1k/5k. Ledger: C-76.
+4. ~~**Murphy decomposition**~~ — **CLOSED, no build needed.** It already existed:
    `brierDecomposition` (`packages/prediction-engine/src/probability-calibration.ts:324`, committed
    98ae6c7ae, 26 days before this queue was written) is the real thing, already wired into ops
    tooling three layers up (`apps/web/lib/calibration/{murphy-res-definition,segmented-murphy,
    murphy-components-explore}.ts`). This queue line was itself an unverified handoff-style claim —
    see ledger C-77. Hermes's stub stays quarantined; nothing superseded it because nothing needed to.
-5. **Lock-price provenance capture** at pick creation (write-once book quote + source + timestamp).
-6. STATE.md current at every session end; ledger rows per SONNET-MAX-LEVERAGE §3.
+5. ~~**Lock-price provenance capture**~~ — **DONE.** Optional `priceSource` on `PickProofReceipt`,
+   derived only from real `bookmakerCount`, additive, no schema migration. Ledger: C-78.
+6. **STATE.md current** — done at every step this session; current as of this queue's closure.
+
+**Next queue (opened by C-75's own findings, ranked, none executed yet — see STATE.md "Revised
+next queue" for the full list with citations):** fix the two real bugs in Hermes's harness/
+calibration scripts; correct `market-atlas.md`'s mislabeled columns; fix the timezone table; and
+reconcile the Wong-teaser underdog legs (blocks Candidate 3's revised ARM-GATE). This is NOT part
+of the closed queue above — it is a fresh backlog a future session should claim explicitly.
 
 Parked / founder-gated: everything in STATE.md's founder queue; anything touching sealed paths;
-arming any live track (founder YES only); all public claims (C-32, until an e-process crosses 20).
+arming any live track (founder YES only — and per C-75, there is currently nothing left worth
+arming this season); all public claims (C-32, until an e-process crosses 20).
 
 ## 6 · Claude-native optimization (founder-ordered: "optimize based off claude trainings and claude prompts")
 
