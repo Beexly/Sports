@@ -54,3 +54,20 @@ Adopt: **pattern** | **dependency** | **skill-doc** | **ignore**
 50. Flipt-io/flipt — flags GPL → ignore — ops — ignore
 
 Hard non-goals: Multica/GPL agent platforms, GPU foundation train, Polymarket without counsel, rewrite outbox/webhook.
+
+## Wave 4 — founder intake 2026-08-26 (queued, unreviewed)
+
+Same lens applies at review time: **pattern** | **dependency** | **skill-doc** | **ignore**.
+Descriptions fetched at queue time; adoption decided at review, founder-gated to WIRE.
+
+51. AlkaiDynamics/Substrate-Mechanics — founder-org: pre-geometric tensor-field physics framework + QuTiP sims — off-domain — review as founder IP
+52. AlkaiDynamics/BURGAMOTS — founder-org: PINN (DeepXDE) planetary-forcing solar/atmospheric model, TS/React — off-domain; PINN method notes only
+53. AlkaiDynamics/P-li — founder-org: "Reconstruction of the Gateway Tapes" AI-Studio app — off-domain — review as founder IP
+54. AlkaiDynamics/repolens — founder-org: AI repo-analysis web app (Next.js/TS, mgithub.com prefix UX) — ops — pattern (fleet repo-review tooling)
+55. preset-io/agor — multiplayer agent-orchestration workspace, per-branch dev envs + MCP — ops — pattern (license gate: BSL 1.1)
+56. github/gh-aw — agentic workflows in Markdown compiled to GitHub Actions, read-only defaults + validated writes — ops — pattern (strong fleet fit)
+57. google/gvisor — userspace application kernel sandbox (runsc) — ops/security — pattern (agent sandboxing)
+58. arXiv:2607.00164 — RL with verifiable rewards for calibrated probabilistic forecasting; label-free state-conditioned win-rate reward; 7B model matches betting-market calibration — model/calibration — pattern (HIGH: direct engine relevance)
+59. arXiv:2606.18805 — reference-dependent emotions → risky post-game driving near stadiums — content/responsible-gaming — skill-doc (bias-mirror + RG content angle)
+60. arXiv:2603.17866 — Bayesian multilevel step-and-turn models on NFL tracking data; simulated counterfactual movement metrics — model — pattern (player-movement → props/fantasy)
+61. arXiv:2309.15253 — NN + MILP optimal DFS lineups, validated vs DraftKings field (~31st pctile) — model/fantasy — pattern (honest benchmark for the DFS optimizer)
