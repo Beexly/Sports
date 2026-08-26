@@ -1,93 +1,110 @@
-import { describe, expect, it } from "vitest";
-import { posteriorRate } from "../props-hb.js";
+/**
+ * INT model tests (props-hb-int).
+ *
+ * H2 Edge — Interceptions. Beta-Binomial over attempts.
+ *
+ * Tests:
+ *  - Method tag.
+ *  - fitIntPrior on realistic CB/S safety spread (1.5-7% INT rate).
+ *  - fitIntPrior returns null when all attempts are 0.
+ *  - posteriorInt: alpha += ints, beta += attempts - ints.
+ *  - probOverInt: monotonicity (lower line → higher p), bounds [0, 1].
+ *  - zero attempts → posterior unchanged (full shrinkage).
+ */
+import { describe, it, expect } from "vitest";
 import {
   INT_HB_METHOD_TAG,
-  fitIntPerAttemptPrior,
-  intProbZero,
-  intProbZeroPoisson,
-  pooledIntPerAttempt,
-  posteriorIntPerAttempt,
-  probInt,
-  probIntGivenAttempts,
+  fitIntPrior,
+  intPosterior,
+  probOverInt,
+  type IntSample,
 } from "../props-hb-int.js";
 
-/** Gunslingers vs care-takers — extra-Poisson so EB is identified. */
-const MIXED: { attempts: number; ints: number }[] = [
-  { attempts: 38, ints: 4 },
-  { attempts: 32, ints: 3 },
-  { attempts: 41, ints: 5 },
-  { attempts: 35, ints: 0 },
-  { attempts: 29, ints: 0 },
-  { attempts: 44, ints: 1 },
-  { attempts: 36, ints: 4 },
-  { attempts: 31, ints: 0 },
-];
-
-describe("fitIntPerAttemptPrior / posteriorIntPerAttempt", () => {
-  it("fits an INT-per-attempt prior and refuses 0-attempt rows as talent", () => {
-    const prior = fitIntPerAttemptPrior(MIXED);
-    expect(prior).not.toBeNull();
-    expect(prior!.alpha / prior!.beta).toBeGreaterThan(0);
+describe("int model contract", () => {
+  it("method tag is stamped", () => {
     expect(INT_HB_METHOD_TAG).toBe("props_hb_int_v1");
-    expect(() => fitIntPerAttemptPrior([{ attempts: 0, ints: 0 }])).toThrow(RangeError);
-  });
-});
-
-describe("intProbZero / probIntGivenAttempts", () => {
-  it("is 1 at zero attempts — ZIP hurdle, not a 0% INT passer", () => {
-    const prior = fitIntPerAttemptPrior(MIXED)!;
-    const post = posteriorIntPerAttempt(prior, MIXED[0]!);
-    expect(intProbZero(post, 0)).toBe(1);
-    expect(probIntGivenAttempts(post, 0)).toBe(0);
   });
 
-  it("rises with attempts at a fixed INT-per-attempt posterior", () => {
-    const prior = fitIntPerAttemptPrior(MIXED)!;
-    const post = posteriorIntPerAttempt(prior, MIXED[0]!);
-    const few = probIntGivenAttempts(post, 8);
-    const many = probIntGivenAttempts(post, 40);
-    expect(many).toBeGreaterThan(few);
-    expect(many).toBeGreaterThan(0.05);
-    expect(many).toBeLessThan(1);
+  // Wide spread across positions: deep CBs 0.5%, slot CBs 3-5%, safeties 8-12%.
+  // INT rates are low-variance Poisson (1-2 per season), so we need large
+  // between-player spread to exceed sampling noise for the Beta fit.
+  const NFL_SAMPLES: IntSample[] = [
+    { attempts: 85, ints: 1 },   // 1.18% — deep outside CB
+    { attempts: 90, ints: 1 },   // 1.11% — deep outside CB
+    { attempts: 70, ints: 3 },   // 4.29% — slot CB
+    { attempts: 65, ints: 4 },   // 6.15% — slot CB
+    { attempts: 48, ints: 5 },   // 10.4% — safety
+    { attempts: 52, ints: 6 },   // 11.5% — aggressive safety
+  ];
+
+  it("fitIntPrior returns beta params on realistic INT samples", () => {
+    const prior = fitIntPrior(NFL_SAMPLES);
+    expect(prior).not.toBeNull();
+    expect(prior!.alpha).toBeGreaterThan(0);
+    expect(prior!.beta).toBeGreaterThan(0);
+    // Gamma prior mean = alpha / (alpha + beta) for Beta
+    const priorMean = prior!.alpha / (prior!.alpha + prior!.beta);
+    expect(priorMean).toBeGreaterThan(0.01);  // at least 1%
+    expect(priorMean).toBeLessThan(0.12);     // less than 12%
   });
 
-  it("matches the closed form 1 − (β/(β+n))^α", () => {
-    const post = posteriorRate({ alpha: 2, beta: 80 }, 0, 0);
-    const n = 40;
-    const expected = 1 - (80 / 120) ** 2;
-    expect(probIntGivenAttempts(post, n)).toBeCloseTo(expected, 12);
-  });
-
-  it("Poisson fallback is exp(-m n) and does not invent φ", () => {
-    const even = [
-      { attempts: 40, ints: 1 },
-      { attempts: 40, ints: 1 },
-      { attempts: 40, ints: 1 },
-      { attempts: 40, ints: 1 },
+  it("fitIntPrior returns null when all attempts are 0", () => {
+    const samples: IntSample[] = [
+      { attempts: 0, ints: 0 },
+      { attempts: 0, ints: 0 },
     ];
-    expect(fitIntPerAttemptPrior(even)).toBeNull();
-    const m = pooledIntPerAttempt(even);
-    expect(m).toBeCloseTo(0.025, 12);
-    expect(intProbZeroPoisson(m!, 0)).toBe(1);
-    expect(intProbZeroPoisson(m!, 40)).toBeCloseTo(Math.exp(-1), 12);
-  });
-});
-
-describe("probInt — mix over T", () => {
-  it("is near 0 when next-game attempts are concentrated at 0", () => {
-    const prior = fitIntPerAttemptPrior(MIXED)!;
-    const intPost = posteriorIntPerAttempt(prior, MIXED[0]!);
-    const attemptPost = posteriorRate({ alpha: 0.1, beta: 20 }, 0, 10);
-    expect(probInt(intPost, attemptPost)).toBeLessThan(0.05);
+    expect(fitIntPrior(samples)).toBeNull();
   });
 
-  it("exceeds the k=0 slice once attempts have mass", () => {
-    const prior = fitIntPerAttemptPrior(MIXED)!;
-    const intPost = posteriorIntPerAttempt(prior, MIXED[0]!);
-    const attemptPost = posteriorRate({ alpha: 80, beta: 4 }, 320, 8);
-    const mixed = probInt(intPost, attemptPost);
-    expect(mixed).toBeGreaterThan(probIntGivenAttempts(intPost, 0));
-    expect(mixed).toBeGreaterThan(0.05);
-    expect(mixed).toBeLessThan(1);
+  it("fitIntPrior excludes zero-attempt games (healthy scratch)", () => {
+    const samples: IntSample[] = [
+      { attempts: 0, ints: 0 }, // scratch — excluded
+      ...NFL_SAMPLES,
+    ];
+    const prior = fitIntPrior(samples);
+    expect(prior).not.toBeNull();
+  });
+
+  it("posteriorInt updates alpha/beta correctly", () => {
+    const prior = { alpha: 3, beta: 97 }; // 3% prior
+    const post = intPosterior(prior, 4, 100); // 4 INTs on 100 attempts
+    expect(post.alpha).toBe(7);   // 3 + 4
+    expect(post.beta).toBe(97 + 96);   // 97 + (100 - 4) = 97 + 96 = 193
+    expect(post.mean).toBeCloseTo(7 / 200, 12);
+  });
+
+  it("posteriorInt with 0 attempts leaves prior unchanged", () => {
+    const prior = { alpha: 3, beta: 97 };
+    const post = intPosterior(prior, 0, 0);
+    expect(post.alpha).toBe(3);
+    expect(post.beta).toBe(97);
+  });
+
+  it("probOverInt: lower line → higher probability (monotonic)", () => {
+    const prior = fitIntPrior(NFL_SAMPLES)!;
+    const post = intPosterior(prior, 3, 80);
+    const pLow = probOverInt(post, 0, 50);  // P(INT > 0 | 50 att)
+    const pHigh = probOverInt(post, 3, 50); // P(INT > 3 | 50 att)
+    expect(pLow).toBeGreaterThan(pHigh);
+  });
+
+  it("probOverInt returns a probability in [0, 1]", () => {
+    const prior = fitIntPrior(NFL_SAMPLES)!;
+    const post = intPosterior(prior, 2, 70);
+    const p = probOverInt(post, 1, 70);
+    expect(p).toBeGreaterThanOrEqual(0);
+    expect(p).toBeLessThanOrEqual(1);
+  });
+
+  it("probOverInt: 0 attempts → P(INT > 0) = 0 (hurdle)", () => {
+    const prior = fitIntPrior(NFL_SAMPLES)!;
+    const post = intPosterior(prior, 0, 0);
+    expect(probOverInt(post, 0, 0)).toBe(0);
+  });
+
+  it("probOverInt: negative line → probability 1", () => {
+    const prior = fitIntPrior(NFL_SAMPLES)!;
+    const post = intPosterior(prior, 3, 80);
+    expect(probOverInt(post, -1, 80)).toBe(1);
   });
 });

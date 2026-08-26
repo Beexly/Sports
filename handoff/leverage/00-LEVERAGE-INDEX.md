@@ -97,3 +97,10 @@ Choices avoid lock-in (own-the-code components, OSS, portable data formats).
 - `03-cost-infra-analytics-security.md` — hosting, DB, analytics, monitoring, security
 - `04-sales-growth-content-seo.md` — the 7 growth plays + the $0 growth stack
 - `05-devtools-frontend-design.md` — cron/API/webhook, testing, perf/a11y, UI, media optimization
+- `06-resource-dump-grok-paas-monetization-2026-08-24.md` — 2026-08-24 dump (45 URLs: Grok/xAI,
+  PaaS, monetization lists, growth/social). Verdicts + raw reports in `raw/`. Key outcomes:
+  MoneyPrinterTurbo adopt-later (video arm of content engine), Coolify parked as the Oracle-VPS
+  PaaS pick, grok2api-style token-scraper family hard-rejected on guardrails.
+- `07-immediate-wins-2026-08-24.md` — executable distillation of 06: SEO checklist,
+  BullMQ cron patterns, Stripe hardening, Discord bot spec, blocklist, adopt-later cards.
+- `raw/` — verbatim per-batch agent reports backing 06 (batches A–D).

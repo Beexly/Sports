@@ -40,4 +40,31 @@ describe("computeConsensus", () => {
     expect(res.consensusHomeProb).toBeNull();
     expect(res.sources).toBe(0);
   });
+
+  describe("geometric mode (log-odds pooling)", () => {
+    it("is more extreme than arithmetic for a same-side field", () => {
+      const probs = [sp("a", 0.55), sp("b", 0.7)];
+      const arith = computeConsensus(probs);
+      const geo = computeConsensus(probs, undefined, { mode: "geometric" });
+      expect(geo.consensusHomeProb ?? 0).toBeGreaterThan(arith.consensusHomeProb ?? 1);
+    });
+
+    it("matches arithmetic when all sources agree", () => {
+      const res = computeConsensus([sp("a", 0.6), sp("b", 0.6)], undefined, { mode: "geometric" });
+      expect(res.consensusHomeProb).toBeCloseTo(0.6, 3);
+    });
+
+    it("respects weights in geometric mode", () => {
+      const res = computeConsensus([sp("a", 0.9, 10), sp("b", 0.3, 1)], undefined, { mode: "geometric" });
+      expect(res.consensusHomeProb ?? 0).toBeGreaterThan(0.7);
+    });
+
+    it("default mode is unchanged arithmetic behavior", () => {
+      const probs = [sp("a", 0.55), sp("b", 0.7)];
+      const def = computeConsensus(probs);
+      const explicit = computeConsensus(probs, undefined, { mode: "arithmetic" });
+      expect(def.consensusHomeProb).toBe(explicit.consensusHomeProb);
+      expect(def.consensusHomeProb).toBeCloseTo(0.625, 3);
+    });
+  });
 });

@@ -11,6 +11,7 @@
  * Sign convention: all probabilities are P(home wins), in [0, 1].
  */
 import type { IndependentMarketFairValue } from "@sports/types";
+import { logOddsPool } from "./edge-lab/features/log-odds-pool.js";
 
 export interface SourceProb {
   readonly source: string;
@@ -66,7 +67,31 @@ export function extractSourceProbs(
 /** Dispersion at/above which agreement is treated as zero. */
 const MAX_DISPERSION = 0.25;
 
-export function computeConsensus(probs: readonly SourceProb[], marketHomeProb?: number): ConsensusResult {
+/**
+ * Consensus pooling mode. `"arithmetic"` (default) is the incumbent weighted
+ * mean. `"geometric"` pools in log-odds space (Satopää-style geometric mean of
+ * odds) — more extreme than arithmetic for same-side fields, pulled toward 0.5
+ * for split fields; see edge-lab/features/log-odds-pool.ts.
+ */
+export type ConsensusMode = "arithmetic" | "geometric";
+
+export interface ComputeConsensusOptions {
+  /** Default "arithmetic" — the historical behavior, unchanged. */
+  readonly mode?: ConsensusMode;
+  /**
+   * Extremization exponent applied in geometric mode only (γ > 0, default 1 =
+   * plain geometric mean of odds). Feed a per-dataset value from
+   * `tuneExtremizationGamma` rather than guessing. Ignored in arithmetic mode
+   * so the incumbent path stays byte-for-byte identical.
+   */
+  readonly extremizationGamma?: number;
+}
+
+export function computeConsensus(
+  probs: readonly SourceProb[],
+  marketHomeProb?: number,
+  options: ComputeConsensusOptions = {},
+): ConsensusResult {
   const usable = probs.filter((p) => p.weight > 0);
   if (usable.length === 0) {
     return {
@@ -80,7 +105,25 @@ export function computeConsensus(probs: readonly SourceProb[], marketHomeProb?: 
   }
 
   const wSum = usable.reduce((s, p) => s + p.weight, 0);
-  const mean = usable.reduce((s, p) => s + p.weight * p.homeProb, 0) / wSum;
+  let gamma = options.extremizationGamma ?? 1;
+  if (options.mode === "geometric") {
+    if (!Number.isFinite(gamma) || gamma <= 0) {
+      throw new Error(`extremizationGamma must be finite and > 0, got ${String(gamma)}`);
+    }
+  } else {
+    gamma = 1; // arithmetic mode ignores gamma entirely
+  }
+  const mean =
+    options.mode === "geometric"
+      ? // Geometric mode: pool in log-odds space. logOddsPool normalizes weights
+        // internally and clamps 0/1 at eps, so no member can poison the pool.
+        // `extremized` = logistic(γ · meanLogOdds); at γ=1 it equals
+        // geometricMeanOfOdds exactly.
+        logOddsPool(
+          usable.map((p) => ({ source: p.source, prob: p.homeProb, weight: p.weight })),
+          gamma,
+        ).extremized
+      : usable.reduce((s, p) => s + p.weight * p.homeProb, 0) / wSum;
   const variance = usable.reduce((s, p) => s + p.weight * (p.homeProb - mean) ** 2, 0) / wSum;
   const dispersion = Math.sqrt(variance);
   const agreementScore = clamp01(1 - dispersion / MAX_DISPERSION);

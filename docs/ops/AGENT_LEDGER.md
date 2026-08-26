@@ -81,6 +81,8 @@ the only copy, and nobody else can verify or build on it.
 
 | ID | Title | Owner | Status | Evidence |
 |---|---|---|---|---|
+| OVN-0826-1 | Overnight edge hunt cycle 1: market-lines harness (6,967 games 1999-2025 w/ closing spread+total, sign convention verified: spread_line>0 = home fav), live-quote fetcher (Manifold+Polymarket, 155 real quotes), falsifier sweep on 4 NGS persistence signals (avgExpectedYac KILLED split+mult; combined-z→YACoe KILLED mult replicating prior kill; sep/targets survivors flagged as multiplicity float-overflow artifacts), backend data acquisition (PFR advstats bulk 2018-25, FTN charting 2022-25, ESPN QBR, pbp 2024), edge-source recon (SOURCES/DEEP-DIVES/THEORY), tooling probe (crawl4ai/Scrapling/Firecrawl honest verdicts) | hermes | DONE | ae1d4d0a9 on origin/hermes/w2-audit-settlement (6 commits 36dcc3d58..ae1d4d0a9); docs in handoff/research/overnight-2026-08-26/ + edge-sources-2026-08-26/ |
+| OVN-0826-2 | Key-number home-fav fade (spread 3&6) preregistered scan: cover 44.9% n=1,179 decided, z=-3.52 with ~40-bucket scan caveat; era-stable 44.7%/45.3%; e-process E=0.073 << 20 → PARKED not SURVIVOR; next test = locked one-sided e-process on 2026 season as it plays out | hermes | PARKED | ae1d4d0a9 handoff/research/overnight-2026-08-26/W2-keynumber-prereg.md |
 | H-A | Isotonic PAV calibration | hermes | DONE | 62e32730 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-B | Cron matrix generator | hermes | DONE | 4b961782 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-C | E-process sequential test | hermes | DONE | f53b229e on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
