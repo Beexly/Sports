@@ -34,6 +34,18 @@
  * means every feasible choice of which team to stack is actually considered,
  * not just the incumbent QB's team with a single fallback swap.
  *
+ * DraftKings' roster-diversity rule — players from at least 2 different
+ * GAMES (which implies 2 different teams) — is enforced exactly and lazily:
+ * a lineup violating it must draw all 9 players from a single game G, so the
+ * relaxed solve runs first and, only if its argmax is single-game, re-runs
+ * with an extra 0/1 "has a player outside G yet" DP flag (same machinery as
+ * the stack flag; the flags generalize to a small bitmask). Any lineup
+ * spanning ≥2 games trivially satisfies every such "leave game Gᵢ" flag, so
+ * the flagged feasible set contains every rule-legal lineup and an argmax
+ * that spans ≥2 games is the true constrained optimum — the standard lazy-
+ * constraint argument. On realistic pools the rule never binds and the relax-
+ * check costs nothing.
+ *
  * Complexity: O(teamRuns × players × countStates × stackDim × salaryStates).
  * For the DK-Classic roster (QB, RB, RB, WR, WR, WR, TE, FLEX, DST) countStates
  * = 192 and, at $100 granularity on a $50,000 cap, salaryStates = 501 — so an
@@ -56,6 +68,9 @@ export type OptOpts = {
 };
 
 const FLEX_POS: readonly DfsPos[] = ["RB", "WR", "TE"];
+
+/** Canonical unordered game key — both sides of a matchup map to the same key. */
+const gameKeyOf = (p: DfsPlayer): string => (p.team < p.opp ? `${p.team}@${p.opp}` : `${p.opp}@${p.team}`);
 
 function objVal(p: DfsPlayer, mode: Mode): number {
   if (mode === "cash") return p.proj;
@@ -140,9 +155,14 @@ type SolveResult = { readonly lineup: DfsPlayer[]; readonly value: number };
 
 /**
  * Exact solve for one roster, optionally requiring a QB + same-team WR/TE
- * pairing on `requiredStackTeam`. `ordered`, `space`, and `unit` are hoisted
- * by the caller so repeated calls (one per candidate stacked team) don't
- * redo the deterministic sort or granularity detection.
+ * pairing on `requiredStackTeam`, and requiring at least one player from
+ * outside each game in `mustLeaveGames` (the lazily-added game-diversity
+ * constraints — see optimizeOne). Both requirements share one generalized
+ * "flags" DP dimension: a bitmask with one bit per requirement, OR-advanced
+ * as players are chosen; only final states with every bit set count.
+ * `ordered`, `space`, and `unit` are hoisted by the caller so repeated calls
+ * (one per candidate stacked team) don't redo the deterministic sort or
+ * granularity detection.
  */
 function solveExact(
   ordered: readonly DfsPlayer[],
@@ -151,21 +171,27 @@ function solveExact(
   space: SlotSpace,
   unit: number,
   requiredStackTeam: string | null,
+  mustLeaveGames: readonly string[],
 ): SolveResult | null {
   const capUnits = SALARY_CAP / unit;
   const salaryStates = capUnits + 1;
-  const stackDim = requiredStackTeam ? 2 : 1;
+  const stackBit = requiredStackTeam ? 1 : 0;
+  const flagStates = 1 << (stackBit + mustLeaveGames.length);
+  const requiredFlags = flagStates - 1; // every requirement bit set
   const countStates = space.totalCountStates;
-  const fullStates = countStates * salaryStates * stackDim;
+  const fullStates = countStates * salaryStates * flagStates;
 
   let dpPrev = new Float64Array(fullStates).fill(-Infinity);
-  dpPrev[0] = 0; // count-state 0, salary 0, stacked 0 — the empty lineup
+  dpPrev[0] = 0; // count-state 0, salary 0, no flags — the empty lineup
 
   const suOf = new Array<number>(ordered.length);
   // choiceLayers[i][state]: how step i reached `state` in its post-step layer —
   // -1 means "player i unused, state carried forward unchanged"; otherwise
-  // code = category*2 + srcStacked, decoded during backward reconstruction.
-  const choiceLayers = new Array<Int8Array>(ordered.length);
+  // code = category*flagStates + srcFlags, decoded during backward
+  // reconstruction. Int8 covers every unflagged/stack-only solve; the wider
+  // array is only allocated when lazy game constraints push codes past 127.
+  const wideCodes = 6 * flagStates > 127;
+  const choiceLayers = new Array<Int8Array | Int16Array>(ordered.length);
 
   for (let i = 0; i < ordered.length; i++) {
     const p = ordered[i]!;
@@ -175,11 +201,15 @@ function solveExact(
     const isOffTeamQb = requiredStackTeam !== null && p.pos === "QB" && p.team !== requiredStackTeam;
     const tooExpensive = su > capUnits;
     const cats = isOffTeamQb || tooExpensive ? [] : categoriesFor(p.pos, space);
-    const givesStack = requiredStackTeam !== null && p.team === requiredStackTeam && (p.pos === "WR" || p.pos === "TE");
+    let setMask = 0;
+    if (requiredStackTeam !== null && p.team === requiredStackTeam && (p.pos === "WR" || p.pos === "TE")) setMask |= 1;
+    for (let b = 0; b < mustLeaveGames.length; b++) {
+      if (gameKeyOf(p) !== mustLeaveGames[b]) setMask |= 1 << (stackBit + b);
+    }
     const val = objVal(p, opts.mode) * decay(p);
 
     const dpNext = locked ? new Float64Array(fullStates).fill(-Infinity) : dpPrev.slice();
-    const ch = new Int8Array(fullStates);
+    const ch = wideCodes ? new Int16Array(fullStates) : new Int8Array(fullStates);
     if (!locked) ch.fill(-1); // baseline: every state carried forward unchanged (skip)
 
     for (const c of cats) {
@@ -190,15 +220,15 @@ function solveExact(
         const cur = Math.floor(countIdx / stride) % (capOfDim + 1);
         if (cur >= capOfDim) continue; // this category is already at capacity
         const targetCountIdx = countIdx + stride;
-        for (let srcStacked = 0; srcStacked < stackDim; srcStacked++) {
-          const dstStacked = givesStack ? Math.min(stackDim - 1, srcStacked + 1) : srcStacked;
-          const srcBase = countIdx * salaryStates * stackDim + srcStacked;
-          const dstBase = targetCountIdx * salaryStates * stackDim + dstStacked;
-          const code = c * 2 + srcStacked;
+        for (let srcFlags = 0; srcFlags < flagStates; srcFlags++) {
+          const dstFlags = srcFlags | setMask;
+          const srcBase = countIdx * salaryStates * flagStates + srcFlags;
+          const dstBase = targetCountIdx * salaryStates * flagStates + dstFlags;
+          const code = c * flagStates + srcFlags;
           for (let s2 = 0; s2 <= maxSu; s2++) {
-            const v = dpPrev[srcBase + s2 * stackDim]!;
+            const v = dpPrev[srcBase + s2 * flagStates]!;
             if (v === -Infinity) continue;
-            const dstIdx = dstBase + (s2 + su) * stackDim;
+            const dstIdx = dstBase + (s2 + su) * flagStates;
             const candidate = v + val;
             if (candidate > dpNext[dstIdx]!) {
               dpNext[dstIdx] = candidate;
@@ -213,12 +243,11 @@ function solveExact(
     choiceLayers[i] = ch;
   }
 
-  const wantStacked = requiredStackTeam ? 1 : 0;
-  const baseIdx = space.fullCountIdx * salaryStates * stackDim + wantStacked;
+  const baseIdx = space.fullCountIdx * salaryStates * flagStates + requiredFlags;
   let bestVal = -Infinity;
   let bestSalaryUnits = -1;
   for (let su = 0; su <= capUnits; su++) {
-    const v = dpPrev[baseIdx + su * stackDim]!;
+    const v = dpPrev[baseIdx + su * flagStates]!;
     if (v > bestVal) { bestVal = v; bestSalaryUnits = su; }
   }
   if (bestSalaryUnits < 0 || !Number.isFinite(bestVal)) return null;
@@ -226,17 +255,17 @@ function solveExact(
   const chosen: { category: number; player: DfsPlayer }[] = [];
   let countIdx = space.fullCountIdx;
   let salaryUnits = bestSalaryUnits;
-  let stacked = wantStacked;
+  let flags = requiredFlags;
   for (let i = ordered.length - 1; i >= 0; i--) {
-    const state = (countIdx * salaryStates + salaryUnits) * stackDim + stacked;
+    const state = (countIdx * salaryStates + salaryUnits) * flagStates + flags;
     const code = choiceLayers[i]![state]!;
     if (code === -1) continue; // player i was not used; state is unchanged going into it
-    const category = Math.floor(code / 2);
-    const srcStacked = code % 2;
+    const category = Math.floor(code / flagStates);
+    const srcFlags = code % flagStates;
     chosen.push({ category, player: ordered[i]! });
     countIdx -= space.strides[category]!;
     salaryUnits -= suOf[i]!;
-    stacked = srcStacked;
+    flags = srcFlags;
   }
 
   return { lineup: assembleLineup(chosen), value: bestVal };
@@ -325,10 +354,6 @@ export function optimizeOne(
   const space = buildSlotSpace(DFS_SLOTS);
   const unit = detectGranularity([...ordered.map((p) => p.salary), SALARY_CAP]);
 
-  if (!opts.stack) {
-    return solveExact(ordered, opts, decay, space, unit, null)?.lineup ?? null;
-  }
-
   // Exact stacking: every team that can field both the QB slot and a
   // same-team WR/TE is a candidate. Solving each exactly and keeping the
   // best tries every feasible "which team is stacked" choice — not a
@@ -337,23 +362,52 @@ export function optimizeOne(
   // upper bound and solve best-first with branch-and-bound pruning: once a
   // team's bound can't beat an already-confirmed value, neither can any
   // team after it (bounds are sorted descending), so the remaining runs are
-  // skipped with the result still provably optimal.
-  const teams = [...new Set(ordered.filter((p) => p.pos === "QB").map((p) => p.team))]
-    .filter((team) => ordered.some((p) => p.team === team && (p.pos === "WR" || p.pos === "TE")))
-    .sort();
-
-  const { bestQbByTeam, otherCategorySum } = stackBounds(ordered, opts, decay, space);
-  const ranked = teams
-    .map((team) => ({ team, bound: (bestQbByTeam.get(team) ?? -Infinity) + otherCategorySum }))
-    .sort((a, b) => b.bound - a.bound || (a.team < b.team ? -1 : a.team > b.team ? 1 : 0));
-
-  let best: SolveResult | null = null;
-  for (const { team, bound } of ranked) {
-    if (best && bound <= best.value) break; // no remaining team can beat the confirmed best
-    const result = solveExact(ordered, opts, decay, space, unit, team);
-    if (result && (!best || result.value > best.value)) best = result;
+  // skipped with the result still provably optimal. The bound ignores the
+  // lazy game-diversity constraints as well as the cap — both only remove
+  // lineups, so it stays a valid upper bound in every re-solve below.
+  let ranked: readonly { team: string; bound: number }[] = [];
+  if (opts.stack) {
+    const teams = [...new Set(ordered.filter((p) => p.pos === "QB").map((p) => p.team))]
+      .filter((team) => ordered.some((p) => p.team === team && (p.pos === "WR" || p.pos === "TE")))
+      .sort();
+    const { bestQbByTeam, otherCategorySum } = stackBounds(ordered, opts, decay, space);
+    ranked = teams
+      .map((team) => ({ team, bound: (bestQbByTeam.get(team) ?? -Infinity) + otherCategorySum }))
+      .sort((a, b) => b.bound - a.bound || (a.team < b.team ? -1 : a.team > b.team ? 1 : 0));
   }
-  return best?.lineup ?? null;
+
+  const solveUnder = (mustLeaveGames: readonly string[]): DfsPlayer[] | null => {
+    if (!opts.stack) return solveExact(ordered, opts, decay, space, unit, null, mustLeaveGames)?.lineup ?? null;
+    let best: SolveResult | null = null;
+    for (const { team, bound } of ranked) {
+      if (best && bound <= best.value) break; // no remaining team can beat the confirmed best
+      const result = solveExact(ordered, opts, decay, space, unit, team, mustLeaveGames);
+      if (result && (!best || result.value > best.value)) best = result;
+    }
+    return best?.lineup ?? null;
+  };
+
+  // DK game-diversity rule (players from ≥2 different games), enforced as a
+  // lazy constraint: a violating lineup is entirely inside one game G, and
+  // every rule-legal lineup has ≥1 player outside ANY single game — so
+  // re-solving with "must leave G" flags keeps the full legal set feasible,
+  // and the first argmax that spans ≥2 games is the true constrained
+  // optimum. Each iteration bans a distinct game, so this terminates; more
+  // than a couple of iterations would need multiple whole games able to
+  // out-score every diverse lineup, so the cap below is a memory guard for
+  // pathological synthetic pools, not a reachable limit on real slates.
+  const mustLeaveGames: string[] = [];
+  for (;;) {
+    const lineup = solveUnder(mustLeaveGames);
+    if (!lineup) return null;
+    const games = new Set(lineup.map(gameKeyOf));
+    if (games.size >= 2) return lineup;
+    const g = games.values().next().value!;
+    if (mustLeaveGames.includes(g) || mustLeaveGames.length >= 8) {
+      throw new Error("DFS optimizer: game-diversity re-solve failed to make progress — internal invariant violated.");
+    }
+    mustLeaveGames.push(g);
+  }
 }
 
 export type LineupMetrics = {
