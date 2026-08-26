@@ -2205,3 +2205,24 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// Independent modelProb aggregation (C-28 bottleneck, docs/edge/MODELPROB_DESIGN.md).
+// Pure, market-free (priced:false), synthetic-fixture-tested only — see the
+// module's own header for the design-doc status and the documented resolution
+// of a dimensional ambiguity in the spec's shrinkage formula. NOT SHIP.
+export {
+  MODELPROB_AGGREGATION_METHOD_TAG,
+  aggregateModelProb,
+  computeLeagueBaseline,
+  shrinkSignal,
+  shrinkageWeight,
+  zScore,
+  zToProbability,
+} from "./edge-lab/modelprob-aggregation.js";
+export type {
+  PlayerSignal,
+  LeagueBaseline,
+  ShrinkOpts,
+  AggregateOpts,
+  AggregationResult,
+} from "./edge-lab/modelprob-aggregation.js";
