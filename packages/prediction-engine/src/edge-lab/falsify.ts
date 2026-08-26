@@ -45,10 +45,25 @@ export interface FalsifyOpts {
   readonly minN?: number;
   readonly shuffleB?: number;
   readonly seed?: number;
+  /**
+   * Significance level for the multiplicity gate's evidence threshold. Ville's
+   * inequality gives `P(exists t: M_t >= 1/alpha) <= alpha`, so the e-process
+   * must reach `1/alpha` — 20 at the default alpha=0.05 — to count as evidence.
+   *
+   * This is a REAL bar. The gate previously passed on `M > 1`, which admits an
+   * e-value of 1.0001 as a survivor; that is not a threshold, it is the absence
+   * of one. Raising it to 1/alpha makes the multiplicity gate strictly harder
+   * to pass than it has ever been.
+   */
+  readonly alpha?: number;
 }
 
 function defaultOpts(o?: FalsifyOpts): Required<FalsifyOpts> {
-  return { minN: 100, shuffleB: 200, seed: 42, ...o };
+  const merged = { minN: 100, shuffleB: 200, seed: 42, alpha: 0.05, ...o };
+  if (!(merged.alpha > 0 && merged.alpha < 1)) {
+    throw new RangeError(`falsifyBind: alpha must be in (0,1), got ${String(merged.alpha)}`);
+  }
+  return merged;
 }
 
 /**
@@ -140,13 +155,30 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
   if (epRes && epRes.series.length > 0) {
     eValue = epRes.series[epRes.series.length - 1]!;
   }
-  let simpleE = 1;
+  // Accumulate BOTH wealth statistics in LOG SPACE.
+  //
+  // The running products `simpleE *= clipped` and `M = exp(logM)` both leave
+  // float64 range at |log| > ~709.78, and the consequences were not symmetric
+  // rounding noise — they inverted the gate. Worse, `eProcess` returns null
+  // outright once `exp(logM)` is non-finite (bernoulli-eprocess.ts:85), and the
+  // old gate read `epRes ? epRes.M > 1 : false`, so a null collapsed to "not
+  // growing" and the bind was KILLED.
+  //
+  // Reproduced: the same bind at n=1200 (logM=705.3) PASSed and at n=1210
+  // (logM=711.2) was KILLED — ten more rows of identical favorable evidence
+  // flipping the verdict. The stronger a real edge, the more certainly it died.
+  //
+  // Log space never overflows here, so the statistic is always representable.
+  let logSimpleE = 0;
+  let logM = 0;
   for (let i = 0; i < rows.length; i++) {
     const p = pHats[i]!, q = pMkts[i]!, y = ys[i]!;
     const factor = y === 1 ? (p / q) : ((1 - p) / (1 - q));
-    const clipped = Math.max(0.5, Math.min(2, factor));
-    simpleE *= clipped;
+    logM += Math.log(factor);
+    logSimpleE += Math.log(Math.max(0.5, Math.min(2, factor)));
   }
+  // Display-only; may be Infinity/0 at extremes. Never decide on these.
+  const simpleE = Math.exp(logSimpleE);
   starvedParkedDetail += `; e=${eValue.toFixed(3)}`;
 
   if (n < o.minN) {
@@ -259,20 +291,30 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
   // bind that never moved. `supM` is now carried in the detail either way.
   // Whether the DECISION should switch to supM is a separate, deliberate call —
   // see docs/ops/edge/2026-08-26-falsifier-kill-test-audit.md.
-  const supM = epRes?.supM ?? simpleE;
-  const growing = simpleE > 1 && (epRes ? epRes.M > 1 : false);
-  const multiplicity: KillResult = growing && simpleE >= 1
+  //
+  // THE BAR IS 1/alpha, NOT 1. The old gate passed on `M > 1`, which is not an
+  // evidence threshold at all — an e-value of 1.0001 is indistinguishable from
+  // noise, and it PASSed. Ville's inequality gives P(exists t: M_t >= 1/alpha)
+  // <= alpha, so at alpha=0.05 the threshold is M >= 20, i.e. logM >= log(20).
+  // Tested in log space so the comparison survives any magnitude.
+  const supM = epRes?.supM ?? Math.exp(Math.min(logM, 709));
+  const logEvidenceThreshold = Math.log(1 / o.alpha);
+  const crossed = logM >= logEvidenceThreshold;
+  const fmtLogM = `logM=${logM.toFixed(3)} (M=${logM > 709 ? ">1e308" : Math.exp(logM).toExponential(3)})`;
+  const multiplicity: KillResult = crossed
     ? {
         verdict: "PASS",
         detail:
-          `e-process M=${(epRes?.M ?? simpleE).toFixed(3)} growing ` +
-          `(peak supM=${supM.toExponential(3)}), simpleE=${simpleE.toFixed(3)}`,
+          `e-process ${fmtLogM} >= 1/alpha=${(1 / o.alpha).toFixed(0)} ` +
+          `(log ${logEvidenceThreshold.toFixed(3)}); peak supM=${supM.toExponential(3)}, ` +
+          `logSimpleE=${logSimpleE.toFixed(3)}`,
       }
     : {
         verdict: "KILLED",
         detail:
-          `e-value decayed M=${(epRes?.M ?? simpleE).toFixed(3)} (not growing/survivor; ` +
-          `peak supM=${supM.toExponential(3)} — decision reads terminal M, not supM)`,
+          `e-value below the evidence threshold: ${fmtLogM} < 1/alpha=${(1 / o.alpha).toFixed(0)} ` +
+          `(log ${logEvidenceThreshold.toFixed(3)}); peak supM=${supM.toExponential(3)} ` +
+          `— decision reads terminal logM, not supM; logSimpleE=${logSimpleE.toFixed(3)}`,
       };
 
   // A gate that could not discriminate is NOT a gate that passed. Ordering:

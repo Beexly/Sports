@@ -258,6 +258,74 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
     expect(peak).toBeGreaterThan(1);
   });
 
+  it("evidence is monotone: more of the same favorable rows never flips PASS to KILLED", () => {
+    // The inversion this pins: the gate used to read `exp(logM)`, which leaves
+    // float64 range at |log| > ~709.78, and `eProcess` returns null outright once
+    // that happens. The old `epRes ? epRes.M > 1 : false` then collapsed to "not
+    // growing" and KILLED the bind. Reproduced before the fix: n=1200 (logM=705.3)
+    // PASSed, n=1210 (logM=711.2) was KILLED — ten more rows of identical
+    // favorable evidence reversing the verdict. The stronger a real edge, the
+    // more certainly the funnel destroyed it.
+    const strongRows = (n: number): BacktestRow[] =>
+      Array.from({ length: n }, (_, i) => synRow({
+        season: i < n / 2 ? 2024 : 2025,
+        outcomeWeek: (i % 12) + 3,
+        knownAtWeek: (i % 12) + 1,
+        outcome: 1,
+        modelProb: 0.9,
+        marketProb: 0.5,
+      }));
+
+    // Straddles the old overflow cliff at logM ~= 709.78.
+    for (const n of [1000, 1200, 1210, 1500, 3000]) {
+      const res = falsifyBind(strongRows(n), { minN: 100, shuffleB: 20, seed: 7 });
+      expect(res.multiplicity.verdict, `n=${n} must not be killed by overflow`).toBe("PASS");
+      expect(res.multiplicity.detail).toContain("logM=");
+      // The reported logM must stay finite and keep growing with n.
+      const logM = Number(/logM=(-?[0-9.]+)/.exec(res.multiplicity.detail)?.[1]);
+      expect(Number.isFinite(logM)).toBe(true);
+      expect(logM).toBeGreaterThan(0);
+    }
+  });
+
+  it("the multiplicity bar is 1/alpha, not 1 — an e-value just above 1 is not evidence", () => {
+    // The old gate passed on `M > 1`. An e-value of ~1.5 is noise, not a survivor.
+    // Build a bind whose logM lands strictly between log(1) and log(20).
+    const rows: BacktestRow[] = Array.from({ length: 300 }, (_, i) => synRow({
+      season: i < 150 ? 2024 : 2025,
+      outcomeWeek: (i % 12) + 3,
+      knownAtWeek: (i % 12) + 1,
+      outcome: i % 2 === 0 ? 1 : 0,
+      modelProb: i % 2 === 0 ? 0.502 : 0.4995,
+      marketProb: 0.5,
+    }));
+    const res = falsifyBind(rows, { minN: 100, shuffleB: 20, seed: 7 });
+    const logM = Number(/logM=(-?[0-9.]+)/.exec(res.multiplicity.detail)?.[1]);
+    expect(logM).toBeGreaterThan(0);                 // wealth did grow...
+    expect(logM).toBeLessThan(Math.log(20));         // ...but never reached 1/alpha
+    expect(res.multiplicity.verdict).toBe("KILLED"); // so it is not a survivor
+    expect(res.multiplicity.detail).toContain("below the evidence threshold");
+  });
+
+  it("alpha is configurable and validated", () => {
+    // Same weak bind as above (0 < logM < log(20)): KILLED at the default
+    // alpha=0.05, but a deliberately loose alpha lowers the bar under it.
+    const weak: BacktestRow[] = Array.from({ length: 300 }, (_, i) => synRow({
+      season: i < 150 ? 2024 : 2025,
+      outcomeWeek: (i % 12) + 3,
+      knownAtWeek: (i % 12) + 1,
+      outcome: i % 2 === 0 ? 1 : 0,
+      modelProb: i % 2 === 0 ? 0.502 : 0.4995,
+      marketProb: 0.5,
+    }));
+    expect(falsifyBind(weak, { minN: 100, shuffleB: 20, seed: 7 }).multiplicity.verdict).toBe("KILLED");
+    expect(
+      falsifyBind(weak, { minN: 100, shuffleB: 20, seed: 7, alpha: 0.99 }).multiplicity.verdict,
+    ).toBe("PASS");
+    expect(() => falsifyBind(weak, { alpha: 0 })).toThrow(RangeError);
+    expect(() => falsifyBind(weak, { alpha: 1 })).toThrow(RangeError);
+  });
+
   it("determinism: same SYNTHETIC input => same output", () => {
     const rows = cleanRows(120);
     const a = falsifyBind(rows, { minN: 10, shuffleB: 50, seed: 99 });

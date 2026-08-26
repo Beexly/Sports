@@ -190,6 +190,63 @@ distinguish them. This is *not* a claim that any specific recorded verdict (YACo
 wrong; re-running those binds with `supM` reporting is what would settle it, and that needs the
 real data this container does not have.
 
+## 5c · Fourth finding, and the worst one: the gate KILLED binds for having too much evidence
+
+Found independently by Hermes on `origin/hermes/w2-audit-settlement` (commit `831171796`) and
+**verified here from scratch before adoption**. Hermes described it as "float64 overflow →
+false PASS / false kill". The verified mechanism is more specific, and worse.
+
+`bernoulli-eprocess.ts:85` abandons the whole computation the moment `Math.exp(logM)` leaves
+float64 range:
+
+```ts
+const M = Math.exp(logM);
+if (!Number.isFinite(M) || !(M > 0)) return null;
+```
+
+`logM` itself is finite and correct at that point — only its exponential is not. And the old
+multiplicity gate read:
+
+```ts
+const growing = simpleE > 1 && (epRes ? epRes.M > 1 : false);
+```
+
+A `null` therefore collapsed to `growing === false` → **KILLED**.
+
+**The inversion, reproduced.** One bind, identical favorable rows, varying only in length:
+
+| n | true logM | exp(logM) | `eProcess()` | multiplicity |
+|---|---|---|---|---|
+| 1000 | 587.8 | 1.87e+255 | ok | PASS |
+| 1200 | 705.3 | 2.12e+306 | ok | PASS |
+| **1210** | **711.2** | **Infinity** | **NULL** | **KILLED** |
+| 1500 | 881.7 | Infinity | NULL | KILLED |
+| 3000 | 1763.4 | Infinity | NULL | KILLED |
+
+Ten more rows of the same favorable evidence flip PASS to KILLED. The cliff sits exactly at
+`logM ≈ 709.78 = ln(1.8e308)`. **The stronger a real edge, the more certainly the funnel
+destroyed it** — a true-positive killer, and the mirror image of §2, where the gates were too
+permissive to kill anything.
+
+**A second defect in the same block: the bar was `M > 1`.** That is not an evidence threshold —
+an e-value of 1.0001 passed it. Ville's inequality gives `P(exists t: M_t >= 1/alpha) <= alpha`,
+so the threshold is `1/alpha`, i.e. 20 at alpha=0.05.
+
+**Fix applied** — both statistics accumulated in log space, decision on `logM` and never on
+`exp(logM)`, plus a validated `alpha` option defaulting to 0.05:
+
+- The overflow inversion is gone; the gate is correct at any magnitude.
+- The bar rose from `M > 1` to `M >= 20`, making the multiplicity gate **strictly harder to pass
+  than it has ever been**. The net direction of this change is tightening, not loosening.
+- `logSimpleE` and `supM` are both carried in the detail, so nothing is censored.
+- `falsify.ts:138` is the only consumer of `eProcess` in the repo, so the frozen MVE
+  certification math in `bernoulli-eprocess.ts` was left untouched. Its `return null` on overflow
+  remains the root cause and deserves a separate fix — logged for the owner, not self-executed.
+
+**This rescues no recorded verdict.** Re-probed after the fix, the YACoe 341-row converter still
+returns SURVIVOR at `logM=76.4` against the stricter bar — so §7's finding that the recorded
+`e=0.000 KILLED` is unreproducible from committed code stands, now under a harder gate.
+
 ## 6 · The acceptance tests encoded the defect too — all three now repaired
 
 This is why the fix waited for an owner call: applying it required **changing the falsifier's own
