@@ -25,9 +25,12 @@ everything else we've found: public engines do not beat closes.
 
 The dataset is a free game-level probability archive from a calibrated,
 well-documented engine. Uses going forward:
-1. Calibration reference for OUR model probs (they were well-calibrated
-   for wins — Brier vs win outcome worth computing next).
+1. Calibration reference for OUR model probs — verified: against WIN
+   outcomes (their intended target) 538 ELO is excellently calibrated
+   (Brier 0.2203, n=1,536; every decile observed ≈ predicted within ±3pp).
 2. Elo trajectory as a FEATURE (not a price-beater): team-strength priors.
 3. Methodology template (their forecast.py is open source).
 
 Verdict: DEAD AS AN EDGE, ALIVE AS A REFERENCE/FEATURE SOURCE.
+Calibration quality vs target choice matters: same engine, same games —
+calibrated for wins, useless for covers.
