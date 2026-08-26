@@ -52,8 +52,8 @@ ec0ce66dbdf5c65053fe3b73b0b73d40d525df4f8cb67a4a1a1fb5dcedf27a46  scripts/edge-l
 prod source (read-only `hermes_ro`, SQL-over-HTTP) and over the local mirror the
 runner actually read, covering every column the runner consumes, with
 timestamps digested as epoch seconds so client formatting cannot mask a
-difference. Re-runnable as `scripts/edge-lab/verify-mirror-digest.py` (read-only
-both sides; connection strings come from env, never the repo). Observed:
+difference. Re-runnable by executing the digest SQL below verbatim against
+both sides (any Postgres client; read-only). Observed:
 
 | relation | prod | mirror | |
 |---|---|---|---|
@@ -130,3 +130,31 @@ the independent audit should confirm this reading before publication.
   the 6–3h entry under this rule. This closes one door with receipts and
   redirects the program to E2 (resolution via covariates, props, softer
   markets) exactly as `2026-08-26-EDGE-PATH.md` sequences.
+
+---
+
+## POST-AUDIT CORRECTIONS (2026-08-26, appended after the independent audit)
+
+The cross-model audit (`INDEPENDENT-AUDIT-2026-08-26.md`) completed after this
+affidavit was written. It verified the execution (provenance, no inversion, no
+leakage, thresholds as registered) and **overturned the conclusion**. Two
+claims above are RETRACTED by that audit and must not be relied on:
+
+1. **The "Cohort note" explanation is retracted.** 241 was not an estimate —
+   it is the pre-existing L-14 clean-close cohort, named in the authorizing
+   F-10 instrument and embedded in the registered checkpoint schedule
+   (50/100/150/200/241); the "corpus filling in over 2h37m" account is
+   arithmetically impossible; and the runner's own output label ("L-14
+   window") names a cohort the run did not use. The cohort deviation is real
+   and requires a founder amendment.
+2. **The "Honest reading" paragraph is retracted.** "SURVIVED, emphatically"
+   rests on post-abort quantities and on an instrument the audit showed had
+   ~zero power: P(KILL) ≈ 99.8% with no edge and ≈ 90% with a real +5pp edge
+   (Bayes factor 0.90), the registered miss term was replaced by an amendment
+   that removed the test's power for no validity gain, and the registered
+   covariates were never implemented. The run supports "INSTRUMENT FAILURE /
+   INCONCLUSIVE", not "no edge exists".
+
+The audit's recommendation — **do not publish as a kill** — supersedes the
+"publish the kill" line in Protocol status above. Founder decisions required:
+adopt the audit framing; amend F-10 before any corrected re-run.

@@ -51,9 +51,11 @@
   slate-commitment tables), `LINE_ARCHIVE_ENABLED` restore, orphan `sports-db`
   Neon project. ~~THE_ODDS_API_KEY decision~~ **superseded same day** — the key
   is live and the dual-path is healthy (evening update item 7).
-- ~~MVE blocked on DATABASE_URL (C-59)~~ **EXECUTED same day → outcome KILL**
-  (`docs/ops/hermes/hf5-mve/EXECUTION-AFFIDAVIT-2026-08-26.md`); pending the
-  independent cross-model audit before the public Kill Ledger entry.
+- ~~MVE blocked on DATABASE_URL (C-59)~~ **EXECUTED and AUDITED same day** —
+  the run returned KILL but the independent audit overturned it (instrument
+  underpowered: P(KILL) ~90% even under a real +5pp edge). Verdict: do not
+  publish as a kill; record as INSTRUMENT FAILURE / INCONCLUSIVE.
+  `docs/ops/hermes/hf5-mve/INDEPENDENT-AUDIT-2026-08-26.md`.
 - ~~CLOSE-stamp liveness open (C-62)~~ **RESOLVED GREEN same day** — see the
   evening update below: CLOSE stamps are writing (MLB 986 · NFL 624 · MLS 839).
 - ~~Unpushed local branch~~ **CORRECTED same day:** `hermes/w2-audit-settlement`
@@ -113,7 +115,7 @@ around them.
 | 2 | **Restore `LINE_ARCHIVE_ENABLED=true`** in Vercel Production env (archive stalled since Aug 22 16:31Z; the Odds-API key itself is live and healthy) | CLV ledger accumulation | evening update item 6 |
 | 3 | `prisma migrate deploy` on next DB-reachable deploy | Proof receipts + slate-commitment tables | `START_HERE.md` |
 | 4 | Flip `PROJECTIONS_PROVIDER` to the real nflverse graded pool | Draft tools live on real data with freshness badge | `LAUNCH_PLAN.md` prereq 2 |
-| 5 | ~~MVE run~~ **DONE (evening): outcome KILL** — commission the independent cross-model audit, then publish Kill Ledger entry #5 | Closes the MLB-totals edge program honestly | `hf5-mve/EXECUTION-AFFIDAVIT` |
+| 5 | ~~MVE run~~ **DONE + AUDITED: kill overturned (instrument underpowered)** — adopt the audit; publish as INSTRUMENT FAILURE if desired; amend F-10 for any corrected re-run | Honest closure or powered re-run of the MLB-totals program | `hf5-mve/INDEPENDENT-AUDIT` |
 | 6 | Delete orphan `sports-db` Neon project; confirm `check-deploy-readiness.mjs` green in prod | Cost + config hygiene | `START_HERE.md` |
 
 ### 4b. Agent lanes (parallel, draft-only where public-facing)
@@ -219,7 +221,7 @@ auto-suppression · in-season fantasy suite converting · CLV sample compounding
 | CLV ledger sample | close-stamps GREEN; archive stalled (flag) | archive resumed | compounding toward 500 |
 | Published calibration | eligibility RED (Brier/ECE floors) | PAVA fit staged (held-out ECE 0.037) | live with freshness stamp |
 | Draft-tool activation | soft-launched | real-data drafts served | in-season suite live |
-| MVE e-process | **executed → KILL** (audit pending) | kill published (entry #5) | program closed with receipts |
+| MVE e-process | executed; **audit overturned the kill** (underpowered) | founder adopts audit framing | powered re-run or honest closure |
 
 ---
 
