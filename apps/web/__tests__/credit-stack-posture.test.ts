@@ -98,7 +98,7 @@ describe("loadCreditStackPosture", () => {
     expect(p.claudeProvider).toBe("auto");
     expect(p.anyCreditLaneReady).toBe(true);
     expect(p.jynx.attemptOrder).toEqual(["azure"]);
-    expect(p.jynx.contentPlanPrimary).toBe("cerebras_free");
+    expect(p.jynx.contentPlanPrimary).toBe("free_lane");
     expect(p.operatorHint).toMatch(/free-lane/i);
   });
 

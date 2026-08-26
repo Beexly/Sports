@@ -60,7 +60,7 @@ zero dependencies — and the repo already proves it uses hook enforcement (`.gi
 | Blueprint name | What it wanted | You already have |
 |---|---|---|
 | A3M Router | Route work to the right model tier | `claude-api/model-router.ts` — per-surface `SURFACE_TIER`, pure & testable |
-| ClawRouter | Failover across backends | `claude-api/jynx.ts` — Bedrock → Azure → Vertex → Anthropic + `cerebras_free` lane |
+| ClawRouter | Failover across backends | `claude-api/jynx.ts` — Bedrock → Azure → Vertex → Anthropic + `free_lane` (Cerebras or secondary) |
 | MTRouter | Multi-provider dispatch | `claude-api/provider-dispatch.ts` + `openai-compat.ts` |
 | ParetoBandit | Budget pacing | `ai-control-plane/budget.ts` — 1,164-line reserve/settle ledger, integer micros |
 | AgentGuard (3-layer) | Validate AI-written code | `typecheck` + `lint` + `test` + 24 `guardrails` scripts, all CI jobs |

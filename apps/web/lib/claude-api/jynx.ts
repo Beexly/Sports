@@ -37,7 +37,7 @@ import {
 } from "./provider-config";
 
 export type JynxCloud = "bedrock" | "azure" | "vertex";
-export type JynxLane = "cerebras_free" | JynxCloud | "anthropic_direct";
+export type JynxLane = "free_lane" | JynxCloud | "anthropic_direct";
 
 export type JynxProviderMode = "anthropic" | "auto" | JynxCloud | "unknown";
 
@@ -166,8 +166,8 @@ export function planJynx(input: PlanJynxInput = {}, env: Env = process.env): Jyn
   let reason: string;
 
   if (freeLaneWillTry) {
-    primaryLane = "cerebras_free";
-    reason = `Free-lane first for surface=${surface} (Cerebras $0). Clouds [${clouds.join(",") || "none"}] then Anthropic if free-lane fails.`;
+    primaryLane = "free_lane";
+    reason = `Free-lane first for surface=${surface} (free lane $0 — Cerebras or the configured secondary). Clouds [${clouds.join(",") || "none"}] then Anthropic if free-lane fails.`;
   } else if (clouds.length > 0) {
     primaryLane = clouds[0]!;
     reason = `Claude credits via ${clouds.join("→")} (mode=${providerMode}, failover=${isCloudFailoverEnabled(env)}). Cash Anthropic last.`;
