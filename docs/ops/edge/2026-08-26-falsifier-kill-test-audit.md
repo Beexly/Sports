@@ -240,3 +240,113 @@ non-deterministic. Replaced with a seeded LCG.
 unapplied. Every change above makes a gate *harder* to pass; that one makes a gate *easier*, and
 it is the only remaining gate that was ever doing real work. It needs its own explicit decision,
 along with whether recorded verdicts get re-run under the repaired funnel.
+
+## 7 · YACoe 341-row kill: reproduction attempt and honest status
+
+Follow-up to §5b and to `2026-08-26-edge-program-verification.md` §2 row 8, which flagged the
+recorded kill as unreproducible but capped its own sweep before independently re-running it. This
+section is that re-run.
+
+**Verdict: does not reproduce. `MULTIPLICITY KILLED (e=0.000)` cannot be regenerated from anything
+committed to this repository — running the current converter on 341 harness-shaped rows yields
+`SURVIVOR` with `M` on the order of `1.6e+55`, not `KILLED`.**
+
+**a. The recorded claim, exactly.** `handoff/EDGE_LEDGER.md:207`:
+```
+[overnight-2026-08-24] EDGE HUNT RESUME — continued autonomously (no ask, no stop):
+- Falsifier (falsifyBind, 341 row real-data YACoe backtest, 2022-2025): MULTIPLICITY KILLED (e=0.000). SURVIVOR not claimed. Honest.
+```
+No script name, no data file path, no `minN`, no seed — anywhere in the ledger entry.
+
+**b. The commit that recorded it carries no evidence.** The entry landed in `ddf415fa4`
+(`git log --all --oneline --grep=YACoe -i`), authored `Sun Aug 23 17:30:55 2026 -0500`, message
+`[overnight-autonomous] falsify KILLED (YACoe real-data, multiplicity); ...`. `git show --stat
+ddf415fa4` touches exactly three files: `AGENTS.md` (+1 boilerplate line), `handoff/EDGE_LEDGER.md`
+(+6 lines — the claim quoted above), `memory/2026-08-24.md` (+1 summary line). **Zero code, zero
+data file, zero test, zero script in the commit that recorded the kill.** Nothing to re-run.
+
+**c. The converter's logic never changed.** `git log --all --follow --oneline -- packages/
+prediction-engine/src/edge-lab/yacoe-edge-candidate.ts` returns exactly one commit ever:
+`a2a2073ab` (`[wave3-w1] YACoe edge candidate: pre-registered, funneled`), authored
+`2026-08-23 14:12:08 -0500` — three hours *before* the kill commit. So the file being run today is
+the same file that (allegedly) produced `KILLED` then; `1c630fe1` (the shuffle/split fix) never
+touched `yacoe-edge-candidate.ts` or the multiplicity gate, confirmed by the same `--follow` log
+showing no second entry.
+
+**d. The one committed data artifact is the wrong shape and the wrong run.** `data/nflverse/`
+in this checkout contains exactly one file, `yacoe_real_backtest_results.json` (1855 bytes),
+added in `14d53794a` (`[wave3-r36] first real-data YACoe backtest run`) — a *different*, earlier,
+non-falsifier run (a Spearman-correlation study, `runId: "swarm-R36"`). Read in full: it is a
+JSON **object** of aggregate fields (`runId`, `correlations`, `verdict` prose, ...), not an array
+of `{season, week, playerId, yacAboveExpected}` rows. Its own metadata reads
+`buildSeasons: [2021,2022,2023]`, `valSeason: 2024`, `holdoutSeason: 2025`, `rowsTotal: 7351` —
+none of which is "341 rows, 2022-2025." Feeding it directly to `convertYacoeToBacktestRows()`
+throws immediately: `harnessRows.map is not a function` (confirmed by execution — the function
+signature at `yacoe-edge-candidate.ts:24-26` requires a `readonly {...}[]`, and this file is a
+plain object).
+
+**e. The real row-level data was never committed, at any point in history.**
+`git log --all --oneline --diff-filter=A -- 'data/nflverse/*'` returns only `14d53794a` (the
+summary file above). The row-level source R36 actually read,
+`data/nflverse/ngs_receiving_2021_2025_harness_rows.json` (7351 rows, per
+`EDGE_LEDGER.md:174`), and the raw `ngs_receiving.csv.gz` (981KB) it was built from, were never
+`git add`-ed — not gitignored, simply never committed — and do not exist on disk in this
+container either (`ls data/nflverse/` shows only the one JSON). There is no git ref, branch, or
+stash anywhere (`--all`) containing a row-level YACoe dataset of any size, 341 or otherwise.
+
+**f. Reproduction executed.** A throwaway script (`packages/prediction-engine/src/repro-yacoe-
+probe.ts`, `npx tsx`, deleted after the run — not part of this diff) did two things: (1) loaded
+the committed JSON and confirmed (d) by direct execution; (2) built 341 harness-shaped rows
+(`{season, week, playerId, yacAboveExpected}`, seasons 2022-2025, deterministic seeded LCG) and
+ran them through the *current, committed* `convertYacoeToBacktestRows()` and `falsifyBind(rows,
+{minN: 100, seed: 7})` — the same options named in the converter's own constants
+(`PRIOR_SEASON_KNOWN_AT_WEEK`, `MARKET_PROXY`). Observed output:
+```
+leakage:      PASS
+shuffle:      PASS   model LLR=0.3728/row beats 200/200 label permutations
+split:        PASS   firstHalfLLR=0.3608 secondHalfLLR=0.3847 signMatch=true
+multiplicity: PASS   e-process M=1.6122007819591628e+55 growing (peak supM=1.612e+55)
+overall:      SURVIVOR (all 4 PASS)
+```
+This independently reproduces the verification doc's own probe (`M=1.6122e+55`, same order and
+same leading digits) and directly contradicts the ledger's `MULTIPLICITY KILLED (e=0.000)`. Two
+probes, built independently, on the current committed code, both land on `SURVIVOR` with an
+e-value roughly 55 orders of magnitude above the kill threshold — not a borderline case that the
+§5b terminal-`M`-vs-`supM` ambiguity could flip either way (this run's `M` and `supM` agree).
+
+**g. Why this is not a coincidence of seed choice — a structural finding.** Read
+`yacoe-edge-candidate.ts:31-38`: `modelProb = clamp((yacAboveExpected + 2) / 4, 0.01, 0.99)` and
+`outcome = yacAboveExpected > 0 ? 1 : 0` are **both derived from the same input number**, and
+`modelProb` crosses `0.5` at exactly `yacAboveExpected = 0` — the same point where `outcome`
+flips. So `sign(modelProb − 0.5) === sign(yacAboveExpected) === (outcome === 1)` by construction,
+for every row, always (excepting the zero-measure case `yacAboveExpected = 0`). The converter
+cannot produce a row where the model disagrees with the outcome's sign. That makes a `KILLED`
+multiplicity verdict effectively unreachable for *any* well-formed input — real or synthetic — fed
+through this converter, which is an independent reason to distrust the original claim beyond the
+missing-evidence problem in (a)-(e): even if the true 341-row dataset resurfaces, this converter
+would need unusually degenerate data (e.g. `yacAboveExpected` clustered at exactly `0`, or a
+different converter entirely) to produce `KILLED`.
+
+**h. Precisely what's missing, vs. what's just different.** Not a different git ref of the
+converter (only one has ever existed). Not a different `falsifyBind` decision rule — the SURVIVOR
+margin here is too large for the §5b terminal-M/supM ambiguity to matter. Not primarily a data-
+size mismatch (341 is a specific, plausible number, and could not be checked against the
+committed JSON because that file carries no row array at all — the "does 341 match the row count"
+question in the task is unanswerable in this checkout, full stop, not merely "no"). What is
+missing is the actual row-level artifact the `ddf415fa4` commit claims was run: no filename, no
+script, no seed was ever recorded for it, no such file was ever committed to git (at any ref), and
+the one committed artifact under `data/nflverse/` is provably a different, earlier, differently-
+shaped run. Given (g), even recovering that exact file would only be dispositive if the original
+run used a materially different mapping from `yacAboveExpected` to `modelProb`/`outcome` than the
+one currently committed — because the current one structurally cannot KILL.
+
+**What would settle this.** A future session with (1) the original `ngs_receiving_2021_2025_
+harness_rows.json` or equivalent raw NGS rows, and (2) either the original (uncommitted, lost)
+falsifier-run script or confirmation that the committed `yacoe-edge-candidate.ts` was in fact what
+ran that night, would need to re-run the exact pipeline and compare. Absent (1), the honest status
+is: **the 2026-08-24 `KILLED (e=0.000)` verdict is unsupported by any artifact in this repository,
+contradicted by two independent reproductions on the current committed code (`SURVIVOR`,
+`M≈1.6e+55`), and structurally implausible under the current converter's construction (g).** This
+does not retroactively prove the original run never happened or that its 341 rows would survive if
+recovered — only that nothing in the repository today can confirm, reproduce, or falsify it either
+way.
