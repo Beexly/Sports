@@ -106,3 +106,85 @@ production**, and `packages/data-ingestion/src/odds-api-client.ts:409`
 3. Approve spending Odds API credits on `getHistoricalEventOdds` to acquire
    player-prop history through the licensed path. This is the single input that
    unblocks the priced test, and it is currently unbuilt rather than blocked.
+
+---
+
+# ADDENDUM — crawl4ai feed + teamrankings (reported 2026-08-26, NOT verified here)
+
+**Still a PROPOSAL. Nothing applied to the registry.**
+
+## What was reported, and what I could confirm
+
+A separate seat reports: container `crawl4ai_nfl_local` healthy, feed attempted,
+"5 crawls verified, max legal position held, boundary documented", with
+artifacts `FEATURE_STORE_ACTUAL.md`, `MODEL_ACTUAL.py`, `CALIBRATION_FEATURE.md`,
+`UNIFIED_INDEX.md`, `CRAWL4AI_FEED_LOG.md`, `CRAWL4AI_FEED_ATTEMPT.md`,
+`COMPLETE_A_B_C.md`, and `ENGINE_CRAWL_LIVE.zip` (81 files) at `Sports/reports/`.
+
+**I could verify NONE of it.** All eight are absent from this working tree, and
+absent from all 120 `origin` refs. `reports/` contains no zip. The working tree
+is clean. So this was produced in an environment this session cannot see, and
+per honesty law 1 I record it as reported, not as observed:
+`MISSING: all eight named crawl4ai artifacts`.
+
+## The legal reasoning already in this repo SUPPORTS the crawl
+
+Credit where due — `docs/ops/edge/backend-engine-data-sources.md:42-47` did the
+homework before any crawl ran:
+
+- `teamrankings.com` — "robots ALLOWS site content, Crawl-delay: 10 → legal slow
+  crawl of power-ratings/trend pages via crawl4ai (deferred to next lane)"
+- `sportsbookreview.com` — Cloudflare-hardened, deferred, odds API preferred
+- `pro-football-reference.com` — "Cloudflare challenge on even robots.txt → do
+  NOT"
+
+A crawl of teamrankings at a 10s delay, honoring a robots file that permits it,
+is a legitimate position and is NOT the evasion pattern. "Boundary documented"
+is consistent with respecting the PFR "do NOT". I opened by flagging this as a
+likely evasion concern; the repo's own analysis does not support that reading
+and I withdraw it.
+
+## But the ENFORCEMENT layer knows about neither the source nor the tool
+
+Verified in code this session:
+
+| gate | file | state | consequence |
+|---|---|---|---|
+| `teamrankings.com` | `source-rights-registry.ts` | **absent** | `checkClearance()` returns `allowed=false`, `SOURCE_NOT_REGISTERED` |
+| `crawl4ai` | `tool-registry.ts` `ToolId` union | **absent** | cannot be passed to `checkClearance()` at all — it does not typecheck |
+
+The `ToolId` union is exactly:
+`trafilatura | crawlee-python | playwright | autoscraper | easyspider | fetch-native | manual-operator`.
+
+So there is a gap between the doctrine (a documented, reasoned, legal crawl
+plan) and the mechanism (a clearance engine that would refuse it, and a tool
+enum that cannot express it). That gap is the finding. It is not an accusation
+about the crawl; it is that **the crawl's output cannot lawfully enter this
+repo until the registry can represent it**, because `checkClearance()` runs
+before every extraction and `allowed=false` stops the job.
+
+## Two owner decisions, proposed not applied
+
+1. **Add `teamrankings.com` to `source-rights-registry.ts`.** Candidate status
+   `approved_public_logged_off` on the cited basis (robots allows, Crawl-delay:
+   10, facts only, no login, no contract). Needs the standard cited memo:
+   ToS review, robots snapshot, and what may be extracted (power ratings and
+   trend figures are facts; site copy and any proprietary composite rating are
+   not).
+2. **Add `crawl4ai` to the Tool Registry `ToolId` union**, with its rate-limit
+   and robots-honoring configuration recorded. Note the standing law: evasion
+   tools must NOT be added. crawl4ai used at a robots-declared delay against a
+   robots-permitted path is not evasion; the same tool pointed at a
+   Cloudflare-challenged host would be. The registry entry should make the
+   permitted posture explicit so the distinction is enforced rather than
+   remembered.
+
+Until both land, any record from these crawls fails the envelope requirement in
+`wrapExtractedRecord()` and must not be merged.
+
+## Unchanged from the main memo
+
+The three sources assessed above — `nextgenstats.nfl.com`,
+`pro-football-reference.com`, `predictions.draftkings.com` — remain
+`allowed=false`. The Q2 pipeline in this branch used the licensed nflverse
+mirror (`allowed=true`) and needs none of this.
