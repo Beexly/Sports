@@ -14,6 +14,13 @@
  * competing Brier calculator.
  */
 
+import { expectedCalibrationError, type CalibrationSample } from "./probability-calibration.js";
+
+function round(value: number, digits = 4): number {
+  const s = 10 ** digits;
+  return Math.round(value * s) / s;
+}
+
 export interface CalibrationHealthResult {
   readonly healthy: boolean;
   /** Longest run of consecutive above-threshold days ending at the series' end. */
@@ -204,6 +211,117 @@ export function checkNegativeUpdateGuard(
     smoothedSeries,
     alert: alertActive
       ? `Candidate calibration map underperformed the incumbent (median cohort loss gain < 0) for more than ${safeRollback} consecutive round(s) — recommend rollback.`
+      : null,
+  };
+}
+
+// ============================================================
+// Phase-bucketed calibration audit — catches aggregation-masking
+// ============================================================
+//
+// Ported from arXiv:1906.05029 (Robberechts, Van Haaren & Davis, "A Bayesian
+// Approach to In-Game Win Probability in Soccer," KDD '21), §3.4/§4.2 Table 1:
+// their model's OVERALL ECE (0.011) hides badly-miscalibrated late-game tie
+// probabilities that only show up when ECE is evaluated per game phase
+// (H1/H2/final-10%) — baselines "calibrated overall" were markedly worse in
+// that window. See docs/ops/edge/extraction/2026-08-26-group-batch3.md §1 for
+// the full derivation and GSE's adaptation.
+//
+// GSE has no in-game phases (picks are pregame), so "phase" here generalizes
+// the paper's own "time-to-event bucketing" framing: any caller-supplied
+// label a pick's calibration might plausibly vary by — time-to-kickoff
+// window, sport, pickType, book count, whatever the fit-report runbook wants
+// to slice on. This is a pure audit surface: it fires no gate and flips
+// nothing; it exists so a C-series calibration flip decision looks at the
+// phase-split view, not just the headline number that can mask exactly the
+// failure this paper measured.
+
+export interface PhaseSample extends CalibrationSample {
+  /** Caller-defined bucket label — e.g. a time-to-kickoff window, sport, or pickType. */
+  readonly phase: string;
+}
+
+export interface PhaseBucketRow {
+  readonly phase: string;
+  readonly n: number;
+  readonly ece: number;
+  readonly brier: number;
+  readonly meanForecast: number;
+  readonly observedRate: number;
+  /** This phase's ECE exceeds `floor` on its own — regardless of what the overall ECE shows. Only set when `n >= minPhaseSamples` (a thin phase's ECE is too noisy to act on). */
+  readonly exceedsFloor: boolean;
+}
+
+export interface PhaseBucketedAuditResult {
+  readonly overallEce: number;
+  readonly overallBrier: number;
+  readonly floor: number;
+  readonly phases: readonly PhaseBucketRow[];
+  /**
+   * True exactly when the overall ECE is within `floor` but at least one
+   * phase (with enough samples to trust) exceeds it — the aggregation-masking
+   * failure mode this audit exists to catch. False when the overall is
+   * ALSO over the floor: that failure is already visible without this audit.
+   */
+  readonly masked: boolean;
+  readonly alert: string | null;
+}
+
+/**
+ * Group `samples` by `phase`, compute ECE and raw Brier per group alongside
+ * the overall figures, and flag whether any phase hides behind an
+ * acceptable-looking overall average. `floor` defaults to the platform's ECE
+ * eligibility floor (0.05, `2026-08-26-CALIBRATION-FIT-REPORT.md`).
+ * `minPhaseSamples` (default 20) withholds the `exceedsFloor`/`masked`
+ * verdict for phases too thin to trust — reported, not flagged.
+ */
+export function phaseBucketedCalibrationAudit(
+  samples: readonly PhaseSample[],
+  floor = 0.05,
+  bins = 10,
+  minPhaseSamples = 20,
+): PhaseBucketedAuditResult {
+  if (samples.length === 0) {
+    return { overallEce: 0, overallBrier: 0, floor, phases: [], masked: false, alert: null };
+  }
+
+  const overallEce = expectedCalibrationError(samples, bins);
+  const overallBrier = round(samples.reduce((sum, s) => sum + (s.p - s.y) ** 2, 0) / samples.length);
+
+  const byPhase = new Map<string, PhaseSample[]>();
+  for (const s of samples) {
+    const arr = byPhase.get(s.phase) ?? [];
+    arr.push(s);
+    byPhase.set(s.phase, arr);
+  }
+
+  const phases: PhaseBucketRow[] = [...byPhase.entries()]
+    .map(([phase, group]) => {
+      const n = group.length;
+      const ece = expectedCalibrationError(group, bins);
+      return {
+        phase,
+        n,
+        ece,
+        brier: round(group.reduce((sum, s) => sum + (s.p - s.y) ** 2, 0) / n),
+        meanForecast: round(group.reduce((sum, s) => sum + s.p, 0) / n),
+        observedRate: round(group.reduce((sum, s) => sum + s.y, 0) / n),
+        exceedsFloor: n >= minPhaseSamples && ece > floor,
+      };
+    })
+    .sort((a, b) => (a.phase < b.phase ? -1 : a.phase > b.phase ? 1 : 0));
+
+  const flagged = phases.filter((p) => p.exceedsFloor);
+  const masked = overallEce <= floor && flagged.length > 0;
+
+  return {
+    overallEce,
+    overallBrier,
+    floor,
+    phases,
+    masked,
+    alert: masked
+      ? `Overall ECE ${overallEce.toFixed(4)} is within the ${floor} floor, but phase(s) ${flagged.map((p) => p.phase).join(", ")} exceed it — aggregation is masking a phase-specific miscalibration.`
       : null,
   };
 }

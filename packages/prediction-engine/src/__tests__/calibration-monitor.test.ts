@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { checkCalibrationHealth, checkNegativeUpdateGuard, type CohortGain } from "../calibration-monitor.js";
+import {
+  checkCalibrationHealth,
+  checkNegativeUpdateGuard,
+  phaseBucketedCalibrationAudit,
+  type CohortGain,
+  type PhaseSample,
+} from "../calibration-monitor.js";
 
 describe("checkCalibrationHealth", () => {
   it("is healthy on an empty series", () => {
@@ -158,5 +164,78 @@ describe("checkNegativeUpdateGuard", () => {
     expect(result.smoothedSeries[0]).toBeCloseTo(0.1, 10);
     expect(result.smoothedSeries[1]).toBeCloseTo(-0.05, 10);
     expect(result.smoothedSeries[2]).toBeCloseTo(0.05, 10);
+  });
+});
+
+describe("phaseBucketedCalibrationAudit", () => {
+  it("returns a zeroed, unmasked result on empty input", () => {
+    const result = phaseBucketedCalibrationAudit([]);
+    expect(result.overallEce).toBe(0);
+    expect(result.masked).toBe(false);
+    expect(result.alert).toBeNull();
+    expect(result.phases).toEqual([]);
+  });
+
+  it("stays unmasked when every phase is well-calibrated", () => {
+    const samples: PhaseSample[] = [
+      ...Array.from({ length: 30 }, () => ({ p: 0.6, y: 1 as const, phase: "A" })),
+      ...Array.from({ length: 20 }, () => ({ p: 0.6, y: 0 as const, phase: "A" })),
+      ...Array.from({ length: 30 }, () => ({ p: 0.6, y: 1 as const, phase: "B" })),
+      ...Array.from({ length: 20 }, () => ({ p: 0.6, y: 0 as const, phase: "B" })),
+    ];
+    const result = phaseBucketedCalibrationAudit(samples, 0.05);
+    expect(result.masked).toBe(false);
+    expect(result.phases.every((p) => !p.exceedsFloor)).toBe(true);
+  });
+
+  it("flags a phase-specific miscalibration masked by a perfectly-calibrated overall average", () => {
+    // Both phases forecast the SAME p=0.55 (one forecast bin), so their
+    // opposite-direction errors cancel exactly when pooled: overall observed
+    // rate = (75+35)/200 = 0.55, matching the forecast, ECE ~ 0. Split by
+    // phase, each is badly miscalibrated in opposite directions (|gap|=0.20).
+    const phaseA: PhaseSample[] = [
+      ...Array.from({ length: 75 }, () => ({ p: 0.55, y: 1 as const, phase: "A" })),
+      ...Array.from({ length: 25 }, () => ({ p: 0.55, y: 0 as const, phase: "A" })),
+    ];
+    const phaseB: PhaseSample[] = [
+      ...Array.from({ length: 35 }, () => ({ p: 0.55, y: 1 as const, phase: "B" })),
+      ...Array.from({ length: 65 }, () => ({ p: 0.55, y: 0 as const, phase: "B" })),
+    ];
+    const result = phaseBucketedCalibrationAudit([...phaseA, ...phaseB], 0.05);
+    expect(result.overallEce).toBeCloseTo(0, 4);
+    expect(result.masked).toBe(true);
+    expect(result.alert).toContain("masking");
+    const a = result.phases.find((p) => p.phase === "A")!;
+    const b = result.phases.find((p) => p.phase === "B")!;
+    expect(a.ece).toBeCloseTo(0.2, 4);
+    expect(b.ece).toBeCloseTo(0.2, 4);
+    expect(a.exceedsFloor).toBe(true);
+    expect(b.exceedsFloor).toBe(true);
+    expect(a.observedRate).toBeCloseTo(0.75, 4);
+    expect(b.observedRate).toBeCloseTo(0.35, 4);
+  });
+
+  it("does not flag a thin phase below minPhaseSamples, even with a real gap", () => {
+    const samples: PhaseSample[] = [
+      ...Array.from({ length: 3 }, () => ({ p: 0.5, y: 1 as const, phase: "rare" })),
+      ...Array.from({ length: 100 }, () => ({ p: 0.5, y: 1 as const, phase: "common" })),
+      ...Array.from({ length: 100 }, () => ({ p: 0.5, y: 0 as const, phase: "common" })),
+    ];
+    const result = phaseBucketedCalibrationAudit(samples, 0.05, 10, 20);
+    const rare = result.phases.find((p) => p.phase === "rare")!;
+    expect(rare.n).toBe(3);
+    expect(rare.ece).toBeGreaterThan(0.05); // genuinely far off in isolation
+    expect(rare.exceedsFloor).toBe(false); // but withheld — too thin to trust
+  });
+
+  it("is not 'masked' when the overall ECE is already over the floor (nothing hidden)", () => {
+    const samples: PhaseSample[] = [
+      ...Array.from({ length: 100 }, () => ({ p: 0.5, y: 1 as const, phase: "A" })),
+    ];
+    const result = phaseBucketedCalibrationAudit(samples, 0.05);
+    expect(result.overallEce).toBeGreaterThan(0.05);
+    expect(result.masked).toBe(false); // the failure is already visible overall
+    const a = result.phases[0]!;
+    expect(a.exceedsFloor).toBe(true); // still correctly reported, just not "masked"
   });
 });

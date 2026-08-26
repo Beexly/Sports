@@ -1924,11 +1924,18 @@ export type { TeamIndexRegistry, AssignTeamIndexResult } from "./team-index-regi
 
 // Consecutive-day Brier health check. Pure/DB-agnostic — see
 // apps/web/lib/ops/calibration-regression-snapshot.ts for the DB-backed series builder.
-export { checkCalibrationHealth, checkNegativeUpdateGuard } from "./calibration-monitor.js";
+export {
+  checkCalibrationHealth,
+  checkNegativeUpdateGuard,
+  phaseBucketedCalibrationAudit,
+} from "./calibration-monitor.js";
 export type {
   CalibrationHealthResult,
   CohortGain,
   NegativeUpdateGuardResult,
+  PhaseSample,
+  PhaseBucketRow,
+  PhaseBucketedAuditResult,
 } from "./calibration-monitor.js";
 
 // Calibration-snapshot regression comparison. Pure/DB-agnostic — reuses
