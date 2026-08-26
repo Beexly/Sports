@@ -265,3 +265,48 @@ export async function loadSettledShadowSignals(
   if (rows === null) return [];
   return rows.filter((r): r is SettledShadowRow => r.outcome !== null);
 }
+
+export interface SettledShadowRowForFalsifier extends SettledShadowRow {
+  readonly evaluatedAt: Date;
+  readonly settledAt: Date;
+}
+
+/**
+ * Settled shadow rows in `[since, until)`, WITH the two timestamps
+ * `@sports/prediction-engine`'s `convertShadowSignalsToBacktestRows` needs to
+ * derive a leak-safe chronological ordering. `loadSettledShadowSignals` above
+ * omits them (its callers only need the probabilities), so this is a
+ * separate, additive query rather than a widening of that one's contract.
+ *
+ * ALL of `[since, until)`, no page limit — the falsifier's global rank
+ * ordering (see the converter's own docblock) is only correct when the whole
+ * corpus for the run is passed in one batch; a paginated caller that ran the
+ * falsifier per-page would get a different, non-comparable rank space each
+ * time.
+ */
+export async function loadSettledShadowSignalsForFalsifier(
+  since: Date,
+  until: Date = new Date(),
+): Promise<readonly SettledShadowRowForFalsifier[]> {
+  const rows = await db.shadowSignal
+    .findMany({
+      where: { outcome: { not: null }, settledAt: { gte: since, lt: until } },
+      select: {
+        gameId: true,
+        modelVersion: true,
+        shadowProb: true,
+        marketProb: true,
+        liveConfidence: true,
+        outcome: true,
+        evaluatedAt: true,
+        settledAt: true,
+      },
+      orderBy: { settledAt: "asc" },
+    })
+    .catch(() => null);
+
+  if (rows === null) return [];
+  return rows.filter(
+    (r): r is SettledShadowRowForFalsifier => r.outcome !== null && r.settledAt !== null,
+  );
+}

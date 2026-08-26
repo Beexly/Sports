@@ -2206,6 +2206,20 @@ export {
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
 
+// Falsifier — leakage/shuffle/split/multiplicity kill tests over a bind's
+// backtest rows (packages/prediction-engine/src/edge-lab/falsify.ts). Never
+// previously exported from this package's public API: every prior consumer
+// (yacoe-edge-candidate.ts) lived inside this same package and imported it by
+// relative path. The ShadowSignal falsifier bridge (below) is the first
+// consumer outside this package, which is what surfaced the gap.
+export { falsifyBind } from "./edge-lab/falsify.js";
+export type {
+  BacktestRow,
+  KillResult,
+  FalsifyOutput,
+  FalsifyOpts,
+} from "./edge-lab/falsify.js";
+
 // Independent modelProb aggregation (C-28 bottleneck, docs/edge/MODELPROB_DESIGN.md).
 // Pure, market-free (priced:false), synthetic-fixture-tested only — see the
 // module's own header for the design-doc status and the documented resolution
@@ -2226,3 +2240,14 @@ export type {
   AggregateOpts,
   AggregationResult,
 } from "./edge-lab/modelprob-aggregation.js";
+
+// ShadowSignal -> falsify.ts BacktestRow bridge (C-67 audit rank #2): the
+// missing piece to run the independent shadowProb, accumulating in production
+// since ShadowSignal's cron went live, through the falsifier's kill tests.
+// See the module header for why this is NOT the same computation as
+// apps/web/lib/ops/shadow-vs-live-report.ts's weekly comparison report.
+export {
+  SHADOW_SIGNAL_BACKTEST_METHOD_TAG,
+  convertShadowSignalsToBacktestRows,
+} from "./edge-lab/shadow-signal-backtest.js";
+export type { ShadowSignalInput, ShadowConversionResult } from "./edge-lab/shadow-signal-backtest.js";
