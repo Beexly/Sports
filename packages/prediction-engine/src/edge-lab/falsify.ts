@@ -21,6 +21,24 @@ export interface FalsifyOutput {
   readonly split: KillResult;
   readonly multiplicity: KillResult;
   readonly overall: { readonly verdict: "SURVIVOR" | "KILLED" | "STARVED" | "PARKED"; readonly reason: string };
+  /**
+   * Honesty report on what `marketProb` actually was, not what it defaulted to.
+   *
+   * `marketProb` is optional on `BacktestRow` and every internal statistic
+   * clamps a missing value to 0.5. That default exists so a caller can run the
+   * funnel before market data is wired up — it was never meant to make a
+   * corpus with NO market data indistinguishable from one with real market
+   * data. It did exactly that once (docs/ops/edge/2026-08-26-edge-program-verification.md
+   * §2 row 8): a real run was graded entirely against a uniform 0.5 baseline
+   * and the record gave no way to tell.
+   */
+  readonly marketDataCoverage: {
+    /** Rows where the caller supplied a finite marketProb — not the default. */
+    readonly rowsWithMarketProb: number;
+    readonly totalRows: number;
+    /** True when EVERY row silently used the 0.5 default. See detail note in overall.reason. */
+    readonly allDefaulted: boolean;
+  };
 }
 
 export interface FalsifyOpts {
@@ -86,6 +104,22 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
   const o = defaultOpts(opts);
   const n = rows.length;
 
+  // MARKET DATA COVERAGE — computed before anything else so both return paths
+  // (starved and main) can attach it and warn in `overall.reason`. A row
+  // "has" marketProb only when the caller supplied a finite number; every
+  // other value silently became the 0.5 clamp used throughout this function.
+  const rowsWithMarketProb = rows.filter(
+    (r) => typeof r.marketProb === "number" && Number.isFinite(r.marketProb),
+  ).length;
+  const allDefaulted = n > 0 && rowsWithMarketProb === 0;
+  const marketDataCoverage = { rowsWithMarketProb, totalRows: n, allDefaulted };
+  const marketWarning = allDefaulted
+    ? ` [WARNING: 0/${n} rows carried real marketProb — every market-relative ` +
+      `statistic in this run (leakage excepted) was computed against a uniform ` +
+      `0.5 baseline, not real market prices. A SURVIVOR here means "beat a coin ` +
+      `flip", not "beat the market".]`
+    : "";
+
   // LEAKAGE
   const leakRow = rows.find((r) => r.knownAtWeek >= r.outcomeWeek);
   const leakage: KillResult = leakRow
@@ -121,13 +155,14 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     const overallStarvedVerdict: "PARKED" | "KILLED" = (leakage.verdict === "KILLED") ? "KILLED" : "PARKED";
     const overallReason = (leakage.verdict === "KILLED")
       ? leakage.detail
-      : `starved bind (n=${n} < minN=${o.minN}) — e-value preserved e=${eValue.toFixed(3)}; gates did not refute`;
+      : `starved bind (n=${n} < minN=${o.minN}) — e-value preserved e=${eValue.toFixed(3)}; gates did not refute${marketWarning}`;
     return {
       leakage: starvedLeak,
       shuffle: { verdict: "PASS" as const, detail: `unrun (n < minN) — e=${eValue.toFixed(3)}` },
       split: { verdict: "PASS" as const, detail: `unrun (n < minN) — e=${eValue.toFixed(3)}` },
       multiplicity: { verdict: "PASS" as const, detail: `unrun (n < minN) — e=${eValue.toFixed(3)}` },
       overall: { verdict: overallStarvedVerdict, reason: overallReason },
+      marketDataCoverage,
     };
   }
 
@@ -249,12 +284,12 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
   const overallVerdict: FalsifyOutput["overall"]["verdict"] =
     killed.length > 0 ? "KILLED" : starved.length > 0 ? "PARKED" : "SURVIVOR";
   const reason =
-    killed.length > 0
+    (killed.length > 0
       ? killed.map((k) => k.detail).join("; ")
       : starved.length > 0
         ? `gates did not refute, but ${starved.length} gate(s) carried no information: ` +
           starved.map((k) => k.detail).join("; ")
-        : "all 4 PASS";
+        : "all 4 PASS") + marketWarning;
 
   return {
     leakage,
@@ -262,5 +297,6 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     split,
     multiplicity,
     overall: { verdict: overallVerdict, reason },
+    marketDataCoverage,
   };
 }

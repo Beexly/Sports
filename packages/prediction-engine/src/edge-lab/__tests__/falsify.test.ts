@@ -55,6 +55,56 @@ function signalRows(n = 200): BacktestRow[] {
   return out;
 }
 
+describe("falsify — market data coverage honesty", () => {
+  // Regression for the exact defect the C-67 edge-program-verification audit
+  // found in the recorded YACoe kill: a corpus with NO market data silently
+  // ran against the 0.5 clamp and the record gave no way to tell a real market
+  // test from a coin-flip-baseline test. This is reporting-only — no verdict
+  // changes on account of it.
+  function omitMarketProb(rows: readonly BacktestRow[]): BacktestRow[] {
+    return rows.map(({ marketProb: _drop, ...rest }) => rest as BacktestRow);
+  }
+
+  it("flags allDefaulted=true and warns in overall.reason when every row omits marketProb", () => {
+    const rows = omitMarketProb(signalRows(200));
+    const res = falsifyBind(rows, { minN: 10, shuffleB: 50, seed: 7 });
+    expect(res.marketDataCoverage).toEqual({ rowsWithMarketProb: 0, totalRows: 200, allDefaulted: true });
+    expect(res.overall.reason).toContain("0/200 rows carried real marketProb");
+    expect(res.overall.reason).toContain("coin flip");
+  });
+
+  it("does not warn when every row carries a real marketProb", () => {
+    const rows = signalRows(200); // synRow-style fixtures always set marketProb explicitly
+    const res = falsifyBind(rows, { minN: 10, shuffleB: 50, seed: 7 });
+    expect(res.marketDataCoverage).toEqual({ rowsWithMarketProb: 200, totalRows: 200, allDefaulted: false });
+    expect(res.overall.reason).not.toContain("WARNING");
+  });
+
+  it("reports partial coverage honestly without flagging allDefaulted", () => {
+    const rows = signalRows(200);
+    const half = omitMarketProb(rows.slice(0, 100)).concat(rows.slice(100));
+    const res = falsifyBind(half, { minN: 10, shuffleB: 50, seed: 7 });
+    expect(res.marketDataCoverage).toEqual({ rowsWithMarketProb: 100, totalRows: 200, allDefaulted: false });
+    // Partial coverage still isn't the "every row defaulted" case — no coin-flip warning,
+    // since some rows did carry real market prices. Not claiming this is fully honest,
+    // only that it isn't the specific failure mode being guarded against here.
+    expect(res.overall.reason).not.toContain("WARNING");
+  });
+
+  it("flags allDefaulted on the STARVED/PARKED early-return path too", () => {
+    const rows = omitMarketProb(signalRows(5)); // n < minN
+    const res = falsifyBind(rows, { minN: 100, shuffleB: 50, seed: 7 });
+    expect(res.overall.verdict).toBe("PARKED");
+    expect(res.marketDataCoverage.allDefaulted).toBe(true);
+    expect(res.overall.reason).toContain("0/5 rows carried real marketProb");
+  });
+
+  it("empty input reports zero coverage without allDefaulted (nothing to default)", () => {
+    const res = falsifyBind([], { minN: 10 });
+    expect(res.marketDataCoverage).toEqual({ rowsWithMarketProb: 0, totalRows: 0, allDefaulted: false });
+  });
+});
+
 describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
   it("clean data passes all 4: SURVIVOR", () => {
     const rows = signalRows(200);
