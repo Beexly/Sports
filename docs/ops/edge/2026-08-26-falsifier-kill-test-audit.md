@@ -113,3 +113,38 @@ review.
 
 Until then, read a `SURVIVOR` as a single-gate (e-process) result and say so wherever it is
 cited.
+
+## 6 · Why this was NOT applied in the same pass — the acceptance tests encode the defect too
+
+Applying the §5 fix requires **changing the falsifier's own acceptance tests**, which is exactly
+the point at which an agent should stop and surface rather than proceed. Three of them, in
+`__tests__/falsify.test.ts`:
+
+**a. `"pure-noise outcomes fail shuffle"` asserts nothing.** Its assertion is
+
+```ts
+expect(["PASS", "KILLED"].includes(res.shuffle.verdict)).toBe(true);
+```
+
+In the `n >= minN` path, `shuffle` is assigned exactly one of `PASS` or `KILLED`
+(`falsify.ts:106–108`) — so this is a tautology. A test named for the kill it verifies, which
+cannot fail, is the same class of defect as the inert test it is guarding.
+
+**b. `"sign-flipped second half fails split"` flips the outcome base rate, not the model edge.**
+First half is `outcome:1, modelProb:0.7`; second is `outcome:0, modelProb:0.3` — a model that is
+*right in both halves*. Under a model-aware split, per-row LLR is `log(0.7/0.5) = +0.336` in
+**both** halves — stable and positive, so it would (correctly) PASS, contradicting the test's
+stated expectation of `KILLED`. Making split model-aware means rewriting this fixture to flip the
+model's edge (e.g. second half `outcome:0, modelProb:0.7`), not the base rate.
+
+**c. `"clean data passes all 4: SURVIVOR"` uses a degenerate outcome vector.** `cleanRows()` sets
+`outcome: 1` on every row. A label-permutation test is **vacuous** when the outcome vector is
+constant — every permutation is identical to the original — so the repaired shuffle test still
+could not discriminate on this fixture. It also asks the funnel to bless a model claiming `0.65`
+where the outcome is always `1`, which is badly calibrated.
+
+Each of these is a judgment call about what the funnel should *mean* — one-sided vs two-sided
+statistic, how to score a degenerate outcome vector, whether `split` becomes model-aware, and
+whether any recorded verdict needs re-running. Rewriting acceptance tests so a self-authored
+change passes is the pattern the Honesty Laws exist to prevent, even when the new semantics are
+better. **Founder/owner call, with this audit as the memo.**
