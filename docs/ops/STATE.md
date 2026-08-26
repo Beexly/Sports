@@ -70,4 +70,15 @@ this file; where they disagree with it, they win.
   C-74 falsifier + C-36 wiring guard + modelProb + acceptance grid + Proof nav.
 - **PR #672** (`claude/sonnet-max-leverage-prompt-433yia`) — open draft,
   `mergeable_state: clean`, 209 files. Not merged by an agent; needs a human.
-- CI: Actions free pool exhausted 2026-08-26. The local verify block is the gate.
+- **CI cannot run — verified, not assumed.** The last `ci.yml` run repo-wide on
+  ANY branch is run 4299 at 2026-08-26T17:44Z (this PR, on the pre-fix sha).
+  Nothing has run since 17:54Z, including `claude/gse-business-prompts-zexw2w`,
+  which had been green every ~40min until then. Consistent with the Actions
+  free pool being exhausted 2026-08-26. A push with no `[skip ci]`
+  (`96ba65ab6`) still produced no run, so `[skip ci]` is NOT the cause — that
+  was a plausible mechanism I published as fact and then corrected on the PR.
+  The local verify block is the gate. Absence of a CI signal on this head is
+  neither pass nor fail.
+- Practice note that still stands: `[skip ci]` is evaluated on the HEAD commit
+  of a push, so a docs commit carrying it will suppress the run for code
+  commits pushed alongside it. Never `[skip ci]` the head of a mixed push.
