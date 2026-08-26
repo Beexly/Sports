@@ -1,6 +1,29 @@
 # Falsifier audit — two of the four kill tests are inert
 
-**Date:** 2026-08-26 · **Status:** FINDING, reproduced live. No code changed in this pass.
+**Date:** 2026-08-26 · **Status:** §5 fix **APPLIED** (owner-approved 2026-08-26). §5b decision
+rule still **HELD** — see the status note below. Findings below are preserved as written, in the
+past tense where they have been repaired, because the record of what was wrong is the point.
+
+> **Status note (post-fix).** §1–§4 describe the defect as found. §5 is the fix that was proposed
+> and has now been applied. §5b's *reporting* half was applied; its *decision-rule* half
+> (terminal `M` → `supM`) is deliberately **not** applied, because unlike everything else here it
+> would make a gate **easier** to pass. That direction needs its own explicit call.
+>
+> Verification that the repair works, run against the same probe as §3, after the fix:
+>
+> ```
+> NOISE     shuffle=KILLED   split=PASS    overall=KILLED
+> ORACLE    shuffle=PASS     split=PASS    overall=SURVIVOR
+> INVERTED  shuffle=KILLED   split=PASS    overall=KILLED
+>
+> shuffle details identical across all three? false
+> split   details identical across all three? false
+> ```
+>
+> Before the fix both lines printed `true` and all three rows showed `shuffle=PASS split=PASS`.
+> (`split` passing on all three is correct: it tests *stability*, not skill — a consistently bad
+> model is stable, and shuffle plus multiplicity are what kill it. Its details now differ, which
+> is what proves it reads `modelProb` at all.)
 **Subject:** `packages/prediction-engine/src/edge-lab/falsify.ts` (arrived on the main lineage
 with the `hermes/w2-audit-settlement` integration).
 
@@ -97,28 +120,83 @@ for the noise model and the perfect oracle.
   funnel, so this is a correctness debt to repay before the next preregistered program, not a
   live incident.
 
-## 5 · Proposed fix (NOT applied here — separate pass, separate review)
+## 5 · The fix — APPLIED (owner-approved 2026-08-26)
 
-Deliberately not bundled with the 138-file integration merge that surfaced it: changing these
-semantics changes what every future verdict means, and it deserves its own diff and its own
-review.
+All four steps landed, plus a fifth the work surfaced:
 
-1. Give the permutation test a statistic that reads `modelProb` — e.g. the log-likelihood ratio
-   already computed for `simpleE`, or the rank correlation between `modelProb` and `outcome`.
-2. Permute the **outcome labels against the predictions**, not the row array, so the null
-   ("predictions carry no information about outcomes") is the one actually being tested.
-3. Make SPLIT compare a model-dependent statistic per half, not the outcome base rate.
-4. Add a regression test asserting the property this audit used: a pure-noise model and a
-   perfect oracle **must not** produce identical shuffle/split verdicts.
+1. ✅ The permutation test now decides on `meanLogLikRatio` — the mean per-row log-likelihood
+   ratio of model against market, `(1/n) Σ [y·log(p/q) + (1−y)·log((1−p)/(1−q))]`. It reads
+   `modelProb`. `effectSize` survives for **reporting only**, with a docblock saying so.
+2. ✅ SHUFFLE permutes the **outcome labels** against fixed `(modelProb, marketProb)` pairs, so
+   the null actually under test is "the model's probabilities carry no information about the
+   outcomes". It is **one-sided** (`origStat >= permStat`) by design: a two-sided `|statistic|`
+   comparison would credit a perfectly *anti*-predictive model, which is the opposite of what an
+   edge funnel should accept.
+3. ✅ SPLIT scores each chronological half with that same model-aware statistic and compares
+   signs, rather than asking whether the outcome base rate sits on the same side of the market.
+4. ✅ Regression test added (`"shuffle and split must distinguish a noise model from an oracle on
+   identical outcomes"`) holding the outcome column fixed and varying only `modelProb`.
+5. ✅ **Degenerate outcome vectors** — not in the original proposal, surfaced while fixing §6c. A
+   label-permutation test is vacuous when every outcome is identical: each permutation equals the
+   original. Returning `PASS` there would be the same silent rubber-stamp the original bug
+   produced, so SHUFFLE now returns `STARVED` with an explicit reason, and `overall` treats an
+   uninformative gate as `PARKED` — never `SURVIVOR`. The verdict ordering is now: any `KILLED`
+   refutes outright; else any `STARVED` means the funnel never actually tested the bind
+   (`PARKED`); else `SURVIVOR`.
 
-Until then, read a `SURVIVOR` as a single-gate (e-process) result and say so wherever it is
-cited.
+## 5b · Third finding: the multiplicity gate reads terminal `M`, not the Ville statistic `supM`
 
-## 6 · Why this was NOT applied in the same pass — the acceptance tests encode the defect too
+Raised by CodeRabbit on PR #672 and **verified against the code and empirically** — it is correct,
+and it is the same family as §2 (the funnel's statistical semantics), so it is recorded here.
 
-Applying the §5 fix requires **changing the falsifier's own acceptance tests**, which is exactly
-the point at which an agent should stop and surface rather than proceed. Three of them, in
-`__tests__/falsify.test.ts`:
+`falsify.ts` gates multiplicity on `epRes.M > 1` — the **terminal** wealth of the e-process. But
+`bernoulli-eprocess.ts`'s own header (line 11) states the Ville result as
+`P(exists t: M_t >= 1/alpha) <= alpha` and says, verbatim:
+
+> `supM` is the statistic, not only terminal M.
+
+The module exports `supM` (the running maximum) alongside `M`; the gate ignored it. A bind whose
+wealth crosses the evidence threshold early and decays afterwards is therefore reported KILLED on
+its terminal value.
+
+Reproduced: 120 rows where the model is right (`outcome:1, modelProb:0.80, marketProb:0.50`)
+followed by 120 where it is wrong (`outcome:0`, same probabilities):
+
+```
+supM (Ville statistic) = 3.122e+24     <- crossed 1/alpha = 20 by 23 orders of magnitude
+M    (terminal wealth) = 5.516e-24
+falsifyBind multiplicity: KILLED
+  detail: e-value decayed M=0.000 (not growing/survivor)
+```
+
+**Two separable problems, and they were handled differently.**
+
+1. **The decision rule** (terminal `M` vs `supM`). Reading terminal `M` is still a valid level-α
+   test by Markov, just not anytime-valid and strictly less powerful. Critically its error
+   direction is **conservative** — it can over-kill, never over-pass — so it cannot manufacture a
+   false SURVIVOR. It is therefore left in force pending the same owner decision as §5, and a
+   test now pins the current behavior so any change to it is deliberate.
+
+2. **The record.** This half was fixed immediately, because it is a pure honesty defect with no
+   verdict consequences: the old detail read only `e-value decayed M=0.000`, which is
+   *indistinguishable* from a bind that never accumulated any evidence at all. A run that peaked
+   at `supM=3e24` and one that never moved produced the same recorded string. `supM` is now
+   carried in the detail on both the PASS and KILLED branches, so a crossing can never again be
+   silently erased.
+
+**Consequence for verdicts already on record:** any recorded `e=0.000` is ambiguous between
+"never had evidence" and "had decisive evidence, then decayed" — the old detail string cannot
+distinguish them. This is *not* a claim that any specific recorded verdict (YACoe included) was
+wrong; re-running those binds with `supM` reporting is what would settle it, and that needs the
+real data this container does not have.
+
+## 6 · The acceptance tests encoded the defect too — all three now repaired
+
+This is why the fix waited for an owner call: applying it required **changing the falsifier's own
+acceptance tests**, and rewriting acceptance tests so a self-authored change passes is the pattern
+the Honesty Laws exist to prevent. With approval given, all three were repaired — and each one
+failed exactly as predicted below when the §5 fix landed, which is itself the confirmation that
+the analysis was right. Three of them, in `__tests__/falsify.test.ts`:
 
 **a. `"pure-noise outcomes fail shuffle"` asserts nothing.** Its assertion is
 
@@ -143,8 +221,22 @@ constant — every permutation is identical to the original — so the repaired 
 could not discriminate on this fixture. It also asks the funnel to bless a model claiming `0.65`
 where the outcome is always `1`, which is badly calibrated.
 
-Each of these is a judgment call about what the funnel should *mean* — one-sided vs two-sided
-statistic, how to score a degenerate outcome vector, whether `split` becomes model-aware, and
-whether any recorded verdict needs re-running. Rewriting acceptance tests so a self-authored
-change passes is the pattern the Honesty Laws exist to prevent, even when the new semantics are
-better. **Founder/owner call, with this audit as the memo.**
+**How each was repaired:**
+
+- **(a)** now asserts `shuffle.verdict === "KILLED"` on a genuinely independent model, built from
+  a seeded LCG rather than an outcome-derived `modelProb`. The old fixture was a perfect oracle
+  mislabelled "noise".
+- **(b)** the fixture now flips the **model's** edge — first half `outcome:1/modelProb:0.7`
+  (LLR `+0.336`), second half `outcome:0/modelProb:0.7` (LLR `−0.511`) — so the signs genuinely
+  disagree and split kills it, asserting `signMatch=false`.
+- **(c)** split in two: the degenerate `cleanRows()` fixture now has its own test asserting
+  `shuffle=STARVED` / `overall=PARKED`, and a new non-degenerate `signalRows()` fixture carries
+  the `SURVIVOR` case.
+
+Also fixed while here: `Math.random()` in a falsifier acceptance test made the funnel's own suite
+non-deterministic. Replaced with a seeded LCG.
+
+**Still open — the one call not taken.** §5b's decision rule (terminal `M` → `supM`) remains
+unapplied. Every change above makes a gate *harder* to pass; that one makes a gate *easier*, and
+it is the only remaining gate that was ever doing real work. It needs its own explicit decision,
+along with whether recorded verdicts get re-run under the repaired funnel.
