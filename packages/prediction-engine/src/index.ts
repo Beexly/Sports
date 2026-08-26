@@ -302,6 +302,26 @@ export type {
   SelectedSliceEceResult,
 } from "./probability-calibration.js";
 
+// R&D — hierarchical empirical-Bayes state-conditioned rate teacher (ported
+// from arXiv:2607.00164's reward-target ablation). Scores any forecaster
+// (raw confidence, a calibration map, or market q) for whether it carries
+// information beyond state — the convergence test behind the Brier-floor
+// diagnosis. NOT wired into live scoring; offline eval only.
+export {
+  fitEmpiricalRateTeacher,
+  binIndexFromEdges,
+  teacherGapReport,
+} from "./empirical-rate-teacher.js";
+export type {
+  TeacherSample,
+  TeacherDim,
+  TeacherConfig,
+  TeacherModel,
+  ForecasterSample,
+  TeacherGapBucketRow,
+  TeacherGapReport,
+} from "./empirical-rate-teacher.js";
+
 // R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
 // across calibrator families (the honest fix for "isotonic by fiat"). Composes
 // the isotonic/ECE toolkit above; equal-mass ECE for robust small-fold scoring.
