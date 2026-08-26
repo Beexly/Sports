@@ -32,7 +32,7 @@ describe("yacoe-edge-candidate converter", () => {
     }));
     const rows = convertYacoeToBacktestRows(synthetic);
     const result = falsifyBind(rows, { minN: 50, seed: 7 });
-    expect(["PASS", "KILLED", "STARVED"]).toContain(result.overall.verdict);
+    expect(["SURVIVOR", "KILLED", "STARVED", "PARKED"]).toContain(result.overall.verdict);
     expect(typeof result.overall.reason).toBe("string");
   });
 

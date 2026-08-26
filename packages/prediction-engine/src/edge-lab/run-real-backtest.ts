@@ -1,6 +1,19 @@
 /** R36 real-data YACoe backtest harness — 7351 NGS rows, deterministic, seed fixed. */
 import * as fs from 'fs';
+import { join } from 'node:path';
 import { computeYacoeSignal, type YacoeRow } from './yacoe-backtest';
+
+// Anchored at the repo root via __dirname, NOT the process cwd. The default was
+// cwd-relative, and vitest runs with cwd = packages/prediction-engine/, so it
+// resolved to packages/prediction-engine/data/... and threw ENOENT no matter
+// where the artifact actually lived. __dirname (CommonJS) rather than
+// import.meta.url — this package's tsconfig targets module: CommonJS.
+// src/edge-lab -> src -> prediction-engine -> packages -> repo root.
+export const REPO_ROOT = join(__dirname, '..', '..', '..', '..');
+export const DEFAULT_NGS_ROWS_PATH = join(
+  REPO_ROOT,
+  'data/nflverse/ngs_receiving_2021_2025_harness_rows.json',
+);
 
 export interface BacktestConfig {
   buildSeasons: number[];   // e.g. [2021,2022,2023]
@@ -45,7 +58,7 @@ function spearmanRankCorr(a: number[], b: number[]): number {
 }
 
 export function runRealBacktest(
-  rowsPath = 'data/nflverse/ngs_receiving_2021_2025_harness_rows.json',
+  rowsPath = DEFAULT_NGS_ROWS_PATH,
 ): { signals: PlayerSeasonSignal[]; correlations: CorrelationResult[]; verdict: string } {
   const raw: YacoeRow[] = JSON.parse(fs.readFileSync(rowsPath, 'utf8'));
   const buildSeasons = [2021, 2022, 2023];

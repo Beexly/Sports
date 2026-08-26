@@ -2204,3 +2204,58 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// ── Edge lab: falsifier, cross-market, backtest runners, independent modelProb ──
+// These are the product surface for the kill-test pipeline and were reachable
+// only by deep import until now. Tests import the modules directly, so their
+// absence here was not build-breaking — but the barrel IS the public surface,
+// and a falsifier you cannot import from the package entry point is not shipped.
+export { falsifyBind } from "./edge-lab/falsify.js";
+export type {
+  BacktestRow,
+  KillResult,
+  FalsifyOutput,
+  FalsifyOpts,
+} from "./edge-lab/falsify.js";
+
+export {
+  impliedTeamVolume,
+  consistencyFlag,
+  PASS_LEAN_PER_SPREAD_FAVORITE,
+  PASS_LEAN_PER_SPREAD_DOG,
+  PLAYS_PER_TOTAL_POINT,
+  LEAGUE_AVG_PLAYS,
+  LEAGUE_AVG_PASS_RATE,
+  CONSISTENCY_Z_THRESHOLD,
+} from "./edge-lab/cross-market.js";
+export type { ImpliedTeamVolume, ConsistencyFlag } from "./edge-lab/cross-market.js";
+
+export { computeYacoeSignal } from "./edge-lab/yacoe-backtest.js";
+export type { YacoeRow, RollingSignalResult } from "./edge-lab/yacoe-backtest.js";
+export { computeSeparationBacktest } from "./edge-lab/separation-backtest.js";
+export type { SeparationRow, SeparationBacktestResult } from "./edge-lab/separation-backtest.js";
+export { computeTprBacktest } from "./edge-lab/tpr-backtest.js";
+export type { TprRow, TprBacktestRow } from "./edge-lab/tpr-backtest.js";
+export { runRealBacktest, DEFAULT_NGS_ROWS_PATH } from "./edge-lab/run-real-backtest.js";
+export type {
+  BacktestConfig,
+  PlayerSeasonSignal,
+  CorrelationResult,
+} from "./edge-lab/run-real-backtest.js";
+
+export {
+  aggregateModelProb,
+  computeLeagueBaseline,
+  zScore,
+  zToProbability,
+  shrinkageWeight,
+  shrinkSignal,
+  MODELPROB_AGGREGATION_METHOD_TAG,
+} from "./edge-lab/modelprob-aggregation.js";
+export type {
+  PlayerSignal,
+  LeagueBaseline,
+  ShrinkOpts,
+  AggregateOpts,
+  AggregationResult,
+} from "./edge-lab/modelprob-aggregation.js";
