@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   buildPickProofReceipt,
   verifyPickProofReceipt,
+  deriveClvPriceSource,
   type PickProofInput,
 } from "../pick-proof-receipt.js";
 
@@ -87,6 +88,33 @@ describe("pick proof receipt", () => {
     const a = buildPickProofReceipt(base({ marketFairProb: 0.524 }), testHash);
     const b = buildPickProofReceipt(base({ marketFairProb: 0.524 + 1e-9 }), testHash);
     expect(a.contentHash).toBe(b.contentHash);
+  });
+
+  it("commits 'none' for priceSource when absent — old receipts unaffected", () => {
+    const without = buildPickProofReceipt(base(), testHash);
+    expect(without.payload).toMatch(/priceSource=none/);
+    expect(verifyPickProofReceipt(without, testHash)).toBe(true);
+  });
+
+  it("commits a real priceSource and changes the hash from the 'none' claim", () => {
+    const withSource = buildPickProofReceipt(
+      base({ priceSource: "consensus_average_7books" }),
+      testHash,
+    );
+    const withoutSource = buildPickProofReceipt(base(), testHash);
+    expect(withSource.payload).toMatch(/priceSource=consensus_average_7books/);
+    expect(withSource.contentHash).not.toBe(withoutSource.contentHash);
+    expect(verifyPickProofReceipt(withSource, testHash)).toBe(true);
+  });
+
+  it("deriveClvPriceSource labels single-book vs consensus-average honestly, never guessing", () => {
+    expect(deriveClvPriceSource(1)).toBe("single_book");
+    expect(deriveClvPriceSource(7)).toBe("consensus_average_7books");
+    expect(deriveClvPriceSource(2)).toBe("consensus_average_2books");
+    // Unknown/zero/invalid counts commit "none" rather than a guessed source.
+    expect(deriveClvPriceSource(0)).toBeNull();
+    expect(deriveClvPriceSource(-1)).toBeNull();
+    expect(deriveClvPriceSource(Number.NaN)).toBeNull();
   });
 
   it("refuses to mint a receipt from invalid input (never fabricates)", () => {
