@@ -30,6 +30,10 @@
   (probability-calibration.ts, since 98ae6c7ae) — no build needed, closed as a verification-only
   correction. The queue itself had an unverified handoff-style claim; standing rule applies to
   our own docs too, not just Hermes's.
+- C-78 DONE (queue #5, lock-price provenance, Door A): the price+timestamp write-once capture
+  already existed (PickProofReceipt); closed the one real gap — an honest source tag
+  ("single_book" vs "consensus_average_Nbooks", derived only from bookmakerCount) — additive,
+  no schema migration. 709dceaf8.
 - SONNET SEAT ACTIVE: orders at docs/agent-prompts/SONNET-EXECUTION-ORDERS-2026-08-26.md
   (CLAUDE-MAX verification protocol adopted; --dangerously-skip-permissions and --bare REJECTED).
 - Week-1 battle plan: docs/ops/edge/2026-08-26-WEEK1-BATTLE-PLAN.md (3 candidates + ARM-GATES).
