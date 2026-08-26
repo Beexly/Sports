@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+
+  "_comment_hooks": "Hooks are the ONLY mechanism that can actually block an action. PreToolUse fires before any permission-mode check, in every mode including bypassPermissions -- which is what makes these unbypassable rather than advisory.",
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-sealed-paths.sh",
+            "statusMessage": "checking sealed paths"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-git-and-gates.sh",
+            "statusMessage": "checking git/gate guardrails"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/trim-verbose-output.sh",
+            "statusMessage": "trimming verbose output"
+          }
+        ]
+      }
+    ],
+
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gate-session-close.sh",
+            "timeout": 300,
+            "statusMessage": "running verify block"
+          }
+        ]
+      }
+    ]
+  },
+
+  "_comment_permissions": "Second layer. Evaluation order is deny -> ask -> allow, first match wins; specificity is irrelevant. Note a broad deny cannot carry allowlist exceptions.",
+
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Bash(git commit --no-verify *)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)"
+    ],
+    "ask": [
+      "Bash(gh pr create *)",
+      "Bash(git push *)"
+    ],
+    "allow": [
+      "Bash(npm run typecheck)",
+      "Bash(npm run lint)",
+      "Bash(npm run check:ledger)",
+      "Bash(npm run agent:eval)",
+      "Bash(npx vitest run *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)"
+    ]
+  },
+
+  "_comment_cache": "Main-conversation prompt cache TTL. On a subscription this already defaults to 1h; setting it explicitly documents the intent and survives a move to usage credits, where the default drops to 5 min. Verify against your installed version -- this key is recent (v2.1.242+).",
+  "promptCacheTtl": "1h"
+}
