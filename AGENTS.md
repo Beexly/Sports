@@ -5,4 +5,4 @@ This file only adds knowledge-base routing.
 
 ## Knowledge Bases
 
-- **Claude Academy corpus**: `C:\Users\Garrett\CLAUDE-ACADEMY-PLAYBOOK.md` — indexed map of all 755 scraped academy.claude.com pages (courses, use-cases by department, tutorials by product, master index). When a task touches Claude usage, prompting, API/MCP/agents/Cowork patterns, check its Scope Router first, then read only the referenced file(s) from `C:\Users\Garrett\academy-corpus\`.
+- **Claude Academy corpus**: `docs/CLAUDE-ACADEMY-PLAYBOOK.md` (this repo) — indexed map of all 755 academy.claude.com pages. Full page texts live outside the repo at `C:\Users\Garrett\academy-corpus\`. When a task touches Claude usage, prompting, API/MCP/agents/Cowork patterns: check the playbook's Scope Router first, then read only the referenced file(s).
