@@ -68,6 +68,14 @@ this file; where they disagree with it, they win.
 
 - **PR #674** (`claude/gse-week1-launch-bh0nqo`) — draft, watched. Hermes merge +
   C-74 falsifier + C-36 wiring guard + modelProb + acceptance grid + Proof nav.
+  **The build fix IS independently confirmed**: Vercel went Error (`Can't
+  resolve 'fs'` on 932fa2bd7) -> Ready (96ba65ab6). Vercel runs a production
+  build, which is exactly what broke, so this is a stronger check on the actual
+  defect than the local build. Codacy holds at exactly 25 issues (2 crit/22
+  high/1 med) across both shas — identical split, so this session's commits
+  added ZERO issues; the 25 are pre-existing in the hermes content. Not
+  claiming them cleared (app.codacy.com unreachable here), but the owner ask is
+  pre-existing debt, not "this PR introduced 2 critical security issues".
 - **PR #672** (`claude/sonnet-max-leverage-prompt-433yia`) — open draft,
   `mergeable_state: clean`, 209 files. Not merged by an agent; needs a human.
 - **CI cannot run — verified, not assumed.** The last `ci.yml` run repo-wide on
