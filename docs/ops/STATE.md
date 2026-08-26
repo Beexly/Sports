@@ -21,6 +21,9 @@
 
 ## In flight
 - C-75 second wave (Claude recomputes all Hermes R&D): ~6/16 agents done, background.
+- SONNET SEAT ACTIVE: orders at docs/agent-prompts/SONNET-EXECUTION-ORDERS-2026-08-26.md
+  (CLAUDE-MAX verification protocol adopted; --dangerously-skip-permissions and --bare REJECTED).
+- Week-1 battle plan: docs/ops/edge/2026-08-26-WEEK1-BATTLE-PLAN.md (3 candidates + ARM-GATES).
 - PR #672: open, draft, clean, all local checks green. Actions minutes exhausted → no CI.
 
 ## Quarantined (unverified agent handoffs)
