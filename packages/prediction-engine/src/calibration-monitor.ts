@@ -325,3 +325,71 @@ export function phaseBucketedCalibrationAudit(
       : null,
   };
 }
+
+// ============================================================
+// Stability-plasticity check — bounds forgetting on the re-fit cadence
+// ============================================================
+//
+// Ported from arXiv:2503.04638 ("No Forgetting Learning" — despite the name
+// collision, No FORGETTING Learning, not football), a buffer-free continual-
+// learning method whose Plasticity-Stability ratio (their Eq. 29: new-task
+// learning gain divided by absolute forgetting on old tasks) names the exact
+// failure mode GSE's re-fit cadence risks once any recency weighting or
+// windowing enters the calibration fit: an update that buys recent-cohort
+// performance by degrading early-season regimes. See
+// docs/ops/edge/extraction/2026-08-26-group-learning-theory.md §1 for the
+// full derivation. The paper's continual-learning MACHINERY does not port
+// (GSE keeps every settled pick — no buffer constraint the method solves for);
+// only the evaluation discipline does.
+
+export interface CohortEce {
+  readonly incumbentEce: number;
+  readonly candidateEce: number;
+}
+
+export interface StabilityPlasticityResult {
+  /** Held-out improvement of the candidate over the incumbent on the NEWEST cohort. Positive = candidate is better there. */
+  readonly plasticity: number;
+  /** Degradation of the candidate vs the incumbent on the OLDEST cohort. Positive = candidate forgot; negative = candidate improved there too. */
+  readonly forgetting: number;
+  /** plasticity / max(|forgetting|, epsilon) — their Eq. 29, higher is better. Reported for the bake-off table, not the pass/fail mechanism. */
+  readonly psRatio: number;
+  readonly forgettingBound: number;
+  /** forgetting <= forgettingBound — the actual C6 eligibility gate. */
+  readonly eligible: boolean;
+  readonly alert: string | null;
+}
+
+/**
+ * Compare a candidate calibration map's ECE against the incumbent's on the
+ * newest and oldest settled cohorts (e.g. first-third vs last-third of the
+ * season-to-date, or NFL-season week buckets). `forgettingBound` defaults to
+ * +0.01 ECE on the early cohort — a candidate that improves the newest slice
+ * but degrades the oldest beyond this bound is NOT eligible for C6, even if
+ * its overall held-out ECE looks better. `forgettingBound` falls back to the
+ * default when non-finite or negative (a negative bound would forbid every
+ * candidate, including one that improves everywhere).
+ */
+export function stabilityPlasticityCheck(
+  newestCohort: CohortEce,
+  oldestCohort: CohortEce,
+  forgettingBound = 0.01,
+): StabilityPlasticityResult {
+  const safeBound = Number.isFinite(forgettingBound) && forgettingBound >= 0 ? forgettingBound : 0.01;
+
+  const plasticity = round(newestCohort.incumbentEce - newestCohort.candidateEce);
+  const forgetting = round(oldestCohort.candidateEce - oldestCohort.incumbentEce);
+  const psRatio = round(plasticity / Math.max(Math.abs(forgetting), 1e-6), 6);
+  const eligible = forgetting <= safeBound;
+
+  return {
+    plasticity,
+    forgetting,
+    psRatio,
+    forgettingBound: safeBound,
+    eligible,
+    alert: eligible
+      ? null
+      : `Candidate degrades the oldest cohort's ECE by ${forgetting.toFixed(4)}, exceeding the ${safeBound} forgetting bound — not eligible for C6 despite any newest-cohort improvement (plasticity ${plasticity.toFixed(4)}).`,
+  };
+}

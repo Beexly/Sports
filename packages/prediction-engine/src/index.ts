@@ -1928,6 +1928,7 @@ export {
   checkCalibrationHealth,
   checkNegativeUpdateGuard,
   phaseBucketedCalibrationAudit,
+  stabilityPlasticityCheck,
 } from "./calibration-monitor.js";
 export type {
   CalibrationHealthResult,
@@ -1936,6 +1937,8 @@ export type {
   PhaseSample,
   PhaseBucketRow,
   PhaseBucketedAuditResult,
+  CohortEce,
+  StabilityPlasticityResult,
 } from "./calibration-monitor.js";
 
 // Calibration-snapshot regression comparison. Pure/DB-agnostic — reuses

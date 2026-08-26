@@ -3,6 +3,7 @@ import {
   checkCalibrationHealth,
   checkNegativeUpdateGuard,
   phaseBucketedCalibrationAudit,
+  stabilityPlasticityCheck,
   type CohortGain,
   type PhaseSample,
 } from "../calibration-monitor.js";
@@ -237,5 +238,78 @@ describe("phaseBucketedCalibrationAudit", () => {
     expect(result.masked).toBe(false); // the failure is already visible overall
     const a = result.phases[0]!;
     expect(a.exceedsFloor).toBe(true); // still correctly reported, just not "masked"
+  });
+});
+
+describe("stabilityPlasticityCheck", () => {
+  it("is eligible when the candidate improves the newest cohort and doesn't forget the oldest", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.05 }, // newest: improved by 0.03
+      { incumbentEce: 0.04, candidateEce: 0.035 }, // oldest: also improved (forgetting negative)
+    );
+    expect(result.plasticity).toBeCloseTo(0.03, 6);
+    expect(result.forgetting).toBeCloseTo(-0.005, 6);
+    expect(result.eligible).toBe(true);
+    expect(result.alert).toBeNull();
+  });
+
+  it("is ineligible when forgetting exceeds the bound, even with strong newest-cohort gains", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.02 }, // newest: big improvement
+      { incumbentEce: 0.04, candidateEce: 0.06 }, // oldest: degraded by 0.02, bound is 0.01
+      0.01,
+    );
+    expect(result.forgetting).toBeCloseTo(0.02, 6);
+    expect(result.eligible).toBe(false);
+    expect(result.alert).toContain("forgetting bound");
+  });
+
+  it("forgetting exactly at the bound is still eligible (<=, not <)", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.05 },
+      { incumbentEce: 0.04, candidateEce: 0.05 }, // degraded by exactly 0.01
+      0.01,
+    );
+    expect(result.forgetting).toBeCloseTo(0.01, 6);
+    expect(result.eligible).toBe(true);
+  });
+
+  it("hand-computed psRatio: plasticity / |forgetting|", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.06 }, // plasticity = 0.04
+      { incumbentEce: 0.04, candidateEce: 0.05 }, // forgetting = 0.01
+      0.02,
+    );
+    expect(result.plasticity).toBeCloseTo(0.04, 6);
+    expect(result.forgetting).toBeCloseTo(0.01, 6);
+    expect(result.psRatio).toBeCloseTo(4, 4); // 0.04 / 0.01
+  });
+
+  it("negative forgetting (improved on the old cohort too) uses its absolute value in psRatio", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.06 }, // plasticity = 0.04
+      { incumbentEce: 0.04, candidateEce: 0.02 }, // forgetting = -0.02 (improved)
+    );
+    expect(result.psRatio).toBeCloseTo(2, 4); // 0.04 / |-0.02|
+  });
+
+  it("exactly-zero forgetting does not throw or divide by zero — uses an epsilon floor", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.08 },
+      { incumbentEce: 0.04, candidateEce: 0.04 }, // forgetting = 0
+    );
+    expect(result.forgetting).toBe(0);
+    expect(Number.isFinite(result.psRatio)).toBe(true);
+    expect(result.psRatio).toBeGreaterThan(1000); // large but finite
+    expect(result.eligible).toBe(true);
+  });
+
+  it("falls back to the default bound on invalid input", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.08 },
+      { incumbentEce: 0.04, candidateEce: 0.041 },
+      -5,
+    );
+    expect(result.forgettingBound).toBe(0.01);
   });
 });
