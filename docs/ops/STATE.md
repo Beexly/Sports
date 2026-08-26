@@ -20,7 +20,12 @@
 (Next up after those: historical-odds pull with existing key; weekly funnel answer.)
 
 ## In flight
-- C-75 second wave (Claude recomputes all Hermes R&D): ~6/16 agents done, background.
+- C-75 second wave (Claude recomputes all Hermes R&D): stalled at ~2/16 agents (journal frozen
+  24min, no live process) — resumed via Workflow resumeFromRunId (cached results reused), running
+  again in background as of ~14:58 UTC.
+- C-76 DONE (falsifier acceptance harness, queue #3): planted-edge/noise/inverted @ n=100/1k/5k,
+  9/9 green, c7ec6e1f6. Independent of the second wave — the instrument now has its own permanent
+  known-good/known-bad acceptance suite per NORTHSTAR §2.
 - SONNET SEAT ACTIVE: orders at docs/agent-prompts/SONNET-EXECUTION-ORDERS-2026-08-26.md
   (CLAUDE-MAX verification protocol adopted; --dangerously-skip-permissions and --bare REJECTED).
 - Week-1 battle plan: docs/ops/edge/2026-08-26-WEEK1-BATTLE-PLAN.md (3 candidates + ARM-GATES).
