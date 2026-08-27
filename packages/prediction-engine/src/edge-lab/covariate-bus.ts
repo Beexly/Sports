@@ -24,19 +24,24 @@
  * NEVER as p (these are y-axis, excluded from the bus):
  *   - `expectedCompletionPct`        (passing NGS proprietary model)
  *   - `avgExpectedYac`               (receiving NGS proprietary model)
- *   - `expectedRushYards` / `ryoe`   (rushing NGS proprietary model)
+ *   - `expectedRushYards` / `ryoe`   (rushing NGS proprietary TOTAL)
  *   - vendor `cpoe`                  (published CPOE)
  * The bus exposes none of the above; it only emits the covariate fields
  * listed under `CovariateField` (avgYac included — it is the per-reception
  * YAC mean, a process/scheme signal, not the per-target arrival YAC the y-axis
  * model fits).
  *
+ * NOTE: `ryoePerAtt` (RYOE per attempt, a weekly NGS MEAN rate) is promoted
+ * to a covariate — see props-hb-ryoe-bind. It is a leak-safe efficiency signal
+ * (week t for t+1), NOT a y-axis prediction. `expectedRushYards` (the total
+ * RYOE) remains y-axis only above.
+ *
  * Pure. No I/O. No Prisma. No model inference.
  */
 
 export const COVARIATE_BUS_METHOD_TAG = "covariate_bus_v1" as const;
 
-export type StatType = "receiving" | "passing" | "rushing";
+export type StatType = "receiving" | "passing" | "rushing" | "defense";
 
 /**
  * Normalized NGS weekly-mean row. The data-ingestion parsers
@@ -62,13 +67,51 @@ export interface CovariateRow {
   readonly avgIntendedAirYards: number | null; // yards per attempt, weekly mean
   readonly avgCompletedAirYards: number | null; // yards per completion, weekly mean
   readonly avgAirYardsDifferential: number | null; // intended minus completed, weekly mean
+  /** Weekly NGS mean: intended air yards to the sticks (distance past LOS to line to gain). H2 Edge. */
+  readonly avgAirYardsToSticks?: number | null; // yards past LOS to the line to gain, weekly mean
   // ── rushing ─────────────────────────────────────────────────────────────
   /** % of rushing attempts facing 8+ defenders in the box. */
   readonly pctAttemptsGte8Defenders: number | null;
   readonly avgTimeToLos: number | null; // seconds from snap to LOS crossing, weekly mean
+  /** Weekly NGS mean: rush yards over expected per attempt (RYOE/att). Efficiency. H2 Edge. */
+  readonly ryoePerAtt?: number | null;
+  /** Weekly NGS mean: % of rushing attempts that exceeded expected yards (RYOE > 0). Hole-hit / efficiency signal; books price rush TDs on volume but miss this. H2 Edge. */
+  readonly rushPctOverExpected?: number | null;
   // ── yac (receiving, covariate) ─────────────────────────────────────────────
   /** Average yards-after-catch per reception (weekly NGS mean). NOT per-target arrival YAC. */
   readonly avgYac: number | null;
+  /**
+   * Weekly NGS mean: yards-after-catch above expectation per reception. H2 Edge — rec TDs.
+   * Optional so existing CovariateRow literals remain valid; absent = unknown (binds fail closed).
+   */
+  readonly yacAboveExpected?: number | null;
+  // NOTE (main-port): every field from avgAirYardsToSticks down is optional
+  // (`?: number | null`) — the yacAboveExpected convention — so pre-existing
+  // CovariateRow literals on main stay valid; absent = unknown, and every
+  // consumer fail-closes on undefined exactly as on null (Number.isFinite).
+  // ── defense (PFR advstats def) ──────────────────────────────────────────────
+  /** Weekly PFR mean: pressures (hurries + hits + sacks) per dropback faced. H1 Edge #1. */
+  readonly pressureRate?: number | null;
+  /** Weekly PFR defensive snap share: fraction of team defensive snaps the player appeared in. H1 Edge #4. */
+  readonly snapShare?: number | null;
+  /** Weekly PFR mean: TFL (tackles for loss) rate per defensive game. H1 Edge #2. */
+  readonly tflRate?: number | null;
+  /** Weekly PFR mean: pass deflections (PD) rate per target faced. H1 Edge #3. */
+  readonly pdRate?: number | null;
+  /** Weekly PFR mean: INT rate per target faced. H2 Edge. */
+  readonly intRate?: number | null;
+  /** Weekly PFR mean: fumble rate per touch. H2 Edge. */
+  readonly fumbleRate?: number | null;
+  /** Weekly PFR mean: missed-tackle rate (missed tackles / tackles attempted), week t for game t+1. H2 Edge — rec TDs. */
+  readonly missedTackleRate?: number | null;
+  /** Weekly NGS mean: air yards per attempt (passer). H2 Edge. */
+  readonly airYardsPerAttempt?: number | null;
+  /** Weekly PFR def mean: opponent passer rating allowed (0–158.3). Lower =
+   * stingier coverage; higher (e.g. 100+) → opposing QBs get the ball out
+   * faster → fewer pressures available to generate. H2 Edge (pressures). */
+  readonly passerRatingAllowed?: number | null;
+  /** Weekly NGS mean: passer rating — public NFL formula (0–158.3). H2 Edge. */
+  readonly passerRating?: number | null;
   // ── receiving vendor y-axis (NEVER exposed as p) ──────────────────────────
   /** NFL NGS proprietary xYAC. Y-axis only — the bus never emits this as a covariate. */
   readonly avgExpectedYac: number | null;
@@ -90,14 +133,28 @@ export type CovariateField =
   | "avgIntendedAirYards"
   | "avgCompletedAirYards"
   | "avgAirYardsDifferential"
+  | "avgAirYardsToSticks"
   | "pctAttemptsGte8Defenders"
   | "avgTimeToLos"
-  | "avgYac";
+  | "avgYac"
+  | "yacAboveExpected"
+  | "pressureRate"
+  | "snapShare"
+  | "tflRate"
+  | "pdRate"
+  | "intRate"
+  | "fumbleRate"
+  | "missedTackleRate"
+  | "airYardsPerAttempt"
+  | "ryoePerAtt"
+  | "rushPctOverExpected"
+  | "passerRating"
+  | "passerRatingAllowed";
 
 /** Grain + provenance tag so callers never mistake a weekly mean for a
  * single-frame measurement. Honest header on every emitted cell. */
 export type CovariateGrain = "week_t_for_tplus1";
-export type CovariateProvenance = "weekly_ngs_mean" | "expected_metric_v1";
+export type CovariateProvenance = "weekly_ngs_mean" | "weekly_pfr_def_mean" | "expected_metric_v1";
 
 export interface CovariateCell {
   readonly value: number;
@@ -157,8 +214,8 @@ export function nextGameCovariate(
 ): CovariateCell | null {
   const row = latestPriorRow(rows, gsisId, season, statType, kickoffWeek);
   if (row === null) return null; // no history before kickoff — fail closed
-  const raw = row[field];
-  if (raw === null || !Number.isFinite(raw)) return null;
+  const raw: number | null | undefined = row[field];
+  if (raw === null || raw === undefined || !Number.isFinite(raw)) return null;
   return { value: raw, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
 }
 
