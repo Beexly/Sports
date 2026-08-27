@@ -1630,6 +1630,45 @@ export type {
   ItsFitResult,
 } from "./edge-lab/poisson-its.js";
 
+// CPAE — completion-probability surface + group-level aggregate
+// (arXiv:1906.03339's model half; the image-scraping half is rights-gated
+// and NOT ported). Discrete tensor product (natural-cubic depth basis × 3
+// pass-location bins) over the paper's continuous smoother — grain honesty
+// for public pbp data — with the §3.2 Naive-Bayes shrinkage and discrete
+// Eq. 1 at QB grain and DEFENSE grain (cpaeAllowed, the new direction),
+// plus the 2603.17866 distributional companions. As-of discipline is
+// structural (pure fits over caller-filtered rows; leakage mutation test in
+// the suite); the ρ ≥ 0.75 NGS gate is QB-grain ONLY — the defense metric
+// needs its own separately defined validation target before admission.
+// Real fit-on-load, validation runs, and admission are data-gated.
+// R&D / offline only, priced:false.
+export {
+  naturalCubicBasis,
+  cpaeSurfaceFeatureRow,
+  fitCpaeSurface,
+  predictCpaeCompletionProbability,
+  CPAE_SURFACE_MODEL_VERSION,
+  CPAE_DEPTH_KNOTS,
+  CPAE_DEPTH_DOMAIN,
+  CPAE_BASIS_SIZE,
+  CPAE_SURFACE_FEATURE_KEYS,
+  MIN_PLAYS_TO_FIT_CPAE_SURFACE,
+} from "./expected-metrics/cpae-surface.js";
+export type { CpaeSurfaceModel } from "./expected-metrics/cpae-surface.js";
+export {
+  cpaeCellIndex,
+  buildGroupCells,
+  shrinkGroupSurface,
+  computeCpaeMetrics,
+  CPAE_DEPTH_BIN_EDGES,
+  CPAE_CELL_COUNT,
+} from "./expected-metrics/cpae-aggregate.js";
+export type {
+  CpaeCell,
+  CpaeGroupCells,
+  CpaeGroupMetric,
+} from "./expected-metrics/cpae-aggregate.js";
+
 // Diagonal-covariance Gaussian mixture EM (arXiv:1906.11373's coverage-
 // clustering model — the pure math core; defense-week features and the
 // real-data fit are a separate, data-gated increment). Seeded k-means++
