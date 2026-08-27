@@ -1630,6 +1630,42 @@ export type {
   ItsFitResult,
 } from "./edge-lab/poisson-its.js";
 
+// Diagonal-covariance Gaussian mixture EM (arXiv:1906.11373's coverage-
+// clustering model — the pure math core; defense-week features and the
+// real-data fit are a separate, data-gated increment). Seeded k-means++
+// init, log-space responsibilities, per-dimension variance floor, LOWO-ARI
+// K selection with a typed "unstable" kill (never a default K), and the
+// polarity gate that keeps cluster posteriors ANONYMOUS until a
+// pre-registered semantic validation passes (the CodeRabbit finding on the
+// spec, encoded in the type). R&D / offline only, priced:false.
+export {
+  fitDiagonalGmm,
+  gmmLogDensity,
+  gmmPosteriors,
+  gmmHardLabels,
+  logSumExp,
+  zScoreFit,
+  zScoreApply,
+  selectKByLowoAri,
+  featureInfluence,
+  labelClustersByCushionRule,
+  adjustedRandIndex,
+} from "./edge-lab/kernel/gmm-em.js";
+export type {
+  GmmFitOptions,
+  DiagonalGmm,
+  ZScoreStats,
+  LowoAriSelection,
+  ClusterLabeling,
+} from "./edge-lab/kernel/gmm-em.js";
+
+// Falsifier — 4 kill tests (leakage / shuffle / split / multiplicity) over a
+// bind's backtest rows, wired to the bernoulli e-process. Salvaged from the
+// hermes/w2-audit-settlement branch (Wave 3 LANE B); verdict vocabulary
+// SURVIVOR / KILLED / STARVED / PARKED. The edge-lab law's enforcement arm.
+export { falsifyBind } from "./edge-lab/falsify.js";
+export type { BacktestRow, KillResult, FalsifyOutput, FalsifyOpts } from "./edge-lab/falsify.js";
+
 // Rare-event admission-harness metrics (arXiv:2206.13222): precision-at-
 // fixed-recall as the operating metric for any rare-event classifier screen
 // (AUC hides the base-rate failure their own numbers demonstrate — 0.82 AUC

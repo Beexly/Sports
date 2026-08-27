@@ -277,3 +277,12 @@ export function binomialCoverage(fired: number, eligible: number): BinomialCover
     coverage: eligible === 0 ? 0 : fired / eligible,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Adjusted Rand index — partition agreement for the coverage-GMM lane
+// (arXiv:1906.11373's K-selection statistic). Exact contingency-table
+// formula with integer pair counts, no gamma-function approximation — the
+// implementation lives beside the GMM in kernel/gmm-em.ts; this re-export
+// keeps the spec's mandated home (stats.ts) canonical for callers.
+// ---------------------------------------------------------------------------
+export { adjustedRandIndex } from "./kernel/gmm-em.js";
