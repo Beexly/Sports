@@ -1582,6 +1582,21 @@ export type {
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
+// Spread-anchored expectation profile: leak-safe game-level covariate
+// (arXiv:2606.18805's suspense/surprise/valence structure, ported from a
+// driving-behavior study — honest prior WEAK, priced:false until walk-forward
+// admission). Mirrors covariate-bus.ts's latestPriorRow leak-safety pattern.
+export {
+  classifyGameCloseness,
+  classifyExpectationProfile,
+  priorGameExpectationProfile,
+} from "./edge-lab/expectation-profile.js";
+export type {
+  GameCloseness,
+  ExpectationProfile,
+  TeamGameResult,
+} from "./edge-lab/expectation-profile.js";
+
 // SEP bind: couples the covariate bus (sepForKickoff) to the aDOT×SEP catch
 // sample. Fail-closed on null — never invents 3.0 yards. Honest weekly-mean
 // grain forwarded verbatim. priced:false.
