@@ -96,15 +96,37 @@ ties below show WHERE our prototype plugs into the production architecture.
   ladder: FOUNDING → PROVEN (≥100 settled + calibration) → ESTABLISHED (≥500 settled + CLV
   ≥52.4%) → AUTHORITY (multi-season ROI). Our +3.5% is PRE-PROVEN; the ladder defines "proven."
 
-## What is STILL genuinely unread (honest gaps — not faked complete)
-- The full 136-row AGENT_LEDGER extraction (sa-3 was stopped after key rows known: OVN-0826-1,
-  L-6/L-9, C-14/C-15, H-S, L-10, C-16, C-23). A complete row table remains a TODO.
-- `fantasyguru/*.csv` outputs, `fantasypros/` dossiers, `GSE-competitive-intel/dossier.html`.
-- The ~80 `Sports-*` worktree dirs (classified, not read).
+ ## C15. Ledger extraction complete (132 rows) — verified cross-reference
+ - `agledger_extraction.md`: 87 DONE / 32 OPEN / 4 BLOCKED / 2 UNPUSHED (H-E, RND-0827) /
+ 1 PARKED / 4 CANCELLED. Keyword grep: CLV=37, edge=111, calibration=20, Shin=6,
+ Kaggle=3 (ALL on RND-0827), fire-gate=1 (RND-0827 only). → proves invisibility claim.
+ - CONFIRMED overlaps: Shin→C-20; CLV→L-6/C-14; 50-papers→C-16; Kaggle path→H-S/L-10.
+ - GAP: G1–G5 fire-gate has NO main-repo ledger row (resolved in R&D only). Honest flag.
+
+ ## C16. fantasyguru engines are REAL working code; 2025 local resolves
+ - `gse_engine.py`/`nfl_engine.py`/`nfl_scheme_defense.py` import-and-run, output named CSVs,
+ use real data (MLB Stats/Savant; local `nfl/*.csv` incl. `season==2025`).
+ - 2025 RECONCILED: local 2025 CSV exists on disk → our "2025 unavailable" should read
+ "not via nflverse API; local 2025 CSV available." Point fixtures there.
+ - Overlap with props-hb-*/Shin/fire-gate: NONE direct (fantasy matchup/ranking vs calibrated
+ prop machinery). Conceptual only (QB mobility, defense context). `DEEP-READ-REPORT.md` written.
+
+ ## C17. `Sports-*` dirs = REAL CODE worktrees, not stubs; 2 active repos unmapped
+ - ~80 `Sports-*` dirs link to `Sports/.git/worktrees/` (60–84 files each). `gse-b1` (`b1-ladder`
+ #75 + frontier wave) + `.cagent/Sports` (`hermes/w2-audit-settlement`, 40+ unmerged branches
+ incl. `claude/consensus-accuracy-engine`, `grok/kalshi-book-div`, `overnight-2026-08-21`) are
+ ACTIVE with Aug-2026 work NOT yet in the map. `Sports-release-codex` does NOT exist (drop it).
+
+ ## What is STILL genuinely unread (honest gaps — not faked complete)
+- `fantasyguru/*.csv` outputs, `fantasypros/` dossiers, `GSE-competitive-intel/dossier.html`
+  (engines read; CSV contents not inspected).
 - `GSE-launch/CODEX_*` runbooks (only CLAUDE_PICKUP/CLAUDE.md skimmed).
 - Live Neon connectivity unverified (cred present; not pinged to avoid side effects).
-- 2025 data: still unverified anywhere; `nfl_engine.py` "2025" needs reconciliation with
-  "2025 not on nflverse."
+- The 132-row ledger is extracted (`agledger_extraction.md`) but only the SPORTS-INTEL-relevant
+  rows (C-20, L-6/C-14, C-16, H-S/L-10, OVN-0826-1) were cross-referenced; a full per-row
+  digest of all 132 remains a future task (low priority — the relevant overlaps are captured).
+- The ~80 `Sports-*` worktree dirs are REAL code (C17) but individually unread; specific modules
+  (props-hb-*, kalshi-*, kaunitz, t11) may hold additional unfinished work worth a future pass.
 
 ## Suggested next actions (prioritized)
 1. **Populate the ledger, don't just prototype it**: wire `settleClv` to Neon `odds_line_snapshots`
