@@ -117,7 +117,38 @@ ties below show WHERE our prototype plugs into the production architecture.
  incl. `claude/consensus-accuracy-engine`, `grok/kalshi-book-div`, `overnight-2026-08-21`) are
  ACTIVE with Aug-2026 work NOT yet in the map. `Sports-release-codex` does NOT exist (drop it).
 
- ## What is STILL genuinely unread (honest gaps — not faked complete)
+ ## C23. CAPSTONE: GSE Intelligence Core (`codex/intelligence-core`, Jun 2026) ALREADY DID OUR WORK
+- `EXECUTION_LEDGER.md` + `INTELLIGENCE_CORE_AUDIT.md` + `DECISIONS_TO_RATIFY.md` describe a
+  FULL sibling build (branch `codex/intelligence-core`, 2026-06-23→24) that shipped, with the
+  SAME honesty gates (shadow / priced=false / draft-only / owner-gated):
+  - **E1** = nflverse replay + historical-backtest harness over 1999+ (MY backtest = duplicative).
+  - **B2** = empirical-Bayes player-rate shrinkage `w = n/(n+k)` (MY shrinkage note = duplicative).
+  - **D1** = prop-anchor triangulation (props vs market medians) — DIRECTLY my `PropBookQuote`/
+    fire-gate q-side. **KS2/WO1/WO2** = real nflverse player-projection backtest on 2023–2025 with
+    HONEST result: model MAE 4.87 vs naive 4.76 → "beats NAIVE = FALSE, do not publish."
+  - **FREE_FIRST_DATA.md** = "odds/lines are the ONLY paid need (The Odds API); everything else
+    free" — EXACTLY my SOLUTION-DOSSIER thesis. **PROPRIETARY_METRICS_REPRODUCTION_STRATEGY.md**
+    = "build our own from public/open data" — EXACTLY my free-Kaggle backtest rationale.
+  - **STAT_INTAKE_COVERAGE_MATRIX.md** = nflverse coverage audit (my research did this too).
+- **2025 RESOLVED (definitive)**: EXECUTION_LEDGER DATA1/DATA2/DATA3 CONFIRM nflverse HAS 2025:
+  the legacy `player_stats_2025.csv` 404s, but the CURRENT asset `stats_player_week_2025.csv`
+  exists, and combined NGS covers 2016→2025. My broken `player_stats_2025.csv` was the LEGACY
+  filename; the data was always there. → My "2025 unavailable" claims (REAUDIT-FIXES, earlier
+  deep-ties, the 2025.STATUS.md stub) are WRONG and must be struck/corrected. This also resolves
+  the nfl_engine.py "2025" question (it pulls the correct asset).
+- **IMPLICATION**: my sports-intel R&D corpus is a LATER, PARALLEL re-derivation of the GSE
+  Intelligence Core that already shipped the same work with identical honesty gates. My corpus
+  VALIDATES + EXTENDS it (Shin/CLV fire-gate math verified vs mberk/shin; free-Kaggle GAME-level
+  +3.5% ROI; 50-paper cross-ref; 7-path feed dossier; the cross-AGENT FEDERATION map tying
+  Hermes/Grok/Codex/Claude/Neon). It is NOT redundant where it adds: (a) the CLV settlement
+  layer (`settleClv`) that the core did NOT ship (C18: `settleClv` = 0 hits in clone), and
+  (b) the federation/visibility layer (this branch + RND-0827 ledger row) that no agent had.
+- **ACTION**: point my corpus AT the existing core. Reference EXECUTION_LEDGER slices by ID in
+  my docs; stop claiming "first backtest" (E1 exists); keep my UNIQUE adds (CLV settleClv,
+  federation map, 7-path feed). This is the single biggest "under-leveraged / forgotten" item:
+  two parallel teams (Hermes-sports-intel + Codex-intelligence-core) built the same thing.
+
+## What is STILL genuinely unread (honest gaps — not faked complete)
 - `fantasyguru/*.csv` outputs, `fantasypros/` dossiers, `GSE-competitive-intel/dossier.html`
   (engines read; CSV contents not inspected).
 - `GSE-launch/CODEX_*` runbooks (only CLAUDE_PICKUP/CLAUDE.md skimmed).
@@ -127,15 +158,21 @@ ties below show WHERE our prototype plugs into the production architecture.
   digest of all 132 remains a future task (low priority — the relevant overlaps are captured).
 - The ~80 `Sports-*` worktree dirs are REAL code (C17) but individually unread; specific modules
   (props-hb-*, kalshi-*, kaunitz, t11) may hold additional unfinished work worth a future pass.
+- **The GSE Intelligence Core (`codex/intelligence-core`) was built by Codex, NOT visible to my
+  sports-intel work until THIS pass** — the canonical "we already did the backtest" finding.
 
 ## Suggested next actions (prioritized)
 1. **Populate the ledger, don't just prototype it**: wire `settleClv` to Neon `odds_line_snapshots`
    (real closing lines) + `PickSignalSnapshot` discipline → our backtest becomes a real,
-   replayable, bitemporal grade (C3+C8+C11). This is the single highest-leverage un-tied thread.
+   replayable, bitemporal grade (C3+C8+C11). This is the single highest-leverage un-tied thread,
+   AND the one piece the Intelligence Core did NOT ship.
 2. **Upgrade "calibration targets" to MODEL_PROMOTION_GATE_CONTRACT** (C7) — the canonical spec.
-3. **Extend backtest to `nfl_ot/games.csv`** (1999–2024, 26 seasons) + the 570 Kaggle games (C1).
+3. **Extend backtest to `nfl_ot/games.csv`** (1999–2024, 26 seasons) + 570 Kaggle games + REAL
+   2025 via `stats_player_week_2025.csv` (C1+C23 — 2025 IS available, correct the legacy-name bug).
 4. **Build the def/ST edge modules** from H1_RESEARCH TODO (C12) — currently offensive-only.
 5. **Cite `gse-data-scout`** in SOLUTION-DOSSIER as the rights-safe recon (C13).
-6. **Reconcile 2025 data availability** (our claim vs `nfl_engine.py` "2025").
+6. **Align corpus to GSE Intelligence Core** (C23): strike "2025 unavailable" + "first backtest"
+   claims; reference EXECUTION_LEDGER slice IDs; keep my unique adds (settleClv, federation map,
+   7-path feed). Two parallel teams built the same thing — make them cite each other.
 7. **Open the PR** for this branch + push the `.cagent/Sports` ledger row (`RND-0827`) so the
    other 3 agents see our corpus remotely.
