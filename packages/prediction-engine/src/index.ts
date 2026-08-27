@@ -236,6 +236,32 @@ export type {
   DixonColesFairValueInput,
   DixonColesFairValue,
 } from "./dixon-coles.js";
+// In-game soccer win probability (arXiv:1906.05029, KDD'21) -- the t=0
+// boundary case of this model IS the pregame independent-Poisson path above
+// (proven exactly equal in the test file), so this is an extension of it,
+// not a separate model. Three portable mechanisms: T=100 percent-time
+// normalization with halftime pinned at frame 50; a closed-form Kalman
+// filter + RTS smoother standing in for the paper's random-walk coefficient
+// prior; and the invlogit structural link on the paper's own validated
+// simplified feature set (score diff, time, cards, Elo diff). Coefficient
+// fitting from real data is a separate, data-gated increment -- GSE has not
+// yet archived the multi-season settled soccer data it needs. R&D / offline
+// only, priced:false.
+export {
+  percentTimeFrame,
+  randomWalkSmooth,
+  inGameRateFactor,
+  inGameWinProbability,
+} from "./ingame-soccer.js";
+export type {
+  MatchClock,
+  FrameObservation,
+  SmoothedFrame,
+  ThetaFeatures,
+  ThetaCoefficients,
+  InGameState,
+  InGameProbabilities,
+} from "./ingame-soccer.js";
 export {
   deriveRankingProbability,
 } from "./ranking-prob.js";
