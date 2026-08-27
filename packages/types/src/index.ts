@@ -257,6 +257,8 @@ export interface OddsApiOutcome {
   /** Absent when the public scoreboard gives a point but no American price (Galaxy/ESPN inline). Never fake -110. */
   price?: number;
   point?: number;
+  /** Galaxy de-vig p_i=(1/O_i)/Σ(1/O_j) when both ML prices exist. */
+  fair_prob?: number;
 }
 
 export interface OddsApiMarket {

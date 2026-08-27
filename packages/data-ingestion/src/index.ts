@@ -292,6 +292,8 @@ export {
 } from "./odds-api-key.js";
 export type { OddsApiKeyEnvName } from "./odds-api-key.js";
 
+export { americanToDecimal, deVigFairProbs } from "./galaxy-devig.js";
+
 export {
   fetchEspnOddsForSport,
   ESPN_ODDS_SPORT_MAP,

@@ -174,6 +174,11 @@ describe("fetchEspnOddsForSport", () => {
     const h2h = markets.find((m) => m.key === "h2h")!;
     const prices = h2h.outcomes.map((o) => o.price);
     expect(prices).toEqual(expect.arrayContaining([-146, 122]));
+    const bufH2h = h2h.outcomes.find((o) => o.name.includes("Bills"));
+    const pitH2h = h2h.outcomes.find((o) => o.name.includes("Steelers"));
+    expect(bufH2h?.fair_prob).toBeGreaterThan(0.5);
+    expect(pitH2h?.fair_prob).toBeLessThan(0.5);
+    expect((bufH2h?.fair_prob ?? 0) + (pitH2h?.fair_prob ?? 0)).toBeCloseTo(1, 3);
     const spreads = markets.find((m) => m.key === "spreads")!;
     const buf = spreads.outcomes.find((o) => o.name === "BUF" || o.name === "Buffalo Bills");
     expect(buf?.point).toBe(-3);

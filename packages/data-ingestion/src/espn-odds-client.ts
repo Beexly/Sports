@@ -13,6 +13,7 @@
  */
 
 import type { OddsApiEvent, OddsApiBookmaker, OddsApiMarket } from "@sports/types";
+import { deVigFairProbs } from "./galaxy-devig.js";
 
 /** Odds-API sport key → ESPN site path + core league path */
 export const ESPN_ODDS_SPORT_MAP: Record<
@@ -195,6 +196,11 @@ function eventFromInlineOdds(
       ],
     },
   ];
+  const fair = deVigFairProbs(markets[0]!.outcomes);
+  for (const o of markets[0]!.outcomes) {
+    const fp = fair[o.name];
+    if (fp != null) o.fair_prob = fp;
+  }
   if (blk["spread"] != null) {
     const s = Number(blk["spread"]);
     if (Number.isFinite(s)) {
