@@ -13,7 +13,8 @@
   is auto-committed to this repo. All findings below were produced there and verified.
 
 ## READ-FIRST ENTRY POINT (the whole corpus, in order)
-1. `C:/Users/Garrett/sports-intel/README.md` — root index (visible on folder open).
+- sports-intel/REAUDIT-FIXES.md — self re-audit: what the first pass missed + corrections (READ THIS for honesty risks)
+- sports-intel/README.md — root index (visible on folder open)
 2. `C:/Users/Garrett/sports-intel/MASTER-INDEX.md` — deliverable map + rollup + loop state.
 3. `C:/Users/Garrett/sports-intel/rnd/STRATEGY-20K.md` — 20k view: forgotten / under-leveraged / path.
 4. `C:/Users/Garrett/sports-intel/deep/FIRE-GATE-CALIBRATION-SPEC.md` — G1–G5 gaps resolved.
@@ -74,8 +75,28 @@ Expected: `23 passed` + `13 passed` + `7 passed` (43 total).
 3. Wire safe sentiment covariates (Action split delta, Pinnacle line-move) into covariate bus.
 4. Port G1–G5 harness closers into this repo via PR.
 
+## HOW TO WIRE A Q-FEED + RUN A PROP REPLAY (literal steps for Claude)
+The gap-closers in `engine-replica.ts` are READY but not wired to a live feed. To run a real
+prop replay once a key exists:
+```bash
+# 1) Get a key (FREE no-card: OddsPapi signup; or PAID $30: The Odds API historical)
+# 2) Fetch historical prop lines for a slate -> normalize to PropBookQuote:
+#    in backtest-replay.ts, replace the q-side fixture with:
+#      const quote = normalizePropOdds(rowFromFeed);   // engine-replica.ts:94
+#      const res = bridgeFireGate(p, quote, /*priced*/ false);  // engine-replica.ts:106
+#      if (res.fire === 'open') { /* grade vs outcome, settle CLV */ settleClv({...}); }
+# 3) Run the harness (proves the path end-to-end):
+ESBUILD=C:/Users/Garrett/Sports-pr/node_modules/.bin/esbuild
+OUT=C:/Users/Garrett/sports-intel/rnd/harness/.build
+$ESBUILD harness/replay-real-games.test.ts --bundle --platform=node --format=esm --outfile="$OUT/r.mjs"
+node "$OUT/r.mjs"   # expect: 7 passed, REAL-DATA ROI printed
+```
+Game-level is ALREADY proven on real 2023–2024 data (no key). Props need the q-feed above.
+The ONE real missing piece is the q-side data source — math, fire gate, and grading are done.
+
 ## FULL CORPUS TREE (all in `C:/Users/Garrett/sports-intel`)
-- Root: `README.md` · `MASTER-INDEX.md` · `REAUDIT-GAP-REPORT.md` · `DEEP-RESEARCH-REPORT.md` · `SPORTS-INTEL-AGENTS.md`
+- Root: `README.md` · `MASTER-INDEX.md` · `REAUDIT-GAP-REPORT.md` · `REAUDIT-FIXES.md` ·
+  `DEEP-RESEARCH-REPORT.md` · `SPORTS-INTEL-AGENTS.md`
 - `deep/`: fire-gate-math-reference.py, FIRE-GATE-CALIBRATION-SPEC.md, odds-api-supply-chain.md,
   prediction-markets-q-source.md, competitor-model-teardown.md, dfs-optimizer-and-sentiment.md,
   regulatory-landscape.md, README.md
