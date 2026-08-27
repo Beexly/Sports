@@ -117,17 +117,19 @@ PART 4 — OPEN CORNERS NOT YET CHECKED (honest gaps)
 ====================================================================
 PART 5 — QUEUE / NEXT STEPS / SUGGESTIONS
 ====================================================================
-1. [USER ACTION] Get free TheRundown key (email, no card): therundown.io/pricing/api.
-   Paste into `RUNDOWN_API_KEY`; unset `THE_ODDS_API_KEY`. This kills the $30 bill — PURE ENV
-   FLIP, no code change (processSport already free-falls through Rundown->ESPN). Verify
-   processSport logs `therundown` / `espn_public` provider tag instead of `the-odds-api`.
-2. [RESEARCH] Fire `fetchRundownEventsForSport` with the real key to confirm multi-book odds
-   shape + 20k/day free-tier behavior. (Needs the key from step 1.)
-3. [RESEARCH] One-time Covers/sportsoddshistory HTML scrape for 2018-2025 closing lines
-   (Playwright, personal/research). Fills the only real historical gap.
-4. [POLISH] Galaxy: add `/health` endpoint, cache layer, per-sport rate limiter; wire as a
-   local dev substitute for The Odds API in tests (already serves at :8731).
-5. [DOC] Keep this log updated each pass; do not declare "done" until step 1 + 2 are closed.
+SUPERSEDED by Part 8 (BE THE PROVIDER, 2026-08-27). Kept for history.
+TheRundown is no longer the plan — we are the provider, no third-party API.
+Original items preserved below:
+====================================================================
+1. [SUPERSEDED] Get free TheRundown key — NO LONGER NEEDED. We are the provider.
+   TheRundown is deprecated (Part 8). Build direct bookmaker adapters instead.
+2. [SUPERSEDED] TheRundown multi-book test — NO LONGER NEEDED.
+3. [ACTIVE] One-time Covers/sportsoddshistory HTML scrape for 2018-2025 closing lines
+   (Playwright, personal/research). Fills the only real historical gap. Moved to
+   revised queue item 4 (Part 8).
+4. [SUPERSEDED] Galaxy local dev substitute — the local odds_feed.py is proof-only.
+   Production path must be in repo packages (Part 8 architecture doc).
+5. [ACTIVE] Keep this log updated each pass.
 
 ====================================================================
 PART 6 — 20,000-FT REVIEW (step outside the box, 2026-08-27)
@@ -209,4 +211,44 @@ PART 7 — ACTIONS TAKEN FROM THIS REVIEW
 - Recommended (not done): bankroll/Kelly guardrail component; 2-source minimum + staleness alert
   in processSport; territory/tax review.
 
-Last updated: 2026-08-27 (pass 6 — staleness guard verified on :8731; stale-process blocker resolved).
+Last updated: 2026-08-27 (pass 7 — BE THE PROVIDER direction set; TheRundown deprecated; architecture doc written; AGENTS.md updated).
+
+====================================================================
+PART 8 — BE THE PROVIDER (owner directive, 2026-08-27)
+====================================================================
+Owner directive: "if im asking us to be the odds provider going forward, i dont
+see why we need the rundown — we need to find solutions on how to get what we
+need without requiring their api or anyone elses."
+
+DECISION: We are the odds provider. No third-party odds API dependency.
+- TheRundown: DEPRECATED. Keep code, remove from required failover chain.
+- The Odds API: Can be unset. Pipeline must work without it.
+- Polymarket: Compliance hold stays. INDEPENDENT_POLYMARKET=OFF.
+- New path: direct bookmaker adapters (BetOnline, Pinnacle, Bovada) + ESPN
+  site.web.api (fix endpoint) + historical backfill (slieb74 CSV + Covers scrape).
+
+KEY DISCOVERY: The Odds API's own Terms (§Market Data & Transparency) state their
+data is "aggregated from publicly accessible sources available to the general
+public on the public internet." They scrape public bookmaker pages. We can too.
+
+DOCS WRITTEN:
+- AGENTS.md: appended "BE THE PROVIDER" section with legal boundary, local
+  artifact table, and ESPN endpoint mismatch warning.
+- docs/ops/galaxy-self-provisioned-odds-architecture.md: full architecture,
+  source inventory, gap analysis, build order.
+
+LOCAL-ONLY ARTIFACTS (Claude Code can't reach — not in this repo):
+- C:\Users\Garrett\galaxy-sports-api\odds_feed.py — Python proof-of-concept
+  (ESPN site.web.api + Polymarket, serves :8731, verified count=42 stale=False)
+- C:\Users\Garrett\Downloads\extract-data-2026-08-27*.json — 3 blueprint extracts
+- C:\Users\Garrett\Downloads\769a3bce-*.zip — 9 raw Odds API scraped pages
+
+REVISED OPEN QUEUE:
+1. [FIX] ESPN client endpoint: sports.core.api (BLOCKED) → site.web.api (WORKS)
+2. [BUILD] BetOnline direct adapter (OddsProvider interface)
+3. [BUILD] Pinnacle direct adapter
+4. [BACKFILL] Historical lines: slieb74 CSV (1968-2017) + Covers scrape (2018-2025)
+5. [BUILD] Bovada direct adapter
+6. [DEPRECATE] TheRundown: mark deprecated in source registry
+7. [BUILD] Bankroll/Kelly guardrail (separate component, needed before real money)
+8. [MONITOR] Data drift / retraining cadence
