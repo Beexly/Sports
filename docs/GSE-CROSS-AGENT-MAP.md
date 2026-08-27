@@ -86,5 +86,69 @@ clones can't resolve SHAs until pushed — by design per ledger rules).
 - This map is a LIVING file — update it when you discover a new agent surface.
 
 ---
-See also: `REAUDIT-FIXES.md` (what the first pass missed), `MASTER-INDEX.md`, `README.md`
-(all in `C:/Users/Garrett/sports-intel/`, registered via branch `hermes/sports-intel-orientation`).
+## VERIFIED INVENTORY (2026-08-27 subagent sweep — HONEST, file-level)
+Three parallel inventory agents enumerated the largest unknown surfaces. What they found:
+
+### A. `.cagent/Sports/docs/ops/hermes/` (the Hermes overnight brain)
+- **20 files + 6 workstream subdirs**: `l14-label-census`, `l15-close-pred-feasibility`,
+  `l16-book-microstructure`, `l17`, `l18`, `hf7-archive`.
+- Root files: `README.md` (handoff pkg), `RESUME.md` (resume protocol: "live ledger is
+  `docs/ops/AGENT_LEDGER.md`; do NOT resume frozen `handoff/LEDGER.md`/`CONTINUOUS.md`"),
+  `BUILD_QUEUE.md`, `AUDIT_PROMPT.md`, `CONTINUOUS.md`, `FINAL-RUN-2026-08-20.md`,
+  `OVERNIGHT-2026-08-19.md`.
+- `hf7-archive/query.sql` → Neon `gse-postgres` (project `summer-brook-99380762`, role
+  `hermes_ro`, SELECT-only): **37,402 `odds_line_snapshots` (9,864 NFL, 11,318 MLB)** — a
+  REAL closing-line store already exists in Neon. This is the q-side CLV source the
+  `C-14`/`C-15` forensics graded (and found model-derived, not real-book, for 909/909 locks).
+- **PROOF OF INVISIBILITY**: keyword search across ALL hermes docs for `sports-intel`,
+  `backtest`, `Kaggle`, `nflverse` returned ZERO hits. Our R&D corpus was truly unseen by
+  the overnight Hermes. The `RND-0827` ledger row + this map fix that.
+
+### B. `GSE-competitive-intel/` (competitor intelligence — REAL GSE IP)
+- `fantasyguru/gse_engine.py` — MLB reliever SMASH/BURR/Solds engine, clean-room from FREE
+  Statcast (no FG data used; GSE-owned IP, glass-box).
+- `fantasyguru/nfl_engine.py` — NFL engine: QB-types (mobility), O-line/D-line trench SMASH,
+  WR receiving SMASH, "from nflverse 2025 season" (⚠️ verify: likely the latest nflverse tag
+  labeled 2025; our corpus found 2025 NOT on nflverse — reconcile before trusting "2025").
+- `fantasyguru/nfl_scheme_defense.py` — coaching/scheme + defense engine.
+- `fantasyguru/FANTASYGURU-DOSSIER.md` — 46,844-URL public-surface CI dossier + DEEP-INTEL-ADDENDUM.
+- `fantasypros/` — `FANTASYPROS-DOSSIER.md`, `fp-accuracy-loopholes.md`, `fingerprint-and-scale.md`.
+- Boundary honored: public surface / passive OSINT only, no paywalled bodies, no /api/ probing.
+
+### C. Repo ownership discrepancy (NEW coordination risk)
+- `gse-b1/README.md` badges point to GitHub owner **`baxley-garrett/sports-intelligence-os`**,
+  while the research clones remote is **`Beexly/Sports`**. There may be TWO GitHub orgs for
+  the same product. Before pushing/opening PRs, confirm which org is canonical — a PR to the
+  wrong org is wasted work. (Our `hermes/sports-intel-orientation` branch is on `Beexly/Sports`.)
+
+### D. `Sports-hermes-ledger/` (sibling of `.cagent/Sports`)
+- Full multi-app sports/gaming repo: `apps/`, `gse-ml-service/`, node_modules symlink to
+  `../Sports`, `.agents/.claude/.grok` dirs. Shares the SAME `docs/ops/AGENT_LEDGER.md`
+  live-ledger path. Likely the same repo as `.cagent/Sports` at a different path (or a
+  mirror) — verify before editing both, or you may double-edit one logical file.
+
+### E. `gse-run` skill references (unread, noted)
+- `.claude/skills/gse-run/references/`: `frontier-kernel.md`, `recovery-priorities.md`,
+  `token-protocol.md` — the runbook for `/gse-run next` (continuing ONE frontier workstream).
+  Pair with `docs/frontier/{CURRENT_STATE,WORKSTREAM_QUEUE,RECOVERY_MATRIX}.md`.
+
+### F. `handoff/` (exactly 2 files)
+- `EDGE_LEDGER.md` — swarm recovery (R01–R91 roles; strict honesty rules; BLOCKED-with-evidence
+  > fabricated SHIP). `H1_RESEARCH_2026-08-23.md` — 19-agent swarm: TIER1-3 edges; "13
+  abandoned/partial edge implementations found"; CRITICAL GAP: repo only ingests OFFENSIVE
+  nflverse — def + ST data free but unused.
+
+## RECONCILED CROSS-REFERENCES (so each agent finds the others)
+- **Our free Kaggle backtest (sports-intel)** ↔ **OVN-0826-1** (their 6,967-game corpus):
+  combine → bigger real q-side. Their Neon `odds_line_snapshots` (hf7-archive) is a REAL
+  closing-line source we should ingest instead of fixtures.
+- **Our Shin/CLV `settleClv`** ↔ **C-14/C-15** (909/909 model-derived warning): use their
+  Neon real quotes, never model-derived, or our CLV grade is meaningless.
+- **Our 50-papers cross-ref** ↔ **C-16** 11-agent dossier + **H1_RESEARCH** 19-agent swarm:
+  merge the literature maps; the "13 abandoned edge impls" in H1 is a TODO list for us.
+- **`nfl_engine.py` "nflverse 2025"** ↔ our "2025 not available": RECONCILE — one of us is
+  wrong about 2025 availability; settle before either claims 2025 coverage.
+
+See also: `REAUDIT-FIXES.md`, `MASTER-INDEX.md`, `README.md` (all in `sports-intel/`, branch
+`hermes/sports-intel-orientation`).
+
