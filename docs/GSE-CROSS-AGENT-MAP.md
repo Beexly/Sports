@@ -154,5 +154,8 @@ Three parallel inventory agents enumerated the largest unknown surfaces. What th
   wrong about 2025 availability; settle before either claims 2025 coverage.
 
 See also: `REAUDIT-FIXES.md`, `MASTER-INDEX.md`, `README.md` (all in `sports-intel/`, branch
-`hermes/sports-intel-orientation`).
+`hermes/sports-intel-orientation`). **Deepest ties + unmade corners: `GSE-DEEP-TIES.md`** (this
+branch) — the unifying insight that the sports-intel R&D corpus is a CONCRETE PROTOTYPE of GSE's
+frontier architecture (event-sourcing / epistemic-twin / model-promotion-gate), plus C1–C14
+corners mined after this map's first pass.
 
