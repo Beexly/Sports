@@ -1582,6 +1582,22 @@ export type {
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
+// Rare-event admission-harness metrics (arXiv:2206.13222): precision-at-
+// fixed-recall as the operating metric for any rare-event classifier screen
+// (AUC hides the base-rate failure their own numbers demonstrate — 0.82 AUC
+// at 2.3% base rate still yields ~7.5% precision), and inverse-frequency
+// class weights over synthetic resampling. The standing argument for keeping
+// GSE's rare-event props on count models + the LCB gate, never raw
+// classifier scores.
+export {
+  inverseFrequencyClassWeights,
+  precisionAtRecall,
+} from "./edge-lab/rare-event-metrics.js";
+export type {
+  ClassWeights,
+  PrecisionAtRecallResult,
+} from "./edge-lab/rare-event-metrics.js";
+
 // Spread-anchored expectation profile: leak-safe game-level covariate
 // (arXiv:2606.18805's suspense/surprise/valence structure, ported from a
 // driving-behavior study — honest prior WEAK, priced:false until walk-forward
