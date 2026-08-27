@@ -1582,6 +1582,28 @@ export type {
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
+// Small dense linear algebra (Gauss-Jordan with partial pivoting) — scoped
+// to inverting a handful of regression coefficients' Fisher information
+// matrix for standard errors. Not a general numerical library.
+export { invertMatrix } from "./edge-lab/linalg.js";
+
+// Poisson interrupted time series with an exposure offset (arXiv:1805.01271's
+// bonus portable method): "the right instrument for any before/after claim
+// GSE ever wants to publish." Mechanically enforces the paper's own
+// discipline -- a rate-ratio CI spanning 1.0 can only ever report
+// "no_detectable_change," never "no change." Simplified from the source
+// (fixed-effects only, no player random intercept) -- documented in the
+// module. R&D / offline only.
+export { fitPoissonIts } from "./edge-lab/poisson-its.js";
+export type {
+  ItsObservation,
+  ItsFitOptions,
+  ItsCoefficient,
+  ChangeCallout,
+  RateRatio,
+  ItsFitResult,
+} from "./edge-lab/poisson-its.js";
+
 // Rare-event admission-harness metrics (arXiv:2206.13222): precision-at-
 // fixed-recall as the operating metric for any rare-event classifier screen
 // (AUC hides the base-rate failure their own numbers demonstrate — 0.82 AUC
