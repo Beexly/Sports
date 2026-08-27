@@ -359,10 +359,30 @@ export async function processSport(
       }
     }
 
-    // TheRundown: full replace when primary empty; thin-fill when some games
-    // sit under MIN_BOOKMAKERS. Never dual-pull a fully covered slate.
+    // Galaxy/ESPN keyless (inline scoreboard) BEFORE Rundown — no vendor key.
     let rundownAttemptNote: string | null = null;
     let espnAttemptNote: string | null = null;
+    if (events.length === 0) {
+      try {
+        const espn = await fetchEspnOddsForSport(sport.key);
+        if (espn.events.length > 0) {
+          events = espn.events;
+          oddsProviderTag = "espn_public";
+          console.log(
+            `${logPrefix} ${sport.key}: Galaxy/ESPN keyless path ${events.length} events` +
+              (espn.error ? ` (note: ${espn.error})` : ""),
+          );
+        } else {
+          espnAttemptNote = espn.error ?? "espn odds empty";
+          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
+        }
+      } catch (espnErr) {
+        espnAttemptNote =
+          espnErr instanceof Error ? espnErr.message : String(espnErr);
+        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
+      }
+    }
+
     const rundownKey = resolveRundownApiKey();
     if (events.length === 0) {
       if (rundownKey) {
@@ -382,7 +402,11 @@ export async function processSport(
       } else {
         rundownAttemptNote = "rundown key ABSENT";
       }
-    } else if (rundownKey && eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0) {
+    } else if (
+      rundownKey &&
+      oddsProviderTag === "the-odds-api" &&
+      eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0
+    ) {
       try {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
         if (rd.events.length > 0) {
@@ -401,33 +425,6 @@ export async function processSport(
           `${logPrefix} ${sport.key}: rundown thin-fill failed — ` +
             `${thinErr instanceof Error ? thinErr.message : thinErr}`,
         );
-      }
-    }
-
-    // Free tertiary path: ESPN public odds (zero keys) when Odds+Rundown empty.
-    // Never invents — soft-fails empty. Community routing: pseudo-r/Public-ESPN-API.
-    if (events.length === 0) {
-      try {
-        const espn = await fetchEspnOddsForSport(sport.key);
-        if (espn.events.length > 0) {
-          events = espn.events;
-          oddsProviderTag = "espn_public";
-          console.log(
-            `${logPrefix} ${sport.key}: ESPN public free path ${events.length} events` +
-              (espn.error ? ` (note: ${espn.error})` : ""),
-          );
-        } else {
-          oddsProviderTag =
-            oddsProviderTag === "therundown-empty" || oddsProviderTag === "none"
-              ? "espn_public-empty"
-              : oddsProviderTag;
-          espnAttemptNote = espn.error ?? "espn odds empty";
-          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
-        }
-      } catch (espnErr) {
-        espnAttemptNote =
-          espnErr instanceof Error ? espnErr.message : String(espnErr);
-        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
       }
     }
 

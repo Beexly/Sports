@@ -254,7 +254,8 @@ export interface OddsApiSport {
 
 export interface OddsApiOutcome {
   name: string;
-  price: number;
+  /** Absent when the public scoreboard gives a point but no American price (Galaxy/ESPN inline). Never fake -110. */
+  price?: number;
   point?: number;
 }
 

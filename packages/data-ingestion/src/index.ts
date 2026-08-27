@@ -183,6 +183,7 @@ export {
 export {
   OfflineOddsProvider,
   TheOddsApiOddsProvider,
+  GalaxySportsApiOddsProvider,
   createOddsQuoteProvider,
   isCertifiableOddsProvider,
   type OddsProviderId,

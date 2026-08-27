@@ -106,4 +106,76 @@ describe("fetchEspnOddsForSport", () => {
     expect(res.events).toEqual([]);
     expect(res.error).toMatch(/HTTP 503/);
   });
+
+  it("hits site.web.api.espn.com first (Galaxy keyless host — site.api / core are blocked from this IP)", async () => {
+    const fetchImpl = vi.fn(async () => ({ ok: false, status: 503 }) as Response);
+    await fetchEspnOddsForSport("americanfootball_nfl", {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    const urls = fetchImpl.mock.calls.map((c) => String(c.at(0) ?? ""));
+    expect(urls.at(0)).toContain("site.web.api.espn.com");
+    expect(urls.at(0)).toContain("/football/nfl/scoreboard");
+  });
+
+  it("maps INLINE scoreboard odds (Galaxy formula) without a core /odds call", async () => {
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
+    const scoreboard = {
+      events: [
+        {
+          id: "401873298",
+          date: commenceSoon,
+          competitions: [
+            {
+              date: commenceSoon,
+              status: { type: { state: "pre", completed: false }, created: commenceSoon },
+              competitors: [
+                {
+                  homeAway: "home",
+                  team: { displayName: "Buffalo Bills", abbreviation: "BUF" },
+                },
+                {
+                  homeAway: "away",
+                  team: { displayName: "Pittsburgh Steelers", abbreviation: "PIT" },
+                },
+              ],
+              odds: [
+                {
+                  provider: { name: "DraftKings" },
+                  spread: -3.0,
+                  overUnder: 34.5,
+                  moneyline: {
+                    home: { close: { odds: "-146" } },
+                    away: { close: { odds: "+122" } },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const fetchImpl = vi.fn(async (url: string) => {
+      const u = String(url);
+      if (u.includes("scoreboard")) {
+        return { ok: true, json: async () => scoreboard } as Response;
+      }
+      return { ok: false, status: 404 } as Response;
+    });
+    const res = await fetchEspnOddsForSport("americanfootball_nfl", {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      interEventMs: 0,
+    });
+    expect(res.events).toHaveLength(1);
+    const coreCalls = fetchImpl.mock.calls.filter((c) =>
+      String(c[0]).includes("sports.core.api.espn.com"),
+    );
+    expect(coreCalls).toHaveLength(0);
+    const markets = res.events[0]!.bookmakers[0]!.markets;
+    const h2h = markets.find((m) => m.key === "h2h")!;
+    const prices = h2h.outcomes.map((o) => o.price);
+    expect(prices).toEqual(expect.arrayContaining([-146, 122]));
+    const spreads = markets.find((m) => m.key === "spreads")!;
+    const buf = spreads.outcomes.find((o) => o.name === "BUF" || o.name === "Buffalo Bills");
+    expect(buf?.point).toBe(-3);
+  });
 });

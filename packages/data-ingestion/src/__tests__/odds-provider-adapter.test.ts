@@ -32,9 +32,9 @@ describe("OfflineOddsProvider", () => {
 });
 
 describe("createOddsQuoteProvider", () => {
-  it("uses offline when key missing", () => {
+  it("uses galaxy-sports-api (keyless) when paid Odds API key is missing — never another vendor key", () => {
     const p = createOddsQuoteProvider({ env: {} });
-    expect(p.id).toBe("offline");
+    expect(p.id).toBe("galaxy-sports-api");
     expect(p.capabilities.certifiableForLiveGate).toBe(false);
   });
 
