@@ -46,7 +46,7 @@ tested, typechecked, on the PR branch — not just specced.
 | 14 | Fail-closed LLM-judge cross-reference | 2606.28570 | `content-engine/` (build-draft → persist-draft) | ⏳ QUEUED |
 | 15 | Injury ITS design + check-claims checklist | 1805.01271 | content trust-gate | ⏳ QUEUED |
 | 16 | Rare-event props conventions (prefilter, class weights, precision@recall) | 2206.13222 | edge-lab props harness | ⏳ QUEUED |
-| 17 | Partial pooling for thin calibration cells | 2608.18430 | `online-beta-recalibration.ts` | ⏳ QUEUED |
+| 17 | Partial pooling for thin calibration cells | 2608.18430 | `hierarchical-calibration.ts` | ✅ **SHIPPED** — `fitHierarchicalBetaShrinkage` + `shrinkCellsTowardGlobal`, EM-like alternation on the existing Beta (a,b) parameterization from `online-beta-recalibration.ts`, weighted by per-cell sample count. 11 unit tests incl. a self-consistency fixed-point proof and a directional monotone-shrinkage check. A rounding-inside-the-loop bug was caught by the test suite itself (a hand-computed precision check failed) and fixed — round only the final reported output, never intermediate iteration state. Takes per-cell (a,b,n) as input; does not itself fit per-cell params or wire into `calibration-map.ts`'s aggregation path — next increment |
 | 18 | Close-loss RG covariate + cool-down framing | 2606.18805 | bias-mirror + RG content | ⏳ QUEUED |
 | 19 | Coverage-transformer / step-and-turn tracking core | 2603.25901, 2603.17866 | future player-movement models | 🔒 **PARKED, not dead** — blocked on a cleared tracking-data source (Big Data Bowl licenses are research-only); unlocks the moment rights clear, no code work possible before then |
 

@@ -322,6 +322,22 @@ export type {
   TeacherGapReport,
 } from "./empirical-rate-teacher.js";
 
+// R&D — hierarchical partial-pooling calibration shrinkage (ported from
+// arXiv:2608.18430's local/global Algorithm-1 alternation). Shrinks per-cell
+// Beta-calibration params toward a jointly-estimated global prior, weighted
+// by each cell's own sample count — thin sport x market cells borrow
+// strength from the pooled map instead of overfitting or being unusable.
+// Offline refit-time tool only; does not flip any live gate.
+export {
+  fitHierarchicalBetaShrinkage,
+  shrinkCellsTowardGlobal,
+} from "./hierarchical-calibration.js";
+export type {
+  CellBetaFit,
+  ShrunkCellBeta,
+  HierarchicalCalibrationResult,
+} from "./hierarchical-calibration.js";
+
 // R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
 // across calibrator families (the honest fix for "isotonic by fiat"). Composes
 // the isotonic/ECE toolkit above; equal-mass ECE for robust small-fold scoring.
