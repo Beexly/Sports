@@ -36,22 +36,30 @@
  *
  * DraftKings' roster-diversity rule — players from at least 2 different
  * GAMES (which implies 2 different teams) — is enforced exactly and lazily:
- * a lineup violating it must draw all 9 players from a single game G, so the
- * relaxed solve runs first and, only if its argmax is single-game, re-runs
- * with an extra 0/1 "has a player outside G yet" DP flag (same machinery as
- * the stack flag; the flags generalize to a small bitmask). Any lineup
- * spanning ≥2 games trivially satisfies every such "leave game Gᵢ" flag, so
- * the flagged feasible set contains every rule-legal lineup and an argmax
- * that spans ≥2 games is the true constrained optimum — the standard lazy-
- * constraint argument. On realistic pools the rule never binds and the relax-
- * check costs nothing.
+ * the relaxed solve (no diversity dimension) runs first, and only if its
+ * argmax draws all 9 players from a single game does a second, constrained
+ * solve run. That second solve adds one extra DP dimension tracking, per
+ * partial lineup, "no player chosen yet" / "every player chosen so far is in
+ * game Gᵢ" (one state per distinct game in the pool) / "already spans ≥2
+ * games" (one absorbing state shared by every way of getting there) — O(games)
+ * states, not a per-attempt bitmask. Forcing the final state to the absorbing
+ * "spans ≥2 games" value is a single exact DP pass, so unlike a bitmask that
+ * bans one already-seen single game per retry (doubling its state count each
+ * time, and needing as many retries as there are individually-dominant single
+ * games) this never needs more than one extra solve. On realistic pools the
+ * rule never binds and the relax-check costs nothing.
  *
- * Complexity: O(teamRuns × players × countStates × stackDim × salaryStates).
- * For the DK-Classic roster (QB, RB, RB, WR, WR, WR, TE, FLEX, DST) countStates
- * = 192 and, at $100 granularity on a $50,000 cap, salaryStates = 501 — so an
- * unconstrained (non-stack) solve over ~600 players touches on the order of
- * 600 × 192 × 501 ≈ 5.8×10^7 DP cells, comfortably inside the file's timed
- * 600-player fixture (see dfs-optimizer.test.ts).
+ * Complexity: O(teamRuns × players × countStates × salaryStates × flagStates),
+ * where flagStates = stackDim (1 or 2) × gameDim (1, or distinctGames + 2 when
+ * the game-diversity dimension is active). For the DK-Classic roster (QB, RB,
+ * RB, WR, WR, WR, TE, FLEX, DST) countStates = 192 and, at $100 granularity on
+ * a $50,000 cap, salaryStates = 501 — so the common relaxed (flagStates = 1)
+ * solve over ~600 players touches on the order of 600 × 192 × 501 ≈ 5.8×10^7
+ * DP cells, comfortably inside the file's timed 600-player fixture (see
+ * dfs-optimizer.test.ts). flagStates only grows past 1 for a stack-required
+ * and/or diversity-constrained re-solve, and gameDim is linear in the pool's
+ * distinct-game count (typically a dozen or two for a real slate) — not
+ * exponential in anything, which is what makes that re-solve's memory bounded.
  *
  * Illustrative slate; the optimizer itself takes any DfsPlayer pool.
  */
@@ -154,15 +162,35 @@ export type DecayFn = (p: DfsPlayer) => number;
 type SolveResult = { readonly lineup: DfsPlayer[]; readonly value: number };
 
 /**
+ * The game-diversity requirement solveExact enforces, chosen by the caller
+ * (see optimizeOne) to fit the requirement actually needed:
+ *   - "none": no dimension — the free, common-case relaxed solve.
+ *   - "escape": one extra 0/1 bit, "has a player outside `bannedGame` been
+ *     chosen yet" — the cheap retry for the overwhelming majority of cases
+ *     where the rule binds (a single dominant single-game lineup to avoid).
+ *   - "diverse": a full `gameIndex.size + 2`-valued dimension tracking exact
+ *     committed-game identity (see below) — guarantees termination in one
+ *     solve regardless of how many individual games would need excluding,
+ *     at the cost of a wider (but still only linear-in-games, not
+ *     exponential) state space. Reserved for the rare case where "escape"
+ *     wasn't enough (the pool has more than one individually-dominant game).
+ */
+type GameRequirement = { readonly kind: "none" } | { readonly kind: "escape"; readonly bannedGame: string } | { readonly kind: "diverse" };
+
+/**
  * Exact solve for one roster, optionally requiring a QB + same-team WR/TE
- * pairing on `requiredStackTeam`, and requiring at least one player from
- * outside each game in `mustLeaveGames` (the lazily-added game-diversity
- * constraints — see optimizeOne). Both requirements share one generalized
- * "flags" DP dimension: a bitmask with one bit per requirement, OR-advanced
- * as players are chosen; only final states with every bit set count.
- * `ordered`, `space`, and `unit` are hoisted by the caller so repeated calls
- * (one per candidate stacked team) don't redo the deterministic sort or
- * granularity detection.
+ * pairing on `requiredStackTeam`, and optionally requiring game diversity
+ * per `gameReq` (see its doc). Both requirements share one generalized
+ * "flags" DP dimension, mixed-radix encoded: a 0/1 stack digit (has a
+ * same-team pass-catcher been chosen yet) times the game digit described by
+ * `gameReq`. Only final states with the stack digit at 1 (if required) and
+ * the game digit at its highest ("satisfied") value (if required) count —
+ * conveniently, for both "escape" (dim 2) and "diverse" (dim gameIndex.size
+ * + 2), the satisfied value is simply `gameDim - 1`. `ordered`, `space`,
+ * `unit`, and `gameIndex` are hoisted by the caller so repeated calls (one
+ * per candidate stacked team, or across the relaxed/escape/diverse retries)
+ * don't redo the deterministic sort, granularity detection, or per-game
+ * indexing.
  */
 function solveExact(
   ordered: readonly DfsPlayer[],
@@ -171,13 +199,19 @@ function solveExact(
   space: SlotSpace,
   unit: number,
   requiredStackTeam: string | null,
-  mustLeaveGames: readonly string[],
+  gameIndex: ReadonlyMap<string, number>,
+  gameReq: GameRequirement,
 ): SolveResult | null {
   const capUnits = SALARY_CAP / unit;
   const salaryStates = capUnits + 1;
-  const stackBit = requiredStackTeam ? 1 : 0;
-  const flagStates = 1 << (stackBit + mustLeaveGames.length);
-  const requiredFlags = flagStates - 1; // every requirement bit set
+  const stackDim = requiredStackTeam ? 2 : 1;
+  // Game-digit values when gameReq.kind === "diverse": 0 = empty,
+  // 1..gameIndex.size = "single game i so far", gameIndex.size + 1 = the
+  // absorbing "spans ≥2 games" state. When "escape": 0 = not yet escaped,
+  // 1 = escaped (absorbing). When "none": the trivial single-value 0.
+  const gameDim = gameReq.kind === "diverse" ? gameIndex.size + 2 : gameReq.kind === "escape" ? 2 : 1;
+  const flagStates = stackDim * gameDim;
+  const requiredFlags = (requiredStackTeam ? 1 : 0) * gameDim + (gameReq.kind === "none" ? 0 : gameDim - 1);
   const countStates = space.totalCountStates;
   const fullStates = countStates * salaryStates * flagStates;
 
@@ -189,7 +223,8 @@ function solveExact(
   // -1 means "player i unused, state carried forward unchanged"; otherwise
   // code = category*flagStates + srcFlags, decoded during backward
   // reconstruction. Int8 covers every unflagged/stack-only solve; the wider
-  // array is only allocated when lazy game constraints push codes past 127.
+  // array is only allocated when the flags dimension pushes codes past 127
+  // (only possible with requireGameDiversity on a pool with many games).
   const wideCodes = 6 * flagStates > 127;
   const choiceLayers = new Array<Int8Array | Int16Array>(ordered.length);
 
@@ -201,11 +236,12 @@ function solveExact(
     const isOffTeamQb = requiredStackTeam !== null && p.pos === "QB" && p.team !== requiredStackTeam;
     const tooExpensive = su > capUnits;
     const cats = isOffTeamQb || tooExpensive ? [] : categoriesFor(p.pos, space);
-    let setMask = 0;
-    if (requiredStackTeam !== null && p.team === requiredStackTeam && (p.pos === "WR" || p.pos === "TE")) setMask |= 1;
-    for (let b = 0; b < mustLeaveGames.length; b++) {
-      if (gameKeyOf(p) !== mustLeaveGames[b]) setMask |= 1 << (stackBit + b);
-    }
+    const advancesStack = requiredStackTeam !== null && p.team === requiredStackTeam && (p.pos === "WR" || p.pos === "TE");
+    const playerGameKey = gameReq.kind === "none" ? null : gameKeyOf(p);
+    // Only looked up for "diverse" — gameIndex is built from this same
+    // `ordered` array by the caller, so every player has an entry.
+    const playerGame = gameReq.kind === "diverse" ? gameIndex.get(playerGameKey!)! : 0;
+    const escapesBanned = gameReq.kind === "escape" && playerGameKey !== gameReq.bannedGame;
     const val = objVal(p, opts.mode) * decay(p);
 
     const dpNext = locked ? new Float64Array(fullStates).fill(-Infinity) : dpPrev.slice();
@@ -221,7 +257,22 @@ function solveExact(
         if (cur >= capOfDim) continue; // this category is already at capacity
         const targetCountIdx = countIdx + stride;
         for (let srcFlags = 0; srcFlags < flagStates; srcFlags++) {
-          const dstFlags = srcFlags | setMask;
+          // Decode the mixed-radix flags digit, advance each sub-digit
+          // independently, and re-encode. The stack digit is a simple OR
+          // (once set, stays set). The game digit depends on gameReq.kind:
+          // "escape" is also a simple OR (has this player, or any earlier
+          // one, been outside the banned game); "diverse" is a genuine
+          // 3-way state machine — empty -> this player's game; same single
+          // game -> stays; any other single game, or already "spans ≥2
+          // games" -> the absorbing "spans ≥2 games" value.
+          const srcStack = stackDim === 2 ? Math.floor(srcFlags / gameDim) : 0;
+          const srcGame = gameDim > 1 ? srcFlags % gameDim : 0;
+          const dstStack = stackDim === 2 ? (srcStack || (advancesStack ? 1 : 0)) : 0;
+          const dstGame =
+            gameReq.kind === "none" ? 0 :
+            gameReq.kind === "escape" ? (srcGame || (escapesBanned ? 1 : 0)) :
+            srcGame === 0 ? playerGame : srcGame === playerGame ? srcGame : gameDim - 1;
+          const dstFlags = dstStack * gameDim + dstGame;
           const srcBase = countIdx * salaryStates * flagStates + srcFlags;
           const dstBase = targetCountIdx * salaryStates * flagStates + dstFlags;
           const code = c * flagStates + srcFlags;
@@ -354,6 +405,11 @@ export function optimizeOne(
   const space = buildSlotSpace(DFS_SLOTS);
   const unit = detectGranularity([...ordered.map((p) => p.salary), SALARY_CAP]);
 
+  // Deterministic 1..N index per distinct game in the pool, shared by every
+  // solveExact call below (see its docstring for the game-diversity digit).
+  const gameIndex = new Map<string, number>();
+  for (const key of [...new Set(ordered.map(gameKeyOf))].sort()) gameIndex.set(key, gameIndex.size + 1);
+
   // Exact stacking: every team that can field both the QB slot and a
   // same-team WR/TE is a candidate. Solving each exactly and keeping the
   // best tries every feasible "which team is stacked" choice — not a
@@ -376,38 +432,38 @@ export function optimizeOne(
       .sort((a, b) => b.bound - a.bound || (a.team < b.team ? -1 : a.team > b.team ? 1 : 0));
   }
 
-  const solveUnder = (mustLeaveGames: readonly string[]): DfsPlayer[] | null => {
-    if (!opts.stack) return solveExact(ordered, opts, decay, space, unit, null, mustLeaveGames)?.lineup ?? null;
+  const solveUnder = (gameReq: GameRequirement): DfsPlayer[] | null => {
+    if (!opts.stack) return solveExact(ordered, opts, decay, space, unit, null, gameIndex, gameReq)?.lineup ?? null;
     let best: SolveResult | null = null;
     for (const { team, bound } of ranked) {
       if (best && bound <= best.value) break; // no remaining team can beat the confirmed best
-      const result = solveExact(ordered, opts, decay, space, unit, team, mustLeaveGames);
+      const result = solveExact(ordered, opts, decay, space, unit, team, gameIndex, gameReq);
       if (result && (!best || result.value > best.value)) best = result;
     }
     return best?.lineup ?? null;
   };
 
-  // DK game-diversity rule (players from ≥2 different games), enforced as a
-  // lazy constraint: a violating lineup is entirely inside one game G, and
-  // every rule-legal lineup has ≥1 player outside ANY single game — so
-  // re-solving with "must leave G" flags keeps the full legal set feasible,
-  // and the first argmax that spans ≥2 games is the true constrained
-  // optimum. Each iteration bans a distinct game, so this terminates; more
-  // than a couple of iterations would need multiple whole games able to
-  // out-score every diverse lineup, so the cap below is a memory guard for
-  // pathological synthetic pools, not a reachable limit on real slates.
-  const mustLeaveGames: string[] = [];
-  for (;;) {
-    const lineup = solveUnder(mustLeaveGames);
-    if (!lineup) return null;
-    const games = new Set(lineup.map(gameKeyOf));
-    if (games.size >= 2) return lineup;
-    const g = games.values().next().value!;
-    if (mustLeaveGames.includes(g) || mustLeaveGames.length >= 8) {
-      throw new Error("DFS optimizer: game-diversity re-solve failed to make progress — internal invariant violated.");
-    }
-    mustLeaveGames.push(g);
-  }
+  // DK game-diversity rule (players from ≥2 different games), resolved in up
+  // to three tiers, cheapest first:
+  //   1. Relaxed (no game dimension) — free, and already diverse on the
+  //      overwhelming majority of real pools.
+  //   2. If the relaxed argmax draws every player from one game G, retry
+  //      with a single "escape G" bit (GameRequirement "escape") — as cheap
+  //      as tier 1 (one extra bit), and sufficient whenever the pool has at
+  //      most one individually-dominant game, which is the expected shape
+  //      of the rule actually binding.
+  //   3. Only if THAT retry is still single-game (a second, different
+  //      dominant game) does the wider, exact "diverse" dimension run —
+  //      bounded (linear in the pool's distinct-game count) and guaranteed
+  //      to terminate in one solve, but paid only in this rare case rather
+  //      than on every retry.
+  const relaxed = solveUnder({ kind: "none" });
+  if (!relaxed) return null;
+  if (new Set(relaxed.map(gameKeyOf)).size >= 2) return relaxed;
+  const escaped = solveUnder({ kind: "escape", bannedGame: gameKeyOf(relaxed[0]!) });
+  if (!escaped) return null;
+  if (new Set(escaped.map(gameKeyOf)).size >= 2) return escaped;
+  return solveUnder({ kind: "diverse" });
 }
 
 export type LineupMetrics = {

@@ -229,6 +229,27 @@ describe("dfs optimizer — exact DP correctness proof", () => {
     }
   });
 
+  it("matches brute-force optimum exactly with TWO comparably strong single-game options (exercises the escape/diverse tiers beyond a weak-filler runner-up)", () => {
+    // Unlike POOL_ONE_GAME (one dominant game vs a 5-player-only weak
+    // filler), this gives the "must escape game G1" DP a genuine second
+    // full 9-player roster (G2) to weigh a partial swap against — a case
+    // the growing-bitmask design never had to get right beyond one banned
+    // game, and the new escape/diverse tiers must still hit the TRUE
+    // optimum, whichever tier resolves it.
+    const g2 = (id: string, pos: DfsPos, team: "CCC" | "DDD", salary: number, proj: number): DfsPlayer =>
+      ({ ...mk(id, pos, team, salary, proj, 0.1), opp: team === "CCC" ? "DDD" : "CCC" });
+    const TWO_STRONG_GAMES: DfsPlayer[] = [
+      ...POOL_ONE_GAME.slice(0, 9), // the full AAA@BBB roster from above
+      g2("q2", "QB", "CCC", 6000, 21),
+      g2("r4", "RB", "CCC", 5000, 17), g2("r5", "RB", "DDD", 5000, 16), g2("r6", "RB", "CCC", 4800, 15),
+      g2("w4", "WR", "CCC", 5000, 17), g2("w5", "WR", "DDD", 5000, 16), g2("w6", "WR", "DDD", 4800, 15),
+      g2("t2", "TE", "CCC", 4000, 13),
+      g2("d2", "DST", "DDD", 3000, 8),
+    ];
+    assertExactOptimum(TWO_STRONG_GAMES, "cash");
+    assertExactOptimum(TWO_STRONG_GAMES, "cash", true); // and with a required stack, composed
+  });
+
   it("stack pruning still finds the true optimum when the best-bound team turns out cap-infeasible", () => {
     // qz has by far the best QB value, so team QZQ's cheap-to-compute bound
     // (which ignores the salary cap) ranks first. But its only same-team
@@ -385,5 +406,27 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     const a = optimizeOne(base({ mode: "gpp" }), undefined, pool);
     const b = optimizeOne(base({ mode: "gpp" }), undefined, pool);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
+  }, 15000);
+
+  it("solves the diversity-constrained AND stack-required re-solve within 10s at 600-player, 16-game scale (CI-safe)", () => {
+    // makeBigPool's fixed team rotation (32 teams, opp = teams[(i+16)%32])
+    // produces 16 distinct games — the game-diversity dimension's
+    // worst-realistic-case width (gameDim = 18). Force BOTH the stack digit
+    // and the game digit to be exercised together: make one game's players
+    // dominate every objective so the relaxed solve collapses to single-game,
+    // which is exactly the case that used to blow up flagStates under the
+    // old per-banned-game bitmask (see the module docstring).
+    const pool = makeBigPool(600).map((p) =>
+      p.team === "ATL" || p.team === "BAL"
+        ? { ...p, team: p.team, opp: p.team === "ATL" ? "BAL" : "ATL", proj: p.proj + 1000, ceiling: p.ceiling + 1000 }
+        : p,
+    );
+    const t0 = Date.now();
+    const lu = optimizeOne(base({ mode: "gpp", stack: true }), undefined, pool);
+    const elapsedMs = Date.now() - t0;
+    expect(lu).not.toBeNull();
+    expect(new Set(lu!.map(gameKeyRef)).size).toBeGreaterThanOrEqual(2);
+    expect(stackSatisfied(lu!)).toBe(true);
+    expect(elapsedMs).toBeLessThan(10000);
   }, 15000);
 });
