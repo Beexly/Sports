@@ -1,6 +1,7 @@
 /** SYNTHETIC property tests for falsify kill-test harness (Wave 3, LANE B). */
 import { describe, expect, it } from "vitest";
 import { falsifyBind, type BacktestRow, type FalsifyOutput } from "../falsify.js";
+import { mulberry32 } from "../rng.js";
 
 function synRow(overrides: Partial<BacktestRow>): BacktestRow {
   return {
@@ -83,7 +84,8 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
     expect(sigRes.multiplicity.verdict).toBe("PASS");
 
     // Noise => multiplicity KILLED (e decays)
-    const noise = cleanRows(150).map((r) => ({ ...r, modelProb: 0.5, marketProb: 0.5, outcome: Math.random() > 0.5 ? 1 : 0 }));
+    const rand = mulberry32(1234);
+    const noise = cleanRows(150).map((r) => ({ ...r, modelProb: 0.5, marketProb: 0.5, outcome: rand() > 0.5 ? 1 : 0 }));
     const noiseRes = falsifyBind(noise, { minN: 10, shuffleB: 50, seed: 42 });
     expect(noiseRes.multiplicity.verdict).toBe("KILLED");
   });
