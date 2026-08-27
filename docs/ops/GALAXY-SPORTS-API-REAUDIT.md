@@ -129,4 +129,84 @@ PART 5 — QUEUE / NEXT STEPS / SUGGESTIONS
    local dev substitute for The Odds API in tests (already serves at :8731).
 5. [DOC] Keep this log updated each pass; do not declare "done" until step 1 + 2 are closed.
 
-Last updated: 2026-08-27 (pass 4 of re-audit — kill switch confirmed = env flip, no code).
+====================================================================
+PART 6 — 20,000-FT REVIEW (step outside the box, 2026-08-27)
+====================================================================
+The three extract packets are NOT a "how to get free odds" cheat-sheet. They are a full
+COMMERCIAL sports-data/analytics product specification. Re-reading them at altitude surfaced
+blind spots the feed-tunneling missed:
+
+A. MISSION / SCOPE MISMATCH (biggest risk).
+   User is unemployed, bank ~ -$580, wants to STOP a $30/mo bill. The blueprint describes a
+   Sportradar/Genius-class venture (CV tracking, lakehouse, OAuth gateway, enterprise
+   licensing, $100k+/yr). Building the WHOLE blueprint is the wrong object. Correct object:
+   keep the user's OWN models fed for $0. Galaxy = personal input feed; do NOT build the
+   enterprise stack (Kafka/Flink/Spark/K8s/OAuth) for a personal need. Cron + SQLite + Galaxy
+   suffices.
+
+B. LEGAL EXPOSURE (under-weighted; the blueprint is explicit and serious).
+   - derived_data_strategy: raw odds payloads, live PBP, tracking coords, logos, video =
+     licensed/restricted; must NOT enter a customer response without entitlement.
+   - U.S. fair use is fact-specific, NO safe-percentage rule; contracts/database rights/
+     trademarks/ToS independently constrain. "A derived-data label cannot cure a missing right."
+   - NBA terms restrict commercial reproduction of basketball content/stats; MLB restricts
+     distribution/modification/derivative of digital properties. DK/Action Network/BettingPros
+     ToS PROHIBIT automated collection / commercial copying.
+   - Repo source-registry already says espn-hidden-api FORBIDDEN, draftkings-unofficial FORBIDDEN
+     for commercial. So "be the provider" to THIRD PARTIES on free scraped data = ToS violation.
+   => PRODUCT BOUNDARY: Galaxy = PERSONAL use. Any outward product sells TRANSFORMED analytics
+      (posterior probs, model scores, alerts), NEVER raw odds rows. No third-party redistribution
+      on free scraped data. This is the surprise that bites if "be the provider" drifts to resale.
+
+C. RELIABILITY / SPOF (runtime surprises not modeled).
+   - TheRundown free tier = 20k data-points/day, NO SLA, can 429 -> processSport cascades to
+     ESPN (DEAD host from this IP) -> if both fail, ingestion writes 0 odds -> board goes stale/dark.
+   - ESPN `site.web.api.espn.com` works NOW but can IP-block/rotate anytime (no contract). Single
+     point of failure. Mitigation: require >=2 independent sources (Rundown + Polymarket exchange
+     consensus) and a STALENESS ALERT so the board goes dark HONESTLY instead of serving stale.
+   - Polymarket = prediction-market CONSENSUS, not true odds; liquidity/accuracy varies; yes/no
+     spread props not full 2-way ML; offseason thin. Cross-check only, never primary.
+
+D. ANALYTICAL BLIND SPOT — backtest validity.
+   - The "+3.5% ROI on 570 games" earlier claim was a SINGLE-SEASON Kaggle sample, NOT a
+     walk-forward validation. Blueprint demands strict chronological Bayesian walk-forward
+     (purged gaps, as-of snapshots, no shuffled CV — it leaks). Without 2018-2025 historical
+     lines (GAP, Part 4) the walk-forward window is impossible -> any ROI claim is in-sample/leaky.
+     Do NOT publish ROI numbers until the 2018-2025 backfill + walk-forward exists.
+
+E. BANKROLL MATH NOT BUILT (feed != survival).
+   Blueprint: fractional Kelly f=omega*f* with correlated-bet joint optimization + drawdown
+   protection Pr(min W_t < alpha W_ref) <= beta. At -$580 bankroll, UNIT SIZING matters more
+   than the feed. Galaxy supplies prices O; the Kelly/correlation guardrail is a SEPARATE needed
+   component (not in Galaxy). Flag as required before any real-money betting.
+
+F. THE ONE GENUINELY UNDER-LEVERAGED GEM: exchange consensus as free no-vig edge.
+   Kalshi/Poly are EXCHANGES; their data is REAL-MONEY consensus, free to READ (Poly keyless;
+   Kalshi auth, no data license for personal reading). Repo already has polymarket-independent-client
+   + kalshi-client. Best free "be the provider" move = cross-check ESPN/Rundown PRICES against
+   Polymarket/Kalshi EXCHANGE probabilities (true no-vig, real money). I fixated on "odds lines"
+   not "exchange consensus" — this is the free edge source, now wired (Poly) into Galaxy.
+
+G. WHAT WE ARE NOT SEEING (forecast list, to pre-empt surprises):
+   - Territory/jurisdiction: some data rights are US-specific; if user is in another territory the
+     ToS map changes. UNKNOWN.
+   - Tax/income: betting wins are taxable; at -$580 this is a real personal-finance interaction.
+   - Account/getting-limited: if user wins, sportsbooks limit/ban accounts; a model that wins needs
+     broker/account diversity the feed doesn't address.
+   - Data drift: book pricing models shift; a static model decays. Needs retraining cadence.
+   - The Odds API itself may have a CHEAPER tier or pause; cancelling Sep 22 is fine but verify no
+     annual lock-in / refund.
+
+PART 7 — ACTIONS TAKEN FROM THIS REVIEW
+====================================================================
+- Added STALENESS GUARD to Galaxy serve mode (generated_at + `stale` flag if feed older than
+  threshold) so it never silently serves dead odds. (See odds_feed.py serve().)
+  VERIFIED 2026-08-27: fresh serve on :8731 returns count=42, generated_at=<epoch>, stale=False,
+  served_at=<epoch>, FRESHNESS OK (generated_at within 10s of now). Stale-process blocker resolved
+  (old server killed, port freed, fresh start confirmed).
+- Product boundary documented in KILL_THE_ODDS_API.md + this log (Part 6-B).
+- Backtest-validity warning added (Part 6-D): no ROI claims until 2018-2025 walk-forward exists.
+- Recommended (not done): bankroll/Kelly guardrail component; 2-source minimum + staleness alert
+  in processSport; territory/tax review.
+
+Last updated: 2026-08-27 (pass 6 — staleness guard verified on :8731; stale-process blocker resolved).
