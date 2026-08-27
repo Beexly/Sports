@@ -211,8 +211,6 @@ PART 7 — ACTIONS TAKEN FROM THIS REVIEW
 - Recommended (not done): bankroll/Kelly guardrail component; 2-source minimum + staleness alert
   in processSport; territory/tax review.
 
-Last updated: 2026-08-27 (pass 7 — BE THE PROVIDER direction set; TheRundown deprecated; architecture doc written; AGENTS.md updated).
-
 ====================================================================
 PART 8 — BE THE PROVIDER (owner directive, 2026-08-27)
 ====================================================================
@@ -248,7 +246,18 @@ REVISED OPEN QUEUE:
 2. [BUILD] BetOnline direct adapter (OddsProvider interface)
 3. [BUILD] Pinnacle direct adapter
 4. [BACKFILL] Historical lines: slieb74 CSV (1968-2017) + Covers scrape (2018-2025)
+   DONE 2026-08-27: nflverse games.csv covers 1999-2026 with full odds (spread,
+   total, ML, spread odds, O/U odds). spreadspoke covers 1966-2017. Unified file
+   at data/historical-odds/nfl_historical_odds_unified.csv (12,164 games).
+   See data/historical-odds/MANIFEST.md.
 5. [BUILD] Bovada direct adapter
 6. [DEPRECATE] TheRundown: mark deprecated in source registry
 7. [BUILD] Bankroll/Kelly guardrail (separate component, needed before real money)
 8. [MONITOR] Data drift / retraining cadence
+
+TESTS RUN 2026-08-27:
+- packages/data-ingestion: 344/344 pass, typecheck clean
+- packages/prediction-engine (consensus/edge-lab/historical): 17/17 pass
+- apps/web odds tests: pre-existing vitest alias resolution failures (not our changes)
+
+Last updated: 2026-08-27 (pass 8 — historical backfill COMPLETE; tests run; AGENTS.md updated).

@@ -198,3 +198,31 @@ The repo's `packages/data-ingestion/src/espn-odds-client.ts` targets
 The local Galaxy script uses `site.web.api.espn.com` — which works.
 Fix: update the repo's ESPN client to use `site.web.api.espn.com` or add it as
 an alternative endpoint in the failover chain.
+
+### Historical odds backfill (COMPLETED 2026-08-27)
+
+`data/historical-odds/nfl_historical_odds_unified.csv` — 12,164 NFL games,
+1966-2026, with spread/total/moneyline closing lines. See
+`data/historical-odds/MANIFEST.md` for full schema, sources, and usage.
+
+This unblocks walk-forward backtesting: train on pre-2018, test on 2018-2026
+(2,303 games). No ROI claim should be published without a walk-forward pass
+against this dataset.
+
+### Test status (2026-08-27)
+
+- `packages/data-ingestion`: 344/344 tests pass, typecheck clean
+- `packages/prediction-engine` (consensus/edge-lab/historical): 17/17 pass
+- `apps/web` odds tests: pre-existing vitest alias resolution failures
+  (files exist, `@/lib/...` aliases not resolving in vitest). NOT caused by
+  our changes — verified by running tests without our changes (same failures).
+
+### What still needs to be done (priority order)
+
+1. [FIX] ESPN client endpoint: `sports.core.api` (BLOCKED) → `site.web.api` (WORKS)
+2. [BUILD] Direct bookmaker adapters (BetOnline, Pinnacle, Bovada) as
+   `OddsProvider` implementations in `packages/data-ingestion`
+3. [BUILD] Walk-forward backtesting harness using the unified CSV
+4. [DEPRECATE] Mark TheRundown as deprecated in source registry
+5. [BUILD] Bankroll/Kelly guardrail component (needed before real money)
+
