@@ -108,6 +108,14 @@ function auditNumerals(copy: string, facts: SourceFacts): NumeralAudit
 // Anything else = FABRICATED — hard fail.
 ```
 
+**Shipped-vs-spec gap (CodeRabbit finding, not yet closed)**: the shipped
+`numeric-fidelity.ts` simplified `SourcedNumber` to a flat `readonly
+number[]` — membership-only, no entity/field scoping. That means a
+fabricated claim about entity A can pass by coincidentally matching entity
+B's real number for a different field. Flagged in-code as a known gap; do
+NOT wire this module into any live publishing path until it's scoped by
+(entity, field) as this section originally specified.
+
 This extends the `check-claims` skill from claims-language into numbers, and
 enforces rule #2 mechanically. Run it over: recap/blog fixtures with recorded
 LLM outputs, and (behind the existing publish pipeline) as a runtime guard in

@@ -40,8 +40,13 @@ Full detail per item lives in the recon record; the findings that matter, ranked
 on origin/main (bb0e7dfc0). Every "82 overdue picks drain on the next cron"
 claim, settlement-health GREEN, calibration-eligibility leg 1, and PROVEN wait
 on this single merge+deploy. It also carries every corpus module shipped this
-session. Founder action: merge + deploy; bundle `prisma migrate deploy`
-(founder path #3) and the orphan-Neon-project deletion (#6) into the same session.
+session. Founder action: merge + deploy this PR on its own — no schema
+changes, no migrations, no database deletions in this diff, verified.
+`prisma migrate deploy` (founder path #3) and the orphan-Neon-project deletion
+(#6) are separate, owner-only database operations against persistent
+infrastructure — no agent runs a migration or touches a database. Each needs
+its own independent approval, backup, rollback plan, and success checkpoint;
+do NOT bundle either into the settlement merge/deploy session.
 
 **Rank 2 — LINE_ARCHIVE flags dark since ~Aug 22 16:31Z.** `LINE_ARCHIVE_ENABLED`
 + `LINE_ARCHIVE_EU_PINNACLE` were dropped in the redeploy; ~5 days of CLV

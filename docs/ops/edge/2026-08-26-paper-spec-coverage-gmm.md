@@ -110,9 +110,17 @@ Port the paper's setup exactly, small-n adapted:
 - **Semantic labeling — pre-registered rule replacing their film review** (we
   have no film step and will not eyeball): the cluster with the lower mean
   `cushionAllowedMean` (tighter press) is labeled MAN-leaning. Declared here,
-  ahead of fitting, so it cannot be chosen post-hoc.
+  ahead of fitting, so it cannot be chosen post-hoc. **Gated in the shipped
+  code**: `labelClustersByCushionRule` (`edge-lab/kernel/gmm-em.ts`) applies
+  this mapping ONLY when the caller passes an explicit, externally-computed
+  `polarityValidation: { passed: boolean }`; with `null` or a failed
+  validation it returns `{ kind: "anonymous" }` — clusters never get a
+  semantic label (`man_zone`) until polarity is independently confirmed, so a
+  stable-but-inverted fit can never silently mislabel `oppManTendency`.
 - Output: `manTendencyPosterior ∈ [0,1]` per (defense, season, week), plus the
-  paper's influence diagnostic (ARI drop per dropped feature) in the fit report.
+  paper's influence diagnostic (ARI drop per dropped feature) in the fit
+  report. Until the polarity validation above passes, treat cluster ids as
+  anonymous — do not bind `oppManTendency` to a semantic MAN/ZONE meaning.
 
 ### 3.3 Bind — `packages/prediction-engine/src/edge-lab/props-hb-man-tendency-bind.ts`
 

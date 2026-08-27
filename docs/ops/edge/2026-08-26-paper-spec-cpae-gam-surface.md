@@ -101,6 +101,15 @@ Discrete tensor product at our real resolution: 3 location bins × smooth depth.
 - `MODEL_VERSION = "gse-cpae-surface-v1"`; ≥ `MIN_DROPBACKS_TO_FIT = 200` for the
   league fit (reuse constant). Fit-on-load like gse-xcomp-v1; provenance via
   `computeFeatureSchemaHash`.
+- **As-of cutoff (CodeRabbit finding, satisfied structurally in the shipped
+  pure core)**: `cpae-surface.ts` does no data loading and takes no `asOfWeek`
+  parameter itself — `fitCpaeSurface`/`predictCpaeCompletionProbability` only
+  ever see rows the CALLER has already filtered. The real fit-on-load
+  increment (this section) MUST perform that filter — restrict training rows
+  to weeks strictly before the stamped `asOfWeek` — before calling the pure
+  core; the module's own leakage mutation test (future rows appended + refit
+  must be deeply-equal to the unmutated fit) proves the pure core itself
+  cannot leak, but the loader is where the cutoff has to actually be applied.
 
 ### 3.2 Module B — shrinkage + CPAE aggregate (same file or `cpae-aggregate.ts`)
 
@@ -126,10 +135,16 @@ Compute for two group classes, both `PlayerExpectedMetric`-shaped with
 - **QB grain** (`passer_player_id`, min 100 attempts — paper's qualifier).
 - **Defense grain** (`defteam`) → `cpaeAllowed` — coverage quality allowed. NEW signal.
 
-Validation gate (before any bind): correlate season GSE-CPAE vs NGS vendor CPAE
-per `expected-metrics/validation.ts` pattern; paper achieved ρ = 0.81–0.91 —
-**admission floor for the metric itself: ρ ≥ 0.75** on the most recent complete
-season, else stop and diagnose.
+Validation gate (before any bind), **QB grain only** — NGS vendor CPOE is the
+only grain with a vendor number to correlate against: correlate season
+GSE-CPAE vs NGS vendor CPAE per `expected-metrics/validation.ts` pattern;
+paper achieved ρ = 0.81–0.91 — **admission floor for the metric itself:
+ρ ≥ 0.75** on the most recent complete season, else stop and diagnose.
+**Defense grain has no vendor ground truth to correlate against** (no
+published "coverage quality allowed" vendor metric exists) — `cpaeAllowed`
+therefore needs its own, separately defined admission target before any bind
+may consume it; do not gate defense admission on the QB-grain ρ number, and
+do not bind `cpaeAllowed` until that target is defined.
 
 ### 3.3 Module C — bind: `packages/prediction-engine/src/edge-lab/props-hb-cpae-def-bind.ts`
 

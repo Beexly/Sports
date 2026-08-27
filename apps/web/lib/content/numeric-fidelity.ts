@@ -40,7 +40,22 @@ export interface NumeralToken {
 }
 
 export interface SourceFacts {
-  /** Numeric facts pulled directly from the structured input this copy was generated from — always allowed as-is. */
+  /**
+   * Numeric facts pulled directly from the structured input this copy was
+   * generated from — always allowed as-is.
+   *
+   * KNOWN GAP (CodeRabbit finding on the spec doc, not yet closed here):
+   * this is a flat pool, not scoped by entity/field. `auditNumerals` checks
+   * membership only, so a fabricated claim can pass by coincidentally
+   * matching a DIFFERENT entity's real number (e.g. claiming Player A had
+   * "7 tackles" passes if 7 appears anywhere in facts, even as Player B's
+   * rushing yards). Closing this needs `SourcedNumber { value, entity,
+   * field }` scoping and a caller-supplied (entity, field) per checked
+   * numeral — a real API change, not a wording fix. This module is NOT
+   * wired into any live publishing path (see file header) specifically
+   * because of this gap; do not wire it in until entity/field scoping
+   * lands.
+   */
   readonly numbers: readonly number[];
   /**
    * Values whitelisted regardless of source (a fixed season year, a named

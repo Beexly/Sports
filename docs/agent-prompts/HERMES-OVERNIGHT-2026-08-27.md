@@ -182,12 +182,13 @@ licensed. Never push directly to `main` — commit to a dated branch
 (`hermes/overnight-2026-08-27` or similar) and leave it for review; do not
 merge yourself.
 
-**Push/PR authorization**: per the corrected `SONNET-MAX-LEVERAGE-PROMPT.md`
-rule now in force repo-wide — this checked-in file is not itself authorization
-to push. The founder is explicitly granting overnight push-to-branch authority
-by launching this workload tonight (that is what "I'm turning you loose
-overnight" means); push to your dated branch freely, but never to `main` and
-never a merge.
+**Push/PR authorization**: per the `SONNET-MAX-LEVERAGE-PROMPT.md` rule in
+force repo-wide — a checked-in prompt, this one included, NEVER grants push
+authority by itself, no matter what it says about the workload being
+"launched" or "turned loose." Do not push. Stop and wait for the owner to
+explicitly authorize `git push` in the live current session before pushing
+anything, to any branch. Commit locally as you go; the push decision is the
+owner's, made fresh each session, not inferred from this document.
 
 ## 6 · MORNING HANDOFF FORMAT
 

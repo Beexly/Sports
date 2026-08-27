@@ -33,8 +33,18 @@ function defaultOpts(o?: FalsifyOpts): Required<FalsifyOpts> {
   return { minN: 100, shuffleB: 200, seed: 42, ...o };
 }
 
+/**
+ * Model-dependent edge: mean signed agreement between the model's deviation
+ * from the market and the realized outcome. Permuting outcomes against
+ * predictions destroys this statistic — required for the shuffle kill test
+ * to have any power (an order-invariant statistic never changes under a
+ * row-order shuffle, which is the bug this replaced).
+ */
 function effectSize(rows: readonly BacktestRow[]): number {
-  const sum = rows.reduce((a, r) => a + (r.outcome - (r.marketProb ?? 0.5)), 0);
+  const sum = rows.reduce(
+    (a, r) => a + (r.modelProb - (r.marketProb ?? 0.5)) * (r.outcome - (r.marketProb ?? 0.5)),
+    0,
+  );
   return sum / rows.length;
 }
 
@@ -94,12 +104,16 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
   const prng = mulberry32(o.seed);
   let survive = 0;
   for (let b = 0; b < o.shuffleB; b++) {
-    const perm = [...rows];
-    // Fisher-Yates shuffle using deterministic PRNG
-    for (let i = perm.length - 1; i > 0; i--) {
+    // Permute OUTCOMES against predictions — permuting whole rows leaves the
+    // (modelProb, marketProb, outcome) pairing untouched and gives the gate
+    // zero power (the original bug: an order-invariant statistic never
+    // changes under a row shuffle).
+    const outcomes = rows.map((r) => r.outcome);
+    for (let i = outcomes.length - 1; i > 0; i--) {
       const j = Math.floor(prng() * (i + 1));
-      const t: BacktestRow = perm[i]!; perm[i] = perm[j]!; perm[j] = t;
+      const t = outcomes[i]!; outcomes[i] = outcomes[j]!; outcomes[j] = t;
     }
+    const perm: BacktestRow[] = rows.map((r, i) => ({ ...r, outcome: outcomes[i]! }));
     const permES = effectSize(perm);
     // "original >= 95th percentile survives" => PASS if original >= 95th perc
     if (Math.abs(origES) >= Math.abs(permES)) survive++;

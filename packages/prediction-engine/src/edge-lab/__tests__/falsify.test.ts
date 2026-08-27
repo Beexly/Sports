@@ -47,23 +47,47 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
     expect(res.leakage.detail).toContain("lookahead");
   });
 
-  it("pure-noise outcomes fail shuffle", () => {
-    // Random outcomes independent of any model => shuffle should kill
-    const noise: BacktestRow[] = [];
+  it("a model with real signal survives shuffle", () => {
+    // modelProb deterministically tracks outcome => a genuine, unshuffleable
+    // edge => shuffle must PASS (this is the mirror case of the noise test
+    // below: the shuffle gate must not kill real signal either).
+    const signalRows: BacktestRow[] = [];
     for (let i = 0; i < 120; i++) {
-      // Mean effect near 0 but row-level signal random => shuffle kills
-      noise.push(synRow({ outcome: i % 3 === 0 ? 1 : 0, modelProb: i % 3 === 0 ? 0.8 : 0.2, marketProb: 0.5 }));
+      signalRows.push(synRow({ outcome: i % 3 === 0 ? 1 : 0, modelProb: i % 3 === 0 ? 0.8 : 0.2, marketProb: 0.5 }));
+    }
+    const res = falsifyBind(signalRows, { minN: 10, shuffleB: 200, seed: 42 });
+    expect(res.shuffle.verdict).toBe("PASS");
+    expect(res.shuffle.detail).toContain("original effect=");
+  });
+
+  it("model opinion uncorrelated with outcome fails shuffle (the bug this regression guards)", () => {
+    // Regression test for the CodeRabbit finding: effectSize used to depend only
+    // on outcome-vs-market, so permuting row order never changed the statistic and
+    // the shuffle gate could never KILL anything. Here modelProb carries a fixed
+    // per-row opinion that is genuinely uncorrelated with a seeded-random outcome —
+    // a real null case the fixed (model-aware) statistic must be able to reject.
+    const rand = mulberry32(2024);
+    const noise: BacktestRow[] = [];
+    for (let i = 0; i < 150; i++) {
+      noise.push(synRow({
+        outcome: rand() > 0.5 ? 1 : 0,
+        modelProb: i % 2 === 0 ? 0.65 : 0.35,
+        marketProb: 0.5,
+      }));
     }
     const res = falsifyBind(noise, { minN: 10, shuffleB: 200, seed: 42 });
-    expect(["PASS", "KILLED"].includes(res.shuffle.verdict)).toBe(true);
+    expect(res.shuffle.verdict).toBe("KILLED");
     expect(res.shuffle.detail).toContain("original effect=");
   });
 
   it("sign-flipped second half fails split", () => {
-    // First 60 rows positive effect; second 60 negative => split kills
+    // effectSize is model-aware: (modelProb - marketProb) * (outcome - marketProb).
+    // First 60 rows: model bullish (0.7 vs 0.5) and right (outcome=1) => positive edge.
+    // Second 60 rows: model STILL bullish (0.7 vs 0.5) but now wrong (outcome=0) => the
+    // edge itself reverses sign, which is what a real split-stability failure looks like.
     const rows: BacktestRow[] = [];
     for (let i = 0; i < 60; i++) rows.push(synRow({ season: 2024, outcome: 1, modelProb: 0.7, marketProb: 0.5, outcomeWeek: i + 1, knownAtWeek: i }));
-    for (let i = 0; i < 60; i++) rows.push(synRow({ season: 2025, outcome: 0, modelProb: 0.3, marketProb: 0.5, outcomeWeek: i + 61, knownAtWeek: i + 60 }));
+    for (let i = 0; i < 60; i++) rows.push(synRow({ season: 2025, outcome: 0, modelProb: 0.7, marketProb: 0.5, outcomeWeek: i + 61, knownAtWeek: i + 60 }));
     const res = falsifyBind(rows, { minN: 10, shuffleB: 50, seed: 7 });
     expect(res.split.verdict).toBe("KILLED");
   });

@@ -392,8 +392,9 @@ Two lanes:
    `timing` dimensions and Cool-down mode copy — plus the
    `RESPONSIBLE_BETTING_EDUCATION` content kind in
    `apps/web/lib/content/workflow.ts`): the evidence-backed angle is a
-   **post-close-loss cool-down window** — the first hour after a
-   high-suspense loss is when emotional regulation measurably degrades.
+   **post-close-loss cool-down window** — the study observed higher
+   traffic-speed and crash measures during the first hour after a
+   predicted-close loss.
    Content correction that matters: the trigger is **close losses**, not
    blowout upsets — "the game that could have gone either way and didn't" is
    the danger window. Honesty boundary (check-claims): the paper measures
