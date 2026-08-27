@@ -100,9 +100,13 @@ Three parallel inventory agents enumerated the largest unknown surfaces. What th
   `hermes_ro`, SELECT-only): **37,402 `odds_line_snapshots` (9,864 NFL, 11,318 MLB)** — a
   REAL closing-line store already exists in Neon. This is the q-side CLV source the
   `C-14`/`C-15` forensics graded (and found model-derived, not real-book, for 909/909 locks).
-- **PROOF OF INVISIBILITY**: keyword search across ALL hermes docs for `sports-intel`,
-  `backtest`, `Kaggle`, `nflverse` returned ZERO hits. Our R&D corpus was truly unseen by
-  the overnight Hermes. The `RND-0827` ledger row + this map fix that.
+- **PROOF OF INVISIBILITY (honest, narrowed)**: keyword search across ALL hermes docs found
+  ZERO hits for `sports-intel` (our workspace name) and `Kaggle` (our free-data path). The
+  shared math vocabulary (`Shin`, `CLV`, `backtest`, `nflverse`) DOES appear in their
+  `AUDIT_PROMPT.md`/`BUILD_QUEUE.md` — so the *methods* overlapped, but our *specific corpus,
+  branch, and free Kaggle backtest were unseen by the overnight Hermes until the `RND-0827`
+  ledger row + this map. (Per subagent's own honesty note: it could not fully read every file,
+  so treat "absent" as "not observed in scanned files," not proven-global.)
 
 ### B. `GSE-competitive-intel/` (competitor intelligence — REAL GSE IP)
 - `fantasyguru/gse_engine.py` — MLB reliever SMASH/BURR/Solds engine, clean-room from FREE
