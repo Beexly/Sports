@@ -150,11 +150,13 @@ export type KickoffReturnYardsBindResult =
     };
 
 /**
- * Default elasticity: the maximum fraction the mean rate shifts at the
- * extreme (WP=0 or WP=1, Δ=0.5 from neutral). A 0.2 elasticity means a team
- * at WP=0.90 (Δ=0.4 from neutral) sees a 8% reduction in expected
- * yards-per-return vs an even game. Tunable — see H1 Edge #5 calibration
- * in CARDS_INCENTIVE_CALENDAR.md (game-script WP asymmetry at 70-80% WP).
+ * Default elasticity: the multiplier is `1 - elasticity * (winProb - 0.5)`,
+ * so the rate shifts by `elasticity` per 1.0 of win-probability deviation —
+ * the maximum shift at the extreme (WP=0 or WP=1, Δ=0.5 from neutral) is
+ * `elasticity / 2`, i.e. 10% for the default 0.2. A team at WP=0.90 (Δ=0.4
+ * from neutral) sees an 8% reduction in expected yards-per-return vs an
+ * even game. Tunable — see H1 Edge #5 calibration in
+ * CARDS_INCENTIVE_CALENDAR.md (game-script WP asymmetry at 70-80% WP).
  */
 export const DEFAULT_KICKOFF_SCRIPT_ELASTICITY = 0.2;
 

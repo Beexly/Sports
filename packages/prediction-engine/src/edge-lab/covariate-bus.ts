@@ -216,7 +216,11 @@ export function nextGameCovariate(
   if (row === null) return null; // no history before kickoff — fail closed
   const raw: number | null | undefined = row[field];
   if (raw === null || raw === undefined || !Number.isFinite(raw)) return null;
-  return { value: raw, grain: "week_t_for_tplus1", provenance: "weekly_ngs_mean" };
+  // Defense fields come from the PFR weekly-advstats parser (nflverse-pfr-def.ts),
+  // not NGS — mislabeling provenance here would make downstream audit records
+  // cite the wrong source for every defense covariate.
+  const provenance: CovariateProvenance = statType === "defense" ? "weekly_pfr_def_mean" : "weekly_ngs_mean";
+  return { value: raw, grain: "week_t_for_tplus1", provenance };
 }
 
 /**

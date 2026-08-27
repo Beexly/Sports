@@ -28,6 +28,22 @@ describe("shrinkCellsTowardGlobal", () => {
     const shrunk = shrinkCellsTowardGlobal([{ cell: "huge", a: 3.0, b: 0, n: 1_000_000 }], 1.0, 0, 25);
     expect(shrunk[0]!.a).toBeCloseTo(3.0, 4);
   });
+
+  it("rejects a negative n (would let n=-strength divide by zero)", () => {
+    expect(() => shrinkCellsTowardGlobal([{ cell: "bad", a: 1, b: 1, n: -25 }], 1.0, 0, 25)).toThrow(RangeError);
+  });
+
+  it("rejects non-finite a/b/n on a cell", () => {
+    expect(() => shrinkCellsTowardGlobal([{ cell: "bad", a: NaN, b: 1, n: 10 }], 1.0, 0, 25)).toThrow(RangeError);
+    expect(() => shrinkCellsTowardGlobal([{ cell: "bad", a: 1, b: Infinity, n: 10 }], 1.0, 0, 25)).toThrow(RangeError);
+    expect(() => shrinkCellsTowardGlobal([{ cell: "bad", a: 1, b: 1, n: NaN }], 1.0, 0, 25)).toThrow(RangeError);
+  });
+
+  it("rejects a non-finite or non-positive strength", () => {
+    expect(() => shrinkCellsTowardGlobal([{ cell: "x", a: 1, b: 1, n: 10 }], 1.0, 0, 0)).toThrow(RangeError);
+    expect(() => shrinkCellsTowardGlobal([{ cell: "x", a: 1, b: 1, n: 10 }], 1.0, 0, -5)).toThrow(RangeError);
+    expect(() => shrinkCellsTowardGlobal([{ cell: "x", a: 1, b: 1, n: 10 }], 1.0, 0, NaN)).toThrow(RangeError);
+  });
 });
 
 describe("fitHierarchicalBetaShrinkage", () => {

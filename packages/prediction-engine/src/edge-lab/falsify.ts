@@ -58,12 +58,10 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     ? { verdict: "KILLED", detail: `lookahead at season=${leakRow.season} week=${leakRow.outcomeWeek}` }
     : { verdict: "PASS", detail: "no knownAtWeek >= outcomeWeek" };
 
-  // STARVATION gate: small n preserves e-value and returns PARKED (not STARVED) when gates ran clean
-  let starvedParkedDetail = `n=${n} < minN=${o.minN}`;
-  let starvedVerdicts = { leakage, shuffle: { verdict: "PASS" as const, detail: "unrun (n < minN)" }, split: { verdict: "PASS" as const, detail: "unrun (n < minN)" }, multiplicity: { verdict: "PASS" as const, detail: "unrun (n < minN)" } };
-
-  // First compute leakage regardless of n (leakage doesn't depend on n)
-  // Then for small n, still compute e-value so it's preserved in PARKED detail
+  // STARVATION gate: small n preserves e-value and returns PARKED (not STARVED)
+  // when gates ran clean. Leakage is computed regardless of n (it doesn't
+  // depend on n); for small n, the e-value is still computed below so it's
+  // preserved in the PARKED detail.
   const pHats = rows.map((r) => Math.max(0.01, Math.min(0.99, r.modelProb)));
   const pMkts = rows.map((r) => Math.max(0.01, Math.min(0.99, r.marketProb ?? 0.5)));
   const ys = rows.map((r) => r.outcome as 0 | 1);
@@ -80,8 +78,6 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
     logSimpleE += Math.log(clipped);
   }
   const simpleE = Math.exp(logSimpleE);
-  const logSimpleEVal = logSimpleE;
-  starvedParkedDetail += `; e=${eValue.toFixed(3)}`;
 
   if (n < o.minN) {
     // For actual refutation failures (leakage KILLED) keep KILLED; else PARKED
@@ -139,12 +135,12 @@ export function falsifyBind(rows: readonly BacktestRow[], opts?: FalsifyOpts): F
 
   // MULTIPLICITY (reuse precomputed eValue/simpleE from starvation gate; computed regardless of n)
   const logThreshold = Math.log(20);
-  const logMVal = epRes ? epRes.logM : logSimpleEVal;
+  const logMVal = epRes ? epRes.logM : logSimpleE;
   const cappedM = Math.min(Math.exp(logMVal), 1e308);
   const growing = logMVal > 0 && (epRes ? epRes.M > 1 : simpleE > 1);
   const multiplicity: KillResult = growing && logMVal > logThreshold
-    ? { verdict: "PASS", detail: `e-process logM=${logMVal.toFixed(3)} M=${cappedM.toFixed(3)} growing, simpleE=${Math.min(simpleE, 1e308).toFixed(3)} logSimpleE=${logSimpleEVal.toFixed(3)}` }
-    : { verdict: "KILLED", detail: `e-value decayed logM=${logMVal.toFixed(3)} M=${cappedM.toFixed(3)} (not growing/survivor) logSimpleE=${logSimpleEVal.toFixed(3)}` };
+    ? { verdict: "PASS", detail: `e-process logM=${logMVal.toFixed(3)} M=${cappedM.toFixed(3)} growing, simpleE=${Math.min(simpleE, 1e308).toFixed(3)} logSimpleE=${logSimpleE.toFixed(3)}` }
+    : { verdict: "KILLED", detail: `e-value decayed logM=${logMVal.toFixed(3)} M=${cappedM.toFixed(3)} (not growing/survivor) logSimpleE=${logSimpleE.toFixed(3)}` };
 
   const allPass = [leakage, shuffle, split, multiplicity].every((k) => k.verdict === "PASS");
   const overallVerdict = allPass ? "SURVIVOR" : "KILLED";

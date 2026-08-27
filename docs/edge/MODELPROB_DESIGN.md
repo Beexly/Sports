@@ -23,7 +23,8 @@
 - `μ_season`, `σ_season` computed from the same season's completed games (not including the target game); never from market-implied rates.
 
 ### Shrinkage toward league mean by sample size
-- `p_i_shrunk = p_league + shrink(s_i, n_i) · (z_i_normalized − p_league)` where `shrink = n / (n + τ)` and `τ` is a season-level shrinkage parameter (pre-registered; never tuned post-hoc). Small `n` pulls strongly toward `p_league` (≈0.5 for binary); large `n` lets signal dominate. No market-based `τ`.
+- Map each `z_i` to a probability first (a z-score is unbounded, so it cannot be shrunk toward a `0..1` global directly): `p_i = logistic(κ · z_i)` with a pre-registered slope `κ`, so `p_i ∈ (0, 1)` by construction — required since `modelProb` must commit as a real `0..1` float (`pick-proof-receipt.ts:83` asserts the range).
+- Then shrink: `p_i_shrunk = p_league + shrink(n_i) · (p_i − p_league)` where `shrink = n_i / (n_i + τ)` and `τ` is a season-level shrinkage parameter (pre-registered; never tuned post-hoc). Small `n` pulls strongly toward `p_league` (≈0.5 for binary); large `n` lets signal dominate. No market-based `τ`.
 
 ### Aggregation to game level (offense-weighted mean)
 - Offense-side `p_game = Σ (w_j · p_j_shrunk) / Σ w_j` with `w_j` = snap-weight / target-share from NGS feed (`nflverse-ngs.ts`, pure ingestion; `priced: false`).

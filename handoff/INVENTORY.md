@@ -69,7 +69,7 @@
 
 ## Summary
 
-**Total:** 1,089,957 bytes across 42 items (8 skills + 32 commands). **20 items** have zero outside references — all from `.claude/commands/`, none from `.agents/skills/`.
+**Total:** 1,089,957 bytes across 42 items (8 skills + 34 commands). **20 items** have zero outside references — all from `.claude/commands/`, none from `.agents/skills/`.
 
 ---
 

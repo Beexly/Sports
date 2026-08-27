@@ -112,6 +112,14 @@ describe("nextGameCovariate", () => {
     expect(cell).not.toBeNull();
     expect(cell!.value).toBe(22.5);
   });
+
+  it("labels defense-grain fields with PFR provenance, not NGS (regression: CodeRabbit finding)", () => {
+    const rows = [rx({ week: 1, statType: "defense" as const, pdRate: 0.12 })];
+    const cell = nextGameCovariate(rows, rows[0]!.gsisId, 2024, 2, "defense", "pdRate");
+    expect(cell).not.toBeNull();
+    expect(cell!.value).toBe(0.12);
+    expect(cell!.provenance).toBe("weekly_pfr_def_mean");
+  });
 });
 
 describe("sepForKickoff", () => {

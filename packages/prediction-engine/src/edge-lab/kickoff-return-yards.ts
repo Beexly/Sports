@@ -209,6 +209,18 @@ export function probOverKickoffReturnYards(yardPost: GammaPosterior, retPost: Ga
     acc += pT * probOverKickoffReturnYardsGivenReturns(yardPost, k, line);
     if (k > 3 && pT < TAIL && mass > 1 - 1e-9) break;
   }
+  // Truncation guard: a realistic returns-per-game posterior (mean ~4-6
+  // returns) legitimately leaves ~1% of its mass above RET_K_MAX=10, which
+  // `acc` correctly omits — that's an accepted, bounded approximation, not
+  // a bug. This guard only catches PATHOLOGICAL over-truncation (a badly
+  // misfit retPost whose mean sits well beyond RET_K_MAX), where `acc`
+  // would silently understate P(yards > line) by an amount too large to
+  // treat as noise.
+  if (mass < 0.95) {
+    throw new RangeError(
+      `probOverKickoffReturnYards: returns posterior mass ${mass} not exhausted by RET_K_MAX=${RET_K_MAX} — retPost mean is likely far outside the realistic range`,
+    );
+  }
   return Math.max(0, Math.min(1, acc));
 }
 

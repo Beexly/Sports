@@ -5,6 +5,7 @@ import {
   inGameRateFactor,
   inGameWinProbability,
   type FrameObservation,
+  type MatchClock,
 } from "../ingame-soccer.js";
 import { moneylineProbabilities } from "../poisson.js";
 
@@ -38,8 +39,8 @@ describe("percentTimeFrame", () => {
   });
 
   it("throws on an invalid half, non-positive regulation length, negative stoppage cap, or negative/non-finite minute", () => {
-    // @ts-expect-error -- deliberately invalid half for the runtime guard
-    expect(() => percentTimeFrame({ half: 3, minute: 0 })).toThrow(RangeError);
+    const invalidHalfClock = { half: 3, minute: 0 } as unknown as MatchClock;
+    expect(() => percentTimeFrame(invalidHalfClock)).toThrow(RangeError);
     expect(() => percentTimeFrame({ half: 1, minute: 0, regulationHalfMinutes: 0 })).toThrow(RangeError);
     expect(() => percentTimeFrame({ half: 1, minute: 0, maxStoppageMinutes: -1 })).toThrow(RangeError);
     expect(() => percentTimeFrame({ half: 1, minute: -1 })).toThrow(RangeError);

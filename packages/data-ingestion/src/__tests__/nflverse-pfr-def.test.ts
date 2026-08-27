@@ -14,6 +14,11 @@ import type { CsvTable } from "../nflverse-source.js";
 /**
  * Realistic sample of the nflverse `advstats_week_def_<season>.csv` release
  * (verified against the live URL 2026-07). 29 columns, 3 data rows.
+ *
+ * Player names/ids below (`Sample Rusher`, `Sample Corner`) are fictional
+ * test identities, not real athletes — the stat lines are synthetic and
+ * must never be attributable to a real person per CLAUDE.md's "no
+ * fabricated stats" rule.
  */
 const HEADER = [
   "game_id", "pfr_game_id", "season", "week", "game_type", "team", "opponent",
@@ -66,7 +71,7 @@ const BOLTON_W1 = rec({
 const RUSHER_W3 = rec({
   game_id: "2024_03_BUF_MIA", pfr_game_id: "20240922mi",
   season: "2024", week: "3", game_type: "REG", team: "BUF", opponent: "MIA",
-  pfr_player_name: "Maurice Hurst", player_position: "DT", pfr_player_id: "HursMo01",
+  pfr_player_name: "Sample Rusher", player_position: "DT", pfr_player_id: "SampRu01",
   def_ints: "0", def_targets: "6", def_completions_allowed: "3", def_completion_pct: "0.500",
   def_yards_allowed: "30", def_yards_allowed_per_cmp: "10.0", def_yards_allowed_per_tgt: "5.0",
   def_receiving_td_allowed: "0", def_passer_rating_allowed: "67.2", def_adot: "2.1",
@@ -81,7 +86,7 @@ const RUSHER_W3 = rec({
 const FUTURE_W5 = rec({
   game_id: "2024_05_GB_CHI", pfr_game_id: "20241006gb",
   season: "2024", week: "5", game_type: "REG", team: "GB", opponent: "CHI",
-  pfr_player_name: "Jaire Alexander", player_position: "CB", pfr_player_id: "AlexJa02",
+  pfr_player_name: "Sample Corner", player_position: "CB", pfr_player_id: "SampCb02",
   def_ints: "1", def_targets: "8", def_completions_allowed: "4", def_completion_pct: "0.500",
   def_yards_allowed: "45", def_yards_allowed_per_cmp: "11.25", def_yards_allowed_per_tgt: "5.625",
   def_receiving_td_allowed: "0", def_passer_rating_allowed: "48.8", def_adot: "6.8",
@@ -96,7 +101,7 @@ const FUTURE_W5 = rec({
 
 // Crosswalk row for the future-schema player.
 const FUTURE_CW = [
-  { gsis_id: "00-0034520-2", pfr_id: "AlexJa02", full_name: "Jaire Alexander" },
+  { gsis_id: "00-0034520-2", pfr_id: "SampCb02", full_name: "Sample Corner" },
 ] as const;
 
 function makeFutureCrosswalk(): IdCrosswalk {
@@ -196,7 +201,7 @@ describe("parsePfrDef", () => {
   it("resolves gsisId to empty when pfr_player_id is not in the crosswalk", () => {
     const cw = makeCrosswalk();
     const rows = parsePfrDef(makeTable([RUSHER_W3]), cw);
-    expect(rows[0]!.gsisId).toBe(""); // "HursMo01" not in crosswalk
+    expect(rows[0]!.gsisId).toBe(""); // "SampRu01" not in crosswalk
   });
 
   it("forward-compatible: reads def_tackles_for_loss and def_pass_deflections when present", () => {
@@ -257,7 +262,7 @@ describe("pfrDefToCovariateRows", () => {
 
     const c = cov[1]!; // Rusher W3: 4 pressures / 6 targets
     expect(c.statType).toBe("defense");
-    expect(c.gsisId).toBe(""); // HursMo01 not in crosswalk
+    expect(c.gsisId).toBe(""); // SampRu01 not in crosswalk
     expect(c.season).toBe(2024);
     expect(c.week).toBe(3);
 

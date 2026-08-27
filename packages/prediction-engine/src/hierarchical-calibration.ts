@@ -89,6 +89,20 @@ export function shrinkCellsTowardGlobal(
   globalB: number,
   strength: number,
 ): readonly ShrunkCellBeta[] {
+  if (!Number.isFinite(strength) || strength <= 0) {
+    throw new RangeError(`shrinkCellsTowardGlobal: strength must be finite and > 0, got ${strength}`);
+  }
+  if (!Number.isFinite(globalA) || !Number.isFinite(globalB)) {
+    throw new RangeError(`shrinkCellsTowardGlobal: globalA/globalB must be finite, got (${globalA}, ${globalB})`);
+  }
+  for (const c of cellFits) {
+    if (!Number.isFinite(c.a) || !Number.isFinite(c.b) || !Number.isFinite(c.n)) {
+      throw new RangeError(`shrinkCellsTowardGlobal: cell "${c.cell}" has non-finite a/b/n (${c.a}, ${c.b}, ${c.n})`);
+    }
+    if (c.n < 0) {
+      throw new RangeError(`shrinkCellsTowardGlobal: cell "${c.cell}" has negative n=${c.n}`);
+    }
+  }
   return cellFits.map((c) => ({
     cell: c.cell,
     a: (c.n * c.a + strength * globalA) / (c.n + strength),

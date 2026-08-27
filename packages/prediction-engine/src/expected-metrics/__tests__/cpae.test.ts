@@ -19,6 +19,7 @@ import {
   type CpaeGroupCells,
   type CpaeCell,
 } from "../cpae-aggregate.js";
+import type { PassLocationBin } from "../cpae-surface.js";
 import type { DropbackPlay } from "../expected-completion.js";
 import { mulberry32 } from "../../edge-lab/rng.js";
 
@@ -215,8 +216,8 @@ describe("cpaeCellIndex", () => {
 
   it("throws on non-finite depth or unknown location", () => {
     expect(() => cpaeCellIndex(NaN, "left")).toThrow(RangeError);
-    // @ts-expect-error deliberately invalid location
-    expect(() => cpaeCellIndex(5, "deep")).toThrow(RangeError);
+    const invalidLocation = "deep" as unknown as PassLocationBin;
+    expect(() => cpaeCellIndex(5, invalidLocation)).toThrow(RangeError);
   });
 });
 

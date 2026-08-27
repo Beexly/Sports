@@ -524,8 +524,9 @@ export function labelClustersByCushionRule(
 
 // Internal ARI used by the selection loops; the public export lives in
 // stats.ts per the spec ("exact formula, no approximation"), re-exported
-// there — this module keeps a private copy so kernel/ stays dependency-light
-// and stats.ts (which imports nothing from kernel/) can host the public one.
+// there — this module keeps a private copy so kernel/ stays dependency-light.
+// Dependency direction: stats.ts imports FROM kernel/gmm-em.ts (this file),
+// one-way — this file must never import from stats.ts, or that becomes a cycle.
 function adjustedRandIndexInternal(a: readonly number[], b: readonly number[]): number {
   if (a.length !== b.length) throw new RangeError("adjustedRandIndex: partitions must have equal length");
   if (a.length === 0) throw new RangeError("adjustedRandIndex: partitions must be non-empty");

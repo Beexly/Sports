@@ -139,21 +139,28 @@ describe("falsify — 4 kill tests (SYNTHETIC, labeled)", () => {
 
   it("synthetic KNOWN-GOOD edge (strong persistent signal) comes out SURVIVOR", () => {
     const rows: BacktestRow[] = [];
-    // 200 rows, 70% outcome=1, modelProb 0.75 vs marketProb 0.45, split across two seasons
+    // 200 rows, 80% outcome=1, split across two seasons. modelProb tracks the
+    // per-row outcome (0.75 when outcome=1, 0.30 when outcome=0) so there is
+    // genuine model-outcome PAIRING for the shuffle gate to detect — a
+    // constant modelProb across every row (the original fixture) makes
+    // effectSize invariant to permutation up to floating-point noise only,
+    // which is a degenerate tie the shuffle gate can't meaningfully judge.
     for (let season = 2024; season <= 2025; season++) {
       for (let i = 0; i < 100; i++) {
+        const outcome = i < 80 ? 1 : 0;
         rows.push({
           season,
           outcomeWeek: (i % 12) + 1,
           knownAtWeek: (i % 12),
-          outcome: i < 80 ? 1 : 0,
-          modelProb: 0.75,
+          outcome,
+          modelProb: outcome === 1 ? 0.75 : 0.30,
           marketProb: 0.45,
         });
       }
     }
     const res = falsifyBind(rows, { minN: 10, shuffleB: 200, seed: 7 });
     expect(res.leakage.verdict).toBe("PASS");
+    expect(res.overall.verdict).toBe("SURVIVOR");
   });
 
   it("synthetic KNOWN-BAD edge (leakage planted) is KILLED by leakage with others PASS/unrun", () => {
