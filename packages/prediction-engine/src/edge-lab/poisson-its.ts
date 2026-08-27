@@ -145,6 +145,12 @@ export function fitPoissonIts(
 
   const maxIterations = options.maxIterations ?? 50;
   const tolerance = options.tolerance ?? 1e-10;
+  // A non-finite/non-positive maxIterations or tolerance would make the
+  // Newton-Raphson loop below non-terminating (an unbounded iteration count
+  // with no way for `delta` to ever fall under a non-positive tolerance).
+  // Same fail-closed convention as the observation-level checks above.
+  if (!Number.isInteger(maxIterations) || maxIterations <= 0) return null;
+  if (!Number.isFinite(tolerance) || tolerance <= 0) return null;
   const tCenter = meanT(observations);
 
   const rows = observations.map((o) => designRow(o, tCenter));

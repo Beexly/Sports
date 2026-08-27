@@ -78,7 +78,15 @@ export interface NumeralAudit {
 // decimal's digits must not fall through to bare integer. `matchAll` never
 // re-scans characters already consumed by an earlier match, so once one
 // alternative wins at a position, the others can't also claim it.
-const NUMERAL_RE = /(\d{1,3}(?:\.\d+)?)%|(\d{1,3})-(\d{1,3})\b|(\d{1,4}\.\d+)|\b(\d{1,4})\b/g;
+//
+// Percent/decimal/integer all capture an optional leading sign so a token's
+// VALUE preserves the sign that appeared in the copy (a spread of "-3.5" or
+// a moneyline of "-150" is common in this domain) -- record components stay
+// unsigned, since "5-3" is a record separator, not a negative number. The
+// negative lookbehinds keep a signed match anchored at a genuine token start
+// (not preceded by another digit/sign/period), so this can't accidentally
+// swallow part of an adjacent number.
+const NUMERAL_RE = /(?<![\d.])([-+]?\d{1,3}(?:\.\d+)?)%|(\d{1,3})-(\d{1,3})\b|(?<![\d.])([-+]?\d{1,4}\.\d+)|(?<![\d.+-])([-+]?\d{1,4})\b/g;
 
 /**
  * Extract every numeral token from `copy`, tagged by shape. Unlike
@@ -139,6 +147,9 @@ export function auditNumerals(
   derivations: readonly Derivation[] = [],
 ): NumeralAudit {
   const tolerance = facts.tolerance ?? 0.1;
+  if (!Number.isFinite(tolerance) || tolerance < 0) {
+    throw new RangeError(`auditNumerals: facts.tolerance must be finite and >= 0, got ${tolerance}`);
+  }
   const derived = derivations.flatMap((d) => d(facts.numbers));
   const allowedValues = [...new Set([...facts.numbers, ...(facts.boilerplate ?? []), ...derived])];
 

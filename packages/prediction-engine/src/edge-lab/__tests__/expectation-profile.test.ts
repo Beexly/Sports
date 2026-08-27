@@ -43,7 +43,10 @@ describe("classifyExpectationProfile", () => {
 
 describe("priorGameExpectationProfile", () => {
   const mk = (team: string, season: number, week: number, spread: number, won: boolean): TeamGameResult => ({
-    team, season, week, closingSpreadForTeam: spread, won,
+    team, season, week, closingSpreadForTeam: spread, result: won ? "win" : "loss",
+  });
+  const mkDraw = (team: string, season: number, week: number, spread: number): TeamGameResult => ({
+    team, season, week, closingSpreadForTeam: spread, result: "draw",
   });
 
   it("returns null with no history", () => {
@@ -77,5 +80,18 @@ describe("priorGameExpectationProfile", () => {
     const history = [mk("PHI", 2026, 1, -5, true)]; // favored at band 4, close at band 6
     expect(priorGameExpectationProfile(history, "PHI", 2026, 2, 4)).toBe("expected_win");
     expect(priorGameExpectationProfile(history, "PHI", 2026, 2, 6)).toBe("close_win");
+  });
+
+  it("skips a drawn prior game rather than miscoding it as a loss, falling through to the next eligible win/loss game", () => {
+    const history = [
+      mk("PHI", 2026, 1, -6, true), // expected_win -- the correct answer once the draw is skipped
+      mkDraw("PHI", 2026, 2, 2), // drawn -- must not be read as close_loss
+    ];
+    expect(priorGameExpectationProfile(history, "PHI", 2026, 3)).toBe("expected_win");
+  });
+
+  it("returns null when the only strictly-prior game is a draw and nothing earlier exists", () => {
+    const history = [mkDraw("PHI", 2026, 2, 2)];
+    expect(priorGameExpectationProfile(history, "PHI", 2026, 3)).toBeNull();
   });
 });

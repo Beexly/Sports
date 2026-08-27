@@ -112,4 +112,10 @@ describe("precisionAtRecall", () => {
   it("throws when there are no positive labels at all", () => {
     expect(() => precisionAtRecall([0.5, 0.6], [0, 0], 0.5)).toThrow(RangeError);
   });
+
+  it("throws on a non-finite score instead of hanging -- NaN === NaN is false, so the tie-block scan would otherwise never advance", () => {
+    expect(() => precisionAtRecall([0.5, NaN, 0.3], [1, 0, 1] as const, 0.5)).toThrow(RangeError);
+    expect(() => precisionAtRecall([0.5, Infinity, 0.3], [1, 0, 1] as const, 0.5)).toThrow(RangeError);
+    expect(() => precisionAtRecall([0.5, -Infinity, 0.3], [1, 0, 1] as const, 0.5)).toThrow(RangeError);
+  });
 });

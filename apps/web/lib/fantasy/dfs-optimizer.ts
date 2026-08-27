@@ -59,7 +59,11 @@
  * dfs-optimizer.test.ts). flagStates only grows past 1 for a stack-required
  * and/or diversity-constrained re-solve, and gameDim is linear in the pool's
  * distinct-game count (typically a dozen or two for a real slate) — not
- * exponential in anything, which is what makes that re-solve's memory bounded.
+ * exponential in anything, which bounds that re-solve's per-cell state count.
+ * Retained MEMORY is bounded separately, by `solveExact`'s checkpointed
+ * reconstruction (see its docstring): O(sqrt(players)) full-DP-state arrays
+ * are ever held at once, not one per player, so even the widest realistic
+ * flagStates does not scale retained memory linearly in the player count.
  *
  * Illustrative slate; the optimizer itself takes any DfsPlayer pool.
  */
@@ -191,6 +195,22 @@ type GameRequirement = { readonly kind: "none" } | { readonly kind: "escape"; re
  * per candidate stacked team, or across the relaxed/escape/diverse retries)
  * don't redo the deterministic sort, granularity detection, or per-game
  * indexing.
+ *
+ * Reconstruction is CHECKPOINTED, not a full per-player backpointer array:
+ * a naive backpointer array retains one full DP-state-sized array PER
+ * PLAYER (O(players) of them), which on a large pool with the wide
+ * "diverse" flag dimension can retain several GiB (a real memory-exhaustion
+ * risk CodeRabbit caught against an earlier version of this function). This
+ * function instead snapshots the DP value layer only every
+ * `~sqrt(players)`-th player during a single value-only forward pass, then
+ * during backward reconstruction re-derives each ~sqrt(players)-sized
+ * segment's choices on demand from its nearest checkpoint before
+ * backtracking through it — trading roughly 2x the forward-pass compute
+ * (an offline/R&D solve, not a hot path) for cutting retained memory from
+ * O(players) full-state arrays to O(sqrt(players)) of them. Both the
+ * checkpoints and every re-derived segment are exact re-runs of the same
+ * deterministic step function, so this changes nothing about the result —
+ * only how much of the trajectory is kept in memory at once.
  */
 function solveExact(
   ordered: readonly DfsPlayer[],
@@ -214,24 +234,16 @@ function solveExact(
   const requiredFlags = (requiredStackTeam ? 1 : 0) * gameDim + (gameReq.kind === "none" ? 0 : gameDim - 1);
   const countStates = space.totalCountStates;
   const fullStates = countStates * salaryStates * flagStates;
-
-  let dpPrev = new Float64Array(fullStates).fill(-Infinity);
-  dpPrev[0] = 0; // count-state 0, salary 0, no flags — the empty lineup
-
-  const suOf = new Array<number>(ordered.length);
-  // choiceLayers[i][state]: how step i reached `state` in its post-step layer —
-  // -1 means "player i unused, state carried forward unchanged"; otherwise
-  // code = category*flagStates + srcFlags, decoded during backward
-  // reconstruction. Int8 covers every unflagged/stack-only solve; the wider
-  // array is only allocated when the flags dimension pushes codes past 127
-  // (only possible with requireGameDiversity on a pool with many games).
   const wideCodes = 6 * flagStates > 127;
-  const choiceLayers = new Array<Int8Array | Int16Array>(ordered.length);
+  const n = ordered.length;
 
-  for (let i = 0; i < ordered.length; i++) {
-    const p = ordered[i]!;
+  // Per-player transition metadata: O(1) fields per player, computed once
+  // and shared by every re-run of stepPlayer below (the initial value-only
+  // pass, and every segment's choice-recording re-run during
+  // reconstruction) — cheap to keep for all N players, unlike the
+  // O(states)-sized DP layers themselves.
+  const meta = ordered.map((p) => {
     const su = Math.round(p.salary / unit);
-    suOf[i] = su;
     const locked = opts.locks.has(p.id);
     const isOffTeamQb = requiredStackTeam !== null && p.pos === "QB" && p.team !== requiredStackTeam;
     const tooExpensive = su > capUnits;
@@ -243,15 +255,26 @@ function solveExact(
     const playerGame = gameReq.kind === "diverse" ? gameIndex.get(playerGameKey!)! : 0;
     const escapesBanned = gameReq.kind === "escape" && playerGameKey !== gameReq.bannedGame;
     const val = objVal(p, opts.mode) * decay(p);
+    return { su, locked, cats, advancesStack, playerGame, escapesBanned, val };
+  });
+  const suOf = meta.map((m) => m.su);
 
-    const dpNext = locked ? new Float64Array(fullStates).fill(-Infinity) : dpPrev.slice();
-    const ch = wideCodes ? new Int16Array(fullStates) : new Int8Array(fullStates);
-    if (!locked) ch.fill(-1); // baseline: every state carried forward unchanged (skip)
+  /**
+   * One DP step: given the layer BEFORE player `i`, produce the layer
+   * after. `ch` (the per-state backpointer code, decoded during backward
+   * reconstruction) is only allocated when `recordChoices` is true —
+   * skipped entirely for the value-only forward pass.
+   */
+  const stepPlayer = (i: number, dpPrev: Float64Array<ArrayBufferLike>, recordChoices: boolean): { dpNext: Float64Array<ArrayBufferLike>; ch: Int8Array | Int16Array | null } => {
+    const m = meta[i]!;
+    const dpNext = m.locked ? new Float64Array(fullStates).fill(-Infinity) : dpPrev.slice();
+    const ch = recordChoices ? (wideCodes ? new Int16Array(fullStates) : new Int8Array(fullStates)) : null;
+    if (ch && !m.locked) ch.fill(-1); // baseline: every state carried forward unchanged (skip)
 
-    for (const c of cats) {
+    for (const c of m.cats) {
       const stride = space.strides[c]!;
       const capOfDim = space.dims[c]! - 1;
-      const maxSu = capUnits - su;
+      const maxSu = capUnits - m.su;
       for (let countIdx = 0; countIdx < countStates; countIdx++) {
         const cur = Math.floor(countIdx / stride) % (capOfDim + 1);
         if (cur >= capOfDim) continue; // this category is already at capacity
@@ -267,11 +290,11 @@ function solveExact(
           // games" -> the absorbing "spans ≥2 games" value.
           const srcStack = stackDim === 2 ? Math.floor(srcFlags / gameDim) : 0;
           const srcGame = gameDim > 1 ? srcFlags % gameDim : 0;
-          const dstStack = stackDim === 2 ? (srcStack || (advancesStack ? 1 : 0)) : 0;
+          const dstStack = stackDim === 2 ? (srcStack || (m.advancesStack ? 1 : 0)) : 0;
           const dstGame =
             gameReq.kind === "none" ? 0 :
-            gameReq.kind === "escape" ? (srcGame || (escapesBanned ? 1 : 0)) :
-            srcGame === 0 ? playerGame : srcGame === playerGame ? srcGame : gameDim - 1;
+            gameReq.kind === "escape" ? (srcGame || (m.escapesBanned ? 1 : 0)) :
+            srcGame === 0 ? m.playerGame : srcGame === m.playerGame ? srcGame : gameDim - 1;
           const dstFlags = dstStack * gameDim + dstGame;
           const srcBase = countIdx * salaryStates * flagStates + srcFlags;
           const dstBase = targetCountIdx * salaryStates * flagStates + dstFlags;
@@ -279,19 +302,30 @@ function solveExact(
           for (let s2 = 0; s2 <= maxSu; s2++) {
             const v = dpPrev[srcBase + s2 * flagStates]!;
             if (v === -Infinity) continue;
-            const dstIdx = dstBase + (s2 + su) * flagStates;
-            const candidate = v + val;
+            const dstIdx = dstBase + (s2 + m.su) * flagStates;
+            const candidate = v + m.val;
             if (candidate > dpNext[dstIdx]!) {
               dpNext[dstIdx] = candidate;
-              ch[dstIdx] = code;
+              if (ch) ch[dstIdx] = code;
             }
           }
         }
       }
     }
 
-    dpPrev = dpNext;
-    choiceLayers[i] = ch;
+    return { dpNext, ch };
+  };
+
+  // Value-only forward pass, snapshotting the layer before every
+  // checkpointStride-th player. ~sqrt(n) balances checkpoint count against
+  // re-derived segment size for minimal peak memory.
+  const checkpointStride = Math.max(1, Math.round(Math.sqrt(n)));
+  const checkpoints: Float64Array<ArrayBufferLike>[] = [];
+  let dpPrev: Float64Array<ArrayBufferLike> = new Float64Array(fullStates).fill(-Infinity);
+  dpPrev[0] = 0; // count-state 0, salary 0, no flags — the empty lineup
+  for (let i = 0; i < n; i++) {
+    if (i % checkpointStride === 0) checkpoints.push(dpPrev.slice());
+    dpPrev = stepPlayer(i, dpPrev, false).dpNext;
   }
 
   const baseIdx = space.fullCountIdx * salaryStates * flagStates + requiredFlags;
@@ -303,20 +337,38 @@ function solveExact(
   }
   if (bestSalaryUnits < 0 || !Number.isFinite(bestVal)) return null;
 
+  // Checkpointed backward reconstruction: walk segments from the end back
+  // to the start. Each segment is re-derived (with choice recording) from
+  // its nearest checkpoint, backtracked through, then discarded before
+  // moving to the previous segment.
   const chosen: { category: number; player: DfsPlayer }[] = [];
   let countIdx = space.fullCountIdx;
   let salaryUnits = bestSalaryUnits;
   let flags = requiredFlags;
-  for (let i = ordered.length - 1; i >= 0; i--) {
-    const state = (countIdx * salaryStates + salaryUnits) * flagStates + flags;
-    const code = choiceLayers[i]![state]!;
-    if (code === -1) continue; // player i was not used; state is unchanged going into it
-    const category = Math.floor(code / flagStates);
-    const srcFlags = code % flagStates;
-    chosen.push({ category, player: ordered[i]! });
-    countIdx -= space.strides[category]!;
-    salaryUnits -= suOf[i]!;
-    flags = srcFlags;
+
+  let segEnd = n; // exclusive
+  while (segEnd > 0) {
+    const checkpointIdx = Math.floor((segEnd - 1) / checkpointStride);
+    const segStart = checkpointIdx * checkpointStride;
+    let segDp = checkpoints[checkpointIdx]!;
+    const segChoices: (Int8Array | Int16Array)[] = [];
+    for (let i = segStart; i < segEnd; i++) {
+      const { dpNext, ch } = stepPlayer(i, segDp, true);
+      segChoices.push(ch!);
+      segDp = dpNext;
+    }
+    for (let i = segEnd - 1; i >= segStart; i--) {
+      const state = (countIdx * salaryStates + salaryUnits) * flagStates + flags;
+      const code = segChoices[i - segStart]![state]!;
+      if (code === -1) continue; // player i was not used; state is unchanged going into it
+      const category = Math.floor(code / flagStates);
+      const srcFlags = code % flagStates;
+      chosen.push({ category, player: ordered[i]! });
+      countIdx -= space.strides[category]!;
+      salaryUnits -= suOf[i]!;
+      flags = srcFlags;
+    }
+    segEnd = segStart;
   }
 
   return { lineup: assembleLineup(chosen), value: bestVal };

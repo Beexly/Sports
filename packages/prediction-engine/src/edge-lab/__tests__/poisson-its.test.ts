@@ -88,6 +88,17 @@ describe("fitPoissonIts — degenerate and edge cases", () => {
     expect(fitPoissonIts(obs)).toBeNull();
   });
 
+  it("returns null on a non-finite/non-positive-integer maxIterations or a non-finite/non-positive tolerance -- both would otherwise make the Newton-Raphson loop non-terminating", () => {
+    const obs = synthesize([Math.log(10), 0.05, Math.log(1.3), 0], 10);
+    expect(fitPoissonIts(obs, { maxIterations: Infinity })).toBeNull();
+    expect(fitPoissonIts(obs, { maxIterations: 0 })).toBeNull();
+    expect(fitPoissonIts(obs, { maxIterations: -1 })).toBeNull();
+    expect(fitPoissonIts(obs, { maxIterations: 1.5 })).toBeNull();
+    expect(fitPoissonIts(obs, { tolerance: 0 })).toBeNull();
+    expect(fitPoissonIts(obs, { tolerance: -1 })).toBeNull();
+    expect(fitPoissonIts(obs, { tolerance: NaN })).toBeNull();
+  });
+
   it("returns null when the design can't identify all four parameters (post never varies)", () => {
     const obs: ItsObservation[] = Array.from({ length: 10 }, (_, t) => ({
       t,

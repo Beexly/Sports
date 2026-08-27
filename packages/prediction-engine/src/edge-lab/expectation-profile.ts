@@ -67,7 +67,15 @@ export interface TeamGameResult {
    * home-win probability per Card & Dahl 2011, cited in the source paper).
    */
   readonly closingSpreadForTeam: number;
-  readonly won: boolean;
+  /**
+   * "win" | "loss" | "draw" — not a bare `won: boolean`, so a drawn game
+   * (soccer, or a rare NFL overtime tie) can be represented at all rather
+   * than being forced into "loss." The source paper's own Table 1 profiles
+   * are win/loss only (no draw dimension) — see `priorGameExpectationProfile`
+   * for how a draw is handled: excluded from consideration, not silently
+   * miscoded as a loss or invented a new, un-sourced profile category.
+   */
+  readonly result: "win" | "loss" | "draw";
 }
 
 /**
@@ -96,11 +104,14 @@ export function classifyExpectationProfile(closeness: GameCloseness, won: boolea
 }
 
 /**
- * Leak-safe: the expectation profile of the LATEST game strictly before
- * `kickoffWeek` in the same season for `team`. Mirrors
+ * Leak-safe: the expectation profile of the LATEST WIN-OR-LOSS game
+ * strictly before `kickoffWeek` in the same season for `team`. Mirrors
  * `covariate-bus.ts`'s `latestPriorRow` exactly — same-week and future games
  * are never eligible, and no qualifying prior game returns `null` rather
- * than imputing a default profile.
+ * than imputing a default profile. A drawn prior game is skipped entirely
+ * (not coded as a loss, and not assigned an invented profile the source
+ * paper's Table 1 never defines) — the scan continues past it to the next
+ * eligible win-or-loss game, exactly as if it were absent from `history`.
  */
 export function priorGameExpectationProfile(
   history: readonly TeamGameResult[],
@@ -114,8 +125,9 @@ export function priorGameExpectationProfile(
     if (g.team !== team) continue;
     if (g.season !== season) continue;
     if (g.week >= kickoffWeek) continue; // strictly prior — no same-week, no future
+    if (g.result === "draw") continue; // no draw profile in the source paper — skip, don't miscode
     if (best === null || g.week > best.week) best = g;
   }
   if (best === null) return null;
-  return classifyExpectationProfile(classifyGameCloseness(best.closingSpreadForTeam, closeBandPoints), best.won);
+  return classifyExpectationProfile(classifyGameCloseness(best.closingSpreadForTeam, closeBandPoints), best.result === "win");
 }

@@ -93,6 +93,12 @@ export function precisionAtRecall(
   if (scores.length === 0) {
     throw new RangeError("precisionAtRecall: scores/labels must be non-empty");
   }
+  // A non-finite score (NaN especially) would make the tie-block scan below
+  // non-terminating: `pairs[i].score === threshold` is false for NaN
+  // against itself, so the inner while never advances `i`.
+  if (!scores.every(Number.isFinite)) {
+    throw new RangeError("precisionAtRecall: every score must be finite (got a NaN or ±Infinity)");
+  }
   if (!Number.isFinite(targetRecall) || targetRecall < 0 || targetRecall > 1) {
     throw new RangeError(`precisionAtRecall: targetRecall must be in [0, 1], got ${targetRecall}`);
   }

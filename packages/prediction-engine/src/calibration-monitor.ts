@@ -377,10 +377,15 @@ export function stabilityPlasticityCheck(
 ): StabilityPlasticityResult {
   const safeBound = Number.isFinite(forgettingBound) && forgettingBound >= 0 ? forgettingBound : 0.01;
 
-  const plasticity = round(newestCohort.incumbentEce - newestCohort.candidateEce);
-  const forgetting = round(oldestCohort.candidateEce - oldestCohort.incumbentEce);
-  const psRatio = round(plasticity / Math.max(Math.abs(forgetting), 1e-6), 6);
-  const eligible = forgetting <= safeBound;
+  // Compare the RAW (unrounded) delta against safeBound -- rounding first
+  // (e.g. 0.0100004 -> 0.01 at 4dp) could make a candidate that actually
+  // exceeds the bound read as exactly at it and pass.
+  const rawPlasticity = newestCohort.incumbentEce - newestCohort.candidateEce;
+  const rawForgetting = oldestCohort.candidateEce - oldestCohort.incumbentEce;
+  const plasticity = round(rawPlasticity);
+  const forgetting = round(rawForgetting);
+  const psRatio = round(rawPlasticity / Math.max(Math.abs(rawForgetting), 1e-6), 6);
+  const eligible = rawForgetting <= safeBound;
 
   return {
     plasticity,

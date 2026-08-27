@@ -50,6 +50,24 @@ describe("extractNumeralTokens", () => {
   it("returns no tokens for copy with no numerals", () => {
     expect(extractNumeralTokens("The Eagles are favored at home tonight.")).toEqual([]);
   });
+
+  it("preserves the sign of a negative moneyline, spread, or percent — a sign-dropping token can never ground against a signed source fact", () => {
+    expect(extractNumeralTokens("The line is -150 for the favorite.")[0]).toMatchObject({ value: -150, kind: "integer" });
+    expect(extractNumeralTokens("Underdog is +150 on the moneyline.")[0]).toMatchObject({ value: 150, kind: "integer" });
+    expect(extractNumeralTokens("Spread is -3.5 points.")[0]).toMatchObject({ value: -3.5, kind: "decimal" });
+    expect(extractNumeralTokens("Spread is +3.5 points.")[0]).toMatchObject({ value: 3.5, kind: "decimal" });
+    expect(extractNumeralTokens("A -62% swing in odds.")[0]).toMatchObject({ value: -62, kind: "percent" });
+  });
+
+  it("a signed integer/decimal doesn't interfere with an adjacent record's unsigned components", () => {
+    const tokens = extractNumeralTokens("Record improved to 10-6 with a -110 line and 55.5% implied.");
+    expect(tokens).toEqual([
+      { raw: "10", value: 10, kind: "record_component", index: 19 },
+      { raw: "6", value: 6, kind: "record_component", index: 22 },
+      { raw: "-110", value: -110, kind: "integer", index: 31 },
+      { raw: "55.5%", value: 55.5, kind: "percent", index: 45 },
+    ]);
+  });
 });
 
 describe("signFlip", () => {
@@ -103,6 +121,14 @@ describe("auditNumerals", () => {
     expect(inTolerance.ok).toBe(true);
     const outOfTolerance = auditNumerals("Total: 48.7", { numbers: [48.5], tolerance: 0.1 });
     expect(outOfTolerance.ok).toBe(false);
+  });
+
+  it("throws on a non-finite or negative tolerance rather than silently grounding every finite numeral", () => {
+    // Infinity would make isGrounded true for ANY numeral against ANY fact —
+    // the exact "no fabricated stats" bypass this module exists to prevent.
+    expect(() => auditNumerals("He threw for 99 touchdowns.", { numbers: [3], tolerance: Infinity })).toThrow(RangeError);
+    expect(() => auditNumerals("He threw for 3 touchdowns.", { numbers: [3], tolerance: NaN })).toThrow(RangeError);
+    expect(() => auditNumerals("He threw for 3 touchdowns.", { numbers: [3], tolerance: -0.1 })).toThrow(RangeError);
   });
 
   it("grounds a sign-flipped value via the signFlip derivation", () => {

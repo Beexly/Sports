@@ -131,14 +131,27 @@ export function fitHierarchicalBetaShrinkage(
   if (!Number.isFinite(strength) || strength <= 0) {
     throw new RangeError(`fitHierarchicalBetaShrinkage: strength must be > 0, got ${strength}`);
   }
+  if (!Number.isInteger(maxIterations) || maxIterations <= 0 || !Number.isFinite(maxIterations)) {
+    throw new RangeError(`fitHierarchicalBetaShrinkage: maxIterations must be a finite positive integer, got ${maxIterations}`);
+  }
+  if (!Number.isFinite(tolerance) || tolerance <= 0) {
+    throw new RangeError(`fitHierarchicalBetaShrinkage: tolerance must be finite and > 0, got ${tolerance}`);
+  }
   if (cellFits.length === 0) {
     return { cells: [], globalA: 1, globalB: 0, strength, iterations: 0, converged: true };
   }
 
   // Initial global: the raw n-weighted mean, before any shrinkage — a
   // reasonable starting prior (their Algorithm 1 does not prescribe one).
-  let globalA = weightedMean(cellFits.map((c) => ({ v: c.a, w: c.n })));
-  let globalB = weightedMean(cellFits.map((c) => ({ v: c.b, w: c.n })));
+  // Identity params (a=1, b=0) when every cell's n is 0 too — weightedMean's
+  // own zero-total-weight fallback is 0 for BOTH params, which for this
+  // module's g_{a,b}(p) = sigma(a.logit(p)+b) parameterization is NOT an
+  // identity map (a=0 flattens every input to the constant sigma(b)); it is
+  // a degenerate map that must never be the silent default for "no evidence
+  // yet."
+  const totalN = cellFits.reduce((s, c) => s + c.n, 0);
+  let globalA = totalN === 0 ? 1 : weightedMean(cellFits.map((c) => ({ v: c.a, w: c.n })));
+  let globalB = totalN === 0 ? 0 : weightedMean(cellFits.map((c) => ({ v: c.b, w: c.n })));
 
   let iterations = 0;
   let converged = false;
@@ -146,8 +159,15 @@ export function fitHierarchicalBetaShrinkage(
 
   for (; iterations < maxIterations; iterations++) {
     shrunk = shrinkCellsTowardGlobal(cellFits, globalA, globalB, strength);
-    const nextGlobalA = weightedMean(shrunk.map((c) => ({ v: c.a, w: c.n })));
-    const nextGlobalB = weightedMean(shrunk.map((c) => ({ v: c.b, w: c.n })));
+    // Every shrunk cell's `n` is unchanged from cellFits (shrinkCellsTowardGlobal
+    // never rewrites it), so totalN is invariant across iterations: with zero
+    // total evidence, re-estimating via weightedMean would collapse back to
+    // its own zero-weight fallback (0, 0) every time, undoing the identity
+    // fallback above on the very first iteration. Hold the global fixed at
+    // its current (identity) value instead -- there is no evidence to ever
+    // move it away from that.
+    const nextGlobalA = totalN === 0 ? globalA : weightedMean(shrunk.map((c) => ({ v: c.a, w: c.n })));
+    const nextGlobalB = totalN === 0 ? globalB : weightedMean(shrunk.map((c) => ({ v: c.b, w: c.n })));
     const moved = Math.abs(nextGlobalA - globalA) + Math.abs(nextGlobalB - globalB);
     globalA = nextGlobalA;
     globalB = nextGlobalB;

@@ -87,7 +87,11 @@ export function fieldPercentile(
     bootstrap[b] = percentileRank(lineupFpts, resample);
   }
   bootstrap.sort((a, b) => a - b);
-  const loIdx = Math.max(0, Math.floor(0.025 * resamples));
+  // Nearest-rank index for the 2.5th percentile: Math.floor(0.025*resamples)
+  // is one order statistic too high whenever 0.025*resamples lands exactly
+  // on an integer (e.g. resamples=200 -> 5, the 6th sorted value, when the
+  // 2.5th nearest-rank result is the 5th).
+  const loIdx = Math.max(0, Math.ceil(0.025 * resamples) - 1);
   const hiIdx = Math.min(resamples - 1, Math.ceil(0.975 * resamples) - 1);
 
   return { percentile, ci95: [bootstrap[loIdx]!, bootstrap[hiIdx]!], n };
@@ -131,6 +135,9 @@ export function randomFeasibleLineups(
   }
   const minSalary = opts.minSalary ?? 0.9 * SALARY_CAP;
   const maxAttemptsPerLineup = opts.maxAttemptsPerLineup ?? 200;
+  if (!Number.isInteger(maxAttemptsPerLineup) || maxAttemptsPerLineup < 1) {
+    throw new RangeError(`randomFeasibleLineups: maxAttemptsPerLineup must be a positive integer, got ${maxAttemptsPerLineup}`);
+  }
   const rng = mulberry32(opts.seed);
 
   const drawOne = (): Lineup | null => {

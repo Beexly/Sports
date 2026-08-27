@@ -68,6 +68,23 @@ describe("invertMatrix", () => {
     expect(invertMatrix([[1, 2], [2, 4]])).toBeNull();
   });
 
+  it("inverts a uniformly tiny but well-conditioned matrix -- the singularity threshold is relative to the matrix's own scale, not a fixed absolute cutoff", () => {
+    // [[1e-13]]: condition number 1, trivially invertible (inverse [[1e13]]).
+    // A fixed absolute 1e-12 cutoff would wrongly reject this as singular
+    // (its pivot, 1e-13, is below 1e-12). The product A*A^-1 is back at O(1)
+    // scale regardless of A's own scale, so a normal-precision identity check applies.
+    const inv = invertMatrix([[1e-13]]);
+    expect(inv).not.toBeNull();
+    expectApproxIdentity(multiply([[1e-13]], inv!), 6);
+
+    // The same relative-scale argument for a uniformly-scaled identity.
+    const scale = 1e-10;
+    const scaledIdentity = [[scale, 0], [0, scale]];
+    const invScaled = invertMatrix(scaledIdentity);
+    expect(invScaled).not.toBeNull();
+    expectApproxIdentity(multiply(scaledIdentity, invScaled!), 6);
+  });
+
   it("returns null for an all-zero matrix", () => {
     expect(invertMatrix([[0, 0], [0, 0]])).toBeNull();
   });

@@ -104,6 +104,34 @@ describe("fitHierarchicalBetaShrinkage", () => {
     expect(() => fitHierarchicalBetaShrinkage([{ cell: "x", a: 1, b: 0, n: 10 }], NaN)).toThrow(RangeError);
   });
 
+  it("throws on a non-finite/non-positive-integer maxIterations, or a non-finite/non-positive tolerance -- both would otherwise make the EM loop non-terminating", () => {
+    const cellFits: CellBetaFit[] = [{ cell: "x", a: 1, b: 0, n: 10 }];
+    expect(() => fitHierarchicalBetaShrinkage(cellFits, 25, Infinity)).toThrow(RangeError);
+    expect(() => fitHierarchicalBetaShrinkage(cellFits, 25, 0)).toThrow(RangeError);
+    expect(() => fitHierarchicalBetaShrinkage(cellFits, 25, -1)).toThrow(RangeError);
+    expect(() => fitHierarchicalBetaShrinkage(cellFits, 25, 1.5)).toThrow(RangeError);
+    expect(() => fitHierarchicalBetaShrinkage(cellFits, 25, 100, 0)).toThrow(RangeError);
+    expect(() => fitHierarchicalBetaShrinkage(cellFits, 25, 100, -1e-9)).toThrow(RangeError);
+    expect(() => fitHierarchicalBetaShrinkage(cellFits, 25, 100, NaN)).toThrow(RangeError);
+  });
+
+  it("falls back to the identity global (a=1, b=0), never the degenerate (a=0, b=0), when every cell has zero evidence", () => {
+    // weightedMean's own zero-total-weight fallback is 0 for both params —
+    // for this module's g_{a,b}(p) = sigma(a.logit(p)+b) parameterization,
+    // a=0 flattens every input to a constant, which is NOT an identity map.
+    const result = fitHierarchicalBetaShrinkage([
+      { cell: "empty1", a: 3, b: 2, n: 0 },
+      { cell: "empty2", a: -1, b: -1, n: 0 },
+    ]);
+    expect(result.globalA).toBe(1);
+    expect(result.globalB).toBe(0);
+    // And every cell, having no evidence, shrinks entirely to that identity.
+    for (const c of result.cells) {
+      expect(c.a).toBeCloseTo(1, 8);
+      expect(c.b).toBeCloseTo(0, 8);
+    }
+  });
+
   it("is deterministic across repeated runs", () => {
     const cellFits: CellBetaFit[] = [
       { cell: "a", a: 2.1, b: 0.4, n: 30 },

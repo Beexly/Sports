@@ -265,13 +265,33 @@ describe("stabilityPlasticityCheck", () => {
   });
 
   it("forgetting exactly at the bound is still eligible (<=, not <)", () => {
+    // Set the bound to the SAME raw expression the check itself computes
+    // (rather than a decimal literal like 0.01) so this is an exact
+    // floating-point equality, not merely "close to" -- 0.05 - 0.04 is
+    // actually 0.010000000000000002 in IEEE754, not exactly 0.01.
+    const oldestIncumbent = 0.04;
+    const oldestCandidate = 0.05;
+    const exactForgetting = oldestCandidate - oldestIncumbent;
     const result = stabilityPlasticityCheck(
       { incumbentEce: 0.08, candidateEce: 0.05 },
-      { incumbentEce: 0.04, candidateEce: 0.05 }, // degraded by exactly 0.01
-      0.01,
+      { incumbentEce: oldestIncumbent, candidateEce: oldestCandidate }, // degraded by exactly exactForgetting
+      exactForgetting,
     );
     expect(result.forgetting).toBeCloseTo(0.01, 6);
     expect(result.eligible).toBe(true);
+  });
+
+  it("a raw forgetting that rounds down to the bound (but truly exceeds it) is still ineligible -- eligibility must use the raw delta, not the rounded one", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.05 },
+      // raw forgetting = 0.0100004, which rounds to 0.0100 at the reported
+      // 4dp precision -- reading eligible off the rounded value would wrongly
+      // accept this as exactly at the 0.01 bound.
+      { incumbentEce: 0.04, candidateEce: 0.0500004 },
+      0.01,
+    );
+    expect(result.forgetting).toBeCloseTo(0.01, 4); // reported (rounded) value
+    expect(result.eligible).toBe(false); // but the raw delta truly exceeds safeBound
   });
 
   it("hand-computed psRatio: plasticity / |forgetting|", () => {

@@ -11,9 +11,14 @@
  * [A | I] system, with partial pivoting (largest-magnitude pivot in the
  * remaining column, swapped to the diagonal) for numerical stability.
  * Returns `null` — never a garbage result — when the matrix is singular or
- * numerically indistinguishable from singular (pivot magnitude below 1e-12
- * after scaling). Throws on a non-square input; that is a caller bug, not a
- * numerical condition to fail closed on.
+ * numerically indistinguishable from singular: pivot magnitude below
+ * `1e-12 * matrixScale`, where `matrixScale` is the largest absolute entry
+ * in the ORIGINAL input (computed once, not re-derived per column) — a
+ * threshold relative to the matrix's own scale, so a uniformly tiny but
+ * well-conditioned matrix (e.g. `[[1e-13]]`, condition number 1) is not
+ * misclassified as singular by a fixed absolute cutoff. Throws on a
+ * non-square input; that is a caller bug, not a numerical condition to fail
+ * closed on.
  */
 export function invertMatrix(matrix: ReadonlyArray<readonly number[]>): number[][] | null {
   const n = matrix.length;
@@ -25,6 +30,10 @@ export function invertMatrix(matrix: ReadonlyArray<readonly number[]>): number[]
       throw new RangeError(`invertMatrix: matrix must be square (got ${n} rows, a row with ${row.length} columns)`);
     }
   }
+
+  let matrixScale = 0;
+  for (const row of matrix) for (const v of row) matrixScale = Math.max(matrixScale, Math.abs(v));
+  const singularityThreshold = 1e-12 * matrixScale;
 
   // Augmented [A | I], worked entirely in a fresh copy.
   const aug: number[][] = matrix.map((row, i) => [
@@ -42,7 +51,7 @@ export function invertMatrix(matrix: ReadonlyArray<readonly number[]>): number[]
         pivotRow = r;
       }
     }
-    if (pivotVal < 1e-12) return null; // singular
+    if (pivotVal <= singularityThreshold) return null; // singular (relative to the matrix's own scale)
 
     if (pivotRow !== col) {
       const tmp = aug[col]!;
