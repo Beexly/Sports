@@ -163,6 +163,61 @@ verdict flip → keyless second book goes live; cancel The Odds API before the
 ~Sep 22 invoice only once Galaxy mints (or renew deliberately — $30 is cheap
 insurance for month one).
 
+## THE ALIGNED MASTER PATH v2 (2026-08-28) — new direction reconciled to the codebase
+
+The product direction is now `docs/strategy/GREEN-BOARD-DOCTRINE.md` (Proof
+Stack identity · GREEN/PRIME/RARE-AIR bands · probability-priced access ·
+simplicity overhaul). This section reconciles it with the machine as it
+actually exists and supersedes emphasis (not content) of the phases below.
+
+### The finish line, restated
+Founding members paying through probability-priced bands · the public record
+accruing from day one with cryptographic receipts · Band Report Cards audited
+monthly · PROVEN milestone → first ladder step → the only verified record in
+the industry. Honesty rails unchanged throughout.
+
+### Alignment corrections (fresh-eyes findings — binding)
+1. **P-0, the foundation stone: the clean probability harvest.** Everything
+   (bands, receipts, report cards) stamps the pick's calibrated p. Live
+   confidence is a degraded market echo (0.2478 vs clean de-vig 0.2107,
+   cross-model verified). Workstream: diagnose the divergence with GB-4's
+   field mapping, then make pick probability = clean de-vigged consensus
+   (independents only as bounded, logged adjustments). No band ships to paying
+   users before P-0 lands.
+2. **Bands are computed, never persisted.** No new enums/columns (schema law
+   also forbids it). One mapping file: band → subscription entitlement.
+3. **Guardrail evolution, not weakening:** extend claims scanners with an
+   allowed vocabulary for probability-threshold band definitions + receipts
+   language, with tests. Copy that states forward probability ≠ performance
+   claim; scanners must learn the difference before Phase D copy lands.
+4. **Receipts plank is ops-gated:** hero claims hash-commitment only after the
+   pending prod migration runs and receipts mint (96h runbook Day 1).
+5. **Two records, never confused:** GB-4 retro = internal evidence (Math Room
+   at most, clearly labeled counterfactual). The PUBLIC record starts at zero
+   on launch day. Publishing retro as track record = claims violation.
+6. **Inventory dependency:** GREEN/PRIME need ≥2 books at high p — the paid
+   key's Sep 1 credit reset is the launch supply line; Galaxy keyless + Kalshi
+   grant remain the sovereignty track behind it.
+
+### Build waves (who/what, in order)
+- **Wave 1 (Hermes now):** dispatch GB-1..GB-5 + Phase D
+  (`docs/ops/hermes/GREEN-BOARD-DISPATCH-2026-08-28.md`). Claude verifies GB-4
+  clean-room. Founder runs the 96h runbook Day-1 items in parallel.
+- **Wave 2 (post-retro):** P-0 harvest fix (specced from GB-4 diagnosis) ·
+  guardrail vocabulary task · Band Report Card generator (monthly, from
+  settled picks by band; no schema) · Daily Receipts draft generator (graded
+  results → founder-publish social draft via the existing draft-only content
+  pipeline) — the distribution organ.
+- **Wave 3 (launch week):** Sep 1 minimum-loud-product: Proof Stack hero,
+  five doors, welcome-video slot, GREEN/PRIME lanes computed, live record at
+  n=0 ("Day 1 of the record"), receipts minting; Green Room + verify-UI and
+  Calibration Wall trail within days, not gating launch.
+- **Wave 4 (post-launch flywheel):** weekly selection-alpha review (realized
+  vs expected per band → SITREP weight tuning, human-approved, never
+  auto-flipped) · RARE AIR productization once GB-4/live data proves monthly
+  supply · Elite alerts for The Drop · Kalshi grant lands → keyless second
+  book live.
+
 ## 0. Verified baseline (run in this session, 2026-08-27, at bb0e7df)
 
 | Check | Result |

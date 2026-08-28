@@ -76,7 +76,12 @@ realized-vs-expected gap (the SELECTION-ALPHA number) — ALL split by tier
 valuable. Output to
 `docs/ops/calibration/2026-08-28-green-retro/RESULTS.md` with the run log.
 DO NOT tune thresholds to make the retro look good — thresholds are fixed
-above; the retro MEASURES them.
+above; the retro MEASURES them. BINDING LAW: the retro is an internal
+COUNTERFACTUAL — it must never appear on any public surface or be phrased as
+a track record anywhere. The public record starts at zero on launch day.
+Also report, per band, the divergence between stored pick confidence and the
+clean de-vigged consensus probability for the same picks — this diagnosis
+feeds workstream P-0 (see FINISH-LINE-PLAN §Aligned Master Path).
 
 ## GB-5 — Green Board surface v1
 
@@ -166,6 +171,14 @@ words · no banned jargon outside The Math Room · welcome-video slot live with
 poster state · Nova unmounted · AA contrast on touched pages · trust-gate,
 check-claims, full web suite green · before/after screenshots for every
 touched route in the PR description.
+
+## GB-6 — guardrail vocabulary (protects Phase D copy; small, tested)
+Extend the claims guardrails (scripts/guardrails/* + related __tests__) with
+an ALLOWED vocabulary: forward-looking probability-threshold band definitions
+("fires only when winning is at least 80% mathematically true", band range
+statements) and receipts language, while performance-claim bans stay fully
+intact. Tests prove: band-definition copy passes; a win-rate performance
+claim still fails. Never weaken an existing rule — add the distinction.
 
 ## Definition of done (whole dispatch)
 
