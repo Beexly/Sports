@@ -7,6 +7,88 @@
 > RUN-VERIFIED in this session, or marked as a probe to run. Where this document
 > conflicts with `docs/ops/CANONICAL.md`, CANONICAL wins.
 
+## ADDENDUM 2026-08-28 — Galaxy keyless decision + PR #680 review
+
+**Founder decision (2026-08-27, do not reverse):** GSE becomes its own odds provider —
+the **Galaxy Sports API** (keyless ESPN `site.web.api` inline scoreboard odds +
+multiplicative de-vig). The Odds API $30/mo renewal (~Sep 22 invoice) is to die;
+TheRundown signup was **rejected** as the kill switch. Wired in
+[PR #680](https://github.com/Beexly/Sports/pull/680) (`hermes/galaxy-keyless-odds`);
+full context in `docs/agents/CLOUD-BRIEF-2026-08-27.md` + the AGENTS.md findings index
+on that branch. This supersedes the §4 framing that treated pasting the paid key as
+the end state — but see the sequencing warning below before unsetting anything.
+
+**Verified at `ffa6b9c40` (this session):** data-ingestion 355 pass, ingestion-pipeline
+221 pass / 6 skip, CI Test/typecheck/lint green, Codacy 0 issues. Confirmed claims:
+no invented prices anywhere on the ingest/persistence plane; Polymarket parser
+unreachable from the quote plane and `INDEPENDENT_POLYMARKET` default off;
+`fetchNflverseGameLines` (2018–2025 real closing lines) research-only; props ingest
+default OFF with credit cap; no gate files touched.
+
+**Adversarial review findings (3-lens, all file:line-verified — fix before this path
+carries the product):**
+
+1. **HIGH — inline spreads are dead on arrival.** `espn-odds-client.ts:211-212` names
+   spread outcomes by team ABBREVIATION; `normalizer.ts:97-102` matches by FULL team
+   name → every inline SPREADS row normalizes to `spread: undefined` and persists as
+   an all-NULL Odds row. Two reviewers confirmed independently. Exactly what the
+   admitted-missing `fetchNormalized` test would have caught.
+2. **HIGH — rights/clearance gap.** The keyless ESPN odds path calls no
+   `assertIngestible`/clearance; the data-ingestion source registry's only ESPN-JSON
+   entry is `espn-hidden-api` = **forbidden**, and the web registry's
+   `espn-public-api` permits logged-off scores FACTS only (`storage_allowed:false`,
+   `commercial_display_allowed:false`) — yet `process-sport.ts:590-592` persists
+   ESPN-relayed DraftKings odds + payload snapshots. `process-sport.ts:99-102` itself
+   says "no free odds source is cleared today." The PR also deleted the old ToU
+   caveat header. Needs a founder rights decision + registry entry + clearance wiring
+   before Galaxy is the primary — this is CLAUDE.md's non-negotiable lane.
+3. **MEDIUM — keyless path cannot mint picks as-is.** Galaxy events carry exactly one
+   bookmaker (`espn_public`); `MIN_BOOKMAKERS=2` makes all three scorers return null
+   (`scoring.ts:385,637,818`). **Unsetting `THE_ODDS_API_KEY` today stops fresh pick
+   generation** — the board would run on signal-slate fills only. Also latent:
+   `scoring.ts:414,418,421` still fabricates −110 for price-less spreads, and this PR
+   ships the first producer of price-less spread rows; one added keyless book flips
+   that from unreachable to live invented-price. Remove the −110 fallbacks.
+4. **MEDIUM — blocked hosts still fetched, no timeouts.** `site.api.espn.com` remains
+   a fallback host and `sports.core.api.espn.com` is hit per event when inline ML is
+   missing (up to 24 sequential calls, no AbortSignal) — contradicting the PR's own
+   AGENTS.md rule; a blackholed host can stall the ingestion cycle.
+5. **MEDIUM — fabricated freshness.** `espn-odds-client.ts:376` stamps
+   `new Date().toISOString()` as the upstream `last_update`, which the normalizer
+   trusts as the anti-tautology freshness signal — keyless rows always look fresh,
+   hollowing the no-stale-data invariant on that path.
+6. **LOW —** `certifiableForLiveGate:false` has no production consumer (and
+   `GalaxySportsApiOddsProvider` itself has no production caller — the pipeline calls
+   `fetchEspnOddsForSport` directly, and does so whenever the board is empty even
+   WITH the paid key); de-vig `fair_prob` is produced but read by nothing;
+   `americanNum` lacks the `|price| ≥ 100` guard; the props credit cap counts only
+   successful calls.
+
+**Revised sequencing (replaces the §4 "paste key" step):**
+- **Keep the rotated paid key live for now** — it is paid through ~Sep 22 and is the
+  only pick-minting odds source until Galaxy is fixed and cleared. Credits reset
+  Sep 1.
+- **hermes:** fix the abbr/full-name normalization bug + add the two missing tests
+  (`fetchNormalized` rows; unpaid `processSport` with non-empty ESPN fixture); add
+  fetch timeouts and drop/flag the blocked hosts; honest upstream timestamps (or mark
+  the path exempt explicitly); remove the scoring −110 fallbacks; wire clearance once
+  a registry entry exists.
+- **founder:** rights call on ESPN `site.web.api` odds as a stored/displayed source
+  (registry entry + counsel note per COMPLIANCE §6); review PR #680 with the findings
+  above; decide props credit spend (`EVENT_ODDS_INGEST_ENABLED=true`, cap 8) before
+  cancelling; only after Galaxy mints certifiable picks (or the pick-gap is accepted
+  deliberately), unset the key on a preview, verify, then production.
+- **Never-do additions:** no Rundown signup as kill switch; no `/api/cron/gamma` or
+  CLOB (compliance hold, not tech debt); no book scraping
+  (`draftkings-unofficial` forbidden); no invented timestamps; no Vitest UI /
+  `npm audit fix --force`.
+- The §4 "credit governor" scope narrows to: event-odds cap hardening (count
+  attempts, not successes) + `x-requests-remaining` telemetry while the paid key
+  lives.
+
+Related PRs, none on main: #680 (Galaxy), #679 (Grok audit), #678 (sports-intel
+orientation), #677 (this plan).
+
 ## 0. Verified baseline (run in this session, 2026-08-27, at bb0e7df)
 
 | Check | Result |
