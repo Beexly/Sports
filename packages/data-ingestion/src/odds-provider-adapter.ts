@@ -20,6 +20,7 @@ import type { Market, SupportedSportKey } from "./config.js";
 import { MARKETS } from "./config.js";
 import type { OddsProvider, OddsProviderResult } from "./odds-failover.js";
 import { fetchEspnOddsForSport } from "./espn-odds-client.js";
+import { fetchGalaxyPolymarketNfl } from "./galaxy-polymarket.js";
 
 export type OddsProviderId = "the-odds-api" | "offline" | "galaxy-sports-api";
 
@@ -213,7 +214,12 @@ export class GalaxySportsApiOddsProvider implements OddsQuoteProvider {
 
   async fetchNormalized(sportKey: string): Promise<OddsProviderResult> {
     const espn = await this.fetchEspn(sportKey);
-    if (espn.events.length === 0) {
+    let events = espn.events;
+    if (sportKey === "americanfootball_nfl") {
+      const poly = await fetchGalaxyPolymarketNfl();
+      if (poly.length > 0) events = [...events, ...poly];
+    }
+    if (events.length === 0) {
       return {
         provider: this.name,
         odds: [],
@@ -222,7 +228,7 @@ export class GalaxySportsApiOddsProvider implements OddsQuoteProvider {
       };
     }
     const normalizer = new DataNormalizer();
-    const odds = normalizer.normalizeOdds(espn.events, this.now());
+    const odds = normalizer.normalizeOdds(events, this.now());
     return {
       provider: this.name,
       odds,

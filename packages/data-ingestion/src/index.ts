@@ -293,6 +293,9 @@ export {
 export type { OddsApiKeyEnvName } from "./odds-api-key.js";
 
 export { americanToDecimal, deVigFairProbs } from "./galaxy-devig.js";
+export { parseNflverseGameLines, linesInSeasons } from "./nflverse-game-lines.js";
+export type { NflverseGameLine } from "./nflverse-game-lines.js";
+export { polymarketEventsToOddsApi, fetchGalaxyPolymarketNfl } from "./galaxy-polymarket.js";
 
 export {
   fetchEspnOddsForSport,
