@@ -352,6 +352,32 @@ jobs:
         run: npm run guardrails
 
   # --------------------------------------------------------------
+  # 6b. Cron matrix — generated docs/ops/CRON_MATRIX.generated.md
+  #     must match apps/web/vercel.json (the SoT Vercel reads).
+  #     A stale matrix silently diverges the documented schedule
+  #     truth from what actually runs. Pure node + fs, no install
+  #     or DB needed (mirrors the secret-scan job's no-install shape).
+  #     Closes the handoff gap: "neither guard runs in
+  #     .github/workflows — both are manual npm scripts."
+  # --------------------------------------------------------------
+  cron-matrix:
+    name: Cron matrix (vercel.json ↔ generated md)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Verify cron matrix is in sync
+        run: node scripts/ops/cron-matrix-from-vercel.mjs --check
+
+  # --------------------------------------------------------------
   # 7. Brand-safety — fast, focused job that fences the customer-
   #    facing copy invariants. Runs the public-copy scanner plus the
   #    policy / dashboard / Jarvis tests that gate visible claims.

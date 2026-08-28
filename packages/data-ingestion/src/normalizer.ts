@@ -73,7 +73,7 @@ export class DataNormalizer {
             // level field, and without the fallback every row parsed as Invalid
             // Date -> every game dropped as "not provably fresh" -> the whole run
             // failed "Upstream odds are stale" even on a live slate.
-            bookmakerLastUpdate: new Date(bookmaker.last_update ?? market.last_update),
+            bookmakerLastUpdate: new Date((bookmaker.last_update ?? market.last_update) as string),
             market: this.mapMarket(market.key),
             fetchedAt,
           };

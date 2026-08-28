@@ -66,6 +66,7 @@ export type {
 export {
   deriveClosingSnapshotFromOdds,
   gradePickClv,
+  resolveCloseSourceLadder,
 } from "./clv-capture.js";
 export type {
   PickKind,
@@ -73,6 +74,7 @@ export type {
   ClosingSnapshot,
   ClvKind,
   ClvGrade,
+  CloseSnapshotRow,
 } from "./clv-capture.js";
 // Edge engine — surfaces a pick only where INDEPENDENT estimators (Poisson model,
 // Kalshi exchange, FPI, ClubElo, Dixon–Coles, …) diverge from the sportsbook fair

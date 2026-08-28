@@ -560,8 +560,9 @@ export async function processSport(
       { historical: true },
     );
     let pinnacleResult: Awaited<ReturnType<typeof capturePinnacleLineSnapshotsIfEnabled>> = {
-      archived: 0,
-      error: null,
+      enabled: false,
+      persisted: 0,
+      gamesArchived: 0,
     };
     if (!creditGuard.allowed) {
       console.warn(

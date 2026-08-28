@@ -511,6 +511,8 @@ export interface OddsInput {
   awayTeam: string;
   commenceTime: Date;
   sport: string;
+  /** Upstream/external game identifier, when the caller has it (used for log/quarantine context). Optional to avoid breaking existing callers. */
+  gameExternalId?: string;
   bookmakerOdds: BookmakerOddsInput[];
   context?: GameContextInput;   // enriched when available
 }

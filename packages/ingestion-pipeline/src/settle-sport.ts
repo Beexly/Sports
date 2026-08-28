@@ -41,6 +41,7 @@ import {
   deriveClosingSnapshotFromOdds,
   gradePickClv,
   resolveCloseSourceLadder,
+  type CloseSnapshotRow,
   selectGradingLine,
 } from "@sports/prediction-engine";
 import type { ReadinessGates, PickKind } from "@sports/prediction-engine";
@@ -474,7 +475,7 @@ export async function settleSport(
               where: { gameId: game.id, phase: "CLOSE" },
               select: { phase: true, book: true, market: true, side: true, price: true, line: true },
             });
-            const ladder = resolveCloseSourceLadder(closeRows, closingSnapshot);
+            const ladder = resolveCloseSourceLadder(closeRows as CloseSnapshotRow[], closingSnapshot);
             if (ladder.usedCloseSource) {
               closingSnapshot = ladder.snapshot;
               console.log(

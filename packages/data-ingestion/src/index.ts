@@ -188,8 +188,6 @@ export {
   isCertifiableOddsProvider,
   isCertifiableOddsTag,
   enforceCertifiableLiveGate,
-  decideCreditSpend,
-  creditTelemetry,
   type OddsProviderId,
   type OddsProviderCapabilities,
   type OddsProviderHealth,
@@ -197,6 +195,10 @@ export {
   type TheOddsApiOddsProviderOptions,
   type CreateOddsQuoteProviderOptions,
 } from "./odds-provider-adapter.js";
+export {
+  decideCreditSpend,
+  creditTelemetry,
+} from "./credit-governor.js";
 export {
   fetchWithFailover,
   withMirrors,
