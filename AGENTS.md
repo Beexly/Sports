@@ -144,9 +144,11 @@ invented number makes every other number suspect.
 
 ## SESSION FINDINGS INDEX (2026-08-27) — cloud agents start here
 
-**Branch `hermes/galaxy-keyless-odds` · PR #680 · not main.**
+**Claude / Codex / Copilot / Grok: read `docs/agents/CLOUD-BRIEF-2026-08-27.md` in full before touching odds, Rundown, history, Polymarket, or launch gates.**
 
-Full brief: **`docs/agents/CLOUD-BRIEF-2026-08-27.md`**. Ledger: `docs/ops/AGENT_LEDGER.md`.
+**Branch `hermes/galaxy-keyless-odds` · PR https://github.com/Beexly/Sports/pull/680 · not main.**
+
+Ledger: `docs/ops/AGENT_LEDGER.md`. If this table conflicts with the brief, the brief wins for 2026-08-27 Galaxy work; `CANONICAL.md` still wins on gates.
 
 | Fact | Do not reverse |
 |---|---|
@@ -156,5 +158,7 @@ Full brief: **`docs/agents/CLOUD-BRIEF-2026-08-27.md`**. Ledger: `docs/ops/AGENT
 | Polymarket: **held off** quote plane (`docs/agent-skills/polymarket-hold`). | Do not enable `/api/cron/gamma`. |
 | Live NFL props: `event-odds-ingest.ts` (pass/rush/rec yards + TDs/receptions). Default OFF. | Do not scrape books. |
 | Local Python `:8731` is **not** in git. Product formula **is** in this PR. | Do not tell cloud agents to `cd galaxy-sports-api`. |
+| Engine tests 3125 passed; PR #680 CI Test/typecheck/lint **pass**. LIVE_BOARD still off. | Do not treat test-green as a public fire. |
+
 
 
