@@ -87,6 +87,87 @@ function avg(values: readonly number[]): number | null {
  * (capturedAt null) when no odds were recorded before kickoff — in which case we
  * cannot honestly grade CLV.
  */
+/**
+ * Close-source ladder (Phase 3 proof-engine integrity).
+ *
+ * The default close is a soft multi-book average of the latest pre-kickoff odds
+ * batch (deriveClosingSnapshotFromOdds). When the line-archive has captured
+ * per-book `OddsLineSnapshot` rows tagged `phase: "CLOSE"` (the Pinnacle/EU
+ * closing-line leg, or any authoritative CLOSE capture), those are the HONEST
+ * close and must be preferred over the soft average. This ladder does exactly
+ * that: prefer CLOSE-tagged per-book snapshots; fall back to the soft average
+ * only when no CLOSE rows exist for a market.
+ *
+ * ML prices are averaged in probability space (same rule as the soft average);
+ * spread/total are plain averages. Pure, no I/O, fully unit-testable.
+ */
+export interface CloseSnapshotRow {
+  readonly phase: string; // "OPEN" | "INTERIM" | "CLOSE"
+  readonly book: string;
+  readonly market: "SPREADS" | "H2H" | "TOTALS";
+  readonly side: string; // "HOME" | "AWAY" (SPREADS/H2H) | "OVER" | "UNDER" (TOTALS)
+  readonly price: number | null; // American price at capture
+  readonly line: number | null; // points line at capture (spread/total)
+}
+
+export interface CloseLadderResult {
+  readonly snapshot: ClosingSnapshot;
+  /** True when at least one market used CLOSE-tagged rows (not the soft fallback). */
+  readonly usedCloseSource: boolean;
+}
+
+export function resolveCloseSourceLadder(
+  closeRows: readonly CloseSnapshotRow[],
+  fallback: ClosingSnapshot,
+): CloseLadderResult {
+  const closeOnly = closeRows.filter((r) => r.phase === "CLOSE");
+
+  const spreadsHome = closeOnly
+    .filter((r) => r.market === "SPREADS" && r.line != null && r.side === "HOME")
+    .map((r) => r.line as number);
+  const spreadsAway = closeOnly
+    .filter((r) => r.market === "SPREADS" && r.line != null && r.side === "AWAY")
+    .map((r) => r.line as number);
+  const totals = closeOnly
+    .filter((r) => r.market === "TOTALS" && r.line != null)
+    .map((r) => r.line as number);
+  const mlHome = averageAmericanPrices(
+    closeOnly
+      .filter((r) => r.market === "H2H" && r.price != null && r.side === "HOME")
+      .map((r) => r.price as number),
+  );
+  const mlAway = averageAmericanPrices(
+    closeOnly
+      .filter((r) => r.market === "H2H" && r.price != null && r.side === "AWAY")
+      .map((r) => r.price as number),
+  );
+
+  const usedCloseSource =
+    spreadsHome.length > 0 ||
+    spreadsAway.length > 0 ||
+    totals.length > 0 ||
+    mlHome != null ||
+    mlAway != null;
+
+  if (!usedCloseSource) {
+    return { snapshot: fallback, usedCloseSource: false };
+  }
+
+  // Prefer CLOSE rows; keep the soft-average value for any market the archive
+  // did not capture a CLOSE row for.
+  return {
+    snapshot: {
+      spreadHome: spreadsHome.length > 0 ? avg(spreadsHome) : fallback.spreadHome,
+      total: totals.length > 0 ? avg(totals) : fallback.total,
+      mlHomePrice: mlHome != null ? mlHome : fallback.mlHomePrice,
+      mlAwayPrice: mlAway != null ? mlAway : fallback.mlAwayPrice,
+      capturedAt: fallback.capturedAt,
+      bookmakerCount: closeOnly.length,
+    },
+    usedCloseSource: true,
+  };
+}
+
 export function deriveClosingSnapshotFromOdds(
   rows: readonly ClosingOddsRow[],
   commenceTime: Date,

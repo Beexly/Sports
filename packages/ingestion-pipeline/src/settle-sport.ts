@@ -40,6 +40,7 @@ import {
   calculatePickResult,
   deriveClosingSnapshotFromOdds,
   gradePickClv,
+  resolveCloseSourceLadder,
   selectGradingLine,
 } from "@sports/prediction-engine";
 import type { ReadinessGates, PickKind } from "@sports/prediction-engine";
@@ -440,8 +441,52 @@ export async function settleSport(
         } catch (clvErr) {
           console.warn(
             `${logPrefix} Closing-line fetch failed for game ${game.id}: ` +
-            `${clvErr instanceof Error ? clvErr.message : clvErr}`,
+              `${clvErr instanceof Error ? clvErr.message : clvErr}`,
           );
+        }
+
+        // Phase 3 close-source ladder: when the line-archive captured per-book
+        // OddsLineSnapshot rows tagged phase:"CLOSE" for this game, prefer them
+        // over the soft multi-book average as the honest close for CLV grading.
+        // The OddsLineSnapshot model is founder-applied (migration
+        // 20260716120000_add_odds_line_snapshots), so its Prisma delegate may be
+        // absent from a generated client that predates it — guard both the
+        // delegate presence and the query behind try/catch so a missing table
+        // never blocks settlement.
+        if (closingSnapshot && typeof (db as { oddsLineSnapshot?: unknown }).oddsLineSnapshot === "object") {
+          try {
+            const closeRows = await (
+              db as unknown as {
+                oddsLineSnapshot: {
+                  findMany: (args: unknown) => Promise<
+                    Array<{
+                      phase: string;
+                      book: string;
+                      market: string;
+                      side: string;
+                      price: number | null;
+                      line: number | null;
+                    }>
+                  >;
+                };
+              }
+            ).oddsLineSnapshot.findMany({
+              where: { gameId: game.id, phase: "CLOSE" },
+              select: { phase: true, book: true, market: true, side: true, price: true, line: true },
+            });
+            const ladder = resolveCloseSourceLadder(closeRows, closingSnapshot);
+            if (ladder.usedCloseSource) {
+              closingSnapshot = ladder.snapshot;
+              console.log(
+                `${logPrefix} game ${game.id}: CLV close resolved from CLOSE-tagged snapshots (per-book), not soft average`,
+              );
+            }
+          } catch (ladderErr) {
+            console.warn(
+              `${logPrefix} close-source ladder query failed for game ${game.id} (using soft average): ` +
+                `${ladderErr instanceof Error ? ladderErr.message : ladderErr}`,
+            );
+          }
         }
 
         for (const pick of game.picks) {
