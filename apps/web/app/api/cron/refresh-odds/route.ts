@@ -42,6 +42,7 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 import { monitorOddsFetchedAt } from "@/lib/data-reliability/monitor-odds-fetchedat";
 import { runShadowEvaluationPass, type ShadowPassResult } from "@/lib/ops/shadow-evaluation-pass";
+import { isOffSeasonNoop, offSeasonNoopResponse } from "@/lib/cron/off-season-noop";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -89,6 +90,18 @@ export async function GET(request: Request) {
       },
       { status: 400 }
     );
+  }
+
+  // H-M off-season no-op (Wave 7): when no sport is explicitly requested and
+  // zero sports are in season, skip the forward-looking billed refresh entirely.
+  // Settlement is NOT gated here (it is backward-looking; see settle-picks route).
+  // A manual ?sport= backfill always proceeds. Free signal-only fill below is
+  // unaffected because it runs inside the no-key branch which is reached only
+  // when there is genuinely no paid work to do.
+  if (isOffSeasonNoop({ requestedSport })) {
+    if (apiKey || rundownKey) {
+      return NextResponse.json(offSeasonNoopResponse(requestedSport));
+    }
   }
 
   // Dead-man's-switch monitor (env-gated; complete no-op until HC_REFRESH_PING_URL

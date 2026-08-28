@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { captureError } from "@/lib/observability/sentry";
 import { runBoardFillPipeline } from "@sports/ingestion-pipeline";
+import { isOffSeasonNoop, offSeasonNoopResponse } from "@/lib/cron/off-season-noop";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,6 +16,15 @@ export const fetchCache = "force-no-store";
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
   if (denied) return denied;
+
+  // H-M off-season no-op (Wave 7): board fill is forward-looking. When no sport
+  // is explicitly requested and zero sports are in season, there is nothing to
+  // seed/refresh — short-circuit before the ESPN+odds+signal pipeline runs.
+  // Excludes settlement (backward-looking). A manual ?sport= backfill proceeds.
+  const requestedSport = new URL(request.url).searchParams.get("sport");
+  if (isOffSeasonNoop({ requestedSport })) {
+    return NextResponse.json(offSeasonNoopResponse(requestedSport));
+  }
 
   try {
     const result = await runBoardFillPipeline({ logPrefix: "[cron:board-fill]" });
