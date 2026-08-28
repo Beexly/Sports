@@ -32,12 +32,14 @@ nflverse `schedules` / `games.csv` (CC-BY-4.0), already in `NFLVERSE_CATALOG`. L
 
 `packages/ingestion-pipeline/src/event-odds-ingest.ts` — Odds API `/v4/sports/{sport}/events/{eventId}/odds`. NFL markets: `player_pass_tds`, `player_pass_yds`, `player_receptions`, `player_reception_yds`, `player_rush_yds`. **Default OFF** (`EVENT_ODDS_INGEST_ENABLED`). Uses remaining paid Odds API credits (cap 8 events). Not a second vendor. Do not scrape DK/FD. Extract-data JSONs in Downloads are a **lakehouse/prop-correlation blueprint**, not a live feed.
 
-## Tests measured on this branch
+## Tests measured on this branch (2026-08-27, this machine)
 
-- `packages/data-ingestion` vitest: **354 passed** (after history+polymarket parser; polymarket not in provider).
-- `packages/ingestion-pipeline` event-odds tests: **10 passed**.
-- Typecheck those packages: **0 errors**.
-- `apps/web` full vitest: **NOT RUN** (timeout). Do not quote 11,770 as re-measured here.
+- `packages/prediction-engine` vitest: **282 files / 3125 passed** (includes edge-lab, calibration, Brier/certificate, CLV properties, leak-gate, props-HB).
+- Galaxy de-vig independent check: −159/+132 → 0.5875/0.4125 (sums to 1).
+- `packages/data-ingestion` Galaxy/espn/history unit tests: **18 passed**.
+- `packages/ingestion-pipeline` process-sport + event-odds: **42 passed** (after mock `isPolymarketIndependentEnabled: false`).
+- `apps/web` full vitest: **NOT RUN**.
+- LIVE_BOARD still off. Edges exist in tests; they are not a public fire.
 
 ## Related PRs (also not main)
 

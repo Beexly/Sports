@@ -110,6 +110,7 @@ vi.mock("@sports/data-ingestion", () => ({
   mergeBookmakersIntoPrimary: mocks.mergeBookmakersIntoPrimary,
   THIN_FILL_MIN_BOOKMAKERS: 2,
   fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
+  isPolymarketIndependentEnabled: vi.fn().mockReturnValue(false),
   NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
   NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
   isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
