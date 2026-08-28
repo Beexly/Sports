@@ -1243,6 +1243,21 @@ By following GSE's existing patterns and principles, these integrations can be p
 
 The key to success will be selective integration based on data quality, compliance alignment, and demonstrable improvement to GSE's edge detection capabilities, all while maintaining the system's commitment to honesty, verification, and founder-gated decision making.
 
+
+
+## GSE Development Status & Next Steps
+
+See GSE_OPEN_ITEMS_NEXT_STEPS.md for comprehensive details on:
+- Open items and next steps
+- Leverage opportunities and growth areas  
+- Under-leveraged/under-valued assets
+- Areas needing polishing and improvement
+- Strategic roadmap recommendations
+- Key metrics for success
+- Innovation opportunities
+- Risk mitigation and controls
+- Immediate action items for cloud coding agents
+
 ## Related
 
 - [Default AGENTS.md](/reference/AGENTS.default)
