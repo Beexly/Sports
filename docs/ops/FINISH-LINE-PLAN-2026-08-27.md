@@ -89,6 +89,80 @@ carries the product):**
 Related PRs, none on main: #680 (Galaxy), #679 (Grok audit), #678 (sports-intel
 orientation), #677 (this plan).
 
+## 96-HOUR LAUNCH ORDER (2026-08-28 → Sep 1) — the executive sequence
+
+**Live-probed 2026-08-28 05:43 UTC:** prod is deployed at current main (`bb0e7dfc0`),
+DB healthy, **ingestion succeeded 5 minutes before the probe — the cron plane is
+ALIVE** (the deck's RED scheduler unknown is resolved: green). One degradation:
+**`settlement is critically behind on commenced picks`** — the T11 debt is live and
+is the #1 blocker, because canonical history (C1) must not start accruing on top of
+a corrupted settlement record. Launch day Sep 1 = Odds API credit reset day (fresh
+20k). Decisions below are made; execute in order.
+
+**DAY 1 (Aug 28) — merge, keys, drain**
+1. Merge [PR #677](https://github.com/Beexly/Sports/pull/677) (docs/plan, green) and
+   [PR #680](https://github.com/Beexly/Sports/pull/680) (Galaxy: twice-reviewed,
+   spreads bug fixed, clearance-gated, all suites green, no gate flips). Redeploy.
+2. Paste the **new rotated** `THE_ODDS_API_KEY` into Vercel Production env now so
+   the Sep 1 credit reset lands on a working key. Verify `oddsKeyPresent` flips
+   true on the truth surface after redeploy.
+3. **Send the Kalshi written-authorization email today** (grant per Developer
+   Agreement §3.1, internal derived analytics + display). $0; it unlocks the
+   keyless second book whenever it lands — launch does not wait on it.
+4. **Drain settlement debt:** authorized manual hits of `/api/cron/settle-picks`
+   (overdue-first path) until `/api/health` settlement capability reads healthy.
+   If a cluster won't settle, the free-path DISPUTED holds are the honest state —
+   investigate only actual errors.
+5. `npx prisma migrate status` against prod (P3): apply anything pending
+   (proof-receipt/slate-commitment tables) with `prisma migrate deploy`.
+6. Rotations while in the console: R-1 (~25 exposed Hermes creds), R-2
+   (`JYNX_MODE=auto`), verify `CRON_SECRET` (401-without / 200-with).
+
+**DAY 2 (Aug 29) — money path + C1**
+1. Stripe LIVE cutover: six price IDs + live secret + webhook secret; endpoint at
+   the **www** host subscribing ALL handled events **including `charge.refunded`,
+   `invoice.paid`, `checkout.session.expired`**; lookup_keys attached; Dashboard
+   ToS URL FIRST, then `STRIPE_TERMS_CONSENT_ENABLED=true`.
+2. One **test-mode checkout end-to-end**, then live mode. This is the revenue
+   lever; do not defer it to launch night.
+3. With settlement healthy + migrations clean: flip **`CANONICAL_HISTORY_ENABLED=true`**
+   (C1). Canonical accrual starts — every day earlier compounds the PROVEN clock.
+4. Canonical host pair + Google OAuth www redirect URI + apex→www 301 verified.
+
+**DAY 3 (Aug 30-31) — readiness + polish**
+1. `node scripts/check-deploy-readiness.mjs` in deploy context → all green;
+   `npm run smoke:prod` green; gate-flip-readiness run for the C3 predicate
+   (seed rows purged, DEMO off, fresh ingestion, ≥1 publishable FREE pick).
+2. Flip **`DERIVED_MODEL_HISTORY_ENABLED=true`** (C2) as soon as any sport crosses
+   50 canonical games (MLB reaches it first at ~15 games/day).
+3. Hermes polish lane: visual-qa pass over public routes (states / contrast /
+   responsive), Elite alert env optional (WARN-only), remove scoring −110
+   fallbacks, LQ18 `--prod` script if time allows (else the manual list below).
+4. Arm off-stack monitoring: `HEALTH_ALERT_WEBHOOK_URL` + an external pinger on
+   `/api/health` (free tier of any uptime service).
+
+**DAY 4 (Sep 1) — LAUNCH**
+1. Fresh credits land 00:00 UTC. Confirm an `IngestionRun` with `oddsInserted>0`
+   and the freshness clock green.
+2. Set **`FORCE_NO_BET_IF_STALE=true`** (defaults false — must be explicit), then
+   flip **`PUBLIC_PICKS_ENABLED=true`** (C3) once gate-flip-readiness passes.
+3. Manual launch smoke (until LQ18 exists): every public route 200 on www; apex
+   301→www; `/api/picks` anonymous shows FREE teaser with `confidence: null`;
+   a premium API 401s logged-out; one live checkout; `/api/health` green;
+   robots/sitemap resolve.
+4. **Stays OFF at launch, non-negotiable:** `PERFORMANCE_STATS` (Brier 0.2478 is
+   RED — no accuracy claims until ≤0.22 + green×3), `PUBLIC_BLOG`, precision
+   display, `PRICING_PHASE` (unset = FOUNDING), LIVE_BOARD certification claims.
+   The launch story is the honest one: live board + picks + proof accruing in
+   public. That story is stronger than a fabricated track record — and it is
+   the only one the guardrails will let through anyway.
+
+**Standing after launch:** watch `/api/health` + truth surface daily; C4 and the
+rest of the ladder flip on proof, not on excitement; Kalshi grant → registry
+verdict flip → keyless second book goes live; cancel The Odds API before the
+~Sep 22 invoice only once Galaxy mints (or renew deliberately — $30 is cheap
+insurance for month one).
+
 ## 0. Verified baseline (run in this session, 2026-08-27, at bb0e7df)
 
 | Check | Result |
