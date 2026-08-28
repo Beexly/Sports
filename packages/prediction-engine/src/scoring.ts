@@ -23,6 +23,7 @@ import { computeGameContext } from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 import { shinFairForSide } from "./honesty/devig-method-compare.js";
+import { plausibleAmericanPrice } from "./lock-guards.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -1066,20 +1067,43 @@ export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
   const now = fetchedAt ?? new Date();
   const picks: ScoredPick[] = [];
 
-  const spreadPick = scoreSpreadPick(input, now);
+  // Phase 3 lock-capture guard: quarantine rows whose American prices are
+  // implausible (0, non-finite, or outside [-10000, +10000]) so a data error
+  // can never devig to a degenerate probability and get graded as a "proven"
+  // lock. Only the prices relevant to each row's market are checked (a H2H row
+  // is not penalized for an absent draw price, etc.). The contradictory row is
+  // dropped from scoring entirely.
+  const guardedOdds = input.bookmakerOdds.filter((o) => {
+    const relevant: (number | undefined)[] =
+      o.market === "H2H"
+        ? [o.homePrice, o.awayPrice]
+        : o.market === "SPREADS"
+          ? [o.homeSpreadPrice, o.awaySpreadPrice]
+          : [o.overPrice, o.underPrice];
+    return relevant.every((p) => p === undefined || plausibleAmericanPrice(p));
+  });
+  if (guardedOdds.length !== input.bookmakerOdds.length) {
+    console.warn(
+      `[lock-guard] quarantined ${input.bookmakerOdds.length - guardedOdds.length} ` +
+        `implausible-price row(s) for ${input.gameExternalId ?? "game"} (not graded)`,
+    );
+  }
+  const guardedInput: OddsInput = { ...input, bookmakerOdds: guardedOdds };
+
+  const spreadPick = scoreSpreadPick(guardedInput, now);
   if (spreadPick) picks.push(spreadPick);
 
-  const totalPick = scoreTotalPick(input, now);
+  const totalPick = scoreTotalPick(guardedInput, now);
   if (totalPick) picks.push(totalPick);
 
-  const mlPick = scoreMoneylinePick(input, now);
+  const mlPick = scoreMoneylinePick(guardedInput, now);
   if (mlPick) picks.push(mlPick);
 
   return picks.sort((a, b) => (b.rankingScore ?? b.confidence) - (a.rankingScore ?? a.confidence));
 }
 
 // ============================================================
-// Score multiple games — returns all picks sorted by rankingScore
+// Score SPREAD pick — returns null if insufficient data
 // ============================================================
 
 /**

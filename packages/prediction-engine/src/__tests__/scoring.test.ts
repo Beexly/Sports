@@ -396,6 +396,29 @@ describe("scoreGame — precision fields", () => {
       const picks = scoreGame(input);
       expect(picks.filter((p) => p.pickType === "SPREAD").length).toBeGreaterThan(0);
     });
+
+    it("quarantines an H2H row with an implausible (0 / out-of-range) price instead of grading it", () => {
+      // Phase 3 lock-capture guard: a row whose American price is 0 or wildly
+      // out of range must be dropped, never devigged into a degenerate pick.
+      const clean = makeOddsInput({
+        bookmakerOdds: [
+          { bookmaker: "fanduel", market: "H2H", homePrice: -150, awayPrice: 130 },
+        ],
+      });
+      const poisoned = makeOddsInput({
+        bookmakerOdds: [
+          { bookmaker: "fanduel", market: "H2H", homePrice: -150, awayPrice: 130 },
+          { bookmaker: "badfeed", market: "H2H", homePrice: -150, awayPrice: -50000 },
+        ],
+      });
+      const cleanPicks = scoreGame(clean);
+      const poisonedPicks = scoreGame(poisoned);
+      // Both produce the same ML pick — the poisoned row was quarantined, not minted.
+      expect(poisonedPicks.length).toBe(cleanPicks.length);
+      expect(poisonedPicks.filter((p) => p.pickType === "MONEYLINE").length).toBe(
+        cleanPicks.filter((p) => p.pickType === "MONEYLINE").length,
+      );
+    });
   });
 });
 
