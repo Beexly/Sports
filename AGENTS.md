@@ -200,7 +200,6 @@ FCB36827+ wave3-laneA PRE-7 sticks→completions shipped 2026-08-24; queue clear
 
 
 # Galaxy Sports Edge (GSE) Optimization Plan
-# Galaxy Sports Edge (GSE) Optimization Plan
 ## Integrating Sports Betting & Prop Sites Research
 
 ### Executive Summary
@@ -1243,3 +1242,7 @@ The 40+ sites researched represent significant opportunity to enhance GSE's capa
 By following GSE's existing patterns and principles, these integrations can be performed systematically and safely, enhancing the system's ability to generate verifiable edges while maintaining its core thesis of "calibrated, not just confident" predictions.
 
 The key to success will be selective integration based on data quality, compliance alignment, and demonstrable improvement to GSE's edge detection capabilities, all while maintaining the system's commitment to honesty, verification, and founder-gated decision making.
+
+## Related
+
+- [Default AGENTS.md](/reference/AGENTS.default)
