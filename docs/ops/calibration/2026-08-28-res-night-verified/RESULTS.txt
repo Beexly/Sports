@@ -1,0 +1,20 @@
+orientation check: home win rate when spread_line>0 = 0.675 -> positive spread_line means HOME favored
+evaluation games 2018-2024 with real moneylines: 1935
+
+model                       Brier      REL      RES      UNC      ECE
+market(ML devig)           0.2107   0.0013   0.0380   0.2480   0.0308
+spread CDF                 0.2112   0.0023   0.0388   0.2480   0.0351
+elo (walk-fwd)             0.2226   0.0023   0.0278   0.2480   0.0405
+blend 0.9mkt+0.1elo        0.2110   0.0017   0.0388   0.2480   0.0367
+blend 0.8mkt+0.2elo        0.2114   0.0012   0.0376   0.2480   0.0285
+blend 0.7mkt+0.3elo        0.2121   0.0012   0.0365   0.2480   0.0291
+blend 0.5mkt+0.5elo        0.2141   0.0015   0.0350   0.2480   0.0317
+
+Per-season Brier (market | best blend 0.8 | elo):
+  2018: n=265  market=0.2124  blend.8=0.2127  elo=0.2236
+  2019: n=266  market=0.2141  blend.8=0.2143  elo=0.2229
+  2020: n=268  market=0.2019  blend.8=0.2028  elo=0.2150
+  2021: n=284  market=0.2177  blend.8=0.2185  elo=0.2305
+  2022: n=282  market=0.2093  blend.8=0.2107  elo=0.2246
+  2023: n=285  market=0.2186  blend.8=0.2201  elo=0.2326
+  2024: n=285  market=0.2010  blend.8=0.2007  elo=0.2086
