@@ -180,7 +180,11 @@ describe("fetchEspnOddsForSport", () => {
     expect(pitH2h?.fair_prob).toBeLessThan(0.5);
     expect((bufH2h?.fair_prob ?? 0) + (pitH2h?.fair_prob ?? 0)).toBeCloseTo(1, 3);
     const spreads = markets.find((m) => m.key === "spreads")!;
-    const buf = spreads.outcomes.find((o) => o.name === "BUF" || o.name === "Buffalo Bills");
+    // Exact full names — the normalizer matches spreads outcomes against
+    // event.home_team/away_team, so abbreviations here would zero the row.
+    const buf = spreads.outcomes.find((o) => o.name === "Buffalo Bills");
+    const pit = spreads.outcomes.find((o) => o.name === "Pittsburgh Steelers");
     expect(buf?.point).toBe(-3);
+    expect(pit?.point).toBe(3);
   });
 });

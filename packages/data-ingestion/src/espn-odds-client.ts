@@ -208,8 +208,12 @@ function eventFromInlineOdds(
         key: "spreads",
         last_update: lastUpdate,
         outcomes: [
-          { name: ev.homeAbbr || ev.home, point: s },
-          { name: ev.awayAbbr || ev.away, point: -s },
+          // Full display names, never abbreviations: DataNormalizer matches
+          // spreads outcomes by exact event.home_team/away_team, which carry
+          // the display names. An abbreviation here normalizes to a row with
+          // spread and both prices undefined (all-NULL Odds row).
+          { name: ev.home, point: s },
+          { name: ev.away, point: -s },
         ],
       });
     }
