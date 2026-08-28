@@ -142,11 +142,19 @@ invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
 
-## SESSION FINDINGS (hermes/galaxy-keyless-odds — 2026-08-27)
+## SESSION FINDINGS INDEX (2026-08-27) — cloud agents start here
 
-- Galaxy formula is in `espn-odds-client` (site.web.api + inline odds) + `GalaxySportsApiOddsProvider` when `THE_ODDS_API_KEY` is unset. Not Rundown.
-- 2018–2025 game lines: nflverse `games.csv` (`parseNflverseGameLines`). Not missing.
-- Polymarket: **held off** the quote plane (`docs/agent-skills/polymarket-hold`). Parser exists, not called.
-- Live NFL props: already in `event-odds-ingest.ts` (`player_pass_tds/yds`, `player_receptions/yds`, `player_rush_yds`). Default **OFF** (`EVENT_ODDS_INGEST_ENABLED`). Uses remaining Odds API credits — not a second vendor.
-- Full audit: `handoff/GROK46_FULL_AUDIT_2026-08-27.md` on PR #679. This branch: PR #680.
+**Branch `hermes/galaxy-keyless-odds` · PR #680 · not main.**
+
+Full brief: **`docs/agents/CLOUD-BRIEF-2026-08-27.md`**. Ledger: `docs/ops/AGENT_LEDGER.md`.
+
+| Fact | Do not reverse |
+|---|---|
+| Founder: we **are** the provider (**Galaxy Sports API**). Not Rundown. Not The Odds API. | Do not queue a Rundown signup as the kill switch. |
+| Formula in-repo: ESPN `site.web.api` **inline** odds + de-vig. `GalaxySportsApiOddsProvider` when `THE_ODDS_API_KEY` unset. | Do not send ESPN through blocked `sports.core`. |
+| 2018–2025 lines: nflverse `games.csv` (`parseNflverseGameLines`). | Do not claim history is missing. |
+| Polymarket: **held off** quote plane (`docs/agent-skills/polymarket-hold`). | Do not enable `/api/cron/gamma`. |
+| Live NFL props: `event-odds-ingest.ts` (pass/rush/rec yards + TDs/receptions). Default OFF. | Do not scrape books. |
+| Local Python `:8731` is **not** in git. Product formula **is** in this PR. | Do not tell cloud agents to `cd galaxy-sports-api`. |
+
 
