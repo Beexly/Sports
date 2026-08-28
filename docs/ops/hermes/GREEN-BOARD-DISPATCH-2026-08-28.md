@@ -125,8 +125,14 @@ do NOT re-add any chat/walkthrough widget).
 Public nav collapses to at most FIVE doors: **Today's Picks · The Record ·
 How We Prove It · Pricing · Learn**. Every existing public page either lives
 behind one of those doors or gets a redirect into one. Homepage above the
-fold = exactly: today's headline (the board state in one sentence), the record
-ticker, ONE call to action. Nothing else above the fold. Merge/condense
+fold — **THE PROOF STACK IS THE HERO** (founder directive): the five planks
+from GREEN-BOARD-DOCTRINE.md §Proof Stack, rendered loud and scannable (five
+short lines, not paragraphs), the house line ("Everyone claims. We prove."),
+the record ticker, ONE call to action. Nothing else above the fold. Every
+other public page carries exactly one plank as its quiet header motif — the
+five proofs are the brand, not a feature page. Board tiers surface as
+GREEN and GSE PRIME per the doctrine; no fixed percentage ever appears in
+copy — the tiers and the live per-tier record are the claim. Merge/condense
 overlapping sections aggressively — target: cut total public routes in nav and
 words-per-page by ≥50% on every touched page. Keep every deep tool reachable
 (the research crowd matters) — but as destinations behind doors, never as
