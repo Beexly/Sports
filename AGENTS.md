@@ -141,3 +141,12 @@ This product's entire premise is that it does not lie about its own performance.
 invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
+
+## SESSION FINDINGS (hermes/galaxy-keyless-odds — 2026-08-27)
+
+- Galaxy formula is in `espn-odds-client` (site.web.api + inline odds) + `GalaxySportsApiOddsProvider` when `THE_ODDS_API_KEY` is unset. Not Rundown.
+- 2018–2025 game lines: nflverse `games.csv` (`parseNflverseGameLines`). Not missing.
+- Polymarket: **held off** the quote plane (`docs/agent-skills/polymarket-hold`). Parser exists, not called.
+- Live NFL props: already in `event-odds-ingest.ts` (`player_pass_tds/yds`, `player_receptions/yds`, `player_rush_yds`). Default **OFF** (`EVENT_ODDS_INGEST_ENABLED`). Uses remaining Odds API credits — not a second vendor.
+- Full audit: `handoff/GROK46_FULL_AUDIT_2026-08-27.md` on PR #679. This branch: PR #680.
+

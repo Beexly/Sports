@@ -2,10 +2,8 @@
  * Galaxy Polymarket consensus — public Gamma GET, no API key.
  *
  * Compliance (docs/agent-skills/polymarket-hold):
- *   NOT a public product, NOT /api/cron/gamma, NOT trading/CLOB.
- *   Founder 2026-08-27: keyless Gamma read as internal second source on the
- *   Galaxy path is allowed (same as galaxy-sports-api/odds_feed.py).
- *   LIVE_BOARD still not certifiable from this book.
+ *   NOT wired into GalaxySportsApiOddsProvider (founder 2026-08-27: hold if not 100% legal).
+ *   Parser kept for research. Do NOT enable /api/cron/gamma. Do NOT CLOB.
  */
 import type { OddsApiEvent } from "@sports/types";
 
