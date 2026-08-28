@@ -33,6 +33,8 @@ import {
   resolveRundownApiKey,
   fetchRundownEventsForSport,
   fetchEspnOddsForSport,
+  KalshiClient,
+  isIngestible,
   NFL_PRESEASON_ODDS_KEY,
   NFL_CANONICAL_SPORT_KEY,
   isNflPreseasonFetchWindow,
@@ -364,7 +366,12 @@ export async function processSport(
     let espnAttemptNote: string | null = null;
     if (events.length === 0) {
       try {
-        const espn = await fetchEspnOddsForSport(sport.key);
+        // Kalshi (cleared exchange) rides along as the second real book so the
+        // keyless board can clear MIN_BOOKMAKERS honestly; the client guards
+        // itself (registry gate + per-event soft miss + own timeout).
+        const espn = await fetchEspnOddsForSport(sport.key, {
+          kalshi: isIngestible("kalshi") ? new KalshiClient() : undefined,
+        });
         if (espn.events.length > 0) {
           events = espn.events;
           oddsProviderTag = "espn_public";

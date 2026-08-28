@@ -271,7 +271,7 @@ describe("processSport", () => {
 
     const res = await processSport(SPORT, "", gates());
 
-    expect(vi.mocked(fetchEspnOddsForSport)).toHaveBeenCalledWith("americanfootball_nfl");
+    expect(vi.mocked(fetchEspnOddsForSport).mock.calls[0]?.[0]).toBe("americanfootball_nfl");
     expect(mocks.getOdds).not.toHaveBeenCalled();
     expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
     expect(mocks.oddsCreateMany).toHaveBeenCalled();

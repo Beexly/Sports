@@ -10,10 +10,20 @@
  * Law:
  *  - Never invent quotes — empty when no ML
  *  - Does not flip LIVE_BOARD / invent PROVEN
+ *  - Rights: ESPN public JSON is undocumented and ESPN's ToU favors personal
+ *    use; this path runs ONLY under the "galaxy-espn-inline" registry entry
+ *    (founder decision 2026-08-27, low-volume odds facts only) and soft-fails
+ *    empty if that entry is ever revoked. Prefer licensed feeds when keyed.
+ *  - Every fetch carries a timeout — a blackholed host must never stall the
+ *    ingestion cron.
  */
 
 import type { OddsApiEvent, OddsApiBookmaker, OddsApiMarket } from "@sports/types";
 import { deVigFairProbs } from "./galaxy-devig.js";
+import { kalshiH2hBookmaker } from "./galaxy-kalshi-book.js";
+import { sportKeyToKalshiLeagueCode } from "./kalshi-series.js";
+import { isIngestible } from "./source-registry.js";
+import type { KalshiFairValue, KalshiGameRef } from "./kalshi-client.js";
 
 /** Odds-API sport key → ESPN site path + core league path */
 export const ESPN_ODDS_SPORT_MAP: Record<
@@ -305,6 +315,18 @@ export async function fetchEspnOddsForSport(
     readonly interEventMs?: number;
     /** Days ahead for scoreboard dates= (default 3). */
     readonly horizonDays?: number;
+    /** Per-request timeout (ms, default 8000) — blocked hosts fail fast. */
+    readonly fetchTimeoutMs?: number;
+    /**
+     * Optional Kalshi exchange client. When provided (and the sport maps to a
+     * Kalshi league), each event gains a second REAL bookmaker from the
+     * exchange's live two-way H2H quote — the honest path past
+     * MIN_BOOKMAKERS=2 on the keyless plane. Failures are per-event soft
+     * misses; Kalshi can never break the ESPN board.
+     */
+    readonly kalshi?: {
+      getFairValue(game: KalshiGameRef): Promise<KalshiFairValue | null>;
+    };
   },
 ): Promise<EspnOddsFetchResult> {
   const meta = ESPN_ODDS_SPORT_MAP[sportKey];
@@ -315,7 +337,16 @@ export async function fetchEspnOddsForSport(
       error: `espn odds: no sport map for ${sportKey}`,
     };
   }
+  // Clearance gate: this keyless path exists only under its registry entry.
+  if (!isIngestible("galaxy-espn-inline")) {
+    return {
+      events: [],
+      provider: "espn_public",
+      error: "espn odds: source not cleared (galaxy-espn-inline)",
+    };
+  }
   const fetchImpl = options?.fetchImpl ?? fetch;
+  const fetchTimeoutMs = Math.min(30000, Math.max(1000, options?.fetchTimeoutMs ?? 8000));
   const maxEvents = Math.min(40, Math.max(1, options?.maxEvents ?? 24));
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
@@ -342,6 +373,7 @@ export async function fetchEspnOddsForSport(
         const res = await fetchImpl(scoreboardUrl, {
           headers: { Accept: "application/json" },
           cache: "no-store",
+          signal: AbortSignal.timeout(fetchTimeoutMs),
         });
         if (!res.ok) {
           errors.push(`scoreboard${dates ? ` ${dates}` : ""}:${host}:HTTP ${res.status}`);
@@ -399,6 +431,7 @@ export async function fetchEspnOddsForSport(
       const res = await fetchImpl(oddsUrl, {
         headers: { Accept: "application/json" },
         cache: "no-store",
+        signal: AbortSignal.timeout(fetchTimeoutMs),
       });
       if (!res.ok) {
         errors.push(`${ev.id}:HTTP ${res.status}`);
@@ -514,8 +547,50 @@ export async function fetchEspnOddsForSport(
         : "espn odds empty: no events with lines",
     };
   }
+
+  // Second real book: Kalshi exchange H2H (cleared registry entry "kalshi").
+  // Per-event soft miss — a Kalshi failure or unmapped matchup never drops
+  // the ESPN book, it just leaves that event single-book (and un-mintable).
+  const kalshi = options?.kalshi;
+  const kalshiLeague = kalshi && isIngestible("kalshi") ? sportKeyToKalshiLeagueCode(sportKey) : null;
+  const events = !kalshiLeague
+    ? filtered
+    : await (async () => {
+        const withBooks: OddsApiEvent[] = [];
+        for (const e of filtered) {
+          const evId = e.id.slice(e.id.lastIndexOf(":") + 1);
+          const cand = byId.get(evId);
+          if (!cand || !cand.homeAbbr || !cand.awayAbbr) {
+            withBooks.push(e);
+            continue;
+          }
+          try {
+            const fv = await kalshi!.getFairValue({
+              league: kalshiLeague,
+              dateUtc: e.commence_time,
+              homeAbbr: cand.homeAbbr,
+              awayAbbr: cand.awayAbbr,
+            });
+            const book = fv
+              ? kalshiH2hBookmaker({
+                  fairValue: fv,
+                  homeAbbr: cand.homeAbbr,
+                  awayAbbr: cand.awayAbbr,
+                  homeTeam: e.home_team,
+                  awayTeam: e.away_team,
+                })
+              : null;
+            withBooks.push(book ? { ...e, bookmakers: [...e.bookmakers, book] } : e);
+          } catch (err) {
+            errors.push(`kalshi:${evId}:${err instanceof Error ? err.message : String(err)}`);
+            withBooks.push(e);
+          }
+        }
+        return withBooks;
+      })();
+
   return {
-    events: filtered,
+    events,
     provider: "espn_public",
     error: errors.length
       ? `partial: ${errors.slice(0, 3).join("; ")}`

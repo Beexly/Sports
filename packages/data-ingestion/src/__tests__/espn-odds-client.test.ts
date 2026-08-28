@@ -1,6 +1,20 @@
 import { describe, expect, it, vi } from "vitest";
 import { fetchEspnOddsForSport } from "../espn-odds-client.js";
 
+// Clearance seam: galaxy-espn-inline is live-cleared; kalshi is paid-required
+// until the founder lands Kalshi's written grant (Developer Agreement §3.1).
+// KALSHI_CLEARED lets the second-book tests exercise the mechanism while the
+// last test pins today's real gate (dark until the grant flips the verdict).
+let KALSHI_CLEARED = false;
+vi.mock("../source-registry.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../source-registry.js")>();
+  return {
+    ...actual,
+    isIngestible: (id: string) =>
+      id === "kalshi" ? KALSHI_CLEARED || actual.isIngestible(id) : actual.isIngestible(id),
+  };
+});
+
 describe("fetchEspnOddsForSport", () => {
   it("maps scoreboard + core odds into OddsApiEvent (h2h required)", async () => {
     // The client drops events outside -6h..+21d of real now, so a fixed
@@ -186,5 +200,158 @@ describe("fetchEspnOddsForSport", () => {
     const pit = spreads.outcomes.find((o) => o.name === "Pittsburgh Steelers");
     expect(buf?.point).toBe(-3);
     expect(pit?.point).toBe(3);
+  });
+
+  it("adds Kalshi as a second real bookmaker when the exchange has a live two-way quote", async () => {
+    KALSHI_CLEARED = true;
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
+    const scoreboard = {
+      events: [
+        {
+          id: "401873298",
+          date: commenceSoon,
+          competitions: [
+            {
+              date: commenceSoon,
+              status: { type: { state: "pre", completed: false } },
+              competitors: [
+                { homeAway: "home", team: { displayName: "Buffalo Bills", abbreviation: "BUF" } },
+                { homeAway: "away", team: { displayName: "Pittsburgh Steelers", abbreviation: "PIT" } },
+              ],
+              odds: [
+                {
+                  provider: { name: "DraftKings" },
+                  spread: -3.0,
+                  overUnder: 34.5,
+                  moneyline: {
+                    home: { close: { odds: "-146" } },
+                    away: { close: { odds: "+122" } },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const fetchImpl = vi.fn(async (url: string) =>
+      String(url).includes("scoreboard")
+        ? ({ ok: true, json: async () => scoreboard } as Response)
+        : ({ ok: false, status: 404 } as Response),
+    );
+    const kalshi = {
+      getFairValue: vi.fn(async () => ({
+        eventTicker: "KXNFLGAME-26SEP04PITBUF",
+        capturedAt: "2026-09-04T15:00:00.000Z",
+        overround: 1.02,
+        sides: [
+          { team: "Buffalo", ticker: "KXNFLGAME-26SEP04PITBUF-BUF", rawImpliedProb: 0.6, fairProb: 0.588 },
+          { team: "Pittsburgh", ticker: "KXNFLGAME-26SEP04PITBUF-PIT", rawImpliedProb: 0.42, fairProb: 0.412 },
+        ],
+      })),
+    };
+    const res = await fetchEspnOddsForSport("americanfootball_nfl", {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      interEventMs: 0,
+      kalshi,
+    });
+    expect(res.events).toHaveLength(1);
+    const books = res.events[0]!.bookmakers;
+    expect(books.map((b) => b.key)).toEqual(["espn_public", "kalshi"]);
+    const kh2h = books[1]!.markets.find((m) => m.key === "h2h")!;
+    expect(kh2h.outcomes.find((o) => o.name === "Buffalo Bills")?.price).toBe(-150);
+    expect(kh2h.outcomes.find((o) => o.name === "Pittsburgh Steelers")?.price).toBe(138);
+    expect(books[1]!.last_update).toBe("2026-09-04T15:00:00.000Z");
+  });
+
+  it("keeps the ESPN book when Kalshi fails or has no quote (soft miss, never breaks the board)", async () => {
+    KALSHI_CLEARED = true;
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
+    const scoreboard = {
+      events: [
+        {
+          id: "401873299",
+          date: commenceSoon,
+          competitions: [
+            {
+              date: commenceSoon,
+              status: { type: { state: "pre", completed: false } },
+              competitors: [
+                { homeAway: "home", team: { displayName: "Buffalo Bills", abbreviation: "BUF" } },
+                { homeAway: "away", team: { displayName: "Pittsburgh Steelers", abbreviation: "PIT" } },
+              ],
+              odds: [
+                {
+                  provider: { name: "DraftKings" },
+                  moneyline: {
+                    home: { close: { odds: "-146" } },
+                    away: { close: { odds: "+122" } },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const fetchImpl = vi.fn(async (url: string) =>
+      String(url).includes("scoreboard")
+        ? ({ ok: true, json: async () => scoreboard } as Response)
+        : ({ ok: false, status: 404 } as Response),
+    );
+    const kalshi = { getFairValue: vi.fn(async () => { throw new Error("exchange down"); }) };
+    const res = await fetchEspnOddsForSport("americanfootball_nfl", {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      interEventMs: 0,
+      kalshi,
+    });
+    expect(res.events).toHaveLength(1);
+    expect(res.events[0]!.bookmakers.map((b) => b.key)).toEqual(["espn_public"]);
+    expect(res.error).toMatch(/kalshi/);
+  });
+
+  it("keeps Kalshi DARK under today's real registry (paid-required until the written grant)", async () => {
+    KALSHI_CLEARED = false;
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
+    const scoreboard = {
+      events: [
+        {
+          id: "401873300",
+          date: commenceSoon,
+          competitions: [
+            {
+              date: commenceSoon,
+              status: { type: { state: "pre", completed: false } },
+              competitors: [
+                { homeAway: "home", team: { displayName: "Buffalo Bills", abbreviation: "BUF" } },
+                { homeAway: "away", team: { displayName: "Pittsburgh Steelers", abbreviation: "PIT" } },
+              ],
+              odds: [
+                {
+                  provider: { name: "DraftKings" },
+                  moneyline: {
+                    home: { close: { odds: "-146" } },
+                    away: { close: { odds: "+122" } },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const fetchImpl = vi.fn(async (url: string) =>
+      String(url).includes("scoreboard")
+        ? ({ ok: true, json: async () => scoreboard } as Response)
+        : ({ ok: false, status: 404 } as Response),
+    );
+    const kalshi = { getFairValue: vi.fn() };
+    const res = await fetchEspnOddsForSport("americanfootball_nfl", {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      interEventMs: 0,
+      kalshi,
+    });
+    expect(res.events[0]!.bookmakers.map((b) => b.key)).toEqual(["espn_public"]);
+    expect(kalshi.getFairValue).not.toHaveBeenCalled();
   });
 });
