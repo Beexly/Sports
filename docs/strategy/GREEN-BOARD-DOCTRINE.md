@@ -56,6 +56,38 @@ it is decoration and gets cut.
   measures it from day one; it is the internal KPI the engine trains against,
   and — once sustained and verified — the loudest sentence on the site.
 
+## PROBABILITY-PRICED ACCESS (founder directive 2026-08-28 — the business model)
+
+The first pricing model where THE PRICE IS THE PROBABILITY, AND THE
+PROBABILITY IS PROVEN. Only possible here: charging by confidence band
+requires the confidence to be true, and only our bands are calibrated,
+receipted, and auditable. Bands (shaped by real supply — verified events
+exist up to p≈0.94, thin at the top):
+
+| Band | What it is | Sold on | Access |
+|---|---|---|---|
+| EDGE (any p) | mispriced lines, value dogs | ROI / CLV proof | Elite |
+| GREEN (0.70–0.80) | the daily certainty board | per-tier win record | Pro |
+| GSE PRIME (0.80–0.90) | rare, loud, receipted | per-tier win record | Elite |
+| RARE AIR (0.90+) | a handful per month; scarcity IS the product | the receipt itself | capped seats / per-drop (founder-priced) |
+
+Load-bearing mechanics:
+1. **Band stamped in the receipt.** Membership = calibrated p at publish,
+   inside the hash commitment. Promoting a 72% pick into a premium band is
+   cryptographically impossible, not just against policy.
+2. **The Band Report Card.** Monthly, per paid band, auto-published:
+   promised range vs realized rate (with interval, n). An invoice with proof
+   attached — no subscription business on earth audits itself to its
+   customers. Variance months are answered by the interval + autopsies, never
+   by silence.
+3. **Certainty of information, never certainty of profit.** Top bands pay
+   short odds; copy sells "the closest thing to knowing," staking guidance
+   stays conservative, responsible-gaming rails intact. This framing is what
+   lets premium pricing survive every critic.
+4. Fits the existing Stripe architecture: extends the Pro/Elite ladder
+   (per-band entitlements) + one new capped product for RARE AIR; founding
+   rates and grandfathering unchanged.
+
 ## The two boards (one product, two crowns)
 
 - **GREEN BOARD** — the win-rate crown. Fires only when every gate passes.
