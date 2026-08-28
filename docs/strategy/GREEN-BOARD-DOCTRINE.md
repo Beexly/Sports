@@ -20,6 +20,42 @@
 3. Honest variance, stated up front: at p̄=0.72, 100 picks → 95% CI ≈ ±9 pts;
    500 picks → ≈ ±4. The site SHOWS the interval. Nobody else dares.
 
+## THE PROOF STACK — the identity, front and center (founder directive 2026-08-28)
+
+The five things no other sports company on earth does are not a feature list —
+they ARE the brand, and they lead every surface. The homepage hero IS the
+Proof Stack; every page reinforces one of its five planks:
+
+1. **Calibrated, not claimed** — our published calibration curve proves the
+   probabilities are true; check us.
+2. **Cryptographic receipts** — every pick hash-committed at publish; deleting
+   or backdating is impossible, not just unlikely.
+3. **The interval rides with the rate** — we print the error bars; only fake
+   numbers fear error bars.
+4. **The SITREP dossier** — the full situational case behind every pick,
+   receipt-attached.
+5. **Public autopsies** — every loss examined in the open; the industry hides
+   losses, we compound trust with them.
+
+House line, everywhere: *"Everyone claims. We prove. We didn't join the claims
+war — we ended it."* If a page does not visibly serve one of the five planks,
+it is decoration and gets cut.
+
+## The two tiers (founder decision: brand the mechanism, not a fixed number)
+
+- **GREEN** — calibrated p ≥ 0.70. The daily board, 2–5 picks. Realizes ~72%
+  by construction.
+- **GSE PRIME** — calibrated p ≥ 0.80. Rare by design (some days: none — and
+  the empty state says so proudly). The scarcity weapon: "PRIME fires only
+  when winning is at least 80% mathematically true."
+- The Record reports realized rate PER TIER, interval attached. No fixed
+  percentage is ever promised in copy — the tiers and the live record ARE the
+  claim.
+- **Selection alpha — the self-learning ambition:** the situational engine's
+  job is realized ≥ expected + 2pts per tier (our 74% picks win 76%). GB-4
+  measures it from day one; it is the internal KPI the engine trains against,
+  and — once sustained and verified — the loudest sentence on the site.
+
 ## The two boards (one product, two crowns)
 
 - **GREEN BOARD** — the win-rate crown. Fires only when every gate passes.

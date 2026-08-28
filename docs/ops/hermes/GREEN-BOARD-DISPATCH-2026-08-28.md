@@ -28,11 +28,14 @@ export const INDEPENDENT_DISSENT_BAND = 0.06; // independent > 6pts under p* = v
 export interface GreenGateInput { calibratedP: number; bookmakerCount: number;
   freshnessOk: boolean; independents: { elo?: number|null; poisson?: number|null;
   fpi?: number|null }; vetoFlags: readonly string[]; }
-export interface GreenGateResult { green: boolean; reasons: readonly string[]; }
+export type BoardTier = "PRIME" | "GREEN" | null; // PRIME: p>=0.80, GREEN: p>=0.70
+export interface GreenGateResult { tier: BoardTier; green: boolean; reasons: readonly string[]; }
 export function greenBoardEligible(input: GreenGateInput): GreenGateResult
 ```
 
-Semantics: G1 p ≥ GREEN_P_MIN; G2 bookmakerCount ≥ 2 && freshnessOk; G3 any
+Semantics: tier = PRIME when p ≥ 0.80 (export PRIME_P_MIN = 0.80) and all other
+gates pass, GREEN when p ≥ GREEN_P_MIN, else null; green = tier !== null.
+G1 p ≥ GREEN_P_MIN; G2 bookmakerCount ≥ 2 && freshnessOk; G3 any
 present independent more than DISSENT_BAND below calibratedP → veto (absent
 independents are NOT a veto and NOT a boost); G4 vetoFlags empty. reasons[]
 names every gate that failed (or ["GREEN"]). Pure function, no I/O.
@@ -67,7 +70,8 @@ Read-only script `scripts/ops/green-board-retro.ts`: run greenBoardEligible
 retroactively over ALL settled published picks (same read-side field mapping as
 GB-3), and report — overall and per sport|market: candidates, greens fired,
 realized win rate, Wilson 95% CI, average calibratedP (expected rate), and
-realized-vs-expected gap. PRE-REGISTERED: report whatever it says, including
+realized-vs-expected gap (the SELECTION-ALPHA number) — ALL split by tier
+(PRIME / GREEN) as well as combined. PRE-REGISTERED: report whatever it says, including
 "greens underperform their p" — that result redirects G4 tuning and is
 valuable. Output to
 `docs/ops/calibration/2026-08-28-green-retro/RESULTS.md` with the run log.
