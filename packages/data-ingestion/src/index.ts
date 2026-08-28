@@ -188,6 +188,8 @@ export {
   isCertifiableOddsProvider,
   isCertifiableOddsTag,
   enforceCertifiableLiveGate,
+  decideCreditSpend,
+  creditTelemetry,
   type OddsProviderId,
   type OddsProviderCapabilities,
   type OddsProviderHealth,
@@ -329,6 +331,8 @@ export {
   sportMetaForKey,
 } from "./espn-schedule-seed.js";
 export type { ShortSportKey, EspnSeedGame } from "./espn-schedule-seed.js";
+
+export * from "./credit-governor.js";
 
 export {
   fetchMlbStandings,

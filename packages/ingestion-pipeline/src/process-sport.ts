@@ -56,6 +56,7 @@ import {
 } from "./build-independent-fair-values.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 import { isCertifiableOddsTag, enforceCertifiableLiveGate } from "@sports/data-ingestion";
+import { decideCreditSpend, DEFAULT_CREDIT_CONFIG } from "@sports/data-ingestion";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
 function sha256Hex(input: string): string {
@@ -546,16 +547,38 @@ export async function processSport(
     // (regions=eu, bookmakers=pinnacle) through this same `client`/`normalizer`
     // — no new HTTP client, no new API-key handling. Never throws — any
     // failure is caught internally and surfaced as `error` below.
-    const pinnacleResult = await capturePinnacleLineSnapshotsIfEnabled({
-      db,
-      sport: sport.key,
-      markets: [...MARKETS],
-      gameRecords,
-      capturedAt: fetchedAt,
-      fetchOdds: (sportKey, markets, options) =>
-        client.getOdds(sportKey as SupportedSportKey, [...markets] as Market[], options),
-      normalizeOdds: (events, at) => normalizer.normalizeOdds(events as OddsApiEvent[], at),
-    });
+    //
+    // Credit governor (Phase 2): the archive leg is a discretionary extra spend.
+    // When the upstream x-requests-remaining is below the daily pace floor, the
+    // governor refuses the 10x-style historical pull so we don't burn the rest
+    // of a near-exhausted monthly budget on a non-essential archive snapshot.
+    const creditGuard = decideCreditSpend(
+      sport.key,
+      1,
+      remainingRequests,
+      DEFAULT_CREDIT_CONFIG,
+      { historical: true },
+    );
+    let pinnacleResult: Awaited<ReturnType<typeof capturePinnacleLineSnapshotsIfEnabled>> = {
+      archived: 0,
+      error: null,
+    };
+    if (!creditGuard.allowed) {
+      console.warn(
+        `${logPrefix} ${sport.key}: EU Pinnacle archive skipped by credit governor — ${creditGuard.reason}`,
+      );
+    } else {
+      pinnacleResult = await capturePinnacleLineSnapshotsIfEnabled({
+        db,
+        sport: sport.key,
+        markets: [...MARKETS],
+        gameRecords,
+        capturedAt: fetchedAt,
+        fetchOdds: (sportKey, markets, options) =>
+          client.getOdds(sportKey as SupportedSportKey, [...markets] as Market[], options),
+        normalizeOdds: (events, at) => normalizer.normalizeOdds(events as OddsApiEvent[], at),
+      });
+    }
     if (pinnacleResult.error) {
       console.warn(
         `${logPrefix} EU Pinnacle line archive failed for ${sport.key}: ${pinnacleResult.error}`

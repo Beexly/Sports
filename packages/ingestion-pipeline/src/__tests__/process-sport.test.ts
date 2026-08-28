@@ -754,6 +754,9 @@ describe("processSport", () => {
     it("makes a second request (regions=eu, bookmakers=pinnacle) only when both flags are true", async () => {
       process.env["LINE_ARCHIVE_ENABLED"] = "true";
       process.env["LINE_ARCHIVE_EU_PINNACLE"] = "true";
+      // Healthy credit posture so the credit governor (Phase 2) does not skip
+      // the archive leg — this test isolates the double-gate FLAG logic.
+      mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 9900 });
 
       await processSport(SPORT, "key", gates());
 
@@ -790,7 +793,7 @@ describe("processSport", () => {
           if (options) {
             throw new Error("eu region rate limited");
           }
-          return { data: [{ raw: true }], remainingRequests: 400 };
+          return { data: [{ raw: true }], remainingRequests: 9900 };
         }) as typeof mocks.getOdds,
       );
 
@@ -803,6 +806,27 @@ describe("processSport", () => {
         expect.stringContaining("EU Pinnacle line archive failed"),
       );
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("eu region rate limited"));
+
+      warnSpy.mockRestore();
+    });
+
+    it("skips the EU Pinnacle archive leg when the credit governor refuses (low remaining near month-end)", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true";
+      process.env["LINE_ARCHIVE_EU_PINNACLE"] = "true";
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      // Low remaining (the global beforeEach mock returns 400) — the governor's
+      // pace floor is well above 400 near month-end, so the 10x archive pull is
+      // refused and the main run still succeeds (no extra credit spend).
+      mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 400 });
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      // Only the single primary (US-region) request — the archive leg was skipped.
+      expect(mocks.getOdds).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("EU Pinnacle archive skipped by credit governor"),
+      );
 
       warnSpy.mockRestore();
     });
