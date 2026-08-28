@@ -186,6 +186,8 @@ export {
   GalaxySportsApiOddsProvider,
   createOddsQuoteProvider,
   isCertifiableOddsProvider,
+  isCertifiableOddsTag,
+  enforceCertifiableLiveGate,
   type OddsProviderId,
   type OddsProviderCapabilities,
   type OddsProviderHealth,

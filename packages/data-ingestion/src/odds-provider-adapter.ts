@@ -272,3 +272,52 @@ export function createOddsQuoteProvider(
 export function isCertifiableOddsProvider(provider: OddsQuoteProvider): boolean {
   return provider.capabilities.certifiableForLiveGate === true;
 }
+
+/**
+ * Map a resolved odds-source tag (the exact strings `process-sport.ts` assigns
+ * to `oddsProviderTag`) to whether that source is certifiable for LIVE_BOARD FIRE.
+ *
+ * The keyless Galaxy/ESPN inline path (`espn_public`) is NOT certifiable — it is
+ * a single, non-cleared, relayed book feed (see faq: addendum 08-28). A
+ * certifiable source is only the paid The Odds API path (`the-odds-api`, and the
+ * rundown thin-fill variants which add real bookmaker rows to it).
+ *
+ * This is the enforcement half of `certifiableForLiveGate`: previously the flag
+ * was defined on every provider but never checked anywhere in the live path, so
+ * a non-certifiable source could in principle back a "live" pick. We make the
+ * verdict explicit and queryable so the ingestion run can refuse live/certifiable
+ * promotion on non-certifiable sources — without flipping any gate.
+ */
+export function isCertifiableOddsTag(tag: string | null | undefined): boolean {
+  if (!tag) return false;
+  if (tag === "the-odds-api") return true;
+  if (tag.startsWith("the-odds-api+")) return true; // thin-fill variants still anchored to the paid book
+  // espn_public, thermundown, free-refused-paid, none, absent, thermundown-empty, etc.
+  return false;
+}
+
+/**
+ * Enforcement guard: given the resolved odds-source tag and the run's intent to
+ * promote picks to a "live"/featured/certifiable surface, return whether that
+ * promotion is permitted. Non-certifiable sources must never back a live pick.
+ *
+ * NOTE: this only *refuses the promotion flag* — it does not delete or downgrade
+ * picks, and it never flips LIVE_BOARD. It enforces the capability flag that was
+ * previously defined-but-dead. Founder gate flips (C1–C8) remain untouched.
+ */
+export function enforceCertifiableLiveGate(
+  tag: string | null | undefined,
+  wantsLivePromotion: boolean,
+): { allowed: boolean; reason: string } {
+  if (!wantsLivePromotion) {
+    return { allowed: true, reason: "no live promotion requested" };
+  }
+  const certifiable = isCertifiableOddsTag(tag);
+  if (certifiable) {
+    return { allowed: true, reason: `certifiable source: ${tag}` };
+  }
+  return {
+    allowed: false,
+    reason: `non-certifiable odds source "${tag}" cannot back a live/certifiable pick (LIVE_BOARD gate enforced)`,
+  };
+}

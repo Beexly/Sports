@@ -63,7 +63,15 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@sports/data-ingestion", () => ({
+vi.mock("@sports/data-ingestion", async () => {
+  // Spread the real module first so any export not explicitly mocked here
+  // (e.g. isCertifiableOddsTag / enforceCertifiableLiveGate added by the
+  // Galaxy keyless fix) is still present. Explicit mocks below override.
+  const actual = await vi.importActual<typeof import("@sports/data-ingestion")>(
+    "@sports/data-ingestion",
+  );
+  return {
+    ...actual,
   OddsApiClient: vi.fn().mockImplementation(() => ({ getOdds: mocks.getOdds })),
   DataNormalizer: vi.fn().mockImplementation(() => ({
     validateFreshness: mocks.validateFreshness,
@@ -119,7 +127,8 @@ vi.mock("@sports/data-ingestion", () => ({
   resolveOddsApiKey: vi.fn().mockReturnValue("key"),
   oddsApiKeyPresence: vi.fn().mockReturnValue({ present: true, matchedEnv: "THE_ODDS_API_KEY" }),
   rundownApiKeyPresence: vi.fn().mockReturnValue({ present: false, matchedEnv: null }),
-}));
+  };
+});
 
 vi.mock("@sports/prediction-engine", async () => {
   // selectionIsHomeSide is the REAL, canonical (#119) implementation — not a

@@ -404,22 +404,29 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const chosenSpread = homeIsChosen ? avgSpread : -avgSpread;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
-  // Average price for chosen side
+  // Average price for chosen side — ONLY over books that actually quote a price.
+  // We must NOT fabricate a -110 fallback when a book omits one side's price:
+  // that silently invents a line, breaks cross-book average integrity, and
+  // mis-grades CLV. If fewer than MIN_BOOKMAKERS quote the chosen side, the
+  // consensus/edge signal is absent and the pick is invalid (return null below).
   const chosenPrices = spreadOdds
     .map((o) => (homeIsChosen ? o.homeSpreadPrice : o.awaySpreadPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  if (chosenPrices.length < MIN_BOOKMAKERS) return null;
+  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
-  // Fair value — assume consensus spread IS fair line, edge from vig removal
+  // Fair value — assume consensus spread IS fair line, edge from vig removal.
+  // Same no-fabrication rule: average only the books that quote each side. A
+  // missing side price is skipped, never imputed to -110.
+  const homePriced = spreadOdds.filter((o) => o.homeSpreadPrice !== undefined);
+  const awayPriced = spreadOdds.filter((o) => o.awaySpreadPrice !== undefined);
+  if (homePriced.length === 0 || awayPriced.length === 0) return null;
   const homeImpliedAvg =
-    spreadOdds.reduce((acc, o) => acc + americanToImpliedProbability(o.homeSpreadPrice ?? -110), 0) /
-    spreadOdds.length;
+    homePriced.reduce((acc, o) => acc + americanToImpliedProbability(o.homeSpreadPrice!), 0) /
+    homePriced.length;
   const awayImpliedAvg =
-    spreadOdds.reduce((acc, o) => acc + americanToImpliedProbability(o.awaySpreadPrice ?? -110), 0) /
-    spreadOdds.length;
+    awayPriced.reduce((acc, o) => acc + americanToImpliedProbability(o.awaySpreadPrice!), 0) /
+    awayPriced.length;
   const fair = removeVig(homeImpliedAvg, awayImpliedAvg);
   const fairProb = homeIsChosen ? fair.home : fair.away;
   const fairShinProb = shinFairForSide(
@@ -663,14 +670,14 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
-  // Avg price for chosen direction
+  // Avg price for chosen direction — ONLY over books that actually quote it.
+  // A -110 fallback would fabricate a line and mis-grade CLV; instead require
+  // MIN_BOOKMAKERS priced books or the consensus signal is absent (null below).
   const chosenPrices = totalOdds
     .map((o) => (overIsChosen ? o.overPrice : o.underPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  if (chosenPrices.length < MIN_BOOKMAKERS) return null;
+  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
   // Fair value
   const overImpliedAvg =

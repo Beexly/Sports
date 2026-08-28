@@ -187,4 +187,84 @@ describe("fetchEspnOddsForSport", () => {
     expect(buf?.point).toBe(-3);
     expect(pit?.point).toBe(3);
   });
+
+  it("does NOT stamp a fabricated last_update on keyless rows (freshness is honest)", async () => {
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
+    const scoreboard = {
+      events: [
+        {
+          id: "401873298",
+          date: commenceSoon,
+          competitions: [
+            {
+              date: commenceSoon,
+              status: { type: { state: "pre", completed: false }, created: commenceSoon },
+              competitors: [
+                { homeAway: "home", team: { displayName: "Buffalo Bills", abbreviation: "BUF" } },
+                { homeAway: "away", team: { displayName: "Pittsburgh Steelers", abbreviation: "PIT" } },
+              ],
+              odds: [
+                {
+                  provider: { name: "DraftKings" },
+                  spread: -3.0,
+                  overUnder: 34.5,
+                  moneyline: {
+                    home: { close: { odds: "-146" } },
+                    away: { close: { odds: "+122" } },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const fetchImpl = vi.fn(async (url: string) => {
+      if (String(url).includes("scoreboard")) {
+        return { ok: true, json: async () => scoreboard } as Response;
+      }
+      return { ok: false, status: 404 } as Response;
+    });
+    const res = await fetchEspnOddsForSport("americanfootball_nfl", {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      interEventMs: 0,
+    });
+    expect(res.events).toHaveLength(1);
+    const book = res.events[0]!.bookmakers[0]!;
+    // Honest freshness: the keyless inline feed carries no real upstream timestamp,
+    // so last_update must be absent (not the local clock in disguise). This lets
+    // the normalizer's anti-tautology freshness gate do its job instead of
+    // treating every keyless row as freshly fetched.
+    expect(book.last_update).toBeUndefined();
+    for (const m of book.markets) {
+      expect(m.last_update).toBeUndefined();
+    }
+  });
+
+  it("aborts a hung keyless host within timeoutMs instead of stalling the run", async () => {
+    // fetchImpl honors the AbortSignal the same way real fetch does: it rejects
+    // with an AbortError when the controller aborts (timeout fires).
+    const fetchImpl = vi.fn((_url: string, init?: { signal?: AbortSignal }) => {
+      return new Promise<Response>((_resolve, reject) => {
+        const sig = init?.signal;
+        if (sig) {
+          if (sig.aborted) {
+            reject(new Error("The operation was aborted"));
+            return;
+          }
+          sig.addEventListener("abort", () => {
+            reject(new Error("The operation was aborted"));
+          });
+        }
+      });
+    });
+    const res = await fetchEspnOddsForSport("baseball_mlb", {
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      timeoutMs: 30,
+    });
+    // Must soft-fail empty (not hang), and must have attempted at least one call.
+    expect(fetchImpl.mock.calls.length).toBeGreaterThan(0);
+    expect(res.events).toEqual([]);
+    expect(res.error).toMatch(/empty board|timeout|abort/i);
+  });
 });

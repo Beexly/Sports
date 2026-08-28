@@ -354,6 +354,49 @@ describe("scoreGame — precision fields", () => {
     const spreadPicks = picks.filter((p) => p.pickType === "SPREAD");
     expect(spreadPicks.length).toBe(0);
   });
+
+  describe("no -110 fabrication when a side price is missing", () => {
+    it("returns no SPREAD pick when only one of two books quotes the away side", () => {
+      // Two books (clears MIN_BOOKMAKERS) but book 2 omits the away spread price.
+      // Historically this silently imputed -110 for the missing side, minting a
+      // fabricated line and mis-grading CLV. It must now refuse the pick.
+      const input = makeOddsInput({
+        bookmakerOdds: [
+          { bookmaker: "fanduel",    market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+          { bookmaker: "draftkings", market: "SPREADS", spread: -3.5, homeSpreadPrice: -108 },
+        ],
+      });
+      const picks = scoreGame(input);
+      expect(picks.filter((p) => p.pickType === "SPREAD").length).toBe(0);
+    });
+
+    it("returns no TOTAL pick when only one of two books quotes the over side", () => {
+      const input = makeOddsInput({
+        bookmakerOdds: [
+          { bookmaker: "fanduel",    market: "TOTALS", total: 48.5, overPrice: -110, underPrice: -110 },
+          { bookmaker: "draftkings", market: "TOTALS", total: 49.0, underPrice: -108 },
+        ],
+      });
+      const picks = scoreGame(input);
+      expect(picks.filter((p) => p.pickType === "TOTAL").length).toBe(0);
+    });
+
+    it("still scores a SPREAD pick when books quote both sides with real consensus", () => {
+      // 5 books, clear home consensus — a genuine pick, proving the
+      // no-fabrication change still scores valid markets.
+      const input = makeOddsInput({
+        bookmakerOdds: [
+          { bookmaker: "fanduel",    market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+          { bookmaker: "draftkings", market: "SPREADS", spread: -3.5, homeSpreadPrice: -112, awaySpreadPrice: -108 },
+          { bookmaker: "betmgm",     market: "SPREADS", spread: -3.0, homeSpreadPrice: -115, awaySpreadPrice: -105 },
+          { bookmaker: "caesars",    market: "SPREADS", spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+          { bookmaker: "pointsbet",  market: "SPREADS", spread: -3.5, homeSpreadPrice: -108, awaySpreadPrice: -112 },
+        ],
+      });
+      const picks = scoreGame(input);
+      expect(picks.filter((p) => p.pickType === "SPREAD").length).toBeGreaterThan(0);
+    });
+  });
 });
 
 // ============================================================

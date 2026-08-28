@@ -177,7 +177,7 @@ function eventFromInlineOdds(
   sportKey: string,
   title: string,
   ev: Candidate,
-  lastUpdate: string,
+  lastUpdate: string | undefined,
 ): OddsApiEvent | null {
   const blk = ev.inlineOdds;
   if (!blk) return null;
@@ -305,6 +305,9 @@ export async function fetchEspnOddsForSport(
     readonly interEventMs?: number;
     /** Days ahead for scoreboard dates= (default 3). */
     readonly horizonDays?: number;
+    /** Per-request timeout (ms). Prevents a hung keyless host from stalling the
+     *  whole ingestion run. Default 8000ms. */
+    readonly timeoutMs?: number;
   },
 ): Promise<EspnOddsFetchResult> {
   const meta = ESPN_ODDS_SPORT_MAP[sportKey];
@@ -319,6 +322,7 @@ export async function fetchEspnOddsForSport(
   const maxEvents = Math.min(40, Math.max(1, options?.maxEvents ?? 24));
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
+  const timeoutMs = Math.max(100, options?.timeoutMs ?? 8000);
   const errors: string[] = [];
   const now = new Date();
   const dateParams = scoreboardDateParams(now, horizonDays);
@@ -328,6 +332,21 @@ export async function fetchEspnOddsForSport(
     "https://site.web.api.espn.com/apis/site/v2/sports",
     "https://site.api.espn.com/apis/site/v2/sports",
   ];
+
+  // Bound every keyless ESPN request so a blocked/slow host can't hang the run.
+  const fetchWithTimeout = async (url: string): Promise<Response> => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetchImpl(url, {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
+  };
 
   for (let di = 0; di < dateParams.length; di++) {
     const dates = dateParams[di]!;
@@ -339,10 +358,7 @@ export async function fetchEspnOddsForSport(
         (dates ? `&dates=${dates}` : "");
       try {
         if (di > 0 || gotBoard) await new Promise((r) => setTimeout(r, 80));
-        const res = await fetchImpl(scoreboardUrl, {
-          headers: { Accept: "application/json" },
-          cache: "no-store",
-        });
+        const res = await fetchWithTimeout(scoreboardUrl);
         if (!res.ok) {
           errors.push(`scoreboard${dates ? ` ${dates}` : ""}:${host}:HTTP ${res.status}`);
           continue;
@@ -377,7 +393,14 @@ export async function fetchEspnOddsForSport(
   }
 
   const out: OddsApiEvent[] = [];
-  const lastUpdate = new Date().toISOString();
+  // No fabricated `last_update`: the keyless inline feed carries no real upstream
+  // timestamp, and stamping the local clock as the book's `last_update` would make
+  // the normalizer's anti-tautology freshness gate vacuously pass (every row
+  // looks freshly fetched). We leave `last_update` absent so the normalizer's
+  // fail-safe ("not provably fresh → treat as stale") holds — keyless rows are
+  // therefore not minted as certifiable picks until a real freshness signal
+  // exists (founder-gated; see the Aug-28 addendum).
+  const lastUpdate: string | undefined = undefined;
   const nowMs = now.getTime();
 
   for (let i = 0; i < candidates.length; i++) {
@@ -396,10 +419,7 @@ export async function fetchEspnOddsForSport(
       `https://sports.core.api.espn.com/v2/sports/${meta.coreSport}/leagues/${meta.coreLeague}` +
       `/events/${ev.id}/competitions/${ev.id}/odds`;
     try {
-      const res = await fetchImpl(oddsUrl, {
-        headers: { Accept: "application/json" },
-        cache: "no-store",
-      });
+      const res = await fetchWithTimeout(oddsUrl);
       if (!res.ok) {
         errors.push(`${ev.id}:HTTP ${res.status}`);
         continue;

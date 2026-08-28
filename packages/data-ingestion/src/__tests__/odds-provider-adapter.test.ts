@@ -5,6 +5,8 @@ import {
   TheOddsApiOddsProvider,
   createOddsQuoteProvider,
   isCertifiableOddsProvider,
+  isCertifiableOddsTag,
+  enforceCertifiableLiveGate,
 } from "../odds-provider-adapter.js";
 import { fetchEspnOddsForSport } from "../espn-odds-client.js";
 import type { OddsApiClient } from "../odds-api-client.js";
@@ -202,5 +204,36 @@ describe("TheOddsApiOddsProvider", () => {
     expect(r.healthy).toBe(true);
     expect(r.odds).toHaveLength(1);
     expect(r.odds[0]?.bookmaker).toBe("fanduel");
+  });
+});
+
+describe("certifiableForLiveGate enforcement (addendum 08-28)", () => {
+  it("isCertifiableOddsTag: paid the-odds-api (and thin-fill variants) are certifiable", () => {
+    expect(isCertifiableOddsTag("the-odds-api")).toBe(true);
+    expect(isCertifiableOddsTag("the-odds-api+therundown-thin")).toBe(true);
+  });
+
+  it("isCertifiableOddsTag: keyless espn_public / rundown / none are NOT certifiable", () => {
+    expect(isCertifiableOddsTag("espn_public")).toBe(false);
+    expect(isCertifiableOddsTag("therundown")).toBe(false);
+    expect(isCertifiableOddsTag("free-refused-paid")).toBe(false);
+    expect(isCertifiableOddsTag(null)).toBe(false);
+    expect(isCertifiableOddsTag(undefined)).toBe(false);
+  });
+
+  it("enforceCertifiableLiveGate: allows when live promotion not requested", () => {
+    const r = enforceCertifiableLiveGate("espn_public", false);
+    expect(r.allowed).toBe(true);
+  });
+
+  it("enforceCertifiableLiveGate: refuses live promotion for non-certifiable source", () => {
+    const r = enforceCertifiableLiveGate("espn_public", true);
+    expect(r.allowed).toBe(false);
+    expect(r.reason).toMatch(/non-certifiable/i);
+  });
+
+  it("enforceCertifiableLiveGate: allows live promotion for certifiable paid source", () => {
+    const r = enforceCertifiableLiveGate("the-odds-api", true);
+    expect(r.allowed).toBe(true);
   });
 });

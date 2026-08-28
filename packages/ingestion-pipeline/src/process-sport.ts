@@ -55,6 +55,7 @@ import {
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
+import { isCertifiableOddsTag, enforceCertifiableLiveGate } from "@sports/data-ingestion";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
 function sha256Hex(input: string): string {
@@ -800,10 +801,25 @@ export async function processSport(
 
       // Featured promotion gate: only auto-promote when explicitly enabled.
       // In bootstrap mode, no pick is featured — grades are uncalibrated.
+      //
+      // LIVE_BOARD / certifiable enforcement: a non-certifiable odds source (the
+      // keyless Galaxy/ESPN inline path, tag `espn_public`) must NEVER back a
+      // live/certifiable pick. We refuse the featured (live-surface) promotion
+      // when the resolved source is non-certifiable — enforcing the
+      // `certifiableForLiveGate` capability flag that was previously defined but
+      // never checked. This does NOT flip any gate; it only withholds the
+      // promotion flag. Founder gate flips (C1–C8) remain untouched.
+      const liveGate = enforceCertifiableLiveGate(oddsProviderTag, gates.canPromoteFeaturedPicks);
       const isFeatured =
         gates.canPromoteFeaturedPicks &&
+        liveGate.allowed &&
         (pick.pickGrade === "ELITE_PLAY" ||
           (pick.pickGrade === "STRONG_PLAY" && pick.confidence >= 80));
+      if (gates.canPromoteFeaturedPicks && !liveGate.allowed) {
+        console.warn(
+          `${logPrefix} ${sport.key}: featured promotion refused — ${liveGate.reason}`,
+        );
+      }
 
       // A SETTLED pick is frozen: once it has a WIN/LOSS/PUSH result, the
       // refresh cycle must never rewrite its selection/line/confidence/grade/

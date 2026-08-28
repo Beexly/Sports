@@ -263,7 +263,14 @@ export interface OddsApiOutcome {
 
 export interface OddsApiMarket {
   key: "h2h" | "spreads" | "totals";
-  last_update: string;
+  /**
+   * Upstream last-update timestamp. Optional because keyless relayed feeds
+   * (e.g. ESPN inline odds) carry no real per-book timestamp — stamping a
+   * fallback would defeat the anti-tautology freshness gate, so callers must
+   * leave it absent rather than invent one. The normalizer treats a missing
+   * timestamp as "not provably fresh" (unparseable), which is the honest state.
+   */
+  last_update?: string;
   outcomes: OddsApiOutcome[];
 }
 
