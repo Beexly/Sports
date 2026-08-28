@@ -152,7 +152,7 @@ Full brief: **`docs/agents/CLOUD-BRIEF-2026-08-27.md`**. Ledger: `docs/ops/AGENT
 |---|---|
 | Founder: we **are** the provider (**Galaxy Sports API**). Not Rundown. Not The Odds API. | Do not queue a Rundown signup as the kill switch. |
 | Formula in-repo: ESPN `site.web.api` **inline** odds + de-vig. `GalaxySportsApiOddsProvider` when `THE_ODDS_API_KEY` unset. | Do not send ESPN through blocked `sports.core`. |
-| 2018–2025 lines: nflverse `games.csv` (`parseNflverseGameLines`). | Do not claim history is missing. |
+| 2018–2025 lines: nflverse `games.csv` (`fetchNflverseGameLines`). | Do not claim history is missing. |
 | Polymarket: **held off** quote plane (`docs/agent-skills/polymarket-hold`). | Do not enable `/api/cron/gamma`. |
 | Live NFL props: `event-odds-ingest.ts` (pass/rush/rec yards + TDs/receptions). Default OFF. | Do not scrape books. |
 | Local Python `:8731` is **not** in git. Product formula **is** in this PR. | Do not tell cloud agents to `cd galaxy-sports-api`. |

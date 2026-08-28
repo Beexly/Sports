@@ -4,6 +4,7 @@
  * and moneylines (267–285 games/season). This is the 2018–2025 history gap close.
  * Attribution: nflverse (Lee Sharpe nfldata / nflverse-data schedules).
  */
+import { fetchNflverseText, type NflverseDatasetKey } from "./nflverse-source.js";
 export type NflverseGameLine = {
   readonly gameId: string;
   readonly season: number;
@@ -95,3 +96,20 @@ export function linesInSeasons(
 ): NflverseGameLine[] {
   return rows.filter((r) => r.season >= from && r.season <= to);
 }
+
+/**
+ * Fetch nflverse schedules/games.csv and return 2018–2025 lines by default.
+ * Injectable fetchText so tests never hit the network.
+ */
+export async function fetchNflverseGameLines(opts?: {
+  readonly fetchText?: (key: string, season: number) => Promise<string>;
+  readonly from?: number;
+  readonly to?: number;
+}): Promise<NflverseGameLine[]> {
+  const fetchText =
+    opts?.fetchText ??
+    (async (key: string, season: number) => fetchNflverseText(key as NflverseDatasetKey, season));
+  const csv = await fetchText("schedules", 0);
+  return linesInSeasons(parseNflverseGameLines(csv), opts?.from ?? 2018, opts?.to ?? 2025);
+}
+
