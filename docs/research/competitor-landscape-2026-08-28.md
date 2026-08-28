@@ -46,3 +46,5 @@ Competitive-awareness catalog ONLY. No site listed here is cleared for ingestion
 19. FanDuel - (mentioned in PropFinder) - Top prop betting site
 20. ESPN Bet - (mentioned in PropFinder) - Top prop betting site
 
+
+# Galaxy Sports Edge (GSE) Optimization Plan
