@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
   classifyRefreshFreshness,
+  classifyPerSportRefreshFreshness,
+  resolveFreshnessThresholds,
   REFRESH_WARN_AFTER_MINUTES,
   REFRESH_STALE_AFTER_MINUTES,
 } from "@/lib/data-reliability/refresh-sla";
@@ -54,6 +56,85 @@ describe("classifyRefreshFreshness", () => {
 
   it("null last-success is stale with null age (never-succeeded is never ok)", () => {
     const r = classifyRefreshFreshness(null, NOW);
+    expect(r.status).toBe("stale");
+    expect(r.ageMinutes).toBeNull();
+  });
+});
+
+describe("resolveFreshnessThresholds", () => {
+  it("falls back to the global SLA for an unregistered sport", () => {
+    const t = resolveFreshnessThresholds("basketball_nba");
+    expect(t.warnMinutes).toBe(REFRESH_WARN_AFTER_MINUTES);
+    expect(t.staleMinutes).toBe(REFRESH_STALE_AFTER_MINUTES);
+  });
+
+  it("uses a registered per-sport override", () => {
+    const t = resolveFreshnessThresholds("americanfootball_nfl", {
+      "americanfootball_nfl": { warnMinutes: 30, staleMinutes: 60 },
+    });
+    expect(t.warnMinutes).toBe(30);
+    expect(t.staleMinutes).toBe(60);
+  });
+});
+
+describe("classifyPerSportRefreshFreshness", () => {
+  it("treats an out-of-season sport as exempt (expected staleness)", () => {
+    const r = classifyPerSportRefreshFreshness(
+      "americanfootball_nfl",
+      null,
+      NOW,
+      () => false, // out of season
+    );
+    expect(r.status).toBe("stale");
+    expect(r.exempt).toBe(true);
+    expect(r.sportKey).toBe("americanfootball_nfl");
+  });
+
+  it("does not exempt an out-of-season sport that overrides exempt off (contract: exempt only when OOS)", () => {
+    // Defensive: even with a per-sport override, an out-of-season sport stays exempt.
+    const r = classifyPerSportRefreshFreshness(
+      "americanfootball_nfl",
+      minutesAgo(10),
+      NOW,
+      () => false,
+      { "americanfootball_nfl": { warnMinutes: 5, staleMinutes: 15 } },
+    );
+    expect(r.exempt).toBe(true);
+    expect(r.status).toBe("stale");
+  });
+
+  it("applies the global SLA to an in-season sport with no override", () => {
+    const r = classifyPerSportRefreshFreshness(
+      "basketball_nba",
+      minutesAgo(REFRESH_STALE_AFTER_MINUTES + 1),
+      NOW,
+      () => true,
+    );
+    expect(r.exempt).toBe(false);
+    expect(r.status).toBe("stale");
+  });
+
+  it("applies a per-sport override when in season", () => {
+    const r = classifyPerSportRefreshFreshness(
+      "americanfootball_nfl",
+      minutesAgo(45),
+      NOW,
+      () => true,
+      { "americanfootball_nfl": { warnMinutes: 30, staleMinutes: 60 } },
+    );
+    // 45m > 30m warn and < 60m stale → "warn", not exempt, using the override.
+    expect(r.exempt).toBe(false);
+    expect(r.status).toBe("warn");
+  });
+
+  it("never-succeeded in season is a real stale (not exempt)", () => {
+    const r = classifyPerSportRefreshFreshness(
+      "basketball_nba",
+      null,
+      NOW,
+      () => true,
+    );
+    expect(r.exempt).toBe(false);
     expect(r.status).toBe("stale");
     expect(r.ageMinutes).toBeNull();
   });
