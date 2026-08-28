@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { resolvePaths, readCrons, diffCrons } from "./cron-matrix-from-vercel.mjs";
 /**
  * GSE launch preflight — read-only black-box probe of production.
  *
@@ -9,6 +10,7 @@
  *   4  Product gates   picks gated, settle cron auth wall
  *   5  Settle (opt)    CRON_SECRET → 2xx + repair fields
  *   6  Trust / SEO     security, ads, humans, llms, robots, sitemaps, feed
+ *   7  Cron-matrix     vercel.json schedules ↔ docs/ops/CRON_MATRIX.generated.md
  *
  * Semantics (do not confuse):
  *   health.ok + HTTP 503  → DB/ingestion only (pipeline death)
@@ -258,6 +260,36 @@ async function main() {
     const r = await get(p);
     if (r.status === 200 || r.status === 308) ok(`${p} → ${r.status}`);
     else hard(`${p} → ${r.status}`);
+  }
+
+  // ── 7. Cron-matrix truth ─────────────────────────────────────────────────
+  // Local, network-free check (CRON_MATRIX spec: `--check` is "for CI / preflight").
+  // A stale generated matrix means the documented schedule truth diverges from what
+  // Vercel actually runs → HARD launcher blocker (catches drift like a newly added
+  // cron route that nobody regenerated the matrix for).
+  section(7, "Cron-matrix truth (vercel.json ↔ generated md)");
+  try {
+    const paths = resolvePaths(process.env);
+    const sotCrons = readCrons(paths.sotPath);
+    const otherCrons = readCrons(paths.otherPath);
+    const drift = diffCrons(sotCrons, otherCrons);
+    if (drift.length === 0) {
+      ok(`cron matrix matches: ${sotCrons.length} crons, both vercel.json copies agree`);
+    } else {
+      const added = drift.filter((r) => r.other === null);
+      const removed = drift.filter((r) => r.sot === null);
+      const changed = drift.filter((r) => r.sot !== null && r.other !== null);
+      if (added.length) hard(`cron matrix STALE — ${added.length} new cron(s) in ${paths.sotRel} not in ${paths.otherRel}: ${added.map((r) => r.path).join(", ")}`);
+      if (removed.length) hard(`cron matrix STALE — ${removed.length} cron(s) in ${paths.otherRel} missing from ${paths.sotRel}: ${removed.map((r) => r.path).join(", ")}`);
+      if (changed.length) {
+        for (const r of changed) {
+          hard(`cron matrix STALE — schedule mismatch for ${r.path}: ${paths.sotRel}=${r.sot} ${paths.otherRel}=${r.other}`);
+        }
+      }
+      console.log(`  fix: node scripts/ops/cron-matrix-from-vercel.mjs  (then re-commit docs/ops/CRON_MATRIX.generated.md)`);
+    }
+  } catch (e) {
+    hard(`cron matrix check failed: ${e?.message || e}`);
   }
 
   // ── Summary ─────────────────────────────────────────────────────────────
