@@ -1,3 +1,5 @@
+UNVERIFIED - single-model run; numbers must be replicated by a second model before any evidence or public use.
+
 # OPERATION RESOLUTION RESULTS
 
 *Generated: 2026-08-28T12:32:08-05:00*
@@ -52,6 +54,7 @@ BLOCKED: Two attempts made.
   Attempt 1: attempted to use the three tools (build-close-calibration.py, build-games-harness.py, fetch-kalshi-quotes.mjs) as raw material to produce a walk-forward backtest and Murphy table. Could not obtain necessary odds data (American odds for each side) from the nflverse CSV.
   Attempt 2: attempted to derive odds from the spread and total lines without vigorish, which is not statistically sound. Could not produce a valid Murphy table.
 Conclusion: No valid walk-forward backtest or Murphy table could be produced.
+
 ## Task 4: Three encoded blend techniques
 **Status:** SOLVED (three blend techniques evaluated)
 
@@ -86,4 +89,3 @@ Devigged away odds: +115
 ```
 
 **Next steps:** If historical odds become available (e.g., from a free API), we can compute calibration and remove the -110 vigorish.
-
