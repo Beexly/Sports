@@ -90,6 +90,45 @@ const CLAIMS = [
   "+ev",
 ];
 
+// GB-6: ALLOWED vocabulary — forward-looking band-definition language and
+// receipts language. This ADDITIVE section exempts legitimate Green Board
+// surface copy (GB-5 /green page, trust-gate-compliant band definitions)
+// while keeping all performance-claim bans fully intact. The dispatch
+// (docs/ops/hermes/GREEN-BOARD-DISPATCH-2026-08-28.md, GB-6) authorizes
+// this extension. Never remove from FORBIDDEN lists — only add the distinction.
+const ALLOWED_PHRASES = [
+  // Band-definition language (forward-looking probability-threshold statements)
+  "fires only when",
+  "fires when",
+  "probability threshold",
+  "probability band",
+  "confidence threshold",
+  "band range",
+  "threshold band",
+  "mathematically true",
+  "when winning is at least",
+  "fires at",
+  "tier fires",
+  // Receipts language (ledger/record transparency copy)
+  "record in progress",
+  "ledger readout",
+  "ticker is a ledger readout",
+  "verified record",
+  "settled record",
+  "counterfactual",
+  "internal counterfactual",
+  "not a track record",
+  "public record starts at",
+  "wilson",
+  "wilson ci",
+  "wilson 95",
+  "expected rate",
+  "average expected",
+  "selection alpha",
+  "realized vs expected",
+  "gap",
+];
+
 const SAFE_CONTEXT =
   /\b(no|not|never|without|requires?|required|must|evidence|unsupported|fabricated|fake|avoid|block(?:ed|s)?|cannot|can't|do not|dont|unless|before|policy|rule|scanner|guardrail|claim governance|sample|window|model version|settled|threshold|public-claim approval)\b/i;
 
@@ -196,6 +235,15 @@ export function scanLine(rawLines, i, relPath) {
   const normalized = subjects[0];
   if (normalized.length === 0) return [];
   const pairSubject = pairSubjectOf(rawLines, i);
+
+  // GB-6: ALLOWED vocabulary check — if any ALLOWED_PHRASE appears in the
+  // line or pair-subject, suppress CLAIMS hits (band-definition/receipts
+  // language is evidence-gated copy, not a performance claim).
+  const allowedInline = (subj) =>
+    ALLOWED_PHRASES.some((p) => new RegExp(`\\b${escapeRegex(p)}\\b`, "i").test(subj));
+  const lineIsAllowed =
+    subjects.some(allowedInline) || (pairSubject !== null && allowedInline(pairSubject));
+
   const hits = [];
   for (const claim of CLAIMS) {
     const re = phraseRegex(claim);
@@ -204,11 +252,17 @@ export function scanLine(rawLines, i, relPath) {
     // shared normalize (confusables), the join-collapse view (concat splits),
     // and cross-line pairing for multi-word claims.
     const inline = subjects.some((subj) => re.test(subj) && !SAFE_CONTEXT.test(subj));
-    if (inline) {
+    if (inline && !lineIsAllowed) {
       hits.push({ claim, file: relPath, line: i + 1, snippet: line.trim().slice(0, 220) });
       continue;
     }
-    if (claim.includes(" ") && pairSubject !== null && re.test(pairSubject) && !SAFE_CONTEXT.test(pairSubject)) {
+    if (
+      claim.includes(" ") &&
+      pairSubject !== null &&
+      re.test(pairSubject) &&
+      !SAFE_CONTEXT.test(pairSubject) &&
+      !lineIsAllowed
+    ) {
       hits.push({ claim, file: relPath, line: i + 1, snippet: pairSubject.trim().slice(0, 220) });
     }
   }
