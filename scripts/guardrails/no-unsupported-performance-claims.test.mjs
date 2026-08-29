@@ -101,7 +101,9 @@ test("evidence vocabulary is NOT retained in NUMERIC_SAFE_CONTEXT (the bug's exa
 const ALLOWED_BAND_DEFINITION = [
   "The GREEN tier fires only when winning is at least 70% mathematically true",
   "PRIME fires when probability threshold reaches 80%",
-  "Band range: 70-80% calibrated probability",
+  // review fix: "calibrated" is a banned concept word pre-milestone — public
+  // band copy states the threshold without it.
+  "Band range: 70-80% probability threshold",
   "Probability band statement: tier fires at p >= 0.70",
   "Confidence threshold for GREEN is 70%",
   "Threshold band definition: fires at 70%+",
@@ -141,6 +143,24 @@ for (const line of ALLOWED_RECEIPTS) {
       claimHits,
       [],
       `receipts language should pass CLAIMS scan: ${line}`,
+    );
+  });
+}
+
+// MASK-THEN-SCAN regression suite (review): an ALLOWED phrase must never
+// whitelist a forbidden claim sharing its line. These exact lines defeated the
+// original line-level exemption; they stay here permanently.
+const SMUGGLED_MUST_FAIL = [
+  "Our record in progress: guaranteed winners, 90% win rate every week.",
+  "Ledger readout says easy profit — proven winners, best win rate anywhere.",
+  "PRIME fires only when winning is at least 80% mathematically true — guaranteed profit.",
+];
+for (const line of SMUGGLED_MUST_FAIL) {
+  test(`SMUGGLED CLAIM STILL FAILS beside ALLOWED phrase: "${line.slice(0, 60)}…"`, () => {
+    const hits = scanLine([line], 0, "apps/web/app/green/page.tsx");
+    assert.ok(
+      hits.length > 0,
+      `a forbidden claim beside an ALLOWED phrase must still be flagged: ${line}`,
     );
   });
 }

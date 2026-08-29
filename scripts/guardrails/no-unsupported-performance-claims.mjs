@@ -113,20 +113,23 @@ const ALLOWED_PHRASES = [
   "record in progress",
   "ledger readout",
   "ticker is a ledger readout",
-  "verified record",
-  "settled record",
+  // NOTE (review): "verified record" / "settled record" were removed — they
+  // contain the banned concept words "verified"/"settled-record" claims and an
+  // ALLOWED entry must never overlap the FORBIDDEN list. Pre-milestone copy
+  // uses "record in progress"; "verified" language earns its way through the
+  // claims-approval process, never through this exemption list.
   "counterfactual",
   "internal counterfactual",
   "not a track record",
   "public record starts at",
-  "wilson",
+  // NOTE (review): single common words are banned from this list — "wilson"
+  // alone matched player surnames and "gap" matched ordinary prose, and under
+  // any exemption scheme broad tokens shrink the scanner's surface for free.
   "wilson ci",
   "wilson 95",
-  "expected rate",
-  "average expected",
+  "average expected rate",
   "selection alpha",
   "realized vs expected",
-  "gap",
 ];
 
 const SAFE_CONTEXT =
@@ -236,13 +239,19 @@ export function scanLine(rawLines, i, relPath) {
   if (normalized.length === 0) return [];
   const pairSubject = pairSubjectOf(rawLines, i);
 
-  // GB-6: ALLOWED vocabulary check — if any ALLOWED_PHRASE appears in the
-  // line or pair-subject, suppress CLAIMS hits (band-definition/receipts
-  // language is evidence-gated copy, not a performance claim).
-  const allowedInline = (subj) =>
-    ALLOWED_PHRASES.some((p) => new RegExp(`\\b${escapeRegex(p)}\\b`, "i").test(subj));
-  const lineIsAllowed =
-    subjects.some(allowedInline) || (pairSubject !== null && allowedInline(pairSubject));
+  // GB-6 (mask-then-scan): ALLOWED phrases are REMOVED from the text and the
+  // FORBIDDEN rules then run over what remains. A line-level suppression flag
+  // was rejected in review: any line containing one allowed phrase would have
+  // whitelisted every forbidden claim sharing it ("verified record: guaranteed
+  // winners" must still fail). Masking lets band-definition/receipts copy pass
+  // while anything smuggled beside it survives the mask and gets caught.
+  const maskAllowed = (subj) =>
+    ALLOWED_PHRASES.reduce(
+      (s, p) => s.replace(new RegExp(`\\b${escapeRegex(p)}\\b`, "gi"), " "),
+      subj,
+    );
+  const maskedSubjects = subjects.map(maskAllowed);
+  const maskedPair = pairSubject !== null ? maskAllowed(pairSubject) : null;
 
   const hits = [];
   for (const claim of CLAIMS) {
@@ -250,18 +259,20 @@ export function scanLine(rawLines, i, relPath) {
     // Descriptive concept words carry a line-wide safe-context exemption (they
     // fire on legitimate evidence surfaces); the O-3.x hardening here is the
     // shared normalize (confusables), the join-collapse view (concat splits),
-    // and cross-line pairing for multi-word claims.
-    const inline = subjects.some((subj) => re.test(subj) && !SAFE_CONTEXT.test(subj));
-    if (inline && !lineIsAllowed) {
+    // and cross-line pairing for multi-word claims. SAFE_CONTEXT still reads
+    // the ORIGINAL subject so masking can only narrow, never widen, matches.
+    const inline = maskedSubjects.some(
+      (msubj, k) => re.test(msubj) && !SAFE_CONTEXT.test(subjects[k]),
+    );
+    if (inline) {
       hits.push({ claim, file: relPath, line: i + 1, snippet: line.trim().slice(0, 220) });
       continue;
     }
     if (
       claim.includes(" ") &&
-      pairSubject !== null &&
-      re.test(pairSubject) &&
-      !SAFE_CONTEXT.test(pairSubject) &&
-      !lineIsAllowed
+      maskedPair !== null &&
+      re.test(maskedPair) &&
+      !SAFE_CONTEXT.test(pairSubject)
     ) {
       hits.push({ claim, file: relPath, line: i + 1, snippet: pairSubject.trim().slice(0, 220) });
     }
