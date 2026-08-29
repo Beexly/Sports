@@ -71,6 +71,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const sportFilter = searchParams.get("sport");
   const dateParam = searchParams.get("date");
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
+  const lane = searchParams.get('lane');
   // Guard against malformed `?date=` values producing an Invalid Date query.
   const targetDate = parseDateParam(dateParam);
 
