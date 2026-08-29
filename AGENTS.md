@@ -141,3 +141,16 @@ This product's entire premise is that it does not lie about its own performance.
 invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
+
+## SESSION FINDINGS INDEX (2026-08-27 grok-4.6)
+
+Cloud agents: start here, then the ledger.
+
+| Artifact | What it holds |
+|---|---|
+| `docs/ops/AGENT_LEDGER.md` | Live multi-agent queue (C-64 = this audit) |
+| `handoff/GROK46_FULL_AUDIT_2026-08-27.md` | Full codebase + security audit at `origin/main` `bb0e7dfc0` — measured tests, guards, ESPN/Rundown legal tension, npm audit |
+| `handoff/GROK46_AUDIT_JOURNAL.md` | Step log for that audit |
+| `docs/ops/CANONICAL.md` | Ops SoT if docs conflict |
+
+Do not treat `.cagent/Sports` dirty-tree file counts or local `galaxy-sports-api/` as GitHub product. Kernel slots K1–K13 are not on main. Finish Line plan is PR #677 DRAFT, not main.
