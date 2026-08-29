@@ -1,5 +1,16 @@
 import { describe, expect, test } from 'vitest';
-import { greenBoardEligible, GreenGateInput, GreenGateResult, BoardTier, GREEN_P_MIN, INDEPENDENT_DISSENT_BAND } from '../green-board';
+import {
+  greenBoardEligible,
+  GreenGateInput,
+  GreenGateResult,
+  BoardTier,
+  GREEN_P_MIN,
+  INDEPENDENT_DISSENT_BAND,
+  PRIME_P_MIN,
+  PLUS_P_MIN,
+  GREEN_BOOKMAKER_MIN,
+  PLUS_BOOKMAKER_MIN,
+} from '../green-board';
 
 describe('greenBoardEligible', () => {
   test('returns GREEN when calibratedP >= 0.70, bookmakerCount >=2, freshnessOk, no dissent, no vetoFlags', () => {
@@ -170,15 +181,6 @@ describe('greenBoardEligible', () => {
 });
 
 // ─── Phase D additions (D-1..D-5) ──────────────────────────────────────
-
-import {
-  GREEN_P_MIN,
-  PRIME_P_MIN,
-  PLUS_P_MIN,
-  GREEN_BOOKMAKER_MIN,
-  PLUS_BOOKMAKER_MIN,
-  INDEPENDENT_DISSENT_BAND,
-} from '../green-board';
 
 describe('greenBoardEligible (Phase D additions)', () => {
   test('D-1: calibration drift in lastDriftCheck adds CALIBRATION_DRIFT reason', () => {
