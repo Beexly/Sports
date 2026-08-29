@@ -183,6 +183,7 @@ export {
 export {
   OfflineOddsProvider,
   TheOddsApiOddsProvider,
+  GalaxySportsApiOddsProvider,
   createOddsQuoteProvider,
   isCertifiableOddsProvider,
   type OddsProviderId,
@@ -290,6 +291,12 @@ export {
   ODDS_API_KEY_ENV_NAMES,
 } from "./odds-api-key.js";
 export type { OddsApiKeyEnvName } from "./odds-api-key.js";
+
+export { americanToDecimal, deVigFairProbs } from "./galaxy-devig.js";
+export { kalshiH2hBookmaker, probToAmerican, KALSHI_BOOK_KEY } from "./galaxy-kalshi-book.js";
+export { parseNflverseGameLines, linesInSeasons, fetchNflverseGameLines } from "./nflverse-game-lines.js";
+export type { NflverseGameLine } from "./nflverse-game-lines.js";
+export { polymarketEventsToOddsApi, fetchGalaxyPolymarketNfl } from "./galaxy-polymarket.js";
 
 export {
   fetchEspnOddsForSport,

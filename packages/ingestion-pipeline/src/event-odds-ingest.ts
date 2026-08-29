@@ -19,7 +19,13 @@ export const DEFAULT_EVENT_ODDS_MARKETS = [
   "player_points",
   "player_receptions",
 ] as const;
-export const NFL_EVENT_ODDS_MARKETS = ["player_pass_tds", "player_receptions"] as const;
+export const NFL_EVENT_ODDS_MARKETS = [
+  "player_pass_tds",
+  "player_pass_yds",
+  "player_receptions",
+  "player_reception_yds",
+  "player_rush_yds",
+] as const;
 export const NBA_EVENT_ODDS_MARKETS = ["player_points"] as const;
 export const DEFAULT_EVENT_ODDS_CREDIT_CAP = 8;
 

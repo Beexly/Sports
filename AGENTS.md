@@ -141,3 +141,24 @@ This product's entire premise is that it does not lie about its own performance.
 invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
+
+## SESSION FINDINGS INDEX (2026-08-27) — cloud agents start here
+
+**Claude / Codex / Copilot / Grok: read `docs/agents/CLOUD-BRIEF-2026-08-27.md` in full before touching odds, Rundown, history, Polymarket, or launch gates.**
+
+**Branch `hermes/galaxy-keyless-odds` · PR https://github.com/Beexly/Sports/pull/680 · not main.**
+
+Ledger: `docs/ops/AGENT_LEDGER.md`. If this table conflicts with the brief, the brief wins for 2026-08-27 Galaxy work; `CANONICAL.md` still wins on gates.
+
+| Fact | Do not reverse |
+|---|---|
+| Founder: we **are** the provider (**Galaxy Sports API**). Not Rundown. Not The Odds API. | Do not queue a Rundown signup as the kill switch. |
+| Formula in-repo: ESPN `site.web.api` **inline** odds + de-vig. `GalaxySportsApiOddsProvider` when `THE_ODDS_API_KEY` unset. | Do not send ESPN through blocked `sports.core`. |
+| 2018–2025 lines: nflverse `games.csv` (`fetchNflverseGameLines`). | Do not claim history is missing. |
+| Polymarket: **held off** quote plane (`docs/agent-skills/polymarket-hold`). | Do not enable `/api/cron/gamma`. |
+| Live NFL props: `event-odds-ingest.ts` (pass/rush/rec yards + TDs/receptions). Default OFF. | Do not scrape books. |
+| Local Python `:8731` is **not** in git. Product formula **is** in this PR. | Do not tell cloud agents to `cd galaxy-sports-api`. |
+| Engine tests 3125 passed; PR #680 CI Test/typecheck/lint **pass**. LIVE_BOARD still off. | Do not treat test-green as a public fire. |
+
+
+

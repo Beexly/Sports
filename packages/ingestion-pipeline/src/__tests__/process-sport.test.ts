@@ -110,6 +110,7 @@ vi.mock("@sports/data-ingestion", () => ({
   mergeBookmakersIntoPrimary: mocks.mergeBookmakersIntoPrimary,
   THIN_FILL_MIN_BOOKMAKERS: 2,
   fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
+  isPolymarketIndependentEnabled: vi.fn().mockReturnValue(false),
   NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
   NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
   isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
@@ -145,6 +146,7 @@ vi.mock("../source-snapshot.js", () => ({
 }));
 
 import { processSport, pickSelectionSide } from "../process-sport.js";
+import { fetchEspnOddsForSport } from "@sports/data-ingestion";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
 
@@ -230,6 +232,50 @@ describe("processSport", () => {
       unmatchedSecondary: 0,
       skippedWellCovered: 0,
     }));
+  });
+
+  it("unpaid path: a non-empty Galaxy/ESPN board is used before Rundown and persists odds", async () => {
+    // Key absent → paid fetch skipped; ESPN inline board non-empty → Rundown
+    // must not be consulted, and the ESPN rows flow through normalize+persist.
+    mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+    // Within 24h of real now — a stale fixture date trips the quiet-board
+    // carve-out and the run is skipped before any persistence.
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
+    vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce({
+      provider: "espn_public",
+      events: [
+        {
+          id: "espn:americanfootball_nfl:401",
+          sport_key: "americanfootball_nfl",
+          sport_title: "NFL",
+          commence_time: commenceSoon,
+          home_team: "Chiefs",
+          away_team: "Bills",
+          bookmakers: [{ key: "espn_public", title: "ESPN/DraftKings", markets: [] }],
+        },
+      ],
+    } as never);
+    mocks.normalizeOdds.mockReturnValue([
+      {
+        gameExternalId: "ext-1",
+        bookmaker: "espn_public",
+        market: "SPREADS",
+        spread: -3,
+        fetchedAt: new Date(),
+        bookmakerLastUpdate: new Date(),
+      },
+    ]);
+    // Fresh upstream odds for the game — the default empty set reads as
+    // "every game stale" and diverts the run into the quiet-board skip.
+    mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+    const res = await processSport(SPORT, "", gates());
+
+    expect(vi.mocked(fetchEspnOddsForSport).mock.calls[0]?.[0]).toBe("americanfootball_nfl");
+    expect(mocks.getOdds).not.toHaveBeenCalled();
+    expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+    expect(mocks.oddsCreateMany).toHaveBeenCalled();
+    expect(res.status).not.toBe("failed");
   });
 
   it("does not call Rundown when every primary event already has two books", async () => {

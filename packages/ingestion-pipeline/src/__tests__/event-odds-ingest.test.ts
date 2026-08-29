@@ -51,6 +51,8 @@ describe("defaultEventOddsMarkets — receptions on NFL, not a mixed NBA key", (
   it("asks for player_receptions on NFL and not on NBA", () => {
     expect(defaultEventOddsMarkets("americanfootball_nfl")).toEqual([...NFL_EVENT_ODDS_MARKETS]);
     expect(NFL_EVENT_ODDS_MARKETS).toContain("player_receptions");
+    expect(NFL_EVENT_ODDS_MARKETS).toContain("player_pass_yds");
+    expect(NFL_EVENT_ODDS_MARKETS).toContain("player_rush_yds");
     expect(defaultEventOddsMarkets("basketball_nba")).toEqual([...NBA_EVENT_ODDS_MARKETS]);
     expect(NBA_EVENT_ODDS_MARKETS).not.toContain("player_receptions");
   });

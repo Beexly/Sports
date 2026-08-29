@@ -1,10 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 import {
+  GalaxySportsApiOddsProvider,
   OfflineOddsProvider,
   TheOddsApiOddsProvider,
   createOddsQuoteProvider,
   isCertifiableOddsProvider,
 } from "../odds-provider-adapter.js";
+import { fetchEspnOddsForSport } from "../espn-odds-client.js";
 import type { OddsApiClient } from "../odds-api-client.js";
 import { OddsApiError } from "../odds-api-client.js";
 import type { NormalizedOdds } from "@sports/types";
@@ -32,9 +34,9 @@ describe("OfflineOddsProvider", () => {
 });
 
 describe("createOddsQuoteProvider", () => {
-  it("uses offline when key missing", () => {
+  it("uses galaxy-sports-api (keyless) when paid Odds API key is missing — never another vendor key", () => {
     const p = createOddsQuoteProvider({ env: {} });
-    expect(p.id).toBe("offline");
+    expect(p.id).toBe("galaxy-sports-api");
     expect(p.capabilities.certifiableForLiveGate).toBe(false);
   });
 
@@ -51,6 +53,91 @@ describe("createOddsQuoteProvider", () => {
     });
     expect(p.id).toBe("the-odds-api");
     expect(p.capabilities.certifiableForLiveGate).toBe(true);
+  });
+});
+
+describe("GalaxySportsApiOddsProvider", () => {
+  it("fetchNormalized returns real rows end-to-end (inline ESPN → normalizer, spreads survive)", async () => {
+    // Real client + real DataNormalizer — this is the seam where the
+    // abbreviation-vs-full-name spreads bug lived; a mocked normalizer
+    // cannot catch it.
+    const commenceSoon = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
+    const scoreboard = {
+      events: [
+        {
+          id: "401873298",
+          date: commenceSoon,
+          competitions: [
+            {
+              date: commenceSoon,
+              status: { type: { state: "pre", completed: false } },
+              competitors: [
+                {
+                  homeAway: "home",
+                  team: { displayName: "Buffalo Bills", abbreviation: "BUF" },
+                },
+                {
+                  homeAway: "away",
+                  team: { displayName: "Pittsburgh Steelers", abbreviation: "PIT" },
+                },
+              ],
+              odds: [
+                {
+                  provider: { name: "DraftKings" },
+                  spread: -3.0,
+                  overUnder: 34.5,
+                  moneyline: {
+                    home: { close: { odds: "-146" } },
+                    away: { close: { odds: "+122" } },
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const fetchImpl = vi.fn(async (url: string) => {
+      if (String(url).includes("scoreboard")) {
+        return { ok: true, json: async () => scoreboard } as Response;
+      }
+      return { ok: false, status: 404 } as Response;
+    });
+
+    const p = new GalaxySportsApiOddsProvider((sportKey) =>
+      fetchEspnOddsForSport(sportKey, {
+        fetchImpl: fetchImpl as unknown as typeof fetch,
+        interEventMs: 0,
+      }),
+    );
+
+    const r = await p.fetchNormalized("americanfootball_nfl");
+    expect(r.provider).toBe("galaxy-sports-api");
+    expect(r.healthy).toBe(true);
+    expect(r.odds.length).toBeGreaterThan(0);
+
+    const h2h = r.odds.find((o) => o.market === "H2H");
+    expect(h2h?.homePrice).toBe(-146);
+    expect(h2h?.awayPrice).toBe(122);
+
+    // The spread POINT must survive normalization (full-name outcome match).
+    const spreads = r.odds.find((o) => o.market === "SPREADS");
+    expect(spreads?.spread).toBe(-3);
+
+    const totals = r.odds.find((o) => o.market === "TOTALS");
+    expect(totals?.total).toBe(34.5);
+  });
+
+  it("fetchNormalized is unhealthy with empty odds when ESPN yields nothing", async () => {
+    const p = new GalaxySportsApiOddsProvider(async () => ({
+      provider: "espn_public",
+      events: [],
+      error: "espn odds empty",
+    }));
+    const r = await p.fetchNormalized("americanfootball_nfl");
+    expect(r.healthy).toBe(false);
+    expect(r.odds).toEqual([]);
+    expect(r.error).toContain("espn odds empty");
   });
 });
 

@@ -5,12 +5,12 @@
  * gate and Prisma `Odds` shape stay provider-agnostic.
  *
  * Design rules:
- *   - Missing/unpaid API key → OfflineOddsProvider (healthy=false, odds=[]).
- *     Never invent prices; never mark healthy when certifiable quotes are absent.
- *   - The Odds API → TheOddsApiOddsProvider (normalize via DataNormalizer).
- *   - LIVE_BOARD / selective-gate are NOT touched here. Offline provider is
- *     explicitly NOT certifiable for live gate FIRE.
- *   - No scrape-based providers in this module (too volatile for honesty thesis).
+ *   - Missing paid Odds API key → GalaxySportsApiOddsProvider (keyless ESPN
+ *     site.web.api inline odds — the Galaxy Sports API formula). Not another vendor key.
+ *     Not certifiable for LIVE_BOARD FIRE.
+ *   - ODDS_PROVIDER=offline → OfflineOddsProvider. Never invent prices.
+ *   - The Odds API → TheOddsApiOddsProvider when THE_ODDS_API_KEY is set.
+ *   - LIVE_BOARD / selective-gate are NOT touched here.
  */
 
 import type { NormalizedOdds, OddsApiEvent } from "@sports/types";
@@ -19,8 +19,9 @@ import { DataNormalizer } from "./normalizer.js";
 import type { Market, SupportedSportKey } from "./config.js";
 import { MARKETS } from "./config.js";
 import type { OddsProvider, OddsProviderResult } from "./odds-failover.js";
+import { fetchEspnOddsForSport } from "./espn-odds-client.js";
 
-export type OddsProviderId = "the-odds-api" | "offline";
+export type OddsProviderId = "the-odds-api" | "offline" | "galaxy-sports-api";
 
 export interface OddsProviderCapabilities {
   /** True when the source can return multiple independent bookmakers. */
@@ -188,6 +189,54 @@ export class TheOddsApiOddsProvider implements OddsQuoteProvider {
   }
 }
 
+const GALAXY_CAPABILITIES: OddsProviderCapabilities = {
+  multiBook: false,
+  markets: ["H2H", "SPREADS", "TOTALS"],
+  supportsLiveQuotes: true,
+  certifiableForLiveGate: false,
+};
+
+/**
+ * Keyless Galaxy Sports API path: ESPN public scoreboard inline odds.
+ * Same formula as C:/Users/Garrett/galaxy-sports-api/odds_feed.py.
+ * Does not require THE_ODDS_API_KEY or RUNDOWN_API_KEY.
+ */
+export class GalaxySportsApiOddsProvider implements OddsQuoteProvider {
+  readonly id = "galaxy-sports-api" as const;
+  readonly name = "galaxy-sports-api";
+  readonly capabilities = GALAXY_CAPABILITIES;
+
+  constructor(
+    private readonly fetchEspn: typeof fetchEspnOddsForSport = fetchEspnOddsForSport,
+    private readonly now: () => Date = () => new Date(),
+  ) {}
+
+  async fetchNormalized(sportKey: string): Promise<OddsProviderResult> {
+    const espn = await this.fetchEspn(sportKey);
+    const events = espn.events;
+    if (events.length === 0) {
+      return {
+        provider: this.name,
+        odds: [],
+        healthy: false,
+        error: espn.error ?? `galaxy-sports-api empty (sport=${sportKey})`,
+      };
+    }
+    const normalizer = new DataNormalizer();
+    const odds = normalizer.normalizeOdds(events, this.now());
+    return {
+      provider: this.name,
+      odds,
+      healthy: odds.length > 0,
+      error: espn.error,
+    };
+  }
+
+  async probe(): Promise<OddsProviderHealth> {
+    return { available: true, reason: "galaxy-sports-api keyless ESPN inline" };
+  }
+}
+
 export interface CreateOddsQuoteProviderOptions {
   readonly env?: Record<string, string | undefined>;
   /** Test seam for The Odds API client. */
@@ -198,27 +247,25 @@ export interface CreateOddsQuoteProviderOptions {
  * Resolve the active quote provider from env.
  *
  *   ODDS_PROVIDER=offline           → OfflineOddsProvider
- *   THE_ODDS_API_KEY missing/empty  → OfflineOddsProvider
- *   otherwise                       → TheOddsApiOddsProvider
+ *   THE_ODDS_API_KEY present        → TheOddsApiOddsProvider
+ *   otherwise                       → GalaxySportsApiOddsProvider (keyless; no Rundown key)
  */
 export function createOddsQuoteProvider(
   options: CreateOddsQuoteProviderOptions = {},
 ): OddsQuoteProvider {
   const env = options.env ?? process.env;
-  const mode = (env["ODDS_PROVIDER"] ?? "the-odds-api").trim().toLowerCase();
+  const mode = (env["ODDS_PROVIDER"] ?? "").trim().toLowerCase();
 
   if (mode === "offline") {
     return new OfflineOddsProvider("ODDS_PROVIDER=offline");
   }
 
   const key = env["THE_ODDS_API_KEY"]?.trim() ?? "";
-  if (!key) {
-    return new OfflineOddsProvider(
-      "THE_ODDS_API_KEY missing — refusing to invent quotes",
-    );
+  if (key) {
+    return new TheOddsApiOddsProvider(key, options.theOddsApiOptions);
   }
 
-  return new TheOddsApiOddsProvider(key, options.theOddsApiOptions);
+  return new GalaxySportsApiOddsProvider();
 }
 
 /** True when the provider may back live-gate certifiable quotes. */
