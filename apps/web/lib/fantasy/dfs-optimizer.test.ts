@@ -55,14 +55,23 @@ function stackSatisfied(sel: readonly DfsPlayer[]): boolean {
   return sel.some((p) => p.id !== qb.id && p.team === qb.team && (p.pos === "WR" || p.pos === "TE"));
 }
 
+/** Independent reimplementation of the canonical game key (see objValRef note). */
+const gameKeyRef = (p: DfsPlayer): string => [p.team, p.opp].sort().join("@");
+
+/** DK rule: a lineup must draw players from at least 2 different games. */
+function spansTwoGames(sel: readonly DfsPlayer[]): boolean {
+  return new Set(sel.map(gameKeyRef)).size >= 2;
+}
+
 /** Exhaustively enumerate every legal 9-player lineup and return the true optimum (all ties). */
-function bruteForceBest(pool: readonly DfsPlayer[], mode: Mode, cap: number, requireStack = false): { value: number; lineups: DfsPlayer[][] } {
+function bruteForceBest(pool: readonly DfsPlayer[], mode: Mode, cap: number, requireStack = false, enforceTwoGames = true): { value: number; lineups: DfsPlayer[][] } {
   let bestValue = -Infinity;
   let bestLineups: DfsPlayer[][] = [];
   for (const sel of combinations(pool, DFS_SLOTS.length)) {
     if (!rosterFeasible(sel)) continue;
     if (salaryOfLocal(sel) > cap) continue;
     if (requireStack && !stackSatisfied(sel)) continue;
+    if (enforceTwoGames && !spansTwoGames(sel)) continue;
     const v = sel.reduce((s, p) => s + objValRef(p, mode), 0);
     if (v > bestValue + 1e-9) { bestValue = v; bestLineups = [sel]; }
     else if (Math.abs(v - bestValue) <= 1e-9) bestLineups.push(sel);
@@ -169,6 +178,76 @@ describe("dfs optimizer — exact DP correctness proof", () => {
     // AAA/BBB have both — this exercises optimizeOne's per-team-bound
     // pruning against the true, exhaustively-checked stacked optimum.
     assertExactOptimum(POOL_CLEAR, "gpp", true);
+  });
+
+  // --- DK game-diversity rule (players from ≥2 different games) -----------
+  // Two teams that play EACH OTHER can field an entire 9-man roster whose
+  // every player out-scores the rest of the pool — without the rule, the
+  // optimizer's argmax would be that single-game lineup, which DK rejects.
+  const g1 = (id: string, pos: DfsPos, team: "AAA" | "BBB", salary: number, proj: number): DfsPlayer =>
+    ({ ...mk(id, pos, team, salary, proj, 0.1), opp: team === "AAA" ? "BBB" : "AAA" });
+  const POOL_ONE_GAME: DfsPlayer[] = [
+    // game AAA@BBB — dominant at every position
+    g1("q1", "QB", "AAA", 6000, 25),
+    g1("r1", "RB", "AAA", 5000, 20), g1("r2", "RB", "BBB", 5000, 19), g1("r3", "RB", "AAA", 4800, 18),
+    g1("w1", "WR", "AAA", 5000, 20), g1("w2", "WR", "BBB", 5000, 19), g1("w3", "WR", "BBB", 4800, 18),
+    g1("t1", "TE", "AAA", 4000, 15),
+    g1("d1", "DST", "BBB", 3000, 10),
+    // game CCC@DDD — strictly weaker at identical salaries
+    { ...mk("q9", "QB", "CCC", 6000, 10, 0.05), opp: "DDD" },
+    { ...mk("r9", "RB", "CCC", 4800, 8, 0.05), opp: "DDD" },
+    { ...mk("w9", "WR", "DDD", 4800, 9, 0.05), opp: "CCC" },
+    { ...mk("t9", "TE", "CCC", 4000, 6, 0.05), opp: "DDD" },
+    { ...mk("d9", "DST", "DDD", 3000, 5, 0.05), opp: "CCC" },
+  ];
+
+  it("enforces DK's two-game rule exactly when the relaxed optimum is single-game", () => {
+    // Prove the fixture exercises the lazy path: WITHOUT the rule the true
+    // optimum lives entirely inside game AAA@BBB.
+    const relaxed = bruteForceBest(POOL_ONE_GAME, "cash", SALARY_CAP, false, false);
+    expect(relaxed.lineups.length).toBeGreaterThan(0);
+    expect(relaxed.lineups.every((lu) => !spansTwoGames(lu))).toBe(true);
+    // WITH the rule, the solver must return the exact constrained optimum.
+    const { dp } = assertExactOptimum(POOL_ONE_GAME, "cash");
+    expect(new Set(dp!.map(gameKeyRef)).size).toBeGreaterThanOrEqual(2);
+    // And it must genuinely cost value vs the illegal relaxed optimum.
+    const dpValue = dp!.reduce((s, p) => s + objValRef(p, "cash"), 0);
+    expect(dpValue).toBeLessThan(relaxed.value);
+  });
+
+  it("two-game rule composes with a required stack (both DP flags at once)", () => {
+    const { dp } = assertExactOptimum(POOL_ONE_GAME, "cash", true);
+    expect(new Set(dp!.map(gameKeyRef)).size).toBeGreaterThanOrEqual(2);
+    expect(stackSatisfied(dp!)).toBe(true);
+  });
+
+  it("never emits a single-game lineup from the illustrative slate either", () => {
+    for (const mode of ["cash", "gpp", "leverage"] as const) {
+      const lu = optimizeOne(base({ mode }));
+      expect(lu).not.toBeNull();
+      expect(new Set(lu!.map(gameKeyRef)).size).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("matches brute-force optimum exactly with TWO comparably strong single-game options (exercises the escape/diverse tiers beyond a weak-filler runner-up)", () => {
+    // Unlike POOL_ONE_GAME (one dominant game vs a 5-player-only weak
+    // filler), this gives the "must escape game G1" DP a genuine second
+    // full 9-player roster (G2) to weigh a partial swap against — a case
+    // the growing-bitmask design never had to get right beyond one banned
+    // game, and the new escape/diverse tiers must still hit the TRUE
+    // optimum, whichever tier resolves it.
+    const g2 = (id: string, pos: DfsPos, team: "CCC" | "DDD", salary: number, proj: number): DfsPlayer =>
+      ({ ...mk(id, pos, team, salary, proj, 0.1), opp: team === "CCC" ? "DDD" : "CCC" });
+    const TWO_STRONG_GAMES: DfsPlayer[] = [
+      ...POOL_ONE_GAME.slice(0, 9), // the full AAA@BBB roster from above
+      g2("q2", "QB", "CCC", 6000, 21),
+      g2("r4", "RB", "CCC", 5000, 17), g2("r5", "RB", "DDD", 5000, 16), g2("r6", "RB", "CCC", 4800, 15),
+      g2("w4", "WR", "CCC", 5000, 17), g2("w5", "WR", "DDD", 5000, 16), g2("w6", "WR", "DDD", 4800, 15),
+      g2("t2", "TE", "CCC", 4000, 13),
+      g2("d2", "DST", "DDD", 3000, 8),
+    ];
+    assertExactOptimum(TWO_STRONG_GAMES, "cash");
+    assertExactOptimum(TWO_STRONG_GAMES, "cash", true); // and with a required stack, composed
   });
 
   it("stack pruning still finds the true optimum when the best-bound team turns out cap-infeasible", () => {
@@ -327,5 +406,27 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     const a = optimizeOne(base({ mode: "gpp" }), undefined, pool);
     const b = optimizeOne(base({ mode: "gpp" }), undefined, pool);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
+  }, 15000);
+
+  it("solves the diversity-constrained AND stack-required re-solve within 10s at 600-player, 16-game scale (CI-safe)", () => {
+    // makeBigPool's fixed team rotation (32 teams, opp = teams[(i+16)%32])
+    // produces 16 distinct games — the game-diversity dimension's
+    // worst-realistic-case width (gameDim = 18). Force BOTH the stack digit
+    // and the game digit to be exercised together: make one game's players
+    // dominate every objective so the relaxed solve collapses to single-game,
+    // which is exactly the case that used to blow up flagStates under the
+    // old per-banned-game bitmask (see the module docstring).
+    const pool = makeBigPool(600).map((p) =>
+      p.team === "ATL" || p.team === "BAL"
+        ? { ...p, team: p.team, opp: p.team === "ATL" ? "BAL" : "ATL", proj: p.proj + 1000, ceiling: p.ceiling + 1000 }
+        : p,
+    );
+    const t0 = Date.now();
+    const lu = optimizeOne(base({ mode: "gpp", stack: true }), undefined, pool);
+    const elapsedMs = Date.now() - t0;
+    expect(lu).not.toBeNull();
+    expect(new Set(lu!.map(gameKeyRef)).size).toBeGreaterThanOrEqual(2);
+    expect(stackSatisfied(lu!)).toBe(true);
+    expect(elapsedMs).toBeLessThan(10000);
   }, 15000);
 });

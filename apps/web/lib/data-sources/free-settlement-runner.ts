@@ -144,6 +144,15 @@ export async function runFreePathSettlement(options?: {
   graceHours?: number;
   /** Optional prior overdue count for burn-rate (leading indicator drain). */
   priorOverdueCount?: number;
+  /**
+   * Process ONLY picks already past graceHours; sports with no overdue picks
+   * are skipped entirely (no score fetch). Used by the paid cron's overdue
+   * recovery pass: duplicate Game rows minted under different externalId
+   * conventions (provider hash vs espn:{short}:* vs espn:{oddsKey}:*) can never
+   * settle on the paid externalId-matched path, while this team+date matcher
+   * heals their picks regardless of which row they hang on.
+   */
+  overdueOnly?: boolean;
   now?: Date;
 }): Promise<FreeSettlementRunResult> {
   const started = Date.now();
@@ -192,11 +201,19 @@ export async function runFreePathSettlement(options?: {
     }
 
     try {
+      // overdueOnly pushes the overdue predicate into the QUERY so an overdue
+      // pick can never fall outside the bounded read; oldest-first makes the
+      // 1500-row window deterministic and drains the health band first.
+      const overdueCutoff = new Date(now.getTime() - graceHours * 60 * 60 * 1000);
       const loadedRows = await db.pick.findMany({
         where: {
           result: "PENDING",
-          game: { sport: { key: sport.key } },
+          game: {
+            sport: { key: sport.key },
+            ...(options?.overdueOnly ? { commenceTime: { lt: overdueCutoff } } : {}),
+          },
         },
+        orderBy: { game: { commenceTime: "asc" } },
         select: {
           id: true,
           pickType: true,
@@ -242,8 +259,10 @@ export async function runFreePathSettlement(options?: {
       });
       // Prefer overdue slice when it is non-empty and we would otherwise burn
       // the cycle on within-grace PENDING that do not affect settlement health.
-      const pendingRows =
-        overdueOnly.length > 0 && overdueOnly.length < sorted.length
+      // overdueOnly mode (paid-path recovery) never widens to in-grace picks.
+      const pendingRows = options?.overdueOnly
+        ? overdueOnly
+        : overdueOnly.length > 0 && overdueOnly.length < sorted.length
           ? overdueOnly
           : sorted;
 

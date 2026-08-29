@@ -7,15 +7,26 @@
 import { db } from "@sports/db";
 import {
   fetchAllEspnSeedGames,
+  matchGameByTeamsAndTime,
   type EspnSeedGame,
+  type GameIdentityCandidate,
   type ShortSportKey,
 } from "@sports/data-ingestion";
+
+/**
+ * Cross-source commence tolerance for game-identity dedup (same contest,
+ * different feed clocks). Doubleheaders are protected by the matcher's
+ * ambiguity guard: two candidates at similar deltas → no dedup, row created.
+ */
+const SEED_DEDUP_COMMENCE_MATCH_MS = 18 * 60 * 60 * 1000;
 
 export type SeedGamesFromEspnResult = {
   readonly ok: boolean;
   readonly fetched: number;
   readonly upcoming: number;
   readonly upserted: number;
+  /** Seed rows skipped because the same physical game already exists under another externalId convention. */
+  readonly deduped: number;
   readonly skippedPast: number;
   readonly errors: readonly string[];
   readonly note: string;
@@ -51,6 +62,7 @@ export async function seedGamesFromEspn(opts?: {
 
   const upcoming = games.filter((g) => isUpcoming(g, now, horizon));
   let upserted = 0;
+  let deduped = 0;
   const writeErrors = [...errors];
 
   // Group by sport key for sport upsert once each.
@@ -73,8 +85,62 @@ export async function seedGamesFromEspn(opts?: {
         },
         update: {},
       });
+
+      // Game-identity dedup: the same physical game may already exist under a
+      // different externalId convention (The Odds API / TheRundown hash, or
+      // `espn:{canonicalKey}:{id}` from the ESPN odds fallback). Creating an
+      // `espn:{short}:{id}` sibling strands any picks it collects — the paid
+      // settlement path matches scores by externalId only and can never reach
+      // it. Load the sport's existing rows once and match before creating.
+      const existingRows = await db.game.findMany({
+        where: {
+          sportId: sportRecord.id,
+          commenceTime: {
+            gte: new Date(now.getTime() - 24 * 60 * 60 * 1000),
+            lte: horizon,
+          },
+        },
+        select: {
+          externalId: true,
+          homeTeamName: true,
+          awayTeamName: true,
+          commenceTime: true,
+        },
+      });
+      const candidateIds = new Set(existingRows.map((r) => r.externalId));
+      const candidates: GameIdentityCandidate[] = existingRows.map((r) => ({
+        externalId: r.externalId,
+        homeTeam: r.homeTeamName,
+        awayTeam: r.awayTeamName,
+        commenceTimeMs: r.commenceTime.getTime(),
+      }));
+
       for (const g of list) {
         try {
+          if (!candidateIds.has(g.externalId)) {
+            // Same ESPN event already stored under the canonical-key
+            // convention (`espn:baseball_mlb:401816675` vs `espn:mlb:401816675`)?
+            const espnEventId = g.externalId.split(":").pop() ?? "";
+            const canonicalSibling = `espn:${g.sportKey}:${espnEventId}`;
+            if (candidateIds.has(canonicalSibling)) {
+              deduped += 1;
+              continue;
+            }
+            // Same physical game under any other convention (team + time match)?
+            const match = matchGameByTeamsAndTime(
+              candidates,
+              {
+                homeTeam: g.homeTeamName,
+                awayTeam: g.awayTeamName,
+                commenceTimeMs: g.commenceTime.getTime(),
+              },
+              SEED_DEDUP_COMMENCE_MATCH_MS,
+            );
+            if (match) {
+              deduped += 1;
+              continue;
+            }
+          }
           await db.game.upsert({
             where: { externalId: g.externalId },
             create: {
@@ -91,6 +157,15 @@ export async function seedGamesFromEspn(opts?: {
             },
           });
           upserted += 1;
+          if (!candidateIds.has(g.externalId)) {
+            candidateIds.add(g.externalId);
+            candidates.push({
+              externalId: g.externalId,
+              homeTeam: g.homeTeamName,
+              awayTeam: g.awayTeamName,
+              commenceTimeMs: g.commenceTime.getTime(),
+            });
+          }
         } catch (err) {
           writeErrors.push(
             `${g.externalId}: ${err instanceof Error ? err.message : String(err)}`,
@@ -107,13 +182,14 @@ export async function seedGamesFromEspn(opts?: {
   const skippedPast = games.length - upcoming.length;
   const note =
     `espn seed fetched=${games.length} upcoming=${upcoming.length} ` +
-    `upserted=${upserted} skippedPast=${skippedPast}`;
+    `upserted=${upserted} deduped=${deduped} skippedPast=${skippedPast}`;
   console.log(`${logPrefix} ${note}`);
   return {
-    ok: upserted > 0 || (upcoming.length === 0 && writeErrors.length === 0),
+    ok: upserted > 0 || deduped > 0 || (upcoming.length === 0 && writeErrors.length === 0),
     fetched: games.length,
     upcoming: upcoming.length,
     upserted,
+    deduped,
     skippedPast,
     errors: writeErrors,
     note,

@@ -11,7 +11,11 @@
  * Pure: no I/O.
  */
 
-import { normalizeComparableText } from "./team-text-match.js";
+import {
+  normalizeComparableText,
+  matchGameByTeamsAndTime,
+  type GameIdentityCandidate,
+} from "./team-text-match.js";
 
 export const NFL_PRESEASON_ODDS_KEY = "americanfootball_nfl_preseason" as const;
 export const NFL_CANONICAL_SPORT_KEY = "americanfootball_nfl" as const;
@@ -103,6 +107,56 @@ export function remapPreseasonRows<T extends PreseasonFeedRow>(
     });
   }
   return { remapped, unmatched };
+}
+
+/**
+ * Generic cross-convention remap (game-identity dedup): rows whose
+ * (teams, commence) match an existing Game row take that row's externalId, so
+ * the downstream upsert UPDATES the existing row instead of minting a
+ * duplicate under a new convention (`espn:{oddsKey}:*` vs provider hash).
+ * Unmatched rows are KEPT verbatim — genuinely new games are still created.
+ * Matching uses the cross-source matcher (exact | nickname | city-prefix
+ * containment, with the same-delta ambiguity guard), so ESPN displayNames
+ * resolve onto TheRundown-style city rows; sport_key is untouched. A row that
+ * already carries an existing externalId claims it, so a later team-matching
+ * row can never be remapped onto the same id (no duplicate ids in output).
+ */
+export function remapOrKeepFeedRows<T extends PreseasonFeedRow>(
+  rows: readonly T[],
+  games: readonly ExistingGameMatch[],
+  windowMs: number = NFL_PRESEASON_COMMENCE_MATCH_MS,
+): { rows: T[]; remapped: number } {
+  const candidates: GameIdentityCandidate[] = games.map((g) => ({
+    externalId: g.externalId,
+    homeTeam: g.homeTeam,
+    awayTeam: g.awayTeam,
+    commenceTimeMs: g.commenceTime.getTime(),
+  }));
+  const knownIds = new Set(candidates.map((c) => c.externalId));
+  const outRows: T[] = [];
+  let remapped = 0;
+  const claimed = new Set<string>();
+  for (const row of rows) {
+    if (knownIds.has(row.id)) {
+      claimed.add(row.id);
+      outRows.push(row);
+      continue;
+    }
+    const t = new Date(row.commence_time).getTime();
+    const game = matchGameByTeamsAndTime(
+      candidates.filter((c) => !claimed.has(c.externalId)),
+      { homeTeam: row.home_team, awayTeam: row.away_team, commenceTimeMs: t },
+      windowMs,
+    );
+    if (!game) {
+      outRows.push(row);
+      continue;
+    }
+    claimed.add(game.externalId);
+    remapped += 1;
+    outRows.push({ ...row, id: game.externalId });
+  }
+  return { rows: outRows, remapped };
 }
 
 export function mergeFeedRowsById<T extends { id: string }>(

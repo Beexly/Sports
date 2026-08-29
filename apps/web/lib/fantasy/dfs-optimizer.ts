@@ -34,12 +34,36 @@
  * means every feasible choice of which team to stack is actually considered,
  * not just the incumbent QB's team with a single fallback swap.
  *
- * Complexity: O(teamRuns × players × countStates × stackDim × salaryStates).
- * For the DK-Classic roster (QB, RB, RB, WR, WR, WR, TE, FLEX, DST) countStates
- * = 192 and, at $100 granularity on a $50,000 cap, salaryStates = 501 — so an
- * unconstrained (non-stack) solve over ~600 players touches on the order of
- * 600 × 192 × 501 ≈ 5.8×10^7 DP cells, comfortably inside the file's timed
- * 600-player fixture (see dfs-optimizer.test.ts).
+ * DraftKings' roster-diversity rule — players from at least 2 different
+ * GAMES (which implies 2 different teams) — is enforced exactly and lazily:
+ * the relaxed solve (no diversity dimension) runs first, and only if its
+ * argmax draws all 9 players from a single game does a second, constrained
+ * solve run. That second solve adds one extra DP dimension tracking, per
+ * partial lineup, "no player chosen yet" / "every player chosen so far is in
+ * game Gᵢ" (one state per distinct game in the pool) / "already spans ≥2
+ * games" (one absorbing state shared by every way of getting there) — O(games)
+ * states, not a per-attempt bitmask. Forcing the final state to the absorbing
+ * "spans ≥2 games" value is a single exact DP pass, so unlike a bitmask that
+ * bans one already-seen single game per retry (doubling its state count each
+ * time, and needing as many retries as there are individually-dominant single
+ * games) this never needs more than one extra solve. On realistic pools the
+ * rule never binds and the relax-check costs nothing.
+ *
+ * Complexity: O(teamRuns × players × countStates × salaryStates × flagStates),
+ * where flagStates = stackDim (1 or 2) × gameDim (1, or distinctGames + 2 when
+ * the game-diversity dimension is active). For the DK-Classic roster (QB, RB,
+ * RB, WR, WR, WR, TE, FLEX, DST) countStates = 192 and, at $100 granularity on
+ * a $50,000 cap, salaryStates = 501 — so the common relaxed (flagStates = 1)
+ * solve over ~600 players touches on the order of 600 × 192 × 501 ≈ 5.8×10^7
+ * DP cells, comfortably inside the file's timed 600-player fixture (see
+ * dfs-optimizer.test.ts). flagStates only grows past 1 for a stack-required
+ * and/or diversity-constrained re-solve, and gameDim is linear in the pool's
+ * distinct-game count (typically a dozen or two for a real slate) — not
+ * exponential in anything, which bounds that re-solve's per-cell state count.
+ * Retained MEMORY is bounded separately, by `solveExact`'s checkpointed
+ * reconstruction (see its docstring): O(sqrt(players)) full-DP-state arrays
+ * are ever held at once, not one per player, so even the widest realistic
+ * flagStates does not scale retained memory linearly in the player count.
  *
  * Illustrative slate; the optimizer itself takes any DfsPlayer pool.
  */
@@ -56,6 +80,9 @@ export type OptOpts = {
 };
 
 const FLEX_POS: readonly DfsPos[] = ["RB", "WR", "TE"];
+
+/** Canonical unordered game key — both sides of a matchup map to the same key. */
+const gameKeyOf = (p: DfsPlayer): string => (p.team < p.opp ? `${p.team}@${p.opp}` : `${p.opp}@${p.team}`);
 
 function objVal(p: DfsPlayer, mode: Mode): number {
   if (mode === "cash") return p.proj;
@@ -139,10 +166,51 @@ export type DecayFn = (p: DfsPlayer) => number;
 type SolveResult = { readonly lineup: DfsPlayer[]; readonly value: number };
 
 /**
+ * The game-diversity requirement solveExact enforces, chosen by the caller
+ * (see optimizeOne) to fit the requirement actually needed:
+ *   - "none": no dimension — the free, common-case relaxed solve.
+ *   - "escape": one extra 0/1 bit, "has a player outside `bannedGame` been
+ *     chosen yet" — the cheap retry for the overwhelming majority of cases
+ *     where the rule binds (a single dominant single-game lineup to avoid).
+ *   - "diverse": a full `gameIndex.size + 2`-valued dimension tracking exact
+ *     committed-game identity (see below) — guarantees termination in one
+ *     solve regardless of how many individual games would need excluding,
+ *     at the cost of a wider (but still only linear-in-games, not
+ *     exponential) state space. Reserved for the rare case where "escape"
+ *     wasn't enough (the pool has more than one individually-dominant game).
+ */
+type GameRequirement = { readonly kind: "none" } | { readonly kind: "escape"; readonly bannedGame: string } | { readonly kind: "diverse" };
+
+/**
  * Exact solve for one roster, optionally requiring a QB + same-team WR/TE
- * pairing on `requiredStackTeam`. `ordered`, `space`, and `unit` are hoisted
- * by the caller so repeated calls (one per candidate stacked team) don't
- * redo the deterministic sort or granularity detection.
+ * pairing on `requiredStackTeam`, and optionally requiring game diversity
+ * per `gameReq` (see its doc). Both requirements share one generalized
+ * "flags" DP dimension, mixed-radix encoded: a 0/1 stack digit (has a
+ * same-team pass-catcher been chosen yet) times the game digit described by
+ * `gameReq`. Only final states with the stack digit at 1 (if required) and
+ * the game digit at its highest ("satisfied") value (if required) count —
+ * conveniently, for both "escape" (dim 2) and "diverse" (dim gameIndex.size
+ * + 2), the satisfied value is simply `gameDim - 1`. `ordered`, `space`,
+ * `unit`, and `gameIndex` are hoisted by the caller so repeated calls (one
+ * per candidate stacked team, or across the relaxed/escape/diverse retries)
+ * don't redo the deterministic sort, granularity detection, or per-game
+ * indexing.
+ *
+ * Reconstruction is CHECKPOINTED, not a full per-player backpointer array:
+ * a naive backpointer array retains one full DP-state-sized array PER
+ * PLAYER (O(players) of them), which on a large pool with the wide
+ * "diverse" flag dimension can retain several GiB (a real memory-exhaustion
+ * risk CodeRabbit caught against an earlier version of this function). This
+ * function instead snapshots the DP value layer only every
+ * `~sqrt(players)`-th player during a single value-only forward pass, then
+ * during backward reconstruction re-derives each ~sqrt(players)-sized
+ * segment's choices on demand from its nearest checkpoint before
+ * backtracking through it — trading roughly 2x the forward-pass compute
+ * (an offline/R&D solve, not a hot path) for cutting retained memory from
+ * O(players) full-state arrays to O(sqrt(players)) of them. Both the
+ * checkpoints and every re-derived segment are exact re-runs of the same
+ * deterministic step function, so this changes nothing about the result —
+ * only how much of the trajectory is kept in memory at once.
  */
 function solveExact(
   ordered: readonly DfsPlayer[],
@@ -151,92 +219,156 @@ function solveExact(
   space: SlotSpace,
   unit: number,
   requiredStackTeam: string | null,
+  gameIndex: ReadonlyMap<string, number>,
+  gameReq: GameRequirement,
 ): SolveResult | null {
   const capUnits = SALARY_CAP / unit;
   const salaryStates = capUnits + 1;
   const stackDim = requiredStackTeam ? 2 : 1;
+  // Game-digit values when gameReq.kind === "diverse": 0 = empty,
+  // 1..gameIndex.size = "single game i so far", gameIndex.size + 1 = the
+  // absorbing "spans ≥2 games" state. When "escape": 0 = not yet escaped,
+  // 1 = escaped (absorbing). When "none": the trivial single-value 0.
+  const gameDim = gameReq.kind === "diverse" ? gameIndex.size + 2 : gameReq.kind === "escape" ? 2 : 1;
+  const flagStates = stackDim * gameDim;
+  const requiredFlags = (requiredStackTeam ? 1 : 0) * gameDim + (gameReq.kind === "none" ? 0 : gameDim - 1);
   const countStates = space.totalCountStates;
-  const fullStates = countStates * salaryStates * stackDim;
+  const fullStates = countStates * salaryStates * flagStates;
+  const wideCodes = 6 * flagStates > 127;
+  const n = ordered.length;
 
-  let dpPrev = new Float64Array(fullStates).fill(-Infinity);
-  dpPrev[0] = 0; // count-state 0, salary 0, stacked 0 — the empty lineup
-
-  const suOf = new Array<number>(ordered.length);
-  // choiceLayers[i][state]: how step i reached `state` in its post-step layer —
-  // -1 means "player i unused, state carried forward unchanged"; otherwise
-  // code = category*2 + srcStacked, decoded during backward reconstruction.
-  const choiceLayers = new Array<Int8Array>(ordered.length);
-
-  for (let i = 0; i < ordered.length; i++) {
-    const p = ordered[i]!;
+  // Per-player transition metadata: O(1) fields per player, computed once
+  // and shared by every re-run of stepPlayer below (the initial value-only
+  // pass, and every segment's choice-recording re-run during
+  // reconstruction) — cheap to keep for all N players, unlike the
+  // O(states)-sized DP layers themselves.
+  const meta = ordered.map((p) => {
     const su = Math.round(p.salary / unit);
-    suOf[i] = su;
     const locked = opts.locks.has(p.id);
     const isOffTeamQb = requiredStackTeam !== null && p.pos === "QB" && p.team !== requiredStackTeam;
     const tooExpensive = su > capUnits;
     const cats = isOffTeamQb || tooExpensive ? [] : categoriesFor(p.pos, space);
-    const givesStack = requiredStackTeam !== null && p.team === requiredStackTeam && (p.pos === "WR" || p.pos === "TE");
+    const advancesStack = requiredStackTeam !== null && p.team === requiredStackTeam && (p.pos === "WR" || p.pos === "TE");
+    const playerGameKey = gameReq.kind === "none" ? null : gameKeyOf(p);
+    // Only looked up for "diverse" — gameIndex is built from this same
+    // `ordered` array by the caller, so every player has an entry.
+    const playerGame = gameReq.kind === "diverse" ? gameIndex.get(playerGameKey!)! : 0;
+    const escapesBanned = gameReq.kind === "escape" && playerGameKey !== gameReq.bannedGame;
     const val = objVal(p, opts.mode) * decay(p);
+    return { su, locked, cats, advancesStack, playerGame, escapesBanned, val };
+  });
+  const suOf = meta.map((m) => m.su);
 
-    const dpNext = locked ? new Float64Array(fullStates).fill(-Infinity) : dpPrev.slice();
-    const ch = new Int8Array(fullStates);
-    if (!locked) ch.fill(-1); // baseline: every state carried forward unchanged (skip)
+  /**
+   * One DP step: given the layer BEFORE player `i`, produce the layer
+   * after. `ch` (the per-state backpointer code, decoded during backward
+   * reconstruction) is only allocated when `recordChoices` is true —
+   * skipped entirely for the value-only forward pass.
+   */
+  const stepPlayer = (i: number, dpPrev: Float64Array<ArrayBufferLike>, recordChoices: boolean): { dpNext: Float64Array<ArrayBufferLike>; ch: Int8Array | Int16Array | null } => {
+    const m = meta[i]!;
+    const dpNext = m.locked ? new Float64Array(fullStates).fill(-Infinity) : dpPrev.slice();
+    const ch = recordChoices ? (wideCodes ? new Int16Array(fullStates) : new Int8Array(fullStates)) : null;
+    if (ch && !m.locked) ch.fill(-1); // baseline: every state carried forward unchanged (skip)
 
-    for (const c of cats) {
+    for (const c of m.cats) {
       const stride = space.strides[c]!;
       const capOfDim = space.dims[c]! - 1;
-      const maxSu = capUnits - su;
+      const maxSu = capUnits - m.su;
       for (let countIdx = 0; countIdx < countStates; countIdx++) {
         const cur = Math.floor(countIdx / stride) % (capOfDim + 1);
         if (cur >= capOfDim) continue; // this category is already at capacity
         const targetCountIdx = countIdx + stride;
-        for (let srcStacked = 0; srcStacked < stackDim; srcStacked++) {
-          const dstStacked = givesStack ? Math.min(stackDim - 1, srcStacked + 1) : srcStacked;
-          const srcBase = countIdx * salaryStates * stackDim + srcStacked;
-          const dstBase = targetCountIdx * salaryStates * stackDim + dstStacked;
-          const code = c * 2 + srcStacked;
+        for (let srcFlags = 0; srcFlags < flagStates; srcFlags++) {
+          // Decode the mixed-radix flags digit, advance each sub-digit
+          // independently, and re-encode. The stack digit is a simple OR
+          // (once set, stays set). The game digit depends on gameReq.kind:
+          // "escape" is also a simple OR (has this player, or any earlier
+          // one, been outside the banned game); "diverse" is a genuine
+          // 3-way state machine — empty -> this player's game; same single
+          // game -> stays; any other single game, or already "spans ≥2
+          // games" -> the absorbing "spans ≥2 games" value.
+          const srcStack = stackDim === 2 ? Math.floor(srcFlags / gameDim) : 0;
+          const srcGame = gameDim > 1 ? srcFlags % gameDim : 0;
+          const dstStack = stackDim === 2 ? (srcStack || (m.advancesStack ? 1 : 0)) : 0;
+          const dstGame =
+            gameReq.kind === "none" ? 0 :
+            gameReq.kind === "escape" ? (srcGame || (m.escapesBanned ? 1 : 0)) :
+            srcGame === 0 ? m.playerGame : srcGame === m.playerGame ? srcGame : gameDim - 1;
+          const dstFlags = dstStack * gameDim + dstGame;
+          const srcBase = countIdx * salaryStates * flagStates + srcFlags;
+          const dstBase = targetCountIdx * salaryStates * flagStates + dstFlags;
+          const code = c * flagStates + srcFlags;
           for (let s2 = 0; s2 <= maxSu; s2++) {
-            const v = dpPrev[srcBase + s2 * stackDim]!;
+            const v = dpPrev[srcBase + s2 * flagStates]!;
             if (v === -Infinity) continue;
-            const dstIdx = dstBase + (s2 + su) * stackDim;
-            const candidate = v + val;
+            const dstIdx = dstBase + (s2 + m.su) * flagStates;
+            const candidate = v + m.val;
             if (candidate > dpNext[dstIdx]!) {
               dpNext[dstIdx] = candidate;
-              ch[dstIdx] = code;
+              if (ch) ch[dstIdx] = code;
             }
           }
         }
       }
     }
 
-    dpPrev = dpNext;
-    choiceLayers[i] = ch;
+    return { dpNext, ch };
+  };
+
+  // Value-only forward pass, snapshotting the layer before every
+  // checkpointStride-th player. ~sqrt(n) balances checkpoint count against
+  // re-derived segment size for minimal peak memory.
+  const checkpointStride = Math.max(1, Math.round(Math.sqrt(n)));
+  const checkpoints: Float64Array<ArrayBufferLike>[] = [];
+  let dpPrev: Float64Array<ArrayBufferLike> = new Float64Array(fullStates).fill(-Infinity);
+  dpPrev[0] = 0; // count-state 0, salary 0, no flags — the empty lineup
+  for (let i = 0; i < n; i++) {
+    if (i % checkpointStride === 0) checkpoints.push(dpPrev.slice());
+    dpPrev = stepPlayer(i, dpPrev, false).dpNext;
   }
 
-  const wantStacked = requiredStackTeam ? 1 : 0;
-  const baseIdx = space.fullCountIdx * salaryStates * stackDim + wantStacked;
+  const baseIdx = space.fullCountIdx * salaryStates * flagStates + requiredFlags;
   let bestVal = -Infinity;
   let bestSalaryUnits = -1;
   for (let su = 0; su <= capUnits; su++) {
-    const v = dpPrev[baseIdx + su * stackDim]!;
+    const v = dpPrev[baseIdx + su * flagStates]!;
     if (v > bestVal) { bestVal = v; bestSalaryUnits = su; }
   }
   if (bestSalaryUnits < 0 || !Number.isFinite(bestVal)) return null;
 
+  // Checkpointed backward reconstruction: walk segments from the end back
+  // to the start. Each segment is re-derived (with choice recording) from
+  // its nearest checkpoint, backtracked through, then discarded before
+  // moving to the previous segment.
   const chosen: { category: number; player: DfsPlayer }[] = [];
   let countIdx = space.fullCountIdx;
   let salaryUnits = bestSalaryUnits;
-  let stacked = wantStacked;
-  for (let i = ordered.length - 1; i >= 0; i--) {
-    const state = (countIdx * salaryStates + salaryUnits) * stackDim + stacked;
-    const code = choiceLayers[i]![state]!;
-    if (code === -1) continue; // player i was not used; state is unchanged going into it
-    const category = Math.floor(code / 2);
-    const srcStacked = code % 2;
-    chosen.push({ category, player: ordered[i]! });
-    countIdx -= space.strides[category]!;
-    salaryUnits -= suOf[i]!;
-    stacked = srcStacked;
+  let flags = requiredFlags;
+
+  let segEnd = n; // exclusive
+  while (segEnd > 0) {
+    const checkpointIdx = Math.floor((segEnd - 1) / checkpointStride);
+    const segStart = checkpointIdx * checkpointStride;
+    let segDp = checkpoints[checkpointIdx]!;
+    const segChoices: (Int8Array | Int16Array)[] = [];
+    for (let i = segStart; i < segEnd; i++) {
+      const { dpNext, ch } = stepPlayer(i, segDp, true);
+      segChoices.push(ch!);
+      segDp = dpNext;
+    }
+    for (let i = segEnd - 1; i >= segStart; i--) {
+      const state = (countIdx * salaryStates + salaryUnits) * flagStates + flags;
+      const code = segChoices[i - segStart]![state]!;
+      if (code === -1) continue; // player i was not used; state is unchanged going into it
+      const category = Math.floor(code / flagStates);
+      const srcFlags = code % flagStates;
+      chosen.push({ category, player: ordered[i]! });
+      countIdx -= space.strides[category]!;
+      salaryUnits -= suOf[i]!;
+      flags = srcFlags;
+    }
+    segEnd = segStart;
   }
 
   return { lineup: assembleLineup(chosen), value: bestVal };
@@ -325,9 +457,10 @@ export function optimizeOne(
   const space = buildSlotSpace(DFS_SLOTS);
   const unit = detectGranularity([...ordered.map((p) => p.salary), SALARY_CAP]);
 
-  if (!opts.stack) {
-    return solveExact(ordered, opts, decay, space, unit, null)?.lineup ?? null;
-  }
+  // Deterministic 1..N index per distinct game in the pool, shared by every
+  // solveExact call below (see its docstring for the game-diversity digit).
+  const gameIndex = new Map<string, number>();
+  for (const key of [...new Set(ordered.map(gameKeyOf))].sort()) gameIndex.set(key, gameIndex.size + 1);
 
   // Exact stacking: every team that can field both the QB slot and a
   // same-team WR/TE is a candidate. Solving each exactly and keeping the
@@ -337,23 +470,52 @@ export function optimizeOne(
   // upper bound and solve best-first with branch-and-bound pruning: once a
   // team's bound can't beat an already-confirmed value, neither can any
   // team after it (bounds are sorted descending), so the remaining runs are
-  // skipped with the result still provably optimal.
-  const teams = [...new Set(ordered.filter((p) => p.pos === "QB").map((p) => p.team))]
-    .filter((team) => ordered.some((p) => p.team === team && (p.pos === "WR" || p.pos === "TE")))
-    .sort();
-
-  const { bestQbByTeam, otherCategorySum } = stackBounds(ordered, opts, decay, space);
-  const ranked = teams
-    .map((team) => ({ team, bound: (bestQbByTeam.get(team) ?? -Infinity) + otherCategorySum }))
-    .sort((a, b) => b.bound - a.bound || (a.team < b.team ? -1 : a.team > b.team ? 1 : 0));
-
-  let best: SolveResult | null = null;
-  for (const { team, bound } of ranked) {
-    if (best && bound <= best.value) break; // no remaining team can beat the confirmed best
-    const result = solveExact(ordered, opts, decay, space, unit, team);
-    if (result && (!best || result.value > best.value)) best = result;
+  // skipped with the result still provably optimal. The bound ignores the
+  // lazy game-diversity constraints as well as the cap — both only remove
+  // lineups, so it stays a valid upper bound in every re-solve below.
+  let ranked: readonly { team: string; bound: number }[] = [];
+  if (opts.stack) {
+    const teams = [...new Set(ordered.filter((p) => p.pos === "QB").map((p) => p.team))]
+      .filter((team) => ordered.some((p) => p.team === team && (p.pos === "WR" || p.pos === "TE")))
+      .sort();
+    const { bestQbByTeam, otherCategorySum } = stackBounds(ordered, opts, decay, space);
+    ranked = teams
+      .map((team) => ({ team, bound: (bestQbByTeam.get(team) ?? -Infinity) + otherCategorySum }))
+      .sort((a, b) => b.bound - a.bound || (a.team < b.team ? -1 : a.team > b.team ? 1 : 0));
   }
-  return best?.lineup ?? null;
+
+  const solveUnder = (gameReq: GameRequirement): DfsPlayer[] | null => {
+    if (!opts.stack) return solveExact(ordered, opts, decay, space, unit, null, gameIndex, gameReq)?.lineup ?? null;
+    let best: SolveResult | null = null;
+    for (const { team, bound } of ranked) {
+      if (best && bound <= best.value) break; // no remaining team can beat the confirmed best
+      const result = solveExact(ordered, opts, decay, space, unit, team, gameIndex, gameReq);
+      if (result && (!best || result.value > best.value)) best = result;
+    }
+    return best?.lineup ?? null;
+  };
+
+  // DK game-diversity rule (players from ≥2 different games), resolved in up
+  // to three tiers, cheapest first:
+  //   1. Relaxed (no game dimension) — free, and already diverse on the
+  //      overwhelming majority of real pools.
+  //   2. If the relaxed argmax draws every player from one game G, retry
+  //      with a single "escape G" bit (GameRequirement "escape") — as cheap
+  //      as tier 1 (one extra bit), and sufficient whenever the pool has at
+  //      most one individually-dominant game, which is the expected shape
+  //      of the rule actually binding.
+  //   3. Only if THAT retry is still single-game (a second, different
+  //      dominant game) does the wider, exact "diverse" dimension run —
+  //      bounded (linear in the pool's distinct-game count) and guaranteed
+  //      to terminate in one solve, but paid only in this rare case rather
+  //      than on every retry.
+  const relaxed = solveUnder({ kind: "none" });
+  if (!relaxed) return null;
+  if (new Set(relaxed.map(gameKeyOf)).size >= 2) return relaxed;
+  const escaped = solveUnder({ kind: "escape", bannedGame: gameKeyOf(relaxed[0]!) });
+  if (!escaped) return null;
+  if (new Set(escaped.map(gameKeyOf)).size >= 2) return escaped;
+  return solveUnder({ kind: "diverse" });
 }
 
 export type LineupMetrics = {

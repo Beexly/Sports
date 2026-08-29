@@ -212,3 +212,8 @@ handoff/*.stderr
 handoff/*.json
 handoff/_*
 handoff/*.py
+
+# Python bytecode. scripts/edge-lab/ now carries a Python verifier
+# (verify-mirror-digest.py); its __pycache__ is generated, never a deliverable.
+__pycache__/
+*.pyc

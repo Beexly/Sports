@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { checkCalibrationHealth } from "../calibration-monitor.js";
+import {
+  checkCalibrationHealth,
+  checkNegativeUpdateGuard,
+  phaseBucketedCalibrationAudit,
+  stabilityPlasticityCheck,
+  type CohortGain,
+  type PhaseSample,
+} from "../calibration-monitor.js";
 
 describe("checkCalibrationHealth", () => {
   it("is healthy on an empty series", () => {
@@ -80,5 +87,249 @@ describe("checkCalibrationHealth", () => {
     const result = checkCalibrationHealth(series, 0.22, 7);
     expect(result.healthy).toBe(false);
     expect(result.longestStreak).toBe(10);
+  });
+});
+
+describe("checkNegativeUpdateGuard", () => {
+  /** incumbentLoss fixed at 1 so incumbentLoss - candidateLoss === the given gain, exactly. */
+  function round(gains: readonly number[]): CohortGain[] {
+    return gains.map((g, i) => ({ cohort: `c${i}`, incumbentLoss: 1, candidateLoss: 1 - g }));
+  }
+
+  it("no alert and an empty smoothed series on an empty input", () => {
+    const result = checkNegativeUpdateGuard([]);
+    expect(result.alertActive).toBe(false);
+    expect(result.alert).toBeNull();
+    expect(result.smoothedSeries).toEqual([]);
+  });
+
+  it("stays clear when the candidate consistently beats the incumbent", () => {
+    const windows = Array.from({ length: 5 }, () => round([0.02, 0.03, 0.01]));
+    const result = checkNegativeUpdateGuard(windows);
+    expect(result.alertActive).toBe(false);
+    expect(result.currentPositiveStreak).toBe(5);
+    expect(result.currentNegativeStreak).toBe(0);
+  });
+
+  it("exactly rollbackThreshold consecutive negative rounds does not trigger (must exceed it)", () => {
+    const windows = Array.from({ length: 3 }, () => round([-0.05, -0.04, -0.06]));
+    const result = checkNegativeUpdateGuard(windows, 3, 2);
+    expect(result.currentNegativeStreak).toBe(3);
+    expect(result.alertActive).toBe(false);
+  });
+
+  it("triggers once the negative streak exceeds rollbackThreshold", () => {
+    const windows = Array.from({ length: 4 }, () => round([-0.05, -0.04, -0.06]));
+    const result = checkNegativeUpdateGuard(windows, 3, 2);
+    expect(result.currentNegativeStreak).toBe(4);
+    expect(result.alertActive).toBe(true);
+    expect(result.alert).toContain("rollback");
+  });
+
+  it("stays active with fewer than cancelWindow good rounds after triggering", () => {
+    const bad = Array.from({ length: 4 }, () => round([-0.05, -0.04, -0.06]));
+    const oneGood = [round([0.05, 0.04, 0.06])];
+    const result = checkNegativeUpdateGuard([...bad, ...oneGood], 3, 2);
+    expect(result.alertActive).toBe(true);
+  });
+
+  it("clears the alert after cancelWindow consecutive non-negative rounds", () => {
+    const bad = Array.from({ length: 4 }, () => round([-0.05, -0.04, -0.06]));
+    const good = Array.from({ length: 2 }, () => round([0.05, 0.04, 0.06]));
+    const result = checkNegativeUpdateGuard([...bad, ...good], 3, 2);
+    expect(result.alertActive).toBe(false);
+  });
+
+  it("one pathological cohort cannot flip the round's median verdict", () => {
+    const r = round([0.05, 0.04, 0.06, 0.05, -0.9]);
+    const result = checkNegativeUpdateGuard([r], 3, 2);
+    expect(result.smoothedSeries[0]).toBeGreaterThan(0);
+  });
+
+  it("a round with no cohorts is a gap — resets both streaks and is NaN, not counted", () => {
+    const windows = [round([0.05]), round([0.05]), [], round([0.05])];
+    const result = checkNegativeUpdateGuard(windows, 3, 2);
+    expect(result.smoothedSeries[2]).toBeNaN();
+    expect(result.currentPositiveStreak).toBe(1); // only the round after the gap counts
+  });
+
+  it("falls back to defaults on invalid rollbackThreshold/cancelWindow", () => {
+    const result = checkNegativeUpdateGuard([], -1, 0);
+    expect(result.rollbackThreshold).toBe(3);
+    expect(result.cancelWindow).toBe(2);
+  });
+
+  it("hand-computed: smoothed value is the trailing mean of per-round medians", () => {
+    const windows = [round([0.1]), round([-0.2]), round([0.3])];
+    const result = checkNegativeUpdateGuard(windows, 3, 2);
+    expect(result.smoothedSeries[0]).toBeCloseTo(0.1, 10);
+    expect(result.smoothedSeries[1]).toBeCloseTo(-0.05, 10);
+    expect(result.smoothedSeries[2]).toBeCloseTo(0.05, 10);
+  });
+});
+
+describe("phaseBucketedCalibrationAudit", () => {
+  it("returns a zeroed, unmasked result on empty input", () => {
+    const result = phaseBucketedCalibrationAudit([]);
+    expect(result.overallEce).toBe(0);
+    expect(result.masked).toBe(false);
+    expect(result.alert).toBeNull();
+    expect(result.phases).toEqual([]);
+  });
+
+  it("stays unmasked when every phase is well-calibrated", () => {
+    const samples: PhaseSample[] = [
+      ...Array.from({ length: 30 }, () => ({ p: 0.6, y: 1 as const, phase: "A" })),
+      ...Array.from({ length: 20 }, () => ({ p: 0.6, y: 0 as const, phase: "A" })),
+      ...Array.from({ length: 30 }, () => ({ p: 0.6, y: 1 as const, phase: "B" })),
+      ...Array.from({ length: 20 }, () => ({ p: 0.6, y: 0 as const, phase: "B" })),
+    ];
+    const result = phaseBucketedCalibrationAudit(samples, 0.05);
+    expect(result.masked).toBe(false);
+    expect(result.phases.every((p) => !p.exceedsFloor)).toBe(true);
+  });
+
+  it("flags a phase-specific miscalibration masked by a perfectly-calibrated overall average", () => {
+    // Both phases forecast the SAME p=0.55 (one forecast bin), so their
+    // opposite-direction errors cancel exactly when pooled: overall observed
+    // rate = (75+35)/200 = 0.55, matching the forecast, ECE ~ 0. Split by
+    // phase, each is badly miscalibrated in opposite directions (|gap|=0.20).
+    const phaseA: PhaseSample[] = [
+      ...Array.from({ length: 75 }, () => ({ p: 0.55, y: 1 as const, phase: "A" })),
+      ...Array.from({ length: 25 }, () => ({ p: 0.55, y: 0 as const, phase: "A" })),
+    ];
+    const phaseB: PhaseSample[] = [
+      ...Array.from({ length: 35 }, () => ({ p: 0.55, y: 1 as const, phase: "B" })),
+      ...Array.from({ length: 65 }, () => ({ p: 0.55, y: 0 as const, phase: "B" })),
+    ];
+    const result = phaseBucketedCalibrationAudit([...phaseA, ...phaseB], 0.05);
+    expect(result.overallEce).toBeCloseTo(0, 4);
+    expect(result.masked).toBe(true);
+    expect(result.alert).toContain("masking");
+    const a = result.phases.find((p) => p.phase === "A")!;
+    const b = result.phases.find((p) => p.phase === "B")!;
+    expect(a.ece).toBeCloseTo(0.2, 4);
+    expect(b.ece).toBeCloseTo(0.2, 4);
+    expect(a.exceedsFloor).toBe(true);
+    expect(b.exceedsFloor).toBe(true);
+    expect(a.observedRate).toBeCloseTo(0.75, 4);
+    expect(b.observedRate).toBeCloseTo(0.35, 4);
+  });
+
+  it("does not flag a thin phase below minPhaseSamples, even with a real gap", () => {
+    const samples: PhaseSample[] = [
+      ...Array.from({ length: 3 }, () => ({ p: 0.5, y: 1 as const, phase: "rare" })),
+      ...Array.from({ length: 100 }, () => ({ p: 0.5, y: 1 as const, phase: "common" })),
+      ...Array.from({ length: 100 }, () => ({ p: 0.5, y: 0 as const, phase: "common" })),
+    ];
+    const result = phaseBucketedCalibrationAudit(samples, 0.05, 10, 20);
+    const rare = result.phases.find((p) => p.phase === "rare")!;
+    expect(rare.n).toBe(3);
+    expect(rare.ece).toBeGreaterThan(0.05); // genuinely far off in isolation
+    expect(rare.exceedsFloor).toBe(false); // but withheld — too thin to trust
+  });
+
+  it("is not 'masked' when the overall ECE is already over the floor (nothing hidden)", () => {
+    const samples: PhaseSample[] = [
+      ...Array.from({ length: 100 }, () => ({ p: 0.5, y: 1 as const, phase: "A" })),
+    ];
+    const result = phaseBucketedCalibrationAudit(samples, 0.05);
+    expect(result.overallEce).toBeGreaterThan(0.05);
+    expect(result.masked).toBe(false); // the failure is already visible overall
+    const a = result.phases[0]!;
+    expect(a.exceedsFloor).toBe(true); // still correctly reported, just not "masked"
+  });
+});
+
+describe("stabilityPlasticityCheck", () => {
+  it("is eligible when the candidate improves the newest cohort and doesn't forget the oldest", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.05 }, // newest: improved by 0.03
+      { incumbentEce: 0.04, candidateEce: 0.035 }, // oldest: also improved (forgetting negative)
+    );
+    expect(result.plasticity).toBeCloseTo(0.03, 6);
+    expect(result.forgetting).toBeCloseTo(-0.005, 6);
+    expect(result.eligible).toBe(true);
+    expect(result.alert).toBeNull();
+  });
+
+  it("is ineligible when forgetting exceeds the bound, even with strong newest-cohort gains", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.02 }, // newest: big improvement
+      { incumbentEce: 0.04, candidateEce: 0.06 }, // oldest: degraded by 0.02, bound is 0.01
+      0.01,
+    );
+    expect(result.forgetting).toBeCloseTo(0.02, 6);
+    expect(result.eligible).toBe(false);
+    expect(result.alert).toContain("forgetting bound");
+  });
+
+  it("forgetting exactly at the bound is still eligible (<=, not <)", () => {
+    // Set the bound to the SAME raw expression the check itself computes
+    // (rather than a decimal literal like 0.01) so this is an exact
+    // floating-point equality, not merely "close to" -- 0.05 - 0.04 is
+    // actually 0.010000000000000002 in IEEE754, not exactly 0.01.
+    const oldestIncumbent = 0.04;
+    const oldestCandidate = 0.05;
+    const exactForgetting = oldestCandidate - oldestIncumbent;
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.05 },
+      { incumbentEce: oldestIncumbent, candidateEce: oldestCandidate }, // degraded by exactly exactForgetting
+      exactForgetting,
+    );
+    expect(result.forgetting).toBeCloseTo(0.01, 6);
+    expect(result.eligible).toBe(true);
+  });
+
+  it("a raw forgetting that rounds down to the bound (but truly exceeds it) is still ineligible -- eligibility must use the raw delta, not the rounded one", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.08, candidateEce: 0.05 },
+      // raw forgetting = 0.0100004, which rounds to 0.0100 at the reported
+      // 4dp precision -- reading eligible off the rounded value would wrongly
+      // accept this as exactly at the 0.01 bound.
+      { incumbentEce: 0.04, candidateEce: 0.0500004 },
+      0.01,
+    );
+    expect(result.forgetting).toBeCloseTo(0.01, 4); // reported (rounded) value
+    expect(result.eligible).toBe(false); // but the raw delta truly exceeds safeBound
+  });
+
+  it("hand-computed psRatio: plasticity / |forgetting|", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.06 }, // plasticity = 0.04
+      { incumbentEce: 0.04, candidateEce: 0.05 }, // forgetting = 0.01
+      0.02,
+    );
+    expect(result.plasticity).toBeCloseTo(0.04, 6);
+    expect(result.forgetting).toBeCloseTo(0.01, 6);
+    expect(result.psRatio).toBeCloseTo(4, 4); // 0.04 / 0.01
+  });
+
+  it("negative forgetting (improved on the old cohort too) uses its absolute value in psRatio", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.06 }, // plasticity = 0.04
+      { incumbentEce: 0.04, candidateEce: 0.02 }, // forgetting = -0.02 (improved)
+    );
+    expect(result.psRatio).toBeCloseTo(2, 4); // 0.04 / |-0.02|
+  });
+
+  it("exactly-zero forgetting does not throw or divide by zero — uses an epsilon floor", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.08 },
+      { incumbentEce: 0.04, candidateEce: 0.04 }, // forgetting = 0
+    );
+    expect(result.forgetting).toBe(0);
+    expect(Number.isFinite(result.psRatio)).toBe(true);
+    expect(result.psRatio).toBeGreaterThan(1000); // large but finite
+    expect(result.eligible).toBe(true);
+  });
+
+  it("falls back to the default bound on invalid input", () => {
+    const result = stabilityPlasticityCheck(
+      { incumbentEce: 0.1, candidateEce: 0.08 },
+      { incumbentEce: 0.04, candidateEce: 0.041 },
+      -5,
+    );
+    expect(result.forgettingBound).toBe(0.01);
   });
 });

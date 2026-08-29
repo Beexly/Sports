@@ -236,6 +236,32 @@ export type {
   DixonColesFairValueInput,
   DixonColesFairValue,
 } from "./dixon-coles.js";
+// In-game soccer win probability (arXiv:1906.05029, KDD'21) -- the t=0
+// boundary case of this model IS the pregame independent-Poisson path above
+// (proven exactly equal in the test file), so this is an extension of it,
+// not a separate model. Three portable mechanisms: T=100 percent-time
+// normalization with halftime pinned at frame 50; a closed-form Kalman
+// filter + RTS smoother standing in for the paper's random-walk coefficient
+// prior; and the invlogit structural link on the paper's own validated
+// simplified feature set (score diff, time, cards, Elo diff). Coefficient
+// fitting from real data is a separate, data-gated increment -- GSE has not
+// yet archived the multi-season settled soccer data it needs. R&D / offline
+// only, priced:false.
+export {
+  percentTimeFrame,
+  randomWalkSmooth,
+  inGameRateFactor,
+  inGameWinProbability,
+} from "./ingame-soccer.js";
+export type {
+  MatchClock,
+  FrameObservation,
+  SmoothedFrame,
+  ThetaFeatures,
+  ThetaCoefficients,
+  InGameState,
+  InGameProbabilities,
+} from "./ingame-soccer.js";
 export {
   deriveRankingProbability,
 } from "./ranking-prob.js";
@@ -301,6 +327,42 @@ export type {
   SelectedSliceEceArgs,
   SelectedSliceEceResult,
 } from "./probability-calibration.js";
+
+// R&D — hierarchical empirical-Bayes state-conditioned rate teacher (ported
+// from arXiv:2607.00164's reward-target ablation). Scores any forecaster
+// (raw confidence, a calibration map, or market q) for whether it carries
+// information beyond state — the convergence test behind the Brier-floor
+// diagnosis. NOT wired into live scoring; offline eval only.
+export {
+  fitEmpiricalRateTeacher,
+  binIndexFromEdges,
+  teacherGapReport,
+} from "./empirical-rate-teacher.js";
+export type {
+  TeacherSample,
+  TeacherDim,
+  TeacherConfig,
+  TeacherModel,
+  ForecasterSample,
+  TeacherGapBucketRow,
+  TeacherGapReport,
+} from "./empirical-rate-teacher.js";
+
+// R&D — hierarchical partial-pooling calibration shrinkage (ported from
+// arXiv:2608.18430's local/global Algorithm-1 alternation). Shrinks per-cell
+// Beta-calibration params toward a jointly-estimated global prior, weighted
+// by each cell's own sample count — thin sport x market cells borrow
+// strength from the pooled map instead of overfitting or being unusable.
+// Offline refit-time tool only; does not flip any live gate.
+export {
+  fitHierarchicalBetaShrinkage,
+  shrinkCellsTowardGlobal,
+} from "./hierarchical-calibration.js";
+export type {
+  CellBetaFit,
+  ShrunkCellBeta,
+  HierarchicalCalibrationResult,
+} from "./hierarchical-calibration.js";
 
 // R&D — parametric calibration maps (Platt, Beta) + cross-validated selection
 // across calibrator families (the honest fix for "isotonic by fiat"). Composes
@@ -1546,6 +1608,134 @@ export type {
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
+// Small dense linear algebra (Gauss-Jordan with partial pivoting) — scoped
+// to inverting a handful of regression coefficients' Fisher information
+// matrix for standard errors. Not a general numerical library.
+export { invertMatrix } from "./edge-lab/linalg.js";
+
+// Poisson interrupted time series with an exposure offset (arXiv:1805.01271's
+// bonus portable method): "the right instrument for any before/after claim
+// GSE ever wants to publish." Mechanically enforces the paper's own
+// discipline -- a rate-ratio CI spanning 1.0 can only ever report
+// "no_detectable_change," never "no change." Simplified from the source
+// (fixed-effects only, no player random intercept) -- documented in the
+// module. R&D / offline only.
+export { fitPoissonIts } from "./edge-lab/poisson-its.js";
+export type {
+  ItsObservation,
+  ItsFitOptions,
+  ItsCoefficient,
+  ChangeCallout,
+  RateRatio,
+  ItsFitResult,
+} from "./edge-lab/poisson-its.js";
+
+// CPAE — completion-probability surface + group-level aggregate
+// (arXiv:1906.03339's model half; the image-scraping half is rights-gated
+// and NOT ported). Discrete tensor product (natural-cubic depth basis × 3
+// pass-location bins) over the paper's continuous smoother — grain honesty
+// for public pbp data — with the §3.2 Naive-Bayes shrinkage and discrete
+// Eq. 1 at QB grain and DEFENSE grain (cpaeAllowed, the new direction),
+// plus the 2603.17866 distributional companions. As-of discipline is
+// structural (pure fits over caller-filtered rows; leakage mutation test in
+// the suite); the ρ ≥ 0.75 NGS gate is QB-grain ONLY — the defense metric
+// needs its own separately defined validation target before admission.
+// Real fit-on-load, validation runs, and admission are data-gated.
+// R&D / offline only, priced:false.
+export {
+  naturalCubicBasis,
+  cpaeSurfaceFeatureRow,
+  fitCpaeSurface,
+  predictCpaeCompletionProbability,
+  CPAE_SURFACE_MODEL_VERSION,
+  CPAE_DEPTH_KNOTS,
+  CPAE_DEPTH_DOMAIN,
+  CPAE_BASIS_SIZE,
+  CPAE_SURFACE_FEATURE_KEYS,
+  MIN_PLAYS_TO_FIT_CPAE_SURFACE,
+} from "./expected-metrics/cpae-surface.js";
+export type { CpaeSurfaceModel } from "./expected-metrics/cpae-surface.js";
+export {
+  cpaeCellIndex,
+  buildGroupCells,
+  shrinkGroupSurface,
+  computeCpaeMetrics,
+  CPAE_DEPTH_BIN_EDGES,
+  CPAE_CELL_COUNT,
+} from "./expected-metrics/cpae-aggregate.js";
+export type {
+  CpaeCell,
+  CpaeGroupCells,
+  CpaeGroupMetric,
+} from "./expected-metrics/cpae-aggregate.js";
+
+// Diagonal-covariance Gaussian mixture EM (arXiv:1906.11373's coverage-
+// clustering model — the pure math core; defense-week features and the
+// real-data fit are a separate, data-gated increment). Seeded k-means++
+// init, log-space responsibilities, per-dimension variance floor, LOWO-ARI
+// K selection with a typed "unstable" kill (never a default K), and the
+// polarity gate that keeps cluster posteriors ANONYMOUS until a
+// pre-registered semantic validation passes (the CodeRabbit finding on the
+// spec, encoded in the type). R&D / offline only, priced:false.
+export {
+  fitDiagonalGmm,
+  gmmLogDensity,
+  gmmPosteriors,
+  gmmHardLabels,
+  logSumExp,
+  zScoreFit,
+  zScoreApply,
+  selectKByLowoAri,
+  featureInfluence,
+  labelClustersByCushionRule,
+  adjustedRandIndex,
+} from "./edge-lab/kernel/gmm-em.js";
+export type {
+  GmmFitOptions,
+  DiagonalGmm,
+  ZScoreStats,
+  LowoAriSelection,
+  ClusterLabeling,
+} from "./edge-lab/kernel/gmm-em.js";
+
+// Falsifier — 4 kill tests (leakage / shuffle / split / multiplicity) over a
+// bind's backtest rows, wired to the bernoulli e-process. Salvaged from the
+// hermes/w2-audit-settlement branch (Wave 3 LANE B); verdict vocabulary
+// SURVIVOR / KILLED / STARVED / PARKED. The edge-lab law's enforcement arm.
+export { falsifyBind } from "./edge-lab/falsify.js";
+export type { BacktestRow, KillResult, FalsifyOutput, FalsifyOpts } from "./edge-lab/falsify.js";
+
+// Rare-event admission-harness metrics (arXiv:2206.13222): precision-at-
+// fixed-recall as the operating metric for any rare-event classifier screen
+// (AUC hides the base-rate failure their own numbers demonstrate — 0.82 AUC
+// at 2.3% base rate still yields ~7.5% precision), and inverse-frequency
+// class weights over synthetic resampling. The standing argument for keeping
+// GSE's rare-event props on count models + the LCB gate, never raw
+// classifier scores.
+export {
+  inverseFrequencyClassWeights,
+  precisionAtRecall,
+} from "./edge-lab/rare-event-metrics.js";
+export type {
+  ClassWeights,
+  PrecisionAtRecallResult,
+} from "./edge-lab/rare-event-metrics.js";
+
+// Spread-anchored expectation profile: leak-safe game-level covariate
+// (arXiv:2606.18805's suspense/surprise/valence structure, ported from a
+// driving-behavior study — honest prior WEAK, priced:false until walk-forward
+// admission). Mirrors covariate-bus.ts's latestPriorRow leak-safety pattern.
+export {
+  classifyGameCloseness,
+  classifyExpectationProfile,
+  priorGameExpectationProfile,
+} from "./edge-lab/expectation-profile.js";
+export type {
+  GameCloseness,
+  ExpectationProfile,
+  TeamGameResult,
+} from "./edge-lab/expectation-profile.js";
+
 // SEP bind: couples the covariate bus (sepForKickoff) to the aDOT×SEP catch
 // sample. Fail-closed on null — never invents 3.0 yards. Honest weekly-mean
 // grain forwarded verbatim. priced:false.
@@ -1904,8 +2094,22 @@ export type { TeamIndexRegistry, AssignTeamIndexResult } from "./team-index-regi
 
 // Consecutive-day Brier health check. Pure/DB-agnostic — see
 // apps/web/lib/ops/calibration-regression-snapshot.ts for the DB-backed series builder.
-export { checkCalibrationHealth } from "./calibration-monitor.js";
-export type { CalibrationHealthResult } from "./calibration-monitor.js";
+export {
+  checkCalibrationHealth,
+  checkNegativeUpdateGuard,
+  phaseBucketedCalibrationAudit,
+  stabilityPlasticityCheck,
+} from "./calibration-monitor.js";
+export type {
+  CalibrationHealthResult,
+  CohortGain,
+  NegativeUpdateGuardResult,
+  PhaseSample,
+  PhaseBucketRow,
+  PhaseBucketedAuditResult,
+  CohortEce,
+  StabilityPlasticityResult,
+} from "./calibration-monitor.js";
 
 // Calibration-snapshot regression comparison. Pure/DB-agnostic — reuses
 // brierDecomposition rather than a second Brier/RES calculator.

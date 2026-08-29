@@ -271,7 +271,10 @@ export {
   normalizeComparableText,
   findMatchingTeamInText,
   parseSportsScore,
+  comparableTeamsMatch,
+  matchGameByTeamsAndTime,
 } from "./team-text-match.js";
+export type { GameIdentityCandidate } from "./team-text-match.js";
 
 export {
   resolveRundownApiKey,
@@ -305,6 +308,7 @@ export {
   nflTeamsMatch,
   matchPreseasonRowToExistingGame,
   remapPreseasonRows,
+  remapOrKeepFeedRows,
   mergeFeedRowsById,
 } from "./nfl-preseason-map.js";
 export type {
