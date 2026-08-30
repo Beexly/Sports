@@ -71,6 +71,22 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const sportFilter = searchParams.get("sport");
   const dateParam = searchParams.get("date");
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
+  const lane = searchParams.get('lane');
+  // The `lane` query param is accepted for forward-compat with the public
+  // tier system (GREEN / PRIME / PLUS) defined in
+  // @sports/prediction-engine. It is observation-only here: the
+  // green-board gate is the authority on which picks are eligible, and
+  // the lane param is logged so operators can see which lane the caller
+  // is asking for. It is intentionally not a filter on the public query
+  // — adding one would require a separate entitlement check.
+  if (lane) {
+    console.info("[public-picks] lane request", {
+      lane,
+      sportFilter,
+      gradeFilter,
+      targetDate: dateParam,
+    });
+  }
   // Guard against malformed `?date=` values producing an Invalid Date query.
   const targetDate = parseDateParam(dateParam);
 
