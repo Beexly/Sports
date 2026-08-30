@@ -141,3 +141,34 @@ This product's entire premise is that it does not lie about its own performance.
 invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
+AGENTS.md — overnight mode — continuing on all night long, without stopping, without asking questions.
+--- AGENTS.md update: 2026-08-23 18:22 wave3-laneA missed-tackle bind shipped 7de8ca0f; next queue item ttlos→rushAttempts
+08-23 18:33 PRE-6 ttlos bind shipped ba702383; queue: sticks→completions next
+FCB36827+ wave3-laneA PRE-7 sticks→completions shipped 2026-08-24; queue clear (all lane A PRE-1 through PRE-7 built + pushed); next: full handoff cycle review then autonomous loop continues; all commits push to origin hermes/w2-audit-settlement
+
+---
+
+## Knowledge Bases
+
+- **Claude Academy corpus**: `docs/CLAUDE-ACADEMY-PLAYBOOK.md` (this repo) — indexed map of all 755 academy.claude.com pages (courses, use-cases by department, tutorials by product, master index). Full page texts live outside the repo at `C:\Users\Garrett\academy-corpus\`. When a task touches Claude usage, prompting, API/MCP/agents/Cowork patterns: check the playbook's Scope Router first, then read only the referenced file(s).
+
+## SESSION FINDINGS INDEX (updated 2026-08-25) — where recent Hermes work lives
+
+Any agent looking for recent findings/audits/tests: read these first, in this order.
+
+| Artifact | What it holds |
+|---|---|
+| `docs/ops/AGENT_LEDGER.md` | Live multi-agent ledger (canonical state; H0.5–H0.7, T-Q1..Q3, C-series, FINAL-RUN closure) |
+| `handoff/EDGE_LEDGER.md` | Edge-hunt ledger: preregistered binds (PRE-1..PRE-7 all built), falsifier verdicts (YACoe real-data KILLED on multiplicity, e=0.000), R36 honest STARVED |
+| `handoff/EDGE_RESEARCH_NEXT_5.md` | Next H1/H2 prop-opportunity research + built-edge registry + framework primitives map |
+| `handoff/HANDOFF-2026-08-23.md` | H0 night handoff: PRs #562/#563/#564/#572/#594, roadmap status |
+| `handoff/INVENTORY.md` | Agent tooling audit (unused skills/commands) |
+| `handoff/OVERSIGHT_H0_CROSSREF-2026-08-23.md` | H0 oversight cross-reference audit |
+| `handoff/leverage/00-LEVERAGE-INDEX.md` | Resource-dump synthesis index (dumps 01–08) |
+| `handoff/leverage/07-immediate-wins-2026-08-24.md` | Executable $0 wins distillation |
+| `handoff/ROUTE_AUTH_INVENTORY.md`, `handoff/TEST_GAP_MAP.md` | Route-auth + test-gap audits |
+| `data/nflverse/yacoe_real_backtest_results.json` | First REAL-data result: prior-season YACoe→next-season r≈0.40 val / 0.43 holdout (n=107/84) — persistence signal, NOT a betting edge |
+
+Standing facts: falsifier funnel is BUILT and WIRED (leakage/shuffle/split/multiplicity via bernoulli-eprocess).
+Lane A queue empty. Remaining known gaps: comp-pct-allowed & blitz-rate bus fields (PFR def source needed),
+routes data only a proxy (pbp_participation approximation). Never claim SHIP without falsify SURVIVOR.

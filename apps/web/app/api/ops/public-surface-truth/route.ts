@@ -3,6 +3,7 @@ import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch
 import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
+import { classifyWeek1Capture } from "@/lib/ops/week1-capture-posture";
 import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
@@ -203,6 +204,108 @@ export async function GET(request: Request) {
       });
     } catch {
       sample = null;
+    }
+  }
+
+  // ── Week-1 capture truth (C-36 / Q5) ────────────────────────────────────
+  // `oddsInserting` reports only the LAST insert across ALL sports, so a live
+  // MLB slate masks an NFL blackout completely — which is how L-14's "NFL 0
+  // clean closes" went unseen for the whole of August while the board looked
+  // healthy. These counters are NFL-specific and answer the two questions that
+  // decide whether Week 1 is recoverable, neither of which was observable:
+  //   1. are NFL odds rows actually landing right now?
+  //   2. is CLOSE stamping armed, or is the archive inert?
+  // A week not captured cleanly cannot be re-bought at any price.
+  let week1Capture: {
+    nflOddsRowsLastHour: number | null;
+    nflOddsRowsLast24h: number | null;
+    lastNflOddsAt: string | null;
+    lastNflOddsAgeMinutes: number | null;
+    nflCapturing: boolean | null;
+    preseasonFetchWindow: boolean;
+    lineArchiveEnabled: boolean;
+    closeStampedLast7d: number | null;
+    snapshotsLast7d: number | null;
+    captureState: "LIVE" | "QUIET" | "DARK" | null;
+    week1Recoverable: boolean | null;
+    operatorHint: string;
+  } = {
+    nflOddsRowsLastHour: null,
+    nflOddsRowsLast24h: null,
+    lastNflOddsAt: null,
+    lastNflOddsAgeMinutes: null,
+    nflCapturing: null,
+    // July-August UTC, mirroring isNflPreseasonFetchWindow in
+    // packages/data-ingestion/src/nfl-preseason-map.ts. Imported rather than
+    // re-typed would be better; this route deliberately avoids a new
+    // cross-package import, so the month test is kept literal and identical.
+    preseasonFetchWindow: [7, 8].includes(new Date().getUTCMonth() + 1),
+    lineArchiveEnabled: process.env["LINE_ARCHIVE_ENABLED"] === "true",
+    closeStampedLast7d: null,
+    snapshotsLast7d: null,
+    captureState: null,
+    week1Recoverable: null,
+    operatorHint: "Not evaluated (stub mode or anonymous caller — Week-1 capture counters are operator-only).",
+  };
+
+  // Gated behind hasOpsAuth, following the stripeWebhookHosts precedent below.
+  // These are three COUNT queries, one of them over `odds` — the largest table
+  // in the schema, growing every refresh cycle x book x market — and the NFL
+  // filter joins game -> sport, which the @@index([fetchedAt]) does not cover.
+  // This route is public and rate-limited to 60/min/IP, so leaving them on the
+  // anonymous path is a real amplification vector on the biggest table we have.
+  // The cheap, non-DB fields (archive flag, preseason window) stay public so
+  // the anonymous operatorHint still says something true.
+  if (!isStubMode() && detailed) {
+    try {
+      const now = Date.now();
+      const hourAgo = new Date(now - 60 * 60 * 1000);
+      const dayAgo = new Date(now - 24 * 60 * 60 * 1000);
+      const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+      const nflWhere = { game: { sport: { key: "americanfootball_nfl" } } };
+      const [rowsHour, rows24h, latest, closes, snaps] = await Promise.all([
+        db.odds.count({ where: { ...nflWhere, fetchedAt: { gte: hourAgo } } }),
+        db.odds.count({ where: { ...nflWhere, fetchedAt: { gte: dayAgo } } }),
+        db.odds.findFirst({
+          where: nflWhere,
+          orderBy: { fetchedAt: "desc" },
+          select: { fetchedAt: true },
+        }),
+        db.oddsLineSnapshot.count({
+          where: { phase: "CLOSE", capturedAt: { gte: weekAgo } },
+        }),
+        db.oddsLineSnapshot.count({ where: { capturedAt: { gte: weekAgo } } }),
+      ]);
+      const ageMinutes = latest?.fetchedAt
+        ? Math.round((now - latest.fetchedAt.getTime()) / 60000)
+        : null;
+      const posture = classifyWeek1Capture({
+        nflOddsRowsLastHour: rowsHour,
+        nflOddsRowsLast24h: rows24h,
+        lineArchiveEnabled: week1Capture.lineArchiveEnabled,
+        closeStampedLast7d: closes,
+        snapshotsLast7d: snaps,
+      });
+      week1Capture = {
+        ...week1Capture,
+        nflOddsRowsLastHour: rowsHour,
+        nflOddsRowsLast24h: rows24h,
+        lastNflOddsAt: latest?.fetchedAt ? latest.fetchedAt.toISOString() : null,
+        lastNflOddsAgeMinutes: ageMinutes,
+        nflCapturing: rowsHour > 0,
+        closeStampedLast7d: closes,
+        snapshotsLast7d: snaps,
+        captureState: posture.state,
+        week1Recoverable: posture.week1Recoverable,
+        operatorHint: posture.hint,
+      };
+    } catch (err) {
+      week1Capture = {
+        ...week1Capture,
+        operatorHint: `Week-1 capture probe FAILED: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
+      };
     }
   }
 
@@ -536,6 +639,7 @@ export async function GET(request: Request) {
        */
       sample,
       oddsInserting,
+      week1Capture,
       calibrationEligibility: calibrationEligibility
         ? {
             status: calibrationEligibility.status,

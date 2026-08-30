@@ -73,3 +73,7 @@ Contract:
 - Do NOT touch schema, `.github`, Odds, scrape.
 - Gap map: `C:\Users\Garrett\Sports-p0\docs\data\PROP_COVARIATE_GAP.md` (read-only).
 - #525 is on serving SHA `544d0148` — slug/cap not redone.
+did: #548 sep bind squash-merged `2151ebec`. #549 yac-bind rebased onto that main (skipped stacked sep commits); force-with-lease pushed. Clean diff: air-yac-bind + tests + barrel only.
+evidence: 547+548 on main. 549 MERGEABLE, CI running.
+next: merge #549 when Test green. Then H0 top-down: #1 validation harness, #2 kneel/garbage-time. Do not chain more remaining-covariate slices. NFL only. No second Hermes.
+
