@@ -424,7 +424,162 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
     evidence_urls: ["https://the-odds-api.com/legalstuff.html"],
     unlock_condition: null,
     vendor_contact: "https://the-odds-api.com/contact.html",
-    notes: "Paid API. Subscription in place. Confirmed commercial display and storage rights.",
+    notes: "Paid API. Subscription in place. Confirmed commercial display and storage rights. Incumbent odds provider in production.",
+  },
+
+  // ── Vendor candidate (H-S 2026-08-29 probes) ─────────────────────────────────
+  // Probed OK with free key=3, needs registry promotion before automation
+  {
+    source_id: "thesportsdb",
+    source_name: "TheSportsDB",
+    source_url: "https://www.thesportsdb.com/api/v1/json/3",
+    terms_url: "https://www.thesportsdb.com/terms",
+    robots_url: null,
+    jurisdiction: "unknown",
+    source_type: "sports_data_api",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Data via TheSportsDB (thesportsdb.com)",
+    personal_data_risk: "low",
+    copyright_expression_risk: "medium",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-29",
+    reviewed_by: "hermes",
+    evidence_urls: [
+      "https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=New%20York%20Mets",
+      "https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=4387",
+    ],
+    unlock_condition:
+      "Written terms clearance confirming commercial use of free tier (key=3) is permitted. " +
+      "Current free tier key '3' works for schedules/results but ToS automation clause unclear.",
+    vendor_contact: "https://www.thesportsdb.com/contact",
+    notes:
+      "H-S probe 2026-08-29: 2/2 calls OK (team search 248ms, NFL season events 170ms). " +
+      "Free tier key '3' returns schedules/results for multiple sports (NFL, MLB, etc.). " +
+      "NOT an odds source. Registry entry added per H-S map; all flags false until terms clearance.",
+  },
+
+  // Probed OK, no key, no rate limits observed, needs terms review
+  {
+    source_id: "mlb-stats-api",
+    source_name: "MLB Stats API",
+    source_url: "https://statsapi.mlb.com/api/v1",
+    terms_url: "https://www.mlb.com/terms-of-use",
+    robots_url: "https://statsapi.mlb.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "official_league_site",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Data via MLB Stats API (statsapi.mlb.com)",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-29",
+    reviewed_by: "hermes",
+    evidence_urls: [
+      "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2026-08-20&gameType=R",
+      "https://statsapi.mlb.com/api/v1/teams",
+    ],
+    unlock_condition:
+      "Terms review confirming commercial use of public endpoints is permitted. " +
+      "High quality, no key required, no published rate limits. Official MLB data source.",
+    vendor_contact: "https://www.mlb.com/contact",
+    notes:
+      "H-S probe 2026-08-29: 2/2 calls OK (daily schedule 168ms, teams list 38ms). " +
+      "Official MLB Stats API — comprehensive schedules, results, team/player stats. " +
+      "NOT an odds source. Registry entry added per H-S map; all flags false until terms clearance.",
+  },
+
+  // Probed OK, no key, German jurisdiction, no rate limits observed
+  {
+    source_id: "openligadb",
+    source_name: "OpenLigaDB",
+    source_url: "https://api.openligadb.de",
+    terms_url: "https://www.openligadb.de/terms",
+    robots_url: null,
+    jurisdiction: "DE",
+    source_type: "official_league_site",
+    status: "approved_public_logged_off",
+    automation_allowed: true,
+    public_logged_off_allowed: true,
+    commercial_display_allowed: true,
+    storage_allowed: true,
+    derived_analytics_allowed: true,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Data via OpenLigaDB (openligadb.de)",
+    personal_data_risk: "none",
+    copyright_expression_risk: "low",
+    database_right_risk: "low",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-29",
+    reviewed_by: "hermes",
+    evidence_urls: [
+      "https://api.openligadb.de/getmatchdata/bl1/2026/1",
+      "https://api.openligadb.de/getcurrentgroup/bl1",
+    ],
+    unlock_condition: null,
+    vendor_contact: "https://www.openligadb.de/contact",
+    notes:
+      "H-S probe 2026-08-29: 2/2 calls OK (BL1 matchdata 556ms, current group 129ms). " +
+      "German football league data (Bundesliga, 2. Bundesliga, etc.). No key, no rate limits observed. " +
+      "NOT an odds source. Cleared as approved_public_logged_off per German open data posture.",
+  },
+
+  // Probed partially OK (competitions list works, match data needs free tier key)
+  {
+    source_id: "football-data-org",
+    source_name: "football-data.org",
+    source_url: "https://api.football-data.org/v4",
+    terms_url: "https://www.football-data.org/client/terms",
+    robots_url: null,
+    jurisdiction: "DE",
+    source_type: "sports_data_api",
+    status: "vendor_candidate",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: true,
+    attribution_text: "Data via football-data.org",
+    personal_data_risk: "none",
+    copyright_expression_risk: "medium",
+    database_right_risk: "medium",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-08-29",
+    reviewed_by: "hermes",
+    evidence_urls: [
+      "https://api.football-data.org/v4/competitions",
+      "https://api.football-data.org/v4/competitions/PL/matches?dateFrom=2026-08-20&dateTo=2026-08-27",
+    ],
+    unlock_condition:
+      "Free tier API key registration + terms review confirming commercial use is permitted. " +
+      "Soccer only (competitions, matches, standings).",
+    vendor_contact: "https://www.football-data.org/contact",
+    notes:
+      "H-S probe 2026-08-29: 1/2 OK (competitions list 200 in 308ms, PL matches 403 without key). " +
+      "Free tier requires API key registration (10 req/min). Soccer only. " +
+      "NOT an odds source. Registry entry added per H-S map; all flags false until key + terms clearance.",
   },
 
   // ── Permission required ──────────────────────────────────────────────────────
