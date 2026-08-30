@@ -1,0 +1,32 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Strix",
+          "informationUri": "https://strix.ai",
+          "rules": [],
+          "version": "1.5.3"
+        }
+      },
+      "results": [],
+      "automationDetails": {
+        "id": "strix/Beexly/Sports"
+      },
+      "versionControlProvenance": [
+        {
+          "repositoryUri": "https://github.com/Beexly/Sports",
+          "revisionId": "bb0e7dfc02b5c11295317f4c4af56d5df19fbbe3",
+          "branch": "main"
+        }
+      ],
+      "properties": {
+        "repository": "Beexly/Sports",
+        "ref": "refs/heads/main",
+        "commit_sha": "bb0e7dfc02b5c11295317f4c4af56d5df19fbbe3"
+      }
+    }
+  ]
+}

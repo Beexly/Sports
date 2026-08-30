@@ -1,0 +1,1227 @@
+2026-08-28 12:33:59.574 INFO    sports_145b - strix.core.runner: Starting Strix scan sports_145b (image=ghcr.io/usestrix/strix-sandbox:1.3.0, max_turns=500, interactive=False, run_dir=C:\Users\Garrett\Sports\strix_runs\sports_145b)
+2026-08-28 12:33:59.575 INFO    sports_145b - strix.core.runner: LLM model resolved: openrouter/nvidia/nemotron-3-super-120b-a12b:free
+2026-08-28 12:33:59.575 INFO    sports_145b - strix.core.runner: Bringing up sandbox session for scan sports_145b
+2026-08-28 12:33:59.575 DEBUG   sports_145b - strix.runtime.backends: Selected sandbox backend: docker
+2026-08-28 12:33:59.575 INFO    sports_145b - strix.runtime.session_manager: Creating sandbox session for scan sports_145b (backend=docker, image=ghcr.io/usestrix/strix-sandbox:1.3.0)
+2026-08-28 12:34:00.350 DEBUG   sports_145b - strix.runtime.docker_client: Creating sandbox container: image=ghcr.io/usestrix/strix-sandbox:1.3.0 caps=['NET_ADMIN', 'NET_RAW'] exposed_ports=[48080]
+2026-08-28 12:34:01.217 INFO    sports_145b - strix.runtime.docker_client: Sandbox container created: id=f9fd7346f786 image=ghcr.io/usestrix/strix-sandbox:1.3.0
+2026-08-28 12:34:04.426 DEBUG   sports_145b - strix.runtime.session_manager: Caido host endpoint resolved: http://127.0.0.1:52097
+2026-08-28 12:34:04.426 INFO    sports_145b - strix.runtime.caido_bootstrap: Bootstrapping Caido client (host=http://127.0.0.1:52097, container=http://127.0.0.1:48080)
+2026-08-28 12:34:05.320 INFO    sports_145b - strix.runtime.caido_bootstrap: Caido project selected: d40f8e6d-959d-4cce-aca3-93036d84865c
+2026-08-28 12:34:05.320 INFO    sports_145b - strix.runtime.session_manager: Sandbox session for scan sports_145b ready and cached
+2026-08-28 12:34:05.320 INFO    sports_145b - strix.core.runner: Sandbox ready for scan sports_145b
+2026-08-28 12:34:05.325 DEBUG   sports_145b - strix.skills: Loaded skill: scan_modes/standard -> standard
+2026-08-28 12:34:05.327 DEBUG   sports_145b - strix.skills: Loaded skill: tooling/agent_browser -> agent_browser
+2026-08-28 12:34:05.334 DEBUG   sports_145b - strix.skills: Loaded skill: tooling/python -> python
+2026-08-28 12:34:05.341 DEBUG   sports_145b - strix.skills: Loaded skill: coordination/root_agent -> root_agent
+2026-08-28 12:34:05.344 DEBUG   sports_145b - strix.skills: load_skills: 4 skill(s) resolved
+2026-08-28 12:34:05.456 DEBUG   sports_145b - strix.agents.prompt: render_system_prompt: scan_mode=standard root=True whitebox=False skills=4 prompt_len=75062
+2026-08-28 12:34:05.456 INFO    sports_145b - strix.agents.factory: Built root agent 'Root Agent' (skills=0, tools=30, scan_mode=standard, whitebox=False)
+2026-08-28 12:34:05.457 INFO    sports_145b - strix.core.agents: agent.register f8aaa861 (Root Agent) parent=-
+2026-08-28 12:34:05.680 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating trace
+2026-08-28 12:34:05.682 DEBUG   sports_145b - openai.agents: Setting current trace: no-op
+2026-08-28 12:34:05.682 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:05.953 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:05.953 DEBUG   sports_145b - openai.agents: Starting turn 1, current_agent=Root Agent
+2026-08-28 12:34:05.953 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:05.955 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:05.956 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:05.958 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:34:06.283 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:34:06.463 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:34:06.511 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:34:06.522 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:34:07.200 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:34:07.471 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:34:07.509 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:34:07.539 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:34:15.390 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:34:15.392 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:34:15.393 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:34:15.393 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:34:15.394 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:15.687 DEBUG   sports_145b - openai.agents: Turn 1 complete, next_step type=NextStepRunAgain
+2026-08-28 12:34:15.855 DEBUG   sports_145b - openai.agents: Starting turn 2, current_agent=Root Agent
+2026-08-28 12:34:15.856 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:15.858 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:15.859 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:15.860 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:34:17.929 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:34:17.931 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:34:17.932 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:34:17.932 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:34:17.933 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:19.229 DEBUG   sports_145b - openai.agents: Turn 2 complete, next_step type=NextStepRunAgain
+2026-08-28 12:34:19.460 DEBUG   sports_145b - openai.agents: Starting turn 3, current_agent=Root Agent
+2026-08-28 12:34:19.460 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:19.462 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:19.462 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:19.464 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:34:21.775 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:34:21.777 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:34:21.779 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:34:21.780 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:34:21.781 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:22.191 DEBUG   sports_145b - openai.agents: Turn 3 complete, next_step type=NextStepRunAgain
+2026-08-28 12:34:22.432 DEBUG   sports_145b - openai.agents: Starting turn 4, current_agent=Root Agent
+2026-08-28 12:34:22.432 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:22.433 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:22.433 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:22.437 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:34:26.349 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:34:26.351 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:34:26.351 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:34:26.353 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:34:26.354 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:28.237 DEBUG   sports_145b - openai.agents: Turn 4 complete, next_step type=NextStepRunAgain
+2026-08-28 12:34:28.551 DEBUG   sports_145b - openai.agents: Starting turn 5, current_agent=Root Agent
+2026-08-28 12:34:28.551 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:28.552 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:28.554 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:28.556 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:34:38.385 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:34:38.388 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:34:38.389 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:34:38.389 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:34:38.390 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:39.528 DEBUG   sports_145b - openai.agents: Turn 5 complete, next_step type=NextStepRunAgain
+2026-08-28 12:34:39.655 DEBUG   sports_145b - openai.agents: Starting turn 6, current_agent=Root Agent
+2026-08-28 12:34:39.655 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:39.658 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:39.658 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:39.661 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:34:45.536 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:34:45.545 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:34:45.546 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:34:45.546 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:34:45.547 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:45.783 DEBUG   sports_145b - openai.agents: Turn 6 complete, next_step type=NextStepRunAgain
+2026-08-28 12:34:45.880 DEBUG   sports_145b - openai.agents: Starting turn 7, current_agent=Root Agent
+2026-08-28 12:34:45.880 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:45.881 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:45.882 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:45.884 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:34:50.483 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:34:50.486 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:34:50.486 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:34:50.486 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:34:50.488 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:50.716 DEBUG   sports_145b - openai.agents: Turn 7 complete, next_step type=NextStepRunAgain
+2026-08-28 12:34:50.800 DEBUG   sports_145b - openai.agents: Starting turn 8, current_agent=Root Agent
+2026-08-28 12:34:50.801 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:50.803 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:34:50.804 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:34:50.811 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:27.580 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:27.583 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:27.584 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:27.584 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:27.585 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:27.944 DEBUG   sports_145b - openai.agents: Turn 8 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:28.103 DEBUG   sports_145b - openai.agents: Starting turn 9, current_agent=Root Agent
+2026-08-28 12:35:28.104 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:28.110 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:28.111 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:28.358 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:32.400 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:32.405 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:32.407 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:32.407 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:32.408 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:32.717 DEBUG   sports_145b - openai.agents: Turn 9 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:32.859 DEBUG   sports_145b - openai.agents: Starting turn 10, current_agent=Root Agent
+2026-08-28 12:35:32.860 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:32.862 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:32.862 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:32.865 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:35.762 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:35.766 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:35.767 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:35.767 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:35.770 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:36.918 DEBUG   sports_145b - openai.agents: Turn 10 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:37.017 DEBUG   sports_145b - openai.agents: Starting turn 11, current_agent=Root Agent
+2026-08-28 12:35:37.017 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:37.019 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:37.020 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:37.022 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:38.942 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:38.944 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:38.953 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:38.953 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:38.955 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:39.276 DEBUG   sports_145b - openai.agents: Turn 11 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:39.486 DEBUG   sports_145b - openai.agents: Starting turn 12, current_agent=Root Agent
+2026-08-28 12:35:39.486 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:39.489 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:39.489 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:39.491 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:42.510 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:42.514 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:42.515 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:42.515 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:42.517 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:42.963 DEBUG   sports_145b - openai.agents: Turn 12 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:43.144 DEBUG   sports_145b - openai.agents: Starting turn 13, current_agent=Root Agent
+2026-08-28 12:35:43.145 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:43.146 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:43.147 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:43.150 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:47.464 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:47.468 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:47.469 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:47.469 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:47.470 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:47.843 DEBUG   sports_145b - openai.agents: Turn 13 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:47.932 DEBUG   sports_145b - openai.agents: Starting turn 14, current_agent=Root Agent
+2026-08-28 12:35:47.932 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:47.935 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:47.935 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:47.938 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:50.446 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:50.449 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:50.450 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:50.450 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:50.451 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:50.874 DEBUG   sports_145b - openai.agents: Turn 14 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:51.060 DEBUG   sports_145b - openai.agents: Starting turn 15, current_agent=Root Agent
+2026-08-28 12:35:51.060 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:51.062 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:51.062 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:51.065 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:54.629 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:54.631 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:54.632 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:54.632 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:54.633 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:54.950 DEBUG   sports_145b - openai.agents: Turn 15 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:55.063 DEBUG   sports_145b - openai.agents: Starting turn 16, current_agent=Root Agent
+2026-08-28 12:35:55.063 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:55.066 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:55.067 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:55.070 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:35:56.947 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:35:56.951 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:35:56.952 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:35:56.952 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:35:56.953 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:57.320 DEBUG   sports_145b - openai.agents: Turn 16 complete, next_step type=NextStepRunAgain
+2026-08-28 12:35:57.543 DEBUG   sports_145b - openai.agents: Starting turn 17, current_agent=Root Agent
+2026-08-28 12:35:57.543 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:57.545 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:35:57.546 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:35:57.550 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:01.801 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:01.811 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:01.813 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:01.813 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:01.815 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:02.287 DEBUG   sports_145b - openai.agents: Turn 17 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:02.560 DEBUG   sports_145b - openai.agents: Starting turn 18, current_agent=Root Agent
+2026-08-28 12:36:02.560 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:02.562 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:02.562 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:02.566 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:07.529 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:07.537 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:07.539 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:07.539 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:07.540 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:08.100 DEBUG   sports_145b - openai.agents: Turn 18 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:08.267 DEBUG   sports_145b - openai.agents: Starting turn 19, current_agent=Root Agent
+2026-08-28 12:36:08.268 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:08.270 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:08.273 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:08.277 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:20.704 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:20.707 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:20.708 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:20.708 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:20.708 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:21.174 DEBUG   sports_145b - openai.agents: Turn 19 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:21.305 DEBUG   sports_145b - openai.agents: Starting turn 20, current_agent=Root Agent
+2026-08-28 12:36:21.305 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:21.308 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:21.311 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:21.314 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:26.515 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:26.519 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:26.520 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:26.520 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:26.531 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:28.444 DEBUG   sports_145b - openai.agents: Turn 20 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:28.607 DEBUG   sports_145b - openai.agents: Starting turn 21, current_agent=Root Agent
+2026-08-28 12:36:28.607 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:28.610 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:28.611 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:28.613 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:30.207 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:30.211 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:30.212 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:30.213 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:30.214 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:32.221 DEBUG   sports_145b - openai.agents: Turn 21 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:32.494 DEBUG   sports_145b - openai.agents: Starting turn 22, current_agent=Root Agent
+2026-08-28 12:36:32.495 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:32.497 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:32.497 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:32.504 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:36.132 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:36.135 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:36.138 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:36.138 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:36.141 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:36.731 DEBUG   sports_145b - openai.agents: Turn 22 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:36.973 DEBUG   sports_145b - openai.agents: Starting turn 23, current_agent=Root Agent
+2026-08-28 12:36:36.973 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:36.975 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:36.976 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:36.985 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:38.054 DEBUG   sports_145b - openai.agents: Retrying failed streamed model request in 2.0s (attempt 1/5).
+2026-08-28 12:36:40.044 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:40.048 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:43.494 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:43.497 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:43.500 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:43.500 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:43.501 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:43.966 DEBUG   sports_145b - openai.agents: Turn 23 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:44.081 DEBUG   sports_145b - openai.agents: Starting turn 24, current_agent=Root Agent
+2026-08-28 12:36:44.081 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:44.083 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:44.084 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:44.087 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:36:46.247 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:36:46.250 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:36:46.251 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:36:46.251 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:36:46.253 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:47.806 DEBUG   sports_145b - openai.agents: Turn 24 complete, next_step type=NextStepRunAgain
+2026-08-28 12:36:47.983 DEBUG   sports_145b - openai.agents: Starting turn 25, current_agent=Root Agent
+2026-08-28 12:36:47.984 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:47.987 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:36:47.988 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:36:47.998 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:13.764 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:13.767 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:13.770 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:13.770 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:13.772 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:23.979 DEBUG   sports_145b - openai.agents: Turn 25 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:24.264 DEBUG   sports_145b - openai.agents: Starting turn 26, current_agent=Root Agent
+2026-08-28 12:37:24.265 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:24.267 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:24.267 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:24.271 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:27.078 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:27.082 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:27.084 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:27.084 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:27.088 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:27.446 DEBUG   sports_145b - openai.agents: Turn 26 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:27.605 DEBUG   sports_145b - openai.agents: Starting turn 27, current_agent=Root Agent
+2026-08-28 12:37:27.607 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:27.608 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:27.609 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:27.612 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:28.157 DEBUG   sports_145b - openai.agents: Retrying failed streamed model request in 2.0s (attempt 1/5).
+2026-08-28 12:37:30.165 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:30.168 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:31.925 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:31.929 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:31.930 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:31.930 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:31.931 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:36.934 DEBUG   sports_145b - openai.agents: Turn 27 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:37.071 DEBUG   sports_145b - openai.agents: Starting turn 28, current_agent=Root Agent
+2026-08-28 12:37:37.071 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:37.073 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:37.074 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:37.077 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:40.439 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:40.444 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:40.445 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:40.445 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:40.448 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:40.805 DEBUG   sports_145b - openai.agents: Turn 28 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:41.220 DEBUG   sports_145b - openai.agents: Starting turn 29, current_agent=Root Agent
+2026-08-28 12:37:41.220 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:41.227 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:41.227 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:41.230 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:44.756 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:44.760 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:44.761 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:44.762 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:44.763 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:45.588 DEBUG   sports_145b - openai.agents: Turn 29 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:46.503 DEBUG   sports_145b - openai.agents: Starting turn 30, current_agent=Root Agent
+2026-08-28 12:37:46.504 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:46.507 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:46.507 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:46.511 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:49.573 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:49.576 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:49.577 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:49.577 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:49.580 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:50.187 DEBUG   sports_145b - openai.agents: Turn 30 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:50.519 DEBUG   sports_145b - openai.agents: Starting turn 31, current_agent=Root Agent
+2026-08-28 12:37:50.519 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:50.522 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:50.522 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:50.525 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:52.401 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:52.406 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:52.409 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:52.409 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:52.410 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:53.152 DEBUG   sports_145b - openai.agents: Turn 31 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:53.490 DEBUG   sports_145b - openai.agents: Starting turn 32, current_agent=Root Agent
+2026-08-28 12:37:53.491 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:53.493 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:53.493 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:53.497 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:55.459 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:55.463 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:55.468 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:55.468 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:55.470 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:56.881 DEBUG   sports_145b - openai.agents: Turn 32 complete, next_step type=NextStepRunAgain
+2026-08-28 12:37:57.131 DEBUG   sports_145b - openai.agents: Starting turn 33, current_agent=Root Agent
+2026-08-28 12:37:57.133 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:57.135 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:37:57.135 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:37:57.140 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:37:58.853 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:37:58.856 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:37:58.858 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:37:58.858 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:37:58.859 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:01.089 DEBUG   sports_145b - openai.agents: Turn 33 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:01.693 DEBUG   sports_145b - openai.agents: Starting turn 34, current_agent=Root Agent
+2026-08-28 12:38:01.696 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:01.700 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:01.700 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:01.705 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:03.888 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:03.893 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:03.900 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:03.900 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:03.905 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:04.609 DEBUG   sports_145b - openai.agents: Turn 34 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:04.864 DEBUG   sports_145b - openai.agents: Starting turn 35, current_agent=Root Agent
+2026-08-28 12:38:04.864 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:04.867 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:04.867 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:04.871 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:07.478 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:07.482 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:07.484 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:07.484 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:07.485 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:07.855 DEBUG   sports_145b - openai.agents: Turn 35 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:08.142 DEBUG   sports_145b - openai.agents: Starting turn 36, current_agent=Root Agent
+2026-08-28 12:38:08.142 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:08.145 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:08.145 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:08.150 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:13.824 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:13.827 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:13.830 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:13.831 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:13.832 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:14.392 DEBUG   sports_145b - openai.agents: Turn 36 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:14.574 DEBUG   sports_145b - openai.agents: Starting turn 37, current_agent=Root Agent
+2026-08-28 12:38:14.575 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:14.578 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:14.579 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:14.583 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:18.107 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:18.112 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:18.114 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:18.114 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:18.116 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:18.581 DEBUG   sports_145b - openai.agents: Turn 37 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:18.758 DEBUG   sports_145b - openai.agents: Starting turn 38, current_agent=Root Agent
+2026-08-28 12:38:18.758 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:18.762 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:18.763 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:18.767 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:22.862 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:22.866 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:22.868 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:22.868 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:22.871 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:25.191 DEBUG   sports_145b - openai.agents: Turn 38 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:25.357 DEBUG   sports_145b - openai.agents: Starting turn 39, current_agent=Root Agent
+2026-08-28 12:38:25.357 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:25.360 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:25.361 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:25.364 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:27.174 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:27.179 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:27.180 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:27.180 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:27.183 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:27.887 DEBUG   sports_145b - openai.agents: Turn 39 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:27.995 DEBUG   sports_145b - openai.agents: Starting turn 40, current_agent=Root Agent
+2026-08-28 12:38:27.995 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:28.001 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:28.001 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:28.008 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:36.212 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:36.220 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:36.222 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:36.222 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:36.232 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:36.602 DEBUG   sports_145b - openai.agents: Turn 40 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:36.792 DEBUG   sports_145b - openai.agents: Starting turn 41, current_agent=Root Agent
+2026-08-28 12:38:36.793 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:36.797 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:36.797 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:36.800 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:38.530 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:38.535 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:38.537 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:38.537 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:38.539 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:38.893 DEBUG   sports_145b - openai.agents: Turn 41 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:38.999 DEBUG   sports_145b - openai.agents: Starting turn 42, current_agent=Root Agent
+2026-08-28 12:38:38.999 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:39.002 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:39.002 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:39.007 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:45.347 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:45.352 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:45.354 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:45.354 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:45.357 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:45.997 DEBUG   sports_145b - openai.agents: Turn 42 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:46.225 DEBUG   sports_145b - openai.agents: Starting turn 43, current_agent=Root Agent
+2026-08-28 12:38:46.226 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:46.230 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:46.230 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:46.234 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:38:52.991 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:38:52.996 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:38:52.998 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:38:52.998 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:38:53.000 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:53.525 DEBUG   sports_145b - openai.agents: Turn 43 complete, next_step type=NextStepRunAgain
+2026-08-28 12:38:53.761 DEBUG   sports_145b - openai.agents: Starting turn 44, current_agent=Root Agent
+2026-08-28 12:38:53.761 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:53.765 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:38:53.766 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:38:53.770 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:03.544 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:03.549 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:03.552 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:03.552 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:03.555 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:04.039 DEBUG   sports_145b - openai.agents: Turn 44 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:04.192 DEBUG   sports_145b - openai.agents: Starting turn 45, current_agent=Root Agent
+2026-08-28 12:39:04.192 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:04.196 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:04.196 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:04.199 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:11.222 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:11.227 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:11.228 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:11.228 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:11.231 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:11.713 DEBUG   sports_145b - openai.agents: Turn 45 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:11.863 DEBUG   sports_145b - openai.agents: Starting turn 46, current_agent=Root Agent
+2026-08-28 12:39:11.863 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:11.866 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:11.867 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:11.871 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:12.956 DEBUG   sports_145b - openai.agents: Retrying failed streamed model request in 2.0s (attempt 1/5).
+2026-08-28 12:39:14.959 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:14.963 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:16.657 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:16.663 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:16.664 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:16.664 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:16.666 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:18.034 DEBUG   sports_145b - openai.agents: Turn 46 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:18.165 DEBUG   sports_145b - openai.agents: Starting turn 47, current_agent=Root Agent
+2026-08-28 12:39:18.165 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:18.169 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:18.170 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:18.175 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:27.761 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:27.771 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:27.773 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:27.773 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:27.777 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:29.506 DEBUG   sports_145b - openai.agents: Turn 47 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:29.828 DEBUG   sports_145b - openai.agents: Starting turn 48, current_agent=Root Agent
+2026-08-28 12:39:29.829 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:29.836 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:29.836 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:29.840 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:31.776 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:31.786 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:31.788 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:31.788 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:31.790 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:33.107 DEBUG   sports_145b - openai.agents: Turn 48 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:33.297 DEBUG   sports_145b - openai.agents: Starting turn 49, current_agent=Root Agent
+2026-08-28 12:39:33.297 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:33.301 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:33.301 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:33.305 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:35.562 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:35.566 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:35.568 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:35.568 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:35.571 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:36.016 DEBUG   sports_145b - openai.agents: Turn 49 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:36.190 DEBUG   sports_145b - openai.agents: Starting turn 50, current_agent=Root Agent
+2026-08-28 12:39:36.190 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:36.194 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:36.195 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:36.199 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:38.233 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:38.239 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:38.241 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:38.241 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:38.244 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:38.732 DEBUG   sports_145b - openai.agents: Turn 50 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:38.881 DEBUG   sports_145b - openai.agents: Starting turn 51, current_agent=Root Agent
+2026-08-28 12:39:38.882 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:38.886 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:38.886 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:38.891 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:39.930 DEBUG   sports_145b - openai.agents: Retrying failed streamed model request in 2.0s (attempt 1/5).
+2026-08-28 12:39:41.921 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:41.926 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:43.628 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:43.633 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:43.635 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:43.635 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:43.638 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:43.984 DEBUG   sports_145b - openai.agents: Turn 51 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:44.117 DEBUG   sports_145b - openai.agents: Starting turn 52, current_agent=Root Agent
+2026-08-28 12:39:44.117 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:44.123 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:44.123 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:44.127 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:46.361 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:46.369 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:46.372 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:46.372 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:46.373 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:48.313 DEBUG   sports_145b - openai.agents: Turn 52 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:48.433 DEBUG   sports_145b - openai.agents: Starting turn 53, current_agent=Root Agent
+2026-08-28 12:39:48.433 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:48.439 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:48.442 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:48.447 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:50.458 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:50.463 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:50.465 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:50.465 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:50.467 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:51.704 DEBUG   sports_145b - openai.agents: Turn 53 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:51.821 DEBUG   sports_145b - openai.agents: Starting turn 54, current_agent=Root Agent
+2026-08-28 12:39:51.821 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:51.827 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:51.828 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:51.832 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:53.936 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:53.941 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:53.942 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:53.942 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:53.946 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:55.795 DEBUG   sports_145b - openai.agents: Turn 54 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:55.949 DEBUG   sports_145b - openai.agents: Starting turn 55, current_agent=Root Agent
+2026-08-28 12:39:55.950 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:55.953 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:55.955 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:55.961 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:39:58.004 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:39:58.010 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:39:58.012 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:39:58.012 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:39:58.014 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:59.298 DEBUG   sports_145b - openai.agents: Turn 55 complete, next_step type=NextStepRunAgain
+2026-08-28 12:39:59.407 DEBUG   sports_145b - openai.agents: Starting turn 56, current_agent=Root Agent
+2026-08-28 12:39:59.407 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:59.411 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:39:59.411 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:39:59.416 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:40:05.966 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:40:05.972 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:40:05.974 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:40:05.975 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:40:05.978 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:06.400 DEBUG   sports_145b - openai.agents: Turn 56 complete, next_step type=NextStepRunAgain
+2026-08-28 12:40:06.527 DEBUG   sports_145b - openai.agents: Starting turn 57, current_agent=Root Agent
+2026-08-28 12:40:06.527 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:06.541 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:40:06.541 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:06.546 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:40:13.938 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:40:13.946 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:40:13.948 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:40:13.948 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:40:13.949 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:15.894 DEBUG   sports_145b - openai.agents: Turn 57 complete, next_step type=NextStepRunAgain
+2026-08-28 12:40:16.107 DEBUG   sports_145b - openai.agents: Starting turn 58, current_agent=Root Agent
+2026-08-28 12:40:16.107 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:16.111 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:40:16.112 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:16.115 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:40:27.009 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:40:27.014 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:40:27.018 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:40:27.018 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:40:27.022 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:28.196 DEBUG   sports_145b - openai.agents: Turn 58 complete, next_step type=NextStepRunAgain
+2026-08-28 12:40:28.306 DEBUG   sports_145b - openai.agents: Starting turn 59, current_agent=Root Agent
+2026-08-28 12:40:28.306 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:28.309 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:40:28.310 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:28.315 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:40:41.955 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:40:41.963 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:40:41.971 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:40:41.972 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:40:41.975 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:42.462 DEBUG   sports_145b - openai.agents: Turn 59 complete, next_step type=NextStepRunAgain
+2026-08-28 12:40:42.559 DEBUG   sports_145b - openai.agents: Starting turn 60, current_agent=Root Agent
+2026-08-28 12:40:42.559 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:42.564 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:40:42.564 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:42.569 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:40:50.562 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:40:50.567 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:40:50.568 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:40:50.569 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:40:50.570 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:50.930 DEBUG   sports_145b - openai.agents: Turn 60 complete, next_step type=NextStepRunAgain
+2026-08-28 12:40:51.033 DEBUG   sports_145b - openai.agents: Starting turn 61, current_agent=Root Agent
+2026-08-28 12:40:51.034 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:51.040 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:40:51.041 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:51.044 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:40:55.662 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:40:55.666 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:40:55.669 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:40:55.669 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:40:55.670 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:57.536 DEBUG   sports_145b - openai.agents: Turn 61 complete, next_step type=NextStepRunAgain
+2026-08-28 12:40:57.619 DEBUG   sports_145b - openai.agents: Starting turn 62, current_agent=Root Agent
+2026-08-28 12:40:57.619 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:57.625 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:40:57.625 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:40:57.629 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:04.141 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:04.146 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:04.149 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:04.149 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:04.151 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:05.316 DEBUG   sports_145b - openai.agents: Turn 62 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:05.540 DEBUG   sports_145b - openai.agents: Starting turn 63, current_agent=Root Agent
+2026-08-28 12:41:05.540 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:05.544 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:05.544 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:05.549 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:07.902 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:07.908 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:07.911 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:07.911 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:07.912 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:09.845 DEBUG   sports_145b - openai.agents: Turn 63 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:09.933 DEBUG   sports_145b - openai.agents: Starting turn 64, current_agent=Root Agent
+2026-08-28 12:41:09.935 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:09.939 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:09.939 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:09.944 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:13.239 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:13.243 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:13.246 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:13.246 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:13.249 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:13.686 DEBUG   sports_145b - openai.agents: Turn 64 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:13.829 DEBUG   sports_145b - openai.agents: Starting turn 65, current_agent=Root Agent
+2026-08-28 12:41:13.831 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:13.835 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:13.835 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:13.839 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:24.243 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:24.248 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:24.251 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:24.251 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:24.253 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:25.894 DEBUG   sports_145b - openai.agents: Turn 65 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:25.985 DEBUG   sports_145b - openai.agents: Starting turn 66, current_agent=Root Agent
+2026-08-28 12:41:25.986 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:25.997 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:25.997 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:26.002 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:42.774 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:42.780 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:42.783 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:42.783 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:42.785 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:44.008 DEBUG   sports_145b - openai.agents: Turn 66 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:44.089 DEBUG   sports_145b - openai.agents: Starting turn 67, current_agent=Root Agent
+2026-08-28 12:41:44.090 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:44.095 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:44.095 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:44.099 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:48.946 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:48.951 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:48.953 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:48.953 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:48.954 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:50.333 DEBUG   sports_145b - openai.agents: Turn 67 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:50.445 DEBUG   sports_145b - openai.agents: Starting turn 68, current_agent=Root Agent
+2026-08-28 12:41:50.445 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:50.449 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:50.450 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:50.454 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:55.159 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:55.166 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:55.168 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:55.168 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:55.170 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:56.337 DEBUG   sports_145b - openai.agents: Turn 68 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:56.395 DEBUG   sports_145b - openai.agents: Starting turn 69, current_agent=Root Agent
+2026-08-28 12:41:56.396 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:56.402 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:56.403 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:56.408 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:41:58.474 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:41:58.481 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:41:58.483 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:41:58.483 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:41:58.485 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:59.577 DEBUG   sports_145b - openai.agents: Turn 69 complete, next_step type=NextStepRunAgain
+2026-08-28 12:41:59.665 DEBUG   sports_145b - openai.agents: Starting turn 70, current_agent=Root Agent
+2026-08-28 12:41:59.665 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:59.670 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:41:59.670 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:41:59.674 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:42:02.387 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:42:02.393 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:42:02.399 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:42:02.400 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:42:02.401 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:03.638 DEBUG   sports_145b - openai.agents: Turn 70 complete, next_step type=NextStepRunAgain
+2026-08-28 12:42:03.776 DEBUG   sports_145b - openai.agents: Starting turn 71, current_agent=Root Agent
+2026-08-28 12:42:03.776 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:03.782 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:42:03.782 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:03.785 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:42:05.818 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:42:05.824 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:42:05.826 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:42:05.826 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:42:05.827 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:07.030 DEBUG   sports_145b - openai.agents: Turn 71 complete, next_step type=NextStepRunAgain
+2026-08-28 12:42:07.113 DEBUG   sports_145b - openai.agents: Starting turn 72, current_agent=Root Agent
+2026-08-28 12:42:07.114 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:07.119 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:42:07.120 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:07.124 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:42:27.196 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:42:27.203 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:42:27.206 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:42:27.206 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:42:27.209 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:28.778 DEBUG   sports_145b - openai.agents: Turn 72 complete, next_step type=NextStepRunAgain
+2026-08-28 12:42:28.869 DEBUG   sports_145b - openai.agents: Starting turn 73, current_agent=Root Agent
+2026-08-28 12:42:28.869 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:28.874 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:42:28.875 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:28.878 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:42:30.902 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:42:30.908 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:42:30.912 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:42:30.912 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:42:30.913 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:31.095 DEBUG   sports_145b - openai.agents: Turn 73 complete, next_step type=NextStepRunAgain
+2026-08-28 12:42:31.164 DEBUG   sports_145b - openai.agents: Starting turn 74, current_agent=Root Agent
+2026-08-28 12:42:31.165 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:31.173 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:42:31.174 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:31.178 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:42:39.367 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:42:39.373 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:42:39.375 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:42:39.375 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:42:39.378 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:40.522 DEBUG   sports_145b - openai.agents: Turn 74 complete, next_step type=NextStepRunAgain
+2026-08-28 12:42:40.601 DEBUG   sports_145b - openai.agents: Starting turn 75, current_agent=Root Agent
+2026-08-28 12:42:40.601 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:40.606 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:42:40.607 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:40.610 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:42:45.847 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:42:45.859 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:42:45.863 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:42:45.863 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:42:45.868 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:46.043 DEBUG   sports_145b - openai.agents: Turn 75 complete, next_step type=NextStepRunAgain
+2026-08-28 12:42:46.135 DEBUG   sports_145b - openai.agents: Starting turn 76, current_agent=Root Agent
+2026-08-28 12:42:46.136 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:46.143 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:42:46.144 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:46.148 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:42:51.053 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:42:51.059 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:42:51.061 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:42:51.062 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:42:51.065 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:51.274 DEBUG   sports_145b - openai.agents: Turn 76 complete, next_step type=NextStepRunAgain
+2026-08-28 12:42:51.339 DEBUG   sports_145b - openai.agents: Starting turn 77, current_agent=Root Agent
+2026-08-28 12:42:51.340 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:51.344 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:42:51.344 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:42:51.349 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:00.872 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:00.878 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:00.881 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:00.881 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:00.889 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:02.065 DEBUG   sports_145b - openai.agents: Turn 77 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:02.160 DEBUG   sports_145b - openai.agents: Starting turn 78, current_agent=Root Agent
+2026-08-28 12:43:02.161 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:02.167 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:02.167 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:02.172 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:04.398 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:04.404 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:04.407 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:04.407 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:04.409 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:05.508 DEBUG   sports_145b - openai.agents: Turn 78 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:05.562 DEBUG   sports_145b - openai.agents: Starting turn 79, current_agent=Root Agent
+2026-08-28 12:43:05.563 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:05.568 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:05.569 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:05.574 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:08.209 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:08.215 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:08.218 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:08.218 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:08.227 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:08.473 DEBUG   sports_145b - openai.agents: Turn 79 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:08.551 DEBUG   sports_145b - openai.agents: Starting turn 80, current_agent=Root Agent
+2026-08-28 12:43:08.551 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:08.560 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:08.560 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:08.565 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:11.859 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:11.864 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:11.866 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:11.866 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:11.869 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:12.222 DEBUG   sports_145b - openai.agents: Turn 80 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:12.279 DEBUG   sports_145b - openai.agents: Starting turn 81, current_agent=Root Agent
+2026-08-28 12:43:12.280 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:12.287 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:12.288 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:12.292 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:18.544 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:18.553 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:18.557 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:18.557 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:18.559 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:19.039 DEBUG   sports_145b - openai.agents: Turn 81 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:19.097 DEBUG   sports_145b - openai.agents: Starting turn 82, current_agent=Root Agent
+2026-08-28 12:43:19.097 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:19.104 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:19.104 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:19.109 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:21.153 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:21.159 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:21.161 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:21.161 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:21.164 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:21.415 DEBUG   sports_145b - openai.agents: Turn 82 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:21.482 DEBUG   sports_145b - openai.agents: Starting turn 83, current_agent=Root Agent
+2026-08-28 12:43:21.482 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:21.490 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:21.491 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:21.496 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:24.583 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:24.589 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:24.592 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:24.592 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:24.595 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:24.952 DEBUG   sports_145b - openai.agents: Turn 83 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:25.014 DEBUG   sports_145b - openai.agents: Starting turn 84, current_agent=Root Agent
+2026-08-28 12:43:25.014 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:25.019 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:25.020 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:25.024 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:27.926 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:27.931 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:27.933 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:27.933 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:27.935 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:28.450 DEBUG   sports_145b - openai.agents: Turn 84 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:28.516 DEBUG   sports_145b - openai.agents: Starting turn 85, current_agent=Root Agent
+2026-08-28 12:43:28.516 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:28.524 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:28.525 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:28.538 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:30.244 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:30.250 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:30.254 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:30.254 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:30.257 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:30.499 DEBUG   sports_145b - openai.agents: Turn 85 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:30.579 DEBUG   sports_145b - openai.agents: Starting turn 86, current_agent=Root Agent
+2026-08-28 12:43:30.580 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:30.585 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:30.585 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:30.592 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:32.768 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:32.774 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:32.776 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:32.777 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:32.778 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:33.110 DEBUG   sports_145b - openai.agents: Turn 86 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:33.174 DEBUG   sports_145b - openai.agents: Starting turn 87, current_agent=Root Agent
+2026-08-28 12:43:33.175 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:33.181 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:33.184 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:33.189 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:35.184 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:35.190 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:35.192 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:35.192 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:35.194 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:35.582 DEBUG   sports_145b - openai.agents: Turn 87 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:35.677 DEBUG   sports_145b - openai.agents: Starting turn 88, current_agent=Root Agent
+2026-08-28 12:43:35.677 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:35.692 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:35.692 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:35.697 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:51.034 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:51.042 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:51.052 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:51.052 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:51.059 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:51.359 DEBUG   sports_145b - openai.agents: Turn 88 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:51.422 DEBUG   sports_145b - openai.agents: Starting turn 89, current_agent=Root Agent
+2026-08-28 12:43:51.422 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:51.429 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:51.430 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:51.435 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:55.024 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:55.032 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:55.033 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:55.034 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:55.036 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:55.340 DEBUG   sports_145b - openai.agents: Turn 89 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:55.403 DEBUG   sports_145b - openai.agents: Starting turn 90, current_agent=Root Agent
+2026-08-28 12:43:55.403 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:55.413 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:55.414 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:55.418 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:43:58.126 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:43:58.134 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:43:58.137 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:43:58.137 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:43:58.139 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:58.651 DEBUG   sports_145b - openai.agents: Turn 90 complete, next_step type=NextStepRunAgain
+2026-08-28 12:43:58.755 DEBUG   sports_145b - openai.agents: Starting turn 91, current_agent=Root Agent
+2026-08-28 12:43:58.755 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:58.762 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:43:58.764 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:43:58.769 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:02.503 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:02.511 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:02.513 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:02.514 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:02.516 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:03.180 DEBUG   sports_145b - openai.agents: Turn 91 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:03.237 DEBUG   sports_145b - openai.agents: Starting turn 92, current_agent=Root Agent
+2026-08-28 12:44:03.237 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:03.244 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:03.245 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:03.247 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:06.764 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:06.771 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:06.774 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:06.774 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:06.776 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:06.960 DEBUG   sports_145b - openai.agents: Turn 92 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:07.058 DEBUG   sports_145b - openai.agents: Starting turn 93, current_agent=Root Agent
+2026-08-28 12:44:07.058 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:07.070 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:07.071 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:07.076 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:10.504 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:10.511 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:10.512 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:10.512 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:10.514 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:10.831 DEBUG   sports_145b - openai.agents: Turn 93 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:10.924 DEBUG   sports_145b - openai.agents: Starting turn 94, current_agent=Root Agent
+2026-08-28 12:44:10.924 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:10.932 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:10.935 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:10.941 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:11.674 DEBUG   sports_145b - openai.agents: Retrying failed streamed model request in 2.0s (attempt 1/5).
+2026-08-28 12:44:13.677 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:13.682 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:18.216 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:18.228 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:18.229 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:18.229 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:18.231 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:18.515 DEBUG   sports_145b - openai.agents: Turn 94 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:18.562 DEBUG   sports_145b - openai.agents: Starting turn 95, current_agent=Root Agent
+2026-08-28 12:44:18.563 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:18.570 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:18.571 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:18.575 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:22.455 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:22.466 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:22.469 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:22.469 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:22.471 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:22.812 DEBUG   sports_145b - openai.agents: Turn 95 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:22.871 DEBUG   sports_145b - openai.agents: Starting turn 96, current_agent=Root Agent
+2026-08-28 12:44:22.871 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:22.877 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:22.877 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:22.883 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:26.511 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:26.518 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:26.520 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:26.520 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:26.523 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:26.825 DEBUG   sports_145b - openai.agents: Turn 96 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:26.879 DEBUG   sports_145b - openai.agents: Starting turn 97, current_agent=Root Agent
+2026-08-28 12:44:26.880 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:26.885 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:26.886 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:26.891 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:30.195 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:30.201 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:30.204 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:30.204 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:30.207 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:30.553 DEBUG   sports_145b - openai.agents: Turn 97 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:30.618 DEBUG   sports_145b - openai.agents: Starting turn 98, current_agent=Root Agent
+2026-08-28 12:44:30.618 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:30.624 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:30.625 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:30.630 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:36.405 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:36.412 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:36.414 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:36.414 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:36.416 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:36.728 DEBUG   sports_145b - openai.agents: Turn 98 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:36.795 DEBUG   sports_145b - openai.agents: Starting turn 99, current_agent=Root Agent
+2026-08-28 12:44:36.795 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:36.801 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:36.801 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:36.806 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:41.090 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:41.099 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:41.101 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:41.101 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:41.102 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:41.423 DEBUG   sports_145b - openai.agents: Turn 99 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:41.483 DEBUG   sports_145b - openai.agents: Starting turn 100, current_agent=Root Agent
+2026-08-28 12:44:41.484 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:41.489 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:41.490 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:41.496 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:44.418 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:44.424 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:44.427 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:44.427 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:44.431 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:44.807 DEBUG   sports_145b - openai.agents: Turn 100 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:44.862 DEBUG   sports_145b - openai.agents: Starting turn 101, current_agent=Root Agent
+2026-08-28 12:44:44.862 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:44.871 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:44.872 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:44.877 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:44:48.211 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:44:48.217 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:44:48.220 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:44:48.220 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:44:48.223 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:48.708 DEBUG   sports_145b - openai.agents: Turn 101 complete, next_step type=NextStepRunAgain
+2026-08-28 12:44:48.833 DEBUG   sports_145b - openai.agents: Starting turn 102, current_agent=Root Agent
+2026-08-28 12:44:48.833 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:48.840 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:44:48.840 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:44:48.845 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:45:41.098 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:45:41.106 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:45:41.109 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:45:41.109 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:45:41.111 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:41.750 DEBUG   sports_145b - openai.agents: Turn 102 complete, next_step type=NextStepRunAgain
+2026-08-28 12:45:41.821 DEBUG   sports_145b - openai.agents: Starting turn 103, current_agent=Root Agent
+2026-08-28 12:45:41.821 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:41.828 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:45:41.828 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:41.837 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:45:45.097 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:45:45.104 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:45:45.108 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:45:45.108 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:45:45.114 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:45.379 DEBUG   sports_145b - openai.agents: Turn 103 complete, next_step type=NextStepRunAgain
+2026-08-28 12:45:45.487 DEBUG   sports_145b - openai.agents: Starting turn 104, current_agent=Root Agent
+2026-08-28 12:45:45.487 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:45.493 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:45:45.495 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:45.500 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:45:52.246 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:45:52.254 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:45:52.257 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:45:52.257 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:45:52.259 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:52.780 DEBUG   sports_145b - openai.agents: Turn 104 complete, next_step type=NextStepRunAgain
+2026-08-28 12:45:52.860 DEBUG   sports_145b - openai.agents: Starting turn 105, current_agent=Root Agent
+2026-08-28 12:45:52.860 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:52.871 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:45:52.872 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:52.876 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:45:55.974 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:45:55.980 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:45:55.983 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:45:55.985 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:45:55.987 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:56.320 DEBUG   sports_145b - openai.agents: Turn 105 complete, next_step type=NextStepRunAgain
+2026-08-28 12:45:56.375 DEBUG   sports_145b - openai.agents: Starting turn 106, current_agent=Root Agent
+2026-08-28 12:45:56.375 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:56.385 DEBUG   sports_145b - openai.agents: No conversation_id available for request
+2026-08-28 12:45:56.386 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:45:56.391 DEBUG   sports_145b - openai.agents: Calling LLM
+2026-08-28 12:48:31.270 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:48:31.278 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:48:31.281 DEBUG   sports_145b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:48:31.281 DEBUG   sports_145b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:48:31.283 DEBUG   sports_145b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:48:31.284 DEBUG   sports_145b - openai.agents: Invoking tool finish_scan
+2026-08-28 12:48:31.285 INFO    sports_145b - strix.report.state: Updated scan final fields
+2026-08-28 12:48:31.291 INFO    sports_145b - strix.report.writer: Saved final penetration test report to: C:\Users\Garrett\Sports\strix_runs\sports_145b\penetration_test_report.md
+2026-08-28 12:48:31.295 INFO    sports_145b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_145b\findings.sarif (0 results)
+2026-08-28 12:48:31.302 INFO    sports_145b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_145b
+2026-08-28 12:48:31.983 DEBUG   sports_145b - strix.telemetry.posthog: posthog event sent: scan_ended
+2026-08-28 12:48:32.757 DEBUG   sports_145b - strix.telemetry.scarf: scarf event sent: scan_ended
+2026-08-28 12:48:32.758 INFO    sports_145b - strix.tools.finish.tool: finish_scan: completed scan with 0 vulnerability report(s)
+2026-08-28 12:48:32.760 INFO    sports_145b - strix.core.agents: agent.status f8aaa861=completed
+2026-08-28 12:48:32.763 DEBUG   sports_145b - openai.agents: Tool finish_scan completed.
+2026-08-28 12:48:32.764 DEBUG   sports_145b - openai.agents: Turn 106 complete, next_step type=NextStepFinalOutput
+2026-08-28 12:48:32.801 DEBUG   sports_145b - openai.agents: Resetting current trace
+2026-08-28 12:48:32.806 INFO    sports_145b - strix.core.runner: Tearing down sandbox session for scan sports_145b
+2026-08-28 12:48:35.358 INFO    sports_145b - strix.runtime.session_manager: Cleaned up sandbox session for scan sports_145b
+2026-08-28 12:48:35.359 INFO    sports_145b - strix.core.runner: Strix scan sports_145b done

@@ -1,0 +1,79 @@
+2026-08-28 12:28:58.164 INFO    sports_af6b - strix.core.runner: Starting Strix scan sports_af6b (image=ghcr.io/usestrix/strix-sandbox:1.3.0, max_turns=3, interactive=False, run_dir=C:\Users\Garrett\Sports\strix_runs\sports_af6b)
+2026-08-28 12:28:58.164 INFO    sports_af6b - strix.core.runner: LLM model resolved: openrouter/nvidia/nemotron-3-super-120b-a12b:free
+2026-08-28 12:28:58.164 INFO    sports_af6b - strix.core.runner: Bringing up sandbox session for scan sports_af6b
+2026-08-28 12:28:58.164 DEBUG   sports_af6b - strix.runtime.backends: Selected sandbox backend: docker
+2026-08-28 12:28:58.165 INFO    sports_af6b - strix.runtime.session_manager: Creating sandbox session for scan sports_af6b (backend=docker, image=ghcr.io/usestrix/strix-sandbox:1.3.0)
+2026-08-28 12:28:59.611 DEBUG   sports_af6b - strix.runtime.docker_client: Creating sandbox container: image=ghcr.io/usestrix/strix-sandbox:1.3.0 caps=['NET_ADMIN', 'NET_RAW'] exposed_ports=[48080]
+2026-08-28 12:29:01.846 INFO    sports_af6b - strix.runtime.docker_client: Sandbox container created: id=7d01805a6a6b image=ghcr.io/usestrix/strix-sandbox:1.3.0
+2026-08-28 12:29:14.187 DEBUG   sports_af6b - strix.runtime.session_manager: Caido host endpoint resolved: http://127.0.0.1:51438
+2026-08-28 12:29:14.187 INFO    sports_af6b - strix.runtime.caido_bootstrap: Bootstrapping Caido client (host=http://127.0.0.1:51438, container=http://127.0.0.1:48080)
+2026-08-28 12:29:15.484 INFO    sports_af6b - strix.runtime.caido_bootstrap: Caido project selected: 8727467d-8d37-40f8-8281-89e437991f7a
+2026-08-28 12:29:15.485 INFO    sports_af6b - strix.runtime.session_manager: Sandbox session for scan sports_af6b ready and cached
+2026-08-28 12:29:15.485 INFO    sports_af6b - strix.core.runner: Sandbox ready for scan sports_af6b
+2026-08-28 12:29:15.489 DEBUG   sports_af6b - strix.skills: Loaded skill: scan_modes/quick -> quick
+2026-08-28 12:29:15.494 DEBUG   sports_af6b - strix.skills: Loaded skill: tooling/agent_browser -> agent_browser
+2026-08-28 12:29:15.497 DEBUG   sports_af6b - strix.skills: Loaded skill: tooling/python -> python
+2026-08-28 12:29:15.510 DEBUG   sports_af6b - strix.skills: Loaded skill: coordination/root_agent -> root_agent
+2026-08-28 12:29:15.513 DEBUG   sports_af6b - strix.skills: load_skills: 4 skill(s) resolved
+2026-08-28 12:29:15.625 DEBUG   sports_af6b - strix.agents.prompt: render_system_prompt: scan_mode=quick root=True whitebox=False skills=4 prompt_len=74161
+2026-08-28 12:29:15.625 INFO    sports_af6b - strix.agents.factory: Built root agent 'Root Agent' (skills=0, tools=30, scan_mode=quick, whitebox=False)
+2026-08-28 12:29:15.625 INFO    sports_af6b - strix.core.agents: agent.register 8e0b1923 (Root Agent) parent=-
+2026-08-28 12:29:15.808 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating trace
+2026-08-28 12:29:15.811 DEBUG   sports_af6b - openai.agents: Setting current trace: no-op
+2026-08-28 12:29:15.811 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:16.310 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:16.310 DEBUG   sports_af6b - openai.agents: Starting turn 1, current_agent=Root Agent
+2026-08-28 12:29:16.310 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:16.312 DEBUG   sports_af6b - openai.agents: No conversation_id available for request
+2026-08-28 12:29:16.313 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:16.315 DEBUG   sports_af6b - openai.agents: Calling LLM
+2026-08-28 12:29:16.764 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:29:16.772 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:29:16.811 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:29:16.836 DEBUG   - - strix.telemetry.posthog: posthog event sent: skill_loaded
+2026-08-28 12:29:18.007 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:29:18.014 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:29:18.065 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:29:18.146 DEBUG   - - strix.telemetry.scarf: scarf event sent: skill_loaded
+2026-08-28 12:29:19.663 INFO    sports_af6b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_af6b\findings.sarif (0 results)
+2026-08-28 12:29:19.666 INFO    sports_af6b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_af6b
+2026-08-28 12:29:19.667 DEBUG   sports_af6b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:29:19.667 DEBUG   sports_af6b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:29:19.668 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:20.016 DEBUG   sports_af6b - openai.agents: Turn 1 complete, next_step type=NextStepRunAgain
+2026-08-28 12:29:20.205 DEBUG   sports_af6b - openai.agents: Starting turn 2, current_agent=Root Agent
+2026-08-28 12:29:20.206 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:20.208 DEBUG   sports_af6b - openai.agents: No conversation_id available for request
+2026-08-28 12:29:20.208 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:20.211 DEBUG   sports_af6b - openai.agents: Calling LLM
+2026-08-28 12:29:23.852 INFO    sports_af6b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_af6b\findings.sarif (0 results)
+2026-08-28 12:29:23.855 INFO    sports_af6b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_af6b
+2026-08-28 12:29:23.856 DEBUG   sports_af6b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:29:23.856 DEBUG   sports_af6b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:29:23.856 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:24.148 DEBUG   sports_af6b - openai.agents: Turn 2 complete, next_step type=NextStepRunAgain
+2026-08-28 12:29:24.262 DEBUG   sports_af6b - openai.agents: Starting turn 3, current_agent=Root Agent
+2026-08-28 12:29:24.262 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:24.264 DEBUG   sports_af6b - openai.agents: No conversation_id available for request
+2026-08-28 12:29:24.264 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:24.265 DEBUG   sports_af6b - openai.agents: Calling LLM
+2026-08-28 12:29:31.855 INFO    sports_af6b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_af6b\findings.sarif (0 results)
+2026-08-28 12:29:31.859 INFO    sports_af6b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_af6b
+2026-08-28 12:29:31.860 DEBUG   sports_af6b - openai.agents: Processing output item type=reasoning class=ResponseReasoningItem
+2026-08-28 12:29:31.860 DEBUG   sports_af6b - openai.agents: Processing output item type=function_call class=ResponseFunctionToolCall
+2026-08-28 12:29:31.862 DEBUG   sports_af6b - openai.agents: Tracing is disabled. Not creating span
+2026-08-28 12:29:31.862 DEBUG   sports_af6b - openai.agents: Invoking tool finish_scan
+2026-08-28 12:29:31.863 INFO    sports_af6b - strix.report.state: Updated scan final fields
+2026-08-28 12:29:31.864 INFO    sports_af6b - strix.report.writer: Saved final penetration test report to: C:\Users\Garrett\Sports\strix_runs\sports_af6b\penetration_test_report.md
+2026-08-28 12:29:31.869 INFO    sports_af6b - strix.report.sarif: Wrote SARIF 2.1.0 report: C:\Users\Garrett\Sports\strix_runs\sports_af6b\findings.sarif (0 results)
+2026-08-28 12:29:31.877 INFO    sports_af6b - strix.report.state: Essential scan data saved to: C:\Users\Garrett\Sports\strix_runs\sports_af6b
+2026-08-28 12:29:32.668 DEBUG   sports_af6b - strix.telemetry.posthog: posthog event sent: scan_ended
+2026-08-28 12:29:33.599 DEBUG   sports_af6b - strix.telemetry.scarf: scarf event sent: scan_ended
+2026-08-28 12:29:33.599 INFO    sports_af6b - strix.tools.finish.tool: finish_scan: completed scan with 0 vulnerability report(s)
+2026-08-28 12:29:33.600 INFO    sports_af6b - strix.core.agents: agent.status 8e0b1923=completed
+2026-08-28 12:29:33.602 DEBUG   sports_af6b - openai.agents: Tool finish_scan completed.
+2026-08-28 12:29:33.604 DEBUG   sports_af6b - openai.agents: Turn 3 complete, next_step type=NextStepFinalOutput
+2026-08-28 12:29:33.625 DEBUG   sports_af6b - openai.agents: Resetting current trace
+2026-08-28 12:29:33.629 INFO    sports_af6b - strix.core.runner: Tearing down sandbox session for scan sports_af6b
+2026-08-28 12:29:37.091 INFO    sports_af6b - strix.runtime.session_manager: Cleaned up sandbox session for scan sports_af6b
+2026-08-28 12:29:37.092 INFO    sports_af6b - strix.core.runner: Strix scan sports_af6b done

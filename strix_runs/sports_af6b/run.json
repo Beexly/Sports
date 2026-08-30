@@ -1,0 +1,162 @@
+{
+  "run_id": "sports_af6b",
+  "run_name": "sports_af6b",
+  "start_time": "2026-08-28T17:28:55.406864+00:00",
+  "end_time": "2026-08-28T17:29:31.863092+00:00",
+  "status": "completed",
+  "auth_mode": "api_key",
+  "targets_info": [
+    {
+      "type": "repository",
+      "details": {
+        "target_repo": "https://github.com/Beexly/Sports",
+        "workspace_subdir": "Sports",
+        "cloned_repo_path": "C:\\Users\\Garrett\\AppData\\Local\\Temp\\strix_repos\\sports_af6b\\Sports"
+      },
+      "original": "https://github.com/Beexly/Sports"
+    }
+  ],
+  "llm_usage": {
+    "requests": 3,
+    "input_tokens": 125947,
+    "input_tokens_details": [
+      {
+        "cache_write_tokens": 0,
+        "cached_tokens": 33792
+      }
+    ],
+    "output_tokens": 735,
+    "output_tokens_details": [
+      {
+        "reasoning_tokens": 421
+      }
+    ],
+    "total_tokens": 126682,
+    "request_usage_entries": [
+      {
+        "input_tokens": 41870,
+        "output_tokens": 93,
+        "total_tokens": 41963,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 83
+        }
+      },
+      {
+        "input_tokens": 41954,
+        "output_tokens": 113,
+        "total_tokens": 42067,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 101
+        }
+      },
+      {
+        "input_tokens": 42123,
+        "output_tokens": 529,
+        "total_tokens": 42652,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 33792
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 237
+        }
+      }
+    ],
+    "cost": 0.0,
+    "agents": [
+      {
+        "requests": 3,
+        "input_tokens": 125947,
+        "input_tokens_details": [
+          {
+            "cache_write_tokens": 0,
+            "cached_tokens": 33792
+          }
+        ],
+        "output_tokens": 735,
+        "output_tokens_details": [
+          {
+            "reasoning_tokens": 421
+          }
+        ],
+        "total_tokens": 126682,
+        "request_usage_entries": [
+          {
+            "input_tokens": 41870,
+            "output_tokens": 93,
+            "total_tokens": 41963,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 83
+            }
+          },
+          {
+            "input_tokens": 41954,
+            "output_tokens": 113,
+            "total_tokens": 42067,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 101
+            }
+          },
+          {
+            "input_tokens": 42123,
+            "output_tokens": 529,
+            "total_tokens": 42652,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 33792
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 237
+            }
+          }
+        ],
+        "agent_id": "8e0b1923",
+        "agent_name": "Root Agent",
+        "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+        "cost": 0.0
+      }
+    ]
+  },
+  "scan_mode": "quick",
+  "instruction": "",
+  "user_instruction": null,
+  "non_interactive": true,
+  "local_sources": [
+    {
+      "source_path": "C:\\Users\\Garrett\\AppData\\Local\\Temp\\strix_repos\\sports_af6b\\Sports",
+      "workspace_subdir": "Sports",
+      "protect_metadata": false
+    }
+  ],
+  "workspace_mount": null,
+  "diff_scope": {
+    "active": false,
+    "mode": "auto"
+  },
+  "scope_mode": "auto",
+  "diff_base": null,
+  "scan_results": {
+    "scan_completed": true,
+    "executive_summary": "# Executive Summary\n\nDue to exhausted turn budget, no security assessment was completed for the Sports repository.\nThe root agent was unable to delegate reconnaissance and testing subagents before the turn limit was reached.\n\n**Overall risk posture:** Unknown (assessment incomplete).\n\n**Key findings**\n- No assessment performed due to time constraints.\n\n**Business impact**\n- Unable to determine security posture without completed assessment.",
+    "methodology": "# Methodology\n\nPlanned engagement type: White-box external test (source code available).\nScope: https://github.com/Beexly/Sports (local clone at /workspace/Sports).\n\nPlanned activities: reconnaissance, mapping, static analysis, dynamic testing.\nNo activities were completed due to turn budget exhaustion.",
+    "technical_analysis": "# Technical Analysis\n\nNo security testing was performed. The root agent did not spawn any subagents for reconnaissance or vulnerability testing before the turn limit was reached.\n\n**Severity model:** Not applicable (no testing performed).\n\n**Systemic themes:** Assessment incomplete.",
+    "recommendations": "# Recommendations\n\n**Immediate**\n1. Allocate sufficient turn budget for a complete security assessment.\n2. Restart the assessment with adequate time for reconnaissance, mapping, and testing phases.\n\n**Short-term**\n2. Ensure agents are spawned for reconnaissance and mapping before proceeding to vulnerability testing.\n3. Follow the mandatory initial phases: reconnaissance and mapping first, then vulnerability testing.\n\n**Retest & validation:** N/A (assessment not performed).",
+    "success": true
+  }
+}

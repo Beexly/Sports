@@ -1,0 +1,161 @@
+{
+  "run_id": "sports_34a1",
+  "run_name": "sports_34a1",
+  "start_time": "2026-08-28T19:27:39.608347+00:00",
+  "end_time": "2026-08-28T19:28:03.038491+00:00",
+  "status": "completed",
+  "auth_mode": "api_key",
+  "targets_info": [
+    {
+      "type": "local_code",
+      "details": {
+        "target_path": "C:\\Users\\Garrett\\Sports",
+        "workspace_subdir": "Sports"
+      },
+      "original": "C:\\Users\\Garrett\\Sports"
+    }
+  ],
+  "llm_usage": {
+    "requests": 3,
+    "input_tokens": 131537,
+    "input_tokens_details": [
+      {
+        "cache_write_tokens": 0,
+        "cached_tokens": 38016
+      }
+    ],
+    "output_tokens": 695,
+    "output_tokens_details": [
+      {
+        "reasoning_tokens": 413
+      }
+    ],
+    "total_tokens": 132232,
+    "request_usage_entries": [
+      {
+        "input_tokens": 43739,
+        "output_tokens": 108,
+        "total_tokens": 43847,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 104
+        }
+      },
+      {
+        "input_tokens": 43819,
+        "output_tokens": 70,
+        "total_tokens": 43889,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 38016
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 48
+        }
+      },
+      {
+        "input_tokens": 43979,
+        "output_tokens": 517,
+        "total_tokens": 44496,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 261
+        }
+      }
+    ],
+    "cost": 0.0,
+    "agents": [
+      {
+        "requests": 3,
+        "input_tokens": 131537,
+        "input_tokens_details": [
+          {
+            "cache_write_tokens": 0,
+            "cached_tokens": 38016
+          }
+        ],
+        "output_tokens": 695,
+        "output_tokens_details": [
+          {
+            "reasoning_tokens": 413
+          }
+        ],
+        "total_tokens": 132232,
+        "request_usage_entries": [
+          {
+            "input_tokens": 43739,
+            "output_tokens": 108,
+            "total_tokens": 43847,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 104
+            }
+          },
+          {
+            "input_tokens": 43819,
+            "output_tokens": 70,
+            "total_tokens": 43889,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 38016
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 48
+            }
+          },
+          {
+            "input_tokens": 43979,
+            "output_tokens": 517,
+            "total_tokens": 44496,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens_details": {
+              "reasoning_tokens": 261
+            }
+          }
+        ],
+        "agent_id": "6bad9c52",
+        "agent_name": "Root Agent",
+        "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+        "cost": 0.0
+      }
+    ]
+  },
+  "scan_mode": "quick",
+  "instruction": "",
+  "user_instruction": null,
+  "non_interactive": true,
+  "local_sources": [
+    {
+      "source_path": "C:\\Users\\Garrett\\Sports",
+      "workspace_subdir": "Sports",
+      "protect_metadata": true
+    }
+  ],
+  "workspace_mount": null,
+  "diff_scope": {
+    "active": false,
+    "mode": "auto"
+  },
+  "scope_mode": "auto",
+  "diff_base": null,
+  "scan_results": {
+    "scan_completed": true,
+    "executive_summary": "# Executive Summary\n\nDue to time constraints, no security testing was performed on the provided codebase. The agent exhausted its turn budget before initiating any assessment activities.\n\n**Overall risk posture:** Unknown (no assessment conducted).\n\n**Key findings**\n- No vulnerabilities were identified because no testing was performed.\n\n**Business impact**\n- Unable to determine security posture without assessment.",
+    "methodology": "# Methodology\n\n**Engagement type:** White-box assessment (source code available).\n**Scope:** Local codebase at /workspace/Sports.\n\n**Activities:** None performed due to insufficient turn budget.",
+    "technical_analysis": "# Technical Analysis\n\nNo security testing was conducted, so no vulnerabilities were identified or validated.\nThe agent was unable to execute any reconnaissance, mapping, or vulnerability testing phases.",
+    "recommendations": "# Recommendations\n\n**Immediate**\n1. Allocate sufficient time for a thorough security assessment when initiating future scans.\n2. Ensure that the agent has adequate turn budget to cover at least reconnaissance and initial testing phases.\n\n**Short-term**\n3. When resources permit, conduct a comprehensive white-box assessment including:\n   - Source code review and architecture mapping\n   - Static analysis with semgrep, ast-grep, and related tools\n   - Dynamic validation of identified potential issues\n\n**Retest & validation:** N/A (no assessment performed).",
+    "success": true
+  }
+}
