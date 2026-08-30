@@ -1,0 +1,767 @@
+/*
+ * Galaxy Sports Edge — global styles.
+ *
+ * Imports the canonical design tokens (mirror of `design-system/colors_and_type.css`)
+ * first so every Tailwind utility and every inline `var(--token)` resolves from a
+ * single source. Component-level utilities below compose those tokens; never
+ * redefine a color or a font here.
+ */
+@import "../styles/design-tokens.css";
+@import "../styles/pickpilot-kit.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--carbon);
+    color: var(--ion);
+    font-family: var(--f-body);
+    /* Multi-layer atmospheric glow — never a flat black. ENERGI PASS:
+       purple/magenta atmosphere turned up so the canvas reads cosmic. */
+    background-image:
+      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255,56,199, 0.09), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(123,97,255, 0.10), transparent 60%),
+      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(123,97,255, 0.07), transparent 65%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--f-display);
+    color: var(--ion-white);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  ::selection {
+    background: var(--plasma);
+    color: var(--plasma-ink);
+  }
+
+  /* Honor reduced-motion globally for all utility animations. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Buttons — primary uses plasma, secondary stays neutral. */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200;
+    background: var(--plasma);
+    color: var(--plasma-ink);
+    box-shadow: var(--glow-plasma);
+  }
+  .btn-primary:hover {
+    background: var(--plasma-glow);
+    transform: translateY(-1px);
+  }
+  .btn-primary:focus-visible {
+    outline: none;
+    box-shadow: var(--glow-plasma), 0 0 0 2px var(--plasma-glow), 0 0 0 4px var(--carbon);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors;
+    border: 1px solid var(--mineral);
+    background: var(--eclipse);
+    color: var(--ion-white);
+  }
+  .btn-secondary:hover {
+    border-color: var(--mineral-hi);
+    background: var(--titanium);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors;
+    color: var(--ion-1);
+  }
+  .btn-ghost:hover {
+    background: var(--titanium);
+    color: var(--ion-white);
+  }
+
+  /* Card surfaces */
+  .surface-card {
+    @apply rounded-2xl backdrop-blur-sm;
+    border: 1px solid var(--mineral);
+    background: color-mix(in srgb, var(--eclipse) 80%, transparent);
+  }
+  .surface-glass {
+    @apply rounded-2xl backdrop-blur-md;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-float);
+  }
+  .surface-lifted {
+    @apply rounded-2xl;
+    border: 1px solid var(--mineral);
+    background: linear-gradient(180deg, var(--titanium), var(--eclipse));
+    box-shadow: var(--shadow-float);
+  }
+
+  /* Eyebrow label — small uppercase mono. */
+  .eyebrow {
+    font: var(--t-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--plasma);
+  }
+
+  /* Live-status dot (the brand's pulse). */
+  .live-dot {
+    @apply relative inline-flex h-2 w-2;
+  }
+  .live-dot::before {
+    content: "";
+    @apply absolute inline-flex h-full w-full rounded-full;
+    background: var(--plasma);
+    opacity: 0.75;
+    animation: pp-live-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  .live-dot::after {
+    content: "";
+    @apply relative inline-flex h-2 w-2 rounded-full;
+    background: var(--plasma-glow);
+  }
+
+  /* Section divider with center-fade hairline. */
+  .section-rule {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, var(--mineral), transparent);
+  }
+
+  /* Skeleton loader. */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 100%
+    );
+    background-size: 200% 100%;
+    @apply rounded-md;
+    animation: shimmer 1.6s linear infinite;
+  }
+
+  /* Legacy aliases — older components reference these directly. */
+  .card { @apply surface-card; }
+  .badge-premium {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+    color: var(--ultraviolet-glow);
+    background: color-mix(in srgb, var(--ultraviolet) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ultraviolet) 25%, transparent);
+  }
+  .badge-free {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+    background: var(--titanium);
+    color: var(--ion);
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+  .mask-fade-bottom {
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+}
+
+/* Keyframes referenced by inline-style or component-level animations.
+ * Tailwind also emits these from the config, but having them here lets
+ * raw-CSS components fire them without depending on the tailwind config. */
+@keyframes pp-live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.6); }
+}
+
+/* ── Kinetic marquee / ticker ──────────────────────────────────────────
+ * A seamless horizontal scroll. The track holds the content TWICE; moving
+ * it -50% loops invisibly. Hovering the .gse-marquee pauses it. */
+@keyframes gse-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.gse-marquee { overflow: hidden; }
+.gse-marquee-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  will-change: transform;
+  animation: gse-marquee var(--gse-marquee-dur, 38s) linear infinite;
+}
+.gse-marquee:hover .gse-marquee-track { animation-play-state: paused; }
+.gse-marquee-reverse .gse-marquee-track { animation-direction: reverse; }
+
+/* Sheen that sweeps across a "flasher" banner word. */
+@keyframes gse-sheen {
+  0%   { background-position: -150% 0; }
+  60%, 100% { background-position: 250% 0; }
+}
+.gse-sheen {
+  background: linear-gradient(
+    100deg,
+    var(--ion-white) 0%, var(--ion-white) 38%,
+    #cfeaff 48%, #ffffff 52%,
+    var(--ion-white) 62%, var(--ion-white) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gse-sheen 5.5s ease-in-out infinite;
+}
+
+/* Soft attention pulse for the gate's enter ring. */
+@keyframes gse-ring {
+  0%   { transform: scale(0.92); opacity: 0.9; }
+  70%  { transform: scale(1.45); opacity: 0; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+.gse-enter-ring { animation: gse-ring 2.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite; }
+
+/* Spotlight step entrance + segmented progress fill (ReasoningShowcase). */
+@keyframes gse-step {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Cinematic entrance (CinematicEntrance) ──────────────────────────── */
+@keyframes gse-in {
+  from { opacity: 0; transform: scale(1.05); filter: blur(6px); }
+  to   { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+@keyframes gse-flash-in {
+  0%   { opacity: 0; letter-spacing: 0.5em; transform: translateY(6px); }
+  18%  { opacity: 1; letter-spacing: 0.22em; transform: translateY(0); }
+  82%  { opacity: 1; letter-spacing: 0.22em; }
+  100% { opacity: 0; letter-spacing: 0.34em; }
+}
+@keyframes gse-sweep { to { transform: rotate(360deg); } }
+@keyframes gse-scan {
+  0% { transform: translateY(-120%); opacity: 0; }
+  10%, 90% { opacity: 0.6; }
+  100% { transform: translateY(120%); opacity: 0; }
+}
+@keyframes gse-signal-ping {
+  0%   { transform: scale(0.6); opacity: 0; }
+  10%  { opacity: 1; }
+  70%  { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes gse-form-burst {
+  0%   { transform: scale(0); opacity: 1; }
+  100% { transform: scale(60); opacity: 0; }
+}
+@keyframes gse-boot-line {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes gse-bolt {
+  0% { stroke-dashoffset: 240; opacity: 0; }
+  20% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* ── Calm entrance (CinematicEntrance, 2026 calm rebuild) ────────────────
+ * The galaxy intro was rebuilt around a still Higgsfield backdrop + paced
+ * copy. These are all compositor-only (transform/opacity) so the intro never
+ * repaints per frame — the fix for the old warp-tunnel lag. Reduced motion is
+ * killed by the .gse-cine-anim override below. */
+@keyframes gse-backdrop-drift {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to   { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+}
+@keyframes gse-soft-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Doctrine line: gently appears, HOLDS long enough to read, then recedes —
+ * within its own time slot (duration set inline to the step length). */
+@keyframes gse-line-cycle {
+  0%   { opacity: 0; transform: translateY(8px); }
+  14%  { opacity: 1; transform: translateY(0); }
+  78%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
+/* ── Warp traversal (CinematicEntrance galaxy flyover) ──────────────────
+ * Radial star streaks pour past the camera; on arrival they brake back to
+ * points. Waypoints (--wx/--wy exit vectors) approach from deep space and
+ * sweep past the viewer. All geometry is deterministic; reduced motion is
+ * killed by the .gse-cine-anim override below. */
+/* Meteor: streaks diagonally down-right then dies — long quiet gaps come
+ * from the animation-delay spread, so the sky reads as weather. */
+@keyframes gse-meteor {
+  0%   { transform: translate3d(0, 0, 0) rotate(18deg) scaleX(0.3); opacity: 0; }
+  6%   { opacity: 0.9; }
+  22%  { transform: translate3d(46vw, 14vw, 0) rotate(18deg) scaleX(1); opacity: 0; }
+  100% { transform: translate3d(46vw, 14vw, 0) rotate(18deg) scaleX(1); opacity: 0; }
+}
+/* Signal pulse traveling along a hairline rule. */
+@keyframes gse-signal-travel {
+  0%   { transform: translateX(-12rem); }
+  55%, 100% { transform: translateX(100vw); }
+}
+@keyframes gse-camera-roll {
+  from { transform: rotate(-2.2deg) scale(1.04); }
+  to   { transform: rotate(2.2deg) scale(1.04); }
+}
+@keyframes gse-warp-star {
+  0%   { transform: rotate(var(--ang)) translateX(2vmax) scaleX(0.08); opacity: 0; }
+  12%  { opacity: 0.9; }
+  100% { transform: rotate(var(--ang)) translateX(58vmax) scaleX(1.7); opacity: 0; }
+}
+@keyframes gse-warp-brake {
+  0%   { transform: rotate(var(--ang)) translateX(16vmax) scaleX(0.6); opacity: 0.7; }
+  100% { transform: rotate(var(--ang)) translateX(20vmax) scaleX(0.05); opacity: 0; }
+}
+/* Compositor-only (transform + opacity): the old version animated
+ * filter: blur(), which forced a repaint of every card every frame and
+ * was the main source of warp-phase lag. The long mid-flight plateau
+ * (18%→70% near full scale) is what makes the doors readable. */
+@keyframes gse-wp-fly {
+  0%   { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.12), calc(var(--wy) * 0.12)) scale(0.3); opacity: 0; }
+  18%  { opacity: 1; }
+  70%  { transform: translate(-50%, -50%) translate(calc(var(--wx) * 0.55), calc(var(--wy) * 0.55)) scale(1.05); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(calc(var(--wx) * 1.6), calc(var(--wy) * 1.6)) scale(2.1); opacity: 0; }
+}
+@keyframes gse-nebula-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(4%, -3%, 0) scale(1.12); }
+}
+@keyframes gse-core-glow {
+  from { transform: scale(1); opacity: 0.5; }
+  to   { transform: scale(2.4); opacity: 1; }
+}
+@keyframes gse-star-breathe {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.8; }
+}
+@keyframes gse-hold-charge {
+  from { transform: scale(0.7); opacity: 0.4; }
+  to   { transform: scale(1.18); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gse-cine-anim { animation: none !important; }
+}
+@keyframes gse-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Cinematic atmosphere — film grain + vignette ──────────────────────
+ * Lifts the dark scenes out of "flat black" into something photographed.
+ * Both layers are fixed, pointer-events-none, aria-hidden via the component. */
+.gse-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 70;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+.gse-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(130% 100% at 50% 38%, transparent 52%, rgba(2, 3, 5, 0.5) 100%),
+    linear-gradient(180deg, rgba(2, 3, 5, 0.35) 0%, transparent 18%);
+}
+
+/* Editorial serif accent — Instrument Serif italic against the geometric
+ * display face. The unexpected pairing is the "designed" signal. */
+.gse-editorial {
+  font-family: var(--f-editorial);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gse-marquee-track { animation: none !important; }
+  .gse-sheen { animation: none !important; color: var(--ion-white); -webkit-text-fill-color: var(--ion-white); }
+  .gse-enter-ring { animation: none !important; opacity: 0 !important; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   GALAXY WORLD LAYER (`gw-`) — public-experience world utilities.
+   Doctrine: docs/design/GALAXY_2026_PUBLIC_WORLD.md §2–4. Every visual
+   here maps to the metaphor grammar (fragments → signal). Motion must
+   explain signal / risk / trust / gravity — never decorate.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Void + nebula atmosphere — the section canvas. Never flat black.
+   ENERGI PASS: purple is the atmosphere's co-lead — sections read as cosmic
+   nebula, not near-black. Text sits on the darker wells, so AA holds. */
+.gw-nebula {
+  position: relative;
+  background:
+    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(123,97,255, 0.22), transparent 62%),
+    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255,56,199, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(0, 229, 255, 0.09), transparent 65%),
+    radial-gradient(ellipse 45% 35% at 70% 65%, rgba(90, 30, 90, 0.35), transparent 70%),
+    linear-gradient(180deg, var(--void) 0%, #0E0A1C 50%, var(--void) 100%);
+}
+.gw-nebula-deep {
+  position: relative;
+  background:
+    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(123,97,255, 0.28), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255,56,199, 0.14), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(0, 229, 255, 0.10), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 30% 55%, rgba(58, 22, 70, 0.45), transparent 75%),
+    var(--void);
+}
+
+/* Starfield — three drifting dot layers, masked to fade at edges. */
+.gw-starfield {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 12% 22%, rgba(246, 247, 250, 0.55), transparent 50%),
+    radial-gradient(1px 1px at 34% 68%, rgba(246, 247, 250, 0.35), transparent 50%),
+    radial-gradient(1.5px 1.5px at 56% 14%, rgba(0, 229, 255, 0.45), transparent 50%),
+    radial-gradient(1px 1px at 71% 47%, rgba(246, 247, 250, 0.4), transparent 50%),
+    radial-gradient(1px 1px at 87% 79%, rgba(123,97,255, 0.5), transparent 50%),
+    radial-gradient(1.5px 1.5px at 23% 88%, rgba(246, 247, 250, 0.3), transparent 50%),
+    radial-gradient(1px 1px at 64% 92%, rgba(255,56,199, 0.35), transparent 50%),
+    radial-gradient(1px 1px at 92% 8%, rgba(246, 247, 250, 0.45), transparent 50%);
+  background-size: 520px 520px;
+  mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
+  animation: gw-star-drift 90s linear infinite;
+}
+@keyframes gw-star-drift {
+  from { background-position: 0 0; }
+  to   { background-position: -520px 260px; }
+}
+
+/* Signal beam — fragments resolve INTO this. Vertical cyan column. */
+.gw-beam {
+  position: relative;
+  background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.75) 18%, rgba(0, 229, 255, 0.95) 50%, rgba(0, 229, 255, 0.75) 82%, transparent);
+  box-shadow: 0 0 18px 2px rgba(0, 229, 255, 0.35);
+  animation: gw-beam-breathe 4.5s ease-in-out infinite;
+}
+@keyframes gw-beam-breathe {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; box-shadow: 0 0 26px 4px rgba(0, 229, 255, 0.5); }
+}
+
+/* Market-gravity stroke flow — apply to SVG paths (pair with stroke-dasharray). */
+.gw-dash-flow { animation: gw-dash 3.2s linear infinite; }
+@keyframes gw-dash { to { stroke-dashoffset: -28; } }
+
+/* Fragment drift — unresolved market inputs floating in the void. */
+.gw-drift   { animation: gw-float 9s ease-in-out infinite; }
+.gw-drift-2 { animation: gw-float 12s ease-in-out -3s infinite; }
+.gw-drift-3 { animation: gw-float 15s ease-in-out -7s infinite; }
+@keyframes gw-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33%      { transform: translate3d(5px, -9px, 0); }
+  66%      { transform: translate3d(-6px, 5px, 0); }
+}
+
+/* Orbit — slow rotation for orbiting signal labels (counter-rotate children). */
+.gw-orbit         { animation: gw-rotate 36s linear infinite; }
+.gw-orbit-counter { animation: gw-rotate 36s linear infinite reverse; }
+@keyframes gw-rotate { to { transform: rotate(360deg); } }
+
+/* Gate aperture — the No-Bet gate breathing shut. Conic ring with a gap. */
+.gw-gate-ring {
+  border-radius: 999px;
+  background: conic-gradient(from 210deg, var(--alert) 0deg 300deg, transparent 300deg 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px));
+  animation: gw-gate-breathe 5s ease-in-out infinite;
+}
+@keyframes gw-gate-breathe {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.9; }
+  50%      { transform: rotate(8deg) scale(0.97); opacity: 1; }
+}
+
+/* ── ENERGI PASS — chrome text, glows, filled chips ──────────────────
+   Poster-grade treatments: gradient "chrome" headlines, saturated text
+   glow, and solid filled chips with dark ink (higher contrast than dim
+   outline tints). Semantics unchanged: cyan = signal, plasma = heat. */
+
+/* Chrome headline fills — vertical white→hue gradients, clipped to text. */
+.gw-chrome-ice {
+  background: linear-gradient(180deg, #FFFFFF 0%, #E8FBFF 38%, #8FECFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px rgba(0, 229, 255, 0.28));
+}
+.gw-chrome-plasma {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFB8EE 30%, #FF38C7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 26px rgba(255,56,199, 0.38));
+}
+.gw-chrome-violet {
+  background: linear-gradient(180deg, #FFFFFF 0%, #D9CBFF 35%, #9F87FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px rgba(123,97,255, 0.35));
+}
+
+/* Saturated text glow — for short accent words only, never prose. */
+.gw-text-glow-cyan   { text-shadow: 0 0 18px rgba(0, 229, 255, 0.65), 0 0 44px rgba(0, 229, 255, 0.3); }
+.gw-text-glow-plasma { text-shadow: 0 0 18px rgba(255,56,199, 0.6), 0 0 44px rgba(255,56,199, 0.3); }
+.gw-text-glow-alert  { text-shadow: 0 0 18px rgba(255, 100, 112, 0.55), 0 0 40px rgba(255, 100, 112, 0.28); }
+.gw-text-glow-white  { text-shadow: 0 0 22px rgba(246, 247, 250, 0.45); }
+
+/* Filled identity chips — dark ink on full-saturation fill. */
+.gw-chip-cyan {
+  display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 999px; padding: 5px 13px;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  background: linear-gradient(110deg, #5BEEFF, #00E5FF);
+  color: var(--ion-blue-ink);
+  box-shadow: 0 0 26px -4px rgba(0, 229, 255, 0.55);
+}
+.gw-chip-plasma {
+  display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 999px; padding: 5px 13px;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  background: linear-gradient(110deg, #FF66E0, #FF38C7);
+  color: var(--plasma-ink);
+  box-shadow: 0 0 26px -4px rgba(255,56,199, 0.55);
+}
+
+/* Glow rings — semantic halo states for nodes and readouts. */
+.gw-ring-signal   { box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.45), 0 0 24px -4px rgba(0, 229, 255, 0.5); }
+.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255,56,199, 0.4), 0 0 24px -4px rgba(255,56,199, 0.45); }
+.gw-ring-caution  { box-shadow: 0 0 0 1px rgba(255, 180, 84, 0.45), 0 0 20px -4px rgba(255, 180, 84, 0.4); }
+.gw-ring-gate     { box-shadow: 0 0 0 1px rgba(255, 100, 112, 0.45), 0 0 20px -4px rgba(255, 100, 112, 0.4); }
+
+/* Receipt row — canonical truth readout: white text, hairline, timestamp slot. */
+.gw-receipt {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid rgba(46, 56, 73, 0.7);
+  padding: 10px 0;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* Scroll-linked chapter marker — mono index + hairline, used by WorldSection. */
+.gw-chapter-index {
+  display: inline-flex; align-items: center; gap: 10px;
+  font: var(--t-eyebrow); text-transform: uppercase; letter-spacing: 0.22em;
+  color: var(--ion-2);
+}
+.gw-chapter-index::after {
+  content: ""; width: 64px; height: 2px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--orbital-cyan), var(--plasma) 70%, transparent);
+  box-shadow: 0 0 12px -2px rgba(0, 229, 255, 0.5);
+}
+
+/* Mirage degrade — truth layers revealing under a too-good surface. */
+.gw-mirage-layer { transition: opacity 480ms var(--ease-out), transform 480ms var(--ease-out); }
+
+/* Hover depth for world cards — restrained lift, no scale soup. */
+.gw-card-hover { transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+.gw-card-hover:hover { transform: translateY(-2px); border-color: var(--mineral-hi); box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px -10px rgba(0, 229, 255, 0.25); }
+
+/* Reduced motion — every gw animation collapses to its readable end state. */
+@media (prefers-reduced-motion: reduce) {
+  .gw-starfield, .gw-beam, .gw-dash-flow,
+  .gw-drift, .gw-drift-2, .gw-drift-3,
+  .gw-orbit, .gw-orbit-counter, .gw-gate-ring {
+    animation: none !important;
+  }
+  .gw-mirage-layer, .gw-card-hover { transition: none !important; }
+}
+
+/* ── Signal Spine animations ────────────────────────────────────────────────── */
+@keyframes spine-packet-0 {
+  0% { top: 0%; opacity: 0; }
+  5% { opacity: 0.9; }
+  95% { opacity: 0.9; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes spine-packet-1 {
+  0% { top: 0%; opacity: 0; }
+  8% { opacity: 0.7; }
+  92% { opacity: 0.7; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes spine-packet-2 {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes spine-packet-3 {
+  0% { top: 0%; opacity: 0; }
+  6% { opacity: 0.6; }
+  94% { opacity: 0.6; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ── Cursor ripple expand ────────────────────────────────────────────────── */
+@keyframes cursor-ripple-expand {
+  0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ── Observatory beacon pulse ────────────────────────────────────────────────── */
+@keyframes observatory-beacon-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 0.2; }
+}
+
+/* ── Signal state pulse animations ────────────────────────────────────────────────── */
+@keyframes signal-pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.35); opacity: 0.2; }
+}
+@keyframes signal-pulse-core {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* ── Signal Room grid field ────────────────────────────────────────────────── */
+.gw-grid-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(0, 229, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+  animation: grid-field-drift 24s linear infinite;
+}
+@keyframes grid-field-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 56px 56px; }
+}
+
+/* ── Health ring breathe ────────────────────────────────────────────────── */
+@keyframes health-ring-breathe {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* ── Montage Entrance animations ────────────────────────────────────────────────── */
+@keyframes montage-flash {
+  0% { opacity: 1; }
+  40% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+@keyframes montage-slam {
+  0% { opacity: 0; transform: scale(2.5) translateY(40px); filter: blur(12px); }
+  60% { opacity: 1; transform: scale(0.95) translateY(-2px); filter: blur(0px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
+}
+@keyframes montage-shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, 1px); }
+  80% { transform: translate(2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes montage-stat-flicker {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  20% { opacity: 0.3; }
+  30% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes montage-burst-ring {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  20% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes montage-hud-slide {
+  0% { opacity: 0; transform: translateX(-30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes montage-fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Logo mark pulse animation ────────────────────────────────────────────────── */
+@keyframes logo-mark-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* ── Sentient Weather animations ────────────────────────────────────────────────── */
+@keyframes sentient-lightning {
+  0%, 100% { opacity: 0; }
+  2% { opacity: 0.8; }
+  4% { opacity: 0; }
+  20% { opacity: 0; }
+  22% { opacity: 0.5; }
+  24% { opacity: 0; }
+  60% { opacity: 0; }
+  62% { opacity: 0.6; }
+  64% { opacity: 0; }
+}
+@keyframes sentient-breathe {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+/* ── Glitch Truth animations ────────────────────────────────────────────────── */
+@keyframes glitch-scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+@keyframes glitch-band {
+  0%, 100% { transform: translateX(0); opacity: 0.3; }
+  25% { transform: translateX(3px); opacity: 0.6; }
+  50% { transform: translateX(-2px); opacity: 0.4; }
+  75% { transform: translateX(1px); opacity: 0.5; }
+}
+@keyframes glitch-noise {
+  0% { background-position: 0 0; }
+  100% { background-position: 128px 128px; }
+}
+
+/* ── Thermal Vision animations ────────────────────────────────────────────────── */
+@keyframes thermal-pulse-hot {
+  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,56,199,0.4); }
+  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,56,199,0.7); }
+}
+@keyframes thermal-pulse-cold {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.15); }
+}
+@keyframes thermal-breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}

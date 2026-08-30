@@ -1,0 +1,36 @@
+{
+  "id": "router-cleared-flags",
+  "description": "Compliance-hold and unregistered sources must not be cleared:true on main after #279",
+  "predicates": [
+    {
+      "id": "polymarket-hold-pattern",
+      "type": "source_router_cleared",
+      "sourceId": "polymarket-gamma",
+      "expectCleared": false
+    },
+    {
+      "id": "kalshi-uncleared",
+      "type": "source_router_cleared",
+      "sourceId": "kalshi-public",
+      "expectCleared": false
+    },
+    {
+      "id": "henrygd-uncleared",
+      "type": "source_router_cleared",
+      "sourceId": "henrygd-ncaa",
+      "expectCleared": false
+    },
+    {
+      "id": "espn-cleared",
+      "type": "source_router_cleared",
+      "sourceId": "espn-public-api",
+      "expectCleared": true
+    },
+    {
+      "id": "nflverse-cleared",
+      "type": "source_router_cleared",
+      "sourceId": "nflverse",
+      "expectCleared": true
+    }
+  ]
+}

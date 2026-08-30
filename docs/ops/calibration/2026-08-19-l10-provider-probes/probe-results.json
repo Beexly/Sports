@@ -1,0 +1,328 @@
+{
+  "analysis_date": "2026-08-19",
+  "source_file": "apps/web/lib/data-sources/source-router.ts (H-S free-spine map)",
+  "registry_file": "apps/web/lib/scraping/source-rights-registry.ts",
+  "constraints": [
+    "At most 2 live calls per candidate",
+    "No signups, no credential creation, no adapters, no scraping beyond documented API endpoints",
+    "No secrets in output \u2014 prices, lines, timestamps only",
+    "Source-rights registry governs every provider call"
+  ],
+  "candidates_probed": [
+    {
+      "source_id": "nflverse",
+      "name": "nflverse (open data)",
+      "registry_status": "approved_open_license",
+      "automation_allowed": true,
+      "tier": "free_unlimited",
+      "cleared": true,
+      "probes": [
+        {
+          "url": "https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv",
+          "label": "nflverse schedules/games.csv (GitHub release)",
+          "timestamp": "2026-08-19T08:30:45Z",
+          "status_code": 200,
+          "latency_ms": 261.2,
+          "content_length": 2177170,
+          "response_shape": "non-json",
+          "rate_limit_headers": {
+            "Server": "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0",
+            "x-ms-server-encrypted": "true",
+            "Content-Type": "application/octet-stream"
+          },
+          "success": true
+        },
+        {
+          "url": "https://github.com/nflverse/nflverse-data/releases/download/schedules/timestamp.json",
+          "label": "nflverse timestamp.json (freshness check)",
+          "timestamp": "2026-08-19T08:30:46Z",
+          "status_code": 200,
+          "latency_ms": 298.8,
+          "content_length": 43,
+          "response_shape": "object",
+          "top_level_keys": [
+            "last_updated"
+          ],
+          "rate_limit_headers": {
+            "Server": "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0",
+            "x-ms-server-encrypted": "true",
+            "Content-Type": "application/octet-stream"
+          },
+          "success": true
+        }
+      ]
+    },
+    {
+      "source_id": "espn-public-api",
+      "name": "ESPN Public API (unofficial)",
+      "registry_status": "approved_public_logged_off",
+      "automation_allowed": true,
+      "tier": "free_quota",
+      "cleared": true,
+      "probes": [
+        {
+          "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+          "label": "ESPN NFL scoreboard",
+          "timestamp": "2026-08-19T08:30:46Z",
+          "status_code": 403,
+          "latency_ms": 81.9,
+          "success": false,
+          "rate_limit_headers": {
+            "Server": "AkamaiGHost",
+            "Content-Type": "text/html"
+          },
+          "error_body": "<HTML><HEAD>\n<TITLE>Access Denied</TITLE>\n</HEAD><BODY>\n<H1>Access Denied</H1>\n \nYou don't have permission to access \"http&#58;&#47;&#47;site&#46;api&#46;espn&#46;com&#47;apis&#47;site&#47;v2&#47;spor"
+        },
+        {
+          "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams",
+          "label": "ESPN NFL teams",
+          "timestamp": "2026-08-19T08:30:47Z",
+          "status_code": 403,
+          "latency_ms": 41.4,
+          "success": false,
+          "rate_limit_headers": {
+            "Server": "AkamaiGHost",
+            "Content-Type": "text/html"
+          },
+          "error_body": "<HTML><HEAD>\n<TITLE>Access Denied</TITLE>\n</HEAD><BODY>\n<H1>Access Denied</H1>\n \nYou don't have permission to access \"http&#58;&#47;&#47;site&#46;api&#46;espn&#46;com&#47;apis&#47;site&#47;v2&#47;spor"
+        }
+      ]
+    },
+    {
+      "source_id": "open-meteo",
+      "name": "Open-Meteo",
+      "registry_status": "approved_open_license",
+      "automation_allowed": true,
+      "tier": "free_unlimited",
+      "cleared": true,
+      "probes": [
+        {
+          "url": "https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.0060&current=temperature_2m,wind_speed_10m&timezone=America/New_York",
+          "label": "Open-Meteo forecast NYC",
+          "timestamp": "2026-08-19T08:30:47Z",
+          "status_code": 200,
+          "latency_ms": 558.5,
+          "content_length": 391,
+          "response_shape": "object",
+          "top_level_keys": [
+            "latitude",
+            "longitude",
+            "generationtime_ms",
+            "utc_offset_seconds",
+            "timezone",
+            "timezone_abbreviation",
+            "elevation",
+            "current_units",
+            "current"
+          ],
+          "rate_limit_headers": {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "success": true
+        },
+        {
+          "url": "https://archive-api.open-meteo.com/v1/archive?latitude=40.7128&longitude=-74.0060&start_date=2026-08-18&end_date=2026-08-18&hourly=temperature_2m,wind_speed_10m,precipitation",
+          "label": "Open-Meteo archive 2026-08-18 NYC",
+          "timestamp": "2026-08-19T08:30:48Z",
+          "status_code": 200,
+          "latency_ms": 540.2,
+          "content_length": 1140,
+          "response_shape": "object",
+          "top_level_keys": [
+            "latitude",
+            "longitude",
+            "generationtime_ms",
+            "utc_offset_seconds",
+            "timezone",
+            "timezone_abbreviation",
+            "elevation",
+            "hourly_units",
+            "hourly"
+          ],
+          "rate_limit_headers": {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          "success": true
+        }
+      ]
+    },
+    {
+      "source_id": "thesportsdb",
+      "name": "TheSportsDB",
+      "registry_status": "vendor_candidate (gated in sports-data-candidates.ts, NOT in source-rights-registry.ts)",
+      "automation_allowed": false,
+      "tier": "free_key",
+      "cleared": false,
+      "probes": [
+        {
+          "url": "https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=New%20York%20Mets",
+          "label": "TheSportsDB team search (key=3)",
+          "timestamp": "2026-08-19T08:30:49Z",
+          "status_code": 200,
+          "latency_ms": 167.3,
+          "content_length": 4103,
+          "response_shape": "object",
+          "top_level_keys": [
+            "teams"
+          ],
+          "rate_limit_headers": {
+            "Content-Type": "application/json; charset=utf-8",
+            "Server": "cloudflare",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, X_API_KEY, OPTION, OPTIONS, XMLHttpRequest",
+            "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS",
+            "Access-Control-Max-Age": "1000",
+            "Server-Timing": "cfCacheStatus;desc=\"HIT\""
+          },
+          "success": true
+        },
+        {
+          "url": "https://www.thesportsdb.com/api/v1/json/3/eventsseasons.php?id=4387",
+          "label": "TheSportsDB NFL season events (key=3)",
+          "timestamp": "2026-08-19T08:30:50Z",
+          "status_code": 404,
+          "latency_ms": 191.5,
+          "success": false,
+          "rate_limit_headers": {
+            "Content-Type": "text/html",
+            "Server": "cloudflare",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, X_API_KEY, OPTION, OPTIONS, XMLHttpRequest",
+            "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS",
+            "Access-Control-Max-Age": "1000",
+            "Server-Timing": "cfCacheStatus;desc=\"DYNAMIC\""
+          },
+          "error_body": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta http-equiv=\"Content-Type\" cont"
+        }
+      ],
+      "registry_note": "Overnight doc mentions key '123' as example. Gated: requires registry entry + terms clearance. Probed with documented free key to inform clearance."
+    },
+    {
+      "source_id": "mlb-statsapi",
+      "name": "MLB Stats API (statsapi.mlb.com)",
+      "registry_status": "vendor_candidate (gated in sports-data-candidates.ts, NOT in source-rights-registry.ts)",
+      "automation_allowed": false,
+      "tier": "free_unlimited",
+      "cleared": false,
+      "probes": [
+        {
+          "url": "https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=2026-08-19&gameType=R",
+          "label": "MLB schedule 2026-08-19",
+          "timestamp": "2026-08-19T08:30:50Z",
+          "status_code": 200,
+          "latency_ms": 234.9,
+          "content_length": 18950,
+          "response_shape": "object",
+          "top_level_keys": [
+            "copyright",
+            "totalItems",
+            "totalEvents",
+            "totalGames",
+            "totalGamesInProgress",
+            "dates"
+          ],
+          "rate_limit_headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization",
+            "Access-Control-Expose-Headers": "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization",
+            "Access-Control-Allow-Credentials": "true",
+            "X-Content-Type-Options": "nosniff",
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          "success": true
+        },
+        {
+          "url": "https://statsapi.mlb.com/api/v1/teams",
+          "label": "MLB teams list",
+          "timestamp": "2026-08-19T08:30:50Z",
+          "status_code": 200,
+          "latency_ms": 155.7,
+          "content_length": 547620,
+          "response_shape": "object",
+          "top_level_keys": [
+            "copyright",
+            "teams"
+          ],
+          "rate_limit_headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization",
+            "Access-Control-Expose-Headers": "Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization",
+            "Access-Control-Allow-Credentials": "true",
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          "success": true
+        }
+      ],
+      "registry_note": "Gated: high quality, no key, but not cleared for automation. Probed to inform clearance decision."
+    },
+    {
+      "source_id": "sleeper-api",
+      "name": "Sleeper API",
+      "registry_status": "approved_public_logged_off",
+      "automation_allowed": true,
+      "tier": "free_unlimited",
+      "cleared": true,
+      "probes": [
+        {
+          "url": "https://api.sleeper.app/players/nfl/0",
+          "label": "Sleeper NFL player metadata (spot check)",
+          "timestamp": "2026-08-19T08:30:51Z",
+          "status_code": 200,
+          "latency_ms": 27.9,
+          "content_length": 4,
+          "response_shape": "NoneType",
+          "rate_limit_headers": {
+            "Content-Type": "application/json; charset=utf-8",
+            "access-control-allow-credentials": "true",
+            "access-control-allow-origin": "*",
+            "access-control-expose-headers": "etag,date",
+            "Server": "cloudflare"
+          },
+          "success": true
+        },
+        {
+          "url": "https://api.sleeper.app/trending/nfl/add?limit=50",
+          "label": "Sleeper trending NFL adds (limit=50)",
+          "timestamp": "2026-08-19T08:30:51Z",
+          "status_code": 200,
+          "latency_ms": 26.1,
+          "content_length": 1750,
+          "response_shape": "array",
+          "array_length": 50,
+          "element_keys": [
+            "count",
+            "player_id"
+          ],
+          "rate_limit_headers": {
+            "Content-Type": "application/json; charset=utf-8",
+            "access-control-allow-credentials": "true",
+            "access-control-allow-origin": "*",
+            "access-control-expose-headers": "etag,date",
+            "Server": "cloudflare"
+          },
+          "success": true
+        }
+      ]
+    },
+    {
+      "source_id": "ffc-adp",
+      "name": "Fantasy Football Calculator ADP REST API",
+      "registry_status": "approved_api",
+      "automation_allowed": true,
+      "tier": "free_unlimited",
+      "cleared": true,
+      "probes": [
+        {
+          "url": "https://api.fantasyfootballcalculator.com/adp?format=json&year=2025",
+          "label": "FFC ADP 2025",
+          "timestamp": "2026-08-19T08:30:51Z",
+          "latency_ms": 10.4,
+          "success": false,
+          "error": "<urlopen error [Errno 11001] getaddrinfo failed>"
+        }
+      ]
+    }
+  ]
+}

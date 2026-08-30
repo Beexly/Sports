@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: sports_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sports
+      POSTGRES_PASSWORD: sports_dev_password
+      POSTGRES_DB: sports_platform
+    ports:
+      - "5433:5432"   # host 5433 → container 5432 (host 5432 is taken by local PG18)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sports"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sports_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Self-hosted henrygd NCAA API — FREE NCAA facts (scores/standings/rankings),
+  # no key. Self-hosting drops the public demo's 5 req/sec/IP cap and improves
+  # reliability. Point the app at it with HENRYGD_NCAA_BASE_URL=http://localhost:3000
+  # (or http://ncaa-api:3000 from inside the compose network).
+  # Source: https://github.com/henrygd/ncaa-api  (verify the image tag before pinning).
+  ncaa-api:
+    image: ghcr.io/henrygd/ncaa-api:latest
+    container_name: sports_ncaa_api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:

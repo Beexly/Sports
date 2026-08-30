@@ -1,0 +1,1 @@
+export function brierScore(samples: readonly { readonly probability: number; readonly outcome: 0 | 1 }[]): number { if (samples.length === 0) return 0; return samples.reduce((sum, sample) => sum + (sample.probability - sample.outcome) ** 2, 0) / samples.length; }

@@ -1,0 +1,5 @@
+{
+  "$comment": "Publication-coin commitments (ADR-009). Append one entry per epoch BEFORE the epoch begins; fill 'revealedSeed' only AFTER the epoch ends. Never edit past entries. Verify any epoch with verifyEpoch() in packages/prediction-engine/src/publication-coin.ts.",
+  "format": "publication-coin:v1",
+  "epochs": []
+}

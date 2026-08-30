@@ -1,0 +1,47 @@
+{
+  "id": "orbit-wave4-calibration",
+  "predicates": [
+    {
+      "id": "time-holdout-export",
+      "type": "file_contains",
+      "path": "packages/prediction-engine/src/probability-calibration.ts",
+      "mustInclude": ["timeHoldoutSplit", "selectedSliceEce", "TimestampedCalibrationSample"]
+    },
+    {
+      "id": "index-exports-wave4",
+      "type": "file_contains",
+      "path": "packages/prediction-engine/src/index.ts",
+      "mustInclude": ["timeHoldoutSplit", "selectedSliceEce"]
+    },
+    {
+      "id": "offline-pipeline",
+      "type": "file_contains",
+      "path": "scripts/calibration-offline/run.mjs",
+      "mustInclude": ["timeHoldoutSplit", "selectedSliceEce", "clvDeflator", "DISARMED"]
+    },
+    {
+      "id": "synthetic-fixture",
+      "type": "file_contains",
+      "path": "scripts/calibration-offline/data/synthetic-settled.jsonl",
+      "mustInclude": ["p_model", "selected", "clvValue"]
+    },
+    {
+      "id": "calibration-skill",
+      "type": "file_contains",
+      "path": "docs/agent-skills/calibration-pipeline/SKILL.md",
+      "mustInclude": ["name: calibration-pipeline", "timeHoldoutSplit", "CALIBRATION_ADJUSTMENTS_ENABLED"]
+    },
+    {
+      "id": "pipeline-doc-wave4",
+      "type": "file_contains",
+      "path": "docs/ops/CALIBRATION_PIPELINE.md",
+      "mustInclude": ["timeHoldoutSplit", "selectedSliceEce", "calibration:offline"]
+    },
+    {
+      "id": "orbit-map-wave4",
+      "type": "file_contains",
+      "path": "docs/ops/ORBIT_MAP.md",
+      "mustInclude": ["timeHoldoutSplit", "selectedSliceEce", "calibration:offline"]
+    }
+  ]
+}

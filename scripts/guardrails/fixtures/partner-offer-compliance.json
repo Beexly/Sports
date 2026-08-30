@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "gse-partner-offer-compliance-fixtures-v1",
+  "now": "2026-07-05T12:00:00.000Z",
+  "partners": [
+    {
+      "id": "partner_creator_tool",
+      "displayName": "Creator Tool Co",
+      "category": "creator_tool",
+      "approvalStatus": "approved",
+      "expiresAt": "2026-12-31T23:59:59.000Z",
+      "allowedSurfaces": ["newsletter", "youtube", "partners_page"],
+      "disclosureRequired": true
+    },
+    {
+      "id": "partner_sportsbook",
+      "displayName": "Regulated Sportsbook",
+      "category": "sportsbook",
+      "approvalStatus": "approved",
+      "expiresAt": "2026-12-31T23:59:59.000Z",
+      "allowedSurfaces": ["newsletter"],
+      "disclosureRequired": true
+    },
+    {
+      "id": "partner_expired",
+      "displayName": "Expired Sponsor",
+      "category": "general_sponsor",
+      "approvalStatus": "approved",
+      "expiresAt": "2026-01-01T00:00:00.000Z",
+      "allowedSurfaces": ["newsletter"],
+      "disclosureRequired": true
+    }
+  ],
+  "offers": [
+    {
+      "id": "offer_creator_tool_ok",
+      "partnerId": "partner_creator_tool",
+      "publicName": "Creator workflow review",
+      "category": "creator_tool",
+      "approvalStatus": "approved",
+      "riskClass": "low",
+      "allowedSurfaces": ["newsletter", "youtube"],
+      "disclosureText": "Affiliate disclosure: GSE may earn a commission from this partner.",
+      "expiresAt": "2026-12-31T23:59:59.000Z"
+    },
+    {
+      "id": "offer_sportsbook_ok",
+      "partnerId": "partner_sportsbook",
+      "publicName": "Regulated sportsbook review",
+      "category": "sportsbook",
+      "approvalStatus": "approved",
+      "riskClass": "high",
+      "allowedSurfaces": ["newsletter"],
+      "termsUrl": "https://partner.example/terms",
+      "disclosureText": "Sponsored disclosure: GSE may receive compensation from this partner.",
+      "responsibleGamingText": "Must be 21+. If gambling is a problem, seek help through local support resources.",
+      "minimumAge": 21,
+      "eligibleStates": ["NJ", "NY"],
+      "restrictedStates": ["WA"],
+      "expiresAt": "2026-12-31T23:59:59.000Z",
+      "containsDepositLanguage": true
+    },
+    {
+      "id": "offer_missing_disclosure",
+      "partnerId": "partner_creator_tool",
+      "publicName": "Missing disclosure review",
+      "category": "creator_tool",
+      "approvalStatus": "approved",
+      "riskClass": "low",
+      "allowedSurfaces": ["newsletter"],
+      "expiresAt": "2026-12-31T23:59:59.000Z"
+    },
+    {
+      "id": "offer_missing_terms",
+      "partnerId": "partner_sportsbook",
+      "publicName": "Missing terms book offer",
+      "category": "sportsbook",
+      "approvalStatus": "approved",
+      "riskClass": "high",
+      "allowedSurfaces": ["newsletter"],
+      "disclosureText": "Sponsored disclosure: GSE may receive compensation from this partner.",
+      "responsibleGamingText": "Must be 21+. If gambling is a problem, seek help through local support resources.",
+      "minimumAge": 21,
+      "eligibleStates": ["NJ"],
+      "expiresAt": "2026-12-31T23:59:59.000Z"
+    },
+    {
+      "id": "offer_unapproved",
+      "partnerId": "partner_creator_tool",
+      "publicName": "Unapproved offer",
+      "category": "creator_tool",
+      "approvalStatus": "unreviewed",
+      "riskClass": "low",
+      "allowedSurfaces": ["newsletter"],
+      "disclosureText": "Affiliate disclosure: GSE may earn a commission from this partner.",
+      "expiresAt": "2026-12-31T23:59:59.000Z"
+    },
+    {
+      "id": "offer_expired_partner",
+      "partnerId": "partner_expired",
+      "publicName": "Expired partner offer",
+      "category": "general_sponsor",
+      "approvalStatus": "approved",
+      "riskClass": "low",
+      "allowedSurfaces": ["newsletter"],
+      "disclosureText": "Sponsored disclosure: GSE may receive compensation from this partner.",
+      "expiresAt": "2026-12-31T23:59:59.000Z"
+    }
+  ],
+  "cases": [
+    {
+      "id": "low_risk_approved_passes",
+      "partnerId": "partner_creator_tool",
+      "offerId": "offer_creator_tool_ok",
+      "surface": "newsletter",
+      "expectedOk": true,
+      "expectedBlockers": []
+    },
+    {
+      "id": "high_risk_approved_with_state_passes",
+      "partnerId": "partner_sportsbook",
+      "offerId": "offer_sportsbook_ok",
+      "surface": "newsletter",
+      "userState": "NJ",
+      "expectedOk": true,
+      "expectedBlockers": []
+    },
+    {
+      "id": "high_risk_unknown_state_fails_closed",
+      "partnerId": "partner_sportsbook",
+      "offerId": "offer_sportsbook_ok",
+      "surface": "newsletter",
+      "expectedOk": false,
+      "expectedBlockers": ["UNKNOWN_STATE"]
+    },
+    {
+      "id": "missing_disclosure_blocks",
+      "partnerId": "partner_creator_tool",
+      "offerId": "offer_missing_disclosure",
+      "surface": "newsletter",
+      "expectedOk": false,
+      "expectedBlockers": ["MISSING_DISCLOSURE"]
+    },
+    {
+      "id": "missing_terms_blocks_high_risk",
+      "partnerId": "partner_sportsbook",
+      "offerId": "offer_missing_terms",
+      "surface": "newsletter",
+      "userState": "NJ",
+      "expectedOk": false,
+      "expectedBlockers": ["MISSING_TERMS_URL"]
+    },
+    {
+      "id": "unapproved_offer_blocks",
+      "partnerId": "partner_creator_tool",
+      "offerId": "offer_unapproved",
+      "surface": "newsletter",
+      "expectedOk": false,
+      "expectedBlockers": ["OFFER_NOT_APPROVED"]
+    },
+    {
+      "id": "expired_partner_blocks",
+      "partnerId": "partner_expired",
+      "offerId": "offer_expired_partner",
+      "surface": "newsletter",
+      "expectedOk": false,
+      "expectedBlockers": ["PARTNER_EXPIRED"]
+    },
+    {
+      "id": "restricted_state_blocks",
+      "partnerId": "partner_sportsbook",
+      "offerId": "offer_sportsbook_ok",
+      "surface": "newsletter",
+      "userState": "WA",
+      "expectedOk": false,
+      "expectedBlockers": ["STATE_RESTRICTED"]
+    }
+  ]
+}

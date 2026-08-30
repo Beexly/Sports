@@ -1,0 +1,18 @@
+{
+  "id": "model-router-env",
+  "description": "model-router exposes PRIMARY/CHEAP env override seam without changing defaults",
+  "predicates": [
+    {
+      "id": "resolve-catalog-present",
+      "type": "file_contains",
+      "path": "apps/web/lib/claude-api/model-router.ts",
+      "mustInclude": ["resolveModelCatalog", "MODEL_PRIMARY", "MODEL_CHEAP", "pickModelForSurface"]
+    },
+    {
+      "id": "default-ids-present",
+      "type": "file_contains",
+      "path": "apps/web/lib/claude-api/model-router.ts",
+      "mustInclude": ["claude-haiku-4-5-20251001", "claude-sonnet-4-6"]
+    }
+  ]
+}

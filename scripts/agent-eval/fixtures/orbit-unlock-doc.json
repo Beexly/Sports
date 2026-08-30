@@ -1,0 +1,12 @@
+{
+  "id": "orbit-unlock-doc",
+  "description": "ORBIT_UNLOCK operator checklist checked in",
+  "predicates": [
+    {
+      "id": "orbit-unlock",
+      "type": "file_contains",
+      "path": "docs/ops/ORBIT_UNLOCK.md",
+      "mustInclude": ["THE_ODDS_API_KEY", "checkout.session.expired", "path\":\"free"]
+    }
+  ]
+}

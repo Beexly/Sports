@@ -1,0 +1,24 @@
+{
+  "id": "webhook-status-mapping",
+  "description": "Stripe webhook implements completed+expired; fail-closed codes documented in code",
+  "predicates": [
+    {
+      "id": "handles-expired",
+      "type": "file_contains",
+      "path": "apps/web/app/api/webhooks/stripe/route.ts",
+      "mustInclude": ["checkout.session.expired", "checkout.session.completed", "reconcileExpiredCheckoutAttempt"]
+    },
+    {
+      "id": "idempotency-stripe-event-id",
+      "type": "file_contains",
+      "path": "apps/web/app/api/webhooks/stripe/route.ts",
+      "mustInclude": ["stripeEventId"]
+    },
+    {
+      "id": "checkout-attempt-id-stamped",
+      "type": "file_contains",
+      "path": "apps/web/lib/stripe.ts",
+      "mustInclude": ["checkoutAttemptId"]
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+/**
+ * Isotonic regression (true PAVA on sorted scores) — offline R&D only.
+ * Apply OFF until holdout wins floors + founder enables CALIBRATION_ADJUSTMENTS.
+ *
+ * Calibrator matrix (doc only — not auto-selected in prod):
+ * | Situation                         | Prefer                          |
+ * |-----------------------------------|---------------------------------|
+ * | Smooth global rescale             | Platt IRLS                      |
+ * | Clear monotone bias, weird shape  | Isotonic PAVA (+ optional CIR)  |
+ * | Thin tails unreliable             | Platt or Temp (avoid plateaus)  |
+ * | Hierarchical markets              | Platt/logistic + EB-τ u_g       |
+ * | Odd reliability shape             | Prefer isotonic PAVA/CIR        |
+ * | Small N, strong regularization    | Prefer Platt / temperature      |
+ * | Ranking OK, levels wrong          | Prefer isotonic                 |
+ * | Need smooth global rescale only   | Prefer Platt / temperature      |
+ */
+
+export interface IsoPoint {
+  readonly p: number;
+  readonly y: 0 | 1;
+}
+
+export interface IsotonicModel {
+  /** Sorted unique forecast knots (input order after sort by p). */
+  readonly x: readonly number[];
+  /** Nondecreasing fitted rates aligned to x. */
+  readonly y: readonly number[];
+  readonly note: string;
+}
+
+function clamp01(v: number): number {
+  return Math.min(1 - 1e-6, Math.max(1e-6, v));
+}
+
+/**
+ * PAVA on sorted scores; y in {0,1} (or any real). Returns block means
+ * aligned to each index (same length as y).
+ */
+export function pava(y: number[], w?: number[]): number[] {
+  const n = y.length;
+  if (n === 0) return [];
+  const weights = w ?? y.map(() => 1);
+  const mean = y.slice();
+  const wt = weights.slice();
+  const left = [...Array(n).keys()];
+  const right = [...Array(n).keys()];
+  let i = 0;
+  while (i < n - 1) {
+    if (mean[i]! <= mean[i + 1]! + 1e-15) {
+      i++;
+      continue;
+    }
+    let j = i;
+    while (j >= 0 && mean[j]! > mean[j + 1]! + 1e-15) {
+      const totalW = wt[j]! + wt[j + 1]!;
+      const m = (mean[j]! * wt[j]! + mean[j + 1]! * wt[j + 1]!) / totalW;
+      const L = left[j]!;
+      const R = right[j + 1]!;
+      for (let k = L; k <= R; k++) {
+        mean[k] = m;
+        wt[k] = totalW;
+        left[k] = L;
+        right[k] = R;
+      }
+      j = L - 1;
+    }
+    // Re-scan from the merged block's LEFT edge instead of jumping past it.
+    //
+    // The previous `i = Math.max(i, right[i]) + 1` advanced beyond the block that
+    // had just been merged, so a block whose new pooled mean violated against its
+    // SUCCESSOR was never re-examined. pava([0.9, 0.1, 0.2, 0.8]) returned
+    // [0.5, 0.5, 0.2, 0.8] — merging 0.9 and 0.1 into 0.5, then never comparing
+    // 0.5 against 0.2. A decreasing output defeats the entire purpose of isotonic
+    // regression, and this function calibrates the confidence scores the product
+    // sells.
+    //
+    // The inner loop only ever walked backwards (j = L - 1), so the forward
+    // violation had nowhere to be caught. Restarting at L is correct because all
+    // indices inside a block share a mean, so the scan walks the block in O(len)
+    // and then tests the real boundary. It terminates: each merge strictly
+    // reduces the block count, and between merges `i` only advances.
+    i = left[i] ?? i;
+  }
+  return mean;
+}
+
+/**
+ * Fit isotonic map: sort by p, run PAVA on outcomes, collapse equal-p ties
+ * into knots for apply.
+ */
+export function fitIsotonicPava(samples: readonly IsoPoint[]): IsotonicModel {
+  if (samples.length === 0) {
+    return {
+      x: [0, 1],
+      y: [0.5, 0.5],
+      note: "empty → flat 0.5 (R&D only)",
+    };
+  }
+
+  const ordered = samples
+    .map((s) => ({ p: clamp01(s.p), y: s.y as number }))
+    .sort((a, b) => a.p - b.p);
+
+  // Pool exact-p ties into weighted observations before PAVA
+  const uniqP: number[] = [];
+  const uniqY: number[] = [];
+  const uniqW: number[] = [];
+  for (const row of ordered) {
+    const last = uniqP.length - 1;
+    if (last >= 0 && Math.abs(uniqP[last]! - row.p) < 1e-12) {
+      const w0 = uniqW[last]!;
+      const w1 = 1;
+      uniqY[last] = (uniqY[last]! * w0 + row.y * w1) / (w0 + w1);
+      uniqW[last] = w0 + w1;
+    } else {
+      uniqP.push(row.p);
+      uniqY.push(row.y);
+      uniqW.push(1);
+    }
+  }
+
+  const fitted = pava(uniqY, uniqW).map(clamp01);
+
+  // Enforce nondecreasing (numerical guard)
+  for (let i = 1; i < fitted.length; i++) {
+    if (fitted[i]! < fitted[i - 1]!) fitted[i] = fitted[i - 1]!;
+  }
+
+  return {
+    x: uniqP,
+    y: fitted,
+    note: "True PAVA on sorted scores — R&D only; apply OFF until holdout wins floors.",
+  };
+}
+
+/** Piecewise-linear interpolate in probability space; flat outside range. */
+export function applyIsotonic(p: number, model: IsotonicModel): number {
+  const x = clamp01(p);
+  if (model.x.length === 0) return 0.5;
+  if (x <= model.x[0]!) return model.y[0]!;
+  if (x >= model.x[model.x.length - 1]!) return model.y[model.y.length - 1]!;
+  for (let i = 1; i < model.x.length; i++) {
+    if (x <= model.x[i]!) {
+      const x0 = model.x[i - 1]!;
+      const x1 = model.x[i]!;
+      const y0 = model.y[i - 1]!;
+      const y1 = model.y[i]!;
+      const t = x1 === x0 ? 0 : (x - x0) / (x1 - x0);
+      return clamp01(y0 + t * (y1 - y0));
+    }
+  }
+  return model.y[model.y.length - 1]!;
+}
+
+
+/** CIR-style: linear interpolation between PAVA knots (vs step). */
+export function applyIsotonicCir(p: number, model: IsotonicModel): number {
+  return applyIsotonic(p, model); // applyIsotonic already linear between knots
+}

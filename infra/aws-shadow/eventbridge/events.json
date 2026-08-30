@@ -1,0 +1,26 @@
+{
+  "schema_version": "gse-shadow-eventbridge-events-v1",
+  "status": "local_fixture_only",
+  "canonical_artifact": "docs/fable/aws/AWS_OPERATING_INTELLIGENCE_MATRIX.md",
+  "live_aws_action": false,
+  "deploy_allowed": false,
+  "credentials_required": false,
+  "paid_resource_required": false,
+  "events": [
+    {
+      "detail_type": "gse.metric.validation.requested",
+      "source": "gse.shadow.metric",
+      "purpose": "Record the event shape for a future local-to-cloud workflow."
+    },
+    {
+      "detail_type": "gse.model.drift.detected",
+      "source": "gse.shadow.drift",
+      "purpose": "Record drift alert metadata without creating a CloudWatch or EventBridge rule."
+    },
+    {
+      "detail_type": "gse.api.payload.blocked",
+      "source": "gse.shadow.api",
+      "purpose": "Record payload-rights abuse response semantics without exposing a live API route."
+    }
+  ]
+}

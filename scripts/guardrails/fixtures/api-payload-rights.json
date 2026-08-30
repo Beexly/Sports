@@ -1,0 +1,120 @@
+{
+  "cases": [
+    {
+      "id": "safe-derived-nflverse",
+      "intendedUse": "commercial_display",
+      "fields": [
+        {
+          "path": "board.sourceReliability",
+          "kind": "derived_metric",
+          "sourceIds": ["nflverse"]
+        },
+        {
+          "path": "board.publicDrivers",
+          "kind": "public_driver",
+          "sourceIds": ["nflverse"]
+        }
+      ],
+      "expectedOk": true,
+      "expectedBlockedFields": []
+    },
+    {
+      "id": "safe-aggregate-weather",
+      "intendedUse": "public_display",
+      "fields": [
+        {
+          "path": "game.weatherSummary",
+          "kind": "aggregate_summary",
+          "sourceIds": ["open-meteo"]
+        }
+      ],
+      "expectedOk": true,
+      "expectedBlockedFields": []
+    },
+    {
+      "id": "raw-source-value-blocked",
+      "intendedUse": "commercial_display",
+      "fields": [
+        {
+          "path": "odds.rawBookPrice",
+          "kind": "raw_source_value",
+          "sourceIds": ["the-odds-api"],
+          "rawVendorPayload": true
+        }
+      ],
+      "expectedOk": false,
+      "expectedBlockedFields": ["odds.rawBookPrice"],
+      "expectedBlockers": ["RAW_OR_PROTECTED_FIELD", "RAW_VENDOR_PAYLOAD"]
+    },
+    {
+      "id": "protected-weight-blocked",
+      "intendedUse": "commercial_display",
+      "fields": [
+        {
+          "path": "model.weights.marketGravity",
+          "kind": "protected_weight",
+          "sourceIds": ["nflverse"]
+        }
+      ],
+      "expectedOk": false,
+      "expectedBlockedFields": ["model.weights.marketGravity"],
+      "expectedBlockers": ["RAW_OR_PROTECTED_FIELD"]
+    },
+    {
+      "id": "provider-identifier-blocked",
+      "intendedUse": "partner_sharing",
+      "fields": [
+        {
+          "path": "provider.accountId",
+          "kind": "provider_identifier",
+          "sourceIds": ["espn-public-api"]
+        }
+      ],
+      "expectedOk": false,
+      "expectedBlockedFields": ["provider.accountId"],
+      "expectedBlockers": ["RAW_OR_PROTECTED_FIELD"]
+    },
+    {
+      "id": "unknown-source-blocked",
+      "intendedUse": "commercial_display",
+      "fields": [
+        {
+          "path": "mystery.metric",
+          "kind": "derived_metric",
+          "sourceIds": ["unknown-feed"]
+        }
+      ],
+      "expectedOk": false,
+      "expectedBlockedFields": ["mystery.metric"],
+      "expectedBlockers": ["UNKNOWN_SOURCE"]
+    },
+    {
+      "id": "missing-source-blocked",
+      "intendedUse": "commercial_display",
+      "fields": [
+        {
+          "path": "board.noSourceMetric",
+          "kind": "derived_metric",
+          "sourceIds": []
+        }
+      ],
+      "expectedOk": false,
+      "expectedBlockedFields": ["board.noSourceMetric"],
+      "expectedBlockers": ["MISSING_SOURCE"]
+    },
+    {
+      "id": "partner-sharing-fails-closed",
+      "intendedUse": "partner_sharing",
+      "fields": [
+        {
+          "path": "partner.payload",
+          "kind": "aggregate_summary",
+          "sourceIds": ["nflverse"]
+        }
+      ],
+      "expectedOk": false,
+      "expectedBlockedFields": ["partner.payload"],
+      "expectedBlockers": ["PARTNER_SHARING_REQUIRES_APPROVAL"]
+    }
+  ]
+}

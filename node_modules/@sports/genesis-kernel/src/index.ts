@@ -1,0 +1,11 @@
+export * from "./contracts";
+export { canonicalJson, sha256Hex, canonicalHash } from "./canonical-json";
+export { buildCodebaseTwin } from "./codebase-twin";
+export type { CodebaseTwinSnapshot, CodebaseTwinCapabilitySnapshot, CollisionFinding } from "./codebase-twin";
+export { REPO_EVIDENCE } from "./repo-evidence";
+export { evaluateHardConstraints, isEligible, failedConstraintNames } from "./hard-constraints";
+export type { TemporalCandidate } from "./hard-constraints";
+export { compileCandidates, computeUtility } from "./plan-compiler";
+export type { PlanDecisionOutcome } from "./plan-compiler";
+export { buildPlanReceipt } from "./plan-receipt";
+export type { BuildPlanReceiptInput } from "./plan-receipt";

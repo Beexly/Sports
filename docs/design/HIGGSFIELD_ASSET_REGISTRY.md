@@ -1,0 +1,43 @@
+# Higgsfield Asset Registry
+
+Every generated asset that touches the product, with its provenance, placement, and code-native fallback. Generation was authorized by the owner for the cinematic work. Model: Recraft 4.1 (images/vector), Seedance 2.0 / Kling 2.6 (video). Workspace: private (Ultra).
+
+## Official approved brand kit (the source of truth — Brand Bible v1.0)
+
+The owner delivered the final, approved brand kit (bible PDF + cinematic logo-reveal MP4 with audio + chrome stills). These supersede the earlier hand-built mark and are the canonical identity. Brand suite job `d2ol7oe51mr4n9`.
+
+| Asset | Source | Placement | Fallback |
+|---|---|---|---|
+| Cinematic reveal MP4 (with audio) | Approved brand kit (seedance_2_0 reveal job) | `public/brand/gse-reveal.mp4` → cold-open (`MontageEntrance`), muted-autoplay + tasteful unmute | poster still + reduced-motion bypass (no video) |
+| Reveal poster still | Frame export from the reveal MP4 | `public/brand/gse-reveal-poster.png` → video poster | n/a (is the fallback) |
+| Chrome emblem (GSN-in-GSE monogram) | Frame export at logo resolve (~4.5s) | `public/brand/gse-emblem.png` (512) + `-180`/`-64` → header lockup, favicon, app icon, manifest, Organization JSON-LD logo | `public/favicon.svg` vector mark (brand palette) |
+| Master logo still | Approved brand kit | `public/brand/gse-master.png` → press / share / OG source | code-native wordmark (Exo 2 + signal fade) |
+
+Palette + type locked to the bible: Orbital Cyan `#00E5FF`, Ion Magenta `#FF38C7`, Soft Ultraviolet `#7B61FF`, Electric Blue `#2A6BFF`, Nebula Purple `#A855F7`, Cosmic Gray `#0D1117`, Obsidian `#05070B`, Starlight White `#F5F7FF`; signal fade = cyan→magenta→violet. Display face = **Exo 2**, body = Inter. The retired near-miss hexes are guarded by `apps/web/__tests__/brand-palette-guard.test.ts`.
+
+## Integrated
+
+| Asset | Job ID | Model | Placement | Fallback | Status |
+|---|---|---|---|---|---|
+| GSN broadcast control-room plate | `0ad33e01-…250d` | recraft_v4_1 (2k, 16:9) | `/the-beat` broadcast backdrop, `public/immersive/gsn-broadcast-plate.webp`, via `GeneratedPlate` @ 20% opacity | `GeneratedPlate` gradient base (auto); reduced-motion safe (still only) | ✅ integrated |
+
+Prompt (broadcast plate): "Premium low-light sports-intelligence broadcast control room, deep obsidian black, bioluminescent cyan and restrained ultraviolet edge glow, abstract out-of-focus data-light geometry and faint surveillance screens, soft volumetric haze, cinematic and sophisticated. Wide establishing plate with a darker calmer center reserved for UI overlay. No text, no logos, no people, no faces, no team marks, no scoreboard, no casino imagery."
+
+## Reference only (informed the hand-built work, not shipped as-is)
+
+| Asset | Job IDs | Model | Used for |
+|---|---|---|---|
+| Logo concepts (round 1) | `808c57b1`, `8c21d219`, `d77f7cc2`, `be24f053` | recraft_v4_1 vector | Direction for the new brand-family mark (split orbital ring + edge blade + core + ping). Owner liked it, asked for "more defined / recognizable". |
+| Logo concepts (round 2, refined) | `7ae8dc48`, `8654fa8f`, `26a2eefd` (defined); `52615cc1`, `3104abcf`, `93ecce33` (abstract) | recraft_v4_1 vector | Refined directions. The hand-built canonical mark (`logo-mark-inline.tsx`, foolproof geometry) was crafted from this direction so it is verifiable and kinetic-safe. |
+
+## Pending owner approval (Higgsfield MCP spend prompt)
+
+| Asset | Model | Placement | Note |
+|---|---|---|---|
+| GSN broadcast motion plate | kling2_6 / seedance_2_0 (i2v from the plate, silent, loopable) | `/the-beat` backdrop `motion` | `generate_video` requires an interactive approval click; the still is the shipped fallback so nothing breaks if it never runs. |
+| Cold-open intro title video | kling2_6 | montage motion bed | Replaces `home-hero-cosmos.mp4` bed when approved. |
+
+## Rules honored
+
+- Every generated asset has a code-native fallback and a placement; nothing photoreal, no faces, no team/league marks, no embedded fake text, no casino imagery.
+- Stills are tiny (≈28KB webp) and decorative (low opacity); reduced-motion shows still/gradient only.

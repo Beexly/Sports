@@ -1,0 +1,22 @@
+# FABLE Shadow Control Tower Guard blueprint.
+# This file is documentation-grade policy-as-code. It is not executed by AWS.
+
+rule fable_no_live_aws_action {
+  live_aws_action == false
+  paid_resource_used == false
+}
+
+rule fable_guardrails_have_pillars {
+  guardrails[*].pillar exists
+  guardrails[*].zero_cost == true
+}
+
+rule fable_agentcore_agents_explain {
+  bedrock_agentcore_agents[*].self_explanation exists
+  bedrock_agentcore_agents[*].evidence_output_required == true
+}
+
+rule fable_cdk_fixtures_synth_only {
+  cdk_iac_fixtures[*].synth_only == true
+  cdk_iac_fixtures[*].deploy_allowed == false
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "gse-aws-shadow-compatibility-v1",
+  "status": "local_compatibility_index_only",
+  "purpose": "Expose exact infra/aws-shadow paths while pointing to canonical local FABLE/AWS artifacts.",
+  "live_aws_action": false,
+  "deploy_allowed": false,
+  "credentials_required": false,
+  "paid_resource_required": false,
+  "canonical_artifacts": [
+    "docs/fable/aws/README.md",
+    "docs/fable/aws/AWS_SERVICE_SCORECARD.md",
+    "docs/fable/aws/AWS_COST_SECURITY_GATES.md",
+    "docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json",
+    "docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json",
+    "infrastructure/aws/cdk/shadow-control-tower-synth.fixture.json"
+  ],
+  "compatibility_fixtures": [
+    "infra/aws-shadow/control-tower-policy.json",
+    "infra/aws-shadow/step-functions/metric-validation.asl.json",
+    "infra/aws-shadow/eventbridge/events.json",
+    "infra/aws-shadow/sagemaker/model-monitor-card.json",
+    "infra/aws-shadow/bedrock/guardrails-policy.json",
+    "infra/aws-shadow/agentcore/agent-contracts.json",
+    "infra/aws-shadow/cleanrooms/synthetic-collab-fixture.json"
+  ],
+  "validation": [
+    "npm run guard:aws-compatibility-index",
+    "npm run fable:aws-fixtures",
+    "npm run fable:aws-governance"
+  ]
+}

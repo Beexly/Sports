@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-06-13T00:00:00Z",
+  "runs": [
+    {
+      "run_id": "bt_fantasy_fixture",
+      "type": "fantasy_projection",
+      "status": "fixture_backtest",
+      "mae": 5.8,
+      "calibration": "limited",
+      "what_is_proven": "UI and scoring math can display proof artifacts.",
+      "not_proven": "No production historical prediction archive yet."
+    },
+    {
+      "run_id": "bt_volatility_fixture",
+      "type": "volatility",
+      "status": "fixture_backtest",
+      "hit_rate": 0.61,
+      "not_proven": "Requires full season actual volatility windows."
+    }
+  ]
+}

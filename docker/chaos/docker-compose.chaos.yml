@@ -1,0 +1,52 @@
+# Staging / local chaos only — NOT for production.
+#
+# Toxiproxy sits in front of a mock Odds API so we can inject:
+#   - HTTP 402/401/429/500 (via mock mode)
+#   - latency, timeout, connection reset (via Toxiproxy toxics)
+#
+# Usage:
+#   docker compose -f docker/chaos/docker-compose.chaos.yml up -d
+#   ./docker/chaos/bootstrap-toxiproxy.sh
+#   export ODDS_API_BASE_URL=http://127.0.0.1:22220/v4
+#   export THE_ODDS_API_KEY=staging-chaos-key
+#
+# Binding product law: never enable LIVE_BOARD from chaos results;
+# fail closed, no invented quotes.
+
+services:
+  odds-api-mock:
+    image: node:22-alpine
+    container_name: gse_odds_api_mock
+    working_dir: /app
+    volumes:
+      - ./mock-odds-api.mjs:/app/mock-odds-api.mjs:ro
+    environment:
+      # ok | 402 | 401 | 429 | 500 | empty | timeout
+      MOCK_ODDS_MODE: ${MOCK_ODDS_MODE:-402}
+      PORT: "8080"
+    command: ["node", "mock-odds-api.mjs"]
+    expose:
+      - "8080"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8080/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy:2.9.0
+    container_name: gse_toxiproxy
+    ports:
+      # Toxiproxy HTTP API (create proxies / toxics)
+      - "8474:8474"
+      # Proxied Odds API traffic (app points here)
+      - "22220:22220"
+    depends_on:
+      odds-api-mock:
+        condition: service_healthy

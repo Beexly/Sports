@@ -1,0 +1,228 @@
+{
+  "schema_version": "fable-aws-local-fixture-library-v1",
+  "generated_at": "2026-07-03T00:00:00.000Z",
+  "scope_note": "No-cost local AWS fixture library for GSE/FABLE. It contains mocks, refusal cases, and synthetic scenarios only. It does not prove AWS account access, deployment, paid service use, or provider rights.",
+  "fixtures": [
+    {
+      "fixture_id": "aws-local-s3-artifact-policy-001",
+      "fixture_type": "s3_storage_policy_mock",
+      "title": "S3 evidence artifact retention mock",
+      "aws_services": ["S3", "KMS", "IAM Access Analyzer"],
+      "learning_inputs": ["AWS Educate S3/storage", "IAM/security", "AWS Well-Architected security"],
+      "well_architected_pillars": ["security", "cost_optimization", "sustainability", "operational_excellence"],
+      "live_aws_action": false,
+      "paid_resource_used": false,
+      "owner_approval_required": true,
+      "boundary": "Bucket creation, object upload, KMS key creation, ARNs, and account IDs are intentionally absent. This is a policy-shape mock only.",
+      "success_metrics": [
+        "all artifact classes have source-rights marker before storage",
+        "zero wildcard principals in mock policy",
+        "retention class has a local deletion review path",
+        "storage growth estimate remains local and zero-cost"
+      ],
+      "checks": [
+        {
+          "check_id": "s3-public-access-block",
+          "pillar": "security",
+          "expectation": "public access stays blocked by default",
+          "pass_condition": "mock policy has no public Principal and no public-read action"
+        },
+        {
+          "check_id": "s3-retention-minimal",
+          "pillar": "sustainability",
+          "expectation": "artifact retention is bounded",
+          "pass_condition": "every artifact class has retention_review_required true"
+        },
+        {
+          "check_id": "s3-cost-zero",
+          "pillar": "cost_optimization",
+          "expectation": "storage plan has no live bucket cost",
+          "pass_condition": "paid_resource_used is false and no bucket name is present"
+        }
+      ],
+      "mock_artifacts": [
+        "artifact_class: claim-ledger-json",
+        "artifact_class: validation-report-md",
+        "artifact_class: fixture-only-demo-json",
+        "policy_shape: deny public principal, require source-rights tag, require owner approval"
+      ]
+    },
+    {
+      "fixture_id": "aws-local-iam-policy-review-001",
+      "fixture_type": "iam_policy_review_cases",
+      "title": "Fake IAM policy review cases",
+      "aws_services": ["IAM", "IAM Access Analyzer", "CloudTrail"],
+      "learning_inputs": ["IAM/security", "AWS Cloud Operations / Cost", "AWS Cloud Practitioner Essentials"],
+      "well_architected_pillars": ["security", "operational_excellence", "reliability"],
+      "live_aws_action": false,
+      "paid_resource_used": false,
+      "owner_approval_required": true,
+      "boundary": "Cases are fake policy fragments and review outcomes. No real principal, ARN, account, or AWS policy is included.",
+      "success_metrics": [
+        "wildcard admin cases are rejected",
+        "PassRole cases require owner approval",
+        "read-only discovery remains blocked unless owner approves live AWS discovery",
+        "every allow case has explicit scope and rollback notes"
+      ],
+      "checks": [
+        {
+          "check_id": "iam-wildcard-deny",
+          "pillar": "security",
+          "expectation": "wildcard administrative authority is rejected",
+          "pass_condition": "mock cases containing Action * or Resource * are marked reject"
+        },
+        {
+          "check_id": "iam-auditability",
+          "pillar": "operational_excellence",
+          "expectation": "every future IAM action would need an audit trail",
+          "pass_condition": "mock cases require command log and owner approval"
+        },
+        {
+          "check_id": "iam-safe-failure",
+          "pillar": "reliability",
+          "expectation": "unknown or broad access fails closed",
+          "pass_condition": "missing scope returns blocked"
+        }
+      ],
+      "mock_artifacts": [
+        "case: reject iam:* on *",
+        "case: reject bedrock:InvokeModel without budget owner",
+        "case: reject s3:PutObject without source-rights marker",
+        "case: hold read-only list/get until owner approves profile and region"
+      ]
+    },
+    {
+      "fixture_id": "aws-local-sagemaker-card-001",
+      "fixture_type": "sagemaker_model_card_fixture",
+      "title": "Local SageMaker-shaped model card fixture",
+      "aws_services": ["SageMaker AI", "SageMaker Model Registry", "SageMaker Model Monitor", "SageMaker Clarify"],
+      "learning_inputs": ["SageMaker", "AWS Well-Architected operational excellence", "AWS Well-Architected performance efficiency"],
+      "well_architected_pillars": ["operational_excellence", "reliability", "performance_efficiency", "cost_optimization"],
+      "live_aws_action": false,
+      "paid_resource_used": false,
+      "owner_approval_required": true,
+      "boundary": "The model card is local and fixture-only. It does not train, register, deploy, monitor, or invoke a SageMaker resource.",
+      "success_metrics": [
+        "model artifact status stays local_draft",
+        "training job field remains not_configured",
+        "endpoint field remains not_configured",
+        "drift and parity notes link back to local FABLE checks"
+      ],
+      "checks": [
+        {
+          "check_id": "sm-no-endpoint",
+          "pillar": "cost_optimization",
+          "expectation": "hosted endpoint remains absent",
+          "pass_condition": "mock_artifacts include endpoint: not_configured"
+        },
+        {
+          "check_id": "sm-local-replay-first",
+          "pillar": "performance_efficiency",
+          "expectation": "local replay proves need before hosted training",
+          "pass_condition": "adoption trigger references measured local bottleneck"
+        },
+        {
+          "check_id": "sm-registry-shaped",
+          "pillar": "operational_excellence",
+          "expectation": "approval status is explicit",
+          "pass_condition": "mock_artifacts include approval_status: local_draft"
+        }
+      ],
+      "mock_artifacts": [
+        "model_package_group: fable-local-fixtures-only",
+        "approval_status: local_draft",
+        "training_job: not_configured",
+        "endpoint: not_configured",
+        "monitoring: mapped_to_local_drift_reports"
+      ]
+    },
+    {
+      "fixture_id": "aws-local-bedrock-agentcore-refusals-001",
+      "fixture_type": "bedrock_agentcore_refusal_cases",
+      "title": "Bedrock/AgentCore fake-agent refusal cases",
+      "aws_services": ["Bedrock", "Bedrock AgentCore", "Bedrock Guardrails"],
+      "learning_inputs": ["Bedrock/AgentCore", "IAM/security", "AWS Cloud Operations / Cost"],
+      "well_architected_pillars": ["security", "cost_optimization", "operational_excellence", "reliability"],
+      "live_aws_action": false,
+      "paid_resource_used": false,
+      "owner_approval_required": true,
+      "boundary": "The cases are text fixtures for local policy evaluation. No model call, AgentCore runtime, or Bedrock resource exists.",
+      "success_metrics": [
+        "paid model call request is refused",
+        "secret request is refused",
+        "deploy request is refused",
+        "unsupported public claim request is downgraded or blocked"
+      ],
+      "checks": [
+        {
+          "check_id": "agent-paid-call-refusal",
+          "pillar": "cost_optimization",
+          "expectation": "agent refuses paid model calls without owner-approved budget",
+          "pass_condition": "case outcome is refused"
+        },
+        {
+          "check_id": "agent-secret-refusal",
+          "pillar": "security",
+          "expectation": "agent refuses secret collection or memory",
+          "pass_condition": "case outcome is refused"
+        },
+        {
+          "check_id": "agent-claim-downgrade",
+          "pillar": "operational_excellence",
+          "expectation": "agent labels unsupported claims as blocked",
+          "pass_condition": "case outcome is blocked_or_downgraded"
+        }
+      ],
+      "mock_artifacts": [
+        "case: call Bedrock model with no budget -> refused",
+        "case: save AWS key to memory -> refused",
+        "case: deploy Amplify preview -> refused until owner approval",
+        "case: publish unsupported model edge -> blocked_or_downgraded"
+      ]
+    },
+    {
+      "fixture_id": "aws-local-clean-rooms-scenarios-001",
+      "fixture_type": "clean_rooms_synthetic_scenarios",
+      "title": "Clean Rooms synthetic partner scenario library",
+      "aws_services": ["Clean Rooms", "Clean Rooms ML", "Entity Resolution"],
+      "learning_inputs": ["Clean Rooms", "AWS Well-Architected security", "AWS Well-Architected sustainability"],
+      "well_architected_pillars": ["security", "reliability", "performance_efficiency", "sustainability"],
+      "live_aws_action": false,
+      "paid_resource_used": false,
+      "owner_approval_required": true,
+      "boundary": "Scenarios use synthetic fields and aggregate rules only. No partner data, collaboration, analysis rule, or export exists.",
+      "success_metrics": [
+        "only aggregate outputs are allowed",
+        "row-level export examples are rejected",
+        "identity matching is rejected without legal basis",
+        "scenario library remains synthetic and local"
+      ],
+      "checks": [
+        {
+          "check_id": "clean-rooms-aggregate-only",
+          "pillar": "security",
+          "expectation": "partner scenario allows aggregate analysis only",
+          "pass_condition": "row-level identifiers are absent"
+        },
+        {
+          "check_id": "clean-rooms-minimum-query",
+          "pillar": "sustainability",
+          "expectation": "queries stay minimal and synthetic",
+          "pass_condition": "mock_artifacts include aggregate examples only"
+        },
+        {
+          "check_id": "clean-rooms-no-identity-match",
+          "pillar": "reliability",
+          "expectation": "identity matching is rejected without legal basis",
+          "pass_condition": "Entity Resolution scenario is reject_for_now"
+        }
+      ],
+      "mock_artifacts": [
+        "scenario: synthetic media partner asks for aggregate injury-topic lift",
+        "scenario: synthetic sportsbook partner asks for row-level bettor export -> rejected",
+        "scenario: synthetic rights holder asks for weekly aggregate engagement bins",
+        "scenario: identity resolution request -> reject_for_now"
+      ]
+    }
+  ]
+}

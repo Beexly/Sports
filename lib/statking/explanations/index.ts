@@ -1,0 +1,2 @@
+export interface ExplanationInput { name: string; score: number; confidence: number; missingData?: string[]; }
+export function explainPlayerScore(input: ExplanationInput) { return { plain_english_summary: `${input.name} has a ${input.score} StatKing score with ${input.confidence}% confidence.`, missing_data_warning: (input.missingData ?? []).join(', ') || 'No major missing-data flag.', what_to_watch_next: 'Watch role, usage, and rights-gated data availability.' }; }

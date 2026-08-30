@@ -1,0 +1,31 @@
+{
+  "id": "settlement-path-selection",
+  "description": "Free path only when THE_ODDS_API_KEY absent; present uses odds-api path",
+  "sourceFile": "apps/web/app/api/cron/settle-picks/route.ts",
+  "predicates": [
+    {
+      "id": "free-when-key-absent",
+      "type": "file_contains",
+      "path": "apps/web/app/api/cron/settle-picks/route.ts",
+      "mustInclude": ["@/lib/settlement/path-select", "hasOddsApiKey", "path: \"free\"", "runFreePathSettlement"]
+    },
+    {
+      "id": "paid-when-key-present",
+      "type": "file_contains",
+      "path": "apps/web/app/api/cron/settle-picks/route.ts",
+      "mustInclude": ["THE_ODDS_API_KEY", "path: \"odds-api\"", "settleSport"]
+    },
+    {
+      "id": "cron-3h",
+      "type": "file_contains",
+      "path": "vercel.json",
+      "mustInclude": ["/api/cron/settle-picks", "0 */3 * * *"]
+    },
+    {
+      "id": "path-select-module",
+      "type": "file_contains",
+      "path": "apps/web/lib/settlement/path-select.ts",
+      "mustInclude": ["selectSettlementPath", "odds-api", "free"]
+    }
+  ]
+}

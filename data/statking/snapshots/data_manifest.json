@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-06-13T00:00:00Z",
+  "live_loader_command": "python3 scripts/statking_open_data_ingest.py --prefer-live --fallback-fixture",
+  "snapshots": [
+    "players",
+    "teams",
+    "games",
+    "player_weekly_stats",
+    "player_season_stats",
+    "team_weekly_stats",
+    "plays_sample",
+    "snap_counts_sample",
+    "injuries_sample",
+    "depth_chart_sample"
+  ],
+  "data_status_policy": [
+    "active_open",
+    "active_owned",
+    "fixture_backed",
+    "generated_derived"
+  ]
+}

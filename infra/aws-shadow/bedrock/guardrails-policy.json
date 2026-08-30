@@ -1,0 +1,25 @@
+{
+  "schema_version": "gse-shadow-bedrock-guardrails-policy-v1",
+  "status": "local_fixture_only",
+  "canonical_artifact": "docs/fable/aws/AGENTCORE_SECURITY_FIREBREAK.md",
+  "live_aws_action": false,
+  "deploy_allowed": false,
+  "credentials_required": false,
+  "paid_resource_required": false,
+  "mapped_services": [
+    "Bedrock Guardrails",
+    "Bedrock AgentCore"
+  ],
+  "blocked_request_classes": [
+    "secret handling",
+    "paid model call",
+    "unsupported performance claim",
+    "live AWS mutation",
+    "source-rights bypass",
+    "raw provider payload export"
+  ],
+  "required_agent_response": {
+    "style": "explain refusal, cite local gate, provide safe local alternative",
+    "manual_review_required": true
+  }
+}

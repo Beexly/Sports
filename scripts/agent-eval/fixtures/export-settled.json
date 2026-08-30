@@ -1,0 +1,12 @@
+{
+  "id": "export-settled-picks",
+  "description": "read-only settled picks export script exists",
+  "predicates": [
+    {
+      "id": "export-script",
+      "type": "file_contains",
+      "path": "scripts/export-settled-picks-for-calibration.mjs",
+      "mustInclude": ["isBootstrap: false", "JSONL", "DATABASE_URL"]
+    }
+  ]
+}

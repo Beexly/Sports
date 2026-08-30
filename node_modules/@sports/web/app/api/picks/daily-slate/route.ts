@@ -1,0 +1,188 @@
+import { jsonNoStore } from "@/lib/api/no-store";
+import type { NextRequest } from "next/server";
+import { startOfDay, endOfDay } from "date-fns";
+import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import {
+  db,
+  isStubMode,
+  isDemoPicksEnabled,
+  getSamplePicks,
+} from "@sports/db";
+import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
+import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { clientIp } from "@/lib/api/rate-limit";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+
+/**
+ * Daily slate API — stub-safe and demo-aware.
+ *
+ * Response shape matches @sports/types `DailySlate` so /picks SlateBar
+ * renders correctly. recentRecord is always null: no real graded W-L-push
+ * data source is wired to this route yet, so there is nothing honest to
+ * report. It must NOT be backfilled with a hardcoded placeholder — see the
+ * note at its declaration below.
+ */
+export const dynamic = "force-dynamic";
+
+export async function GET(req: NextRequest) {
+  // Public, anonymous, DB-heavy route (multiple count + findMany aggregates).
+  // IP-keyed rate limit copied from the established pattern in
+  // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
+  // Durable (Postgres) limiter — same swap and same rationale as /api/picks:
+  // the in-memory bucket was per-process, so the effective quota multiplied by
+  // warm-instance count on serverless.
+  const limit = await consumePublicFormRateLimit("public-daily-slate", clientIp(req), 60, 60_000);
+  if (!limit.ok) {
+    return jsonNoStore(
+      limit.status === 429
+        ? { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" }
+        : { success: false, error: "Rate limit service unavailable. Please retry shortly.", code: "rate_limit_store_unavailable" },
+      { status: limit.status, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
+
+  const gates = getReadinessGates();
+
+  // Public-picks gate — the SAME gate /api/picks enforces, and it was missing
+  // here. This route read getReadinessGates() but only ever consulted
+  // forceNoBetIfStale, so with PUBLIC_PICKS_ENABLED=false /api/picks went dark
+  // (503) while this endpoint kept answering 200 with totalPicks,
+  // premiumPickCount, freePickCount, sportBreakdown and a freshly stamped
+  // lastUpdatedAt. That is the shape of the board — exactly what the gate
+  // exists to withhold — served from the surface the gate was supposed to
+  // close. Two public pick endpoints must not disagree about whether picks
+  // are public.
+  //
+  // 503 (not a zeroed 200) so the contract matches /api/picks byte for byte.
+  // The only consumer, fetchSlate() in app/picks/page.tsx, already does
+  // `if (!res.ok) return null` inside a try/catch, so the SlateBar degrades to
+  // its no-slate state rather than rendering fabricated zeros.
+  if (!gates.canExposePublicPicks) {
+    return jsonNoStore(bootstrapGateResponse("Public picks"), { status: 503 });
+  }
+
+  const demoActive = isStubMode() && isDemoPicksEnabled();
+
+  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). The /picks
+  // page reads this slate alongside /api/picks; without this guard the SlateBar
+  // would still count published rows and stamp a fresh "updated now" even when
+  // /api/picks has collapsed to its dark/collecting state. When the flag is ON
+  // and the latest successful ingestion is "stale" per the shared Refresh SLA,
+  // return the SAME zeroed/demo-suppressed slate shape — but with
+  // lastUpdatedAt: null so we never imply a fresh refresh (CLAUDE.md rule #5).
+  // Fail OPEN on a DB error — a transient blip must not black out a fresh
+  // surface; freshness is enforced separately by /api/health.
+  if (gates.forceNoBetIfStale) {
+    const stale = await isPublicPicksSurfaceStale().catch(() => false);
+    if (stale) {
+      return jsonNoStore({
+        success: true,
+        data: {
+          date: new Date().toISOString().slice(0, 10),
+          totalGames: 0,
+          totalPicks: 0,
+          premiumPickCount: 0,
+          freePickCount: 0,
+          topEdgePick: null,
+          lastUpdatedAt: null,
+          sportBreakdown: [],
+          recentRecord: null,
+          isSampleData: demoActive,
+        },
+        meta: { isSampleData: demoActive },
+      });
+    }
+  }
+
+  // Match /api/picks and the board: in production, drop dev seed rows
+  // (modelVersion="v5.0.0-seed") so this slate's counts agree with the picks the
+  // /api/picks route actually returns. No-op in dev/test.
+  const excludeSeedInProd =
+    process.env["NODE_ENV"] === "production" ? { NOT: { modelVersion: "v5.0.0-seed" } } : {};
+
+  // Shared published-pick filter for every count on this slate (matches /api/picks).
+  // The generatedAt day-bound mirrors /api/picks (route.ts): without it this
+  // "daily" slate counted EVERY pending published pick ever, so /picks rendered
+  // four irreconcilable numbers on one screen (C-31).
+  const slateDay = new Date();
+  const baseWhere = {
+    isPublished: true,
+    result: "PENDING" as const,
+    isBootstrap: false,
+    generatedAt: { gte: startOfDay(slateDay), lte: endOfDay(slateDay) },
+    game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+    ...excludeSeedInProd,
+  };
+
+  const totalPicks = await db.pick.count({ where: baseWhere }).catch(() => 0);
+
+  const samples = demoActive ? getSamplePicks() : [];
+  let totalGames: number;
+  let freePickCount: number;
+  // Sport breakdown accumulator (demo counts samples; prod counts real picks).
+  const sportCount = new Map<string, number>();
+  if (demoActive) {
+    totalGames = new Set(samples.map((p) => p.gameId)).size;
+    freePickCount = samples.filter((p) => p.tier === "FREE").length;
+    for (const p of samples) {
+      sportCount.set(p.game.sport.name, (sportCount.get(p.game.sport.name) ?? 0) + 1);
+    }
+  } else {
+    // Production: derive the counts from the REAL DB, not the (empty) demo array.
+    // Deriving totalGames/free/premium from `samples` in prod published a
+    // self-contradictory "Games Today: 0" next to a non-zero Total Picks and
+    // mislabelled every FREE-tier pick as premium (premium = total − 0).
+    //
+    // ONE scan over today's published picks feeds BOTH the distinct-game count
+    // AND the per-sport breakdown (was two separate findMany calls on this public
+    // path). Prisma groupBy can't traverse the pick→game→sport relation, so a
+    // narrowed select + in-process tally is the correct shape; a day's slate is
+    // bounded. On a DB error, fall back to empty — never fabricate.
+    freePickCount = await db.pick
+      .count({ where: { ...baseWhere, tier: "FREE" } })
+      .catch(() => 0);
+    const rows = await db.pick
+      .findMany({
+        where: baseWhere,
+        select: { gameId: true, game: { select: { sport: { select: { name: true } } } } },
+      })
+      .catch(() => [] as { gameId: string; game: { sport: { name: string } } }[]);
+    const gameIds = new Set<string>();
+    for (const row of rows) {
+      gameIds.add(row.gameId);
+      const name = row.game.sport.name;
+      sportCount.set(name, (sportCount.get(name) ?? 0) + 1);
+    }
+    totalGames = gameIds.size;
+  }
+  const premiumPickCount = Math.max(0, totalPicks - freePickCount);
+  const sportBreakdown = Array.from(sportCount.entries())
+    .map(([sport, pickCount]) => ({ sport, pickCount }))
+    .sort((a, b) => b.pickCount - a.pickCount || a.sport.localeCompare(b.sport));
+  // recentRecord: no real graded win/loss/push data source is wired to this
+  // route yet. Always null — do NOT resurrect a hardcoded all-zero record
+  // placeholder here. That was a dead path that would render a fabricated
+  // 0-0-0 record the day canExposePerformanceStats opens
+  // (public-number-audit-2026-07-16, finding #7; CLAUDE.md "no fabricated
+  // stats"). Wire this to real settled-pick aggregates before ever setting
+  // it non-null.
+  const recentRecord: { wins: number; losses: number; pushes: number; period: string } | null = null;
+
+  return jsonNoStore({
+    success: true,
+    data: {
+      date: new Date().toISOString().slice(0, 10),
+      totalGames,
+      totalPicks,
+      premiumPickCount,
+      freePickCount,
+      topEdgePick: null,
+      lastUpdatedAt: new Date().toISOString(),
+      sportBreakdown,
+      // Always null — see the declaration above for why.
+      recentRecord,
+      isSampleData: demoActive,
+    },
+    meta: { isSampleData: demoActive },
+  });
+}

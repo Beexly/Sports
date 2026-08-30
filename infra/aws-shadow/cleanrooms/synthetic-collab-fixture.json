@@ -1,0 +1,30 @@
+{
+  "schema_version": "gse-shadow-cleanrooms-collab-v1",
+  "status": "local_fixture_only",
+  "canonical_artifact": "docs/fable/aws/clean-rooms-demo/README.md",
+  "live_aws_action": false,
+  "deploy_allowed": false,
+  "credentials_required": false,
+  "paid_resource_required": false,
+  "mapped_services": [
+    "AWS Clean Rooms",
+    "AWS Clean Rooms ML",
+    "Entity Resolution"
+  ],
+  "synthetic_participants": [
+    "gse_derived_metrics_owner",
+    "fantasy_tool_partner_mock",
+    "sports_media_partner_mock"
+  ],
+  "allowed_outputs": [
+    "aggregate segment counts",
+    "synthetic overlap rates",
+    "privacy-preserving partner opportunity summaries"
+  ],
+  "blocked_outputs": [
+    "row-level user data",
+    "raw provider payloads",
+    "source data redistribution",
+    "partner-identifying live data"
+  ]
+}

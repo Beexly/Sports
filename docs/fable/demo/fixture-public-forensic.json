@@ -1,0 +1,22 @@
+{
+  "fixture_id": "fixture-nfl-public-001",
+  "source_id": "nflverse",
+  "source_freshness": "fixture-only, derived from safe public-data pattern",
+  "market_open_probability": 0.48,
+  "current_model_probability": 0.59,
+  "event_timestamp": "2026-09-08T18:30:00.000Z",
+  "features": [
+    {
+      "name": "injury_timing_delta",
+      "value": "starter downgraded after market-open snapshot"
+    },
+    {
+      "name": "depth_chart_instability",
+      "value": "two role changes in same position group"
+    },
+    {
+      "name": "source_freshness_minutes",
+      "value": "42"
+    }
+  ]
+}

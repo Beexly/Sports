@@ -1,0 +1,78 @@
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=34727 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 19 and seed 3222761233863887652 with 4 workers on 4 cores with 4020MB heap and 64MB offheap memory [pid: 24484] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/wt/formal-invariant-foundry/formal/ai-invocation/InvocationClaim.tla
+Parsing file /tmp/tlc-5991061062560764028/Naturals.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5991061062560764028/FiniteSets.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-5991061062560764028/Sequences.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-5991061062560764028/TLC.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-5991061062560764028/_TLCTrace.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5991061062560764028/TLCExt.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5991061062560764028/Integers.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module InvocationClaim
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module InvocationClaim
+Starting... (2026-07-22 08:43:53)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-07-22 08:43:53.
+Error: Invariant AmbiguousAttemptStopsFallback is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ attemptOutcome = (a1 :> "Pending" @@ a2 :> "Pending" @@ a3 :> "Pending")
+/\ invocationStatus = (i1 :> "Open" @@ i2 :> "Open")
+/\ rejectedRequests = {}
+/\ invocationFp = (i1 :> "NoFp" @@ i2 :> "NoFp")
+/\ dispatched = (a1 :> FALSE @@ a2 :> FALSE @@ a3 :> FALSE)
+/\ claimOwner = (i1 :> "NoOwner" @@ i2 :> "NoOwner")
+/\ attemptOf = (a1 :> "NoInv" @@ a2 :> "NoInv" @@ a3 :> "NoInv")
+
+State 2: <ClaimOwner(act1,i1,fp1) line 98, col 5 to line 111, col 76 of module InvocationClaim>
+/\ attemptOutcome = (a1 :> "Pending" @@ a2 :> "Pending" @@ a3 :> "Pending")
+/\ invocationStatus = (i1 :> "Open" @@ i2 :> "Open")
+/\ rejectedRequests = {}
+/\ invocationFp = (i1 :> fp1 @@ i2 :> "NoFp")
+/\ dispatched = (a1 :> FALSE @@ a2 :> FALSE @@ a3 :> FALSE)
+/\ claimOwner = (i1 :> act1 @@ i2 :> "NoOwner")
+/\ attemptOf = (a1 :> "NoInv" @@ a2 :> "NoInv" @@ a3 :> "NoInv")
+
+State 3: <Dispatch(act1,i1,a1) line 134, col 5 to line 141, col 81 of module InvocationClaim>
+/\ attemptOutcome = (a1 :> "Pending" @@ a2 :> "Pending" @@ a3 :> "Pending")
+/\ invocationStatus = (i1 :> "Open" @@ i2 :> "Open")
+/\ rejectedRequests = {}
+/\ invocationFp = (i1 :> fp1 @@ i2 :> "NoFp")
+/\ dispatched = (a1 :> TRUE @@ a2 :> FALSE @@ a3 :> FALSE)
+/\ claimOwner = (i1 :> act1 @@ i2 :> "NoOwner")
+/\ attemptOf = (a1 :> i1 @@ a2 :> "NoInv" @@ a3 :> "NoInv")
+
+State 4: <Dispatch(act1,i1,a2) line 134, col 5 to line 141, col 81 of module InvocationClaim>
+/\ attemptOutcome = (a1 :> "Pending" @@ a2 :> "Pending" @@ a3 :> "Pending")
+/\ invocationStatus = (i1 :> "Open" @@ i2 :> "Open")
+/\ rejectedRequests = {}
+/\ invocationFp = (i1 :> fp1 @@ i2 :> "NoFp")
+/\ dispatched = (a1 :> TRUE @@ a2 :> TRUE @@ a3 :> FALSE)
+/\ claimOwner = (i1 :> act1 @@ i2 :> "NoOwner")
+/\ attemptOf = (a1 :> i1 @@ a2 :> i1 @@ a3 :> "NoInv")
+
+State 5: <Resolve(a1,"Ambiguous") line 153, col 5 to line 163, col 86 of module InvocationClaim>
+/\ attemptOutcome = (a1 :> "Ambiguous" @@ a2 :> "Pending" @@ a3 :> "Pending")
+/\ invocationStatus = (i1 :> "Ambiguous" @@ i2 :> "Open")
+/\ rejectedRequests = {}
+/\ invocationFp = (i1 :> fp1 @@ i2 :> "NoFp")
+/\ dispatched = (a1 :> TRUE @@ a2 :> TRUE @@ a3 :> FALSE)
+/\ claimOwner = (i1 :> act1 @@ i2 :> "NoOwner")
+/\ attemptOf = (a1 :> i1 @@ a2 :> i1 @@ a3 :> "NoInv")
+
+918 states generated, 555 distinct states found, 448 states left on queue.
+The depth of the complete state graph search is 6.
+Finished in 00s at (2026-07-22 08:43:54)
+Trace exploration spec path: ./InvocationClaim_TTrace_1784709833.tla

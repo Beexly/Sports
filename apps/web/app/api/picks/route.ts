@@ -1,0 +1,344 @@
+import { NextRequest, NextResponse } from "next/server";
+import { jsonNoStore } from "@/lib/api/no-store";
+import { auth } from "@/lib/auth";
+import { getUserEntitlements } from "@/lib/entitlements";
+import { db } from "@sports/db";
+import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import { getEntitlements, type PublicPick, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
+import { startOfDay, endOfDay } from "date-fns";
+import { parseDateParam } from "@/lib/parse-date-param";
+import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
+import {
+  isPublicPicksSurfaceStale,
+  staleDataGateResponse,
+} from "@/lib/data-reliability/public-freshness-gate";
+import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
+import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
+import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
+import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { clientIp } from "@/lib/api/rate-limit";
+import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+
+export const dynamic = "force-dynamic";
+
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  // Public, anonymous, DB-heavy route (findMany + count + per-pick selective
+  // filter). DURABLE (Postgres) rate limit: the previous in-memory limiter was
+  // per-process, so on serverless the real ceiling was 60/min × warm-instance
+  // count — horizontal scale silently multiplied the quota. Same limiter the
+  // B2B and public-form routes already run in production. Fail-closed 503 when
+  // the store is unreachable is honest here: this route needs the same DB for
+  // its content, so "limiter store down" already means "no picks to serve".
+  const limit = await consumePublicFormRateLimit("public-picks", clientIp(req), 60, 60_000);
+  if (!limit.ok) {
+    return jsonNoStore(
+      limit.status === 429
+        ? { success: false, error: "Too many requests. Please wait and try again.", code: "rate_limited" }
+        : { success: false, error: "Rate limit service unavailable. Please retry shortly.", code: "rate_limit_store_unavailable" },
+      { status: limit.status, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
+
+  const gates = getReadinessGates();
+  if (!gates.canExposePublicPicks) {
+    return jsonNoStore(bootstrapGateResponse("Public picks"), { status: 503 });
+  }
+
+  // Stale-Data Kill Switch (default OFF via FORCE_NO_BET_IF_STALE). When ON and
+  // the latest successful ingestion is "stale" per the shared Refresh SLA, go
+  // dark with a DISTINCT 503 body so the surface never serves a stale slate
+  // (CLAUDE.md rule #5) — and so operators/monitors can tell "awaiting fresh
+  // data" apart from "env gate regressed" (2026-07-10 incident lesson). Fail
+  // OPEN on a DB error — a transient blip must not black out a fresh surface.
+  if (gates.forceNoBetIfStale) {
+    const stale = await isPublicPicksSurfaceStale().catch(() => false);
+    if (stale) {
+      return jsonNoStore(staleDataGateResponse("Public picks"), { status: 503 });
+    }
+  }
+
+  const session = await auth();
+
+  // Anonymous viewers get the canonical FREE entitlements — the SAME single
+  // source of truth (getEntitlements) that signed-in users resolve through.
+  // A hand-rolled fallback here is exactly how the two FREE definitions drifted
+  // apart (anon limited vs signed-in over-granted); never re-inline it.
+  const entitlements = session?.user?.id
+    ? await getUserEntitlements(session.user.id)
+    : getEntitlements("FREE");
+
+  const { searchParams } = new URL(req.url);
+  const sportFilter = searchParams.get("sport");
+  const dateParam = searchParams.get("date");
+  const gradeFilter = searchParams.get("grade") as PickGrade | null;
+  const lane = searchParams.get('lane');
+  // The `lane` query param is accepted for forward-compat with the public
+  // tier system (GREEN / PRIME / PLUS) defined in
+  // @sports/prediction-engine. It is observation-only here: the
+  // green-board gate is the authority on which picks are eligible, and
+  // the lane param is logged so operators can see which lane the caller
+  // is asking for. It is intentionally not a filter on the public query
+  // — adding one would require a separate entitlement check.
+  if (lane) {
+    console.info("[public-picks] lane request", {
+      lane,
+      sportFilter,
+      gradeFilter,
+      targetDate: dateParam,
+    });
+  }
+  // Guard against malformed `?date=` values producing an Invalid Date query.
+  const targetDate = parseDateParam(dateParam);
+
+  // Production seed-row exclusion (defense-in-depth). The dev seed writes
+  // synthetic rows tagged modelVersion="v5.0.0-seed"; in production there
+  // should be zero of them, but this is the last unguarded public path.
+  // Exclude them ONLY in production so a stray seed row can never surface on
+  // the live picks endpoint. In dev/test this spread is empty, so demo mode —
+  // which intentionally returns seed rows and flags meta.containsSeedData —
+  // is preserved byte-for-byte.
+  const excludeSeedInProd =
+    process.env.NODE_ENV === "production"
+      ? { NOT: { modelVersion: "v5.0.0-seed" } }
+      : {};
+  const gameFilter = {
+    dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE },
+    ...(sportFilter
+      ? {
+          sport: {
+            key: { contains: sportFilter, mode: "insensitive" as const },
+          },
+        }
+      : {}),
+  };
+
+  // Fail OPEN on a DB error — a transient blip on the primary query must not
+  // black out a fresh surface. The sibling count below already falls back, and
+  // the stale-check fails open too; an unwrapped throw here would 500 the public
+  // endpoint instead of honestly returning the bootstrap/collecting state. So on
+  // a primary-query failure, collapse to the same dark/"collecting" 503 the
+  // bootstrap gate returns rather than leaking a stack trace.
+  const picks = await db.pick
+    .findMany({
+      where: {
+        isPublished: true,
+        isBootstrap: false, // never expose bootstrap-era picks publicly
+        ...excludeSeedInProd, // prod-only: drop dev seed rows (no-op in dev/test)
+        generatedAt: {
+          gte: startOfDay(targetDate),
+          lte: endOfDay(targetDate),
+        },
+        // Server-side tier gate
+        ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
+        // Optional grade filter (only useful for PRO+ who can see premium)
+        ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
+        game: gameFilter,
+      },
+      include: {
+        game: {
+          include: {
+            sport: { select: { name: true, key: true } },
+          },
+        },
+        // The public proof-of-record pointer: a hash reveals nothing, and
+        // publishing it pre-kickoff is exactly how a commitment works.
+        proofReceipt: { select: { contentHash: true } },
+      },
+      orderBy: [
+        { isFeatured: "desc" },
+        { confidence: "desc" },
+        { generatedAt: "desc" },
+      ],
+      // Over-fetch a bounded pool when the viewer has a daily limit: the
+      // selective-publish filter below can only REMOVE rows, so taking exactly
+      // the limit here meant a FREE user (limit 2) could receive 0-1 picks
+      // whenever fetched rows failed the filter. The real cap is applied
+      // AFTER filter + ranking (see limitedPicks).
+      take: entitlements.dailyPickLimit != null ? 48 : 200,
+    })
+    .catch(() => null);
+  if (picks === null) {
+    return jsonNoStore(bootstrapGateResponse("Public picks"), { status: 503 });
+  }
+
+  // Selective publish (default ON): prefer priced rankingP over confidence.
+  const filteredPicks = (
+    await Promise.all(
+      picks.map(async (pick) => {
+        let rankingP: number | null = null;
+        let rankingScore: number | null = null;
+        let marketImpliedProb: number | null = null;
+        if (pick.factorBreakdown && typeof pick.factorBreakdown === "object") {
+          const fb = pick.factorBreakdown as Record<string, unknown>;
+          if (typeof fb["rankingP"] === "number" && Number.isFinite(fb["rankingP"])) {
+            rankingP = fb["rankingP"] as number;
+          }
+          if (typeof fb["marketFairProb"] === "number" && Number.isFinite(fb["marketFairProb"])) {
+            marketImpliedProb = fb["marketFairProb"] as number;
+          }
+          // rankingScore 0–100 mirror when rankingP present
+          if (rankingP != null) rankingScore = Math.round(rankingP * 100);
+        }
+        const ok = await passesPublicSelectiveFilterAsync({
+          confidence: pick.confidence,
+          rankingP,
+          rankingScore,
+          edgeScore: pick.edgeScore,
+          pickType: pick.pickType,
+          sportKey: pick.game?.sport?.key ?? null,
+          marketImpliedProb,
+        });
+        return ok ? pick : null;
+      }),
+    )
+  ).filter((p): p is NonNullable<typeof p> => p != null);
+
+  // Display order must match generation ranking law (rankingP, not confidence).
+  // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
+  const rankedPicks = [...filteredPicks].sort(comparePicksByRanking);
+
+  // Tier cap applied AFTER filter + rank so a limited viewer always gets their
+  // full allowance (best-ranked survivors), never fewer because the filter ate
+  // the pre-capped fetch.
+  const limitedPicks =
+    entitlements.dailyPickLimit != null
+      ? rankedPicks.slice(0, entitlements.dailyPickLimit)
+      : rankedPicks;
+
+  // Thread 2: honest calibrated confidence. Built once (memoised) and only when
+  // the audited calibrator is on; the calibrator is self-suppressing if the
+  // sample is insufficient/non-improving, so this is null-safe by construction.
+  const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
+
+  const publicPicks: PublicPick[] = limitedPicks.map((pick) => {
+    // Parse + validate factorBreakdown from JSON storage. The Prisma column is
+    // typed JsonValue; parseFactorBreakdown checks the shape and returns null
+    // for a malformed/legacy blob (a handled "no factor trail" state) so a
+    // consumer iterating `.factors` can never crash on bad data.
+    let factorBreakdown: FactorBreakdown | null = null;
+    if (entitlements.canSeeFactorBreakdown && pick.factorBreakdown) {
+      factorBreakdown = parseFactorBreakdown(pick.factorBreakdown);
+    }
+
+    // Extract dataQualityScore — always public trust signal
+    // Prefer from stored factorBreakdown JSON if available, else fall back to game.dataQualityScore
+    let storedDqScore: number | null = null;
+    if (pick.factorBreakdown) {
+      try {
+        const fb = pick.factorBreakdown as Record<string, unknown>;
+        if (typeof fb["dataQualityScore"] === "number") {
+          storedDqScore = fb["dataQualityScore"];
+        }
+      } catch { /* ignore */ }
+    }
+    const dataQualityScore = storedDqScore ?? Math.round(pick.game.dataQualityScore);
+
+    // Confidence is a PAID metric (Thread 1 reversed): gated solely on the
+    // viewer's entitlement — a teaser pick's tier no longer frees it. The free
+    // trust signal on the teaser is the Edge Index, not the confidence number.
+    const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
+
+    return {
+      id: pick.id,
+      game: {
+        homeTeam: pick.game.homeTeamName,
+        awayTeam: pick.game.awayTeamName,
+        commenceTime: pick.game.commenceTime.toISOString(),
+        sport: pick.game.sport.name,
+      },
+      pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+      selection: pick.selection,
+      line: pick.line,
+      // Opening -> current movement, the Pro-tier market read. Only SPREAD and
+      // TOTAL carry a comparable opening line (enrichment captures it at first
+      // ingestion); MONEYLINE and games without a captured open return null,
+      // as does any viewer without the entitlement.
+      lineMovement:
+        entitlements.canSeeLineMovement
+          ? (() => {
+              const opening =
+                pick.pickType === "SPREAD"
+                  ? pick.game.openingSpread
+                  : pick.pickType === "TOTAL"
+                    ? pick.game.openingTotal
+                    : null;
+              return opening !== null && opening !== undefined
+                ? { opening, current: pick.line }
+                : null;
+            })()
+          : null,
+      // Gated fields. Premium picks are never returned to FREE viewers (tier
+      // filter above); confidence is entitlement-gated for every viewer.
+      confidence: shownConfidence,
+      // Honest calibrated display of the confidence shown, when the audited
+      // calibrator is active (else null → surfaces show the raw heuristic %).
+      confidenceCalibrated: calibrator ? honestConfidence(shownConfidence, calibrator, true) : null,
+      edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
+      factorBreakdown,
+      // Always visible — trust transparency
+      dataQualityScore,
+      tier: pick.tier as "FREE" | "PREMIUM",
+      pickGrade: (pick.pickGrade ?? "LEAN") as PickGrade,
+      riskLevel: (pick.riskLevel ?? "MODERATE") as RiskLevel,
+      // Full reasoning / "the why" stays a paid feature (Pro+). Decoupled from
+      // canSeeConfidence (now true for FREE) so freeing confidence does not also
+      // free the premium reasoning trail. FREE gets the short teaser.
+      reasoning: entitlements.canSeeFactorBreakdown
+        ? pick.reasoning
+        : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
+      reasoningShort: pick.reasoningShort,
+      isFeatured: pick.isFeatured,
+      isAuditAvailable:
+        !pick.id.startsWith("sample-pick-") &&
+        !(pick.modelVersion ?? "").startsWith("sample-"),
+      generatedAt: pick.generatedAt.toISOString(),
+      dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
+      result: pick.result as PickResult,
+      receiptHash: pick.proofReceipt?.contentHash ?? null,
+    };
+  });
+
+  // Demo-mode detection: when any of the returned picks were created by
+  // the dev seed (modelVersion === "v5.0.0-seed"), surface a flag so the
+  // page can render a "demo mode" badge. Real model output never uses
+  // this string — synthetic seed picks are the only producer.
+  const containsSeedData = picks.some((p) => p.modelVersion === "v5.0.0-seed");
+
+  // Daily-limit transparency for FREE viewers: count the full published
+  // slate (no tier filter, no take) so the UI can say "N picks published
+  // today — you're seeing 1" instead of silently truncating. The count is
+  // already public on the board (openPicks), so no premium data leaks.
+  let totalAvailableToday = publicPicks.length;
+  if (!entitlements.canSeePremiumPicks) {
+    totalAvailableToday = await db.pick
+      .count({
+        where: {
+          isPublished: true,
+          isBootstrap: false,
+          ...excludeSeedInProd, // prod-only: keep the count consistent with the slate
+          generatedAt: {
+            gte: startOfDay(targetDate),
+            lte: endOfDay(targetDate),
+          },
+          game: gameFilter,
+        },
+      })
+      .catch(() => publicPicks.length);
+  }
+  const hitDailyLimit = totalAvailableToday > publicPicks.length;
+
+  return jsonNoStore({
+    success: true,
+    data: publicPicks,
+    meta: {
+      tier: entitlements.tier,
+      total: publicPicks.length,
+      totalAvailableToday,
+      hitDailyLimit,
+      date: targetDate.toISOString().split("T")[0],
+      canSeeConfidence: entitlements.canSeeConfidence,
+      canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
+      containsSeedData,
+    },
+  });
+}

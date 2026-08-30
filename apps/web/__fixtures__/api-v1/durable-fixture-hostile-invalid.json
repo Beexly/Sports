@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "api-v1-durable-fixture-simulator-v1",
+  "fixtureId": "api-v1-durable-hostile-invalid-synthetic-v1",
+  "source": "local_synthetic_fixture",
+  "routeExposed": false,
+  "databaseTouched": false,
+  "providerCalled": false,
+  "operations": [
+    {
+      "id": "read-only-side-effect-hostile",
+      "operation": "resolve_consumer",
+      "result": "read_only",
+      "observedReads": ["api_v1_consumers"],
+      "observedWrites": [],
+      "observedCommitOrder": [],
+      "observedRollbackOrder": [],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 2
+      },
+      "after": {
+        "api_v1_consumers": 4,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 2
+      },
+      "notes": [
+        "Hostile negative-control case: a read-only lookup mutates consumers."
+      ]
+    },
+    {
+      "id": "audit-append-batches-two-events-hostile",
+      "operation": "append_audit_event",
+      "result": "committed",
+      "observedReads": [],
+      "observedWrites": ["api_v1_audit_events"],
+      "observedCommitOrder": ["api_v1_audit_events"],
+      "observedRollbackOrder": ["api_v1_audit_events"],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 2
+      },
+      "after": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 7,
+        "api_v1_quota_months": 2
+      },
+      "notes": [
+        "Hostile negative-control case: an audit append batches two events."
+      ]
+    },
+    {
+      "id": "quota-audit-deletes-quota-row-hostile",
+      "operation": "record_quota_and_audit",
+      "result": "committed",
+      "observedReads": ["api_v1_quota_months"],
+      "observedWrites": ["api_v1_quota_months", "api_v1_audit_events"],
+      "observedCommitOrder": ["api_v1_quota_months", "api_v1_audit_events"],
+      "observedRollbackOrder": ["api_v1_audit_events", "api_v1_quota_months"],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 2
+      },
+      "after": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 6,
+        "api_v1_quota_months": 1
+      },
+      "notes": [
+        "Hostile negative-control case: quota and audit commit deletes a quota row."
+      ]
+    },
+    {
+      "id": "missing-table-count-hostile",
+      "operation": "put_consumer",
+      "result": "committed",
+      "observedReads": [],
+      "observedWrites": ["api_v1_consumers"],
+      "observedCommitOrder": ["api_v1_consumers"],
+      "observedRollbackOrder": ["api_v1_consumers"],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 2
+      },
+      "after": {
+        "api_v1_consumers": 4,
+        "api_v1_audit_events": 5
+      },
+      "notes": [
+        "Hostile negative-control case: a hand-edited fixture omits a required table count."
+      ]
+    }
+  ]
+}

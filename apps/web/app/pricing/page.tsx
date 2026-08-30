@@ -1,0 +1,720 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Nav } from "@/components/ui/nav";
+import { Footer } from "@/components/ui/footer";
+import { RiskDisclosure } from "@/components/ui/risk-disclosure";
+import { jsonLdScript } from "@/lib/seo/json-ld";
+import { PricingPlans, type PlanView } from "@/components/pricing/pricing-plans";
+import {
+  getCurrentPricingPhase,
+  annualSavingsPct,
+  annualMonthlyEquivalent,
+  GRANDFATHER_GUARANTEE as LIFETIME_PRICE_NOTE,
+  PRICING_PHASES,
+} from "@/lib/pricing/pricing-phases";
+import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
+import { Reveal } from "@/components/motion/reveal";
+import { ShootingStars } from "@/components/motion/shooting-stars";
+import { SignalRule } from "@/components/motion/signal-rule";
+import {
+  VALUE_TIERS,
+  POSITIONING,
+  EMOTIONAL_VALUE,
+} from "@/lib/pricing/value-architecture";
+import { getFeature } from "@/lib/pricing/feature-gates";
+import {
+  honestyContrastStrip,
+  WHY_PAY_FOR_HONESTY_LEAD,
+} from "@/lib/competitive/honesty-contrast";
+import { WaitlistForm } from "@/components/gsn/waitlist-form";
+import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
+import { PricingPageAnalytics } from "@/components/pricing/pricing-page-analytics";
+
+// ─────────────────────────────────────────────
+// Metadata — SEO-critical surface
+// ─────────────────────────────────────────────
+
+const phase = getCurrentPricingPhase();
+
+export const metadata: Metadata = {
+  title: "Pricing: Founding-Member Rates, Locked For Life",
+  description:
+    "A free daily sample and a public record as settled history accumulates, with the full board, confidence, depth, and alerts on the paid tiers. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+  alternates: { canonical: "/pricing" },
+  openGraph: {
+    title: `Pricing · ${BRAND_NAME}`,
+    description:
+      "Founding-member pricing, locked for life. Monthly or annual, with a 3-day money-back window.",
+  },
+};
+
+// ─────────────────────────────────────────────
+// Feature matrix (static) + phase-derived prices
+// ─────────────────────────────────────────────
+
+const FREE_FEATURES = [
+  // Honesty: public picks board is founder-gated until calibration is published.
+  // Free still delivers tools, Academy, and transparent process — not invented free picks.
+  { label: "Free calculators & intelligence tools (no account wall)", included: true },
+  { label: "The Academy: full training floor", included: true },
+  { label: "Public methodology + calibration status (building honestly)", included: true },
+  { label: "Contest Bay paper skills (no fees, no prizes, no wagering)", included: true },
+  { label: "Founding waitlist for early operator updates", included: true },
+  { label: "The full daily board, every signal (Pro)", included: false },
+  { label: "Confidence rating on every pick (Pro)", included: false },
+  { label: "Factor trail & evidence audit (Pro)", included: false },
+  { label: "Trend Lab + Parlay MRI (Pro)", included: false },
+  { label: "Graded-pick alerts (Elite)", included: false },
+  { label: "Line-value tracker + staking toolkit (Elite)", included: false },
+] as const;
+
+const PRO_FEATURES = [
+  // Honesty leads, deliberately. The product's claim is that it refuses to
+  // guess; what a subscription unlocks is the REASONING behind each refusal,
+  // not a larger pile of picks. Seeing THAT we passed on a game stays free for
+  // everyone (see the honesty-surface block in Entitlements) — paying is how
+  // you see why, and check it yourself.
+  { label: "No-Bet reasoning: the code, model version, and evidence behind every pass we make", included: true },
+  { label: "Multiprobability intervals: the honest range, not a confident-sounding single number", included: true },
+  { label: "Glass Ledger access: every published number with its coverage, bound, and provenance", included: true },
+  { label: "Recompute any claim yourself — the verifier is named, not hand-waved", included: true },
+  { label: "The Academy + public record", included: true },
+  { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
+  { label: "Confidence rating on every signal", included: true },
+  { label: "Full factor trail & reasoning", included: true },
+  { label: "Evidence audit: full forensic detail", included: true },
+  { label: "Ask the model why, on any pick", included: true },
+  { label: "Line-movement intel", included: true },
+  { label: "Trend Lab: full cohort workbench", included: true },
+  { label: "Parlay MRI: the portfolio surgeon", included: true },
+  { label: "Graded-pick alerts (Elite)", included: false },
+  { label: "Line-value tracker + staking toolkit (Elite)", included: false },
+] as const;
+
+const ELITE_FEATURES = [
+  { label: "Email + push alerts when a pick you follow settles", included: true },
+  { label: "Line-value tracker: your glass-box bet tracker", included: true },
+  { label: "Staking calculator: Kelly-aware sizing", included: true },
+  { label: "First access to new intelligence surfaces", included: true },
+  { label: "Every signal, every day: all 7 sports", included: true },
+  { label: "Confidence rating on every signal", included: true },
+  { label: "Full factor trail & evidence audit", included: true },
+  { label: "Ask the model why + line-movement intel", included: true },
+  { label: "Trend Lab: full cohort workbench", included: true },
+  { label: "Parlay MRI: the portfolio surgeon", included: true },
+  { label: "The Academy + public record", included: true },
+] as const;
+
+const FANTASY_FEATURES = [
+  { label: "Draft Assistant + Best Ball, on real, cleared data", included: true },
+  { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
+  { label: "Bye-week fragility + roster-construction guidance", included: true },
+  { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
+  { label: "Everything free plus Fantasy depth tools", included: true },
+  { label: "The Academy: full training floor", included: true },
+  { label: "Betting depth: factor trail & line movement (Pro)", included: false },
+  { label: "Trend Lab + Parlay MRI (Pro)", included: false },
+  { label: "Graded-pick alerts (Elite)", included: false },
+] as const;
+
+const PLANS: PlanView[] = [
+  {
+    id: "FREE",
+    name: "Free",
+    monthly: null,
+    annual: null,
+    annualSavingsPct: null,
+    annualMonthly: null,
+    description: "Tools, Academy, and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
+    badge: null,
+    cta: "Start free",
+    features: [...FREE_FEATURES],
+  },
+  {
+    id: "FANTASY",
+    name: "Fantasy",
+    monthly: phase.fantasy.monthly,
+    annual: phase.fantasy.annual,
+    annualSavingsPct: annualSavingsPct(phase.fantasy),
+    annualMonthly: annualMonthlyEquivalent(phase.fantasy),
+    description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data. Roster construction, stacks, and bye structure, with the reasoning.",
+    badge: "Draft season",
+    cta: "Subscribe to Fantasy",
+    features: [...FANTASY_FEATURES],
+  },
+  {
+    id: "PRO",
+    name: "Pro",
+    monthly: phase.pro.monthly,
+    annual: phase.pro.annual,
+    annualSavingsPct: annualSavingsPct(phase.pro),
+    annualMonthly: annualMonthlyEquivalent(phase.pro),
+    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself — plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
+    badge: "Recommended",
+    cta: "Subscribe to Pro",
+    features: [...PRO_FEATURES],
+  },
+  {
+    id: "ELITE",
+    name: "Elite",
+    monthly: phase.elite.monthly,
+    annual: phase.elite.annual,
+    annualSavingsPct: annualSavingsPct(phase.elite),
+    annualMonthly: annualMonthlyEquivalent(phase.elite),
+    description: "The professional toolkit: everything in Pro, plus graded-pick alerts and a line-value tracker for post-close review.",
+    badge: "The professional toolkit",
+    cta: "Subscribe to Elite",
+    features: [...ELITE_FEATURES],
+  },
+];
+
+const COMPARISON_FEATURES = [
+  "Signals per day",
+  "Sports covered",
+  "Edge Index",
+  "Confidence rating",
+  "Factor trail & reasoning",
+  "Evidence audit detail",
+  "Ask the model why",
+  "Line-movement intel",
+  "Trend Lab",
+  "Parlay MRI",
+  "Graded-pick alerts",
+  "Line-value tracker + staking toolkit",
+  "The Academy",
+  "Public record",
+  "Fantasy draft + best-ball suite",
+] as const;
+
+// Fantasy mirrors Free on the betting columns (it adds no betting depth) and unlocks
+// the fantasy suite. Public picks stay founder-gated until calibration + PUBLIC_PICKS;
+// free cells must not invent a live daily teaser while the board is dark. Paid tiers
+// describe the product when the public surface is open. Cells must never advertise
+// more than honesty allows while eligibility is RED.
+const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
+  FREE: ["When public picks open", "Tools + Academy", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Preview"],
+  FANTASY: ["When public picks open", "Tools + Fantasy suite", true, false, false, "Counts only", false, false, false, false, false, false, true, true, true],
+  PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
+  ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
+};
+
+// ─────────────────────────────────────────────
+// FAQ — JSON-LD eligible
+// ─────────────────────────────────────────────
+
+const FAQ = [
+  {
+    q: "Is there a free trial on Pro or Elite?",
+    a: "No free trial, but every paid plan has a 3-day money-back window. Cancel any time from your dashboard.",
+  },
+  {
+    q: "What is founding-member pricing?",
+    a: "We're pre-track-record, so the launch cohort gets the lowest price we'll ever offer, locked for the life of your subscription. When prices rise for new members as the public record matures, yours never does.",
+  },
+  {
+    q: "How is this different from a tout service?",
+    a: "Tout services publish their wins and quietly delete the losses. Galaxy Sports Edge keeps every finished pick in the public record, wins and losses alike, and holds back a public win-rate until enough settled history exists to support one honestly. See the full comparison at /vs/tout-services.",
+  },
+  {
+    q: "Why is the Performance page empty right now?",
+    a: "The Calibration Report stays gated until enough finished, graded picks have accumulated to make the published number statistically defensible. Patience over noise. That's the standard.",
+  },
+  {
+    q: "Which sports are covered?",
+    a: "NFL, NCAAF, NBA, NCAAB, MLB, NHL, and MLS. All seven with live odds refreshed regularly during games on a schedule the board gate enforces (candidate odds older than the freshness cap are refused the write).",
+  },
+] as const;
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+};
+
+// Product/Offer structured data: real phase prices only (single source of
+// truth: pricing-phases.ts). Free tier omitted (no offer); prices in USD.
+const productJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: `${BRAND_NAME} Membership`,
+  description:
+    "Sports decision intelligence: free calculators, methodology, and paper contests now; full board, confidence ratings, factor trails, and alerts on paid tiers when the public sample is honest.",
+  brand: { "@type": "Brand", name: BRAND_NAME },
+  offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
+    "@type": "Offer",
+    name: `${p.name} (monthly)`,
+    price: p.monthly,
+    priceCurrency: "USD",
+    url: "/pricing",
+    availability: "https://schema.org/InStock",
+  })),
+};
+
+// ─────────────────────────────────────────────
+// Page
+// ─────────────────────────────────────────────
+
+export default function PricingPage() {
+  const grandfatherNote = `${phase.name}-member rate. ${LIFETIME_PRICE_NOTE}`;
+
+  return (
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
+      <Nav />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(productJsonLd) }}
+      />
+
+      <main id="main-content" className="relative flex-1 overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
+        <PricingPageAnalytics />
+        <ShootingStars />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
+          style={{
+            background: `radial-gradient(60% 70% at 50% 0%, ${BRAND_COLORS.softUltraviolet}22, transparent 70%), radial-gradient(40% 50% at 72% 0%, ${BRAND_COLORS.orbitalCyan}14, transparent 70%)`,
+          }}
+        />
+        <div className="mx-auto max-w-6xl">
+          {/* Header */}
+          <div className="text-center">
+            <Reveal>
+              <p className="eyebrow" style={{ color: BRAND_COLORS.orbitalCyan }}>
+                {phase.name} pricing
+              </p>
+            </Reveal>
+            <Reveal delay={90}>
+              <h1 className="mt-3 font-display text-display-xl text-balance text-white">
+                Claim the founding rate.
+              </h1>
+            </Reveal>
+            <Reveal delay={180}>
+              <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
+                Start free. Back us before the record exists and your price never moves,
+                even as it rises for everyone who joins later.
+              </p>
+            </Reveal>
+            <Reveal delay={260}>
+              <p className="mx-auto mt-5 max-w-2xl text-sm text-ion-3">{POSITIONING}</p>
+            </Reveal>
+          </div>
+
+          {/* Plans with billing toggle */}
+          <div className="mt-14">
+            <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
+          </div>
+
+          {/* Evidence strip: inspect before you pay. The proof surfaces ARE
+              the sales pitch; they belong next to the buy buttons. */}
+          <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-ink-300">
+            Inspect before you pay:{" "}
+            <Link href="/proof" className="font-semibold text-orbital-cyan hover:text-white">
+              the sealed record
+            </Link>
+            ,{" "}
+            <Link href="/performance" className="font-semibold text-orbital-cyan hover:text-white">
+              the calibration report
+            </Link>
+            , and{" "}
+            <Link href="/engine" className="font-semibold text-orbital-cyan hover:text-white">
+              the engine committing live
+            </Link>
+            . Every claim on this page stands on that record.
+          </p>
+
+          {/* Why each step up — the value ladder (live tiers only; hidden tiers
+              like Operator are filtered out until they graduate to live). */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Why each step up</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              Each plan is a different job, and you can see exactly what the next tier adds before you pay for it.
+              Fantasy sits beside this ladder: it unlocks the draft and lineup suite, while the betting board keeps
+              its free daily preview.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {VALUE_TIERS.filter((t) => t.status === "live").map((t) => (
+                <div
+                  key={t.id}
+                  className="flex h-full flex-col rounded-2xl border border-titanium bg-carbon/40 p-5"
+                >
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-3">
+                    {({ FREE: "Free", PRO: "Pro", ELITE: "Elite" } as Record<string, string>)[t.id] ?? t.id}
+                    {" · "}
+                    {t.name}
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-white">{t.promise}</p>
+                  <p className="mt-1 text-xs text-ion-3">{t.forWho}</p>
+                  {t.whyNextTier && (
+                    <p className="mt-3 border-t border-titanium pt-3 text-xs leading-relaxed text-ink-300">
+                      <span className="text-ion-3">Next: </span>
+                      {t.whyNextTier}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* The price ladder — proof-gated escalation, published ahead of time.
+              This is the honest version of urgency: the next prices and the
+              milestones that trigger them are documented in code
+              (lib/pricing/pricing-phases.ts), never a marketing calendar. */}
+          <section className="mt-20" aria-labelledby="price-ladder-heading">
+            <h2 id="price-ladder-heading" className="text-center text-2xl font-bold text-white">
+              The price ladder is public
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              Prices only rise when a verified proof milestone is met — never on a marketing
+              calendar. Join at any phase and your rate is locked for the life of your
+              subscription.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {PRICING_PHASES.map((p) => {
+                const isCurrent = p.id === phase.id;
+                return (
+                  <div
+                    key={p.id}
+                    className={`flex h-full flex-col rounded-2xl border p-5 ${
+                      isCurrent
+                        ? "border-brand-400/60 bg-brand-400/5"
+                        : "border-titanium bg-carbon/40"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em] text-ion-3">
+                        {p.name}
+                      </p>
+                      {isCurrent && (
+                        <span
+                          className="rounded-full border px-2 py-0.5 text-[10px] font-semibold"
+                          style={{ color: BRAND_COLORS.orbitalCyan, borderColor: BRAND_COLORS.orbitalCyan }}
+                        >
+                          You are here
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-3 text-base font-semibold text-white">
+                      Pro ${p.pro.monthly}/mo · Elite ${p.elite.monthly}/mo
+                    </p>
+                    <p className="mt-1 text-xs text-ion-3">
+                      Annual: Pro ${p.pro.annual} · Elite ${p.elite.annual}
+                    </p>
+                    <p className="mt-3 border-t border-titanium pt-3 text-xs leading-relaxed text-ink-300">
+                      <span className="text-ion-3">Unlocks when: </span>
+                      {p.trigger}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="mx-auto mt-6 max-w-2xl text-center text-xs text-ion-3">
+              {LIFETIME_PRICE_NOTE}
+            </p>
+          </section>
+
+          <SignalRule className="mt-20" />
+
+          {/* Where each tier takes you — real doors, real locks */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Where each tier takes you</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              Every gate below is enforced on the server. Walk up to any door and the seal tells
+              you exactly which tier opens it.
+            </p>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              <TierDoorColumn
+                tier="Free"
+                hex={BRAND_COLORS.orbitalCyan}
+                doors={[
+                  { label: "Today's board", href: "/board" },
+                  { label: "The Academy", href: "/academy" },
+                  { label: "Public record & calibration status", href: "/performance" },
+                ]}
+              />
+              <TierDoorColumn
+                tier="Pro"
+                hex={BRAND_COLORS.ionMagenta}
+                doors={[
+                  { label: "Trend Lab: cohort workbench", href: "/trends" },
+                  { label: "Parlay MRI: portfolio surgeon", href: "/parlay-mri" },
+                  { label: "Factor trail on every pick", href: "/picks" },
+                ]}
+              />
+              <TierDoorColumn
+                tier="Elite"
+                hex={BRAND_COLORS.softUltraviolet}
+                doors={[
+                  { label: "Line-value tracker + staking toolkit", href: "/track" },
+                  { label: "Graded-pick alerts", href: "/dashboard" },
+                  { label: "New surfaces, first", href: "/changelog" },
+                ]}
+              />
+            </div>
+          </section>
+
+          {/* Feature comparison table */}
+          <div className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Side by side</h2>
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-titanium">
+              <table className="w-full min-w-[560px] text-sm">
+                <thead>
+                  <tr className="border-b border-titanium">
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
+                      Feature
+                    </th>
+                    {PLANS.map((plan) => (
+                      <th
+                        key={plan.id}
+                        className={[
+                          "px-4 py-3 text-center text-sm font-bold",
+                          plan.id === "PRO"
+                            ? "text-brand-400"
+                            : plan.id === "ELITE"
+                              ? "text-ultraviolet-glow"
+                              : "text-ion-1",
+                        ].join(" ")}
+                      >
+                        {plan.name}
+                        {plan.monthly !== null && (
+                          <span className="ml-1 text-xs font-normal text-ion-2">
+                            ${plan.monthly}/mo
+                          </span>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {COMPARISON_FEATURES.map((feature, i) => (
+                    <tr
+                      key={feature}
+                      className={[
+                        "border-b border-titanium/60",
+                        i % 2 === 0 ? "bg-carbon/20" : "",
+                      ].join(" ")}
+                    >
+                      <td className="px-4 py-3 text-ion-2">{feature}</td>
+                      {(["FREE", "FANTASY", "PRO", "ELITE"] as const).map((planId) => {
+                        const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
+                        return (
+                          <td key={planId} className="px-4 py-3 text-center">
+                            <ComparisonCell value={cell} />
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Built to protect you from hype — what every tier is really for */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Built to protect you from hype</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">{EMOTIONAL_VALUE}</p>
+            <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
+                <h3 className="text-sm font-semibold text-white">How confidence works</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                  {getFeature("confidence")?.customerExplanation ??
+                    "A 0 to 100 score of how strongly the model likes a pick, calibrated against every settled result. It is an input to your judgment, not a promise."}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">
+                <h3 className="text-sm font-semibold text-white">What No-Bet means</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                  {getFeature("no-bet-reasoning")?.customerExplanation ??
+                    "When the numbers do not clear our bar, the engine says so and sits out, with the reasons logged. Restraint is a feature you are paying for, not a gap."}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/*
+            Why pay for honesty.
+
+            Sits immediately after "Built to protect you from hype", where a
+            reader is closest to asking what the money is actually for. The lead
+            line deliberately does not promise results — see the module
+            docstring. Four of the seven structural failure modes, projected
+            from the same source list the /integrity page renders in full, so
+            the two surfaces cannot drift into different wording.
+          */}
+          <section className="mt-20" aria-labelledby="why-pay-honesty-heading">
+            <h2
+              id="why-pay-honesty-heading"
+              className="text-center text-2xl font-bold text-white"
+            >
+              Why pay for honesty
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
+              {WHY_PAY_FOR_HONESTY_LEAD}
+            </p>
+            <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-2">
+              {honestyContrastStrip().map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-2xl border border-titanium bg-carbon/40 p-6"
+                >
+                  <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-300">{item.weDo}</p>
+                  <Link
+                    href={item.verifyHref}
+                    className="mt-3 inline-block text-sm underline hover:text-orbital-cyan"
+                  >
+                    Check it
+                  </Link>
+                </div>
+              ))}
+            </div>
+            <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-ink-300">
+              The full set of seven, with the mechanism behind each one, is on{" "}
+              <Link href="/integrity" className="underline hover:text-orbital-cyan">
+                our integrity page
+              </Link>
+              .
+            </p>
+          </section>
+
+          {/* FAQ */}
+          <section className="mt-20">
+            <h2 className="text-center text-2xl font-bold text-white">Frequently asked</h2>
+            <div className="mx-auto mt-8 max-w-3xl divide-y divide-titanium/60 rounded-2xl border border-titanium bg-carbon/40">
+              {FAQ.map((item) => (
+                <details
+                  key={item.q}
+                  className="group px-5 py-4 [&_summary::-webkit-details-marker]:hidden"
+                >
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-sm font-semibold text-ion-white">
+                    <span>{item.q}</span>
+                    <span
+                      aria-hidden="true"
+                      className="text-ion-2 transition-transform group-open:rotate-45"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-ion-2">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          {/* Refund note */}
+
+          {/* Founding waitlist — capture leads even if checkout env is incomplete */}
+          <section
+            id="founding-waitlist"
+            data-testid="pricing-waitlist"
+            className="mx-auto mt-20 max-w-xl border-t border-mineral pt-14"
+          >
+            <p className="text-center font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
+              {WAITLIST_COPY.eyebrow}
+            </p>
+            <h2 className="mt-3 text-center font-display text-2xl text-white">
+              Not ready to subscribe? Join the founding list.
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-center text-sm text-ink-300">
+              {WAITLIST_COPY.subhead}
+            </p>
+            <div className="mt-8">
+              <WaitlistForm />
+            </div>
+          </section>
+
+          <p className="mt-12 text-center text-xs text-ion-2">
+            No free trial. Every paid plan has a 3-day money-back window. Cancel any time
+            from your dashboard. Prices shown are founding-member rates.
+          </p>
+
+          {/* The one page selling access to picks was the one page without the
+              disclosure ~30 other pages render (C-31). Default variant only:
+              no includePastPerformance (implies a performance history) and no
+              hardcoded age (terms defer to the viewer's jurisdiction). */}
+          <RiskDisclosure />
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────
+
+function TierDoorColumn({
+  tier,
+  hex,
+  doors,
+}: {
+  tier: string;
+  hex: string;
+  doors: { label: string; href: string }[];
+}) {
+  return (
+    <div
+      className="rounded-2xl border p-5"
+      style={{ borderColor: `${hex}33`, background: `radial-gradient(100% 80% at 50% 0%, ${hex}0c, transparent 70%)` }}
+    >
+      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.3em]" style={{ color: hex }}>
+        {tier} opens
+      </p>
+      <ul className="mt-4 space-y-2.5">
+        {doors.map((d) => (
+          <li key={d.href + d.label}>
+            <Link
+              href={d.href}
+              className="group flex items-center justify-between rounded-lg border border-transparent px-3 py-2 text-sm text-ink-200 transition-colors hover:border-titanium hover:bg-carbon/50 hover:text-white"
+            >
+              {d.label}
+              <span aria-hidden className="text-ink-500 transition-transform group-hover:translate-x-0.5">→</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ComparisonCell({ value }: { value: string | boolean }) {
+  if (typeof value === "boolean") {
+    return value ? (
+      <svg
+        className="mx-auto h-5 w-5 text-brand-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={2.5}
+        stroke="currentColor"
+        role="img"
+        aria-label="Included"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+      </svg>
+    ) : (
+      <svg
+        className="mx-auto h-5 w-5 text-ion-3"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={2}
+        stroke="currentColor"
+        role="img"
+        aria-label="Not included"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    );
+  }
+  return <span className="text-ion-1">{value}</span>;
+}

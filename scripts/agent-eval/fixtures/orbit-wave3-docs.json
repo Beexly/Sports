@@ -1,0 +1,47 @@
+{
+  "id": "orbit-wave3-docs",
+  "predicates": [
+    {
+      "id": "calibration-pipeline-doc",
+      "type": "file_contains",
+      "path": "docs/ops/CALIBRATION_PIPELINE.md",
+      "mustInclude": ["centeredIsotonicCalibration", "export:settled-picks", "portfolio Kelly"]
+    },
+    {
+      "id": "orbit-map-doc",
+      "type": "file_contains",
+      "path": "docs/ops/ORBIT_MAP.md",
+      "mustInclude": ["Money out", "Own models", "do not rewrite"]
+    },
+    {
+      "id": "orbit-next-50-doc",
+      "type": "file_contains",
+      "path": "docs/ops/ORBIT_NEXT_50.md",
+      "mustInclude": ["promptfoo/promptfoo", "finite-sample/calibre", "stanfordnlp/dspy"]
+    },
+    {
+      "id": "cir-export",
+      "type": "file_contains",
+      "path": "packages/prediction-engine/src/probability-calibration.ts",
+      "mustInclude": ["centeredIsotonicCalibration", "countDistinctPredictions"]
+    },
+    {
+      "id": "coding-skill",
+      "type": "file_contains",
+      "path": "docs/agent-skills/coding-agent/SKILL.md",
+      "mustInclude": ["name: coding-agent", "THE_ODDS_API_KEY"]
+    },
+    {
+      "id": "polymarket-skill",
+      "type": "file_contains",
+      "path": "docs/agent-skills/polymarket-hold/SKILL.md",
+      "mustInclude": ["name: polymarket-hold", "compliance hold"]
+    },
+    {
+      "id": "dspy-gse-harness",
+      "type": "file_contains",
+      "path": "scripts/dspy-gse/run.mjs",
+      "mustInclude": ["goldens.json", "free path"]
+    }
+  ]
+}

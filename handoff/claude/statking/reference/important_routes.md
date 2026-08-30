@@ -1,0 +1,21 @@
+# Important Routes
+
+| Route | Purpose | Data source | UX weakness | Claude task | Files to inspect |
+|---|---|---|---|---|---|
+| `/stats` | Public command center | snapshot/product loader | Hero too plain; improve 10-second comprehension | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/players` | Search/sort player table | players + derived metrics snapshots | Needs premium filters and comparison affordances | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/players/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/player/[id]` | Flagship player intelligence card | player snapshot, metrics, comps, archetypes | Needs stronger narrative and visual hierarchy | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/player/[id]/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/compare` | Player comparison | compare helper + snapshots | Needs better selectors and winner storytelling | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/compare/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/teams` | Team overview | teams + derived team metrics | Needs fuller team cards | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/teams/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/sources` | Source transparency | source registry/rights | Needs clearer rights labels | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/sources/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/coverage` | Coverage map | coverage report | Needs heatmap-style UX | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/coverage/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/source-graph` | Source universe | source registry/candidate graph | Needs graph/cluster visualization | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/source-graph/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/media` | Media intelligence summary | media metadata snapshots | Needs better trend storytelling | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/media/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/ask` | Template intelligence | askStatKing templates | Needs polished response cards | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/ask/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/stats/proof` | Proof/reliability | proof report/backtests | Needs clearer public limitations | Improve clarity/polish while preserving data status badges. | `apps/web/app/stats/proof/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/admin/statking` | Admin hub | product readiness + registry | Needs navigation hierarchy | Improve clarity/polish while preserving data status badges. | `apps/web/app/admin/statking/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/admin/statking/crown` | Founder cockpit | all StatKing ledgers | Most important Claude polish target | Improve clarity/polish while preserving data status badges. | `apps/web/app/admin/statking/crown/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/admin/statking/rights` | Rights dashboard | rights ledger/gates | Must not weaken gates | Improve clarity/polish while preserving data status badges. | `apps/web/app/admin/statking/rights/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/admin/statking/source-crm` | Activation CRM | source targets/ROI | Needs founder action clarity | Improve clarity/polish while preserving data status badges. | `apps/web/app/admin/statking/source-crm/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/admin/statking/outreach` | Outreach targets | top outreach targets | Needs actionable workflow | Improve clarity/polish while preserving data status badges. | `apps/web/app/admin/statking/outreach/page.tsx`, `apps/web/lib/statking/product.ts` |
+| `/admin/statking/readiness` | Product readiness | readiness score | Needs visual scorecard | Improve clarity/polish while preserving data status badges. | `apps/web/app/admin/statking/readiness/page.tsx`, `apps/web/lib/statking/product.ts` |

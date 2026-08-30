@@ -1,0 +1,47 @@
+{
+  "id": "orbit-wave6-full-session",
+  "predicates": [
+    {
+      "id": "full-session-extract",
+      "type": "file_contains",
+      "path": "docs/ops/FULL_SESSION_EXTRACT.md",
+      "mustInclude": ["Wave 6", "embed/edge-index", "SHIPPED", "sizeAfterCalibration"]
+    },
+    {
+      "id": "edge-index-embed-page",
+      "type": "file_contains",
+      "path": "apps/web/app/embed/edge-index/[gameId]/page.tsx",
+      "mustInclude": ["loadEdgeIndexEmbed", "Galaxy Edge", "honestEmpty"]
+    },
+    {
+      "id": "edge-index-loader-free",
+      "type": "file_contains",
+      "path": "apps/web/lib/embed/edge-index.ts",
+      "mustInclude": ["canSeeFactorBreakdown: false", "canSeeLineMovement: false", "buildEmbedSnippet"]
+    },
+    {
+      "id": "edge-index-marketing",
+      "type": "file_contains",
+      "path": "apps/web/app/edge-index/page.tsx",
+      "mustInclude": ["buildEmbedSnippet", "Free distribution"]
+    },
+    {
+      "id": "orbit-integrity-script",
+      "type": "file_contains",
+      "path": "scripts/orbit-extract-integrity.mjs",
+      "mustInclude": ["REQUIRED_PATHS", "sizeAfterCalibration", "embed"]
+    },
+    {
+      "id": "inference-routing-skill",
+      "type": "file_contains",
+      "path": "docs/agent-skills/inference-routing/SKILL.md",
+      "mustInclude": ["name: inference-routing", "MODEL_PRIMARY", "MODEL_CHEAP"]
+    },
+    {
+      "id": "embed-frame-ancestors",
+      "type": "file_contains",
+      "path": "apps/web/next.config.mjs",
+      "mustInclude": ["frame-ancestors", "/embed/:path*"]
+    }
+  ]
+}

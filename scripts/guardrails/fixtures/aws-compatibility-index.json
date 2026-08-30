@@ -1,0 +1,94 @@
+{
+  "required_paths": [
+    "docs/aws/README.md",
+    "docs/aws/COMPATIBILITY_INDEX.md",
+    "docs/aws/AWS_WELL_ARCHITECTED_GSE_LENS.md",
+    "docs/aws/AWS_SHADOW_BOUNDARY.md",
+    "docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md",
+    "infra/aws-shadow/README.md",
+    "infra/aws-shadow/compatibility-manifest.json",
+    "infra/aws-shadow/control-tower-policy.json",
+    "infra/aws-shadow/step-functions/metric-validation.asl.json",
+    "infra/aws-shadow/eventbridge/events.json",
+    "infra/aws-shadow/sagemaker/model-monitor-card.json",
+    "infra/aws-shadow/bedrock/guardrails-policy.json",
+    "infra/aws-shadow/agentcore/agent-contracts.json",
+    "infra/aws-shadow/cleanrooms/synthetic-collab-fixture.json"
+  ],
+  "canonical_paths": [
+    "docs/fable/aws/README.md",
+    "docs/fable/aws/AWS_SERVICE_SCORECARD.md",
+    "docs/fable/aws/AWS_COST_SECURITY_GATES.md",
+    "docs/fable/aws/AWS_OPERATING_INTELLIGENCE_RUNBOOK.md",
+    "docs/fable/aws/AWS_SAGEMAKER_MLOPS_PLAN.md",
+    "docs/fable/aws/AWS_BEDROCK_AGENTCORE_PLAN.md",
+    "docs/fable/aws/AWS_CLEAN_ROOMS_PARTNERSHIP_PLAN.md",
+    "docs/fable/aws/AWS_OPERATING_INTELLIGENCE_MATRIX.md",
+    "docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json",
+    "docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json",
+    "docs/fable/aws/clean-rooms-demo/README.md",
+    "infrastructure/aws/amplify/README.md",
+    "infrastructure/aws/cdk/shadow-control-tower-synth.fixture.json"
+  ],
+  "required_fragments": {
+    "docs/aws/README.md": [
+      "Status: compatibility index only.",
+      "No live AWS calls.",
+      "No AWS credentials.",
+      "npm run guard:aws-compatibility-index"
+    ],
+    "docs/aws/AWS_WELL_ARCHITECTED_GSE_LENS.md": [
+      "Operational excellence",
+      "Security",
+      "Reliability",
+      "Performance efficiency",
+      "Cost optimization",
+      "Sustainability"
+    ],
+    "docs/aws/AWS_SHADOW_BOUNDARY.md": [
+      "Not allowed here:",
+      "Before any live AWS step exists"
+    ],
+    "docs/aws/AWS_PUBLIC_CASE_STUDY_ROUTE.md": [
+      "Status: public-safe local route artifact.",
+      "/case-studies/aws-governed-sports-intelligence",
+      "Well-Architected mapping:",
+      "release readiness claimed: false"
+    ],
+    "infra/aws-shadow/README.md": [
+      "Status: exact-path compatibility layer only.",
+      "live_aws_action: false"
+    ],
+    "infra/aws-shadow/compatibility-manifest.json": [
+      "\"live_aws_action\": false",
+      "\"deploy_allowed\": false",
+      "\"credentials_required\": false",
+      "\"paid_resource_required\": false"
+    ]
+  },
+  "json_fixture_paths": [
+    "infra/aws-shadow/compatibility-manifest.json",
+    "infra/aws-shadow/control-tower-policy.json",
+    "infra/aws-shadow/step-functions/metric-validation.asl.json",
+    "infra/aws-shadow/eventbridge/events.json",
+    "infra/aws-shadow/sagemaker/model-monitor-card.json",
+    "infra/aws-shadow/bedrock/guardrails-policy.json",
+    "infra/aws-shadow/agentcore/agent-contracts.json",
+    "infra/aws-shadow/cleanrooms/synthetic-collab-fixture.json"
+  ],
+  "forbidden_fragments": [
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "aws configure",
+    "aws s3",
+    "aws cloudformation",
+    "aws iam",
+    "aws sts",
+    "aws bedrock",
+    "aws sagemaker",
+    "aws cleanrooms",
+    "cdk deploy",
+    "cdk bootstrap",
+    "arn:aws:"
+  ]
+}

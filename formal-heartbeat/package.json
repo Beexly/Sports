@@ -1,0 +1,16 @@
+{
+  "name": "formal-heartbeat",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Wave 3 batch (Decision-A-independent pieces): dormant, lab-only sequential-confidence e-process kernel + event->abstract-state projection/ConstInit emitter + formal invariant heartbeat for the AI control plane's LiveModelDispatchUnderAmbiguity TLA+ spec. Monitoring/detection only; zero production wiring, zero side effects.",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  }
+}

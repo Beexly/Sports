@@ -1,0 +1,3 @@
+import { brierScore } from "./brier";
+export interface VersionedCalibrationSample { readonly modelVersion: string; readonly probability: number; readonly outcome: 0 | 1; readonly season?: number; }
+export function groupCalibrationByModelVersion(samples: readonly VersionedCalibrationSample[], currentSeason?: number) { const settled = currentSeason === undefined ? samples : samples.filter((sample) => sample.season === undefined || sample.season < currentSeason); const versions = [...new Set(settled.map((sample) => sample.modelVersion))]; return versions.map((modelVersion) => { const versionSamples = settled.filter((sample) => sample.modelVersion === modelVersion); return { modelVersion, sampleSize: versionSamples.length, brier: brierScore(versionSamples) }; }); }

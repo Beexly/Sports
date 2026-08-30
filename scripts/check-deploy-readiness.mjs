@@ -1,0 +1,463 @@
+#!/usr/bin/env node
+/**
+ * Deploy-readiness CLI for Helm.
+ *
+ * Validates that every external dependency is reachable with the configured
+ * credentials BEFORE pushing a deploy. Prints a green/red checklist and
+ * exits non-zero on any failure.
+ *
+ * Usage:
+ *   node scripts/check-deploy-readiness.mjs
+ *
+ * Loads .env.production.local (preferred, gitignored) → .env.production →
+ * existing process.env, in that order.
+ *
+ * Checks:
+ *   - All required env vars present
+ *   - Postgres reachable (TCP + SELECT 1 via DATABASE_URL)
+ *   - The Odds API key valid (/v4/sports endpoint)
+ *   - Stripe secret key valid (/v1/account)
+ *   - Anthropic API key valid (/v1/messages with a 1-token ping)
+ *   - Redis reachable (PING — only if `ioredis` is installed)
+ *   - Vercel cron schedule present in vercel.json
+ *   - Bootstrap gate sanity (no public-picks while ingestion is off, etc.)
+ *
+ * Pure Node — uses fetch + pg + the local filesystem. ioredis is optional.
+ */
+
+import { readFileSync, existsSync } from "node:fs";
+import { resolve, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const repoRoot = resolve(__dirname, "..");
+
+const COLOR = process.stdout.isTTY
+  ? {
+      reset: "\x1b[0m",
+      red: "\x1b[31m",
+      green: "\x1b[32m",
+      yellow: "\x1b[33m",
+      cyan: "\x1b[36m",
+      dim: "\x1b[2m",
+    }
+  : { reset: "", red: "", green: "", yellow: "", cyan: "", dim: "" };
+
+let failures = 0;
+let warnings = 0;
+const lines = [];
+
+function ok(label, detail = "") {
+  lines.push(`  ${COLOR.green}✓${COLOR.reset}  ${label}${detail ? COLOR.dim + " " + detail + COLOR.reset : ""}`);
+}
+function bad(label, detail = "") {
+  failures += 1;
+  lines.push(`  ${COLOR.red}✗${COLOR.reset}  ${label}${detail ? "  " + COLOR.red + detail + COLOR.reset : ""}`);
+}
+function warn(label, detail = "") {
+  warnings += 1;
+  lines.push(`  ${COLOR.yellow}!${COLOR.reset}  ${label}${detail ? "  " + COLOR.yellow + detail + COLOR.reset : ""}`);
+}
+
+function header(label) {
+  lines.push("");
+  lines.push(`${COLOR.cyan}${label}${COLOR.reset}`);
+}
+
+// ── Env loading ──────────────────────────────────────────────────────────
+
+function loadEnvFile(path) {
+  if (!existsSync(path)) return false;
+  const text = readFileSync(path, "utf8");
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq < 0) continue;
+    const key = trimmed.slice(0, eq).trim();
+    const value = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, "");
+    if (!(key in process.env)) process.env[key] = value;
+  }
+  return true;
+}
+
+const envFilesTried = [
+  join(repoRoot, ".env.production.local"),
+  join(repoRoot, ".env.production"),
+];
+const loaded = envFilesTried.filter(loadEnvFile);
+
+// ── Required vars ────────────────────────────────────────────────────────
+
+const REQUIRED = [
+  "DATABASE_URL",
+  "DIRECT_URL",
+  "NEXTAUTH_SECRET",
+  "NEXTAUTH_URL",
+  "GOOGLE_CLIENT_ID",
+  "GOOGLE_CLIENT_SECRET",
+  "THE_ODDS_API_KEY",
+  "ANTHROPIC_API_KEY",
+  "REDIS_URL",
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+  "STRIPE_PRO_MONTHLY_PRICE_ID",
+  "STRIPE_PRO_ANNUAL_PRICE_ID",
+  "STRIPE_ELITE_MONTHLY_PRICE_ID",
+  "STRIPE_ELITE_ANNUAL_PRICE_ID",
+  "NEXT_PUBLIC_APP_URL",
+  "CRON_SECRET",
+  "STRIPE_FANTASY_MONTHLY_PRICE_ID",
+  "STRIPE_FANTASY_ANNUAL_PRICE_ID",
+];
+
+header("Environment variables");
+
+// The SPECIFIC server-side secrets this deployment stores as Vercel "Sensitive"
+// (write-only → absent from `vercel env pull`). ONLY these may downgrade to a
+// warning when missing from a local file; every other required var — including
+// non-sensitive secrets like STRIPE_SECRET_KEY/NEXTAUTH_SECRET and the public
+// NEXT_PUBLIC_* vars — stays a hard failure, so a partial hand-written env can't
+// produce a false green. Keep this list tight and in sync with the Vercel UI.
+const KNOWN_SENSITIVE = new Set([
+  "DIRECT_URL",
+  "THE_ODDS_API_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+  "STRIPE_PRO_MONTHLY_PRICE_ID",
+  "STRIPE_PRO_ANNUAL_PRICE_ID",
+  "STRIPE_ELITE_MONTHLY_PRICE_ID",
+  "STRIPE_ELITE_ANNUAL_PRICE_ID",
+  "CRON_SECRET",
+  "STRIPE_FANTASY_MONTHLY_PRICE_ID",
+  "STRIPE_FANTASY_ANNUAL_PRICE_ID",
+]);
+
+// True when we loaded a local env file (e.g. the output of `vercel env pull`).
+// In the deploy/CI context (no local file; env injected) ALL vars — including
+// Sensitive ones — are present, so any miss there is a genuine hard failure.
+const localPullContext = loaded.length > 0;
+
+let sensitiveUnverifiable = 0;
+for (const key of REQUIRED) {
+  const v = process.env[key];
+  if (v) {
+    const redacted = v.length > 12 ? `${v.slice(0, 8)}…${v.slice(-4)}` : "(short)";
+    ok(key, redacted);
+    continue;
+  }
+  // Downgrade to a warning ONLY for a known-Sensitive var absent from a local
+  // pull (write-only, can't be read locally). Everything else is a hard failure.
+  if (localPullContext && KNOWN_SENSITIVE.has(key)) {
+    sensitiveUnverifiable += 1;
+    warn(
+      key,
+      "not in local pull — set 'Sensitive' in Vercel (write-only); verify in the deploy/CI context"
+    );
+  } else {
+    bad(key, "missing");
+  }
+}
+if (sensitiveUnverifiable > 0) {
+  lines.push(
+    `  ${COLOR.dim}↳ ${sensitiveUnverifiable} secret(s) absent from the local pull (likely Vercel "Sensitive" = write-only). ` +
+      `For an authoritative check run this in the Vercel build or a CI job with the env injected; ` +
+      `otherwise confirm via runtime side-effects (the cron hitting The Odds API, the Stripe TEST subscribe cycle).${COLOR.reset}`
+  );
+}
+
+// ── Elite alert channels ────────────────────────────────────────────────
+// Launching with these dark is a legal owner choice (deliveries queue as
+// retryable, never fail loudly) — WARN, never a hard failure. An invisible
+// dark channel is the actual bug this section closes.
+header("Elite alert channels");
+for (const key of ["RESEND_API_KEY", "ALERTS_EMAIL_FROM", "NEXT_PUBLIC_VAPID_PUBLIC_KEY", "VAPID_PRIVATE_KEY", "VAPID_SUBJECT"]) {
+  const v = process.env[key];
+  if (v) {
+    const redacted = v.length > 12 ? `${v.slice(0, 8)}…${v.slice(-4)}` : "(short)";
+    ok(key, redacted);
+  } else {
+    warn(key, "Elite graded-alert channel dark; deliveries queue as retryable, never fail loudly");
+  }
+}
+
+// ── Postgres ─────────────────────────────────────────────────────────────
+
+header("Postgres");
+async function checkPostgres() {
+  if (!process.env.DATABASE_URL) {
+    bad("Postgres reachability", "DATABASE_URL unset");
+    return;
+  }
+  let pg;
+  try {
+    pg = await import("pg");
+  } catch {
+    warn("Postgres reachability", "skipped — `pg` not installed; run `npm install pg`");
+    return;
+  }
+  const client = new pg.default.Client({ connectionString: process.env.DATABASE_URL });
+  try {
+    await client.connect();
+    const res = await client.query("SELECT 1 AS ok");
+    if (res.rows[0]?.ok === 1) ok("Postgres reachable", "SELECT 1 returned");
+    else bad("Postgres reachable", "unexpected query result");
+  } catch (err) {
+    bad("Postgres reachable", err.message);
+  } finally {
+    try { await client.end(); } catch {}
+  }
+}
+
+// ── The Odds API ─────────────────────────────────────────────────────────
+
+header("The Odds API");
+async function checkOddsApi() {
+  if (!process.env.THE_ODDS_API_KEY) return;
+  try {
+    const res = await fetch(
+      `https://api.the-odds-api.com/v4/sports?apiKey=${process.env.THE_ODDS_API_KEY}`
+    );
+    if (!res.ok) {
+      bad("The Odds API key", `HTTP ${res.status}`);
+      return;
+    }
+    const json = await res.json();
+    const sportCount = Array.isArray(json) ? json.length : 0;
+    const remaining = res.headers.get("x-requests-remaining");
+    ok("The Odds API key", `${sportCount} sports listed; ${remaining ?? "?"} requests remaining`);
+  } catch (err) {
+    bad("The Odds API key", err.message);
+  }
+}
+
+// ── Stripe ───────────────────────────────────────────────────────────────
+
+header("Stripe");
+async function checkStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) return;
+  try {
+    const res = await fetch("https://api.stripe.com/v1/account", {
+      headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+    });
+    if (!res.ok) {
+      bad("Stripe secret key", `HTTP ${res.status}`);
+      return;
+    }
+    const account = await res.json();
+    const live = !process.env.STRIPE_SECRET_KEY.startsWith("sk_test_");
+    ok("Stripe secret key", `${live ? "LIVE" : "TEST"} mode · ${account.id}`);
+  } catch (err) {
+    bad("Stripe secret key", err.message);
+  }
+
+  // Confirm the four tiered price IDs resolve.
+  for (const which of [
+    "STRIPE_PRO_MONTHLY_PRICE_ID",
+    "STRIPE_PRO_ANNUAL_PRICE_ID",
+    "STRIPE_ELITE_MONTHLY_PRICE_ID",
+    "STRIPE_ELITE_ANNUAL_PRICE_ID",
+  ]) {
+    const id = process.env[which];
+    if (!id) continue;
+    try {
+      const res = await fetch(`https://api.stripe.com/v1/prices/${id}`, {
+        headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+      });
+      if (!res.ok) {
+        bad(which, `HTTP ${res.status}`);
+        continue;
+      }
+      const price = await res.json();
+      const amount = (price.unit_amount / 100).toFixed(2);
+      ok(which, `$${amount}/${price.recurring?.interval ?? "?"}`);
+    } catch (err) {
+      bad(which, err.message);
+    }
+  }
+}
+
+// ── Anthropic ────────────────────────────────────────────────────────────
+//
+// Anthropic is ONLY used by the content engine (lib/content-generator.ts)
+// and by cockpit narrative augmentation (lib/cockpit/jarvis-data.ts —
+// which checks for *presence* of the key as a string, never pings).
+//
+// Therefore:
+//   - If PUBLIC_BLOG_ENABLED=true → key MUST be valid (live content path).
+//   - If PUBLIC_BLOG_ENABLED=false → key need only be PRESENT for the env
+//     audit; a failed ping is a WARN, not a deploy blocker. This matches
+//     the actual runtime: with content dark, no production code path ever
+//     calls Anthropic, so a 401 here cannot affect user-facing behaviour.
+//
+// This is not a loosening of the integrity gates the picks/performance
+// surface relies on — those are governed by the readiness-gate flags and
+// the brand-safety linter, not by this script.
+
+header("Anthropic");
+async function checkAnthropic() {
+  if (!process.env.ANTHROPIC_API_KEY) return;
+  const contentLive =
+    String(process.env.PUBLIC_BLOG_ENABLED ?? "").toLowerCase() === "true";
+  const reportFail = contentLive ? bad : warn;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 4,
+        messages: [{ role: "user", content: "ping" }],
+      }),
+    });
+    if (!res.ok) {
+      reportFail(
+        "Anthropic API key",
+        `HTTP ${res.status}${contentLive ? "" : " (warn: PUBLIC_BLOG_ENABLED=false — no runtime path uses this key right now; rotate before enabling content)"}`
+      );
+      return;
+    }
+    const json = await res.json();
+    const usage = json.usage ?? {};
+    ok(
+      "Anthropic API key",
+      `model=${json.model} · input_tokens=${usage.input_tokens ?? "?"}`
+    );
+  } catch (err) {
+    reportFail("Anthropic API key", err.message);
+  }
+}
+
+// ── Redis ────────────────────────────────────────────────────────────────
+
+header("Redis");
+async function checkRedis() {
+  if (!process.env.REDIS_URL) return;
+  let mod;
+  try {
+    mod = await import("ioredis");
+  } catch {
+    warn("Redis reachability", "skipped — `ioredis` not installed; run `npm install ioredis`");
+    return;
+  }
+  const Redis = mod.default;
+  const client = new Redis(process.env.REDIS_URL, {
+    connectTimeout: 5000,
+    maxRetriesPerRequest: 1,
+  });
+  try {
+    const pong = await client.ping();
+    if (pong === "PONG") ok("Redis reachable", "PING → PONG");
+    else bad("Redis reachable", `unexpected: ${pong}`);
+  } catch (err) {
+    bad("Redis reachable", err.message);
+  } finally {
+    client.disconnect();
+  }
+}
+
+// ── vercel.json ──────────────────────────────────────────────────────────
+
+header("Deploy config");
+function checkVercelConfig() {
+  // Vercel reads crons/headers ONLY from the vercel.json inside its Root Directory
+  // (apps/web). A copy at the repo root is inert — validating it reports green
+  // while the live config drifts. See apps/web/__tests__/vercel-config-drift.test.ts
+  const path = join(repoRoot, "apps", "web", "vercel.json");
+  if (!existsSync(path)) {
+    bad("vercel.json present");
+    return;
+  }
+  try {
+    const v = JSON.parse(readFileSync(path, "utf8"));
+    if (Array.isArray(v.crons) && v.crons.length > 0) {
+      ok("vercel.json crons", `${v.crons.length} schedule(s) defined`);
+    } else {
+      warn("vercel.json crons", "no crons defined; ingestion won't auto-run");
+    }
+    if (v.headers && v.headers.length) ok("Security headers", `${v.headers.length} rule(s)`);
+  } catch (err) {
+    bad("vercel.json parse", err.message);
+  }
+}
+
+// ── Gate sanity ──────────────────────────────────────────────────────────
+
+header("Bootstrap gate sanity");
+function checkGates() {
+  const get = (k) => (process.env[k] ?? "").toLowerCase() === "true";
+  const canon = get("CANONICAL_HISTORY_ENABLED");
+  const derived = get("DERIVED_MODEL_HISTORY_ENABLED");
+  const pub = get("PUBLIC_PICKS_ENABLED");
+  const perf = get("PERFORMANCE_STATS_ENABLED");
+  const learn = get("OUTCOME_LEARNING_ENABLED");
+  const blog = get("PUBLIC_BLOG_ENABLED");
+  const calib = get("CALIBRATION_ADJUSTMENTS_ENABLED");
+
+  if (!canon && (derived || pub || perf || learn)) {
+    bad("Gate sequencing", "downstream gate is on while CANONICAL_HISTORY_ENABLED is off");
+  } else {
+    ok("Gate sequencing");
+  }
+  if (pub && !derived) bad("PUBLIC_PICKS_ENABLED", "requires DERIVED_MODEL_HISTORY_ENABLED");
+  if (perf && !pub) bad("PERFORMANCE_STATS_ENABLED", "requires PUBLIC_PICKS_ENABLED");
+  if (blog && !pub) bad("PUBLIC_BLOG_ENABLED", "requires PUBLIC_PICKS_ENABLED");
+  if (learn && !perf) bad("OUTCOME_LEARNING_ENABLED", "requires PERFORMANCE_STATS_ENABLED");
+  // Calibration sits ABOVE the learning gate: a calibrated win-probability can only
+  // be honestly applied once outcome learning has been admitting eligible picks.
+  // Requiring learn transitively enforces the whole upstream ladder (perf→pub→derived→canon).
+  // This is a sequencing guard only — actual activation also requires the audited
+  // MODEL_VERSION step in docs/path-to-70.md §7, which this script cannot verify.
+  if (calib && !learn) {
+    bad("CALIBRATION_ADJUSTMENTS_ENABLED", "requires OUTCOME_LEARNING_ENABLED + audited MODEL_VERSION activation (docs/path-to-70.md §7)");
+  }
+
+  if (get("DEV_FAKE_ADMIN")) bad("DEV_FAKE_ADMIN", "must not be true in production");
+  if (get("DEMO_PICKS_ENABLED")) bad("DEMO_PICKS_ENABLED", "must not be true in production");
+}
+
+// ── Drive everything ─────────────────────────────────────────────────────
+
+async function main() {
+  console.log("");
+  if (loaded.length > 0) {
+    console.log(
+      `${COLOR.dim}Loaded env from: ${loaded.map((p) => p.replace(repoRoot + "/", "")).join(", ")}${COLOR.reset}`
+    );
+  } else {
+    console.log(`${COLOR.dim}No .env.production[.local] found; using process.env only.${COLOR.reset}`);
+  }
+
+  await checkPostgres();
+  await checkOddsApi();
+  await checkStripe();
+  await checkAnthropic();
+  await checkRedis();
+  checkVercelConfig();
+  checkGates();
+
+  console.log(lines.join("\n"));
+  console.log("");
+
+  if (failures > 0) {
+    console.log(
+      `${COLOR.red}Result: ${failures} failure(s)${warnings ? `, ${warnings} warning(s)` : ""}.${COLOR.reset}`
+    );
+    process.exit(1);
+  } else if (warnings > 0) {
+    console.log(
+      `${COLOR.yellow}Result: ready, ${warnings} warning(s).${COLOR.reset}`
+    );
+  } else {
+    console.log(`${COLOR.green}Result: ready to ship.${COLOR.reset}`);
+  }
+}
+
+main().catch((err) => {
+  console.error("Fatal:", err);
+  process.exit(1);
+});

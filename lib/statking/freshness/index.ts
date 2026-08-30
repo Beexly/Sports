@@ -1,0 +1,1 @@
+export function calculateFreshness(lastSeen:number, expectedMinutes:number, now:number=Date.now()){const staleness_minutes=Math.max(0,Math.round((now-lastSeen)/60000));return {staleness_minutes,freshness_status:staleness_minutes>expectedMinutes?"stale":"fresh",staleness_severity:staleness_minutes>expectedMinutes*4?"critical":staleness_minutes>expectedMinutes?"warning":"ok"}}

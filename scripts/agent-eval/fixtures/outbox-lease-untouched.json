@@ -1,0 +1,13 @@
+{
+  "id": "outbox-lease-preserved",
+  "description": "Settlement outbox lease/claimVersion surface remains present (do not rebuild)",
+  "predicates": [
+    {
+      "id": "claim-version-present",
+      "type": "file_contains",
+      "path": "apps/web/lib/settlement-outbox",
+      "mustIncludeAnyFile": true,
+      "mustInclude": ["claimVersion"]
+    }
+  ]
+}

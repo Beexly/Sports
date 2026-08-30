@@ -1,0 +1,34 @@
+########################################################################
+# W2-03 chaos profile: real Toxiproxy in front of a real HTTP backend,
+# used to inject network faults (latency timeout, connection reset) on
+# the "external provider dispatch" boundary and prove the REAL
+# control-store.ts claim/attempt machinery degrades safely (no
+# double-dispatch, unproven attempts held, clean failures allowed to
+# retry) under that fault.
+#
+# NOT wired into the app's actual provider adapters (those are abstract
+# ProviderDispatchFn injection points in the real code, not literal
+# HTTP clients) -- this proxies a REAL HTTP round trip and the chaos test
+# script (../scripts/chaos-toxiproxy.mjs) drives the REAL
+# createPgControlStore claim/startAttempt/recordAttemptFailure/
+# finalizeFailure calls around that real, chaos-afflicted network call,
+# exactly modeling the dispatch boundary those methods guard.
+########################################################################
+services:
+  backend:
+    image: ghcr.io/mccutchen/go-httpbin:v2.15.0
+    expose:
+      - "8080"
+    networks: [chaosnet]
+
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy:2.9.0
+    ports:
+      - "8474:8474" # control API
+      - "8666:8666" # proxied provider endpoint
+    networks: [chaosnet]
+    depends_on: [backend]
+
+networks:
+  chaosnet:
+    driver: bridge

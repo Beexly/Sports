@@ -1,0 +1,229 @@
+==============================================================================
+RUN 1 — INDUCTIVE STEP (induction constants: 2 invocations, 2 attempts,
+2 fingerprints, 2 actors): INIT = IndInv (the candidate itself), NEXT = Next.
+TLC enumerates every state satisfying IndInv and checks one-step closure.
+Verbatim TLC output:
+==============================================================================
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46847 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 69 and seed -6615338566457240735 with 4 workers on 4 cores with 3573MB heap and 64MB offheap memory [pid: 25182] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaimInductive.tla
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaim.tla
+Parsing file /tmp/tlc-9154409182893955902/_TLCTrace.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-9154409182893955902/Naturals.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-9154409182893955902/FiniteSets.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-9154409182893955902/Sequences.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-9154409182893955902/TLC.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-9154409182893955902/TLCExt.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-9154409182893955902/Integers.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module InvocationClaim
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module InvocationClaimInductive
+Linting of module InvocationClaim
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module InvocationClaimInductive
+Starting... (2026-07-22 16:09:14)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Computed 16384 initial states...
+Computed 32768 initial states...
+Computed 65536 initial states...
+Computed 131072 initial states...
+Computed 262144 initial states...
+Computed 524288 initial states...
+Finished computing initial states: 698400 distinct states generated at 2026-07-22 16:09:43.
+Progress(1) at 2026-07-22 16:09:46: 2,148,077 states generated (2,148,077 s/min), 698,400 distinct states found (698,400 ds/min), 63,146 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 6.4E-8
+  based on the actual fingerprints:  val = 1.1E-8
+2378400 states generated, 698400 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 33s at (2026-07-22 16:09:47)
+
+--- command used (RUN 1) ---
+java -cp tla2tools.jar tlc2.TLC -workers auto -deadlock -config InvocationClaimInductive.cfg InvocationClaimInductive.tla
+
+==============================================================================
+RUN 2 — BASE CASE / REACHABLE TRUTH (same constants): SPECIFICATION Spec
+(original Init/Next), every IndInv conjunct as INVARIANT. Subsumes Init => IndInv.
+Verbatim TLC output:
+==============================================================================
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46847 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 34 and seed -5958880620807293383 with 4 workers on 4 cores with 4020MB heap and 64MB offheap memory [pid: 25213] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaimInductive.tla
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaim.tla
+Parsing file /tmp/tlc-15159599696790484434/_TLCTrace.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-15159599696790484434/Naturals.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-15159599696790484434/FiniteSets.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-15159599696790484434/Sequences.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-15159599696790484434/TLC.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-15159599696790484434/TLCExt.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-15159599696790484434/Integers.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module InvocationClaim
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module InvocationClaimInductive
+Linting of module InvocationClaim
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module InvocationClaimInductive
+Starting... (2026-07-22 16:09:47)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-07-22 16:09:48.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.4E-11
+37417 states generated, 9457 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 13.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 8 and the 95th percentile is 4).
+Finished in 01s at (2026-07-22 16:09:48)
+
+--- command used (RUN 2) ---
+java -cp tla2tools.jar tlc2.TLC -workers auto -deadlock -config InvocationClaimInductive.base.cfg InvocationClaimInductive.tla
+==============================================================================
+RUN 3 — INDUCTIVE STEP at the ORIGINAL reachability-model constants
+(2 invocations, 3 attempts, 2 fingerprints, 2 actors — InvocationClaim.cfg's
+bound): same candidate IndInv, same one-step-closure setup as RUN 1.
+Verbatim TLC output:
+==============================================================================
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46847 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 3 and seed -5188733602437033209 with 4 workers on 4 cores with 3573MB heap and 64MB offheap memory [pid: 30540] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaimInductive.tla
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaim.tla
+Parsing file /tmp/tlc-467425777714911947/_TLCTrace.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-467425777714911947/Naturals.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-467425777714911947/FiniteSets.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-467425777714911947/Sequences.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-467425777714911947/TLC.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-467425777714911947/TLCExt.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-467425777714911947/Integers.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module InvocationClaim
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module InvocationClaimInductive
+Linting of module InvocationClaim
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module InvocationClaimInductive
+Starting... (2026-07-22 16:16:44)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Computed 8192 initial states...
+Computed 16384 initial states...
+Computed 32768 initial states...
+Computed 65536 initial states...
+Computed 131072 initial states...
+Computed 262144 initial states...
+Computed 524288 initial states...
+Computed 1048576 initial states...
+Computed 2097152 initial states...
+Computed 4194304 initial states...
+Computed 8388608 initial states...
+Finished computing initial states: 12787200 distinct states generated at 2026-07-22 16:24:03.
+Progress(1) at 2026-07-22 16:24:06: 14,630,120 states generated (14,630,120 s/min), 12,787,200 distinct states found (12,787,200 ds/min), 11,965,554 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 2.5E-5
+  based on the actual fingerprints:  val = 4.2E-5
+49190400 states generated, 12787200 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 08min 01s at (2026-07-22 16:24:45)
+
+--- command used (RUN 3) ---
+java -XX:+UseParallelGC -cp tla2tools.jar tlc2.TLC -workers auto -deadlock -config InvocationClaimInductive.orig3.cfg InvocationClaimInductive.tla
+
+==============================================================================
+RUN 4 — BASE CASE at the ORIGINAL constants (3 attempts): SPECIFICATION Spec,
+every IndInv conjunct as INVARIANT. Subsumes Init => IndInv at this bound.
+Verbatim TLC output:
+==============================================================================
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46847 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Running breadth-first search Model-Checking with fp 103 and seed 1262067067448276428 with 4 workers on 4 cores with 3573MB heap and 64MB offheap memory [pid: 30948] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaimInductive.tla
+Parsing file /workspace/wt/inductive/formal/ai-invocation/InvocationClaim.tla
+Parsing file /tmp/tlc-84955552735396348/_TLCTrace.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-84955552735396348/Naturals.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-84955552735396348/FiniteSets.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-84955552735396348/Sequences.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-84955552735396348/TLC.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-84955552735396348/TLCExt.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-84955552735396348/Integers.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module InvocationClaim
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module InvocationClaimInductive
+Linting of module InvocationClaim
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module InvocationClaimInductive
+Starting... (2026-07-22 16:24:57)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-07-22 16:24:58.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 4.2E-10
+  based on the actual fingerprints:  val = 1.1E-10
+200649 states generated, 51601 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 15.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 8 and the 95th percentile is 4).
+Finished in 01s at (2026-07-22 16:24:59)
+
+--- command used (RUN 4) ---
+java -XX:+UseParallelGC -cp tla2tools.jar tlc2.TLC -workers auto -deadlock -config InvocationClaimInductive.orig3.base.cfg InvocationClaimInductive.tla

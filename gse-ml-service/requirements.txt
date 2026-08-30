@@ -1,0 +1,103 @@
+# gse-ml-service — fully pinned dependency lock.
+#
+#   INSTALL WITH:   python -m pip install --no-deps -r requirements.txt
+#                                         ^^^^^^^^^
+# The --no-deps is REQUIRED, not a micro-optimisation. See "Why --no-deps" below.
+# The Dockerfile and .github/workflows/python-tests.yml both use exactly this command.
+#
+# Every version here is the version actually importable in the environment where
+# `python3 -m pytest app/tests -q` reports 354 passed (CPython 3.11.15), read back from
+# importlib.metadata rather than copied from a changelog, and every pin was confirmed to
+# exist on PyPI. A live `uvicorn app.main:app` boot serving GET /health and the predict
+# endpoints was run against those same versions.
+#
+# NOT verified: a from-scratch `pip install --no-deps -r requirements.txt` into an empty
+# virtualenv. This file describes an environment that was observed working; it has not
+# been replayed. (Five pins — certifi, filelock, fsspec, idna, packaging — previously
+# claimed versions NEWER than anything this suite has ever run against; they are now the
+# versions actually in use.)
+#
+# ---------------------------------------------------------------------------
+# Why --no-deps
+# ---------------------------------------------------------------------------
+# `ripser==0.6.15` DECLARES `persim` (and `Cython`) as runtime dependencies, and
+# `persim` depends on `hopcroftkarp`, which is sdist-only — no wheel exists for any
+# platform, so pip must compile it at install time. That build has failed on Python 3.11
+# (setuptools' removed `install_layout` API); it happens to succeed with current
+# pip/setuptools, but it is a compile step in every CI run and every image build for a
+# package this service never imports. persim also drags in matplotlib, pillow, fonttools,
+# contourpy, kiwisolver and friends — tens of MB of plotting stack for a headless API.
+#
+# We do not need any of it: `app/models/tda.py` calls `ripser.ripser()` only, and writes
+# its own persistence-image vectorisation (persim's `PersistenceImager` is exactly what
+# it replaces). A clean venv with ripser installed `--no-deps` and no persim present runs
+# the full TDA test file green — that is how this lock was produced.
+#
+# `--no-deps` means pip installs EXACTLY the lines below and resolves nothing, so every
+# transitive package is pinned here explicitly. Adding a direct dependency means adding
+# its transitive closure too: install it normally in a scratch venv, run `pip freeze`,
+# and update both sections.
+#
+# Plain `pip install -r requirements.txt` (without --no-deps) is not fatal — it just
+# re-adds persim/hopcroftkarp/matplotlib and the source build. Don't.
+# ---------------------------------------------------------------------------
+
+# torch's `+cpu` local version exists only on PyTorch's own index. Pinning it (rather
+# than plain `torch==2.13.0` from PyPI) keeps the install to a single ~192 MB wheel
+# instead of the multi-GB CUDA build: there is no GPU in the deployment target and
+# nothing in this service trains.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# ---------------------------------------------------------------------------
+# Direct dependencies
+# ---------------------------------------------------------------------------
+numpy==2.4.6
+scipy==1.17.1            # cho_factor / cho_solve in the ETKF square-root update
+ripser==0.6.15           # Vietoris-Rips persistent homology (app/models/tda.py)
+scikit-learn==1.9.0      # imported by ripser at import time; not used directly
+torch==2.13.0+cpu        # free_energy_coder + mps_layer
+fastapi==0.141.1
+uvicorn==0.52.1          # ASGI server; see the Dockerfile CMD
+pydantic==2.13.4         # request models rely on v2 semantics (ConfigDict,
+                         # field_validator, populate_by_name)
+
+# Test-only, kept in the same file on purpose: CI installs exactly what the image
+# contains, so "it passed CI" and "it is in the image" cannot drift apart. Split into a
+# requirements-dev.txt only if image size becomes a real constraint.
+pytest==9.1.1
+httpx==0.28.1            # transport behind fastapi.testclient.TestClient
+
+# ---------------------------------------------------------------------------
+# Transitive dependencies — pinned because --no-deps installs nothing else.
+# (fastapi -> starlette, anyio, idna, annotated-doc; pydantic -> pydantic_core,
+#  annotated-types, typing-inspection, typing_extensions; uvicorn -> click, h11;
+#  httpx -> httpcore, certifi; pytest -> pluggy, iniconfig, packaging, Pygments;
+#  scikit-learn -> joblib, threadpoolctl, narwhals; torch -> filelock, fsspec,
+#  Jinja2/MarkupSafe, networkx, sympy/mpmath)
+# ---------------------------------------------------------------------------
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anyio==4.14.2
+certifi==2026.2.25
+click==8.4.2
+filelock==3.29.0
+fsspec==2026.4.0
+h11==0.16.0
+httpcore==1.0.9
+idna==3.11
+iniconfig==2.3.0
+Jinja2==3.1.6
+joblib==1.5.3
+MarkupSafe==3.0.3
+mpmath==1.3.0
+narwhals==2.24.0
+networkx==3.6.1
+packaging==24.0
+pluggy==1.6.0
+pydantic_core==2.46.4
+Pygments==2.20.0
+starlette==1.6.0
+sympy==1.14.0
+threadpoolctl==3.6.0
+typing-inspection==0.4.3
+typing_extensions==4.16.0
