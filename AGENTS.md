@@ -141,3 +141,88 @@ This product's entire premise is that it does not lie about its own performance.
 invented number makes every other number suspect.
 
 **Work continuously. Record everything. Invent nothing. Push nothing.**
+
+---
+
+## BE THE PROVIDER — Self-Provisioned Odds (2026-08-27)
+
+**Direction: we are the odds provider. No third-party odds API dependency.**
+
+The $30/mo The Odds API bill is not the object — dependency on a third-party
+aggregator is. The Odds API's own Terms (§Market Data & Transparency) state their
+data is "aggregated from publicly accessible sources available to the general
+public on the public internet" and that "the Service does not circumvent
+authentication controls." If they can aggregate public bookmaker pages, we can
+do the same for personal use. We do not need The Odds API, TheRundown, or any
+other paid/free third-party aggregator.
+
+### What agents must NOT do
+
+- Do NOT add TheRundown as a dependency. It is a third-party aggregator we don't need.
+- Do NOT rely on The Odds API. The key can be unset; the pipeline must work without it.
+- Do NOT touch the Polymarket compliance hold (`docs/agent-skills/polymarket-hold`).
+  It is NOT unfinished work — it is a legal gate. Leave `INDEPENDENT_POLYMARKET` OFF.
+- Do NOT scrape DraftKings, Action Network, or BettingPros — their ToS prohibit
+  automated collection. Use only public sources whose ToS permit programmatic reads.
+- Do NOT flip `LIVE_BOARD`, `PUBLIC_PICKS`, or any gate to make this work.
+
+### What the self-provisioned odds path IS
+
+Direct adapters to public bookmaker odds pages and keyless APIs, normalized to
+the repo's `OddsApiEvent` shape, merged via `odds-failover.ts`, ingested through
+the existing `processSport()` pipeline. No third-party aggregator in the middle.
+
+See `docs/ops/galaxy-self-provisioned-odds-architecture.md` for the full
+architecture, source list, legal boundary, and build order.
+
+### Local-only artifacts (Claude Code can't reach these)
+
+Claude Code runs in the cloud and only has access to this repo. The following
+artifacts live on Garrett's local machine and are NOT in this repo (gitignored
+under home-dir deny-by-default). They are proof-of-concept, not production.
+
+| Artifact | Path | What it is | How to use |
+|---|---|---|---|
+| Galaxy Sports API | `C:\Users\Garrett\galaxy-sports-api\odds_feed.py` | Python HTTP server (port 8731). Fetches ESPN `site.web.api` + Polymarket Gamma, returns Odds-API-shaped JSON with `generated_at`, `stale`, `served_at` flags. | `python3 odds_feed.py --serve 8731` then `curl localhost:8731/odds?sport=nfl`. Verified 2026-08-27: count=42, stale=False. |
+| Serve log | `C:\Users\Garrett\galaxy-sports-api\serve.log` | Stdout from the server process | `cat serve.log` |
+| Source extracts | `C:\Users\Garrett\Downloads\extract-data-2026-08-27*.json` | 3 JSON files: The Odds API provider spec, tracking/ingestion systems, commercial/legal framework | Read with any JSON viewer |
+| Raw Odds API pages | `C:\Users\Garrett\Downloads\769a3bce-*.zip` | 9 scraped pages from the-odds-api.com (terms, bookmaker list, betting markets, API guide) | `unzip` to `_extract_zip/` |
+
+These are reference/proof only. The production path must be built in THIS repo
+as TypeScript packages so Claude Code and all agents can reach and maintain it.
+
+### ESPN endpoint mismatch (known issue)
+
+The repo's `packages/data-ingestion/src/espn-odds-client.ts` targets
+`sports.core.api.espn.com` — which is BLOCKED from this IP (Akamai 403).
+The local Galaxy script uses `site.web.api.espn.com` — which works.
+Fix: update the repo's ESPN client to use `site.web.api.espn.com` or add it as
+an alternative endpoint in the failover chain.
+
+### Historical odds backfill (COMPLETED 2026-08-27)
+
+`data/historical-odds/nfl_historical_odds_unified.csv` — 12,164 NFL games,
+1966-2026, with spread/total/moneyline closing lines. See
+`data/historical-odds/MANIFEST.md` for full schema, sources, and usage.
+
+This unblocks walk-forward backtesting: train on pre-2018, test on 2018-2026
+(2,303 games). No ROI claim should be published without a walk-forward pass
+against this dataset.
+
+### Test status (2026-08-27)
+
+- `packages/data-ingestion`: 344/344 tests pass, typecheck clean
+- `packages/prediction-engine` (consensus/edge-lab/historical): 17/17 pass
+- `apps/web` odds tests: pre-existing vitest alias resolution failures
+  (files exist, `@/lib/...` aliases not resolving in vitest). NOT caused by
+  our changes — verified by running tests without our changes (same failures).
+
+### What still needs to be done (priority order)
+
+1. [FIX] ESPN client endpoint: `sports.core.api` (BLOCKED) → `site.web.api` (WORKS)
+2. [BUILD] Direct bookmaker adapters (BetOnline, Pinnacle, Bovada) as
+   `OddsProvider` implementations in `packages/data-ingestion`
+3. [BUILD] Walk-forward backtesting harness using the unified CSV
+4. [DEPRECATE] Mark TheRundown as deprecated in source registry
+5. [BUILD] Bankroll/Kelly guardrail component (needed before real money)
+
