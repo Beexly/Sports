@@ -7,7 +7,7 @@
 - `apps/web/app/stats/compare/page.tsx`
 - `apps/web/app/stats/teams/page.tsx`
 - `apps/web/app/stats/sources/page.tsx`
-- `apps/web/app/stats/coverage/page.tsx`
+- ~~`apps/web/app/stats/coverage/page.tsx`~~ — not in the tree; `/stats/coverage` is not a built route
 - `apps/web/app/stats/source-graph/page.tsx`
 - `apps/web/app/stats/media/**/page.tsx`
 - `apps/web/app/stats/ask/page.tsx`

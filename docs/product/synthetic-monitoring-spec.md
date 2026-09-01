@@ -3,7 +3,15 @@
 **Status:** Phase 3+ build. Implements the synthetic monitoring layer referenced in master plan Part 1.5.
 **Owner of code:** Codex.
 **Owner of check definitions + severity bands:** Claude.
-**Location:** `workers/synthetic-monitoring/`, `scripts/smoke-prod.sh` (extends the existing daily smoke).
+**Location as built (the spec's original target paths were never used):**
+`scripts/synthetic-monitoring-runner.mjs` (run it with `npm run synthetic:run`),
+`apps/web/lib/synthetic-monitoring/dashboard.ts`, and the cockpit view at
+`apps/web/app/cockpit/synthetic-monitoring/page.tsx`. There is no
+`workers/synthetic-monitoring/` directory — and there is no queue or worker
+process behind any of it; the runner is a plain script a scheduler or operator
+invokes. `scripts/smoke-prod.sh` (the daily smoke) does exist; note that
+`npm run smoke:prod` points at a different script,
+`scripts/post-deploy-smoke.mjs`.
 
 ---
 
@@ -51,7 +59,12 @@ Gap: there's no continuous production check that catches things like "banned voc
    └────────────────────────────┘
 ```
 
-Implementation: workers run via existing BullMQ infra (Redis already in tree). Cron-triggered every 15 minutes.
+Implementation as built: `scripts/synthetic-monitoring-runner.mjs`, invoked
+directly (`npm run synthetic:run`). It is **not** attached to a scheduler — no
+`/api/cron/*` route and no entry in `apps/web/vercel.json` runs it, so the
+"every 15 minutes" cadence above is a target, not current behavior. There is no
+queue and no cache server behind it; the premise that either was "already in the
+tree" was never true.
 
 ---
 
@@ -218,13 +231,18 @@ Env vars:
 - `SYNTHETIC_MONITORING_OWNER_CHANNEL=discord|email|sms|webhook` — P1 escalation channel.
 - `SYNTHETIC_MONITORING_OWNER_TARGET=<value>` — Discord user ID, email address, phone, or webhook URL.
 
-Per-check thresholds configurable in `apps/web/lib/synthetic-monitoring/check-config.ts`.
+Per-check thresholds are **not** externally configurable yet: no
+`check-config.ts` exists. The only files under `apps/web/lib/synthetic-monitoring/`
+are listed at the top of this spec; thresholds live in the runner
+(`scripts/synthetic-monitoring-runner.mjs`).
 
 ---
 
 ## Local development
 
-`npm run synth:local` runs the check suite against a local dev server. Useful before PR for catching changes that break a check.
+`npm run synthetic:run` runs the check suite (`APP_URL` selects the target — point
+it at a local dev server). Useful before PR for catching changes that break a
+check. There is no `synth:local` script.
 
 ---
 

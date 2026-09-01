@@ -40,7 +40,7 @@ schedule masquerade as skill.
 ## Commands
 ```bash
 npm run guard:model-freeze     # MODEL_VERSION must have IMPLEMENTED calibration evidence
-npm run calibrate              # calibration pipeline
+npm run calibration:offline    # offline calibration dry-run (see calibration-pipeline/SKILL.md)
 npm test --workspace=packages/prediction-engine
 npx tsx scripts/ops/verify-shadow-pipeline.ts    # read-only shadow status
 npx tsx scripts/ops/compare-shadow-vs-live.ts    # posts win/lose/insufficient-sample

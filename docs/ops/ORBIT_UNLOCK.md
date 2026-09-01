@@ -12,7 +12,10 @@ Code is ready. These steps require human portals / secrets. Agents do not invent
    curl -sS -H "Authorization: Bearer $CRON_SECRET" \
      "https://www.galaxysportsedge.com/api/cron/settle-picks" | jq '{ok,path,picksSettled,picksHeld}'
    ```
-   Expect `"path":"free"`. Cadence: every 3h (`vercel.json` → `0 */3 * * *`, #278).
+   Expect `"path":"free"`. Cadence: `settle-picks` runs **hourly**. Read the live
+   value from [`CRON_MATRIX.generated.md`](./CRON_MATRIX.generated.md) rather than
+   any cadence transcribed into a runbook. The separate 3-hourly job is
+   `deliver-settlement-alerts`, which sweeps the alert outbox; it does not grade picks.
 
 ## 2. Stripe Dashboard
 

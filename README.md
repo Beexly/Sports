@@ -1,6 +1,6 @@
 # Sports Intelligence OS
 
-[![CI](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml/badge.svg)](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml)
+[![CI](https://github.com/Beexly/Sports/actions/workflows/ci.yml/badge.svg)](https://github.com/Beexly/Sports/actions/workflows/ci.yml)
 
 Sports picks platform with real data ingestion, AI-assisted prediction
 ranking, subscription paywalls, content generation, and an internal operator
@@ -198,7 +198,11 @@ docker/                     Postgres + Redis compose, app Dockerfile
 docs/                       Architecture + ops runbook
 ```
 
-See `handoff.md` for the full per-phase history.
+There is no root `handoff.md`. Per-phase history lives in the tracked `handoff/`
+directory — start at [`handoff/00-READ-CANONICAL.md`](handoff/00-READ-CANONICAL.md),
+which routes you to the actual doc source of truth
+([`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md)) and warns that the dated
+session handoffs beside it are museum pieces, not plans to execute.
 
 
 ## Orbit unlock (process capital)

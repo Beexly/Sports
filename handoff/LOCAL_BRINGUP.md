@@ -85,12 +85,9 @@ NEXTAUTH_URL=http://localhost:3000
 NODE_ENV=development
 ```
 
-Optional Redis (only needed for BullMQ workers):
-
-```bash
-docker compose -f docker\docker-compose.yml up -d redis
-# Then set: REDIS_URL=redis://localhost:6379
-```
+Redis: **not needed for local bring-up.** `docker/docker-compose.yml` still defines
+a `redis` service, but nothing in the app or in `npm run workers:*` connects to it
+— see the note under the env table below.
 
 ---
 
@@ -159,8 +156,16 @@ npm run dev    # Next.js dev server on http://localhost:3000
 | `NEXTAUTH_URL` | NextAuth callback URLs | OAuth callbacks redirect to wrong host |
 | `STRIPE_SECRET_KEY` | Stripe client construction | 503 with `STRIPE_SECRET_KEY` named (not 400 signature error) |
 | `STRIPE_WEBHOOK_SECRET` | Webhook signature verification | Webhook returns 400 "Invalid signature" |
-| `REDIS_URL` | BullMQ queue connection | Worker routes return 503; `npm run workers:*` fail to start |
+| `CRON_SECRET` | Bearer check in `apps/web/lib/cron/authorize.ts` | With neither this nor `CRON_SECRET_PREVIOUS` set, **every** `/api/cron/*` route returns 500 `{"error":"CRON_SECRET not configured"}` — the whole scheduler fails closed |
 | `NEXT_PUBLIC_APP_URL` | Canonical URL, sitemap, metadataBase | Falls back to `https://www.galaxysportsedge.com` (wrong host locally) |
+
+> `REDIS_URL` used to be listed above as hard-required for a queue connection.
+> It is not required and never was: no application code reads it, the
+> `npm run workers:*` processes re-arm themselves with `setTimeout` and open no
+> connection to a cache server, and this repo has no queue and no broker. Its only
+> consumers are `docker/oracle-vps/compose.yml` and an opt-in reachability probe in
+> `scripts/check-deploy-readiness.mjs` (whose `REQUIRED` array still lists it — a
+> stale entry, tracked separately). Do not provision one for local bring-up.
 
 ### Feature-gated (app runs without these, feature is off)
 
