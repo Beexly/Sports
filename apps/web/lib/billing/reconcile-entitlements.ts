@@ -133,6 +133,49 @@ function isResourceMissing(err: unknown): boolean {
  *                 paused) — none of which grant access. Leaving the row would strand
  *                 a paid tier on a dead subscription forever (every cron a no-op).
  */
+/**
+ * The DB status to persist when a retrieved Stripe status is a CONFIRMED
+ * non-access state. Access is revoked either way — `getUserEntitlements` grants
+ * only on ACTIVE / TRIALING / PAST_DUE-within-grace, so none of these serve a
+ * paid tier — but the CHOICE of status decides whether the member can ever come
+ * back.
+ *
+ * CANCELED is TERMINAL here, not merely "not granting": the webhook's
+ * out-of-order resurrection guard refuses to re-grant a row it finds in
+ * CANCELED, precisely so a late event cannot revive a dead subscription. So
+ * writing CANCELED for a RESUMABLE Stripe state locks the member out
+ * permanently — `paused` resumes and `incomplete` completes, Stripe sends
+ * customer.subscription.updated with `active`, and the guard swallows it. The
+ * member pays and stays FREE.
+ *
+ * The refund handler already reasons exactly this way (see
+ * `handleChargeRefunded`: "terminally revoking would let the out-of-order
+ * resurrection guard swallow the next PAID renewal and lock a paying member to
+ * FREE") and deliberately treats paused/incomplete as LIVE. This mapping makes
+ * reconcile agree with it: revoke the access, keep the door open.
+ *
+ * RESIDUAL (tracked, deliberately not papered over): Stripe `unpaid` is also
+ * recoverable — paying the open invoice reactivates it — but there is no UNPAID
+ * value in the DB enum, and the two non-terminal alternatives are both wrong
+ * (PAUSED misstates it; PAST_DUE would re-grant access inside the grace
+ * window). It stays CANCELED until the enum gains an accurate value. Noted
+ * rather than silently mapped.
+ */
+function revokedDbStatusForRetrievedStatus(
+  status: Stripe.Subscription.Status,
+): "CANCELED" | "PAUSED" | "INCOMPLETE" {
+  switch (status) {
+    case "paused":
+      return "PAUSED";
+    case "incomplete":
+      return "INCOMPLETE";
+    default:
+      // canceled / incomplete_expired are genuinely terminal; unpaid per the
+      // residual above.
+      return "CANCELED";
+  }
+}
+
 function downgradeActionForRetrievedStatus(
   status: Stripe.Subscription.Status,
 ): "keep" | "downgrade" {
@@ -421,6 +464,9 @@ async function downgradeStaleRows(
     const subscriptionId = row.stripeSubscriptionId; // narrowed non-null by the guard above
 
     let confirmedGone = false;
+    // Which non-granting status to persist. A subscription Stripe cannot find at
+    // all is terminal, so CANCELED is the right default for the missing case.
+    let revokedStatus: "CANCELED" | "PAUSED" | "INCOMPLETE" = "CANCELED";
     try {
       const remote = await stripe.subscriptions.retrieve(subscriptionId);
       // FINDING 1: a positively-retrieved status is authoritative, never "ambiguous".
@@ -431,6 +477,7 @@ async function downgradeStaleRows(
       if (downgradeActionForRetrievedStatus(remote.status) === "keep") {
         continue;
       }
+      revokedStatus = revokedDbStatusForRetrievedStatus(remote.status);
       confirmedGone = true;
     } catch (err) {
       if (isResourceMissing(err)) {
@@ -459,7 +506,16 @@ async function downgradeStaleRows(
             stripeSubscriptionId: subscriptionId,
             status: { in: [...PAID_DB_STATUSES] },
           },
-          data: { tier: "FREE", status: "CANCELED", canceledAt: new Date(), pastDueSince: null },
+          // canceledAt is stamped only for a genuinely terminal revoke — a
+          // paused/incomplete row is not "canceled at" anything, and stamping it
+          // would make a resumable subscription read as dead to every downstream
+          // reader.
+          data: {
+            tier: "FREE",
+            status: revokedStatus,
+            ...(revokedStatus === "CANCELED" ? { canceledAt: new Date() } : {}),
+            pastDueSince: null,
+          },
         });
         if (revoke.count > 0) {
           downgraded++;

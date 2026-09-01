@@ -1,0 +1,41 @@
+{
+  "runId": "swarm-R36",
+  "timestamp": "2026-08-23",
+  "branch": "hermes/h2-remaining-binds",
+  "dataSource": "data/nflverse/ngs_receiving_2021_2025_harness_rows.json",
+  "rowsTotal": 7351,
+  "rowsAfterNullFilter": 7331,
+  "nullYacCount": 20,
+  "buildSeasons": [2021, 2022, 2023],
+  "valSeason": 2024,
+  "holdoutSeason": 2025,
+  "minTargetsThreshold": 20,
+  "tprBacktestUsable": false,
+  "tprBacktestReason": "NGS rows lack routes column; TPR needs routes per tpr-backtest.ts interface",
+  "separationBacktestUsable": true,
+  "correlations": {
+    "validation-2024": {
+      "nPlayers": 107,
+      "spearmanR": 0.4025,
+      "verdictNote": "Positive but must not claim edge from positive r alone; multiple-testing applies"
+    },
+    "holdout-2025": {
+      "nPlayers": 84,
+      "spearmanR": 0.4254,
+      "verdictNote": "Positive but must not claim edge from positive r alone; sign stable across splits"
+    }
+  },
+  "verdict": "STARVED/NO-SIGNAL (honest evaluation per R62 doctrine): |r| is moderate (~0.40) but this is a single un-preregistered split on real NGS data; no market data available; no independent p; multiple-testing applies; no priced edge claim made. Verdict remains NO-SIGNAL for any betting-purpose claim until preregistered holdout + real market calibration runs.",
+  "honestLimits": [
+    "No routes column => TPR harness not usable.",
+    "20 null yacAboveExpected rows excluded.",
+    "No market/odds data => priced:false always.",
+    "No preregistered design => cannot claim predictive edge.",
+    "Sign is stable (positive both splits) but magnitude alone is not sufficient for SHIP."
+  ],
+  "filesCreated": [
+    "packages/prediction-engine/src/edge-lab/run-real-backtest.ts",
+    "packages/prediction-engine/src/edge-lab/run-backtest-cli.ts"
+  ],
+  "testFastSliceFile": "tests/edge-lab/yacoe-backtest-fast-slice.test.ts"
+}
