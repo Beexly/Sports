@@ -21,8 +21,6 @@
       "Bash(npm run guard:*)",
       "Bash(npm run agent:eval*)",
       "Bash(npm run evals:contracts*)",
-      "Bash(npm run skills:check*)",
-      "Bash(npm run skills:sync*)",
       "Bash(npm run db:generate*)",
       "Bash(npm run db:migrate:status*)",
       "Bash(npm run deploy:ready*)",
@@ -33,7 +31,6 @@
       "Bash(npx prisma validate*)",
       "Bash(npx prisma migrate status*)",
       "Bash(node scripts/guardrails/*)",
-      "Bash(node scripts/sync-agent-skills.mjs*)",
       "Bash(node scripts/agent-eval/run.mjs*)",
       "Bash(ls*)",
       "Bash(wc*)"
@@ -197,9 +194,38 @@
     ]
   },
   "sandbox": {
-    "enabled": false,
+    "enabled": true,
     "failIfUnavailable": false,
-    "autoAllowBashIfSandboxed": false
+    "autoAllowBashIfSandboxed": false,
+    "allowUnsandboxedCommands": false,
+    "excludedCommands": [
+      "git"
+    ],
+    "network": {
+      "allowLocalBinding": true,
+      "allowedDomains": [
+        "registry.npmjs.org",
+        "*.npmjs.org",
+        "github.com",
+        "api.github.com",
+        "codeload.github.com",
+        "objects.githubusercontent.com",
+        "raw.githubusercontent.com",
+        "api.anthropic.com",
+        "api.stripe.com",
+        "api.vercel.com",
+        "vercel.com",
+        "*.neon.tech",
+        "*.aws.neon.tech",
+        "api.the-odds-api.com",
+        "site.api.espn.com",
+        "www.galaxysportsedge.com",
+        "galaxysportsedge.com",
+        "oauth2.googleapis.com",
+        "json.schemastore.org",
+        "binaries.prisma.sh"
+      ]
+    }
   },
   "hooks": {
     "PreToolUse": [
@@ -221,9 +247,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$CLAUDE_PROJECT_DIR\" && { [ -d node_modules ] || npm ci --no-audit --no-fund; } && node scripts/sync-agent-skills.mjs --check",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && { [ -d node_modules ] || npm ci --no-audit --no-fund; }",
             "timeout": 600,
-            "statusMessage": "Installing dependencies and checking synced skills..."
+            "statusMessage": "Installing dependencies..."
           }
         ]
       }
