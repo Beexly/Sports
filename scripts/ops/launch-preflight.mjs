@@ -71,8 +71,10 @@ async function main() {
   console.log(`(soft !! = founder env; hard !! = launch blockers)\n`);
 
   // ── 1. Health ───────────────────────────────────────────────────────────
-  section(1, "Health (/api/health)");
-  const health = await get("/api/health");
+  // strict=1: a degraded or unavailable settlement band fails the HTTP status, so
+  // a launch preflight can never read "200 ok" through a settlement outage.
+  section(1, "Health (/api/health?strict=1)");
+  const health = await get("/api/health?strict=1");
   const h = health.json || {};
   const hOk = health.status === 200 && h.ok === true;
   const hStatus = h.status || "(none)";

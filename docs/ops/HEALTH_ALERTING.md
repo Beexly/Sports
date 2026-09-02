@@ -26,6 +26,11 @@ Set in Vercel production:
 
 ```
 HEALTH_ALERT_WEBHOOK_URL=https://hooks.slack.com/...   # or Discord / generic webhook
+# Also add the SAME value as a GitHub Actions repository secret named
+# HEALTH_ALERT_WEBHOOK_URL: .github/workflows/external-watchdog.yml (every 30 min,
+# from outside Vercel) posts to it whenever the scheduler is not ok or settlement
+# is CRITICAL. Without the secret the workflow still fails visibly but pages nobody
+# (that is how production sat red for five days in August 2026).
 ```
 
 Payload includes status, reason, ingestion age, deployment sha, link to `/api/health`.

@@ -190,12 +190,26 @@ function buildEnvActions() {
 
   actions.push({
     id: 'HEALTH-ALERT-WEBHOOK',
-    what: 'Set HEALTH_ALERT_WEBHOOK_URL (Slack/Discord/generic webhook) and point an external uptime monitor (UptimeRobot / Better Stack / Cronitor) at /api/health?strict=1.',
+    what: 'Set HEALTH_ALERT_WEBHOOK_URL (Slack/Discord/generic webhook) in Vercel Production AND as the GitHub repo secret of the same name (Settings → Secrets → Actions), so both the in-platform health-alert cron and the external watchdog workflow (.github/workflows/external-watchdog.yml, every 30 min from outside Vercel) can page. Then point an external uptime monitor (UptimeRobot / Better Stack / Cronitor) at /api/health?strict=1.',
     setCmd: `${vercelAddCmd('HEALTH_ALERT_WEBHOOK_URL')}`,
     unsetCmd: vercelRmCmd('HEALTH_ALERT_WEBHOOK_URL'),
     dashboard: VERCEL_DASHBOARD_URL,
     verify: 'curl -sS "https://www.galaxysportsedge.com/api/health?strict=1" | jq "{ok, status}"   # ok:false / HTTP!=200 must page',
     source: 'docs/ops/HEALTH_ALERTING.md',
+  });
+
+  // The stale-data kill switch the gate runbook pairs with PUBLIC_PICKS_ENABLED
+  // ("it's what makes #1 safe"). The truth surface does not report it, so it can
+  // only be confirmed in Vercel; the founder checklist keeps public picks
+  // unchecked until it is.
+  actions.push({
+    id: 'FORCE-NO-BET-IF-STALE',
+    what: 'Confirm FORCE_NO_BET_IF_STALE=true in Production. PUBLIC_PICKS_ENABLED is observed ON; the gate runbook requires the stale-data kill switch alongside it, and /api/ops/public-surface-truth does not report this flag.',
+    setCmd: vercelAddCmd('FORCE_NO_BET_IF_STALE') + '   # value: true',
+    unsetCmd: vercelRmCmd('FORCE_NO_BET_IF_STALE'),
+    dashboard: VERCEL_DASHBOARD_URL,
+    verify: 'vercel env ls production | grep FORCE_NO_BET_IF_STALE   # then tick the founder checklist line',
+    source: 'docs/ops/FOUNDER_ONLY_CHECKLIST.md (gate 1b); docs/ops/OPERATOR.md § 5',
   });
 
   // Elite alerts — exact env vars and gate order verified against the real
@@ -262,8 +276,8 @@ function buildDecisionItems() {
   // supersedes or voids them. The live count is on the ops truth surface.
   items.push({
     id: 'STALE-MODEL-VERSION-PICKS',
-    what: 'Supersede or void the 18 published PENDING picks from model v5.0.0 (May lines on Sept 5 → Nov 8 games; observed 2026-09-02) before their kickoffs. Never a cron: an owner decision recorded in the owner queue.',
-    where: 'Owner queue / Prisma Studio: picks WHERE result = PENDING AND isPublished AND modelVersion = v5.0.0. Voiding keeps the row (result VOID, reason stale-line); nothing is deleted.',
+    what: 'Supersede or void the 21 published PENDING picks not refreshed in 14 days: 18 from model v5.0.0 (May lines on Sept 5 → Nov 8 games, last refreshed 2026-06-16) and 3 from v5.2.6 (Sept 5–6 games, last refreshed 2026-08-19); observed 2026-09-02. Never a cron: an owner decision recorded in the owner queue.',
+    where: 'Owner queue / Prisma Studio: picks WHERE result = PENDING AND isPublished AND dataFreshnessAt < now() - 14 days (the same predicate as stalePendingPicks on the truth surface). Voiding keeps the row (result VOID, reason stale-line); nothing is deleted.',
     verify:
       'curl -sS "https://www.galaxysportsedge.com/api/ops/public-surface-truth" | jq .stalePendingPicks   # count must read 0 before the Sept 5 kickoffs',
     source: 'apps/web/lib/board/stale-pick-policy.ts; apps/web/app/api/ops/public-surface-truth/route.ts (stalePendingPicks); PICKS_STATE_2026-09-02.md § 5',

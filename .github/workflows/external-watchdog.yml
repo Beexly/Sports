@@ -33,6 +33,8 @@ jobs:
     timeout-minutes: 3
     steps:
       - name: Fetch and evaluate live status
+        env:
+          HEALTH_ALERT_WEBHOOK_URL: ${{ secrets.HEALTH_ALERT_WEBHOOK_URL }}
         run: |
           set -euo pipefail
           response=$(curl -sS -o /tmp/status.json -w "%{http_code}" \
@@ -67,6 +69,18 @@ jobs:
           if [ "${settlement_health}" = "CRITICAL" ]; then
             echo "::error::Settlement health is CRITICAL"
             fail=1
+          fi
+
+          # Page somebody. GitHub only emails the workflow owner on failure; a Slack/
+          # Discord/generic webhook in the repo secret HEALTH_ALERT_WEBHOOK_URL (the
+          # same value the platform uses for /api/cron/health-alert) makes this
+          # poll an actual alarm. Absent secret → the job still fails visibly.
+          if [ "${fail}" = "1" ] && [ -n "${HEALTH_ALERT_WEBHOOK_URL:-}" ]; then
+            msg="Galaxy Sports Edge external watchdog: scheduler=${scheduler_status} (age ${age_minutes}m), settlement=${settlement_health}. https://www.galaxysportsedge.com/api/ops/public-surface-truth"
+            payload=$(jq -cn --arg t "${msg}" '{text: $t, content: $t}')
+            curl -sS --max-time 15 -X POST -H "Content-Type: application/json" \
+              --data "${payload}" "${HEALTH_ALERT_WEBHOOK_URL}" >/dev/null \
+              || echo "::warning::webhook delivery failed (alert still recorded as a failed run)"
           fi
 
           exit "${fail}"

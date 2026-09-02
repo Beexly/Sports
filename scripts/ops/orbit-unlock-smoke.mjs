@@ -199,9 +199,17 @@ if (prod) {
         if (res.status < 200 || res.status >= 300) {
           failed.push(`${path} HTTP ${res.status}`);
         }
-        if (path === "/api/cron/settle-picks" && pathField && pathField !== "free") {
+        // Free-first law (2026-09-02): "free" (no key or ?path=free) and
+        // "free+odds-api" (key present, paid supplement ran after the free pass)
+        // are both correct. Anything else means an old deploy is serving.
+        if (
+          path === "/api/cron/settle-picks" &&
+          pathField &&
+          pathField !== "free" &&
+          pathField !== "free+odds-api"
+        ) {
           report.settlePathWarning =
-            "settle path is not free — blank THE_ODDS_API_KEY in Production";
+            `settle path is "${pathField}" — expected "free" or "free+odds-api" (free grader first on every cycle); the deployed build predates the free-first law`;
         }
       } catch (e) {
         failed.push(`${path} fetch failed: ${e instanceof Error ? e.message : e}`);
