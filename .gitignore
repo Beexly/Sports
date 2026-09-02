@@ -80,10 +80,6 @@ screenshots/
 test-results/
 playwright-report/
 
-# Ignore local .claude config, but DO track shared project commands.
-.claude/*
-!.claude/commands/
-
 # Local session helper scripts — never commit
 *.bat
 *.ps1
@@ -188,6 +184,11 @@ playwright-report/
 !.claude/commands/
 !.claude/settings.json
 !.claude/skills/
+!.claude/rules/
+!.claude/agents/
+!.claude/hooks/
+# Per-developer memory override — never commit (pair of settings.local.json)
+CLAUDE.local.md
 
 # Local session helper scripts — never commit
 *.bat

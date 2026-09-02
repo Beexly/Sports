@@ -12,6 +12,9 @@ license: MIT
 compatibility: Requires the `grok` CLI (Grok Build) installed and authenticated (`grok login`, or `XAI_API_KEY`; beta access needs an eligible xAI subscription), Node 18+, and git. The orchestrating agent must be able to run shell commands and read files. Shell examples assume bash/zsh (macOS/Linux, or Git Bash/WSL on Windows).
 metadata:
   version: 0.5.0
+effort: medium
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Edit, Bash(node *), Bash(git status*), Bash(git diff*), Bash(git log*)
 ---
 
 # Grok Delegate
@@ -161,3 +164,11 @@ is in [references/review-and-land.md](references/review-and-land.md).
   boundary, and the rework cycle via `--resume-last`.
 - [references/multi-task-queues.md](references/multi-task-queues.md) — running a sequential queue:
   carrying constraints forward, progress tracking, and the end-of-run coherence check.
+
+## Repo policy (Galaxy Sports Edge)
+
+- Never pass `--full-access` or `--always-approve` in this repo — `.claude/settings.json` sets
+  `disableBypassPermissionsMode` and AGENTS.md law 2 freezes `.claude/**` and
+  `scripts/guardrails/**`.
+- The child session must keep the default permission mode so the PreToolUse guard and
+  ask-list apply.

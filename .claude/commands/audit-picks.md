@@ -1,5 +1,6 @@
 ---
 description: Audit the pick lifecycle state machine
+allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git status*)
 ---
 Map every state and transition in the pick lifecycle state machine.
 Flag: illegal transitions, unreachable/orphaned states, missing terminal handling (win/loss/push/void), and any place a pick can mutate without passing through the state machine.

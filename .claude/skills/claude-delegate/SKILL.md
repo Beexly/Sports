@@ -11,6 +11,9 @@ license: MIT
 compatibility: Requires the `claude` CLI (Claude Code) installed and authenticated, Node 18+, and git. The orchestrating agent must be able to run shell commands and read files. Claude's shell sandbox requires macOS, Linux, or WSL2; native Windows launch is pending verification.
 metadata:
   version: 0.5.0
+effort: medium
+disable-model-invocation: true
+allowed-tools: Read, Grep, Glob, Edit, Bash(node *), Bash(git status*), Bash(git diff*), Bash(git log*)
 ---
 
 # Claude Delegate
@@ -162,3 +165,11 @@ provides a cross-orchestrator contract — self-contained brief → dispatch →
   boundary, and session rework.
 - [references/multi-task-queues.md](references/multi-task-queues.md) — sequential queues, progress
   tracking, constraint carry-forward, and final coherence.
+
+## Repo policy (Galaxy Sports Edge)
+
+- Never pass `--dangerously-skip-permissions` in this repo — `.claude/settings.json` sets
+  `disableBypassPermissionsMode` and AGENTS.md law 2 freezes `.claude/**` and
+  `scripts/guardrails/**`.
+- The child session must keep the default permission mode so the PreToolUse guard and
+  ask-list apply.
