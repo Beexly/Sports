@@ -79,6 +79,8 @@
     "guard:skipped-pg-integration": "node scripts/guardrails/skipped-pg-integration-honesty.mjs",
     "guard:agent-bash": "node scripts/guardrails/agent-bash-guard.mjs --selftest",
     "ops:tasks": "node scripts/check-operator-tasks.mjs",
+    "launch:ready": "node scripts/check-launch-readiness.mjs",
+    "ops:alert-smoke": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/watchlist-alert-smoke.ts",
     "guardrails": "node scripts/guardrails/run-all.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "ai:call-sites": "node scripts/ai/build-call-site-inventory.mjs",

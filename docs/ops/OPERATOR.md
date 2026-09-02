@@ -94,6 +94,22 @@ host — never the apex). All absolute-URL construction — `metadataBase`, `sit
 The apex (`https://galaxysportsedge.com`) should redirect to www at the DNS/platform
 layer (not in app code).
 
+## 6. Launch readiness in one command
+
+```bash
+npm run launch:ready            # production, read-only, no secrets; exit 1 on any FAIL
+npm run launch:ready -- --json  # machine-readable
+```
+
+`scripts/check-launch-readiness.mjs` reads the platform's own truth surfaces
+(`/api/health?strict=1`, `/api/ops/public-surface-truth`, the proof API, the picks API)
+plus the repo (cron config mirror, operator tasks, nflverse currency) and applies the
+platform's own gates: settlement HEALTHY with 0 overdue, calibration eligibility, the
+record gate (PERFORMANCE_STATS never on while eligibility is not GREEN), odds freshness,
+free score spine, money path, founder P0 queue. It never invents a number; anything the
+endpoint does not report prints as unknown. Run it the morning of every slate and after
+every production deploy; a FAIL is a stop.
+
 ## Related
 - Skills: `.claude/skills/`
 - Credits: `docs/ops/CREDITS.md` + `GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md`
