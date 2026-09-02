@@ -145,6 +145,28 @@ describe("/api/health — freshness threshold (executed)", () => {
     expect(body.checks.ingestion.status).toBe("error");
   });
 
+  it("accepts ?strict=1 for uptime monitors and reports the mode in the body", async () => {
+    dbMocks.ingestionRunFindFirst.mockResolvedValue({
+      completedAt: minutesAgo(10),
+    });
+
+    const { GET } = await import("@/app/api/health/route");
+    const lenient = await (await GET(new Request("http://x/api/health"))).json();
+    expect(lenient.strict).toBe(false);
+
+    const res = await GET(new Request("http://x/api/health?strict=1"));
+    const body = await res.json();
+    expect(body.strict).toBe(true);
+    // Strict mode only ADDS the settlement capability to the readiness verdict;
+    // with settlement not impaired the verdict must match the lenient one.
+    const settlement = (body.capabilities as { capabilityId: string; status: string }[]).find(
+      (c) => c.capabilityId === "settlement",
+    );
+    const impaired = settlement?.status === "degraded" || settlement?.status === "unavailable";
+    expect(res.status).toBe(impaired ? 503 : 200);
+    expect(body.ok).toBe(!impaired);
+  });
+
   it("reports ok/200 when the last SUCCESS run is fresh", async () => {
     dbMocks.ingestionRunFindFirst.mockResolvedValue({
       completedAt: minutesAgo(10),

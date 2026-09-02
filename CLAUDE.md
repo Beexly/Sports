@@ -16,7 +16,7 @@ A production-grade sports picks platform with real data ingestion, deterministic
 - **Sports data**: free-first multi-source spine in `apps/web/lib/data-sources/*` (ESPN public, CFB, multi-source scores); The Odds API is optional (`oddsApiRequired: false`)
 - **Claude API**: content generation only — never the source of truth for picks
 - **Cache**: Redis via `ioredis`, used for the Claude response cache only (there is no job-queue library)
-- **Background jobs**: Vercel Cron (`vercel.json`, 21 schedules → `apps/web/app/api/cron/*`)
+- **Background jobs**: Vercel Cron (`apps/web/vercel.json`, mirrored at the root; 22 schedules → `apps/web/app/api/cron/*` + `/api/ops/daily-truth`)
 - **Testing**: Vitest + Testing Library
 - **CI/CD**: GitHub Actions (`.github/workflows/ci.yml`; the `guardrails` job runs `scripts/guardrails/run-all.mjs`)
 

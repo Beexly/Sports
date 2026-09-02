@@ -163,6 +163,10 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   cronEntry("/api/cron/backfill-independent-trueprob", "10 */4 * * *"),
   cronEntry("/api/cron/refresh-player-stats", "0,30 * * * *"),
   cronEntry("/api/cron/backfill-team-efficiency", "15 7 * * *"),
+  // Read-only 24h rollup (settlement, CLV coverage, calibration, canonical
+  // sample, scheduler liveness). Bearer CRON_SECRET like every cron; it was
+  // built 2026-08 but never scheduled, so nothing ever read it.
+  cronEntry("/api/ops/daily-truth", "5 12 * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */

@@ -36,9 +36,17 @@ If unset, the cron still runs and logs `[health-alert] ALERT: ...` (visible in V
 
 Point UptimeRobot / Better Stack / Cronitor at:
 
-`https://www.galaxysportsedge.com/api/health`
+`https://www.galaxysportsedge.com/api/health?strict=1`
 
 Alert when HTTP status ≠ 200 (or body `ok === false`). This does not require any app change.
+
+`strict=1` matters: without it the route deliberately stays HTTP 200 while settlement
+is DEGRADED/CRITICAL (so the Nightly Sentinel does not page on settlement lag), and a
+status-only monitor would have slept through the 2026-09-02 backlog (92 overdue picks,
+`capabilities[].settlement = unavailable`, HTTP still 200). With `strict=1` a degraded or
+unavailable settlement capability fails the request too. If the monitor can inspect the
+body, alerting on `capabilities[?(@.capabilityId=="settlement")].status != "healthy"` is
+equivalent.
 
 ## State limitation
 

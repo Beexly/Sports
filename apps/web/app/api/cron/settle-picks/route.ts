@@ -11,6 +11,7 @@
 import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { captureError } from "@/lib/observability/sentry";
 import { db } from "@sports/db";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import {
@@ -64,6 +65,7 @@ export async function GET(request: Request) {
         `[cron:settle-picks:free] pre-cycle settlement health snapshot failed: ` +
           `${healthErr instanceof Error ? healthErr.message : healthErr}`,
       );
+      captureError(healthErr, { path: "settle-picks", stage: "free:health-snapshot" });
     }
     const freeScores = await persistFreeScores({ sportKey: requestedSport });
     const free = await runFreePathSettlement({
@@ -81,6 +83,7 @@ export async function GET(request: Request) {
         `[cron:settle-picks:free] outbox drain failed: ` +
           `${drainErr instanceof Error ? drainErr.message : drainErr}`,
       );
+      captureError(drainErr, { path: "settle-picks", stage: "free:outbox-drain" });
     }
     // Top-level clvRepair / snapshotRepair / scoreDates / rca for ops
     // (same values also under free.* for full free-path payload).
@@ -181,6 +184,7 @@ export async function GET(request: Request) {
       `[cron:settle-picks] slate commitment freeze pass failed: ` +
         `${freezeErr instanceof Error ? freezeErr.message : freezeErr}`,
     );
+    captureError(freezeErr, { path: "settle-picks", stage: "paid:slate-freeze" });
   }
 
   let alertDrain: OutboxDrainSummary | null = null;
@@ -191,6 +195,7 @@ export async function GET(request: Request) {
       `[cron:settle-picks] post-settlement outbox drain failed: ` +
         `${drainErr instanceof Error ? drainErr.message : drainErr}`,
     );
+    captureError(drainErr, { path: "settle-picks", stage: "paid:outbox-drain" });
   }
 
   // Repair: complete any PENDING PostSettlementWork rows left by a crash
@@ -206,6 +211,7 @@ export async function GET(request: Request) {
     console.warn(
       `[cron:settle-picks] CLV repair drain failed: ${err instanceof Error ? err.message : err}`,
     );
+    captureError(err, { path: "settle-picks", stage: "paid:clv-repair" });
   }
 
   let snapshotRepair: { attempted: number; done: number; failed: number } | null = null;
@@ -215,6 +221,7 @@ export async function GET(request: Request) {
     console.warn(
       `[cron:settle-picks] SNAPSHOT repair drain failed: ${err instanceof Error ? err.message : err}`,
     );
+    captureError(err, { path: "settle-picks", stage: "paid:snapshot-repair" });
   }
 
   let teamGameLogRepair: { attempted: number; done: number; failed: number } | null = null;
@@ -224,6 +231,7 @@ export async function GET(request: Request) {
     console.warn(
       `[cron:settle-picks] TEAM_GAME_LOG repair drain failed: ${err instanceof Error ? err.message : err}`,
     );
+    captureError(err, { path: "settle-picks", stage: "paid:team-game-log-repair" });
   }
 
   const okCount = results.filter((r) => r.ok).length;
@@ -259,6 +267,7 @@ async function runStaleBackfillSafe(logPrefix: string): Promise<BackfillResult |
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`${logPrefix} stale backfill failed: ${message}`);
+    captureError(err, { path: "settle-picks", stage: "stale-backfill" });
     return { error: message };
   }
 }

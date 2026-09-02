@@ -211,9 +211,13 @@ async function main() {
 
   // ── 4. Product gates ────────────────────────────────────────────────────
   section(4, "Product gates");
+  // PUBLIC_PICKS is informational (see section 3): 503 = gated, 200 = the
+  // operator opened the board. Both are acceptable pre-proof; anything else
+  // (a 500, a 401 on a public route) is a real failure.
   const picks = await get("/api/picks");
   if (picks.status === 503) ok(`picks API 503 (gated)`);
-  else hard(`picks API ${picks.status} (expect 503 until PUBLIC_PICKS proof)`);
+  else if (picks.status === 200) ok(`picks API 200 (PUBLIC_PICKS open — informational, record gates still closed)`);
+  else hard(`picks API ${picks.status} (expect 503 gated or 200 open)`);
 
   const cron = await get("/api/cron/settle-picks");
   if (cron.status === 401) ok(`settle-picks unauth 401`);

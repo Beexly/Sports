@@ -65,11 +65,14 @@ const vercel = JSON.parse(
 const cronMap = Object.fromEntries(
   (vercel.crons || []).map((c) => [c.path, c.schedule]),
 );
+// Keep in sync with apps/web/vercel.json. settle-picks moved from every 3h to
+// hourly (#300, 2026-08-06) and free-spine-health from daily to every 2h; the
+// old values here made this smoke cry wolf on two intentional cadences.
 const required = {
-  "/api/cron/settle-picks": "0 */3 * * *",
+  "/api/cron/settle-picks": "20 * * * *",
   "/api/cron/health-alert": "*/15 * * * *",
   "/api/cron/refresh-player-stats": "0,30 * * * *",
-  "/api/cron/free-spine-health": "0 10 * * *",
+  "/api/cron/free-spine-health": "0 */2 * * *",
   "/api/cron/reconcile-entitlements": "0 8 * * *",
   "/api/cron/repair-checkout-attempts": "30 8 * * *",
 };

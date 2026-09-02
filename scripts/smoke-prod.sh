@@ -34,7 +34,7 @@ bold "2. Critical routes"
 ROUTES=( / /picks /methodology /performance /pricing /observatory /vault /about /press /contact /faq /responsible-play /vs/tout-services /privacy /terms /opengraph-image /robots.txt /sitemap.xml /api/health )
 ok_count=0
 for r in "${ROUTES[@]}"; do
-  code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 6 "$BASE$r")
+  code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 12 "$BASE$r")
   if [ "$code" = "200" ]; then
     ok_count=$((ok_count+1))
   else

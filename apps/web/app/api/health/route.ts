@@ -10,7 +10,20 @@ import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
 // x-vercel-cache: HIT, age ~3h). A health check must reflect live state.
 export const dynamic = "force-dynamic";
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(request?: Request): Promise<NextResponse> {
+  // `?strict=1` is for external uptime monitors (UptimeRobot / Better Stack /
+  // Cronitor) that can only alert on the HTTP status: in strict mode a
+  // degraded settlement capability also fails the request. The default keeps
+  // `ok`/HTTP tied to DB + ingestion only, so the Nightly Sentinel does not
+  // page on settlement lag (docs/ops/HEALTH_ALERTING.md).
+  const strict = (() => {
+    try {
+      const v = request ? new URL(request.url).searchParams.get("strict") : null;
+      return v === "1" || v === "true";
+    } catch {
+      return false;
+    }
+  })();
   // Probes (DB ping, ingestion freshness, settlement health, nflverse cache
   // stats, money-path env posture) live in live-capability-probes.ts, shared
   // with the epistemic-twin cron/agent guard (capability-graph.ts's
@@ -56,16 +69,18 @@ export async function GET(): Promise<NextResponse> {
   // for why organic traffic is currently the only reliable trigger available.
   void maybeRunTrafficHeartbeat().catch(() => undefined);
 
+  const strictOk = allOk && !settlementImpaired;
   return NextResponse.json(
     {
-      ok: allOk,
+      ok: strict ? strictOk : allOk,
       status,
+      strict,
       checks,
       capabilities,
       capabilityGraph,
       schedulerLiveness,
       deployment: { sha: deploymentSha(), observedAt: new Date().toISOString() },
     },
-    { status: allOk ? 200 : 503 },
+    { status: (strict ? strictOk : allOk) ? 200 : 503 },
   );
 }
