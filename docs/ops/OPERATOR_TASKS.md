@@ -15,7 +15,7 @@ off it.
 |---|---|---|---|---|
 | NEON-RO | Switch the Neon connector to read-only | claude.ai → Settings → Connectors → Neon | No — account/connector-level | Open |
 | CONN-PRUNE | Prune workspace connectors to `github`, `Neon` (read-only), `Vercel` | claude.ai → Settings → Connectors | No — account-level (proxy: `.mcp.json` has no DB server; `.claude/settings.json` denies `mcp__Neon__delete_project`) | Open |
-| BASELINE-MIG | Baseline migration landed; confirm production + make the CI replay blocking | Baseline in PR #684; owner: confirm `npm run db:migrate:status` after the first production deploy, apply the `.github/workflows/ci.yml` patch below | Partly (`npx prisma migrate deploy` on an empty DB is green) | Baseline landed in PR #684; 2 owner steps open |
+| BASELINE-MIG | Baseline migration landed; CI replay blocking; confirm production | Baseline in PR #684; CI replay + drift check made blocking on `claude/final-launch` (2026-09-02); owner: confirm `npm run db:migrate:status` after the first production deploy | Partly (`npx prisma migrate deploy` on an empty DB is green; CI enforces it) | 1 owner step open (production confirm) |
 | ACTIONS-BILLING | GitHub Actions billing / minutes | GitHub org → Settings → Billing | Partly — CI, daily-smoke and external-cron runs observed completing on 2026-09-02 (PR #684 check runs; daily-smoke #103–#105 green) | Resolved 2026-09-02 (minutes restored; keep an eye on the monthly cap) |
 | PUSH-PROTECT | Enable push protection and secret scanning | GitHub repo → Settings → Code security | No — GitHub repo-settings-level | Open |
 | BRANCH-PROTECT | Confirm branch protection on `main` | GitHub repo → Settings → Branches | No — GitHub repo-settings-level | Open |
@@ -56,7 +56,7 @@ off it.
   schema is up to date!". The old files moved unchanged to
   `packages/db/prisma/migrations-archive/` because tests and
   `scripts/integration/settlement-outbox-acceptance.mjs` read their SQL.
-  Two owner steps remain, which is why the box is unticked:
+  One owner step remains, which is why the box is unticked:
   1. **Confirm production after the first deploy that carries the baseline.**
      `scripts/deploy/migrate-if-configured.mjs` runs `migrate deploy`, which
      applies the baseline once (nothing is re-created — see above) and records
@@ -66,20 +66,11 @@ off it.
      `migrate resolve` is needed. If the baseline fails in the build gate, the
      build fails closed and the error names the statement; do not edit the
      baseline — fix the data or add a forward migration.
-  2. **Make the CI replay blocking.** `.github/workflows/**` is Edit-denied
-     for agent sessions, so this patch was written out instead of applied.
-     In `.github/workflows/ci.yml` replace the "Migration history replay
-     check" step (with its `continue-on-error: true`) and the following
-     "Push database schema (test DB)" step with:
-     ```yaml
-     - name: Apply migrations (prisma migrate deploy, empty test DB)
-       run: npx prisma migrate deploy --schema packages/db/prisma/schema.prisma
-
-     - name: Migration drift check (schema.prisma vs applied migrations)
-       run: npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel packages/db/prisma/schema.prisma --exit-code
-     ```
-     Until then the existing non-blocking replay step passes on every run and
-     the `db push` step is a no-op.
+  2. ~~Make the CI replay blocking~~ — **done 2026-09-02** on
+     `claude/final-launch` under the owner authority granted for that session:
+     `.github/workflows/ci.yml` now runs `prisma migrate deploy` (blocking) and
+     `prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel … --exit-code`;
+     the `db push` step is gone. A schema change without a migration fails CI.
 
 ## Data rights
 

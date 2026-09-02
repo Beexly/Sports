@@ -82,22 +82,16 @@ jobs:
       - name: Prisma schema validate (no migrations)
         run: npx prisma validate --schema packages/db/prisma/schema.prisma
 
-      # Migration-history replay check. KNOWN RED until a baseline migration exists:
-      # the ledger starts at 20260522141600_add_loss_autopsy on top of a schema that
-      # was created with `db push`, so `migrate deploy` on an empty database fails
-      # with "relation picks does not exist" (verified locally 2026-09-02). It is
-      # non-blocking so the failure is visible on every run without hiding the rest
-      # of CI; flip `continue-on-error` off once the baseline lands
-      # (docs/ops/OPERATOR_TASKS.md → "Baseline migration").
-      - name: Migration history replay check (prisma migrate deploy on empty DB)
-        continue-on-error: true
+      # Migration history is the source of truth (one idempotent baseline since
+      # 2026-09-02 plus forward migrations). The empty test database is built by
+      # replaying it exactly as production does (scripts/deploy/migrate-if-configured.mjs
+      # runs migrate deploy fail-closed), and the drift check proves schema.prisma and
+      # the applied migrations describe the same database. Both steps are blocking.
+      - name: Apply migrations (prisma migrate deploy, empty test DB)
         run: npx prisma migrate deploy --schema packages/db/prisma/schema.prisma
 
-      # Until then the test database is brought to schema.prisma with db push so the
-      # test suite runs against the full schema. Production never uses this path:
-      # scripts/deploy/migrate-if-configured.mjs runs migrate deploy fail-closed.
-      - name: Push database schema (test DB)
-        run: npm run db:push
+      - name: Migration drift check (schema.prisma vs applied migrations)
+        run: npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel packages/db/prisma/schema.prisma --exit-code
 
       - name: Lint
         run: npm run lint
