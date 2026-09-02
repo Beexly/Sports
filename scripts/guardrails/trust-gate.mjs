@@ -154,6 +154,9 @@ function buildPositioningPhraseRegex(phrase) {
   const escaped = phrase
     .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     .replace(/[\s-]/g, "[\\s-]+");
+  // Static-analysis note (detect-non-literal-regexp): `escaped` is a regex-escaped
+  // phrase from positioning-vocab.json (repo content), never user input.
+  // eslint-disable-next-line -- nosemgrep: pattern is built from escaped constants
   return new RegExp("\\b" + escaped + "\\b", "i");
 }
 
