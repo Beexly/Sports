@@ -1,0 +1,193 @@
+# Decisions — final launch pass, 2026-09-02
+
+Branch `claude/final-launch` (on top of PR #684). Every decision below names the
+evidence it rests on (a file read, a command run, or a production database read
+made 2026-09-02 between 21:30 and 23:00 UTC) and the tripwire that keeps it true.
+Nothing here opens an honesty gate or lowers a floor.
+
+## D1. Settlement grades free-first; the paid Odds API pass is a supplement
+
+**Evidence.** From 2026-08-24 15:05 UTC the production Odds API key was rejected
+(provider snapshots switch to TheRundown two minutes later); the settle-picks
+cron ran the paid branch alone and threw every hour, so 92 picks sat overdue for
+9 days while ESPN had every final (`PICKS_STATE_2026-09-02.md` § 5). PR #684 added a
+per-sport free fallback inside the paid branch; that still made the free grader
+conditional on the paid branch's failure shape.
+
+**Decision.** Order the graders by cost-to-fail, not by key presence. Every cycle:
+free pass (ESPN finals + registered consensus, `runFreePathSettlement`) →
+paid `settleSport` only if a key is present and `?path=free` was not sent →
+stale backfill → slate-commitment freeze → outbox drain. A failing supplement
+never turns the cycle red: `ok` reflects the free pass; `paidSupplement.failedSports`
+and `advisories[]` carry the failure; Sentry gets `paid:supplement-failed`. The paid
+pass was kept, not deleted: it is PENDING-scoped, costs nothing when the key is
+absent, and covers a final ESPN never posts. Removing the key is now hygiene, not a fix.
+
+**Tripwires.** `apps/web/__tests__/settle-picks-free-first.test.ts` (7 cases:
+ordering, dead key, throwing provider, no key, `?path=free`, `?sport=`, red only
+when the free pass fails); `settlement-sla-contract.test.ts` (hourly cron in both
+manifests, grace 6h = backfill window, cap ≥ 200, free call precedes paid in
+source); `settlement-path-select.test.ts`; agent-eval fixture
+`settlement-path-selection` rewritten (`free-first-always`, `paid-is-a-supplement`).
+
+## D2. Calibration floors stay at Brier ≤ 0.22 / ECE ≤ 0.05; nothing is published
+
+**Evidence (production read, 1,663 graded WIN/LOSS picks).**
+
+| | Value |
+|---|---|
+| Overall Brier (all graded) | 0.2727 |
+| Murphy uncertainty (base rate 52.6%) | 0.2493 |
+| Reliability term | 0.0288 |
+| Resolution term | 0.0054 |
+| Brier after a *perfect* recalibration (uncertainty − resolution) | ≈ 0.244 |
+| Best single version (v5.2.7, n = 353) | 0.2489 |
+| Metrics artifact used by the gate (n = 981) | 0.2430, ECE 0.0513 |
+
+A calibration map can remove the reliability term; it cannot create resolution.
+The floor of 0.22 needs resolution ≈ 0.03, six times what the model has. So the
+gap to GREEN is a *model* gap, and the only way to make the gate GREEN today
+would be to lower it, which is the one thing the product promises never to do.
+
+**Considered and rejected.** Re-expressing the gate as a Brier skill score
+against the closing line is statistically cleaner (an absolute floor conflates
+sport difficulty with model skill: MLB moneylines rarely beat 0.24 even from the
+market's own prices), but on the 123 MLB moneyline picks that have a stored
+closing price the model's Brier is 0.2227 against a raw-market 0.2343 (vig
+included, so the market is flattered downward by ≈ 0.006): encouraging, n far too
+small, and the CLV beat-close rate on the same picks is 6.5%. Not enough to
+justify moving the goalposts four days before launch. Revisit after Week 4 with
+≥ 500 picks carrying closing prices.
+
+**Decision.** Keep the floors. Keep PERFORMANCE_STATS, LIVE_BOARD, PUBLISH_LEDGER
+closed. Publish the honest state ("collecting") and add the tail monitor (D3).
+
+## D3. The ≥ 80 confidence tail is inverted; monitor it, do not ship it as probability
+
+**Evidence.** Confidence buckets 80–99 (n = 144) won 33–47%; the 100 bucket
+(n = 8) won 87.5%. Most of the tail is v5.0.0/v5.1.0 spread and total picks
+(114 of 152), but the current versions still emit it: v5.2.6 + v5.2.7 have 38
+graded picks at ≥ 80 with 14 wins (36.8%). A tail that claims 82–96% and wins
+under half is not miscalibrated, it is anti-predictive: an isotonic map would
+turn "85" into "37", which is the honest number and also a signal that the score
+should have picked the other side.
+
+**Decision.** No MODEL_VERSION change this week (the freeze guard and the
+proposal process exist for exactly this; four days is not enough to rehearse a
+tail fix offline). Instead: `apps/web/lib/calibration/confidence-tail.ts`
+computes the tail summary (n, win rate, claimed rate, Brier, by version, verdict
+`insufficient | inverted | overconfident | calibrated`) from graded picks; the ops
+truth surface publishes it as `confidenceTail`; `npm run launch:ready` shows WARN
+while it is inverted. The finding is the first item for the next calibration
+proposal (`docs/calibration-proposals/`), with a confidence ceiling or per-market
+shrinkage as candidate fixes to be validated on held-out data first.
+
+**Tripwire.** `apps/web/__tests__/confidence-tail.test.ts` reproduces the
+production buckets and asserts the `inverted` verdict, the sample floor (30) and
+the loader's query shape.
+
+## D4. CFB totals: degrade with a clear signal, do not estimate a line
+
+**Evidence.** The zero-key "signal slate" is moneyline-only by construction
+(`packages/ingestion-pipeline/src/generate-signal-slate.ts`, literal
+`pickType: "MONEYLINE"`); ESPN's public odds do carry an over/under for college
+football (`espn-odds-client.ts` parses `overUnder` → `totals`) but as a single
+bookmaker, which the scorer rejects (`MIN_BOOKMAKERS = 2` in
+`packages/prediction-engine/src/constants.ts`); the refresh-odds cron skips
+`refreshOdds()` entirely when both keys are absent. Today TheRundown is live, so
+CFB totals are produced (50 pending on Week 2). The gap only opens if both odds
+feeds fail on a Saturday.
+
+**Decision.** A totals *pick* needs a real market line; inventing one from team
+scoring rates would violate rule 1 (no fake data). Lowering `MIN_BOOKMAKERS` to
+accept a single free book changes the scorer four days out and is not
+rehearsed. So the board degrades visibly instead of silently:
+`apps/web/lib/board/market-coverage.ts` reports per-sport market coverage for
+the next 72 hours (games, picks per market, `covered | none | no_games`) and a
+`degraded[]` list with the named cause; the ops truth surface publishes
+`marketCoverage`; the launch checker turns WARN on any `sport:market` with games
+and zero picks. Post-launch path: accept `espn_public` as a scoring source at a
+reduced confidence in a rehearsed MODEL_VERSION bump, and let the refresh-odds
+cron reach the ESPN tertiary path when both keys are absent.
+
+**Tripwire.** `apps/web/__tests__/market-coverage.test.ts` (CFB-with-no-TOTAL
+flagged with the MIN_BOOKMAKERS cause; covered; no_games never degraded; unknown
+pick types ignored; loader query shape).
+
+## D5. Duplicate game rows: alias, never re-point picks
+
+**Evidence.** Each real game exists up to three times (Odds API hash id,
+TheRundown hex id with city-only names, two ESPN id formats): MLB 284, MLS 75,
+NFL 48, NCAAF 45 duplicate groups, picks on all variants. `picks` carries
+`@@unique([gameId, pickType])`, so re-pointing picks to one canonical row would
+collide whenever two variants carry the same market.
+
+**Decision.** Merge = mark, not move. `Game.mergedIntoGameId` (new, nullable
+self-reference) turns a duplicate into an alias tombstone: it keeps its picks
+and settlement history (the free grader matches by team + date, so alias picks
+still grade), child rows without unique collisions are re-pointed, colliding
+rows are reported, and ingestion follows the alias to the canonical row so an
+old external id never recreates a twin. The merge tool
+(`npm run ops:merge-games`, dry-run by default, `--execute` to apply, plan
+written to stdout and a JSON file) reports PENDING pick conflicts across
+variants (same market, agreeing or disagreeing sides) without touching them; the
+de-duplication of *published pending* duplicates is the owner's call and is
+listed in the handoff. Sequencing: the merge runs only after the deploy that
+carries the alias-aware ingestion, otherwise the next odds refresh recreates
+the rows. Never before Week 1 settles.
+
+**Known limit, on purpose.** The grouper reuses the ingestion identity rules
+unchanged, including `AMBIGUOUS_CITY_TOKENS`: a TheRundown row whose team is a
+bare shared city ("Los Angeles", "New York", "Chicago", …) is *not* auto-grouped,
+because the same token names two teams. Those rows stay as they are and need a
+manual merge; weakening the token list to catch them would re-open the wrong-team
+grading bug the matcher was just fixed for. When the exact-external-id fast path
+lands on an alias whose chain is broken or deeper than 3 hops it throws (the
+module's existing "DB errors propagate to the caller's fallback" contract)
+rather than silently writing on the tombstone.
+
+**Tripwires.** `packages/ingestion-pipeline` game-identity tests (alias
+following, canonical never an alias, 9 new cases; 264 tests green);
+`apps/web/__tests__/game-merge-plan.test.ts` (15 cases on the real four-variant
+fixture, conflict listed); `apps/web/__tests__/forward-migrations-agree-with-schema.test.ts`
+(schema and migration name the same column, index and FK).
+
+## D6. CI replays the migration history, blocking
+
+**Evidence.** Since the 2026-09-02 squash `prisma migrate deploy` applies the
+idempotent baseline from empty and is a no-op on a schema-bearing database
+(verified on a disposable Postgres 16 in PR #684). The replay step was still
+`continue-on-error: true` followed by `db push` only because
+`.github/workflows/**` was Edit-denied for agent sessions.
+
+**Decision.** Apply the patch that was written out in OPERATOR_TASKS →
+BASELINE-MIG under the owner authority granted for this session: the replay is
+blocking and is followed by `prisma migrate diff --from-url … --exit-code`, so a
+schema change without a migration (or a migration that drifts from the schema)
+fails CI. `db push` is gone from CI; the test database is built the way
+production is. `.claude/rules/prisma.md` rule 5 and OPERATOR_TASKS are updated to
+match.
+
+## D7. Week 1 hot path: one index, one page fix, no new caching
+
+**Evidence (audit).** `/api/(.*)` already carries `Cache-Control: no-store,
+max-age=0` in both `vercel.json` copies; every picks/odds/calibration page and
+route is `force-dynamic` and returns through `jsonNoStore`, except
+`app/performance/page.tsx` (reads settled picks, was cacheable) — fixed. The
+proof ledger's deliberate `public, max-age=300` (append-only, viewer-independent
+hash chain) is left as designed. Compression is Next's default. The public board
+query (`isPublished`, `isBootstrap`, `generatedAt` range) had no covering index.
+
+**Decision.** `@@index([isPublished, isBootstrap, generatedAt])` on `picks`
+(migration `20260902231000_week1_hot_path_indexes`, `CREATE INDEX IF NOT
+EXISTS`). Nothing else: the tables are small (2.6k picks) and every other hot
+shape was already covered.
+
+## D8. Gates that stay closed, and why that is the launch-ready state
+
+PERFORMANCE_STATS, LIVE_BOARD, PUBLISH_LEDGER, CALIBRATION_ADJUSTMENTS remain
+off: D2 shows the sample does not clear the floors and D3 shows why the tail
+must not be shown as probability. PUBLIC_PICKS stays on (observed on, serving the
+board). "Launch-ready" for this product means every number it *does* show is
+real and every number it does *not* show has a visible reason. Both are now
+observable on `/api/ops/public-surface-truth` and `npm run launch:ready`.

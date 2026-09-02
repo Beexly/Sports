@@ -20,7 +20,7 @@ Short, agent-loadable runbooks for high-leverage GSE surfaces. Each skill is a `
 | max-leverage | [`max-leverage/SKILL.md`](./max-leverage/SKILL.md) | Founder max-leverage unlock for GSE money recovery and free capacity. Use when asked to unlock, free path, or maximize orbit. |
 | model-promotion-gate | [`model-promotion-gate/SKILL.md`](./model-promotion-gate/SKILL.md) | Decide whether a challenger model may replace the champion — without re-labeling history or promoting noise. |
 | polymarket-hold | [`polymarket-hold/SKILL.md`](./polymarket-hold/SKILL.md) | Polymarket is a compliance hold, not unfinished product work. Use when asked to finish/enable Polymarket markets. |
-| settlement-free-path | [`settlement-free-path/SKILL.md`](./settlement-free-path/SKILL.md) | Free-path settle-picks when THE_ODDS_API_KEY is absent; paid path when present. |
+| settlement-free-path | [`settlement-free-path/SKILL.md`](./settlement-free-path/SKILL.md) | Free-first settle-picks — the ESPN/consensus grader runs every cycle; THE_ODDS_API_KEY only adds a paid supplement. |
 | stripe-webhook | [`stripe-webhook/SKILL.md`](./stripe-webhook/SKILL.md) | Stripe webhook handler — retries, idempotency, checkout.session.expired, status codes. |
 
 ## Law
