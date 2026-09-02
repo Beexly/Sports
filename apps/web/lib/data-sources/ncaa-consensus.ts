@@ -20,6 +20,10 @@ export type ComparableTeam = { readonly abbr: string; readonly name: string; rea
 export type ComparableGame = {
   readonly source: string;
   readonly date: string; // YYYY-MM-DD
+  /** Full ISO start time when the source provides one (ESPN does); lets a
+   *  pick be matched to the nearest game of a multi-day series instead of the
+   *  nearest calendar date, which UTC rollover gets wrong for evening games. */
+  readonly startIso?: string;
   readonly completed: boolean;
   readonly home: ComparableTeam;
   readonly away: ComparableTeam;
@@ -40,6 +44,7 @@ export function toComparableFromEspn(g: NormalizedGame): ComparableGame | null {
   return {
     source: g.sourceId,
     date: (g.startTime ?? "").slice(0, 10),
+    ...(g.startTime && !Number.isNaN(Date.parse(g.startTime)) ? { startIso: g.startTime } : {}),
     completed: g.completed,
     home: { abbr: normAbbr(g.home.abbreviation), name: g.home.team, score: g.home.score },
     away: { abbr: normAbbr(g.away.abbreviation), name: g.away.team, score: g.away.score },
