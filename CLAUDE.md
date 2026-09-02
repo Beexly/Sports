@@ -91,7 +91,7 @@ Each one is defined in `.claude/agents/<name>.md` (tool-scoped; invoke via the A
 Pricing follows a **named, proof-gated ladder** (single source of truth:
 `apps/web/lib/pricing/pricing-phases.ts`). Founding rates are live; each step-up is
 triggered by a verified milestone and ships added value. Founding members are
-grandfathered for life. See `docs/ops/archive/root-museum/COMPETITIVE_PRICING_AND_PACKAGING.md` (archived).
+grandfathered for life.
 
 | Tier | Founding rate (live) | Access |
 |---|---|---|

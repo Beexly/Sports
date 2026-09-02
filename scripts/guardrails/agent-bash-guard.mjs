@@ -51,8 +51,8 @@ const PROJECT_DIR = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
  */
 const ANCHOR = String.raw`(?:^|[;&|\n]|&&|\|\||\$\(|<\(|\x60)`;
 const CMD = ANCHOR + String.raw`\s*`;
-// eslint-disable-next-line -- nosemgrep: composed from String.raw constants (see note above)
-const atCmd = (pattern, flags = "") => new RegExp(CMD + pattern, flags);
+// eslint-disable-next-line -- composed from String.raw constants (see note above)
+const atCmd = (pattern, flags = "") => new RegExp(CMD + pattern, flags); // nosemgrep
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /* ------------------------------ normalisation ------------------------------ */
@@ -63,11 +63,11 @@ const ASSIGN = String.raw`(?:[A-Za-z_]\w*=(?:"[^"\n]*"|'[^'\n]*'|\S*)\s+)`;
 
 /** `\sudo`, `/usr/bin/sudo`, `./node_modules/.bin/x` at a command position -> bare name. */
 function stripCommandDecorations(c) {
-  // eslint-disable-next-line -- nosemgrep: composed from String.raw constants (see note above)
-  let out = c.replace(new RegExp(String.raw`(${ANCHOR}\s*)\\(?=[\w./])`, "g"), "$1");
+  // eslint-disable-next-line -- composed from String.raw constants (see note above)
+  let out = c.replace(new RegExp(String.raw`(${ANCHOR}\s*)\\(?=[\w./])`, "g"), "$1"); // nosemgrep
   out = out.replace(
-    // eslint-disable-next-line -- nosemgrep: composed from String.raw constants (see note above)
-    new RegExp(String.raw`(${ANCHOR}\s*)(?:\.{0,2}\/)?(?:[\w.@+-]+\/)+(?=[\w.@+-]+(?:\s|$))`, "g"),
+    // eslint-disable-next-line -- composed from String.raw constants (see note above)
+    new RegExp(String.raw`(${ANCHOR}\s*)(?:\.{0,2}\/)?(?:[\w.@+-]+\/)+(?=[\w.@+-]+(?:\s|$))`, "g"), // nosemgrep
     "$1",
   );
   return out;
@@ -75,8 +75,8 @@ function stripCommandDecorations(c) {
 
 /** `env CI=1 timeout 5 nice -n 3 X` -> `X`; `FOO=bar X` -> `X`. */
 function stripWrappers(c) {
-  // eslint-disable-next-line -- nosemgrep: composed from String.raw constants (see note above)
-  const wrapRe = new RegExp(
+  // eslint-disable-next-line -- composed from String.raw constants (see note above)
+  const wrapRe = new RegExp( // nosemgrep
     String.raw`(${ANCHOR}\s*)${ASSIGN}*${WRAPPERS}\b(?:\s+-[\w-]+(?:[= ][^\s;&|]+)?)*(?:\s+\d+(?:\.\d+)?[smhd]?)?\s+${ASSIGN}*`,
     "g",
   );
@@ -86,8 +86,8 @@ function stripWrappers(c) {
     if (next === out) break;
     out = next;
   }
-  // eslint-disable-next-line -- nosemgrep: composed from String.raw constants (see note above)
-  return out.replace(new RegExp(String.raw`(${ANCHOR}\s*)${ASSIGN}+`, "g"), "$1");
+  // eslint-disable-next-line -- composed from String.raw constants (see note above)
+  return out.replace(new RegExp(String.raw`(${ANCHOR}\s*)${ASSIGN}+`, "g"), "$1"); // nosemgrep
 }
 
 const normalize = (c) => stripWrappers(stripCommandDecorations(c));
@@ -98,13 +98,13 @@ const unescapeShell = (s) => s.replace(/\\(["\\$\x60])/g, "$1");
 function unwrapShellStrings(c, depth = 0) {
   if (depth > 4) return c;
   const inner = [];
-  // eslint-disable-next-line -- nosemgrep: composed from String.raw constants (see note above)
-  const shRe = new RegExp(
+  // eslint-disable-next-line -- composed from String.raw constants (see note above)
+  const shRe = new RegExp( // nosemgrep
     String.raw`${CMD}${SHELLS}\b(?:\s+-[\w-]+)*?\s+-[a-zA-Z]*c[a-zA-Z]*\s+(?:"((?:[^"\\]|\\.)*)"|'([^']*)'|([^\s;&|]+))`,
     "g",
   );
-  // eslint-disable-next-line -- nosemgrep: composed from String.raw constants (see note above)
-  const evalRe = new RegExp(
+  // eslint-disable-next-line -- composed from String.raw constants (see note above)
+  const evalRe = new RegExp( // nosemgrep
     String.raw`${CMD}eval\s+(?:"((?:[^"\\]|\\.)*)"|'([^']*)'|([^\n;&|]+))`,
     "g",
   );
@@ -187,22 +187,22 @@ const REMOTE_EXEC = String.raw`(?:${SHELLS}|node|nodejs|python3?|perl|ruby|php)`
 
 /** Paths an agent must never rewrite from inside a session (AGENTS.md law 2). */
 const PROTECTED = String.raw`(?:${escapeRe(PROJECT_DIR)}\/|\.\/)?(?:\.claude\/settings\.json|\.claude\/hooks\/|scripts\/guardrails\/|\.githooks\/)`;
-// eslint-disable-next-line -- nosemgrep: PROJECT_DIR is passed through escapeRe() (see note above)
-const PROTECTED_RE = new RegExp(String.raw`(?:^|[\s"'=(])${PROTECTED}`);
+// eslint-disable-next-line -- PROJECT_DIR is passed through escapeRe() (see note above)
+const PROTECTED_RE = new RegExp(String.raw`(?:^|[\s"'=(])${PROTECTED}`); // nosemgrep
 const WRITE_CMDS = String.raw`(?:rm|rmdir|mv|truncate|install|ln|chmod|chown|chattr|tee|dd)\b`;
 
 function writesProtectedPath(expanded) {
   return segments(expanded).some((seg) => {
     if (!PROTECTED_RE.test(seg)) return false;
-    // eslint-disable-next-line -- nosemgrep: PROJECT_DIR is passed through escapeRe() (see note above)
-    if (new RegExp(String.raw`>>?\s*["']?${PROTECTED}`).test(seg)) return true;
+    // eslint-disable-next-line -- PROJECT_DIR is passed through escapeRe() (see note above)
+    if (new RegExp(String.raw`>>?\s*["']?${PROTECTED}`).test(seg)) return true; // nosemgrep
     if (atCmd(WRITE_CMDS).test(seg)) return true;
     if (atCmd(String.raw`sed\s+(?:-[a-zA-Z]*i|--in-place)`).test(seg)) return true;
     if (atCmd(String.raw`perl\s+-[a-zA-Z]*i`).test(seg)) return true;
     if (atCmd(String.raw`cp\b`).test(seg)) {
       const args = seg.replace(/^.*?\bcp\b/, "").trim().split(/\s+/).filter((a) => !a.startsWith("-"));
-      // eslint-disable-next-line -- nosemgrep: PROJECT_DIR is passed through escapeRe() (see note above)
-      return new RegExp(String.raw`^["']?${PROTECTED}`).test(args[args.length - 1] ?? "");
+      // eslint-disable-next-line -- PROJECT_DIR is passed through escapeRe() (see note above)
+      return new RegExp(String.raw`^["']?${PROTECTED}`).test(args[args.length - 1] ?? ""); // nosemgrep
     }
     return false;
   });

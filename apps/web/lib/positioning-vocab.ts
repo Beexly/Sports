@@ -49,6 +49,6 @@ export function buildPositioningRegex(
   // Static-analysis note (detect-non-literal-regexp): every alternative is a
   // regex-escaped phrase from positioning-vocab.json (repo content, not user
   // input), so there is no injection or ReDoS surface here.
-  // eslint-disable-next-line -- nosemgrep: pattern is built from escaped constants
-  return new RegExp(`\\b(?:${alternatives.join("|")})\\b`, "i");
+  // eslint-disable-next-line -- pattern is built from escaped constants
+  return new RegExp(`\\b(?:${alternatives.join("|")})\\b`, "i"); // nosemgrep
 }
