@@ -4,15 +4,30 @@
 
 ## 1. Free settlement recovery (highest leverage if settle stuck)
 
-1. Vercel → Project → Settings → Environment Variables → Production  
-2. **Blank** `THE_ODDS_API_KEY` (delete or empty). Present+deactivated does **not** free-path.  
-3. Redeploy or wait for env sync.  
-4. Manual settle:
+Since 2026-09-02 (`apps/web/lib/settlement/path-select.ts` `selectSettlementPlan`) the
+free grader (ESPN + registered consensus) is the **primary** pass on every settle-picks
+cycle regardless of `THE_ODDS_API_KEY` — a present key only adds a paid `settleSport`
+**supplement** afterwards for whatever the free pass left `PENDING`. A dead/deactivated
+key fails only the supplement (`paidSupplement.failedSports`, `advisories[]` in the
+response); it no longer blocks the free grader the way it did before this law.
+Removing the key is now optional hygiene (no paid supplement, no failing calls), not a
+fix for a stuck settle.
+
+1. Manual settle (free pass always runs; add `?path=free` to skip the paid supplement
+   explicitly):
    ```bash
    curl -sS -H "Authorization: Bearer $CRON_SECRET" \
      "https://www.galaxysportsedge.com/api/cron/settle-picks" | jq .
    ```
-   Expect `"path":"free"`. Cron cadence: every 3h (`vercel.json`, #278).
+   Expect `"path"` to be `"free"` (no key, or `?path=free`) or `"free+odds-api"` (key
+   present, supplement ran). Cron cadence: every hour (`vercel.json`;
+   `.claude/skills/settlement-free-path/SKILL.md`).
+2. If settlement is still stuck after that, the free grader itself is failing (e.g. the
+   free score spine is down) — check `/api/health?strict=1` and
+   `docs/ops/FREE_MODE_INGESTION_HEALTH.md`, not the key.
+3. Optional: Vercel → Project → Settings → Environment Variables → Production →
+   `THE_ODDS_API_KEY` — set it to get denser paid-book supplement coverage, or leave it
+   blank/deleted for free-only. Either state is safe.
 
 ## 2. Stripe Dashboard
 
@@ -109,6 +124,10 @@ record gate (PERFORMANCE_STATS never on while eligibility is not GREEN), odds fr
 free score spine, money path, founder P0 queue. It never invents a number; anything the
 endpoint does not report prints as unknown. Run it the morning of every slate and after
 every production deploy; a FAIL is a stop.
+
+Every open manual owner action, with the exact command to take it and to verify it, is
+generated live by `npm run ops:runbook` (`scripts/ops/owner-runbook.mjs`). The day-of
+sequence that ties this and the other checks together is `docs/ops/LAUNCH_DAY_RUNBOOK.md`.
 
 ## Related
 - Skills: `.claude/skills/`
