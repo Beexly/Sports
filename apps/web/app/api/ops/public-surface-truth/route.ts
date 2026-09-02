@@ -11,6 +11,8 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
+import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
+import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reliability/public-freshness-gate";
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
@@ -481,11 +483,51 @@ export async function GET(request: Request) {
     remainingToFloor: sample?.remainingToFloor ?? null,
   });
 
+  // Closing-line value, counted from the canonical graded picks (BEAT_CLOSE /
+  // MATCHED_CLOSE / LOST_TO_CLOSE verdicts). The ladder's ESTABLISHED rung is
+  // "verified CLV ≥ 52.4%"; until this was wired the evaluator received null
+  // and could never observe that milestone. Rate = beat / graded (matched
+  // counts against, same as the public policy and summarizeClv). Null until
+  // the graded sample clears the public floor so a handful of picks cannot
+  // read as a rate.
+  const clvPolicy = isStubMode()
+    ? null
+    : await loadPublicClvPolicy(db, {
+        canExposePerformanceStats: effectivePerformanceStats,
+        minGradedForPublic: 25,
+      }).catch(() => null);
+  const clvBeatCloseRate =
+    clvPolicy && clvPolicy.gradedSampleSize >= 25
+      ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
+      : null;
+  const clvPosture = clvPolicy
+    ? {
+        gradedSampleSize: clvPolicy.gradedSampleSize,
+        beatCloseCount: clvPolicy.beatCloseCount,
+        matchedCloseCount: clvPolicy.matchedCloseCount,
+        lostToCloseCount: clvPolicy.lostToCloseCount,
+        beatCloseRate: clvBeatCloseRate,
+        clearsBreakEven: clvPolicy.clearsBreakEven,
+        canExposeClv: clvPolicy.canExposeClv,
+        blockers: clvPolicy.blockers,
+        operatorMessage: clvPolicy.operatorMessage,
+      }
+    : null;
+
+  // Named pricing ladder (pricing-phases.ts) checked against the same live
+  // proof: this is the evaluator the ladder was designed around; it never
+  // advances the phase (PRICING_PHASE stays an operator action).
+  const pricingPhaseReadiness = evaluatePhaseAdvance({
+    canonicalSettledPicks: sample?.canonicalSettled ?? 0,
+    calibrationPublished,
+    beatCloseRate: clvBeatCloseRate,
+  });
+
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
     canonicalSettled: sample?.canonicalSettled ?? 0,
     calibrationPublished,
-    clvBeatCloseRate: null,
+    clvBeatCloseRate,
     settlementHealthy: settlement?.health === "HEALTHY",
     boardNotSuppressed:
       boardSurface.surface === "signal"
@@ -694,6 +736,8 @@ export async function GET(request: Request) {
         blockersToNext: revenueLadder.blockersToNext,
         milestones: revenueLadder.milestones,
       },
+      clvPosture,
+      pricingPhaseReadiness,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },
