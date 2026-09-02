@@ -62,7 +62,7 @@ the worst case is if it fires at 3am with nobody watching.
 - `apps/web/lib/autonomy/settlement-learning.ts`, `revenue-ladder.ts`
 - `docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md` — promotion is a *separate*
   gate; the kernel never promotes a model (see the `model-promotion-gate` skill)
-- `docs/agent-skills/deploy-readiness/SKILL.md`
+- `.claude/skills/deploy-readiness/SKILL.md`
 
 ## Do-not-dos
 - Do **not** flip `LIVE_BOARD` / `PUBLISH_LEDGER` / `PUBLIC_PICKS` /

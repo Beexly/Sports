@@ -34,7 +34,7 @@ Primary `CRON_SECRET` on Production. Dual-secret rotation: `CRON_SECRET_PREVIOUS
 LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · HEOS #226 · gamma schedule
 
 ## Related
-- Skills: `docs/agent-skills/`
+- Skills: `.claude/skills/`
 - Credits: `docs/ops/CREDITS.md` + `GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md`
 - Stripe detail: `STRIPE_GO_LIVE_CHECKLIST.md`
 - Credentials: `CREDENTIALS_CHECKLIST.md`

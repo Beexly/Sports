@@ -78,8 +78,6 @@
     "prepare": "node scripts/setup-git-hooks.mjs",
     "guard:skipped-pg-integration": "node scripts/guardrails/skipped-pg-integration-honesty.mjs",
     "guard:agent-bash": "node scripts/guardrails/agent-bash-guard.mjs --selftest",
-    "skills:sync": "node scripts/sync-agent-skills.mjs",
-    "skills:check": "node scripts/sync-agent-skills.mjs --check",
     "guardrails": "node scripts/guardrails/run-all.mjs",
     "evals:contracts": "node scripts/eval-contracts.mjs",
     "ai:call-sites": "node scripts/ai/build-call-site-inventory.mjs",

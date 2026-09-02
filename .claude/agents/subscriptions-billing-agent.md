@@ -23,7 +23,7 @@ tools: Read, Grep, Glob, Edit, Write, Bash(npm run test*), Bash(npx vitest*), Ba
 
 - Never run a `stripe` CLI mutation command. `.claude/settings.json` already routes `Bash(stripe *)` through an approval prompt at the harness level; this agent's own tool allowlist has no `Bash(stripe *)` entry at all, so it cannot invoke the CLI regardless.
 - Never edit tier prices, phase order, or phase-advancement logic in `pricing-phases.ts` without explicit founder sign-off — the grandfather guarantee and the "advance only on proof" doctrine are load-bearing business decisions, not refactors.
-- Webhook handlers stay idempotent: don't remove `webhookEvent.stripeEventId` idempotency, don't ack `200` when the durable write failed. See `docs/agent-skills/stripe-webhook/SKILL.md`.
+- Webhook handlers stay idempotent: don't remove `webhookEvent.stripeEventId` idempotency, don't ack `200` when the durable write failed. See `.claude/skills/stripe-webhook/SKILL.md`.
 
 ## Verify
 

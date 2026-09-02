@@ -1,7 +1,7 @@
 /**
  * Polymarket Gamma — INTERNAL independent fair-value estimator ONLY.
  *
- * COMPLIANCE HOLD (docs/agent-skills/polymarket-hold):
+ * COMPLIANCE HOLD (.claude/skills/polymarket-hold):
  *   • NOT a product surface. NOT a cron clear. NOT markets/trading.
  *   • Default OFF. Runs only when INDEPENDENT_POLYMARKET=1|true.
  *   • Public Gamma read-only (no CLOB orders, no API key).

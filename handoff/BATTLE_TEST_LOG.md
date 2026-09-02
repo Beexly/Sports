@@ -4013,7 +4013,7 @@ No round counter increment (P10-02 is a mid-round audit task, not a round-closin
 
 All 172 sprint-touched files (from `git diff --name-only origin/main..HEAD -- '*.ts' '*.tsx' '*.js' '*.mjs' '*.md'`) were grepped. Of these:
 - **155 production source files** (non-test, non-e2e, non-docs) — all scanned for vendor-behavior claim patterns.
-- **17 docs files** (docs/ops/, docs/intelligence/, docs/adr/, docs/agent-skills/) — all scanned.
+- **17 docs files** (docs/ops/, docs/intelligence/, docs/adr/, .claude/skills/) — all scanned.
 - **8 scripts files** (scripts/guardrails/, scripts/ops/) — all scanned.
 
 No file silently skipped. The complete file list is in `handoff/.sprint_files.txt` (committed in this round's commit).

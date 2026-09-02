@@ -49,7 +49,7 @@ workers/{data-refresh,pick-generation,content-publishing,airwave-listener}/
                               — Background jobs driven by Vercel Cron routes (no queue library); content-publishing is draft-only and hard-gated
 scripts/guardrails/           — 26 CI guard scripts + agent-bash-guard.mjs (PreToolUse hook); run-all.mjs runs the suite
 scripts/deploy/, scripts/ops/ — Vercel migrate gate, launch preflight, ledger checks
-docs/ops/, docs/agent-skills/, docs/positioning.md — Runbooks, domain skills (synced to .claude/skills), brand positioning
+docs/ops/, docs/positioning.md — Runbooks, brand positioning (domain skills live in .claude/skills/, see below)
 .claude/                      — commands/, rules/, agents/, skills/, settings.json (frozen by AGENTS.md law 2)
 .github/workflows/            — ci.yml (12 jobs), daily-smoke.yml, external-watchdog.yml
 ```
@@ -184,6 +184,6 @@ A task is NOT complete until: tests pass, types pass, build succeeds, and `npm r
 
 ## Agent skills (process capital)
 
-Domain runbooks live in `docs/agent-skills/<name>/SKILL.md` (canonical, indexed by `docs/agent-skills/README.md`) and are synced into `.claude/skills/<name>/SKILL.md` by `npm run skills:sync` so Claude Code loads them; `npm run skills:check` fails CI on drift. Path-scoped rules live in `.claude/rules/`. Operator console steps: `docs/ops/OPERATOR.md`; operator-only remediation items: `docs/ops/OPERATOR_TASKS.md`. Run `npm run agent:eval` for the thin harness.
+Domain runbooks live in `.claude/skills/<name>/SKILL.md` (canonical, indexed by `.claude/skills/README.md`) so Claude Code loads them directly. Path-scoped rules live in `.claude/rules/`. Operator console steps: `docs/ops/OPERATOR.md`; operator-only remediation items: `docs/ops/OPERATOR_TASKS.md`. Run `npm run agent:eval` for the thin harness.
 
 Per-developer overrides go in `CLAUDE.local.md` and `.claude/settings.local.json` (both gitignored); the shared files are frozen by AGENTS.md law 2.

@@ -67,7 +67,7 @@ zero dependencies — and the repo already proves it uses hook enforcement (`.gi
 | TEIA (SHA-256 / Merkle) | Audit sealing | `lib/performance/proof-hash.ts`, Merkle across 16 files, Pedersen ledger in `packages/crypto` |
 | Basilisk | Adversarial prompt testing | `promptfoo` 0.122.0, already at `eval/promptfoo` |
 | OPA fail-closed policy | Policy enforcement | `ai-control-plane/policy-registry.ts` + `enforce-gate.ts` |
-| obsidian-skills | Agent-loadable runbooks | `docs/agent-skills/` — 8 SKILL.md files + `npm run agent:eval` |
+| obsidian-skills | Agent-loadable runbooks | `.claude/skills/` — 8 SKILL.md files + `npm run agent:eval` |
 | Prime Agent | Top-level coordinator | `lib/autonomy/operating-kernel.ts` — *pure, deterministic*, stamps `requiresOwner` per action |
 | Evolution Engine | Propose→adopt improvements | `cti-miner.ts` + `accept-proposal.ts` + `CalibrationProposal` + promotion-gate contract |
 | Semantic cache (partial) | Don't pay twice | Anthropic native prompt caching already live at `claude-api/messages.ts:64-68` |

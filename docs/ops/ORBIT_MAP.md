@@ -4,7 +4,7 @@
 |-------|-------------------------------------|---------------|
 | **Money out** | Blank `THE_ODDS_API_KEY` for free path; AI Gateway/LiteLLM tags; Flash default | GPU self-host |
 | **Money in** | Stripe `checkout.session.expired`; free embed `/embed/edge-index/[gameId]` **SHIPPED** wave6 | Rebuild CheckoutAttempt |
-| **Coding velocity** | `docs/agent-skills/*` SKILL.md; `npm run agent:eval`; GEPA offline on skills | Multica/agent OS vendors |
+| **Coding velocity** | `.claude/skills/*` SKILL.md; `npm run agent:eval`; GEPA offline on skills | Multica/agent OS vendors |
 | **Agent ops** | OPERATOR.md / ORBIT_UNLOCK; flags only for LIVE_BOARD | New locking systems |
 | **Agent evaluation** | agent-eval fixtures; promptfoo; CIR distinct-count diagnostic | Academic multi-agent tourism |
 | **Inference cost** | model-router PRIMARY/CHEAP env; existing router | Custom gateway rewrite |
@@ -20,7 +20,7 @@
 
 ## Ship surface
 
-- Skills: `docs/agent-skills/`
+- Skills: `.claude/skills/`
 - Eval: `npm run agent:eval` (16 predicates, $0)
 - Export: `npm run export:settled-picks`
 - CIR: `centeredIsotonicCalibration` in `@sports/prediction-engine`

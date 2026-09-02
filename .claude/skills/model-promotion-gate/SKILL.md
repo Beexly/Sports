@@ -64,8 +64,8 @@ Never satisfy it by editing the guard.
 - `packages/prediction-engine/src/` — `brier-ogd-ensemble.ts`,
   `earned-weight-ensemble.ts`, `calibration-drift.ts`, `elo-backtest.ts`, `clv.ts`
 - `apps/web/lib/decision-genome/` — candidate generation (`candidate-ledger.ts`)
-- `docs/agent-skills/calibration-pipeline/SKILL.md`
-- `docs/agent-skills/autonomy-kernel/SKILL.md` — the kernel never promotes
+- `.claude/skills/calibration-pipeline/SKILL.md`
+- `.claude/skills/autonomy-kernel/SKILL.md` — the kernel never promotes
 
 ## Do-not-dos
 - Do **not** flip `MODEL_VERSION` from code, CI, or cron. Eligibility ≠ promotion.

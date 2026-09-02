@@ -3,6 +3,9 @@
 Short, agent-loadable runbooks for high-leverage GSE surfaces. Each skill is a `SKILL.md`
 (purpose · commands · failure modes · do-not-dos). Prefer skills over re-deriving doctrine.
 
+`.claude/skills/` is the canonical home, loaded directly by Claude Code. Other agents read
+`AGENTS.md` + `CLAUDE.md`, which point here.
+
 | Skill | Path | Description |
 |-------|------|--------------|
 | autonomy-kernel | [`autonomy-kernel/SKILL.md`](./autonomy-kernel/SKILL.md) | Operate the autonomous plan→act→verify cycle without ever flipping a public gate or inventing data. |
@@ -26,15 +29,6 @@ Short, agent-loadable runbooks for high-leverage GSE surfaces. Each skill is a `
 - Do not re-enable Polymarket/gamma without counsel-approved registry entry.
 
 See also: `docs/ops/ORBIT_UNLOCK.md`, `docs/ops/CREDITS.md`.
-
-## Loading
-
-These `docs/agent-skills/<name>/SKILL.md` files are canonical — edit them here, never the
-`.claude/skills/` copies. Claude Code only loads skills from `.claude/skills/<name>/SKILL.md`, so:
-
-- `npm run skills:sync` copies every skill above into `.claude/skills/` for Claude Code to load.
-- `npm run skills:check` fails CI if a `.claude/skills/` copy is missing or has drifted from its
-  `docs/agent-skills/` source.
 
 Format: [agentskills](https://github.com/agentskills/agentskills) YAML frontmatter (`name`, `description`) + markdown body.
 Offline prompt optimize: `scripts/dspy-gse/` (GEPA-ready; dry-run without dspy).

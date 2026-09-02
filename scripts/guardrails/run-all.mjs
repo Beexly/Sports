@@ -58,7 +58,6 @@ const GUARDS = [
   ["eval-contracts", ["node", "scripts/eval-contracts.mjs"]],
   ["dependency-audit", ["node", "scripts/guardrails/dependency-audit.mjs"]],
   ["agent-bash-guard", ["node", "scripts/guardrails/agent-bash-guard.mjs", "--selftest"]],
-  ["agent-skills-sync", ["node", "scripts/sync-agent-skills.mjs", "--check"]],
 ];
 
 function flag(name) {

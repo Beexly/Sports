@@ -1,7 +1,7 @@
 # Prediction-market ecosystem triage — 2026-08-09
 
 **Source:** [Oddpool](https://www.oddpool.com/) catalog paste + Awesome-Prediction-Market-Tools harvest.  
-**GSE law:** `docs/agent-skills/polymarket-hold` — **no public Polymarket product**, no arb bots, no copy-trade, no whale-alert customer features, no “guaranteed edge” claims.  
+**GSE law:** `.claude/skills/polymarket-hold` — **no public Polymarket product**, no arb bots, no copy-trade, no whale-alert customer features, no “guaranteed edge” claims.  
 **Purpose:** Turn a raw directory into **GSE leverage buckets** (architecture, content, free data, B2B packaging) vs **hard hold**.
 
 ---
@@ -167,5 +167,5 @@ Priority order — **all leverage, zero PM product:**
 
 - `docs/research/prediction-market-tool-bookmarks.md` — short prefer list  
 - `docs/ops/INDEPENDENT_EXCHANGE_HARVEST.md` — Kalshi/ClubElo/FPI  
-- `docs/agent-skills/polymarket-hold/SKILL.md` — hard law  
+- `.claude/skills/polymarket-hold/SKILL.md` — hard law  
 - `docs/ops/SESSION_LEVERAGE_ATLAS_2026-08-09.md` — full-session map  

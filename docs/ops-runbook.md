@@ -165,7 +165,7 @@ GROUP BY sport;
 - [`docs/ops/ORBIT_UNLOCK.md`](docs/ops/ORBIT_UNLOCK.md) — founder click checklist (free settle, Stripe, credits)
 - [`docs/ops/OPERATOR.md`](docs/ops/OPERATOR.md) — production actions agents cannot perform
 - [`docs/ops/CREDITS.md`](docs/ops/CREDITS.md) — credit claim tracker
-- [`docs/agent-skills/`](docs/agent-skills/) — agent SKILL packs
+- [`.claude/skills/`](.claude/skills/) — agent SKILL packs
 - `npm run agent:eval` — thin deterministic harness
 - `npm run e2e:pricing-smoke` — public pricing + checkout route probe
 - `npm run export:settled-picks` — JSONL settled picks (DATABASE_URL, read-only)

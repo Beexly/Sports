@@ -27,7 +27,7 @@ Structured extract of research waves in Session 2. Every row is either **SHIPPED
 | Fixtures → Examples train/val | Promote goldens | `promote.mjs` → `data/examples.json` | SHIPPED | — |
 | Named metric `gse_metric` | DSPy GSE opt | `gse_metric.mjs` | SHIPPED | — |
 | Calibration domain goldens | Session 2 deepen | `goldens.json` cal-* | SHIPPED | — |
-| Skill pack for GEPA | agent DX | `docs/agent-skills/dspy-gepa/SKILL.md` | SHIPPED | — |
+| Skill pack for GEPA | agent DX | `.claude/skills/dspy-gepa/SKILL.md` | SHIPPED | — |
 
 ## Wave B — Next 50 repos (rank-adjusted)
 
@@ -35,7 +35,7 @@ Structured extract of research waves in Session 2. Every row is either **SHIPPED
 |---------|--------|------|--------|------|
 | Ranked next-50 adoption table | Wave 2 research | `docs/ops/ORBIT_NEXT_50.md` | SHIPPED | — |
 | promptfoo already wired | #1 adopt | `eval/promptfoo` · `eval:prompts` | SHIPPED | — |
-| agentskills SKILL.md standard | #6 | `docs/agent-skills/*` | SHIPPED | — |
+| agentskills SKILL.md standard | #6 | `.claude/skills/*` | SHIPPED | — |
 | calibre CIR pattern | #7 | `centeredIsotonicCalibration` | SHIPPED | R&D gate |
 | dspy GEPA pattern | #41 | `scripts/dspy-gse` | SHIPPED | offline |
 | Multica / GPL agent OS | #ignore | `DEFER_90_DAYS.md` | HARD NON-GOAL | counsel+founder |
@@ -73,7 +73,7 @@ Structured extract of research waves in Session 2. Every row is either **SHIPPED
 | Free path only when key ABSENT | free-path law | settle-picks cron | SHIPPED | **OPERATOR blank key** |
 | Stripe expired + idempotency | money in | webhook route | SHIPPED | **OPERATOR dashboard** |
 | Outbox lease + claimVersion | do not rewrite | existing | SHIPPED | never rebuild |
-| Skills pack | agent DX | `docs/agent-skills/*` | SHIPPED | — |
+| Skills pack | agent DX | `.claude/skills/*` | SHIPPED | — |
 | agent-eval $0 fixtures | eval | `npm run agent:eval` | SHIPPED | expand per wave |
 | MODEL_PRIMARY / MODEL_CHEAP | inference cost | `model-router.ts` | SHIPPED | env |
 | export settled picks | own labels | `export:settled-picks` | SHIPPED | needs DATABASE_URL |
