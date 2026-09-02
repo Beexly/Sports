@@ -92,8 +92,10 @@ decisions). Items 1–2 are the only ones that gate the settlement fix reaching 
 | apps/web ops-public-surface-truth-rate-limit 5, data-first-public-surfaces 6, health-route 17 | 28 / 28 |
 | apps/web game-merge-plan 15, forward-migrations-agree-with-schema 4 | 19 / 19 |
 | packages/ingestion-pipeline `npx vitest run` | 264 passed, 6 skipped (+9 alias cases) |
-| Full apps/web suite (`npx vitest run`, background) | see addendum below |
-| CI on 54c7b559a (PR #685) | 10/10 guard jobs green; Test job: `migrate deploy` step green, drift-check step green, lint/typecheck/tests in progress at time of writing — see addendum |
+| Full apps/web suite (`npx vitest run`, before the review-fix pass) | 885 files passed, 12 skipped; 11,881 tests passed, 97 skipped; exit 0 |
+| CI on 54c7b559a (PR #685) | 10/10 guard jobs green; Test job: `migrate deploy` step green, drift-check step green, lint green, then superseded by the next push (concurrency group) |
+| Review-fix pass (addendum, § 7) | apps/web 67 + 122 + 99 tests green across the touched suites; ingestion-pipeline 268 passed / 6 skipped; typecheck (22 workspaces) exit 0; lint exit 0; guardrails 26/26; brand lint 3,713/3,713; guard selftest 91 denied / 7 ask / 45 allowed; production-like budget replay OK; merge script dry run exit 0 |
+| CI on the final head (0e315159e and the addendum commit) | reported on PR #685's checks; every push in this session so far has been green on all guard jobs |
 | CI on PR #684 head 4282d1890 | all jobs green including Build; PR marked ready for review |
 | Production database reads | picks by market/version/bucket, model-vs-market Brier, stale v5.0.0 count (18), Week 1 duplicate listing — all read-only `SELECT`s; no write was issued to any database this session |
 
@@ -110,6 +112,34 @@ returns a 302 login redirect); production probes run after merge via `npm run la
 | 3d3bf5d31 | `scripts/ops/owner-runbook.mjs`, `docs/ops/LAUNCH_DAY_RUNBOOK.md`, `docs/ops/OPERATOR.md`, `apps/web/__tests__/docs-public-copy-scan.test.ts` | Owner runbook as commands; 10-minute day-of sequence; brand lint widened |
 | 54c7b559a | `packages/db/prisma/schema.prisma`, 2 migrations, `packages/ingestion-pipeline/src/{game-identity,process-sport,seed-games-from-espn,index}.ts` + tests, `apps/web/lib/ops/game-merge-plan.ts` + test, `scripts/ops/merge-duplicate-games.ts`, `apps/web/__tests__/forward-migrations-agree-with-schema.test.ts`, `package.json`, `apps/web/app/performance/page.tsx` | Alias tombstones for duplicate games, alias-aware ingestion, dry-run merge tool, Week 1 board index, `/performance` force-dynamic |
 | (final) | `LAUNCH_FINAL_20260902.md`, `docs/ops/CLAUDE_DECISIONS_20260902.md`, `.claude/skills/README.md` | This report; decision record; skills index description |
+
+## 7. Addendum — automated review findings on PR #684, acted on here
+
+Devin and cubic reviewed PR #684 after it was marked ready. Every finding was verified against
+the code; the decision record (`docs/ops/CLAUDE_DECISIONS_20260902.md` § D9) lists each one
+with its fix and tripwire, or the reason it was left. The two that mattered most:
+
+1. **The squashed baseline's seed rows used `ON CONFLICT DO UPDATE`**, which would have reset
+   operator-tuned Claude API budgets on the first production deploy. Changed to
+   `DO NOTHING` before the baseline was ever applied outside CI; proven on a production-like
+   database (db push schema, the 53 old migration names recorded, tuned rows) where the replay
+   keeps 999/777, inserts the one missing default, and reports no drift.
+2. **The settle cron could report `ok` while grading nothing.** A cycle with overdue picks that
+   grades and holds nothing is now `starved` (red, advisory, Sentry).
+
+Also fixed: date-only timestamps in the nearest-final matcher, the city-ambiguity date window,
+the stale-pick policy reading creation age instead of refresh age (verified in production: the
+18 v5.0.0 picks are still stale, 317 refreshed v5.2.7 picks would have been wrongly excluded),
+public exposure of the CLV rate while the policy gates it, a 2-hour twin window for baseball
+doubleheaders (matcher, DB window and merge planner, which now refuses bridged clusters),
+"Manchester" as a shared city, the henrygd storage intent, six agent-bash-guard bypasses
+(selftest 67/7/41 → 91/7/45), brand-vocabulary variants across every scanner, nflverse
+zero-row handling, checker strictness, and five doc/command corrections. Commits
+af1368bce, 86fe59925, 0e315159e.
+
+Left, with reasons (D9): the check-then-write race between concurrent feeds (post-launch
+advisory lock), NBA alias normalisation in the city guard, single-book ESPN scoring, seed
+batching, and three posture items the repo rules already settle.
 
 ## 6. Remaining risks, ranked
 
