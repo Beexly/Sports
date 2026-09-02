@@ -1,6 +1,6 @@
 # AGENTS.md — autonomous run contract
 
-Auto-loaded by coding agents at workspace root. Read this first, every session.
+Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loads it through the `@AGENTS.md` import on line 1 of `CLAUDE.md`. Read this first, every session.
 
 Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 **unattended agent** works here.
@@ -19,6 +19,10 @@ and Claude sessions — is **`docs/ops/AGENT_LEDGER.md`**. It is validated by
 enforced in CI. Read its own "Rules" section before touching a row: claim
 before starting, never edit a row you do not own, `DONE` requires a
 resolvable commit SHA or `#PR`, `UNPUSHED` if you cannot push.
+
+**UPDATED 2026-09-02 — `docs/ops/AGENT_LEDGER.md` was last written 2026-08-22.
+LQ-tagged work landed since then is tracked in `docs/data/FLEET_DISPATCH.md`.
+Read both before claiming; a task already dispatched there is not free.**
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
@@ -90,7 +94,7 @@ Breaking one discards the run.
   Tag every message `[hermes-<task-id>]`.
 - **Verify block before every code commit:**
   ```bash
-  npm run typecheck 2>&1 | grep -c "error TS"   # must print 0
+  npm run typecheck                              # exit 0 (real exit code — never pipe it away)
   npm run lint                                   # exit 0
   npx vitest run <this task's test file>         # green
   ```

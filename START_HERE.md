@@ -12,7 +12,7 @@
 
 ## Deploy (when you need to ship `main`)
 ```powershell
-cd C:\dev\sports
+cd <your local clone>   # e.g. C:\dev\sports
 git checkout main && git pull origin main
 vercel --prod --yes        # migrate step won't block; next build needs no DB
 npm run smoke:prod         # green/red checklist of every public route
@@ -43,7 +43,7 @@ You're in **silent launch**: marketing surfaces up, public picks/stats gated OFF
 - [ ] **C6** `CALIBRATION_ADJUSTMENTS_ENABLED=true` — **only** after the path-to-70 §7 audit (held-out `calibratedEce ≤ rawEce`). *Note: already validated once (0.198→0.044); re-confirm at the real sample.*
 - [ ] **C7/C8** `PUBLIC_BLOG_ENABLED`, then `CONFIDENCE_DISPLAY_MODE=precision`.
 
-`LAUNCH_LEDGER.md` has the full env block + details. `check-deploy-readiness.mjs` validates it.
+`docs/ops/archive/root-museum/LAUNCH_LEDGER.md` has the full env block + details. `check-deploy-readiness.mjs` validates it.
 
 ---
 
@@ -65,9 +65,9 @@ controlled passes (not rushed into a fresh-recovered prod). The 30/60/90 order i
 
 ## 🗂 Doc index
 - **This file** = launch control.
-- Reference: `LAUNCH_LEDGER.md`, `docs/strategy/*.md`, `docs/architecture/ADVANCED_SYSTEMS_SPINE_2026-06-22.md`, `AFFILIATE_GO_LIVE.md`.
+- Reference: `docs/ops/archive/root-museum/LAUNCH_LEDGER.md`, `docs/strategy/*.md`, `docs/architecture/ADVANCED_SYSTEMS_SPINE_2026-06-22.md`, `docs/ops/archive/root-museum/AFFILIATE_GO_LIVE.md`.
 - Live ops surface: `/cockpit/integrity` (the honest system-state ledger).
-- Superseded (ignore): `AGENT_HANDOFF.md`, `handoff/OVERNIGHT_SUMMARY_2026-06-22.md`.
+- Superseded (ignore): `docs/ops/archive/root-museum/AGENT_HANDOFF.md`, `handoff/OVERNIGHT_SUMMARY_2026-06-22.md`.
 
 
 ## Orbit unlock (process capital)

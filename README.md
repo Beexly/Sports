@@ -2,10 +2,10 @@
 
 [![CI](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml/badge.svg)](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml)
 
-Sports picks platform with real data ingestion, AI-assisted prediction
-ranking, subscription paywalls, content generation, and an internal operator
-cockpit. See `CLAUDE.md` for the full system overview and non-negotiable
-rules.
+Sports picks platform with real data ingestion, deterministic factor-model
+prediction ranking, subscription paywalls, content generation, and an internal
+operator cockpit. We're not AI. We're math you can read. See `CLAUDE.md` for
+the full system overview and non-negotiable rules.
 
 > **Current mode: internal calibration only.** No auto-publish. No auto-send.
 > No external posting. No automated betting. The platform's `ContentDraft`
@@ -84,7 +84,7 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 # required for AI-generated content
 ANTHROPIC_API_KEY="sk-ant-..."
 
-# required for BullMQ workers
+# required for the Claude response cache (ioredis); there is no job-queue library
 REDIS_URL="redis://localhost:6379"
 ```
 

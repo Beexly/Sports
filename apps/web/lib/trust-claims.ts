@@ -27,6 +27,12 @@
  *      volume justifies it (revisit during Phase 7 Agent Cockpit work).
  */
 
+// BS-004 (brand-safety-rules-v2): "AI picks" / "AI-generated picks" phrasing
+// for the BANNED entries below is sourced from the shared positioning
+// vocabulary (apps/web/lib/positioning-vocab.json) rather than re-typed here
+// — the same list the runtime compliance scanner and the CI trust-gate read.
+import { SAFE_REPLACEMENTS } from "./positioning-vocab";
+
 // ─────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────
@@ -37,7 +43,8 @@ export type ClaimCategory =
   | "PERFORMANCE"        // anything resembling a track-record assertion
   | "PRICING"            // billing, refund, subscription mechanics
   | "SOCIAL_PROOF"       // testimonials, user counts, badges
-  | "RISK_DISCLOSURE";   // responsible-gambling, no-guarantee language
+  | "RISK_DISCLOSURE"    // responsible-gambling, no-guarantee language
+  | "BRAND_POSITIONING"; // "We're not AI. We're math you can read." (BS-004)
 
 export type ClaimStatus =
   | "APPROVED"       // safe to render publicly
@@ -364,6 +371,39 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     visibility: "INTERNAL",
     lastReviewedAt: LAST_REVIEW,
     reviewNote: "Compound certainty + financial outcome. Banned.",
+  },
+
+  // ── Brand positioning (BS-004: "We're not AI. We're math you can read.") ─
+  // The picks come from a deterministic engine, never an LLM. "AI" belongs
+  // only to the content/atmosphere layer (see CLAUDE.md — "AI Layer: Claude
+  // API (content generation only — not source of truth)"). Banning the
+  // "AI picks" framing on any surface keeps that position honest. Precise to
+  // "pick(s)" so legitimate copy ("AI Ops", "AI-presenter disclosure",
+  // critiquing competitors' "AI prediction sites") is untouched — same scope
+  // the CI trust-gate's existing BS-004 rules enforce.
+  {
+    id: "banned.ai-picks",
+    copy: "AI picks",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. 'AI picks' misrepresents the source of truth. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
+  },
+  {
+    id: "banned.ai-generated-picks",
+    copy: "AI-generated picks",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. 'AI-generated picks' misrepresents the source of truth. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
   },
 ] as const;
 

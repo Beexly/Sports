@@ -1,34 +1,57 @@
-# Sports Prediction Platform — CLAUDE.md
+@AGENTS.md
+
+# Galaxy Sports Edge (GSE) — CLAUDE.md
 
 ## System Overview
 
-A production-grade sports picks platform with real data ingestion, AI-assisted prediction ranking, subscription paywalls, content generation, and automated job scheduling.
+A production-grade sports picks platform with real data ingestion, deterministic factor-model prediction ranking, subscription paywalls, content generation, and automated job scheduling. Positioning: **We're not AI. We're math you can read.** (rule 8 below; `docs/positioning.md`).
 
 ## Tech Stack
 
-- **Frontend/Backend**: Next.js 14 (App Router), TypeScript
-- **Database**: PostgreSQL + Prisma ORM
-- **Auth**: NextAuth.js v5 (Auth.js)
-- **Payments**: Stripe (subscriptions + webhooks)
-- **Sports Data**: The Odds API (real odds/lines data)
-- **AI Layer**: Claude API (content generation only — not source of truth)
-- **Queue**: BullMQ + Redis
-- **Testing**: Vitest + Testing Library + Supertest
-- **Containerization**: Docker + Docker Compose
-- **CI/CD**: GitHub Actions
+- **Hosting**: Vercel (production; merge-to-main auto-deploys; the build runs `scripts/deploy/migrate-if-configured.mjs` fail-closed and `scripts/vercel-skip-build.mjs` as `ignoreCommand`) + Neon (PostgreSQL)
+- **Framework**: Next.js 14.2 (App Router only — no `pages/`) + TypeScript 5.9 (strict)
+- **ORM**: Prisma 5.22 (`packages/db/prisma`; migrations are the source of truth — see `.claude/rules/prisma.md`)
+- **Auth**: NextAuth.js v5 (Auth.js, beta)
+- **Payments**: Stripe (subscriptions + webhooks; live keys in production since 2026-07-09)
+- **Sports data**: free-first multi-source spine in `apps/web/lib/data-sources/*` (ESPN public, CFB, multi-source scores); The Odds API is optional (`oddsApiRequired: false`)
+- **Claude API**: content generation only — never the source of truth for picks
+- **Cache**: Redis via `ioredis`, used for the Claude response cache only (there is no job-queue library)
+- **Background jobs**: Vercel Cron (`vercel.json`, 21 schedules → `apps/web/app/api/cron/*`)
+- **Testing**: Vitest + Testing Library
+- **CI/CD**: GitHub Actions (`.github/workflows/ci.yml`; the `guardrails` job runs `scripts/guardrails/run-all.mjs`)
 
 ## Repository Structure
 
+Workspaces: `apps/*`, `packages/*`, `workers/*` (23 packages). Hot paths first:
+
 ```
-apps/web/           — Next.js app (frontend + API routes)
-packages/db/        — Prisma schema, migrations, client
-packages/prediction-engine/ — Core prediction scoring logic
-packages/data-ingestion/    — API adapters (The Odds API, etc.)
-packages/types/             — Shared TypeScript types
-workers/            — Background jobs (data refresh, picks, content)
-docs/               — Architecture and ops documentation
-docker/             — Docker configs
-.github/workflows/  — CI/CD pipelines
+apps/web/                     — Next.js app: app/ (pages, API routes, cockpit, api/cron/*), components/, lib/
+  apps/web/lib/entitlements.ts, lib/api-entitlement.ts   — server-side paywall (rule 3; .claude/rules/api-gating.md)
+  apps/web/lib/pricing/pricing-phases.ts                 — pricing ladder single source of truth
+  apps/web/lib/scraping/*                                — clearance engine + rights registry (.claude/rules/scraping.md)
+  apps/web/lib/compliance-scanner/, lib/positioning-vocab.json — brand/positioning lint (rule 8)
+  apps/web/lib/data-sources/*                            — free-first multi-source ingestion spine
+  apps/web/lib/claude-api/*                              — Claude API router, numeric guard, response cache
+  apps/web/lib/api/no-store.ts                           — jsonNoStore helper (rule 5; .claude/rules/nextjs-caching.md)
+packages/db/                  — Prisma schema, migrations (source of truth), client
+packages/prediction-engine/   — Deterministic scoring, confidence, ranking; MODEL_VERSION frozen by scripts/guardrails/model-freeze.mjs
+packages/data-ingestion/      — Source adapters and normalization
+packages/ingestion-pipeline/  — Ingestion orchestration
+packages/feature-store/       — Derived features for the engine
+packages/stats-api/           — Stats API surface
+packages/types/, packages/util/ — Shared types and utilities
+packages/compliance/          — Compliance control library, evidence, export pack
+packages/ai-council/          — AI-council checks (npm run guard:ai-council)
+packages/crypto/              — Receipt/commitment primitives (see scripts/guardrails/pedersen-opener-boundary.mjs)
+packages/{epistemic-twin,genesis-kernel,governed,ops,partner-stack,phase-c,quote-plane}/
+                              — Read the package README before touching; several have no importers yet
+workers/{data-refresh,pick-generation,content-publishing,airwave-listener}/
+                              — Background jobs driven by Vercel Cron routes (no queue library); content-publishing is draft-only and hard-gated
+scripts/guardrails/           — 26 CI guard scripts + agent-bash-guard.mjs (PreToolUse hook); run-all.mjs runs the suite
+scripts/deploy/, scripts/ops/ — Vercel migrate gate, launch preflight, ledger checks
+docs/ops/, docs/agent-skills/, docs/positioning.md — Runbooks, domain skills (synced to .claude/skills), brand positioning
+.claude/                      — commands/, rules/, agents/, skills/, settings.json (frozen by AGENTS.md law 2)
+.github/workflows/            — ci.yml (12 jobs), daily-smoke.yml, external-watchdog.yml
 ```
 
 ## Non-Negotiable Rules
@@ -40,17 +63,21 @@ docker/             — Docker configs
 5. **No stale data** — always validate timestamps and freshness
 6. **Tests required** — no feature is complete without passing tests
 7. **Types required** — TypeScript strict mode, no `any`
+8. **Brand positioning** — We're not AI. We're math you can read. Copy, docs, and code describe the engine as deterministic statistical modeling (factor model, deterministic scoring, factor breakdown). Never frame the engine as AI. The canonical banned-phrase list is `docs/positioning.md` § "What Not To Say"; the machine-readable copy is `apps/web/lib/positioning-vocab.json`, enforced at runtime by `apps/web/lib/compliance-scanner/rules.ts` and in CI by `scripts/guardrails/trust-gate.mjs` plus `npm run lint:brand`. A violation is a blocking lint failure, not a style note.
 
 ## Subagent Domains
+
+Defined in `.claude/agents/<name>.md` (tool-scoped; invoke via the Agent tool by name).
 
 | Agent | Responsibility |
 |---|---|
 | data-ingestion-agent | API adapters, normalization, ingestion jobs |
 | prediction-engine-agent | Scoring, confidence, ranking, versioning |
 | subscriptions-billing-agent | Stripe, webhooks, entitlements |
-| content-publishing-agent | Blog generation, SEO, publishing pipeline |
+| content-publishing-agent | Blog generation, SEO, publishing pipeline (draft-only) |
 | frontend-app-agent | UI pages, components, UX |
 | testing-qa-agent | Test coverage, QA, regression prevention |
+| auditor | Read-only audits (used by the `/audit*` commands) |
 
 ## Prediction Engine Rules
 
@@ -64,7 +91,7 @@ docker/             — Docker configs
 Pricing follows a **named, proof-gated ladder** (single source of truth:
 `apps/web/lib/pricing/pricing-phases.ts`). Founding rates are live; each step-up is
 triggered by a verified milestone and ships added value. Founding members are
-grandfathered for life. See `COMPETITIVE_PRICING_AND_PACKAGING.md`.
+grandfathered for life. See `docs/ops/archive/root-museum/COMPETITIVE_PRICING_AND_PACKAGING.md` (archived).
 
 | Tier | Founding rate (live) | Access |
 |---|---|---|
@@ -147,66 +174,16 @@ npm run db:seed      # seed data
 
 ## Legal Scraping Posture
 
-**Scraping is rights-gated, not banned.**
+**Scraping is rights-gated, not banned.** Every extraction job passes `checkClearance()` (`apps/web/lib/scraping/clearance-engine.ts`) first; `wrapExtractedRecord()` enforces the rights envelope; no evasion tooling, ever. The full posture (source-rights statuses, what may be extracted, key invariants) is the path-scoped rule `.claude/rules/scraping.md`, loaded automatically when you touch `apps/web/lib/scraping/**` or the ingestion packages.
 
-Every extraction job MUST pass through the Scraping Clearance Engine (`apps/web/lib/scraping/clearance-engine.ts`) before running. A `ClearanceResult` with `allowed=false` MUST stop the job. Every extracted record MUST carry a `RightsSnapshot` captured at extraction time.
+## Operating loop
 
-### Do not build evasion
+Unattended runs follow **AGENTS.md → THE LOOP** (imported above): claim one ledger row, do exactly that task, run the verify block, mark it DONE with the real SHA. Interactive sessions use the same completion bar. Work selection for unattended runs comes from the ledger, not from "highest-leverage gap" judgment.
 
-- No CAPTCHA bypass, login bypass, or paywall bypass
-- No fake accounts or credential misuse
-- No proxy rotation to circumvent IP blocks or access controls
-- No scraping of paths disallowed by source policy unless legal counsel approves
-- No automated access after receiving a cease-and-desist without legal review
-- Evasion tools must NOT be added to the Tool Registry
-
-### Source rights classification
-
-All sources live in `apps/web/lib/scraping/source-rights-registry.ts`. Statuses:
-
-| Status | Meaning |
-|---|---|
-| `approved_public_logged_off` | Public access, facts only, no login, no contract |
-| `approved_api` | Licensed API with explicit commercial terms |
-| `approved_open_license` | CC0/CC-BY/CC-BY-SA/Apache/MIT open dataset |
-| `approved_written_permission` | Written contract or explicit permission received |
-| `vendor_candidate` | Commercial provider — evaluate via questionnaire |
-| `manual_research_only` | Human UX/taxonomy review only |
-| `permission_required` | Terms prohibit automation without consent |
-| `blocked_technical_controls` | Anti-bot/CAPTCHA/IP-block active |
-| `excluded` | No safe path; permanently excluded |
-
-**scores24.live** → `permission_required`. Manual UX research is allowed. Automation requires written consent from Kiito OÜ (support@scores24.live).
-**score24.com** → `vendor_candidate`. Complete vendor questionnaire before any ingestion.
-**siriusxm-activator** → `excluded`. Circumvents paid access. No path to approval.
-
-### What may be extracted
-
-Facts (scores, standings, fixtures), timestamps, URLs, metadata, derived signals we generate, source references. See `apps/web/lib/scraping/data-rules.ts`.
-
-**Never extract**: article bodies for republication, proprietary predictions, protected graphics/charts/logos, site copy, personal data without privacy review, account-gated content.
-
-### Key invariants
-
-- `checkClearance()` must be called before every extraction job
-- `wrapExtractedRecord()` enforces the envelope — throws if clearance not granted
-- Rights snapshots are point-in-time captures; do not mutate them
-- Attribution text from the registry must propagate to all derived outputs
-
-## Autonomous Loop Protocol
-
-Each cycle must:
-1. Analyze current state
-2. Identify highest-leverage gap
-3. Implement with real code
-4. Run tests + typecheck + lint
-5. Fix failures before moving on
-6. Document what changed
-7. Self-audit remaining gaps
-
-A task is NOT complete until: tests pass, types pass, build succeeds.
+A task is NOT complete until: tests pass, types pass, build succeeds, and `npm run guardrails` is green.
 
 ## Agent skills (process capital)
 
-See `docs/agent-skills/README.md` and `docs/ops/OPERATOR.md`.
-Run `npm run agent:eval` for thin harness.
+Domain runbooks live in `docs/agent-skills/<name>/SKILL.md` (canonical, indexed by `docs/agent-skills/README.md`) and are synced into `.claude/skills/<name>/SKILL.md` by `npm run skills:sync` so Claude Code loads them; `npm run skills:check` fails CI on drift. Path-scoped rules live in `.claude/rules/`. Operator console steps: `docs/ops/OPERATOR.md`; operator-only remediation items: `docs/ops/OPERATOR_TASKS.md`. Run `npm run agent:eval` for the thin harness.
+
+Per-developer overrides go in `CLAUDE.local.md` and `.claude/settings.local.json` (both gitignored); the shared files are frozen by AGENTS.md law 2.

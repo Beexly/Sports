@@ -29,6 +29,7 @@ describe("Trust Claim Registry — shape", () => {
         "PRICING",
         "SOCIAL_PROOF",
         "RISK_DISCLOSURE",
+        "BRAND_POSITIONING",
       ]).toContain(claim.category);
       expect([
         "ENGINE_BEHAVIOR",
@@ -330,7 +331,7 @@ describe("Trust Claim Registry — visibility audit", () => {
   });
 
   // ── Enum-shape audit ─────────────────────────────────────────────────────
-  it("every claim category is one of the canonical six", () => {
+  it("every claim category is one of the canonical seven", () => {
     const allowed = new Set([
       "METHODOLOGY",
       "DATA_TRANSPARENCY",
@@ -338,6 +339,9 @@ describe("Trust Claim Registry — visibility audit", () => {
       "PRICING",
       "SOCIAL_PROOF",
       "RISK_DISCLOSURE",
+      // BS-004: "We're not AI. We're math you can read." — see
+      // apps/web/lib/positioning-vocab.json.
+      "BRAND_POSITIONING",
     ]);
     for (const claim of TRUST_CLAIMS) {
       expect(
