@@ -10,7 +10,7 @@
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { backfillPlayerData, DATASET_MIN_SEASON } from "@/lib/ingestion/backfill-player-data";
-import { currentNflSeason } from "@/lib/ingestion/player-stats";
+import { ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -23,10 +23,12 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   const url = new URL(request.url);
-  const maxSeason = currentNflSeason() + 1;
+  // Labelled season (not the completed-REG display floor) bounds the crawl so
+  // the in-progress season is reachable the day the source publishes it.
+  const maxSeason = ingestionTargetNflSeason() + 1;
   const from = Number(url.searchParams.get("from") ?? DATASET_MIN_SEASON.stats);
   const toParam = url.searchParams.get("to");
-  const to = toParam ? Number(toParam) : currentNflSeason();
+  const to = toParam ? Number(toParam) : ingestionTargetNflSeason();
   if (
     !Number.isInteger(from) || !Number.isInteger(to) ||
     from < 1999 || to < 1999 || from > maxSeason || to > maxSeason || from > to

@@ -15,7 +15,7 @@
 import { NextResponse } from "next/server";
 import { resolveFootballStatsSeason } from "@sports/data-ingestion";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { ingestPlayerWeeklyStats } from "@/lib/ingestion/player-stats";
+import { ingestPlayerWeeklyStats, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
@@ -46,13 +46,25 @@ export async function GET(request: Request): Promise<NextResponse> {
   const mode = (url.searchParams.get("mode") ?? "primary").toLowerCase();
   const runFull = mode === "full" || mode === "all";
 
+  // Ask the source for the labelled season (September 2026 → 2026). The
+  // resolved display floor (2025 until 2026 REG rows exist) is the fallback
+  // when the labelled season is not published yet, so the run stays green and
+  // 2026 is picked up automatically the day nflverse ships week-1 rows.
   const resolved = resolveFootballStatsSeason();
-  const season = seasonParam ? Number(seasonParam) : resolved.season;
-  if (!Number.isInteger(season) || season < 1999 || season > 2100) {
+  const labelled = ingestionTargetNflSeason();
+  const requested = seasonParam ? Number(seasonParam) : labelled;
+  if (!Number.isInteger(requested) || requested < 1999 || requested > 2100) {
     return NextResponse.json({ error: "invalid season" }, { status: 400 });
   }
 
-  const stats = await ingestPlayerWeeklyStats(season);
+  let season = requested;
+  let stats = await ingestPlayerWeeklyStats(season);
+  let labelledAttempt: { season: number; status: string; error: string | null } | null = null;
+  if (!seasonParam && stats.status === "source-error" && labelled !== resolved.season) {
+    labelledAttempt = { season: labelled, status: stats.status, error: stats.error ?? null };
+    season = resolved.season;
+    stats = await ingestPlayerWeeklyStats(season);
+  }
   const primaryOk = stats.status === "ok";
 
   const ingestionRun = await recordFreeIngestionRun({
@@ -98,7 +110,9 @@ export async function GET(request: Request): Promise<NextResponse> {
         reason: resolved.reason,
         labelledCurrent: resolved.labelledCurrent,
         completedFloor: resolved.completedFloor,
+        ingestionTarget: labelled,
       },
+      labelledAttempt,
       stats,
       ...(satellites ?? {}),
       ingestionRun,

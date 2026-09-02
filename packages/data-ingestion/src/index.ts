@@ -133,6 +133,7 @@ export {
 } from "./nflverse-id-crosswalk.js";
 export {
   currentNflSeasonLabel,
+  ingestionTargetNflSeason,
   latestCompletedNflSeasonFloor,
   resolveFootballStatsSeason,
   type StatsSeasonResolution,

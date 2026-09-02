@@ -69,19 +69,31 @@ describe("planPlayerStatsRun", () => {
     expect(steady.missingSeasons).toEqual([]);
   });
 
-  it("does not re-anchor onto an unverified in-progress season", async () => {
-    // Same completed-REG-floor design as nflverse-readiness.test.ts.
-    // currentNflSeason() → resolveFootballStatsSeason() with no hasRegRows
-    // probe, so September 2026 still resolves to 2025. Calendar rollover is
-    // not enough to advertise a season with no REG rows.
+  it("re-anchors onto the labelled season at the September rollover so the new season is ingested", async () => {
+    // The cursor follows ingestionTargetNflSeason() (the labelled season), not
+    // the completed-REG display floor: September 2026 must make 2026 show up
+    // as the newest missing season, or the crons keep re-ingesting 2025 for
+    // the whole 2026 season (observed in production 2026-09-02). The days
+    // before nflverse publishes week 1 are covered by the route's
+    // rollover-starvation guard, not by refusing to target the season.
+    mocks.findMany.mockResolvedValue(
+      [2021, 2022, 2023, 2024, 2025].map((season) => ({ season })),
+    );
+    const plan = await planPlayerStatsRun(new Date("2026-09-15T12:00:00Z"));
+    expect(plan.mode).toBe("backfill");
+    expect(plan.season).toBe(2026);
+    expect(plan.targetSeasons).toEqual([2021, 2022, 2023, 2024, 2025, 2026]);
+    expect(plan.missingSeasons).toEqual([2026]);
+    expect(plan.backfillComplete).toBe(false);
+  });
+
+  it("stays on the prior season until September (labelled season is still last year)", async () => {
     mocks.findMany.mockResolvedValue(
       [2020, 2021, 2022, 2023, 2024, 2025].map((season) => ({ season })),
     );
-    const plan = await planPlayerStatsRun(new Date("2026-09-15T12:00:00Z"));
+    const plan = await planPlayerStatsRun(new Date("2026-08-15T12:00:00Z"));
     expect(plan.mode).toBe("steady-state");
     expect(plan.season).toBe(2025);
-    expect(plan.targetSeasons).toEqual([2020, 2021, 2022, 2023, 2024, 2025]);
     expect(plan.missingSeasons).toEqual([]);
-    expect(plan.backfillComplete).toBe(true);
   });
 });

@@ -34,6 +34,22 @@ export function latestCompletedNflSeasonFloor(now = new Date()): number {
   return Math.max(2025, completedCandidate);
 }
 
+/**
+ * Season an INGESTION cron should target: the labelled current season.
+ *
+ * Product surfaces default to `latestCompletedNflSeasonFloor` so they never
+ * advertise an empty in-progress season, but an ingestion cursor that follows
+ * that floor never asks the source for the new season at all — in 2026 the
+ * daily/half-hourly nflverse crons kept re-ingesting 2025 through the whole
+ * 2026 season (observed 2026-09-02). Ingestion must ask for the labelled
+ * season; the caller falls back to the completed floor when the source has
+ * not published it yet (404 / zero rows), and the display floor advances on
+ * its own once REG rows exist.
+ */
+export function ingestionTargetNflSeason(now = new Date()): number {
+  return currentNflSeasonLabel(now);
+}
+
 export type StatsSeasonResolution = {
   /** Season to load for REG leaders / engines / website stats. */
   readonly season: number;
