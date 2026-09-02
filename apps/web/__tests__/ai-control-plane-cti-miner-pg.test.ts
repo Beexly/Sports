@@ -121,7 +121,7 @@ const MIGRATIONS_DIR = join(
   "packages",
   "db",
   "prisma",
-  "migrations",
+  "migrations-archive",
 );
 
 suite("cti-miner against real Postgres", () => {

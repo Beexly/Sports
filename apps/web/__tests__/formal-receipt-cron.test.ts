@@ -132,7 +132,7 @@ const suite = HAS_DB ? describe : describe.skip;
 
 const SCHEMA = "formal_receipt_job_acceptance";
 
-const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations");
+const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations-archive");
 
 suite("Track B — formal-receipt job against real Postgres", () => {
   let pool: Pool;

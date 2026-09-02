@@ -65,7 +65,7 @@ const MIGRATIONS_DIR = join(
   "packages",
   "db",
   "prisma",
-  "migrations",
+  "migrations-archive",
 );
 
 suite("Track A — control event ledger acceptance against real Postgres", () => {

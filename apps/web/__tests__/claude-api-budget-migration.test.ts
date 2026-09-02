@@ -7,7 +7,7 @@ import {
 } from "@/lib/claude-api/cost-monitor";
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
-const migrationsDir = path.join(repoRoot, "packages/db/prisma/migrations");
+const migrationsDir = path.join(repoRoot, "packages/db/prisma/migrations-archive");
 const migration = fs.readFileSync(
   path.join(migrationsDir, "20260523031000_seed_claude_api_budgets/migration.sql"),
   "utf8"
