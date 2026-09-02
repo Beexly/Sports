@@ -36,7 +36,10 @@ describe("free settle response contract", () => {
     expect(route).toMatch(/snapshotRepair:\s*free\.snapshotRepair/);
     expect(route).toMatch(/teamGameLogRepair:\s*free\.teamGameLogRepair/);
     expect(route).toMatch(/get\("path"\) === "free"/);
-    expect(route).toMatch(/forceFree \|\| !hasOddsApiKey\(apiKey\)/);
+    // Free-first law (2026-09-02): the plan comes from path-select and the
+    // free pass is unconditional; the key only gates the paid supplement.
+    expect(route).toMatch(/selectSettlementPlan\(apiKey, \{ forceFree \}\)/);
+    expect(route).toMatch(/plan\.paidSupplement && hasOddsApiKey\(apiKey\)/);
   });
 
   it("autonomy canonicalSettled is wired from the cumulative loader, not this cycle's learning batch (PL3)", () => {

@@ -1,6 +1,6 @@
 ---
 name: settlement-free-path
-description: Free-path settle-picks when THE_ODDS_API_KEY is absent; paid path when present.
+description: Free-first settle-picks — the ESPN/consensus grader runs every cycle; THE_ODDS_API_KEY only adds a paid supplement.
 effort: medium
 allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 ---
@@ -8,7 +8,7 @@ allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 # Settlement free path
 
 ## Purpose
-Settle completed games without paid Odds API scores. Path selection is **key presence**, not key health.
+Settle completed games without paid Odds API scores. Since 2026-09-02 the free grader is the **primary** on every cycle; key presence only decides whether a paid supplement runs afterwards.
 
 ## Code
 - Cron: `apps/web/app/api/cron/settle-picks/route.ts` — hourly, `20 * * * *` in `vercel.json` (was `0 */3 * * *` in #278; moved to hourly by the P0 settlement drain, #300, 2026-08-06)
@@ -16,12 +16,14 @@ Settle completed games without paid Odds API scores. Path selection is **key pre
 - Consensus: `apps/web/lib/data-sources/free-settlement.ts` (ESPN + henrygd adapters)
 - Outbox drain: existing lease + claimVersion (do not rewrite)
 
-## Path law
-| `THE_ODDS_API_KEY` | Path | Notes |
-|--------------------|------|-------|
-| **ABSENT** (unset/blank) | free | `path: "free"`, `oddsApiRequired: false` |
-| **PRESENT** (any truthy) | odds-api, free fallback per failed sport | Since 2026-09-02 (PR #684): a sport whose paid scores fetch fails (dead/exhausted key, 401/402/429) is handed to the free ESPN path in the same cycle (`freeFallback` in the response, `paidFailedSports` lists them). Before that a deactivated key silently graded nothing for 9 days. |
-| `?path=free` on the URL | free | Forces the free path with the key present. The autonomy executor sends this for its free-settle action. |
+## Path law (free-first, `selectSettlementPlan` in `apps/web/lib/settlement/path-select.ts`)
+| `THE_ODDS_API_KEY` | Plan | Response |
+|--------------------|------|----------|
+| **ABSENT** (unset/blank) | free pass only | `path: "free"`, `paidSupplement: null`, `oddsApiRequired: false` |
+| **PRESENT** (any truthy) | free pass first, then paid `settleSport` as a PENDING-scoped supplement | `path: "free+odds-api"`, `paidSupplement: { ok, failedSports, results… }`. A dead key fails the supplement only: `ok` still reflects the free pass, `advisories[]` names the key, Sentry gets `paid:supplement-failed`. Before 2026-09-02 a present-but-dead key ran the paid branch alone and graded nothing for 9 days. |
+| `?path=free` on the URL | free pass only, supplement skipped | `path: "free"`. The autonomy executor sends this for its free-settle action. |
+
+`selectSettlementPath` keeps its two-value contract for smoke scripts: "odds-api" now means "supplement available", never "free skipped".
 
 ## Lanes (all PENDING-scoped, none overwrites a conflicting final)
 - Paid `settleSport` (Odds API scores, `daysFrom=3`) — writes `settlement_runs`; its catch returns `status: failed` (captured to Sentry by the route since PR #684).
@@ -41,7 +43,7 @@ curl -sS -H "Authorization: Bearer $CRON_SECRET" \
 ```
 
 ## Failure modes
-- Key present+deactivated → 401/402 from Odds → free path never runs → blank key in Vercel
+- Key present+deactivated → 401/402 from Odds → `paidSupplement.failedSports` every hour, free pass unaffected → remove or renew the key in Vercel (either state is safe)
 - ESPN/henrygd disagree → DISPUTED hold (by design)
 - Outbox drain warn → non-fatal; alerts may lag
 

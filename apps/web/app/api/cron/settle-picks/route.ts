@@ -1,9 +1,20 @@
 /**
- * Vercel cron — settle completed games.
+ * Vercel cron — settle completed games. Hourly (`20 * * * *`).
  *
- * Path A (paid scores): THE_ODDS_API_KEY present → settleSport (externalId match).
- * Path B (free scores): key missing → free-settlement-runner (ESPN + henrygd,
- *   team+date match, DISPUTED holds). oddsApiRequired=false forever on path B.
+ * Law (apps/web/lib/settlement/path-select.ts, since 2026-09-02): the FREE
+ * grader runs first on every cycle — ESPN finals plus registered consensus
+ * sources, team+date matching, DISPUTED/AMBIGUOUS holds — followed by the
+ * stale backfill. When THE_ODDS_API_KEY is present the paid `settleSport`
+ * pass runs afterwards as a SUPPLEMENT for anything still PENDING; when it
+ * fails (dead key, provider outage) the cycle is still `ok` because the free
+ * pass already graded, and the failure is reported in `paidSupplement` and
+ * captured to Sentry. `?path=free` skips the supplement. oddsApiRequired is
+ * false forever.
+ *
+ * Why free-first: from 2026-08-24 to 2026-09-02 a deactivated key made the
+ * paid branch run alone and throw every hour, so nothing graded for 9 days
+ * while ESPN had every final. Ordering the graders by cost-to-fail instead of
+ * by key presence removes that failure mode structurally.
  *
  * Auth: Bearer CRON_SECRET. runtime=nodejs · force-dynamic.
  */
@@ -29,101 +40,64 @@ import {
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
 import { persistFreeScores } from "@/lib/data-sources/free-score-persist";
 import { backfillStaleSettlement, type BackfillResult } from "@/lib/data-sources/settle-backfill";
-import { hasOddsApiKey } from "@/lib/settlement/path-select";
+import { hasOddsApiKey, selectSettlementPlan } from "@/lib/settlement/path-select";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
 import { drainPendingSnapshotOutcomes } from "@/lib/settlement/free-path-snapshot";
-
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const fetchCache = "force-no-store";
 export const maxDuration = 300;
 
+/** Per-sport outcome of the paid supplement pass. */
+export interface PaidSupplementSportResult {
+  readonly sport: string;
+  readonly ok: boolean;
+  readonly gamesSettled: number;
+  readonly picksSettled: number;
+  readonly observationsRecorded: number;
+  readonly anomaliesOpened: number;
+  readonly anomaliesPromoted: number;
+  readonly anomaliesResolved: number;
+  readonly outboxAppended: number;
+  readonly error?: string;
+}
+
+export interface PaidSupplementSummary {
+  readonly ok: boolean;
+  readonly okCount: number;
+  readonly totalCount: number;
+  readonly failedSports: readonly string[];
+  readonly picksSettled: number;
+  readonly gamesSettled: number;
+  readonly results: readonly PaidSupplementSportResult[];
+  readonly clvRepair: { attempted: number; graded: number; noClose: number; failed: number } | null;
+  readonly snapshotRepair: { attempted: number; done: number; failed: number } | null;
+  readonly teamGameLogRepair: { attempted: number; done: number; failed: number } | null;
+}
+
 export async function GET(request: Request) {
   const denied = cronAuthError(request);
   if (denied) return denied;
 
   const apiKey = process.env["THE_ODDS_API_KEY"]?.trim();
-  const requestedSport = new URL(request.url).searchParams.get("sport");
-  // Owner drain: ?path=free uses ESPN/henrygd even when THE_ODDS_API_KEY is set.
-  // Paid getScores is daysFrom=3 and cannot grade older overdue picks; scores
-  // are covered free (GSE-SEC-039). Default cron with a key still uses odds-api.
-  const forceFree = new URL(request.url).searchParams.get("path") === "free";
+  const url = new URL(request.url);
+  const requestedSport = url.searchParams.get("sport");
+  // Owner drain: ?path=free skips the paid supplement even when a key is set.
+  const forceFree = url.searchParams.get("path") === "free";
   const startedAt = Date.now();
   const gates = getReadinessGates();
-  // ── Free path: no paid Odds key required ─────────────────────────────────
-  // Negated type guard, so `apiKey` narrows to `string` for the paid path below.
-  if (forceFree || !hasOddsApiKey(apiKey)) {
-    // Snapshot overdue before STP so burn-rate can tell whether this cycle drained the band.
-    let priorOverdueCount: number | undefined;
-    try {
-      const healthBefore = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
-      priorOverdueCount = healthBefore.overduePending;
-    } catch (healthErr) {
-      console.warn(
-        `[cron:settle-picks:free] pre-cycle settlement health snapshot failed: ` +
-          `${healthErr instanceof Error ? healthErr.message : healthErr}`,
-      );
-      captureError(healthErr, { path: "settle-picks", stage: "free:health-snapshot" });
-    }
-    const freeScores = await persistFreeScores({ sportKey: requestedSport });
-    const free = await runFreePathSettlement({
-      sportKey: requestedSport,
-      graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
-      ...(priorOverdueCount !== undefined ? { priorOverdueCount } : {}),
-    });
-    const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks:free]");
-
-    let alertDrain: OutboxDrainSummary | null = null;
-    try {
-      alertDrain = await drainSettlementOutbox(db);
-    } catch (drainErr) {
-      console.warn(
-        `[cron:settle-picks:free] outbox drain failed: ` +
-          `${drainErr instanceof Error ? drainErr.message : drainErr}`,
-      );
-      captureError(drainErr, { path: "settle-picks", stage: "free:outbox-drain" });
-    }
-    // Top-level clvRepair / snapshotRepair / scoreDates / rca for ops
-    // (same values also under free.* for full free-path payload).
-    return NextResponse.json({
-      ok: free.sports.every((s) => s.ok),
-      path: "free" as const,
-      oddsApiRequired: false as const,
-      elapsedMs: Date.now() - startedAt,
-      picksSettled: free.picksSettled,
-      picksHeld: free.picksHeld,
-      clvRepair: free.clvRepair,
-      snapshotRepair: free.snapshotRepair,
-      teamGameLogRepair: free.teamGameLogRepair,
-      scoreDates: free.scoreDates,
-      rca: free.rca,
-      staleBackfill,
-      bootstrapMode: gates.isBootstrapMode,
-      free,
-      freeScores,
-      alertDrain,
-      requestedSport: requestedSport ?? null,
-    });
-  }
-
-  if (!hasOddsApiKey(apiKey)) {
-    return NextResponse.json({ error: "THE_ODDS_API_KEY missing" }, { status: 500 });
-  }
+  const plan = selectSettlementPlan(apiKey, { forceFree });
 
   // Settlement is backward-looking (grading games already played) and free —
   // unlike refresh (forward-looking, billed), it must NEVER season-gate.
-  // workers/data-refresh/src/index.ts:88 and settle-sport.ts:83-85 make this
-  // contract explicit: refresh uses getInSeasonSports(), settlement always
-  // uses SUPPORTED_SPORTS, "so the two settlement paths can never drift."
-  // A prior change gated this on getInSeasonSports() too, which meant an
-  // MLB World Series game (played in November, after MLB's in-season window)
-  // could never settle on the paid path. Reverted 2026-08-15.
+  // workers/data-refresh/src/index.ts and settle-sport.ts make this contract
+  // explicit: refresh uses getInSeasonSports(), settlement always uses
+  // SUPPORTED_SPORTS (an MLB World Series game in November must still settle).
   const sportsToProcess = requestedSport
     ? SUPPORTED_SPORTS.filter((sport) => sport.key === requestedSport)
     : SUPPORTED_SPORTS;
-
   if (requestedSport && sportsToProcess.length === 0) {
     return NextResponse.json(
       {
@@ -135,42 +109,37 @@ export async function GET(request: Request) {
     );
   }
 
-  const results: Array<{
-    sport: string;
-    ok: boolean;
-    gamesSettled: number;
-    picksSettled: number;
-    observationsRecorded: number;
-    anomaliesOpened: number;
-    anomaliesPromoted: number;
-    anomaliesResolved: number;
-    outboxAppended: number;
-    error?: string;
-  }> = [];
+  // ── 1. Free pass (always first) ────────────────────────────────────────────
+  // Snapshot overdue before STP so burn-rate can tell whether this cycle drained the band.
+  let priorOverdueCount: number | undefined;
+  try {
+    const healthBefore = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
+    priorOverdueCount = healthBefore.overduePending;
+  } catch (healthErr) {
+    console.warn(
+      `[cron:settle-picks] pre-cycle settlement health snapshot failed: ` +
+        `${healthErr instanceof Error ? healthErr.message : healthErr}`,
+    );
+    captureError(healthErr, { path: "settle-picks", stage: "free:health-snapshot" });
+  }
+  const freeScores = await persistFreeScores({ sportKey: requestedSport });
+  const free = await runFreePathSettlement({
+    sportKey: requestedSport,
+    graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
+    ...(priorOverdueCount !== undefined ? { priorOverdueCount } : {}),
+  });
 
-  const scheduledWindow = computeScheduledWindow();
-
-  for (const sport of sportsToProcess) {
-    const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks]", {
-      scheduledWindow,
-    });
-    results.push({
-      sport: result.sport,
-      ok: result.status === "success",
-      gamesSettled: result.gamesSettled,
-      picksSettled: result.picksSettled,
-      observationsRecorded: result.observationsRecorded,
-      anomaliesOpened: result.anomaliesOpened,
-      anomaliesPromoted: result.anomaliesPromoted,
-      anomaliesResolved: result.anomaliesResolved,
-      outboxAppended: result.outboxAppended,
-      ...(result.error ? { error: result.error } : {}),
-    });
-    await new Promise((r) => setTimeout(r, 750));
+  // ── 2. Paid supplement (key present, not forced free) ─────────────────────
+  // PENDING-scoped like the free pass; grades only what the free pass left.
+  let paidSupplement: PaidSupplementSummary | null = null;
+  if (plan.paidSupplement && hasOddsApiKey(apiKey)) {
+    paidSupplement = await runPaidSupplement(apiKey, sportsToProcess, gates);
   }
 
+  // ── 3. Stale backfill (every published PENDING pick past the 6h grace) ────
   const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]");
 
+  // ── 4. Slate commitment freeze (hash-chained receipts; no odds key needed) ─
   let freeze: SlateFreezeResult[] = [];
   try {
     freeze = await freezeSlateCommitments(
@@ -184,106 +153,160 @@ export async function GET(request: Request) {
       `[cron:settle-picks] slate commitment freeze pass failed: ` +
         `${freezeErr instanceof Error ? freezeErr.message : freezeErr}`,
     );
-    captureError(freezeErr, { path: "settle-picks", stage: "paid:slate-freeze" });
+    captureError(freezeErr, { path: "settle-picks", stage: "slate-freeze" });
   }
 
+  // ── 5. Alert outbox drain ─────────────────────────────────────────────────
   let alertDrain: OutboxDrainSummary | null = null;
   try {
     alertDrain = await drainSettlementOutbox(db);
   } catch (drainErr) {
     console.warn(
-      `[cron:settle-picks] post-settlement outbox drain failed: ` +
+      `[cron:settle-picks] outbox drain failed: ` +
         `${drainErr instanceof Error ? drainErr.message : drainErr}`,
     );
-    captureError(drainErr, { path: "settle-picks", stage: "paid:outbox-drain" });
+    captureError(drainErr, { path: "settle-picks", stage: "outbox-drain" });
+  }
+
+  const advisories: string[] = [];
+  if (paidSupplement && paidSupplement.failedSports.length > 0) {
+    advisories.push(
+      `Paid supplement failed for ${paidSupplement.failedSports.length}/${paidSupplement.totalCount} sport(s) ` +
+        `(${paidSupplement.failedSports.join(", ")}). The free pass already graded this cycle; ` +
+        `if this repeats every hour THE_ODDS_API_KEY is dead — remove or renew it.`,
+    );
+  }
+
+  const freeOk = free.sports.every((s) => s.ok);
+  // Top-level clvRepair / snapshotRepair / scoreDates / rca for ops
+  // (same values also under free.* for the full free-path payload).
+  return NextResponse.json({
+    ok: freeOk,
+    path: plan.label,
+    plan,
+    oddsApiRequired: false as const,
+    elapsedMs: Date.now() - startedAt,
+    picksSettled: free.picksSettled + (paidSupplement?.picksSettled ?? 0),
+    picksHeld: free.picksHeld,
+    clvRepair: free.clvRepair,
+    snapshotRepair: free.snapshotRepair,
+    teamGameLogRepair: free.teamGameLogRepair,
+    scoreDates: free.scoreDates,
+    rca: free.rca,
+    staleBackfill,
+    bootstrapMode: gates.isBootstrapMode,
+    free,
+    freeScores,
+    paidSupplement,
+    advisories,
+    freeze,
+    alertDrain,
+    requestedSport: requestedSport ?? null,
+  });
+}
+
+async function runPaidSupplement(
+  apiKey: string,
+  sportsToProcess: ReadonlyArray<(typeof SUPPORTED_SPORTS)[number]>,
+  gates: ReturnType<typeof getReadinessGates>,
+): Promise<PaidSupplementSummary> {
+  const results: PaidSupplementSportResult[] = [];
+  const scheduledWindow = computeScheduledWindow();
+
+  for (const sport of sportsToProcess) {
+    try {
+      const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks:paid]", {
+        scheduledWindow,
+      });
+      results.push({
+        sport: result.sport,
+        ok: result.status === "success",
+        gamesSettled: result.gamesSettled,
+        picksSettled: result.picksSettled,
+        observationsRecorded: result.observationsRecorded,
+        anomaliesOpened: result.anomaliesOpened,
+        anomaliesPromoted: result.anomaliesPromoted,
+        anomaliesResolved: result.anomaliesResolved,
+        outboxAppended: result.outboxAppended,
+        ...(result.error ? { error: result.error } : {}),
+      });
+    } catch (err) {
+      // settleSport catches internally and returns status: failed; this guard
+      // exists so an unexpected throw in one sport never aborts the others.
+      const message = err instanceof Error ? err.message : String(err);
+      captureError(err, { path: "settle-picks", stage: "paid:settle-sport", sport: sport.key });
+      results.push({
+        sport: sport.key,
+        ok: false,
+        gamesSettled: 0,
+        picksSettled: 0,
+        observationsRecorded: 0,
+        anomaliesOpened: 0,
+        anomaliesPromoted: 0,
+        anomaliesResolved: 0,
+        outboxAppended: 0,
+        error: message,
+      });
+    }
+    await new Promise((r) => setTimeout(r, 750));
+  }
+
+  const failedSports = results.filter((r) => !r.ok).map((r) => r.sport);
+  if (failedSports.length > 0) {
+    captureError(new Error(`settle-picks paid supplement failed: ${failedSports.join(", ")}`), {
+      path: "settle-picks",
+      stage: "paid:supplement-failed",
+      failedSports,
+    });
   }
 
   // Repair: complete any PENDING PostSettlementWork rows left by a crash
   // between settleSport()'s enqueue and its inline write (hardening 6.10).
-  // The free path already drains CLV_GRADE/SNAPSHOT_OUTCOME every cycle;
-  // this path previously drained nothing, so a mid-cycle crash left rows
-  // PENDING forever with no process ever revisiting them.
-  let clvRepair: { attempted: number; graded: number; noClose: number; failed: number } | null =
-    null;
+  // The free pass drains these every cycle; the paid pass repeats it so a
+  // mid-cycle crash inside the supplement never leaves rows PENDING forever.
+  let clvRepair: PaidSupplementSummary["clvRepair"] = null;
   try {
     clvRepair = await drainPendingClvGrades(db as never, { take: 100 });
   } catch (err) {
     console.warn(
-      `[cron:settle-picks] CLV repair drain failed: ${err instanceof Error ? err.message : err}`,
+      `[cron:settle-picks:paid] CLV repair drain failed: ${err instanceof Error ? err.message : err}`,
     );
     captureError(err, { path: "settle-picks", stage: "paid:clv-repair" });
   }
 
-  let snapshotRepair: { attempted: number; done: number; failed: number } | null = null;
+  let snapshotRepair: PaidSupplementSummary["snapshotRepair"] = null;
   try {
     snapshotRepair = await drainPendingSnapshotOutcomes(db as never, { take: 100 });
   } catch (err) {
     console.warn(
-      `[cron:settle-picks] SNAPSHOT repair drain failed: ${err instanceof Error ? err.message : err}`,
+      `[cron:settle-picks:paid] SNAPSHOT repair drain failed: ${err instanceof Error ? err.message : err}`,
     );
     captureError(err, { path: "settle-picks", stage: "paid:snapshot-repair" });
   }
 
-  let teamGameLogRepair: { attempted: number; done: number; failed: number } | null = null;
+  let teamGameLogRepair: PaidSupplementSummary["teamGameLogRepair"] = null;
   try {
     teamGameLogRepair = await drainPendingTeamGameLogs(db as never, gates, { take: 100 });
   } catch (err) {
     console.warn(
-      `[cron:settle-picks] TEAM_GAME_LOG repair drain failed: ${err instanceof Error ? err.message : err}`,
+      `[cron:settle-picks:paid] TEAM_GAME_LOG repair drain failed: ${err instanceof Error ? err.message : err}`,
     );
     captureError(err, { path: "settle-picks", stage: "paid:team-game-log-repair" });
   }
 
-  // Paid-path failure fallback. When the Odds API scores call throws (provider
-  // outage, exhausted key: observed continuously from 2026-08-24, with no
-  // settlement_runs row and no Sentry event to show for it), the paid branch
-  // used to grade nothing and rely on the stale backfill, which only looked at
-  // games older than 3 days. Now any failed sport is handed to the free ESPN
-  // path in the same cycle. Both graders are PENDING-scoped and the free runner
-  // refuses to overwrite a conflicting paid final, so running both is safe.
-  const failedSports = results.filter((r) => !r.ok).map((r) => r.sport);
-  let freeFallback: Awaited<ReturnType<typeof runFreePathSettlement>> | { error: string } | null = null;
-  if (failedSports.length > 0) {
-    try {
-      freeFallback = await runFreePathSettlement({
-        ...(failedSports.length === 1 ? { sportKey: failedSports[0] } : {}),
-        graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
-      });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.warn(`[cron:settle-picks] free fallback after paid failure failed: ${message}`);
-      captureError(err, { path: "settle-picks", stage: "paid:free-fallback", failedSports });
-      freeFallback = { error: message };
-    }
-  }
-
   const okCount = results.filter((r) => r.ok).length;
-  return NextResponse.json({
-    ok: okCount === results.length || (freeFallback !== null && !("error" in freeFallback) && freeFallback.sports.every((s) => s.ok)),
-    path: "odds-api" as const,
-    paidFailedSports: failedSports,
-    freeFallback,
-    oddsApiRequired: false as const,
-    elapsedMs: Date.now() - startedAt,
+  return {
+    ok: okCount === results.length,
     okCount,
     totalCount: results.length,
-    gamesSettled: results.reduce((sum, r) => sum + r.gamesSettled, 0),
+    failedSports,
     picksSettled: results.reduce((sum, r) => sum + r.picksSettled, 0),
-    observationsRecorded: results.reduce((sum, r) => sum + r.observationsRecorded, 0),
-    anomaliesOpened: results.reduce((sum, r) => sum + r.anomaliesOpened, 0),
-    anomaliesPromoted: results.reduce((sum, r) => sum + r.anomaliesPromoted, 0),
-    anomaliesResolved: results.reduce((sum, r) => sum + r.anomaliesResolved, 0),
-    outboxAppended: results.reduce((sum, r) => sum + r.outboxAppended, 0),
-    requestedSport: requestedSport ?? null,
-    bootstrapMode: gates.isBootstrapMode,
+    gamesSettled: results.reduce((sum, r) => sum + r.gamesSettled, 0),
     results,
-    freeze,
-    alertDrain,
     clvRepair,
     snapshotRepair,
     teamGameLogRepair,
-    staleBackfill,
-  });
+  };
 }
 
 async function runStaleBackfillSafe(logPrefix: string): Promise<BackfillResult | { error: string }> {

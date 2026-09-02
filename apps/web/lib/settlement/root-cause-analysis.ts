@@ -159,9 +159,9 @@ function fiveWhysFor(code: SettlementRootCauseCode): readonly string[] {
       ];
     case "PATH_MISCONFIG":
       return [
-        "Why free-path expected but not active? Odds key presence selects paid path.",
-        "Why paid path broken? Key present but deactivated still forces odds-api path.",
-        "Why backlog grows? Paid settle fails closed; free runner never runs.",
+        "Why free-path expected but not active? Before 2026-09-02 odds key presence selected the paid path alone.",
+        "Why paid path broken? Key present but deactivated forced odds-api and threw every cycle.",
+        "Why backlog grows? Paid settle failed closed; free runner never ran. Since 2026-09-02 the free grader runs first on every cycle, so this cause can only come from a caller still flagging it.",
         "Why ops surprised? diagnoseOddsKeyPresence documents this law.",
         "Root: THE_ODDS_API_KEY must be absent (not merely invalid) for free STP.",
       ];
@@ -235,8 +235,8 @@ function remediationFor(code: SettlementRootCauseCode): readonly string[] {
       ];
     case "PATH_MISCONFIG":
       return [
-        "Remove THE_ODDS_API_KEY from Production if free path is intended.",
-        "Confirm settle-picks response path:\"free\" and oddsApiRequired:false.",
+        "Confirm the deployed settle-picks grades free-first (response path:\"free\" or \"free+odds-api\", oddsApiRequired:false).",
+        "If paidSupplement.failedSports repeats every hour the key is dead: remove or renew THE_ODDS_API_KEY (either state is safe).",
       ];
     case "WRITE_RACE_LOST":
       return ["Re-load settlement health; treat as already cleared if result is terminal."];
@@ -266,7 +266,7 @@ function summaryFor(code: SettlementRootCauseCode, ageHours: number): string {
     case "TEAM_ORIENT_FAIL":
       return "Final found but home-team orientation failed.";
     case "PATH_MISCONFIG":
-      return "Settlement path misconfigured (odds key present blocks free STP).";
+      return "Settlement path misconfigured (legacy: odds key present blocked the free grader before the 2026-09-02 free-first law).";
     case "WRITE_RACE_LOST":
       return "Idempotent write lost race — likely already settled.";
     case "WITHIN_GRACE":
