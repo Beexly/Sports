@@ -33,6 +33,61 @@ Primary `CRON_SECRET` on Production. Dual-secret rotation: `CRON_SECRET_PREVIOUS
 
 LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · HEOS #226 · gamma schedule
 
+## 5. Environment variables (moved here from CLAUDE.md on 2026-09-02)
+
+Every value is set in the deploy environment (Vercel → Project → Settings → Environment Variables), never in code. Agent sessions cannot read `.env*` files; this list is the reference.
+
+```
+DATABASE_URL=
+DIRECT_URL=
+NEXTAUTH_SECRET=
+# Must be the exact live canonical host WITH www: https://www.galaxysportsedge.com
+# (identical to NEXT_PUBLIC_APP_URL). See canonical-host note below.
+NEXTAUTH_URL=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+# Per-interval price IDs are what checkout reads. The monthly vars fall back to
+# the legacy STRIPE_PRO_PRICE_ID / STRIPE_ELITE_PRICE_ID when unset.
+STRIPE_PRO_MONTHLY_PRICE_ID=
+STRIPE_PRO_ANNUAL_PRICE_ID=
+STRIPE_ELITE_MONTHLY_PRICE_ID=
+STRIPE_ELITE_ANNUAL_PRICE_ID=
+STRIPE_FANTASY_MONTHLY_PRICE_ID=
+STRIPE_FANTASY_ANNUAL_PRICE_ID=
+# Point-of-sale Terms consent at Stripe Checkout. DEFAULT OFF. Order matters:
+# set the Stripe Dashboard Terms-of-Service URL FIRST, THEN flip this to "true"
+# (otherwise Stripe rejects every Checkout Session and new subscriptions 500).
+# Unset/"false" = checkout omits consent_collection and behaves exactly as before.
+STRIPE_TERMS_CONSENT_ENABLED=
+THE_ODDS_API_KEY=
+ANTHROPIC_API_KEY=
+REDIS_URL=
+# Canonical public base URL. The single source of truth is
+# apps/web/lib/seo/site-url.ts, which resolves to NEXT_PUBLIC_APP_URL when set,
+# else defaults to the WWW host https://www.galaxysportsedge.com (never the apex).
+NEXT_PUBLIC_APP_URL=
+```
+
+### 5a. Canonical host (single source of truth)
+
+The one canonical base URL lives in `apps/web/lib/seo/site-url.ts` (`SITE_URL`):
+`NEXT_PUBLIC_APP_URL` when set, else `https://www.galaxysportsedge.com` (the **www**
+host — never the apex). All absolute-URL construction — `metadataBase`, `sitemap.ts`,
+`robots.ts`, canonical tags, JSON-LD, RSS, bot-post links — resolves off it.
+
+**OPERATOR (owner's env/console step — not code):**
+
+- Set `NEXT_PUBLIC_APP_URL=https://www.galaxysportsedge.com` in the deploy env.
+- Set `NEXTAUTH_URL=https://www.galaxysportsedge.com` (identical host).
+- In the Google Cloud Console OAuth client, add
+  `https://www.galaxysportsedge.com/api/auth/callback/google` to the Authorized
+  redirect URIs.
+
+The apex (`https://galaxysportsedge.com`) should redirect to www at the DNS/platform
+layer (not in app code).
+
 ## Related
 - Skills: `.claude/skills/`
 - Credits: `docs/ops/CREDITS.md` + `GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md`

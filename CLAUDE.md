@@ -65,9 +65,9 @@ docs/ops/, docs/positioning.md — Runbooks, brand positioning (domain skills li
 7. **Types required** — TypeScript strict mode, no `any`
 8. **Brand positioning** — We're not AI. We're math you can read. Copy, docs, and code describe the engine as deterministic statistical modeling (factor model, deterministic scoring, factor breakdown). Never frame the engine as AI. The canonical banned-phrase list is `docs/positioning.md` § "What Not To Say"; the machine-readable copy is `apps/web/lib/positioning-vocab.json`, enforced at runtime by `apps/web/lib/compliance-scanner/rules.ts` and in CI by `scripts/guardrails/trust-gate.mjs` plus `npm run lint:brand`. A violation is a blocking lint failure, not a style note.
 
-## Subagent Domains
+## Subagents (`.claude/agents/`)
 
-Defined in `.claude/agents/<name>.md` (tool-scoped; invoke via the Agent tool by name).
+Each one is defined in `.claude/agents/<name>.md` (tool-scoped; invoke via the Agent tool by name).
 
 | Agent | Responsibility |
 |---|---|
@@ -104,58 +104,14 @@ grandfathered for life. See `docs/ops/archive/root-museum/COMPETITIVE_PRICING_AN
 Ladder (named ahead of time): FOUNDING → PROVEN (≥100 settled + published calibration)
 → ESTABLISHED (≥500 settled + verified CLV ≥52.4%) → AUTHORITY (multi-season ROI).
 
-## Environment Variables Required
+## Environment variables and canonical host
 
-```
-DATABASE_URL=
-DIRECT_URL=
-NEXTAUTH_SECRET=
-# Must be the exact live canonical host WITH www: https://www.galaxysportsedge.com
-# (identical to NEXT_PUBLIC_APP_URL). See canonical-host note below.
-NEXTAUTH_URL=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-# Per-interval price IDs are what checkout reads. The monthly vars fall back to
-# the legacy STRIPE_PRO_PRICE_ID / STRIPE_ELITE_PRICE_ID when unset.
-STRIPE_PRO_MONTHLY_PRICE_ID=
-STRIPE_PRO_ANNUAL_PRICE_ID=
-STRIPE_ELITE_MONTHLY_PRICE_ID=
-STRIPE_ELITE_ANNUAL_PRICE_ID=
-STRIPE_FANTASY_MONTHLY_PRICE_ID=
-STRIPE_FANTASY_ANNUAL_PRICE_ID=
-# Point-of-sale Terms consent at Stripe Checkout. DEFAULT OFF. Order matters:
-# set the Stripe Dashboard Terms-of-Service URL FIRST, THEN flip this to "true"
-# (otherwise Stripe rejects every Checkout Session and new subscriptions 500).
-# Unset/"false" = checkout omits consent_collection and behaves exactly as before.
-STRIPE_TERMS_CONSENT_ENABLED=
-THE_ODDS_API_KEY=
-ANTHROPIC_API_KEY=
-REDIS_URL=
-# Canonical public base URL. The single source of truth is
-# apps/web/lib/seo/site-url.ts, which resolves to NEXT_PUBLIC_APP_URL when set,
-# else defaults to the WWW host https://www.galaxysportsedge.com (never the apex).
-NEXT_PUBLIC_APP_URL=
-```
+The full required-variable list (with the Stripe price-ID fallbacks and the
+`STRIPE_TERMS_CONSENT_ENABLED` ordering rule) is an operator reference and lives in
+`docs/ops/OPERATOR.md` § 5. Two invariants every agent keeps:
 
-### Canonical host (single source of truth)
-
-The one canonical base URL lives in `apps/web/lib/seo/site-url.ts` (`SITE_URL`):
-`NEXT_PUBLIC_APP_URL` when set, else `https://www.galaxysportsedge.com` (the **www**
-host — never the apex). All absolute-URL construction — `metadataBase`, `sitemap.ts`,
-`robots.ts`, canonical tags, JSON-LD, RSS, bot-post links — resolves off it.
-
-**OPERATOR (owner's env/console step — not code):**
-
-- Set `NEXT_PUBLIC_APP_URL=https://www.galaxysportsedge.com` in the deploy env.
-- Set `NEXTAUTH_URL=https://www.galaxysportsedge.com` (identical host).
-- In the Google Cloud Console OAuth client, add
-  `https://www.galaxysportsedge.com/api/auth/callback/google` to the Authorized
-  redirect URIs.
-
-The apex (`https://galaxysportsedge.com`) should redirect to www at the DNS/platform
-layer (not in app code).
+- **No secrets in code** (rule 4): every key is read from the environment; `.env*` files are Read-denied for agent sessions.
+- **One canonical host**: `apps/web/lib/seo/site-url.ts` (`SITE_URL`) resolves to `NEXT_PUBLIC_APP_URL` when set, else `https://www.galaxysportsedge.com` (the **www** host, never the apex). Every absolute URL (`metadataBase`, sitemap, robots, canonical tags, JSON-LD, RSS, bot posts) derives from it, and `NEXTAUTH_URL` must be the identical host. The apex redirects to www at the DNS/platform layer, not in app code.
 
 ## Development Commands
 
