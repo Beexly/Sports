@@ -169,7 +169,7 @@ enum CheckoutOutcomeClass {
 // the intent) or is NULL (a terminal attempt released the intent so a fresh
 // generation can claim it). History is never erased. Both invariants are
 // DB-enforced via CHECK constraints in the migration
-// (packages/db/prisma/migrations/20260722130000_add_checkout_attempt).
+// (packages/db/prisma/migrations-archive/20260722130000_add_checkout_attempt; carried by migrations/20260101000000_baseline since 2026-09-02).
 //
 // RETENTION (financial audit record): the User FK is NULLABLE with
 // ON DELETE SET NULL, and subjectUserId/subjectEmail are immutable snapshots
@@ -909,7 +909,8 @@ model Alert {
 // for small fixed value sets rather than native enums.
 //
 // Founder-applied migration — see
-// packages/db/prisma/migrations/20260717120000_add_watchlist. Application
+// packages/db/prisma/migrations-archive/20260717120000_add_watchlist (carried by
+// migrations/20260101000000_baseline since 2026-09-02). Application
 // code (apps/web/lib/watchlist/db.ts) fails gracefully (503, not 500) when
 // this table is absent, exactly like OddsLineSnapshot.
 model Watchlist {
@@ -936,7 +937,8 @@ model Watchlist {
 // device/browser they've granted permission on).
 //
 // Founder-applied migration — see
-// packages/db/prisma/migrations/20260719120000_add_push_subscriptions,
+// packages/db/prisma/migrations-archive/20260719120000_add_push_subscriptions
+// (carried by migrations/20260101000000_baseline since 2026-09-02),
 // following the exact Watchlist precedent above. Application code
 // (apps/web/lib/push/subscription-db.ts) fails gracefully when this table
 // is absent, exactly like Watchlist/OddsLineSnapshot.

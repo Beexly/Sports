@@ -177,7 +177,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     displayName: "Watchlist: follow teams & players",
     customerExplanation: "Follow a team or player to track them in one place. Free on every plan — Elite adds graded-pick alerts.",
     internalNote:
-      "Follow itself is FREE-and-up (the retention primitive should maximize adoption, not gate it); graded-pick alerts stay Elite-exclusive via the existing canGetAlerts entitlement — see apps/web/lib/watchlist/. status:preview (not live) because the Watchlist table is founder-applied (packages/db/prisma/migrations/20260717120000_add_watchlist); the API/UI 503 honestly until that migration lands.",
+      "Follow itself is FREE-and-up (the retention primitive should maximize adoption, not gate it); graded-pick alerts stay Elite-exclusive via the existing canGetAlerts entitlement — see apps/web/lib/watchlist/. status:preview (not live) because the Watchlist table is founder-applied (packages/db/prisma/migrations-archive/20260717120000_add_watchlist, carried by the 2026-09-02 baseline); the API/UI 503 honestly until that table exists in production.",
     minTier: "FREE", status: "preview", freePreview: true, lockBehaviorForFree: "open", upgradeCtaTier: null,
   },
   {
