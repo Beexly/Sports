@@ -582,6 +582,10 @@ model Pick {
   // Dashboard orders/ranges settled history by settledAt; unindexed it full-scans as
   // the settled set grows.
   @@index([settledAt])
+  // Public board hot path (GET /api/picks, board/state.ts): every read filters
+  // isPublished=true AND isBootstrap=false AND generatedAt in a window, then
+  // orders by generatedAt. Composite covers the filter + range in one index.
+  @@index([isPublished, isBootstrap, generatedAt])
   @@map("picks")
 }
 
