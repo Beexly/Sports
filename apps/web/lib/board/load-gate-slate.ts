@@ -19,6 +19,7 @@
  * them.
  */
 
+import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { db, isStubMode } from "@sports/db";
 import { averageAmericanPrices, selectGradingLine } from "@sports/prediction-engine";
 import {
@@ -602,6 +603,10 @@ export async function fetchGateSlate(
           status: "SCHEDULED",
           commenceTime: { gt: now },
         },
+        // And only rows the pipeline still refreshes: a pick written months
+        // ago on an opening line (see lib/board/stale-pick-policy.ts) is not a
+        // live recommendation either.
+        ...freshPickWhere(now),
       },
       orderBy: { generatedAt: "desc" },
       take: candidateLimit,

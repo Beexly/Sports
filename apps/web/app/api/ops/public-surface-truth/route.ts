@@ -13,6 +13,17 @@ import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
 import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
+import { STALE_PENDING_PICK_MAX_AGE_DAYS } from "@/lib/board/stale-pick-policy";
+
+/** A read-only posture field must never take the whole truth surface down: any
+ *  throw (including a synchronous one from a partial client) reads as null. */
+async function safeRead<T>(fn: () => Promise<T>): Promise<T | null> {
+  try {
+    return await fn();
+  } catch {
+    return null;
+  }
+}
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reliability/public-freshness-gate";
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
@@ -492,10 +503,12 @@ export async function GET(request: Request) {
   // read as a rate.
   const clvPolicy = isStubMode()
     ? null
-    : await loadPublicClvPolicy(db, {
-        canExposePerformanceStats: effectivePerformanceStats,
-        minGradedForPublic: 25,
-      }).catch(() => null);
+    : await safeRead(() =>
+        loadPublicClvPolicy(db, {
+          canExposePerformanceStats: effectivePerformanceStats,
+          minGradedForPublic: 25,
+        }),
+      );
   const clvBeatCloseRate =
     clvPolicy && clvPolicy.gradedSampleSize >= 25
       ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
@@ -522,6 +535,25 @@ export async function GET(request: Request) {
     calibrationPublished,
     beatCloseRate: clvBeatCloseRate,
   });
+
+  // Published PENDING picks on games that have not started whose row the
+  // pipeline has not refreshed in 14 days (observed 2026-09-02: 18 picks from
+  // model v5.0.0 written in May on September/November lines). They are not on
+  // the public daily slate (day-bound by generatedAt) but they will grade at
+  // kickoff on a stale line; the owner decides supersede/void, never a cron.
+  const staleCutoff = new Date(Date.now() - STALE_PENDING_PICK_MAX_AGE_DAYS * 24 * 60 * 60 * 1000);
+  const stalePendingPicks = isStubMode()
+    ? null
+    : await safeRead(() =>
+        db.pick.count({
+          where: {
+            isPublished: true,
+            result: "PENDING",
+            generatedAt: { lt: staleCutoff },
+            game: { commenceTime: { gt: new Date() } },
+          },
+        }),
+      );
 
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
@@ -738,6 +770,16 @@ export async function GET(request: Request) {
       },
       clvPosture,
       pricingPhaseReadiness,
+      stalePendingPicks: {
+        count: stalePendingPicks,
+        maxAgeDays: STALE_PENDING_PICK_MAX_AGE_DAYS,
+        operatorHint:
+          stalePendingPicks === null
+            ? "unknown (stub DB or query failed)"
+            : stalePendingPicks > 0
+              ? `${stalePendingPicks} published PENDING pick(s) on unstarted games not refreshed in ${STALE_PENDING_PICK_MAX_AGE_DAYS}d — review in the owner queue (supersede/void is an owner decision, never automatic).`
+              : "none",
+      },
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },
