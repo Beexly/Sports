@@ -241,3 +241,27 @@ must not be shown as probability. PUBLIC_PICKS stays on (observed on, serving th
 board). "Launch-ready" for this product means every number it *does* show is
 real and every number it does *not* show has a visible reason. Both are now
 observable on `/api/ops/public-surface-truth` and `npm run launch:ready`.
+
+## D10. Second gap review (the pasted critique): each claim checked against the code first
+
+The owner pasted a nine-item critique ("3 gaps, 2 under-leverages, 4 polishes").
+Rule 4 of AGENTS.md applies to critiques too: nothing was changed on the strength
+of a claim until the claim was read against the tree. Five of the nine were false
+in this checkout; four were real and are closed below.
+
+| Claim | Checked | Outcome |
+|---|---|---|
+| "agent:eval asserts the settle cron at `0 */3 * * *`" | `scripts/agent-eval/fixtures/settlement-path.json:22` asserts `20 * * * *`; `apps/web/vercel.json:22` schedules `20 * * * *` | False. Already agree (fixture rewritten in d0d4be0c4). No change |
+| "`FORCE_NO_BET_IF_STALE` is not actually enforced" | `apps/web/lib/board/passes.ts:94` and `board/state.ts:207` short-circuit on `gates.forceNoBetIfStale`; `public-freshness-gate.ts`, `operating-kernel.ts:259`, the picks routes and `readiness.ts` read the same flag (`platform-config.ts:175`, default false) | False as stated. The real gap was observability: nothing reported the flag's live value, so the gate runbook's "pair it with public picks" rested on memory. `gates.forceNoBetIfStale` is now on `/api/ops/public-surface-truth`; `launch:ready` WARNs when picks are public and the switch is off |
+| "Board should use `stale-while-revalidate=60`" | `.claude/rules/nextjs-caching.md` § 3: entitlement-dependent output is never cached; the board is tier-filtered and a cached tier bleed is a paywall bypass (rule 3) | Declined. Documented here so it is not re-proposed |
+| "Guard selftest is not wired into guardrails" | `scripts/guardrails/run-all.mjs:60` runs `agent-bash-guard.mjs --selftest` | False. No change |
+| "Sandbox is declared but disabled" | `.claude/settings.json:222` `enabled: true`, `:223` `failIfUnavailable: false`, allowlist present | False; it is enabled and fails open. The honest row is SANDBOX-NET in `docs/ops/OPERATOR_TASKS.md`: verify on a machine with bubblewrap/seatbelt, then flip `failIfUnavailable` to true (settings are owner-frozen, AGENTS.md law 2) |
+| "Runbook split between the launch-day doc and the runbook script" | Both exist by design: `LAUNCH_DAY_RUNBOOK.md` is the ten-minute sequence, `npm run ops:runbook` is the command list; each links the other | Kept. The runbook's merge item wording refreshed (it still said no npm alias existed; `ops:merge-games` exists) |
+| "Confidence tail is on the truth endpoint but not in the cockpit" | `apps/web/app/cockpit/calibration/page.tsx` had no tail or coverage section | True. Added two read-only sections (`data-testid="confidence-tail"`, `"market-coverage"`) driven by the same loaders as the truth surface; a DB failure renders an "unavailable" line, never a number |
+| "The merge tool prints the plan but does not save it" | `scripts/ops/merge-duplicate-games.ts` wrote JSON only after `--execute` | True. Dry run now writes `scripts/ops/out/merge-duplicate-games-plan-<ts>.json` (plan, pick conflicts, refused groups, child-table previews) and prints the path; `out/` is already git-ignored |
+| "Brand lint should run pre-commit" | The pre-commit hook runs only the staged secret scan | True. The agent bash guard refused the write into the hooks directory (`hooks-dir-write`: the guard working). Hook text and verification steps are in `docs/ops/OPERATOR_TASKS.md` § "Pre-commit brand gate" (PRE-COMMIT-BRAND) for the owner to install by hand |
+
+Tripwires: `npm run typecheck` (22 workspaces) exit 0, `npm run lint` exit 0,
+cockpit/wiring/route-shape suites 66/66, monitor suites 11/11, `node --check`
+on both scripts, `npm run ops:runbook` prints the refreshed merge item,
+`npm run lint:brand` exit 0, `npm run guardrails` 26/26.

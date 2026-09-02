@@ -287,10 +287,10 @@ function buildDecisionItems() {
 }
 
 // ---------------------------------------------------------------------------
-// 4. Duplicate-game merge — detected dynamically. As of this writing no
-//    scripts/ops/merge-duplicate-games.ts and no npm script exist yet, so
-//    this prints an honest "not yet available" rather than a fabricated
-//    command; once the script lands this switches on its own.
+// 4. Duplicate-game merge — detected dynamically. The script and the
+//    `ops:merge-games` alias landed 2026-09-02; the "not yet available"
+//    branch below is kept so a checkout without them prints an honest
+//    message rather than a fabricated command.
 // ---------------------------------------------------------------------------
 
 function buildDuplicateGameMergeItem() {
@@ -310,7 +310,7 @@ function buildDuplicateGameMergeItem() {
       cmd: hasNpmScript
         ? 'npm run ops:merge-games   # dry run by default; review the plan, then npm run ops:merge-games -- --execute'
         : 'npx tsx scripts/ops/merge-duplicate-games.ts   # no npm script alias yet; dry run by default, review the plan, then re-run with --execute',
-      verify: 'npx tsx scripts/ops/merge-duplicate-games.ts   # dry run; read the printed plan before ever passing --execute',
+      verify: 'npm run ops:merge-games   # dry run; it prints the plan AND writes scripts/ops/out/merge-duplicate-games-plan-<ts>.json — read that file (groups, pickConflicts, refusedGroups) before ever passing --execute',
       source: 'packages/ingestion-pipeline/src/game-identity.ts (MAX_ALIAS_HOPS doc); scripts/ops/merge-duplicate-games.ts',
     };
   }

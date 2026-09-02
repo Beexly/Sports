@@ -112,6 +112,9 @@ returns a 302 login redirect); production probes run after merge via `npm run la
 | 3d3bf5d31 | `scripts/ops/owner-runbook.mjs`, `docs/ops/LAUNCH_DAY_RUNBOOK.md`, `docs/ops/OPERATOR.md`, `apps/web/__tests__/docs-public-copy-scan.test.ts` | Owner runbook as commands; 10-minute day-of sequence; brand lint widened |
 | 54c7b559a | `packages/db/prisma/schema.prisma`, 2 migrations, `packages/ingestion-pipeline/src/{game-identity,process-sport,seed-games-from-espn,index}.ts` + tests, `apps/web/lib/ops/game-merge-plan.ts` + test, `scripts/ops/merge-duplicate-games.ts`, `apps/web/__tests__/forward-migrations-agree-with-schema.test.ts`, `package.json`, `apps/web/app/performance/page.tsx` | Alias tombstones for duplicate games, alias-aware ingestion, dry-run merge tool, Week 1 board index, `/performance` force-dynamic |
 | (final) | `LAUNCH_FINAL_20260902.md`, `docs/ops/CLAUDE_DECISIONS_20260902.md`, `.claude/skills/README.md` | This report; decision record; skills index description |
+| af1368bce, 86fe59925, 0e315159e, 781cfe240 | see § 7 | Review-fix pass on the Devin/cubic findings; addendum |
+| f194a05a0 | `.github/workflows/external-watchdog.yml`, `scripts/ops/launch-preflight.mjs`, `scripts/ops/orbit-unlock-smoke.mjs`, `scripts/ops/owner-runbook.mjs`, `docs/ops/{HEALTH_ALERTING,OPERATOR_TASKS,AGENT_LEDGER}.md` | First gap review: the watchdog can page (webhook secret), preflight is strict, the smoke accepts both settlement paths, ledger row |
+| (this commit) | `apps/web/app/cockpit/calibration/page.tsx`, `apps/web/app/api/ops/public-surface-truth/route.ts`, `scripts/check-launch-readiness.mjs`, `scripts/ops/merge-duplicate-games.ts`, `scripts/ops/owner-runbook.mjs`, `docs/ops/OPERATOR_TASKS.md`, decisions D10 | Second gap review (§ 8): kill-switch observability, cockpit tail/coverage sections, dry-run plan file, pre-commit brand gate as an owner task |
 
 ## 7. Addendum — automated review findings on PR #684, acted on here
 
@@ -140,6 +143,33 @@ af1368bce, 86fe59925, 0e315159e.
 Left, with reasons (D9): the check-then-write race between concurrent feeds (post-launch
 advisory lock), NBA alias normalisation in the city guard, single-book ESPN scoring, seed
 batching, and three posture items the repo rules already settle.
+
+## 8. Addendum — second gap review (the owner's critique), verified before acting
+
+Nine claims were checked against the tree (decision record § D10). Five were false in this
+checkout and were left alone with the evidence line recorded: the agent:eval settle-cron
+fixture already asserts `20 * * * *`; `FORCE_NO_BET_IF_STALE` is enforced in the board pass
+selector, board state, the public freshness gate, the operating kernel and the picks routes;
+the guard selftest is line 60 of the guardrails runner; the sandbox is enabled (it fails open,
+which is the SANDBOX-NET owner task); the runbook split is by design. One was declined
+(`stale-while-revalidate` on the board: entitlement-dependent output is never cached, rule 3).
+
+Four were real and are closed on this branch:
+
+1. The kill switch's live value is now on the truth surface (`gates.forceNoBetIfStale`) and
+   `npm run launch:ready` warns when picks are public and it is off.
+2. The cockpit calibration page shows the high-confidence tail (verdict, realized vs claimed,
+   tail Brier, per-version rows) and the 72-hour market-coverage table from the same loaders
+   as the truth endpoint. Read-only; a failed read renders "unavailable", never a number.
+3. The merge tool's dry run writes the plan file (`scripts/ops/out/merge-duplicate-games-plan-<ts>.json`)
+   and prints its path, so the reviewed artefact is what `--execute` later applies.
+4. The pre-commit brand gate is written up as PRE-COMMIT-BRAND in `docs/ops/OPERATOR_TASKS.md`
+   with the exact hook text; the agent bash guard refused to write into `.githooks/` and that
+   refusal was left standing.
+
+Verification for this pass: typecheck 22/22 exit 0, lint exit 0, cockpit + wiring + route-shape
+suites 66/66, market-coverage + confidence-tail 11/11, brand lint and guardrails as recorded in
+the commit message.
 
 ## 6. Remaining risks, ranked
 

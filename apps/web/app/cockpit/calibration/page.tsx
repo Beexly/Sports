@@ -9,6 +9,8 @@ import {
   CONVICTION_MIN_CLV_BEAT_RATE,
   CONVICTION_MIN_CLV_SAMPLE,
 } from "@sports/prediction-engine";
+import { loadConfidenceTail, type ConfidenceTailSummary } from "@/lib/calibration/confidence-tail";
+import { loadMarketCoverage, MARKET_KEYS, type MarketCoverageReport } from "@/lib/board/market-coverage";
 
 /**
  * Cockpit calibration — live data binding, rebuilt. Preserves the
@@ -65,6 +67,8 @@ export default async function CockpitCalibrationPage() {
     eligibleRows,
     clvAgg,
     clvBeatCount,
+    confidenceTail,
+    marketCoverage,
   ] = await Promise.all([
       db.game.count().catch(() => 0),
       db.game.count({ where: { status: "FINAL" } }).catch(() => 0),
@@ -104,6 +108,10 @@ export default async function CockpitCalibrationPage() {
       // which is not the same statistic as the average CLV value shown below — a
       // positive average can hide a sub-50% beat rate. Counted separately on purpose.
       db.pick.count({ where: { clvValue: { gt: 0 } } }).catch(() => 0),
+      // The same two monitors /api/ops/public-surface-truth and launch:ready
+      // report, so the cockpit shows them without an API call. Read-only.
+      loadConfidenceTail(db as never).catch((): ConfidenceTailSummary | null => null),
+      loadMarketCoverage(db as never).catch((): MarketCoverageReport | null => null),
     ]);
   const picksPending = picksTotal - picksResolved;
 
@@ -319,6 +327,131 @@ export default async function CockpitCalibrationPage() {
               );
             })}
           </div>
+          </>
+        )}
+      </section>
+
+      <section
+        data-testid="confidence-tail"
+        className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs"
+      >
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          High-confidence tail — does ≥{confidenceTail?.floor ?? 80} earn it?
+        </h2>
+        {confidenceTail === null ? (
+          <p className="text-ion-3">Tail monitor unavailable (database read failed).</p>
+        ) : (
+          <>
+            <p
+              className={`mb-3 text-[11px] leading-relaxed ${
+                confidenceTail.verdict === "inverted" || confidenceTail.verdict === "overconfident"
+                  ? "text-caution"
+                  : "text-ion-2"
+              }`}
+            >
+              <span className="mr-2 font-mono uppercase">{confidenceTail.verdict}</span>
+              {confidenceTail.operatorHint}
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <BaselineStat label="Graded (n)" value={String(confidenceTail.n)} sub={`≥${confidenceTail.floor} confidence · WIN/LOSS`} />
+              <BaselineStat
+                label="Realized"
+                value={confidenceTail.winRate === null ? "—" : `${(confidenceTail.winRate * 100).toFixed(1)}%`}
+                sub="won"
+              />
+              <BaselineStat
+                label="Claimed"
+                value={confidenceTail.claimedRate === null ? "—" : `${(confidenceTail.claimedRate * 100).toFixed(1)}%`}
+                sub="mean stated confidence"
+              />
+              <BaselineStat
+                label="Brier (tail)"
+                value={confidenceTail.brier === null ? "—" : confidenceTail.brier.toFixed(4)}
+                sub="lower better · 0.25 = coin flip"
+              />
+            </div>
+            {confidenceTail.byVersion.length > 0 ? (
+              <table aria-label="High-confidence tail by model version" className="mt-3 w-full text-left">
+                <thead>
+                  <tr className="text-[10px] uppercase tracking-widest text-ion-3">
+                    <th scope="col" className="py-1 pr-4 font-medium">Model version</th>
+                    <th scope="col" className="py-1 pr-4 font-medium">Graded (n)</th>
+                    <th scope="col" className="py-1 pr-4 font-medium">Wins</th>
+                    <th scope="col" className="py-1 font-medium">Win rate</th>
+                  </tr>
+                </thead>
+                <tbody className="text-ion-1">
+                  {confidenceTail.byVersion.map((v) => (
+                    <tr key={v.modelVersion} className="border-t border-titanium/40">
+                      <td className="py-1.5 pr-4 font-mono">{v.modelVersion}</td>
+                      <td className="py-1.5 pr-4">{v.n}</td>
+                      <td className="py-1.5 pr-4">{v.wins}</td>
+                      <td className="py-1.5">{v.winRate === null ? "—" : `${(v.winRate * 100).toFixed(1)}%`}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : null}
+            <p className="mt-3 text-[10px] text-ion-3">
+              Same read as <span className="font-mono">/api/ops/public-surface-truth</span> · <span className="font-mono">confidenceTail</span> and{" "}
+              <span className="font-mono">npm run launch:ready</span>. Measured only; nothing here changes a pick.
+            </p>
+          </>
+        )}
+      </section>
+
+      <section
+        data-testid="market-coverage"
+        className="rounded-2xl border border-titanium/40 bg-eclipse/40 p-4 text-xs"
+      >
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-ion-3">
+          Market coverage — next {marketCoverage?.windowHours ?? 72}h
+        </h2>
+        {marketCoverage === null ? (
+          <p className="text-ion-3">Coverage monitor unavailable (database read failed).</p>
+        ) : marketCoverage.sports.length === 0 ? (
+          <p className="text-ion-3">No games scheduled in the window.</p>
+        ) : (
+          <>
+            <table aria-label="Published pending picks per sport and market" className="w-full text-left">
+              <thead>
+                <tr className="text-[10px] uppercase tracking-widest text-ion-3">
+                  <th scope="col" className="py-1 pr-4 font-medium">Sport</th>
+                  <th scope="col" className="py-1 pr-4 font-medium">Games</th>
+                  {MARKET_KEYS.map((m) => (
+                    <th key={m} scope="col" className="py-1 pr-4 font-medium">{m}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="text-ion-1">
+                {marketCoverage.sports.map((s) => (
+                  <tr key={s.sportKey} className="border-t border-titanium/40">
+                    <td className="py-1.5 pr-4 font-mono">{s.sportKey}</td>
+                    <td className="py-1.5 pr-4">{s.games}</td>
+                    {MARKET_KEYS.map((m) => (
+                      <td
+                        key={m}
+                        className={`py-1.5 pr-4 ${s.status[m] === "none" ? "text-caution" : ""}`}
+                      >
+                        {s.picks[m]}
+                        {s.status[m] === "none" ? " · none" : ""}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {marketCoverage.degraded.length > 0 ? (
+              <ul className="mt-3 flex flex-col gap-1 text-[11px] text-caution">
+                {marketCoverage.degraded.map((d) => (
+                  <li key={`${d.sportKey}-${d.market}`}>
+                    <span className="font-mono">{d.sportKey} · {d.market}</span>: {d.hint}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-[11px] text-ion-2">Every scheduled sport has picks in every market.</p>
+            )}
           </>
         )}
       </section>

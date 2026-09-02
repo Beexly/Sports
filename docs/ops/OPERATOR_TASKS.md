@@ -19,9 +19,10 @@ off it.
 | ACTIONS-BILLING | GitHub Actions billing / minutes | GitHub org → Settings → Billing | Partly — CI, daily-smoke and external-cron runs observed completing on 2026-09-02 (PR #684 check runs; daily-smoke #103–#105 green) | Resolved 2026-09-02 (minutes restored; keep an eye on the monthly cap) |
 | PUSH-PROTECT | Enable push protection and secret scanning | GitHub repo → Settings → Code security | No — GitHub repo-settings-level | Open |
 | BRANCH-PROTECT | Confirm branch protection on `main` | GitHub repo → Settings → Branches | No — GitHub repo-settings-level | Open |
-| SANDBOX-NET | Enable OS-level sandboxing with a network allowlist | Edit `.claude/settings.json` (owner-only): `sandbox.enabled: true` + `sandbox.network.allowedDomains` | Yes | Done in PR #684 (verify on a machine with bubblewrap / macOS) |
+| SANDBOX-NET | Sandbox is enabled with a 20-domain allowlist; make it fail closed | On a machine with bubblewrap (Linux) or seatbelt (macOS): run one agent session and confirm `sandbox` reports active; then set `sandbox.failIfUnavailable: true` in `.claude/settings.json` (owner-only). Until then a machine without a sandbox runtime runs unsandboxed, which is why `npm run ops:tasks` reports this row UNVERIFIED (2026-09-02) | Partly (`npm run ops:tasks` verifies enabled + allowlist + failIfUnavailable) | Open — enabled in PR #684; fail-closed flip pending the owner's verification run |
 | NEXT-MAJOR | Plan the Next.js 14 → 15/16 major upgrade | Separate migration project; the two `dependency-audit` waivers (`next`, bundled `postcss`) are reviewed by 2027-01-15 | Partly (`node scripts/guardrails/dependency-audit.mjs` shows the waivers) | Open |
 | HENRYGD-REG | Register (or reject) the henrygd NCAA API in the source-rights registry | Owner/legal read, then a row in `apps/web/lib/scraping/source-rights-registry.ts` | Partly (`checkClearance` denies it today; NCAA settlement runs single-source) | Open |
+| PRE-COMMIT-BRAND | Run the brand trust gate in the pre-commit hook, not only in CI | Replace `.githooks/pre-commit` with the text in "Pre-commit brand gate" below (`.githooks/**` is agent-denied; the bash guard refused the write on 2026-09-02, as designed) | No — hook files are owner-only | Open (hook text ready, 2026-09-02) |
 
 ## Database and MCP connectors
 
@@ -71,6 +72,36 @@ off it.
      `.github/workflows/ci.yml` now runs `prisma migrate deploy` (blocking) and
      `prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel … --exit-code`;
      the `db push` step is gone. A schema change without a migration fails CI.
+
+## Pre-commit brand gate
+
+- [ ] **PRE-COMMIT-BRAND** — Today `.githooks/pre-commit` runs only the staged-file
+  secret scan, so a banned phrase (rule 8) is first caught by CI five minutes after
+  the commit. `node scripts/guardrails/trust-gate.mjs` scans the public-copy
+  directories in about five seconds and is the same check CI runs. The agent bash
+  guard refuses writes into `.githooks/` (that refusal is the guard working), so the
+  owner replaces the hook by hand with:
+
+  ```sh
+  #!/usr/bin/env sh
+  # Pre-commit guardrails: secret scan (staged files) + brand trust gate.
+  node scripts/guardrails/secret-scan.mjs
+  status=$?
+  if [ "$status" -ne 0 ]; then
+    echo "pre-commit: secret-scan blocked this commit (see above)." 1>&2
+    exit "$status"
+  fi
+  node scripts/guardrails/trust-gate.mjs
+  status=$?
+  if [ "$status" -ne 0 ]; then
+    echo "pre-commit: trust-gate blocked this commit (banned phrase on a public surface; see above)." 1>&2
+    exit "$status"
+  fi
+  exit 0
+  ```
+
+  Keep the file mode `100755`. Verify: stage a file containing a banned phrase from
+  `docs/positioning.md` and confirm `git commit` aborts; then unstage it.
 
 ## Data rights
 

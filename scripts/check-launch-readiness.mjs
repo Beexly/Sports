@@ -104,6 +104,12 @@ function num(v) {
 
     const g = d.gates ?? {};
     verdict("PASS", "gates", `publicPicks=${g.canExposePublicPicks ?? "?"} performanceStats=${g.canExposePerformanceStats ?? "?"} statsPublic=${g.statsPublic ?? "?"} calibrationPublished=${g.calibrationPublished ?? "?"}`);
+    // The stale-data kill switch the gate runbook pairs with public picks: when
+    // picks are public it must be on, or a stale slate can be served as live.
+    if (g.forceNoBetIfStale === true) verdict("PASS", "stale-data kill switch", "FORCE_NO_BET_IF_STALE=true");
+    else if (g.forceNoBetIfStale === false && g.canExposePublicPicks === true) verdict("WARN", "stale-data kill switch", "FORCE_NO_BET_IF_STALE is not true while public picks are on (gate runbook 1b): set it in Vercel Production");
+    else if (g.forceNoBetIfStale === false) verdict("PASS", "stale-data kill switch", "off, and public picks are off");
+    else verdict("WARN", "stale-data kill switch", "not reported (deploy carries the ops-truth gates change?)");
     if (g.canExposePerformanceStats === true && cal?.status !== "GREEN") {
       verdict("FAIL", "record gate", `PERFORMANCE_STATS is on while calibration eligibility is ${cal?.status ?? "unknown"}: a record is exposed without proof`);
     } else {

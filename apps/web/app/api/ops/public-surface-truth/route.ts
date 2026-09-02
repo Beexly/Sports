@@ -4,7 +4,7 @@ import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { getReadinessGates, getPlatformConfig } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
@@ -622,6 +622,10 @@ export async function GET(request: Request) {
         isBootstrapMode: gates.isBootstrapMode,
         canExposePerformanceStats: effectivePerformanceStats,
         envPerformanceStatsEnabled: gates.canExposePerformanceStats,
+        // Stale-data kill switch (FORCE_NO_BET_IF_STALE). The gate runbook pairs
+        // it with public picks; reported here so launch:ready can warn when
+        // picks are public and the switch is off, instead of trusting memory.
+        forceNoBetIfStale: getPlatformConfig().forceNoBetIfStale,
         minSettledPicksForLearning: gates.minSettledPicksForLearning,
         calibrationPublished,
       },

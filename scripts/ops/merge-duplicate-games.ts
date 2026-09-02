@@ -452,6 +452,13 @@ async function main(): Promise<void> {
   }
 
   if (!args.execute) {
+    // The dry-run plan is the artefact the owner reviews before --execute, so
+    // it is written to disk too (not only printed), under a distinct name.
+    const planPath = writeReport("merge-duplicate-games-plan", {
+      plan,
+      childRepointPreviews: Object.fromEntries(childRepointPreviews),
+    });
+    console.log(`[merge-duplicate-games] dry-run plan written to ${planPath}`);
     console.log("[merge-duplicate-games] dry run — no writes made. Re-run with --execute to apply.");
     return;
   }
@@ -507,11 +514,17 @@ async function main(): Promise<void> {
     console.log(`[merge-duplicate-games] merged ${aliasRows.length} alias row(s) into ${canonicalRow.id}`);
   }
 
+  const outPath = writeReport("merge-duplicate-games", { plan, executionReports });
+  console.log(`[merge-duplicate-games] execution report written to ${outPath}`);
+}
+
+/** Writes a JSON report under scripts/ops/out/<name>-<timestamp>.json and returns its path. */
+function writeReport(name: string, body: unknown): string {
   const outDir = join(dirname(fileURLToPath(import.meta.url)), "out");
   mkdirSync(outDir, { recursive: true });
-  const outPath = join(outDir, `merge-duplicate-games-${new Date().toISOString().replace(/[:.]/g, "-")}.json`);
-  writeFileSync(outPath, JSON.stringify({ plan, executionReports }, null, 2));
-  console.log(`[merge-duplicate-games] execution report written to ${outPath}`);
+  const outPath = join(outDir, `${name}-${new Date().toISOString().replace(/[:.]/g, "-")}.json`);
+  writeFileSync(outPath, JSON.stringify(body, null, 2));
+  return outPath;
 }
 
 main().catch((err) => {
