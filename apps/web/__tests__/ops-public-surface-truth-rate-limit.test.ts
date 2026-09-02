@@ -123,6 +123,10 @@ vi.mock("@sports/db", () => ({
 
 vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: predictionEngineMocks.getReadinessGates,
+  // The route reports the stale-data kill switch (gates.forceNoBetIfStale);
+  // this suite only exercises rate limiting and Stripe gating, so the
+  // switch is simply off here.
+  getPlatformConfig: () => ({ forceNoBetIfStale: false }),
 }));
 
 vi.mock("@sports/data-ingestion", () => ({
