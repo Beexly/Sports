@@ -42,7 +42,8 @@ Updated: 2026-08-08 — code can prepare everything else; you own secrets, YES f
 - [ ] Explicit YES: **LIVE_BOARD** on
 - [ ] Explicit YES: **PUBLISH_LEDGER** on
 - [ ] Explicit YES: **SLATE_OPENING_REVEAL** / reveal on
-- [ ] Explicit YES: public picks (`PUBLIC_PICKS_ENABLED`) / performance stats (`PERFORMANCE_STATS_ENABLED`)
+- [x] Explicit YES: public picks (`PUBLIC_PICKS_ENABLED`) — observed ON in production 2026-09-02 (`gates.canExposePublicPicks: true`)
+- [ ] Explicit YES: performance stats (`PERFORMANCE_STATS_ENABLED`) — stays OFF until calibration eligibility is GREEN ×3 (RED on 2026-09-02: Brier 0.243, ECE 0.051)
 - [ ] Explicit YES: merge / land **#226 HEOS**
 - [ ] **Phase C (5b)** remeasure after real path (not silent flip)
 - [ ] Calibration floors met + founder signed YES before any **verified track record** language

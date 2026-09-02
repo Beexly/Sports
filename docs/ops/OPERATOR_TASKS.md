@@ -16,7 +16,7 @@ off it.
 | NEON-RO | Switch the Neon connector to read-only | claude.ai → Settings → Connectors → Neon | No — account/connector-level | Open |
 | CONN-PRUNE | Prune workspace connectors to `github`, `Neon` (read-only), `Vercel` | claude.ai → Settings → Connectors | No — account-level (proxy: `.mcp.json` has no DB server; `.claude/settings.json` denies `mcp__Neon__delete_project`) | Open |
 | BASELINE-MIG | Baseline migration landed; confirm production + make the CI replay blocking | Baseline in PR #684; owner: confirm `npm run db:migrate:status` after the first production deploy, apply the `.github/workflows/ci.yml` patch below | Partly (`npx prisma migrate deploy` on an empty DB is green) | Baseline landed in PR #684; 2 owner steps open |
-| ACTIONS-BILLING | Restore GitHub Actions billing / minutes | GitHub org → Settings → Billing | No — GitHub account/org-level (proxy: confirm `.github/workflows/ci.yml` exists and lists the expected jobs) | Open |
+| ACTIONS-BILLING | GitHub Actions billing / minutes | GitHub org → Settings → Billing | Partly — CI, daily-smoke and external-cron runs observed completing on 2026-09-02 (PR #684 check runs; daily-smoke #103–#105 green) | Resolved 2026-09-02 (minutes restored; keep an eye on the monthly cap) |
 | PUSH-PROTECT | Enable push protection and secret scanning | GitHub repo → Settings → Code security | No — GitHub repo-settings-level | Open |
 | BRANCH-PROTECT | Confirm branch protection on `main` | GitHub repo → Settings → Branches | No — GitHub repo-settings-level | Open |
 | SANDBOX-NET | Enable OS-level sandboxing with a network allowlist | Edit `.claude/settings.json` (owner-only): `sandbox.enabled: true` + `sandbox.network.allowedDomains` | Yes | Done in PR #684 (verify on a machine with bubblewrap / macOS) |
@@ -82,10 +82,13 @@ off it.
 
 ## GitHub
 
-- [ ] **ACTIONS-BILLING** — Restore GitHub Actions billing / minutes so
-  `.github/workflows/ci.yml` runs on every PR again. The `.githooks/pre-push`
-  comment records that minutes were unavailable; until they are, the
-  secret-scan, trust-gate, and guardrails jobs are not a backstop.
+- [x] **ACTIONS-BILLING** — GitHub Actions minutes are back: on 2026-09-02
+  the full `ci.yml` matrix ran on every push to PR #684 (12 jobs green on the
+  final head), `daily-smoke.yml` completed #103–#105 on consecutive days and
+  `external-cron.yml` fires dozens of times a day. The `.githooks/pre-push`
+  comment that called itself "the LAST automated gate" dated from the
+  2026-08-16 billing block and has been corrected. Re-open this item if a
+  workflow run shows "billing" or "spending limit" in its failure reason.
 - [ ] **PUSH-PROTECT** — Enable push protection and secret scanning on the
   repository (Settings → Code security). This is the one layer that works
   even when a contributor bypasses local hooks.

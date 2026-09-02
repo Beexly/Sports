@@ -31,7 +31,13 @@ Primary `CRON_SECRET` on Production. Dual-secret rotation: `CRON_SECRET_PREVIOUS
 
 ## 4. Do not flip without founder YES
 
-LIVE_BOARD · PUBLISH_LEDGER · public picks · Phase C · HEOS #226 · gamma schedule
+LIVE_BOARD · PUBLISH_LEDGER · PERFORMANCE_STATS · Phase C · HEOS #226 · gamma schedule
+
+State check (observed 2026-09-02 on `/api/ops/public-surface-truth`): `PUBLIC_PICKS_ENABLED`
+is **already ON** in production (`gates.canExposePublicPicks: true`, the board serves 55
+picks/day); `PERFORMANCE_STATS`, `LIVE_BOARD` and `PUBLISH_LEDGER` are off. Publishing a
+pick is not a track-record claim; the record gates above stay closed until calibration
+eligibility is GREEN ×3.
 
 ## 5. Environment variables (moved here from CLAUDE.md on 2026-09-02)
 
