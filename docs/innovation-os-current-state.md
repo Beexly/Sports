@@ -16,7 +16,7 @@ The accidental nested `Sports/` checkout is ignored from the root repository so 
 
 The Prisma schema now adds `LossAutopsy`, related one-to-one with `Pick`, plus `LossAutopsyStatus` and `LossRootCause` enums. The migration is:
 
-- `packages/db/prisma/migrations/20260522141600_add_loss_autopsy/migration.sql`
+- `packages/db/prisma/migrations-archive/20260522141600_add_loss_autopsy/migration.sql` (pre-baseline history; squashed into `migrations/20260101000000_baseline` on 2026-09-02)
 
 The migration creates `loss_autopsies`, indexes authored time, status, and root cause, and enforces a unique autopsy per pick. Rollback is straightforward while no production data depends on it: drop the foreign key, indexes, table, then the two enums.
 

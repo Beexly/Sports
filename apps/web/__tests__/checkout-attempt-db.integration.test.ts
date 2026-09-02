@@ -22,7 +22,7 @@ import {
  *
  * GATED: runs only when CHECKOUT_ATTEMPT_DB_TEST_URL points at a disposable
  * Postgres carrying the branch schema + migration (see
- * packages/db/prisma/migrations/20260722130000_add_checkout_attempt).
+ * packages/db/prisma/migrations-archive/20260722130000_add_checkout_attempt).
  * Run: scripts/dev/disposable-postgres.sh (adapted port), then
  *   CHECKOUT_ATTEMPT_DB_TEST_URL=postgresql://postgres@127.0.0.1:<port>/sports_test \
  *   npx vitest run __tests__/checkout-attempt-db.integration.test.ts

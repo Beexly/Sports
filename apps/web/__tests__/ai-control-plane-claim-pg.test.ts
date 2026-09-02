@@ -7,7 +7,7 @@
  * 20260722140000_add_ai_control_plane_ledger migration applied):
  *
  *   PORT=5447 DATADIR=/tmp/ai-claim-pg scripts/dev/disposable-postgres.sh   # adapted
- *   psql "$URL" -f packages/db/prisma/migrations/20260722140000_add_ai_control_plane_ledger/migration.sql
+ *   psql "$URL" -f packages/db/prisma/migrations-archive/20260722140000_add_ai_control_plane_ledger/migration.sql
  *   AI_CLAIM_PG_URL="postgresql://postgres@127.0.0.1:5447/sports_test" vitest run ai-control-plane-claim-pg
  */
 import { describe, it, expect, beforeAll, afterAll } from "vitest";

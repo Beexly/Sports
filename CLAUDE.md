@@ -33,7 +33,7 @@ apps/web/                     — Next.js app: app/ (pages, API routes, cockpit,
   apps/web/lib/data-sources/*                            — free-first multi-source ingestion spine
   apps/web/lib/claude-api/*                              — Claude API router, numeric guard, response cache
   apps/web/lib/api/no-store.ts                           — jsonNoStore helper (rule 5; .claude/rules/nextjs-caching.md)
-packages/db/                  — Prisma schema, migrations (source of truth), client
+packages/db/                  — Prisma schema, migrations (source of truth; one idempotent baseline since 2026-09-02, pre-baseline SQL in prisma/migrations-archive/), client
 packages/prediction-engine/   — Deterministic scoring, confidence, ranking; MODEL_VERSION frozen by scripts/guardrails/model-freeze.mjs
 packages/data-ingestion/      — Source adapters and normalization
 packages/ingestion-pipeline/  — Ingestion orchestration

@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const schema = fs.readFileSync(path.join(repoRoot, "packages/db/prisma/schema.prisma"), "utf8");
 const migration = fs.readFileSync(
-  path.join(repoRoot, "packages/db/prisma/migrations/20260523002500_add_model_journal_entries/migration.sql"),
+  path.join(repoRoot, "packages/db/prisma/migrations-archive/20260523002500_add_model_journal_entries/migration.sql"),
   "utf8"
 );
 const modelBlock = schema.match(/model ModelJournalEntry \{[\s\S]*?\n\}/)?.[0] ?? "";

@@ -9,7 +9,8 @@ paths:
 ## The facts
 
 - Schema: `packages/db/prisma/schema.prisma`
-- Migrations: `packages/db/prisma/migrations/` — 53 migration directories as of this writing, each timestamp-prefixed (e.g. `20260723100000_add_ind_inv_proposal`)
+- Migrations: `packages/db/prisma/migrations/` — squashed on 2026-09-02 into one idempotent baseline (`20260101000000_baseline`); every later change is a new timestamp-prefixed directory after it
+- Pre-baseline history: `packages/db/prisma/migrations-archive/` — the 53 original migration directories, unchanged, kept because tests and `scripts/integration/settlement-outbox-acceptance.mjs` read their SQL. Never apply them and never add to them (see the README there)
 - `packages/db/prisma/migrations/migration_lock.toml` exists and pins the provider (`postgresql`) — never hand-edit it
 - Client: `@prisma/client` + `@prisma/adapter-neon` (Neon serverless driver over `ws`), both pinned to `^5.22.0` in `packages/db/package.json`
 
@@ -19,11 +20,11 @@ paths:
 
 2. **Every `schema.prisma` change ships with a migration.** Generate it with `npm run db:migrate:dev -- --name <change>` (the root passthrough to `packages/db`'s `prisma migrate dev`) run against a **disposable** database — start one with `npm run db:disposable`. Never run `migrate dev` against a shared or production `DATABASE_URL`.
 
-3. **`db:push` (`prisma db push`) is dev-only.** It's fine against a local/disposable database for quick iteration, but it must never run against a shared or production URL — it has no migration history and can silently drop data. CI uses it only against the ephemeral test DB (see below); that's the one sanctioned exception.
+3. **`db:push` (`prisma db push`) is dev-only.** It's fine against a local/disposable database for quick iteration, but it must never run against a shared or production URL — it has no migration history and can silently drop data. CI still runs it against the ephemeral test DB after the replay (a no-op now that the baseline applies the full schema); the owner patch in rule 5 removes that step.
 
 4. **Production applies migrations via `prisma migrate deploy`**, run by `scripts/deploy/migrate-if-configured.mjs` during the Vercel build. That script is fail-closed: if migration application is misconfigured, the build fails rather than deploying app code against a schema it doesn't match.
 
-5. **CI replays the migration history, non-blocking for now.** `.github/workflows/ci.yml` runs `prisma migrate deploy` against the empty test database as a visible check, then brings the test DB to `schema.prisma` with `db push`. The replay is KNOWN RED: no migration creates `picks` or `users` — the ledger starts at `20260522141600_add_loss_autopsy` on top of a `db push`-built schema — so it cannot be blocking until an owner lands a baseline migration (`docs/ops/OPERATOR_TASKS.md` → "Baseline migration"). After that, CI switches to blocking `migrate deploy` plus `prisma migrate diff --exit-code`. Do not "fix" the replay by editing or reordering existing migrations.
+5. **CI replays the migration history.** `.github/workflows/ci.yml` runs `prisma migrate deploy` against the empty test database. Since the 2026-09-02 squash the replay passes: the baseline applies from empty and is a no-op on a database that already carries the schema (verified on a disposable Postgres 16 against both). The step is still `continue-on-error: true` and followed by `db push` only because `.github/workflows/**` is Edit-denied for agent sessions; the owner patch that makes it blocking and adds `prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel … --exit-code` is written out in `docs/ops/OPERATOR_TASKS.md` → BASELINE-MIG. Do not "fix" a red replay by editing or reordering existing migrations — write a forward migration.
 
 6. **Destructive commands are denied by the agent-bash-guard**: `prisma migrate reset` and `prisma db push --force-reset` are blocked outright. Don't attempt to route around the guard.
 
