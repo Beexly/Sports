@@ -20,7 +20,17 @@ Settle completed games without paid Odds API scores. Path selection is **key pre
 | `THE_ODDS_API_KEY` | Path | Notes |
 |--------------------|------|-------|
 | **ABSENT** (unset/blank) | free | `path: "free"`, `oddsApiRequired: false` |
-| **PRESENT** (any truthy) | odds-api | Even if DEACTIVATED → paid path fails; free path NOT taken |
+| **PRESENT** (any truthy) | odds-api, free fallback per failed sport | Since 2026-09-02 (PR #684): a sport whose paid scores fetch fails (dead/exhausted key, 401/402/429) is handed to the free ESPN path in the same cycle (`freeFallback` in the response, `paidFailedSports` lists them). Before that a deactivated key silently graded nothing for 9 days. |
+| `?path=free` on the URL | free | Forces the free path with the key present. The autonomy executor sends this for its free-settle action. |
+
+## Lanes (all PENDING-scoped, none overwrites a conflicting final)
+- Paid `settleSport` (Odds API scores, `daysFrom=3`) — writes `settlement_runs`; its catch returns `status: failed` (captured to Sentry by the route since PR #684).
+- Free `runFreePathSettlement` (ESPN, + henrygd for NCAA only once the source is registered) — live path, and the fallback above.
+- Stale backfill `backfillStaleSettlement` — every published PENDING pick whose game started more than **6h** ago (= settlement-health grace; was 3 days, which left the 6h–3d band ungraded when the paid path died), cap 200/run, HELD outcomes recorded in `unresolved` with their reason.
+
+## Matcher (free-settlement.ts)
+- Nearest start time wins among same-matchup finals (series games); a same-day doubleheader (two finals within 4h) still HOLDs as `AMBIGUOUS_MATCH`.
+- City-only pick names ("Los Angeles", "New York", "Chicago") HOLD when two teams with that city are on the fetched boards; grade only when the city names exactly one team.
 
 ## Commands
 ```bash
