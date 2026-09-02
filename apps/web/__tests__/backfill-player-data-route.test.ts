@@ -5,7 +5,7 @@ vi.mock("@/lib/ingestion/backfill-player-data", async (importActual) => {
   const actual = await importActual<typeof import("@/lib/ingestion/backfill-player-data")>();
   return { ...actual, backfillPlayerData: vi.fn() };
 });
-vi.mock("@/lib/ingestion/player-stats", () => ({ currentNflSeason: () => 2025 }));
+vi.mock("@/lib/ingestion/player-stats", () => ({ currentNflSeason: () => 2025, ingestionTargetNflSeason: () => 2026 }));
 
 import { GET } from "@/app/api/cron/backfill-player-data/route";
 import { backfillPlayerData } from "@/lib/ingestion/backfill-player-data";
