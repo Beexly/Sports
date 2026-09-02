@@ -234,10 +234,35 @@ export async function GET(request: Request) {
     captureError(err, { path: "settle-picks", stage: "paid:team-game-log-repair" });
   }
 
+  // Paid-path failure fallback. When the Odds API scores call throws (provider
+  // outage, exhausted key: observed continuously from 2026-08-24, with no
+  // settlement_runs row and no Sentry event to show for it), the paid branch
+  // used to grade nothing and rely on the stale backfill, which only looked at
+  // games older than 3 days. Now any failed sport is handed to the free ESPN
+  // path in the same cycle. Both graders are PENDING-scoped and the free runner
+  // refuses to overwrite a conflicting paid final, so running both is safe.
+  const failedSports = results.filter((r) => !r.ok).map((r) => r.sport);
+  let freeFallback: Awaited<ReturnType<typeof runFreePathSettlement>> | { error: string } | null = null;
+  if (failedSports.length > 0) {
+    try {
+      freeFallback = await runFreePathSettlement({
+        ...(failedSports.length === 1 ? { sportKey: failedSports[0] } : {}),
+        graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn(`[cron:settle-picks] free fallback after paid failure failed: ${message}`);
+      captureError(err, { path: "settle-picks", stage: "paid:free-fallback", failedSports });
+      freeFallback = { error: message };
+    }
+  }
+
   const okCount = results.filter((r) => r.ok).length;
   return NextResponse.json({
-    ok: okCount === results.length,
+    ok: okCount === results.length || (freeFallback !== null && !("error" in freeFallback) && freeFallback.sports.every((s) => s.ok)),
     path: "odds-api" as const,
+    paidFailedSports: failedSports,
+    freeFallback,
     oddsApiRequired: false as const,
     elapsedMs: Date.now() - startedAt,
     okCount,

@@ -21,6 +21,7 @@ off it.
 | BRANCH-PROTECT | Confirm branch protection on `main` | GitHub repo → Settings → Branches | No — GitHub repo-settings-level | Open |
 | SANDBOX-NET | Enable OS-level sandboxing with a network allowlist | Edit `.claude/settings.json` (owner-only): `sandbox.enabled: true` + `sandbox.network.allowedDomains` | Yes | Done in PR #684 (verify on a machine with bubblewrap / macOS) |
 | NEXT-MAJOR | Plan the Next.js 14 → 15/16 major upgrade | Separate migration project; the two `dependency-audit` waivers (`next`, bundled `postcss`) are reviewed by 2027-01-15 | Partly (`node scripts/guardrails/dependency-audit.mjs` shows the waivers) | Open |
+| HENRYGD-REG | Register (or reject) the henrygd NCAA API in the source-rights registry | Owner/legal read, then a row in `apps/web/lib/scraping/source-rights-registry.ts` | Partly (`checkClearance` denies it today; NCAA settlement runs single-source) | Open |
 
 ## Database and MCP connectors
 
@@ -79,6 +80,23 @@ off it.
      ```
      Until then the existing non-blocking replay step passes on every run and
      the `db push` step is a no-op.
+
+## Data rights
+
+- [ ] **HENRYGD-REG** — Decide the rights posture of the henrygd NCAA API
+  (`https://github.com/henrygd/ncaa-api`, NCAA.com-derived facts). It is listed
+  as OWNER-APPROVED free-first primary for NCAA facts in
+  `apps/web/lib/scraping/sports-data-candidates.ts` but has **no row** in
+  `apps/web/lib/scraping/source-rights-registry.ts`, so `checkClearance()`
+  denies it. Until 2026-09-02 the free settlement runner fetched it anyway
+  (bypassing the gate); it now fails closed like `free-score-persist.ts`
+  (GSE-SEC-050), which makes NCAA football settlement single-source (ESPN)
+  and never CONFIRMED by consensus. To restore the second source, add a
+  registry row (status `approved_public_logged_off`, facts only,
+  `storage_allowed: false`, attribution to NCAA.com via henrygd, self-host
+  before relying on it) after the terms read in
+  `docs/legal/VENDOR_QUESTIONNAIRE_CFBD.md`'s checklist style. Never widen a
+  registry row to make a test pass.
 
 ## GitHub
 

@@ -39,6 +39,28 @@ export const EXECUTABLE_CRON_TARGETS = {
   // together, in one reviewed change, if the kernel is ever taught to plan slates.
 } as const satisfies Partial<Record<AutonomyActionKind, string>>;
 
+/**
+ * Query string appended at invoke time for actions that must take the FREE
+ * settlement branch. `?path=free` is load-bearing: without it the settle-picks
+ * route takes the paid branch whenever THE_ODDS_API_KEY is present, so the
+ * planner's "free settle" never ran the free path in production (observed
+ * 2026-09-02). Kept apart from EXECUTABLE_CRON_TARGETS so the allow-list
+ * comparison below stays a plain path comparison.
+ */
+export const EXECUTABLE_CRON_QUERY = {
+  RUN_FREE_SETTLE: "?path=free",
+  ATTACK_RCA_WAVE_A: "?path=free",
+  ACCUMULATE_SETTLED_SAMPLE: "?path=free",
+} as const satisfies Partial<Record<AutonomyActionKind, string>>;
+
+/** Full request target (path + query) for an executable action. */
+export function executableRequestFor(action: AutonomyAction): string | null {
+  const path = executableTargetFor(action);
+  if (!path) return null;
+  const query = (EXECUTABLE_CRON_QUERY as Partial<Record<AutonomyActionKind, string>>)[action.kind] ?? "";
+  return `${path}${query}`;
+}
+
 /** Soft load-time check: EXECUTABLE paths must equal SAFE allow-list. */
 const _safeSet = new Set<string>(AUTONOMY_SAFE_CRON_TARGETS as readonly string[]);
 for (const p of Object.values(EXECUTABLE_CRON_TARGETS)) {
@@ -330,10 +352,11 @@ export async function executeAutonomyCycle(
       continue;
     }
 
+    const target = executableRequestFor(action) ?? path;
     const result = await invokeCron(
       fetchImpl,
       options.baseUrl,
-      path,
+      target,
       options.cronSecret,
       timeoutMs,
     );
@@ -341,7 +364,7 @@ export async function executeAutonomyCycle(
     acts.push({
       kind: action.kind,
       title: action.title,
-      target: path,
+      target,
       status: result.ok ? "executed" : "failed",
       httpStatus: result.httpStatus || null,
       ok: result.ok,

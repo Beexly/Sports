@@ -2,10 +2,11 @@ import { describe, expect, it, vi } from "vitest";
 import {
   BACKFILL_CAP,
   BACKFILL_UNRESOLVED_GRACE_DAYS,
-  PAID_SCORES_WINDOW_DAYS,
+  BACKFILL_WINDOW_HOURS,
   backfillStaleSettlement,
   type BackfillDb,
 } from "./settle-backfill";
+import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "../performance/settlement-health";
 import type { NormalizedGame } from "./free-adapters/espn-scores";
 import type { MultiSourceScoreResult } from "./multi-source-scores";
 
@@ -119,11 +120,16 @@ describe("backfillStaleSettlement", () => {
     expect(result.unresolved[0]?.sourcesTried).toContain("espn-public-api");
   });
 
-  it("does not settle in-window picks even if findMany returns them", async () => {
+  it("the window equals the settlement-health grace, so nothing can be overdue yet outside this lane", () => {
+    expect(BACKFILL_WINDOW_HOURS).toBe(SETTLEMENT_DEFAULT_GRACE_HOURS);
+  });
+
+  it("does not settle in-window picks (game started under the grace window) even if findMany returns them", async () => {
     const persistSettled = vi.fn(async () => true);
     const fetchScores = vi.fn(async () => scores([navyFinal()]));
     const db: BackfillDb = {
-      pick: { findMany: vi.fn(async () => [row({ daysAgo: 1 })]) },
+      // 2.4h ago: inside the 6h grace, so still the live path's business.
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 0.1 })]) },
     };
 
     const result = await backfillStaleSettlement({
@@ -160,10 +166,41 @@ describe("backfillStaleSettlement", () => {
     expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ take: BACKFILL_CAP }));
     expect(result.inspected).toBe(BACKFILL_CAP);
     expect(result.cap).toBe(BACKFILL_CAP);
-    expect(result.windowDays).toBe(PAID_SCORES_WINDOW_DAYS);
+    expect(result.windowHours).toBe(BACKFILL_WINDOW_HOURS);
+    expect(result.windowDays).toBeCloseTo(BACKFILL_WINDOW_HOURS / 24, 8);
   });
 
-  it("queries only PENDING published picks older than the paid window", async () => {
+  it("grades a 1-day-old pick: the 6h-to-3d band is no longer skipped", async () => {
+    const persistSettled = vi.fn(async () => true);
+    const fetchScores = vi.fn(async () => scores([{ ...navyFinal(), startTime: daysAgo(1).toISOString() }]));
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 1 })]) },
+    };
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores, persistSettled });
+    expect(result.skippedInWindow).toBe(0);
+    expect(result.inspected).toBe(1);
+    expect(result.settled).toBe(1);
+  });
+
+  it("records a HELD pick in unresolved with its reason instead of dropping it", async () => {
+    const persistSettled = vi.fn(async () => true);
+    // Two completed finals, same two teams, same start time, different scores:
+    // a doubleheader the matcher cannot tell apart → AMBIGUOUS_MATCH hold.
+    const g1 = navyFinal();
+    const g2: NormalizedGame = { ...navyFinal(), gameId: "espn-2", home: { team: "Navy", abbreviation: "NAVY", score: 3 }, away: { team: "Army", abbreviation: "ARMY", score: 20 } };
+    const fetchScores = vi.fn(async () => scores([g1, g2]));
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+    };
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores, persistSettled });
+    expect(result.held).toBe(1);
+    expect(result.settled).toBe(0);
+    expect(persistSettled).not.toHaveBeenCalled();
+    expect(result.unresolved).toHaveLength(1);
+    expect(result.unresolved[0]).toMatchObject({ pickId: "pick-1", reason: "AMBIGUOUS_MATCH", olderThanGrace: false });
+  });
+
+  it("queries only PENDING published picks older than the grace window", async () => {
     const findMany = vi.fn(async () => []);
     await backfillStaleSettlement({
       db: { pick: { findMany } },
@@ -176,7 +213,7 @@ describe("backfillStaleSettlement", () => {
     };
     expect(args.where.result).toBe("PENDING");
     const cutoff = args.where.game.commenceTime.lt;
-    const deltaDays = (NOW.getTime() - cutoff.getTime()) / (24 * 60 * 60 * 1000);
-    expect(deltaDays).toBeCloseTo(PAID_SCORES_WINDOW_DAYS, 8);
+    const deltaHours = (NOW.getTime() - cutoff.getTime()) / (60 * 60 * 1000);
+    expect(deltaHours).toBeCloseTo(BACKFILL_WINDOW_HOURS, 8);
   });
 });

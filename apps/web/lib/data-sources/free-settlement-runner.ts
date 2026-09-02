@@ -41,6 +41,7 @@ import {
   type SettlementRcaReport,
 } from "@/lib/settlement/root-cause-analysis";
 import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
+import { checkClearance } from "@/lib/scraping/clearance-engine";
 import {
   computeBurnRate,
   planClearanceWaves,
@@ -92,7 +93,7 @@ export type FreeSettlementSportResult = {
    */
   matchDebug?: readonly {
     pickId: string;
-    reason: "NO_FINAL" | "ORIENT_FAIL";
+    reason: "NO_FINAL" | "ORIENT_FAIL" | "AMBIGUOUS_MATCH" | "DISPUTED";
     homeTeam: string;
     awayTeam: string;
     gameDate: string;
@@ -129,6 +130,18 @@ export type FreeSettlementRunResult = {
 };
 
 async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
+  // GSE-SEC-050, same gate as free-score-persist.ts: henrygd-ncaa has no
+  // source-rights-registry row, so this must fail closed before any network
+  // call. Until the owner registers the source (docs/ops/OPERATOR_TASKS.md →
+  // HENRYGD-REG) NCAA settlement is single-source (ESPN), never silently
+  // dual-source through an unregistered fetch.
+  const clearance = checkClearance({
+    source_id: "henrygd-ncaa",
+    mode: "public_logged_off_fact_extract",
+    tool_id: "fetch-native",
+    intents: ["derived_analytics"],
+  });
+  if (!clearance.allowed) return [];
   try {
     if (free === "ncaaf") return await fetchHenrygdScoreboard(HENRYGD_PATHS.cfb);
     if (free === "ncaab") return await fetchHenrygdScoreboard(HENRYGD_PATHS.mbb);
@@ -494,12 +507,15 @@ export async function runFreePathSettlement(options?: {
       }
 
       // Sample unmatched overdue for operator RCA (no secrets — team names only).
+      // HELD outcomes are included: a hold (AMBIGUOUS_MATCH / DISPUTED) is the
+      // reason a pick stays overdue just as often as a missing final, and it was
+      // invisible here before.
       const matchDebug =
-        stillPending > 0 && finals.length > 0
+        (stillPending > 0 || picksHeld > 0) && finals.length > 0
           ? outcomes
               .filter(
-                (o): o is Extract<typeof o, { status: "PENDING" }> =>
-                  o.status === "PENDING",
+                (o): o is Extract<typeof o, { status: "PENDING" | "HELD" }> =>
+                  o.status === "PENDING" || o.status === "HELD",
               )
               .slice(0, 8)
               .map((o) => {
