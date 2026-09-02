@@ -156,6 +156,17 @@ describe("series (multi-day, same matchup): nearest start time wins", () => {
     if (out.status === "HELD") expect(out.reason).toBe("AMBIGUOUS_MATCH");
   });
 
+  it("a date-only pick timestamp never lets 'nearest' choose between two same-day finals", () => {
+    // "2025-08-16" parses as midnight; the 17:00 final is nearer than the 23:00
+    // one, but without a real kickoff time that is not evidence. Both stay and
+    // the doubleheader guard holds (scores differ).
+    const out = settlePendingPicks(
+      [pick({ pickId: "dateonly", gameDateIso: "2025-08-16" })],
+      [seriesFinal("2025-08-16T17:05:00Z", 3, 1), seriesFinal("2025-08-16T23:10:00Z", 2, 9)],
+    );
+    expect(out[0]).toMatchObject({ pickId: "dateonly", status: "HELD", reason: "AMBIGUOUS_MATCH" });
+  });
+
   it("without start times the old date-only behaviour is unchanged (series stays held)", () => {
     const dateOnly = (f: TrustedFinal): TrustedFinal => {
       const { startIso: _omit, ...rest } = f;

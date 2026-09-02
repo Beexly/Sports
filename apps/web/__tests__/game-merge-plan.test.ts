@@ -3,6 +3,7 @@ import {
   buildMergePlan,
   findPickConflicts,
   groupDuplicateGames,
+  groupDuplicateGamesDetailed,
   selectCanonical,
   type MergeCandidateGame,
   type PickSummary,
@@ -76,21 +77,22 @@ const rundownRow = game({
   externalId: "a1b2c3d4e5f60718293a4b5c6d7e8f90", // TheRundown hex event_id
   homeTeamName: "St. Louis", // city-only, as TheRundown emits
   awayTeamName: "Milwaukee",
-  commenceTime: new Date(COMMENCE.getTime() + 1 * HOUR),
+  // Feed clocks for the SAME game differ by minutes (baseball twin window: 2h).
+  commenceTime: new Date(COMMENCE.getTime() + 45 * 60 * 1000),
   createdAt: new Date(COMMENCE.getTime() - 1 * HOUR),
   pickCount: 1,
 });
 const espnSportKeyRow = game({
   id: "game-espn-sportkey",
   externalId: "espn:baseball_mlb:401816772",
-  commenceTime: new Date(COMMENCE.getTime() - 2 * HOUR),
+  commenceTime: new Date(COMMENCE.getTime() - 30 * 60 * 1000),
   createdAt: new Date(COMMENCE.getTime() - 2 * HOUR),
   pickCount: 1,
 });
 const espnShortRow = game({
   id: "game-espn-short",
   externalId: "espn:mlb:401816772",
-  commenceTime: new Date(COMMENCE.getTime() + 3 * HOUR),
+  commenceTime: new Date(COMMENCE.getTime() + 1 * HOUR),
   createdAt: COMMENCE,
   pickCount: 0,
 });
@@ -126,14 +128,34 @@ describe("groupDuplicateGames", () => {
     expect(groups).toHaveLength(0);
   });
 
-  it("does not group a same-team-pair game outside the 18h window", () => {
+  it("does not group a same-team-pair game outside the sport window (baseball: 2h)", () => {
     const farAway = game({
       id: "game-far",
       externalId: "espn:mlb:2",
       commenceTime: new Date(COMMENCE.getTime() + 25 * HOUR),
     });
-    const groups = groupDuplicateGames([oddsApiRow, farAway]);
-    expect(groups).toHaveLength(0);
+    expect(groupDuplicateGames([oddsApiRow, farAway])).toHaveLength(0);
+    // A doubleheader: same two teams, second game 4h later — two contests, never one group.
+    const game2 = game({
+      id: "game-dh-2",
+      externalId: "espn:mlb:3",
+      commenceTime: new Date(COMMENCE.getTime() + 4 * HOUR),
+    });
+    expect(groupDuplicateGames([oddsApiRow, game2])).toHaveLength(0);
+  });
+
+  it("refuses a cluster that union-find only reached by chaining across the window (doubleheader bridge)", () => {
+    // 0h ↔ +1h45 (ok) and +1h45 ↔ +3h30 (ok) would chain 0h to +3h30, which is
+    // the second game of a doubleheader. The cluster's span (3.5h) exceeds the
+    // 2h baseball window, so it is refused as a whole and reported, not merged.
+    const bridge = game({ id: "game-bridge", externalId: "espn:mlb:4", commenceTime: new Date(COMMENCE.getTime() + 1.75 * HOUR) });
+    const second = game({ id: "game-dh-second", externalId: "espn:mlb:5", commenceTime: new Date(COMMENCE.getTime() + 3.5 * HOUR) });
+    const detailed = groupDuplicateGamesDetailed([oddsApiRow, bridge, second]);
+    expect(detailed.groups).toHaveLength(0);
+    expect(detailed.refused).toHaveLength(1);
+    expect(detailed.refused[0]!.members.map((m) => m.id).sort()).toEqual(["game-bridge", "game-dh-second", "game-odds"]);
+    expect(detailed.refused[0]!.spanMs).toBe(3.5 * HOUR);
+    expect(groupDuplicateGames([oddsApiRow, bridge, second])).toHaveLength(0);
   });
 
   it("never auto-groups a bare ambiguous city (Los Angeles) — same fail-closed rule as game-identity.ts", () => {

@@ -221,6 +221,39 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     expect(calls.filter((c) => c.startsWith("settleSport:"))).toEqual(["settleSport:americanfootball_nfl"]);
   });
 
+  it("a cycle that grades and holds nothing while picks are overdue is red (starved), not ok", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    (runFreePathSettlement as Mock).mockImplementation(async () => ({
+      ...freeResult(true),
+      picksSettled: 0,
+      picksHeld: 0,
+    }));
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    const body = (await res.json()) as Body & { starved: boolean; priorOverdueCount: number | null };
+    // loadSettlementHealth is mocked to 3 overdue going in.
+    expect(body.priorOverdueCount).toBe(3);
+    expect(body.starved).toBe(true);
+    expect(body.ok).toBe(false);
+    expect(body.advisories.join(" ")).toMatch(/no usable finals/);
+    expect(captureError).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ path: "settle-picks", stage: "starved-cycle" }),
+    );
+  });
+
+  it("a cycle that only HOLDS overdue picks (with reasons) is work, not starvation", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    (runFreePathSettlement as Mock).mockImplementation(async () => ({
+      ...freeResult(true),
+      picksSettled: 0,
+      picksHeld: 2,
+    }));
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    const body = (await res.json()) as Body & { starved: boolean };
+    expect(body.starved).toBe(false);
+    expect(body.ok).toBe(true);
+  });
+
   it("the cycle is red only when the free pass itself fails", async () => {
     vi.stubEnv("THE_ODDS_API_KEY", "sk_live_present");
     (runFreePathSettlement as Mock).mockImplementation(async () => freeResult(false));

@@ -177,17 +177,38 @@ export async function GET(request: Request) {
     );
   }
 
-  const freeOk = free.sports.every((s) => s.ok);
+  // A cycle that ran without throwing is not the same as a cycle that graded.
+  // If picks were overdue going in and neither pass graded or held anything,
+  // no usable finals were obtained: report the cycle red so the watchdog sees
+  // the outage instead of an "ok" that masks it. Holds count as work (they are
+  // recorded with a reason); a cycle with nothing overdue is a healthy no-op.
+  const totalSettled = free.picksSettled + (paidSupplement?.picksSettled ?? 0);
+  const starved = (priorOverdueCount ?? 0) > 0 && totalSettled === 0 && free.picksHeld === 0;
+  if (starved) {
+    advisories.push(
+      `${priorOverdueCount} pick(s) were overdue past the ${SETTLEMENT_DEFAULT_GRACE_HOURS}h grace and this cycle graded ` +
+        `and held nothing: no usable finals were obtained. Check the free score spine (/api/cron/free-spine-health) and the RCA.`,
+    );
+    captureError(new Error("settle-picks cycle starved: overdue picks, no finals obtained"), {
+      path: "settle-picks",
+      stage: "starved-cycle",
+      priorOverdueCount,
+    });
+  }
+
+  const freeOk = free.sports.every((s) => s.ok) && !starved;
   // Top-level clvRepair / snapshotRepair / scoreDates / rca for ops
   // (same values also under free.* for the full free-path payload).
   return NextResponse.json({
     ok: freeOk,
+    starved,
     path: plan.label,
     plan,
     oddsApiRequired: false as const,
     elapsedMs: Date.now() - startedAt,
-    picksSettled: free.picksSettled + (paidSupplement?.picksSettled ?? 0),
+    picksSettled: totalSettled,
     picksHeld: free.picksHeld,
+    priorOverdueCount: priorOverdueCount ?? null,
     clvRepair: free.clvRepair,
     snapshotRepair: free.snapshotRepair,
     teamGameLogRepair: free.teamGameLogRepair,

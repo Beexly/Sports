@@ -13,7 +13,7 @@ import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
 import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
-import { STALE_PENDING_PICK_MAX_AGE_DAYS } from "@/lib/board/stale-pick-policy";
+import { STALE_PENDING_PICK_MAX_AGE_DAYS, stalePickWhere } from "@/lib/board/stale-pick-policy";
 import { loadMarketCoverage } from "@/lib/board/market-coverage";
 import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
 
@@ -515,18 +515,34 @@ export async function GET(request: Request) {
     clvPolicy && clvPolicy.gradedSampleSize >= 25
       ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
       : null;
+  // The rate feeds the pricing-ladder evaluator internally regardless; this is
+  // a public endpoint, so the split counts and the rate are only PUBLISHED when
+  // the CLV policy says they may be (canExposeClv). Gated → sample size and the
+  // reason only; the owner reads the numbers from the database / the ops report.
   const clvPosture = clvPolicy
-    ? {
-        gradedSampleSize: clvPolicy.gradedSampleSize,
-        beatCloseCount: clvPolicy.beatCloseCount,
-        matchedCloseCount: clvPolicy.matchedCloseCount,
-        lostToCloseCount: clvPolicy.lostToCloseCount,
-        beatCloseRate: clvBeatCloseRate,
-        clearsBreakEven: clvPolicy.clearsBreakEven,
-        canExposeClv: clvPolicy.canExposeClv,
-        blockers: clvPolicy.blockers,
-        operatorMessage: clvPolicy.operatorMessage,
-      }
+    ? clvPolicy.canExposeClv
+      ? {
+          gradedSampleSize: clvPolicy.gradedSampleSize,
+          beatCloseCount: clvPolicy.beatCloseCount,
+          matchedCloseCount: clvPolicy.matchedCloseCount,
+          lostToCloseCount: clvPolicy.lostToCloseCount,
+          beatCloseRate: clvBeatCloseRate,
+          clearsBreakEven: clvPolicy.clearsBreakEven,
+          canExposeClv: true as const,
+          blockers: clvPolicy.blockers,
+          operatorMessage: clvPolicy.operatorMessage,
+        }
+      : {
+          gradedSampleSize: clvPolicy.gradedSampleSize,
+          beatCloseCount: null,
+          matchedCloseCount: null,
+          lostToCloseCount: null,
+          beatCloseRate: null,
+          clearsBreakEven: null,
+          canExposeClv: false as const,
+          blockers: clvPolicy.blockers,
+          operatorMessage: clvPolicy.operatorMessage,
+        }
     : null;
 
   // Named pricing ladder (pricing-phases.ts) checked against the same live
@@ -543,7 +559,6 @@ export async function GET(request: Request) {
   // model v5.0.0 written in May on September/November lines). They are not on
   // the public daily slate (day-bound by generatedAt) but they will grade at
   // kickoff on a stale line; the owner decides supersede/void, never a cron.
-  const staleCutoff = new Date(Date.now() - STALE_PENDING_PICK_MAX_AGE_DAYS * 24 * 60 * 60 * 1000);
   const stalePendingPicks = isStubMode()
     ? null
     : await safeRead(() =>
@@ -551,7 +566,8 @@ export async function GET(request: Request) {
           where: {
             isPublished: true,
             result: "PENDING",
-            generatedAt: { lt: staleCutoff },
+            // Refresh age, not creation age (lib/board/stale-pick-policy.ts).
+            ...stalePickWhere(),
             game: { commenceTime: { gt: new Date() } },
           },
         }),

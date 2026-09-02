@@ -120,6 +120,8 @@ export {
   preferLongerTeamName,
   gameIdentityMergeDisabled,
   GAME_IDENTITY_COMMENCE_MATCH_MS,
+  BASEBALL_COMMENCE_MATCH_MS,
+  commenceMatchMsFor,
   MAX_ALIAS_HOPS,
   PREFIX_MATCH_SPORT_KEYS,
   normalizeGameTeamToken,

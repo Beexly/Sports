@@ -285,7 +285,10 @@ export async function settleSport(
               awayTeamName: raw.away_team,
               commenceTime,
             });
-            if (resolved && resolved.matchedBy === "twin") {
+            // Any resolution counts: a twin, or an externalId row another
+            // ingestion created between the two lookups (reload by id so its
+            // picks settle this cycle instead of waiting for the next).
+            if (resolved) {
               game = await db.game.findUnique({
                 where: { id: resolved.game.id },
                 include: { picks: { where: { result: "PENDING" } } },

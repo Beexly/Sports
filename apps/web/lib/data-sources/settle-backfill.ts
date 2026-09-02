@@ -29,6 +29,7 @@ import {
   type PendingPick,
 } from "./free-settlement";
 import { ODDS_KEY_TO_FREE } from "./free-settlement-runner";
+import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import type { NormalizedGame } from "./free-adapters/espn-scores";
 import type { Sport } from "./source-router";
 
@@ -44,7 +45,7 @@ export const PAID_SCORES_WINDOW_DAYS = 3;
  * (provider outage), which left every game in that band ungraded and produced
  * the CRITICAL backlog observed 2026-09-02.
  */
-export const BACKFILL_WINDOW_HOURS = 6;
+export const BACKFILL_WINDOW_HOURS: number = SETTLEMENT_DEFAULT_GRACE_HOURS;
 /**
  * Per-run cap. 50 re-read the same oldest 50 every hour once that many picks
  * were HELD or unmatched, and everything behind them was never inspected.

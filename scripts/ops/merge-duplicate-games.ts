@@ -392,8 +392,15 @@ async function main(): Promise<void> {
   console.log(
     `[merge-duplicate-games] mode=${args.execute ? "EXECUTE" : "DRY-RUN"} ` +
       `sport=${args.sportKey ?? "ALL"} groups=${plan.groupCount} aliases=${plan.aliasCount} ` +
-      `pickConflicts=${plan.conflictCount}`,
+      `pickConflicts=${plan.conflictCount} refusedGroups=${plan.refusedGroupCount}`,
   );
+  for (const r of plan.refusedGroups) {
+    console.log(
+      `[merge-duplicate-games] REFUSED ${r.sportKey}: ${r.memberIds.length} rows span ` +
+        `${Math.round(r.spanMs / 60000)}m > ${Math.round(r.windowMs / 60000)}m window (${r.reason}) — ` +
+        `split by hand: ${r.memberExternalIds.join(", ")}`,
+    );
+  }
 
   // Read-only preview of the child-row re-pointing (including which rows
   // WOULD collide and be skipped) for every group — shown in both dry-run

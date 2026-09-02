@@ -5,6 +5,9 @@ import {
   preferLongerTeamName,
   gameIdentityMergeDisabled,
   GAME_IDENTITY_COMMENCE_MATCH_MS,
+  BASEBALL_COMMENCE_MATCH_MS,
+  AMBIGUOUS_CITY_TOKENS,
+  commenceMatchMsFor,
   MAX_ALIAS_HOPS,
   type GameIdentityDb,
   type GameTwinCandidate,
@@ -56,20 +59,20 @@ describe("findTwinCandidate (pure)", () => {
     expect(match?.exact).toBe(true);
   });
 
-  it("matches across feeds whose kickoff clocks disagree by less than 18h", () => {
+  it("matches across feeds whose kickoff clocks disagree inside the sport window (baseball: 2h)", () => {
     const match = findTwinCandidate(
-      [candidate({ commenceTime: new Date(BASE.getTime() - 17 * HOUR) })],
+      [candidate({ commenceTime: new Date(BASE.getTime() - 1.5 * HOUR) })],
       probe(),
     );
     expect(match?.candidate.id).toBe("game-1");
-    expect(match?.commenceDeltaMs).toBe(17 * HOUR);
+    expect(match?.commenceDeltaMs).toBe(1.5 * HOUR);
   });
 
-  it("refuses a candidate outside the 18h window", () => {
+  it("refuses a candidate outside the sport window", () => {
     const match = findTwinCandidate(
       [
         candidate({
-          commenceTime: new Date(BASE.getTime() + GAME_IDENTITY_COMMENCE_MATCH_MS + 60_000),
+          commenceTime: new Date(BASE.getTime() + commenceMatchMsFor("baseball_mlb") + 60_000),
         }),
       ],
       probe(),
@@ -361,15 +364,16 @@ describe("resolveCanonicalGame (db)", () => {
     expect(line).toContain("baseball_mlb");
   });
 
-  it("queries only the ±18h window for the same sport", async () => {
+  it("queries only the sport's twin window for the same sport (baseball: ±2h)", async () => {
     await resolveCanonicalGame(db, probe());
 
+    const windowMs = commenceMatchMsFor("baseball_mlb");
     expect(findMany).toHaveBeenCalledWith({
       where: {
         sportId: "sport-mlb",
         commenceTime: {
-          gte: new Date(BASE.getTime() - GAME_IDENTITY_COMMENCE_MATCH_MS),
-          lte: new Date(BASE.getTime() + GAME_IDENTITY_COMMENCE_MATCH_MS),
+          gte: new Date(BASE.getTime() - windowMs),
+          lte: new Date(BASE.getTime() + windowMs),
         },
       },
       select: {
@@ -511,6 +515,62 @@ describe("resolveCanonicalGame — alias-safe fast path", () => {
     });
 
     await expect(resolveCanonicalGame(db, probe())).rejects.toThrow(/exceeded 3 hops/);
+  });
+});
+
+describe("sport-specific twin window (doubleheaders) and shared-city tokens", () => {
+  it("baseball uses a 2h window: a second contest 3.5h later is NOT a twin even when it is the only row", () => {
+    const only = candidate({ commenceTime: BASE });
+    const game2 = probe({ commenceTime: new Date(BASE.getTime() + 3.5 * HOUR) });
+    expect(commenceMatchMsFor("baseball_mlb")).toBe(BASEBALL_COMMENCE_MATCH_MS);
+    expect(findTwinCandidate([only], game2)).toBeNull();
+  });
+
+  it("baseball still merges the same game when feed clocks differ by minutes", () => {
+    const only = candidate({ commenceTime: BASE });
+    const sameGame = probe({ commenceTime: new Date(BASE.getTime() + 25 * 60 * 1000) });
+    expect(findTwinCandidate([only], sameGame)?.candidate.id).toBe("game-1");
+  });
+
+  it("football keeps the 18h window (one contest per pair per week)", () => {
+    const nfl = candidate({
+      id: "nfl-1",
+      sportId: "sport-nfl",
+      externalId: "espn:nfl:1",
+      homeTeamName: "Kansas City Chiefs",
+      awayTeamName: "Baltimore Ravens",
+      commenceTime: BASE,
+    });
+    const tenHoursLater = probe({
+      sportId: "sport-nfl",
+      sportKey: "americanfootball_nfl",
+      externalId: "abc123",
+      homeTeamName: "Kansas City Chiefs",
+      awayTeamName: "Baltimore Ravens",
+      commenceTime: new Date(BASE.getTime() + 10 * HOUR),
+    });
+    expect(commenceMatchMsFor("americanfootball_nfl")).toBe(GAME_IDENTITY_COMMENCE_MATCH_MS);
+    expect(commenceMatchMsFor(undefined)).toBe(GAME_IDENTITY_COMMENCE_MATCH_MS);
+    expect(findTwinCandidate([nfl], tenHoursLater)?.candidate.id).toBe("nfl-1");
+  });
+
+  it("a bare 'Manchester' never prefix-matches Manchester City or United (EPL)", () => {
+    const city = candidate({
+      id: "epl-1",
+      sportId: "sport-epl",
+      externalId: "espn:epl:1",
+      homeTeamName: "Manchester City",
+      awayTeamName: "Arsenal",
+    });
+    const cityOnly = probe({
+      sportId: "sport-epl",
+      sportKey: "soccer_epl",
+      externalId: "rundown-epl-1",
+      homeTeamName: "Manchester",
+      awayTeamName: "Arsenal",
+    });
+    expect(AMBIGUOUS_CITY_TOKENS.has("manchester")).toBe(true);
+    expect(findTwinCandidate([city], cityOnly)).toBeNull();
   });
 });
 

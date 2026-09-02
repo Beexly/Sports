@@ -293,6 +293,10 @@ export const NEAREST_CANDIDATE_TIE_MS = 4 * 60 * 60 * 1000;
 
 export function nearestCandidates(pick: PendingPick, matching: readonly TrustedFinal[]): TrustedFinal[] {
   if (matching.length <= 1) return [...matching];
+  // A date-only gameDateIso ("2026-09-05") parses as midnight, which would make
+  // "nearest" pick the earlier game of a same-day doubleheader. Without a real
+  // kickoff time every candidate stays and the doubleheader guard holds.
+  if (!pick.gameDateIso.includes("T")) return [...matching];
   const kickoff = Date.parse(pick.gameDateIso);
   if (Number.isNaN(kickoff) || matching.some((f) => !f.startIso || Number.isNaN(Date.parse(f.startIso)))) {
     return [...matching];
@@ -355,7 +359,15 @@ export function settlePendingPicks(
     // feed that dropped the nickname. When more than one team with that city
     // appears anywhere on the fetched scoreboards, the name cannot identify the
     // game; hold rather than grade against whichever team happened to play.
-    const ambiguousCity = cityOnlyAmbiguity(pick, finals, postponedCandidates);
+    // Only rows inside the pick's own date window count: another date's
+    // same-city team elsewhere in the batch must not hold a pick the date can
+    // identify. Rows without a start time are kept (fail closed).
+    const pickDate = pick.gameDateIso.slice(0, 10);
+    const ambiguousCity = cityOnlyAmbiguity(
+      pick,
+      finals.filter((f) => daysApart(f.date, pickDate) <= 2),
+      postponedCandidates.filter((g) => !g.startTime || daysApart(g.startTime.slice(0, 10), pickDate) <= 2),
+    );
     if (ambiguousCity) {
       return { pickId: pick.pickId, status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] };
     }

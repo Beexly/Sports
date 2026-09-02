@@ -26,7 +26,7 @@
  * human to resolve by hand rather than being auto-merged on a guess.
  */
 import {
-  GAME_IDENTITY_COMMENCE_MATCH_MS,
+  commenceMatchMsFor,
   PREFIX_MATCH_SPORT_KEYS,
   matchTeamSide,
   preferLongerTeamName,
@@ -92,12 +92,37 @@ export type MergePlanGroup = {
   readonly pickConflicts: readonly PickConflict[];
 };
 
+/**
+ * A cluster union-find connected only by CHAINING across the sport window
+ * (0h ↔ +1h45 ↔ +3h30: the last row is the second game of a doubleheader).
+ * Its members span more than one contest's worth of time, so the tool refuses
+ * to merge any of them and reports the cluster for a human to split.
+ */
+export type RefusedGroup = {
+  readonly sportKey: string;
+  readonly members: readonly MergeCandidateGame[];
+  readonly spanMs: number;
+  readonly windowMs: number;
+  readonly reason: "span-exceeds-window";
+};
+
+export type MergePlanRefusedGroup = {
+  readonly sportKey: string;
+  readonly memberIds: readonly string[];
+  readonly memberExternalIds: readonly string[];
+  readonly spanMs: number;
+  readonly windowMs: number;
+  readonly reason: RefusedGroup["reason"];
+};
+
 export type MergePlan = {
   readonly generatedAt: string;
   readonly groupCount: number;
   readonly aliasCount: number;
   readonly conflictCount: number;
+  readonly refusedGroupCount: number;
   readonly groups: readonly MergePlanGroup[];
+  readonly refusedGroups: readonly MergePlanRefusedGroup[];
 };
 
 /** True for every externalId format odds ingestion does NOT write (see game-identity.ts header). */
@@ -113,8 +138,10 @@ function isEspnExternalId(externalId: string): boolean {
  */
 function pairMatches(a: MergeCandidateGame, b: MergeCandidateGame): boolean {
   if (a.sportId !== b.sportId) return false;
+  // Same window as ingestion identity (2h for baseball so a doubleheader is
+  // never grouped as one contest; 18h otherwise).
   const delta = Math.abs(a.commenceTime.getTime() - b.commenceTime.getTime());
-  if (delta > GAME_IDENTITY_COMMENCE_MATCH_MS) return false;
+  if (delta > commenceMatchMsFor(a.sportKey)) return false;
   const allowPrefix = PREFIX_MATCH_SPORT_KEYS.has(a.sportKey);
   const home = matchTeamSide(a.homeTeamName, b.homeTeamName, allowPrefix);
   const away = matchTeamSide(a.awayTeamName, b.awayTeamName, allowPrefix);
@@ -136,6 +163,20 @@ function pairMatches(a: MergeCandidateGame, b: MergeCandidateGame): boolean {
 export function groupDuplicateGames(
   games: readonly MergeCandidateGame[],
 ): MergeGroup[] {
+  return groupDuplicateGamesDetailed(games).groups;
+}
+
+/**
+ * Same clustering, plus the clusters that were REFUSED: union-find is
+ * transitive, so pairwise-in-window rows can chain a cluster whose total span
+ * exceeds the sport window (a doubleheader bridged by a row in between). Such a
+ * cluster describes more than one contest; merging any of it would attach one
+ * game's picks and odds to another. It is dropped from `groups` and returned in
+ * `refused` with its span so the dry-run plan shows it.
+ */
+export function groupDuplicateGamesDetailed(
+  games: readonly MergeCandidateGame[],
+): { groups: MergeGroup[]; refused: RefusedGroup[] } {
   const eligible = games.filter((g) => g.mergedIntoGameId == null);
   const parent = new Map<string, string>();
   for (const g of eligible) parent.set(g.id, g.id);
@@ -175,11 +216,20 @@ export function groupDuplicateGames(
   }
 
   const groups: MergeGroup[] = [];
+  const refused: RefusedGroup[] = [];
   for (const members of clusters.values()) {
     if (members.length < 2) continue;
-    groups.push({ sportKey: members[0]!.sportKey, members });
+    const sportKey = members[0]!.sportKey;
+    const times = members.map((m) => m.commenceTime.getTime());
+    const spanMs = Math.max(...times) - Math.min(...times);
+    const windowMs = commenceMatchMsFor(sportKey);
+    if (spanMs > windowMs) {
+      refused.push({ sportKey, members, spanMs, windowMs, reason: "span-exceeds-window" });
+      continue;
+    }
+    groups.push({ sportKey, members });
   }
-  return groups;
+  return { groups, refused };
 }
 
 /**
@@ -272,7 +322,7 @@ export function buildMergePlan(
   picksByGameId: ReadonlyMap<string, readonly PickSummary[]>,
   options: { readonly now?: Date } = {},
 ): MergePlan {
-  const rawGroups = groupDuplicateGames(games);
+  const { groups: rawGroups, refused } = groupDuplicateGamesDetailed(games);
   const groups: MergePlanGroup[] = rawGroups.map((group) => {
     const { canonical, aliases, resolvedHomeTeamName, resolvedAwayTeamName } =
       selectCanonical(group.members);
@@ -294,6 +344,15 @@ export function buildMergePlan(
     groupCount: groups.length,
     aliasCount: groups.reduce((sum, g) => sum + g.aliasIds.length, 0),
     conflictCount: groups.reduce((sum, g) => sum + g.pickConflicts.length, 0),
+    refusedGroupCount: refused.length,
     groups,
+    refusedGroups: refused.map((r) => ({
+      sportKey: r.sportKey,
+      memberIds: r.members.map((m) => m.id),
+      memberExternalIds: r.members.map((m) => m.externalId),
+      spanMs: r.spanMs,
+      windowMs: r.windowMs,
+      reason: r.reason,
+    })),
   };
 }

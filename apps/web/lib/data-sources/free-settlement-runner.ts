@@ -139,7 +139,10 @@ async function loadHenrygdFor(free: Sport): Promise<readonly NcaaGame[]> {
     source_id: "henrygd-ncaa",
     mode: "public_logged_off_fact_extract",
     tool_id: "fetch-native",
-    intents: ["derived_analytics"],
+    // The runner persists these finals on `games` and grades picks from them,
+    // so it needs storage rights, not just derived analytics — a registry row
+    // with storage_allowed:false must still fail this gate.
+    intents: ["storage", "derived_analytics"],
   });
   if (!clearance.allowed) return [];
   try {

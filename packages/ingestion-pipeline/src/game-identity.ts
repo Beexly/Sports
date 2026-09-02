@@ -37,6 +37,21 @@
 export const GAME_IDENTITY_COMMENCE_MATCH_MS = 18 * 60 * 60 * 1000;
 
 /**
+ * Baseball plays doubleheaders: two DIFFERENT contests between the same two
+ * teams on the same day, typically 3.5–7h apart. Inside an 18h window the
+ * second game of a doubleheader would be treated as a twin of the first when
+ * only one row exists yet (the nearest/tie rules cannot help when the other
+ * contest is absent). Feed clocks for the SAME game differ by minutes, never
+ * hours, so a 2h window keeps true twins and separates doubleheader games.
+ */
+export const BASEBALL_COMMENCE_MATCH_MS = 2 * 60 * 60 * 1000;
+
+/** Twin window for a sport key; unknown/omitted keys use the default 18h. */
+export function commenceMatchMsFor(sportKey: string | undefined): number {
+  return sportKey === "baseball_mlb" ? BASEBALL_COMMENCE_MATCH_MS : GAME_IDENTITY_COMMENCE_MATCH_MS;
+}
+
+/**
  * Shortest normalized name allowed to participate in a city-only PREFIX match.
  * Blocks 2–3 letter abbreviations ("NY", "LAA") from prefix-matching a full name.
  */
@@ -54,6 +69,8 @@ export const AMBIGUOUS_CITY_TOKENS: ReadonlySet<string> = new Set([
   "losangeles",
   "newyork",
   "chicago",
+  // EPL: Manchester City / Manchester United share the bare city.
+  "manchester",
 ]);
 
 /**
@@ -279,8 +296,9 @@ export function gameIdentityMergeDisabled(
  * Pure twin matcher — no DB, no clock, no env.
  *
  * Rules, in order:
- *  1. Candidate must share the probe's sportId and commence within
- *     GAME_IDENTITY_COMMENCE_MATCH_MS.
+ *  1. Candidate must share the probe's sportId and commence within the sport's
+ *     window (commenceMatchMsFor: 2h for baseball because of doubleheaders,
+ *     GAME_IDENTITY_COMMENCE_MATCH_MS = 18h otherwise).
  *  2. Team pair must match (order-insensitive; the orientation is reported).
  *  3. EXACT-name matches outrank prefix matches. If any exact match exists,
  *     prefix matches are discarded entirely.
@@ -309,6 +327,8 @@ export function findTwinCandidate(
   const allowPrefix =
     probe.sportKey != null && PREFIX_MATCH_SPORT_KEYS.has(probe.sportKey);
 
+  const windowMs = commenceMatchMsFor(probe.sportKey);
+
   const byId = new Map<string, GameTwinCandidate>();
   for (const c of candidates) byId.set(c.id, c);
 
@@ -318,7 +338,7 @@ export function findTwinCandidate(
     const candidateMs = candidate.commenceTime.getTime();
     if (!Number.isFinite(candidateMs)) continue;
     const delta = Math.abs(candidateMs - probeMs);
-    if (delta > GAME_IDENTITY_COMMENCE_MATCH_MS) continue;
+    if (delta > windowMs) continue;
     const pair = matchTeamPair(probe, candidate, allowPrefix);
     if (!pair) continue;
 
@@ -458,14 +478,15 @@ export async function resolveCanonicalGame(
   const probeMs = probe.commenceTime.getTime();
   if (!Number.isFinite(probeMs)) return null;
 
+  const windowMs = commenceMatchMsFor(probe.sportKey);
   const candidates =
     options.candidates ??
     (await db.game.findMany({
       where: {
         sportId: probe.sportId,
         commenceTime: {
-          gte: new Date(probeMs - GAME_IDENTITY_COMMENCE_MATCH_MS),
-          lte: new Date(probeMs + GAME_IDENTITY_COMMENCE_MATCH_MS),
+          gte: new Date(probeMs - windowMs),
+          lte: new Date(probeMs + windowMs),
         },
       },
       select: GAME_ROW_SELECT,
