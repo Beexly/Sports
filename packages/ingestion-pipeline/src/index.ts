@@ -120,6 +120,10 @@ export {
   preferLongerTeamName,
   gameIdentityMergeDisabled,
   GAME_IDENTITY_COMMENCE_MATCH_MS,
+  MAX_ALIAS_HOPS,
+  PREFIX_MATCH_SPORT_KEYS,
+  normalizeGameTeamToken,
+  matchTeamSide,
 } from "./game-identity.js";
 export type {
   GameIdentityDb,

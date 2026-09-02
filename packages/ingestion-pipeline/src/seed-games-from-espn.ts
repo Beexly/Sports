@@ -95,12 +95,19 @@ export async function seedGamesFromEspn(opts?: {
               awayTeamName: g.awayTeamName,
               commenceTime: g.commenceTime,
             });
-            if (
-              resolved &&
-              resolved.matchedBy === "twin" &&
-              !claimedTwinIds.has(resolved.game.id)
-            ) {
-              twin = resolved.game;
+            if (resolved && !claimedTwinIds.has(resolved.game.id)) {
+              if (resolved.matchedBy === "twin") {
+                twin = resolved.game;
+              } else if (resolved.game.externalId !== g.externalId) {
+                // matchedBy "externalId" but the returned row's OWN
+                // externalId differs from what we ingested: this seed's id
+                // is an ALIAS (scripts/ops/merge-duplicate-games.ts) and
+                // resolveCanonicalGame followed it to the canonical row.
+                // Update the canonical, never the tombstone — an untouched
+                // externalId match still falls through to the plain upsert
+                // below, unchanged.
+                twin = resolved.game;
+              }
             }
           } catch (identityErr) {
             // Fall back to the original upsert-by-externalId behaviour.

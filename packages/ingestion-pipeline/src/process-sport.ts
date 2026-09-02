@@ -546,12 +546,20 @@ export async function processSport(
           awayTeamName: game.awayTeam,
           commenceTime: game.commenceTime,
         });
-        if (
-          resolved &&
-          resolved.matchedBy === "twin" &&
-          !claimedTwinIds.has(resolved.game.id)
-        ) {
-          twin = resolved.game;
+        if (resolved && !claimedTwinIds.has(resolved.game.id)) {
+          if (resolved.matchedBy === "twin") {
+            twin = resolved.game;
+          } else if (resolved.game.externalId !== game.externalId) {
+            // matchedBy "externalId" but the returned row's OWN externalId
+            // differs from what we ingested: resolveCanonicalGame followed
+            // this externalId to a merged-away ALIAS row and returned the
+            // canonical it points to (scripts/ops/merge-duplicate-games.ts).
+            // Route through the same "update the existing row" path as a
+            // twin so re-ingesting the old id never writes onto the
+            // tombstone — an untouched externalId match (the common case)
+            // still falls through to the plain upsert below, unchanged.
+            twin = resolved.game;
+          }
         }
       } catch (identityErr) {
         // Never let identity resolution block ingestion — fall back to the

@@ -5,6 +5,7 @@ import {
   preferLongerTeamName,
   gameIdentityMergeDisabled,
   GAME_IDENTITY_COMMENCE_MATCH_MS,
+  MAX_ALIAS_HOPS,
   type GameIdentityDb,
   type GameTwinCandidate,
 } from "../game-identity.js";
@@ -30,6 +31,7 @@ function candidate(overrides: Partial<GameTwinCandidate> = {}): GameTwinCandidat
     homeTeamName: "San Diego Padres",
     awayTeamName: "Los Angeles Dodgers",
     commenceTime: BASE,
+    mergedIntoGameId: null,
     ...overrides,
   };
 }
@@ -228,6 +230,87 @@ describe("findTwinCandidate (pure)", () => {
   });
 });
 
+describe("findTwinCandidate — alias-safe (scripts/ops/merge-duplicate-games.ts)", () => {
+  it("resolves a matching ALIAS row to its canonical, never returning the alias", () => {
+    const rows = [
+      candidate({
+        id: "game-alias",
+        externalId: "espn:mlb:legacy",
+        mergedIntoGameId: "game-canonical",
+      }),
+      candidate({
+        id: "game-canonical",
+        externalId: "0f2c1d3e4a5b6c7d8e9f0a1b2c3d4e5f",
+        // Deliberately different team-name specificity/time so this row alone
+        // would NOT match the probe — proving the alias row's own match is
+        // what drove resolution, not an independent match on this row.
+        homeTeamName: "San Diego",
+        awayTeamName: "Los Angeles",
+        commenceTime: new Date(BASE.getTime() + 5 * HOUR),
+      }),
+    ];
+    const match = findTwinCandidate(rows, probe());
+    expect(match?.candidate.id).toBe("game-canonical");
+    expect(match?.candidate.mergedIntoGameId).toBeNull();
+  });
+
+  it("follows a 2-hop alias chain (within MAX_ALIAS_HOPS)", () => {
+    // Only game-a matches the probe's team pair (the alias entry point);
+    // game-b/game-c intentionally carry a NON-matching team pair so the only
+    // way to reach game-c is by following game-a's chain, not an independent
+    // direct match.
+    const rows = [
+      candidate({ id: "game-a", externalId: "a", mergedIntoGameId: "game-b" }),
+      candidate({
+        id: "game-b",
+        externalId: "b",
+        homeTeamName: "Chicago Cubs",
+        awayTeamName: "Cincinnati Reds",
+        mergedIntoGameId: "game-c",
+      }),
+      candidate({ id: "game-c", externalId: "c", homeTeamName: "Chicago Cubs", awayTeamName: "Cincinnati Reds" }),
+    ];
+    const match = findTwinCandidate(rows, probe());
+    expect(match?.candidate.id).toBe("game-c");
+  });
+
+  it("fails closed (drops the candidate) when the chain exceeds MAX_ALIAS_HOPS", () => {
+    // 4 hops: a -> b -> c -> d -> e, deeper than MAX_ALIAS_HOPS (3). Only
+    // game-a matches the probe's team pair; b/c/d/e intentionally carry a
+    // NON-matching team pair so none of them is an independent direct match
+    // — the only path to "game-e" is via game-a's chain, which must fail.
+    expect(MAX_ALIAS_HOPS).toBe(3);
+    const other = { homeTeamName: "Chicago Cubs", awayTeamName: "Cincinnati Reds" };
+    const rows = [
+      candidate({ id: "game-a", externalId: "a", mergedIntoGameId: "game-b" }),
+      candidate({ id: "game-b", externalId: "b", ...other, mergedIntoGameId: "game-c" }),
+      candidate({ id: "game-c", externalId: "c", ...other, mergedIntoGameId: "game-d" }),
+      candidate({ id: "game-d", externalId: "d", ...other, mergedIntoGameId: "game-e" }),
+      candidate({ id: "game-e", externalId: "e", ...other }),
+    ];
+    expect(findTwinCandidate(rows, probe())).toBeNull();
+  });
+
+  it("fails closed when the alias target is not among the given candidates", () => {
+    const rows = [
+      candidate({ id: "game-alias", externalId: "a", mergedIntoGameId: "game-missing" }),
+    ];
+    expect(findTwinCandidate(rows, probe())).toBeNull();
+  });
+
+  it("dedupes an alias and its own canonical so both matching does not read as a tie", () => {
+    // Both rows independently satisfy the team+time match (why they were
+    // merged in the first place) — without dedupe this would look like two
+    // distinct candidates tying on commence delta and fail closed to null.
+    const rows = [
+      candidate({ id: "game-alias", externalId: "alias-id", mergedIntoGameId: "game-canonical" }),
+      candidate({ id: "game-canonical", externalId: "canon-id" }),
+    ];
+    const match = findTwinCandidate(rows, probe());
+    expect(match?.candidate.id).toBe("game-canonical");
+  });
+});
+
 describe("resolveCanonicalGame (db)", () => {
   const findUnique = vi.fn();
   const findMany = vi.fn();
@@ -296,6 +379,7 @@ describe("resolveCanonicalGame (db)", () => {
         homeTeamName: true,
         awayTeamName: true,
         commenceTime: true,
+        mergedIntoGameId: true,
       },
     });
   });
@@ -339,6 +423,94 @@ describe("resolveCanonicalGame (db)", () => {
 
     expect(resolved?.matchedBy).toBe("twin");
     expect(findMany).not.toHaveBeenCalled();
+  });
+});
+
+describe("resolveCanonicalGame — alias-safe fast path", () => {
+  const findUnique = vi.fn();
+  const findMany = vi.fn();
+  const db = { game: { findUnique, findMany } } as unknown as GameIdentityDb;
+
+  beforeEach(() => {
+    findUnique.mockReset();
+    findMany.mockReset();
+    findMany.mockResolvedValue([]);
+    vi.spyOn(console, "info").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    delete process.env["GAME_IDENTITY_MERGE_DISABLED"];
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    delete process.env["GAME_IDENTITY_MERGE_DISABLED"];
+  });
+
+  it("re-ingesting an old (now-aliased) externalId returns the canonical row, not the tombstone", async () => {
+    const alias = candidate({
+      id: "game-alias",
+      externalId: probe().externalId,
+      mergedIntoGameId: "game-canonical",
+    });
+    const canonical = candidate({ id: "game-canonical", externalId: "espn:mlb:401816772" });
+    findUnique.mockImplementation(async (args: { where: { externalId?: string; id?: string } }) => {
+      if (args.where.externalId === probe().externalId) return alias;
+      if (args.where.id === "game-canonical") return canonical;
+      return null;
+    });
+
+    const resolved = await resolveCanonicalGame(db, probe());
+
+    expect(resolved).toEqual({ game: canonical, matchedBy: "externalId" });
+    expect(resolved?.game.mergedIntoGameId).toBeNull();
+    // The hop was a direct DB lookup by id, not the ±18h twin scan.
+    expect(findMany).not.toHaveBeenCalled();
+  });
+
+  it("follows a 2-hop chain via the DB (within MAX_ALIAS_HOPS)", async () => {
+    const a = candidate({ id: "game-a", externalId: probe().externalId, mergedIntoGameId: "game-b" });
+    const b = candidate({ id: "game-b", externalId: "b", mergedIntoGameId: "game-c" });
+    const c = candidate({ id: "game-c", externalId: "c" });
+    findUnique.mockImplementation(async (args: { where: { externalId?: string; id?: string } }) => {
+      if (args.where.externalId === probe().externalId) return a;
+      if (args.where.id === "game-b") return b;
+      if (args.where.id === "game-c") return c;
+      return null;
+    });
+
+    const resolved = await resolveCanonicalGame(db, probe());
+    expect(resolved?.game.id).toBe("game-c");
+  });
+
+  it("throws when a hop's target row is missing (never silently falls back to the alias)", async () => {
+    const alias = candidate({
+      id: "game-alias",
+      externalId: probe().externalId,
+      mergedIntoGameId: "game-nowhere",
+    });
+    findUnique.mockImplementation(async (args: { where: { externalId?: string; id?: string } }) => {
+      if (args.where.externalId === probe().externalId) return alias;
+      return null;
+    });
+
+    await expect(resolveCanonicalGame(db, probe())).rejects.toThrow(/missing canonical game/);
+  });
+
+  it("throws when the alias chain exceeds MAX_ALIAS_HOPS (fail closed, never guesses)", async () => {
+    expect(MAX_ALIAS_HOPS).toBe(3);
+    const chain: Record<string, GameTwinCandidate> = {
+      [probe().externalId]: candidate({ id: "game-0", externalId: probe().externalId, mergedIntoGameId: "game-1" }),
+      "game-1": candidate({ id: "game-1", externalId: "1", mergedIntoGameId: "game-2" }),
+      "game-2": candidate({ id: "game-2", externalId: "2", mergedIntoGameId: "game-3" }),
+      "game-3": candidate({ id: "game-3", externalId: "3", mergedIntoGameId: "game-4" }),
+      "game-4": candidate({ id: "game-4", externalId: "4" }),
+    };
+    findUnique.mockImplementation(async (args: { where: { externalId?: string; id?: string } }) => {
+      if (args.where.externalId != null) return chain[args.where.externalId] ?? null;
+      if (args.where.id != null) return chain[args.where.id] ?? null;
+      return null;
+    });
+
+    await expect(resolveCanonicalGame(db, probe())).rejects.toThrow(/exceeded 3 hops/);
   });
 });
 

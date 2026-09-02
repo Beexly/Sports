@@ -334,6 +334,17 @@ model Game {
   currentEdgeIndex     Float? // public 0-100 readout for every tracked game
   contextComputedAt    DateTime? // when scheduling context was last computed
 
+  // ── Duplicate-game merge (scripts/ops/merge-duplicate-games.ts) ──
+  // Set when this row has been identified as a duplicate of another `games`
+  // row for the same real contest (same sportKey, team pair, ~commence time —
+  // see packages/ingestion-pipeline/src/game-identity.ts) and the row is kept
+  // ONLY as an alias/tombstone: it is never deleted (picks and other
+  // settlement history stay on it, since `picks` has @@unique([gameId,
+  // pickType]) and cannot always be re-pointed onto the canonical row without
+  // a collision), but new ingestion must resolve through it to `mergedInto`
+  // rather than treat it as the canonical game going forward.
+  mergedIntoGameId String?
+
   sport                  Sport                   @relation(fields: [sportId], references: [id])
   league                 League?                 @relation(fields: [leagueId], references: [id])
   homeTeam               Team?                   @relation("HomeTeam", fields: [homeTeamId], references: [id])
@@ -351,10 +362,13 @@ model Game {
   settlementObservations SettlementObservation[]
   settlementAnomalies    SettlementAnomaly[]
   pickSettlementEvents   PickSettlementEvent[]
+  mergedInto             Game?                   @relation("GameMerge", fields: [mergedIntoGameId], references: [id], onDelete: SetNull)
+  mergedAliases          Game[]                  @relation("GameMerge")
 
   @@index([sportId])
   @@index([commenceTime])
   @@index([status])
+  @@index([mergedIntoGameId])
   @@map("games")
 }
 
@@ -582,6 +596,9 @@ model Pick {
   // Dashboard orders/ranges settled history by settledAt; unindexed it full-scans as
   // the settled set grows.
   @@index([settledAt])
+  // Public board / daily slate hot path (api/picks, lib/board/state.ts):
+  // isPublished + isBootstrap + generatedAt range. Added 2026-09-02 for Week 1.
+  @@index([isPublished, isBootstrap, generatedAt])
   @@map("picks")
 }
 

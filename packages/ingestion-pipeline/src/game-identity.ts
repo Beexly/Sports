@@ -74,6 +74,19 @@ export const PREFIX_MATCH_SPORT_KEYS: ReadonlySet<string> = new Set([
   "soccer_epl",
 ]);
 
+/**
+ * A `games` row is tombstoned into an ALIAS by setting `mergedIntoGameId`
+ * (scripts/ops/merge-duplicate-games.ts) — never deleted, since picks and
+ * other un-repointed child rows stay valid on it, but it must never be
+ * treated as the canonical game going forward. `MAX_ALIAS_HOPS` bounds how
+ * far this module follows a `mergedIntoGameId` chain before it fails closed.
+ * The merge script only ever repoints an alias directly at a NON-aliased
+ * canonical (it excludes already-aliased rows from duplicate-group
+ * detection), so a real chain is never longer than one hop — this ceiling is
+ * defensive, not an expected depth.
+ */
+export const MAX_ALIAS_HOPS = 3;
+
 /** An existing `games` row, reduced to the fields identity resolution needs. */
 export type GameTwinCandidate = {
   readonly id: string;
@@ -82,6 +95,8 @@ export type GameTwinCandidate = {
   readonly homeTeamName: string;
   readonly awayTeamName: string;
   readonly commenceTime: Date;
+  /** Set when this row is an alias of another game (see MAX_ALIAS_HOPS doc above). Null for a live canonical row. */
+  readonly mergedIntoGameId: string | null;
 };
 
 /** The incoming feed row we are about to persist. */
@@ -123,7 +138,10 @@ export type CanonicalGameResolution = {
 export type GameIdentityDb = {
   readonly game: {
     findUnique(args: {
-      where: { externalId: string };
+      // `{ id }` is used only internally, to follow a `mergedIntoGameId`
+      // chain — every caller of this module still looks a probe up by
+      // `{ externalId }`.
+      where: { externalId: string } | { id: string };
       select: {
         id: true;
         externalId: true;
@@ -131,6 +149,7 @@ export type GameIdentityDb = {
         homeTeamName: true;
         awayTeamName: true;
         commenceTime: true;
+        mergedIntoGameId: true;
       };
     }): Promise<GameTwinCandidate | null>;
     findMany(args: {
@@ -145,6 +164,7 @@ export type GameIdentityDb = {
         homeTeamName: true;
         awayTeamName: true;
         commenceTime: true;
+        mergedIntoGameId: true;
       };
     }): Promise<GameTwinCandidate[]>;
   };
@@ -157,6 +177,7 @@ const GAME_ROW_SELECT = {
   homeTeamName: true,
   awayTeamName: true,
   commenceTime: true,
+  mergedIntoGameId: true,
 } as const;
 
 /**
@@ -197,6 +218,31 @@ export function matchTeamSide(
   if (AMBIGUOUS_CITY_TOKENS.has(short)) return null;
   if (!long.startsWith(short)) return null;
   return "prefix";
+}
+
+/**
+ * Follow `mergedIntoGameId` from `start` through `byId` up to MAX_ALIAS_HOPS
+ * hops. `findTwinCandidate` is pure (no DB), so this can only resolve a chain
+ * using rows it was already handed — `byId` is built from the SAME
+ * `candidates` array passed to `findTwinCandidate`. Returns the first
+ * non-alias row reached; returns null (fails closed — the alias candidate is
+ * dropped, exactly as if it never matched) when the chain runs past
+ * MAX_ALIAS_HOPS or a hop's target id is not among the given candidates.
+ */
+function resolveAliasWithinCandidates(
+  start: GameTwinCandidate,
+  byId: ReadonlyMap<string, GameTwinCandidate>,
+): GameTwinCandidate | null {
+  let current = start;
+  let hops = 0;
+  while (current.mergedIntoGameId) {
+    if (hops >= MAX_ALIAS_HOPS) return null;
+    const next = byId.get(current.mergedIntoGameId);
+    if (!next) return null;
+    current = next;
+    hops += 1;
+  }
+  return current;
 }
 
 type PairMatch = { orientation: "aligned" | "flipped"; exact: boolean } | null;
@@ -245,6 +291,14 @@ export function gameIdentityMergeDisabled(
  *     commence time, or when the winning tier is PREFIX and more than one
  *     candidate matched (the "Los Angeles" case where the Dodgers and the
  *     Angels both play inside the window). Never guesses.
+ *
+ * Alias-safe: a candidate that is itself an alias (`mergedIntoGameId` set)
+ * never comes back as the match — it is resolved to its canonical row via
+ * `resolveAliasWithinCandidates` first (dropped on an unresolvable chain,
+ * same as "no match"). An alias and its own canonical can both legitimately
+ * satisfy the team+time match (that is WHY they were merged); once resolved
+ * they are deduped by final id so they are never treated as two distinct
+ * competing candidates for the tie-break rule below.
  */
 export function findTwinCandidate(
   candidates: readonly GameTwinCandidate[],
@@ -255,7 +309,10 @@ export function findTwinCandidate(
   const allowPrefix =
     probe.sportKey != null && PREFIX_MATCH_SPORT_KEYS.has(probe.sportKey);
 
-  const matches: GameTwinMatch[] = [];
+  const byId = new Map<string, GameTwinCandidate>();
+  for (const c of candidates) byId.set(c.id, c);
+
+  const rawMatches: GameTwinMatch[] = [];
   for (const candidate of candidates) {
     if (candidate.sportId !== probe.sportId) continue;
     const candidateMs = candidate.commenceTime.getTime();
@@ -264,15 +321,36 @@ export function findTwinCandidate(
     if (delta > GAME_IDENTITY_COMMENCE_MATCH_MS) continue;
     const pair = matchTeamPair(probe, candidate, allowPrefix);
     if (!pair) continue;
-    matches.push({
-      candidate,
+
+    const resolved = candidate.mergedIntoGameId
+      ? resolveAliasWithinCandidates(candidate, byId)
+      : candidate;
+    if (!resolved) continue; // unresolvable alias chain — fails closed, dropped
+
+    rawMatches.push({
+      candidate: resolved,
       orientation: pair.orientation,
       exact: pair.exact,
       commenceDeltaMs: delta,
     });
   }
 
-  if (matches.length === 0) return null;
+  if (rawMatches.length === 0) return null;
+
+  // Dedupe by resolved candidate id: an alias row and its own canonical can
+  // both raw-match the probe and now point at the same final row.
+  const byResolvedId = new Map<string, GameTwinMatch>();
+  for (const m of rawMatches) {
+    const prior = byResolvedId.get(m.candidate.id);
+    if (
+      !prior ||
+      m.commenceDeltaMs < prior.commenceDeltaMs ||
+      (m.commenceDeltaMs === prior.commenceDeltaMs && m.exact && !prior.exact)
+    ) {
+      byResolvedId.set(m.candidate.id, m);
+    }
+  }
+  const matches = [...byResolvedId.values()];
 
   const exactMatches = matches.filter((m) => m.exact);
   const tier = exactMatches.length > 0 ? exactMatches : matches;
@@ -296,12 +374,58 @@ export function findTwinCandidate(
 }
 
 /**
+ * Follow `mergedIntoGameId` from `start` via `db`, one `findUnique({ where:
+ * { id } })` per hop, up to MAX_ALIAS_HOPS. Unlike `resolveAliasWithinCandidates`
+ * this has DB access, so an unresolvable chain (missing target row, or one
+ * still aliased past the hop ceiling) is a genuine data-integrity problem —
+ * not a normal "no match" — so it THROWS rather than returning null. Every
+ * caller of `resolveCanonicalGame` already wraps it and falls back to the
+ * plain upsert-by-externalId on any error (see each call site), which is the
+ * correct fail-closed behaviour here too: better to fall back to today's
+ * pre-alias handling than to silently return null and let the caller's own
+ * upsert-by-externalId write onto the very tombstone this function exists to
+ * avoid.
+ */
+async function followAliasChain(
+  db: GameIdentityDb,
+  start: GameTwinCandidate,
+): Promise<GameTwinCandidate> {
+  let current = start;
+  let hops = 0;
+  while (current.mergedIntoGameId) {
+    if (hops >= MAX_ALIAS_HOPS) {
+      throw new Error(
+        `[game-identity] alias chain from ${start.externalId} (${start.id}) exceeded ` +
+          `${MAX_ALIAS_HOPS} hops — refusing to guess a canonical game`,
+      );
+    }
+    const next = await db.game.findUnique({
+      where: { id: current.mergedIntoGameId },
+      select: GAME_ROW_SELECT,
+    });
+    if (!next) {
+      throw new Error(
+        `[game-identity] alias ${current.id} points to missing canonical game ${current.mergedIntoGameId}`,
+      );
+    }
+    current = next;
+    hops += 1;
+  }
+  return current;
+}
+
+/**
  * Resolve the `games` row a feed row belongs to.
  *
  *  (i)  a row already carries this externalId  → return it ("externalId"),
- *       leaving the caller's existing upsert semantics untouched;
+ *       leaving the caller's existing upsert semantics untouched. When that
+ *       row is itself an ALIAS (merged into another game — see
+ *       scripts/ops/merge-duplicate-games.ts), the canonical row it points to
+ *       is returned instead (still tagged "externalId") so re-ingesting an
+ *       old externalId never recreates or updates the tombstone;
  *  (ii) else an unambiguous twin (same sport, matching team pair, kickoff
- *       within 18h)                            → return it ("twin");
+ *       within 18h)                            → return it ("twin"), also
+ *       never an alias — see findTwinCandidate;
  *  (iii) else                                  → null (caller creates a row).
  *
  * Never throws for a "no match" — but DB errors propagate, so callers wrap it
@@ -324,7 +448,12 @@ export async function resolveCanonicalGame(
     where: { externalId: probe.externalId },
     select: GAME_ROW_SELECT,
   });
-  if (existing) return { game: existing, matchedBy: "externalId" };
+  if (existing) {
+    const canonical = existing.mergedIntoGameId
+      ? await followAliasChain(db, existing)
+      : existing;
+    return { game: canonical, matchedBy: "externalId" };
+  }
 
   const probeMs = probe.commenceTime.getTime();
   if (!Number.isFinite(probeMs)) return null;
