@@ -11,7 +11,7 @@ allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
 Settle completed games without paid Odds API scores. Path selection is **key presence**, not key health.
 
 ## Code
-- Cron: `apps/web/app/api/cron/settle-picks/route.ts` — `0 */3 * * *` in `vercel.json` (#278)
+- Cron: `apps/web/app/api/cron/settle-picks/route.ts` — hourly, `20 * * * *` in `vercel.json` (was `0 */3 * * *` in #278; moved to hourly by the P0 settlement drain, #300, 2026-08-06)
 - Free runner: `apps/web/lib/data-sources/free-settlement-runner.ts`
 - Consensus: `apps/web/lib/data-sources/free-settlement.ts` (ESPN + henrygd adapters)
 - Outbox drain: existing lease + claimVersion (do not rewrite)

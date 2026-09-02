@@ -16,10 +16,10 @@
       "mustInclude": ["THE_ODDS_API_KEY", "path: \"odds-api\"", "settleSport"]
     },
     {
-      "id": "cron-3h",
+      "id": "cron-hourly",
       "type": "file_contains",
       "path": "vercel.json",
-      "mustInclude": ["/api/cron/settle-picks", "0 */3 * * *"]
+      "mustInclude": ["/api/cron/settle-picks", "20 * * * *"]
     },
     {
       "id": "path-select-module",
