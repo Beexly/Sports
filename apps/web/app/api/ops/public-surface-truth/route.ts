@@ -14,6 +14,8 @@ import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
 import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
 import { STALE_PENDING_PICK_MAX_AGE_DAYS } from "@/lib/board/stale-pick-policy";
+import { loadMarketCoverage } from "@/lib/board/market-coverage";
+import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
 
 /** A read-only posture field must never take the whole truth surface down: any
  *  throw (including a synchronous one from a partial client) reads as null. */
@@ -555,6 +557,14 @@ export async function GET(request: Request) {
         }),
       );
 
+  // Market coverage over the next 72h: which markets the published slate
+  // actually carries per sport. A sport with games but no TOTAL picks is a
+  // visible degradation (the zero-key pipeline is moneyline-only), never a
+  // silent zero. Confidence tail: whether picks at ≥80 stated confidence earn
+  // it (observed 2026-09-02: they did not). Both are read-only postures.
+  const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
+  const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
+
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
     canonicalSettled: sample?.canonicalSettled ?? 0,
@@ -780,6 +790,8 @@ export async function GET(request: Request) {
               ? `${stalePendingPicks} published PENDING pick(s) on unstarted games not refreshed in ${STALE_PENDING_PICK_MAX_AGE_DAYS}d — review in the owner queue (supersede/void is an owner decision, never automatic).`
               : "none",
       },
+      marketCoverage,
+      confidenceTail,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },

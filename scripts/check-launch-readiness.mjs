@@ -133,6 +133,31 @@ function num(v) {
     if (clv) verdict("PASS", "closing-line value", `graded=${clv.gradedSampleSize} beat=${clv.beatCloseCount} matched=${clv.matchedCloseCount} lost=${clv.lostToCloseCount} rate=${clv.beatCloseRate === null ? "n/a" : (clv.beatCloseRate * 100).toFixed(1) + "%"}`);
     else verdict("WARN", "closing-line value", "clvPosture not reported (deploy carries the ops-truth CLV change?)");
 
+    // Market coverage: a sport with games in the window but no picks in a market
+    // the product sells is a degradation the board does not show on its own.
+    const cov = d.marketCoverage ?? null;
+    if (cov && Array.isArray(cov.degraded)) {
+      const degraded = cov.degraded;
+      if (degraded.length === 0) {
+        verdict("PASS", "market coverage", `every market covered for ${num(cov.sports?.length) ?? "?"} sport(s) with games in the next ${num(cov.windowHours) ?? "?"}h`);
+      } else {
+        verdict("WARN", "market coverage", degraded.map((x) => `${x.sportKey}:${x.market} (${x.games} games, 0 picks)`).join(" | "));
+      }
+    } else {
+      verdict("WARN", "market coverage", "marketCoverage not reported (deploy carries the ops-truth coverage change?)");
+    }
+
+    // Confidence tail: picks at ≥80 stated confidence must not lose more than they win.
+    const tail = d.confidenceTail ?? null;
+    if (tail && typeof tail.verdict === "string") {
+      const detail = `n=${num(tail.n) ?? "?"} win=${tail.winRate === null ? "n/a" : (tail.winRate * 100).toFixed(1) + "%"} claimed=${tail.claimedRate === null ? "n/a" : (tail.claimedRate * 100).toFixed(1) + "%"}`;
+      if (tail.verdict === "inverted") verdict("WARN", "confidence tail", `INVERTED at ≥${num(tail.floor) ?? "?"}: ${detail}. ${tail.operatorHint ?? ""}`.trim());
+      else if (tail.verdict === "overconfident") verdict("WARN", "confidence tail", `overconfident at ≥${num(tail.floor) ?? "?"}: ${detail}`);
+      else verdict("PASS", "confidence tail", `${tail.verdict} at ≥${num(tail.floor) ?? "?"}: ${detail}`);
+    } else {
+      verdict("WARN", "confidence tail", "confidenceTail not reported (deploy carries the ops-truth tail change?)");
+    }
+
     const money = d.billingMoney ?? {};
     if (money.moneyPathReady === true) verdict("PASS", "money path", `stripe secret + webhook + ${num(money.envPriceSlotsConfigured) ?? "?"}/${num(money.envPriceSlotsTotal) ?? "?"} price slots`);
     else verdict("FAIL", "money path", money.operatorHint ?? "not ready");
