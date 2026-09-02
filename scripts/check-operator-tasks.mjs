@@ -162,10 +162,14 @@ function checkSandboxNet() {
   const enabled = settings?.sandbox?.enabled === true;
   const domains = settings?.sandbox?.network?.allowedDomains;
   const hasDomains = Array.isArray(domains) && domains.length > 0;
-  const ok = enabled && hasDomains;
+  // failIfUnavailable=false lets a machine without bubblewrap/seatbelt run
+  // UNSANDBOXED; that is a documented fallback, not a verified sandbox.
+  const failClosed = settings?.sandbox?.failIfUnavailable === true;
+  const ok = enabled && hasDomains && failClosed;
   const detail = ok
-    ? `sandbox.enabled=true, sandbox.network.allowedDomains has ${domains.length} entries`
+    ? `sandbox.enabled=true, failIfUnavailable=true, sandbox.network.allowedDomains has ${domains.length} entries`
     : `sandbox.enabled=${JSON.stringify(settings?.sandbox?.enabled)}, ` +
+      `failIfUnavailable=${JSON.stringify(settings?.sandbox?.failIfUnavailable)} (must be true to count as enforced), ` +
       `sandbox.network.allowedDomains=${hasDomains ? `${domains.length} entries` : 'missing/empty'}`;
   return { kind: 'verified', ok, detail };
 }

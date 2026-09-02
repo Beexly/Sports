@@ -130,7 +130,8 @@ function num(v) {
     verdict("PASS", "pricing ladder", `${ladder.currentStep ?? "?"} → ${ladder.nextStep ?? "?"}; blockers: ${(ladder.blockersToNext ?? []).join("; ") || "none"}`);
 
     const clv = d.clvPosture ?? null;
-    if (clv) verdict("PASS", "closing-line value", `graded=${clv.gradedSampleSize} beat=${clv.beatCloseCount} matched=${clv.matchedCloseCount} lost=${clv.lostToCloseCount} rate=${clv.beatCloseRate === null ? "n/a" : (clv.beatCloseRate * 100).toFixed(1) + "%"}`);
+    if (clv && clv.canExposeClv === false) verdict("PASS", "closing-line value", `graded=${clv.gradedSampleSize}; counts and rate gated by the CLV policy (${(clv.blockers ?? []).join(", ") || "not publishable"}) — read them from the database, never from this public surface`);
+    else if (clv) verdict("PASS", "closing-line value", `graded=${clv.gradedSampleSize} beat=${clv.beatCloseCount} matched=${clv.matchedCloseCount} lost=${clv.lostToCloseCount} rate=${clv.beatCloseRate === null ? "n/a" : (clv.beatCloseRate * 100).toFixed(1) + "%"}`);
     else verdict("WARN", "closing-line value", "clvPosture not reported (deploy carries the ops-truth CLV change?)");
 
     // Market coverage: a sport with games in the window but no picks in a market
@@ -193,7 +194,12 @@ for (const [pathname, expect] of [
 
   const ops = spawnSync(process.execPath, [path.join(ROOT, "scripts", "check-operator-tasks.mjs")], { encoding: "utf8" });
   const summary = (ops.stdout ?? "").split("\n").find((l) => l.includes("open,")) ?? "no summary";
-  verdict(ops.status === 0 ? "PASS" : "FAIL", "operator tasks", summary.replace("[operator-tasks] ", ""));
+  // A repo-verifiable item the checker could not verify is a WARN with its count,
+  // never folded into a PASS; a non-zero exit (parse failure) is a FAIL.
+  const unverified = ((ops.stdout ?? "").match(/UNVERIFIED/g) ?? []).length;
+  if (ops.status !== 0) verdict("FAIL", "operator tasks", summary.replace("[operator-tasks] ", ""));
+  else if (unverified > 0) verdict("WARN", "operator tasks", `${summary.replace("[operator-tasks] ", "")}; ${unverified} repo-verifiable item(s) UNVERIFIED`);
+  else verdict("PASS", "operator tasks", summary.replace("[operator-tasks] ", ""));
 }
 
 // 5. nflverse currency (network; the script is the source of truth, this just relays its verdict)
@@ -207,7 +213,8 @@ for (const [pathname, expect] of [
   const failures = out.match(/FAILURES \((\d+)\)/);
   if (probe.status === 0) verdict("PASS", "nflverse currency", "every required dataset reaches the current season");
   else if (failures) verdict("WARN", "nflverse currency", `${failures[1]} dataset(s) not yet at the current season (expected before week 1; re-check after kickoff)`);
-  else verdict("WARN", "nflverse currency", `probe exit ${probe.status ?? "?"}: ${out.trim().split("\n").slice(-1)[0] ?? ""}`);
+  // A probe that crashed, could not start or timed out verified nothing: FAIL, not WARN.
+  else verdict("FAIL", "nflverse currency", `probe exit ${probe.status ?? "?"} without a dataset verdict: ${out.trim().split("\n").slice(-1)[0] ?? ""}`);
 }
 
 const fails = rows.filter((r) => r.status === "FAIL").length;

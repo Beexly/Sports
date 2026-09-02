@@ -42,7 +42,7 @@ Updated: 2026-08-08 — code can prepare everything else; you own secrets, YES f
 - [ ] Explicit YES: **LIVE_BOARD** on
 - [ ] Explicit YES: **PUBLISH_LEDGER** on
 - [ ] Explicit YES: **SLATE_OPENING_REVEAL** / reveal on
-- [x] Explicit YES: public picks (`PUBLIC_PICKS_ENABLED`) — observed ON in production 2026-09-02 (`gates.canExposePublicPicks: true`)
+- [ ] Explicit YES: public picks (`PUBLIC_PICKS_ENABLED`) — observed ON in production 2026-09-02 (`gates.canExposePublicPicks: true`), but an observation is not a founder YES: stays unchecked until the founder records YES and `FORCE_NO_BET_IF_STALE=true` is confirmed in production (gate runbook 1b; the truth surface does not report that flag, so confirm it in Vercel)
 - [ ] Explicit YES: performance stats (`PERFORMANCE_STATS_ENABLED`) — stays OFF until calibration eligibility is GREEN ×3 (RED on 2026-09-02: Brier 0.243, ECE 0.051)
 - [ ] Explicit YES: merge / land **#226 HEOS**
 - [ ] **Phase C (5b)** remeasure after real path (not silent flip)

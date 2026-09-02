@@ -60,7 +60,17 @@ export async function GET(request: Request): Promise<NextResponse> {
   let season = requested;
   let stats = await ingestPlayerWeeklyStats(season);
   let labelledAttempt: { season: number; status: string; error: string | null } | null = null;
-  if (!seasonParam && stats.status === "source-error" && labelled !== resolved.season) {
+  // Unpublished-season retry (scheduled runs only, never an explicit ?season
+  // override): a "source-error" is the obvious unpublished signal, but
+  // nflverse can also return the older combined asset with status "ok" and
+  // zero rows for the labelled season before it ships — the 2b hard-filter
+  // upstream (player-stats.ts) then has nothing to upsert. Treat that the
+  // same as "source-error" so an empty labelled-season run is never recorded
+  // as success; clearance-denied is deliberately excluded — that is a rights
+  // stop, not an unpublished-season signal, and must not retry.
+  const labelledUnpublished =
+    stats.status === "source-error" || (stats.status === "ok" && stats.statsUpserted === 0);
+  if (!seasonParam && labelledUnpublished && labelled !== resolved.season) {
     labelledAttempt = { season: labelled, status: stats.status, error: stats.error ?? null };
     season = resolved.season;
     stats = await ingestPlayerWeeklyStats(season);

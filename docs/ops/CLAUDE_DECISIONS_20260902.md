@@ -183,6 +183,56 @@ query (`isPublished`, `isBootstrap`, `generatedAt` range) had no covering index.
 EXISTS`). Nothing else: the tables are small (2.6k picks) and every other hot
 shape was already covered.
 
+## D9. Automated review findings on PR #684 (Devin, cubic): what was fixed, what was not
+
+Bot findings are bug reports. Each one was verified against the code before acting.
+
+**Fixed on this branch.**
+
+| Finding | Fix | Tripwire |
+|---|---|---|
+| Baseline seed rows used `ON CONFLICT DO UPDATE`: the first production deploy would have overwritten operator-tuned Claude API budgets (Devin, red) | All three seed blocks are `DO NOTHING`; the baseline had never been applied outside CI and disposable clusters, so editing it before merge is legitimate | Production-like replay (db push + 53 recorded names + tuned rows) keeps 999/777, inserts the missing default, drift clean (`scratchpad/pgsim-prodlike-budgets.mjs`) |
+| settle-picks `ok` while nothing graded (Devin, red) | A cycle with overdue picks that grades and holds nothing is `starved`: `ok:false`, advisory, Sentry `starved-cycle`; holds count as work | `settle-picks-free-first.test.ts` (+2) |
+| `nearestCandidates` on a date-only timestamp picked the earlier doubleheader game (cubic P1) | Date-only `gameDateIso` keeps every candidate; the guard holds | `free-settlement-doubleheader.test.ts` (+1) |
+| City-only ambiguity counted another date's same-city team (cubic P2) | Finals and scoreboard rows restricted to the pick's ±2-day window before the check; rows without a start time are kept (fail closed) | existing abbr/doubleheader suites |
+| Stale-pick policy read `generatedAt`, which refresh never updates; live v5.2.7 picks created in May (317 refreshed today) would have been dropped from the conviction gate (cubic P1) | `freshPickWhere`/`stalePickWhere` read `dataFreshnessAt`, falling back to `generatedAt` only when null; truth surface uses the same predicate. Verified in production: the 18 v5.0.0 picks were last refreshed 2026-06-16, so the count is unchanged | board and truth suites |
+| CLV rate and split counts published on a public endpoint while the CLV policy said not publishable (cubic P1) | `clvPosture` carries counts and rate only when `canExposeClv`; the ladder still receives the rate internally; launch checker prints the gated state | truth suites |
+| henrygd clearance asked only `derived_analytics` while the runner stores finals (cubic P1) | Intents are `storage` + `derived_analytics` | scraping-clearance suite |
+| Backfill window was an independent `6` (cubic P2) | Imports `SETTLEMENT_DEFAULT_GRACE_HOURS` | `settlement-sla-contract.test.ts` |
+| MLB doubleheader could merge into a lone existing row inside the 18h twin window (cubic P1) | `commenceMatchMsFor`: 2h for baseball, 18h otherwise, in both the pure matcher and the DB window | `game-identity.test.ts` (+4) |
+| Bare "Manchester" prefix-matched a lone Manchester City row (cubic P1) | Added to `AMBIGUOUS_CITY_TOKENS` | same |
+| settle-sport ignored an `externalId` resolution created between two lookups (cubic P2) | Any resolution reloads the game by id | ingestion suite |
+| Launch checker: probe crash read as WARN; UNVERIFIED repo items folded into PASS (cubic P2 ×2) | Crash without a verdict is FAIL; UNVERIFIED items are a WARN with their count | `node --check`, manual run |
+| SANDBOX-NET reported verified with `failIfUnavailable:false` (cubic P2) | Requires `failIfUnavailable === true`; today it reports the honest fallback state | `npm run ops:tasks` |
+| Empty phrase list built a match-everything regex (cubic P2) | Never-match regex for an empty list | brand suites |
+| Docs/commands: polish-view vitest from the workspace; /debug allowed-tools; grok-delegate policy contradiction; founder checklist checked on an observation; VAPID "configured" wording (cubic P2 ×5) | Corrected as suggested; the public-picks box is unchecked again until founder YES + `FORCE_NO_BET_IF_STALE` confirmed | n/a |
+| Brand: spaced/singular "AI generated pick" variants passed some scanners (cubic P1) | Two variants added to the shared vocabulary, four `TrustClaim` entries added, `scanForBannedPhrases()` now also runs the shared positioning matcher, and the CI trust gate's hand-maintained list carries the spaced singular | `trust-claims.test.ts` (+7), brand lint 3,713 |
+| nflverse: a labelled-season fetch returning `ok` with zero rows skipped the floor retry (cubic P1); backfill-player-data's default range had no floor retry (cubic P2) | Zero rows on a scheduled run is treated as unpublished and retries the completed floor (clearance-denied excluded); backfill-player-data's bare default targets the labelled season with a reported `floorFallback` (explicit ranges unchanged; the route is not on the cron schedule, so this only changes manual runs) | route suites (+9) |
+| Merge planner could chain a doubleheader through union-find even with the 2h window | Clusters whose kickoff span exceeds the sport window are refused as a whole and reported (`refusedGroups`), never merged | `game-merge-plan.test.ts` (+2) |
+| Agent bash guard: quoted `$(…)` bypass, interpreter writes to protected paths, `env --` wrapper, `>` boundary, `refs/heads/main` refspec, `$VAR/.env` (cubic P0/P1 ×6) | Delegated in this session on a copy (the path is agent-denied), landed by the owner-authorised copy step; results in the final report | guard selftest |
+
+**Not fixed, with reasons.**
+
+- Concurrent feeds creating the same new game (check-then-write race in
+  `resolveCanonicalGame`; Devin, cubic): real but narrow (crons run at different
+  minutes; the merge tool now exists for any residue). Fix is an advisory lock or
+  a canonical identity key, a design change for after Week 1.
+- "LA Clippers" vs "Los Angeles Lakers" alias normalisation in the city guard: NBA
+  is out of season; noted for the alias table.
+- `MIN_BOOKMAKERS` / ESPN single-book scoring, seed-games per-event scans,
+  backfill re-fetching free scores on the free path: performance or scoring
+  changes, not launch-week fixes; traffic is a handful of ESPN calls per hour.
+- backfill-team-efficiency floor fallback on any source error: the labelled error
+  text is reported in the response, so a transient failure is visible; a 404-only
+  rule needs the source's error shape.
+- Prisma migrate commands under `ask` rather than `deny` in settings: the rule
+  (`.claude/rules/prisma.md` § 9) is "interactive sessions ask"; unattended runs are
+  forbidden by AGENTS.md law 7. Kept.
+- SessionStart `npm ci` hook: `.npmrc` `strict-allow-scripts` limits lifecycle scripts
+  to the pinned allow-list; kept.
+- Compliance-scanner rule overlap producing duplicate reports: cosmetic; deduping
+  rules risks narrowing coverage. Kept.
+
 ## D8. Gates that stay closed, and why that is the launch-ready state
 
 PERFORMANCE_STATS, LIVE_BOARD, PUBLISH_LEDGER, CALIBRATION_ADJUSTMENTS remain

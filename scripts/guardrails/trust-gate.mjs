@@ -109,6 +109,7 @@ const BANNED_PHRASES = [
   { phrase: "AI-generated picks", wordBoundary: true, claim: "banned.ai-generated-picks" },
   { phrase: "AI generated picks", wordBoundary: true, claim: "banned.ai-generated-picks-2" },
   { phrase: "AI-generated pick", wordBoundary: true, claim: "banned.ai-generated-pick" },
+  { phrase: "AI generated pick", wordBoundary: true, claim: "banned.ai-generated-pick-2" },
   // BS-023 (brand-safety-rules-v2): sharp/smart-money framing claims a factor we
   // do not source yet. Context-aware via allowFiles — banned everywhere except
   // the verified education / glossary / internal / labelled-demo files above.
@@ -118,7 +119,7 @@ const BANNED_PHRASES = [
 
 // ── BS-004 positioning vocabulary (the REST of it) ──────────────────────
 //
-// The 5 "AI picks" family entries directly above are hand-maintained and
+// The 6 "AI picks" family entries directly above are hand-maintained and
 // unrestricted in scope (unchanged, per the note above). Every OTHER phrase
 // in the shared positioning vocabulary — AI-powered, AI-driven, AI-assisted,
 // artificial intelligence, machine learning, AI agents, etc. — is read
@@ -135,6 +136,7 @@ const EXISTING_AI_PICKS_PHRASES = new Set([
   "ai-generated picks",
   "ai generated picks",
   "ai-generated pick",
+  "ai generated pick",
 ]);
 
 function slugForClaim(phrase) {

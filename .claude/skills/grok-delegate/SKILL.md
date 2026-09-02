@@ -167,8 +167,11 @@ is in [references/review-and-land.md](references/review-and-land.md).
 
 ## Repo policy (Galaxy Sports Edge)
 
-- Never pass `--full-access` or `--always-approve` in this repo — `.claude/settings.json` sets
+- Never pass `--full-access`, and never pass `--always-approve` on its own (without
+  `--sandbox workspace`) in this repo — `.claude/settings.json` sets
   `disableBypassPermissionsMode` and AGENTS.md law 2 freezes `.claude/**` and
-  `scripts/guardrails/**`.
+  `scripts/guardrails/**`. The relay's default `workspace-write` mode
+  (`--always-approve --sandbox workspace`) is the documented dispatch and stays allowed
+  because the OS sandbox remains on; the autonomy-model table above says when it applies.
 - The child session must keep the default permission mode so the PreToolUse guard and
   ask-list apply.

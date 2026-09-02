@@ -39,8 +39,8 @@ async function main(): Promise<number> {
   const push = isWebPushConfigured();
 
   console.log("[alert-smoke] WATCHLIST_ALERTS_ENABLED:", enabled ? "true (alerts dispatch)" : "not true (dispatcher returns outcome=disabled)");
-  console.log("[alert-smoke] email channel (RESEND_API_KEY + ALERTS_EMAIL_FROM):", email ? "configured" : "NOT configured (channel no-ops with detail=not_configured)");
-  console.log("[alert-smoke] web push (VAPID_PRIVATE_KEY + VAPID_SUBJECT + NEXT_PUBLIC_VAPID_PUBLIC_KEY):", push ? "configured" : "NOT configured (channel no-ops with detail=not_configured)");
+  console.log("[alert-smoke] email channel (RESEND_API_KEY + ALERTS_EMAIL_FROM):", email ? "env present (validated only by --send)" : "NOT configured (channel no-ops with detail=not_configured)");
+  console.log("[alert-smoke] web push (VAPID_PRIVATE_KEY + VAPID_SUBJECT + NEXT_PUBLIC_VAPID_PUBLIC_KEY):", push ? "env present (key material is NOT validated here; a real subscription is the only end-to-end check)" : "NOT configured (channel no-ops with detail=not_configured)");
 
   let exitCode = 0;
   if (enabled && !email && !push) {

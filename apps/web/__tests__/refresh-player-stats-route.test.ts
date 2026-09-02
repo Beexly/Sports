@@ -95,6 +95,57 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(body.labelledAttempt).toEqual({ season: labelled, status: "source-error", error: "HTTP 404" });
   });
 
+  it("falls back to the completed floor when the labelled season returns ok with zero rows (unpublished, combined asset)", async () => {
+    // Tripwire (2026-09-02 automated review): nflverse can return the older
+    // combined asset with status "ok" and zero upserted rows for a not-yet-
+    // published labelled season — an empty labelled-season run must not be
+    // recorded as success on a scheduled run.
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    const floor = currentNflSeason(now);
+    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) =>
+      season === labelled
+        ? { status: "ok", season, playersUpserted: 0, statsUpserted: 0 }
+        : { status: "ok", season, playersUpserted: 1, statsUpserted: 9 },
+    );
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(ingestPlayerWeeklyStats).toHaveBeenNthCalledWith(1, labelled);
+    expect(ingestPlayerWeeklyStats).toHaveBeenNthCalledWith(2, floor);
+    const body = (await res.json()) as {
+      success: boolean;
+      season: number;
+      labelledAttempt: { season: number; status: string; error: string | null } | null;
+    };
+    expect(body.success).toBe(true);
+    expect(body.season).toBe(floor);
+    expect(body.labelledAttempt).toEqual({ season: labelled, status: "ok", error: null });
+  });
+
+  it("does NOT retry the floor when clearance-denied — that is a rights stop, not an unpublished signal", async () => {
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    const floor = currentNflSeason(now);
+    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "clearance-denied", season: labelled, playersUpserted: 0, statsUpserted: 0, blocks: ["rights"],
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(res.status).toBe(502);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledWith(labelled);
+  });
+
+  it("does NOT retry an ok result with zero rows on an explicit ?season override", async () => {
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok", season: 2026, playersUpserted: 0, statsUpserted: 0,
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2026", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+  });
+
   it("never falls back on an explicit ?season override", async () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "source-error", season: 2026, playersUpserted: 0, statsUpserted: 0, error: "HTTP 404",
