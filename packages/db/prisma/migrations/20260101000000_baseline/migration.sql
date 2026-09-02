@@ -3663,6 +3663,12 @@ DO $$ BEGIN
   END IF;
 END $$;
 
+-- Seed rows are defaults for an EMPTY database only. On a database that already
+-- carries claude_api_budgets (production, built with db push before this baseline
+-- existed) the operator may have tuned monthlyBudgetUsd / alertThresholds; the
+-- replay must never overwrite live spending controls, so every seed below is
+-- ON CONFLICT DO NOTHING (changed from DO UPDATE on 2026-09-02, before the
+-- baseline was ever applied outside CI and disposable test clusters).
 -- Seed from 20260523031000_seed_claude_api_budgets
 INSERT INTO "claude_api_budgets" (
   "id",
@@ -3736,10 +3742,7 @@ INSERT INTO "claude_api_budgets" (
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
   )
-ON CONFLICT ("surface") DO UPDATE SET
-  "monthlyBudgetUsd" = EXCLUDED."monthlyBudgetUsd",
-  "alertThresholds" = EXCLUDED."alertThresholds",
-  "updatedAt" = CURRENT_TIMESTAMP;
+ON CONFLICT ("surface") DO NOTHING;
 
 -- Seed from 20260603130000_seed_pick_explanation_budget
 INSERT INTO "claude_api_budgets" (
@@ -3760,10 +3763,7 @@ INSERT INTO "claude_api_budgets" (
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
   )
-ON CONFLICT ("surface") DO UPDATE SET
-  "monthlyBudgetUsd" = EXCLUDED."monthlyBudgetUsd",
-  "alertThresholds" = EXCLUDED."alertThresholds",
-  "updatedAt" = CURRENT_TIMESTAMP;
+ON CONFLICT ("surface") DO NOTHING;
 
 -- Seed from 20260603140000_seed_loss_autopsy_draft_budget
 INSERT INTO "claude_api_budgets" (
@@ -3784,8 +3784,5 @@ INSERT INTO "claude_api_budgets" (
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
   )
-ON CONFLICT ("surface") DO UPDATE SET
-  "monthlyBudgetUsd" = EXCLUDED."monthlyBudgetUsd",
-  "alertThresholds" = EXCLUDED."alertThresholds",
-  "updatedAt" = CURRENT_TIMESTAMP;
+ON CONFLICT ("surface") DO NOTHING;
 
