@@ -23,7 +23,9 @@ const mocks = vi.hoisted(() => ({
   gradePickClv: vi.fn<(args: unknown) => unknown>(),
   // db
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   gameUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  sportFindUnique: vi.fn<(args: unknown) => Promise<{ id: string } | null>>(),
   oddsFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   pickUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
@@ -114,7 +116,12 @@ vi.mock("@sports/db", () => {
   return {
     db: {
       $transaction: mocks.transaction,
-      game: { findUnique: mocks.gameFindUnique, update: mocks.gameUpdate },
+      game: {
+        findUnique: mocks.gameFindUnique,
+        findMany: mocks.gameFindMany,
+        update: mocks.gameUpdate,
+      },
+      sport: { findUnique: mocks.sportFindUnique },
       odds: { findMany: mocks.oddsFindMany },
       pick,
       openingLine: { findUnique: mocks.openingLineFindUnique },
@@ -275,7 +282,9 @@ describe("settleSport", () => {
     mocks.getScores.mockResolvedValue({ data: ["raw"] });
     mocks.normalizeScores.mockReturnValue([completedScore()]);
     mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()]));
+    mocks.gameFindMany.mockResolvedValue([]);
     mocks.gameUpdate.mockResolvedValue({});
+    mocks.sportFindUnique.mockResolvedValue({ id: "sport-1" });
     mocks.oddsFindMany.mockResolvedValue([]);
     mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
     mocks.calculatePickResult.mockReturnValue("WIN");
@@ -1218,6 +1227,109 @@ describe("settleSport", () => {
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
       expect(result.gamesSettled).toBe(1);
+    });
+  });
+
+  /**
+   * The paid scores feed keys on the Odds API event id, but the row for that
+   * contest may carry ANOTHER feed's externalId (ESPN seed / TheRundown),
+   * because that feed created it first. Without a fallback the game never
+   * settles on the paid path.
+   */
+  describe("identity fallback (row carries another feed's externalId)", () => {
+    const RAW_SCORE = {
+      id: "odds-api-1",
+      sport_key: "americanfootball_nfl",
+      sport_title: "NFL",
+      commence_time: "2026-06-10T17:00:00.000Z",
+      completed: true,
+      home_team: "Kansas City Chiefs",
+      away_team: "Buffalo Bills",
+      scores: [
+        { name: "Kansas City Chiefs", score: "27" },
+        { name: "Buffalo Bills", score: "20" },
+      ],
+      last_update: "2026-06-10T21:00:00.000Z",
+    };
+    const ESPN_ROW = {
+      id: "game-espn",
+      externalId: "espn:nfl:401872656",
+      sportId: "sport-1",
+      homeTeamName: "Kansas City Chiefs",
+      awayTeamName: "Buffalo Bills",
+      commenceTime: new Date("2026-06-10T17:00:00.000Z"),
+    };
+
+    beforeEach(() => {
+      delete process.env["GAME_IDENTITY_MERGE_DISABLED"];
+      mocks.getScores.mockResolvedValue({ data: [RAW_SCORE] });
+      mocks.normalizeScores.mockReturnValue([completedScore({ externalId: "odds-api-1" })]);
+      // No row carries the Odds API id; the ESPN-seeded row is fetched by id.
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        if (where?.id === "game-espn") {
+          return dbGame([pendingPick()], { id: "game-espn", externalId: "espn:nfl:401872656" });
+        }
+        return null;
+      });
+    });
+
+    afterEach(() => {
+      delete process.env["GAME_IDENTITY_MERGE_DISABLED"];
+    });
+
+    it("settles the game found by team pair + commence time and logs the fallback", async () => {
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+      mocks.gameFindMany.mockResolvedValue([ESPN_ROW]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(mocks.gameUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: "game-espn" } }),
+      );
+      expect(infoSpy).toHaveBeenCalledWith(
+        expect.stringContaining("identity fallback settled feed id odds-api-1"),
+      );
+      infoSpy.mockRestore();
+    });
+
+    it("skips the game (as today) when no unambiguous twin exists", async () => {
+      mocks.gameFindMany.mockResolvedValue([
+        { ...ESPN_ROW, id: "twin-a", commenceTime: new Date("2026-06-10T15:00:00.000Z") },
+        { ...ESPN_ROW, id: "twin-b", externalId: "espn:x:2", commenceTime: new Date("2026-06-10T19:00:00.000Z") },
+      ]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(0);
+      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+    });
+
+    it("kill switch disables the fallback (exactly today's behaviour)", async () => {
+      process.env["GAME_IDENTITY_MERGE_DISABLED"] = "true";
+      mocks.gameFindMany.mockResolvedValue([ESPN_ROW]);
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.picksSettled).toBe(0);
+      expect(mocks.gameFindMany).not.toHaveBeenCalled();
+    });
+
+    it("never aborts settlement when the fallback lookup throws", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.gameFindMany.mockRejectedValue(new Error("db down"));
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(0);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("identity fallback failed for odds-api-1"),
+      );
+      warnSpy.mockRestore();
     });
   });
 });

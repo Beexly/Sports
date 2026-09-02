@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  composeRundownTeamName,
   resolveRundownApiKey,
   rundownEventToOddsApiEvent,
   RUNDOWN_AFFILIATE_BOOK_KEYS,
@@ -28,6 +29,53 @@ describe("rundown-client", () => {
     expect(resolveRundownApiKey({ RUNDOWN_KEY: "b" })).toBe("b");
     expect(resolveRundownApiKey({ FREE_RUNDOWN_API_KEY: "c" })).toBe("c");
     expect(resolveRundownApiKey({})).toBe("");
+  });
+
+  /**
+   * TheRundown splits a team into `name` (city/school) and `mascot`. Reading
+   * `name` alone produced city-only board names ("Los Angeles", "St. Louis")
+   * that match no other feed — the direct cause of duplicate `games` rows.
+   */
+  describe("team name composition (name + mascot)", () => {
+    it("joins city and mascot, and never invents one that is absent", () => {
+      expect(composeRundownTeamName("Los Angeles", "Dodgers")).toBe("Los Angeles Dodgers");
+      expect(composeRundownTeamName("St. Louis", "Cardinals")).toBe("St. Louis Cardinals");
+      expect(composeRundownTeamName("Athletics", "")).toBe("Athletics");
+      expect(composeRundownTeamName("Athletics", undefined)).toBe("Athletics");
+      expect(composeRundownTeamName("  Oakland  ", " Athletics ")).toBe("Oakland Athletics");
+    });
+
+    it("does not repeat a mascot the name already ends with", () => {
+      expect(composeRundownTeamName("Oakland Athletics", "Athletics")).toBe("Oakland Athletics");
+      expect(composeRundownTeamName("Athletics", "Athletics")).toBe("Athletics");
+    });
+
+    it("keeps whichever half the feed actually sent", () => {
+      expect(composeRundownTeamName("", "Dodgers")).toBe("Dodgers");
+      expect(composeRundownTeamName("", "")).toBe("");
+    });
+
+    it("emits full team names on the event (city-only names are what duplicated rows)", () => {
+      const ev = rundownEventToOddsApiEvent(
+        {
+          event_id: "e2",
+          teams: [
+            { name: "St. Louis", mascot: "Cardinals", is_away: false },
+            { name: "Los Angeles", mascot: "Dodgers", is_away: true },
+          ],
+          event_date: "2026-09-10T00:00:00Z",
+          lines: { "3": { moneyline: { moneyline_home: -120, moneyline_away: 100 } } },
+        },
+        "baseball_mlb",
+      );
+      expect(ev!.home_team).toBe("St. Louis Cardinals");
+      expect(ev!.away_team).toBe("Los Angeles Dodgers");
+      // Outcome names must carry the same composed names as the event.
+      expect(ev!.bookmakers[0]!.markets[0]!.outcomes.map((o) => o.name)).toEqual([
+        "St. Louis Cardinals",
+        "Los Angeles Dodgers",
+      ]);
+    });
   });
 
   it("maps moneyline lines to OddsApiEvent with team names", () => {

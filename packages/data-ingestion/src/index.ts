@@ -279,6 +279,7 @@ export {
   rundownApiKeyPresence,
   fetchRundownEventsForSport,
   rundownEventToOddsApiEvent,
+  composeRundownTeamName,
   RUNDOWN_SPORT_IDS,
   RUNDOWN_AFFILIATE_BOOK_KEYS,
   RUNDOWN_API_KEY_ENV_NAMES,

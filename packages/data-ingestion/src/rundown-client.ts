@@ -116,6 +116,29 @@ function americanFromPrice(p: unknown): number | null {
 type Loose = Record<string, unknown>;
 
 /**
+ * TheRundown splits a team into `name` (the CITY / school — "Los Angeles",
+ * "St. Louis", "New York") and `mascot` ("Dodgers", "Blues", "Yankees").
+ * Reading `name` alone produced city-only team names on every failover cycle,
+ * which no other feed matches — the direct cause of duplicate `games` rows and
+ * of city-only names on the board.
+ *
+ * Compose only what the feed actually gave us — never invent a mascot:
+ *   "Los Angeles" + "Dodgers" → "Los Angeles Dodgers"
+ *   "Athletics"   + ""        → "Athletics"
+ *   "Oakland Athletics" + "Athletics" → "Oakland Athletics" (already ends with it)
+ */
+export function composeRundownTeamName(name: unknown, mascot: unknown): string {
+  const base = String(name ?? "").trim();
+  const nick = String(mascot ?? "").trim();
+  if (!nick) return base;
+  if (!base) return nick;
+  const lowerBase = base.toLowerCase();
+  const lowerNick = nick.toLowerCase();
+  if (lowerBase === lowerNick || lowerBase.endsWith(lowerNick)) return base;
+  return `${base} ${nick}`;
+}
+
+/**
  * Best-effort map of a Rundown event blob → OddsApiEvent.
  * Schema varies by plan; we only extract what is finite.
  */
@@ -129,7 +152,7 @@ export function rundownEventToOddsApiEvent(raw: unknown, sportKey: string): Odds
   let home = "";
   let away = "";
   for (const t of teams) {
-    const name = String(t["name"] ?? t["team_name"] ?? "");
+    const name = composeRundownTeamName(t["name"] ?? t["team_name"], t["mascot"]);
     if (!name) continue;
     if (t["is_away"] === true || t["is_home"] === false) away = name;
     else home = name;

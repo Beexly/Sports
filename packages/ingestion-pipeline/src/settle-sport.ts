@@ -63,6 +63,7 @@ import {
   type PostSettlementWorkDelegate,
 } from "./post-settlement-work.js";
 import { markClosingSnapshotsIfEnabled } from "./line-archive.js";
+import { resolveCanonicalGame, type GameIdentityDb } from "./game-identity.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -237,13 +238,74 @@ export async function settleSport(
     });
     const settlementRunId = run.id;
 
+    // Raw feed rows keyed by id — normalizeScores drops home_team/away_team/
+    // commence_time, which the identity fallback below needs.
+    const rawScoreById = new Map<string, (typeof scores)[number]>();
+    for (const raw of scores) {
+      if (raw?.id) rawScoreById.set(raw.id, raw);
+    }
+    // Sport row id, resolved lazily and once — only the fallback needs it.
+    let sportRowId: string | null | undefined;
+    const resolveSportRowId = async (): Promise<string | null> => {
+      if (sportRowId === undefined) {
+        const row = await db.sport.findUnique({
+          where: { key: sport.key },
+          select: { id: true },
+        });
+        sportRowId = row?.id ?? null;
+      }
+      return sportRowId;
+    };
+
     for (const score of normalized) {
       if (!score.completed) continue;
 
-      const game = await db.game.findUnique({
+      let game = await db.game.findUnique({
         where: { externalId: score.externalId },
         include: { picks: { where: { result: "PENDING" } } },
       });
+
+      // The row for this contest may carry ANOTHER feed's externalId (ESPN seed
+      // id / TheRundown event_id) because that feed created it first. Resolve by
+      // team pair + commence time so the paid path can still settle it. Failure
+      // isolated — a fallback error must never abort settlement of the slate.
+      if (!game) {
+        try {
+          const raw = rawScoreById.get(score.externalId);
+          const commenceTime = raw ? new Date(raw.commence_time) : null;
+          const sportId = raw && commenceTime && !Number.isNaN(commenceTime.getTime())
+            ? await resolveSportRowId()
+            : null;
+          if (raw && commenceTime && sportId) {
+            const resolved = await resolveCanonicalGame(db as unknown as GameIdentityDb, {
+              sportId,
+              sportKey: sport.key,
+              externalId: score.externalId,
+              homeTeamName: raw.home_team,
+              awayTeamName: raw.away_team,
+              commenceTime,
+            });
+            if (resolved && resolved.matchedBy === "twin") {
+              game = await db.game.findUnique({
+                where: { id: resolved.game.id },
+                include: { picks: { where: { result: "PENDING" } } },
+              });
+              if (game) {
+                console.info(
+                  `${logPrefix} ${sport.key}: identity fallback settled feed id ` +
+                    `${score.externalId} onto existing game ${game.externalId} ` +
+                    `("${raw.home_team}" vs "${raw.away_team}")`,
+                );
+              }
+            }
+          }
+        } catch (identityErr) {
+          console.warn(
+            `${logPrefix} ${sport.key}: identity fallback failed for ${score.externalId} — ` +
+              `${identityErr instanceof Error ? identityErr.message : identityErr}`,
+          );
+        }
+      }
       if (!game) continue;
 
       const bothScores = score.homeScore !== null && score.awayScore !== null;
