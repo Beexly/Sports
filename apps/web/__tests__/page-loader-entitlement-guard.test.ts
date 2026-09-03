@@ -55,6 +55,11 @@ const WEB_ROOT = resolve(__dirname, "..");
 const APP_DIR = resolve(WEB_ROOT, "app");
 const API_DIR = resolve(APP_DIR, "api");
 
+/** The guard's maps key on repo-relative FORWARD-slash paths (they are data, compared across OSes). */
+function toPosix(p: string): string {
+  return p.split("\\").join("/");
+}
+
 /** Entitlement gates that mark a route's data as paid. */
 const GATE_HELPERS = new Set([
   "requirePremiumApi",
@@ -100,18 +105,6 @@ const ALLOWLIST: ReadonlyMap<string, string> = new Map([
     "Fantasy hub. Same @/lib/data-sources/live-evidence aggregate summary as " +
       "/integrations (evidence.summary.* scalars + qbAge34Lift), rendered as " +
       "EvidenceMetric counts. No paid rows are rendered.",
-  ],
-  [
-    // ⚠ NOT a "this page is fine" exemption — this one is a REAL LEAK, held here
-    // only because its fix belongs to another in-flight PR and this branch must not
-    // touch the file. The stale-entry check below is the safety net: the moment that
-    // branch lands and the page imports getViewerEntitlements, this entry goes stale
-    // and FAILS the suite, forcing its removal. It cannot quietly become permanent.
-    "app/players/page.tsx",
-    "REAL LEAK, fixed on branch claude/kernel-wave-k-slots (verified: that branch adds " +
-      "getViewerEntitlements + TierGatePanel and gates each view on view.requires). The " +
-      "page reaches 12 paid loaders through the @/lib/players/views wrapper. DELETE THIS " +
-      "ENTRY when that branch merges — the stale-exemption check will demand it.",
   ],
   [
     "app/cockpit/sources/page.tsx",
@@ -253,7 +246,7 @@ for (const pageFile of PAGE_FILES) {
   const hasResolver = parseImports(pageFile).some(
     (i) => !i.typeOnly && ENTITLEMENT_RESOLVERS.has(i.name),
   );
-  FLAGGED.push({ page: relative(WEB_ROOT, pageFile), reaches, hasResolver });
+  FLAGGED.push({ page: toPosix(relative(WEB_ROOT, pageFile)), reaches, hasResolver });
 }
 
 function describeReaches(f: Flagged): string {
