@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Integrity · Governed Decision Path · ${BRAND_NAME}`,
     description:
-      "What our AI/agent control plane governs, how to verify a signed receipt yourself, and the explicit list of what we do not claim.",
+      "What our agent control plane governs, how to verify a signed receipt yourself, and the explicit list of what we do not claim.",
     url: "/integrity",
     type: "website",
   },
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: `Integrity · Governed Decision Path · ${BRAND_NAME}`,
     description:
-      "What our AI/agent control plane governs, and what we do not claim.",
+      "What our agent control plane governs, and what we do not claim.",
   },
 };
 
@@ -96,7 +96,7 @@ export default function IntegrityPage() {
             Integrity — Governed Decision Path
           </p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
-            How we govern our own AI agents.
+            How we govern our own automated agents.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
             Our platform&apos;s own agents make tool calls — starting invocations,
@@ -243,7 +243,7 @@ export default function IntegrityPage() {
                 Agent control-plane governance
               </p>
               <p className="mt-2 text-sm leading-6 text-ion-1">
-                How our own AI agents are governed when they call tools:
+                How our own tool-calling agents are governed:
                 admission bookkeeping, the SHADOW-by-default posture, and
                 signed receipts anyone can verify against a published key.
                 Subject: <em>our software&apos;s behavior</em>.

@@ -169,7 +169,7 @@ enum CheckoutOutcomeClass {
 // the intent) or is NULL (a terminal attempt released the intent so a fresh
 // generation can claim it). History is never erased. Both invariants are
 // DB-enforced via CHECK constraints in the migration
-// (packages/db/prisma/migrations/20260722130000_add_checkout_attempt).
+// (packages/db/prisma/migrations-archive/20260722130000_add_checkout_attempt; carried by migrations/20260101000000_baseline since 2026-09-02).
 //
 // RETENTION (financial audit record): the User FK is NULLABLE with
 // ON DELETE SET NULL, and subjectUserId/subjectEmail are immutable snapshots
@@ -334,6 +334,17 @@ model Game {
   currentEdgeIndex     Float? // public 0-100 readout for every tracked game
   contextComputedAt    DateTime? // when scheduling context was last computed
 
+  // ── Duplicate-game merge (scripts/ops/merge-duplicate-games.ts) ──
+  // Set when this row has been identified as a duplicate of another `games`
+  // row for the same real contest (same sportKey, team pair, ~commence time —
+  // see packages/ingestion-pipeline/src/game-identity.ts) and the row is kept
+  // ONLY as an alias/tombstone: it is never deleted (picks and other
+  // settlement history stay on it, since `picks` has @@unique([gameId,
+  // pickType]) and cannot always be re-pointed onto the canonical row without
+  // a collision), but new ingestion must resolve through it to `mergedInto`
+  // rather than treat it as the canonical game going forward.
+  mergedIntoGameId String?
+
   sport                  Sport                   @relation(fields: [sportId], references: [id])
   league                 League?                 @relation(fields: [leagueId], references: [id])
   homeTeam               Team?                   @relation("HomeTeam", fields: [homeTeamId], references: [id])
@@ -351,10 +362,13 @@ model Game {
   settlementObservations SettlementObservation[]
   settlementAnomalies    SettlementAnomaly[]
   pickSettlementEvents   PickSettlementEvent[]
+  mergedInto             Game?                   @relation("GameMerge", fields: [mergedIntoGameId], references: [id], onDelete: SetNull)
+  mergedAliases          Game[]                  @relation("GameMerge")
 
   @@index([sportId])
   @@index([commenceTime])
   @@index([status])
+  @@index([mergedIntoGameId])
   @@map("games")
 }
 
@@ -582,6 +596,9 @@ model Pick {
   // Dashboard orders/ranges settled history by settledAt; unindexed it full-scans as
   // the settled set grows.
   @@index([settledAt])
+  // Public board / daily slate hot path (api/picks, lib/board/state.ts):
+  // isPublished + isBootstrap + generatedAt range. Added 2026-09-02 for Week 1.
+  @@index([isPublished, isBootstrap, generatedAt])
   @@map("picks")
 }
 
@@ -909,7 +926,8 @@ model Alert {
 // for small fixed value sets rather than native enums.
 //
 // Founder-applied migration — see
-// packages/db/prisma/migrations/20260717120000_add_watchlist. Application
+// packages/db/prisma/migrations-archive/20260717120000_add_watchlist (carried by
+// migrations/20260101000000_baseline since 2026-09-02). Application
 // code (apps/web/lib/watchlist/db.ts) fails gracefully (503, not 500) when
 // this table is absent, exactly like OddsLineSnapshot.
 model Watchlist {
@@ -936,7 +954,8 @@ model Watchlist {
 // device/browser they've granted permission on).
 //
 // Founder-applied migration — see
-// packages/db/prisma/migrations/20260719120000_add_push_subscriptions,
+// packages/db/prisma/migrations-archive/20260719120000_add_push_subscriptions
+// (carried by migrations/20260101000000_baseline since 2026-09-02),
 // following the exact Watchlist precedent above. Application code
 // (apps/web/lib/push/subscription-db.ts) fails gracefully when this table
 // is absent, exactly like Watchlist/OddsLineSnapshot.

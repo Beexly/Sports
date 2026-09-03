@@ -30,7 +30,7 @@ const suite = HAS_DB ? describe : describe.skip;
 
 const SCHEMA = "budget_alpha_witness_acceptance";
 
-const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations");
+const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations-archive");
 
 suite("W5 budget_alpha_witness against real Postgres", () => {
   let pool: Pool;

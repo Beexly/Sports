@@ -107,14 +107,14 @@ try {
   // already has their objects (the db-push above already created them).
   const migSql = path.join(
     ROOT,
-    "packages/db/prisma/migrations/20260722183000_harden_settlement_evidence_outbox/migration.sql",
+    "packages/db/prisma/migrations-archive/20260722183000_harden_settlement_evidence_outbox/migration.sql",
   );
   const reapply = spawnSync(`${PGBIN}/psql`, ["-h", "127.0.0.1", "-p", String(PORT), "-U", "postgres", "-d", DBNAME, "-v", "ON_ERROR_STOP=1", "-f", migSql], { encoding: "utf8" });
   record("hardening migration re-applies cleanly", reapply.status === 0, reapply.status === 0 ? "" : reapply.stderr.slice(-300));
 
   const deadLetterMigSql = path.join(
     ROOT,
-    "packages/db/prisma/migrations/20260722213000_outbox_dead_letter_receipts/migration.sql",
+    "packages/db/prisma/migrations-archive/20260722213000_outbox_dead_letter_receipts/migration.sql",
   );
   const deadLetterReapply = spawnSync(`${PGBIN}/psql`, ["-h", "127.0.0.1", "-p", String(PORT), "-U", "postgres", "-d", DBNAME, "-v", "ON_ERROR_STOP=1", "-f", deadLetterMigSql], { encoding: "utf8" });
   record("dead-letter-receipt migration re-applies cleanly", deadLetterReapply.status === 0, deadLetterReapply.status === 0 ? "" : deadLetterReapply.stderr.slice(-300));

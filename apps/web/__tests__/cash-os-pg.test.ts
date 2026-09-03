@@ -30,7 +30,8 @@ const suite = HAS_DB ? describe : describe.skip;
 
 const SCHEMA = "cash_os_acceptance";
 
-const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations");
+// Pre-baseline history (squashed 2026-09-02); the per-feature SQL this test replays lives in the archive.
+const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations-archive");
 
 suite("Cash OS — recordActivation + computeCashSnapshot against real Postgres", () => {
   let pool: Pool;

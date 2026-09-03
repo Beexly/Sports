@@ -131,24 +131,42 @@ the visible result, and the proof is the moat.
 
 ## 7. Activation checklist for Step 1 (calibration) — what "turn it on" actually requires
 
+> **Status as of 2026-09-02.** Steps 3 and 4 below were completed in `v5.1.0`
+> (`docs/calibration-proposals/2026-06-22-calibration-activation-v5.1.0.md`): the gate is the env flag
+> `CALIBRATION_ADJUSTMENTS_ENABLED` (default `false`, `platform-config.ts`) and `MODEL_VERSION` is now
+> `v5.2.7`, each bump backed by a proposal under `docs/calibration-proposals/` and checked by
+> `scripts/guardrails/model-freeze.mjs`. What remains is Step 1 (the sample) and the founder's flip.
+
 The engine is built and tested (`calibration-apply.ts` → `buildCalibrator`). It is **self-suppressing**:
 with no settled sample it is a labeled-uncalibrated identity passthrough, so it is already safe to wire.
-Going live is deliberately gated — the model is FROZEN at `v5.0.0` by `scripts/guardrails/model-freeze.mjs`
-+ `docs/calibration-proposals/FROZEN.md` to keep historical confidence numbers honest. When the data exists,
-activate in this order (each is one reviewable commit):
+Going live is deliberately gated — every `MODEL_VERSION` bump needs an audit trail under
+`docs/calibration-proposals/` (enforced by `scripts/guardrails/model-freeze.mjs` + `FROZEN.md`) to keep
+historical confidence numbers honest. Activation order (each is one reviewable commit):
 
-1. **Have the sample.** ≥ `MIN_SETTLED_PICKS_FOR_LEARNING` (100) settled, canonical, learning-eligible picks.
-   Until then activation is inert by design — do not force it.
-2. **Fit & validate offline.** Run `buildCalibrator` over the settled (confidence/100, outcome) pairs;
-   confirm `isActive === true` and `calibratedEce <= rawEce` on a held-out split, not just in-sample.
-3. **Audit trail (required by FROZEN.md).** Bump `MODEL_VERSION` in `constants.ts` AND record the bump as a
-   `CalibrationProposal` (status `IMPLEMENTED`) or a `docs/calibration-proposals/<slug>.md` with the
-   observation + change that justified it. Update the `frozen:` line. Update the tests pinning `v5.0.0`.
-4. **Unpin the gate.** Change `canApplyCalibrationAdjustments` from the literal `false` to a config flag
-   (`CALIBRATION_ADJUSTMENTS_ENABLED`, default false) in `readiness.ts` + `platform-config.ts`, and update
-   `readiness-gate-enforcement.test.ts` (which intentionally pins it today).
+1. **Have the sample.** ≥ `MIN_SETTLED_PICKS_FOR_LEARNING` (100) settled, canonical, learning-eligible picks,
+   and `apps/web/lib/ops/calibration-eligibility.ts` reporting GREEN for 3 consecutive runs
+   (`brier ≤ 0.22`, `ece ≤ 0.05`, `murphyReliability ≤ 0.05`). Until then activation is inert by design —
+   do not force it and never lower a floor.
+2. **Fit & validate offline.** `npm run export:settled-picks` (real `DATABASE_URL`) exports every
+   non-bootstrap settled pick (`result != PENDING`, `settledAt != null`, `isBootstrap = false`) — that
+   raw export is **not** the fit sample as-is: it still carries non-learning-eligible rows (no filter on
+   `PickSignalSnapshot.eligibleForLearning`) and non-binary outcomes (`PUSH`/`VOID`, not just `WIN`/`LOSS`).
+   Before fitting, filter the export to canonical, learning-eligible, published, non-bootstrap picks whose
+   `result` is `WIN` or `LOSS` (drop `PUSH`/`VOID` — they carry no binary calibration label). Only then run
+   `buildCalibrator` over the filtered (confidence/100, outcome) pairs. Use a **time-ordered hold-out**, not
+   a random split: `timeHoldoutSplit` (`packages/prediction-engine/src/probability-calibration.ts`) sorts by
+   timestamp ascending and cuts at `trainFraction` (default 0.7 — earliest 70% settled = train, latest 30% =
+   test). Fit the isotonic map on `train` only, then compute `isActive` and `calibratedEce <= rawEce` on the
+   untouched `test` partition — never in-sample, and never on the unfiltered export. Approve activation only
+   on the `test`-partition numbers. `npm run calibration:offline` rehearses the same math on a synthetic
+   fixture without a database.
+3. **Audit trail (done for every bump so far; required again for the next).** Bump `MODEL_VERSION` in
+   `constants.ts` AND record it as a `CalibrationProposal` (status `IMPLEMENTED`) or a
+   `docs/calibration-proposals/<slug>.md` with the observation + change that justified it.
+4. **Gate (done in v5.1.0).** `canApplyCalibrationAdjustments` reads `CALIBRATION_ADJUSTMENTS_ENABLED`;
+   `readiness-gate-enforcement.test.ts` pins the default-off behaviour.
 5. **Wire & display.** Feed the calibrated probability into the conviction tier and the public reliability
    diagram. New picks carry the new `MODEL_VERSION`; prior picks keep theirs (no retroactive relabeling).
 
-Steps 3–4 are the founder's audited decision — they break the freeze pin on purpose and must not be done
-casually. Step 1 (the data) is the real gate; everything else is ready and waiting on it.
+Flipping `CALIBRATION_ADJUSTMENTS_ENABLED` (and `PERFORMANCE_STATS_ENABLED`) is the founder's audited
+decision. Step 1 (the data) is the real gate; everything else is ready and waiting on it.

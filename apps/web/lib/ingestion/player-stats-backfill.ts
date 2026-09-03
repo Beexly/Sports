@@ -29,7 +29,7 @@
  */
 import { db } from "@sports/db";
 import { NFLVERSE_TREND_PLANS } from "@sports/data-ingestion";
-import { currentNflSeason } from "@/lib/ingestion/player-stats";
+import { ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
 
 /**
  * The anchor trend plan whose declared season threshold sizes the window. One
@@ -56,7 +56,11 @@ export interface PlayerStatsRunPlan {
  * an empty list, which safely degrades to "everything is missing".
  */
 export async function planPlayerStatsRun(now = new Date()): Promise<PlayerStatsRunPlan> {
-  const current = currentNflSeason(now);
+  // Labelled season, not the completed-REG display floor: the cursor must ask
+  // the source for the new season so the September rollover shows up as
+  // "missing" and gets backfilled (the route's starvation guard covers the
+  // days before nflverse publishes week 1).
+  const current = ingestionTargetNflSeason(now);
   const targetSeasons: number[] = [];
   for (let season = current - TREND_BACKFILL_SEASONS + 1; season <= current; season++) {
     targetSeasons.push(season);

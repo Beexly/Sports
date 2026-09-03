@@ -12,7 +12,12 @@
  * nflverse is CC-BY-4.0 (free) so this can run on a frequent cadence at no
  * metered cost — unlike the paid Odds API path.
  */
-import { fetchNflverse, resolveFootballStatsSeason, type NflverseDatasetKey } from "@sports/data-ingestion";
+import {
+  fetchNflverse,
+  ingestionTargetNflSeason as ingestionTargetSeasonFromLabel,
+  resolveFootballStatsSeason,
+  type NflverseDatasetKey,
+} from "@sports/data-ingestion";
 import { db } from "@sports/db";
 import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 
@@ -49,6 +54,19 @@ function int(value: string | undefined): number | null {
  */
 export function currentNflSeason(now = new Date()): number {
   return resolveFootballStatsSeason(now).season;
+}
+
+/**
+ * Season the ingestion crons should ASK THE SOURCE for: the labelled current
+ * season (September 2026 → 2026), not the completed-REG floor above. The floor
+ * is right for display (never advertise an empty season) but wrong for a
+ * cursor: following it, the crons re-ingested 2025 for the whole 2026 season.
+ * Callers fall back to `currentNflSeason` when the source has not published
+ * the labelled season yet, so runs stay green and 2026 is picked up the day
+ * nflverse ships week-1 rows.
+ */
+export function ingestionTargetNflSeason(now = new Date()): number {
+  return ingestionTargetSeasonFromLabel(now);
 }
 
 /**

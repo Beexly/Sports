@@ -379,7 +379,7 @@ const MIGRATIONS_DIR = join(
   "packages",
   "db",
   "prisma",
-  "migrations",
+  "migrations-archive",
 );
 
 suite("LSRQC KERNEL v1 against real Postgres", () => {

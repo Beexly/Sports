@@ -2,7 +2,8 @@
 
 **Truth:** github.com/Beexly/Sports · **Live:** https://www.galaxysportsedge.com  
 **Do not re-ship:** #320–#341 (Jynx, free-lane, settle drains, trust chrome, grace DRY, preflight)  
-**Do not flip:** LIVE_BOARD · PUBLIC_PICKS · STATS_PUBLIC · PERFORMANCE_STATS  
+**Do not flip:** LIVE_BOARD · STATS_PUBLIC · PERFORMANCE_STATS · PUBLISH_LEDGER (PUBLIC_PICKS was
+opened by the founder and is ON in production as of 2026-09-02 — informational, not a record claim)  
 **Do not** put CrewAI / Ollama / OpenClaw into this monorepo (personal machine only)
 
 ---

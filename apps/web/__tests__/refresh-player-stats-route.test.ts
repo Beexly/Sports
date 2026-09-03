@@ -17,7 +17,7 @@ vi.mock("@/lib/ingestion/depth-charts", () => ({ ingestDepthCharts: vi.fn() }));
 vi.mock("@/lib/ingestion/next-gen-stats", () => ({ ingestNextGenStats: vi.fn() }));
 
 import { GET } from "@/app/api/cron/refresh-player-stats/route";
-import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
+import { ingestPlayerWeeklyStats, currentNflSeason, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
@@ -55,6 +55,127 @@ describe("GET /api/cron/refresh-player-stats", () => {
     vi.stubEnv("CRON_SECRET", "secret");
   });
   afterEach(() => vi.unstubAllEnvs());
+
+  it("asks the source for the labelled season on a scheduled run and stands on it when published", async () => {
+    const labelled = ingestionTargetNflSeason(new Date());
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) => ({
+      status: "ok", season, playersUpserted: 1, statsUpserted: 9,
+    }));
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledWith(labelled);
+    const body = (await res.json()) as { season: number; labelledAttempt: unknown; seasonResolution: { ingestionTarget: number } };
+    expect(body.season).toBe(labelled);
+    expect(body.labelledAttempt).toBeNull();
+    expect(body.seasonResolution.ingestionTarget).toBe(labelled);
+  });
+
+  it("falls back to the completed floor when the labelled season is not published yet, and reports the attempt", async () => {
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    const floor = currentNflSeason(now);
+    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) =>
+      season === labelled
+        ? { status: "source-error", season, playersUpserted: 0, statsUpserted: 0, error: "HTTP 404" }
+        : { status: "ok", season, playersUpserted: 1, statsUpserted: 9 },
+    );
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(ingestPlayerWeeklyStats).toHaveBeenNthCalledWith(1, labelled);
+    expect(ingestPlayerWeeklyStats).toHaveBeenNthCalledWith(2, floor);
+    const body = (await res.json()) as {
+      success: boolean;
+      season: number;
+      labelledAttempt: { season: number; status: string; error: string | null } | null;
+    };
+    expect(body.success).toBe(true);
+    expect(body.season).toBe(floor);
+    expect(body.labelledAttempt).toEqual({ season: labelled, status: "source-error", error: "HTTP 404" });
+  });
+
+  it("does NOT retry the floor on a transient source error (5xx/timeout): the run fails instead of masking an outage", async () => {
+    // Tripwire (2026-09-03 automated review): only a 404 (or ok with zero
+    // rows) means "not published yet". A 503 or a timeout on the labelled
+    // season is an outage; retrying the floor and answering 200 would hide it.
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    const floor = currentNflSeason(now);
+    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) => ({
+      status: "source-error", season, playersUpserted: 0, statsUpserted: 0,
+      error: `nflverse fetch failed (503) for https://example.invalid/${season}`,
+    }));
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledWith(labelled);
+    expect(res.status).not.toBe(200);
+    const body = (await res.json()) as { success: boolean; season: number; labelledAttempt: unknown };
+    expect(body.success).toBe(false);
+    expect(body.season).toBe(labelled);
+    expect(body.labelledAttempt).toBeNull();
+  });
+
+  it("falls back to the completed floor when the labelled season returns ok with zero rows (unpublished, combined asset)", async () => {
+    // Tripwire (2026-09-02 automated review): nflverse can return the older
+    // combined asset with status "ok" and zero upserted rows for a not-yet-
+    // published labelled season — an empty labelled-season run must not be
+    // recorded as success on a scheduled run.
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    const floor = currentNflSeason(now);
+    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) =>
+      season === labelled
+        ? { status: "ok", season, playersUpserted: 0, statsUpserted: 0 }
+        : { status: "ok", season, playersUpserted: 1, statsUpserted: 9 },
+    );
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(ingestPlayerWeeklyStats).toHaveBeenNthCalledWith(1, labelled);
+    expect(ingestPlayerWeeklyStats).toHaveBeenNthCalledWith(2, floor);
+    const body = (await res.json()) as {
+      success: boolean;
+      season: number;
+      labelledAttempt: { season: number; status: string; error: string | null } | null;
+    };
+    expect(body.success).toBe(true);
+    expect(body.season).toBe(floor);
+    expect(body.labelledAttempt).toEqual({ season: labelled, status: "ok", error: null });
+  });
+
+  it("does NOT retry the floor when clearance-denied — that is a rights stop, not an unpublished signal", async () => {
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    const floor = currentNflSeason(now);
+    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "clearance-denied", season: labelled, playersUpserted: 0, statsUpserted: 0, blocks: ["rights"],
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(res.status).toBe(502);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledWith(labelled);
+  });
+
+  it("does NOT retry an ok result with zero rows on an explicit ?season override", async () => {
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok", season: 2026, playersUpserted: 0, statsUpserted: 0,
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2026", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+  });
+
+  it("never falls back on an explicit ?season override", async () => {
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "source-error", season: 2026, playersUpserted: 0, statsUpserted: 0, error: "HTTP 404",
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2026", "Bearer secret"));
+    expect(res.status).toBe(502);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+  });
 
   it("401s without the bearer secret", async () => {
     const res = await GET(req("http://x/api/cron/refresh-player-stats"));

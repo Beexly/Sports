@@ -38,7 +38,7 @@ const suite = HAS_DB ? describe : describe.skip;
 
 const SCHEMA = "shadow_metrics_acceptance";
 
-const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations");
+const MIGRATIONS_DIR = join(__dirname, "..", "..", "..", "packages", "db", "prisma", "migrations-archive");
 
 suite("W1 shadow metrics against real Postgres", () => {
   let pool: Pool;

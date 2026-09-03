@@ -29,6 +29,7 @@ describe("Trust Claim Registry — shape", () => {
         "PRICING",
         "SOCIAL_PROOF",
         "RISK_DISCLOSURE",
+        "BRAND_POSITIONING",
       ]).toContain(claim.category);
       expect([
         "ENGINE_BEHAVIOR",
@@ -151,6 +152,44 @@ describe("Banned-phrase scanner", () => {
     expect(scanForBannedPhrases("see the line at lock").some((h) => h.claimId === "banned.lock")).toBe(true);
     // Word-boundary still spares 'block'/'unlock'/'clock'.
     expect(scanForBannedPhrases("the matchup is a roadblock to unlock").some((h) => h.claimId === "banned.lock")).toBe(false);
+  });
+
+  // Tripwire (2026-09-02 automated review): the "AI picks" family only
+  // covered plural "AI picks" and hyphenated "AI-generated picks" — the
+  // singular and un-hyphenated variants slipped past the gate. All six
+  // singular/plural x hyphen/space combinations must now hit.
+  it("flags every singular/plural x hyphen/space variant of the 'AI pick(s)' framing", () => {
+    const cases = [
+      "Our AI pick for tonight's game is the Chiefs.",
+      "Today's AI picks are live.",
+      "This is an AI-generated pick you can trust.",
+      "These are AI-generated picks from the model.",
+      "This AI generated pick looks strong.",
+      "Check out today's AI generated picks.",
+    ];
+    for (const text of cases) {
+      const hits = scanForBannedPhrases(text);
+      expect(hits.length, `expected a banned-phrase hit for: "${text}"`).toBeGreaterThan(0);
+      expect(
+        hits.some((h) => h.claimId.startsWith("banned.ai-") || h.claimId.startsWith("banned.positioning-vocab.ai-")),
+        `expected an AI-picks-family or positioning-vocab hit for: "${text}"`
+      ).toBe(true);
+    }
+  });
+
+  // Tripwire: scanForBannedPhrases() now also runs the shared brand-
+  // positioning vocabulary (positioning-vocab.json / buildPositioningRegex)
+  // additively, so phrases the trust-claims registry never named explicitly
+  // (e.g. "AI-powered", "machine learning") are rejected here too.
+  it("flags shared brand-positioning vocabulary that has no dedicated trust claim (additive)", () => {
+    const cases = ["Our AI-powered scoring engine never sleeps.", "This is a machine learning model."];
+    for (const text of cases) {
+      const hits = scanForBannedPhrases(text);
+      expect(
+        hits.some((h) => h.claimId.startsWith("banned.positioning-vocab.")),
+        `expected a shared-positioning-vocab hit for: "${text}"`
+      ).toBe(true);
+    }
   });
 });
 
@@ -330,7 +369,7 @@ describe("Trust Claim Registry — visibility audit", () => {
   });
 
   // ── Enum-shape audit ─────────────────────────────────────────────────────
-  it("every claim category is one of the canonical six", () => {
+  it("every claim category is one of the canonical seven", () => {
     const allowed = new Set([
       "METHODOLOGY",
       "DATA_TRANSPARENCY",
@@ -338,6 +377,9 @@ describe("Trust Claim Registry — visibility audit", () => {
       "PRICING",
       "SOCIAL_PROOF",
       "RISK_DISCLOSURE",
+      // BS-004: "We're not AI. We're math you can read." — see
+      // apps/web/lib/positioning-vocab.json.
+      "BRAND_POSITIONING",
     ]);
     for (const claim of TRUST_CLAIMS) {
       expect(

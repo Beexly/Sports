@@ -12,7 +12,7 @@ Code is ready. These steps require human portals / secrets. Agents do not invent
    curl -sS -H "Authorization: Bearer $CRON_SECRET" \
      "https://www.galaxysportsedge.com/api/cron/settle-picks" | jq '{ok,path,picksSettled,picksHeld}'
    ```
-   Expect `"path":"free"`. Cadence: every 3h (`vercel.json` → `0 */3 * * *`, #278).
+   Expect `"path":"free"`. Cadence: hourly (`vercel.json` → `20 * * * *`; #278 set 3h, #300 moved it to hourly on 2026-08-06).
 
 ## 2. Stripe Dashboard
 
@@ -49,7 +49,7 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 | Expired session | `apps/web/app/api/webhooks/stripe/route.ts` |
 | CheckoutAttempt stamp | `apps/web/lib/stripe.ts` |
 | Clearance honesty | `apps/web/lib/data-sources/source-router.ts` |
-| Skills | `docs/agent-skills/` |
+| Skills | `.claude/skills/` |
 | Agent eval | `npm run agent:eval` |
 | Pricing smoke | `npm run e2e:pricing-smoke` |
 
@@ -71,10 +71,10 @@ See [`CREDITS.md`](./CREDITS.md) — Neon, Vercel, Anthropic, OpenAI, AWS. Statu
 | CIR calibrator | `centeredIsotonicCalibration` in prediction-engine |
 | Time hold-out / paradox | `timeHoldoutSplit`, `selectedSliceEce` |
 | Offline calibration | `scripts/calibration-offline/` · `npm run calibration:offline` |
-| Calibration skill | `docs/agent-skills/calibration-pipeline/SKILL.md` |
+| Calibration skill | `.claude/skills/calibration-pipeline/SKILL.md` |
 | DSPy skill offline | `scripts/dspy-gse/` |
-| Coding skill | `docs/agent-skills/coding-agent/SKILL.md` |
-| Polymarket hold skill | `docs/agent-skills/polymarket-hold/SKILL.md` |
+| Coding skill | `.claude/skills/coding-agent/SKILL.md` |
+| Polymarket hold skill | `.claude/skills/polymarket-hold/SKILL.md` |
 
 | Session 2 extract | `docs/ops/SESSION_2_EXTRACT.md` |
 | gse_metric / GEPA config | `scripts/dspy-gse/` |

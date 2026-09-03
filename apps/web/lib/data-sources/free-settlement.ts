@@ -32,6 +32,8 @@ export type Confirmation = "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED";
 
 export type TrustedFinal = {
   readonly date: string;
+  /** ISO start time when the primary source carries one (see ComparableGame). */
+  readonly startIso?: string;
   readonly home: { name: string; abbr: string; score: number };
   readonly away: { name: string; abbr: string; score: number };
   readonly confirmation: Confirmation;
@@ -96,6 +98,7 @@ function scoreFor(g: ComparableGame, abbr: string): number | null {
 function toTrusted(g: ComparableGame, confirmation: Confirmation, sources: string[]): TrustedFinal {
   return {
     date: g.date,
+    ...(g.startIso ? { startIso: g.startIso } : {}),
     home: { name: g.home.name, abbr: g.home.abbr, score: g.home.score as number },
     away: { name: g.away.name, abbr: g.away.abbr, score: g.away.score as number },
     confirmation,
@@ -275,6 +278,73 @@ export function orientToPickHome(
 }
 
 /**
+ * A multi-day series (Fri/Sat/Sun, same two teams) puts up to three completed
+ * finals inside the ±2-day date tolerance. Before this, all of them became
+ * candidates, their scores disagreed, and the doubleheader guard held every
+ * series game forever (AMBIGUOUS_MATCH). Prefer the final whose start time is
+ * nearest the pick's kickoff when the source carries start times: the Saturday
+ * pick matches the Saturday final. A same-day doubleheader still yields two
+ * finals at nearly the same distance, so the guard below keeps its hold.
+ *
+ * Calendar dates alone are not enough: a 20:10 ET game is the next UTC day,
+ * so "nearest date" would choose the wrong game of the series.
+ */
+export const NEAREST_CANDIDATE_TIE_MS = 4 * 60 * 60 * 1000;
+
+export function nearestCandidates(pick: PendingPick, matching: readonly TrustedFinal[]): TrustedFinal[] {
+  if (matching.length <= 1) return [...matching];
+  // A date-only gameDateIso ("2026-09-05") parses as midnight, which would make
+  // "nearest" pick the earlier game of a same-day doubleheader. Without a real
+  // kickoff time every candidate stays and the doubleheader guard holds.
+  if (!pick.gameDateIso.includes("T")) return [...matching];
+  const kickoff = Date.parse(pick.gameDateIso);
+  if (Number.isNaN(kickoff) || matching.some((f) => !f.startIso || Number.isNaN(Date.parse(f.startIso)))) {
+    return [...matching];
+  }
+  const withDelta = matching.map((f) => ({ f, delta: Math.abs(Date.parse(f.startIso as string) - kickoff) }));
+  const best = Math.min(...withDelta.map((c) => c.delta));
+  // Everything within the tie window of the best is still a candidate, so two
+  // games of a doubleheader (a few hours apart) both remain and get held.
+  return withDelta.filter((c) => c.delta - best <= NEAREST_CANDIDATE_TIE_MS).map((c) => c.f);
+}
+
+/** Normalized city prefixes that name more than one team in at least one league. */
+const SHARED_CITY_TOKENS: ReadonlySet<string> = new Set(
+  ["los angeles", "new york", "chicago", "san francisco", "bay area", "washington", "dallas", "houston", "philadelphia", "miami", "tampa bay", "kansas city", "st louis", "saint louis", "san jose", "oakland", "anaheim"].map((c) =>
+    normalizeTeamToken(c),
+  ),
+);
+
+/**
+ * True when a pick side is ONLY a city that names two or more distinct teams
+ * across the fetched scoreboards (finals plus scheduled/postponed rows). Such a
+ * pick cannot be matched honestly; the caller holds it. A city with a single
+ * team on the boards is unambiguous for that slate and grades normally.
+ */
+export function cityOnlyAmbiguity(
+  pick: PendingPick,
+  finals: readonly TrustedFinal[],
+  scoreboard: readonly NormalizedGame[] = [],
+): boolean {
+  const sides = [pick.homeTeam, pick.awayTeam].map((s) => normalizeTeamToken(s)).filter(Boolean);
+  const cityOnly = sides.filter((s) => SHARED_CITY_TOKENS.has(s));
+  if (cityOnly.length === 0) return false;
+  const teamNames = new Set<string>();
+  for (const f of finals) {
+    teamNames.add(normalizeTeamToken(f.home.name));
+    teamNames.add(normalizeTeamToken(f.away.name));
+  }
+  for (const g of scoreboard) {
+    if (g.home) teamNames.add(normalizeTeamToken(g.home.team));
+    if (g.away) teamNames.add(normalizeTeamToken(g.away.team));
+  }
+  return cityOnly.some((city) => {
+    const teamsWithCity = [...teamNames].filter((t) => t !== city && t.startsWith(city));
+    return teamsWithCity.length >= 2;
+  });
+}
+
+/**
  * Settle pending picks against trusted free finals.
  * DISPUTED finals HOLD; unmatched stay PENDING; dual-confirmed postponed → honest VOID.
  */
@@ -285,9 +355,27 @@ export function settlePendingPicks(
 ): SettlementOutcome[] {
   const postponedCandidates = options.postponedCandidates ?? [];
   return picks.map((pick): SettlementOutcome => {
-    const candidates = finals.filter(
+    // City-only pick names ("Los Angeles", "New York", "Chicago") come from a
+    // feed that dropped the nickname. When more than one team with that city
+    // appears anywhere on the fetched scoreboards, the name cannot identify the
+    // game; hold rather than grade against whichever team happened to play.
+    // Only rows inside the pick's own date window count: another date's
+    // same-city team elsewhere in the batch must not hold a pick the date can
+    // identify. Rows without a start time are kept (fail closed).
+    const pickDate = pick.gameDateIso.slice(0, 10);
+    const ambiguousCity = cityOnlyAmbiguity(
+      pick,
+      finals.filter((f) => daysApart(f.date, pickDate) <= 2),
+      postponedCandidates.filter((g) => !g.startTime || daysApart(g.startTime.slice(0, 10), pickDate) <= 2),
+    );
+    if (ambiguousCity) {
+      return { pickId: pick.pickId, status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] };
+    }
+
+    const matching = finals.filter(
       (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 2 && finalMatchesPick(pick, f),
     );
+    const candidates = nearestCandidates(pick, matching);
 
     // Same-day rematch guard (e.g. an MLB doubleheader): two DIFFERENT completed
     // games between the same two teams can both fall inside the date-tolerance

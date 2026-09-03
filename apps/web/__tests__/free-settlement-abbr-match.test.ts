@@ -199,3 +199,66 @@ describe("postponed free-path VOID (no invented scores)", () => {
     expect(out.status).toBe("PENDING");
   });
 });
+
+// City-only team names (a feed that dropped the nickname: "Los Angeles" /
+// "New York"). "losangeles" is a prefix of both losangelesdodgers and
+// losangelesangels, so bare containment matched either team.
+describe("city-only pick names", () => {
+  const cityPick: PendingPick = {
+    pickId: "city",
+    pickType: "MONEYLINE",
+    selection: "Los Angeles",
+    line: 0,
+    homeTeam: "Los Angeles",
+    awayTeam: "New York",
+    sportKey: "baseball_mlb",
+    gameDateIso: `${DATE}T23:10:00Z`,
+  };
+  const angelsYankees: TrustedFinal = {
+    date: DATE,
+    startIso: `${DATE}T23:10:00Z`,
+    home: { name: "Los Angeles Angels", abbr: "LAA", score: 5 },
+    away: { name: "New York Yankees", abbr: "NYY", score: 2 },
+    confirmation: "SINGLE_SOURCE",
+    sources: ["espn-public-api"],
+  };
+  const dodgersMets: TrustedFinal = {
+    date: DATE,
+    startIso: `${DATE}T20:10:00Z`,
+    home: { name: "Los Angeles Dodgers", abbr: "LAD", score: 1 },
+    away: { name: "New York Mets", abbr: "NYM", score: 4 },
+    confirmation: "SINGLE_SOURCE",
+    sources: ["espn-public-api"],
+  };
+
+  it("holds when two teams share the city on the boards (cannot identify the game)", () => {
+    const out = settlePendingPicks([cityPick], [angelsYankees, dodgersMets])[0]!;
+    expect(out.status).toBe("HELD");
+    if (out.status === "HELD") expect(out.reason).toBe("AMBIGUOUS_MATCH");
+  });
+
+  it("holds even when only one of the two city teams has a final, if the other is on the scoreboard", () => {
+    const scheduledDodgers: NormalizedGame = {
+      sourceId: "espn-public-api",
+      sport: "mlb",
+      gameId: "sched",
+      startTime: `${DATE}T20:10:00Z`,
+      state: "pre",
+      completed: false,
+      statusDetail: "Postponed",
+      venue: null,
+      home: { team: "Los Angeles Dodgers", abbreviation: "LAD", score: null },
+      away: { team: "New York Mets", abbreviation: "NYM", score: null },
+      attribution: "espn",
+    };
+    const out = settlePendingPicks([cityPick], [angelsYankees], { postponedCandidates: [scheduledDodgers] })[0]!;
+    expect(out.status).toBe("HELD");
+  });
+
+  it("grades when the city names exactly one team on the boards", () => {
+    const out = settlePendingPicks([cityPick], [angelsYankees])[0]!;
+    expect(out.status).toBe("SETTLED");
+    if (out.status !== "SETTLED") return;
+    expect(out.result).toBe("WIN");
+  });
+});

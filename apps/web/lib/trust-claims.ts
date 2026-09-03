@@ -27,6 +27,12 @@
  *      volume justifies it (revisit during Phase 7 Agent Cockpit work).
  */
 
+// BS-004 (brand-safety-rules-v2): "AI picks" / "AI-generated picks" phrasing
+// for the BANNED entries below is sourced from the shared positioning
+// vocabulary (apps/web/lib/positioning-vocab.json) rather than re-typed here
+// — the same list the runtime compliance scanner and the CI trust-gate read.
+import { SAFE_REPLACEMENTS, FORBIDDEN_PHRASES, buildPositioningRegex } from "./positioning-vocab";
+
 // ─────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────
@@ -37,7 +43,8 @@ export type ClaimCategory =
   | "PERFORMANCE"        // anything resembling a track-record assertion
   | "PRICING"            // billing, refund, subscription mechanics
   | "SOCIAL_PROOF"       // testimonials, user counts, badges
-  | "RISK_DISCLOSURE";   // responsible-gambling, no-guarantee language
+  | "RISK_DISCLOSURE"    // responsible-gambling, no-guarantee language
+  | "BRAND_POSITIONING"; // "We're not AI. We're math you can read." (BS-004)
 
 export type ClaimStatus =
   | "APPROVED"       // safe to render publicly
@@ -365,6 +372,92 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     lastReviewedAt: LAST_REVIEW,
     reviewNote: "Compound certainty + financial outcome. Banned.",
   },
+
+  // ── Brand positioning (BS-004: "We're not AI. We're math you can read.") ─
+  // The picks come from a deterministic engine, never an LLM. "AI" belongs
+  // only to the content/atmosphere layer (see CLAUDE.md — "AI Layer: Claude
+  // API (content generation only — not source of truth)"). Banning the
+  // "AI picks" framing on any surface keeps that position honest. Precise to
+  // "pick(s)" so legitimate copy ("AI Ops", "AI-presenter disclosure",
+  // critiquing competitors' "AI prediction sites") is untouched — same scope
+  // the CI trust-gate's existing BS-004 rules enforce.
+  {
+    id: "banned.ai-picks",
+    copy: "AI picks",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. 'AI picks' misrepresents the source of truth. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
+  },
+  {
+    id: "banned.ai-generated-picks",
+    copy: "AI-generated picks",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. 'AI-generated picks' misrepresents the source of truth. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
+  },
+  // Singular / spaced variants of the same "AI picks" framing (BS-004
+  // review, 2026-09-02): the pair above only caught the plural "AI picks"
+  // and the hyphenated plural "AI-generated picks", so "AI pick",
+  // "AI-generated pick", and the un-hyphenated "AI generated pick(s)" slipped
+  // past scanForBannedPhrases(). Same category/shape, same rationale.
+  {
+    id: "banned.ai-pick",
+    copy: "AI pick",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. 'AI pick' (singular) misrepresents the source of truth. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
+  },
+  {
+    id: "banned.ai-generated-pick",
+    copy: "AI-generated pick",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. 'AI-generated pick' (singular) misrepresents the source of truth. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
+  },
+  {
+    id: "banned.ai-generated-pick-2",
+    copy: "AI generated pick",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. Un-hyphenated 'AI generated pick' misrepresents the source of truth the same as the hyphenated form. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
+  },
+  {
+    id: "banned.ai-generated-picks-2",
+    copy: "AI generated picks",
+    category: "BRAND_POSITIONING",
+    status: "BANNED",
+    evidence: "NONE",
+    visibility: "INTERNAL",
+    lastReviewedAt: LAST_REVIEW,
+    reviewNote:
+      "The engine is deterministic, not an LLM. Un-hyphenated 'AI generated picks' misrepresents the source of truth the same as the hyphenated form. Sourced from apps/web/lib/positioning-vocab.json.",
+    safeReplacement: SAFE_REPLACEMENTS["AI picks"],
+  },
 ] as const;
 
 // ─────────────────────────────────────────────
@@ -433,6 +526,29 @@ export interface BannedPhraseHit {
   readonly snippet: string;
 }
 
+// Phrases already covered above by an explicit BANNED trust claim (the "AI
+// pick(s)" / "AI-generated pick(s)" family) — the shared-vocab pass below
+// skips these so a single occurrence doesn't produce two hits with two
+// different claimIds for the same match.
+const CLAIM_COVERED_POSITIONING_PHRASES = new Set(
+  getBannedClaims()
+    .filter((c) => c.category === "BRAND_POSITIONING")
+    .map((c) => c.copy.toLowerCase())
+);
+
+/**
+ * Slug for the shared-positioning-vocab diagnostic claimId, e.g.
+ * "AI-powered" -> "positioning-vocab.ai-powered". Mirrors
+ * scripts/guardrails/trust-gate.mjs's slugForClaim so the ids a reviewer
+ * sees read the same across the runtime scanner and the CI guard.
+ */
+function slugForPositioningPhrase(phrase: string): string {
+  return phrase
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 /**
  * Scan a string for any public-banned phrase from the registry.
  *
@@ -440,6 +556,14 @@ export interface BannedPhraseHit {
  * inside larger words (e.g. "lock" inside "block", "unlock", "clock") are
  * matched with regex word boundaries. Multi-word phrases are matched as
  * literal case-insensitive substrings.
+ *
+ * Additive: on top of the registry claims above, this also runs the shared
+ * brand-positioning vocabulary (apps/web/lib/positioning-vocab.json, via
+ * positioning-vocab.ts's buildPositioningRegex) — the same matcher the
+ * runtime compliance scanner and the CI trust-gate use — so "AI-powered",
+ * "machine learning", etc. are rejected here too, not just the "AI
+ * pick(s)" framing the registry names explicitly. Existing claim-based hits
+ * (phrase/claimId/line/snippet) are untouched by this addition.
  *
  * Returns every hit; the caller decides how to report them.
  */
@@ -463,6 +587,21 @@ export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
         hits.push({
           phrase,
           claimId: claim.id,
+          line: idx + 1,
+          snippet: line.trim(),
+        });
+      }
+    });
+  }
+
+  for (const rawPhrase of FORBIDDEN_PHRASES) {
+    if (CLAIM_COVERED_POSITIONING_PHRASES.has(rawPhrase.toLowerCase())) continue;
+    const pattern = buildPositioningRegex([rawPhrase]);
+    lines.forEach((line, idx) => {
+      if (pattern.test(normalizeForScan(line))) {
+        hits.push({
+          phrase: rawPhrase,
+          claimId: `banned.positioning-vocab.${slugForPositioningPhrase(rawPhrase)}`,
           line: idx + 1,
           snippet: line.trim(),
         });

@@ -68,6 +68,11 @@ import type {
   OddsApiEvent,
 } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
+import {
+  resolveCanonicalGame,
+  preferLongerTeamName,
+  type GameIdentityDb,
+} from "./game-identity.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
 import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archive.js";
@@ -518,24 +523,99 @@ export async function processSport(
       update: {},
     });
 
-    // Upsert all games first so we have DB IDs for the rest of the pipeline
+    // Upsert all games first so we have DB IDs for the rest of the pipeline.
+    //
+    // Identity, not just id: the SAME contest reaches this loop under an Odds
+    // API id, a TheRundown event_id, or an `espn:<sport>:<id>` id depending on
+    // which provider answered this cycle. Keying only on externalId created a
+    // fresh row (and a second set of picks) for every feed. resolveCanonicalGame
+    // reuses the row we already have when the team pair + kickoff prove it is
+    // the same game; every ambiguity falls back to the original upsert.
     const gameRecords: Record<string, { id: string }> = {};
+    // A twin may be claimed by at most ONE feed row per cycle — two events that
+    // both resolve to one row would stack two games' odds onto it.
+    const claimedTwinIds = new Set<string>();
     for (const game of normalizedGames) {
-      const record = await db.game.upsert({
-        where: { externalId: game.externalId },
-        create: {
-          externalId: game.externalId,
+      let twin: { id: string; homeTeamName: string; awayTeamName: string } | null = null;
+      let alreadyClaimed = false;
+      try {
+        const resolved = await resolveCanonicalGame(db as unknown as GameIdentityDb, {
           sportId: sportRecord.id,
+          sportKey: sport.key,
+          externalId: game.externalId,
           homeTeamName: game.homeTeam,
           awayTeamName: game.awayTeam,
           commenceTime: game.commenceTime,
-        },
-        update: {
-          homeTeamName: game.homeTeam,
-          awayTeamName: game.awayTeam,
-          commenceTime: game.commenceTime,
-        },
-      });
+        });
+        if (resolved && claimedTwinIds.has(resolved.game.id)) {
+          // A second feed row for a contest another row already claimed this
+          // cycle. Falling through to upsert-by-externalId would either stack
+          // a second event's odds onto the claimed row or, when this id is a
+          // merged alias, write onto the tombstone. Skip the row instead.
+          alreadyClaimed = true;
+        } else if (resolved) {
+          if (resolved.matchedBy === "twin") {
+            twin = resolved.game;
+          } else if (resolved.game.externalId !== game.externalId) {
+            // matchedBy "externalId" but the returned row's OWN externalId
+            // differs from what we ingested: resolveCanonicalGame followed
+            // this externalId to a merged-away ALIAS row and returned the
+            // canonical it points to (scripts/ops/merge-duplicate-games.ts).
+            // Route through the same "update the existing row" path as a
+            // twin so re-ingesting the old id never writes onto the
+            // tombstone — an untouched externalId match (the common case)
+            // still falls through to the plain upsert below, unchanged.
+            twin = resolved.game;
+          }
+        }
+      } catch (identityErr) {
+        // Never let identity resolution block ingestion — fall back to the
+        // pre-existing upsert-by-externalId behaviour.
+        console.warn(
+          `${logPrefix} game identity lookup failed for ${game.externalId}: ` +
+            `${identityErr instanceof Error ? identityErr.message : identityErr}`,
+        );
+      }
+
+      if (alreadyClaimed) {
+        console.warn(
+          `${logPrefix} skipping feed row ${game.externalId}: its contest was already claimed this cycle`,
+        );
+        continue;
+      }
+
+      let record: { id: string };
+      if (twin) {
+        claimedTwinIds.add(twin.id);
+        record = await db.game.update({
+          where: { id: twin.id },
+          // Never downgrade a stored full name to a city-only feed name.
+          data: {
+            homeTeamName: preferLongerTeamName(twin.homeTeamName, game.homeTeam),
+            awayTeamName: preferLongerTeamName(twin.awayTeamName, game.awayTeam),
+            commenceTime: game.commenceTime,
+          },
+        });
+      } else {
+        record = await db.game.upsert({
+          where: { externalId: game.externalId },
+          create: {
+            externalId: game.externalId,
+            sportId: sportRecord.id,
+            homeTeamName: game.homeTeam,
+            awayTeamName: game.awayTeam,
+            commenceTime: game.commenceTime,
+          },
+          update: {
+            homeTeamName: game.homeTeam,
+            awayTeamName: game.awayTeam,
+            commenceTime: game.commenceTime,
+          },
+        });
+      }
+      // Odds rows, enrichment (bookmakerCoverageMax, opening lines) and picks
+      // all key off this id below, so a reused twin receives this cycle's odds
+      // instead of a duplicate row receiving them.
       gameRecords[game.externalId] = record;
     }
 

@@ -58,15 +58,15 @@ function loadSkills(paths) {
 
 const skillByDomain = {
   settlement: loadSkills([
-    "docs/agent-skills/settlement-free-path/SKILL.md",
-    "docs/agent-skills/stripe-webhook/SKILL.md",
-    "docs/agent-skills/checkout-attempt/SKILL.md",
+    ".claude/skills/settlement-free-path/SKILL.md",
+    ".claude/skills/stripe-webhook/SKILL.md",
+    ".claude/skills/checkout-attempt/SKILL.md",
   ]),
   coding: loadSkills([
-    "docs/agent-skills/coding-agent/SKILL.md",
-    "docs/agent-skills/polymarket-hold/SKILL.md",
+    ".claude/skills/coding-agent/SKILL.md",
+    ".claude/skills/polymarket-hold/SKILL.md",
   ]),
-  calibration: loadSkills(["docs/agent-skills/calibration-pipeline/SKILL.md"]),
+  calibration: loadSkills([".claude/skills/calibration-pipeline/SKILL.md"]),
 };
 
 // Expand examples with calibration domain goldens if present in goldens but not examples

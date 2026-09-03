@@ -29,11 +29,28 @@ import {
   type PendingPick,
 } from "./free-settlement";
 import { ODDS_KEY_TO_FREE } from "./free-settlement-runner";
+import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import type { NormalizedGame } from "./free-adapters/espn-scores";
 import type { Sport } from "./source-router";
 
+/** Kept for callers/tests that reference the old paid window; no longer the cutoff. */
 export const PAID_SCORES_WINDOW_DAYS = 3;
-export const BACKFILL_CAP = 50;
+/**
+ * Backfill inspects every published PENDING pick whose game started more than
+ * this many hours ago. It equals SETTLEMENT_DEFAULT_GRACE_HOURS
+ * (lib/performance/settlement-health.ts) on purpose: the settlement-health
+ * band counts a pick overdue after the same 6h, so nothing can be "overdue" and
+ * yet outside this lane. The old 3-day cutoff assumed the paid Odds API scores
+ * path covered the 6h–3d band; that path has been failing since 2026-08-24
+ * (provider outage), which left every game in that band ungraded and produced
+ * the CRITICAL backlog observed 2026-09-02.
+ */
+export const BACKFILL_WINDOW_HOURS: number = SETTLEMENT_DEFAULT_GRACE_HOURS;
+/**
+ * Per-run cap. 50 re-read the same oldest 50 every hour once that many picks
+ * were HELD or unmatched, and everything behind them was never inspected.
+ */
+export const BACKFILL_CAP = 200;
 export const BACKFILL_UNRESOLVED_GRACE_DAYS = 14;
 
 export type UnresolvedStalePick = {
@@ -41,19 +58,30 @@ export type UnresolvedStalePick = {
   gameId: string;
   commenceTime: string;
   ageDays: number;
-  reason: "NO_FINAL" | "ORIENT_FAIL";
+  reason: "NO_FINAL" | "ORIENT_FAIL" | "AMBIGUOUS_MATCH" | "DISPUTED";
   sourcesTried: readonly string[];
   olderThanGrace: boolean;
 };
 
 export type BackfillResult = {
   inspected: number;
+  /**
+   * True when the lane inspected a full cap's worth of rows: the oldest
+   * `cap` overdue picks filled the run, so anything behind them was not
+   * looked at this hour. If this stays true run after run while `settled` is
+   * 0, the head of the backlog is stuck on HELD/unmatched rows and the
+   * operator has to resolve them (or raise the cap) before later picks are
+   * ever reached.
+   */
+  capReached: boolean;
   settled: number;
   held: number;
   skippedInWindow: number;
   unresolved: UnresolvedStalePick[];
   cap: number;
+  /** Fractional days; kept for older readers. `windowHours` is the real unit. */
   windowDays: number;
+  windowHours: number;
 };
 
 type StalePickRow = {
@@ -116,12 +144,18 @@ export async function backfillStaleSettlement(input: {
   db: BackfillDb;
   now?: Date;
   cap?: number;
+  /**
+   * Restrict the lane to one sport (the cron's `?sport=` scope). Without it
+   * the lane covers every sport. A scoped settle cycle must not count another
+   * sport's backfill as its own work, so the scope reaches this query too.
+   */
+  sportKey?: string | null;
   fetchScores?: typeof fetchScoresMultiSource;
   persistSettled?: (args: PersistSettledArgs) => Promise<boolean>;
 }): Promise<BackfillResult> {
   const now = input.now ?? new Date();
   const cap = input.cap ?? BACKFILL_CAP;
-  const windowMs = PAID_SCORES_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+  const windowMs = BACKFILL_WINDOW_HOURS * 60 * 60 * 1000;
   const cutoff = new Date(now.getTime() - windowMs);
   const fetchScores = input.fetchScores ?? fetchScoresMultiSource;
   const persistSettled = input.persistSettled ?? defaultPersist(input.db);
@@ -130,7 +164,10 @@ export async function backfillStaleSettlement(input: {
     where: {
       result: "PENDING",
       isPublished: true,
-      game: { commenceTime: { lt: cutoff } },
+      game: {
+        commenceTime: { lt: cutoff },
+        ...(input.sportKey ? { sport: { key: input.sportKey } } : {}),
+      },
     },
     orderBy: { game: { commenceTime: "asc" } },
     take: cap,
@@ -227,7 +264,18 @@ export async function backfillStaleSettlement(input: {
         (now.getTime() - row.game.commenceTime.getTime()) / (24 * 60 * 60 * 1000);
 
       if (o.status === "HELD") {
+        // A hold is a decision, not a disappearance: record it with its reason
+        // so the operator surface can tell "no final" from "two finals".
         held++;
+        unresolved.push({
+          pickId: o.pickId,
+          gameId: row.gameId,
+          commenceTime: row.game.commenceTime.toISOString(),
+          ageDays: Math.round(ageDays * 10) / 10,
+          reason: o.reason,
+          sourcesTried: o.sources.length ? o.sources : sourcesTried,
+          olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+        });
         continue;
       }
       if (o.status === "PENDING") {
@@ -257,12 +305,14 @@ export async function backfillStaleSettlement(input: {
 
   return {
     inspected: stale.length,
+    capReached: stale.length >= cap,
     settled,
     held,
     skippedInWindow: inWindowSkipped.length,
     unresolved,
     cap,
-    windowDays: PAID_SCORES_WINDOW_DAYS,
+    windowDays: BACKFILL_WINDOW_HOURS / 24,
+    windowHours: BACKFILL_WINDOW_HOURS,
   };
 }
 

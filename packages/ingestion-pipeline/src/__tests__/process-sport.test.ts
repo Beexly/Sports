@@ -35,6 +35,8 @@ const mocks = vi.hoisted(() => ({
   sportUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   gameUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+  gameUpdate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   oddsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
@@ -56,7 +58,12 @@ vi.mock("@sports/db", () => ({
   db: {
     ingestionRun: { create: mocks.ingestionRunCreate, update: mocks.ingestionRunUpdate },
     sport: { upsert: mocks.sportUpsert },
-    game: { upsert: mocks.gameUpsert, findUnique: mocks.gameFindUnique },
+    game: {
+      upsert: mocks.gameUpsert,
+      findUnique: mocks.gameFindUnique,
+      findMany: mocks.gameFindMany,
+      update: mocks.gameUpdate,
+    },
     odds: { createMany: mocks.oddsCreateMany },
     pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique, updateMany: mocks.pickUpdateMany, create: mocks.pickCreate },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
@@ -207,6 +214,8 @@ describe("processSport", () => {
     mocks.sportUpsert.mockResolvedValue({ id: "sport-1" });
     mocks.gameUpsert.mockResolvedValue({ id: "game-1" });
     mocks.gameFindUnique.mockResolvedValue({ id: "game-1" });
+    mocks.gameFindMany.mockResolvedValue([]);
+    mocks.gameUpdate.mockResolvedValue({ id: "game-1" });
     mocks.enrichGameContext.mockResolvedValue(undefined);
     mocks.getAtsForm.mockResolvedValue(null);
     mocks.getHeadToHeadForm.mockResolvedValue(null);
@@ -749,6 +758,182 @@ describe("processSport", () => {
       );
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("eu region rate limited"));
 
+      warnSpy.mockRestore();
+    });
+  });
+
+  /**
+   * Duplicate-row prevention. Production evidence (Neon, 2026-09-02): the same
+   * contest exists up to three times in `games` (Odds API id, TheRundown
+   * event_id, `espn:*` id), each with its own picks, because every writer keyed
+   * only on externalId.
+   */
+  describe("game identity (no duplicate rows)", () => {
+    const TWIN = {
+      id: "game-espn",
+      externalId: "espn:nfl:401872656",
+      sportId: "sport-1",
+      homeTeamName: "Kansas City Chiefs",
+      awayTeamName: "Buffalo Bills",
+      commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+    };
+
+    beforeEach(() => {
+      delete process.env["GAME_IDENTITY_MERGE_DISABLED"];
+      // The externalId is NEW (first identity lookup misses); later
+      // findUnique calls are the post-enrichment reload.
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId ? null : { id: "game-espn" };
+      });
+    });
+
+    afterEach(() => {
+      delete process.env["GAME_IDENTITY_MERGE_DISABLED"];
+    });
+
+    it("writes this cycle's odds onto the existing ESPN-seeded row instead of creating a second one", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "5f9f1b2c3d4e5a6b7c8d9e0f1a2b3c4d",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      mocks.gameFindMany.mockResolvedValue([TWIN]);
+      mocks.gameUpdate.mockResolvedValue({ id: "game-espn" });
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(mocks.gameUpsert).not.toHaveBeenCalled();
+      expect(mocks.gameUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: "game-espn" } }),
+      );
+      // Downstream work is keyed to the REUSED row, not a new one.
+      expect(mocks.enrichGameContext).toHaveBeenCalledWith(
+        expect.objectContaining({ gameId: "game-espn" }),
+      );
+    });
+
+    it("never downgrades stored full team names to a city-only feed name", async () => {
+      // TheRundown failover cycle: city-only home/away names.
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "rundown-9f2",
+          homeTeam: "Kansas City",
+          awayTeam: "Buffalo",
+        }),
+      ]);
+      mocks.gameFindMany.mockResolvedValue([TWIN]);
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "game-espn" },
+          data: expect.objectContaining({
+            homeTeamName: "Kansas City Chiefs",
+            awayTeamName: "Buffalo Bills",
+          }),
+        }),
+      );
+      expect(mocks.gameUpsert).not.toHaveBeenCalled();
+    });
+
+    it("creates the row as before when the twin match is ambiguous", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "odds-api-1",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      // Two rows tie on kickoff distance → no honest winner.
+      mocks.gameFindMany.mockResolvedValue([
+        { ...TWIN, id: "twin-a", commenceTime: new Date("2026-06-12T15:00:00.000Z") },
+        {
+          ...TWIN,
+          id: "twin-b",
+          externalId: "espn:americanfootball_nfl:401872656",
+          commenceTime: new Date("2026-06-12T19:00:00.000Z"),
+        },
+      ]);
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { externalId: "odds-api-1" } }),
+      );
+    });
+
+    it("kill switch restores today's behaviour exactly (no twin scan, plain upsert)", async () => {
+      process.env["GAME_IDENTITY_MERGE_DISABLED"] = "true";
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "odds-api-1",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      mocks.gameFindMany.mockResolvedValue([TWIN]);
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameFindMany).not.toHaveBeenCalled();
+      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { externalId: "odds-api-1" } }),
+      );
+    });
+
+    it("a twin is claimed by at most one feed row per cycle", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "odds-api-1",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+        normalizedGame({
+          externalId: "odds-api-2",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      mocks.gameFindMany.mockResolvedValue([TWIN]);
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      await processSport(SPORT, "key", gates());
+
+      // The first row claims the twin; the second row for the same contest is
+      // SKIPPED, not routed to upsert-by-externalId. Falling through used to
+      // create a second row (or, when the id was a merged alias, write onto
+      // the tombstone) — 2026-09-03 automated review.
+      expect(mocks.gameUpdate).toHaveBeenCalledTimes(1);
+      expect(mocks.gameUpsert).not.toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("skipping feed row odds-api-2: its contest was already claimed this cycle"),
+      );
+      warnSpy.mockRestore();
+    });
+
+    it("falls back to the plain upsert when the identity lookup throws", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "Kansas City Chiefs", awayTeam: "Buffalo Bills" }),
+      ]);
+      mocks.gameFindMany.mockRejectedValue(new Error("db down"));
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { externalId: "odds-api-1" } }),
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("game identity lookup failed"),
+      );
       warnSpy.mockRestore();
     });
   });

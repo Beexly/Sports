@@ -7,8 +7,9 @@
  * `@sports/ingestion-pipeline`'s `refreshOdds()` (which itself calls
  * `processSport()`) so the two execution paths can never drift.
  *
- * Schedule is declared in `vercel.json` at the repo root: every 30 minutes
- * (the "every-30th-minute" cron pattern — written in prose here, not as the
+ * Schedule is declared in `apps/web/vercel.json` (the copy Vercel reads; the
+ * repo-root file mirrors it): every 15 minutes
+ * (the "every-15th-minute" cron pattern — written in prose here, not as the
  * literal cron string, because a literal star-slash sequence inside a block
  * comment terminates the comment early and breaks the build; that exact
  * mistake shipped once already, so it isn't getting a second chance).

@@ -10,7 +10,7 @@ the NFL battle order and supersedes the masterplan's P2 ordering).
 fabricated stats, server-side paywalls, no secrets in code, no stale data, tests required,
 strict types), the subagent domain table, the prediction-engine rules, the legal scraping
 posture, and the Autonomous Loop Protocol (a task is NOT complete until tests, types, and
-build pass). Also `docs/agent-skills/README.md` and `docs/ops/OPERATOR.md`; the thin
+build pass). Also `.claude/skills/README.md` and `docs/ops/OPERATOR.md`; the thin
 harness is `npm run agent:eval`.
 
 ---
@@ -123,7 +123,7 @@ Tier 0 makes a turn cheap; Tier 3 makes an *agent* cheap. Together they're the o
 solo shop out-produces a staffed desk.
 
 The repo already has the primitives — the `CLAUDE.md` subagent domain table, the skills in
-`docs/agent-skills/`, and `npm run agent:eval` as a harness. Turn them into a factory:
+`.claude/skills/`, and `npm run agent:eval` as a harness. Turn them into a factory:
 
 ### T3.1 · Lessons → skills (the compounding loop)
 Every non-obvious thing you learn — a gotcha, a repo convention, a license trap, a command

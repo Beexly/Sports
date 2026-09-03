@@ -33,8 +33,12 @@ fi
 bold "2. Critical routes"
 ROUTES=( / /picks /methodology /performance /pricing /observatory /vault /about /press /contact /faq /responsible-play /vs/tout-services /privacy /terms /opengraph-image /robots.txt /sitemap.xml /api/health )
 ok_count=0
+# Per-route budget: the daily-smoke job is capped at 5 minutes; 19 routes at a
+# 12s ceiling could burn 228s on a bad day and leave no time for the summary.
+# 8s still clears a cold serverless start, and the worst case stays under 3
+# minutes for this section.
 for r in "${ROUTES[@]}"; do
-  code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 6 "$BASE$r")
+  code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 8 "$BASE$r")
   if [ "$code" = "200" ]; then
     ok_count=$((ok_count+1))
   else

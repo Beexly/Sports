@@ -1,31 +1,31 @@
 {
   "id": "settlement-path-selection",
-  "description": "Free path only when THE_ODDS_API_KEY absent; present uses odds-api path",
+  "description": "Free grader runs first on every cycle; THE_ODDS_API_KEY only adds a paid supplement afterwards (law since 2026-09-02)",
   "sourceFile": "apps/web/app/api/cron/settle-picks/route.ts",
   "predicates": [
     {
-      "id": "free-when-key-absent",
+      "id": "free-first-always",
       "type": "file_contains",
       "path": "apps/web/app/api/cron/settle-picks/route.ts",
-      "mustInclude": ["@/lib/settlement/path-select", "hasOddsApiKey", "path: \"free\"", "runFreePathSettlement"]
+      "mustInclude": ["@/lib/settlement/path-select", "selectSettlementPlan(apiKey, { forceFree })", "await runFreePathSettlement(", "runFreePathSettlement"]
     },
     {
-      "id": "paid-when-key-present",
+      "id": "paid-is-a-supplement",
       "type": "file_contains",
       "path": "apps/web/app/api/cron/settle-picks/route.ts",
-      "mustInclude": ["THE_ODDS_API_KEY", "path: \"odds-api\"", "settleSport"]
+      "mustInclude": ["THE_ODDS_API_KEY", "plan.paidSupplement && hasOddsApiKey(apiKey)", "runPaidSupplement", "settleSport", "ok: freeOk"]
     },
     {
-      "id": "cron-3h",
+      "id": "cron-hourly",
       "type": "file_contains",
       "path": "vercel.json",
-      "mustInclude": ["/api/cron/settle-picks", "0 */3 * * *"]
+      "mustInclude": ["/api/cron/settle-picks", "20 * * * *"]
     },
     {
       "id": "path-select-module",
       "type": "file_contains",
       "path": "apps/web/lib/settlement/path-select.ts",
-      "mustInclude": ["selectSettlementPath", "odds-api", "free"]
+      "mustInclude": ["selectSettlementPath", "selectSettlementPlan", "primary: \"free\"", "paidSupplement", "odds-api", "free"]
     }
   ]
 }

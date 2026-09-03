@@ -10,6 +10,11 @@ import {
   type EspnSeedGame,
   type ShortSportKey,
 } from "@sports/data-ingestion";
+import {
+  resolveCanonicalGame,
+  preferLongerTeamName,
+  type GameIdentityDb,
+} from "./game-identity.js";
 
 export type SeedGamesFromEspnResult = {
   readonly ok: boolean;
@@ -73,23 +78,74 @@ export async function seedGamesFromEspn(opts?: {
         },
         update: {},
       });
+      // This seed writes `espn:<short>:<id>` while espn-odds-client writes
+      // `espn:<sportKey>:<id>` and the paid path writes the Odds API id — three
+      // ids for one contest. Reuse the row we already have when identity proves
+      // it is the same game; a twin is claimed at most once per run.
+      const claimedTwinIds = new Set<string>();
       for (const g of list) {
         try {
-          await db.game.upsert({
-            where: { externalId: g.externalId },
-            create: {
-              externalId: g.externalId,
+          let twin: { id: string; homeTeamName: string; awayTeamName: string } | null = null;
+          try {
+            const resolved = await resolveCanonicalGame(db as unknown as GameIdentityDb, {
               sportId: sportRecord.id,
+              sportKey: g.sportKey,
+              externalId: g.externalId,
               homeTeamName: g.homeTeamName,
               awayTeamName: g.awayTeamName,
               commenceTime: g.commenceTime,
-            },
-            update: {
-              homeTeamName: g.homeTeamName,
-              awayTeamName: g.awayTeamName,
-              commenceTime: g.commenceTime,
-            },
-          });
+            });
+            if (resolved && !claimedTwinIds.has(resolved.game.id)) {
+              if (resolved.matchedBy === "twin") {
+                twin = resolved.game;
+              } else if (resolved.game.externalId !== g.externalId) {
+                // matchedBy "externalId" but the returned row's OWN
+                // externalId differs from what we ingested: this seed's id
+                // is an ALIAS (scripts/ops/merge-duplicate-games.ts) and
+                // resolveCanonicalGame followed it to the canonical row.
+                // Update the canonical, never the tombstone — an untouched
+                // externalId match still falls through to the plain upsert
+                // below, unchanged.
+                twin = resolved.game;
+              }
+            }
+          } catch (identityErr) {
+            // Fall back to the original upsert-by-externalId behaviour.
+            console.warn(
+              `${logPrefix} identity lookup failed for ${g.externalId}: ` +
+                `${identityErr instanceof Error ? identityErr.message : identityErr}`,
+            );
+          }
+
+          if (twin) {
+            claimedTwinIds.add(twin.id);
+            await db.game.update({
+              where: { id: twin.id },
+              // ESPN display names are the most specific we get — but never
+              // shorten a stored name that is already longer.
+              data: {
+                homeTeamName: preferLongerTeamName(twin.homeTeamName, g.homeTeamName),
+                awayTeamName: preferLongerTeamName(twin.awayTeamName, g.awayTeamName),
+                commenceTime: g.commenceTime,
+              },
+            });
+          } else {
+            await db.game.upsert({
+              where: { externalId: g.externalId },
+              create: {
+                externalId: g.externalId,
+                sportId: sportRecord.id,
+                homeTeamName: g.homeTeamName,
+                awayTeamName: g.awayTeamName,
+                commenceTime: g.commenceTime,
+              },
+              update: {
+                homeTeamName: g.homeTeamName,
+                awayTeamName: g.awayTeamName,
+                commenceTime: g.commenceTime,
+              },
+            });
+          }
           upserted += 1;
         } catch (err) {
           writeErrors.push(

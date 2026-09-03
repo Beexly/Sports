@@ -1,4 +1,4 @@
-# Contributing to Sports Intelligence OS
+# Contributing to Galaxy Sports Edge (GSE)
 
 Welcome. The platform is built around a small set of non-negotiable rules
 that protect customers from inflated claims, leaky bootstrap data, and

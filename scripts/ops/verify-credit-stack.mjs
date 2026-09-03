@@ -71,7 +71,7 @@ check(
 
 check(
   "content generation is $0",
-  jynx.contentPlanPrimary === "cerebras_free",
+  jynx.contentPlanPrimary === "content_free",
   `primary lane: ${jynx.contentPlanPrimary}`,
 );
 

@@ -680,7 +680,7 @@ describe("migration file", () => {
   it("20260613000000_council_ledgers/migration.sql exists", () => {
     const migrationPath = resolve(
       __dirname,
-      "../../../packages/db/prisma/migrations/20260613000000_council_ledgers/migration.sql"
+      "../../../packages/db/prisma/migrations-archive/20260613000000_council_ledgers/migration.sql"
     );
     const content = readFileSync(migrationPath, "utf-8");
     expect(content).toContain("agent_handoffs");

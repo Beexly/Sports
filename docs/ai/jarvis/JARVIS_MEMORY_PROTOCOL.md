@@ -82,7 +82,7 @@ Registry `nextAction` (authoritative): *"Wire mem0 or Postgres-based episodic me
 | Artifact | Path | What it does |
 |---|---|---|
 | Prisma schema | `packages/db/prisma/schema.prisma` | `JarvisMemoryEvent` + `JarvisDecision` models, `MemoryType` + `MemoryState` enums |
-| Migration SQL | `packages/db/prisma/migrations/20260612120000_jarvis_memory_protocol/migration.sql` | Creates `jarvis_memory_events` + `jarvis_decisions` tables |
+| Migration SQL | `packages/db/prisma/migrations-archive/20260612120000_jarvis_memory_protocol/migration.sql` (pre-baseline history; the live schema is carried by `migrations/20260101000000_baseline`) | Creates `jarvis_memory_events` + `jarvis_decisions` tables |
 | State machine | `apps/web/lib/jarvis/memory/states.ts` | All 8 states, allowed transitions, terminal-state enforcement |
 | Conflict detector | `apps/web/lib/jarvis/memory/conflict.ts` | Conservative conflict detection (explicit supersedes/contradicts only) |
 | Sensitivity guards | `apps/web/lib/jarvis/memory/guards.ts` | Blocks `public_claim_rule`/high/legal/hr/spend from `confirmed` without owner approval |

@@ -114,6 +114,27 @@ export type { SignalSlateResult } from "./generate-signal-slate.js";
 export { runBoardFillPipeline } from "./board-fill.js";
 export type { BoardFillResult } from "./board-fill.js";
 
+export {
+  resolveCanonicalGame,
+  findTwinCandidate,
+  preferLongerTeamName,
+  gameIdentityMergeDisabled,
+  GAME_IDENTITY_COMMENCE_MATCH_MS,
+  BASEBALL_COMMENCE_MATCH_MS,
+  commenceMatchMsFor,
+  MAX_ALIAS_HOPS,
+  PREFIX_MATCH_SPORT_KEYS,
+  normalizeGameTeamToken,
+  matchTeamSide,
+} from "./game-identity.js";
+export type {
+  GameIdentityDb,
+  GameIdentityProbe,
+  GameTwinCandidate,
+  GameTwinMatch,
+  CanonicalGameResolution,
+} from "./game-identity.js";
+
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
 

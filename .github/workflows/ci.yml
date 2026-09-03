@@ -82,8 +82,16 @@ jobs:
       - name: Prisma schema validate (no migrations)
         run: npx prisma validate --schema packages/db/prisma/schema.prisma
 
-      - name: Push database schema (test DB)
-        run: npm run db:push
+      # Migration history is the source of truth (one idempotent baseline since
+      # 2026-09-02 plus forward migrations). The empty test database is built by
+      # replaying it exactly as production does (scripts/deploy/migrate-if-configured.mjs
+      # runs migrate deploy fail-closed), and the drift check proves schema.prisma and
+      # the applied migrations describe the same database. Both steps are blocking.
+      - name: Apply migrations (prisma migrate deploy, empty test DB)
+        run: npx prisma migrate deploy --schema packages/db/prisma/schema.prisma
+
+      - name: Migration drift check (schema.prisma vs applied migrations)
+        run: npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel packages/db/prisma/schema.prisma --exit-code
 
       - name: Lint
         run: npm run lint

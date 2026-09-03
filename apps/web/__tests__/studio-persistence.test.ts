@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const schema = fs.readFileSync(path.join(repoRoot, "packages/db/prisma/schema.prisma"), "utf8");
 const migration = fs.readFileSync(
-  path.join(repoRoot, "packages/db/prisma/migrations/20260523001000_add_creator_assets/migration.sql"),
+  path.join(repoRoot, "packages/db/prisma/migrations-archive/20260523001000_add_creator_assets/migration.sql"),
   "utf8"
 );
 const route = fs.readFileSync(

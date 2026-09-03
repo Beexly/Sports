@@ -1,6 +1,6 @@
 # Prediction-market tool bookmarks (research only)
 
-**Compliance:** GSE product holds Polymarket as non-surface (`docs/agent-skills/polymarket-hold`).  
+**Compliance:** GSE product holds Polymarket as non-surface (`.claude/skills/polymarket-hold`).  
 This list is **founder research / internal architecture reference** — not a build order for public markets or trading bots.
 
 **Full triage (A/B/C/D buckets):**  

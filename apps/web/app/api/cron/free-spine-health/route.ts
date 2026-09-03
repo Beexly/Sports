@@ -103,8 +103,15 @@ export async function GET(request: Request): Promise<NextResponse> {
     gamesUpserted: sportsWithGames,
     oddsInserted: 0,
     failed: probeFailed,
+    // Keep the per-sport errors (HTTP status / timeout text) so a 403 from the
+    // deployment's egress is distinguishable from a timeout in the durable row.
     errorMessage: probeFailed
-      ? `free-spine probe: all ${live.length} sports failed to return games`
+      ? `free-spine probe: all ${live.length} sports failed to return games; ` +
+        live
+          .slice(0, 7)
+          .map((s) => `${s.sport}: ${s.errors[0] ?? "no error text"}`)
+          .join(" | ")
+          .slice(0, 900)
       : null,
   });
 

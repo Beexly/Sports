@@ -32,7 +32,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import {
   ingestPlayerWeeklyStats,
-  currentNflSeason,
+  ingestionTargetNflSeason,
   type PlayerStatsIngestResult,
 } from "@/lib/ingestion/player-stats";
 import { planPlayerStatsRun } from "@/lib/ingestion/player-stats-backfill";
@@ -48,7 +48,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   const seasonParam = new URL(request.url).searchParams.get("season");
   if (seasonParam !== null) {
     const season = Number(seasonParam);
-    if (!Number.isInteger(season) || season < 1999 || season > currentNflSeason() + 1) {
+    if (!Number.isInteger(season) || season < 1999 || season > ingestionTargetNflSeason() + 1) {
       return NextResponse.json({ error: "invalid season" }, { status: 400 });
     }
     const result = await ingestPlayerWeeklyStats(season);

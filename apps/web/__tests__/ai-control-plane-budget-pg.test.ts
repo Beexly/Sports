@@ -77,7 +77,7 @@ const MIGRATIONS_DIR = join(
   "packages",
   "db",
   "prisma",
-  "migrations",
+  "migrations-archive",
 );
 
 function pgBudgetDb(pool: Pool): BudgetDb {

@@ -45,7 +45,7 @@ verified live 2026-08-09 against `external-api.kalshi.com`.
 
 ## Polymarket compliance hold
 
-`docs/agent-skills/polymarket-hold` still applies:
+`.claude/skills/polymarket-hold` still applies:
 
 - Not a product surface, not a cleared source, not a cron.
 - Source tag: `polymarket_gamma_internal` (never confusable with quote-plane clear).

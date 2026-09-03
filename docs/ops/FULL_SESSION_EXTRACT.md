@@ -27,7 +27,7 @@ and would merge the same commits repeatedly.
 | Outbox lease + claimVersion | existing outbox | SHIPPED — never rewrite |
 | CheckoutAttempt create-idempotency | stripe lib | SHIPPED |
 | Clearance honesty unregistered=false | source-router | SHIPPED |
-| Skills pack SKILL.md | docs/agent-skills/* | SHIPPED |
+| Skills pack SKILL.md | .claude/skills/* | SHIPPED |
 | agent-eval $0 fixtures | scripts/agent-eval | SHIPPED |
 | MODEL_PRIMARY / MODEL_CHEAP | model-router.ts | SHIPPED |
 | export:settled-picks | scripts/export-settled-picks… | SHIPPED |
@@ -45,7 +45,7 @@ and would merge the same commits repeatedly.
 | countDistinctPredictions | same | SHIPPED |
 | dspy-gse dry-run harness | scripts/dspy-gse | SHIPPED |
 | ORBIT_MAP / ORBIT_NEXT_50 | docs/ops | SHIPPED |
-| coding-agent + polymarket-hold skills | docs/agent-skills | SHIPPED |
+| coding-agent + polymarket-hold skills | .claude/skills | SHIPPED |
 
 ## Wave 4 — Hold-out + paradox + offline
 
@@ -54,7 +54,7 @@ and would merge the same commits repeatedly.
 | timeHoldoutSplit | probability-calibration.ts | SHIPPED |
 | selectedSliceEce | same | SHIPPED |
 | calibration:offline | scripts/calibration-offline | SHIPPED |
-| calibration-pipeline skill | docs/agent-skills | SHIPPED |
+| calibration-pipeline skill | .claude/skills | SHIPPED |
 
 ## Wave 5 — Session 2 extract integrity
 
@@ -66,7 +66,7 @@ and would merge the same commits repeatedly.
 | promote Examples train/val | promote.mjs | SHIPPED |
 | sizeAfterCalibration CIR→Kelly | calibration-kelly-bridge.ts | SHIPPED |
 | portfolioKellyStakes barrel export | index.ts | SHIPPED |
-| dspy-gepa skill | docs/agent-skills | SHIPPED |
+| dspy-gepa skill | .claude/skills | SHIPPED |
 | Full Kelly / MIPROv2 default | DEFER_90_DAYS | HARD NON-GOAL |
 
 ## Wave 6 — Distribution embed + full integrity
@@ -78,7 +78,7 @@ and would merge the same commits repeatedly.
 | iframe frame-ancestors for /embed/* | middleware + next.config | SHIPPED |
 | No confidence on free embed | loadEdgeIndexEmbed FREE only | SHIPPED |
 | orbit-extract-integrity harness | scripts/orbit-extract-integrity.mjs | SHIPPED |
-| inference-routing SKILL.md | docs/agent-skills/inference-routing | SHIPPED |
+| inference-routing SKILL.md | .claude/skills/inference-routing | SHIPPED |
 | FULL_SESSION_EXTRACT | this file | SHIPPED |
 
 ## Commands
@@ -125,4 +125,4 @@ import {
 | settle-picks uses path-select | settle-picks/route.ts | SHIPPED |
 | orbit-unlock-smoke | scripts/ops/orbit-unlock-smoke.mjs | SHIPPED |
 | MAX_LEVERAGE founder page | docs/ops/MAX_LEVERAGE.md | SHIPPED |
-| max-leverage skill | docs/agent-skills/max-leverage | SHIPPED |
+| max-leverage skill | .claude/skills/max-leverage | SHIPPED |

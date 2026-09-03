@@ -65,11 +65,14 @@ const vercel = JSON.parse(
 const cronMap = Object.fromEntries(
   (vercel.crons || []).map((c) => [c.path, c.schedule]),
 );
+// Keep in sync with apps/web/vercel.json. settle-picks moved from every 3h to
+// hourly (#300, 2026-08-06) and free-spine-health from daily to every 2h; the
+// old values here made this smoke cry wolf on two intentional cadences.
 const required = {
-  "/api/cron/settle-picks": "0 */3 * * *",
+  "/api/cron/settle-picks": "20 * * * *",
   "/api/cron/health-alert": "*/15 * * * *",
   "/api/cron/refresh-player-stats": "0,30 * * * *",
-  "/api/cron/free-spine-health": "0 10 * * *",
+  "/api/cron/free-spine-health": "0 */2 * * *",
   "/api/cron/reconcile-entitlements": "0 8 * * *",
   "/api/cron/repair-checkout-attempts": "30 8 * * *",
 };
@@ -196,9 +199,17 @@ if (prod) {
         if (res.status < 200 || res.status >= 300) {
           failed.push(`${path} HTTP ${res.status}`);
         }
-        if (path === "/api/cron/settle-picks" && pathField && pathField !== "free") {
+        // Free-first law (2026-09-02): "free" (no key or ?path=free) and
+        // "free+odds-api" (key present, paid supplement ran after the free pass)
+        // are both correct. Anything else means an old deploy is serving.
+        if (
+          path === "/api/cron/settle-picks" &&
+          pathField &&
+          pathField !== "free" &&
+          pathField !== "free+odds-api"
+        ) {
           report.settlePathWarning =
-            "settle path is not free — blank THE_ODDS_API_KEY in Production";
+            `settle path is "${pathField}" — expected "free" or "free+odds-api" (free grader first on every cycle); the deployed build predates the free-first law`;
         }
       } catch (e) {
         failed.push(`${path} fetch failed: ${e instanceof Error ? e.message : e}`);

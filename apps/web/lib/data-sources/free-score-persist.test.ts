@@ -344,9 +344,19 @@ describe("persistFreeScores — clearance gating (GSE-SEC-050/051)", () => {
     expect(nflResult.gamesUpdated).toBe(1);
     expect(result.gamesUpdated).toBe(1);
 
-    // DB write was called with the final scores
+    // DB write was called with the final scores. The where clause carries the
+    // recorded-final guard: a row that became FINAL with a different pair
+    // between read and write is left alone (see free-score-persist-guard.test.ts).
     expect(mocks.dbGameUpdateMany).toHaveBeenCalledWith({
-      where: { id: "game-1" },
+      where: {
+        id: "game-1",
+        OR: [
+          { status: { not: "FINAL" } },
+          { homeScore: null },
+          { awayScore: null },
+          { homeScore: 21, awayScore: 14 },
+        ],
+      },
       data: {
         homeScore: 21,
         awayScore: 14,

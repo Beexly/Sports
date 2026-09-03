@@ -53,7 +53,7 @@ const MIGRATIONS_DIR = join(
   "packages",
   "db",
   "prisma",
-  "migrations",
+  "migrations-archive",
 );
 
 suite("Versioned envelope — FormalIncident + SrqcVersion against real Postgres", () => {

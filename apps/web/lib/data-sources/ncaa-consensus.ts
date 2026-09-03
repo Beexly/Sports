@@ -20,10 +20,17 @@ export type ComparableTeam = { readonly abbr: string; readonly name: string; rea
 export type ComparableGame = {
   readonly source: string;
   readonly date: string; // YYYY-MM-DD
+  /** Full ISO start time when the source provides one (ESPN does); lets a
+   *  pick be matched to the nearest game of a multi-day series instead of the
+   *  nearest calendar date, which UTC rollover gets wrong for evening games. */
+  readonly startIso?: string;
   readonly completed: boolean;
   readonly home: ComparableTeam;
   readonly away: ComparableTeam;
 };
+
+/** An ISO-8601 string with a clock, e.g. "2026-09-05T19:30:00Z"; a bare date does not match. */
+const HAS_TIME_COMPONENT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
 
 /** Uppercase, strip non-alphanumerics — "Navy"/"NAVY"/"navy" all collapse to "NAVY". */
 export function normAbbr(s: string): string {
@@ -40,6 +47,13 @@ export function toComparableFromEspn(g: NormalizedGame): ComparableGame | null {
   return {
     source: g.sourceId,
     date: (g.startTime ?? "").slice(0, 10),
+    // Only a real timestamp becomes startIso. Date.parse accepts a bare
+    // "YYYY-MM-DD", which would publish midnight as the kickoff and let the
+    // nearest-kickoff matcher pick one game out of a doubleheader on a
+    // fabricated time; a date-only row keeps only `date`.
+    ...(g.startTime && HAS_TIME_COMPONENT.test(g.startTime) && !Number.isNaN(Date.parse(g.startTime))
+      ? { startIso: g.startTime }
+      : {}),
     completed: g.completed,
     home: { abbr: normAbbr(g.home.abbreviation), name: g.home.team, score: g.home.score },
     away: { abbr: normAbbr(g.away.abbreviation), name: g.away.team, score: g.away.score },

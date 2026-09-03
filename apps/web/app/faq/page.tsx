@@ -65,11 +65,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What's the Edge Index?",
-        a: "A calibrated 0-100 confidence rating on every signal. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth. A 71 Edge Index still loses ~29 times in 100. Variance is described, not hidden.",
-      },
-      {
-        q: "What's Eclipse Gate?",
-        a: "Verified conviction state: the rarest grade. Only signals where every gate cleared by a wide margin earn it. It's the model's strongest honest signal, not a promise about the outcome. It still loses sometimes.",
+        a: "A 0-100 rating of how much better our number is than the market price on that signal. It is not a win probability and does not turn into one: it rises when our fair value and the posted line disagree in our favor, and a high Edge Index still loses. The Calibration Report, once it is published, shows how often. Variance is described, not hidden.",
       },
       {
         q: "Can I see the factor trail on every signal?",

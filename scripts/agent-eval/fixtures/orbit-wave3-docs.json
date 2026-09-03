@@ -28,13 +28,13 @@
     {
       "id": "coding-skill",
       "type": "file_contains",
-      "path": "docs/agent-skills/coding-agent/SKILL.md",
+      "path": ".claude/skills/coding-agent/SKILL.md",
       "mustInclude": ["name: coding-agent", "THE_ODDS_API_KEY"]
     },
     {
       "id": "polymarket-skill",
       "type": "file_contains",
-      "path": "docs/agent-skills/polymarket-hold/SKILL.md",
+      "path": ".claude/skills/polymarket-hold/SKILL.md",
       "mustInclude": ["name: polymarket-hold", "compliance hold"]
     },
     {

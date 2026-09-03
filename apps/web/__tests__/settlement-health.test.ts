@@ -83,4 +83,30 @@ describe("settlement health (leading CLV indicator)", () => {
     const cutoff = (overdueWhere["game"] as { commenceTime: { lt: Date } }).commenceTime.lt;
     expect(cutoff.toISOString()).toBe("2026-06-22T06:00:00.000Z");
   });
+
+  it("scopes both counts to one sport when sportKey is given (the settle cron's ?sport= cycle)", async () => {
+    // A scoped settle cycle compares its own settlements against the overdue
+    // count; without this scope another sport's backlog would flag the cycle
+    // as starved (2026-09-03 automated review).
+    const now = new Date("2026-06-22T12:00:00.000Z");
+    const calls: Array<Record<string, unknown>> = [];
+    const db = {
+      pick: {
+        count: async ({ where }: { where: Record<string, unknown> }) => {
+          calls.push(where);
+          return 0;
+        },
+      },
+    };
+    await loadSettlementHealth(db, { now, graceHours: 6, sportKey: "americanfootball_nfl" });
+    expect(calls).toHaveLength(2);
+    for (const where of calls) {
+      expect(where["game"]).toMatchObject({ sport: { key: "americanfootball_nfl" } });
+    }
+    calls.length = 0;
+    await loadSettlementHealth(db, { now, graceHours: 6, sportKey: null });
+    for (const where of calls) {
+      expect(where["game"]).not.toHaveProperty("sport");
+    }
+  });
 });

@@ -31,15 +31,15 @@ const ACCEPTED = [
     package: "next",
     reason:
       "Fix requires next@16.3.0, a semver-major jump from the pinned 14.2.x line. " +
-      "Tracked as its own migration; not shippable as a patch bump.",
-    reviewBy: "2026-11-01",
+      "Tracked as its own migration (docs/ops/OPERATOR_TASKS.md → NEXT-MAJOR); not shippable as a patch bump.",
+    reviewBy: "2027-01-15",
   },
   {
     package: "postcss",
     reason:
       "Only the copy bundled inside next/node_modules is affected; it is remediated " +
       "by the same next@16 major upgrade. The top-level postcss is already patched.",
-    reviewBy: "2026-11-01",
+    reviewBy: "2027-01-15",
   },
 ];
 

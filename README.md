@@ -1,11 +1,11 @@
-# Sports Intelligence OS
+# Galaxy Sports Edge (GSE)
 
-[![CI](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml/badge.svg)](https://github.com/baxley-garrett/sports-intelligence-os/actions/workflows/ci.yml)
+[![CI](https://github.com/Beexly/Sports/actions/workflows/ci.yml/badge.svg)](https://github.com/Beexly/Sports/actions/workflows/ci.yml)
 
-Sports picks platform with real data ingestion, AI-assisted prediction
-ranking, subscription paywalls, content generation, and an internal operator
-cockpit. See `CLAUDE.md` for the full system overview and non-negotiable
-rules.
+Sports picks platform with real data ingestion, deterministic factor-model
+prediction ranking, subscription paywalls, content generation, and an internal
+operator cockpit. We're not AI. We're math you can read. See `CLAUDE.md` for
+the full system overview and non-negotiable rules.
 
 > **Current mode: internal calibration only.** No auto-publish. No auto-send.
 > No external posting. No automated betting. The platform's `ContentDraft`
@@ -81,10 +81,10 @@ STRIPE_PRO_PRICE_ID="price_..."
 STRIPE_ELITE_PRICE_ID="price_..."
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 
-# required for AI-generated content
+# required for Claude-drafted content (blog/journal drafts only; never picks)
 ANTHROPIC_API_KEY="sk-ant-..."
 
-# required for BullMQ workers
+# required for the Claude response cache (ioredis); there is no job-queue library
 REDIS_URL="redis://localhost:6379"
 ```
 
@@ -206,7 +206,7 @@ See `handoff.md` for the full per-phase history.
 - [`docs/ops/ORBIT_UNLOCK.md`](docs/ops/ORBIT_UNLOCK.md) — founder click checklist (free settle, Stripe, credits)
 - [`docs/ops/OPERATOR.md`](docs/ops/OPERATOR.md) — production actions agents cannot perform
 - [`docs/ops/CREDITS.md`](docs/ops/CREDITS.md) — credit claim tracker
-- [`docs/agent-skills/`](docs/agent-skills/) — agent SKILL packs
+- [`.claude/skills/`](.claude/skills/) — agent SKILL packs
 - `npm run agent:eval` — thin deterministic harness
 - `npm run e2e:pricing-smoke` — public pricing + checkout route probe
 - `npm run export:settled-picks` — JSONL settled picks (DATABASE_URL, read-only)

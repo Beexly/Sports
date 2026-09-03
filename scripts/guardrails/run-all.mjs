@@ -53,7 +53,7 @@ const GUARDS = [
   ["actor-minting-boundary", ["node", "scripts/guardrails/actor-minting-boundary.mjs"]],
   ["ai-control-plane-sealing", ["node", "scripts/guardrails/ai-control-plane-sealing.mjs"]],
   ["skipped-pg-integration-honesty", ["node", "scripts/guardrails/skipped-pg-integration-honesty.mjs"]],
-  ["ai-council", ["npm", "run", "guard:ai-council"]],
+  ["ai-council", ["node", "scripts/guardrails/ai-council-ci.mjs"]],
   ["aws-compatibility-index-scan", ["node", "scripts/guardrails/aws-compatibility-index-scan.mjs"]],
   ["eval-contracts", ["node", "scripts/eval-contracts.mjs"]],
   ["dependency-audit", ["node", "scripts/guardrails/dependency-audit.mjs"]],

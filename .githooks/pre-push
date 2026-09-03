@@ -9,9 +9,11 @@
 # Pushing is the moment code stops being local, so it is the right place for a
 # whole-tree check.
 #
-# It is also, right now, the LAST automated gate: GitHub Actions minutes are
-# unavailable (see .github/workflows/external-cron.yml), so CI-side scanning is
-# not running.
+# It is the first automated gate, not the only one: CI (.github/workflows/ci.yml)
+# runs the full-tree secret scan again on every push. During the 2026-08-16
+# Actions billing block this hook was the last gate; minutes were restored by
+# 2026-09-02 (docs/ops/OPERATOR_TASKS.md → ACTIONS-BILLING). Keep the hook
+# regardless: a secret must never reach the remote at all.
 #
 # Measured cost: ~1.8s across 5,513 tracked files. Kept deliberately cheap --
 # a slow pre-push hook gets `--no-verify`'d within a week, which is worse than

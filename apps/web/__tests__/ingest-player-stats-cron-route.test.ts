@@ -22,10 +22,12 @@ vi.mock("@/lib/ingestion/player-stats", async (importActual) => {
 });
 
 import { GET } from "@/app/api/cron/ingest-player-stats/route";
-import { ingestPlayerWeeklyStats, currentNflSeason } from "@/lib/ingestion/player-stats";
+import { ingestPlayerWeeklyStats, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
 import { TREND_BACKFILL_SEASONS } from "@/lib/ingestion/player-stats-backfill";
 
-const CURRENT = currentNflSeason(new Date());
+// The cursor targets the labelled season (what the source is asked for), not
+// the completed-REG display floor.
+const CURRENT = ingestionTargetNflSeason(new Date());
 const WINDOW: number[] = [];
 for (let s = CURRENT - TREND_BACKFILL_SEASONS + 1; s <= CURRENT; s++) WINDOW.push(s);
 

@@ -37,15 +37,15 @@ const REQUIRED_PATHS = [
   "apps/web/app/embed/edge-index/[gameId]/page.tsx",
   "apps/web/app/edge-index/page.tsx",
   "apps/web/lib/claude-api/model-router.ts",
-  "docs/agent-skills/dspy-gepa/SKILL.md",
-  "docs/agent-skills/calibration-pipeline/SKILL.md",
-  "docs/agent-skills/inference-routing/SKILL.md",
-  "docs/agent-skills/settlement-free-path/SKILL.md",
-  "docs/agent-skills/polymarket-hold/SKILL.md",
+  ".claude/skills/dspy-gepa/SKILL.md",
+  ".claude/skills/calibration-pipeline/SKILL.md",
+  ".claude/skills/inference-routing/SKILL.md",
+  ".claude/skills/settlement-free-path/SKILL.md",
+  ".claude/skills/polymarket-hold/SKILL.md",
   "apps/web/lib/settlement/path-select.ts",
   "scripts/ops/orbit-unlock-smoke.mjs",
   "docs/ops/MAX_LEVERAGE.md",
-  "docs/agent-skills/max-leverage/SKILL.md",
+  ".claude/skills/max-leverage/SKILL.md",
 ];
 
 const EXPORTS = [

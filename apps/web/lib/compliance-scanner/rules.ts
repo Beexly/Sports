@@ -17,6 +17,7 @@
  */
 
 import { normalizeForComplianceScan } from "./normalize";
+import { buildPositioningRegex } from "../positioning-vocab";
 
 export type RuleSeverity = "block" | "warn" | "info";
 export type RuleLayer = 1 | 2 | 3 | 4;
@@ -41,7 +42,11 @@ export const LAYER_1_PLATFORM_BANS: ComplianceRule[] = [
     id: "L1-AI-POWERED",
     layer: 1,
     severity: "block",
-    pattern: /\b(AI[\s-]powered|powered by AI|AI[\s-]driven|AI[\s-]enabled)\b/i,
+    // Sourced from the shared positioning vocabulary (apps/web/lib/positioning-vocab.json)
+    // so the runtime scanner, the CI trust-gate, and the docs copy-scan test all ban the
+    // exact same phrase list. Matches the full vocab, not just the "AI-powered" family —
+    // this is the platform-wide catch-all rule.
+    pattern: buildPositioningRegex(),
     message: "Banned: 'AI-powered' / 'AI-driven' framing. The platform's position is 'We're not AI. We're math you can read.' (DEC-001/002)",
     suggestion: "Use 'deterministic scoring' or 'factor model' instead.",
   },
@@ -49,7 +54,9 @@ export const LAYER_1_PLATFORM_BANS: ComplianceRule[] = [
     id: "L1-MULTIMODAL-INTELLIGENCE",
     layer: 1,
     severity: "block",
-    pattern: /\b(multimodal intelligence|AI agents|machine learning models?)\b/i,
+    // Subset of the same shared vocab — the AI-category marketing terms this rule has
+    // always covered (as opposed to L1-AI-POWERED's full-vocab catch-all above).
+    pattern: buildPositioningRegex(["multimodal intelligence", "AI agents", "machine learning"]),
     message: "Banned: AI-category marketing language.",
     suggestion: "Describe the actual mechanism (deterministic scoring, factor breakdown) instead.",
   },

@@ -15,7 +15,8 @@
 import { NextResponse } from "next/server";
 import { resolveFootballStatsSeason } from "@sports/data-ingestion";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { ingestPlayerWeeklyStats } from "@/lib/ingestion/player-stats";
+import { ingestPlayerWeeklyStats, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
+import { isUnpublishedSeasonSignal } from "@/lib/ingestion/unpublished-season";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
@@ -46,13 +47,34 @@ export async function GET(request: Request): Promise<NextResponse> {
   const mode = (url.searchParams.get("mode") ?? "primary").toLowerCase();
   const runFull = mode === "full" || mode === "all";
 
+  // Ask the source for the labelled season (September 2026 → 2026). The
+  // resolved display floor (2025 until 2026 REG rows exist) is the fallback
+  // when the labelled season is not published yet, so the run stays green and
+  // 2026 is picked up automatically the day nflverse ships week-1 rows.
   const resolved = resolveFootballStatsSeason();
-  const season = seasonParam ? Number(seasonParam) : resolved.season;
-  if (!Number.isInteger(season) || season < 1999 || season > 2100) {
+  const labelled = ingestionTargetNflSeason();
+  const requested = seasonParam ? Number(seasonParam) : labelled;
+  if (!Number.isInteger(requested) || requested < 1999 || requested > 2100) {
     return NextResponse.json({ error: "invalid season" }, { status: 400 });
   }
 
-  const stats = await ingestPlayerWeeklyStats(season);
+  let season = requested;
+  let stats = await ingestPlayerWeeklyStats(season);
+  let labelledAttempt: { season: number; status: string; error: string | null } | null = null;
+  // Unpublished-season retry (scheduled runs only, never an explicit ?season
+  // override): a 404 source-error is the unpublished signal, and nflverse can
+  // also return the older combined asset with status "ok" and zero rows for
+  // the labelled season before it ships — the 2b hard-filter upstream
+  // (player-stats.ts) then has nothing to upsert. Both mean "not published";
+  // any other source error (5xx, timeout) is an outage and keeps the failure
+  // path; clearance-denied is a rights stop and never retries. The rule lives
+  // in lib/ingestion/unpublished-season.ts, shared with backfill-player-data.
+  const labelledUnpublished = isUnpublishedSeasonSignal(stats);
+  if (!seasonParam && labelledUnpublished && labelled !== resolved.season) {
+    labelledAttempt = { season: labelled, status: stats.status, error: stats.error ?? null };
+    season = resolved.season;
+    stats = await ingestPlayerWeeklyStats(season);
+  }
   const primaryOk = stats.status === "ok";
 
   const ingestionRun = await recordFreeIngestionRun({
@@ -98,7 +120,9 @@ export async function GET(request: Request): Promise<NextResponse> {
         reason: resolved.reason,
         labelledCurrent: resolved.labelledCurrent,
         completedFloor: resolved.completedFloor,
+        ingestionTarget: labelled,
       },
+      labelledAttempt,
       stats,
       ...(satellites ?? {}),
       ingestionRun,

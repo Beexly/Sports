@@ -4,13 +4,28 @@ import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
-import { getReadinessGates } from "@sports/prediction-engine";
+import { getReadinessGates, getPlatformConfig } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
+import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
+import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
+import { STALE_PENDING_PICK_MAX_AGE_DAYS, stalePickWhere } from "@/lib/board/stale-pick-policy";
+import { loadMarketCoverage } from "@/lib/board/market-coverage";
+import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
+
+/** A read-only posture field must never take the whole truth surface down: any
+ *  throw (including a synchronous one from a partial client) reads as null. */
+async function safeRead<T>(fn: () => Promise<T>): Promise<T | null> {
+  try {
+    return await fn();
+  } catch {
+    return null;
+  }
+}
 import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
 import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reliability/public-freshness-gate";
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
@@ -481,11 +496,96 @@ export async function GET(request: Request) {
     remainingToFloor: sample?.remainingToFloor ?? null,
   });
 
+  // Closing-line value, counted from the canonical graded picks (BEAT_CLOSE /
+  // MATCHED_CLOSE / LOST_TO_CLOSE verdicts). The ladder's ESTABLISHED rung is
+  // "verified CLV ≥ 52.4%"; until this was wired the evaluator received null
+  // and could never observe that milestone. Rate = beat / graded (matched
+  // counts against, same as the public policy and summarizeClv). Null until
+  // the graded sample clears the public floor so a handful of picks cannot
+  // read as a rate.
+  const clvPolicy = isStubMode()
+    ? null
+    : await safeRead(() =>
+        loadPublicClvPolicy(db, {
+          canExposePerformanceStats: effectivePerformanceStats,
+          minGradedForPublic: 25,
+        }),
+      );
+  const clvBeatCloseRate =
+    clvPolicy && clvPolicy.gradedSampleSize >= 25
+      ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
+      : null;
+  // The rate feeds the pricing-ladder evaluator internally regardless; this is
+  // a public endpoint, so the split counts and the rate are only PUBLISHED when
+  // the CLV policy says they may be (canExposeClv). Gated → sample size and the
+  // reason only; the owner reads the numbers from the database / the ops report.
+  const clvPosture = clvPolicy
+    ? clvPolicy.canExposeClv
+      ? {
+          gradedSampleSize: clvPolicy.gradedSampleSize,
+          beatCloseCount: clvPolicy.beatCloseCount,
+          matchedCloseCount: clvPolicy.matchedCloseCount,
+          lostToCloseCount: clvPolicy.lostToCloseCount,
+          beatCloseRate: clvBeatCloseRate,
+          clearsBreakEven: clvPolicy.clearsBreakEven,
+          canExposeClv: true as const,
+          blockers: clvPolicy.blockers,
+          operatorMessage: clvPolicy.operatorMessage,
+        }
+      : {
+          gradedSampleSize: clvPolicy.gradedSampleSize,
+          beatCloseCount: null,
+          matchedCloseCount: null,
+          lostToCloseCount: null,
+          beatCloseRate: null,
+          clearsBreakEven: null,
+          canExposeClv: false as const,
+          blockers: clvPolicy.blockers,
+          operatorMessage: clvPolicy.operatorMessage,
+        }
+    : null;
+
+  // Named pricing ladder (pricing-phases.ts) checked against the same live
+  // proof: this is the evaluator the ladder was designed around; it never
+  // advances the phase (PRICING_PHASE stays an operator action).
+  const pricingPhaseReadiness = evaluatePhaseAdvance({
+    canonicalSettledPicks: sample?.canonicalSettled ?? 0,
+    calibrationPublished,
+    beatCloseRate: clvBeatCloseRate,
+  });
+
+  // Published PENDING picks on games that have not started whose row the
+  // pipeline has not refreshed in 14 days (observed 2026-09-02: 18 picks from
+  // model v5.0.0 written in May on September/November lines). They are not on
+  // the public daily slate (day-bound by generatedAt) but they will grade at
+  // kickoff on a stale line; the owner decides supersede/void, never a cron.
+  const stalePendingPicks = isStubMode()
+    ? null
+    : await safeRead(() =>
+        db.pick.count({
+          where: {
+            isPublished: true,
+            result: "PENDING",
+            // Refresh age, not creation age (lib/board/stale-pick-policy.ts).
+            ...stalePickWhere(),
+            game: { commenceTime: { gt: new Date() } },
+          },
+        }),
+      );
+
+  // Market coverage over the next 72h: which markets the published slate
+  // actually carries per sport. A sport with games but no TOTAL picks is a
+  // visible degradation (the zero-key pipeline is moneyline-only), never a
+  // silent zero. Confidence tail: whether picks at ≥80 stated confidence earn
+  // it (observed 2026-09-02: they did not). Both are read-only postures.
+  const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
+  const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
+
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
     canonicalSettled: sample?.canonicalSettled ?? 0,
     calibrationPublished,
-    clvBeatCloseRate: null,
+    clvBeatCloseRate,
     settlementHealthy: settlement?.health === "HEALTHY",
     boardNotSuppressed:
       boardSurface.surface === "signal"
@@ -522,6 +622,10 @@ export async function GET(request: Request) {
         isBootstrapMode: gates.isBootstrapMode,
         canExposePerformanceStats: effectivePerformanceStats,
         envPerformanceStatsEnabled: gates.canExposePerformanceStats,
+        // Stale-data kill switch (FORCE_NO_BET_IF_STALE). The gate runbook pairs
+        // it with public picks; reported here so launch:ready can warn when
+        // picks are public and the switch is off, instead of trusting memory.
+        forceNoBetIfStale: getPlatformConfig().forceNoBetIfStale,
         minSettledPicksForLearning: gates.minSettledPicksForLearning,
         calibrationPublished,
       },
@@ -694,6 +798,20 @@ export async function GET(request: Request) {
         blockersToNext: revenueLadder.blockersToNext,
         milestones: revenueLadder.milestones,
       },
+      clvPosture,
+      pricingPhaseReadiness,
+      stalePendingPicks: {
+        count: stalePendingPicks,
+        maxAgeDays: STALE_PENDING_PICK_MAX_AGE_DAYS,
+        operatorHint:
+          stalePendingPicks === null
+            ? "unknown (stub DB or query failed)"
+            : stalePendingPicks > 0
+              ? `${stalePendingPicks} published PENDING pick(s) on unstarted games not refreshed in ${STALE_PENDING_PICK_MAX_AGE_DAYS}d — review in the owner queue (supersede/void is an owner decision, never automatic).`
+              : "none",
+      },
+      marketCoverage,
+      confidenceTail,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },

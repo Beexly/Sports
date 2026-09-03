@@ -167,6 +167,7 @@ export async function persistFreeScores(options?: {
           commenceTime: true,
           homeScore: true,
           awayScore: true,
+          status: true,
         },
         take: 300,
       });
@@ -223,9 +224,37 @@ export async function persistFreeScores(options?: {
           continue;
         }
 
+        // Never overwrite a recorded final with a different one. A game the
+        // paid path (or an earlier free pass) already settled can still match
+        // the query above through `resultFetched: false`; if ESPN now says a
+        // different score, that is a cross-path disagreement for a human, not
+        // a last-write-wins clobber of a result picks were graded against.
+        // Same rule as SCORE_MISMATCH_CROSS_PATH in free-settlement-runner.
+        const recordedFinal = g.status === "FINAL" && g.homeScore != null && g.awayScore != null;
+        if (recordedFinal && (g.homeScore !== hit.homeScore || g.awayScore !== hit.awayScore)) {
+          console.warn(
+            `[free-score-persist] SCORE_MISMATCH_CROSS_PATH game=${g.id} ` +
+              `existing=${g.homeScore}-${g.awayScore} incoming(free)=${hit.homeScore}-${hit.awayScore} ` +
+              `— refusing to overwrite a recorded final; left for human review.`,
+          );
+          continue;
+        }
+
         // Do not blank existing scores with null; only write concrete scores.
+        // The where clause repeats the guard so a concurrent settle that
+        // finalised the row between the read and this write cannot be
+        // overwritten either: only a non-final row, an unscored row, or a row
+        // that already carries this exact score pair is touched.
         const res = await db.game.updateMany({
-          where: { id: g.id },
+          where: {
+            id: g.id,
+            OR: [
+              { status: { not: "FINAL" } },
+              { homeScore: null },
+              { awayScore: null },
+              { homeScore: hit.homeScore, awayScore: hit.awayScore },
+            ],
+          },
           data: {
             homeScore: hit.homeScore,
             awayScore: hit.awayScore,

@@ -20,6 +20,10 @@ import type { PickType, PickTier } from "@sports/types";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
+// Reads settled picks and calibration state from the database on every request
+// (.claude/rules/nextjs-caching.md): never let Next memoise this page.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Calibration Report: Settled-Pick Audit Trail",
   description:

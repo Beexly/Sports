@@ -24,7 +24,7 @@ Use this as the consumer-facing wedge. Do not reposition the product as a genera
 
 ## What Not To Say
 
-- AI-powered, AI-driven, or powered by AI
+- AI-powered, AI-driven, AI-assisted, AI-based, AI-enabled, AI-generated, powered by AI, "our AI", artificial intelligence, machine learning (when describing the engine or the picks), or any synonym that frames the engine as AI. The machine-readable list is `apps/web/lib/positioning-vocab.json`; runtime lint `apps/web/lib/compliance-scanner/rules.ts`, CI lint `scripts/guardrails/trust-gate.mjs` and `npm run lint:brand` all read it.
 - Mission Control
 - ecosystem
 - transform, unlock your, level up, your edge starts here
