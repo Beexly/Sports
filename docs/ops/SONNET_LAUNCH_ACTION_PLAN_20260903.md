@@ -3,7 +3,8 @@
 Audience: a Claude Sonnet session taking over from the Fable session that
 produced PR #685. Read this file, `AGENTS.md`, `CLAUDE.md`, and the decision
 record `docs/ops/CLAUDE_DECISIONS_20260902.md` (D1–D13) before touching
-anything. The stand-alone report is `LAUNCH_FINAL_20260902.md`.
+anything. The stand-alone report is `LAUNCH_FINAL_20260902.md` at the
+repository root (not under `docs/ops/`).
 
 ## Where things stand
 
@@ -44,6 +45,76 @@ anything. The stand-alone report is `LAUNCH_FINAL_20260902.md`.
 - Bot review findings (Devin, cubic, Codacy, Strix) are bug reports: read
   the code first, fix real ones with a tripwire test, answer false ones with
   the evidence line, never resolve a thread you did not address.
+
+## Phase 0: known red items at handoff (added 2026-09-03 01:50 UTC)
+
+These arrived after the plan was first written and were NOT fixed by the
+Fable session. Verify each against the code before acting; fix the real
+ones in one commit per area with a tripwire test.
+
+CI is red on the last two heads. Root cause was not inspected:
+
+- run 33701803833 on a573e6bbd (Test job)
+- run 33703406579 on 358287530 (Test job, check_run 100487352912)
+- Prime suspect (cubic, confidence 10): an existing persistence test still
+  asserts `updateMany` `where: { id: "game-1" }` after the new `OR` guard in
+  `apps/web/lib/data-sources/free-score-persist.ts`. Search
+  `apps/web/__tests__` for `"game-1"` together with `updateMany`; update the
+  expectation to the guarded shape that
+  `free-score-persist-guard.test.ts` already asserts.
+- Codacy reports 4 "critical" findings on 358287530; read them, most are
+  likely the guard script's regexes. Do not weaken the guard to satisfy a
+  linter.
+
+Bot findings still open (Devin round 3, cubic rounds 4 and 5):
+
+1. `apps/web/lib/calibration/confidence-tail.ts` (Devin + cubic P1): the
+   loader's `.map()` omits `pickType`, so `byMarket` is always empty in
+   production. Forward `pickType: r.pickType` and add a loader test that
+   asserts a non-empty `byMarket`.
+2. `apps/web/lib/data-sources/settle-backfill.ts` `defaultPersist` (Devin 🔴):
+   lacks the FINAL score-disagreement guard the settle runner and
+   `free-score-persist.ts` now have. Add the same `SCORE_MISMATCH_CROSS_PATH`
+   skip plus the conditional `updateMany` where clause; test it.
+3. Same file: `capReached` reads true when overdue count equals `cap`.
+   Fetch `cap + 1` and set `capReached = stale.length > cap` (then slice to
+   `cap`). Update the existing test.
+4. `apps/web/app/api/cron/backfill-team-efficiency` and `ingest-player-stats`
+   routes (Devin): apply `isUnpublishedSeasonSignal` from
+   `apps/web/lib/ingestion/unpublished-season.ts` as the player-stats routes
+   do (404 or ok-with-zero-rows is not an error).
+5. `scripts/ops/merge-duplicate-games.ts` `computeCanonicalFillData` (cubic):
+   the score-pair branch must run when EITHER canonical score is null
+   (`||`, not `&&`).
+6. `apps/web/lib/ops/game-merge-plan.ts` (cubic): settled picks on earlier
+   aliases are not indexed as references; rename `canonicalPickId` to
+   `referencePickId` for accuracy.
+7. `apps/web/__tests__/process-sport.test.ts` (cubic): restore `warnSpy` in
+   `afterEach` or `finally` so a failing assertion cannot leak the spy.
+8. `.github/workflows/external-watchdog.yml` (cubic; agent-denied path,
+   owner-authorised labelled node script only): GitHub's default shell is
+   `bash -e`, so add an explicit `set +e` before the fallible `curl`/`jq`
+   calls, or the poll still aborts before the paging block.
+9. `scripts/ops/owner-runbook.mjs` HEALTH-ALERT-WEBHOOK verify (cubic):
+   check both stores, `vercel env ls production | grep HEALTH_ALERT_WEBHOOK_URL`
+   AND the `gh secret list` grep, before the curl.
+10. `scripts/guardrails/agent-bash-guard.mjs` (cubic; agent-denied path,
+    same edit procedure, work on a scratchpad copy and run its selftest
+    first): attached `env -Ssudo …` bypasses split-string unwrapping;
+    combined xargs flags `-rn1` are not recognised; quoted
+    `git diff --output="x"` bypasses `redirect-output-ask` because the rule
+    sees the quote-stripped view (evaluate it against the raw command).
+    Selftest baseline is 115 denied / 10 ask / 55 allowed; every case must
+    stay intact.
+11. `scripts/smoke-prod.sh` (cubic): an 8-second `--max-time` can report
+    `000` on a cold Vercel function; retry once or downgrade to WARN.
+12. `.claude/commands/review-pr.md` (`Bash(npm run test*)` → `Bash(npm run test)`),
+    `.claude/commands/canary.md` (guard the empty `--url=` with
+    `${ARGUMENTS:+-- --url=$ARGUMENTS}`), `docs/ops/OPERATOR_TASKS.md`
+    HENRYGD-REG row (also set `derived_analytics_allowed: false`).
+
+After the push, reply on each thread with the SHA (or the reason it is
+left as is) and resolve only the ones you addressed.
 
 ## Phase 1: take over the PR watch (first 10 minutes)
 
