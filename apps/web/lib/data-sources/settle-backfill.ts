@@ -126,7 +126,14 @@ export type BackfillDb = {
       pick: { updateMany: (args: unknown) => Promise<{ count: number }> };
       pickSettlementEvent: { create: (args: unknown) => Promise<unknown> };
       postSettlementWork: unknown;
-      game: { update: (args: unknown) => Promise<unknown> };
+      game: {
+        update: (args: unknown) => Promise<unknown>;
+        findUnique: (args: unknown) => Promise<{
+          status: string;
+          homeScore: number | null;
+          awayScore: number | null;
+        } | null>;
+      };
     }) => Promise<{ count: number }>,
   ) => Promise<{ count: number }>;
 };
@@ -342,6 +349,30 @@ function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<b
         ],
       );
       if (args.homeScore != null && args.awayScore != null) {
+        // Never overwrite a recorded final with a different one.
+        // Same guard pattern as free-score-persist.ts (SCORE_MISMATCH_CROSS_PATH):
+        // if a game already has a FINAL status and a different score pair,
+        // refuse to clobber the result picks were graded against.
+        const existingGame = await tx.game.findUnique({
+          where: { id: args.gameId },
+          select: { status: true, homeScore: true, awayScore: true },
+        });
+        const recordedFinal =
+          existingGame?.status === "FINAL" &&
+          existingGame.homeScore != null &&
+          existingGame.awayScore != null;
+        if (
+          recordedFinal &&
+          (existingGame.homeScore !== args.homeScore ||
+            existingGame.awayScore !== args.awayScore)
+        ) {
+          console.warn(
+            `[settle-backfill] SCORE_MISMATCH game=${args.gameId} ` +
+              `existing=${existingGame.homeScore}-${existingGame.awayScore} ` +
+              `incoming=${args.homeScore}-${args.awayScore} — refusing overwrite.`,
+          );
+          // Do not write scores; the pick settlement already happened above.
+        } else {
         await tx.game.update({
           where: { id: args.gameId },
           data: {
@@ -351,6 +382,7 @@ function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<b
             resultFetched: true,
           },
         });
+        }
       }
       return updated;
     });
