@@ -6,18 +6,38 @@ record `docs/ops/CLAUDE_DECISIONS_20260902.md` (D1–D13) before touching
 anything. The stand-alone report is `LAUNCH_FINAL_20260902.md` at the
 repository root (not under `docs/ops/`).
 
-## Where things stand
+## Where things stand (refreshed 2026-09-03 14:05 UTC, handoff to a new session)
 
-- Branch `claude/final-launch`, PR #685 (ready for review, stacked on #684).
-  The last Fable push carries the cubic third-pass fixes (D13), the watchdog
-  vocabulary fix, the hardened agent bash guard and this plan. `git log` shows
-  the SHA; the PR body's "Validation" section names the previous head.
-- Every gate was green locally at that push: `npm run typecheck` (22
-  workspaces), `npm run lint`, `npm run guardrails` 26/26, `npm run lint:brand`
-  3,715/3,715, trust-gate OK, the touched apps/web suites, guard selftest
-  115/10/55. CI on that head had not finished when this was written.
-- The merge of #685 is the owner's decision (baseline migration, ~280 files).
-  Do not merge it yourself.
+- Branch `claude/final-launch`, PR #685 (ready for review, stacked on #684),
+  base `main` at 8e55293a0. Not merged. Head 8c1f68f4a: the Fable session's
+  two test-expectation fixes (dc3d80a75, 4ac7ac957) followed by twelve owner
+  commits (03:30–10:40 UTC: rate limiting on the blog and performance-stats
+  routes, runtime error capture with PII scrubbing, guard fixes, package
+  READMEs, ledger rows, `docs/ops/VERIFICATION_SUMMARY_2026-09-03.md`).
+- CI on 4ac7ac957 (run 33709213093): Test job and all eleven guard jobs
+  green at 03:01 UTC; Build was still running; Codacy "action_required"
+  (not a required check). CI on 8c1f68f4a was NOT checked by this session:
+  read it first. The two red runs named in Phase 0 are explained: the
+  persistence test asserted the pre-guard `updateMany` shape and the AWS
+  compatibility test asserted the old `guardrails:chain` literal; both
+  expectations were updated (no guard weakened). The full apps/web suite
+  passed locally apart from those two (11,887 passed).
+- **The owner has instructed: merge #685 once CI is green** (message of
+  2026-09-03: "Merge PR #685 ... After merging: 1. Merge main into #686 to
+  fix its audit check. 2. Proceed with the Sonnet launch per this plan").
+  Use a merge commit. The Fable session could not do it: its GitHub MCP
+  connection dropped at 14:00 UTC.
+- #686 (`claude/upbeat-wozniak-jqjqqi`, draft) adds the same
+  `picks_isPublished_isBootstrap_generatedAt_idx` index that #685 already
+  ships (schema.prisma line ~601, migration
+  `20260902231000_week1_hot_path_indexes`). After #685 merges, updating #686
+  with main will conflict on the schema and leave a second migration that
+  creates an index that already exists (`IF NOT EXISTS`, so harmless).
+  Report that to the owner and recommend closing #686 as superseded; do not
+  close it yourself. Its failing check was "Dependency audit", which passes
+  on #685's head.
+- Phase 0 items 1–12 below are still open (none were fixed); do them on a
+  fresh branch off `main` after the merge, one PR.
 
 ## Laws that bind you (short form; the long form is AGENTS.md)
 
