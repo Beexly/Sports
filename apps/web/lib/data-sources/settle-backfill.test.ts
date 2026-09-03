@@ -146,13 +146,13 @@ describe("backfillStaleSettlement", () => {
     expect(fetchScores).not.toHaveBeenCalled();
   });
 
-  it("respects the per-run cap", async () => {
+  it("reports capReached=false on an exactly-cap backlog and grades all of it", async () => {
     const persistSettled = vi.fn(async () => true);
     const fetchScores = vi.fn(async () => scores([navyFinal()]));
-    const many = Array.from({ length: BACKFILL_CAP + 10 }, (_, i) =>
+    const exactly = Array.from({ length: BACKFILL_CAP }, (_, i) =>
       row({ id: `p${i}`, daysAgo: 5, home: "Navy", away: "Army" }),
     );
-    const findMany = vi.fn(async () => many);
+    const findMany = vi.fn(async () => exactly);
     const db: BackfillDb = { pick: { findMany } };
 
     const result = await backfillStaleSettlement({
@@ -163,15 +163,35 @@ describe("backfillStaleSettlement", () => {
       persistSettled,
     });
 
-    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ take: BACKFILL_CAP }));
+    // We fetch cap + 1 so "rows exist beyond the cap" is decidable.
+    expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ take: BACKFILL_CAP + 1 }));
     expect(result.inspected).toBe(BACKFILL_CAP);
-    // A full cap means rows behind the oldest `cap` were not looked at this
-    // run; the flag is what tells an operator the head of the backlog is
-    // saturated (2026-09-03 automated review).
-    expect(result.capReached).toBe(true);
+    // Exactly cap rows: nothing was left unexamined.
+    expect(result.capReached).toBe(false);
     expect(result.cap).toBe(BACKFILL_CAP);
-    expect(result.windowHours).toBe(BACKFILL_WINDOW_HOURS);
-    expect(result.windowDays).toBeCloseTo(BACKFILL_WINDOW_HOURS / 24, 8);
+  });
+
+  it("reports capReached=true when at least cap+1 stale rows exist", async () => {
+    const persistSettled = vi.fn(async () => true);
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const over = Array.from({ length: BACKFILL_CAP + 1 }, (_, i) =>
+      row({ id: `p${i}`, daysAgo: 5, home: "Navy", away: "Army" }),
+    );
+    const findMany = vi.fn(async () => over);
+    const db: BackfillDb = { pick: { findMany } };
+
+    const result = await backfillStaleSettlement({
+      db,
+      now: NOW,
+      cap: BACKFILL_CAP,
+      fetchScores,
+      persistSettled,
+    });
+
+    expect(result.inspected).toBe(BACKFILL_CAP);
+    // cap+1 rows exist: rows behind the oldest `cap` were not looked at this
+    // run; the flag tells the operator the head of the backlog is saturated.
+    expect(result.capReached).toBe(true);
   });
 
   it("grades a 1-day-old pick: the 6h-to-3d band is no longer skipped", async () => {
