@@ -136,8 +136,8 @@ export async function GET(request: Request) {
     paidSupplement = await runPaidSupplement(apiKey, sportsToProcess, gates);
   }
 
-  // ── 3. Stale backfill (every published PENDING pick past the 6h grace) ────
-  const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]");
+  // ── 3. Stale backfill (published PENDING picks past the 6h grace, in scope) ─
+  const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]", requestedSport);
 
   // ── 4. Slate commitment freeze (hash-chained receipts; no odds key needed) ─
   let freeze: SlateFreezeResult[] = [];
@@ -334,9 +334,14 @@ async function runPaidSupplement(
   };
 }
 
-async function runStaleBackfillSafe(logPrefix: string): Promise<BackfillResult | { error: string }> {
+async function runStaleBackfillSafe(
+  logPrefix: string,
+  sportKey: string | null,
+): Promise<BackfillResult | { error: string }> {
   try {
-    return await backfillStaleSettlement({ db: db as never });
+    // Same scope as the free and paid passes: a `?sport=` cycle backfills,
+    // counts and reports only that sport.
+    return await backfillStaleSettlement({ db: db as never, sportKey });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`${logPrefix} stale backfill failed: ${message}`);

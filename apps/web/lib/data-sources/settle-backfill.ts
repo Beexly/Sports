@@ -135,6 +135,12 @@ export async function backfillStaleSettlement(input: {
   db: BackfillDb;
   now?: Date;
   cap?: number;
+  /**
+   * Restrict the lane to one sport (the cron's `?sport=` scope). Without it
+   * the lane covers every sport. A scoped settle cycle must not count another
+   * sport's backfill as its own work, so the scope reaches this query too.
+   */
+  sportKey?: string | null;
   fetchScores?: typeof fetchScoresMultiSource;
   persistSettled?: (args: PersistSettledArgs) => Promise<boolean>;
 }): Promise<BackfillResult> {
@@ -149,7 +155,10 @@ export async function backfillStaleSettlement(input: {
     where: {
       result: "PENDING",
       isPublished: true,
-      game: { commenceTime: { lt: cutoff } },
+      game: {
+        commenceTime: { lt: cutoff },
+        ...(input.sportKey ? { sport: { key: input.sportKey } } : {}),
+      },
     },
     orderBy: { game: { commenceTime: "asc" } },
     take: cap,

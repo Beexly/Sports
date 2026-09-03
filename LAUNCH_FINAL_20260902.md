@@ -176,7 +176,9 @@ the starvation signal, fixed on this branch: market coverage and the confidence 
 same public population the board and the performance policy use (published, non-bootstrap, not a
 seed row), and a settle cycle in which only the stale backfill graded overdue picks is work, not
 starvation. A production re-read on the corrected population left today's tail finding unchanged
-(152 picks, 61 wins, 40%, no hidden rows in it).
+(152 picks, 61 wins, 40%, no hidden rows in it). Devin's follow-up on that fix was also right: a
+`?sport=` cycle could have counted another sport's backfill as its own work, so the backfill lane
+now carries the same sport scope as the free and paid passes.
 
 ## 6. Remaining risks, ranked
 

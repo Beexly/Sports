@@ -207,7 +207,7 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     expect(body.paidSupplement).toBeNull();
   });
 
-  it("?sport= narrows both passes and rejects unsupported sports before any grading", async () => {
+  it("?sport= narrows all three lanes (free, paid, stale backfill) and rejects unsupported sports before any grading", async () => {
     vi.stubEnv("THE_ODDS_API_KEY", "sk_live_present");
     const bad = await GET(new Request("http://x/api/cron/settle-picks?sport=quidditch"));
     expect(bad.status).toBe(400);
@@ -220,6 +220,18 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
       expect.objectContaining({ sportKey: "americanfootball_nfl", graceHours: 6, priorOverdueCount: 3 }),
     );
     expect(calls.filter((c) => c.startsWith("settleSport:"))).toEqual(["settleSport:americanfootball_nfl"]);
+    // The backfill lane carries the same scope, so another sport's overdue
+    // picks can neither count toward this cycle's picksSettled nor suppress
+    // its starvation signal.
+    expect(backfillStaleSettlement).toHaveBeenLastCalledWith(
+      expect.objectContaining({ sportKey: "americanfootball_nfl" }),
+    );
+  });
+
+  it("an unscoped cycle runs the stale backfill across every sport", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    await GET(new Request("http://x/api/cron/settle-picks"));
+    expect(backfillStaleSettlement).toHaveBeenLastCalledWith(expect.objectContaining({ sportKey: null }));
   });
 
   it("a cycle that grades and holds nothing while picks are overdue is red (starved), not ok", async () => {

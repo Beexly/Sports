@@ -216,4 +216,25 @@ describe("backfillStaleSettlement", () => {
     const deltaHours = (NOW.getTime() - cutoff.getTime()) / (60 * 60 * 1000);
     expect(deltaHours).toBeCloseTo(BACKFILL_WINDOW_HOURS, 8);
   });
+
+  it("scopes the query to one sport when sportKey is given, and to every sport otherwise", async () => {
+    // A `?sport=` settle cycle must not count another sport's backfill as its
+    // own work (starvation decision + picksSettled), so the scope reaches the
+    // query itself rather than being filtered after the fact.
+    const findMany = vi.fn(async () => []);
+    const base = {
+      db: { pick: { findMany } },
+      now: NOW,
+      fetchScores: vi.fn(async () => scores([])),
+      persistSettled: vi.fn(async () => true),
+    };
+    await backfillStaleSettlement({ ...base, sportKey: "americanfootball_nfl" });
+    await backfillStaleSettlement({ ...base, sportKey: null });
+    await backfillStaleSettlement(base);
+    const whereOf = (i: number) =>
+      (findMany.mock.calls[i]?.[0] as { where: { game: Record<string, unknown> } }).where.game;
+    expect(whereOf(0)).toMatchObject({ sport: { key: "americanfootball_nfl" } });
+    expect(whereOf(1)).not.toHaveProperty("sport");
+    expect(whereOf(2)).not.toHaveProperty("sport");
+  });
 });
