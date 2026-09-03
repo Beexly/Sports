@@ -36,39 +36,51 @@ jobs:
         env:
           HEALTH_ALERT_WEBHOOK_URL: ${{ secrets.HEALTH_ALERT_WEBHOOK_URL }}
         run: |
-          set -euo pipefail
+          # No `set -e`: every failure below must reach the paging block instead
+          # of aborting before it (2026-09-03 review). -u and pipefail stay.
+          set -uo pipefail
+          fail=0
+          scheduler_status="unknown"
+          settlement_health="unknown"
+          age_minutes="unknown"
           response=$(curl -sS -o /tmp/status.json -w "%{http_code}" \
             --location --max-time 30 \
-            "https://www.galaxysportsedge.com/api/ops/public-surface-truth")
+            "https://www.galaxysportsedge.com/api/ops/public-surface-truth") || response="000"
           echo "HTTP ${response}"
 
           if [ "${response}" != "200" ]; then
             echo "::error::public-surface-truth returned HTTP ${response}, not 200"
-            exit 1
-          fi
-
-          if command -v jq >/dev/null 2>&1; then
-            jq . /tmp/status.json
+            fail=1
+          elif ! jq -e . /tmp/status.json >/dev/null 2>&1; then
+            echo "::error::public-surface-truth returned invalid JSON"
+            fail=1
           else
-            cat /tmp/status.json
-          fi
+            jq . /tmp/status.json
 
-          scheduler_status=$(jq -r '.schedulerLiveness.status // "unknown"' /tmp/status.json)
-          settlement_health=$(jq -r '.settlement.health // "unknown"' /tmp/status.json)
-          age_minutes=$(jq -r '.schedulerLiveness.ageMinutes // "unknown"' /tmp/status.json)
+            scheduler_status=$(jq -r '.schedulerLiveness.status // "unknown"' /tmp/status.json)
+            settlement_health=$(jq -r '.settlement.health // "unknown"' /tmp/status.json)
+            age_minutes=$(jq -r '.schedulerLiveness.ageMinutes // "unknown"' /tmp/status.json)
 
-          echo "schedulerLiveness.status = ${scheduler_status}"
-          echo "settlement.health = ${settlement_health}"
-          echo "schedulerLiveness.ageMinutes = ${age_minutes}"
+            echo "schedulerLiveness.status = ${scheduler_status}"
+            echo "settlement.health = ${settlement_health}"
+            echo "schedulerLiveness.ageMinutes = ${age_minutes}"
 
-          fail=0
-          if [ "${scheduler_status}" != "ok" ]; then
-            echo "::error::Scheduler is not healthy: status=${scheduler_status}, ageMinutes=${age_minutes}"
-            fail=1
-          fi
-          if [ "${settlement_health}" = "CRITICAL" ]; then
-            echo "::error::Settlement health is CRITICAL"
-            fail=1
+            # Vocabulary: SCHEDULER_LIVENESS_STATUSES in
+            # apps/web/lib/ops/scheduler-liveness.ts (healthy | degraded | dead |
+            # unknown), pinned by apps/web/__tests__/github-workflow-contract.test.ts.
+            # "ok" was never a member, so the old `!= "ok"` failed every poll.
+            # dead/unknown page; degraded is a heads-up, not an outage.
+            if [ "${scheduler_status}" != "healthy" ] && [ "${scheduler_status}" != "degraded" ]; then
+              echo "::error::Scheduler is not healthy: status=${scheduler_status}, ageMinutes=${age_minutes}"
+              fail=1
+            fi
+            if [ "${scheduler_status}" = "degraded" ]; then
+              echo "::warning::Scheduler degraded: ageMinutes=${age_minutes}"
+            fi
+            if [ "${settlement_health}" = "CRITICAL" ]; then
+              echo "::error::Settlement health is CRITICAL"
+              fail=1
+            fi
           fi
 
           # Page somebody. GitHub only emails the workflow owner on failure; a Slack/
@@ -76,9 +88,10 @@ jobs:
           # same value the platform uses for /api/cron/health-alert) makes this
           # poll an actual alarm. Absent secret → the job still fails visibly.
           if [ "${fail}" = "1" ] && [ -n "${HEALTH_ALERT_WEBHOOK_URL:-}" ]; then
-            msg="Galaxy Sports Edge external watchdog: scheduler=${scheduler_status} (age ${age_minutes}m), settlement=${settlement_health}. https://www.galaxysportsedge.com/api/ops/public-surface-truth"
+            msg="Galaxy Sports Edge external watchdog: http=${response}, scheduler=${scheduler_status} (age ${age_minutes}m), settlement=${settlement_health}. https://www.galaxysportsedge.com/api/ops/public-surface-truth"
             payload=$(jq -cn --arg t "${msg}" '{text: $t, content: $t}')
-            curl -sS --max-time 15 -X POST -H "Content-Type: application/json" \
+            # --fail: a 4xx/5xx from the webhook is a lost page, not a delivery.
+            curl -sS --fail --max-time 15 -X POST -H "Content-Type: application/json" \
               --data "${payload}" "${HEALTH_ALERT_WEBHOOK_URL}" >/dev/null \
               || echo "::warning::webhook delivery failed (alert still recorded as a failed run)"
           fi

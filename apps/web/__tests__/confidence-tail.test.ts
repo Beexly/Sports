@@ -63,6 +63,29 @@ describe("summarizeConfidenceTail", () => {
   });
 });
 
+describe("summarizeConfidenceTail — by market", () => {
+  it("splits the tail per market so the moneyline tail can be read on its own", () => {
+    const s = summarizeConfidenceTail(
+      [
+        { confidence: 85, result: "WIN", modelVersion: "v5.2.7", pickType: "MONEYLINE" },
+        { confidence: 90, result: "LOSS", modelVersion: "v5.2.7", pickType: "MONEYLINE" },
+        { confidence: 82, result: "LOSS", modelVersion: "v5.2.7", pickType: "SPREAD" },
+        { confidence: 70, result: "WIN", modelVersion: "v5.2.7", pickType: "SPREAD" }, // below the floor
+      ],
+      { minN: 1 },
+    );
+    expect(s.byMarket).toEqual([
+      { market: "MONEYLINE", n: 2, wins: 1, winRate: 0.5, claimedRate: 0.875 },
+      { market: "SPREAD", n: 1, wins: 0, winRate: 0, claimedRate: 0.82 },
+    ]);
+  });
+
+  it("reports no market rows when the rows carry no pickType", () => {
+    const s = summarizeConfidenceTail([{ confidence: 85, result: "WIN", modelVersion: "v5.2.7" }], { minN: 1 });
+    expect(s.byMarket).toEqual([]);
+  });
+});
+
 describe("loadConfidenceTail", () => {
   it("reads only graded WIN/LOSS picks at or above the floor from the public population (published, non-bootstrap, not seed)", async () => {
     let seenArgs: unknown = null;

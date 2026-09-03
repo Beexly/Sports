@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { backfillStaleSettlement } from "@/lib/data-sources/settle-backfill";
+import { loadSettlementHealth } from "@/lib/performance/settlement-health";
 
 /**
  * Tripwire for the settlement law (2026-09-02): the FREE grader runs first on
@@ -224,6 +225,13 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     // picks can neither count toward this cycle's picksSettled nor suppress
     // its starvation signal.
     expect(backfillStaleSettlement).toHaveBeenLastCalledWith(
+      expect.objectContaining({ sportKey: "americanfootball_nfl" }),
+    );
+    // And the pre-cycle overdue snapshot the starvation check compares against
+    // carries the same scope, so another sport's backlog cannot flag this
+    // cycle as starved.
+    expect(loadSettlementHealth).toHaveBeenLastCalledWith(
+      expect.anything(),
       expect.objectContaining({ sportKey: "americanfootball_nfl" }),
     );
   });

@@ -322,3 +322,52 @@ authorised every file; `.claude/settings.json` itself was not touched.
 `.claude/settings.json` do not match. The agent permission surface denies
 writing `.mcp.json`, so the rename is MCP-VERCEL-KEY in
 `docs/ops/OPERATOR_TASKS.md`.
+
+## D13. cubic's third pass (a573e6bbd, 2026-09-03 01:05 UTC): 38 threads
+
+Same rule: each claim read against the code first.
+
+**The one that mattered most.** The external watchdog compared
+`.schedulerLiveness.status` with `"ok"`. The vocabulary is `healthy | degraded
+| dead | unknown` (`apps/web/lib/ops/scheduler-liveness.ts`); `"ok"` was never
+a member, so the poll failed on every run and, once the webhook secret is set,
+would have paged every 30 minutes. The repo already knew: the workflow contract
+test carried the literal as a pinned known-bad entry with the one-line fix
+written in a comment. Fixed under the session's owner authorisation: healthy
+passes, degraded warns, anything else pages; a non-200 or invalid-JSON response
+now reaches the paging block instead of aborting before it; the webhook POST
+uses `--fail`. The known-bad pin is deleted, so the contract test now enforces
+the fix.
+
+**Fixed in code.**
+
+| Finding | Fix | Tripwire |
+|---|---|---|
+| `persistFreeScores` could overwrite a recorded final (a paid-settled game with `resultFetched` still false matches the revisit query) with a different ESPN score | In-memory SCORE_MISMATCH guard mirroring the runner's, plus a conditional `updateMany` where clause so a concurrent finalisation is not clobbered either | `free-score-persist-guard.test.ts` |
+| A `?sport=` cycle compared its scoped settlements against the global overdue count and could be flagged starved by another sport's backlog | `loadSettlementHealth` takes `sportKey`; the route passes the cycle's scope | `settlement-health.test.ts` (+1), `settle-picks-free-first.test.ts` |
+| Backfill cap saturation was invisible | `capReached` on the backfill result (in the cron response) | `settle-backfill.test.ts` |
+| Market coverage counted alias tombstones and stale or hidden picks | Canonical games only (`mergedIntoGameId: null`) and `freshPickWhere` on the picks | `market-coverage.test.ts` |
+| Cockpit rendered a coverage table from stub data in demo mode | Both monitors render "unavailable" in stub mode, as the truth surface does | cockpit suites |
+| Confidence tail mixed markets without saying so | `byMarket` split added; the headline is scored exactly as `calibration/report.ts` scores the calibration sample, so it stays comparable with the floors | `confidence-tail.test.ts` (+2) |
+| Merge tool: malformed `--sport`/`--limit` widened silently to every sport; `--limit` left stale counts; scores could be assembled from two aliases; later aliases graded against the pre-fill canonical | Strict option parsing that aborts before any read; counts recomputed after truncation; the score pair is copied only as a pair from a FINAL alias and carries the status; aliases graded against the effective canonical | `tsc`, dry run |
+| Owner runbook: an unused constant and a header claiming OPERATOR.md is parsed; SANDBOX-NET verified by the wrong command; the webhook set/unset ignored the GitHub secret; the kill-switch check accepted any value; Elite alert verification ran locally; the stale-pick item hardcoded a snapshot and mis-stated the predicate | All seven corrected; the kill-switch check reads `gates.forceNoBetIfStale == true` from the truth surface | `node --check`, `npm run ops:runbook` |
+| Report inconsistencies: 37% vs 40% for the same 152-pick tail, 3,711 vs the final brand-lint count | Corrected to the observed 61/152 and the final-head count, with the correction stated | brand lint |
+
+**Answered, left as is.** Aggregating the tail in the database (152 rows today
+in a 2,584-row table; revisit at 100×); learning-eligibility on the tail (the
+monitor deliberately scores what customers saw, the learning gate is a separate
+population); per-group merge transactions (each group is atomic and a rerun
+skips merged aliases, which is the resumable contract; one transaction across
+hundreds of groups would hold locks for the whole run); the dry-run collision
+preview (per alias by design, the execution report is the record); backfill
+pagination (88 overdue today against a cap of 200; `capReached` now shows
+saturation, and pagination lands if it ever reads true); the identity race
+(D9); the `npm ci` SessionStart hook and `git diff --output` (settings are
+owner-frozen; the guard now classifies `--output` targets, see the guard row).
+
+**Guard.** Seven bypasses in the agent bash guard (escaped executable names,
+`env -S`, wrapper option arity, path-prefixed executables behind wrappers,
+ANSI-C quoting, attached `xargs` options, protected paths behind
+`$CLAUDE_PROJECT_DIR`/`$PWD`) plus `git --output` targets: hardened on a copy
+with new selftest cases and installed through the same owner-authorised step
+as the earlier hardening; results in the final report.

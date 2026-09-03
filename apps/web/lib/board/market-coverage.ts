@@ -13,6 +13,8 @@
  * fake data). Pure classifier + a thin loader.
  */
 
+import { freshPickWhere, type FreshPickWhere } from "./stale-pick-policy";
+
 export const MARKET_COVERAGE_WINDOW_HOURS = 72;
 
 export const MARKET_KEYS = ["MONEYLINE", "SPREAD", "TOTAL"] as const;
@@ -121,7 +123,9 @@ const SEED_MODEL_VERSION = "v5.0.0-seed";
 export interface MarketCoverageDb {
   game: {
     findMany(args: {
-      where: { commenceTime: { gte: Date; lte: Date } };
+      // Canonical rows only: a merged alias (tombstone) is the same contest
+      // twice and would inflate the game count.
+      where: { commenceTime: { gte: Date; lte: Date }; mergedIntoGameId: null };
       select: { sport: { select: { key: true } } };
     }): Promise<Array<{ sport: { key: string } }>>;
   };
@@ -129,14 +133,15 @@ export interface MarketCoverageDb {
     findMany(args: {
       where: {
         // The public board's eligibility (load-gate-slate, board/state):
-        // published, non-bootstrap, not a seed row. A pick the board hides
-        // must not satisfy coverage.
+        // published, non-bootstrap, not a seed row, on a canonical game that
+        // has not started, refreshed within the stale-pick window. A pick the
+        // board hides must not satisfy coverage.
         isPublished: true;
         isBootstrap: false;
         NOT: { modelVersion: string };
         result: "PENDING";
-        game: { commenceTime: { gte: Date; lte: Date } };
-      };
+        game: { commenceTime: { gte: Date; lte: Date }; mergedIntoGameId: null };
+      } & FreshPickWhere;
       select: { pickType: true; game: { select: { sport: { select: { key: true } } } } };
     }): Promise<Array<{ pickType: string; game: { sport: { key: string } } }>>;
   };
@@ -150,14 +155,18 @@ export async function loadMarketCoverage(
   const to = new Date(now.getTime() + windowHours * 60 * 60 * 1000);
   const range = { gte: now, lte: to };
   const [games, picks] = await Promise.all([
-    db.game.findMany({ where: { commenceTime: range }, select: { sport: { select: { key: true } } } }),
+    db.game.findMany({
+      where: { commenceTime: range, mergedIntoGameId: null },
+      select: { sport: { select: { key: true } } },
+    }),
     db.pick.findMany({
       where: {
         isPublished: true,
         isBootstrap: false,
         NOT: { modelVersion: SEED_MODEL_VERSION },
         result: "PENDING",
-        game: { commenceTime: range },
+        game: { commenceTime: range, mergedIntoGameId: null },
+        ...freshPickWhere(now),
       },
       select: { pickType: true, game: { select: { sport: { select: { key: true } } } } },
     }),

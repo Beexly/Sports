@@ -165,6 +165,10 @@ describe("backfillStaleSettlement", () => {
 
     expect(findMany).toHaveBeenCalledWith(expect.objectContaining({ take: BACKFILL_CAP }));
     expect(result.inspected).toBe(BACKFILL_CAP);
+    // A full cap means rows behind the oldest `cap` were not looked at this
+    // run; the flag is what tells an operator the head of the backlog is
+    // saturated (2026-09-03 automated review).
+    expect(result.capReached).toBe(true);
     expect(result.cap).toBe(BACKFILL_CAP);
     expect(result.windowHours).toBe(BACKFILL_WINDOW_HOURS);
     expect(result.windowDays).toBeCloseTo(BACKFILL_WINDOW_HOURS / 24, 8);

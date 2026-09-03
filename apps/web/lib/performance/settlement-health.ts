@@ -127,6 +127,12 @@ export interface LoadSettlementHealthInput {
   /** Hours after kickoff before a still-PENDING pick is overdue. Default 6. */
   readonly graceHours?: number;
   readonly criticalThreshold?: number;
+  /**
+   * Restrict both counts to one sport (the settle cron's `?sport=` scope), so
+   * a scoped cycle's starvation check compares like with like. Omitted or
+   * null: every sport.
+   */
+  readonly sportKey?: string | null;
 }
 
 /**
@@ -148,11 +154,16 @@ export async function loadSettlementHealth(
     isPublished: true,
     NOT: { modelVersion: { contains: "seed" } },
   } as const;
+  const gameScope = input.sportKey ? { sport: { key: input.sportKey } } : {};
 
   const [commencedTotal, overduePending] = await Promise.all([
-    db.pick.count({ where: { ...baseWhere, game: { commenceTime: { lt: now } } } }),
+    db.pick.count({ where: { ...baseWhere, game: { ...gameScope, commenceTime: { lt: now } } } }),
     db.pick.count({
-      where: { ...baseWhere, result: "PENDING", game: { commenceTime: { lt: overdueCutoff } } },
+      where: {
+        ...baseWhere,
+        result: "PENDING",
+        game: { ...gameScope, commenceTime: { lt: overdueCutoff } },
+      },
     }),
   ]);
 

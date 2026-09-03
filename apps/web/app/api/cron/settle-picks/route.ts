@@ -113,7 +113,12 @@ export async function GET(request: Request) {
   // Snapshot overdue before STP so burn-rate can tell whether this cycle drained the band.
   let priorOverdueCount: number | undefined;
   try {
-    const healthBefore = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
+    // Same scope as the three settlement lanes: a `?sport=` cycle must not be
+    // called starved because another sport is overdue.
+    const healthBefore = await loadSettlementHealth(db, {
+      graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS,
+      sportKey: requestedSport,
+    });
     priorOverdueCount = healthBefore.overduePending;
   } catch (healthErr) {
     console.warn(

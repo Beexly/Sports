@@ -4,11 +4,13 @@
 // Owner runbook — every manual owner action still open, with the exact
 // command to take it and the exact command to verify it, in one place.
 //
-// Sources (never hard-coded — read live at run time):
-//   - docs/ops/OPERATOR_TASKS.md   (table rows + checkbox items)
-//   - docs/ops/OPERATOR.md § 5     (environment variable reference)
+// Sources:
+//   - docs/ops/OPERATOR_TASKS.md   (table rows + checkbox items; read live)
 //   - the repo itself, for anything whose presence changes what to print
-//     (e.g. whether a duplicate-game merge script has landed yet)
+//     (e.g. whether a duplicate-game merge script has landed yet; read live)
+//   - the environment-variable actions below are maintained in this file and
+//     were checked against docs/ops/OPERATOR.md § 5 and the code that reads
+//     each variable on 2026-09-02; OPERATOR.md is not parsed at run time.
 //
 // Usage:
 //   node scripts/ops/owner-runbook.mjs
@@ -30,7 +32,6 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const JSON_OUT = process.argv.includes('--json');
 
 const OPERATOR_TASKS_PATH = path.join(REPO_ROOT, 'docs/ops/OPERATOR_TASKS.md');
-const OPERATOR_PATH = path.join(REPO_ROOT, 'docs/ops/OPERATOR.md');
 
 const VERCEL_TEAM = process.env.VERCEL_TEAM || '<team>';
 const VERCEL_PROJECT = process.env.VERCEL_PROJECT || '<project>';
@@ -116,7 +117,7 @@ const OPERATOR_TASK_VERIFY = {
   'ACTIONS-BILLING': 'gh run list --limit 5   # confirm recent workflow runs completed, not billing-blocked',
   'PUSH-PROTECT': `gh api repos/Beexly/Sports --jq '.security_and_analysis'`,
   'BRANCH-PROTECT': `gh api repos/Beexly/Sports/branches/main/protection --jq '{required_status_checks: .required_status_checks.contexts}'`,
-  'SANDBOX-NET': 'npm run guard:agent-bash   # selftest of the PreToolUse guard; sandbox.enabled itself is owner-only in .claude/settings.json',
+  'SANDBOX-NET': 'npm run ops:tasks   # the SANDBOX-NET row reads verified only with failIfUnavailable:true; first run the real sandbox-session check in docs/ops/OPERATOR_TASKS.md (bubblewrap/seatbelt machine). npm run guard:agent-bash is the PreToolUse guard selftest, not the sandbox check',
   'NEXT-MAJOR': 'node scripts/guardrails/dependency-audit.mjs',
   'HENRYGD-REG': 'npx vitest run --root apps/web __tests__/scraping-clearance.test.ts',
 };
@@ -191,24 +192,26 @@ function buildEnvActions() {
   actions.push({
     id: 'HEALTH-ALERT-WEBHOOK',
     what: 'Set HEALTH_ALERT_WEBHOOK_URL (Slack/Discord/generic webhook) in Vercel Production AND as the GitHub repo secret of the same name (Settings → Secrets → Actions), so both the in-platform health-alert cron and the external watchdog workflow (.github/workflows/external-watchdog.yml, every 30 min from outside Vercel) can page. Then point an external uptime monitor (UptimeRobot / Better Stack / Cronitor) at /api/health?strict=1.',
-    setCmd: `${vercelAddCmd('HEALTH_ALERT_WEBHOOK_URL')}`,
-    unsetCmd: vercelRmCmd('HEALTH_ALERT_WEBHOOK_URL'),
+    // Two stores, one value: the platform cron reads Vercel; the external
+    // watchdog workflow reads the GitHub Actions secret of the same name.
+    setCmd: `${vercelAddCmd('HEALTH_ALERT_WEBHOOK_URL')} && gh secret set HEALTH_ALERT_WEBHOOK_URL --repo Beexly/Sports`,
+    unsetCmd: `${vercelRmCmd('HEALTH_ALERT_WEBHOOK_URL')} && gh secret delete HEALTH_ALERT_WEBHOOK_URL --repo Beexly/Sports`,
     dashboard: VERCEL_DASHBOARD_URL,
-    verify: 'curl -sS "https://www.galaxysportsedge.com/api/health?strict=1" | jq "{ok, status}"   # ok:false / HTTP!=200 must page',
+    verify: 'curl -sS "https://www.galaxysportsedge.com/api/health?strict=1" | jq "{ok, status}"   # ok:false / HTTP!=200 must page; then gh secret list --repo Beexly/Sports | grep HEALTH_ALERT_WEBHOOK_URL',
     source: 'docs/ops/HEALTH_ALERTING.md',
   });
 
   // The stale-data kill switch the gate runbook pairs with PUBLIC_PICKS_ENABLED
-  // ("it's what makes #1 safe"). The truth surface does not report it, so it can
-  // only be confirmed in Vercel; the founder checklist keeps public picks
-  // unchecked until it is.
+  // ("it's what makes #1 safe"). The truth surface reports its live value as
+  // gates.forceNoBetIfStale (since 2026-09-02), so the verification is
+  // value-aware: presence in Vercel is not enough, the gate needs exactly true.
   actions.push({
     id: 'FORCE-NO-BET-IF-STALE',
-    what: 'Confirm FORCE_NO_BET_IF_STALE=true in Production. PUBLIC_PICKS_ENABLED is observed ON; the gate runbook requires the stale-data kill switch alongside it, and /api/ops/public-surface-truth does not report this flag.',
+    what: 'Confirm FORCE_NO_BET_IF_STALE=true in Production. PUBLIC_PICKS_ENABLED is observed ON; the gate runbook requires the stale-data kill switch alongside it. /api/ops/public-surface-truth reports the live value as gates.forceNoBetIfStale and npm run launch:ready warns while it is off with public picks on.',
     setCmd: vercelAddCmd('FORCE_NO_BET_IF_STALE') + '   # value: true',
     unsetCmd: vercelRmCmd('FORCE_NO_BET_IF_STALE'),
     dashboard: VERCEL_DASHBOARD_URL,
-    verify: 'vercel env ls production | grep FORCE_NO_BET_IF_STALE   # then tick the founder checklist line',
+    verify: 'curl -sS "https://www.galaxysportsedge.com/api/ops/public-surface-truth" | jq -e ".gates.forceNoBetIfStale == true"   # exit 0 only when the deployed value is exactly true; then tick the founder checklist line',
     source: 'docs/ops/FOUNDER_ONLY_CHECKLIST.md (gate 1b); docs/ops/OPERATOR.md § 5',
   });
 
@@ -227,7 +230,7 @@ function buildEnvActions() {
       setCmd: vercelAddCmd(name),
       unsetCmd: vercelRmCmd(name),
       dashboard: VERCEL_DASHBOARD_URL,
-      verify: 'npm run ops:alert-smoke',
+      verify: `vercel env ls production | grep ${name}   # presence in Production; npm run ops:alert-smoke only checks the shell you run it in, so run it with the Production values pulled (vercel env pull) before treating the channel as configured`,
       source: 'scripts/ops/watchlist-alert-smoke.ts; apps/web/lib/watchlist/channels/{email-channel,web-push-channel}.ts',
     });
   }
@@ -276,8 +279,8 @@ function buildDecisionItems() {
   // supersedes or voids them. The live count is on the ops truth surface.
   items.push({
     id: 'STALE-MODEL-VERSION-PICKS',
-    what: 'Supersede or void the 21 published PENDING picks not refreshed in 14 days: 18 from model v5.0.0 (May lines on Sept 5 → Nov 8 games, last refreshed 2026-06-16) and 3 from v5.2.6 (Sept 5–6 games, last refreshed 2026-08-19); observed 2026-09-02. Never a cron: an owner decision recorded in the owner queue.',
-    where: 'Owner queue / Prisma Studio: picks WHERE result = PENDING AND isPublished AND dataFreshnessAt < now() - 14 days (the same predicate as stalePendingPicks on the truth surface). Voiding keeps the row (result VOID, reason stale-line); nothing is deleted.',
+    what: 'Supersede or void every published PENDING pick on an unstarted game that has not been refreshed in 14 days. Read the live count from the ops truth surface (stalePendingPicks) rather than any snapshot: on 2026-09-02 it read 21 (18 from model v5.0.0 on May lines, 3 from v5.2.6), and that set changes as games start and refreshes land. Never a cron: an owner decision recorded in the owner queue.',
+    where: 'Owner queue / Prisma Studio, the same predicate as stalePendingPicks on the truth surface (lib/board/stale-pick-policy.ts): picks WHERE result = PENDING AND isPublished AND game.commenceTime > now() AND (dataFreshnessAt < now() - interval \'14 days\' OR (dataFreshnessAt IS NULL AND generatedAt < now() - interval \'14 days\')). Voiding keeps the row (result VOID, reason stale-line); nothing is deleted.',
     verify:
       'curl -sS "https://www.galaxysportsedge.com/api/ops/public-surface-truth" | jq .stalePendingPicks   # count must read 0 before the Sept 5 kickoffs',
     source: 'apps/web/lib/board/stale-pick-policy.ts; apps/web/app/api/ops/public-surface-truth/route.ts (stalePendingPicks); PICKS_STATE_2026-09-02.md § 5',

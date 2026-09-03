@@ -65,6 +65,15 @@ export type UnresolvedStalePick = {
 
 export type BackfillResult = {
   inspected: number;
+  /**
+   * True when the lane inspected a full cap's worth of rows: the oldest
+   * `cap` overdue picks filled the run, so anything behind them was not
+   * looked at this hour. If this stays true run after run while `settled` is
+   * 0, the head of the backlog is stuck on HELD/unmatched rows and the
+   * operator has to resolve them (or raise the cap) before later picks are
+   * ever reached.
+   */
+  capReached: boolean;
   settled: number;
   held: number;
   skippedInWindow: number;
@@ -296,6 +305,7 @@ export async function backfillStaleSettlement(input: {
 
   return {
     inspected: stale.length,
+    capReached: stale.length >= cap,
     settled,
     held,
     skippedInWindow: inWindowSkipped.length,

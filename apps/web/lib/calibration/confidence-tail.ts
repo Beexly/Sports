@@ -23,6 +23,24 @@ export interface ConfidenceTailRow {
   readonly confidence: number;
   readonly result: "WIN" | "LOSS";
   readonly modelVersion: string;
+  /** Market (MONEYLINE / SPREAD / TOTAL). Optional so pure callers can omit it. */
+  readonly pickType?: string;
+}
+
+/**
+ * Per-market rows. Confidence is scored as a stated probability across every
+ * market here exactly as `calibration/report.ts` scores the calibration
+ * sample (confidence/100 against WIN/LOSS, all pick types), so the headline
+ * verdict is comparable with the calibration floors. Spread and total picks
+ * are priced near a coin flip, which is why the per-market split is shown:
+ * a reader can weigh the moneyline tail on its own.
+ */
+export interface ConfidenceTailMarketRow {
+  readonly market: string;
+  readonly n: number;
+  readonly wins: number;
+  readonly winRate: number | null;
+  readonly claimedRate: number | null;
 }
 
 export type ConfidenceTailVerdict = "insufficient" | "inverted" | "overconfident" | "calibrated";
@@ -44,6 +62,8 @@ export interface ConfidenceTailSummary {
   readonly claimedRate: number | null;
   readonly brier: number | null;
   readonly byVersion: readonly ConfidenceTailVersionRow[];
+  /** Split by market; empty when the rows carry no pickType. */
+  readonly byMarket: readonly ConfidenceTailMarketRow[];
   readonly verdict: ConfidenceTailVerdict;
   readonly operatorHint: string;
 }
@@ -84,6 +104,25 @@ export function summarizeConfidenceTail(
       winRate: v.n > 0 ? round4(v.wins / v.n) : null,
     }));
 
+  const markets = new Map<string, { n: number; wins: number; claimed: number }>();
+  for (const r of tail) {
+    if (!r.pickType) continue;
+    const m = markets.get(r.pickType) ?? { n: 0, wins: 0, claimed: 0 };
+    m.n += 1;
+    if (r.result === "WIN") m.wins += 1;
+    m.claimed += r.confidence / 100;
+    markets.set(r.pickType, m);
+  }
+  const byMarket: ConfidenceTailMarketRow[] = [...markets.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([market, m]) => ({
+      market,
+      n: m.n,
+      wins: m.wins,
+      winRate: m.n > 0 ? round4(m.wins / m.n) : null,
+      claimedRate: m.n > 0 ? round4(m.claimed / m.n) : null,
+    }));
+
   let verdict: ConfidenceTailVerdict;
   if (n < minN || winRate === null || claimedRate === null) {
     verdict = "insufficient";
@@ -113,6 +152,7 @@ export function summarizeConfidenceTail(
     claimedRate: claimedRate === null ? null : round4(claimedRate),
     brier: brier === null ? null : round4(brier),
     byVersion,
+    byMarket,
     verdict,
     operatorHint,
   };
@@ -137,8 +177,8 @@ export interface ConfidenceTailDb {
         isBootstrap: false;
         NOT: { modelVersion: string };
       };
-      select: { confidence: true; result: true; modelVersion: true };
-    }): Promise<Array<{ confidence: number; result: string; modelVersion: string }>>;
+      select: { confidence: true; result: true; modelVersion: true; pickType: true };
+    }): Promise<Array<{ confidence: number; result: string; modelVersion: string; pickType: string }>>;
   };
 }
 
@@ -154,7 +194,7 @@ export async function loadConfidenceTail(
       isBootstrap: false,
       NOT: { modelVersion: SEED_MODEL_VERSION },
     },
-    select: { confidence: true, result: true, modelVersion: true },
+    select: { confidence: true, result: true, modelVersion: true, pickType: true },
   });
   return summarizeConfidenceTail(
     rows

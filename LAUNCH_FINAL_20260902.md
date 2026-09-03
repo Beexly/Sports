@@ -20,11 +20,12 @@ blocking and checks drift; two forward migrations (alias column, Week 1 board in
 validated on a disposable Postgres 16 exactly the way CI runs them. The ops truth surface and
 `npm run launch:ready` now show two states the board used to hide: which markets the slate
 actually carries per sport (CFB totals under a zero-key slate) and whether the model's
-highest-confidence picks earn their confidence (they do not: 152 picks at ≥80 won 37%).
+highest-confidence picks earn their confidence (they do not: 152 picks at ≥80 won 40%, 61 of 152;
+the first draft of this line said 37%, corrected on the 2026-09-03 re-read).
 Every manual owner action prints as a command from `npm run ops:runbook`; the 10-minute
 launch-day sequence is `docs/ops/LAUNCH_DAY_RUNBOOK.md`; brand lint covers 20 more surfaces.
 
-**Green.** Typecheck (22 workspaces), lint, guardrails 26/26, brand lint 3,711/3,711,
+**Green.** Typecheck (22 workspaces), lint, guardrails 26/26, brand lint 3,715/3,715 on the final head (3,711 when this summary was first written),
 agent-eval 53/53, ingestion-pipeline 264 tests, the targeted apps/web suites (92 tests
 across settlement, coverage/tail, truth/health, merge plan, migrations), disposable-Postgres
 migration replay + drift + idempotent redeploy, and every CI guard job on the pushed head.
@@ -80,7 +81,7 @@ decisions). Items 1–2 are the only ones that gate the settlement fix reaching 
 | `npm run typecheck` (22 workspaces) | exit 0 |
 | `npm run lint` (apps/web, `--max-warnings=0`) | exit 0 |
 | `npm run guardrails` (run-all, 26 guards) | 26/26 |
-| `npm run lint:brand` | 3,711 / 3,711 (was 3,691; 20 new surfaces, 0 violations) |
+| `npm run lint:brand` | 3,715 / 3,715 on the final head (3,691 at the start; 20 new surfaces, four vocabulary variants; 0 violations) |
 | `npm run agent:eval` | 53 / 53 (settlement fixture rewritten for the free-first law) |
 | `node scripts/guardrails/trust-gate.mjs` | OK — 2,073 files, no banned phrases |
 | `node scripts/check-operator-tasks.mjs` | 8 open, 1 done, 2 repo-verified, exit 0 |

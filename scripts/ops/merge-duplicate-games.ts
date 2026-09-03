@@ -87,14 +87,40 @@ interface Args {
   readonly limit: number | null;
 }
 
+/**
+ * Strict option parsing. A malformed scope must never widen silently: `--sport`
+ * without a value, or `--limit` with anything but a positive integer, used to
+ * fall back to "every sport, every group", which on `--execute` is the one
+ * mistake this tool must not let an owner make. Both now abort before any
+ * database read.
+ */
 function parseArgs(argv: readonly string[]): Args {
+  const known = new Set(["--execute", "--json", "--sport", "--limit"]);
   const execute = argv.includes("--execute");
   const json = argv.includes("--json");
-  const sportIdx = argv.indexOf("--sport");
-  const sportKey = sportIdx >= 0 ? argv[sportIdx + 1] ?? null : null;
-  const limitIdx = argv.indexOf("--limit");
-  const limitRaw = limitIdx >= 0 ? argv[limitIdx + 1] : undefined;
-  const limit = limitRaw != null && Number.isFinite(Number(limitRaw)) ? Number(limitRaw) : null;
+  const optionValue = (flag: string): string | null => {
+    const idx = argv.indexOf(flag);
+    if (idx < 0) return null;
+    const value = argv[idx + 1];
+    if (value === undefined || value.startsWith("-")) {
+      throw new Error(`${flag} requires a value (got ${value === undefined ? "nothing" : JSON.stringify(value)})`);
+    }
+    return value;
+  };
+  const sportKey = optionValue("--sport");
+  const limitRaw = optionValue("--limit");
+  let limit: number | null = null;
+  if (limitRaw !== null) {
+    if (!/^\d+$/.test(limitRaw) || Number(limitRaw) < 1) {
+      throw new Error(`--limit must be a positive integer (got ${JSON.stringify(limitRaw)})`);
+    }
+    limit = Number(limitRaw);
+  }
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i]!;
+    if (arg.startsWith("-") && !known.has(arg)) throw new Error(`unknown option ${JSON.stringify(arg)}`);
+    if (arg === "--sport" || arg === "--limit") i++;
+  }
   return { execute, sportKey, json, limit };
 }
 
@@ -327,13 +353,24 @@ async function repointChildTables(
   return outcomes;
 }
 
-/** Fill only-null enrichment fields on the canonical from the first alias that has a value. Never overwrites a non-null canonical value. */
+/**
+ * Fill only-null enrichment fields on the canonical from the first alias that
+ * has a value. Never overwrites a non-null canonical value.
+ *
+ * Scores are the exception to per-field filling: a final is a PAIR from one
+ * row, never a home score from one alias and an away score from another
+ * (that would grade picks against a result no feed ever reported). The pair
+ * is copied only from an alias that is FINAL with both sides present, and it
+ * carries the terminal status with it so the canonical does not end up with
+ * a full score and a SCHEDULED status.
+ */
 function computeCanonicalFillData(
   canonical: GameRow,
   aliases: readonly GameRow[],
 ): Record<string, unknown> {
   const data: Record<string, unknown> = {};
   for (const field of FILL_IF_NULL_FIELDS) {
+    if (field === "homeScore" || field === "awayScore") continue;
     const canonicalValue = (canonical as unknown as Record<string, unknown>)[field];
     if (canonicalValue != null) continue;
     for (const alias of aliases) {
@@ -342,6 +379,16 @@ function computeCanonicalFillData(
         data[field] = aliasValue;
         break;
       }
+    }
+  }
+  if (canonical.homeScore == null && canonical.awayScore == null) {
+    const source = aliases.find(
+      (alias) => alias.status === "FINAL" && alias.homeScore != null && alias.awayScore != null,
+    );
+    if (source) {
+      data["homeScore"] = source.homeScore;
+      data["awayScore"] = source.awayScore;
+      if (canonical.status !== "FINAL") data["status"] = "FINAL";
     }
   }
   return data;
@@ -386,7 +433,16 @@ async function main(): Promise<void> {
   let plan: MergePlan = buildMergePlan(candidates, picksByGameId);
 
   if (args.limit != null && plan.groups.length > args.limit) {
-    plan = { ...plan, groups: plan.groups.slice(0, args.limit), groupCount: args.limit };
+    // Every derived count follows the truncation, so the printed plan never
+    // reports aliases or conflicts that this run will not touch.
+    const groups = plan.groups.slice(0, args.limit);
+    plan = {
+      ...plan,
+      groups,
+      groupCount: groups.length,
+      aliasCount: groups.reduce((n, g) => n + g.aliasIds.length, 0),
+      conflictCount: groups.reduce((n, g) => n + g.pickConflicts.length, 0),
+    };
   }
 
   console.log(
@@ -489,9 +545,13 @@ async function main(): Promise<void> {
       if (Object.keys(canonicalFillData).length > 0) {
         await tx.game.update({ where: { id: canonicalRow.id }, data: canonicalFillData });
       }
+      // The canonical the aliases are graded against is the one AFTER the
+      // fill: when the score pair came from an alias, later aliases must see
+      // it or their pending picks would never be grade-filled.
+      const effectiveCanonical = { ...canonicalRow, ...canonicalFillData } as GameRow;
       for (const aliasRow of aliasRows) {
         const childRepoints = await repointChildTables(tx, aliasRow.id, canonicalRow.id, false);
-        const gradeFillData = computeAliasGradeFillData(canonicalRow, aliasRow);
+        const gradeFillData = computeAliasGradeFillData(effectiveCanonical, aliasRow);
         await tx.game.update({
           where: { id: aliasRow.id },
           data: { mergedIntoGameId: canonicalRow.id, ...gradeFillData },

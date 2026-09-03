@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { db } from "@sports/db";
+import { db, isStubMode } from "@sports/db";
 import {
   getReadinessGates,
   buildCalibrator,
@@ -109,9 +109,16 @@ export default async function CockpitCalibrationPage() {
       // positive average can hide a sub-50% beat rate. Counted separately on purpose.
       db.pick.count({ where: { clvValue: { gt: 0 } } }).catch(() => 0),
       // The same two monitors /api/ops/public-surface-truth and launch:ready
-      // report, so the cockpit shows them without an API call. Read-only.
-      loadConfidenceTail(db as never).catch((): ConfidenceTailSummary | null => null),
-      loadMarketCoverage(db as never).catch((): MarketCoverageReport | null => null),
+      // report, so the cockpit shows them without an API call. Read-only. In
+      // stub/demo mode the stub client mixes sample picks with stub games, so
+      // both render as "unavailable" rather than a fabricated table, exactly
+      // as the truth surface does.
+      isStubMode()
+        ? Promise.resolve<ConfidenceTailSummary | null>(null)
+        : loadConfidenceTail(db as never).catch((): ConfidenceTailSummary | null => null),
+      isStubMode()
+        ? Promise.resolve<MarketCoverageReport | null>(null)
+        : loadMarketCoverage(db as never).catch((): MarketCoverageReport | null => null),
     ]);
   const picksPending = picksTotal - picksResolved;
 

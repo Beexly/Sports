@@ -105,14 +105,22 @@ describe("loadMarketCoverage", () => {
     expect(report.windowHours).toBe(48);
     expect(report.to).toBe(new Date("2026-09-14T12:00:00Z").toISOString());
     expect(seen).toHaveLength(2);
-    // A pick the public board hides (bootstrap, seed, unpublished) must never
-    // satisfy coverage: the same predicate the board's relation filter uses.
+    // Canonical games only: a merged alias is the same contest twice.
+    expect(seen[0]).toMatchObject({ where: { mergedIntoGameId: null } });
+    // A pick the public board hides (bootstrap, seed, unpublished, on a
+    // tombstone, or stale) must never satisfy coverage: the same predicates
+    // the board's relation filter and the stale-pick policy use.
     expect(seen[1]).toMatchObject({
       where: {
         isPublished: true,
         isBootstrap: false,
         NOT: { modelVersion: "v5.0.0-seed" },
         result: "PENDING",
+        game: { mergedIntoGameId: null },
+        OR: [
+          { dataFreshnessAt: { gte: expect.any(Date) } },
+          { dataFreshnessAt: null, generatedAt: { gte: expect.any(Date) } },
+        ],
       },
     });
     expect(report.degraded.map((d) => `${d.sportKey}:${d.market}`)).toEqual([

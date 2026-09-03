@@ -115,11 +115,10 @@ function statusComparisons(): StatusComparison[] {
  * Exact-match pin — see the header. Fix, then delete the entry.
  */
 const KNOWN_BAD_STATUS_LITERALS: readonly string[] = [
-  // external-watchdog.yml: `if [ "${scheduler_status}" != "ok" ]`.
-  // FOUNDER FIX (one line): compare against a real member instead —
-  //   if [ "${scheduler_status}" != "healthy" ] && [ "${scheduler_status}" != "degraded" ]
-  // ("degraded" is a heads-up, not an outage; alarming on it re-creates the noise.)
-  'external-watchdog.yml .schedulerLiveness.status "ok"',
+  // (empty) external-watchdog.yml's `!= "ok"` — the one entry this list ever
+  // held — was fixed 2026-09-03 (owner-authorised session): it now compares
+  // against the real members ("healthy" passes, "degraded" warns, anything
+  // else pages). Any new entry here is a regression to fix, not to keep.
 ];
 
 const describeComparison = (c: StatusComparison) =>
