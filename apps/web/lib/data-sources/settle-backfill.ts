@@ -126,7 +126,14 @@ export type BackfillDb = {
       pick: { updateMany: (args: unknown) => Promise<{ count: number }> };
       pickSettlementEvent: { create: (args: unknown) => Promise<unknown> };
       postSettlementWork: unknown;
-      game: { update: (args: unknown) => Promise<unknown> };
+      game: {
+        update: (args: unknown) => Promise<unknown>;
+        findUnique: (args: unknown) => Promise<{
+          status: string;
+          homeScore: number | null;
+          awayScore: number | null;
+        } | null>;
+      };
     }) => Promise<{ count: number }>,
   ) => Promise<{ count: number }>;
 };
@@ -170,7 +177,7 @@ export async function backfillStaleSettlement(input: {
       },
     },
     orderBy: { game: { commenceTime: "asc" } },
-    take: cap,
+    take: cap + 1, // +1 so capReached (rows beyond cap) is decidable
     select: {
       id: true,
       pickType: true,
@@ -207,9 +214,12 @@ export async function backfillStaleSettlement(input: {
   }));
 
   const inWindowSkipped = normalized.filter((r) => r.game.commenceTime >= cutoff);
-  const stale = normalized
-    .filter((r) => r.game.commenceTime < cutoff)
-    .slice(0, cap);
+  const staleUntrimmed = normalized.filter((r) => r.game.commenceTime < cutoff);
+  // capReached must mean "rows exist BEYOND the cap that were not looked at".
+  // We fetch cap + 1 rows precisely so this is decidable: exactly-cap backlogs
+  // report false; anything deeper reports true.
+  const capReached = staleUntrimmed.length > cap;
+  const stale = staleUntrimmed.slice(0, cap);
 
   const bySport = new Map<string, StalePickRow[]>();
   for (const row of stale) {
@@ -305,7 +315,7 @@ export async function backfillStaleSettlement(input: {
 
   return {
     inspected: stale.length,
-    capReached: stale.length >= cap,
+    capReached,
     settled,
     held,
     skippedInWindow: inWindowSkipped.length,
@@ -342,6 +352,30 @@ function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<b
         ],
       );
       if (args.homeScore != null && args.awayScore != null) {
+        // Never overwrite a recorded final with a different one.
+        // Same guard pattern as free-score-persist.ts (SCORE_MISMATCH_CROSS_PATH):
+        // if a game already has a FINAL status and a different score pair,
+        // refuse to clobber the result picks were graded against.
+        const existingGame = await tx.game.findUnique({
+          where: { id: args.gameId },
+          select: { status: true, homeScore: true, awayScore: true },
+        });
+        const recordedFinal =
+          existingGame?.status === "FINAL" &&
+          existingGame.homeScore != null &&
+          existingGame.awayScore != null;
+        if (
+          recordedFinal &&
+          (existingGame.homeScore !== args.homeScore ||
+            existingGame.awayScore !== args.awayScore)
+        ) {
+          console.warn(
+            `[settle-backfill] SCORE_MISMATCH game=${args.gameId} ` +
+              `existing=${existingGame.homeScore}-${existingGame.awayScore} ` +
+              `incoming=${args.homeScore}-${args.awayScore} — refusing overwrite.`,
+          );
+          // Do not write scores; the pick settlement already happened above.
+        } else {
         await tx.game.update({
           where: { id: args.gameId },
           data: {
@@ -351,6 +385,7 @@ function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<b
             resultFetched: true,
           },
         });
+        }
       }
       return updated;
     });

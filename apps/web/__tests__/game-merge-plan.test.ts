@@ -244,7 +244,7 @@ describe("findPickConflicts / buildMergePlan — pending-pick conflict reporting
     expect(conflicts).toHaveLength(1);
     expect(conflicts[0]).toMatchObject({
       aliasGameId: "game-rundown",
-      canonicalPickId: "pick-odds-ml",
+      referencePickId: "pick-odds-ml",
       aliasPickId: "pick-rundown-ml",
       pickType: "MONEYLINE",
       sidesAgree: false,

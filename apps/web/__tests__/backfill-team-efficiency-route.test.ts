@@ -87,4 +87,28 @@ describe("GET /api/cron/backfill-team-efficiency", () => {
     expect(body.success).toBe(false);
     expect(body.floorFallback).toBeNull();
   });
+
+  it("never falls back on a 5xx outage — an outage is not an unpublished season (C-66)", async () => {
+    (ingestTeamEfficiency as Mock).mockResolvedValue({
+      status: "source-error", season: 2026, rowsWritten: 0, games: 0, error: "HTTP 503",
+    });
+    const res = await GET(req("", "Bearer secret"));
+    const body = (await res.json()) as { success: boolean; floorFallback: unknown };
+    expect(ingestTeamEfficiency).toHaveBeenCalledTimes(1); // 2026 only, no floor retry
+    expect(body.success).toBe(false);
+    expect(body.floorFallback).toBeNull();
+  });
+
+  it("falls back when the labelled season reports ok with zero rows (combined-asset shape)", async () => {
+    (ingestTeamEfficiency as Mock).mockImplementation(async (season: number) =>
+      season === 2026
+        ? { status: "ok", season, rowsWritten: 0, games: 0 }
+        : { status: "ok", season, rowsWritten: 3, games: 3 },
+    );
+    const res = await GET(req("", "Bearer secret"));
+    const body = (await res.json()) as { success: boolean; floorFallback: unknown };
+    expect(ingestTeamEfficiency).toHaveBeenCalledTimes(2);
+    expect(body.success).toBe(true);
+    expect(body.floorFallback).toMatchObject({ status: "ok", season: 2025 });
+  });
 });

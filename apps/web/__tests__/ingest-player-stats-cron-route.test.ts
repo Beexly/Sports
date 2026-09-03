@@ -159,6 +159,25 @@ describe("GET /api/cron/ingest-player-stats", () => {
     expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(2);
   });
 
+  it("does not fall back on a 5xx outage — an outage is not an unpublished season (C-66)", async () => {
+    mocks.findMany.mockResolvedValue(
+      WINDOW.filter((s) => s !== CURRENT && s !== CURRENT - 3).map((season) => ({ season })),
+    );
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) =>
+      season === CURRENT
+        ? { status: "source-error", season, playersUpserted: 0, statsUpserted: 0, error: "HTTP 503" }
+        : okResult(season),
+    );
+
+    const res = await GET(req("http://x/api/cron/ingest-player-stats", "Bearer secret"));
+    expect(res.status).toBe(502); // recorded as failed, not masked by an older-season success
+    const body = (await res.json()) as CronBody;
+    expect(body.success).toBe(false);
+    expect(body.firstAttempt).toBeNull();
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+    expect(ingestPlayerWeeklyStats).not.toHaveBeenCalledWith(CURRENT - 3);
+  });
+
   it("caps at exactly ONE fallback per run even when it also yields nothing", async () => {
     // Three missing seasons; the two newest both come up empty. The third
     // (oldest) must NOT be attempted — one fallback is the budget cap.
