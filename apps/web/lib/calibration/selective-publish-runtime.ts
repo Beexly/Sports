@@ -76,29 +76,58 @@ export function loadSelectiveRuntimeConfig(
   };
 }
 
-let cachedPlan: ProvenPathPlan | null | undefined;
-let cachedPause: RankingPauseDurableSnap | null | undefined;
+/**
+ * Cache the in-flight PROMISE, not the resolved value (single-flight).
+ *
+ * These two loaders are called once PER PICK from the public picks route:
+ * `/api/picks` maps every fetched row through `passesPublicSelectiveFilterAsync`
+ * inside a `Promise.all`. `Promise.all` invokes all N map callbacks
+ * synchronously up to their first `await`, so a value-only cache
+ * (`if (cached !== undefined) return cached`) is passed by EVERY caller before
+ * the first assignment ever lands: nothing is memoised until after the whole
+ * fan-out has already been issued.
+ *
+ * Measured blast radius on a cold lambda: a PRO/ELITE viewer (dailyPickLimit
+ * null → `take: 200`) issued 200 plan reads + 200 pause reads = 400 concurrent
+ * durable queries for ONE request; a FREE/Fantasy viewer (`take: 48`) issued 96.
+ * Warm instances were 0, so the stampede fires exactly during a cold-start
+ * traffic spike — on the money page. Holding the promise makes N callers share
+ * one flight: 400 → 2.
+ *
+ * Rejection handling: a rejected promise left in the slot would poison the
+ * cache for the life of the isolate, so the slot is dropped when the load
+ * fails and the batch degrades to `null` (the same value the pre-fix
+ * try/catch produced). The next request retries instead of being pinned to a
+ * transient failure forever — still single-flight, so a persistently failing
+ * loader costs one query per batch, never N.
+ */
+let cachedPlan: Promise<ProvenPathPlan | null> | undefined;
+let cachedPause: Promise<RankingPauseDurableSnap | null> | undefined;
 
-export async function getCachedProvenPathPlan(): Promise<ProvenPathPlan | null> {
+export function getCachedProvenPathPlan(): Promise<ProvenPathPlan | null> {
   if (cachedPlan !== undefined) return cachedPlan;
-  try {
+  const flight: Promise<ProvenPathPlan | null> = (async () => {
     const { loadProvenPathPlan } = await import("@/lib/ops/proven-path-durable");
-    cachedPlan = await loadProvenPathPlan();
-  } catch {
-    cachedPlan = null;
-  }
-  return cachedPlan;
+    return await loadProvenPathPlan();
+  })().catch(() => {
+    if (cachedPlan === flight) cachedPlan = undefined; // never cache a failure
+    return null;
+  });
+  cachedPlan = flight;
+  return flight;
 }
 
-export async function getCachedRankingPauseDurable(): Promise<RankingPauseDurableSnap | null> {
+export function getCachedRankingPauseDurable(): Promise<RankingPauseDurableSnap | null> {
   if (cachedPause !== undefined) return cachedPause;
-  try {
+  const flight: Promise<RankingPauseDurableSnap | null> = (async () => {
     const { loadRankingPauseApply } = await import("@/lib/ops/ranking-pause-durable");
-    cachedPause = await loadRankingPauseApply();
-  } catch {
-    cachedPause = null;
-  }
-  return cachedPause;
+    return await loadRankingPauseApply();
+  })().catch(() => {
+    if (cachedPause === flight) cachedPause = undefined; // never cache a failure
+    return null;
+  });
+  cachedPause = flight;
+  return flight;
 }
 
 /** Test / post-write: drop in-memory caches. */
@@ -146,8 +175,12 @@ export async function passesPublicSelectiveFilterAsync(
   pick: PublicPickLike,
   env: Record<string, string | undefined> = process.env,
 ): Promise<boolean> {
-  const plan = await getCachedProvenPathPlan();
-  const durable = await getCachedRankingPauseDurable();
+  // Both flights in parallel: on a cold isolate this is the difference between
+  // two serial durable reads and one round of two.
+  const [plan, durable] = await Promise.all([
+    getCachedProvenPathPlan(),
+    getCachedRankingPauseDurable(),
+  ]);
   return passesPublicSelectiveFilter(pick, env, plan, durable);
 }
 
@@ -172,7 +205,9 @@ export function selectiveRuntimePosture(
 export async function selectiveRuntimePostureAsync(
   env: Record<string, string | undefined> = process.env,
 ) {
-  const plan = await getCachedProvenPathPlan();
-  const durable = await getCachedRankingPauseDurable();
+  const [plan, durable] = await Promise.all([
+    getCachedProvenPathPlan(),
+    getCachedRankingPauseDurable(),
+  ]);
   return selectiveRuntimePosture(env, plan, durable);
 }
