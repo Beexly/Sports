@@ -43,6 +43,12 @@ type Env = Record<string, string | undefined>;
 export type StripePriceLike = {
   /** Stripe's unit_amount for a price, in the currency's minor unit (cents for USD). */
   unit_amount: number | null;
+  /**
+   * Stripe's recurring config. `null`/absent means a ONE-TIME price, which can
+   * never satisfy a subscription billing interval — so the interval guard fails
+   * CLOSED on it.
+   */
+  recurring?: { interval?: string | null } | null;
 };
 
 /**
@@ -78,6 +84,29 @@ export function stripePriceAmountMatchesAd(
 ): boolean {
   if (price.unit_amount == null) return false;
   return price.unit_amount === advertisedPhaseUnitAmountCents(tier, interval);
+}
+
+/**
+ * Validate that a Stripe price object's RECURRING INTERVAL matches the interval
+ * the member is checking out for. Amount agreement alone is not enough: the
+ * annual Pro plan is advertised at $99/yr, but a monthly $14.99 price also
+ * "matches" nothing about the year — and, symmetrically, an annual price id
+ * pasted into a `_MONTHLY_` env var would bill $99 up front for what the page
+ * sold as $14.99/mo. Both are silent overcharges/undercharges, so the interval
+ * is checked as its own axis.
+ *
+ * Fails CLOSED for one-time prices (`recurring` null/absent) and for any
+ * interval string Stripe reports that isn't the one we intend to sell.
+ *
+ * Pure + env-free → fully unit-testable without Stripe.
+ */
+export function stripePriceIntervalMatchesAd(
+  price: StripePriceLike,
+  interval: BillingInterval,
+): boolean {
+  const actual = price.recurring?.interval;
+  if (actual == null) return false;
+  return actual === interval;
 }
 
 export const STRIPE_LOOKUP_KEYS: Record<

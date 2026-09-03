@@ -956,7 +956,10 @@ describe("POST /api/webhooks/stripe", () => {
     it.each([
       ["trialing", "TRIALING"],
       ["past_due", "PAST_DUE"],
-      ["unpaid", "PAST_DUE"],
+      // `unpaid` = Stripe's retry schedule is EXHAUSTED (terminal non-payment),
+      // NOT dunning. It must not land on PAST_DUE, the only status that opens a
+      // 7-day grace window. See the dedicated regression below.
+      ["unpaid", "CANCELED"],
       ["canceled", "CANCELED"],
       ["incomplete_expired", "CANCELED"],
       ["incomplete", "INCOMPLETE"],
