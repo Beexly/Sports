@@ -39,11 +39,36 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   let event: Stripe.Event;
 
   try {
-    event = stripeClient.webhooks.constructEvent(
-      body,
-      signature,
-      process.env["STRIPE_WEBHOOK_SECRET"]!
+  // STRIPE_WEBHOOK_SECRET is a hard precondition, checked BEFORE verification
+  // for the same reason STRIPE_SECRET_KEY is checked above: correct diagnosis.
+  //
+  // Verification already fails closed without this check — stripe-node throws
+  // on an absent key (TypeError from createHmac) and computes a non-matching
+  // HMAC for a blank one — so no event was ever processed unverified. But it
+  // failed with the WRONG STORY: the caller got 400 "Invalid signature" and the
+  // log said "signature verification failed", which sends an operator hunting a
+  // proxy or body-parsing bug while EVERY delivery is silently dropped and
+  // eventually aged out by Stripe. Name the real cause, and answer 503 (our
+  // configuration is broken, please retry) rather than 400 (your request was
+  // bad) to a delivery that was in fact perfectly well-formed.
+  //
+  // Trimmed to match `getStripeSecretKey()` in lib/stripe.ts: a whitespace-
+  // padded value is an operator typo, and a Stripe signing secret never
+  // contains whitespace, so trimming cannot weaken verification.
+  const webhookSecret = process.env["STRIPE_WEBHOOK_SECRET"]?.trim();
+  if (!webhookSecret) {
+    console.error(
+      "Stripe webhook config error: STRIPE_WEBHOOK_SECRET is missing or blank — " +
+        "refusing the delivery unverified. Set it from the Stripe Dashboard " +
+        "endpoint's signing secret and redeploy.",
     );
+    return NextResponse.json(
+      { error: "Stripe webhook is not configured (STRIPE_WEBHOOK_SECRET is missing or blank)" },
+      { status: 503 },
+    );
+  }
+
+    event = stripeClient.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Stripe webhook signature verification failed: ${message}`);
@@ -235,6 +260,61 @@ async function handleStripeEvent(event: Stripe.Event): Promise<void> {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
         const subId = invoice.subscription as string;
+
+        // AUTHORITATIVE RE-CHECK before writing dunning state.
+        //
+        // Stripe does not guarantee delivery ORDER, and a delivery that failed
+        // once is redelivered with backoff for up to three days — so an
+        // `invoice.payment_failed` can land long AFTER the smart retry it
+        // refers to already succeeded. Every other entitlement-affecting
+        // handler in this file re-retrieves the subscription by id precisely so
+        // its write converges on Stripe's CURRENT state regardless of arrival
+        // order; this handler was the one that still wrote entitlement state
+        // straight from the arriving event payload.
+        //
+        // Both directions of that are wrong, and both are reachable:
+        //   - Stripe currently ACTIVE (the retry collected): stamping PAST_DUE
+        //     with a fresh `pastDueSince` starts a grace clock on a fully
+        //     paid-up member and shows them a failed-payment banner. Nothing in
+        //     the webhook clears it until their NEXT successful invoice — a
+        //     month out on monthly, a YEAR out on annual.
+        //   - Stripe currently CANCELED: PAST_DUE is access-GRANTING for
+        //     PAST_DUE_GRACE_DAYS, so the same write opens a grace window on a
+        //     dead subscription. (The WHERE guards below only bite once the DB
+        //     row is itself terminal; a not-yet-processed cancel leaves it
+        //     ACTIVE and matching.)
+        //
+        // Only a POSITIVE, current "still in dunning" reading proceeds to the
+        // write below. Anything else converges through the canonical
+        // syncSubscription path — the same call the sibling invoice handlers
+        // make — which writes Stripe's real status and clears/keeps the anchor
+        // accordingly.
+        //
+        // A Stripe API failure here deliberately FALLS THROUGH to the write
+        // below instead of throwing. That write is exactly the pre-existing
+        // behavior, and PAST_DUE grants access for the grace window, so the
+        // fallback cannot revoke anyone; skipping it on every Stripe blip
+        // would instead drop real dunning signal on the floor.
+        let authoritative: Stripe.Subscription | null = null;
+        try {
+          authoritative = await stripe.subscriptions.retrieve(subId);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : "Unknown error";
+          console.warn(
+            `[stripe] invoice.payment_failed: could not re-retrieve subscription ${subId} ` +
+              `(${message}) — applying the dunning write from the event payload.`,
+          );
+        }
+        if (authoritative && mapStripeStatus(authoritative.status) !== "PAST_DUE") {
+          console.warn(
+            `[stripe] invoice.payment_failed for ${subId} is stale — Stripe reports ` +
+              `"${authoritative.status}", not dunning. Converging on current state ` +
+              "instead of stamping a grace anchor.",
+          );
+          await syncSubscription(authoritative);
+          break;
+        }
+
         // Atomic: stamp the first-failure anchor (only where null — retries must
         // not slide the grace window entitlements compute from pastDueSince) AND
         // set PAST_DUE together, so a crash between them can't leave a member
