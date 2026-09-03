@@ -236,3 +236,73 @@ Each row is claimable. Follow the ledger rules: claim before starting, evidence 
   different game (MLB SF at ARI, event 401816714) from the one used in that PR.
 - Every other row is OPEN and unclaimed.
 
+
+## 8. Branch accounting, all 789
+
+Computed per branch against `main` at `0db5ef808`: commits ahead, then the real
+diff (`git diff --shortstat origin/main...<ref>`), then cross-referenced against
+the 121 open pull requests. A branch can be many commits ahead and still carry an
+empty diff when its work was squashed in, so ahead-count alone is not evidence.
+
+| Bucket | Count | Meaning |
+|---|---|---|
+| Fully merged (0 commits ahead) | 140 | Content is on `main`. Safe to delete. |
+| Ahead but empty diff | 8 | Work already on `main` by another route. Safe to delete. |
+| Divergent WITH an open PR | 118 | Tracked. The audit-wave queue in section 3 is most of this. |
+| Divergent with NO open PR | 522 | Orphaned work. Nobody is tracking these. |
+| **Total** | **789** | |
+
+### The 522 orphans by last-commit month
+
+| Month | Branches |
+|---|---|
+| 2026-04 | 3 |
+| 2026-05 | 21 |
+| 2026-06 | 49 |
+| 2026-07 | 204 |
+| 2026-08 | 245 |
+
+### Recommendation
+
+Do NOT act on this before launch. None of it is launch work, and deleting branches
+during a launch week buys nothing and risks losing something unreviewed.
+
+After launch, in this order:
+
+1. The 148 merged-or-empty branches can be deleted with zero risk, since their
+   content is provably on `main`. Tag first if you want an audit trail.
+2. The 522 orphans need a decision, not a delete. The largest ones are listed
+   below; each is unreviewed work somebody spent tokens on.
+3. Anything still wanted becomes a PR against `main` and goes through CI like
+   everything else.
+
+### Largest orphans (files changed vs main, no open PR)
+
+| Files | Last commit | Branch |
+|---|---|---|
+| 1009 | 2026-06-19 | `claude/compassionate-ramanujan-qqt5nb` |
+| 763 | 2026-06-10 | `safety/sports-wip-2026-06-04` |
+| 736 | 2026-07-07 | `codex/sunday-frontier-maxforce-2026-07-05` |
+| 541 | 2026-07-04 | `codex/api-v1-disposable-rehearsal-packet` |
+| 537 | 2026-07-04 | `codex/api-v1-promotion-readiness-matrix` |
+| 533 | 2026-07-04 | `codex/api-v1-autonomous-polish-hardening` |
+| 528 | 2026-07-04 | `codex/api-v1-rd-polish-guards` |
+| 521 | 2026-07-04 | `codex/api-v1-disposable-db-rehearsal-plan` |
+| 517 | 2026-07-04 | `codex/api-v1-durable-fixture-report-archive` |
+| 512 | 2026-07-04 | `codex/api-v1-durable-fixture-simulator` |
+| 507 | 2026-07-04 | `codex/api-v1-dormant-durable-adapter-interface` |
+| 503 | 2026-07-04 | `codex/api-v1-durable-adapter-harness` |
+| 499 | 2026-07-04 | `codex/api-v1-db-schema-proposal` |
+| 495 | 2026-07-04 | `codex/api-persistence-shadow-adapter` |
+| 492 | 2026-07-04 | `codex/api-consumer-registry-shadow` |
+| 488 | 2026-07-04 | `codex/evidence-api-v1-shadow-seam` |
+| 477 | 2026-07-04 | `codex/commercial-revenue-core` |
+| 471 | 2026-06-09 | `claude/edge-map-rebuild-2026-06-04` |
+| 464 | 2026-06-26 | `claude/keen-ptolemy-t38f1g` |
+| 442 | 2026-07-04 | `codex/media-revenue-metric-api-closeout` |
+| 439 | 2026-07-04 | `codex/media-revenue-studio` |
+| 408 | 2026-07-04 | `codex/fable-nfl-evidence-integration` |
+| 378 | 2026-05-29 | `claude/determined-keller-dUcdG` |
+| 322 | 2026-07-19 | `claude/galaxy-sports-edge-pdcswh` |
+| 304 | 2026-07-01 | `claude/humanize-polish` |
+
