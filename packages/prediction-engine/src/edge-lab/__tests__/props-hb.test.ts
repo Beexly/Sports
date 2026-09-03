@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mulberry32, type Rng } from "../rng.js";
 import {
   fitGroupPrior,
+  partitionRateSamples,
   posteriorRate,
   probOver,
   probOverContinuous,
@@ -305,5 +306,238 @@ describe("regularizedGammaQ", () => {
   it("throws RangeError on non-positive a or negative x", () => {
     expect(() => regularizedGammaQ(0, 1)).toThrow(RangeError);
     expect(() => regularizedGammaQ(5, -1)).toThrow(RangeError);
+  });
+});
+
+// ── EV13: batch-side sieve — poisoned rows drop with reasons, never kill the
+//    batch. The fit's own throw contract is deliberately left intact; these
+//    tests pin BOTH sides of that seam.
+
+describe("partitionRateSamples — poisoned rows refuse with reasons", () => {
+  const GOOD_A: RateSample & { id?: string } = { id: "a", games: 10, total: 22 };
+  const GOOD_B: RateSample & { id?: string } = { id: "b", games: 7, total: 3 };
+
+  it("keeps the good rows and refuses the NaN row at its INPUT index", () => {
+    const out = partitionRateSamples([GOOD_A, { games: NaN, total: 3 }, GOOD_B]);
+
+    expect(out.kept).toEqual([GOOD_A, GOOD_B]);
+    expect(out.refused).toEqual([{ index: 1, id: undefined, reason: "non_finite" }]);
+  });
+
+  it("pins the fit's own contract: fitGroupPrior still throws, naming the bad value", () => {
+    expect(() => fitGroupPrior([GOOD_A, { games: NaN, total: 3 }])).toThrow(RangeError);
+    expect(() => fitGroupPrior([GOOD_A, { games: NaN, total: 3 }])).toThrow(/games=NaN/);
+    expect(() => fitGroupPrior([GOOD_A, { games: -2, total: 3 }])).toThrow(/games=-2/);
+    expect(() => fitGroupPrior([GOOD_A, { games: 4, total: -7 }])).toThrow(/total=-7/);
+  });
+
+  it("returns an empty partition for an empty batch (no data is not bad data)", () => {
+    const out = partitionRateSamples([]);
+    expect(out.kept).toEqual([]);
+    expect(out.refused).toEqual([]);
+    expect(fitGroupPrior(out.kept)).toBeNull();
+  });
+
+  it("emits every documented refusal reason, one per triggering row", () => {
+    const out = partitionRateSamples([
+      { id: "nan-games", games: NaN, total: 3 },
+      { id: "nan-total", games: 5, total: NaN },
+      { id: "zero-games", games: 0, total: 3 },
+      { id: "neg-games", games: -4, total: 3 },
+      { id: "neg-total", games: 5, total: -1 },
+    ]);
+
+    expect(out.kept).toEqual([]);
+    expect(out.refused.map((r) => r.reason)).toEqual([
+      "non_finite",
+      "non_finite",
+      "non_positive_games",
+      "non_positive_games",
+      "negative_total",
+    ]);
+    expect(out.refused.map((r) => r.id)).toEqual([
+      "nan-games",
+      "nan-total",
+      "zero-games",
+      "neg-games",
+      "neg-total",
+    ]);
+  });
+
+  // ── ATTACK: adversarial values must REFUSE, never throw ──────────────────
+
+  it("refuses ±Infinity games/total as non_finite", () => {
+    expect(partitionRateSamples([{ games: Infinity, total: 3 }]).refused).toEqual([
+      { index: 0, id: undefined, reason: "non_finite" },
+    ]);
+    expect(partitionRateSamples([{ games: -Infinity, total: 3 }]).refused[0]?.reason).toBe("non_finite");
+    expect(partitionRateSamples([{ games: 5, total: Infinity }]).refused[0]?.reason).toBe("non_finite");
+  });
+
+  it("refuses games: -0 as non_positive_games (JS: -0 <= 0 is true)", () => {
+    const out = partitionRateSamples([{ games: -0, total: 3 }]);
+    expect(out.kept).toEqual([]);
+    expect(out.refused).toEqual([{ index: 0, id: undefined, reason: "non_positive_games" }]);
+  });
+
+  it("refuses a total of -1e-300 as negative_total (no epsilon-clamp to zero)", () => {
+    const out = partitionRateSamples([{ games: 5, total: -1e-300 }]);
+    expect(out.kept).toEqual([]);
+    expect(out.refused).toEqual([{ index: 0, id: undefined, reason: "negative_total" }]);
+  });
+
+  it("refuses a numeric STRING that slipped past the type system, without throwing", () => {
+    const poisoned = { games: "3" as unknown as number, total: 3 };
+    let out!: ReturnType<typeof partitionRateSamples>;
+    expect(() => {
+      out = partitionRateSamples([GOOD_A, poisoned]);
+    }).not.toThrow();
+    expect(out.kept).toEqual([GOOD_A]);
+    expect(out.refused).toEqual([{ index: 1, id: undefined, reason: "non_finite" }]);
+  });
+
+  it("refuses null/undefined holes in the batch, without throwing", () => {
+    const holed = [GOOD_A, null, undefined, GOOD_B] as unknown as readonly (RateSample & {
+      readonly id?: string;
+    })[];
+    let out!: ReturnType<typeof partitionRateSamples>;
+    expect(() => {
+      out = partitionRateSamples(holed);
+    }).not.toThrow();
+    expect(out.kept).toEqual([GOOD_A, GOOD_B]);
+    expect(out.refused).toEqual([
+      { index: 1, id: undefined, reason: "non_finite" },
+      { index: 2, id: undefined, reason: "non_finite" },
+    ]);
+    expect(() => fitGroupPrior(out.kept)).not.toThrow();
+  });
+
+  // ── ATTACK: reason precedence is deterministic ───────────────────────────
+
+  it("reports the FIRST matching reason: {games: NaN, total: -1} is non_finite", () => {
+    expect(partitionRateSamples([{ games: NaN, total: -1 }]).refused[0]?.reason).toBe("non_finite");
+    // and it stays non_finite across repeated calls (no ordering nondeterminism)
+    for (let i = 0; i < 5; i += 1) {
+      expect(partitionRateSamples([{ games: NaN, total: -1 }]).refused[0]?.reason).toBe("non_finite");
+    }
+  });
+
+  it("prefers non_positive_games over negative_total when both fail", () => {
+    expect(partitionRateSamples([{ games: 0, total: -1 }]).refused[0]?.reason).toBe("non_positive_games");
+    expect(partitionRateSamples([{ games: -3, total: -3 }]).refused[0]?.reason).toBe("non_positive_games");
+  });
+
+  // ── ATTACK: order preservation, input indexes ────────────────────────────
+
+  it("preserves relative order in kept; refused indexes are INPUT indexes", () => {
+    const batch: (RateSample & { id?: string })[] = [
+      { id: "g0", games: 9, total: 11 },
+      { id: "bad1", games: NaN, total: 2 },
+      { id: "g2", games: 4, total: 1 },
+      { id: "bad3", games: 0, total: 2 },
+      { id: "bad4", games: 6, total: -2 },
+      { id: "g5", games: 12, total: 30 },
+      { id: "g6", games: 3, total: 0 },
+    ];
+
+    const out = partitionRateSamples(batch);
+
+    expect(out.kept.map((k) => k.id)).toEqual(["g0", "g2", "g5", "g6"]);
+    expect(out.refused).toEqual([
+      { index: 1, id: "bad1", reason: "non_finite" },
+      { index: 3, id: "bad3", reason: "non_positive_games" },
+      { index: 4, id: "bad4", reason: "negative_total" },
+    ]);
+    // input index, not kept index: batch[3] is the zero-games row
+    for (const r of out.refused) {
+      expect(batch[r.index]?.id).toBe(r.id);
+    }
+  });
+
+  it("does not mutate the input batch", () => {
+    const batch: (RateSample & { id?: string })[] = [GOOD_A, { games: NaN, total: 3 }, GOOD_B];
+    const snapshot = JSON.stringify(batch);
+    partitionRateSamples(batch);
+    expect(JSON.stringify(batch)).toBe(snapshot);
+    expect(batch).toHaveLength(3);
+  });
+
+  // ── ATTACK: the never-throws guarantee, property-tested ──────────────────
+
+  it("property: 300 seeded mixed batches — fitGroupPrior(kept) never throws and the partition is exact", () => {
+    const rng = mulberry32(20260813);
+    const POISONS: readonly (RateSample & { id?: string })[] = [
+      { games: NaN, total: 3 },
+      { games: 5, total: NaN },
+      { games: Infinity, total: 1 },
+      { games: 5, total: -Infinity },
+      { games: 0, total: 4 },
+      { games: -0, total: 4 },
+      { games: -2.5, total: 4 },
+      { games: 6, total: -1 },
+      { games: 6, total: -1e-300 },
+      { games: NaN, total: -1 },
+      { games: "3" as unknown as number, total: 3 },
+      { games: 4, total: undefined as unknown as number },
+    ];
+
+    let sawRefusal = false;
+    let sawNonNullPrior = false;
+
+    for (let trial = 0; trial < 300; trial += 1) {
+      const n = 1 + Math.floor(rng() * 24);
+      const batch: (RateSample & { id?: string })[] = [];
+      for (let i = 0; i < n; i += 1) {
+        if (rng() < 0.35) {
+          const poison = POISONS[Math.floor(rng() * POISONS.length)] as RateSample & { id?: string };
+          batch.push({ ...poison, id: `t${trial}-r${i}` });
+        } else {
+          const games = 1 + Math.floor(rng() * 30);
+          batch.push({ id: `t${trial}-r${i}`, games, total: Math.floor(rng() * 4 * games) });
+        }
+      }
+
+      const out = partitionRateSamples(batch);
+
+      // exact partition, no row invented or lost
+      expect(out.kept.length + out.refused.length).toBe(batch.length);
+      // refused indexes are strictly increasing input indexes within range
+      let prevIndex = -1;
+      for (const r of out.refused) {
+        expect(r.index).toBeGreaterThan(prevIndex);
+        expect(r.index).toBeLessThan(batch.length);
+        expect(batch[r.index]?.id).toBe(r.id);
+        prevIndex = r.index;
+      }
+      // kept rows are exactly the non-refused rows, in input order
+      const refusedIndexes = new Set(out.refused.map((r) => r.index));
+      expect(out.kept.map((k) => k.id)).toEqual(
+        batch.filter((_, i) => !refusedIndexes.has(i)).map((k) => k.id),
+      );
+
+      // THE guarantee
+      expect(() => fitGroupPrior(out.kept)).not.toThrow();
+      const prior = fitGroupPrior(out.kept);
+      if (prior !== null) {
+        sawNonNullPrior = true;
+        expect(prior.alpha).toBeGreaterThan(0);
+        expect(prior.beta).toBeGreaterThan(0);
+      }
+      if (out.refused.length > 0) sawRefusal = true;
+    }
+
+    // the property test is only meaningful if it actually exercised both paths
+    expect(sawRefusal).toBe(true);
+    expect(sawNonNullPrior).toBe(true);
+  });
+
+  it("property control: the same poisoned batches DO kill an unsieved fit", () => {
+    const poisoned = [
+      { games: 10, total: 22 },
+      { games: NaN, total: 3 },
+      { games: 8, total: 4 },
+    ];
+    expect(() => fitGroupPrior(poisoned)).toThrow(RangeError);
+    expect(() => fitGroupPrior(partitionRateSamples(poisoned).kept)).not.toThrow();
   });
 });
