@@ -156,3 +156,83 @@ These are open questions, recorded so nobody reports them as settled:
 - The 7 conflicted pull requests were not resolved or analysed line by line.
 - 640 branches diverge from `main`. Only the 50 audit-wave pull requests were triaged.
   The remainder are unaccounted for and are NOT claimed to be safe to delete.
+
+## 7. Verified gap sweep, 2026-09-03
+
+An eight-lane read-only sweep (money, settlement, honesty, cron, abuse, UX, SEO,
+coverage). Every finding was then handed to a separate agent instructed to REFUTE
+it, defaulting to refuted when the claim could not be reproduced from the code.
+24 survived, 2 were refuted and are not listed.
+
+Areas swept with nothing found are recorded per lane at the end; that is evidence too.
+
+Each row is claimable. Follow the ledger rules: claim before starting, evidence on close.
+
+| # | Severity | Lane | Finding | Location |
+|---|---|---|---|---|
+| G1 | BLOCKER | settlement | Free-lane ESPN date targeting uses UTC calendar day, but ESPN buckets evening games under the prior day — verified live, misses the scoreboard that actually has the final | `apps/web/lib/data-sources/settlement-score-dates.ts`:13-20 |
+| G2 | BLOCKER | honesty | The flagship /performance win-rate numbers are gated only by the raw env flag, not the eligibility/publish system the rest of the honesty stack requires — including the panel on the same page | `apps/web/app/performance/page.tsx`:128-131, 189-217 |
+| G3 | BLOCKER | coverage | runFreePathSettlement — the hourly settle-picks cron's core orchestrator — is never actually executed by any test | `apps/web/lib/data-sources/free-settlement-runner.ts`:157 |
+| G4 | HIGH | money | Proof-of-record surfaces expose confidence/edgeScore for bootstrap-era picks — the one invariant every sibling picks route enforces is missing here | `apps/web/app/api/proof/receipts/route.ts`:80-106 |
+| G5 | HIGH | settlement | A temporarily SUSPENDED game (not cancelled — will resume and finish) is graded identically to postponed/cancelled and permanently VOIDed before it actually completes | `apps/web/lib/data-sources/free-settlement.ts`:480-490 |
+| G6 | HIGH | settlement | The hourly live free-settlement query caps at 1500 rows with NO orderBy, so its own 'overdue-first' priority sort can only reorder an arbitrary DB sample — under a real backlog the truly oldest picks may never even be fetched | `apps/web/lib/data-sources/free-settlement-runner.ts`:211-253 |
+| G7 | HIGH | honesty | /api/performance never sets Cache-Control: no-store — every response (200 data, 503 gate, 429 rate-limit) is a bare NextResponse.json, violating the repo's own no-stale-data rule | `apps/web/app/api/performance/route.ts`:10-12, 129-140 |
+| G8 | HIGH | honesty | The confidence-tail monitor documents that the model's current ≥80-confidence band is anti-predictive (~40% win rate while claiming ~86%), but this verdict is never rendered on any public page — only behind CRON_SECRET or the authenticated cockpit | `apps/web/lib/calibration/confidence-tail.ts`:1-16, 129-145 |
+| G9 | HIGH | authz | Five routes derive the rate-limit key from the client-controlled leftmost X-Forwarded-For entry, which the codebase's own clientIp() helper documents as a known bypass — and one gates a real-cost external fetch, another gates a reward-claim endpoint | `apps/web/app/api/intelligence/roster-advice/route.ts`:14-16 |
+| G10 | HIGH | ux | Tailwind `ink-400/500/600` text tokens are a light-surface color ramp misapplied as body text on the app's dark surfaces, rendering near-invisible on launch-critical pages | `apps/web/tailwind.config.ts`:160-178 (ramp def); apps/web/app/not-found.tsx:67; apps/web/app/launch/page.tsx:76,114; apps/web/components/trust-ledger/proof-of-record.tsx:46,54,90,94,110,125,129 |
+| G11 | HIGH | seo | Podcast RSS feed link/guid bypass SITE_URL — hardcoded host, invisible to the canonical-host guard test | `apps/web/lib/podcast/episodes.ts`:23 |
+| G12 | HIGH | seo | Public Edge Index embed widget (copy-paste iframe snippet third parties place on their own sites) hardcodes the host instead of SITE_URL | `apps/web/lib/embed/edge-index.ts`:23 |
+| G13 | MEDIUM | money | Several pick-data JSON routes skip the project's own jsonNoStore/no-store convention, leaving tier-dependent responses without an explicit Cache-Control | `apps/web/app/api/board/state/route.ts`:15-18,37 |
+| G14 | MEDIUM | settlement | SCORE_MISMATCH_CROSS_PATH and the stale-backfill's 'unresolved' list are correctly detected but never alerted anywhere — a real post-FINAL score correction (or a pick stuck past the 14-day grace) is invisible outside raw cron JSON | `apps/web/lib/data-sources/free-score-persist.ts`:233-241 |
+| G15 | MEDIUM | settlement | The live hourly settlement pass grades ALL PENDING picks regardless of isPublished; only the stale-backfill lane restricts to isPublished:true | `apps/web/lib/data-sources/free-settlement-runner.ts`:211-215 |
+| G16 | MEDIUM | cron | /api/ops/daily-truth is the only one of 26 cron/ops routes with no explicit maxDuration, and it does 7+ sequential DB-backed loader calls | `apps/web/app/api/ops/daily-truth/route.ts`:29-30 |
+| G17 | MEDIUM | cron | daily-truth's header comment still claims it is 'NOT wired into vercel.json crons' though it has been the scheduled 22nd cron since the same commit that added this text | `apps/web/app/api/ops/daily-truth/route.ts`:9-11 |
+| G18 | MEDIUM | cron | daily-truth hand-rolls its own Bearer check instead of the shared cronAuthError helper, so it silently drops out of CRON_SECRET rotation support that every other cron gets | `apps/web/app/api/ops/daily-truth/route.ts`:37-49 |
+| G19 | MEDIUM | seo | Pricing page Product/Offer JSON-LD ships a bare relative URL instead of an absolute SITE_URL-derived one | `apps/web/app/pricing/page.tsx`:251 |
+| G20 | MEDIUM | seo | Admin Studio content-draft generator defaults to the bare apex (not www, not SITE_URL) for links baked into social/newsletter drafts | `apps/web/lib/studio/load.ts`:100 |
+| G21 | MEDIUM (OWNER-ONLY) | seo | Site-wide Twitter/X card metadata attributes every single page to the handle @GalaxySportsAI | `apps/web/app/layout.tsx`:90 |
+| G22 | LOW | money | Stale comment in api-entitlement.ts asserts picks are free for all tiers, contradicting the live getEntitlements() implementation | `apps/web/lib/api-entitlement.ts`:118-122 |
+| G23 | LOW | authz | /api/dfs/salaries is the one fantasy-gated route using the non-rate-limited requireFantasyApi() while its own comment names the exact denial-of-wallet risk its sibling route (tools/lineup) is protected against | `apps/web/app/api/dfs/salaries/route.ts`:10-16 |
+| G24 | LOW | seo | Admin-only bot-outbox preview endpoint falls back to the apex host (same pattern as Studio, but auth-gated and non-public) | `apps/web/app/api/cockpit/bot-outbox/preview/route.ts`:356 |
+
+### The three blockers, in full
+
+**G1. Free-lane ESPN date targeting uses UTC calendar day, but ESPN buckets evening games under the prior day — verified live, misses the scoreboard that actually has the final**
+
+- Location: `apps/web/lib/data-sources/settlement-score-dates.ts`:13-20
+- Why it matters: uniqueScoreboardDates()/toEspnDateKey() is the ONLY thing that decides which ESPN scoreboard pages get requested — used by settle-backfill.ts:234, free-score-persist.ts:175, and free-settlement-runner.ts:281, all with no adjacent-day buffer at the fetch step (only the ±1-2 day tolerance applied AFTER fetch, to games already retrieved). Any game whose real US start time pushes its UTC timestamp into the next calendar day — every MLB West Coast night game, every NFL Sunday/Monday night 8:20pm ET kickoff (also UTC+1 day in EDT) — has its true ESPN scoreboard page skipped. When a settle cycle's pending set is dominated by one night's games (a normal hourly-cron scenario, e.g. a Friday-night ...
+- Proposed fix: In uniqueScoreboardDates() (or at each call site), always also request `toEspnDateKey(commenceTime - 24h)` alongside the UTC-derived key for every distinct day (cheap: ESPN scoreboard fetches are already batched/compacted via compactEspnDateRanges), or derive the key from the US-Eastern calendar date of commenceTime instead of raw UTC. Add a test asserting a >8pm ET commence time resolves to the ESPN date one day before its UTC calendar day.
+- Verify with: `cd apps/web && npx vitest run __tests__/settlement-score-dates.test.ts`
+
+**G2. The flagship /performance win-rate numbers are gated only by the raw env flag, not the eligibility/publish system the rest of the honesty stack requires — including the panel on the same page**
+
+- Location: `apps/web/app/performance/page.tsx`:128-131, 189-217
+- Why it matters: Once an operator sets PERFORMANCE_STATS_ENABLED=true (the documented activation switch for the PROVEN pricing milestone), /performance and /api/performance publish real win/loss/win-rate numbers forever, regardless of what happens to calibration eligibility afterward. If settlement health degrades or ECE/MCE breaches and the durable eligibility system flips to RED (which is designed to auto-unpublish and does darken the CalibrationPanel, /clv, and /api/ops/public-surface-truth), /performance keeps showing the old win rate as a large 5xl headline stat while the CalibrationPanel two inches below it on the exact same page renders 'Building calibration history... Public metrics stay dark ...
+- Proposed fix: Gate both `apps/web/app/performance/page.tsx` and `apps/web/app/api/performance/route.ts` on `resolveEffectivePerformanceGate()` (or route their win-rate computation through `evaluatePublicPerformancePolicy()` as the module's own header comment already claims they do), so the auto-unpublish/eligibility system actually protects these two surfaces the same way it protects CalibrationPanel, /clv, and /api/ops/public-surface-truth.
+- Verify with: `(none given)`
+
+**G3. runFreePathSettlement — the hourly settle-picks cron's core orchestrator — is never actually executed by any test**
+
+- Location: `apps/web/lib/data-sources/free-settlement-runner.ts`:157
+- Why it matters: This is the function the production hourly cron (/api/cron/settle-picks) actually calls to grade every free-path pick, decide overdue-first load order (STP), aggregate the RCA report, and drive the CLV/snapshot/team-game-log repair drains. A regression inside its 570+ lines of orchestration (wrong overdue-sort comparator, wrong sport-loop error isolation, mis-wired clvRepair/snapshotRepair/teamGameLogRepair aggregation into the returned result, a broken picksSettled/picksHeld count) would ship to production Friday and silently mis-grade or under-grade live picks — the exact honesty-surface failure this product exists to avoid — while every existing 'test' referencing this file would ...
+- Proposed fix: Add a real (not source-text) unit test for runFreePathSettlement itself: call it with a fully mocked @sports/db (same delegate-mocking pattern already used in settle-sport.test.ts) and mocked lower-level drain/grade helpers (drainPendingClvGrades, drainPendingSnapshotOutcomes, drainPendingTeamGameLogs, buildTrustedFinals, settlePendingPicks), then assert on the REAL, unmocked return value: result.clvRepair/result.snapshotRepair/result.teamGameLogRepair equal exactly what the mocked drain ...
+- Verify with: `npx vitest run apps/web/__tests__/free-settle-response-contract.test.ts apps/web/__tests__/settle-picks-free-first.test.ts (from apps/web) — both currently pass without ever invoking the real function`
+
+### Areas swept clean
+
+- **money** (11): apps/web/lib/entitlements.ts and apps/web/lib/api-entitlement.ts: getUserEntitlements/gateApi/requirePremiumApi/requirePremiumApiRateLimited/requireFantasyApi(+RateLimited) all read correctly — 401 unauthenticated, 403 under-tier, fail-closed to FREE on any lookup error, PAST_DUE_GRACE_DAYS anchored to pastDueSince so retries can't extend the grace window, DEV_FAKE_ADMIN hard-gated to non- ...
+- **settlement** (5): packages/prediction-engine/src/settlement.ts calculatePickResult: pushes/ties handled correctly — SPREAD homeCoverMargin===0 -> PUSH (line 106), TOTAL total===line -> PUSH (line 114), MONEYLINE non-soccer tie -> PUSH / soccer tie -> LOSS (lines 95-97). Overtime is a non-issue: only final home/away scores are compared, never period-by-period, so OT periods already baked into the final score ...
+- **honesty** (8): apps/web/app/edge-index/page.tsx and apps/web/app/embed/edge-index/[gameId]/page.tsx: no confidence leak (loadGameRoom called with canSeeFactorBreakdown/canSeeLineMovement: false), honest-empty path is exercised on missing game / bootstrap (lib/embed/edge-index.ts), formatEdgeIndex renders '—' for null rather than 0 — clean.; apps/web/app/clv/page.tsx: three cleanly separated states ...
+- **cron** (5): vercel.json drift: `diff /home/user/Sports/vercel.json /home/user/Sports/apps/web/vercel.json` returns byte-identical (no drift). Both declare exactly 22 cron schedules (confirmed via grep -c '"path"').; refresh-odds, board-fill, settle-picks, deliver-settlement-alerts, reconcile-entitlements, repair-checkout-attempts, run-formal-receipt, drain-ai-telemetry-recovery, prune-rate-limits, jarvis- ...
+- **authz** (10): Every cron route under apps/web/app/api/cron/* plus /api/ops/daily-truth and /api/ops/ranking-pause-apply calls cronAuthError() (Bearer CRON_SECRET / CRON_SECRET_PREVIOUS, bearer_only by default) before doing any work; none opt into the spoofable 'dual' x-vercel-cron mode (grep confirmed zero matches for mode:"dual" in any route file), so no cron is anonymously triggerable.; Every admin/* and ...
+- **ux** (19): Board (/board, apps/web/app/board/page.tsx): server component, force-dynamic, distinguishes DB_UNREACHABLE outage vs STALE_DATA_SUPPRESSED vs DEMO_DATA_SUPPRESSED vs honest-empty with visually and textually distinct banners; no raw error ever surfaces; loading.tsx present.; Picks (/picks, apps/web/app/picks/page.tsx): entitlement-filtered fields (confidence, edgeScore, factorBreakdown, ...
+- **seo** (8): apps/web/app/robots.ts and apps/web/app/sitemap.ts — both correctly import and derive every URL from SITE_URL; robots.txt disallows /admin, /cockpit, /api/, /auth/, /dashboard, /brief, /go/, and /stats (gated) while leaving complete public products crawlable; sitemap conditionally includes /stats and /fantasy/contests behind isStatsPublic()/isContestsPublic() gates.; apps/web/app/layout.tsx ...
+- **coverage** (9): Money path core (apps/web/lib/entitlements.ts, apps/web/lib/api-entitlement.ts): exhaustive behavioral tests — 401/403/fail-closed, tier predicates (including the FANTASY-vs-PRO/ELITE regression guard), rate-limit-after-gate ordering, PAST_DUE grace window, DEV_FAKE_ADMIN prod-hardgate.; Stripe webhook route (apps/web/app/api/webhooks/stripe/route.ts, tested by apps/web/__tests__/stripe- ...
+
+### Status
+
+- G1 (ESPN Eastern date key) is FIXED in PR #692, with tripwire tests proven to fail
+  against the previous code. The sweep's verifier reproduced it independently on a
+  different game (MLB SF at ARI, event 401816714) from the one used in that PR.
+- Every other row is OPEN and unclaimed.
+
