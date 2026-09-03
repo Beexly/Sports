@@ -18,6 +18,7 @@
     "nova:inventory": "node scripts/nova/build-convergence-inventory.mjs",
     "nova:inventory:verify": "node scripts/nova/verify-convergence-inventory.mjs",
     "test:nova-inventory": "node --test scripts/nova/convergence-inventory.test.mjs scripts/nova/multihead-inventory.test.mjs",
+    "test:merge-score-fill": "tsx --test scripts/ops/game-merge-score-fill.test.ts",
     "nova:inventory:multi": "node scripts/nova/multihead-inventory.mjs",
     "nova:inventory:multi:verify": "node scripts/nova/verify-convergence-inventory.mjs --out reports/nova/convergence/multi-head",
     "db:disposable": "bash scripts/dev/disposable-postgres.sh",

@@ -74,7 +74,7 @@ export type PickConflict = {
   readonly aliasExternalId: string;
   readonly aliasPickId: string;
   /** The reference pick for this market: the canonical's when it has one, else the first alias pick seen. */
-  readonly canonicalPickId: string;
+  readonly referencePickId: string;
   /** Row the reference pick lives on (the canonical, or an earlier alias when the canonical has no pick for the market). */
   readonly referenceGameId: string;
   readonly referenceIsCanonical: boolean;
@@ -317,7 +317,7 @@ export function findPickConflicts(
         aliasGameId: alias.id,
         aliasExternalId: alias.externalId,
         aliasPickId: aliasPick.id,
-        canonicalPickId: ref.pick.id,
+        referencePickId: ref.pick.id,
         referenceGameId: ref.gameId,
         referenceIsCanonical: ref.isCanonical,
         pickType: aliasPick.pickType,

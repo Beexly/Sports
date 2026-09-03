@@ -13,12 +13,16 @@ const UNPUBLISHED_ERROR = /\b404\b|not found/i;
 
 export interface SeasonIngestionSignal {
   readonly status: string;
-  readonly statsUpserted: number;
+  /** player-stats ingestion result field. */
+  readonly statsUpserted?: number;
+  /** team-efficiency ingestion result field. */
+  readonly rowsWritten?: number;
   readonly error?: string | null;
 }
 
 export function isUnpublishedSeasonSignal(stats: SeasonIngestionSignal): boolean {
-  if (stats.status === "ok") return stats.statsUpserted === 0;
+  const written = stats.statsUpserted ?? stats.rowsWritten ?? 0;
+  if (stats.status === "ok") return written === 0;
   if (stats.status !== "source-error") return false;
   return UNPUBLISHED_ERROR.test(stats.error ?? "");
 }
