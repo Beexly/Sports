@@ -317,3 +317,46 @@ describe("agent ledger — malformed input fails loudly", () => {
     expect(errors.join("\n")).toMatch(/markers/);
   });
 });
+
+describe("agent ledger — C-25 hardening (round 2)", () => {
+  it("accepts ON HOLD with owner + reason and rejects it without either", () => {
+    const ok = validate([row({ status: "ON HOLD", evidence: "parked by founder 2026-09-03, awaiting greenlight" })], RESOLVES);
+    expect(ok).toEqual([]);
+    const bad = validate(
+      [
+        row({ id: "A", status: "ON HOLD", owner: "—", evidence: "—", line: 1 }),
+        row({ id: "B", status: "ON HOLD", owner: "claude", evidence: "—", line: 2 }),
+      ],
+      RESOLVES,
+    );
+    expect(bad.join("\n")).toMatch(/A: ON HOLD requires an Owner/);
+    expect(bad.join("\n")).toMatch(/ON HOLD requires a reason in Evidence/);
+  });
+
+  it("warns on a CLAIMED row with no evidence (SLA watch)", () => {
+    const warnings: string[] = [];
+    const v = validate([row({ status: "CLAIMED", evidence: "—" })], { ...RESOLVES, warnings });
+    expect(v).toEqual([]);
+    expect(warnings.join("\n")).toMatch(/T-1: CLAIMED with no evidence/);
+  });
+
+  it("warns on an OPEN row carrying evidence but no owner (orphaned work)", () => {
+    const warnings: string[] = [];
+    const v = validate([row({ status: "OPEN", owner: "—", evidence: "draft at docs/x.md" })], { ...RESOLVES, warnings });
+    expect(v).toEqual([]);
+    expect(warnings.join("\n")).toMatch(/T-1: OPEN with evidence but no owner/);
+  });
+
+  it("stays silent when CLAIMED has evidence or OPEN is cleanly unowned", () => {
+    const warnings: string[] = [];
+    const v = validate(
+      [
+        row({ id: "A", title: "claimed with evidence", status: "CLAIMED", evidence: "abc1234 worktree started", line: 1 }),
+        row({ id: "B", title: "clean open row", status: "OPEN", owner: "—", evidence: "—", line: 2 }),
+      ],
+      { ...RESOLVES, warnings },
+    );
+    expect(v).toEqual([]);
+    expect(warnings).toEqual([]);
+  });
+});
