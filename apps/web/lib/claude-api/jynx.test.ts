@@ -31,7 +31,7 @@ describe("Jynx planner", () => {
         ...BEDROCK,
       },
     );
-    expect(plan.primaryLane).toBe("cerebras_free");
+    expect(plan.primaryLane).toBe("content_free");
     expect(plan.freeLaneWillTry).toBe(true);
     expect(plan.cloudAttempts[0]).toBe("bedrock");
     expect(plan.tier).toBe("sonnet");
@@ -80,7 +80,7 @@ describe("Jynx planner", () => {
     });
     expect(JSON.stringify(snap)).not.toContain("secret-key");
     expect(snap.freeLaneEnabled).toBe(true);
-    expect(snap.contentPlanPrimary).toBe("cerebras_free");
+    expect(snap.contentPlanPrimary).toBe("content_free");
     expect(snap.configuredClouds).toContain("bedrock");
   });
 

@@ -54,6 +54,6 @@ describe("open-weight free map", () => {
     });
     expect(result.text).toBe("hello free");
     expect(result.modelName).toBe("free-secondary/gemma-4-31b");
-    expect(creditPoolForModel(result.modelName)).toBe("cerebras_free");
+    expect(creditPoolForModel(result.modelName)).toBe("content_free");
   });
 });

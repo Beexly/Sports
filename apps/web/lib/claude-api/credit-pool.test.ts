@@ -15,8 +15,8 @@ describe("creditPoolForModel", () => {
     expect(creditPoolForModel("azure-foundry/claude-sonnet-4-6")).toBe("azure_foundry");
   });
 
-  it("attributes Cerebras free-lane ids to cerebras_free", () => {
-    expect(creditPoolForModel("gpt-oss-120b")).toBe("cerebras_free");
+  it("attributes Cerebras free-lane ids to content_free", () => {
+    expect(creditPoolForModel("gpt-oss-120b")).toBe("content_free");
   });
 
   it("attributes plain claude-* to anthropic_direct", () => {
@@ -28,7 +28,7 @@ describe("creditPoolForModel", () => {
     expect(CREDIT_POOL_META.aws_activate.creditEligible).toBe(true);
     expect(CREDIT_POOL_META.vertex_partner.creditEligible).toBe(true);
     expect(CREDIT_POOL_META.azure_foundry.creditEligible).toBe(true);
-    expect(CREDIT_POOL_META.cerebras_free.creditEligible).toBe(true);
+    expect(CREDIT_POOL_META.content_free.creditEligible).toBe(true);
     expect(CREDIT_POOL_META.anthropic_direct.creditEligible).toBe(false);
   });
 });
@@ -45,7 +45,7 @@ describe("rollupByCreditPool", () => {
       "anthropic_direct",
       "aws_activate",
       "azure_foundry",
-      "cerebras_free",
+      "content_free",
     ]);
   });
 

@@ -23,9 +23,9 @@ describe("jynx-examples (cloudAttemptOrder code samples)", () => {
     expect(exampleDefaultCloudOrder()).toEqual(["bedrock", "azure", "vertex"]);
   });
 
-  it("content free-lane plan example prefers cerebras_free", () => {
+  it("content free-lane plan example prefers content_free", () => {
     const plan = exampleContentFreeLanePlan();
-    expect(plan.primaryLane).toBe("cerebras_free");
+    expect(plan.primaryLane).toBe("content_free");
     expect(plan.cloudAttempts[0]).toBe("bedrock");
   });
 });

@@ -5,7 +5,7 @@
  *   - Bedrock: anthropic.* / us.anthropic.*     → aws_activate
  *   - Vertex:  claude-…@version                 → vertex_partner
  *   - Azure Foundry: azure-foundry/*            → azure_foundry
- *   - Cerebras free-lane: gpt-oss-* / *cerebras* → cerebras_free
+ *   - Cerebras free-lane: gpt-oss-* / *cerebras* → content_free
  *   - plain claude-*                            → anthropic_direct (cash)
  */
 
@@ -13,7 +13,7 @@ export type CreditPool =
   | "aws_activate"
   | "vertex_partner"
   | "azure_foundry"
-  | "cerebras_free"
+  | "content_free"
   | "anthropic_direct";
 
 export interface CreditPoolMeta {
@@ -43,7 +43,7 @@ export const CREDIT_POOL_META: Record<CreditPool, CreditPoolMeta> = {
     creditEligible: true,
     note: "Claude via Foundry Messages API — bills Azure subscription; verify credit SKU covers Claude.",
   },
-  cerebras_free: {
+  content_free: {
     label: "Open free lane (Cerebras / Gemma / Nemotron hosts)",
     provider: "cerebras",
     creditEligible: true,
@@ -66,8 +66,8 @@ export function creditPoolForModel(modelName: string): CreditPool {
   if (id.startsWith("azure-foundry/")) return "azure_foundry";
   if (id.includes("@")) return "vertex_partner";
   if (/^(?:[a-z]{2,4}\.)?anthropic\./.test(id)) return "aws_activate";
-  if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "cerebras_free";
-  if (id.startsWith("free-secondary/") || id.startsWith("free-groq/") || id.startsWith("free-nim/") || id.startsWith("free-compat/")) return "cerebras_free";
+  if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "content_free";
+  if (id.startsWith("free-secondary/") || id.startsWith("free-groq/") || id.startsWith("free-nim/") || id.startsWith("free-compat/")) return "content_free";
   return "anthropic_direct";
 }
 
