@@ -75,6 +75,24 @@ describe("NCAA cross-source consensus", () => {
   });
 });
 
+describe("toComparableFromEspn — kickoff time", () => {
+  const sample = parseEspnScoreboard(read("espn-ncaaf-scoreboard.json"), "ncaaf")[0]!;
+
+  it("publishes startIso only for a timestamp with a clock; a bare date keeps only `date`", () => {
+    // Tripwire (2026-09-03 automated review): Date.parse accepts "YYYY-MM-DD",
+    // which would publish midnight as the kickoff and let the nearest-kickoff
+    // matcher pick one game out of a doubleheader on a fabricated time.
+    const dateOnly = toComparableFromEspn({ ...sample, startTime: "2026-09-05" });
+    expect(dateOnly).not.toBeNull();
+    expect(dateOnly!.date).toBe("2026-09-05");
+    expect(dateOnly).not.toHaveProperty("startIso");
+
+    const withClock = toComparableFromEspn({ ...sample, startTime: "2026-09-05T19:30:00Z" });
+    expect(withClock!.startIso).toBe("2026-09-05T19:30:00Z");
+    expect(withClock!.date).toBe("2026-09-05");
+  });
+});
+
 describe("NCAA free-source failover", () => {
   it("serves from the primary when it is healthy", async () => {
     const r = await resilientNcaaScores(async () => espn, async () => henry);

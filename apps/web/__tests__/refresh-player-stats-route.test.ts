@@ -95,6 +95,28 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(body.labelledAttempt).toEqual({ season: labelled, status: "source-error", error: "HTTP 404" });
   });
 
+  it("does NOT retry the floor on a transient source error (5xx/timeout): the run fails instead of masking an outage", async () => {
+    // Tripwire (2026-09-03 automated review): only a 404 (or ok with zero
+    // rows) means "not published yet". A 503 or a timeout on the labelled
+    // season is an outage; retrying the floor and answering 200 would hide it.
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    const floor = currentNflSeason(now);
+    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) => ({
+      status: "source-error", season, playersUpserted: 0, statsUpserted: 0,
+      error: `nflverse fetch failed (503) for https://example.invalid/${season}`,
+    }));
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledTimes(1);
+    expect(ingestPlayerWeeklyStats).toHaveBeenCalledWith(labelled);
+    expect(res.status).not.toBe(200);
+    const body = (await res.json()) as { success: boolean; season: number; labelledAttempt: unknown };
+    expect(body.success).toBe(false);
+    expect(body.season).toBe(labelled);
+    expect(body.labelledAttempt).toBeNull();
+  });
+
   it("falls back to the completed floor when the labelled season returns ok with zero rows (unpublished, combined asset)", async () => {
     // Tripwire (2026-09-02 automated review): nflverse can return the older
     // combined asset with status "ok" and zero upserted rows for a not-yet-

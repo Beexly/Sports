@@ -73,7 +73,11 @@ export type PickConflict = {
   readonly aliasGameId: string;
   readonly aliasExternalId: string;
   readonly aliasPickId: string;
+  /** The reference pick for this market: the canonical's when it has one, else the first alias pick seen. */
   readonly canonicalPickId: string;
+  /** Row the reference pick lives on (the canonical, or an earlier alias when the canonical has no pick for the market). */
+  readonly referenceGameId: string;
+  readonly referenceIsCanonical: boolean;
   readonly pickType: string;
   readonly aliasSelection: string;
   readonly canonicalSelection: string;
@@ -276,11 +280,15 @@ function normalizeSelection(s: string): string {
 }
 
 /**
- * Pending-pick conflicts (design spec): a PENDING pick on an alias row whose
- * pickType the canonical ALSO has a pick for. `picks` is never modified by
- * the merge script — this is a report only, for a human to resolve
- * separately. `sidesAgree` compares normalized `selection` text; false means
- * the two picks disagree on which side to take.
+ * Pending-pick conflicts (design spec): a PENDING pick on an alias row for a
+ * market (pickType) that another member of the group also carries a pick
+ * for. The reference is the canonical's pick when it has one; otherwise the
+ * first alias pick seen for that market, so two aliases that each hold a
+ * pending pick on the same market are reported even when the canonical has
+ * none (after the merge both would survive as two picks on one contest).
+ * `picks` is never modified by the merge script — this is a report only, for
+ * a human to resolve separately. `sidesAgree` compares normalized `selection`
+ * text; false means the two picks disagree on which side to take.
  */
 export function findPickConflicts(
   canonical: MergeCandidateGame,
@@ -289,22 +297,33 @@ export function findPickConflicts(
 ): PickConflict[] {
   const canonicalPicks = picksByGameId.get(canonical.id) ?? [];
   const conflicts: PickConflict[] = [];
+  const reference = new Map<string, { gameId: string; pick: PickSummary; isCanonical: boolean }>();
+  for (const pick of canonicalPicks) {
+    if (!reference.has(pick.pickType)) {
+      reference.set(pick.pickType, { gameId: canonical.id, pick, isCanonical: true });
+    }
+  }
   for (const alias of aliases) {
     const aliasPendingPicks = (picksByGameId.get(alias.id) ?? []).filter(
       (p) => p.result === "PENDING",
     );
     for (const aliasPick of aliasPendingPicks) {
-      const canonicalPick = canonicalPicks.find((p) => p.pickType === aliasPick.pickType);
-      if (!canonicalPick) continue;
+      const ref = reference.get(aliasPick.pickType);
+      if (!ref) {
+        reference.set(aliasPick.pickType, { gameId: alias.id, pick: aliasPick, isCanonical: false });
+        continue;
+      }
       conflicts.push({
         aliasGameId: alias.id,
         aliasExternalId: alias.externalId,
         aliasPickId: aliasPick.id,
-        canonicalPickId: canonicalPick.id,
+        canonicalPickId: ref.pick.id,
+        referenceGameId: ref.gameId,
+        referenceIsCanonical: ref.isCanonical,
         pickType: aliasPick.pickType,
         aliasSelection: aliasPick.selection,
-        canonicalSelection: canonicalPick.selection,
-        sidesAgree: normalizeSelection(aliasPick.selection) === normalizeSelection(canonicalPick.selection),
+        canonicalSelection: ref.pick.selection,
+        sidesAgree: normalizeSelection(aliasPick.selection) === normalizeSelection(ref.pick.selection),
       });
     }
   }

@@ -83,6 +83,24 @@ describe("GET /api/cron/backfill-player-data", () => {
     expect(body.floorFallback!.to).toBe(2025);
   });
 
+  it("does NOT retry the floor on the bare default when the labelled season fails transiently (5xx): the run reports the outage", async () => {
+    (backfillPlayerData as Mock).mockImplementation(async (from: number, to: number) => ({
+      from, to, seasonsProcessed: 1, allOk: false,
+      results: [{
+        season: from,
+        stats: { status: "source-error", season: from, playersUpserted: 0, statsUpserted: 0, error: "nflverse fetch failed (503) for https://example.invalid" },
+        snaps: "skipped", injuries: "skipped", depth: "skipped",
+      }],
+    }));
+    const res = await GET(req("", "Bearer secret"));
+    expect(res.status).toBe(200);
+    expect(backfillPlayerData).toHaveBeenCalledTimes(1);
+    expect(backfillPlayerData).toHaveBeenCalledWith(2026, 2026);
+    const body = (await res.json()) as { success: boolean; floorFallback: unknown };
+    expect(body.success).toBe(false);
+    expect(body.floorFallback).toBeNull();
+  });
+
   it("falls back to the completed floor on the bare default when the labelled season is ok with zero rows (combined asset)", async () => {
     (backfillPlayerData as Mock).mockImplementation(async (from: number, to: number) => {
       if (from === 2026 && to === 2026) {

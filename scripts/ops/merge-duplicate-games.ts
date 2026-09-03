@@ -435,8 +435,8 @@ async function main(): Promise<void> {
       for (const conflict of group.pickConflicts) {
         console.log(
           `    PICK CONFLICT pickType=${conflict.pickType} alias=${conflict.aliasGameId} ` +
-            `(${conflict.aliasSelection}) vs canonical (${conflict.canonicalSelection}) ` +
-            `sidesAgree=${conflict.sidesAgree}`,
+            `(${conflict.aliasSelection}) vs ${conflict.referenceIsCanonical ? "canonical" : `alias ${conflict.referenceGameId}`} ` +
+            `(${conflict.canonicalSelection}) sidesAgree=${conflict.sidesAgree}`,
         );
       }
       for (const aliasPreview of childRepointPreviews.get(group.canonicalId) ?? []) {

@@ -902,14 +902,20 @@ describe("processSport", () => {
         }),
       ]);
       mocks.gameFindMany.mockResolvedValue([TWIN]);
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
       await processSport(SPORT, "key", gates());
 
+      // The first row claims the twin; the second row for the same contest is
+      // SKIPPED, not routed to upsert-by-externalId. Falling through used to
+      // create a second row (or, when the id was a merged alias, write onto
+      // the tombstone) — 2026-09-03 automated review.
       expect(mocks.gameUpdate).toHaveBeenCalledTimes(1);
-      expect(mocks.gameUpsert).toHaveBeenCalledTimes(1);
-      expect(mocks.gameUpsert).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { externalId: "odds-api-2" } }),
+      expect(mocks.gameUpsert).not.toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("skipping feed row odds-api-2: its contest was already claimed this cycle"),
       );
+      warnSpy.mockRestore();
     });
 
     it("falls back to the plain upsert when the identity lookup throws", async () => {

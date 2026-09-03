@@ -176,8 +176,27 @@ function num(v) {
 }
 
 // 3. Public surfaces
+{
+  // /api/picks answers 503 for two deliberate gates and for real trouble. Only
+  // the bootstrap gate (no canonical history yet) is a healthy 503. The
+  // stale-data gate means the kill switch darkened the public surface, and any
+  // other 503 (rate-limit store down, database error) is an outage; neither
+  // may read as PASS.
+  const picks = await getJson("/api/picks");
+  const body = picks.body && typeof picks.body === "object" ? picks.body : {};
+  if (picks.status === 200) {
+    verdict("PASS", "GET /api/picks", "HTTP 200");
+  } else if (picks.status === 503 && (body.bootstrapMode === true || body.reason === "bootstrap")) {
+    verdict("PASS", "GET /api/picks", "HTTP 503 bootstrap gate (deliberate: no canonical history yet)");
+  } else if (picks.status === 503 && body.reason === "feature_gate") {
+    verdict("PASS", "GET /api/picks", "HTTP 503 feature gate (deliberate: public picks off; see the gates row)");
+  } else if (picks.status === 503 && body.reason === "stale_data") {
+    verdict("FAIL", "GET /api/picks", `HTTP 503 stale-data gate: the kill switch darkened the public surface${body.hint ? ` (${body.hint})` : ""}`);
+  } else {
+    verdict("FAIL", "GET /api/picks", `HTTP ${picks.status}${body.error ? ` ${body.error}` : ""}${picks.error ? ` ${picks.error}` : ""}`);
+  }
+}
 for (const [pathname, expect] of [
-  ["/api/picks", [200, 503]],
   ["/api/proof/ledger", [200]],
   ["/api/proof/openapi.json", [200]],
 ]) {

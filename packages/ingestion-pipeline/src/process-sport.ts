@@ -537,6 +537,7 @@ export async function processSport(
     const claimedTwinIds = new Set<string>();
     for (const game of normalizedGames) {
       let twin: { id: string; homeTeamName: string; awayTeamName: string } | null = null;
+      let alreadyClaimed = false;
       try {
         const resolved = await resolveCanonicalGame(db as unknown as GameIdentityDb, {
           sportId: sportRecord.id,
@@ -546,7 +547,13 @@ export async function processSport(
           awayTeamName: game.awayTeam,
           commenceTime: game.commenceTime,
         });
-        if (resolved && !claimedTwinIds.has(resolved.game.id)) {
+        if (resolved && claimedTwinIds.has(resolved.game.id)) {
+          // A second feed row for a contest another row already claimed this
+          // cycle. Falling through to upsert-by-externalId would either stack
+          // a second event's odds onto the claimed row or, when this id is a
+          // merged alias, write onto the tombstone. Skip the row instead.
+          alreadyClaimed = true;
+        } else if (resolved) {
           if (resolved.matchedBy === "twin") {
             twin = resolved.game;
           } else if (resolved.game.externalId !== game.externalId) {
@@ -568,6 +575,13 @@ export async function processSport(
           `${logPrefix} game identity lookup failed for ${game.externalId}: ` +
             `${identityErr instanceof Error ? identityErr.message : identityErr}`,
         );
+      }
+
+      if (alreadyClaimed) {
+        console.warn(
+          `${logPrefix} skipping feed row ${game.externalId}: its contest was already claimed this cycle`,
+        );
+        continue;
       }
 
       let record: { id: string };

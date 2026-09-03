@@ -248,7 +248,42 @@ describe("findPickConflicts / buildMergePlan — pending-pick conflict reporting
       aliasPickId: "pick-rundown-ml",
       pickType: "MONEYLINE",
       sidesAgree: false,
+      referenceGameId: "game-odds",
+      referenceIsCanonical: true,
     });
+  });
+
+  it("reports two aliases that each hold a pending pick on the same market even when the canonical has none", () => {
+    // Tripwire (2026-09-03 automated review): both alias picks survive the
+    // merge (aliases keep their picks), so one contest would carry two SPREAD
+    // picks. The plan must say so; comparing only against the canonical hid it.
+    const picksByGameId = new Map<string, readonly PickSummary[]>([
+      [
+        "game-odds",
+        [pick({ id: "pick-odds-ml", gameId: "game-odds", pickType: "MONEYLINE", selection: "Cardinals -145" })],
+      ],
+      [
+        "game-rundown",
+        [pick({ id: "pick-rundown-spread", gameId: "game-rundown", pickType: "SPREAD", selection: "Brewers +1.5" })],
+      ],
+      [
+        "game-espn-sportkey",
+        [pick({ id: "pick-espn-spread", gameId: "game-espn-sportkey", pickType: "SPREAD", selection: "Cardinals -1.5" })],
+      ],
+    ]);
+
+    const { canonical, aliases } = selectCanonical(fourRowFixture);
+    const conflicts = findPickConflicts(canonical, aliases, picksByGameId);
+
+    expect(conflicts).toHaveLength(1);
+    const [conflict] = conflicts;
+    expect(conflict!.pickType).toBe("SPREAD");
+    expect(conflict!.referenceIsCanonical).toBe(false);
+    expect(conflict!.sidesAgree).toBe(false);
+    // The reference is the other alias, never the canonical (which has no SPREAD pick).
+    expect(["game-rundown", "game-espn-sportkey"]).toContain(conflict!.referenceGameId);
+    expect(conflict!.referenceGameId).not.toBe(conflict!.aliasGameId);
+    expect(conflict!.referenceGameId).not.toBe("game-odds");
   });
 
   it("buildMergePlan surfaces the same conflict end-to-end and counts it", () => {

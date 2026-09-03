@@ -19,6 +19,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { backfillPlayerData, DATASET_MIN_SEASON } from "@/lib/ingestion/backfill-player-data";
 import { currentNflSeason, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
+import { isUnpublishedSeasonSignal } from "@/lib/ingestion/unpublished-season";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -65,7 +66,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     result.results.length > 0 &&
     result.results.every((r) => {
       if (r.stats === "skipped") return false;
-      return r.stats.status === "source-error" || (r.stats.status === "ok" && r.stats.statsUpserted === 0);
+      // 404 or ok-with-zero-rows only; a 5xx/timeout is an outage, not an
+      // unpublished season (lib/ingestion/unpublished-season.ts).
+      return isUnpublishedSeasonSignal(r.stats);
     });
   const floorFallback =
     scheduledDefault && labelled !== floor && labelledUnpublished
