@@ -88,6 +88,7 @@ function sessionCtx(session: Record<string, unknown>, token: Record<string, unkn
 const callbacks = () => capturedConfig["callbacks"] as {
   jwt: (ctx: unknown) => Promise<unknown>;
   session: (ctx: unknown) => Promise<unknown>;
+  redirect?: (ctx: { url: string; baseUrl: string }) => Promise<string>;
 };
 
 /**
@@ -359,5 +360,68 @@ describe("auth() — error handling on realAuth failure", () => {
     mockRealAuth.mockRejectedValue(new Error("getServerSideProps on a page that contains..."));
     const session = await auth();
     expect(session).toBeNull();
+  });
+});
+
+/**
+ * The NextAuth config must DECLARE a redirect callback, and that callback must
+ * refuse every off-origin destination.
+ *
+ * Why assert on the declaration and not only on the helper: `trustHost: true`
+ * makes the origin NextAuth validates against request-derived, and with no
+ * `redirect` callback of our own the only thing standing between
+ * `/api/auth/signin?callbackUrl=https://evil.example` and a phish through our
+ * own domain is a default inside a `5.0.0-beta` dependency — untested here and
+ * free to change on the next bump. These are RUNTIME assertions on the object
+ * actually handed to NextAuth (apps/web/tsconfig.json excludes test files from
+ * the typecheck, so a type-level assertion would prove nothing).
+ */
+describe("NextAuth config — redirect callback (open-redirect gate)", () => {
+  const BASE = "https://www.galaxysportsedge.com";
+  const TAB = String.fromCharCode(0x09);
+  const LF = String.fromCharCode(0x0a);
+  const CR = String.fromCharCode(0x0d);
+
+  it("declares a redirect callback (not inherited implicitly from next-auth)", () => {
+    expect(typeof callbacks().redirect).toBe("function");
+  });
+
+  it("keeps a safe relative callbackUrl on the request origin", async () => {
+    const redirect = callbacks().redirect;
+    if (!redirect) throw new Error("redirect callback is not declared");
+    await expect(redirect({ url: "/dashboard", baseUrl: BASE })).resolves.toBe(
+      `${BASE}/dashboard`,
+    );
+  });
+
+  it("never returns an off-origin destination for any hostile callbackUrl", async () => {
+    const redirect = callbacks().redirect;
+    if (!redirect) throw new Error("redirect callback is not declared");
+
+    const hostile = [
+      "https://evil.example",
+      "https://evil.example/dashboard",
+      "http://evil.example",
+      "//evil.example",
+      "///evil.example",
+      "/\\evil.example",
+      "https://www.galaxysportsedge.com.evil.example",
+      "https://www.galaxysportsedge.com@evil.example",
+      `/${TAB}/evil.example`,
+      `/${TAB}\\evil.example`,
+      `/${LF}/evil.example`,
+      `/${CR}/evil.example`,
+    ];
+
+    for (const url of hostile) {
+      const destination = await redirect({ url, baseUrl: BASE });
+      // Resolve exactly as a browser would, then require the host to be ours.
+      const host = new URL(destination, BASE).host;
+      expect(
+        host,
+        `callbackUrl=${JSON.stringify(url)} produced ${JSON.stringify(destination)}, ` +
+          `which a browser resolves to host "${host}"`,
+      ).toBe("www.galaxysportsedge.com");
+    }
   });
 });
