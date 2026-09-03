@@ -34,6 +34,7 @@ const SKIP_DIRS = new Set([
   "dist",
   "build",
   "coverage",
+  "Sports", // Skip nested repo copy to avoid duplicate path violations
 ]);
 
 /** Control-plane modules whose import is restricted to tests/internal. */
