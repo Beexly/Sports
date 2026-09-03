@@ -61,7 +61,7 @@ function liveVerdict(entry, truth) {
   switch (entry.id) {
     case "cerebras":
       return {
-        armed: credit.freeLaneConfigured && jynx.contentPlanPrimary === "cerebras_free",
+        armed: credit.freeLaneConfigured && jynx.contentPlanPrimary === "content_free",
         detail: `freeLaneConfigured=${credit.freeLaneConfigured}, contentPlan=${jynx.contentPlanPrimary}`,
       };
     case "groq":

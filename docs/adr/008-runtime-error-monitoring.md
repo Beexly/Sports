@@ -1,7 +1,7 @@
-# ADR 008: Runtime Error Monitoring
+# ADR 008 — Runtime Error Monitoring
 
 **Status:** Proposed  
-**Decision Date:** 2026-09-02  
+**Date:** 2026-09-02  
 **Authors:** Hermes Agent (overnight pre-launch audit)  
 **Reviewers:** Operator
 

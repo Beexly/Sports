@@ -22,6 +22,18 @@ repository root (not under `docs/ops/`).
   compatibility test asserted the old `guardrails:chain` literal; both
   expectations were updated (no guard weakened). The full apps/web suite
   passed locally apart from those two (11,887 passed).
+- CI on 8c1f68f4a (run 33745525674) and therefore on 6840a0fa6 failed the
+  Test job because of the overnight commits: `docs/adr/008-runtime-error-
+  monitoring.md` broke the ADR contract test (title must read
+  `# ADR 008 — …`, field must be `**Date:**`), and the C-19 label rename
+  (`cerebras_free` → `content_free`, 4df9e6b9e) missed
+  `credit-stack-posture.test.ts` and three ops scripts that still compared
+  against the old label (`scripts/ops/verify-credit-stack.mjs`,
+  `scripts/ops/provisioning/provision-status.mjs`, `registry.mjs`; the
+  first two would have reported the free lane as never armed). All fixed in
+  the commit after 6840a0fa6; full apps/web suite locally 11,904 passed
+  with only those 3 failures before the fix; typecheck, lint and
+  guardrails 26/26 green on the same head.
 - **The owner has instructed: merge #685 once CI is green** (message of
   2026-09-03: "Merge PR #685 ... After merging: 1. Merge main into #686 to
   fix its audit check. 2. Proceed with the Sonnet launch per this plan").
