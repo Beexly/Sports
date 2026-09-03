@@ -2,7 +2,7 @@
 name: dspy-gepa
 description: Offline GEPA/DSPy skill compile for GSE. Use when optimizing agent skills or prompt metrics without live product changes.
 effort: medium
-allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
+allowed-tools: Read, Grep, Glob, Bash(node scripts/dspy-gse/*), Bash(npm run dspy:gse*)
 ---
 
 # DSPy / GEPA (GSE offline)

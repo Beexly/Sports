@@ -7,7 +7,7 @@ Updated: **2026-08-10** (sliding OGD + Hedge analysis + Brier steps · model **v
 
 ## Law (do not violate)
 
-LIVE_BOARD=off · PERFORMANCE_STATS_ENABLED=off · PUBLISH_LEDGER=off (PUBLIC_PICKS_ENABLED=on, observed 2026-09-02)  
+LIVE_BOARD=off · PERFORMANCE_STATS_ENABLED=off · PUBLISH_LEDGER=off (PUBLIC_PICKS_ENABLED=on, **observed** on `/api/ops/public-surface-truth` 2026-09-02 — an observation, not a founder YES: founder approval and the `FORCE_NO_BET_IF_STALE=true` confirmation are still pending; see `FOUNDER_ONLY_CHECKLIST.md`. Confirm `gates.forceNoBetIfStale` on `/api/ops/public-surface-truth` (or the "stale-data kill switch" verdict from `npm run launch:ready`) reports `true` before treating the public surface as safe.)  
 oddsApiRequired=false on free path · refuse-default · CPA blocked · no auto-publish · no auto-bet  
 CALIBRATION_ADJUSTMENTS_ENABLED off · CALIBRATION_AUTO_PUBLISH false  
 RANKING_PAUSE_APPLY durable ON (MLB ML+SPREAD founder-yes) · env default OFF  

@@ -1,7 +1,7 @@
 ---
 description: Read-only review of a PR or branch against repo rules
 argument-hint: [PR number or branch, default HEAD vs origin/main]
-allowed-tools: Read, Grep, Glob, Bash(git fetch*), Bash(git diff*), Bash(git log*), Bash(git show*)
+allowed-tools: Read, Grep, Glob, Bash(git fetch*), Bash(git diff*), Bash(git log*), Bash(git show*), Bash(git status*), Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run test*), Bash(npm run guardrails*), Bash(npm run guard:*)
 ---
 Review: $ARGUMENTS
 1. Get the diff. Default: `git fetch origin && git diff origin/main...HEAD`. For a PR number: `git fetch origin pull/<N>/head:pr-<N>` then diff `pr-<N>` against `origin/main`. For a branch name, diff that branch against `origin/main`.

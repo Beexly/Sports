@@ -274,3 +274,51 @@ on both scripts, `npm run ops:runbook` prints the refreshed merge item,
 | The confidence-tail summary, served on a public endpoint, read every graded pick including bootstrap, unpublished and seed rows | `public-performance-policy.ts:317-343` and `calibration/report.ts:40` define the public population as published, non-bootstrap, not seed | `loadConfidenceTail` reads that population. Production re-read 2026-09-03 (read-only): the ≥80 tail is 152 picks, 61 wins (40%), mean claimed 86%, with 0 bootstrap, 0 unpublished and 0 seed rows in it, so today's verdict is unchanged; the filter is protective | `confidence-tail.test.ts` asserts the full predicate |
 | A settle cycle in which only the 6h stale backfill graded overdue picks reported `starved` (ok:false, Sentry) because `totalSettled` counted only the free and paid passes | `settle-picks/route.ts:185-186`; the backfill lane grades exactly the overdue population | `backfillSettled` (0 when the backfill result is error-shaped) joins the total and the starvation decision; `picksSettled` in the response includes it | `settle-picks-free-first.test.ts` (+1): free and paid settle nothing, backfill settles 2, cycle is ok and not starved |
 | Follow-up (Devin, third pass): with backfill settlements in the total, a `?sport=` cycle could count another sport's backfill as its own work and hide starvation, because the backfill lane ignored the scope | `route.ts:86-99` scopes the free and paid passes by `requestedSport`; `settle-backfill.ts` had no sport input | `backfillStaleSettlement` takes `sportKey`; the query adds `game.sport.key` when given; the route passes `requestedSport`, so all three lanes share one scope | `settle-backfill.test.ts` (+1) asserts the scoped and unscoped where clauses; `settle-picks-free-first.test.ts` (+1) asserts the scoped and unscoped calls |
+
+## D12. cubic's review of PR #685 (2026-09-03 00:43 UTC): 39 threads, verified one by one
+
+cubic posted 39 findings on the ready-for-review head. Each was read against the
+code before acting. Outcome: 34 fixed on this branch (10 in code, 24 in
+documentation, rules, command and skill allowlists), 2 answered with evidence
+and left as is, 2 answered as a documented policy exception, 1 turned into an
+owner task because the agent permission surface denies the file.
+
+**Code (each with a tripwire).**
+
+| Finding | Verified | Fix |
+|---|---|---|
+| `launch:ready` passed every HTTP 503 from `/api/picks`, including the stale-data gate and backend failures | `getJson` returns the body; `bootstrapGateResponse` carries `reason: "bootstrap" \| "feature_gate"`, `staleDataGateResponse` carries `reason: "stale_data"` | Body-aware verdict: bootstrap or feature gate PASS, stale-data gate FAIL (the kill switch darkened the surface), any other 503 FAIL |
+| Merge plan reported pick conflicts only between an alias and the canonical; two aliases each holding a pending pick on one market with no canonical pick went unreported although both survive the merge | `findPickConflicts` looked up `canonicalPicks` only | Reference pick per market is the canonical's or the first alias pick seen; `referenceGameId`/`referenceIsCanonical` added; the script prints which. `game-merge-plan.test.ts` (+1) |
+| A second feed row for a contest already claimed this cycle fell through to upsert-by-externalId, which could write onto a merged alias tombstone | `process-sport.ts` `claimedTwinIds` branch | The row is skipped with a warn; the existing twin-claim test now asserts the skip instead of the fall-through |
+| Any labelled-season source error (5xx, timeout) was treated as "unpublished" and retried the floor into a green run | `nflverse-source.ts` throws `nflverse fetch failed (<status>) for <url>`, so 404 is distinguishable | `lib/ingestion/unpublished-season.ts`: 404 or ok-with-zero-rows only; both cron routes use it. Route tests (+2) |
+| `toComparableFromEspn` published a bare `YYYY-MM-DD` as `startIso` (Date.parse accepts it), so the nearest-kickoff matcher would trust midnight | `free-settlement.ts:301` keeps every candidate only when a candidate lacks a parseable `startIso` | `startIso` requires a clock component. `ncaa-consensus.test.ts` (+1) |
+| The confidence-tail monitor read bootstrap and unpublished picks | Same as Devin's finding | Already fixed in 429224c2c |
+| `smoke-prod.sh`: 19 routes at a 12s ceiling can exceed the 5-minute job | arithmetic | 8s ceiling with the budget stated |
+| `guardrails:chain` skipped three guards and short-circuited | `package.json:145` | Points at `scripts/guardrails/run-all.mjs` |
+| The generated cron matrix was stale after the health-alert cron | `node scripts/ops/cron-matrix-from-vercel.mjs` changed the file | Regenerated (22 crons) |
+| `positioning.md` bans "AI-generated" but the vocabulary carried only the pick-specific variants | vocab file | Generic phrase added; `trust-gate` then caught `README.md:84`, a real usage in the env-var table, reworded |
+
+**Documentation, rules and allowlists (verified by the delegated pass; every
+claim held).** `prisma.md` rule 4 documents the `MIGRATE_GATE_ALLOW_UNVERIFIED`
+break-glass; `api-gating.md` describes `feature-gates.ts` as display state and
+`gateApi` as the place errors become a FREE denial; `scraping.md` says plainly
+that the ingestion packages carry no clearance gate of their own;
+`path-to-70.md` requires the learning-eligible WIN/LOSS export and a
+time-ordered hold-out; `settlement-free-path` smoke uses `?path=free`;
+`CURRENT_STATE`, `FOUNDER_ONLY_CHECKLIST` and `OPERATOR_TASKS` (HENRYGD-REG
+needs storage rights) corrected; twelve command, skill and agent allowlists
+narrowed to read-only verification commands or widened by exactly the
+read-only command their checklist needs (no mutating command was
+pre-approved anywhere).
+
+**Answered, not changed.** The Week 1 index migration: `picks` is 2,584 rows
+and 7.9 MB in production, and `CREATE INDEX CONCURRENTLY` cannot run inside
+`prisma migrate deploy`'s transaction (the repo's own test forbids it). The two
+".claude/** must not change" threads: the owner's session instruction
+authorised every file; `.claude/settings.json` itself was not touched.
+
+**Owner task.** `.mcp.json`'s lowercase `vercel` server key produces
+`mcp__vercel__*` tool names that the `mcp__Vercel__*` confirmation rules in
+`.claude/settings.json` do not match. The agent permission surface denies
+writing `.mcp.json`, so the rename is MCP-VERCEL-KEY in
+`docs/ops/OPERATOR_TASKS.md`.

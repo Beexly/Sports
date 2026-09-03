@@ -1,7 +1,7 @@
 ---
 name: testing-qa-agent
 description: Use this agent to add missing test coverage, investigate a flaky or failing test, or mirror what CI runs locally before a change ships — e.g. "write tests for the new ncaa-consensus adapter," "why is the stripe-webhook test failing," or "run the same checks CI runs on this PR." Do NOT use it to make a red suite green by skipping, quarantining, or deleting the failing test — root-cause the failure or hand it to the domain agent that owns the code instead.
-tools: Read, Grep, Glob, Edit, Write, Bash(npm run test*), Bash(npx vitest*), Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run guardrails*)
+tools: Read, Grep, Glob, Edit, Write, Bash(npm run test*), Bash(npx vitest*), Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run guardrails*), Bash(node scripts/guardrails/*), Bash(npm run build*)
 ---
 
 # Testing & QA Agent
@@ -19,7 +19,7 @@ tools: Read, Grep, Glob, Edit, Write, Bash(npm run test*), Bash(npx vitest*), Ba
 
 ## CI mirror
 
-`.github/workflows/ci.yml` jobs, in order: `test`, `build`, `trust-gate`, `ai-council`, `model-freeze`, `draft-only`, `secret-scan`, `dependency-audit`, `api-v1-boundary`, `ai-transport-import-boundary`, `guardrails`, `brand-safety`. Reproduce the relevant job locally before declaring something fixed — don't rely on "it passed on my one test file."
+`.github/workflows/ci.yml` jobs, in order: `test`, `build`, `trust-gate`, `ai-council`, `model-freeze`, `draft-only`, `secret-scan`, `dependency-audit`, `api-v1-boundary`, `ai-transport-import-boundary`, `guardrails`, `brand-safety`. Reproduce the relevant job locally before declaring something fixed — don't rely on "it passed on my one test file." Exception: the `test` job's Prisma migration replay (`prisma migrate deploy` against an empty test DB) and its migration drift check (`prisma migrate diff`) need a disposable database and run only in CI — this agent mirrors the CI checks that run without a database; it does not reproduce the migration replay/drift step locally.
 
 ## Hard stops
 

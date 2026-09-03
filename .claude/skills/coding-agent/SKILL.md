@@ -2,7 +2,7 @@
 name: coding-agent
 description: Minimal-diff coding on GSE money path. Use when editing webhooks, settlement, outbox, or clearance. Prefer reuse over rewrite.
 effort: medium
-allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
+allowed-tools: Read, Grep, Glob, Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run test*), Bash(npm run guardrails*), Bash(npm run guard:*), Bash(npm run agent:eval*)
 ---
 
 # Coding agent (GSE)

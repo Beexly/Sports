@@ -147,10 +147,19 @@ historical confidence numbers honest. Activation order (each is one reviewable c
    and `apps/web/lib/ops/calibration-eligibility.ts` reporting GREEN for 3 consecutive runs
    (`brier ≤ 0.22`, `ece ≤ 0.05`, `murphyReliability ≤ 0.05`). Until then activation is inert by design —
    do not force it and never lower a floor.
-2. **Fit & validate offline.** `npm run export:settled-picks` (real `DATABASE_URL`), then `buildCalibrator`
-   over the settled (confidence/100, outcome) pairs; confirm `isActive === true` and
-   `calibratedEce <= rawEce` on the time hold-out split (`timeHoldoutSplit`), not just in-sample.
-   `npm run calibration:offline` rehearses the same math on a synthetic fixture without a database.
+2. **Fit & validate offline.** `npm run export:settled-picks` (real `DATABASE_URL`) exports every
+   non-bootstrap settled pick (`result != PENDING`, `settledAt != null`, `isBootstrap = false`) — that
+   raw export is **not** the fit sample as-is: it still carries non-learning-eligible rows (no filter on
+   `PickSignalSnapshot.eligibleForLearning`) and non-binary outcomes (`PUSH`/`VOID`, not just `WIN`/`LOSS`).
+   Before fitting, filter the export to canonical, learning-eligible, published, non-bootstrap picks whose
+   `result` is `WIN` or `LOSS` (drop `PUSH`/`VOID` — they carry no binary calibration label). Only then run
+   `buildCalibrator` over the filtered (confidence/100, outcome) pairs. Use a **time-ordered hold-out**, not
+   a random split: `timeHoldoutSplit` (`packages/prediction-engine/src/probability-calibration.ts`) sorts by
+   timestamp ascending and cuts at `trainFraction` (default 0.7 — earliest 70% settled = train, latest 30% =
+   test). Fit the isotonic map on `train` only, then compute `isActive` and `calibratedEce <= rawEce` on the
+   untouched `test` partition — never in-sample, and never on the unfiltered export. Approve activation only
+   on the `test`-partition numbers. `npm run calibration:offline` rehearses the same math on a synthetic
+   fixture without a database.
 3. **Audit trail (done for every bump so far; required again for the next).** Bump `MODEL_VERSION` in
    `constants.ts` AND record it as a `CalibrationProposal` (status `IMPLEMENTED`) or a
    `docs/calibration-proposals/<slug>.md` with the observation + change that justified it.

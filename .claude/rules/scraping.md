@@ -12,6 +12,8 @@ paths:
 
 Every extraction job MUST pass through the Scraping Clearance Engine (`apps/web/lib/scraping/clearance-engine.ts`) before running. A `ClearanceResult` with `allowed=false` MUST stop the job. Every extracted record MUST carry a `RightsSnapshot` captured at extraction time.
 
+This rule file is also path-scoped to `packages/data-ingestion/**` and `packages/ingestion-pipeline/**`, but those packages cannot import `apps/web/lib/scraping/clearance-engine.ts` — they are separate workspaces (`packages/data-ingestion`'s own `package.json` depends only on `@sports/types` and `zod`) and carry no clearance gate of their own today. The enforceable guarantee is: the **app engine** (`apps/web/lib/scraping/**`) enforces `checkClearance()` for every extraction it runs. A fetcher that lives in `packages/data-ingestion` or `packages/ingestion-pipeline` and pulls from a rights-gated source must be invoked through the app engine (so clearance is checked at the app layer before or around the call), or through a package-level clearance gate if one is later added. No such package-level gate exists yet — adding one (or documenting the call path that routes every package fetcher through the app engine) is the open item; do not claim the package layer self-enforces clearance until it does.
+
 ### Do not build evasion
 
 - No CAPTCHA bypass, login bypass, or paywall bypass

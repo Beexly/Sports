@@ -180,6 +180,19 @@ starvation. A production re-read on the corrected population left today's tail f
 `?sport=` cycle could have counted another sport's backfill as its own work, so the backfill lane
 now carries the same sport scope as the free and paid passes.
 
+cubic then reviewed the ready-for-review head and posted 39 threads (decision record § D11 for
+Devin, § D12 for cubic). Every claim was read against the code: 34 fixed here (the launch checker
+now reads the body of a 503 from `/api/picks` instead of passing every 503; the merge plan reports
+same-market picks across aliases, not only against the canonical; a second feed row for an
+already-claimed contest is skipped rather than upserted onto a possible tombstone; only a 404 or an
+empty result counts as an unpublished nflverse season, a 5xx keeps the failure path; a bare date is
+never a kickoff time; the guardrails chain alias points at the canonical runner; the cron matrix is
+regenerated; the generic "AI-generated" phrase joined the banned vocabulary and the one real hit in
+the README was reworded; and twenty-four documentation, rule and allowlist corrections), two
+answered with evidence and left as is (the index migration on a 2,584-row table; the confidence
+tail already fixed), two answered as the documented policy exception for `.claude/**`, and one
+turned into an owner task (MCP-VERCEL-KEY) because the agent permission surface denies `.mcp.json`.
+
 ## 6. Remaining risks, ranked
 
 1. Production's first `migrate deploy` applies the baseline and two forward migrations once; the simulation used `schema.prisma`, not a production dump. The build gate fails closed if any statement fails, leaving the previous deployment live.

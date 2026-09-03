@@ -81,7 +81,7 @@ STRIPE_PRO_PRICE_ID="price_..."
 STRIPE_ELITE_PRICE_ID="price_..."
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 
-# required for AI-generated content
+# required for Claude-drafted content (blog/journal drafts only; never picks)
 ANTHROPIC_API_KEY="sk-ant-..."
 
 # required for the Claude response cache (ioredis); there is no job-queue library

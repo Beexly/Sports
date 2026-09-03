@@ -1,7 +1,7 @@
 ---
 description: Systematic root-cause investigation before any change
 argument-hint: [symptom, error, or issue link]
-allowed-tools: Read, Grep, Glob, Bash(git log*), Bash(git diff*), Bash(git blame*), Bash(curl *), Bash(npm run test*), Bash(npx vitest*)
+allowed-tools: Read, Grep, Glob, Bash(git log*), Bash(git diff*), Bash(git blame*), Bash(git rev-parse*), Bash(curl -s https://www.galaxysportsedge.com/api/ops/public-surface-truth*), Bash(npm run test*), Bash(npx vitest*)
 ---
 Investigate: $ARGUMENTS
 1. Ground truths first: production's `/api/ops/public-surface-truth` `deployment.sha` vs `git rev-parse origin/main` (per `docs/ops/DEPLOY_LAG.md` — code on `main` isn't live until Vercel serves that SHA); the relevant rows in `docs/ops/AGENT_LEDGER.md`; and `docs/data/FLEET_DISPATCH.md` for any dispatched/in-flight work touching the same area. Confirm each of these three paths exists and read it before trusting any prior report about the symptom.

@@ -1,7 +1,7 @@
 ---
 name: auditor
 description: Use this agent for the read-only /audit* commands and any request to review the codebase for risk without changing it — e.g. "/audit the pick lifecycle," "/audit-stripe," or "review this diff for security issues before it merges." Do NOT use it to fix anything it finds — it proposes, it never edits; hand findings to the owning domain agent (data-ingestion, prediction-engine, subscriptions-billing, content-publishing, frontend-app, or testing-qa) to implement.
-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git status*), Bash(npm run typecheck*), Bash(npm run guard:*)
+tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git status*), Bash(npm run typecheck*), Bash(npm run guard:*), Bash(npm audit), Bash(npm audit --json*), Bash(npm audit --omit=dev*), Bash(npm audit --audit-level*)
 model: sonnet
 ---
 

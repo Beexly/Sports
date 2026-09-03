@@ -23,6 +23,7 @@ off it.
 | NEXT-MAJOR | Plan the Next.js 14 → 15/16 major upgrade | Separate migration project; the two `dependency-audit` waivers (`next`, bundled `postcss`) are reviewed by 2027-01-15 | Partly (`node scripts/guardrails/dependency-audit.mjs` shows the waivers) | Open |
 | HENRYGD-REG | Register (or reject) the henrygd NCAA API in the source-rights registry | Owner/legal read, then a row in `apps/web/lib/scraping/source-rights-registry.ts` | Partly (`checkClearance` denies it today; NCAA settlement runs single-source) | Open |
 | PRE-COMMIT-BRAND | Run the brand trust gate in the pre-commit hook, not only in CI | Replace `.githooks/pre-commit` with the text in "Pre-commit brand gate" below (`.githooks/**` is agent-denied; the bash guard refused the write on 2026-09-02, as designed) | No — hook files are owner-only | Open (hook text ready, 2026-09-02) |
+| MCP-VERCEL-KEY | Rename the `vercel` server key in `.mcp.json` to `Vercel` | MCP tool names are case-sensitive: the lowercase key yields `mcp__vercel__*` tools, which the `mcp__Vercel__pause_project` / `mcp__Vercel__unpause_project` confirmation rules in `.claude/settings.json` do not match, so a mutating Vercel call through the repo server would skip confirmation. Change the key to `"Vercel"` (nothing else references it), then confirm `/mcp` lists the server as `Vercel`. The agent permission surface denies writes to `.mcp.json` (refused 2026-09-03, as designed) | No — `.mcp.json` is owner-only for agents | Open (2026-09-03, cubic review) |
 
 ## Database and MCP connectors
 
@@ -117,8 +118,15 @@ off it.
   registry row (status `approved_public_logged_off`, facts only,
   `storage_allowed: false`, attribution to NCAA.com via henrygd, self-host
   before relying on it) after the terms read in
-  `docs/legal/VENDOR_QUESTIONNAIRE_CFBD.md`'s checklist style. Never widen a
-  registry row to make a test pass.
+  `docs/legal/VENDOR_QUESTIONNAIRE_CFBD.md`'s checklist style. Note:
+  `storage_allowed: false` blocks the `storage` and `derived_analytics`
+  intents in `checkClearance()` (`apps/web/lib/scraping/clearance-engine.ts`),
+  so a row added with that flag restores henrygd only as a live consensus
+  check, not for settlement — settlement persists finals (the `storage` and
+  `derived_analytics` intents, via intents storage + `derived_analytics`).
+  Using henrygd for settlement storage requires legal approval of storage
+  rights first; only after that approval may the row be updated to
+  `storage_allowed: true`. Never widen a registry row to make a test pass.
 
 ## GitHub
 

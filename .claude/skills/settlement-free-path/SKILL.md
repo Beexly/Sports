@@ -36,10 +36,13 @@ Settle completed games without paid Odds API scores. Since 2026-09-02 the free g
 
 ## Commands
 ```bash
-# Manual free settle (Production HOST + CRON_SECRET — never invent secrets)
+# Manual free-only settle smoke (Production HOST + CRON_SECRET — never invent secrets)
 curl -sS -H "Authorization: Bearer $CRON_SECRET" \
-  "https://www.galaxysportsedge.com/api/cron/settle-picks"
-# Expect path:free when key blank; path:odds-api when key set
+  "https://www.galaxysportsedge.com/api/cron/settle-picks?path=free"
+# Expect path: "free" — ?path=free forces the free-only plan regardless of key state.
+# Without ?path=free the response label is path: "free" (key blank) or
+# path: "free+odds-api" (key present and the supplement ran) — never "odds-api";
+# that string only appears as selectSettlementPath()'s internal key-presence label.
 ```
 
 ## Failure modes

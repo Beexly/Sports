@@ -2,7 +2,7 @@
 name: autonomy-kernel
 description: Operate the autonomous plan→act→verify cycle without ever flipping a public gate or inventing data.
 effort: medium
-allowed-tools: Read, Grep, Glob, Bash(npm run *), Bash(node scripts/*)
+allowed-tools: Read, Grep, Glob, Bash(npm run nova:cycle:dry*), Bash(npm run guardrails*), Bash(npm run typecheck*), Bash(npm run lint*), Bash(npm run test*), Bash(node scripts/guardrails/*)
 ---
 
 # Autonomy kernel
