@@ -14,6 +14,7 @@ import { buildLeagueTwin } from "./league-twin";
 import { TIER_WEIGHT } from "../news/impact";
 import { DFS_SLATE, leverage } from "./dfs-slate";
 import { PROPS, readProp } from "./props";
+import type { Player } from "./players";
 
 export type BriefSection = { readonly heading: string; readonly items: readonly string[] };
 export type WeeklyBrief = {
@@ -25,18 +26,25 @@ export type WeeklyBrief = {
   readonly plaintext: string;
 };
 
-export function generateWeeklyBrief(): WeeklyBrief {
-  const twin = buildLeagueTwin();
+/**
+ * `pool` is EXPLICIT and entitlement-gated by the caller (app/fantasy/studio/page.tsx).
+ * It is deliberately NOT defaulted to `activePlayerPool()`: every downstream helper
+ * (waiverTargets / applyScheme / buildLeagueTwin) used to reach for the live registry
+ * on its own, which put the paid graded pool into an ungated page the moment
+ * PROJECTIONS_PROVIDER was set. Omitted → the illustrative universe.
+ */
+export function generateWeeklyBrief(pool?: readonly Player[]): WeeklyBrief {
+  const twin = buildLeagueTwin(undefined, pool);
   const week = twin.currentWeek;
 
   // Waivers. Top 3 adds
-  const adds = waiverTargets().slice(0, 3).map((r) =>
+  const adds = waiverTargets(pool).slice(0, 3).map((r) =>
     `${r.player.name} (${r.player.team}, ${r.player.pos}). ${r.tier}, bid ~${Math.round(r.bidPct * 100)}% FAAB: ${r.reason}`,
   );
 
   // Scheme. The most reliable move
   const topScheme = [...SCHEME_SCENARIOS].sort((a, b) => TIER_WEIGHT[b.tier] - TIER_WEIGHT[a.tier])[0]!;
-  const cascade = applyScheme(topScheme);
+  const cascade = applyScheme(topScheme, pool);
   const topGainer = cascade.impacts.find((i) => i.direction === "up");
   const topFader = cascade.impacts.find((i) => i.direction === "down");
   const scheme = [
