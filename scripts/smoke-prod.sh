@@ -35,17 +35,45 @@ ROUTES=( / /picks /methodology /performance /pricing /observatory /vault /about 
 ok_count=0
 # Per-route budget: the daily-smoke job is capped at 5 minutes; 19 routes at a
 # 12s ceiling could burn 228s on a bad day and leave no time for the summary.
-# 8s still clears a cold serverless start, and the worst case stays under 3
-# minutes for this section.
+# 8s still clears a warm hit, and the worst case stays under 3 minutes for
+# this section.
+#
+# Cold-start retry (C-69): a serverless function that has been idle can blow
+# the 8s ceiling (timeout "000") or 5xx on the FIRST hit while the instance
+# boots — a warm-up, not a regression. Each non-200 gets ONE retry after a
+# short settle before it is recorded as a failure, capped at 8 retries across
+# the whole section so a catastrophically-down site still finishes inside the
+# CI budget instead of doubling 19×18s. A route failing twice in a row is a
+# real regression and still fails.
+cold_retries=0
+MAX_COLD_RETRIES=8
+LAST_CODE=""
+# Sets LAST_CODE (global — command substitution would run this in a subshell
+# and lose the cold_retries increments). Call WITHOUT $(...).
+route_code() {
+  local url="$1" code
+  code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 8 "$url")
+  if [ "$code" != "200" ] && [ "$cold_retries" -lt "$MAX_COLD_RETRIES" ]; then
+    cold_retries=$((cold_retries+1))
+    sleep 2
+    code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 8 "$url")
+  fi
+  LAST_CODE="$code"
+}
 for r in "${ROUTES[@]}"; do
-  code=$(curl -sS -o /dev/null -w "%{http_code}" -L --max-time 8 "$BASE$r")
+  route_code "$BASE$r"
+  code="$LAST_CODE"
   if [ "$code" = "200" ]; then
     ok_count=$((ok_count+1))
   else
     fail "$r returned $code"
   fi
 done
-ok "$ok_count/${#ROUTES[@]} routes returned 200"
+if [ "$cold_retries" -gt 0 ]; then
+  ok "$ok_count/${#ROUTES[@]} routes returned 200 ($cold_retries cold-start retry hit(s))"
+else
+  ok "$ok_count/${#ROUTES[@]} routes returned 200"
+fi
 
 bold "3. Brand integrity"
 home=$(curl -sS --max-time 6 "$BASE")
