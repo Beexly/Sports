@@ -32,8 +32,8 @@ baseline: typecheck=0  lint=0  guards=24/26 (api-v1-boundary expected FAIL; ai-t
 | P1d-1 | Rate-limit coverage sweep (batch 1) | DONE | 22:33 | 5 GSE v1 unauth POST routes + 15-test suite; 2318d86f; typecheck=0 lint=0 |
 | P1d-1b | Rate-limit coverage sweep (batch 2) | DONE | 22:46 | 2 IP-keyed + 3 user-keyed routes + 16-test suite; d3e012ac; typecheck=0 lint=0 |
 | P1d-1c | Rate-limit coverage sweep (batch 3) | DONE | 23:58 | committed as 27e9c912 (was wip) — 5 routes gain consumeRateLimit 429+Retry-After, tsc=0 lint=0; bot-outbox-preview + cockpit-journal + push-subscribe tests green (133ms) |
-| P1d-2 | B2B limiter durability | CLAIMED | 00:01 | recovering per CONTINUOUS.md §P1d-2 |
-| P1d-3 | Runtime error capture (ADR 008 + interim) | CLAIMED | 02:43 | starting ADR 008 |
+| P1d-2 | B2B limiter durability | DONE | 22:37 | Already refactored to PostgresDurableRateLimiter (GSE-SEC-015 fix); 6/6 tests green; uses fingerprintClientKey + durable store |
+| P1d-3 | Runtime error capture (ADR 008 + interim) | DONE | 23:09 | ADR 008 + capture-route-error.ts + 9-test suite; typecheck=0 lint=0 tests=9/9 |
 | P2-1 | ROUTE_AUTH_INVENTORY.md | TODO | — | — |
 | P2-2 | DOC_DRIFT.md | TODO | — | — |
 | P2-3 | TEST_GAP_MAP.md | TODO | — | — |
