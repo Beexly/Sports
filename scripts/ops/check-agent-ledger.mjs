@@ -44,7 +44,13 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const DEFAULT_LEDGER = join(REPO_ROOT, "docs", "ops", "AGENT_LEDGER.md");
 
 export const OWNERS = ["hermes", "copilot", "browser", "claude", "founder", "—"];
-export const STATUSES = ["OPEN", "CLAIMED", "BLOCKED", "UNPUSHED", "DONE", "CANCELLED"];
+export const STATUSES = ["OPEN", "CLAIMED", "BLOCKED", "UNPUSHED", "DONE", "CANCELLED", "ON HOLD"];
+/**
+ * C-25 rule 3: a terminal-ish status must say WHY in Evidence, so an agent has
+ * a legitimate slot for "this finding was wrong" / "parked by the founder"
+ * instead of being forced to choose between a fake DONE and a bare OPEN row.
+ */
+const REQUIRES_EVIDENCE_REASON = new Set(["CANCELLED", "ON HOLD"]);
 
 const BEGIN = "<!-- LEDGER:BEGIN -->";
 const END = "<!-- LEDGER:END -->";
@@ -270,6 +276,13 @@ function originReachable(cwd) {
  */
 export function validate(rows, opts = {}) {
   const violations = [];
+  // C-25 rule 2 (escalation SLA) — soft surface. The ledger schema has no
+  // timestamps, so "how long has this sat" is not decidable from the file
+  // alone; what IS decidable is a claim with nothing attached (claimed but no
+  // evidence of having started) and work in flight with no owner (evidence on
+  // an unowned OPEN row). Both are printed by the CLI on every run so a stale
+  // row is at least VISIBLE each check instead of silently aging forever.
+  const warnings = opts.warnings ?? [];
   const resolveSha = opts.resolveSha === undefined ? (s) => shaExists(s, REPO_ROOT) : opts.resolveSha;
   const shallow = opts.shallow === undefined ? isShallowRepo(REPO_ROOT) : opts.shallow;
   const fetchSha =
@@ -321,12 +334,20 @@ export function validate(rows, opts = {}) {
       case "OPEN":
         // An OPEN row may name an intended owner (an assignment) or none at all.
         // CLAIMED is the signal that work has actually begun, so OPEN carries no
-        // ownership requirement in either direction.
+        // ownership requirement in either direction. But an OPEN row that already
+        // carries evidence means work STARTED — if it also has no owner, it is
+        // orphaned mid-flight (C-25's escalation-SLA hole), so surface it.
+        if (unowned && hasEvidence) {
+          warnings.push(`${where}: OPEN with evidence but no owner — work in flight, nobody to chase (SLA watch)`);
+        }
         break;
 
       case "CLAIMED":
       case "BLOCKED":
         if (unowned) violations.push(`${where}: ${row.status} requires an Owner — an unowned claim cannot be chased`);
+        if (row.status === "CLAIMED" && !hasEvidence) {
+          warnings.push(`${where}: CLAIMED with no evidence — claimed but nothing recorded as started (SLA watch)`);
+        }
         break;
 
       case "UNPUSHED": {
@@ -404,6 +425,15 @@ export function validate(rows, opts = {}) {
         }
         break;
 
+      case "ON HOLD":
+        // Same contract as CANCELLED: a hold without a stated reason is just a
+        // row someone did not want to deal with.
+        if (unowned) violations.push(`${where}: ON HOLD requires an Owner`);
+        if (!hasEvidence) {
+          violations.push(`${where}: ON HOLD requires a reason in Evidence (who parked it and why)`);
+        }
+        break;
+
       default:
         break; // unknown status already reported
     }
@@ -431,6 +461,15 @@ export function inspectLedgerFile(path = DEFAULT_LEDGER, opts = {}) {
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
   const target = process.argv[2] ? resolve(process.argv[2]) : DEFAULT_LEDGER;
   const { violations, rows, unverified } = inspectLedgerFile(target);
+  // C-25: surface the soft SLA warnings on every CLI run (cheap: validate() is
+  // pure; the DONE/SHA resolution it repeats is memoised where expensive).
+  const warnings = [];
+  validate(parseLedger(readFileSync(target, "utf8")).rows, { warnings });
+  if (warnings.length > 0) {
+    console.warn(`[agent-ledger] ${warnings.length} SLA watch item(s):`);
+    for (const w of warnings) console.warn(`  ~ ${w}`);
+    console.warn("");
+  }
   if (unverified.length > 0) {
     // Never silent: a run that verified less than it appears to must say so,
     // otherwise a green line reads as "every DONE is proven" when it is not.

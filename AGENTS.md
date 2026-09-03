@@ -20,9 +20,15 @@ enforced in CI. Read its own "Rules" section before touching a row: claim
 before starting, never edit a row you do not own, `DONE` requires a
 resolvable commit SHA or `#PR`, `UNPUSHED` if you cannot push.
 
-**UPDATED 2026-09-02 — `docs/ops/AGENT_LEDGER.md` was last written 2026-08-22.
-LQ-tagged work landed since then is tracked in `docs/data/FLEET_DISPATCH.md`.
+**UPDATED 2026-09-03 — `docs/ops/AGENT_LEDGER.md` is LIVE and current
+(142 rows: 27 OPEN / 2 CLAIMED / 4 BLOCKED / 102 DONE / 6 CANCELLED, guard green).
+LQ-tagged work is additionally tracked in `docs/data/FLEET_DISPATCH.md`.
 Read both before claiming; a task already dispatched there is not free.**
+**Verified-fixes note:** the C-64..C-70 dual-audit batch lives on
+`claude/verified-fixes-2026-09-03` (draft PR #689) — check whether it merged
+before re-fixing anything from that list. The ledger guard now also prints
+SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
+no owner will be called out on every guard run — resolve or re-own them.
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
@@ -148,14 +154,3 @@ invented number makes every other number suspect.
 
 ---
 
-## OVERNIGHT RUN — 2026-09-02 22:11 UTC-0500
-
-**Session:** Claude Sonnet 4.5 via Hermes CLI
-**Mission:** Pre-launch overnight continuous improvement - audit deep, fix issues, prepare for tomorrow's launch
-**Approved:** Full autonomy to work all night on audits and improvements
-**Current branch:** claude/final-launch @ 01a2e6302
-
-### LIVE STATUS (updating as I work)
-
-**22:11** - Starting overnight run. Reading ledgers and planning work.
-**Strategy:** Loop through: code audit → identify issues → fix → verify → improve → next. Skip blockers, document everything.

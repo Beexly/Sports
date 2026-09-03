@@ -10,6 +10,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { ingestTeamEfficiency } from "@/lib/ingestion/team-efficiency";
 import { currentNflSeason, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
+import { isUnpublishedSeasonSignal } from "@/lib/ingestion/unpublished-season";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -52,12 +53,18 @@ export async function GET(request: Request): Promise<NextResponse> {
     results.push(await ingestTeamEfficiency(season));
   }
 
-  // Scheduled default only: the labelled season source-errored (nflverse has
-  // not published its play-by-play yet), so refresh the completed floor
-  // instead. Reported separately — never relabelled as the labelled season.
+  // Scheduled default only: the labelled season is unpublished — a 404
+  // source-error or ok-with-zero-rows (nflverse has not published its
+  // play-by-play yet) — so refresh the completed floor instead and report it
+  // separately, never relabelled as the labelled season. Any other source
+  // error (5xx, timeout, network) is an OUTAGE: no fallback, so a real
+  // failure is not masked by a floor retry that happens to succeed
+  // (doctrine: lib/ingestion/unpublished-season.ts).
   const scheduledDefault = fromParam === null && toParam === null;
+  const labelledUnpublished =
+    results.length > 0 && results.every((r) => isUnpublishedSeasonSignal(r));
   const floorFallback =
-    scheduledDefault && labelled !== floor && results.every((r) => r.status === "source-error")
+    scheduledDefault && labelled !== floor && labelledUnpublished
       ? await ingestTeamEfficiency(floor)
       : null;
 
