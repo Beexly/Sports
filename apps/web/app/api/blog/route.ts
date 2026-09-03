@@ -5,11 +5,22 @@ import { db } from "@sports/db";
 import { bootstrapGateResponse, getReadinessGates } from "@sports/prediction-engine";
 import type { PublicBlogPost } from "@sports/types";
 import { guardPublicContent, guardPublicExcerpt, guardPublicTitle } from "@/lib/blog/public-guard";
+import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canPublishContent) {
     return NextResponse.json(bootstrapGateResponse("Public blog"), { status: 503 });
+  }
+
+  // Rate limit: 60 requests per minute per IP for public blog access
+  const ip = clientIp(req);
+  const rl = consumeRateLimit("public-blog", ip, 60, 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "retry-after": String(rl.retryAfterSec) } }
+    );
   }
 
   const session = await auth();
@@ -25,7 +36,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       };
 
   const { searchParams } = new URL(req.url);
-  const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+  const page = Math.max(1, Math.min(100, parseInt(searchParams.get("page") ?? "1", 10))); // Cap at page 100 to prevent expensive offsets
   const pageSize = 10;
   const sportFilter = searchParams.get("sport");
   const slug = searchParams.get("slug");
