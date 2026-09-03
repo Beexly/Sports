@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
 const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn(), playerFindMany: vi.fn() }));
 vi.mock("@sports/db", () => ({ db: {
+  $transaction: (ops: readonly Promise<unknown>[]) => Promise.all(ops),
   depthChartEntry: { deleteMany: mocks.deleteMany, createMany: mocks.createMany },
   player: { findMany: mocks.playerFindMany },
 } }));
