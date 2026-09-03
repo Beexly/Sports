@@ -77,3 +77,11 @@ Analyzing truly public routes without auth/rate limiting...
 **Next:** Check other public DB query routes (contests/week, gse/v1/*)
 
 ### 22:26 - Continuing Public Route Audit
+
+**Status:** GSE v1 POST routes already have rate limiting (8/min). GET routes are low-risk (pure computation, cached).
+
+**Commit c898975:** Blog route hardening complete.
+
+### 22:30 - Database Query Optimization Audit
+
+Searching for potential N+1 queries and unoptimized DB patterns...

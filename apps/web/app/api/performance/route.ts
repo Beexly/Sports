@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -8,6 +9,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canExposePerformanceStats) {
     return NextResponse.json(bootstrapGateResponse("Performance stats"), { status: 503 });
+  }
+
+  // Rate limit: 30 requests per minute per IP for public performance stats
+  const ip = clientIp(req);
+  const rl = consumeRateLimit("public-performance", ip, 30, 60_000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "retry-after": String(rl.retryAfterSec) } }
+    );
   }
 
   const { searchParams } = new URL(req.url);
