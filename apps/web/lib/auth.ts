@@ -3,6 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@sports/db";
 import { isAsciiEmail, canonicalEmail } from "@/lib/auth/email-guard";
+import { resolveAuthRedirect } from "@/lib/auth/callback-url-guard";
+import { SITE_URL } from "@/lib/seo/site-url";
 
 export type UserRole = "USER" | "ADMIN";
 
@@ -37,6 +39,25 @@ const config: NextAuthConfig = {
   // a day even on the paths that don't re-resolve it — defense-in-depth for revocation.
   session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
   callbacks: {
+    /**
+     * Post-sign-in / post-sign-out destination gate.
+     *
+     * NextAuth v5 supplies a same-origin default when this callback is absent,
+     * but leaving it absent means the ONE invariant that stops
+     * `/api/auth/signin?callbackUrl=https://evil.example` from phishing through
+     * our own domain lives in a `5.0.0-beta` dependency, untested by this repo
+     * and free to change on the next bump. `trustHost: true` (above) also means
+     * `baseUrl` here is request-derived, so the check is worth owning.
+     *
+     * `resolveAuthRedirect` enforces the same-origin rule explicitly and adds
+     * the control-character rejection the upstream default does not have. It
+     * rebases relative paths onto the REQUEST origin (so local dev and preview
+     * deployments still redirect to themselves) and additionally accepts an
+     * absolute URL on the canonical `SITE_URL` origin.
+     */
+    async redirect({ url, baseUrl }) {
+      return resolveAuthRedirect(url, baseUrl, SITE_URL);
+    },
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
