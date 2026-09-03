@@ -241,4 +241,36 @@ describe("backfillStaleSettlement", () => {
     expect(whereOf(1)).not.toHaveProperty("sport");
     expect(whereOf(2)).not.toHaveProperty("sport");
   });
+
+  it("refuses to overwrite an existing FINAL score that disagrees with incoming score", async () => {
+    // Regression guard: defaultPersist must check for a score mismatch before
+    // writing, matching the SCORE_MISMATCH_CROSS_PATH pattern from free-score-persist.ts.
+    const gameUpdate = vi.fn();
+    const gameFindUnique = vi.fn(async () => ({
+      status: "FINAL",
+      homeScore: 24,
+      awayScore: 17,
+    }));
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+      $transaction: vi.fn(async (fn) => {
+        const tx = {
+          pick: { updateMany: vi.fn(async () => ({ count: 1 })) },
+          pickSettlementEvent: { create: vi.fn() },
+          postSettlementWork: { createMany: vi.fn(async () => ({ count: 0 })) },
+          game: { update: gameUpdate, findUnique: gameFindUnique },
+        };
+        return fn(tx);
+      }),
+    };
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    await backfillStaleSettlement({ db, now: NOW, fetchScores });
+    // gameFindUnique was called to check existing scores
+    expect(gameFindUnique).toHaveBeenCalledWith({
+      where: { id: "game-1" },
+      select: { status: true, homeScore: true, awayScore: true },
+    });
+    // gameUpdate should NOT have been called because scores disagree (24-17 vs 21-17)
+    expect(gameUpdate).not.toHaveBeenCalled();
+  });
 });
