@@ -267,3 +267,47 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 ## Related
 
 - [Default AGENTS.md](/reference/AGENTS.default)
+
+## HERMES AGENT DISCOVERY: GALAXY SPORTS EDGE (GSE) & GALAXY SPORTS NETWORK (GSN)
+
+**Updated 2026-08-28 by Hermes Agent Autonomous Investigation**
+
+During investigation of `/c/Users/Garrett/Sports`, Hermes Agent discovered this is not merely a data repository, but the operational workspace for the Galaxy Sports Edge (GSE) sports betting prediction system and Galaxy Sports Network (GSN) content system.
+
+### Key Discoveries:
+
+**System Identity**: This repository hosts the GSE/GSN autonomous sports intelligence operating system
+- **GSE (Galaxy Sports Edge)**: Generates sports betting picks, confidence scores, model context, injury/usage alerts
+- **GSN (Galaxy Sports Network)**: Produces editorial content, show segments, podcast ideas, newsletters
+- **Critical Constraint**: Both systems require explicit human operator approval for all external actions (no auto-bet, no auto-publish)
+
+**Data Foundation**: 
+- `/data/nflverse/games.csv` - Historical NFL game data (~2.5MB)
+- `/data/nflverse/games_harness_rows.jsonl` - Additional NFL harness data (~4MB)
+- Serves as foundational input feeding into the GSE prediction system
+
+**Analysis Artifacts** (from Strix security penetration tests):
+- CLV (Closing Line Value) calculations for betting picks — whether our locked line beat the de-vigged closing line; 52.4% is the breakeven beat rate at -110
+- Performance metrics showing >52.4% beat rate (profitable threshold)
+- Spread movement analysis with detected sign-flip patterns
+- Moneyline lock/provenance verification systems
+- Found in temporary Strix analysis directories during security assessment (`/c/Users/Garrett/AppData/Local/Temp/strix_repos/`)
+
+**Architecture Confirmed**: 
+- **Six Operator Agents**: SCOUT (sports research), JARVIS (orchestrator), SARAH (support), TAL (engineering), AVA (content), BOBBY (analytics)
+- **Airwave Intelligence Intake**: Processes sports media (satellite radio, podcasts, YouTube, beat reports, operator notes) into structured intelligence
+- **Hard Stops**: No auto-bet, no auto-publish, no fabricated data, no destructive DB operations - all require human approval
+- **Model Routing**: Cost-aware optimization using Haiku/Sonnet/Opus models based on task complexity with prompt caching
+
+**Beexly-dev Relationship**: 
+- `/c/Users/Garrett/beexly-dev` is a separate website repository for "Altify Developing LTD"
+- **NO CONNECTION** to GSE/GSN system found
+- Contains standard web files, documentation, security tools only
+
+**Verification Notes**: 
+- All findings based on actual file discovery and content analysis
+- System appears in analysis/workspace mode, not live betting operation
+- Strix tests were evaluating this system's security and operation
+- Full documentation available in `/.cagent/Sports/.claude/worktrees/phase3/`
+
+**Note to Future Agents**: This system is designed for analysis and improvement of sports prediction algorithms with strict compliance gates. The NFL data here serves as input to the prediction system, not the system itself. All external actions require human operator approval.
