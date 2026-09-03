@@ -33,7 +33,13 @@ describe("AWS compatibility index", () => {
 
     expect(packageJson).toContain('"guard:aws-compatibility-index"');
     expect(packageJson).toContain("aws-compatibility-index-scan.mjs");
-    expect(packageJson).toContain("node scripts/guardrails/aws-compatibility-index-scan.mjs && node scripts/eval-contracts.mjs");
+    // The chain alias runs the canonical guard runner, which must keep both the
+    // AWS scan and the contract evals in its list (they were the chain's tail
+    // before the alias pointed at run-all.mjs).
+    expect(packageJson).toContain('"guardrails:chain": "node scripts/guardrails/run-all.mjs"');
+    const runAll = readFileSync(resolve(REPO_ROOT, "scripts/guardrails/run-all.mjs"), "utf8");
+    expect(runAll).toContain("scripts/guardrails/aws-compatibility-index-scan.mjs");
+    expect(runAll).toContain("scripts/eval-contracts.mjs");
   });
 
   it("points compatibility files to existing canonical artifacts", () => {
