@@ -347,3 +347,45 @@ happen before Friday. Not urgent enough to delay launch on its own.
 
 A skeptical reader on Friday is the test the product sets for itself. This is the
 kind of detail that reader screenshots.
+
+## 10. G25: the dependency-audit guard cannot tell "gone" from "unavailable"
+
+Found by a real CI failure on this branch, then reproduced locally twice.
+
+`scripts/guardrails/dependency-audit.mjs:90` computes
+
+    stale = ACCEPTED.filter(a => !offenders.some(o => o.name === a.package))
+
+`offenders` is whatever `npm audit --omit=dev` returned on that run. `npm audit`
+is a network call. When the registry returns a thin or degraded report, every
+legitimate waiver looks stale and the run fails with a message asserting the
+opposite of the truth:
+
+    [dependency-audit] FAIL - 2 stale waiver(s); the vulnerability is gone,
+    so remove the entry: next, postcss
+
+Evidence that the message is false:
+
+- CI run 33812513871 attempt 1 failed this way on a docs-only commit. A re-run
+  with no code change came back green.
+- The same check passed on the same branch 40 minutes earlier (run 33809232202)
+  and on another branch 14 minutes earlier (run 33811341959).
+- Locally on the same tree the guard exits 0 and reports `stale: []`, with
+  `next` and `postcss` both still WAIVED, meaning both vulnerabilities are
+  present. Two local runs disagreed with each other under load: a run competing
+  for the registry reported 25/26 with dependency-audit failed at 385s, while an
+  uncontended run reported 26/26 at 95s.
+
+Do NOT resolve this by deleting the two waivers. Remediation needs a
+`next@16` semver-major jump, which is why the waiver exists; deleting the
+entries would hard-block CI the moment the advisory is served again.
+
+The fix is to make absence-of-finding provable rather than assumed, exactly as
+`scripts/ops/check-agent-ledger.mjs` already does for commit SHAs, whose own
+comment reads: distinguish "origin does not have it" from "we could not reach
+origin", because only the first is evidence. A thin or failed audit should mark
+the waiver unverified, not stale.
+
+`scripts/guardrails/**` is an agent-denied path under AGENTS.md law 2, so this
+is recorded rather than patched. Until it is fixed, a lone dependency-audit
+failure with this message is a re-run, not a code change.
