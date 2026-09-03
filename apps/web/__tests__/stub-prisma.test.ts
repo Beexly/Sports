@@ -26,8 +26,7 @@ describe("stub Prisma — pick model with DEMO_PICKS_ENABLED=true", () => {
     const { db } = await freshDb();
     const rows = await db.pick.findMany({});
     expect(rows.length).toBeGreaterThanOrEqual(8);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((rows[0] as any).result).toBe("PENDING");
+    expect(rows[0]?.result).toBe("PENDING");
   });
 
   it("findMany returns empty when isBootstrap=true (samples are non-bootstrap)", async () => {
