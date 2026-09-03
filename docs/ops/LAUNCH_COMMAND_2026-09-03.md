@@ -306,3 +306,44 @@ After launch, in this order:
 | 322 | 2026-07-19 | `claude/galaxy-sports-edge-pdcswh` |
 | 304 | 2026-07-01 | `claude/humanize-polish` |
 
+
+## 9. Owner decision: the X handle contradicts rule 8
+
+Raised because it is owner-only, so nobody working the queue will pick it up, and
+because it is visible on every page rather than on one.
+
+Positioning rule 8 is that the engine is deterministic statistical modeling and is
+never framed as AI. The brand's own X handle is `@GalaxySportsAI`.
+
+Where it reaches a reader:
+
+| Surface | File | Effect |
+|---|---|---|
+| Social card on EVERY page | `apps/web/app/layout.tsx`:90, 140, 141 | `twitter.site` and `twitter.creator` are `ORG_HANDLE` |
+| Footer on EVERY page | `apps/web/lib/brand.ts`:67 into `components/ui/footer.tsx`:4 | `SOCIAL.x` links to `https://x.com/GalaxySportsAI` |
+| Public changelog copy | `apps/web/app/changelog/page.tsx`:64 | names the handle in body text |
+| The brand guidelines themselves | `docs/brand/brand-guidelines.md`:207 | records it as the canonical handle |
+
+No guard catches this. The handle is not in `apps/web/lib/positioning-vocab.json`,
+so `npm run lint:brand` and the trust gate both pass: the brand law is enforced on
+copy but not on the brand's own identifiers. Verified by grep.
+
+Why it is not an agent task. Renaming an X handle is an owner action with real
+consequences: the account is an existing reservation, prior posts are referenced
+in the archived handoffs, and every link above would need to move together. An
+agent changing four files without the account being renamed first would produce
+dead links, which is worse than the contradiction.
+
+The decision, stated as one problem and three options:
+
+1. Rename the account and update the four surfaces in one commit. Consistent with
+   rule 8. Costs the existing handle reservation and any inbound links to it.
+2. Keep the handle and stop citing it in `twitter.site`/`twitter.creator`, leaving
+   the footer link only. Reduces exposure from every share card to one footer row.
+3. Keep it as is and accept that the positioning line and the handle disagree.
+
+Recommendation: option 1 before any paid acquisition, option 2 if that cannot
+happen before Friday. Not urgent enough to delay launch on its own.
+
+A skeptical reader on Friday is the test the product sets for itself. This is the
+kind of detail that reader screenshots.
