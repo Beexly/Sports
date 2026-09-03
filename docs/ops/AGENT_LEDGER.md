@@ -220,7 +220,7 @@ the only copy, and nobody else can verify or build on it.
 | C-64 | settle-backfill defaultPersist score-disagreement guard (dual-audit verified) | claude | DONE | 6a2ec0d0d + regression test in settle-backfill.test.ts |
 | C-65 | settle-backfill capReached off-by-one fix: fetch cap+1 rows so capReached (rows beyond cap) is decidable; exactly-cap=false, cap+1=true; graded set still sliced to cap | claude | DONE | merge 4adc43f2b + capReached rework in settle-backfill.ts, 11/11 tests |
 | C-66 | backfill-team-efficiency + ingest-player-stats unpublished-season guards | claude | CLAIMED | — |
-| C-67 | merge-duplicate-games computeCanonicalFillData score-pair branch (AND to OR) | claude | CLAIMED | — |
+| C-67 | merge-duplicate-games computeCanonicalFillData score-pair branch (AND to OR) | claude | DONE | extracted pure rules to scripts/ops/game-merge-score-fill.ts (|| semantics) + 10 node:test cases via test:merge-score-fill |
 | C-68 | game-merge-plan canonicalPickId → referencePickId rename (repo-wide) | claude | CLAIMED | — |
 | C-69 | smoke-prod cold-start timeout retry logic | claude | CLAIMED | — |
 | C-70 | VERIFIED FIXES 2026-09-03: 6 real bugs from dual-audit verification (DeepSeek + Claude independent scans agreed on 6/12 real, 6/12 false/stale). Shipped as C-64 through C-69 with one commit each plus verify block. False positives NOT touched: confidence-tail pickType (already wired), external-watchdog set -e (already omitted with comment), owner-runbook dual-secret check (already present), agent-bash-guard env -S/--output (already handled with selftests), review-pr.md/canary.md (already correct), process-sport.test.ts (doesn't exist). | claude | CLAIMED | — |
