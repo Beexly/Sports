@@ -435,7 +435,7 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
         where: {
           stripeSubscriptionId: "sub_123",
           pastDueSince: null,
-          status: { not: "CANCELED" },
+          status: { notIn: ["CANCELED", "INCOMPLETE"] },
         },
         data: { pastDueSince: expect.any(Date) },
       })
@@ -468,7 +468,10 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
     // The status flip to PAST_DUE still runs (it has no pastDueSince: null where).
     expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
+        where: {
+          stripeSubscriptionId: "sub_123",
+          status: { notIn: ["CANCELED", "INCOMPLETE"] },
+        },
         data: { status: "PAST_DUE" },
       })
     );
@@ -478,17 +481,35 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
    * 4. A late invoice.payment_failed AFTER subscription.deleted does NOT resurrect access.
    *
    * Stripe may deliver a burst of dunning events after the cancel event. The
-   * terminal-CANCELED guard (status: { not: "CANCELED" } in the WHERE) ensures a
-   * late payment_failed cannot flip a CANCELED row back to PAST_DUE (which is
-   * access-granting in getUserEntitlements).
+   * never-grant-grace guard (status: { notIn: [...] } in the WHERE) ensures a
+   * late payment_failed cannot flip a terminal row back to PAST_DUE — which is
+   * access-granting in getUserEntitlements for PAST_DUE_GRACE_DAYS.
+   *
+   * INCOMPLETE is in that list alongside CANCELED for a different reason worth
+   * stating: an INCOMPLETE subscription is one whose FIRST charge never cleared,
+   * so it has never been paid for. Granting it a past-due grace window would
+   * hand out days of paid access on the strength of a payment that failed — the
+   * grace period exists to protect a lapsed paying customer, not to front
+   * access to one who never paid at all.
    */
   it("a late invoice.payment_failed AFTER subscription.deleted cannot resurrect access", async () => {
     mocks.subscriptionUpdateMany.mockImplementation(async (args) => {
       const w = (args as { where?: Record<string, unknown> }).where || {};
-      const statusNot = w["status"] as { not?: string } | undefined;
-      const statusGuard = statusNot?.not;
-      // If the row is CANCELED and the WHERE excludes CANCELED, it must not match.
-      if (statusGuard === "CANCELED") return { count: 0 };
+      const guard = w["status"] as
+        | { not?: string; notIn?: readonly string[] }
+        | undefined;
+      // Model BOTH operators. A mock that understands only `not` treats a
+      // `notIn` guard as absent and reports the update as having matched — it
+      // would pass a route that had dropped the guard entirely, which is the
+      // one thing this test exists to catch.
+      const excluded =
+        guard?.notIn !== undefined
+          ? guard.notIn
+          : guard?.not !== undefined
+            ? [guard.not]
+            : [];
+      // The row is CANCELED: it must not match a WHERE that excludes CANCELED.
+      if (excluded.includes("CANCELED")) return { count: 0 };
       return { count: 1 };
     });
 
@@ -499,14 +520,18 @@ describe("P9.5-06 — Cancellation / dunning / refund", () => {
 
     const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
-    // The PAST_DUE status flip is guarded by status: { not: "CANCELED" }.
     const pastDueCall = mocks.subscriptionUpdateMany.mock.calls.find(
       (call) =>
         (call[0] as { data?: Record<string, unknown> }).data?.["status"] === "PAST_DUE"
     );
     expect(pastDueCall).toBeDefined();
     const where = (pastDueCall![0] as { where?: Record<string, unknown> }).where;
-    expect(where?.["status"]).toEqual({ not: "CANCELED" });
+    expect(where?.["status"]).toEqual({ notIn: ["CANCELED", "INCOMPLETE"] });
+    // Assert membership as well as shape, so a reordering of the list is not a
+    // failure but a silent DROP of either terminal status is.
+    const excludedStatuses = (where?.["status"] as { notIn: readonly string[] }).notIn;
+    expect(excludedStatuses).toContain("CANCELED");
+    expect(excludedStatuses).toContain("INCOMPLETE");
   });
 
   /**
