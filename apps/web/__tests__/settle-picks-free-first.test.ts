@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
+import { backfillStaleSettlement } from "@/lib/data-sources/settle-backfill";
 
 /**
  * Tripwire for the settlement law (2026-09-02): the FREE grader runs first on
@@ -252,6 +253,30 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     const body = (await res.json()) as Body & { starved: boolean };
     expect(body.starved).toBe(false);
     expect(body.ok).toBe(true);
+  });
+
+  it("a cycle where only the stale backfill grades overdue picks is work, not starvation", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    (runFreePathSettlement as Mock).mockImplementation(async () => ({
+      ...freeResult(true),
+      picksSettled: 0,
+      picksHeld: 0,
+    }));
+    (backfillStaleSettlement as Mock).mockImplementationOnce(async () => ({
+      scanned: 2,
+      settled: 2,
+      unresolved: [],
+    }));
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    const body = (await res.json()) as Body & { starved: boolean; picksSettled: number };
+    expect(body.starved).toBe(false);
+    expect(body.ok).toBe(true);
+    // The backfill's settlements are this cycle's work and are reported as such.
+    expect(body.picksSettled).toBe(2);
+    expect(captureError).not.toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ stage: "starved-cycle" }),
+    );
   });
 
   it("the cycle is red only when the free pass itself fails", async () => {

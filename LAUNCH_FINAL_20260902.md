@@ -171,6 +171,13 @@ Verification for this pass: typecheck 22/22 exit 0, lint exit 0, cockpit + wirin
 suites 66/66, market-coverage + confidence-tail 11/11, brand lint and guardrails as recorded in
 the commit message.
 
+Devin's second review (decision record § D11) found three real defects in the new monitors and
+the starvation signal, fixed on this branch: market coverage and the confidence tail now read the
+same public population the board and the performance policy use (published, non-bootstrap, not a
+seed row), and a settle cycle in which only the stale backfill graded overdue picks is work, not
+starvation. A production re-read on the corrected population left today's tail finding unchanged
+(152 picks, 61 wins, 40%, no hidden rows in it).
+
 ## 6. Remaining risks, ranked
 
 1. Production's first `migrate deploy` applies the baseline and two forward migrations once; the simulation used `schema.prisma`, not a production dump. The build gate fails closed if any statement fails, leaving the previous deployment live.

@@ -1,9 +1,10 @@
 /**
  * Confidence-tail monitor — does the model's highest stated confidence earn it?
  *
- * Finding (production read, 2026-09-02, 1,663 graded WIN/LOSS picks): every
- * confidence bucket from 80 upward won between 33% and 47% of the time
- * (152 picks, 37% overall) while claiming 82–96% confidence. Most of that tail
+ * Finding (production read, 2026-09-02, 1,663 graded WIN/LOSS picks; re-read
+ * 2026-09-03 on the public population below, identical): every confidence
+ * bucket from 80 upward won between 33% and 47% of the time (152 picks, 61
+ * wins, 40% overall) while claiming 86% on average. Most of that tail
  * is model v5.0.0/v5.1.0 spread and total picks, but the current versions
  * still emit it (v5.2.6 + v5.2.7: 38 picks at ≥80, 14 wins). A tail that wins
  * less than half the time while claiming more than 80% is not miscalibrated,
@@ -117,11 +118,25 @@ export function summarizeConfidenceTail(
   };
 }
 
+/**
+ * The population is the public-performance one (public-performance-policy,
+ * calibration/report): published, non-bootstrap, not a seed row. The summary
+ * is served on a public endpoint, so a bootstrap or seed pick must never move
+ * the verdict in either direction.
+ */
+const SEED_MODEL_VERSION = "v5.0.0-seed";
+
 /** Narrow read surface so the loader stays testable without a Prisma client. */
 export interface ConfidenceTailDb {
   pick: {
     findMany(args: {
-      where: { result: { in: ["WIN", "LOSS"] }; confidence: { gte: number } };
+      where: {
+        result: { in: ["WIN", "LOSS"] };
+        confidence: { gte: number };
+        isPublished: true;
+        isBootstrap: false;
+        NOT: { modelVersion: string };
+      };
       select: { confidence: true; result: true; modelVersion: true };
     }): Promise<Array<{ confidence: number; result: string; modelVersion: string }>>;
   };
@@ -132,7 +147,13 @@ export async function loadConfidenceTail(
   floor: number = CONFIDENCE_TAIL_FLOOR,
 ): Promise<ConfidenceTailSummary> {
   const rows = await db.pick.findMany({
-    where: { result: { in: ["WIN", "LOSS"] }, confidence: { gte: floor } },
+    where: {
+      result: { in: ["WIN", "LOSS"] },
+      confidence: { gte: floor },
+      isPublished: true,
+      isBootstrap: false,
+      NOT: { modelVersion: SEED_MODEL_VERSION },
+    },
     select: { confidence: true, result: true, modelVersion: true },
   });
   return summarizeConfidenceTail(

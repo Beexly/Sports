@@ -109,6 +109,15 @@ export function classifyMarketCoverage(
 }
 
 /** Narrow read surface so the loader stays testable without a Prisma client. */
+/**
+ * Seed/demo picks (modelVersion "v5.0.0-seed") never count as coverage, the
+ * same exclusion the public win-rate readers and the board's relation
+ * predicate apply. Kept unconditional here (the board applies it only in
+ * production) because a monitor that can be turned green by a seed row is
+ * worse than none.
+ */
+const SEED_MODEL_VERSION = "v5.0.0-seed";
+
 export interface MarketCoverageDb {
   game: {
     findMany(args: {
@@ -119,7 +128,12 @@ export interface MarketCoverageDb {
   pick: {
     findMany(args: {
       where: {
+        // The public board's eligibility (load-gate-slate, board/state):
+        // published, non-bootstrap, not a seed row. A pick the board hides
+        // must not satisfy coverage.
         isPublished: true;
+        isBootstrap: false;
+        NOT: { modelVersion: string };
         result: "PENDING";
         game: { commenceTime: { gte: Date; lte: Date } };
       };
@@ -138,7 +152,13 @@ export async function loadMarketCoverage(
   const [games, picks] = await Promise.all([
     db.game.findMany({ where: { commenceTime: range }, select: { sport: { select: { key: true } } } }),
     db.pick.findMany({
-      where: { isPublished: true, result: "PENDING", game: { commenceTime: range } },
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        NOT: { modelVersion: SEED_MODEL_VERSION },
+        result: "PENDING",
+        game: { commenceTime: range },
+      },
       select: { pickType: true, game: { select: { sport: { select: { key: true } } } } },
     }),
   ]);

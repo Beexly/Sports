@@ -64,7 +64,7 @@ describe("summarizeConfidenceTail", () => {
 });
 
 describe("loadConfidenceTail", () => {
-  it("reads only graded WIN/LOSS picks at or above the floor", async () => {
+  it("reads only graded WIN/LOSS picks at or above the floor from the public population (published, non-bootstrap, not seed)", async () => {
     let seenArgs: unknown = null;
     const db: ConfidenceTailDb = {
       pick: {
@@ -79,7 +79,15 @@ describe("loadConfidenceTail", () => {
       },
     };
     const s = await loadConfidenceTail(db, 80);
-    expect(seenArgs).toMatchObject({ where: { result: { in: ["WIN", "LOSS"] }, confidence: { gte: 80 } } });
+    expect(seenArgs).toMatchObject({
+      where: {
+        result: { in: ["WIN", "LOSS"] },
+        confidence: { gte: 80 },
+        isPublished: true,
+        isBootstrap: false,
+        NOT: { modelVersion: "v5.0.0-seed" },
+      },
+    });
     expect(s.n).toBe(2);
     expect(s.wins).toBe(1);
     expect(s.verdict).toBe("insufficient");

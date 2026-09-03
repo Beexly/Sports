@@ -79,7 +79,7 @@ describe("classifyMarketCoverage", () => {
 });
 
 describe("loadMarketCoverage", () => {
-  it("queries published PENDING picks and games inside the window and classifies them", async () => {
+  it("queries board-eligible PENDING picks (published, non-bootstrap, not seed) and games inside the window", async () => {
     const seen: unknown[] = [];
     const db: MarketCoverageDb = {
       game: {
@@ -105,7 +105,16 @@ describe("loadMarketCoverage", () => {
     expect(report.windowHours).toBe(48);
     expect(report.to).toBe(new Date("2026-09-14T12:00:00Z").toISOString());
     expect(seen).toHaveLength(2);
-    expect(seen[1]).toMatchObject({ where: { isPublished: true, result: "PENDING" } });
+    // A pick the public board hides (bootstrap, seed, unpublished) must never
+    // satisfy coverage: the same predicate the board's relation filter uses.
+    expect(seen[1]).toMatchObject({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        NOT: { modelVersion: "v5.0.0-seed" },
+        result: "PENDING",
+      },
+    });
     expect(report.degraded.map((d) => `${d.sportKey}:${d.market}`)).toEqual([
       "americanfootball_ncaaf:SPREAD",
       "americanfootball_ncaaf:TOTAL",

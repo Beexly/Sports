@@ -182,7 +182,11 @@ export async function GET(request: Request) {
   // no usable finals were obtained: report the cycle red so the watchdog sees
   // the outage instead of an "ok" that masks it. Holds count as work (they are
   // recorded with a reason); a cycle with nothing overdue is a healthy no-op.
-  const totalSettled = free.picksSettled + (paidSupplement?.picksSettled ?? 0);
+  // The stale backfill grades exactly the overdue population, so what it
+  // settled is work this cycle did; a cycle where only the backfill graded is
+  // not starved. An error-shaped backfill result contributes nothing.
+  const backfillSettled = "error" in staleBackfill ? 0 : staleBackfill.settled;
+  const totalSettled = free.picksSettled + (paidSupplement?.picksSettled ?? 0) + backfillSettled;
   const starved = (priorOverdueCount ?? 0) > 0 && totalSettled === 0 && free.picksHeld === 0;
   if (starved) {
     advisories.push(

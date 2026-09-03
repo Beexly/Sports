@@ -265,3 +265,11 @@ Tripwires: `npm run typecheck` (22 workspaces) exit 0, `npm run lint` exit 0,
 cockpit/wiring/route-shape suites 66/66, monitor suites 11/11, `node --check`
 on both scripts, `npm run ops:runbook` prints the refreshed merge item,
 `npm run lint:brand` exit 0, `npm run guardrails` 26/26.
+
+## D11. Devin's second review (PR #685, 2026-09-03 00:22 UTC): three findings, all real
+
+| Finding | Verified against | Fix | Tripwire |
+|---|---|---|---|
+| Market coverage counted any published PENDING pick, so a bootstrap or seed pick the board hides could turn a market "covered" | `board/state.ts:280` relation predicate and `load-gate-slate.ts:580` both require `isPublished`, `isBootstrap: false` (and no seed row in production) | `loadMarketCoverage` uses the board predicate: published, non-bootstrap, `modelVersion <> "v5.0.0-seed"` (unconditional) | `market-coverage.test.ts` asserts the full predicate |
+| The confidence-tail summary, served on a public endpoint, read every graded pick including bootstrap, unpublished and seed rows | `public-performance-policy.ts:317-343` and `calibration/report.ts:40` define the public population as published, non-bootstrap, not seed | `loadConfidenceTail` reads that population. Production re-read 2026-09-03 (read-only): the ≥80 tail is 152 picks, 61 wins (40%), mean claimed 86%, with 0 bootstrap, 0 unpublished and 0 seed rows in it, so today's verdict is unchanged; the filter is protective | `confidence-tail.test.ts` asserts the full predicate |
+| A settle cycle in which only the 6h stale backfill graded overdue picks reported `starved` (ok:false, Sentry) because `totalSettled` counted only the free and paid passes | `settle-picks/route.ts:185-186`; the backfill lane grades exactly the overdue population | `backfillSettled` (0 when the backfill result is error-shaped) joins the total and the starvation decision; `picksSettled` in the response includes it | `settle-picks-free-first.test.ts` (+1): free and paid settle nothing, backfill settles 2, cycle is ok and not starved |
