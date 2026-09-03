@@ -66,4 +66,11 @@ baseline: typecheck=0  lint=0  guards=24/26 (api-v1-boundary expected FAIL; ai-t
 | H-D | wire markClosingSnapshots behind flag | DONE | 18:37 | markClosingSnapshotsIfEnabled no-op unless LINE_ARCHIVE_ENABLED=true; settle-sport swallows archive errors; 54/54 settle+archive tests; tsc=0 lint=0 |
 | H-E | CLV + pick-universe census (read-only) | BLOCKED | 19:15 | hermes_ro exists on gse-postgres/neondb but is a member of neon_superuser; INSERT is not permission-denied (fails NOT NULL). neondb_owner cannot REVOKE neon_superuser. Retroactive CLV: UNKNOWN. |
 | H-F | DOC_DRIFT.md | DONE | 18:41 | handoff/DOC_DRIFT.md; seed+schedule+16 missing paths proved by test -f; CRON_MATRIX cadence table stale vs live vercel.json |
-| H-G | suppression curve vs random + oracle | DONE | 19:29 | DROP semantics (selective-publish-runtime.ts:133). curveAtRates/randomBaseline/oracleBaseline/curveGap. Seed 20260818. 8/8 tests. Real-data run blocked on H-E export. |
+|| H-G | suppression curve vs random + oracle | DONE | 19:29 | DROP semantics (selective-publish-runtime.ts:133). curveAtRates/randomBaseline/oracleBaseline/curveGap. Seed 20260818. 8/8 tests. Real-data run blocked on H-E export. |
+| H1-qb | QB pressures model + pressureRate bind | DONE | 08-22 | commit 88368e9c, pushed |
+| H2-fum | Fumbles model + fumbleRate bind + pfr-def rewrite | DONE | 08-23 | commit 55fd862d, pushed |
+| H2-ayd | air-yards-diff bind → pass yards | DONE | 08-23 | commit d993ca2a (agent), pushed; 11 tests |
+| H2-wave | 6 covariate binds salvaged from 524-killed agent fleet | DONE | 08-23 | commit 01a07c2c, pushed: aggressiveness→passTD, cay→passYards, passerRating→passTD, ryoePerAtt→rushTD, avgSeparation→catches, rpoe→rushTD (+tests+barrel); backtest suite completed; typecheck=0 lint=0 edge-lab 1120/1120 green |
+| P3-2 | pin promptfoo to 0.122.0 | DONE | 08-23 | commit fd688f17 (agent) |
+| EDGE-R&D | next-edge research report | DONE | 08-23 | handoff/EDGE_RESEARCH_NEXT_5.md: tackles, pass attempts, QB hits, completions-allowed, missed tackles (all copyable patterns) |
+| NOTE | agent fan-out lesson | — | 08-23 | >3 concurrent laguna :free children hit HTTP 524 at ~60K ctx; salvage pattern logged in docs/ops/AGENT.md (c6c533fb). Remaining H2 binds not yet built: blitz-rate→sacks, box-rate→rushYards, missed-tackle→recTD, comp-pct-allowed→passAttempts, pra→pressures, ttlos→rushAttempts, sticks→completions (bus fields for several already added in 01a07c2c) |
