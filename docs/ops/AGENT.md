@@ -126,3 +126,10 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - PR #553: OPEN, mergeable (was UNSTABLE before rebase, now CLEAN).
 - No DONE.md STOP. Watchdog stays live.
 - Next: H0 #4 TPRR — PR #556 (grok/h0-est-routes) OPEN/GREEN on main. Do NOT start a second TPRR bind.
+
+## Now (2026-09-03 15:48 CT)
+### 2026-09-03 15:48 CT | Hermes (verified-fixes session) | CLEAN
+- Dual-audit verified bug batch shipped as PR #689 (draft, claude/verified-fixes-2026-09-03 → main), one commit per fix: C-64 settle-backfill SCORE_MISMATCH no-clobber guard + regression test (47037c6d1); C-65 capReached decidable — fetch cap+1, > cap, exactly-cap now false (cd0c6adc1); C-66 backfill-team-efficiency + ingest-player-stats fall back to floor only on UNPUBLISHED signals (404/zero-rows) via shared isUnpublishedSeasonSignal — 5xx outage recorded failed, never masked (968c49522); C-67 merge score-pair fill && → ||, partial canonical pairs fill from clean FINAL alias, pure rules extracted to scripts/ops/game-merge-score-fill.ts + 10 node:tests via test:merge-score-fill (ea893d5a8); C-68 PickConflict.canonicalPickId → referencePickId (f4709df22); C-69 smoke-prod cold-start retry — one 2s-settle retry per non-200, cap 8, LAST_CODE global after subshell counter bug caught in self-test (5ba852598).
+- Merged origin/main (PR #685) mid-branch, clean; both sportKey per-sport fetch and C-64 guard kept.
+- Gates at close: tsc 0 errors, lint clean, guardrails 26/26, test:fast 251/251, settle-backfill 11/11, game-merge-plan 17/17, merge-score-fill 10/10, cron route tests 49/49. Ledger C-64..C-70 all DONE.
+- Next action (one owner): founder review + merge PR #689; next agent opens from origin/main.
