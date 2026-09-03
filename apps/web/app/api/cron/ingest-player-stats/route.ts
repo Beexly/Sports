@@ -15,13 +15,15 @@
  * Rollover-starvation guard: in backfill mode the planner always re-picks the
  * NEWEST missing season, so a season whose source publishes nothing yet (the
  * September rollover, before nflverse ships week-1 rows) would be re-picked
- * every day while older missing seasons starve. When the picked season
- * persists zero rows or source-errors, the SAME run attempts exactly ONE
- * fallback: the next-newest missing season. Capped at one because each
- * ingestion is a full fetch+upsert cycle and two seasons is the most that
- * safely fits the 300s budget. Clearance denials never fall back — the gate
- * is global, so a second season would be denied too. Both attempts are
- * reported in the response.
+ * every day while older missing seasons starve. When the picked season is
+ * UNPUBLISHED (404 source-error, or "ok" with zero rows via the older
+ * combined asset — lib/ingestion/unpublished-season.ts), the SAME run
+ * attempts exactly ONE fallback: the next-newest missing season. Capped at
+ * one because each ingestion is a full fetch+upsert cycle and two seasons is
+ * the most that safely fits the 300s budget. Other source errors (5xx,
+ * timeout) are outages and never fall back; clearance denials never fall
+ * back either — the gate is global, so a second season would be denied too.
+ * Both attempts are reported in the response.
  *
  * Optional `?season=YYYY` override lets an operator drive specific seasons
  * manually (faster backfill via repeated CRON_SECRET curls) — never required.
@@ -36,6 +38,7 @@ import {
   type PlayerStatsIngestResult,
 } from "@/lib/ingestion/player-stats";
 import { planPlayerStatsRun } from "@/lib/ingestion/player-stats-backfill";
+import { isUnpublishedSeasonSignal } from "@/lib/ingestion/unpublished-season";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -59,13 +62,15 @@ export async function GET(request: Request): Promise<NextResponse> {
   const plan = await planPlayerStatsRun();
   const firstResult = await ingestPlayerWeeklyStats(plan.season);
 
-  // Rollover-starvation guard (see module doc): the picked season yielded no
-  // persisted rows, so it will still be "missing" tomorrow and the planner
-  // would park on it forever. Spend this run's remaining budget on the
-  // next-newest missing season instead — at most one fallback per run.
-  const firstYieldedNothing =
-    firstResult.status === "source-error" ||
-    (firstResult.status === "ok" && firstResult.statsUpserted === 0);
+  // Rollover-starvation guard (see module doc): the picked season is
+  // UNPUBLISHED — a 404 source-error or ok-with-zero-rows — so it will still
+  // be "missing" tomorrow and the planner would park on it forever. Spend
+  // this run's remaining budget on the next-newest missing season instead —
+  // at most one fallback per run. Any other source error (5xx, timeout,
+  // network) is an OUTAGE, not unpublished: no fallback, so the failure is
+  // recorded as failed instead of masked by an older-season success
+  // (doctrine: lib/ingestion/unpublished-season.ts).
+  const firstYieldedNothing = isUnpublishedSeasonSignal(firstResult);
   const olderMissingSeasons = plan.missingSeasons.filter((s) => s !== plan.season);
   const fallbackSeason =
     plan.mode === "backfill" && firstYieldedNothing

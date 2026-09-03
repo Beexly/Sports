@@ -44,6 +44,10 @@
  *   --limit <n>      Cap the number of duplicate groups processed.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
+import {
+  aliasScoreFill,
+  canonicalScoreFill,
+} from "./game-merge-score-fill";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { db } from "@sports/db";
@@ -381,24 +385,15 @@ function computeCanonicalFillData(
       }
     }
   }
-  if (canonical.homeScore == null && canonical.awayScore == null) {
-    const source = aliases.find(
-      (alias) => alias.status === "FINAL" && alias.homeScore != null && alias.awayScore != null,
-    );
-    if (source) {
-      data["homeScore"] = source.homeScore;
-      data["awayScore"] = source.awayScore;
-      if (canonical.status !== "FINAL") data["status"] = "FINAL";
-    }
-  }
-  return data;
+  // Score-pair logic is shared with its unit tests (C-67): a partial
+  // canonical pair (either side null) fills from a clean FINAL alias.
+  const scoreFill = canonicalScoreFill(canonical, aliases);
+  return { ...data, ...scoreFill };
 }
 
 /** So pending picks on an alias can still grade: copy the canonical's terminal score onto the alias ONLY when the alias has neither score yet. */
 function computeAliasGradeFillData(canonical: GameRow, alias: GameRow): Record<string, unknown> {
-  if (alias.homeScore != null || alias.awayScore != null) return {};
-  if (canonical.homeScore == null || canonical.awayScore == null) return {};
-  return { status: canonical.status, homeScore: canonical.homeScore, awayScore: canonical.awayScore };
+  return aliasScoreFill(canonical, alias);
 }
 
 interface GroupExecutionReport {
