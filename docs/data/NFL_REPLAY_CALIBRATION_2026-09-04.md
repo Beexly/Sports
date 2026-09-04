@@ -93,6 +93,41 @@ anti-informative** — which is a direct problem for `PREMIUM_CONFIDENCE_THRESHO
 and for any tier ladder that prices off it. A pick labelled "high conviction" was, on
 27 seasons of history, the worse bet.
 
+### The confidence bands ARE the paywall
+
+This is not an internal-metric problem. Confidence decides what a customer pays for:
+
+```
+packages/prediction-engine/src/scoring.ts:541, :750, :945
+packages/ingestion-pipeline/src/generate-signal-slate.ts:189
+
+    const tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
+```
+
+`PREMIUM_CONFIDENCE_THRESHOLD = 70`. So the 70-79 band above **is** the paid board,
+and the 65-69 band **is** what we give away. Set side by side:
+
+| Band | Ships as | n | Win rate | ROI |
+|---|---|---|---|---|
+| 70-79 | **PREMIUM** (paywalled) | 3,770 | 48.33% | −7.52% |
+| 65-69 | **FREE** (given away) | 9,693 | 49.47% | −5.46% |
+
+**Stated precisely, because the precision matters:** two-proportion test gives
+z = −1.19, p = 0.235. The gap is **not statistically significant**, so the claim
+"premium picks are worse than free picks" is **not supported** and must not be made.
+
+What *is* supported is the thing that matters commercially: **on 13,463 historical
+picks there is no evidence that the paywalled picks outperform the free ones, and
+the point estimate runs the wrong way.** A paid tier whose whole premise is "these
+are the better picks" is charging for a distinction we cannot demonstrate — and the
+best available measurement leans against it rather than for it.
+
+Note also what the bands show about the live distribution: there is **no 80+ row at
+all** — the engine essentially never emits confidence ≥ 80 on 27 seasons — and only
+183 picks land in 60-64. Almost the entire board is squeezed into 65-79, so the
+threshold at 70 is slicing a narrow, noisy range rather than separating genuinely
+different populations.
+
 ### It has never worked, in any era
 
 ```
