@@ -663,12 +663,44 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   const incomingStatus = mapStripeStatus(stripeSubscription.status);
   // One read of the existing row, reused by the out-of-order guard AND the
   // defensive no-downgrade guard below.
+  //
+  // THIS READ MUST NOT BE SWALLOWED. It used to end in `.catch(() => null)`,
+  // which made a transient Postgres fault indistinguishable from "no row for
+  // this customer yet" — and `null` silently DISABLES every guard below that
+  // depends on it, all at once:
+  //
+  //   1. the out-of-order resurrection guard (needs existing.status ===
+  //      "CANCELED") → a delayed `updated` carrying an old active snapshot
+  //      re-grants premium on a subscription that is dead in Stripe;
+  //   2. the superseded-subscription guard (needs existing.stripeSubscriptionId)
+  //      → a late event for a cancelled sub_OLD clobbers the paying sub_NEW row,
+  //      and sub_OLD's eventual cancel then revokes a paying member;
+  //   3. the grandfathering no-downgrade guard (needs existing.tier) → an
+  //      unmapped price id downgrades a paid member to FREE;
+  //   4. `canceledAt: existing?.canceledAt ?? new Date()` → the real
+  //      cancellation timestamp is overwritten with "now".
+  //
+  // And the failure was invisible: the handler completed, the route answered
+  // 200 `{received:true}`, and the event was recorded as processed, so Stripe
+  // never redelivered. Rethrowing turns that into a 500, which is exactly the
+  // signal Stripe's retry schedule is built for — the event comes back and the
+  // guards run against a real row. Loud and retried beats silent and wrong on
+  // the money path.
   const existing = await db.subscription
     .findUnique({
       where: { stripeCustomerId: customerId },
       select: { status: true, canceledAt: true, stripeSubscriptionId: true, tier: true },
     })
-    .catch(() => null);
+    .catch((err: unknown): never => {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      console.error(
+        `[stripe] syncSubscription: could not read the existing subscription row for customer ` +
+          `${customerId} (subscription ${stripeSubscription.id}, incoming ${incomingStatus}): ${message}. ` +
+          "Refusing to sync with the out-of-order, superseded-subscription and no-downgrade guards " +
+          "blind — failing the webhook so Stripe redelivers.",
+      );
+      throw err;
+    });
 
   if (incomingStatus !== "CANCELED") {
     if (
