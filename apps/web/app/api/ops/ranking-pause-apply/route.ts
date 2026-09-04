@@ -47,9 +47,13 @@ export async function POST(request: Request) {
 
   const enabled = body.enabled === true;
   const plan = await loadProvenPathPlan();
+  // Group keys are caller-supplied and end up in the persisted `note`, which
+  // `resolvePausedGroups` echoes into `operatorHint`. Flatten them here for the
+  // same reason as setBy/note: a newline in a group key is never legitimate,
+  // and would otherwise walk straight past the sanitising done below.
   const groups =
     Array.isArray(body.groups) && body.groups.length > 0
-      ? body.groups.map(String)
+      ? body.groups.map((g) => sanitizeLogField(g, 120)).filter(Boolean)
       : [...(plan?.pauseGroups ?? [])];
 
   if (enabled && groups.length === 0) {
@@ -70,9 +74,9 @@ export async function POST(request: Request) {
     // stored on the audit row. Flatten control characters here, at the trust
     // boundary, so a caller cannot inject a newline and forge a second log
     // record claiming a different outcome.
-    setBy: sanitizeLogField(body.setBy ?? "", 120) || "ops.ranking-pause-apply",
+    setBy: sanitizeLogField(body.setBy, 120) || "ops.ranking-pause-apply",
     note:
-      sanitizeLogField(body.note ?? "", 500) ||
+      sanitizeLogField(body.note, 500) ||
       (enabled
         ? `Founder-yes pause apply: ${groups.join(", ")}. Not PROVEN; maps OFF.`
         : "Pause apply disabled (durable)."),
@@ -84,7 +88,6 @@ export async function POST(request: Request) {
   // every isolate, and a failed write has to be a retryable 500 rather than a
   // green light over a control that was never applied.
   const persist = await persistRankingPauseApply(snap);
-  clearSelectiveRuntimeCaches();
 
   // `ok` means ONE thing on this route: the suppression control is now durable
   // in every isolate. "stub" is not that — no DATABASE_URL is configured, so
@@ -112,6 +115,16 @@ export async function POST(request: Request) {
       { status: failedWrite ? 500 : 503 },
     );
   }
+
+  // ONLY on a landed write. This used to run unconditionally, which made a
+  // failed write strictly worse than doing nothing: the isolate was still
+  // holding the PREVIOUS valid pause snapshot in cache and pausing correctly,
+  // and clearing it forced a re-read that — during the outage that just broke
+  // the write — answers "no durable pause". `resolvePausedGroups` then falls
+  // through to an empty pause list, so the groups being suppressed start
+  // publishing again. A write that did not land must leave the running posture
+  // exactly as it found it.
+  clearSelectiveRuntimeCaches();
 
   return NextResponse.json({
     ok: true,

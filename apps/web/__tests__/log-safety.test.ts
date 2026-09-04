@@ -88,6 +88,55 @@ describe("redactErrorDetail", () => {
     expect(out).toMatch(/\[truncated\]$/);
   });
 
+  it("redacts a password containing bracket and quote characters", () => {
+    // The terminator set once excluded `)` and `'`, so a password containing
+    // either truncated the match and published everything after it — the rest
+    // of the password, the host and the port.
+    for (const pw of ["pa)ss", "pa'ss", "pa]ss", "p(a)s'[s]"]) {
+      const out = redactErrorDetail(
+        new Error(["Can't reach ", "postgresql", "://gse:", pw, "@", SENTINEL_HOST, ":5432/gse"].join("")),
+      );
+      expect(out).not.toContain(pw);
+      expect(out).not.toContain(SENTINEL_HOST);
+      expect(out).not.toContain("5432");
+    }
+  });
+
+  it("redacts host:port from driver errors that are not Prisma's phrasing", () => {
+    // `pg` and `ioredis` never say "database server at". Before this the host
+    // and port went to the log verbatim.
+    const pg = redactErrorDetail(new Error(`connection to ${SENTINEL_HOST}:5432 failed`));
+    expect(pg).not.toContain(SENTINEL_HOST);
+    expect(pg).not.toContain("5432");
+
+    const redis = redactErrorDetail(new Error(`connect ECONNREFUSED ${SENTINEL_HOST}:6379`));
+    expect(redis).not.toContain(SENTINEL_HOST);
+    expect(redis).not.toContain("6379");
+
+    // Dot-less container hostname, introduced by the errno keyword.
+    const bare = redactErrorDetail(new Error("connect ECONNREFUSED db:6379"));
+    expect(bare).not.toContain("db:6379");
+
+    const ip = redactErrorDetail(new Error("connection to 10.1.2.3:5432 refused"));
+    expect(ip).not.toContain("10.1.2.3");
+  });
+
+  it("redacts the port even with whitespace around the colon", () => {
+    const out = redactErrorDetail(
+      new Error(`Can't reach database server at ${SENTINEL_HOST} : 5432`),
+    );
+    expect(out).not.toContain("5432");
+    expect(out).not.toContain(SENTINEL_HOST);
+  });
+
+  it("leaves ordinary diagnostics that merely look like host:port alone", () => {
+    // Requiring a dotted host (or an errno keyword) is what keeps redaction
+    // from eating the numbers an operator actually needs.
+    const out = redactErrorDetail(new Error("failed at line:42 after attempt:3 of 5"));
+    expect(out).toContain("line:42");
+    expect(out).toContain("attempt:3");
+  });
+
   it("handles a thrown non-Error without crashing the logger", () => {
     expect(redactErrorDetail("plain string failure")).toBe("plain string failure");
     expect(redactErrorDetail(undefined)).toBe("undefined");
@@ -121,5 +170,16 @@ describe("sanitizeLogField", () => {
 
   it("leaves an ordinary value untouched", () => {
     expect(sanitizeLogField("ops.ranking-pause-apply")).toBe("ops.ranking-pause-apply");
+  });
+
+  it("does not throw on a non-string — its callers read untrusted request bodies", () => {
+    // `{"setBy": 12}` used to reach `value.replace` and turn a malformed ops
+    // POST into a 500 from a kill-switch endpoint.
+    expect(() => sanitizeLogField(12 as unknown as string)).not.toThrow();
+    expect(sanitizeLogField(12 as unknown as string)).toBe("12");
+    expect(sanitizeLogField(undefined)).toBe("");
+    expect(sanitizeLogField(null)).toBe("");
+    expect(sanitizeLogField({ a: 1 } as unknown as string)).toBe("[object Object]");
+    expect(sanitizeLogField(["a", "b"] as unknown as string)).toBe("a,b");
   });
 });

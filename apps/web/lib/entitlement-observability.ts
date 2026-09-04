@@ -43,6 +43,45 @@ type SiteThrottleState = {
 const throttleBySite = new Map<string, SiteThrottleState>();
 
 /**
+ * How long a spent entry is kept before it is swept.
+ *
+ * Generous on purpose: an entry whose window has just elapsed still holds the
+ * suppressed count that its NEXT printed line is supposed to report, so
+ * evicting at exactly one window would silently drop the number. Ten windows
+ * is long past the point where that count is still interesting.
+ */
+const THROTTLE_RETENTION_MS = THROTTLE_WINDOW_MS * 10;
+
+/**
+ * Hard ceiling on distinct keys, as a backstop to the sweep.
+ *
+ * Keying on the fault text is what stops a second failure mode hiding behind
+ * the first — but it also means a fault whose text varies per occurrence (one
+ * carrying a request id, say) mints a new key every time. Unbounded, that is a
+ * slow leak for the life of a warm server process. The sweep handles the
+ * ordinary case; this catches a burst that outruns it.
+ */
+const MAX_THROTTLE_KEYS = 500;
+
+/**
+ * Drop spent entries. Runs only when a line is actually printed, so the cost
+ * is paid once per emitted log rather than once per suppressed request.
+ */
+function sweepThrottle(now: number): void {
+  for (const [key, state] of throttleBySite) {
+    if (now - state.emittedAt >= THROTTLE_RETENTION_MS) throttleBySite.delete(key);
+  }
+  // A Map iterates in insertion order and every emit re-inserts, so the oldest
+  // keys are the least recently printed.
+  let excess = throttleBySite.size - MAX_THROTTLE_KEYS;
+  if (excess <= 0) return;
+  for (const key of throttleBySite.keys()) {
+    if (excess-- <= 0) break;
+    throttleBySite.delete(key);
+  }
+}
+
+/**
  * Drop the throttle state. Tests only: each case must start from silence, or a
  * neighbouring case's log would suppress the one under assertion.
  */
@@ -88,6 +127,10 @@ export function logEntitlementFailClosed(
   }
 
   const suppressed = state?.suppressed ?? 0;
+  // Delete before re-inserting so this key moves to the back of the insertion
+  // order, which is what makes the size cap evict least-recently-printed.
+  throttleBySite.delete(throttleKey);
+  sweepThrottle(now);
   throttleBySite.set(throttleKey, { emittedAt: now, suppressed: 0 });
 
   const who = sanitizeLogField(userId ?? "<unauthenticated>", 64);

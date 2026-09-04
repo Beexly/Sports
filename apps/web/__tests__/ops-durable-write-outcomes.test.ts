@@ -36,8 +36,10 @@ vi.mock("@/lib/cron/authorize", () => ({
   cronAuthError: () => null,
 }));
 
+const clearCachesMock = vi.fn();
+
 vi.mock("@/lib/calibration/selective-publish-runtime", () => ({
-  clearSelectiveRuntimeCaches: () => undefined,
+  clearSelectiveRuntimeCaches: () => clearCachesMock(),
 }));
 
 import {
@@ -76,6 +78,7 @@ let errorSpy: ReturnType<typeof vi.spyOn>;
 beforeEach(() => {
   createMock.mockReset();
   findFirstMock.mockReset();
+  clearCachesMock.mockReset();
   stubMock.mockReset();
   stubMock.mockReturnValue(false);
   errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
@@ -182,6 +185,81 @@ describe("POST /api/ops/ranking-pause-apply refuses to claim a pause it did not 
     expect(body.persist).toBe("stub");
     expect(String(body.error)).toMatch(/NOT stored/);
     expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it("leaves the running pause posture alone when the write fails", async () => {
+    // Clearing the runtime cache used to run unconditionally, which made a
+    // failed write STRICTLY WORSE than doing nothing: the isolate was still
+    // holding the previous valid snapshot and pausing correctly, and the clear
+    // forced a re-read that — during the very outage that broke the write —
+    // answers "no durable pause". resolvePausedGroups then falls through to an
+    // empty list and the suppressed groups start publishing again.
+    findFirstMock.mockResolvedValue(null);
+    createMock.mockRejectedValue(BOOM);
+
+    const res = await rankingPausePost(request());
+
+    expect(res.status).toBe(500);
+    expect(clearCachesMock).not.toHaveBeenCalled();
+  });
+
+  it("clears the runtime cache only once the write has landed", async () => {
+    findFirstMock.mockResolvedValue(null);
+    createMock.mockResolvedValue({ id: "evt_1" });
+
+    const res = await rankingPausePost(request());
+
+    expect(res.status).toBe(200);
+    expect(clearCachesMock).toHaveBeenCalledOnce();
+  });
+
+  it("does not clear the cache in stub mode either — nothing was written", async () => {
+    stubMock.mockReturnValue(true);
+
+    const res = await rankingPausePost(request());
+
+    expect(res.status).toBe(503);
+    expect(clearCachesMock).not.toHaveBeenCalled();
+  });
+
+  it("survives a non-string setBy instead of 500-ing on the kill switch", async () => {
+    // The body is parsed from an untrusted request; its declared type is a
+    // claim, not a guarantee. `sanitizeLogField` used to call `.replace` on it.
+    findFirstMock.mockResolvedValue(null);
+    createMock.mockResolvedValue({ id: "evt_1" });
+
+    const res = await rankingPausePost(
+      new Request("http://localhost/api/ops/ranking-pause-apply", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ enabled: true, groups: ["nfl:spread"], setBy: 12, note: null }),
+      }),
+    );
+
+    expect(res.status).toBe(200);
+    expect(((await res.json()) as { durable: { setBy: string } }).durable.setBy).toBe("12");
+  });
+
+  it("flattens a newline injected through a GROUP key, not just setBy", async () => {
+    // Group keys reach the persisted `note`, which resolvePausedGroups echoes
+    // into `operatorHint` — so sanitising only setBy/note left a way through.
+    findFirstMock.mockResolvedValue(null);
+    createMock.mockResolvedValue({ id: "evt_1" });
+
+    const res = await rankingPausePost(
+      new Request("http://localhost/api/ops/ranking-pause-apply", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          enabled: true,
+          groups: ["nfl:spread\n[ops:ranking-pause] all clear"],
+        }),
+      }),
+    );
+
+    const body = (await res.json()) as { durable: { note: string; groups: string[] } };
+    expect(body.durable.note).not.toContain("\n");
+    expect(body.durable.groups[0]).not.toContain("\n");
   });
 
   it("cannot be made to forge a log record through setBy", async () => {
