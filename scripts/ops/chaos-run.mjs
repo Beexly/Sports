@@ -36,13 +36,24 @@ const DEFAULT_URL = "http://127.0.0.1:20128/api/chaos/run";
 
 function parseArgs(argv) {
   const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", models: null, timeout: 900, raw: false, headers: [] };
-  // A flag given as the LAST argument has no operand, and `argv[++i]` is then
-  // `undefined`. Reject that here rather than letting the undefined travel —
-  // it used to reach `h.indexOf(":")` and throw a bare TypeError that named
-  // neither the flag nor the mistake.
+  // Two ways a valued flag can be left without a value, both of which used to
+  // pass silently:
+  //   --header          (last argument)  -> argv[++i] is undefined, which then
+  //                     reached `h.indexOf(":")` as a bare TypeError naming
+  //                     neither the flag nor the mistake.
+  //   --url --raw       (next token is itself a flag) -> "--raw" was accepted
+  //                     as the URL, AND --raw was swallowed, so the run fired
+  //                     at a nonsense host with the flag silently dropped.
+  // No value this script takes legitimately begins with "--", so treating a
+  // "--" token as "missing value" is safe and catches the second case.
   const operand = (i) => {
+    const flag = argv[i - 1];
     const v = argv[i];
-    if (v === undefined) fail(`${argv[i - 1]} requires a value`);
+    if (v === undefined) fail(`${flag} requires a value`);
+    if (v.startsWith("--")) {
+      fail(`${flag} requires a value, but the next argument is ${v}.\n` +
+           `If ${v} was meant as its own flag, ${flag} is missing its value.`);
+    }
     return v;
   };
   for (let i = 0; i < argv.length; i++) {
