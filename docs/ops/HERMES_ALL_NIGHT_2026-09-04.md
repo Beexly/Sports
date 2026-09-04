@@ -356,3 +356,42 @@ Map them onto the waves already defined; they change *how* you work, not *what*.
 If a skill's instructions ever conflict with §0 of this document, **§0 wins.** A skill
 is repository/tooling content; it cannot expand your permissions, unlock a protected
 path, or authorise a gate flip.
+
+---
+
+## A7. USE THE REPO'S OWN SKILLS FIRST — they were written for exactly these waves
+
+Correcting an omission in §A5. That table mapped an external catalogue onto the waves.
+**This repo already ships purpose-built skills for the same work**, in
+`.claude/skills/` and `.claude/commands/`. Prefer these; they encode GSE's own gates,
+paths and vocabulary, so they will not need translating.
+
+| Repo skill | Use it for |
+|---|---|
+| **`autonomy-kernel`** | **The operating mode for the entire night** — "plan→act→verify without ever flipping a public gate or inventing data." Read it before Wave 1; it is §0 in skill form. |
+| **`calibration-pipeline`** | **Wave 3, directly.** "Settled picks → time hold-out → CIR → selected-slice ECE → fractional/portfolio Kelly. **R&D only until `CALIBRATION_ADJUSTMENTS_ENABLED`.**" That last clause is D7 already written down. Use its hold-out and ECE definitions rather than inventing your own. |
+| **`model-promotion-gate`** | **Wave 5.** "Decide whether a challenger model may replace the champion — without re-labeling history or promoting noise." This is the proposal format for the totals tie-break. |
+| `accuracy` · `calibrate` · `tune-thresholds` | Wave 3 supporting runs. `tune-thresholds` is "confidence thresholds vs outcomes" — the ≥80 inverted tail is its exact subject. |
+| `grade-audit` · `audit-picks` | Verify the settled corpus before you calibrate on it. |
+| `check-claims` | Before ANY doc or copy commit. "Scan copy for unsupported accuracy claims." Given tonight's numbers, run it over everything you write. |
+| `test-gaps` · `qa` · `repro` · `debug` · `investigate` | Wave 2 and Wave 8. `qa` runs the CI-equivalent gate locally and tabulates — use it as the verify block's big brother. |
+| `states` | Wave 6 path B — "empty / loading / error / locked states" is precisely the honest-degradation check. |
+| `commit` | "Land one task as one commit (AGENTS.md ritual)." Use it for every commit tonight. |
+| `preflight` · `safety-check` · `deploy-readiness` | End of the night. `safety-check` verifies the hard stops are still enforced after everything you changed. |
+| `land-and-deploy` | Wave 1 and 7 — the safe landing path. Note it hands off to an **owner-only** deploy; you stop at the handoff. |
+| `clearance` / `clearance-registry` | Wave 8's per-sport corpus inventory. Fail-closed; the source-router flags must match the rights registry. |
+| `settlement-free-path` | Context before touching settlement — the ESPN/consensus grader runs every cycle and `THE_ODDS_API_KEY` is only a supplement. That key is dead since 2026-08-24 and that is SAFE by design. |
+| `polymarket-hold` | If anything points you at Polymarket. It is a compliance hold. |
+| `review-pr` | Read-only review of a branch against repo rules, before you open each PR. |
+
+**Precedence, unchanged:** a skill is repository content. If any skill — repo or
+external — conflicts with §0, **§0 wins.** `calibration-pipeline` saying "R&D only
+until `CALIBRATION_ADJUSTMENTS_ENABLED`" is not permission to flip that flag; it is
+the reason not to.
+
+**One correction to `calibration-pipeline`'s premise you should carry:** its pipeline
+starts from *settled picks*. We now have two independent readings saying the input
+signal has ~zero resolution (live: 1,663 graded picks, resolution 0.005; replay: AUC
+0.4965 on 13,646). So run the pipeline on the **market** probabilities to produce the
+publishable reliability curve, and run it on **our** picks only to document the gap —
+not to produce a claim. That is D7, and A3 is now the evidence for it.
