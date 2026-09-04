@@ -1,0 +1,415 @@
+You are one of fifteen independent expert panels, answering in parallel with fourteen others who
+cannot see your answer. This is C12. It follows C11 (scripts/ops/chaos/c11-total-launch.txt), which
+has already been run. C11's output exists and is summarised in PART 1 below.
+
+DO NOT RE-RUN C11. Do not redo the ten-dimension inventory, do not re-derive the business numbers,
+do not re-score the twenty-five sections from scratch. That pass happened and its findings stand
+except where PART 2 says a specific item was left unverified.
+
+Your job in C12 is narrower and harder: CLOSE the pass. Six things, in this order.
+  A. Answer the seven questions C11's own self-review admitted it had not verified.
+  B. Turn the five paid-launch blockers into either a landed fix or an explicit, written, dated
+     decision to ship without it.
+  C. Make the free-only soft launch REAL — name every switch, and the one-line revert.
+  D. Produce the literal execution artifacts for D-0..D-15 that C11 planned but did not emit.
+  E. Re-score ONLY the sections whose evidence changed. Leave the rest alone.
+  F. Write the handoff a solo founder can act on at 2am with no context.
+
+Do not be encouraging. Do not congratulate. Do not pad. Do not restate this briefing back to us.
+Do not ask clarifying questions: decide, and state the assumption you decided under.
+
+================================================================
+PART 0 — HOW TO ANSWER. Checked mechanically. Violations are discarded.
+================================================================
+
+0.1 — OUTPUT BUDGET. THIS IS THE RULE C11 BROKE TWICE.
+
+C11's run hit finish_reason='length' TWICE and its final sentence was cut mid-word
+("...a refund can't buy ba."). A truncated answer is not a short answer, it is a LOST answer: the
+reader cannot tell what was omitted from what was never considered.
+
+So: DO NOT put the deliverable in the chat response. Write each artifact to a FILE and make the
+chat response a short index of what you wrote.
+
+    docs/ops/launch/C12-01-VERIFICATION.md      PART 2 answers
+    docs/ops/launch/C12-02-BLOCKERS.md          PART 3 decisions
+    docs/ops/launch/C12-03-FREE-ONLY.md         PART 4 switch list + revert
+    docs/ops/launch/C12-04-EXECUTION.md         PART 5 D-0..D-15 artifacts
+    docs/ops/launch/C12-05-SCORES.md            PART 6 re-scores
+    docs/ops/launch/C12-06-HANDOFF.md           PART 7 handoff
+
+Create docs/ops/launch/ if it does not exist. One part per file. Finish a file before starting the
+next — a complete PART 2 and nothing else beats six thin stubs.
+
+If you approach your output limit anyway: STOP AT A SECTION BOUNDARY. Do not thin everything to
+make it fit. Make the LAST LINE of your response exactly:
+
+    CONTINUE FROM: <part number> / <section id>
+
+and nothing after it. A clean stop with a resume marker is a success. A truncated sentence is a
+failed run.
+
+0.2 — DISCLOSE YOUR MODEL, AT THE TOP.
+
+C11 ran with two provider failures and silently fell back:
+    "auto/chaos via custom unavailable (provider failure); using free-fast via omniroute"
+    "auto/best-chaos via omniroute unavailable (provider failure); using free-fast via omniroute"
+
+The founder read a 3/10 launch-readiness verdict without knowing it came from a degraded run. That
+is the single worst thing that happened in C11 and it was not a reasoning error — it was a
+disclosure error.
+
+The FIRST LINE of your response is:
+    MODEL: <the model actually serving this run> | FALLBACK: <yes, from what, why | no>
+
+If you cannot determine it, write "MODEL: UNKNOWN" — that is an acceptable answer. Guessing is not.
+
+0.3 — MARKING. Every load-bearing claim carries one of:
+    [VERIFIED: <the specific thing observed, and where>]
+    [INFERRED: <the specific command or file that would confirm it>]
+    [NOT RUN: <why>]
+An unmarked claim is treated as [INFERRED] and discounted.
+
+AND THE LESSON C11 LEARNED THE HARD WAY, which you inherit:
+
+    A TAG IS ACCURATE ABOUT PROVENANCE AND USELESS ABOUT VALIDITY.
+
+In the work that produced C11, a statistical claim was correctly tagged [INFERRED] — and the
+derivation behind it used an invalid method (inverting a permutation p-value through the normal
+CDF). The tag was honest. The number was still garbage. Tagging is the floor, not the ceiling: if
+the METHOD is wrong, the claim does not survive being labelled.
+
+Second inherited lesson, same origin:
+
+    A RETRACTION IS A CLAIM. A RECOMPUTATION IS A CLAIM.
+
+A true finding in that work was retracted because a reviewer objected using a mismatched baseline,
+and the retraction shipped as fact without anyone checking the objection's arithmetic. Then the
+recomputation that reinstated it used the wrong constant and was ALSO wrong. Three assertions,
+three different wrong answers, each more confident than the last because each came with more
+arithmetic attached.
+
+So when you disagree with a C11 finding: check your objection as hard as you would check the claim.
+Say which one you checked and how.
+
+0.4 — NO OPTIONS WITHOUT A PICK. "It depends" is a failed answer. If a decision forks on a fact you
+do not have, name the fact, pick the branch you would bet on, and say what would flip you.
+
+0.5 — CONFIDENCE as a percentage on every decision and every score.
+
+0.6 — SCORING, where PART 6 asks for a number:
+    10  = you attacked it and could not break it. A standard nobody in this market has reached.
+    7-9 = strong, with specific named gaps.
+    4-6 = works, but has real holes a serious reviewer would call out.
+    1-3 = would not survive a motivated attacker, a regulator, or a churned customer.
+Never a score without naming what costs it the points and what specifically would earn a 10.
+No filler. No fluff. No feel-good numbers.
+
+================================================================
+PART 1 — WHAT C11 ESTABLISHED. Ground truth. Do not re-derive.
+================================================================
+
+1.1 — THE VERDICT
+Overall launch-readiness 3/10, confidence 78%. Recommendation: SOFT-LAUNCH FREE-ONLY, no paid tiers
+for 1-2 weeks. Produced on a fallback model (see 0.2) — treat the reasoning as real and the SCORE as
+provisional pending PART 6.
+
+1.2 — THE FIVE PAID-LAUNCH BLOCKERS
+  S1  The honesty banner lies above real rows the moment CANONICAL_HISTORY_ENABLED flips.
+      liveBoardOn is hardcoded false at apps/web/lib/board/state.ts:261, 351, 469, 499.
+      [VERIFIED — the founder's session confirmed all four line numbers carry `liveBoardOn: false,`]
+  S2  Elite tier sells real-time email and push alerts that cannot be delivered.
+  S3  Minors reach every betting surface. No age affirmation anywhere in the funnel.
+  S10 / #10  ESPN rights contradiction. Scored 2/10 — "the worst surface in the product."
+  #16 The terms page's own header says it requires counsel review before paid checkout.
+
+1.3 — SEVEN STRENGTHS C11 FOUND THAT THE FIRST-PASS INVENTORY MISSED
+  G1  Cron auth exists, with a timing-safe Bearer comparison.  <-- but see 2.1, C11 downgraded this
+  G2  No SSRF surface.
+  G3  Client bundle clean — no secrets, no server-only imports leaking.
+  G4  No CI injection vector.
+  G5  Live `npm audit`: 1 CRITICAL (vitest <=3.2.5) and 5 HIGH, one being a `next` range up to
+      16.3.0-preview whose stated fix is a major bump to 16.3.4.
+  G7  Durable rate limiter on anonymous reports.
+  G8  jsonLdScript escapes < > &.
+
+  G5 is the most under-leveraged fact in the whole C11 output. It was found, stated once, and never
+  turned into a decision. PART 2.5 turns it into one.
+
+1.4 — WHAT C11 PRODUCED THAT STANDS
+  Stage 4 flag ordering, STEP 0-10, including the irreversible pair: OUTCOME_LEARNING_ENABLED must
+  be flipped BEFORE CANONICAL_HISTORY_ENABLED, with the backfill run between them.
+  Stage 6 lists: D-0..D-15 (before deploy), W-1..W-20 (week one), B-1..B-12 (backlog),
+  N-1..N-7 (deliberately never).
+  Keep all of it. PART 5 executes D-0..D-15; you do not need to re-plan them.
+
+================================================================
+PART 2 — THE SEVEN OPEN VERIFICATIONS. -> C12-01-VERIFICATION.md
+================================================================
+
+C11's own Stage 8 self-review named these as unverified. It was right to. Close them. Each one gets:
+the command or file you opened, the literal output or the literal lines, the answer, a confidence,
+and — if the answer changes a C11 finding — which finding and how.
+
+2.1 — CRON AUTH IS [INFERRED], NOT VERIFIED.
+C11 claimed G1 (every cron route authenticated, timing-safe Bearer compare) and then downgraded it
+in its own self-review because it had sampled routes, not enumerated them.
+Enumerate. List EVERY route file under apps/web/app/api/cron/ plus /api/ops/daily-truth. For each:
+does it call the auth check before doing any work, and is the comparison timing-safe? Produce a
+table with one row per route and a file:line for the check. Name every route that lacks one. If all
+of them have it, say so with the count. There are 22 Vercel Cron schedules — the route count may
+differ from 22 and that difference is itself a finding.
+
+2.2 — profile.email_verified MAY NOT EXIST.
+C11's D-1 depends on reading `profile.email_verified` from the Google provider under NextAuth v5
+(Auth.js beta). It never confirmed the field is present on the profile type at the installed
+version. Open the installed package in node_modules and the app's own auth config. Answer: does the
+field exist, is it typed, and is it populated for the Google provider? If it is not, D-1 as written
+is broken — say so and give the replacement.
+
+2.3 — D-4's SNAPSHOT SCHEMA COLUMNS ARE UNVERIFIED.
+C11's D-4 references snapshot columns it did not read. Open packages/db/prisma/schema.prisma
+READ-ONLY and confirm every column D-4 names exists with the type D-4 assumes. Do not edit the
+schema. Do not write a migration. If a column is missing, D-4 becomes a schema change, which is
+owner-only and NOT a launch-day item — reclassify it to B- and say so.
+
+2.4 — STRIPE WEBHOOK EVENT-ID DEDUPE IS UNVERIFIED.
+Stripe retries. If the webhook handler is not idempotent on event id, a retry can double-apply an
+entitlement change. Find the handler, show the dedupe (or its absence) with file:line, and say what
+a replayed `checkout.session.completed` does today. Stripe keys are LIVE — this is a READ of the
+code, never an exercise of the flow.
+
+2.5 — THE npm audit MATRIX WAS NEVER OPENED. Close it.
+G5 found 1 critical + 5 high and stopped. For EACH advisory:
+  - Is the vulnerable package in PROD dependencies or DEV only? (vitest is dev. That matters.)
+  - Is the vulnerable code path reachable in this app, concretely? Name the call site or say none.
+  - What is the fix, and is it a patch, a minor, or a MAJOR?
+  - The `next` advisory's stated fix is 16.3.4 — a major bump from 14.2. That is not a launch-day
+    action. Say what the ACTUAL exposure is on 14.2.x and whether a patch release inside the 14.2
+    line addresses it.
+Then give ONE line per advisory: FIX NOW / FIX WEEK ONE / WAIVE WITH REASON. A waiver names the
+reason and the date it gets revisited.
+DO NOT run npm install. DO NOT bump a dependency. DO NOT touch package-lock.json or .npmrc. This
+part is analysis and a written recommendation only. The existing next/postcss audit waivers stay.
+
+2.6 — NEON BACKUP AND PITR WERE NEVER EXAMINED AT ALL.
+C11 admitted this outright. It is the single largest unexamined risk in the product: a solo founder,
+live payments, and no stated recovery posture. Answer from what is in the repo — config, docs,
+runbooks, ops scripts:
+  - Is point-in-time recovery on, and what is the retention window?
+  - What is the documented restore procedure, and has anyone ever run it?
+  - What is the RPO and RTO the current setup actually delivers?
+  - If a migration corrupts a table at 2am, what are the literal steps?
+If the repo does not say, the answer is [NOT RUN: not recorded in the repo] plus a written
+recommendation — do NOT connect to the database, do NOT run SQL, do NOT create or restore a branch.
+An honest "this is undocumented and here is what it should be" is the deliverable.
+
+2.7 — THE 3/10 CAME FROM A DEGRADED RUN.
+Say plainly whether, on the evidence you now have, 3/10 was right, too harsh, or too kind — and by
+how much. One paragraph. This is not a re-score; PART 6 is. This is a calibration check on C11.
+
+================================================================
+PART 3 — THE FIVE BLOCKERS: FIX OR DECIDE. -> C12-02-BLOCKERS.md
+================================================================
+
+Every one of the five gets ONE of exactly two outcomes. There is no third.
+
+    FIXED   — a literal diff, the verify block output, and the test that would catch a regression.
+    ACCEPTED — a written decision: what ships broken, who it can hurt, what compensating control is
+               in place instead, what triggers a revisit, and a date. Signed "founder decision,
+               2026-09-04."
+
+"Needs more investigation" is not an outcome. "Should be addressed" is not an outcome.
+
+S1 — THE BANNER LIES. apps/web/lib/board/state.ts:261, 351, 469, 499 hardcode `liveBoardOn: false`.
+     Today that is harmless because CANONICAL_HISTORY_ENABLED is off. The defect is that flipping
+     the flag does not change these four sites, so the honesty banner keeps saying "not live" above
+     rows that ARE live — the exact inverse of the failure everyone guards against, and worse for
+     trust, because it trains the reader to ignore the banner.
+     The fix is to thread the real value through. It must not flip any gate: with the flag off, the
+     rendered output must be byte-identical to today. Prove that with a test.
+     apps/web/__tests__/board-class-banner-honesty.test.ts and board-classify-state.test.ts already
+     exercise this shape — read them first and follow the pattern rather than inventing one.
+
+S2 — ELITE SELLS UNDELIVERABLE ALERTS. Elite is $24.99/mo and $179/yr on LIVE Stripe keys. Selling
+     a feature that cannot be delivered is the clearest legal exposure in the product.
+     The fix is NOT to build the alerting today. Decide between:
+       (a) Elite is not purchasable until alerts deliver, or
+       (b) Elite's copy stops promising alerts until they deliver.
+     Pick one, write the exact copy or the exact gate, and say which surfaces carry the promise
+     today — pricing page, checkout, tier comparison, marketing copy, emails. Enumerate them; a
+     half-removed promise is worse than the whole one.
+
+S3 — MINORS REACH EVERY BETTING SURFACE. No age affirmation in the funnel.
+     Give the minimum defensible control that can ship today and the stronger one for week one.
+     Name every entry point it has to cover. Say what the standard actually is for a picks/analysis
+     product versus a sportsbook — this product takes no wagers, and that distinction changes the
+     answer. Do not overstate the requirement and do not wave it away.
+
+S10 / #10 — ESPN RIGHTS CONTRADICTION, scored 2/10, "the worst surface in the product."
+     State the contradiction precisely: what the rights registry says versus what the code does
+     versus what the customer sees. Then the fix, under .claude/rules/scraping.md — every extraction
+     passes checkClearance() and wrapExtractedRecord() enforces the envelope. No evasion tooling,
+     ever, in any proposal you write.
+     If the honest answer is "this surface should be dark until rights are clear," say that.
+
+#16 — TERMS PAGE HEADER REQUIRES COUNSEL REVIEW BEFORE PAID CHECKOUT.
+     The document says so about itself. Either paid checkout does not open until counsel signs, or
+     the header comes off with a written justification. You cannot ship paid checkout with a terms
+     page that declares itself unreviewed — that is a document that testifies against you.
+     Pick one. If the answer is "no paid checkout today," that is consistent with PART 4 and is a
+     fine answer — say it explicitly rather than leaving it implied.
+
+================================================================
+PART 4 — MAKE FREE-ONLY REAL. -> C12-03-FREE-ONLY.md
+================================================================
+
+C11 recommended a free-only soft launch and then did not say how to be free-only. A recommendation
+without a switch list is a wish.
+
+4.1  Enumerate EVERY path to a paid checkout. Pricing page, upgrade CTAs, paywall prompts, tier
+     comparison, emails, API responses that link to checkout, deep links. Miss one and a real card
+     gets charged on a product you decided not to sell today.
+4.2  For each: the exact change that closes it, with file:line.
+4.3  The ONE-LINE REVERT. When paid opens in 1-2 weeks, what is the single change that undoes 4.2?
+     If it is not one line, restructure it until it is, or say why it cannot be and give the
+     shortest real sequence.
+4.4  What does an EXISTING paying subscriber see? Some may already exist — live keys since
+     2026-07-09. Free-only must not break someone who already paid. Say what happens to them.
+4.5  What free-only does NOT fix. S3 (minors) and S10 (ESPN rights) do not care whether money
+     changed hands. Say which blockers survive the decision.
+4.6  The public sentence. One or two lines the founder can put on the site explaining that paid
+     tiers open shortly. Under rule 8: deterministic factor model, never framed as AI. It must be
+     true — no "coming soon" that implies a date nobody has committed to.
+
+================================================================
+PART 5 — D-0..D-15 EXECUTION ARTIFACTS. -> C12-04-EXECUTION.md
+================================================================
+
+C11 planned D-0..D-15 and emitted no artifacts. Emit them.
+
+For EACH D-item, in order:
+    ID and one-line statement of what it does
+    STATUS: DONE | BLOCKED | RECLASSIFIED
+    The literal diff, or the literal command with its literal output
+    The verify block, actually run:
+        npm run typecheck        exit code
+        npm run lint             exit code
+        npx vitest run <the specific test file>   pass/fail
+    What would catch a regression
+    Confidence
+
+BLOCKED is a legitimate status. It needs the exact error text pasted, not a description of it.
+RECLASSIFIED is legitimate when PART 2 proved the item was mis-scoped (2.3 may do this to D-4) —
+say what it became and why.
+
+Two attempts per item. Then revert, mark BLOCKED with the exact error, move on. Never a third.
+
+Stage 4's flag order is NOT a D-item and is NOT yours to execute. Write it down as the operator
+runbook, in order, with the irreversible pair called out:
+OUTCOME_LEARNING_ENABLED first, backfill, THEN CANONICAL_HISTORY_ENABLED. Flipping any flag is the
+founder's action on the founder's console. You write the steps. You do not take them.
+
+================================================================
+PART 6 — RE-SCORE ONLY WHAT CHANGED. -> C12-05-SCORES.md
+================================================================
+
+Do NOT re-score all twenty-five sections. Score only:
+  - every section whose evidence changed because of PART 2, PART 3, or PART 5
+  - the overall launch-readiness number
+For each: old score, new score, the SPECIFIC evidence that moved it, confidence.
+A score that did not move is not listed. Silence means unchanged.
+
+Then, separately and in one line each:
+  - Launch-readiness FREE-ONLY today, 1-10.
+  - Launch-readiness PAID today, 1-10.
+These are different numbers and C11 conflated them into one 3/10. Separating them is the point.
+
+================================================================
+PART 7 — THE HANDOFF. -> C12-06-HANDOFF.md
+================================================================
+
+Written for a solo founder at 2am with no memory of this run.
+
+  1. What is true right now. Five sentences maximum.
+  2. What is safe to ship today, and what is not, each with its one-line reason.
+  3. The ordered checklist for going live free-only. Numbered. Each step is an action with a
+     command or a click, not a topic.
+  4. What must be true before paid opens. Each item has an owner and a check that proves it.
+  5. What is still unknown, and the cheapest next step for each.
+  6. The three things most likely to go wrong in the first 72 hours, and what to do about each.
+
+No new findings in PART 7. If something belongs in the handoff and is not already above, it means
+PART 2-6 is incomplete — go back and put it there first.
+
+END WITH A COMPLETE SENTENCE. If you cannot, use the CONTINUE FROM marker from 0.1.
+
+================================================================
+PART 8 — HARD CONSTRAINTS. Breaking one discards the run.
+================================================================
+
+NEVER MODIFY:
+    packages/db/prisma/schema.prisma        packages/db/prisma/migrations/**
+    .github/workflows/**                    scripts/guardrails/**
+    .claude/**                              any .env*
+    package-lock.json  .gitignore  .githooks/**
+    apps/web/lib/ai-control-plane/**
+    scripts/ops/chaos-run.mjs   (binding founder decision, this session: no further commits)
+
+NEVER FLIP A GATE OR ENV FLAG, and never edit code so a gate resolves differently:
+    PUBLIC_PICKS  STATS_PUBLIC  LIVE_BOARD  PERFORMANCE_STATS
+    CALIBRATION_ADJUSTMENTS_ENABLED  CALIBRATION_PUBLISHED  CALIBRATION_AUTO_PUBLISH
+    OUTCOME_LEARNING_ENABLED  CANONICAL_HISTORY_ENABLED
+These gates are the honesty boundary. Opening one publishes an unearned claim. Writing the runbook
+is your job; flipping is the founder's.
+
+NEVER install a package, run a migration, or touch a database. No npm install of a new dep, no
+prisma migrate, no SQL, no Neon branch create or restore. .npmrc has strict-allow-scripts=true and
+min-release-age=7 — do NOT delete it, do NOT set ignore-scripts, do NOT run
+`npm install-scripts approve`. If an install fails on an unapproved script, that is the control
+working: mark BLOCKED and name the package.
+
+NEVER bump MODEL_VERSION. NEVER delete the next/postcss dependency-audit waivers.
+
+NEVER exercise a payment flow. Stripe keys have been LIVE since 2026-07-09. Reading the code is
+fine. Creating a session, a customer, or a subscription is not.
+
+NEVER fabricate a number, a benchmark, a win rate, a sample pick, or a placeholder stat. Anywhere.
+Not run -> write NOT RUN. Failed -> paste the error. An honest gap is a contribution; an invented
+fact is sabotage.
+
+NEVER `git commit --no-verify`. NEVER weaken, narrow-out, or delete a guard to make something pass.
+NEVER skip, quarantine, or delete a test to get green.
+
+NEVER push to main. Push only to the branch you were given for this session, and only if the
+founder said to push this session.
+
+BRAND, rule 8: "We're not AI. We're math you can read." The engine is a deterministic factor model
+with explicit weighted factors and a readable factor breakdown. It is never described as AI. A
+language model drafts written content only and never chooses a pick. Enforced by
+scripts/guardrails/trust-gate.mjs and `npm run lint:brand`; a violation is a build failure, not a
+style note.
+
+VERIFY BLOCK before every code commit:
+    npm run typecheck                              exit 0, real exit code, never piped away
+    npm run lint                                   exit 0
+    npx vitest run <this task's test file>         green
+
+ONE TASK = ONE COMMIT. Stage by name. Never `git add -A`, never `git add .`.
+
+================================================================
+PART 9 — SELF-CHECK BEFORE YOU STOP.
+================================================================
+
+Answer these five, literally, as the last section of C12-06-HANDOFF.md:
+
+  1. Did you disclose your model and any fallback on line one? Yes/no.
+  2. How many of the seven PART 2 items did you actually close, and which remain [NOT RUN]?
+  3. How many of the five blockers are FIXED and how many ACCEPTED? Name them.
+  4. Which claim in your own output is the WEAKEST — the one you would expect a hostile reviewer to
+     break first? Name it and say what would confirm or kill it.
+  5. What did you leave out because of output budget? If nothing, say nothing. If something, name
+     it precisely enough that the next run can pick it up.
+
+Question 4 is the one that matters. C11's willingness to downgrade its own G1 to [INFERRED] was the
+single most valuable thing in its output. Do that again, harder.
