@@ -114,6 +114,18 @@ const DURABLE_FRESH_MS = 60_000;
  */
 const DURABLE_FAILURE_BACKOFF_MS = 5_000;
 
+/**
+ * What one read attempt concluded.
+ *
+ * `superseded` means a `clear()` landed mid-read, so the answer describes the
+ * world before a durable write — useless to everyone, including the caller
+ * that started it.
+ */
+type ReadResolution<T> = {
+  readonly superseded: boolean;
+  readonly value: T | null;
+};
+
 type DurableCache<T> = {
   get(): Promise<T | null>;
   clear(): void;
@@ -140,7 +152,7 @@ function makeDurableCache<T>(
 ): DurableCache<T> {
   let cached: { value: T | null; at: number } | undefined;
   let failedAt = 0;
-  let inFlight: Promise<T | null> | undefined;
+  let inFlight: Promise<ReadResolution<T>> | undefined;
   /**
    * Bumped by `clear()`. A read captures it at the moment it starts and may
    * only write back if it still matches.
@@ -155,55 +167,82 @@ function makeDurableCache<T>(
    */
   let generation = 0;
 
-  return {
-    async get(): Promise<T | null> {
-      const now = Date.now();
-      if (cached && now - cached.at < DURABLE_FRESH_MS) return cached.value;
-      // Serve the last known answer rather than hammering a database that just
-      // refused us. With no last known answer this is `null` — the same
-      // less-restrictive answer as before, but reached at most once per
-      // backoff window instead of once per candidate pick.
-      if (now - failedAt < DURABLE_FAILURE_BACKOFF_MS) return cached?.value ?? null;
-      if (inFlight) return inFlight;
+  /**
+   * A superseded read re-reads rather than answering. Bounded only so a
+   * pathological storm of writes cannot recurse without end; reaching the cap
+   * needs three durable writes inside one request, which does not happen.
+   */
+  const MAX_SUPERSEDED_RETRIES = 3;
 
-      const startedAt = generation;
-      const current = (async (): Promise<T | null> => {
-        try {
-          const result = await read();
-          // Superseded by a clear() while we were reading. Answer our own
-          // callers — they asked before the write — but never write back.
-          if (startedAt !== generation) {
-            return result.status === "ok" ? result.value : null;
-          }
-          if (result.status === "error") {
-            failedAt = Date.now();
-            return cached?.value ?? null;
-          }
-          cached = { value: result.status === "ok" ? result.value : null, at: Date.now() };
-          return cached.value;
-        } catch (err) {
-          // The dynamic import itself failed, or the reader threw unexpectedly.
-          // Unavailability, not absence — do not store it as a value, and do
-          // not swallow it silently.
-          if (startedAt === generation) failedAt = Date.now();
-          console.error(
-            `[selective-publish] ${label} could not be read: ${redactErrorDetail(err)}. ` +
-              "Treating as UNAVAILABLE (not 'not set'); serving the last known value " +
-              "and retrying after a short backoff.",
-          );
-          return cached?.value ?? null;
+  /**
+   * Hand the caller the freshest answer we can, never the superseded one.
+   *
+   * Returning a superseded read's own value was still wrong: the caller began
+   * before the write, but it RESPONDS after it, so a request in flight when the
+   * founder enabled a pause would go on to publish the groups that pause names.
+   * "They asked first" is not a defence for a suppression control. Every waiter
+   * on a superseded read — the originator and anyone who joined it — retries
+   * into the current generation instead.
+   */
+  async function settle(res: ReadResolution<T>, depth: number): Promise<T | null> {
+    if (!res.superseded) return res.value;
+    // Cap reached: answer from the post-write cache, never from the stale read.
+    if (depth >= MAX_SUPERSEDED_RETRIES) return cached?.value ?? null;
+    return get(depth + 1);
+  }
+
+  async function get(depth = 0): Promise<T | null> {
+    const now = Date.now();
+    if (cached && now - cached.at < DURABLE_FRESH_MS) return cached.value;
+    // Serve the last known answer rather than hammering a database that just
+    // refused us. With no last known answer this is `null` — the same
+    // less-restrictive answer as before, but reached at most once per
+    // backoff window instead of once per candidate pick.
+    if (now - failedAt < DURABLE_FAILURE_BACKOFF_MS) return cached?.value ?? null;
+    if (inFlight) return settle(await inFlight, depth);
+
+    const startedAt = generation;
+    const current = (async (): Promise<ReadResolution<T>> => {
+      try {
+        const result = await read();
+        // A clear() landed while we were reading: this answer describes the
+        // world before the write. Never write it back, and never return it.
+        if (startedAt !== generation) {
+          return { superseded: true, value: null };
         }
-      })();
+        if (result.status === "error") {
+          failedAt = Date.now();
+          return { superseded: false, value: cached?.value ?? null };
+        }
+        cached = { value: result.status === "ok" ? result.value : null, at: Date.now() };
+        return { superseded: false, value: cached.value };
+      } catch (err) {
+        // The dynamic import itself failed, or the reader threw unexpectedly.
+        // Unavailability, not absence — do not store it as a value, and do
+        // not swallow it silently.
+        const superseded = startedAt !== generation;
+        if (!superseded) failedAt = Date.now();
+        console.error(
+          `[selective-publish] ${label} could not be read: ${redactErrorDetail(err)}. ` +
+            "Treating as UNAVAILABLE (not 'not set'); serving the last known value " +
+            "and retrying after a short backoff.",
+        );
+        return { superseded, value: cached?.value ?? null };
+      }
+    })();
 
-      inFlight = current;
-      void current.finally(() => {
-        // Only retract our OWN handle. A superseded read must not clear the
-        // in-flight promise a later caller is waiting on.
-        if (inFlight === current) inFlight = undefined;
-      });
+    inFlight = current;
+    void current.finally(() => {
+      // Only retract our OWN handle. A superseded read must not clear the
+      // in-flight promise a later caller is waiting on.
+      if (inFlight === current) inFlight = undefined;
+    });
 
-      return current;
-    },
+    return settle(await current, depth);
+  }
+
+  return {
+    get: () => get(),
     clear(): void {
       generation += 1;
       cached = undefined;

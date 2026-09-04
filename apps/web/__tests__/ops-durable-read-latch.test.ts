@@ -267,9 +267,14 @@ describe("durable ranking-pause read: failure is not an absence", () => {
 
     // Only NOW does the superseded read resolve, carrying the old snapshot.
     releaseStale({ metadata: { ...SNAP, groups: ["g-old"] }, full_text: null });
-    await stalePending;
 
-    // It must not have overwritten the post-write value.
+    // Its own caller must not receive the pre-write answer either. That caller
+    // began before the write but RESPONDS after it, so handing back "g-old"
+    // would publish the groups the founder had just paused. It retries into the
+    // current generation instead.
+    expect((await stalePending)?.groups).toEqual(["g-new"]);
+
+    // And it must not have overwritten the post-write value.
     expect((await getCachedRankingPauseDurable())?.groups).toEqual(["g-new"]);
   });
 
@@ -301,9 +306,10 @@ describe("durable ranking-pause read: failure is not an absence", () => {
     const freshFirst = getCachedRankingPauseDurable();
     await waitForDelegateCalls(2);
 
-    // Stale lands first and must leave the fresh in-flight handle alone.
+    // Stale lands first and must leave the fresh in-flight handle alone. It is
+    // deliberately NOT awaited yet: being superseded, it now retries into the
+    // fresh read, so awaiting it here would deadlock until that read resolves.
     releaseStale({ metadata: SNAP, full_text: null });
-    await stalePending;
 
     // A caller arriving now joins the FRESH read rather than starting a third.
     const freshSecond = getCachedRankingPauseDurable();
@@ -311,6 +317,8 @@ describe("durable ranking-pause read: failure is not an absence", () => {
 
     expect((await freshFirst)?.groups).toEqual(["g-new"]);
     expect((await freshSecond)?.groups).toEqual(["g-new"]);
+    // The superseded caller lands on the post-write answer, not its own.
+    expect((await stalePending)?.groups).toEqual(["g-new"]);
     // One stale read + one fresh read. A third would mean single-flight broke.
     expect(findFirstMock).toHaveBeenCalledTimes(2);
   });
