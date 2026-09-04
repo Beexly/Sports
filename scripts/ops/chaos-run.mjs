@@ -35,7 +35,7 @@ import { resolve, basename } from "node:path";
 const DEFAULT_URL = "http://127.0.0.1:20128/api/chaos/run";
 
 function parseArgs(argv) {
-  const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", models: null, timeout: 900, raw: false, headers: [] };
+  const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", models: null, timeoutMs: 900_000, raw: false, headers: [] };
   // Two ways a valued flag can be left without a value, both of which used to
   // pass silently:
   //   --header          (last argument)  -> argv[++i] is undefined, which then
@@ -56,34 +56,39 @@ function parseArgs(argv) {
     }
     return v;
   };
-  // `Number("abc")` is NaN and `Number("-5")` is negative; both used to sail
-  // through to `AbortSignal.timeout(x * 1000)`, which throws a RangeError from
-  // Node internals that this script then reported as "request failed: ..." —
-  // pointing the operator at the router when the fault was their own argument.
-  // Validate here so the message names the real mistake.
-  // The bound is AbortSignal.timeout's, not ours: it takes a whole number of
-  // milliseconds in [0, 2^32-1]. Checking only "positive and finite" left
-  // 0.0001 (-> 0.1 ms, not an integer) and 4294968 (-> over the ceiling) still
-  // throwing the same RangeError from inside fetch, which this script reported
-  // as "request failed ... Is the OmniRoute router running?" — the exact wrong
-  // answer this validation exists to prevent. Fractional seconds are fine as
-  // long as they land on a whole millisecond: 0.5 -> 500 ms is accepted.
-  const MAX_TIMEOUT_MS = 2 ** 32 - 1;
-  const seconds = (v) => {
+  // --timeout is validated here so a bad value names itself. Left unchecked, an
+  // invalid one reached `AbortSignal.timeout()` inside `fetch` and came back as
+  // "request failed: ... Is the OmniRoute router running?", sending the operator
+  // to debug their router over their own typo. Three distinct ways in, all
+  // measured rather than assumed:
+  //   "abc" / "-5" / "0"  -> NaN or non-positive; RangeError from Node.
+  //   0.0001              -> 0.1 ms; RangeError, "must be an integer".
+  //   4294967.295         -> WORSE than an error. Node's timers are 32-bit
+  //                          SIGNED, so anything over 2^31-1 ms does not throw:
+  //                          it warns and fires after 1 ms. The run aborts
+  //                          instantly and nothing explains why.
+  // Hence a 2^31-1 ceiling and a rounded integer millisecond, returned as ms so
+  // the float never reaches AbortSignal at all.
+  const MAX_TIMEOUT_MS = 2 ** 31 - 1;
+  const parseTimeoutMs = (v) => {
     const n = Number(v);
-    const ms = n * 1000;
-    if (!Number.isFinite(n) || n <= 0 || !Number.isInteger(ms) || ms > MAX_TIMEOUT_MS) {
-      fail(`--timeout must be a positive number of seconds landing on a whole\n` +
-           `millisecond, at most ${MAX_TIMEOUT_MS / 1000} — got ${JSON.stringify(v)}.`);
+    // Round rather than demand exact integrality: 1.001 * 1000 is
+    // 1000.9999999999999 in binary floating point, and rejecting a plainly
+    // valid 1001 ms for that reason is a false negative. The rounded integer
+    // is what actually reaches AbortSignal, so the float never does.
+    const ms = Math.round(n * 1000);
+    if (!Number.isFinite(n) || n <= 0 || ms < 1 || ms > MAX_TIMEOUT_MS) {
+      fail(`--timeout must be between 0.001 and ${MAX_TIMEOUT_MS / 1000} seconds ` +
+           `(1 ms to ~24.8 days), got ${JSON.stringify(v)}.`);
     }
-    return n;
+    return ms;
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--url") out.url = operand(++i);
     else if (a === "--out") out.dir = operand(++i);
     else if (a === "--models") out.models = operand(++i);
-    else if (a === "--timeout") out.timeout = seconds(operand(++i));
+    else if (a === "--timeout") out.timeoutMs = parseTimeoutMs(operand(++i));
     else if (a === "--header") out.headers.push(operand(++i));
     else if (a === "--raw") out.raw = true;
     else if (a.startsWith("--")) fail(`unknown flag ${a}`);
@@ -203,7 +208,7 @@ async function main() {
 
   const label = basename(promptPath).replace(/\.txt$/i, "");
   process.stdout.write(`Firing ${label} (${prompt.length} chars) at ${args.url}\n`);
-  process.stdout.write(`Timeout ${args.timeout}s. Chaos panels are slow — do not kill this early.\n\n`);
+  process.stdout.write(`Timeout ${args.timeoutMs / 1000}s. Chaos panels are slow — do not kill this early.\n\n`);
 
   const started = Date.now();
   let res;
@@ -216,7 +221,7 @@ async function main() {
         ...extraHeaders,
       },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(args.timeout * 1000),
+      signal: AbortSignal.timeout(args.timeoutMs),
     });
   } catch (e) {
     fail(`request failed: ${e.message}\n` +
