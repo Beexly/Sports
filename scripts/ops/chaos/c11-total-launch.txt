@@ -78,7 +78,10 @@ settled + published calibration) -> ESTABLISHED (>=500 settled + verified CLV >=
 AUTHORITY (multi-season ROI).
 
 WHAT THE MODEL DOES — frozen model, historical replay, 1999-2025 NFL regular season, 6,967 games,
-15,939 settled picks, ZERO lookahead errors, graded against real closing lines:
+15,939 settled picks, ZERO lookahead errors, graded against real closing lines. Note the two
+denominators before you reconcile them yourself: the market rows below sum to 15,647, which is
+also the OVERALL row. The 292-pick difference between that and 15,939 is not broken out in the
+reproduction output, so do not assume what it is:
 
     SPREAD     n=6778   48.86%   Wilson CI [47.67%, 50.05%]   ROI  -6.53%
     TOTAL      n=6868   49.49%   Wilson CI [48.31%, 50.67%]   ROI  -5.44%
@@ -90,9 +93,17 @@ moneyline row is the instructive one: it wins three bets in four and STILL LOSES
 picks heavy favourites at prices that already contain the edge. Remember this whenever you are
 tempted to use a win rate as a success threshold.
 
-CONFIDENCE DOES NOT RANK OUTCOMES. AUC 0.4965, p=0.4113, on 13,646 picks. Not inverted — INERT.
-Controls (line magnitude, rest days, week of season) all sit at ~0.50 too. The confidence score,
-the headline paid feature, currently carries no information about whether a pick wins.
+NO EVIDENCE THAT CONFIDENCE RANKS OUTCOMES. AUC 0.4965, p=0.4113, on 13,646 picks. Controls
+(line magnitude, rest days, week of season) all sit at ~0.50 too.
+
+State this precisely, because the loose version is a real statistical error and it was in an
+earlier draft of this brief: p=0.4113 means we FAILED TO REJECT the null of no discrimination. It
+does NOT establish the null. "The confidence score carries no information" is accepting the null
+hypothesis and this test does not license it. What IS licensed: at n=13,646 the test had ample
+power to detect a commercially usable ranking signal and found none, so any real effect is small
+enough to be useless — but "small" is not "zero", and the feature's information content is
+UNESTABLISHED, not disproven. Do not write copy, or build an argument, that depends on it being
+exactly zero.
 
 CORROBORATED ON LIVE PRODUCTION PICKS via a different code path: the >=80-confidence tail is 152
 graded picks, 61 wins, 40% — worse than the average pick. Brier resolution 0.005 on 1,663 graded
@@ -234,10 +245,12 @@ about what exists. This is the material for your second pass.
   =false and must NOT count toward the 100 floor"
   (packages/ingestion-pipeline/src/settle-sport.ts:630; apps/web/lib/board/gate-rows.ts:75;
   apps/web/app/cockpit/calibration/page.tsx:87)
-- Vercel Hobby caps crons at 1/day and 2 total; vercel.json declares 22 sub-hourly schedules; the
-  GitHub-Actions fallback is documented idle. The repo calls this "the one RED spine item". Every
-  cron route also sets maxDuration=300, which requires Pro
-  (docs/data/CARDS_LAUNCH_QA.md:913-923; .github/workflows/external-cron.yml:8-12)
+- Vercel Hobby caps crons at 1/day and 2 TOTAL. vercel.json declares 22 schedules: 6 sub-hourly,
+  7 hourly or every-N-hours, 9 daily — so 13 run more often than once a day, and the count alone
+  is 11x the Hobby cap regardless of cadence. The GitHub-Actions fallback is documented idle. The
+  repo calls this "the one RED spine item". Every cron route also sets maxDuration=300, which
+  requires Pro (apps/web/vercel.json; docs/data/CARDS_LAUNCH_QA.md:913-923;
+  .github/workflows/external-cron.yml:8-12)
 - Dead branch in the fallback scheduler: refresh-odds is gated `if: github.event.schedule ==
   '*/30 * * * *'` but that schedule is not in the workflow's on.schedule list, so it can never
   fire on schedule even with Actions minutes restored (.github/workflows/external-cron.yml:130)
