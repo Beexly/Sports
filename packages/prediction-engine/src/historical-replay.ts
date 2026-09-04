@@ -21,8 +21,26 @@
  * nflverse `schedules` (games.csv, Lee Sharpe's nfldata) ships pre-game lines for
  * free under CC-BY-4.0: spread_line / total_line / home_moneyline / away_moneyline
  * are the closing market as of kickoff — a legal, no-lookahead source of the lines
- * we would have priced against. spread_line is HOME-perspective (negative = home
- * favored), matching scoring.ts / settlement.ts / clv.ts.
+ * we would have priced against.
+ *
+ * ── SPREAD SIGN: the caller must convert. Read this before wiring a new source. ──
+ * `RawScheduleRow.spreadLine` is in THIS REPO's convention: NEGATIVE = home favored,
+ * matching scoring.ts / settlement.ts / clv.ts (settlement grades
+ * `homeCoverMargin = homeMargin + line`).
+ *
+ * nflverse `spread_line` uses the OPPOSITE polarity: POSITIVE = home favored.
+ * Verified against the live games.csv on 2026-09-04 — corr(spread_line, result)
+ * = +0.4260 over n=7276 rows carrying both, same-sign 4810 vs opposite-sign 2420;
+ * and 2007_08_WAS_NE (the 16-0 Patriots at home, won 52-7) carries
+ * spread_line = +15. An earlier version of this comment asserted the opposite and
+ * two nflverse mappers trusted it, publishing every backfilled SPREAD pick on the
+ * wrong team.
+ *
+ * So a caller mapping nflverse into `RawScheduleRow` MUST negate spread_line.
+ * See `negateOrNull` in scripts/backfill/historical-settlement-backfill.ts and the
+ * same negation at edge-lab/loaders/nfl-games.ts:172. This module does not negate
+ * for you: its own field contract is the repo convention, and silently flipping a
+ * sign here would break every caller that already passes a correct line.
  *
  * Pure and dependency-free (only @sports/types). No I/O, no DB — fully unit-testable.
  */
