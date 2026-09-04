@@ -7,11 +7,16 @@
  * home-win probability, and measures how well-calibrated that market is against
  * actual outcomes (Brier score, Expected Calibration Error, a reliability curve).
  *
- * Why this is the honest "run calibration": our own PICK model can't be calibrated
- * until real settled picks exist (none do yet). But the market closing line is a
- * settled, real probability we CAN score — it establishes the calibration baseline
- * the signal engine must beat, and it proves the de-vig + calibration math on real
- * data end to end. Read-only; nflverse is CC-BY-4.0.
+ * This script calibrates the MARKET closing line — de-vigged, scored against final
+ * outcomes — which establishes the calibration baseline the signal engine must beat.
+ * It also proves the de-vig + calibration math on real data end to end.
+ *
+ * The older claim here ("our pick model can't be calibrated until real settled picks
+ * exist — none do yet") is FALSE: packages/prediction-engine/src/historical-replay.ts
+ * replays this same corpus through the frozen scorer via replayAndSettleGame, and
+ * scripts/calibration-offline/nfl-replay-calibration.ts fits per-market calibration
+ * maps on those settled picks (artifact: docs/data/NFL_REPLAY_CALIBRATION_2026-09-04.md).
+ * Read-only; nflverse is CC-BY-4.0.
  *
  *   node scripts/run-historical-calibration.mjs [minSeason]
  */
