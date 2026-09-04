@@ -74,62 +74,64 @@ leaves did not move together, and 6.5–9.5 moved most.
 
 ## 3. Why it matters
 
-**The comparison has to be like-for-like.** A leaf's Brier score is conditional
-on that leaf; 0.2478 is the global constant predictor's score aggregated over
-*all* leaves. Putting them side by side measures nothing. The right question is
-what the global predictor scores **on that leaf**, which depends on the leaf's
-own outcome rate. For a constant predictor `q` on a segment with outcome rate
-`p`:
+**The per-leaf value comparison is OPEN. Do not assert it either way.**
+
+What is established, straight from the run: the per-leaf test n, outcome rate
+and leaf Brier in §1; a weighted leaf Brier of **0.2440** against a single
+global mean of **0.2478**, so the leaf model beats the global mean **in
+aggregate** by 0.0038; and — this comparison is valid, because 0.25 is the
+coin-flip Brier on any segment regardless of its rate — **two leaves exceed the
+coin-flip line**, 1.5–2.5 at 0.2501 and 6.5–9.5 at 0.2526.
+
+What is NOT established is **which individual leaves beat the global predictor
+on their own segment.** A leaf's Brier is conditional on that leaf, so it cannot
+be set against the global predictor's all-leaf aggregate of 0.2478. The
+like-for-like question is what the global predictor scores *on that leaf*, which
+requires the constant the predictor actually emits. `scripts/analytics/replay-calibration.ts:439`
+fits that constant as the mean of the **training** set (seasons ≤ 2015),
+evaluated on test:
 
 ```text
-Brier = p(1-q)^2 + (1-p)q^2
+brierOf(testAll, () => trainAll.reduce((s, x) => s + x.y, 0) / trainAll.length)
 ```
 
-With `q` = 55.02% (the n-weighted outcome rate across all 2,750 test games):
+That training mean is not printed anywhere in the reproduction output, and
+inverting the published 0.2478 for it admits two roots (≈0.5323 and ≈0.5681) and
+is unstable to rounding at the fourth decimal. So the per-leaf verdict is **not
+recoverable from what has been published.**
 
-| leaf | n | rate | leaf Brier | global-on-this-leaf | Δ | weighted Δ |
-|---|---:|---:|---:|---:|---:|---:|
-| PK-1 | 188 | 46.81% | 0.2490 | 0.2557 | **+0.0067** | +0.00046 |
-| 1.5–2.5 | 447 | 50.11% | 0.2501 | 0.2524 | **+0.0023** | +0.00037 |
-| 3–6 | 1196 | 52.01% | 0.2500 | 0.2505 | **+0.0005** | +0.00022 |
-| 6.5–9.5 | 576 | 57.12% | 0.2526 | 0.2454 | **−0.0072** | −0.00151 |
-| 10+ | 343 | 72.89% | 0.1979 | 0.2295 | **+0.0316** | +0.00394 |
+To settle it: print the training-set mean and `n_train` per leaf from
+`replay-calibration.ts`, then compute each leaf's global baseline as
+`p_test(1−q_train)² + (1−p_test)q_train²`. Until that is run, any claim of the
+form "N leaves beat the global mean" is unsupported, in either direction.
 
-Positive Δ = the leaf model beats the global mean on that leaf. The
-reconstruction checks out: the weighted leaf Brier comes to 0.2440, exactly the
-published figure, and weighted global-on-leaves to 0.2475 against the published
-0.2478.
+The 6.5–9.5 leaf's standing does **not** depend on this. It is the only leaf
+whose base-rate drift is significant, and that is what separates a leaf that is
+merely uninformative from one that is confidently wrong: a 65.86% prior applied
+to a band that delivers 57.12%, across 576 games.
 
-So: **four of the five leaves beat the global mean on their own segment, and
-6.5–9.5 is the only one that loses to it.** It is also the only leaf whose
-base-rate drift is significant — which is what separates a leaf that is merely
-uninformative from one that is confidently wrong: a 65.86% prior applied to a
-band that delivers 57.12%, across 576 games.
+### Record of a three-step error in this section
 
-The 10+ leaf still carries the aggregate: its +0.00394 weighted contribution
-exceeds the +0.00349 net improvement on its own, precisely because 6.5–9.5
-subtracts 0.00151. "Carried by 10+" survives; "the other four are dead weight"
-does not.
-
-Separately, and this comparison **is** valid because 0.25 is the coin-flip Brier
-on any segment regardless of its rate: two leaves exceed it — 1.5–2.5 at 0.2501
-and 6.5–9.5 at 0.2526.
-
-### Record of a two-step error in this section
-
-Worth keeping, because the second step was the expensive one.
+Kept in full, because the shape of it is the lesson.
 
 1. The first draft said 6.5–9.5 was "the only leaf actively worse than doing
-   nothing." **That was correct**, on the like-for-like comparison above.
+   nothing."
 2. cubic objected that four leaves lose to the 0.2478 baseline. I accepted it
-   and rewrote the section. **The objection used the mismatched baseline**, and
-   accepting it put a wrong claim into a document whose entire purpose is not
-   being wrong.
-3. Devin flagged the mismatch. Recomputed; step 1 is reinstated.
+   and rewrote the section — **without checking the objection's arithmetic.**
+3. Devin flagged that the objection used a mismatched baseline. I recomputed
+   with `q` = the **test** outcome rate, reinstated step 1, and published a
+   table of per-leaf deltas.
+4. Devin flagged again: the predictor is fitted on the **training** mean, not
+   the test mean (line 439 above). My recomputation used the wrong constant, so
+   that table was wrong too.
 
-The lesson is not "trust the first draft." It is that a reviewer's objection
-needs checking against the arithmetic exactly as hard as the claim it targets,
-and a retraction is a claim too.
+Three assertions, three different wrong answers, each one more confident than
+the last because each came with more arithmetic attached. The correct move —
+available at every step — was to say the data does not settle it. That is what
+this section now says.
+
+A retraction is a claim. A recomputation is a claim. Both need the same standard
+of evidence as the thing they replace.
 
 ## 4. Recommendation (not applied)
 

@@ -90,7 +90,13 @@ export default function DeckPage(): JSX.Element {
         <div className="relative z-30 mx-auto w-full max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
-              <SignalDecode speed={22}>Galaxy Sports Edge · Command Deck</SignalDecode>
+              {/* The label belongs in the FIRST viewport. The systems banner
+                  further down is below a full-screen hero, so a visitor who
+                  bounces early would otherwise read the hero's operational
+                  language as a live claim. */}
+              <SignalDecode speed={22}>
+                Galaxy Sports Edge · Command Deck · Illustrative concept
+              </SignalDecode>
             </p>
             <h1 className="mt-6 font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
               The room where{" "}

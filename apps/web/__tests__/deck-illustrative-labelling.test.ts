@@ -31,6 +31,17 @@ const SOURCE = readFileSync(
 );
 
 describe("/deck illustrative labelling", () => {
+  it("labels the page illustrative in the FIRST viewport, above the fold", () => {
+    // The systems banner sits below a min-h-screen hero, so a visitor who
+    // bounces early would never reach it. The hero eyebrow carries the label.
+    expect(SOURCE).toContain("Command Deck · Illustrative concept");
+    const heroLabel = SOURCE.indexOf("Illustrative concept");
+    const systemsBanner = SOURCE.indexOf('data-testid="deck-illustrative-banner"');
+    expect(heroLabel).toBeGreaterThan(-1);
+    expect(systemsBanner).toBeGreaterThan(-1);
+    expect(heroLabel).toBeLessThan(systemsBanner);
+  });
+
   it("renders a visible banner disclaiming live telemetry", () => {
     expect(SOURCE).toContain('data-testid="deck-illustrative-banner"');
     expect(SOURCE).toContain("Illustrative interface concept.");

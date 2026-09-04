@@ -126,22 +126,36 @@ leaves = 19.57 on 4 df, p=6.07e-04, I-squared 79.6%, which rejects the UNIFORM C
 league-wide component can coexist with leaf-specific ones and Q cannot separate them. The z-values
 treat the training base rate as fixed, so they are optimistic and the p-values are lower bounds.
 
-On the VALUE of the leaf model, compared LIKE-FOR-LIKE (a leaf's Brier is conditional on that
-leaf, so it must be measured against what the global constant predictor scores ON THAT LEAF, not
-against its all-leaf aggregate of 0.2478). With q=55.02% and Brier = p(1-q)^2 + (1-p)q^2:
+On the VALUE of the leaf model — what IS established, and what is OPEN. Treat the boundary between
+these two as itself instructive; it is the third time this particular comparison has been gotten
+wrong on this project, twice by asserting more than the data licensed.
 
-    leaf       n     rate    leaf Brier   global-on-leaf   delta      weighted
-    PK-1     188   46.81%      0.2490        0.2557       +0.0067    +0.00046
-    1.5-2.5  447   50.11%      0.2501        0.2524       +0.0023    +0.00037
-    3-6     1196   52.01%      0.2500        0.2505       +0.0005    +0.00022
-    6.5-9.5  576   57.12%      0.2526        0.2454       -0.0072    -0.00151
-    10+      343   72.89%      0.1979        0.2295       +0.0316    +0.00394
+    ESTABLISHED, straight from the run:
+      per-leaf test n, test outcome rate, and leaf Brier as tabled above
+      weighted leaf Brier          0.2440
+      single global mean Brier     0.2478
+      so the leaf model beats the global mean IN AGGREGATE by 0.0038
+      two leaves exceed the 0.25 coin-flip line (1.5-2.5 at 0.2501, 6.5-9.5 at 0.2526).
+      This comparison IS valid, because 0.25 is the coin-flip Brier on ANY segment
+      regardless of that segment's outcome rate.
 
-FOUR of five leaves BEAT the global mean on their own segment; 6.5-9.5 is the ONLY one that loses.
-Weighted leaf Brier 0.2440 vs 0.2475 global-on-leaves. The 10+ leaf's +0.00394 exceeds the entire
-+0.00349 net on its own, because 6.5-9.5 subtracts 0.00151. Two leaves also exceed the 0.25
-coin-flip line (1.5-2.5 at 0.2501, 6.5-9.5 at 0.2526) — that comparison IS valid, because 0.25 is
-the coin-flip Brier on any segment regardless of its rate.
+    OPEN — do not assert either way:
+      WHICH leaves individually beat the global predictor on their own segment.
+      A leaf's Brier is conditional on that leaf, so it cannot be compared against the
+      global predictor's ALL-LEAF aggregate of 0.2478. The like-for-like question is what
+      the global predictor scores ON THAT LEAF. Computing that needs the constant the
+      predictor actually emits, and scripts/analytics/replay-calibration.ts:439 fits it as
+      the mean of the TRAINING set (seasons <= 2015), evaluated on test:
+          brierOf(testAll, () => trainAll.reduce((s,x) => s + x.y, 0) / trainAll.length)
+      That training mean is not printed anywhere in the reproduction output, and inverting
+      the published 0.2478 for it yields two admissible roots (~0.5323 and ~0.5681) and is
+      unstable to rounding at the fourth decimal. So the per-leaf verdict is NOT
+      RECOVERABLE from what has been published.
+
+    TO SETTLE IT: print the training-set mean and n_train per leaf from replay-calibration.ts,
+    then recompute per-leaf global Brier as p_test(1-q_train)^2 + (1-p_test)q_train^2. Until
+    that is run, any statement of the form "N leaves beat/lose to the global mean" is
+    unsupported. Do not build a recommendation on one.
 
 WHAT WE HAVE THAT IS GOOD
 - Frozen, versioned, auditable model. Every pick carries sport, game, pick type, line, confidence,
