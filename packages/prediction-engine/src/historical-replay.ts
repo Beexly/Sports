@@ -193,7 +193,25 @@ export function extractSettlementFacts(row: RawScheduleRow): SettlementFacts | n
 const SYNTHETIC_BOOK_COUNT = WEIGHTS.MARKET_DEPTH_IDEAL_BOOKS;
 const STD_VIG_PRICE = -110;
 
-export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
+/**
+ * Sport key used for replayed picks. Default preserves every existing NFL caller
+ * byte-for-byte; pass e.g. "americanfootball_ncaaf" to replay another sport's
+ * schedule rows. RawScheduleRow itself is sport-agnostic (dispatch T1,
+ * docs/ops/OVERNIGHT_NCAAF_2026-09-04.md §5) — this is the only knob the engine
+ * needs; it changes the sport LABEL carried into scoring and settlement, not the
+ * frozen scoring logic.
+ */
+export const DEFAULT_REPLAY_SPORT = "americanfootball_nfl";
+
+export interface ReplaySportOptions {
+  /** Sport key threaded into the scoring input and settlement grading. */
+  readonly sportKey?: string;
+}
+
+export function buildHistoricalOddsInput(
+  features: PreGameFeatures,
+  options: ReplaySportOptions = {},
+): OddsInput {
   const bookmakerOdds: BookmakerOddsInput[] = [];
 
   for (let i = 0; i < SYNTHETIC_BOOK_COUNT; i++) {
@@ -231,7 +249,7 @@ export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
     homeTeam: features.homeTeam,
     awayTeam: features.awayTeam,
     commenceTime: new Date(features.commenceTime),
-    sport: "americanfootball_nfl",
+    sport: options.sportKey ?? DEFAULT_REPLAY_SPORT,
     bookmakerOdds,
     context: {
       // Pre-game context only. Opening == current (one closing snapshot), rest days
@@ -256,8 +274,11 @@ export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
  * (pre-kickoff) kickoff time, so the proof receipt's frozen timestamp is honestly
  * pre-result. Returns the scorer's picks (zero, one, or several markets).
  */
-export function scoreHistoricalGame(features: PreGameFeatures): ScoredPick[] {
-  const input = buildHistoricalOddsInput(features);
+export function scoreHistoricalGame(
+  features: PreGameFeatures,
+  options: ReplaySportOptions = {},
+): ScoredPick[] {
+  const input = buildHistoricalOddsInput(features, options);
   // Score "as of" kickoff — the latest pre-result instant. scoreGame is the frozen
   // model; we pass the kickoff so dataFreshnessAt/asOf are pre-kickoff, not "now".
   return scoreGame(input, new Date(features.commenceTime));
@@ -312,6 +333,7 @@ export function settleHistoricalPick(
   facts: SettlementFacts,
   homeTeam: string,
   awayTeam: string,
+  options: ReplaySportOptions = {},
 ): SettledHistoricalPick {
   const result = calculatePickResult(
     pick.pickType,
@@ -320,7 +342,7 @@ export function settleHistoricalPick(
     homeTeam,
     facts.homeScore,
     facts.awayScore,
-    "americanfootball_nfl",
+    options.sportKey ?? DEFAULT_REPLAY_SPORT,
     awayTeam,
   );
 
@@ -403,13 +425,18 @@ function stripPostGame(row: RawScheduleRow): RawScheduleRow {
  * against the isolated final score. Returns [] when the game has no settleable final
  * score (skipped, never guessed). Feature assembly and settlement read DISJOINT data.
  */
-export function replayAndSettleGame(row: RawScheduleRow): SettledHistoricalPick[] {
+export function replayAndSettleGame(
+  row: RawScheduleRow,
+  options: ReplaySportOptions = {},
+): SettledHistoricalPick[] {
   const facts = extractSettlementFacts(row); // the only score read (from the raw row)
   if (!facts) return []; // unplayed / unscored → cannot settle
   // Feature assembly only ever sees the quarantined, score-free row.
   const features = assemblePreGameFeatures(stripPostGame(row));
-  const picks = scoreHistoricalGame(features);
-  return picks.map((pick) => settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam));
+  const picks = scoreHistoricalGame(features, options);
+  return picks.map((pick) =>
+    settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam, options),
+  );
 }
 
 function numOrNull(v: number | null | undefined): number | null {
@@ -422,8 +449,10 @@ function intOrNull(v: number | null | undefined): number | null {
 
 /** Deterministic, unambiguously pre-result kickoff stamp for a (season, week). */
 function syntheticKickoff(season: number, week: number): string {
-  // Anchor to the NFL season's early September and step a week at a time. Only used
-  // for ordering + an as-of timestamp; never compared against any post-game fact.
+  // NFL-CALENDAR-SPECIFIC: anchors to the NFL season's early September and steps a
+  // week at a time, so the synthetic ordering is faithful for NFL-shaped seasons.
+  // Only used for ordering + an as-of timestamp; never compared against any
+  // post-game fact.
   const base = Date.UTC(season, 8, 1, 17, 0, 0); // Sep 1, 17:00 UTC
   const weekMs = (week - 1) * 7 * 24 * 60 * 60 * 1000;
   return new Date(base + weekMs).toISOString();
