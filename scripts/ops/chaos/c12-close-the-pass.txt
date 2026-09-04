@@ -252,12 +252,22 @@ how much. One paragraph. This is not a re-score; PART 6 is. This is a calibratio
 PART 3 — THE FIVE BLOCKERS: FIX OR DECIDE. -> C12-02-BLOCKERS.md
 ================================================================
 
-Every one of the five gets ONE of exactly two outcomes. There is no third.
+Every one of the five gets ONE of exactly three outcomes. There is no fourth.
 
-    FIXED   — a literal diff, the verify block output, and the test that would catch a regression.
-    ACCEPTED — a written decision: what ships broken, who it can hurt, what compensating control is
-               in place instead, what triggers a revisit, and a date. Signed "founder decision,
-               2026-09-04."
+    FIXED       — AGENT RUNTIME ONLY. A literal diff, the verify block output, and the test that
+                  would catch a regression. A TEXT PANEL cannot write this: with no write access,
+                  a FIXED from you is a fabricated claim, not an optimistic one.
+
+    RECOMMENDED — the exact change, the exact file:line to make it at, the command that verifies
+                  it, and what a pass and a fail would each mean. This is a TEXT PANEL's ceiling
+                  here, and it is a complete answer, not a hedge. Say who has to run it.
+
+    ACCEPTED    — DRAFTED BY YOU, RATIFIED BY THE FOUNDER, in either runtime. What ships broken,
+                  who it can hurt, what compensating control stands in instead, what triggers a
+                  revisit, and a date. Write it as a decision the founder can read and sign.
+                  Do NOT sign it yourself and do NOT date it as though it were signed. No agent
+                  accepts a launch risk on the founder's behalf; a line reading "founder decision"
+                  that no founder made is worse than no line at all.
 
 "Needs more investigation" is not an outcome. "Should be addressed" is not an outcome.
 
@@ -306,6 +316,17 @@ PART 4 — MAKE FREE-ONLY REAL. -> C12-03-FREE-ONLY.md
 
 C11 recommended a free-only soft launch and then did not say how to be free-only. A recommendation
 without a switch list is a wish.
+
+TEXT PANEL, read this before 4.1: you cannot search the repository, so you cannot enumerate the
+checkout paths and you cannot give current line numbers. Do not produce an inventory anyway. An
+incomplete checkout list is the most dangerous artifact this brief could generate — Stripe keys
+have been LIVE since 2026-07-09, and one path you failed to guess keeps charging real cards for a
+product the founder decided not to sell today. A confident list that is 90% right is worse here
+than no list, because it will be trusted.
+So: mark 4.1 and 4.2 [NOT RUN: no repository access], give the SEARCH COMMANDS that would
+enumerate them and the decision rule for each kind of hit, and put one line at the top of
+C12-03-FREE-ONLY.md saying the switch list is UNVERIFIED until an agent or the operator runs
+them. 4.3 through 4.6 you can and should answer in full.
 
 4.1  Enumerate EVERY path to a paid checkout. Pricing page, upgrade CTAs, paywall prompts, tier
      comparison, emails, API responses that link to checkout, deep links. Miss one and a real card
