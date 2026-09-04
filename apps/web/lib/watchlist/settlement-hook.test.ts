@@ -15,7 +15,7 @@ import { getEntitlements } from "@sports/types";
 
 const mocks = vi.hoisted(() => ({
   watchlistFindMany: vi.fn(),
-  userFindUnique: vi.fn(),
+  userFindMany: vi.fn(),
   getUserEntitlements: vi.fn(),
   dispatchWatchlistAlert: vi.fn(),
 }));
@@ -25,10 +25,10 @@ vi.mock("./alert-dispatch", () => ({ dispatchWatchlistAlert: mocks.dispatchWatch
 
 import { notifyWatchlistFollowersForGradedPick, type GradedPickNotifyEvent } from "./settlement-hook";
 
-function db(overrides: Partial<{ watchlistFindMany: unknown; userFindUnique: unknown }> = {}) {
+function db(overrides: Partial<{ watchlistFindMany: unknown; userFindMany: unknown }> = {}) {
   return {
     watchlist: { findMany: overrides.watchlistFindMany ?? mocks.watchlistFindMany },
-    user: { findUnique: overrides.userFindUnique ?? mocks.userFindUnique },
+    user: { findMany: overrides.userFindMany ?? mocks.userFindMany },
   };
 }
 
@@ -48,7 +48,7 @@ function event(overrides: Partial<GradedPickNotifyEvent> = {}): GradedPickNotify
 
 beforeEach(() => {
   mocks.watchlistFindMany.mockReset();
-  mocks.userFindUnique.mockReset();
+  mocks.userFindMany.mockReset();
   mocks.getUserEntitlements.mockReset();
   mocks.dispatchWatchlistAlert.mockReset().mockResolvedValue({
     sent: true,
@@ -84,11 +84,13 @@ describe("notifyWatchlistFollowersForGradedPick", () => {
     mocks.watchlistFindMany.mockResolvedValue([
       { id: "wl-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" },
     ]);
-    mocks.userFindUnique.mockResolvedValue({
-      id: "user-1",
-      email: "user@example.com",
-      emailVerified: new Date("2026-01-01T00:00:00.000Z"),
-    });
+    mocks.userFindMany.mockResolvedValue([
+      {
+        id: "user-1",
+        email: "user@example.com",
+        emailVerified: new Date("2026-01-01T00:00:00.000Z"),
+      },
+    ]);
     mocks.getUserEntitlements.mockResolvedValue(getEntitlements("ELITE"));
 
     await notifyWatchlistFollowersForGradedPick(db(), event());
@@ -110,11 +112,9 @@ describe("notifyWatchlistFollowersForGradedPick", () => {
     mocks.watchlistFindMany.mockResolvedValue([
       { id: "wl-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" },
     ]);
-    mocks.userFindUnique.mockResolvedValue({
-      id: "user-1",
-      email: "user@example.com",
-      emailVerified: null,
-    });
+    mocks.userFindMany.mockResolvedValue([
+      { id: "user-1", email: "user@example.com", emailVerified: null },
+    ]);
     mocks.getUserEntitlements.mockResolvedValue(getEntitlements("ELITE"));
 
     await notifyWatchlistFollowersForGradedPick(db(), event());
@@ -127,11 +127,13 @@ describe("notifyWatchlistFollowersForGradedPick", () => {
     mocks.watchlistFindMany.mockResolvedValue([
       { id: "wl-1", userId: "user-1", entityType: "TEAM", entityId: "team-away" },
     ]);
-    mocks.userFindUnique.mockResolvedValue({
-      id: "user-1",
-      email: "user@example.com",
-      emailVerified: new Date("2026-01-01T00:00:00.000Z"),
-    });
+    mocks.userFindMany.mockResolvedValue([
+      {
+        id: "user-1",
+        email: "user@example.com",
+        emailVerified: new Date("2026-01-01T00:00:00.000Z"),
+      },
+    ]);
     mocks.getUserEntitlements.mockResolvedValue(getEntitlements("FREE"));
 
     await notifyWatchlistFollowersForGradedPick(db(), event());
@@ -145,7 +147,7 @@ describe("notifyWatchlistFollowersForGradedPick", () => {
     mocks.watchlistFindMany.mockResolvedValue([
       { id: "wl-1", userId: "ghost-user", entityType: "TEAM", entityId: "team-home" },
     ]);
-    mocks.userFindUnique.mockResolvedValue(null);
+    mocks.userFindMany.mockResolvedValue([]);
 
     const summary = await notifyWatchlistFollowersForGradedPick(db(), event());
     expect(summary).toEqual({ followersMatched: 1, dispatches: [] });
@@ -165,11 +167,18 @@ describe("notifyWatchlistFollowersForGradedPick", () => {
       { id: "wl-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" },
       { id: "wl-2", userId: "user-2", entityType: "TEAM", entityId: "team-away" },
     ]);
-    mocks.userFindUnique.mockResolvedValue({
-      id: "user-x",
-      email: "user@example.com",
-      emailVerified: new Date("2026-01-01T00:00:00.000Z"),
-    });
+    mocks.userFindMany.mockResolvedValue([
+      {
+        id: "user-1",
+        email: "user@example.com",
+        emailVerified: new Date("2026-01-01T00:00:00.000Z"),
+      },
+      {
+        id: "user-2",
+        email: "user2@example.com",
+        emailVerified: new Date("2026-01-01T00:00:00.000Z"),
+      },
+    ]);
     mocks.getUserEntitlements.mockResolvedValue(getEntitlements("ELITE"));
     mocks.dispatchWatchlistAlert
       .mockRejectedValueOnce(new Error("channel exploded"))
@@ -184,15 +193,49 @@ describe("notifyWatchlistFollowersForGradedPick", () => {
     expect(summary.dispatches[1]).toMatchObject({ sent: true, outcome: "dispatched" });
   });
 
+  it("batches the contact lookup: ONE user query for N followers, not one per follower", async () => {
+    mocks.watchlistFindMany.mockResolvedValue([
+      { id: "wl-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" },
+      { id: "wl-2", userId: "user-2", entityType: "TEAM", entityId: "team-away" },
+      // duplicate follower row for the same user across both teams — the
+      // batch must de-duplicate rather than ask twice
+      { id: "wl-3", userId: "user-1", entityType: "TEAM", entityId: "team-away" },
+    ]);
+    mocks.userFindMany.mockResolvedValue([
+      {
+        id: "user-1",
+        email: "user@example.com",
+        emailVerified: new Date("2026-01-01T00:00:00.000Z"),
+      },
+      {
+        id: "user-2",
+        email: "user2@example.com",
+        emailVerified: new Date("2026-01-01T00:00:00.000Z"),
+      },
+    ]);
+    mocks.getUserEntitlements.mockResolvedValue(getEntitlements("ELITE"));
+
+    await notifyWatchlistFollowersForGradedPick(db(), event());
+
+    expect(mocks.userFindMany).toHaveBeenCalledTimes(1);
+    expect(mocks.userFindMany).toHaveBeenCalledWith({
+      where: { id: { in: ["user-1", "user-2"] } },
+      select: { id: true, email: true, emailVerified: true },
+    });
+    expect(mocks.dispatchWatchlistAlert).toHaveBeenCalledTimes(3);
+  });
+
   it("FAIL-ISOLATION: getUserEntitlements throwing for one follower doesn't stop the run", async () => {
     mocks.watchlistFindMany.mockResolvedValue([
       { id: "wl-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" },
     ]);
-    mocks.userFindUnique.mockResolvedValue({
-      id: "user-1",
-      email: "user@example.com",
-      emailVerified: new Date("2026-01-01T00:00:00.000Z"),
-    });
+    mocks.userFindMany.mockResolvedValue([
+      {
+        id: "user-1",
+        email: "user@example.com",
+        emailVerified: new Date("2026-01-01T00:00:00.000Z"),
+      },
+    ]);
     mocks.getUserEntitlements.mockRejectedValue(new Error("entitlements lookup failed"));
 
     await expect(notifyWatchlistFollowersForGradedPick(db(), event())).resolves.toEqual({
@@ -202,3 +245,10 @@ describe("notifyWatchlistFollowersForGradedPick", () => {
     expect(mocks.dispatchWatchlistAlert).not.toHaveBeenCalled();
   });
 });
+
+/**
+ * The type-level regression that pins these query shapes to Prisma's own
+ * generated input types lives in settlement-hook.ts, NOT here:
+ * apps/web/tsconfig.json excludes `**\/*.test.ts`, so `npx tsc --noEmit`
+ * never compiles this file and an assertion placed here would prove nothing.
+ */
