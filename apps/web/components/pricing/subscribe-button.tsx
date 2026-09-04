@@ -214,6 +214,15 @@ export function SubscribeButton({
         <Link href="/terms" className="underline hover:text-ion-2">
           Terms
         </Link>
+        {" · "}
+        {/* This control collects a date of birth for the server-side 21+ gate
+            (lib/auth/age-gate.ts), so the privacy notice belongs on the SAME
+            proximate line as Terms. /pricing does render <Footer />, which
+            links Privacy — but far below the fold, nowhere near the point
+            where personal data is actually entered. */}
+        <Link href="/privacy" className="underline hover:text-ion-2">
+          Privacy
+        </Link>
         .
       </p>
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME } from "@/lib/brand";
+import { BRAND_NAME, HELPLINE } from "@/lib/brand";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 
@@ -128,7 +128,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "Is sports betting risky?",
-        a: "Yes. Real risk. Only stake what you can afford to lose without changing your week. If you or someone you know has a gambling problem, call 1-800-GAMBLER. The /responsible-play page has resources and self-exclusion options.",
+        a: `Yes. Real risk. Only stake what you can afford to lose without changing your week. If you or someone you know has a gambling problem, call ${HELPLINE.number}. The /responsible-play page has resources and self-exclusion options.`,
       },
       {
         q: "Should I bet every signal?",
