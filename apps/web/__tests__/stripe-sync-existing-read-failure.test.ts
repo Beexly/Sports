@@ -120,12 +120,21 @@ function armSubscriptionEvent(sub: Record<string, unknown>, id = "evt_read_fail"
 describe("syncSubscription: existing-row read failure", () => {
   let errorSpy: ReturnType<typeof vi.spyOn>;
 
+  /** Env keys this suite mutates, snapshotted per test and restored after. */
+  const ENV_KEYS = [
+    "STRIPE_WEBHOOK_SECRET",
+    "STRIPE_PRO_MONTHLY_PRICE_ID",
+    "REFUND_REVOKES_ACCESS",
+  ] as const;
+  const envBefore: Record<string, string | undefined> = {};
+
   beforeEach(() => {
     for (const m of Object.values(mocks)) {
       if (typeof m === "function" && "mockReset" in m) {
         (m as { mockReset: () => void }).mockReset();
       }
     }
+    for (const key of ENV_KEYS) envBefore[key] = process.env[key];
     process.env["STRIPE_WEBHOOK_SECRET"] = "whsec_test";
     process.env["STRIPE_PRO_MONTHLY_PRICE_ID"] = PRO_MONTHLY;
     delete process.env["REFUND_REVOKES_ACCESS"];
@@ -146,9 +155,14 @@ describe("syncSubscription: existing-row read failure", () => {
   });
 
   // Restore the real console.error: a spy left installed silences every later
-  // suite that runs in this worker.
+  // suite that runs in this worker. Same for the env keys this suite sets —
+  // leaving them behind makes every later suite in the worker order-dependent.
   afterEach(() => {
     errorSpy.mockRestore();
+    for (const [key, prior] of Object.entries(envBefore)) {
+      if (prior === undefined) delete process.env[key];
+      else process.env[key] = prior;
+    }
   });
 
   it("does NOT write the subscription row when the existing-row read rejects", async () => {

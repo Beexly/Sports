@@ -104,8 +104,18 @@ export async function readProvenPathPlan(): Promise<ProvenPathReadResult> {
         : row.full_text
           ? JSON.parse(row.full_text)
           : null;
-    if (!raw || typeof raw !== "object") {
-      throw new Error("durable proven-path payload is malformed (not an object)");
+    // Validate the fields callers actually read before reporting "ok". A bare
+    // `{}` is an object, and returning it as a plan would put an empty control
+    // state into the runtime cache — `resolvePausedGroups` would then read
+    // `pauseGroups` off it and conclude nothing is paused.
+    const shape = raw as { pauseGroups?: unknown; defaultDelta?: unknown };
+    if (
+      Array.isArray(raw) ||
+      !Array.isArray(shape.pauseGroups) ||
+      typeof shape.defaultDelta !== "number" ||
+      !Number.isFinite(shape.defaultDelta)
+    ) {
+      throw new Error("durable proven-path payload is malformed (missing pauseGroups/defaultDelta)");
     }
     return { status: "ok", plan: raw as ProvenPathPlan };
   } catch (err) {

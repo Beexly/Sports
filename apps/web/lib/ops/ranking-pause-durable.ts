@@ -128,15 +128,22 @@ export async function readRankingPauseApply(): Promise<RankingPauseReadResult> {
       // caller retries and an operator sees it, never as "no pause set".
       throw new Error("durable ranking-pause payload is malformed (no boolean `enabled`)");
     }
-    const s = raw as RankingPauseDurableSnap;
+    const snap = raw as RankingPauseDurableSnap;
+    // `groups` is the one field that decides WHAT is suppressed, so a record
+    // that does not carry it as an array is not a usable control state — say
+    // "error", not "here is a pause with nothing in it". The remaining fields
+    // are audit metadata; defaulting those is cosmetic and stays.
+    if (!Array.isArray(snap.groups)) {
+      throw new Error("durable ranking-pause payload is malformed (groups is not an array)");
+    }
     return {
       status: "ok",
       snap: {
-        enabled: s.enabled,
-        groups: Array.isArray(s.groups) ? s.groups.map(String) : [],
-        setAt: typeof s.setAt === "string" ? s.setAt : new Date().toISOString(),
-        setBy: typeof s.setBy === "string" ? s.setBy : "unknown",
-        note: typeof s.note === "string" ? s.note : "",
+        enabled: snap.enabled,
+        groups: snap.groups.map(String),
+        setAt: typeof snap.setAt === "string" ? snap.setAt : new Date().toISOString(),
+        setBy: typeof snap.setBy === "string" ? snap.setBy : "unknown",
+        note: typeof snap.note === "string" ? snap.note : "",
       },
     };
   } catch (err) {

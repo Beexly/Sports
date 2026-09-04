@@ -117,7 +117,11 @@ export function logEntitlementFailClosed(
   // Site + fault. The user id is deliberately NOT part of the key: during an
   // outage every request carries a different one, which would defeat the
   // throttle completely.
-  const throttleKey = `${key}::${detail.slice(0, 160)}`;
+  // The FULL redacted detail, not a prefix. `redactErrorDetail` already bounds
+  // it to 400 characters, and truncating further to 160 made two errors sharing
+  // a prefix collide — the second one would then be suppressed as a duplicate
+  // of the first, which is exactly the hiding this key exists to prevent.
+  const throttleKey = `${key}::${detail}`;
   const now = Date.now();
   const state = throttleBySite.get(throttleKey);
 
@@ -142,8 +146,11 @@ export function logEntitlementFailClosed(
       : "";
 
   console.error(
-    `[entitlements] FAIL-CLOSED at ${key} — serving FREE because entitlements could ` +
-      `not be resolved for user ${who}: ${detail}. ` +
+    // "fail-closed", not "serving FREE": this helper is also used where the
+    // fallback is an anonymous 401 rather than a FREE-tier render, and naming
+    // the wrong fallback sends an operator looking in the wrong place.
+    `[entitlements] FAIL-CLOSED at ${key} — serving the fail-closed fallback ` +
+      `(anonymous / FREE) because entitlements could not be resolved for user ${who}: ${detail}. ` +
       "A paying member may be seeing the free surface; this is infrastructure, not policy." +
       backlog,
   );

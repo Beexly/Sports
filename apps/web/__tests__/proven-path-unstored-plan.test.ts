@@ -84,14 +84,28 @@ describe("proven-path surface: an unstored plan is not returned", () => {
     expect(surface?.plan).toBeDefined();
   });
 
-  it("also withholds the surface in stub mode, where nothing was written", async () => {
+  it("returns null in real stub mode, before the write is even attempted", async () => {
+    // Actual stub mode. `loadProvenPathSurface` returns at its own
+    // `isStubMode()` guard, so `persistProvenPathPlan` is never reached — which
+    // is why the case below can only ever be about the RETURN VALUE "stub",
+    // not about stub mode itself.
+    stubMock.mockReturnValue(true);
+    const { loadProvenPathSurface } = await import("@/lib/ops/proven-path-seed");
+
+    await expect(loadProvenPathSurface()).resolves.toBeNull();
+    expect(persistProvenPathPlanMock).not.toHaveBeenCalled();
+  });
+
+  it("does NOT withhold the surface when persist reports \"stub\"", async () => {
+    // Earlier this case was titled "also withholds the surface in stub mode",
+    // which contradicted its own assertion AND was not in stub mode. Named for
+    // what it actually pins: only "error" withholds. The branch is unreachable
+    // in production — persistProvenPathPlan returns "stub" only when
+    // isStubMode() is true, and the case above shows the surface has already
+    // returned by then — so this documents the contract, nothing more.
     persistProvenPathPlanMock.mockResolvedValue("stub");
     const { loadProvenPathSurface } = await import("@/lib/ops/proven-path-seed");
 
-    // Documents the CURRENT contract: only "error" withholds the surface.
-    // "stub" means no durable store exists at all, so the plan is equally
-    // invisible to other isolates — but every caller in stub mode is already
-    // running without a database, so this is recorded rather than changed.
     const surface = await loadProvenPathSurface();
     expect(persistProvenPathPlanMock).toHaveBeenCalledOnce();
     expect(surface).not.toBeNull();

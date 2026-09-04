@@ -19,6 +19,7 @@ import {
   rankingPauseApplyPosture,
 } from "@/lib/calibration/ranking-pause-apply";
 import type { RankingPauseDurableSnap } from "@/lib/ops/ranking-pause-durable";
+import { redactErrorDetail } from "@/lib/log-safety";
 
 export type PublicPickLike = {
   readonly confidence?: number | null;
@@ -76,72 +77,144 @@ export function loadSelectiveRuntimeConfig(
   };
 }
 
-let cachedPlan: ProvenPathPlan | null | undefined;
-let cachedPause: RankingPauseDurableSnap | null | undefined;
+/**
+ * Read outcome shape both durable readers share.
+ *
+ * Kept structural rather than importing either concrete type: this module
+ * loads the readers through a dynamic `import()` to stay out of their
+ * dependency graph at module scope.
+ */
+type DurableReadOutcome<T> =
+  | { readonly status: "ok"; readonly value: T }
+  | { readonly status: "absent" }
+  | { readonly status: "error" };
+
+/**
+ * How long a SUCCESSFUL read — a value or a genuine absence — is trusted.
+ *
+ * These caches used to have no expiry at all, which is wrong for a control
+ * that other isolates can change: `POST /api/ops/ranking-pause-apply` clears
+ * the cache in the isolate that served the request and no other, so a founder
+ * enabling a pause was invisible to every already-warm isolate until it was
+ * recycled. A minute of staleness is the cost of two indexed reads per minute
+ * per isolate, and it bounds how long a kill switch can be ignored.
+ */
+const DURABLE_FRESH_MS = 60_000;
+
+/**
+ * How long to wait after a FAILED read before trying again.
+ *
+ * Refusing to cache a failure is right — a transient fault must not latch —
+ * but on its own it is a stampede: `passesPublicSelectiveFilterAsync` runs
+ * once per candidate pick inside a `Promise.all`, so an unreadable database
+ * would be hit twice per pick, per request, for as long as the outage lasted.
+ * Single-flight collapses the concurrent calls; this backoff bounds the serial
+ * ones. Deliberately short — the pause must reassert itself quickly once the
+ * database recovers.
+ */
+const DURABLE_FAILURE_BACKOFF_MS = 5_000;
+
+type DurableCache<T> = {
+  get(): Promise<T | null>;
+  clear(): void;
+};
+
+/**
+ * Freshness-bounded, single-flight cache over one durable control.
+ *
+ * Three properties, each of which was a defect on its own:
+ *
+ *  - a read FAILURE is never stored as a value, so a transient fault cannot
+ *    latch "no pause is in effect" for the life of the isolate;
+ *  - concurrent callers share one in-flight read, and a failed read is not
+ *    retried for `DURABLE_FAILURE_BACKOFF_MS`, so an outage cannot turn one
+ *    picks request into a query storm;
+ *  - while a read is failing, the LAST KNOWN value keeps being served rather
+ *    than `null`. For a suppression control that is the safe direction: a
+ *    database we cannot reach is not evidence that the founder lifted the
+ *    pause.
+ */
+function makeDurableCache<T>(
+  label: string,
+  read: () => Promise<DurableReadOutcome<T>>,
+): DurableCache<T> {
+  let cached: { value: T | null; at: number } | undefined;
+  let failedAt = 0;
+  let inFlight: Promise<T | null> | undefined;
+
+  return {
+    async get(): Promise<T | null> {
+      const now = Date.now();
+      if (cached && now - cached.at < DURABLE_FRESH_MS) return cached.value;
+      // Serve the last known answer rather than hammering a database that just
+      // refused us. With no last known answer this is `null` — the same
+      // less-restrictive answer as before, but reached at most once per
+      // backoff window instead of once per candidate pick.
+      if (now - failedAt < DURABLE_FAILURE_BACKOFF_MS) return cached?.value ?? null;
+      if (inFlight) return inFlight;
+
+      inFlight = (async (): Promise<T | null> => {
+        try {
+          const result = await read();
+          if (result.status === "error") {
+            failedAt = Date.now();
+            return cached?.value ?? null;
+          }
+          cached = { value: result.status === "ok" ? result.value : null, at: Date.now() };
+          return cached.value;
+        } catch (err) {
+          // The dynamic import itself failed, or the reader threw unexpectedly.
+          // Unavailability, not absence — do not store it as a value, and do
+          // not swallow it silently.
+          failedAt = Date.now();
+          console.error(
+            `[selective-publish] ${label} could not be read: ${redactErrorDetail(err)}. ` +
+              "Treating as UNAVAILABLE (not 'not set'); serving the last known value " +
+              "and retrying after a short backoff.",
+          );
+          return cached?.value ?? null;
+        }
+      })().finally(() => {
+        inFlight = undefined;
+      });
+
+      return inFlight;
+    },
+    clear(): void {
+      cached = undefined;
+      failedAt = 0;
+      inFlight = undefined;
+    },
+  };
+}
+
+const provenPathCache = makeDurableCache<ProvenPathPlan>("durable proven-path plan", async () => {
+  const { readProvenPathPlan } = await import("@/lib/ops/proven-path-durable");
+  const result = await readProvenPathPlan();
+  return result.status === "ok" ? { status: "ok", value: result.plan } : { status: result.status };
+});
+
+const rankingPauseCache = makeDurableCache<RankingPauseDurableSnap>(
+  "durable ranking pause",
+  async () => {
+    const { readRankingPauseApply } = await import("@/lib/ops/ranking-pause-durable");
+    const result = await readRankingPauseApply();
+    return result.status === "ok" ? { status: "ok", value: result.snap } : { status: result.status };
+  },
+);
 
 export async function getCachedProvenPathPlan(): Promise<ProvenPathPlan | null> {
-  if (cachedPlan !== undefined) return cachedPlan;
-  try {
-    const { readProvenPathPlan } = await import("@/lib/ops/proven-path-durable");
-    const result = await readProvenPathPlan();
-    if (result.status === "error") {
-      // Do NOT memoise a read failure — identical reasoning to the pause cache
-      // below. `cachedPlan` uses `undefined` as its "not loaded" sentinel, so
-      // caching this `null` would latch "no plan recorded" for the life of the
-      // isolate: plan-backed pause groups and selective thresholds would stay
-      // disabled long after the database recovered. The cause is already
-      // logged by readProvenPathPlan.
-      return null;
-    }
-    cachedPlan = result.status === "ok" ? result.plan : null;
-  } catch (err) {
-    // The dynamic import itself failed, or the reader threw unexpectedly.
-    // Unavailability, not absence — do not cache, and do not swallow silently.
-    console.error(
-      "[selective-publish] getCachedProvenPathPlan could not read the durable plan: " +
-        `${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}. ` +
-        "Proceeding without a plan for this call; the next call retries.",
-    );
-    return null;
-  }
-  return cachedPlan;
+  return provenPathCache.get();
 }
 
 export async function getCachedRankingPauseDurable(): Promise<RankingPauseDurableSnap | null> {
-  if (cachedPause !== undefined) return cachedPause;
-  try {
-    const { readRankingPauseApply } = await import("@/lib/ops/ranking-pause-durable");
-    const result = await readRankingPauseApply();
-    if (result.status === "error") {
-      // Do NOT memoise a read failure. `cachedPause` uses `undefined` as its
-      // "not loaded" sentinel, so caching the `null` we return here would latch
-      // "no pause is in effect" for the life of the isolate — one transient DB
-      // blip would silently resume paused publishing until a restart. Leaving
-      // the sentinel unset costs one query on the next call and lets the pause
-      // reassert itself the moment the read succeeds.
-      return null;
-    }
-    cachedPause = result.status === "ok" ? result.snap : null;
-  } catch (err) {
-    // Same reasoning: an unexpected throw (a failed dynamic import, or the
-    // reader itself throwing) is unavailability, not absence. Returning null
-    // silently would let paused publishing resume with nothing in the logs, so
-    // say so — the pause is a suppression control, and this is the one place
-    // that failure is visible.
-    console.error(
-      "[selective-publish] getCachedRankingPauseDurable could not read the durable pause: " +
-        `${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}. ` +
-        "Treating as UNAVAILABLE (not 'no pause set'); the next call retries.",
-    );
-    return null;
-  }
-  return cachedPause;
+  return rankingPauseCache.get();
 }
 
 /** Test / post-write: drop in-memory caches. */
 export function clearSelectiveRuntimeCaches(): void {
-  cachedPlan = undefined;
-  cachedPause = undefined;
+  provenPathCache.clear();
+  rankingPauseCache.clear();
 }
 
 export function passesPublicSelectiveFilter(
