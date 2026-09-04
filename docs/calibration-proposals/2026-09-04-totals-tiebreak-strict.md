@@ -56,8 +56,10 @@ the future DEFAULT:
 
 scripts/analytics/totals-tiebreak-replay.ts replays the SAME 3 completed NFL
 seasons through the unchanged `replayAndSettleGame` pipeline, once per mode,
-differing ONLY in `totalsTiebreak` (raw JSON output; run logs in
-$LOCALAPPDATA/Temp/night-wave1/w5-legacy.json and w5-strict.json):
+differing ONLY in `totalsTiebreak` (raw JSON output; committed verbatim as
+evidence/2026-09-04-totals-tiebreak-replay-legacy.json and
+evidence/2026-09-04-totals-tiebreak-replay-strict.json — re-audit 2026-09-04
+10:36 CST, previously only in a temp dir that does not survive the machine):
 
 | metric | legacy (BEFORE) | strict (AFTER) |
 |---|---|---|
@@ -100,3 +102,28 @@ Adopt strict as the default in the next scheduled model version bump, with the
 replay table above as supporting evidence and a fresh per-season strict replay
 run at bump time. The opt-in flag lets the board A/B the behaviour behind a
 gate before that flip.
+
+## Re-audit addendum — SPREAD sibling (2026-09-04, post-merge)
+
+A same-day re-audit probed the SPREAD path this doc's point 4 cites as the
+sound contrast. Point 4 survives for OPPOSING lines: an exact 50/50 split of
+genuinely juiced books publishes nothing (consensus 0.5 < CONSENSUS_MIN_PCT
+0.55). But `scoreSpreadPick` (scoring.ts:390-392) counts a book as a HOME vote
+only when `spread < 0`, so:
+
+- A book posting spread === 0 (pick'em) is counted as an AWAY vote — the same
+  equal-information failure as the totals `<=`, mirrored.
+- An all-pick'em board publishes a phantom SPREAD pick. Probed empirically
+  2026-09-04 (throwaway `scoreGame` run, six synthetic books all at spread 0,
+  ±110 prices, since deleted): one SPREAD pick returned, line 0, confidence 59
+  ≥ MIN_PUBLISH_CONFIDENCE 50 → published. Side is AWAY by exclusion
+  (homeFavoredCount = 0 → homeIsChosen = false → chosenTeam = awayTeam) and
+  consensusPct = 1.0 by the same arithmetic — unanimity from a board where no
+  book expressed a preference.
+
+Scope note: unlike totals, no synthetic corpus path feeds spreadLine === 0
+(nflverse pick'em games carry spreadLine null → no SPREADS book at all), so
+this is not measurable in replay — live-path reachable only, on real PK
+boards. The strict-opt-in pattern from this proposal (only discriminating
+books vote; no preference on the board → no pick) applies to the spread path
+unchanged; filed as a follow-up rather than extending this proposal's scope.
