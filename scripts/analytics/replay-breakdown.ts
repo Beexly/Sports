@@ -111,7 +111,35 @@ async function main(): Promise<void> {
   const byEra = new Map<string, Bucket>();
   const byEdgeIndex = new Map<string, Bucket>();
   const byGrade = new Map<string, Bucket>();
+  const bySlice = new Map<string, Bucket>();
   const overall = emptyBucket();
+
+  /**
+   * The edge hunt. Every slice here is a market shape a bettor could actually
+   * filter on, and each is a separate hypothesis — see the multiple-comparisons
+   * warning printed with the results. A slice earns attention ONLY if its Wilson
+   * lower bound clears break-even, and even then it needs out-of-sample
+   * confirmation before it becomes a product.
+   */
+  const slicesFor = (p: SettledHistoricalPick): string[] => {
+    const out: string[] = [];
+    if (p.pickType === "SPREAD") {
+      out.push(p.line < 0 ? "SPREAD favourite" : "SPREAD underdog");
+      const mag = Math.abs(p.line);
+      if (mag <= 3) out.push("SPREAD |line| <=3");
+      else if (mag <= 7) out.push("SPREAD |line| 3.5-7");
+      else if (mag <= 10) out.push("SPREAD |line| 7.5-10");
+      else out.push("SPREAD |line| >10");
+    } else if (p.pickType === "TOTAL") {
+      const over = p.selection.toUpperCase().startsWith("OVER");
+      out.push(over ? "TOTAL over" : "TOTAL under");
+      if (p.line <= 40) out.push("TOTAL <=40");
+      else if (p.line <= 45) out.push("TOTAL 40.5-45");
+      else if (p.line <= 50) out.push("TOTAL 45.5-50");
+      else out.push("TOTAL >50");
+    }
+    return out;
+  };
 
   const edgeBand = (e: number): string => {
     if (e >= 80) return "80-100";
@@ -175,6 +203,12 @@ async function main(): Promise<void> {
         const g = byGrade.get(grade) ?? emptyBucket();
         add(g, p);
         byGrade.set(grade, g);
+
+        for (const s of slicesFor(p)) {
+          const sb = bySlice.get(s) ?? emptyBucket();
+          add(sb, p);
+          bySlice.set(s, sb);
+        }
       }
     }
   }
@@ -232,6 +266,22 @@ async function main(): Promise<void> {
     const b = byEra.get(e);
     if (b) console.log(row(e, b));
   }
+
+  console.log("\n── THE EDGE HUNT (market shapes a bettor could filter on) ───────────────");
+  const sliceOrder = [...bySlice.keys()].sort();
+  for (const s of sliceOrder) console.log(row(s, bySlice.get(s)!));
+  const winners = sliceOrder.filter((s) => {
+    const b = bySlice.get(s)!;
+    const n = b.wins + b.losses;
+    return n > 0 && wilson(b.wins, n)[0] > BREAK_EVEN;
+  });
+  console.log(
+    winners.length === 0
+      ? `\n   No slice clears break-even on its Wilson LOWER bound. ${sliceOrder.length} hypotheses tested, 0 survived.`
+      : `\n   ${winners.length} of ${sliceOrder.length} slices clear break-even on the lower bound: ${winners.join(", ")}.\n` +
+          "   Testing this many slices, expect roughly 1 in 20 to clear by chance alone.\n" +
+          "   Treat any hit as a hypothesis to confirm out-of-sample, never as a finding.",
+  );
 
   console.log("\n── OVERALL ──────────────────────────────────────────────────────────────");
   console.log(row("all picks", overall));
