@@ -156,14 +156,27 @@ wrong on this project, twice by asserting more than the data licensed.
         leaf        n    Brier    mean d      SE       95% CI              verdict
         PK-1      188   0.2490   -0.00102  0.00232  [-0.0056, +0.0035]  not distinguishable
         1.5-2.5   447   0.2501   +0.00007  0.00044  [-0.0008, +0.0009]  not distinguishable
-        3-6      1196   0.2500    0.00000  0.00000   —                  not distinguishable
+        3-6      1196   0.2500    0.00000  0.00000   —                  DEGENERATE, see below
         6.5-9.5   576   0.2526   +0.00257  0.00654  [-0.0103, +0.0154]  not distinguishable
         10+       343   0.1979   -0.05216  0.01173  [-0.0751, -0.0292]  BETTER than coin flip
+
+      The 3-6 row is not a test result. Its printed forecast is 50.00%, so d is
+      identically zero on every one of its 1,196 observations and its "Brier
+      0.2500" is not an estimate that landed on the coin-flip value — it IS the
+      coin-flip value, by construction. That leaf reproduces a coin flip rather
+      than being tested against one. (Caveat in the same spirit: 50.00% is the
+      base rate as PRINTED to two decimals; unprinted digits could make it
+      marginally non-degenerate. The row carries no information either way.)
+
+      MULTIPLICITY: those are five raw intervals. The drift test elsewhere in
+      this brief applies Bonferroni across the same five leaves, so hold this
+      column to the same standard — the 10+ result survives it: z = -4.45,
+      two-sided p = 8.7e-06, Bonferroni x5 = 4.4e-05.
 
       So 6.5-9.5's 0.2526 is a real point estimate and NOT a demonstrated
       shortfall — its interval spans zero comfortably at n=576. Do not tell the
       founder any leaf has been shown to underperform a coin flip. What HAS been
-      shown is that 10+ beats one.
+      shown, and survives correction, is that 10+ beats one.
 
     OPEN — do not assert either way:
       WHICH leaves individually beat the global predictor on their own segment.

@@ -92,9 +92,22 @@ forecast and `p` its outcome rate:
 |---|---:|---:|---:|---:|---|---|
 | PK-1 | 188 | 0.2490 | −0.00102 | 0.00232 | [−0.0056, +0.0035] | not distinguishable |
 | 1.5–2.5 | 447 | 0.2501 | +0.00007 | 0.00044 | [−0.0008, +0.0009] | not distinguishable |
-| 3–6 | 1196 | 0.2500 | 0.00000 | 0.00000 | — | not distinguishable |
+| 3–6 | 1196 | 0.2500 | 0.00000 | 0.00000 | — | **degenerate**, see below |
 | 6.5–9.5 | 576 | 0.2526 | +0.00257 | 0.00654 | [−0.0103, +0.0154] | not distinguishable |
 | 10+ | 343 | 0.1979 | −0.05216 | 0.01173 | [−0.0751, −0.0292] | **better than coin flip** |
+
+**The 3–6 row is not a test result.** Its printed forecast is 50.00%, so `d` is
+identically zero across all 1,196 observations and its Brier of 0.2500 is not an
+estimate that happened to land on the coin-flip value — it *is* the coin-flip
+value, by construction. That leaf reproduces a coin flip rather than being tested
+against one. In the same spirit as the rest of this section: 50.00% is the base
+rate as printed to two decimals, and unprinted digits could make it marginally
+non-degenerate. Either way the row carries no information.
+
+**Multiplicity.** Those are five raw intervals, while §1 applies Bonferroni
+across the same five leaves. Holding this column to the document's own standard,
+the 10+ result survives: z = −4.45, two-sided p = 8.7e−06, Bonferroni ×5 =
+4.4e−05. cubic raised the inconsistency and was right to.
 
 An earlier version of this section said "two leaves exceed the coin-flip line",
 and the version before that called 6.5–9.5 "the only clear one". Both were point
