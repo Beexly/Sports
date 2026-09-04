@@ -408,10 +408,12 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const chosenPrices = spreadOdds
     .map((o) => (homeIsChosen ? o.homeSpreadPrice : o.awaySpreadPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  // Averaged in PROBABILITY space (see averageAmericanPrices): American odds are
+  // discontinuous across ±100, so an arithmetic mean over books that straddle
+  // pick'em collapses toward 0 — a non-price whose implied probability is ~0,
+  // which mints a double-digit "edge" out of a market that has none.
+  // `?? -110` preserves the pre-existing empty-set fallback exactly.
+  const avgPrice = averageAmericanPrices(chosenPrices) ?? -110;
 
   // Fair value — assume consensus spread IS fair line, edge from vig removal
   const homeImpliedAvg =
@@ -490,7 +492,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  // Fail-CLOSED: `NaN < MIN` is false, so the old form let a non-finite
+  // confidence through and published "Confidence: NaN/100". Finite values are
+  // unaffected — a confidence exactly equal to MIN_PUBLISH_CONFIDENCE still publishes.
+  if (!(Number.isFinite(confidence) && confidence >= MIN_PUBLISH_CONFIDENCE)) return null;
 
   const skellamIndependents = (input.context?.independentFairValues ?? []).filter(
     (fv) => fv.source === SKELLAM_COVER_SOURCE,
@@ -687,10 +692,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const chosenPrices = totalOdds
     .map((o) => (overIsChosen ? o.overPrice : o.underPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  // Averaged in PROBABILITY space (see averageAmericanPrices) — an arithmetic
+  // mean of American prices across the ±100 discontinuity is not a price.
+  // `?? -110` preserves the pre-existing empty-set fallback exactly.
+  const avgPrice = averageAmericanPrices(chosenPrices) ?? -110;
 
   // Fair value
   const overImpliedAvg =
@@ -762,7 +767,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  // Fail-CLOSED: `NaN < MIN` is false, so the old form let a non-finite
+  // confidence through and published "Confidence: NaN/100". Finite values are
+  // unaffected — a confidence exactly equal to MIN_PUBLISH_CONFIDENCE still publishes.
+  if (!(Number.isFinite(confidence) && confidence >= MIN_PUBLISH_CONFIDENCE)) return null;
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
@@ -947,7 +955,10 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  // Fail-CLOSED: `NaN < MIN` is false, so the old form let a non-finite
+  // confidence through and published "Confidence: NaN/100". Finite values are
+  // unaffected — a confidence exactly equal to MIN_PUBLISH_CONFIDENCE still publishes.
+  if (!(Number.isFinite(confidence) && confidence >= MIN_PUBLISH_CONFIDENCE)) return null;
 
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
