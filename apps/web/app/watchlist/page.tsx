@@ -120,7 +120,7 @@ async function SignedInWatchlist({ userId }: { userId: string }) {
         {!result.ok ? (
           <DegradedState reason={result.reason} />
         ) : result.data.length === 0 ? (
-          <EmptyState />
+          <EmptyState hasSuggestions={suggestions.length > 0} />
         ) : (
           <ul className="flex flex-col gap-3" data-testid="watchlist-entries">
             {result.data.map((entry) => (
@@ -222,7 +222,18 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
   );
 }
 
-function EmptyState() {
+/**
+ * Zero-follow state for a brand-new account.
+ *
+ * `hasSuggestions` is NOT decoration. The "Suggested teams" section below this
+ * card only renders when `suggestions.length > 0`, and the FollowButton exists
+ * on NO other surface in the product — so on a fresh install (zero Team rows)
+ * or a failed team load, "Start with a suggested team below" pointed a new
+ * member at something that was not on the page and at an action they had no
+ * way to take anywhere else. That is the first thing a new account sees on this
+ * surface, so it says what is actually true instead.
+ */
+function EmptyState({ hasSuggestions }: { hasSuggestions: boolean }) {
   return (
     <div
       data-testid="watchlist-empty"
@@ -235,7 +246,18 @@ function EmptyState() {
         Follow a team or player and it lives here — one place to keep track of
         what you care about across the board.
       </p>
-      <p className="mt-1.5 text-xs text-ion-2">Start with a suggested team below.</p>
+      {hasSuggestions ? (
+        <p className="mt-1.5 text-xs text-ion-2">Start with a suggested team below.</p>
+      ) : (
+        <p
+          data-testid="watchlist-no-suggestions"
+          className="mx-auto mt-1.5 max-w-md text-xs leading-relaxed text-ion-2"
+        >
+          No teams have loaded yet, so there is nothing to suggest right now.
+          Teams appear here as soon as the roster data lands — nothing is broken
+          and nothing is lost.
+        </p>
+      )}
     </div>
   );
 }

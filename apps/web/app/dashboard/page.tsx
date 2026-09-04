@@ -12,7 +12,7 @@ import { ManageSubscriptionButton } from "@/components/ui/manage-subscription-bu
 import { getBillingNotice } from "@/lib/billing/notice";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
-import { BRAND_NAME } from "@/lib/brand";
+import { BRAND_NAME, SUPPORT_EMAIL } from "@/lib/brand";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
@@ -269,34 +269,80 @@ export default async function DashboardPage({
           {/* Purchase-success moment: Stripe checkout returns to
               /dashboard?upgraded=true. One-time (URL-param-driven) banner that
               confirms the locked founding rate and points at what just unlocked
-              — first-session activation is the strongest churn lever. */}
-          {searchParams?.upgraded === "true" && (
-            <div
-              data-testid="upgrade-success-banner"
-              className="mb-6 rounded-xl border border-verify/50 bg-verify/10 p-5"
-            >
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-verify">
-                Subscription active
-              </p>
-              <p className="mt-2 text-sm font-semibold text-ion-white">
-                You&apos;re in — at the {phaseName} rate, locked for the life of your
-                subscription.
-              </p>
-              <p className="mt-1 text-xs leading-relaxed text-ion-1">
-                Confidence scores, the full factor trail, and line movement are now live on
-                every pick.
-                {entitlements.tier === "ELITE"
-                  ? " Email and push alerts on your followed picks — delivered when they grade — are included with Elite."
-                  : ""}
-              </p>
-              <Link
-                href="/picks"
-                className="mt-3 inline-flex rounded-lg bg-verify px-4 py-2 text-xs font-semibold text-obsidian transition-colors hover:bg-verify/80"
+              — first-session activation is the strongest churn lever.
+
+              The banner is driven by the RECONCILED ENTITLEMENT, not by the URL
+              param alone. `?upgraded=true` is an unauthenticated string anyone
+              can type, keep in a bookmark, or land on via the back button after
+              an abandoned checkout — and reconcileUserEntitlement() above is
+              deliberately fail-safe, so it can also legitimately come back with
+              nothing confirmed yet (webhook not landed AND the Stripe read was
+              ambiguous). In both cases the old param-only banner announced
+              "Subscription active — you're in", and the very next click landed
+              on the paywall it had just promised was gone. Claiming access the
+              server has not granted is the worst possible first impression, so
+              the unconfirmed case gets an honest waiting state instead. Note
+              this only narrows a CLAIM — the gates themselves are untouched. */}
+          {searchParams?.upgraded === "true" &&
+            (entitlements.tier !== "FREE" ? (
+              <div
+                data-testid="upgrade-success-banner"
+                className="mb-6 rounded-xl border border-verify/50 bg-verify/10 p-5"
               >
-                See today&apos;s board →
-              </Link>
-            </div>
-          )}
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-verify">
+                  Subscription active
+                </p>
+                <p className="mt-2 text-sm font-semibold text-ion-white">
+                  You&apos;re in — at the {phaseName} rate, locked for the life of your
+                  subscription.
+                </p>
+                {/* Keyed on the server's own entitlement flag so this line can
+                    never promise a board the paywall still withholds (the
+                    Fantasy plan sees the same free teaser on betting picks). */}
+                <p className="mt-1 text-xs leading-relaxed text-ion-1">
+                  {entitlements.canSeePremiumPicks
+                    ? "Confidence scores, the full factor trail, and line movement are now live on every pick."
+                    : "Your fantasy suite is unlocked. On the betting board your plan sees the same free daily teaser — Pro opens the full board."}
+                  {entitlements.tier === "ELITE"
+                    ? " Email and push alerts on your followed picks — delivered when they grade — are included with Elite."
+                    : ""}
+                </p>
+                <Link
+                  href="/picks"
+                  className="mt-3 inline-flex rounded-lg bg-verify px-4 py-2 text-xs font-semibold text-obsidian transition-colors hover:bg-verify/80"
+                >
+                  See today&apos;s board →
+                </Link>
+              </div>
+            ) : (
+              <div
+                data-testid="upgrade-pending-banner"
+                role="status"
+                aria-live="polite"
+                className="mb-6 rounded-xl border border-caution/50 bg-caution/10 p-5"
+              >
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-caution">
+                  Confirming your subscription
+                </p>
+                <p className="mt-2 text-sm font-semibold text-ion-white">
+                  We haven&apos;t confirmed the payment on our side yet, so your plan
+                  still reads Free below.
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-ion-1">
+                  If you completed checkout, nothing is lost — confirmation usually
+                  lands within a minute and we re-check it every time you open this
+                  page. Reload in a moment. If it still says this after a few
+                  minutes, email {SUPPORT_EMAIL} and we will sort it out directly.
+                  You are never charged for access you do not have.
+                </p>
+                <Link
+                  href="/dashboard?upgraded=true"
+                  className="mt-3 inline-flex rounded-lg border border-caution/60 px-4 py-2 text-xs font-semibold text-caution transition-colors hover:bg-caution/15"
+                >
+                  Re-check now
+                </Link>
+              </div>
+            ))}
 
           {billingNotice && <BillingNoticeBanner notice={billingNotice} />}
 

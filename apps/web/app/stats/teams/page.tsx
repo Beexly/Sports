@@ -1,5 +1,6 @@
 import { Shell, Cards, DataTable, BarChart, StatusRibbon, HeroStat, InsightCard, SectionHeader } from "../_components";
 import { loadTeams } from "@/lib/statking/product";
+import { STAT_PLACEHOLDER } from "@/lib/format/stat";
 export const metadata = {
   title: "Team Environments: Pace, Offense & Defense",
   description: "Team environment metrics: pace, offensive and defensive context, and fantasy environment.",
@@ -9,17 +10,38 @@ export default function Page() {
   const teams = loadTeams();
   const topOffense = [...teams].sort((a, b) => b.offensive_environment - a.offensive_environment)[0];
   const topFantasy = [...teams].sort((a, b) => b.fantasy_environment - a.fantasy_environment)[0];
-  const avgConfidence = Math.round(teams.reduce((a, t) => a + t.data_confidence, 0) / teams.length);
+  // An empty snapshot divides by zero: `avgConfidence + "%"` rendered the
+  // literal string "NaN%" in a customer-facing stat card, and the leader notes
+  // captioned a missing team with a fabricated "env: 0". Missing data takes the
+  // em-dash placeholder and drops the note entirely (lib/format/stat.ts
+  // doctrine) — never "NaN", never an invented zero.
+  const avgConfidence =
+    teams.length > 0
+      ? `${Math.round(teams.reduce((a, t) => a + t.data_confidence, 0) / teams.length)}%`
+      : STAT_PLACEHOLDER;
 
   return (
     <Shell title="Team Environments">
       <StatusRibbon status="fixture" label="Team environments updated every sync cycle" />
       <Cards items={[
         { label: "Teams", value: teams.length },
-        { label: "Top offense", value: topOffense?.team_id ?? "—", note: "Offensive env: " + Number(topOffense?.offensive_environment ?? 0) },
-        { label: "Top fantasy env", value: topFantasy?.team_id ?? "—", note: "Fantasy env: " + Number(topFantasy?.fantasy_environment ?? 0) },
-        { label: "Avg confidence", value: avgConfidence + "%" }
+        topOffense
+          ? { label: "Top offense", value: topOffense.team_id, note: "Offensive env: " + Number(topOffense.offensive_environment ?? 0) }
+          : { label: "Top offense", value: STAT_PLACEHOLDER },
+        topFantasy
+          ? { label: "Top fantasy env", value: topFantasy.team_id, note: "Fantasy env: " + Number(topFantasy.fantasy_environment ?? 0) }
+          : { label: "Top fantasy env", value: STAT_PLACEHOLDER },
+        { label: "Avg confidence", value: avgConfidence }
       ]} />
+      {teams.length === 0 && (
+        <p
+          data-testid="stats-teams-empty"
+          className="border border-mineral bg-eclipse/40 px-4 py-4 text-sm text-ion-1"
+        >
+          The team-environment snapshot is empty — no teams have loaded yet.
+          Nothing is broken; this page fills in on the next sync cycle.
+        </p>
+      )}
       <InsightCard
         eyebrow="Why Team Environment Matters"
         headline="A player's ceiling is set by their team context, not just their talent"
