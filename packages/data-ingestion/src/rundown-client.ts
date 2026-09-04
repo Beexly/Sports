@@ -227,7 +227,6 @@ function lineBlobToBookmaker(
     if (home != null && away != null) {
       markets.push({
         key: "h2h",
-        last_update: new Date().toISOString(),
         outcomes: [
           { name: homeTeam, price: home },
           { name: awayTeam, price: away },
@@ -245,7 +244,6 @@ function lineBlobToBookmaker(
     if (Number.isFinite(point) && homeP != null && awayP != null) {
       markets.push({
         key: "spreads",
-        last_update: new Date().toISOString(),
         outcomes: [
           { name: homeTeam, price: homeP, point },
           { name: awayTeam, price: awayP, point: -point },
@@ -263,7 +261,6 @@ function lineBlobToBookmaker(
     if (Number.isFinite(point) && over != null && under != null) {
       markets.push({
         key: "totals",
-        last_update: new Date().toISOString(),
         outcomes: [
           { name: "Over", price: over, point },
           { name: "Under", price: under, point },
@@ -274,10 +271,14 @@ function lineBlobToBookmaker(
 
   if (markets.length === 0) return null;
   const bookKey = affiliateBookKey(key);
+  // NO `last_update`: the v1 line blob carries no upstream update timestamp.
+  // Stamping the local clock here made every v1 book fresh by construction and
+  // let a thin-filled, days-stale primary book pass the freshness gate as half
+  // of a 2-book consensus. Omitted == not-provably-fresh (the correct fail-safe),
+  // matching the v2 path below. See normalizer.ts `toUpstreamDate`.
   return {
     key: bookKey,
     title: bookKey,
-    last_update: new Date().toISOString(),
     markets,
   };
 }
@@ -302,6 +303,9 @@ function v2MarketsToBookmakers(
   awayTeam: string,
 ): OddsApiBookmaker[] {
   type MarketKey = "h2h" | "spreads" | "totals";
+  // `last` is the UPSTREAM `updated_at` for this book+market, or "" when the
+  // payload omitted it. "" is NOT backfilled with the local clock — it becomes
+  // an omitted `last_update`, i.e. not-provably-fresh.
   type Acc = { outcomes: Map<string, { name: string; price: number; point?: number }>; last: string };
   const byAff = new Map<string, Map<MarketKey, Acc>>();
 
@@ -352,7 +356,11 @@ function v2MarketsToBookmakers(
           const pr = blob as Loose;
           const price = americanFromPrice(pr["price"]);
           if (price == null) continue;
-          const updated = String(pr["updated_at"] ?? new Date().toISOString());
+          // UPSTREAM timestamp only. A missing `updated_at` stays empty — never
+          // the local clock, which would be fresh by construction and defeat the
+          // anti-tautology freshness gate in normalizer.freshGameIds.
+          const rawUpdated = pr["updated_at"];
+          const updated = typeof rawUpdated === "string" ? rawUpdated : "";
           touch(aff, marketKey, outcomeName, price, marketKey === "h2h" ? undefined : point, updated);
         }
       }
@@ -362,14 +370,15 @@ function v2MarketsToBookmakers(
   const out: OddsApiBookmaker[] = [];
   for (const [aff, marketsMap] of byAff) {
     const apiMarkets: OddsApiMarket[] = [];
-    let last = new Date().toISOString();
+    let last: string | undefined;
     for (const [mkey, acc] of marketsMap) {
       const outcomes = [...acc.outcomes.values()];
       if (outcomes.length < 2) continue;
       last = acc.last || last;
       apiMarkets.push({
         key: mkey,
-        last_update: acc.last,
+        // Omitted when upstream gave no `updated_at` (see Acc note above).
+        last_update: acc.last || undefined,
         outcomes,
       });
     }
