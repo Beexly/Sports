@@ -811,7 +811,32 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 // Score MONEYLINE pick
 // ============================================================
 
+/**
+ * Sports whose moneyline has THREE outcomes, where a draw is a real settlement
+ * result rather than a void.
+ *
+ * `removeVig(home, away)` renormalises two outcomes to sum to 1, giving
+ * P(home wins | the match is decisive). That is the right quantity only when a
+ * tie voids the bet. For soccer it is not: settlement.ts grades a draw as a
+ * LOSS for either side, so the settlement-relevant number is the UNCONDITIONAL
+ * P(home wins) — lower by the whole draw mass (~20-30%).
+ *
+ * A correct fix needs the draw price, and the engine cannot see one:
+ * `BookmakerOddsInput` has no `drawPrice` field, and the default free ESPN path
+ * never fetches it. Until a genuine three-way de-vig exists, the honest output
+ * is no moneyline pick at all. Spreads and totals are unaffected — those settle
+ * on goals, where a draw is not a special outcome.
+ */
+function isThreeWayMoneylineSport(sportKey: string): boolean {
+  return sportKey.toLowerCase().startsWith("soccer");
+}
+
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
+  // Publishing a two-way number for a three-way market overstates win
+  // probability, edge and confidence, and persists that overstatement into the
+  // pick proof receipt. Suppress rather than mislead.
+  if (isThreeWayMoneylineSport(input.sport)) return null;
+
   const h2hOdds = input.bookmakerOdds.filter(
     (o) => o.market === "H2H" && o.homePrice !== undefined && o.awayPrice !== undefined
   );
