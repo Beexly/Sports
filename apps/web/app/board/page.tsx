@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
@@ -11,6 +12,8 @@ import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
+import { LocalTime } from "@/components/ui/local-time";
+import { isRealInstant } from "@/lib/time/local-time";
 
 export const metadata: Metadata = {
   title: "Today's Board",
@@ -27,10 +30,15 @@ export const metadata: Metadata = {
 // Reads live board state per request; never statically prerendered.
 export const dynamic = "force-dynamic";
 
-function timeLabel(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Just now";
-  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+/**
+ * Board clocks render through <LocalTime>, a client leaf, so they land on the
+ * VIEWER's clock and always carry their zone. Formatting here — a SERVER
+ * component with no TZ set — printed the server's UTC wall clock, and with no
+ * `timeZoneName` at all it was a bare wrong number with no unit attached.
+ */
+function timeLabel(value: string, label: string): JSX.Element {
+  if (!isRealInstant(value)) return <>Just now</>;
+  return <LocalTime iso={value} format="clock" label={label} />;
 }
 
 export default async function BoardPage(): Promise<JSX.Element> {
@@ -213,7 +221,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
           <StateTile label="Gated today" value={String(state.gatedToday)} />
-          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
+          <StateTile label="Last refresh" value={timeLabel(state.lastRefresh, "Last refresh")} dataTestid="board-freshness" />
           <StateTile label="Model" value={state.modelVersion} />
         </section>
 
@@ -232,7 +240,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             rows={state.publishedToday}
             empty={
               stateResult.meta.boardClass.refusePublicFire
-                ? "No public fires — LIVE_BOARD / gate held by law."
+                ? "No public fires — the board is deliberately holding, not publishing."
                 : "No picks have cleared today."
             }
           />
@@ -275,7 +283,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               <Metric label="Sample" value={String(calibration.sampleSize)} />
               <Metric label="Brier" value={calibration.brierScore === null ? "N/A" : String(calibration.brierScore)} />
             </dl>
-            <p className="mt-5 text-xs text-ion-3">Updated {timeLabel(calibration.updatedAt)}</p>
+            <p className="mt-5 text-xs text-ion-3">Updated {timeLabel(calibration.updatedAt, "Calibration updated")}</p>
           </div>
         </section>
 
@@ -286,7 +294,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
   );
 }
 
-function StateTile({ label, value, dataTestid }: { label: string; value: string; dataTestid?: string }): JSX.Element {
+function StateTile({ label, value, dataTestid }: { label: string; value: ReactNode; dataTestid?: string }): JSX.Element {
   return (
     <div className="min-h-16 border border-titanium bg-carbon/60 px-3 py-2" {...(dataTestid ? { "data-testid": dataTestid } : {})}>
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-3">{label}</p>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
+import { LocalTime } from "@/components/ui/local-time";
 import { SUPPORT_EMAIL } from "@/lib/brand";
 import { listEpisodes, PODCAST_SHOW } from "@/lib/podcast/episodes";
 
@@ -46,7 +47,17 @@ export default function PodcastPage() {
               <article key={ep.slug} className="surface-card p-6">
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2">
                   Episode {String(ep.number).padStart(3, "0")} · {ep.durationMin} min ·{" "}
-                  {new Date(ep.publishedAt).toLocaleDateString()}
+                  {/*
+                    Was a bare `toLocaleDateString()` during SERVER render: no
+                    locale AND no timeZone, so it rendered the server's calendar
+                    date in the server's default locale for every reader on
+                    earth. <LocalTime> resolves it on the viewer's own clock.
+                  */}
+                  <LocalTime
+                    iso={ep.publishedAt}
+                    format="date-short"
+                    label="Published"
+                  />
                 </p>
                 <h2 className="mt-2 font-display text-2xl text-ion-white">
                   <Link href={`/podcast/${ep.slug}`} className="hover:text-orbital-cyan">
