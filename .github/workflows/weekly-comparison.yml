@@ -41,7 +41,7 @@ jobs:
 
       - name: Post report as an issue
         if: always() # post even on a script failure — see compare-shadow-vs-live.ts's catch path
-        uses: peter-evans/create-issue-from-file@v5
+        uses: peter-evans/create-issue-from-file@v6
         with:
           title: "Weekly shadow-vs-live comparison — ${{ github.run_id }}"
           content-filepath: comparison-report.md
