@@ -23,6 +23,7 @@ import { computeGameContext } from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 import { shinFairForSide } from "./honesty/devig-method-compare.js";
+import { snapToPostedLine, formatPublishedLine } from "./published-line.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -399,9 +400,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const variance = spreads.reduce((acc, s) => acc + Math.pow(s - spreadMean, 2), 0) / spreads.length;
   const spreadOfSpreads = Math.sqrt(variance);
 
-  // Chosen side
+  // Chosen side. The chosen-side HANDICAP is derived below from the PUBLISHED
+  // (posted) line, not from the raw mean — see `chosenPublishedSpread`.
   const chosenTeam = homeIsChosen ? input.homeTeam : input.awayTeam;
-  const chosenSpread = homeIsChosen ? avgSpread : -avgSpread;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
   // Average price for chosen side
@@ -540,8 +541,21 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const riskLevel: RiskLevel = computeRiskLevel(spreadOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
+  // PUBLISHED handicap — the number the customer sees, the number we lock, and
+  // the number settlement grades against. `avgSpread` above stays the raw mean
+  // for every scoring computation (dispersion, edge, fair value); only the
+  // published artifact snaps onto a line a book actually posted. Without this,
+  // the mean is an integer only when every book agrees, so `homeMargin + line
+  // === 0` almost never holds and PUSH is structurally unreachable — see
+  // published-line.ts. `worseWhenHigher` is expressed in HOME perspective:
+  // laying the home team means a lower (more negative) line is worse for us;
+  // laying the away team means a higher line is.
+  const publishedSpread = snapToPostedLine(avgSpread, spreads, !homeIsChosen);
+  const chosenPublishedSpread = homeIsChosen ? publishedSpread : -publishedSpread;
   const spreadDisplay =
-    chosenSpread > 0 ? `+${chosenSpread.toFixed(1)}` : chosenSpread.toFixed(1);
+    chosenPublishedSpread > 0
+      ? `+${formatPublishedLine(chosenPublishedSpread)}`
+      : formatPublishedLine(chosenPublishedSpread);
   const selection = `${chosenTeam} ${spreadDisplay}`;
 
   // Build contextual reasoning clauses
@@ -600,13 +614,17 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     gameId: input.gameId,
     pickType: "SPREAD",
     selection,
-    // `line` is stored in HOME-team perspective (= avgSpread), matching the
+    // `line` is stored in HOME-team perspective (= publishedSpread), matching the
     // settlement convention (settlement.ts: `homeCoverMargin = homeMargin + line`),
     // the OpeningLine / Game.openingSpread fields, and the CLV helpers. The
     // chosen-side display number lives in `selection` (e.g. "Away Favs -6.0").
     // Storing chosenSpread here previously mis-graded AWAY-favored picks, because
     // chosenSpread is away-perspective for away picks while settlement reads home.
-    line: avgSpread,
+    //
+    // This is the SNAPPED, posted line — identical to the number rendered in
+    // `selection` — not the raw `avgSpread`. It is what process-sport.ts copies
+    // into the write-once `clvLockLine`, so display, lock and grade are one value.
+    line: publishedSpread,
     confidence,
     rankingScore: rank.rankingScore,
     edgeScore,
@@ -770,20 +788,28 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
   const direction = overIsChosen ? "OVER" : "UNDER";
-  const selection = `${direction} ${avgTotal.toFixed(1)}`;
+  // PUBLISHED total — see published-line.ts and the SPREAD branch above.
+  // `avgTotal` stays the raw mean for scoring; the customer-visible and graded
+  // number snaps onto a total a book actually posted, so `total === line` (the
+  // only PUSH branch) can fire on the integer finals that really produce pushes.
+  // A HIGHER total is worse for an OVER, a LOWER one worse for an UNDER — that
+  // is how an exact tie is resolved, always against us.
+  const publishedTotal = snapToPostedLine(avgTotal, totals, overIsChosen);
+  const totalDisplay = formatPublishedLine(publishedTotal);
+  const selection = `${direction} ${totalDisplay}`;
 
   const movementNote = lineMovementScore > 5 ? " Total line moving in pick direction." :
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
 
   const reasoning =
-    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
+    `${direction} ${totalDisplay} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
     `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     movementNote +
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${avgTotal.toFixed(1)}.`;
+    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${totalDisplay}.`;
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
@@ -807,7 +833,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     gameId: input.gameId,
     pickType: "TOTAL",
     selection,
-    line: avgTotal,
+    // The SNAPPED, posted total — identical to the number in `selection`,
+    // not the raw `avgTotal`. Copied verbatim into the write-once `clvLockLine`.
+    line: publishedTotal,
     confidence,
     rankingScore: confidence, // no independent ML edge on totals yet
     edgeScore,

@@ -237,6 +237,20 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // TOTAL carry a comparable opening line (enrichment captures it at first
       // ingestion); MONEYLINE and games without a captured open return null,
       // as does any viewer without the entitlement.
+      //
+      // `current` is derived from the GAME's live movement delta, NOT from
+      // `pick.line`. `pick.line` used to be rewritten with the fresh consensus
+      // on every refresh cycle — which is exactly the drift that let the graded
+      // line and the published line diverge — and is now frozen at publish.
+      // Reading a frozen field as "current" would tell a paying viewer "Unmoved
+      // since open" while the market moved, so this reads the pair that is still
+      // refreshed every cycle: `Game.openingSpread/openingTotal` (write-once at
+      // first sight) plus `Game.lineMovementSpread/lineMovementTotal` (current
+      // consensus mean − opening, rewritten by enrichGameContext each cycle).
+      // Both halves derive from the SAME `avgSpread`/`avgTotal` first-sight
+      // value (context-enrichment.ts), so opening + delta reconstructs today's
+      // consensus mean — the identical statistic `pick.line` used to carry. A
+      // null delta means no second observation yet, which honestly is no movement.
       lineMovement:
         entitlements.canSeeLineMovement
           ? (() => {
@@ -246,9 +260,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
                   : pick.pickType === "TOTAL"
                     ? pick.game.openingTotal
                     : null;
-              return opening !== null && opening !== undefined
-                ? { opening, current: pick.line }
-                : null;
+              if (opening === null || opening === undefined) return null;
+              const delta =
+                pick.pickType === "SPREAD"
+                  ? pick.game.lineMovementSpread
+                  : pick.game.lineMovementTotal;
+              return { opening, current: opening + (delta ?? 0) };
             })()
           : null,
       // Gated fields. Premium picks are never returned to FREE viewers (tier
