@@ -22,14 +22,50 @@ Do not ask clarifying questions: decide, and state the assumption you decided un
 PART 0 — HOW TO ANSWER. Checked mechanically. Violations are discarded.
 ================================================================
 
+0.0 — DECLARE YOUR RUNTIME BEFORE ANYTHING ELSE.
+
+This brief can reach you two ways, and they have different capabilities:
+
+  AGENT RUNTIME — you can read files, write files, and run shell commands. C11 ran this way; its
+  output quoted live `npm audit` results, which is only possible with a shell.
+
+  TEXT PANEL — you were handed this prompt as text through scripts/ops/chaos-run.mjs, which posts
+  {task, maxTokens} to a router and receives content back. You have NO filesystem and NO shell.
+  You cannot open a file, you cannot run a command, and you cannot write an artifact.
+
+Line two of your response is:
+    RUNTIME: agent (filesystem + shell) | text panel (neither)
+
+This is not bookkeeping. Most of this brief asks you to open specific files and run specific
+commands. If you are a TEXT PANEL, you cannot do that, and the ONLY acceptable answers to those
+parts are [NOT RUN: no shell in this runtime] plus the exact command the operator must run, and
+what each possible result would mean. A text panel that reports having read a file, run a
+command, or written an artifact has fabricated its evidence, which is the one failure that
+discards a run outright — see 0.3 and PART 8.
+
+What a TEXT PANEL substitutes for the file artifacts in 0.1: emit the same six parts inline, each
+opened by a line containing only
+
+    ===== FILE: docs/ops/launch/C12-0N-NAME.md =====
+
+so the operator can split your output into those files mechanically. Do not also claim you wrote
+them.
+
+What a TEXT PANEL is still fully able to do, and should do at full depth: PART 3's decisions,
+PART 4's reasoning and public sentence, PART 6's scoring, PART 7's handoff, and — for every
+verification in PART 2 — the exact command, the exact file:line to open, and the decision rule
+for what its output would mean. That is genuinely valuable. A precise unrun test beats a vague
+run one.
+
 0.1 — OUTPUT BUDGET. THIS IS THE RULE C11 BROKE TWICE.
 
 C11's run hit finish_reason='length' TWICE and its final sentence was cut mid-word
 ("...a refund can't buy ba."). A truncated answer is not a short answer, it is a LOST answer: the
 reader cannot tell what was omitted from what was never considered.
 
-So: DO NOT put the deliverable in the chat response. Write each artifact to a FILE and make the
-chat response a short index of what you wrote.
+So: DO NOT put the deliverable in one undifferentiated chat response. On an AGENT RUNTIME, write
+each artifact to a FILE and make the response a short index of what you wrote. On a TEXT PANEL,
+use the ===== FILE: ===== delimiters from 0.0 instead. Either way the parts are separable.
 
     docs/ops/launch/C12-01-VERIFICATION.md      PART 2 answers
     docs/ops/launch/C12-02-BLOCKERS.md          PART 3 decisions
@@ -40,6 +76,10 @@ chat response a short index of what you wrote.
 
 Create docs/ops/launch/ if it does not exist. One part per file. Finish a file before starting the
 next — a complete PART 2 and nothing else beats six thin stubs.
+
+If this brief is being fired through scripts/ops/chaos-run.mjs, the operator must pass
+`--max-tokens 16000` or higher. Its default is 4096 per model, which is what truncated C11 twice.
+The flag is the fix; do not compensate by thinning the answer.
 
 If you approach your output limit anyway: STOP AT A SECTION BOUNDARY. Do not thin everything to
 make it fit. Make the LAST LINE of your response exactly:
@@ -298,6 +338,11 @@ For EACH D-item, in order:
         npx vitest run <the specific test file>   pass/fail
     What would catch a regression
     Confidence
+
+On a TEXT PANEL none of the above can be executed. Per 0.0, every D-item's status is then
+[NOT RUN: no shell in this runtime], and what you deliver instead is the exact change to make,
+the exact file:line to make it at, the command that verifies it, and what a pass and a fail
+would each mean. Never write a diff as though you had applied it.
 
 BLOCKED is a legitimate status. It needs the exact error text pasted, not a description of it.
 RECLASSIFIED is legitimate when PART 2 proved the item was mis-scoped (2.3 may do this to D-4) —
