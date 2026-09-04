@@ -908,3 +908,72 @@ describe("computeUncertaintyPenalty", () => {
     expect(factor).toBeNull();
   });
 });
+
+// ============================================================
+// Totals side-selection tie-break (Wave 5)
+// ============================================================
+//
+// Defect: scoreTotalPick's LEGACY rule counts a book as an OVER-favored vote
+// when overPrice <= underPrice, so equal-juice (-110/-110) books — the most
+// common quote in any real board — all vote OVER. A symmetric board fabricates
+// unanimous OVER consensus, and an exact 50/50 split of genuinely juiced books
+// deterministically picks OVER by fiat. The same file already refuses to let a
+// MISSING price fabricate one-sided consensus (pricedTotals filter); an
+// AMBIGUOUS price must be no different.
+//
+// The fix ships as an OPT-IN (context.totalsTiebreak === "strict"), NOT a
+// default change: the legacy default is pinned by
+// totals-consensus-tiebreak.test.ts and flipping it is a MODEL_VERSION
+// decision owned by docs/calibration-proposals/2026-09-04-totals-tiebreak-strict.md.
+
+const strictCtx = { totalsTiebreak: "strict" as const };
+
+describe("scoreTotalPick — side selection tie-break (Wave 5, strict opt-in)", () => {
+  it("STRICT: a perfectly symmetric -110/-110 board yields NO totals pick (no fabricated unanimity)", () => {
+    // Five equal-juice books. Under the legacy rule overFavoredPct = 5/5 = 1.0
+    // ("unanimous OVER") — a coin-flip rendered as certainty.
+    const picks = scoreGame({ ...makeTwoWayTotalInput(-110, -110), context: strictCtx });
+    expect(picks.find((p) => p.pickType === "TOTAL")).toBeUndefined();
+  });
+
+  it("STRICT: an exact 50/50 split of juiced books yields NO totals pick (no fiat OVER)", () => {
+    const input = makeTwoWayTotalInput(-112, -108);
+    input.bookmakerOdds = [
+      { bookmaker: "fanduel", market: "TOTALS" as const, total: 48.5, overPrice: -112, underPrice: -108 },
+      { bookmaker: "draftkings", market: "TOTALS" as const, total: 48.5, overPrice: -108, underPrice: -112 },
+      { bookmaker: "betmgm", market: "TOTALS" as const, total: 49.0, overPrice: -112, underPrice: -108 },
+      { bookmaker: "book4", market: "TOTALS" as const, total: 49.0, overPrice: -108, underPrice: -112 },
+    ];
+    const picks = scoreGame({ ...input, context: strictCtx });
+    expect(picks.find((p) => p.pickType === "TOTAL")).toBeUndefined();
+  });
+
+  it("STRICT: genuine OVER juice still produces an OVER pick (control — fix must not kill signal)", () => {
+    // All 5 books genuinely juice the over (-112 < -108): unanimity from
+    // discriminating prices is real signal and must still emit. Contrast
+    // with test 1: same unanimity, but from EQUAL prices (no information).
+    const total = scoreGame({ ...makeTwoWayTotalInput(-112, -108), context: strictCtx }).find(
+      (p) => p.pickType === "TOTAL",
+    );
+    expect(total).toBeTruthy();
+    expect(total!.selection.startsWith("OVER")).toBe(true);
+  });
+
+  it("STRICT: genuine UNDER juice produces an UNDER pick (control)", () => {
+    const total = scoreGame({ ...makeTwoWayTotalInput(-108, -112), context: strictCtx }).find(
+      (p) => p.pickType === "TOTAL",
+    );
+    expect(total).toBeTruthy();
+    expect(total!.selection.startsWith("UNDER")).toBe(true);
+  });
+
+  it("A/B: identical symmetric board — legacy emits OVER, strict emits nothing (the flag is real)", () => {
+    const legacy = scoreGame(makeTwoWayTotalInput(-110, -110)).find((p) => p.pickType === "TOTAL");
+    const strict = scoreGame({ ...makeTwoWayTotalInput(-110, -110), context: strictCtx }).find(
+      (p) => p.pickType === "TOTAL",
+    );
+    expect(legacy).toBeTruthy();
+    expect(legacy!.selection.startsWith("OVER")).toBe(true);
+    expect(strict).toBeUndefined();
+  });
+});
