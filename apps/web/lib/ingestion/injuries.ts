@@ -80,8 +80,14 @@ export async function ingestInjuries(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.injury.deleteMany({ where: { season } });
-  const created = data.length > 0 ? await db.injury.createMany({ data }) : null;
+  // ATOMIC SEASON REPLACE — see snap-counts.ts for the full rationale. As two
+  // separate awaits, a failure between them leaves the season DELETED and never
+  // re-inserted, and a retry re-enters the same delete-first path so it cannot
+  // self-heal.
+  const [, created] = await db.$transaction([
+    db.injury.deleteMany({ where: { season } }),
+    db.injury.createMany({ data }),
+  ]);
 
   return { status: "ok", season, rowsWritten: created?.count ?? data.length };
 }

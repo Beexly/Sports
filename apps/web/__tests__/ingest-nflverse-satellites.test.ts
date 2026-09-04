@@ -15,6 +15,13 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
+    // The season replace is issued as one batch `$transaction`; these doubles
+    // already return promises, so resolving the batch preserves the existing
+    // per-call assertions below. The dedicated atomicity contract (delete and
+    // insert in ONE transaction, rollback on a failed insert) is proven in
+    // ingestion-season-replace-atomicity.test.ts against a double that models
+    // Prisma's lazy PrismaPromise semantics.
+    $transaction: (ops: readonly Promise<unknown>[]) => Promise.all(ops),
     snapCount: { deleteMany: mocks.snapDelete, createMany: mocks.snapCreate },
     injury: { deleteMany: mocks.injDelete, createMany: mocks.injCreate },
     player: { findMany: mocks.playerFindMany },

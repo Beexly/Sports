@@ -39,6 +39,7 @@ const mocks = vi.hoisted(() => {
     upsert: vi.fn<(args: unknown) => Promise<unknown>>(),
     update: vi.fn<(args: unknown) => Promise<unknown>>(),
     updateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
+    transaction: vi.fn<(ops: readonly unknown[]) => Promise<unknown[]>>(),
     requireDurableWriteStore: vi.fn<(capability: string) => void>(),
     DurableWriteStoreUnavailableError,
   };
@@ -55,6 +56,7 @@ vi.mock("@/lib/stripe", () => ({
 
 vi.mock("@sports/db", () => ({
   db: {
+    $transaction: mocks.transaction,
     subscription: {
       findUnique: mocks.findUnique,
       findMany: mocks.findMany,
@@ -107,6 +109,7 @@ beforeEach(() => {
   mocks.upsert.mockReset();
   mocks.update.mockReset();
   mocks.updateMany.mockReset();
+  mocks.transaction.mockReset();
   mocks.requireDurableWriteStore.mockReset();
   mocks.requireDurableWriteStore.mockReturnValue(undefined); // available by default
 
@@ -123,6 +126,11 @@ beforeEach(() => {
   mocks.upsert.mockResolvedValue({ id: "s_1" });
   mocks.update.mockResolvedValue({ id: "s_1" });
   mocks.updateMany.mockResolvedValue({ count: 1 });
+  // Default batch-transaction double: the delegate doubles above already return
+  // promises, so resolving them together preserves every per-call assertion in
+  // this file. The dedicated atomicity block at the end of the file replaces
+  // this with a store-backed double that models real rollback.
+  mocks.transaction.mockImplementation(async (ops) => Promise.all(ops));
 });
 
 afterEach(() => {
@@ -785,5 +793,211 @@ describe("reconcileUserEntitlement — post-checkout single-user grant", () => {
 
     expect(mocks.upsert).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * ── PAST_DUE GRANT ATOMICITY (money path) ───────────────────────────────────
+ *
+ * `upsertGrant` performs TWO writes when Stripe reports a subscription
+ * `past_due`: the upsert that flips the row to PAST_DUE, and the updateMany
+ * that stamps the Stripe-derived grace anchor (`pastDueSince`) where it is
+ * absent.
+ *
+ * `getUserEntitlements` grants premium to a PAST_DUE row ONLY while
+ * `pastDueSince >= graceCutoff`. A NULL anchor matches neither branch of that
+ * OR, so it resolves to FREE. Run as two separate awaits, a failure between
+ * them leaves the row `PAST_DUE` with `pastDueSince = null`: a paying member in
+ * dunning, entitled to the full grace window, locked out of everything.
+ *
+ * And it does NOT self-heal. `reconcileConfirmedSubscription` /
+ * `reconcileUserEntitlement` both short-circuit to "already in sync" the moment
+ * tier + status + subscription id match Stripe — which they do after a
+ * successful upsert — so `upsertGrant` is never re-entered on a later pass and
+ * the anchor is never re-stamped.
+ *
+ * The double below models Prisma's real semantics: model methods return inert
+ * ops, and `$transaction` applies them against a snapshot with ROLLBACK on
+ * throw. That is what gives these tests teeth — a version awaiting the two
+ * statements separately applies the upsert standalone, where the later failure
+ * cannot roll it back.
+ */
+describe("upsertGrant — PAST_DUE grant is atomic", () => {
+  interface Row {
+    userId: string;
+    stripeCustomerId: string;
+    tier: string;
+    status: string;
+    stripeSubscriptionId: string | null;
+    pastDueSince: Date | null;
+  }
+
+  /** The one subscription row, or null when the customer has none yet. */
+  let row: Row | null = null;
+  /** Injected failure on the grace-anchor write. */
+  let failAnchorWrite = false;
+
+  interface Op {
+    kind: "upsert" | "updateMany";
+    args: { where?: Record<string, unknown>; create?: Row; update?: Partial<Row>; data?: Partial<Row> };
+    then(resolve: (v: unknown) => void, reject: (e: unknown) => void): void;
+  }
+
+  function apply(op: Op): unknown {
+    if (op.kind === "upsert") {
+      row = row === null ? ({ ...(op.args.create as Row) }) : ({ ...row, ...op.args.update });
+      return { id: "s_1" };
+    }
+    if (failAnchorWrite) throw new Error("injected DB failure on the grace-anchor write");
+    // Honour the `pastDueSince: null` guard exactly as Postgres would.
+    const wantsNullAnchor = op.args.where?.["pastDueSince"] === null;
+    if (row && (!wantsNullAnchor || row.pastDueSince === null)) {
+      row = { ...row, ...op.args.data };
+      return { count: 1 };
+    }
+    return { count: 0 };
+  }
+
+  function makeOp(kind: Op["kind"], args: Op["args"]): Op {
+    const self: Op = {
+      kind,
+      args,
+      then(resolve, reject) {
+        // Awaited standalone → applied immediately, outside any transaction.
+        standaloneOps.push(self);
+        try {
+          resolve(apply(self));
+        } catch (err) {
+          reject(err);
+        }
+      },
+    };
+    return self;
+  }
+
+  let standaloneOps: Op[] = [];
+
+  /**
+   * Mirrors `getUserEntitlements`' PAST_DUE branch: a paid row grants access
+   * while ACTIVE/TRIALING, or while PAST_DUE with an anchor inside the grace
+   * window. A NULL anchor never matches `{ gte: cutoff }`.
+   */
+  function grantsPremium(r: Row | null, now: Date, graceDays: number): boolean {
+    if (!r || r.tier === "FREE") return false;
+    if (r.status === "ACTIVE" || r.status === "TRIALING") return true;
+    if (r.status !== "PAST_DUE") return false;
+    if (r.pastDueSince === null) return false;
+    return r.pastDueSince.getTime() >= now.getTime() - graceDays * 24 * 60 * 60 * 1000;
+  }
+
+  const NOW = new Date("2026-06-14T12:00:00.000Z");
+  // The grace anchor reconcile derives from Stripe: current_period_start.
+  const PERIOD_START = Math.floor(new Date("2026-06-12T00:00:00.000Z").getTime() / 1000);
+
+  beforeEach(() => {
+    standaloneOps = [];
+    failAnchorWrite = false;
+    row = {
+      userId: "user_1",
+      stripeCustomerId: "cus_1",
+      tier: "PRO",
+      status: "ACTIVE",
+      stripeSubscriptionId: "sub_1",
+      pastDueSince: null,
+    };
+
+    mocks.upsert.mockImplementation((args: unknown) => makeOp("upsert", args as Op["args"]) as never);
+    mocks.updateMany.mockImplementation((args: unknown) => makeOp("updateMany", args as Op["args"]) as never);
+    mocks.findUnique.mockImplementation(async () => (row ? { ...row } : null));
+    mocks.transaction.mockImplementation(async (ops) => {
+      const snapshot = row ? { ...row } : null;
+      try {
+        return (ops as readonly Op[]).map((o) => apply(o));
+      } catch (err) {
+        row = snapshot; // ROLLBACK
+        throw err;
+      }
+    });
+
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [
+        stripeSub({ status: "past_due", current_period_start: PERIOD_START }),
+      ],
+      has_more: false,
+    });
+  });
+
+  it("issues the status flip and the grace-anchor stamp as ONE transaction", async () => {
+    await reconcileUserEntitlement("user_1");
+
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    const ops = mocks.transaction.mock.calls[0]![0] as readonly Op[];
+    expect(ops).toHaveLength(2);
+    expect(ops[0]!.kind).toBe("upsert");
+    expect(ops[1]!.kind).toBe("updateMany");
+    // The anchor write runs SECOND so it observes the upsert's row.
+    expect(ops[1]!.args.where).toEqual({ stripeCustomerId: "cus_1", pastDueSince: null });
+    // Nothing executed outside the transaction — the assertion a two-awaits
+    // version cannot satisfy.
+    expect(standaloneOps).toHaveLength(0);
+  });
+
+  it("uses the Stripe-derived anchor, never now()", async () => {
+    await reconcileUserEntitlement("user_1");
+    expect(row!.status).toBe("PAST_DUE");
+    expect(row!.pastDueSince).toEqual(new Date(PERIOD_START * 1000));
+  });
+
+  it("NEVER leaves a paying member PAST_DUE with a null anchor when the anchor write fails", async () => {
+    failAnchorWrite = true;
+
+    // The caller swallows (its "never throws" contract) — the row state is what matters.
+    await reconcileUserEntitlement("user_1");
+
+    // The whole grant rolled back: the member is still on their previous
+    // access-granting row. Pre-fix, the standalone upsert had already written
+    // status=PAST_DUE with pastDueSince=null.
+    expect(row).not.toBeNull();
+    expect({ status: row!.status, pastDueSince: row!.pastDueSince }).not.toEqual({
+      status: "PAST_DUE",
+      pastDueSince: null,
+    });
+    // A paying member must not lose access because a second write failed.
+    expect(grantsPremium(row, NOW, 7)).toBe(true);
+  });
+
+  it("stays repairable on the next pass — the failure must not be absorbed by the in-sync short-circuit", async () => {
+    // Pass 1 fails on the anchor write.
+    failAnchorWrite = true;
+    await reconcileUserEntitlement("user_1");
+
+    // Pass 2, writes healthy again. Pre-fix, pass 1 had already committed
+    // tier+status+subscriptionId, so this pass matches the "already in sync"
+    // check, returns early, and NEVER re-stamps the anchor — the member stays
+    // locked out permanently. Post-fix the rollback leaves the row unchanged,
+    // so this pass re-enters the grant and completes it.
+    failAnchorWrite = false;
+    await reconcileUserEntitlement("user_1");
+
+    expect(row!.status).toBe("PAST_DUE");
+    expect(row!.pastDueSince).toEqual(new Date(PERIOD_START * 1000));
+    expect(grantsPremium(row, NOW, 7)).toBe(true);
+  });
+
+  it("does not open a transaction for a plain ACTIVE grant — no needless second write", async () => {
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSub({ status: "active" })],
+      has_more: false,
+    });
+    row = { ...row!, tier: "FREE", status: "ACTIVE", stripeSubscriptionId: null };
+
+    await reconcileUserEntitlement("user_1");
+
+    expect(mocks.transaction).not.toHaveBeenCalled();
+    expect(mocks.updateMany).not.toHaveBeenCalled();
+    expect(row!.tier).toBe("PRO");
+    // The single upsert is awaited directly — that IS the whole write.
+    expect(standaloneOps).toHaveLength(1);
+    expect(standaloneOps[0]!.kind).toBe("upsert");
   });
 });

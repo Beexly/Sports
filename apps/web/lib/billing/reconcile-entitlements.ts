@@ -256,7 +256,7 @@ async function upsertGrant(
     ...(isPastDue ? {} : { pastDueSince: null }),
   };
 
-  await db.subscription.upsert({
+  const upsertOp = db.subscription.upsert({
     where: { stripeCustomerId: customerId },
     create: {
       userId,
@@ -268,13 +268,44 @@ async function upsertGrant(
   });
 
   if (isPastDue && pastDueAnchor) {
-    // Stamp the grace anchor only where absent so retries can't slide the window,
-    // and use the Stripe-derived anchor (FINDING 2) — never `now()`.
-    await db.subscription.updateMany({
-      where: { stripeCustomerId: customerId, pastDueSince: null },
-      data: { pastDueSince: pastDueAnchor },
-    });
+    // ATOMIC PAST_DUE GRANT — the status flip and the grace anchor commit
+    // together or not at all.
+    //
+    // Why this MUST be one transaction (and why a retry cannot repair it):
+    // `getUserEntitlements` grants premium to a PAST_DUE row only while
+    // `pastDueSince >= graceCutoff`; a NULL anchor matches neither branch of
+    // that OR, so it resolves to FREE. Run as two separate awaits, a failure
+    // between them (connection drop / pooled-connection timeout / process
+    // teardown mid-cron) leaves the row PAST_DUE with `pastDueSince = null` —
+    // a paying member in dunning who should have the full grace window is
+    // locked out of everything they pay for.
+    //
+    // And the next cron pass does NOT fix it. `reconcileConfirmedSubscription`
+    // short-circuits to "noop" the moment tier + status + subscription id
+    // already match Stripe — which they do after a successful upsert — so
+    // `upsertGrant` is never re-entered and the anchor is never re-stamped.
+    // The lockout persists until the subscription's Stripe status changes.
+    //
+    // Ordering note: the anchor write runs SECOND so it observes the upsert's
+    // row inside the same transaction (an INSERT on the create path has no
+    // pre-existing row for it to match). The webhook's `invoice.payment_failed`
+    // handler already uses this same one-transaction shape for the same reason.
+    //
+    // The `pastDueSince: null` guard is preserved verbatim: it stamps only
+    // where the anchor is ABSENT, so a repeat reconcile of a still-past_due
+    // subscription can never slide an existing grace window forward
+    // (FINDING 2). The anchor is Stripe-derived, never `now()`.
+    await db.$transaction([
+      upsertOp,
+      db.subscription.updateMany({
+        where: { stripeCustomerId: customerId, pastDueSince: null },
+        data: { pastDueSince: pastDueAnchor },
+      }),
+    ]);
+    return;
   }
+
+  await upsertOp;
 }
 
 /**
