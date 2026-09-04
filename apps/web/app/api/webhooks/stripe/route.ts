@@ -800,7 +800,15 @@ function mapStripeStatus(
     case "paused":
       return "PAUSED";
     case "unpaid":
-      return "PAST_DUE";
+      // Stripe's `unpaid` is TERMINAL non-payment: the smart-retry schedule is
+      // EXHAUSTED and Stripe has stopped trying to collect. It is NOT dunning.
+      // Mapping it to PAST_DUE handed it the one status that grants a 7-day
+      // grace window (lib/entitlements.ts) — i.e. free paid access after the
+      // final failed charge. It also DISAGREED with the other writer of this
+      // same Stripe status: reconcile-entitlements.ts already classifies
+      // `unpaid` as a downgrade. CANCELED is non-access, terminal, and matches
+      // reconcile — the fail-closed choice both writers now agree on.
+      return "CANCELED";
     default:
       // Fail CLOSED. Stripe's status set is closed and fully handled above, so
       // this only fires if Stripe introduces a new status — in which case the

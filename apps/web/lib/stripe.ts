@@ -5,6 +5,7 @@ import {
   currentPriceId,
   stripeLookupKeyFor,
   stripePriceAmountMatchesAd,
+  stripePriceIntervalMatchesAd,
   advertisedPhaseUnitAmountCents,
   type PaidTier,
 } from "@/lib/billing/price-ids";
@@ -134,8 +135,56 @@ export function getStripePriceId(tier: "FANTASY" | "PRO" | "ELITE", interval: Bi
 }
 
 /**
+ * GSE-SEC-024 (extended): assert a resolved Stripe Price actually sells what the
+ * pricing page advertises, on BOTH money axes.
+ *
+ *  - amount:   unit_amount must equal the current phase's advertised cents.
+ *  - interval: recurring.interval must equal the interval being checked out.
+ *
+ * Either mismatch means the operator wired a Price that charges something other
+ * than what the member agreed to (classic case: the monthly price id pasted into
+ * STRIPE_PRO_ANNUAL_PRICE_ID — page says $99/yr, Stripe bills $14.99 monthly).
+ * Both fail CLOSED: the caller returns "" and the checkout route answers 503
+ * rather than charging a price we never advertised.
+ *
+ * `source` is logged so the operator knows which knob to fix (an env var vs. the
+ * Stripe Dashboard lookup_key).
+ */
+function assertPriceMatchesAdvertisedPlan(
+  price: Stripe.Price,
+  tier: PaidTier,
+  interval: BillingInterval,
+  source: "env" | "lookup_key",
+): boolean {
+  if (!stripePriceAmountMatchesAd(price, tier, interval)) {
+    console.error(
+      `[checkout] unit_amount mismatch for ${tier}/${interval} (${source}): ` +
+        `Stripe price ${price.id} unit_amount=${price.unit_amount} ` +
+        `but advertised phase price is ${advertisedPhaseUnitAmountCents(tier, interval)} cents. ` +
+        `Refusing to return this price ID.`,
+    );
+    return false;
+  }
+  if (!stripePriceIntervalMatchesAd(price, interval)) {
+    console.error(
+      `[checkout] recurring.interval mismatch for ${tier}/${interval} (${source}): ` +
+        `Stripe price ${price.id} recurring.interval=${price.recurring?.interval ?? "none (one-time price)"} ` +
+        `but checkout is selling a "${interval}" plan. ` +
+        `Refusing to return this price ID.`,
+    );
+    return false;
+  }
+  return true;
+}
+
+/**
  * Resolve checkout price: prefer env STRIPE_*_PRICE_ID, else Stripe lookup_key.
- * Fail-closed empty string if neither env nor an active price with the key exists.
+ * Fail-closed empty string if neither env nor an active price with the key exists,
+ * or if the resolved price disagrees with the advertised amount/interval.
+ *
+ * The env path is the DOCUMENTED production config, so it is validated with the
+ * same guards as the lookup_key fallback — previously it returned the raw env
+ * value unverified, which meant the amount guard effectively never ran in prod.
  */
 export async function resolveCheckoutPriceId(
   tier: PaidTier,
@@ -143,10 +192,34 @@ export async function resolveCheckoutPriceId(
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<string> {
   const fromEnv = checkoutPriceId(tier, interval, env);
-  if (fromEnv) return fromEnv;
 
   if (!process.env["STRIPE_SECRET_KEY"]) {
+    // Without a secret key we can neither retrieve nor verify a price. Returning
+    // an unverified env id here is exactly the hole this guard closes, and any
+    // checkout would fail on the next Stripe call anyway → fail CLOSED.
+    if (fromEnv) {
+      console.error(
+        `[checkout] cannot verify env price ${fromEnv} for ${tier}/${interval}: ` +
+          `STRIPE_SECRET_KEY is missing. Refusing to return an unverified price ID.`,
+      );
+    }
     return "";
+  }
+
+  if (fromEnv) {
+    try {
+      const price = await stripe.prices.retrieve(fromEnv);
+      if (!assertPriceMatchesAdvertisedPlan(price, tier, interval, "env")) {
+        return "";
+      }
+      return price.id;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "unknown";
+      console.error(
+        `[checkout] env price retrieve failed for ${tier}/${interval} (${fromEnv}): ${message}`,
+      );
+      return "";
+    }
   }
 
   const lookupKey = stripeLookupKeyFor(tier, interval);
@@ -158,18 +231,7 @@ export async function resolveCheckoutPriceId(
     });
     const price = listed.data[0];
     if (!price) return "";
-    // GSE-SEC-024: verify the Stripe price's unit_amount matches the advertised
-    // phase price before returning it. A mismatch means someone configured a
-    // Stripe Price with a different amount than what we publicly advertise —
-    // fail CLOSED (return empty → 503 at the route) rather than charging the
-    // wrong amount.
-    if (!stripePriceAmountMatchesAd(price, tier, interval)) {
-      console.error(
-        `[checkout] unit_amount mismatch for ${tier}/${interval}: ` +
-          `Stripe price ${price.id} unit_amount=${price.unit_amount} ` +
-          `but advertised phase price is ${advertisedPhaseUnitAmountCents(tier, interval)} cents. ` +
-          `Refusing to return this price ID.`,
-      );
+    if (!assertPriceMatchesAdvertisedPlan(price, tier, interval, "lookup_key")) {
       return "";
     }
     return price.id;
