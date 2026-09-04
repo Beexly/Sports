@@ -92,17 +92,34 @@ forecast and `p` its outcome rate:
 |---|---:|---:|---:|---:|---|---|
 | PK-1 | 188 | 0.2490 | −0.00102 | 0.00232 | [−0.0056, +0.0035] | not distinguishable |
 | 1.5–2.5 | 447 | 0.2501 | +0.00007 | 0.00044 | [−0.0008, +0.0009] | not distinguishable |
-| 3–6 | 1196 | 0.2500 | 0.00000 | 0.00000 | see note | not distinguishable |
+| 3–6 | 1196 | 0.2500 | 0.00000 | 0.00000 | see note | **indeterminate** |
 | 6.5–9.5 | 576 | 0.2526 | +0.00257 | 0.00654 | [−0.0103, +0.0154] | not distinguishable |
 | 10+ | 343 | 0.1979 | −0.05216 | 0.01173 | [−0.0751, −0.0292] | **better than coin flip** |
 
 **Rounded inputs, and what they do and do not permit.** Every forecast `q` and
 outcome rate `p` above is published to two decimals, so every `d`, SE and
-interval is computed from rounded values. The 3–6 row is where that bites: at a
-printed 50.00% its `d` computes to exactly zero, which invites calling the row
-degenerate — a leaf that provably emits a coin flip. **That is not supported.**
-The true forecast lies anywhere in 50.00% ± 0.005%, and across that interval the
-row's `z` ranges over [−1.393, +1.397]. It is a real test that came back null.
+interval is computed from rounded values. The 3–6 row is where that bites, and
+the honest verdict is that **it is INDETERMINATE from the published output** —
+not degenerate, and not a null test either, because its rounding interval
+contains both cases:
+
+| true q | mean d | z |
+|---|---:|---|
+| 0.499950 | +2.01e−6 | +1.393 |
+| 0.499975 | +1.01e−6 | +1.392 |
+| **0.500000** | **0** | **UNDEFINED (0/0)** |
+| 0.500025 | −1.00e−6 | −1.391 |
+| 0.500050 | −2.01e−6 | −1.390 |
+
+At exactly `q = 0.5` the variance is zero and the statistic is 0/0 — undefined,
+not a value inside a range. Anywhere else in the interval `|z| ≤ 1.393`. So the
+leaf either emits a literal coin flip (no test possible) or is a real test that
+came back null, and two published decimals cannot tell us which.
+
+**It does not matter for any conclusion here.** Both branches say the same
+thing: this row is not evidence of anything. And the Bonferroni family is either
+5 (all real tests) or 4 (3–6 degenerate); the 10+ result survives both —
+raw p = 8.7e−06, ×5 = 4.4e−05, ×4 = 3.5e−05.
 
 **The conclusions are robust to the rounding.** Sweeping every row over its full
 `q ± 0.00005`, `p ± 0.00005` interval:
@@ -111,16 +128,16 @@ row's `z` ranges over [−1.393, +1.397]. It is a real test that came back null.
 |---|---:|---|---|
 | PK-1 | −0.438 | [−0.440, −0.436] | insignificant throughout |
 | 1.5–2.5 | +0.152 | [+0.149, +0.155] | insignificant throughout |
-| 3–6 | 0.000 | [−1.393, +1.397] | insignificant throughout |
+| 3–6 | undefined (0/0) at q=0.5 | [−1.393, +1.393] elsewhere | indeterminate, never significant |
 | 6.5–9.5 | +0.393 | [+0.389, +0.396] | insignificant throughout |
 | 10+ | −4.448 | [−4.451, −4.444] | **significant throughout** |
 
 No verdict flips anywhere in the rounding space.
 
-**Multiplicity.** Those are five raw intervals, and all five are real tests —
-none degenerate — so the family size is 5. §1 applies Bonferroni across the same
-five leaves; held to that standard the 10+ result survives: z = −4.45, two-sided
-p = 8.7e−06, Bonferroni ×5 = 4.4e−05.
+**Multiplicity.** The Bonferroni family is either 5 (if 3–6 is a real test) or 4
+(if it is degenerate), and the published output cannot settle which. §1 applies
+Bonferroni across the same leaves; held to that standard the 10+ result survives
+either way: raw p = 8.7e−06, ×5 = 4.4e−05, ×4 = 3.5e−05.
 
 *(An intermediate version of this section called the 3–6 row "degenerate" and
 said it "carries no information either way" — stating the rounding caveat and

@@ -156,30 +156,35 @@ wrong on this project, twice by asserting more than the data licensed.
         leaf        n    Brier    mean d      SE       95% CI              verdict
         PK-1      188   0.2490   -0.00102  0.00232  [-0.0056, +0.0035]  not distinguishable
         1.5-2.5   447   0.2501   +0.00007  0.00044  [-0.0008, +0.0009]  not distinguishable
-        3-6      1196   0.2500    0.00000  0.00000   see note            not distinguishable
+        3-6      1196   0.2500    0.00000  0.00000   see note            INDETERMINATE
         6.5-9.5   576   0.2526   +0.00257  0.00654  [-0.0103, +0.0154]  not distinguishable
         10+       343   0.1979   -0.05216  0.01173  [-0.0751, -0.0292]  BETTER than coin flip
 
       ROUNDED INPUTS. Every forecast and outcome rate above is published to two
-      decimals, so each d, SE and interval is computed from a rounded q and p.
-      The 3-6 row is the one where that matters: at a printed 50.00% its d
-      computes to exactly zero, but the true forecast lies anywhere in
-      50.00% +/- 0.005%, and across that interval its z ranges over
-      [-1.393, +1.397]. So it is a real test that came back null, NOT a
-      degenerate row and NOT a leaf that provably emits a coin flip.
+      decimals, so each d, SE and interval derives from a rounded q and p. The
+      3-6 row is INDETERMINATE because of it — neither degenerate nor a null
+      test, because its rounding interval contains BOTH cases:
 
-      The conclusions ARE robust to that rounding. Sweeping every row over its
-      full q +/- 0.00005 and p +/- 0.00005 interval: PK-1 z in [-0.440, -0.436],
-      1.5-2.5 in [+0.149, +0.155], 3-6 in [-1.393, +1.397], 6.5-9.5 in
-      [+0.389, +0.396] — all insignificant throughout — and 10+ in
-      [-4.451, -4.444], significant throughout. No verdict flips anywhere in the
-      rounding space.
+          true q       mean d        z
+          0.499950    +2.01e-6     +1.393
+          0.500000     0           UNDEFINED (0/0)
+          0.500050    -2.01e-6     -1.390
 
-      MULTIPLICITY: those are five raw intervals, and all five are real tests
-      (none degenerate), so the family size is 5. The drift test elsewhere in
-      this brief applies Bonferroni across the same five leaves; held to that
-      standard the 10+ result survives: z = -4.45, two-sided p = 8.7e-06,
-      Bonferroni x5 = 4.4e-05.
+      At exactly q = 0.5 the variance is zero and the statistic is 0/0 —
+      undefined, not a value sitting inside a range. Anywhere else in the
+      interval |z| <= 1.393. Two published decimals cannot tell us which case
+      holds, and it does not matter: both branches say this row is not evidence
+      of anything.
+
+      EVERY OTHER CONCLUSION IS ROBUST to the rounding. Sweeping each row over
+      its full q +/- 0.00005, p +/- 0.00005 interval: PK-1 z in [-0.440, -0.436],
+      1.5-2.5 in [+0.149, +0.155], 6.5-9.5 in [+0.389, +0.396] — insignificant
+      throughout — and 10+ in [-4.451, -4.444], significant throughout. No
+      verdict flips anywhere in the rounding space.
+
+      MULTIPLICITY: the Bonferroni family is either 5 (if 3-6 is a real test) or
+      4 (if it is degenerate). The 10+ result survives BOTH: raw p = 8.7e-06,
+      x5 = 4.4e-05, x4 = 3.5e-05.
 
       So 6.5-9.5's 0.2526 is a real point estimate and NOT a demonstrated
       shortfall — its interval spans zero comfortably at n=576. Do not tell the
