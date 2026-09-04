@@ -92,22 +92,40 @@ forecast and `p` its outcome rate:
 |---|---:|---:|---:|---:|---|---|
 | PK-1 | 188 | 0.2490 | −0.00102 | 0.00232 | [−0.0056, +0.0035] | not distinguishable |
 | 1.5–2.5 | 447 | 0.2501 | +0.00007 | 0.00044 | [−0.0008, +0.0009] | not distinguishable |
-| 3–6 | 1196 | 0.2500 | 0.00000 | 0.00000 | — | **degenerate**, see below |
+| 3–6 | 1196 | 0.2500 | 0.00000 | 0.00000 | see note | not distinguishable |
 | 6.5–9.5 | 576 | 0.2526 | +0.00257 | 0.00654 | [−0.0103, +0.0154] | not distinguishable |
 | 10+ | 343 | 0.1979 | −0.05216 | 0.01173 | [−0.0751, −0.0292] | **better than coin flip** |
 
-**The 3–6 row is not a test result.** Its printed forecast is 50.00%, so `d` is
-identically zero across all 1,196 observations and its Brier of 0.2500 is not an
-estimate that happened to land on the coin-flip value — it *is* the coin-flip
-value, by construction. That leaf reproduces a coin flip rather than being tested
-against one. In the same spirit as the rest of this section: 50.00% is the base
-rate as printed to two decimals, and unprinted digits could make it marginally
-non-degenerate. Either way the row carries no information.
+**Rounded inputs, and what they do and do not permit.** Every forecast `q` and
+outcome rate `p` above is published to two decimals, so every `d`, SE and
+interval is computed from rounded values. The 3–6 row is where that bites: at a
+printed 50.00% its `d` computes to exactly zero, which invites calling the row
+degenerate — a leaf that provably emits a coin flip. **That is not supported.**
+The true forecast lies anywhere in 50.00% ± 0.005%, and across that interval the
+row's `z` ranges over [−1.393, +1.397]. It is a real test that came back null.
 
-**Multiplicity.** Those are five raw intervals, while §1 applies Bonferroni
-across the same five leaves. Holding this column to the document's own standard,
-the 10+ result survives: z = −4.45, two-sided p = 8.7e−06, Bonferroni ×5 =
-4.4e−05. cubic raised the inconsistency and was right to.
+**The conclusions are robust to the rounding.** Sweeping every row over its full
+`q ± 0.00005`, `p ± 0.00005` interval:
+
+| leaf | z at printed values | z across rounding interval | stable? |
+|---|---:|---|---|
+| PK-1 | −0.438 | [−0.440, −0.436] | insignificant throughout |
+| 1.5–2.5 | +0.152 | [+0.149, +0.155] | insignificant throughout |
+| 3–6 | 0.000 | [−1.393, +1.397] | insignificant throughout |
+| 6.5–9.5 | +0.393 | [+0.389, +0.396] | insignificant throughout |
+| 10+ | −4.448 | [−4.451, −4.444] | **significant throughout** |
+
+No verdict flips anywhere in the rounding space.
+
+**Multiplicity.** Those are five raw intervals, and all five are real tests —
+none degenerate — so the family size is 5. §1 applies Bonferroni across the same
+five leaves; held to that standard the 10+ result survives: z = −4.45, two-sided
+p = 8.7e−06, Bonferroni ×5 = 4.4e−05.
+
+*(An intermediate version of this section called the 3–6 row "degenerate" and
+said it "carries no information either way" — stating the rounding caveat and
+then overriding it in the same sentence. Devin caught it. The sweep above is what
+the caveat actually required.)*
 
 An earlier version of this section said "two leaves exceed the coin-flip line",
 and the version before that called 6.5–9.5 "the only clear one". Both were point
