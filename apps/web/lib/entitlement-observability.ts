@@ -8,6 +8,48 @@
  * this module, so the gates keep logging for real under test.
  */
 
+import { redactErrorDetail, sanitizeLogField } from "@/lib/log-safety";
+
+/**
+ * How long one call site stays quiet after it has spoken.
+ *
+ * The faults this helper reports are by their nature per-REQUEST: a database
+ * that cannot be reached fails every gate on every page load for as long as the
+ * outage lasts. Logging each one turns a single infrastructure fault into
+ * thousands of identical records a minute — the operator pays to store them,
+ * and the signal that matters (whatever ELSE breaks during the outage) is
+ * buried in them. So the first downgrade at a site prints immediately, and the
+ * next line from that site carries the count of everything suppressed in
+ * between: the outage stays visible and its scale is still reported, at one
+ * line a minute per site instead of one per request.
+ *
+ * Throttling is keyed on the site AND the redacted error text, never the site
+ * alone. Collapsing a repeat of the SAME fault is the point; swallowing a
+ * DIFFERENT one because it landed at the same call site within the minute would
+ * recreate the exact problem this module exists to fix — a second failure mode
+ * hidden inside the first. A fault whose text varies per occurrence therefore
+ * defeats the throttle and prints every time, which is the safe direction to
+ * fail: no worse than logging without a throttle at all.
+ */
+const THROTTLE_WINDOW_MS = 60_000;
+
+type SiteThrottleState = {
+  /** When this site+fault last actually printed. */
+  emittedAt: number;
+  /** Downgrades swallowed since then — reported on the next printed line. */
+  suppressed: number;
+};
+
+const throttleBySite = new Map<string, SiteThrottleState>();
+
+/**
+ * Drop the throttle state. Tests only: each case must start from silence, or a
+ * neighbouring case's log would suppress the one under assertion.
+ */
+export function resetEntitlementFailClosedThrottle(): void {
+  throttleBySite.clear();
+}
+
 /**
  * Record a fail-closed downgrade to FREE.
  *
@@ -19,8 +61,10 @@
  * — 401s from the API gate, teaser boards from the page gate — with nothing at
  * all in the logs to explain the support wave.
  *
- * Logs the error name/message and the user id only — never an env var value, a
- * token, or a connection string.
+ * Logs the error name/message and the user id only — and the message goes
+ * through `redactErrorDetail` first, because a Prisma fault is exactly the kind
+ * of error that carries the datasource URL or the database host:port in its
+ * text. Never an env var value, a token, or a connection string.
  *
  * @param site  short call-site tag, e.g. "api-entitlement:gate"
  */
@@ -29,11 +73,35 @@ export function logEntitlementFailClosed(
   userId: string | undefined,
   error: unknown,
 ): void {
-  const detail =
-    error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+  const key = sanitizeLogField(site, 64);
+  const detail = redactErrorDetail(error);
+  // Site + fault. The user id is deliberately NOT part of the key: during an
+  // outage every request carries a different one, which would defeat the
+  // throttle completely.
+  const throttleKey = `${key}::${detail.slice(0, 160)}`;
+  const now = Date.now();
+  const state = throttleBySite.get(throttleKey);
+
+  if (state && now - state.emittedAt < THROTTLE_WINDOW_MS) {
+    state.suppressed += 1;
+    return;
+  }
+
+  const suppressed = state?.suppressed ?? 0;
+  throttleBySite.set(throttleKey, { emittedAt: now, suppressed: 0 });
+
+  const who = sanitizeLogField(userId ?? "<unauthenticated>", 64);
+  const backlog =
+    suppressed > 0
+      ? ` ${suppressed} further identical downgrade${suppressed === 1 ? "" : "s"} at this ` +
+        `site ${suppressed === 1 ? "was" : "were"} suppressed in the preceding ` +
+        `${Math.round(THROTTLE_WINDOW_MS / 1000)}s.`
+      : "";
+
   console.error(
-    `[entitlements] FAIL-CLOSED at ${site} — serving FREE because entitlements could ` +
-      `not be resolved for user ${userId ?? "<unauthenticated>"}: ${detail}. ` +
-      "A paying member may be seeing the free surface; this is infrastructure, not policy.",
+    `[entitlements] FAIL-CLOSED at ${key} — serving FREE because entitlements could ` +
+      `not be resolved for user ${who}: ${detail}. ` +
+      "A paying member may be seeing the free surface; this is infrastructure, not policy." +
+      backlog,
   );
 }

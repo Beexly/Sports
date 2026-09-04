@@ -16,6 +16,7 @@ import {
 } from "@/lib/ops/ranking-pause-durable";
 import { loadProvenPathPlan } from "@/lib/ops/proven-path-durable";
 import { clearSelectiveRuntimeCaches } from "@/lib/calibration/selective-publish-runtime";
+import { sanitizeLogField } from "@/lib/log-safety";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -65,9 +66,13 @@ export async function POST(request: Request) {
     enabled,
     groups: enabled ? groups : [],
     setAt: new Date().toISOString(),
-    setBy: body.setBy?.trim() || "ops.ranking-pause-apply",
+    // Both fields are echoed into a log line by persistRankingPauseApply and
+    // stored on the audit row. Flatten control characters here, at the trust
+    // boundary, so a caller cannot inject a newline and forge a second log
+    // record claiming a different outcome.
+    setBy: sanitizeLogField(body.setBy ?? "", 120) || "ops.ranking-pause-apply",
     note:
-      body.note?.trim() ||
+      sanitizeLogField(body.note ?? "", 500) ||
       (enabled
         ? `Founder-yes pause apply: ${groups.join(", ")}. Not PROVEN; maps OFF.`
         : "Pause apply disabled (durable)."),
@@ -81,24 +86,36 @@ export async function POST(request: Request) {
   const persist = await persistRankingPauseApply(snap);
   clearSelectiveRuntimeCaches();
 
-  if (persist === "error") {
+  // `ok` means ONE thing on this route: the suppression control is now durable
+  // in every isolate. "stub" is not that — no DATABASE_URL is configured, so
+  // nothing was written and nothing will be. Answering 200/ok:true for it would
+  // reintroduce exactly the defect this route was fixed for, one state over:
+  // the founder reads "applied", the other isolates read nothing, and the
+  // groups that were supposed to be paused keep publishing. The two non-ok
+  // states are kept apart by status because the remedy differs — a 500 is worth
+  // retrying, a 503 needs a database before any retry can succeed.
+  if (persist !== "ok") {
+    const failedWrite = persist === "error";
     return NextResponse.json(
       {
         ok: false,
         persist,
-        error:
-          "Durable RANKING_PAUSE_APPLY write FAILED — the pause was NOT applied. " +
-          "Other isolates keep the previous posture; retry, or set the RANKING_PAUSE_APPLY env var.",
+        error: failedWrite
+          ? "Durable RANKING_PAUSE_APPLY write FAILED — the pause was NOT applied. " +
+            "Other isolates keep the previous posture; retry, or set the RANKING_PAUSE_APPLY env var."
+          : "No durable store in this environment (stub database) — the pause was NOT stored " +
+            "and will not survive this isolate. Configure DATABASE_URL, or set the " +
+            "RANKING_PAUSE_APPLY env var, which still works.",
         attempted: snap,
         claimPosture: "ranking_pause_only_not_proven",
       },
-      { status: 500 },
+      { status: failedWrite ? 500 : 503 },
     );
   }
 
   return NextResponse.json({
     ok: true,
-    /** Durable-write outcome for this request: "ok" | "stub". */
+    /** Durable-write outcome for this request. `ok: true` implies persist "ok". */
     persist,
     durable: snap,
     claimPosture: "ranking_pause_only_not_proven",

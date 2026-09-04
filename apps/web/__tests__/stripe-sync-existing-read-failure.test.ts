@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import type Stripe from "stripe";
 
@@ -143,6 +143,12 @@ describe("syncSubscription: existing-row read failure", () => {
     mocks.checkoutAttemptUpdateMany.mockResolvedValue({ count: 1 });
 
     errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+  });
+
+  // Restore the real console.error: a spy left installed silences every later
+  // suite that runs in this worker.
+  afterEach(() => {
+    errorSpy.mockRestore();
   });
 
   it("does NOT write the subscription row when the existing-row read rejects", async () => {

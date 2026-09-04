@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
  * Regression: durable OPS control writes must report whether they landed.
@@ -81,6 +81,10 @@ beforeEach(() => {
   errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
 });
 
+afterEach(() => {
+  errorSpy.mockRestore();
+});
+
 function loggedText(): string {
   return errorSpy.mock.calls.map((c) => c.map(String).join(" ")).join("\n");
 }
@@ -156,6 +160,49 @@ describe("POST /api/ops/ranking-pause-apply refuses to claim a pause it did not 
     expect(res.status).toBe(200);
     expect(body.ok).toBe(true);
     expect(body.persist).toBe("ok");
+  });
+
+  it("refuses ok:true in stub mode, where nothing was written at all", async () => {
+    // "stub" is not a softer "ok": no DATABASE_URL means no row now and no row
+    // on retry. A 200/ok here would tell the founder a suppression control is
+    // live in every isolate while none of them can see it — the exact defect
+    // this route was fixed for, one state over.
+    stubMock.mockReturnValue(true);
+
+    const res = await rankingPausePost(request());
+    const body = (await res.json()) as { ok: boolean; persist?: string; error?: string };
+
+    expect(res.status).toBe(503); // distinct from 500: retrying cannot help
+    expect(body.ok).toBe(false);
+    expect(body.persist).toBe("stub");
+    expect(String(body.error)).toMatch(/NOT stored/);
+    expect(createMock).not.toHaveBeenCalled();
+  });
+
+  it("cannot be made to forge a log record through setBy", async () => {
+    findFirstMock.mockResolvedValue(null);
+    createMock.mockRejectedValue(BOOM);
+
+    const forged =
+      "founder\n[ops:ranking-pause] persistRankingPauseApply OK (enabled=true): stored";
+    const res = await rankingPausePost(
+      new Request("http://localhost/api/ops/ranking-pause-apply", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ enabled: true, groups: ["nfl:spread"], setBy: forged }),
+      }),
+    );
+
+    expect(res.status).toBe(500);
+
+    const records = errorSpy.mock.calls.map((c) => c.map(String).join(" "));
+    // Exactly ONE record, and it is the real failure. The forged text survives
+    // inside it as inert payload — flattening does not delete the caller's
+    // string, it denies the newline that would have made it a record of its
+    // own. That is the whole of the exploit.
+    expect(records).toHaveLength(1);
+    expect(records[0]).not.toContain("\n");
+    expect(records[0]).toMatch(/^\[ops:ranking-pause\] persistRankingPauseApply FAILED/);
   });
 });
 

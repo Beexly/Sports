@@ -3,12 +3,18 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { redactErrorDetail } from "@/lib/log-safety";
 import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 
 export const PROVEN_PATH_SCOPE = "ops.calibration.proven-path";
 
+/**
+ * Driver errors are not safe to print raw: Prisma's P1001 carries the database
+ * host and port, and an initialization error can carry the datasource URL with
+ * its credentials. Redact before logging.
+ */
 function errMessage(err: unknown): string {
-  return err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+  return redactErrorDetail(err);
 }
 
 /** Outcome of a durable write — same three states as the other ops persisters. */

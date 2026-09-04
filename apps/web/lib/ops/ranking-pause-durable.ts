@@ -5,11 +5,17 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { redactErrorDetail, sanitizeLogField } from "@/lib/log-safety";
 
 export const RANKING_PAUSE_DURABLE_SCOPE = "ops.ranking.pause-apply";
 
+/**
+ * Driver errors are not safe to print raw: Prisma's P1001 carries the database
+ * host and port, and an initialization error can carry the datasource URL with
+ * its credentials. Redact before logging.
+ */
 function errMessage(err: unknown): string {
-  return err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+  return redactErrorDetail(err);
 }
 
 export type RankingPauseDurableSnap = {
@@ -66,7 +72,8 @@ export async function persistRankingPauseApply(
   } catch (err) {
     console.error(
       `[ops:ranking-pause] persistRankingPauseApply FAILED (enabled=${snap.enabled} ` +
-        `groups=${snap.groups.length} setBy=${snap.setBy}): ${errMessage(err)}. ` +
+        `groups=${snap.groups.length} setBy=${sanitizeLogField(snap.setBy, 120)}): ` +
+        `${errMessage(err)}. ` +
         "The durable pause was NOT stored — other isolates will keep the previous posture.",
     );
     return "error";

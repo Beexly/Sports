@@ -71,10 +71,12 @@ async function evaluateGate(
   try {
     userId = (await auth())?.user?.id;
   } catch (error) {
-    // Treating an auth() EXCEPTION as "anonymous" is the right fail-closed
-    // verdict, but it used to be indistinguishable from a logged-out visitor:
-    // a broken session store answered every paying member with a 401 and left
-    // no trace of why. Verdict unchanged, now audible.
+    // BACKSTOP ONLY. `auth()` (lib/auth.ts) catches a throwing session store
+    // itself and answers `null`, so in production this catch does not fire —
+    // the fail-closed downgrade is logged there, at "auth:session-store", which
+    // is the one place the exception actually exists. Kept because auth() is
+    // not contractually total (a module-scope fault could still surface here),
+    // and a 500 from the gate would be a worse answer than a fail-closed 401.
     logEntitlementFailClosed("api-entitlement:auth", undefined, error);
     userId = undefined;
   }
