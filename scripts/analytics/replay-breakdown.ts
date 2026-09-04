@@ -31,6 +31,7 @@ import {
   replayAndSettleGame,
   type SettledHistoricalPick,
 } from "../../packages/prediction-engine/src/index.js";
+import { computePickGrade } from "@sports/types";
 import { toRawRow } from "../backfill/historical-settlement-backfill.js";
 
 const BREAK_EVEN = 110 / 210; // -110 both sides
@@ -108,7 +109,17 @@ async function main(): Promise<void> {
   const byType = new Map<string, Bucket>();
   const byConfidence = new Map<string, Bucket>();
   const byEra = new Map<string, Bucket>();
+  const byEdgeIndex = new Map<string, Bucket>();
+  const byGrade = new Map<string, Bucket>();
   const overall = emptyBucket();
+
+  const edgeBand = (e: number): string => {
+    if (e >= 80) return "80-100";
+    if (e >= 65) return "65-79";
+    if (e >= 50) return "50-64";
+    if (e >= 35) return "35-49";
+    return "0-34";
+  };
 
   const confidenceBand = (c: number): string => {
     if (c >= 80) return "80+";
@@ -151,6 +162,19 @@ async function main(): Promise<void> {
         const e = byEra.get(era(raw.season)) ?? emptyBucket();
         add(e, p);
         byEra.set(era(raw.season), e);
+
+        // Edge Index and the grade ladder are BOTH customer-facing: edgeScore is
+        // what toEdgeIndex() renders publicly, and computePickGrade(confidence,
+        // edgeScore) is the ELITE/STRONG/SOLID/LEAN ladder a subscriber buys on.
+        // Same function the engine uses — imported, not reimplemented.
+        const ei = byEdgeIndex.get(edgeBand(p.edgeScore)) ?? emptyBucket();
+        add(ei, p);
+        byEdgeIndex.set(edgeBand(p.edgeScore), ei);
+
+        const grade = computePickGrade(p.confidence, p.edgeScore);
+        const g = byGrade.get(grade) ?? emptyBucket();
+        add(g, p);
+        byGrade.set(grade, g);
       }
     }
   }
@@ -167,9 +191,40 @@ async function main(): Promise<void> {
 
   console.log("\n── BY CONFIDENCE (spread + total only) ──────────────────────────────────");
   console.log("   If confidence is meaningful, win rate rises down this list.");
+  console.log("   CAVEAT: the replay pins the edge component (see the Edge Index note");
+  console.log("   below), so this tests only the market-independent drivers of");
+  console.log("   confidence, not the live distribution.");
   for (const band of ["80+", "70-79", "65-69", "60-64", "55-59", "50-54"]) {
     const b = byConfidence.get(band);
     if (b) console.log(row(band, b));
+  }
+
+  console.log("\n── BY EDGE INDEX (the public 0-100 number; spread + total only) ─────────");
+  for (const band of ["80-100", "65-79", "50-64", "35-49", "0-34"]) {
+    const b = byEdgeIndex.get(band);
+    if (b) console.log(row(band, b));
+  }
+  if (byEdgeIndex.size <= 1) {
+    console.log(
+      "\n   *** DEGENERATE — DO NOT READ THIS AS A PRODUCT FINDING. ***\n" +
+        "   Every pick lands in one band because the replay PRICES BOTH SIDES AT -110\n" +
+        "   (buildHistoricalOddsInput uses STD_VIG_PRICE for spread/total). Then\n" +
+        "   offeredProb(-110) = 0.5238, the symmetric de-vig gives fairProb = 0.5000,\n" +
+        "   and computeEdgeScore's rawEdge = fair - offered = -0.0238 for EVERY pick.\n" +
+        "   edgeScore is therefore a constant here, by construction.\n" +
+        "   The Edge Index and the grade ladder CANNOT be evaluated by this replay.\n" +
+        "   Testing them needs an archive with real per-book prices, which nflverse\n" +
+        "   games.csv does not carry — it has one consensus line per market.",
+    );
+  }
+
+  console.log("\n── BY GRADE LADDER (what a subscriber buys; spread + total only) ────────");
+  for (const g of ["ELITE_PLAY", "STRONG_PLAY", "SOLID_PLAY", "LEAN"]) {
+    const b = byGrade.get(g);
+    if (b) console.log(row(g, b));
+  }
+  if (byGrade.size <= 1) {
+    console.log("   Same degeneracy as above — grade is a function of edgeScore, which is pinned.");
   }
 
   console.log("\n── BY ERA (spread + total only) ─────────────────────────────────────────");

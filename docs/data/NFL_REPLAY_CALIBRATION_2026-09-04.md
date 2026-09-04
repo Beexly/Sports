@@ -116,6 +116,27 @@ and the 65-69 band **is** what we give away. Set side by side:
 z = −1.19, p = 0.235. The gap is **not statistically significant**, so the claim
 "premium picks are worse than free picks" is **not supported** and must not be made.
 
+**And a second limit, found while trying to test the Edge Index — it narrows this
+finding further.** The replay prices both sides of every spread and total at −110
+(`buildHistoricalOddsInput` uses `STD_VIG_PRICE`). So `offeredProb(-110) = 0.5238`,
+the symmetric de-vig gives `fairProb = 0.5000`, and `computeEdgeScore`'s
+`rawEdge = fair − offered = −0.0238` **for every single pick**. The edge component of
+confidence is a constant here. Verified: `edgeScore = 26` on both the spread and the
+total pick of a probe game, and all 13,646 spread/total picks land in one Edge Index
+band.
+
+Two consequences:
+
+- **The Edge Index and the grade ladder cannot be evaluated by this replay at all.**
+  Every pick grades `LEAN`, and that is an artifact of the reconstruction, **not** a
+  product defect. Do not cite it as one. Testing them needs an archive with real
+  per-book prices; nflverse `games.csv` carries one consensus line per market.
+- **The confidence comparison above tests only the market-independent drivers** of
+  confidence (context, schedule, line magnitude) — not consensus dispersion, depth,
+  or pricing edge, all of which are constant by construction. So the premium-vs-free
+  result is real *for this corpus* but transfers to the live board more weakly than
+  a first reading suggests.
+
 What *is* supported is the thing that matters commercially: **on 13,463 historical
 picks there is no evidence that the paywalled picks outperform the free ones, and
 the point estimate runs the wrong way.** A paid tier whose whole premise is "these
