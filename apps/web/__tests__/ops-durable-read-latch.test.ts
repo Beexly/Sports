@@ -214,7 +214,14 @@ describe("durable ranking-pause read: failure is not an absence", () => {
     expect(findFirstMock).toHaveBeenCalledTimes(2);
   });
 
-  it("is audible when the read cannot be attempted at all", async () => {
+  it("is audible when the delegate throws synchronously, and still answers null", async () => {
+    // NOTE ON WHAT THIS DOES AND DOES NOT COVER. `readRankingPauseApply` wraps
+    // the whole query in try/catch, so a synchronous throw from the delegate is
+    // caught THERE and reported as `{ status: "error" }` — the log asserted
+    // below is the reader's, not the cache's. The cache's own outer catch is
+    // reachable only if the dynamic `import()` itself fails, which this suite
+    // cannot induce without mocking the module it imports directly elsewhere.
+    // Titled for what it actually pins rather than implying otherwise.
     const { getCachedRankingPauseDurable } = await import(
       "@/lib/calibration/selective-publish-runtime"
     );
@@ -225,6 +232,9 @@ describe("durable ranking-pause read: failure is not an absence", () => {
 
     expect(await getCachedRankingPauseDurable()).toBeNull();
     expect(errorSpy).toHaveBeenCalled();
+    const logged = errorSpy.mock.calls.map((c) => c.map(String).join(" ")).join("\n");
+    expect(logged).toMatch(/readRankingPauseApply FAILED/);
+    expect(logged).toMatch(/not proof of absence/);
   });
 });
 

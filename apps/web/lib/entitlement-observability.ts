@@ -72,8 +72,10 @@ function sweepThrottle(now: number): void {
     if (now - state.emittedAt >= THROTTLE_RETENTION_MS) throttleBySite.delete(key);
   }
   // A Map iterates in insertion order and every emit re-inserts, so the oldest
-  // keys are the least recently printed.
-  let excess = throttleBySite.size - MAX_THROTTLE_KEYS;
+  // keys are the least recently printed. The `+ 1` accounts for the entry the
+  // caller is about to insert: without it, a full map admits a 501st key and
+  // the ceiling is off by one forever.
+  let excess = throttleBySite.size - MAX_THROTTLE_KEYS + 1;
   if (excess <= 0) return;
   for (const key of throttleBySite.keys()) {
     if (excess-- <= 0) break;
