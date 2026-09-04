@@ -61,10 +61,20 @@ function parseArgs(argv) {
   // Node internals that this script then reported as "request failed: ..." —
   // pointing the operator at the router when the fault was their own argument.
   // Validate here so the message names the real mistake.
+  // The bound is AbortSignal.timeout's, not ours: it takes a whole number of
+  // milliseconds in [0, 2^32-1]. Checking only "positive and finite" left
+  // 0.0001 (-> 0.1 ms, not an integer) and 4294968 (-> over the ceiling) still
+  // throwing the same RangeError from inside fetch, which this script reported
+  // as "request failed ... Is the OmniRoute router running?" — the exact wrong
+  // answer this validation exists to prevent. Fractional seconds are fine as
+  // long as they land on a whole millisecond: 0.5 -> 500 ms is accepted.
+  const MAX_TIMEOUT_MS = 2 ** 32 - 1;
   const seconds = (v) => {
     const n = Number(v);
-    if (!Number.isFinite(n) || n <= 0) {
-      fail(`--timeout must be a positive number of seconds, got ${JSON.stringify(v)}`);
+    const ms = n * 1000;
+    if (!Number.isFinite(n) || n <= 0 || !Number.isInteger(ms) || ms > MAX_TIMEOUT_MS) {
+      fail(`--timeout must be a positive number of seconds landing on a whole\n` +
+           `millisecond, at most ${MAX_TIMEOUT_MS / 1000} — got ${JSON.stringify(v)}.`);
     }
     return n;
   };
