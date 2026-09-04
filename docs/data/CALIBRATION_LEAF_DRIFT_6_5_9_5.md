@@ -77,11 +77,29 @@ leaves did not move together, and 6.5–9.5 moved most.
 **The per-leaf value comparison is OPEN. Do not assert it either way.**
 
 What is established, straight from the run: the per-leaf test n, outcome rate
-and leaf Brier in §1; a weighted leaf Brier of **0.2440** against a single
+and leaf Brier in §1, and a weighted leaf Brier of **0.2440** against a single
 global mean of **0.2478**, so the leaf model beats the global mean **in
-aggregate** by 0.0038; and — this comparison is valid, because 0.25 is the
-coin-flip Brier on any segment regardless of its rate — **two leaves exceed the
-coin-flip line**, 1.5–2.5 at 0.2501 and 6.5–9.5 at 0.2526.
+aggregate** by 0.0038.
+
+**Against the 0.25 coin-flip line, no leaf is distinguishably worse, and the
+only significant result is that 10+ is better.** Comparing a leaf's Brier to
+0.25 is valid arithmetic — 0.25 is the coin-flip Brier on any segment
+regardless of its rate — but a point estimate is not a verdict. Taking the
+paired per-observation difference `d = (q−y)² − (0.5−y)²`, with `q` the leaf's
+forecast and `p` its outcome rate:
+
+| leaf | n | Brier | mean d | SE | 95% CI | verdict |
+|---|---:|---:|---:|---:|---|---|
+| PK-1 | 188 | 0.2490 | −0.00102 | 0.00232 | [−0.0056, +0.0035] | not distinguishable |
+| 1.5–2.5 | 447 | 0.2501 | +0.00007 | 0.00044 | [−0.0008, +0.0009] | not distinguishable |
+| 3–6 | 1196 | 0.2500 | 0.00000 | 0.00000 | — | not distinguishable |
+| 6.5–9.5 | 576 | 0.2526 | +0.00257 | 0.00654 | [−0.0103, +0.0154] | not distinguishable |
+| 10+ | 343 | 0.1979 | −0.05216 | 0.01173 | [−0.0751, −0.0292] | **better than coin flip** |
+
+An earlier version of this section said "two leaves exceed the coin-flip line",
+and the version before that called 6.5–9.5 "the only clear one". Both were point
+estimates dressed as findings. 6.5–9.5's interval spans zero comfortably at
+n=576. Devin caught it.
 
 What is NOT established is **which individual leaves beat the global predictor
 on their own segment.** A leaf's Brier is conditional on that leaf, so it cannot

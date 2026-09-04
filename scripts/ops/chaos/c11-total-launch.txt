@@ -146,14 +146,24 @@ wrong on this project, twice by asserting more than the data licensed.
       weighted leaf Brier          0.2440
       single global mean Brier     0.2478
       so the leaf model beats the global mean IN AGGREGATE by 0.0038
-      against the 0.25 coin-flip line — a VALID comparison, because 0.25 is the
-      coin-flip Brier on ANY segment regardless of that segment's outcome rate —
-      only 6.5-9.5 is clearly worse, at 0.2526, an excess of 0.0026. Read the
-      magnitudes, not a binary: 1.5-2.5 sits at 0.2501, exceeding the line by
-      0.0001 on n=447, and 3-6 sits exactly on it at 0.2500. Both are inside
-      sampling noise. "Two leaves are worse than a coin flip" is true to four
-      decimal places and misleading as a verdict; do not rank 1.5-2.5 as
-      notably coin-flip-worse.
+      against the 0.25 coin-flip line: NO LEAF IS DISTINGUISHABLY WORSE THAN A
+      COIN FLIP, and the only significant result in the column is that 10+ is
+      BETTER. Comparing a leaf's Brier to 0.25 is valid as an arithmetic fact
+      (0.25 is the coin-flip Brier on any segment regardless of its rate) but a
+      point estimate is not a verdict. The paired per-observation difference
+      d = (q-y)^2 - (0.5-y)^2, with q the leaf's forecast and p its outcome rate:
+
+        leaf        n    Brier    mean d      SE       95% CI              verdict
+        PK-1      188   0.2490   -0.00102  0.00232  [-0.0056, +0.0035]  not distinguishable
+        1.5-2.5   447   0.2501   +0.00007  0.00044  [-0.0008, +0.0009]  not distinguishable
+        3-6      1196   0.2500    0.00000  0.00000   —                  not distinguishable
+        6.5-9.5   576   0.2526   +0.00257  0.00654  [-0.0103, +0.0154]  not distinguishable
+        10+       343   0.1979   -0.05216  0.01173  [-0.0751, -0.0292]  BETTER than coin flip
+
+      So 6.5-9.5's 0.2526 is a real point estimate and NOT a demonstrated
+      shortfall — its interval spans zero comfortably at n=576. Do not tell the
+      founder any leaf has been shown to underperform a coin flip. What HAS been
+      shown is that 10+ beats one.
 
     OPEN — do not assert either way:
       WHICH leaves individually beat the global predictor on their own segment.
