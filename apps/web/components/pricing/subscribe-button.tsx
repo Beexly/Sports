@@ -181,7 +181,12 @@ export function SubscribeButton({
           autoComplete="bday"
           value={dateOfBirth}
           onChange={(e) => setDateOfBirth(e.target.value)}
-          className="rounded-lg border border-ion-4/40 bg-void px-3 py-2 text-sm text-ion-1"
+          // `border-ion-4/40` used to sit here, but the `ion` scale stops at
+          // ion-3 — the class compiled to nothing and this required 21+ field
+          // fell back to Tailwind's default border. ion-3/60 composites to
+          // #5E6578 on bg-void: 3.46:1, clearing the 3:1 WCAG floor for a
+          // control boundary.
+          className="rounded-lg border border-ion-3/60 bg-void px-3 py-2 text-sm text-ion-1"
         />
       </label>
       <button
