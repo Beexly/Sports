@@ -132,11 +132,28 @@ async function main() {
   // Auth is sent as `authorization: Bearer <token>`. If this router wants a
   // different header instead, pass it rather than editing this file:
   //   --header "x-custom-auth: $OMNIROUTE_TOKEN"
+  //
+  // `authorization` and `content-type` are REFUSED rather than merged. These
+  // values are spread into the request after the defaults, so accepting them
+  // would let a --header silently replace the real credential (or the JSON
+  // content type) with no indication at the call site that it had happened —
+  // the run would just fail auth, or the router would reject the body, and the
+  // cause would be invisible. --header exists to ADD a header for a router
+  // whose auth scheme we do not know, never to replace one we do.
+  const RESERVED = new Set(["authorization", "content-type"]);
   const extraHeaders = {};
   for (const h of args.headers) {
     const at = h.indexOf(":");
     if (at < 1) fail(`--header expects "Name: value", got ${JSON.stringify(h)}`);
-    extraHeaders[h.slice(0, at).trim()] = h.slice(at + 1).trim();
+    const name = h.slice(0, at).trim();
+    if (name === "") fail(`--header has an empty name: ${JSON.stringify(h)}`);
+    if (RESERVED.has(name.toLowerCase())) {
+      fail(`--header may not set ${name}: it would silently override the value this ` +
+           `script already sends.\nAuth goes out as "authorization: Bearer $OMNIROUTE_TOKEN". ` +
+           `If the router wants the token\nunder a different name, add that name — ` +
+           `e.g. --header "x-custom-auth: $OMNIROUTE_TOKEN".`);
+    }
+    extraHeaders[name] = h.slice(at + 1).trim();
   }
 
   const body = { prompt, mode: "chaos", stream: false };
