@@ -468,12 +468,16 @@ export default function PricingPage() {
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
                   <tr className="border-b border-titanium">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2"
+                    >
                       Feature
                     </th>
                     {PLANS.map((plan) => (
                       <th
                         key={plan.id}
+                        scope="col"
                         className={[
                           "px-4 py-3 text-center text-sm font-bold",
                           plan.id === "PRO"
@@ -502,7 +506,20 @@ export default function PricingPage() {
                         i % 2 === 0 ? "bg-carbon/20" : "",
                       ].join(" ")}
                     >
-                      <td className="px-4 py-3 text-ion-2">{feature}</td>
+                      {/* Row header, not a bare cell. As a <td> every
+                          "Included"/"Not included" marker in the row was
+                          announced with no idea WHICH feature it belonged to —
+                          60 disconnected checkmarks. `scope="row"` restores the
+                          association (WCAG 1.3.1). `text-left font-normal`
+                          pins the <th> UA defaults (bold + centered) back to
+                          exactly what the <td> rendered, so this is a
+                          semantics-only change with no visual delta. */}
+                      <th
+                        scope="row"
+                        className="px-4 py-3 text-left font-normal text-ion-2"
+                      >
+                        {feature}
+                      </th>
                       {(["FREE", "FANTASY", "PRO", "ELITE"] as const).map((planId) => {
                         const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
                         return (
