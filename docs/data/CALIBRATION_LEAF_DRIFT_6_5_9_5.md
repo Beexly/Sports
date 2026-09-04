@@ -74,23 +74,62 @@ leaves did not move together, and 6.5–9.5 moved most.
 
 ## 3. Why it matters
 
-Four of the five leaves are worse than the global single-mean baseline of
-0.2478 (PK-1 0.2490, 1.5–2.5 0.2501, 3–6 0.2500, 6.5–9.5 0.2526), and **two**
-exceed the 0.25 coin-flip line: 1.5–2.5 at 0.2501 and 6.5–9.5 at 0.2526.
+**The comparison has to be like-for-like.** A leaf's Brier score is conditional
+on that leaf; 0.2478 is the global constant predictor's score aggregated over
+*all* leaves. Putting them side by side measures nothing. The right question is
+what the global predictor scores **on that leaf**, which depends on the leaf's
+own outcome rate. For a constant predictor `q` on a segment with outcome rate
+`p`:
 
-6.5–9.5 is the worst of them and the only one worse by a margin that is not a
-rounding error — 0.0048 above the baseline, against 0.0012–0.0023 for the other
-three. It is also the only leaf whose base-rate drift is significant, which is
-what separates a leaf that is merely uninformative from one that is confidently
-wrong: a 65.86% prior applied to a band that delivers 57.12%, across 576 games.
+```text
+Brier = p(1-q)^2 + (1-p)q^2
+```
 
-The leaf model still beats the global mean overall (weighted leaf Brier 0.2440
-vs 0.2478), but that margin is carried by the 10+ leaf (0.1979). It survives the
-other four rather than being helped by them.
+With `q` = 55.02% (the n-weighted outcome rate across all 2,750 test games):
 
-*(An earlier draft of this document claimed 6.5–9.5 was "the only leaf actively
-worse than doing nothing." That was false on the numbers in this very table, and
-cubic caught it. Corrected above.)*
+| leaf | n | rate | leaf Brier | global-on-this-leaf | Δ | weighted Δ |
+|---|---:|---:|---:|---:|---:|---:|
+| PK-1 | 188 | 46.81% | 0.2490 | 0.2557 | **+0.0067** | +0.00046 |
+| 1.5–2.5 | 447 | 50.11% | 0.2501 | 0.2524 | **+0.0023** | +0.00037 |
+| 3–6 | 1196 | 52.01% | 0.2500 | 0.2505 | **+0.0005** | +0.00022 |
+| 6.5–9.5 | 576 | 57.12% | 0.2526 | 0.2454 | **−0.0072** | −0.00151 |
+| 10+ | 343 | 72.89% | 0.1979 | 0.2295 | **+0.0316** | +0.00394 |
+
+Positive Δ = the leaf model beats the global mean on that leaf. The
+reconstruction checks out: the weighted leaf Brier comes to 0.2440, exactly the
+published figure, and weighted global-on-leaves to 0.2475 against the published
+0.2478.
+
+So: **four of the five leaves beat the global mean on their own segment, and
+6.5–9.5 is the only one that loses to it.** It is also the only leaf whose
+base-rate drift is significant — which is what separates a leaf that is merely
+uninformative from one that is confidently wrong: a 65.86% prior applied to a
+band that delivers 57.12%, across 576 games.
+
+The 10+ leaf still carries the aggregate: its +0.00394 weighted contribution
+exceeds the +0.00349 net improvement on its own, precisely because 6.5–9.5
+subtracts 0.00151. "Carried by 10+" survives; "the other four are dead weight"
+does not.
+
+Separately, and this comparison **is** valid because 0.25 is the coin-flip Brier
+on any segment regardless of its rate: two leaves exceed it — 1.5–2.5 at 0.2501
+and 6.5–9.5 at 0.2526.
+
+### Record of a two-step error in this section
+
+Worth keeping, because the second step was the expensive one.
+
+1. The first draft said 6.5–9.5 was "the only leaf actively worse than doing
+   nothing." **That was correct**, on the like-for-like comparison above.
+2. cubic objected that four leaves lose to the 0.2478 baseline. I accepted it
+   and rewrote the section. **The objection used the mismatched baseline**, and
+   accepting it put a wrong claim into a document whose entire purpose is not
+   being wrong.
+3. Devin flagged the mismatch. Recomputed; step 1 is reinstated.
+
+The lesson is not "trust the first draft." It is that a reviewer's objection
+needs checking against the arithmetic exactly as hard as the claim it targets,
+and a retraction is a claim too.
 
 ## 4. Recommendation (not applied)
 

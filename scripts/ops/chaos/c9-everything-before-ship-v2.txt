@@ -56,7 +56,7 @@ NEW SINCE THE LAST VERSION OF THIS BRIEF — two findings that change what you c
       6.5-9.5   0.2526   worse than global AND worse than coin-flip
       10+       0.1979   better than both
 
-    FOUR of five leaves lose to the global mean. The weighted leaf model (0.2440) beats it only because the 10+ leaf carries the other four.
+    Compared like-for-like (a leaf's Brier is conditional on that leaf, so it must be measured against what the global constant predictor scores ON THAT LEAF, not against its all-leaf aggregate 0.2478): FOUR of five leaves BEAT the global mean on their own segment (PK-1 +0.0067, 1.5-2.5 +0.0023, 3-6 +0.0005, 10+ +0.0316) and 6.5-9.5 is the ONLY one that loses (-0.0072). Weighted leaf model 0.2440 vs 0.2475 global-on-leaves; 10+ contributes +0.00394 of the +0.00349 net on its own because 6.5-9.5 subtracts 0.00151.
     The 6.5-9.5 leaf also drifts hard: train base 65.86%, test actual 57.12%, n=576, z=-4.42, p=9.7e-06 (Bonferroni 4.9e-05).
     The UNIFORM COMMON-DRIFT MODEL is formally rejected, not hand-waved: Cochran's Q = 19.57 on 4 df, p = 6.07e-04, I-squared = 79.6%; and 6.5-9.5 (-8.74pp) against the other four pooled (+0.59pp) gives z = -4.17, p = 3.03e-05. Scope it precisely: Q tests only whether the five leaf drifts share ONE common value, so rejecting it does NOT rule out a league-wide effect — a league-wide component can coexist with leaf-specific ones and Q cannot separate them. What survives: the leaves did not move together, the effect is concentrated in that band, and the mechanism is UNEXPLAINED.
     Caveat, stated because it is real: these z-values treat the training base rate as fixed, so they are optimistic and the p-values are lower bounds.

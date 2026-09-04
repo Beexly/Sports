@@ -103,9 +103,19 @@ to overstate and we did: it does NOT rule out a league-wide effect. A league-wid
 can coexist with leaf-specific ones, and Q cannot separate them. What is established is
 that the drift is concentrated in the 6.5-9.5 band and the mechanism is unexplained. The
 z-values also treat the training base rate as fixed, so they are optimistic and the
-p-values are lower bounds. The leaf model still beats the global mean overall (0.2440 vs
-0.2478), but that margin is carried entirely by the 10+ leaf (0.1979); it survives the
-other four rather than being helped by them.
+p-values are lower bounds.
+
+On the value of the leaf model, compared like-for-like — a leaf's Brier is conditional on
+that leaf, so it must be measured against what the global constant predictor scores ON THAT
+LEAF, not against its all-leaf aggregate of 0.2478. With q = 55.02% and
+Brier = p(1-q)^2 + (1-p)q^2: PK-1 +0.0067, 1.5-2.5 +0.0023, 3-6 +0.0005, 10+ +0.0316, and
+6.5-9.5 -0.0072 (positive = leaf model better). So FOUR of the five leaves beat the global
+mean on their own segment and 6.5-9.5 is the ONLY one that loses to it. The weighted leaf
+Brier is 0.2440 against 0.2475 for the global predictor evaluated leaf-by-leaf; the 10+
+leaf's weighted +0.00394 exceeds the whole +0.00349 net on its own, because 6.5-9.5
+subtracts 0.00151. Two leaves also exceed the 0.25 coin-flip line (1.5-2.5 at 0.2501,
+6.5-9.5 at 0.2526) — that comparison is valid because 0.25 is the coin-flip Brier on any
+segment.
 
 WHAT WE HAVE THAT IS GOOD
 - A frozen, versioned, auditable model. Every pick carries sport, game, pick type, line,
