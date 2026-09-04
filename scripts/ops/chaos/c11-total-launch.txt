@@ -146,9 +146,14 @@ wrong on this project, twice by asserting more than the data licensed.
       weighted leaf Brier          0.2440
       single global mean Brier     0.2478
       so the leaf model beats the global mean IN AGGREGATE by 0.0038
-      two leaves exceed the 0.25 coin-flip line (1.5-2.5 at 0.2501, 6.5-9.5 at 0.2526).
-      This comparison IS valid, because 0.25 is the coin-flip Brier on ANY segment
-      regardless of that segment's outcome rate.
+      against the 0.25 coin-flip line — a VALID comparison, because 0.25 is the
+      coin-flip Brier on ANY segment regardless of that segment's outcome rate —
+      only 6.5-9.5 is clearly worse, at 0.2526, an excess of 0.0026. Read the
+      magnitudes, not a binary: 1.5-2.5 sits at 0.2501, exceeding the line by
+      0.0001 on n=447, and 3-6 sits exactly on it at 0.2500. Both are inside
+      sampling noise. "Two leaves are worse than a coin flip" is true to four
+      decimal places and misleading as a verdict; do not rank 1.5-2.5 as
+      notably coin-flip-worse.
 
     OPEN — do not assert either way:
       WHICH leaves individually beat the global predictor on their own segment.

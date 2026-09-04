@@ -48,15 +48,17 @@ CLV IS UNMEASURED, NOT DISPROVEN. Entry line IS the close by construction, so ev
 
 NEW SINCE THE LAST VERSION OF THIS BRIEF — two findings that change what you can propose:
 
-(1) THE CALIBRATION LEAF MODEL IS MOSTLY DEAD WEIGHT. Train <=2015, evaluate 2016-2025, five spread-band leaves. Per-leaf Brier against a 0.2478 global single-mean baseline and the 0.25 coin-flip line:
+(1) THE CALIBRATION LEAF MODEL — WHAT IS ESTABLISHED AND WHAT IS OPEN. Train <=2015, evaluate 2016-2025, five spread-band leaves. Per-leaf Brier, and its distance from the 0.25 coin-flip line ONLY (the per-leaf-vs-global column that used to sit here has been withdrawn — see below):
 
-      PK-1      0.2490   worse than global
-      1.5-2.5   0.2501   worse than global AND worse than coin-flip
-      3-6       0.2500   worse than global
-      6.5-9.5   0.2526   worse than global AND worse than coin-flip
-      10+       0.1979   better than both
+      PK-1      0.2490   0.0010 BELOW coin-flip      vs global: OPEN
+      1.5-2.5   0.2501   0.0001 above coin-flip      vs global: OPEN   (excess is inside noise at n=447)
+      3-6       0.2500   exactly at coin-flip        vs global: OPEN
+      6.5-9.5   0.2526   0.0026 above coin-flip      vs global: OPEN   (the only clear one)
+      10+       0.1979   0.0521 BELOW coin-flip      vs global: OPEN
 
-    ESTABLISHED: weighted leaf Brier 0.2440 vs single global mean 0.2478, so the leaf model beats the global mean IN AGGREGATE by 0.0038; and two leaves exceed the 0.25 coin-flip line (1.5-2.5 at 0.2501, 6.5-9.5 at 0.2526), which is a valid comparison because 0.25 is the coin-flip Brier on any segment regardless of rate. OPEN, do not assert either way: WHICH individual leaves beat the global predictor on their own segment. A leaf's Brier is conditional on that leaf and cannot be set against the all-leaf aggregate 0.2478; the like-for-like figure needs the constant the predictor emits, which scripts/analytics/replay-calibration.ts:439 fits as the TRAINING-set mean (seasons <= 2015). That mean is not printed in the reproduction output and inverting 0.2478 for it admits two roots. Settle it by printing the training mean and n_train per leaf, then computing p_test(1-q_train)^2 + (1-p_test)q_train^2 per leaf.
+    Read that middle column with the magnitudes attached, not as a binary. Only 6.5-9.5 is clearly worse than a coin flip. 1.5-2.5 exceeds it by 0.0001 on n=447 and 3-6 sits exactly on it — calling either "worse than a coin flip" is true to four decimal places and misleading as a verdict.
+
+    ESTABLISHED: weighted leaf Brier 0.2440 vs single global mean 0.2478, so the leaf model beats the global mean IN AGGREGATE by 0.0038. Against the 0.25 coin-flip line — a valid comparison, because 0.25 is the coin-flip Brier on any segment regardless of rate — only 6.5-9.5 (0.2526, excess 0.0026) is clearly worse; 1.5-2.5 exceeds it by 0.0001 and 3-6 sits exactly on it, both inside noise. OPEN, do not assert either way: WHICH individual leaves beat the global predictor on their own segment. A leaf's Brier is conditional on that leaf and cannot be set against the all-leaf aggregate 0.2478; the like-for-like figure needs the constant the predictor emits, which scripts/analytics/replay-calibration.ts:439 fits as the TRAINING-set mean (seasons <= 2015). That mean is not printed in the reproduction output and inverting 0.2478 for it admits two roots. Settle it by printing the training mean and n_train per leaf, then computing p_test(1-q_train)^2 + (1-p_test)q_train^2 per leaf.
     The 6.5-9.5 leaf also drifts hard: train base 65.86%, test actual 57.12%, n=576, z=-4.42, p=9.7e-06 (Bonferroni 4.9e-05).
     The UNIFORM COMMON-DRIFT MODEL is formally rejected, not hand-waved: Cochran's Q = 19.57 on 4 df, p = 6.07e-04, I-squared = 79.6%; and 6.5-9.5 (-8.74pp) against the other four pooled (+0.59pp) gives z = -4.17, p = 3.03e-05. Scope it precisely: Q tests only whether the five leaf drifts share ONE common value, so rejecting it does NOT rule out a league-wide effect — a league-wide component can coexist with leaf-specific ones and Q cannot separate them. What survives: the leaves did not move together, the effect is concentrated in that band, and the mechanism is UNEXPLAINED.
     Caveat, stated because it is real: these z-values treat the training base rate as fixed, so they are optimistic and the p-values are lower bounds.
