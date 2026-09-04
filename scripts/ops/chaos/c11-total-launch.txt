@@ -101,19 +101,26 @@ earlier draft of this brief: p=0.4113 means we FAILED TO REJECT the null of no d
 does NOT establish the null. "The confidence score carries no information" is accepting the null
 hypothesis and this test does not license it.
 
-What IS licensed is a BOUND, not a point. The run publishes the AUC and the p-value but no
-interval; inverting the two-sided p gives |z| = 0.822 and therefore SE ~ 0.0043, so
-[INFERRED, from the published AUC and p rather than a reported SE — have the script print its own
-interval to confirm]:
+What IS licensed is narrower than an interval. The p is a PERMUTATION p-value
+(scripts/analytics/replay-discrimination.ts:74-88): 2000 seeded label shuffles, scored as
+(atLeastAsExtreme + 1) / (PERMUTATIONS + 1), with the script's own header noting it "assumes
+nothing about the distribution." So p = 0.4113 means 822 of 2000 shuffles produced an AUC at
+least as extreme as the observed one. The observed value is unremarkable under the null. That is
+the whole finding.
 
-    95% CI on AUC          [0.4882, 0.5048]
-    smallest effect this n could detect at 80% power     AUC 0.512 or better
+An earlier draft of this brief inverted that p through the normal CDF to get SE ~ 0.0043, and
+published a 95% CI of [0.4882, 0.5048] and an "80% power to detect AUC 0.512" threshold. BOTH ARE
+WITHDRAWN. A permutation p is not a normal-tail probability, so the inversion was the wrong
+method — not merely an unconfirmed number, an invalid one. Marking it INFERRED did not save it,
+which is the lesson: a label on a claim does not repair the method that produced it.
 
-So the data rules OUT a usable ranking signal — anything at or above ~0.505 is outside the
-interval — while remaining consistent with a small non-zero effect. The honest statement is
-"no usable discrimination, and none detectable at this sample size", NOT "carries no
-information." Do not write copy, or build an argument, that depends on the effect being exactly
-zero.
+So: NO published interval on this AUC, and NO power statement. To get one, extend
+replay-discrimination.ts to compute a bootstrap or DeLong interval over the underlying samples
+(it must handle ties — the AUC already uses average ranks for them) and rerun. Until that is run,
+the defensible statement is exactly: observed AUC 0.4965 on 13,646 picks, permutation p = 0.4113,
+no evidence of discrimination, and the magnitude of any true effect UNQUANTIFIED. Do not write
+copy, or build an argument, that depends on the effect being exactly zero — or on it being
+bounded.
 
 A SECOND, WEAKER SIGNAL FROM LIVE PRODUCTION PICKS, via a different code path: the
 >=80-confidence tail is 152 graded picks, 61 wins, 40.1%. Brier resolution 0.005 on 1,663 graded
