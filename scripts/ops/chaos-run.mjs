@@ -221,7 +221,16 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.file === null) fail("usage: node scripts/ops/chaos-run.mjs <prompt-file> [--url ...] [--out ...]");
 
-  const token = (process.env.OMNIROUTE_TOKEN ?? process.env.OMA_TOKEN ?? tokenFromConfig() ?? "");
+  // `??` only falls through on null/undefined, NOT on "". On Windows,
+  // `set OMNIROUTE_TOKEN=` (clearing a var) leaves it as an EMPTY STRING, so
+  // `env.OMNIROUTE_TOKEN ?? ...` sees a defined-but-blank value, takes it, and
+  // never reaches OMA_TOKEN or the config file — the run then fails with
+  // "OMNIROUTE_TOKEN is not set" even though a perfectly good token sits in
+  // ~/.omniroute/config.json. Treat blank (empty or whitespace-only) as absent
+  // instead, so blank/unset behave identically and precedence still holds:
+  // non-blank OMNIROUTE_TOKEN > non-blank OMA_TOKEN > config token.
+  const nonBlank = (v) => (typeof v === "string" && v.trim() !== "" ? v : null);
+  const token = nonBlank(process.env.OMNIROUTE_TOKEN) ?? nonBlank(process.env.OMA_TOKEN) ?? tokenFromConfig() ?? "";
   if (token.trim() === "") {
     fail("OMNIROUTE_TOKEN is not set. cmd:  set OMNIROUTE_TOKEN=oma_live_...\n" +
          "                       PowerShell:  $env:OMNIROUTE_TOKEN=\"oma_live_...\"");
