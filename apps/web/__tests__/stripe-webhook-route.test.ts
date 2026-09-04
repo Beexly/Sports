@@ -232,8 +232,20 @@ describe("POST /api/webhooks/stripe", () => {
           where["stripeSubscriptionId"] === undefined || where["stripeSubscriptionId"] === row.stripeSubscriptionId;
         const okCust =
           where["stripeCustomerId"] === undefined || where["stripeCustomerId"] === row.stripeCustomerId;
-        const statusNot = (where["status"] as { not?: string } | undefined)?.not;
-        const okStatus = statusNot === undefined || row.status !== statusNot;
+        // Model both status guards Prisma supports here. `notIn` is the live
+        // shape (CANCELED + INCOMPLETE); `not` is kept so the mock stays honest
+        // if a single-value guard is used elsewhere. Treating an unmodelled
+        // operator as "matches" would silently let a guarded write through and
+        // make this harness pass code that leaks access in production.
+        const statusGuard = where["status"] as { not?: string; notIn?: readonly string[] } | undefined;
+        const okStatus =
+          statusGuard === undefined
+            ? true
+            : statusGuard.notIn !== undefined
+              ? !statusGuard.notIn.includes(row.status)
+              : statusGuard.not !== undefined
+                ? row.status !== statusGuard.not
+                : true;
         const okPastDue =
           where["pastDueSince"] === undefined ? true : where["pastDueSince"] === null ? row.pastDueSince === null : true;
         if (okSub && okCust && okStatus && okPastDue) {
@@ -341,8 +353,20 @@ describe("POST /api/webhooks/stripe", () => {
           where["stripeSubscriptionId"] === undefined || where["stripeSubscriptionId"] === row.stripeSubscriptionId;
         const okCust =
           where["stripeCustomerId"] === undefined || where["stripeCustomerId"] === row.stripeCustomerId;
-        const statusNot = (where["status"] as { not?: string } | undefined)?.not;
-        const okStatus = statusNot === undefined || row.status !== statusNot;
+        // Model both status guards Prisma supports here. `notIn` is the live
+        // shape (CANCELED + INCOMPLETE); `not` is kept so the mock stays honest
+        // if a single-value guard is used elsewhere. Treating an unmodelled
+        // operator as "matches" would silently let a guarded write through and
+        // make this harness pass code that leaks access in production.
+        const statusGuard = where["status"] as { not?: string; notIn?: readonly string[] } | undefined;
+        const okStatus =
+          statusGuard === undefined
+            ? true
+            : statusGuard.notIn !== undefined
+              ? !statusGuard.notIn.includes(row.status)
+              : statusGuard.not !== undefined
+                ? row.status !== statusGuard.not
+                : true;
         const okPastDue =
           where["pastDueSince"] === undefined ? true : where["pastDueSince"] === null ? row.pastDueSince === null : true;
         if (okSub && okCust && okStatus && okPastDue) {
@@ -932,7 +956,10 @@ describe("POST /api/webhooks/stripe", () => {
     it.each([
       ["trialing", "TRIALING"],
       ["past_due", "PAST_DUE"],
-      ["unpaid", "PAST_DUE"],
+      // `unpaid` = Stripe's retry schedule is EXHAUSTED (terminal non-payment),
+      // NOT dunning. It must not land on PAST_DUE, the only status that opens a
+      // 7-day grace window. See the dedicated regression below.
+      ["unpaid", "CANCELED"],
       ["canceled", "CANCELED"],
       ["incomplete_expired", "CANCELED"],
       ["incomplete", "INCOMPLETE"],
@@ -1037,7 +1064,7 @@ describe("POST /api/webhooks/stripe", () => {
       expect(mocks.subscriptionUpsert).toHaveBeenCalled();
     });
 
-    it("payment_failed marks the subscription PAST_DUE, stamps the first failure, and never touches a CANCELED row", async () => {
+    it("payment_failed marks the subscription PAST_DUE, stamps the first failure, and never touches a CANCELED or INCOMPLETE row", async () => {
       mocks.constructEvent.mockReturnValue(
         stripeEvent("invoice.payment_failed", { subscription: "sub_123" })
       );
@@ -1048,18 +1075,75 @@ describe("POST /api/webhooks/stripe", () => {
       // retries must not slide the grace window.
       expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { stripeSubscriptionId: "sub_123", pastDueSince: null, status: { not: "CANCELED" } },
+          where: {
+            stripeSubscriptionId: "sub_123",
+            pastDueSince: null,
+            status: { notIn: ["CANCELED", "INCOMPLETE"] },
+          },
           data: { pastDueSince: expect.any(Date) },
         })
       );
-      // Adversarial-review regression: CANCELED is terminal and excluded, so a
-      // late payment_failed after subscription.deleted cannot resurrect access.
+      // Two exclusions, two different failure modes:
+      // CANCELED is terminal — a late payment_failed after subscription.deleted
+      // must not resurrect access. INCOMPLETE has never been paid — the grace
+      // window is for a lapsed renewal, not a first charge that never cleared.
       expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { stripeSubscriptionId: "sub_123", status: { not: "CANCELED" } },
+          where: { stripeSubscriptionId: "sub_123", status: { notIn: ["CANCELED", "INCOMPLETE"] } },
           data: { status: "PAST_DUE" },
         })
       );
+    });
+
+    it("a never-paid INCOMPLETE subscription is NOT promoted to PAST_DUE (no free grace period)", async () => {
+      // The exploit this closes: start a Pro checkout, let the FIRST charge
+      // decline. Stripe holds the subscription at `incomplete` and fires
+      // invoice.payment_failed. Promoting that row to PAST_DUE handed the
+      // account PAST_DUE_GRACE_DAYS of full paid access having never paid a
+      // cent — repeatable with a fresh account.
+      type Row = { status: string; tier: string; pastDueSince: Date | null; stripeSubscriptionId: string };
+      const asArgs = (a: unknown) => a as { where?: Record<string, unknown>; data?: Record<string, unknown> };
+      let row: Row = {
+        status: "INCOMPLETE",
+        tier: "PRO",
+        pastDueSince: null,
+        stripeSubscriptionId: "sub_123",
+      };
+
+      mocks.subscriptionFindUnique.mockImplementation(async () => ({ ...row }));
+      mocks.subscriptionUpdateMany.mockImplementation(async (argsUnknown) => {
+        const { where = {}, data = {} } = asArgs(argsUnknown);
+        const okSub =
+          where["stripeSubscriptionId"] === undefined ||
+          where["stripeSubscriptionId"] === row.stripeSubscriptionId;
+        const guard = where["status"] as { not?: string; notIn?: readonly string[] } | undefined;
+        const okStatus =
+          guard === undefined
+            ? true
+            : guard.notIn !== undefined
+              ? !guard.notIn.includes(row.status)
+              : guard.not !== undefined
+                ? row.status !== guard.not
+                : true;
+        const okPastDue =
+          where["pastDueSince"] === undefined ? true : where["pastDueSince"] === null ? row.pastDueSince === null : true;
+        if (okSub && okStatus && okPastDue) {
+          row = { ...row, ...(data as Partial<Row>) };
+          return { count: 1 };
+        }
+        return { count: 0 };
+      });
+
+      mocks.constructEvent.mockReturnValue(
+        stripeEvent("invoice.payment_failed", { subscription: "sub_123" }, "evt_incomplete_pf"),
+      );
+      expect((await POST(webhookRequest())).status).toBe(200);
+
+      // Still INCOMPLETE, and crucially NO grace anchor — pastDueSince is what
+      // lib/entitlements.ts compares against the PAST_DUE_GRACE_DAYS cutoff to
+      // decide whether to serve premium.
+      expect(row.status).toBe("INCOMPLETE");
+      expect(row.pastDueSince).toBeNull();
     });
 
     it("payment_action_required re-syncs so the DB captures the pending status", async () => {

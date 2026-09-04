@@ -7,8 +7,29 @@ import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 
 export const PROVEN_PATH_SCOPE = "ops.calibration.proven-path";
 
-export async function persistProvenPathPlan(plan: ProvenPathPlan): Promise<void> {
-  if (isStubMode()) return;
+function errMessage(err: unknown): string {
+  return err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+}
+
+/** Outcome of a durable write — same three states as the other ops persisters. */
+export type ProvenPathWriteResult = "ok" | "stub" | "error";
+
+/**
+ * Persist the proven-path plan.
+ *
+ * RETURNS AN OUTCOME instead of `void`. The bare "best-effort" catch it used to
+ * end in meant a failed write looked exactly like a successful one, and both
+ * callers discarded the (absent) result: the calibration-metrics cron answered
+ * 200, and `proven-path-seed` reported a completed seed. Downstream,
+ * `loadProvenPathPlan` feeds the selective-publish pause list and the
+ * FOUNDING → PROVEN proof gate, so a silently dropped write leaves the ladder
+ * stuck and the pause groups unapplied while every surface claims a healthy
+ * cycle.
+ */
+export async function persistProvenPathPlan(
+  plan: ProvenPathPlan,
+): Promise<ProvenPathWriteResult> {
+  if (isStubMode()) return "stub";
   try {
     await db.jarvisMemoryEvent.create({
       data: {
@@ -28,11 +49,25 @@ export async function persistProvenPathPlan(plan: ProvenPathPlan): Promise<void>
         owner_approval: true,
       },
     });
-  } catch {
-    /* best-effort */
+    return "ok";
+  } catch (err) {
+    console.error(
+      `[ops:proven-path] persistProvenPathPlan FAILED (generatedAt=${plan.generatedAt} ` +
+        `pauseGroups=${plan.pauseGroups.length} defaultDelta=${plan.defaultDelta}): ` +
+        `${errMessage(err)}. The plan was NOT stored — selective publish and the ` +
+        "PROVEN gate keep running on the previous plan this cycle.",
+    );
+    return "error";
   }
 }
 
+/**
+ * Newest durable proven-path plan, or null.
+ *
+ * `null` legitimately means "no plan recorded yet". A thrown query returns the
+ * same null (verdict unchanged — callers must degrade, not crash), but it is
+ * now logged so absence and unavailability are distinguishable in the logs.
+ */
 export async function loadProvenPathPlan(): Promise<ProvenPathPlan | null> {
   if (isStubMode()) return null;
   try {
@@ -50,7 +85,11 @@ export async function loadProvenPathPlan(): Promise<ProvenPathPlan | null> {
           : null;
     if (!raw || typeof raw !== "object") return null;
     return raw as ProvenPathPlan;
-  } catch {
+  } catch (err) {
+    console.error(
+      `[ops:proven-path] loadProvenPathPlan FAILED: ${errMessage(err)}. ` +
+        "Reporting 'no plan' — this is a read failure, not proof of absence.",
+    );
     return null;
   }
 }

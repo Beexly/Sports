@@ -191,6 +191,94 @@ export function fitGroupPrior(playerRates: readonly RateSample[]): GammaPrior | 
   return { alpha, beta };
 }
 
+// ── 1b. batch-side sieve for fitGroupPrior ─────────────────────────────────
+
+/**
+ * Why a row was refused by {@link partitionRateSamples}. These mirror, one for
+ * one, the three RangeError conditions {@link fitGroupPrior} throws on:
+ *
+ * - `non_finite`         — `games` or `total` is NaN / ±Infinity / not a number
+ *                          at all (a CSV cell that parsed to `undefined`, a
+ *                          string that slipped past an untyped loader).
+ * - `non_positive_games` — `games <= 0` (includes `-0`, since `-0 <= 0`).
+ * - `negative_total`     — `total < 0`.
+ */
+export type RateSampleRefusalReason = "non_finite" | "non_positive_games" | "negative_total";
+
+/**
+ * Split a batch of (games, total) rows into those a fit can safely consume and
+ * those that must be DROPPED WITH A STATED REASON.
+ *
+ * ── Why this exists ──
+ * {@link fitGroupPrior} throws `RangeError` on the first bad row it sees, and
+ * that is the correct contract at the fit seam: data handed directly to an
+ * estimator must be trusted or rejected loudly, never silently repaired. But a
+ * BATCH caller (a validation run over a whole nflverse season, many position
+ * groups, thousands of rows) must not lose the entire run to one poisoned CSV
+ * row. This helper is the sieve that belongs BEFORE the fit: it converts
+ * "one bad row aborts everything" into "one bad row is reported and skipped."
+ *
+ * Fail-closed, never impute: a refused row is dropped and named. No value is
+ * ever substituted, clamped, or defaulted — the caller learns exactly which
+ * input index (and, when supplied, which `id`) was unusable and why, and can
+ * surface that count in its own report.
+ *
+ * ── Guarantees (each pinned by test) ──
+ * 1. TOTAL: never throws, for ANY input array — including rows that are
+ *    `null`/`undefined` or whose fields are not numbers at all.
+ * 2. `fitGroupPrior(partitionRateSamples(xs).kept)` never throws, for any `xs`.
+ *    (It may still return `null` — "no data" and "no measurable dispersion"
+ *    remain honest non-throwing outcomes of the fit.)
+ * 3. ORDER-PRESERVING: `kept` holds the surviving rows in input order, and the
+ *    `index` on each refusal is the INPUT index, not a post-filter index.
+ * 4. PARTITION: `kept.length + refused.length === samples.length`, always.
+ * 5. DETERMINISTIC REASON PRECEDENCE: a row failing several checks reports the
+ *    FIRST match in the order `non_finite` → `non_positive_games` →
+ *    `negative_total`. So `{ games: NaN, total: -1 }` is always `non_finite`.
+ */
+export function partitionRateSamples(samples: readonly (RateSample & { readonly id?: string })[]): {
+  readonly kept: readonly (RateSample & { readonly id?: string })[];
+  readonly refused: readonly {
+    readonly index: number;
+    readonly id?: string;
+    readonly reason: RateSampleRefusalReason;
+  }[];
+} {
+  const kept: (RateSample & { readonly id?: string })[] = [];
+  const refused: { index: number; id?: string; reason: RateSampleRefusalReason }[] = [];
+
+  for (let index = 0; index < samples.length; index += 1) {
+    // Widened deliberately: this helper is the boundary between untyped loader
+    // output and the typed fit, so it must survive holes/nulls the type says
+    // cannot exist. Reading a field off one of those would throw, which
+    // guarantee (1) forbids.
+    const row = samples[index] as (RateSample & { readonly id?: string }) | null | undefined;
+    if (row === null || row === undefined) {
+      refused.push({ index, id: undefined, reason: "non_finite" });
+      continue;
+    }
+
+    const id = typeof row.id === "string" ? row.id : undefined;
+    const { games, total } = row;
+
+    if (!Number.isFinite(games) || !Number.isFinite(total)) {
+      refused.push({ index, id, reason: "non_finite" });
+      continue;
+    }
+    if (games <= 0) {
+      refused.push({ index, id, reason: "non_positive_games" });
+      continue;
+    }
+    if (total < 0) {
+      refused.push({ index, id, reason: "negative_total" });
+      continue;
+    }
+    kept.push(row);
+  }
+
+  return { kept, refused };
+}
+
 // ── 2. posterior update (conjugate, closed form) ────────────────────────────
 
 /**

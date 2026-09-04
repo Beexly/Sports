@@ -2,7 +2,13 @@
  * Founder / ops: enable durable RANKING_PAUSE_APPLY without Vercel env redeploy.
  *
  * POST { enabled: true|false, groups?: string[] }
- * Auth: Bearer CRON_SECRET or x-vercel-cron (same dual auth as other ops).
+ *
+ * Auth: Bearer CRON_SECRET ONLY. `cronAuthError(request)` with no options
+ * resolves to mode "bearer_only" (GSE-SEC-016), so the spoofable `x-vercel-cron`
+ * header does NOT authorize here — and must never be allowed to: this POST
+ * mutates durable ranking-pause state, and lib/cron/authorize.ts reserves the
+ * "dual" mode for read-only health probes. Do not add `{ mode: "dual" }` here.
+ * (This header previously described dual auth; the code has never granted it.)
  *
  * Does NOT flip PERFORMANCE_STATS / maps / PROVEN.
  */
@@ -73,11 +79,33 @@ export async function POST(request: Request) {
         : "Pause apply disabled (durable)."),
   };
 
-  await persistRankingPauseApply(snap);
+  // The response used to be a hard-coded `ok: true` echoing `snap` back
+  // regardless of what the write did. Report the real outcome: a founder who
+  // sees 200/ok must be able to trust that the pause is actually durable in
+  // every isolate, and a failed write has to be a retryable 500 rather than a
+  // green light over a control that was never applied.
+  const persist = await persistRankingPauseApply(snap);
   clearSelectiveRuntimeCaches();
+
+  if (persist === "error") {
+    return NextResponse.json(
+      {
+        ok: false,
+        persist,
+        error:
+          "Durable RANKING_PAUSE_APPLY write FAILED — the pause was NOT applied. " +
+          "Other isolates keep the previous posture; retry, or set the RANKING_PAUSE_APPLY env var.",
+        attempted: snap,
+        claimPosture: "ranking_pause_only_not_proven",
+      },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({
     ok: true,
+    /** Durable-write outcome for this request: "ok" | "stub". */
+    persist,
     durable: snap,
     claimPosture: "ranking_pause_only_not_proven",
   });

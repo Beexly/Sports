@@ -109,17 +109,25 @@ export async function GET(req: Request): Promise<NextResponse> {
             market: p.pickType,
             selection: p.selection,
             line: p.line,
-            modelConfidence: p.confidence,
-            rankingP,
+            // Field gate: confidence is a PAID metric ("Free — 2 picks/day
+            // teaser, NO confidence scores"), so a free-scope key gets null even
+            // on the FREE-tier rows the row filter above lets it see. Mirrors
+            // app/api/picks/route.ts, which nulls confidence for this same
+            // viewer. The KEYS are kept and set to null rather than dropped:
+            // this is a published response shape, and existing consumers read
+            // `.modelConfidence` / `.rankingP` directly.
+            modelConfidence: scope === "premium" ? p.confidence : null,
+            rankingP: scope === "premium" ? rankingP : null,
             modelVersion: p.modelVersion,
             generatedAt: p.generatedAt,
+            // Sort key is derived from the UNDERLYING model values regardless of
+            // scope, so nulling the two fields above cannot silently degrade the
+            // ordering. Stripped before the row is emitted.
+            _sort: rankingP ?? p.confidence / 100,
           };
         })
-        .sort((a, b) => {
-          const ra = a.rankingP ?? a.modelConfidence / 100;
-          const rb = b.rankingP ?? b.modelConfidence / 100;
-          return rb - ra;
-        }),
+        .sort((a, b) => b._sort - a._sort)
+        .map(({ _sort, ...row }) => row),
       disclaimer:
         "Sports intelligence API — model signals only. Not verified ROI, not PROVEN track record while eligibility RED.",
     },

@@ -80,8 +80,19 @@ export async function ingestSnapCounts(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.snapCount.deleteMany({ where: { season } });
-  const created = data.length > 0 ? await db.snapCount.createMany({ data }) : null;
+  // ATOMIC SEASON REPLACE — the delete and the insert commit together or not
+  // at all. Issued as two separate awaits, any failure between them (a row the
+  // DB rejects, a connection drop, a pooled-connection or route timeout) leaves
+  // the season DELETED and never re-inserted. A retry re-enters the same
+  // delete-first path, so it cannot self-heal, and the empty-upstream guard
+  // above does not cover it: `data` WAS non-empty — the delete simply landed
+  // and the insert did not. Same defect class as the team-efficiency season
+  // replace. `data.length > 0` is guaranteed by the guard above, so the old
+  // ternary is dead and the insert is unconditional.
+  const [, created] = await db.$transaction([
+    db.snapCount.deleteMany({ where: { season } }),
+    db.snapCount.createMany({ data }),
+  ]);
 
   return { status: "ok", season, rowsWritten: created?.count ?? data.length };
 }

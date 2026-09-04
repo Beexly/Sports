@@ -15,7 +15,7 @@
 
 import { DEFAULT_ROSTER_IDS, sampleRoster } from "./lineup";
 import { PLAYERS, POS_HEX, vor, volatility, playerById, correlated, type Player, type Pos } from "./players";
-import { activePlayerPool, isLiveProjections } from "@/lib/integrations/projections";
+import { isLiveProjections } from "@/lib/integrations/projections";
 
 export type Shock = "none" | "positive" | "caution" | "critical";
 
@@ -61,9 +61,16 @@ function shockFor(p: Player): { shock: Shock; note: string } {
   return { shock: "none", note: "Stable." };
 }
 
+/**
+ * PAYWALL INVARIANT (CLAUDE.md rule 3): `pool` defaults to the ILLUSTRATIVE `PLAYERS`
+ * universe, never to `activePlayerPool()`. A live default meant any server-side caller
+ * (studio.ts and mission-control.ts already are ones) silently served the paid graded
+ * pool the moment PROJECTIONS_PROVIDER was set — no code change required. A caller that
+ * wants the live pool must resolve it AND gate it, then pass it in explicitly.
+ */
 export function buildLeagueTwin(
   rosterIds: readonly string[] = DEFAULT_ROSTER_IDS,
-  pool: readonly Player[] = activePlayerPool(),
+  pool: readonly Player[] = PLAYERS,
 ): LeagueTwin {
   let roster = rosterIds.map((id) => playerById(id, pool)).filter((p): p is Player => Boolean(p));
 
@@ -121,7 +128,10 @@ export function buildLeagueTwin(
   }
 
   return {
-    illustrative: !isLiveProjections(),
+    // Honest per-call provenance: illustrative unless a live feed is active AND the
+    // pool actually served is not the illustrative constant. Reporting
+    // illustrative=false while fictional players are on screen would be a false claim.
+    illustrative: pool === PLAYERS || !isLiveProjections(),
     currentWeek,
     nodes,
     ties,

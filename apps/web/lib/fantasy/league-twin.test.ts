@@ -93,7 +93,12 @@ describe("league twin — LIVE pool (illustrative default ids absent)", () => {
     const prev = process.env.PROJECTIONS_PROVIDER;
     process.env.PROJECTIONS_PROVIDER = "acme";
     try {
-      const twin = buildLeagueTwin();
+      // Pass the live pool EXPLICITLY. The no-arg default is now the illustrative
+      // universe by design (paywall fix): buildLeagueTwin() must never reach the
+      // licensed pool on its own, so a no-arg call is always illustrative=true.
+      // Both halves of that contract are pinned in
+      // __tests__/fantasy-live-pool-leak.test.tsx — no-arg => true, explicit => false.
+      const twin = buildLeagueTwin(undefined, livePool);
       expect(twin.illustrative).toBe(false);
       expect(twin.nodes.length).toBeGreaterThan(0);
       expect(twin.nodes.every((n) => livePool.some((p) => p.id === n.player.id))).toBe(true);

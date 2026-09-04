@@ -133,6 +133,49 @@ function isResourceMissing(err: unknown): boolean {
  *                 paused) — none of which grant access. Leaving the row would strand
  *                 a paid tier on a dead subscription forever (every cron a no-op).
  */
+/**
+ * The DB status to persist when a retrieved Stripe status is a CONFIRMED
+ * non-access state. Access is revoked either way — `getUserEntitlements` grants
+ * only on ACTIVE / TRIALING / PAST_DUE-within-grace, so none of these serve a
+ * paid tier — but the CHOICE of status decides whether the member can ever come
+ * back.
+ *
+ * CANCELED is TERMINAL here, not merely "not granting": the webhook's
+ * out-of-order resurrection guard refuses to re-grant a row it finds in
+ * CANCELED, precisely so a late event cannot revive a dead subscription. So
+ * writing CANCELED for a RESUMABLE Stripe state locks the member out
+ * permanently — `paused` resumes and `incomplete` completes, Stripe sends
+ * customer.subscription.updated with `active`, and the guard swallows it. The
+ * member pays and stays FREE.
+ *
+ * The refund handler already reasons exactly this way (see
+ * `handleChargeRefunded`: "terminally revoking would let the out-of-order
+ * resurrection guard swallow the next PAID renewal and lock a paying member to
+ * FREE") and deliberately treats paused/incomplete as LIVE. This mapping makes
+ * reconcile agree with it: revoke the access, keep the door open.
+ *
+ * RESIDUAL (tracked, deliberately not papered over): Stripe `unpaid` is also
+ * recoverable — paying the open invoice reactivates it — but there is no UNPAID
+ * value in the DB enum, and the two non-terminal alternatives are both wrong
+ * (PAUSED misstates it; PAST_DUE would re-grant access inside the grace
+ * window). It stays CANCELED until the enum gains an accurate value. Noted
+ * rather than silently mapped.
+ */
+function revokedDbStatusForRetrievedStatus(
+  status: Stripe.Subscription.Status,
+): "CANCELED" | "PAUSED" | "INCOMPLETE" {
+  switch (status) {
+    case "paused":
+      return "PAUSED";
+    case "incomplete":
+      return "INCOMPLETE";
+    default:
+      // canceled / incomplete_expired are genuinely terminal; unpaid per the
+      // residual above.
+      return "CANCELED";
+  }
+}
+
 function downgradeActionForRetrievedStatus(
   status: Stripe.Subscription.Status,
 ): "keep" | "downgrade" {
@@ -256,7 +299,7 @@ async function upsertGrant(
     ...(isPastDue ? {} : { pastDueSince: null }),
   };
 
-  await db.subscription.upsert({
+  const upsertOp = db.subscription.upsert({
     where: { stripeCustomerId: customerId },
     create: {
       userId,
@@ -268,13 +311,44 @@ async function upsertGrant(
   });
 
   if (isPastDue && pastDueAnchor) {
-    // Stamp the grace anchor only where absent so retries can't slide the window,
-    // and use the Stripe-derived anchor (FINDING 2) — never `now()`.
-    await db.subscription.updateMany({
-      where: { stripeCustomerId: customerId, pastDueSince: null },
-      data: { pastDueSince: pastDueAnchor },
-    });
+    // ATOMIC PAST_DUE GRANT — the status flip and the grace anchor commit
+    // together or not at all.
+    //
+    // Why this MUST be one transaction (and why a retry cannot repair it):
+    // `getUserEntitlements` grants premium to a PAST_DUE row only while
+    // `pastDueSince >= graceCutoff`; a NULL anchor matches neither branch of
+    // that OR, so it resolves to FREE. Run as two separate awaits, a failure
+    // between them (connection drop / pooled-connection timeout / process
+    // teardown mid-cron) leaves the row PAST_DUE with `pastDueSince = null` —
+    // a paying member in dunning who should have the full grace window is
+    // locked out of everything they pay for.
+    //
+    // And the next cron pass does NOT fix it. `reconcileConfirmedSubscription`
+    // short-circuits to "noop" the moment tier + status + subscription id
+    // already match Stripe — which they do after a successful upsert — so
+    // `upsertGrant` is never re-entered and the anchor is never re-stamped.
+    // The lockout persists until the subscription's Stripe status changes.
+    //
+    // Ordering note: the anchor write runs SECOND so it observes the upsert's
+    // row inside the same transaction (an INSERT on the create path has no
+    // pre-existing row for it to match). The webhook's `invoice.payment_failed`
+    // handler already uses this same one-transaction shape for the same reason.
+    //
+    // The `pastDueSince: null` guard is preserved verbatim: it stamps only
+    // where the anchor is ABSENT, so a repeat reconcile of a still-past_due
+    // subscription can never slide an existing grace window forward
+    // (FINDING 2). The anchor is Stripe-derived, never `now()`.
+    await db.$transaction([
+      upsertOp,
+      db.subscription.updateMany({
+        where: { stripeCustomerId: customerId, pastDueSince: null },
+        data: { pastDueSince: pastDueAnchor },
+      }),
+    ]);
+    return;
   }
+
+  await upsertOp;
 }
 
 /**
@@ -421,6 +495,9 @@ async function downgradeStaleRows(
     const subscriptionId = row.stripeSubscriptionId; // narrowed non-null by the guard above
 
     let confirmedGone = false;
+    // Which non-granting status to persist. A subscription Stripe cannot find at
+    // all is terminal, so CANCELED is the right default for the missing case.
+    let revokedStatus: "CANCELED" | "PAUSED" | "INCOMPLETE" = "CANCELED";
     try {
       const remote = await stripe.subscriptions.retrieve(subscriptionId);
       // FINDING 1: a positively-retrieved status is authoritative, never "ambiguous".
@@ -431,6 +508,7 @@ async function downgradeStaleRows(
       if (downgradeActionForRetrievedStatus(remote.status) === "keep") {
         continue;
       }
+      revokedStatus = revokedDbStatusForRetrievedStatus(remote.status);
       confirmedGone = true;
     } catch (err) {
       if (isResourceMissing(err)) {
@@ -459,7 +537,16 @@ async function downgradeStaleRows(
             stripeSubscriptionId: subscriptionId,
             status: { in: [...PAID_DB_STATUSES] },
           },
-          data: { tier: "FREE", status: "CANCELED", canceledAt: new Date(), pastDueSince: null },
+          // canceledAt is stamped only for a genuinely terminal revoke — a
+          // paused/incomplete row is not "canceled at" anything, and stamping it
+          // would make a resumable subscription read as dead to every downstream
+          // reader.
+          data: {
+            tier: "FREE",
+            status: revokedStatus,
+            ...(revokedStatus === "CANCELED" ? { canceledAt: new Date() } : {}),
+            pastDueSince: null,
+          },
         });
         if (revoke.count > 0) {
           downgraded++;

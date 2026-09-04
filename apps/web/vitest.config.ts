@@ -37,6 +37,11 @@ export default defineConfig({
     alias: {
       "@": resolve(__dirname, "."),
       "next/server": nextServerEntry,
+      // `server-only` is not an installed package (Next aliases it at build time), so
+      // Vite cannot resolve it. Point it at an empty stub so server modules — e.g.
+      // lib/integrations/projections-server.ts — are unit-testable. The real build-time
+      // client-import guard is unaffected.
+      "server-only": resolve(__dirname, "vitest.server-only-stub.ts"),
     },
   },
 });
