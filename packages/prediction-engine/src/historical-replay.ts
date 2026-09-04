@@ -85,6 +85,35 @@ export interface RawScheduleRow {
   readonly result?: number | null; // home margin (home_score - away_score)
 }
 
+/**
+ * The sport key a replay scores and settles under. Defaults to NFL so every
+ * existing caller and fixture is byte-identical; pass it to replay another sport.
+ *
+ * It is threaded to TWO places, not one, and both matter:
+ *   - `buildHistoricalOddsInput` — `OddsInput.sport`, which `scoreGame` reads
+ *     (soccer moneyline suppression keys off it, for one).
+ *   - `settleHistoricalPick` — `calculatePickResult`'s `sportKey`, which decides
+ *     how a TIE settles (`sportKey.includes("soccer")` grades a draw LOSS, every
+ *     other sport PUSH). Scoring one sport while grading another is silently wrong,
+ *     so a single option feeds both rather than letting them drift apart.
+ *
+ * The corpus, not this option, is the real constraint on replaying a new sport:
+ * `RawScheduleRow` needs closing spread/total/moneyline plus finals, in THIS repo's
+ * sign convention (negative = home favored — see the spread-sign note in the module
+ * header). Setting a sport key against a corpus that lacks lines produces nothing.
+ */
+export const DEFAULT_REPLAY_SPORT_KEY = "americanfootball_nfl";
+
+export interface HistoricalReplayOptions {
+  /** Sport key for scoring AND settlement. Default `DEFAULT_REPLAY_SPORT_KEY`. */
+  readonly sportKey?: string;
+}
+
+function sportKeyOf(options?: HistoricalReplayOptions): string {
+  const key = options?.sportKey;
+  return key !== undefined && key.trim() !== "" ? key : DEFAULT_REPLAY_SPORT_KEY;
+}
+
 /** Columns that, if present on a row treated as pre-game, are a lookahead leak. */
 export const POST_KICKOFF_FIELDS = ["homeScore", "awayScore", "result"] as const;
 export type PostKickoffField = (typeof POST_KICKOFF_FIELDS)[number];
@@ -211,7 +240,10 @@ export function extractSettlementFacts(row: RawScheduleRow): SettlementFacts | n
 const SYNTHETIC_BOOK_COUNT = WEIGHTS.MARKET_DEPTH_IDEAL_BOOKS;
 const STD_VIG_PRICE = -110;
 
-export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
+export function buildHistoricalOddsInput(
+  features: PreGameFeatures,
+  options?: HistoricalReplayOptions,
+): OddsInput {
   const bookmakerOdds: BookmakerOddsInput[] = [];
 
   for (let i = 0; i < SYNTHETIC_BOOK_COUNT; i++) {
@@ -249,7 +281,7 @@ export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
     homeTeam: features.homeTeam,
     awayTeam: features.awayTeam,
     commenceTime: new Date(features.commenceTime),
-    sport: "americanfootball_nfl",
+    sport: sportKeyOf(options),
     bookmakerOdds,
     context: {
       // Pre-game context only. Opening == current (one closing snapshot), rest days
@@ -274,8 +306,11 @@ export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
  * (pre-kickoff) kickoff time, so the proof receipt's frozen timestamp is honestly
  * pre-result. Returns the scorer's picks (zero, one, or several markets).
  */
-export function scoreHistoricalGame(features: PreGameFeatures): ScoredPick[] {
-  const input = buildHistoricalOddsInput(features);
+export function scoreHistoricalGame(
+  features: PreGameFeatures,
+  options?: HistoricalReplayOptions,
+): ScoredPick[] {
+  const input = buildHistoricalOddsInput(features, options);
   // Score "as of" kickoff — the latest pre-result instant. scoreGame is the frozen
   // model; we pass the kickoff so dataFreshnessAt/asOf are pre-kickoff, not "now".
   return scoreGame(input, new Date(features.commenceTime));
@@ -330,6 +365,7 @@ export function settleHistoricalPick(
   facts: SettlementFacts,
   homeTeam: string,
   awayTeam: string,
+  options?: HistoricalReplayOptions,
 ): SettledHistoricalPick {
   const result = calculatePickResult(
     pick.pickType,
@@ -338,7 +374,7 @@ export function settleHistoricalPick(
     homeTeam,
     facts.homeScore,
     facts.awayScore,
-    "americanfootball_nfl",
+    sportKeyOf(options),
     awayTeam,
   );
 
@@ -421,13 +457,20 @@ function stripPostGame(row: RawScheduleRow): RawScheduleRow {
  * against the isolated final score. Returns [] when the game has no settleable final
  * score (skipped, never guessed). Feature assembly and settlement read DISJOINT data.
  */
-export function replayAndSettleGame(row: RawScheduleRow): SettledHistoricalPick[] {
+export function replayAndSettleGame(
+  row: RawScheduleRow,
+  options?: HistoricalReplayOptions,
+): SettledHistoricalPick[] {
   const facts = extractSettlementFacts(row); // the only score read (from the raw row)
   if (!facts) return []; // unplayed / unscored → cannot settle
   // Feature assembly only ever sees the quarantined, score-free row.
   const features = assemblePreGameFeatures(stripPostGame(row));
-  const picks = scoreHistoricalGame(features);
-  return picks.map((pick) => settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam));
+  // The SAME options object reaches scoring and settlement, so the sport a pick is
+  // scored under can never differ from the sport it is graded under.
+  const picks = scoreHistoricalGame(features, options);
+  return picks.map((pick) =>
+    settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam, options),
+  );
 }
 
 function numOrNull(v: number | null | undefined): number | null {
