@@ -1,9 +1,19 @@
 !!! SUPERSEDED — DO NOT RUN THIS BRIEF !!!
 Superseded by scripts/ops/chaos/c11-total-launch.txt, which is the only launch brief to run.
-This file is kept for provenance only. It contains statistical claims that were later found
-wrong and corrected in c11 and in docs/data/CALIBRATION_LEAF_DRIFT_6_5_9_5.md — including an
-AUC result stated as proof of zero information, a per-leaf-vs-global comparison computed from
-the wrong constant, and an immutability claim that overstates what settlement protects.
+This file is kept for provenance only. It contains claims later found wrong and corrected in c11
+and in docs/data/CALIBRATION_LEAF_DRIFT_6_5_9_5.md. In THIS file, specifically:
+  - AUC 0.4965 / p=0.4113 stated as proof the confidence score carries no information. That is
+    accepting the null, not a finding.
+  - The paragraph beginning "On the value of the leaf model, compared like-for-like". Read it
+    carefully before concluding it is already corrected: it DOES fix the baseline SCOPE (it
+    measures each leaf against the global predictor scored on that leaf, "not against its
+    all-leaf aggregate of 0.2478") and it STILL uses the WRONG CONSTANT. Its q = 55.02% is the
+    TEST mean; scripts/analytics/replay-calibration.ts:439 fits the constant as the TRAINING
+    mean. So "four of five leaves beat the global mean" is WITHDRAWN, not corrected — and the
+    training mean is not printed anywhere, so the comparison is not recoverable from published
+    output in either direction.
+  - "no ability to un-publish or retro-edit" overstates what settlement protects. Pick
+    publication is tamper-evident; settlement is not yet.
 Running this brief would feed a panel premises that have since been withdrawn.
 
 You are one of fifteen independent panels being paid to produce a COMPLETE, DECISION-READY launch package for a sports analytics business that ships TODAY. You are answering in parallel with fourteen others who cannot see your answer, and you cannot see theirs. Where you all converge, the founder will act. Where you diverge, he will investigate. Your job is to be right, not agreeable.

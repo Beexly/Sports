@@ -1,9 +1,13 @@
 !!! SUPERSEDED — DO NOT RUN THIS BRIEF !!!
 Superseded by scripts/ops/chaos/c11-total-launch.txt, which is the only launch brief to run.
-This file is kept for provenance only. It contains statistical claims that were later found
-wrong and corrected in c11 and in docs/data/CALIBRATION_LEAF_DRIFT_6_5_9_5.md — including an
-AUC result stated as proof of zero information, a per-leaf-vs-global comparison computed from
-the wrong constant, and an immutability claim that overstates what settlement protects.
+This file is kept for provenance only. It contains claims later found wrong and corrected in c11
+and in docs/data/CALIBRATION_LEAF_DRIFT_6_5_9_5.md. In THIS file, specifically:
+  - "CONFIDENCE CARRIES NO INFORMATION", and the free/paid question that repeats it, both from
+    AUC 0.4965 / p=0.4113. That is accepting the null, not a finding.
+  - The BONUS question still rests on "Four of five leaves lose to a single global mean" — the
+    per-leaf-vs-global comparison that this same file elsewhere correctly withdraws as needing
+    the TRAINING mean from scripts/analytics/replay-calibration.ts:439. The withdrawal is right;
+    the bonus question was not updated to match it.
 Running this brief would feed a panel premises that have since been withdrawn.
 
 SUPERSEDES c8-everything-before-ship.txt. Same job, sharper facts, and one new rule the previous version lacked.
