@@ -19,7 +19,7 @@ import {
   computeScheduleStressScore,
 } from "../game-context.js";
 import type { OddsInput } from "@sports/types";
-import { MODEL_VERSION } from "../constants.js";
+import { MODEL_VERSION, PREMIUM_CONFIDENCE_THRESHOLD, RISK_THRESHOLDS } from "../constants.js";
 import { buildPickProofReceipt, verifyPickProofReceipt } from "../pick-proof-receipt.js";
 
 // Deterministic non-crypto hash for the receipt contract test (prod injects sha256).
@@ -250,10 +250,13 @@ describe("scoreGame — precision fields", () => {
       expect(typeof pick.consensusPct).toBe("number");
       expect(typeof pick.bookmakerCount).toBe("number");
 
-      // Classification
-      expect(["FREE", "PREMIUM"]).toContain(pick.tier);
-      expect(["ELITE_PLAY", "STRONG_PLAY", "SOLID_PLAY", "LEAN"]).toContain(pick.pickGrade);
-      expect(["LOW_RISK", "MODERATE", "HIGH_VARIANCE", "INJURY_RISK", "LINE_STEAM"]).toContain(pick.riskLevel);
+      // Classification — tier is a pure function of confidence, so assert the
+      // rule itself. Listing the entire PickTier / PickGrade / RiskLevel
+      // domain in a toContain() asserts nothing: the type already guarantees
+      // membership, so such a check cannot fail for any input.
+      expect(pick.tier).toBe(
+        pick.confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE"
+      );
 
       // Explainability
       expect(pick.reasoning.length).toBeGreaterThan(30);
@@ -266,6 +269,27 @@ describe("scoreGame — precision fields", () => {
       expect(pick.modelVersion).toBe(MODEL_VERSION);
       expect(pick.dataFreshnessAt).toBeInstanceOf(Date);
     }
+
+    // The fixture is deterministic, so pin the classification it MUST produce
+    // together with the inputs that force it.
+    const spread = picks.find((p) => p.pickType === "SPREAD");
+    expect(spread).toBeDefined();
+    // 5 spread books, 100% consensus on the home side.
+    expect(spread!.bookmakerCount).toBe(5);
+    expect(spread!.consensusPct).toBeGreaterThanOrEqual(
+      RISK_THRESHOLDS.HIGH_VARIANCE_CONSENSUS_THRESHOLD
+    );
+    // Depth 5 < LOW_RISK_BOOK_THRESHOLD (7) → cannot be LOW_RISK; consensus is
+    // above the HIGH_VARIANCE floor and the line is not steaming → MODERATE.
+    expect(spread!.riskLevel).toBe("MODERATE");
+    // SOLID_PLAY needs confidence >= 65 AND edgeScore >= 50; this fixture
+    // clears neither band, so the grade must be LEAN.
+    expect(spread!.confidence).toBeLessThan(65);
+    expect(spread!.edgeScore).toBeLessThan(50);
+    expect(spread!.pickGrade).toBe("LEAN");
+    // Same confidence is below the premium cutoff → free-tier pick.
+    expect(spread!.confidence).toBeLessThan(PREMIUM_CONFIDENCE_THRESHOLD);
+    expect(spread!.tier).toBe("FREE");
   });
 
   it("confidence is in range 0–100", () => {
@@ -361,13 +385,15 @@ describe("scoreGame — precision fields", () => {
 // ============================================================
 
 describe("scoreGame — risk level", () => {
-  it("deep market with strong consensus = LOW_RISK or MODERATE", () => {
+  it("deep market with strong consensus = MODERATE (5 books is below the LOW_RISK depth floor)", () => {
     const picks = scoreGame(makeOddsInput());
     const spread = picks.find((p) => p.pickType === "SPREAD");
-    // 5 books, 80% consensus = should be at most MODERATE
-    if (spread) {
-      expect(["LOW_RISK", "MODERATE"]).toContain(spread.riskLevel);
-    }
+    // Previously guarded by `if (spread)`, which made the whole assertion
+    // disappear whenever the engine stopped emitting a spread pick.
+    expect(spread).toBeDefined();
+    expect(spread!.bookmakerCount).toBe(5);
+    expect(spread!.bookmakerCount).toBeLessThan(RISK_THRESHOLDS.LOW_RISK_BOOK_THRESHOLD);
+    expect(spread!.riskLevel).toBe("MODERATE");
   });
 
   it("thin market (2 books) = HIGH_VARIANCE", () => {
