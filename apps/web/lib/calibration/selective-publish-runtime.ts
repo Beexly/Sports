@@ -93,10 +93,21 @@ export async function getCachedProvenPathPlan(): Promise<ProvenPathPlan | null> 
 export async function getCachedRankingPauseDurable(): Promise<RankingPauseDurableSnap | null> {
   if (cachedPause !== undefined) return cachedPause;
   try {
-    const { loadRankingPauseApply } = await import("@/lib/ops/ranking-pause-durable");
-    cachedPause = await loadRankingPauseApply();
+    const { readRankingPauseApply } = await import("@/lib/ops/ranking-pause-durable");
+    const result = await readRankingPauseApply();
+    if (result.status === "error") {
+      // Do NOT memoise a read failure. `cachedPause` uses `undefined` as its
+      // "not loaded" sentinel, so caching the `null` we return here would latch
+      // "no pause is in effect" for the life of the isolate — one transient DB
+      // blip would silently resume paused publishing until a restart. Leaving
+      // the sentinel unset costs one query on the next call and lets the pause
+      // reassert itself the moment the read succeeds.
+      return null;
+    }
+    cachedPause = result.status === "ok" ? result.snap : null;
   } catch {
-    cachedPause = null;
+    // Same reasoning: an unexpected throw is unavailability, not absence.
+    return null;
   }
   return cachedPause;
 }

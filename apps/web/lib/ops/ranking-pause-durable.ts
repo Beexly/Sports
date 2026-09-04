@@ -82,6 +82,65 @@ export async function persistRankingPauseApply(
  * thrown query is now logged so an operator can tell a real "no pause set" from
  * a database that could not answer.
  */
+/**
+ * Outcome of a durable READ, with absence and unavailability kept apart.
+ *
+ * `loadRankingPauseApply` collapses both to `null`, which is right for callers
+ * that must degrade rather than crash — but it is NOT safe to cache. A caller
+ * that memoises the `null` from a transient read failure latches "no pause is
+ * in effect" for the life of the isolate, which turns a kill switch into a
+ * no-op. `getCachedRankingPauseDurable` uses this shape so it can cache a real
+ * absence and retry an unavailability.
+ */
+export type RankingPauseReadResult =
+  | { readonly status: "ok"; readonly snap: RankingPauseDurableSnap }
+  | { readonly status: "absent" }
+  | { readonly status: "error"; readonly message: string };
+
+/**
+ * Read the durable pause, distinguishing "no record" from "could not read".
+ *
+ * `loadRankingPauseApply` is the lossy convenience wrapper over this; prefer
+ * this one anywhere the answer is stored, cached, or reported.
+ */
+export async function readRankingPauseApply(): Promise<RankingPauseReadResult> {
+  if (isStubMode()) return { status: "absent" };
+  try {
+    const row = await db.jarvisMemoryEvent.findFirst({
+      where: { scope: RANKING_PAUSE_DURABLE_SCOPE, memory_type: "episodic" },
+      orderBy: { created_at: "desc" },
+      select: { metadata: true, full_text: true },
+    });
+    if (!row) return { status: "absent" };
+    const raw =
+      typeof row.metadata === "object" && row.metadata !== null
+        ? row.metadata
+        : row.full_text
+          ? JSON.parse(row.full_text)
+          : null;
+    if (!raw || typeof raw !== "object") return { status: "absent" };
+    const s = raw as RankingPauseDurableSnap;
+    if (typeof s.enabled !== "boolean") return { status: "absent" };
+    return {
+      status: "ok",
+      snap: {
+        enabled: s.enabled,
+        groups: Array.isArray(s.groups) ? s.groups.map(String) : [],
+        setAt: typeof s.setAt === "string" ? s.setAt : new Date().toISOString(),
+        setBy: typeof s.setBy === "string" ? s.setBy : "unknown",
+        note: typeof s.note === "string" ? s.note : "",
+      },
+    };
+  } catch (err) {
+    const message = errMessage(err);
+    console.error(
+      `[ops:ranking-pause] readRankingPauseApply FAILED: ${message}. ` +
+        "Reporting 'unavailable' — this is a read failure, not proof of absence.",
+    );
+    return { status: "error", message };
+  }
+}
+
 export async function loadRankingPauseApply(): Promise<RankingPauseDurableSnap | null> {
   if (isStubMode()) return null;
   try {
