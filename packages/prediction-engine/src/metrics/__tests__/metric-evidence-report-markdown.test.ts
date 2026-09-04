@@ -1,10 +1,31 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   renderAllShadowMetricEvidenceReportsMarkdown,
   renderShadowMetricEvidenceReportIndexMarkdown,
 } from "../core/index.js";
+
+// Repo root, found by walking up from this file's directory (or the cwd when the
+// runner provides no __dirname) until the unique root marker is hit:
+// tsconfig.base.json exists ONLY at the repo root. process.cwd() alone made the
+// run cwd-dependent — it passed in CI and failed from the repo root. The walk
+// converges to the same root from any directory inside the repo; the control
+// assertions in the tests keep a wrong root from passing vacuously.
+function findRepoRoot(): string {
+  let dir = typeof __dirname === "string" ? __dirname : process.cwd();
+  for (let depth = 0; depth < 20; depth += 1) {
+    if (existsSync(resolve(dir, "tsconfig.base.json"))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  throw new Error(
+    "repo root not found: no ancestor directory contains tsconfig.base.json",
+  );
+}
+
+const REPO_ROOT = findRepoRoot();
 
 describe("shadow metric evidence markdown reports", () => {
   it("renders synthetic/local markdown reports with promotion locks", () => {
@@ -40,10 +61,13 @@ describe("shadow metric evidence markdown reports", () => {
 
   it("keeps the repo-visible markdown report aligned to generated shadow reports", () => {
     const markdown = readFileSync(
-      resolve(process.cwd(), "../../docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md"),
+      resolve(REPO_ROOT, "docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md"),
       "utf8",
     );
     const reports = renderAllShadowMetricEvidenceReportsMarkdown();
+
+    // Control: zero reports would make the loop below vacuous.
+    expect(reports.length, "no shadow metric evidence reports rendered").toBeGreaterThan(0);
 
     expect(markdown).toContain("# GSE Shadow Metric Evidence Reports");
     expect(markdown).toContain("generated from synthetic/local evidence fixtures");

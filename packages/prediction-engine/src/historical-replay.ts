@@ -21,8 +21,26 @@
  * nflverse `schedules` (games.csv, Lee Sharpe's nfldata) ships pre-game lines for
  * free under CC-BY-4.0: spread_line / total_line / home_moneyline / away_moneyline
  * are the closing market as of kickoff — a legal, no-lookahead source of the lines
- * we would have priced against. spread_line is HOME-perspective (negative = home
- * favored), matching scoring.ts / settlement.ts / clv.ts.
+ * we would have priced against.
+ *
+ * ── SPREAD SIGN: the caller must convert. Read this before wiring a new source. ──
+ * `RawScheduleRow.spreadLine` is in THIS REPO's convention: NEGATIVE = home favored,
+ * matching scoring.ts / settlement.ts / clv.ts (settlement grades
+ * `homeCoverMargin = homeMargin + line`).
+ *
+ * nflverse `spread_line` uses the OPPOSITE polarity: POSITIVE = home favored.
+ * Verified against the live games.csv on 2026-09-04 — corr(spread_line, result)
+ * = +0.4260 over n=7276 rows carrying both, same-sign 4810 vs opposite-sign 2420;
+ * and 2007_08_WAS_NE (the 16-0 Patriots at home, won 52-7) carries
+ * spread_line = +15. An earlier version of this comment asserted the opposite and
+ * two nflverse mappers trusted it, publishing every backfilled SPREAD pick on the
+ * wrong team.
+ *
+ * So a caller mapping nflverse into `RawScheduleRow` MUST negate spread_line.
+ * See `negateOrNull` in scripts/backfill/historical-settlement-backfill.ts and the
+ * same negation at edge-lab/loaders/nfl-games.ts:172. This module does not negate
+ * for you: its own field contract is the repo convention, and silently flipping a
+ * sign here would break every caller that already passes a correct line.
  *
  * Pure and dependency-free (only @sports/types). No I/O, no DB — fully unit-testable.
  */
@@ -65,6 +83,42 @@ export interface RawScheduleRow {
   readonly homeScore?: number | null;
   readonly awayScore?: number | null;
   readonly result?: number | null; // home margin (home_score - away_score)
+}
+
+/**
+ * The sport key a replay scores and settles under. Defaults to NFL so every
+ * existing caller and fixture is byte-identical; pass it to replay another sport.
+ *
+ * It is threaded to TWO places, not one, and both matter:
+ *   - `buildHistoricalOddsInput` — `OddsInput.sport`, which `scoreGame` reads
+ *     (soccer moneyline suppression keys off it, for one).
+ *   - `settleHistoricalPick` — `calculatePickResult`'s `sportKey`, which decides
+ *     how a TIE settles (`sportKey.includes("soccer")` grades a draw LOSS, every
+ *     other sport PUSH). Scoring one sport while grading another is silently wrong,
+ *     so a single option feeds both rather than letting them drift apart.
+ *
+ * The corpus, not this option, is the real constraint on replaying a new sport:
+ * `RawScheduleRow` needs closing spread/total/moneyline plus finals, in THIS repo's
+ * sign convention (negative = home favored — see the spread-sign note in the module
+ * header). Setting a sport key against a corpus that lacks lines produces nothing.
+ */
+export const DEFAULT_REPLAY_SPORT_KEY = "americanfootball_nfl";
+
+export interface HistoricalReplayOptions {
+  /** Sport key for scoring AND settlement. Default `DEFAULT_REPLAY_SPORT_KEY`. */
+  readonly sportKey?: string;
+  /**
+   * Totals side-selection tie-break (Wave 5). "strict" → only discriminating
+   * books vote; exact tie → no total pick. Undefined → legacy behaviour.
+   * Threaded into the scoring context so before/after replay replays differ
+   * ONLY in the tie-break.
+   */
+  readonly totalsTiebreak?: "legacy" | "strict";
+}
+
+function sportKeyOf(options?: HistoricalReplayOptions): string {
+  const key = options?.sportKey;
+  return key !== undefined && key.trim() !== "" ? key : DEFAULT_REPLAY_SPORT_KEY;
 }
 
 /** Columns that, if present on a row treated as pre-game, are a lookahead leak. */
@@ -193,7 +247,10 @@ export function extractSettlementFacts(row: RawScheduleRow): SettlementFacts | n
 const SYNTHETIC_BOOK_COUNT = WEIGHTS.MARKET_DEPTH_IDEAL_BOOKS;
 const STD_VIG_PRICE = -110;
 
-export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
+export function buildHistoricalOddsInput(
+  features: PreGameFeatures,
+  options?: HistoricalReplayOptions,
+): OddsInput {
   const bookmakerOdds: BookmakerOddsInput[] = [];
 
   for (let i = 0; i < SYNTHETIC_BOOK_COUNT; i++) {
@@ -231,7 +288,7 @@ export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
     homeTeam: features.homeTeam,
     awayTeam: features.awayTeam,
     commenceTime: new Date(features.commenceTime),
-    sport: "americanfootball_nfl",
+    sport: sportKeyOf(options),
     bookmakerOdds,
     context: {
       // Pre-game context only. Opening == current (one closing snapshot), rest days
@@ -246,6 +303,10 @@ export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
       hasSpreadMarket: features.spreadLine !== null,
       hasTotalMarket: features.totalLine !== null,
       hasH2HMarket: features.homeMoneyline !== null && features.awayMoneyline !== null,
+      // Wave 5 before/after replay: thread the totals tie-break mode so the
+      // replay differs from the live default ONLY in the tie-break. Undefined
+      // for live callers → legacy behaviour, unchanged.
+      totalsTiebreak: options?.totalsTiebreak,
     },
   };
 }
@@ -256,8 +317,11 @@ export function buildHistoricalOddsInput(features: PreGameFeatures): OddsInput {
  * (pre-kickoff) kickoff time, so the proof receipt's frozen timestamp is honestly
  * pre-result. Returns the scorer's picks (zero, one, or several markets).
  */
-export function scoreHistoricalGame(features: PreGameFeatures): ScoredPick[] {
-  const input = buildHistoricalOddsInput(features);
+export function scoreHistoricalGame(
+  features: PreGameFeatures,
+  options?: HistoricalReplayOptions,
+): ScoredPick[] {
+  const input = buildHistoricalOddsInput(features, options);
   // Score "as of" kickoff — the latest pre-result instant. scoreGame is the frozen
   // model; we pass the kickoff so dataFreshnessAt/asOf are pre-kickoff, not "now".
   return scoreGame(input, new Date(features.commenceTime));
@@ -312,6 +376,7 @@ export function settleHistoricalPick(
   facts: SettlementFacts,
   homeTeam: string,
   awayTeam: string,
+  options?: HistoricalReplayOptions,
 ): SettledHistoricalPick {
   const result = calculatePickResult(
     pick.pickType,
@@ -320,7 +385,7 @@ export function settleHistoricalPick(
     homeTeam,
     facts.homeScore,
     facts.awayScore,
-    "americanfootball_nfl",
+    sportKeyOf(options),
     awayTeam,
   );
 
@@ -403,13 +468,20 @@ function stripPostGame(row: RawScheduleRow): RawScheduleRow {
  * against the isolated final score. Returns [] when the game has no settleable final
  * score (skipped, never guessed). Feature assembly and settlement read DISJOINT data.
  */
-export function replayAndSettleGame(row: RawScheduleRow): SettledHistoricalPick[] {
+export function replayAndSettleGame(
+  row: RawScheduleRow,
+  options?: HistoricalReplayOptions,
+): SettledHistoricalPick[] {
   const facts = extractSettlementFacts(row); // the only score read (from the raw row)
   if (!facts) return []; // unplayed / unscored → cannot settle
   // Feature assembly only ever sees the quarantined, score-free row.
   const features = assemblePreGameFeatures(stripPostGame(row));
-  const picks = scoreHistoricalGame(features);
-  return picks.map((pick) => settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam));
+  // The SAME options object reaches scoring and settlement, so the sport a pick is
+  // scored under can never differ from the sport it is graded under.
+  const picks = scoreHistoricalGame(features, options);
+  return picks.map((pick) =>
+    settleHistoricalPick(pick, facts, features.homeTeam, features.awayTeam, options),
+  );
 }
 
 function numOrNull(v: number | null | undefined): number | null {

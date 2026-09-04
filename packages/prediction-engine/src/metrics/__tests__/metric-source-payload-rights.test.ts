@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import {
   GSE_METRIC_SOURCE_RIGHTS_POLICIES,
   GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES,
@@ -14,12 +14,38 @@ import {
 
 const policies = GSE_METRIC_SOURCE_RIGHTS_POLICIES;
 
+// Repo root, found by walking up from this file's directory (or the cwd when the
+// runner provides no __dirname) until the unique root marker is hit:
+// tsconfig.base.json exists ONLY at the repo root. process.cwd() alone made the
+// run cwd-dependent — it passed in CI and failed from the repo root. The walk
+// converges to the same root from any directory inside the repo; the control
+// assertions in the tests keep a wrong root from passing vacuously.
+function findRepoRoot(): string {
+  let dir = typeof __dirname === "string" ? __dirname : process.cwd();
+  for (let depth = 0; depth < 20; depth += 1) {
+    if (existsSync(resolve(dir, "tsconfig.base.json"))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  throw new Error(
+    "repo root not found: no ancestor directory contains tsconfig.base.json",
+  );
+}
+
+const REPO_ROOT = findRepoRoot();
+
 describe("metric source and payload rights", () => {
   it("keeps metric source fixtures aligned with the canonical web registry source ids", () => {
-    const registryPath = resolve(process.cwd(), "../../apps/web/lib/scraping/source-rights-registry.ts");
+    const registryPath = resolve(REPO_ROOT, "apps/web/lib/scraping/source-rights-registry.ts");
     const registrySource = readFileSync(registryPath, "utf8");
     const canonicalIds = [...registrySource.matchAll(/source_id:\s*"([^"]+)"/g)].map((match) => match[1]);
     const fixtureIds = GSE_METRIC_SOURCE_RIGHTS_REGISTRY_FIXTURES.map((entry) => entry.source_id);
+
+    // Controls: a wrong root would ENOENT above, but a stale registry or an empty
+    // fixture list would make the comparison vacuously pass (both arrays empty).
+    expect(canonicalIds.length, "registry matched zero source_id entries").toBeGreaterThan(0);
+    expect(fixtureIds.length, "fixture registry is empty").toBeGreaterThan(0);
 
     expect(fixtureIds).toEqual(canonicalIds);
   });

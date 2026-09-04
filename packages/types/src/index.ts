@@ -382,6 +382,13 @@ export interface GameContextInput {
   // are async I/O) so the PURE, synchronous scorer can run the edge engine
   // against them. Home/away perspective. Absent → scorer is unchanged.
   independentFairValues?: IndependentMarketFairValue[];
+  // Totals side-selection tie-break (Wave 5 proposal — NOT yet the default).
+  // "strict": only books whose over/under prices DISCRIMINATE
+  // (overPrice !== underPrice) count as consensus votes; equal-juice books
+  // abstain, and an exact tie produces NO pick. Absent (legacy): the current
+  // `overPrice <= underPrice` rule, under which the standard -110/-110 quote
+  // counts as an OVER vote at every book.
+  totalsTiebreak?: "legacy" | "strict";
 }
 
 /**

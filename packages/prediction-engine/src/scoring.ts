@@ -652,11 +652,31 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // signed price (e.g. -115 over is favored over -105 under). Using Math.abs
   // here would pick the LESS-juiced side and invert the favorite on any
   // asymmetric juice.
-  const overFavored = pricedTotals.filter(
-    (o) => o.overPrice! <= o.underPrice!
+  //
+  // Side-selection tie-break (Wave 5). LEGACY (default): a book counts as an
+  // OVER vote when overPrice <= underPrice, so the standard -110/-110 quote
+  // votes OVER at every book and a symmetric board reads as unanimous OVER —
+  // pinned by totals-consensus-tiebreak.test.ts; changing the DEFAULT is a
+  // MODEL_VERSION decision (docs/calibration-proposals/2026-09-04-…). STRICT
+  // (opt-in via context.totalsTiebreak): only books whose prices DISCRIMINATE
+  // vote; equal-juice books abstain, and an exact tie yields NO pick — a coin
+  // flip must not become a published pick.
+  const strictTiebreak = input.context?.totalsTiebreak === "strict";
+  const votingTotals = strictTiebreak
+    ? pricedTotals.filter((o) => o.overPrice! !== o.underPrice!)
+    : pricedTotals;
+  if (strictTiebreak && votingTotals.length === 0) return null;
+  const overFavored = votingTotals.filter(
+    (o) =>
+      strictTiebreak
+        ? o.overPrice! < o.underPrice!
+        : o.overPrice! <= o.underPrice!,
   ).length;
-  const overFavoredPct = overFavored / pricedTotals.length;
-  const overIsChosen = overFavoredPct >= 0.5;
+  const overFavoredPct = overFavored / votingTotals.length;
+  const overIsChosen = strictTiebreak
+    ? overFavoredPct > 0.5
+    : overFavoredPct >= 0.5;
+  if (strictTiebreak && overFavoredPct === 0.5) return null;
   const consensusPct = overIsChosen ? overFavoredPct : 1 - overFavoredPct;
 
   if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
@@ -811,7 +831,32 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 // Score MONEYLINE pick
 // ============================================================
 
+/**
+ * Sports whose moneyline has THREE outcomes, where a draw is a real settlement
+ * result rather than a void.
+ *
+ * `removeVig(home, away)` renormalises two outcomes to sum to 1, giving
+ * P(home wins | the match is decisive). That is the right quantity only when a
+ * tie voids the bet. For soccer it is not: settlement.ts grades a draw as a
+ * LOSS for either side, so the settlement-relevant number is the UNCONDITIONAL
+ * P(home wins) — lower by the whole draw mass (~20-30%).
+ *
+ * A correct fix needs the draw price, and the engine cannot see one:
+ * `BookmakerOddsInput` has no `drawPrice` field, and the default free ESPN path
+ * never fetches it. Until a genuine three-way de-vig exists, the honest output
+ * is no moneyline pick at all. Spreads and totals are unaffected — those settle
+ * on goals, where a draw is not a special outcome.
+ */
+function isThreeWayMoneylineSport(sportKey: string): boolean {
+  return sportKey.toLowerCase().startsWith("soccer");
+}
+
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
+  // Publishing a two-way number for a three-way market overstates win
+  // probability, edge and confidence, and persists that overstatement into the
+  // pick proof receipt. Suppress rather than mislead.
+  if (isThreeWayMoneylineSport(input.sport)) return null;
+
   const h2hOdds = input.bookmakerOdds.filter(
     (o) => o.market === "H2H" && o.homePrice !== undefined && o.awayPrice !== undefined
   );

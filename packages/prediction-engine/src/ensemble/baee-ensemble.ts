@@ -20,6 +20,43 @@
  * is simpler (no learning-rate hyperparameter to misjustify) and has the
  * stronger guarantee for free.
  *
+ * PRIOR ART — THIS ALGORITHM IS NOT NOVEL, AND MUST NOT BE PUBLISHED AS NOVEL.
+ * An earlier write-up framed this as a new theorem ("Beexly Adaptive E-Optimal
+ * Ensemble"), claimed it was the FIRST method to maximise the growth rate of an
+ * anytime-valid E-process, and the FIRST link between online learning and
+ * anytime-valid inference, and proposed an arXiv submission. That was tested
+ * rather than assumed: the claim was put, blind, to a panel of 9 independent
+ * models on 2026-09-03 (OmniRoute chaos run, 2 runs, 10/11 and 8/11 responding).
+ *
+ *   Verdict: 8x KNOWN RESULT, 1x KNOWN WITH MINOR VARIATION, 0x NOVEL.
+ *
+ *   1. The log(K) regret bound: unanimously identified as the standard
+ *      Bayesian-mixture / exponential-weights bound under log loss.
+ *   2. Maximising E-process growth rate: near-unanimously identified as the
+ *      Kelly criterion / growth-optimal portfolio — equivalently, maximising
+ *      expected log-score. One model added the Shafer-Vovk game-theoretic framing.
+ *   3. The "first connection" claim was called the weakest part: that connection
+ *      is Vovk's own research programme, not a new one.
+ *
+ * Names the panel converged on, listed as leads to READ rather than as verified
+ * citations: Vovk, "Aggregating Strategies" (COLT 1990); Littlestone & Warmuth,
+ * "The Weighted Majority Algorithm" (1994); Freund & Schapire (Hedge, 1997);
+ * Cesa-Bianchi & Lugosi, "Prediction, Learning, and Games" (2006); Shafer & Vovk,
+ * "Probability and Finance: It's Only a Game!" (2001); Cover on universal
+ * prediction / universal portfolios.
+ *
+ * TREAT THOSE CITATIONS AS UNVERIFIED. The panel itself flagged that several
+ * models fabricated references despite being instructed not to — a "Cover (1965)"
+ * title that does not match Cover's 1965 paper, garbled author lists, and a
+ * spurious "Chernoff (1952) mixing weights". The CONSENSUS (result is standard;
+ * Kelly equivalence) is solid because it was reached independently by many models;
+ * the individual bibliography is not, and anyone citing it must check Vovk 1990
+ * and Littlestone-Warmuth 1994 directly.
+ *
+ * None of this is a criticism of the code below. The algorithm is correct and is
+ * the right one to use — it is well-founded precisely BECAUSE it is the standard
+ * result. What is retracted is the novelty claim, not the implementation.
+ *
  * MATH. Each model k is scored by the probability it assigned to what actually
  * happened: `p_k(y_t) = y_t · p_{t,k} + (1-y_t) · (1-p_{t,k})`. The update is
  * `w_k ← w_k · p_k(y_t)`, renormalized. This is Bayes' rule applied online with
