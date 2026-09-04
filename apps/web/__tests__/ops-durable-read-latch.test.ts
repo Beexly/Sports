@@ -328,6 +328,31 @@ describe("durable ranking-pause read: failure is not an absence", () => {
     expect(findFirstMock).toHaveBeenCalledTimes(2);
   });
 
+  it("never answers 'no pause' from an emptied cache, even past the retry cap", async () => {
+    // Pathological: a durable write lands during EVERY retry, so the read is
+    // superseded all the way to the cap. The fallback used to read the cache,
+    // which `clear()` had just emptied — handing back the permissive "no
+    // pause". Reaching this needs several ops writes inside one request, so it
+    // is near-unreachable; it is fixed anyway because an unverified absence on
+    // a suppression control is the wrong direction at any probability.
+    vi.useFakeTimers();
+    const rt = await import("@/lib/calibration/selective-publish-runtime");
+
+    // Every read invalidates itself: the delegate clears the cache before
+    // answering, so each attempt is superseded by construction.
+    findFirstMock.mockImplementation(async () => {
+      rt.clearSelectiveRuntimeCaches();
+      return { metadata: SNAP, full_text: null };
+    });
+
+    const answer = await rt.getCachedRankingPauseDurable();
+
+    // The pause is enabled in the durable record, so the caller must see it.
+    expect(answer).not.toBeNull();
+    expect(answer?.enabled).toBe(true);
+    expect(answer?.groups).toEqual(["g1"]);
+  });
+
   it("is audible when the delegate throws synchronously, and still answers null", async () => {
     // NOTE ON WHAT THIS DOES AND DOES NOT COVER. `readRankingPauseApply` wraps
     // the whole query in try/catch, so a synchronous throw from the delegate is

@@ -186,8 +186,22 @@ function makeDurableCache<T>(
    */
   async function settle(res: ReadResolution<T>, depth: number): Promise<T | null> {
     if (!res.superseded) return res.value;
-    // Cap reached: answer from the post-write cache, never from the stale read.
-    if (depth >= MAX_SUPERSEDED_RETRIES) return cached?.value ?? null;
+    if (depth >= MAX_SUPERSEDED_RETRIES) {
+      // Cap reached. Do NOT answer from the cache: `clear()` has just emptied
+      // it, so `cached?.value ?? null` is the permissive "no pause" — an
+      // unverified absence, which is the wrong direction for a suppression
+      // control however unlikely the path. Read once more and answer from THAT,
+      // whatever generation it belongs to. It is at worst one write behind;
+      // it is never an absence nobody read.
+      try {
+        const final = await read();
+        if (final.status === "ok") return final.value;
+        if (final.status === "absent") return null; // read from the DB, not assumed
+      } catch {
+        // Fall through: an unreadable database is handled below.
+      }
+      return cached?.value ?? null;
+    }
     return get(depth + 1);
   }
 
