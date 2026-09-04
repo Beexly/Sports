@@ -61,6 +61,9 @@ const DOTTED_HOST_PORT =
  * the container-network shape, e.g. "connect ECONNREFUSED db:6379". Anchoring
  * on the keyword is what makes it safe to match a host with no dot in it.
  */
+const CONNECT_HOST_PORT =
+  /\b(ECONNREFUSED|ETIMEDOUT|EHOSTUNREACH|ENOTFOUND|connection to|connect(?:ing)? to)\s+\S+?\s*:\s*\d{2,5}\b/gi;
+
 /**
  * A DNS failure names the host with NO port at all — `getaddrinfo ENOTFOUND
  * db.internal` — so none of the patterns above touch it and the internal
@@ -68,9 +71,6 @@ const DOTTED_HOST_PORT =
  * ordinary words.
  */
 const DNS_HOST_ONLY = /\b(ENOTFOUND|EAI_AGAIN)\s+([a-z0-9][a-z0-9.-]*)/gi;
-
-const CONNECT_HOST_PORT =
-  /\b(ECONNREFUSED|ETIMEDOUT|EHOSTUNREACH|ENOTFOUND|connection to|connect(?:ing)? to)\s+\S+?\s*:\s*\d{2,5}\b/gi;
 
 /** C0 and C1 control characters — CR/LF included. */
 // eslint-disable-next-line no-control-regex
