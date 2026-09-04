@@ -18,6 +18,9 @@
  *   --out <dir>        where to write results. Default scripts/ops/chaos/out
  *   --models a,b,c     forwarded as `models` in the body; omit to let the router decide
  *   --timeout <sec>    default 900 (chaos panels are slow; this is not a bug)
+ *   --header "K: V"    extra request header; repeatable. Auth already goes out as
+ *                      `authorization: Bearer $OMNIROUTE_TOKEN` — use this only if
+ *                      the router wants the token somewhere else instead.
  *   --raw              always print the untouched response body as well as the summary
  *
  * HONESTY NOTE: this script was written WITHOUT the router's response schema in
@@ -32,13 +35,14 @@ import { resolve, basename } from "node:path";
 const DEFAULT_URL = "http://127.0.0.1:20128/api/chaos/run";
 
 function parseArgs(argv) {
-  const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", models: null, timeout: 900, raw: false };
+  const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", models: null, timeout: 900, raw: false, headers: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--url") out.url = argv[++i];
     else if (a === "--out") out.dir = argv[++i];
     else if (a === "--models") out.models = argv[++i];
     else if (a === "--timeout") out.timeout = Number(argv[++i]);
+    else if (a === "--header") out.headers.push(argv[++i]);
     else if (a === "--raw") out.raw = true;
     else if (a.startsWith("--")) fail(`unknown flag ${a}`);
     else if (out.file === null) out.file = a;
@@ -125,6 +129,16 @@ async function main() {
   const prompt = readFileSync(promptPath, "utf8");
   if (prompt.trim() === "") fail(`prompt file is empty: ${promptPath}`);
 
+  // Auth is sent as `authorization: Bearer <token>`. If this router wants a
+  // different header instead, pass it rather than editing this file:
+  //   --header "x-custom-auth: $OMNIROUTE_TOKEN"
+  const extraHeaders = {};
+  for (const h of args.headers) {
+    const at = h.indexOf(":");
+    if (at < 1) fail(`--header expects "Name: value", got ${JSON.stringify(h)}`);
+    extraHeaders[h.slice(0, at).trim()] = h.slice(at + 1).trim();
+  }
+
   const body = { prompt, mode: "chaos", stream: false };
   if (args.models !== null) body.models = args.models.split(",").map((m) => m.trim()).filter(Boolean);
 
@@ -140,7 +154,7 @@ async function main() {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
-        "x-api-key": token,
+        ...extraHeaders,
       },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(args.timeout * 1000),
