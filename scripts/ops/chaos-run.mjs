@@ -36,13 +36,22 @@ const DEFAULT_URL = "http://127.0.0.1:20128/api/chaos/run";
 
 function parseArgs(argv) {
   const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", models: null, timeout: 900, raw: false, headers: [] };
+  // A flag given as the LAST argument has no operand, and `argv[++i]` is then
+  // `undefined`. Reject that here rather than letting the undefined travel —
+  // it used to reach `h.indexOf(":")` and throw a bare TypeError that named
+  // neither the flag nor the mistake.
+  const operand = (i) => {
+    const v = argv[i];
+    if (v === undefined) fail(`${argv[i - 1]} requires a value`);
+    return v;
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a === "--url") out.url = argv[++i];
-    else if (a === "--out") out.dir = argv[++i];
-    else if (a === "--models") out.models = argv[++i];
-    else if (a === "--timeout") out.timeout = Number(argv[++i]);
-    else if (a === "--header") out.headers.push(argv[++i]);
+    if (a === "--url") out.url = operand(++i);
+    else if (a === "--out") out.dir = operand(++i);
+    else if (a === "--models") out.models = operand(++i);
+    else if (a === "--timeout") out.timeout = Number(operand(++i));
+    else if (a === "--header") out.headers.push(operand(++i));
     else if (a === "--raw") out.raw = true;
     else if (a.startsWith("--")) fail(`unknown flag ${a}`);
     else if (out.file === null) out.file = a;
