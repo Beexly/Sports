@@ -360,6 +360,13 @@ describe("durable ranking-pause read: failure is not an absence", () => {
     expect(answer).not.toBeNull();
     expect(answer?.enabled).toBe(true);
     expect(answer?.groups).toEqual(["g1"]);
+
+    // And it got there the long way. Without this the test passes even if the
+    // very first read is never superseded — a future change to the supersede
+    // detection could quietly stop exercising the cap while this case stayed
+    // green. MAX_SUPERSEDED_RETRIES is 3, so the walk is four superseded reads
+    // plus the uncapped final one.
+    expect(findFirstMock.mock.calls.length).toBeGreaterThanOrEqual(5);
   });
 
   it("is audible when the delegate throws synchronously, and still answers null", async () => {
