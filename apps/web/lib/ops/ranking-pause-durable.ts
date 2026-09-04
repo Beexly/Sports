@@ -81,15 +81,6 @@ export async function persistRankingPauseApply(
 }
 
 /**
- * Newest durable pause snapshot, or null.
- *
- * `null` means "no durable pause is in force", which is the LESS restrictive
- * answer — so a read failure must not be mistaken for a deliberate absence.
- * The verdict is unchanged (callers already treat null as "env decides"), but a
- * thrown query is now logged so an operator can tell a real "no pause set" from
- * a database that could not answer.
- */
-/**
  * Outcome of a durable READ, with absence and unavailability kept apart.
  *
  * `loadRankingPauseApply` collapses both to `null`, which is right for callers
@@ -107,8 +98,15 @@ export type RankingPauseReadResult =
 /**
  * Read the durable pause, distinguishing "no record" from "could not read".
  *
- * `loadRankingPauseApply` is the lossy convenience wrapper over this; prefer
- * this one anywhere the answer is stored, cached, or reported.
+ * This is the ONE reader; `loadRankingPauseApply` is a lossy wrapper over it.
+ * They were briefly separate implementations of the same parse, which is how a
+ * cached read and an API read drift apart on what a valid payload is.
+ *
+ * A row whose payload cannot be parsed reports `error`, not `absent`. Absence
+ * is the LESS restrictive answer — it hands the decision back to the env var —
+ * so a snapshot we merely failed to understand must not be reported as "no
+ * pause is set", which would leave a corrupt row silently disabling the kill
+ * switch for the isolate's whole life.
  */
 export async function readRankingPauseApply(): Promise<RankingPauseReadResult> {
   if (isStubMode()) return { status: "absent" };
@@ -125,9 +123,12 @@ export async function readRankingPauseApply(): Promise<RankingPauseReadResult> {
         : row.full_text
           ? JSON.parse(row.full_text)
           : null;
-    if (!raw || typeof raw !== "object") return { status: "absent" };
+    if (!raw || typeof raw !== "object" || typeof (raw as RankingPauseDurableSnap).enabled !== "boolean") {
+      // A row exists but we cannot read it. Treated as unavailability so the
+      // caller retries and an operator sees it, never as "no pause set".
+      throw new Error("durable ranking-pause payload is malformed (no boolean `enabled`)");
+    }
     const s = raw as RankingPauseDurableSnap;
-    if (typeof s.enabled !== "boolean") return { status: "absent" };
     return {
       status: "ok",
       snap: {
@@ -148,36 +149,19 @@ export async function readRankingPauseApply(): Promise<RankingPauseReadResult> {
   }
 }
 
+/**
+ * Newest durable pause snapshot, or null.
+ *
+ * `null` means "no durable pause is in force", which is the LESS restrictive
+ * answer — so a read failure must not be mistaken for a deliberate absence.
+ * The verdict is unchanged (callers already treat null as "env decides"), and
+ * `readRankingPauseApply` has already logged the cause, so an operator can
+ * still tell a real "no pause set" from a database that could not answer.
+ *
+ * Prefer `readRankingPauseApply` anywhere the answer is stored, cached, or
+ * reported: this wrapper throws away the distinction on purpose.
+ */
 export async function loadRankingPauseApply(): Promise<RankingPauseDurableSnap | null> {
-  if (isStubMode()) return null;
-  try {
-    const row = await db.jarvisMemoryEvent.findFirst({
-      where: { scope: RANKING_PAUSE_DURABLE_SCOPE, memory_type: "episodic" },
-      orderBy: { created_at: "desc" },
-      select: { metadata: true, full_text: true },
-    });
-    if (!row) return null;
-    const raw =
-      typeof row.metadata === "object" && row.metadata !== null
-        ? row.metadata
-        : row.full_text
-          ? JSON.parse(row.full_text)
-          : null;
-    if (!raw || typeof raw !== "object") return null;
-    const s = raw as RankingPauseDurableSnap;
-    if (typeof s.enabled !== "boolean") return null;
-    return {
-      enabled: s.enabled,
-      groups: Array.isArray(s.groups) ? s.groups.map(String) : [],
-      setAt: typeof s.setAt === "string" ? s.setAt : new Date().toISOString(),
-      setBy: typeof s.setBy === "string" ? s.setBy : "unknown",
-      note: typeof s.note === "string" ? s.note : "",
-    };
-  } catch (err) {
-    console.error(
-      `[ops:ranking-pause] loadRankingPauseApply FAILED: ${errMessage(err)}. ` +
-        "Reporting 'no durable pause' — this is a read failure, not proof of absence.",
-    );
-    return null;
-  }
+  const result = await readRankingPauseApply();
+  return result.status === "ok" ? result.snap : null;
 }

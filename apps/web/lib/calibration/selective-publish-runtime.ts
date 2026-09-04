@@ -82,10 +82,27 @@ let cachedPause: RankingPauseDurableSnap | null | undefined;
 export async function getCachedProvenPathPlan(): Promise<ProvenPathPlan | null> {
   if (cachedPlan !== undefined) return cachedPlan;
   try {
-    const { loadProvenPathPlan } = await import("@/lib/ops/proven-path-durable");
-    cachedPlan = await loadProvenPathPlan();
-  } catch {
-    cachedPlan = null;
+    const { readProvenPathPlan } = await import("@/lib/ops/proven-path-durable");
+    const result = await readProvenPathPlan();
+    if (result.status === "error") {
+      // Do NOT memoise a read failure — identical reasoning to the pause cache
+      // below. `cachedPlan` uses `undefined` as its "not loaded" sentinel, so
+      // caching this `null` would latch "no plan recorded" for the life of the
+      // isolate: plan-backed pause groups and selective thresholds would stay
+      // disabled long after the database recovered. The cause is already
+      // logged by readProvenPathPlan.
+      return null;
+    }
+    cachedPlan = result.status === "ok" ? result.plan : null;
+  } catch (err) {
+    // The dynamic import itself failed, or the reader threw unexpectedly.
+    // Unavailability, not absence — do not cache, and do not swallow silently.
+    console.error(
+      "[selective-publish] getCachedProvenPathPlan could not read the durable plan: " +
+        `${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}. ` +
+        "Proceeding without a plan for this call; the next call retries.",
+    );
+    return null;
   }
   return cachedPlan;
 }
@@ -105,8 +122,17 @@ export async function getCachedRankingPauseDurable(): Promise<RankingPauseDurabl
       return null;
     }
     cachedPause = result.status === "ok" ? result.snap : null;
-  } catch {
-    // Same reasoning: an unexpected throw is unavailability, not absence.
+  } catch (err) {
+    // Same reasoning: an unexpected throw (a failed dynamic import, or the
+    // reader itself throwing) is unavailability, not absence. Returning null
+    // silently would let paused publishing resume with nothing in the logs, so
+    // say so — the pause is a suppression control, and this is the one place
+    // that failure is visible.
+    console.error(
+      "[selective-publish] getCachedRankingPauseDurable could not read the durable pause: " +
+        `${err instanceof Error ? `${err.name}: ${err.message}` : String(err)}. ` +
+        "Treating as UNAVAILABLE (not 'no pause set'); the next call retries.",
+    );
     return null;
   }
   return cachedPause;

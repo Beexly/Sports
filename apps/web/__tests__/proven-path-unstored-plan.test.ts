@@ -17,11 +17,33 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const persistProvenPathPlanMock = vi.fn();
 const stubMock = vi.fn(() => false);
+const pickFindManyMock = vi.fn(async () => [] as unknown[]);
 
 vi.mock("@sports/db", () => ({
   isStubMode: () => stubMock(),
-  db: { pick: { findMany: vi.fn(async () => []) } },
+  db: {
+    pick: { findMany: (...a: unknown[]) => pickFindManyMock(...(a as [])) },
+    // The real loadRankingPauseApply runs on the success path; give it a
+    // delegate so it answers "no durable pause" instead of throwing.
+    jarvisMemoryEvent: { findFirst: async () => null },
+  },
 }));
+
+/**
+ * `loadProvenPathSurface` returns early at `rows.length < 50`, so a test that
+ * leaves the pick table empty never reaches the durable write at all. These are
+ * the minimum a row must satisfy to survive `toProvenPathPickRow`: a settled
+ * WIN/LOSS and a finite confidence.
+ */
+function settledPicks(count: number): unknown[] {
+  return Array.from({ length: count }, (_, i) => ({
+    confidence: 55 + (i % 30),
+    result: i % 3 === 0 ? "LOSS" : "WIN",
+    pickType: "SPREAD",
+    factorBreakdown: null,
+    game: { sport: { key: "nfl", name: "NFL" } },
+  }));
+}
 
 vi.mock("@/lib/ops/proven-path-durable", () => ({
   persistProvenPathPlan: (...a: unknown[]) => persistProvenPathPlanMock(...a),
@@ -32,18 +54,47 @@ describe("proven-path surface: an unstored plan is not returned", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     stubMock.mockReturnValue(false);
+    // Enough eligible rows to clear the `rows.length < 50` early return, so the
+    // durable write is actually reached.
+    pickFindManyMock.mockResolvedValue(settledPicks(60));
   });
 
   it("returns null when the durable write failed", async () => {
     persistProvenPathPlanMock.mockResolvedValue("error");
     const { loadProvenPathSurface } = await import("@/lib/ops/proven-path-seed");
 
-    // Fewer than 50 rows short-circuits before the write, so this asserts the
-    // contract rather than the row loader: with an empty pick table the
-    // function returns null either way. The value of this case is that it
-    // pins the FAILED-write branch as reachable and non-throwing; the branch
-    // itself is verified by the source-level assertion below.
     await expect(loadProvenPathSurface()).resolves.toBeNull();
+    // Without this the case would be vacuous: an empty pick table returns null
+    // before the write, so the assertion above would hold whether or not the
+    // guard exists.
+    expect(persistProvenPathPlanMock).toHaveBeenCalledOnce();
+  });
+
+  it("DOES return a surface when the same plan is written successfully", async () => {
+    // The control that gives the case above its meaning. If the surface were
+    // null for a successful write too, "returns null on error" would be
+    // measuring the row loader rather than the guard.
+    persistProvenPathPlanMock.mockResolvedValue("ok");
+    const { loadProvenPathSurface } = await import("@/lib/ops/proven-path-seed");
+
+    const surface = await loadProvenPathSurface();
+
+    expect(persistProvenPathPlanMock).toHaveBeenCalledOnce();
+    expect(surface).not.toBeNull();
+    expect(surface?.plan).toBeDefined();
+  });
+
+  it("also withholds the surface in stub mode, where nothing was written", async () => {
+    persistProvenPathPlanMock.mockResolvedValue("stub");
+    const { loadProvenPathSurface } = await import("@/lib/ops/proven-path-seed");
+
+    // Documents the CURRENT contract: only "error" withholds the surface.
+    // "stub" means no durable store exists at all, so the plan is equally
+    // invisible to other isolates — but every caller in stub mode is already
+    // running without a database, so this is recorded rather than changed.
+    const surface = await loadProvenPathSurface();
+    expect(persistProvenPathPlanMock).toHaveBeenCalledOnce();
+    expect(surface).not.toBeNull();
   });
 
   it("the failed-write branch returns before building a surface", async () => {

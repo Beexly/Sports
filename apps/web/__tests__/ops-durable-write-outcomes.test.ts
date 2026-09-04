@@ -116,13 +116,18 @@ describe("persistRankingPauseApply reports its outcome", () => {
   });
 
   it("distinguishes a failed read from a genuine absence on load", async () => {
+    // Both answers are `null` — that is the loader's whole contract — so the
+    // LOG is what separates "no pause set" from "the database could not
+    // answer". `loadRankingPauseApply` is now a thin wrapper over the single
+    // reader, so the line names `readRankingPauseApply`.
     findFirstMock.mockResolvedValue(null);
     await expect(loadRankingPauseApply()).resolves.toBeNull();
     expect(errorSpy).not.toHaveBeenCalled();
 
     findFirstMock.mockRejectedValue(BOOM);
     await expect(loadRankingPauseApply()).resolves.toBeNull();
-    expect(loggedText()).toMatch(/loadRankingPauseApply FAILED/);
+    expect(loggedText()).toMatch(/readRankingPauseApply FAILED/);
+    expect(loggedText()).toMatch(/not proof of absence/);
   });
 });
 
@@ -232,6 +237,7 @@ describe("persistProvenPathPlan reports its outcome", () => {
 
     findFirstMock.mockRejectedValue(BOOM);
     await expect(loadProvenPathPlan()).resolves.toBeNull();
-    expect(loggedText()).toMatch(/loadProvenPathPlan FAILED/);
+    expect(loggedText()).toMatch(/readProvenPathPlan FAILED/);
+    expect(loggedText()).toMatch(/not proof of absence/);
   });
 });

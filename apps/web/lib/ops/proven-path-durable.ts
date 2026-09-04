@@ -68,34 +68,66 @@ export async function persistProvenPathPlan(
 }
 
 /**
- * Newest durable proven-path plan, or null.
+ * Outcome of a durable plan READ, with absence and unavailability kept apart.
  *
- * `null` legitimately means "no plan recorded yet". A thrown query returns the
- * same null (verdict unchanged — callers must degrade, not crash), but it is
- * now logged so absence and unavailability are distinguishable in the logs.
+ * Same shape and same reason as `RankingPauseReadResult`: `loadProvenPathPlan`
+ * collapses both to `null`, which callers must degrade on — but a cache that
+ * memoises the `null` from a transient read failure latches "no plan recorded"
+ * for the life of the isolate. Plan-backed pause groups and thresholds then
+ * stay disabled long after the database recovers.
  */
-export async function loadProvenPathPlan(): Promise<ProvenPathPlan | null> {
-  if (isStubMode()) return null;
+export type ProvenPathReadResult =
+  | { readonly status: "ok"; readonly plan: ProvenPathPlan }
+  | { readonly status: "absent" }
+  | { readonly status: "error"; readonly message: string };
+
+/**
+ * Read the durable plan, distinguishing "no plan yet" from "could not read".
+ *
+ * The ONE reader; `loadProvenPathPlan` is the lossy wrapper over it. A row
+ * whose payload cannot be parsed reports `error`, not `absent`, for the same
+ * reason as the ranking pause: absence is the less restrictive answer, and a
+ * snapshot we merely failed to understand must not be reported as "no plan".
+ */
+export async function readProvenPathPlan(): Promise<ProvenPathReadResult> {
+  if (isStubMode()) return { status: "absent" };
   try {
     const row = await db.jarvisMemoryEvent.findFirst({
       where: { scope: PROVEN_PATH_SCOPE, memory_type: "episodic" },
       orderBy: { created_at: "desc" },
       select: { metadata: true, full_text: true },
     });
-    if (!row) return null;
+    if (!row) return { status: "absent" };
     const raw =
       typeof row.metadata === "object" && row.metadata !== null
         ? row.metadata
         : row.full_text
           ? JSON.parse(row.full_text)
           : null;
-    if (!raw || typeof raw !== "object") return null;
-    return raw as ProvenPathPlan;
+    if (!raw || typeof raw !== "object") {
+      throw new Error("durable proven-path payload is malformed (not an object)");
+    }
+    return { status: "ok", plan: raw as ProvenPathPlan };
   } catch (err) {
+    const message = errMessage(err);
     console.error(
-      `[ops:proven-path] loadProvenPathPlan FAILED: ${errMessage(err)}. ` +
+      `[ops:proven-path] readProvenPathPlan FAILED: ${message}. ` +
         "Reporting 'no plan' — this is a read failure, not proof of absence.",
     );
-    return null;
+    return { status: "error", message };
   }
+}
+
+/**
+ * Newest durable proven-path plan, or null.
+ *
+ * `null` legitimately means "no plan recorded yet". A failed read returns the
+ * same null (verdict unchanged — callers must degrade, not crash) and has
+ * already been logged by `readProvenPathPlan`, so absence and unavailability
+ * stay distinguishable in the logs. Prefer `readProvenPathPlan` anywhere the
+ * answer is cached.
+ */
+export async function loadProvenPathPlan(): Promise<ProvenPathPlan | null> {
+  const result = await readProvenPathPlan();
+  return result.status === "ok" ? result.plan : null;
 }
