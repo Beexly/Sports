@@ -46,6 +46,7 @@ const STACK = [
 ] as const;
 
 const CHANGELOG = [
+  ["v5.3.0", "Edge Index published across the full range an honest market can produce: 100 is a fair price, ~50 an ordinary -110/-110 two-way. It previously put a fair price at 50, leaving the upper half of the published scale unreachable. It reads the price, not a win probability, and nothing fits it to settled results. Confidence and ranking math unchanged."],
   ["v5.2.2", "Dixon–Coles soccer independent + Kalshi ESPN/ET match polarity; ranking math from v5.2.1 unchanged."],
   ["v5.2.1", "Ranking uses independent model P whenever finite (incl. PASS); bake-off never treats edge as a win probability; positive separation required."],
   ["v5.2", "Independent estimators priced into ranking path; edge is never used as a win probability."],

@@ -9,7 +9,12 @@ import type {
   IndependentMarketFairValue,
   IndependentEdgeSummary,
 } from "@sports/types";
-import { computePickGrade } from "@sports/types";
+import {
+  computePickGrade,
+  edgeIndexFromRawEdge,
+  EDGE_INDEX_MIN,
+  EDGE_INDEX_MAX,
+} from "@sports/types";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
   MODEL_VERSION,
@@ -86,27 +91,30 @@ export function clamp(value: number, min: number, max: number): number {
 // ============================================================
 
 /**
- * Maps a pick's engine `edgeScore` (already on a 0–100 scale — see
- * `ScoredPick.edgeScore`) to the public 0–100 "Edge Index" rendered on the
- * board / Gate Cam / Pass List.
+ * Renders a stored/computed `edgeScore` as the public "Edge Index" shown on the
+ * board / Gate Cam / Pass List / embed.
  *
- * This is the SINGLE source of truth for the Edge Index scale. The mapping is
- * intentionally identity-with-clamp: the engine value is already normalized to
- * 0–100 in `computeEdgeScore` callers, so the only job here is to:
- *   1. Round to a whole number for display.
- *   2. Hard-clamp to [0, 100] so no upstream scale mistake (e.g. a stray ×10,
- *      or a raw-edge fraction persisted to `Game.currentEdgeIndex` /
- *      `GateDecision.edgeIndex`) can ever surface an Edge Index above 100.
+ * The SCALE itself is defined once, in `@sports/types`' `edge-index.ts`
+ * (`edgeIndexFromRawEdge`), which every scoring path calls. This function is
+ * only the render step: round, and hard-clamp so no upstream scale fault (a
+ * stray ×10, or a raw-edge fraction persisted straight into
+ * `Game.currentEdgeIndex` / `GateDecision.edgeIndex`) can surface out of range.
  *
  * Returns `null` for nullish input so callers can render "Edge Index pending".
  *
- * A two-way market that is internally consistent can only reach an Edge Index
- * of 100 when the de-vigged fair edge is genuinely ≥ +5% (see computeEdgeScore);
- * a vanilla -110/-110 total maps to ~26, never 100.
+ * Reading the number (see `edge-index.ts` for the derivation): it is a
+ * PRICE-QUALITY reading, not a forecast. 100 is a perfectly fair price, 50 is an
+ * ordinary −110/−110 two-way, 0 is roughly a 10% two-way hold. Cheaper books
+ * read higher, and nothing here is fitted to settled results.
+ *
+ * Values stamped with a model version at or before
+ * `LEGACY_HALF_SCALE_THROUGH_MODEL_VERSION` are on the retired half scale
+ * (50 = fair price); convert them with `legacyHalfScaleToCurrent` before
+ * comparing them against anything produced since.
  */
 export function toEdgeIndex(edgeScore: number | null | undefined): number | null {
   if (edgeScore == null || !Number.isFinite(edgeScore)) return null;
-  return clamp(Math.round(edgeScore), 0, 100);
+  return clamp(Math.round(edgeScore), EDGE_INDEX_MIN, EDGE_INDEX_MAX);
 }
 
 // ============================================================
@@ -309,7 +317,12 @@ function computeEdgeScore(
     rawEdge = 0;
   }
 
-  // Normalize: edge of +5% = full score, edge of 0% = half score
+  // Normalize: edge of +5% = full score, edge of 0% = half score.
+  // DELIBERATELY UNCHANGED by the Edge Index rescale. This value feeds the
+  // CONFIDENCE composite, and re-anchoring it would move confidence, tier,
+  // MIN_PUBLISH_CONFIDENCE and every ranking that reads them. The rescale
+  // touches only the PUBLISHED index (see edgeIndexFromRawEdge), which reuses
+  // this same ±0.05 domain rather than inventing a new one.
   const normalized = clamp((rawEdge + 0.05) / 0.10, 0, 1);
   const score = normalized * WEIGHTS.EDGE_COMPONENT_MAX;
 
@@ -535,7 +548,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ...independentEdgeFactors,
   ];
 
-  const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
+  const edgeScore = edgeIndexFromRawEdge(rawEdge, twoSidedImpliedSum);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
   const riskLevel: RiskLevel = computeRiskLevel(spreadOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
@@ -764,7 +777,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
 
-  const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
+  const edgeScore = edgeIndexFromRawEdge(rawEdge, twoSidedImpliedSum);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
   const riskLevel: RiskLevel = computeRiskLevel(totalOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
@@ -984,7 +997,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     ...independentEdgeFactors,
   ];
 
-  const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
+  const edgeScore = edgeIndexFromRawEdge(rawEdge, twoSidedImpliedSum);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
   const riskLevel: RiskLevel = computeRiskLevel(h2hOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
