@@ -29,7 +29,7 @@ Stated precisely: **under this test, a deviation this large is very unlikely to
 arise from sampling variation alone.** That is what a p-value licenses. It is not
 proof that no chance process produced it.
 
-## 2. A single league-wide effect is formally rejected
+## 2. A uniform league-wide drift is rejected
 
 The obvious mechanism is a league-wide decline in home-field advantage, which
 would shift every leaf by roughly the same amount. The per-leaf tests in §1 do
@@ -40,7 +40,7 @@ actually addresses it.
 
 **Cochran's Q**, H0 = all five leaves share one common drift, weights `1/var_i`:
 
-```
+```text
 common-drift estimate   -1.46 pp
 Cochran's Q             19.57 on 4 df
 heterogeneity p         6.07e-04
@@ -52,7 +52,7 @@ rather than sampling error, so the leaves are not moving together.
 
 **Contrast, 6.5–9.5 against the other four pooled:**
 
-```
+```text
 others pooled Δ         +0.59 pp  (SE 1.05)
 6.5-9.5 Δ               -8.74 pp  (SE 1.98)
 z = -4.17               p = 3.03e-05
@@ -64,6 +64,13 @@ difference between them is significant on its own.
 Conclusion, now earned rather than asserted: **a uniform league-wide shift does
 not fit these data.** The effect is concentrated in the 6.5–9.5 band and the
 mechanism is unexplained. No mechanism is invented here.
+
+**What this does NOT establish**, because the heading of this section previously
+overstated it and CodeRabbit was right to flag it: Q tests one null — that the
+five leaf drifts share a single common value. Rejecting it does not rule out a
+league-wide effect. A league-wide component can coexist with leaf-specific ones,
+and Q cannot separate the two. The claim that survives is the narrow one: the
+leaves did not move together, and 6.5–9.5 moved most.
 
 ## 3. Why it matters
 
