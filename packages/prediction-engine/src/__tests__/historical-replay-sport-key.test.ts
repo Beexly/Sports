@@ -129,10 +129,25 @@ describe("historical replay — sport key is a parameter, NFL is the default", (
     expect(asNfl!.result).toBe("PUSH");
   });
 
-  // NOTE: the scoring-side soccer assertion — that a soccer replay publishes NO
-  // moneyline at all — deliberately is NOT here. That suppression lives in
-  // `scoreMoneylinePick` on PR #694 (claude/fix-soccer-threeway-moneyline), which
-  // is not merged into this branch. Asserting it here would go red for a reason
-  // unrelated to this change. Add it to this file once #694 lands; the first draft
-  // of this test did assert it and failed exactly that way.
+  it("a soccer replay publishes NO moneyline — #694 suppression, with an NFL control", () => {
+    // #694: removeVig renormalises two outcomes to P(win | decisive), but soccer
+    // settlement grades a draw as LOSS for either side, so the two-way number
+    // overstates win probability, edge and confidence. The engine cannot see a
+    // draw price, so the honest output is no moneyline pick at all. This is the
+    // assertion this file deferred until #694 landed; it now lands with it.
+    const features = assemblePreGameFeatures(
+      heavyMlRow({ homeScore: null, awayScore: null, result: null }),
+    );
+
+    // Control: the identical row under the NFL default must publish a moneyline,
+    // or the suppression assertion below proves nothing.
+    const nfl = scoreHistoricalGame(features).filter((p) => p.pickType === "MONEYLINE");
+    expect(nfl.length, "NFL control must publish a moneyline").toBeGreaterThan(0);
+
+    // Scoring-side suppression: the same game under a soccer key publishes none.
+    const soccer = scoreHistoricalGame(features, { sportKey: "soccer_usa_mls" }).filter(
+      (p) => p.pickType === "MONEYLINE",
+    );
+    expect(soccer).toHaveLength(0);
+  });
 });
