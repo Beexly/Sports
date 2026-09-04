@@ -276,12 +276,57 @@ export class OddsApiClient {
     }
 
     this.circuitBreaker.recordSuccess();
-    const data = (await response.json()) as T;
+    let data: T;
+    try {
+      data = (await response.json()) as T;
+    } catch (err) {
+      // A 2xx whose body is not JSON is an upstream/CDN error page, not data.
+      // Unwrapped, `response.json()` throws a bare SyntaxError ("Unexpected
+      // token '<'") that surfaces to operators as a parsing/data problem
+      // rather than as an outage, and it escapes every `err instanceof
+      // OddsApiError` classification downstream (odds-provider-adapter reads
+      // `.status` to tell auth/payment failures apart from transient ones).
+      throw new OddsApiError(
+        `The Odds API returned a non-JSON body (status ${response.status}): ` +
+          `${err instanceof Error ? err.message : String(err)}`,
+        response.status,
+        remainingRequests,
+      );
+    }
     return { data, remainingRequests, usedRequests };
   }
 
+  /**
+   * `fetch` for an endpoint the vendor documents as returning a JSON ARRAY.
+   *
+   * Without this, `fetch<T>` hands back whatever decoded and casts it: a 200
+   * carrying an object (a vendor error envelope, a maintenance/edge response)
+   * flowed on as `events` whose `.length` is `undefined`. That is uniquely
+   * nasty in process-sport, because `undefined === 0` is FALSE — so the
+   * "primary returned nothing, try the free paths" branch does not fire, the
+   * Rundown and ESPN fallbacks are skipped even though they were available,
+   * and the run finally dies with an opaque TypeError inside the normalizer.
+   * Failing here instead is caught by the caller's existing primary-failure
+   * handler, which sets `events = []` and lets failover run as designed.
+   */
+  private async fetchArray<T>(
+    path: string,
+    params: Record<string, string> = {}
+  ): Promise<OddsApiFetchResult<T[]>> {
+    const result = await this.fetch<T[]>(path, params);
+    if (!Array.isArray(result.data)) {
+      throw new OddsApiError(
+        `The Odds API returned a non-array body for ${path} ` +
+          `(got ${result.data === null ? "null" : typeof result.data})`,
+        502,
+        result.remainingRequests
+      );
+    }
+    return result;
+  }
+
   async getSports(): Promise<OddsApiFetchResult<OddsApiSport[]>> {
-    return this.fetch<OddsApiSport[]>("/sports", { all: "false" });
+    return this.fetchArray<OddsApiSport>("/sports", { all: "false" });
   }
 
   async getOdds(
@@ -306,14 +351,14 @@ export class OddsApiClient {
     if (options?.bookmakers && options.bookmakers.length > 0) {
       params["bookmakers"] = options.bookmakers.join(",");
     }
-    return this.fetch<OddsApiEvent[]>(`/sports/${sportKey}/odds`, params);
+    return this.fetchArray<OddsApiEvent>(`/sports/${sportKey}/odds`, params);
   }
 
   async getScores(
     sportKey: OddsIngestKey,
     daysFrom: number = 1
   ): Promise<OddsApiFetchResult<OddsApiScore[]>> {
-    return this.fetch<OddsApiScore[]>(`/sports/${sportKey}/scores`, {
+    return this.fetchArray<OddsApiScore>(`/sports/${sportKey}/scores`, {
       daysFrom: daysFrom.toString(),
       dateFormat: "iso",
     });
@@ -322,7 +367,7 @@ export class OddsApiClient {
   async getEvents(
     sportKey: SupportedSportKey
   ): Promise<OddsApiFetchResult<OddsApiEvent[]>> {
-    return this.fetch<OddsApiEvent[]>(`/sports/${sportKey}/events`, {
+    return this.fetchArray<OddsApiEvent>(`/sports/${sportKey}/events`, {
       dateFormat: "iso",
     });
   }
@@ -432,6 +477,6 @@ export class OddsApiClient {
   async getParticipants(
     sportKey: SupportedSportKey
   ): Promise<OddsApiFetchResult<OddsApiParticipant[]>> {
-    return this.fetch<OddsApiParticipant[]>(`/sports/${sportKey}/participants`);
+    return this.fetchArray<OddsApiParticipant>(`/sports/${sportKey}/participants`);
   }
 }

@@ -4,6 +4,7 @@ import {
   buildMlbWinPctLookup,
   lookupMlbWinPct,
   fetchMlbCompletedGamesForDate,
+  MlbStatsApiError,
 } from "../mlb-statsapi-client.js";
 
 describe("mlb-statsapi-client", () => {
@@ -49,10 +50,23 @@ describe("mlb-statsapi-client", () => {
     );
   });
 
-  it("soft-fails empty on HTTP error", async () => {
+  // REPLACES an assertion that pinned the defect ("soft-fails empty on HTTP
+  // error"). Returning [] made an outage indistinguishable from a league with
+  // no standings, and the only production consumer caches whatever it gets for
+  // 30 minutes — so one 500 silently suppressed MLB independent fair values for
+  // half an hour. See the fail-closed note at the top of mlb-statsapi-client.ts.
+  it("surfaces an HTTP error instead of reporting an empty standings table", async () => {
     const fetchImpl = vi.fn(async () => ({
       ok: false,
       status: 500,
+    })) as unknown as typeof fetch;
+    await expect(fetchMlbStandings({ fetchImpl })).rejects.toBeInstanceOf(MlbStatsApiError);
+  });
+
+  it("still returns [] when the provider genuinely publishes no standings rows", async () => {
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ records: [] }),
     })) as unknown as typeof fetch;
     expect(await fetchMlbStandings({ fetchImpl })).toEqual([]);
   });
