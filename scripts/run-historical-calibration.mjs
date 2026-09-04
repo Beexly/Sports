@@ -108,9 +108,11 @@ async function main() {
   process.stdout.write(`Expected Calib. Error: ${ece.toFixed(4)}  (0 = perfectly calibrated)\n`);
   process.stdout.write(`\nReliability curve (predicted vs actual home-win %):\n`);
   for (const r of curve) process.stdout.write(`  ${r.bin.padStart(8)}  n=${String(r.n).padStart(5)}  pred ${String(r.predicted).padStart(5)}%  actual ${String(r.actual).padStart(5)}%\n`);
-  process.stdout.write(`\nInterpretation: this is the baseline the signal engine must beat. Our own pick\n`);
-  process.stdout.write(`model is NOT calibrated here — that requires real settled picks, which do not\n`);
-  process.stdout.write(`exist yet. This proves the de-vig + calibration math on real outcomes.\n`);
+  process.stdout.write(`\nInterpretation: this is THE MARKET, and it is the baseline the signal engine must\n`);
+  process.stdout.write(`beat. It also proves the de-vig + calibration math on real outcomes.\n`);
+  process.stdout.write(`This script does NOT measure our own pick model. That is a separate run:\n`);
+  process.stdout.write(`  npx tsx scripts/backfill/historical-settlement-backfill.ts --from=1999 --to=2025\n`);
+  process.stdout.write(`which replays the FROZEN model over the same history without lookahead.\n`);
 }
 
 main().catch((e) => { process.stderr.write(`ERROR: ${e.message}\n`); process.exit(1); });
