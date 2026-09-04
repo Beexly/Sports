@@ -9,25 +9,32 @@
  * JSON body into cmd.exe or PowerShell reliably mangles the prompt.
  *
  * USAGE
- *   set OMNIROUTE_TOKEN=oma_live_...            (PowerShell: $env:OMNIROUTE_TOKEN="oma_live_...")
- *   node scripts/ops/chaos-run.mjs scripts/ops/chaos/c1-edge-hunt.txt
- *   node scripts/ops/chaos-run.mjs scripts/ops/chaos/c6-clv-archive.txt
+ *   node scripts/ops/chaos-run.mjs scripts/ops/chaos/c9-everything-before-ship-v2.txt
+ *
+ * The token is read from ~/.omniroute/config.json (contexts.localhost.accessToken)
+ * if OMNIROUTE_TOKEN is not set, so normally there is nothing to export.
  *
  * FLAGS
  *   --url <endpoint>   full endpoint URL. Default http://127.0.0.1:20128/api/chaos/run
  *   --out <dir>        where to write results. Default scripts/ops/chaos/out
- *   --models a,b,c     forwarded as `models` in the body; omit to let the router decide
- *   --timeout <sec>    default 900 (chaos panels are slow; this is not a bug)
+ *   --max-tokens <n>   per-model ceiling, sent as `maxTokens`. Default 4096.
+ *   --timeout <sec>    default 900. A full 4096-token run measured ~31s, slowest
+ *                      model ~33s, so this is enormous headroom on purpose.
  *   --header "K: V"    extra request header; repeatable. Auth already goes out as
  *                      `authorization: Bearer $OMNIROUTE_TOKEN` — use this only if
  *                      the router wants the token somewhere else instead.
  *   --raw              always print the untouched response body as well as the summary
  *
- * HONESTY NOTE: this script was written WITHOUT the router's response schema in
- * hand. It parses JSON, then NDJSON, then gives up and prints the body verbatim.
- * It never invents a field. If the summary looks empty, the raw file on disk is
- * the source of truth — read that, and tell the author the real shape so the
- * summariser can be tightened.
+ * CONTRACT (supplied by the operator, 2026-09-04 — an earlier version of this
+ * file GUESSED it and guessed wrong on every field):
+ *   request   { "task": "...", "maxTokens": 4096 }      NOT "prompt"
+ *   response  { "models": [ ... ] }                     NOT "results"
+ *   entry     { providerId, providerName, modelId, status, content, durationMs, error }
+ * 15 participants, all free-tier. 14 of 15 answer; openrouter/ling-3.0-flash-fin
+ * is quota-exhausted upstream and fails fast (~250ms, genuine 429) until its free
+ * window resets. A failing entry is REPORTED, never dropped — a run that quietly
+ * shows 14 answers when 15 were asked is the kind of silence this tool exists to
+ * avoid. The generic walker is kept as a fallback for a shape change.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, basename } from "node:path";
@@ -35,14 +42,68 @@ import { resolve, basename } from "node:path";
 const DEFAULT_URL = "http://127.0.0.1:20128/api/chaos/run";
 
 function parseArgs(argv) {
-  const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", models: null, timeout: 900, raw: false, headers: [] };
+  const out = { file: null, url: DEFAULT_URL, dir: "scripts/ops/chaos/out", maxTokens: 4096, timeoutMs: 900_000, raw: false, headers: [] };
+  // Two ways a valued flag can be left without a value, both of which used to
+  // pass silently:
+  //   --header          (last argument)  -> argv[++i] is undefined, which then
+  //                     reached `h.indexOf(":")` as a bare TypeError naming
+  //                     neither the flag nor the mistake.
+  //   --url --raw       (next token is itself a flag) -> "--raw" was accepted
+  //                     as the URL, AND --raw was swallowed, so the run fired
+  //                     at a nonsense host with the flag silently dropped.
+  // No value this script takes legitimately begins with "--", so treating a
+  // "--" token as "missing value" is safe and catches the second case.
+  const operand = (i) => {
+    const flag = argv[i - 1];
+    const v = argv[i];
+    if (v === undefined) fail(`${flag} requires a value`);
+    if (v.startsWith("--")) {
+      fail(`${flag} requires a value, but the next argument is ${v}.\n` +
+           `If ${v} was meant as its own flag, ${flag} is missing its value.`);
+    }
+    return v;
+  };
+  // --timeout is validated here so a bad value names itself. Left unchecked, an
+  // invalid one reached `AbortSignal.timeout()` inside `fetch` and came back as
+  // "request failed: ... Is the OmniRoute router running?", sending the operator
+  // to debug their router over their own typo. Three distinct ways in, all
+  // measured rather than assumed:
+  //   "abc" / "-5" / "0"  -> NaN or non-positive; RangeError from Node.
+  //   0.0001              -> 0.1 ms; RangeError, "must be an integer".
+  //   4294967.295         -> WORSE than an error. Node's timers are 32-bit
+  //                          SIGNED, so anything over 2^31-1 ms does not throw:
+  //                          it warns and fires after 1 ms. The run aborts
+  //                          instantly and nothing explains why.
+  // Hence a 2^31-1 ceiling and a rounded integer millisecond, returned as ms so
+  // the float never reaches AbortSignal at all.
+  const MAX_TIMEOUT_MS = 2 ** 31 - 1;
+  const parseTimeoutMs = (v) => {
+    const n = Number(v);
+    // Round rather than demand exact integrality: 1.001 * 1000 is
+    // 1000.9999999999999 in binary floating point, and rejecting a plainly
+    // valid 1001 ms for that reason is a false negative. The rounded integer
+    // is what actually reaches AbortSignal, so the float never does.
+    const ms = Math.round(n * 1000);
+    if (!Number.isFinite(n) || n <= 0 || ms < 1 || ms > MAX_TIMEOUT_MS) {
+      fail(`--timeout must be between 0.001 and ${MAX_TIMEOUT_MS / 1000} seconds ` +
+           `(1 ms to ~24.8 days), got ${JSON.stringify(v)}.`);
+    }
+    return ms;
+  };
+  const positiveInt = (v) => {
+    const n = Number(v);
+    if (!Number.isInteger(n) || n < 1) {
+      fail(`--max-tokens must be a positive whole number, got ${JSON.stringify(v)}.`);
+    }
+    return n;
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a === "--url") out.url = argv[++i];
-    else if (a === "--out") out.dir = argv[++i];
-    else if (a === "--models") out.models = argv[++i];
-    else if (a === "--timeout") out.timeout = Number(argv[++i]);
-    else if (a === "--header") out.headers.push(argv[++i]);
+    if (a === "--url") out.url = operand(++i);
+    else if (a === "--out") out.dir = operand(++i);
+    else if (a === "--max-tokens") out.maxTokens = positiveInt(operand(++i));
+    else if (a === "--timeout") out.timeoutMs = parseTimeoutMs(operand(++i));
+    else if (a === "--header") out.headers.push(operand(++i));
     else if (a === "--raw") out.raw = true;
     else if (a.startsWith("--")) fail(`unknown flag ${a}`);
     else if (out.file === null) out.file = a;
@@ -94,6 +155,28 @@ function pick(obj, keys) {
   return null;
 }
 
+/**
+ * One entry of the documented `models` array:
+ *   { providerId, providerName, modelId, status, content, durationMs, error }
+ * `ok` is content-based, not status-based: a run that returned a status string
+ * we have not seen before but DID return content is still an answer, and one
+ * that reports success with an empty body is not. Judging by the payload rather
+ * than by a label we may not recognise is the safer default in both directions.
+ */
+function normalizeEntry(e) {
+  const text = typeof e?.content === "string" ? e.content : "";
+  const model = String(e?.modelId ?? e?.providerId ?? "unknown");
+  return {
+    model,
+    provider: String(e?.providerName ?? e?.providerId ?? ""),
+    text,
+    ok: text.trim() !== "",
+    ms: Number.isFinite(e?.durationMs) ? e.durationMs : null,
+    status: typeof e?.status === "string" ? e.status : "",
+    error: typeof e?.error === "string" ? e.error : "",
+  };
+}
+
 function extractAnswers(node, acc = [], depth = 0) {
   if (depth > 6 || node === null || typeof node !== "object") return acc;
   if (Array.isArray(node)) {
@@ -114,11 +197,40 @@ function extractAnswers(node, acc = [], depth = 0) {
   return acc;
 }
 
+/**
+ * The router already stores its own token, so making the operator export it by
+ * hand is a step that exists only to be forgotten. Read it if present; return
+ * null and let the caller's error message stand if anything is missing or
+ * unreadable, because a config problem must not masquerade as a token problem.
+ * Never logged or written to disk — only placed in the Authorization header.
+ */
+function tokenFromConfig() {
+  const home = process.env.HOME ?? process.env.USERPROFILE;
+  if (home === undefined || home === "") return null;
+  const cfg = resolve(home, ".omniroute", "config.json");
+  if (!existsSync(cfg)) return null;
+  try {
+    const t = JSON.parse(readFileSync(cfg, "utf8"))?.contexts?.localhost?.accessToken;
+    return typeof t === "string" && t.trim() !== "" ? t : null;
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.file === null) fail("usage: node scripts/ops/chaos-run.mjs <prompt-file> [--url ...] [--out ...]");
 
-  const token = process.env.OMNIROUTE_TOKEN ?? process.env.OMA_TOKEN ?? "";
+  // `??` only falls through on null/undefined, NOT on "". On Windows,
+  // `set OMNIROUTE_TOKEN=` (clearing a var) leaves it as an EMPTY STRING, so
+  // `env.OMNIROUTE_TOKEN ?? ...` sees a defined-but-blank value, takes it, and
+  // never reaches OMA_TOKEN or the config file — the run then fails with
+  // "OMNIROUTE_TOKEN is not set" even though a perfectly good token sits in
+  // ~/.omniroute/config.json. Treat blank (empty or whitespace-only) as absent
+  // instead, so blank/unset behave identically and precedence still holds:
+  // non-blank OMNIROUTE_TOKEN > non-blank OMA_TOKEN > config token.
+  const nonBlank = (v) => (typeof v === "string" && v.trim() !== "" ? v : null);
+  const token = nonBlank(process.env.OMNIROUTE_TOKEN) ?? nonBlank(process.env.OMA_TOKEN) ?? tokenFromConfig() ?? "";
   if (token.trim() === "") {
     fail("OMNIROUTE_TOKEN is not set. cmd:  set OMNIROUTE_TOKEN=oma_live_...\n" +
          "                       PowerShell:  $env:OMNIROUTE_TOKEN=\"oma_live_...\"");
@@ -132,19 +244,35 @@ async function main() {
   // Auth is sent as `authorization: Bearer <token>`. If this router wants a
   // different header instead, pass it rather than editing this file:
   //   --header "x-custom-auth: $OMNIROUTE_TOKEN"
+  //
+  // `authorization` and `content-type` are REFUSED rather than merged. These
+  // values are spread into the request after the defaults, so accepting them
+  // would let a --header silently replace the real credential (or the JSON
+  // content type) with no indication at the call site that it had happened —
+  // the run would just fail auth, or the router would reject the body, and the
+  // cause would be invisible. --header exists to ADD a header for a router
+  // whose auth scheme we do not know, never to replace one we do.
+  const RESERVED = new Set(["authorization", "content-type"]);
   const extraHeaders = {};
   for (const h of args.headers) {
     const at = h.indexOf(":");
     if (at < 1) fail(`--header expects "Name: value", got ${JSON.stringify(h)}`);
-    extraHeaders[h.slice(0, at).trim()] = h.slice(at + 1).trim();
+    const name = h.slice(0, at).trim();
+    if (name === "") fail(`--header has an empty name: ${JSON.stringify(h)}`);
+    if (RESERVED.has(name.toLowerCase())) {
+      fail(`--header may not set ${name}: it would silently override the value this ` +
+           `script already sends.\nAuth goes out as "authorization: Bearer $OMNIROUTE_TOKEN". ` +
+           `If the router wants the token\nunder a different name, add that name — ` +
+           `e.g. --header "x-custom-auth: $OMNIROUTE_TOKEN".`);
+    }
+    extraHeaders[name] = h.slice(at + 1).trim();
   }
 
-  const body = { prompt, mode: "chaos", stream: false };
-  if (args.models !== null) body.models = args.models.split(",").map((m) => m.trim()).filter(Boolean);
+  const body = { task: prompt, maxTokens: args.maxTokens };
 
   const label = basename(promptPath).replace(/\.txt$/i, "");
   process.stdout.write(`Firing ${label} (${prompt.length} chars) at ${args.url}\n`);
-  process.stdout.write(`Timeout ${args.timeout}s. Chaos panels are slow — do not kill this early.\n\n`);
+  process.stdout.write(`Timeout ${args.timeoutMs / 1000}s. Chaos panels are slow — do not kill this early.\n\n`);
 
   const started = Date.now();
   let res;
@@ -157,7 +285,7 @@ async function main() {
         ...extraHeaders,
       },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(args.timeout * 1000),
+      signal: AbortSignal.timeout(args.timeoutMs),
     });
   } catch (e) {
     fail(`request failed: ${e.message}\n` +
@@ -191,25 +319,41 @@ async function main() {
     return;
   }
 
-  const answers = extractAnswers(parsed.value);
+  // Documented shape first; the generic walker only as a fallback if it changes.
+  const entries = Array.isArray(parsed.value?.models) ? parsed.value.models : null;
+  const answers = entries !== null ? entries.map(normalizeEntry) : extractAnswers(parsed.value).map(
+    (a) => ({ model: a.model, provider: "", text: a.text, ok: true, ms: null, error: "" }));
+
   if (answers.length === 0) {
-    process.stdout.write(`Parsed as ${parsed.kind}, but no {model, text} pairs recognised.\n` +
-      `This means UNRECOGNISED SHAPE, not "no answers". Full body:\n\n`);
+    process.stdout.write(`Parsed as ${parsed.kind}, but no model entries recognised.\n` +
+      `This means UNRECOGNISED SHAPE, not "no answers" — the contract may have changed.\n` +
+      `Full body:\n\n`);
     process.stdout.write(JSON.stringify(parsed.value, null, 2).slice(0, 20000));
     return;
   }
 
+  const ok = answers.filter((a) => a.ok);
+  const bad = answers.filter((a) => !a.ok);
+
   const mdPath = resolve(outDir, `${label}-${stamp}.md`);
-  const md = [`# ${label}`, "", `Endpoint: ${args.url}`, `Elapsed: ${elapsed}s`, `Models answering: ${answers.length}`, "",
+  const md = [`# ${label}`, "", `Endpoint: ${args.url}`, `Elapsed: ${elapsed}s`,
+    `Answered: ${ok.length} of ${answers.length}${bad.length > 0 ? ` (${bad.length} failed)` : ""}`, "",
+    ...(bad.length > 0 ? ["## Failed", "", ...bad.map((a) => `- **${a.model}** (${a.provider}) — ${a.error || a.status || "no content"}`), ""] : []),
     "---", "", `## PROMPT SENT`, "", "```", prompt.trim(), "```", "",
-    ...answers.flatMap((a, i) => ["---", "", `## ${i + 1}. ${a.model}`, "", a.text.trim(), ""])].join("\n");
+    ...ok.flatMap((a, i) => ["---", "", `## ${i + 1}. ${a.model}${a.provider ? ` — ${a.provider}` : ""}`, "", a.text.trim(), ""])].join("\n");
   writeFileSync(mdPath, md, "utf8");
 
-  process.stdout.write(`${answers.length} model answer(s). Readable transcript -> ${mdPath}\n\n`);
+  process.stdout.write(`${ok.length} of ${answers.length} answered` +
+    `${bad.length > 0 ? `, ${bad.length} FAILED` : ""}. Transcript -> ${mdPath}\n\n`);
   for (const a of answers) {
+    const secs = a.ms === null ? "" : `${(a.ms / 1000).toFixed(1)}s`.padStart(7);
+    if (!a.ok) {
+      process.stdout.write(`  ${a.model.padEnd(30)}${secs}  FAILED  ${(a.error || a.status || "no content").slice(0, 60)}\n`);
+      continue;
+    }
     const words = a.text.trim().split(/\s+/).length;
     const head = a.text.trim().split("\n").find((l) => l.trim() !== "") ?? "";
-    process.stdout.write(`  ${a.model.padEnd(28)} ${String(words).padStart(5)} words  ${head.slice(0, 90)}\n`);
+    process.stdout.write(`  ${a.model.padEnd(30)}${secs}  ${String(words).padStart(5)}w  ${head.slice(0, 64)}\n`);
   }
 
   process.stdout.write(

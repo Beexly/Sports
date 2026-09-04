@@ -14,10 +14,25 @@ import { getPlate } from "@/lib/visual-production/asset-manifest";
 export const metadata: Metadata = {
   title: "The Command Deck",
   description:
-    "A single operator's intelligence command deck: the owner watching an entire company run itself. Galaxy Sports Edge.",
+    "A single operator's intelligence command deck: the owner watching an entire company run itself. Interface concept — the system readouts and agent states shown are illustrative, not live telemetry. Galaxy Sports Edge.",
   alternates: { canonical: "/deck" },
 };
 
+/*
+ * ILLUSTRATIVE, NOT LIVE.
+ *
+ * SYSTEMS and AGENTS below are fixed design values for an interface concept.
+ * They are NOT read from any running system, and no readout on this page is
+ * wired to telemetry. Every render site is labelled accordingly — see the
+ * banner above the systems grid and the note under the agent fleet.
+ *
+ * Same posture as /airwave's DEMO_PUNDITS and the "Sample · " prefix in
+ * lib/cockpit/mission-control.ts: a concept surface says so in the interface,
+ * not just in a comment. CLAUDE.md rules 1-2 and AGENTS.md law 8 forbid
+ * presenting values like these as observed. If this page is ever wired to real
+ * telemetry, delete these constants rather than editing the numbers, and drop
+ * the labels in the same commit.
+ */
 const SYSTEMS = [
   { name: "Data Ingestion", status: "live", health: 0.92, detail: "12 intake lanes active" },
   { name: "Consensus Engine", status: "live", health: 0.85, detail: "3 models in agreement" },
@@ -75,7 +90,13 @@ export default function DeckPage(): JSX.Element {
         <div className="relative z-30 mx-auto w-full max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
-              <SignalDecode speed={22}>Galaxy Sports Edge · Command Deck</SignalDecode>
+              {/* The label belongs in the FIRST viewport. The systems banner
+                  further down is below a full-screen hero, so a visitor who
+                  bounces early would otherwise read the hero's operational
+                  language as a live claim. */}
+              <SignalDecode speed={22}>
+                Galaxy Sports Edge · Command Deck · Illustrative concept
+              </SignalDecode>
             </p>
             <h1 className="mt-6 font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
               The room where{" "}
@@ -97,7 +118,7 @@ export default function DeckPage(): JSX.Element {
                 href="#systems"
                 className="inline-flex min-h-11 items-center justify-center rounded-xl border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 transition-colors hover:border-orbital-cyan hover:text-ion-white"
               >
-                System status
+                See the concept
               </Link>
             </div>
           </div>
@@ -107,19 +128,41 @@ export default function DeckPage(): JSX.Element {
       {/* ── SYSTEMS HEALTH ─────────────────────────────────────────── */}
       <section id="systems" className="relative border-b border-mineral px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
+          {/* The readouts below are fixed design values, never observed ones.
+              Say so before the reader sees a single number. */}
+          <p
+            data-testid="deck-illustrative-banner"
+            className="mb-12 rounded-ds-md border border-caution/40 bg-caution/[0.06] px-4 py-3 text-sm leading-6 text-ion-1"
+          >
+            <strong className="font-semibold text-ion-white">
+              Illustrative interface concept.
+            </strong>{" "}
+            The health readings, system details and agent states on this page are
+            fixed sample values chosen to show the layout. They are not live
+            telemetry and nothing here reports the real state of any system. For
+            numbers we actually stand behind, see{" "}
+            <Link href="/proof" className="underline hover:text-orbital-cyan">
+              the sealed record
+            </Link>{" "}
+            and{" "}
+            <Link href="/performance" className="underline hover:text-orbital-cyan">
+              the calibration report
+            </Link>
+            .
+          </p>
           <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
             {/* Health ring */}
             <div className="flex flex-col items-center justify-center">
               <HealthRing size={260} health={0.87} />
               <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
-                Overall system health
+                Overall system health · illustrative
               </p>
             </div>
 
             {/* System grid */}
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-                Active systems
+                Active systems · illustrative
               </p>
               <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 Every engine, accountable.
@@ -227,14 +270,17 @@ export default function DeckPage(): JSX.Element {
       <section className="border-b border-mineral px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
-            Agent constellation
+            Agent constellation · illustrative
           </p>
           <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
             A fleet of agents, not a monolith.
           </h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-ion-1">
             Each agent has a role, a state, and a heartbeat. They orbit the core,
-            signal when they need attention, and rest when the work is done.
+            signal when they need attention, and rest when the work is done. The
+            states below are <strong className="text-ion">illustrative</strong> —
+            fixed sample values, not a live read of what any agent is doing right
+            now.
           </p>
 
           <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

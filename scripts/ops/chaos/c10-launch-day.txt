@@ -1,0 +1,334 @@
+!!! SUPERSEDED — DO NOT RUN THIS BRIEF !!!
+Superseded by scripts/ops/chaos/c11-total-launch.txt, which is the only launch brief to run.
+This file is kept for provenance only. It contains claims later found wrong and corrected in c11
+and in docs/data/CALIBRATION_LEAF_DRIFT_6_5_9_5.md. In THIS file, specifically:
+  - AUC 0.4965 / p=0.4113 stated as proof the confidence score carries no information. That is
+    accepting the null, not a finding.
+  - The paragraph beginning "On the value of the leaf model, compared like-for-like". Read it
+    carefully before concluding it is already corrected: it DOES fix the baseline SCOPE (it
+    measures each leaf against the global predictor scored on that leaf, "not against its
+    all-leaf aggregate of 0.2478") and it STILL uses the WRONG CONSTANT. Its q = 55.02% is the
+    TEST mean; scripts/analytics/replay-calibration.ts:439 fits the constant as the TRAINING
+    mean. So "four of five leaves beat the global mean" is WITHDRAWN, not corrected — and the
+    training mean is not printed anywhere, so the comparison is not recoverable from published
+    output in either direction.
+  - "no ability to un-publish or retro-edit" overstates what settlement protects. Pick
+    publication is tamper-evident; settlement is not yet.
+Running this brief would feed a panel premises that have since been withdrawn.
+
+You are one of fifteen independent panels being paid to produce a COMPLETE, DECISION-READY launch package for a sports analytics business that ships TODAY. You are answering in parallel with fourteen others who cannot see your answer, and you cannot see theirs. Where you all converge, the founder will act. Where you diverge, he will investigate. Your job is to be right, not agreeable.
+
+The founder will not run another round of analysis after this. Whatever you leave undecided ships undecided, or does not ship.
+
+Do not be encouraging. Do not congratulate. Do not pad. Do not restate the briefing back to us — we wrote it. Do not ask clarifying questions: decide, and state the assumption you decided under.
+
+You have a hard output budget of roughly 3,000 words. Spend it on decisions, not on prose. A short answer that commits beats a long one that surveys.
+
+================================================================
+PART 0 — HOW TO ANSWER. These rules are checked mechanically.
+================================================================
+
+MARK EVERY LOAD-BEARING CLAIM. Prefix each with one of:
+    [VERIFIED: <the specific thing that would have been observed>]
+    [INFERRED: <the specific test that would confirm it>]
+An unmarked claim is treated as [INFERRED] and discounted. This rule exists because the last round produced a confident boundary claim that turned out to be the opposite of what had been measured — the tester had confirmed that a validator ACCEPTED a value, and reported that the value WORKED. Those are different claims. Do not make that trade.
+
+NEVER GIVE OPTIONS WITHOUT PICKING ONE. "It depends" is a failed answer. If a decision genuinely forks on a fact you do not have, name the fact, pick the branch you would bet on, and say what would flip you.
+
+For every numbered deliverable, give in this order:
+    DECISION   — the commitment, stated flatly
+    WHY        — at most four sentences
+    STRONGEST OBJECTION — the best argument against your own decision, stated as an opponent would state it, not as a strawman you can dismiss
+
+STATE YOUR CONFIDENCE as a percentage on each DECISION. Calibration matters: the founder is running fifteen of you and will weight by stated confidence. Overclaiming is more costly to you than admitting a coin-flip.
+
+================================================================
+PART 1 — THE BUSINESS, AS MEASURED. Every number below came from a
+command that was actually run against real data. None are projections,
+targets, or estimates. Treat them as ground truth. Do not re-derive them.
+================================================================
+
+Galaxy Sports Edge. A sports betting picks platform. Solo founder, launching today.
+Positioning to date: "We're not AI. We're math you can read."
+
+The engine is a DETERMINISTIC FACTOR MODEL — explicit weighted factors, a frozen model
+version, a readable factor breakdown per pick. It is NOT a language model and is never
+described as AI. A language model drafts written content only, and never chooses a pick.
+
+Sports: NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS.
+
+CURRENT PRICING (live Stripe — real cards can be charged today)
+  Free      $0                     tools + methodology, no confidence scores
+  Fantasy   $4.99/mo  | $49/yr     fantasy suite; same free teaser on betting picks
+  Pro       $14.99/mo | $99/yr     full board, confidence scores, factor trail, line
+                                   movement, Trend Lab, Parlay MRI, 7 sports
+  Elite     $24.99/mo | $179/yr    all Pro + real-time email/push alerts + CLV ledger
+Founding rates, grandfathered for life. A named proof-gated ladder exists:
+FOUNDING -> PROVEN (>=100 settled + published calibration) -> ESTABLISHED (>=500 settled
++ verified CLV >=52.4%) -> AUTHORITY (multi-season ROI).
+
+WHAT THE MODEL DOES — frozen model, historical replay, 1999-2025 NFL regular season,
+6,967 games, 15,939 settled picks, ZERO lookahead errors, graded against real closing lines:
+
+    SPREAD     n=6778   48.86%   Wilson CI [47.67%, 50.05%]   ROI  -6.53%
+    TOTAL      n=6868   49.49%   Wilson CI [48.31%, 50.67%]   ROI  -5.44%
+    MONEYLINE  n=2001   76.71%   Wilson CI [74.81%, 78.51%]   ROI  -1.96%
+    OVERALL    n=15647  52.70%   Wilson CI [51.92%, 53.48%]   ROI  -5.48% per unit staked
+
+Break-even at -110 is 52.38%. We do not clear it on a lower confidence bound anywhere.
+The moneyline row is the instructive one: it wins three bets in four and still loses
+money, because it picks heavy favourites at prices that already contain the edge.
+
+CONFIDENCE DOES NOT RANK OUTCOMES. AUC 0.4965, p=0.4113, on 13,646 picks. Not inverted —
+inert. Control variables (line magnitude, rest days, week of season) all sit at ~0.50 too.
+The confidence score, the headline paid feature, currently carries no information about
+whether a pick wins.
+
+INDEPENDENTLY CORROBORATED ON LIVE PRODUCTION PICKS via a different code path: the
+>=80-confidence tail is 152 graded picks, 61 wins, 40% — worse than the average pick.
+Brier resolution 0.005 on 1,663 graded picks. Live data and historical replay agree.
+This is not a replay artifact.
+
+PRECISION NOTE ON THAT NUMBER, because it is easy to get wrong: the AUC 0.4965 came from
+a standalone no-DB analysis script over 13,646 NFL-only picks. The product's OWN
+confidence-discrimination surface is a different thing — its verdict is a two-bucket
+win-rate spread over the last 500 live settled picks, all sports pooled. That surface is
+BUILT BUT DARK: it needs CALIBRATION_PUBLISHED or CALIBRATION_AUTO_PUBLISH (both default
+false) plus an eligibility GREEN, and it short-circuits before touching the database when
+the gate is closed, rendering "Building discrimination history". So the site does not
+today show a visitor what the replay found.
+
+11 MARKET SLICES TESTED (favourite/underdog, four spread bands, over/under, four total
+bands). ZERO cleared break-even on the Wilson lower bound.
+
+THE MARKET CLOSE IS ALREADY NEAR-PERFECTLY CALIBRATED. Walk-forward, pooled Brier 0.2106,
+CI [0.2050, 0.2172], n=2,750. Mean held-out Brier delta vs identity, SIGNED SO THAT
+POSITIVE = BETTER (this is the convention the run printed; Brier itself is lower-is-better,
+so read the sign, not the raw score): isotonic +0.00007, Platt -0.00003, beta -0.00014. So
+the best calibrator we could fit beats doing nothing by seven hundred-thousandths of a
+Brier point, and two of the three are worse than doing nothing. NONE beats identity by more
+than 0.0005. There is nothing left to recalibrate — the closing line already IS the
+calibration.
+
+CLV IS UNMEASURED, NOT DISPROVEN. Our entry line IS the closing line by construction, so
+every pick grades MATCHED_CLOSE. We hold no opening-line archive, for any sport.
+
+ONE OPEN ANOMALY, now characterised: the calibration leaf covering spreads 6.5-9.5 drifts
+65.86% -> 57.12% (n=576, z=-4.42). Cochran's Q across the five leaves is 19.57 on 4 df
+(p=6.07e-04, I-squared 79.6%), which rejects the UNIFORM COMMON-DRIFT MODEL — the five
+leaves did not all move by the same amount. Scope that claim precisely, because it is easy
+to overstate and we did: it does NOT rule out a league-wide effect. A league-wide component
+can coexist with leaf-specific ones, and Q cannot separate them. What is established is
+that the drift is concentrated in the 6.5-9.5 band and the mechanism is unexplained. The
+z-values also treat the training base rate as fixed, so they are optimistic and the
+p-values are lower bounds.
+
+On the value of the leaf model, compared like-for-like — a leaf's Brier is conditional on
+that leaf, so it must be measured against what the global constant predictor scores ON THAT
+LEAF, not against its all-leaf aggregate of 0.2478. With q = 55.02% and
+Brier = p(1-q)^2 + (1-p)q^2: PK-1 +0.0067, 1.5-2.5 +0.0023, 3-6 +0.0005, 10+ +0.0316, and
+6.5-9.5 -0.0072 (positive = leaf model better). So FOUR of the five leaves beat the global
+mean on their own segment and 6.5-9.5 is the ONLY one that loses to it. The weighted leaf
+Brier is 0.2440 against 0.2475 for the global predictor evaluated leaf-by-leaf; the 10+
+leaf's weighted +0.00394 exceeds the whole +0.00349 net on its own, because 6.5-9.5
+subtracts 0.00151. Two leaves also exceed the 0.25 coin-flip line (1.5-2.5 at 0.2501,
+6.5-9.5 at 0.2526) — that comparison is valid because 0.25 is the coin-flip Brier on any
+segment.
+
+WHAT WE HAVE THAT IS GOOD
+- A frozen, versioned, auditable model. Every pick carries sport, game, pick type, line,
+  confidence, tier, generated_at, model_version, and a readable factor breakdown.
+- A settlement and grading pipeline that grades every published pick against real final
+  scores, with no ability to un-publish or retro-edit.
+- Tamper-evident pre-kickoff commitments: picks are hashed and committed before kickoff.
+- 26 CI guardrails including a brand linter, a banned-phrase trust gate, a compliance
+  scanner, a model-freeze guard, and a rights-clearance engine every extraction must pass.
+- Free-first ingestion: nflverse (CC-BY-4.0), ESPN public endpoints, CFB sources. No
+  mandatory paid odds vendor.
+
+WHAT WE DO NOT HAVE
+- Any evidence the picks beat the closing line. We have the opposite.
+- Any evidence the confidence score means anything.
+- Any opening-line archive, so CLV cannot be measured for any sport.
+- Any settled track record on the live product beyond 1,663 graded picks, resolution ~0.
+- Any paying customers. Any marketing channel, list, or audience.
+
+================================================================
+PART 2 — THE CODEBASE, AS READ. Every line below was read out of the
+source by an agent that cited the file. Paths are given so you can reason
+about cost. Nothing here is a guess about what exists.
+================================================================
+
+--- A. SHIPS-BLOCKING DEFECTS ------------------------------------------------
+
+- Premium analytics (snap share, Next Gen, combine, QBR, DFS salaries) served free as HTML to anonymous visitors while the identical JSON API is PRO/ELITE-gated (apps/web/app/players/page.tsx; apps/web/lib/players/views.tsx)
+- Elite's headline "real-time email & push alerts" can never deliver: User.emailVerified is never written by any code path (so always null) and the push opt-in component has zero mount sites (apps/web/lib/settlement-outbox/worker.ts:942; apps/web/components/push/push-alert-opt-in.tsx)
+- "Real-time" is false regardless: the alert delivery cron is every 3 hours, and payloads older than 24h are suppressed as expired (apps/web/vercel.json:25-26; apps/web/lib/settlement-outbox/worker.ts:80)
+- FAQ sells pre-game "signal ships" alerts; the alert doctrine is GRADED-only and no such delivery path exists. Every other surface describes it correctly — the FAQ is the outlier, and it is the page a prospect reads before paying (apps/web/app/faq/page.tsx:93; apps/web/lib/watchlist/alert-eligibility.ts)
+- Advertised "3-day money-back window" has no code behind it: no in-app refund request, no automated revocation (apps/web/app/terms/page.tsx:82-85; apps/web/app/pricing/page.tsx:47,208,636)
+- REFUND_REVOKES_ACCESS defaults off — an issued Stripe refund revokes zero access; the member keeps paid access indefinitely (apps/web/app/api/webhooks/stripe/route.ts)
+- No 21+ age gate anywhere except the checkout POST; homepage, /picks, /board, /promotions and sign-in are all reachable with zero age check (apps/web/app/api/subscriptions/checkout/route.ts:76)
+- Date of birth is validated once at checkout and never persisted — no schema field, so no audit trail of any 21+ attestation ever exists (apps/web/lib/auth/age-gate.ts; packages/db/prisma/schema.prisma)
+- The root layout renders no <Footer>, so legal chrome is opt-in per page: 54 of 158 public page.tsx files carry neither <Footer/> nor FantasyShell, and therefore no Terms, Privacy, responsible-play or 1-800-GAMBLER link at all (apps/web/app/layout.tsx; apps/web/components/ui/footer.tsx)
+- Responsible-gambling distress detection is fully written and never called: detectDistressSignals/routeDistress have no importer outside their own test (apps/web/lib/community/distress-signals.ts)
+- Confirmed settlement mis-grading: the free path matches finals by team + calendar day with no game ID, so a doubleheader pick can grade against the wrong game; zero test coverage (docs/data/LAUNCH_RUNBOOK.md:369-376)
+- PickSignalSnapshot.eligibleForLearning is stamped once at settlement with no backfill — picks settled before both CANONICAL_HISTORY_ENABLED and OUTCOME_LEARNING_ENABLED are on stay permanently excluded from the calibration report and from the 100-settled floor (packages/ingestion-pipeline/src/settle-sport.ts:630; apps/web/lib/board/gate-rows.ts:75; apps/web/app/cockpit/calibration/page.tsx:87)
+- Vercel Hobby caps crons at 1/day and 2 total; vercel.json declares 22 sub-hourly schedules; the GitHub-Actions fallback is documented idle. The repo calls this "the one RED spine item" (docs/data/CARDS_LAUNCH_QA.md:913-923; .github/workflows/external-cron.yml:8-12)
+- PUBLIC_PICKS_ENABLED defaults false — /api/picks 503s every tier including paying members, so a buyer can pay and land on a dark board with nothing in checkout warning them (packages/prediction-engine/src/platform-config.ts:166; apps/web/app/api/picks/route.ts:42-45)
+- The /dashboard?upgraded=true banner renders on the URL parameter alone with no tier check, telling every buyer that confidence scores, factor trail and line movement are now live — including a FANTASY subscriber, who gets none of them (apps/web/app/dashboard/page.tsx)
+- STRIPE_TERMS_CONSENT_ENABLED ordering trap: flipping it before setting a public Terms URL in the Stripe Dashboard makes Stripe reject every Checkout Session — a total checkout outage. The dependency exists only as a code comment (apps/web/lib/stripe.ts:318-328)
+- /deck publishes fabricated live health scores and agent states ("scanning", "alert: Source lag detected") with no label, full public chrome and no gate. FIXED 2026-09-04 — now labelled illustrative (apps/web/app/deck/page.tsx:21-38)
+- espn-odds-client.ts and espn-schedule-seed.ts — the fetchers writing every Game row and the free odds path — bypass the clearance engine entirely, with no assertIngestible/isIngestible guard (packages/data-ingestion/src/espn-odds-client.ts; espn-schedule-seed.ts)
+- The public /data page lists ESPN as "Refused" while ESPN is the live primary source for scores, odds and settlement across all 7 sports; its own rights row says storage_allowed:false yet its data is persisted and displayed on the paid board (apps/web/app/data/page.tsx; apps/web/lib/scraping/source-rights-registry.ts:241-242)
+- Up to ~12 board-fill/signal passes per hour hit ESPN's undocumented endpoints, against a source the repo's own registry classifies as prohibiting high-volume automated access (apps/web/vercel.json; packages/ingestion-pipeline/src/process-sport.ts)
+- The free score/settlement chain resolves to ESPN alone for every sport — the declared secondaries have no clearance registry row and are refused at runtime (apps/web/lib/data-sources/multi-source-scores.ts:67-83)
+- HEALTH_ALERT_WEBHOOK_URL "confirmed ABSENT in Vercel production" per a prior audit — ops paging is dark (handoff/LAUNCH_BLOCKERS.md:79)
+- No cookie-consent banner and no CCPA "Do Not Sell" mechanism, despite setting NextAuth session cookies (apps/web/middleware.ts:24-29; apps/web/app/privacy/page.tsx)
+- terms/page.tsx carries a header comment saying the copy must be reviewed by counsel before paid checkout is enabled. Stripe live keys have been in production since 2026-07-09, so its own precondition is unmet and nothing records a review (apps/web/app/terms/page.tsx)
+
+--- B. BUILT BUT INVISIBLE ---------------------------------------------------
+
+- /blog: DB-backed blogPost model plus a content-publishing worker, fully built and gated dark (PUBLIC_BLOG_ENABLED default false); one inbound link, behind login, absent from the sitemap (apps/web/app/blog/page.tsx; apps/web/app/dashboard/page.tsx:402)
+- /watchlist: a shipped, DB-backed, tier-aware follow feature — and the entry point for the Elite alerts — with zero inbound links from nav, footer, palette or sitemap. Reachable only by typing the URL (apps/web/app/watchlist/page.tsx)
+- /stats: 26 fully-built StatKing pages that all 404 by default (STATS_PUBLIC=false); robots.ts disallows the tree, yet the global footer still links to it (apps/web/app/stats/layout.tsx; apps/web/app/robots.ts)
+- /journal: a research-notes hub feeding sitemap.xml, news-sitemap.xml and an RSS alternate declared in the root layout, with zero inbound internal links from nav, footer, mobile nav or palette (apps/web/app/journal/page.tsx)
+- /calibration/market: real Brier/ECE/reliability on the de-vigged closing moneyline over the nflverse 1999-present archive — the one credible number showable on day zero with no settled picks — with zero inbound links and absent from the sitemap (apps/web/app/calibration/market/page.tsx)
+- /preview/[sport]/[slug]: up to 120 programmatic-SEO matchup pages, sitemap-only orphans with no internal UI link anywhere (apps/web/app/preview/[sport]/[slug]/page.tsx)
+- /edge-index, the free-badge distribution play: triple-orphaned (no inbound links, absent from sitemap) and its embed snippet ships a hardcoded EXAMPLE_ID the visitor is told to replace by hand. The /embed target it advertises is correctly built (apps/web/app/edge-index/page.tsx)
+- /deck, /sealed and /case-studies/aws-governed-sports-intelligence have zero inbound links from anywhere in app/, components/ or lib/
+- alert-dispatch.ts (205 lines) and settlement-hook.ts (223 lines) are dead in production — worker.ts bypasses both and calls sendWebPushAlert/sendAlertEmail directly. settlement-hook.ts's own header claims the worker invokes it; it does not (apps/web/lib/watchlist/alert-dispatch.ts; apps/web/lib/watchlist/settlement-hook.ts)
+- model Alert + enum AlertChannel — the confidence-threshold alert product the FAQ describes — has zero code references anywhere in the repo (packages/db/prisma/schema.prisma:894-910,1479-1482)
+- The command palette exposes 30 routes globally (fantasy/connect, autopilot, league-twin, gm-ledger, academy, scheme) that are absent from the visible nav entirely (apps/web/components/ui/command-palette.tsx)
+- capture-route-error.ts's "3-route pilot" for posting route errors to the health webhook has zero call sites — the pilot never happened (apps/web/lib/observability/capture-route-error.ts)
+- /promotions is a fully-built sportsbook-promotions directory that can never render a row: the operator registry holds zero APPROVED_PARTNER entries. It is also orphaned but crawlable (apps/web/app/promotions/page.tsx; apps/web/lib/cockpit/operator-registry.ts)
+- Four entitlement flags are declared, typed and test-pinned with no consumer anywhere: canSeeMultiprob, canSeeGlassLedger, canSeeRecompute, canUseFantasyDraftSuite (packages/types/src/index.ts)
+- /glass-ledger is shipped and permanently empty: even with PUBLISH_LEDGER on it hardcodes seasons: [], calibration: null, significance: null — the flag unlocks only the shape (apps/web/lib/ledger/ledger-view.ts:85)
+
+--- C. GATES AND FLAGS THAT DECIDE WHAT A VISITOR SEES ------------------------
+
+- PUBLIC_PICKS_ENABLED (default false, packages/prediction-engine/src/platform-config.ts:166) — off means /api/picks and /picks 503 to every tier; the entire paid board is dark
+- CANONICAL_HISTORY_ENABLED (default false, platform-config.ts:164) — off means picks are stamped isBootstrap=true, and /proof, /ledger, /performance, /clv, /performance/losses, the calibration report and the Edge Index badge all read empty
+- OUTCOME_LEARNING_ENABLED (default false, platform-config.ts:172) — off means eligibleForLearning is never true. NOT RETROACTIVE: stamped once at settlement, no backfill
+- PERFORMANCE_STATS_ENABLED (default false, platform-config.ts:168) — off means /performance, /clv and /api/performance stay dark
+- CALIBRATION_PUBLISHED / CALIBRATION_AUTO_PUBLISH (both default false, apps/web/lib/calibration/calibration-publish-policy.ts:54-60) — off means the confidence-discrimination panel renders "Building discrimination history" and short-circuits before the database
+- PUBLIC_BLOG_ENABLED (default false, platform-config.ts:167) — off means /blog renders empty and every /blog/[slug] 404s
+- FORCE_NO_BET_IF_STALE (default false, platform-config.ts:175) — off means a board serving hours-old rows shows no staleness banner
+- WATCHLIST_ALERTS_ENABLED (default false, apps/web/lib/watchlist/alert-dispatch.ts:92-96) — off means no settlement email or push ever dispatches. NOTE: on does not help; see the recipient-layer defect in section A
+- STATS_PUBLIC (default false, apps/web/app/stats/layout.tsx) — off means all 26 /stats/* pages notFound()
+- CONTESTS_PUBLIC (default false, apps/web/app/fantasy/contests/page.tsx) — off means Contest Bay and /contests both notFound()
+- PUBLISH_LEDGER (default false, apps/web/app/glass-ledger/page.tsx:158) — off means /glass-ledger renders a sealed refusal state and noindex, while the sitemap still lists it
+- REFUND_REVOKES_ACCESS (default off, log-only) — off means an issued refund revokes zero access
+- STRIPE_TERMS_CONSENT_ENABLED (default off, apps/web/lib/stripe.ts:326) — off means checkout records no ToS acceptance; on before a Stripe-side Terms URL breaks checkout entirely
+
+--- D. GENUINELY STRONG — do not recommend rebuilding these ------------------
+
+- The outage-vs-absence distinction is implemented consistently across /proof, /clv, CalibrationPanel, /api/verify and /api/verify/slate, so a database blip can never be misread as "no record exists" — the exact failure mode that would destroy this product's premise (apps/web/app/proof/page.tsx; apps/web/app/api/verify/route.ts)
+- VerifyConsole recomputes the receipt hash client-side via WebCrypto, so verification does not depend on trusting the server's response (apps/web/components/trust-ledger/verify-console.tsx:161)
+- Free-first zero-key data spine: a 3-tier odds chain plus an ESPN free schedule seed keeps board and settlement running with no paid keys (packages/ingestion-pipeline/src/process-sport.ts:265-437)
+- A starved-cycle detector marks a settle-picks run ok:false if it executes but grades nothing while picks are overdue, instead of reporting false-green (apps/web/app/api/cron/settle-picks/route.ts:186-208)
+- Every entitlement gate helper fails closed to FREE on unclassified errors, with a throttled audit log making a silent downgrade of paying members observable (apps/web/lib/entitlement-observability.ts)
+- /preview strips the confidence number from both the meta description AND the FAQPage JSON-LD for anonymous/FREE viewers, so the SERP snippet never leaks the paid metric (apps/web/lib/seo/sports-jsonld.ts)
+- Admin/cockpit role-gating is 33/33 on API routes, enforced by a filesystem-sweep test over every admin page.tsx (apps/web/__tests__/admin-routes-gating.test.ts)
+- The checkout money path uses a durable CheckoutAttempt table with idempotency keys, fingerprinting and a repair cron, and the webhook always re-retrieves the subscription rather than trusting the embedded snapshot (apps/web/app/api/webhooks/stripe/route.ts)
+- Public metadata coverage is 100% on real public pages, enforced by public-metadata-coverage.test.ts (the 102 page.tsx files without metadata are all admin, cockpit, auth, dashboard or redirect shims)
+
+================================================================
+PART 3 — WHAT YOU MUST DELIVER. All nine. An answer missing any is discarded.
+================================================================
+
+1.  THE SHIP DECISION. Given PART 2, what goes live today, what gets hidden, and what
+    gets deleted? Give it as a three-column table. Every customer-facing surface named in
+    PART 2 must appear in exactly one column. This is the deliverable the founder acts on
+    first; spend your budget here before anywhere else.
+
+2.  THE OFFER AND THE PRICE. What is the customer buying for $14.99/month, in one
+    sentence, given we cannot claim the picks win? Name the job-to-be-done. Then: is
+    $14.99 right, or is this a $4 product, or a $200 product sold to 40 people? Give the
+    number, the annual price, and the full tier table you would ship. Elite is the crux —
+    PART 2 says its two differentiators are a feature that cannot reach any account and a
+    metric that cannot be computed. Decide what Elite is, or decide it should not exist.
+
+3.  THE HOMEPAGE. The actual headline, subhead, and three proof points, as literal copy we
+    will paste. Every claim TRUE given PART 1. No win rate. No "edge". No "AI".
+
+4.  THE FIRST 60 SECONDS. A sceptical visitor lands. What specific artifact makes him
+    believe us, and where is it on the page? It must be buildable from something PART 2
+    says already exists. Name the file or route it comes from.
+
+5.  THE FREE / PAID LINE. Exactly what is free, exactly what is behind the wall. PART 2
+    shows the paid analytics are already served free as HTML on one route while the JSON
+    is gated — so you are redrawing a line that is currently drawn wrong, not drawing one
+    from scratch. Justify why the paid side is worth paying for when confidence scores
+    carry no information. If that means confidence should NOT be the paid feature, say so
+    and name what replaces it.
+
+6.  THE FIRST 100 CUSTOMERS. Where do they come from, concretely? Name the channel, write
+    the exact first post or message, and say why that audience responds. "Content
+    marketing" and "SEO" are not answers unless you name the specific piece and the
+    specific query.
+
+7.  THE EDGE ROADMAP. Three untested hypotheses, ranked. For each: the mechanism (who is
+    on the other side of this trade and why are they wrong), the exact computable test,
+    a PRE-REGISTERED PASS THRESHOLD, and your prior it survives.
+
+    On that threshold, be careful — 52.38% is break-even ONLY at a fixed -110. PART 1
+    contains the counterexample: a 76.71% moneyline win rate that still loses 1.96% per
+    unit, because those prices already contain the edge. A win-rate bar is therefore the
+    right instrument only for a fixed-price market. So: if your test is confined to
+    -110-priced markets, give the threshold as a Wilson lower bound against 52.38%. If it
+    touches variable prices — any moneyline, any alternate line, anything bought at a
+    number that moves — give a price-aware threshold instead (price-weighted ROI,
+    expected value per unit staked, or CLV in basis points), and say which you chose and
+    why. A hypothesis whose threshold does not match its market is a failed answer.
+
+    BANNED because already tested and dead: confidence-based selection,
+    line-magnitude bands, favourite/underdog, over/under, total-size bands, rest
+    differential, week of season, "recalibrate the model", "collect more data", "use
+    machine learning", "ensemble more models".
+
+8.  THE ORDERED FIX LIST. From PART 2's defects only. Three buckets — BEFORE DEPLOY /
+    THIS WEEK / NEVER — with every defect assigned to exactly one, and one clause of
+    reasoning each. NEVER is a real and respectable bucket; a solo founder cannot fix
+    everything and pretending otherwise is how nothing ships. Be willing to put real
+    defects in it.
+
+9.  THE RANKED KILL LIST. The five things most likely to kill this business within 90
+    days, most likely first. For each: the early warning signal he would actually see, and
+    the specific mitigation. Rank strictly — no ties.
+
+================================================================
+PART 4 — RULES. Breaking one voids your entire answer.
+================================================================
+
+- NEVER propose fabricating, cherry-picking, backfilling, or selectively publishing a
+  performance number, or presenting the historical replay as a live track record. The
+  entire premise of this business is that it does not lie about its own performance. One
+  invented number makes every other number suspect. An answer that softens this is worse
+  than no answer.
+- NEVER propose anything that requires the picks to beat the close. That is the assumption
+  under test and it currently fails.
+- NEVER describe the engine as AI, machine learning, or a neural network in customer-facing
+  copy you write. It is a deterministic factor model. This is enforced by a CI linter and
+  a copy scanner; a violation is a build failure, not a style note.
+- NEVER invent a URL, a licence clause, a price, a statute, or a citation. We will open
+  every URL and read every clause. One fabricated citation destroys your whole answer.
+  Write LICENCE UNKNOWN, PRICE UNKNOWN, or NOT SURE.
+- NEVER answer "wait until there is a track record." That is a plan to have no business
+  for a year. If that is genuinely your answer to a section, say it in one sentence and
+  move on — a stated dead end is worth more than an invented path.
+- NEVER recommend flipping a gate or env flag as a way to make a number appear. The gates
+  in PART 2 are the honesty boundary. Recommending one be opened is legitimate ONLY when
+  you say what earns it.
+
+================================================================
+PART 5 — FINISH WITH THIS
+================================================================
+
+RANK YOUR OWN PACKAGE HONESTLY. Most "honest analytics" plays in sports betting die
+because honesty is not a feature anyone pays for: customers say they want transparency and
+buy confidence. If your package is a version of that dead idea, say so, and either fix it
+or concede the point. A panel that concedes here and explains why is more useful than one
+that does not notice.
+
+Then, the single sentence you would say to this founder if you had five seconds and he was
+about to press deploy.
