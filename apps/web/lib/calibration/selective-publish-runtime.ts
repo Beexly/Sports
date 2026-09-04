@@ -141,6 +141,19 @@ function makeDurableCache<T>(
   let cached: { value: T | null; at: number } | undefined;
   let failedAt = 0;
   let inFlight: Promise<T | null> | undefined;
+  /**
+   * Bumped by `clear()`. A read captures it at the moment it starts and may
+   * only write back if it still matches.
+   *
+   * Without this, `clear()` merely forgot the in-flight promise — it could not
+   * stop it. The ops route writes a new pause and calls
+   * `clearSelectiveRuntimeCaches()`, but a read that started BEFORE the write
+   * is still running; when it lands it would store the pre-write snapshot for
+   * a full freshness window, so the pause the founder just enabled is ignored
+   * for 60 seconds. Its `finally` would also clear a NEWER in-flight promise,
+   * breaking single-flight for whoever was waiting on that one.
+   */
+  let generation = 0;
 
   return {
     async get(): Promise<T | null> {
@@ -153,9 +166,15 @@ function makeDurableCache<T>(
       if (now - failedAt < DURABLE_FAILURE_BACKOFF_MS) return cached?.value ?? null;
       if (inFlight) return inFlight;
 
-      inFlight = (async (): Promise<T | null> => {
+      const startedAt = generation;
+      const current = (async (): Promise<T | null> => {
         try {
           const result = await read();
+          // Superseded by a clear() while we were reading. Answer our own
+          // callers — they asked before the write — but never write back.
+          if (startedAt !== generation) {
+            return result.status === "ok" ? result.value : null;
+          }
           if (result.status === "error") {
             failedAt = Date.now();
             return cached?.value ?? null;
@@ -166,7 +185,7 @@ function makeDurableCache<T>(
           // The dynamic import itself failed, or the reader threw unexpectedly.
           // Unavailability, not absence — do not store it as a value, and do
           // not swallow it silently.
-          failedAt = Date.now();
+          if (startedAt === generation) failedAt = Date.now();
           console.error(
             `[selective-publish] ${label} could not be read: ${redactErrorDetail(err)}. ` +
               "Treating as UNAVAILABLE (not 'not set'); serving the last known value " +
@@ -174,13 +193,19 @@ function makeDurableCache<T>(
           );
           return cached?.value ?? null;
         }
-      })().finally(() => {
-        inFlight = undefined;
+      })();
+
+      inFlight = current;
+      void current.finally(() => {
+        // Only retract our OWN handle. A superseded read must not clear the
+        // in-flight promise a later caller is waiting on.
+        if (inFlight === current) inFlight = undefined;
       });
 
-      return inFlight;
+      return current;
     },
     clear(): void {
+      generation += 1;
       cached = undefined;
       failedAt = 0;
       inFlight = undefined;

@@ -56,6 +56,21 @@ const PAST_FRESHNESS_MS = 61_000;
 
 let errorSpy: ReturnType<typeof vi.spyOn>;
 
+/**
+ * Wait until the delegate has actually been entered `n` times.
+ *
+ * The caches reach the delegate through a dynamic `import()`, so a read that
+ * has been *started* has not necessarily *called* `findFirst` yet. Releasing a
+ * deferred promise before its own call ran would resolve nothing and hang the
+ * test, so the race cases below wait on the call count rather than assuming an
+ * ordering that only holds by luck.
+ */
+async function waitForDelegateCalls(n: number): Promise<void> {
+  for (let i = 0; i < 500 && findFirstMock.mock.calls.length < n; i += 1) {
+    await Promise.resolve();
+  }
+}
+
 beforeEach(async () => {
   // reset, not clear: clearAllMocks wipes call records but LEAVES
   // implementations, so a `mockResolvedValue(null)` from an earlier case would
@@ -98,6 +113,11 @@ describe("durable ranking-pause read: failure is not an absence", () => {
   it("does not re-query on every call while the read is failing", async () => {
     // Property 2. Not storing the failure is right; retrying it per candidate
     // pick is a stampede against a database that is already down.
+    //
+    // Fake timers on purpose: under real time the assertion below only holds
+    // if all 25 iterations finish inside the 5s backoff window, so a scheduling
+    // stall would turn a correct implementation into a red test.
+    vi.useFakeTimers();
     const { getCachedRankingPauseDurable } = await import(
       "@/lib/calibration/selective-publish-runtime"
     );
@@ -211,6 +231,87 @@ describe("durable ranking-pause read: failure is not an absence", () => {
     vi.advanceTimersByTime(PAST_BACKOFF_MS);
     findFirstMock.mockResolvedValueOnce({ metadata: SNAP, full_text: null });
     expect((await getCachedRankingPauseDurable())?.enabled).toBe(true);
+    expect(findFirstMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("a read that started before clear() must not repopulate the cache", async () => {
+    // THE RACE. The ops route writes a new pause and calls
+    // clearSelectiveRuntimeCaches(), but a read that began BEFORE the write is
+    // still in flight. Without a generation token it lands afterwards and
+    // stores the PRE-WRITE snapshot for a full freshness window — so the pause
+    // the founder just enabled is ignored for 60 seconds.
+    vi.useFakeTimers();
+    const { getCachedRankingPauseDurable, clearSelectiveRuntimeCaches } = await import(
+      "@/lib/calibration/selective-publish-runtime"
+    );
+
+    // Hold the first read open.
+    let releaseStale: (row: unknown) => void = () => undefined;
+    findFirstMock.mockImplementationOnce(
+      () => new Promise((resolve) => {
+        releaseStale = resolve;
+      }),
+    );
+    const stalePending = getCachedRankingPauseDurable();
+    await waitForDelegateCalls(1);
+
+    // The durable write lands and invalidates the cache mid-read.
+    clearSelectiveRuntimeCaches();
+
+    // A fresh read sees the new state.
+    findFirstMock.mockResolvedValueOnce({
+      metadata: { ...SNAP, groups: ["g-new"] },
+      full_text: null,
+    });
+    expect((await getCachedRankingPauseDurable())?.groups).toEqual(["g-new"]);
+
+    // Only NOW does the superseded read resolve, carrying the old snapshot.
+    releaseStale({ metadata: { ...SNAP, groups: ["g-old"] }, full_text: null });
+    await stalePending;
+
+    // It must not have overwritten the post-write value.
+    expect((await getCachedRankingPauseDurable())?.groups).toEqual(["g-new"]);
+  });
+
+  it("a superseded read does not retract a newer in-flight read", async () => {
+    // The same race seen from the single-flight side: the stale promise's
+    // `finally` used to clear whatever `inFlight` happened to hold, including a
+    // newer read that other callers were already waiting on.
+    vi.useFakeTimers();
+    const { getCachedRankingPauseDurable, clearSelectiveRuntimeCaches } = await import(
+      "@/lib/calibration/selective-publish-runtime"
+    );
+
+    let releaseStale: (row: unknown) => void = () => undefined;
+    findFirstMock.mockImplementationOnce(
+      () => new Promise((resolve) => {
+        releaseStale = resolve;
+      }),
+    );
+    const stalePending = getCachedRankingPauseDurable();
+    await waitForDelegateCalls(1);
+    clearSelectiveRuntimeCaches();
+
+    let releaseFresh: (row: unknown) => void = () => undefined;
+    findFirstMock.mockImplementationOnce(
+      () => new Promise((resolve) => {
+        releaseFresh = resolve;
+      }),
+    );
+    const freshFirst = getCachedRankingPauseDurable();
+    await waitForDelegateCalls(2);
+
+    // Stale lands first and must leave the fresh in-flight handle alone.
+    releaseStale({ metadata: SNAP, full_text: null });
+    await stalePending;
+
+    // A caller arriving now joins the FRESH read rather than starting a third.
+    const freshSecond = getCachedRankingPauseDurable();
+    releaseFresh({ metadata: { ...SNAP, groups: ["g-new"] }, full_text: null });
+
+    expect((await freshFirst)?.groups).toEqual(["g-new"]);
+    expect((await freshSecond)?.groups).toEqual(["g-new"]);
+    // One stale read + one fresh read. A third would mean single-flight broke.
     expect(findFirstMock).toHaveBeenCalledTimes(2);
   });
 
