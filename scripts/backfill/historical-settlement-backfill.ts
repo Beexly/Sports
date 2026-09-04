@@ -101,7 +101,17 @@ function int(v: string | undefined): number | null {
   return n === null ? null : Math.round(n);
 }
 
-function toRawRow(r: Readonly<Record<string, string>>): RawScheduleRow | null {
+/**
+ * Convert an nflverse-convention spread (positive = home favored) to the repo
+ * convention (negative = home favored). Preserves null; -0 is normalised to 0 so a
+ * pick'em line never reads as a signed zero downstream.
+ */
+export function negateOrNull(v: number | null): number | null {
+  if (v === null) return null;
+  return v === 0 ? 0 : -v;
+}
+
+export function toRawRow(r: Readonly<Record<string, string>>): RawScheduleRow | null {
   const season = int(r["season"]);
   const week = int(r["week"]);
   const homeTeam = r["home_team"];
@@ -121,7 +131,19 @@ function toRawRow(r: Readonly<Record<string, string>>): RawScheduleRow | null {
     homeTeam,
     awayTeam,
     commenceTime,
-    spreadLine: num(r["spread_line"]),
+    // SIGN FLIP — not cosmetic. nflverse `spread_line` is POSITIVE = home favored;
+    // `RawScheduleRow.spreadLine` (and scoring/settlement/clv) are NEGATIVE = home
+    // favored. Passing the raw column through put every backfilled SPREAD pick on
+    // the WRONG TEAM. Verified against the live games.csv on 2026-09-04:
+    // corr(spread_line, result) = +0.4260 over n=7276 rows with both populated,
+    // same-sign 4810 vs opposite-sign 2420; and 2007_08_WAS_NE (the 16-0 Patriots
+    // at home, won 52-7) carries spread_line = +15. Unnegated, the frozen model
+    // published "WAS -15.0" at confidence 64 — Washington laying 15 on the road to
+    // an undefeated team — while its own moneyline pick on the same game was
+    // "NE ML (-1225)". Negated, it publishes "NE -15.0" at confidence 71, WIN.
+    // The repo's own edge-lab loader (edge-lab/loaders/nfl-games.ts:172) already
+    // negates for exactly this reason.
+    spreadLine: negateOrNull(num(r["spread_line"])),
     totalLine: num(r["total_line"]),
     homeMoneyline: int(r["home_moneyline"]),
     awayMoneyline: int(r["away_moneyline"]),
@@ -403,7 +425,15 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
   }
 }
 
-main().catch((err) => {
-  console.error("\nbackfill fatal:", err);
-  process.exit(1);
-});
+// Run ONLY when invoked as a CLI. Without this guard, importing anything from this
+// file (a unit test on toRawRow, for instance) would kick off the whole backfill —
+// a network fetch, and with BACKFILL_WRITE=1 set, real DB writes. The pure mappers
+// above are exported so they can be pinned by tests; that is only safe if importing
+// the module has no side effects.
+const invokedDirectly = (process.argv[1] ?? "").includes("historical-settlement-backfill");
+if (invokedDirectly) {
+  main().catch((err) => {
+    console.error("\nbackfill fatal:", err);
+    process.exit(1);
+  });
+}
