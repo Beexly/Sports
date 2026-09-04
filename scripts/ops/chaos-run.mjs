@@ -56,12 +56,24 @@ function parseArgs(argv) {
     }
     return v;
   };
+  // `Number("abc")` is NaN and `Number("-5")` is negative; both used to sail
+  // through to `AbortSignal.timeout(x * 1000)`, which throws a RangeError from
+  // Node internals that this script then reported as "request failed: ..." —
+  // pointing the operator at the router when the fault was their own argument.
+  // Validate here so the message names the real mistake.
+  const seconds = (v) => {
+    const n = Number(v);
+    if (!Number.isFinite(n) || n <= 0) {
+      fail(`--timeout must be a positive number of seconds, got ${JSON.stringify(v)}`);
+    }
+    return n;
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--url") out.url = operand(++i);
     else if (a === "--out") out.dir = operand(++i);
     else if (a === "--models") out.models = operand(++i);
-    else if (a === "--timeout") out.timeout = Number(operand(++i));
+    else if (a === "--timeout") out.timeout = seconds(operand(++i));
     else if (a === "--header") out.headers.push(operand(++i));
     else if (a === "--raw") out.raw = true;
     else if (a.startsWith("--")) fail(`unknown flag ${a}`);
