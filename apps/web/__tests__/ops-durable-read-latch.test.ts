@@ -69,6 +69,11 @@ async function waitForDelegateCalls(n: number): Promise<void> {
   for (let i = 0; i < 500 && findFirstMock.mock.calls.length < n; i += 1) {
     await Promise.resolve();
   }
+  // Fail HERE, not later. Giving up silently leaves the deferred promise's
+  // no-op default resolver in place, so the caller hangs on `await` until the
+  // 60s Vitest timeout and the report blames the wrong step. (This is not
+  // hypothetical — the first draft of the second race case did exactly that.)
+  expect(findFirstMock.mock.calls.length).toBeGreaterThanOrEqual(n);
 }
 
 beforeEach(async () => {
