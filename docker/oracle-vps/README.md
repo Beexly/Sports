@@ -1,7 +1,11 @@
 # Oracle Cloud Always-Free VPS — deploy runbook
 
-Stand up the $0 self-host box: self-hosted **henrygd** (no rate cap), **Redis** for BullMQ,
+Stand up the $0 self-host box: self-hosted **henrygd** (no rate cap), **Redis**,
 **Ollama** for the internal-LLM tier, behind **Caddy** auto-TLS. Everything here is free.
+
+> **Redis here is unused capacity, not a queue.** `bullmq` is installed nowhere in this
+> repo and no application code reads `REDIS_URL`. Do not describe the platform as
+> queue-backed. See `workers/README.md`.
 
 > Honest flags (from the leverage audit): Oracle Always-Free signup needs a real credit card
 > + ID, and idle ARM instances have been reclaimed historically — keep it busy / pin your
@@ -37,10 +41,19 @@ HENRYGD_NCAA_BASE_URL=https://ncaa.<domain>
 #  - or Groq free tier:  INTERNAL_LLM_BASE_URL=https://api.groq.com/openai/v1 + key
 ```
 
-## 5. (Optional) Run the BullMQ workers here too
-Add a `Dockerfile` under `workers/<name>/`, uncomment the `worker-*` service in `compose.yml`,
-put `DATABASE_URL` + `REDIS_URL=redis://:<pass>@redis:6379` in `.env`, and `compose up -d`.
-This moves the queue + workers fully off any paid host.
+## 5. (Optional, and currently broken) Run the standalone workers here too
+The three `worker-*` services in `compose.yml` are already declared, not commented out, and
+their Dockerfiles already exist under `workers/<name>/Dockerfile`. Put `DATABASE_URL` +
+`REDIS_URL=redis://:<pass>@redis:6379` in `.env` and `compose up -d`.
+
+> **They will not start as written.** Every worker `CMD` is
+> `npx ts-node --esm src/index.ts`, which fails on Node 20 with
+> `ERR_UNKNOWN_FILE_EXTENSION`, and the `data-refresh` deps stage never copies
+> `packages/stats-api/package.json` despite `@sports/stats-api` being a declared
+> dependency. These are also not queue consumers: `pick-generation` and
+> `content-publishing` are run-once stubs and `data-refresh` is a `setTimeout`
+> loop whose work is already covered by `/api/cron/refresh-odds` and
+> `/api/cron/settle-picks`. Read `workers/README.md` before spending time here.
 
 ## What this saves
 Managed Redis (Upstash) + a paid VPS + the henrygd rate cap + paid LLM inference for internal
