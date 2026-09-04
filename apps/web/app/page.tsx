@@ -26,10 +26,16 @@ import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 
 export const dynamic = "force-dynamic";
 
+// The description names only always-on free surfaces. It used to promise
+// "paper contests" — that is Contest Bay, which is opt-in behind
+// CONTESTS_PUBLIC and 404s while the flag is off
+// (apps/web/lib/launch/public-surface-gate.ts). A static metadata string
+// cannot read that gate, so it must not advertise the surface at all.
+// Pinned by apps/web/__tests__/free-tier-gate-coupling.test.ts.
 export const metadata: Metadata = {
   title: "A Sports Intelligence Operating System",
   description:
-    "Galaxy Sports Edge turns market noise into structured signal: free calculators, methodology, paper contests, and a gated board that refuses forced action until the sample is honest. We detect. You decide.",
+    "Galaxy Sports Edge turns market noise into structured signal: free calculators, methodology, the Academy, and a gated board that refuses forced action until the sample is honest. We detect. You decide.",
   alternates: { canonical: "/" },
 };
 

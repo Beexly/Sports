@@ -16,10 +16,15 @@ import { NextRequest } from "next/server";
 import { GET as getPicks } from "@/app/api/picks/route";
 import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 
+// "paper contests" dropped from the description: that is Contest Bay, opt-in
+// behind CONTESTS_PUBLIC and a 404 while the flag is off
+// (apps/web/lib/launch/public-surface-gate.ts). A static metadata string cannot
+// read the gate, so it names the always-on free surfaces instead.
+// Pinned by apps/web/__tests__/free-tier-gate-coupling.test.ts.
 export const metadata: Metadata = {
   title: "Today's Signals — Galaxy Sports Edge",
   description:
-    "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark — no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
+    "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark — no invented slate, no certainty theater. Methodology, tools, and the Academy remain free.",
   alternates: { canonical: "/picks" },
 };
 
