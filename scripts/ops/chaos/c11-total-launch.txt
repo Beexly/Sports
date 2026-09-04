@@ -99,15 +99,35 @@ NO EVIDENCE THAT CONFIDENCE RANKS OUTCOMES. AUC 0.4965, p=0.4113, on 13,646 pick
 State this precisely, because the loose version is a real statistical error and it was in an
 earlier draft of this brief: p=0.4113 means we FAILED TO REJECT the null of no discrimination. It
 does NOT establish the null. "The confidence score carries no information" is accepting the null
-hypothesis and this test does not license it. What IS licensed: at n=13,646 the test had ample
-power to detect a commercially usable ranking signal and found none, so any real effect is small
-enough to be useless — but "small" is not "zero", and the feature's information content is
-UNESTABLISHED, not disproven. Do not write copy, or build an argument, that depends on it being
-exactly zero.
+hypothesis and this test does not license it.
 
-CORROBORATED ON LIVE PRODUCTION PICKS via a different code path: the >=80-confidence tail is 152
-graded picks, 61 wins, 40% — worse than the average pick. Brier resolution 0.005 on 1,663 graded
-picks. Live and replay agree. Not a replay artifact.
+What IS licensed is a BOUND, not a point. The run publishes the AUC and the p-value but no
+interval; inverting the two-sided p gives |z| = 0.822 and therefore SE ~ 0.0043, so
+[INFERRED, from the published AUC and p rather than a reported SE — have the script print its own
+interval to confirm]:
+
+    95% CI on AUC          [0.4882, 0.5048]
+    smallest effect this n could detect at 80% power     AUC 0.512 or better
+
+So the data rules OUT a usable ranking signal — anything at or above ~0.505 is outside the
+interval — while remaining consistent with a small non-zero effect. The honest statement is
+"no usable discrimination, and none detectable at this sample size", NOT "carries no
+information." Do not write copy, or build an argument, that depends on the effect being exactly
+zero.
+
+A SECOND, WEAKER SIGNAL FROM LIVE PRODUCTION PICKS, via a different code path: the
+>=80-confidence tail is 152 graded picks, 61 wins, 40.1%. Brier resolution 0.005 on 1,663 graded
+picks.
+
+Do not lean on this the way an earlier draft did. It said the tail was "worse than the average
+pick" and that "live and replay agree" — both unsupported as written. The first needs the LIVE
+all-pick win rate over the same window, which is not published here; comparing 40.1% against the
+REPLAY's 52.70% is a different population, a different era and a different code path. The second
+calls two different statistics agreeing when one is an AUC over 13,646 NFL replay picks and the
+other is a raw tail win rate over 152 live picks across all sports. What the live number
+independently supports is narrow and still useful: a resolution of 0.005 on 1,663 picks means the
+confidence buckets barely separate outcomes in production either. State it that way. To make the
+tail claim properly, print the live all-pick win rate for the same window alongside it.
 
 PRECISION NOTE, because this was gotten wrong once: the AUC 0.4965 came from a standalone no-DB
 script over 13,646 NFL-only picks. The product's OWN confidence-discrimination surface is a
@@ -212,7 +232,12 @@ wrong on this project, twice by asserting more than the data licensed.
 WHAT WE HAVE THAT IS GOOD
 - Frozen, versioned, auditable model. Every pick carries sport, game, pick type, line, confidence,
   tier, generated_at, model_version, and a readable factor breakdown.
-- Settlement and grading against real final scores, with no ability to un-publish or retro-edit.
+- Settlement and grading against real final scores. SCOPE THIS CAREFULLY, because an earlier
+  draft of this brief overstated it and contradicted its own PART 2: what is immutable is the
+  PUBLISHED PICK — hashed and committed before kickoff, with no un-publish and no retro-edit. The
+  GRADE is not equally protected: PART 2 records that `?path=free` can overwrite an
+  already-settled score from a disagreeing source, and that the free path matches finals by team
+  plus calendar day with no game ID. Pick publication is tamper-evident; settlement is not yet.
 - Tamper-evident pre-kickoff commitments: picks hashed and committed before kickoff.
 - 26 CI guardrails: brand linter, banned-phrase trust gate, compliance scanner, model-freeze
   guard, rights-clearance engine every extraction must pass.
