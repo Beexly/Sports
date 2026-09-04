@@ -121,6 +121,19 @@ describe("redactErrorDetail", () => {
     expect(ip).not.toContain("10.1.2.3");
   });
 
+  it("redacts a host-only DNS failure, which carries no port at all", () => {
+    // `getaddrinfo ENOTFOUND db.internal` matched none of the other patterns —
+    // they all require a port or a scheme — so the internal hostname went to
+    // the log verbatim. DNS failures are among the commonest a driver emits.
+    const enotfound = redactErrorDetail(new Error(`getaddrinfo ENOTFOUND ${SENTINEL_HOST}`));
+    expect(enotfound).not.toContain(SENTINEL_HOST);
+    expect(enotfound).toContain("<redacted-host>");
+    expect(enotfound).toMatch(/ENOTFOUND/); // the diagnosis survives
+
+    const eaiAgain = redactErrorDetail(new Error(`getaddrinfo EAI_AGAIN ${SENTINEL_HOST}`));
+    expect(eaiAgain).not.toContain(SENTINEL_HOST);
+  });
+
   it("redacts the port even with whitespace around the colon", () => {
     const out = redactErrorDetail(
       new Error(`Can't reach database server at ${SENTINEL_HOST} : 5432`),

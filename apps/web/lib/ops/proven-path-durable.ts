@@ -117,6 +117,14 @@ export async function readProvenPathPlan(): Promise<ProvenPathReadResult> {
     ) {
       throw new Error("durable proven-path payload is malformed (missing pauseGroups/defaultDelta)");
     }
+    // Every ENTRY must be a string, not just the array. Consumers ask
+    // `pauseGroups.includes(groupKey)` against string keys like "nfl|SPREAD"
+    // (proven-path-engine.ts:354,362; projected-proven-metrics.ts:110), so a
+    // numeric entry matches nothing — the group quietly is NOT paused while the
+    // plan reports "ok" and gets cached as control state.
+    if (!shape.pauseGroups.every((g) => typeof g === "string")) {
+      throw new Error("durable proven-path payload is malformed (non-string pauseGroups entry)");
+    }
     return { status: "ok", plan: raw as ProvenPathPlan };
   } catch (err) {
     const message = errMessage(err);

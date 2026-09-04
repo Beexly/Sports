@@ -222,6 +222,15 @@ describe("durable ranking-pause read: failure is not an absence", () => {
       full_text: null,
     });
     expect((await readRankingPauseApply()).status).toBe("error");
+
+    // Nor is one whose entries are not strings: `map(String)` would turn 42
+    // into "42", which matches no real group key — the pause would report
+    // itself enabled while suppressing nothing.
+    findFirstMock.mockResolvedValueOnce({
+      metadata: { enabled: true, groups: ["nfl|SPREAD", 42] },
+      full_text: null,
+    });
+    expect((await readRankingPauseApply()).status).toBe("error");
   });
 
   it("does not store a malformed row as a value — the cache retries it", async () => {
@@ -424,6 +433,20 @@ describe("durable proven-path read: failure is not an absence", () => {
     expect((await readProvenPathPlan()).status).toBe("error");
 
     findFirstMock.mockResolvedValueOnce({ metadata: null, full_text: "not json at all" });
+    expect((await readProvenPathPlan()).status).toBe("error");
+  });
+
+  it("refuses a plan whose pauseGroups contains a non-string entry", async () => {
+    // The array check alone was not enough. Consumers ask
+    // `pauseGroups.includes(groupKey)` against strings like "nfl|SPREAD", so a
+    // numeric entry matches nothing: the group is quietly NOT paused while the
+    // plan reports "ok" and is cached as control state.
+    const { readProvenPathPlan } = await import("@/lib/ops/proven-path-durable");
+
+    findFirstMock.mockResolvedValueOnce({
+      metadata: { pauseGroups: ["nfl|SPREAD", 42], defaultDelta: 0.05 },
+      full_text: null,
+    });
     expect((await readProvenPathPlan()).status).toBe("error");
   });
 

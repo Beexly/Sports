@@ -136,6 +136,12 @@ export async function readRankingPauseApply(): Promise<RankingPauseReadResult> {
     if (!Array.isArray(snap.groups)) {
       throw new Error("durable ranking-pause payload is malformed (groups is not an array)");
     }
+    // And every entry must already BE a string. `map(String)` would coerce 42
+    // into "42", which matches no real group key — the pause would report
+    // itself as enabled while suppressing nothing.
+    if (!snap.groups.every((g) => typeof g === "string")) {
+      throw new Error("durable ranking-pause payload is malformed (non-string group entry)");
+    }
     return {
       status: "ok",
       snap: {

@@ -61,6 +61,14 @@ const DOTTED_HOST_PORT =
  * the container-network shape, e.g. "connect ECONNREFUSED db:6379". Anchoring
  * on the keyword is what makes it safe to match a host with no dot in it.
  */
+/**
+ * A DNS failure names the host with NO port at all — `getaddrinfo ENOTFOUND
+ * db.internal` — so none of the patterns above touch it and the internal
+ * hostname went to the log verbatim. Anchored on the errno so it cannot eat
+ * ordinary words.
+ */
+const DNS_HOST_ONLY = /\b(ENOTFOUND|EAI_AGAIN)\s+([a-z0-9][a-z0-9.-]*)/gi;
+
 const CONNECT_HOST_PORT =
   /\b(ECONNREFUSED|ETIMEDOUT|EHOSTUNREACH|ENOTFOUND|connection to|connect(?:ing)? to)\s+\S+?\s*:\s*\d{2,5}\b/gi;
 
@@ -98,6 +106,7 @@ export function redactErrorDetail(error: unknown, maxChars = MAX_DETAIL_CHARS): 
     .replace(URL_WITH_AUTHORITY, "<redacted-url>")
     .replace(DB_SERVER_AT, "$1<redacted-host>")
     .replace(CONNECT_HOST_PORT, "$1 <redacted-host>")
-    .replace(DOTTED_HOST_PORT, "<redacted-host>");
+    .replace(DOTTED_HOST_PORT, "<redacted-host>")
+    .replace(DNS_HOST_ONLY, "$1 <redacted-host>");
   return sanitizeLogField(redacted, maxChars);
 }
