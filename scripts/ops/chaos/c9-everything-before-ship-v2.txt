@@ -1,0 +1,110 @@
+SUPERSEDES c8-everything-before-ship.txt. Same job, sharper facts, and one new rule the previous version lacked.
+
+You are a panel being paid to produce a COMPLETE, DECISION-READY launch package for a sports analytics business that ships TODAY. The founder will not do another round of analysis after this. Whatever you leave undecided, ships undecided or does not ship at all.
+
+Do not be encouraging. Do not congratulate. Do not pad. Do not ask clarifying questions — decide, and state the assumption you decided under.
+
+================================================================
+PART 0 — THE ONE RULE THAT MATTERS MOST
+================================================================
+
+For every factual claim you make, you must be able to say what you would OBSERVE that distinguishes it from its opposite. If you cannot, mark the claim INFERRED, not verified.
+
+This is not philosophy. It is the specific failure mode that cost this project the most time in the last 24 hours: someone checked that a validator ACCEPTED a value and then reported that the value WORKED. Those are different claims. The first was tested; the second was published. It was wrong, and it was wrong twice in a row, each time inside a fix for the previous instance.
+
+So: mark every claim in your answer as [VERIFIED: here is the observation] or [INFERRED: here is what would test it]. An answer whose claims are all unmarked is discarded. An answer that marks its own weakest claim INFERRED is worth more than one that sounds certain throughout.
+
+================================================================
+PART 1 — VERIFIED STATE. Every number came from a command that was actually run against real data. Treat as ground truth; do not re-derive.
+================================================================
+
+THE BUSINESS
+Galaxy Sports Edge. A sports betting picks platform. Solo founder, launching today.
+Positioning: "We're not AI. We're math you can read."
+The engine is a DETERMINISTIC FACTOR MODEL — explicit weighted factors, a frozen model version, a readable factor breakdown per pick. NOT an LLM. An LLM drafts written content only, never chooses a pick.
+Sports: NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS.
+
+PRICING (live Stripe, real cards chargeable today)
+  Free     $0                     2 picks/day teaser, NO confidence scores, public calibration + track record
+  Pro      $14.99/mo | $99/yr     full board, confidence scores, factor trail, line movement, trend tools, 7 sports
+  Elite    $24.99/mo | $179/yr    all Pro + real-time alerts + CLV / line-value ledger
+  Fantasy  $4.99/mo  | $49/yr     fantasy suite only; same free teaser on betting picks
+Founding rates grandfathered for life. Ladder: FOUNDING -> PROVEN (>=100 settled + published calibration) -> ESTABLISHED (>=500 settled + verified CLV >=52.4%) -> AUTHORITY (multi-season ROI).
+
+THE CORE MEASUREMENT — frozen model, 1999-2025 NFL regular season, 6,967 games, 15,939 settled picks, ZERO lookahead errors, graded against real closing lines:
+
+    SPREAD     n=6778   48.86%   Wilson CI [47.67%, 50.05%]   ROI  -6.53%
+    TOTAL      n=6868   49.49%   Wilson CI [48.31%, 50.67%]   ROI  -5.44%
+    MONEYLINE  n=2001   76.71%   Wilson CI [74.81%, 78.51%]   ROI  -1.96%
+    OVERALL    n=15647  52.70%   Wilson CI [51.92%, 53.48%]   ROI  -5.48% per unit staked
+
+Break-even at -110 is 52.38%. Not cleared on a lower bound anywhere. The moneyline row is the instructive one: it wins three bets in four and still loses money, because it picks heavy favourites at prices that already contain the edge.
+
+CONFIDENCE CARRIES NO INFORMATION. AUC 0.4965, p=0.4113, on 13,646 picks. Not inverted — inert. Controls (line magnitude, rest days, week) all ~0.50.
+CORROBORATED ON LIVE PRODUCTION PICKS via a different code path: the >=80-confidence tail is 152 graded picks, 61 wins, 40%. Brier resolution 0.005 on 1,663 graded picks. Replay and live agree.
+11 MARKET SLICES TESTED (favourite/dog, four spread bands, over/under, four total bands). ZERO cleared break-even on the Wilson lower bound.
+THE CLOSE IS ALREADY CALIBRATED. Walk-forward pooled Brier 0.2106, CI [0.2050, 0.2172], n=2,750. Best recalibrator (isotonic) improves it by +0.00007.
+CLV IS UNMEASURED, NOT DISPROVEN. Entry line IS the close by construction, so every pick grades MATCHED_CLOSE. No opening-line archive exists, for any sport.
+
+NEW SINCE THE LAST VERSION OF THIS BRIEF — two findings that change what you can propose:
+
+(1) THE CALIBRATION LEAF MODEL IS MOSTLY DEAD WEIGHT. Train <=2015, evaluate 2016-2025, five spread-band leaves. Per-leaf Brier against a 0.2478 global single-mean baseline and the 0.25 coin-flip line:
+
+      PK-1      0.2490   worse than global
+      1.5-2.5   0.2501   worse than global AND worse than coin-flip
+      3-6       0.2500   worse than global
+      6.5-9.5   0.2526   worse than global AND worse than coin-flip
+      10+       0.1979   better than both
+
+    FOUR of five leaves lose to the global mean. The weighted leaf model (0.2440) beats it only because the 10+ leaf carries the other four.
+    The 6.5-9.5 leaf also drifts hard: train base 65.86%, test actual 57.12%, n=576, z=-4.42, p=9.7e-06 (Bonferroni 4.9e-05).
+    A single league-wide cause is FORMALLY REJECTED, not hand-waved: Cochran's Q = 19.57 on 4 df, p = 6.07e-04, I-squared = 79.6%; and 6.5-9.5 (-8.74pp) against the other four pooled (+0.59pp) gives z = -4.17, p = 3.03e-05. The effect is concentrated in that band and the mechanism is UNEXPLAINED.
+    Caveat, stated because it is real: these z-values treat the training base rate as fixed, so they are optimistic and the p-values are lower bounds.
+
+(2) THE PRODUCT ALREADY TELLS THE TRUTH ABOUT ITS OWN CONFIDENCE SCORE, WITHOUT ANYONE EDITING COPY. The performance surface asks the customer, in the product, "Does higher confidence win more?" and renders one of four states computed from settled picks (minimum 20 per bucket, 0.02 tolerance band): "Confidence ranks picks correctly" / "Confidence is not separating outcomes yet" / "Higher confidence is winning less. Under review" / "Building discrimination history". Given AUC 0.4965 it will render one of the middle two on its own. A minimum-sample floor means a thin bucket never displays a win-rate number at all.
+    Also verified: NO numeric performance claim exists anywhere in customer-facing copy.
+
+    This matters for your answer. The honest-calibration surface is not something to build. It exists. Proposals whose novelty is "be transparent about calibration" are proposing a feature that shipped.
+
+WHAT WE STILL DO NOT HAVE
+Any evidence the picks beat the close. Any evidence confidence means anything. Any opening-line archive. Any settled track record beyond 1,663 graded picks with resolution ~0. Any paying customers. Any marketing channel, list, or audience.
+
+================================================================
+PART 2 — DELIVER ALL FOURTEEN. A missing section discards the answer.
+================================================================
+
+Each section: the DECISION, then REASONING in at most four sentences, then the STRONGEST OBJECTION to your own decision. Never options without a pick. "It depends" is a failure. Mark claims [VERIFIED] / [INFERRED] per PART 0.
+
+1.  THE OFFER. What is the customer buying for $14.99/month, in one sentence, given we cannot claim the picks win? Name the job-to-be-done.
+2.  THE PRICE. Is $14.99 right for what you just described? Or is this $4/mo, or $200/mo to 40 people? Give a number, an annual price, and reasoning. Restructure the tiers if you would.
+3.  THE HOMEPAGE. Actual headline, subhead, three proof points, as literal paste-ready copy. Every claim TRUE given PART 1. No win rate. No "edge". No "AI".
+4.  THE FIRST 60 SECONDS. What specific artifact makes a sceptic believe us, and where is it? Note that the calibration/discrimination surface already exists — so either use it deliberately, or say why something else should lead.
+5.  THE FREE / PAID LINE. Exactly what is free, what is behind the wall. The hard part: confidence scores are the headline paid feature and carry no information (AUC 0.4965). Decide whether they stay paid, become free, or stop being sold as a feature — and if they stop, what replaces them at $14.99.
+6.  THE GUARANTEE. Refund policy given no proven edge. Window, conditions, who eats the cost.
+7.  THE FIRST 100 CUSTOMERS. Concretely: the channel, the exact first post or message, why that audience responds. "Content marketing" and "SEO" are not answers unless you name the specific piece and the specific query.
+8.  THE CHURN DEFENCE. What brings him back in week 3, before any track record exists? Name the mechanic.
+9.  THE MOAT. What stops a funded competitor shipping this in three weeks? Name the asset, switching cost, or compounding loop. "We move faster" is not a moat.
+10. THE EDGE ROADMAP. Three most promising untested hypotheses, ranked. For each: the mechanism (who is on the other side and why are they wrong), the exact computable test, the pre-registered pass threshold as a Wilson lower bound against 52.38%, and your prior it survives. BANNED, already tested and dead: confidence-based selection, line-magnitude bands, favourite/underdog, over/under, total-size bands, rest differential, week of season, "recalibrate the model", "collect more data", "use machine learning", "ensemble more models".
+11. THE CLV PROBLEM. We need a historical OPENING-line archive. Must permit COMMERCIAL use of DERIVED outputs; obtainable WITHOUT scraping behind a login or paywall and without violating terms of service; per-game granularity; 3+ seasons. Name real sources with real licences. If you do not KNOW a licence, write LICENCE UNKNOWN — do not infer one from a project's reputation or from its being on GitHub. If no free source qualifies, say so and name the cheapest PAID one with its actual price and actual derived-commercial-use terms.
+12. THE LEGAL AND COMPLIANCE FLOOR. What must be on the site day one and plausibly is not: responsible-gambling provisions, age gating, state/jurisdiction handling, disclaimers, terms, affiliate posture. Be concrete about what a US operator actually needs.
+13. THE 90-DAY KILL RISK. Five things most likely to kill this in 90 days, most likely first. Each with its early warning signal and specific mitigation.
+14. WHAT TO CUT. What should NOT ship today. A solo founder shipping seven sports, four tiers, alerts, a CLV ledger, trend tools and a fantasy suite is doing too much. Name the cut and why that one.
+
+BONUS, answer only if you have something real: given finding (1), should the calibration leaf model be switched off entirely rather than repaired? Four of five leaves lose to a single global mean. State what evidence would settle it.
+
+================================================================
+PART 3 — RULES. Breaking one voids the answer.
+================================================================
+
+- NEVER propose fabricating, cherry-picking, backfilling, or selectively publishing a performance number, or presenting the replay as a live track record. This business's entire premise is that it does not lie about its own performance. One invented number makes every other number suspect.
+- NEVER propose anything requiring the picks to beat the close. That is the assumption under test and it currently fails.
+- NEVER describe the engine as AI, machine learning, or a neural network in customer-facing copy. It is a deterministic factor model. Hard brand constraint, enforced by a CI linter.
+- NEVER invent a URL, licence clause, price, statute, or citation. We will open every URL and read every clause. One fabrication destroys the whole answer. Write LICENCE UNKNOWN, PRICE UNKNOWN, NOT SURE.
+- NEVER answer "wait until there is a track record." That is a plan to have no business for a year. If it is genuinely your answer to a section, say it in one sentence and move on.
+- Do not repeat PART 1 back to us. We wrote it.
+
+Rank your own package honestly at the end. Most "honest analytics" plays in sports betting die because honesty is not a feature anyone pays for: customers say they want transparency and buy confidence. Note that this project has ALREADY BUILT the transparency surface — so if your package rests on it, you are betting on the thing that usually fails, with the build cost already sunk. Say whether that changes your view or not.
+
+Then finish with two things:
+  (a) the single sentence you would say to this founder if you had five seconds and he was about to press deploy;
+  (b) the one claim in your own answer you are least sure of, and the cheapest experiment that would settle it.
