@@ -107,6 +107,13 @@ export const DEFAULT_REPLAY_SPORT_KEY = "americanfootball_nfl";
 export interface HistoricalReplayOptions {
   /** Sport key for scoring AND settlement. Default `DEFAULT_REPLAY_SPORT_KEY`. */
   readonly sportKey?: string;
+  /**
+   * Totals side-selection tie-break (Wave 5). "strict" → only discriminating
+   * books vote; exact tie → no total pick. Undefined → legacy behaviour.
+   * Threaded into the scoring context so before/after replay replays differ
+   * ONLY in the tie-break.
+   */
+  readonly totalsTiebreak?: "legacy" | "strict";
 }
 
 function sportKeyOf(options?: HistoricalReplayOptions): string {
@@ -296,6 +303,10 @@ export function buildHistoricalOddsInput(
       hasSpreadMarket: features.spreadLine !== null,
       hasTotalMarket: features.totalLine !== null,
       hasH2HMarket: features.homeMoneyline !== null && features.awayMoneyline !== null,
+      // Wave 5 before/after replay: thread the totals tie-break mode so the
+      // replay differs from the live default ONLY in the tie-break. Undefined
+      // for live callers → legacy behaviour, unchanged.
+      totalsTiebreak: options?.totalsTiebreak,
     },
   };
 }
