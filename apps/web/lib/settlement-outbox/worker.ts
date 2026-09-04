@@ -1132,9 +1132,17 @@ const HEALTH_DELIVERY_STATUSES = [
 ];
 const HEALTH_EVENT_STATUSES = ["PENDING", "EXPANDED", "DELIVERED", "COMPLETED_WITH_FAILURES", "FAILED"];
 
+/** One row per distinct status. Shape verified against Prisma's generated
+ *  `PickSettlement{Event,Delivery}GroupByArgs`: `by: ["status"]` with
+ *  `_count: true` yields `{ status, _count: number }`. */
+type StatusGroup = { status: string; _count: number };
+
+interface StatusGroupingTable {
+  groupBy(args: { by: ["status"]; _count: true }): Promise<StatusGroup[]>;
+}
+
 interface CountingDb {
-  pickSettlementEvent: {
-    count(args: { where: Record<string, unknown> }): Promise<number>;
+  pickSettlementEvent: StatusGroupingTable & {
     findMany(args: {
       where: Record<string, unknown>;
       orderBy: Record<string, unknown>;
@@ -1142,9 +1150,23 @@ interface CountingDb {
       select: Record<string, unknown>;
     }): Promise<Array<{ createdAt: Date }>>;
   };
-  pickSettlementDelivery: {
-    count(args: { where: Record<string, unknown> }): Promise<number>;
-  };
+  pickSettlementDelivery: StatusGroupingTable;
+}
+
+/** Fold a grouped result into a dense record. `groupBy` returns NO row for a
+ *  status with zero rows, so every expected status is pre-seeded to 0: a
+ *  missing key would read as "no data" where the truth is "zero". Statuses
+ *  outside the expected list are still surfaced rather than dropped. */
+function densifyStatusCounts(
+  groups: StatusGroup[],
+  expected: readonly string[],
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const status of expected) counts[status] = 0;
+  for (const group of groups) {
+    counts[group.status] = (counts[group.status] ?? 0) + group._count;
+  }
+  return counts;
 }
 
 /** Per-state counts, queue depth and oldest-pending age. `ok` is false when
@@ -1159,14 +1181,14 @@ export async function getSettlementOutboxHealth(
   const db = dbArg as CountingDb;
   const reasons: string[] = [];
   try {
-    const deliveryCounts: Record<string, number> = {};
-    for (const status of HEALTH_DELIVERY_STATUSES) {
-      deliveryCounts[status] = await db.pickSettlementDelivery.count({ where: { status } });
-    }
-    const eventCounts: Record<string, number> = {};
-    for (const status of HEALTH_EVENT_STATUSES) {
-      eventCounts[status] = await db.pickSettlementEvent.count({ where: { status } });
-    }
+    // One grouped scan per table instead of eleven sequential counts. This is
+    // load reduction, not a behaviour change: the returned shape is identical.
+    const [deliveryGroups, eventGroups] = await Promise.all([
+      db.pickSettlementDelivery.groupBy({ by: ["status"], _count: true }),
+      db.pickSettlementEvent.groupBy({ by: ["status"], _count: true }),
+    ]);
+    const deliveryCounts = densifyStatusCounts(deliveryGroups, HEALTH_DELIVERY_STATUSES);
+    const eventCounts = densifyStatusCounts(eventGroups, HEALTH_EVENT_STATUSES);
     const oldest = await db.pickSettlementEvent.findMany({
       where: { status: { in: ["PENDING", "EXPANDED"] } },
       orderBy: { createdAt: "asc" },
