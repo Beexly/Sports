@@ -114,13 +114,23 @@ WITHDRAWN. A permutation p is not a normal-tail probability, so the inversion wa
 method — not merely an unconfirmed number, an invalid one. Marking it INFERRED did not save it,
 which is the lesson: a label on a claim does not repair the method that produced it.
 
-So: NO published interval on this AUC, and NO power statement. To get one, extend
-replay-discrimination.ts to compute a bootstrap or DeLong interval over the underlying samples
-(it must handle ties — the AUC already uses average ranks for them) and rerun. Until that is run,
-the defensible statement is exactly: observed AUC 0.4965 on 13,646 picks, permutation p = 0.4113,
-no evidence of discrimination, and the magnitude of any true effect UNQUANTIFIED. Do not write
-copy, or build an argument, that depends on the effect being exactly zero — or on it being
-bounded.
+One further limitation, which does NOT overturn the finding but belongs on the record. The
+permutation shuffles pick labels INDEPENDENTLY, while a single game can contribute more than one
+pick — so strict exchangeability does not hold. Two things bound how much that matters here:
+replay-discrimination.ts:135 excludes MONEYLINE entirely (`if (p.pickType === "MONEYLINE")
+continue`), which removes the strongest within-game dependence, and 6778 spread + 6868 total =
+13,646 confirms the set is spread and total only — clusters of at most two, whose outcomes are
+only weakly related. Positive within-game correlation inflates the true variance, which makes the
+true p LARGER than the one reported. A non-significant result therefore stays non-significant
+under clustering; this could only have threatened a SIGNIFICANT finding, and there isn't one.
+
+So: NO published interval on this AUC, and NO power statement. To get either, extend
+replay-discrimination.ts to retain a game key and use a CLUSTERED resampling method — game-level
+permutation, and a game-level bootstrap or DeLong variant rather than pick-level — handling ties
+as the AUC already does with average ranks. Until that is run, the defensible statement is
+exactly: observed AUC 0.4965 on 13,646 spread-and-total picks, permutation p = 0.4113, no
+evidence of discrimination, magnitude of any true effect UNQUANTIFIED. Do not write copy, or
+build an argument, that depends on the effect being exactly zero — or on it being bounded.
 
 A SECOND, WEAKER SIGNAL FROM LIVE PRODUCTION PICKS, via a different code path: the
 >=80-confidence tail is 152 graded picks, 61 wins, 40.1%. Brier resolution 0.005 on 1,663 graded
