@@ -48,6 +48,75 @@ one. One season is not evidence of an edge; it is evidence of a wide interval.
 entirely — a completed season, and the most recent and relevant one. Adding it moved
 the headline from 52.647% to 52.700% and changed no conclusion.
 
+## The headline number is misleading, and the breakdown is worse
+
+`scripts/analytics/replay-breakdown.ts` splits the identical corpus by market. It
+changes the conclusion, so read this before the section above.
+
+```
+── BY PICK TYPE ────────────────────────────────────────────────────────
+SPREAD      n= 6778   48.86%  CI [47.67%, 50.05%]  ROI -6.53%  push 189
+TOTAL       n= 6868   49.49%  CI [48.31%, 50.67%]  ROI -5.44%  push  99
+MONEYLINE   n= 2001   76.71%  CI [74.81%, 78.51%]  ROI -1.96%  push   4
+
+── OVERALL ─────────────────────────────────────────────────────────────
+all picks   n=15647   52.70%  CI [51.92%, 53.48%]  ROI -5.48%  push 292
+```
+
+**52.70% is an artifact of mixing markets priced differently.** Moneyline wins
+76.71% of the time because the engine only publishes it on heavy favourites
+(empirically around −350), where each win pays about 0.29 units rather than 0.91.
+Counting those wins equally with −110 wins pulls the blended *rate* above break-even
+while the *money* goes the other way. A win rate computed across mixed odds is not a
+meaningful statistic.
+
+**The honest single number is ROI: −5.48% per unit staked.** Every market is
+negative, moneyline included — it wins three of every four bets and still loses money.
+The model does not have "no edge." It has a negative edge, roughly the size of the vig.
+
+### Confidence runs backwards
+
+```
+── BY CONFIDENCE (spread + total only) ─────────────────────────────────
+70-79   n= 3770   48.33%  CI [46.74%, 49.92%]  ROI -7.52%
+65-69   n= 9693   49.47%  CI [48.47%, 50.46%]  ROI -5.46%
+60-64   n=  183   51.37%  CI [44.17%, 58.50%]  ROI -1.91%
+```
+
+Higher confidence, worse results. The 70-79 band (n=3,770) underperforms the 65-69
+band (n=9,693) by 1.14 points, and both are well-sampled — this is not noise at the
+top. The 60-64 row is only 183 picks with an interval from 44% to 58%, so nothing
+should be read into its position.
+
+On this corpus the confidence score is not merely uninformative, it is **mildly
+anti-informative** — which is a direct problem for `PREMIUM_CONFIDENCE_THRESHOLD = 70`
+and for any tier ladder that prices off it. A pick labelled "high conviction" was, on
+27 seasons of history, the worse bet.
+
+### It has never worked, in any era
+
+```
+1999-2005  n=3454  48.90%  ROI -6.49%
+2006-2012  n=3494  49.86%  ROI -4.70%
+2013-2019  n=3517  49.22%  ROI -5.93%
+2020-2025  n=3181  48.70%  ROI -6.93%
+```
+
+Flat and consistently negative. There is no decayed golden age to recover and no
+market-efficiency trend to blame — the spread/total model has never beaten the close.
+
+### What this does and does not license saying
+
+It does license: *"measured against 27 seasons of closing lines, our spread and
+total picks lose about 5-6% of stake, and our confidence score does not rank them."*
+
+It does not license concluding the model is worthless for every purpose. Everything
+here is measured **against the closing line**, the hardest available benchmark, with
+synthetic book depth. A live operation betting into earlier, softer numbers is a
+different measurement — that is what CLV exists to test, and this corpus structurally
+cannot show it. But the confidence inversion is not explained by any of that: it is
+an internal property of the model, visible on any benchmark.
+
 ## Read this before quoting the number
 
 Three caveats, all of which cut against over-claiming:
