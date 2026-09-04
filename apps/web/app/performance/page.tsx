@@ -19,6 +19,7 @@ import {
 import type { PickType, PickTier } from "@sports/types";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 
 // Reads settled picks and calibration state from the database on every request
 // (.claude/rules/nextjs-caching.md): never let Next memoise this page.
@@ -130,14 +131,16 @@ export default async function PerformancePage() {
   // Gate closed: bootstrap state only. No DB query, no track-record claim.
   if (!gates.canExposePerformanceStats) {
     const demoActive = isStubMode() && isDemoPicksEnabled();
-    const startOfDay = new Date();
-    startOfDay.setUTCHours(0, 0, 0, 0);
+    // ONE day definition (UTC calendar day — lib/time/day-boundary.ts). This
+    // page was already UTC-anchored; it now reads the SHARED definition so the
+    // number here and the board's "published today" can never drift apart.
+    const today = utcDayWindow(new Date());
     const todayPickCount = await db.pick
       .count({
         where: {
           isPublished: true,
           result: "PENDING",
-          generatedAt: { gte: startOfDay },
+          generatedAt: { gte: today.start },
         },
       })
       .catch(() => 0);

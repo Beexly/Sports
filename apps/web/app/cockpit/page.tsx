@@ -25,7 +25,7 @@ import { summarizeAgentHealth } from "@/lib/agents/agent-health";
 import { loadCommandCenterFeed } from "@/lib/command-center/feed";
 import type { OwnerAttentionItem } from "@/lib/command-center/types";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
-import { startOfDay, endOfDay } from "date-fns";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export const dynamic = "force-dynamic";
@@ -35,12 +35,15 @@ export default async function CockpitOverview() {
   const stubMode = isStubMode();
   const demoActive = isDemoPicksEnabled() && stubMode;
   const now = new Date();
+  // ONE day definition (UTC calendar day — lib/time/day-boundary.ts), resolved
+  // once from `now` and shared by every "today" query on this page.
+  const today = utcDayWindow(now);
 
   const todayPicksForOperator = await db.pick
     .count({
       where: {
         isPublished: true,
-        generatedAt: { gte: startOfDay(now), lte: endOfDay(now) },
+        generatedAt: { gte: today.start, lte: today.endInclusive },
       },
     })
     .catch(() => 0);
@@ -49,7 +52,7 @@ export default async function CockpitOverview() {
     .findMany({
       where: {
         isPublished: true,
-        generatedAt: { gte: startOfDay(now), lte: endOfDay(now) },
+        generatedAt: { gte: today.start, lte: today.endInclusive },
       },
       include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: [{ generatedAt: "desc" }],

@@ -15,7 +15,8 @@ import { reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
 import { BRAND_NAME } from "@/lib/brand";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
-import { subDays, format, startOfDay, endOfDay } from "date-fns";
+import { subDays, format } from "date-fns";
+import { utcDayWindow } from "@/lib/time/day-boundary";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export const dynamic = "force-dynamic";
@@ -99,6 +100,12 @@ export default async function DashboardPage({
   // pick without confidence; PRO+ sees the full slate with confidence.
   const entitlements = await getUserEntitlements(user.id);
   const phaseName = getCurrentPricingPhase().name;
+  // ONE day definition (UTC calendar day — lib/time/day-boundary.ts), from ONE
+  // clock read. The two queries below each opened their own runtime-local
+  // date-fns day window off a SEPARATE `new Date()`, so the member's today's-picks
+  // list and the "N published today" count it is compared against could be built
+  // from different instants — and, across midnight, from different days.
+  const today = utcDayWindow(new Date());
 
   const [
     todayPicks,
@@ -120,7 +127,7 @@ export default async function DashboardPage({
           isPublished: true,
           isBootstrap: false,
           ...excludeSeedInProd,
-          generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
+          generatedAt: { gte: today.start, lte: today.endInclusive },
           ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
@@ -138,7 +145,7 @@ export default async function DashboardPage({
         where: {
           isPublished: true,
           ...excludeSeedInProd,
-          generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
+          generatedAt: { gte: today.start, lte: today.endInclusive },
         },
       })
       .catch(() => 0),
