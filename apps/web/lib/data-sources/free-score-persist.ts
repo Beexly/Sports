@@ -107,6 +107,13 @@ async function loadHenry(free: Sport): Promise<readonly NcaaGame[]> {
     intents: ["storage", "derived_analytics"],
   });
   if (!clearance.allowed) {
+    // Fail-CLOSED is correct — but log the reason so a rights-status change is
+    // visible instead of looking like an empty off-season slate.
+    console.warn(
+      `[free-score-persist] clearance DENIED for henrygd-ncaa (${free}) — ` +
+      `blocks=[${clearance.blocks.join(", ") || "none"}] ` +
+      `warnings=[${clearance.warnings.join(", ") || "none"}]; skipping fetch`,
+    );
     return [];
   }
   try {

@@ -24,6 +24,13 @@ export const CAL_METRICS_SCOPE = "ops.calibration.metrics";
 export const CAL_ELIGIBILITY_SCOPE = "ops.calibration.eligibility";
 export const CAL_PUBLISH_SCOPE = "ops.calibration.publish-receipt";
 
+/** Log prefix for this module — durable calibration writes/reads. */
+const LOG_PREFIX = "[ops:calibration-durable]";
+
+function errMessage(err: unknown): string {
+  return err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+}
+
 export interface DurableMetricsPayload {
   readonly generatedAt: string;
   readonly gitSha: string | null;
@@ -105,7 +112,13 @@ export async function persistCalibrationMetrics(
       },
     });
     return "ok";
-  } catch {
+  } catch (err) {
+    // Silent failure here freezes the FOUNDING -> PROVEN proof gate: the public
+    // calibration surface reports "collecting" forever and nothing else notices.
+    console.error(
+      `${LOG_PREFIX} persistCalibrationMetrics FAILED (n=${payload.n} status=${payload.status} generatedAt=${payload.generatedAt}) — ${errMessage(err)}`,
+      err,
+    );
     return "error";
   }
 }
@@ -137,7 +150,13 @@ export async function loadLatestCalibrationMetrics(): Promise<DurableMetricsPayl
     const raw = parseJsonField(row);
     if (!raw || typeof raw !== "object") return null;
     return raw as DurableMetricsPayload;
-  } catch {
+  } catch (err) {
+    // null is ambiguous ("never written" vs "DB down") — log so the exception
+    // case is distinguishable in logs without changing the return type.
+    console.error(
+      `${LOG_PREFIX} loadLatestCalibrationMetrics FAILED (returning null; not proof of absence) — ${errMessage(err)}`,
+      err,
+    );
     return null;
   }
 }
@@ -154,7 +173,11 @@ export async function loadLatestEligibilitySnap(): Promise<EligibilityDurableSna
     const raw = parseJsonField(row);
     if (!raw || typeof raw !== "object") return null;
     return raw as EligibilityDurableSnap;
-  } catch {
+  } catch (err) {
+    console.error(
+      `${LOG_PREFIX} loadLatestEligibilitySnap FAILED (returning null; not proof of absence) — ${errMessage(err)}`,
+      err,
+    );
     return null;
   }
 }
@@ -183,7 +206,13 @@ export async function persistEligibilitySnap(
       },
     });
     return "ok";
-  } catch {
+  } catch (err) {
+    // A lost snap resets consecutiveGreen to 0 on the next cycle — the streak
+    // can never advance and the ladder silently never progresses.
+    console.error(
+      `${LOG_PREFIX} persistEligibilitySnap FAILED (status=${snap.report.status} streak=${snap.report.consecutiveGreen} metricsGeneratedAt=${snap.metricsGeneratedAt ?? "null"}) — ${errMessage(err)}`,
+      err,
+    );
     return "error";
   }
 }
@@ -200,7 +229,11 @@ export async function loadPublishReceipt(): Promise<PublishReceipt | null> {
     const raw = parseJsonField(row);
     if (!raw || typeof raw !== "object") return null;
     return raw as PublishReceipt;
-  } catch {
+  } catch (err) {
+    console.error(
+      `${LOG_PREFIX} loadPublishReceipt FAILED (returning null; not proof of absence) — ${errMessage(err)}`,
+      err,
+    );
     return null;
   }
 }
@@ -229,7 +262,11 @@ export async function persistPublishReceipt(
       },
     });
     return "ok";
-  } catch {
+  } catch (err) {
+    console.error(
+      `${LOG_PREFIX} persistPublishReceipt FAILED (published=${receipt.published} source=${receipt.source} at=${receipt.at}) — ${errMessage(err)}`,
+      err,
+    );
     return "error";
   }
 }
