@@ -23,6 +23,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { logEntitlementFailClosed } from "@/lib/entitlement-observability";
 import { getEntitlements, type Entitlements } from "@sports/types";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 
@@ -69,7 +70,14 @@ async function evaluateGate(
   let userId: string | undefined;
   try {
     userId = (await auth())?.user?.id;
-  } catch {
+  } catch (error) {
+    // BACKSTOP ONLY. `auth()` (lib/auth.ts) catches a throwing session store
+    // itself and answers `null`, so in production this catch does not fire —
+    // the fail-closed downgrade is logged there, at "auth:session-store", which
+    // is the one place the exception actually exists. Kept because auth() is
+    // not contractually total (a module-scope fault could still surface here),
+    // and a 500 from the gate would be a worse answer than a fail-closed 401.
+    logEntitlementFailClosed("api-entitlement:auth", undefined, error);
     userId = undefined;
   }
 
@@ -86,7 +94,12 @@ async function evaluateGate(
   let entitlements: Entitlements;
   try {
     entitlements = await getUserEntitlements(userId);
-  } catch {
+  } catch (error) {
+    // Fail closed (unchanged) — and say so. `getUserEntitlements` only rethrows
+    // errors it did NOT classify as an unreachable database, so anything
+    // arriving here is an unrecognized infrastructure fault worth an operator's
+    // attention rather than a silent 403 for a paying subscriber.
+    logEntitlementFailClosed("api-entitlement:gate", userId, error);
     entitlements = getEntitlements("FREE"); // fail closed
   }
 

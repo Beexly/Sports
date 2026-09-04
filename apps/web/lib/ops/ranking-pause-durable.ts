@@ -5,8 +5,18 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { redactErrorDetail, sanitizeLogField } from "@/lib/log-safety";
 
 export const RANKING_PAUSE_DURABLE_SCOPE = "ops.ranking.pause-apply";
+
+/**
+ * Driver errors are not safe to print raw: Prisma's P1001 carries the database
+ * host and port, and an initialization error can carry the datasource URL with
+ * its credentials. Redact before logging.
+ */
+function errMessage(err: unknown): string {
+  return redactErrorDetail(err);
+}
 
 export type RankingPauseDurableSnap = {
   readonly enabled: boolean;
@@ -16,10 +26,29 @@ export type RankingPauseDurableSnap = {
   readonly note: string;
 };
 
+/**
+ * Outcome of a durable write. Mirrors the `"ok" | "stub" | "error"` shape
+ * `persistDurableFreeSpine` already uses so callers read the same three states
+ * everywhere.
+ */
+export type RankingPauseWriteResult = "ok" | "stub" | "error";
+
+/**
+ * Persist the durable pause snapshot.
+ *
+ * RETURNS AN OUTCOME instead of `void`. It previously ended in a bare
+ * "best-effort" catch and returned nothing, so a failed write was
+ * indistinguishable from a successful one — and the only caller
+ * (`POST /api/ops/ranking-pause-apply`) went on to answer `{ ok: true, durable:
+ * snap }`, echoing back a snapshot that had never been stored. This is a
+ * SUPPRESSION control: the founder reads "applied", the other isolates read the
+ * DB, find nothing, and keep publishing the groups that were supposed to be
+ * paused. "Best-effort" is not an acceptable posture for a kill switch.
+ */
 export async function persistRankingPauseApply(
   snap: RankingPauseDurableSnap,
-): Promise<void> {
-  if (isStubMode()) return;
+): Promise<RankingPauseWriteResult> {
+  if (isStubMode()) return "stub";
   try {
     await db.jarvisMemoryEvent.create({
       data: {
@@ -39,37 +68,113 @@ export async function persistRankingPauseApply(
         owner_approval: true,
       },
     });
-  } catch {
-    /* best-effort */
+    return "ok";
+  } catch (err) {
+    console.error(
+      `[ops:ranking-pause] persistRankingPauseApply FAILED (enabled=${snap.enabled} ` +
+        `groups=${snap.groups.length} setBy=${sanitizeLogField(snap.setBy, 120)}): ` +
+        `${errMessage(err)}. ` +
+        "The durable pause was NOT stored — other isolates will keep the previous posture.",
+    );
+    return "error";
   }
 }
 
-export async function loadRankingPauseApply(): Promise<RankingPauseDurableSnap | null> {
-  if (isStubMode()) return null;
+/**
+ * Outcome of a durable READ, with absence and unavailability kept apart.
+ *
+ * `loadRankingPauseApply` collapses both to `null`, which is right for callers
+ * that must degrade rather than crash — but it is NOT safe to cache. A caller
+ * that memoises the `null` from a transient read failure latches "no pause is
+ * in effect" for the life of the isolate, which turns a kill switch into a
+ * no-op. `getCachedRankingPauseDurable` uses this shape so it can cache a real
+ * absence and retry an unavailability.
+ */
+export type RankingPauseReadResult =
+  | { readonly status: "ok"; readonly snap: RankingPauseDurableSnap }
+  | { readonly status: "absent" }
+  | { readonly status: "error"; readonly message: string };
+
+/**
+ * Read the durable pause, distinguishing "no record" from "could not read".
+ *
+ * This is the ONE reader; `loadRankingPauseApply` is a lossy wrapper over it.
+ * They were briefly separate implementations of the same parse, which is how a
+ * cached read and an API read drift apart on what a valid payload is.
+ *
+ * A row whose payload cannot be parsed reports `error`, not `absent`. Absence
+ * is the LESS restrictive answer — it hands the decision back to the env var —
+ * so a snapshot we merely failed to understand must not be reported as "no
+ * pause is set", which would leave a corrupt row silently disabling the kill
+ * switch for the isolate's whole life.
+ */
+export async function readRankingPauseApply(): Promise<RankingPauseReadResult> {
+  if (isStubMode()) return { status: "absent" };
   try {
     const row = await db.jarvisMemoryEvent.findFirst({
       where: { scope: RANKING_PAUSE_DURABLE_SCOPE, memory_type: "episodic" },
       orderBy: { created_at: "desc" },
       select: { metadata: true, full_text: true },
     });
-    if (!row) return null;
+    if (!row) return { status: "absent" };
     const raw =
       typeof row.metadata === "object" && row.metadata !== null
         ? row.metadata
         : row.full_text
           ? JSON.parse(row.full_text)
           : null;
-    if (!raw || typeof raw !== "object") return null;
-    const s = raw as RankingPauseDurableSnap;
-    if (typeof s.enabled !== "boolean") return null;
+    if (!raw || typeof raw !== "object" || typeof (raw as RankingPauseDurableSnap).enabled !== "boolean") {
+      // A row exists but we cannot read it. Treated as unavailability so the
+      // caller retries and an operator sees it, never as "no pause set".
+      throw new Error("durable ranking-pause payload is malformed (no boolean `enabled`)");
+    }
+    const snap = raw as RankingPauseDurableSnap;
+    // `groups` is the one field that decides WHAT is suppressed, so a record
+    // that does not carry it as an array is not a usable control state — say
+    // "error", not "here is a pause with nothing in it". The remaining fields
+    // are audit metadata; defaulting those is cosmetic and stays.
+    if (!Array.isArray(snap.groups)) {
+      throw new Error("durable ranking-pause payload is malformed (groups is not an array)");
+    }
+    // And every entry must already BE a string. `map(String)` would coerce 42
+    // into "42", which matches no real group key — the pause would report
+    // itself as enabled while suppressing nothing.
+    if (!snap.groups.every((g) => typeof g === "string")) {
+      throw new Error("durable ranking-pause payload is malformed (non-string group entry)");
+    }
     return {
-      enabled: s.enabled,
-      groups: Array.isArray(s.groups) ? s.groups.map(String) : [],
-      setAt: typeof s.setAt === "string" ? s.setAt : new Date().toISOString(),
-      setBy: typeof s.setBy === "string" ? s.setBy : "unknown",
-      note: typeof s.note === "string" ? s.note : "",
+      status: "ok",
+      snap: {
+        enabled: snap.enabled,
+        groups: snap.groups.map(String),
+        setAt: typeof snap.setAt === "string" ? snap.setAt : new Date().toISOString(),
+        setBy: typeof snap.setBy === "string" ? snap.setBy : "unknown",
+        note: typeof snap.note === "string" ? snap.note : "",
+      },
     };
-  } catch {
-    return null;
+  } catch (err) {
+    const message = errMessage(err);
+    console.error(
+      `[ops:ranking-pause] readRankingPauseApply FAILED: ${message}. ` +
+        "Reporting 'unavailable' — this is a read failure, not proof of absence.",
+    );
+    return { status: "error", message };
   }
+}
+
+/**
+ * Newest durable pause snapshot, or null.
+ *
+ * `null` means "no durable pause is in force", which is the LESS restrictive
+ * answer — so a read failure must not be mistaken for a deliberate absence.
+ * The verdict is unchanged (callers already treat null as "env decides"), and
+ * `readRankingPauseApply` has already logged the cause, so an operator can
+ * still tell a real "no pause set" from a database that could not answer.
+ *
+ * Prefer `readRankingPauseApply` anywhere the answer is stored, cached, or
+ * reported: this wrapper throws away the distinction on purpose.
+ */
+export async function loadRankingPauseApply(): Promise<RankingPauseDurableSnap | null> {
+  const result = await readRankingPauseApply();
+  return result.status === "ok" ? result.snap : null;
 }

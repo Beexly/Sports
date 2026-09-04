@@ -10,6 +10,7 @@
 
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { logEntitlementFailClosed } from "@/lib/entitlement-observability";
 import { getEntitlements, type Entitlements } from "@sports/types";
 
 export async function getViewerEntitlements(): Promise<Entitlements> {
@@ -17,13 +18,20 @@ export async function getViewerEntitlements(): Promise<Entitlements> {
   try {
     const session = await auth();
     userId = session?.user?.id;
-  } catch {
+  } catch (error) {
+    // BACKSTOP ONLY — see the matching note in lib/api-entitlement.ts. `auth()`
+    // swallows a throwing session store and returns `null`, so the downgrade is
+    // logged inside lib/auth.ts at "auth:session-store". This catch stays so a
+    // fault that does reach here still fails closed to anonymous rather than
+    // throwing a 500 out of a page render.
+    logEntitlementFailClosed("tier-access:auth", undefined, error);
     userId = undefined;
   }
   if (!userId) return getEntitlements("FREE");
   try {
     return await getUserEntitlements(userId);
-  } catch {
+  } catch (error) {
+    logEntitlementFailClosed("tier-access:entitlements", userId, error);
     return getEntitlements("FREE"); // fail closed
   }
 }

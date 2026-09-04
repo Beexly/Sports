@@ -63,6 +63,7 @@ vi.mock("@auth/prisma-adapter", () => ({
 // ─── Now import the module under test ───
 // The module-level NextAuth(config) call fires here; capturedConfig is populated.
 import { isAdminEmail, auth, DEV_FAKE_ADMIN } from "@/lib/auth";
+import { resetEntitlementFailClosedThrottle } from "@/lib/entitlement-observability";
 
 // ─── Helpers ───
 
@@ -340,10 +341,33 @@ describe("DEV_FAKE_ADMIN — production hard-gate", () => {
 });
 
 describe("auth() — error handling on realAuth failure", () => {
+  /**
+   * THE PRODUCTION FAIL-CLOSED PATH.
+   *
+   * A throwing session store never reaches the entitlement gates: auth()
+   * catches it here and answers null, so `evaluateGate` and
+   * `getViewerEntitlements` see an ordinary logged-out visitor and hand every
+   * paying member a 401 / the free surface. Their own try/catch around auth()
+   * cannot observe it. That makes THIS the only place the downgrade can be made
+   * audible — so it is asserted here, on the contract production actually has,
+   * rather than only against a test double that rejects.
+   */
+  let errorSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    resetEntitlementFailClosedThrottle();
+    errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+  });
+
   afterEach(() => {
+    errorSpy.mockRestore();
     vi.unstubAllEnvs();
     mockRealAuth.mockReset();
   });
+
+  function loggedText(): string {
+    return errorSpy.mock.calls.map((c) => c.map(String).join(" ")).join("\n");
+  }
 
   it("returns null when realAuth throws a non-static-generation error", async () => {
     vi.stubEnv("NODE_ENV", "production");
@@ -353,11 +377,51 @@ describe("auth() — error handling on realAuth failure", () => {
     expect(session).toBeNull();
   });
 
+  it("records the fail-closed downgrade when the session store throws", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    delete process.env["DEV_FAKE_ADMIN"];
+    mockRealAuth.mockRejectedValue(new Error("JWEDecryptionFailed: session store unreadable"));
+
+    await expect(auth()).resolves.toBeNull(); // verdict unchanged
+
+    expect(errorSpy).toHaveBeenCalled();
+    expect(loggedText()).toMatch(/FAIL-CLOSED/);
+    expect(loggedText()).toMatch(/auth:session-store/);
+    expect(loggedText()).toMatch(/JWEDecryptionFailed/);
+  });
+
+  it("never prints the connection details a driver fault carries", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    delete process.env["DEV_FAKE_ADMIN"];
+    // Assembled, not written literally: a `scheme://user:pass@host` string in
+    // the source is exactly what the repo's secret scanner should keep flagging.
+    const dsn = ["postgresql", "://auth:", "pw-sentinel", "@", "sessions.internal", ":5432/gse"].join("");
+    mockRealAuth.mockRejectedValue(new Error(`Can't reach database server at ${dsn}`));
+
+    await expect(auth()).resolves.toBeNull();
+
+    expect(loggedText()).not.toContain("pw-sentinel");
+    expect(loggedText()).not.toContain("sessions.internal");
+    expect(loggedText()).toMatch(/FAIL-CLOSED/);
+  });
+
   it("returns null (silently) when realAuth throws a static-generation probe error", async () => {
     vi.stubEnv("NODE_ENV", "production");
     delete process.env["DEV_FAKE_ADMIN"];
     mockRealAuth.mockRejectedValue(new Error("getServerSideProps on a page that contains..."));
     const session = await auth();
     expect(session).toBeNull();
+  });
+
+  it("stays silent for a static-generation probe — that is not a downgrade", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    delete process.env["DEV_FAKE_ADMIN"];
+    mockRealAuth.mockRejectedValue(
+      new Error("Dynamic server usage: Page couldn't be rendered statically"),
+    );
+
+    await expect(auth()).resolves.toBeNull();
+
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 });

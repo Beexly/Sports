@@ -68,7 +68,16 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
     if (rows.length < 50) return null;
     // Always rebuild so polarity law applies (edge-as-p plans are invalid).
     const plan = buildProvenPathPlan(rows);
-    await persistProvenPathPlan(plan);
+    const planWrite = await persistProvenPathPlan(plan);
+    if (planWrite === "error") {
+      // The plan was BUILT but not STORED. Returning a surface here would hand
+      // callers a plan that exists only in this isolate — selective publish and
+      // the PROVEN gate would act on something no other isolate can see, and
+      // `loadProvenPathPlan` would report it as the durable plan. `null` is the
+      // honest answer and the one every caller already degrades on; the failure
+      // itself was logged with its reason by persistProvenPathPlan.
+      return null;
+    }
     const projection = projectProvenPathMetrics(rows);
 
     let appliedPauseGroups: readonly string[] = [];

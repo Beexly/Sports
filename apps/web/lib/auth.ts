@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@sports/db";
 import { isAsciiEmail, canonicalEmail } from "@/lib/auth/email-guard";
+import { logEntitlementFailClosed } from "@/lib/entitlement-observability";
 
 export type UserRole = "USER" | "ADMIN";
 
@@ -125,8 +126,17 @@ export const auth: () => Promise<Session | null> = async () => {
       message.includes("couldn't be rendered statically");
 
     if (!isStaticGenerationProbe) {
-      // eslint-disable-next-line no-console
-      console.warn("[auth] realAuth() failed:", message);
+      // THIS is where a broken session store becomes a fail-closed downgrade.
+      //
+      // auth() swallows the throw and answers `null`, so every gate downstream
+      // — `evaluateGate` in lib/api-entitlement.ts, `getViewerEntitlements` in
+      // lib/pricing/tier-access.ts — sees an ordinary logged-out visitor and
+      // answers 401 / the free surface. Their own try/catch around auth()
+      // therefore never fires in production: the exception does not reach them.
+      // Logging it as a plain warn *here* left the actual failure mode
+      // ("every paying member is being treated as anonymous") looking like
+      // routine noise.
+      logEntitlementFailClosed("auth:session-store", undefined, err);
     }
     return null;
   }

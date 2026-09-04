@@ -5,6 +5,7 @@
 
 import { db } from "@sports/db";
 import { getEntitlements, type Entitlements, type SubscriptionTier } from "@sports/types";
+import { logEntitlementFailClosed } from "@/lib/entitlement-observability";
 
 export { getEntitlements };
 export type { Entitlements };
@@ -84,6 +85,9 @@ export async function getUserEntitlements(userId: string): Promise<Entitlements>
     });
   } catch (error) {
     if (isDatabaseUnreachable(error)) {
+      // Unchanged verdict (FREE), newly audible. Without this line a total
+      // Postgres outage downgraded the entire paid membership with zero trace.
+      logEntitlementFailClosed("getUserEntitlements", userId, error);
       return getEntitlements("FREE");
     }
     throw error;

@@ -376,7 +376,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       }
       try {
         const plan = buildProvenPathPlan(provenRows);
-        await persistProvenPathPlan(plan);
+        const planWrite = await persistProvenPathPlan(plan);
         await writeFile(
           path.join(dir, "proven-path-plan.json"),
           JSON.stringify(plan, null, 2),
@@ -384,11 +384,23 @@ export async function GET(request: Request): Promise<NextResponse> {
         ).catch(() => undefined);
         // Attach to payload notes only if we still have a mutable notes array
         // that already shipped into payload — plan is durable; log for Vercel.
+        // `durable=` is on the success line deliberately: this log was the only
+        // record of the cycle, and it read identically whether or not the plan
+        // reached the database. A reader can no longer mistake a failed write
+        // for a clean cycle.
         console.info(
           `[cron:calibration-metrics] proven-path best=${plan.bestScore} pause=${plan.pauseGroups.length} ` +
             `(res0=${plan.pauseSources.resNearZero.length} sig=${plan.pauseSources.significanceDead.length}) ` +
-            `δ=${plan.defaultDelta} selectiveGainRes=${plan.selectiveGainRes ?? "n/a"}`,
+            `δ=${plan.defaultDelta} selectiveGainRes=${plan.selectiveGainRes ?? "n/a"} durable=${planWrite}`,
         );
+        if (planWrite === "error") {
+          console.error(
+            "[cron:calibration-metrics] proven-path plan was NOT persisted — this cycle " +
+              "computed a plan that no other isolate can see. Selective publish and the " +
+              "PROVEN gate continue on the PREVIOUS durable plan until a later cycle " +
+              "succeeds. Treat this run as incomplete, not green.",
+          );
+        }
       } catch {
         /* proven path best-effort */
       }
