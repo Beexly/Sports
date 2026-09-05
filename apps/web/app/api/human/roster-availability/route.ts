@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 const MAX_PLAYERS = 40;
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const fwd = request.headers.get("x-forwarded-for");
-  const ip = fwd ? fwd.split(",")[0]!.trim() : (request.headers.get("x-real-ip") ?? "anon");
-  const limit = consumeRateLimit("human-roster-availability", ip, 20, 5 * 60 * 1000);
+
+
+  const limit = consumeRateLimit("human-roster-availability", clientIp(req), 20, 5 * 60 * 1000);
   if (!limit.ok) {
     return NextResponse.json(
       { success: false, error: "Too many requests. Please wait a moment." },
