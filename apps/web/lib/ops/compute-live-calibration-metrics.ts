@@ -122,7 +122,7 @@ export function buildDurableMetricsFromSamples(input: {
       // Restated 2026-09-05 (ledger C-28 cited the old wording, which described a
       // basis this code stopped using in v5.2.6): the p scored here follows
       // live-calibration-p.ts. It is never confidence/100 for SPREAD or TOTAL.
-      "p per live-calibration-p hierarchy: shrunk independent trueProb -> market-anchored blend when a real book fair exists (factor breakdown, else the lock-time proof receipt) -> market fair -> MONEYLINE confidence/100 only when nothing else exists; SPREAD/TOTAL without a fair p are excluded. Internal eligibility only until publish policy.",
+      "p per live-calibration-p hierarchy: shrunk independent trueProb -> market-anchored blend when a real book fair exists (factor breakdown, else the proof receipt minted at publish) -> market fair -> MONEYLINE confidence/100 only when nothing else exists; SPREAD/TOTAL without a fair p are excluded. Internal eligibility only until publish policy.",
     ],
   };
 }
