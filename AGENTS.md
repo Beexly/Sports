@@ -30,6 +30,35 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-05 (18:20 UTC) by the launch session on `claude/sports-prediction-launch-rtiexc`
+(draft PR #707, CI green). Read `docs/ops/LAUNCH_FINISH_LINE_2026-09-05.md` before claiming
+anything: section 3b holds eleven decisions the founder delegated in-session, section 4 the
+founder-only actions, section 5 every dispatchable work package (WP-1..26, FE, FAN, NFL, OPS,
+TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and F-14..F-33.**
+
+- **TOP founder item (F-15): The Odds API account is in a payment state.** HTTP 402
+  "payment circuit open" on every hourly cycle since 2026-09-03 20:20 UTC. The shared
+  breaker stopped paid book odds at 2026-09-05 00:30 UTC; zero book-priced picks were
+  generated in the 18 hours after. Fix the account. Do not upgrade the tier.
+- **Second book root cause (2026-09-05 production logs, verbatim):** every refresh cycle,
+  all four in-season sports log `rundown empty (2d): HTTP 429 rate_limited`. TheRundown is
+  the registered commercial-use fallback (`packages/data-ingestion/src/source-registry.ts`
+  id `therundown`, free 20k data-points/day) and it alone satisfies `MIN_BOOKMAKERS = 2`;
+  our own cadence (refresh-odds every 15 min plus board-fill 4x/h, 4 sports, 2 dates, no
+  cooldown after a 429) exhausts its daily quota early and it 429s for the rest of the day.
+  ESPN public (`espn_public`) is one book (DraftKings via ESPN, verified live for NFL, CFB,
+  MLB, MLS), so no picks can be book-priced without either the paid feed or a working
+  Rundown. Fix is quota discipline plus observability (WP-26), not a new vendor.
+- Decisions already taken (do not re-open): keyless odds becomes primary with TheRundown as
+  the second book (WP-26); v5.2.8 YES sequenced after the first clean NFL Sunday; stale
+  published picks are UNPUBLISHED via `npm run ops:stale-picks:unpublish -- --execute`
+  (owner-run); ESPN Power Index is gated fail-closed (`ESPN_POWERINDEX_LICENSED` unset);
+  `hermes/settlement-token-fix` is superseded by `6880f18` (do not merge it); Vercel cron
+  is the primary scheduler; `/picks` is the product surface; the `/fantasy` age gate stays.
+- Settlement CRITICAL (36 overdue) root causes are fixed on the PR branch, not on main:
+  ESPN `limit=1000` truncation, matcher containment on 2-3 letter abbreviations and bare
+  club tokens, overdue-only runner slice, backfill date order. Do not re-fix them; land #707.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —

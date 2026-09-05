@@ -99,14 +99,23 @@ shown to anyone (shipped).
 The founder delegated these in-session. Each is reversible by editing this list and the
 ledger row named; none flips a gate, changes an env value, or touches production data.
 
-1. **Odds supply.** The Odds API stays an optional supplement; the keyless path becomes the
-   strategic primary (re-land the core of PR #680 fresh off main after #707: WP-26). Fact
-   behind it (read-only SQL, 18:00 UTC): the last paid-book odds row (fanduel, draftkings,
-   betmgm) was fetched 2026-09-05 00:30 UTC; since then only `espn_public` inserted, and
-   zero book-priced picks were generated in 18 hours. Because `MIN_BOOKMAKERS = 2` and ESPN
-   public is one book, only the paid feed can produce multi-book spreads and totals for
-   Week 1, so the account check in section 4 item 1 stays the top founder action. Do not
-   upgrade the tier.
+1. **Odds supply.** The Odds API stays an optional supplement; our own ingestion becomes
+   primary with **TheRundown as the second book** (WP-26). Facts behind it: (a) read-only
+   SQL at 18:00 UTC: the last paid-book odds row (fanduel, draftkings, betmgm) was fetched
+   2026-09-05 00:30 UTC; since then only `espn_public` inserted and zero book-priced picks
+   were generated in 18 hours. (b) ESPN public is one book (DraftKings via ESPN; the core
+   odds endpoint returned exactly one provider, verified live for NFL, CFB, MLB and MLS) and
+   `MIN_BOOKMAKERS = 2`. (c) Production logs, verbatim, every 15-minute cycle for all four
+   in-season sports: `rundown empty (2d): HTTP 429 rate_limited (abort remaining days)`.
+   TheRundown is already wired as the fallback, is registered for commercial use
+   (`source-registry.ts` id `therundown`, free 20k data-points/day) and alone carries
+   DraftKings, FanDuel, MGM and Pinnacle; our own cadence (refresh-odds every 15 minutes
+   plus board-fill 4x/h, 4 sports, 2 dates, no memory of a 429) exhausts its quota early
+   each day. So the second book exists and is being throttled by us. WP-26 is quota
+   discipline plus observability, not a new vendor. For Week 1 the founder still fixes The
+   Odds API account (section 4 item 1) because the free Rundown tier cannot sustain a
+   15-minute live cadence; the cheaper durable option is TheRundown Starter ($49) instead of
+   a higher Odds API tier. Do not upgrade The Odds API tier.
 2. **v5.2.8: YES, sequenced.** Phase 2 (WP-1) starts after #707 deploys and the first NFL
    Sunday settles clean; MODEL_VERSION does not move before that. Recorded in the proposal
    doc section 1. (F-14)
@@ -251,7 +260,7 @@ idempotent, fail-closed; 174 money-path unit tests green) and the pick-generatio
 | WP-24 | Totals drop reasons: MLB/MLS TOTAL=0 is scoreTotalPick's own gates (fewer than 2 totals books, no two-sided prices, consensus below 0.55, confidence below 50) and the ESPN tertiary odds path emits one bookmaker so it can never yield a TOTAL; return a per-market drop reason from scoreGame and surface counts on the coverage hint (supersedes WP-7) | `packages/prediction-engine/src/scoring.ts` scoreTotalPick, `process-sport.ts` result, `apps/web/lib/board/market-coverage.ts` | coverage hint names the gate that fired | M |
 
 | WP-25 | Gate the ESPN Power Index fetch behind the rights registry (fail closed, attribution) until F-21 clears it; anonymous copy never names the source | `packages/ingestion-pipeline/src/generate-signal-slate.ts` (espn_powerindex), `apps/web/lib/scraping/clearance-engine.ts` | slate test: fetch not called when clearance denies | S |
-| WP-26 | Keyless odds as the strategic primary (section 3b item 1): re-land the core of PR #680 fresh off main after #707 (`GalaxySportsApiOddsProvider` reading ESPN inline scoreboard odds, de-vig `fair_prob`, 8s timeouts, registry gating, Rundown thin-fill only behind the-odds-api), then choose the second free book so `MIN_BOOKMAKERS = 2` holds without the paid feed (Kalshi is paid-required in the package registry; TheRundown is keyed, use-with-caution; ESPN public is one book) | `packages/data-ingestion/src/odds-provider-adapter.ts`, `source-registry.ts`, `packages/ingestion-pipeline/src/process-sport.ts`; reference `origin/hermes/galaxy-keyless-odds` (197 behind main) | with `THE_ODDS_API_KEY` unset in a test, `processSport` yields a non-empty book-priced board from two cleared sources; ingestion-pipeline and data-ingestion suites green | L |
+| WP-26 | Own odds ingestion as primary, TheRundown as the working second book (section 3b item 1). Phase A (in flight on this branch, adversarially reviewed): durable 429 cooldown read from `IngestionRun` (marker `rundown:429`, `RUNDOWN_429_COOLDOWN_MINUTES` default 60), freshness throttle from the newest Rundown-affiliate odds row (`RUNDOWN_FALLBACK_MIN_INTERVAL_MINUTES` default 30), `provider` and `providerNote` on every per-sport result and `oddsInserting.lastProviderNote` on the truth surface. Phase B: board-fill must not run a second odds pass when refresh-odds ran within the interval; Rundown `daySpan` follows the horizon of games actually on the board (NFL Thursday and Sunday from a Friday cycle); founder picks TheRundown Starter or keeps The Odds API. Phase C (optional, after Week 1): re-land the core of PR #680 (`GalaxySportsApiOddsProvider`, de-vig `fair_prob`, 8s timeouts, registry gating) | `packages/data-ingestion/src/rundown-client.ts`, `packages/ingestion-pipeline/src/process-sport.ts`, `apps/web/app/api/ops/public-surface-truth/route.ts`, `apps/web/app/api/cron/board-fill/route.ts`; reference `origin/hermes/galaxy-keyless-odds` (197 behind main) | production logs stop showing `HTTP 429 rate_limited` every cycle; `curl /api/ops/public-surface-truth \| jq .oddsInserting.lastProviderNote`; odds rows with Rundown affiliate bookmakers appear within one interval; ingestion-pipeline and data-ingestion suites green | M |
 
 Public frontend (from the frontend audit; FE-01/03/04 shipped in `994a2fa` and `486b0a3`;
 no screenshots were possible from the sandbox, every finding is from source):
