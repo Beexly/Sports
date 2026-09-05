@@ -240,8 +240,8 @@ describe("scoreGame — SPREAD pick'em (spread === 0) defect", () => {
     const picks = scoreGame(makeOddsInput({
       bookmakerOdds: [
         ...books.map((b, i) => ({
-          bookmaker: b, market: "SPREADS" as const, spread: spreads[i],
-          homeSpreadPrice: prices[i], awaySpreadPrice: -prices[i] + (i % 2 === 0 ? 0 : 4),
+          bookmaker: b, market: "SPREADS" as const, spread: spreads[i]!,
+          homeSpreadPrice: prices[i]!, awaySpreadPrice: -prices[i]! + (i % 2 === 0 ? 0 : 4),
         })),
         { bookmaker: "fanduel",    market: "H2H", homePrice: -180, awayPrice: 155 },
         { bookmaker: "draftkings", market: "H2H", homePrice: -175, awayPrice: 150 },
