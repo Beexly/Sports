@@ -13,10 +13,10 @@ export async function POST(req: Request) {
   }
 
   const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
+
+
     "anon";
-  const rl = await consumePublicFormRateLimit("contest-enter", ip, 8, 60_000);
+  const rl = await consumePublicFormRateLimit("contest-enter", clientIp(req), 8, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many entries — try again shortly." },
