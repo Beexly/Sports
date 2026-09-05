@@ -9,7 +9,10 @@ import { generateSignalSlate } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 120;
+// 300s (the Vercel Pro cron ceiling, same as refresh-odds): Vercel runtime errors
+// recorded 583 "Task timed out after 120 seconds" events across the cron routes
+// between 2026-08-10 and 2026-09-05, which cut the slate mid-write every cycle.
+export const maxDuration = 300;
 
 export async function GET(request: Request): Promise<NextResponse> {
   const denied = cronAuthError(request);
