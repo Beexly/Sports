@@ -4,7 +4,9 @@
  * Sources (null = honest no opinion):
  *  1) Prefetched (Kalshi / caller-supplied)
  *  2) Kalshi live fair (series-aware; multi-league)
- *  3) ESPN PowerIndex logistic (NFL/CFB/NBA/NCAAB when FPI available)
+ *  3) ESPN PowerIndex logistic (NFL/CFB/NBA/NCAAB when FPI available) ONLY when
+ *     ESPN_POWERINDEX_LICENSED="true" (rights gate, default closed; see
+ *     independent-source-rights.ts)
  *  4) ClubElo soccer (Fixtures W/D/L → 2-way, else rating logistic)
  *  5) Rate-model independent: Dixon–Coles on soccer (not double-counted with Poisson);
  *     independent Poisson on icehockey / baseball
@@ -59,6 +61,7 @@ import {
 import type { IndependentMarketFairValue } from "@sports/types";
 import { db } from "@sports/db";
 import { resolveKalshiTeamAbbr } from "./kalshi-team-abbr.js";
+import { isEspnPowerIndexCleared } from "./independent-source-rights.js";
 
 export type IndependentFairValueBuildInput = {
   readonly sportKey: string;
@@ -71,6 +74,12 @@ export type IndependentFairValueBuildInput = {
   readonly now?: () => Date;
   /** Skip live network independents (Kalshi / ESPN / ClubElo / Polymarket) — tests. */
   readonly skipNetworkIndependents?: boolean;
+  /**
+   * Environment consulted by rights gates (ESPN_POWERINDEX_LICENSED). Defaults
+   * to process.env; injected in tests so the gate is provable without stubbing
+   * the global environment.
+   */
+  readonly env?: NodeJS.ProcessEnv;
   /**
    * Posted home spread (negative = home favourite). Used only as the ATS
    * *question* for Skellam cover; λ still comes from TeamGameLog rates.
@@ -494,7 +503,13 @@ export async function buildIndependentFairValues(
   }
 
   // 3) ESPN PowerIndex logistic (NFL/CFB/NBA/NCAAB).
-  if (!input.skipNetworkIndependents) {
+  // Rights gate, fail closed: the registry clears ESPN facts only, and FPI is a
+  // proprietary prediction. The client is never called unless the founder has
+  // set ESPN_POWERINDEX_LICENSED="true" after a license exists.
+  if (
+    !input.skipNetworkIndependents &&
+    isEspnPowerIndexCleared(input.env ?? process.env)
+  ) {
     const fpi = await tryEspnPowerIndexFairValue(input);
     if (fpi) out.push(fpi);
   }

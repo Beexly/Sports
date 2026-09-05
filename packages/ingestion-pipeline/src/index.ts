@@ -104,6 +104,10 @@ export type {
   EloRatingsCache,
 } from "./build-independent-fair-values.js";
 export {
+  ESPN_POWERINDEX_LICENSE_ENV,
+  isEspnPowerIndexCleared,
+} from "./independent-source-rights.js";
+export {
   resolveKalshiTeamAbbr,
   normalizeTeamKey,
 } from "./kalshi-team-abbr.js";

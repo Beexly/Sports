@@ -83,6 +83,13 @@ STRIPE_FANTASY_ANNUAL_PRICE_ID=
 # Unset/"false" = checkout omits consent_collection and behaves exactly as before.
 STRIPE_TERMS_CONSENT_ENABLED=
 THE_ODDS_API_KEY=
+# ESPN Power Index (FPI) as an independent probability source. DEFAULT OFF (unset).
+# The rights registry clears ESPN facts only (scores, fixtures); FPI is a proprietary
+# prediction, so the pipeline never fetches it while this is unset. Founder action:
+# set to the exact string "true" ONLY after an ESPN data license exists. Any other
+# value ("1", "TRUE", "yes") keeps the source off. Gate: packages/ingestion-pipeline/
+# src/independent-source-rights.ts. Agents never set this (AGENTS.md law 3).
+ESPN_POWERINDEX_LICENSED=
 ANTHROPIC_API_KEY=
 REDIS_URL=
 # Canonical public base URL. The single source of truth is
