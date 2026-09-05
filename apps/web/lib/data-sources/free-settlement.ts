@@ -124,9 +124,13 @@ export type PendingPick = {
 /** Token equality or containment (handles "LAD" vs "Los Angeles Dodgers" via abbr path). */
 export function teamTokensMatch(a: string, b: string): boolean {
   if (!a || !b) return false;
-  if (a === b || a.includes(b) || b.includes(a)) return true;
-  // Require short tokens (abbrs) to match as whole-token containment only when len>=2
-  // already covered by includes. No fuzzy beyond that.
+  if (a === b) return true;
+  // Substring containment only when the shorter token has length >= 3.
+  // This blocks generic 2-char suffixes (fc, sc, cf) from over-matching
+  // inside nearly every MLS name while preserving legitimate abbr matches
+  // like "lafc" ⊂ "losangelesfc", "nycfc" ⊂ "newyorkcityfc", "lad" ⊂ "losangelesdodgers".
+  const shorter = a.length < b.length ? a : b;
+  if (shorter.length >= 3 && (a.includes(b) || b.includes(a))) return true;
   return false;
 }
 
