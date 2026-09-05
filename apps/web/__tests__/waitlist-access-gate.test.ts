@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
+import { checkWaitlistGate, safeEqualSecret } from "@/lib/waitlist/access-gate";
 import {
   BACKTEST_TRUTH,
   ALL_WAITLIST_COPY_STRINGS,
@@ -238,5 +238,51 @@ describe("checkWaitlistGate — one flag is not a lock", () => {
     const result = checkWaitlistGate(null);
     expect(result.allowed).toBe(false);
     expect((result as { allowed: false; reason: string }).reason).toBe("gate_not_configured");
+  });
+});
+
+describe("safeEqualSecret — constant-time secret comparison", () => {
+  afterEach(() => {
+    delete process.env["GSE_WAITLIST_GATE_ENABLED"];
+    delete process.env["GSE_WAITLIST_BASIC_FORCE"];
+    delete process.env["GSE_WAITLIST_BASIC_USER"];
+    delete process.env["GSE_WAITLIST_BASIC_PASSWORD"];
+  });
+
+  it("matches equal strings", () => {
+    expect(safeEqualSecret("testpass", "testpass")).toBe(true);
+    expect(safeEqualSecret("", "")).toBe(true);
+  });
+
+  it("rejects different strings of equal length", () => {
+    expect(safeEqualSecret("testpass", "testpast")).toBe(false);
+    expect(safeEqualSecret("a", "b")).toBe(false);
+  });
+
+  it("rejects different lengths in both directions", () => {
+    expect(safeEqualSecret("testpass", "testpassx")).toBe(false);
+    expect(safeEqualSecret("testpassx", "testpass")).toBe(false);
+  });
+
+  it("rejects empty vs non-empty", () => {
+    expect(safeEqualSecret("", "testpass")).toBe(false);
+    expect(safeEqualSecret("testpass", "")).toBe(false);
+  });
+
+  it("compares by UTF-8 bytes, not UTF-16 code units", () => {
+    // U+00E9 is one UTF-16 unit but two UTF-8 bytes; the byte walk must see
+    // the real encoded length so a multibyte secret cannot alias a prefix.
+    expect(safeEqualSecret("café", "caf\u00e9")).toBe(true);
+    expect(safeEqualSecret("café", "cafe\u0301")).toBe(false); // é vs e+combining acute
+  });
+
+  it("gate denies with wrong credentials even after the safeEqualSecret switch", () => {
+    process.env["GSE_WAITLIST_GATE_ENABLED"] = "true";
+    process.env["GSE_WAITLIST_BASIC_FORCE"] = "true";
+    process.env["GSE_WAITLIST_BASIC_USER"] = "testuser";
+    process.env["GSE_WAITLIST_BASIC_PASSWORD"] = "testpass";
+    expect(checkWaitlistGate(basicAuthHeader("testuser", "wrongpass")).allowed).toBe(false);
+    expect(checkWaitlistGate(basicAuthHeader("wronguser", "testpass")).allowed).toBe(false);
+    expect(checkWaitlistGate(basicAuthHeader("testuser", "testpass")).allowed).toBe(true);
   });
 });
