@@ -345,6 +345,8 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
         confidence: true,
         pickType: true,
         factorBreakdown: true,
+        // Lock-time market fair backs up a factor breakdown that lost it (proven-path-rows.ts).
+        proofReceipt: { select: { marketFairProb: true } },
         result: true,
         modelVersion: true,
         settledAt: true,

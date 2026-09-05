@@ -77,11 +77,33 @@ export function extractProvenPathProbs(fb: FactorBreakdownLike | null | undefine
   return { pIndependent, marketP, rankingP, rankingSource };
 }
 
+/**
+ * The lock-time market probability committed to the immutable proof receipt
+ * (PickProofReceipt.marketFairProb, minted in process-sport.ts from the same
+ * `fairProb` the scorer writes into factorBreakdown.marketFairProb, so the two
+ * describe the same side of the same market). Read as a fallback when the
+ * factor breakdown carries none: rows from before v5.2.1 never persisted it
+ * there, and until 2026-09-05 the signal slate overwrote book-priced moneyline
+ * rows with marketFairProb null while their receipt kept the real value (live
+ * bake-off coverage for the market score fell to 34%). Rejects the synthetic
+ * coin-flip 0.5 exactly as the live eligibility resolver does.
+ */
+export function receiptMarketFairProb(
+  receipt: { readonly marketFairProb?: number | null } | null | undefined,
+): number | null {
+  const p = receipt?.marketFairProb;
+  if (typeof p !== "number" || !Number.isFinite(p) || p <= 0 || p >= 1) return null;
+  if (Math.abs(p - 0.5) < 1e-9) return null;
+  return p;
+}
+
 export type SettledPickForProvenPath = {
   readonly confidence: number;
   readonly result: "WIN" | "LOSS" | string;
   readonly pickType?: string | null;
   readonly factorBreakdown?: unknown;
+  /** Immutable lock-time receipt; its marketFairProb backs up the factor breakdown. */
+  readonly proofReceipt?: { readonly marketFairProb?: number | null } | null;
   readonly game?: {
     readonly sport?: { readonly key?: string | null; readonly name?: string | null } | null;
   } | null;
@@ -97,7 +119,8 @@ export function toProvenPathPickRow(
   }
   const pConfidence = clamp01(pick.confidence / 100);
   const fb = (pick.factorBreakdown ?? null) as FactorBreakdownLike | null;
-  const { pIndependent, marketP } = extractProvenPathProbs(fb);
+  const { pIndependent, marketP: fbMarketP } = extractProvenPathProbs(fb);
+  const marketP = fbMarketP ?? receiptMarketFairProb(pick.proofReceipt);
   const sport =
     pick.game?.sport?.key ?? pick.game?.sport?.name ?? "unknown";
   const market = pick.pickType ?? "unknown";

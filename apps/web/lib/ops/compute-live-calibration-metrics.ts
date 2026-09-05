@@ -19,6 +19,8 @@ export interface PickRowForCal {
   readonly settledAt: Date | null;
   readonly pickType?: string | null;
   readonly factorBreakdown?: unknown;
+  /** Immutable lock-time receipt; its marketFairProb backs up the factor breakdown. */
+  readonly proofReceipt?: { readonly marketFairProb?: number | null } | null;
 }
 
 function mceFromCurve(
@@ -46,6 +48,7 @@ export function picksToCalibrationSamples(picks: readonly PickRowForCal[]): {
       result: pick.result,
       pickType: pick.pickType,
       factorBreakdown: pick.factorBreakdown,
+      proofReceipt: pick.proofReceipt,
       modelVersion: pick.modelVersion,
       settledAt: pick.settledAt,
     })),
@@ -116,7 +119,10 @@ export function buildDurableMetricsFromSamples(input: {
     },
     notes: [
       ...(input.notes ?? []),
-      "p from confidence/100 provisional; internal eligibility only until publish policy.",
+      // Restated 2026-09-05 (ledger C-28 cited the old wording, which described a
+      // basis this code stopped using in v5.2.6): the p scored here follows
+      // live-calibration-p.ts. It is never confidence/100 for SPREAD or TOTAL.
+      "p per live-calibration-p hierarchy: shrunk independent trueProb -> market-anchored blend when a real book fair exists (factor breakdown, else the lock-time proof receipt) -> market fair -> MONEYLINE confidence/100 only when nothing else exists; SPREAD/TOTAL without a fair p are excluded. Internal eligibility only until publish policy.",
     ],
   };
 }

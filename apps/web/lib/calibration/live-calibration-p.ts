@@ -11,10 +11,14 @@
  * - SPREAD/TOTAL without fair p ABSENT from absolute floors.
  * - Never invent p. Never apply fitted maps here.
  * - Never treat synthetic marketFairProb=0.5 as a real book.
+ * - When the factor breakdown carries no market fair, the immutable proof
+ *   receipt's lock-time marketFairProb (same side, same market) is read
+ *   instead (2026-09-05; see receiptMarketFairProb).
  */
 
 import {
   extractProvenPathProbs,
+  receiptMarketFairProb,
   type FactorBreakdownLike,
 } from "@/lib/calibration/proven-path-rows";
 
@@ -55,13 +59,16 @@ export function resolveLiveCalibrationP(input: {
   readonly confidence: number;
   readonly pickType?: string | null;
   readonly factorBreakdown?: unknown;
+  /** Immutable lock-time receipt; its marketFairProb backs up the factor breakdown. */
+  readonly proofReceipt?: { readonly marketFairProb?: number | null } | null;
 }): LiveCalPResolution {
   if (typeof input.confidence !== "number" || !Number.isFinite(input.confidence)) {
     return null;
   }
 
   const fb = (input.factorBreakdown ?? null) as FactorBreakdownLike | null;
-  const { pIndependent, marketP } = extractProvenPathProbs(fb);
+  const { pIndependent, marketP: fbMarketP } = extractProvenPathProbs(fb);
+  const marketP = fbMarketP ?? receiptMarketFairProb(input.proofReceipt);
   const confP = clamp01(input.confidence / 100);
 
   if (pIndependent != null && pIndependent > 0 && pIndependent < 1) {
@@ -102,6 +109,7 @@ export type PickForLiveCal = {
   readonly result: "WIN" | "LOSS" | string;
   readonly pickType?: string | null;
   readonly factorBreakdown?: unknown;
+  readonly proofReceipt?: { readonly marketFairProb?: number | null } | null;
   readonly modelVersion?: string | null;
   readonly settledAt?: Date | null;
 };
@@ -134,6 +142,7 @@ export function picksToHonestCalibrationSamples(picks: readonly PickForLiveCal[]
       confidence: pick.confidence,
       pickType: pick.pickType,
       factorBreakdown: pick.factorBreakdown,
+      proofReceipt: pick.proofReceipt,
     });
 
     if (!res) {

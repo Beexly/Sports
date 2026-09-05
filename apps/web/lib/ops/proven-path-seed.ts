@@ -48,6 +48,8 @@ async function loadRows() {
       result: true,
       pickType: true,
       factorBreakdown: true,
+      // Lock-time market fair backs up a factor breakdown that lost it (proven-path-rows.ts).
+      proofReceipt: { select: { marketFairProb: true } },
       game: { select: { sport: { select: { key: true, name: true } } } },
     },
     orderBy: { settledAt: "desc" },

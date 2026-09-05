@@ -102,6 +102,8 @@ async function loadSettledCalibrationSamples(): Promise<{
         modelVersion: true,
         settledAt: true,
         pickType: true,
+        // Lock-time market fair backs up a factor breakdown that lost it (proven-path-rows.ts).
+        proofReceipt: { select: { marketFairProb: true } },
         game: { select: { sport: { select: { key: true, name: true } } } },
       },
       orderBy: { settledAt: "desc" },
@@ -114,6 +116,7 @@ async function loadSettledCalibrationSamples(): Promise<{
         result: pick.result ?? "",
         pickType: pick.pickType,
         factorBreakdown: pick.factorBreakdown,
+        proofReceipt: pick.proofReceipt,
         modelVersion: pick.modelVersion,
         settledAt: pick.settledAt,
       })),
@@ -132,6 +135,7 @@ async function loadSettledCalibrationSamples(): Promise<{
         result: pick.result ?? "",
         pickType: pick.pickType,
         factorBreakdown: pick.factorBreakdown,
+        proofReceipt: pick.proofReceipt,
         game: pick.game,
       });
       if (proven) {
