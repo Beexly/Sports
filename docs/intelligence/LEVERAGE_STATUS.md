@@ -1,9 +1,9 @@
 # Leverage Status Report
 
-**Generated**: 2026-09-04 (CST)
+**Generated**: 2026-09-05 (CST)
 **Scope**: Galaxy Sports Edge (GSE) / Galaxy Sports Network (GSN) — Sports Intelligence OS
-**Source**: `C:\Users\Garrett\Sports` (canonical repo, branch `hermes/c12-close-the-pass` @ `4e5a58963`)
-**Method**: Direct grep/find/stat scan of live working tree (prior 2026-08-29 report was generated from a strix temp checkout; this run re-verifies against the canonical repo)
+**Source**: `C:\Users\Garrett\Sports` (canonical repo working tree, branch `hermes/settlement-token-fix` @ `1a3f00d05`)
+**Method**: Direct grep/find/stat scan of live working tree — re-verifies the 2026-09-04 baseline.
 
 ---
 
@@ -11,10 +11,10 @@
 
 | Check | Status | Finding |
 |---|---|---|
-| TODO/FIXME in algorithm files | ✅ CLEAN | 0 true TODO/FIXME/HACK markers in 313 algorithm source files |
+| TODO/FIXME in algorithm files | ✅ CLEAN | 0 true TODO/FIXME/HACK markers in 299 algorithm source files (12 dead modules now in `attic/`) |
 | Unused algorithm imports | ✅ RESOLVED 2026-09-05 | 12 orphaned modules archived to `attic/`; 5 of the 19 flagged were transitively live and kept |
 | Research-lab.md core algorithm coverage | ✅ CLOSED 2026-09-05 | "Algorithm Reference for Operators" maps all 10 brief types to live, importer-verified modules (§3.3) |
-| Overall leverage health | 🟡 ATTENTION | Dead-code and doc-gap items are closed; Brier ≤0.22 and the odds-key stall remain |
+|| Overall leverage health | 🟢 IMPROVED | Dead-code + doc-gap closed; Brier ≤0.22 achieved (0.2106, 2026-09-04 run); odds-key stall remains |
 
 ---
 
@@ -107,9 +107,10 @@ The `index.ts` barrel exports 330 symbols. Cross-referencing against actual impo
 
 ### 2.3 Recommendation
 
-- ~~Remove or archive the 19 dead-code modules from `packages/prediction-engine/src/`~~ **DONE 2026-09-05** — 12 archived to `attic/`, 5 proven transitively live and kept, 2 were never top-level dead files
-- Add `// @deprecated` annotations to unused exports in `index.ts`
-- Consider splitting into a separate `packages/prediction-engine-rd/` for R&D modules (linear-thompson, pedersen-ledger, calibration-sequence, etc.)
+- ~~Archive dead-code modules from `packages/prediction-engine/src/`~~ **DONE 2026-09-05** — 12 archived to `attic/`, 5 proven transitively live and kept, 2 misattributed local modules
+- ~~Achieve Brier ≤ 0.22 (GREEN)~~ **DONE 2026-09-04** — Brier 0.2106 (market-calibration evidence)
+- Add `// @deprecated` annotations to unused exports in `index.ts` (open)
+- Consider splitting R&D "dark" modules into `packages/prediction-engine-rd/` (open)
 
 ---
 
@@ -186,7 +187,7 @@ All five are now answered by the operator reference section.
 - ~~🔴 **19 dead-code modules** (~134 KB) never exposed via public API~~ **CLOSED 2026-09-05** — 12 archived to `attic/` (~69 KB), 5 proven transitively live, 2 misattributed local modules
 - ~~🔴 **Research-lab.md has zero algorithm coverage**~~ **CLOSED 2026-09-05** — operator algorithm reference added (§3.3)
 - 🟡 **Many exported symbols unused** — barrel file includes R&D modules marked "Dark, NOT wired"
-- 🟡 **Brier score at 0.247** (above 0.22 GREEN threshold) — calibration needs improvement
+- 🟢 **Brier score 0.2106** (≤ 0.22 GREEN floor MET, 2026-09-04 calibration run; see `docs/data/MARKET_CALIBRATION_2026-09-04.md:37`)
 - 🟡 **Odds API key ABSENT** — market clock stalled since 2026-07-25
 
 ### 4.3 Leverage Opportunities
@@ -203,15 +204,15 @@ All five are now answered by the operator reference section.
 ### 4.4 Key Metrics
 
 | Metric | Value | Target | Status |
-|---|---|---|---|
-| Algorithm source files | 299 in src/ excl. tests (313 before the 2026-09-05 attic move) | — | — |
-| Dead-code modules | 0 in src/ (12 in `attic/`, 5 kept as transitively live) | 0 in src/ | ✅ (2026-09-05) |
-| Dead-code footprint archived | ~69 KB (12 modules, measured `du -b` 2026-09-05) | — | ✅ |
-| TODO/FIXME count | 0 | ≤5 | ✅ |
-| Research-lab algorithm refs | 10 brief types mapped | ≥10 | ✅ (2026-09-05) |
-| Brier score | 0.247 | ≤0.22 | 🟡 |
-| Public API symbols | 330 | — | — |
-| MODEL_VERSION | v5.2.7 | — | ✅ |
+||---|---|---|---|
+|| Algorithm source files | 299 in src/ (excl. tests) | — | ✅ verified 2026-09-05 (`find ... -name '*.ts' ! -name '*.test.ts'` = 299) |
+|| Dead-code modules | 0 in src/ (12 archived to `attic/`) | 0 in src/ | ✅ 2026-09-05 |
+|| Dead-code footprint archived | ~69 KB (12 modules) | — | ✅ |
+|| TODO/FIXME/HACK markers | 0 (1 fence false-positive string-literal; see §1) | ≤5 | ✅ |
+|| Research-lab algorithm section | §"Algorithm Reference for Operators" | ≥10 brief types | ✅ 2026-09-05 |
+|| Brier score | 0.2106 (≤ 0.22 floor MET) | ≤0.22 | 🟢 2026-09-04 |
+|| Public API symbols | 330 in barrel | — | — |
+|| MODEL_VERSION | v5.2.7 | — | ✅ |
 
 ---
 
