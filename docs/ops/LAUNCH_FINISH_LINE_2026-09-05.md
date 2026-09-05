@@ -123,9 +123,14 @@ ledger row named; none flips a gate, changes an env value, or touches production
    totals are reachable. Nothing on main consumes PredExon yet. Activation is **WP-27**
    (ledger C-104); TheRundown is at most a bridge (WP-26). Do not upgrade The Odds API
    tier; fix the account for Week 1 only if WP-27 cannot land before Thursday.
-2. **v5.2.8: YES, sequenced.** Phase 2 (WP-1) starts after #707 deploys and the first NFL
-   Sunday settles clean; MODEL_VERSION does not move before that. Recorded in the proposal
-   doc section 1. (F-14)
+2. **v5.2.8: YES, NOW** (revised 19:05 UTC; the earlier "after the first NFL Sunday" was
+   wrong). It is the PROVEN unlock. Section 3c has the measured floors and the day-count
+   path. (F-14, WP-1, WP-28)
+12. **No pick ever sits.** Founder policy, 2026-09-05: every pick is graded, or voided with
+    an RCA reason through the settlement outbox lane, or unpublished. Nothing stays PENDING
+    past its window, nothing stays stale on an unstarted game. The 36 overdue drain when
+    #707 deploys; the 20 stale go through the owner tool once; WP-29 automates both so the
+    condition cannot recur. (C-106)
 3. **Stale published picks: unpublish all rows the selector finds.** Not void (it writes
    settlement events into the record), not leave (they grade on May lines). One-command
    owner tool: `npm run ops:stale-picks:unpublish` (dry run) then `-- --execute`. (F-16)
@@ -149,6 +154,45 @@ ledger row named; none flips a gate, changes an env value, or touches production
     `20260101000000_baseline`, `20260902230000_game_merge_alias`,
     `20260902231000_week1_hot_path_indexes` all finished 2026-09-03 20:00 UTC, no
     rollbacks. Section 4 item 7 is closed.
+
+## 3c. Path to PROVEN before kickoff (measured 2026-09-05 19:05 UTC, read-only SQL)
+
+PROVEN needs at least 100 settled picks and a published calibration. The published
+calibration needs Brier at or under 0.22, ECE at or under 0.05, Murphy REL at or under 0.05,
+n at least 100, and three consecutive green runs of the calibration-metrics cron (every six
+hours). This is days, not weeks, because the probability that clears the floors is already
+committed to every receipt.
+
+| Floor | Required | Market-anchored p, settled MONEYLINE with receipt, today | Status |
+|---|---|---|---|
+| n | at least 100 | 150 | met |
+| Brier | at most 0.22 | 0.1692 | met |
+| Murphy REL | at most 0.05 | 0.0050 | met |
+| ECE (10 equal-width bins) | at most 0.05 | 0.0552 | missed by 0.005 |
+
+Context: hit rate 0.7533 against mean p 0.7958 (favorites-heavy sample); 1,894 settled picks
+in total; 610 settled moneyline picks carry no receipt (older rows and signal-slate rows).
+
+1. **WP-1 now** (Phase 2 of v5.2.8): the eligibility and calibration surfaces measure the
+   market-anchored probability (hierarchy: factor-breakdown market p, then receipt
+   `marketFairProb`, then WP-28's lock-time derivation); book-priced picks display it,
+   labelled; the public claim says exactly what is measured. Files and acceptance in the
+   proposal doc section 4.
+2. **WP-28**: lock-time market probability for the 610 receipt-less settled moneyline picks,
+   derived at read time from the append-only odds table (rows with `fetchedAt` at or before
+   the pick's `generatedAt`, de-vigged consensus of the picked side via `consensusNoVig`),
+   reusing the query shape in `apps/web/lib/settlement/free-path-clv.ts:68-90`. Zero
+   writes; the number is arithmetic on stored quotes. This moves n toward 700 and gives ECE
+   its true value either way; nothing is tuned to pass.
+3. **Book-priced flow restored** (section 4 item 1 or WP-27) so every settled pick from
+   Saturday onward carries a receipt.
+4. **Streak**: three consecutive green cron runs (12 to 18 hours). The founder may trigger
+   `calibration-metrics` by hand to compress this; agents never run a cron with a secret.
+5. **Founder flips** `calibrationPublished` per GATE_OPENING_RUNBOOK when the streak is
+   green, then moves the pricing phase to PROVEN (`pricing-phases.ts`). (F-36)
+
+Honest caveat: ECE at 0.0552 on 150 samples is not a pass. Steps 2 and 3 change the sample;
+the floor is either met on the true number or it is not, and the surface says which.
 
 ## 4. Founder-only actions (nothing here can be done by an agent)
 
@@ -269,6 +313,8 @@ idempotent, fail-closed; 174 money-path unit tests green) and the pick-generatio
 | WP-25 | Gate the ESPN Power Index fetch behind the rights registry (fail closed, attribution) until F-21 clears it; anonymous copy never names the source | `packages/ingestion-pipeline/src/generate-signal-slate.ts` (espn_powerindex), `apps/web/lib/scraping/clearance-engine.ts` | slate test: fetch not called when clearance denies | S |
 | WP-26 | Own odds ingestion as primary, TheRundown as the working second book (section 3b item 1). Phase A (NOT STARTED; fully specified, dispatch first): durable 429 cooldown read from `IngestionRun` (marker `rundown:429`, `RUNDOWN_429_COOLDOWN_MINUTES` default 60), freshness throttle from the newest Rundown-affiliate odds row (`RUNDOWN_FALLBACK_MIN_INTERVAL_MINUTES` default 30), `provider` and `providerNote` on every per-sport result and `oddsInserting.lastProviderNote` on the truth surface. Phase B: board-fill must not run a second odds pass when refresh-odds ran within the interval; Rundown `daySpan` follows the horizon of games actually on the board (NFL Thursday and Sunday from a Friday cycle); founder picks TheRundown Starter or keeps The Odds API. Phase C (optional, after Week 1): re-land the core of PR #680 (`GalaxySportsApiOddsProvider`, de-vig `fair_prob`, 8s timeouts, registry gating) | `packages/data-ingestion/src/rundown-client.ts`, `packages/ingestion-pipeline/src/process-sport.ts`, `apps/web/app/api/ops/public-surface-truth/route.ts`, `apps/web/app/api/cron/board-fill/route.ts`; reference `origin/hermes/galaxy-keyless-odds` (197 behind main) | production logs stop showing `HTTP 429 rate_limited` every cycle; `curl /api/ops/public-surface-truth \| jq .oddsInserting.lastProviderNote`; odds rows with Rundown affiliate bookmakers appear within one interval; ingestion-pipeline and data-ingestion suites green | M |
 | WP-27 | **GSN API activation: the completely free two-book board** (founder position on PR #680: we are the provider, not Rundown, not The Odds API). (1) Re-land the PR #680 core onto main: `GalaxySportsApiOddsProvider` (ESPN inline odds via `site.web.api`, de-vig `fair_prob`, 8s timeouts, `galaxy-espn-inline` registry entry, provider selection in `odds-provider-adapter.ts`). (2) Select the Galaxy provider also when the paid circuit is open (HTTP 402), not only when `THE_ODDS_API_KEY` is unset. (3) Feed `galaxy-kalshi-book.ts` from the PredExon Kalshi catalog (`predexon-client.ts`, `PREDEXON_INGEST` + `PREDEXON_API_KEY`, `assertIngestible("predexon")` passes: verdict use-with-caution) instead of the direct Kalshi client, so the second book clears the registry. Cache the catalog per cycle (PredExon free tier is 1 rps, 1k requests per month; Kalshi list-markets is documented free and unlimited). (4) Extend the Kalshi book from H2H to NFL SPREAD and TOTAL using series `KXNFLSPREAD` and `KXNFLTOTAL` (`kalshi-series.ts`); other sports stay H2H until their series are verified. (5) Never invent the other side: both sides need a live two-way quote or no book is added (law already in `galaxy-kalshi-book.ts`). | `origin/hermes/galaxy-keyless-odds` (197 behind main; CI was green): `packages/data-ingestion/src/{odds-provider-adapter,galaxy-kalshi-book,source-registry}.ts`, `packages/ingestion-pipeline/src/process-sport.ts`; on main: `packages/data-ingestion/src/{predexon-client,kalshi-series,kalshi-client}.ts` | with `THE_ODDS_API_KEY` blank in a test, `processSport` mints MONEYLINE and NFL SPREAD/TOTAL picks with `bookmakerCount = 2` from `espn_public` plus `kalshi`; no pick minted when either side lacks a live quote; data-ingestion and ingestion-pipeline suites green; then founder F-34 sets the two PredExon env values and the first production cycle shows `kalshi` rows in the odds table | L |
+| WP-28 | **Lock-time market probability from the odds table** (section 3c step 2): in `apps/web/lib/calibration/live-calibration-p.ts` add the third fallback after the receipt: for a settled MONEYLINE pick with no receipt and no factor-breakdown market p, read odds rows for the game with `fetchedAt` at or before `generatedAt` (latest snapshot per bookmaker, at least `MIN_BOOKMAKERS` books), de-vig with `consensusNoVig` (`packages/prediction-engine/src/market-read.ts`), take the picked side. Read-time only, no writes, deterministic. Loaders in `proven-path-seed.ts`, `calibration-eligibility-durable.ts` and `calibration-metrics/route.ts` pass the odds rows or a resolver. | `apps/web/lib/calibration/live-calibration-p.ts`, `proven-path-rows.ts`, `apps/web/lib/settlement/free-path-clv.ts:68-90` (query shape to reuse), `apps/web/lib/ops/calibration-eligibility-durable.ts:349` | unit test with a fixture of three bookmaker rows yields the de-vigged side probability; a pick with no odds rows stays excluded; `scoreBakeoffByMarket` coverage for MONEYLINE rises above 0.7 on the next cron run | M |
+| WP-29 | **Zero-sit settlement policy** (section 3b item 12): a pick PENDING more than 24 hours after `commenceTime` whose settlement-rca reason is NO_FINAL after every free source and the backfill lane is VOIDED through the settlement outbox lane (`PickSettlementEvent` with result VOID and the RCA code in the payload), never deleted; a published PENDING pick on an unstarted game not refreshed within `STALE_PENDING_PICK_MAX_AGE_DAYS` is unpublished by the same cron using the shared selector in `scripts/ops/lib/stale-pending-picks-selection.ts`; both actions are counted on the truth surface and in the health alert. Founder policy replaces the "owner decides" stance in `stale-pick-policy.ts:16-20`; keep the owner tool for manual overrides. | `apps/web/app/api/cron/settle-picks/route.ts`, `apps/web/lib/settlement/root-cause-analysis.ts`, `apps/web/lib/board/stale-pick-policy.ts`, `apps/web/lib/data-sources/settle-backfill.ts`, `scripts/ops/lib/stale-pending-picks-selection.ts` | tests: a 25-hour NO_FINAL pick is voided with an outbox event; a 23-hour one is not; a stale unstarted pick is unpublished; `overduePending` and `stalePendingPicks` both read 0 on the truth surface after one cycle | M |
 
 Public frontend (from the frontend audit; FE-01/03/04 shipped in `994a2fa` and `486b0a3`;
 no screenshots were possible from the sandbox, every finding is from source):

@@ -21,13 +21,19 @@ proposed here is arithmetic on quoted prices that a reader can recompute by hand
 
 ## 1. Decision (founder)
 
-**Decision record, 2026-09-05.** The founder delegated this call in-session ("make the
-most intelligent and aggressive decisions for me"). Decision: **YES, sequenced.** Phase 2
-(work package WP-1) starts only after PR #707 has deployed and the first NFL Sunday has
-settled clean through the free-first path; nothing changes MODEL_VERSION before that. The
-status line above stays PROPOSED until the implementer flips it to IMPLEMENTED with the
-Phase 2 commit, so `model-freeze.mjs` keeps guarding the bump. The founder can veto by
-editing this paragraph.
+**Decision record, 2026-09-05 (revised 19:05 UTC).** The founder delegated this call
+in-session. Decision: **YES, NOW.** Phase 2 (work package WP-1) starts immediately; it is
+the PROVEN unlock, not a post-launch nicety. Measured on production at 19:05 UTC (read-only
+SQL over settled MONEYLINE picks that carry a receipt): n 150, Brier 0.1692, Murphy REL
+0.0050, ECE 0.0552 on ten equal-width bins. Three of the four floors already pass on the
+market-anchored probability; ECE misses by 0.005 on 150 samples, and 610 more settled
+moneyline picks have no receipt but can carry a lock-time market probability recomputed
+from the append-only odds table (WP-28, zero writes). The eligibility streak is three
+consecutive green runs (`CALIBRATION_ELIGIBILITY_STREAK`, default 3) of a cron that fires
+every six hours, so GREEN is 12 to 18 hours after the probability source switches, sooner
+if the founder triggers the cron by hand. The status line above stays PROPOSED until the
+implementer flips it to IMPLEMENTED with the Phase 2 commit, so `model-freeze.mjs` keeps
+guarding the bump. The founder can veto by editing this paragraph.
 
 Publish, on every book-priced pick and for every tier, a **market-anchored win
 probability**: the de-vigged consensus probability of the picked side, computed from the
