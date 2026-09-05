@@ -27,7 +27,7 @@ the PROVEN unlock, not a post-launch nicety. Measured on production at 19:05 UTC
 SQL over settled MONEYLINE picks that carry a receipt): n 150, Brier 0.1692, Murphy REL
 0.0050, ECE 0.0552 on ten equal-width bins. Three of the four floors already pass on the
 market-anchored probability; ECE misses by 0.005 on 150 samples, and 610 more settled
-moneyline picks have no receipt but can carry a lock-time market probability recomputed
+moneyline picks have no receipt but can carry a publish-time market probability recomputed
 from the append-only odds table (WP-28, zero writes). The eligibility streak is three
 consecutive green runs (`CALIBRATION_ELIGIBILITY_STREAK`, default 3) of a cron that fires
 every six hours, so GREEN is 12 to 18 hours after the probability source switches, sooner
@@ -124,7 +124,7 @@ is recorded as an observation, not a result.
 | 31564d9 | Signal slate never overwrites a book-priced moneyline pick; teaser carries no percentage |
 | ef24e77 | Public picks route strips any probability from teaser text served without confidence |
 | 67730a6 | Confidence tail splits by market (loader forwarded pickType) |
-| 8a8f292 | Loaders read the receipt's lock-time marketFairProb when the factor breakdown lost it |
+| 8a8f292 | Loaders read the receipt's publish-time marketFairProb when the factor breakdown lost it |
 
 ### Phase 1, shipped (claim restatement, no MODEL_VERSION change)
 

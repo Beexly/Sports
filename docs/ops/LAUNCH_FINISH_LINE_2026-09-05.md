@@ -175,10 +175,10 @@ in total; 610 settled moneyline picks carry no receipt (older rows and signal-sl
 
 1. **WP-1 now** (Phase 2 of v5.2.8): the eligibility and calibration surfaces measure the
    market-anchored probability (hierarchy: factor-breakdown market p, then receipt
-   `marketFairProb`, then WP-28's lock-time derivation); book-priced picks display it,
+   `marketFairProb`, then WP-28's publish-time derivation); book-priced picks display it,
    labelled; the public claim says exactly what is measured. Files and acceptance in the
    proposal doc section 4.
-2. **WP-28**: lock-time market probability for the 610 receipt-less settled moneyline picks,
+2. **WP-28**: publish-time market probability for the 610 receipt-less settled moneyline picks,
    derived at read time from the append-only odds table (rows with `fetchedAt` at or before
    the pick's `generatedAt`, de-vigged consensus of the picked side via `consensusNoVig`),
    reusing the query shape in `apps/web/lib/settlement/free-path-clv.ts:68-90`. Zero
