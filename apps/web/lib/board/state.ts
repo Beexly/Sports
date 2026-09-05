@@ -19,6 +19,20 @@ import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
+/**
+ * D-3 (C11 BEFORE DEPLOY): liveBoardOn was hardcoded false at every call site,
+ * so classifyBoardState could NEVER return HAS_ROWS — the board rendered
+ * "held by founder gate" copy above real rows the moment CANONICAL_HISTORY
+ * flipped on. The gate is now env-driven, reading the SAME LIVE_BOARD variable
+ * the autonomy kernel already observes (cron/autonomy-cycle/route.ts). House
+ * flag convention (lib/ops/autonomy-posture.ts): trimmed, case-insensitive
+ * "true" is the only truthy value — absent/empty/garbage stays false, so the
+ * founder gate remains the production default until explicitly opened.
+ */
+export function liveBoardOn(env: Record<string, string | undefined> = process.env): boolean {
+  return env["LIVE_BOARD"]?.trim().toLowerCase() === "true";
+}
+
 export interface BoardStateRow {
   id: string;
   gameId: string;
@@ -258,7 +272,7 @@ async function loadBoardStateInner(
         now,
         rows: emptyRows,
         suppressedReason: demoActive ? "DEMO_DATA" : "STALE_DATA",
-        liveBoardOn: false,
+        liveBoardOn: liveBoardOn(),
         bootstrap: gates.isBootstrapMode,
         schedulerLiveness,
       }),
@@ -348,7 +362,7 @@ async function loadBoardStateInner(
           modelVersion,
           now,
           rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
-        liveBoardOn: false,
+        liveBoardOn: liveBoardOn(),
         bootstrap: gates.isBootstrapMode,
       }),
       };
@@ -466,7 +480,7 @@ async function loadBoardStateInner(
         modelVersion,
         now,
         rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
-        liveBoardOn: false,
+        liveBoardOn: liveBoardOn(),
         bootstrap: gates.isBootstrapMode,
         staleDetected: staleInfo.stale,
         schedulerLiveness: staleInfo.schedulerLiveness ?? schedulerLiveness,
@@ -496,7 +510,7 @@ async function loadBoardStateInner(
         modelVersion: MODEL_VERSION,
         now,
         rows: emptyRows,
-        liveBoardOn: false,
+        liveBoardOn: liveBoardOn(),
         bootstrap: gates.isBootstrapMode,
       }),
     };

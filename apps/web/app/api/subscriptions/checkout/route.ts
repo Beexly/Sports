@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { auth } from "@/lib/auth";
+import { paidCheckoutOpen } from "@/lib/billing/paid-checkout";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
   getOrCreateStripeCustomer,
@@ -50,6 +51,22 @@ const CheckoutSchema = z.object({
 const CHECKOUT_CURRENCY = "usd";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // PART 4 (C12) free-only switch: one server-side choke for NEW paid
+  // checkouts. Default open — PAID_CHECKOUT_OPEN=false in the console closes
+  // it; deleting the var is the one-line revert. Placed BEFORE the session
+  // lookup so the closed state costs zero DB/Stripe work. The billing portal
+  // is deliberately NOT gated: existing subscribers keep managing/cancelling.
+  if (!paidCheckoutOpen()) {
+    return NextResponse.json(
+      {
+        error:
+          "Paid plans are opening soon. Everything free stays free — the board, stats, and alerts are open today.",
+        code: "paid_checkout_closed",
+      },
+      { status: 503 },
+    );
+  }
+
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

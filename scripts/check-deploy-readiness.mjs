@@ -28,6 +28,11 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  STRIPE_PRICE_ENV_MATRIX,
+  loadPriceIdHelpers,
+  evaluateStripePrice,
+} from "./lib/stripe-price-check.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const repoRoot = resolve(__dirname, "..");
@@ -251,28 +256,51 @@ async function checkStripe() {
     bad("Stripe secret key", err.message);
   }
 
-  // Confirm the four tiered price IDs resolve.
-  for (const which of [
-    "STRIPE_PRO_MONTHLY_PRICE_ID",
-    "STRIPE_PRO_ANNUAL_PRICE_ID",
-    "STRIPE_ELITE_MONTHLY_PRICE_ID",
-    "STRIPE_ELITE_ANNUAL_PRICE_ID",
-  ]) {
-    const id = process.env[which];
-    if (!id) continue;
-    try {
-      const res = await fetch(`https://api.stripe.com/v1/prices/${id}`, {
-        headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
-      });
-      if (!res.ok) {
-        bad(which, `HTTP ${res.status}`);
+  // Confirm EVERY tiered price ID resolves AND charges the advertised amount.
+  //
+  // The old loop covered four vars, printed whatever amount it fetched as a
+  // GREEN line, and never compared it to anything — so the runbook's
+  // "create Pro at $19/mo / Elite at $49/mo" instruction sailed through here
+  // and then 503'd at checkout, because apps/web/lib/stripe.ts fails CLOSED on
+  // an amount mismatch (GSE-SEC-024). That is a silent, total revenue outage
+  // delivered as a passing checklist.
+  //
+  // This now loops the SAME shared matrix and the SAME predicate the runtime
+  // checkout guard uses (scripts/lib/stripe-price-check.mjs → price-ids.ts),
+  // covers all six vars including FANTASY, and reports a mismatch through
+  // bad() — a hard failure that exits non-zero — never warn().
+  let priceHelpers = null;
+  try {
+    priceHelpers = await loadPriceIdHelpers(repoRoot);
+  } catch (err) {
+    bad(
+      "Stripe price validation",
+      `could not load the advertised-price helpers — refusing to certify prices it did not check: ${err.message}`,
+    );
+  }
+
+  if (priceHelpers) {
+    for (const { env: which, tier, interval } of STRIPE_PRICE_ENV_MATRIX) {
+      const id = process.env[which];
+      if (!id) {
+        bad(which, `not set — ${tier}/${interval} checkout would 503 (no price ID)`);
         continue;
       }
-      const price = await res.json();
-      const amount = (price.unit_amount / 100).toFixed(2);
-      ok(which, `$${amount}/${price.recurring?.interval ?? "?"}`);
-    } catch (err) {
-      bad(which, err.message);
+      try {
+        const res = await fetch(`https://api.stripe.com/v1/prices/${id}`, {
+          headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+        });
+        if (!res.ok) {
+          bad(which, `HTTP ${res.status} — price ${id} does not resolve on this key`);
+          continue;
+        }
+        const price = await res.json();
+        const verdict = evaluateStripePrice({ helpers: priceHelpers, tier, interval, price });
+        if (verdict.ok) ok(which, verdict.detail);
+        else bad(which, `${verdict.detail} [price ${id}]`);
+      } catch (err) {
+        bad(which, err.message);
+      }
     }
   }
 }

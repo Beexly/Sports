@@ -90,7 +90,11 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "What does Elite get?",
-        a: `$${phase.elite.monthly}/month, or $${phase.elite.annual}/year. Everything in Pro plus email and push notifications for high-Edge-Index signals as they ship.`,
+        // D-6 (C11 BEFORE DEPLOY): this claimed push/email "as they ship" — a
+        // real-time alert promise. The dispatch path only ever fires on a
+        // SETTLED result (watchlist AlertsBanner, CLAUDE.md tier table, and the
+        // worker itself all say graded-only). Copy now matches the code.
+        a: `$${phase.elite.monthly}/month, or $${phase.elite.annual}/year. Everything in Pro plus email and push notifications when a pick you follow is graded — win, loss, push, or void. We never alert on an ungraded tip.`,
       },
       {
         q: "Is there a refund window?",

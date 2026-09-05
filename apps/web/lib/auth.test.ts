@@ -62,7 +62,7 @@ vi.mock("@auth/prisma-adapter", () => ({
 
 // ─── Now import the module under test ───
 // The module-level NextAuth(config) call fires here; capturedConfig is populated.
-import { isAdminEmail, auth, DEV_FAKE_ADMIN } from "@/lib/auth";
+import { isAdminEmail, auth, DEV_FAKE_ADMIN, stampEmailVerifiedFromProfile } from "@/lib/auth";
 import { resetEntitlementFailClosedThrottle } from "@/lib/entitlement-observability";
 
 // ─── Helpers ───
@@ -423,5 +423,76 @@ describe("auth() — error handling on realAuth failure", () => {
     await expect(auth()).resolves.toBeNull();
 
     expect(errorSpy).not.toHaveBeenCalled();
+  });
+});
+
+// ─── D-1 (C11): emailVerified stamping from Google's email_verified claim ───
+// The alert worker refuses recipients with emailVerified=null and no code path
+// ever wrote the column, so Elite alerts could never deliver. These tests pin
+// the fail-closed / idempotent contract of the write.
+describe("stampEmailVerifiedFromProfile (D-1)", () => {
+  function fakeDb(row: { emailVerified: Date | null } | null) {
+    const updates: unknown[] = [];
+    return {
+      updates,
+      user: {
+        findUnique: async () => row,
+        update: async (args: unknown) => {
+          updates.push(args);
+          return row;
+        },
+      },
+    };
+  }
+
+  it("stamps when the provider claims email_verified === true and the row is null", async () => {
+    const dbLike = fakeDb({ emailVerified: null });
+    const when = new Date("2026-09-04T00:00:00.000Z");
+    const result = await stampEmailVerifiedFromProfile(
+      dbLike, "a@b.co", { email_verified: true }, when,
+    );
+    expect(result).toBe("stamped");
+    expect(dbLike.updates).toHaveLength(1);
+    expect(dbLike.updates[0]).toEqual({
+      where: { email: "a@b.co" },
+      data: { emailVerified: when },
+    });
+  });
+
+  it("is idempotent — never re-writes an already-verified row", async () => {
+    const dbLike = fakeDb({ emailVerified: new Date("2026-01-01") });
+    const result = await stampEmailVerifiedFromProfile(
+      dbLike, "a@b.co", { email_verified: true },
+    );
+    expect(result).toBe("already");
+    expect(dbLike.updates).toHaveLength(0);
+  });
+
+  it("fail-closed: a missing or false email_verified claim writes nothing", async () => {
+    for (const profile of [{}, { email_verified: false }, { email_verified: "true" }, null, undefined]) {
+      const dbLike = fakeDb({ emailVerified: null });
+      const result = await stampEmailVerifiedFromProfile(dbLike, "a@b.co", profile);
+      expect(result).toBe("unverified");
+      expect(dbLike.updates).toHaveLength(0);
+    }
+  });
+
+  it("no email / no user row → no write, distinct outcomes", async () => {
+    const dbLike = fakeDb(null);
+    expect(await stampEmailVerifiedFromProfile(dbLike, null, { email_verified: true })).toBe("no-email");
+    expect(await stampEmailVerifiedFromProfile(dbLike, "ghost@b.co", { email_verified: true })).toBe("no-user");
+    expect(dbLike.updates).toHaveLength(0);
+  });
+
+  it("a findUnique rejection degrades to no-user (never throws into sign-in)", async () => {
+    const dbLike = {
+      user: {
+        findUnique: async () => { throw new Error("db down"); },
+        update: async () => { throw new Error("must not be reached"); },
+      },
+    };
+    await expect(
+      stampEmailVerifiedFromProfile(dbLike, "a@b.co", { email_verified: true }),
+    ).resolves.toBe("no-user");
   });
 });
