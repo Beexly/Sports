@@ -241,9 +241,13 @@ export async function backfillStaleSettlement(input: {
       : [];
     let games: readonly NormalizedGame[] = [];
     if (freeSport) {
+      // This lane drains the tail, so when the loaded rows span more than the
+      // date cap the OLDEST days must be the ones fetched (the runner keeps the
+      // newest). Before 2026-09-05 both lanes kept the newest 21, so the oldest
+      // overdue picks never got their board fetched by either lane.
       const { espnKeys, isoKeys } = uniqueScoreboardDates(
         sportRows.map((r) => r.game.commenceTime),
-        { maxDays: 21, now },
+        { maxDays: 21, now, order: "oldest" },
       );
       const multi = await fetchScores(freeSport, {
         espnDateKeys: espnKeys,
