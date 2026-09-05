@@ -151,7 +151,14 @@ The research-lab.md focuses exclusively on **operational research brief types**:
 - Content/SEO Brief
 - Competitor/Product Research Brief
 
-### 3.3 Gap Assessment
+### 3.3 Gap Assessment — CLOSED 2026-09-05
+
+`docs/brain/research-lab.md` gained an "Algorithm Reference for Operators"
+section mapping all 10 brief types to live, importer-verified engine modules
+(confidence row: scoring → conviction-tier → calibration → quarter-Kelly;
+settlement/honesty surfaces inherited by every brief). All cited paths were
+existence-checked against the tree the same night (three wrong paths caught
+and fixed before commit).
 
 🔴 **CRITICAL GAP**: The research-lab.md does not document how any of the core prediction algorithms feed into research briefs. Operators using the lab have no reference to:
 - How the scoring algorithm (`scoring.ts`) produces confidence scores that inform pick generation
@@ -194,10 +201,10 @@ The research-lab.md focuses exclusively on **operational research brief types**:
 | Metric | Value | Target | Status |
 |---|---|---|---|
 | Algorithm source files | 120+ | — | — |
-| Dead-code modules | 19 | 0 | 🔴 |
+| Dead-code modules | 12 archived, 5 kept as live (2026-09-05) | 0 in src/ | ✅ |
 | Dead-code footprint | ~134 KB | — | 🔴 |
 | TODO/FIXME count | 0 | ≤5 | ✅ |
-| Research-lab algorithm refs | 0 | ≥10 | 🔴 |
+| Research-lab algorithm refs | 10 brief types mapped | ≥10 | ✅ (2026-09-05) |
 | Brier score | 0.247 | ≤0.22 | 🟡 |
 | Public API symbols | 1,100+ | — | — |
 | MODEL_VERSION | v5.1.0 | — | ✅ |
