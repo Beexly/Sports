@@ -200,6 +200,34 @@ be declared. Weakening signals must be included.
 
 ---
 
+## Algorithm Reference for Operators (added 2026-09-05)
+
+The engine is a deterministic factor model with explicit weighted factors —
+never "AI" (brand rule 8). A language model drafts brief prose only; it never
+chooses a pick. This section maps each brief type to the live engine modules
+that produce the numbers the brief cites. Module paths are relative to
+`packages/prediction-engine/src/`. Only barrel-exported, importer-verified
+modules are listed — archived R&D modules under `attic/` are out of scope.
+
+| Brief | Engine modules that feed it | What the operator cites |
+|---|---|---|
+| Game Context | `game-context.ts`, `team-strength-filter.ts`, `elo-from-results.ts`, `team-rates.ts` | Pre-game features, Elo-based fair value, team base rates |
+| Prop Market | `poisson.ts`, `skellam.ts`, `dixon-coles.ts`, `player-projection.ts`, `player-rate-posteriors.ts`, `opponent-adjusted.ts` | Expected player/team totals distributions for over/under research |
+| Market Movement | `market-read.ts`, `clv.ts`, `clv-capture.ts`, `market-anchored-reconciliation.ts`, `pipeline/live-orchestrator.ts` (+ `hawkes-steam.ts` steam detector) | Line moves, closing-line value, reconciled market snapshot |
+| Injury / Player Context | `player-archetype.ts`, `opponent-adjusted.ts`, `expected-metrics/` | Role-adjusted expectation shifts when personnel changes |
+| Fantasy Decision | `earned-weight-ensemble.ts`, `tweedie-baseline.ts`, `ml-estimator.ts` | Ensemble-weighted projections with baseline comparisons |
+| Coach / Scheme Change | `edge-lab/nfl-change-point.ts`, `edge-lab/features/nfl-regime-change.ts`, `game-script.ts` | Detected regime breaks; script-conditioned expectations |
+| Rumor Triage | `metrics/market/market-gravity-index.ts`, `metrics/market/stale-line-risk-score.ts` | Whether the market corroborates or ignores the rumor |
+| Content / SEO | `pick-proof-receipt.ts`, `certificate/` | Citable proof-of-record artifacts, never invented stats |
+| Competitor / Product | `docs/intelligence/` corpora + `gse-competitive-intel` repo (e.g. nfelo 66.61% SU / 53.70% ATS vs close / +5.61% CLV reference) | Versioned external benchmarks, never silently merged |
+| All briefs (confidence) | `scoring.ts`, `conviction-tier.ts`, `calibration-apply.ts`, `probability-calibration.ts`, `temperature-scaling.ts`, `kelly.ts`, `robust-kelly.ts` | Confidence score, conviction tier, calibrated probability, quarter-Kelly stake lens |
+
+Settlement and honesty surfaces every brief inherits: `settlement.ts` records
+results, `honesty/no-bet-gate.ts` / `metrics/decision/no-bet-pressure.ts` can force a
+hard pass, and `forecast-skill-eprocess.ts` scores probability skill over time.
+If a brief's numbers cannot be traced to one of the modules above, the brief
+is not ready — write the gap down instead of filling it.
+
 ## Cross-Reference
 
 - Ask the Brain: `docs/brain/ask-the-brain.md` — Brain infrastructure shared with lab
