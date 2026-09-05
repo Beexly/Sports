@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
+import { paidCheckoutOpen } from "@/lib/billing/paid-checkout";
 
 /**
  * Behavioral tests for the subscription checkout route — the entry
@@ -104,6 +105,36 @@ function stripeError(type: string): Error & { type: string } {
 }
 
 describe("POST /api/subscriptions/checkout", () => {
+  const savedPaidFlag = process.env["PAID_CHECKOUT_OPEN"];
+  afterEach(() => {
+    if (savedPaidFlag === undefined) delete process.env["PAID_CHECKOUT_OPEN"];
+    else process.env["PAID_CHECKOUT_OPEN"] = savedPaidFlag;
+  });
+
+  it("PART 4 free-only: PAID_CHECKOUT_OPEN=false returns 503 before any auth/DB/Stripe work", async () => {
+    process.env["PAID_CHECKOUT_OPEN"] = "false";
+    const req = new NextRequest("http://localhost/api/subscriptions/checkout", {
+      method: "POST",
+      body: JSON.stringify({ tier: "PRO", interval: "month", dateOfBirth: "2000-01-01" }),
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(503);
+    const body = await res.json();
+    expect(body.code).toBe("paid_checkout_closed");
+    // Nothing downstream ran: no session lookup, no Stripe call.
+    expect(mocks.auth).not.toHaveBeenCalled();
+    expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+  });
+
+  it("PART 4 free-only: unset or any non-'false' value keeps checkout open (default unchanged)", async () => {
+    delete process.env["PAID_CHECKOUT_OPEN"];
+    expect(paidCheckoutOpen()).toBe(true);
+    process.env["PAID_CHECKOUT_OPEN"] = "TRUE";
+    expect(paidCheckoutOpen()).toBe(true);
+    process.env["PAID_CHECKOUT_OPEN"] = " false ";
+    expect(paidCheckoutOpen()).toBe(false);
+  });
+
   beforeEach(() => {
     resetRateLimits();
     mocks.auth.mockReset();

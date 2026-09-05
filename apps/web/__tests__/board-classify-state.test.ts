@@ -1,5 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { classifyBoardState } from "@/lib/board/classify-board-state";
+import { liveBoardOn } from "@/lib/board/state";
+
+describe("liveBoardOn env gate (D-3)", () => {
+  it("only trimmed case-insensitive 'true' opens the gate — house flag convention", () => {
+    expect(liveBoardOn({ LIVE_BOARD: "true" })).toBe(true);
+    expect(liveBoardOn({ LIVE_BOARD: " TRUE " })).toBe(true);
+    expect(liveBoardOn({ LIVE_BOARD: "1" })).toBe(false);
+    expect(liveBoardOn({ LIVE_BOARD: "yes" })).toBe(false);
+    expect(liveBoardOn({ LIVE_BOARD: "" })).toBe(false);
+    expect(liveBoardOn({})).toBe(false);
+    expect(liveBoardOn({ LIVE_BOARD: undefined })).toBe(false);
+  });
+
+  it("gate ON + real rows → HAS_ROWS (previously unreachable: hardcoded false)", () => {
+    const r = classifyBoardState({
+      liveBoardOn: liveBoardOn({ LIVE_BOARD: "true" }),
+      bootstrap: false,
+      rowCount: 3,
+    });
+    expect(r.state).toBe("HAS_ROWS");
+    expect(r.refusePublicFire).toBe(false);
+  });
+});
 
 describe("classifyBoardState", () => {
   it("LIVE_BOARD off → honest empty refuse public fire", () => {

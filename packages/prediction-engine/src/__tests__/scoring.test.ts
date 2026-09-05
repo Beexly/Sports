@@ -199,6 +199,78 @@ describe("scoreTotalPick — edge score of a realistic two-way total", () => {
 });
 
 // ============================================================
+// scoreGame — SPREAD pick'em (spread === 0) defect
+// ============================================================
+// Defect (night probe 2026-09-04, docs/data/MARKET_CALIBRATION): an all-PK
+// board (every book spread === 0) votes 0 books "home favored", so
+// homeFavoredPct = 0 → homeIsChosen = false → consensusPct = 1.0 and a
+// phantom "Away +0.0" SPREAD pick with maximum consensus. Contract:
+// an all-PK board has NO favored side → scoreSpreadPick returns null and
+// scoreGame emits no SPREAD pick. Mixed boards (≥1 nonzero spread) keep
+// existing side selection byte-for-byte.
+
+describe("scoreGame — SPREAD pick'em (spread === 0) defect", () => {
+  const pkBoard = (): Partial<OddsInput> => ({
+    bookmakerOdds: [
+      { bookmaker: "fanduel",    market: "SPREADS", spread: 0, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { bookmaker: "draftkings", market: "SPREADS", spread: 0, homeSpreadPrice: -112, awaySpreadPrice: -108 },
+      { bookmaker: "betmgm",     market: "SPREADS", spread: 0, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { bookmaker: "caesars",    market: "SPREADS", spread: 0, homeSpreadPrice: -115, awaySpreadPrice: -105 },
+      { bookmaker: "pointsbet",  market: "SPREADS", spread: 0, homeSpreadPrice: -108, awaySpreadPrice: -112 },
+      { bookmaker: "fanduel",    market: "H2H", homePrice: -120, awayPrice: 100 },
+      { bookmaker: "draftkings", market: "H2H", homePrice: -118, awayPrice: 102 },
+    ],
+  });
+
+  it("all-PK board emits NO SPREAD pick (no phantom away pick'em)", () => {
+    const picks = scoreGame(makeOddsInput(pkBoard()) as OddsInput);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    expect(spreadPick).toBeUndefined();
+  });
+
+  it("mixed board with one PK book keeps home-side selection (byte-stable behavior)", () => {
+    // 8 home-favored books + 1 PK: homeFavoredPct = 8/9 → home chosen; the PK
+    // book is a non-vote, not an away vote (pre-fix it dragged the side AWAY
+    // whenever the PK share tied or led). Board is deliberately heavy so
+    // confidence clears the 50 publish floor with consensus < 1.0.
+    const books = ["fanduel", "draftkings", "betmgm", "caesars", "pointsbet",
+      "williamhill", "unibet", "betrivers", "bovada"];
+    const spreads = [-3.5, -3.5, -3.0, -3.5, 0, -3.5, -3.5, -4.0, -3.5];
+    const prices  = [-110, -112, -115, -110, -108, -111, -109, -113, -110];
+    const picks = scoreGame(makeOddsInput({
+      bookmakerOdds: [
+        ...books.map((b, i) => ({
+          bookmaker: b, market: "SPREADS" as const, spread: spreads[i]!,
+          homeSpreadPrice: prices[i]!, awaySpreadPrice: -prices[i]! + (i % 2 === 0 ? 0 : 4),
+        })),
+        { bookmaker: "fanduel",    market: "H2H", homePrice: -180, awayPrice: 155 },
+        { bookmaker: "draftkings", market: "H2H", homePrice: -175, awayPrice: 150 },
+      ],
+    }));
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    expect(spreadPick).toBeTruthy();
+    expect(spreadPick!.selection).toContain("Chiefs");
+  });
+
+  it("all-away-favored board still picks the away side (regression guard)", () => {
+    const picks = scoreGame(makeOddsInput({
+      bookmakerOdds: [
+        { bookmaker: "fanduel",    market: "SPREADS", spread: 2.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "draftkings", market: "SPREADS", spread: 2.5, homeSpreadPrice: -112, awaySpreadPrice: -108 },
+        { bookmaker: "betmgm",     market: "SPREADS", spread: 3.0, homeSpreadPrice: -115, awaySpreadPrice: -105 },
+        { bookmaker: "caesars",    market: "SPREADS", spread: 2.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { bookmaker: "pointsbet",  market: "SPREADS", spread: 2.5, homeSpreadPrice: -108, awaySpreadPrice: -112 },
+        { bookmaker: "fanduel",    market: "H2H", homePrice: 150, awayPrice: -180 },
+        { bookmaker: "draftkings", market: "H2H", homePrice: 155, awayPrice: -175 },
+      ],
+    }) as OddsInput);
+    const spreadPick = picks.find((p) => p.pickType === "SPREAD");
+    expect(spreadPick).toBeTruthy();
+    expect(spreadPick!.selection).toContain("Eagles");
+  });
+});
+
+// ============================================================
 // Test data builder
 // ============================================================
 

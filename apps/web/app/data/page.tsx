@@ -65,6 +65,22 @@ export default function DataSourcingPage(): JSX.Element {
           </dl>
         </section>
 
+        <section className="border border-caution/40 bg-caution/[0.06] p-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-caution">Open review — ESPN</p>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-ion-1">
+            Two different ESPN feeds, two different answers, stated plainly. The{" "}
+            <span className="font-semibold text-ion-white">undocumented hidden JSON API</span> is
+            refused for ingestion — its terms restrict use to personal, non-commercial access. The{" "}
+            <span className="font-semibold text-ion-white">public logged-off scores API</span>{" "}
+            (site.api.espn.com) is currently used as a score fallback in the live product for
+            derived analytics, with the attribution “Scores data via ESPN” rendered wherever it
+            appears. Its commercial display rights are{" "}
+            <span className="font-semibold text-caution">UNVERIFIED — pending legal review</span>.
+            Until that review closes, ESPN data is treated as internal signal, not a licensed
+            display feed, and is never presented as our own pricing.
+          </p>
+        </section>
+
         <section>
           <h2 className="text-2xl font-semibold text-ion-white">Sources we ingest</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-ion-1">

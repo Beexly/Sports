@@ -1,8 +1,9 @@
 # Leverage Status Report
 
-**Generated**: 2026-08-29 (CST)
+**Generated**: 2026-09-04 (CST)
 **Scope**: Galaxy Sports Edge (GSE) / Galaxy Sports Network (GSN) — Sports Intelligence OS
-**Source**: `/c/Users/Garrett/AppData/Local/Temp/strix_repos/sports_145b/Sports/`
+**Source**: `C:\Users\Garrett\Sports` (canonical repo, branch `hermes/c12-close-the-pass` @ `4e5a58963`)
+**Method**: Direct grep/find/stat scan of live working tree (prior 2026-08-29 report was generated from a strix temp checkout; this run re-verifies against the canonical repo)
 
 ---
 
@@ -10,26 +11,33 @@
 
 | Check | Status | Finding |
 |---|---|---|
-| TODO/FIXME in algorithm files | ✅ CLEAN | No TODO/FIXME/HACK comments in algorithm source files |
+| TODO/FIXME in algorithm files | ✅ CLEAN | 0 true TODO/FIXME/HACK markers in 313 algorithm source files |
 | Unused algorithm imports | ✅ RESOLVED 2026-09-05 | 12 orphaned modules archived to `attic/`; 5 of the 19 flagged were transitively live and kept |
-| Research-lab.md core algorithm coverage | 🔴 GAP | Research-lab.md mentions **zero** core prediction algorithms |
-| Overall leverage health | 🟡 ATTENTION | Algorithm surface is large and well-structured but documentation coverage and dead code cleanup needed |
+| Research-lab.md core algorithm coverage | ✅ CLOSED 2026-09-05 | "Algorithm Reference for Operators" maps all 10 brief types to live, importer-verified modules (§3.3) |
+| Overall leverage health | 🟡 ATTENTION | Dead-code and doc-gap items are closed; Brier ≤0.22 and the odds-key stall remain |
 
 ---
 
 ## 1. TODO/FIXME Scan — Algorithm-Related Files
 
-**Scope**: All `.ts` files in `packages/prediction-engine/src/` (including subdirectories: calibration, ensemble, edge-lab, nfl, pipeline, parlay, conformal, dispersion, ladder, research)
+**Scope**: All `.ts` files under `packages/prediction-engine/src/` (including subdirectories: calibration, conformal, devig, dispersion, edge-lab, kernel, ladder, pipeline, research; 313 source files excluding tests, 373 including them).
 
-**Result**: ✅ **CLEAN** — Zero TODO/FIXME/HACK/XXX comments found in algorithm source code.
+**Result**: ✅ **CLEAN** — Zero true TODO/FIXME/HACK markers.
 
 | Metric | Value |
 |---|---|
-| Algorithm source files scanned | 120+ |
-| TODO/FIXME/HACK found | 0 |
-| XXX occurrences | 1 (test-only placeholder: `awayTeam: "XXX"` in `edge-lab/__tests__/nfl-body-clock.test.ts`) |
+| Algorithm source files scanned | 313 (excl. tests) / 373 (incl. tests) |
+| True TODO/FIXME/HACK markers | 0 |
+| Raw regex hits | 3 (all benign, individually inspected) |
 
-**Assessment**: The prediction engine codebase is well-maintained with no outstanding technical debt markers in source files.
+The 3 raw hits, inspected individually:
+1. `edge-lab/kernel/contract.ts:323` — prose in a docstring: "…stops the mining engine from being a p-hacking machine" (the word "machine" tripped a loose `HACK` regex). Not a debt marker.
+2. `edge-lab/__tests__/nfl-body-clock.test.ts:83` — `awayTeam: "XXX"` test placeholder data. Not a debt marker.
+3. `probability-calibration.ts:77` — comment explaining removal of "a same-x tie hack" (past-tense cleanup note). Not an outstanding marker.
+
+Adjacent algorithm code (`apps/web/lib/intelligence/`, `apps/web/lib/calibration/`, `packages/stats-api/src/`) also scanned: **0 TODO/FIXME markers**.
+
+**Assessment**: The prediction-engine codebase carries no outstanding technical-debt markers. Same clean verdict as the 2026-08-29 report.
 
 ---
 
@@ -56,56 +64,50 @@
 > (`consensus.ts`, `provenance.ts` in the original table are local modules
 > under `edge-lab/` subdirectories, not top-level dead files.)
 
-The following 19 algorithm modules exist as source files in `packages/prediction-engine/src/` but are **never re-exported** from `index.ts`, meaning they are dead code not accessible to downstream consumers:
+The 2026-09-04 re-verification (canonical tree, `hermes/c12-close-the-pass` @
+`4e5a58963`) confirmed all 19 were still present with 0 barrel refs and 0 real
+external importers; word-boundary grep across `apps/`, `packages/`, `scripts/`
+showed the few apparent importers are same-named local modules elsewhere
+(`qb-consensus`, `capability-provenance`, `lib/reconstruction/provenance`).
+The barrel-only method was the flaw — the per-module transitive check above
+supersedes it. Disposition as of 2026-09-05:
 
 | Module | Size | Status |
 |---|---|---|
-| `bankroll.ts` | 3.1 KB | 🔴 Dead |
-| `bernoulli-eprocess.ts` | 7.1 KB | 🔴 Dead |
-| `calibration-drift.ts` | 3.3 KB | 🔴 Dead |
-| `consensus.ts` | 5.2 KB | 🔴 Dead |
-| `consensus-view.ts` | 2.7 KB | 🔴 Dead |
-| `contest-scoring.ts` | 5.2 KB | 🔴 Dead |
-| `edge-significance.ts` | 3.6 KB | 🔴 Dead |
-| `elo-estimator.ts` | 4.4 KB | 🔴 Dead |
-| `hawkes-steam.ts` | 40.4 KB | 🔴 Dead (largest dead module) |
-| `instrumented-eprocess.ts` | 12.8 KB | 🔴 Dead |
-| `narrative-signal.ts` | 9.1 KB | 🔴 Dead |
-| `nflverse-replay-parser.ts` | 10.1 KB | 🔴 Dead |
-| `performance-analytics.ts` | 5.9 KB | 🔴 Dead |
-| `projection-evaluation.ts` | 1.7 KB | 🔴 Dead |
-| `provenance.ts` | 5.1 KB | 🔴 Dead |
-| `publication-coin.ts` | 3.4 KB | 🔴 Dead |
-| `responsible-gaming.ts` | 5.5 KB | 🔴 Dead |
-| `suppression-curve.ts` | 6.2 KB | 🔴 Dead |
-| `tweedie-aci.ts` | 2.4 KB | 🔴 Dead |
+| `bankroll.ts` | 3.1 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `bernoulli-eprocess.ts` | 7.1 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `calibration-drift.ts` | 3.3 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `consensus.ts` | 5.2 KB | ℹ️ Not a top-level dead file (local `edge-lab/` module) |
+| `consensus-view.ts` | 2.7 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `contest-scoring.ts` | 5.2 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `edge-significance.ts` | 3.6 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `elo-estimator.ts` | 4.4 KB | ✅ KEPT — transitively live via `elo-from-results`/`elo-backtest` |
+| `hawkes-steam.ts` | 40.4 KB | ✅ KEPT — transitively live via `pipeline/live-orchestrator` |
+| `instrumented-eprocess.ts` | 12.8 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `narrative-signal.ts` | 9.1 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `nflverse-replay-parser.ts` | 10.1 KB | ✅ KEPT — transitively live via `replay-harness` |
+| `performance-analytics.ts` | 5.9 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `projection-evaluation.ts` | 1.7 KB | ✅ KEPT — transitively live via `tweedie-baseline`/`earned-weight-ensemble` |
+| `provenance.ts` | 5.1 KB | ℹ️ Not a top-level dead file (local `edge-lab/` module) |
+| `publication-coin.ts` | 3.4 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `responsible-gaming.ts` | 5.5 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `suppression-curve.ts` | 6.2 KB | 📦 Archived to `attic/` 2026-09-05 |
+| `tweedie-aci.ts` | 2.4 KB | ✅ KEPT — barrel re-export via `tweedie-baseline` |
 
-**Total dead code footprint**: ~134 KB claimed; verified 2026-09-05 at ~83 KB
-across the 12 genuinely orphaned modules (now in `attic/`). The other ~51 KB
+**Total dead code footprint**: ~134 KB claimed; verified 2026-09-05 at ~69 KB
+(70,425 bytes, `du -b` across the 12 genuinely orphaned modules, now in
+`attic/`). The other ~51 KB
 (`elo-estimator`, `hawkes-steam`, `nflverse-replay-parser`,
 `projection-evaluation`, `tweedie-aci`) is transitively reachable — see the
 correction note under §2.1.
 
 ### 2.2 Exported but Unused Symbols in `index.ts`
 
-The `index.ts` barrel exports 1,100+ symbols. Cross-referencing against actual imports in `apps/web/`:
-
-| Category | Exported | Imported by Web App | Utilization |
-|---|---|---|---|
-| Core scoring | scoring.ts exports | ✅ Multiple used | High |
-| CLV module | ~16 symbols | ✅ Partial use | Medium |
-| Kelly module | ~8 symbols | ✅ Partial use | Medium |
-| Calibration | ~50+ symbols | ⚠️ Selective | Low-Medium |
-| Conformal | ~20+ symbols | ⚠️ Partial | Low |
-| Edge engine | ~20+ symbols | ✅ Used | High |
-| Poisson/Skellam | ~30+ symbols | ⚠️ Partial | Low |
-| Dixon-Coles | ~20+ symbols | ⚠️ Partial | Low |
-| Elo module | ~15+ symbols | ⚠️ Partial | Low |
-| Research modules | Many | ❌ Not imported | Dead |
+The `index.ts` barrel exports 330 symbols. Cross-referencing against actual imports in `apps/web/` shows many exported symbols unused (same pattern as prior report). Specific counts unchanged.
 
 ### 2.3 Recommendation
 
-- Remove or archive the 19 dead-code modules from `packages/prediction-engine/src/`
+- ~~Remove or archive the 19 dead-code modules from `packages/prediction-engine/src/`~~ **DONE 2026-09-05** — 12 archived to `attic/`, 5 proven transitively live and kept, 2 were never top-level dead files
 - Add `// @deprecated` annotations to unused exports in `index.ts`
 - Consider splitting into a separate `packages/prediction-engine-rd/` for R&D modules (linear-thompson, pedersen-ledger, calibration-sequence, etc.)
 
@@ -160,12 +162,14 @@ settlement/honesty surfaces inherited by every brief). All cited paths were
 existence-checked against the tree the same night (three wrong paths caught
 and fixed before commit).
 
-🔴 **CRITICAL GAP**: The research-lab.md does not document how any of the core prediction algorithms feed into research briefs. Operators using the lab have no reference to:
+The original gap (§3.1) was that operators using the lab had no reference to:
 - How the scoring algorithm (`scoring.ts`) produces confidence scores that inform pick generation
 - How Elo ratings (`elo-from-results.ts`) contribute to game context intelligence
 - How Poisson/Skellam models inform over/under prop research
 - How calibration affects confidence reliability in research outputs
 - How CLV analysis determines pick quality for research briefs
+
+All five are now answered by the operator reference section.
 
 ---
 
@@ -179,8 +183,8 @@ and fixed before commit).
 - ✅ Evidence-tier system (Tier 1-3) provides clear sourcing standards
 
 ### 4.2 Risks
-- 🔴 **19 dead-code modules** (~134 KB) never exposed via public API
-- 🔴 **Research-lab.md has zero algorithm coverage** — operators lack algorithm documentation
+- ~~🔴 **19 dead-code modules** (~134 KB) never exposed via public API~~ **CLOSED 2026-09-05** — 12 archived to `attic/` (~69 KB), 5 proven transitively live, 2 misattributed local modules
+- ~~🔴 **Research-lab.md has zero algorithm coverage**~~ **CLOSED 2026-09-05** — operator algorithm reference added (§3.3)
 - 🟡 **Many exported symbols unused** — barrel file includes R&D modules marked "Dark, NOT wired"
 - 🟡 **Brier score at 0.247** (above 0.22 GREEN threshold) — calibration needs improvement
 - 🟡 **Odds API key ABSENT** — market clock stalled since 2026-07-25
@@ -189,8 +193,8 @@ and fixed before commit).
 
 | Priority | Action | Impact | Effort |
 |---|---|---|---|
-| P0 | Archive 19 dead-code modules | Reduce codebase by ~134 KB, improve maintainability | Low |
-| P0 | Add algorithm documentation to research-lab.md | Close critical gap for operators | Medium |
+| ~~P0~~ | ~~Archive 19 dead-code modules~~ **DONE 2026-09-05** | 12 archived, 5 kept live | — |
+| ~~P0~~ | ~~Add algorithm documentation to research-lab.md~~ **DONE 2026-09-05** | §3.3 operator reference | — |
 | P1 | Annotate unused exports with `@deprecated` | Prevent confusion, guide consumers | Low |
 | P1 | Achieve Brier ≤ 0.22 (GREEN) | Meets calibration floor | Medium |
 | P2 | Split R&D "dark" modules into separate package | Cleaner public API surface | High |
@@ -200,20 +204,21 @@ and fixed before commit).
 
 | Metric | Value | Target | Status |
 |---|---|---|---|
-| Algorithm source files | 120+ | — | — |
-| Dead-code modules | 12 archived, 5 kept as live (2026-09-05) | 0 in src/ | ✅ |
-| Dead-code footprint | ~134 KB | — | 🔴 |
+| Algorithm source files | 299 in src/ excl. tests (313 before the 2026-09-05 attic move) | — | — |
+| Dead-code modules | 0 in src/ (12 in `attic/`, 5 kept as transitively live) | 0 in src/ | ✅ (2026-09-05) |
+| Dead-code footprint archived | ~69 KB (12 modules, measured `du -b` 2026-09-05) | — | ✅ |
 | TODO/FIXME count | 0 | ≤5 | ✅ |
 | Research-lab algorithm refs | 10 brief types mapped | ≥10 | ✅ (2026-09-05) |
 | Brier score | 0.247 | ≤0.22 | 🟡 |
-| Public API symbols | 1,100+ | — | — |
-| MODEL_VERSION | v5.1.0 | — | ✅ |
+| Public API symbols | 330 | — | — |
+| MODEL_VERSION | v5.2.7 | — | ✅ |
 
 ---
 
 ## 5. Appendix: Algorithm Module Map
 
 ### 5.1 Live/Wired Algorithms
+
 | Module | Purpose | Status |
 |---|---|---|
 | `scoring.ts` | Core pick scoring & confidence | ✅ Live |
@@ -228,21 +233,23 @@ and fixed before commit).
 | `temperature-scaling.ts` | Temperature scaling (R&D) | ⚠️ R&D |
 
 ### 5.2 R&D / "Dark" Modules (NOT wired to live actions)
+
 | Module | Purpose | Policy |
 |---|---|---|
 | `linear-thompson.ts` | Thompson sampling bandit | Never gate real money |
 | `pedersen-ledger.ts` | Homomorphic commitments | ADDITIVE layer only |
 | `calibration-commitment.ts` | Tamper-evident MAP registration | Proof always null |
 | `calibration-sequence.ts` | Anytime-valid CALIBRATION monitoring | Dark, unwired |
-| `bernoulli-eprocess.ts` | Bernoulli e-process | R&D only |
+| `bernoulli-eprocess.ts` | Bernoulli e-process | R&D only — archived to `attic/` 2026-09-05 (orphaned) |
 | `adaptive-delta-analysis.ts` | Adaptive delta analysis | R&D only |
 | `adaptive-delta-hedge.ts` | Adaptive delta hedging | R&D only |
 | `brier-ogd-ensemble.ts` | Brier OGD ensemble | R&D only |
 | `forecast-skill-eprocess.ts` | Forecast skill e-process | R&D only |
 
 ### 5.3 Dead-Code Modules (Never Exported)
+
 See Section 2.1 for full list of 19 modules.
 
 ---
 
-*Report generated from analysis of `/c/Users/Garrett/AppData/Local/Temp/strix_repos/sports_145b/Sports/` and related strix artifacts. All findings based on actual file content analysis.*
+*Report generated from analysis of `C:\Users\Garrett\Sports` and related artifacts. All findings based on actual file content analysis.*
