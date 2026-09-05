@@ -139,6 +139,43 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
     }
   });
 
+  it("publishes from the readiness gate and prices the tier from PREMIUM_CONFIDENCE_THRESHOLD", async () => {
+    // Default fixture: home 0.68 blends past the paywall threshold (mock: 70).
+    mocks.pickFindUnique.mockResolvedValue(null);
+    await generateSignalSlate({ now: NOW, skipSeed: true });
+    const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { confidence: number; tier: string; isPublished: boolean } };
+    expect(args.data.isPublished).toBe(true); // gates.canExposePublicPicks (mocked true)
+    expect(args.data.confidence).toBeGreaterThanOrEqual(70);
+    expect(args.data.tier).toBe("PREMIUM");
+  });
+
+  it("writes a FREE-tier row when the blended estimate clears the coin-flip filter but not the paywall threshold", async () => {
+    mocks.buildIndependents.mockResolvedValue([
+      { source: "espn_powerindex", homeFairProb: 0.6, awayFairProb: 0.4, capturedAt: NOW.toISOString() },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+    const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { confidence: number; tier: string } };
+    expect(args.data.confidence).toBeGreaterThanOrEqual(60);
+    expect(args.data.confidence).toBeLessThan(70);
+    expect(args.data.tier).toBe("FREE");
+    expect(out.picksUpserted).toBe(1);
+  });
+
+  it("skips a coin-flip estimate (|p - 0.5| < 0.1) instead of upserting a row /api/picks would filter out", async () => {
+    mocks.buildIndependents.mockResolvedValue([
+      { source: "espn_powerindex", homeFairProb: 0.52, awayFairProb: 0.48, capturedAt: NOW.toISOString() },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(out.candidatesWithIndependents).toBe(1);
+    expect(out.picksSkipped).toBe(1);
+    expect(out.picksUpserted).toBe(0);
+  });
+
   it("never writes a two-way moneyline signal for soccer (three-way market)", async () => {
     mocks.gameFindMany.mockResolvedValue([
       { ...GAME, id: "game-mls", homeTeamName: "Portland Timbers", awayTeamName: "Austin FC", sport: { key: "soccer_usa_mls", name: "MLS" } },
