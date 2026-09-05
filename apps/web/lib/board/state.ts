@@ -16,6 +16,7 @@ import {
   type ClassifiedBoardState,
 } from "./classify-board-state";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -413,7 +414,12 @@ async function loadBoardStateInner(
     sport: pick.game.sport.name,
     market: isPremiumViewer ? pick.selection : "ALL_MARKETS",
     status: "PUBLISHED_TODAY",
-    edgeIndex: toEdgeIndex(pick.game.currentEdgeIndex ?? pick.edgeScore),
+    // The per-pick fallback is withheld on book-less rows for non-premium viewers
+    // (edgeScore = confidence - 50 there; lib/picks/public-edge-score.ts).
+    edgeIndex: toEdgeIndex(
+      pick.game.currentEdgeIndex ??
+        publicEdgeScore(pick, { canSeeEdgeScore: true, canSeeConfidence: isPremiumViewer }),
+    ),
     confidence: pick.confidence,
     ...extractRankingFromFb(pick.factorBreakdown, isPremiumViewer),
     gateReason: null,

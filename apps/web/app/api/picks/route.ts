@@ -15,6 +15,7 @@ import {
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { teaserForViewer } from "@/lib/picks/teaser-text";
+import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { clientIp } from "@/lib/api/rate-limit";
@@ -258,7 +259,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // Honest calibrated display of the confidence shown, when the audited
       // calibrator is active (else null → surfaces show the raw heuristic %).
       confidenceCalibrated: calibrator ? honestConfidence(shownConfidence, calibrator, true) : null,
-      edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
+      // Withheld on book-less (signal-slate) rows for viewers who cannot see
+      // confidence: there edgeScore = confidence - 50 exactly (lib/picks/public-edge-score.ts).
+      edgeScore: publicEdgeScore(pick, entitlements),
       factorBreakdown,
       // Always visible — trust transparency
       dataQualityScore,
