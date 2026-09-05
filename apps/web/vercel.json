@@ -35,7 +35,7 @@
     },
     {
       "path": "/api/cron/reconcile-entitlements",
-      "schedule": "0 8 * * *"
+      "schedule": "45 * * * *"
     },
     {
       "path": "/api/cron/ingest-player-stats",
@@ -55,7 +55,7 @@
     },
     {
       "path": "/api/cron/repair-checkout-attempts",
-      "schedule": "30 8 * * *"
+      "schedule": "50 * * * *"
     },
     {
       "path": "/api/cron/run-formal-receipt",
