@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { loadRosterAvailability } from "@/lib/human-performance/availability";
-import { consumeRateLimit } from "@/lib/api/rate-limit";
+import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 const MAX_PLAYERS = 40;
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
 
 
-  const limit = consumeRateLimit("human-roster-availability", clientIp(req), 20, 5 * 60 * 1000);
+  const limit = consumeRateLimit("human-roster-availability", clientIp(request), 20, 5 * 60 * 1000);
   if (!limit.ok) {
     return NextResponse.json(
       { success: false, error: "Too many requests. Please wait a moment." },

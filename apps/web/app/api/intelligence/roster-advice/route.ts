@@ -1,19 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { loadPlayerModel } from "@/lib/intelligence/player-model";
 import { addTargets, dropCandidates, classifyRoster } from "@/lib/intelligence/roster-advice";
 import { requirePremiumApi } from "@/lib/api-entitlement";
-import { consumeRateLimit } from "@/lib/api/rate-limit";
+import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 const MAX_ROSTER = 60;
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const denied = await requirePremiumApi();
   if (denied) return denied;
 
 
-  const limit = consumeRateLimit("roster-advice", clientIp(req), 30, 5 * 60 * 1000);
+  const limit = consumeRateLimit("roster-advice", clientIp(request), 30, 5 * 60 * 1000);
   if (!limit.ok) {
     return NextResponse.json(
       { success: false, error: "Too many requests. Please wait a moment." },
