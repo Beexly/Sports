@@ -6,6 +6,11 @@ import {
   type PickRowForCal,
 } from "@/lib/ops/compute-live-calibration-metrics";
 
+/**
+ * v5.2.8 Phase 2 (2026-09-05): the eligibility sample is market-anchored only,
+ * so a MONEYLINE row enters it through its receipt marketFairProb, never
+ * through confidence/100. Fixtures carry a receipt for that reason.
+ */
 function moneylinePick(
   overrides: Partial<PickRowForCal> &
     Pick<PickRowForCal, "confidence" | "result">,
@@ -14,6 +19,8 @@ function moneylinePick(
     pickType: "MONEYLINE",
     modelVersion: null,
     settledAt: null,
+    proofReceipt: { marketFairProb: 0.6 },
+    sportKey: "baseball_mlb",
     ...overrides,
   };
 }
@@ -25,6 +32,16 @@ describe("picksToCalibrationSamples", () => {
     expect(built.modelVersions).toEqual([]);
     expect(built.settledFrom).toBeNull();
     expect(built.settledTo).toBeNull();
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 });
+  });
+
+  it("a MONEYLINE row without any market probability is excluded and counted, never scored on confidence", () => {
+    const built = picksToCalibrationSamples([
+      moneylinePick({ confidence: 62, result: "WIN", proofReceipt: null, modelVersion: "v5.2.6" }),
+    ]);
+    expect(built.samples).toEqual([]);
+    expect(built.modelVersions).toEqual([]);
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
   });
 
   it("keeps a single modelVersion and ISO-settled range from honest MONEYLINE rows", () => {

@@ -11,7 +11,8 @@ import { fitPavaMap, pavaMapPredict } from "@/lib/calibration/pava-map-fit";
 import { fitPlattIrlS, plattPredict } from "@/lib/calibration/platt-map-artifact";
 import { fitTemperature, temperatureMapPredict } from "@/lib/calibration/temperature-map";
 
-function mulberry32(seed: number): () => number {
+/** Seeded 32-bit PRNG shared with bootstrap-metric-ci.ts (same stream, same seed). */
+export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;

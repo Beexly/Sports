@@ -7,6 +7,7 @@ export {
   averageAmericanPrices,
   clamp,
   toEdgeIndex,
+  isThreeWayMoneylineSport,
 } from "./scoring.js";
 export {
   computeGameContext,
