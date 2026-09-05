@@ -14,6 +14,7 @@ import {
 } from "@/lib/data-reliability/public-freshness-gate";
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
+import { teaserForViewer } from "@/lib/picks/teaser-text";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { clientIp } from "@/lib/api/rate-limit";
@@ -267,10 +268,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // Full reasoning / "the why" stays a paid feature (Pro+). Decoupled from
       // canSeeConfidence (now true for FREE) so freeing confidence does not also
       // free the premium reasoning trail. FREE gets the short teaser.
+      // A viewer who cannot see confidence must not read it back as a percentage
+      // inside the teaser (lib/picks/teaser-text.ts).
       reasoning: entitlements.canSeeFactorBreakdown
         ? pick.reasoning
-        : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
-      reasoningShort: pick.reasoningShort,
+        : teaserForViewer(pick.reasoningShort || pick.reasoning.split(".")[0] + ".", entitlements.canSeeConfidence),
+      reasoningShort: teaserForViewer(pick.reasoningShort, entitlements.canSeeConfidence),
       isFeatured: pick.isFeatured,
       isAuditAvailable:
         !pick.id.startsWith("sample-pick-") &&
