@@ -1,0 +1,12 @@
+version: 4
+steps:
+  - prompt: Open a browser and navigate to https://www.galaxysportsedge.com/board
+  - prompt: Wait for the page to fully load
+  - prompt: >
+      Assert that the picks board page is displayed. It may show a list of
+      picks, a paywall/upgrade prompt, or a sign-in prompt — any of these is
+      acceptable evidence that the board route loaded correctly
+  - prompt: >
+      Assert that the page contains a heading, sport labels, or pick cards
+      (e.g. "NFL", "NBA", "MLB", confidence scores, or team names), OR
+      that a paywall/upgrade gate message is visible
