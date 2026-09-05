@@ -134,6 +134,26 @@ describe("finalMatchesPick is bipartite", () => {
   });
 });
 
+describe("NFL Week 1 regression: 2-3 letter ESPN abbreviations never grade a pick off another game", () => {
+  // Reproduced verbatim against origin/main's matcher on 2026-09-05: "tennesseetitans"
+  // and "newyorkjets" both contain "ne" (New England), and "chiefs"/"cardinals" hit
+  // CHI/CAR. Under the fixed matcher an abbreviation matches only exactly.
+  const neAtSea = final("2026-09-10T00:20:00Z", ["Seattle Seahawks", "SEA", 0], ["New England Patriots", "NE", 0]);
+  const chiAtCar = final("2026-09-13T17:00:00Z", ["Carolina Panthers", "CAR", 0], ["Chicago Bears", "CHI", 0]);
+  const nyjAtTen = final("2026-09-13T17:00:00Z", ["Tennessee Titans", "TEN", 20], ["New York Jets", "NYJ", 17]);
+
+  it("Jets @ Titans does not match the Patriots @ Seahawks final", () => {
+    const pick = { ...mlPick(0, "home"), homeTeam: "Tennessee Titans", awayTeam: "New York Jets" };
+    expect(finalMatchesPick(pick, neAtSea)).toBe(false);
+    expect(finalMatchesPick(pick, nyjAtTen)).toBe(true);
+  });
+
+  it("Cardinals @ Chiefs does not match the Bears @ Panthers final", () => {
+    const pick = { ...mlPick(0, "home"), homeTeam: "Kansas City Chiefs", awayTeam: "Arizona Cardinals" };
+    expect(finalMatchesPick(pick, chiAtCar)).toBe(false);
+  });
+});
+
 describe("the 2026-08-29 MLS board grades 13/13 with zero holds", () => {
   it("settles every pick against exactly its own final", () => {
     const picks = MLS_PICKS.map((_, i) => mlPick(i, "home"));

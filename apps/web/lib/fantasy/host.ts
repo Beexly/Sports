@@ -148,8 +148,11 @@ export type Broadcast = {
   readonly plaintext: string;
 };
 
+// Honest and brand-safe: these scripts are composed deterministically from
+// templates in this module (no language model is involved), and the previous
+// wording used a phrase banned by apps/web/lib/positioning-vocab.json (rule 8).
 export const HOST_DISCLOSURE =
-  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are AI-generated and human-reviewed before anything is published; they do not post or reply on their own.";
+  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own.";
 
 // ─────────────── publish-readiness pipeline (enforced doctrine) ───────────────
 
