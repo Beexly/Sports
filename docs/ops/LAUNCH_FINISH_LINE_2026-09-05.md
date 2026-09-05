@@ -111,11 +111,18 @@ ledger row named; none flips a gate, changes an env value, or touches production
    (`source-registry.ts` id `therundown`, free 20k data-points/day) and alone carries
    DraftKings, FanDuel, MGM and Pinnacle; our own cadence (refresh-odds every 15 minutes
    plus board-fill 4x/h, 4 sports, 2 dates, no memory of a 429) exhausts its quota early
-   each day. So the second book exists and is being throttled by us. WP-26 is quota
-   discipline plus observability, not a new vendor. For Week 1 the founder still fixes The
-   Odds API account (section 4 item 1) because the free Rundown tier cannot sustain a
-   15-minute live cadence; the cheaper durable option is TheRundown Starter ($49) instead of
-   a higher Odds API tier. Do not upgrade The Odds API tier.
+   each day. (d) Founder position, verbatim from the Hermes brief on PR #680: "we are the
+   provider (Galaxy Sports API). Not Rundown. Not The Odds API." The completely free
+   two-book board is already designed in the repo and is about 80 percent built: book 1 is
+   ESPN inline odds through `GalaxySportsApiOddsProvider` (PR #680, de-vig formula, 8s
+   timeouts, `galaxy-espn-inline` registry entry, verdict use-with-caution); book 2 is
+   Kalshi exchange quotes as a real bookmaker (`galaxy-kalshi-book.ts`, PR #680) fed through
+   the PredExon catalog (`predexon-client.ts` on main, verdict use-with-caution, free key the
+   founder already holds, `PREDEXON_INGEST` default OFF), the legal route around Kalshi Dev
+   Agreement section 3. Kalshi lists `KXNFLSPREAD` and `KXNFLTOTAL`, so NFL spreads and
+   totals are reachable. Nothing on main consumes PredExon yet. Activation is **WP-27**
+   (ledger C-104); TheRundown is at most a bridge (WP-26). Do not upgrade The Odds API
+   tier; fix the account for Week 1 only if WP-27 cannot land before Thursday.
 2. **v5.2.8: YES, sequenced.** Phase 2 (WP-1) starts after #707 deploys and the first NFL
    Sunday settles clean; MODEL_VERSION does not move before that. Recorded in the proposal
    doc section 1. (F-14)
@@ -261,6 +268,7 @@ idempotent, fail-closed; 174 money-path unit tests green) and the pick-generatio
 
 | WP-25 | Gate the ESPN Power Index fetch behind the rights registry (fail closed, attribution) until F-21 clears it; anonymous copy never names the source | `packages/ingestion-pipeline/src/generate-signal-slate.ts` (espn_powerindex), `apps/web/lib/scraping/clearance-engine.ts` | slate test: fetch not called when clearance denies | S |
 | WP-26 | Own odds ingestion as primary, TheRundown as the working second book (section 3b item 1). Phase A (NOT STARTED; fully specified, dispatch first): durable 429 cooldown read from `IngestionRun` (marker `rundown:429`, `RUNDOWN_429_COOLDOWN_MINUTES` default 60), freshness throttle from the newest Rundown-affiliate odds row (`RUNDOWN_FALLBACK_MIN_INTERVAL_MINUTES` default 30), `provider` and `providerNote` on every per-sport result and `oddsInserting.lastProviderNote` on the truth surface. Phase B: board-fill must not run a second odds pass when refresh-odds ran within the interval; Rundown `daySpan` follows the horizon of games actually on the board (NFL Thursday and Sunday from a Friday cycle); founder picks TheRundown Starter or keeps The Odds API. Phase C (optional, after Week 1): re-land the core of PR #680 (`GalaxySportsApiOddsProvider`, de-vig `fair_prob`, 8s timeouts, registry gating) | `packages/data-ingestion/src/rundown-client.ts`, `packages/ingestion-pipeline/src/process-sport.ts`, `apps/web/app/api/ops/public-surface-truth/route.ts`, `apps/web/app/api/cron/board-fill/route.ts`; reference `origin/hermes/galaxy-keyless-odds` (197 behind main) | production logs stop showing `HTTP 429 rate_limited` every cycle; `curl /api/ops/public-surface-truth \| jq .oddsInserting.lastProviderNote`; odds rows with Rundown affiliate bookmakers appear within one interval; ingestion-pipeline and data-ingestion suites green | M |
+| WP-27 | **GSN API activation: the completely free two-book board** (founder position on PR #680: we are the provider, not Rundown, not The Odds API). (1) Re-land the PR #680 core onto main: `GalaxySportsApiOddsProvider` (ESPN inline odds via `site.web.api`, de-vig `fair_prob`, 8s timeouts, `galaxy-espn-inline` registry entry, provider selection in `odds-provider-adapter.ts`). (2) Select the Galaxy provider also when the paid circuit is open (HTTP 402), not only when `THE_ODDS_API_KEY` is unset. (3) Feed `galaxy-kalshi-book.ts` from the PredExon Kalshi catalog (`predexon-client.ts`, `PREDEXON_INGEST` + `PREDEXON_API_KEY`, `assertIngestible("predexon")` passes: verdict use-with-caution) instead of the direct Kalshi client, so the second book clears the registry. Cache the catalog per cycle (PredExon free tier is 1 rps, 1k requests per month; Kalshi list-markets is documented free and unlimited). (4) Extend the Kalshi book from H2H to NFL SPREAD and TOTAL using series `KXNFLSPREAD` and `KXNFLTOTAL` (`kalshi-series.ts`); other sports stay H2H until their series are verified. (5) Never invent the other side: both sides need a live two-way quote or no book is added (law already in `galaxy-kalshi-book.ts`). | `origin/hermes/galaxy-keyless-odds` (197 behind main; CI was green): `packages/data-ingestion/src/{odds-provider-adapter,galaxy-kalshi-book,source-registry}.ts`, `packages/ingestion-pipeline/src/process-sport.ts`; on main: `packages/data-ingestion/src/{predexon-client,kalshi-series,kalshi-client}.ts` | with `THE_ODDS_API_KEY` blank in a test, `processSport` mints MONEYLINE and NFL SPREAD/TOTAL picks with `bookmakerCount = 2` from `espn_public` plus `kalshi`; no pick minted when either side lacks a live quote; data-ingestion and ingestion-pipeline suites green; then founder F-34 sets the two PredExon env values and the first production cycle shows `kalshi` rows in the odds table | L |
 
 Public frontend (from the frontend audit; FE-01/03/04 shipped in `994a2fa` and `486b0a3`;
 no screenshots were possible from the sandbox, every finding is from source):

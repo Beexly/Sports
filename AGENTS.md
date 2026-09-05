@@ -47,10 +47,22 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
   our own cadence (refresh-odds every 15 min plus board-fill 4x/h, 4 sports, 2 dates, no
   cooldown after a 429) exhausts its daily quota early and it 429s for the rest of the day.
   ESPN public (`espn_public`) is one book (DraftKings via ESPN, verified live for NFL, CFB,
-  MLB, MLS), so no picks can be book-priced without either the paid feed or a working
-  Rundown. Fix is quota discipline plus observability (WP-26), not a new vendor.
-- Decisions already taken (do not re-open): keyless odds becomes primary with TheRundown as
-  the second book (WP-26); v5.2.8 YES sequenced after the first clean NFL Sunday; stale
+  MLB, MLS), so no picks can be book-priced without a second cleared source.
+- **The completely free two-book board is already designed in this repo (WP-27, ledger
+  C-104). Founder position, verbatim from the Hermes brief on PR #680: "we are the provider
+  (Galaxy Sports API). Not Rundown. Not The Odds API."** Book 1 is ESPN inline odds through
+  `GalaxySportsApiOddsProvider` (PR #680 branch `hermes/galaxy-keyless-odds`, de-vig
+  formula, 8s timeouts, registry entry `galaxy-espn-inline`). Book 2 is Kalshi exchange
+  quotes as a real bookmaker (`galaxy-kalshi-book.ts` on that branch) fed through the
+  PredExon catalog (`packages/data-ingestion/src/predexon-client.ts` on main, verdict
+  use-with-caution, free key the founder already holds, `PREDEXON_INGEST` default OFF),
+  which is the legal route around Kalshi Dev Agreement section 3. Kalshi lists
+  `KXNFLSPREAD` and `KXNFLTOTAL` (`kalshi-series.ts`), so NFL spreads and totals are
+  reachable, not only moneylines. Nothing on main consumes PredExon yet: that wiring plus
+  re-landing the #680 core is the work. TheRundown is at most a bridge (WP-26), not the
+  product path.
+- Decisions already taken (do not re-open): the keyless Galaxy Sports API becomes primary
+  with Kalshi via PredExon as the second book (WP-27); v5.2.8 YES sequenced after the first clean NFL Sunday; stale
   published picks are UNPUBLISHED via `npm run ops:stale-picks:unpublish -- --execute`
   (owner-run); ESPN Power Index is gated fail-closed (`ESPN_POWERINDEX_LICENSED` unset);
   `hermes/settlement-token-fix` is superseded by `6880f18` (do not merge it); Vercel cron
