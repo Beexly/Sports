@@ -385,6 +385,12 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   if (spreadOdds.length < MIN_BOOKMAKERS) return null;
 
   const spreads = spreadOdds.map((o) => o.spread as number);
+
+  // Pick'em guard: an all-PK board (every spread === 0) has no favored side.
+  // Without this, spread===0 votes AWAY (s < 0 is false) → phantom away pick
+  // with consensus 1.0. Mixed boards keep existing side selection.
+  if (spreads.every((s) => s === 0)) return null;
+
   const avgSpread = spreads.reduce((a, b) => a + b, 0) / spreads.length;
 
   const homeFavoredCount = spreads.filter((s) => s < 0).length;
