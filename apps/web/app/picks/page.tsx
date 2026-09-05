@@ -10,18 +10,26 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { getEntitlements, type PublicPick, type DailySlate, type SubscriptionTier } from "@sports/types";
+import { getReadinessGates } from "@sports/prediction-engine";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import { GET as getPicks } from "@/app/api/picks/route";
 import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 
-export const metadata: Metadata = {
-  title: "Today's Signals — Galaxy Sports Edge",
-  description:
-    "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark — no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
-  alternates: { canonical: "/picks" },
-};
+// Metadata follows the same gate the page follows, so the description never says
+// the board is dark while /api/picks serves it (or the reverse). The root layout
+// template appends the brand, so the title carries none of it.
+export function generateMetadata(): Metadata {
+  const publicPicksOpen = getReadinessGates().canExposePublicPicks;
+  return {
+    title: "Today's Signals",
+    description: publicPicksOpen
+      ? "Today's picks from a deterministic factor model: two free picks a day with the public Edge Index. The full board, the confidence score and the factor trail are on Pro and Elite."
+      : "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark: no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
+    alternates: { canonical: "/picks" },
+  };
+}
 
 // ─────────────────────────────────────────────
 // Types

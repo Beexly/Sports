@@ -22,6 +22,7 @@ import {
   EMOTIONAL_VALUE,
 } from "@/lib/pricing/value-architecture";
 import { getFeature } from "@/lib/pricing/feature-gates";
+import { getReadinessGates } from "@sports/prediction-engine";
 import {
   honestyContrastStrip,
   WHY_PAY_FOR_HONESTY_LEAD,
@@ -187,16 +188,51 @@ const COMPARISON_FEATURES = [
 ] as const;
 
 // Fantasy mirrors Free on the betting columns (it adds no betting depth) and unlocks
-// the fantasy suite. Public picks stay founder-gated until calibration + PUBLIC_PICKS;
-// free cells must not invent a live daily teaser while the board is dark. Paid tiers
-// describe the product when the public surface is open. Cells must never advertise
-// more than honesty allows while eligibility is RED.
+// the fantasy suite. The free "Signals per day" cell follows the PUBLIC_PICKS gate at
+// render time (comparisonCellsForGate): while the board is dark the cell must not
+// invent a live daily teaser, and while the board is open (as it has been in
+// production since 2026-09-02) the cell must not tell a prospect who just read two
+// free picks on /picks that public picks have not opened. Paid tiers describe the
+// product when the public surface is open. Cells must never advertise more than
+// honesty allows while eligibility is RED.
 const COMPARISON_CELLS: Record<"FREE" | "FANTASY" | "PRO" | "ELITE", (string | boolean)[]> = {
   FREE: ["When public picks open", "Tools + Academy", true, false, false, "Counts only", false, false, false, false, false, false, true, true, "Preview"],
   FANTASY: ["When public picks open", "Tools + Fantasy suite", true, false, false, "Counts only", false, false, false, false, false, false, true, true, true],
   PRO: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, false, false, true, true, true],
   ELITE: ["All", "All 7", true, true, true, "Full forensic", true, true, true, true, true, true, true, true, true],
 };
+
+/** The free teaser as it exists once the public board is open (packages/types dailyPickLimit 2, no confidence). */
+const FREE_TEASER_CELL = "2 per day (teaser, no confidence score)";
+const FREE_TEASER_FEATURE = {
+  label: "Two picks a day with the public Edge Index (no confidence score)",
+  included: true,
+} as const;
+
+/** Plan copy for the live gate state: the free tier describes the teaser only when it exists. */
+function plansForGate(publicPicksOpen: boolean): PlanView[] {
+  if (!publicPicksOpen) return PLANS;
+  return PLANS.map((plan) =>
+    plan.id === "FREE"
+      ? {
+          ...plan,
+          description:
+            "Two picks a day with the public Edge Index, plus tools, the Academy and the transparent process. The full board, the confidence score and the factor trail are on Pro.",
+          features: [FREE_TEASER_FEATURE, ...plan.features],
+        }
+      : plan,
+  );
+}
+
+/** Comparison cells for the live gate state (free and fantasy share the betting columns). */
+function comparisonCellsForGate(publicPicksOpen: boolean): typeof COMPARISON_CELLS {
+  if (!publicPicksOpen) return COMPARISON_CELLS;
+  return {
+    ...COMPARISON_CELLS,
+    FREE: [FREE_TEASER_CELL, ...COMPARISON_CELLS.FREE.slice(1)],
+    FANTASY: [FREE_TEASER_CELL, ...COMPARISON_CELLS.FANTASY.slice(1)],
+  };
+}
 
 // ─────────────────────────────────────────────
 // FAQ — JSON-LD eligible
@@ -260,6 +296,10 @@ const productJsonLd = {
 
 export default function PricingPage() {
   const grandfatherNote = `${phase.name}-member rate. ${LIFETIME_PRICE_NOTE}`;
+  // Read, never flip: the free-tier copy describes the board as it is right now.
+  const publicPicksOpen = getReadinessGates().canExposePublicPicks;
+  const plans = plansForGate(publicPicksOpen);
+  const cells = comparisonCellsForGate(publicPicksOpen);
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
@@ -310,7 +350,7 @@ export default function PricingPage() {
 
           {/* Plans with billing toggle */}
           <div className="mt-14">
-            <PricingPlans plans={PLANS} grandfatherNote={grandfatherNote} />
+            <PricingPlans plans={plans} grandfatherNote={grandfatherNote} />
           </div>
 
           {/* Evidence strip: inspect before you pay. The proof surfaces ARE
@@ -471,7 +511,7 @@ export default function PricingPage() {
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-ion-2">
                       Feature
                     </th>
-                    {PLANS.map((plan) => (
+                    {plans.map((plan) => (
                       <th
                         key={plan.id}
                         className={[
@@ -504,7 +544,7 @@ export default function PricingPage() {
                     >
                       <td className="px-4 py-3 text-ion-2">{feature}</td>
                       {(["FREE", "FANTASY", "PRO", "ELITE"] as const).map((planId) => {
-                        const cell: string | boolean = COMPARISON_CELLS[planId][i] ?? false;
+                        const cell: string | boolean = cells[planId][i] ?? false;
                         return (
                           <td key={planId} className="px-4 py-3 text-center">
                             <ComparisonCell value={cell} />

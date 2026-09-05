@@ -43,8 +43,13 @@ describe("/dashboard a11y", () => {
     expect(dashboard).toMatch(/aria-live="polite"/);
   });
 
-  it("confidence bar has aria-label with the percentage", () => {
-    expect(dashboard).toMatch(/aria-label=\{`Confidence \$\{pick\.confidence\}%`\}/);
+  it("confidence bar has aria-label with the score out of 100 (never a percent)", () => {
+    // Confidence is a 0-100 selection score, not a win probability; a "%" in the
+    // accessible name would read as one to a screen-reader user.
+    expect(dashboard).toMatch(
+      /aria-label=\{`Model confidence \$\{pick\.confidence\} out of 100[^`]*`\}/,
+    );
+    expect(dashboard).not.toMatch(/aria-label=\{`Confidence \$\{pick\.confidence\}%`\}/);
   });
 
   it("edge-score badge has aria-label with the score", () => {

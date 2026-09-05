@@ -120,7 +120,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </div>
           <div className="relative flex justify-center text-xs">
             <span className="bg-carbon px-3 text-ion-2">
-              Google is the only sign-in method for now
+              Sign in with Google
             </span>
           </div>
         </div>
