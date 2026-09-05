@@ -10,6 +10,7 @@ import type { Metadata } from "next";
 import { WaitlistForm } from "@/components/gsn/waitlist-form";
 import { WAITLIST_COPY, BACKTEST_TRANSPARENCY } from "@/lib/gse/waitlist-copy";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { Footer } from "@/components/ui/footer";
 
 export const metadata: Metadata = {
   title: "Founding Decision-Process Lane · GSE",
@@ -46,6 +47,9 @@ export default function WaitlistPage(): JSX.Element {
           <WaitlistForm />
         </section>
       </main>
+      {/* D-7 (C11): public page with zero legal/responsible-play links —
+          Footer carries the RG block + terms/privacy. */}
+      <Footer />
     </div>
   );
 }

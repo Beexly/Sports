@@ -8,6 +8,49 @@ import { logEntitlementFailClosed } from "@/lib/entitlement-observability";
 export type UserRole = "USER" | "ADMIN";
 
 /**
+ * D-1 (C11 BEFORE DEPLOY): the settlement/alert worker refuses every recipient
+ * whose User.emailVerified is null, and NOTHING in the codebase ever wrote that
+ * column — the Prisma adapter's createUser leaves it null for OAuth users
+ * (emailVerified is only non-null on the email-provider verify path). Result:
+ * Elite alerts could never deliver to anyone. Google's OIDC profile carries an
+ * `email_verified` boolean; we stamp it here on first sign-in.
+ *
+ * Fail-closed: only an explicit `email_verified === true` counts as verified.
+ * A missing/false claim leaves the column untouched (never un-verifies).
+ * Idempotent: skips the write when the row is already non-null.
+ */
+export async function stampEmailVerifiedFromProfile(
+  dbLike: {
+    user: {
+      // Method syntax (bivariant params) so the real PrismaClient's
+      // overloaded signatures structurally match; property-function
+      // types would be checked contravariantly and reject it.
+      findUnique(args: {
+        where: { email: string };
+        select: { emailVerified: true };
+      }): Promise<{ emailVerified: Date | null } | null>;
+      update(args: {
+        where: { email: string };
+        data: { emailVerified: Date };
+      }): Promise<unknown>;
+    };
+  },
+  email: string | null | undefined,
+  profile: { email_verified?: unknown } | null | undefined,
+  now: Date = new Date(),
+): Promise<"stamped" | "already" | "unverified" | "no-user" | "no-email"> {
+  if (!email) return "no-email";
+  if (profile?.email_verified !== true) return "unverified";
+  const existing = await dbLike.user
+    .findUnique({ where: { email }, select: { emailVerified: true } })
+    .catch(() => null);
+  if (!existing) return "no-user";
+  if (existing.emailVerified) return "already";
+  await dbLike.user.update({ where: { email }, data: { emailVerified: now } });
+  return "stamped";
+}
+
+/**
  * Owner/operator allow-list: comma-separated emails in ADMIN_EMAILS are
  * elevated to ADMIN at session time. This is the production path for the
  * founder to reach /cockpit without manual DB writes; the DB role still
@@ -38,10 +81,20 @@ const config: NextAuthConfig = {
   // a day even on the paths that don't re-resolve it — defense-in-depth for revocation.
   session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, profile }) {
       if (user) {
         token.sub = user.id;
         token.role = (user as unknown as { role?: UserRole }).role ?? "USER";
+        // D-1: first sign-in — stamp emailVerified from Google's email_verified
+        // claim (see stampEmailVerifiedFromProfile). `profile` carries the raw
+        // OIDC ID-token claims. Fire-and-forget: a failed write must not break
+        // sign-in; it leaves the column null, which keeps alerts blocked
+        // (fail-closed), never falsely verified.
+        void stampEmailVerifiedFromProfile(
+          db,
+          token.email ?? user.email,
+          profile as { email_verified?: unknown } | undefined,
+        ).catch(() => undefined);
       } else if (token.email) {
         // Re-resolve the DB role on every refresh (not only when it is unset) so a
         // role change — e.g. an ADMIN downgraded to USER — propagates within the

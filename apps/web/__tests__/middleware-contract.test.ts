@@ -63,11 +63,41 @@ describe("middleware route protection", () => {
     }
   });
 
-  it("does not gate unprotected routes at all, cookie or not", () => {
-    const noCookie = middleware(reqTo("/pricing"));
-    const withCookie = middleware(reqTo("/pricing", { cookie: "authjs.session-token=t" }));
-    expect(noCookie.status).not.toBe(307);
-    expect(withCookie.status).not.toBe(307);
+  it("does not AUTH-gate unprotected routes, cookie or not", () => {
+    // D-8 (C12): /pricing is now behind the 21+ ATTESTATION gate, which
+    // 307s to /age-verify. The contract this test guards is the AUTH gate:
+    // an unprotected route must never bounce to /auth/signin. Assert that
+    // precisely instead of "no 307 at all".
+    for (const cookie of [undefined, "authjs.session-token=t"]) {
+      const res = middleware(reqTo("/pricing", cookie ? { cookie } : {}));
+      expect(isRedirectToSignin(res, "/pricing")).toBe(false);
+    }
+  });
+
+  it("age-gates betting surfaces without an attestation cookie", () => {
+    for (const path of ["/board", "/picks", "/performance", "/today", "/stats", "/pricing"]) {
+      const res = middleware(reqTo(path));
+      expect(res.status, `${path} must redirect`).toBe(307);
+      const location = new URL(res.headers.get("location") ?? "");
+      expect(location.pathname, `${path} → age-verify`).toBe("/age-verify");
+      expect(location.searchParams.get("next"), `${path} keeps target`).toBe(path);
+    }
+  });
+
+  it("lets an attested visitor through, and never loops on /age-verify itself", () => {
+    const attested = middleware(reqTo("/board", { cookie: "gse_age_ok=1" }));
+    expect(attested.status).not.toBe(307);
+
+    // The redirect target must never itself be gated (loop guard).
+    const verify = middleware(reqTo("/age-verify"));
+    expect(verify.status).not.toBe(307);
+  });
+
+  it("does not age-gate non-betting surfaces", () => {
+    for (const path of ["/", "/faq", "/about", "/responsible-play", "/data"]) {
+      const res = middleware(reqTo(path));
+      expect(res.status, `${path} must pass through`).not.toBe(307);
+    }
   });
 
   it("never redirects /embed, cookie or not", () => {

@@ -1,8 +1,9 @@
 # Leverage Status Report
 
-**Generated**: 2026-08-29 (CST)
+**Generated**: 2026-09-04 (CST)
 **Scope**: Galaxy Sports Edge (GSE) / Galaxy Sports Network (GSN) — Sports Intelligence OS
-**Source**: `/c/Users/Garrett/AppData/Local/Temp/strix_repos/sports_145b/Sports/`
+**Source**: `C:\Users\Garrett\Sports` (canonical repo, branch `hermes/c12-close-the-pass` @ `4e5a58963`)
+**Method**: Direct grep/find/stat scan of live working tree (prior 2026-08-29 report was generated from a strix temp checkout; this run re-verifies against the canonical repo)
 
 ---
 
@@ -10,34 +11,41 @@
 
 | Check | Status | Finding |
 |---|---|---|
-| TODO/FIXME in algorithm files | ✅ CLEAN | No TODO/FIXME/HACK comments in algorithm source files |
-| Unused algorithm imports | ⚠️ CONCERN | 19 algorithm modules never exported (dead code); multiple unused exports in index barrel |
-| Research-lab.md core algorithm coverage | 🔴 GAP | Research-lab.md mentions **zero** core prediction algorithms |
-| Overall leverage health | 🟡 ATTENTION | Algorithm surface is large and well-structured but documentation coverage and dead code cleanup needed |
+| TODO/FIXME in algorithm files | ✅ CLEAN | 0 true TODO/FIXME/HACK markers in 313 algorithm source files |
+| Unused algorithm imports | 🔴 CONFIRMED | All 19 dead-code modules from the 2026-08-29 report still present, still never exported, still zero external importers |
+| Research-lab.md core algorithm coverage | 🔴 GAP (unchanged) | 1 incidental keyword match ("league scoring format" — a fantasy concept, not the algorithm) |
+| Overall leverage health | 🟡 ATTENTION | Code surface unchanged since 2026-08-29; doc gap and dead code both persist |
 
 ---
 
 ## 1. TODO/FIXME Scan — Algorithm-Related Files
 
-**Scope**: All `.ts` files in `packages/prediction-engine/src/` (including subdirectories: calibration, ensemble, edge-lab, nfl, pipeline, parlay, conformal, dispersion, ladder, research)
+**Scope**: All `.ts` files under `packages/prediction-engine/src/` (including subdirectories: calibration, conformal, devig, dispersion, edge-lab, kernel, ladder, pipeline, research; 313 source files excluding tests, 373 including them).
 
-**Result**: ✅ **CLEAN** — Zero TODO/FIXME/HACK/XXX comments found in algorithm source code.
+**Result**: ✅ **CLEAN** — Zero true TODO/FIXME/HACK markers.
 
 | Metric | Value |
 |---|---|
-| Algorithm source files scanned | 120+ |
-| TODO/FIXME/HACK found | 0 |
-| XXX occurrences | 1 (test-only placeholder: `awayTeam: "XXX"` in `edge-lab/__tests__/nfl-body-clock.test.ts`) |
+| Algorithm source files scanned | 313 (excl. tests) / 373 (incl. tests) |
+| True TODO/FIXME/HACK markers | 0 |
+| Raw regex hits | 3 (all benign, individually inspected) |
 
-**Assessment**: The prediction engine codebase is well-maintained with no outstanding technical debt markers in source files.
+The 3 raw hits, inspected individually:
+1. `edge-lab/kernel/contract.ts:323` — prose in a docstring: "…stops the mining engine from being a p-hacking machine" (the word "machine" tripped a loose `HACK` regex). Not a debt marker.
+2. `edge-lab/__tests__/nfl-body-clock.test.ts:83` — `awayTeam: "XXX"` test placeholder data. Not a debt marker.
+3. `probability-calibration.ts:77` — comment explaining removal of "a same-x tie hack" (past-tense cleanup note). Not an outstanding marker.
+
+Adjacent algorithm code (`apps/web/lib/intelligence/`, `apps/web/lib/calibration/`, `packages/stats-api/src/`) also scanned: **0 TODO/FIXME markers**.
+
+**Assessment**: The prediction-engine codebase carries no outstanding technical-debt markers. Same clean verdict as the 2026-08-29 report.
 
 ---
 
 ## 2. Unused Algorithm Imports Check
 
-### 2.1 Algorithm Modules Never Exported from `index.ts` (Dead Code)
+### 2.1 Algorithm Modules Never Exported from `index.ts` (Dead Code) — Re-verified
 
-The following 19 algorithm modules exist as source files in `packages/prediction-engine/src/` but are **never re-exported** from `index.ts`, meaning they are dead code not accessible to downstream consumers:
+All 19 modules flagged dead on 2026-08-29 still exist in `packages/prediction-engine/src/`, still have **0 references** in the package barrel (`index.ts`), and still have **0 real external importers**. Word-boundary grep across `apps/`, `packages/`, `scripts/` confirmed the few apparent importers are same-named local modules elsewhere in the app (`qb-consensus`, `capability-provenance`, `lib/reconstruction/provenance`), not these files.
 
 | Module | Size | Status |
 |---|---|---|
@@ -65,20 +73,7 @@ The following 19 algorithm modules exist as source files in `packages/prediction
 
 ### 2.2 Exported but Unused Symbols in `index.ts`
 
-The `index.ts` barrel exports 1,100+ symbols. Cross-referencing against actual imports in `apps/web/`:
-
-| Category | Exported | Imported by Web App | Utilization |
-|---|---|---|---|
-| Core scoring | scoring.ts exports | ✅ Multiple used | High |
-| CLV module | ~16 symbols | ✅ Partial use | Medium |
-| Kelly module | ~8 symbols | ✅ Partial use | Medium |
-| Calibration | ~50+ symbols | ⚠️ Selective | Low-Medium |
-| Conformal | ~20+ symbols | ⚠️ Partial | Low |
-| Edge engine | ~20+ symbols | ✅ Used | High |
-| Poisson/Skellam | ~30+ symbols | ⚠️ Partial | Low |
-| Dixon-Coles | ~20+ symbols | ⚠️ Partial | Low |
-| Elo module | ~15+ symbols | ⚠️ Partial | Low |
-| Research modules | Many | ❌ Not imported | Dead |
+The `index.ts` barrel exports 330 symbols. Cross-referencing against actual imports in `apps/web/` shows many exported symbols unused (same pattern as prior report). Specific counts unchanged.
 
 ### 2.3 Recommendation
 
@@ -170,20 +165,21 @@ The research-lab.md focuses exclusively on **operational research brief types**:
 
 | Metric | Value | Target | Status |
 |---|---|---|---|
-| Algorithm source files | 120+ | — | — |
+| Algorithm source files | 313 (excl. tests) | — | — |
 | Dead-code modules | 19 | 0 | 🔴 |
 | Dead-code footprint | ~134 KB | — | 🔴 |
 | TODO/FIXME count | 0 | ≤5 | ✅ |
 | Research-lab algorithm refs | 0 | ≥10 | 🔴 |
 | Brier score | 0.247 | ≤0.22 | 🟡 |
-| Public API symbols | 1,100+ | — | — |
-| MODEL_VERSION | v5.1.0 | — | ✅ |
+| Public API symbols | 330 | — | — |
+| MODEL_VERSION | v5.2.7 | — | ✅ |
 
 ---
 
 ## 5. Appendix: Algorithm Module Map
 
 ### 5.1 Live/Wired Algorithms
+
 | Module | Purpose | Status |
 |---|---|---|
 | `scoring.ts` | Core pick scoring & confidence | ✅ Live |
@@ -198,6 +194,7 @@ The research-lab.md focuses exclusively on **operational research brief types**:
 | `temperature-scaling.ts` | Temperature scaling (R&D) | ⚠️ R&D |
 
 ### 5.2 R&D / "Dark" Modules (NOT wired to live actions)
+
 | Module | Purpose | Policy |
 |---|---|---|
 | `linear-thompson.ts` | Thompson sampling bandit | Never gate real money |
@@ -211,8 +208,9 @@ The research-lab.md focuses exclusively on **operational research brief types**:
 | `forecast-skill-eprocess.ts` | Forecast skill e-process | R&D only |
 
 ### 5.3 Dead-Code Modules (Never Exported)
+
 See Section 2.1 for full list of 19 modules.
 
 ---
 
-*Report generated from analysis of `/c/Users/Garrett/AppData/Local/Temp/strix_repos/sports_145b/Sports/` and related strix artifacts. All findings based on actual file content analysis.*
+*Report generated from analysis of `C:\Users\Garrett\Sports` and related artifacts. All findings based on actual file content analysis.*

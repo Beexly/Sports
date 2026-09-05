@@ -4,6 +4,7 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import { BRIEF_RESPONSIBLE_GAMING_NOTE } from "@/lib/brief/compose";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { Footer } from "@/components/ui/footer";
 
 // Composer is being rebuilt; keep the stub out of the index until it ships.
 export const metadata: Metadata = {
@@ -94,6 +95,9 @@ export default async function BriefStub() {
           ← Home
         </Link>
       </main>
+      {/* D-7 (C11): public page with zero legal/responsible-play links —
+          Footer carries the RG block + terms/privacy. */}
+      <Footer />
     </div>
   );
 }

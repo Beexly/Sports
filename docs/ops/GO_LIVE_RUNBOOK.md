@@ -101,14 +101,38 @@ and the cockpit readiness panel are built and tested. Nothing in live scoring co
 they engage only at the audited step above.
 
 ## Phase 5 — Turn on payments (first revenue)
-1. In Stripe: create **Pro ($19/mo)** and **Elite ($49/mo)** products → copy their price IDs into
-   `STRIPE_PRO_PRICE_ID` / `STRIPE_ELITE_PRICE_ID`.
+
+> **Price figures come from `apps/web/lib/pricing/pricing-phases.ts` — nowhere else.**
+> The current phase is **FOUNDING** (the default when `PRICING_PHASE` is unset).
+> `apps/web/lib/stripe.ts` fails CLOSED (GSE-SEC-024): if a Stripe price's
+> `unit_amount` disagrees with the advertised phase price, checkout returns an
+> empty price ID and 503s. A runbook that names a figure the code rejects is a
+> revenue outage — so the table below is generated from the phase, and
+> `node scripts/check-deploy-readiness.mjs` now FAILS (not warns) on any mismatch.
+
+| Tier | Monthly | Annual |
+|---|---|---|
+| Fantasy | $4.99 | $49 |
+| Pro | $14.99 | $99 |
+| Elite | $24.99 | $179 |
+
+1. In Stripe: create the six products/prices above (FOUNDING figures) → copy each price ID into
+   its own var: `STRIPE_FANTASY_MONTHLY_PRICE_ID`, `STRIPE_FANTASY_ANNUAL_PRICE_ID`,
+   `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_ANNUAL_PRICE_ID`,
+   `STRIPE_ELITE_MONTHLY_PRICE_ID`, `STRIPE_ELITE_ANNUAL_PRICE_ID`.
+   (`STRIPE_PRO_PRICE_ID` / `STRIPE_ELITE_PRICE_ID` are LEGACY monthly fallbacks —
+   set them only for grandfathered lookups, never as the source of a new price.)
+   **PREPEND, never replace:** when a price changes, add the new ID *in front of*
+   the comma-list and leave the old IDs in place — `tierForPriceId()` reads every
+   listed ID, so deleting an old ID silently downgrades founding members to FREE.
 2. Add the webhook endpoint `https://<domain>/api/webhooks/stripe` → copy the signing secret into
    `STRIPE_WEBHOOK_SECRET`. (Signature verification + idempotency are already implemented.)
 3. **Start in Stripe TEST mode**, run a full subscribe → entitlement → cancel cycle, then swap to
-   **LIVE** keys. Re-run the readiness script — it reports TEST vs LIVE and validates the prices.
-4. Entitlements gate server-side (Free 1 pick/day · Pro all+confidence · Elite +early/alerts) —
-   no frontend-only paywall.
+   **LIVE** keys. Re-run the readiness script — it reports TEST vs LIVE and validates every
+   price against the advertised phase amount, interval, and currency.
+4. Entitlements gate server-side (Free tier is a 2-pick/day teaser —
+   `packages/types/src/index.ts`: `dailyPickLimit: isPro ? null : 2` · Pro all+confidence ·
+   Elite +graded alerts) — no frontend-only paywall.
 
 ## Phase 6 — Keep live AI OFF until deliberately approved
 The content/Studio engine is draft-only and dark. Leave `PUBLIC_BLOG_ENABLED=false` and don't

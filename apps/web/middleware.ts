@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
+import { AGE_COOKIE, isAgeGatedSurface } from "@/lib/age-verify/surface";
 
 /**
  * Middleware for route protection.
@@ -39,6 +40,19 @@ export function middleware(req: NextRequest): NextResponse {
   // /auth/signin by a later gate.
   if (pathname === "/embed" || pathname.startsWith("/embed/")) {
     return NextResponse.next();
+  }
+
+  // ── D-8 / S3 age attestation gate ─────────────────────────────────────────
+  // One-click 21+ cookie gate on every betting-analysis surface. Always on —
+  // no env flag (an off-switch on an age gate is the first thing a regulator
+  // asks about). /age-verify itself is not in AGE_GATED_PREFIXES, so the
+  // redirect target can never loop. This is a UX/attestation floor, not a
+  // real identity check; the money path has its own server-side
+  // assertAtLeast21 (apps/web/lib/auth/age-gate.ts) at checkout.
+  if (isAgeGatedSurface(pathname) && !req.cookies.has(AGE_COOKIE)) {
+    const verifyUrl = new URL("/age-verify", req.url);
+    verifyUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(verifyUrl);
   }
 
   // ── Waitlist Basic Auth gate ──────────────────────────────────────────────

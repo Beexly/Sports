@@ -9,6 +9,7 @@ import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
+import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 
@@ -186,6 +187,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               </p>
             </div>
             <div className="flex min-w-0 flex-col gap-3 sm:items-end">
+              <BoardSurfaceChip />
               <BoardHealthBadge meta={stateResult.meta} />
               <div className="flex flex-wrap gap-3 sm:justify-end">
                 <Link href="/pricing" className="btn btn-primary min-h-11 px-5 py-3">
