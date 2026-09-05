@@ -173,6 +173,27 @@ committed to every receipt.
 Context: hit rate 0.7533 against mean p 0.7958 (favorites-heavy sample); 1,894 settled picks
 in total; 610 settled moneyline picks carry no receipt (older rows and signal-slate rows).
 
+**Split by sport (same query, 19:20 UTC) and the floors pass today.** MLB (n 100) reads
+hit 0.780 against p 0.801, Brier 0.1558: calibrated. MLS (n 35) reads hit 0.600 against p
+0.726, Brier 0.2505: that is the two-way moneyline on a three-way market, whose probability
+drops the draw mass and is wrong by construction; the engine already refuses to publish
+those (`scoring.ts` `isThreeWayMoneylineSport`) and the signal slate skips soccer since
+`6631646`. Applying the same rule to the calibration sample (exclude three-way-sport
+moneylines, a structural exclusion, not a tuning) gives:
+
+| Floor | Required | Non-soccer MONEYLINE with receipt, today | Status |
+|---|---|---|---|
+| n | at least 100 | 115 | met |
+| Brier | at most 0.22 | 0.1444 | met |
+| ECE | at most 0.05 | 0.0440 (10 equal-width bins), 0.0354 (5 equal-mass bins) | met |
+| Murphy REL | at most 0.05 | 0.0044 | met |
+
+All four floors are met today on the number that will be displayed. What remains is code
+(WP-1 with the three-way exclusion written into the loaders), the streak, and the founder's
+gate flips. Watch item, not a blocker: the current model version's MLB slice (v5.2.7, Aug
+22 to 24, n 25) read hit 0.600 against p 0.806; small n, but it is the most recent stretch,
+so the surface must keep reporting by version and by sport after publish.
+
 1. **WP-1 now** (Phase 2 of v5.2.8): the eligibility and calibration surfaces measure the
    market-anchored probability (hierarchy: factor-breakdown market p, then receipt
    `marketFairProb`, then WP-28's publish-time derivation); book-priced picks display it,
@@ -191,8 +212,28 @@ in total; 610 settled moneyline picks carry no receipt (older rows and signal-sl
 5. **Founder flips** `calibrationPublished` per GATE_OPENING_RUNBOOK when the streak is
    green, then moves the pricing phase to PROVEN (`pricing-phases.ts`). (F-36)
 
-Honest caveat: ECE at 0.0552 on 150 samples is not a pass. Steps 2 and 3 change the sample;
-the floor is either met on the true number or it is not, and the surface says which.
+Honest caveat: with soccer moneylines included, ECE reads 0.0552 and is not a pass; without
+them, by the engine's own publication rule, every floor passes. WP-1 must write that
+exclusion into the loaders explicitly and the public claim must name the scope
+(book-priced, non-three-way moneylines). Founder approval recorded 19:20 UTC: source switch
+first, streak compressed by triggering the cron.
+
+## 3d. Calibration excellence checklist (what "best of the best" means here, and what is verified)
+
+| # | Item | Status |
+|---|---|---|
+| 1 | Measured probability is the one displayed, labelled, scope named (book-priced, non-three-way moneylines) | WP-1, decided |
+| 2 | Three-way sports excluded from two-way moneyline calibration by the same rule that refuses to publish them | verified today; write into loaders in WP-1 |
+| 3 | Receipt probability recovered for receipt-less settled picks from the odds table, zero writes | WP-28 |
+| 4 | ECE reported with the repo's binning AND an equal-mass variant, plus a bootstrap interval (`bootstrap-calib-ci.ts` exists) so a point estimate never carries the claim alone | add to WP-1 acceptance |
+| 5 | Time-ordered holdout: metrics computed only on picks settled after publish, never on the fitting window (calibration-pipeline skill) | verify in `calibration-metrics/route.ts` during WP-1 |
+| 6 | Report by sport and by model version on the surface; publish the scoped claim, not a pooled headline | add to WP-1 acceptance |
+| 7 | One row per game in the sample (duplicate Game rows would inflate n): 150 receipts map to 150 distinct games today | verified today |
+| 8 | Confidence has no ranking power (AUC 0.4965 on 13,646 picks, PR #698) and its top tail is inverted: never shown as a probability; recalibration (isotonic, CIR) stays R&D behind `CALIBRATION_ADJUSTMENTS_ENABLED` | shipped (display), R&D deferred |
+| 9 | De-vig method on the receipt matches the method the claim describes (Shin per book, median across books); if receipts used another method, describe that one, do not switch silently | verify in WP-1 |
+| 10 | Publish-time versus closing probability: display publish-time (what the customer saw); the CLV ledger carries the difference; CLOSE stamps must come from the free path too | NFL-05 (C-95) |
+| 11 | Drift after publish: the archived `calibration-drift.ts` monitor is revived or replaced by the streak monitor running continuously, alert on a red run | add to OPS-05 |
+| 12 | Signal-slate, stale, voided and pushed picks never enter the sample | verified for signal (no receipt); voids and pushes excluded by result filter; stale rows leave via WP-29 |
 
 ## 4. Founder-only actions (nothing here can be done by an agent)
 

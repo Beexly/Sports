@@ -82,8 +82,11 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
   branch before opening its own PR.
 - **PROVEN is days away, not weeks (measured on production 2026-09-05 19:05 UTC, read-only
   SQL):** on settled MONEYLINE picks that carry a receipt, the market-anchored probability
-  reads n 150, Brier 0.1692, Murphy REL 0.0050, ECE 0.0552 (ten bins). Three of four floors
-  pass today; ECE misses by 0.005 on 150 samples. 610 more settled moneyline picks have no
+  reads n 150, Brier 0.1692, Murphy REL 0.0050, ECE 0.0552 (ten bins). Excluding soccer
+  two-way moneylines (wrong by construction on a three-way market; the engine already refuses
+  to publish them), the same sample reads n 115, Brier 0.1444, ECE 0.0440, Murphy REL 0.0044:
+  **all four floors pass today.** Founder approved the source switch and cron triggering at
+  19:20 UTC. 610 more settled moneyline picks have no
   receipt but their publish-time market probability is recomputable from the append-only odds
   table with zero writes (WP-28, C-105). The eligibility streak is three consecutive green
   runs of a six-hourly cron. Order: WP-1 (v5.2.8 Phase 2, decision revised to NOW), WP-28,
