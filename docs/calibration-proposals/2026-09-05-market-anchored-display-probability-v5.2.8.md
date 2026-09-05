@@ -35,13 +35,19 @@ if the founder triggers the cron by hand. The status line above stays PROPOSED u
 implementer flips it to IMPLEMENTED with the Phase 2 commit, so `model-freeze.mjs` keeps
 guarding the bump. The founder can veto by editing this paragraph.
 
-Publish, on every book-priced pick and for every tier, a **market-anchored win
-probability**: the de-vigged consensus probability of the picked side, computed from the
-two-way (or three-way) prices of every book in the snapshot with the Shin method per book
-and the median across books (`packages/prediction-engine/src/market-read.ts`,
-`consensusNoVig`, exported today and used only by edge-lab). Label it exactly:
+Publish, on every book-priced two-way moneyline pick and for every tier, a **market-anchored
+win probability**: the number every receipt already carries. Verified 2026-09-05 against
+the minting code (`packages/prediction-engine/src/scoring.ts` scoreMoneylinePick,
+`process-sport.ts` receipt mint): each book's quoted price for each side is converted to an
+implied probability, the implied probabilities are averaged across the books in the
+snapshot, and the two-sided average is normalised to sum to one (proportional de-vig). It
+is NOT the Shin-per-book median (`consensusNoVig`); no receipt carries that value, and a
+receipt stores one immutable scalar, so the claim must describe what the receipts hold.
+Label it exactly:
 
-> Market-implied win probability NN% (de-vigged consensus of N books at lock).
+> Market-implied win probability NN%: every book's price for each side converted to an
+> implied probability, averaged across the N books in the snapshot, normalised to sum to
+> one, fixed at publish time in this pick's proof receipt.
 
 Keep `confidence` as what it is, a 0-100 **selection score**, rendered as "NN/100", never as
 a percent, never called a probability. Signal-slate picks (no book behind them) show no
@@ -50,9 +56,17 @@ not a book price" since 31564d9).
 
 Restate the public calibration claim to say precisely what it measures:
 
-> The reliability curve we publish is the calibration of the displayed market-implied
-> probability on our settled moneyline picks. Confidence is a ranking score and is not on
-> this chart.
+> The reliability curve we publish is the calibration of that market-implied probability
+> on our settled two-way moneyline picks: the average implied probability across books,
+> normalised to remove the vig, fixed at publish time and committed to the pick's proof
+> receipt, never recomputed. Confidence is a ranking score and is not on this chart.
+
+Scope decision (2026-09-05, delegated): the pooled floors sample is two-way MONEYLINE only.
+Spread and total picks carry cover probabilities near 0.5, whose Brier sits near 0.25 by
+construction, so pooling them into a 0.22 Brier floor would make the floor unreachable
+regardless of skill; their calibration is reported per market on the bake-off surface
+instead. Three-way-sport moneylines are excluded structurally (the two-way de-vig drops the
+draw mass; the engine does not publish them).
 
 This is the posture ledger row C-28 asked the founder to choose ("either emit a genuine
 modelProb or restate the calibration claim to say precisely what it measures"). It is the

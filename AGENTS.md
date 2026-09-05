@@ -89,7 +89,11 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
   19:20 UTC. 610 more settled moneyline picks have no
   receipt but their publish-time market probability is recomputable from the append-only odds
   table with zero writes (WP-28, C-105). The eligibility streak is three consecutive green
-  runs of a six-hourly cron. Order: WP-1 (v5.2.8 Phase 2, decision revised to NOW), WP-28,
+  runs of a six-hourly cron. Shipped in `fbc3784c7` on the #707 branch: the
+  measurement side of WP-1, WP-28 and the drift alert (receipt-first scoring, MONEYLINE-only
+  pooled floors, basis-aware streak). Receipts carry a mean-implied proportional de-vig, not
+  Shin-median; the proposal wording now says so. Remaining: C-107 (display label and claim
+  copy, then the IMPLEMENTED flip and MODEL_VERSION v5.2.8),
   restore the book-priced flow, streak, founder flips `calibrationPublished` and the PROVEN
   pricing phase (F-36). Plan section 3c.
 - **No pick ever sits (founder policy 2026-09-05):** graded, voided with an RCA reason through
