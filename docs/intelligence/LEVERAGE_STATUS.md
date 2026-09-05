@@ -11,7 +11,7 @@
 | Check | Status | Finding |
 |---|---|---|
 | TODO/FIXME in algorithm files | ✅ CLEAN | No TODO/FIXME/HACK comments in algorithm source files |
-| Unused algorithm imports | ⚠️ CONCERN | 19 algorithm modules never exported (dead code); multiple unused exports in index barrel |
+| Unused algorithm imports | ✅ RESOLVED 2026-09-05 | 12 orphaned modules archived to `attic/`; 5 of the 19 flagged were transitively live and kept |
 | Research-lab.md core algorithm coverage | 🔴 GAP | Research-lab.md mentions **zero** core prediction algorithms |
 | Overall leverage health | 🟡 ATTENTION | Algorithm surface is large and well-structured but documentation coverage and dead code cleanup needed |
 
@@ -35,7 +35,26 @@
 
 ## 2. Unused Algorithm Imports Check
 
-### 2.1 Algorithm Modules Never Exported from `index.ts` (Dead Code)
+### 2.1 Algorithm Modules Never Exported from `index.ts` (Dead Code) — CORRECTED 2026-09-05
+
+> **Correction (2026-09-05, night wave on `hermes/night-2026-09-05`):** the
+> table below checked the barrel only and missed transitive `from`-imports, so
+> it overstated the dead set. Re-verified module-by-module against value
+> `from ".../<module>.js"` imports across `apps/`, `workers/`, `packages/`,
+> `scripts/` plus barrel refs: **5 of the 19 are reachable and were KEPT**
+> (`elo-estimator` ← barrel-exported `elo-from-results`/`elo-backtest`;
+> `hawkes-steam` ← barrel-exported `pipeline/live-orchestrator`;
+> `nflverse-replay-parser` ← barrel-exported `replay-harness`;
+> `projection-evaluation` ← barrel-exported `tweedie-baseline` +
+> `earned-weight-ensemble`; `tweedie-aci` ← barrel re-export via
+> `tweedie-baseline`). The 12 genuinely orphaned modules (zero barrel refs,
+> zero non-test value-imports, prose mentions only) were archived to
+> `packages/prediction-engine/attic/` with their tests
+> (`*.test.ts.archived`, ignored by the `src/**` vitest/tsconfig includes) and
+> an `attic/README.md` recording the evidence. `eprocess-property.test.ts` was
+> narrowed to the live `forecast-skill-eprocess` properties.
+> (`consensus.ts`, `provenance.ts` in the original table are local modules
+> under `edge-lab/` subdirectories, not top-level dead files.)
 
 The following 19 algorithm modules exist as source files in `packages/prediction-engine/src/` but are **never re-exported** from `index.ts`, meaning they are dead code not accessible to downstream consumers:
 
@@ -61,7 +80,11 @@ The following 19 algorithm modules exist as source files in `packages/prediction
 | `suppression-curve.ts` | 6.2 KB | 🔴 Dead |
 | `tweedie-aci.ts` | 2.4 KB | 🔴 Dead |
 
-**Total dead code footprint**: ~134 KB of algorithm source files that are never exposed via the public API barrel.
+**Total dead code footprint**: ~134 KB claimed; verified 2026-09-05 at ~83 KB
+across the 12 genuinely orphaned modules (now in `attic/`). The other ~51 KB
+(`elo-estimator`, `hawkes-steam`, `nflverse-replay-parser`,
+`projection-evaluation`, `tweedie-aci`) is transitively reachable — see the
+correction note under §2.1.
 
 ### 2.2 Exported but Unused Symbols in `index.ts`
 
