@@ -164,6 +164,14 @@ export async function generateSignalSlate(opts?: {
 
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
+    // A two-way moneyline on a three-way market overstates P(win): the blend
+    // below normalises home/(home+away) and drops the draw mass, while the pick
+    // settles a draw as a loss. The book path refuses to publish these
+    // (scoring.ts isThreeWayMoneylineSport) and so does this one.
+    if (sportKey.toLowerCase().startsWith("soccer")) {
+      picksSkipped += 1;
+      continue;
+    }
     const homeTeam = game.homeTeamName;
     const awayTeam = game.awayTeamName;
     let independents: IndependentMarketFairValue[];
@@ -229,7 +237,7 @@ export async function generateSignalSlate(opts?: {
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources: [...sources],
       priced: true,
-      rationale: `Independent blend (${sourcesLabel}) prices ${chosenTeam} at ${(trueProb * 100).toFixed(1)}%. Model signal only — not a book line.`,
+      rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
     };
 
     const factorBreakdown: FactorBreakdown = {
@@ -257,10 +265,12 @@ export async function generateSignalSlate(opts?: {
     };
 
     const selection = `${chosenTeam} ML ${SIGNAL_SELECTION_SUFFIX}`;
+    // Paid viewers read this verbatim. It states an estimate with its status, and
+    // carries no operator vocabulary (RankingP, eligibility colours, ladder names).
     const reasoning =
-      `Model signal (no book line): ${chosenTeam} priced at ${Math.round(trueProb * 100)}% ` +
-      `by independent sources [${sourcesLabel}]. Not a sportsbook quote. RankingP=${rankingP.toFixed(3)}. ` +
-      `Eligibility RED forbids PROVEN/performance claims.`;
+      `Model signal (no book line): independent sources [${sourcesLabel}] put ${chosenTeam} at a ` +
+      `model estimate of ${Math.round(trueProb * 100)}%, uncalibrated and not a sportsbook quote. ` +
+      `No book price is attached to this pick.`;
     const reasoningShort = buildSignalReasoningShort(chosenTeam, sourcesLabel);
 
     try {

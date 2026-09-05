@@ -124,11 +124,31 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
     const out = await generateSignalSlate({ now: NOW, skipSeed: true });
     expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
-    const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { gameId: string; pickType: string; bookmakerCount: number; selection: string } };
+    const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { gameId: string; pickType: string; bookmakerCount: number; selection: string; reasoning: string; factorBreakdown: { independentEdge: { rationale: string } } } };
     expect(args.data.gameId).toBe("game-1");
     expect(args.data.pickType).toBe("MONEYLINE");
     expect(args.data.bookmakerCount).toBe(0);
     expect(isSignalSlateRow(args.data)).toBe(true);
     expect(out.picksUpserted).toBe(1);
+    // Paid viewers read `reasoning` verbatim: an estimate with its status, and
+    // no operator vocabulary or "priced at" language (a price needs a book).
+    for (const text of [args.data.reasoning, args.data.factorBreakdown.independentEdge.rationale]) {
+      expect(text).not.toMatch(/RankingP=|Eligibility RED|PROVEN|priced at|prices /);
+      expect(text).toMatch(/uncalibrated/);
+      expect(text).toMatch(/not a (sportsbook quote|book price)/);
+    }
+  });
+
+  it("never writes a two-way moneyline signal for soccer (three-way market)", async () => {
+    mocks.gameFindMany.mockResolvedValue([
+      { ...GAME, id: "game-mls", homeTeamName: "Portland Timbers", awayTeamName: "Austin FC", sport: { key: "soccer_usa_mls", name: "MLS" } },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    expect(mocks.buildIndependents).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(out.picksUpserted).toBe(0);
+    expect(out.picksSkipped).toBe(1);
   });
 });
