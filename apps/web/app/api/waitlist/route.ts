@@ -32,10 +32,10 @@ function isTooFast(body: unknown): boolean {
 
 export async function POST(request: Request): Promise<NextResponse> {
   const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
+
+
     "anon";
-  const rl = await consumePublicFormRateLimit("waitlist", ip, 5, 60_000);
+  const rl = await consumePublicFormRateLimit("waitlist", clientIp(req), 5, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many requests" },
