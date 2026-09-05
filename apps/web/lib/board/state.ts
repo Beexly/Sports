@@ -17,6 +17,8 @@ import {
 } from "./classify-board-state";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
+import { freshPickWhere } from "@/lib/board/stale-pick-policy";
+import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 
 export type BoardLane = "SCORING_NOW" | "PUBLISHED_TODAY" | "GATED_TODAY";
 
@@ -306,6 +308,10 @@ async function loadBoardStateInner(
   const isPremiumViewer = entitlements?.canSeePremiumPicks ?? false;
 
   const { start, end } = todayBounds();
+  // Published rows follow the public slate window (Eastern day the game starts
+  // in, rows still refreshed), the same as /api/picks; see lib/picks/slate-window.ts.
+  const slateNow = new Date();
+  const slate = resolveSlateWindow(null, slateNow);
   try {
     const decisions = await db.gateDecision.findMany({
       where: {
@@ -375,7 +381,8 @@ async function loadBoardStateInner(
           isPublished: true,
           isBootstrap: false,
           ...excludeSeedInProd,
-          generatedAt: { gte: start, lt: end },
+          ...freshPickWhere(slateNow),
+          game: gameInSlateWindow(slate),
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
         // Wide window — re-rank by rankingP below so low-conf demotions surface
