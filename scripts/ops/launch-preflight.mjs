@@ -31,6 +31,14 @@ let softFails = 0;
 
 async function get(path, opts = {}) {
   const headers = { "User-Agent": "gse-launch-preflight/3", ...(opts.headers || {}) };
+  // CRON_SECRET (SEC-05 companion): the ops-truth route's founder-queue,
+  // deploy markers, and matched env slots are operator-only now. When the
+  // secret is set, ops-truth is fetched with it so preflight keeps full detail;
+  // anonymous runs still pass (counts-only degrade) — set CRON_SECRET for the
+  // complete preflight.
+  if (process.env.CRON_SECRET?.trim() && path === "/api/ops/public-surface-truth") {
+    headers.authorization = `Bearer ${process.env.CRON_SECRET.trim()}`;
+  }
   const res = await fetch(`${BASE}${path}`, { headers, redirect: "manual" });
   const text = await res.text();
   let json = null;
@@ -134,7 +142,9 @@ async function main() {
   const ops = await get("/api/ops/public-surface-truth");
   const d = ops.json || {};
   const sha = d.deployment?.sha ? String(d.deployment.sha).slice(0, 12) : "(none)";
-  const markers = d.deployment?.expectedMainFeatures?.length ?? 0;
+  const markers = d.deployment?.expectedMainFeatures?.length
+    ?? d.deployment?.expectedMainFeatureCount
+    ?? 0;
   if (ops.status === 200) ok(`ops HTTP=200 sha=${sha} markers=${markers}`);
   else hard(`ops HTTP=${ops.status}`);
 
@@ -207,6 +217,9 @@ async function main() {
     }
     const ids = new Set(d.founderNextSteps.map((s) => s.id));
     if (!ids.has("stripe-webhook-audit")) soft("founderNextSteps missing stripe-webhook-audit (#338+)");
+  } else if (d.founderSteps?.count != null) {
+    // SEC-05: anonymous payload carries count only; full queue needs CRON_SECRET.
+    ok(`founderSteps count=${d.founderSteps.count} (set CRON_SECRET for the full queue)`);
   } else {
     soft("founderNextSteps missing — prod SHA likely lags main");
   }

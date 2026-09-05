@@ -26,9 +26,15 @@ const base = (arg("--base") ?? process.env.GSE_BASE_URL ?? DEFAULT_BASE).replace
 const expectSha = arg("--expect-sha") ?? process.env.GSE_EXPECT_SHA;
 const url = `${base}/api/ops/public-surface-truth`;
 
+// SEC-05: founderNextSteps is operator-only now — send CRON_SECRET when set.
+const truthHeaders = { accept: "application/json" };
+if (process.env.CRON_SECRET?.trim()) {
+  truthHeaders.authorization = `Bearer ${process.env.CRON_SECRET.trim()}`;
+}
+
 let truth;
 try {
-  const res = await fetch(url, { headers: { accept: "application/json" } });
+  const res = await fetch(url, { headers: truthHeaders });
   if (!res.ok) {
     console.error(JSON.stringify({ ok: false, reason: "http", status: res.status, url }, null, 2));
     process.exit(2);

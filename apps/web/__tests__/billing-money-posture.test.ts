@@ -10,7 +10,10 @@ describe("loadBillingMoneyPosture", () => {
     expect(p.moneyPathReady).toBe(false);
     expect(p.envPriceSlotsTotal).toBe(6);
     expect(p.envPriceSlotsConfigured).toBe(0);
-    expect(p.operatorHint).toMatch(/STRIPE_SECRET_KEY missing/i);
+    // SEC-05: operatorHint no longer names env vars verbatim (the anonymous
+    // truth surface must be env-name-free); prose form below. The boolean
+    // posture above is the contract; the hint wording is prose now.
+    expect(p.operatorHint).toMatch(/Stripe secret key is missing/i);
   });
 
   it("secret without webhook is creatable but not money-path ready", () => {

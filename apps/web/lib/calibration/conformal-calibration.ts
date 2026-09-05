@@ -110,7 +110,7 @@ export const CONFORMAL_METHODS: readonly ConformalMethodStatus[] = [
 export const CONFORMAL_CALIBRATION_NOTES = {
   mapUncertainty: "stationary-bootstrap or Wilson-on-blocks (internal)",
   outcomeSets: "split-conformal residual sets — coverage on y, not map CI",
-  aciAbstain: "CONFORMAL_ABSTAIN_ENABLED — show/abstain only; never publish",
+  aciAbstain: "conformal-abstain flag — show/abstain only; never publish",
   provenEligibility: "still frequentist Brier · ECE · Murphy RES on shown p",
   qrfNumeric: "QRF/CQR for spreads/totals/props only — skip for binary side cal",
   exchangeability:

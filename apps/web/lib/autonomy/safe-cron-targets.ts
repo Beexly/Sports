@@ -32,7 +32,7 @@ export const AUTONOMY_MAX_ACTIONS_PER_CYCLE = 4;
 export const AUTONOMY_FREE_SPINE_SLA_MINUTES = 120;
 
 export const AUTONOMY_EXECUTE_HINT_ON =
-  "AUTONOMY_EXECUTE=true — planner may invoke free-spine-health, settle-picks, refresh-odds, generate-drafts, calibration-metrics (autonomousSafe only). Owner-queue + LAWS never auto-run.";
+  "Autonomy execute flag ON — planner may invoke free-spine-health, settle-picks, refresh-odds, generate-drafts, calibration-metrics (autonomousSafe only). Owner-queue + LAWS never auto-run.";
 
 export const AUTONOMY_EXECUTE_HINT_OFF =
-  "Default dry-run: autonomy-cycle plans only. Set AUTONOMY_EXECUTE=true (exact string) to close plan→act for allow-listed free-path crons (I9).";
+  "Default dry-run: autonomy-cycle plans only. Set the autonomy execute flag to true (exact string) to close plan→act for allow-listed free-path crons (I9).";

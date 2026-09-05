@@ -169,7 +169,12 @@ function num(v) {
     if (money.moneyPathReady === true) verdict("PASS", "money path", `stripe secret + webhook + ${num(money.envPriceSlotsConfigured) ?? "?"}/${num(money.envPriceSlotsTotal) ?? "?"} price slots`);
     else verdict("FAIL", "money path", money.operatorHint ?? "not ready");
 
-    const steps = Array.isArray(d.founderNextSteps) ? d.founderNextSteps : [];
+    const steps = Array.isArray(d.founderNextSteps)
+      ? d.founderNextSteps
+      : // SEC-05: anonymous payload has count only — P0 detail needs CRON_SECRET.
+        (d.founderSteps?.count != null
+          ? [{ id: "founder-steps-count", priority: "P0", action: `count=${d.founderSteps.count} (set CRON_SECRET for the P0 detail)` }]
+          : []);
     const p0 = steps.filter((s) => s?.priority === "P0");
     verdict(p0.length ? "WARN" : "PASS", "founder P0 queue", p0.length ? p0.map((s) => `${s.id}: ${s.action}`).join(" | ") : "empty");
   }

@@ -79,13 +79,13 @@ export function loadBillingMoneyPosture(env: Env = process.env): BillingMoneyPos
   let operatorHint: string;
   if (!stripeSecretConfigured) {
     operatorHint =
-      "STRIPE_SECRET_KEY missing — checkout API will fail closed. Wire secret + prices/lookup_keys.";
+      "The Stripe secret key is missing — checkout API will fail closed. Wire the secret + prices/lookup_keys.";
   } else if (!webhookSecretConfigured) {
     operatorHint =
-      "Stripe secret present but STRIPE_WEBHOOK_SECRET missing — sessions may create without durable entitlements.";
+      "The Stripe secret is present but the webhook signing secret is missing — sessions may create without durable entitlements.";
   } else if (envPriceSlotsConfigured === 0) {
     operatorHint =
-      "Webhook ready; no STRIPE_*_PRICE_ID envs — checkout relies on Stripe lookup_keys (gse-*-monthly/annual).";
+      "Webhook ready; no per-price env ids are set — checkout relies on Stripe lookup_keys (gse-*-monthly/annual).";
   } else if (envPriceSlotsConfigured < 6) {
     operatorHint = `Money path ready (${envPriceSlotsConfigured}/6 env price slots). Missing slots fall back to lookup_key.`;
   } else {

@@ -170,13 +170,13 @@ export function planJynx(input: PlanJynxInput = {}, env: Env = process.env): Jyn
     reason = `Free-lane first for surface=${surface} (Cerebras $0). Clouds [${clouds.join(",") || "none"}] then Anthropic if free-lane fails.`;
   } else if (clouds.length > 0) {
     primaryLane = clouds[0]!;
-    reason = `Claude credits via ${clouds.join("→")} (mode=${providerMode}, failover=${isCloudFailoverEnabled(env)}). Cash Anthropic last.`;
+    reason = `Claude credits via ${clouds.join("→")} (provider mode ${providerMode}, failover=${isCloudFailoverEnabled(env)}). Cash Anthropic last.`;
   } else {
     primaryLane = "anthropic_direct";
     reason =
       providerMode === "auto"
         ? "Auto mode but no cloud fully configured — Anthropic cash until Bedrock/Azure/Vertex env complete."
-        : "Claude cash path (set CLAUDE_PROVIDER=auto or bedrock|azure|vertex + maps to burn credits).";
+        : "Claude cash path (point the Claude provider at credits: set auto mode or a specific cloud + model maps to burn credits).";
   }
 
   return {

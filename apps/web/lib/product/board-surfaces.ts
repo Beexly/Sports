@@ -65,8 +65,8 @@ export function productBoardSurfaces(env: EnvMap = process.env): {
       routes: ["/stats", "/stats/*"],
       rankingP: "n/a",
       operatorHint: statsPublic
-        ? "STATS_PUBLIC is ON — confirm rights memo + live feeds before marketing StatKing as live data."
-        : "StatKing stays dark until STATS_PUBLIC + rights + live feeds. Snapshot/fixture only underneath.",
+        ? "The stats-public flag is ON — confirm rights memo + live feeds before marketing StatKing as live data."
+        : "StatKing stays dark until stats-public + rights + live feeds. Snapshot/fixture only underneath.",
     },
     {
       id: "HELM",
@@ -102,8 +102,8 @@ export function productBoardSurfaces(env: EnvMap = process.env): {
       routes: ["/board"],
       rankingP: "required",
       operatorHint: liveBoard
-        ? "LIVE_BOARD ON — rows must sort by rankingP; market vs signal kill switch still applies."
-        : "LIVE_BOARD default OFF. Code path sorts by rankingP when board opens; do not invent slate.",
+        ? "Live-board flag ON — rows must sort by rankingP; market vs signal kill switch still applies."
+        : "Live-board default OFF. Code path sorts by rankingP when board opens; do not invent slate.",
     },
     {
       id: "GSE_PICKS",
@@ -112,8 +112,8 @@ export function productBoardSurfaces(env: EnvMap = process.env): {
       routes: ["/picks", "/api/picks"],
       rankingP: "required",
       operatorHint: publicPicks
-        ? "PUBLIC_PICKS ON — confirm eligibility GREEN + proof bar before marketing track record."
-        : "PUBLIC_PICKS dark by law while calibration RED / bootstrap. rankingP ready on code path.",
+        ? "Public picks ON — confirm eligibility GREEN + proof bar before marketing track record."
+        : "Public picks dark by law while calibration RED / bootstrap. rankingP ready on code path.",
     },
     {
       id: "GSE_COCKPIT",
