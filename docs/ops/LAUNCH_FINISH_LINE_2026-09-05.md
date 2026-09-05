@@ -164,6 +164,13 @@ Ordered by damage-if-skipped before Thursday.
     executor); pick the primary. In `ci.yml`, set the four env-gated Postgres suite URLs to
     the existing test `DATABASE_URL` and point the brand-safety step at
     `npm run test:brand-safety` so the seven-file list cannot drift from the nineteen. F-30.
+21. **Open pull request triage.** Thirty are open; nine are merged or superseded, five are
+    clean and worth merging after CI, #693 re-lands eleven money and access-control fixes
+    that never reached main and must be split by original PR, four mega-branches should be
+    closed, #670 is a MODEL_VERSION bump in disguise. Order of operations in F-31.
+22. **Operator read secret.** `CRON_SECRET` authorizes both cron mutations and the read-only
+    operator surfaces. Once `lib/ops/ops-auth.ts` accepts `OPS_READ_SECRET` (C-102), set it
+    in Vercel so a leaked read credential cannot fire a cron. F-32.
 
 ## 5. Work packages for the next sessions
 
@@ -279,9 +286,41 @@ pushed and its pull request is the record. TCI-4 and TCI-7 (enable the four env-
 Postgres suites and point the brand-safety CI step at `npm run test:brand-safety`) edit
 `.github/workflows/ci.yml`, which is frozen for agents: founder item 20.
 
-Audits still in flight when this file was last updated (rows land in
-`docs/ops/AGENT_LEDGER.md` as they complete): open pull request triage (30 open),
-security and auth. Read the ledger before dispatching anything not listed above.
+Security and auth (quick pass; no P0 or P1 found). The perimeter holds: middleware checks
+cookie presence only, but the admin and cockpit layouts re-run `auth()` and require ADMIN,
+every admin and cockpit API route carries an inline ADMIN check, ops routes compare the
+Bearer secret in constant time, B2B keys are constant-time and default to FREE scope, and
+open redirects are guarded on sign-in and age-verify.
+
+| ID | Package | Files (entry points) | Acceptance | Effort |
+|---|---|---|---|---|
+| SEC-01 | Admin "Trigger Data Refresh" server action fetches its own API without the session cookie (dead and unauthenticated); call the handler directly under `requireAdminActor()` with the same rate limit | `apps/web/app/admin/page.tsx:112-122`, `lib/auth/actor.ts` | action test: non-admin rejected, admin triggers | S |
+| SEC-02 | `emailVerified` stamping is fire-and-forget inside the JWT callback; on serverless the write can be dropped, keeping Elite alerts blocked. Await it with a fail-closed catch | `apps/web/lib/auth.ts:93-97` | auth test; founder review (auth path) | S |
+| SEC-03 | Five public routes rate-limit on the leftmost X-Forwarded-For entry instead of `clientIp()` | `app/api/human/roster-availability`, `cipher/verify`, `intelligence/roster-advice`, `waitlist`, `contests/*` routes | grep shows `clientIp(` in all five | S |
+| SEC-04 | Waitlist Basic Auth compares with `===`; use `safeEqualSecret` from `@sports/util` | `apps/web/lib/waitlist/access-gate.ts:59-62` | gate test | S |
+| SEC-05 | Truth surface emits the detail-gated `mainFeatureMarkers` publicly as `expectedMainFeatures`, and provider env-var names anonymously | `app/api/ops/public-surface-truth/route.ts:610,815` | anonymous response carries neither | S |
+| SEC-06 | Production CSP allows `'unsafe-inline'` scripts with no nonce; move to a per-request nonce with `'strict-dynamic'` | `apps/web/next.config.mjs:87-88`, `middleware.ts` | header test; pages render | M |
+| SEC-08 | `/api/promotions` is CDN-cacheable for 5 minutes although compliance-gated; return via `jsonNoStore` | `app/api/promotions/route.ts:48-53` | route test asserts no-store | S |
+
+SEC-07 (one secret authorizes both cron mutations and read-only operator surfaces) is
+founder item 22 plus a small `ops-auth.ts` change.
+
+Open pull requests (30, triaged read-only against `origin/main` 1a3f00d05; GitHub metadata
+not read). All four launch-merge-train PRs from 2026-09-04 are merged. Nine are already
+merged or superseded and should be closed. Five are clean-merging and production-relevant
+(#665 adapters fail closed, #668 revenue-fence validation, #666 auth tests, #660
+rollback/additivity, #669 ledger audit) and need only an update from main and a CI run. The
+one consequential stranded item is #693: a 13-commit bundle re-landing twelve money and
+access-control PRs, of which only one reached main; 47 of its 52 added files are absent
+from main and it carries 11 conflicts, so it must be split by original PR, not rebased
+blind. Four mega-branches (#663, #674, #672, #675) are unmergeable and should be closed
+with a two-item salvage list. #670 bumps MODEL_VERSION to v5.3.0 and rescales the public
+Edge Index: a calibration proposal, never routine cleanup. Hold the production dependabot
+bump #437 until after Week 1. Details and the order of operations: ledger F-31.
+
+All eleven audits have completed. Every P0 finding was independently re-verified against
+the deployed SHA by a separate verifier that tried to refute it: 18 of 18 verdicts
+CONFIRMED. The workflow journal is the evidence; the ledger rows point at it.
 
 ## 6. Verification commands (what "done" means for every package)
 
