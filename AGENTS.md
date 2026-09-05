@@ -67,6 +67,19 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
   (owner-run); ESPN Power Index is gated fail-closed (`ESPN_POWERINDEX_LICENSED` unset);
   `hermes/settlement-token-fix` is superseded by `6880f18` (do not merge it); Vercel cron
   is the primary scheduler; `/picks` is the product surface; the `/fantasy` age gate stays.
+- **Coordination with `hermes/finish-line-2026-09-05` (verified against the remote 2026-09-05
+  18:55 UTC):** that branch is stacked on top of the #707 branch at `6a9c092f7` and merges
+  cleanly with the #707 tip (`git merge-tree` reports no conflict). SEC-01 (`fe42773bd`) and
+  SEC-02 (`96ab46d27`) are on the remote; ledger C-102 is owned by hermes (CLAIMED), do not
+  edit that row from another branch. The SEC-03 commits Hermes reported (`dbb49850b`,
+  `7bc9508d5`, `8014c67c8`) are NOT on the remote and the five SEC-03 routes are untouched
+  there. The local edit of `apps/web/app/api/contests/enter/route.ts` is half-applied: the
+  X-Forwarded-For lines were deleted leaving `const ip =` and `"anon";` behind, and
+  `clientIp(req)` is used without an import. Finish it before pushing: add
+  `import { clientIp } from "@/lib/api/rate-limit";`, delete the `const ip = ... "anon";`
+  remnant, run `npm run typecheck` and `npm run lint`. Landing order: #707 first, then Hermes
+  merges `origin/claude/sports-prediction-launch-rtiexc` (adds `29a4151eb`, WP-27) into its
+  branch before opening its own PR.
 - Settlement CRITICAL (36 overdue) root causes are fixed on the PR branch, not on main:
   ESPN `limit=1000` truncation, matcher containment on 2-3 letter abbreviations and bare
   club tokens, overdue-only runner slice, backfill date order. Do not re-fix them; land #707.
