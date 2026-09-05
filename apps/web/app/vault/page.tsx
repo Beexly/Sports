@@ -38,8 +38,9 @@ export default function VaultPage() {
                 product is built to avoid.
               </p>
               <p className="text-sm leading-relaxed text-ion-1">
-                Every pick already carries a tamper-evident receipt frozen before
-                kickoff. You don&apos;t have to wait for the Vault to check one:
+                Every book-priced pick carries a tamper-evident receipt frozen before
+                kickoff; a model-signal pick has no book price and carries no receipt,
+                and says so. You don&apos;t have to wait for the Vault to check one:
                 paste any receipt hash and verify it against the committed payload
                 yourself.
               </p>

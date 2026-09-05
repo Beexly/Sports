@@ -201,7 +201,7 @@ export default async function SealedEnginePage() {
                     03 · The seal
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-semibold">
-                    Every survivor is sealed before kickoff.
+                    Every book-priced survivor is sealed before kickoff.
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
                     <SurgeCount value={story.seals.receiptsFrozenToday} className="font-semibold text-ion-white" />{" "}

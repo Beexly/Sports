@@ -69,7 +69,7 @@ export interface BuildMachineProofOptions {
 }
 
 const DOCTRINE: readonly string[] = [
-  "Every pick is committed to a tamper-evident, hash-chained receipt BEFORE kickoff — the claim is frozen before the outcome is known.",
+  "Every book-priced pick is committed to a tamper-evident, hash-chained receipt BEFORE kickoff — the claim is frozen before the outcome is known. A model-signal pick has no book price, carries no receipt, and is labelled as such.",
   "The judge is closing-line value (CLV) measured against the market's closing number, plus the settled result — not our own after-the-fact narration.",
   "A performance number renders only if it carries all four legs: a coverage denominator, a Wilson or Clopper-Pearson lower bound, CLV backing, and walk-forward provenance. Missing any leg, it is withheld, not shown.",
   "Publication is founder-gated and defaults OFF. Until it is on and a metric is substantiated, this surface publishes no record — and says so.",
