@@ -217,7 +217,7 @@ modules are listed — archived R&D modules under `attic/` are out of scope.
 | Injury / Player Context | `player-archetype.ts`, `opponent-adjusted.ts`, `expected-metrics/` | Role-adjusted expectation shifts when personnel changes |
 | Fantasy Decision | `earned-weight-ensemble.ts`, `tweedie-baseline.ts`, `ml-estimator.ts` | Ensemble-weighted projections with baseline comparisons |
 | Coach / Scheme Change | `edge-lab/nfl-change-point.ts`, `edge-lab/features/nfl-regime-change.ts`, `game-script.ts` | Detected regime breaks; script-conditioned expectations |
-| Rumor Triage | `market-gravity-index.ts`, `stale-line-risk-score.ts` (metrics/market) | Whether the market corroborates or ignores the rumor |
+| Rumor Triage | `metrics/market/market-gravity-index.ts`, `metrics/market/stale-line-risk-score.ts` | Whether the market corroborates or ignores the rumor |
 | Content / SEO | `pick-proof-receipt.ts`, `certificate/` | Citable proof-of-record artifacts, never invented stats |
 | Competitor / Product | `docs/intelligence/` corpora + `gse-competitive-intel` repo (e.g. nfelo 66.61% SU / 53.70% ATS vs close / +5.61% CLV reference) | Versioned external benchmarks, never silently merged |
 | All briefs (confidence) | `scoring.ts`, `conviction-tier.ts`, `calibration-apply.ts`, `probability-calibration.ts`, `temperature-scaling.ts`, `kelly.ts`, `robust-kelly.ts` | Confidence score, conviction tier, calibrated probability, quarter-Kelly stake lens |
