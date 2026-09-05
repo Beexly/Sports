@@ -94,6 +94,46 @@ Founder decision required: YES flips the doc to IMPLEMENTED and dispatches work 
 WP-1. Until then confidence keeps rendering "NN/100" to PRO only and no percentage is
 shown to anyone (shipped).
 
+## 3b. Decisions taken on the founder's behalf (delegated 2026-09-05, 18:00 UTC)
+
+The founder delegated these in-session. Each is reversible by editing this list and the
+ledger row named; none flips a gate, changes an env value, or touches production data.
+
+1. **Odds supply.** The Odds API stays an optional supplement; the keyless path becomes the
+   strategic primary (re-land the core of PR #680 fresh off main after #707: WP-26). Fact
+   behind it (read-only SQL, 18:00 UTC): the last paid-book odds row (fanduel, draftkings,
+   betmgm) was fetched 2026-09-05 00:30 UTC; since then only `espn_public` inserted, and
+   zero book-priced picks were generated in 18 hours. Because `MIN_BOOKMAKERS = 2` and ESPN
+   public is one book, only the paid feed can produce multi-book spreads and totals for
+   Week 1, so the account check in section 4 item 1 stays the top founder action. Do not
+   upgrade the tier.
+2. **v5.2.8: YES, sequenced.** Phase 2 (WP-1) starts after #707 deploys and the first NFL
+   Sunday settles clean; MODEL_VERSION does not move before that. Recorded in the proposal
+   doc section 1. (F-14)
+3. **Stale published picks: unpublish all rows the selector finds.** Not void (it writes
+   settlement events into the record), not leave (they grade on May lines). One-command
+   owner tool: `npm run ops:stale-picks:unpublish` (dry run) then `-- --execute`. (F-16)
+4. **ESPN Power Index: gated fail-closed at the package layer.** The registry permits ESPN
+   facts only; FPI is a proprietary prediction. `ESPN_POWERINDEX_LICENSED` unset means the
+   independent source is off. The signal slate loses FPI for NFL and NCAAF until a license
+   exists; book-priced picks are unaffected. (F-21, C-90)
+5. **Hermes branch `hermes/settlement-token-fix` is superseded.** It sets the containment
+   minimum to 3, which still lets "chi" match "kansascitychiefs"; `6880f18` on this branch
+   uses 4 plus exact abbreviations plus bipartite side matching, with the NFL regression
+   cases. Do not merge it; close it after #707 lands. (F-33)
+6. **Schedulers.** Vercel cron is primary; `external-cron.yml` stays as the watchdog; the
+   autonomy executor gets a recency guard (C-99). No workflow edit is needed for Week 1.
+7. **Landing montage OFF for organic first visits**, keep `?intro=play` (FE-07 moves from
+   founder item 15 to the engineering queue, C-93).
+8. **Home IA.** `/picks` is the product; hero CTAs go to `/picks` and `/pricing`; `/board`
+   is retitled as telemetry (FE-06 moves from founder item 18 to C-93).
+9. **Age gate on `/fantasy` stays** until counsel says otherwise; accept the SEO cost (F-25).
+10. **Contest Bay stays dark through launch**; no migration now (F-27 deferred).
+11. **Production migration status: verified.** Read-only SQL on `_prisma_migrations`:
+    `20260101000000_baseline`, `20260902230000_game_merge_alias`,
+    `20260902231000_week1_hot_path_indexes` all finished 2026-09-03 20:00 UTC, no
+    rollbacks. Section 4 item 7 is closed.
+
 ## 4. Founder-only actions (nothing here can be done by an agent)
 
 Ordered by damage-if-skipped before Thursday.
@@ -113,8 +153,8 @@ Ordered by damage-if-skipped before Thursday.
 6. **Duplicate games.** Run `npm run ops:merge-games` (owner tool, exists) after reading
    `apps/web/lib/ops/game-merge-plan.ts`; the two ESPN namespaces are unified for new
    rows by WP-3 below, the existing 500+ duplicate rows need the owner-run merge.
-7. Confirm production migration status once after the deploy that carries this branch
-   (`npm run db:migrate:status`, OPERATOR_TASKS `BASELINE-MIG`).
+7. ~~Confirm production migration status~~ Verified by read-only SQL on 2026-09-05 (section
+   3b item 11). Re-check only if a future PR adds a migration.
 8. **ESPN FPI rights.** The signal slate's main independent source is ESPN's Power Index,
    fetched from `sports.core.api.espn.com` with no clearance gate; the rights registry
    allows ESPN facts only (`commercial_display_allowed: false`, attribution required) and
@@ -211,6 +251,7 @@ idempotent, fail-closed; 174 money-path unit tests green) and the pick-generatio
 | WP-24 | Totals drop reasons: MLB/MLS TOTAL=0 is scoreTotalPick's own gates (fewer than 2 totals books, no two-sided prices, consensus below 0.55, confidence below 50) and the ESPN tertiary odds path emits one bookmaker so it can never yield a TOTAL; return a per-market drop reason from scoreGame and surface counts on the coverage hint (supersedes WP-7) | `packages/prediction-engine/src/scoring.ts` scoreTotalPick, `process-sport.ts` result, `apps/web/lib/board/market-coverage.ts` | coverage hint names the gate that fired | M |
 
 | WP-25 | Gate the ESPN Power Index fetch behind the rights registry (fail closed, attribution) until F-21 clears it; anonymous copy never names the source | `packages/ingestion-pipeline/src/generate-signal-slate.ts` (espn_powerindex), `apps/web/lib/scraping/clearance-engine.ts` | slate test: fetch not called when clearance denies | S |
+| WP-26 | Keyless odds as the strategic primary (section 3b item 1): re-land the core of PR #680 fresh off main after #707 (`GalaxySportsApiOddsProvider` reading ESPN inline scoreboard odds, de-vig `fair_prob`, 8s timeouts, registry gating, Rundown thin-fill only behind the-odds-api), then choose the second free book so `MIN_BOOKMAKERS = 2` holds without the paid feed (Kalshi is paid-required in the package registry; TheRundown is keyed, use-with-caution; ESPN public is one book) | `packages/data-ingestion/src/odds-provider-adapter.ts`, `source-registry.ts`, `packages/ingestion-pipeline/src/process-sport.ts`; reference `origin/hermes/galaxy-keyless-odds` (197 behind main) | with `THE_ODDS_API_KEY` unset in a test, `processSport` yields a non-empty book-priced board from two cleared sources; ingestion-pipeline and data-ingestion suites green | L |
 
 Public frontend (from the frontend audit; FE-01/03/04 shipped in `994a2fa` and `486b0a3`;
 no screenshots were possible from the sandbox, every finding is from source):

@@ -21,6 +21,14 @@ proposed here is arithmetic on quoted prices that a reader can recompute by hand
 
 ## 1. Decision (founder)
 
+**Decision record, 2026-09-05.** The founder delegated this call in-session ("make the
+most intelligent and aggressive decisions for me"). Decision: **YES, sequenced.** Phase 2
+(work package WP-1) starts only after PR #707 has deployed and the first NFL Sunday has
+settled clean through the free-first path; nothing changes MODEL_VERSION before that. The
+status line above stays PROPOSED until the implementer flips it to IMPLEMENTED with the
+Phase 2 commit, so `model-freeze.mjs` keeps guarding the bump. The founder can veto by
+editing this paragraph.
+
 Publish, on every book-priced pick and for every tier, a **market-anchored win
 probability**: the de-vigged consensus probability of the picked side, computed from the
 two-way (or three-way) prices of every book in the snapshot with the Shin method per book
