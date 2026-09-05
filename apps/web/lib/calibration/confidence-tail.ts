@@ -203,6 +203,10 @@ export async function loadConfidenceTail(
         confidence: r.confidence,
         result: r.result === "WIN" ? "WIN" : "LOSS",
         modelVersion: r.modelVersion,
+        // Selected above but dropped here until 2026-09-05, so byMarket was always
+        // empty on the truth surface and the inverted tail could not be attributed
+        // to a market.
+        pickType: r.pickType,
       })),
     { floor },
   );

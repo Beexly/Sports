@@ -94,14 +94,20 @@ describe("loadConfidenceTail", () => {
         findMany: async (args) => {
           seenArgs = args;
           return [
-            { confidence: 85, result: "WIN", modelVersion: "v5.2.7" },
-            { confidence: 90, result: "LOSS", modelVersion: "v5.2.7" },
-            { confidence: 90, result: "PUSH", modelVersion: "v5.2.7" }, // defensive: filtered client-side too
+            { confidence: 85, result: "WIN", modelVersion: "v5.2.7", pickType: "MONEYLINE" },
+            { confidence: 90, result: "LOSS", modelVersion: "v5.2.7", pickType: "SPREAD" },
+            { confidence: 90, result: "PUSH", modelVersion: "v5.2.7", pickType: "TOTAL" }, // defensive: filtered client-side too
           ];
         },
       },
     };
     const s = await loadConfidenceTail(db, 80);
+    // The loader selects pickType and must forward it: until 2026-09-05 the mapped
+    // row dropped it, so byMarket was always empty on the public truth surface.
+    expect(s.byMarket.map((m) => [m.market, m.n, m.wins])).toEqual([
+      ["MONEYLINE", 1, 1],
+      ["SPREAD", 1, 0],
+    ]);
     expect(seenArgs).toMatchObject({
       where: {
         result: { in: ["WIN", "LOSS"] },
