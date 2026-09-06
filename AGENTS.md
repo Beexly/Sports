@@ -35,9 +35,15 @@ production and F-36's precondition cannot be met on current data. Do not wait fo
 receipt and do not flip anything.** Measured read of
 `/api/ops/public-surface-truth` `calibrationEligibility` at 16:38:22 UTC, generatedAt from the
 surface itself: status RED, `consecutiveGreen` 0 of `streakRequired` 3, reasons
-"Settlement not healthy" and "ECE 0.0524 > 0.05". Three of the four floors pass comfortably
-(n 458 against 100, Brier 0.1926 against 0.22, Murphy reliability 0.0053 against 0.05); ECE
-is the only failure and it is narrow. The settlement reason clears on its own when
+"Settlement not healthy" and "ECE 0.0524 > 0.05". The other three floors pass
+(n 458 against 100, Brier 0.1926 against 0.22, Murphy reliability 0.0053 against 0.05), but
+do not read that as three pieces of corroborating evidence: measured 17:09 UTC and derived in
+`docs/ops/CALIBRATION_GATE_SCALE_2026-09-06.md`, the Brier floor is cleared by a constant
+base-rate forecast with no skill at all (uncertainty alone is 0.2139 against the 0.22 floor)
+and the Murphy reliability floor averages SQUARED per-bin gaps against the same literal 0.05,
+so it permits a 22.4-point RMS gap where the ECE floor permits 5.0, a 4.47x difference in
+strictness. ECE is the only floor that constrains calibration quality here, and it is the one
+that fails. The settlement reason clears on its own when
 overduePending reaches 0 (it is 2 at 16:39, down from 16 this morning, the zero-sit lane
 voiding as designed). ECE does not clear on its own.
 
