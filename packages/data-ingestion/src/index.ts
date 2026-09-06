@@ -320,6 +320,7 @@ export {
   fetchEspnSeedGamesForSport,
   fetchAllEspnSeedGames,
   SHORT_TO_ODDS_SPORT,
+  ESPN_SCOREBOARD_LIMIT,
   sportMetaForKey,
 } from "./espn-schedule-seed.js";
 export type { ShortSportKey, EspnSeedGame } from "./espn-schedule-seed.js";
@@ -332,3 +333,63 @@ export {
   fetchMlbRecentCompletedGames,
 } from "./mlb-statsapi-client.js";
 export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";
+
+export {
+  MONTHLY_CREDITS,
+  DAILY_BUDGET,
+  HOURLY_BUDGET,
+  EVENT_HORIZON_HOURS,
+  PAID_CALL_MIN_INTERVAL_MS,
+  PAID_CALL_PURPOSES,
+  hoursToMonthEnd,
+  reservePaceOk,
+  zeroObservationIsStale,
+  decidePaidOddsCall,
+  evaluatePaidOddsCall,
+  projectCreditExhaustion,
+  emptyOddsCreditTruth,
+  buildOddsCreditTruth,
+} from "./odds-credit-governor.js";
+export type {
+  PaidCallPurpose,
+  PaidCallDecisionInput,
+  PaidCallDecision,
+  PaidCallEvaluation,
+  HourlySlot,
+  OddsCreditObservation,
+  OddsCreditTruth,
+} from "./odds-credit-governor.js";
+export {
+  ODDS_CREDITS_SCOPE,
+  ODDS_PAID_CALL_SCOPE,
+  CREDIT_OBSERVATION_WINDOW_LIMIT,
+  recordCreditObservation,
+  loadLatestCreditObservation,
+  loadCreditObservationsSince,
+  recordPaidCall,
+  loadLatestPaidCallAt,
+  loadLatestPaidCallAnyPurposeAt,
+  reservePaidCallSlot,
+  paidCallMutexKey,
+  resetPaidCallReservationWarning,
+  loadOddsCreditTruth,
+} from "./odds-credit-ledger.js";
+export type {
+  OddsCreditLedgerDb,
+  OddsCreditLedgerRows,
+  OddsCreditLedgerTx,
+  PaidCallMarker,
+  ReservePaidCallSlotInput,
+  PaidCallSlotReservation,
+} from "./odds-credit-ledger.js";
+export {
+  ODDS_KEY_TO_ESPN_SHORT,
+  STARTED_GRACE_HOURS,
+  ESPN_GOVERNOR_GROUPS,
+  espnGovernorGroups,
+  espnScoreboardDateRange,
+  hasEventWithinHorizon,
+  sportHasEventWithin48h,
+  buildPaidOddsGovernor,
+} from "./paid-odds-governor.js";
+export type { PaidOddsGovernor, PaidOddsGovernorDeps } from "./paid-odds-governor.js";

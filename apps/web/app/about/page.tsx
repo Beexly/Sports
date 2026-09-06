@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME, BRAND_TAGLINE, SUPPORT_EMAIL } from "@/lib/brand";
+import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
 
 export const metadata: Metadata = {
   title: "About",
@@ -21,13 +22,15 @@ const PRINCIPLES = [
     eyebrow: "02 · Reasoning is published",
     title: "If the work can't be shown, it doesn't ship.",
     body:
-      "Each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the confidence the model assigned — calibration is measured against settled results, never assumed. You see the inputs. You decide what to do with them.",
+      "On Pro and Elite, each pick exposes its factor breakdown: consensus, market depth, line movement, intelligence layers, and the confidence score the model assigned. Free sees the daily two-pick teaser without the confidence score. On book-priced moneyline picks the only probability shown is the market-implied one fixed in the pick's proof receipt. " +
+      MARKET_IMPLIED_CALIBRATION_CLAIM +
+      " You see the inputs. You decide what to do with them.",
   },
   {
     eyebrow: "03 · Outcomes are uncertain",
     title: "Perspective, not certainty.",
     body:
-      "No certainty theater. No guarantees. A signal with a 64% calibrated confidence still loses 36 out of 100 times. Every public surface is designed around that reality. Variance is described, not hidden.",
+      "No certainty theater. No guarantees. Even a pick the market prices as a clear favorite loses a real share of the time, on every tier. Every public surface is designed around that reality. Variance is described, not hidden.",
   },
   {
     eyebrow: "04 · Trust is earned slowly",

@@ -24,69 +24,32 @@
  *             future calibration reads snapshots joined to settled outcomes.
  */
 
-import { SUPPORTED_SPORTS, getInSeasonSports } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
-import { processSport, settleSport } from "@sports/ingestion-pipeline";
+import { settleSport } from "@sports/ingestion-pipeline";
+// The per-cycle paid refresh (governed by the C-109 credit governor) lives in
+// its own module so it can be unit-tested without starting this loop.
+import { runRefreshCycle } from "./refresh-cycle.js";
 
 const REFRESH_INTERVAL_MS = 30 * 60 * 1000;
-
-interface CycleSummary {
-  readonly total: number;
-  readonly failed: number;
-}
-
-async function runRefreshCycle(): Promise<CycleSummary> {
-  const apiKey = process.env["THE_ODDS_API_KEY"];
-  if (!apiKey) throw new Error("THE_ODDS_API_KEY not set");
-
-  // Read readiness gates fresh every cycle — env vars may change across deploys
-  const gates = getReadinessGates();
-
-  const bootstrapLabel = gates.isBootstrapMode ? " [BOOTSTRAP MODE]" : "";
-  console.log(`[data-refresh] Cycle start ${new Date().toISOString()}${bootstrapLabel}`);
-
-  if (gates.isBootstrapMode) {
-    console.log(
-      "[data-refresh] Bootstrap mode active: picks marked isBootstrap=true, " +
-      "derived history (ATS/H2H/venue) excluded from scoring. " +
-      "Set CANONICAL_HISTORY_ENABLED=true to begin accumulating canonical history."
-    );
-  }
-
-  // In-season sports only (cost control). Override: ODDS_REFRESH_ALL_SPORTS=true.
-  // processSport never throws (it returns status:"failed"), so failures are
-  // aggregated here — a fully-failed cycle must be loud, not "Cycle complete".
-  let total = 0;
-  let failed = 0;
-  for (const sport of getInSeasonSports()) {
-    const result = await processSport(sport, apiKey, gates, "[data-refresh]");
-    total += 1;
-    if (result.status === "failed") failed += 1;
-    // Brief pause between sports to avoid saturating the API
-    await new Promise((r) => setTimeout(r, 1000));
-  }
-
-  if (failed > 0) {
-    console.error(
-      `[data-refresh] ${failed}/${total} in-season sports FAILED this cycle — ` +
-      "check THE_ODDS_API_KEY validity, API quota, and upstream status."
-    );
-  }
-  console.log(`[data-refresh] Cycle complete ${new Date().toISOString()} (${total - failed}/${total} sports ok)`);
-  return { total, failed };
-}
 
 async function settleResults(): Promise<void> {
   const apiKey = process.env["THE_ODDS_API_KEY"];
   if (!apiKey) return;
 
   // Settlement is delegated to settleSport() from @sports/ingestion-pipeline —
-  // the single source of truth shared with the Vercel settle-picks cron, so the
-  // two settlement paths can never drift.
+  // the same grader the Vercel settle-picks cron uses, so the two paths cannot
+  // drift. C-109: the paid scores fetch now needs an explicit per-sport
+  // justification from the free pass (overdue NO_FINAL picks). This worker has
+  // no free pass of its own, so it passes none and settleSport returns the
+  // "spend_guard" note for every sport; the cron (the primary scheduler)
+  // supplies the justification and spends the credits.
   const gates = getReadinessGates();
   let failed = 0;
   for (const sport of SUPPORTED_SPORTS) {
-    const result = await settleSport(sport, apiKey, gates, "[settlement]");
+    const result = await settleSport(sport, apiKey, gates, "[settlement]", {
+      paidScoresJustifiedSports: new Set<string>(),
+    });
     if (result.status === "failed") failed += 1;
     // Brief pause between sports to avoid saturating the scores endpoint.
     await new Promise((r) => setTimeout(r, 750));

@@ -173,7 +173,7 @@ export class TheOddsApiOddsProvider implements OddsQuoteProvider {
       const { remainingRequests } = await this.client.getSports();
       return {
         available: true,
-        remainingCredits: remainingRequests,
+        remainingCredits: remainingRequests ?? undefined,
       };
     } catch (err) {
       const status = err instanceof OddsApiError ? err.status : undefined;
@@ -182,7 +182,7 @@ export class TheOddsApiOddsProvider implements OddsQuoteProvider {
         statusCode: status,
         reason: err instanceof Error ? err.message : String(err),
         remainingCredits:
-          err instanceof OddsApiError ? err.remainingRequests : undefined,
+          err instanceof OddsApiError ? (err.remainingRequests ?? undefined) : undefined,
       };
     }
   }

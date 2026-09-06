@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /**
@@ -14,7 +14,12 @@ import type { ReadinessGates } from "@sports/prediction-engine";
 
 const mocks = vi.hoisted(() => ({
   // data-ingestion
-  getScores: vi.fn<(sport: string, daysFrom: number) => Promise<{ data: unknown[] }>>(),
+  getScores: vi.fn<
+    (
+      sport: string,
+      daysFrom: number,
+    ) => Promise<{ data: unknown[]; remainingRequests?: number | null; usedRequests?: number | null }>
+  >(),
   normalizeScores: vi.fn<(scores: unknown[]) => unknown[]>(),
   settleGameLogs: vi.fn<(args: unknown) => Promise<void>>(),
   // prediction-engine
@@ -62,6 +67,12 @@ const mocks = vi.hoisted(() => ({
   outboxDeleteMany: vi.fn(),
   lineSnapFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   lineSnapUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  // C-109 credit ledger (append-only JarvisMemoryEvent rows).
+  memFindFirst: vi.fn<(args: unknown) => Promise<unknown>>(),
+  memFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+  memCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  // @sports/db stub-mode probe: the reservation is told when the client is the stub.
+  isStubMode: vi.fn<() => boolean>(),
 }));
 
 vi.mock("@sports/db", () => {
@@ -114,6 +125,7 @@ vi.mock("@sports/db", () => {
   };
   mocks.transaction.mockImplementation(async (fn: (t: unknown) => Promise<unknown>) => fn(tx));
   return {
+    isStubMode: mocks.isStubMode,
     db: {
       $transaction: mocks.transaction,
       game: {
@@ -142,20 +154,43 @@ vi.mock("@sports/db", () => {
         findMany: mocks.lineSnapFindMany,
         update: mocks.lineSnapUpdate,
       },
+      jarvisMemoryEvent: {
+        findFirst: mocks.memFindFirst,
+        findMany: mocks.memFindMany,
+        create: mocks.memCreate,
+      },
     },
   };
 });
 
-vi.mock("@sports/data-ingestion", () => ({
-  OddsApiClient: vi.fn().mockImplementation(() => ({ getScores: mocks.getScores })),
-  DataNormalizer: vi.fn().mockImplementation(() => ({ normalizeScores: mocks.normalizeScores })),
-  settleGameLogs: mocks.settleGameLogs,
-  NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
-  NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
-  isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
-  remapPreseasonRows: vi.fn().mockReturnValue({ remapped: [], unmatched: 0 }),
-  mergeFeedRowsById: vi.fn((primary: unknown[]) => primary),
-}));
+vi.mock("@sports/data-ingestion", async () => {
+  // The credit governor and its ledger are pure / structural; run the real ones.
+  const actual = await vi.importActual<typeof import("@sports/data-ingestion")>(
+    "@sports/data-ingestion",
+  );
+  return {
+    OddsApiClient: vi.fn().mockImplementation(() => ({ getScores: mocks.getScores })),
+    OddsApiError: actual.OddsApiError,
+    DataNormalizer: vi.fn().mockImplementation(() => ({ normalizeScores: mocks.normalizeScores })),
+    settleGameLogs: mocks.settleGameLogs,
+    NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
+    NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
+    isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
+    remapPreseasonRows: vi.fn().mockReturnValue({ remapped: [], unmatched: 0 }),
+    mergeFeedRowsById: vi.fn((primary: unknown[]) => primary),
+    decidePaidOddsCall: actual.decidePaidOddsCall,
+    evaluatePaidOddsCall: actual.evaluatePaidOddsCall,
+    loadLatestCreditObservation: actual.loadLatestCreditObservation,
+    loadLatestPaidCallAt: actual.loadLatestPaidCallAt,
+    loadLatestPaidCallAnyPurposeAt: actual.loadLatestPaidCallAnyPurposeAt,
+    recordCreditObservation: actual.recordCreditObservation,
+    recordPaidCall: actual.recordPaidCall,
+    reservePaidCallSlot: actual.reservePaidCallSlot,
+    resetPaidCallReservationWarning: actual.resetPaidCallReservationWarning,
+    PAID_CALL_MIN_INTERVAL_MS: actual.PAID_CALL_MIN_INTERVAL_MS,
+    PAID_CALL_PURPOSES: actual.PAID_CALL_PURPOSES,
+  };
+});
 
 vi.mock("@sports/prediction-engine", () => ({
   calculatePickResult: mocks.calculatePickResult,
@@ -172,9 +207,24 @@ import {
   SCORELESS_REVIEW_THRESHOLD,
   SCORELESS_COMPLETED_ANOMALY,
 } from "../settle-sport.js";
+import {
+  OddsApiError,
+  NFL_PRESEASON_ODDS_KEY,
+  isNflPreseasonFetchWindow,
+  remapPreseasonRows,
+  resetPaidCallReservationWarning,
+} from "@sports/data-ingestion";
 import { fingerprintScorePayload } from "../settlement-evidence.js";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
+
+/**
+ * C-109: the paid scores fetch runs only when the caller justifies it (the
+ * free pass left overdue NO_FINAL picks in this sport). Every settlement
+ * behaviour below is exercised through that justified path; the spend-guard
+ * skip is tested on its own at the end of the file.
+ */
+const JUSTIFIED = { paidScoresJustifiedSports: new Set([SPORT.key]) } as const;
 
 function gates(overrides: Partial<ReadinessGates> = {}): ReadinessGates {
   return {
@@ -279,7 +329,9 @@ describe("settleSport", () => {
     mocks.workUpdateMany.mockResolvedValue({ count: 1 });
 
     // Healthy defaults: one completed game, one pending pick, no CLV close.
-    mocks.getScores.mockResolvedValue({ data: ["raw"] });
+    // The paid response carries realistic quota headers (a header-less
+    // response is its own explicit case below).
+    mocks.getScores.mockResolvedValue({ data: ["raw"], remainingRequests: 1000, usedRequests: 500 });
     mocks.normalizeScores.mockReturnValue([completedScore()]);
     mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()]));
     mocks.gameFindMany.mockResolvedValue([]);
@@ -295,6 +347,11 @@ describe("settleSport", () => {
     mocks.snapshotUpdateMany.mockResolvedValue({ count: 1 });
     mocks.lineSnapFindMany.mockResolvedValue([]);
     mocks.lineSnapUpdate.mockResolvedValue({});
+    // Credit ledger: nothing recorded yet, writes succeed; a real client.
+    mocks.memFindFirst.mockResolvedValue(null);
+    mocks.memFindMany.mockResolvedValue([]);
+    mocks.memCreate.mockResolvedValue({});
+    mocks.isStubMode.mockReturnValue(false);
   });
 
   it("grades SPREAD/TOTAL against the LOCKED line, not the drifted live line", async () => {
@@ -303,7 +360,7 @@ describe("settleSport", () => {
       dbGame([pendingPick({ line: -7, selection: "Chiefs -7.0", clvLockLine: -3.5 })])
     );
 
-    await settleSport(SPORT, "key", gates());
+    await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     // Settlement must grade against the frozen -3.5, never the drifted -7.
     expect(mocks.calculatePickResult).toHaveBeenCalledWith(
@@ -323,7 +380,7 @@ describe("settleSport", () => {
       dbGame([pendingPick({ line: -4.5, clvLockLine: null })])
     );
 
-    await settleSport(SPORT, "key", gates());
+    await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     expect(mocks.calculatePickResult).toHaveBeenCalledWith(
       "SPREAD",
@@ -342,7 +399,7 @@ describe("settleSport", () => {
       dbGame([pendingPick({ id: "pick-1" }), pendingPick({ id: "pick-2" })])
     );
 
-    const result = await settleSport(SPORT, "key", gates());
+    const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     expect(result).toMatchObject({
       sport: SPORT.key,
@@ -374,7 +431,7 @@ describe("settleSport", () => {
       completedScore({ homeScore: null, awayScore: null }),
     ]);
 
-    const result = await settleSport(SPORT, "key", gates());
+    const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     expect(result).toMatchObject({
       status: "success",
@@ -406,7 +463,7 @@ describe("settleSport", () => {
       completedScore({ homeScore: 23, awayScore: 20 }),
     ]);
 
-    const result = await settleSport(SPORT, "key", gates());
+    const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     // No write at all — the conflict guard skips db.game.update entirely
     // rather than issuing a no-op write, unlike the scoreless-drop case above.
@@ -429,7 +486,7 @@ describe("settleSport", () => {
       dbGame([pendingPick()], { status: "FINAL", homeScore: 27, awayScore: 20 }),
     );
 
-    await settleSport(SPORT, "key", gates());
+    await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     expect(mocks.gameUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -444,7 +501,7 @@ describe("settleSport", () => {
     mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
     mocks.deriveClosingSnapshotFromOdds.mockReturnValue({ capturedAt: new Date() });
 
-    const result = await settleSport(SPORT, "key", gates());
+    const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     // Settle write was attempted, but nothing downstream ran for that pick:
     // no CLV grade, no snapshot, and it is not counted as newly settled.
@@ -456,7 +513,7 @@ describe("settleSport", () => {
   it("skips scores that are not completed", async () => {
     mocks.normalizeScores.mockReturnValue([completedScore({ completed: false })]);
 
-    const result = await settleSport(SPORT, "key", gates());
+    const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     expect(result.gamesSettled).toBe(0);
     expect(mocks.gameFindUnique).not.toHaveBeenCalled();
@@ -465,21 +522,21 @@ describe("settleSport", () => {
   it("skips completed scores with no matching game record", async () => {
     mocks.gameFindUnique.mockResolvedValue(null);
 
-    const result = await settleSport(SPORT, "key", gates());
+    const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     expect(result).toMatchObject({ status: "success", gamesSettled: 0, picksSettled: 0 });
     expect(mocks.gameUpdate).not.toHaveBeenCalled();
   });
 
   it("fetches paid scores with daysFrom=3 (Odds API max)", async () => {
-    await settleSport(SPORT, "key", gates());
+    await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
     expect(mocks.getScores).toHaveBeenCalledWith(SPORT.key, 3);
   });
 
   it("returns status failed (never throws) when the scores API errors", async () => {
     mocks.getScores.mockRejectedValue(new Error("rate limited"));
 
-    const result = await settleSport(SPORT, "key", gates());
+    const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
     expect(result.status).toBe("failed");
     expect(result.error).toBe("rate limited");
@@ -489,7 +546,9 @@ describe("settleSport", () => {
     const result = await settleSport(
       SPORT,
       "key",
-      gates({ canPersistCanonicalHistory: false, isBootstrapMode: true } as Partial<ReadinessGates>)
+      gates({ canPersistCanonicalHistory: false, isBootstrapMode: true } as Partial<ReadinessGates>),
+      "[settlement]",
+      JUSTIFIED,
     );
 
     expect(result.status).toBe("success");
@@ -509,24 +568,24 @@ describe("settleSport", () => {
     }
 
     it("marks the snapshot eligible for a decisive canonical result with learning on", async () => {
-      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: true }));
+      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: true }), "[settlement]", JUSTIFIED);
       expect(snapshotEligibility()).toBe(true);
     });
 
     it("never eligible when the learning gate is off", async () => {
-      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: false }));
+      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: false }), "[settlement]", JUSTIFIED);
       expect(snapshotEligibility()).toBe(false);
     });
 
     it("never eligible for bootstrap-era picks", async () => {
       mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick({ isBootstrap: true })]));
-      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: true }));
+      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: true }), "[settlement]", JUSTIFIED);
       expect(snapshotEligibility()).toBe(false);
     });
 
     it("never eligible for VOID results", async () => {
       mocks.calculatePickResult.mockReturnValue("VOID");
-      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: true }));
+      await settleSport(SPORT, "key", gates({ canLearnFromOutcomes: true }), "[settlement]", JUSTIFIED);
       expect(snapshotEligibility()).toBe(false);
     });
   });
@@ -535,7 +594,7 @@ describe("settleSport", () => {
     it("a closing-line fetch failure never blocks settlement", async () => {
       mocks.oddsFindMany.mockRejectedValue(new Error("odds table locked"));
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
@@ -547,7 +606,7 @@ describe("settleSport", () => {
         throw new Error("clv kind mismatch");
       });
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
@@ -556,7 +615,7 @@ describe("settleSport", () => {
     it("a game-log failure never blocks settlement", async () => {
       mocks.settleGameLogs.mockRejectedValue(new Error("ats write failed"));
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.gamesSettled).toBe(1);
@@ -575,7 +634,7 @@ describe("settleSport", () => {
         verdict: "BEAT_CLOSE",
       });
 
-      await settleSport(SPORT, "key", gates());
+      await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(mocks.pickUpdate).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -593,7 +652,7 @@ describe("settleSport", () => {
     it("skips CLV writes when no close can be derived", async () => {
       mocks.deriveClosingSnapshotFromOdds.mockReturnValue(null);
 
-      await settleSport(SPORT, "key", gates());
+      await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(mocks.gradePickClv).not.toHaveBeenCalled();
       // Settlement goes through updateMany; pick.update is CLV-only, so with no
@@ -616,7 +675,7 @@ describe("settleSport", () => {
     });
 
     it("records a deduplicated observation in one transaction — never a counter, never a status change, never a void", async () => {
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result).toMatchObject({
         status: "success",
@@ -670,7 +729,10 @@ describe("settleSport", () => {
         .mockResolvedValueOnce(dbGame([pendingPick()], { id: "game-1", status: "SCHEDULED" }))
         .mockResolvedValueOnce(dbGame([pendingPick()], { id: "game-2", status: "LIVE" }));
 
-      await settleSport(SPORT, "key", gates(), "[t]", { scheduledWindow: "2026-06-11T00Z" });
+      await settleSport(SPORT, "key", gates(), "[t]", {
+        scheduledWindow: "2026-06-11T00Z",
+        ...JUSTIFIED,
+      });
 
       // The run is created-or-retrieved BEFORE evidence writes, keyed on
       // source + sport + scheduledWindow + sourceSnapshotFingerprint — so a
@@ -723,7 +785,7 @@ describe("settleSport", () => {
       mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
       mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesPromoted).toBe(0);
       expect(mocks.ownerRequestUpsert).not.toHaveBeenCalled();
@@ -748,7 +810,7 @@ describe("settleSport", () => {
       ]);
       mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.observationsRecorded).toBe(0);
       expect(result.anomaliesOpened).toBe(0);
@@ -786,7 +848,7 @@ describe("settleSport", () => {
       mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
       mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 }); // won the promotion race
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesPromoted).toBe(1);
       expect(SCORELESS_REVIEW_THRESHOLD).toBe(3);
@@ -857,7 +919,7 @@ describe("settleSport", () => {
       mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OPEN", resolvedAt: null });
       mocks.anomalyUpdateMany.mockResolvedValue({ count: 0 }); // lost the race
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesPromoted).toBe(0);
       expect(mocks.ownerRequestUpsert).not.toHaveBeenCalled();
@@ -879,7 +941,7 @@ describe("settleSport", () => {
       mocks.anomalyFindUnique.mockResolvedValue({ id: "anomaly-1", state: "OWNER_REVIEW", resolvedAt: null });
       mocks.anomalyUpsert.mockResolvedValue({ id: "anomaly-1", state: "OWNER_REVIEW", resolvedAt: null });
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesPromoted).toBe(0);
       // No promotion attempt at all (the guard is not even exercised) and
@@ -894,7 +956,7 @@ describe("settleSport", () => {
     it("terminal-game late source regression: FINAL games never enter the evidence path (preserved from main)", async () => {
       mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()], { status: "FINAL" }));
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result).toMatchObject({
         status: "success",
@@ -923,7 +985,7 @@ describe("settleSport", () => {
       });
       mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 }); // reopen wins
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesReopened).toBe(1);
       // State-scoped reopen from the TRUE prior state...
@@ -992,7 +1054,7 @@ describe("settleSport", () => {
         },
       ]);
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesReopened).toBe(1);
       expect(result.anomaliesPromoted).toBe(1);
@@ -1015,7 +1077,7 @@ describe("settleSport", () => {
     it("an evidence write failure is isolated — settlement still succeeds", async () => {
       mocks.obsCreateMany.mockRejectedValue(new Error("evidence table locked"));
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.observationsRecorded).toBe(0);
@@ -1024,11 +1086,11 @@ describe("settleSport", () => {
     it("APPEND-ONLY: no delete of observations, anomalies, decisions, or outbox rows — ever", async () => {
       // Run both the evidence path and (separately re-mocked) a normal
       // settle+resolve pass, then assert none of the deletion tripwires fired.
-      await settleSport(SPORT, "key", gates());
+      await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
       mocks.normalizeScores.mockReturnValue([completedScore()]);
       mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()], { status: "SCHEDULED" }));
       mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 });
-      await settleSport(SPORT, "key", gates());
+      await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       for (const tripwire of [
         mocks.obsDelete,
@@ -1051,7 +1113,7 @@ describe("settleSport", () => {
       mocks.anomalyFindMany.mockResolvedValue([{ id: "anomaly-1", state: "OWNER_REVIEW", resolvedAt: null }]);
       mocks.anomalyUpdateMany.mockResolvedValue({ count: 1 });
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesResolved).toBe(1);
       // State-scoped exactly-once transition...
@@ -1088,7 +1150,7 @@ describe("settleSport", () => {
       mocks.anomalyFindMany.mockResolvedValue([{ id: "anomaly-1", state: "OPEN", resolvedAt: null }]);
       mocks.anomalyUpdateMany.mockResolvedValue({ count: 0 }); // concurrent run won
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.anomaliesResolved).toBe(0);
       expect(mocks.decisionEventCreate).not.toHaveBeenCalled();
@@ -1097,7 +1159,7 @@ describe("settleSport", () => {
     it("a resolution failure never blocks settlement", async () => {
       mocks.anomalyFindMany.mockRejectedValue(new Error("anomaly table locked"));
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
@@ -1111,7 +1173,7 @@ describe("settleSport", () => {
         dbGame([pendingPick({ id: "pick-1" }), pendingPick({ id: "pick-2" })]),
       );
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.picksSettled).toBe(2);
       expect(result.outboxAppended).toBe(2);
@@ -1147,7 +1209,7 @@ describe("settleSport", () => {
     it("the settle-race loser (updateMany count 0) appends NO outbox row", async () => {
       mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.picksSettled).toBe(0);
       expect(result.outboxAppended).toBe(0);
@@ -1183,7 +1245,7 @@ describe("settleSport", () => {
         });
       });
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("failed");
       expect(result.picksSettled).toBe(0);
@@ -1201,7 +1263,7 @@ describe("settleSport", () => {
 
     it("does not touch oddsLineSnapshot when the flag is unset", async () => {
       delete process.env["LINE_ARCHIVE_ENABLED"];
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
       expect(mocks.lineSnapFindMany).not.toHaveBeenCalled();
@@ -1210,7 +1272,7 @@ describe("settleSport", () => {
 
     it("invokes markClosingSnapshots when the flag is true", async () => {
       process.env["LINE_ARCHIVE_ENABLED"] = "true";
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
       expect(result.status).toBe("success");
       expect(mocks.lineSnapFindMany).toHaveBeenCalledWith({
         where: {
@@ -1223,7 +1285,7 @@ describe("settleSport", () => {
     it("still settles when markClosingSnapshots rejects", async () => {
       process.env["LINE_ARCHIVE_ENABLED"] = "true";
       mocks.lineSnapFindMany.mockRejectedValue(new Error("archive down"));
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
       expect(result.gamesSettled).toBe(1);
@@ -1282,7 +1344,7 @@ describe("settleSport", () => {
       const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
       mocks.gameFindMany.mockResolvedValue([ESPN_ROW]);
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
@@ -1301,7 +1363,7 @@ describe("settleSport", () => {
         { ...ESPN_ROW, id: "twin-b", externalId: "espn:x:2", commenceTime: new Date("2026-06-10T19:00:00.000Z") },
       ]);
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(0);
@@ -1312,7 +1374,7 @@ describe("settleSport", () => {
       process.env["GAME_IDENTITY_MERGE_DISABLED"] = "true";
       mocks.gameFindMany.mockResolvedValue([ESPN_ROW]);
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.picksSettled).toBe(0);
       expect(mocks.gameFindMany).not.toHaveBeenCalled();
@@ -1322,7 +1384,7 @@ describe("settleSport", () => {
       const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       mocks.gameFindMany.mockRejectedValue(new Error("db down"));
 
-      const result = await settleSport(SPORT, "key", gates());
+      const result = await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
 
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(0);
@@ -1330,6 +1392,439 @@ describe("settleSport", () => {
         expect.stringContaining("identity fallback failed for odds-api-1"),
       );
       warnSpy.mockRestore();
+    });
+  });
+
+  /**
+   * C-109: the spend guard used to log "not justified" and proceed, fetching
+   * paid scores for every sport five times an hour. Now the paid getScores
+   * runs only with an explicit justification, at most once per sport per hour
+   * across every caller, and every call records the vendor's credit headers.
+   */
+  describe("spend guard and credit governor (C-109)", () => {
+    type Created = { data: Record<string, unknown> };
+    const createdScopes = () =>
+      mocks.memCreate.mock.calls.map((c) => (c[0] as Created).data["scope"]);
+
+    it("skips the paid scores fetch when the spend guard says free covers scores and nothing justifies it", async () => {
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+
+      const result = await settleSport(SPORT, "key", gates());
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result).toMatchObject({
+        sport: SPORT.key,
+        status: "success",
+        gamesSettled: 0,
+        picksSettled: 0,
+        note: "spend_guard",
+      });
+      expect(result.error).toBeUndefined();
+      // Nothing was graded, nothing was written, no ledger marker either.
+      expect(mocks.gameFindUnique).not.toHaveBeenCalled();
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+      expect(infoSpy).toHaveBeenCalledWith(expect.stringContaining("spend guard"));
+      infoSpy.mockRestore();
+    });
+
+    it("a justification for ANOTHER sport does not unlock this one", async () => {
+      const result = await settleSport(SPORT, "key", gates(), "[t]", {
+        paidScoresJustifiedSports: new Set(["baseball_mlb"]),
+      });
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.note).toBe("spend_guard");
+    });
+
+    it("calls paid scores when justified, records the call marker before and the credit headers after", async () => {
+      mocks.getScores.mockResolvedValue({ data: ["raw"], remainingRequests: 18877, usedRequests: 1123 });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).toHaveBeenCalledWith(SPORT.key, 3);
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(createdScopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      const marker = mocks.memCreate.mock.calls[0]![0] as Created;
+      expect(marker.data["source_ref"]).toBe(SPORT.key);
+      expect(marker.data["metadata"]).toMatchObject({ sport: SPORT.key, purpose: "scores" });
+      const credits = mocks.memCreate.mock.calls[1]![0] as Created;
+      expect(credits.data["metadata"]).toMatchObject({
+        remaining: 18877,
+        used: 1123,
+        source: "settle-sport",
+      });
+      // The marker is written BEFORE the paid call, so a concurrent caller sees it.
+      expect(mocks.memCreate.mock.invocationCallOrder[0]!).toBeLessThan(
+        mocks.getScores.mock.invocationCallOrder[0]!,
+      );
+    });
+
+    it("at most one paid scores call per sport per hour, whichever caller asks (durable marker)", async () => {
+      const twentyMinutesAgo = new Date(Date.now() - 20 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        return where.scope === "ops.odds.paidScores"
+          ? { full_text: null, metadata: { sport: SPORT.key, purpose: "scores", at: twentyMinutesAgo } }
+          : null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.status).toBe("success");
+      expect(result.note).toMatch(/^credit_governor: .*within the hour/);
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+      // The marker lookup was scoped to this sport.
+      expect(mocks.memFindFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ scope: "ops.odds.paidScores", source_ref: SPORT.key }),
+        }),
+      );
+    });
+
+    it("a marker older than an hour no longer blocks the call", async () => {
+      const seventyMinutesAgo = new Date(Date.now() - 70 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        return where.scope === "ops.odds.paidScores"
+          ? { full_text: null, metadata: { sport: SPORT.key, purpose: "scores", at: seventyMinutesAgo } }
+          : null;
+      });
+
+      await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).toHaveBeenCalledTimes(1);
+    });
+
+    it("holds when the latest credit observation reads zero remaining", async () => {
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        return where.scope === "ops.odds.credits"
+          ? {
+              full_text: null,
+              metadata: { remaining: 0, used: 20000, observedAt: new Date().toISOString(), source: "t" },
+            }
+          : null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.note).toMatch(/^credit_governor: zero credits remaining/);
+    });
+
+    it("a stale zero reading (2h old) lets one probe call re-observe the count; a second within the hour is held", async () => {
+      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60_000).toISOString();
+      const zeroReading = {
+        full_text: null,
+        metadata: { remaining: 0, used: 20000, observedAt: twoHoursAgo, source: "t" },
+      };
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        return where.scope === "ops.odds.credits" ? zeroReading : null;
+      });
+      mocks.getScores.mockResolvedValue({ data: ["raw"], remainingRequests: 19950, usedRequests: 50 });
+
+      const first = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(first.status).toBe("success");
+      expect(mocks.getScores).toHaveBeenCalledTimes(1);
+      expect(createdScopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      const credits = mocks.memCreate.mock.calls[1]![0] as Created;
+      expect(credits.data["metadata"]).toMatchObject({ remaining: 19950, used: 50 });
+
+      // Same stale zero, but this sport probed ten minutes ago: held.
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        if (where.scope === "ops.odds.credits") return zeroReading;
+        if (where.scope === "ops.odds.paidScores") {
+          return { full_text: null, metadata: { sport: SPORT.key, purpose: "scores", at: tenMinutesAgo } };
+        }
+        return null;
+      });
+      mocks.getScores.mockClear();
+
+      const second = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(second.note).toMatch(/^credit_governor: .*within the hour/);
+    });
+
+    it("in @sports/db stub mode the hourly reservation is told it cannot serialize: non-atomic, warned, marker still written", async () => {
+      // The stub client's Proxy answers $transaction / $executeRaw with no-ops,
+      // so the ledger's shape check alone would report an atomic reservation
+      // that took no mutex. settleSport passes isStubMode() through.
+      resetPaidCallReservationWarning();
+      mocks.isStubMode.mockReturnValue(true);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(mocks.getScores).toHaveBeenCalledTimes(1);
+      expect(createdScopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("stub Prisma client"));
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("non-atomic"));
+      warn.mockRestore();
+    });
+
+    it("a failed paid call (402) still persists the x-requests-remaining it carried", async () => {
+      const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mocks.getScores.mockRejectedValue(new OddsApiError("The Odds API error: 402", 402, 0));
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("failed");
+      expect(createdScopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      const credits = mocks.memCreate.mock.calls[1]![0] as Created;
+      expect(credits.data["metadata"]).toMatchObject({ remaining: 0, used: null, source: "settle-sport" });
+      errorSpy.mockRestore();
+    });
+
+    it("a failed paid call persists x-requests-used too, not just remaining", async () => {
+      // The vendor sends BOTH quota headers on a 402/429 and OddsApiError
+      // carries both. Recording remaining while dropping used left the ledger
+      // with a half observation, so a failed run silently lost the counter the
+      // burn measurement reads.
+      const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mocks.getScores.mockRejectedValue(
+        new OddsApiError("The Odds API error: 429", 429, 16680, 3320),
+      );
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("failed");
+      expect(createdScopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      const credits = mocks.memCreate.mock.calls[1]![0] as Created;
+      expect(credits.data["metadata"]).toMatchObject({
+        remaining: 16680,
+        used: 3320,
+        source: "settle-sport",
+      });
+      errorSpy.mockRestore();
+    });
+
+    it("a failed paid call without a remaining count records nothing", async () => {
+      const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mocks.getScores.mockRejectedValue(new OddsApiError("The Odds API request timed out", 408));
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("failed");
+      expect(createdScopes()).toEqual(["ops.odds.paidScores"]);
+      errorSpy.mockRestore();
+    });
+
+    it("a ledger outage fails open: the justified call still runs", async () => {
+      mocks.memFindFirst.mockRejectedValue(new Error("ledger down"));
+      mocks.memCreate.mockRejectedValue(new Error("ledger down"));
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).toHaveBeenCalledTimes(1);
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+    });
+
+    it("a header-less success (remaining null) records the marker but NO credit observation", async () => {
+      mocks.getScores.mockResolvedValue({ data: ["raw"], remainingRequests: null, usedRequests: null });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(createdScopes()).toEqual(["ops.odds.paidScores"]);
+    });
+
+    it("the stale-zero probe is one per sport per hour ACROSS purposes: an odds probe ten minutes ago holds the scores probe", async () => {
+      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60_000).toISOString();
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        if (where.scope === "ops.odds.credits") {
+          return { full_text: null, metadata: { remaining: 0, used: 20000, observedAt: twoHoursAgo, source: "t" } };
+        }
+        if (where.scope === "ops.odds.paidOdds") {
+          return { full_text: null, metadata: { sport: SPORT.key, purpose: "odds", at: tenMinutesAgo } };
+        }
+        return null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.note).toMatch(/^credit_governor: .*already probed this hour/);
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+      expect(mocks.memFindFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ scope: "ops.odds.paidOdds", source_ref: SPORT.key }),
+        }),
+      );
+    });
+
+    it("the hourly slot is a reservation: a marker a concurrent caller wrote between the decision and the reservation holds the call", async () => {
+      // The decision phase reads the scores marker twice (own purpose, then
+      // any-purpose) and sees none; the reservation's own read then finds the
+      // marker the :22 autonomy cycle wrote a minute ago, so this run holds
+      // instead of spending a second credit inside the hour.
+      const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
+      let scoresReads = 0;
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        if (where.scope !== "ops.odds.paidScores") return null;
+        scoresReads += 1;
+        return scoresReads <= 2
+          ? null
+          : { full_text: null, metadata: { sport: SPORT.key, purpose: "scores", at: oneMinuteAgo } };
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.status).toBe("success");
+      expect(result.note).toMatch(/^credit_governor: .*reserved by a concurrent caller/);
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * C-109 review finding: in the July/August window one allowed NFL settlement
+   * made TWO paid HTTP requests (regular season, then the preseason feed), and
+   * the second ran under the first's recordPaidCall marker: neither gated nor
+   * recorded. Each request is now its own governed call keyed on the vendor
+   * sport key, so it is decided, marked and credited separately.
+   */
+  describe("NFL preseason window: each paid request is its own governed call (C-109)", () => {
+    type Created = { data: Record<string, unknown> };
+    const created = () => mocks.memCreate.mock.calls.map((c) => c[0] as Created);
+    const scopes = () => created().map((c) => c.data["scope"]);
+    const PRESEASON: string = NFL_PRESEASON_ODDS_KEY;
+
+    beforeEach(() => {
+      (isNflPreseasonFetchWindow as Mock).mockReturnValue(true);
+      (remapPreseasonRows as Mock).mockClear();
+      mocks.getScores.mockImplementation(async (key: string) =>
+        key === PRESEASON
+          ? { data: ["raw-preseason"], remainingRequests: 17990, usedRequests: 2010 }
+          : { data: ["raw"], remainingRequests: 18000, usedRequests: 2000 },
+      );
+    });
+
+    afterEach(() => {
+      (isNflPreseasonFetchWindow as Mock).mockReturnValue(false);
+    });
+
+    it("fetches regular and preseason scores as two governed calls: two markers, two credit readings, each under its own key", async () => {
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(mocks.getScores.mock.calls).toEqual([
+        [SPORT.key, 3],
+        [PRESEASON, 3],
+      ]);
+      expect(scopes()).toEqual([
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+      ]);
+      const markers = created().filter((c) => c.data["scope"] === "ops.odds.paidScores");
+      expect(markers.map((c) => c.data["source_ref"])).toEqual([SPORT.key, PRESEASON]);
+      expect(markers[1]!.data["metadata"]).toMatchObject({ sport: PRESEASON, purpose: "scores" });
+      const credits = created().filter((c) => c.data["scope"] === "ops.odds.credits");
+      expect(credits.map((c) => (c.data["metadata"] as { remaining: number; used: number }).remaining)).toEqual([
+        18000, 17990,
+      ]);
+      // Each request consulted ITS OWN hourly marker before going out...
+      expect(mocks.memFindFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ scope: "ops.odds.paidScores", source_ref: SPORT.key }),
+        }),
+      );
+      expect(mocks.memFindFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ scope: "ops.odds.paidScores", source_ref: PRESEASON }),
+        }),
+      );
+      // ...and the preseason marker was written BEFORE the preseason request.
+      expect(mocks.memCreate.mock.invocationCallOrder[2]!).toBeLessThan(
+        mocks.getScores.mock.invocationCallOrder[1]!,
+      );
+      expect(remapPreseasonRows).toHaveBeenCalledWith(["raw-preseason"], []);
+    });
+
+    it("a preseason marker inside the hour skips ONLY the preseason request; the regular scores still settle", async () => {
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+      const twentyMinutesAgo = new Date(Date.now() - 20 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string; source_ref?: string } }).where;
+        return where.scope === "ops.odds.paidScores" && where.source_ref === PRESEASON
+          ? { full_text: null, metadata: { sport: PRESEASON, purpose: "scores", at: twentyMinutesAgo } }
+          : null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores.mock.calls).toEqual([[SPORT.key, 3]]);
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(result.note).toBeUndefined();
+      // Only the regular season's marker and reading were written.
+      expect(scopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      expect(remapPreseasonRows).not.toHaveBeenCalled();
+      expect(infoSpy).toHaveBeenCalledWith(
+        expect.stringContaining("preseason scores fetch skipped, credit governor"),
+      );
+      infoSpy.mockRestore();
+    });
+
+    it("a regular-season marker inside the hour still skips the whole sport (the preseason half never runs alone)", async () => {
+      const twentyMinutesAgo = new Date(Date.now() - 20 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string; source_ref?: string } }).where;
+        return where.scope === "ops.odds.paidScores" && where.source_ref === SPORT.key
+          ? { full_text: null, metadata: { sport: SPORT.key, purpose: "scores", at: twentyMinutesAgo } }
+          : null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.note).toMatch(/^credit_governor: .*within the hour/);
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+    });
+
+    it("a failed preseason request still records the credits it carried and never aborts settlement", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.getScores.mockImplementation(async (key: string) => {
+        if (key === PRESEASON) throw new OddsApiError("The Odds API error: 429", 429, 17950);
+        return { data: ["raw"], remainingRequests: 18000, usedRequests: 2000 };
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(scopes()).toEqual([
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+      ]);
+      expect(created()[3]!.data["metadata"]).toMatchObject({ remaining: 17950, used: null, source: "settle-sport" });
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("preseason scores fetch failed"));
+      warnSpy.mockRestore();
+    });
+
+    it("outside the window there is exactly one governed request (unchanged)", async () => {
+      (isNflPreseasonFetchWindow as Mock).mockReturnValue(false);
+
+      await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores.mock.calls).toEqual([[SPORT.key, 3]]);
+      expect(scopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
     });
   });
 });

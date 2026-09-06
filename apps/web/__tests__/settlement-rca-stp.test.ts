@@ -3,6 +3,7 @@ import {
   aggregateSettlementRca,
   classifySettlementRootCause,
   buildCausePareto,
+  rootCauseNarrative,
 } from "@/lib/settlement/root-cause-analysis";
 import {
   computeBurnRate,
@@ -11,6 +12,73 @@ import {
   stpLoadPriority,
   DEFAULT_STP_POLICY,
 } from "@/lib/settlement/stp-clearance";
+
+describe("zero-sit void narratives (rootCauseNarrative)", () => {
+  const joined = (lines: readonly string[]): string => lines.join(" ");
+
+  it("AMBIGUOUS_TEAM_NAME with cause CITY_ONLY_NAME blames the dropped nickname and repairs the names", () => {
+    const n = rootCauseNarrative("AMBIGUOUS_TEAM_NAME", 30, { ambiguityCause: "CITY_ONLY_NAME" });
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/nickname/);
+    expect(joined(n.fiveWhys)).toMatch(/CITY_ONLY_NAME/);
+    expect(joined(n.fiveWhys)).not.toMatch(/doubleheader/);
+    expect(joined(n.remediation)).toMatch(/full team names/);
+    expect(joined(n.remediation)).not.toMatch(/event id/);
+  });
+
+  it("AMBIGUOUS_TEAM_NAME with cause MULTIPLE_FINALS never blames a nickname and points at event-id or kickoff disambiguation", () => {
+    const n = rootCauseNarrative("AMBIGUOUS_TEAM_NAME", 30, { ambiguityCause: "MULTIPLE_FINALS" });
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/doubleheader/);
+    expect(joined(n.fiveWhys)).toMatch(/MULTIPLE_FINALS/);
+    expect(joined(n.fiveWhys)).not.toMatch(/nickname/);
+    expect(joined(n.remediation)).toMatch(/event id or kickoff/);
+    expect(joined(n.remediation)).toMatch(/names are not the defect/);
+  });
+
+  it("AMBIGUOUS_TEAM_NAME without a cause names both causes and sends the reader to evidence.cause", () => {
+    const n = rootCauseNarrative("AMBIGUOUS_TEAM_NAME", 30);
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/CITY_ONLY_NAME/);
+    expect(joined(n.fiveWhys)).toMatch(/MULTIPLE_FINALS/);
+    expect(joined(n.fiveWhys)).not.toMatch(/nickname/);
+    expect(joined(n.remediation)).toMatch(/evidence\.cause/);
+  });
+
+  it("FIXTURE_NOT_FOUND claims only that neither stored name matched the board and requires fixture verification before cancelling", () => {
+    const n = rootCauseNarrative("FIXTURE_NOT_FOUND", 30);
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/NEITHER stored name matched a board side/);
+    expect(joined(n.fiveWhys)).toMatch(/homeListed and awayListed/);
+    expect(joined(n.fiveWhys)).toMatch(/alias or spelling mismatch/);
+    expect(joined(n.fiveWhys)).toMatch(/POSTPONED row keeps its status/);
+    // homeListed/awayListed false never proves that the teams did not play.
+    expect(joined(n.fiveWhys)).not.toMatch(/NEITHER team appears/);
+    expect(joined(n.fiveWhys)).not.toMatch(/no event for either team/);
+    expect(joined(n.remediation)).toMatch(/evidence\.homeListed and evidence\.awayListed/);
+    expect(joined(n.remediation)).toMatch(/both false means neither stored name matched the board/);
+    expect(joined(n.remediation)).toMatch(/not proof that the contest did not occur/);
+    expect(joined(n.remediation)).toMatch(/Verify the fixture itself \(the ESPN event id or the league schedule page\) before concluding the contest did not occur/);
+    expect(joined(n.remediation)).toMatch(/left as is/);
+    expect(joined(n.remediation)).not.toMatch(/neither team played that day/);
+    // The old wording claimed every such row is CANCELED; that is no longer said.
+    expect(joined(n.remediation)).not.toMatch(/and the game row marked CANCELED;/);
+    expect(n.summary).toMatch(/no event pairing the two stored team names/);
+  });
+
+  it("OVERDUE_NO_SCORE names the grace window, the missing final and the score path to restore", () => {
+    const n = rootCauseNarrative("OVERDUE_NO_SCORE", 12);
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(n.fiveWhys[0]).toMatch(/Kickoff was more than graceHours ago and result is still PENDING/);
+    expect(joined(n.fiveWhys)).toMatch(/No CONFIRMED\/SINGLE_SOURCE final was available at last run/);
+    expect(joined(n.fiveWhys)).toMatch(/Source outage, sport not mapped, or finals filter dropped the game/);
+    expect(n.fiveWhys[4]).toMatch(/^Root: .*restore score path then re-run settle-picks/);
+    expect(joined(n.remediation)).toMatch(/Re-run free score persist \+ settle-picks for the sport/);
+    expect(joined(n.remediation)).toMatch(/Verify ESPN\/henrygd coverage for the matchup date/);
+    expect(joined(n.remediation)).toMatch(/Check team name tokens/);
+    expect(n.summary).toBe("Overdue with no usable score (12.0h).");
+  });
+});
 
 describe("settlement root-cause analysis", () => {
   it("classifies overdue with no final as OVERDUE_NO_SCORE (wave A)", () => {

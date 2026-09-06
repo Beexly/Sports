@@ -28,6 +28,7 @@ import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ProofExplorer } from "@/components/proof/proof-explorer";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
+import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
 
 export const dynamic = "force-dynamic";
 
@@ -107,6 +108,14 @@ export default async function CalibrationProofRoomPage() {
             fabricated picks, no invented stats, no silent edits. Each number stays gated
             until the settled sample is large enough to back it honestly. And once it
             settles, it stays in the record, win or loss.
+          </p>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1" data-testid="calibration-claim-scope">
+            {MARKET_IMPLIED_CALIBRATION_CLAIM}
+          </p>
+          <p className="mt-2 max-w-2xl text-xs leading-5 text-ion-2" data-testid="calibration-chart-basis">
+            The interactive chart below groups settled picks by confidence score. It is a
+            separate view of the same record, not the market-implied measurement described
+            above.
           </p>
         </header>
 

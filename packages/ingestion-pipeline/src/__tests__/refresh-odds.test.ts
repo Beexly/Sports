@@ -32,6 +32,13 @@ const hoisted = vi.hoisted(() => {
       vi.fn<() => Array<{ key: string; name: string; displayName: string }>>(),
     getReadinessGates: vi.fn<() => unknown>(),
     freezeSlateCommitments: vi.fn<(...args: unknown[]) => Promise<unknown[]>>(),
+    // C-109: the ledger-backed factory refreshOdds uses to build its DEFAULT
+    // governor, and the sentinel Prisma client it must hand to it.
+    buildPaidOddsGovernor: vi.fn<(deps: unknown) => unknown>(),
+    DB: { sentinel: "prisma-client" },
+    // @sports/db's stub-mode probe: the default governor tells the ledger when
+    // the shared client is the stub (no advisory mutex possible there).
+    isStubMode: vi.fn<() => boolean>(() => false),
   };
 });
 
@@ -41,6 +48,7 @@ const mocks = {
   getInSeasonSports: hoisted.getInSeasonSports,
   getReadinessGates: hoisted.getReadinessGates,
   freezeSlateCommitments: hoisted.freezeSlateCommitments,
+  buildPaidOddsGovernor: hoisted.buildPaidOddsGovernor,
 };
 
 vi.mock("../process-sport.js", () => ({
@@ -51,9 +59,12 @@ vi.mock("../freeze-slate-commitments.js", () => ({
   freezeSlateCommitments: hoisted.freezeSlateCommitments,
 }));
 
+vi.mock("@sports/db", () => ({ db: hoisted.DB, isStubMode: hoisted.isStubMode }));
+
 vi.mock("@sports/data-ingestion", () => ({
   SUPPORTED_SPORTS: hoisted.SPORTS,
   getInSeasonSports: hoisted.getInSeasonSports,
+  buildPaidOddsGovernor: hoisted.buildPaidOddsGovernor,
   resolveOddsApiKey: () =>
     process.env["THE_ODDS_API_KEY"]?.trim() ||
     process.env["ODDS_API_KEY"]?.trim() ||
@@ -70,18 +81,43 @@ vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: hoisted.getReadinessGates,
 }));
 
-import { refreshOdds, UnsupportedSportError } from "../refresh-odds.js";
+import {
+  refreshOdds,
+  UnsupportedSportError,
+  CREDIT_GOVERNOR_SKIP_NOTE,
+  ODDS_API_LOW_QUOTA_THRESHOLD,
+  governedDecision,
+  isLowQuota,
+  paidRequestCountOf,
+  recordPaidRunAccounting,
+  resolvePaidOddsGovernor,
+} from "../refresh-odds.js";
 
 const GATES = { isBootstrapMode: false } as const;
+
+/** A PaidOddsGovernor stub: holds the listed sports, allows every other one. */
+function stubGovernor(decisions: Record<string, { allow: boolean; reason: string }>) {
+  return {
+    decide: vi.fn(async (sport: string) => decisions[sport] ?? { allow: true, reason: "pace ok" }),
+    recordCall: vi.fn(async (_sport: string, _at: Date) => undefined),
+    recordCredits: vi.fn(
+      async (_obs: { remaining: number; used?: number | null; observedAt: Date }) => undefined,
+    ),
+  };
+}
 
 beforeEach(() => {
   vi.useFakeTimers();
   for (const m of Object.values(mocks)) m.mockReset();
+  hoisted.isStubMode.mockReset().mockReturnValue(false);
   process.env["THE_ODDS_API_KEY"] = "test-key";
   mocks.getReadinessGates.mockReturnValue(GATES);
   mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1]]);
   mocks.processSport.mockResolvedValue({ status: "success" });
   mocks.freezeSlateCommitments.mockResolvedValue([]);
+  // The default governor (built when a test injects none) allows everything,
+  // so the loop-behaviour tests above are unaffected by pacing.
+  mocks.buildPaidOddsGovernor.mockImplementation(() => stubGovernor({}));
 });
 
 afterEach(() => {
@@ -365,5 +401,521 @@ describe("refreshOdds", () => {
       UnsupportedSportError,
     );
     expect(mocks.processSport).not.toHaveBeenCalled();
+  });
+
+  /**
+   * C-109: the paid odds path consults the injected credit governor per
+   * sport. A held sport is reported, not dropped; a governor outage fails
+   * open; the free paths (no Odds key) are never gated.
+   */
+  describe("credit governor (C-109)", () => {
+    const governor = stubGovernor;
+
+    it("skips a sport the governor holds and reports it with a note, running the others", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1], SPORTS[2]]);
+      const info = vi.spyOn(console, "info").mockImplementation(() => {});
+      const gov = governor({
+        basketball_nba: { allow: false, reason: "no event within 48h on the free scoreboard" },
+      });
+
+      const result = await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(mocks.processSport).toHaveBeenCalledTimes(2);
+      expect(mocks.processSport.mock.calls.map((c) => (c[0] as { key: string }).key)).toEqual([
+        "americanfootball_nfl",
+        "baseball_mlb",
+      ]);
+      expect(result.ok).toBe(true);
+      expect(result.results).toEqual([
+        expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
+        {
+          sport: "basketball_nba",
+          ok: true,
+          oddsInserted: 0,
+          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: no event within 48h on the free scoreboard`,
+        },
+        expect.objectContaining({ sport: "baseball_mlb", ok: true }),
+      ]);
+      expect(info).toHaveBeenCalledWith(
+        expect.stringContaining("basketball_nba: paid odds fetch skipped, credit governor"),
+      );
+      // Every sport was put to the governor: decide() reserves the hourly slot
+      // and writes the marker for the first paid request. No run made an
+      // additional paid request, so no extra marker was appended.
+      expect(gov.decide.mock.calls.map((c) => c[0])).toEqual([
+        "americanfootball_nfl",
+        "basketball_nba",
+        "baseball_mlb",
+      ]);
+      expect(gov.recordCall).not.toHaveBeenCalled();
+      info.mockRestore();
+    });
+
+    it("reserves the slot (decide) before the paid fetch and records the credit headers after it; one request needs no extra marker", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce({ status: "success", oddsApiRemainingRequests: 18000 });
+      const gov = governor({});
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.decide).toHaveBeenCalledWith("americanfootball_nfl");
+      expect(gov.decide.mock.invocationCallOrder[0]!).toBeLessThan(
+        mocks.processSport.mock.invocationCallOrder[0]!,
+      );
+      expect(gov.recordCall).not.toHaveBeenCalled();
+      expect(gov.recordCredits).toHaveBeenCalledWith({ remaining: 18000, used: null, observedAt: expect.any(Date) });
+    });
+
+    it("carries x-requests-used from the envelope into the credit observation (null when the run did not see it)", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce({
+        status: "success",
+        oddsApiRemainingRequests: 17995,
+        oddsApiUsedRequests: 2005,
+      });
+      const gov = governor({});
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.recordCredits).toHaveBeenCalledWith({ remaining: 17995, used: 2005, observedAt: expect.any(Date) });
+    });
+
+    it("does not record credits when processSport reported none", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const gov = governor({});
+      await runWithTimers(refreshOdds({ governor: gov }));
+      expect(gov.recordCredits).not.toHaveBeenCalled();
+      expect(gov.recordCall).not.toHaveBeenCalled();
+    });
+
+    /**
+     * Review finding: one run can make several paid requests (a preseason leg,
+     * the Pinnacle archive request) and processSport reports how many in
+     * `paidRequestCount`. The reservation covered the first; every additional
+     * request gets its own marker, so the ledger counts every spend.
+     */
+    it("appends one marker per ADDITIONAL paid request (paidRequestCount 3 -> two extra markers, one quota reading)", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce({
+        status: "success",
+        oddsApiRemainingRequests: 17990,
+        oddsApiUsedRequests: 2010,
+        paidRequestCount: 3,
+      });
+      const gov = governor({});
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.recordCall).toHaveBeenCalledTimes(2);
+      for (const call of gov.recordCall.mock.calls) {
+        expect(call).toEqual(["americanfootball_nfl", expect.any(Date)]);
+      }
+      // Extra markers are appended AFTER the run (the count is only known then).
+      for (const order of gov.recordCall.mock.invocationCallOrder) {
+        expect(order).toBeGreaterThan(mocks.processSport.mock.invocationCallOrder[0]!);
+      }
+      expect(gov.recordCredits).toHaveBeenCalledTimes(1);
+      // x-requests-used rides along with the reading (the envelope carried it).
+      expect(gov.recordCredits).toHaveBeenCalledWith({ remaining: 17990, used: 2010, observedAt: expect.any(Date) });
+    });
+
+    it("a paid response without paidRequestCount counts as one request (older envelope): no extra marker", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce({ status: "success", oddsApiRemainingRequests: 18000 });
+      const gov = governor({});
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.recordCall).not.toHaveBeenCalled();
+      expect(gov.recordCredits).toHaveBeenCalledTimes(1);
+    });
+
+    it("records the quota reading and the extra markers from a FAILED envelope: a request that spent a credit but failed to persist", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce({
+        status: "failed",
+        error: "persist failed",
+        oddsApiRemainingRequests: 17000,
+        paidRequestCount: 2,
+      });
+      const gov = governor({});
+
+      const result = await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(result.ok).toBe(false);
+      expect(gov.recordCredits).toHaveBeenCalledWith({ remaining: 17000, used: null, observedAt: expect.any(Date) });
+      expect(gov.recordCall).toHaveBeenCalledTimes(1);
+    });
+
+    it("a run that made no paid request (paidRequestCount 0, no header) records nothing", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce({ status: "success", note: "quiet_board", paidRequestCount: 0 });
+      const gov = governor({});
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.recordCall).not.toHaveBeenCalled();
+      expect(gov.recordCredits).not.toHaveBeenCalled();
+    });
+
+    it("paidRequestCountOf reads the envelope defensively", () => {
+      // A real envelope; the contract field is `paidRequestCount?: number` on
+      // ProcessSportResult, and a malformed value is still read defensively.
+      const base: import("../process-sport.js").ProcessSportResult = {
+        sport: "x",
+        status: "success",
+        games: 0,
+        picks: 0,
+      };
+      // Attached through Object.assign so a non-number value can be handed to
+      // the reader without an excess-property check on the literal.
+      const withCount = (paidRequestCount: unknown) => Object.assign({ ...base }, { paidRequestCount });
+      expect(paidRequestCountOf(base)).toBeNull();
+      expect(paidRequestCountOf(withCount(3))).toBe(3);
+      expect(paidRequestCountOf(withCount(2.7))).toBe(2);
+      expect(paidRequestCountOf(withCount(-1))).toBeNull();
+      expect(paidRequestCountOf(withCount(Number.NaN))).toBeNull();
+      expect(paidRequestCountOf(withCount("3"))).toBeNull();
+    });
+
+    it("a governor that throws fails open: the sport is still refreshed", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const gov = {
+        decide: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+        recordCall: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+        recordCredits: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+      };
+      mocks.processSport.mockResolvedValueOnce({ status: "success", oddsApiRemainingRequests: 17000 });
+
+      const result = await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(result.ok).toBe(true);
+    });
+
+    it("governedDecision reports whether the slot was RESERVED: true only when the governor itself allowed", async () => {
+      const allowing = governor({});
+      expect(await governedDecision(allowing, "americanfootball_nfl")).toEqual({
+        allow: true,
+        reserved: true,
+        reason: "pace ok",
+      });
+      const holding = governor({ americanfootball_nfl: { allow: false, reason: "zero credits remaining" } });
+      expect(await governedDecision(holding, "americanfootball_nfl")).toEqual({
+        allow: false,
+        reserved: false,
+        reason: "zero credits remaining",
+      });
+      const throwing = {
+        ...governor({}),
+        decide: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+      };
+      expect(await governedDecision(throwing, "americanfootball_nfl")).toEqual({
+        allow: true,
+        reserved: false,
+        reason: "governor unavailable, proceeding: ledger down",
+      });
+    });
+
+    it("when decide() threw (fail-open, nothing reserved) the run's FIRST paid request is marked too, so it is never missing from the ledger", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const gov = {
+        ...governor({}),
+        decide: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+      };
+      mocks.processSport.mockResolvedValueOnce({
+        status: "success",
+        oddsApiRemainingRequests: 17000,
+        paidRequestCount: 2,
+      });
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      // Two paid requests, none reserved by decide(): two markers, not one.
+      expect(gov.recordCall).toHaveBeenCalledTimes(2);
+      expect(gov.recordCredits).toHaveBeenCalledTimes(1);
+    });
+
+    it("recordPaidRunAccounting marks every request when nothing was reserved, and only the extras when the first was", async () => {
+      const base: import("../process-sport.js").ProcessSportResult = {
+        sport: "americanfootball_nfl",
+        status: "success",
+        games: 0,
+        picks: 0,
+        oddsApiRemainingRequests: 17000,
+        paidRequestCount: 2,
+      };
+      const reserved = governor({});
+      await recordPaidRunAccounting(reserved, "americanfootball_nfl", base, { reserved: true });
+      expect(reserved.recordCall).toHaveBeenCalledTimes(1);
+
+      const unreserved = governor({});
+      await recordPaidRunAccounting(unreserved, "americanfootball_nfl", base, { reserved: false });
+      expect(unreserved.recordCall).toHaveBeenCalledTimes(2);
+
+      // An older envelope (no paidRequestCount) with one paid response is one request.
+      const single = governor({});
+      await recordPaidRunAccounting(
+        single,
+        "americanfootball_nfl",
+        { ...base, paidRequestCount: undefined },
+        { reserved: false },
+      );
+      expect(single.recordCall).toHaveBeenCalledTimes(1);
+    });
+
+    it("recordPaidRunAccounting never throws: a governor whose recordCall / recordCredits throw SYNCHRONOUSLY is swallowed", async () => {
+      const gov = {
+        decide: vi.fn(async () => ({ allow: true, reason: "pace ok" })),
+        // Not async: the throw happens before any promise exists.
+        recordCall: vi.fn((): Promise<void> => {
+          throw new Error("sync ledger failure");
+        }),
+        recordCredits: vi.fn((): Promise<void> => {
+          throw new Error("sync ledger failure");
+        }),
+      };
+      const res: import("../process-sport.js").ProcessSportResult = {
+        sport: "americanfootball_nfl",
+        status: "success",
+        games: 0,
+        picks: 0,
+        oddsApiRemainingRequests: 17000,
+        paidRequestCount: 3,
+      };
+
+      await expect(recordPaidRunAccounting(gov, "americanfootball_nfl", res)).resolves.toBeUndefined();
+      expect(gov.recordCall).toHaveBeenCalledTimes(2);
+      expect(gov.recordCredits).toHaveBeenCalledTimes(1);
+
+      // Through the loop as well: the cycle completes and the sport is ok.
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce(res);
+      const result = await runWithTimers(refreshOdds({ governor: gov }));
+      expect(result.ok).toBe(true);
+    });
+
+    it("isLowQuota is the shared cutoff: below the threshold only, never on a header-less reading", () => {
+      expect(ODDS_API_LOW_QUOTA_THRESHOLD).toBe(10);
+      expect(isLowQuota({ oddsApiRemainingRequests: 9 })).toBe(true);
+      expect(isLowQuota({ oddsApiRemainingRequests: 10 })).toBe(false);
+      expect(isLowQuota({ oddsApiRemainingRequests: null })).toBe(false);
+      expect(isLowQuota({})).toBe(false);
+    });
+
+    it("never gates the free paths: without an Odds key the governor is not consulted", async () => {
+      process.env["THE_ODDS_API_KEY"] = "";
+      delete process.env["ODDS_API_KEY"];
+      delete process.env["FREE_ODDS_API_KEY"];
+      delete process.env["RUNDOWN_API_KEY"];
+      delete process.env["RUNDOWN_KEY"];
+      delete process.env["FREE_RUNDOWN_API_KEY"];
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const gov = governor({ americanfootball_nfl: { allow: false, reason: "zero credits remaining" } });
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.decide).not.toHaveBeenCalled();
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(mocks.processSport.mock.calls[0]![1]).toBe("espn-free-path");
+    });
+  });
+
+  /**
+   * C-109 review finding: pacing used to apply only when the caller passed a
+   * governor, so board-fill (4x/h), free-spine-health and the traffic
+   * heartbeat ran paid refreshes outside the ledger budget. Now refreshOdds
+   * builds the default ledger-backed governor itself whenever the paid path is
+   * active and nothing was injected; `governor: null` is the only, test-only,
+   * way to switch pacing off.
+   */
+  describe("default governor: every production caller is paced (C-109)", () => {
+    it("builds the ledger-backed default from the shared Prisma client when none is injected, and honors its hold", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1], SPORTS[2]]);
+      const info = vi.spyOn(console, "info").mockImplementation(() => {});
+      const gov = stubGovernor({
+        basketball_nba: { allow: false, reason: "no event within 48h on the free scoreboard" },
+      });
+      mocks.buildPaidOddsGovernor.mockReturnValue(gov);
+
+      // Exactly what board-fill / free-spine-health / the heartbeat do: no governor option.
+      const result = await runWithTimers(refreshOdds());
+
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledTimes(1);
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledWith({ db: hoisted.DB, atomicCapable: true });
+      expect(gov.decide.mock.calls.map((c) => c[0])).toEqual([
+        "americanfootball_nfl",
+        "basketball_nba",
+        "baseball_mlb",
+      ]);
+      expect(mocks.processSport.mock.calls.map((c) => (c[0] as { key: string }).key)).toEqual([
+        "americanfootball_nfl",
+        "baseball_mlb",
+      ]);
+      expect(result.ok).toBe(true);
+      expect(result.results[1]).toEqual({
+        sport: "basketball_nba",
+        ok: true,
+        oddsInserted: 0,
+        note: `${CREDIT_GOVERNOR_SKIP_NOTE}: no event within 48h on the free scoreboard`,
+      });
+      // Single-request runs: the reservation inside decide() is the marker.
+      expect(gov.recordCall).not.toHaveBeenCalled();
+      expect(info).toHaveBeenCalledWith(
+        expect.stringContaining("basketball_nba: paid odds fetch skipped, credit governor"),
+      );
+      info.mockRestore();
+    });
+
+    it("tells the ledger the shared client is the STUB when @sports/db is in stub mode (no advisory mutex there)", async () => {
+      hoisted.isStubMode.mockReturnValue(true);
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+
+      await runWithTimers(refreshOdds());
+
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledWith({ db: hoisted.DB, atomicCapable: false });
+    });
+
+    /**
+     * The middle hop of the credit label. buildPaidOddsGovernor stamping a
+     * supplied source onto the observation is already proven in
+     * packages/data-ingestion paid-odds-governor.test.ts ("stamps a
+     * caller-supplied source on the credit observation"), and the worker
+     * passing its label is proven in refresh-cycle.test.ts. Neither covers
+     * whether resolvePaidOddsGovernor actually FORWARDS it: the conditional
+     * spread in defaultPaidOddsGovernor could drop it and both of those would
+     * still pass (CodeRabbit, PR #714).
+     */
+    it("forwards a caller's source through to the governor factory", () => {
+      resolvePaidOddsGovernor(undefined, "[data-refresh]", "data-refresh-worker");
+
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledWith({
+        db: hoisted.DB,
+        atomicCapable: true,
+        source: "data-refresh-worker",
+      });
+    });
+
+    it("omits source entirely when the caller gives none, so the factory default stands", () => {
+      resolvePaidOddsGovernor(undefined, "[cron:refresh-odds]");
+
+      // Not `source: undefined` — the key must be absent, which is what keeps
+      // every existing caller's deps object byte-identical to before.
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledWith({
+        db: hoisted.DB,
+        atomicCapable: true,
+      });
+      const deps = mocks.buildPaidOddsGovernor.mock.calls[0]![0] as Record<string, unknown>;
+      expect("source" in deps).toBe(false);
+    });
+
+    it("an injected governor is returned as-is and no source is applied to it", () => {
+      const gov = stubGovernor({});
+
+      expect(resolvePaidOddsGovernor(gov, "[data-refresh]", "data-refresh-worker")).toBe(gov);
+      expect(mocks.buildPaidOddsGovernor).not.toHaveBeenCalled();
+    });
+
+    it("the default is built once per cycle, not once per sport", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1], SPORTS[2]]);
+
+      await runWithTimers(refreshOdds());
+
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledTimes(1);
+      expect(mocks.processSport).toHaveBeenCalledTimes(3);
+    });
+
+    it("an explicit `sport` still goes through the default governor", async () => {
+      const gov = stubGovernor({ baseball_mlb: { allow: false, reason: "zero credits remaining" } });
+      mocks.buildPaidOddsGovernor.mockReturnValue(gov);
+      const info = vi.spyOn(console, "info").mockImplementation(() => {});
+
+      const result = await runWithTimers(refreshOdds({ sport: "baseball_mlb" }));
+
+      expect(mocks.processSport).not.toHaveBeenCalled();
+      expect(result.results).toEqual([
+        {
+          sport: "baseball_mlb",
+          ok: true,
+          oddsInserted: 0,
+          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: zero credits remaining`,
+        },
+      ]);
+      info.mockRestore();
+    });
+
+    it("an injected governor takes precedence: the default is never built", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const injected = stubGovernor({
+        americanfootball_nfl: { allow: false, reason: "reserve: held by the injected stub" },
+      });
+      const info = vi.spyOn(console, "info").mockImplementation(() => {});
+
+      const result = await runWithTimers(refreshOdds({ governor: injected }));
+
+      expect(mocks.buildPaidOddsGovernor).not.toHaveBeenCalled();
+      expect(injected.decide).toHaveBeenCalledWith("americanfootball_nfl");
+      expect(mocks.processSport).not.toHaveBeenCalled();
+      expect(result.results[0]!.note).toBe(
+        `${CREDIT_GOVERNOR_SKIP_NOTE}: reserve: held by the injected stub`,
+      );
+      info.mockRestore();
+    });
+
+    it("`governor: null` is the test-only off switch: no default is built and nothing is paced", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1]]);
+      mocks.buildPaidOddsGovernor.mockReturnValue(
+        stubGovernor({ americanfootball_nfl: { allow: false, reason: "would hold" } }),
+      );
+
+      const result = await runWithTimers(refreshOdds({ governor: null }));
+
+      expect(mocks.buildPaidOddsGovernor).not.toHaveBeenCalled();
+      expect(mocks.processSport).toHaveBeenCalledTimes(2);
+      expect(result.results.every((r) => r.ok && r.note === undefined)).toBe(true);
+    });
+
+    it("never builds the default on the free paths (no Odds key: nothing to pace)", async () => {
+      process.env["THE_ODDS_API_KEY"] = "";
+      delete process.env["ODDS_API_KEY"];
+      delete process.env["FREE_ODDS_API_KEY"];
+      delete process.env["RUNDOWN_API_KEY"];
+      delete process.env["RUNDOWN_KEY"];
+      delete process.env["FREE_RUNDOWN_API_KEY"];
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+
+      await runWithTimers(refreshOdds());
+
+      expect(mocks.buildPaidOddsGovernor).not.toHaveBeenCalled();
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(mocks.processSport.mock.calls[0]![1]).toBe("espn-free-path");
+    });
+
+    it("a default governor that cannot be built fails open: the refresh still runs, with a warning", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.buildPaidOddsGovernor.mockImplementation(() => {
+        throw new Error("ledger client not initialised");
+      });
+
+      const result = await runWithTimers(refreshOdds());
+
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(result.ok).toBe(true);
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining("default credit governor unavailable, proceeding unpaced: ledger client not initialised"),
+      );
+      warn.mockRestore();
+    });
   });
 });

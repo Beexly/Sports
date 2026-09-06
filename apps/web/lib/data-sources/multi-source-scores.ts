@@ -112,6 +112,7 @@ async function fetchEspnForDates(
   sport: Sport,
   espnKeys: readonly string[],
   fetchImpl?: typeof fetch,
+  strictEspn?: boolean,
 ): Promise<{ games: NormalizedGame[]; errors: string[]; params: string[] }> {
   const errors: string[] = [];
   if (espnKeys.length === 0) {
@@ -142,7 +143,11 @@ async function fetchEspnForDates(
   // Serial ranges keep ESPN friendly under cron; cap already applied upstream.
   for (const dates of params) {
     try {
-      const games = await fetchEspnScoreboard(sport, { fetchImpl, dates });
+      const games = await fetchEspnScoreboard(sport, {
+        fetchImpl,
+        dates,
+        ...(strictEspn ? { requireAllGroups: true } : {}),
+      });
       chunks.push([...games]);
     } catch (e) {
       errors.push(`espn ${dates}: ${e instanceof Error ? e.message : String(e)}`);
@@ -220,6 +225,12 @@ export type MultiSourceOpts = {
   readonly espnDateKeys?: readonly string[];
   /** ISO days YYYY-MM-DD for secondary APIs (mlb/nhl/balldontlie). */
   readonly isoDateKeys?: readonly string[];
+  /**
+   * Dated ESPN path only: a date whose board came back with any division
+   * group missing is reported as an `espn <dates>: ...` error instead of a
+   * silently partial board. For callers that read absence as evidence.
+   */
+  readonly strictEspn?: boolean;
 };
 
 /**
@@ -241,7 +252,7 @@ export async function fetchScoresMultiSource(
   // When settling historical days, go straight to date-targeted ESPN (skip undated free-first).
   if (espnKeys.length > 0) {
     attempted.push("espn-public-api");
-    const espn = await fetchEspnForDates(sport, espnKeys, opts.fetchImpl);
+    const espn = await fetchEspnForDates(sport, espnKeys, opts.fetchImpl, opts.strictEspn);
     errors.push(...espn.errors);
 
     let games = espn.games;

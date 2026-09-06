@@ -43,6 +43,7 @@ import {
   type CalibrationExclusionCounts,
 } from "@/lib/calibration/proven-path-rows";
 import {
+  MARKET_ANCHORED_P_BASIS,
   picksToMarketAnchoredCalibrationSamples,
   type MarketAnchoredSample,
 } from "@/lib/calibration/live-calibration-p";
@@ -165,7 +166,8 @@ async function loadSettledCalibrationSamples(): Promise<{
 
     // WP-28: one read-only odds query for the receipt-less two-way moneyline
     // picks; their publish-time market probability is recomputed with the
-    // receipt's own de-vig and reported as market_p_from_odds_table.
+    // receipt's own de-vig and reported as market_p_from_odds_table (two or
+    // more books) or market_p_single_book (one book, C-110).
     const oddsTable = await loadPublishTimeMarketPResolver(db, rows);
 
     // Eligibility sample: market-anchored p only; three-way moneylines and
@@ -314,7 +316,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         modelVersion,
         dateRange,
         overall: null,
-        pBasis: "market_anchored",
+        pBasis: MARKET_ANCHORED_P_BASIS,
         exclusions,
         pSources,
         marketPFromOddsTable,
@@ -340,7 +342,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         status: "ok" as const,
         modelVersion,
         dateRange,
-        pBasis: "market_anchored" as const,
+        pBasis: MARKET_ANCHORED_P_BASIS,
         exclusions,
         pSources,
         marketPFromOddsTable,
@@ -400,7 +402,7 @@ export async function GET(request: Request): Promise<NextResponse> {
             uncertainty: decomp.uncertainty,
           },
         },
-        pBasis: "market_anchored",
+        pBasis: MARKET_ANCHORED_P_BASIS,
         exclusions,
         pSources,
         marketPFromOddsTable,
