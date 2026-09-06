@@ -346,6 +346,24 @@ describe("settlePendingPicks — an unfinished doubleheader holds", () => {
     expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
   });
 
+  it("SETTLES the game-one pick whose own fixture is complete, even while game two is live", () => {
+    // The count-based first version held this too. A correctly graded opener
+    // left held would have been voided by the zero-sit lane if game two never
+    // reached final — trading one silent corruption for another.
+    const gameOnePick: PendingPick = { ...dhPick, pickId: "dh-game-one", gameDateIso: gameOne };
+    const out = settlePendingPicks([gameOnePick], [gameOneFinal()], {
+      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, false)] as never,
+    })[0]!;
+    expect(out.status).toBe("SETTLED");
+  });
+
+  it("still holds the game-two pick when game two is postponed and never finals", () => {
+    const out = settlePendingPicks([dhPick], [gameOneFinal()], {
+      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, false)] as never,
+    })[0]!;
+    expect(out.status).toBe("HELD");
+  });
+
   it("settles normally when the board lists a single fixture that day", () => {
     const soleFinal: TrustedFinal = {
       date: gameTwo.slice(0, 10),

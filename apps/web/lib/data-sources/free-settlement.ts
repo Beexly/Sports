@@ -312,10 +312,10 @@ export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
 export function sameMatchupFixturesOnPickDay(
   pick: PendingPick,
   scoreboard: readonly NormalizedGame[],
-): number {
+): readonly NormalizedGame[] {
   const pickHome = expandTeamMatchTokens(pick.homeTeam);
   const pickAway = expandTeamMatchTokens(pick.awayTeam);
-  if (pickHome.length === 0 || pickAway.length === 0) return 0;
+  if (pickHome.length === 0 || pickAway.length === 0) return [];
   const day = pick.gameDateIso.slice(0, 10);
   return scoreboard.filter((g) => {
     if (!g.startTime || g.startTime.slice(0, 10) !== day) return false;
@@ -332,7 +332,41 @@ export function sameMatchupFixturesOnPickDay(
       (sideMatches(pickHome, gHome) && sideMatches(pickAway, gAway)) ||
       (sideMatches(pickHome, gAway) && sideMatches(pickAway, gHome))
     );
-  }).length;
+  });
+}
+
+/**
+ * In a doubleheader, is THIS pick's own fixture still unfinished?
+ *
+ * A matchup-wide count cannot answer that: with game one final and game two
+ * live it is equally true for a pick on either game, so counting held the
+ * game-one pick whose result was legitimately in hand, and a game two that
+ * never reached final would have left it held until the zero-sit lane voided a
+ * correctly graded pick (Devin Review, #717).
+ *
+ * The board answers it exactly. The fixture nearest this pick's kickoff IS this
+ * pick's game — the two starts are hours apart, far wider than any scheduling
+ * jitter — so if that row is completed the pick may settle, and only when it is
+ * NOT completed is any final we hold necessarily the sibling's.
+ *
+ * Returns false whenever the question cannot be asked (fewer than two fixtures,
+ * no real kickoff, unparseable start times), leaving behaviour unchanged.
+ */
+export function pickOwnFixtureUnfinished(
+  pick: PendingPick,
+  scoreboard: readonly NormalizedGame[],
+): boolean {
+  const rows = sameMatchupFixturesOnPickDay(pick, scoreboard);
+  if (rows.length < 2) return false;
+  if (!pick.gameDateIso.includes("T")) return false;
+  const kickoff = Date.parse(pick.gameDateIso);
+  if (!Number.isFinite(kickoff)) return false;
+  const withDelta = rows
+    .map((r) => ({ r, delta: Math.abs(Date.parse(r.startTime) - kickoff) }))
+    .filter((c) => Number.isFinite(c.delta));
+  if (withDelta.length < 2) return false;
+  withDelta.sort((a, b) => a.delta - b.delta);
+  return !withDelta[0]!.r.completed;
 }
 
 /** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */
@@ -534,8 +568,7 @@ export function settlePendingPicks(
     // finals this is the ordinary "not scored yet" case, which must stay
     // PENDING/NO_FINAL so the zero-sit lane can age it out and VOID it with an
     // RCA code; holding it here would strand it as AMBIGUOUS_MATCH forever.
-    const dayFixtures = sameMatchupFixturesOnPickDay(pick, postponedCandidates);
-    if (dayFixtures >= 2 && pickDayFinals >= 1 && dayFixtures > pickDayFinals) {
+    if (pickDayFinals >= 1 && pickOwnFixtureUnfinished(pick, postponedCandidates)) {
       return { pickId: pick.pickId, status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] };
     }
 
