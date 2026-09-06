@@ -82,8 +82,14 @@ class FakeTxStore {
   }
 
   client(): Prisma.TransactionClient {
+    // Prisma accepts either an exact value or an { lte } bound for commenceTime;
+    // the settlement write uses both shapes, so the fake evaluates both.
     const lte = (when: unknown): boolean => {
-      const bound = (when as { commenceTime?: { lte?: Date } } | undefined)?.commenceTime?.lte;
+      const clause = (when as { commenceTime?: Date | { lte?: Date } } | undefined)?.commenceTime;
+      if (clause instanceof Date) {
+        return this.game.commenceTime.getTime() === clause.getTime();
+      }
+      const bound = (clause as { lte?: Date } | undefined)?.lte;
       return bound instanceof Date ? this.game.commenceTime.getTime() <= bound.getTime() : true;
     };
     return {
@@ -99,7 +105,7 @@ class FakeTxStore {
         }: {
           where: {
             id: string;
-            commenceTime?: { lte?: Date };
+            commenceTime?: Date | { lte?: Date };
             OR?: Array<Record<string, unknown>>;
           };
           data: Partial<GameRow>;
@@ -408,6 +414,30 @@ describe("settlement write under a mid-transaction schedule correction", () => {
     const written = await settleOnePickGuarded((fn) => store.run(fn), ARGS);
 
     expect(written.kickoffAt).toEqual(POSTPONED_TO);
+  });
+
+  it("never overwrites a schedule correction that moved the game to another PAST time", async () => {
+    // The scoreless hold writes the kickoff back to keep the row locked. Matched
+    // on `lte: settledAt` that write was a no-op only when nothing had changed:
+    // a correction to a DIFFERENT past time satisfies the same predicate, so the
+    // hold overwrote the correction with the stale kickoff (Devin Review, #717).
+    const CORRECTED = new Date(KICKOFF.getTime() - 60 * 60 * 1000);
+    store.onAfterGameRead = (call) => {
+      if (call === 1) store.game = { ...store.game, commenceTime: CORRECTED };
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), {
+      ...ARGS,
+      result: "VOID",
+      homeScore: null,
+      awayScore: null,
+    });
+
+    expect(written.count).toBe(0);
+    expect(written.refusal).toBe("ROLLED_BACK_KICKOFF");
+    expect(store.pick.result).toBe("PENDING");
+    // The correction survives: it was not replaced by the kickoff we had read.
+    expect(store.game.commenceTime).toEqual(CORRECTED);
   });
 
   it("rethrows anything that is not the deliberate rollback", async () => {

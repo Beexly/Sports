@@ -250,12 +250,17 @@ export async function writeFreeSettlementInTx(
     // took a row lock on the game and the pick write's relation filter was the
     // only guard it had. A postponement committing after that statement then
     // left a VOID stamped on a game nobody has played (Devin Review, #717).
-    // Write the kickoff back to the value we just read, under the same
-    // predicate: it changes nothing, it refuses when the game has moved, and
-    // holding the row until commit is what stops the correction from slipping
-    // in behind us.
+    // Write the kickoff back to the value we just read, matched on that EXACT
+    // value: it changes nothing, it refuses whenever the row has moved at all,
+    // and holding it until commit is what stops a correction slipping in behind
+    // us. Matching on `lte: settledAt` instead would have made this a no-op
+    // only when nothing changed — a correction moving the game to a DIFFERENT
+    // PAST time still satisfies that predicate, so this statement would have
+    // overwritten the correction with the stale kickoff it read a moment
+    // earlier (Devin Review, #717). The exact match implies the `lte` one: the
+    // guard above already refused anything not in the past.
     const held = await tx.game.updateMany({
-      where: { id: args.gameId, commenceTime: { lte: args.settledAt } },
+      where: { id: args.gameId, commenceTime: currentKickoff.commenceTime },
       data: { commenceTime: currentKickoff.commenceTime },
     });
     if (held.count === 0) {
