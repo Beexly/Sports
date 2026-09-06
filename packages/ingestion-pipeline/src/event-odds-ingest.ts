@@ -72,9 +72,30 @@ export interface EventOddsIngestReport {
   readonly fetched: number;
   readonly skipped: number;
   readonly failed: number;
+  /**
+   * The latest x-requests-remaining / x-requests-used the vendor reported in
+   * this batch, from a successful response OR the error a failed request
+   * carried (the client parses the headers of a 402/429 too); null when no
+   * response carried the header. A later header-less response never erases
+   * an earlier reading.
+   */
   readonly remainingRequests: number | null;
+  readonly usedRequests: number | null;
   readonly reason: string;
   readonly snapshots: readonly unknown[];
+}
+
+/** Quota headers a thrown OddsApiError carries (duck-typed: this module has no client import). */
+function quotaHeadersOf(err: unknown): { remainingRequests?: number; usedRequests?: number } {
+  if (typeof err !== "object" || err === null) return {};
+  const out: { remainingRequests?: number; usedRequests?: number } = {};
+  if ("remainingRequests" in err && typeof err.remainingRequests === "number") {
+    out.remainingRequests = err.remainingRequests;
+  }
+  if ("usedRequests" in err && typeof err.usedRequests === "number") {
+    out.usedRequests = err.usedRequests;
+  }
+  return out;
 }
 
 export function isEventOddsIngestEnabled(
@@ -133,6 +154,7 @@ export async function ingestEventOddsIfEnabled(
       skipped: args.eventIds.length,
       failed: 0,
       remainingRequests: null,
+      usedRequests: null,
       reason: "EVENT_ODDS_INGEST_ENABLED is not true — no credits spent.",
       snapshots: [],
     };
@@ -146,6 +168,7 @@ export async function ingestEventOddsIfEnabled(
       skipped: args.eventIds.length,
       failed: 0,
       remainingRequests: null,
+      usedRequests: null,
       reason: cap <= 0 ? "credit cap is 0" : "no events on the slate",
       snapshots: [],
     };
@@ -157,6 +180,11 @@ export async function ingestEventOddsIfEnabled(
   let fetched = 0;
   let failed = 0;
   let remainingRequests: number | null = null;
+  let usedRequests: number | null = null;
+  const noteHeaders = (h: { remainingRequests?: number | null; usedRequests?: number | null }): void => {
+    if (h.remainingRequests != null) remainingRequests = h.remainingRequests;
+    if (h.usedRequests != null) usedRequests = h.usedRequests;
+  };
 
   // Kickoff-sorted so the credit cap does not starve late games on a dense slate.
   const orderedIds = orderEventIdsForCreditCap(args.eventIds, args.commenceByEventId);
@@ -168,10 +196,13 @@ export async function ingestEventOddsIfEnabled(
       });
       snapshots.push(result.data);
       fetched += 1;
-      remainingRequests = result.remainingRequests;
-      if (remainingRequests !== null && remainingRequests <= 0) break;
-    } catch {
+      noteHeaders(result);
+      if (result.remainingRequests !== null && result.remainingRequests <= 0) break;
+    } catch (err) {
       failed += 1;
+      // A failed request still spent a credit and its error still carries the
+      // vendor's quota headers when the vendor answered.
+      noteHeaders(quotaHeadersOf(err));
     }
   }
 
@@ -182,6 +213,7 @@ export async function ingestEventOddsIfEnabled(
     skipped: Math.max(0, args.eventIds.length - considered),
     failed,
     remainingRequests,
+    usedRequests,
     reason: `fetched ${fetched}/${cap} (failed ${failed})`,
     snapshots,
   };

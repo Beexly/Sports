@@ -1,12 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  ESPN_GOVERNOR_GROUPS,
   ODDS_KEY_TO_ESPN_SHORT,
   buildPaidOddsGovernor,
+  espnGovernorGroups,
   espnScoreboardDateRange,
   hasEventWithinHorizon,
   sportHasEventWithin48h,
 } from "../paid-odds-governor.js";
-import type { OddsCreditLedgerDb } from "../odds-credit-ledger.js";
+import {
+  resetPaidCallReservationWarning,
+  type OddsCreditLedgerDb,
+  type OddsCreditLedgerTx,
+} from "../odds-credit-ledger.js";
 
 /**
  * C-109: the ledger-backed paid odds governor now lives in this package so
@@ -132,6 +138,66 @@ describe("sportHasEventWithin48h", () => {
     expect(url).toContain("/basketball/nba/scoreboard");
     expect(url).toContain("dates=20260906-20260908");
     expect(url).toContain("limit=300");
+    // The NBA board is complete by default: one request, no division selector.
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(url).not.toContain("groups=");
+  });
+
+  it("mirrors the pipeline's fixture groups: NCAAF is FBS 80 plus FCS 81, NCAAB is Division I 50, every other sport one default request", () => {
+    expect(ESPN_GOVERNOR_GROUPS).toEqual({ ncaaf: ["80", "81"], ncaab: ["50"] });
+    expect(espnGovernorGroups("ncaaf")).toEqual(["80", "81"]);
+    expect(espnGovernorGroups("ncaab")).toEqual(["50"]);
+    expect(espnGovernorGroups("nfl")).toEqual([undefined]);
+  });
+
+  it("an FCS-only college football horizon counts as live: the FBS group is empty, the FCS group lists the game", async () => {
+    const fetchImpl = vi.fn<FetchFn>(async (url) =>
+      url.includes("groups=81")
+        ? scoreboardResponse([{ id: "fcs-1", date: "2026-09-07T20:00:00Z", state: "pre" }])
+        : scoreboardResponse([]),
+    );
+
+    expect(await sportHasEventWithin48h("americanfootball_ncaaf", NOW, asFetch(fetchImpl))).toBe(true);
+    const urls = fetchImpl.mock.calls.map((c) => c[0]);
+    expect(urls).toHaveLength(2);
+    expect(urls.some((u) => u.includes("/football/college-football/scoreboard") && u.includes("groups=80"))).toBe(true);
+    expect(urls.some((u) => u.includes("/football/college-football/scoreboard") && u.includes("groups=81"))).toBe(true);
+  });
+
+  it("a men's college basketball game outside ESPN's featured page counts: the board is read with groups=50", async () => {
+    const fetchImpl = vi.fn<FetchFn>(async (url) =>
+      url.includes("groups=50")
+        ? scoreboardResponse([{ id: "d1-1", date: "2026-09-07T00:00:00Z", state: "pre" }])
+        : scoreboardResponse([]),
+    );
+
+    expect(await sportHasEventWithin48h("basketball_ncaab", NOW, asFetch(fetchImpl))).toBe(true);
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(fetchImpl.mock.calls[0]![0]).toContain("/basketball/mens-college-basketball/scoreboard");
+    expect(fetchImpl.mock.calls[0]![0]).toContain("groups=50");
+  });
+
+  it("merges the groups and deduplicates by event id, so a game listed under both divisions is one event", async () => {
+    const fetchImpl = vi.fn<FetchFn>(async () =>
+      scoreboardResponse([{ id: "same", date: "2026-09-09T12:00:00Z", state: "pre" }]),
+    );
+    // Listed twice (both groups), but outside the horizon: the merged board is
+    // one event and it does not count.
+    expect(await sportHasEventWithin48h("americanfootball_ncaaf", NOW, asFetch(fetchImpl))).toBe(false);
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+  });
+
+  it("answers null (proceed) when ANY required group fails, never an empty board from the groups that succeeded", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const fetchImpl = vi.fn<FetchFn>(async (url) =>
+      url.includes("groups=81")
+        ? ({ ok: false, status: 503 } as unknown as Response)
+        : scoreboardResponse([{ id: "fbs-1", date: "2026-09-07T17:00:00Z", state: "pre" }]),
+    );
+
+    expect(await sportHasEventWithin48h("americanfootball_ncaaf", NOW, asFetch(fetchImpl))).toBeNull();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("groups=81 unavailable, not skipping"));
+    warn.mockRestore();
   });
 
   it("answers true when the board lists an event inside the horizon", async () => {
@@ -297,6 +363,33 @@ describe("buildPaidOddsGovernor", () => {
       used: null,
       source: "refresh-odds",
     });
+  });
+
+  it("stamps x-requests-used on the credit observation when the caller saw it", async () => {
+    const { db, create } = fakeLedger();
+    const gov = buildPaidOddsGovernor({ db, now: () => NOW, hasEventWithin48h: async () => true });
+    await gov.recordCredits({ remaining: 18500, used: 1500, observedAt: NOW });
+    expect(create.mock.calls[0]![0].data["metadata"]).toMatchObject({ remaining: 18500, used: 1500 });
+  });
+
+  it("threads atomicCapable:false (the stub client) into the reservation: no transaction, warned non-atomic; omitted, the transaction runs", async () => {
+    resetPaidCallReservationWarning();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { db: rows } = fakeLedger({ credits: credits(19000) });
+    const transaction = vi.fn(async <T,>(fn: (tx: OddsCreditLedgerTx) => Promise<T>): Promise<T> =>
+      fn({ ...rows, $executeRaw: async () => 1 }),
+    );
+    const db: OddsCreditLedgerDb = { ...rows, $transaction: transaction, $executeRaw: async () => 1 };
+
+    const stub = buildPaidOddsGovernor({ db, now: () => NOW, hasEventWithin48h: async () => true, atomicCapable: false });
+    expect((await stub.decide("americanfootball_nfl")).allow).toBe(true);
+    expect(transaction).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("stub Prisma client"));
+
+    const real = buildPaidOddsGovernor({ db, now: () => NOW, hasEventWithin48h: async () => true });
+    expect((await real.decide("americanfootball_nfl")).allow).toBe(true);
+    expect(transaction).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
   });
 
   it("stamps a caller-supplied source on the credit observation", async () => {

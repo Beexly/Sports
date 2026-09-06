@@ -73,6 +73,8 @@ export {
   defaultPaidOddsGovernor,
   resolvePaidOddsGovernor,
   governedDecision,
+  isLowQuota,
+  ODDS_API_LOW_QUOTA_THRESHOLD,
   paidRequestCountOf,
   recordPaidRunAccounting,
 } from "./refresh-odds.js";
@@ -81,6 +83,7 @@ export type {
   RefreshOddsSportResult,
   RefreshOddsOptions,
   PaidOddsGovernor,
+  GovernedDecision,
 } from "./refresh-odds.js";
 export { notifyOwner, ownerAlertsConfigured } from "./owner-alert.js";
 export {

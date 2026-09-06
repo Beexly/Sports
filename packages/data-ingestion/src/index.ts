@@ -385,6 +385,8 @@ export type {
 export {
   ODDS_KEY_TO_ESPN_SHORT,
   STARTED_GRACE_HOURS,
+  ESPN_GOVERNOR_GROUPS,
+  espnGovernorGroups,
   espnScoreboardDateRange,
   hasEventWithinHorizon,
   sportHasEventWithin48h,

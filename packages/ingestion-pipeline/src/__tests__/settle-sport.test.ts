@@ -71,6 +71,8 @@ const mocks = vi.hoisted(() => ({
   memFindFirst: vi.fn<(args: unknown) => Promise<unknown>>(),
   memFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   memCreate: vi.fn<(args: unknown) => Promise<unknown>>(),
+  // @sports/db stub-mode probe: the reservation is told when the client is the stub.
+  isStubMode: vi.fn<() => boolean>(),
 }));
 
 vi.mock("@sports/db", () => {
@@ -123,6 +125,7 @@ vi.mock("@sports/db", () => {
   };
   mocks.transaction.mockImplementation(async (fn: (t: unknown) => Promise<unknown>) => fn(tx));
   return {
+    isStubMode: mocks.isStubMode,
     db: {
       $transaction: mocks.transaction,
       game: {
@@ -183,6 +186,7 @@ vi.mock("@sports/data-ingestion", async () => {
     recordCreditObservation: actual.recordCreditObservation,
     recordPaidCall: actual.recordPaidCall,
     reservePaidCallSlot: actual.reservePaidCallSlot,
+    resetPaidCallReservationWarning: actual.resetPaidCallReservationWarning,
     PAID_CALL_MIN_INTERVAL_MS: actual.PAID_CALL_MIN_INTERVAL_MS,
     PAID_CALL_PURPOSES: actual.PAID_CALL_PURPOSES,
   };
@@ -208,6 +212,7 @@ import {
   NFL_PRESEASON_ODDS_KEY,
   isNflPreseasonFetchWindow,
   remapPreseasonRows,
+  resetPaidCallReservationWarning,
 } from "@sports/data-ingestion";
 import { fingerprintScorePayload } from "../settlement-evidence.js";
 
@@ -342,10 +347,11 @@ describe("settleSport", () => {
     mocks.snapshotUpdateMany.mockResolvedValue({ count: 1 });
     mocks.lineSnapFindMany.mockResolvedValue([]);
     mocks.lineSnapUpdate.mockResolvedValue({});
-    // Credit ledger: nothing recorded yet, writes succeed.
+    // Credit ledger: nothing recorded yet, writes succeed; a real client.
     mocks.memFindFirst.mockResolvedValue(null);
     mocks.memFindMany.mockResolvedValue([]);
     mocks.memCreate.mockResolvedValue({});
+    mocks.isStubMode.mockReturnValue(false);
   });
 
   it("grades SPREAD/TOTAL against the LOCKED line, not the drifted live line", async () => {
@@ -1543,6 +1549,24 @@ describe("settleSport", () => {
 
       expect(mocks.getScores).not.toHaveBeenCalled();
       expect(second.note).toMatch(/^credit_governor: .*within the hour/);
+    });
+
+    it("in @sports/db stub mode the hourly reservation is told it cannot serialize: non-atomic, warned, marker still written", async () => {
+      // The stub client's Proxy answers $transaction / $executeRaw with no-ops,
+      // so the ledger's shape check alone would report an atomic reservation
+      // that took no mutex. settleSport passes isStubMode() through.
+      resetPaidCallReservationWarning();
+      mocks.isStubMode.mockReturnValue(true);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(mocks.getScores).toHaveBeenCalledTimes(1);
+      expect(createdScopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("stub Prisma client"));
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("non-atomic"));
+      warn.mockRestore();
     });
 
     it("a failed paid call (402) still persists the x-requests-remaining it carried", async () => {

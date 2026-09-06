@@ -8,7 +8,9 @@
  * pipeline's default ledger-backed one, built once per cycle and failing open
  * on construction failure; a held sport is skipped and logged with the
  * governor's reason; after each paid call the pipeline's own accounting
- * records the quota reading and one marker per additional paid request.
+ * records the quota reading and one marker per additional paid request; once
+ * a response reports fewer than ODDS_API_LOW_QUOTA_THRESHOLD credits the rest
+ * of the cycle is skipped, the same cutoff `refreshOdds()` applies.
  */
 
 import { getInSeasonSports } from "@sports/data-ingestion";
@@ -16,8 +18,10 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import {
   processSport,
   governedDecision,
+  isLowQuota,
   recordPaidRunAccounting,
   resolvePaidOddsGovernor,
+  type ProcessSportResult,
 } from "@sports/ingestion-pipeline";
 
 const LOG_PREFIX = "[data-refresh]";
@@ -26,12 +30,18 @@ const LOG_PREFIX = "[data-refresh]";
 const INTER_SPORT_PAUSE_MS = 1000;
 
 export interface CycleSummary {
-  /** Sports whose paid processSport call ran this cycle. */
+  /** Sports whose paid processSport call ran this cycle (a call that threw included). */
   readonly total: number;
-  /** Of those, sports that returned status "failed". */
+  /** Of those, sports that returned status "failed" or whose call threw. */
   readonly failed: number;
   /** Sports the credit governor held this cycle (no paid request made). */
   readonly held: number;
+  /**
+   * Sports not started because an earlier response in this cycle reported
+   * fewer than ODDS_API_LOW_QUOTA_THRESHOLD credits remaining (no paid
+   * request made for them).
+   */
+  readonly skipped: number;
 }
 
 export async function runRefreshCycle(): Promise<CycleSummary> {
@@ -59,12 +69,21 @@ export async function runRefreshCycle(): Promise<CycleSummary> {
   const governor = resolvePaidOddsGovernor(undefined, LOG_PREFIX);
 
   // In-season sports only (cost control). Override: ODDS_REFRESH_ALL_SPORTS=true.
-  // processSport never throws (it returns status:"failed"), so failures are
-  // aggregated here — a fully-failed cycle must be loud, not "Cycle complete".
+  // processSport catches provider/normalization failures (status:"failed"), but
+  // its ingestion-run insert runs before that handler and can reject; a
+  // rejection counts that sport as failed and the cycle goes on, so one sport
+  // can never leave the rest unprocessed or the cycle without a summary.
+  const sports = getInSeasonSports();
   let total = 0;
   let failed = 0;
   let held = 0;
-  for (const sport of getInSeasonSports()) {
+  let skipped = 0;
+  for (let i = 0; i < sports.length; i++) {
+    const sport = sports[i]!;
+    // A governor that answered allow has reserved the slot and marked the
+    // first request; one that was unavailable (fail-open) has not, and the
+    // accounting below then marks every request of the run.
+    let slotReserved = true;
     if (governor) {
       const decision = await governedDecision(governor, sport.key);
       if (!decision.allow) {
@@ -74,11 +93,36 @@ export async function runRefreshCycle(): Promise<CycleSummary> {
         held += 1;
         continue;
       }
+      slotReserved = decision.reserved;
     }
-    const result = await processSport(sport, apiKey, gates, LOG_PREFIX);
     total += 1;
+    let result: ProcessSportResult;
+    try {
+      result = await processSport(sport, apiKey, gates, LOG_PREFIX);
+    } catch (err) {
+      failed += 1;
+      console.error(
+        `${LOG_PREFIX} ${sport.key}: processSport threw — ` +
+          `${err instanceof Error ? err.message : String(err)}`,
+      );
+      await new Promise((r) => setTimeout(r, INTER_SPORT_PAUSE_MS));
+      continue;
+    }
     if (result.status === "failed") failed += 1;
-    if (governor) await recordPaidRunAccounting(governor, sport.key, result);
+    if (governor) {
+      await recordPaidRunAccounting(governor, sport.key, result, { reserved: slotReserved });
+    }
+    // Same proactive cutoff as refreshOdds: once the vendor reports a
+    // near-exhausted budget, stop starting new sports this cycle. Skipped,
+    // not silently dropped, so the summary says what did not run and why.
+    if (isLowQuota(result)) {
+      skipped = sports.length - i - 1;
+      console.warn(
+        `${LOG_PREFIX} ${sport.key}: only ${result.oddsApiRemainingRequests} Odds API credits left — ` +
+          `skipping the remaining ${skipped} in-season sport(s) this cycle`,
+      );
+      break;
+    }
     // Brief pause between sports to avoid saturating the API
     await new Promise((r) => setTimeout(r, INTER_SPORT_PAUSE_MS));
   }
@@ -91,7 +135,8 @@ export async function runRefreshCycle(): Promise<CycleSummary> {
   }
   console.log(
     `${LOG_PREFIX} Cycle complete ${new Date().toISOString()} ` +
-      `(${total - failed}/${total} sports ok, ${held} held by the credit governor)`,
+      `(${total - failed}/${total} sports ok, ${held} held by the credit governor, ` +
+      `${skipped} skipped on low quota)`,
   );
-  return { total, failed, held };
+  return { total, failed, held, skipped };
 }

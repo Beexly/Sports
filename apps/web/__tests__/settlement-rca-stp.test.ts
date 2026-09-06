@@ -45,33 +45,38 @@ describe("zero-sit void narratives (rootCauseNarrative)", () => {
     expect(joined(n.remediation)).toMatch(/evidence\.cause/);
   });
 
-  it("FIXTURE_NOT_FOUND describes the per-team evidence and cancels only when neither team appears", () => {
+  it("FIXTURE_NOT_FOUND claims only that neither stored name matched the board and requires fixture verification before cancelling", () => {
     const n = rootCauseNarrative("FIXTURE_NOT_FOUND", 30);
     expect(n.fiveWhys).toHaveLength(5);
-    expect(joined(n.fiveWhys)).toMatch(/NEITHER team/);
+    expect(joined(n.fiveWhys)).toMatch(/NEITHER stored name matched a board side/);
     expect(joined(n.fiveWhys)).toMatch(/homeListed and awayListed/);
+    expect(joined(n.fiveWhys)).toMatch(/alias or spelling mismatch/);
+    expect(joined(n.fiveWhys)).toMatch(/POSTPONED row keeps its status/);
+    // homeListed/awayListed false never proves that the teams did not play.
+    expect(joined(n.fiveWhys)).not.toMatch(/NEITHER team appears/);
     expect(joined(n.fiveWhys)).not.toMatch(/no event for either team/);
     expect(joined(n.remediation)).toMatch(/evidence\.homeListed and evidence\.awayListed/);
-    expect(joined(n.remediation)).toMatch(/both false/);
+    expect(joined(n.remediation)).toMatch(/both false means neither stored name matched the board/);
+    expect(joined(n.remediation)).toMatch(/not proof that the contest did not occur/);
+    expect(joined(n.remediation)).toMatch(/Verify the fixture itself \(the ESPN event id or the league schedule page\) before concluding the contest did not occur/);
     expect(joined(n.remediation)).toMatch(/left as is/);
+    expect(joined(n.remediation)).not.toMatch(/neither team played that day/);
     // The old wording claimed every such row is CANCELED; that is no longer said.
     expect(joined(n.remediation)).not.toMatch(/and the game row marked CANCELED;/);
-    expect(n.summary).toMatch(/no event pairing the two teams/);
+    expect(n.summary).toMatch(/no event pairing the two stored team names/);
   });
 
-  it("classifySettlementRootCause narratives are unchanged for the codes it produces", () => {
-    const f = classifySettlementRootCause({
-      pickId: "p-n",
-      sportKey: "americanfootball_nfl",
-      ageHours: 12,
-      graceHours: 6,
-      outcomeStatus: "PENDING",
-      pendingReason: "NO_FINAL",
-    });
-    const n = rootCauseNarrative(f.code, f.ageHours);
-    expect(n.fiveWhys).toEqual(f.fiveWhys);
-    expect(n.remediation).toEqual(f.remediation);
-    expect(n.summary).toBe(f.summary);
+  it("OVERDUE_NO_SCORE names the grace window, the missing final and the score path to restore", () => {
+    const n = rootCauseNarrative("OVERDUE_NO_SCORE", 12);
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(n.fiveWhys[0]).toMatch(/Kickoff was more than graceHours ago and result is still PENDING/);
+    expect(joined(n.fiveWhys)).toMatch(/No CONFIRMED\/SINGLE_SOURCE final was available at last run/);
+    expect(joined(n.fiveWhys)).toMatch(/Source outage, sport not mapped, or finals filter dropped the game/);
+    expect(n.fiveWhys[4]).toMatch(/^Root: .*restore score path then re-run settle-picks/);
+    expect(joined(n.remediation)).toMatch(/Re-run free score persist \+ settle-picks for the sport/);
+    expect(joined(n.remediation)).toMatch(/Verify ESPN\/henrygd coverage for the matchup date/);
+    expect(joined(n.remediation)).toMatch(/Check team name tokens/);
+    expect(n.summary).toBe("Overdue with no usable score (12.0h).");
   });
 });
 

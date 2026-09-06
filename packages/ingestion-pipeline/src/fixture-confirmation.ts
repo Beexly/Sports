@@ -96,12 +96,24 @@ export type FixtureConfirmation =
       readonly event: EspnSeedGame;
       /**
        * ESPN's clock when it differs from the stored kickoff by more than 15
-       * minutes and the kickoff is still ahead; null otherwise
+       * minutes and both clocks are still ahead of `now`; null otherwise
        * (commenceTimeCorrection).
        */
       readonly correctedCommenceTime: Date | null;
     }
-  | { readonly status: "not_listed" };
+  | { readonly status: "not_listed" }
+  | {
+      /**
+       * The board lists the contest, but ESPN's kickoff is not after `now`: the
+       * game is under way or over. A stale future row (a May listing) can match
+       * an event that already started, and its past clock must never become a
+       * correction that both generation paths then price a pick on. Distinct
+       * from not_listed so the caller can log the real reason; it skips
+       * generation either way.
+       */
+      readonly status: "event_already_started";
+      readonly event: EspnSeedGame;
+    };
 
 export type FixtureBatchResult =
   | {
@@ -246,7 +258,9 @@ export function requiresReconfirmation(probe: FixtureProbe, now: Date): boolean 
  * free, cleared public source (facts only: the listed kickoff of a contest we
  * already carry), not a fabricated value: the row keeps its teams and identity,
  * only its stale kickoff moves to what ESPN publishes. A kickoff already behind
- * `now` is never rewritten (historical game).
+ * `now` is never rewritten (historical game), and a past ESPN clock is never
+ * written onto a future row (that contest has started; see
+ * confirmFixturesAgainstScoreboard, which refuses it before reaching here).
  */
 export function commenceTimeCorrection(
   probe: FixtureProbe,
@@ -254,6 +268,7 @@ export function commenceTimeCorrection(
   now: Date,
 ): Date | null {
   if (probe.commenceTime.getTime() <= now.getTime()) return null;
+  if (espnCommenceTime.getTime() <= now.getTime()) return null;
   const delta = Math.abs(espnCommenceTime.getTime() - probe.commenceTime.getTime());
   return delta > FIXTURE_TIME_CORRECTION_MIN_MS ? espnCommenceTime : null;
 }
@@ -270,6 +285,13 @@ export function confirmFixturesAgainstScoreboard(
     const event = findListedFixture(probe, events, sportKey);
     if (!event) {
       out.set(probe.id, { status: "not_listed" });
+      continue;
+    }
+    if (event.commenceTime.getTime() <= now.getTime()) {
+      // Listed, but ESPN's kickoff is not ahead of now: the contest is under
+      // way or finished. Never confirmed, never a correction (a stale future
+      // row would otherwise be rewritten to the past clock and priced).
+      out.set(probe.id, { status: "event_already_started", event });
       continue;
     }
     out.set(probe.id, {

@@ -29,7 +29,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { db } from "@sports/db";
+import { db, isStubMode } from "@sports/db";
 import {
   SUPPORTED_SPORTS,
   getInSeasonSports,
@@ -43,11 +43,20 @@ import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "./process-sport.js";
 import {
   governedDecision,
+  isLowQuota,
+  ODDS_API_LOW_QUOTA_THRESHOLD,
   paidRequestCountOf,
   recordPaidRunAccounting,
 } from "./paid-run-accounting.js";
 
-export { governedDecision, paidRequestCountOf, recordPaidRunAccounting };
+export {
+  governedDecision,
+  isLowQuota,
+  ODDS_API_LOW_QUOTA_THRESHOLD,
+  paidRequestCountOf,
+  recordPaidRunAccounting,
+};
+export type { GovernedDecision } from "./paid-run-accounting.js";
 import { freezeSlateCommitments, type SlateFreezeResult } from "./freeze-slate-commitments.js";
 
 /** Production SHA-256 HashFn for the proof spine — matches process-sport.ts. */
@@ -67,13 +76,6 @@ export interface RefreshOddsSportResult {
   readonly picks?: number;
   readonly note?: string;
 }
-
-/** Below this many remaining The-Odds-API credits, stop starting new sports
- *  in this cycle rather than risk exhausting the monthly budget mid-loop.
- *  One more MARKETS.length-market/1-region call costs MARKETS.length credits
- *  (3 today); this leaves real margin above that for settle-picks' own
- *  getScores calls sharing the same key. */
-const ODDS_API_LOW_QUOTA_THRESHOLD = 10;
 
 export interface RefreshOddsResult {
   /** True only when every processed sport succeeded. */
@@ -142,10 +144,15 @@ export const CREDIT_GOVERNOR_SKIP_NOTE = "credit_governor_skip";
 /**
  * The governor every production caller gets when it injects none: the durable
  * credit ledger (append-only JarvisMemoryEvent rows on the shared Prisma
- * client) plus the free ESPN scoreboard event check.
+ * client) plus the free ESPN scoreboard event check. The stub client
+ * (DATABASE_URL unset) cannot take the advisory mutex although its no-op
+ * `$transaction` looks like it can, so the ledger is told when it is the stub.
  */
 export function defaultPaidOddsGovernor(): PaidOddsGovernor {
-  return buildPaidOddsGovernor({ db: db as unknown as OddsCreditLedgerDb });
+  return buildPaidOddsGovernor({
+    db: db as unknown as OddsCreditLedgerDb,
+    atomicCapable: !isStubMode(),
+  });
 }
 
 /**
@@ -279,6 +286,10 @@ export async function refreshOdds(
     // reported (ok, oddsInserted 0, note) rather than silently dropped, so the
     // cron response says what did not run and why. The governor itself fails
     // open: a ledger or scoreboard outage must never blank the board.
+    // A governor that answered allow has reserved the slot and marked the
+    // first request; a governor that was unavailable (fail-open) has not, and
+    // the accounting below then marks every request of the run.
+    let slotReserved = true;
     if (governor) {
       const decision = await governedDecision(governor, sport.key);
       if (!decision.allow) {
@@ -293,6 +304,7 @@ export async function refreshOdds(
         });
         continue;
       }
+      slotReserved = decision.reserved;
       // decide() has already reserved this sport's hourly slot and written the
       // marker for the first paid request, so concurrent callers see it before
       // the fetch. Additional paid requests in the run are marked below.
@@ -303,7 +315,9 @@ export async function refreshOdds(
       // the returned status so a failed sport is recorded as ok:false (and the
       // Healthchecks success ping cannot fire falsely on a silent failure).
       const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
-      if (governor) await recordPaidRunAccounting(governor, sport.key, res);
+      if (governor) {
+        await recordPaidRunAccounting(governor, sport.key, res, { reserved: slotReserved });
+      }
       const note = res.note ?? "";
       if (
         rundownOnly &&
@@ -341,10 +355,7 @@ export async function refreshOdds(
       // nearly out of credits — a proactive guard, not just the existing
       // reactive 402/429 circuit breaker. Skip, don't silently drop, the
       // rest so the response is honest about what didn't run and why.
-      if (
-        res.oddsApiRemainingRequests != null &&
-        res.oddsApiRemainingRequests < ODDS_API_LOW_QUOTA_THRESHOLD
-      ) {
+      if (isLowQuota(res)) {
         const doneKeys = new Set(results.map((r) => r.sport));
         for (const skipped of sportsToProcess) {
           if (doneKeys.has(skipped.key)) continue;

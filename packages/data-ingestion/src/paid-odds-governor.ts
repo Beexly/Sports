@@ -66,8 +66,16 @@ export interface PaidOddsGovernor {
    * counts every spend.
    */
   recordCall(sportKey: string, at: Date): Promise<void>;
-  /** Called after a paid fetch that reported x-requests-remaining. */
-  recordCredits(observation: { readonly remaining: number; readonly observedAt: Date }): Promise<void>;
+  /**
+   * Called after a paid fetch that reported x-requests-remaining. `used` is
+   * x-requests-used from the same response when the caller saw it; omitted or
+   * null when the header was absent (never coerced to 0).
+   */
+  recordCredits(observation: {
+    readonly remaining: number;
+    readonly used?: number | null;
+    readonly observedAt: Date;
+  }): Promise<void>;
 }
 
 /** The Odds API sport key to the free-spine short key (inverse of SHORT_TO_ODDS_SPORT). */
@@ -82,6 +90,29 @@ export const STARTED_GRACE_HOURS = 6;
 
 /** Free scoreboard request timeout; a slow ESPN answers null, never a skip. */
 const SCOREBOARD_TIMEOUT_MS = 12_000;
+
+/**
+ * ESPN `groups` (division) selectors that widen a college board beyond its
+ * default: college football defaults to FBS (`80`), `81` adds FCS; men's
+ * college basketball defaults to a featured page, `50` is all of Division I.
+ * Without them an FCS-only football slate or an unfeatured basketball slate
+ * reads as an empty board, and an empty board is exactly what skips the paid
+ * call for a live sport. Twin of `ESPN_FIXTURE_GROUPS` in
+ * `packages/ingestion-pipeline/src/fixture-confirmation.ts` (and of
+ * `ESPN_SCOREBOARD_GROUPS` in the app's free settlement adapter); this package
+ * cannot import the pipeline, so the mapping is kept here and must stay in
+ * step with it. Sports absent here return a complete default board.
+ */
+export const ESPN_GOVERNOR_GROUPS: Partial<Record<ShortSportKey, readonly string[]>> = {
+  ncaaf: ["80", "81"],
+  ncaab: ["50"],
+};
+
+/** The group requests covering a sport's full board (one default request when none). */
+export function espnGovernorGroups(short: ShortSportKey): readonly (string | undefined)[] {
+  const groups = ESPN_GOVERNOR_GROUPS[short];
+  return groups && groups.length > 0 ? groups : [undefined];
+}
 
 function yyyymmddUtc(d: Date): string {
   const y = d.getUTCFullYear();
@@ -123,8 +154,12 @@ export function hasEventWithinHorizon(
 }
 
 /**
- * Free scoreboard check for one sport. true / false when ESPN answered; null
- * when the sport is not mapped or the fetch failed (the caller proceeds).
+ * Free scoreboard check for one sport. true / false when ESPN answered IN
+ * FULL; null when the sport is not mapped or ANY required group request
+ * failed (the caller proceeds). College boards are several division requests
+ * (`espnGovernorGroups`), merged and deduplicated by event id: a missing
+ * division must never read as an empty board, because an empty board is what
+ * skips the paid call.
  */
 export async function sportHasEventWithin48h(
   sportKey: string,
@@ -134,26 +169,32 @@ export async function sportHasEventWithin48h(
   const short = ODDS_KEY_TO_ESPN_SHORT[sportKey];
   if (!short) return null;
   const meta = SHORT_TO_ODDS_SPORT[short];
-  const params = new URLSearchParams({
-    dates: espnScoreboardDateRange(now),
-    limit: String(ESPN_SCOREBOARD_LIMIT),
-  });
-  const url = `https://site.api.espn.com/apis/site/v2/sports/${meta.espnPath}/scoreboard?${params.toString()}`;
-  try {
-    const res = await fetchImpl(url, {
-      headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(SCOREBOARD_TIMEOUT_MS),
+  const byId = new Map<string, EspnSeedGame>();
+  for (const group of espnGovernorGroups(short)) {
+    const params = new URLSearchParams({
+      dates: espnScoreboardDateRange(now),
+      limit: String(ESPN_SCOREBOARD_LIMIT),
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const body = (await res.json()) as Parameters<typeof parseEspnScoreboardForSeed>[1];
-    return hasEventWithinHorizon(parseEspnScoreboardForSeed(short, body), now);
-  } catch (err) {
-    console.warn(
-      `[credit-governor] ${sportKey}: free scoreboard unavailable, not skipping: ` +
-        `${err instanceof Error ? err.message : String(err)}`,
-    );
-    return null;
+    if (group !== undefined) params.set("groups", group);
+    const url = `https://site.api.espn.com/apis/site/v2/sports/${meta.espnPath}/scoreboard?${params.toString()}`;
+    const label = group === undefined ? "free scoreboard" : `free scoreboard groups=${group}`;
+    try {
+      const res = await fetchImpl(url, {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(SCOREBOARD_TIMEOUT_MS),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const body = (await res.json()) as Parameters<typeof parseEspnScoreboardForSeed>[1];
+      for (const game of parseEspnScoreboardForSeed(short, body)) byId.set(game.externalId, game);
+    } catch (err) {
+      console.warn(
+        `[credit-governor] ${sportKey}: ${label} unavailable, not skipping: ` +
+          `${err instanceof Error ? err.message : String(err)}`,
+      );
+      return null;
+    }
   }
+  return hasEventWithinHorizon([...byId.values()], now);
 }
 
 export interface PaidOddsGovernorDeps {
@@ -163,6 +204,14 @@ export interface PaidOddsGovernorDeps {
   /** Injectable for tests or a richer adapter; defaults to the ESPN check above. */
   readonly hasEventWithin48h?: (sportKey: string, now: Date) => Promise<boolean | null>;
   readonly source?: string;
+  /**
+   * false when `db` is the @sports/db stub client (DATABASE_URL unset): its
+   * no-op `$transaction` would otherwise pass the ledger's shape check and the
+   * hourly reservation would report atomic while taking no mutex. Callers with
+   * access to @sports/db pass `!isStubMode()`; omitted, the ledger detects
+   * from the client's shape. See `reservePaidCallSlot`.
+   */
+  readonly atomicCapable?: boolean;
 }
 
 /** The ledger-backed governor `refreshOdds()` consults on the paid path. */
@@ -203,6 +252,7 @@ export function buildPaidOddsGovernor(deps: PaidOddsGovernorDeps): PaidOddsGover
         now: at,
         intervalMs: slot === "none" ? 0 : PAID_CALL_MIN_INTERVAL_MS,
         checkPurposes: slot === "any-purpose" ? PAID_CALL_PURPOSES : ["odds"],
+        ...(deps.atomicCapable !== undefined ? { atomicCapable: deps.atomicCapable } : {}),
       });
       if (!reservation.reserved) {
         return {
@@ -220,7 +270,7 @@ export function buildPaidOddsGovernor(deps: PaidOddsGovernorDeps): PaidOddsGover
     async recordCredits(observation) {
       await recordCreditObservation(deps.db, {
         remaining: observation.remaining,
-        used: null,
+        used: observation.used ?? null,
         observedAt: observation.observedAt.toISOString(),
         source,
       });

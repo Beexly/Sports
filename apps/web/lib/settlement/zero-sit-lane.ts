@@ -855,11 +855,15 @@ async function persistZeroSitVoid(
       ],
     );
     if (decision.cancelGame) {
-      // Never clobber a recorded FINAL; only an unplayed row becomes CANCELED:
-      // SCHEDULED, LIVE (a stale feed state) or already POSTPONED, since a
-      // postponed contest that the board never lists again did not happen.
+      // Never clobber a recorded FINAL; only a SCHEDULED or LIVE (a stale feed
+      // state) row becomes CANCELED. POSTPONED is deliberately NOT in the
+      // predicate: a postponed contest may be rescheduled outside the original
+      // date window, so the original board no longer listing it is absence of
+      // evidence, not evidence of cancellation. Cancellation needs positive
+      // evidence; the pick is still voided FIXTURE_NOT_FOUND above and the row
+      // keeps its POSTPONED status.
       const canceled = await tx.game.updateMany({
-        where: { id: row.game.id, status: { in: ["SCHEDULED", "LIVE", "POSTPONED"] } },
+        where: { id: row.game.id, status: { in: ["SCHEDULED", "LIVE"] } },
         data: { status: "CANCELED" },
       });
       gameCanceled = canceled.count > 0;

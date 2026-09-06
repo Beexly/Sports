@@ -369,7 +369,10 @@ describe("zero-sit lane: VOID half", () => {
     });
   });
 
-  it("cancels a FIXTURE_NOT_FOUND row that was already POSTPONED; the predicate never names FINAL", async () => {
+  it("voids a FIXTURE_NOT_FOUND pick on a POSTPONED row but leaves the row POSTPONED: the predicate names only SCHEDULED and LIVE, never POSTPONED, FINAL or CANCELED", async () => {
+    // A postponed contest may be rescheduled outside the original date window;
+    // the original board no longer listing it is not positive evidence of
+    // cancellation, so the row keeps its status while the pick is voided.
     const kickoff = hoursAgo(30);
     const fake = makeFake([
       row({ id: "p-postponed", commenceTime: kickoff, status: "POSTPONED", home: "Phantom Rebels", away: "Phantom Cardinals" }),
@@ -379,13 +382,15 @@ describe("zero-sit lane: VOID half", () => {
 
     expect(res.voided).toBe(1);
     expect(res.byCode.FIXTURE_NOT_FOUND).toBe(1);
-    expect(res.gamesCanceled).toBe(1);
+    expect(res.gamesCanceled).toBe(0);
     expect(fake.rows[0]!.result).toBe("VOID");
-    expect(fake.rows[0]!.game.status).toBe("CANCELED");
+    expect(fake.rows[0]!.game.status).toBe("POSTPONED");
+    expect(fake.events[0]!.payload.rcaCode).toBe("FIXTURE_NOT_FOUND");
     expect(fake.gameUpdates).toHaveLength(1);
     const where = (fake.gameUpdates[0] as { where: { id: string; status: { in: string[] } } }).where;
     expect(where.id).toBe("game-p-postponed");
-    expect(where.status.in).toContain("POSTPONED");
+    expect(where.status.in).toEqual(["SCHEDULED", "LIVE"]);
+    expect(where.status.in).not.toContain("POSTPONED");
     expect(where.status.in).not.toContain("FINAL");
     expect(where.status.in).not.toContain("CANCELED");
   });
@@ -405,7 +410,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(fake.rows[0]!.result).toBe("VOID");
     expect(fake.rows[0]!.game.status).toBe("CANCELED");
     expect(fake.gameUpdates[0]).toMatchObject({
-      where: { id: "game-p-phantom", status: { in: ["SCHEDULED", "LIVE", "POSTPONED"] } },
+      where: { id: "game-p-phantom", status: { in: ["SCHEDULED", "LIVE"] } },
       data: { status: "CANCELED" },
     });
     expect(fake.events[0]!.payload.rcaCode).toBe("FIXTURE_NOT_FOUND");
