@@ -13,7 +13,10 @@ import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
 import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
 import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
-import { STALE_PENDING_PICK_MAX_AGE_DAYS, stalePickWhere } from "@/lib/board/stale-pick-policy";
+import {
+  STALE_PENDING_PICK_MAX_AGE_DAYS,
+  staleUnstartedPublishedPendingWhere,
+} from "@/lib/board/stale-pick-policy";
 import { loadMarketCoverage } from "@/lib/board/market-coverage";
 import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
 
@@ -61,6 +64,10 @@ import { timingSafeEqual } from "node:crypto";
 import {
   oddsApiKeyPresence,
   rundownApiKeyPresence,
+  emptyOddsCreditTruth,
+  loadOddsCreditTruth,
+  type OddsCreditLedgerDb,
+  type OddsCreditTruth,
 } from "@sports/data-ingestion";
 
 export const dynamic = "force-dynamic";
@@ -246,6 +253,14 @@ export async function GET(request: Request) {
       rundownMatchedEnv: string | null;
       /** Zero-key ESPN public odds tertiary path (always code-available). */
       espnPublicTertiary: true;
+      /**
+       * C-109 credit governor: latest The Odds API quota headers from the
+       * durable ledger (remaining, used, observedAt), the 600-a-day budget,
+       * a linear exhaustion projection from the last 24h of observations
+       * (null with fewer than two), and whether the reserve pace holds.
+       * All null before the first paid call is observed; never invented.
+       */
+      credits: OddsCreditTruth;
     };
     lastZeroOddsSuccessAt: string | null;
     lastZeroOddsSport: string | null;
@@ -265,6 +280,7 @@ export async function GET(request: Request) {
       rundownKeyPresent: rundownKeySlot.present,
       rundownMatchedEnv: detailed ? rundownKeySlot.matchedEnv : null,
       espnPublicTertiary: true,
+      credits: emptyOddsCreditTruth(),
     },
     lastZeroOddsSuccessAt: null,
     lastZeroOddsSport: null,
@@ -354,6 +370,17 @@ export async function GET(request: Request) {
       }
     } catch {
       /* leave default */
+    }
+    // C-109: credit posture rides under dualPath; a ledger failure leaves the
+    // all-null block rather than taking the surface down.
+    const credits = await safeRead(() =>
+      loadOddsCreditTruth(db as unknown as OddsCreditLedgerDb, new Date()),
+    );
+    if (credits) {
+      oddsInserting = {
+        ...oddsInserting,
+        dualPath: { ...oddsInserting.dualPath, credits },
+      };
     }
   }
 
@@ -588,19 +615,17 @@ export async function GET(request: Request) {
   // Published PENDING picks on games that have not started whose row the
   // pipeline has not refreshed in 14 days (observed 2026-09-02: 18 picks from
   // model v5.0.0 written in May on September/November lines). They are not on
-  // the public daily slate (day-bound by generatedAt) but they will grade at
-  // kickoff on a stale line; the owner decides supersede/void, never a cron.
+  // the public daily slate (day-bound by generatedAt) but they would grade at
+  // kickoff on a stale line. Since WP-29 (C-106) the settle-picks cron
+  // unpublishes exactly this selection at the end of every cycle (zero-sit
+  // lane), so the count reads 0 once a cycle has run; the where is the shared
+  // builder in lib/board/stale-pick-policy.ts so count and cron cannot drift.
+  // Unpublished rows leave this count by construction (isPublished: true).
   const stalePendingPicks = isStubMode()
     ? null
     : await safeRead(() =>
         db.pick.count({
-          where: {
-            isPublished: true,
-            result: "PENDING",
-            // Refresh age, not creation age (lib/board/stale-pick-policy.ts).
-            ...stalePickWhere(),
-            game: { commenceTime: { gt: new Date() } },
-          },
+          where: staleUnstartedPublishedPendingWhere(new Date()),
         }),
       );
 
@@ -888,8 +913,8 @@ export async function GET(request: Request) {
           stalePendingPicks === null
             ? "unknown (stub DB or query failed)"
             : stalePendingPicks > 0
-              ? `${stalePendingPicks} published PENDING pick(s) on unstarted games not refreshed in ${STALE_PENDING_PICK_MAX_AGE_DAYS}d — review in the owner queue (supersede/void is an owner decision, never automatic).`
-              : "none",
+              ? `${stalePendingPicks} published PENDING pick(s) on unstarted games not refreshed in ${STALE_PENDING_PICK_MAX_AGE_DAYS}d. The settle-picks cron unpublishes them automatically at the end of its next cycle (zero-sit lane, WP-29) and records each action as a memory event; a count that persists across cycles means the lane is not running. Manual override only: npm run ops:stale-picks:unpublish.`
+              : "none (the zero-sit lane unpublishes stale unstarted picks every settle cycle)",
       },
       marketCoverage,
       confidenceTail,

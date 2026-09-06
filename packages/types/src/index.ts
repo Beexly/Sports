@@ -613,6 +613,21 @@ export interface PublicPick {
    */
   lineMovement?: { opening: number; current: number } | null;
 
+  /**
+   * False on a signal-slate row (bookmakerCount 0, no book behind it); the
+   * surface renders "No book price attached" in the line slot. Public for
+   * every tier: the row's teaser already says "not a book price".
+   */
+  hasBookPrice?: boolean;
+  /**
+   * Market-implied win probability for the picked side, 0..1, read from the
+   * pick's immutable proof receipt, with the bookmaker count it was averaged
+   * across. Present ONLY on book-priced two-way MONEYLINE picks that carry a
+   * receipt AND for viewers entitled to see confidence; the key is omitted
+   * otherwise (v5.2.8 display side, apps/web/lib/picks/market-implied-display.ts).
+   */
+  marketImplied?: { prob: number; bookmakerCount: number } | null;
+
   // Gated by subscription
   confidence: number | null;         // null for FREE
   // Honest, calibrated display of `confidence`. Populated ONLY when the audited

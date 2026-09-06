@@ -170,7 +170,19 @@ export function espnScoreboardUrl(sport: Sport, dates?: string, group?: string):
   return `${base}?${params.toString()}`;
 }
 
-export type FetchOptions = { readonly fetchImpl?: typeof fetch; readonly timeoutMs?: number; readonly dates?: string };
+export type FetchOptions = {
+  readonly fetchImpl?: typeof fetch;
+  readonly timeoutMs?: number;
+  readonly dates?: string;
+  /**
+   * Throw when ANY division group request fails instead of returning the
+   * groups that succeeded. The graders keep the default (a partial board still
+   * grades what it can); a lane that treats absence from the board as evidence
+   * (the zero-sit void lane) must set this so a missing FBS group can never
+   * read as "fixture not found".
+   */
+  readonly requireAllGroups?: boolean;
+};
 
 /**
  * Fetch + normalize a scoreboard for a sport. Pass `opts.dates` to target a specific
@@ -185,7 +197,8 @@ export async function fetchEspnScoreboard(
   // One request per division group (most sports: exactly one). FBS and FCS boards
   // overlap on cross-division games, so rows are deduped by ESPN event id, preferring
   // a completed row. A group that fails is recorded; the call throws only when every
-  // group failed, so a partial board (the pre-fix behaviour) still reaches the caller.
+  // group failed, so a partial board (the pre-fix behaviour) still reaches the caller,
+  // unless the caller asked for `requireAllGroups` (then one failure throws).
   const byId = new Map<string, NormalizedGame>();
   const failures: Error[] = [];
   const groups = espnScoreboardGroups(sport);
@@ -208,5 +221,6 @@ export async function fetchEspnScoreboard(
     }
   }
   if (failures.length === groups.length && failures.length > 0) throw failures[0];
+  if (opts.requireAllGroups && failures.length > 0) throw failures[0];
   return [...byId.values()];
 }

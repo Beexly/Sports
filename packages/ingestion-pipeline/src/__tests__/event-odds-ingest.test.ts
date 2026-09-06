@@ -148,4 +148,69 @@ describe("event-odds ingest — default OFF, hard credit cap", () => {
     expect(report.fetched).toBe(1);
     expect(report.remainingRequests).toBe(0);
   });
+
+  it("reports x-requests-used alongside x-requests-remaining, and a failed request's error headers are preserved", async () => {
+    // The client parses the quota headers of a 402/429 into the thrown error;
+    // a failed request still spent a credit, so its reading must not be lost.
+    const client = {
+      async getEventOdds(_sport: string, eventId: string) {
+        if (eventId === "bad") {
+          throw Object.assign(new Error("The Odds API error: 429"), {
+            status: 429,
+            remainingRequests: 5,
+            usedRequests: 19_995,
+          });
+        }
+        return { data: { id: eventId } as never, remainingRequests: 9, usedRequests: 19_991 };
+      },
+    } as EventOddsClient;
+    const report = await ingestEventOddsIfEnabled({
+      client,
+      sportKey: "americanfootball_nfl",
+      eventIds: ["ok", "bad"],
+      env: { EVENT_ODDS_INGEST_ENABLED: "true", EVENT_ODDS_CREDIT_CAP: "8" },
+    });
+    expect(report.fetched).toBe(1);
+    expect(report.failed).toBe(1);
+    expect(report.remainingRequests).toBe(5);
+    expect(report.usedRequests).toBe(19_995);
+  });
+
+  it("a later header-less response (success or failure) never erases an earlier reading", async () => {
+    const client = {
+      async getEventOdds(_sport: string, eventId: string) {
+        if (eventId === "bare-error") throw new Error("network down");
+        if (eventId === "bare-ok") return { data: { id: eventId } as never, remainingRequests: null, usedRequests: null };
+        return { data: { id: eventId } as never, remainingRequests: 12, usedRequests: 19_988 };
+      },
+    } as EventOddsClient;
+    const report = await ingestEventOddsIfEnabled({
+      client,
+      sportKey: "americanfootball_nfl",
+      eventIds: ["ok", "bare-error", "bare-ok"],
+      env: { EVENT_ODDS_INGEST_ENABLED: "true", EVENT_ODDS_CREDIT_CAP: "8" },
+    });
+    expect(report.fetched).toBe(2);
+    expect(report.failed).toBe(1);
+    expect(report.remainingRequests).toBe(12);
+    expect(report.usedRequests).toBe(19_988);
+  });
+
+  it("carries null quota headers when disabled or when nothing was fetched", async () => {
+    const off = await ingestEventOddsIfEnabled({
+      client: fakeClient(),
+      sportKey: "americanfootball_nfl",
+      eventIds: ["a"],
+      env: {},
+    });
+    expect(off.usedRequests).toBeNull();
+    const empty = await ingestEventOddsIfEnabled({
+      client: fakeClient(),
+      sportKey: "americanfootball_nfl",
+      eventIds: [],
+      env: { EVENT_ODDS_INGEST_ENABLED: "true" },
+    });
+    expect(empty.usedRequests).toBeNull();
+    expect(empty.remainingRequests).toBeNull();
+  });
 });

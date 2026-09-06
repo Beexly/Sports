@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
+import type { FixtureProbe } from "../fixture-confirmation.js";
 
 /**
  * Behavioral tests for processSport — the single pick-generation path
@@ -17,7 +18,10 @@ import type { ReadinessGates } from "@sports/prediction-engine";
 
 const mocks = vi.hoisted(() => ({
   // data-ingestion
-  getOdds: vi.fn<(sport: string, markets: string[]) => Promise<{ data: unknown[]; remainingRequests: number }>>(),
+  // Header fields mirror the client contract: number | null (null = header absent), usedRequests optional in older fixtures.
+  getOdds: vi.fn<
+    (sport: string, markets: string[]) => Promise<{ data: unknown[]; remainingRequests: number | null; usedRequests?: number | null }>
+  >(),
   validateFreshness: vi.fn<(at: Date) => boolean>(),
   validateOddsFreshness: vi.fn<(odds: unknown[]) => boolean>(),
   freshGameIds: vi.fn<(odds: unknown[]) => Set<string>>(),
@@ -33,10 +37,12 @@ const mocks = vi.hoisted(() => ({
   ingestionRunCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   ingestionRunUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   sportUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
-  gameUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
+  // The game writes return the stored names the fixture guard probes with
+  // (process-sport selects them); optional here so older cases stay `{ id }`.
+  gameUpsert: vi.fn<(args: unknown) => Promise<{ id: string; homeTeamName?: string; awayTeamName?: string }>>(),
   gameFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
-  gameUpdate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
+  gameUpdate: vi.fn<(args: unknown) => Promise<{ id: string; homeTeamName?: string; awayTeamName?: string }>>(),
   oddsCreateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
@@ -52,6 +58,10 @@ const mocks = vi.hoisted(() => ({
     unmatchedSecondary: number;
     skippedWellCovered: number;
   }>(),
+  // fixture confirmation guard (C-111): one batch per sport per cycle
+  confirmBatch: vi.fn<(sportKey: string, probes: readonly FixtureProbe[]) => Promise<unknown>>(),
+  // Recorder only: the real buildIndependentFairValues still runs (see the passthrough mock below).
+  independentsInput: vi.fn<(input: unknown) => void>(),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -70,7 +80,15 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@sports/data-ingestion", () => ({
+vi.mock("@sports/data-ingestion", async () => {
+  // The fixture guard's real ESPN parser, sport table and page limit, so a
+  // test can run the real FixtureConfirmer against an injected board; every
+  // other export stays a test double.
+  const actual = await vi.importActual<typeof import("@sports/data-ingestion")>("@sports/data-ingestion");
+  return {
+  parseEspnScoreboardForSeed: actual.parseEspnScoreboardForSeed,
+  SHORT_TO_ODDS_SPORT: actual.SHORT_TO_ODDS_SPORT,
+  ESPN_SCOREBOARD_LIMIT: actual.ESPN_SCOREBOARD_LIMIT,
   OddsApiClient: vi.fn().mockImplementation(() => ({ getOdds: mocks.getOdds })),
   DataNormalizer: vi.fn().mockImplementation(() => ({
     validateFreshness: mocks.validateFreshness,
@@ -125,7 +143,8 @@ vi.mock("@sports/data-ingestion", () => ({
   resolveOddsApiKey: vi.fn().mockReturnValue("key"),
   oddsApiKeyPresence: vi.fn().mockReturnValue({ present: true, matchedEnv: "THE_ODDS_API_KEY" }),
   rundownApiKeyPresence: vi.fn().mockReturnValue({ present: false, matchedEnv: null }),
-}));
+  };
+});
 
 vi.mock("@sports/prediction-engine", async () => {
   // selectionIsHomeSide is the REAL, canonical (#119) implementation — not a
@@ -151,7 +170,44 @@ vi.mock("../source-snapshot.js", () => ({
   recordSourceSnapshot: vi.fn().mockResolvedValue(undefined),
 }));
 
+// The confirmer's fetch is replaced; the pure helpers stay real. The batch
+// contract itself is unit-tested in fixture-confirmation.test.ts.
+vi.mock("../fixture-confirmation.js", async () => {
+  const actual = await vi.importActual<typeof import("../fixture-confirmation.js")>(
+    "../fixture-confirmation.js",
+  );
+  return {
+    ...actual,
+    FixtureConfirmer: vi.fn().mockImplementation(() => ({ confirmBatch: mocks.confirmBatch })),
+  };
+});
+
+// Passthrough: records the input every game hands the independent builder,
+// then runs the real function, so the kickoff it sees can be asserted.
+vi.mock("../build-independent-fair-values.js", async () => {
+  const actual = await vi.importActual<typeof import("../build-independent-fair-values.js")>(
+    "../build-independent-fair-values.js",
+  );
+  const recorded: typeof actual.buildIndependentFairValues = (input, eloCache) => {
+    mocks.independentsInput(input);
+    return actual.buildIndependentFairValues(input, eloCache);
+  };
+  return { ...actual, buildIndependentFairValues: recorded };
+});
+
 import { processSport, pickSelectionSide } from "../process-sport.js";
+import { isNflPreseasonFetchWindow } from "@sports/data-ingestion";
+
+/** Default guard behaviour for these tests: every probe is listed on the board. */
+function confirmAll(_sportKey: string, probes: readonly { id: string }[]): Promise<unknown> {
+  return Promise.resolve({
+    status: "ok",
+    eventsOnBoard: probes.length,
+    byGameId: new Map(
+      probes.map((p) => [p.id, { status: "confirmed", event: { externalId: `espn:test:${p.id}` }, correctedCommenceTime: null }]),
+    ),
+  });
+}
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
 
@@ -212,10 +268,11 @@ describe("processSport", () => {
     mocks.normalizeGames.mockReturnValue([normalizedGame()]);
     mocks.normalizeOdds.mockReturnValue([]);
     mocks.sportUpsert.mockResolvedValue({ id: "sport-1" });
-    mocks.gameUpsert.mockResolvedValue({ id: "game-1" });
+    // The stored names come back from the write (process-sport selects them).
+    mocks.gameUpsert.mockResolvedValue({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" });
     mocks.gameFindUnique.mockResolvedValue({ id: "game-1" });
     mocks.gameFindMany.mockResolvedValue([]);
-    mocks.gameUpdate.mockResolvedValue({ id: "game-1" });
+    mocks.gameUpdate.mockResolvedValue({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" });
     mocks.enrichGameContext.mockResolvedValue(undefined);
     mocks.getAtsForm.mockResolvedValue(null);
     mocks.getHeadToHeadForm.mockResolvedValue(null);
@@ -239,6 +296,266 @@ describe("processSport", () => {
       unmatchedSecondary: 0,
       skippedWellCovered: 0,
     }));
+    mocks.confirmBatch.mockImplementation(confirmAll);
+  });
+
+  describe("fixture confirmation guard (C-111)", () => {
+    it("generates no pick for a game the day's ESPN scoreboard does not list, and skips it before scoring", async () => {
+      mocks.confirmBatch.mockResolvedValue({
+        status: "ok",
+        eventsOnBoard: 68,
+        byGameId: new Map([["game-1", { status: "not_listed" }]]),
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.confirmBatch).toHaveBeenCalledTimes(1);
+      expect(mocks.confirmBatch).toHaveBeenCalledWith(
+        SPORT.key,
+        [expect.objectContaining({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" })],
+      );
+      // Scoring never sees the phantom game, so no pick can be created or refreshed.
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ status: "success", games: 1 });
+      expect(warn.mock.calls.some((c) => /fixture not listed/.test(String(c[0])) && /game-1/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("generates no pick and writes no correction when the board lists the fixture but its ESPN kickoff has already passed", async () => {
+      // A stale future row matched an event that started 2h before the run:
+      // the confirmer reports event_already_started, never a correction.
+      mocks.confirmBatch.mockResolvedValue({
+        status: "ok",
+        eventsOnBoard: 1,
+        byGameId: new Map([
+          [
+            "game-1",
+            {
+              status: "event_already_started",
+              event: { externalId: "espn:nfl:1", commenceTime: new Date("2026-06-12T13:00:00.000Z") },
+            },
+          ],
+        ]),
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      const corrections = mocks.gameUpdate.mock.calls.filter(
+        (c) => Object.keys((c[0] as { data: Record<string, unknown> }).data).join() === "commenceTime",
+      );
+      expect(corrections).toHaveLength(0);
+      expect(result).toMatchObject({ status: "success", games: 1, picks: 0 });
+      expect(warn.mock.calls.some((c) => /fixture already started/.test(String(c[0])) && /game-1/.test(String(c[0])))).toBe(true);
+      expect(warn.mock.calls.some((c) => /fixture not listed/.test(String(c[0])))).toBe(false);
+      warn.mockRestore();
+    });
+
+    it("probes the guard with the names the row stores, not the feed's city-only names (real confirmer, MLB)", async () => {
+      // Feed says "New York"; the row keeps "New York Yankees" through the
+      // plain-upsert name guard. The board lists the Yankees AND the Mets that
+      // day, so a bare "New York" is an ambiguous city the matcher refuses;
+      // the stored name confirms. ESPN-shaped TEST FIXTURE, injected fetch.
+      const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
+      const kickoff = new Date("2026-06-12T17:00:00.000Z");
+      const runAt = new Date("2026-06-12T15:00:00.000Z");
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1"
+          ? {
+              id: "game-1",
+              externalId: "odds-api-1",
+              sportId: "sport-1",
+              homeTeamName: "New York Yankees",
+              awayTeamName: "Tampa Bay Rays",
+              commenceTime: kickoff,
+              mergedIntoGameId: null,
+            }
+          : { id: "game-1" };
+      });
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "New York", awayTeam: "Tampa Bay Rays", commenceTime: kickoff }),
+      ]);
+      // The upsert returns what it wrote: the guarded (longer) names.
+      mocks.gameUpsert.mockImplementation(async (args: unknown) => {
+        const update = (args as { update: { homeTeamName: string; awayTeamName: string } }).update;
+        return { id: "game-1", homeTeamName: update.homeTeamName, awayTeamName: update.awayTeamName };
+      });
+      const espnEvent = (id: string, date: string, home: string, away: string): Record<string, unknown> => ({
+        id,
+        date,
+        status: { type: { state: "pre", completed: false } },
+        competitions: [{ competitors: [
+          { homeAway: "home", team: { displayName: home } },
+          { homeAway: "away", team: { displayName: away } },
+        ] }],
+      });
+      const board = {
+        events: [
+          espnEvent("501", "2026-06-12T17:05Z", "New York Yankees", "Tampa Bay Rays"),
+          espnEvent("502", "2026-06-12T23:10Z", "New York Mets", "Atlanta Braves"),
+        ],
+      };
+      const espnFetch = vi.fn<(url: string) => Promise<Response>>(
+        async () => new Response(JSON.stringify(board), { status: 200, headers: { "content-type": "application/json" } }),
+      );
+      const actual = await vi.importActual<typeof import("../fixture-confirmation.js")>("../fixture-confirmation.js");
+      const confirmer = new actual.FixtureConfirmer({ fetchImpl: espnFetch as unknown as typeof fetch, now: runAt });
+      mocks.confirmBatch.mockImplementation((sportKey, probes) => confirmer.confirmBatch(sportKey, probes));
+
+      const result = await processSport(MLB, "key", gates());
+
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { externalId: "odds-api-1" },
+          update: expect.objectContaining({ homeTeamName: "New York Yankees", awayTeamName: "Tampa Bay Rays" }),
+          select: expect.objectContaining({ homeTeamName: true, awayTeamName: true }),
+        }),
+      );
+      expect(mocks.confirmBatch).toHaveBeenCalledWith(
+        "baseball_mlb",
+        [expect.objectContaining({ id: "game-1", homeTeamName: "New York Yankees", awayTeamName: "Tampa Bay Rays" })],
+      );
+      expect(espnFetch).toHaveBeenCalledTimes(1);
+      expect(String(espnFetch.mock.calls[0]![0])).toContain("/baseball/mlb/scoreboard?dates=20260612");
+      expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+      expect(result).toMatchObject({ status: "success", games: 1, picks: 1 });
+      // Control on the same cached board: the feed's own name is refused.
+      const withFeedName = await confirmer.confirmBatch("baseball_mlb", [
+        { id: "game-1", homeTeamName: "New York", awayTeamName: "Tampa Bay Rays", commenceTime: kickoff },
+      ]);
+      expect(withFeedName.status).toBe("ok");
+      if (withFeedName.status === "ok") expect(withFeedName.byGameId.get("game-1")).toEqual({ status: "not_listed" });
+      expect(espnFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("skips pick generation for the whole sport this cycle when the scoreboard fetch fails (fail-closed)", async () => {
+      mocks.confirmBatch.mockResolvedValue({ status: "fetch_failed", error: "espn nfl 20260612 HTTP 503" });
+      mocks.normalizeOdds.mockReturnValue([
+        { gameExternalId: "ext-1", bookmaker: "a", market: "SPREADS", spread: -3 },
+      ]);
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+      mocks.oddsCreateMany.mockResolvedValue({ count: 1 });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      // Odds rows are still archived; only pick generation is gated.
+      expect(mocks.oddsCreateMany).toHaveBeenCalledTimes(1);
+      expect(result).toMatchObject({ status: "success", picks: 0, note: "fixture_scoreboard_unavailable" });
+      expect(warn.mock.calls.some((c) => /fixture scoreboard unavailable/.test(String(c[0])) && /HTTP 503/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("keeps the fixture-scoreboard failure as the note even when the cycle also inserted no odds", async () => {
+      // Default mocks insert zero odds rows, which would otherwise produce an
+      // emptiness note; the fail-closed reason must win.
+      mocks.confirmBatch.mockResolvedValue({ status: "fetch_failed", error: "espn nfl 20260612 HTTP 503" });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({ status: "success", picks: 0, oddsInserted: 0, note: "fixture_scoreboard_unavailable" });
+      warn.mockRestore();
+    });
+
+    it("leaves a listed fixture unaffected (happy path still creates the pick)", async () => {
+      const result = await processSport(SPORT, "key", gates());
+      expect(result).toMatchObject({ status: "success", games: 1, picks: 1 });
+      expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+      // No commenceTime-only correction write (the identity path's name+time update is unrelated).
+      const corrections = mocks.gameUpdate.mock.calls.filter(
+        (c) => Object.keys((c[0] as { data: Record<string, unknown> }).data).join() === "commenceTime",
+      );
+      expect(corrections).toHaveLength(0);
+    });
+
+    it("applies ESPN's kickoff to a confirmed old row when the batch carries a correction", async () => {
+      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      mocks.confirmBatch.mockResolvedValue({
+        status: "ok",
+        eventsOnBoard: 1,
+        byGameId: new Map([
+          ["game-1", { status: "confirmed", event: { externalId: "espn:nfl:1" }, correctedCommenceTime: corrected }],
+        ]),
+      });
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpdate).toHaveBeenCalledWith({
+        where: { id: "game-1" },
+        data: { commenceTime: corrected },
+      });
+      expect(result).toMatchObject({ status: "success", picks: 1 });
+      // The corrected kickoff is the one every same-cycle consumer reads: the
+      // enrichment call, the independent fair-value builder and the OddsInput
+      // the scorer receives. None of them may keep the stale feed time.
+      expect(mocks.enrichGameContext).toHaveBeenCalledWith(
+        expect.objectContaining({ gameId: "game-1", commenceTime: corrected }),
+      );
+      expect(mocks.independentsInput).toHaveBeenCalledWith(
+        expect.objectContaining({ homeTeam: "Chiefs", awayTeam: "Bills", commenceTime: corrected }),
+      );
+      expect(mocks.scoreGames).toHaveBeenCalledWith(
+        [expect.objectContaining({ gameId: "game-1", commenceTime: corrected })],
+        expect.any(Date),
+      );
+    });
+
+    it("keeps the feed kickoff in the row and in every input when the correction write fails", async () => {
+      const feedTime = new Date("2026-06-12T17:00:00.000Z");
+      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      mocks.confirmBatch.mockResolvedValue({
+        status: "ok",
+        eventsOnBoard: 1,
+        byGameId: new Map([
+          ["game-1", { status: "confirmed", event: { externalId: "espn:nfl:1" }, correctedCommenceTime: corrected }],
+        ]),
+      });
+      // Only the commenceTime-only correction write fails; the identity path's
+      // name+time update (unrelated, feed time) still succeeds.
+      const isCorrection = (args: unknown): boolean =>
+        Object.keys((args as { data: Record<string, unknown> }).data).join() === "commenceTime";
+      mocks.gameUpdate.mockImplementation(async (args: unknown) => {
+        if (isCorrection(args)) throw new Error("fixture: connection reset");
+        return { id: "game-1" };
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      // The correction was attempted once and failed; the row keeps the feed time.
+      const corrections = mocks.gameUpdate.mock.calls.filter((c) => isCorrection(c[0]));
+      expect(corrections).toHaveLength(1);
+      expect(corrections[0]![0]).toEqual({
+        where: { id: "game-1" },
+        data: { commenceTime: corrected },
+      });
+      expect(warn.mock.calls.some((c) => /commenceTime correction failed/.test(String(c[0])) && /connection reset/.test(String(c[0])))).toBe(true);
+      // Every consumer stays on the feed time, consistently with the row.
+      expect(mocks.enrichGameContext).toHaveBeenCalledWith(
+        expect.objectContaining({ gameId: "game-1", commenceTime: feedTime }),
+      );
+      expect(mocks.independentsInput).toHaveBeenCalledWith(
+        expect.objectContaining({ commenceTime: feedTime }),
+      );
+      expect(mocks.scoreGames).toHaveBeenCalledWith(
+        [expect.objectContaining({ gameId: "game-1", commenceTime: feedTime })],
+        expect.any(Date),
+      );
+      // The pick still ships: a failed schedule correction is not a reason to sit.
+      expect(result).toMatchObject({ status: "success", picks: 1 });
+      warn.mockRestore();
+    });
   });
 
   it("does not call Rundown when every primary event already has two books", async () => {
@@ -677,6 +994,165 @@ describe("processSport", () => {
     expect(result.picks).toBe(1);
   });
 
+  // Nested so it inherits the outer beforeEach (mock resets) like the Pinnacle block below.
+  describe("paid Odds API accounting on the result envelope (contract with the odds client, C-109)", () => {
+    const ORIGINAL_ENABLED = process.env["LINE_ARCHIVE_ENABLED"];
+    const ORIGINAL_EU_PINNACLE = process.env["LINE_ARCHIVE_EU_PINNACLE"];
+
+    beforeEach(() => {
+      delete process.env["LINE_ARCHIVE_ENABLED"];
+      delete process.env["LINE_ARCHIVE_EU_PINNACLE"];
+    });
+
+    afterEach(() => {
+      delete process.env["LINE_ARCHIVE_ENABLED"];
+      delete process.env["LINE_ARCHIVE_EU_PINNACLE"];
+      if (ORIGINAL_ENABLED !== undefined) process.env["LINE_ARCHIVE_ENABLED"] = ORIGINAL_ENABLED;
+      if (ORIGINAL_EU_PINNACLE !== undefined) {
+        process.env["LINE_ARCHIVE_EU_PINNACLE"] = ORIGINAL_EU_PINNACLE;
+      }
+    });
+
+    /** Main call answers without options; the Pinnacle leg passes the 3rd `options` arg. */
+    function twoLegOdds(
+      main: { remainingRequests: number | null; usedRequests: number | null },
+      leg: { remainingRequests: number | null; usedRequests: number | null },
+    ): void {
+      mocks.getOdds.mockImplementation(
+        (async (
+          _sport: string,
+          _markets: string[],
+          options?: { regions: string; bookmakers: string[] },
+        ) => (options ? { data: [], ...leg } : { data: [{ raw: true }], ...main })) as typeof mocks.getOdds,
+      );
+    }
+
+    it("a run that fails after a paid response still surfaces the quota headers and the request count", async () => {
+      mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: 250, usedRequests: 19_750 });
+      mocks.pickCreate.mockRejectedValue(new Error("fixture: pick write failed"));
+      const err = vi.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("failed");
+      expect(result.error).toMatch(/pick write failed/);
+      expect(result.oddsApiRemainingRequests).toBe(250);
+      expect(result.oddsApiUsedRequests).toBe(19_750);
+      expect(result.paidRequestCount).toBe(1);
+      err.mockRestore();
+    });
+
+    it("an archive-enabled run counts the Pinnacle leg (paidRequestCount 2) and the latest headers win", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true";
+      process.env["LINE_ARCHIVE_EU_PINNACLE"] = "true";
+      twoLegOdds({ remainingRequests: 399, usedRequests: 19_601 }, { remainingRequests: 398, usedRequests: 19_602 });
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(mocks.getOdds).toHaveBeenCalledTimes(2);
+      expect(result.paidRequestCount).toBe(2);
+      expect(result.oddsApiRemainingRequests).toBe(398);
+      expect(result.oddsApiUsedRequests).toBe(19_602);
+    });
+
+    it("absent quota headers surface as null, never 0", async () => {
+      mocks.getOdds.mockResolvedValue({ data: [{ raw: true }], remainingRequests: null, usedRequests: null });
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.paidRequestCount).toBe(1);
+      expect(result).toHaveProperty("oddsApiRemainingRequests", null);
+      expect(result).toHaveProperty("oddsApiUsedRequests", null);
+    });
+
+    it("a later header-less response never erases an earlier reading, and a later reading replaces a null", async () => {
+      process.env["LINE_ARCHIVE_ENABLED"] = "true";
+      process.env["LINE_ARCHIVE_EU_PINNACLE"] = "true";
+      twoLegOdds({ remainingRequests: 400, usedRequests: 100 }, { remainingRequests: null, usedRequests: null });
+      const kept = await processSport(SPORT, "key", gates());
+      expect(kept.paidRequestCount).toBe(2);
+      expect(kept.oddsApiRemainingRequests).toBe(400);
+      expect(kept.oddsApiUsedRequests).toBe(100);
+
+      twoLegOdds({ remainingRequests: null, usedRequests: null }, { remainingRequests: 398, usedRequests: 2 });
+      const replaced = await processSport(SPORT, "key", gates());
+      expect(replaced.paidRequestCount).toBe(2);
+      expect(replaced.oddsApiRemainingRequests).toBe(398);
+      expect(replaced.oddsApiUsedRequests).toBe(2);
+    });
+
+    it("carries no paid accounting when no paid request was made (free-path sentinel key)", async () => {
+      const result = await processSport(SPORT, "absent", gates());
+
+      expect(mocks.getOdds).not.toHaveBeenCalled();
+      expect(result).not.toHaveProperty("paidRequestCount");
+      expect(result).not.toHaveProperty("oddsApiRemainingRequests");
+      expect(result).not.toHaveProperty("oddsApiUsedRequests");
+    });
+
+    it("a FAILED primary request still surfaces BOTH quota headers its error carried (the client parses them on a 402/429)", async () => {
+      mocks.getOdds.mockRejectedValue(
+        Object.assign(new Error("The Odds API error: 429"), {
+          status: 429,
+          remainingRequests: 7,
+          usedRequests: 19_993,
+        }),
+      );
+      mocks.normalizeGames.mockReturnValue([]);
+      mocks.scoreGames.mockReturnValue([]);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      expect(result.paidRequestCount).toBe(1);
+      expect(result.oddsApiRemainingRequests).toBe(7);
+      expect(result.oddsApiUsedRequests).toBe(19_993);
+      warn.mockRestore();
+    });
+
+    it("a FAILED preseason request records the headers its error carried on top of the primary's (latest wins, no stale used)", async () => {
+      vi.mocked(isNflPreseasonFetchWindow).mockReturnValueOnce(true);
+      mocks.getOdds.mockImplementation(async (sport) => {
+        if (sport === "americanfootball_nfl_preseason") {
+          throw Object.assign(new Error("The Odds API error: 402"), {
+            status: 402,
+            remainingRequests: 399,
+            usedRequests: 19_601,
+          });
+        }
+        return { data: [{ raw: true }], remainingRequests: 400, usedRequests: 19_600 };
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.getOdds).toHaveBeenCalledTimes(2);
+      expect(result.paidRequestCount).toBe(2);
+      expect(result.oddsApiRemainingRequests).toBe(399);
+      expect(result.oddsApiUsedRequests).toBe(19_601);
+      warn.mockRestore();
+    });
+
+    it("a failed request whose error carries no headers leaves an earlier reading in place and never reads as 0", async () => {
+      vi.mocked(isNflPreseasonFetchWindow).mockReturnValueOnce(true);
+      mocks.getOdds.mockImplementation(async (sport) => {
+        if (sport === "americanfootball_nfl_preseason") throw new Error("The Odds API request timed out");
+        return { data: [{ raw: true }], remainingRequests: 400, usedRequests: 19_600 };
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.paidRequestCount).toBe(2);
+      expect(result.oddsApiRemainingRequests).toBe(400);
+      expect(result.oddsApiUsedRequests).toBe(19_600);
+      warn.mockRestore();
+    });
+  });
+
   // Nested (not a sibling describe) so it inherits the outer beforeEach above,
   // which resets every `mocks.*` call history and default resolved values
   // before each test — without it, mocks.getOdds call counts leak across
@@ -826,6 +1302,8 @@ describe("processSport", () => {
         }),
       ]);
       mocks.gameFindMany.mockResolvedValue([TWIN]);
+      // The twin update returns the names it kept (process-sport selects them).
+      mocks.gameUpdate.mockResolvedValue({ id: "game-espn", homeTeamName: "Kansas City Chiefs", awayTeamName: "Buffalo Bills" });
 
       await processSport(SPORT, "key", gates());
 
@@ -836,9 +1314,15 @@ describe("processSport", () => {
             homeTeamName: "Kansas City Chiefs",
             awayTeamName: "Buffalo Bills",
           }),
+          select: expect.objectContaining({ homeTeamName: true, awayTeamName: true }),
         }),
       );
       expect(mocks.gameUpsert).not.toHaveBeenCalled();
+      // The fixture guard probes with the STORED names, not the feed's city-only ones.
+      expect(mocks.confirmBatch).toHaveBeenCalledWith(
+        SPORT.key,
+        [expect.objectContaining({ id: "game-espn", homeTeamName: "Kansas City Chiefs", awayTeamName: "Buffalo Bills" })],
+      );
     });
 
     it("creates the row as before when the twin match is ambiguous", async () => {
@@ -935,6 +1419,90 @@ describe("processSport", () => {
         expect.stringContaining("game identity lookup failed"),
       );
       warnSpy.mockRestore();
+    });
+
+    /**
+     * Name guard on the PLAIN upsert branch (ledger C-106, 2026-09-06). The twin
+     * branch already applied preferLongerTeamName; the plain `update` did not,
+     * so a city-only feed cycle overwrote "New York Yankees" with "New York"
+     * on ten MLB rows and their picks could never be matched to a final.
+     * Test fixtures only.
+     */
+    it("plain upsert update branch keeps the longer stored name in both directions when the identity lookup found the externalId row", async () => {
+      const STORED = {
+        id: "game-1",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        // Stored home is the full name, stored away is city-only.
+        homeTeamName: "New York Yankees",
+        awayTeamName: "Tampa Bay",
+        commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+        mergedIntoGameId: null,
+      };
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? STORED : { id: "game-1" };
+      });
+      // Feed cycle: home city-only (must not downgrade), away full (must upgrade).
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "New York", awayTeam: "Tampa Bay Rays" }),
+      ]);
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { externalId: "odds-api-1" },
+          update: expect.objectContaining({
+            homeTeamName: "New York Yankees",
+            awayTeamName: "Tampa Bay Rays",
+          }),
+        }),
+      );
+    });
+
+    it("plain upsert update branch reads the stored names itself when the kill switch skipped the identity lookup", async () => {
+      process.env["GAME_IDENTITY_MERGE_DISABLED"] = "true";
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1"
+          ? { homeTeamName: "New York Yankees", awayTeamName: "Tampa Bay Rays" }
+          : { id: "game-1" };
+      });
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "New York", awayTeam: "Tampa Bay" }),
+      ]);
+
+      await processSport(SPORT, "key", gates());
+
+      // Still no twin scan under the kill switch; only the by-externalId read.
+      expect(mocks.gameFindMany).not.toHaveBeenCalled();
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { externalId: "odds-api-1" },
+          update: expect.objectContaining({
+            homeTeamName: "New York Yankees",
+            awayTeamName: "Tampa Bay Rays",
+          }),
+        }),
+      );
+    });
+
+    it("plain upsert writes the feed names unchanged for a genuinely new row (no stored name to prefer)", async () => {
+      // Identity describe default: the externalId lookup misses -> new row.
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "New York", awayTeam: "Tampa Bay" }),
+      ]);
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({ homeTeamName: "New York", awayTeamName: "Tampa Bay" }),
+          update: expect.objectContaining({ homeTeamName: "New York", awayTeamName: "Tampa Bay" }),
+        }),
+      );
     });
   });
 });

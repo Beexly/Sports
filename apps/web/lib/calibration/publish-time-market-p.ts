@@ -23,9 +23,16 @@
  * can see the spread. Rows after generatedAt are never read: the probability
  * is fixed at publish time, not recomputed toward the close.
  *
- * Book count. At least MIN_BOOKMAKERS distinct bookmaker keys (the engine's
- * own constant, never a literal), each quoting BOTH sides. Distinct means
+ * Book count. Distinct bookmaker keys, each quoting BOTH sides. Distinct means
  * distinct keys, exactly as the engine counts bookmakerCount (h2hOdds.length).
+ * At least MIN_BOOKMAKERS (the engine's own constant, never a literal) tags
+ * the result `market_p_from_odds_table`, the same book floor publishing needs.
+ * C-110 (WP-28b, decision delegated 2026-09-06): a game whose only stored
+ * book at or before generatedAt is ONE real bookmaker is resolved too, with
+ * the same de-vig on that one book's latest snapshot, and tagged with the
+ * DISTINCT source `market_p_single_book` so the sample reports the two
+ * populations separately. This is measurement only: MIN_BOOKMAKERS is not
+ * read differently anywhere and publishing still needs two books.
  * Known limit, documented rather than hidden: `espn_public` is ESPN's routed
  * DraftKings line (espn-odds-client.ts header), and the odds row does not say
  * which provider ESPN routed, so `espn_public` and `draftkings` in one snapshot
@@ -161,7 +168,28 @@ export function latestH2hRowPerBookmaker(
     .map(([, row]) => row);
 }
 
-export type PublishTimeMarketPUnresolvedReason = "no_rows" | "insufficient_books" | "no_side";
+/**
+ * Why a candidate could not be resolved. `no_rows`: no H2H row for the game at
+ * or before generatedAt. `no_usable_book`: rows exist but none comes from a
+ * real bookmaker quoting both sides (C-110; before it, both cases were
+ * `no_rows` and a lone real book was `insufficient_books`). `no_side`: the
+ * selection names neither team or both. `insufficient_books` is no longer
+ * produced (a single real book resolves as market_p_single_book); the loader
+ * keeps the key at 0 for readers of persisted artifacts.
+ */
+export type PublishTimeMarketPUnresolvedReason = "no_rows" | "no_usable_book" | "no_side";
+
+/**
+ * Provenance tag of a resolved probability. `market_p_from_odds_table`: at
+ * least MIN_BOOKMAKERS real books in the snapshot (the receipt's own book
+ * floor). `market_p_single_book`: exactly one real book quoted the game at or
+ * before generatedAt (C-110); same de-vig, reported separately.
+ */
+export type PublishTimeMarketPSource = "market_p_from_odds_table" | "market_p_single_book";
+
+export function publishTimeMarketPSource(bookCount: number): PublishTimeMarketPSource {
+  return bookCount >= MIN_BOOKMAKERS ? "market_p_from_odds_table" : "market_p_single_book";
+}
 
 export type PublishTimeMarketPResolved = {
   readonly status: "resolved";
@@ -169,6 +197,8 @@ export type PublishTimeMarketPResolved = {
   readonly p: number;
   readonly side: PickedSide;
   readonly bookCount: number;
+  /** Two-or-more books versus a single book; see PublishTimeMarketPSource. */
+  readonly pSource: PublishTimeMarketPSource;
   readonly bookmakers: readonly string[];
   /** Latest fetchedAt among the rows used: the snapshot this read reflects. */
   readonly snapshotAt: Date;
@@ -199,14 +229,22 @@ export function resolvePublishTimeMarketP(
 ): PublishTimeMarketPResult {
   const side = pickedSide(pick);
   const books = latestH2hRowPerBookmaker(rows, pick.gameId, pick.generatedAt);
-  if (books.length === 0) return { status: "unresolved", reason: "no_rows", bookCount: 0 };
-  if (books.length < MIN_BOOKMAKERS) {
-    return { status: "unresolved", reason: "insufficient_books", bookCount: books.length };
+  if (books.length === 0) {
+    // Distinguish "nothing stored" from "stored, but no real two-sided book".
+    const asOfMs = pick.generatedAt.getTime();
+    const anyH2hRow = rows.some(
+      (row) =>
+        row.gameId === pick.gameId &&
+        (row.market == null || row.market.toUpperCase() === "H2H") &&
+        row.fetchedAt.getTime() <= asOfMs,
+    );
+    return { status: "unresolved", reason: anyH2hRow ? "no_usable_book" : "no_rows", bookCount: 0 };
   }
   if (side == null) return { status: "unresolved", reason: "no_side", bookCount: books.length };
 
   // Same arithmetic as the engine's moneyline scorer: mean implied per side
-  // across books, then proportional two-way de-vig.
+  // across books, then proportional two-way de-vig. With one book (C-110) the
+  // mean is that book's implied pair and the de-vig is identical.
   let homeSum = 0;
   let awaySum = 0;
   let newest = Number.NEGATIVE_INFINITY;
@@ -226,6 +264,7 @@ export function resolvePublishTimeMarketP(
     p,
     side,
     bookCount: books.length,
+    pSource: publishTimeMarketPSource(books.length),
     bookmakers: books.map((row) => row.bookmaker.trim()),
     snapshotAt: new Date(newest),
     oldestBookAt: new Date(oldest),
@@ -235,8 +274,8 @@ export function resolvePublishTimeMarketP(
 
 /**
  * Hook-shaped form: the picked side's publish-time probability, or null when
- * the side cannot be determined or fewer than MIN_BOOKMAKERS real books quoted
- * both sides at or before generatedAt.
+ * the side cannot be determined or no real book quoted both sides at or
+ * before generatedAt.
  */
 export function publishTimeMarketP(
   pick: PickForMarketP,

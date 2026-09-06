@@ -1,12 +1,42 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { isThreeWayMoneylineSport } from "@sports/prediction-engine";
+
+// Append-only JarvisMemoryEvent store, keyed by scope (latest row per scope
+// wins), exactly as calibration-drift-alert.test.ts mocks the durable module.
+type StoredRow = { scope: string; metadata: unknown; full_text: string | null };
+const store: StoredRow[] = [];
+const createMock = vi.fn();
+const findFirstMock = vi.fn();
+
+vi.mock("@sports/db", () => ({
+  isStubMode: () => false,
+  db: {
+    jarvisMemoryEvent: {
+      create: (...args: unknown[]) => createMock(...args),
+      findFirst: (...args: unknown[]) => findFirstMock(...args),
+    },
+    pick: { findMany: async () => [] },
+  },
+}));
+
 import {
+  MARKET_ANCHORED_P_BASIS,
   picksToMarketAnchoredCalibrationSamples,
   resolveMarketAnchoredCalibrationP,
   type PickForLiveCal,
 } from "@/lib/calibration/live-calibration-p";
+import {
+  CAL_ELIGIBILITY_SCOPE,
+  consecutiveGreenPriorForBasis,
+  evaluateAndPersistEligibility,
+  metricsPBasis,
+  snapPBasis,
+  type DurableMetricsPayload,
+  type EligibilityDurableSnap,
+} from "@/lib/ops/calibration-eligibility-durable";
+import { evaluateCalibrationEligibility } from "@/lib/ops/calibration-eligibility";
 import {
   threeWayMoneylineExclusion,
   toProvenPathPickRow,
@@ -133,6 +163,14 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     // The resolver cannot smuggle in the synthetic coin flip or an out-of-range value.
     expect(resolveMarketAnchoredCalibrationP(none, () => 0.5)).toBeNull();
     expect(resolveMarketAnchoredCalibrationP(none, () => 1)).toBeNull();
+    // C-110: a tagged result carries its own source; the same guards apply to it.
+    expect(resolveMarketAnchoredCalibrationP(none, () => ({ p: 0.58, source: "resolver_single_book" }))).toEqual({ p: 0.58, source: "resolver_single_book" });
+    expect(resolveMarketAnchoredCalibrationP(none, () => ({ p: 0.58, source: "resolver" }))).toEqual({ p: 0.58, source: "resolver" });
+    expect(resolveMarketAnchoredCalibrationP(none, () => ({ p: 0.5, source: "resolver_single_book" }))).toBeNull();
+    expect(resolveMarketAnchoredCalibrationP(none, () => ({ p: 0, source: "resolver_single_book" }))).toBeNull();
+    // A receipt still wins over any resolver result.
+    const receipted = pick({ result: "WIN", proofReceipt: { marketFairProb: 0.61 } });
+    expect(resolveMarketAnchoredCalibrationP(receipted, () => ({ p: 0.58, source: "resolver_single_book" }))).toEqual({ p: 0.61, source: "proof_receipt" });
   });
 
   it("the WP-28 resolver hook fills a receipt-less pick and is reported as its own source", () => {
@@ -147,6 +185,31 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(out.excluded.no_market_probability).toBe(0);
     expect(out.bySource).toEqual({ proof_receipt: 1, resolver: 1 });
     expect(out.samples[1]).toEqual({ p: 0.55, y: 0, sportKey: "baseball_mlb", modelVersion: "v5.2.1", pickType: "MONEYLINE" });
+  });
+
+  it("C-110: single-book resolver results are scored and counted apart from the two-or-more-book recompute", () => {
+    const out = picksToMarketAnchoredCalibrationSamples(
+      [
+        pick({ result: "WIN", proofReceipt: { marketFairProb: 0.63 } }),
+        pick({ result: "LOSS", proofReceipt: null, modelVersion: "v5.2.1" }),
+        pick({ result: "WIN", proofReceipt: null, modelVersion: "v5.2.6" }),
+        pick({ result: "LOSS", proofReceipt: null, modelVersion: "v5.2.5" }),
+      ],
+      {
+        resolveMarketP: (p) => {
+          if (p.modelVersion === "v5.2.1") return { p: 0.55, source: "resolver" };
+          if (p.modelVersion === "v5.2.6") return { p: 0.58, source: "resolver_single_book" };
+          return null;
+        },
+      },
+    );
+    expect(out.included).toBe(3);
+    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(out.bySource).toEqual({ proof_receipt: 1, resolver: 1, resolver_single_book: 1 });
+    expect(out.samples[2]).toEqual({ p: 0.58, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.6", pickType: "MONEYLINE" });
+    // The composition note says single-book probabilities are in, and how they are tagged.
+    expect(out.notes.some((n) => /Single-book market probabilities are included/.test(n) && /market_p_single_book/.test(n))).toBe(true);
+    expect(out.notes.some((n) => /resolver_single_book/.test(n))).toBe(true);
   });
 
   it("pSources: every receipted pick is proof_receipt; factor_breakdown counts only receipt-less rows", () => {
@@ -177,8 +240,150 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     });
     expect(payload.status).toBe("collecting");
     expect(payload.n).toBe(0);
-    expect(payload.pBasis).toBe("market_anchored");
+    expect(payload.pBasis).toBe(MARKET_ANCHORED_P_BASIS);
+    expect(payload.pBasis).toBe("market_anchored_v2");
     expect(payload.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+  });
+});
+
+describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under market_anchored (v1)", () => {
+  // The single-book samples change the sample definition, so a GREEN run
+  // counted on the v1 sample must not seed the v2 streak. The reset logic is
+  // the existing basis-aware one; only the tag moved.
+  const NOW = new Date("2026-09-06T06:07:00.000Z");
+  const GREEN_OVERALL = {
+    brier: 0.15,
+    ece: 0.03,
+    mce: 0.06,
+    murphy: { reliability: 0.004, resolution: 0.02, uncertainty: 0.24 },
+  };
+  const RUN_INPUT = { canonicalSettled: 150, minSettledForLearning: 100, settlementHealthy: true };
+
+  function metricsWithBasis(generatedAt: string, pBasis: DurableMetricsPayload["pBasis"]): DurableMetricsPayload {
+    return {
+      generatedAt,
+      gitSha: null,
+      n: 120,
+      status: "ok",
+      modelVersion: "v5.2.7",
+      dateRange: "2026-08-01..2026-09-01",
+      overall: GREEN_OVERALL,
+      pBasis,
+    };
+  }
+
+  function greenReport(generatedAt: string, consecutiveGreenPrior: number) {
+    return evaluateCalibrationEligibility({
+      metrics: { n: 120, ...GREEN_OVERALL, modelVersion: "v5.2.7", dateRange: null, generatedAt },
+      ...RUN_INPUT,
+      consecutiveGreenPrior,
+      streakRequired: 3,
+    });
+  }
+
+  function seed(scope: string, value: unknown): void {
+    store.push({ scope, metadata: value, full_text: JSON.stringify(value) });
+  }
+
+  function lastSnap(): EligibilityDurableSnap {
+    const r = store.filter((row) => row.scope === CAL_ELIGIBILITY_SCOPE);
+    return r[r.length - 1]!.metadata as EligibilityDurableSnap;
+  }
+
+  beforeEach(() => {
+    store.length = 0;
+    createMock.mockReset();
+    findFirstMock.mockReset();
+    createMock.mockImplementation(async (args: unknown) => {
+      const data = (args as { data: { scope: string; metadata: unknown; full_text: string } }).data;
+      store.push({ scope: data.scope, metadata: data.metadata, full_text: data.full_text });
+      return { id: `row-${store.length}` };
+    });
+    findFirstMock.mockImplementation(async (args: unknown) => {
+      const scope = (args as { where: { scope: string } }).where.scope;
+      for (let i = store.length - 1; i >= 0; i -= 1) {
+        const row = store[i]!;
+        if (row.scope === scope) return { full_text: row.full_text, metadata: row.metadata };
+      }
+      return null;
+    });
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("pure helpers: the builder tags v2; a v1 prior zeroes the streak and is named on the reset; a v2 prior seeds it", () => {
+    const built = picksToCalibrationSamples([
+      { confidence: 70, result: "WIN", modelVersion: "v5.2.7", settledAt: settled, pickType: "MONEYLINE", proofReceipt: { marketFairProb: 0.66 }, sportKey: "baseball_mlb" },
+    ]);
+    const payload = buildDurableMetricsFromSamples({ ...built, samples: built.samples, taggedSamples: built.taggedSamples });
+    expect(metricsPBasis(payload)).toBe("market_anchored_v2");
+    // Artifacts persisted under the earlier tags read as themselves, never as v2.
+    expect(metricsPBasis(metricsWithBasis("a", "market_anchored"))).toBe("market_anchored");
+    expect(metricsPBasis(metricsWithBasis("a", undefined))).toBe("legacy");
+
+    const v1Snap: EligibilityDurableSnap = {
+      evaluatedAt: "a",
+      metricsGeneratedAt: "a",
+      report: greenReport("a", 2),
+      pBasis: "market_anchored",
+    };
+    expect(v1Snap.report.status).toBe("GREEN");
+    expect(snapPBasis(v1Snap)).toBe("market_anchored");
+    expect(consecutiveGreenPriorForBasis(v1Snap, MARKET_ANCHORED_P_BASIS)).toEqual({
+      consecutiveGreenPrior: 0,
+      streakResetFromBasis: "market_anchored",
+    });
+    expect(consecutiveGreenPriorForBasis({ ...v1Snap, pBasis: undefined }, MARKET_ANCHORED_P_BASIS)).toEqual({
+      consecutiveGreenPrior: 0,
+      streakResetFromBasis: "legacy",
+    });
+    expect(consecutiveGreenPriorForBasis({ ...v1Snap, pBasis: MARKET_ANCHORED_P_BASIS }, MARKET_ANCHORED_P_BASIS)).toEqual({
+      consecutiveGreenPrior: 3,
+      streakResetFromBasis: null,
+    });
+    // The reverse also resets: a v2 streak never seeds a v1 artifact.
+    expect(consecutiveGreenPriorForBasis({ ...v1Snap, pBasis: MARKET_ANCHORED_P_BASIS }, "market_anchored")).toEqual({
+      consecutiveGreenPrior: 0,
+      streakResetFromBasis: "market_anchored_v2",
+    });
+  });
+
+  it("cron path: a GREEN 3/3 streak accumulated under v1 restarts at 1/3 on the first v2 artifact, then builds", async () => {
+    seed(CAL_ELIGIBILITY_SCOPE, {
+      evaluatedAt: "2026-09-06T00:00:00.000Z",
+      metricsGeneratedAt: "2026-09-06T00:00:00.000Z",
+      report: greenReport("2026-09-06T00:00:00.000Z", 2),
+      pBasis: "market_anchored",
+      streakResetFromBasis: null,
+    } satisfies EligibilityDurableSnap);
+
+    const first = await evaluateAndPersistEligibility({
+      metrics: metricsWithBasis("2026-09-06T06:00:00.000Z", MARKET_ANCHORED_P_BASIS),
+      ...RUN_INPUT,
+    });
+    // Floors pass on the new sample, but the streak restarts: 1/3 and RED, not 4/3 and GREEN.
+    expect(first.eligibility.runMeetsFloors).toBe(true);
+    expect(first.eligibility.consecutiveGreen).toBe(1);
+    expect(first.eligibility.status).toBe("RED");
+    expect(first.publish.published).toBe(false);
+    let snap = lastSnap();
+    expect(snap.pBasis).toBe("market_anchored_v2");
+    expect(snap.streakResetFromBasis).toBe("market_anchored");
+
+    // The next v2 artifact builds on the v2 streak, with no further reset.
+    const second = await evaluateAndPersistEligibility({
+      metrics: metricsWithBasis("2026-09-06T12:00:00.000Z", MARKET_ANCHORED_P_BASIS),
+      ...RUN_INPUT,
+    });
+    expect(second.eligibility.consecutiveGreen).toBe(2);
+    expect(second.eligibility.status).toBe("RED");
+    snap = lastSnap();
+    expect(snap.pBasis).toBe("market_anchored_v2");
+    expect(snap.streakResetFromBasis).toBeNull();
   });
 });
 
@@ -339,6 +544,10 @@ describe("byMarket: the pooled floors sample is two-way moneyline only and the a
     expect(built.notes?.some((n) => composition.test(n))).toBe(true);
     expect(payload.notes?.some((n) => composition.test(n))).toBe(true);
     expect(built.notes?.some((n) => /non_moneyline_market 8/.test(n))).toBe(true);
+    // C-110: the same statement says single-book probabilities are included and tagged.
+    const singleBook = /Single-book market probabilities are included \(C-110.*market_p_single_book/;
+    expect(built.notes?.some((n) => singleBook.test(n))).toBe(true);
+    expect(payload.notes?.some((n) => singleBook.test(n))).toBe(true);
     // The interval caveat travels with the intervals.
     expect(payload.notes?.some((n) => /ECE is bounded at zero/.test(n))).toBe(true);
   });
