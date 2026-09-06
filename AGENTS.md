@@ -42,8 +42,8 @@ do not read that as three pieces of corroborating evidence: measured 17:09 UTC a
 base-rate forecast with no skill at all (uncertainty alone is 0.2139 against the 0.22 floor)
 and the Murphy reliability floor averages SQUARED per-bin gaps against the same literal 0.05,
 so it permits a 22.4-point RMS gap where the ECE floor permits 5.0, a 4.47x difference in
-strictness. ECE is the only floor that constrains calibration quality here, and it is the one
-that fails. CONFIRMED 19:08:42 UTC: the settlement reason HAS cleared and RED now reads
+strictness. Murphy reliability is still a real calibration constraint, just a far looser one:
+ECE is the only floor that BINDS here, and it is the one that fails. CONFIRMED 19:08:42 UTC: the settlement reason HAS cleared and RED now reads
 "ECE 0.0524 > 0.05" alone. overduePending is 0 of 2627 commenced picks and stalePendingPicks
 is 0, so C-106 is DONE (the zero-sit lane voided the last two phantom-fixture picks through
 the outbox at 19:07:18 UTC with rcaCode FIXTURE_NOT_FOUND; ledger row has the ids). n, Brier,

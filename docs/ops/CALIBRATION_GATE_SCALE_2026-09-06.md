@@ -13,15 +13,16 @@ independent pieces of corroborating evidence against one narrow objection.
 That reading is wrong, and this file corrects it. Two of the three passing floors
 would also pass for a model with no skill at all, or for one whose per-bin
 calibration gaps average four times the size ECE is rejecting. They are not
-corroboration. **ECE is the only floor that constrains calibration quality at the
-sample sizes and base rate this product actually has.**
+corroboration. Murphy reliability is still a genuine calibration constraint, and nothing here
+says otherwise; it is simply far looser in the same units. **ECE is the only floor that BINDS
+at the sample sizes and base rate this product actually has** (CodeRabbit, PR #716).
 
 ## The measurement
 
 Source: `/api/ops/public-surface-truth` `calibrationEligibility`, `generatedAt`
 2026-09-06T17:09:56.032Z, read from the surface itself.
 
-```
+```text
 n          458    floor 100     PASS
 Brier      0.1926 floor 0.22    PASS
 MurphyRel  0.0053 floor 0.05    PASS
@@ -153,6 +154,34 @@ a factor breakdown, and they span 2026-08-09 to 2026-09-06.
 no odds rows (documented in `publish-time-market-p.ts` and visible in
 `generate-signal-slate.ts`). These games were never book-priced. There is no
 publish-time market probability to recover, because no market price ever existed.
+
+## Alias-aware recheck (Devin Review, PR #716)
+
+The review raised the exact mechanism flagged above, and more sharply than the query originally
+tested for. `scripts/ops/merge-duplicate-games.ts` re-points `odds` rows to the canonical game
+(`odds.updateMany ... data: { gameId: canonicalId }`) while its own comment states that `picks`
+"are NEVER touched, they are settlement history and stay on the alias row." A pick left on an
+alias whose odds moved to the canonical row would read as `no_rows` under a `pick.gameId` query
+even though a real publish-time price survives.
+
+The mechanism is real in the code. It has never fired in this database. Re-measured following
+`mergedIntoGameId` up to three hops:
+
+| Measure | Count |
+|---|---|
+| Game rows with `mergedIntoGameId` set (anywhere in the table) | **0** |
+| Of the 297, picks sitting on an alias row | 0 |
+| Of those, recoverable via the canonical row's H2H rows at or before `generatedAt` | 0 |
+
+Zero alias rows exist, so no pick in the cohort is affected and the conclusion below stands as
+measured. The `bookmakerCount` 0 evidence is also independent of this path: it records what the
+engine saw at generation time, not where odds rows were later stored.
+
+**The latent defect is still real and is worth a ledger row.** The loader keys on `pick.gameId`
+with no alias resolution, so the first production run of the merge utility silently drops those
+picks out of the calibration sample. Nothing here changes the loader: that is app code and does
+not belong in a docs change, and today it is measurably a no-op. It should be fixed before the
+merge tool is run, not after.
 
 ## What that settles
 
