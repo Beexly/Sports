@@ -75,6 +75,10 @@ vi.mock("./free-settlement", async (importOriginal) => {
   // exist to pin.
   const actual = await importOriginal<typeof import("./free-settlement")>();
   return {
+    // Spread first: a later import added to the persister would otherwise
+    // resolve to undefined here and surface as a confusing runtime TypeError
+    // inside persistFreeScores rather than as an obvious mock gap.
+    ...actual,
     buildTrustedFinals: mocks.buildTrustedFinalsMock,
     expandTeamMatchTokens: (side: unknown) =>
       typeof side === "string" ? [side.toLowerCase()] : [],
@@ -565,7 +569,7 @@ describe("persistFreeScores — clearance gating (GSE-SEC-050/051)", () => {
     expect(result.path).toBe("free-score-persist");
     expect(result.oddsApiRequired).toBe(false);
     expect(result.elapsedMs).toBeGreaterThanOrEqual(0);
-        expect(result.sports).toHaveLength(3); // SUPPORTED_SPORTS mock has 3 sports (NFL, NCAAF, MLB)
+    expect(result.sports).toHaveLength(3); // SUPPORTED_SPORTS mock has 3 sports (NFL, NCAAF, MLB)
     expect(result.gamesUpdated).toBe(0);
     // ingestionRunId is set when anyOk or allFailed is true
     expect(typeof result.ingestionRunId).toBe("string");
@@ -1044,5 +1048,163 @@ describe("persistFreeScores — guards that must hold at write time, not just re
     await persistFreeScores({ sportKey: "baseball_mlb" });
 
     expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+  });
+});
+
+// ─── Unresolved doubleheader (cubic, #717) ─────────────────────────────────────
+
+/**
+ * The clock cannot separate a doubleheader. When game one is final and game two
+ * is still in progress, only ONE final exists, so the multi-candidate hold never
+ * fires, and the two fixtures start 2-4h apart — inside MAX_KICKOFF_DRIFT_MS.
+ * Only the board can tell us a second fixture exists.
+ */
+describe("persistFreeScores — an unfinished doubleheader is never resolved by time", () => {
+  const HOUR = 60 * 60 * 1000;
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  function armWithBoard(
+    games: ReturnType<typeof makeGameRow>[],
+    finals: unknown[],
+    board: unknown[],
+  ) {
+    mocks.checkClearanceMock.mockReturnValue(clearanceResult(true, []));
+    mocks.dbGameFindMany.mockResolvedValue(games);
+    mocks.dbGameUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.dbIngestionRunCreate.mockResolvedValue({
+      id: "run-stub",
+      status: "SUCCESS",
+      completedAt: new Date("2026-06-15T12:00:00.000Z"),
+    });
+    mocks.fetchScoresMultiSourceMock.mockResolvedValue({
+      games: board,
+      errors: [],
+      attempted: [],
+      used: null,
+      primary: null,
+      failover: false,
+      oddsApiRequired: false,
+      datesRequested: [],
+    });
+    mocks.fetchHenrygdScoreboardMock.mockResolvedValue([]);
+    mocks.buildTrustedFinalsMock.mockReturnValue(finals);
+  }
+
+  it("holds game two while game one is final and game two is still in progress", async () => {
+    const gameTwo = new Date(Date.now() - 1 * HOUR);
+    const gameOne = new Date(gameTwo.getTime() - 3 * HOUR); // 3h earlier: inside the drift bound
+    const day = gameTwo.toISOString().slice(0, 10);
+
+    armWithBoard(
+      [
+        makeGameRow({
+          id: "game-two-of-dh",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: gameTwo,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      // Only game ONE has a final.
+      [
+        makeTrustedFinal({
+          date: day,
+          startIso: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+      // The board lists BOTH fixtures — that is the only signal a second game exists.
+      [
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-1",
+          startTime: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+        }),
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-2",
+          startTime: gameTwo.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: null,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: null,
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    // Game one's 4-2 must not become game two's result.
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it("settles normally when the board lists a single fixture for the matchup", async () => {
+    const kickoff = new Date(Date.now() - 3 * HOUR);
+    const day = kickoff.toISOString().slice(0, 10);
+
+    armWithBoard(
+      [
+        makeGameRow({
+          id: "game-single",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: kickoff,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        makeTrustedFinal({
+          date: day,
+          startIso: kickoff.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+      [
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "single-1",
+          startTime: kickoff.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
+    const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
+      data: { homeScore: number; awayScore: number };
+    };
+    expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2 });
   });
 });

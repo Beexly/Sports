@@ -257,6 +257,42 @@ export async function persistFreeScores(options?: {
           );
           continue;
         }
+        // A doubleheader defeats the clock. When game one is final and game two
+        // is still in progress, only ONE final exists, so the multi-candidate
+        // hold above never fires, and the two fixtures start 2-4h apart, well
+        // inside MAX_KICKOFF_DRIFT_MS — game one's score would be written onto
+        // game two (cubic, #717). Time cannot separate them; only the board can.
+        // If it lists more fixtures for this matchup today than we hold finals
+        // for, at least one has not finished and this row is not identifiable.
+        const fixturesToday = espn.filter((ev) => {
+          if (!ev.startTime || ev.startTime.slice(0, 10) !== day) return false;
+          const evHome = sideTokens({
+            name: ev.home?.team ?? "",
+            abbr: ev.home?.abbreviation ?? "",
+          });
+          const evAway = sideTokens({
+            name: ev.away?.team ?? "",
+            abbr: ev.away?.abbreviation ?? "",
+          });
+          const gHome = expandTeamMatchTokens(g.homeTeamName);
+          const gAway = expandTeamMatchTokens(g.awayTeamName);
+          const hit = (a: string[], b: string[]) =>
+            a.some((t) => b.some((x) => teamTokensMatch(t, x)));
+          return (
+            (hit(gHome, evHome) && hit(gAway, evAway)) ||
+            (hit(gHome, evAway) && hit(gAway, evHome))
+          );
+        }).length;
+        if (fixturesToday > matchesByTeam.length) {
+          console.warn(
+            `[free-score-persist] UNRESOLVED_DOUBLEHEADER game=${g.id} ` +
+              `${g.awayTeamName} @ ${g.homeTeamName} day=${day} — the board lists ` +
+              `${fixturesToday} fixtures for this matchup but only ${matchesByTeam.length} ` +
+              `final(s); refusing to guess which one this row is.`,
+          );
+          continue;
+        }
+
         const chosen = narrowed[0]!;
 
         // Narrowing cannot reject a LONE stale candidate: nearestByKickoff
