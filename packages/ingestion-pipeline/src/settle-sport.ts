@@ -286,10 +286,13 @@ export async function settleSport(
       try {
         response = await client.getScores(vendorKey, PAID_SCORES_DAYS_FROM);
       } catch (fetchErr) {
-        // A 402/429 still carries x-requests-remaining: persist it so a probe
-        // against a stale zero lands its reading even when the call fails.
+        // A 402/429 still carries BOTH quota headers: persist them so a probe
+        // against a stale zero lands its reading even when the call fails, and
+        // so a failed run does not silently drop x-requests-used (the counter
+        // the burn measurement reads). usedRequests stays null when the header
+        // was absent; it is never coerced to 0.
         if (fetchErr instanceof OddsApiError && fetchErr.remainingRequests != null) {
-          await recordCredits(fetchErr.remainingRequests, null);
+          await recordCredits(fetchErr.remainingRequests, fetchErr.usedRequests ?? null);
         }
         throw fetchErr;
       }
