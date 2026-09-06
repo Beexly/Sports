@@ -77,13 +77,36 @@ import { loadPublicPerformancePolicy } from "@/lib/performance/public-performanc
 export class SettlementRaceRollback extends Error {
   readonly pickId: string;
   readonly gameId: string;
-  constructor(pickId: string, gameId: string) {
-    super(`settlement race: game ${gameId} refused the FINAL write for pick ${pickId}`);
+  /** KICKOFF: the game moved into the future. SCORE: a different FINAL landed. */
+  readonly cause: "KICKOFF" | "SCORE";
+  constructor(pickId: string, gameId: string, cause: "KICKOFF" | "SCORE") {
+    super(
+      `settlement race (${cause}): game ${gameId} refused the FINAL write for pick ${pickId}`,
+    );
     this.name = "SettlementRaceRollback";
     this.pickId = pickId;
     this.gameId = gameId;
+    this.cause = cause;
   }
 }
+
+/**
+ * Why a settlement write wrote nothing. Every value except ALREADY_SETTLED
+ * leaves the pick PENDING for the next cycle; ALREADY_SETTLED means another
+ * worker disposed of it and this runner must not count it as its own backlog
+ * (cubic, #717).
+ */
+export type SettlementWriteRefusal =
+  | "KICKOFF_MOVED"
+  | "SCORE_MISMATCH_CROSS_PATH"
+  | "ROLLED_BACK_KICKOFF"
+  | "ROLLED_BACK_SCORE"
+  | "ALREADY_SETTLED";
+
+export type SettlementWriteResult = {
+  readonly count: number;
+  readonly refusal: SettlementWriteRefusal | null;
+};
 
 
 export type FreeSettlementWriteArgs = {
@@ -110,7 +133,7 @@ export type FreeSettlementWriteArgs = {
 export async function writeFreeSettlementInTx(
   tx: Prisma.TransactionClient,
   args: FreeSettlementWriteArgs,
-): Promise<{ count: number }> {
+): Promise<SettlementWriteResult> {
   // The caller's findMany scoped its load to games that had already
   // started, but that read happened before the network work, and a
   // concurrent schedule correction can postpone a loaded game into the
@@ -130,7 +153,7 @@ export async function writeFreeSettlementInTx(
         `commence=${currentKickoff?.commenceTime.toISOString() ?? "missing"} ` +
         `— the game has not started as of this cycle; leaving the pick PENDING.`,
     );
-    return { count: 0 };
+    return { count: 0, refusal: "KICKOFF_MOVED" };
   }
 
   if (args.homeScore != null && args.awayScore != null) {
@@ -162,7 +185,7 @@ export async function writeFreeSettlementInTx(
           `incoming(free)=${args.homeScore}-${args.awayScore} — refusing to settle or ` +
           `overwrite; pick=${args.pickId} left PENDING for human review.`,
       );
-      return { count: 0 };
+      return { count: 0, refusal: "SCORE_MISMATCH_CROSS_PATH" };
     }
   }
 
@@ -180,7 +203,18 @@ export async function writeFreeSettlementInTx(
     },
     data: { result: args.result, settledAt: args.settledAt },
   });
-  if (updated.count === 0) return updated;
+  if (updated.count === 0) {
+    // Zero here has two very different causes and the runner must not report
+    // them as one: the kickoff relation filter refused (pick still PENDING,
+    // ours to retry) or another worker already settled this pick (not our
+    // backlog). One extra read, only on the refusal path (cubic, #717).
+    const currentPick = await tx.pick.findUnique({
+      where: { id: args.pickId },
+      select: { result: true },
+    });
+    const takenByAnother = currentPick === null || currentPick.result !== "PENDING";
+    return { count: 0, refusal: takenByAnother ? "ALREADY_SETTLED" : "KICKOFF_MOVED" };
+  }
   await tx.pickSettlementEvent.create({
     data: {
       pickId: args.pickId,
@@ -198,11 +232,27 @@ export async function writeFreeSettlementInTx(
     ],
   );
   if (args.homeScore != null && args.awayScore != null) {
-    // updateMany, not update: it carries the same kickoff predicate so a
-    // concurrent correction makes it match nothing instead of throwing a
-    // record-not-found, exactly as the pick write above does.
+    // updateMany, not update: it carries the guards so a concurrent correction
+    // makes it match nothing instead of throwing a record-not-found, exactly as
+    // the pick write above does.
+    //
+    // The SCORE predicate rides here too, not only in the reread above. The
+    // conflict check is a read, so the paid path can commit a DIFFERENT FINAL
+    // between that read and this write and this statement would clobber it,
+    // after picks were already graded against it (Devin Review + cubic, #717).
+    // Same OR the score persister already carries: permit a row that is not
+    // FINAL, one with no score yet, or one that agrees with us.
     const scored = await tx.game.updateMany({
-      where: { id: args.gameId, commenceTime: { lte: args.settledAt } },
+      where: {
+        id: args.gameId,
+        commenceTime: { lte: args.settledAt },
+        OR: [
+          { status: { not: "FINAL" } },
+          { homeScore: null },
+          { awayScore: null },
+          { homeScore: args.homeScore, awayScore: args.awayScore },
+        ],
+      },
       data: {
         homeScore: args.homeScore,
         awayScore: args.awayScore,
@@ -218,10 +268,19 @@ export async function writeFreeSettlementInTx(
     // and which the row itself never marks FINAL. Returning a zero count
     // here does not undo the pick write; only a rollback does.
     if (scored.count === 0) {
-      throw new SettlementRaceRollback(args.pickId, args.gameId);
+      // Which guard refused decides what the operator sees, so read the row
+      // once more rather than guessing: a kickoff that moved is a schedule
+      // correction, a disagreeing FINAL is a cross-path score conflict.
+      const after = await tx.game.findUnique({
+        where: { id: args.gameId },
+        select: { commenceTime: true },
+      });
+      const movedOut =
+        after === null || after.commenceTime.getTime() > args.settledAt.getTime();
+      throw new SettlementRaceRollback(args.pickId, args.gameId, movedOut ? "KICKOFF" : "SCORE");
     }
   }
-  return updated;
+  return { count: updated.count, refusal: null };
 }
 
 /**
@@ -232,20 +291,23 @@ export async function writeFreeSettlementInTx(
 export async function settleOnePickGuarded(
   runTx: <T>(fn: (tx: Prisma.TransactionClient) => Promise<T>) => Promise<T>,
   args: FreeSettlementWriteArgs,
-): Promise<{ count: number }> {
+): Promise<SettlementWriteResult> {
   try {
     return await runTx((tx) => writeFreeSettlementInTx(tx, args));
   } catch (txErr) {
     // The rollback above is the intended outcome, not a cycle failure: swallow
-    // it here so the remaining picks still settle, and report a zero count so
-    // this one is treated exactly like any other refusal.
+    // it here so the remaining picks still settle, and report a zero count with
+    // the reason so the caller can still account for the pick.
     if (txErr instanceof SettlementRaceRollback) {
       console.warn(
-        `[free-settle] SETTLE_ROLLBACK game=${txErr.gameId} pick=${txErr.pickId} ` +
-          `— the game refused the FINAL write after the pick update, so the ` +
-          `transaction was rolled back; leaving the pick PENDING.`,
+        `[free-settle] SETTLE_ROLLBACK cause=${txErr.cause} game=${txErr.gameId} ` +
+          `pick=${txErr.pickId} — the game refused the FINAL write after the pick ` +
+          `update, so the transaction was rolled back; leaving the pick PENDING.`,
       );
-      return { count: 0 };
+      return {
+        count: 0,
+        refusal: txErr.cause === "KICKOFF" ? "ROLLED_BACK_KICKOFF" : "ROLLED_BACK_SCORE",
+      };
     }
     throw txErr;
   }
@@ -637,13 +699,23 @@ export async function runFreePathSettlement(options?: {
             settledAtIso: settledAt.toISOString(),
           });
         } else {
-
+          // A refused write is not a silent no-op: every refusal except
+          // ALREADY_SETTLED leaves the pick PENDING and therefore still in this
+          // runner's backlog, and the count that reports that backlog was
+          // dropping them (cubic, #717). ALREADY_SETTLED belongs to whichever
+          // worker did settle it, so it is deliberately not counted here.
+          if (written.refusal !== "ALREADY_SETTLED") stillPending++;
           rcaInputs.push({
             pickId: o.pickId,
             sportKey: sport.key,
             ageHours,
             graceHours,
-            outcomeStatus: "WRITE_FAILED",
+            // KICKOFF_MOVED is a schedule correction, not a lost race: the game
+            // has not been played, so it reads as an ordinary pending pick.
+            // The race and conflict refusals keep WRITE_FAILED, which the RCA
+            // classifies as WRITE_RACE_LOST — the signal an operator needs when
+            // one repeats every cycle.
+            outcomeStatus: written.refusal === "KICKOFF_MOVED" ? "PENDING" : "WRITE_FAILED",
             settlementPath: "free",
           });
         }

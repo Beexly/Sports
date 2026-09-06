@@ -66,6 +66,21 @@ class FakeTxStore {
     }
   }
 
+  /** Evaluates a Prisma OR clause against the current committed game row. */
+  private matchesOr(clauses: Array<Record<string, unknown>> | undefined): boolean {
+    if (!clauses) return true;
+    const row = this.game as unknown as Record<string, unknown>;
+    return clauses.some((clause) =>
+      Object.entries(clause).every(([field, expected]) => {
+        const actual = row[field];
+        if (expected !== null && typeof expected === "object" && "not" in expected) {
+          return actual !== (expected as { not: unknown }).not;
+        }
+        return actual === expected;
+      }),
+    );
+  }
+
   client(): Prisma.TransactionClient {
     const lte = (when: unknown): boolean => {
       const bound = (when as { commenceTime?: { lte?: Date } } | undefined)?.commenceTime?.lte;
@@ -82,10 +97,16 @@ class FakeTxStore {
           where,
           data,
         }: {
-          where: { id: string; commenceTime?: { lte?: Date } };
+          where: {
+            id: string;
+            commenceTime?: { lte?: Date };
+            OR?: Array<Record<string, unknown>>;
+          };
           data: Partial<GameRow>;
         }) => {
-          if (where.id !== this.game.id || !lte(where)) return { count: 0 };
+          if (where.id !== this.game.id || !lte(where) || !this.matchesOr(where.OR)) {
+            return { count: 0 };
+          }
           const before = { ...this.game };
           this.undo.push(() => {
             this.game = before;
@@ -95,6 +116,8 @@ class FakeTxStore {
         },
       },
       pick: {
+        findUnique: async ({ where }: { where: { id: string } }) =>
+          where.id === this.pick.id ? { result: this.pick.result } : null,
         updateMany: async ({
           where,
           data,
@@ -289,6 +312,67 @@ describe("settlement write under a mid-transaction schedule correction", () => {
     expect(store.pick.settledAt).toBeNull();
     expect(store.events).toHaveLength(0);
     expect(store.work).toHaveLength(0);
+  });
+
+  it("leaves a competing FINAL alone when it commits after the conflict read", async () => {
+    // The cross-path conflict check is a READ. The paid settlement path can
+    // commit a different FINAL between it and the game write, and the write
+    // carried only the kickoff predicate, so it clobbered that score after
+    // picks had already been graded against it (Devin Review + cubic, #717).
+    store.onAfterGameRead = (call) => {
+      // Call 2 is the score reread; the competing FINAL lands right after it.
+      if (call === 2) {
+        store.game = { ...store.game, homeScore: 31, awayScore: 17, status: "FINAL" };
+      }
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), ARGS);
+
+    expect(written.count).toBe(0);
+    expect(written.refusal).toBe("ROLLED_BACK_SCORE");
+    expect(store.pick.result).toBe("PENDING");
+    expect(store.events).toHaveLength(0);
+    // The competing score survives untouched — no last-write-wins clobber.
+    expect(store.game.homeScore).toBe(31);
+    expect(store.game.awayScore).toBe(17);
+  });
+
+  it("still writes when the concurrent FINAL agrees with ours", async () => {
+    store.onAfterGameRead = (call) => {
+      if (call === 2) {
+        store.game = { ...store.game, homeScore: 27, awayScore: 20, status: "FINAL" };
+      }
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), ARGS);
+
+    expect(written.count).toBe(1);
+    expect(written.refusal).toBeNull();
+    expect(store.pick.result).toBe("WIN");
+    expect(store.game.homeScore).toBe(27);
+  });
+
+  it("reports a pick another worker already settled as ALREADY_SETTLED, not a refusal of ours", async () => {
+    // Both causes of a zero pick-update count used to be reported identically,
+    // so the runner counted someone else's settled pick as its own backlog
+    // (cubic, #717).
+    store.pick = { ...store.pick, result: "WIN", settledAt: SETTLED_AT };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), ARGS);
+
+    expect(written.count).toBe(0);
+    expect(written.refusal).toBe("ALREADY_SETTLED");
+    expect(store.events).toHaveLength(0);
+  });
+
+  it("names the kickoff as the cause when the postponement is what refused the write", async () => {
+    store.onAfterPickWrite = () => {
+      store.game = { ...store.game, commenceTime: POSTPONED_TO };
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), ARGS);
+
+    expect(written.refusal).toBe("ROLLED_BACK_KICKOFF");
   });
 
   it("rethrows anything that is not the deliberate rollback", async () => {
