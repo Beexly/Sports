@@ -15,6 +15,7 @@
  */
 
 import { db } from "@sports/db";
+import type { Prisma } from "@prisma/client";
 import { getReadinessGates, selectGradingLine } from "@sports/prediction-engine";
 import {
   drainPendingTeamGameLogs,
@@ -66,6 +67,189 @@ import {
 import { uniqueScoreboardDates } from "./settlement-score-dates";
 import { loadPublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 
+/**
+ * Thrown inside the settlement transaction when the FINAL score write matched
+ * no row. The pick update has already succeeded at that point, so returning a
+ * zero count would commit a settled pick against a game the database refused to
+ * mark FINAL. Throwing rolls the whole transaction back and leaves the pick
+ * PENDING for the next cycle (Devin Review, #717).
+ */
+export class SettlementRaceRollback extends Error {
+  readonly pickId: string;
+  readonly gameId: string;
+  constructor(pickId: string, gameId: string) {
+    super(`settlement race: game ${gameId} refused the FINAL write for pick ${pickId}`);
+    this.name = "SettlementRaceRollback";
+    this.pickId = pickId;
+    this.gameId = gameId;
+  }
+}
+
+
+export type FreeSettlementWriteArgs = {
+  readonly pickId: string;
+  readonly gameId: string;
+  readonly result: "WIN" | "LOSS" | "PUSH" | "VOID";
+  readonly homeScore: number | null;
+  readonly awayScore: number | null;
+  readonly settledAt: Date;
+};
+
+/**
+ * The full settlement write for ONE pick, exactly as it runs inside the
+ * transaction. Exported so the concurrency guards can be driven against a
+ * transaction client that simulates a schedule correction committing between
+ * two statements — a source-text assertion cannot show that the rollback
+ * actually happens.
+ *
+ * Returns { count: 0 } when it refuses to settle before writing anything, and
+ * THROWS SettlementRaceRollback when it has already written the pick and the
+ * game then refuses the FINAL write. Only a rollback undoes the pick write, so
+ * that case cannot be reported by a return value.
+ */
+export async function writeFreeSettlementInTx(
+  tx: Prisma.TransactionClient,
+  args: FreeSettlementWriteArgs,
+): Promise<{ count: number }> {
+  // The caller's findMany scoped its load to games that had already
+  // started, but that read happened before the network work, and a
+  // concurrent schedule correction can postpone a loaded game into the
+  // future before this transaction runs. The reread below covers only
+  // scores and status, so a newly postponed game would still be graded
+  // (Devin Review, #717). Re-read the CURRENT kickoff and refuse both
+  // the pick update and the FINAL write when it has not passed.
+  // Deliberately unconditional: it must also cover a VOID or an
+  // outcome carrying no scores, which the score reread below skips.
+  const currentKickoff = await tx.game.findUnique({
+    where: { id: args.gameId },
+    select: { commenceTime: true },
+  });
+  if (!currentKickoff || currentKickoff.commenceTime.getTime() > args.settledAt.getTime()) {
+    console.warn(
+      `[free-settle] KICKOFF_MOVED game=${args.gameId} pick=${args.pickId} ` +
+        `commence=${currentKickoff?.commenceTime.toISOString() ?? "missing"} ` +
+        `— the game has not started as of this cycle; leaving the pick PENDING.`,
+    );
+    return { count: 0 };
+  }
+
+  if (args.homeScore != null && args.awayScore != null) {
+    // PR #550's ?path=free (forceFree) lets this free path run even when
+    // THE_ODDS_API_KEY is present, so it can now race the paid path
+    // (settle-sport.ts) against the SAME game in the SAME rough window.
+    // Read the game's CURRENT score fresh, inside this transaction,
+    // BEFORE settling anything — never blind-overwrite a FINAL score
+    // that disagrees with the one we're about to grade against, and
+    // never grade the pick against a score we're about to refuse to
+    // write to the Game row either (that would settle the pick
+    // against a different score than the one the Game row records —
+    // a fresh inconsistency, not a fix). A genuine cross-path
+    // disagreement needs a human, not a silent last-write-wins clobber
+    // of whatever pick(s) were already settled against the first score.
+    const current = await tx.game.findUnique({
+      where: { id: args.gameId },
+      select: { homeScore: true, awayScore: true, status: true },
+    });
+    const conflicts =
+      current?.status === "FINAL" &&
+      current.homeScore != null &&
+      current.awayScore != null &&
+      (current.homeScore !== args.homeScore || current.awayScore !== args.awayScore);
+    if (conflicts) {
+      console.warn(
+        `[free-settle] SCORE_MISMATCH_CROSS_PATH game=${args.gameId} ` +
+          `existing=${current!.homeScore}-${current!.awayScore} ` +
+          `incoming(free)=${args.homeScore}-${args.awayScore} — refusing to settle or ` +
+          `overwrite; pick=${args.pickId} left PENDING for human review.`,
+      );
+      return { count: 0 };
+    }
+  }
+
+  // The kickoff predicate rides in the WRITE, not just the read above.
+  // Prisma's default isolation does not lock the game row, so a schedule
+  // correction can commit between that findUnique and this statement and
+  // the read alone would not see it (Devin Review, #717). As a relation
+  // filter the database evaluates it as part of the update itself, so a
+  // game moved into the future matches nothing and count comes back 0.
+  const updated = await tx.pick.updateMany({
+    where: {
+      id: args.pickId,
+      result: "PENDING",
+      game: { commenceTime: { lte: args.settledAt } },
+    },
+    data: { result: args.result, settledAt: args.settledAt },
+  });
+  if (updated.count === 0) return updated;
+  await tx.pickSettlementEvent.create({
+    data: {
+      pickId: args.pickId,
+      gameId: args.gameId,
+      result: args.result,
+      settledAt: args.settledAt,
+      status: "PENDING",
+    },
+  });
+  await enqueuePostSettlementWork(
+    tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
+    [
+      { subjectId: args.pickId, kind: "CLV_GRADE" },
+      { subjectId: args.pickId, kind: "SNAPSHOT_OUTCOME" },
+    ],
+  );
+  if (args.homeScore != null && args.awayScore != null) {
+    // updateMany, not update: it carries the same kickoff predicate so a
+    // concurrent correction makes it match nothing instead of throwing a
+    // record-not-found, exactly as the pick write above does.
+    const scored = await tx.game.updateMany({
+      where: { id: args.gameId, commenceTime: { lte: args.settledAt } },
+      data: {
+        homeScore: args.homeScore,
+        awayScore: args.awayScore,
+        status: "FINAL",
+        resultFetched: true,
+      },
+    });
+    // A postponement can commit BETWEEN the pick write above and this
+    // one — each statement reads its own committed snapshot under READ
+    // COMMITTED, and a transaction is not a lock (Devin Review, #717).
+    // The pick would then be finalised while the game write no-ops, so
+    // the pick reads WIN/LOSS for a game whose kickoff is in the future
+    // and which the row itself never marks FINAL. Returning a zero count
+    // here does not undo the pick write; only a rollback does.
+    if (scored.count === 0) {
+      throw new SettlementRaceRollback(args.pickId, args.gameId);
+    }
+  }
+  return updated;
+}
+
+/**
+ * Runs writeFreeSettlementInTx inside the supplied transaction runner and turns
+ * the deliberate rollback back into a plain refusal, so one raced pick never
+ * aborts the rest of the cycle.
+ */
+export async function settleOnePickGuarded(
+  runTx: <T>(fn: (tx: Prisma.TransactionClient) => Promise<T>) => Promise<T>,
+  args: FreeSettlementWriteArgs,
+): Promise<{ count: number }> {
+  try {
+    return await runTx((tx) => writeFreeSettlementInTx(tx, args));
+  } catch (txErr) {
+    // The rollback above is the intended outcome, not a cycle failure: swallow
+    // it here so the remaining picks still settle, and report a zero count so
+    // this one is treated exactly like any other refusal.
+    if (txErr instanceof SettlementRaceRollback) {
+      console.warn(
+        `[free-settle] SETTLE_ROLLBACK game=${txErr.gameId} pick=${txErr.pickId} ` +
+          `— the game refused the FINAL write after the pick update, so the ` +
+          `transaction was rolled back; leaving the pick PENDING.`,
+      );
+      return { count: 0 };
+    }
+    throw txErr;
+  }
+}
 
 export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -362,109 +546,17 @@ export async function runFreePathSettlement(options?: {
 
         if (!row) continue;
 
-        const written = await db.$transaction(async (tx) => {
-          // The findMany above scoped this load to games that had already
-          // started, but that read happened before the network work, and a
-          // concurrent schedule correction can postpone a loaded game into the
-          // future before this transaction runs. The reread below covers only
-          // scores and status, so a newly postponed game would still be graded
-          // (Devin Review, #717). Re-read the CURRENT kickoff and refuse both
-          // the pick update and the FINAL write when it has not passed.
-          // Deliberately unconditional: it must also cover a VOID or an
-          // outcome carrying no scores, which the score reread below skips.
-          const currentKickoff = await tx.game.findUnique({
-            where: { id: row.game.id },
-            select: { commenceTime: true },
-          });
-          if (!currentKickoff || currentKickoff.commenceTime.getTime() > settledAt.getTime()) {
-            console.warn(
-              `[free-settle] KICKOFF_MOVED game=${row.game.id} pick=${o.pickId} ` +
-                `commence=${currentKickoff?.commenceTime.toISOString() ?? "missing"} ` +
-                `— the game has not started as of this cycle; leaving the pick PENDING.`,
-            );
-            return { count: 0 };
-          }
-
-          if (o.homeScore != null && o.awayScore != null) {
-            // PR #550's ?path=free (forceFree) lets this free path run even when
-            // THE_ODDS_API_KEY is present, so it can now race the paid path
-            // (settle-sport.ts) against the SAME game in the SAME rough window.
-            // Read the game's CURRENT score fresh, inside this transaction,
-            // BEFORE settling anything — never blind-overwrite a FINAL score
-            // that disagrees with the one we're about to grade against, and
-            // never grade the pick against a score we're about to refuse to
-            // write to the Game row either (that would settle the pick
-            // against a different score than the one the Game row records —
-            // a fresh inconsistency, not a fix). A genuine cross-path
-            // disagreement needs a human, not a silent last-write-wins clobber
-            // of whatever pick(s) were already settled against the first score.
-            const current = await tx.game.findUnique({
-              where: { id: row.game.id },
-              select: { homeScore: true, awayScore: true, status: true },
-            });
-            const conflicts =
-              current?.status === "FINAL" &&
-              current.homeScore != null &&
-              current.awayScore != null &&
-              (current.homeScore !== o.homeScore || current.awayScore !== o.awayScore);
-            if (conflicts) {
-              console.warn(
-                `[free-settle] SCORE_MISMATCH_CROSS_PATH game=${row.game.id} ` +
-                  `existing=${current!.homeScore}-${current!.awayScore} ` +
-                  `incoming(free)=${o.homeScore}-${o.awayScore} — refusing to settle or ` +
-                  `overwrite; pick=${o.pickId} left PENDING for human review.`,
-              );
-              return { count: 0 };
-            }
-          }
-
-          // The kickoff predicate rides in the WRITE, not just the read above.
-          // Prisma's default isolation does not lock the game row, so a schedule
-          // correction can commit between that findUnique and this statement and
-          // the read alone would not see it (Devin Review, #717). As a relation
-          // filter the database evaluates it as part of the update itself, so a
-          // game moved into the future matches nothing and count comes back 0.
-          const updated = await tx.pick.updateMany({
-            where: {
-              id: o.pickId,
-              result: "PENDING",
-              game: { commenceTime: { lte: settledAt } },
-            },
-            data: { result: o.result, settledAt },
-          });
-          if (updated.count === 0) return updated;
-          await tx.pickSettlementEvent.create({
-            data: {
-              pickId: o.pickId,
-              gameId: row.game.id,
-              result: o.result,
-              settledAt,
-              status: "PENDING",
-            },
-          });
-          await enqueuePostSettlementWork(
-            tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
-            [
-              { subjectId: o.pickId, kind: "CLV_GRADE" },
-              { subjectId: o.pickId, kind: "SNAPSHOT_OUTCOME" },
-            ],
-          );
-          if (o.homeScore != null && o.awayScore != null) {
-            // updateMany, not update: it carries the same kickoff predicate and
-            // must no-op rather than throw when a concurrent correction moved
-            // the game, exactly as the pick write above does.
-            await tx.game.updateMany({
-              where: { id: row.game.id, commenceTime: { lte: settledAt } },
-              data: {
-                homeScore: o.homeScore,
-                awayScore: o.awayScore,
-                status: "FINAL",
-                resultFetched: true,
-              },
-            });
-          }
-          return updated;
-        });
+        const written = await settleOnePickGuarded(
+          (fn) => db.$transaction(fn),
+          {
+            pickId: o.pickId,
+            gameId: row.game.id,
+            result: o.result,
+            homeScore: o.homeScore,
+            awayScore: o.awayScore,
+            settledAt,
+          },
+        );
 
         if (written.count > 0) {
           settled++;

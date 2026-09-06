@@ -260,34 +260,16 @@ describe("finalBindsToKickoff — a malformed timestamp is not evidence", () => 
 });
 
 /**
- * Structural, and deliberately so: the guard IS the transactional reread, and a
- * unit test around runFreePathSettlement would have to mock $transaction, which
- * is the very thing being pinned. Devin Review (#717) found that the findMany
- * predicate alone leaves a race — a schedule correction can postpone a loaded
- * game before the transaction runs.
+ * The write-time kickoff guards used to be pinned here by reading this file's
+ * own source, because the only way to reach them was through $transaction. That
+ * proxy is gone: the transactional write is now writeFreeSettlementInTx, and
+ * free-settlement-race.test.ts drives it against a transaction client that
+ * commits a schedule correction BETWEEN the guarded statements — the reread,
+ * the relation filter on the pick write, the predicate on the FINAL write and
+ * the rollback that undoes an already-written pick are each negative-controlled
+ * there (Devin Review, #717). Source-text assertions cannot show a rollback
+ * actually happens, so they were replaced rather than kept alongside.
  */
-describe("free-settlement-runner write-time kickoff guard", () => {
-  it("re-reads commenceTime inside the transaction and refuses a game that has not started", () => {
-    const src = readFileSync(
-      resolve(__dirname, "..", "lib", "data-sources", "free-settlement-runner.ts"),
-      "utf8",
-    );
-    const txStart = src.indexOf("db.$transaction");
-    expect(txStart).toBeGreaterThan(-1);
-    const body = src.slice(txStart, txStart + 1400);
-    expect(body).toContain("commenceTime: true");
-    expect(body).toMatch(/commenceTime\.getTime\(\)\s*>\s*settledAt\.getTime\(\)/);
-    expect(body).toContain("KICKOFF_MOVED");
-    // The read alone is not the guard: Prisma's default isolation does not lock
-    // the game row, so the predicate must ride in the WRITE (Devin Review, #717).
-    const writes = src.slice(txStart, txStart + 6000);
-    expect(writes).toMatch(/tx\.pick\.updateMany\([\s\S]{0,200}?game:\s*\{\s*commenceTime:\s*\{\s*lte:\s*settledAt/);
-    expect(writes).toMatch(/tx\.game\.updateMany\([\s\S]{0,160}?commenceTime:\s*\{\s*lte:\s*settledAt/);
-    // The guard must run before the score-conditional block, so it also covers
-    // a VOID or a scoreless outcome.
-    expect(body.indexOf("KICKOFF_MOVED")).toBeLessThan(body.indexOf("o.homeScore != null"));
-  });
-});
 
 /**
  * The doubleheader hold belongs in the SHARED grader, not only in the score
