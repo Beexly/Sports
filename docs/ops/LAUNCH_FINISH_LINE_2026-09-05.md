@@ -267,23 +267,34 @@ logged-in browser using the script below. Decisions taken accordingly:
 
 | # | To reach 100 | Owner | How it closes |
 |---|---|---|---|
-| 1 | Book-priced picks flowing: founder sets `THE_ODDS_API_KEY` in Vercel Production to the 20K plan key and redeploys (the account is Active with 0 of 20,000 credits used, not unpaid; script A) | founder (flip), browser agent (verify) | paid book rows return within one refresh cycle after the redeploy |
-| 2 | Overdue picks to 0 | automatic (deployed fixes) | `settlement.overduePending` reads 0; leftovers carry a reason on `/api/ops/settlement-rca` |
-| 3 | Stale picks to 0 | coder: WP-29 (C-106), priority 1 | `stalePendingPicks.count` reads 0 after one cycle |
-| 4 | Calibration GREEN three runs | automatic (02:40, 08:40, 14:40 UTC) | truth surface `calibrationEligibility` published true, streak 3 |
-| 5 | C-107 display label and claim, IMPLEMENTED flip, MODEL_VERSION v5.2.8 | coder, priority 2 | proposal status IMPLEMENTED; model-freeze green |
-| 6 | `PERFORMANCE_STATS_ENABLED=true`, `PRICING_PHASE=PROVEN` after 4 and 5 | browser agent (script B) | truth surface `gates.calibrationPublished` true; pricing page shows PROVEN rates |
-| 7 | Live checkout, then refund | browser agent with the founder's card (script D) | dashboard shows the plan active; Stripe shows the refund |
-| 8 | Alerting: webhook URL and Sentry DSN in Vercel | browser agent (script B) | `alerting` booleans true once OPS-01 (C-98) ships; until then, health-alert logs DELIVERED |
-| 9 | Stripe: Terms URL, consent flag, three webhook events, no live Payment Link | browser agent (script C) | checkout shows the consent checkbox; endpoint lists ten events |
-| 10 | FE-05, FE-10, FE-15 copy | coder, priority 3 | acceptance greps in the FE table |
+| 1 | Book-priced picks flowing | DONE 2026-09-06 02:37 UTC (browser agent, script A) | 20K key rotated, `THE_ODDS_API_KEY` set in Vercel Production, redeploy Ready 02:37:12 UTC; one 402 on the old key at 02:37:15 UTC during rollover, none in the 24 minutes after; dashboard usage 0 to 112 credits by 03:02 UTC |
+| 2 | Overdue picks to 0: the 16 are two cohorts (section 3f), 10 MLB spreads on city-only game rows refused as SCORE_MISMATCH_CROSS_PATH and 6 NCAAF picks on phantom fixtures | coder: C-106 void lane (priority 2) and C-111 fixture guard (priority 3) | `settlement.overduePending` reads 0; every cleared pick carries an RCA code on its outbox event |
+| 3 | Stale picks to 0 (26 at 03:02 UTC, up from 18) | coder: WP-29 (C-106), priority 2 | `stalePendingPicks.count` reads 0 after one cycle |
+| 4 | Calibration GREEN three runs | automatic (02:40, 08:40, 14:40, 20:40 UTC) | truth surface `calibrationEligibility` published true, streak 3 |
+| 5 | C-107 display label and claim, IMPLEMENTED flip, MODEL_VERSION v5.2.8 | coder, priority 5 | proposal status IMPLEMENTED; model-freeze green |
+| 6 | `PERFORMANCE_STATS_ENABLED=true`, `PRICING_PHASE=PROVEN` after 4 and 5 | browser agent, later prompt | truth surface `gates.calibrationPublished` true; pricing page shows PROVEN rates |
+| 7 | Live checkout, then refund | SKIPPED by founder decision 2026-09-06 (script D not run, no charge made) | reopen only if the founder asks |
+| 8 | Alerting: webhook URL and Sentry DSN in Vercel | SKIPPED by founder decision 2026-09-06 (no Slack, no Sentry) | health-alert keeps logging DELIVERED; reopen only if the founder asks |
+| 9 | Stripe: Terms URL, consent flag, three webhook events, no live Payment Link | DONE 2026-09-06 (browser agent, script C) | Privacy URL set, consent flag already true, endpoint lists ten events, five Payment Links deactivated |
+| 10 | FE-05, FE-10, FE-15 copy | coder, priority 6 | acceptance greps in the FE table |
+| 11 | The Odds API credit governor so the 20K plan lasts the month (section 3f) | coder: C-109, priority 1, before 2026-09-08 00:00 UTC | steady state at or below 600 credits a day on the dashboard; remaining credits and projected exhaustion on the truth surface |
+| 12 | Calibration sample grows honestly: single-book publish-time market p for the 223 `insufficient_books` games | coder: C-110, priority 4 | truth surface `pSources` shows `market_p_single_book`; streak basis `market_anchored_v2` |
+| 13 | No pick on a fixture ESPN does not list for that day (section 3f) | coder: C-111, priority 3 | signal slate refuses a game absent from the day's scoreboard; phantom rows CANCELLED, their picks VOIDED with RCA FIXTURE_NOT_FOUND |
 
-Blocks: 1 to 3 reach 75. 4 to 6 reach 90 (PROVEN). 7 to 10 reach 100.
+Blocks: 1 to 3 reach 75. 4 to 6 reach 90 (PROVEN). 9 to 13 reach 100; 7 and 8 are closed by founder decision.
 
 ### Browser-agent scripts (no secret is ever pasted into chat, a doc, or a commit)
 
-**A. The Odds API key (revised 2026-09-06 02:25 UTC from the founder's dashboard
-screenshots).** The account is not in a payment state. The dashboard shows two keys: a Free
+**A. The Odds API key. DONE 2026-09-06 02:37 UTC by the browser agent:** the 20K key was
+regenerated on the dashboard, pasted into `THE_ODDS_API_KEY` for Vercel Production (verified
+byte for byte after a first paste corruption was caught), production redeployed (Ready
+02:37:12.965 UTC, deployment `dpl_BW5hoeSLH4voMi3E6evBfFbzB5Bs`). One "payment circuit open
+after HTTP 402" line at 02:37:15 UTC on the old key mid-rollover, none in the 24 minutes after;
+dashboard usage 0 to 112 credits between two checks 21 minutes apart. Verification correction:
+`bookmakerCount` is not a field of the `/api/picks` list payload (it lives on the entitled
+`/api/picks/<id>/audit` and `/explain` routes), so the read-only check is the truth surface's
+`oddsInserting.lastSuccessAt`, `oddsInserted` and `sport`, plus the dashboard usage counter.
+Original brief follows for the record. The account is not in a payment state. The dashboard shows two keys: a Free
 plan key (0 of 500 credits used this period, started Apr 20, 2026) and a 20K plan key
 (Active, $30 a month, 0 of 20,000 credits used this period, started Aug 22, 2026, next
 invoice Sep 22, 2026). Zero usage on both keys this period means, by inference, that
@@ -309,8 +320,19 @@ page, copy the DSN here only). Then Deployments, latest production deployment, R
 the variables apply. Later, only after the preconditions above hold, add
 `PERFORMANCE_STATS_ENABLED=true` and `PRICING_PHASE=PROVEN` the same way and redeploy.
 Never edit any other variable. Never blank `THE_ODDS_API_KEY` before WP-27 is deployed.
+Status 2026-09-06: the alerting halves (`HEALTH_ALERT_WEBHOOK_URL`, `SENTRY_DSN`) were
+SKIPPED by founder decision (no Slack, no Sentry). The two public flips remain, in a later
+prompt, after the receipt and C-107.
 
-**C. Stripe Dashboard, live mode.** Settings, Business, Public details: set the Terms of
+**C. Stripe Dashboard, live mode.** Status 2026-09-06 (browser agent): DONE. Terms of service
+URL was already `/terms`; Privacy policy URL was empty and is now
+`https://www.galaxysportsedge.com/privacy`; `STRIPE_TERMS_CONSENT_ENABLED` was already
+`true` in Vercel Production (added Jul 12), no edit or redeploy needed; the endpoint
+`/api/webhooks/stripe` now listens to ten events (`invoice.paid` and `charge.refunded`
+added, `checkout.session.expired` was already present, nothing removed); five active
+Payment Links deactivated: Signal Origin First Screen Protocol ($19), Week-1 desk Houston
+Texans ($29), BeeXly Design Sprint One-pager ($500), Galaxy Sports Edge Fantasy ($4.99 a
+month, Aug 6) and Galaxy Sports Edge Fantasy ($4.99 a month, Jul 29). Original brief: Settings, Business, Public details: set the Terms of
 service URL to the site's Terms page (the footer link on www.galaxysportsedge.com). Then in
 Vercel add `STRIPE_TERMS_CONSENT_ENABLED=true` and redeploy (this order is required by
 OPERATOR.md section 5). Developers, Webhooks, the production endpoint ending in
@@ -319,7 +341,8 @@ so all ten handled events are subscribed. Payments, Payment Links: deactivate an
 link (they charge without granting access by construction). Do not create products, prices
 or coupons.
 
-**D. Live checkout smoke.** On www.galaxysportsedge.com/pricing choose Pro monthly, complete
+**D. Live checkout smoke.** Status 2026-09-06: SKIPPED by founder decision, no charge made,
+nothing to refund. Original brief: on www.galaxysportsedge.com/pricing choose Pro monthly, complete
 Stripe Checkout with the founder's card (the founder enters the card; the agent does not
 store it), confirm the consent checkbox appears if script C ran, confirm the dashboard shows
 the plan active within a minute, then in Stripe refund the payment and cancel the
@@ -329,6 +352,92 @@ subscription immediately. Record the date in OPERATOR_TASKS.
 ```
 curl -sS https://www.galaxysportsedge.com/api/ops/public-surface-truth | jq '{deployment: .deployment.sha, gates, settlement: .settlement.overduePending, stale: .stalePendingPicks.count, calibration: .calibrationEligibility}'
 ```
+
+## 3f. Findings after the key swap (2026-09-06 03:25 UTC, read-only: truth surface, Vercel logs, one SELECT, ESPN public scoreboard)
+
+Production reads `c3d955c2c` (the #709 merge auto-deploy, docs only). Truth surface at
+03:02 UTC: overdue 16 (unchanged), stale 26 (from 18), calibration RED with reasons
+"Settlement not healthy" and "ECE 0.0553 > 0.05", `oddsInserting.lastSuccessAt` 03:03 UTC
+with 242 odds rows for `soccer_usa_mls` (the paid book path is back).
+
+**1. Credit cliff (C-109, coder priority 1, ship before 2026-09-08 00:00 UTC).** The browser
+agent observed 112 credits used between 02:41 and 03:02 UTC, about 320 an hour against a
+20,000-a-month plan (645 a day). At that rate the key exhausts around 2026-09-08. The
+schedule alone explains most of it: `refresh-odds` iterates all seven `SUPPORTED_SPORTS`
+every 15 minutes (`packages/data-ingestion/src/config.ts`, `refresh-odds/route.ts:121-123`),
+NBA, NCAAB and NHL included out of season; `settle-picks` runs five times an hour, the :20
+cron plus the autonomy cycle's `RUN_FREE_SETTLE` target at 7, 22, 37 and 52
+(`apps/web/lib/autonomy/execute-autonomy-cycle.ts:29`; Vercel logs show runs at 02:07,
+02:20, 02:22, 02:37, 02:52, 03:07), and each run fetches paid scores for all seven sports
+although its own spend guard says the free sources cover scores: `settle-sport.ts:181-187`
+logs "not justified" and proceeds. Assuming the provider's documented per-call costs (odds:
+markets times regions, three here; scores with `daysFrom`: two), that is roughly 154 credits
+an hour and exhaustion around 2026-09-11, NFL Week 1 kickoff; confirm from the
+`x-requests-used` deltas the client already parses (`odds-api-client.ts:255`). Governor:
+honor the spend guard (paid scores only when the free path reported NO_FINAL for that sport's
+overdue picks, at most once an hour); skip paid odds for a sport with no event in the next
+48 hours on the free ESPN scoreboard; pace to `x-requests-remaining` divided by hours to
+month end; publish remaining credits and projected exhaustion on
+`oddsInserting.dualPath`. Nothing about `MIN_BOOKMAKERS` or any gate changes.
+
+**2. The 16 overdue picks are two cohorts, and neither self-heals.**
+
+- **10 MLB SPREAD picks (v5.2.7, 2026-09-01 to 03)** on game rows stored with city-only
+  names: Tampa Bay v New York (twice), Chicago v Milwaukee (twice), Los Angeles v New York
+  (twice), Los Angeles v St. Louis (twice), Houston v Chicago (twice); 32-hex `externalId`s
+  (`bb67a30c…`, `5a34d35c…`, `9805eed2…`, `f5341d5d…`, `2ea60b79…`, `87e1928b…`,
+  `22777e93…`, `373c20a7…`, `48f1ca55…`, `eb4fcb33…`). Every settle run since the deploy logs
+  seven of them as `[free-settle] SCORE_MISMATCH_CROSS_PATH ... existing=3-1
+  incoming(free)=3-4 ... left PENDING for human review` (five games): two feeds matched two
+  different real games, which is exactly what "New York" or "Los Angeles" produces. The
+  paid scores window (`daysFrom` 3) has passed for nine of the ten, so only the void lane
+  clears them. C-106: VOID with RCA `AMBIGUOUS_TEAM_NAME` or `SCORE_MISMATCH_CROSS_PATH`
+  after 24 hours through the outbox lane, never "human review" forever; and apply
+  `preferLongerTeamName` in the plain upsert `update` branch of `process-sport.ts:609-612`,
+  which today overwrites a stored full name with a feed's city-only name (the twin branch
+  already guards it).
+- **6 NCAAF picks on three phantom fixtures.** Game rows Ole Miss Rebels v Louisville
+  Cardinals, Illinois Fighting Illini v UAB Blazers (both 2026-09-05 16:00 UTC) and
+  Washington Huskies v Washington State Cougars (19:00 UTC) were created from May listings
+  (`externalId`s `a6dfbee1…`, `e17a2675…`, `bcad21f3…`). ESPN's public scoreboard for
+  2026-09-05 (68 events) lists none of them; 2026-09-12 lists Duke at Illinois, Charlotte at
+  Ole Miss, Utah State at Washington and Washington State at Kansas State. Three v5.0.0
+  spreads from 2026-05-22/23 still sit published, and `generate-signal-slate` wrote three
+  MONEYLINE "model signal" picks on the same rows at 15:54 and 18:53 UTC on 2026-09-05,
+  from our own stale kickoff time. C-111: the slate and the board refuse a game absent from
+  the day's free ESPN scoreboard for its sport; a row whose kickoff passed with no ESPN
+  fixture within 24 hours is marked CANCELLED and its picks VOIDED with RCA
+  `FIXTURE_NOT_FOUND`; rows older than 30 days re-confirm date and opponent before any pick.
+
+**3. Calibration reading and the decision it drives.** First market-anchored run: n 223,
+Brier 0.1617, ECE 0.0553, MCE 0.2539, Murphy REL 0.0071; bootstrap 95% intervals Brier
+0.1395 to 0.1880 and ECE 0.0365 to 0.1142 (200 resamples). Exclusions work as designed:
+`three_way_market` 120, `non_moneyline_market` 976, `no_market_probability` 486.
+`pSources`: `proof_receipt` 122, `market_p_from_odds_table` 101 (WP-28 live); the odds-table
+recompute queried 587 games and left 263 with no rows and 223 with one stored book. By
+sport: MLB n 175 ECE 0.0509 (mean p 0.7263, hit 0.7257), NCAAF n 35 ECE 0.131 (0.870 vs
+0.943), NFL n 13 ECE 0.3006 (0.655 vs 0.846). By model version: v5.2.7 n 109 ECE 0.1478
+(0.729 vs 0.706), v5.1.0 n 74 ECE 0.0729, v5.0.0 n 29 ECE 0.1531, v5.2.6 n 11 ECE 0.2043.
+At n 223 the 0.05 floor sits inside the estimator's own interval, so single runs will
+flicker either side of it; the honest lever is more real rows, not a different floor,
+estimator or bin count (10 equal-width, `apps/web/lib/calibration/ece.ts`). Decision
+(delegated): **C-110**, resolve the 223 `insufficient_books` games from their one stored book
+with the same proportional de-vig, tag `market_p_single_book`, report it in `pSources` and
+`bySource`, and bump the streak basis to `market_anchored_v2` so the streak restarts honestly
+on the new sample definition. Floors, bins and streak length do not change. Eligibility
+also stays RED on "Settlement not healthy" until item 2 clears, whatever ECE reads.
+
+**4. Hermes corrections (its handoff of 03:00 UTC read the pre-merge F-15).** The branch
+`hermes/finish-line-2026-09-05` (tip `0dd81273f`) does not contain `main`; `git merge-tree`
+against `c3d955c2c` is clean, so merge `origin/main` first. The Odds API steps it proposed
+are forbidden and moot: no `vc env get` or `vc env set` with the key in a shell, no key in a
+curl URL, no `ops:stale-picks:unpublish --execute` (WP-29 automates it), no manual
+calibration cron trigger. The key swap is done. Hermes's Week 1 work is C-104 (WP-27, OPEN,
+unowned): claim it. Its auxiliary reviewer failed with "Model auto/best-free has a context
+window of 32,768 tokens, below the minimum 64,000"; pin the free lane to a model that
+reports at least 64K.
+
+Coder order from here: C-109, C-106, C-111, C-110, C-107, FE-05/FE-10/FE-15.
 
 ## 4. Founder-only actions (nothing here can be done by an agent)
 
