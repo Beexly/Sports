@@ -41,7 +41,8 @@ overduePending 0 and stalePendingPicks 0 after the first settle cycle post-deplo
 merge `origin/main` after this lands; your work is C-104 (WP-27), nothing in this batch.
 The open founder acceptance: the public calibration claim was reworded to "The calibration we
 measure ourselves on is ..." because the /calibration chart still buckets by confidence
-(`apps/web/lib/calibration/report.ts:68`); accept it or open a row to re-scope that chart.**
+(`apps/web/lib/calibration/compute.ts`, `BUCKETS` and `bucketFor()`); accept it or open a row
+to re-scope that chart.**
 
 **UPDATED 2026-09-06 (03:30 UTC): F-15 is DONE and #709 is merged as `c3d955c2c`.** The
 browser agent rotated the 20K key, set `THE_ODDS_API_KEY` in Vercel Production and redeployed
