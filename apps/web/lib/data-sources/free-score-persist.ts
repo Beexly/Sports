@@ -191,15 +191,45 @@ export async function persistFreeScores(options?: {
       let matched = 0;
       let updated = 0;
 
+      const nowMs = Date.now();
+
       for (const g of games) {
+        // A game that has not started cannot have a final score. Without this
+        // the ±48h candidate window below, which matches on team names only,
+        // maps an earlier meeting's final onto a LATER unplayed game between
+        // the same two clubs — an MLB series plays the same matchup on
+        // consecutive days, so yesterday's final matched today's and
+        // tomorrow's scheduled game and the picks on them were graded WIN/LOSS
+        // before first pitch. Measured on production 2026-09-06: 5 games with
+        // a future commenceTime carried status FINAL, and 87 published picks
+        // had settledAt earlier than their game's commenceTime. Nothing
+        // downstream caught it: SCORE_MISMATCH_CROSS_PATH below only refuses
+        // to overwrite an EXISTING final with a different one, and a pick
+        // graded off a phantom score is not overdue, so the settlement health
+        // counters read clean. Publishing a graded result for a game nobody
+        // has played is the one thing this product's premise forbids.
+        if (g.commenceTime.getTime() > nowMs) {
+          continue;
+        }
+
         const day = g.commenceTime.toISOString().slice(0, 10);
-        const candidates = finals.filter((f) => {
-          const fd = f.date.slice(0, 10);
-          const d0 = Date.parse(day);
-          const d1 = Date.parse(fd);
-          if (!Number.isFinite(d0) || !Number.isFinite(d1)) return false;
-          return Math.abs(d0 - d1) <= 36e5 * 48; // ~2 days (TZ edge)
-        });
+        const d0 = Date.parse(day);
+        const candidates = finals
+          .map((f) => {
+            const d1 = Date.parse(f.date.slice(0, 10));
+            return { f, delta: Math.abs(d0 - d1) };
+          })
+          .filter(
+            ({ delta }) => Number.isFinite(d0) && Number.isFinite(delta) && delta <= 36e5 * 48,
+          )
+          // Closest date first. The ±48h window is a timezone tolerance (a late
+          // game can be dated a day either side by the source), but it also
+          // spans a whole series, and an unordered scan took whichever final
+          // happened to come first in the feed. Trying the same-day final
+          // before a neighbouring day's keeps the tolerance without letting an
+          // adjacent meeting win when the game's own result is available.
+          .sort((a, b) => a.delta - b.delta)
+          .map(({ f }) => f);
 
         let hit: { homeScore: number; awayScore: number } | null = null;
         for (const f of candidates) {

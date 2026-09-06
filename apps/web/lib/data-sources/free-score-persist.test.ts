@@ -581,3 +581,145 @@ describe("persistFreeScores — clearance gating (GSE-SEC-050/051)", () => {
     expect(result.ingestionRunId).toBe("run-stub");
   });
 });
+
+// ─── Unplayed-game guard ───────────────────────────────────────────────────────
+
+/**
+ * Production defect measured 2026-09-06: 5 games with a FUTURE commenceTime
+ * carried status FINAL and 87 published picks had settledAt earlier than their
+ * game's commenceTime, because the ±48h candidate window matched on team names
+ * only and an MLB series plays the same matchup on consecutive days. Yesterday's
+ * final was written onto today's and tomorrow's unplayed game and the picks on
+ * them were graded WIN/LOSS before first pitch.
+ *
+ * The guard is unarguable in both directions: a game that has not started
+ * cannot have a final score, and a game that HAS started must still settle
+ * normally.
+ */
+describe("persistFreeScores — never settles a game that has not started", () => {
+  const HOUR = 60 * 60 * 1000;
+
+  function armSport(games: ReturnType<typeof makeGameRow>[], finals: unknown[]) {
+    mocks.checkClearanceMock.mockReturnValue(clearanceResult(true, []));
+    mocks.dbGameFindMany.mockResolvedValue(games);
+    mocks.dbGameUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.dbIngestionRunCreate.mockResolvedValue({
+      id: "run-stub",
+      status: "SUCCESS",
+      completedAt: new Date("2026-06-15T12:00:00.000Z"),
+    });
+    mocks.fetchScoresMultiSourceMock.mockResolvedValue({
+      games: [],
+      errors: [],
+      attempted: [],
+      used: null,
+      primary: null,
+      failover: false,
+      oddsApiRequired: false,
+      datesRequested: [],
+    });
+    mocks.fetchHenrygdScoreboardMock.mockResolvedValue([]);
+    mocks.buildTrustedFinalsMock.mockReturnValue(finals);
+  }
+
+  /** A final whose team names match the game rows below. */
+  function seriesFinal(date: string, homeScore: number, awayScore: number) {
+    return makeTrustedFinal({
+      date,
+      homeName: "Phillies",
+      homeAbbr: "PHI",
+      homeScore,
+      awayName: "Braves",
+      awayAbbr: "ATL",
+      awayScore,
+      confirmation: "CONFIRMED",
+    });
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("does NOT write a final onto a game whose commenceTime is still in the future", async () => {
+    const tomorrow = new Date(Date.now() + 24 * HOUR);
+    armSport(
+      [
+        makeGameRow({
+          id: "game-future",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: tomorrow,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      // A final for the SAME matchup, dated within the ±48h window: this is
+      // exactly the earlier meeting in the series that used to leak forward.
+      [seriesFinal(new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10), 4, 2)],
+    );
+
+    const result = await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+    expect(result.gamesUpdated).toBe(0);
+  });
+
+  it("still settles a game that HAS started (the guard is not a blanket refusal)", async () => {
+    const startedTwoHoursAgo = new Date(Date.now() - 2 * HOUR);
+    armSport(
+      [
+        makeGameRow({
+          id: "game-started",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedTwoHoursAgo,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [seriesFinal(startedTwoHoursAgo.toISOString().slice(0, 10), 4, 2)],
+    );
+
+    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
+    const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
+      where: { id: string };
+      data: { homeScore: number; awayScore: number; status: string };
+    };
+    expect(call.where.id).toBe("game-started");
+    expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2, status: "FINAL" });
+  });
+
+  it("prefers the game's own day over an adjacent day inside the ±48h window", async () => {
+    const startedToday = new Date(Date.now() - 3 * HOUR);
+    const gameDay = startedToday.toISOString().slice(0, 10);
+    const dayBefore = new Date(startedToday.getTime() - 24 * HOUR)
+      .toISOString()
+      .slice(0, 10);
+
+    armSport(
+      [
+        makeGameRow({
+          id: "game-series",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedToday,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      // Yesterday's meeting listed FIRST, so an unordered scan would take it.
+      [seriesFinal(dayBefore, 9, 1), seriesFinal(gameDay, 4, 2)],
+    );
+
+    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
+    const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
+      data: { homeScore: number; awayScore: number };
+    };
+    // 4-2 is today's result; 9-1 is yesterday's and must not win.
+    expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2 });
+  });
+});
