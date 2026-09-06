@@ -77,6 +77,29 @@ export const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   soccer_usa_mls: "mls",
 };
 
+/**
+ * Order one sport's PENDING rows for a settlement cycle: overdue first (STP
+ * priority, then oldest kickoff), and EVERY row is returned. Until 2026-09-05
+ * the runner processed only the overdue slice whenever one existed, so a
+ * single sticky hold (a NO_FINAL from a truncated board, an AMBIGUOUS_MATCH)
+ * guaranteed that every fresh pick crossed the 6h grace before the free path
+ * first looked at it, and the health band read CRITICAL by construction.
+ * Pure; exported for the tripwire test.
+ */
+export function orderPendingRowsForCycle<T extends { readonly game: { readonly commenceTime: Date } }>(
+  rows: readonly T[],
+  now: Date,
+  graceHours: number,
+): T[] {
+  const ageHours = (r: T): number => (now.getTime() - r.game.commenceTime.getTime()) / (60 * 60 * 1000);
+  return [...rows].sort((a, b) => {
+    const ageA = ageHours(a);
+    const ageB = ageHours(b);
+    const byPri = stpLoadPriority(ageB, graceHours) - stpLoadPriority(ageA, graceHours);
+    return byPri !== 0 ? byPri : ageB - ageA;
+  });
+}
+
 export type FreeSettlementSportResult = {
   sport: string;
   freeSport: Sport | null;
@@ -240,28 +263,9 @@ export async function runFreePathSettlement(options?: {
         take: 1500,
       });
 
-      // STP load order: overdue first so limited cron time drains the health band.
-      // When backlog is large, process overdue-only first (health CRITICAL band).
-      const sorted = [...loadedRows].sort((a, b) => {
-        const ageA =
-          (now.getTime() - a.game.commenceTime.getTime()) / (60 * 60 * 1000);
-        const ageB =
-          (now.getTime() - b.game.commenceTime.getTime()) / (60 * 60 * 1000);
-        const byPri =
-          stpLoadPriority(ageB, graceHours) - stpLoadPriority(ageA, graceHours);
-        return byPri !== 0 ? byPri : ageB - ageA;
-      });
-      const overdueOnly = sorted.filter((r) => {
-        const ageH =
-          (now.getTime() - r.game.commenceTime.getTime()) / (60 * 60 * 1000);
-        return ageH > graceHours;
-      });
-      // Prefer overdue slice when it is non-empty and we would otherwise burn
-      // the cycle on within-grace PENDING that do not affect settlement health.
-      const pendingRows =
-        overdueOnly.length > 0 && overdueOnly.length < sorted.length
-          ? overdueOnly
-          : sorted;
+      // STP load order: overdue first so limited cron time drains the health
+      // band; every loaded row is graded this cycle (see orderPendingRowsForCycle).
+      const pendingRows = orderPendingRowsForCycle(loadedRows, now, graceHours);
 
       if (pendingRows.length === 0) {
         out.push({

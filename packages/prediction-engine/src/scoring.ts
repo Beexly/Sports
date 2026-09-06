@@ -853,7 +853,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
  * is no moneyline pick at all. Spreads and totals are unaffected — those settle
  * on goals, where a draw is not a special outcome.
  */
-function isThreeWayMoneylineSport(sportKey: string): boolean {
+export function isThreeWayMoneylineSport(sportKey: string): boolean {
   return sportKey.toLowerCase().startsWith("soccer");
 }
 

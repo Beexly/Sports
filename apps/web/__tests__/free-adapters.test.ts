@@ -4,7 +4,10 @@ import { resolve } from "node:path";
 import {
   parseEspnScoreboard,
   espnScoreboardUrl,
+  espnScoreboardGroups,
+  fetchEspnScoreboard,
   ESPN_ATTRIBUTION,
+  ESPN_SCOREBOARD_LIMIT,
   type EspnScoreboard,
 } from "@/lib/data-sources/free-adapters/espn-scores";
 import {
@@ -57,12 +60,76 @@ describe("ESPN scores adapter (free, facts-only)", () => {
     expect(espnScoreboardUrl("nfl", "20251207-20251208")).toContain("dates=20251207-20251208");
   });
 
-  it("always sends an explicit limit so busy settlement boards never truncate", () => {
+  it("always sends an explicit, verified limit so busy settlement boards never truncate", () => {
     // ESPN's default page silently drops games on heavy dates; this is the settlement scores
     // path, so a truncated board leaves finals unsettled. Both dated and undated must carry it.
-    expect(espnScoreboardUrl("ncaaf")).toContain("limit=1000");
-    expect(espnScoreboardUrl("ncaaf", "20251213")).toContain("limit=1000");
-    expect(espnScoreboardUrl("mls", "20251207-20251208")).toContain("limit=1000");
+    // Measured live 2026-09-05: limit=300..500 returns the full CFB board (80 events for
+    // dates=20250906) while limit>=999 collapses to ESPN's 25-event default page, so the
+    // value must stay inside the verified window or the "full board" intent is lost.
+    for (const url of [
+      espnScoreboardUrl("ncaaf"),
+      espnScoreboardUrl("ncaaf", "20251213"),
+      espnScoreboardUrl("mls", "20251207-20251208"),
+    ]) {
+      const limit = Number(new URL(url).searchParams.get("limit"));
+      expect(limit).toBe(ESPN_SCOREBOARD_LIMIT);
+      expect(limit).toBeGreaterThanOrEqual(100);
+      expect(limit).toBeLessThanOrEqual(500);
+    }
+  });
+
+  it("requests every division group a sport needs and none where the default board is complete", () => {
+    // CFB defaults to FBS (groups=80); FCS games are lined by The Odds API and settle only
+    // with groups=81. Men's college basketball defaults to a featured page; groups=50 is D-I.
+    expect(espnScoreboardGroups("ncaaf")).toEqual(["80", "81"]);
+    expect(espnScoreboardGroups("ncaab")).toEqual(["50"]);
+    expect(espnScoreboardGroups("nfl")).toEqual([undefined]);
+    expect(espnScoreboardGroups("mls")).toEqual([undefined]);
+    expect(espnScoreboardUrl("ncaaf", "20260905", "81")).toContain("groups=81");
+    expect(espnScoreboardUrl("ncaaf", "20260905", "81")).toContain("dates=20260905");
+    expect(espnScoreboardUrl("nfl", "20260913")).not.toContain("groups=");
+  });
+
+  it("merges the FBS and FCS boards by event id, preferring the completed row", async () => {
+    const mk = (id: string, completed: boolean) => ({
+      id,
+      date: "2026-09-05T20:00Z",
+      competitions: [
+        {
+          competitors: [
+            { homeAway: "home", team: { displayName: "Home U", abbreviation: "HOME" }, score: completed ? "21" : undefined },
+            { homeAway: "away", team: { displayName: "Away U", abbreviation: "AWAY" }, score: completed ? "14" : undefined },
+          ],
+          status: { type: { state: completed ? "post" : "pre", completed } },
+        },
+      ],
+    });
+    const urls: string[] = [];
+    const fetchImpl = (async (input: string | URL | Request) => {
+      const url = String(input);
+      urls.push(url);
+      // Game 2 is a cross-division game: on the FBS board it is still "pre", on the FCS board final.
+      const events = url.includes("groups=80") ? [mk("1", true), mk("2", false)] : [mk("2", true), mk("3", true)];
+      return { ok: true, status: 200, json: async () => ({ events }) } as unknown as Response;
+    }) as typeof fetch;
+    const games = await fetchEspnScoreboard("ncaaf", { fetchImpl, dates: "20260905" });
+    expect(urls).toHaveLength(2);
+    expect(urls.some((u) => u.includes("groups=80"))).toBe(true);
+    expect(urls.some((u) => u.includes("groups=81"))).toBe(true);
+    expect(games.map((g) => g.gameId).sort()).toEqual(["1", "2", "3"]);
+    expect(games.find((g) => g.gameId === "2")?.completed).toBe(true);
+  });
+
+  it("throws only when every group request fails, and keeps a partial board otherwise", async () => {
+    const failing = (async () => ({ ok: false, status: 503, json: async () => ({}) }) as unknown as Response) as typeof fetch;
+    await expect(fetchEspnScoreboard("ncaaf", { fetchImpl: failing, dates: "20260905" })).rejects.toThrow(/HTTP 503/);
+    const half = (async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("groups=81")) return { ok: false, status: 503, json: async () => ({}) } as unknown as Response;
+      return { ok: true, status: 200, json: async () => ({ events: [{ id: "9", date: "2026-09-05T20:00Z", competitions: [{ competitors: [], status: { type: { state: "pre", completed: false } } }] }] }) } as unknown as Response;
+    }) as typeof fetch;
+    const games = await fetchEspnScoreboard("ncaaf", { fetchImpl: half, dates: "20260905" });
+    expect(games.map((g) => g.gameId)).toEqual(["9"]);
   });
 
   it("is defensive against missing fields", () => {

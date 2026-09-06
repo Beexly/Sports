@@ -30,6 +30,81 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-05 (18:20 UTC) by the launch session on `claude/sports-prediction-launch-rtiexc`
+(draft PR #707, CI green). Read `docs/ops/LAUNCH_FINISH_LINE_2026-09-05.md` before claiming
+anything: section 3b holds eleven decisions the founder delegated in-session, section 4 the
+founder-only actions, section 5 every dispatchable work package (WP-1..26, FE, FAN, NFL, OPS,
+TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and F-14..F-33.**
+
+- **TOP founder item (F-15): The Odds API account is in a payment state.** HTTP 402
+  "payment circuit open" on every hourly cycle since 2026-09-03 20:20 UTC. The shared
+  breaker stopped paid book odds at 2026-09-05 00:30 UTC; zero book-priced picks were
+  generated in the 18 hours after. Fix the account. Do not upgrade the tier.
+- **Second book root cause (2026-09-05 production logs, verbatim):** every refresh cycle,
+  all four in-season sports log `rundown empty (2d): HTTP 429 rate_limited`. TheRundown is
+  the registered commercial-use fallback (`packages/data-ingestion/src/source-registry.ts`
+  id `therundown`, free 20k data-points/day) and it alone satisfies `MIN_BOOKMAKERS = 2`;
+  our own cadence (refresh-odds every 15 min plus board-fill 4x/h, 4 sports, 2 dates, no
+  cooldown after a 429) exhausts its daily quota early and it 429s for the rest of the day.
+  ESPN public (`espn_public`) is one book (DraftKings via ESPN, verified live for NFL, CFB,
+  MLB, MLS), so no picks can be book-priced without a second cleared source.
+- **The completely free two-book board is already designed in this repo (WP-27, ledger
+  C-104). Founder position, verbatim from the Hermes brief on PR #680: "we are the provider
+  (Galaxy Sports API). Not Rundown. Not The Odds API."** Book 1 is ESPN inline odds through
+  `GalaxySportsApiOddsProvider` (PR #680 branch `hermes/galaxy-keyless-odds`, de-vig
+  formula, 8s timeouts, registry entry `galaxy-espn-inline`). Book 2 is Kalshi exchange
+  quotes as a real bookmaker (`galaxy-kalshi-book.ts` on that branch) fed through the
+  PredExon catalog (`packages/data-ingestion/src/predexon-client.ts` on main, verdict
+  use-with-caution, free key the founder already holds, `PREDEXON_INGEST` default OFF),
+  which is the legal route around Kalshi Dev Agreement section 3. Kalshi lists
+  `KXNFLSPREAD` and `KXNFLTOTAL` (`kalshi-series.ts`), so NFL spreads and totals are
+  reachable, not only moneylines. Nothing on main consumes PredExon yet: that wiring plus
+  re-landing the #680 core is the work. TheRundown is at most a bridge (WP-26), not the
+  product path.
+- Decisions already taken (do not re-open): the keyless Galaxy Sports API becomes primary
+  with Kalshi via PredExon as the second book (WP-27); v5.2.8 YES sequenced after the first clean NFL Sunday; stale
+  published picks are UNPUBLISHED via `npm run ops:stale-picks:unpublish -- --execute`
+  (owner-run); ESPN Power Index is gated fail-closed (`ESPN_POWERINDEX_LICENSED` unset);
+  `hermes/settlement-token-fix` is superseded by `6880f18` (do not merge it); Vercel cron
+  is the primary scheduler; `/picks` is the product surface; the `/fantasy` age gate stays.
+- **Coordination with `hermes/finish-line-2026-09-05` (verified against the remote 2026-09-05
+  18:55 UTC):** that branch is stacked on top of the #707 branch at `6a9c092f7` and merges
+  cleanly with the #707 tip (`git merge-tree` reports no conflict). SEC-01 (`fe42773bd`) and
+  SEC-02 (`96ab46d27`) are on the remote; ledger C-102 is owned by hermes (CLAIMED), do not
+  edit that row from another branch. **Update 2026-09-06 00:10 UTC (verified against the
+  remote):** the Hermes tip is `5fa7c88d0`; SEC-03 (`dbb49850b`, `7bc9508d5`, `8014c67c8`)
+  plus its repair (`3efb1634d`, the half-applied `contests/enter` edit is finished), SEC-04
+  (`30b238e12`) and SEC-05 (`e60f887a9`) are on the remote. It also carries C-108
+  (`99ff4d545`, an OpenRouter free lane for the Claude API router), which edits
+  `.env.example`: law 2 freezes any `.env*` for agents, so the founder accepts that hunk
+  explicitly or Hermes moves the variable documentation to `docs/ops/OPERATOR.md` section 5.
+  `git merge-tree` of the Hermes tip against the #707 tip (`0fb97ab36`) is still clean.
+  Landing order unchanged: #707 first, then Hermes merges
+  `origin/claude/sports-prediction-launch-rtiexc` (WP-27, the calibration pass `fbc3784c7`)
+  into its branch before opening its own PR.
+- **PROVEN is days away, not weeks (measured on production 2026-09-05 19:05 UTC, read-only
+  SQL):** on settled MONEYLINE picks that carry a receipt, the market-anchored probability
+  reads n 150, Brier 0.1692, Murphy REL 0.0050, ECE 0.0552 (ten bins). Excluding soccer
+  two-way moneylines (wrong by construction on a three-way market; the engine already refuses
+  to publish them), the same sample reads n 115, Brier 0.1444, ECE 0.0440, Murphy REL 0.0044:
+  **all four floors pass today.** Founder approved the source switch and cron triggering at
+  19:20 UTC. 610 more settled moneyline picks have no
+  receipt but their publish-time market probability is recomputable from the append-only odds
+  table with zero writes (WP-28, C-105). The eligibility streak is three consecutive green
+  runs of a six-hourly cron. Shipped in `fbc3784c7` on the #707 branch: the
+  measurement side of WP-1, WP-28 and the drift alert (receipt-first scoring, MONEYLINE-only
+  pooled floors, basis-aware streak). Receipts carry a mean-implied proportional de-vig, not
+  Shin-median; the proposal wording now says so. Remaining: C-107 (display label and claim
+  copy, then the IMPLEMENTED flip and MODEL_VERSION v5.2.8),
+  restore the book-priced flow, streak, founder flips `calibrationPublished` and the PROVEN
+  pricing phase (F-36). Plan section 3c.
+- **No pick ever sits (founder policy 2026-09-05):** graded, voided with an RCA reason through
+  the settlement outbox lane, or unpublished. WP-29 (C-106) automates it; the owner tool
+  handles today's 20 stale rows once.
+- Settlement CRITICAL (36 overdue) root causes are fixed on the PR branch, not on main:
+  ESPN `limit=1000` truncation, matcher containment on 2-3 letter abbreviations and bare
+  club tokens, overdue-only runner slice, backfill date order. Do not re-fix them; land #707.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —

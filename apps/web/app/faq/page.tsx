@@ -111,7 +111,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
     items: [
       {
         q: "How do I sign up?",
-        a: "With your Google account. Click \"Sign in\" and you're in. Email-based sign-in is coming.",
+        a: "With your Google account. Click \"Sign in\" and you're in.",
       },
       {
         q: "Where can I see my subscription?",

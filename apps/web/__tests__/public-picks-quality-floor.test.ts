@@ -27,6 +27,10 @@ describe("public picks data-quality floor", () => {
     const src = read("app/api/picks/daily-slate/route.ts");
 
     expect(src).toMatch(/MIN_PUBLIC_PICK_DATA_QUALITY_SCORE/);
-    expect(src).toMatch(/game:\s*\{\s*dataQualityScore:\s*\{\s*gte:\s*MIN_PUBLIC_PICK_DATA_QUALITY_SCORE\s*\}\s*\}/);
+    // The game filter carries the quality floor first; the slate-day window
+    // (gameInSlateWindow) is spread alongside it and must never replace it.
+    expect(src).toMatch(
+      /game:\s*\{\s*dataQualityScore:\s*\{\s*gte:\s*MIN_PUBLIC_PICK_DATA_QUALITY_SCORE\s*\}\s*(,\s*\.\.\.gameInSlateWindow\(slate\)\s*)?\}/,
+    );
   });
 });

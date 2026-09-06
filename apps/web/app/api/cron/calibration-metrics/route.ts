@@ -7,7 +7,9 @@
  * - ZERO auto PERFORMANCE_STATS env flips
  * - CALIBRATION_ADJUSTMENTS_ENABLED stays off
  * - Publish only via CALIBRATION_AUTO_PUBLISH / CALIBRATION_PUBLISHED policy
- * - confidence/100 treated as provisional p for live eligibility (documented)
+ * - Eligibility p is the market-anchored probability only (v5.2.8 Phase 2,
+ *   2026-09-05): picks without one are excluded and counted, never scored on
+ *   confidence/100; three-way moneyline sports are excluded structurally
  * - proven-path bake-off uses trueProb only for independent kinds (never edge-as-p,
  *   never confidence-echo rankingP as independent)
  */
@@ -36,8 +38,24 @@ import { computeResolutionByGroup } from "@/lib/calibration/resolution-by-group"
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 import { runCalibrationMapBakeoff } from "@/lib/calibration/calibration-map-bakeoff";
 import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
-import { toProvenPathPickRow } from "@/lib/calibration/proven-path-rows";
-import { picksToHonestCalibrationSamples } from "@/lib/calibration/live-calibration-p";
+import {
+  toProvenPathPickRow,
+  type CalibrationExclusionCounts,
+} from "@/lib/calibration/proven-path-rows";
+import {
+  picksToMarketAnchoredCalibrationSamples,
+  type MarketAnchoredSample,
+} from "@/lib/calibration/live-calibration-p";
+import { computeCalibrationBreakdowns } from "@/lib/ops/compute-live-calibration-metrics";
+import { METRIC_CI_READING_NOTE } from "@/lib/calibration/bootstrap-metric-ci";
+import {
+  emptyOddsTableMarketPStats,
+  loadPublishTimeMarketPResolver,
+  marketPSourcesFromBySource,
+  oddsTableStatsNote,
+  type MarketPSources,
+  type OddsTableMarketPStats,
+} from "@/lib/calibration/publish-time-market-p-loader";
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
 import { backfillIndependentTrueProb } from "@sports/ingestion-pipeline";
 export const dynamic = "force-dynamic";
@@ -78,6 +96,12 @@ function bss(
 
 async function loadSettledCalibrationSamples(): Promise<{
   samples: CalibrationSample[];
+  taggedSamples: MarketAnchoredSample[];
+  exclusions: CalibrationExclusionCounts;
+  /** WP-28: scored probabilities by origin (receipts versus the odds table). */
+  pSources: MarketPSources;
+  /** WP-28: odds-table recompute coverage. */
+  marketPFromOddsTable: OddsTableMarketPStats;
   groupedRows: import("@/lib/calibration/resolution-by-group").GroupedCalibRow[];
   provenRows: import("@/lib/calibration/proven-path-engine").ProvenPathPickRow[];
   notes: string[];
@@ -86,6 +110,7 @@ async function loadSettledCalibrationSamples(): Promise<{
   settledTo: string | null;
 }> {
   const notes: string[] = [];
+  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 };
   try {
     const picks = await db.pick.findMany({
       where: {
@@ -96,28 +121,58 @@ async function loadSettledCalibrationSamples(): Promise<{
         NOT: { modelVersion: "v5.0.0-seed" },
       },
       select: {
+        id: true,
+        gameId: true,
+        generatedAt: true,
+        selection: true,
         confidence: true,
         factorBreakdown: true,
         result: true,
         modelVersion: true,
         settledAt: true,
         pickType: true,
-        game: { select: { sport: { select: { key: true, name: true } } } },
+        // Publish-time market fair backs up a factor breakdown that lost it (proven-path-rows.ts).
+        proofReceipt: { select: { marketFairProb: true } },
+        // Team names: the WP-28 odds-table resolver needs the pick's side.
+        game: {
+          select: {
+            homeTeamName: true,
+            awayTeamName: true,
+            sport: { select: { key: true, name: true } },
+          },
+        },
       },
       orderBy: { settledAt: "desc" },
       take: 2000,
     });
 
-    const honest = picksToHonestCalibrationSamples(
-      picks.map((pick) => ({
-        confidence: pick.confidence,
-        result: pick.result ?? "",
-        pickType: pick.pickType,
-        factorBreakdown: pick.factorBreakdown,
-        modelVersion: pick.modelVersion,
-        settledAt: pick.settledAt,
-      })),
-    );
+    const rows = picks.map((pick) => ({
+      id: pick.id,
+      gameId: pick.gameId,
+      generatedAt: pick.generatedAt,
+      selection: pick.selection,
+      homeTeamName: pick.game?.homeTeamName ?? null,
+      awayTeamName: pick.game?.awayTeamName ?? null,
+      confidence: pick.confidence,
+      result: pick.result ?? "",
+      pickType: pick.pickType,
+      factorBreakdown: pick.factorBreakdown,
+      proofReceipt: pick.proofReceipt,
+      modelVersion: pick.modelVersion,
+      settledAt: pick.settledAt,
+      sportKey: pick.game?.sport?.key ?? null,
+    }));
+
+    // WP-28: one read-only odds query for the receipt-less two-way moneyline
+    // picks; their publish-time market probability is recomputed with the
+    // receipt's own de-vig and reported as market_p_from_odds_table.
+    const oddsTable = await loadPublishTimeMarketPResolver(db, rows);
+
+    // Eligibility sample: market-anchored p only; three-way moneylines and
+    // picks with no market probability are counted in `excluded`, never scored.
+    const honest = picksToMarketAnchoredCalibrationSamples(rows, {
+      resolveMarketP: oddsTable.resolveMarketP,
+    });
     const samples: CalibrationSample[] = honest.samples.map((s) => ({
       p: s.p,
       y: s.y,
@@ -132,6 +187,7 @@ async function loadSettledCalibrationSamples(): Promise<{
         result: pick.result ?? "",
         pickType: pick.pickType,
         factorBreakdown: pick.factorBreakdown,
+        proofReceipt: pick.proofReceipt,
         game: pick.game,
       });
       if (proven) {
@@ -154,14 +210,22 @@ async function loadSettledCalibrationSamples(): Promise<{
     const minT = honest.settledFrom ? Date.parse(honest.settledFrom) : null;
     const maxT = honest.settledTo ? Date.parse(honest.settledTo) : null;
     notes.push(...honest.notes);
+    notes.push(oddsTableStatsNote(oddsTable.stats));
     notes.push(
       `Proven-path rows: ${provenRows.length}; with independent trueProb: ${independentCount} (never edge-as-p; never conf-echo rankingP as independent).`,
     );
+    notes.push(
+      "Ranking diagnostics, not the eligibility sample: resolution-by-group, holdout-ranking-report and selective-publish-sweep score marketP, else independent trueProb, else confidence/100; the proven-path bake-off keeps its confidence / independent / blend kinds by design and reads the factor-breakdown market fair before the receipt. None of these is a calibration claim; the floors are scored only on the market-anchored sample above.",
+    );
     if (samples.length === 0) {
-      notes.push("No settled non-seed WIN/LOSS picks eligible for learning yet.");
+      notes.push("No settled non-seed WIN/LOSS picks with a market-anchored probability yet.");
     }
     return {
       samples,
+      taggedSamples: honest.samples,
+      exclusions: honest.excluded,
+      pSources: marketPSourcesFromBySource(honest.bySource),
+      marketPFromOddsTable: oddsTable.stats,
       groupedRows,
       provenRows,
       notes,
@@ -174,6 +238,10 @@ async function loadSettledCalibrationSamples(): Promise<{
     notes.push(`Settled pick load unavailable: ${msg}`);
     return {
       samples: [],
+      taggedSamples: [],
+      exclusions: emptyExclusions,
+      pSources: marketPSourcesFromBySource({}),
+      marketPFromOddsTable: emptyOddsTableMarketPStats(),
       groupedRows: [],
       provenRows: [],
       notes,
@@ -206,8 +274,19 @@ export async function GET(request: Request): Promise<NextResponse> {
       console.warn(`[cron:calibration-metrics] ${backfillNote}`);
     }
 
-    const { samples, groupedRows, provenRows, notes, modelVersions, settledFrom, settledTo } =
-      await loadSettledCalibrationSamples();
+    const {
+      samples,
+      taggedSamples,
+      exclusions,
+      pSources,
+      marketPFromOddsTable,
+      groupedRows,
+      provenRows,
+      notes,
+      modelVersions,
+      settledFrom,
+      settledTo,
+    } = await loadSettledCalibrationSamples();
     notes.push(backfillNote);
     const generatedAt = new Date().toISOString();
     const gitSha =
@@ -235,6 +314,10 @@ export async function GET(request: Request): Promise<NextResponse> {
         modelVersion,
         dateRange,
         overall: null,
+        pBasis: "market_anchored",
+        exclusions,
+        pSources,
+        marketPFromOddsTable,
         notes: [
           ...notes,
           "Gates unchanged: no PERFORMANCE_STATS / LIVE_BOARD / CALIBRATION_ADJUSTMENTS env auto-flip.",
@@ -246,6 +329,9 @@ export async function GET(request: Request): Promise<NextResponse> {
       const curve = reliabilityCurve(samples);
       const mce = mceFromCurve(curve);
       const logLoss = meanLogLoss(samples);
+      // bySport / byModelVersion (same functions as the pooled numbers) and the
+      // seeded bootstrap intervals; deterministic for this sample.
+      const breakdowns = computeCalibrationBreakdowns(taggedSamples);
 
       const filePayload = {
         generatedAt,
@@ -254,6 +340,15 @@ export async function GET(request: Request): Promise<NextResponse> {
         status: "ok" as const,
         modelVersion,
         dateRange,
+        pBasis: "market_anchored" as const,
+        exclusions,
+        pSources,
+        marketPFromOddsTable,
+        bySport: breakdowns.bySport,
+        byModelVersion: breakdowns.byModelVersion,
+        byMarket: breakdowns.byMarket,
+        brierCi95: breakdowns.brierCi95,
+        eceCi95: breakdowns.eceCi95,
         overall: {
           brier: decomp.brier,
           murphy: {
@@ -275,6 +370,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         },
         notes: [
           ...notes,
+          METRIC_CI_READING_NOTE,
           "Internal only until eligibility GREEN + publish policy.",
           "bssClose null until closing implied probabilities are joined.",
         ],
@@ -304,6 +400,15 @@ export async function GET(request: Request): Promise<NextResponse> {
             uncertainty: decomp.uncertainty,
           },
         },
+        pBasis: "market_anchored",
+        exclusions,
+        pSources,
+        marketPFromOddsTable,
+        bySport: breakdowns.bySport,
+        byModelVersion: breakdowns.byModelVersion,
+        byMarket: breakdowns.byMarket,
+        brierCi95: breakdowns.brierCi95,
+        eceCi95: breakdowns.eceCi95,
         notes: filePayload.notes,
       };
     }
@@ -430,7 +535,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       }
     }
 
-    const { eligibility, publish, skippedDuplicate } = await evaluateAndPersistEligibility({
+    const { eligibility, publish, drift, skippedDuplicate } = await evaluateAndPersistEligibility({
       metrics: payload,
       canonicalSettled,
       minSettledForLearning: gates.minSettledPicksForLearning,
@@ -456,9 +561,24 @@ export async function GET(request: Request): Promise<NextResponse> {
         canExposePerformanceStats: publish.canExposePerformanceStats,
         autoPublish: publish.autoPublish,
       },
+      /** Open post-publish drift marker (scope ops.calibration.drift), or null. */
+      calibrationDrift: drift
+        ? {
+            since: drift.since,
+            previousStatus: drift.previousStatus,
+            currentStatus: drift.currentStatus,
+            failingFloors: drift.failingFloors,
+          }
+        : null,
       skippedDuplicate,
       artifact: "durable:ops.calibration.metrics",
       provenPathRows: provenRows.length,
+      pBasis: payload.pBasis ?? null,
+      exclusions: payload.exclusions ?? null,
+      pSources: payload.pSources ?? null,
+      marketPFromOddsTable: payload.marketPFromOddsTable ?? null,
+      /** Per pick type: the pooled floors sample is not moneyline-only. */
+      byMarket: payload.byMarket ?? null,
     });
   } catch (err) {
     captureError(err, { route: "cron/calibration-metrics" });

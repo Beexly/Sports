@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { SLEEPER_READONLY_NOTE, type League, type Team } from "@/lib/integrations/sleeper";
 import type { StandingRow } from "@/lib/integrations/sleeper-sync";
 import { connectorsByStatus, type ConnectorStatus } from "@/lib/integrations/connectors";
+import { defaultSleeperSeason } from "@/lib/fantasy/sleeper-season";
 
 // Position identity (design tokens) — the same accent poles the draft tools use.
 // Plasma here is identity (WR), never a warning.
@@ -38,7 +39,9 @@ const AVAIL_TONE: Record<"play" | "watchlist" | "no-bet", string> = { play: "var
 
 export function SleeperConnect() {
   const [username, setUsername] = useState("");
-  const [season, setSeason] = useState("2025");
+  // Season defaults to the live NFL season (calendar year from March), never a
+  // hard-coded year that goes stale at the next kickoff.
+  const [season, setSeason] = useState(() => defaultSleeperSeason(new Date()));
   const [userId, setUserId] = useState<string | null>(null);
   const [leagues, setLeagues] = useState<League[] | null>(null);
   const [view, setView] = useState<LeagueView | null>(null);

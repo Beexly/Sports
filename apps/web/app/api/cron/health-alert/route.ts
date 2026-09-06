@@ -25,6 +25,7 @@ import {
   classifyHealthAlertSnapshot,
   decideHealthAlertStateless,
 } from "@/lib/ops/health-alert-decision";
+import { loadActiveCalibrationDrift } from "@/lib/ops/calibration-eligibility-durable";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { db } from "@sports/db";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
@@ -119,7 +120,15 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   const started = Date.now();
   const probes = await computeLiveCapabilityProbes();
-  const snap = classifyHealthAlertSnapshot(probes);
+  // Post-publish calibration drift marker (durable, read-only here). The loader
+  // swallows its own errors and returns null in stub mode; the extra guard keeps
+  // a thrown rejection from taking the health cron down with it.
+  const calibrationDrift = await loadActiveCalibrationDrift().catch(() => null);
+  const snap = classifyHealthAlertSnapshot({
+    checks: probes.checks,
+    capabilities: probes.capabilities,
+    calibrationDrift,
+  });
   const decision = decideHealthAlertStateless(snap);
 
   const deploymentSha =
@@ -203,6 +212,14 @@ export async function GET(request: Request): Promise<NextResponse> {
       decisionReason: decision.reason,
       ingestionAgeMinutes: snap.ingestionAgeMinutes,
       settlementUnavailable: snap.settlementUnavailable,
+      calibrationDrift: calibrationDrift
+        ? {
+            since: calibrationDrift.since,
+            previousStatus: calibrationDrift.previousStatus,
+            currentStatus: calibrationDrift.currentStatus,
+            failingFloors: calibrationDrift.failingFloors,
+          }
+        : null,
       checks: probes.checks,
       deploymentSha,
       observedAt,
@@ -243,6 +260,14 @@ export async function GET(request: Request): Promise<NextResponse> {
     snapReason: snap.reason,
     ingestionAgeMinutes: snap.ingestionAgeMinutes,
     settlementUnavailable: snap.settlementUnavailable,
+    calibrationDrift: calibrationDrift
+      ? {
+          since: calibrationDrift.since,
+          previousStatus: calibrationDrift.previousStatus,
+          currentStatus: calibrationDrift.currentStatus,
+          failingFloors: calibrationDrift.failingFloors,
+        }
+      : null,
     webhookConfigured: webhook.configured,
     webhookPosted: webhook.delivered,
     webhookStatus: webhook.status,

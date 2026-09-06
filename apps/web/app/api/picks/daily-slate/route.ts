@@ -1,6 +1,7 @@
 import { jsonNoStore } from "@/lib/api/no-store";
 import type { NextRequest } from "next/server";
-import { startOfDay, endOfDay } from "date-fns";
+import { freshPickWhere } from "@/lib/board/stale-pick-policy";
+import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import {
   db,
@@ -101,16 +102,17 @@ export async function GET(req: NextRequest) {
     process.env["NODE_ENV"] === "production" ? { NOT: { modelVersion: "v5.0.0-seed" } } : {};
 
   // Shared published-pick filter for every count on this slate (matches /api/picks).
-  // The generatedAt day-bound mirrors /api/picks (route.ts): without it this
-  // "daily" slate counted EVERY pending published pick ever, so /picks rendered
-  // four irreconcilable numbers on one screen (C-31).
-  const slateDay = new Date();
+  // Day-bound so this "daily" slate never counts every pending pick ever (C-31);
+  // the bound is the Eastern day the GAME starts in, on rows still refreshed,
+  // the same window /api/picks uses (lib/picks/slate-window.ts).
+  const now = new Date();
+  const slate = resolveSlateWindow(null, now);
   const baseWhere = {
     isPublished: true,
     result: "PENDING" as const,
     isBootstrap: false,
-    generatedAt: { gte: startOfDay(slateDay), lte: endOfDay(slateDay) },
-    game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } },
+    ...freshPickWhere(now),
+    game: { dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE }, ...gameInSlateWindow(slate) },
     ...excludeSeedInProd,
   };
 

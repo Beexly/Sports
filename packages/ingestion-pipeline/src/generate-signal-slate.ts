@@ -37,6 +37,33 @@ function clamp01(p: number): number {
   return Math.min(1 - 1e-6, Math.max(1e-6, p));
 }
 
+/** Marker suffix every signal-slate selection carries; a row without it was priced by a book. */
+export const SIGNAL_SELECTION_SUFFIX = "(model signal)";
+
+/**
+ * True only for a row this path wrote itself: signal selection AND no book behind it.
+ * A book-priced MONEYLINE row (process-sport.ts) carries the book price in its selection,
+ * bookmakerCount >= MIN_BOOKMAKERS, a real marketFairProb and an immutable proof receipt
+ * committing to all three. The signal path may create when no row exists and refresh
+ * its own rows; it must never rewrite a book-priced pick.
+ */
+export function isSignalSlateRow(row: {
+  readonly selection: string;
+  readonly bookmakerCount: number;
+}): boolean {
+  return row.selection.endsWith(SIGNAL_SELECTION_SUFFIX) && row.bookmakerCount === 0;
+}
+
+/**
+ * Teaser line for viewers who cannot see confidence. It carries no probability:
+ * the independent estimate is uncalibrated (maps OFF), single-source in most
+ * rows, and its >= 80 tail is measured inverted, so "@ 68%" read as a win
+ * probability was a claim the calibration surface does not cover.
+ */
+export function buildSignalReasoningShort(chosenTeam: string, sourcesLabel: string): string {
+  return `${chosenTeam} model signal (${sourcesLabel}). Independent estimate, not a book price.`;
+}
+
 /** Pure blend of independent home fair probs (exported for unit tests). */
 /**
  * Equal-then-sharpness blend of independent home fair probs.
@@ -137,6 +164,14 @@ export async function generateSignalSlate(opts?: {
 
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
+    // A two-way moneyline on a three-way market overstates P(win): the blend
+    // below normalises home/(home+away) and drops the draw mass, while the pick
+    // settles a draw as a loss. The book path refuses to publish these
+    // (scoring.ts isThreeWayMoneylineSport) and so does this one.
+    if (sportKey.toLowerCase().startsWith("soccer")) {
+      picksSkipped += 1;
+      continue;
+    }
     const homeTeam = game.homeTeamName;
     const awayTeam = game.awayTeamName;
     let independents: IndependentMarketFairValue[];
@@ -202,7 +237,7 @@ export async function generateSignalSlate(opts?: {
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources: [...sources],
       priced: true,
-      rationale: `Independent blend (${sourcesLabel}) prices ${chosenTeam} at ${(trueProb * 100).toFixed(1)}%. Model signal only — not a book line.`,
+      rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
     };
 
     const factorBreakdown: FactorBreakdown = {
@@ -229,20 +264,35 @@ export async function generateSignalSlate(opts?: {
       ],
     };
 
-    const selection = `${chosenTeam} ML (model signal)`;
+    const selection = `${chosenTeam} ML ${SIGNAL_SELECTION_SUFFIX}`;
+    // Paid viewers read this verbatim. It states an estimate with its status, and
+    // carries no operator vocabulary (RankingP, eligibility colours, ladder names).
     const reasoning =
-      `Model signal (no book line): ${chosenTeam} priced at ${Math.round(trueProb * 100)}% ` +
-      `by independent sources [${sourcesLabel}]. Not a sportsbook quote. RankingP=${rankingP.toFixed(3)}. ` +
-      `Eligibility RED forbids PROVEN/performance claims.`;
-    const reasoningShort = `${chosenTeam} model signal @ ${Math.round(trueProb * 100)}% (${sourcesLabel}).`;
+      `Model signal (no book line): independent sources [${sourcesLabel}] put ${chosenTeam} at a ` +
+      `model estimate of ${Math.round(trueProb * 100)}%, uncalibrated and not a sportsbook quote. ` +
+      `No book price is attached to this pick.`;
+    const reasoningShort = buildSignalReasoningShort(chosenTeam, sourcesLabel);
 
     try {
       const existing = await db.pick.findUnique({
         where: { gameId_pickType: { gameId: game.id, pickType: "MONEYLINE" } },
-        select: { id: true, result: true, selection: true },
+        select: { id: true, result: true, selection: true, bookmakerCount: true },
       });
 
       if (existing && existing.result !== "PENDING") {
+        picksSkipped += 1;
+        continue;
+      }
+
+      // Never overwrite a book-priced pick. refresh-odds and board-fill run this
+      // slate in the same tick AFTER refreshOdds, and until 2026-09-05 a same-side
+      // book pick fell through to the updateMany below: selection became
+      // "X ML (model signal)", line 0, bookmakerCount 0, confidence = trueProb*100,
+      // factorBreakdown.marketFairProb null, while the immutable proof receipt
+      // still committed the book price and the real market probability. That
+      // erased marketFairProb on the only rows that had one (bake-off coverage
+      // fell to 34%) and turned the moneyline paywall into a probability threshold.
+      if (existing && !isSignalSlateRow(existing)) {
         picksSkipped += 1;
         continue;
       }

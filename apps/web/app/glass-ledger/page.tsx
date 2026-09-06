@@ -113,7 +113,7 @@ const SEALED_VAULT_SECTIONS: readonly SealedVaultSection[] = [
   {
     title: "Sealed before kickoff",
     body:
-      "Every pick is written and hash-linked before its game starts, never after. Each entry points to the one written just before it, so changing any past record breaks the chain at that point and every point after it. There is no update path. Only append.",
+      "Every book-priced pick is written and hash-linked before its game starts, never after. Each entry points to the one written just before it, so changing any past record breaks the chain at that point and every point after it. There is no update path. Only append. Model-signal picks, which carry no book price, carry no receipt and are labelled as such.",
   },
   {
     title: "Graded against the close",
@@ -493,8 +493,8 @@ export default async function LedgerPage(): Promise<JSX.Element> {
           The record, computed in the open.
         </h1>
         <p className="mt-5 max-w-2xl text-sm leading-6 text-ion-1">
-          Every pick is recorded before kickoff, sealed into a hash-chained record, and never
-          rewritten after the fact. This page leads with calibration — how well confidence numbers
+          Every book-priced pick is recorded before kickoff, sealed into a hash-chained record, and
+          never rewritten after the fact. This page leads with calibration — how well confidence numbers
           matched reality — and closing-line value, not a single headline stat. {note}
         </p>
 

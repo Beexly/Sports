@@ -1,6 +1,6 @@
 # CRON matrix (generated from vercel.json)
 
-Generated: 2026-09-03T00:49:12.825Z
+Generated: 2026-09-05T16:45:33.578Z
 
 Default SoT: `apps/web/vercel.json` (the file Vercel actually reads).
 Compared against: `vercel.json`.
@@ -13,12 +13,12 @@ Compared against: `vercel.json`.
 | `/api/cron/deliver-settlement-alerts` | `15 */3 * * *` |
 | `/api/cron/generate-signal-slate` | `5,20,35,50 * * * *` |
 | `/api/cron/generate-drafts` | `0 11 * * *` |
-| `/api/cron/reconcile-entitlements` | `0 8 * * *` |
+| `/api/cron/reconcile-entitlements` | `45 * * * *` |
 | `/api/cron/ingest-player-stats` | `0 9 * * *` |
 | `/api/cron/hydrate-cold-plane` | `30 9 * * *` |
 | `/api/cron/drain-ai-telemetry-recovery` | `30 * * * *` |
 | `/api/cron/prune-rate-limits` | `30 6 * * *` |
-| `/api/cron/repair-checkout-attempts` | `30 8 * * *` |
+| `/api/cron/repair-checkout-attempts` | `50 * * * *` |
 | `/api/cron/run-formal-receipt` | `45 9 * * *` |
 | `/api/cron/jarvis-snapshot` | `15 * * * *` |
 | `/api/cron/free-spine-health` | `0 */2 * * *` |

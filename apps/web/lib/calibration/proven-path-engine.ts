@@ -78,11 +78,21 @@ export type ScoreBakeoffRow = {
   readonly coverage: number;
 };
 
+/**
+ * One score on one market. A pooled Brier mixes moneyline rows (a probability
+ * claim on a side) with spread/total rows priced near a coin flip, whose Brier
+ * sits near 0.25 irreducibly; this view says exactly which number a floor is
+ * being applied to. Coverage is n_kind / n_confidence WITHIN the market.
+ */
+export type ScoreBakeoffMarketRow = ScoreBakeoffRow & { readonly market: string };
+
 export type ProvenPathPlan = {
   readonly generatedAt: string;
   /** Winning score metrics (not pre-filter confidence — see scoreBakeoff). */
   readonly baseline: ScoreBakeoffRow;
   readonly scoreBakeoff: readonly ScoreBakeoffRow[];
+  /** scoreBakeoff split by market (2026-09-05, ledger C-28); absent on plans persisted before it. */
+  readonly scoreBakeoffByMarket?: readonly ScoreBakeoffMarketRow[];
   readonly bestScore: RankingScoreKind;
   readonly selectiveRecommended: SelectiveMetrics | null;
   readonly selectiveGainRes: number | null;
@@ -237,6 +247,23 @@ export function buildProvenPathPlan(
     return scoreMetrics(k, toSamples(rows, k), denom);
   });
 
+  // Per-market view (2026-09-05, ledger C-28). The pooled rows above mix a
+  // moneyline probability claim with spread/total rows priced near a coin flip
+  // (Brier ~0.25 irreducibly), so a pooled Brier can never say whether the
+  // market-anchored moneyline number clears the 0.22 floor. Same kinds, same
+  // metrics, one row per (kind, market); coverage within the market.
+  const marketOf = (groupKey: string): string => (groupKey.split("|")[1] ?? "unknown").toUpperCase();
+  const markets = [...new Set(rows.map((r) => marketOf(r.groupKey)))].sort();
+  const scoreBakeoffByMarket: ScoreBakeoffMarketRow[] = [];
+  for (const market of markets) {
+    const marketRows = rows.filter((r) => marketOf(r.groupKey) === market);
+    const marketConfN = toSamples(marketRows, "confidence").length;
+    for (const k of kinds) {
+      const row = scoreMetrics(k, toSamples(marketRows, k), marketConfN);
+      if (row.n > 0) scoreBakeoffByMarket.push({ market, ...row });
+    }
+  }
+
   // bestScore: max RES among separation > 0, n ≥ 50, coverage ≥ 40% (non-conf).
   const confRow =
     scoreBakeoff.find((r) => r.score === "confidence") ?? scoreBakeoff[0]!;
@@ -311,6 +338,7 @@ export function buildProvenPathPlan(
     generatedAt,
     baseline: best,
     scoreBakeoff,
+    scoreBakeoffByMarket,
     bestScore,
     selectiveRecommended: sweep.recommended,
     selectiveGainRes,

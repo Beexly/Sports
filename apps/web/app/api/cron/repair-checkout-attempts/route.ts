@@ -10,8 +10,10 @@
  * expiry, never on elapsed time alone. Anything unprovable stays unresolved
  * and is surfaced to the owner queue (durable CockpitTask review item).
  *
- * Schedule is declared in `vercel.json` at the repo root ("30 8 * * *" —
- * DAILY, matching every other cron; Vercel Hobby's minimum interval).
+ * Schedule is declared in `vercel.json` (root and apps/web mirror): "50 * * * *",
+ * HOURLY since 2026-09-05 (it was daily on a stale Hobby-minimum premise, which
+ * held an expired attempt's idempotency key for up to 24h and answered every
+ * retry with checkout_attempt_unresolved 409).
  * Immediacy is covered by the inline reconciliation in the checkout route
  * (an unresolved past-TTL attempt reconciles on the user's next retry); this
  * scheduled pass is the self-healing safety net for attempts nobody retries.

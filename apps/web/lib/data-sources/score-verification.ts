@@ -24,8 +24,18 @@ export type FinalScore = {
   readonly awayScore: number;
 };
 
+/**
+ * Fold accented letters to their base letter before lowercasing and stripping
+ * punctuation. ESPN names "CF Montréal" while the odds feed names "CF Montreal";
+ * without folding the two normalized to "cfmontral" and "cfmontreal", so every
+ * Montréal pick stayed NO_FINAL (found by the 2026-08-29 MLS board replay).
+ */
+export function foldDiacritics(s: string): string {
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
 export function normalizeTeamToken(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return foldDiacritics(s).toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 function dateKey(iso: string): string {

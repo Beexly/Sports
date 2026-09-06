@@ -79,10 +79,18 @@ export function uniqueScoreboardDates(
     now?: Date;
     /** How many future UTC days to allow after past/today (default 0). */
     includeFutureDays?: number;
+    /**
+     * Which end of a backlog wider than `maxDays` survives the cap. The runner
+     * wants "newest" (oxygen for the health band); the stale-backfill lane exists
+     * to drain the TAIL and must ask for "oldest", otherwise the oldest overdue
+     * days are dropped every cycle and those picks report NO_FINAL forever.
+     */
+    order?: "newest" | "oldest";
   } = {},
 ): { espnKeys: string[]; isoKeys: string[] } {
   const maxDays = options.maxDays ?? 21;
   const includeFutureDays = options.includeFutureDays ?? 0;
+  const order = options.order ?? "newest";
   const now = options.now ?? new Date();
   const todayKey = toEspnDateKey(now);
   if (!todayKey) return { espnKeys: [], isoKeys: [] };
@@ -96,8 +104,11 @@ export function uniqueScoreboardDates(
     else future.add(k);
   }
 
-  // Most recent past/today first — oxygen for overdue drain.
-  const pastKeys = [...pastOrToday].sort((a, b) => b.localeCompare(a));
+  // Default: most recent past/today first — oxygen for overdue drain. The
+  // backfill lane flips this so the cap keeps the oldest days instead.
+  const pastKeys = [...pastOrToday].sort((a, b) =>
+    order === "oldest" ? a.localeCompare(b) : b.localeCompare(a),
+  );
   // Soonest future first if explicitly allowed (rare).
   const futureKeys = [...future].sort((a, b) => a.localeCompare(b));
 

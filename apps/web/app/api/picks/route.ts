@@ -5,8 +5,8 @@ import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { getEntitlements, type PublicPick, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
-import { startOfDay, endOfDay } from "date-fns";
-import { parseDateParam } from "@/lib/parse-date-param";
+import { freshPickWhere } from "@/lib/board/stale-pick-policy";
+import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import {
   isPublicPicksSurfaceStale,
@@ -14,6 +14,8 @@ import {
 } from "@/lib/data-reliability/public-freshness-gate";
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
+import { teaserForViewer } from "@/lib/picks/teaser-text";
+import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { clientIp } from "@/lib/api/rate-limit";
@@ -71,8 +73,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const sportFilter = searchParams.get("sport");
   const dateParam = searchParams.get("date");
   const gradeFilter = searchParams.get("grade") as PickGrade | null;
-  // Guard against malformed `?date=` values producing an Invalid Date query.
-  const targetDate = parseDateParam(dateParam);
+  // `?date=YYYY-MM-DD` names an Eastern calendar day; anything else resolves to
+  // the Eastern day containing now, so a malformed value never reaches Prisma.
+  const now = new Date();
+  const slate = resolveSlateWindow(dateParam, now);
 
   // Production seed-row exclusion (defense-in-depth). The dev seed writes
   // synthetic rows tagged modelVersion="v5.0.0-seed"; in production there
@@ -108,15 +112,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         isPublished: true,
         isBootstrap: false, // never expose bootstrap-era picks publicly
         ...excludeSeedInProd, // prod-only: drop dev seed rows (no-op in dev/test)
-        generatedAt: {
-          gte: startOfDay(targetDate),
-          lte: endOfDay(targetDate),
-        },
+        // The slate is the set of picks on games that START inside the Eastern
+        // day, restricted to rows the pipeline still refreshes. Selecting by
+        // generatedAt hid every book-priced pick created before today
+        // (lib/picks/slate-window.ts).
+        ...freshPickWhere(now),
         // Server-side tier gate
         ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         // Optional grade filter (only useful for PRO+ who can see premium)
         ...(gradeFilter && entitlements.canSeePremiumPicks ? { pickGrade: gradeFilter } : {}),
-        game: gameFilter,
+        game: { ...gameFilter, ...gameInSlateWindow(slate) },
       },
       include: {
         game: {
@@ -257,7 +262,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // Honest calibrated display of the confidence shown, when the audited
       // calibrator is active (else null → surfaces show the raw heuristic %).
       confidenceCalibrated: calibrator ? honestConfidence(shownConfidence, calibrator, true) : null,
-      edgeScore: entitlements.canSeeEdgeScore ? pick.edgeScore : null,
+      // Withheld on book-less (signal-slate) rows for viewers who cannot see
+      // confidence: there edgeScore = confidence - 50 exactly (lib/picks/public-edge-score.ts).
+      edgeScore: publicEdgeScore(pick, entitlements),
       factorBreakdown,
       // Always visible — trust transparency
       dataQualityScore,
@@ -267,10 +274,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // Full reasoning / "the why" stays a paid feature (Pro+). Decoupled from
       // canSeeConfidence (now true for FREE) so freeing confidence does not also
       // free the premium reasoning trail. FREE gets the short teaser.
+      // A viewer who cannot see confidence must not read it back as a percentage
+      // inside the teaser (lib/picks/teaser-text.ts).
       reasoning: entitlements.canSeeFactorBreakdown
         ? pick.reasoning
-        : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
-      reasoningShort: pick.reasoningShort,
+        : teaserForViewer(pick.reasoningShort || pick.reasoning.split(".")[0] + ".", entitlements.canSeeConfidence),
+      reasoningShort: teaserForViewer(pick.reasoningShort, entitlements.canSeeConfidence),
       isFeatured: pick.isFeatured,
       isAuditAvailable:
         !pick.id.startsWith("sample-pick-") &&
@@ -300,11 +309,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           isPublished: true,
           isBootstrap: false,
           ...excludeSeedInProd, // prod-only: keep the count consistent with the slate
-          generatedAt: {
-            gte: startOfDay(targetDate),
-            lte: endOfDay(targetDate),
-          },
-          game: gameFilter,
+          ...freshPickWhere(now),
+          game: { ...gameFilter, ...gameInSlateWindow(slate) },
         },
       })
       .catch(() => publicPicks.length);
@@ -319,7 +325,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       total: publicPicks.length,
       totalAvailableToday,
       hitDailyLimit,
-      date: targetDate.toISOString().split("T")[0],
+      date: slate.dayKey,
       canSeeConfidence: entitlements.canSeeConfidence,
       canSeeFactorBreakdown: entitlements.canSeeFactorBreakdown,
       containsSeedData,

@@ -64,7 +64,7 @@ export const HONESTY_CONTRAST: readonly HonestyContrastItem[] = [
     failureMode:
       "If a prediction is stored in a mutable row, a losing call can be softened, requalified, or quietly removed once the result is known, and no reader can tell that it happened. The published history then describes the outcome rather than the forecast — and it will look excellent, because anything that did not work has been edited out.",
     weDo:
-      "Every pick is written before kickoff into a hash-chained record where each entry commits to the one before it. Changing an old entry breaks the chain for everything after it, so tampering is detectable by a stranger rather than only by us.",
+      "Every book-priced pick is written before kickoff into a hash-chained record where each entry commits to the one before it. Changing an old entry breaks the chain for everything after it, so tampering is detectable by a stranger rather than only by us.",
     verifyHref: "/how-to-verify-a-record",
     verifyLabel: "Check a record yourself",
   },

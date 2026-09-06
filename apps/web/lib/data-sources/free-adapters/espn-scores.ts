@@ -27,6 +27,37 @@ const ESPN_PATHS: Record<Sport, string> = {
   mls: "soccer/usa.1",
 };
 
+/**
+ * Explicit page size for every scoreboard request. Measured live on 2026-09-05
+ * against site.api.espn.com football/college-football/scoreboard: `limit=300`,
+ * `limit=400`, `limit=500` and no limit all return the full board (80 events for
+ * dates=20250906, 68 for dates=20260905), while `limit=999` and `limit=1000`
+ * make ESPN fall back to its 25-event default page. The previous value (1000)
+ * therefore truncated every busy Saturday to its 25 earliest kickoffs and left
+ * the rest of the slate NO_FINAL. Keep this inside the verified 100..500 window;
+ * the URL test pins the range.
+ */
+export const ESPN_SCOREBOARD_LIMIT = 300;
+
+/**
+ * ESPN `groups` (division) selectors that widen a board beyond its default.
+ * Measured live 2026-09-05: college football defaults to FBS only (`groups=80`);
+ * `groups=81` adds the FCS slate (The Odds API lines FCS games, so their picks
+ * could never settle before). Men's college basketball defaults to a 16-event
+ * featured page; `groups=50` returns all of Division I (146 events on
+ * 2025-02-01). Sports absent here already return a complete default board.
+ */
+export const ESPN_SCOREBOARD_GROUPS: Partial<Record<Sport, readonly string[]>> = {
+  ncaaf: ["80", "81"],
+  ncaab: ["50"],
+};
+
+/** The group requests needed to cover a sport's full board (one default request when none). */
+export function espnScoreboardGroups(sport: Sport): readonly (string | undefined)[] {
+  const groups = ESPN_SCOREBOARD_GROUPS[sport];
+  return groups && groups.length > 0 ? groups : [undefined];
+}
+
 export type GameState = "pre" | "in" | "post" | "unknown";
 
 export type NormalizedTeamScore = {
@@ -126,14 +157,16 @@ export function parseEspnScoreboard(json: EspnScoreboard, sport: Sport): Normali
  * which in the offseason rolls to the next season — so date-targeting is required to
  * verify finals for a past game.
  */
-export function espnScoreboardUrl(sport: Sport, dates?: string): string {
+export function espnScoreboardUrl(sport: Sport, dates?: string, group?: string): string {
   const base = `https://site.api.espn.com/apis/site/v2/sports/${ESPN_PATHS[sport]}/scoreboard`;
   // ESPN's scoreboard returns a small default page and silently truncates busy boards (CFB
   // Saturdays, multi-league soccer days). This is the settlement scores path, so a dropped final
-  // leaves its pick unsettled — force the full board with an explicit limit (dated and undated).
+  // leaves its pick unsettled: always send the explicit, verified limit (dated and undated) and
+  // the division group when the sport's default board is incomplete (ESPN_SCOREBOARD_GROUPS).
   const params = new URLSearchParams();
   if (dates) params.set("dates", dates);
-  params.set("limit", "1000");
+  params.set("limit", String(ESPN_SCOREBOARD_LIMIT));
+  if (group) params.set("groups", group);
   return `${base}?${params.toString()}`;
 }
 
@@ -149,14 +182,31 @@ export async function fetchEspnScoreboard(
   opts: FetchOptions = {},
 ): Promise<NormalizedGame[]> {
   const doFetch = opts.fetchImpl ?? fetch;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? 12000);
-  try {
-    const res = await doFetch(espnScoreboardUrl(sport, opts.dates), { signal: controller.signal });
-    if (!res.ok) throw new Error(`ESPN scoreboard ${sport} HTTP ${res.status}`);
-    const json = (await res.json()) as EspnScoreboard;
-    return parseEspnScoreboard(json, sport);
-  } finally {
-    clearTimeout(timer);
+  // One request per division group (most sports: exactly one). FBS and FCS boards
+  // overlap on cross-division games, so rows are deduped by ESPN event id, preferring
+  // a completed row. A group that fails is recorded; the call throws only when every
+  // group failed, so a partial board (the pre-fix behaviour) still reaches the caller.
+  const byId = new Map<string, NormalizedGame>();
+  const failures: Error[] = [];
+  const groups = espnScoreboardGroups(sport);
+  for (const group of groups) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? 12000);
+    try {
+      const res = await doFetch(espnScoreboardUrl(sport, opts.dates, group), { signal: controller.signal });
+      if (!res.ok) throw new Error(`ESPN scoreboard ${sport}${group ? ` groups=${group}` : ""} HTTP ${res.status}`);
+      const json = (await res.json()) as EspnScoreboard;
+      for (const g of parseEspnScoreboard(json, sport)) {
+        const key = g.gameId || `${g.startTime}|${g.home?.abbreviation}|${g.away?.abbreviation}`;
+        const prev = byId.get(key);
+        if (!prev || (!prev.completed && g.completed)) byId.set(key, g);
+      }
+    } catch (err) {
+      failures.push(err instanceof Error ? err : new Error(String(err)));
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  if (failures.length === groups.length && failures.length > 0) throw failures[0];
+  return [...byId.values()];
 }

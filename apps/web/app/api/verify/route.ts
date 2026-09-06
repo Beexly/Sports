@@ -7,7 +7,7 @@ import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 /**
  * Public Proof-of-Record verification — the skeptic's endpoint.
  *
- * Every pick mints a tamper-evident receipt BEFORE kickoff (payload +
+ * Every book-priced pick mints a tamper-evident receipt BEFORE kickoff (payload +
  * SHA-256 content hash, frozen, never rewritten). This endpoint lets anyone
  * paste a receipt hash and confirm the commitment still matches: the stored
  * payload is re-hashed live and compared against the frozen hash, so a

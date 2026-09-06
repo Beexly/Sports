@@ -32,7 +32,10 @@ import {
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 120;
+// 300s (the Vercel Pro cron ceiling, same as refresh-odds): this route was among
+// the 583 "Task timed out after 120 seconds" Vercel runtime errors recorded
+// 2026-08-10..2026-09-05, which aborted the plan->act cycle before it reported.
+export const maxDuration = 300;
 
 function envFlag(name: string): boolean {
   return process.env[name]?.trim().toLowerCase() === "true";

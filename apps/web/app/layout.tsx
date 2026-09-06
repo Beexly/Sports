@@ -19,7 +19,6 @@ import {
 import { CommandPalette } from "@/components/ui/command-palette";
 import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
-import { SentientShell } from "@/components/motion/sentient-shell";
 import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 import {
   shouldRenderCloudflareAnalytics,
@@ -229,7 +228,12 @@ export default function RootLayout({
         {children}
         <CommandPalette />
         <GalaxyCursor />
-        <SentientShell />
+        {/* SentientShell (GhostJarvis "machine thoughts", a coin-flip "data
+            uncertainty" glitch, dream mode, thermal toggle) is no longer mounted
+            on public routes: first-person machine narration and a random
+            interference effect that claims uncertainty without a data signal
+            contradict "not AI, math you can read" and rule 1 (no fabricated
+            signals). The components remain for /cockpit use. */}
         <PageExplainerAuto />
         <SentryClientInit />
 

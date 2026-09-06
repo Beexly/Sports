@@ -26,7 +26,7 @@ import {
   daysApart,
   type ComparableGame,
 } from "./ncaa-consensus";
-import { normalizeTeamToken } from "./score-verification";
+import { foldDiacritics, normalizeTeamToken } from "./score-verification";
 
 export type Confirmation = "CONFIRMED" | "SINGLE_SOURCE" | "DISPUTED";
 
@@ -121,13 +121,24 @@ export type PendingPick = {
   readonly gameDateIso: string;
 };
 
-/** Token equality or containment (handles "LAD" vs "Los Angeles Dodgers" via abbr path). */
+/**
+ * Shortest token that may match by substring containment. Anything shorter is an
+ * abbreviation ("LA", "SEA", "FLA", "DC") and must match exactly. Replayed on the
+ * 2026-08-29 MLS board, "LA" (LA Galaxy) was contained in atLAnta, orLAndo,
+ * philadeLphiA and portLAnd, and on the 2025-09-06 CFB board "FLA" (Florida) sat
+ * inside Saint Francis Red FLAsh, so one final satisfied many picks and a pick was
+ * graded off a different game once its true final was missing from the board.
+ */
+export const MIN_CONTAINMENT_TOKEN_LENGTH = 4;
+
+/** Token equality, or containment when the shorter token is a real name fragment (>= 4 chars). */
 export function teamTokensMatch(a: string, b: string): boolean {
   if (!a || !b) return false;
-  if (a === b || a.includes(b) || b.includes(a)) return true;
-  // Require short tokens (abbrs) to match as whole-token containment only when len>=2
-  // already covered by includes. No fuzzy beyond that.
-  return false;
+  if (a === b) return true;
+  const shorter = a.length <= b.length ? a : b;
+  const longer = shorter === a ? b : a;
+  if (shorter.length < MIN_CONTAINMENT_TOKEN_LENGTH) return false;
+  return longer.includes(shorter);
 }
 
 /** Multi-word city / place prefixes common in US pro sports display names. */
@@ -194,14 +205,28 @@ const TOKEN_ALIASES: Readonly<Record<string, readonly string[]>> = {
 
 
 /**
+ * Tokens that name a KIND of club, not a club. Emitted as standalone tokens they
+ * let "Charlotte FC @ Toronto FC" match every FC / SC / United final on a board
+ * (8 of 13 MLS games on 2026-08-29 were held AMBIGUOUS_MATCH). The full normalized
+ * name ("torontofc") still carries the suffix; only the bare fragment is dropped.
+ */
+export const GENERIC_TEAM_TOKENS: ReadonlySet<string> = new Set(
+  [
+    "fc", "sc", "cf", "afc", "cfc", "united", "city", "club", "real", "sporting",
+    "state", "st", "university", "univ", "college", "the", "of", "and", "team",
+  ].map((t) => normalizeTeamToken(t)),
+);
+
+/**
  * Expand a team display string into match tokens:
  * full normalized string, last-word / last-two-words nicknames, city-stripped
  * nickname, and a small alias table for known short forms (A's, D-backs, …).
+ * Generic club-kind fragments (GENERIC_TEAM_TOKENS) are never emitted alone.
  */
 export function expandTeamMatchTokens(name: string): string[] {
   const full = normalizeTeamToken(name);
   if (!full) return [];
-  const lower = name.toLowerCase().replace(/['']/g, ""); // Athletics / A's
+  const lower = foldDiacritics(name).toLowerCase().replace(/['']/g, ""); // Athletics / A's
   const words = lower
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
@@ -239,7 +264,7 @@ export function expandTeamMatchTokens(name: string): string[] {
     }
   }
 
-  return [...out].filter((t) => t.length >= 2);
+  return [...out].filter((t) => t.length >= 2 && !GENERIC_TEAM_TOKENS.has(t));
 }
 
 function finalSideTokens(side: { name: string; abbr: string }): string[] {
@@ -249,15 +274,27 @@ function finalSideTokens(side: { name: string; abbr: string }): string[] {
   ].filter(Boolean);
 }
 
-/** Does this trusted final involve both of the pick's teams (name OR abbr, either orientation)? */
+function sideMatches(pickTokens: readonly string[], finalTokens: readonly string[]): boolean {
+  return pickTokens.some((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
+}
+
+/**
+ * Does this trusted final involve both of the pick's teams, one on each side?
+ * Bipartite by construction: pick.home must match ONE side of the final and
+ * pick.away the OTHER (either orientation). The earlier check tested each pick
+ * side against the union of both final sides, so a single shared token (a bare
+ * "fc", a two-letter abbreviation) satisfied both sides at once.
+ */
 export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
   const pickHome = expandTeamMatchTokens(pick.homeTeam);
   const pickAway = expandTeamMatchTokens(pick.awayTeam);
   if (pickHome.length === 0 || pickAway.length === 0) return false;
-  const finalTokens = [...finalSideTokens(f.home), ...finalSideTokens(f.away)];
-  const homeOk = pickHome.some((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
-  const awayOk = pickAway.some((pt) => finalTokens.some((ft) => teamTokensMatch(pt, ft)));
-  return homeOk && awayOk;
+  const finalHome = finalSideTokens(f.home);
+  const finalAway = finalSideTokens(f.away);
+  return (
+    (sideMatches(pickHome, finalHome) && sideMatches(pickAway, finalAway)) ||
+    (sideMatches(pickHome, finalAway) && sideMatches(pickAway, finalHome))
+  );
 }
 
 /** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */

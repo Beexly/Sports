@@ -23,8 +23,12 @@ const ESPN_TIMEOUT_MS = 15 * 1000;
 // ESPN's scoreboard endpoint returns a small default page and silently truncates the event
 // list on busy dates (CFB Saturdays, multi-league soccer days). This is the settlement scores
 // path, so a truncated board means completed games never receive final scores and stay
-// unsettled. An explicit high limit forces the full board.
-const ESPN_SCOREBOARD_LIMIT = 1000;
+// unsettled. An explicit limit forces the full board, but only inside ESPN's accepted range:
+// measured live 2026-09-05, limit=300..500 returns the full CFB board (80 events for
+// 20250906) while limit>=999 makes ESPN fall back to its 25-event default page. The prior
+// value (1000) was the truncation it was meant to prevent. Same constant as
+// apps/web/lib/data-sources/free-adapters/espn-scores.ts and espn-schedule-seed.ts.
+const ESPN_SCOREBOARD_LIMIT = 300;
 
 export type EspnLeague = "nfl" | "nba" | "mlb" | "nhl" | "ncaaf" | "ncaab";
 

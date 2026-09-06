@@ -153,10 +153,14 @@ export function espnHorizonDateKeys(now: Date, horizonDays: number): string[] {
 
 /**
  * ESPN's scoreboard endpoint returns a small default page and silently truncates the
- * event list on busy dates (CFB Saturdays, multi-league soccer days). An explicit high
- * limit forces the full board so games are never dropped before reaching the Game table.
+ * event list on busy dates (CFB Saturdays, multi-league soccer days). An explicit limit
+ * forces the full board so games are never dropped before reaching the Game table, but
+ * only inside ESPN's accepted range: measured live 2026-09-05, limit=300..500 returns the
+ * full CFB board (80 events for 20250906) while limit>=999 falls back to the 25-event
+ * default page. The prior value (1000) caused the truncation it was meant to prevent.
+ * Keep in step with apps/web/lib/data-sources/free-adapters/espn-scores.ts.
  */
-export const ESPN_SCOREBOARD_LIMIT = 1000;
+export const ESPN_SCOREBOARD_LIMIT = 300;
 
 export async function fetchEspnSeedGamesForSport(
   short: ShortSportKey,

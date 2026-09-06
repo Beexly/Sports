@@ -69,8 +69,12 @@ describe("/dashboard — tier-gated picks", () => {
 
   it("gates confidence rendering on the canSeeConfidence entitlement", () => {
     expect(dashboardSrc).toMatch(/showConfidence=\{entitlements\.canSeeConfidence\}/);
-    // The raw "% conf" readout must be inside the showConfidence branch.
-    expect(dashboardSrc).toMatch(/showConfidence\s*\?\s*\([\s\S]{0,200}% conf/);
+    // The raw confidence readout must be inside the showConfidence branch, and it
+    // is a score out of 100, never a percent (a percent reads as a win probability;
+    // the >= 80 tail is measured inverted). Same rule as the pick card.
+    expect(dashboardSrc).toMatch(/showConfidence\s*\?\s*\([\s\S]{0,300}\{pick\.confidence\}\/100/);
+    expect(dashboardSrc).not.toMatch(/% conf/);
+    expect(dashboardSrc).not.toMatch(/Confidence \$\{pick\.confidence\}%/);
   });
 
   it("loads entitlements through the canonical server-side helper", () => {

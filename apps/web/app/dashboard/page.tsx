@@ -270,7 +270,29 @@ export default async function DashboardPage({
               /dashboard?upgraded=true. One-time (URL-param-driven) banner that
               confirms the locked founding rate and points at what just unlocked
               — first-session activation is the strongest churn lever. */}
-          {searchParams?.upgraded === "true" && (
+          {/* The success banner is gated on the RESOLVED entitlement, not the URL
+              param: a buyer whose webhook is still retrying (or who typed the URL)
+              must never be told access is live when the board will show the free
+              tier. The pending state below is what they see instead. */}
+          {searchParams?.upgraded === "true" && entitlements.tier === "FREE" && (
+            <div
+              data-testid="upgrade-pending-banner"
+              className="mb-6 rounded-xl border border-ion-2/50 bg-ion-2/10 p-5"
+            >
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ion-1">
+                Payment received. Activating your plan.
+              </p>
+              <p className="mt-2 text-sm font-semibold text-ion-white">
+                Your access is being confirmed with the payment processor.
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-ion-1">
+                This usually completes within a minute. Refresh this page; if it still shows
+                the free tier after a few minutes, reply to your receipt email or use the
+                contact page and we will confirm it by hand.
+              </p>
+            </div>
+          )}
+          {searchParams?.upgraded === "true" && entitlements.tier !== "FREE" && (
             <div
               data-testid="upgrade-success-banner"
               className="mb-6 rounded-xl border border-verify/50 bg-verify/10 p-5"
@@ -283,8 +305,9 @@ export default async function DashboardPage({
                 subscription.
               </p>
               <p className="mt-1 text-xs leading-relaxed text-ion-1">
-                Confidence scores, the full factor trail, and line movement are now live on
-                every pick.
+                {entitlements.tier === "FANTASY"
+                  ? "The fantasy suite is now live on your account."
+                  : "Confidence scores, the full factor trail, and line movement are now live on every pick."}
                 {entitlements.tier === "ELITE"
                   ? " Email and push alerts on your followed picks — delivered when they grade — are included with Elite."
                   : ""}
@@ -505,7 +528,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
         {showConfidence && (
           <div
             data-testid="confidence-bar"
-            aria-label={`Confidence ${pick.confidence}%`}
+            aria-label={`Model confidence ${pick.confidence} out of 100 (selection score, not a win probability)`}
             className="mt-1 h-1 w-full overflow-hidden rounded-full bg-titanium"
           >
             <div
@@ -517,9 +540,12 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
       </div>
       <div className="flex shrink-0 flex-col items-end gap-1 text-right">
         <GradeBadge grade={pick.pickGrade} />
+        {/* A score out of 100, never a percent: "%" reads as a win probability,
+            which this heuristic is not (the >= 80 tail is measured inverted).
+            Same rule as components/picks/pick-card.tsx. */}
         {showConfidence ? (
           <span className={`text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
-            {pick.confidence}% conf
+            {pick.confidence}/100
           </span>
         ) : (
           <Link
