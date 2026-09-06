@@ -193,6 +193,22 @@ describe("fetchRundownEventsForSport rate limit", () => {
     expect(out.events).toEqual([]);
     expect(calls).toBe(1);
     expect(out.error ?? "").toMatch(/429|rate_limited/);
+    expect(out.rateLimited).toBe(true);
+  });
+
+  it("reports rateLimited=false on a clean empty response (no 429)", async () => {
+    const { fetchRundownEventsForSport } = await import("../rundown-client.js");
+    const fetchImpl = async () =>
+      new Response(JSON.stringify({ events: [] }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    const out = await fetchRundownEventsForSport("americanfootball_nfl", "k", {
+      daySpan: 1,
+      date: "2026-08-10",
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    expect(out.rateLimited).toBe(false);
   });
 });
 
