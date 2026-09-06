@@ -79,7 +79,14 @@ export class SettlementRaceRollback extends Error {
   readonly gameId: string;
   /** KICKOFF: the game moved into the future. SCORE: a different FINAL landed. */
   readonly cause: "KICKOFF" | "SCORE";
-  constructor(pickId: string, gameId: string, cause: "KICKOFF" | "SCORE") {
+  /** The kickoff the database held when the write was refused, when known. */
+  readonly kickoffAt: Date | null;
+  constructor(
+    pickId: string,
+    gameId: string,
+    cause: "KICKOFF" | "SCORE",
+    kickoffAt: Date | null = null,
+  ) {
     super(
       `settlement race (${cause}): game ${gameId} refused the FINAL write for pick ${pickId}`,
     );
@@ -87,6 +94,7 @@ export class SettlementRaceRollback extends Error {
     this.pickId = pickId;
     this.gameId = gameId;
     this.cause = cause;
+    this.kickoffAt = kickoffAt;
   }
 }
 
@@ -106,6 +114,8 @@ export type SettlementWriteRefusal =
 export type SettlementWriteResult = {
   readonly count: number;
   readonly refusal: SettlementWriteRefusal | null;
+  /** The kickoff the database held when a kickoff refusal was decided. */
+  readonly kickoffAt?: Date | null;
 };
 
 
@@ -153,7 +163,11 @@ export async function writeFreeSettlementInTx(
         `commence=${currentKickoff?.commenceTime.toISOString() ?? "missing"} ` +
         `— the game has not started as of this cycle; leaving the pick PENDING.`,
     );
-    return { count: 0, refusal: "KICKOFF_MOVED" };
+    return {
+      count: 0,
+      refusal: "KICKOFF_MOVED",
+      kickoffAt: currentKickoff?.commenceTime ?? null,
+    };
   }
 
   if (args.homeScore != null && args.awayScore != null) {
@@ -231,7 +245,32 @@ export async function writeFreeSettlementInTx(
       { subjectId: args.pickId, kind: "SNAPSHOT_OUTCOME" },
     ],
   );
-  if (args.homeScore != null && args.awayScore != null) {
+  if (args.homeScore == null || args.awayScore == null) {
+    // A scoreless outcome (an honest VOID) writes no FINAL, so nothing here
+    // took a row lock on the game and the pick write's relation filter was the
+    // only guard it had. A postponement committing after that statement then
+    // left a VOID stamped on a game nobody has played (Devin Review, #717).
+    // Write the kickoff back to the value we just read, under the same
+    // predicate: it changes nothing, it refuses when the game has moved, and
+    // holding the row until commit is what stops the correction from slipping
+    // in behind us.
+    const held = await tx.game.updateMany({
+      where: { id: args.gameId, commenceTime: { lte: args.settledAt } },
+      data: { commenceTime: currentKickoff.commenceTime },
+    });
+    if (held.count === 0) {
+      const after = await tx.game.findUnique({
+        where: { id: args.gameId },
+        select: { commenceTime: true },
+      });
+      throw new SettlementRaceRollback(
+        args.pickId,
+        args.gameId,
+        "KICKOFF",
+        after?.commenceTime ?? null,
+      );
+    }
+  } else {
     // updateMany, not update: it carries the guards so a concurrent correction
     // makes it match nothing instead of throwing a record-not-found, exactly as
     // the pick write above does.
@@ -277,7 +316,12 @@ export async function writeFreeSettlementInTx(
       });
       const movedOut =
         after === null || after.commenceTime.getTime() > args.settledAt.getTime();
-      throw new SettlementRaceRollback(args.pickId, args.gameId, movedOut ? "KICKOFF" : "SCORE");
+      throw new SettlementRaceRollback(
+        args.pickId,
+        args.gameId,
+        movedOut ? "KICKOFF" : "SCORE",
+        after?.commenceTime ?? null,
+      );
     }
   }
   return { count: updated.count, refusal: null };
@@ -307,6 +351,7 @@ export async function settleOnePickGuarded(
       return {
         count: 0,
         refusal: txErr.cause === "KICKOFF" ? "ROLLED_BACK_KICKOFF" : "ROLLED_BACK_SCORE",
+        kickoffAt: txErr.kickoffAt,
       };
     }
     throw txErr;
@@ -698,24 +743,42 @@ export async function runFreePathSettlement(options?: {
             clv: clvValue,
             settledAtIso: settledAt.toISOString(),
           });
+        } else if (written.refusal === "ALREADY_SETTLED") {
+          // Another worker settled this pick. It is neither this runner's
+          // backlog nor a race this runner lost, so it belongs in neither the
+          // pending count nor the WRITE_RACE_LOST reprocess plan (Devin
+          // Review, #717) — recording it there would have the STP lane chase a
+          // pick that is already terminal.
+          continue;
         } else {
-          // A refused write is not a silent no-op: every refusal except
-          // ALREADY_SETTLED leaves the pick PENDING and therefore still in this
-          // runner's backlog, and the count that reports that backlog was
-          // dropping them (cubic, #717). ALREADY_SETTLED belongs to whichever
-          // worker did settle it, so it is deliberately not counted here.
-          if (written.refusal !== "ALREADY_SETTLED") stillPending++;
+          // Every other refusal leaves the pick PENDING and therefore still in
+          // this runner's backlog, and the count that reports that backlog was
+          // dropping them (cubic, #717).
+          stillPending++;
+          // A kickoff refusal means the game moved; ageHours computed from the
+          // kickoff we LOADED would report it as an overdue score failure when
+          // it has not been played at all, so re-age it against the kickoff the
+          // database actually holds (cubic, #717).
+          const movedKickoff =
+            (written.refusal === "KICKOFF_MOVED" ||
+              written.refusal === "ROLLED_BACK_KICKOFF") &&
+            written.kickoffAt instanceof Date
+              ? written.kickoffAt
+              : null;
           rcaInputs.push({
             pickId: o.pickId,
             sportKey: sport.key,
-            ageHours,
+            ageHours: movedKickoff
+              ? (now.getTime() - movedKickoff.getTime()) / (60 * 60 * 1000)
+              : ageHours,
             graceHours,
-            // KICKOFF_MOVED is a schedule correction, not a lost race: the game
-            // has not been played, so it reads as an ordinary pending pick.
-            // The race and conflict refusals keep WRITE_FAILED, which the RCA
-            // classifies as WRITE_RACE_LOST — the signal an operator needs when
-            // one repeats every cycle.
-            outcomeStatus: written.refusal === "KICKOFF_MOVED" ? "PENDING" : "WRITE_FAILED",
+            // A moved kickoff is a schedule correction, not a lost race: the
+            // game has not been played, so it reads as an ordinary pending
+            // pick and a negative age classifies it NOT_COMMENCED. The score
+            // conflict and score rollback keep WRITE_FAILED, which the RCA
+            // classifies as WRITE_RACE_LOST — the signal an operator needs
+            // when one repeats every cycle.
+            outcomeStatus: movedKickoff ? "PENDING" : "WRITE_FAILED",
             settlementPath: "free",
           });
         }

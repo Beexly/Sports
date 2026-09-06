@@ -375,6 +375,41 @@ describe("settlement write under a mid-transaction schedule correction", () => {
     expect(written.refusal).toBe("ROLLED_BACK_KICKOFF");
   });
 
+  it("rolls a scoreless VOID back when the postponement commits after the pick write", async () => {
+    // A scoreless outcome writes no FINAL, so nothing took a row lock on the
+    // game and the pick write's relation filter was the only guard. A
+    // correction committing after that statement left a VOID stamped on a game
+    // nobody has played (Devin Review, #717).
+    store.onAfterPickWrite = () => {
+      store.game = { ...store.game, commenceTime: POSTPONED_TO };
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), {
+      ...ARGS,
+      result: "VOID",
+      homeScore: null,
+      awayScore: null,
+    });
+
+    expect(written.count).toBe(0);
+    expect(written.refusal).toBe("ROLLED_BACK_KICKOFF");
+    expect(store.pick.result).toBe("PENDING");
+    expect(store.pick.settledAt).toBeNull();
+    expect(store.events).toHaveLength(0);
+    expect(store.work).toHaveLength(0);
+    expect(store.game.commenceTime).toEqual(POSTPONED_TO);
+  });
+
+  it("hands back the kickoff the database held, so the refusal can be aged correctly", async () => {
+    store.onAfterPickWrite = () => {
+      store.game = { ...store.game, commenceTime: POSTPONED_TO };
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), ARGS);
+
+    expect(written.kickoffAt).toEqual(POSTPONED_TO);
+  });
+
   it("rethrows anything that is not the deliberate rollback", async () => {
     const boom = new Error("connection reset");
     await expect(

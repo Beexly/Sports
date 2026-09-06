@@ -427,9 +427,29 @@ export function finalMatchesNearestFixture(
   if (!Number.isFinite(kickoff) || !Number.isFinite(start)) return false;
   const starts = fixtureStartIsos.map((iso) => Date.parse(iso)).filter((t) => Number.isFinite(t));
   if (starts.length < 2) return false;
-  const nearestTo = (t: number): number =>
-    starts.reduce((best, s) => (Math.abs(s - t) < Math.abs(best - t) ? s : best), starts[0]!);
-  return nearestTo(kickoff) === nearestTo(start);
+  // A tie is not an assignment. With the kickoff (or the final) exactly between
+  // two fixture starts there is no nearest row, and `<` silently handed it to
+  // whichever start came first in the array — settling a game that is by
+  // construction unidentifiable (cubic, #717).
+  const nearestTo = (t: number): number | null => {
+    let best = starts[0]!;
+    let tied = false;
+    for (const s of starts.slice(1)) {
+      const d = Math.abs(s - t);
+      const bd = Math.abs(best - t);
+      if (d < bd) {
+        best = s;
+        tied = false;
+      } else if (d === bd && s !== best) {
+        tied = true;
+      }
+    }
+    return tied ? null : best;
+  };
+  const own = nearestTo(kickoff);
+  const placed = nearestTo(start);
+  if (own === null || placed === null) return false;
+  return own === placed;
 }
 
 /** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */

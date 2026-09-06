@@ -1168,9 +1168,10 @@ describe("persistFreeScores — an unfinished doubleheader is never resolved by 
   });
 
   it("still holds when the doubleheader straddles UTC midnight", async () => {
-    // 17:00 / 20:00 ET is a real MLB doubleheader shape and it lands on two
-    // different UTC days. The day-string fixture filter saw only one of the two
-    // rows here, so the guard silently stopped guarding (cubic, #717).
+    // 18:00 / 21:00 ET (June, so EDT) is a real MLB doubleheader shape and it
+    // lands on two different UTC days. The day-string fixture filter saw only
+    // one of the two rows here, so the guard silently stopped guarding
+    // (cubic, #717).
     vi.setSystemTime(new Date("2026-06-16T02:00:00.000Z"));
     const gameTwo = new Date("2026-06-16T01:00:00.000Z");
     const gameOne = new Date("2026-06-15T22:00:00.000Z");

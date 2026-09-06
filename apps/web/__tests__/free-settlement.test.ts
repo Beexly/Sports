@@ -6,6 +6,7 @@ import { parseHenrygdScoreboard, type NcaaGame } from "@/lib/data-sources/free-a
 import {
   buildTrustedFinals,
   finalBindsToKickoff,
+  finalMatchesNearestFixture,
   MAX_KICKOFF_DRIFT_MS,
   settlePendingPicks,
   type PendingPick,
@@ -285,6 +286,40 @@ describe("finalBindsToKickoff — a malformed timestamp is not evidence", () => 
  * call settlePendingPicks and all already hand it the full board, so one guard
  * here covers every path that can publish a graded result (Devin Review, #717).
  */
+describe("finalMatchesNearestFixture", () => {
+  const one = "2026-09-06T17:00:00.000Z";
+  const two = "2026-09-06T21:00:00.000Z";
+
+  it("places a final on the fixture it sits nearest", () => {
+    expect(finalMatchesNearestFixture(two, two, [one, two])).toBe(true);
+    expect(finalMatchesNearestFixture(two, one, [one, two])).toBe(false);
+  });
+
+  it("refuses a tie rather than taking whichever start sorted first", () => {
+    // A kickoff exactly between two fixtures has no nearest row. Comparing with
+    // `<` handed it to the first entry and settled a game that is by
+    // construction unidentifiable (cubic, #717).
+    const midpoint = "2026-09-06T19:00:00.000Z";
+    // Both directions of the tie. Taking the first entry made each of these
+    // read as a successful placement on the fixture that merely sorted first.
+    expect(finalMatchesNearestFixture(midpoint, one, [one, two])).toBe(false);
+    expect(finalMatchesNearestFixture(one, midpoint, [one, two])).toBe(false);
+    // And it is the TIE that refuses, not the midpoint: with a third fixture
+    // that is unambiguously nearer, the same midpoint places fine.
+    expect(finalMatchesNearestFixture(midpoint, midpoint, [one, two, midpoint])).toBe(true);
+  });
+
+  it("accepts everything when the board lists fewer than two fixtures", () => {
+    expect(finalMatchesNearestFixture(two, one, [two])).toBe(true);
+  });
+
+  it("refuses when any timestamp in the comparison carries no clock", () => {
+    expect(finalMatchesNearestFixture(two, two, [one.slice(0, 10), two])).toBe(false);
+    expect(finalMatchesNearestFixture(two, undefined, [one, two])).toBe(false);
+    expect(finalMatchesNearestFixture(two.slice(0, 10), two, [one, two])).toBe(false);
+  });
+});
+
 describe("settlePendingPicks — an unfinished doubleheader holds", () => {
   const HOUR = 60 * 60 * 1000;
   const gameTwo = "2026-09-06T23:10:00.000Z";
