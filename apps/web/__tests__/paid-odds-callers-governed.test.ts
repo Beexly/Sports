@@ -53,6 +53,38 @@ export function stripComments(src: string): string {
  * guard entirely (CodeRabbit, PR #713). The named import itself never matches,
  * because that is `processSport }` or `processSport,` and never `processSport(`.
  */
+/**
+ * The argument text of every `recordPaidRunAccounting(...)` call in `src`,
+ * comments already stripped, matched by balancing parentheses so a multi-line
+ * call with a nested object literal is captured whole.
+ */
+export function accountingCallArgs(src: string): string[] {
+  const code = stripComments(src);
+  const out: string[] = [];
+  const needle = "recordPaidRunAccounting";
+  let from = 0;
+  for (;;) {
+    const at = code.indexOf(needle, from);
+    if (at === -1) break;
+    from = at + needle.length;
+    let i = from;
+    while (i < code.length && /\s/.test(code[i]!)) i += 1;
+    if (code[i] !== "(") continue; // a mention, not a call
+    let depth = 0;
+    const start = i;
+    for (; i < code.length; i += 1) {
+      if (code[i] === "(") depth += 1;
+      else if (code[i] === ")") {
+        depth -= 1;
+        if (depth === 0) break;
+      }
+    }
+    out.push(code.slice(start + 1, i));
+    from = i;
+  }
+  return out;
+}
+
 export function callsProcessSport(src: string): boolean {
   const code = stripComments(src)
     // The declaration is the definition, not a caller: `processSport` itself
@@ -102,6 +134,30 @@ describe("C-109: the paid-caller detector itself", () => {
     expect(callsProcessSport("await client.processSport(s);")).toBe(false);
   });
 
+  it("reads the reservation flag from the call arguments, not from a comment", () => {
+    // The exact shape that used to slip through: the flag named only in prose.
+    const commentOnly = [
+      "// reserved:false when the governor failed open",
+      "await recordPaidRunAccounting(governor, sport.key, res);",
+    ].join("\n");
+    expect(accountingCallArgs(commentOnly)).toEqual(["governor, sport.key, res"]);
+    expect(accountingCallArgs(commentOnly)[0]).not.toMatch(/reserved:\s*\w/);
+
+    const real = "await recordPaidRunAccounting(governor, sport.key, res, { reserved: slotReserved });";
+    expect(accountingCallArgs(real)[0]).toMatch(/reserved:\s*\w/);
+
+    // Multi-line call with a nested object is captured whole.
+    const multiline = [
+      "await recordPaidRunAccounting(governor, sport.key, result, {",
+      "  reserved: slotReserved,",
+      "});",
+    ].join("\n");
+    expect(accountingCallArgs(multiline)[0]).toMatch(/reserved:\s*\w/);
+
+    // A bare mention is not a call.
+    expect(accountingCallArgs("recordPaidRunAccounting is the helper")).toEqual([]);
+  });
+
   it("does not treat the definition site as a caller", () => {
     expect(callsProcessSport("export async function processSport(sport, apiKey) {")).toBe(false);
     expect(callsProcessSport("async function processSport(sport) {")).toBe(false);
@@ -139,8 +195,16 @@ describe("C-109: every paid processSport caller is governed and accounted", () =
       // reserved:false is what tells the accounting to mark the FIRST paid
       // request itself, after a governor that failed open reserved nothing.
       // Omitting it defaults to true and silently under-counts that spend.
+      //
+      // Asserted on the CALL ARGUMENTS, not the file: a file-wide match also
+      // matched this rule's own explanatory comment in the caller, so it
+      // passed even when the call itself dropped the flag (cubic, PR #713).
       const src = readFileSync(resolve(repoRoot, rel), "utf8");
-      expect(src).toMatch(/reserved:\s*\w/);
+      const calls = accountingCallArgs(src);
+      expect(calls.length).toBeGreaterThan(0);
+      for (const args of calls) {
+        expect(args).toMatch(/reserved:\s*\w/);
+      }
     });
   }
 });
