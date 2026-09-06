@@ -30,6 +30,39 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-06 (16:40 UTC): PROVEN IS NOT CLOSE. Calibration eligibility reads RED on
+production and F-36's precondition cannot be met on current data. Do not wait for a publish
+receipt and do not flip anything.** Measured read of
+`/api/ops/public-surface-truth` `calibrationEligibility` at 16:38:22 UTC, generatedAt from the
+surface itself: status RED, `consecutiveGreen` 0 of `streakRequired` 3, reasons
+"Settlement not healthy" and "ECE 0.0524 > 0.05". Three of the four floors pass comfortably
+(n 458 against 100, Brier 0.1926 against 0.22, Murphy reliability 0.0053 against 0.05); ECE
+is the only failure and it is narrow. The settlement reason clears on its own when
+overduePending reaches 0 (it is 2 at 16:39, down from 16 this morning, the zero-sit lane
+voiding as designed). ECE does not clear on its own.
+
+Two things this corrects in the record above. First, the 2026-09-05 19:05 UTC note that "all
+four floors pass today" was measured on the receipt-only sample (n 115 after the soccer
+exclusion, ECE 0.0440). C-110's single-book resolution has since grown the sample to n 458,
+and on that fuller, more representative sample ECE reads 0.0524. That is not a regression: it
+is the honest number emerging with more data, and it is the number the gate reads. Second,
+the pooled figure flatters. Every individual model version measures WORSE than the pool:
+v5.2.7 (the current one, n 245) ECE 0.1089, v5.2.6 (n 110) 0.0587, v5.1.0 (n 74) 0.0729,
+v5.0.0 (n 29) 0.1531. A pooled number lower than every stratum it is built from is getting
+help from opposite-direction errors cancelling across strata, so 0.0524 should be read as the
+optimistic end of the range, not the true calibration of what is running. Publishing a PROVEN
+claim on a pooled figure while the deployed version alone measures 0.1089 is exactly the kind
+of thing this product's premise forbids.
+
+By sport, the miscalibration is concentrated and is in the safer direction for the two
+football books: MLB n 365 ECE 0.0501 (hit 0.649 against meanP 0.648, essentially calibrated),
+NCAAF n 65 ECE 0.1123 (hit 0.938 against meanP 0.871), NFL n 28 ECE 0.267 (hit 0.643 against
+meanP 0.586). NCAAF and NFL are UNDER-confident, beating their own stated probabilities, which
+costs ECE without overstating performance to a customer. MLB carries the sample and sits on
+the line. No agent should touch thresholds, floors or the engine to move this: law 9 forbids
+weakening the guard, and the engine is frozen under MODEL_VERSION. The levers are more settled
+rows and a real calibration pass, both founder-gated.
+
 **UPDATED 2026-09-06 (05:00 UTC): tonight's build is on `claude/sports-prediction-launch-rtiexc`
 (four code commits `b4885f214`, `3359e072a`, `23a0a3a0f`, `f06be6b31`; typecheck 0, lint 0,
 guardrails 26/26, five adversarial reviews approved).** C-109 credit governor DONE, C-110
