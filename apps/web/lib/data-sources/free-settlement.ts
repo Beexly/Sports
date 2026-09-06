@@ -298,18 +298,24 @@ export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
 }
 
 /**
- * How many fixtures for THIS pick's matchup does the board list on the pick's
- * own day? A doubleheader is the case time cannot solve: when game one is final
- * and game two is still live, only ONE final exists, so the multi-candidate hold
- * never fires and the two starts sit 2-4h apart, inside any drift bound that
- * still tolerates a rain delay. The only signal that a second game exists is the
+ * Which fixtures for THIS pick's matchup could the clock confuse with it? A
+ * doubleheader is the case time cannot solve: when game one is final and game
+ * two is still live, only ONE final exists, so the multi-candidate hold never
+ * fires and the two starts sit 2-4h apart, inside any drift bound that still
+ * tolerates a rain delay. The only signal that a second game exists is the
  * scoreboard itself (Devin Review, #717).
  *
- * Counts every row, played or not, because "not finished yet" is exactly the
+ * Bounded by the same drift the confusion needs, NOT by the calendar day. A
+ * 17:00 / 20:00 ET doubleheader straddles UTC midnight, so a day-string match
+ * saw only one of the two fixtures and the guard quietly stopped guarding for
+ * exactly the pairing it exists for (cubic, #717). A next-day meeting of the
+ * same series sits 24h out, well beyond the bound.
+ *
+ * Keeps every row, played or not, because "not finished yet" is exactly the
  * state being detected. Callers already hand the full board in as
  * `postponedCandidates`, so this costs nothing extra at any call site.
  */
-export function sameMatchupFixturesOnPickDay(
+export function sameMatchupFixturesNearKickoff(
   pick: PendingPick,
   scoreboard: readonly NormalizedGame[],
 ): readonly NormalizedGame[] {
@@ -317,8 +323,15 @@ export function sameMatchupFixturesOnPickDay(
   const pickAway = expandTeamMatchTokens(pick.awayTeam);
   if (pickHome.length === 0 || pickAway.length === 0) return [];
   const day = pick.gameDateIso.slice(0, 10);
+  const kickoff = pick.gameDateIso.includes("T") ? Date.parse(pick.gameDateIso) : Number.NaN;
   return scoreboard.filter((g) => {
-    if (!g.startTime || g.startTime.slice(0, 10) !== day) return false;
+    if (!g.startTime) return false;
+    const start = Date.parse(g.startTime);
+    const near =
+      Number.isFinite(kickoff) && Number.isFinite(start)
+        ? Math.abs(start - kickoff) <= MAX_KICKOFF_DRIFT_MS
+        : g.startTime.slice(0, 10) === day;
+    if (!near) return false;
     if (!g.home || !g.away) return false;
     const gHome = [
       ...expandTeamMatchTokens(g.home.team),
@@ -336,37 +349,74 @@ export function sameMatchupFixturesOnPickDay(
 }
 
 /**
- * In a doubleheader, is THIS pick's own fixture still unfinished?
+ * In a doubleheader, does THIS final belong to THIS pick's own fixture?
  *
  * A matchup-wide count cannot answer that: with game one final and game two
  * live it is equally true for a pick on either game, so counting held the
- * game-one pick whose result was legitimately in hand, and a game two that
- * never reached final would have left it held until the zero-sit lane voided a
- * correctly graded pick (Devin Review, #717).
+ * game-one pick whose result was legitimately in hand (Devin Review, #717).
  *
- * The board answers it exactly. The fixture nearest this pick's kickoff IS this
- * pick's game — the two starts are hours apart, far wider than any scheduling
- * jitter — so if that row is completed the pick may settle, and only when it is
- * NOT completed is any final we hold necessarily the sibling's.
+ * Neither can the board's `completed` flag on its own, which is what this
+ * helper used to read. buildTrustedFinals drops a completed row whose scores
+ * are null, so a fixture can be completed and still have no trusted final: the
+ * flag then said "settle" while the only usable final was the SIBLING's, and
+ * the pick was graded against the wrong game (Devin Review + cubic, #717). The
+ * flag also over-held the opposite case, holding a pick whose own final was in
+ * hand because the board had not caught up to marking its row completed.
  *
- * Returns false whenever the question cannot be asked (fewer than two fixtures,
- * no real kickoff, unparseable start times), leaving behaviour unchanged.
+ * The clock answers it exactly, in both directions. Assign the final to the
+ * fixture whose start it sits nearest, assign the pick to the fixture ITS
+ * kickoff sits nearest, and require the two to be the same fixture. The starts
+ * are hours apart, far wider than any scheduling jitter.
+ *
+ * Fails closed: a final that cannot be placed on the board by the clock (no
+ * start time, unparseable timestamps, a date-only kickoff) belongs to no
+ * fixture, so a doubleheader pick holds rather than grading on a guess. With
+ * fewer than two fixtures there is no doubleheader and nothing to disambiguate,
+ * so every final is accepted and the ordinary binding rules decide.
  */
-export function pickOwnFixtureUnfinished(
+export function finalBelongsToOwnFixture(
   pick: PendingPick,
+  final: TrustedFinal,
   scoreboard: readonly NormalizedGame[],
 ): boolean {
-  const rows = sameMatchupFixturesOnPickDay(pick, scoreboard);
-  if (rows.length < 2) return false;
+  const rows = sameMatchupFixturesNearKickoff(pick, scoreboard);
+  if (rows.length < 2) return true;
+  // A date-only kickoff parses as midnight UTC, hours from either fixture, so
+  // there is no clock to assign it with.
   if (!pick.gameDateIso.includes("T")) return false;
-  const kickoff = Date.parse(pick.gameDateIso);
-  if (!Number.isFinite(kickoff)) return false;
-  const withDelta = rows
-    .map((r) => ({ r, delta: Math.abs(Date.parse(r.startTime) - kickoff) }))
-    .filter((c) => Number.isFinite(c.delta));
-  if (withDelta.length < 2) return false;
-  withDelta.sort((a, b) => a.delta - b.delta);
-  return !withDelta[0]!.r.completed;
+  return finalMatchesNearestFixture(
+    pick.gameDateIso,
+    final.startIso,
+    rows.map((r) => r.startTime),
+  );
+}
+
+/**
+ * The clock-assignment rule above, addressed by plain timestamps so the score
+ * persister can apply the identical test to a Game row (it has no PendingPick).
+ * The persister compared a COUNT of board fixtures against a count of finals,
+ * which a prior-day final inside the +/-48h window silently disabled, and which
+ * held game one's perfectly good final along with game two's ambiguous one
+ * (cubic, #717).
+ *
+ * With fewer than two fixtures there is no doubleheader and every final is
+ * accepted. Otherwise both timestamps must place on the SAME board fixture, and
+ * anything unplaceable fails closed.
+ */
+export function finalMatchesNearestFixture(
+  kickoffIso: string,
+  finalStartIso: string | undefined,
+  fixtureStartIsos: readonly string[],
+): boolean {
+  if (fixtureStartIsos.length < 2) return true;
+  const kickoff = Date.parse(kickoffIso);
+  const start = finalStartIso ? Date.parse(finalStartIso) : Number.NaN;
+  if (!Number.isFinite(kickoff) || !Number.isFinite(start)) return false;
+  const starts = fixtureStartIsos.map((iso) => Date.parse(iso)).filter((t) => Number.isFinite(t));
+  if (starts.length < 2) return false;
+  const nearestTo = (t: number): number =>
+    starts.reduce((best, s) => (Math.abs(s - t) < Math.abs(best - t) ? s : best), starts[0]!);
+  return nearestTo(kickoff) === nearestTo(start);
 }
 
 /** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */
@@ -433,11 +483,13 @@ export function finalBindsToKickoff(kickoffIso: string, final: TrustedFinal): bo
     const start = Date.parse(final.startIso);
     // An unparseable timestamp is not evidence of a match. Returning true here
     // let a malformed startIso through the +/-2-day candidate filter and settle
-    // a pick off a stale score (CodeRabbit, #717). Fall back to the same
-    // one-day calendar rule used when there is no start time at all.
-    if (!Number.isFinite(kickoff) || !Number.isFinite(start)) {
-      return daysApart(final.date, kickoffIso.slice(0, 10)) <= 1;
-    }
+    // a pick off a stale score (CodeRabbit, #717), and falling back to the
+    // one-day calendar rule was still too generous: a prior doubleheader or
+    // series result on the SAME day passes that rule, which is exactly the
+    // failure the clock binding exists to stop (cubic, #717). The calendar
+    // fallback is for a final that genuinely carries no start time; a final
+    // that supplies a broken one binds to nothing.
+    if (!Number.isFinite(kickoff) || !Number.isFinite(start)) return false;
     return Math.abs(start - kickoff) <= MAX_KICKOFF_DRIFT_MS;
   }
   return daysApart(final.date, kickoffIso.slice(0, 10)) <= 1;
@@ -561,18 +613,19 @@ export function settlePendingPicks(
     // it (Devin Review, #717). If the board lists more fixtures for this
     // matchup on the pick's day than we hold finals for, one of them has not
     // finished and this pick is not identifiable by any clock.
-    const pickDayFinals = bound.filter(
-      (f) => f.date.slice(0, 10) === pick.gameDateIso.slice(0, 10),
-    ).length;
-    // Requires BOTH a second fixture and at least one final in hand. With zero
-    // finals this is the ordinary "not scored yet" case, which must stay
-    // PENDING/NO_FINAL so the zero-sit lane can age it out and VOID it with an
-    // RCA code; holding it here would strand it as AMBIGUOUS_MATCH forever.
-    if (pickDayFinals >= 1 && pickOwnFixtureUnfinished(pick, postponedCandidates)) {
+    const ownFixture = bound.filter((f) =>
+      finalBelongsToOwnFixture(pick, f, postponedCandidates),
+    );
+    // Requires BOTH a final in hand and none of them placeable on this pick's
+    // own fixture. With zero finals this is the ordinary "not scored yet" case,
+    // which must stay PENDING/NO_FINAL so the zero-sit lane can age it out and
+    // VOID it with an RCA code; holding it here would strand it as
+    // AMBIGUOUS_MATCH forever.
+    if (bound.length > 0 && ownFixture.length === 0) {
       return { pickId: pick.pickId, status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] };
     }
 
-    const candidates = nearestCandidates(pick, bound);
+    const candidates = nearestCandidates(pick, ownFixture);
 
     // Same-day rematch guard (e.g. an MLB doubleheader): two DIFFERENT completed
     // games between the same two teams can both fall inside the date-tolerance

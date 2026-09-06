@@ -247,13 +247,21 @@ describe("finalBindsToKickoff — a malformed timestamp is not evidence", () => 
   }
   const kickoff = "2026-09-06T23:10:00.000Z";
 
-  it("falls back to the one-day rule when startIso cannot be parsed, instead of accepting it", () => {
+  it("binds nothing when a supplied startIso cannot be parsed", () => {
     // Returning true here let a malformed timestamp through the +/-2-day
     // candidate filter and settle a pick off a stale score (CodeRabbit, #717).
+    // The one-day calendar fallback was still too generous: a same-day prior
+    // meeting passes it, which is the very case the clock binding exists to
+    // stop (cubic, #717). A final that supplies a broken timestamp binds to
+    // nothing, on any date.
     expect(finalBindsToKickoff(kickoff, final({ startIso: "not-a-date", date: "2026-09-04" }))).toBe(
       false,
     );
     expect(finalBindsToKickoff(kickoff, final({ startIso: "not-a-date", date: "2026-09-06" }))).toBe(
+      false,
+    );
+    // A final that carries NO start time still gets the one-day calendar rule.
+    expect(finalBindsToKickoff(kickoff, final({ startIso: undefined, date: "2026-09-06" }))).toBe(
       true,
     );
   });
@@ -339,11 +347,41 @@ describe("settlePendingPicks — an unfinished doubleheader holds", () => {
     expect(out.status).toBe("SETTLED");
   });
 
-  it("still holds the game-two pick when game two is postponed and never finals", () => {
+  it("holds when the pick's OWN fixture is completed but produced no final", () => {
+    // buildTrustedFinals drops a completed row whose scores are null, so a
+    // fixture can read completed on the board and still have no usable final.
+    // The old completed-flag heuristic read that as "settle" and graded this
+    // pick against the SIBLING's final (Devin Review + cubic, #717).
     const out = settlePendingPicks([dhPick], [gameOneFinal()], {
-      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, false)] as never,
+      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, true)] as never,
     })[0]!;
     expect(out.status).toBe("HELD");
+    expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
+  });
+
+  it("settles BOTH picks against their own final once both finals exist", () => {
+    // The mirror failure of the hold above: over-holding a pick whose own
+    // result is in hand is its own corruption, since the zero-sit lane would
+    // eventually VOID a correctly gradable pick (cubic, #717).
+    const gameTwoFinal: TrustedFinal = {
+      date: gameTwo.slice(0, 10),
+      startIso: gameTwo,
+      home: { name: "Phillies", abbr: "PHI", score: 6 },
+      away: { name: "Braves", abbr: "ATL", score: 3 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+    const gameOnePick: PendingPick = { ...dhPick, pickId: "dh-game-one", gameDateIso: gameOne };
+    const board = [boardRow(gameOne, true), boardRow(gameTwo, true)] as never;
+    const finals = [gameOneFinal(), gameTwoFinal];
+
+    const two = settlePendingPicks([dhPick], finals, { postponedCandidates: board })[0]!;
+    const one = settlePendingPicks([gameOnePick], finals, { postponedCandidates: board })[0]!;
+
+    expect(two.status).toBe("SETTLED");
+    expect(two.status === "SETTLED" ? two.homeScore : null).toBe(6);
+    expect(one.status).toBe("SETTLED");
+    expect(one.status === "SETTLED" ? one.homeScore : null).toBe(4);
   });
 
   it("settles normally when the board lists a single fixture that day", () => {

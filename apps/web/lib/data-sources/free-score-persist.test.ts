@@ -1061,8 +1061,19 @@ describe("persistFreeScores — guards that must hold at write time, not just re
  */
 describe("persistFreeScores — an unfinished doubleheader is never resolved by time", () => {
   const HOUR = 60 * 60 * 1000;
+  // Pinned, not Date.now(): these fixtures sit 1-4h back, so between 00:00 and
+  // 04:00 UTC game one crossed into the previous calendar day, the board filter
+  // stopped seeing it and the guard silently stopped being exercised — a
+  // regression test that passed 20 hours a day (cubic, #717).
+  const NOW = new Date("2026-06-15T23:00:00.000Z");
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(NOW);
+  });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -1094,7 +1105,7 @@ describe("persistFreeScores — an unfinished doubleheader is never resolved by 
   }
 
   it("holds game two while game one is final and game two is still in progress", async () => {
-    const gameTwo = new Date(Date.now() - 1 * HOUR);
+    const gameTwo = new Date(NOW.getTime() - 1 * HOUR);
     const gameOne = new Date(gameTwo.getTime() - 3 * HOUR); // 3h earlier: inside the drift bound
     const day = gameTwo.toISOString().slice(0, 10);
 
@@ -1156,8 +1167,218 @@ describe("persistFreeScores — an unfinished doubleheader is never resolved by 
     expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
   });
 
+  it("still holds when the doubleheader straddles UTC midnight", async () => {
+    // 17:00 / 20:00 ET is a real MLB doubleheader shape and it lands on two
+    // different UTC days. The day-string fixture filter saw only one of the two
+    // rows here, so the guard silently stopped guarding (cubic, #717).
+    vi.setSystemTime(new Date("2026-06-16T02:00:00.000Z"));
+    const gameTwo = new Date("2026-06-16T01:00:00.000Z");
+    const gameOne = new Date("2026-06-15T22:00:00.000Z");
+    expect(gameOne.toISOString().slice(0, 10)).not.toBe(gameTwo.toISOString().slice(0, 10));
+
+    armWithBoard(
+      [
+        makeGameRow({
+          id: "game-two-across-midnight",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: gameTwo,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        makeTrustedFinal({
+          date: gameOne.toISOString().slice(0, 10),
+          startIso: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+      [
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-1",
+          startTime: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+        }),
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-2",
+          startTime: gameTwo.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: null,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: null,
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it("holds when a prior-day final also sits inside the search window", async () => {
+    // The first version of this guard compared a COUNT of board fixtures to a
+    // count of finals. Yesterday's meeting of the same series is inside the
+    // +/-48h window, so it raised the final count to two and switched the guard
+    // off entirely (cubic, #717).
+    const gameTwo = new Date(NOW.getTime() - 1 * HOUR);
+    const gameOne = new Date(gameTwo.getTime() - 3 * HOUR);
+    const yesterday = new Date(gameOne.getTime() - 24 * HOUR);
+    const day = gameTwo.toISOString().slice(0, 10);
+
+    armWithBoard(
+      [
+        makeGameRow({
+          id: "game-two-of-dh",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: gameTwo,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        makeTrustedFinal({
+          date: yesterday.toISOString().slice(0, 10),
+          startIso: yesterday.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 1,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 0,
+          confirmation: "CONFIRMED",
+        }),
+        makeTrustedFinal({
+          date: day,
+          startIso: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+      [
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-1",
+          startTime: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+        }),
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-2",
+          startTime: gameTwo.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: null,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: null,
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it("WRITES game one's own final while game two is still in progress", async () => {
+    // The mirror failure: an aggregate hold skipped the opener's perfectly good
+    // final along with the sibling's ambiguous one, leaving a finished game
+    // unscored and its picks to be voided by the zero-sit lane (cubic, #717).
+    const gameTwo = new Date(NOW.getTime() - 1 * HOUR);
+    const gameOne = new Date(gameTwo.getTime() - 3 * HOUR);
+    const day = gameTwo.toISOString().slice(0, 10);
+
+    armWithBoard(
+      [
+        makeGameRow({
+          id: "game-one-of-dh",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: gameOne,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        makeTrustedFinal({
+          date: day,
+          startIso: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+      [
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-1",
+          startTime: gameOne.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+        }),
+        makeEspnGame({
+          sport: "mlb",
+          gameId: "dh-2",
+          startTime: gameTwo.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: null,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: null,
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
+    const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
+      where: { id: string };
+      data: { homeScore: number; awayScore: number };
+    };
+    expect(call.where.id).toBe("game-one-of-dh");
+    expect(call.data.homeScore).toBe(4);
+    expect(call.data.awayScore).toBe(2);
+  });
+
   it("settles normally when the board lists a single fixture for the matchup", async () => {
-    const kickoff = new Date(Date.now() - 3 * HOUR);
+    const kickoff = new Date(NOW.getTime() - 3 * HOUR);
     const day = kickoff.toISOString().slice(0, 10);
 
     armWithBoard(

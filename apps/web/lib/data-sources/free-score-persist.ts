@@ -27,6 +27,7 @@ import type { Sport } from "./source-router";
 import {
   buildTrustedFinals,
   expandTeamMatchTokens,
+  finalMatchesNearestFixture,
   MAX_KICKOFF_DRIFT_MS,
   nearestByKickoff,
   teamTokensMatch,
@@ -257,15 +258,23 @@ export async function persistFreeScores(options?: {
           );
           continue;
         }
-        // A doubleheader defeats the clock. When game one is final and game two
-        // is still in progress, only ONE final exists, so the multi-candidate
-        // hold above never fires, and the two fixtures start 2-4h apart, well
-        // inside MAX_KICKOFF_DRIFT_MS — game one's score would be written onto
-        // game two (cubic, #717). Time cannot separate them; only the board can.
-        // If it lists more fixtures for this matchup today than we hold finals
-        // for, at least one has not finished and this row is not identifiable.
+        // A doubleheader defeats the lone-candidate clock check. When game one
+        // is final and game two is still in progress, only ONE final exists, so
+        // the multi-candidate hold above never fires, and the two fixtures start
+        // 2-4h apart, well inside MAX_KICKOFF_DRIFT_MS — game one's score would
+        // be written onto game two (cubic, #717). The board separates them: read
+        // every fixture it lists for this matchup today.
+        // Bounded by the drift the confusion needs, not by the calendar day: a
+        // 17:00 / 20:00 ET doubleheader straddles UTC midnight, so a day-string
+        // match saw only one of the two fixtures and this guard quietly stopped
+        // guarding for exactly the pairing it exists for (cubic, #717).
         const fixturesToday = espn.filter((ev) => {
-          if (!ev.startTime || ev.startTime.slice(0, 10) !== day) return false;
+          if (!ev.startTime) return false;
+          const evStart = Date.parse(ev.startTime);
+          const near = Number.isFinite(evStart)
+            ? Math.abs(evStart - g.commenceTime.getTime()) <= MAX_KICKOFF_DRIFT_MS
+            : ev.startTime.slice(0, 10) === day;
+          if (!near) return false;
           const evHome = sideTokens({
             name: ev.home?.team ?? "",
             abbr: ev.home?.abbreviation ?? "",
@@ -282,18 +291,33 @@ export async function persistFreeScores(options?: {
             (hit(gHome, evHome) && hit(gAway, evAway)) ||
             (hit(gHome, evAway) && hit(gAway, evHome))
           );
-        }).length;
-        if (fixturesToday > matchesByTeam.length) {
+        });
+
+        const chosen = narrowed[0]!;
+
+        // Counting fixtures against finals was the first version of this guard
+        // and it was wrong twice over: a prior-day final inside the +/-48h
+        // window inflated the final count and silently disabled the hold, and
+        // when it did fire it skipped game one's perfectly good final along with
+        // game two's ambiguous one (cubic, #717). Assign by the clock instead —
+        // the same rule the shared grader applies to a pick — so a final only
+        // scores the row it actually places on.
+        if (
+          !finalMatchesNearestFixture(
+            g.commenceTime.toISOString(),
+            chosen.startIso,
+            fixturesToday.map((ev) => ev.startTime).filter((t): t is string => Boolean(t)),
+          )
+        ) {
           console.warn(
             `[free-score-persist] UNRESOLVED_DOUBLEHEADER game=${g.id} ` +
               `${g.awayTeamName} @ ${g.homeTeamName} day=${day} — the board lists ` +
-              `${fixturesToday} fixtures for this matchup but only ${matchesByTeam.length} ` +
-              `final(s); refusing to guess which one this row is.`,
+              `${fixturesToday.length} fixtures for this matchup and the chosen final ` +
+              `(start=${chosen.startIso ?? "none"}) does not place on this one; ` +
+              `refusing to guess which one this row is.`,
           );
           continue;
         }
-
-        const chosen = narrowed[0]!;
 
         // Narrowing cannot reject a LONE stale candidate: nearestByKickoff
         // returns a single-element list unchanged. So bind it explicitly. A
