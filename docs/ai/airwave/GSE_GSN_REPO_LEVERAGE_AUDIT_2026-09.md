@@ -1303,3 +1303,121 @@ snapshot, `shop-advantage.ts` wiring once a placement decision is made), a found
 cross-agent handoff already named above. The two standout "most of the way to done" items —
 the calibration-regression cron wiring and the Sleeper/League-Twin splice — are both small
 integration commits on top of code that already exists and is already tested, not new builds.
+
+---
+
+## Round 10 — new categories: play-by-play models, betting exchanges, injury data, distribution (2026-09-06)
+
+**Why this round exists**: founder instruction, verbatim in spirit — after nine rounds, "what
+leverage are you missing... don't be safe, research if you're scared." This round deliberately
+opened categories not yet touched: the academic/community play-by-play + win-probability
+ecosystem, betting exchanges beyond Kalshi, official-league injury data (GSE has zero
+player-availability signal outside the NFL), and distribution/growth rather than data/tech. One
+explicit boundary, stated up front and held throughout: this is not license to approach anything
+under the existing Polymarket compliance hold or to build toward scraping-evasion — those stay
+untouched by design, not by timidity. Five targets, all cloned/tested at the source level.
+
+### nflverse-data — a real, license-clean third probability signal, buildable today
+
+The single most directly actionable finding of this round. `nflverse/nflfastR`'s win-probability
+models are real, disciplined statistics — gradient-boosted trees with explicit monotone
+constraints, tuned via leakage-aware cross-validation pairing seasons a decade apart, with
+externally published calibration numbers (mean calibration error 0.0055-0.0066, roughly 3-7x
+better than the predecessor model they replaced) — not marketing claims. Critically, the
+**compiled release data** (not the R package, which is irrelevant to a TypeScript stack) ships
+from the companion `nflverse/nflverse-data` repo under a full, verified **CC-BY-4.0 license** —
+attribution-only, no non-commercial clause, no field-of-use restriction, explicitly covering the
+compiled database itself. Live-tested: a real `play_by_play_2025.csv.gz` release asset pulled
+directly (plain HTTP GET, no auth) contains 48,771 real rows with populated `wp`/`vegas_wp`/`epa`
+columns for the actual 2025 season. **GSE's data-ingestion-agent can build a thin adapter — GET
+the release asset, parse it, extract `wp` at the relevant play — as a genuine third probability
+signal (alongside the factor model and market-implied probability) for the internal drift/QA gap
+Round 7 already identified**, with its own `source-rights-registry.ts` entry (a clean
+`permission_not_required`-shaped case, distinct from ESPN/NCAA, but still worth an explicit row
+rather than assumed-clear by analogy). No schema change, no scraping, no founder ToS call needed
+— only a registry entry and the adapter itself.
+
+### CFBD — GSE may already have this signal one authenticated call away
+
+`sportsdataverse/cfbfastR` (the R wrapper) turned out to be the less important half of this dive:
+**CollegeFootballData's own REST API — the same `cfbd` source GSE's `cost-policy.ts` already
+references — returns pre-computed Predicted Points Added (`ppa`, CFBD's own EPA analogue) and
+win probability (`/metrics/wp`, `/metrics/wp/pregame`) directly as JSON**, confirmed by reading
+cfbfastR's own source (it's a thin GET wrapper around these exact endpoints) and live-testing the
+API directly (a real `401` with a documented free-key-signup message, confirming the auth model).
+If GSE registers a free CFBD key, the CFB equivalent of the nflverse signal above may need only a
+thin adapter, not a new R runtime or a licensing question at all. The `sportsdataverse-data`
+release mirror (same MIT-licensed, GitHub-Releases pattern as nflverse) is a dead end specifically
+for GSE — its play-by-play datasets ship only as R-serialized `.rds` files, no JSON/parquet
+mirror, so the live CFBD API is strictly the better path. One transferable pattern worth adopting
+regardless: cfbfastR refuses to compute EPA on a play-by-play feed with implausible play counts
+(too few for a completed game, or absurdly many) rather than silently producing confident-looking
+numbers on a truncated feed — a one-function sanity gate GSE's own multi-division CFB ingestion
+(FBS/FCS/G5 depth varies far more than the NFL) should consider before its factor model trusts a
+play-by-play frame it can't first sanity-check.
+
+### ProphetX and Novig — two real CFTC-licensed exchanges, not a fit today
+
+Both are genuine, primary-source-verified (CFTC.gov's own filing records, not just press
+coverage) Designated Contract Markets that launched sports-exchange products in 2026 — real
+market structure, not vaporware. Neither offers free, self-serve API access: both gate developer
+access behind an approval form/sales relationship, the same shape of blocker (unpriced rather
+than priced) that already ruled out a paid Odds-API dependency for the free-first board. ProphetX
+has a real strength in PGA/NBA player props corroborated independently of its own marketing.
+Two third-party aggregators (OpticOdds, and a separately-claimed but unverified oddspapi.io
+listing) offer trial/sales-gated access to both. Verdict: not buildable into WP-27's free board
+now; a legitimate paid-vendor shortlist item for later, and useful market-signal context that
+regulated sports-exchange betting is now durable structure, independent of any near-term build.
+
+### Injury data — MLB is a clean win today; NBA is right but currently unreachable
+
+GSE ships zero player-availability signal for NBA/MLB/NHL/MLS today. This dive found a real,
+immediately usable fix for one of those sports and a well-characterized blocker for another.
+**MLB's own official Stats API** (`statsapi.mlb.com/api/v1/transactions`, filtered to
+status-change transactions) is live, keyless, and confirmed working via a direct test today —
+`ssharpe42/mlb-injury`'s ~40 lines of Python scraping logic against this endpoint are directly
+portable into a `packages/data-ingestion` adapter matching GSE's existing free-source shape.
+**NBA's official injury source** (`ak-static.cms.nba.com`'s league-mandated participation-report
+PDFs, which `mxufc29/nbainjuries` — a real, actively-maintained, PyPI-published package — parses)
+is a genuinely clean rights position (a document the league contractually requires teams to
+file, republished by the league itself), but both `ak-static.cms.nba.com` and `stats.nba.com`
+returned no response or a 503 from this sandbox's egress — Akamai-level bot mitigation, not a
+rights or data-quality problem, and not resolved in this round. Two other candidates were
+conclusively ruled out with direct evidence: `balldontlie.io`'s own pricing page confirms its
+injury endpoint is paid-gated (Free tier explicitly excludes it), and Big Balls Data's own docs
+now state outright that its NBA/NHL injury feed's upstream provider is paused, serving stale
+`as_of` dates — not a secondhand rumor, confirmed from the vendor's own current page.
+Strategic note: official league Stats APIs are a structurally cleaner rights category than
+ESPN's hidden API or NCAA.com's restrictive ToS — worth the founder considering "official-source-
+first" as a standing per-domain sourcing principle, separate from whether NBA's specific domains
+are reachable from any given network today.
+
+### Discord distribution — a real, validated pattern GSE hasn't tried at all
+
+The one target this round chosen deliberately outside data/tech entirely. `fearandesire/
+Pluto-Betting-Bot` is a mature, 2,500+-commit production Discord bot (discord.js/TypeScript —
+directly compatible with GSE's own stack) running inside named NFL/NBA/fantasy-football Discord
+communities, but its own architecture diagram is honest that all real logic (odds, settlement,
+balances) lives in a private backend the open repo only calls — the reusable asset is the
+thin-client distribution pattern, not any code. Its `/predictions` feature (a free,
+no-currency-wagered pick-the-winner mode with streak badges and its own leaderboard) is
+functionally identical in spirit to GSE's own already-built, no-money paper-pick contest
+(`contests/store.ts`). Independent, separately-verified evidence that this pattern actually
+drives signups exists: **BettorEdge, a comparable bot, is confirmed live in 1,100+ Discord
+servers** running the same "1-2 free picks a day plus a leaderboard" shape GSE's own Free tier
+already uses. The concrete, unbuilt idea: a small, read-only discord.js bot posting GSE's Free
+tier's daily teaser (calling GSE's own public API, respecting existing entitlements, zero betting
+logic of its own) into servers that add it, linking back to the full board — a pure marketing
+surface, and, as a further step, a thin client letting a Discord server host GSE's existing
+paper-pick contest natively via slash commands. Sketched, not built — this is a founder
+marketing/growth-prioritization decision, not an autonomous build, but it is the one finding this
+round that has nothing to do with data-source rights and everything to do with reach.
+
+### What actually got built from this round
+
+Nothing yet — but three items are now scoped small enough to build without a founder decision on
+anything but a free API-key signup: the nflverse-data win-probability pull (registry entry +
+adapter), the CFBD PPA/WP pull (key + adapter, possibly already covered by GSE's existing `cfbd`
+registration), and the MLB injury adapter (no key needed at all). All three are single-domain,
+single-adapter tasks matching the existing free-adapters pattern — the smallest, most immediately
+buildable set of findings in this audit to date.

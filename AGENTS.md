@@ -285,6 +285,31 @@ CI-enforced structural tests, not neglected. Nothing built autonomously this rou
 is either purely additive tooling for the owning domain agent or a founder-decision item. Full
 detail in the doc's Round 9 section.
 
+**Round 10 (same day): new categories — play-by-play/win-probability models, betting exchanges,
+injury data, distribution.** Most directly actionable round yet; three small, single-adapter
+tasks are now scoped needing only a free API-key signup, no schema change, no founder rights
+call beyond that. (1) `nflverse/nflverse-data`'s compiled play-by-play releases (win probability,
+EPA) are **CC-BY-4.0 licensed**, confirmed by reading the full license text — attribution-only,
+no non-commercial clause — and live-tested as real 2025-season data pulled via a plain HTTP GET.
+A thin adapter here gives GSE a genuine third probability signal (alongside the factor model and
+market-implied probability) for the internal drift/QA gap Round 7 already flagged. (2) CFBD's
+own REST API — the same `cfbd` source `cost-policy.ts` already references — already returns
+pre-computed EPA (`ppa`) and win probability as JSON, confirmed by reading `cfbfastR`'s source
+(a thin wrapper around those exact endpoints) and live-testing the API directly; the CFB
+equivalent may need only a thin adapter, not new licensing. (3) MLB's official Stats API
+(`statsapi.mlb.com/api/v1/transactions`) is live, keyless, and directly portable into an injury
+adapter — GSE ships zero player-availability signal for MLB/NBA/NHL/MLS today. NBA's official
+injury-PDF source is equally clean rights-wise but unreachable from this sandbox (Akamai
+mitigation, not a rights problem); `balldontlie.io`'s injury endpoint is confirmed paid-gated
+and Big Balls Data's NBA/NHL feed is confirmed dead by its own current docs — both ruled out with
+direct evidence, not assumed. Two non-buildable-now findings, still useful: ProphetX and Novig
+are real, CFTC-verified (via CFTC.gov's own filings) sports exchanges, but both gate API access
+behind an approval/sales process, not a fit for the free-first board today. And one genuinely
+different lever — a Discord bot posting GSE's Free-tier daily teaser, sketched against a real,
+validated precedent (a comparable bot, BettorEdge, confirmed live in 1,100+ servers running the
+same free-picks-plus-leaderboard shape) — a founder marketing decision, not built. Full detail
+in the doc's Round 10 section.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
