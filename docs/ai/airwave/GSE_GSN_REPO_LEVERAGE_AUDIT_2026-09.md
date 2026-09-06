@@ -936,3 +936,370 @@ needs one `allowScripts` line (its postinstall only selects a prebuilt binary vi
 at the implementation level the way the other eleven repos in this round were. Re-attempting
 the deep dive in an environment with reliable npm-registry access (or by cloning the source
 directly instead of installing the CLI) is the honest next step, not a re-run here.
+
+---
+
+## Round 8 — Sports-specific external sweep, 13 repos (2026-09-06)
+
+**Why this round exists**: prior rounds were general (MCP/RAG/agent-memory/observability).
+Founder instruction: go find sports-specific leverage this time — APIs, MCP servers,
+workflows/connectors, betting-math tooling, fantasy platforms — "in depth, not some README
+scan." All 13 were cloned fresh and read at the source level; every live-data or free-tier
+claim below was tested directly, not taken from a README or vendor page.
+
+### MCP servers over odds/scores — one vendor SEO vehicle, two dead-end wrappers, one real dev tool
+
+**`Backspace-me/sportscore-mcp`** (free, keyless SportScore wrapper) works — a live pull today
+(2026-09-06) returned real, current football and cricket results with no key required. But two
+things the README doesn't say: the license only covers the ~400-line wrapper, and SportScore's
+own NOTICE/ToS require a **visible, dofollow "Powered by SportScore" badge on every surface
+that renders the data**, unwaivable on the free tier — a real `permission_required` clearance
+item, not `approved_public_logged_off`, and one that clashes with "we're not AI, we're math you
+can read" branding regardless. More telling: all 10 commits landed in a single 22-hour window
+five months ago, and the repo ships its own internal `HANDOFF.md` — a checked-in playbook
+instructing submission to MCP directories and "organic" posts on *the vendor's own subreddit*
+to farm backlinks, with `sportscore.com/admin/backlinks/` named as the payoff metric. This is
+the vendor's SEO vehicle, not a community project. Verdict: no production ingestion value;
+the only honest use is a zero-setup, no-key cross-check tool for an engineer's own Cursor/Claude
+Desktop during an incident, never customer-facing.
+
+**`odds-api/odds-api`** and **`marcoeg/mcp-odds-api`** are unrelated products that happen to
+share a name — confirmed from source (`openapi.json`'s `servers` block vs. a hardcoded
+`https://api.the-odds-api.com/v4` respectively), not guessed. `odds-api/odds-api` (a brand-new
+vendor, odds-api.net) advertises a free tier that a live fetch of its own pricing page
+contradicts: **no free tier exists**, plans start at $30/mo, single-maintainer, 6 weeks stale,
+heavily built for AI-agent SEO discovery (`llms.txt`, `agents/AGENTS.md`, discovery-page
+Markdown files) — poor fit for WP-27's stated goal of *reducing* paid-vendor dependence. Its one
+transferable idea: a clean transport-injection "mock mode" pattern (an optional `transport`
+callable the SDK swaps for a fixture-returning stub) worth testing-qa-agent's attention for
+GSE's own data-source test fixtures. `marcoeg/mcp-odds-api` genuinely wraps the-odds-api.com,
+the vendor GSE already pays for — pointing it at a **non-production** `THE_ODDS_API_KEY` would
+let a Claude Code session query live odds directly during dev/debug with zero new adapter code.
+One real risk: its `utils.py` unconditionally calls `load_dotenv(cwd + "/.env")` at import, so
+running it from inside the GSE repo root would silently ingest GSE's own `.env` — run it from an
+isolated directory only, matching rule 4.
+
+### ESPN's hidden API — the most directly useful find this round
+
+**`pseudo-r/Public-ESPN-API`** is genuinely comprehensive (17 sports, 139 leagues, 370+79
+endpoints, dated per-endpoint verification, a working Django reference server) — live-tested 4
+of its documented endpoints today, all real and current, including a full DraftKings odds
+object (spread/total/moneyline, open and current) for a real 2026-09-10 NFL game at the exact
+Core-API path (`.../competitions/{id}/odds`) GSE's own `espn-odds-client.ts` already targets.
+**Confirms GSE's existing odds parsing hits the right shape** and documents the identical
+pattern already live for NHL, ATP/WTA tennis, UFC, and F1 — sports GSE doesn't currently
+ingest, reachable via the same free hidden API with no new vendor risk. **`LeSingh1/espn-api`**
+is real but thinner than described: its README implies odds parsing, but the actual source
+(`parse.js`) has zero odds-extraction code — the odds "support" is an untyped passthrough. Its
+only independent value is corroborating the Core-API odds path is correct and still live.
+Neither repo does any ToS analysis; both are one more data point (real mobile apps, real Play
+Store listings) that ESPN's hidden API sees wide, un-enforced-against public consumption — real
+signal for the founder/legal to weigh on *enforcement risk*, not an answer to GSE's own
+registry-vs.-running-code disagreement (Round 7), which only a reading of ESPN's own terms
+resolves.
+
+### Kelly/CLV tooling — confirms GSE's own math is still ahead, with one honest exception
+
+**`ianalloway/kelly-js`** is a real, tested (156/156 passing), single-maintainer TS library —
+not vaporware, but its Kelly implementation is textbook full-Kelly with no robust/maximin layer
+for probability-estimate uncertainty, and its "CLV" is a static two-point delta
+(bet-price-vs-close) with **no timing dimension at all** — confirmed by grep, no
+timestamp/trajectory logic exists anywhere in the file. GSE's own `robust-kelly.ts`/`clv.ts`
+remain ahead on both axes, as Round 7 already found for other repos. The one exportable idea:
+the "zero-deps, tree-shakeable, MIT, publicly-tested" packaging itself is a plausible
+transparency/trust move — GSE could publish a small, genuinely open de-vig or odds-conversion
+utility as a credibility signal, independent of any technical merit here.
+
+### Kalshi tooling — corroborates WP-27's premise and surfaces two real edge cases to check
+
+**`machina-sports/sports-skills`**'s Kalshi skill and **`TexasCoding/kalshi-python-sdk`** were
+both read at the source level (Polymarket portions of both were explicitly not opened, per the
+compliance hold). Both confirm, independent of each other and of GSE's own plan: Kalshi's
+market-data surface is genuinely keyless (a live, unauthenticated pull today returned real
+`KXNFLSPREAD` contracts), and `KXNFLSPREAD`/`KXNFLTOTAL` are real, currently-listed series — good
+external validation of WP-27's premise. They also surface two concrete edge cases worth checking
+against the unmerged `galaxy-kalshi-book.ts` branch: (1) Kalshi markets carry **one binary
+contract per strike line** (e.g. separate tickers for a 6.5 and a 7.5 spread), not one
+line-and-price pair like a sportsbook — a naive implementation could mis-model the series shape;
+(2) a `Market` object exposes **four distinct timestamps** (`close_time`,
+`latest_expiration_time`, `expected_expiration_time`, `expiration_time`) that can genuinely
+diverge — treating `close_time` as "the" expiration would be wrong. The SDK's `Retry-After`-aware
+backoff is also a direct, reusable pattern for the TheRundown 429 problem if
+`galaxy-kalshi-book.ts` doesn't already honor Kalshi's own rate-limit headers the same way.
+
+### sportsdataverse-js — a clean negative: does not solve the NCAA rights problem
+
+High-priority target, precise result: **this library does not touch the separately-licensed
+`sportsdataverse-data` (CC-BY-4.0) dataset at all** (zero references in source or docs) — its
+NCAA functions scrape `data.ncaa.com`/`stats.ncaa.org` directly, the identical ToS surface
+GSE's own fail-closed adapter is already blocked on, just through a different wrapper. Worse,
+live-testing its NCAA scoreboard endpoint today returned **HTTP 404 with a raw S3 `NoSuchKey`
+error** — the endpoint is dead in production, confirmed beyond what the library's own code
+comments (which only flagged the per-game JSON endpoints as dead) admit. Its NBA path, by
+contrast, works live today via ESPN's hidden API — the library itself is real and maintained,
+just not a fix for the NCAA gap. **If GSE wants a licensed NCAA path, the actual unlock is the
+separate `sportsdataverse-data` GitHub Releases (parquet/CSV, CC-BY-4.0) as a direct-download
+adapter that never touches NCAA.com** — a distinct, unstarted piece of work from anything in
+this JS client.
+
+### A dual-pipeline data-engineering portfolio — real architecture idea, fake sentiment feature
+
+**`sanchitvj/sports_betting_analytics_engine`** is a real, ambitious, solo-built data platform
+(Airflow/Glue batch + Kafka/Spark streaming, genuine dbt market-efficiency models) that **never
+scores a bet anywhere in its source** — it's an ingestion/warehouse/dashboard project, not a
+predictor, despite the README's framing. Its weather ingestion is real (live OpenWeatherMap/
+Open-Meteo calls, genuine wind/comfort feature math) but terminates in a Grafana dashboard, never
+a model input. Its "news sentiment" is **not real** — the transform code reads a `sentiment`
+key that none of its three source APIs ever return, so the field is always `null` in production;
+its own tests only pass because fixtures hand-inject a fake sentiment score, masking that no
+sentiment producer exists at all. Its CI has almost certainly been broken since inception (the
+workflow installs from a `requirements.txt` that doesn't exist in a `pyproject.toml`-based repo)
+and 7 of 36 tests fail today on plain signature drift. The one genuinely transferable idea: its
+weather connector gates polling by **proximity to kickoff** (skip games hours out, poll only
+pre-game/live) rather than a flat global interval — a real, complementary lever for GSE's
+TheRundown quota problem alongside the Redis-backed daily counter already proposed elsewhere in
+this document. Separately: weather-as-a-feature for outdoor NFL/CFB is worth GSE building for
+real (see Round 9 below — it turns out GSE already has the leak-free math built and unwired).
+
+### Fantasy platforms — a real Yahoo OAuth reference, and a design non-starter
+
+**`jdguggs10/flaim`** is mature (1,395 commits spanning 15 months, live shipped product,
+published Chrome extension, 151 test files) and its Yahoo OAuth code
+(`workers/auth-worker/src/yahoo-connect-handlers.ts`) is a genuine, production-hardened
+reference for the exact flow GSE's founder-only league-twin completion needs: authorization-code
+OAuth2 with a read-only `fspt-r` scope, a DB-backed refresh lease to prevent concurrent-refresh
+races, a Yahoo-429 cooldown, and an app-fingerprint check that fails closed on token/config
+drift instead of retry-storming. **One pattern to explicitly not copy**: it stores Yahoo tokens
+in plaintext DB columns, protected only by Postgres RLS, not encryption-at-rest — GSE should
+encrypt token columns even though flaim shipped without it. Its companion Sleeper client
+independently confirms Sleeper's API is genuinely keyless/unauthenticated — a much faster
+non-OAuth path to seed `league-twin.ts` with *something* real (see Round 9: this turns out to
+already be half-built and just unwired). **`ajhochy/claude-ffb`** contributed nothing concrete —
+a single-commit personal Claude Skills configuration with zero source code, no license, and a
+Sleeper "integration" that's entirely a reference to an external MCP tool never included in the
+repo. Both projects independently expose fantasy data as MCP tool calls rather than plain REST —
+weak (n=2) but real signal that fantasy-data consumers are already standardizing on MCP as the
+agent integration surface, worth a line item for a future Galaxy Sports API roadmap, not a
+reprioritization.
+
+### x402-fpl-api — low sport relevance, but a real, Stripe-backed protocol worth knowing about
+
+The Fantasy Premier League tooling itself is real but not GSE-relevant (soccer fantasy, a sport/
+product GSE doesn't touch). The genuinely useful finding is that **x402 is a real, implemented
+protocol here** — not a name-drop: a working FastAPI middleware verifies actual on-chain USDC
+transfer receipts via `web3.py` against a Base RPC node, with replay protection and reverted-tx
+rejection, exercised by real unit tests (shipped testnet-only and safety-gated against
+accidental mainnet use). x402 itself moved in April 2026 to a vendor-neutral Linux Foundation
+project backed by 22 institutions **including Stripe** — GSE's own payment processor — alongside
+Google, Visa, and Mastercard, though independent reporting (CoinDesk, 2026-03) notes organic
+adoption is still thin. Given GSE's own stated ambition to become an API *provider* ("Galaxy
+Sports API. Not Rundown. Not The Odds API" — AGENTS.md), this is a real second monetization
+primitive worth the founder knowing exists for that future surface — per-call stablecoin payment
+from other agents, complementing rather than replacing Stripe subscriptions. Nothing to act on
+autonomously; payments infrastructure stays founder-only per Law 2/3.
+
+### What actually got built from this round
+
+Nothing — every genuinely useful item above is either a cross-check against an unmerged branch
+(Kalshi edge cases), a founder-awareness item (x402, ESPN enforcement-risk signal), a future
+ledger row (Redis quota + proximity-gated polling, a GSE MCP server, encrypted Yahoo tokens when
+that work happens), or a clean negative (sportsdataverse-js, kelly-js, both fantasy repos as
+dependencies). See Round 9 immediately below for what GSE's *own* codebase turned up when the
+same rigor was pointed inward instead.
+
+---
+
+## Round 9 — GSE internal creative/20,000-ft pass, 8 facets (2026-09-06)
+
+**Why this round exists**: founder instruction, verbatim in spirit: after the external sweep,
+turn the same "20,000 foot, innovative, intuitive, creative, dynamic" lens on GSE itself —
+what to add, what's missing or half-done, what to polish. Eight read-only audits ran in
+parallel, one per domain, each required to cite real files and real code, not generic advice.
+Three findings below are significant enough to flag independent of the full list.
+
+### The three biggest findings
+
+**A live calibration-regression detector exists, is unit-tested, and is wired into nothing.**
+`packages/prediction-engine`'s `calibration-monitor.ts` (consecutive-day Brier-streak alert) and
+`regression-detector.ts` (baseline-vs-current Brier/RES comparator) are both pure, exported, and
+tested. The one piece meant to feed them real settled-pick data,
+`apps/web/lib/ops/calibration-regression-snapshot.ts`, has **zero call sites anywhere outside
+its own test file** — no cron route imports it. A live calibration regression today would raise
+no alert anywhere. The math is done; the wiring is the entire gap.
+
+**A real, working Sleeper league sync and a real, working League Twin visualization were built
+separately and never connected.** `apps/web/lib/integrations/sleeper-sync.ts` (behind
+`/fantasy/connect`) does genuine read-only roster/standings sync with real player names. Sepa-
+rately, `apps/web/lib/fantasy/league-twin.ts`'s `buildLeagueTwin()` already has a tested live-
+data seam (`activePlayerPool()` from `projections.ts`) and correctly falls back to illustrative
+sample data when no provider is registered. **The Sleeper-synced roster is never passed into
+`buildLeagueTwin()` at all** — `/fantasy/league-twin` renders with zero props regardless of
+whether the visiting user has connected a real league. Two complete, tested halves of the same
+feature, never spliced together — and even once spliced, Sleeper's player records lack the
+`proj`/`floor`/`ceiling`/`usage` fields the Twin's math needs, so a projections join is the real
+remaining unit of work, not a stub.
+
+**`workers/content-publishing` is a fully orphaned package, and the weekly transparency-recap
+draft it was meant to gate is apparently never reviewed into publication.** Grep confirms
+`runContentPublisher` has no caller anywhere in `apps/web` or any cron route — the real draft
+pipeline lives entirely in `apps/web/app/api/cron/generate-drafts/route.ts` and writes
+`ContentDraft` rows directly, bypassing the worker's own "hard-gated" framing in CLAUDE.md's
+repo map. More consequentially: `buildWeeklyRecapDraft` — a fully built, W/L/Push-accurate,
+bootstrap-excluded weekly transparency digest, exactly the kind of trust content this brand
+wants — creates a `DRAFT`-status row every week with nothing in the codebase indicating anyone
+has ever opened the cockpit review queue to publish one. This reads as an ops/cadence gap, not a
+missing feature.
+
+### Data ingestion spine
+
+Buildable today, no founder decision needed: a **shared Redis-backed daily-quota counter**
+(GSE already holds the ioredis connection used for the Claude cache) to durably track
+TheRundown's real 20k/day consumption across the whole fleet, since the existing circuit
+breaker is explicitly process-local per its own code comment; a **registry cross-check guard**
+that mechanically diffs `source-router.ts`'s hand-set `cleared` flags against both rights
+registries (an honor-system comment today says they "must match," nothing enforces it — this is
+exactly the class of drift that produced the ESPN disagreement); and a **cross-source agreement
+signal** generalizing the dual-source consensus pattern `ncaa-consensus.ts` already proves out
+for one sport into a platform-wide confidence input. Half-done, needs a decision:
+`predexon-client.ts` and `mlb-statsapi-client.ts` are both complete, tested, correctly-gated
+adapters with **zero importers anywhere in the ingestion pipeline** — built and waiting, not
+missing. `cost-policy.ts` and `source-router.ts` independently hand-maintain overlapping
+tier/cleared data for the same source IDs — a second place the two rights systems can silently
+drift beyond the already-known ESPN case.
+
+### Prediction engine and calibration
+
+Beyond the calibration-regression wiring gap above: **leak-free weather-suppression and
+travel/body-clock features are already built and tested for player props**
+(`edge-lab/features/nfl-weather.ts`, `nfl-body-clock.ts`, both PIT-correct, both consumed by
+`edge-lab/props-context-bind.ts`) but **never feed the game-level spread/total scorer** — the
+`WEIGHTS` table in `scoring.ts` has no weather slot at all. NFL is the obvious candidate given
+outdoor stadiums; promoting either signal into live scoring is a scoring-weight change requiring
+the model-promotion-gate process, not a silent edit. `conviction-tier.ts` is self-documented
+dead code (its own header says nothing calls it yet, confirmed by grep) sitting alongside a
+separate, differently-scaled confidence threshold (`PREMIUM_CONFIDENCE_THRESHOLD`) — a naming
+collision worth resolving before conviction-tier is ever wired in. `trials-registry.ts` already
+self-discloses that real model-admission statistical tests (Deflated Sharpe, White Reality
+Check) are queued, not faked — an honest, pre-flagged gap, not a hidden one.
+
+### Product, UX, and cockpit
+
+The clearest shovel-ready idea: **wire `shop-advantage.ts` onto the pick card as a free,
+public trust signal**, not a locked one — `PublicPick.entryPrice` already carries the exact
+average price the module needs, `best-line.ts` already computes the matching best price, and
+`canSeeEdgeScore` is already true for every tier, so this closes the exact gap the module's own
+header describes (the Edge Score and the Line Shop Board's numbers never appear together for one
+pick) with no new data path. Also surfaced: `apps/web/app/picks/page.tsx` has no explicit
+`export const dynamic = "force-dynamic"` (unlike `/board`, which does), relying instead on an
+implicit side effect of calling `headers()` — worth a cross-check that this isn't a fragile,
+undocumented reliance on rule-required caching behavior per `.claude/rules/nextjs-caching.md`.
+Two parallel calibration-curve components exist in different directories with no canonical
+answer as to which one is current. `docs/positioning.md`'s tier narrative is stale against the
+canonical ladder in CLAUDE.md/`pricing-phases.ts` (mentions a "weekly learning digest" and
+"early access" that don't appear in the canonical Elite differentiators).
+
+### Content, positioning, and brand trust
+
+Beyond the orphaned publishing worker above: a concrete addable idea — **give a settled losing
+pick the same factor-trail depth a live Pro pick gets**, not the current three-boolean
+`snapshotSummary()`. Since a settled pick's factors are historical, not a live edge, there's no
+proprietary-weight reason to withhold them, and showing full reasoning on a loss is a stronger,
+more honest trust signal than only showing depth on wins — directly on-brand. Also found:
+`docs/positioning.md`'s "What Not To Say" list and the machine-readable
+`positioning-vocab.json` have already drifted apart in both directions (the JSON bans phrases
+the doc never mentions, and vice versa), and — more structurally — the six non-AI brand rules
+hardcoded in `compliance-scanner/rules.ts` are never run by `scripts/guardrails/trust-gate.mjs`
+at all; the CI-wide scan only covers LLM-drafted surfaces, so hand-typed marketing copy in any
+`apps/web/app/**` page could use a banned phrase today and pass every automated check.
+
+### Monetization, pricing, and entitlements
+
+Ideation only, all founder-decision territory: a founding-member referral mechanic scoped as a
+proof-linked perk rather than a price change (fits the existing grandfathering doctrine
+cleanly); a one-time "unlock this week's slate" micro-purchase, confirmed as genuinely new
+plumbing since `stripe.ts` hardcodes `mode: "subscription"` everywhere with zero one-time
+`PaymentIntent` code anywhere in the app; and a scoped, metered developer-API tier building on
+`packages/stats-api`'s existing tier-to-API-surface mapping, gated to a proof milestone
+consistent with the ladder's own evidentiary bar. Also found, independent of any new idea: the
+entire promo-code module (`promo-codes.ts`) is inert (every entry `active: false`, no live
+Stripe coupon-object code anywhere) — a documented design, not a shipped feature; two
+independent Stripe tier-to-product mappings exist (`price-ids.ts`'s env-driven, history-aware
+logic vs. `packages/stats-api`'s hardcoded product-ID map) with no shared source of truth or
+test coupling them; and two `gse/v1` API routes that branch on subscription tier return via a
+bare `NextResponse.json` rather than the required `jsonNoStore` helper — not a live paywall
+bypass today, but exactly the caching gap `.claude/rules/nextjs-caching.md` exists to prevent.
+
+### Ops, guardrails, and agent coordination
+
+Buildable, purely additive (never edits a frozen path): a single ops-health snapshot script
+composing the existing guard/ledger/cron-drift/live-truth outputs into one glance-able table;
+a cron-heartbeat report flagging any of the 22 Vercel Cron schedules that's gone silent past its
+own interval. Found and worth the founder's attention: two ledger rows (`H-N`, `L-7`) are
+exactly the stale-CLAIMED pattern the ledger's own SLA-warning rule exists to catch;
+`docs/data/FLEET_DISPATCH.md` promised a companion `FLEET_STATUS.md` "on first dispatch" two
+weeks ago and it still doesn't exist; and the cron-drift guard and the ledger-validity guard both
+exist and pass today (confirmed: `vercel.json` and its root mirror are currently byte-identical)
+but neither is part of the 26-guard `npm run guardrails` set, so an agent who only runs the
+standard guard suite gets zero signal on either.
+
+### Fantasy and engagement
+
+Beyond the Sleeper/League-Twin splice above: `gm-ledger.ts` has the identical shape — real
+Merkle-commitment cryptography and real process-vs-outcome grading logic, running entirely on
+eight hardcoded illustrative decisions, and is already honestly labeled "gated" in the product's
+own tool directory (not silently mocked). A genuinely new, on-brand engagement idea: an opt-in,
+server-side "Calibration Journal" letting a user tag their own outcomes against GSE's published
+confidence buckets, rolling into a personal Brier/ECE score and a seasonal leaderboard ranked by
+*forecast accuracy*, not win count or stake — reusing the existing local CLV tracker's
+calibration math and the GM Ledger's commit-before-outcome pattern, and structurally incapable of
+reading as gambling promotion since nothing about stakes or payout is scored. The existing
+paper-pick contest flow's explicit no-money consent copy is the right template to copy for it.
+
+### Dormant packages and dev tooling
+
+The framing needed a correction, not just findings: of the seven packages CLAUDE.md lists as
+having "no importers yet," four are actually live in production —
+`epistemic-twin` (`/api/health`'s capability graph), `quote-plane` (the `gamma` cron),
+`governed` (receipt verification, `persistReceiptOrFail`), and `crypto` (the Pedersen
+slate-commitment ledger). Real gaps inside the live ones: `createGovernedSrqcGate` has zero
+production call sites despite being fully built and tested, and the receipt signing-key
+rotation lifecycle (`rotate-keys.ts`) has no operational trigger anywhere — the keyring likely
+runs on one never-rotated key. Of the genuinely dormant three: `genesis-kernel` is *deliberately*
+unwired (its own structural tests fail CI if anything ever imports it) — a standalone
+"codebase twin" planning CLI, correctly kept out of the runtime, and notably a machine analog of
+this very audit exercise, worth running once as a cross-check. `phase-c` is self-aware
+scaffolding that explicitly refuses to fabricate a result absent a real gate run — a founder
+call on finishing or retiring it. `partner-stack` is the one genuine risk: it contains a
+**second, competing Stripe-tier resolver** with placeholder price IDs literally commented "fill
+real IDs" and a missing Fantasy tier — if anyone ever imported it believing it authoritative,
+it would violate rule 3's server-side-only paywall requirement; recommend explicit quarantine.
+Separately, `packages/ai-council`'s CI guard validates a **hand-typed fixture corpus** claiming
+to represent live pages like `/` and `/claims`, never sourced from actual rendered or source
+content — the guard can stay green forever regardless of what real copy says.
+
+### Agent tooling and future API surface
+
+`packages/stats-api`'s existing REST surface (catalog/metrics/values/source-matrix, with real
+PIT-`asOf` and rights/attribution logic already built) maps closely onto a small MCP toolset —
+the concrete missing piece for GSE's own stated "Galaxy Sports API" ambition is an MCP
+*server* exposing GSE's own engine output, since GSE currently only has MCP *clients* (github,
+context7, vercel) wired, never a server of its own. A smaller, immediately actionable finding:
+**`.claude/skills/clearance/` and `.claude/skills/clearance-registry/` are duplicate skills**
+(one explicitly says in its own text that the other is canonical) that have **already drifted**
+— the non-canonical one's "cleared today" list is missing four sources the canonical one has.
+This is the same two-sources-of-truth failure mode already found in the code-level rights
+registries, now reproduced in the skills documentation meant to describe them. Also: two
+subagent definitions (`content-publishing-agent`, `prediction-engine-agent`) have `Edit`/`Write`
+over strict-TypeScript source but no `Bash(npm run typecheck*)` tool, so neither can self-verify
+before handing work back — a small, additive fix to `.claude/agents/*.md` for the founder to
+make (that directory is law-frozen for autonomous edits).
+
+### What this round changes about priorities
+
+Nothing here was built autonomously — every item is either purely additive tooling safe for the
+owning domain agent to pick up next (Redis quota counter, registry cross-check guard, ops-health
+snapshot, `shop-advantage.ts` wiring once a placement decision is made), a founder-decision item
+(monetization ideas, `partner-stack` quarantine, skill dedup, agent tool-scoping), or a
+cross-agent handoff already named above. The two standout "most of the way to done" items —
+the calibration-regression cron wiring and the Sleeper/League-Twin splice — are both small
+integration commits on top of code that already exists and is already tested, not new builds.

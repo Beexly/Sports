@@ -205,6 +205,53 @@ fourteen repos (course material, meetup demos, near-empty repos) got a second, c
 founder instruction and still had no realistic adoption angle — verified, not assumed. Full
 detail in the doc's Round 6 section.
 
+**Round 8 (same day): 13 sports-specific external repos** (MCP servers, ESPN/odds clients,
+Kalshi tooling, betting math, fantasy platforms) — all cloned and read at the source level, all
+live-data claims tested directly. Highlights: `Backspace-me/sportscore-mcp` is a vendor SEO
+vehicle requiring a mandatory unwaivable attribution badge, not neutral OSS — treat as
+`permission_required`, not free; `pseudo-r/Public-ESPN-API`'s live-tested endpoints confirm
+GSE's own ESPN odds parsing hits the right shape and document the same free pattern already
+live for NHL/tennis/UFC/F1, sports GSE doesn't yet ingest; `sportsdataverse/sportsdataverse-js`
+does **not** solve the NCAA rights problem (it scrapes NCAA.com directly under a different
+wrapper, and its NCAA endpoint 404s in production today) — the real unlock, if any, is the
+separately-licensed `sportsdataverse-data` (CC-BY-4.0) dataset, untouched by this library;
+`machina-sports/sports-skills` and `TexasCoding/kalshi-python-sdk` corroborate WP-27's premise
+(Kalshi market-data is genuinely keyless, `KXNFLSPREAD`/`KXNFLTOTAL` are real live series) and
+surface two edge cases to check against the unmerged `galaxy-kalshi-book.ts` branch: one
+contract per strike line, not one line-and-price pair, and four distinct expiration timestamps
+that can diverge; `jdguggs10/flaim` is a mature, production Yahoo OAuth2 reference (token
+refresh-lease/cooldown/app-fingerprint logic worth adapting; its plaintext token storage is
+not); and `x402-fpl-api` confirms x402 (a real, Stripe-backed Linux Foundation payment
+protocol) is genuinely implemented in-repo, worth the founder's awareness for a future
+"Galaxy Sports API" monetization surface, not a build-now item. Full detail in the doc's
+Round 8 section.
+
+**Round 9 (same day): the same lens turned inward — 8 parallel read-only audits of GSE's own
+codebase**, not external repos, per founder instruction to find what to add/what's missing/
+what to polish. Three findings stand out. (1) A full calibration-regression detector
+(`calibration-monitor.ts`/`regression-detector.ts`, Brier/RES baseline comparison) is built and
+unit-tested but its DB-backed data feed (`calibration-regression-snapshot.ts`) has zero callers
+in any cron route — a live regression today raises no alert anywhere; the math is done, only
+the wiring is missing. (2) GSE already has a real, working Sleeper league sync
+(`sleeper-sync.ts`) and a real, working League Twin visualization
+(`fantasy/league-twin.ts`) with a tested live-data seam already built — but the synced roster
+is never passed into the Twin, so `/fantasy/league-twin` shows illustrative sample players even
+after a user connects their real league; a projections join is the remaining gap, not a stub.
+(3) `workers/content-publishing` has zero callers anywhere (confirmed by grep) despite CLAUDE.md
+calling it "hard-gated" — the real draft pipeline bypasses it entirely — and the fully-built
+weekly transparency-recap draft template appears to generate a `DRAFT` row every week that
+nobody has ever reviewed into publication. Also found: two dead/duplicate systems needing a
+founder look — `.claude/skills/clearance/` and `clearance-registry/` are duplicate skills that
+have already drifted out of sync (the same failure mode as the code-level rights registries,
+now in the skills docs describing them), and `packages/partner-stack` contains a second,
+competing Stripe-tier resolver with placeholder price IDs that would violate rule 3 if anyone
+ever imported it believing it authoritative. Four of the seven packages CLAUDE.md calls
+dormant (`epistemic-twin`, `quote-plane`, `governed`, `crypto`) are corrected in the doc as
+actually live in production; `genesis-kernel` is confirmed *deliberately* unwired by its own
+CI-enforced structural tests, not neglected. Nothing built autonomously this round — every item
+is either purely additive tooling for the owning domain agent or a founder-decision item. Full
+detail in the doc's Round 9 section.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
