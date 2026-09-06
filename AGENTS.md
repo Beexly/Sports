@@ -30,6 +30,28 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-06 (03:30 UTC): F-15 is DONE and #709 is merged as `c3d955c2c`.** The
+browser agent rotated the 20K key, set `THE_ODDS_API_KEY` in Vercel Production and redeployed
+(Ready 02:37:12 UTC); no 402 after the rollover, dashboard usage 0 to 112 credits in 21
+minutes, `oddsInserting` back to 242 rows a cycle. Three findings, all in plan section 3f and
+ledger C-109..C-111: (1) **credit cliff**: at the observed rate the 20K plan exhausts around
+2026-09-08, at the schedule-implied rate around 2026-09-11 (NFL Week 1 kickoff); `settle-picks`
+runs five times an hour (the :20 cron plus the autonomy cycle) and the paid scores spend
+guard logs "not justified" then proceeds; **C-109 is coder priority 1, ship before
+2026-09-08 00:00 UTC.** (2) **The 16 overdue picks are two cohorts and neither self-heals**:
+10 MLB spreads on city-only game rows refused every cycle as `SCORE_MISMATCH_CROSS_PATH`
+(void lane, C-106, priority 2) and 6 NCAAF picks on phantom fixtures absent from ESPN's
+2026 schedule, which the signal slate generated on yesterday (C-111, priority 3).
+(3) **Calibration**: n 223, ECE 0.0553, bootstrap CI 0.0365 to 0.1142; the soccer exclusion
+works (120 excluded); more real rows is the lever (C-110 single-book recompute, priority 4).
+Floors, bins and streak unchanged. Coder order: C-109, C-106, C-111, C-110, C-107,
+FE-05/10/15. Hermes: `hermes/finish-line-2026-09-05` (tip `0dd81273f`) lacks `main`, merge
+`origin/main` first (merge-tree clean); the Odds API shell steps it proposed (key via
+`vc env get` or `vc env set`, key in a curl URL) are forbidden and moot; its Week 1 work is
+C-104 (WP-27, OPEN, unowned); its auxiliary reviewer model has a 32K context, below the 64K
+it needs. Browser agent: scripts A, C, E done; B (alerting) and D (checkout) skipped by
+founder decision; the two public flips remain for a later prompt.**
+
 **UPDATED 2026-09-06 (02:15 UTC): PR #707 is MERGED to `main` as `cff3e72d7` and deployed
 (the truth surface reports that SHA). Score 60 of 100; the measured path to 100 with owners
 is plan section 3e. Founder instruction: no human step where a machine can do it; console
@@ -46,14 +68,11 @@ anything: section 3b holds eleven decisions the founder delegated in-session, se
 founder-only actions, section 5 every dispatchable work package (WP-1..26, FE, FAN, NFL, OPS,
 TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and F-14..F-33.**
 
-- **TOP founder item (F-15), REVISED 2026-09-06 02:25 UTC from the founder's dashboard
-  screenshots: the account is NOT unpaid.** The 20K plan is Active ($30 a month, next invoice
-  Sep 22) with 0 of 20,000 credits used this period, and the free key shows 0 of 500. The
-  HTTP 402 "payment circuit open" on every cycle since 2026-09-03 20:20 UTC (breaker stopped
-  paid book odds 2026-09-05 00:30 UTC, zero book-priced picks since) is a stale production
-  key, not billing. The founder is setting `THE_ODDS_API_KEY` in Vercel Production to the
-  20K key and redeploying; the breaker is process-local, so the redeploy resets it. No tier
-  change. Nobody pastes a key anywhere. Verify steps: plan section 3e script A.
+- **F-15 DONE 2026-09-06 02:37 UTC (browser agent).** The account was never unpaid: the 20K
+  plan is Active ($30 a month, next invoice Sep 22) and the HTTP 402 "payment circuit open"
+  since 2026-09-03 20:20 UTC was a stale production key. The key was rotated, set in Vercel
+  Production and the redeploy reset the process-local breaker. Book odds flow again. The
+  open risk is now spend, not access: C-109 (plan 3f item 1). Nobody pastes a key anywhere.
 - **Second book root cause (2026-09-05 production logs, verbatim):** every refresh cycle,
   all four in-season sports log `rundown empty (2d): HTTP 429 rate_limited`. TheRundown is
   the registered commercial-use fallback (`packages/data-ingestion/src/source-registry.ts`
