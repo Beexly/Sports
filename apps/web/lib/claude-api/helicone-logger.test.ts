@@ -40,6 +40,7 @@ describe("logClaudeCallToHelicone", () => {
     expect((init.headers as Record<string, string>)["Authorization"]).toBe("Bearer sk-helicone-test");
 
     const body = JSON.parse(init.body as string);
+    expect(body.providerRequest.url).toBe("anthropic-messages-api");
     expect(body.providerRequest.json.model).toBe("claude-sonnet-4-6");
     expect(body.providerRequest.json.messages).toEqual([{ role: "user", content: "U" }]);
     expect(body.providerResponse.json.content).toEqual([{ type: "text", text: "response text" }]);

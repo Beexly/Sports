@@ -73,7 +73,15 @@ export async function logClaudeCallToHelicone(
       },
       body: JSON.stringify({
         providerRequest: {
-          url: "https://api.anthropic.com/v1/messages",
+          // A descriptive label, not the literal endpoint — this file has no
+          // legitimate reason to reference the real transport URL (it never
+          // calls it; provider-dispatch.ts/messages.ts own that), and the
+          // ai-transport-import-boundary guardrail correctly flags any raw
+          // endpoint literal outside the adapter allowlist. Helicone's own
+          // Custom Logger docs example uses a non-URL label here too
+          // ("custom-model-nopath"), so this field is descriptive, not a
+          // fetch target.
+          url: "anthropic-messages-api",
           json: {
             model: params.modelName,
             system: params.system,
