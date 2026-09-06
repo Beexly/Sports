@@ -14,6 +14,7 @@ import {
 } from "@/lib/pricing/feature-gates";
 import { PROMO_CODES, getPromoCode, getActivePromoCodes } from "@/lib/pricing/promo-codes";
 import { getPricingPhase } from "@/lib/pricing/pricing-phases";
+import { getEntitlements } from "@sports/types";
 
 // Banned betting-hype / guaranteed-outcome phrases (owner brief §12).
 const BANNED = [
@@ -69,15 +70,32 @@ describe("value architecture — Free must not leak the paid product", () => {
     expect(free.price.annual).toBe(0);
   });
 
-  it("Free gates the paid product (full reasoning, tools, alerts) — not the picks or confidence", () => {
+  it("Free gates the paid product (full reasoning, tools, alerts); its two daily picks carry no confidence score", () => {
     const gatedText = free.gated.join(" ").toLowerCase();
-    // Picks are free and confidence is calibrated-honest-and-free now; the paid
-    // line is depth (the full why), the tools, and alerts.
+    // The paid line is depth (the full why), the tools, and alerts.
     expect(gatedText).toMatch(/full reasoning|factor trail/);
     expect(gatedText).toContain("alert");
-    // The board and confidence must NOT be gated — they are free.
+    // The gated list phrases the paid line as depth and tools; the two-pick
+    // teaser versus the full board is asserted on unlocks below and in the
+    // feature-gating block (daily-board-full is Pro).
     expect(gatedText).not.toContain("full board");
-    expect(gatedText).not.toContain("confidence");
+    // The shipped contract (packages/types getEntitlements, enforced server-side
+    // by /api/picks): Free sees two picks a day with the Edge Index and NO
+    // confidence score; confidence is Pro and Elite. The tier copy must say so
+    // and must never describe confidence as free.
+    const freeEntitlements = getEntitlements("FREE");
+    expect(freeEntitlements.canSeeConfidence).toBe(false);
+    expect(freeEntitlements.dailyPickLimit).toBe(2);
+    expect(freeEntitlements.canSeePremiumPicks).toBe(false);
+    const unlocksText = free.unlocks.join(" ").toLowerCase();
+    expect(unlocksText).toMatch(/confidence unlocks with pro/);
+    expect(unlocksText).not.toMatch(/free confidence|confidence (is|stays) free/);
+    // The Confidence feature gate itself states the same contract.
+    const confidenceGate = FEATURE_GATES.find((f) => f.key === "confidence");
+    expect(confidenceGate?.minTier).toBe("PRO");
+    expect(isFeatureUnlocked("FREE", "confidence")).toBe(false);
+    expect(confidenceGate?.internalNote).toMatch(/canSeeConfidence=false/);
+    expect(confidenceGate?.internalNote).not.toMatch(/Free gets it/);
   });
 
   it("Free's unlocks are previews/education/samples only — never the full product", () => {

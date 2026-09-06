@@ -17,6 +17,22 @@ describe("ops revenue ladder surface", () => {
     expect(src).toMatch(/oddsInserting/);
   });
 
+  it("C-109: oddsInserting.dualPath carries the credit governor posture from the durable ledger, never invented", () => {
+    const src = readFileSync(
+      resolve(__dirname, "../app/api/ops/public-surface-truth/route.ts"),
+      "utf8",
+    );
+    // The block is typed on the dualPath shape and seeded with the all-null truth.
+    expect(src).toMatch(/credits:\s*OddsCreditTruth/);
+    expect(src).toMatch(/credits:\s*emptyOddsCreditTruth\(\)/);
+    // Filled from the ledger through the failure-isolated reader only.
+    expect(src).toMatch(/loadOddsCreditTruth\(db as unknown as OddsCreditLedgerDb/);
+    expect(src).toMatch(/dualPath:\s*\{\s*\.\.\.oddsInserting\.dualPath,\s*credits\s*\}/);
+    // No literal credit numbers on the surface.
+    expect(src).not.toMatch(/remaining:\s*\d/);
+    expect(src).not.toMatch(/projectedExhaustionAt:\s*"/);
+  });
+
   it("healthy settlement alone does not unlock monetize without PERFORMANCE_STATS", () => {
     const r = evaluateRevenueLadder({
       canonicalSettled: 2000,

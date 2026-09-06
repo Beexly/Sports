@@ -30,6 +30,20 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-06 (05:00 UTC): tonight's build is on `claude/sports-prediction-launch-rtiexc`
+(four code commits `b4885f214`, `3359e072a`, `23a0a3a0f`, `f06be6b31`; typecheck 0, lint 0,
+guardrails 26/26, five adversarial reviews approved).** C-109 credit governor DONE, C-110
+single-book market p DONE (basis `market_anchored_v2`, one streak reset on the 08:40 UTC run
+by design), C-111 fixture guard DONE, FE-05/10/15 DONE, C-107 display half landed (the
+IMPLEMENTED flip and MODEL_VERSION v5.2.8 wait for the first clean NFL Sunday, 2026-09-13).
+C-106 zero-sit lane is CODE-COMPLETE and flips to DONE when the truth surface reads
+overduePending 0 and stalePendingPicks 0 after the first settle cycle post-deploy. Hermes:
+merge `origin/main` after this lands; your work is C-104 (WP-27), nothing in this batch.
+The open founder acceptance: the public calibration claim was reworded to "The calibration we
+measure ourselves on is ..." because the /calibration chart still buckets by confidence
+(`apps/web/lib/calibration/compute.ts`, `BUCKETS` and `bucketFor()`); accept it or open a row
+to re-scope that chart.**
+
 **UPDATED 2026-09-06 (03:30 UTC): F-15 is DONE and #709 is merged as `c3d955c2c`.** The
 browser agent rotated the 20K key, set `THE_ODDS_API_KEY` in Vercel Production and redeployed
 (Ready 02:37:12 UTC); no 402 after the rollover, dashboard usage 0 to 112 credits in 21

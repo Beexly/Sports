@@ -21,6 +21,12 @@ export type SettlementRootCauseCode =
   | "PATH_MISCONFIG"
   | "WRITE_RACE_LOST"
   | "NOT_COMMENCED"
+  // Zero-sit lane void codes (WP-29, ledger C-106). Stamped on the VOID
+  // PickSettlementEvent payload by apps/web/lib/settlement/zero-sit-lane.ts;
+  // never produced by classifySettlementRootCause (it explains, the lane acts).
+  | "SCORE_MISMATCH_CROSS_PATH"
+  | "AMBIGUOUS_TEAM_NAME"
+  | "FIXTURE_NOT_FOUND"
   | "UNKNOWN";
 
 /** Fishbone (Ishikawa) category for ops routing. */
@@ -34,6 +40,27 @@ export type FishboneCategory =
   | "UNKNOWN";
 
 export type PendingReason = "NO_FINAL" | "ORIENT_FAIL";
+
+/**
+ * Cause the zero-sit lane stamps on an AMBIGUOUS_TEAM_NAME void
+ * (`evidence.cause` on the PickSettlementEvent payload; zero-sit-lane.ts
+ * ZeroSitAmbiguityCause). The two causes have different defects and different
+ * fixes: a city-only name is game-row identity debt; a same-day doubleheader
+ * with full, correct names is a matcher join on team pair and day with no
+ * event id.
+ */
+export type AmbiguousTeamNameCause = "CITY_ONLY_NAME" | "MULTIPLE_FINALS";
+
+/** Evidence detail that refines a code's narrative (five whys, remediation). */
+export interface RootCauseNarrativeDetail {
+  readonly ambiguityCause?: AmbiguousTeamNameCause;
+}
+
+export interface RootCauseNarrative {
+  readonly summary: string;
+  readonly fiveWhys: readonly string[];
+  readonly remediation: readonly string[];
+}
 
 export interface SettlementRcaInput {
   readonly pickId: string;
@@ -94,6 +121,9 @@ const CODE_CATEGORY: Record<SettlementRootCauseCode, FishboneCategory> = {
   PATH_MISCONFIG: "PATH_CONFIG",
   WRITE_RACE_LOST: "DURABILITY",
   NOT_COMMENCED: "TIMING",
+  SCORE_MISMATCH_CROSS_PATH: "DATA_SOURCE",
+  AMBIGUOUS_TEAM_NAME: "MATCHING",
+  FIXTURE_NOT_FOUND: "DATA_SOURCE",
   UNKNOWN: "UNKNOWN",
 };
 
@@ -109,13 +139,19 @@ const CODE_WAVE: Record<SettlementRootCauseCode, "A" | "B" | "C" | "D"> = {
   DISPUTED_SCORES: "C",
   AMBIGUOUS_MATCHUP: "C",
   PATH_MISCONFIG: "C",
+  SCORE_MISMATCH_CROSS_PATH: "C",
+  AMBIGUOUS_TEAM_NAME: "C",
+  FIXTURE_NOT_FOUND: "C",
   // D: not actionable yet / unknown
   WITHIN_GRACE: "D",
   NOT_COMMENCED: "D",
   UNKNOWN: "D",
 };
 
-function fiveWhysFor(code: SettlementRootCauseCode): readonly string[] {
+function fiveWhysFor(
+  code: SettlementRootCauseCode,
+  detail: RootCauseNarrativeDetail = {},
+): readonly string[] {
   switch (code) {
     case "NO_TRUSTED_FINAL":
       return [
@@ -197,6 +233,49 @@ function fiveWhysFor(code: SettlementRootCauseCode): readonly string[] {
         "Why wave B? Human spot-check sample, not full stop.",
         "Root: secondary score coverage gap.",
       ];
+    case "SCORE_MISMATCH_CROSS_PATH":
+      return [
+        "Why VOIDED? The game row already carried a FINAL score that disagreed with the free final, so every grader refused to write.",
+        "Why disagree? Two feeds matched two different real games (city-only team names) or one feed corrected a score after the other wrote it.",
+        "Why not graded against either? Grading against a score another lane refused to record would settle the pick against a result the record does not show.",
+        "Why voided after 24h? Founder policy 2026-09-05: no pick sits in human review forever; the conflict is recorded on the outbox event.",
+        "Root: game identity resolved by team name and date, not by event id; see the name guard in process-sport.ts.",
+      ];
+    case "AMBIGUOUS_TEAM_NAME":
+      switch (detail.ambiguityCause) {
+        case "CITY_ONLY_NAME":
+          return [
+            "Why VOIDED? The free matcher held the pick AMBIGUOUS_MATCH on every cycle: a stored side is a city-only name that fits more than one team.",
+            "Why ambiguous? A city-only side (New York, Los Angeles, Chicago) names two or more teams on the fetched boards, so no single final can be tied to it.",
+            "Why city-only? A feed dropped the nickname and the plain upsert overwrote the stored full name (fixed by preferLongerTeamName in process-sport.ts).",
+            "Why voided after 24h? A hold is a decision only while a final can still arrive; for an unidentifiable game none can.",
+            "Root: team identity debt on the game row; the outbox event carries both names and cause CITY_ONLY_NAME.",
+          ];
+        case "MULTIPLE_FINALS":
+          return [
+            "Why VOIDED? The free matcher held the pick AMBIGUOUS_MATCH on every cycle: more than one final for these two teams inside the date window disagrees on the score.",
+            "Why more than one final? A same-day rematch (an MLB doubleheader) is two real games under one team-pair + calendar-day key; the stored names are full and correct.",
+            "Why not the nearest one? The matcher joins on team pair and day, not on event id or kickoff, so it cannot say which final is this pick's game.",
+            "Why voided after 24h? Grading against either candidate risks settling the wrong game, and the hold cannot resolve without an identifier.",
+            "Root: game identity by team pair and date, not event id; the outbox event carries the disagreeing candidates' sources and cause MULTIPLE_FINALS.",
+          ];
+        default:
+          return [
+            "Why VOIDED? The free matcher held the pick AMBIGUOUS_MATCH on every cycle: its team names cannot identify one game.",
+            "Why ambiguous? Either a city-only side names two or more teams on the fetched boards (cause CITY_ONLY_NAME) or two same-day finals for the pair disagree (cause MULTIPLE_FINALS); evidence.cause on the outbox event says which.",
+            "Why does the cause matter? A city-only name is game-row identity debt; a doubleheader is a matcher join on team pair and day with no event id, with the names correct.",
+            "Why voided after 24h? A hold is a decision only while a final can still arrive; for an unidentifiable game none can.",
+            "Root: read evidence.cause on the PickSettlementEvent payload and follow that cause's remediation.",
+          ];
+      }
+    case "FIXTURE_NOT_FOUND":
+      return [
+        "Why VOIDED? The free ESPN scoreboard for the sport and date lists no event pairing the pick's two stored team names.",
+        "Why no event? The game row was created from an early listing (a May schedule) that the league later moved or never played, or a stored name does not match the board (an alias or spelling mismatch produces the same evidence).",
+        "Why did a pick exist? The slate generated from our own stale kickoff time, not from a confirmed fixture (C-111 guards this upstream).",
+        "Why CANCELED or not? The row is marked CANCELED only when NEITHER stored name matched a board side (evidence homeListed and awayListed both false) and the row was still SCHEDULED or LIVE; a POSTPONED row keeps its status because it may be rescheduled, and when one stored name matched against another opponent the board is real and the row is left as is (a one-sided name mismatch).",
+        "Root: fixture confirmation missing before pick generation; the per-name evidence separates a phantom fixture from a name defect only once the fixture itself is verified.",
+      ];
     default:
       return [
         "Why unclassified? Outcome shape did not match a known pattern.",
@@ -208,7 +287,10 @@ function fiveWhysFor(code: SettlementRootCauseCode): readonly string[] {
   }
 }
 
-function remediationFor(code: SettlementRootCauseCode): readonly string[] {
+function remediationFor(
+  code: SettlementRootCauseCode,
+  detail: RootCauseNarrativeDetail = {},
+): readonly string[] {
   switch (code) {
     case "NO_TRUSTED_FINAL":
     case "OVERDUE_NO_SCORE":
@@ -248,6 +330,35 @@ function remediationFor(code: SettlementRootCauseCode): readonly string[] {
         "Optional: allow SINGLE_SOURCE auto-settle under STP audit policy.",
         "Improve secondary feed coverage for dual confirmation.",
       ];
+    case "SCORE_MISMATCH_CROSS_PATH":
+      return [
+        "Already voided by the zero-sit lane; read the recorded and incoming scores on the PickSettlementEvent payload.",
+        "If the game row names are city-only, merge the duplicate game rows (scripts/ops/merge-duplicate-games.ts) so the next season resolves by identity.",
+      ];
+    case "AMBIGUOUS_TEAM_NAME":
+      switch (detail.ambiguityCause) {
+        case "CITY_ONLY_NAME":
+          return [
+            "Already voided by the zero-sit lane; the payload carries both team names, the matcher hold and cause CITY_ONLY_NAME.",
+            "Repair the game row names (full team names) so future picks on the same fixture can be matched; the names are the defect.",
+          ];
+        case "MULTIPLE_FINALS":
+          return [
+            "Already voided by the zero-sit lane; the payload carries both team names, the disagreeing candidates' sources and cause MULTIPLE_FINALS.",
+            "Disambiguate by event id or kickoff time, not by team names: thread a per-game identifier (or the kickoff) through the free matcher join so a doubleheader resolves to its own final. The names are not the defect.",
+          ];
+        default:
+          return [
+            "Already voided by the zero-sit lane; read evidence.cause on the PickSettlementEvent payload.",
+            "CITY_ONLY_NAME: repair the game row names (full team names). MULTIPLE_FINALS: disambiguate by event id or kickoff time, not by names.",
+          ];
+      }
+    case "FIXTURE_NOT_FOUND":
+      return [
+        "Already voided by the zero-sit lane; read evidence.homeListed and evidence.awayListed on the PickSettlementEvent payload: both false means neither stored name matched the board (an alias or spelling mismatch produces the same evidence), not proof that the contest did not occur; one true means a real board with a stored name it does not match, and the row was left as is.",
+        "Verify the fixture itself (the ESPN event id or the league schedule page) before concluding the contest did not occur: a SCHEDULED or LIVE row with both names unmatched was marked CANCELED and must be reopened if the contest exists under other names; a POSTPONED row kept its status.",
+        "Confirm the fixture against ESPN before any new pick (C-111); for a name mismatch repair the stored team name instead of cancelling anything.",
+      ];
     default:
       return ["Inspect raw settlement outcome and extend RCA classifier."];
   }
@@ -275,9 +386,33 @@ function summaryFor(code: SettlementRootCauseCode, ageHours: number): string {
       return "Game not yet commenced.";
     case "SINGLE_SOURCE_POLICY_HOLD":
       return "Single-source final — audit / policy wave.";
+    case "SCORE_MISMATCH_CROSS_PATH":
+      return `Voided: recorded FINAL score disagreed with the free final for more than 24h (${ageHours.toFixed(1)}h since kickoff).`;
+    case "AMBIGUOUS_TEAM_NAME":
+      return `Voided: team names could not identify one game (${ageHours.toFixed(1)}h since kickoff).`;
+    case "FIXTURE_NOT_FOUND":
+      return `Voided: the free scoreboard for that date lists no event pairing the two stored team names (${ageHours.toFixed(1)}h since kickoff).`;
     default:
       return "Unclassified settlement blockage.";
   }
+}
+
+/**
+ * Narrative (summary, five whys, remediation) for one code, refined by the
+ * evidence detail the zero-sit lane stamps on its VOID events. Pure. Used to
+ * explain codes classifySettlementRootCause never produces (the lane acts,
+ * this explains) without losing the cause that decides the fix.
+ */
+export function rootCauseNarrative(
+  code: SettlementRootCauseCode,
+  ageHours: number,
+  detail: RootCauseNarrativeDetail = {},
+): RootCauseNarrative {
+  return {
+    summary: summaryFor(code, ageHours),
+    fiveWhys: fiveWhysFor(code, detail),
+    remediation: remediationFor(code, detail),
+  };
 }
 
 /**

@@ -12,6 +12,8 @@ import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
+import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
+import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -109,15 +111,26 @@ export function PickCard({
       {/* Selection box */}
       <div className="rounded-lg bg-titanium/60 px-4 py-3">
         <p className="text-xs font-medium text-ion-1">Pick</p>
-        <p className="mt-0.5 text-lg font-bold text-white">{pick.selection}</p>
-        {/* SPREAD's chosen-side number already lives in `selection` (e.g.
-            "Away Favs -6.0"). `line` is stored in HOME-team perspective for
-            settlement, so rendering it raw here would contradict the selection
-            for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */}
-        {pick.line !== 0 && pick.pickType !== "SPREAD" && (
-          <p className="mt-0.5 text-xs text-ion-1">
-            Line: {pick.line > 0 ? "+" : ""}{pick.line}
+        <p className="mt-0.5 text-lg font-bold text-white">{displaySelection(pick.selection)}</p>
+        {/* A signal-slate row has no book behind it: the line slot says so in
+            plain words instead of sitting empty (FE-05). */}
+        {pick.hasBookPrice === false ? (
+          <p
+            className="mt-1 inline-flex items-center rounded-full border border-titanium px-2 py-0.5 text-[11px] text-ion-2"
+            data-testid="no-book-price-pill"
+          >
+            {NO_BOOK_PRICE_LABEL}
           </p>
+        ) : (
+          /* SPREAD's chosen-side number already lives in `selection` (e.g.
+             "Away Favs -6.0"). `line` is stored in HOME-team perspective for
+             settlement, so rendering it raw here would contradict the selection
+             for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */
+          pick.line !== 0 && pick.pickType !== "SPREAD" && (
+            <p className="mt-0.5 text-xs text-ion-1">
+              Line: {pick.line > 0 ? "+" : ""}{pick.line}
+            </p>
+          )
         )}
         {pick.lineMovement && (
           <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
@@ -168,6 +181,20 @@ export function PickCard({
           </span>
         </div>
       </div>
+
+      {/* Market-implied win probability (v5.2.8 display side): the receipt's
+          number on book-priced two-way moneyline picks, shown under the same
+          entitlement as confidence. The API omits the field for every other
+          viewer and for signal-slate, SPREAD and TOTAL picks, so this renders
+          no percentage there. Label text is the verified proposal wording. */}
+      {canSeeConfidence && pick.marketImplied && (
+        <p
+          className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/5 px-3 py-2 text-xs leading-relaxed text-ion-1"
+          data-testid="market-implied-win-probability"
+        >
+          {formatMarketImpliedLabel(pick.marketImplied)}
+        </p>
+      )}
 
       {/* Reasoning teaser / full — gated on the SAME flag the API gates the
           full prose on (canSeeFactorBreakdown), so the display gate can never

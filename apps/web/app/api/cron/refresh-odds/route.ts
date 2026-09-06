@@ -37,12 +37,19 @@
 
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { SUPPORTED_SPORTS, resolveOddsApiKey, resolveRundownApiKey } from "@sports/data-ingestion";
+import { db } from "@sports/db";
+import {
+  SUPPORTED_SPORTS,
+  resolveOddsApiKey,
+  resolveRundownApiKey,
+  type OddsCreditLedgerDb,
+} from "@sports/data-ingestion";
 import { refreshOdds } from "@sports/ingestion-pipeline";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 import { monitorOddsFetchedAt } from "@/lib/data-reliability/monitor-odds-fetchedat";
 import { runShadowEvaluationPass, type ShadowPassResult } from "@/lib/ops/shadow-evaluation-pass";
+import { buildPaidOddsGovernor } from "@/lib/odds/paid-odds-governor";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -96,9 +103,18 @@ export async function GET(request: Request) {
   // is set, so wiring it in ships no behavior change). Never throws.
   const pingUrl = process.env["HC_REFRESH_PING_URL"];
 
-  const result = await refreshOdds(
-    requestedSport ? { sport: requestedSport } : {}
-  );
+  // C-109 credit governor (paid path only; refreshOdds ignores it without a
+  // real Odds key): skip a sport with no event in the next 48h on the free ESPN
+  // scoreboard, pace to x-requests-remaining over the hours left in the month,
+  // and record every paid call and quota header in the durable ledger. A
+  // scoreboard or ledger failure fails open inside the governor.
+  const governor = apiKey
+    ? buildPaidOddsGovernor({ db: db as unknown as OddsCreditLedgerDb })
+    : undefined;
+  const result = await refreshOdds({
+    ...(requestedSport ? { sport: requestedSport } : {}),
+    ...(governor ? { governor } : {}),
+  });
 
   // Autonomous board fill: independent signals in same tick (no founder cron wait).
   let signalFill: Awaited<ReturnType<typeof import("@sports/ingestion-pipeline").generateSignalSlate>> | null = null;

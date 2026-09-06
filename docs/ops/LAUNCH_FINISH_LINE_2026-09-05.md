@@ -268,18 +268,18 @@ logged-in browser using the script below. Decisions taken accordingly:
 | # | To reach 100 | Owner | How it closes |
 |---|---|---|---|
 | 1 | Book-priced picks flowing | DONE 2026-09-06 02:37 UTC (browser agent, script A) | 20K key rotated, `THE_ODDS_API_KEY` set in Vercel Production, redeploy Ready 02:37:12 UTC; one 402 on the old key at 02:37:15 UTC during rollover, none in the 24 minutes after; dashboard usage 0 to 112 credits by 03:02 UTC |
-| 2 | Overdue picks to 0: the 16 are two cohorts (section 3f), 10 MLB spreads on city-only game rows refused as SCORE_MISMATCH_CROSS_PATH and 6 NCAAF picks on phantom fixtures | coder: C-106 void lane (priority 2) and C-111 fixture guard (priority 3) | `settlement.overduePending` reads 0; every cleared pick carries an RCA code on its outbox event |
-| 3 | Stale picks to 0 (26 at 03:02 UTC, up from 18) | coder: WP-29 (C-106), priority 2 | `stalePendingPicks.count` reads 0 after one cycle |
+| 2 | Overdue picks to 0: the 16 are two cohorts (section 3f), 10 MLB spreads on city-only game rows refused as SCORE_MISMATCH_CROSS_PATH and 6 NCAAF picks on phantom fixtures | code landed 2026-09-06 04:55 UTC (`b4885f214`: C-106 zero-sit lane, C-111 fixture guard) | `settlement.overduePending` reads 0 after the first settle cycle post-deploy; every cleared pick carries an RCA code on its outbox event |
+| 3 | Stale picks to 0 (26 at 03:02 UTC, up from 18) | code landed 2026-09-06 04:55 UTC (`b4885f214`, automatic unpublish in the zero-sit lane) | `stalePendingPicks.count` reads 0 after the first cycle post-deploy |
 | 4 | Calibration GREEN three runs | automatic (02:40, 08:40, 14:40, 20:40 UTC) | truth surface `calibrationEligibility` published true, streak 3 |
-| 5 | C-107 display label and claim, IMPLEMENTED flip, MODEL_VERSION v5.2.8 | coder, priority 5 | proposal status IMPLEMENTED; model-freeze green |
+| 5 | C-107 display label and claim (landed `f06be6b31`), then the IMPLEMENTED flip and MODEL_VERSION v5.2.8 after the first clean NFL Sunday (2026-09-13) | coder, after 2026-09-13 | proposal status IMPLEMENTED; model-freeze green |
 | 6 | `PERFORMANCE_STATS_ENABLED=true`, `PRICING_PHASE=PROVEN` after 4 and 5 | browser agent, later prompt | truth surface `gates.calibrationPublished` true; pricing page shows PROVEN rates |
 | 7 | Live checkout, then refund | SKIPPED by founder decision 2026-09-06 (script D not run, no charge made) | reopen only if the founder asks |
 | 8 | Alerting: webhook URL and Sentry DSN in Vercel | SKIPPED by founder decision 2026-09-06 (no Slack, no Sentry) | health-alert keeps logging DELIVERED; reopen only if the founder asks |
 | 9 | Stripe: Terms URL, consent flag, three webhook events, no live Payment Link | DONE 2026-09-06 (browser agent, script C) | Privacy URL set, consent flag already true, endpoint lists ten events, five Payment Links deactivated |
-| 10 | FE-05, FE-10, FE-15 copy | coder, priority 6 | acceptance greps in the FE table |
-| 11 | The Odds API credit governor so the 20K plan lasts the month (section 3f) | coder: C-109, priority 1, before 2026-09-08 00:00 UTC | steady state at or below 600 credits a day on the dashboard; remaining credits and projected exhaustion on the truth surface |
-| 12 | Calibration sample grows honestly: single-book publish-time market p for the 223 `insufficient_books` games | coder: C-110, priority 4 | truth surface `pSources` shows `market_p_single_book`; streak basis `market_anchored_v2` |
-| 13 | No pick on a fixture ESPN does not list for that day (section 3f) | coder: C-111, priority 3 | signal slate refuses a game absent from the day's scoreboard; phantom rows CANCELLED, their picks VOIDED with RCA FIXTURE_NOT_FOUND |
+| 10 | FE-05, FE-10, FE-15 copy | DONE 2026-09-06 04:55 UTC (`f06be6b31`) | acceptance greps in the FE table pass; the preview page's displaySelection is a follow-up |
+| 11 | The Odds API credit governor so the 20K plan lasts the month (section 3f) | DONE 2026-09-06 04:55 UTC (`3359e072a`, C-109) | steady state at or below 600 credits a day, measured on the dashboard over the first 24h post-deploy; `oddsInserting.dualPath.credits` on the truth surface |
+| 12 | Calibration sample grows honestly: single-book publish-time market p for the 223 `insufficient_books` games | DONE 2026-09-06 04:55 UTC (`23a0a3a0f`, C-110) | truth surface `pSources` shows `market_p_single_book`; streak basis `market_anchored_v2` (the first v2 run at 08:40 UTC resets the streak once, by design) |
+| 13 | No pick on a fixture ESPN does not list for that day (section 3f) | DONE 2026-09-06 04:55 UTC (`b4885f214`, C-111 generation guard; the void of existing phantom picks rides on C-106) | signal slate refuses a game absent from the day's scoreboard; phantom rows CANCELED, their picks VOIDED with RCA FIXTURE_NOT_FOUND |
 
 Blocks: 1 to 3 reach 75. 4 to 6 reach 90 (PROVEN). 9 to 13 reach 100; 7 and 8 are closed by founder decision.
 

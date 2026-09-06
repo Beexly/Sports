@@ -29,9 +29,34 @@
  */
 
 import { createHash } from "node:crypto";
-import { SUPPORTED_SPORTS, getInSeasonSports, resolveRundownApiKey, resolveOddsApiKey } from "@sports/data-ingestion";
+import { db, isStubMode } from "@sports/db";
+import {
+  SUPPORTED_SPORTS,
+  getInSeasonSports,
+  resolveRundownApiKey,
+  resolveOddsApiKey,
+  buildPaidOddsGovernor,
+  type OddsCreditLedgerDb,
+  type PaidOddsGovernor,
+} from "@sports/data-ingestion";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { processSport } from "./process-sport.js";
+import {
+  governedDecision,
+  isLowQuota,
+  ODDS_API_LOW_QUOTA_THRESHOLD,
+  paidRequestCountOf,
+  recordPaidRunAccounting,
+} from "./paid-run-accounting.js";
+
+export {
+  governedDecision,
+  isLowQuota,
+  ODDS_API_LOW_QUOTA_THRESHOLD,
+  paidRequestCountOf,
+  recordPaidRunAccounting,
+};
+export type { GovernedDecision } from "./paid-run-accounting.js";
 import { freezeSlateCommitments, type SlateFreezeResult } from "./freeze-slate-commitments.js";
 
 /** Production SHA-256 HashFn for the proof spine — matches process-sport.ts. */
@@ -51,13 +76,6 @@ export interface RefreshOddsSportResult {
   readonly picks?: number;
   readonly note?: string;
 }
-
-/** Below this many remaining The-Odds-API credits, stop starting new sports
- *  in this cycle rather than risk exhausting the monthly budget mid-loop.
- *  One more MARKETS.length-market/1-region call costs MARKETS.length credits
- *  (3 today); this leaves real margin above that for settle-picks' own
- *  getScores calls sharing the same key. */
-const ODDS_API_LOW_QUOTA_THRESHOLD = 10;
 
 export interface RefreshOddsResult {
   /** True only when every processed sport succeeded. */
@@ -94,9 +112,69 @@ export class UnsupportedSportError extends Error {
 /** Inter-sport pause to avoid bursting the upstream API quota. Matches the route. */
 const INTER_SPORT_PAUSE_MS = 750;
 
+/**
+ * C-109 credit governor hook for the PAID odds path (the interface lives in
+ * `@sports/data-ingestion` next to the ledger; re-exported here so existing
+ * importers keep working). Consulted only when a real The Odds API key is in
+ * use; the Rundown / ESPN free paths cost no credits and are never gated by it.
+ */
+export type { PaidOddsGovernor };
+
 export interface RefreshOddsOptions {
   /** Optional explicit sport key. When omitted, refreshes in-season sports. */
   readonly sport?: string;
+  /**
+   * C-109 paid-path credit governor.
+   *
+   *   - omitted (every production caller: the refresh-odds cron, board-fill,
+   *     free-spine-health, the traffic heartbeat): `refreshOdds` builds the
+   *     default ledger-backed governor itself via `defaultPaidOddsGovernor()`,
+   *     so no caller can run paid refreshes outside the credit budget;
+   *   - an object: used as given (the cron route injects one with its richer
+   *     ESPN scoreboard adapter; unit tests inject stubs);
+   *   - `null`: pacing disabled for this call. TEST-ONLY: no production
+   *     caller may pass it; the loop then spends credits unpaced.
+   */
+  readonly governor?: PaidOddsGovernor | null;
+}
+
+/** Note prefix on a per-sport result the governor held back this cycle. */
+export const CREDIT_GOVERNOR_SKIP_NOTE = "credit_governor_skip";
+
+/**
+ * The governor every production caller gets when it injects none: the durable
+ * credit ledger (append-only JarvisMemoryEvent rows on the shared Prisma
+ * client) plus the free ESPN scoreboard event check. The stub client
+ * (DATABASE_URL unset) cannot take the advisory mutex although its no-op
+ * `$transaction` looks like it can, so the ledger is told when it is the stub.
+ */
+export function defaultPaidOddsGovernor(): PaidOddsGovernor {
+  return buildPaidOddsGovernor({
+    db: db as unknown as OddsCreditLedgerDb,
+    atomicCapable: !isStubMode(),
+  });
+}
+
+/**
+ * `undefined` → default; object → as injected; `null` → disabled (test-only).
+ * Building the default fails open: a governor that cannot even be constructed
+ * must never blank the board (its decide() already fails open at call time).
+ */
+export function resolvePaidOddsGovernor(
+  injected: PaidOddsGovernor | null | undefined,
+  logPrefix: string = "[cron:refresh-odds]",
+): PaidOddsGovernor | undefined {
+  if (injected === null) return undefined;
+  if (injected) return injected;
+  try {
+    return defaultPaidOddsGovernor();
+  } catch (err) {
+    console.warn(
+      `${logPrefix} default credit governor unavailable, proceeding unpaced: ` +
+        `${err instanceof Error ? err.message : String(err)}`,
+    );
+    return undefined;
+  }
 }
 
 /**
@@ -156,6 +234,10 @@ export async function refreshOdds(
 
   const results: RefreshOddsSportResult[] = [];
 
+  // C-109: paid path only. Resolved once per cycle so every sport below is
+  // judged by the same governor (default, injected, or test-only null).
+  const governor = apiKey ? resolvePaidOddsGovernor(opts.governor) : undefined;
+
   for (const sport of sportsToProcess) {
     if (skipRundownSports && rundownOnly) {
       // Still try ESPN when Rundown 429 cascade — do not skip tertiary free path.
@@ -200,12 +282,42 @@ export async function refreshOdds(
       await new Promise((r) => setTimeout(r, interSportPauseMs));
       continue;
     }
+    // C-109: on the paid path, ask the credit governor first. A held sport is
+    // reported (ok, oddsInserted 0, note) rather than silently dropped, so the
+    // cron response says what did not run and why. The governor itself fails
+    // open: a ledger or scoreboard outage must never blank the board.
+    // A governor that answered allow has reserved the slot and marked the
+    // first request; a governor that was unavailable (fail-open) has not, and
+    // the accounting below then marks every request of the run.
+    let slotReserved = true;
+    if (governor) {
+      const decision = await governedDecision(governor, sport.key);
+      if (!decision.allow) {
+        console.info(
+          `[cron:refresh-odds] ${sport.key}: paid odds fetch skipped, credit governor: ${decision.reason}`,
+        );
+        results.push({
+          sport: sport.key,
+          ok: true,
+          oddsInserted: 0,
+          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: ${decision.reason}`,
+        });
+        continue;
+      }
+      slotReserved = decision.reserved;
+      // decide() has already reserved this sport's hourly slot and written the
+      // marker for the first paid request, so concurrent callers see it before
+      // the fetch. Additional paid requests in the run are marked below.
+    }
     try {
       // processSport NEVER throws on a provider/normalization failure — it
       // catches internally and RESOLVES { status: "failed", error }. Inspect
       // the returned status so a failed sport is recorded as ok:false (and the
       // Healthchecks success ping cannot fire falsely on a silent failure).
       const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
+      if (governor) {
+        await recordPaidRunAccounting(governor, sport.key, res, { reserved: slotReserved });
+      }
       const note = res.note ?? "";
       if (
         rundownOnly &&
@@ -243,10 +355,7 @@ export async function refreshOdds(
       // nearly out of credits — a proactive guard, not just the existing
       // reactive 402/429 circuit breaker. Skip, don't silently drop, the
       // rest so the response is honest about what didn't run and why.
-      if (
-        res.oddsApiRemainingRequests != null &&
-        res.oddsApiRemainingRequests < ODDS_API_LOW_QUOTA_THRESHOLD
-      ) {
+      if (isLowQuota(res)) {
         const doneKeys = new Set(results.map((r) => r.sport));
         for (const skipped of sportsToProcess) {
           if (doneKeys.has(skipped.key)) continue;

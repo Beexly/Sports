@@ -66,11 +66,24 @@ export type {
 } from "./settlement-snapshots.js";
 export { recordSourceSnapshot } from "./source-snapshot.js";
 export type { SourceSnapshotInput } from "./source-snapshot.js";
-export { refreshOdds, UnsupportedSportError } from "./refresh-odds.js";
+export {
+  refreshOdds,
+  UnsupportedSportError,
+  CREDIT_GOVERNOR_SKIP_NOTE,
+  defaultPaidOddsGovernor,
+  resolvePaidOddsGovernor,
+  governedDecision,
+  isLowQuota,
+  ODDS_API_LOW_QUOTA_THRESHOLD,
+  paidRequestCountOf,
+  recordPaidRunAccounting,
+} from "./refresh-odds.js";
 export type {
   RefreshOddsResult,
   RefreshOddsSportResult,
   RefreshOddsOptions,
+  PaidOddsGovernor,
+  GovernedDecision,
 } from "./refresh-odds.js";
 export { notifyOwner, ownerAlertsConfigured } from "./owner-alert.js";
 export {
@@ -141,6 +154,19 @@ export type {
 
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
+export {
+  FixtureConfirmer,
+  confirmFixturesAgainstScoreboard,
+  findListedFixture,
+  fixtureDateKeys,
+  requiresReconfirmation,
+  commenceTimeCorrection,
+} from "./fixture-confirmation.js";
+export type {
+  FixtureProbe,
+  FixtureConfirmation,
+  FixtureBatchResult,
+} from "./fixture-confirmation.js";
 
 export { backfillIndependentTrueProb } from "./backfill-independent-trueprob.js";
 export type { BackfillIndependentResult } from "./backfill-independent-trueprob.js";

@@ -15,6 +15,7 @@ import {
 } from "@sports/prediction-engine";
 import type { DurableMetricsPayload } from "@/lib/ops/calibration-eligibility-durable";
 import {
+  MARKET_ANCHORED_P_BASIS,
   MARKET_ANCHORED_SAMPLE_COMPOSITION_NOTE,
   picksToMarketAnchoredCalibrationSamples,
   type MarketAnchoredSample,
@@ -180,7 +181,7 @@ export function buildDurableMetricsFromSamples(input: {
       modelVersion,
       dateRange,
       overall: null,
-      pBasis: "market_anchored",
+      pBasis: MARKET_ANCHORED_P_BASIS,
       exclusions: input.exclusions,
       pSources: input.bySource ? marketPSourcesFromBySource(input.bySource) : undefined,
       marketPFromOddsTable: input.marketPFromOddsTable,
@@ -215,7 +216,7 @@ export function buildDurableMetricsFromSamples(input: {
         uncertainty: decomp.uncertainty,
       },
     },
-    pBasis: "market_anchored",
+    pBasis: MARKET_ANCHORED_P_BASIS,
     exclusions: input.exclusions,
     pSources: input.bySource ? marketPSourcesFromBySource(input.bySource) : undefined,
     marketPFromOddsTable: input.marketPFromOddsTable,
@@ -226,7 +227,7 @@ export function buildDurableMetricsFromSamples(input: {
     eceCi95: breakdowns?.eceCi95 ?? null,
     notes: [
       ...callerNotes,
-      "p scored for the floors: market-anchored probability only, publish-time value. Order: the proof receipt minted before kickoff (immutable), else the factor-breakdown market fair only for rows with no receipt (refreshed until settlement, so not publish-time-fixed), else the publish-time recompute from the append-only odds table (same mean-implied proportional de-vig as the receipt, MIN_BOOKMAKERS real books, rows at or before generatedAt). Picks with none are excluded and counted; confidence/100 is never scored. Internal eligibility only until publish policy.",
+      "p scored for the floors: market-anchored probability only, publish-time value. Order: the proof receipt minted before kickoff (immutable), else the factor-breakdown market fair only for rows with no receipt (refreshed until settlement, so not publish-time-fixed), else the publish-time recompute from the append-only odds table (same mean-implied proportional de-vig as the receipt, rows at or before generatedAt; MIN_BOOKMAKERS or more real books reported as market_p_from_odds_table, exactly one real book reported as market_p_single_book since C-110). Picks with none are excluded and counted; confidence/100 is never scored. Internal eligibility only until publish policy.",
       ...(breakdowns ? [METRIC_CI_READING_NOTE] : []),
     ],
   };

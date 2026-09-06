@@ -69,7 +69,7 @@ const GROUPS: ReadonlyArray<FaqGroup> = [
       },
       {
         q: "Can I see the factor trail on every signal?",
-        a: "Yes, that's the whole product. Every published signal exposes its full factor breakdown: which books, what line movement, market depth, freshness, public lean, intelligence layers. You read what the model read.",
+        a: "On Pro and Elite, yes. Every published signal carries its full factor breakdown: which books, what line movement, market depth, freshness, public lean, intelligence layers. You read what the model read. Free sees the daily two-pick teaser, the matchup and pick type, without the confidence rating or the factor trail.",
       },
       {
         q: "Does the model ever stay quiet?",
