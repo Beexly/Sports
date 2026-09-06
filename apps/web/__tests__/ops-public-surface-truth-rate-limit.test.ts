@@ -441,6 +441,7 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
       observedAt: null,
       dailyBudget: 600,
       projectedExhaustionAt: null,
+      projectionBasis: "linear_24h_unthrottled",
       paceOk: null,
     });
     // The block came from the real ledger read, not from a swallowed TypeError.
@@ -480,6 +481,7 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
       observedAt: "2026-09-06T04:00:00.000Z",
       dailyBudget: 600,
       projectedExhaustionAt: null,
+      projectionBasis: "linear_24h_unthrottled",
       paceOk: true,
     });
   });

@@ -69,7 +69,17 @@ export interface PaidCallDecision {
   readonly reason: string;
 }
 
-/** Whole hours (fractional) from `now` to the first instant of next UTC month. */
+/**
+ * Whole hours (fractional) from `now` to the first instant of next UTC month.
+ *
+ * The UTC month boundary is the RIGHT horizon, not an approximation of the
+ * billing date. The Odds API dashboard states verbatim on the plan card:
+ * "Monthly plans reset on the 1st of each month at 12AM UTC." Credits therefore
+ * reset on the 1st; the invoice date (the 22nd on the current 20K plan) is
+ * billing only and never resets the counter. Reviewers have twice read the gap
+ * between the two dates as a pacing defect: it is not one, and this comment is
+ * here so it stops being re-raised (founder ruling 2026-09-06, closed).
+ */
 export function hoursToMonthEnd(now: Date): number {
   const end = Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1);
   const hours = (end - now.getTime()) / 3_600_000;
@@ -238,6 +248,10 @@ export function projectCreditExhaustion(
   return new Date(at).toISOString();
 }
 
+/** The only basis `projectedExhaustionAt` is ever computed on today. */
+export const PROJECTION_BASIS = "linear_24h_unthrottled";
+export type PROJECTION_BASIS = typeof PROJECTION_BASIS;
+
 /** Truth-surface block under oddsInserting.dualPath.credits. */
 export interface OddsCreditTruth {
   readonly remaining: number | null;
@@ -246,6 +260,16 @@ export interface OddsCreditTruth {
   readonly dailyBudget: typeof DAILY_BUDGET;
   /** ISO, from the last 24h of observations; null with fewer than two. */
   readonly projectedExhaustionAt: string | null;
+  /**
+   * How to read `projectedExhaustionAt`: a straight line through the last 24h
+   * of observations with NO model of this governor throttling. It is the
+   * no-governor worst case, not a forecast: once remaining divided by hours to
+   * month end falls below HOURLY_BUDGET the reserve mode caps each sport at one
+   * paid call an hour and the real burn drops well below this line. An operator
+   * reading the raw date without this basis reads a cliff that the governor
+   * exists to prevent.
+   */
+  readonly projectionBasis: PROJECTION_BASIS;
   /** Reserve pace holds at the latest observation; null when never observed. */
   readonly paceOk: boolean | null;
 }
@@ -257,6 +281,7 @@ export function emptyOddsCreditTruth(): OddsCreditTruth {
     observedAt: null,
     dailyBudget: DAILY_BUDGET,
     projectedExhaustionAt: null,
+    projectionBasis: PROJECTION_BASIS,
     paceOk: null,
   };
 }
@@ -275,6 +300,7 @@ export function buildOddsCreditTruth(input: {
     observedAt: latest.observedAt,
     dailyBudget: DAILY_BUDGET,
     projectedExhaustionAt: projectCreditExhaustion(input.last24h, now),
+    projectionBasis: PROJECTION_BASIS,
     paceOk: reservePaceOk(latest.remaining, now),
   };
 }

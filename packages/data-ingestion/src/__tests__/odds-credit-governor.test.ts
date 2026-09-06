@@ -508,6 +508,7 @@ describe("buildOddsCreditTruth", () => {
       observedAt: "2026-09-06T11:00:00.000Z",
       dailyBudget: 600,
       projectedExhaustionAt: "2026-09-07T06:00:00.000Z",
+      projectionBasis: "linear_24h_unthrottled",
       paceOk: false,
     });
   });
@@ -635,6 +636,7 @@ describe("ledger (append-only JarvisMemoryEvent rows)", () => {
       observedAt: "2026-09-06T11:00:00.000Z",
       dailyBudget: 600,
       projectedExhaustionAt: "2026-09-07T06:00:00.000Z",
+      projectionBasis: "linear_24h_unthrottled",
       paceOk: false,
     });
     // The window query starts 24h before now.

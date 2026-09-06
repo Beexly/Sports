@@ -1582,6 +1582,29 @@ describe("settleSport", () => {
       errorSpy.mockRestore();
     });
 
+    it("a failed paid call persists x-requests-used too, not just remaining", async () => {
+      // The vendor sends BOTH quota headers on a 402/429 and OddsApiError
+      // carries both. Recording remaining while dropping used left the ledger
+      // with a half observation, so a failed run silently lost the counter the
+      // burn measurement reads.
+      const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mocks.getScores.mockRejectedValue(
+        new OddsApiError("The Odds API error: 429", 429, 16680, 3320),
+      );
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("failed");
+      expect(createdScopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      const credits = mocks.memCreate.mock.calls[1]![0] as Created;
+      expect(credits.data["metadata"]).toMatchObject({
+        remaining: 16680,
+        used: 3320,
+        source: "settle-sport",
+      });
+      errorSpy.mockRestore();
+    });
+
     it("a failed paid call without a remaining count records nothing", async () => {
       const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       mocks.getScores.mockRejectedValue(new OddsApiError("The Odds API request timed out", 408));
