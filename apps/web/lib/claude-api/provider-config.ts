@@ -28,6 +28,59 @@ import { parseServiceAccountJson, type ServiceAccountKey } from "./google-oauth"
 
 type Env = Record<string, string | undefined>;
 
+// ── OpenRouter (free-lane) ───────────────────────────────────────────────────
+
+export interface OpenRouterConfig {
+  readonly apiKey: string;
+  /** Free model ids attempted in order (defaults to gemma-4-31b-it:free). */
+  readonly models: readonly string[];
+}
+
+export const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
+
+/** Default free models, in preference order (verified live on OpenRouter 2026-09-05). */
+export const DEFAULT_OPENROUTER_FREE_MODELS = [
+  "thinkingmachines/inkling:free",
+  "minimax/minimax-m3:free",
+  "nvidia/nemotron-3.5-lightning:free",
+  "z-ai/glm-5.2:free",
+  "google/gemma-4-31b-it:free",
+] as const;
+
+/**
+ * OpenRouter free-lane config. `OPENROUTER_MODELS` is an optional JSON array of
+ * model slugs; when absent the curated default list is used. Validation is
+ * shape-only (no transport, no SDK) — this module stays import-safe for the
+ * planner.
+ */
+export function openRouterConfig(env: Env = process.env): OpenRouterConfig | null {
+  const apiKey = env["OPENROUTER_API_KEY"]?.trim();
+  if (!apiKey) return null;
+
+  const rawModels = env["OPENROUTER_MODELS"]?.trim();
+  if (!rawModels) {
+    return { apiKey, models: [...DEFAULT_OPENROUTER_FREE_MODELS] };
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(rawModels);
+    if (
+      Array.isArray(parsed) &&
+      parsed.length > 0 &&
+      parsed.every((m) => typeof m === "string" && m.trim().length > 0)
+    ) {
+      return { apiKey, models: parsed.map((m) => String(m).trim()) };
+    }
+  } catch {
+    // fall through to default — malformed model list must not disable the lane
+  }
+  return { apiKey, models: [...DEFAULT_OPENROUTER_FREE_MODELS] };
+}
+
+export function isOpenRouterConfigured(env: Env = process.env): boolean {
+  return openRouterConfig(env) !== null;
+}
+
 // ── Bedrock ──────────────────────────────────────────────────────────────────
 
 export interface BedrockConfig {

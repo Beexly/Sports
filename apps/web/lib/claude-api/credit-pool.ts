@@ -67,7 +67,15 @@ export function creditPoolForModel(modelName: string): CreditPool {
   if (id.includes("@")) return "vertex_partner";
   if (/^(?:[a-z]{2,4}\.)?anthropic\./.test(id)) return "aws_activate";
   if (/^gpt-oss/i.test(id) || /cerebras/i.test(id)) return "content_free";
-  if (id.startsWith("free-secondary/") || id.startsWith("free-groq/") || id.startsWith("free-nim/") || id.startsWith("free-compat/")) return "content_free";
+  if (
+    id.startsWith("free-openrouter/") ||
+    id.startsWith("free-secondary/") ||
+    id.startsWith("free-groq/") ||
+    id.startsWith("free-nim/") ||
+    id.startsWith("free-compat/")
+  ) {
+    return "content_free";
+  }
   return "anthropic_direct";
 }
 
