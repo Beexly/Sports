@@ -11,7 +11,10 @@ import { db, isStubMode } from "@sports/db";
 import { captureError } from "@/lib/observability/sentry";
 import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import { projectProvenPathMetrics } from "@/lib/calibration/projected-proven-metrics";
-import { toProvenPathPickRows } from "@/lib/calibration/proven-path-rows";
+import {
+  toProvenPathPickRowsReport,
+  type CalibrationExclusionCounts,
+} from "@/lib/calibration/proven-path-rows";
 import {
   buildRankingPowerControl,
   rankingPowerPosture,
@@ -38,6 +41,8 @@ export type ProvenPathSurface = {
   /** Offline conformal bridge (default not computed). Founder-ops diagnostic only. */
   readonly conformalBridge: RpcpConformalBridge;
   readonly conformalBridgeEnv: ReturnType<typeof rpcpConformalBridgePosture>;
+  /** Settled WIN/LOSS picks dropped before the bake-off, by reason (three_way_market here). */
+  readonly exclusions: CalibrationExclusionCounts;
 };
 
 async function loadRows() {
@@ -55,7 +60,8 @@ async function loadRows() {
     orderBy: { settledAt: "desc" },
     take: 2000,
   });
-  return toProvenPathPickRows(picks);
+  // Three-way moneyline sports are excluded here (shared row builder) and counted.
+  return toProvenPathPickRowsReport(picks);
 }
 
 export async function loadOrSeedProvenPathPlan(): Promise<ProvenPathPlan | null> {
@@ -66,7 +72,7 @@ export async function loadOrSeedProvenPathPlan(): Promise<ProvenPathPlan | null>
 export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null> {
   if (isStubMode()) return null;
   try {
-    const rows = await loadRows();
+    const { rows, excluded } = await loadRows();
     if (rows.length < 50) return null;
     // Always rebuild so polarity law applies (edge-as-p plans are invalid).
     const plan = buildProvenPathPlan(rows);
@@ -123,6 +129,7 @@ export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null>
       rankingPowerPosture: rankingPowerPosture(rankingPower),
       conformalBridge,
       conformalBridgeEnv,
+      exclusions: excluded,
     };
   } catch (err) {
     captureError(err, { path: "proven-path-seed", stage: "loadProvenPathSurface" });

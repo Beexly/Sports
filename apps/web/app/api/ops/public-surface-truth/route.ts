@@ -35,7 +35,10 @@ import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
-import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
+import {
+  calibrationDriftPosture,
+  loadCalibrationOpsSurface,
+} from "@/lib/ops/calibration-eligibility-durable";
 import { aciPublicPosture } from "@/lib/calibration/aci-durable";
 import { loadProvenPathSurface } from "@/lib/ops/proven-path-seed";
 import { buildMurphyResSnapshot } from "@/lib/calibration/murphy-res-definition";
@@ -444,6 +447,14 @@ export async function GET(request: Request) {
   let calibrationPublish: Awaited<
     ReturnType<typeof loadCalibrationOpsSurface>
   >["publish"] | null = null;
+  // The durable metrics artifact itself: pBasis, exclusions, bySport,
+  // byModelVersion and the bootstrap intervals (v5.2.8 Phase 2). Plain numbers.
+  let calibrationMetricsArtifact: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["metrics"] | null = null;
+  // Open post-publish drift marker (GREEN fell to RED, or the streak reset,
+  // while a publish receipt was live). Null when no drift is open.
+  let calibrationDrift: ReturnType<typeof calibrationDriftPosture> = null;
   if (!isStubMode()) {
     try {
       const cal = await loadCalibrationOpsSurface({
@@ -454,9 +465,13 @@ export async function GET(request: Request) {
       });
       calibrationEligibility = cal.eligibility;
       calibrationPublish = cal.publish;
+      calibrationMetricsArtifact = cal.metrics ?? null;
+      calibrationDrift = calibrationDriftPosture(cal.drift ?? null);
     } catch {
       calibrationEligibility = null;
       calibrationPublish = null;
+      calibrationMetricsArtifact = null;
+      calibrationDrift = null;
     }
   }
 
@@ -676,6 +691,20 @@ export async function GET(request: Request) {
             dateRange: calibrationEligibility.dateRange,
             generatedAt: calibrationEligibility.generatedAt,
             operatorHint: calibrationEligibility.operatorHint,
+            /** Which probability the floors were scored on; null on a pre-Phase-2 artifact. */
+            pBasis: calibrationMetricsArtifact?.pBasis ?? null,
+            /** Settled WIN/LOSS picks left out of the sample, by reason. */
+            exclusions: calibrationMetricsArtifact?.exclusions ?? null,
+            /** WP-28: scored probabilities by origin (receipts versus the odds table). */
+            pSources: calibrationMetricsArtifact?.pSources ?? null,
+            /** WP-28: odds-table recompute coverage; null on a pre-WP-28 artifact. */
+            marketPFromOddsTable: calibrationMetricsArtifact?.marketPFromOddsTable ?? null,
+            bySport: calibrationMetricsArtifact?.bySport ?? null,
+            byModelVersion: calibrationMetricsArtifact?.byModelVersion ?? null,
+            /** Per pick type; the pooled floors sample holds every market with a market-anchored p. */
+            byMarket: calibrationMetricsArtifact?.byMarket ?? null,
+            brierCi95: calibrationMetricsArtifact?.brierCi95 ?? null,
+            eceCi95: calibrationMetricsArtifact?.eceCi95 ?? null,
           }
         : null,
       calibrationPublish: calibrationPublish
@@ -687,6 +716,24 @@ export async function GET(request: Request) {
             autoUnpublish: calibrationPublish.autoUnpublish,
             canExposePerformanceStats: calibrationPublish.canExposePerformanceStats,
             operatorHint: calibrationPublish.operatorHint,
+          }
+        : null,
+      /**
+       * Post-publish drift: the eligibility streak fell (GREEN to RED, or reset)
+       * while a publish receipt was live. Durable marker in scope
+       * ops.calibration.drift; the health-alert cron pages on it. Null when no
+       * drift is open (never written, or cleared by a later GREEN).
+       */
+      calibrationDrift: calibrationDrift
+        ? {
+            since: calibrationDrift.since,
+            previousStatus: calibrationDrift.previousStatus,
+            currentStatus: calibrationDrift.currentStatus,
+            failingFloors: calibrationDrift.failingFloors,
+            reasons: calibrationDrift.reasons,
+            publishedAt: calibrationDrift.publishedAt,
+            observedAt: calibrationDrift.observedAt,
+            operatorHint: calibrationDrift.operatorHint,
           }
         : null,
       content: {
@@ -735,6 +782,8 @@ export async function GET(request: Request) {
         return {
           provenPath: surface?.plan ?? null,
           provenPathProjection: surface?.projection ?? null,
+          /** Settled WIN/LOSS picks dropped before the bake-off rows (three_way_market). */
+          provenPathExclusions: surface?.exclusions ?? null,
           /** Ranking Power Control Plane — residual + operatorHint for founder ops. */
           rankingPower: surface?.rankingPowerPosture ?? {
             present: false,

@@ -11,7 +11,59 @@
  *   rankingP = stored sort key (may equal conf); diagnostic + selective only.
  */
 
+import { isThreeWayMoneylineSport } from "@sports/prediction-engine";
 import type { ProvenPathPickRow } from "@/lib/calibration/proven-path-engine";
+
+/**
+ * Why a settled WIN/LOSS pick is left out of the calibration sample. Every
+ * loader that drops a row reports the count under one of these keys.
+ *
+ * - three_way_market: a MONEYLINE pick on a sport whose moneyline has three
+ *   outcomes (scoring.ts isThreeWayMoneylineSport). The two-way de-vig drops
+ *   the draw mass, so its probability is wrong by construction and the engine
+ *   already refuses to publish these. Structural exclusion, not a filter.
+ * - no_market_probability: no market-anchored probability exists for the pick
+ *   (no factor-breakdown market fair, no receipt marketFairProb, resolver
+ *   returned null). Such a pick is never scored on confidence/100 for the
+ *   floors (v5.2.8 Phase 2, 2026-09-05).
+ * - non_moneyline_market: a SPREAD or TOTAL pick. Scope decision (2026-09-05,
+ *   delegated by the founder): the pooled floors sample is two-way MONEYLINE
+ *   only. Cover probabilities sit near 0.5, so their Brier is near 0.25 by
+ *   construction and pooling them into a 0.22 floor would make the floor
+ *   unreachable regardless of skill. Their calibration is reported per market
+ *   on the bake-off surface instead (scoreBakeoffByMarket).
+ */
+export type CalibrationExclusionReason =
+  | "three_way_market"
+  | "no_market_probability"
+  | "non_moneyline_market";
+
+export type CalibrationExclusionCounts = Readonly<Record<CalibrationExclusionReason, number>>;
+
+export function emptyExclusionCounts(): Record<CalibrationExclusionReason, number> {
+  return { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 };
+}
+
+/** Pick types that carry a moneyline probability claim on one side. */
+export function isMoneylinePickType(pickType: string | null | undefined): boolean {
+  const market = (pickType ?? "").toUpperCase();
+  return market === "MONEYLINE" || market === "H2H" || market === "ML";
+}
+
+/**
+ * Structural exclusion: a settled MONEYLINE pick on a three-way moneyline
+ * sport. Spreads and totals on the same sport settle on goals and are kept.
+ * Uses the engine's own helper; there is no second sport list here.
+ */
+export function threeWayMoneylineExclusion(pick: {
+  readonly pickType?: string | null;
+  readonly sportKey?: string | null;
+}): "three_way_market" | null {
+  if (!isMoneylinePickType(pick.pickType)) return null;
+  const sportKey = pick.sportKey ?? "";
+  if (sportKey.length === 0) return null;
+  return isThreeWayMoneylineSport(sportKey) ? "three_way_market" : null;
+}
 
 export type FactorBreakdownLike = {
   readonly rankingP?: number | null;
@@ -117,6 +169,12 @@ export function toProvenPathPickRow(
   if (typeof pick.confidence !== "number" || !Number.isFinite(pick.confidence)) {
     return null;
   }
+  // Three-way moneyline sports never enter the bake-off rows either: every
+  // score kind (confidence included) would be graded against a draw-as-loss
+  // outcome its probability never priced.
+  if (threeWayMoneylineExclusion({ pickType: pick.pickType, sportKey: pick.game?.sport?.key ?? null })) {
+    return null;
+  }
   const pConfidence = clamp01(pick.confidence / 100);
   const fb = (pick.factorBreakdown ?? null) as FactorBreakdownLike | null;
   const { pIndependent, marketP: fbMarketP } = extractProvenPathProbs(fb);
@@ -134,13 +192,37 @@ export function toProvenPathPickRow(
   };
 }
 
+export type ProvenPathRowsReport = {
+  readonly rows: ProvenPathPickRow[];
+  /** Settled WIN/LOSS picks dropped by structural exclusion, by reason. */
+  readonly excluded: CalibrationExclusionCounts;
+};
+
+/**
+ * Rows plus the exclusion count. The bake-off rows keep every pick that has a
+ * confidence (the comparison surface still shows confidence for transparency),
+ * so `no_market_probability` is always 0 here; it is counted by the
+ * eligibility sample builder (live-calibration-p.ts) instead.
+ */
+export function toProvenPathPickRowsReport(
+  picks: readonly SettledPickForProvenPath[],
+): ProvenPathRowsReport {
+  const rows: ProvenPathPickRow[] = [];
+  const excluded = emptyExclusionCounts();
+  for (const pick of picks) {
+    if (pick.result !== "WIN" && pick.result !== "LOSS") continue;
+    if (threeWayMoneylineExclusion({ pickType: pick.pickType, sportKey: pick.game?.sport?.key ?? null })) {
+      excluded.three_way_market += 1;
+      continue;
+    }
+    const row = toProvenPathPickRow(pick);
+    if (row) rows.push(row);
+  }
+  return { rows, excluded };
+}
+
 export function toProvenPathPickRows(
   picks: readonly SettledPickForProvenPath[],
 ): ProvenPathPickRow[] {
-  const out: ProvenPathPickRow[] = [];
-  for (const pick of picks) {
-    const row = toProvenPathPickRow(pick);
-    if (row) out.push(row);
-  }
-  return out;
+  return toProvenPathPickRowsReport(picks).rows;
 }
