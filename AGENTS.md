@@ -143,7 +143,11 @@ archived, no replacement); visual-regression testing for the ~30-route cockpit n
 zero new dependencies (Playwright's built-in `toHaveScreenshot`); and `NVIDIA/openshell`
 could make this file's own frozen-path/no-install/no-gate-flip laws machine-enforced
 instead of honor-system. Nothing in Round 3 was installed either — same founder-only
-posture as Round 2.
+posture as Round 2. **Round 4 added a design reference, not a repo**: a founder-shared
+bitemporal memory-repair pattern that is now the strongest available citation for the
+Airwave `claim-consistency-check.ts` work (supersedes NanoIndex) and directly targets
+the dormant `Entity`/`EntityEdge`/`Signal` schema — see the doc for the open question
+it raises about `Signal.capturedAt` semantics before that gets wired up.
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip

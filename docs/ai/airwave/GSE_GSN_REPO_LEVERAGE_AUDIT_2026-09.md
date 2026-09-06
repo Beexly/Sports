@@ -171,3 +171,91 @@ Every zk/verifiable-compute option checked (circom/snarkjs — GPL-3.0; Noir —
 
 ### Visual regression — needs nothing new at all
 Playwright's built-in `toHaveScreenshot` (uses pixelmatch internally, already installed via `@playwright/test`) covers the entire ~30-route cockpit gap with zero new dependencies or licenses. `Lost Pixel` (the obvious trendy pick) was archived April 2026 when its team joined Figma — confirmed via its own archive banner, a live cautionary example. `Argos CI` (MIT, self-hostable) is the option worth naming only if a browsable cross-deploy diff dashboard is ever wanted beyond CI artifacts.
+
+---
+
+## Round 4 — Design reference: bitemporal memory-repair pattern (2026-09-06)
+
+**Source**: a founder-shared, paid/authored Python build guide, "Build an Agent That
+Repairs Its Own Stale Memories" (LangGraph + sqlite-vec + Groq, self-dated verified
+2026-09-05). **Not a GitHub repo — no LICENSE to check, no code to import (wrong
+language and runtime).** Filed exactly like `pg_bitemporal`/NanoIndex in Round 3:
+design-pattern reference only. Verified against real code shown from sections 1-7
+(the mental model through the complete storage layer, `config.py`/`clock.py`/
+`store.py`) — sections 8-22 (`embed.py`/`recall.py`/`cache.py`/`extract.py`/
+`classify.py`/`policy.py`, and critically `repair.py`/`detect.py`/`propose.py`/
+`sweep.py`, the actual decision mechanism) were not shared and are **not** reflected
+below; do not assume this section covers them.
+
+**Why this matters more than any other reference found so far for this specific gap**:
+its core thesis — "a memory is not a row, it is an interval with a belief attached" —
+is a complete, working implementation of the exact bitemporal model GSE's own
+`Entity`/`EntityEdge`/`Signal` Prisma tables were already designed around (Round 2,
+via grounding `getzep/graphiti`) but have zero application-code consumers for. This
+supersedes NanoIndex as the primary citation for `claim-consistency-check.ts`.
+
+**Concrete, portable rules** (verified against real code, not the table of contents):
+1. **Three time axes, not two**: valid-time (`valid_from`/`valid_to`), transaction-time
+   (`recorded_at`/`expired_at`), and a third — evidence-time (`last_verified_at`,
+   distinct from `recorded_at`). Rule: measure staleness age from *last verified*, not
+   *first recorded*, or long-standing, repeatedly-reconfirmed facts get penalized
+   backwards. **Direct open question to check before wiring up `Signal.capturedAt`**:
+   is it meant to update on every re-confirmation, or does it freeze at first capture?
+2. **Four-state lifecycle** (born / replaced / ages / ends) collapsed to three
+   filterable integers (2=believed+fresh, 1=believed+flagged, 0=not believed), so
+   "is this live" is one comparison. Deletion is deliberately never one of the four
+   operations — nothing is physically removed except by a separate, clearly-labeled
+   function nothing in the main path calls.
+3. **Asymmetric confidence by destructiveness**: retiring/superseding a claim needs a
+   high bar (0.80); adding a new candidate needs a lower one (0.60). A contradiction on
+   a "stable"-category fact always parks for human review regardless of confidence,
+   since it's more likely an extraction error than a real change.
+4. **One staleness threshold, shared by both the read-time display and the background
+   sweep** — never two independently-tuned definitions of "stale." The author's own
+   documented failure: starting at 0.7 made every freshly-seeded fact render "may be
+   out of date" while the sweep reported nothing wrong — two subsystems visibly
+   contradicting each other in front of a user.
+5. **Per-category half-life** (stable/slow/fast/scheduled) instead of one global decay
+   rate.
+6. **An append-only decision-audit table**: every change writes exactly one row
+   (before/after state, evidence, reason, confidence, `decided_by: agent|human|oracle`,
+   `routed: auto|parked|forced`, `status: parked|applied|rejected`, never rewritten
+   except that one status transition). **The human-review queue is a SQL VIEW over
+   this table, not a second materialized copy** — specifically so the queue can never
+   drift out of sync with the log it's derived from. Worth checking whether Airwave's
+   own review queue currently materializes a duplicate.
+7. **A six-way taxonomy for why a repair was proposed**: `arrival | aged |
+   source_changed | contradiction | scheduled | human` — richer than a binary
+   stale/not-stale flag.
+8. **The single sharpest principle in the whole guide**: any denormalized copy of a
+   claim's status (a search/vector index, a cache, a secondary read path) must update
+   atomically with the source of truth, in the same write function, never as a
+   deferred second step — otherwise the system can "confidently state a stale
+   memory," the exact failure class the design exists to prevent. Generalizes to
+   anywhere GSE denormalizes `operator_status`.
+9. **Sources store a full content snapshot + hash, not just a pointer** — detecting
+   that an upstream document changed requires remembering what it used to say. Possible
+   overlap with the clearance-engine's existing point-in-time `RightsSnapshot`.
+10. **An injected clock**, one module owns "now," everything else takes a clock
+    parameter — matches GSE's own Workflow-script convention (no `Date.now()`/
+    `new Date()`) for the same determinism reason. The clock refuses to move
+    backwards: superseding a fact writes "this stopped being true when that started,"
+    and a backwards clock could produce an interval with negative length.
+
+**Where this plugs into GSE, concretely**:
+- `packages/db/prisma/schema.prisma` `Entity`/`EntityEdge`/`Signal` — the exact tables
+  this pattern targets; resolve the `capturedAt` semantics question (rule 1) before
+  wiring a producer/consumer.
+- A new `apps/web/lib/airwave/claim-consistency-check.ts` (proposed in Round 2 off
+  NanoIndex) — this guide is now the stronger reference: reuse rules 3, 4, and 7
+  specifically.
+- `apps/web/lib/jarvis/memory/write-gate.ts` — already implements rule 8's "single
+  writer enforces every rule" philosophy; the append-only `repairs` table (rule 6) is
+  a legitimate schema reference if its own audit trail ever needs strengthening.
+- Airwave's review queue (cockpit) — check against rule 6's "view, never a second
+  table" for a concrete, low-effort correctness check.
+- **A silent-decay sweep** — the one piece with no existing GSE analogue at all:
+  nothing today re-evaluates `Entity`/`Signal` freshness with no new claim arriving.
+  Unlike almost everything else in this whole three-round audit, this is a new Vercel
+  Cron route against tables that already exist — **no new dependency, no founder
+  approval needed** — once Airwave has live data to sweep.
