@@ -283,3 +283,76 @@ describe("free-settlement-runner write-time kickoff guard", () => {
     expect(body.indexOf("KICKOFF_MOVED")).toBeLessThan(body.indexOf("o.homeScore != null"));
   });
 });
+
+/**
+ * The doubleheader hold belongs in the SHARED grader, not only in the score
+ * persister. free-settlement-runner, settle-backfill and the zero-sit lane all
+ * call settlePendingPicks and all already hand it the full board, so one guard
+ * here covers every path that can publish a graded result (Devin Review, #717).
+ */
+describe("settlePendingPicks — an unfinished doubleheader holds", () => {
+  const HOUR = 60 * 60 * 1000;
+  const gameTwo = "2026-09-06T23:10:00.000Z";
+  const gameOne = new Date(Date.parse(gameTwo) - 3 * HOUR).toISOString();
+
+  const dhPick: PendingPick = {
+    pickId: "dh-pick",
+    pickType: "MONEYLINE",
+    selection: "Phillies",
+    line: 0,
+    homeTeam: "Phillies",
+    awayTeam: "Braves",
+    sportKey: "baseball_mlb",
+    gameDateIso: gameTwo,
+  };
+
+  function gameOneFinal(): TrustedFinal {
+    return {
+      date: gameOne.slice(0, 10),
+      startIso: gameOne,
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+
+  function boardRow(startTime: string, completed: boolean) {
+    return {
+      sourceId: "espn-public-api" as const,
+      sport: "mlb" as const,
+      gameId: `row-${startTime}`,
+      startTime,
+      state: completed ? "post" : "pre",
+      completed,
+      statusDetail: "",
+      venue: null,
+      home: { team: "Phillies", abbreviation: "PHI", score: completed ? 4 : null },
+      away: { team: "Braves", abbreviation: "ATL", score: completed ? 2 : null },
+      attribution: "Scores data via ESPN",
+    };
+  }
+
+  it("holds a game-two pick while only game one is final", () => {
+    const out = settlePendingPicks([dhPick], [gameOneFinal()], {
+      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, false)] as never,
+    })[0]!;
+    expect(out.status).toBe("HELD");
+    expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
+  });
+
+  it("settles normally when the board lists a single fixture that day", () => {
+    const soleFinal: TrustedFinal = {
+      date: gameTwo.slice(0, 10),
+      startIso: gameTwo,
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+    const out = settlePendingPicks([dhPick], [soleFinal], {
+      postponedCandidates: [boardRow(gameTwo, true)] as never,
+    })[0]!;
+    expect(out.status).toBe("SETTLED");
+  });
+});

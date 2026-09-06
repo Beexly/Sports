@@ -297,6 +297,44 @@ export function finalMatchesPick(pick: PendingPick, f: TrustedFinal): boolean {
   );
 }
 
+/**
+ * How many fixtures for THIS pick's matchup does the board list on the pick's
+ * own day? A doubleheader is the case time cannot solve: when game one is final
+ * and game two is still live, only ONE final exists, so the multi-candidate hold
+ * never fires and the two starts sit 2-4h apart, inside any drift bound that
+ * still tolerates a rain delay. The only signal that a second game exists is the
+ * scoreboard itself (Devin Review, #717).
+ *
+ * Counts every row, played or not, because "not finished yet" is exactly the
+ * state being detected. Callers already hand the full board in as
+ * `postponedCandidates`, so this costs nothing extra at any call site.
+ */
+export function sameMatchupFixturesOnPickDay(
+  pick: PendingPick,
+  scoreboard: readonly NormalizedGame[],
+): number {
+  const pickHome = expandTeamMatchTokens(pick.homeTeam);
+  const pickAway = expandTeamMatchTokens(pick.awayTeam);
+  if (pickHome.length === 0 || pickAway.length === 0) return 0;
+  const day = pick.gameDateIso.slice(0, 10);
+  return scoreboard.filter((g) => {
+    if (!g.startTime || g.startTime.slice(0, 10) !== day) return false;
+    if (!g.home || !g.away) return false;
+    const gHome = [
+      ...expandTeamMatchTokens(g.home.team),
+      ...expandTeamMatchTokens(g.home.abbreviation),
+    ].filter(Boolean);
+    const gAway = [
+      ...expandTeamMatchTokens(g.away.team),
+      ...expandTeamMatchTokens(g.away.abbreviation),
+    ].filter(Boolean);
+    return (
+      (sideMatches(pickHome, gHome) && sideMatches(pickAway, gAway)) ||
+      (sideMatches(pickHome, gAway) && sideMatches(pickAway, gHome))
+    );
+  }).length;
+}
+
 /** Orient final scores to the pick's home team. Returns null if the home team can't be matched. */
 export function orientToPickHome(
   pick: PendingPick,
@@ -482,6 +520,25 @@ export function settlePendingPicks(
     // team-name match. That is what graded 87 published picks WIN/LOSS before
     // their game's commenceTime (measured on production 2026-09-06).
     const bound = matching.filter((f) => finalBindsToKickoff(pick.gameDateIso, f));
+
+    // Doubleheader hold, in the SHARED grader so every caller gets it. The
+    // persister grew this guard first and it was left there alone; the graded
+    // result is what reaches a subscriber, so this is the path that most needed
+    // it (Devin Review, #717). If the board lists more fixtures for this
+    // matchup on the pick's day than we hold finals for, one of them has not
+    // finished and this pick is not identifiable by any clock.
+    const pickDayFinals = bound.filter(
+      (f) => f.date.slice(0, 10) === pick.gameDateIso.slice(0, 10),
+    ).length;
+    // Requires BOTH a second fixture and at least one final in hand. With zero
+    // finals this is the ordinary "not scored yet" case, which must stay
+    // PENDING/NO_FINAL so the zero-sit lane can age it out and VOID it with an
+    // RCA code; holding it here would strand it as AMBIGUOUS_MATCH forever.
+    const dayFixtures = sameMatchupFixturesOnPickDay(pick, postponedCandidates);
+    if (dayFixtures >= 2 && pickDayFinals >= 1 && dayFixtures > pickDayFinals) {
+      return { pickId: pick.pickId, status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] };
+    }
+
     const candidates = nearestCandidates(pick, bound);
 
     // Same-day rematch guard (e.g. an MLB doubleheader): two DIFFERENT completed
