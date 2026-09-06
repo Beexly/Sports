@@ -418,8 +418,18 @@ export async function runFreePathSettlement(options?: {
             }
           }
 
+          // The kickoff predicate rides in the WRITE, not just the read above.
+          // Prisma's default isolation does not lock the game row, so a schedule
+          // correction can commit between that findUnique and this statement and
+          // the read alone would not see it (Devin Review, #717). As a relation
+          // filter the database evaluates it as part of the update itself, so a
+          // game moved into the future matches nothing and count comes back 0.
           const updated = await tx.pick.updateMany({
-            where: { id: o.pickId, result: "PENDING" },
+            where: {
+              id: o.pickId,
+              result: "PENDING",
+              game: { commenceTime: { lte: settledAt } },
+            },
             data: { result: o.result, settledAt },
           });
           if (updated.count === 0) return updated;
@@ -440,8 +450,11 @@ export async function runFreePathSettlement(options?: {
             ],
           );
           if (o.homeScore != null && o.awayScore != null) {
-            await tx.game.update({
-              where: { id: row.game.id },
+            // updateMany, not update: it carries the same kickoff predicate and
+            // must no-op rather than throw when a concurrent correction moved
+            // the game, exactly as the pick write above does.
+            await tx.game.updateMany({
+              where: { id: row.game.id, commenceTime: { lte: settledAt } },
               data: {
                 homeScore: o.homeScore,
                 awayScore: o.awayScore,

@@ -278,6 +278,11 @@ describe("free-settlement-runner write-time kickoff guard", () => {
     expect(body).toContain("commenceTime: true");
     expect(body).toMatch(/commenceTime\.getTime\(\)\s*>\s*settledAt\.getTime\(\)/);
     expect(body).toContain("KICKOFF_MOVED");
+    // The read alone is not the guard: Prisma's default isolation does not lock
+    // the game row, so the predicate must ride in the WRITE (Devin Review, #717).
+    const writes = src.slice(txStart, txStart + 6000);
+    expect(writes).toMatch(/tx\.pick\.updateMany\([\s\S]{0,200}?game:\s*\{\s*commenceTime:\s*\{\s*lte:\s*settledAt/);
+    expect(writes).toMatch(/tx\.game\.updateMany\([\s\S]{0,160}?commenceTime:\s*\{\s*lte:\s*settledAt/);
     // The guard must run before the score-conditional block, so it also covers
     // a VOID or a scoreless outcome.
     expect(body.indexOf("KICKOFF_MOVED")).toBeLessThan(body.indexOf("o.homeScore != null"));
