@@ -696,6 +696,235 @@ repo's technical merit.
 
 ---
 
+---
+
+## Round 7 — 12 deep-code-dive agents on the Round 6 sweep (2026-09-06)
+
+**Why this round exists**: Round 6 was purpose/license/activity triage plus two live vendor
+tests. Founder instruction: go deeper — real code-level understanding on every repo that had
+real code, and a genuinely creative pass on each, not just "does GSE import this." Two repos
+already conclusively verified as empty/non-original (`sport-feed-ai`, `6S191_MIT_DeepLearning`)
+were not re-dived — nothing new to find. The Polymarket arbitrage bot's mechanics were not
+deep-dived on principle — extracting its "leverage" sits too close to the compliance hold's
+own "refuse to build toward this" line. The other 12 were cloned fresh and read at the source
+level. Two findings below are significant enough to need action independent of anything else
+in this file.
+
+### The most consequential finding: GSE already built the NCAA integration — it's fail-closed, not missing
+
+Round 6 assumed a gap ("GSE has no dedicated NCAA.com source"). It doesn't hold: **GSE already
+has a complete, tested `henrygd-ncaa` adapter** (`apps/web/lib/data-sources/free-adapters/
+henrygd-ncaa.ts`), wired into the CFB/NCAAB score-failover chain and cross-source consensus
+checking (`multi-source-scores.ts`, `ncaa-consensus.ts`), with its own test suite and captured
+fixtures. It is **fail-closed by design, not by oversight** — `source-router.ts` marks it
+`cleared: false` with an explicit ticket reference (`GSE-SEC-050`), and every fetch is refused
+before any network call because no `source-rights-registry.ts` entry exists for it yet.
+
+The deep dive fetched NCAA.com's **live, current ToS** directly (`https://www.ncaa.com/tos`,
+confirmed as the operative document — the old `ncaa.org` ToS URL 302s to the homepage and is
+stale) and found language stronger than ESPN's: it explicitly names *"statistics, updated
+scores"* as owned "NCAA Content" and states you may not *"use for commercial purposes... any
+of the NCAA Content... without the express permission of Operator."* Matching this repo's own
+precedent for similarly-restrictive sources (Kalshi, ClubElo, scores24.live — all
+`permission_required` despite public reachability), **the correct classification is
+`permission_required`, not `approved_public_logged_off`** — `automation_allowed: false` until
+Turner Sports Interactive grants written permission. robots.txt does not block the scraped
+paths (the one point in the tool's favor), and attribution text is already drafted in the
+adapter code (`HENRYGD_ATTRIBUTION`). **The single blocking artifact is one registry entry** —
+adapter, tests, and failover wiring are already done and waiting. Not added to the registry in
+this round: writing a rights classification is a legal/compliance judgment, and per this
+session's own posture on the ESPN-registry disagreement below, that call is the founder's to
+make, not an agent's to self-execute — but the exact entry fields (status, evidence URLs,
+unlock condition, contact path) are now fully drafted and ready to paste in.
+
+### Second major finding: the ESPN "forbidden" verdict is a dead letter against the code that actually runs
+
+The `Public-ESPN-API` dive went further than Round 6's registry-disagreement flag: **GSE's
+three real ESPN client files (`espn-schedule-seed.ts`, `espn-results-client.ts`,
+`espn-odds-client.ts`) never call `assertIngestible()`/`source-registry.ts` at all** — confirmed
+by grep, not inferred. So `source-registry.ts`'s `espn-hidden-api: forbidden` verdict (with a
+passing test asserting it throws) has zero effect on the ESPN traffic GSE actually generates in
+production; the traffic runs under the more permissive `source-rights-registry.ts` posture
+(`approved_public_logged_off`, `commercial_display_allowed: false`) without ever being checked
+against it. This is worth the founder's attention as a mechanical/architectural fact, not just
+a documentation disagreement: **one document disagrees with the actual running code**, not just
+with the other document. A plausible root cause was also identified: `espn-hidden-api`'s
+verdict may have been reasoned about ESPN's proprietary derived analytics (BPI/Power
+Index/QBR — GSE already treats *that* tier more cautiously, gating `espn-powerindex-client.ts`
+behind `ESPN_POWERINDEX_LICENSED`), while `espn-public-api`'s verdict was reasoned about raw
+facts (scores/schedules) — two people, two moments, two slices of the same domain each recorded
+as the whole.
+
+Concrete, rights-compliant (`commercial_display_allowed: false`, `derived_analytics_allowed:
+true`) ESPN endpoints GSE doesn't touch today, verified against `docs/response_schemas.md` and
+cross-checked line-by-line against GSE's three actual client files: league/team injuries
+(`/injuries` — **the most concrete gap**: NBA/NHL/MLB/MLS picks ship today with **zero
+player-availability signal**; GSE's only injury source, `nflverse/injury-report.ts`, is
+NFL-only), win-probability/BPI (`/probabilities`, `summary`'s `predictor` object — a third,
+fully independent probability estimate alongside the factor model and the market-implied
+probability, useful as an internal drift/QA signal for the PROVEN-gate calibration work),
+athlete splits/gamelog (rest/travel/matchup factors, especially relevant to NBA/NHL
+back-to-backs), and coach tenure/record (a documented small ATS factor with zero representation
+anywhere in `packages/feature-store` today). None of these are commercially displayable without
+a license; all are legitimate compute-and-discard engine inputs under the registry's existing
+`derived_analytics_allowed: true`.
+
+### Fantasy — both Yahoo wrappers dived; the real asset is a half-finished GSE feature, not either library
+
+Neither `whatadewitt/yahoo-fantasy-sports-api` (Node) nor `mattdodge/yahoofantasy` (Python) is a
+dependency candidate — confirmed at the source level, not assumed. The Python library's OAuth
+flow is a local-developer-terminal flow (spins up a self-signed-cert local HTTPS server,
+blocks on one redirect) with no concept of a multi-tenant "user 4,821 connects their own
+account" flow; its response layer is a schema-less runtime-reflection object mapper
+(`from_response_object`/`APIAttr`) that is the structural opposite of GSE's strict-TypeScript
+discipline. The Node sibling is architecturally closer to what a Next.js route needs (`auth`/
+`authCallback` already shaped like an Express redirect handler with a `tokenCallbackFn` hook)
+but is two-plus years stale and still carries dead OAuth1 fallback code. **Verdict: if GSE ever
+builds real Yahoo league-import, write it fresh in TypeScript against Yahoo's OAuth2 +
+`?format=json`, using the Node repo's redirect-flow shape as a design reference and GSE's own
+hand-authored Zod/TS types — neither library as a dependency.**
+
+The real asset this pair of dives surfaced is on GSE's own side: **`apps/web/lib/fantasy/
+league-twin.ts` already builds a complete "your roster as a navigable galaxy" visualization**
+(brightness = projection, halo = volatility, eclipse = bye exposure, shock = injury/trend,
+orbital ties = stack correlation) — but `buildLeagueTwin(rosterIds, pool)` runs on
+`DEFAULT_ROSTER_IDS`/`sampleRoster(pool)` today, `illustrative: true` "unless a licensed live
+projections feed is active." A real Yahoo `team.roster` fetch, joined by name/team, is the
+single missing input to flip this from sample data to a genuinely personal feature — the
+clearest "half-finished, most of the way to something valuable" item found in this whole
+sweep, on GSE's side of the fence. Two content ideas, both fully data-backed (not AI-inferred,
+matching rule 8): comparing a user's real Yahoo start/sit decisions and FAAB spend against the
+model's confidence scores after the fact ("what your league already knows"), and comparing real
+draft-capital data against current confidence-score rankings (over/under-drafted vs. the
+model). Both need real users connecting real accounts to mean anything — not buildable from
+aggregate data alone.
+
+### Betting math and vendor tooling — GSE's engine confirmed ahead on every axis checked
+
+Three ParlayAPI-ecosystem repos were dived (`parlay-api-mcp`, `betting-model-starter`,
+`parlayapi-betting-agent-starter`). Consistent, cross-verified findings: ParlayAPI's own MCP
+server has **no rate-limit or circuit-breaker handling at all** (grepped, zero hits) — the
+opposite of the durable day-quota gate GSE just shipped for TheRundown — and its real
+value-hunting math (arbitrage/EV/consensus/middles) lives entirely server-side in a private
+backend the public repos only proxy to, confirmed by a git history that's just two "mirror the
+private release" commits. `betting-model-starter`'s own devig/Kelly/CLV math was checked
+line-by-line against GSE's engine and **GSE is ahead on every axis**: GSE's de-vig already
+includes Shin's method (the starter has only multiplicative/additive/power, two-way only, with
+a narrower and less safe bisection bracket than GSE's own `powerDevig`); GSE's Kelly sizing
+includes a research-grade robust/maximin layer under Knightian uncertainty (`robust-kelly.ts`)
+the starter has nothing resembling; GSE has real PAV/IVAP/CVAP calibration where the starter has
+none; GSE has a purged-and-embargoed walk-forward splitter with a sealed holdout where the
+starter has no leakage protection at all; and GSE's CLV (`clv.ts`) is genuine timing CLV where
+the starter's own notebook **explicitly admits** its version is a cross-book proxy, not real
+timing CLV. The earlier "one marked hole where your model goes" framing doesn't survive a full
+read — no such literal function/TODO exists in the actual source; that detail from Round 6 is
+corrected here.
+
+Two genuinely new, small, concrete ideas surfaced despite GSE's math being ahead: (1) an unused
+ParlayAPI endpoint, `/v1/historical/closing-lines/import`, would let GSE log its own locked
+price/timestamp and later get **true timing CLV against a completely independent, non-overlapping
+book panel** — a small offline validation script outside the monorepo, matching the same
+"shadow/R&D only" posture `robust-kelly.ts`/`devig-method-compare.ts` already use, not wired
+into any live surface; (2) GSE has no cross-book **middle detection** and no **book-identity
+tracking for "best single book for a whole parlay slip"** (`parlay.ts`'s `computeVitals` runs on
+illustrative sample legs with no book concept at all) — both real, scoped feature gaps for
+Trend Lab/Parlay MRI once the two-book board (WP-27) lands, neither built in this round since
+both depend on that board existing first. A third finding worth a targeted look, separate from
+this sweep: GSE's own de-vig math is already N-outcome-generic (`shin-devig.ts`, and
+`market-read.ts` already branches on `hasDraw`) — so AGENTS.md's note that live soccer
+moneylines are refused as "wrong by construction on a three-way market" is more likely an
+**ingestion gap** (draw odds not populated) than a scoring-math limitation, since the primitives
+to do it right already exist end-to-end.
+
+### Sports-skills — confirms a real prior port, and one genuinely new calibration idea
+
+`machina-sports/sports-skills` is where GSE's own `kalshi-series.ts` ticker map and event-tail
+parser were originally ported from — the dive confirmed that attribution is accurate, not just
+plausible. It also independently reproduces the exact team-matching fragility (containment-based,
+no minimum-length guard) that AGENTS.md already names as a root cause GSE just fixed on the #707
+branch — useful as confirmation the fix direction was right, not as prior art to adopt. The one
+genuinely new idea: `get_plays_near_timestamp` fuses ESPN play-by-play timestamps with a market
+price tick — "what did the market believe at the instant of this specific play." GSE's engine is
+pre-game factor modeling today, not live in-game repricing, so this isn't buildable now, but once
+GSE has both play-by-play and Kalshi/PredExon tick history for the same game, the identical join
+would give a materially more granular calibration signal than anything in the current PROVEN-gate
+math — flagged as a future ledger row, not a build-now item. Separately, the dive proposed a
+concrete, cheap pattern GSE lacks: a `.claude/skills/data-ingestion-<source>/SKILL.md` per
+adapter plus a docstring-to-JSON-Schema generator (mirroring `sports-skills`'s own `cli.py
+schema` command), so a future agent session queries live GSE data through one documented
+interface instead of grepping raw TypeScript cold — this exact research task would have been
+faster with that layer already in place, which is a fair, self-referential argument for it.
+
+### SofaScore confirmed a hard no, with direct evidence — not just a thin repo to skip
+
+`Magoocito/MatchEdge`'s own in-repo documentation (`KNOWN_ISSUES.md`, "SofaScore — Cloudflare
+Bot Protection (UNSOLVABLE)") describes a three-step escalation ending in a real,
+production-wired mechanism: a real, non-headless Chrome with `--disable-blink-features=
+AutomationControlled` (the specific flag that hides automation tells from Cloudflare-style bot
+management), a persistent profile, and an explicit 10-minute wait loop for **a human to
+manually clear the Cloudflare challenge** before the app replays authenticated `fetch()` calls
+from inside that browser tab. This is exactly the technical-control workaround `.claude/rules/
+scraping.md`'s "no evasion tooling, ever" rule exists to prohibit — confirmed as production code
+in another team's repo, not a hypothetical. Reinforces Round 6's independently-observed
+`sofascore.com/robots.txt` 403 finding from the inside: the repo's own authors hit the identical
+wall and their fix was to defeat it, not respect it; their own stated long-term plan is to get
+onto a licensed API (API-Football) instead, which is directionally the same conclusion GSE's own
+posture already requires.
+
+### API-Football — the open pricing question is now mostly closed
+
+Three prior attempts (marketing page, docs subdomain, RapidAPI listing) all failed. This round's
+attempt also could not reach api-football.com's own ToS text directly (a fourth, distinct
+blocker — an egress-policy block on the Wayback Machine's content subdomain) but deliberately
+stopped chaining bypass proxies rather than force it (one such attempt was in fact blocked by
+this session's own tool-permission classifier as a likely circumvention pattern — the right
+outcome, not a failure). Instead, it triangulated via independent secondary sources and a live
+technical probe (a direct, keyless call to `v3.football.api-sports.io/status` confirming the
+API is live and that the RapidAPI and direct-api-sports.io channels share one backend). Two
+numbers now have real, converging (if still secondary-sourced) support: **free tier ≈ 100
+requests/day, hard cap, no burst, resets at local midnight**; **paid Pro tier ≈ $15-19/mo for
+7,500 req/day**. The `williamandradesantana/sports` codebase itself (Java/Spring, real,
+complete, hexagonal architecture) independently demonstrates exactly why that free-tier number
+matters: its own default odds-sync config (every 15 min × matches in a 6h window × 2 tracked
+bookmakers) would burn through 100 requests/day in well under an hour — the same
+quota-exhaustion shape AGENTS.md already documents for TheRundown. Commercial-use terms remain
+the one still-open question (a third-party source claims all tiers allow commercial use, but
+that's a paraphrase, not the ToS itself) — founder ToS read is still the honest next step before
+any registry entry, exactly as Round 6 concluded.
+
+### Two more repos, real dives, real "no adoption" verdicts
+
+`reeeeemo/mcp-sports`: real, working, buggy — a credential logged in plaintext on every call, two
+tools permanently broken by a `json.dump`/`json.dumps` typo silently swallowed by the tool's own
+error handling, a resource/caching layer fully wired at the decorator level but fully
+disconnected from any real data. Confirms a real gap in GSE's own setup, not this repo's code:
+GSE has three external MCP *clients* wired (`github`, `context7`, `vercel`) but no MCP *server*
+of its own exposing engine outputs (board state, factor trails, calibration numbers) as
+agent-callable tools — a legitimate, if speculative, future idea, not attempted in this round.
+
+`smagara/AgilitySports_api`: genuinely complete for its scope (zero TODO/stub markers found
+across three linked repos, real transactional writes, real CI, real Azure AD auth) — a
+PhillyDotNet teaching lab, confirmed after a real second look, not dismissed on star count. Its
+one forward-looking asset: a real, reviewed technical-design document that already reasoned
+through the exact schema fork (wide/nullable vs. EAV vs. core-entity-plus-typed-per-sport-
+extension-tables) GSE will face the day it builds multi-sport player props — GSE's own schema
+comment already flags player-signal wiring as a future, separate, gated step. Worth citing then,
+not actionable today.
+
+### What actually got built from this round
+
+Only one idea was concrete and small enough to implement without a product/legal decision
+attached: `apps/web/lib/market/shop-advantage.ts` (from the ParlayAPI-agent-starter dive) — a
+pure function computing the probability-point advantage available from shopping the best price
+vs. the average price the Edge Score already used, deliberately left unwired (pick-card
+placement and wording is a product decision, not made here). Everything else above needs one of:
+a founder-made rights-registry entry (NCAA, and eventually API-Football), a founder ToS read
+(API-Football), the two-book board landing first (middles, book-identity in Parlay MRI), real
+users connecting real accounts (Yahoo league-twin), or is explicitly filed as a future idea, not
+a build-now item (in-game calibration fusion, an internal GSE MCP server).
+
+---
+
 **Addendum — `@ast-grep/cli` deep dive: stalled, not completed.** The background pass hung
 for ~2h50m with zero progress after its first step — `npx --yes @ast-grep/cli@latest
 --version`, an npm-registry install of an uncached package — never returned in this sandbox

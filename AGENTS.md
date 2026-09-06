@@ -168,7 +168,26 @@ the wire protocol. Full detail and citations in the doc's Round 5 section. `@ast
 deep dive **stalled** (~2h50m hung on an `npx` registry install in this sandbox, stopped
 rather than left running) and was not completed — Round 2's original finding (BLOCKED, new
 dependency, `allowScripts` needed) stands, un-re-verified at the source level. See the doc's
-addendum. **Round 6 (founder-sourced, live-tested): 14 more repos.** Real finding independent
+addendum. **Round 7: 12 deep-code-dives on the Round 6 sweep, two consequential findings.**
+(1) GSE already built a complete, tested `henrygd-ncaa` adapter with dual-source consensus
+checking — it's fail-closed pending one `source-rights-registry.ts` entry
+(`GSE-SEC-050`), not missing. The dive fetched NCAA.com's live ToS directly and found
+explicit commercial-use restriction language on "statistics, updated scores" — the correct
+classification is `permission_required`, matching Kalshi/ClubElo/scores24.live precedent, not
+`approved_public_logged_off`. Not added to the registry autonomously (a legal/compliance
+call), but the exact entry is fully drafted in the doc. (2) GSE's three real ESPN client files
+(`espn-schedule-seed.ts`/`espn-results-client.ts`/`espn-odds-client.ts`) never call
+`assertIngestible()` at all — confirmed by grep — so `source-registry.ts`'s `espn-hidden-api:
+forbidden` verdict (with a passing test asserting it throws) has zero effect on the ESPN
+traffic GSE actually generates; production runs under the other, more permissive registry's
+posture unchecked. One document disagrees with the running code, not just with the other
+document — a founder/legal item, independent of Round 6's original registry-disagreement
+flag. Also confirmed GSE's own prediction/calibration engine is ahead of every betting-math
+repo checked (Shin devig, robust Kelly, PAV/IVAP/CVAP, purged-embargoed walk-forward, real
+timing CLV) — no gap, a reassurance. One idea was concrete enough to build:
+`apps/web/lib/market/shop-advantage.ts`, a pure "shop vs. edge" probability-delta function,
+deliberately left unwired pending a product decision on placement/wording. Full detail in
+the doc's Round 7 section. **Round 6 (founder-sourced, live-tested): 14 more repos.** Real finding independent
 of any repo: GSE's own two rights registries disagree on ESPN's status
 (`packages/data-ingestion/src/source-registry.ts`'s `espn-hidden-api` = forbidden vs.
 `apps/web/lib/scraping/source-rights-registry.ts`'s `espn-public-api` = approved,
