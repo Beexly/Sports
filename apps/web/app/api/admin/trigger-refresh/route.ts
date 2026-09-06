@@ -68,7 +68,14 @@ export async function POST(): Promise<NextResponse> {
   // the ledger ever seeing it, which both bypassed the budget and skewed the
   // burn reading the truth surface reports. The per-admin rate limit above
   // bounds how OFTEN this runs; the governor bounds what it may SPEND.
-  const governor = buildPaidOddsGovernor({ db: db as unknown as OddsCreditLedgerDb });
+  // `source` labels every credit observation this route writes. Without it the
+  // factory defaults to "refresh-odds" and a manual admin refresh would be
+  // recorded in the ledger as scheduled-cron spend, so a caller-level audit
+  // could never tell the two apart (settle-sport labels its own the same way).
+  const governor = buildPaidOddsGovernor({
+    db: db as unknown as OddsCreditLedgerDb,
+    source: "trigger-refresh",
+  });
   const results: TriggerRefreshEntry[] = [];
   for (let i = 0; i < sports.length; i++) {
     const sport = sports[i]!;
