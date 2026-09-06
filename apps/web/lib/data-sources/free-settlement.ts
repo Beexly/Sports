@@ -359,7 +359,13 @@ export function finalBindsToKickoff(kickoffIso: string, final: TrustedFinal): bo
   if (kickoffIso.includes("T") && final.startIso) {
     const kickoff = Date.parse(kickoffIso);
     const start = Date.parse(final.startIso);
-    if (!Number.isFinite(kickoff) || !Number.isFinite(start)) return true;
+    // An unparseable timestamp is not evidence of a match. Returning true here
+    // let a malformed startIso through the +/-2-day candidate filter and settle
+    // a pick off a stale score (CodeRabbit, #717). Fall back to the same
+    // one-day calendar rule used when there is no start time at all.
+    if (!Number.isFinite(kickoff) || !Number.isFinite(start)) {
+      return daysApart(final.date, kickoffIso.slice(0, 10)) <= 1;
+    }
     return Math.abs(start - kickoff) <= MAX_KICKOFF_DRIFT_MS;
   }
   return daysApart(final.date, kickoffIso.slice(0, 10)) <= 1;

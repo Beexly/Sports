@@ -233,3 +233,53 @@ describe("settlePendingPicks — a lone out-of-window final never grades a pick"
     expect(out.status).toBe("SETTLED");
   });
 });
+
+describe("finalBindsToKickoff — a malformed timestamp is not evidence", () => {
+  function final(opts: { startIso?: string; date: string }): TrustedFinal {
+    return {
+      date: opts.date,
+      ...(opts.startIso ? { startIso: opts.startIso } : {}),
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+  const kickoff = "2026-09-06T23:10:00.000Z";
+
+  it("falls back to the one-day rule when startIso cannot be parsed, instead of accepting it", () => {
+    // Returning true here let a malformed timestamp through the +/-2-day
+    // candidate filter and settle a pick off a stale score (CodeRabbit, #717).
+    expect(finalBindsToKickoff(kickoff, final({ startIso: "not-a-date", date: "2026-09-04" }))).toBe(
+      false,
+    );
+    expect(finalBindsToKickoff(kickoff, final({ startIso: "not-a-date", date: "2026-09-06" }))).toBe(
+      true,
+    );
+  });
+});
+
+/**
+ * Structural, and deliberately so: the guard IS the transactional reread, and a
+ * unit test around runFreePathSettlement would have to mock $transaction, which
+ * is the very thing being pinned. Devin Review (#717) found that the findMany
+ * predicate alone leaves a race — a schedule correction can postpone a loaded
+ * game before the transaction runs.
+ */
+describe("free-settlement-runner write-time kickoff guard", () => {
+  it("re-reads commenceTime inside the transaction and refuses a game that has not started", () => {
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "data-sources", "free-settlement-runner.ts"),
+      "utf8",
+    );
+    const txStart = src.indexOf("db.$transaction");
+    expect(txStart).toBeGreaterThan(-1);
+    const body = src.slice(txStart, txStart + 1400);
+    expect(body).toContain("commenceTime: true");
+    expect(body).toMatch(/commenceTime\.getTime\(\)\s*>\s*settledAt\.getTime\(\)/);
+    expect(body).toContain("KICKOFF_MOVED");
+    // The guard must run before the score-conditional block, so it also covers
+    // a VOID or a scoreless outcome.
+    expect(body.indexOf("KICKOFF_MOVED")).toBeLessThan(body.indexOf("o.homeScore != null"));
+  });
+});

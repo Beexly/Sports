@@ -363,6 +363,28 @@ export async function runFreePathSettlement(options?: {
         if (!row) continue;
 
         const written = await db.$transaction(async (tx) => {
+          // The findMany above scoped this load to games that had already
+          // started, but that read happened before the network work, and a
+          // concurrent schedule correction can postpone a loaded game into the
+          // future before this transaction runs. The reread below covers only
+          // scores and status, so a newly postponed game would still be graded
+          // (Devin Review, #717). Re-read the CURRENT kickoff and refuse both
+          // the pick update and the FINAL write when it has not passed.
+          // Deliberately unconditional: it must also cover a VOID or an
+          // outcome carrying no scores, which the score reread below skips.
+          const currentKickoff = await tx.game.findUnique({
+            where: { id: row.game.id },
+            select: { commenceTime: true },
+          });
+          if (!currentKickoff || currentKickoff.commenceTime.getTime() > settledAt.getTime()) {
+            console.warn(
+              `[free-settle] KICKOFF_MOVED game=${row.game.id} pick=${o.pickId} ` +
+                `commence=${currentKickoff?.commenceTime.toISOString() ?? "missing"} ` +
+                `— the game has not started as of this cycle; leaving the pick PENDING.`,
+            );
+            return { count: 0 };
+          }
+
           if (o.homeScore != null && o.awayScore != null) {
             // PR #550's ?path=free (forceFree) lets this free path run even when
             // THE_ODDS_API_KEY is present, so it can now race the paid path
