@@ -282,14 +282,21 @@ export async function persistFreeScores(options?: {
             );
             continue;
           }
-        } else if (chosen.date.slice(0, 10) !== day) {
+        } else if (Math.abs(Date.parse(chosen.date.slice(0, 10)) - d0) > 36e5 * 24) {
           // No start time to bind against. The ±48h window spans a whole series,
           // so without a clock the only defensible tolerance is the timezone
-          // edge the window exists for, and that is one day, not two.
+          // edge the window exists for, and that is ONE day, not two.
+          //
+          // One day, not zero: henrygd carries the fixture's local calendar date
+          // while `day` comes from commenceTime in UTC, so a Saturday evening
+          // NCAA kickoff is already Sunday in UTC. Exact equality would reject
+          // that final and strand the game and its picks unsettled (Devin
+          // Review, #717) — a real regression for the ESPN-unavailable path,
+          // where henrygd is the only source and carries no start time.
           console.warn(
             `[free-score-persist] UNBOUND_DATE game=${g.id} ` +
               `${g.awayTeamName} @ ${g.homeTeamName} day=${day} final date=${chosen.date} ` +
-              `— no start time on the final and the dates differ; refusing to guess.`,
+              `— no start time on the final and the dates are more than a day apart; refusing to guess.`,
           );
           continue;
         }
@@ -336,6 +343,14 @@ export async function persistFreeScores(options?: {
         const res = await db.game.updateMany({
           where: {
             id: g.id,
+            // The has-it-started guard, repeated at write time for the same
+            // reason the score guard below is: `g.commenceTime` was read before
+            // the network work above, and a concurrent schedule refresh can
+            // postpone the game into the future in between. Checking only the
+            // in-memory copy would then still stamp a postponed game FINAL
+            // (Devin Review, #717). Re-evaluated by the database against the
+            // CURRENT row, so a row that moved forward simply matches nothing.
+            commenceTime: { lte: new Date() },
             OR: [
               { status: { not: "FINAL" } },
               { homeScore: null },

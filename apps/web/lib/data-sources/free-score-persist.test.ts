@@ -366,6 +366,10 @@ describe("persistFreeScores — clearance gating (GSE-SEC-050/051)", () => {
     expect(mocks.dbGameUpdateMany).toHaveBeenCalledWith({
       where: {
         id: "game-1",
+        // The has-it-started guard is re-evaluated by the database at write
+        // time, so a game postponed between the read and the write matches
+        // nothing instead of being stamped FINAL.
+        commenceTime: { lte: expect.any(Date) },
         OR: [
           { status: { not: "FINAL" } },
           { homeScore: null },
@@ -883,5 +887,157 @@ describe("persistFreeScores — binds a final to kickoff and holds when ambiguou
       data: { homeScore: number; awayScore: number };
     };
     expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2 });
+  });
+});
+
+// ─── Write-time guards (Devin Review, #717 round 2) ────────────────────────────
+
+describe("persistFreeScores — guards that must hold at write time, not just read time", () => {
+  const HOUR = 60 * 60 * 1000;
+
+  function arm(games: ReturnType<typeof makeGameRow>[], finals: unknown[]) {
+    mocks.checkClearanceMock.mockReturnValue(clearanceResult(true, []));
+    mocks.dbGameFindMany.mockResolvedValue(games);
+    mocks.dbGameUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.dbIngestionRunCreate.mockResolvedValue({
+      id: "run-stub",
+      status: "SUCCESS",
+      completedAt: new Date("2026-06-15T12:00:00.000Z"),
+    });
+    mocks.fetchScoresMultiSourceMock.mockResolvedValue({
+      games: [],
+      errors: [],
+      attempted: [],
+      used: null,
+      primary: null,
+      failover: false,
+      oddsApiRequired: false,
+      datesRequested: [],
+    });
+    mocks.fetchHenrygdScoreboardMock.mockResolvedValue([]);
+    mocks.buildTrustedFinalsMock.mockReturnValue(finals);
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("re-checks commenceTime in the UPDATE, so a game postponed mid-cycle cannot be stamped FINAL", async () => {
+    // The row was in the past when findMany read it. A concurrent schedule
+    // refresh may postpone it before the write lands, so the write itself must
+    // carry the guard rather than trusting the in-memory copy.
+    const startedTwoHoursAgo = new Date(Date.now() - 2 * HOUR);
+    arm(
+      [
+        makeGameRow({
+          id: "game-postponed",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedTwoHoursAgo,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        makeTrustedFinal({
+          date: startedTwoHoursAgo.toISOString().slice(0, 10),
+          startIso: startedTwoHoursAgo.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
+    const where = (mocks.dbGameUpdateMany.mock.calls[0]![0] as {
+      where: { commenceTime?: { lte?: Date } };
+    }).where;
+    // The database, not this process, decides whether the game has started.
+    expect(where.commenceTime?.lte).toBeInstanceOf(Date);
+  });
+
+  it("accepts a date-only final one calendar day off, which UTC rollover makes routine", async () => {
+    // A Saturday-evening NCAA kickoff is already Sunday in UTC. henrygd carries
+    // the fixture's local date and no start time, so exact equality would strand
+    // the game unsettled on the ESPN-unavailable path.
+    const eveningKickoff = new Date(Date.now() - 3 * HOUR);
+    const localDayBefore = new Date(eveningKickoff.getTime() - 24 * HOUR)
+      .toISOString()
+      .slice(0, 10);
+    arm(
+      [
+        makeGameRow({
+          id: "game-utc-rollover",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: eveningKickoff,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      // No startIso: this is the date-only source.
+      [
+        makeTrustedFinal({
+          date: localDayBefore,
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
+    const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
+      data: { homeScore: number; awayScore: number };
+    };
+    expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2 });
+  });
+
+  it("still refuses a date-only final two or more days off", async () => {
+    const startedToday = new Date(Date.now() - 3 * HOUR);
+    const twoDaysBefore = new Date(startedToday.getTime() - 48 * HOUR)
+      .toISOString()
+      .slice(0, 10);
+    arm(
+      [
+        makeGameRow({
+          id: "game-far-date",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedToday,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        makeTrustedFinal({
+          date: twoDaysBefore,
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 9,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 1,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
   });
 });
