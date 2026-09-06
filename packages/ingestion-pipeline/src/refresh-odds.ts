@@ -148,10 +148,16 @@ export const CREDIT_GOVERNOR_SKIP_NOTE = "credit_governor_skip";
  * (DATABASE_URL unset) cannot take the advisory mutex although its no-op
  * `$transaction` looks like it can, so the ledger is told when it is the stub.
  */
-export function defaultPaidOddsGovernor(): PaidOddsGovernor {
+export function defaultPaidOddsGovernor(source?: string): PaidOddsGovernor {
   return buildPaidOddsGovernor({
     db: db as unknown as OddsCreditLedgerDb,
     atomicCapable: !isStubMode(),
+    // `source` labels the credit observations this governor writes (the ledger
+    // row's source_type is `ops.odds.<source>`). Spread conditionally so the
+    // no-source call is byte-identical to what every refreshOdds() caller has
+    // always sent: passing `source: undefined` would put the key on the object
+    // and leave existing deps assertions relying on ignore-undefined semantics.
+    ...(source ? { source } : {}),
   });
 }
 
@@ -159,15 +165,24 @@ export function defaultPaidOddsGovernor(): PaidOddsGovernor {
  * `undefined` → default; object → as injected; `null` → disabled (test-only).
  * Building the default fails open: a governor that cannot even be constructed
  * must never blank the board (its decide() already fails open at call time).
+ *
+ * `source` labels this caller's credit observations in the ledger. Omitted, the
+ * factory's own "refresh-odds" default stands, which is correct for every
+ * caller that spends THROUGH refreshOdds() (the cron, board-fill,
+ * free-spine-health, the traffic heartbeat): refresh-odds is literally the
+ * function that spent the credit. A separate process with its own cadence
+ * passes its own label so a caller-level audit can tell them apart.
  */
 export function resolvePaidOddsGovernor(
   injected: PaidOddsGovernor | null | undefined,
   logPrefix: string = "[cron:refresh-odds]",
+  source?: string,
 ): PaidOddsGovernor | undefined {
   if (injected === null) return undefined;
+  // An injected governor carries whatever label its own factory gave it.
   if (injected) return injected;
   try {
-    return defaultPaidOddsGovernor();
+    return defaultPaidOddsGovernor(source);
   } catch (err) {
     console.warn(
       `${logPrefix} default credit governor unavailable, proceeding unpaced: ` +
