@@ -15,6 +15,8 @@ import {
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { teaserForViewer } from "@/lib/picks/teaser-text";
+import { displaySelection } from "@/lib/picks/display-selection";
+import { resolveMarketImplied } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
@@ -131,7 +133,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         },
         // The public proof-of-record pointer: a hash reveals nothing, and
         // publishing it pre-kickoff is exactly how a commitment works.
-        proofReceipt: { select: { contentHash: true } },
+        // marketFairProb is the receipt's committed market-implied probability;
+        // it is only serialised under the confidence entitlement (see below).
+        proofReceipt: { select: { contentHash: true, marketFairProb: true } },
+        // The mint-time book count. The snapshot is created once in the same
+        // cycle as the receipt and never overwritten (update: {}), so it is the
+        // "N books in the snapshot" the label states was fixed at publish time.
+        // Pick.bookmakerCount is rewritten every refresh cycle and must not be
+        // shown in that label.
+        signalSnapshot: { select: { bookmakerCount: true } },
       },
       orderBy: [
         { isFeatured: "desc" },
@@ -227,6 +237,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // trust signal on the teaser is the Edge Index, not the confidence number.
     const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
 
+    // v5.2.8 display side: the receipt's market-implied win probability on
+    // book-priced two-way MONEYLINE picks, under the SAME entitlement as
+    // confidence. Null resolves to an omitted key, so no FREE payload carries it.
+    // N is the immutable snapshot count (mint time), not the live Pick column;
+    // a pick without a snapshot count shows no percentage rather than a
+    // drifting N.
+    const marketImplied = resolveMarketImplied(
+      {
+        pickType: pick.pickType,
+        bookmakerCount: pick.signalSnapshot?.bookmakerCount ?? 0,
+        receiptMarketFairProb: pick.proofReceipt?.marketFairProb,
+      },
+      entitlements,
+    );
+
     return {
       id: pick.id,
       game: {
@@ -236,8 +261,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         sport: pick.game.sport.name,
       },
       pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
-      selection: pick.selection,
+      // Display text: the signal slate's "(model signal)" marker is stripped
+      // at render time (lib/picks/display-selection.ts); the DB string is kept.
+      selection: displaySelection(pick.selection),
       line: pick.line,
+      hasBookPrice: pick.bookmakerCount > 0,
+      ...(marketImplied ? { marketImplied } : {}),
       // Opening -> current movement, the Pro-tier market read. Only SPREAD and
       // TOTAL carry a comparable opening line (enrichment captures it at first
       // ingestion); MONEYLINE and games without a captured open return null,

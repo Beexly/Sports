@@ -183,7 +183,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "calibration-report",
     displayName: "Calibration reports",
-    customerExplanation: "How well Galaxy's confidence has matched real outcomes over time, the honesty check on the number.",
+    customerExplanation: "How well the market-implied probability fixed in each proof receipt has matched real outcomes on settled two-way moneyline picks, the honesty check on the number. Confidence is a ranking score and is not on that chart.",
     internalNote: "Calibration depth for Elite.",
     minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
   },
