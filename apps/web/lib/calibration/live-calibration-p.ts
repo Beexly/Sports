@@ -135,15 +135,43 @@ export type PickForLiveCal = {
 };
 
 /**
+ * Source tags a resolver may attach to its probability. `resolver` is the
+ * WP-28 odds-table recompute on at least MIN_BOOKMAKERS real books (reported
+ * as pSources.market_p_from_odds_table); `resolver_single_book` is the C-110
+ * single-book recompute (reported as pSources.market_p_single_book).
+ */
+export type MarketAnchoredResolverSource = "resolver" | "resolver_single_book";
+
+export type ResolvedMarketP = {
+  readonly p: number;
+  readonly source: MarketAnchoredResolverSource;
+};
+
+/**
  * WP-28 hook: recompute a publish-time market probability for a pick that
  * carries none (no factor-breakdown market fair, no receipt). Injected by the
- * loader; the default resolver returns null so nothing is invented here.
+ * loader; the default resolver returns null so nothing is invented here. A
+ * bare number is read as source `resolver`; a tagged result names its source.
  */
-export type MarketProbabilityResolver = (pick: PickForLiveCal) => number | null;
+export type MarketProbabilityResolver = (pick: PickForLiveCal) => number | ResolvedMarketP | null;
 
 export const NULL_MARKET_PROBABILITY_RESOLVER: MarketProbabilityResolver = () => null;
 
-export type MarketAnchoredPSource = "proof_receipt" | "factor_breakdown" | "resolver";
+export type MarketAnchoredPSource = "proof_receipt" | "factor_breakdown" | MarketAnchoredResolverSource;
+
+/**
+ * Sample definition tag written on every metrics artifact and eligibility snap
+ * (pBasis). The streak is counted under one tag only: changing the sample
+ * definition changes the tag, and the basis-aware reset in
+ * calibration-eligibility-durable.ts restarts the streak from 0.
+ *   market_anchored     v5.2.8 Phase 2 (2026-09-05): receipts, factor-breakdown
+ *                       fair for pre-receipt rows, odds-table recompute on two
+ *                       or more books.
+ *   market_anchored_v2  C-110 (2026-09-06): the same, plus single-book
+ *                       publish-time market probabilities (market_p_single_book).
+ */
+export const MARKET_ANCHORED_P_BASIS = "market_anchored_v2" as const;
+export type MarketAnchoredPBasis = typeof MARKET_ANCHORED_P_BASIS;
 
 export type MarketAnchoredPResolution = {
   readonly p: number;
@@ -165,7 +193,8 @@ export type MarketAnchoredPResolution = {
  *    PENDING and merged again after settlement (backfillIndependentTrueProb),
  *    so it is the last refresh, not the publish-time value; it is accepted
  *    here only for rows that predate receipts.
- * 3. The injectable resolver (WP-28 odds-table recompute at generatedAt).
+ * 3. The injectable resolver (WP-28 odds-table recompute at generatedAt; two
+ *    or more books tagged `resolver`, one book tagged `resolver_single_book`).
  *
  * A pick with none is excluded; confidence/100 is never a fallback for the
  * floors. The synthetic coin flip 0.5 is rejected at every step.
@@ -180,7 +209,10 @@ export function resolveMarketAnchoredCalibrationP(
   const { marketP: fbMarketP } = extractProvenPathProbs(fb);
   if (isRealMarketP(fbMarketP)) return { p: clamp01(fbMarketP), source: "factor_breakdown" };
   const resolved = resolveMarketP(pick);
-  if (isRealMarketP(resolved)) return { p: clamp01(resolved), source: "resolver" };
+  if (resolved == null) return null;
+  const resolvedP = typeof resolved === "number" ? resolved : resolved.p;
+  const source: MarketAnchoredResolverSource = typeof resolved === "number" ? "resolver" : resolved.source;
+  if (isRealMarketP(resolvedP)) return { p: clamp01(resolvedP), source };
   return null;
 }
 
@@ -204,9 +236,15 @@ export type MarketAnchoredSample = {
  * their calibration is reported per market on the bake-off surface
  * (scoreBakeoffByMarket). This matches the numbers the founder approved on
  * 2026-09-05 (MONEYLINE only) and the public claim's scope.
+ *
+ * C-110 (2026-09-06, delegated): receipt-less picks whose game has exactly one
+ * real book stored at or before generatedAt are included, scored on that one
+ * book's de-vigged price, and tagged market_p_single_book so pSources and
+ * bySource report them apart from the two-or-more-book recompute. The basis
+ * tag moved to market_anchored_v2 so the streak restarted on this definition.
  */
 export const MARKET_ANCHORED_SAMPLE_COMPOSITION_NOTE =
-  "Sample composition: the pooled floors sample is two-way MONEYLINE only (scope decision 2026-09-05, delegated by the founder). Receipted SPREAD and TOTAL picks carry cover probabilities near 0.5, whose Brier sits near 0.25 by construction, so they are excluded from the pooled floors as non_moneyline_market and counted; their calibration is reported per market on the bake-off surface (scoreBakeoffByMarket). Three-way-sport moneylines are excluded as three_way_market. byMarket on this artifact therefore carries MONEYLINE only.";
+  "Sample composition: the pooled floors sample is two-way MONEYLINE only (scope decision 2026-09-05, delegated by the founder). Receipted SPREAD and TOTAL picks carry cover probabilities near 0.5, whose Brier sits near 0.25 by construction, so they are excluded from the pooled floors as non_moneyline_market and counted; their calibration is reported per market on the bake-off surface (scoreBakeoffByMarket). Three-way-sport moneylines are excluded as three_way_market. byMarket on this artifact therefore carries MONEYLINE only. Single-book market probabilities are included (C-110, decision 2026-09-06): a receipt-less pick whose game has exactly one real book stored at or before generatedAt is scored on that book's proportionally de-vigged price and tagged market_p_single_book, reported separately from market_p_from_odds_table (two or more books) in pSources and bySource; the streak basis is market_anchored_v2 for this sample definition.";
 
 export type MarketAnchoredSampleBuild = {
   readonly samples: MarketAnchoredSample[];
@@ -274,7 +312,7 @@ export function picksToMarketAnchoredCalibrationSamples(
   }
 
   const notes = [
-    "Eligibility p (v5.2.8 Phase 2): market-anchored probability only, publish-time value. Order: proof receipt marketFairProb (minted once before kickoff, immutable), then factor-breakdown market fair only when no receipt exists (rows that predate receipts; the factor breakdown is refreshed until settlement and merged after it, so it is not publish-time-fixed), then the injected resolver (odds-table recompute at generatedAt). Synthetic 0.5 rejected. Confidence/100 is never scored for the floors.",
+    "Eligibility p (v5.2.8 Phase 2): market-anchored probability only, publish-time value. Order: proof receipt marketFairProb (minted once before kickoff, immutable), then factor-breakdown market fair only when no receipt exists (rows that predate receipts; the factor breakdown is refreshed until settlement and merged after it, so it is not publish-time-fixed), then the injected resolver (odds-table recompute at generatedAt; two or more books as resolver, one book as resolver_single_book). Synthetic 0.5 rejected. Confidence/100 is never scored for the floors.",
     `Included ${samples.length}; excluded three_way_market ${excluded.three_way_market}, no_market_probability ${excluded.no_market_probability}, non_moneyline_market ${excluded.non_moneyline_market}. Sources: ${JSON.stringify(bySource)}.`,
     "Three-way moneyline sports (scoring.ts isThreeWayMoneylineSport) are a structural exclusion: the two-way de-vig drops the draw mass and the engine does not publish them.",
     MARKET_ANCHORED_SAMPLE_COMPOSITION_NOTE,

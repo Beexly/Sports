@@ -8,6 +8,7 @@ import {
   latestH2hRowPerBookmaker,
   pickedSide,
   publishTimeMarketP,
+  publishTimeMarketPSource,
   resolvePublishTimeMarketP,
   type OddsRowForMarketP,
   type PickForMarketP,
@@ -18,9 +19,11 @@ import {
   marketPSourcesFromBySource,
   oddsTableCandidate,
   oddsTableStatsNote,
+  resolverSourceForPSource,
   type OddsTableDb,
 } from "@/lib/calibration/publish-time-market-p-loader";
 import {
+  MARKET_ANCHORED_P_BASIS,
   picksToMarketAnchoredCalibrationSamples,
   type PickForLiveCal,
 } from "@/lib/calibration/live-calibration-p";
@@ -38,6 +41,10 @@ import {
  *   draftkings -150/+130, fanduel -145/+125, espn_public -155/+135
  *     -> home 0.579712, away 0.420288
  *   draftkings -160/+140 replacing -150/+130 -> home 0.585182
+ * C-110 single book (one real book stored at or before generatedAt, same
+ * de-vig on that book alone, tagged market_p_single_book):
+ *   draftkings -150/+130 alone -> home 0.579832, away 0.420168
+ *   fanduel -145/+125 alone    -> home 0.571116, away 0.428884
  */
 
 const HOME = "Kansas City Chiefs";
@@ -85,6 +92,7 @@ describe("publishTimeMarketP: pure recompute with the receipt's de-vig", () => {
     expect(res.p).toBeCloseTo(0.579712, 6);
     expect(res.side).toBe("home");
     expect(res.bookCount).toBe(3);
+    expect(res.pSource).toBe("market_p_from_odds_table");
     expect(res.bookmakers).toEqual(["draftkings", "espn_public", "fanduel"]);
     expect(res.snapshotAt.getTime()).toBe(T0.getTime());
     expect(res.oldestBookAt.getTime()).toBe(T0.getTime());
@@ -95,12 +103,51 @@ describe("publishTimeMarketP: pure recompute with the receipt's de-vig", () => {
     expect((away ?? 0) + res.p).toBeCloseTo(1, 6);
   });
 
-  it("fewer than MIN_BOOKMAKERS real books yields null (never a literal threshold)", () => {
-    expect(MIN_BOOKMAKERS).toBeGreaterThan(1);
-    const rows = threeBooks().slice(0, MIN_BOOKMAKERS - 1);
-    expect(publishTimeMarketP(homePick, rows)).toBeNull();
-    const res = resolvePublishTimeMarketP(homePick, rows);
-    expect(res).toEqual({ status: "unresolved", reason: "insufficient_books", bookCount: MIN_BOOKMAKERS - 1 });
+  it("C-110: one real book resolves with that book's de-vig and the distinct source market_p_single_book", () => {
+    expect(MIN_BOOKMAKERS).toBe(2);
+    const oneBook = threeBooks().slice(0, 1); // draftkings -150/+130 alone
+    const res = resolvePublishTimeMarketP(homePick, oneBook);
+    expect(res.status).toBe("resolved");
+    if (res.status !== "resolved") return;
+    expect(res.pSource).toBe("market_p_single_book");
+    expect(res.p).toBeCloseTo(0.579832, 6);
+    expect(res.side).toBe("home");
+    expect(res.bookCount).toBe(1);
+    expect(res.bookmakers).toEqual(["draftkings"]);
+    expect(res.snapshotAt.getTime()).toBe(T0.getTime());
+    expect(res.oldestBookAt.getTime()).toBe(T0.getTime());
+    expect(res.method).toBe(PUBLISH_TIME_MARKET_P_METHOD);
+    // Picked side flips the same book's pair; the two sides still sum to one.
+    const away = publishTimeMarketP(awayPick, oneBook);
+    expect(away).toBeCloseTo(0.420168, 6);
+    expect((away ?? 0) + res.p).toBeCloseTo(1, 6);
+
+    // The tag is decided against the engine's own book floor, never a literal.
+    expect(publishTimeMarketPSource(1)).toBe("market_p_single_book");
+    expect(publishTimeMarketPSource(MIN_BOOKMAKERS)).toBe("market_p_from_odds_table");
+    expect(publishTimeMarketPSource(MIN_BOOKMAKERS + 1)).toBe("market_p_from_odds_table");
+    // Exactly MIN_BOOKMAKERS books keeps the two-or-more tag.
+    const twoBooks = resolvePublishTimeMarketP(homePick, threeBooks().slice(0, MIN_BOOKMAKERS));
+    expect(twoBooks.status).toBe("resolved");
+    if (twoBooks.status === "resolved") expect(twoBooks.pSource).toBe("market_p_from_odds_table");
+  });
+
+  it("zero usable books stays unresolved: no_rows when nothing is stored, no_usable_book when only non-book rows are", () => {
+    expect(publishTimeMarketP(homePick, [])).toBeNull();
+    expect(resolvePublishTimeMarketP(homePick, [])).toEqual({ status: "unresolved", reason: "no_rows", bookCount: 0 });
+    // Rows for another game only: nothing stored for this one.
+    expect(resolvePublishTimeMarketP(homePick, threeBooks("g2"))).toEqual({ status: "unresolved", reason: "no_rows", bookCount: 0 });
+    // Rows exist for the game but none is a real two-sided book.
+    const unusable = [
+      row("g1", "rundown_default", -150, 130, T0),
+      row("g1", "pinnacle", -150, null, T0),
+      row("g1", "betmgm", -150, 130, T0, "SPREADS"),
+    ];
+    expect(publishTimeMarketP(homePick, unusable)).toBeNull();
+    expect(resolvePublishTimeMarketP(homePick, unusable)).toEqual({ status: "unresolved", reason: "no_usable_book", bookCount: 0 });
+    // A one-sided row and a non-H2H row alone are "stored, unusable"; the reason never invents a book.
+    expect(resolvePublishTimeMarketP(homePick, [row("g1", "pinnacle", -150, null, T0)])).toEqual({ status: "unresolved", reason: "no_usable_book", bookCount: 0 });
+    expect(resolvePublishTimeMarketP(homePick, [row("g1", "betmgm", -150, 130, T0, "SPREADS")])).toEqual({ status: "unresolved", reason: "no_rows", bookCount: 0 });
   });
 
   it("rows fetched after generatedAt are ignored: the probability is fixed at publish time", () => {
@@ -163,13 +210,23 @@ describe("publishTimeMarketP: pure recompute with the receipt's de-vig", () => {
     const res = resolvePublishTimeMarketP(homePick, padded);
     expect(res.status).toBe("resolved");
     if (res.status !== "resolved") return;
+    expect(res.pSource).toBe("market_p_from_odds_table");
     expect(res.bookmakers).toEqual(["draftkings", "fanduel"]);
     expect(res.p).toBeCloseTo(0.575471, 6);
-    // Drop one real book: the padding rows never make up the count.
-    expect(resolvePublishTimeMarketP(homePick, padded.slice(1))).toEqual({
+    // Drop one real book: the padding rows never make up the count, so the
+    // remaining fanduel row resolves alone and is tagged as a single book.
+    const single = resolvePublishTimeMarketP(homePick, padded.slice(1));
+    expect(single.status).toBe("resolved");
+    if (single.status !== "resolved") return;
+    expect(single.pSource).toBe("market_p_single_book");
+    expect(single.bookCount).toBe(1);
+    expect(single.bookmakers).toEqual(["fanduel"]);
+    expect(single.p).toBeCloseTo(0.571116, 6);
+    // Drop both real books: padding alone is no usable book.
+    expect(resolvePublishTimeMarketP(homePick, padded.slice(2))).toEqual({
       status: "unresolved",
-      reason: "insufficient_books",
-      bookCount: 1,
+      reason: "no_usable_book",
+      bookCount: 0,
     });
   });
 
@@ -283,17 +340,40 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
     expect(load.stats.queries).toBe(1);
     expect(load.stats.oddsRows).toBe(7);
     expect(load.stats.resolved).toBe(3);
-    expect(load.stats.unresolved).toEqual({ no_rows: 0, insufficient_books: 0, no_side: 0 });
+    expect(load.stats.resolvedSingleBook).toBe(0);
+    expect(load.stats.unresolved).toEqual({ no_rows: 0, no_usable_book: 0, insufficient_books: 0, no_side: 0 });
     expect(load.stats.note).toBeNull();
 
-    expect(load.resolveMarketP(picks[0]!)).toBeCloseTo(0.579712, 6);
-    expect(load.resolveMarketP(picks[2]!)).toBeCloseTo(0.579712, 6);
+    expect(load.resolveMarketP(picks[0]!)).toEqual({ p: 0.579712, source: "resolver" });
+    expect(load.resolveMarketP(picks[2]!)).toEqual({ p: 0.579712, source: "resolver" });
     // Pick b was generated after betmgm's late row, so all four g2 books count.
     const pB = load.resolveMarketP(picks[1]!);
     expect(pB).not.toBeNull();
-    expect(pB).not.toBeCloseTo(0.420288, 6);
+    expect(typeof pB === "object" && pB !== null ? pB.p : null).not.toBeCloseTo(0.420288, 6);
     expect(load.resolveMarketP(picks[3]!)).toBeNull();
     expect(load.resolveMarketP({ ...picks[0]!, id: null })).toBeNull();
+  });
+
+  it("C-110: a candidate whose game has one stored book resolves as resolver_single_book and is counted apart", async () => {
+    const picks: PickForLiveCal[] = [
+      mlPick({ id: "one", gameId: "g1" }),
+      mlPick({ id: "two", gameId: "g2" }),
+      mlPick({ id: "oneAway", gameId: "g1", selection: `${AWAY} ML (+130)` }),
+    ];
+    // g1: draftkings alone (plus a non-book row that never counts); g2: two real books.
+    const rows = [...threeBooks("g1").slice(0, 1), row("g1", "rundown_default", -150, 130, T0), ...threeBooks("g2").slice(0, 2)];
+    const { db, findMany } = mockOddsDb(rows);
+    const load = await loadPublishTimeMarketPResolver(db, picks);
+    expect(findMany).toHaveBeenCalledTimes(1);
+    expect(load.stats.resolved).toBe(3);
+    expect(load.stats.resolvedSingleBook).toBe(2);
+    expect(load.stats.unresolved).toEqual({ no_rows: 0, no_usable_book: 0, insufficient_books: 0, no_side: 0 });
+    expect(load.resolveMarketP(picks[0]!)).toEqual({ p: 0.579832, source: "resolver_single_book" });
+    expect(load.resolveMarketP(picks[2]!)).toEqual({ p: 0.420168, source: "resolver_single_book" });
+    expect(load.resolveMarketP(picks[1]!)).toEqual({ p: 0.575471, source: "resolver" });
+    expect(resolverSourceForPSource("market_p_single_book")).toBe("resolver_single_book");
+    expect(resolverSourceForPSource("market_p_from_odds_table")).toBe("resolver");
+    expect(oddsTableStatsNote(load.stats)).toContain("resolved 3 (single book 2)");
   });
 
   it("counts unresolved candidates by reason and never invents a probability", async () => {
@@ -302,15 +382,19 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       mlPick({ id: "b", gameId: "g2" }),
       mlPick({ id: "c", gameId: "g3", selection: "Somebody Else ML (-110)" }),
     ];
-    const rows = [...threeBooks("g1").slice(0, 1), ...threeBooks("g3")];
+    // g1: only a non-book row (no usable book); g2: nothing stored; g3: books but no side.
+    const rows = [row("g1", "rundown_default", -150, 130, T0), ...threeBooks("g3")];
     const { db, findMany } = mockOddsDb(rows);
     const load = await loadPublishTimeMarketPResolver(db, picks);
     expect(findMany).toHaveBeenCalledTimes(1);
     expect(load.stats.resolved).toBe(0);
-    expect(load.stats.unresolved).toEqual({ no_rows: 1, insufficient_books: 1, no_side: 1 });
+    expect(load.stats.resolvedSingleBook).toBe(0);
+    // insufficient_books is retired (a lone book resolves) and stays 0 for readers of older artifacts.
+    expect(load.stats.unresolved).toEqual({ no_rows: 1, no_usable_book: 1, insufficient_books: 0, no_side: 1 });
     for (const p of picks) expect(load.resolveMarketP(p)).toBeNull();
     expect(oddsTableStatsNote(load.stats)).toContain("resolved 0");
-    expect(oddsTableStatsNote(load.stats)).toContain("insufficient_books 1");
+    expect(oddsTableStatsNote(load.stats)).toContain("no_usable_book 1");
+    expect(oddsTableStatsNote(load.stats)).toContain("insufficient_books 0");
   });
 
   it("fails soft when the odds table cannot be read: null resolver, note set, no throw", async () => {
@@ -327,22 +411,33 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
     expect(oddsTableStatsNote(load.stats)).toContain("odds table unavailable");
   });
 
-  it("feeds the shared builder and is reported as market_p_from_odds_table alongside the receipts", async () => {
+  it("feeds the shared builder; two-or-more books report as market_p_from_odds_table, one book as market_p_single_book", async () => {
     const picks = [
       mlPick({ id: "r", gameId: "g9", proofReceipt: { marketFairProb: 0.63 } }),
       mlPick({ id: "o", gameId: "g1", result: "LOSS" }),
+      mlPick({ id: "s", gameId: "g6", result: "WIN" }),
       mlPick({ id: "x", gameId: "g5" }),
     ];
-    const { db } = mockOddsDb(threeBooks("g1"));
+    // g1: three books; g6: fanduel alone; g5: nothing stored.
+    const { db } = mockOddsDb([...threeBooks("g1"), row("g6", "fanduel", -145, 125, T0)]);
     const load = await loadPublishTimeMarketPResolver(db, picks);
+    expect(load.stats.resolved).toBe(2);
+    expect(load.stats.resolvedSingleBook).toBe(1);
 
     const built = picksToCalibrationSamples(picks, { resolveMarketP: load.resolveMarketP });
-    expect(built.samples).toHaveLength(2);
+    expect(built.samples).toHaveLength(3);
     expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
-    expect(built.bySource).toEqual({ proof_receipt: 1, resolver: 1 });
+    expect(built.bySource).toEqual({ proof_receipt: 1, resolver: 1, resolver_single_book: 1 });
     expect(built.taggedSamples[1]).toEqual({
       p: 0.579712,
       y: 0,
+      sportKey: "americanfootball_nfl",
+      modelVersion: "v5.2.7",
+      pickType: "MONEYLINE",
+    });
+    expect(built.taggedSamples[2]).toEqual({
+      p: 0.571116,
+      y: 1,
       sportKey: "americanfootball_nfl",
       modelVersion: "v5.2.7",
       pickType: "MONEYLINE",
@@ -352,7 +447,10 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       factor_breakdown: 0,
       proof_receipt: 1,
       market_p_from_odds_table: 1,
+      market_p_single_book: 1,
     });
+    // A bySource with no single-book rows still reports the key, at 0.
+    expect(marketPSourcesFromBySource({ proof_receipt: 2 }).market_p_single_book).toBe(0);
 
     const payload = buildDurableMetricsFromSamples({
       samples: built.samples,
@@ -364,11 +462,16 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       settledFrom: built.settledFrom,
       settledTo: built.settledTo,
     });
-    expect(payload.pBasis).toBe("market_anchored");
-    expect(payload.pSources).toEqual({ factor_breakdown: 0, proof_receipt: 1, market_p_from_odds_table: 1 });
+    // C-110 changed the sample definition, so the streak basis tag moved to v2.
+    expect(MARKET_ANCHORED_P_BASIS).toBe("market_anchored_v2");
+    expect(payload.pBasis).toBe("market_anchored_v2");
+    expect(payload.pSources).toEqual({ factor_breakdown: 0, proof_receipt: 1, market_p_from_odds_table: 1, market_p_single_book: 1 });
     expect(payload.marketPFromOddsTable).toEqual(load.stats);
     expect(payload.marketPFromOddsTable?.queries).toBe(1);
+    expect(payload.marketPFromOddsTable?.resolvedSingleBook).toBe(1);
     expect(payload.marketPFromOddsTable?.unresolved.no_rows).toBe(1);
+    expect(payload.marketPFromOddsTable?.unresolved.insufficient_books).toBe(0);
+    expect(payload.notes?.some((n) => /market_p_single_book/.test(n))).toBe(true);
   });
 });
 
@@ -385,6 +488,15 @@ describe("wiring: both canonical loaders run the odds-table resolver and the sur
     expect(src).toMatch(/resolveMarketP:\s*oddsTable\.resolveMarketP/);
     expect(src).toMatch(/pSources:\s*marketPSourcesFromBySource\(honest\.bySource\)/);
     expect(src).toMatch(/marketPFromOddsTable:\s*oddsTable\.stats/);
+    // The basis tag is the shared constant (v2 since C-110), never a stale literal.
+    expect(src).toMatch(/pBasis:\s*MARKET_ANCHORED_P_BASIS/);
+    expect(src).not.toMatch(/pBasis:\s*"market_anchored"/);
+  });
+
+  it("the shared metrics builder writes the v2 basis tag through the constant", () => {
+    const src = read("lib/ops/compute-live-calibration-metrics.ts");
+    expect(src).toMatch(/pBasis:\s*MARKET_ANCHORED_P_BASIS/);
+    expect(src).not.toMatch(/pBasis:\s*"market_anchored"/);
   });
 
   it("the durable seed path selects the identity fields and injects the resolver", () => {
