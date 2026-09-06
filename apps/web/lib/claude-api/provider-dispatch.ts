@@ -12,6 +12,8 @@ import { callClaudeMessages, type ClaudeMessagesRequest, type ClaudeMessagesResu
 import { pickModelForSurface } from "./model-router";
 import { cloudAttemptOrder, type JynxCloud } from "./jynx";
 import { logClaudeCallToHelicone } from "./helicone-logger";
+import { traceClaudeCallToLangfuse } from "./langfuse-tracing";
+import { estimateClaudeCostUsd } from "./cost-monitor";
 import {
   callBedrockClaudeMessages,
   BedrockConfigError,
@@ -80,20 +82,33 @@ async function logResult(
   startedAtMs: number,
   env: Env,
 ): Promise<void> {
-  await logClaudeCallToHelicone(
-    {
-      modelName: result.modelName,
-      system: request.system,
-      user: request.user,
-      responseText: result.text,
-      inputTokens: result.inputTokens,
-      outputTokens: result.outputTokens,
-      startedAtMs,
-      completedAtMs: startedAtMs + result.durationMs,
-      status: 200,
-    },
-    env,
-  );
+  await Promise.all([
+    logClaudeCallToHelicone(
+      {
+        modelName: result.modelName,
+        system: request.system,
+        user: request.user,
+        responseText: result.text,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        startedAtMs,
+        completedAtMs: startedAtMs + result.durationMs,
+        status: 200,
+      },
+      env,
+    ),
+    traceClaudeCallToLangfuse(
+      {
+        surfaceName: request.surface ?? "claude-call",
+        modelName: result.modelName,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        costUsd: estimateClaudeCostUsd(result.inputTokens, result.outputTokens),
+        durationMs: result.durationMs,
+      },
+      env,
+    ),
+  ]);
 }
 
 /**
