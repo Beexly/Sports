@@ -114,7 +114,11 @@ curl -s https://www.galaxysportsedge.com/api/ops/public-surface-truth \
 ```
 
 The two derivations are one line each: `0.69 * (1 - 0.69) = 0.2139` against the
-0.22 Brier floor, and `sqrt(0.05) = 0.2236` against the 0.05 ECE floor.
+0.22 Brier floor, and `sqrt(0.05) = 0.2236` against the 0.05 MURPHY floor, which
+is the squared-gap one. The ECE floor is linear, so its 0.05 is already a
+5.0-point mean absolute gap and needs no square root. (An earlier revision of
+this line attributed the square root to the ECE floor, contradicting the table in
+section 2 above; cubic, PR #716.)
 
 ---
 
