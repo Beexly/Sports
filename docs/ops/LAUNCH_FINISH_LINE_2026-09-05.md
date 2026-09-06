@@ -242,6 +242,82 @@ first, streak compressed by triggering the cron.
 | 11 | Drift after publish: durable marker on GREEN to RED or streak reset after a published receipt, health-alert pages, truth surface shows it | shipped `fbc3784c7` |
 | 12 | Signal-slate, stale, voided and pushed picks never enter the sample; a pick with no market type fails closed | verified; stale rows leave via WP-29 |
 
+## 3e. Path to 100, measured, and the browser-agent handoff (2026-09-06 02:08 UTC)
+
+PR #707 merged to `main` as `cff3e72d7` and is deployed (the truth surface reports that
+SHA). One hourly cycle later the overdue PENDING count read 16 (from 36); stale unstarted
+picks 18; odds inserting from one book; the calibration surface RED with streak 0 because its
+last snapshot predates the deploy (first market-anchored run: the 02:40 UTC cron).
+
+Score 60 of 100. Founder instruction (2026-09-06): no human step where a machine can do it;
+where a console is unavoidable, the Claude browser agent does it from the founder's
+logged-in browser using the script below. Decisions taken accordingly:
+
+- **Stale picks are automated, not hand-run.** WP-29 (C-106) is the coder's first task; the
+  owner tool stays as a fallback only.
+- **The calibration streak runs on the schedule.** No manual cron triggers. The durable
+  publish receipt is written automatically by `evaluateAndPersistEligibility` when the
+  streak reaches three ("Auto-publish: eligibility GREEN for required streak"). What
+  remains manual is the public exposure flag, below.
+- **Public flips are two Vercel variables**, set only after both preconditions hold:
+  `PERFORMANCE_STATS_ENABLED=true` (the truth surface's `calibrationPublished` follows it)
+  and `PRICING_PHASE=PROVEN` (`pricing-phases.ts` reads it). Preconditions: the truth
+  surface shows the durable publish receipt (streak 3, published true) AND C-107 is
+  deployed so the displayed probability matches the published claim.
+
+| # | To reach 100 | Owner | How it closes |
+|---|---|---|---|
+| 1 | Book-priced picks flowing: clear The Odds API billing, no tier change | browser agent (script A) | paid book rows return within one six-hour breaker window |
+| 2 | Overdue picks to 0 | automatic (deployed fixes) | `settlement.overduePending` reads 0; leftovers carry a reason on `/api/ops/settlement-rca` |
+| 3 | Stale picks to 0 | coder: WP-29 (C-106), priority 1 | `stalePendingPicks.count` reads 0 after one cycle |
+| 4 | Calibration GREEN three runs | automatic (02:40, 08:40, 14:40 UTC) | truth surface `calibrationEligibility` published true, streak 3 |
+| 5 | C-107 display label and claim, IMPLEMENTED flip, MODEL_VERSION v5.2.8 | coder, priority 2 | proposal status IMPLEMENTED; model-freeze green |
+| 6 | `PERFORMANCE_STATS_ENABLED=true`, `PRICING_PHASE=PROVEN` after 4 and 5 | browser agent (script B) | truth surface `gates.calibrationPublished` true; pricing page shows PROVEN rates |
+| 7 | Live checkout, then refund | browser agent with the founder's card (script D) | dashboard shows the plan active; Stripe shows the refund |
+| 8 | Alerting: webhook URL and Sentry DSN in Vercel | browser agent (script B) | `alerting` booleans true once OPS-01 (C-98) ships; until then, health-alert logs DELIVERED |
+| 9 | Stripe: Terms URL, consent flag, three webhook events, no live Payment Link | browser agent (script C) | checkout shows the consent checkbox; endpoint lists ten events |
+| 10 | FE-05, FE-10, FE-15 copy | coder, priority 3 | acceptance greps in the FE table |
+
+Blocks: 1 to 3 reach 75. 4 to 6 reach 90 (PROVEN). 7 to 10 reach 100.
+
+### Browser-agent scripts (no secret is ever pasted into chat, a doc, or a commit)
+
+**A. The Odds API billing.** Open the-odds-api.com, sign in with the founder's account, open
+Account or Billing. Clear the overdue invoice or re-enter the card. Do not change the plan
+tier. Confirm the subscription shows active and the key shows enabled. Do not copy the key
+anywhere. Verify later: Vercel runtime errors for `/api/cron/settle-picks` stop showing
+"payment circuit open after HTTP 402", and `/api/picks` returns picks with
+`bookmakerCount` of 2 or more.
+
+**B. Vercel environment (project `sports-web`, team `pick-pilot-s-projects`).** Open
+vercel.com, Project Settings, Environment Variables, scope Production. Add
+`HEALTH_ALERT_WEBHOOK_URL` (create a Slack incoming webhook or a Discord channel webhook
+first and paste its URL here only) and `SENTRY_DSN` (Sentry, the project's Client Keys
+page, copy the DSN here only). Then Deployments, latest production deployment, Redeploy, so
+the variables apply. Later, only after the preconditions above hold, add
+`PERFORMANCE_STATS_ENABLED=true` and `PRICING_PHASE=PROVEN` the same way and redeploy.
+Never edit any other variable. Never blank `THE_ODDS_API_KEY` before WP-27 is deployed.
+
+**C. Stripe Dashboard, live mode.** Settings, Business, Public details: set the Terms of
+service URL to the site's Terms page (the footer link on www.galaxysportsedge.com). Then in
+Vercel add `STRIPE_TERMS_CONSENT_ENABLED=true` and redeploy (this order is required by
+OPERATOR.md section 5). Developers, Webhooks, the production endpoint ending in
+`/api/webhooks/stripe`: add `checkout.session.expired`, `invoice.paid`, `charge.refunded`
+so all ten handled events are subscribed. Payments, Payment Links: deactivate any active
+link (they charge without granting access by construction). Do not create products, prices
+or coupons.
+
+**D. Live checkout smoke.** On www.galaxysportsedge.com/pricing choose Pro monthly, complete
+Stripe Checkout with the founder's card (the founder enters the card; the agent does not
+store it), confirm the consent checkbox appears if script C ran, confirm the dashboard shows
+the plan active within a minute, then in Stripe refund the payment and cancel the
+subscription immediately. Record the date in OPERATOR_TASKS.
+
+**E. Verify after each script**, read-only:
+```
+curl -sS https://www.galaxysportsedge.com/api/ops/public-surface-truth | jq '{deployment: .deployment.sha, gates, settlement: .settlement.overduePending, stale: .stalePendingPicks.count, calibration: .calibrationEligibility}'
+```
+
 ## 4. Founder-only actions (nothing here can be done by an agent)
 
 Ordered by damage-if-skipped before Thursday.

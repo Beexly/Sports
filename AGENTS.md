@@ -30,8 +30,18 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-06 (02:15 UTC): PR #707 is MERGED to `main` as `cff3e72d7` and deployed
+(the truth surface reports that SHA). Score 60 of 100; the measured path to 100 with owners
+is plan section 3e. Founder instruction: no human step where a machine can do it; console
+steps go to the Claude browser agent via the scripts in 3e. Coder priorities, in order:
+WP-29 (C-106, stale picks automated), C-107 (display label and claim, IMPLEMENTED flip,
+MODEL_VERSION v5.2.8), FE-05/FE-10/FE-15 copy. The calibration streak runs on its schedule
+and the publish receipt is automatic at streak three; the public flips are two Vercel
+variables (`PERFORMANCE_STATS_ENABLED`, `PRICING_PHASE=PROVEN`) after that receipt AND
+C-107 are live. Hermes merges `origin/main` before opening its PR.**
+
 **UPDATED 2026-09-05 (18:20 UTC) by the launch session on `claude/sports-prediction-launch-rtiexc`
-(draft PR #707, CI green). Read `docs/ops/LAUNCH_FINISH_LINE_2026-09-05.md` before claiming
+(PR #707, since merged). Read `docs/ops/LAUNCH_FINISH_LINE_2026-09-05.md` before claiming
 anything: section 3b holds eleven decisions the founder delegated in-session, section 4 the
 founder-only actions, section 5 every dispatchable work package (WP-1..26, FE, FAN, NFL, OPS,
 TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and F-14..F-33.**
