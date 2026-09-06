@@ -327,10 +327,16 @@ export function sameMatchupFixturesNearKickoff(
   return scoreboard.filter((g) => {
     if (!g.startTime) return false;
     const start = Date.parse(g.startTime);
+    // A date-only board time ("2026-09-06") parses as midnight, which is hours
+    // from any real kickoff, so clock math would DROP the row. That leaves one
+    // fixture standing, and one fixture means "no doubleheader", which silently
+    // hands the sibling's final to this pick (cubic, #717). Keep such a row on
+    // the calendar comparison; finalMatchesNearestFixture then refuses to place
+    // anything against it.
     const near =
-      Number.isFinite(kickoff) && Number.isFinite(start)
+      g.startTime.includes("T") && Number.isFinite(kickoff) && Number.isFinite(start)
         ? Math.abs(start - kickoff) <= MAX_KICKOFF_DRIFT_MS
-        : g.startTime.slice(0, 10) === day;
+        : daysApart(g.startTime.slice(0, 10), day) <= 1;
     if (!near) return false;
     if (!g.home || !g.away) return false;
     const gHome = [
@@ -409,8 +415,15 @@ export function finalMatchesNearestFixture(
   fixtureStartIsos: readonly string[],
 ): boolean {
   if (fixtureStartIsos.length < 2) return true;
+  // Every timestamp in the comparison must carry a real clock. A date-only one
+  // parses to midnight, which is a fabricated position on the board, not a
+  // missing one — assigning against it would look successful and be wrong
+  // (cubic, #717). Refusing holds the pick instead.
+  if (!finalStartIso?.includes("T")) return false;
+  if (!kickoffIso.includes("T")) return false;
+  if (fixtureStartIsos.some((iso) => !iso.includes("T"))) return false;
   const kickoff = Date.parse(kickoffIso);
-  const start = finalStartIso ? Date.parse(finalStartIso) : Number.NaN;
+  const start = Date.parse(finalStartIso);
   if (!Number.isFinite(kickoff) || !Number.isFinite(start)) return false;
   const starts = fixtureStartIsos.map((iso) => Date.parse(iso)).filter((t) => Number.isFinite(t));
   if (starts.length < 2) return false;

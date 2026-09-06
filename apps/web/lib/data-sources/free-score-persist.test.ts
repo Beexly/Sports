@@ -1377,6 +1377,101 @@ describe("persistFreeScores — an unfinished doubleheader is never resolved by 
     expect(call.data.awayScore).toBe(2);
   });
 
+  it("writes EACH game its own score once both finals of the doubleheader exist", async () => {
+    // Narrowing ran before the fixture-placement filter, and both finals sit
+    // inside the 4h tie window for both rows, so every row reported
+    // AMBIGUOUS_MATCH and neither ever received its score. The shared grader
+    // filters by fixture first; these two paths must agree (CodeRabbit + cubic,
+    // #717).
+    const gameTwo = new Date(NOW.getTime() - 1 * HOUR);
+    const gameOne = new Date(gameTwo.getTime() - 3 * HOUR);
+    const day = gameTwo.toISOString().slice(0, 10);
+    const finals = [
+      makeTrustedFinal({
+        date: day,
+        startIso: gameOne.toISOString(),
+        homeName: "Phillies",
+        homeAbbr: "PHI",
+        homeScore: 4,
+        awayName: "Braves",
+        awayAbbr: "ATL",
+        awayScore: 2,
+        confirmation: "CONFIRMED",
+      }),
+      makeTrustedFinal({
+        date: day,
+        startIso: gameTwo.toISOString(),
+        homeName: "Phillies",
+        homeAbbr: "PHI",
+        homeScore: 6,
+        awayName: "Braves",
+        awayAbbr: "ATL",
+        awayScore: 3,
+        confirmation: "CONFIRMED",
+      }),
+    ];
+    const board = [
+      makeEspnGame({
+        sport: "mlb",
+        gameId: "dh-1",
+        startTime: gameOne.toISOString(),
+        homeName: "Phillies",
+        homeAbbr: "PHI",
+        homeScore: 4,
+        awayName: "Braves",
+        awayAbbr: "ATL",
+        awayScore: 2,
+      }),
+      makeEspnGame({
+        sport: "mlb",
+        gameId: "dh-2",
+        startTime: gameTwo.toISOString(),
+        homeName: "Phillies",
+        homeAbbr: "PHI",
+        homeScore: 6,
+        awayName: "Braves",
+        awayAbbr: "ATL",
+        awayScore: 3,
+      }),
+    ];
+
+    armWithBoard(
+      [
+        makeGameRow({
+          id: "dh-row-one",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: gameOne,
+          homeScore: null,
+          awayScore: null,
+        }),
+        makeGameRow({
+          id: "dh-row-two",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: gameTwo,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      finals,
+      board,
+    );
+
+    await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    const written = mocks.dbGameUpdateMany.mock.calls.map((call) => {
+      const arg = call[0] as {
+        where: { id: string };
+        data: { homeScore: number; awayScore: number };
+      };
+      return [arg.where.id, arg.data.homeScore, arg.data.awayScore];
+    });
+    expect(written).toHaveLength(2);
+    expect(written).toContainEqual(["dh-row-one", 4, 2]);
+    expect(written).toContainEqual(["dh-row-two", 6, 3]);
+  });
+
   it("settles normally when the board lists a single fixture for the matchup", async () => {
     const kickoff = new Date(NOW.getTime() - 3 * HOUR);
     const day = kickoff.toISOString().slice(0, 10);

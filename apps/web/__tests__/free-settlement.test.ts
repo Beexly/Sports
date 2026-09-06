@@ -384,6 +384,20 @@ describe("settlePendingPicks — an unfinished doubleheader holds", () => {
     expect(one.status === "SETTLED" ? one.homeScore : null).toBe(4);
   });
 
+  it("holds when a doubleheader fixture carries a date-only start time", () => {
+    // A date-only board time parses as midnight. Clock math then DROPPED that
+    // row, one fixture means "no doubleheader", and the sibling's final settled
+    // this pick unchallenged — the guard failing open (cubic, #717).
+    const out = settlePendingPicks([dhPick], [gameOneFinal()], {
+      postponedCandidates: [
+        { ...boardRow(gameOne, true), startTime: gameOne.slice(0, 10) },
+        boardRow(gameTwo, false),
+      ] as never,
+    })[0]!;
+    expect(out.status).toBe("HELD");
+    expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
+  });
+
   it("settles normally when the board lists a single fixture that day", () => {
     const soleFinal: TrustedFinal = {
       date: gameTwo.slice(0, 10),

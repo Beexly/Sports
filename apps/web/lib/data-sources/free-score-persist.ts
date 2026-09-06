@@ -235,45 +235,28 @@ export async function persistFreeScores(options?: {
           );
         if (matchesByTeam.length === 0) continue;
 
-        // Bind the final to this game's kickoff with the SAME rule and the same
-        // tie window the pick-settlement path already uses (nearestByKickoff in
-        // free-settlement.ts). Calendar dates alone are not enough: a 20:10 ET
-        // game is the next UTC day, so "nearest date" picks the wrong game of a
-        // series.
-        const narrowed = nearestByKickoff(
-          g.commenceTime.toISOString(),
-          matchesByTeam.map((c) => c.f),
-        );
-
-        // Fail closed on a tie. Two finals still in contention means a
-        // doubleheader, or a series the sources gave no start times for; either
-        // way we cannot say which one this game is, and guessing is what wrote
-        // a phantom result in the first place. Leaving the row unscored is
-        // recoverable — a wrong FINAL that picks are graded against is not.
-        if (narrowed.length !== 1) {
-          console.warn(
-            `[free-score-persist] AMBIGUOUS_MATCH game=${g.id} ` +
-              `${g.awayTeamName} @ ${g.homeTeamName} commence=${g.commenceTime.toISOString()} ` +
-              `— ${narrowed.length} finals remain after kickoff narrowing; refusing to guess.`,
-          );
-          continue;
-        }
-        // A doubleheader defeats the lone-candidate clock check. When game one
-        // is final and game two is still in progress, only ONE final exists, so
-        // the multi-candidate hold above never fires, and the two fixtures start
-        // 2-4h apart, well inside MAX_KICKOFF_DRIFT_MS — game one's score would
-        // be written onto game two (cubic, #717). The board separates them: read
-        // every fixture it lists for this matchup today.
+        // The board's fixtures for this matchup, near this game's kickoff. Read
+        // BEFORE narrowing: with both games of a doubleheader final, both finals
+        // survive the 4h tie window for both rows, so narrowing alone reported
+        // AMBIGUOUS_MATCH and neither row ever received its own score — the
+        // placement check below never ran (CodeRabbit + cubic, #717). The shared
+        // grader filters by fixture first and then narrows; these two paths must
+        // agree.
+        //
         // Bounded by the drift the confusion needs, not by the calendar day: a
         // 17:00 / 20:00 ET doubleheader straddles UTC midnight, so a day-string
         // match saw only one of the two fixtures and this guard quietly stopped
-        // guarding for exactly the pairing it exists for (cubic, #717).
+        // guarding for exactly the pairing it exists for (cubic, #717). A row
+        // whose start time is date-only carries no clock, so it falls back to
+        // the calendar comparison and is KEPT — dropping it would leave one
+        // fixture standing and silently switch the doubleheader guard off.
         const fixturesToday = espn.filter((ev) => {
           if (!ev.startTime) return false;
           const evStart = Date.parse(ev.startTime);
-          const near = Number.isFinite(evStart)
-            ? Math.abs(evStart - g.commenceTime.getTime()) <= MAX_KICKOFF_DRIFT_MS
-            : ev.startTime.slice(0, 10) === day;
+          const near =
+            ev.startTime.includes("T") && Number.isFinite(evStart)
+              ? Math.abs(evStart - g.commenceTime.getTime()) <= MAX_KICKOFF_DRIFT_MS
+              : Math.abs(Date.parse(ev.startTime.slice(0, 10)) - d0) <= 36e5 * 24;
           if (!near) return false;
           const evHome = sideTokens({
             name: ev.home?.team ?? "",
@@ -292,8 +275,9 @@ export async function persistFreeScores(options?: {
             (hit(gHome, evAway) && hit(gAway, evHome))
           );
         });
-
-        const chosen = narrowed[0]!;
+        const fixtureStarts = fixturesToday
+          .map((ev) => ev.startTime)
+          .filter((t): t is string => Boolean(t));
 
         // Counting fixtures against finals was the first version of this guard
         // and it was wrong twice over: a prior-day final inside the +/-48h
@@ -302,22 +286,45 @@ export async function persistFreeScores(options?: {
         // game two's ambiguous one (cubic, #717). Assign by the clock instead —
         // the same rule the shared grader applies to a pick — so a final only
         // scores the row it actually places on.
-        if (
-          !finalMatchesNearestFixture(
-            g.commenceTime.toISOString(),
-            chosen.startIso,
-            fixturesToday.map((ev) => ev.startTime).filter((t): t is string => Boolean(t)),
-          )
-        ) {
+        const placeable = matchesByTeam.filter((c) =>
+          finalMatchesNearestFixture(g.commenceTime.toISOString(), c.f.startIso, fixtureStarts),
+        );
+        if (placeable.length === 0) {
           console.warn(
             `[free-score-persist] UNRESOLVED_DOUBLEHEADER game=${g.id} ` +
               `${g.awayTeamName} @ ${g.homeTeamName} day=${day} — the board lists ` +
-              `${fixturesToday.length} fixtures for this matchup and the chosen final ` +
-              `(start=${chosen.startIso ?? "none"}) does not place on this one; ` +
-              `refusing to guess which one this row is.`,
+              `${fixturesToday.length} fixtures for this matchup and none of the ` +
+              `${matchesByTeam.length} final(s) place on this one; refusing to guess ` +
+              `which one this row is.`,
           );
           continue;
         }
+
+        // Bind the final to this game's kickoff with the SAME rule and the same
+        // tie window the pick-settlement path already uses (nearestByKickoff in
+        // free-settlement.ts). Calendar dates alone are not enough: a 20:10 ET
+        // game is the next UTC day, so "nearest date" picks the wrong game of a
+        // series.
+        const narrowed = nearestByKickoff(
+          g.commenceTime.toISOString(),
+          placeable.map((c) => c.f),
+        );
+
+        // Fail closed on a tie. Two finals still in contention means a
+        // doubleheader, or a series the sources gave no start times for; either
+        // way we cannot say which one this game is, and guessing is what wrote
+        // a phantom result in the first place. Leaving the row unscored is
+        // recoverable — a wrong FINAL that picks are graded against is not.
+        if (narrowed.length !== 1) {
+          console.warn(
+            `[free-score-persist] AMBIGUOUS_MATCH game=${g.id} ` +
+              `${g.awayTeamName} @ ${g.homeTeamName} commence=${g.commenceTime.toISOString()} ` +
+              `— ${narrowed.length} finals remain after kickoff narrowing; refusing to guess.`,
+          );
+          continue;
+        }
+
+        const chosen = narrowed[0]!;
 
         // Narrowing cannot reject a LONE stale candidate: nearestByKickoff
         // returns a single-element list unchanged. So bind it explicitly. A
