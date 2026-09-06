@@ -35,13 +35,16 @@ import {
   isNflPreseasonFetchWindow,
   remapPreseasonRows,
   mergeFeedRowsById,
-  decidePaidOddsCall,
+  evaluatePaidOddsCall,
   loadLatestCreditObservation,
   loadLatestPaidCallAt,
+  loadLatestPaidCallAnyPurposeAt,
   recordCreditObservation,
-  recordPaidCall,
+  reservePaidCallSlot,
+  PAID_CALL_MIN_INTERVAL_MS,
+  PAID_CALL_PURPOSES,
 } from "@sports/data-ingestion";
-import type { SupportedSportKey, OddsCreditLedgerDb } from "@sports/data-ingestion";
+import type { SupportedSportKey, OddsCreditLedgerDb, OddsIngestKey } from "@sports/data-ingestion";
 import {
   calculatePickResult,
   deriveClosingSnapshotFromOdds,
@@ -217,79 +220,122 @@ export async function settleSport(
       return skipped("spend_guard");
     }
 
-    // C-109 pacing: at most one paid scores call per sport per hour across every
-    // caller (the hourly cron and the autonomy cycle both reach here), read from
-    // the durable ledger, plus the credit reserve rule. See odds-credit-ledger.ts
-    // for why the JarvisMemoryEvent marker was chosen over the settlement run.
+    // C-109 pacing: at most one paid scores call per VENDOR SPORT KEY per hour
+    // across every caller (the hourly cron and the autonomy cycle both reach
+    // here), read from the durable ledger, plus the credit reserve rule. Each
+    // HTTP request is its own governed call: the NFL preseason feed below is
+    // decided, marked and credited under its own key, never under the regular
+    // season's marker. See odds-credit-ledger.ts for why the JarvisMemoryEvent
+    // marker was chosen over the settlement run.
     const ledger = db as unknown as OddsCreditLedgerDb;
-    const now = new Date();
-    const [lastPaidScoresAt, latestCredits] = await Promise.all([
-      loadLatestPaidCallAt(ledger, "scores", sport.key),
-      loadLatestCreditObservation(ledger),
-    ]);
-    const decision = decidePaidOddsCall({
-      remaining: latestCredits?.remaining ?? null,
-      now,
-      purpose: "scores",
-      hasEventWithin48h: null,
-      freeCoversPurpose: false,
-      lastPaidCallAt: lastPaidScoresAt,
-      observedAt: latestCredits?.observedAt ?? null,
-    });
-    if (!decision.allow) {
-      console.info(
-        `${logPrefix} ${sport.key}: paid scores fetch skipped, credit governor: ${decision.reason}`,
-      );
-      return skipped(`credit_governor: ${decision.reason}`);
-    }
-    await recordPaidCall(ledger, { sport: sport.key, purpose: "scores", at: now.toISOString() });
-    const recordCredits = (remaining: number, used: number | null): Promise<unknown> =>
-      recordCreditObservation(ledger, {
-        remaining,
-        used,
-        observedAt: new Date().toISOString(),
-        source: "settle-sport",
+    // A header-less response (remaining null) is not a reading: never recorded.
+    const recordCredits = (remaining: number | null, used: number | null): Promise<unknown> =>
+      remaining == null
+        ? Promise.resolve("skipped")
+        : recordCreditObservation(ledger, {
+            remaining,
+            used,
+            observedAt: new Date().toISOString(),
+            source: "settle-sport",
+          });
+    type ScoresResponse = Awaited<ReturnType<typeof client.getScores>>;
+    type GovernedScores =
+      | { readonly allowed: true; readonly response: ScoresResponse }
+      | { readonly allowed: false; readonly reason: string };
+    const governedScoresFetch = async (vendorKey: OddsIngestKey): Promise<GovernedScores> => {
+      const now = new Date();
+      const [lastPaidScoresAt, lastPaidAnyPurposeAt, latestCredits] = await Promise.all([
+        loadLatestPaidCallAt(ledger, "scores", vendorKey),
+        loadLatestPaidCallAnyPurposeAt(ledger, vendorKey),
+        loadLatestCreditObservation(ledger),
+      ]);
+      const { decision, slot } = evaluatePaidOddsCall({
+        remaining: latestCredits?.remaining ?? null,
+        now,
+        purpose: "scores",
+        hasEventWithin48h: null,
+        freeCoversPurpose: false,
+        lastPaidCallAt: lastPaidScoresAt,
+        lastPaidCallAnyPurposeAt: lastPaidAnyPurposeAt,
+        observedAt: latestCredits?.observedAt ?? null,
       });
-    let scoresFetch: Awaited<ReturnType<typeof client.getScores>>;
-    try {
-      scoresFetch = await client.getScores(sport.key, PAID_SCORES_DAYS_FROM);
-    } catch (fetchErr) {
-      // A 402/429 still carries x-requests-remaining: persist it so a probe
-      // against a stale zero lands its reading even when the call fails.
-      if (fetchErr instanceof OddsApiError && fetchErr.remainingRequests != null) {
-        await recordCredits(fetchErr.remainingRequests, null);
+      if (!decision.allow) return { allowed: false, reason: decision.reason };
+      // Atomic hourly reservation BEFORE the request: advisory mutex, marker
+      // read and marker write in one transaction, so the :20 cron and the :22
+      // autonomy cycle cannot both pass the hourly rule for the same sport. A
+      // stale-zero probe reserves across purposes (one probe per sport per hour).
+      const reservation = await reservePaidCallSlot(ledger, {
+        sport: vendorKey,
+        purpose: "scores",
+        now,
+        intervalMs: PAID_CALL_MIN_INTERVAL_MS,
+        checkPurposes: slot === "any-purpose" ? PAID_CALL_PURPOSES : ["scores"],
+      });
+      if (!reservation.reserved) {
+        return {
+          allowed: false,
+          reason:
+            `paid scores slot for this sport already reserved by a concurrent caller ` +
+            `at ${reservation.lastAt.toISOString()}`,
+        };
       }
-      throw fetchErr;
+      let response: ScoresResponse;
+      try {
+        response = await client.getScores(vendorKey, PAID_SCORES_DAYS_FROM);
+      } catch (fetchErr) {
+        // A 402/429 still carries x-requests-remaining: persist it so a probe
+        // against a stale zero lands its reading even when the call fails.
+        if (fetchErr instanceof OddsApiError && fetchErr.remainingRequests != null) {
+          await recordCredits(fetchErr.remainingRequests, null);
+        }
+        throw fetchErr;
+      }
+      await recordCredits(response.remainingRequests, response.usedRequests);
+      return { allowed: true, response };
+    };
+
+    const regular = await governedScoresFetch(sport.key);
+    if (!regular.allowed) {
+      console.info(
+        `${logPrefix} ${sport.key}: paid scores fetch skipped, credit governor: ${regular.reason}`,
+      );
+      return skipped(`credit_governor: ${regular.reason}`);
     }
-    await recordCredits(scoresFetch.remainingRequests, scoresFetch.usedRequests);
-    let scores = scoresFetch.data;
+    let scores = regular.response.data;
     if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow()) {
       try {
-        const preseason = await client.getScores(NFL_PRESEASON_ODDS_KEY, PAID_SCORES_DAYS_FROM);
-        // Second paid call under the same justification: keep the ledger current.
-        await recordCredits(preseason.remainingRequests, preseason.usedRequests);
-        const existingRows = await db.game.findMany({
-          where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
-          select: {
-            externalId: true,
-            homeTeamName: true,
-            awayTeamName: true,
-            commenceTime: true,
-          },
-        });
-        const candidates = existingRows.map((g) => ({
-          externalId: g.externalId,
-          homeTeam: g.homeTeamName,
-          awayTeam: g.awayTeamName,
-          commenceTime: g.commenceTime,
-        }));
-        const { remapped, unmatched } = remapPreseasonRows(preseason.data, candidates);
-        if (unmatched > 0) {
-          console.warn(
-            `${logPrefix} ${sport.key}: preseason score map skipped ${unmatched} unmatched rows`,
+        // Second paid request, governed on its own vendor key: held by its own
+        // hourly marker or the reserve rule, it is skipped ALONE and the
+        // regular-season scores above still settle.
+        const preseason = await governedScoresFetch(NFL_PRESEASON_ODDS_KEY);
+        if (!preseason.allowed) {
+          console.info(
+            `${logPrefix} ${sport.key}: preseason scores fetch skipped, credit governor: ${preseason.reason}`,
           );
+        } else {
+          const existingRows = await db.game.findMany({
+            where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
+            select: {
+              externalId: true,
+              homeTeamName: true,
+              awayTeamName: true,
+              commenceTime: true,
+            },
+          });
+          const candidates = existingRows.map((g) => ({
+            externalId: g.externalId,
+            homeTeam: g.homeTeamName,
+            awayTeam: g.awayTeamName,
+            commenceTime: g.commenceTime,
+          }));
+          const { remapped, unmatched } = remapPreseasonRows(preseason.response.data, candidates);
+          if (unmatched > 0) {
+            console.warn(
+              `${logPrefix} ${sport.key}: preseason score map skipped ${unmatched} unmatched rows`,
+            );
+          }
+          scores = mergeFeedRowsById(scores, remapped);
         }
-        scores = mergeFeedRowsById(scores, remapped);
       } catch (preseasonErr) {
         console.warn(
           `${logPrefix} ${sport.key}: preseason scores fetch failed — ` +

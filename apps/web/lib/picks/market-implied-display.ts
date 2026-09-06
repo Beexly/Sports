@@ -47,6 +47,11 @@ export function resolveMarketImplied(
   if (!Number.isFinite(pick.bookmakerCount) || pick.bookmakerCount <= 0) return null;
   const p = pick.receiptMarketFairProb;
   if (typeof p !== "number" || !Number.isFinite(p) || p <= 0 || p >= 1) return null;
+  // The synthetic coin-flip 0.5 is the placeholder a receipt carries when no
+  // market probability was resolved. Every public calibration path rejects it
+  // (receiptMarketFairProb in lib/calibration/proven-path-rows.ts, same
+  // tolerance), so the display must never claim "50%" as a market price.
+  if (Math.abs(p - 0.5) < 1e-9) return null;
   return { prob: p, bookmakerCount: Math.round(pick.bookmakerCount) };
 }
 

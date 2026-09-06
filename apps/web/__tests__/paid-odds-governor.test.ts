@@ -59,6 +59,9 @@ describe("espnScoreboardDateRange", () => {
   it("crosses a month boundary in UTC", () => {
     expect(espnScoreboardDateRange(new Date("2026-09-30T20:00:00.000Z"))).toBe("20260930-20261002");
   });
+  it("starts at the six-hour started-game grace boundary: at 00:30 UTC the range begins yesterday", () => {
+    expect(espnScoreboardDateRange(new Date("2026-09-06T00:30:00.000Z"))).toBe("20260905-20260908");
+  });
 });
 
 describe("hasEventWithinHorizon", () => {
@@ -74,6 +77,12 @@ describe("hasEventWithinHorizon", () => {
   });
   it("true for a game in progress regardless of its listed start", () => {
     expect(hasEventWithinHorizon([g("2026-09-06T02:00:00Z", "in")], NOW)).toBe(true);
+  });
+  it("true for a not-yet-final game that kicked off inside the 6h grace window", () => {
+    expect(hasEventWithinHorizon([g("2026-09-06T09:00:00Z")], NOW)).toBe(true);
+  });
+  it("a finished game 3h ago never counts, even inside the grace window (state-aware)", () => {
+    expect(hasEventWithinHorizon([g("2026-09-06T09:00:00Z", "post")], NOW)).toBe(false);
   });
   it("false for an empty board", () => {
     expect(hasEventWithinHorizon([], NOW)).toBe(false);
@@ -128,6 +137,37 @@ describe("sportHasEventWithin48h", () => {
 
   it("answers null for an unmapped sport key", async () => {
     expect(await sportHasEventWithin48h("cricket_ipl", NOW)).toBeNull();
+  });
+
+  it("requires every division group: one failed group answers null (proceed), never an empty board", async () => {
+    // College football is two ESPN requests (FBS groups=80, FCS groups=81). If
+    // the FCS request fails, the FBS half alone must not be read as the board:
+    // an empty board is what skips the paid call, so a missing division must
+    // let the paid call PROCEED.
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const fetchImpl = vi.fn(async (url: string) =>
+      url.includes("groups=81")
+        ? ({ ok: false, status: 503 } as unknown as Response)
+        : scoreboardResponse([{ id: "1", date: "2026-09-07T17:00:00Z", state: "pre" }]),
+    );
+
+    const res = await sportHasEventWithin48h("americanfootball_ncaaf", NOW, fetchImpl as unknown as typeof fetch);
+
+    expect(res).toBeNull();
+    const urls = fetchImpl.mock.calls.map((c) => String(c[0]));
+    expect(urls.some((u) => u.includes("groups=80"))).toBe(true);
+    expect(urls.some((u) => u.includes("groups=81"))).toBe(true);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("not skipping"));
+    warn.mockRestore();
+  });
+
+  it("answers from the full board when every division group succeeds", async () => {
+    const fetchImpl = vi.fn(async (url: string) =>
+      url.includes("groups=81")
+        ? scoreboardResponse([{ id: "2", date: "2026-09-07T20:00:00Z", state: "pre" }])
+        : scoreboardResponse([]),
+    );
+    expect(await sportHasEventWithin48h("americanfootball_ncaaf", NOW, fetchImpl as unknown as typeof fetch)).toBe(true);
   });
 });
 

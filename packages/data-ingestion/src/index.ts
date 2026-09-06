@@ -340,10 +340,12 @@ export {
   HOURLY_BUDGET,
   EVENT_HORIZON_HOURS,
   PAID_CALL_MIN_INTERVAL_MS,
+  PAID_CALL_PURPOSES,
   hoursToMonthEnd,
   reservePaceOk,
   zeroObservationIsStale,
   decidePaidOddsCall,
+  evaluatePaidOddsCall,
   projectCreditExhaustion,
   emptyOddsCreditTruth,
   buildOddsCreditTruth,
@@ -352,17 +354,40 @@ export type {
   PaidCallPurpose,
   PaidCallDecisionInput,
   PaidCallDecision,
+  PaidCallEvaluation,
+  HourlySlot,
   OddsCreditObservation,
   OddsCreditTruth,
 } from "./odds-credit-governor.js";
 export {
   ODDS_CREDITS_SCOPE,
   ODDS_PAID_CALL_SCOPE,
+  CREDIT_OBSERVATION_WINDOW_LIMIT,
   recordCreditObservation,
   loadLatestCreditObservation,
   loadCreditObservationsSince,
   recordPaidCall,
   loadLatestPaidCallAt,
+  loadLatestPaidCallAnyPurposeAt,
+  reservePaidCallSlot,
+  paidCallMutexKey,
+  resetPaidCallReservationWarning,
   loadOddsCreditTruth,
 } from "./odds-credit-ledger.js";
-export type { OddsCreditLedgerDb, PaidCallMarker } from "./odds-credit-ledger.js";
+export type {
+  OddsCreditLedgerDb,
+  OddsCreditLedgerRows,
+  OddsCreditLedgerTx,
+  PaidCallMarker,
+  ReservePaidCallSlotInput,
+  PaidCallSlotReservation,
+} from "./odds-credit-ledger.js";
+export {
+  ODDS_KEY_TO_ESPN_SHORT,
+  STARTED_GRACE_HOURS,
+  espnScoreboardDateRange,
+  hasEventWithinHorizon,
+  sportHasEventWithin48h,
+  buildPaidOddsGovernor,
+} from "./paid-odds-governor.js";
+export type { PaidOddsGovernor, PaidOddsGovernorDeps } from "./paid-odds-governor.js";

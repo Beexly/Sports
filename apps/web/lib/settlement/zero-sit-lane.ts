@@ -49,11 +49,15 @@
  *                                grader refuses to write (see the
  *                                SCORE_MISMATCH_CROSS_PATH guards in
  *                                free-settlement-runner.ts and settle-sport.ts).
- *                                No lane stamps a first-seen time, so the
- *                                recorded final's own write time (game.updatedAt,
- *                                untouched once the conflict starts) is the
- *                                earliest the conflict could have been seen;
- *                                the void waits until that is 24h old too.
+ *                                Aged from KICKOFF like every other code: no
+ *                                lane stamps a first-seen time, and
+ *                                game.updatedAt is a Prisma @updatedAt column
+ *                                that enrichGameContext bumps every cycle
+ *                                (FINAL rows included), so a window anchored on
+ *                                it would reset forever. Voided when kickoff is
+ *                                more than 24h past and the conflict is still
+ *                                on the board this cycle; under the floor it
+ *                                skips as MISMATCH_UNDER_24H.
  *
  * Conservative by construction: the ESPN fetch is strict (`strictEspn`: a
  * date whose board lost any division group, e.g. FBS with FCS healthy, is an
@@ -98,8 +102,36 @@ import type { SettlementRootCauseCode } from "./root-cause-analysis";
 
 /** Hours after kickoff before a still-PENDING pick may be voided. */
 export const ZERO_SIT_VOID_MIN_AGE_HOURS = 24;
-/** Oldest-first cap on void candidates inspected per cycle (published rows lead). */
-export const ZERO_SIT_VOID_CAP = 200;
+/**
+ * Oldest-first cap on void candidates inspected per cycle (published rows
+ * lead). Sized from the scoreboard fetch budget, not from row counts: the
+ * candidates are grouped per sport and their kickoff days compacted into
+ * serial ESPN date-range requests (multi-source-scores.ts fetchEspnForDates),
+ * each bounded by the 12s abort per division group (espn-scores.ts
+ * fetchEspnScoreboard). A candidate adds at most one day, so at most one
+ * range: 20 candidates x 12s = 240s, the route's 300s maxDuration less the
+ * 60s tail reserve below, even when ESPN times out on every request. What the
+ * cap leaves is next cycle's (five cycles an hour; the lane is idempotent).
+ * The deadline covers what the cap cannot: the graders' share of the budget
+ * and NCAAF's second division group (2 x 12s per range).
+ */
+export const ZERO_SIT_VOID_CAP = 20;
+/**
+ * Wall-clock the lane leaves the settle-picks route after it stops: the slate
+ * freeze, the outbox drain and the health read still run after it. Sized above
+ * the longest single step the lane can have just started when it last read
+ * the clock: one NCAAF date range = 2 division groups x 12s abort = 24s, plus
+ * one candidate transaction.
+ */
+export const ZERO_SIT_ROUTE_TAIL_RESERVE_MS = 60_000;
+
+/**
+ * Epoch ms after which the void lane stops before its next scoreboard fetch or
+ * candidate write, derived from the route's own start and `maxDuration`.
+ */
+export function zeroSitDeadline(routeStartedAtMs: number, routeMaxDurationSeconds: number): number {
+  return routeStartedAtMs + routeMaxDurationSeconds * 1000 - ZERO_SIT_ROUTE_TAIL_RESERVE_MS;
+}
 /** Cap on stale rows unpublished per cycle. */
 export const ZERO_SIT_STALE_CAP = 500;
 /** Scoreboard days fetched per sport per cycle (same budget as the backfill lane). */
@@ -246,6 +278,10 @@ export type ZeroSitVoidResult = {
   minAgeHours: number;
   inspected: number;
   capReached: boolean;
+  /** The route deadline stopped the lane before every candidate was inspected. */
+  deadlineHit: boolean;
+  /** Candidates selected this cycle and not inspected (deadline); next cycle's. */
+  remaining: number;
   voided: number;
   gamesCanceled: number;
   byCode: Record<ZeroSitVoidRcaCode, number>;
@@ -370,6 +406,17 @@ export function fixtureListedOnBoard(
 }
 
 /**
+ * A cross-path score conflict: the game row carries a FINAL (written by
+ * another path, keyed by externalId) whose score differs from the free
+ * board's final for the same fixture, so every grader refuses to write.
+ */
+function isCrossPathScoreMismatch(game: ZeroSitPickRow["game"], outcome: SettlementOutcome): boolean {
+  if (outcome.status !== "SETTLED" || outcome.homeScore == null || outcome.awayScore == null) return false;
+  const recordedFinal = game.status === "FINAL" && game.homeScore != null && game.awayScore != null;
+  return recordedFinal && (game.homeScore !== outcome.homeScore || game.awayScore !== outcome.awayScore);
+}
+
+/**
  * Decide what the lane does with one overdue PENDING pick given the free
  * matcher's outcome for it this cycle and the board it was matched against.
  * Pure: no clock reads, no writes.
@@ -384,37 +431,41 @@ export function decideZeroSitVoid(args: {
   const minAgeHours = args.minAgeHours ?? ZERO_SIT_VOID_MIN_AGE_HOURS;
   const { row, outcome } = args;
   const ageHours = hoursBetween(args.now, row.game.commenceTime);
-  if (ageHours < minAgeHours) return { kind: "skip", reason: "UNDER_MIN_AGE" };
+  const crossPathMismatch = isCrossPathScoreMismatch(row.game, outcome);
+  if (ageHours < minAgeHours) {
+    // Under the floor nothing is voided. A conflicting recorded final keeps
+    // its own reason so the surface separates a young mismatch from a young
+    // game; both are aged from kickoff (see the SETTLED branch).
+    return { kind: "skip", reason: crossPathMismatch ? "MISMATCH_UNDER_24H" : "UNDER_MIN_AGE" };
+  }
 
   if (outcome.status === "SETTLED") {
     if (outcome.homeScore == null || outcome.awayScore == null) {
       // Postponed/cancelled VOID from the matcher: the free pass voids it.
       return { kind: "skip", reason: "GRADABLE" };
     }
-    const recordedFinal =
-      row.game.status === "FINAL" && row.game.homeScore != null && row.game.awayScore != null;
-    const conflicts =
-      recordedFinal &&
-      (row.game.homeScore !== outcome.homeScore || row.game.awayScore !== outcome.awayScore);
-    if (!conflicts) return { kind: "skip", reason: "GRADABLE" };
-    // The recorded final's write time is the earliest the conflict could have
-    // been observed (no lane writes the game row once it conflicts).
-    if (hoursBetween(args.now, row.game.updatedAt) < minAgeHours) {
-      return { kind: "skip", reason: "MISMATCH_UNDER_24H" };
-    }
+    if (!crossPathMismatch) return { kind: "skip", reason: "GRADABLE" };
+    // Mismatch age is measured from KICKOFF, never from game.updatedAt.
+    // Game.updatedAt is a Prisma @updatedAt column that every game writer
+    // bumps (enrichGameContext refreshes context on FINAL rows too), so a
+    // window anchored on it can reset each cycle and the pick would sit
+    // forever as MISMATCH_UNDER_24H. This lane reads no settlement
+    // observation or event table, so the stable anchor is the kickoff: the
+    // conflict cannot predate the game, the board still shows it this cycle,
+    // and ageHours >= minAgeHours holds here (floor above).
     return {
       kind: "void",
       rcaCode: "SCORE_MISMATCH_CROSS_PATH",
       reason:
-        `Game row recorded FINAL ${row.game.homeScore}-${row.game.awayScore} at ` +
-        `${row.game.updatedAt.toISOString()}; the free final reads ` +
-        `${outcome.homeScore}-${outcome.awayScore}; every grader refused to write for ` +
-        `more than ${minAgeHours}h.`,
+        `Game row carries FINAL ${row.game.homeScore}-${row.game.awayScore} (row last written ` +
+        `${row.game.updatedAt.toISOString()}); the free final reads ` +
+        `${outcome.homeScore}-${outcome.awayScore}; every grader refused to write, ` +
+        `${round1(ageHours)}h after kickoff (floor ${minAgeHours}h).`,
       evidence: {
         recorded: {
           homeScore: row.game.homeScore,
           awayScore: row.game.awayScore,
-          recordedAt: row.game.updatedAt.toISOString(),
+          rowUpdatedAt: row.game.updatedAt.toISOString(),
         },
         incoming: {
           homeScore: outcome.homeScore,
@@ -422,6 +473,8 @@ export function decideZeroSitVoid(args: {
           confirmation: outcome.confirmation,
           sources: [...outcome.sources],
         },
+        agedFrom: "commenceTime",
+        ageHours: round1(ageHours),
       },
       cancelGame: false,
     };
@@ -614,9 +667,15 @@ function staleUnpublishMemoryEvent(row: ZeroSitPickRow, now: Date): Record<strin
 
 /**
  * STALE half. Selects with the exact where the truth surface counts, then in
- * one transaction re-reads the still-eligible ids, unpublishes exactly those,
- * and appends one memory event per row. Idempotent: rows already unpublished
- * or graded between the read and the write are neither touched nor recorded.
+ * one transaction re-reads the ids that still satisfy the COMPLETE stale
+ * predicate (published, PENDING, not refreshed within the window, kickoff
+ * still in the future, sport scope), unpublishes exactly those under the same
+ * predicate, and appends one memory event per row actually updated.
+ * Idempotent: a row unpublished, graded, refreshed (dataFreshnessAt moved
+ * inside the window) or rescheduled (kickoff now past) between the read and
+ * the write is neither touched nor recorded. Should the bulk update touch
+ * fewer rows than the re-select returned, the rows still published are the
+ * ones it skipped; events and the returned ids cover only the rest.
  */
 export async function unpublishStalePendingPicks(input: {
   readonly db: ZeroSitDb;
@@ -626,8 +685,9 @@ export async function unpublishStalePendingPicks(input: {
 }): Promise<ZeroSitStaleResult> {
   const now = input.now ?? new Date();
   const cap = input.cap ?? ZERO_SIT_STALE_CAP;
+  const stalePredicate = staleUnstartedPublishedPendingWhere(now, input.sportKey ?? null);
   const rows = await input.db.pick.findMany({
-    where: staleUnstartedPublishedPendingWhere(now, input.sportKey ?? null),
+    where: stalePredicate,
     orderBy: [{ game: { commenceTime: "asc" } }, { generatedAt: "asc" }],
     take: cap + 1,
     select: ZERO_SIT_PICK_SELECT,
@@ -648,18 +708,40 @@ export async function unpublishStalePendingPicks(input: {
   let recorded = 0;
   const unpublishedIds: string[] = [];
   const written = await input.db.$transaction(async (tx) => {
+    // Re-validate the COMPLETE predicate, not just isPublished/result: a pick
+    // the pipeline refreshed (dataFreshnessAt inside the window) or whose
+    // kickoff moved into the past since the read is no longer stale-unstarted.
     const stillEligible = await tx.pick.findMany({
-      where: { id: { in: [...byId.keys()] }, isPublished: true, result: "PENDING" },
+      where: { id: { in: [...byId.keys()] }, ...stalePredicate },
       select: { id: true },
     });
     const ids = stillEligible.map((r) => r.id);
     if (ids.length === 0) return { count: 0 };
     const updated = await tx.pick.updateMany({
-      where: { id: { in: ids }, isPublished: true, result: "PENDING" },
+      where: { id: { in: ids }, ...stalePredicate },
       data: { isPublished: false },
     });
     if (updated.count === 0) return updated;
-    for (const id of ids) {
+    let updatedIds = ids;
+    if (updated.count !== ids.length) {
+      // A row changed between the re-select and the update. Our update sets
+      // isPublished=false, so any targeted row still published was skipped;
+      // only the rest were unpublished by this cycle.
+      const stillPublished = await tx.pick.findMany({
+        where: { id: { in: ids }, isPublished: true },
+        select: { id: true },
+      });
+      const skipped = new Set(stillPublished.map((r) => r.id));
+      updatedIds = ids.filter((id) => !skipped.has(id));
+      if (updatedIds.length !== updated.count) {
+        console.warn(
+          `[zero-sit] stale unpublish: updateMany reported ${updated.count} rows but ` +
+            `${updatedIds.length} targeted rows are now unpublished; another writer ` +
+            `unpublished a targeted row in the same window. Recording the ${updatedIds.length}.`,
+        );
+      }
+    }
+    for (const id of updatedIds) {
       const row = byId.get(id);
       if (!row) continue;
       await tx.jarvisMemoryEvent.create({ data: staleUnpublishMemoryEvent(row, now) });
@@ -773,9 +855,11 @@ async function persistZeroSitVoid(
       ],
     );
     if (decision.cancelGame) {
-      // Never clobber a recorded FINAL; only an unplayed row becomes CANCELED.
+      // Never clobber a recorded FINAL; only an unplayed row becomes CANCELED:
+      // SCHEDULED, LIVE (a stale feed state) or already POSTPONED, since a
+      // postponed contest that the board never lists again did not happen.
       const canceled = await tx.game.updateMany({
-        where: { id: row.game.id, status: { in: ["SCHEDULED", "LIVE"] } },
+        where: { id: row.game.id, status: { in: ["SCHEDULED", "LIVE", "POSTPONED"] } },
         data: { status: "CANCELED" },
       });
       gameCanceled = canceled.count > 0;
@@ -800,11 +884,17 @@ export async function voidSittingPicks(input: {
   readonly cap?: number;
   readonly scoreboardMaxDays?: number;
   readonly fetchScores?: typeof fetchScoresMultiSource;
+  /** Route deadline (epoch ms, zeroSitDeadline): the lane stops before its next fetch or write once reached. */
+  readonly deadlineAtMs?: number;
+  /** Wall clock for the deadline check (tests inject one); the decision clock stays `now`. */
+  readonly clock?: () => number;
 }): Promise<ZeroSitVoidResult> {
   const now = input.now ?? new Date();
   const cap = input.cap ?? ZERO_SIT_VOID_CAP;
   const scoreboardMaxDays = input.scoreboardMaxDays ?? ZERO_SIT_SCOREBOARD_MAX_DAYS;
   const fetchScores = input.fetchScores ?? fetchScoresMultiSource;
+  const clock = input.clock ?? ((): number => Date.now());
+  const pastDeadline = (): boolean => input.deadlineAtMs !== undefined && clock() >= input.deadlineAtMs;
   const cutoff = new Date(now.getTime() - ZERO_SIT_VOID_MIN_AGE_HOURS * 60 * 60 * 1000);
 
   const rows = await input.db.pick.findMany({
@@ -830,11 +920,14 @@ export async function voidSittingPicks(input: {
     gamesCanceled: 0,
     byCode: emptyByCode(),
     skippedByReason: emptySkips(),
+    deadlineHit: false,
+    remaining: candidates.length,
     voids: [],
     skipped: [],
     scoreboardFailures: [],
   };
   const skip = (row: ZeroSitPickRow, reason: ZeroSitSkipReason): void => {
+    result.remaining -= 1;
     result.skippedByReason[reason] += 1;
     if (result.skipped.length < SAMPLE_CAP) {
       result.skipped.push({ pickId: row.id, sportKey: row.game.sport?.key ?? "", reason });
@@ -854,6 +947,12 @@ export async function voidSittingPicks(input: {
     if (!freeSport) {
       for (const row of sportRows) skip(row, "NO_FREE_SPORT");
       continue;
+    }
+    // Deadline before every scoreboard fetch: one range can hold the route
+    // for 12s per division group, so it is never started past the budget.
+    if (pastDeadline()) {
+      result.deadlineHit = true;
+      break;
     }
     const { espnKeys, isoKeys } = scoreboardDatesPublishedFirst(sportRows, {
       now,
@@ -910,11 +1009,20 @@ export async function voidSittingPicks(input: {
         gameDateIso: row.game.commenceTime.toISOString(),
       };
       const outcome = settlePendingPicks([pick], finals, { postponedCandidates: board })[0];
-      if (!outcome) continue;
+      if (!outcome) {
+        result.remaining -= 1;
+        continue;
+      }
       const decision = decideZeroSitVoid({ row, outcome, board, now });
       if (decision.kind === "skip") {
         skip(row, decision.reason);
         continue;
+      }
+      // Deadline before every candidate write; the row stays PENDING and is
+      // re-inspected next cycle (the lane is idempotent).
+      if (pastDeadline()) {
+        result.deadlineHit = true;
+        break;
       }
       let persisted: { written: boolean; gameCanceled: boolean };
       try {
@@ -933,6 +1041,7 @@ export async function voidSittingPicks(input: {
         skip(row, "WRITE_RACE_LOST");
         continue;
       }
+      result.remaining -= 1;
       result.voided += 1;
       result.byCode[decision.rcaCode] += 1;
       if (persisted.gameCanceled) result.gamesCanceled += 1;
@@ -950,6 +1059,13 @@ export async function voidSittingPicks(input: {
         `[zero-sit] VOID pick=${row.id} game=${row.game.id} sport=${sportKey} rca=${decision.rcaCode}: ${decision.reason}`,
       );
     }
+    if (result.deadlineHit) break;
+  }
+  if (result.deadlineHit) {
+    console.warn(
+      `[zero-sit] route deadline reached: ${result.remaining} of ${candidates.length} candidates not ` +
+        "inspected this cycle; the lane is idempotent and the next cycle takes them.",
+    );
   }
 
   return result;
@@ -961,6 +1077,9 @@ export async function runZeroSitLane(input: {
   readonly now?: Date;
   readonly sportKey?: string | null;
   readonly fetchScores?: typeof fetchScoresMultiSource;
+  /** Route deadline for the void half (zeroSitDeadline); the stale half is one local transaction. */
+  readonly deadlineAtMs?: number;
+  readonly clock?: () => number;
 }): Promise<ZeroSitLaneResult> {
   const now = input.now ?? new Date();
   const stale = await unpublishStalePendingPicks({
@@ -973,6 +1092,8 @@ export async function runZeroSitLane(input: {
     now,
     sportKey: input.sportKey ?? null,
     ...(input.fetchScores ? { fetchScores: input.fetchScores } : {}),
+    ...(input.deadlineAtMs !== undefined ? { deadlineAtMs: input.deadlineAtMs } : {}),
+    ...(input.clock ? { clock: input.clock } : {}),
   });
   return { lane: "zero-sit", stale, voids };
 }

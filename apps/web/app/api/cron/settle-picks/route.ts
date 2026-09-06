@@ -52,7 +52,7 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
 import { drainPendingSnapshotOutcomes } from "@/lib/settlement/free-path-snapshot";
 import { paidScoresJustifiedSports } from "@/lib/odds/paid-scores-justification";
-import { runZeroSitLane, type ZeroSitLaneResult } from "@/lib/settlement/zero-sit-lane";
+import { runZeroSitLane, zeroSitDeadline, type ZeroSitLaneResult } from "@/lib/settlement/zero-sit-lane";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -172,8 +172,15 @@ export async function GET(request: Request) {
   // ── 3b. Zero-sit lane: every grader has run; unpublish stale unstarted
   // picks and VOID (with an RCA code on the outbox event) what still sits
   // more than 24h past kickoff. Runs before the outbox drain in step 5 so the
-  // VOID receipts it appends are closed in the same cycle.
-  const zeroSit = await runZeroSitLaneSafe("[cron:settle-picks]", requestedSport);
+  // VOID receipts it appends are closed in the same cycle. The lane stops at a
+  // deadline derived from this route's start and maxDuration, leaving
+  // ZERO_SIT_ROUTE_TAIL_RESERVE_MS for steps 4-6 (what it did not reach is
+  // next cycle's; the lane is idempotent).
+  const zeroSit = await runZeroSitLaneSafe(
+    "[cron:settle-picks]",
+    requestedSport,
+    zeroSitDeadline(startedAt, maxDuration),
+  );
 
   // ── 4. Slate commitment freeze (hash-chained receipts; no odds key needed) ─
   let freeze: SlateFreezeResult[] = [];
@@ -401,10 +408,11 @@ async function runStaleBackfillSafe(
 async function runZeroSitLaneSafe(
   logPrefix: string,
   sportKey: string | null,
+  deadlineAtMs: number,
 ): Promise<ZeroSitLaneResult | { error: string }> {
   try {
     // Same `?sport=` scope as the other lanes.
-    return await runZeroSitLane({ db: db as never, sportKey });
+    return await runZeroSitLane({ db: db as never, sportKey, deadlineAtMs });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`${logPrefix} zero-sit lane failed: ${message}`);

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /**
@@ -18,7 +18,7 @@ const mocks = vi.hoisted(() => ({
     (
       sport: string,
       daysFrom: number,
-    ) => Promise<{ data: unknown[]; remainingRequests?: number; usedRequests?: number }>
+    ) => Promise<{ data: unknown[]; remainingRequests?: number | null; usedRequests?: number | null }>
   >(),
   normalizeScores: vi.fn<(scores: unknown[]) => unknown[]>(),
   settleGameLogs: vi.fn<(args: unknown) => Promise<void>>(),
@@ -176,10 +176,15 @@ vi.mock("@sports/data-ingestion", async () => {
     remapPreseasonRows: vi.fn().mockReturnValue({ remapped: [], unmatched: 0 }),
     mergeFeedRowsById: vi.fn((primary: unknown[]) => primary),
     decidePaidOddsCall: actual.decidePaidOddsCall,
+    evaluatePaidOddsCall: actual.evaluatePaidOddsCall,
     loadLatestCreditObservation: actual.loadLatestCreditObservation,
     loadLatestPaidCallAt: actual.loadLatestPaidCallAt,
+    loadLatestPaidCallAnyPurposeAt: actual.loadLatestPaidCallAnyPurposeAt,
     recordCreditObservation: actual.recordCreditObservation,
     recordPaidCall: actual.recordPaidCall,
+    reservePaidCallSlot: actual.reservePaidCallSlot,
+    PAID_CALL_MIN_INTERVAL_MS: actual.PAID_CALL_MIN_INTERVAL_MS,
+    PAID_CALL_PURPOSES: actual.PAID_CALL_PURPOSES,
   };
 });
 
@@ -198,7 +203,12 @@ import {
   SCORELESS_REVIEW_THRESHOLD,
   SCORELESS_COMPLETED_ANOMALY,
 } from "../settle-sport.js";
-import { OddsApiError } from "@sports/data-ingestion";
+import {
+  OddsApiError,
+  NFL_PRESEASON_ODDS_KEY,
+  isNflPreseasonFetchWindow,
+  remapPreseasonRows,
+} from "@sports/data-ingestion";
 import { fingerprintScorePayload } from "../settlement-evidence.js";
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
@@ -314,7 +324,9 @@ describe("settleSport", () => {
     mocks.workUpdateMany.mockResolvedValue({ count: 1 });
 
     // Healthy defaults: one completed game, one pending pick, no CLV close.
-    mocks.getScores.mockResolvedValue({ data: ["raw"] });
+    // The paid response carries realistic quota headers (a header-less
+    // response is its own explicit case below).
+    mocks.getScores.mockResolvedValue({ data: ["raw"], remainingRequests: 1000, usedRequests: 500 });
     mocks.normalizeScores.mockReturnValue([completedScore()]);
     mocks.gameFindUnique.mockResolvedValue(dbGame([pendingPick()]));
     mocks.gameFindMany.mockResolvedValue([]);
@@ -1566,6 +1578,206 @@ describe("settleSport", () => {
       expect(mocks.getScores).toHaveBeenCalledTimes(1);
       expect(result.status).toBe("success");
       expect(result.picksSettled).toBe(1);
+    });
+
+    it("a header-less success (remaining null) records the marker but NO credit observation", async () => {
+      mocks.getScores.mockResolvedValue({ data: ["raw"], remainingRequests: null, usedRequests: null });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(createdScopes()).toEqual(["ops.odds.paidScores"]);
+    });
+
+    it("the stale-zero probe is one per sport per hour ACROSS purposes: an odds probe ten minutes ago holds the scores probe", async () => {
+      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60_000).toISOString();
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        if (where.scope === "ops.odds.credits") {
+          return { full_text: null, metadata: { remaining: 0, used: 20000, observedAt: twoHoursAgo, source: "t" } };
+        }
+        if (where.scope === "ops.odds.paidOdds") {
+          return { full_text: null, metadata: { sport: SPORT.key, purpose: "odds", at: tenMinutesAgo } };
+        }
+        return null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.note).toMatch(/^credit_governor: .*already probed this hour/);
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+      expect(mocks.memFindFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ scope: "ops.odds.paidOdds", source_ref: SPORT.key }),
+        }),
+      );
+    });
+
+    it("the hourly slot is a reservation: a marker a concurrent caller wrote between the decision and the reservation holds the call", async () => {
+      // The decision phase reads the scores marker twice (own purpose, then
+      // any-purpose) and sees none; the reservation's own read then finds the
+      // marker the :22 autonomy cycle wrote a minute ago, so this run holds
+      // instead of spending a second credit inside the hour.
+      const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString();
+      let scoresReads = 0;
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string } }).where;
+        if (where.scope !== "ops.odds.paidScores") return null;
+        scoresReads += 1;
+        return scoresReads <= 2
+          ? null
+          : { full_text: null, metadata: { sport: SPORT.key, purpose: "scores", at: oneMinuteAgo } };
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.status).toBe("success");
+      expect(result.note).toMatch(/^credit_governor: .*reserved by a concurrent caller/);
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * C-109 review finding: in the July/August window one allowed NFL settlement
+   * made TWO paid HTTP requests (regular season, then the preseason feed), and
+   * the second ran under the first's recordPaidCall marker: neither gated nor
+   * recorded. Each request is now its own governed call keyed on the vendor
+   * sport key, so it is decided, marked and credited separately.
+   */
+  describe("NFL preseason window: each paid request is its own governed call (C-109)", () => {
+    type Created = { data: Record<string, unknown> };
+    const created = () => mocks.memCreate.mock.calls.map((c) => c[0] as Created);
+    const scopes = () => created().map((c) => c.data["scope"]);
+    const PRESEASON: string = NFL_PRESEASON_ODDS_KEY;
+
+    beforeEach(() => {
+      (isNflPreseasonFetchWindow as Mock).mockReturnValue(true);
+      (remapPreseasonRows as Mock).mockClear();
+      mocks.getScores.mockImplementation(async (key: string) =>
+        key === PRESEASON
+          ? { data: ["raw-preseason"], remainingRequests: 17990, usedRequests: 2010 }
+          : { data: ["raw"], remainingRequests: 18000, usedRequests: 2000 },
+      );
+    });
+
+    afterEach(() => {
+      (isNflPreseasonFetchWindow as Mock).mockReturnValue(false);
+    });
+
+    it("fetches regular and preseason scores as two governed calls: two markers, two credit readings, each under its own key", async () => {
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(mocks.getScores.mock.calls).toEqual([
+        [SPORT.key, 3],
+        [PRESEASON, 3],
+      ]);
+      expect(scopes()).toEqual([
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+      ]);
+      const markers = created().filter((c) => c.data["scope"] === "ops.odds.paidScores");
+      expect(markers.map((c) => c.data["source_ref"])).toEqual([SPORT.key, PRESEASON]);
+      expect(markers[1]!.data["metadata"]).toMatchObject({ sport: PRESEASON, purpose: "scores" });
+      const credits = created().filter((c) => c.data["scope"] === "ops.odds.credits");
+      expect(credits.map((c) => (c.data["metadata"] as { remaining: number; used: number }).remaining)).toEqual([
+        18000, 17990,
+      ]);
+      // Each request consulted ITS OWN hourly marker before going out...
+      expect(mocks.memFindFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ scope: "ops.odds.paidScores", source_ref: SPORT.key }),
+        }),
+      );
+      expect(mocks.memFindFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ scope: "ops.odds.paidScores", source_ref: PRESEASON }),
+        }),
+      );
+      // ...and the preseason marker was written BEFORE the preseason request.
+      expect(mocks.memCreate.mock.invocationCallOrder[2]!).toBeLessThan(
+        mocks.getScores.mock.invocationCallOrder[1]!,
+      );
+      expect(remapPreseasonRows).toHaveBeenCalledWith(["raw-preseason"], []);
+    });
+
+    it("a preseason marker inside the hour skips ONLY the preseason request; the regular scores still settle", async () => {
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+      const twentyMinutesAgo = new Date(Date.now() - 20 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string; source_ref?: string } }).where;
+        return where.scope === "ops.odds.paidScores" && where.source_ref === PRESEASON
+          ? { full_text: null, metadata: { sport: PRESEASON, purpose: "scores", at: twentyMinutesAgo } }
+          : null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores.mock.calls).toEqual([[SPORT.key, 3]]);
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(result.note).toBeUndefined();
+      // Only the regular season's marker and reading were written.
+      expect(scopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
+      expect(remapPreseasonRows).not.toHaveBeenCalled();
+      expect(infoSpy).toHaveBeenCalledWith(
+        expect.stringContaining("preseason scores fetch skipped, credit governor"),
+      );
+      infoSpy.mockRestore();
+    });
+
+    it("a regular-season marker inside the hour still skips the whole sport (the preseason half never runs alone)", async () => {
+      const twentyMinutesAgo = new Date(Date.now() - 20 * 60_000).toISOString();
+      mocks.memFindFirst.mockImplementation(async (args: unknown) => {
+        const where = (args as { where: { scope: string; source_ref?: string } }).where;
+        return where.scope === "ops.odds.paidScores" && where.source_ref === SPORT.key
+          ? { full_text: null, metadata: { sport: SPORT.key, purpose: "scores", at: twentyMinutesAgo } }
+          : null;
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores).not.toHaveBeenCalled();
+      expect(result.note).toMatch(/^credit_governor: .*within the hour/);
+      expect(mocks.memCreate).not.toHaveBeenCalled();
+    });
+
+    it("a failed preseason request still records the credits it carried and never aborts settlement", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.getScores.mockImplementation(async (key: string) => {
+        if (key === PRESEASON) throw new OddsApiError("The Odds API error: 429", 429, 17950);
+        return { data: ["raw"], remainingRequests: 18000, usedRequests: 2000 };
+      });
+
+      const result = await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(result.status).toBe("success");
+      expect(result.picksSettled).toBe(1);
+      expect(scopes()).toEqual([
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+        "ops.odds.paidScores",
+        "ops.odds.credits",
+      ]);
+      expect(created()[3]!.data["metadata"]).toMatchObject({ remaining: 17950, used: null, source: "settle-sport" });
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("preseason scores fetch failed"));
+      warnSpy.mockRestore();
+    });
+
+    it("outside the window there is exactly one governed request (unchanged)", async () => {
+      (isNflPreseasonFetchWindow as Mock).mockReturnValue(false);
+
+      await settleSport(SPORT, "key", gates(), "[t]", JUSTIFIED);
+
+      expect(mocks.getScores.mock.calls).toEqual([[SPORT.key, 3]]);
+      expect(scopes()).toEqual(["ops.odds.paidScores", "ops.odds.credits"]);
     });
   });
 });

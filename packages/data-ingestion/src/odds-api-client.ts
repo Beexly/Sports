@@ -22,7 +22,8 @@ export class OddsApiError extends Error {
   constructor(
     message: string,
     public readonly status?: number,
-    public readonly remainingRequests?: number
+    /** x-requests-remaining from the failed response; null when the header was absent. */
+    public readonly remainingRequests?: number | null
   ) {
     super(message);
     this.name = "OddsApiError";
@@ -31,8 +32,23 @@ export class OddsApiError extends Error {
 
 export interface OddsApiFetchResult<T> {
   data: T;
-  remainingRequests: number;
-  usedRequests: number;
+  /**
+   * x-requests-remaining / x-requests-used as the vendor reported them. null
+   * when the header was absent or not an integer (a proxy or CDN edge answered,
+   * not the vendor): a header-less response is NOT a zero-credit reading and
+   * must never be recorded as one (C-109).
+   */
+  remainingRequests: number | null;
+  usedRequests: number | null;
+}
+
+/** Parse one quota header: an integer string to a number, anything else to null. */
+export function parseQuotaHeader(value: string | null | undefined): number | null {
+  if (value == null) return null;
+  const trimmed = value.trim();
+  if (!/^-?\d+$/.test(trimmed)) return null;
+  const n = Number(trimmed);
+  return Number.isSafeInteger(n) ? n : null;
 }
 
 /** Paid historical `/v4/historical/sports/{sport}/odds` envelope. */
@@ -252,14 +268,8 @@ export class OddsApiClient {
       throw new OddsApiError("The Odds API request failed before a response was received");
     }
 
-    const remainingRequests = parseInt(
-      response.headers.get("x-requests-remaining") ?? "0",
-      10
-    );
-    const usedRequests = parseInt(
-      response.headers.get("x-requests-used") ?? "0",
-      10
-    );
+    const remainingRequests = parseQuotaHeader(response.headers.get("x-requests-remaining"));
+    const usedRequests = parseQuotaHeader(response.headers.get("x-requests-used"));
 
     if (!response.ok) {
       const body = await response.text();

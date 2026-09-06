@@ -3,24 +3,33 @@ import {
   DAILY_BUDGET,
   HOURLY_BUDGET,
   MONTHLY_CREDITS,
+  PAID_CALL_PURPOSES,
   buildOddsCreditTruth,
   decidePaidOddsCall,
   emptyOddsCreditTruth,
+  evaluatePaidOddsCall,
   hoursToMonthEnd,
   projectCreditExhaustion,
   reservePaceOk,
   zeroObservationIsStale,
 } from "../odds-credit-governor";
 import {
+  CREDIT_OBSERVATION_WINDOW_LIMIT,
   ODDS_CREDITS_SCOPE,
   ODDS_PAID_CALL_SCOPE,
   loadCreditObservationsSince,
   loadLatestCreditObservation,
+  loadLatestPaidCallAnyPurposeAt,
   loadLatestPaidCallAt,
   loadOddsCreditTruth,
+  paidCallMutexKey,
   recordCreditObservation,
   recordPaidCall,
+  resetPaidCallReservationWarning,
+  reservePaidCallSlot,
   type OddsCreditLedgerDb,
+  type OddsCreditLedgerRows,
+  type OddsCreditLedgerTx,
 } from "../odds-credit-ledger";
 
 /**
@@ -334,6 +343,147 @@ describe("projectCreditExhaustion", () => {
     // after 11:00, which is before now (12:00), so the projection clamps to now.
     expect(at).toBe(SEP_6.toISOString());
   });
+
+  it("segments at the last upward step: a reset inside the window is fitted only on the post-reset run", () => {
+    // 100 left at 10:00, the monthly reset lands 20000 at 11:00, 19880 at 12:00:
+    // the slope is 120/h from the reset onward (19880/120 = 165h40m after 12:00),
+    // never the 100 -> 20000 jump nor anything before it.
+    const at = projectCreditExhaustion(
+      [
+        obs(100, "2026-09-06T10:00:00.000Z"),
+        obs(20000, "2026-09-06T11:00:00.000Z"),
+        obs(19880, "2026-09-06T12:00:00.000Z"),
+      ],
+      SEP_6,
+    );
+    expect(at).toBe("2026-09-13T09:40:00.000Z");
+  });
+
+  it("ignores the pre-reset burn entirely, however steep", () => {
+    const at = projectCreditExhaustion(
+      [
+        obs(20000, "2026-09-06T08:00:00.000Z"),
+        obs(100, "2026-09-06T10:00:00.000Z"), // 9950/h before the reset
+        obs(20000, "2026-09-06T11:00:00.000Z"),
+        obs(19880, "2026-09-06T12:00:00.000Z"),
+      ],
+      SEP_6,
+    );
+    expect(at).toBe("2026-09-13T09:40:00.000Z");
+  });
+
+  it("returns null when the post-reset segment holds a single point", () => {
+    expect(
+      projectCreditExhaustion(
+        [
+          obs(2400, "2026-09-06T10:00:00.000Z"),
+          obs(100, "2026-09-06T10:30:00.000Z"),
+          obs(20000, "2026-09-06T11:00:00.000Z"),
+        ],
+        SEP_6,
+      ),
+    ).toBeNull();
+  });
+});
+
+/**
+ * C-109 review: the pure evaluation also names the hourly slot an allowed call
+ * must reserve atomically before spending, and the stale-zero probe is capped
+ * across purposes (an odds probe AND a scores probe used to both fire in one
+ * hour for the same sport).
+ */
+describe("evaluatePaidOddsCall: hourly slot and the cross-purpose probe cap", () => {
+  const base = {
+    now: SEP_6,
+    hasEventWithin48h: true,
+    freeCoversPurpose: false,
+    remaining: 19000,
+    observedAt: SEP_6.toISOString(),
+  } as const;
+  const twoHoursAgo = new Date(SEP_6.getTime() - 2 * 60 * 60_000).toISOString();
+
+  it("decidePaidOddsCall is the evaluation's decision", () => {
+    const input = { ...base, purpose: "odds" as const };
+    expect(decidePaidOddsCall(input)).toEqual(evaluatePaidOddsCall(input).decision);
+  });
+
+  it("odds while the pace funds the budget: allowed, no hourly slot binds ('none')", () => {
+    const e = evaluatePaidOddsCall({ ...base, purpose: "odds" });
+    expect(e.decision.allow).toBe(true);
+    expect(e.slot).toBe("none");
+  });
+
+  it("odds in reserve mode: one call per sport per hour ('purpose')", () => {
+    const e = evaluatePaidOddsCall({ ...base, purpose: "odds", remaining: 3000 });
+    expect(e.decision.allow).toBe(true);
+    expect(e.decision.reason).toMatch(/reserve/);
+    expect(e.slot).toBe("purpose");
+  });
+
+  it("scores always carry the per-purpose hourly slot, pace ok or not, observation or not", () => {
+    expect(evaluatePaidOddsCall({ ...base, purpose: "scores" }).slot).toBe("purpose");
+    expect(evaluatePaidOddsCall({ ...base, purpose: "scores", remaining: null }).slot).toBe("purpose");
+    expect(evaluatePaidOddsCall({ ...base, purpose: "scores", remaining: 3000 }).slot).toBe("purpose");
+  });
+
+  it("a stale-zero probe reserves across every purpose ('any-purpose')", () => {
+    for (const purpose of PAID_CALL_PURPOSES) {
+      const e = evaluatePaidOddsCall({ ...base, purpose, remaining: 0, observedAt: twoHoursAgo });
+      expect(e.decision).toEqual({ allow: true, reason: "probe: zero-credit observation is stale" });
+      expect(e.slot).toBe("any-purpose");
+    }
+  });
+
+  it("a held call reports slot 'none'", () => {
+    const e = evaluatePaidOddsCall({ ...base, purpose: "odds", hasEventWithin48h: false });
+    expect(e.decision.allow).toBe(false);
+    expect(e.slot).toBe("none");
+  });
+
+  it("at most ONE probe per sport per hour across purposes: a scores probe ten minutes ago holds the odds probe", () => {
+    const held = decidePaidOddsCall({
+      ...base,
+      purpose: "odds",
+      remaining: 0,
+      observedAt: twoHoursAgo,
+      lastPaidCallAt: null, // no odds call this hour...
+      lastPaidCallAnyPurposeAt: new Date(SEP_6.getTime() - 10 * 60_000), // ...but a scores probe was
+    });
+    expect(held.allow).toBe(false);
+    expect(held.reason).toMatch(/already probed this hour/);
+
+    const heldScores = decidePaidOddsCall({
+      ...base,
+      purpose: "scores",
+      remaining: 0,
+      observedAt: twoHoursAgo,
+      lastPaidCallAt: null,
+      lastPaidCallAnyPurposeAt: new Date(SEP_6.getTime() - 10 * 60_000),
+    });
+    expect(heldScores.allow).toBe(false);
+  });
+
+  it("the cross-purpose marker releases after the hour", () => {
+    const d = decidePaidOddsCall({
+      ...base,
+      purpose: "odds",
+      remaining: 0,
+      observedAt: twoHoursAgo,
+      lastPaidCallAt: null,
+      lastPaidCallAnyPurposeAt: new Date(SEP_6.getTime() - 70 * 60_000),
+    });
+    expect(d).toEqual({ allow: true, reason: "probe: zero-credit observation is stale" });
+  });
+
+  it("the cross-purpose marker only affects the probe: pace-ok odds and normal scores ignore it", () => {
+    const tenMinutesAgo = new Date(SEP_6.getTime() - 10 * 60_000);
+    expect(
+      evaluatePaidOddsCall({ ...base, purpose: "odds", lastPaidCallAnyPurposeAt: tenMinutesAgo }).decision.allow,
+    ).toBe(true);
+    expect(
+      evaluatePaidOddsCall({ ...base, purpose: "scores", lastPaidCallAnyPurposeAt: tenMinutesAgo }).decision.allow,
+    ).toBe(true);
+  });
 });
 
 describe("buildOddsCreditTruth", () => {
@@ -522,5 +672,267 @@ describe("ledger (append-only JarvisMemoryEvent rows)", () => {
     const rows = await loadCreditObservationsSince(db, SEP_6);
     expect(rows).toHaveLength(1);
     expect(rows[0]!.remaining).toBe(10);
+  });
+
+  it("loadCreditObservationsSince reads the NEWEST 500 of a busy window, returned chronological", async () => {
+    // 600 readings a minute apart. Ascending + take 500 returned the OLDEST
+    // 500 and anchored the projection on stale rows; the ledger now reads
+    // newest-first and reverses.
+    const stored = Array.from({ length: 600 }, (_, i) => ({
+      full_text: null,
+      metadata: {
+        remaining: 20000 - i,
+        used: i,
+        observedAt: new Date(Date.UTC(2026, 8, 6, 0, i)).toISOString(),
+        source: "t",
+      },
+    }));
+    const findMany = vi.fn(async (args: { orderBy: { created_at: "asc" | "desc" }; take: number }) => {
+      const ordered = args.orderBy.created_at === "desc" ? [...stored].reverse() : stored;
+      return ordered.slice(0, args.take);
+    });
+    const db: OddsCreditLedgerDb = {
+      jarvisMemoryEvent: { create: vi.fn(async () => ({})), findFirst: vi.fn(async () => null), findMany },
+    };
+
+    const rows = await loadCreditObservationsSince(db, SEP_6);
+
+    expect(CREDIT_OBSERVATION_WINDOW_LIMIT).toBe(500);
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ orderBy: { created_at: "desc" }, take: 500 }),
+    );
+    expect(rows).toHaveLength(500);
+    // Oldest of the newest 500 first, the very latest reading last.
+    expect(rows[0]!.remaining).toBe(20000 - 100);
+    expect(rows[499]!.remaining).toBe(20000 - 599);
+    for (let i = 1; i < rows.length; i++) {
+      expect(Date.parse(rows[i]!.observedAt)).toBeGreaterThan(Date.parse(rows[i - 1]!.observedAt));
+    }
+  });
+
+  it("loadLatestPaidCallAnyPurposeAt is the newest marker across odds and scores; null when none; null on outage", async () => {
+    type Row = { full_text: string | null; metadata: unknown } | null;
+    const findFirst = vi.fn<(args: { where: { scope: string } }) => Promise<Row>>(async (args) => {
+      if (args.where.scope === ODDS_PAID_CALL_SCOPE.odds) {
+        return { full_text: null, metadata: { sport: "baseball_mlb", purpose: "odds", at: "2026-09-06T11:00:00.000Z" } };
+      }
+      if (args.where.scope === ODDS_PAID_CALL_SCOPE.scores) {
+        return { full_text: null, metadata: { sport: "baseball_mlb", purpose: "scores", at: "2026-09-06T11:30:00.000Z" } };
+      }
+      return null;
+    });
+    const db: OddsCreditLedgerDb = {
+      jarvisMemoryEvent: { create: vi.fn(async () => ({})), findFirst, findMany: vi.fn(async () => []) },
+    };
+    expect(await loadLatestPaidCallAnyPurposeAt(db, "baseball_mlb")).toEqual(new Date("2026-09-06T11:30:00.000Z"));
+    const scopes = findFirst.mock.calls.map((c) => c[0].where.scope).sort();
+    expect(scopes).toEqual([ODDS_PAID_CALL_SCOPE.odds, ODDS_PAID_CALL_SCOPE.scores].sort());
+
+    const empty = fakeDb();
+    expect(await loadLatestPaidCallAnyPurposeAt(empty.db, "baseball_mlb")).toBeNull();
+
+    const broken = fakeDb();
+    broken.findFirst.mockRejectedValue(new Error("db down"));
+    expect(await loadLatestPaidCallAnyPurposeAt(broken.db, "baseball_mlb")).toBeNull();
+  });
+});
+
+/**
+ * C-109 review: the hourly slot is an ATOMIC reservation. Two overlapping
+ * executions for the same sport used to both read the same latest marker
+ * before either wrote one, both pass the hourly limit and both spend.
+ */
+describe("reservePaidCallSlot (atomic hourly slot)", () => {
+  const HOUR = 60 * 60_000;
+  type StoredMarker = { scope: string; source_ref: string; at: string; created: number };
+
+  /** In-memory marker store; `rows()` is the delegate view a transaction or the client sees. */
+  function markerStore() {
+    const markers: StoredMarker[] = [];
+    let seq = 0;
+    const rows = (): OddsCreditLedgerRows => ({
+      jarvisMemoryEvent: {
+        findFirst: async (args) => {
+          const { scope, source_ref } = args.where;
+          const hit = markers
+            .filter((m) => m.scope === scope && (source_ref === undefined || m.source_ref === source_ref))
+            .sort((a, b) => b.created - a.created)[0];
+          if (!hit) return null;
+          const purpose = hit.scope === ODDS_PAID_CALL_SCOPE.scores ? "scores" : "odds";
+          return { full_text: null, metadata: { sport: hit.source_ref, purpose, at: hit.at } };
+        },
+        findMany: async () => [],
+        create: async (args) => {
+          const d = args.data;
+          markers.push({
+            scope: String(d["scope"]),
+            source_ref: String(d["source_ref"]),
+            at: String((d["metadata"] as { at: string }).at),
+            created: ++seq,
+          });
+          return {};
+        },
+      },
+    });
+    return { markers, rows };
+  }
+
+  /** A real-client-shaped fake: $transaction serializes callbacks (what the advisory mutex does in Postgres). */
+  function atomicFakeDb() {
+    const store = markerStore();
+    const mutexKeys: string[] = [];
+    let chain: Promise<unknown> = Promise.resolve();
+    const db: OddsCreditLedgerDb = {
+      ...store.rows(),
+      $transaction: <T>(fn: (tx: OddsCreditLedgerTx) => Promise<T>): Promise<T> => {
+        const run = chain.then(() =>
+          fn({
+            ...store.rows(),
+            $executeRaw: async (_query, ...values) => {
+              mutexKeys.push(String(values[0]));
+              return 1;
+            },
+          }),
+        );
+        chain = run.catch(() => undefined);
+        return run;
+      },
+      $executeRaw: async () => 1,
+    };
+    return { db, markers: store.markers, mutexKeys };
+  }
+
+  it("two concurrent reservations for the same sport within the hour yield exactly one reserved:true, under the per-sport advisory mutex", async () => {
+    const { db, markers, mutexKeys } = atomicFakeDb();
+    const input = { sport: "baseball_mlb", purpose: "scores" as const, now: SEP_6, intervalMs: HOUR };
+
+    const [a, b] = await Promise.all([reservePaidCallSlot(db, input), reservePaidCallSlot(db, input)]);
+
+    expect([a.reserved, b.reserved].filter(Boolean)).toHaveLength(1);
+    expect(a.atomic).toBe(true);
+    expect(b.atomic).toBe(true);
+    expect(markers).toHaveLength(1);
+    expect(markers[0]).toMatchObject({ scope: ODDS_PAID_CALL_SCOPE.scores, source_ref: "baseball_mlb" });
+    const loser = a.reserved ? b : a;
+    expect(loser.reserved === false && loser.lastAt.toISOString()).toBe(SEP_6.toISOString());
+    expect(mutexKeys).toEqual([paidCallMutexKey("baseball_mlb"), paidCallMutexKey("baseball_mlb")]);
+    expect(paidCallMutexKey("baseball_mlb")).toBe("odds-paid:baseball_mlb");
+  });
+
+  it("reserves again once the interval has passed; intervalMs 0 records without ever holding", async () => {
+    const { db, markers } = atomicFakeDb();
+    const first = await reservePaidCallSlot(db, { sport: "x", purpose: "odds", now: SEP_6, intervalMs: HOUR });
+    expect(first.reserved).toBe(true);
+    const within = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "odds",
+      now: new Date(SEP_6.getTime() + 59 * 60_000),
+      intervalMs: HOUR,
+    });
+    expect(within.reserved).toBe(false);
+    const later = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "odds",
+      now: new Date(SEP_6.getTime() + 61 * 60_000),
+      intervalMs: HOUR,
+    });
+    expect(later.reserved).toBe(true);
+    const unpaced = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "odds",
+      now: new Date(SEP_6.getTime() + 62 * 60_000),
+      intervalMs: 0,
+    });
+    expect(unpaced.reserved).toBe(true);
+    expect(markers).toHaveLength(3);
+  });
+
+  it("a cross-purpose check (the stale-zero probe) is held by the OTHER purpose's fresh marker; the per-purpose default is not", async () => {
+    const { db } = atomicFakeDb();
+    expect(
+      (await reservePaidCallSlot(db, { sport: "x", purpose: "odds", now: SEP_6, intervalMs: HOUR })).reserved,
+    ).toBe(true);
+    const tenMinutesLater = new Date(SEP_6.getTime() + 10 * 60_000);
+    const probe = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "scores",
+      now: tenMinutesLater,
+      intervalMs: HOUR,
+      checkPurposes: PAID_CALL_PURPOSES,
+    });
+    expect(probe.reserved).toBe(false);
+    const scoresOnly = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "scores",
+      now: tenMinutesLater,
+      intervalMs: HOUR,
+    });
+    expect(scoresOnly.reserved).toBe(true);
+  });
+
+  it("different sports never block each other", async () => {
+    const { db } = atomicFakeDb();
+    const [a, b] = await Promise.all([
+      reservePaidCallSlot(db, { sport: "a", purpose: "scores", now: SEP_6, intervalMs: HOUR }),
+      reservePaidCallSlot(db, { sport: "b", purpose: "scores", now: SEP_6, intervalMs: HOUR }),
+    ]);
+    expect(a.reserved && b.reserved).toBe(true);
+  });
+
+  it("without $transaction/$executeRaw it falls back to read-then-write, warns once, and still enforces the interval for sequential calls", async () => {
+    resetPaidCallReservationWarning();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const store = markerStore();
+    const db: OddsCreditLedgerDb = store.rows();
+
+    const first = await reservePaidCallSlot(db, { sport: "x", purpose: "scores", now: SEP_6, intervalMs: HOUR });
+    const second = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "scores",
+      now: new Date(SEP_6.getTime() + 20 * 60_000),
+      intervalMs: HOUR,
+    });
+
+    expect(first).toEqual({ reserved: true, atomic: false });
+    expect(second).toEqual({ reserved: false, atomic: false, lastAt: SEP_6 });
+    expect(store.markers).toHaveLength(1);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("non-atomic"));
+    warn.mockRestore();
+  });
+
+  it("a transaction that throws falls back to read-then-write (marker still written) and says so", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const store = markerStore();
+    const db: OddsCreditLedgerDb = {
+      ...store.rows(),
+      $transaction: async () => {
+        throw new Error("advisory mutex unavailable");
+      },
+      $executeRaw: async () => 1,
+    };
+    const r = await reservePaidCallSlot(db, { sport: "x", purpose: "odds", now: SEP_6, intervalMs: HOUR });
+    expect(r).toEqual({ reserved: true, atomic: false });
+    expect(store.markers).toHaveLength(1);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("atomic slot reservation failed"));
+    warn.mockRestore();
+  });
+
+  it("a ledger outage reads as reserved (fail open, like every other ledger function)", async () => {
+    const db: OddsCreditLedgerDb = {
+      jarvisMemoryEvent: {
+        create: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+        findFirst: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+        findMany: vi.fn(async () => []),
+      },
+    };
+    expect(await reservePaidCallSlot(db, { sport: "x", purpose: "odds", now: SEP_6, intervalMs: HOUR })).toEqual({
+      reserved: true,
+      atomic: false,
+    });
   });
 });

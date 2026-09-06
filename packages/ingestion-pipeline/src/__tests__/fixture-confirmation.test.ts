@@ -17,6 +17,7 @@ import {
   findListedFixture,
   fixtureDateKeys,
   requiresReconfirmation,
+  scoreboardDateKeys,
   scoreboardDatesParam,
   type FixtureProbe,
 } from "../fixture-confirmation.js";
@@ -102,6 +103,21 @@ describe("fixtureDateKeys", () => {
   });
 });
 
+describe("scoreboardDateKeys", () => {
+  it("returns the sorted unique day keys a batch needs, one ESPN request each", () => {
+    expect(scoreboardDateKeys([LISTED])).toEqual(["20260905"]);
+    expect(
+      scoreboardDateKeys([
+        // 01:00Z on 09-07 is the Eastern evening of 09-06: two keys.
+        { ...LISTED, id: "x", commenceTime: new Date("2026-09-07T01:00:00.000Z") },
+        LISTED,
+        { ...LISTED, id: "y", commenceTime: new Date("2026-09-05T21:00:00.000Z") },
+      ]),
+    ).toEqual(["20260905", "20260906", "20260907"]);
+    expect(scoreboardDateKeys([])).toEqual([]);
+  });
+});
+
 describe("scoreboardDatesParam", () => {
   it("collapses to one day or a min-max range", () => {
     expect(scoreboardDatesParam([LISTED])).toBe("20260905");
@@ -167,6 +183,29 @@ describe("findListedFixture", () => {
     };
     expect(findListedFixture(probe, board, NCAAF)?.externalId).toBe("espn:ncaaf:10");
   });
+
+  it("rejects a same-teams candidate on a shared date key more than 12 hours from our clock", () => {
+    // 01:00Z on 09-05 (Eastern 09-04) shares the 20260905 key with a 23:30Z
+    // listing that day, but 22.5 hours apart is a different contest.
+    const board = parseBoard({
+      events: [espnEvent("11", "2026-09-05T23:30Z", "Ole Miss Rebels", "Louisville Cardinals")],
+    });
+    const probe: FixtureProbe = {
+      id: "g",
+      homeTeamName: "Ole Miss Rebels",
+      awayTeamName: "Louisville Cardinals",
+      commenceTime: new Date("2026-09-05T01:00:00.000Z"),
+    };
+    expect(findListedFixture(probe, board, NCAAF)).toBeNull();
+    // Inside the bound (the listing 3.5 hours later, same day) still confirms.
+    expect(
+      findListedFixture(
+        { ...probe, commenceTime: new Date("2026-09-05T20:00:00.000Z") },
+        board,
+        NCAAF,
+      )?.externalId,
+    ).toBe("espn:ncaaf:11");
+  });
 });
 
 describe("requiresReconfirmation and commenceTimeCorrection", () => {
@@ -178,14 +217,17 @@ describe("requiresReconfirmation and commenceTimeCorrection", () => {
     commenceTime: new Date("2026-09-05T19:00:00.000Z"),
   };
 
-  it("re-confirms only rows older than 30 days with kickoff inside 48 hours", () => {
+  it("re-confirms only rows older than 30 days with a kickoff still ahead and inside 48 hours", () => {
     expect(requiresReconfirmation(oldRow, NOW)).toBe(true);
     expect(requiresReconfirmation({ ...oldRow, createdAt: new Date("2026-09-01T00:00:00.000Z") }, NOW)).toBe(false);
     expect(requiresReconfirmation({ ...oldRow, commenceTime: new Date("2026-09-09T19:00:00.000Z") }, NOW)).toBe(false);
     expect(requiresReconfirmation({ ...oldRow, createdAt: null }, NOW)).toBe(false);
+    // A kickoff already behind now is a historical game: never re-confirmed.
+    expect(requiresReconfirmation({ ...oldRow, commenceTime: new Date("2026-09-05T14:00:00.000Z") }, NOW)).toBe(false);
+    expect(requiresReconfirmation({ ...oldRow, commenceTime: NOW }, NOW)).toBe(false);
   });
 
-  it("corrects commenceTime only beyond 15 minutes of drift", () => {
+  it("corrects commenceTime beyond 15 minutes of drift on any row whose kickoff is still ahead", () => {
     // 30 minutes of drift: corrected to ESPN's clock.
     expect(commenceTimeCorrection(oldRow, espnAt, NOW)).toEqual(espnAt);
     // Exactly 15 minutes: left alone.
@@ -196,14 +238,29 @@ describe("requiresReconfirmation and commenceTimeCorrection", () => {
     expect(
       commenceTimeCorrection(oldRow, new Date("2026-09-05T19:10:00.000Z"), NOW),
     ).toBeNull();
-    // A fresh row never has its clock rewritten by the guard, whatever the drift.
-    expect(commenceTimeCorrection(LISTED, new Date("2026-09-05T21:00:00.000Z"), NOW)).toBeNull();
+    // A fresh row is corrected too: the same contest listed at a materially
+    // different clock would otherwise be priced and settled at the stale time.
+    expect(commenceTimeCorrection(LISTED, new Date("2026-09-05T21:00:00.000Z"), NOW)).toEqual(
+      new Date("2026-09-05T21:00:00.000Z"),
+    );
+    // A kickoff already behind now is never rewritten, whatever the drift.
+    const passed: FixtureProbe = { ...LISTED, commenceTime: new Date("2026-09-05T13:00:00.000Z") };
+    expect(commenceTimeCorrection(passed, new Date("2026-09-05T14:30:00.000Z"), NOW)).toBeNull();
+    expect(
+      commenceTimeCorrection({ ...oldRow, commenceTime: new Date("2026-09-05T13:00:00.000Z") }, espnAt, NOW),
+    ).toBeNull();
   });
 
-  it("carries the correction on a confirmed old row and null on a fresh one", () => {
+  it("carries the correction on a confirmed row with drift (old or fresh) and null when the clocks agree", () => {
     const board = parseBoard(CFB_BOARD);
-    const out = confirmFixturesAgainstScoreboard([oldRow, LISTED], board, NCAAF, NOW);
+    const freshDrift: FixtureProbe = {
+      ...LISTED,
+      id: "g-cincy-fresh",
+      commenceTime: new Date("2026-09-05T18:45:00.000Z"),
+    };
+    const out = confirmFixturesAgainstScoreboard([oldRow, LISTED, freshDrift], board, NCAAF, NOW);
     expect(out.get(oldRow.id)).toMatchObject({ status: "confirmed", correctedCommenceTime: espnAt });
+    expect(out.get(freshDrift.id)).toMatchObject({ status: "confirmed", correctedCommenceTime: espnAt });
     expect(out.get(LISTED.id)).toMatchObject({ status: "confirmed", correctedCommenceTime: null });
   });
 });
@@ -257,23 +314,85 @@ describe("FixtureConfirmer", () => {
     });
   });
 
-  it("sends groups=50 on a men's college basketball batch spanning two date keys (a range without groups is HTTP 404 live)", async () => {
+  it("fetches one day at a time (never a min-max range) and caches each day per group", async () => {
+    const fetchImpl = vi.fn<(url: string) => Promise<Response>>(async () => jsonResponse(CFB_BOARD));
+    const confirmer = new FixtureConfirmer({ fetchImpl: fetchImpl as unknown as typeof fetch, now: NOW });
+    const sunday: FixtureProbe = {
+      id: "g-sunday",
+      homeTeamName: "Ole Miss Rebels",
+      awayTeamName: "Louisville Cardinals",
+      commenceTime: new Date("2026-09-06T23:30:00.000Z"),
+    };
+
+    const first = await confirmer.confirmBatch(NCAAF, [LISTED, sunday]);
+    // Two days x two groups; no request spans a range.
+    expect(fetchImpl).toHaveBeenCalledTimes(4);
+    const urls = fetchImpl.mock.calls.map((c) => String(c[0]));
+    for (const url of urls) expect(url).not.toMatch(/dates=\d+-\d+/);
+    expect(urls.filter((u) => u.includes("dates=20260905"))).toHaveLength(2);
+    expect(urls.filter((u) => u.includes("dates=20260906"))).toHaveLength(2);
+    expect(first.status).toBe("ok");
+    if (first.status === "ok") {
+      expect(first.byGameId.get("g-cincy")?.status).toBe("confirmed");
+      expect(first.byGameId.get("g-sunday")?.status).toBe("confirmed");
+    }
+
+    // A later batch on a day already fetched adds no request; a new day adds
+    // one per group.
+    await confirmer.confirmBatch(NCAAF, [sunday]);
+    expect(fetchImpl).toHaveBeenCalledTimes(4);
+    await confirmer.confirmBatch(NCAAF, [
+      { ...sunday, id: "g-monday", commenceTime: new Date("2026-09-07T23:30:00.000Z") },
+    ]);
+    expect(fetchImpl).toHaveBeenCalledTimes(6);
+  });
+
+  it("treats a full page (events at the ESPN limit) as not confirmable: fetch_failed, never not_listed", async () => {
+    const full = {
+      events: Array.from({ length: ESPN_SCOREBOARD_LIMIT }, (_, i) =>
+        espnEvent(String(1000 + i), "2026-09-05T20:00Z", `Home Side ${i}`, `Away Side ${i}`),
+      ),
+    };
+    const fetchImpl = vi.fn<(url: string) => Promise<Response>>(async () => jsonResponse(full));
+    const confirmer = new FixtureConfirmer({ fetchImpl: fetchImpl as unknown as typeof fetch, now: NOW });
+    const out = await confirmer.confirmBatch(NCAAF, [LISTED, ...PHANTOMS]);
+    expect(out).toMatchObject({
+      status: "fetch_failed",
+      error: expect.stringContaining(
+        `truncated: ${ESPN_SCOREBOARD_LIMIT} events at limit=${ESPN_SCOREBOARD_LIMIT}`,
+      ),
+    });
+    // The first group's page was full; the day fails before the second group is spent.
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+
+    // One below the cap is a complete board and reads normally.
+    const nearlyFull = { events: full.events.slice(0, ESPN_SCOREBOARD_LIMIT - 1) };
+    const okFetch = vi.fn<(url: string) => Promise<Response>>(async () => jsonResponse(nearlyFull));
+    const okConfirmer = new FixtureConfirmer({ fetchImpl: okFetch as unknown as typeof fetch, now: NOW });
+    expect((await okConfirmer.confirmBatch(NCAAF, [LISTED])).status).toBe("ok");
+  });
+
+  it("sends groups=50 on every men's college basketball request, one per date key of a late tip", async () => {
     const fetchImpl = vi.fn<(url: string) => Promise<Response>>(async () => jsonResponse({ events: [] }));
     const confirmer = new FixtureConfirmer({ fetchImpl: fetchImpl as unknown as typeof fetch, now: NOW });
     const lateTip: FixtureProbe = {
       id: "g-hoops",
       homeTeamName: "Kansas Jayhawks",
       awayTeamName: "Baylor Bears",
-      // 02:00Z is the previous Eastern day: two date keys, hence a min-max range.
+      // 02:00Z is the previous Eastern day: two date keys, hence two requests.
       commenceTime: new Date("2026-03-08T02:00:00.000Z"),
     };
     const out = await confirmer.confirmBatch("basketball_ncaab", [lateTip]);
     expect(out.status).toBe("ok");
-    expect(fetchImpl).toHaveBeenCalledTimes(1);
-    const url = String(fetchImpl.mock.calls[0]?.[0]);
-    expect(url).toContain("/basketball/mens-college-basketball/scoreboard");
-    expect(url).toContain("dates=20260307-20260308");
-    expect(url).toContain("groups=50");
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    const urls = fetchImpl.mock.calls.map((c) => String(c[0]));
+    for (const url of urls) {
+      expect(url).toContain("/basketball/mens-college-basketball/scoreboard");
+      expect(url).toContain("groups=50");
+      expect(url).not.toMatch(/dates=\d+-\d+/);
+    }
+    expect(urls.filter((u) => u.includes("dates=20260307"))).toHaveLength(1);
+    expect(urls.filter((u) => u.includes("dates=20260308"))).toHaveLength(1);
   });
 
   it("confirms a CFB fixture listed only on the FCS (groups=81) board", async () => {
@@ -332,8 +451,8 @@ describe("FixtureConfirmer", () => {
   });
 });
 
-// Parse through the same free ESPN parser the confirmer uses.
-import { parseEspnScoreboardForSeed } from "@sports/data-ingestion";
+// Parse through the same free ESPN parser (and page limit) the confirmer uses.
+import { ESPN_SCOREBOARD_LIMIT, parseEspnScoreboardForSeed } from "@sports/data-ingestion";
 function parseBoard(body: { events: Record<string, unknown>[] }) {
   return parseEspnScoreboardForSeed("ncaaf", body as Parameters<typeof parseEspnScoreboardForSeed>[1]);
 }

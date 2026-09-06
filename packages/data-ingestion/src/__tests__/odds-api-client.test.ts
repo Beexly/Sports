@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { OddsApiClient, OddsApiError } from "../odds-api-client.js";
+import { OddsApiClient, OddsApiError, parseQuotaHeader } from "../odds-api-client.js";
 import { getOddsPaymentCircuitBreaker } from "../odds-api-circuit-breaker.js";
 
 const client = new OddsApiClient("test-key");
@@ -381,5 +381,67 @@ describe("licensed extra endpoints (props / historical / participants)", () => {
     await client.getParticipants("americanfootball_nfl");
     const url = new URL(spy.mock.calls[0]![0] as string);
     expect(url.pathname).toContain("/sports/americanfootball_nfl/participants");
+  });
+});
+
+/**
+ * C-109 review: a MISSING x-requests-* header used to parse as 0, so a proxy
+ * or CDN edge answer could be recorded as a zero-credit reading and hold every
+ * paid call. Absent or non-integer headers now read as null.
+ */
+describe("quota headers: absent or malformed is null, never zero", () => {
+  it("absent headers read as null on a successful response", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), { status: 200 }),
+    );
+    const result = await client.getSports();
+    expect(result.remainingRequests).toBeNull();
+    expect(result.usedRequests).toBeNull();
+  });
+
+  it("present integer headers read as numbers (zero included)", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { "x-requests-remaining": "0", "x-requests-used": "20000" },
+      }),
+    );
+    const result = await client.getSports();
+    expect(result.remainingRequests).toBe(0);
+    expect(result.usedRequests).toBe(20000);
+  });
+
+  it("a non-integer header reads as null", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { "x-requests-remaining": "n/a", "x-requests-used": "12.5" },
+      }),
+    );
+    const result = await client.getSports();
+    expect(result.remainingRequests).toBeNull();
+    expect(result.usedRequests).toBeNull();
+  });
+
+  it("an error response without the header carries remainingRequests null, with it the number", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(new Response("boom", { status: 500 }));
+    const noRetry = new OddsApiClient("test-key", { maxRetries: 0, sleep: async () => {} });
+    await expect(noRetry.getSports()).rejects.toMatchObject({ status: 500, remainingRequests: null });
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response("rate limited", { status: 429, headers: { "x-requests-remaining": "7" } }),
+    );
+    await expect(noRetry.getSports()).rejects.toMatchObject({ status: 429, remainingRequests: 7 });
+  });
+
+  it("parseQuotaHeader: integer strings only", () => {
+    expect(parseQuotaHeader(null)).toBeNull();
+    expect(parseQuotaHeader(undefined)).toBeNull();
+    expect(parseQuotaHeader("")).toBeNull();
+    expect(parseQuotaHeader("abc")).toBeNull();
+    expect(parseQuotaHeader("12abc")).toBeNull();
+    expect(parseQuotaHeader("1e3")).toBeNull();
+    expect(parseQuotaHeader(" 42 ")).toBe(42);
+    expect(parseQuotaHeader("0")).toBe(0);
   });
 });

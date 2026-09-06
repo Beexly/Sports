@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  ZERO_SIT_ROUTE_TAIL_RESERVE_MS,
   ZERO_SIT_VOID_MIN_AGE_HOURS,
   boardListing,
   decideZeroSitVoid,
@@ -8,11 +9,13 @@ import {
   scoreboardDatesPublishedFirst,
   unpublishStalePendingPicks,
   voidSittingPicks,
+  zeroSitDeadline,
   type ZeroSitDb,
   type ZeroSitPickRow,
   type ZeroSitTx,
   type ZeroSitVoidEventPayload,
 } from "@/lib/settlement/zero-sit-lane";
+import type { SettlementOutcome } from "@/lib/data-sources/free-settlement";
 import {
   STALE_PENDING_PICK_MAX_AGE_DAYS,
   staleUnstartedPublishedPendingWhere,
@@ -119,10 +122,28 @@ function boardGame(overrides: {
 type Where = {
   result?: string;
   isPublished?: boolean;
-  id?: { in: string[] };
+  id?: string | { in: string[] };
   OR?: Array<{ dataFreshnessAt?: { lt?: Date } | null; generatedAt?: { lt?: Date } }>;
   game?: { commenceTime?: { lt?: Date; gt?: Date }; sport?: { key: string } };
 };
+
+/** One matcher for every fake pick query so a where fragment means the same thing on both sides of the transaction. */
+function matchesWhere(r: FakeRow, where: Where): boolean {
+  if (typeof where.id === "string" && r.id !== where.id) return false;
+  if (where.id && typeof where.id !== "string" && !where.id.in.includes(r.id)) return false;
+  if (where.result !== undefined && r.result !== where.result) return false;
+  if (where.isPublished !== undefined && r.isPublished !== where.isPublished) return false;
+  const sportKey = where.game?.sport?.key;
+  if (sportKey && r.game.sport?.key !== sportKey) return false;
+  const lt = where.game?.commenceTime?.lt;
+  if (lt && !(r.game.commenceTime < lt)) return false;
+  const gt = where.game?.commenceTime?.gt;
+  if (gt && !(r.game.commenceTime > gt)) return false;
+  const staleCutoff = where.OR?.[0]?.dataFreshnessAt;
+  const cutoff = staleCutoff && "lt" in staleCutoff ? staleCutoff.lt : undefined;
+  if (cutoff && !isStale(r, cutoff)) return false;
+  return true;
+}
 
 type Fake = {
   db: ZeroSitDb;
@@ -154,20 +175,7 @@ function makeFake(rows: FakeRow[]): Fake {
       pick: {
         findMany: async (args) => {
           const where = args["where"] as Where;
-          const sportKey = where.game?.sport?.key;
-          const lt = where.game?.commenceTime?.lt;
-          const gt = where.game?.commenceTime?.gt;
-          const staleCutoff = where.OR?.[0]?.dataFreshnessAt;
-          const cutoff = staleCutoff && "lt" in staleCutoff ? staleCutoff.lt : undefined;
-          return rows.filter((r) => {
-            if (where.result && r.result !== where.result) return false;
-            if (where.isPublished !== undefined && r.isPublished !== where.isPublished) return false;
-            if (sportKey && r.game.sport?.key !== sportKey) return false;
-            if (lt && !(r.game.commenceTime < lt)) return false;
-            if (gt && !(r.game.commenceTime > gt)) return false;
-            if (cutoff && !isStale(r, cutoff)) return false;
-            return true;
-          });
+          return rows.filter((r) => matchesWhere(r, where));
         },
       },
       $transaction: async (fn) => fn(tx),
@@ -177,25 +185,15 @@ function makeFake(rows: FakeRow[]): Fake {
     pick: {
       findMany: async (args) => {
         const where = args["where"] as Where;
-        return rows
-          .filter(
-            (r) =>
-              (!where.id || where.id.in.includes(r.id)) &&
-              (where.result === undefined || r.result === where.result) &&
-              (where.isPublished === undefined || r.isPublished === where.isPublished),
-          )
-          .map((r) => ({ id: r.id }));
+        return rows.filter((r) => matchesWhere(r, where)).map((r) => ({ id: r.id }));
       },
       updateMany: async (args) => {
         if (fake.loseRace) return { count: 0 };
-        const where = args["where"] as { id: string | { in: string[] }; result?: string; isPublished?: boolean };
+        const where = args["where"] as Where;
         const data = args["data"] as { result?: string; settledAt?: Date; isPublished?: boolean };
-        const ids = typeof where.id === "string" ? [where.id] : where.id.in;
         let count = 0;
         for (const r of rows) {
-          if (!ids.includes(r.id)) continue;
-          if (where.result !== undefined && r.result !== where.result) continue;
-          if (where.isPublished !== undefined && r.isPublished !== where.isPublished) continue;
+          if (!matchesWhere(r, where)) continue;
           if (data.result) r.result = data.result;
           if (data.isPublished !== undefined) r.isPublished = data.isPublished;
           count++;
@@ -311,35 +309,34 @@ describe("zero-sit lane: VOID half", () => {
     expect(ZERO_SIT_VOID_MIN_AGE_HOURS).toBe(24);
   });
 
-  it("voids a SCORE_MISMATCH_CROSS_PATH older than 24h and leaves a younger one PENDING", async () => {
-    const kickoff = hoursAgo(40);
+  it("voids a SCORE_MISMATCH_CROSS_PATH aged from kickoff whatever game.updatedAt reads; under 24h past kickoff it skips as MISMATCH_UNDER_24H", async () => {
+    // game.updatedAt is a Prisma @updatedAt column bumped every cycle (enrichGameContext
+    // writes FINAL rows too), so a row refreshed one minute ago must still void.
     const old = row({
       id: "p-old-mismatch",
-      commenceTime: kickoff,
+      commenceTime: hoursAgo(30),
       status: "FINAL",
       homeScore: 3,
       awayScore: 1,
-      updatedAt: hoursAgo(30), // conflicting final recorded 30h ago
+      updatedAt: new Date(NOW.getTime() - 60 * 1000),
     });
     const young = row({
       id: "p-young-mismatch",
-      commenceTime: kickoff,
-      home: "Fixture Home Sox",
-      away: "Fixture Away Birds",
+      commenceTime: hoursAgo(20),
       status: "FINAL",
       homeScore: 3,
       awayScore: 1,
-      updatedAt: hoursAgo(2), // conflicting final recorded 2h ago
+      updatedAt: hoursAgo(19),
     });
     const fake = makeFake([old, young]);
-    // The free board says 3-4 for the same fixture: every grader refuses to write.
-    const board = [boardGame({ id: "e1", home: SOX, away: BIRDS, startTime: kickoff, homeScore: 3, awayScore: 4 })];
+    // The free board says 3-4 for the fixture: every grader refuses to write.
+    const board = [boardGame({ id: "e1", home: SOX, away: BIRDS, startTime: old.game.commenceTime, homeScore: 3, awayScore: 4 })];
 
     const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: scoreboard(board) });
 
+    expect(res.inspected).toBe(1); // the 20h row is under the floor and never selected
     expect(res.voided).toBe(1);
     expect(res.byCode.SCORE_MISMATCH_CROSS_PATH).toBe(1);
-    expect(res.skippedByReason.MISMATCH_UNDER_24H).toBe(1);
     expect(old.result).toBe("VOID");
     expect(young.result).toBe("PENDING");
     expect(fake.events).toHaveLength(1);
@@ -347,7 +344,50 @@ describe("zero-sit lane: VOID half", () => {
     expect(fake.events[0]!.payload.evidence).toMatchObject({
       recorded: { homeScore: 3, awayScore: 1 },
       incoming: { homeScore: 3, awayScore: 4 },
+      agedFrom: "commenceTime",
+      ageHours: 30,
     });
+
+    // The pure decision on the same conflicting final: 20h past kickoff keeps the
+    // mismatch-specific skip; 30h past kickoff voids regardless of updatedAt.
+    const conflicting = (pickId: string): SettlementOutcome => ({
+      pickId,
+      status: "SETTLED",
+      result: "LOSS",
+      confirmation: "SINGLE_SOURCE",
+      homeScore: 3,
+      awayScore: 4,
+      sources: ["espn-public-api"],
+    });
+    expect(decideZeroSitVoid({ row: young, outcome: conflicting(young.id), board, now: NOW })).toEqual({
+      kind: "skip",
+      reason: "MISMATCH_UNDER_24H",
+    });
+    expect(decideZeroSitVoid({ row: old, outcome: conflicting(old.id), board, now: NOW })).toMatchObject({
+      kind: "void",
+      rcaCode: "SCORE_MISMATCH_CROSS_PATH",
+    });
+  });
+
+  it("cancels a FIXTURE_NOT_FOUND row that was already POSTPONED; the predicate never names FINAL", async () => {
+    const kickoff = hoursAgo(30);
+    const fake = makeFake([
+      row({ id: "p-postponed", commenceTime: kickoff, status: "POSTPONED", home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: scoreboard([]) });
+
+    expect(res.voided).toBe(1);
+    expect(res.byCode.FIXTURE_NOT_FOUND).toBe(1);
+    expect(res.gamesCanceled).toBe(1);
+    expect(fake.rows[0]!.result).toBe("VOID");
+    expect(fake.rows[0]!.game.status).toBe("CANCELED");
+    expect(fake.gameUpdates).toHaveLength(1);
+    const where = (fake.gameUpdates[0] as { where: { id: string; status: { in: string[] } } }).where;
+    expect(where.id).toBe("game-p-postponed");
+    expect(where.status.in).toContain("POSTPONED");
+    expect(where.status.in).not.toContain("FINAL");
+    expect(where.status.in).not.toContain("CANCELED");
   });
 
   it("voids FIXTURE_NOT_FOUND only when the board fetch succeeded and lists neither team, and marks the game CANCELED", async () => {
@@ -365,7 +405,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(fake.rows[0]!.result).toBe("VOID");
     expect(fake.rows[0]!.game.status).toBe("CANCELED");
     expect(fake.gameUpdates[0]).toMatchObject({
-      where: { id: "game-p-phantom", status: { in: ["SCHEDULED", "LIVE"] } },
+      where: { id: "game-p-phantom", status: { in: ["SCHEDULED", "LIVE", "POSTPONED"] } },
       data: { status: "CANCELED" },
     });
     expect(fake.events[0]!.payload.rcaCode).toBe("FIXTURE_NOT_FOUND");
@@ -609,9 +649,117 @@ describe("zero-sit lane: VOID half", () => {
     expect(res.voids.map((v) => v.pickId)).toEqual(["p-nfl"]);
     expect(fake.rows[0]!.result).toBe("PENDING");
   });
+
+  // ── Route deadline ─────────────────────────────────────────────────────────
+
+  /** A clock the tests step: each read returns the next value, the last one repeats. */
+  function steppedClock(reads: readonly number[]): { clock: () => number; reads: () => number } {
+    let i = 0;
+    return {
+      clock: () => reads[Math.min(i++, reads.length - 1)]!,
+      reads: () => i,
+    };
+  }
+
+  it("stops before the next scoreboard fetch once the route deadline has passed and reports the remainder", async () => {
+    const kickoff = hoursAgo(30);
+    const fake = makeFake([
+      row({ id: "p-mlb", commenceTime: kickoff, home: "Phantom Rebels", away: "Phantom Cardinals" }),
+      row({ id: "p-nfl", commenceTime: kickoff, sportKey: "americanfootball_nfl", home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    const calls: ScoreboardCall[] = [];
+    // Reads: before the MLB fetch (in budget), before the MLB write (in budget),
+    // before the NFL fetch (past the deadline).
+    const ticker = steppedClock([1_000, 2_000, 99_000]);
+
+    const res = await voidSittingPicks({
+      db: fake.db,
+      now: NOW,
+      deadlineAtMs: 50_000,
+      clock: ticker.clock,
+      fetchScores: scoreboard([], [], calls),
+    });
+
+    expect(calls).toHaveLength(1); // the NFL board was never fetched
+    expect(ticker.reads()).toBe(3);
+    expect(res.inspected).toBe(2);
+    expect(res.voided).toBe(1);
+    expect(res.voids.map((v) => v.pickId)).toEqual(["p-mlb"]);
+    expect(res.deadlineHit).toBe(true);
+    expect(res.remaining).toBe(1);
+    expect(fake.rows[1]!.result).toBe("PENDING");
+    expect(fake.events).toHaveLength(1);
+  });
+
+  it("stops before a candidate write once the deadline has passed; the row stays PENDING for the next cycle", async () => {
+    const kickoff = hoursAgo(30);
+    const fake = makeFake([
+      row({ id: "p-first", commenceTime: kickoff, home: "Phantom Rebels", away: "Phantom Cardinals" }),
+      row({ id: "p-second", commenceTime: kickoff, home: "Phantom Bears", away: "Phantom Lions" }),
+    ]);
+    // Reads: before the one fetch, before the first write (both in budget),
+    // before the second write (past the deadline).
+    const ticker = steppedClock([1_000, 2_000, 99_000]);
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, deadlineAtMs: 50_000, clock: ticker.clock, fetchScores: scoreboard([]) });
+
+    expect(ticker.reads()).toBe(3);
+    expect(res.voided).toBe(1);
+    expect(res.voids.map((v) => v.pickId)).toEqual(["p-first"]);
+    expect(res.deadlineHit).toBe(true);
+    expect(res.remaining).toBe(1);
+    expect(fake.rows[1]!.result).toBe("PENDING");
+    expect(fake.events).toHaveLength(1);
+  });
+
+  it("under the deadline the lane behaves exactly as with no deadline: every candidate inspected, nothing remaining", async () => {
+    const kickoff = hoursAgo(30);
+    const build = (): Fake =>
+      makeFake([
+        row({ id: "p-mlb", commenceTime: kickoff, home: "Phantom Rebels", away: "Phantom Cardinals" }),
+        row({ id: "p-nfl", commenceTime: kickoff, sportKey: "americanfootball_nfl", home: "Phantom Rebels", away: "Phantom Cardinals" }),
+      ]);
+    const bounded = build();
+    const unbounded = build();
+
+    const withDeadline = await voidSittingPicks({
+      db: bounded.db,
+      now: NOW,
+      deadlineAtMs: 1_000_000,
+      clock: () => 1_000,
+      fetchScores: scoreboard([]),
+    });
+    const withoutDeadline = await voidSittingPicks({ db: unbounded.db, now: NOW, fetchScores: scoreboard([]) });
+
+    for (const res of [withDeadline, withoutDeadline]) {
+      expect(res.inspected).toBe(2);
+      expect(res.voided).toBe(2);
+      expect(res.deadlineHit).toBe(false);
+      expect(res.remaining).toBe(0);
+    }
+    expect(withDeadline.voids.map((v) => v.pickId)).toEqual(withoutDeadline.voids.map((v) => v.pickId));
+    expect(bounded.events).toHaveLength(2);
+    expect(unbounded.events).toHaveLength(2);
+  });
+
+  it("runZeroSitLane passes the route deadline to the void half", async () => {
+    const fake = makeFake([
+      row({ id: "p-phantom", commenceTime: hoursAgo(30), home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    const res = await runZeroSitLane({ db: fake.db, now: NOW, deadlineAtMs: 10, clock: () => 20, fetchScores: scoreboard([]) });
+    expect(res.voids.deadlineHit).toBe(true);
+    expect(res.voids.remaining).toBe(1);
+    expect(res.voids.voided).toBe(0);
+    expect(fake.rows[0]!.result).toBe("PENDING");
+  });
 });
 
 describe("zero-sit lane: pure helpers", () => {
+  it("zeroSitDeadline leaves the tail reserve inside the route's maxDuration", () => {
+    expect(ZERO_SIT_ROUTE_TAIL_RESERVE_MS).toBeGreaterThanOrEqual(60_000);
+    expect(zeroSitDeadline(1_000, 300)).toBe(1_000 + 300 * 1000 - ZERO_SIT_ROUTE_TAIL_RESERVE_MS);
+  });
+
   it("boardListing is bipartite: the fixture is listed only when one event pairs both teams; per-team flags say who appears at all", () => {
     const kickoff = hoursAgo(30);
     const pick = { homeTeam: SOX, awayTeam: BIRDS, gameDateIso: kickoff.toISOString() };
@@ -740,6 +888,94 @@ describe("zero-sit lane: STALE half", () => {
     expect(res.unpublished).toBe(0);
     expect(res.recorded).toBe(0);
     expect(fake.memories).toHaveLength(0);
+  });
+
+  it("leaves a pick the pipeline refreshed between the read and the transaction published, with no event", async () => {
+    const stale = row({
+      id: "p-stale",
+      commenceTime: daysFromNow(5),
+      dataFreshnessAt: new Date(NOW.getTime() - 30 * DAY),
+    });
+    const fake = makeFake([stale]);
+    // refresh-odds stamped dataFreshnessAt after our select: the row is fresh again.
+    const originalTransaction = fake.db.$transaction;
+    fake.db = {
+      ...fake.db,
+      $transaction: async (fn) => {
+        stale.dataFreshnessAt = hoursAgo(1);
+        return originalTransaction(fn);
+      },
+    };
+    const res = await unpublishStalePendingPicks({ db: fake.db, now: NOW });
+    expect(res.selected).toBe(1);
+    expect(res.unpublished).toBe(0);
+    expect(res.recorded).toBe(0);
+    expect(res.pickIds).toEqual([]);
+    expect(stale.isPublished).toBe(true);
+    expect(fake.memories).toHaveLength(0);
+  });
+
+  it("leaves a pick whose kickoff moved into the past between the read and the transaction untouched", async () => {
+    const stale = row({
+      id: "p-stale",
+      commenceTime: daysFromNow(5),
+      dataFreshnessAt: new Date(NOW.getTime() - 30 * DAY),
+    });
+    const fake = makeFake([stale]);
+    // A schedule correction pulled the kickoff to before `now`: no longer unstarted, the void half owns it.
+    const originalTransaction = fake.db.$transaction;
+    fake.db = {
+      ...fake.db,
+      $transaction: async (fn) => {
+        stale.game.commenceTime = hoursAgo(1);
+        return originalTransaction(fn);
+      },
+    };
+    const res = await unpublishStalePendingPicks({ db: fake.db, now: NOW });
+    expect(res.unpublished).toBe(0);
+    expect(res.recorded).toBe(0);
+    expect(stale.isPublished).toBe(true);
+    expect(fake.memories).toHaveLength(0);
+  });
+
+  it("records events and returns ids only for the rows the bulk update actually changed", async () => {
+    const a = row({ id: "p-a", commenceTime: daysFromNow(3), dataFreshnessAt: new Date(NOW.getTime() - 30 * DAY) });
+    const b = row({ id: "p-b", commenceTime: daysFromNow(4), dataFreshnessAt: new Date(NOW.getTime() - 30 * DAY) });
+    const c = row({ id: "p-c", commenceTime: daysFromNow(5), dataFreshnessAt: new Date(NOW.getTime() - 30 * DAY) });
+    const fake = makeFake([a, b, c]);
+    // The in-transaction re-select still lists all three; b is refreshed after
+    // it returns and before the update runs, so the update's own predicate
+    // must skip b and the lane must reconcile the count with the id list.
+    const originalTransaction = fake.db.$transaction;
+    let reselects = 0;
+    fake.db = {
+      ...fake.db,
+      $transaction: async (fn) =>
+        originalTransaction(async (tx) =>
+          fn({
+            ...tx,
+            pick: {
+              ...tx.pick,
+              findMany: async (args) => {
+                const found = await tx.pick.findMany(args);
+                reselects++;
+                if (reselects === 1) b.dataFreshnessAt = hoursAgo(1);
+                return found;
+              },
+            },
+          }),
+        ),
+    };
+    const res = await unpublishStalePendingPicks({ db: fake.db, now: NOW });
+    expect(res.selected).toBe(3);
+    expect(res.unpublished).toBe(2);
+    expect(res.recorded).toBe(2);
+    expect(res.pickIds).toEqual(["p-a", "p-c"]);
+    expect(a.isPublished).toBe(false);
+    expect(b.isPublished).toBe(true);
+    expect(c.isPublished).toBe(false);
+    expect(fake.memories.map((m) => m["source_ref"])).toEqual(["p-a", "p-c"]);
+    expect(reselects).toBe(2); // the eligible re-select plus the still-published reconciliation
   });
 
   it("runZeroSitLane runs both halves under one clock and scope", async () => {

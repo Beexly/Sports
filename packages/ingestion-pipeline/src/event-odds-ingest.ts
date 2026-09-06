@@ -40,8 +40,9 @@ export function defaultEventOddsMarkets(sportKey: string): readonly string[] {
 
 export interface EventOddsFetchResult<T = unknown> {
   readonly data: T;
-  readonly remainingRequests: number;
-  readonly usedRequests: number;
+  /** null when the vendor response carried no usable quota header. */
+  readonly remainingRequests: number | null;
+  readonly usedRequests: number | null;
 }
 
 export interface EventOddsClient {

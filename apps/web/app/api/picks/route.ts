@@ -237,6 +237,13 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // trust signal on the teaser is the Edge Index, not the confidence number.
     const shownConfidence = entitlements.canSeeConfidence ? pick.confidence : null;
 
+    // One book count for both the "No book price attached" pill and the
+    // market-implied percentage: the immutable mint-time snapshot when the pick
+    // has one, else the live Pick.bookmakerCount (rewritten every refresh
+    // cycle). Reading the pill from the live column while the percentage read
+    // the snapshot let a transient feed gap render the pill beside a percentage.
+    const bookmakerCount = pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount;
+
     // v5.2.8 display side: the receipt's market-implied win probability on
     // book-priced two-way MONEYLINE picks, under the SAME entitlement as
     // confidence. Null resolves to an omitted key, so no FREE payload carries it.
@@ -265,7 +272,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // at render time (lib/picks/display-selection.ts); the DB string is kept.
       selection: displaySelection(pick.selection),
       line: pick.line,
-      hasBookPrice: pick.bookmakerCount > 0,
+      hasBookPrice: bookmakerCount > 0,
       ...(marketImplied ? { marketImplied } : {}),
       // Opening -> current movement, the Pro-tier market read. Only SPREAD and
       // TOTAL carry a comparable opening line (enrichment captures it at first

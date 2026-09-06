@@ -21,6 +21,9 @@ import { resetRateLimits } from "@/lib/api/rate-limit";
 
 const dbMock = vi.hoisted(() => ({
   ingestionRun: { findFirst: vi.fn() },
+  // C-109 credit ledger rows (odds-credit-ledger.ts reads JarvisMemoryEvent);
+  // the real ledger read runs against this mock.
+  jarvisMemoryEvent: { findFirst: vi.fn(), findMany: vi.fn() },
 }));
 
 const predictionEngineMocks = vi.hoisted(() => ({
@@ -298,6 +301,9 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
     resetRateLimits();
     // DB lookups (only hit when isStubMode() is false)
     dbMock.ingestionRun.findFirst.mockResolvedValue(null);
+    // Credit ledger: no observation recorded yet.
+    dbMock.jarvisMemoryEvent.findFirst.mockResolvedValue(null);
+    dbMock.jarvisMemoryEvent.findMany.mockResolvedValue([]);
     // Settlement health returns a shape the route destructures
     opsMocks.loadSettlementHealth.mockResolvedValue({
       health: "HEALTHY",
@@ -436,6 +442,45 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
       dailyBudget: 600,
       projectedExhaustionAt: null,
       paceOk: null,
+    });
+    // The block came from the real ledger read, not from a swallowed TypeError.
+    expect(dbMock.jarvisMemoryEvent.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { scope: "ops.odds.credits", memory_type: "episodic" } }),
+    );
+    expect(dbMock.jarvisMemoryEvent.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ scope: "ops.odds.credits" }) }),
+    );
+  });
+
+  it("echoes the latest ledger observation in the C-109 credits block (remaining, used, observedAt; dailyBudget 600)", async () => {
+    // Test fixture: one durable reading as recordCreditObservation writes it
+    // (metadata carries the observation). 19000 remaining funds the reserve
+    // pace on any day of any month (31 days x 24h x 25/h = 18600), so paceOk
+    // is true whatever the wall clock reads; one observation projects nothing.
+    const observation = {
+      remaining: 19000,
+      used: 1000,
+      observedAt: "2026-09-06T04:00:00.000Z",
+      source: "settle-sport",
+    };
+    const row = { full_text: JSON.stringify(observation), metadata: observation };
+    dbMock.jarvisMemoryEvent.findFirst.mockResolvedValue(row);
+    dbMock.jarvisMemoryEvent.findMany.mockResolvedValue([row]);
+    const mod = await import(
+      "@/app/api/ops/public-surface-truth/route"
+    );
+    const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+
+    delete process.env.CRON_SECRET;
+    const body = await mod.GET(req).then((r) => r.json());
+
+    expect(body.oddsInserting.dualPath.credits).toEqual({
+      remaining: 19000,
+      used: 1000,
+      observedAt: "2026-09-06T04:00:00.000Z",
+      dailyBudget: 600,
+      projectedExhaustionAt: null,
+      paceOk: true,
     });
   });
 

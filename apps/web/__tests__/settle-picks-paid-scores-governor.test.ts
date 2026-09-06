@@ -48,12 +48,21 @@ vi.mock("@/lib/settlement/free-path-clv", () => ({
 vi.mock("@/lib/settlement/free-path-snapshot", () => ({
   drainPendingSnapshotOutcomes: vi.fn(async () => ({ attempted: 0, done: 0, failed: 0 })),
 }));
-vi.mock("@/lib/settlement/zero-sit-lane", () => ({
-  runZeroSitLane: vi.fn(async () => ({
-    stale: { unpublished: 0 },
-    voids: { voided: 0 },
-  })),
-}));
+vi.mock("@/lib/settlement/zero-sit-lane", async () => {
+  // The lane is replaced; the route's deadline helper and its reserve stay
+  // real (same shape as settle-picks-free-first.test.ts).
+  const actual = await vi.importActual<typeof import("@/lib/settlement/zero-sit-lane")>(
+    "@/lib/settlement/zero-sit-lane",
+  );
+  return {
+    zeroSitDeadline: actual.zeroSitDeadline,
+    ZERO_SIT_ROUTE_TAIL_RESERVE_MS: actual.ZERO_SIT_ROUTE_TAIL_RESERVE_MS,
+    runZeroSitLane: vi.fn(async () => ({
+      stale: { unpublished: 0 },
+      voids: { voided: 0 },
+    })),
+  };
+});
 
 import { GET } from "@/app/api/cron/settle-picks/route";
 import { settleSport } from "@sports/ingestion-pipeline";

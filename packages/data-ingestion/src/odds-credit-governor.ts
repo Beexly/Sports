@@ -46,6 +46,14 @@ export interface PaidCallDecisionInput {
   /** Latest paid call for this sport and purpose (durable); null when none. */
   readonly lastPaidCallAt?: Date | null;
   /**
+   * Latest paid call for this sport across EVERY purpose (odds and scores).
+   * Consulted only by the stale-zero probe rule, so at most ONE probe per
+   * sport per hour fires across purposes (an odds probe and a scores probe
+   * used to be able to fire in the same hour). Omitted: falls back to
+   * `lastPaidCallAt`.
+   */
+  readonly lastPaidCallAnyPurposeAt?: Date | null;
+  /**
    * ISO timestamp of the observation that produced `remaining`; null or
    * missing when unknown. Only consulted when `remaining` reads zero: a zero
    * older than PAID_CALL_MIN_INTERVAL_MS, or dated before the current UTC
@@ -93,66 +101,94 @@ export function zeroObservationIsStale(observedAt: string | null | undefined, no
   return now.getTime() - t >= PAID_CALL_MIN_INTERVAL_MS;
 }
 
-/** Decide whether one paid call may go out now. Pure. */
-export function decidePaidOddsCall(input: PaidCallDecisionInput): PaidCallDecision {
+/** Every purpose the ledger tracks (the cross-purpose probe cap reads them all). */
+export const PAID_CALL_PURPOSES: readonly PaidCallPurpose[] = ["odds", "scores"];
+
+/**
+ * Which hourly slot an ALLOWED call must reserve (atomically, in the ledger)
+ * before it spends:
+ *   - "none":        no hourly rule binds (odds while the pace funds the budget);
+ *                    the marker is still recorded, for the audit trail and for
+ *                    reserve mode later, but never gates the call;
+ *   - "purpose":     one call per sport per hour within this purpose (scores
+ *                    always; odds in reserve mode);
+ *   - "any-purpose": one probe per sport per hour across every purpose (the
+ *                    stale-zero probe).
+ */
+export type HourlySlot = "none" | "purpose" | "any-purpose";
+
+export interface PaidCallEvaluation {
+  readonly decision: PaidCallDecision;
+  /** Meaningful only when `decision.allow` is true. */
+  readonly slot: HourlySlot;
+}
+
+/** Decide whether one paid call may go out now, and which hourly slot it needs. Pure. */
+export function evaluatePaidOddsCall(input: PaidCallDecisionInput): PaidCallEvaluation {
   const { purpose, now } = input;
+  const held = (reason: string): PaidCallEvaluation => ({ decision: { allow: false, reason }, slot: "none" });
+  const allowed = (reason: string, slot: HourlySlot): PaidCallEvaluation => ({
+    decision: { allow: true, reason },
+    slot,
+  });
+  // Scores are capped at one call per sport per hour whatever the pace.
+  const purposeSlot: HourlySlot = purpose === "scores" ? "purpose" : "none";
+
   if (input.freeCoversPurpose) {
-    return { allow: false, reason: `free source covers ${purpose}` };
+    return held(`free source covers ${purpose}`);
   }
   if (purpose === "odds" && input.hasEventWithin48h === false) {
-    return {
-      allow: false,
-      reason: `no event within ${EVENT_HORIZON_HOURS}h on the free scoreboard`,
-    };
+    return held(`no event within ${EVENT_HORIZON_HOURS}h on the free scoreboard`);
   }
   const calledThisHour = calledWithinInterval(input.lastPaidCallAt, now);
   if (purpose === "scores" && calledThisHour) {
-    return { allow: false, reason: "paid scores already fetched for this sport within the hour" };
+    return held("paid scores already fetched for this sport within the hour");
   }
   const remaining = input.remaining;
   if (remaining === null || !Number.isFinite(remaining)) {
-    return { allow: true, reason: "no observation yet" };
+    return allowed("no observation yet", purposeSlot);
   }
   if (remaining <= 0) {
     // Self-healing: the ledger only gains a new reading from a paid call, so a
     // zero that is never re-probed would hold every caller past the vendor's
     // reset (or after one header-less response). A fresh zero holds; a stale
-    // zero lets ONE probe per sport per hour re-observe the real count.
+    // zero lets ONE probe per sport per hour, across purposes, re-observe the
+    // real count.
     if (!zeroObservationIsStale(input.observedAt, now)) {
-      return { allow: false, reason: "zero credits remaining" };
+      return held("zero credits remaining");
     }
-    if (calledThisHour) {
-      return {
-        allow: false,
-        reason: "zero credits remaining (stale reading) and this sport already probed this hour",
-      };
+    const probedThisHour =
+      calledThisHour || calledWithinInterval(input.lastPaidCallAnyPurposeAt, now);
+    if (probedThisHour) {
+      return held("zero credits remaining (stale reading) and this sport already probed this hour");
     }
-    return { allow: true, reason: "probe: zero-credit observation is stale" };
+    return allowed("probe: zero-credit observation is stale", "any-purpose");
   }
   const hours = hoursToMonthEnd(now);
   const pace = remaining / hours;
   if (pace >= HOURLY_BUDGET) {
-    return {
-      allow: true,
-      reason:
-        `pace ok: ${remaining} credits over ${hours.toFixed(1)}h to month end ` +
+    return allowed(
+      `pace ok: ${remaining} credits over ${hours.toFixed(1)}h to month end ` +
         `(${pace.toFixed(1)}/h, floor ${HOURLY_BUDGET}/h)`,
-    };
+      purposeSlot,
+    );
   }
   if (calledThisHour) {
-    return {
-      allow: false,
-      reason:
-        `reserve: ${remaining} credits over ${hours.toFixed(1)}h to month end ` +
-        `(${pace.toFixed(1)}/h below ${HOURLY_BUDGET}/h) and this sport already made a ${purpose} call this hour`,
-    };
-  }
-  return {
-    allow: true,
-    reason:
+    return held(
       `reserve: ${remaining} credits over ${hours.toFixed(1)}h to month end ` +
+        `(${pace.toFixed(1)}/h below ${HOURLY_BUDGET}/h) and this sport already made a ${purpose} call this hour`,
+    );
+  }
+  return allowed(
+    `reserve: ${remaining} credits over ${hours.toFixed(1)}h to month end ` +
       `(${pace.toFixed(1)}/h below ${HOURLY_BUDGET}/h); allowing one ${purpose} call per sport per hour`,
-  };
+    "purpose",
+  );
+}
+
+/** Decide whether one paid call may go out now. Pure. */
+export function decidePaidOddsCall(input: PaidCallDecisionInput): PaidCallDecision {
+  return evaluatePaidOddsCall(input).decision;
 }
 
 /** One durable reading of the vendor's quota headers. */
@@ -168,18 +204,25 @@ export interface OddsCreditObservation {
 }
 
 /**
- * Linear projection of when credits reach zero, from the first and last
- * observation in the window. Null when fewer than two observations, when the
- * two share a timestamp, or when the count did not fall (a reset, or noise).
+ * Linear projection of when credits reach zero, fitted on the FINAL monotonic
+ * non-increasing run of the window: an upward step (the vendor's monthly reset,
+ * or a counter correction) starts a new segment, so a reset never averages
+ * against the pre-reset burn. Null when that segment holds fewer than two
+ * observations, when they share a timestamp, or when the count did not fall.
  */
 export function projectCreditExhaustion(
   observations: readonly OddsCreditObservation[],
   now: Date,
 ): string | null {
-  const rows = observations
+  const sorted = observations
     .map((o) => ({ ...o, t: Date.parse(o.observedAt) }))
     .filter((o) => Number.isFinite(o.t) && Number.isFinite(o.remaining))
     .sort((a, b) => a.t - b.t);
+  let segmentStart = 0;
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i]!.remaining > sorted[i - 1]!.remaining) segmentStart = i;
+  }
+  const rows = sorted.slice(segmentStart);
   if (rows.length < 2) return null;
   const first = rows[0]!;
   const last = rows[rows.length - 1]!;

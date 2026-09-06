@@ -196,14 +196,17 @@ export async function generateSignalSlate(opts?: {
           createdAt: g.createdAt,
         }));
       batch = confirmer.confirmBatch(sportKey, probes).then((result) => {
+        // A board that cannot be read surfaces in `errors` (ok: false) like
+        // every other slate failure, so a sustained ESPN outage is visible to
+        // the caller and the truth surface, not only in the log line.
         if (result.status === "fetch_failed") {
-          console.warn(
-            `${logPrefix} fixture scoreboard unavailable for ${sportKey}, skipping ${probes.length} games this cycle: ${result.error}`,
-          );
+          const message = `fixture scoreboard unavailable for ${sportKey}, skipping ${probes.length} games this cycle: ${result.error}`;
+          console.warn(`${logPrefix} ${message}`);
+          errors.push(message);
         } else if (result.status === "unsupported_sport") {
-          console.warn(
-            `${logPrefix} no free ESPN scoreboard for ${sportKey}, skipping ${probes.length} games (cannot confirm fixtures)`,
-          );
+          const message = `no free ESPN scoreboard for ${sportKey}, skipping ${probes.length} games (cannot confirm fixtures)`;
+          console.warn(`${logPrefix} ${message}`);
+          errors.push(message);
         }
         return result;
       });
@@ -240,8 +243,8 @@ export async function generateSignalSlate(opts?: {
     let commenceTime = game.commenceTime;
     if (fixture.correctedCommenceTime) {
       // Schedule correction from the free cleared source (see
-      // commenceTimeCorrection): a row older than 30 days carried a stale
-      // kickoff; ESPN lists the same contest, same day, at a different clock.
+      // commenceTimeCorrection): ESPN lists the same contest, same day, at a
+      // clock more than 15 minutes from ours, and the kickoff is still ahead.
       try {
         await db.game.update({
           where: { id: game.id },

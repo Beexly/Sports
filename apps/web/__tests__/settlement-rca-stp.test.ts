@@ -3,6 +3,7 @@ import {
   aggregateSettlementRca,
   classifySettlementRootCause,
   buildCausePareto,
+  rootCauseNarrative,
 } from "@/lib/settlement/root-cause-analysis";
 import {
   computeBurnRate,
@@ -11,6 +12,68 @@ import {
   stpLoadPriority,
   DEFAULT_STP_POLICY,
 } from "@/lib/settlement/stp-clearance";
+
+describe("zero-sit void narratives (rootCauseNarrative)", () => {
+  const joined = (lines: readonly string[]): string => lines.join(" ");
+
+  it("AMBIGUOUS_TEAM_NAME with cause CITY_ONLY_NAME blames the dropped nickname and repairs the names", () => {
+    const n = rootCauseNarrative("AMBIGUOUS_TEAM_NAME", 30, { ambiguityCause: "CITY_ONLY_NAME" });
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/nickname/);
+    expect(joined(n.fiveWhys)).toMatch(/CITY_ONLY_NAME/);
+    expect(joined(n.fiveWhys)).not.toMatch(/doubleheader/);
+    expect(joined(n.remediation)).toMatch(/full team names/);
+    expect(joined(n.remediation)).not.toMatch(/event id/);
+  });
+
+  it("AMBIGUOUS_TEAM_NAME with cause MULTIPLE_FINALS never blames a nickname and points at event-id or kickoff disambiguation", () => {
+    const n = rootCauseNarrative("AMBIGUOUS_TEAM_NAME", 30, { ambiguityCause: "MULTIPLE_FINALS" });
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/doubleheader/);
+    expect(joined(n.fiveWhys)).toMatch(/MULTIPLE_FINALS/);
+    expect(joined(n.fiveWhys)).not.toMatch(/nickname/);
+    expect(joined(n.remediation)).toMatch(/event id or kickoff/);
+    expect(joined(n.remediation)).toMatch(/names are not the defect/);
+  });
+
+  it("AMBIGUOUS_TEAM_NAME without a cause names both causes and sends the reader to evidence.cause", () => {
+    const n = rootCauseNarrative("AMBIGUOUS_TEAM_NAME", 30);
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/CITY_ONLY_NAME/);
+    expect(joined(n.fiveWhys)).toMatch(/MULTIPLE_FINALS/);
+    expect(joined(n.fiveWhys)).not.toMatch(/nickname/);
+    expect(joined(n.remediation)).toMatch(/evidence\.cause/);
+  });
+
+  it("FIXTURE_NOT_FOUND describes the per-team evidence and cancels only when neither team appears", () => {
+    const n = rootCauseNarrative("FIXTURE_NOT_FOUND", 30);
+    expect(n.fiveWhys).toHaveLength(5);
+    expect(joined(n.fiveWhys)).toMatch(/NEITHER team/);
+    expect(joined(n.fiveWhys)).toMatch(/homeListed and awayListed/);
+    expect(joined(n.fiveWhys)).not.toMatch(/no event for either team/);
+    expect(joined(n.remediation)).toMatch(/evidence\.homeListed and evidence\.awayListed/);
+    expect(joined(n.remediation)).toMatch(/both false/);
+    expect(joined(n.remediation)).toMatch(/left as is/);
+    // The old wording claimed every such row is CANCELED; that is no longer said.
+    expect(joined(n.remediation)).not.toMatch(/and the game row marked CANCELED;/);
+    expect(n.summary).toMatch(/no event pairing the two teams/);
+  });
+
+  it("classifySettlementRootCause narratives are unchanged for the codes it produces", () => {
+    const f = classifySettlementRootCause({
+      pickId: "p-n",
+      sportKey: "americanfootball_nfl",
+      ageHours: 12,
+      graceHours: 6,
+      outcomeStatus: "PENDING",
+      pendingReason: "NO_FINAL",
+    });
+    const n = rootCauseNarrative(f.code, f.ageHours);
+    expect(n.fiveWhys).toEqual(f.fiveWhys);
+    expect(n.remediation).toEqual(f.remediation);
+    expect(n.summary).toBe(f.summary);
+  });
+});
 
 describe("settlement root-cause analysis", () => {
   it("classifies overdue with no final as OVERDUE_NO_SCORE (wave A)", () => {

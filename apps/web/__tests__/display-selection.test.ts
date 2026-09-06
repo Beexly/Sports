@@ -34,7 +34,11 @@ describe("public surfaces render the selection through displaySelection", () => 
     const src = readFileSync(resolve(root, "app/api/picks/route.ts"), "utf8");
     expect(src).toContain('from "@/lib/picks/display-selection"');
     expect(src).toMatch(/selection:\s*displaySelection\(pick\.selection\)/);
-    expect(src).toMatch(/hasBookPrice:\s*pick\.bookmakerCount > 0/);
+    // One book count for the pill and the market-implied percentage: the
+    // mint-time snapshot when the pick has one, else the live column
+    // (market-implied-display.test.ts covers the payload).
+    expect(src).toMatch(/const bookmakerCount = pick\.signalSnapshot\?\.bookmakerCount \?\? pick\.bookmakerCount;/);
+    expect(src).toMatch(/hasBookPrice:\s*bookmakerCount > 0/);
   });
   it("pick card", () => {
     const src = readFileSync(resolve(root, "components/picks/pick-card.tsx"), "utf8");

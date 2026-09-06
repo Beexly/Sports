@@ -288,12 +288,36 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
     expect(out.fixtureUnconfirmed).toBe(2);
     expect(out.picksUpserted).toBe(0);
     expect(warn.mock.calls.some((c) => /fixture scoreboard unavailable for americanfootball_ncaaf/.test(String(c[0])) && /HTTP 503/.test(String(c[0])))).toBe(true);
+    // The outage surfaces in the result like every other slate failure, not only in the log.
+    expect(out.ok).toBe(false);
+    expect(out.errors).toEqual([
+      expect.stringMatching(/fixture scoreboard unavailable for americanfootball_ncaaf, skipping 2 games this cycle: .*HTTP 503/),
+    ]);
     // Still one fetch for the sport; the failure is not retried within the cycle.
     expect(espnFetch).toHaveBeenCalledTimes(1);
     warn.mockRestore();
   });
 
-  it("fetches the scoreboard once per ESPN group per sport per cycle across many games (CFB: FBS 80 and FCS 81)", async () => {
+  it("reports a sport with no free ESPN scoreboard in errors and counts its games as unconfirmed (no fetch)", async () => {
+    mocks.gameFindMany.mockResolvedValue([
+      { ...GAME, id: "game-cricket", homeTeamName: "Home XI", awayTeamName: "Away XI", sport: { key: "cricket_ipl", name: "IPL" } },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    expect(espnFetch).not.toHaveBeenCalled();
+    expect(mocks.buildIndependents).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(out.fixtureUnconfirmed).toBe(1);
+    expect(out.picksSkipped).toBe(1);
+    expect(out.ok).toBe(false);
+    expect(out.errors).toEqual([expect.stringMatching(/no free ESPN scoreboard for cricket_ipl, skipping 1 games/)]);
+    warn.mockRestore();
+  });
+
+  it("fetches the scoreboard once per day per ESPN group per sport per cycle across many games (CFB: FBS 80 and FCS 81)", async () => {
     mocks.gameFindMany.mockResolvedValue([
       GAME,
       ...PHANTOMS,
@@ -304,15 +328,37 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
 
     await runSlate();
 
-    expect(espnFetch).toHaveBeenCalledTimes(2);
+    // Two day keys (09-05, and 09-06 for the 00:00Z kickoff) x two groups: one
+    // request per day per group, never a min-max range that could truncate.
+    expect(espnFetch).toHaveBeenCalledTimes(4);
     const urls = espnFetch.mock.calls.map((c) => String(c[0]));
     for (const url of urls) {
       expect(url).toContain("/football/college-football/scoreboard");
-      expect(url).toContain("dates=20260905-20260906");
+      expect(url).not.toMatch(/dates=\d+-\d+/);
     }
-    expect(urls.filter((u) => u.includes("groups=80"))).toHaveLength(1);
-    expect(urls.filter((u) => u.includes("groups=81"))).toHaveLength(1);
+    expect(urls.filter((u) => u.includes("dates=20260905"))).toHaveLength(2);
+    expect(urls.filter((u) => u.includes("dates=20260906"))).toHaveLength(2);
+    expect(urls.filter((u) => u.includes("groups=80"))).toHaveLength(2);
+    expect(urls.filter((u) => u.includes("groups=81"))).toHaveLength(2);
     vi.restoreAllMocks();
+  });
+
+  it("corrects a fresh row's commenceTime too when ESPN lists the same contest at a different clock", async () => {
+    // Created this week (no re-confirmation required), our clock 45 minutes early.
+    mocks.gameFindMany.mockResolvedValue([
+      { ...GAME, id: "game-fresh", commenceTime: new Date("2026-09-05T18:45:00.000Z") },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+
+    await runSlate();
+
+    expect(mocks.gameUpdate).toHaveBeenCalledWith({
+      where: { id: "game-fresh" },
+      data: { commenceTime: new Date("2026-09-05T19:30:00.000Z") },
+    });
+    expect(mocks.buildIndependents).toHaveBeenCalledWith(
+      expect.objectContaining({ commenceTime: new Date("2026-09-05T19:30:00.000Z") }),
+    );
   });
 
   it("corrects a confirmed old row's commenceTime from ESPN only beyond 15 minutes", async () => {

@@ -134,10 +134,24 @@ export interface ProcessSportResult {
   provider?: string;
   /** Raw events accepted before freshness filter. */
   eventsCount?: number;
-  /** The-Odds-API's own x-requests-remaining from this cycle's primary call,
-   *  when one was made. Lets a multi-sport caller stop early instead of
-   *  blindly burning the rest of a near-exhausted monthly credit budget. */
-  oddsApiRemainingRequests?: number;
+  /**
+   * The Odds API quota headers (x-requests-remaining / x-requests-used) from
+   * this run's paid responses, exactly as the client parsed them: the latest
+   * response that carried the header wins; `null` when no paid response in
+   * the run carried it (a proxy or edge answered), never coerced to 0
+   * (C-109). Present on the success AND the failed envelope whenever a paid
+   * request was made in the run. Lets a multi-sport caller stop early instead
+   * of burning the rest of a near-exhausted monthly credit budget.
+   */
+  oddsApiRemainingRequests?: number | null;
+  oddsApiUsedRequests?: number | null;
+  /**
+   * Paid Odds API requests made in this run: the primary odds call, the NFL
+   * preseason call in its window, the EU Pinnacle archive leg when enabled and
+   * each licensed event-odds request. Counted when the request is sent, so a
+   * request the vendor answered with an error is still counted.
+   */
+  paidRequestCount?: number;
 }
 
 const SHADOW_CONTEXT_CATEGORIES: SignalCategory[] = [
@@ -253,13 +267,46 @@ export async function processSport(
     data: { sport: sport.key, status: "RUNNING" },
   });
 
+  // Paid Odds API accounting for the result envelope (contract with the odds
+  // client, C-109). Declared outside the try so the failed envelope carries
+  // the same readings as the success one.
+  let remainingRequests: number | null = null;
+  let usedRequests: number | null = null;
+  let paidRequestCount = 0;
+  const recordPaidResponse = (res: {
+    remainingRequests?: number | null;
+    usedRequests?: number | null;
+  }): void => {
+    // Latest response that carried the header wins; an absent header (null)
+    // never erases an earlier reading and is never read as 0.
+    if (res.remainingRequests != null) remainingRequests = res.remainingRequests;
+    if (res.usedRequests != null) usedRequests = res.usedRequests;
+  };
+  const notePaidError = (err: unknown): void => {
+    // OddsApiError carries x-requests-remaining from a failed vendor response.
+    if (typeof err === "object" && err !== null && "remainingRequests" in err) {
+      const r: unknown = err.remainingRequests;
+      if (typeof r === "number") recordPaidResponse({ remainingRequests: r });
+    }
+  };
+  const paidAccounting = (): Pick<
+    ProcessSportResult,
+    "oddsApiRemainingRequests" | "oddsApiUsedRequests" | "paidRequestCount"
+  > =>
+    paidRequestCount > 0
+      ? {
+          oddsApiRemainingRequests: remainingRequests,
+          oddsApiUsedRequests: usedRequests,
+          paidRequestCount,
+        }
+      : {};
+
   try {
     const client = new OddsApiClient(apiKey);
     const normalizer = new DataNormalizer();
     const fetchedAt = new Date();
 
     let events: import("@sports/types").OddsApiEvent[] = [];
-    let remainingRequests: number | null = null;
     // Sentinel used when only free paths are configured (no real Odds key).
     const oddsKeyIsSentinel =
       !apiKey ||
@@ -277,15 +324,15 @@ export async function processSport(
       // dual-path below (rundown / espn).
       if (paidCallJustified("odds", sport.key)) {
         try {
+          paidRequestCount += 1;
           const primary = await client.getOdds(sport.key, [...MARKETS]);
           events = primary.data as import("@sports/types").OddsApiEvent[];
-          remainingRequests = primary.remainingRequests ?? null;
+          recordPaidResponse(primary);
           if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow(fetchedAt)) {
             try {
+              paidRequestCount += 1;
               const preseason = await client.getOdds(NFL_PRESEASON_ODDS_KEY, [...MARKETS]);
-              if (preseason.remainingRequests != null) {
-                remainingRequests = preseason.remainingRequests;
-              }
+              recordPaidResponse(preseason);
               const existingRows = await db.game.findMany({
                 where: {
                   sport: { key: NFL_CANONICAL_SPORT_KEY },
@@ -321,6 +368,7 @@ export async function processSport(
               }
               events = mergeFeedRowsById(events, remapped);
             } catch (preseasonErr) {
+              notePaidError(preseasonErr);
               console.warn(
                 `${logPrefix} ${sport.key}: preseason odds fetch failed — ` +
                   `${preseasonErr instanceof Error ? preseasonErr.message : preseasonErr}`,
@@ -328,6 +376,7 @@ export async function processSport(
             }
           }
         } catch (primaryErr) {
+          notePaidError(primaryErr);
           console.warn(
             `${logPrefix} ${sport.key}: Odds API primary failed — ` +
               `${primaryErr instanceof Error ? primaryErr.message : primaryErr}`,
@@ -361,6 +410,11 @@ export async function processSport(
           eventIds: events.map((event) => event.id).filter((id): id is string => Boolean(id)),
           commenceByEventId,
         });
+        // Each licensed event-odds call is a paid request (fetched + failed =
+        // requests sent); the report's last x-requests-remaining feeds the
+        // envelope like any other paid response (null when absent).
+        paidRequestCount += eventOddsReport.fetched + eventOddsReport.failed;
+        recordPaidResponse({ remainingRequests: eventOddsReport.remainingRequests });
         for (const snap of eventOddsReport.snapshots) {
           const id = eventOddsId(snap as { id?: string });
           if (id) eventOddsByExternalId.set(id, snap);
@@ -513,6 +567,7 @@ export async function processSport(
           provider: oddsProviderTag,
           eventsCount: events.length,
           note: "quiet_board",
+          ...paidAccounting(),
         };
       }
 
@@ -675,8 +730,14 @@ export async function processSport(
       markets: [...MARKETS],
       gameRecords,
       capturedAt: fetchedAt,
-      fetchOdds: (sportKey, markets, options) =>
-        client.getOdds(sportKey as SupportedSportKey, [...markets] as Market[], options),
+      fetchOdds: async (sportKey, markets, options) => {
+        // The archive leg is a paid request like any other: counted and its
+        // quota headers recorded for the envelope.
+        paidRequestCount += 1;
+        const res = await client.getOdds(sportKey as SupportedSportKey, [...markets] as Market[], options);
+        recordPaidResponse(res);
+        return res;
+      },
       normalizeOdds: (events, at) => normalizer.normalizeOdds(events as OddsApiEvent[], at),
     });
     if (pinnacleResult.error) {
@@ -789,6 +850,11 @@ export async function processSport(
         continue;
       }
       confirmedGameIds.add(gameRecord.id);
+      // One effective kickoff for every consumer below (enrichment, independent
+      // fair values, the OddsInput the scorer reads). It is the feed's time
+      // unless ESPN's correction is persisted, so the row and this cycle's
+      // inputs can never disagree about when the game starts.
+      let kickoff = game.commenceTime;
       if (fixture.correctedCommenceTime) {
         // Schedule correction from the free cleared source (see
         // commenceTimeCorrection in fixture-confirmation.ts): a row older than
@@ -799,11 +865,13 @@ export async function processSport(
             where: { id: gameRecord.id },
             data: { commenceTime: fixture.correctedCommenceTime },
           });
+          kickoff = fixture.correctedCommenceTime;
           console.log(
             `${logPrefix} ${sport.key}: commenceTime corrected from ESPN for game ${gameRecord.id} ` +
               `${game.commenceTime.toISOString()} -> ${fixture.correctedCommenceTime.toISOString()}`,
           );
         } catch (correctionErr) {
+          // The row keeps the feed time, so this cycle's inputs keep it too.
           console.warn(
             `${logPrefix} ${sport.key}: commenceTime correction failed for ${gameRecord.id}: ` +
               `${correctionErr instanceof Error ? correctionErr.message : correctionErr}`,
@@ -865,7 +933,7 @@ export async function processSport(
           homeTeam: game.homeTeam,
           awayTeam: game.awayTeam,
           sport: sport.key,
-          commenceTime: game.commenceTime,
+          commenceTime: kickoff,
           avgSpread,
           avgTotal,
           bookmakerCoverageMax,
@@ -913,7 +981,7 @@ export async function processSport(
             sportKey: sport.key,
             homeTeam: game.homeTeam,
             awayTeam: game.awayTeam,
-            commenceTime: game.commenceTime,
+            commenceTime: kickoff,
             now: () => fetchedAt,
             spreadHome: avgSpread,
           },
@@ -961,7 +1029,7 @@ export async function processSport(
         gameId: gameRecord.id,
         homeTeam: game.homeTeam,
         awayTeam: game.awayTeam,
-        commenceTime: game.commenceTime,
+        commenceTime: kickoff,
         sport: sport.name,
         bookmakerOdds: gameOdds.map((o) => ({
           bookmaker: o.bookmaker,
@@ -1245,8 +1313,11 @@ export async function processSport(
       oddsInserted,
       provider: oddsProviderTag,
       eventsCount: events.length,
-      note: emptyNote ?? fixtureNote,
-      oddsApiRemainingRequests: remainingRequests ?? undefined,
+      // The fixture-scoreboard failure is the fail-closed reason for zero
+      // picks; it must stay observable even when the cycle also inserted no
+      // odds (an emptiness note would otherwise mask why picks were withheld).
+      note: fixtureNote ?? emptyNote,
+      ...paidAccounting(),
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -1268,6 +1339,9 @@ export async function processSport(
       oddsInserted: 0,
       eventsCount: 0,
       error: message,
+      // A run that fails after a paid response still spent the credits and
+      // still saw the vendor's headers; the caller's governor needs both.
+      ...paidAccounting(),
     };
   }
 }

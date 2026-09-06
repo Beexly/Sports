@@ -13,9 +13,17 @@
  * Fail-closed: when the scoreboard cannot be fetched, the caller skips pick
  * generation for that sport this cycle (the cadence is 15 minutes, so the cost
  * is one cycle). Pure helpers are exported for unit tests; the class caches one
- * merged board per sport per instance, so a run adds at most one free request
- * per ESPN group per sport (two for college football: FBS and FCS; one for
- * every other sport).
+ * merged board per sport per day per instance, so a run adds at most one free
+ * request per day per ESPN group per sport (two a day for college football:
+ * FBS and FCS; one a day for every other sport).
+ *
+ * One request per day, never a multi-day `dates=min-max` range: ESPN caps a
+ * response at `limit` (300) events, and a range over a busy board (a college
+ * football Saturday plus the Sunday slate) can hit that cap and silently drop
+ * fixtures that then read as absent. A response carrying `limit` or more raw
+ * events is treated as truncated and that board as not confirmable this cycle
+ * (the same fail-closed path as a fetch failure), so nothing is ever refused
+ * as "not listed" on truncated evidence.
  *
  * Groups: ESPN's default college boards are partial (FBS only for football, a
  * featured page for men's basketball, and a multi-day range without `groups`
@@ -45,6 +53,12 @@ export const FIXTURE_RECONFIRM_ROW_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 export const FIXTURE_RECONFIRM_HORIZON_MS = 48 * 60 * 60 * 1000;
 /** ESPN clock differing from ours by more than this corrects the row's commenceTime. */
 export const FIXTURE_TIME_CORRECTION_MIN_MS = 15 * 60 * 1000;
+/**
+ * A same-teams candidate on a shared date key whose clock is further than this
+ * from ours is a different contest (the other game of a doubleheader, a
+ * relisted fixture), never a confirmation of this row.
+ */
+export const FIXTURE_MAX_CLOCK_DELTA_MS = 12 * 60 * 60 * 1000;
 
 /**
  * ESPN `groups` (division) selectors that widen a board beyond its default;
@@ -69,7 +83,10 @@ export type FixtureProbe = {
   readonly homeTeamName: string;
   readonly awayTeamName: string;
   readonly commenceTime: Date;
-  /** Row creation time; absent or null means "unknown", which never triggers a correction. */
+  /**
+   * Row creation time; absent or null means "unknown". Read by
+   * requiresReconfirmation only; the clock correction does not depend on it.
+   */
   readonly createdAt?: Date | null;
 };
 
@@ -78,8 +95,9 @@ export type FixtureConfirmation =
       readonly status: "confirmed";
       readonly event: EspnSeedGame;
       /**
-       * Non-null only for a row that required re-confirmation (older than 30 days,
-       * kickoff within 48h) whose ESPN clock differs by more than 15 minutes.
+       * ESPN's clock when it differs from the stored kickoff by more than 15
+       * minutes and the kickoff is still ahead; null otherwise
+       * (commenceTimeCorrection).
        */
       readonly correctedCommenceTime: Date | null;
     }
@@ -142,15 +160,24 @@ export function fixtureDateKeys(d: Date): readonly string[] {
   return utc === eastern ? [utc] : [utc, eastern];
 }
 
-/** ESPN `dates=` value covering every probe: one key, or `min-max` (range). */
-export function scoreboardDatesParam(probes: readonly FixtureProbe[]): string | null {
+/** Sorted unique YYYYMMDD keys covering every probe: one ESPN request each (per group). */
+export function scoreboardDateKeys(probes: readonly FixtureProbe[]): readonly string[] {
   const keys = new Set<string>();
   for (const p of probes) {
     if (Number.isNaN(p.commenceTime.getTime())) continue;
     for (const k of fixtureDateKeys(p.commenceTime)) keys.add(k);
   }
-  if (keys.size === 0) return null;
-  const sorted = [...keys].sort();
+  return [...keys].sort();
+}
+
+/**
+ * The span covering every probe as one `dates=` value: one key, or `min-max`.
+ * A log-line summary of a batch; the confirmer itself requests one day at a
+ * time (module doc: a range can truncate).
+ */
+export function scoreboardDatesParam(probes: readonly FixtureProbe[]): string | null {
+  const sorted = scoreboardDateKeys(probes);
+  if (sorted.length === 0) return null;
   const min = sorted[0]!;
   const max = sorted[sorted.length - 1]!;
   return min === max ? min : `${min}-${max}`;
@@ -169,10 +196,12 @@ function teamsMatch(probe: FixtureProbe, ev: EspnSeedGame, allowPrefix: boolean)
 }
 
 /**
- * The scoreboard event for this probe: same two teams AND a shared date key.
- * Several candidates (a baseball doubleheader) resolve to the nearest clock.
- * Prefix (city-only) matching follows the identity module's per-sport gate;
- * college keys stay exact-only so "Washington" never confirms "Washington State".
+ * The scoreboard event for this probe: same two teams AND a shared date key AND
+ * a clock within 12 hours of ours (FIXTURE_MAX_CLOCK_DELTA_MS; further apart is
+ * a different contest, not this one relisted). Several candidates (a baseball
+ * doubleheader) resolve to the nearest clock. Prefix (city-only) matching
+ * follows the identity module's per-sport gate; college keys stay exact-only so
+ * "Washington" never confirms "Washington State".
  */
 export function findListedFixture(
   probe: FixtureProbe,
@@ -187,6 +216,7 @@ export function findListedFixture(
     if (!fixtureDateKeys(ev.commenceTime).some((k) => probeKeys.has(k))) continue;
     if (!teamsMatch(probe, ev, allowPrefix)) continue;
     const delta = Math.abs(ev.commenceTime.getTime() - probe.commenceTime.getTime());
+    if (delta > FIXTURE_MAX_CLOCK_DELTA_MS) continue;
     if (delta < bestDelta) {
       best = ev;
       bestDelta = delta;
@@ -195,26 +225,35 @@ export function findListedFixture(
   return best;
 }
 
-/** Row created more than 30 days ago whose kickoff is within the next 48 hours. */
+/**
+ * Row created more than 30 days ago whose kickoff is still ahead of `now` and
+ * within the next 48 hours. A kickoff already behind `now` is a historical
+ * game: never re-confirmed, never rewritten.
+ */
 export function requiresReconfirmation(probe: FixtureProbe, now: Date): boolean {
   if (!probe.createdAt) return false;
   if (now.getTime() - probe.createdAt.getTime() < FIXTURE_RECONFIRM_ROW_AGE_MS) return false;
-  return probe.commenceTime.getTime() - now.getTime() <= FIXTURE_RECONFIRM_HORIZON_MS;
+  const lead = probe.commenceTime.getTime() - now.getTime();
+  return lead > 0 && lead <= FIXTURE_RECONFIRM_HORIZON_MS;
 }
 
 /**
- * ESPN's clock for a confirmed, re-confirmed row when it differs from ours by
- * more than 15 minutes; null otherwise. This is a schedule correction taken
- * from a free, cleared public source (facts only: the listed kickoff of a
- * contest we already carry), not a fabricated value: the row keeps its teams
- * and identity, only its stale kickoff moves to what ESPN publishes.
+ * ESPN's clock for a confirmed row when it differs from ours by more than 15
+ * minutes and the kickoff is still ahead of `now`; null otherwise. Applies to
+ * every confirmed row, not only one older than 30 days: a candidate matched on
+ * the same date key at a materially different clock would otherwise be priced
+ * and settled at the stale time. This is a schedule correction taken from a
+ * free, cleared public source (facts only: the listed kickoff of a contest we
+ * already carry), not a fabricated value: the row keeps its teams and identity,
+ * only its stale kickoff moves to what ESPN publishes. A kickoff already behind
+ * `now` is never rewritten (historical game).
  */
 export function commenceTimeCorrection(
   probe: FixtureProbe,
   espnCommenceTime: Date,
   now: Date,
 ): Date | null {
-  if (!requiresReconfirmation(probe, now)) return null;
+  if (probe.commenceTime.getTime() <= now.getTime()) return null;
   const delta = Math.abs(espnCommenceTime.getTime() - probe.commenceTime.getTime());
   return delta > FIXTURE_TIME_CORRECTION_MIN_MS ? espnCommenceTime : null;
 }
@@ -271,6 +310,15 @@ async function fetchFixtureScoreboardGroup(
     });
     if (!res.ok) return { ok: false, error: `${label} HTTP ${res.status}` };
     const body = (await res.json()) as Parameters<typeof parseEspnScoreboardForSeed>[1];
+    const rawEvents = body.events?.length ?? 0;
+    if (rawEvents >= ESPN_SCOREBOARD_LIMIT) {
+      // A full page: ESPN may have dropped fixtures past the cap, so absence
+      // from this response is not evidence. Fail closed like a fetch failure.
+      return {
+        ok: false,
+        error: `${label} truncated: ${rawEvents} events at limit=${ESPN_SCOREBOARD_LIMIT}, board not confirmable`,
+      };
+    }
     return { ok: true, events: parseEspnScoreboardForSeed(short, body) };
   } catch (err) {
     return {
@@ -281,13 +329,12 @@ async function fetchFixtureScoreboardGroup(
 }
 
 /**
- * The free ESPN scoreboard for a sport over a `dates=` value (single day or
- * `min-max` range, both accepted by the public endpoint): one request per
- * ESPN group the sport needs (`espnFixtureGroups`), events merged and deduped
- * by externalId. Absence from this board is treated as evidence, so a failure
- * of ANY group request fails the whole fetch (a missing division must never
- * read as "fixture not found"). Same host, path table, limit and parser as
- * the schedule seed.
+ * The free ESPN scoreboard for a sport for one `dates=` day key: one request
+ * per ESPN group the sport needs (`espnFixtureGroups`), events merged and
+ * deduped by externalId. Absence from this board is treated as evidence, so a
+ * failure of ANY group request, including a truncated page, fails the whole
+ * fetch (a missing division must never read as "fixture not found"). Same
+ * host, path table, limit and parser as the schedule seed.
  */
 export async function fetchFixtureScoreboard(
   short: ShortSportKey,
@@ -307,25 +354,15 @@ export async function fetchFixtureScoreboard(
   return { ok: true, events: [...byId.values()] };
 }
 
-type CachedBoard = {
-  readonly minKey: string;
-  readonly maxKey: string;
-  readonly result: FixtureScoreboardFetch;
-};
-
-function splitDates(dates: string): { minKey: string; maxKey: string } {
-  const [a, b] = dates.split("-");
-  return { minKey: a!, maxKey: b ?? a! };
-}
-
 /**
- * Per-run confirmer. Caches the merged (all groups) board per sport; a later
- * batch whose dates fall inside the cached range reuses it, so a run adds at
- * most one free request per group per sport (a wider later batch widens the
- * range once).
+ * Per-run confirmer. Caches the merged (all groups) board per sport per day; a
+ * later batch on days already fetched reuses them, so a run adds at most one
+ * free request per day per group per sport. A day's failure (HTTP error,
+ * timeout, truncated page) is cached too: it is not retried within the cycle,
+ * and any failed day fails the batch (fail-closed).
  */
 export class FixtureConfirmer {
-  private readonly boards = new Map<ShortSportKey, CachedBoard>();
+  private readonly boards = new Map<ShortSportKey, Map<string, FixtureScoreboardFetch>>();
   private readonly fetchImpl: typeof fetch | undefined;
   private readonly timeoutMs: number | undefined;
   private readonly now: Date;
@@ -340,33 +377,44 @@ export class FixtureConfirmer {
     this.now = opts?.now ?? new Date();
   }
 
-  private async board(short: ShortSportKey, dates: string): Promise<FixtureScoreboardFetch> {
-    const want = splitDates(dates);
-    const cached = this.boards.get(short);
-    if (cached && cached.minKey <= want.minKey && cached.maxKey >= want.maxKey) {
-      return cached.result;
+  /** The merged board for these day keys: one fetch per day not yet cached. */
+  private async board(
+    short: ShortSportKey,
+    dateKeys: readonly string[],
+  ): Promise<FixtureScoreboardFetch> {
+    let days = this.boards.get(short);
+    if (!days) {
+      days = new Map<string, FixtureScoreboardFetch>();
+      this.boards.set(short, days);
     }
-    const minKey = cached && cached.minKey < want.minKey ? cached.minKey : want.minKey;
-    const maxKey = cached && cached.maxKey > want.maxKey ? cached.maxKey : want.maxKey;
-    const result = await fetchFixtureScoreboard(
-      short,
-      minKey === maxKey ? minKey : `${minKey}-${maxKey}`,
-      { fetchImpl: this.fetchImpl, timeoutMs: this.timeoutMs },
-    );
-    this.boards.set(short, { minKey, maxKey, result });
-    return result;
+    const byId = new Map<string, EspnSeedGame>();
+    for (const key of dateKeys) {
+      let day = days.get(key);
+      if (!day) {
+        day = await fetchFixtureScoreboard(short, key, {
+          fetchImpl: this.fetchImpl,
+          timeoutMs: this.timeoutMs,
+        });
+        days.set(key, day);
+      }
+      if (!day.ok) return day;
+      for (const ev of day.events) {
+        if (!byId.has(ev.externalId)) byId.set(ev.externalId, ev);
+      }
+    }
+    return { ok: true, events: [...byId.values()] };
   }
 
-  /** Confirm every probe of one sport against that sport's board (one fetch). */
+  /** Confirm every probe of one sport against that sport's board (one fetch per day per group). */
   async confirmBatch(
     sportKey: string,
     probes: readonly FixtureProbe[],
   ): Promise<FixtureBatchResult> {
     const short = espnShortForSportKey(sportKey);
     if (!short) return { status: "unsupported_sport" };
-    const dates = scoreboardDatesParam(probes);
-    if (!dates) return { status: "ok", byGameId: new Map(), eventsOnBoard: 0 };
-    const board = await this.board(short, dates);
+    const dateKeys = scoreboardDateKeys(probes);
+    if (dateKeys.length === 0) return { status: "ok", byGameId: new Map(), eventsOnBoard: 0 };
+    const board = await this.board(short, dateKeys);
     if (!board.ok) return { status: "fetch_failed", error: board.error };
     return {
       status: "ok",

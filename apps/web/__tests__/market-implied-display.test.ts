@@ -8,6 +8,7 @@ import {
   marketImpliedPercent,
   resolveMarketImplied,
 } from "@/lib/picks/market-implied-display";
+import { receiptMarketFairProb } from "@/lib/calibration/proven-path-rows";
 
 /**
  * v5.2.8 display side (ledger C-107): the market-implied win probability is
@@ -50,6 +51,19 @@ describe("resolveMarketImplied", () => {
     expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 0 }, PRO)).toBeNull();
     expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 1 }, PRO)).toBeNull();
     expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: Number.NaN }, PRO)).toBeNull();
+  });
+
+  it("never displays the synthetic coin-flip 0.5 a receipt may carry, the same rule the calibration paths apply", () => {
+    // A receipt minted without a resolved market probability carries 0.5; the
+    // public calibration loaders reject it (receiptMarketFairProb), so "50%"
+    // must never be shown as a market price either.
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 0.5 }, PRO)).toBeNull();
+    expect(receiptMarketFairProb({ marketFairProb: 0.5 })).toBeNull();
+    // Same tolerance as the calibration rule: a real price near a coin flip still shows.
+    for (const p of [0.51, 0.49, 0.5000001, 0.4999999]) {
+      expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: p }, PRO)?.prob).toBe(p);
+      expect(receiptMarketFairProb({ marketFairProb: p })).toBe(p);
+    }
   });
 });
 
@@ -234,9 +248,34 @@ describe("/api/picks payload: market-implied win probability follows the confide
     expect(data[0]?.["hasBookPrice"]).toBe(true);
   });
 
+  it("hasBookPrice follows the mint-time snapshot count through a transient feed gap on the live column", async () => {
+    // A refresh cycle briefly wrote Pick.bookmakerCount 0 (feed gap); the
+    // receipt-era snapshot still says 6. The pill and the percentage must read
+    // the same count, never "No book price attached" beside a percentage.
+    const gapRow = { ...receiptedMoneylineRow("ml-gap"), bookmakerCount: 0, signalSnapshot: { bookmakerCount: 6 } };
+    mocks.pickFindMany.mockResolvedValue([gapRow]);
+
+    // FREE branch: the pill reads the snapshot count; no percentage as ever.
+    const free = await callPicks();
+    const freeRow = (free.body["data"] as Array<Record<string, unknown>>)[0]!;
+    expect(freeRow["hasBookPrice"]).toBe(true);
+    expect(freeRow).not.toHaveProperty("marketImplied");
+
+    // PRO branch: the pill and the percentage agree.
+    mocks.auth.mockResolvedValue({ user: { id: "user-pro" } });
+    mocks.getUserEntitlements.mockResolvedValue({ ...PRO });
+    mocks.pickFindMany.mockResolvedValue([gapRow]);
+    const pro = await callPicks();
+    const proRow = (pro.body["data"] as Array<Record<string, unknown>>)[0]!;
+    expect(proRow["hasBookPrice"]).toBe(true);
+    expect(proRow["marketImplied"]).toEqual({ prob: 0.6142, bookmakerCount: 6 });
+  });
+
   it("strips the signal-slate marker from the rendered selection for every viewer", async () => {
+    // A signal-slate row never mints a PickSignalSnapshot (process-sport.ts is
+    // the only writer), so it carries none.
     mocks.pickFindMany.mockResolvedValue([
-      { ...receiptedMoneylineRow("sig-1"), selection: "Home ML (model signal)", bookmakerCount: 0, line: 0, proofReceipt: null },
+      { ...receiptedMoneylineRow("sig-1"), selection: "Home ML (model signal)", bookmakerCount: 0, line: 0, proofReceipt: null, signalSnapshot: null },
     ]);
     const { body } = await callPicks();
     const data = body["data"] as Array<Record<string, unknown>>;

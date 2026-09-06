@@ -61,17 +61,26 @@ vi.mock("@/lib/settlement/free-path-clv", () => ({
 vi.mock("@/lib/settlement/free-path-snapshot", () => ({
   drainPendingSnapshotOutcomes: vi.fn(async () => ({ attempted: 0, done: 0, failed: 0 })),
 }));
-vi.mock("@/lib/settlement/zero-sit-lane", () => ({
-  runZeroSitLane: vi.fn(async () => {
-    calls.push("runZeroSitLane");
-    return zeroSitResult(0, 0);
-  }),
-}));
+vi.mock("@/lib/settlement/zero-sit-lane", async () => {
+  // The lane is replaced; the deadline helper and its reserve stay real so the
+  // route's budget arithmetic is what is under test.
+  const actual = await vi.importActual<typeof import("@/lib/settlement/zero-sit-lane")>(
+    "@/lib/settlement/zero-sit-lane",
+  );
+  return {
+    zeroSitDeadline: actual.zeroSitDeadline,
+    ZERO_SIT_ROUTE_TAIL_RESERVE_MS: actual.ZERO_SIT_ROUTE_TAIL_RESERVE_MS,
+    runZeroSitLane: vi.fn(async () => {
+      calls.push("runZeroSitLane");
+      return zeroSitResult(0, 0);
+    }),
+  };
+});
 
-import { GET } from "@/app/api/cron/settle-picks/route";
+import { GET, maxDuration } from "@/app/api/cron/settle-picks/route";
 import { settleSport } from "@sports/ingestion-pipeline";
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
-import { runZeroSitLane } from "@/lib/settlement/zero-sit-lane";
+import { runZeroSitLane, ZERO_SIT_ROUTE_TAIL_RESERVE_MS } from "@/lib/settlement/zero-sit-lane";
 import { captureError } from "@/lib/observability/sentry";
 
 /** Zero-sit lane summary shape (WP-29); counts only, no product data. */
@@ -83,6 +92,8 @@ function zeroSitResult(voided: number, unpublished: number) {
       minAgeHours: 24,
       inspected: voided,
       capReached: false,
+      deadlineHit: false,
+      remaining: 0,
       voided,
       gamesCanceled: 0,
       byCode: { OVERDUE_NO_SCORE: voided, SCORE_MISMATCH_CROSS_PATH: 0, AMBIGUOUS_TEAM_NAME: 0, FIXTURE_NOT_FOUND: 0 },
@@ -358,6 +369,20 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     expect(runZeroSitLane).toHaveBeenLastCalledWith(
       expect.objectContaining({ sportKey: "americanfootball_nfl" }),
     );
+  });
+
+  it("hands the zero-sit lane a deadline derived from the route start that keeps the tail reserve", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    const before = Date.now();
+    await GET(new Request("http://x/api/cron/settle-picks"));
+    const after = Date.now();
+    const arg = (runZeroSitLane as Mock).mock.calls.at(-1)![0] as { deadlineAtMs?: number };
+    const budgetMs = maxDuration * 1000 - ZERO_SIT_ROUTE_TAIL_RESERVE_MS;
+    expect(arg.deadlineAtMs).toBeDefined();
+    expect(arg.deadlineAtMs!).toBeGreaterThanOrEqual(before + budgetMs);
+    expect(arg.deadlineAtMs!).toBeLessThanOrEqual(after + budgetMs);
+    // The later steps (freeze, outbox drain, health) keep at least a minute.
+    expect(ZERO_SIT_ROUTE_TAIL_RESERVE_MS).toBeGreaterThanOrEqual(60_000);
   });
 
   it("a cycle whose only work is zero-sit voids is not starved and reports the counts", async () => {

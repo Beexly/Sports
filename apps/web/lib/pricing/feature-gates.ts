@@ -104,7 +104,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "confidence",
     displayName: "Confidence",
     customerExplanation: "Galaxy's estimate of how strong, stable, and supported a signal is. An estimate, never a promise.",
-    internalNote: "Confidence score. Free gets it on its 2 free (tier:FREE) picks; Pro+ gets it on the full board.",
+    internalNote: "Confidence score, Pro and Elite only (packages/types: FREE canSeeConfidence=false; /api/picks nulls it for every viewer without the entitlement). Free's two daily teaser picks carry no confidence score; the free trust signal is the Edge Index. An earlier note here said Free got it on its two picks, which never matched the shipped entitlements.",
     minTier: "PRO", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
   {
@@ -183,7 +183,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "calibration-report",
     displayName: "Calibration reports",
-    customerExplanation: "How well the market-implied probability fixed in each proof receipt has matched real outcomes on settled two-way moneyline picks, the honesty check on the number. Confidence is a ranking score and is not on that chart.",
+    customerExplanation: "How well the market-implied probability fixed in each proof receipt has matched real outcomes on settled two-way moneyline picks, the honesty check on the number. Confidence is a ranking score and is not part of that measurement.",
     internalNote: "Calibration depth for Elite.",
     minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
   },
