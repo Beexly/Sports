@@ -610,6 +610,24 @@ describe("processSport", () => {
     expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledWith([primary], [secondary], 2);
   });
 
+  it("hands the engine the sport KEY, not the display name, so the three-way guard can fire", async () => {
+    // The engine suppresses moneylines for three-way markets with
+    // isThreeWayMoneylineSport(input.sport), which tests startsWith("soccer").
+    // This call site passed sport.name. For soccer_usa_mls that is "MLS", so the
+    // guard never fired and soccer moneylines published against an unpriced
+    // draw. Every other sport: assignment in this package passes the key; this
+    // was the only one that did not, and the engine's own unit test could not
+    // see it because it calls the scorer directly with a key.
+    const soccer = { key: "soccer_usa_mls", name: "MLS", displayName: "MLS" } as const;
+
+    await processSport(soccer, "key", gates());
+
+    const inputs = mocks.scoreGames.mock.calls[0]?.[0] as Array<{ sport: string }> | undefined;
+    expect(inputs?.length ?? 0).toBeGreaterThan(0);
+    expect(inputs![0]!.sport).toBe("soccer_usa_mls");
+    expect(inputs![0]!.sport).not.toBe("MLS");
+  });
+
   it("runs the happy path and marks the IngestionRun SUCCESS with counts", async () => {
     const result = await processSport(SPORT, "key", gates());
 
