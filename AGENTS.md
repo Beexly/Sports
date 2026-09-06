@@ -48,20 +48,27 @@ and on that fuller, more representative sample ECE reads 0.0524. That is not a r
 is the honest number emerging with more data, and it is the number the gate reads. Second,
 the pooled figure flatters. Every individual model version measures WORSE than the pool:
 v5.2.7 (the current one, n 245) ECE 0.1089, v5.2.6 (n 110) 0.0587, v5.1.0 (n 74) 0.0729,
-v5.0.0 (n 29) 0.1531. A pooled number lower than every stratum it is built from is getting
-help from opposite-direction errors cancelling across strata, so 0.0524 should be read as the
-optimistic end of the range, not the true calibration of what is running. Publishing a PROVEN
-claim on a pooled figure while the deployed version alone measures 0.1089 is exactly the kind
-of thing this product's premise forbids.
+v5.0.0 (n 29) 0.1531. State that carefully: what is MEASURED is that the pooled value sits
+below every stratum it is built from. `expectedCalibrationError` stores weighted ABSOLUTE
+per-bin gaps, so these numbers do not by themselves demonstrate that signed errors cancelled
+across strata; that is a plausible mechanism, not an observed one, and proving it needs an
+aligned per-bin decomposition nobody has run. The actionable part does not depend on the
+mechanism: whatever produces it, 0.0524 is the pooled figure and the deployed v5.2.7 measures
+0.1089 on its own 245 rows. Publishing a PROVEN claim off the pooled number while the version
+actually serving traffic measures more than twice the floor is exactly the kind of thing this
+product's premise forbids.
 
-By sport, the miscalibration is concentrated and is in the safer direction for the two
-football books: MLB n 365 ECE 0.0501 (hit 0.649 against meanP 0.648, essentially calibrated),
-NCAAF n 65 ECE 0.1123 (hit 0.938 against meanP 0.871), NFL n 28 ECE 0.267 (hit 0.643 against
-meanP 0.586). NCAAF and NFL are UNDER-confident, beating their own stated probabilities, which
-costs ECE without overstating performance to a customer. MLB carries the sample and sits on
-the line. No agent should touch thresholds, floors or the engine to move this: law 9 forbids
-weakening the guard, and the engine is frozen under MODEL_VERSION. The levers are more settled
-rows and a real calibration pass, both founder-gated.
+By sport, only ONE stratum has the sample to support a conclusion. MLB n 365 ECE 0.0501, hit
+0.649 against meanP 0.648: essentially calibrated, and it carries the pooled figure. The other
+two are small-sample and illustrative only: NCAAF n 65 ECE 0.1123, NFL n 28 ECE 0.267. Do not
+read a direction off those. An ECE spread across ten confidence bins at n 28 puts roughly three
+picks in a bin, so both the magnitude and the sign are dominated by sampling noise; an earlier
+draft of this note called the two football books "under-confident, the safer direction to be
+wrong in" and that inference is not supported by n 28 (cubic, PR #715). Anyone acting on this
+should treat MLB as the measurement and treat NCAAF and NFL as too thin to steer by until they
+have real rows. No agent should touch thresholds, floors or the engine to move any of this:
+law 9 forbids weakening the guard, and the engine is frozen under MODEL_VERSION. The levers are
+more settled rows and a real calibration pass, both founder-gated.
 
 **UPDATED 2026-09-06 (05:00 UTC): tonight's build is on `claude/sports-prediction-launch-rtiexc`
 (four code commits `b4885f214`, `3359e072a`, `23a0a3a0f`, `f06be6b31`; typecheck 0, lint 0,
