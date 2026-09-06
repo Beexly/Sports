@@ -1,22 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ContestEntrySchema } from "@/lib/contests/types";
 import { enterContest } from "@/lib/contests/store";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import { isContestsPublic } from "@/lib/launch/public-surface-gate";
+import { clientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   if (!isContestsPublic()) {
     return NextResponse.json({ ok: false, error: "Not found" }, { status: 404 });
   }
 
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    req.headers.get("x-real-ip") ||
-    "anon";
-  const rl = await consumePublicFormRateLimit("contest-enter", ip, 8, 60_000);
+  const rl = await consumePublicFormRateLimit("contest-enter", clientIp(req), 8, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many entries — try again shortly." },

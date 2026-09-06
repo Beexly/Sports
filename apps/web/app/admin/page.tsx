@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@sports/db";
+import { triggerDataRefreshAction } from "@/lib/admin/trigger-refresh-action";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -114,11 +115,8 @@ function TriggerRefreshButton() {
     <form
       action={async () => {
         "use server";
-        const response = await fetch(
-          `${process.env["NEXT_PUBLIC_APP_URL"] ?? "http://localhost:3000"}/api/admin/trigger-refresh`,
-          { method: "POST" }
-        );
-        if (!response.ok) console.error("Refresh failed");
+        const ok = await triggerDataRefreshAction();
+        if (!ok) console.error("Refresh failed");
       }}
     >
       <button

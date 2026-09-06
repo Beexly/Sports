@@ -105,7 +105,7 @@ export function resolveCalibrationPublishPolicy(
       "Unpublished / RED — performance surfaces stay dark. Fix metrics or wait for streak.";
   } else if (green && !autoPublish && !envPublished) {
     operatorHint =
-      "Eligibility GREEN. Set CALIBRATION_AUTO_PUBLISH=true (one-time) or CALIBRATION_PUBLISHED=true to publish.";
+      "Eligibility GREEN. One-time: enable calibration auto-publish (or the calibration published flag). No weekly ceremony after that.";
   } else {
     operatorHint = `Published=${published} eligibility=${input.eligibilityStatus} streak=${consecutiveGreen}/${streakRequired} — performance dark until publishedEffective && GREEN.`;
   }

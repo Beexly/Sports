@@ -17,6 +17,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { getChapterByWeek, getCipherStatus, normalizeAnswer } from "@/lib/cipher/cipher";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import { clientIp } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -24,12 +25,6 @@ export const revalidate = 0;
 // ── Per-IP rate limit (durable Postgres via public-form helper) ───────────
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_ATTEMPTS = 8;
-
-function clientIp(req: NextRequest): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip") ?? "anon";
-}
 
 function sha256(s: string): string {
   return createHash("sha256").update(s).digest("hex");

@@ -31,7 +31,7 @@ export function loadWaitlistPosture(env: Env = process.env): WaitlistPosture {
     operatorHint = "Waitlist public — /waitlist accepts anonymous lead capture.";
   } else if (basicAuthCredentialsConfigured) {
     operatorHint =
-      "Waitlist Basic Auth ON (GATE + BASIC_FORCE). Unset GSE_WAITLIST_BASIC_FORCE to open FOUNDING funnel.";
+      "Waitlist Basic Auth ON (gate + force flags). Unset the Basic-Auth force flag to open the FOUNDING funnel.";
   } else {
     operatorHint =
       "Waitlist gate flag ON but Basic Auth credentials incomplete — page may 401 inconsistently. Fix creds or disable gate.";

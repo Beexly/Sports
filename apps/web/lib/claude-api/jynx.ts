@@ -34,6 +34,7 @@ import {
   isBedrockConfigured,
   isVertexConfigured,
   isAzureFoundryConfigured,
+  isOpenRouterConfigured,
 } from "./provider-config";
 
 export type JynxCloud = "bedrock" | "azure" | "vertex";
@@ -167,16 +168,16 @@ export function planJynx(input: PlanJynxInput = {}, env: Env = process.env): Jyn
 
   if (freeLaneWillTry) {
     primaryLane = "content_free";
-    reason = `Free-lane first for surface=${surface} (Cerebras $0). Clouds [${clouds.join(",") || "none"}] then Anthropic if free-lane fails.`;
+    reason = `Free-lane first for surface=${surface} (OpenRouter free → Cerebras $0). Clouds [${clouds.join(",") || "none"}] then Anthropic if free-lane fails.`;
   } else if (clouds.length > 0) {
     primaryLane = clouds[0]!;
-    reason = `Claude credits via ${clouds.join("→")} (mode=${providerMode}, failover=${isCloudFailoverEnabled(env)}). Cash Anthropic last.`;
+    reason = `Claude credits via ${clouds.join("→")} (provider mode ${providerMode}, failover=${isCloudFailoverEnabled(env)}). Cash Anthropic last.`;
   } else {
     primaryLane = "anthropic_direct";
     reason =
       providerMode === "auto"
         ? "Auto mode but no cloud fully configured — Anthropic cash until Bedrock/Azure/Vertex env complete."
-        : "Claude cash path (set CLAUDE_PROVIDER=auto or bedrock|azure|vertex + maps to burn credits).";
+        : "Claude cash path (point the Claude provider at credits: set auto mode or a specific cloud + model maps to burn credits).";
   }
 
   return {
@@ -200,6 +201,7 @@ export interface JynxPublicSnapshot {
   readonly attemptOrder: readonly string[];
   readonly failover: boolean;
   readonly freeLaneEnabled: boolean;
+  readonly openRouterConfigured: boolean;
   readonly freeLaneSurfaces: readonly string[];
   readonly contentPlanPrimary: JynxLane;
   readonly contentPlanReason: string;
@@ -215,6 +217,7 @@ export function loadJynxPublicSnapshot(env: Env = process.env): JynxPublicSnapsh
     attemptOrder: [...plan.cloudAttempts],
     failover: isCloudFailoverEnabled(env),
     freeLaneEnabled: isFreeLaneEnabled(env),
+    openRouterConfigured: isOpenRouterConfigured(env),
     freeLaneSurfaces: [...FREE_LANE_SURFACES],
     contentPlanPrimary: plan.primaryLane,
     contentPlanReason: plan.reason,

@@ -43,10 +43,10 @@ describe("loadWaitlistPosture", () => {
     expect(p.gateEnabled).toBe(true);
     expect(p.publicPageOpen).toBe(false);
     expect(p.basicAuthCredentialsConfigured).toBe(true);
-    // The hint names the flag that actually re-opens the funnel. It used to say
-    // GATE_ENABLED=false, which under the two-flag design is no longer the
-    // instruction that works — unsetting BASIC_FORCE is.
-    expect(p.operatorHint).toMatch(/BASIC_FORCE/);
+    // The hint names the control that actually re-opens the funnel. It used to
+    // name GATE_ENABLED, then the force flag verbatim; SEC-05 (anon payload
+    // env-name hygiene) made hints prose-only, so assert the prose control.
+    expect(p.operatorHint).toMatch(/force flag/i);
   });
 
   it("flags incomplete creds when the gate is genuinely on", () => {

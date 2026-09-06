@@ -6,11 +6,12 @@
  * WAITLIST_WELCOME_EMAIL=true + Resend configured — never blocks durability.
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { validateWaitlistLead } from "@/lib/gse/waitlist-validation";
 import { selectWaitlistStore } from "@/lib/gse/waitlist-store";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import { sendWaitlistWelcomeEmail } from "@/lib/gse/waitlist-welcome-email";
+import { clientIp } from "@/lib/api/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,12 +31,8 @@ function isTooFast(body: unknown): boolean {
   return elapsed >= 0 && elapsed < MIN_SUBMIT_MS;
 }
 
-export async function POST(request: Request): Promise<NextResponse> {
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "anon";
-  const rl = await consumePublicFormRateLimit("waitlist", ip, 5, 60_000);
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const rl = await consumePublicFormRateLimit("waitlist", clientIp(request), 5, 60_000);
   if (!rl.ok) {
     return NextResponse.json(
       { ok: false, error: "Too many requests" },

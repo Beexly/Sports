@@ -75,11 +75,14 @@ describe("Jynx planner", () => {
     const snap = loadJynxPublicSnapshot({
       CLAUDE_PROVIDER: "auto",
       CEREBRAS_API_KEY: "secret-key",
+      OPENROUTER_API_KEY: "or-secret",
       CONTENT_FREE_LANE_ENABLED: "true",
       ...BEDROCK,
     });
     expect(JSON.stringify(snap)).not.toContain("secret-key");
+    expect(JSON.stringify(snap)).not.toContain("or-secret");
     expect(snap.freeLaneEnabled).toBe(true);
+    expect(snap.openRouterConfigured).toBe(true);
     expect(snap.contentPlanPrimary).toBe("content_free");
     expect(snap.configuredClouds).toContain("bedrock");
   });

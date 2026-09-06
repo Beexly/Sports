@@ -5,6 +5,7 @@ import {
   type JynxProviderMode,
   type JynxPublicSnapshot,
 } from "@/lib/claude-api/jynx";
+import { isOpenRouterConfigured } from "@/lib/claude-api/provider-config";
 
 /**
  * Public-safe credit / free-capacity posture for ops truth.
@@ -33,6 +34,7 @@ const CLOUD_LABEL: Readonly<Record<JynxCloud, string>> = {
 
 export interface CreditStackPosture {
   readonly freeLaneConfigured: boolean;
+  readonly openRouterConfigured: boolean;
   readonly freeLaneSurfaces: readonly string[];
   readonly internalLlmConfigured: boolean;
   readonly claudeProvider: ClaudeProviderSelection;
@@ -62,9 +64,11 @@ export function resolveClaudeProviderSelection(env: Env = process.env): ClaudePr
 }
 
 export function loadCreditStackPosture(env: Env = process.env): CreditStackPosture {
+  const openRouterConfigured = isOpenRouterConfigured(env);
   const freeLaneConfigured =
     env["CONTENT_FREE_LANE_ENABLED"] === "true" &&
-    (has(env, "CEREBRAS_API_KEY") ||
+    (openRouterConfigured ||
+      has(env, "CEREBRAS_API_KEY") ||
       (has(env, "FREE_LANE_SECONDARY_BASE_URL") && has(env, "FREE_LANE_SECONDARY_MODEL")));
   const internalLlmConfigured = has(env, "INTERNAL_LLM_API_KEY");
   const claudeProvider = resolveClaudeProviderSelection(env);
@@ -112,7 +116,7 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
 
   let operatorHint: string;
   if (freeLaneConfigured && creditCloudsReady) {
-    operatorHint = `Free-lane + Claude credits via ${creditPath} — content $0, Claude on credits, cash Anthropic last.`;
+    operatorHint = `Free-lane + Claude credits via ${creditPath} — content $0 (OpenRouter free first), Claude on credits, cash Anthropic last.`;
   } else if (creditCloudsReady) {
     operatorHint = `Claude credits via ${creditPath} (mode=${claudeProvider}). Enable free-lane for content $0.`;
   } else if (anyCloudConfigured) {
@@ -137,6 +141,7 @@ export function loadCreditStackPosture(env: Env = process.env): CreditStackPostu
 
   return {
     freeLaneConfigured,
+    openRouterConfigured,
     freeLaneSurfaces: [...freeLaneSurfaces],
     internalLlmConfigured,
     claudeProvider,

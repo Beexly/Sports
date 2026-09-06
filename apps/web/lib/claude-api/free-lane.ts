@@ -2,10 +2,11 @@
  * Content free-lane dispatcher.
  *
  * Chain (max free reward, same governance):
- *   1) Cerebras (gpt-oss-120b) when CONTENT_FREE_LANE_ENABLED + CEREBRAS_API_KEY
- *   2) Secondary OpenAI-compat free host (Gemma / Nemotron / etc.) when
+ *   1) OpenRouter free (OPENROUTER_API_KEY) — first $0 attempt, best free quality
+ *   2) Cerebras (gpt-oss-120b) when CONTENT_FREE_LANE_ENABLED + CEREBRAS_API_KEY
+ *   3) Secondary OpenAI-compat free host (Gemma / Nemotron / etc.) when
  *      FREE_LANE_SECONDARY_BASE_URL + FREE_LANE_SECONDARY_MODEL set
- *   3) callClaude → Jynx multi-cloud credits → Anthropic cash
+ *   4) callClaude → Jynx multi-cloud credits → Anthropic cash
  *
  * Surfaces: free-lane-policy allow-list only (content, brief).
  */
@@ -13,6 +14,7 @@ import { callClaude } from "./provider-dispatch";
 import type { ClaudeMessagesRequest, ClaudeMessagesResult } from "./messages";
 import { callCerebrasMessages, CerebrasMessagesError } from "./providers/cerebras";
 import { callOpenAiCompatMessages, OpenAiCompatError } from "./openai-compat";
+import { OPENROUTER_BASE_URL, openRouterConfig } from "./provider-config";
 import type { ClaudeSurface } from "./model-router";
 import {
   FREE_LANE_SURFACES,
@@ -57,6 +59,27 @@ export async function generateContentMessages(
   env: Env = process.env
 ): Promise<ClaudeMessagesResult> {
   if (shouldUseFreeLane(request.surface, env)) {
+    const or = openRouterConfig(env);
+    if (or) {
+      for (const model of or.models) {
+        try {
+          return await callOpenAiCompatMessages({
+            baseUrl: OPENROUTER_BASE_URL,
+            apiKey: or.apiKey,
+            model,
+            system: request.system,
+            user: request.user,
+            maxTokens: request.maxTokens,
+            temperature: request.temperature,
+            fetchImpl: request.fetchImpl,
+            ledgerPrefix: "free-openrouter/",
+          });
+        } catch (error) {
+          if (!(error instanceof OpenAiCompatError)) throw error;
+        }
+      }
+    }
+
     const cerebrasKey = env["CEREBRAS_API_KEY"]?.trim();
     if (cerebrasKey) {
       try {

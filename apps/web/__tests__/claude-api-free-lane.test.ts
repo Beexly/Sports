@@ -23,7 +23,22 @@ const cerebrasResponse = () =>
     { status: 200 }
   );
 
+const openRouterResponse = () =>
+  new Response(
+    JSON.stringify({
+      choices: [{ message: { content: "OpenRouter text" } }],
+      usage: { prompt_tokens: 7, completion_tokens: 3 },
+    }),
+    { status: 200 }
+  );
+
 const FREE_ON = { CONTENT_FREE_LANE_ENABLED: "true", CEREBRAS_API_KEY: "cb-key" } as const;
+
+const OPENROUTER_ON = {
+  CONTENT_FREE_LANE_ENABLED: "true",
+  OPENROUTER_API_KEY: "or-key",
+  CEREBRAS_API_KEY: "cb-key",
+} as const;
 
 const base = { apiKey: "an-key", maxTokens: 100, system: "S", user: "U" } as const;
 
@@ -42,6 +57,42 @@ describe("content free-lane dispatcher", () => {
     const result = await generateContentMessages({ ...base, fetchImpl, surface: "brief" }, {});
     expect(result.text).toBe("Anthropic text");
     expect(urls(fetchImpl)[0]).toBe("https://api.anthropic.com/v1/messages");
+  });
+
+  it("uses OpenRouter free first when OPENROUTER_API_KEY set (before Cerebras)", async () => {
+    const fetchImpl = vi.fn(async () => openRouterResponse());
+    const result = await generateContentMessages(
+      { ...base, fetchImpl, surface: "content" },
+      OPENROUTER_ON
+    );
+    expect(result.text).toBe("OpenRouter text");
+    expect(result.modelName).toBe("free-openrouter/thinkingmachines/inkling:free");
+    expect(urls(fetchImpl)[0]).toBe("https://openrouter.ai/api/v1/chat/completions");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it("falls back to Cerebras when OpenRouter fails", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(new Response("or down", { status: 503 }))
+      .mockResolvedValueOnce(new Response("or down2", { status: 503 }))
+      .mockResolvedValueOnce(new Response("or down3", { status: 503 }))
+      .mockResolvedValueOnce(new Response("or down4", { status: 503 }))
+      .mockResolvedValueOnce(new Response("or down5", { status: 503 }))
+      .mockResolvedValueOnce(cerebrasResponse());
+    const result = await generateContentMessages(
+      { ...base, fetchImpl, surface: "content" },
+      OPENROUTER_ON
+    );
+    expect(result.text).toBe("Cerebras text");
+    expect(urls(fetchImpl)).toEqual([
+      "https://openrouter.ai/api/v1/chat/completions",
+      "https://openrouter.ai/api/v1/chat/completions",
+      "https://openrouter.ai/api/v1/chat/completions",
+      "https://openrouter.ai/api/v1/chat/completions",
+      "https://openrouter.ai/api/v1/chat/completions",
+      "https://api.cerebras.ai/v1/chat/completions",
+    ]);
   });
 
   it("uses Cerebras for brief when enabled", async () => {

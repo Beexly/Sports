@@ -152,7 +152,12 @@ function hasOpsAuth(request: Request): boolean {
 /**
  * Surface truth snapshot.
  * - Public: gates, storage modes, settlement band counts, deploymentSha, sample.
- * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
+ *   Anonymous payload carries NO env-var names (hints are prose) and no deploy
+ *   markers / founder queue (SEC-05) — it is reachable by anyone and polled
+ *   every ~7 minutes.
+ * - Bearer CRON_SECRET: full operator detail — bySport, operatorNext,
+ *   expectedMainFeatures, founderNextSteps, conformal internals, matched env
+ *   slots (internal remediation).
  */
 export async function GET(request: Request) {
   const detailed = hasOpsAuth(request);
@@ -269,9 +274,11 @@ export async function GET(request: Request) {
     sport: null,
     dualPath: {
       oddsKeyPresent: oddsKeySlot.present,
-      oddsMatchedEnv: oddsKeySlot.matchedEnv,
+      // SEC-05: matched env var NAMES are operator-only detail; anonymous sees
+      // the boolean posture only (null = present-not-disclosed).
+      oddsMatchedEnv: detailed ? oddsKeySlot.matchedEnv : null,
       rundownKeyPresent: rundownKeySlot.present,
-      rundownMatchedEnv: rundownKeySlot.matchedEnv,
+      rundownMatchedEnv: detailed ? rundownKeySlot.matchedEnv : null,
       espnPublicTertiary: true,
       credits: emptyOddsCreditTruth(),
     },
@@ -308,7 +315,7 @@ export async function GET(request: Request) {
           err.includes("rate_limited") ||
           err.includes("rate limit");
         oddsInserting.lastZeroOddsNote = rateLimited
-          ? "Recent SUCCESS with oddsInserted=0 — provider HTTP 429 / rate_limited. Does NOT advance market kill-switch clock. Wait out free-tier window or set THE_ODDS_API_KEY (dual path)."
+          ? "Recent SUCCESS with oddsInserted=0 — provider HTTP 429 / rate_limited. Does NOT advance market kill-switch clock. Wait out the free-tier window or add an Odds API key (dual path)."
           : "Recent SUCCESS with oddsInserted=0 (quiet board, empty provider events, or mapping drop) — does NOT advance market kill-switch clock.";
       }
       if (run?.completedAt) {
@@ -319,16 +326,21 @@ export async function GET(request: Request) {
           zeroErr.includes("429") ||
           zeroErr.includes("rate_limited") ||
           zeroErr.includes("rate limit");
+        // SEC-05: env var names only for the operator payload; anonymous gets prose.
         let keyHint = !oddsKeySlot.present && !rundownKeySlot.present
           ? " No Odds/Rundown keys visible — ESPN public free path still available (tertiary)."
           : !oddsKeySlot.present && rundownKeySlot.present
-            ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT; ESPN public tertiary if Rundown empty/429.`
+            ? detailed
+              ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT; ESPN public tertiary if Rundown empty/429.`
+              : " A Rundown provider key is present; the Odds API key is absent; ESPN public tertiary if Rundown empty/429."
             : oddsKeySlot.present
-              ? ` Odds key present (${oddsKeySlot.matchedEnv}).`
+              ? detailed
+                ? ` Odds key present (${oddsKeySlot.matchedEnv}).`
+                : " An Odds API key is present."
               : "";
         if (rateLimited && !oddsKeySlot.present) {
           keyHint +=
-            " Rundown free-tier 429 active — cascade to ESPN public odds (zero keys) or wait cool-off / add THE_ODDS_API_KEY.";
+            " Rundown free-tier 429 active — cascade to ESPN public odds (zero keys) or wait cool-off / add an Odds API key.";
         }
         oddsInserting = {
           ...oddsInserting,
@@ -345,8 +357,12 @@ export async function GET(request: Request) {
         const keyHint = !oddsKeySlot.present && !rundownKeySlot.present
           ? "No quote keys visible."
           : rundownKeySlot.present
-            ? `Rundown key present (${rundownKeySlot.matchedEnv}) but no oddsInserted>0 run yet — provider empty/mapping, 429, or multi-day lag.`
-            : `Odds key present (${oddsKeySlot.matchedEnv}) but no oddsInserted>0 run yet.`;
+            ? detailed
+              ? `Rundown key present (${rundownKeySlot.matchedEnv}) but no oddsInserted>0 run yet — provider empty/mapping, 429, or multi-day lag.`
+              : "A Rundown provider key is present but no oddsInserted>0 run yet — provider empty/mapping, 429, or multi-day lag."
+            : detailed
+              ? `Odds key present (${oddsKeySlot.matchedEnv}) but no oddsInserted>0 run yet.`
+              : "An Odds API key is present but no oddsInserted>0 run yet.";
         oddsInserting = {
           ...oddsInserting,
           operatorHint: `${keyHint} Market board stays dark until oddsInserted>0. Signal board independent.`,
@@ -647,7 +663,11 @@ export async function GET(request: Request) {
       deployment: {
         sha: deploymentSha,
         note: "Redeploy after main merges (honesty/Jynx/free-lane). Settlement CRITICAL or SHA lag → redeploy before matching code.",
-        expectedMainFeatures: MAIN_FEATURE_MARKERS,
+        // SEC-05: the marker list is a deploy-diff oracle — operator-only.
+        // Anonymous callers get the count (integrity signal, no diff oracle).
+        ...(detailed
+          ? { expectedMainFeatures: MAIN_FEATURE_MARKERS }
+          : { expectedMainFeatureCount: MAIN_FEATURE_MARKERS.length }),
       },
       host: {
         stubMode: isStubMode(),
@@ -830,7 +850,15 @@ export async function GET(request: Request) {
           pathViable: surface?.projection?.pathViable ?? null,
           murphyExplain: murphySnap?.explain ?? null,
           murphyRes: murphySnap,
-          conformalRd: conformalRdPosture(process.env),
+          // SEC-05: methods/notes name internal calibration machinery — they
+          // stay in the operator (detailed) payload only. Anonymous gets the
+          // product-flag booleans, which are already public posture.
+          conformalRd: detailed
+            ? conformalRdPosture(process.env)
+            : {
+                product: conformalRdPosture(process.env).product,
+                nextAutonomous: conformalRdPosture(process.env).nextAutonomous,
+              },
           isotonicAlternatives: ISOTONIC_ALTERNATIVES.map((a) => ({
             situation: a.situation,
             prefer: a.prefer,
@@ -862,7 +890,11 @@ export async function GET(request: Request) {
         rankingPauseApplyDefault: "off",
         mapsDefault: "off",
       },
-      founderNextSteps,
+      ...(detailed
+        ? { founderNextSteps }
+        : // SEC-05: the founder remediation queue (step ids + actions) is
+          // operator-only; anonymous callers get a count for drift checks.
+          { founderSteps: { count: founderNextSteps.length } }),
       schedulerLiveness,
       revenueLadder: {
         currentStep: revenueLadder.currentStep,

@@ -17,6 +17,7 @@ describe("creditPoolForModel", () => {
 
   it("attributes Cerebras free-lane ids to content_free", () => {
     expect(creditPoolForModel("gpt-oss-120b")).toBe("content_free");
+    expect(creditPoolForModel("free-openrouter/google/gemma-4-31b-it:free")).toBe("content_free");
   });
 
   it("attributes plain claude-* to anthropic_direct", () => {

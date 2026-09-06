@@ -87,10 +87,13 @@ const config: NextAuthConfig = {
         token.role = (user as unknown as { role?: UserRole }).role ?? "USER";
         // D-1: first sign-in — stamp emailVerified from Google's email_verified
         // claim (see stampEmailVerifiedFromProfile). `profile` carries the raw
-        // OIDC ID-token claims. Fire-and-forget: a failed write must not break
-        // sign-in; it leaves the column null, which keeps alerts blocked
-        // (fail-closed), never falsely verified.
-        void stampEmailVerifiedFromProfile(
+        // OIDC ID-token claims. SEC-02: the write is AWAITED so the column is
+        // settled before the token is issued (a fire-and-forget write could
+        // still be pending when the alert worker reads the row). The catch
+        // keeps a failed write from breaking sign-in; it leaves the column
+        // null, which keeps alerts blocked (fail-closed), never falsely
+        // verified.
+        await stampEmailVerifiedFromProfile(
           db,
           token.email ?? user.email,
           profile as { email_verified?: unknown } | undefined,

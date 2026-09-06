@@ -101,7 +101,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
         `Platform cron scheduler looks dead — no cron of any cadence has succeeded in ` +
         `${age != null ? `${age}m` : "a long time"}. This is almost certainly the root cause of ` +
         "any staleness below, not a data problem. Check Vercel dashboard → Cron Jobs for the " +
-        "production deployment, then fire a founder one-shot with CRON_SECRET to confirm the routes still work.",
+        "production deployment, then fire a founder one-shot against the settle route to confirm the routes still work.",
     });
   }
 
@@ -110,7 +110,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       id: "settle-overdue",
       domain: "settlement",
       priority: "P0",
-      action: `Settlement overdue ${input.overduePending} — run free settle-picks (CRON_SECRET); RCA if stuck after redeploy.`,
+      action: `Settlement overdue ${input.overduePending} — run the free settle-picks cron; RCA if stuck after redeploy.`,
     });
   } else if (input.settlementHealth === "CRITICAL") {
     steps.push({
@@ -136,7 +136,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "free_lane",
       priority: "P1",
       action:
-        "Enable free content: CONTENT_FREE_LANE_ENABLED=true + CEREBRAS_API_KEY and/or FREE_LANE_SECONDARY_*.",
+        "Enable free content: turn on the free-lane flag and add the Cerebras key (and optional secondary free-lane keys) in the dashboard.",
     });
   }
 
@@ -148,7 +148,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
         domain: "free_lane",
         priority: "P1",
         action:
-          "No free-spine durable snap — run free-spine-health (CRON_SECRET) so multi-isolate cockpit can score live free coverage (I3).",
+          "No free-spine durable snap — run the free-spine-health cron so multi-isolate cockpit can score live free coverage (I3).",
       });
     } else if (input.freeSpineWithinSla === false) {
       steps.push({
@@ -156,7 +156,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
         domain: "free_lane",
         priority: "P1",
         action:
-          "Free-spine snap past 120m SLA — run free-spine-health (or enable AUTONOMY_EXECUTE for planner re-probe). Stale multi-source age misleads I8.",
+          "Free-spine snap past 120m SLA — run the free-spine-health cron (or enable the autonomy execute flag for planner re-probe). Stale multi-source age misleads I8.",
       });
     }
   }
@@ -187,7 +187,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "jynx_credits",
       priority: "P1",
       action:
-        "Set CLAUDE_PROVIDER=auto (or bedrock|azure|vertex) + cloud maps so Claude spends credits not cash. Free-lane already covers content $0.",
+        "Point Claude at cloud credits: set the Claude provider mode to auto (or a specific cloud) and paste the cloud creds + model maps so Claude spends credits not cash. Free-lane already covers content $0.",
     });
   } else if (!input.anyCloudConfigured) {
     steps.push({
@@ -207,7 +207,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
           domain: "product_gates",
           priority: "P0",
           action:
-            "PUBLIC_PICKS ON + signal board: model slate quiet — run generate-signal-slate cron (independents only; no book invent). Reopens when published PENDING signals exist for upcoming games.",
+            "Public picks on + signal board: model slate quiet — run generate-signal-slate cron (independents only; no book invent). Reopens when published PENDING signals exist for upcoming games.",
         });
       } else {
         steps.push({
@@ -215,7 +215,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
           domain: "product_gates",
           priority: "P0",
           action:
-            "PUBLIC_PICKS ON + signal board live — model signals only (never book labels). PERFORMANCE_STATS stays OFF while eligibility RED.",
+            "Public picks on + signal board live — model signals only (never book labels). Performance stats stay off while eligibility is RED.",
         });
       }
       if (input.oddsInsertingStale) {
@@ -224,7 +224,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
           domain: "product_gates",
           priority: "P1",
           action:
-            "Market odds insert outside Refresh SLA — market board stays dark. Optional: restore THE_ODDS_API_KEY quota for book labels; signal path does not need it.",
+            "Market odds insert outside Refresh SLA — market board stays dark. Optional: restore Odds API key quota for book labels; signal path does not need it.",
         });
       }
     } else if (input.oddsInsertingStale) {
@@ -233,14 +233,14 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
         domain: "product_gates",
         priority: "P0",
         action:
-          "PUBLIC_PICKS ON but last odds insert is outside Refresh SLA — market board dark. Confirm THE_ODDS_API_KEY quota; OR rely on auto signal board (PUBLIC_BOARD_SURFACE unset + odds stale).",
+          "Public picks on but last odds insert is outside Refresh SLA — market board dark. Confirm the Odds API key quota; or rely on the auto signal board (default surface + odds stale).",
       });
     } else {
       steps.push({
         id: "public-picks-on",
         domain: "product_gates",
         priority: "P0",
-        action: "PUBLIC_PICKS is ON — confirm proof bar + settlement healthy before marketing. PERFORMANCE_STATS still requires GREEN eligibility.",
+        action: "Public picks are on — confirm proof bar + settlement healthy before marketing. Performance stats still require GREEN eligibility.",
       });
     }
   }
@@ -251,7 +251,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "growth",
       priority: "P1",
       action:
-        "Waitlist Basic Auth is locking lead capture — FOUNDING open: set GSE_WAITLIST_GATE_ENABLED=false (or unset) on Production; code default is open when flag is not true.",
+        "Waitlist Basic Auth is locking lead capture — to open the FOUNDING funnel, turn the waitlist gate flag off (or unset it) on Production; code default is open when the flag is not true.",
     });
   }
 
@@ -282,7 +282,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "product_gates",
       priority: "P1",
       action:
-        "Eligibility GREEN. One-time: set CALIBRATION_AUTO_PUBLISH=true (or CALIBRATION_PUBLISHED=true). No weekly ceremony after that.",
+        "Eligibility GREEN. One-time: enable calibration auto-publish (or the calibration published flag) in the dashboard. No weekly ceremony after that.",
     });
   } else if (input.calibrationAutoPublish && input.calibrationEligibilityStatus === "GREEN") {
     steps.push({
@@ -340,7 +340,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       id: "stats-public-on",
       domain: "statking",
       priority: "P0",
-      action: "STATS_PUBLIC is ON — confirm rights memo + feed SLA before promoting StatKing.",
+      action: "The stats-public flag is ON — confirm rights memo + feed SLA before promoting StatKing.",
     });
   }
 
@@ -353,7 +353,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "billing",
       priority: "P1",
       action:
-        "STRIPE_SECRET_KEY missing in prod — checkout cannot create sessions. Wire secret + price ids/lookup_keys.",
+        "The Stripe secret key is missing in prod — checkout cannot create sessions. Wire the secret + price ids/lookup_keys.",
     });
   } else if (webhookKnown && input.webhookSecretConfigured === false) {
     steps.push({
@@ -361,7 +361,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "billing",
       priority: "P1",
       action:
-        "STRIPE_WEBHOOK_SECRET missing — sessions may create without durable entitlements. Wire webhook secret + Dashboard endpoint.",
+        "The Stripe webhook secret is missing — sessions may create without durable entitlements. Wire the webhook secret + Dashboard endpoint.",
     });
   } else if (input.stripeWebhookProbed === true) {
     if (input.stripeWebhookAuditRequired === true) {
@@ -399,7 +399,7 @@ export function buildFounderNextSteps(input: FounderNextStepsInput): readonly Fo
       domain: "analytics",
       priority: "P2",
       action:
-        "Optional: NEXT_PUBLIC_ANALYTICS_ENABLED=true + NEXT_PUBLIC_CLARITY_PROJECT_ID (PostHog only with keys + privacy review).",
+        "Optional: enable the analytics flag and add the analytics/Clarity project id (PostHog only with keys + privacy review).",
     });
   }
 

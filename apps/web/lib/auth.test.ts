@@ -16,9 +16,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // ── Hoisted mock functions (vi.mock factories are hoisted above imports) ──
-const { mockUserFindUnique, mockRealAuth, capturedConfig } = vi.hoisted(() => {
+const { mockUserFindUnique, mockUserUpdate, mockRealAuth, capturedConfig } = vi.hoisted(() => {
   return {
     mockUserFindUnique: vi.fn<() => Promise<unknown>>(),
+    mockUserUpdate: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
     mockRealAuth: vi.fn<() => Promise<unknown>>(),
     capturedConfig: {} as Record<string, unknown>,
   };
@@ -27,7 +28,7 @@ const { mockUserFindUnique, mockRealAuth, capturedConfig } = vi.hoisted(() => {
 // ─── Mock @sports/db so the JWT callback's db.user.findUnique is controllable ───
 vi.mock("@sports/db", () => ({
   db: {
-    user: { findUnique: mockUserFindUnique },
+    user: { findUnique: mockUserFindUnique, update: mockUserUpdate },
   },
 }));
 
@@ -494,5 +495,48 @@ describe("stampEmailVerifiedFromProfile (D-1)", () => {
     await expect(
       stampEmailVerifiedFromProfile(dbLike, "a@b.co", { email_verified: true }),
     ).resolves.toBe("no-user");
+  });
+});
+
+// ─── SEC-02: the jwt callback AWaits the emailVerified stamp ───
+// Fire-and-forget left a window where sign-in completed while the write was
+// still in flight. The callback must settle the write (catch → fail-closed)
+// before returning the token.
+describe("jwt callback — SEC-02 awaited emailVerified stamp", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("first sign-in settles the stamp write before the token is returned", async () => {
+    mockUserFindUnique.mockResolvedValue({ emailVerified: null });
+    // Gate the write so it hangs until released — proving the callback waits.
+    let release!: () => void;
+    const gate = new Promise<void>((r) => { release = r; });
+    let updateCalls = 0;
+    mockUserUpdate.mockImplementation(async () => {
+      await gate;
+      updateCalls += 1;
+      return {};
+    });
+    const ctx = jwtCtx({ email: "a@b.co" }, { id: "u-1", email: "a@b.co" });
+    (ctx as Record<string, unknown>).profile = { email_verified: true };
+    const pending = callbacks().jwt(ctx);
+    let settled = false;
+    void pending.then(() => { settled = true; });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(settled).toBe(false); // still waiting on the stamp write
+    release();
+    await pending;
+    expect(settled).toBe(true);
+    expect(updateCalls).toBe(1);
+  });
+
+  it("a failing stamp write does not reject the jwt callback (fail-closed catch)", async () => {
+    mockUserFindUnique.mockResolvedValue({ emailVerified: null });
+    mockUserUpdate.mockRejectedValue(new Error("write failed"));
+    const ctx = jwtCtx({ email: "a@b.co" }, { id: "u-1", email: "a@b.co" });
+    (ctx as Record<string, unknown>).profile = { email_verified: true };
+    await expect(callbacks().jwt(ctx)).resolves.toBeTruthy();
+    expect(mockUserUpdate).toHaveBeenCalledTimes(1);
   });
 });
