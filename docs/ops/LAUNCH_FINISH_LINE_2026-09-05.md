@@ -267,7 +267,7 @@ logged-in browser using the script below. Decisions taken accordingly:
 
 | # | To reach 100 | Owner | How it closes |
 |---|---|---|---|
-| 1 | Book-priced picks flowing: clear The Odds API billing, no tier change | browser agent (script A) | paid book rows return within one six-hour breaker window |
+| 1 | Book-priced picks flowing: founder sets `THE_ODDS_API_KEY` in Vercel Production to the 20K plan key and redeploys (the account is Active with 0 of 20,000 credits used, not unpaid; script A) | founder (flip), browser agent (verify) | paid book rows return within one refresh cycle after the redeploy |
 | 2 | Overdue picks to 0 | automatic (deployed fixes) | `settlement.overduePending` reads 0; leftovers carry a reason on `/api/ops/settlement-rca` |
 | 3 | Stale picks to 0 | coder: WP-29 (C-106), priority 1 | `stalePendingPicks.count` reads 0 after one cycle |
 | 4 | Calibration GREEN three runs | automatic (02:40, 08:40, 14:40 UTC) | truth surface `calibrationEligibility` published true, streak 3 |
@@ -282,12 +282,24 @@ Blocks: 1 to 3 reach 75. 4 to 6 reach 90 (PROVEN). 7 to 10 reach 100.
 
 ### Browser-agent scripts (no secret is ever pasted into chat, a doc, or a commit)
 
-**A. The Odds API billing.** Open the-odds-api.com, sign in with the founder's account, open
-Account or Billing. Clear the overdue invoice or re-enter the card. Do not change the plan
-tier. Confirm the subscription shows active and the key shows enabled. Do not copy the key
-anywhere. Verify later: Vercel runtime errors for `/api/cron/settle-picks` stop showing
-"payment circuit open after HTTP 402", and `/api/picks` returns picks with
-`bookmakerCount` of 2 or more.
+**A. The Odds API key (revised 2026-09-06 02:25 UTC from the founder's dashboard
+screenshots).** The account is not in a payment state. The dashboard shows two keys: a Free
+plan key (0 of 500 credits used this period, started Apr 20, 2026) and a 20K plan key
+(Active, $30 a month, 0 of 20,000 credits used this period, started Aug 22, 2026, next
+invoice Sep 22, 2026). Zero usage on both keys this period means, by inference, that
+production has not made one billable call in September: the key in Vercel is stale or
+rotated, not unpaid, which also fits the 401 INVALID_KEY seen on NFL until 2026-09-04.
+Founder action, in flight: in Vercel Production set `THE_ODDS_API_KEY` to the 20K plan key,
+then Redeploy the latest production deployment so the variable applies. The payment breaker
+is process-local (`packages/data-ingestion/src/odds-api-circuit-breaker.ts`, cold starts
+reset it), so the redeploy also clears the open circuit. No billing step, no tier change, no
+browser-agent action on the-odds-api.com. Browser agent, verify only, after the redeploy:
+Vercel runtime errors for `/api/cron/settle-picks` and `/api/cron/refresh-odds` stop showing
+"payment circuit open after HTTP 402" within one cycle, `/api/picks` returns picks with
+`bookmakerCount` of 2 or more, and the 20K dashboard usage moves off zero. Hygiene: both
+keys were visible in the screenshots, so once the flow is confirmed, rotate the 20K key on
+the dashboard (the refresh icon) and set the new value in Vercel the same way. Never copy a
+key anywhere else.
 
 **B. Vercel environment (project `sports-web`, team `pick-pilot-s-projects`).** Open
 vercel.com, Project Settings, Environment Variables, scope Production. Add

@@ -46,10 +46,14 @@ anything: section 3b holds eleven decisions the founder delegated in-session, se
 founder-only actions, section 5 every dispatchable work package (WP-1..26, FE, FAN, NFL, OPS,
 TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and F-14..F-33.**
 
-- **TOP founder item (F-15): The Odds API account is in a payment state.** HTTP 402
-  "payment circuit open" on every hourly cycle since 2026-09-03 20:20 UTC. The shared
-  breaker stopped paid book odds at 2026-09-05 00:30 UTC; zero book-priced picks were
-  generated in the 18 hours after. Fix the account. Do not upgrade the tier.
+- **TOP founder item (F-15), REVISED 2026-09-06 02:25 UTC from the founder's dashboard
+  screenshots: the account is NOT unpaid.** The 20K plan is Active ($30 a month, next invoice
+  Sep 22) with 0 of 20,000 credits used this period, and the free key shows 0 of 500. The
+  HTTP 402 "payment circuit open" on every cycle since 2026-09-03 20:20 UTC (breaker stopped
+  paid book odds 2026-09-05 00:30 UTC, zero book-priced picks since) is a stale production
+  key, not billing. The founder is setting `THE_ODDS_API_KEY` in Vercel Production to the
+  20K key and redeploying; the breaker is process-local, so the redeploy resets it. No tier
+  change. Nobody pastes a key anywhere. Verify steps: plan section 3e script A.
 - **Second book root cause (2026-09-05 production logs, verbatim):** every refresh cycle,
   all four in-season sports log `rundown empty (2d): HTTP 429 rate_limited`. TheRundown is
   the registered commercial-use fallback (`packages/data-ingestion/src/source-registry.ts`
