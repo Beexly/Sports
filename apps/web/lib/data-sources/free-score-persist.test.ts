@@ -94,6 +94,11 @@ vi.mock("@sports/data-ingestion", () => ({
   SUPPORTED_SPORTS: [
     { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" },
     { key: "americanfootball_ncaaf", name: "NCAAF", displayName: "NCAA Football" },
+    // baseball_mlb is present because the series-bleed defect these tests pin is
+    // an MLB one: the same two clubs meet on consecutive days, which is what let
+    // an earlier meeting's final match a later game. Running that scenario down
+    // the NFL mapping path would exercise a fixture that cannot occur.
+    { key: "baseball_mlb", name: "MLB", displayName: "MLB" },
   ],
 }));
 
@@ -551,7 +556,7 @@ describe("persistFreeScores — clearance gating (GSE-SEC-050/051)", () => {
     expect(result.path).toBe("free-score-persist");
     expect(result.oddsApiRequired).toBe(false);
     expect(result.elapsedMs).toBeGreaterThanOrEqual(0);
-    expect(result.sports).toHaveLength(2); // SUPPORTED_SPORTS mock has 2
+        expect(result.sports).toHaveLength(3); // SUPPORTED_SPORTS mock has 3 sports (NFL, NCAAF, MLB)
     expect(result.gamesUpdated).toBe(0);
     // ingestionRunId is set when anyOk or allFailed is true
     expect(typeof result.ingestionRunId).toBe("string");
@@ -669,7 +674,7 @@ describe("persistFreeScores — never settles a game that has not started", () =
       [seriesFinal(new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10), 4, 2)],
     );
 
-    const result = await persistFreeScores({ sportKey: "americanfootball_nfl" });
+    const result = await persistFreeScores({ sportKey: "baseball_mlb" });
 
     expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
     expect(result.gamesUpdated).toBe(0);
@@ -691,7 +696,7 @@ describe("persistFreeScores — never settles a game that has not started", () =
       [seriesFinal(startedTwoHoursAgo.toISOString().slice(0, 10), 4, 2)],
     );
 
-    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+    await persistFreeScores({ sportKey: "baseball_mlb" });
 
     expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
     const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
@@ -724,7 +729,7 @@ describe("persistFreeScores — never settles a game that has not started", () =
       [seriesFinal(dayBefore, 9, 1), seriesFinal(gameDay, 4, 2)],
     );
 
-    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+    await persistFreeScores({ sportKey: "baseball_mlb" });
 
     // An earlier revision of this fix sorted by calendar-date distance and took
     // today's 4-2. That was too weak, and Devin Review on #717 was right about
@@ -812,7 +817,7 @@ describe("persistFreeScores — binds a final to kickoff and holds when ambiguou
       [seriesFinal(new Date(startedRecently.getTime() - 24 * HOUR).toISOString(), 9, 1)],
     );
 
-    const result = await persistFreeScores({ sportKey: "americanfootball_nfl" });
+    const result = await persistFreeScores({ sportKey: "baseball_mlb" });
 
     // 24h away is far outside NEAREST_CANDIDATE_TIE_MS, but it is the only
     // candidate, so the kickoff rule alone cannot reject it — what matters is
@@ -845,7 +850,7 @@ describe("persistFreeScores — binds a final to kickoff and holds when ambiguou
       ],
     );
 
-    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+    await persistFreeScores({ sportKey: "baseball_mlb" });
 
     // Neither score may be written: we cannot say which game this row is.
     expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
@@ -871,7 +876,7 @@ describe("persistFreeScores — binds a final to kickoff and holds when ambiguou
       ],
     );
 
-    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+    await persistFreeScores({ sportKey: "baseball_mlb" });
 
     expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
     const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
