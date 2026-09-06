@@ -114,3 +114,62 @@ curl -s https://www.galaxysportsedge.com/api/ops/public-surface-truth \
 
 The two derivations are one line each: `0.69 * (1 - 0.69) = 0.2139` against the
 0.22 Brier floor, and `sqrt(0.05) = 0.2236` against the 0.05 ECE floor.
+
+---
+
+# There is no recoverable sample hiding in `no_rows`
+
+**Measured 2026-09-06 on production, read-only SQL (SELECT only, zero writes).**
+
+## Why this was worth checking
+
+The surface reports `marketPFromOddsTable.unresolved.no_rows` at 266 of 595
+candidate games. If a meaningful share of those were unresolved because of a
+join or a timing defect rather than genuinely absent data, recovering them would
+grow `n` honestly, which is one of the two levers the record names. It is worth
+one query before anyone spends a day on it.
+
+`loadPublishTimeMarketPResolver` keys strictly on `pick.gameId`
+(`apps/web/lib/calibration/publish-time-market-p-loader.ts`), and this repo does
+merge game identities (`game-identity.ts`, alias hops), so a mismatch was a real
+possibility rather than a hypothetical.
+
+## The query and the answer
+
+Over every settled MONEYLINE pick (`result` in WIN, LOSS), one per game:
+
+| Cohort | Picks |
+|---|---|
+| Total settled MONEYLINE picks | 863 |
+| An H2H odds row exists at or before `generatedAt` (resolvable in principle) | 560 |
+| H2H rows exist but ALL of them postdate `generatedAt` | 4 |
+| Odds rows exist for the game but none in the H2H market | 2 |
+| **No odds row of any market exists for the game at all** | **297** |
+
+Then, on those 297: **every single one carries `bookmakerCount` 0**, all 297 carry
+a factor breakdown, and they span 2026-08-09 to 2026-09-06.
+
+`bookmakerCount` 0 is the signature of a signal-slate pick, and the slate writes
+no odds rows (documented in `publish-time-market-p.ts` and visible in
+`generate-signal-slate.ts`). These games were never book-priced. There is no
+publish-time market probability to recover, because no market price ever existed.
+
+## What that settles
+
+**The `no_rows` exclusion is correct by construction, not a defect.** No fix
+recovers those rows, and any change that appeared to would be inventing a price.
+The 6 picks in the two middle cohorts stay excluded correctly too: the probability
+is fixed at publish time, so a quote that arrived afterwards is not the one the
+pick was published against.
+
+Note the counts here are a superset of the surface's own accounting (candidates
+595, no_rows 266), which starts from a narrower slice: receipted picks never reach
+the odds-table fallback, and three-way soccer moneylines are excluded upstream.
+Both readings agree on the substance.
+
+## Consequence
+
+"More settled rows" cannot come from re-reading history. It has to come from new
+settled picks that were book-priced at publish, which needs the book-priced flow
+restored. That is ledger row **C-104 (WP-27, the two-book board)**, currently the
+real bottleneck on the ECE sample, and it is owned elsewhere.

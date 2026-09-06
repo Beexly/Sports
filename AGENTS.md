@@ -43,9 +43,12 @@ base-rate forecast with no skill at all (uncertainty alone is 0.2139 against the
 and the Murphy reliability floor averages SQUARED per-bin gaps against the same literal 0.05,
 so it permits a 22.4-point RMS gap where the ECE floor permits 5.0, a 4.47x difference in
 strictness. ECE is the only floor that constrains calibration quality here, and it is the one
-that fails. The settlement reason clears on its own when
-overduePending reaches 0 (it is 2 at 16:39, down from 16 this morning, the zero-sit lane
-voiding as designed). ECE does not clear on its own.
+that fails. CONFIRMED 19:08:42 UTC: the settlement reason HAS cleared and RED now reads
+"ECE 0.0524 > 0.05" alone. overduePending is 0 of 2627 commenced picks and stalePendingPicks
+is 0, so C-106 is DONE (the zero-sit lane voided the last two phantom-fixture picks through
+the outbox at 19:07:18 UTC with rcaCode FIXTURE_NOT_FOUND; ledger row has the ids). n, Brier,
+Murphy and ECE are unchanged at 458 / 0.1926 / 0.0053 / 0.0524, consecutiveGreen still 0 of 3.
+ECE does not clear on its own, and nothing that has happened today moved it.
 
 Two things this corrects in the record above. First, the 2026-09-05 19:05 UTC note that "all
 four floors pass today" was measured on the receipt-only sample (n 115 after the soccer
