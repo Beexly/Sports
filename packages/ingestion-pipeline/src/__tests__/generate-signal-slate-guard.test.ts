@@ -274,6 +274,31 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
     expect(out.fixtureUnconfirmed).toBe(1);
   });
 
+  it("writes no pick and no correction when the board lists the fixture but its ESPN kickoff is already behind the run clock", async () => {
+    // Our row still says 16:00Z (ahead of NOW 15:00Z); ESPN lists the same
+    // pair at 13:00Z, 2h in the past. The past clock is never written to the
+    // row and no signal is priced on a contest already under way.
+    espnFetch.mockImplementation(async () =>
+      boardResponse({ events: [espnEvent("405", "2026-09-05T13:00Z", "Cincinnati Bearcats", "Boston College Eagles")] }),
+    );
+    mocks.gameFindMany.mockResolvedValue([{ ...GAME, commenceTime: new Date("2026-09-05T16:00:00.000Z") }]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    expect(mocks.gameUpdate).not.toHaveBeenCalled();
+    expect(mocks.buildIndependents).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(out.fixtureUnconfirmed).toBe(1);
+    expect(out.picksSkipped).toBe(1);
+    expect(out.picksUpserted).toBe(0);
+    expect(warn.mock.calls.some((c) => /fixture already started/.test(String(c[0])) && String(c[0]).includes("game-1"))).toBe(true);
+    expect(warn.mock.calls.some((c) => /fixture not listed/.test(String(c[0])))).toBe(false);
+    warn.mockRestore();
+  });
+
   it("skips the whole sport this cycle and logs when the scoreboard fetch fails (fail-closed)", async () => {
     espnFetch.mockImplementation(async () => boardResponse({ events: [] }, 503));
     mocks.gameFindMany.mockResolvedValue([GAME, PHANTOMS[0]!]);

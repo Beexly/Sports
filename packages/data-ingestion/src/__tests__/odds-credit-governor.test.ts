@@ -901,6 +901,59 @@ describe("reservePaidCallSlot (atomic hourly slot)", () => {
     warn.mockRestore();
   });
 
+  it("atomicCapable:false (the @sports/db stub client) never enters the transaction even though the client LOOKS capable: non-atomic, warned once, marker still written", async () => {
+    // The stub client is a Proxy whose $transaction / $executeRaw are no-op
+    // functions, so the shape check alone would report atomic:true while no
+    // mutex was ever taken. The caller that knows (isStubMode) says so.
+    resetPaidCallReservationWarning();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const store = markerStore();
+    let transactions = 0;
+    const db: OddsCreditLedgerDb = {
+      ...store.rows(),
+      $transaction: <T,>(fn: (tx: OddsCreditLedgerTx) => Promise<T>): Promise<T> => {
+        transactions += 1;
+        return fn({ ...store.rows(), $executeRaw: async () => 1 });
+      },
+      $executeRaw: async () => 1,
+    };
+
+    const first = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "odds",
+      now: SEP_6,
+      intervalMs: HOUR,
+      atomicCapable: false,
+    });
+    const second = await reservePaidCallSlot(db, {
+      sport: "x",
+      purpose: "odds",
+      now: new Date(SEP_6.getTime() + 20 * 60_000),
+      intervalMs: HOUR,
+      atomicCapable: false,
+    });
+
+    expect(first).toEqual({ reserved: true, atomic: false });
+    expect(second).toEqual({ reserved: false, atomic: false, lastAt: SEP_6 });
+    expect(transactions).toBe(0);
+    expect(store.markers).toHaveLength(1);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("stub Prisma client"));
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("non-atomic"));
+
+    // atomicCapable:true (or omitted) on the same client takes the transaction.
+    const third = await reservePaidCallSlot(db, {
+      sport: "y",
+      purpose: "odds",
+      now: SEP_6,
+      intervalMs: HOUR,
+      atomicCapable: true,
+    });
+    expect(third).toEqual({ reserved: true, atomic: true });
+    expect(transactions).toBe(1);
+    warn.mockRestore();
+  });
+
   it("a transaction that throws falls back to read-then-write (marker still written) and says so", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const store = markerStore();

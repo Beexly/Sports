@@ -29,6 +29,7 @@ import {
   type PaidOddsGovernor,
   type PaidOddsGovernorDeps,
 } from "@sports/data-ingestion";
+import { isStubMode } from "@sports/db";
 import { fetchEspnScoreboard, type NormalizedGame } from "@/lib/data-sources/free-adapters/espn-scores";
 import type { Sport } from "@/lib/data-sources/source-router";
 
@@ -100,7 +101,10 @@ export async function sportHasEventWithin48h(
 /**
  * The governor the refresh-odds cron route injects into `refreshOdds()`: the
  * shared ledger-backed factory with this module's ESPN adapter as the event
- * check (an explicit `hasEventWithin48h` in deps still wins, for tests).
+ * check (an explicit `hasEventWithin48h` in deps still wins, for tests) and
+ * the stub-client flag the ledger cannot compute itself: the stub Prisma
+ * client (DATABASE_URL unset) answers `$transaction` with a no-op, so its
+ * hourly reservation must run the warned non-atomic path, never report atomic.
  */
 export function buildPaidOddsGovernor(deps: PaidOddsGovernorDeps): PaidOddsGovernor {
   return buildLedgerBackedGovernor({
@@ -108,5 +112,6 @@ export function buildPaidOddsGovernor(deps: PaidOddsGovernorDeps): PaidOddsGover
     hasEventWithin48h:
       deps.hasEventWithin48h ??
       ((sportKey: string, at: Date) => sportHasEventWithin48h(sportKey, at, deps.fetchImpl)),
+    atomicCapable: deps.atomicCapable ?? !isStubMode(),
   });
 }

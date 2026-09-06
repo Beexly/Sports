@@ -434,6 +434,27 @@ describe("quota headers: absent or malformed is null, never zero", () => {
     await expect(noRetry.getSports()).rejects.toMatchObject({ status: 429, remainingRequests: 7 });
   });
 
+  it("an error response carries x-requests-used alongside x-requests-remaining; absent reads null on both", async () => {
+    const noRetry = new OddsApiClient("test-key", { maxRetries: 0, sleep: async () => {} });
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response("quota", {
+        status: 429,
+        headers: { "x-requests-remaining": "0", "x-requests-used": "20000" },
+      }),
+    );
+    await expect(noRetry.getSports()).rejects.toMatchObject({
+      status: 429,
+      remainingRequests: 0,
+      usedRequests: 20000,
+    });
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(new Response("boom", { status: 500 }));
+    const err = await noRetry.getSports().catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(OddsApiError);
+    expect((err as OddsApiError).remainingRequests).toBeNull();
+    expect((err as OddsApiError).usedRequests).toBeNull();
+  });
+
   it("parseQuotaHeader: integer strings only", () => {
     expect(parseQuotaHeader(null)).toBeNull();
     expect(parseQuotaHeader(undefined)).toBeNull();

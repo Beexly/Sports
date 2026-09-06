@@ -290,6 +290,16 @@ export interface ReservePaidCallSlotInput {
   readonly intervalMs: number;
   /** Purposes whose markers count against the slot; defaults to [purpose]. A stale-zero probe passes every purpose. */
   readonly checkPurposes?: readonly PaidCallPurpose[];
+  /**
+   * Whether the client can really serialize the reservation. The @sports/db
+   * stub client (DATABASE_URL unset) is a Proxy whose `$transaction` and
+   * `$executeRaw` are functions that do nothing, so the shape check below
+   * would pass while no mutex is ever taken; a caller that knows the client is
+   * that stub (`isStubMode()` in @sports/db, which this package cannot import)
+   * passes `false` and the reservation runs the non-atomic path, warned.
+   * Omitted: detected from the client's shape.
+   */
+  readonly atomicCapable?: boolean;
 }
 
 export type PaidCallSlotReservation =
@@ -325,8 +335,9 @@ function withinInterval(lastAt: Date, now: Date, intervalMs: number): boolean {
  * needs a separate write.
  *
  * Fallbacks (both logged): a client without `$transaction` AND `$executeRaw`
- * (the stub Prisma client, test fakes) runs the read-then-write path
- * non-atomically, once-warned; a transaction that throws also falls back. A
+ * (test fakes), or one the caller flagged `atomicCapable: false` (the stub
+ * Prisma client, whose no-op `$transaction` passes the shape check), runs the
+ * read-then-write path non-atomically, once-warned; a transaction that throws also falls back. A
  * ledger outage on the fallback itself reads as reserved (fail open, matching
  * every other ledger function: an outage removes the pacing signal, it never
  * blanks the board or stalls settlement).
@@ -350,7 +361,10 @@ export async function reservePaidCallSlot(
     return { reserved: true, atomic };
   };
 
-  const canSerialize = typeof db.$transaction === "function" && typeof db.$executeRaw === "function";
+  const canSerialize =
+    input.atomicCapable !== false &&
+    typeof db.$transaction === "function" &&
+    typeof db.$executeRaw === "function";
   if (canSerialize && db.$transaction) {
     try {
       const key = paidCallMutexKey(input.sport);
@@ -370,8 +384,11 @@ export async function reservePaidCallSlot(
   } else if (!warnedNonAtomicReservation) {
     warnedNonAtomicReservation = true;
     console.warn(
-      "[credit-ledger] ledger client has no $transaction/$executeRaw: hourly slot reservations " +
-        "are read-then-write (non-atomic) in this process",
+      input.atomicCapable === false
+        ? "[credit-ledger] ledger client is the stub Prisma client (no database): hourly slot " +
+            "reservations are read-then-write (non-atomic) in this process"
+        : "[credit-ledger] ledger client has no $transaction/$executeRaw: hourly slot reservations " +
+            "are read-then-write (non-atomic) in this process",
     );
   }
   try {

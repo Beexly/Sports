@@ -1,4 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+// The adapter reads @sports/db's stub-mode probe so the ledger's hourly
+// reservation knows when the shared client cannot take the advisory mutex.
+const dbMocks = vi.hoisted(() => ({ isStubMode: vi.fn<() => boolean>(() => false) }));
+vi.mock("@sports/db", () => ({ isStubMode: dbMocks.isStubMode }));
+
 import {
   ODDS_KEY_TO_ESPN_SPORT,
   buildPaidOddsGovernor,
@@ -6,7 +12,15 @@ import {
   hasEventWithinHorizon,
   sportHasEventWithin48h,
 } from "@/lib/odds/paid-odds-governor";
-import type { OddsCreditLedgerDb } from "@sports/data-ingestion";
+import {
+  resetPaidCallReservationWarning,
+  type OddsCreditLedgerDb,
+  type OddsCreditLedgerTx,
+} from "@sports/data-ingestion";
+
+beforeEach(() => {
+  dbMocks.isStubMode.mockReset().mockReturnValue(false);
+});
 
 /**
  * C-109 (c): refresh-odds skips the paid fetch for a sport with no event in the
@@ -246,5 +260,46 @@ describe("buildPaidOddsGovernor", () => {
     expect(scopes).toEqual(["ops.odds.paidOdds", "ops.odds.credits"]);
     const credits = (create.mock.calls[1]![0] as { data: { metadata: Record<string, unknown> } }).data.metadata;
     expect(credits).toMatchObject({ remaining: 18500, used: null, source: "refresh-odds" });
+  });
+
+  it("stamps x-requests-used on the credit observation when the run saw it", async () => {
+    const { db, create } = fakeLedger();
+    const gov = buildPaidOddsGovernor({ db, now: () => NOW, hasEventWithin48h: async () => true });
+    await gov.recordCredits({ remaining: 18400, used: 1600, observedAt: NOW });
+    const credits = (create.mock.calls[0]![0] as { data: { metadata: Record<string, unknown> } }).data.metadata;
+    expect(credits).toMatchObject({ remaining: 18400, used: 1600 });
+  });
+
+  it("in @sports/db stub mode the hourly reservation runs non-atomic and warned; with a real client it takes the transaction", async () => {
+    // The stub client's Proxy answers $transaction / $executeRaw with no-ops,
+    // so the ledger's shape check alone would report an atomic reservation
+    // that took no mutex. The adapter passes isStubMode() through.
+    resetPaidCallReservationWarning();
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { db: rows } = fakeLedger({
+      credits: { full_text: null, metadata: { remaining: 19000, used: 1000, observedAt: NOW.toISOString(), source: "t" } },
+    });
+    let transactions = 0;
+    const db: OddsCreditLedgerDb = {
+      ...rows,
+      $transaction: <T,>(fn: (tx: OddsCreditLedgerTx) => Promise<T>): Promise<T> => {
+        transactions += 1;
+        return fn({ ...rows, $executeRaw: async () => 1 });
+      },
+      $executeRaw: async () => 1,
+    };
+
+    dbMocks.isStubMode.mockReturnValue(true);
+    const stub = buildPaidOddsGovernor({ db, now: () => NOW, hasEventWithin48h: async () => true });
+    expect((await stub.decide("americanfootball_nfl")).allow).toBe(true);
+    expect(transactions).toBe(0);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("stub Prisma client"));
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("non-atomic"));
+
+    dbMocks.isStubMode.mockReturnValue(false);
+    const real = buildPaidOddsGovernor({ db, now: () => NOW, hasEventWithin48h: async () => true });
+    expect((await real.decide("americanfootball_nfl")).allow).toBe(true);
+    expect(transactions).toBe(1);
+    warn.mockRestore();
   });
 });

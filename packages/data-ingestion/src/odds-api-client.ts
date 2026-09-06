@@ -23,7 +23,9 @@ export class OddsApiError extends Error {
     message: string,
     public readonly status?: number,
     /** x-requests-remaining from the failed response; null when the header was absent. */
-    public readonly remainingRequests?: number | null
+    public readonly remainingRequests?: number | null,
+    /** x-requests-used from the failed response; null when the header was absent. */
+    public readonly usedRequests?: number | null
   ) {
     super(message);
     this.name = "OddsApiError";
@@ -281,7 +283,8 @@ export class OddsApiClient {
       throw new OddsApiError(
         `The Odds API error: ${response.status} — ${body}`,
         response.status,
-        remainingRequests
+        remainingRequests,
+        usedRequests
       );
     }
 

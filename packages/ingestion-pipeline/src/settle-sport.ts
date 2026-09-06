@@ -24,7 +24,7 @@
  * sport cannot abort the remaining sports in the caller's loop.
  */
 
-import { db } from "@sports/db";
+import { db, isStubMode } from "@sports/db";
 import {
   OddsApiClient,
   OddsApiError,
@@ -264,12 +264,15 @@ export async function settleSport(
       // read and marker write in one transaction, so the :20 cron and the :22
       // autonomy cycle cannot both pass the hourly rule for the same sport. A
       // stale-zero probe reserves across purposes (one probe per sport per hour).
+      // The stub client (DATABASE_URL unset) answers $transaction with a no-op,
+      // so the ledger is told it cannot serialize there (warned, non-atomic).
       const reservation = await reservePaidCallSlot(ledger, {
         sport: vendorKey,
         purpose: "scores",
         now,
         intervalMs: PAID_CALL_MIN_INTERVAL_MS,
         checkPurposes: slot === "any-purpose" ? PAID_CALL_PURPOSES : ["scores"],
+        atomicCapable: !isStubMode(),
       });
       if (!reservation.reserved) {
         return {

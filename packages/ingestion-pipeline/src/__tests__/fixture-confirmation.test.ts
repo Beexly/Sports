@@ -263,6 +263,44 @@ describe("requiresReconfirmation and commenceTimeCorrection", () => {
     expect(out.get(freshDrift.id)).toMatchObject({ status: "confirmed", correctedCommenceTime: espnAt });
     expect(out.get(LISTED.id)).toMatchObject({ status: "confirmed", correctedCommenceTime: null });
   });
+
+  it("never confirms a matched event whose ESPN kickoff is not after now, and never returns its past clock as a correction", () => {
+    // Stored kickoff still ahead (19:30Z, now 15:00Z); ESPN lists the same
+    // pair 2h in the past (13:00Z, same day, inside the 12h clock bound).
+    const startedAt = new Date("2026-09-05T13:00:00.000Z");
+    const board = parseBoard({
+      events: [espnEvent("21", startedAt.toISOString(), "Cincinnati Bearcats", "Boston College Eagles")],
+    });
+    expect(findListedFixture(LISTED, board, NCAAF)?.externalId).toBe("espn:ncaaf:21");
+    expect(commenceTimeCorrection(LISTED, startedAt, NOW)).toBeNull();
+    const out = confirmFixturesAgainstScoreboard([LISTED], board, NCAAF, NOW);
+    expect(out.get(LISTED.id)).toMatchObject({
+      status: "event_already_started",
+      event: { externalId: "espn:ncaaf:21" },
+    });
+    expect(out.get(LISTED.id)).not.toHaveProperty("correctedCommenceTime");
+    // Exactly now is not after now either.
+    const atNow = parseBoard({
+      events: [espnEvent("22", NOW.toISOString(), "Cincinnati Bearcats", "Boston College Eagles")],
+    });
+    expect(confirmFixturesAgainstScoreboard([LISTED], atNow, NCAAF, NOW).get(LISTED.id)).toMatchObject({
+      status: "event_already_started",
+    });
+
+    // The same pair 2h ahead (17:00Z) against a stored 16:30Z row: 30 minutes
+    // of drift on a contest still ahead is corrected to ESPN's clock.
+    const aheadAt = new Date("2026-09-05T17:00:00.000Z");
+    const ahead = parseBoard({
+      events: [espnEvent("23", aheadAt.toISOString(), "Cincinnati Bearcats", "Boston College Eagles")],
+    });
+    const soon: FixtureProbe = { ...LISTED, id: "g-soon", commenceTime: new Date("2026-09-05T16:30:00.000Z") };
+    expect(commenceTimeCorrection(soon, aheadAt, NOW)).toEqual(aheadAt);
+    expect(confirmFixturesAgainstScoreboard([soon], ahead, NCAAF, NOW).get(soon.id)).toEqual({
+      status: "confirmed",
+      event: ahead[0],
+      correctedCommenceTime: aheadAt,
+    });
+  });
 });
 
 describe("FixtureConfirmer", () => {
@@ -433,6 +471,24 @@ describe("FixtureConfirmer", () => {
       status: "fetch_failed",
       error: expect.stringContaining("groups=81 HTTP 503"),
     });
+  });
+
+  it("reports event_already_started through confirmBatch when the run's clock is past the listed kickoff", async () => {
+    // Same board, a run at 21:00Z: the 19:30Z Cincinnati listing has started.
+    const fetchImpl = vi.fn<(url: string) => Promise<Response>>(async () => jsonResponse(CFB_BOARD));
+    const confirmer = new FixtureConfirmer({
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      now: new Date("2026-09-05T21:00:00.000Z"),
+    });
+    const stale: FixtureProbe = { ...LISTED, id: "g-cincy-stale", commenceTime: new Date("2026-09-05T22:00:00.000Z") };
+    const out = await confirmer.confirmBatch(NCAAF, [stale]);
+    expect(out.status).toBe("ok");
+    if (out.status === "ok") {
+      expect(out.byGameId.get("g-cincy-stale")).toMatchObject({
+        status: "event_already_started",
+        event: { externalId: "espn:ncaaf:402" },
+      });
+    }
   });
 
   it("returns unsupported_sport without fetching when ESPN has no board for the key", async () => {

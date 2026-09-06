@@ -270,11 +270,11 @@ function fiveWhysFor(
       }
     case "FIXTURE_NOT_FOUND":
       return [
-        "Why VOIDED? The free ESPN scoreboard for the sport and date lists no event pairing the pick's two teams.",
-        "Why no event? The game row was created from an early listing (a May schedule) that the league later moved or never played, or a stored name does not match the board.",
+        "Why VOIDED? The free ESPN scoreboard for the sport and date lists no event pairing the pick's two stored team names.",
+        "Why no event? The game row was created from an early listing (a May schedule) that the league later moved or never played, or a stored name does not match the board (an alias or spelling mismatch produces the same evidence).",
         "Why did a pick exist? The slate generated from our own stale kickoff time, not from a confirmed fixture (C-111 guards this upstream).",
-        "Why CANCELED or not? The row is marked CANCELED only when NEITHER team appears on that date's board (evidence homeListed and awayListed both false); when one team appears against another opponent the board is real and the row is left as is (a one-sided name mismatch).",
-        "Root: fixture confirmation missing before pick generation; the per-team evidence separates a phantom fixture from a name defect.",
+        "Why CANCELED or not? The row is marked CANCELED only when NEITHER stored name matched a board side (evidence homeListed and awayListed both false) and the row was still SCHEDULED or LIVE; a POSTPONED row keeps its status because it may be rescheduled, and when one stored name matched against another opponent the board is real and the row is left as is (a one-sided name mismatch).",
+        "Root: fixture confirmation missing before pick generation; the per-name evidence separates a phantom fixture from a name defect only once the fixture itself is verified.",
       ];
     default:
       return [
@@ -355,8 +355,9 @@ function remediationFor(
       }
     case "FIXTURE_NOT_FOUND":
       return [
-        "Already voided by the zero-sit lane; read evidence.homeListed and evidence.awayListed on the PickSettlementEvent payload: both false means neither team played that day and the game row was also marked CANCELED; one true means a real board with a stored name it does not match, and the row was left as is.",
-        "Confirm the fixture against ESPN before any new pick (C-111); for a one-sided mismatch repair the stored team name instead of cancelling anything.",
+        "Already voided by the zero-sit lane; read evidence.homeListed and evidence.awayListed on the PickSettlementEvent payload: both false means neither stored name matched the board (an alias or spelling mismatch produces the same evidence), not proof that the contest did not occur; one true means a real board with a stored name it does not match, and the row was left as is.",
+        "Verify the fixture itself (the ESPN event id or the league schedule page) before concluding the contest did not occur: a SCHEDULED or LIVE row with both names unmatched was marked CANCELED and must be reopened if the contest exists under other names; a POSTPONED row kept its status.",
+        "Confirm the fixture against ESPN before any new pick (C-111); for a name mismatch repair the stored team name instead of cancelling anything.",
       ];
     default:
       return ["Inspect raw settlement outcome and extend RCA classifier."];
@@ -390,7 +391,7 @@ function summaryFor(code: SettlementRootCauseCode, ageHours: number): string {
     case "AMBIGUOUS_TEAM_NAME":
       return `Voided: team names could not identify one game (${ageHours.toFixed(1)}h since kickoff).`;
     case "FIXTURE_NOT_FOUND":
-      return `Voided: the free scoreboard for that date lists no event pairing the two teams (${ageHours.toFixed(1)}h since kickoff).`;
+      return `Voided: the free scoreboard for that date lists no event pairing the two stored team names (${ageHours.toFixed(1)}h since kickoff).`;
     default:
       return "Unclassified settlement blockage.";
   }

@@ -233,8 +233,12 @@ export async function generateSignalSlate(opts?: {
     }
     const fixture = fixtureBatch.byGameId.get(game.id);
     if (!fixture || fixture.status !== "confirmed") {
+      // A listed contest whose ESPN kickoff is already behind the run clock is
+      // skipped for a different reason than an absent one; say which.
       console.warn(
-        `${logPrefix} fixture not listed on the ESPN ${sportKey} scoreboard for its date, no pick: ${formatFixtureLine(game)}`,
+        fixture?.status === "event_already_started"
+          ? `${logPrefix} fixture already started per the ESPN ${sportKey} scoreboard (listed ${fixture.event.commenceTime.toISOString()}), no pick: ${formatFixtureLine(game)}`
+          : `${logPrefix} fixture not listed on the ESPN ${sportKey} scoreboard for its date, no pick: ${formatFixtureLine(game)}`,
       );
       picksSkipped += 1;
       fixtureUnconfirmed += 1;
