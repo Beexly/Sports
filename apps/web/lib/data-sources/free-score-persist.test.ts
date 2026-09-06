@@ -68,12 +68,21 @@ vi.mock("./free-adapters/henrygd-ncaa", () => ({
 }));
 
 // ─── Mock free-settlement (only the functions free-score-persist imports) ─────
-vi.mock("./free-settlement", () => ({
-  buildTrustedFinals: mocks.buildTrustedFinalsMock,
-  expandTeamMatchTokens: (side: unknown) =>
-    typeof side === "string" ? [side.toLowerCase()] : [],
-  teamTokensMatch: (a: string, b: string) => a.toLowerCase() === b.toLowerCase(),
-}));
+vi.mock("./free-settlement", async (importOriginal) => {
+  // nearestByKickoff carries the kickoff-binding and tie-window rule the
+  // persister now depends on, so the REAL implementation is used here: mocking
+  // it away would make these tests assert nothing about the behaviour they
+  // exist to pin.
+  const actual = await importOriginal<typeof import("./free-settlement")>();
+  return {
+    buildTrustedFinals: mocks.buildTrustedFinalsMock,
+    expandTeamMatchTokens: (side: unknown) =>
+      typeof side === "string" ? [side.toLowerCase()] : [],
+    teamTokensMatch: (a: string, b: string) => a.toLowerCase() === b.toLowerCase(),
+    nearestByKickoff: actual.nearestByKickoff,
+    NEAREST_CANDIDATE_TIE_MS: actual.NEAREST_CANDIDATE_TIE_MS,
+  };
+});
 
 // ─── Mock settlement-score-dates ───────────────────────────────────────────────
 vi.mock("./settlement-score-dates", () => ({
@@ -157,6 +166,7 @@ function makeEspnGame(opts: {
  */
 function makeTrustedFinal(opts: {
   date: string;
+  startIso?: string;
   homeName: string;
   homeAbbr: string;
   homeScore: number;
@@ -167,6 +177,7 @@ function makeTrustedFinal(opts: {
 }) {
   return {
     date: opts.date,
+    ...(opts.startIso ? { startIso: opts.startIso } : {}),
     home: { name: opts.homeName, abbr: opts.homeAbbr, score: opts.homeScore },
     away: { name: opts.awayName, abbr: opts.awayAbbr, score: opts.awayScore },
     confirmation: opts.confirmation,
@@ -691,7 +702,7 @@ describe("persistFreeScores — never settles a game that has not started", () =
     expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2, status: "FINAL" });
   });
 
-  it("prefers the game's own day over an adjacent day inside the ±48h window", async () => {
+  it("holds rather than guessing when two same-matchup finals carry no start times", async () => {
     const startedToday = new Date(Date.now() - 3 * HOUR);
     const gameDay = startedToday.toISOString().slice(0, 10);
     const dayBefore = new Date(startedToday.getTime() - 24 * HOUR)
@@ -709,8 +720,155 @@ describe("persistFreeScores — never settles a game that has not started", () =
           awayScore: null,
         }),
       ],
-      // Yesterday's meeting listed FIRST, so an unordered scan would take it.
+      // Two meetings of the same series, neither carrying a start time.
       [seriesFinal(dayBefore, 9, 1), seriesFinal(gameDay, 4, 2)],
+    );
+
+    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    // An earlier revision of this fix sorted by calendar-date distance and took
+    // today's 4-2. That was too weak, and Devin Review on #717 was right about
+    // why: a date is not a clock, and the same reasoning that makes the sort
+    // "obviously" correct here picks the wrong game of a doubleheader. Without
+    // start times on the finals there is no honest way to say which meeting
+    // this row is, so the persister now holds and writes nothing. Yesterday's
+    // 9-1 must not be written, and neither may today's 4-2 be guessed at.
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+  });
+});
+
+// ─── Kickoff binding and the ambiguity hold ────────────────────────────────────
+
+/**
+ * Devin Review on PR #717: the commence-time guard alone only protects a game
+ * BEFORE kickoff. Once a game has started, the ±48h window still offers the
+ * previous meeting's final, and if this game's own result is not published yet
+ * an earlier score is accepted and written as this game's final.
+ *
+ * The fix reuses nearestByKickoff from free-settlement.ts — the same rule and
+ * the same tie window the pick-settlement path already applies — and fails
+ * closed when more than one candidate survives. Leaving a row unscored is
+ * recoverable; a wrong FINAL that picks are graded against is not.
+ */
+describe("persistFreeScores — binds a final to kickoff and holds when ambiguous", () => {
+  const HOUR = 60 * 60 * 1000;
+
+  function armSport(games: ReturnType<typeof makeGameRow>[], finals: unknown[]) {
+    mocks.checkClearanceMock.mockReturnValue(clearanceResult(true, []));
+    mocks.dbGameFindMany.mockResolvedValue(games);
+    mocks.dbGameUpdateMany.mockResolvedValue({ count: 1 });
+    mocks.dbIngestionRunCreate.mockResolvedValue({
+      id: "run-stub",
+      status: "SUCCESS",
+      completedAt: new Date("2026-06-15T12:00:00.000Z"),
+    });
+    mocks.fetchScoresMultiSourceMock.mockResolvedValue({
+      games: [],
+      errors: [],
+      attempted: [],
+      used: null,
+      primary: null,
+      failover: false,
+      oddsApiRequired: false,
+      datesRequested: [],
+    });
+    mocks.fetchHenrygdScoreboardMock.mockResolvedValue([]);
+    mocks.buildTrustedFinalsMock.mockReturnValue(finals);
+  }
+
+  function seriesFinal(startIso: string, homeScore: number, awayScore: number) {
+    return makeTrustedFinal({
+      date: startIso.slice(0, 10),
+      startIso,
+      homeName: "Phillies",
+      homeAbbr: "PHI",
+      homeScore,
+      awayName: "Braves",
+      awayAbbr: "ATL",
+      awayScore,
+      confirmation: "CONFIRMED",
+    });
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("does NOT inherit yesterday's final for a game that started but has no result yet", async () => {
+    // Started 90 minutes ago: past the commence-time guard, still in progress.
+    const startedRecently = new Date(Date.now() - 1.5 * HOUR);
+    armSport(
+      [
+        makeGameRow({
+          id: "game-live",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedRecently,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      // ONLY the previous meeting's final exists. Nothing for today.
+      [seriesFinal(new Date(startedRecently.getTime() - 24 * HOUR).toISOString(), 9, 1)],
+    );
+
+    const result = await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    // 24h away is far outside NEAREST_CANDIDATE_TIE_MS, but it is the only
+    // candidate, so the kickoff rule alone cannot reject it — what matters is
+    // that we do not write yesterday's 9-1 as this game's final.
+    const wrote = mocks.dbGameUpdateMany.mock.calls.some((c) => {
+      const data = (c[0] as { data?: { homeScore?: number } }).data;
+      return data?.homeScore === 9;
+    });
+    expect(wrote).toBe(false);
+    expect(result.gamesUpdated).toBe(0);
+  });
+
+  it("holds instead of guessing when two same-matchup finals are equally close (doubleheader)", async () => {
+    const startedToday = new Date(Date.now() - 2 * HOUR);
+    armSport(
+      [
+        makeGameRow({
+          id: "game-dh",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedToday,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      // Two games of a doubleheader, both within the tie window of each other.
+      [
+        seriesFinal(new Date(startedToday.getTime() - 30 * 60 * 1000).toISOString(), 4, 2),
+        seriesFinal(new Date(startedToday.getTime() + 30 * 60 * 1000).toISOString(), 7, 5),
+      ],
+    );
+
+    await persistFreeScores({ sportKey: "americanfootball_nfl" });
+
+    // Neither score may be written: we cannot say which game this row is.
+    expect(mocks.dbGameUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it("settles normally when exactly one final matches the game's kickoff", async () => {
+    const startedToday = new Date(Date.now() - 3 * HOUR);
+    armSport(
+      [
+        makeGameRow({
+          id: "game-clear",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedToday,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        // Yesterday's meeting AND today's: today's is far nearer the kickoff.
+        seriesFinal(new Date(startedToday.getTime() - 24 * HOUR).toISOString(), 9, 1),
+        seriesFinal(startedToday.toISOString(), 4, 2),
+      ],
     );
 
     await persistFreeScores({ sportKey: "americanfootball_nfl" });
@@ -719,7 +877,6 @@ describe("persistFreeScores — never settles a game that has not started", () =
     const call = mocks.dbGameUpdateMany.mock.calls[0]![0] as {
       data: { homeScore: number; awayScore: number };
     };
-    // 4-2 is today's result; 9-1 is yesterday's and must not win.
     expect(call.data).toMatchObject({ homeScore: 4, awayScore: 2 });
   });
 });

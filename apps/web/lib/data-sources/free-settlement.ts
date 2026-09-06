@@ -329,12 +329,31 @@ export function orientToPickHome(
 export const NEAREST_CANDIDATE_TIE_MS = 4 * 60 * 60 * 1000;
 
 export function nearestCandidates(pick: PendingPick, matching: readonly TrustedFinal[]): TrustedFinal[] {
+  return nearestByKickoff(pick.gameDateIso, matching);
+}
+
+/**
+ * The kickoff-nearest narrowing above, addressed by an ISO kickoff instead of a
+ * PendingPick, so the game-score persister can reuse the identical rule (and the
+ * identical tie window) rather than re-deriving one. `free-score-persist.ts` was
+ * matching a series on team names inside the same ±2-day tolerance with no
+ * kickoff binding at all, which is how an earlier meeting's final was written
+ * onto a later game of the same series.
+ *
+ * Returns every candidate unchanged when the caller has no real kickoff time or
+ * any candidate lacks `startIso` — "nearest" is meaningless then, and the
+ * caller's own ambiguity guard decides what to do with the several it gets back.
+ */
+export function nearestByKickoff(
+  kickoffIso: string,
+  matching: readonly TrustedFinal[],
+): TrustedFinal[] {
   if (matching.length <= 1) return [...matching];
-  // A date-only gameDateIso ("2026-09-05") parses as midnight, which would make
+  // A date-only kickoff ("2026-09-05") parses as midnight, which would make
   // "nearest" pick the earlier game of a same-day doubleheader. Without a real
   // kickoff time every candidate stays and the doubleheader guard holds.
-  if (!pick.gameDateIso.includes("T")) return [...matching];
-  const kickoff = Date.parse(pick.gameDateIso);
+  if (!kickoffIso.includes("T")) return [...matching];
+  const kickoff = Date.parse(kickoffIso);
   if (Number.isNaN(kickoff) || matching.some((f) => !f.startIso || Number.isNaN(Date.parse(f.startIso)))) {
     return [...matching];
   }

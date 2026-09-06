@@ -27,12 +27,21 @@ import type { Sport } from "./source-router";
 import {
   buildTrustedFinals,
   expandTeamMatchTokens,
+  nearestByKickoff,
   teamTokensMatch,
   type TrustedFinal,
 } from "./free-settlement";
 import { uniqueScoreboardDates } from "./settlement-score-dates";
 import { recordFreeIngestionRun } from "./free-ingestion-run";
 import { checkClearance } from "@/lib/scraping/clearance-engine";
+
+/**
+ * How far a trusted final's start time may sit from a game row's commenceTime
+ * and still be accepted as that game's result. Generous enough for a rain delay
+ * or a schedule correction, far below the 24h spacing of consecutive games in a
+ * series, which is the confusion this bounds.
+ */
+export const MAX_KICKOFF_DRIFT_MS = 12 * 60 * 60 * 1000;
 
 const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
@@ -214,29 +223,78 @@ export async function persistFreeScores(options?: {
 
         const day = g.commenceTime.toISOString().slice(0, 10);
         const d0 = Date.parse(day);
-        const candidates = finals
-          .map((f) => {
-            const d1 = Date.parse(f.date.slice(0, 10));
-            return { f, delta: Math.abs(d0 - d1) };
-          })
-          .filter(
-            ({ delta }) => Number.isFinite(d0) && Number.isFinite(delta) && delta <= 36e5 * 48,
-          )
-          // Closest date first. The ±48h window is a timezone tolerance (a late
-          // game can be dated a day either side by the source), but it also
-          // spans a whole series, and an unordered scan took whichever final
-          // happened to come first in the feed. Trying the same-day final
-          // before a neighbouring day's keeps the tolerance without letting an
-          // adjacent meeting win when the game's own result is available.
-          .sort((a, b) => a.delta - b.delta)
-          .map(({ f }) => f);
+        const inWindow = finals.filter((f) => {
+          const d1 = Date.parse(f.date.slice(0, 10));
+          if (!Number.isFinite(d0) || !Number.isFinite(d1)) return false;
+          return Math.abs(d0 - d1) <= 36e5 * 48; // ~2 days (TZ edge)
+        });
 
-        let hit: { homeScore: number; awayScore: number } | null = null;
-        for (const f of candidates) {
-          hit = finalMatchesGame(f, g.homeTeamName, g.awayTeamName);
-          if (hit) break;
+        // Every final in the window that names these two teams — ALL of them,
+        // not the first one the feed happened to yield. In a Fri/Sat/Sun series
+        // the ±48h tolerance holds up to three completed finals for the same
+        // matchup, and taking the first was how an earlier meeting's score was
+        // written onto a later game.
+        const matchesByTeam = inWindow
+          .map((f) => ({ f, hit: finalMatchesGame(f, g.homeTeamName, g.awayTeamName) }))
+          .filter((c): c is { f: TrustedFinal; hit: { homeScore: number; awayScore: number } } =>
+            c.hit !== null,
+          );
+        if (matchesByTeam.length === 0) continue;
+
+        // Bind the final to this game's kickoff with the SAME rule and the same
+        // tie window the pick-settlement path already uses (nearestByKickoff in
+        // free-settlement.ts). Calendar dates alone are not enough: a 20:10 ET
+        // game is the next UTC day, so "nearest date" picks the wrong game of a
+        // series.
+        const narrowed = nearestByKickoff(
+          g.commenceTime.toISOString(),
+          matchesByTeam.map((c) => c.f),
+        );
+
+        // Fail closed on a tie. Two finals still in contention means a
+        // doubleheader, or a series the sources gave no start times for; either
+        // way we cannot say which one this game is, and guessing is what wrote
+        // a phantom result in the first place. Leaving the row unscored is
+        // recoverable — a wrong FINAL that picks are graded against is not.
+        if (narrowed.length !== 1) {
+          console.warn(
+            `[free-score-persist] AMBIGUOUS_MATCH game=${g.id} ` +
+              `${g.awayTeamName} @ ${g.homeTeamName} commence=${g.commenceTime.toISOString()} ` +
+              `— ${narrowed.length} finals remain after kickoff narrowing; refusing to guess.`,
+          );
+          continue;
         }
-        if (!hit) continue;
+        const chosen = narrowed[0]!;
+
+        // Narrowing cannot reject a LONE stale candidate: nearestByKickoff
+        // returns a single-element list unchanged. So bind it explicitly. A
+        // game that has started but whose own result is not published yet still
+        // sits inside the ±48h window of the PREVIOUS meeting, and taking that
+        // one writes an earlier score as this game's final (Devin Review, #717).
+        if (chosen.startIso) {
+          const drift = Math.abs(Date.parse(chosen.startIso) - g.commenceTime.getTime());
+          if (!Number.isFinite(drift) || drift > MAX_KICKOFF_DRIFT_MS) {
+            console.warn(
+              `[free-score-persist] KICKOFF_DRIFT game=${g.id} ` +
+                `${g.awayTeamName} @ ${g.homeTeamName} commence=${g.commenceTime.toISOString()} ` +
+                `final start=${chosen.startIso} — ${Math.round(drift / 36e5)}h apart, ` +
+                `beyond ${MAX_KICKOFF_DRIFT_MS / 36e5}h; refusing to treat it as this game's result.`,
+            );
+            continue;
+          }
+        } else if (chosen.date.slice(0, 10) !== day) {
+          // No start time to bind against. The ±48h window spans a whole series,
+          // so without a clock the only defensible tolerance is the timezone
+          // edge the window exists for, and that is one day, not two.
+          console.warn(
+            `[free-score-persist] UNBOUND_DATE game=${g.id} ` +
+              `${g.awayTeamName} @ ${g.homeTeamName} day=${day} final date=${chosen.date} ` +
+              `— no start time on the final and the dates differ; refusing to guess.`,
+          );
+          continue;
+        }
+
+        const hit = matchesByTeam.find((c) => c.f === chosen)!.hit;
         matched++;
 
         // GSE-SEC-051: ESPN (espn-public-api) has storage_allowed=false in the rights
