@@ -90,6 +90,7 @@ import {
   isLowQuota,
   paidRequestCountOf,
   recordPaidRunAccounting,
+  resolvePaidOddsGovernor,
 } from "../refresh-odds.js";
 
 const GATES = { isBootstrapMode: false } as const;
@@ -783,6 +784,46 @@ describe("refreshOdds", () => {
       await runWithTimers(refreshOdds());
 
       expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledWith({ db: hoisted.DB, atomicCapable: false });
+    });
+
+    /**
+     * The middle hop of the credit label. buildPaidOddsGovernor stamping a
+     * supplied source onto the observation is already proven in
+     * packages/data-ingestion paid-odds-governor.test.ts ("stamps a
+     * caller-supplied source on the credit observation"), and the worker
+     * passing its label is proven in refresh-cycle.test.ts. Neither covers
+     * whether resolvePaidOddsGovernor actually FORWARDS it: the conditional
+     * spread in defaultPaidOddsGovernor could drop it and both of those would
+     * still pass (CodeRabbit, PR #714).
+     */
+    it("forwards a caller's source through to the governor factory", () => {
+      resolvePaidOddsGovernor(undefined, "[data-refresh]", "data-refresh-worker");
+
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledWith({
+        db: hoisted.DB,
+        atomicCapable: true,
+        source: "data-refresh-worker",
+      });
+    });
+
+    it("omits source entirely when the caller gives none, so the factory default stands", () => {
+      resolvePaidOddsGovernor(undefined, "[cron:refresh-odds]");
+
+      // Not `source: undefined` — the key must be absent, which is what keeps
+      // every existing caller's deps object byte-identical to before.
+      expect(mocks.buildPaidOddsGovernor).toHaveBeenCalledWith({
+        db: hoisted.DB,
+        atomicCapable: true,
+      });
+      const deps = mocks.buildPaidOddsGovernor.mock.calls[0]![0] as Record<string, unknown>;
+      expect("source" in deps).toBe(false);
+    });
+
+    it("an injected governor is returned as-is and no source is applied to it", () => {
+      const gov = stubGovernor({});
+
+      expect(resolvePaidOddsGovernor(gov, "[data-refresh]", "data-refresh-worker")).toBe(gov);
+      expect(mocks.buildPaidOddsGovernor).not.toHaveBeenCalled();
     });
 
     it("the default is built once per cycle, not once per sport", async () => {

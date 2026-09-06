@@ -27,7 +27,8 @@ const hoisted = vi.hoisted(() => {
     processSport: vi.fn<(...args: unknown[]) => Promise<Envelope>>(),
     getInSeasonSports: vi.fn<() => Array<{ key: string; name: string; displayName: string }>>(),
     getReadinessGates: vi.fn<() => unknown>(),
-    resolvePaidOddsGovernor: vi.fn<(injected: unknown, logPrefix?: string) => unknown>(),
+    resolvePaidOddsGovernor:
+    vi.fn<(injected: unknown, logPrefix?: string, source?: string) => unknown>(),
   };
 });
 
@@ -117,15 +118,31 @@ describe("runRefreshCycle (data-refresh worker, C-109 governed)", () => {
     expect(mocks.resolvePaidOddsGovernor).not.toHaveBeenCalled();
   });
 
-  it("builds the default governor once per cycle (worker log prefix) and runs every allowed sport through processSport", async () => {
+  it("builds the default governor once per cycle (worker log prefix and its own credit-ledger label) and runs every allowed sport through processSport", async () => {
     const summary = await runWithTimers(runRefreshCycle());
 
     expect(mocks.resolvePaidOddsGovernor).toHaveBeenCalledTimes(1);
-    expect(mocks.resolvePaidOddsGovernor).toHaveBeenCalledWith(undefined, "[data-refresh]");
+    expect(mocks.resolvePaidOddsGovernor).toHaveBeenCalledWith(
+      undefined,
+      "[data-refresh]",
+      "data-refresh-worker",
+    );
     expect(mocks.processSport).toHaveBeenCalledTimes(2);
     expect(mocks.processSport).toHaveBeenNthCalledWith(1, SPORTS[0], "test-key", GATES, "[data-refresh]");
     expect(mocks.processSport).toHaveBeenNthCalledWith(2, SPORTS[1], "test-key", GATES, "[data-refresh]");
     expect(summary).toEqual({ total: 2, failed: 0, held: 0, skipped: 0 });
+  });
+
+  it("labels its credit spend as the worker, never as the refresh-odds cron", async () => {
+    // The defect: resolvePaidOddsGovernor was called with no source, so
+    // buildPaidOddsGovernor fell back to its "refresh-odds" default and every
+    // credit observation this separate, separately-paced process wrote landed
+    // in the ledger as scheduled-cron spend (source_type ops.odds.refresh-odds).
+    await runWithTimers(runRefreshCycle());
+
+    const source = mocks.resolvePaidOddsGovernor.mock.calls[0]![2];
+    expect(source).toBe("data-refresh-worker");
+    expect(source).not.toBe("refresh-odds");
   });
 
   it("skips a sport the governor holds, logs the governor's reason, and still runs the others", async () => {

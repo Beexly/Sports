@@ -26,6 +26,16 @@ import {
 
 const LOG_PREFIX = "[data-refresh]";
 
+/**
+ * Credit-ledger label for this worker's spend: the observation row's
+ * source_type becomes `ops.odds.data-refresh-worker`, distinct from the
+ * refresh-odds cron's. Twin of settle-sport's "settle-sport" and the admin
+ * route's "trigger-refresh". Without it this worker's credits were recorded as
+ * scheduled-cron spend and a caller-level audit could not tell the two apart,
+ * even though the worker is a separate process on its own cadence.
+ */
+const CREDIT_SOURCE = "data-refresh-worker";
+
 /** Pause between sports so the vendor never sees a burst. */
 const INTER_SPORT_PAUSE_MS = 1000;
 
@@ -66,7 +76,7 @@ export async function runRefreshCycle(): Promise<CycleSummary> {
   // refresh-odds cron's, so they answer to the same default ledger-backed
   // governor. Built once per cycle; a governor that cannot be constructed
   // fails open (logged) rather than blanking the board.
-  const governor = resolvePaidOddsGovernor(undefined, LOG_PREFIX);
+  const governor = resolvePaidOddsGovernor(undefined, LOG_PREFIX, CREDIT_SOURCE);
 
   // In-season sports only (cost control). Override: ODDS_REFRESH_ALL_SPORTS=true.
   // processSport catches provider/normalization failures (status:"failed"), but
