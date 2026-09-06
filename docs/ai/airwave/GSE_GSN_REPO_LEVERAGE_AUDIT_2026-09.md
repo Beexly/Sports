@@ -104,4 +104,70 @@ Two rounds preceded this doc:
 4. Everything else in this doc, roughly in the order it's likely to matter: Langfuse (cost tracing), mem0 or mcp-memory-service (agent memory — pick one, not both, to avoid running two competing memory stores), `@ast-grep/cli` (dev tooling).
 5. The `typescript-language-server` MCP bridge and the Airwave `claim-consistency-check.ts` module are real, scoped, buildable tasks for a future coding session — not blocked on the founder at all, just not yet started.
 
-See the "Further exploration" round (10-15 additional, more exploratory finds spanning sports-analytics/forecasting OSS, serverless queue/rate-limit infra, and other categories the first two rounds didn't cover) once it lands — this doc will get a follow-on section rather than a rewrite.
+See below for the "further exploration" round (landed 2026-09-06) — a broader, more
+exploratory sweep spanning sports-analytics/forecasting OSS, serverless queue/rate-limit
+infra, trending agent frameworks, non-NFL sports data, content/API-monetization tooling,
+and verifiable-computation/visual-regression, six independent research passes, all with
+the same verification standard (raw LICENSE fetched, real commit history checked, not
+star counts trusted).
+
+---
+
+## Round 3 — Broader exploration (2026-09-06)
+
+### Reassuring negative finding, stated first because it changes how to read the rest
+`packages/prediction-engine` is already ahead of nearly all public prior art checked:
+PAV isotonic + IVAP/CVAP conformal calibration, a purged-and-embargoed walk-forward
+splitter (López de Prado-style leakage control — most public sports-betting repos don't
+attempt this), and robust/fractional Kelly off a lower-confidence-bound edge (stricter
+than a plain Kelly formula). Nothing found beats it; two libraries are worth using purely
+as independent cross-checks before trusting a number that flips a public gate:
+**EFS-OpenSource/calibration-framework** ("netcal", Apache-2.0) for ECE/ACE math, and
+**frazane/scoringrules** (Apache-2.0) for Brier/CRPS math.
+
+### Data-ingestion gaps (real, sport-specific)
+| Repo | License | Fills |
+|---|---|---|
+| `sportsdataverse/sportsdataverse-data` | **CC-BY-4.0** (data) | The actual "nflverse of NBA/NHL" — same GitHub-Release-asset shape `nflverse-source.ts` already reads. Single most actionable data find of this round. |
+| `swar/nba_api` | MIT (code; underlying stats.nba.com data is **non-commercial-only per NBA's own ToS** — needs a `permission_required` registry entry, same bucket as MoneyPuck) | Maps stats.nba.com endpoints (shot charts, tracking, hustle stats) ESPN's public API doesn't expose |
+| `sportsdataverse/fastRhockey` | MIT | NHL — use this, not `hockeyR` (confirmed dead, last commit 2024-03-15) |
+
+**Negative finding, don't re-search this**: soccer's nflverse-equivalent (`worldfootballR`) is confirmed archived (2025-09-18). No open-licensed replacement exists — GSE's existing `openfootball` (CC0, fixtures only) + `ClubElo`/`Football-Data.co.uk` (already `use-with-caution` in `source-registry.ts`) remain the only viable soccer sources. StatsBomb's free tier is non-commercial-only (matches GSE's existing `forbidden` verdict — no change needed).
+
+**Scraping-governance architecture reference** (not importable — Python/R — but worth reading before ever building the package-level clearance gate `.claude/rules/scraping.md` itself flags as missing): Scrapy's `ROBOTSTXT_OBEY`-by-default + `AutoThrottle` middleware chain, and the R package `polite`'s `bow()`/`scrape()`/`nod()` four-verb "ask permission, cache robots.txt, never ask twice" API — the cleanest existing embodiment of the posture this repo already commits to. (`apify/crawlee` was checked and explicitly rejected — it markets itself around evading bot detection, the opposite of what the scraping rule requires.)
+
+### Production incident fix (highest-confidence, most concrete finding of this round)
+The hand-rolled circuit-breaker pattern for TheRundown 429s is the right *idea*, wrong *shape* — it's process-local, and Vercel serverless invocations don't share memory, which is structurally why the 429s recur all day. **Fix needs no new vendor**: GSE already has a Redis connection (`REDIS_URL`/`ioredis`, currently only used for the Claude cache) reachable from the same cron routes — a ~15-line `INCR`/`EXPIRE`-with-midnight-TTL daily quota counter closes the gap for free. `@upstash/ratelimit` (MIT) is a legitimate optional polish layer, not a requirement. Separately: **Vercel Queues** went to public beta Feb 27, 2026 — a native (no new vendor), real retry/backoff/idempotency-key-dedup primitive, worth adopting only if cron-to-cron coordination becomes the actual bottleneck (Inngest/Trigger.dev solve the same problem but mean a real migration off raw Cron — not justified at current scale).
+
+### Agent-fleet / dev-tooling (genuinely new, none installed)
+| Repo | License | What it offers |
+|---|---|---|
+| `NVIDIA/openshell` | Apache-2.0 | Declarative sandboxing (filesystem/network/process/inference layers) that could make AGENTS.md's frozen-paths/no-install/no-gate-flip laws **machine-enforced** instead of honor-system, across Claude Code/Codex/Copilot |
+| `omnigent-ai/omnigent` | Apache-2.0 | Meta-harness running Claude Code/Codex/Cursor/Hermes in one session with stacked spend-cap/approval policy — a more general version of the ledger's claim-before-start convention |
+| `open-multi-agent/open-multi-agent` | MIT, **TypeScript-native** | Runtime task-DAG planning + a replayable execution-trace viewer — the ledger records *that* a task was done, not *how*; checkpoint/resume maps directly onto "two attempts then BLOCKED" |
+| `paperclipai/paperclip` | MIT | CEO→manager→worker agent org-chart with hard per-agent monthly budget caps that auto-pause on overspend — a real mechanism GSE's `model-economics.ts` doesn't have at the per-agent-session level. **Caution**: star growth (55k→80k in months) is unusually fast for an undisclosed team — commits are real and dated, but treat the popularity claim skeptically |
+
+### Content-generation and eval (complements, not replacements, for existing tools)
+| Repo | License | Fit |
+|---|---|---|
+| `Laith0003/ux-skill` | MIT | Ships its brand-linter as a live **MCP server** — the pattern worth stealing is exposing GSE's own `positioning-vocab.json` check as an MCP tool so content-generation call sites self-check while drafting, not only at CI time |
+| `KRLabsOrg/LettuceDetect` | MIT | Span-level attribution classifier — catches a syntactically-valid number attributed to the *wrong* stat/team, the specific failure mode `numeric-guard.ts`'s allow-list approach structurally can't catch. Complementary offline pass, not a replacement. |
+
+### Short-form content production (draft-only, matches `media-revenue/platform-strategy.ts`'s existing no-auto-publish rules per platform)
+| Repo | License | Note |
+|---|---|---|
+| `Anil-matcha/AI-Youtube-Shorts-Generator` | MIT | Cleanest starting point — writes local MP4s only, no publish integration exists to accidentally wire in |
+| `mutonby/openshorts` | MIT core (Commercial License scoped to `cloud/` only) | Self-hosted (needs a real container, not Vercel Cron — video processing is multi-minute). **Never wire its MCP auto-publish tool.** |
+| `nmbrthirteen/podcli` | **AGPL-3.0** | DaVinci Resolve (FCPXML) handoff is the most literal "draft for a human editor" match found. AGPL is fine for internal-tool use, not for wrapping into a customer-facing GSN feature without legal sign-off. **Never invoke its YouTube-publish MCP tool.** |
+
+### API productization for `packages/stats-api` (narrower than expected — most pieces already exist)
+Grounding: GSE already has a real hashed API-key primitive (`api/v1/api-key.ts`) and a durable **Postgres-backed** cross-instance rate limiter (`community/durable-rate-limiter.ts`) — no new rate-limiting service is needed. The actual gap is narrow: a self-serve key-management UI, and a bridge from "N verified calls" to a Stripe invoice line.
+- **Stripe Billing Meters** — native, zero new vendor, use for launch. (Stripe acquired Metronome Jan 2026 and now steers new integrations there; Metronome is the credible upgrade path once metering gets complex, not a day-one need.)
+- **openmeterio/openmeter** (Apache-2.0) — self-hosting needs Kafka+ClickHouse+Postgres+Redis+Svix, too heavy; use **OpenMeter Cloud** only, as a pure ingest API.
+- **unkeyed/unkey** (AGPL-3.0, "not accepting external PRs") — redundant with what's already built; only worth it as a **hosted** self-serve dashboard, called externally, never self-hosted/forked.
+
+### Verifiable computation for the factor model — stays a someday-idea, not a roadmap item
+Every zk/verifiable-compute option checked (circom/snarkjs — GPL-3.0; Noir — self-described "not suitable for production, expect bugs"; o1js — built for on-chain Mina use; EZKL — no clean OSS license visible) requires hand-encoding the model as finite-field arithmetic, and a confidence-score sigmoid is a materially harder circuit than the homomorphic sum `pedersen-ledger.ts` already does. Worth revisiting only as an unwired R&D spike, same posture the crypto package already documents for itself.
+
+### Visual regression — needs nothing new at all
+Playwright's built-in `toHaveScreenshot` (uses pixelmatch internally, already installed via `@playwright/test`) covers the entire ~30-route cockpit gap with zero new dependencies or licenses. `Lost Pixel` (the obvious trendy pick) was archived April 2026 when its team joined Figma — confirmed via its own archive banner, a live cautionary example. `Argos CI` (MIT, self-hostable) is the option worth naming only if a browsable cross-deploy diff dashboard is ever wanted beyond CI artifacts.

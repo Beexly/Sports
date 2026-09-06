@@ -134,8 +134,16 @@ gated by the clearance-engine rule same as any extraction); (2) Helicone free-ti
 + Claude-API proxy URL swap (LLM cost tracing, zero new dependency); (3) approve
 `npm install @orama/orama` (local search — the single most-requested item across the prior
 audit's own domains). Do not approve mem0 AND mcp-memory-service together — two competing
-agent-memory stores is a regression, not a leverage gain. A broader "10-15 more, trending/
-creative" search is running as a follow-up; it will extend this doc, not replace it.
+agent-memory stores is a regression, not a leverage gain. **Round 3 landed same-day**:
+a broader, six-area exploratory sweep (same doc, new section) — highlights: the
+TheRundown 429 incident has a free, no-new-vendor fix (a Redis daily-quota counter GSE
+already has the connection for); a real CC-BY-4.0 nflverse-equivalent exists for
+NBA/NHL (`sportsdataverse-data`) and a real negative finding for soccer (`worldfootballR`
+archived, no replacement); visual-regression testing for the ~30-route cockpit needs
+zero new dependencies (Playwright's built-in `toHaveScreenshot`); and `NVIDIA/openshell`
+could make this file's own frozen-path/no-install/no-gate-flip laws machine-enforced
+instead of honor-system. Nothing in Round 3 was installed either — same founder-only
+posture as Round 2.
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
