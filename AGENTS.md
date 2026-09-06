@@ -165,7 +165,10 @@ its portability to `EntityEdge` needs real rework for the compound `cuid` key; t
 `typescript-language-server` MCP bridge is now sized (~300-600 lines, days not weeks), with
 the real risk being silent under-reporting on this repo's own 24-tsconfig-file shape, not
 the wire protocol. Full detail and citations in the doc's Round 5 section. `@ast-grep/cli`'s
-deep dive was still running when this was written; check the doc for its addendum.
+deep dive **stalled** (~2h50m hung on an `npx` registry install in this sandbox, stopped
+rather than left running) and was not completed — Round 2's original finding (BLOCKED, new
+dependency, `allowScripts` needed) stands, un-re-verified at the source level. See the doc's
+addendum.
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip

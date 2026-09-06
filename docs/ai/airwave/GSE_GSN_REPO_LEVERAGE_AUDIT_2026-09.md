@@ -558,5 +558,14 @@ loud-failure-or-correct rather than silently incomplete on this exact 23-package
 
 ---
 
-**Addendum — `@ast-grep/cli` deep dive**: pending; will be appended here once that
-background pass completes.
+**Addendum — `@ast-grep/cli` deep dive: stalled, not completed.** The background pass hung
+for ~2h50m with zero progress after its first step — `npx --yes @ast-grep/cli@latest
+--version`, an npm-registry install of an uncached package — never returned in this sandbox
+(likely the outbound-network proxy environment, not the tool itself). Stopped rather than left
+running indefinitely. Round 2's original finding stands undisturbed: `@ast-grep/cli` (MIT)
+needs one `allowScripts` line (its postinstall only selects a prebuilt binary via
+`optionalDependencies`, the same precedented pattern already approved for `esbuild`) then
+`npm install @ast-grep/cli` — still **BLOCKED — new dependency**, still not source-verified
+at the implementation level the way the other eleven repos in this round were. Re-attempting
+the deep dive in an environment with reliable npm-registry access (or by cloning the source
+directly instead of installing the CLI) is the honest next step, not a re-run here.
