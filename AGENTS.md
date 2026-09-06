@@ -148,6 +148,24 @@ bitemporal memory-repair pattern that is now the strongest available citation fo
 Airwave `claim-consistency-check.ts` work (supersedes NanoIndex) and directly targets
 the dormant `Entity`/`EntityEdge`/`Signal` schema — see the doc for the open question
 it raises about `Signal.capturedAt` semantics before that gets wired up.
+**Round 5 (same day): eleven of Round 1-2's repos re-verified at the source-code level**
+(cloned fresh, exact files/lines cited, not README/license-level like Rounds 1-2) —
+several prior recommendations are corrected, not just deepened. Highlights: Helicone
+should run in **Async** logging mode, not the proxy-URL-swap Round 2 recommended (Helicone's
+own docs mark Proxy mode as on the critical path — an outage there fails live Claude calls
+outright); Langfuse's SDK is a different repo (`langfuse-js`) with a different package name
+(`@langfuse/otel`, not `langfuse`) after a full OTel-based rewrite; **cut `Stevenic/vectra`
+entirely** (no cross-process concurrency control — a real lost-update race, not just "less
+durable" than Postgres); Orama's "sub-2KB" tagline is false (measured 63-77KB) and it has no
+ANN index at all, fine for small static corpora, wrong for growing semantic search where
+Neon's own pgvector is the better fit; `mem0` is usable only as retrieval plumbing behind
+GSE's own `write-gate.ts` (every mutating call commits synchronously, no pending state);
+`pg_bitemporal`'s real design is a shadow-table + stored-procedure API, not triggers, and
+its portability to `EntityEdge` needs real rework for the compound `cuid` key; the
+`typescript-language-server` MCP bridge is now sized (~300-600 lines, days not weeks), with
+the real risk being silent under-reporting on this repo's own 24-tsconfig-file shape, not
+the wire protocol. Full detail and citations in the doc's Round 5 section. `@ast-grep/cli`'s
+deep dive was still running when this was written; check the doc for its addendum.
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
