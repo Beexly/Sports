@@ -132,6 +132,21 @@ describe("ESPN scores adapter (free, facts-only)", () => {
     expect(games.map((g) => g.gameId)).toEqual(["9"]);
   });
 
+  it("requireAllGroups throws on a single failed group (a partial board is not evidence of absence)", async () => {
+    const half = (async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("groups=80")) return { ok: false, status: 503, json: async () => ({}) } as unknown as Response;
+      return { ok: true, status: 200, json: async () => ({ events: [{ id: "9", date: "2026-09-05T20:00Z", competitions: [{ competitors: [], status: { type: { state: "pre", completed: false } } }] }] }) } as unknown as Response;
+    }) as typeof fetch;
+    await expect(
+      fetchEspnScoreboard("ncaaf", { fetchImpl: half, dates: "20260905", requireAllGroups: true }),
+    ).rejects.toThrow(/ESPN scoreboard ncaaf groups=80 HTTP 503/);
+    // Every group healthy: identical result to the default.
+    const healthy = (async () => ({ ok: true, status: 200, json: async () => ({ events: [{ id: "9", date: "2026-09-05T20:00Z", competitions: [{ competitors: [], status: { type: { state: "pre", completed: false } } }] }] }) }) as unknown as Response) as typeof fetch;
+    const games = await fetchEspnScoreboard("ncaaf", { fetchImpl: healthy, dates: "20260905", requireAllGroups: true });
+    expect(games.map((g) => g.gameId)).toEqual(["9"]);
+  });
+
   it("is defensive against missing fields", () => {
     expect(parseEspnScoreboard({}, "nfl")).toEqual([]);
     expect(parseEspnScoreboard({ events: [{}] }, "nba")).toEqual([]); // no competitions → skipped

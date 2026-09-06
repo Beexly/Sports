@@ -20,8 +20,10 @@
 import {
   NULL_MARKET_PROBABILITY_RESOLVER,
   resolveMarketAnchoredCalibrationP,
+  type MarketAnchoredResolverSource,
   type MarketProbabilityResolver,
   type PickForLiveCal,
+  type ResolvedMarketP,
 } from "@/lib/calibration/live-calibration-p";
 import {
   isMoneylinePickType,
@@ -31,6 +33,7 @@ import {
   resolvePublishTimeMarketP,
   type OddsRowForMarketP,
   type PickForMarketP,
+  type PublishTimeMarketPSource,
   type PublishTimeMarketPUnresolvedReason,
 } from "@/lib/calibration/publish-time-market-p";
 
@@ -54,7 +57,14 @@ export type OddsTableDb = {
   };
 };
 
-export type OddsTableUnresolvedCounts = Readonly<Record<PublishTimeMarketPUnresolvedReason, number>>;
+/**
+ * Unresolved candidates by reason. `insufficient_books` is retired by C-110 (a
+ * lone real book now resolves as market_p_single_book) and is always 0; the key
+ * stays so readers of persisted artifacts see a number, never `undefined`.
+ */
+export type OddsTableUnresolvedCounts = Readonly<
+  Record<PublishTimeMarketPUnresolvedReason, number> & { readonly insufficient_books: number }
+>;
 
 /** Coverage report for the odds-table recompute; carried on the metrics artifact. */
 export type OddsTableMarketPStats = {
@@ -64,7 +74,10 @@ export type OddsTableMarketPStats = {
   /** Number of odds-table queries issued: 0 when there were no candidates, else 1. */
   readonly queries: number;
   readonly oddsRows: number;
+  /** Every resolved candidate, whichever book count. */
   readonly resolved: number;
+  /** C-110: the part of `resolved` that came from exactly one real book (market_p_single_book). */
+  readonly resolvedSingleBook: number;
   readonly unresolved: OddsTableUnresolvedCounts;
   /** Set only when the odds table could not be read; the sample then excludes every candidate. */
   readonly note: string | null;
@@ -75,8 +88,8 @@ export type PublishTimeMarketPResolverLoad = {
   readonly stats: OddsTableMarketPStats;
 };
 
-function emptyUnresolved(): Record<PublishTimeMarketPUnresolvedReason, number> {
-  return { no_rows: 0, insufficient_books: 0, no_side: 0 };
+function emptyUnresolved(): Record<PublishTimeMarketPUnresolvedReason, number> & { insufficient_books: number } {
+  return { no_rows: 0, no_usable_book: 0, insufficient_books: 0, no_side: 0 };
 }
 
 /** Stats for "the loader did not run" (no candidates, or the pick load itself failed). */
@@ -87,9 +100,15 @@ export function emptyOddsTableMarketPStats(): OddsTableMarketPStats {
     queries: 0,
     oddsRows: 0,
     resolved: 0,
+    resolvedSingleBook: 0,
     unresolved: emptyUnresolved(),
     note: null,
   };
+}
+
+/** The pure resolver's provenance tag as the sample builder's bySource key. */
+export function resolverSourceForPSource(pSource: PublishTimeMarketPSource): MarketAnchoredResolverSource {
+  return pSource === "market_p_single_book" ? "resolver_single_book" : "resolver";
 }
 
 /**
@@ -153,6 +172,7 @@ export async function loadPublishTimeMarketPResolver(
         queries: 1,
         oddsRows: 0,
         resolved: 0,
+        resolvedSingleBook: 0,
         unresolved,
         note: `odds table unavailable: ${msg}`,
       },
@@ -166,11 +186,16 @@ export async function loadPublishTimeMarketPResolver(
     else rowsByGame.set(row.gameId, [row]);
   }
 
-  const byPickId = new Map<string, number>();
+  const byPickId = new Map<string, ResolvedMarketP>();
+  let resolvedSingleBook = 0;
   for (const c of candidates) {
     const res = resolvePublishTimeMarketP(c, rowsByGame.get(c.gameId) ?? []);
-    if (res.status === "resolved") byPickId.set(c.id, res.p);
-    else unresolved[res.reason] += 1;
+    if (res.status === "resolved") {
+      byPickId.set(c.id, { p: res.p, source: resolverSourceForPSource(res.pSource) });
+      if (res.pSource === "market_p_single_book") resolvedSingleBook += 1;
+    } else {
+      unresolved[res.reason] += 1;
+    }
   }
 
   const resolveMarketP: MarketProbabilityResolver = (pick) =>
@@ -184,6 +209,7 @@ export async function loadPublishTimeMarketPResolver(
       queries: 1,
       oddsRows: rows.length,
       resolved: byPickId.size,
+      resolvedSingleBook,
       unresolved,
       note: null,
     },
@@ -194,18 +220,22 @@ export async function loadPublishTimeMarketPResolver(
  * Where each scored probability came from. proof_receipt is the publish-time
  * value and the primary source (every receipted pick lands here);
  * factor_breakdown counts only rows with no receipt (last-refresh value, rows
- * that predate receipts); market_p_from_odds_table is the WP-28 recompute.
+ * that predate receipts); market_p_from_odds_table is the WP-28 recompute on
+ * at least MIN_BOOKMAKERS real books; market_p_single_book is the C-110
+ * recompute on exactly one real book (same de-vig, reported apart).
  */
 export type MarketPSources = {
   readonly factor_breakdown: number;
   readonly proof_receipt: number;
   readonly market_p_from_odds_table: number;
+  readonly market_p_single_book: number;
 };
 
 /**
  * Map the sample builder's bySource to the coverage report. In every
  * production wiring the only injected resolver is this loader, so the
- * builder's "resolver" source is market_p_from_odds_table.
+ * builder's "resolver" source is market_p_from_odds_table and its
+ * "resolver_single_book" source is market_p_single_book.
  */
 export function marketPSourcesFromBySource(
   bySource: Readonly<Record<string, number>>,
@@ -214,6 +244,7 @@ export function marketPSourcesFromBySource(
     factor_breakdown: bySource["factor_breakdown"] ?? 0,
     proof_receipt: bySource["proof_receipt"] ?? 0,
     market_p_from_odds_table: bySource["resolver"] ?? 0,
+    market_p_single_book: bySource["resolver_single_book"] ?? 0,
   };
 }
 
@@ -221,8 +252,8 @@ export function oddsTableStatsNote(stats: OddsTableMarketPStats): string {
   const u = stats.unresolved;
   const tail = stats.note ? ` ${stats.note}.` : "";
   return (
-    `Odds-table recompute (WP-28): candidates ${stats.candidates}, games ${stats.gamesQueried}, ` +
-    `queries ${stats.queries}, rows ${stats.oddsRows}, resolved ${stats.resolved}; ` +
-    `unresolved no_rows ${u.no_rows}, insufficient_books ${u.insufficient_books}, no_side ${u.no_side}.${tail}`
+    `Odds-table recompute (WP-28, single book since C-110): candidates ${stats.candidates}, games ${stats.gamesQueried}, ` +
+    `queries ${stats.queries}, rows ${stats.oddsRows}, resolved ${stats.resolved} (single book ${stats.resolvedSingleBook}); ` +
+    `unresolved no_rows ${u.no_rows}, no_usable_book ${u.no_usable_book}, insufficient_books ${u.insufficient_books}, no_side ${u.no_side}.${tail}`
   );
 }

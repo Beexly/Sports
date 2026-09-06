@@ -21,6 +21,7 @@ import {
   picksToCalibrationSamples,
 } from "@/lib/ops/compute-live-calibration-metrics";
 import type { CalibrationExclusionCounts } from "@/lib/calibration/proven-path-rows";
+import type { MarketAnchoredPBasis } from "@/lib/calibration/live-calibration-p";
 import type { CalibrationSliceMetrics } from "@/lib/calibration/metric-slices";
 import type { MetricCi95 } from "@/lib/calibration/bootstrap-metric-ci";
 import {
@@ -58,8 +59,13 @@ export interface DurableMetricsPayload {
    * v5.2.8 Phase 2 fields (2026-09-05). Optional because artifacts persisted
    * before this date carry none of them; readers treat absence as "not measured".
    */
-  /** Which probability the floors were scored on. Absent on pre-Phase-2 artifacts. */
-  readonly pBasis?: "market_anchored";
+  /**
+   * Which sample definition the floors were scored on. Absent on pre-Phase-2
+   * artifacts; "market_anchored" on artifacts persisted 2026-09-05/06 (v1);
+   * MARKET_ANCHORED_P_BASIS ("market_anchored_v2", C-110 single-book samples
+   * included) on everything written since.
+   */
+  readonly pBasis?: MarketAnchoredPBasis | "market_anchored";
   /** Settled WIN/LOSS picks left out of the sample, by reason. */
   readonly exclusions?: CalibrationExclusionCounts;
   /** WP-28: how many scored probabilities came from receipts versus the odds table. */
@@ -79,9 +85,13 @@ export interface DurableMetricsPayload {
 /**
  * Sample definition a metrics artifact (and the streak counted on it) belongs
  * to. "legacy" is every artifact and snap persisted before v5.2.8 Phase 2
- * (scored on the confidence/blend hierarchy); "market_anchored" is Phase 2.
+ * (scored on the confidence/blend hierarchy); "market_anchored" is Phase 2 as
+ * first shipped (two-or-more-book recompute only); "market_anchored_v2" adds
+ * the C-110 single-book samples. A streak counted under one tag never seeds
+ * another (consecutiveGreenPriorForBasis), so the v1 to v2 move restarted the
+ * streak from 0 with streakResetFromBasis "market_anchored" on the first v2 snap.
  */
-export type CalibrationPBasis = "market_anchored" | "legacy";
+export type CalibrationPBasis = MarketAnchoredPBasis | "market_anchored" | "legacy";
 
 export function metricsPBasis(m: DurableMetricsPayload | null | undefined): CalibrationPBasis {
   return m?.pBasis ?? "legacy";

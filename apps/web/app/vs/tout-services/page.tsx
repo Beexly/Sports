@@ -107,8 +107,8 @@ export default function VsToutServicesPage() {
             </h2>
             <div className="mt-6 space-y-5 text-base leading-relaxed text-ion-1">
               <p>
-                Sports markets are uncertain. A model with a 64% calibrated
-                confidence on a single signal still loses 36 of 100 times.
+                Sports markets are uncertain. Even a pick the market prices as
+                a clear favorite loses a real share of the time.
                 That is not a flaw. That is the math. Any service that hides
                 this is selling certainty it cannot deliver.
               </p>

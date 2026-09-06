@@ -30,7 +30,7 @@ export const dynamic = "force-dynamic";
 
 function timeLabel(value: string): string {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Just now";
+  if (Number.isNaN(date.getTime())) return "Unavailable";
   return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 }
 
@@ -156,7 +156,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             </div>
           )}
 
-        {/* Honest-empty classifier — LIVE_BOARD off is not a quiet winning day */
+        {/* Honest-empty classifier: a closed board is not a quiet winning day */
           stateResult.meta.boardClass.honestEmpty &&
           !dbUnreachable &&
           !suppression &&
@@ -225,7 +225,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             rows={state.scoringNow}
             empty={
               stateResult.meta.boardClass.honestEmpty
-                ? "Held — empty is refuse-default, not a scoring drought claim."
+                ? "The board is closed until the data checks pass. An empty lane is not a claim about results."
                 : "No games are currently scoring."
             }
           />
@@ -234,7 +234,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             rows={state.publishedToday}
             empty={
               stateResult.meta.boardClass.refusePublicFire
-                ? "No public fires — LIVE_BOARD / gate held by law."
+                ? "No public fires: nothing is published while the board is closed."
                 : "No picks have cleared today."
             }
           />
@@ -322,13 +322,8 @@ function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
           {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
         </span>
       </div>
-      {row.rankingP !== null && (
-        <p className="mt-3 font-mono text-xs text-ion-1">
-          rankingP {row.rankingP.toFixed(3)}
-          {row.rankingSource ? ` · ${row.rankingSource}` : ""}
-          <span className="text-ion-3"> — model sort key, not verified ROI</span>
-        </p>
-      )}
+      {/* The ranking sort key and its source are model internals; the public
+          row does not render them (FE-10). The pick view carries the label. */}
       {row.confidence !== null && (
         <p className="mt-3 text-sm text-ion-1">Confidence label available on the pick view.</p>
       )}
