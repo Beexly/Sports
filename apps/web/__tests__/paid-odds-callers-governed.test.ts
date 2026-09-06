@@ -35,24 +35,122 @@ const SEARCH_ROOTS = [
 ];
 
 /**
- * Strip line and block comments so a prose mention of `processSport()` in a
- * docstring is not mistaken for a call. Crude but sufficient here: it can also
- * blank a comment-like run inside a string literal, which would only ever cause
- * a MISSED match in a file that has no real call anyway.
+ * Blank out comments, and ONLY comments.
+ *
+ * A plain regex cannot do this: `//` inside a string literal (a URL, say) is
+ * not a comment, and treating it as one erases the rest of that line, hiding
+ * any `processSport(` call after it from the scan below (Devin and cubic both
+ * caught this on PR #713). So this walks the source and tracks whether it is
+ * inside a single-quoted, double-quoted or template string, honouring escapes,
+ * and preserves `${...}` interpolations because those hold real code.
+ *
+ * Not handled, deliberately: distinguishing a regex literal from division needs
+ * real lexer context, and an unescaped `//` inside a regex is not a thing this
+ * codebase contains. Worst case there is a MISSED strip, which makes the scan
+ * more inclusive, never less.
  */
 export function stripComments(src: string): string {
-  return src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/[^\n]*/g, " ");
+  let out = "";
+  let i = 0;
+  const n = src.length;
+  // Template-literal nesting: each entry is the brace depth of an open `${`.
+  const templateStack: number[] = [];
+  let braceDepth = 0;
+
+  const skipString = (quote: string): void => {
+    out += " ";
+    i += 1;
+    while (i < n) {
+      if (src[i] === "\\") {
+        i += 2;
+        continue;
+      }
+      if (src[i] === quote) {
+        i += 1;
+        return;
+      }
+      i += 1;
+    }
+  };
+
+  while (i < n) {
+    const c = src[i]!;
+    const next = src[i + 1];
+
+    if (c === "/" && next === "/") {
+      while (i < n && src[i] !== "\n") i += 1;
+      out += " ";
+      continue;
+    }
+    if (c === "/" && next === "*") {
+      i += 2;
+      while (i < n && !(src[i] === "*" && src[i + 1] === "/")) i += 1;
+      i += 2;
+      out += " ";
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      skipString(c);
+      continue;
+    }
+    if (c === "`") {
+      // Walk the template, emitting only the code inside `${ ... }`.
+      out += " ";
+      i += 1;
+      while (i < n) {
+        if (src[i] === "\\") {
+          i += 2;
+          continue;
+        }
+        if (src[i] === "`") {
+          i += 1;
+          break;
+        }
+        if (src[i] === "$" && src[i + 1] === "{") {
+          out += " ";
+          i += 2;
+          templateStack.push(braceDepth);
+          braceDepth += 1;
+          break; // fall back to the main loop, which now emits the code
+        }
+        i += 1;
+      }
+      continue;
+    }
+    if (c === "{") braceDepth += 1;
+    if (c === "}") {
+      braceDepth -= 1;
+      if (templateStack.length > 0 && templateStack[templateStack.length - 1] === braceDepth) {
+        // Closing a `${`: resume template-literal text.
+        templateStack.pop();
+        out += " ";
+        i += 1;
+        while (i < n) {
+          if (src[i] === "\\") {
+            i += 2;
+            continue;
+          }
+          if (src[i] === "`") {
+            i += 1;
+            break;
+          }
+          if (src[i] === "$" && src[i + 1] === "{") {
+            i += 2;
+            templateStack.push(braceDepth);
+            braceDepth += 1;
+            break;
+          }
+          i += 1;
+        }
+        continue;
+      }
+    }
+    out += c;
+    i += 1;
+  }
+  return out;
 }
 
-/**
- * Any direct invocation of `processSport`, however its promise is consumed.
- *
- * Deliberately NOT anchored on `await`: a caller that does `return
- * processSport(...)`, stores the promise, or hands it to `Promise.all` spends
- * exactly the same credits, and an await-only matcher would let it bypass this
- * guard entirely (CodeRabbit, PR #713). The named import itself never matches,
- * because that is `processSport }` or `processSport,` and never `processSport(`.
- */
 /**
  * The argument text of every `recordPaidRunAccounting(...)` call in `src`,
  * comments already stripped, matched by balancing parentheses so a multi-line
@@ -120,6 +218,28 @@ describe("C-109: the paid-caller detector itself", () => {
     expect(callsProcessSport("const p = processSport(s, k, g, p);")).toBe(true);
     expect(callsProcessSport("await Promise.all(list.map((s) => processSport(s, k, g, p)));")).toBe(true);
     expect(callsProcessSport("void processSport(s, k, g, p);")).toBe(true);
+  });
+
+  it("does not let a comment marker inside a string hide a real call", () => {
+    // The exact hole Devin and cubic both found: a regex stripper treats the
+    // "//" in a URL as a comment and erases the rest of the line, so the call
+    // after it vanishes and an ungoverned caller passes the guard unseen.
+    expect(callsProcessSport('const u = "https://api.example.com"; await processSport(s);')).toBe(true);
+    expect(callsProcessSport("const u = 'http://x//y'; return processSport(s);")).toBe(true);
+    expect(callsProcessSport('const u = `wss://h/${p}`; await processSport(s);')).toBe(true);
+    // A block-comment marker inside a string must not open a comment either.
+    expect(callsProcessSport('const s = "/*"; await processSport(s);')).toBe(true);
+    // ...and an escaped quote must not end the string early.
+    expect(callsProcessSport('const s = "a\\"// b"; await processSport(s);')).toBe(true);
+  });
+
+  it("still strips real comments, and reads code inside template interpolations", () => {
+    expect(stripComments("// await processSport(s);").includes("processSport")).toBe(false);
+    expect(stripComments("/* await processSport(s); */").includes("processSport")).toBe(false);
+    // Interpolated code is real code and must survive the strip.
+    expect(stripComments("`x ${processSport(s)} y`").includes("processSport")).toBe(true);
+    // Text inside the template, however, is not code.
+    expect(stripComments("`processSport(s)`").includes("processSport")).toBe(false);
   });
 
   it("ignores a mention in prose and the import itself", () => {
