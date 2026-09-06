@@ -27,6 +27,7 @@ import type { Sport } from "./source-router";
 import {
   buildTrustedFinals,
   expandTeamMatchTokens,
+  MAX_KICKOFF_DRIFT_MS,
   nearestByKickoff,
   teamTokensMatch,
   type TrustedFinal,
@@ -34,14 +35,6 @@ import {
 import { uniqueScoreboardDates } from "./settlement-score-dates";
 import { recordFreeIngestionRun } from "./free-ingestion-run";
 import { checkClearance } from "@/lib/scraping/clearance-engine";
-
-/**
- * How far a trusted final's start time may sit from a game row's commenceTime
- * and still be accepted as that game's result. Generous enough for a rain delay
- * or a schedule correction, far below the 24h spacing of consecutive games in a
- * series, which is the confusion this bounds.
- */
-export const MAX_KICKOFF_DRIFT_MS = 12 * 60 * 60 * 1000;
 
 const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",

@@ -81,6 +81,11 @@ vi.mock("./free-settlement", async (importOriginal) => {
     teamTokensMatch: (a: string, b: string) => a.toLowerCase() === b.toLowerCase(),
     nearestByKickoff: actual.nearestByKickoff,
     NEAREST_CANDIDATE_TIE_MS: actual.NEAREST_CANDIDATE_TIE_MS,
+    // Real values, not stubs: these carry the kickoff-binding rule the
+    // persister depends on, so stubbing them would make the tests below assert
+    // nothing about the behaviour they exist to pin.
+    MAX_KICKOFF_DRIFT_MS: actual.MAX_KICKOFF_DRIFT_MS,
+    finalBindsToKickoff: actual.finalBindsToKickoff,
   };
 });
 

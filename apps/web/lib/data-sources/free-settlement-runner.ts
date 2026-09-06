@@ -234,7 +234,16 @@ export async function runFreePathSettlement(options?: {
       const loadedRows = await db.pick.findMany({
         where: {
           result: "PENDING",
-          game: { sport: { key: sport.key } },
+          // A pick on a game that has not started cannot have a result, so it
+          // must never enter the grader. Without this the loader handed every
+          // PENDING pick to settlePendingPicks, including picks on future
+          // games, and a team-name match against a previous meeting of the same
+          // series graded them before kickoff: 87 published picks carried a
+          // settledAt EARLIER than their game's commenceTime (production,
+          // 2026-09-06), and 298 published PENDING picks sat on future games at
+          // the time this guard was written. settle-backfill.ts and the
+          // zero-sit lane already scope their loads this way; this path did not.
+          game: { sport: { key: sport.key }, commenceTime: { lte: new Date() } },
         },
         select: {
           id: true,

@@ -328,6 +328,43 @@ export function orientToPickHome(
  */
 export const NEAREST_CANDIDATE_TIE_MS = 4 * 60 * 60 * 1000;
 
+/**
+ * How far a trusted final's start time may sit from a game's kickoff and still
+ * be accepted as that game's result. Generous enough for a rain delay or a
+ * schedule correction, far below the 24h spacing of consecutive games in a
+ * series, which is the confusion this bounds.
+ */
+export const MAX_KICKOFF_DRIFT_MS = 12 * 60 * 60 * 1000;
+
+/**
+ * Is `final` close enough in time to be THIS game's result?
+ *
+ * nearestCandidates cannot reject a LONE stale candidate: with one element there
+ * is nothing to be nearer than, so it returns it unchanged. That is how a game
+ * which has started but whose own result is not published yet inherits the
+ * PREVIOUS meeting's final, inside the same +/-2-day tolerance, on nothing but a
+ * team-name match. Measured on production 2026-09-06: 87 published picks were
+ * graded WIN/LOSS before their game's commenceTime.
+ *
+ * With a start time on the final, bind by the clock. Without one, the only
+ * defensible tolerance is the timezone edge the window exists for, which is ONE
+ * day, not two: a source may carry the fixture's local date while the kickoff is
+ * held in UTC, so a Saturday evening game is already Sunday.
+ */
+export function finalBindsToKickoff(kickoffIso: string, final: TrustedFinal): boolean {
+  // A date-only kickoff ("2026-09-05") parses as midnight UTC, so clock math
+  // against it would reject a legitimate 7pm final as 19 hours adrift. Same
+  // reason nearestCandidates refuses to rank on a date-only timestamp: without
+  // a real kickoff there is no clock to bind to, only the day.
+  if (kickoffIso.includes("T") && final.startIso) {
+    const kickoff = Date.parse(kickoffIso);
+    const start = Date.parse(final.startIso);
+    if (!Number.isFinite(kickoff) || !Number.isFinite(start)) return true;
+    return Math.abs(start - kickoff) <= MAX_KICKOFF_DRIFT_MS;
+  }
+  return daysApart(final.date, kickoffIso.slice(0, 10)) <= 1;
+}
+
 export function nearestCandidates(pick: PendingPick, matching: readonly TrustedFinal[]): TrustedFinal[] {
   return nearestByKickoff(pick.gameDateIso, matching);
 }
@@ -431,7 +468,15 @@ export function settlePendingPicks(
     const matching = finals.filter(
       (f) => daysApart(f.date, pick.gameDateIso.slice(0, 10)) <= 2 && finalMatchesPick(pick, f),
     );
-    const candidates = nearestCandidates(pick, matching);
+    // Bind every candidate to this pick's kickoff BEFORE narrowing. The
+    // multi-candidate hold below cannot help when only one final is in the
+    // window, and nearestCandidates returns a lone candidate unchanged, so a
+    // pick on a game that has started but has no published result yet was
+    // graded off the PREVIOUS meeting of the same series on nothing but a
+    // team-name match. That is what graded 87 published picks WIN/LOSS before
+    // their game's commenceTime (measured on production 2026-09-06).
+    const bound = matching.filter((f) => finalBindsToKickoff(pick.gameDateIso, f));
+    const candidates = nearestCandidates(pick, bound);
 
     // Same-day rematch guard (e.g. an MLB doubleheader): two DIFFERENT completed
     // games between the same two teams can both fall inside the date-tolerance

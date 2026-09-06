@@ -5,8 +5,11 @@ import { parseEspnScoreboard } from "@/lib/data-sources/free-adapters/espn-score
 import { parseHenrygdScoreboard, type NcaaGame } from "@/lib/data-sources/free-adapters/henrygd-ncaa";
 import {
   buildTrustedFinals,
+  finalBindsToKickoff,
+  MAX_KICKOFF_DRIFT_MS,
   settlePendingPicks,
   type PendingPick,
+  type TrustedFinal,
 } from "@/lib/data-sources/free-settlement";
 
 const FIX = resolve(__dirname, "fixtures");
@@ -99,5 +102,134 @@ describe("settlePendingPicks", () => {
     const single = buildTrustedFinals(espn, []);
     const out = settlePendingPicks([pick({ pickType: "MONEYLINE", selection: "Navy" })], single)[0]!;
     expect(out.status === "SETTLED" ? out.confirmation : out.status).toBe("SINGLE_SOURCE");
+  });
+});
+
+// ─── Kickoff binding ───────────────────────────────────────────────────────────
+
+/**
+ * The grader holds when SEVERAL same-matchup finals are in the window, but a
+ * LONE previous-meeting final had nothing to be held against: nearestCandidates
+ * returns a one-element list unchanged. That is how a pick on a game which had
+ * started but had no published result yet was graded off the previous meeting
+ * of the same series, on nothing but a team-name match.
+ *
+ * Measured on production 2026-09-06: 87 published picks carried a settledAt
+ * EARLIER than their game's commenceTime, 63 of them MONEYLINE graded WIN/LOSS.
+ */
+describe("finalBindsToKickoff", () => {
+  const HOUR = 60 * 60 * 1000;
+
+  function final(opts: { startIso?: string; date: string }): TrustedFinal {
+    return {
+      date: opts.date,
+      ...(opts.startIso ? { startIso: opts.startIso } : {}),
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+
+  const kickoff = "2026-09-06T23:10:00.000Z";
+
+  it("accepts a final that starts at the game's kickoff", () => {
+    expect(finalBindsToKickoff(kickoff, final({ startIso: kickoff, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("accepts a delayed start inside the drift bound", () => {
+    const delayed = new Date(Date.parse(kickoff) + 3 * HOUR).toISOString();
+    expect(finalBindsToKickoff(kickoff, final({ startIso: delayed, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("REJECTS the previous day's meeting of the same series", () => {
+    const yesterday = new Date(Date.parse(kickoff) - 24 * HOUR).toISOString();
+    expect(finalBindsToKickoff(kickoff, final({ startIso: yesterday, date: "2026-09-05" }))).toBe(false);
+  });
+
+  it("rejects exactly at the boundary and accepts just inside it", () => {
+    const justOver = new Date(Date.parse(kickoff) - (MAX_KICKOFF_DRIFT_MS + 1)).toISOString();
+    const justUnder = new Date(Date.parse(kickoff) - (MAX_KICKOFF_DRIFT_MS - 1)).toISOString();
+    expect(finalBindsToKickoff(kickoff, final({ startIso: justOver, date: "2026-09-06" }))).toBe(false);
+    expect(finalBindsToKickoff(kickoff, final({ startIso: justUnder, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("falls back to the day when the KICKOFF is date-only, because midnight is not a kickoff", () => {
+    // Clock math against a date-only kickoff would read a 7pm final as 19h
+    // adrift and reject every legitimate settlement on that path.
+    const evening = "2026-09-06T23:10:00.000Z";
+    expect(finalBindsToKickoff("2026-09-06", final({ startIso: evening, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("falls back to one day when the FINAL carries no start time, and refuses two", () => {
+    expect(finalBindsToKickoff(kickoff, final({ date: "2026-09-05" }))).toBe(true);
+    expect(finalBindsToKickoff(kickoff, final({ date: "2026-09-04" }))).toBe(false);
+  });
+});
+
+/**
+ * Structural guard: the free settlement runner must not hand the grader a pick
+ * whose game has not started. Asserted against the source because the query is
+ * the guard — a unit test of the surrounding function would mock the very call
+ * being pinned. settle-backfill.ts and the zero-sit lane already scope their
+ * loads this way; the runner did not, and that is what fed 298 published
+ * PENDING picks on future games into the grader every cycle.
+ */
+describe("free-settlement-runner PENDING load", () => {
+  it("scopes the pick query to games that have already started", () => {
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "data-sources", "free-settlement-runner.ts"),
+      "utf8",
+    );
+    const start = src.indexOf("db.pick.findMany");
+    expect(start).toBeGreaterThan(-1);
+    const where = src.slice(start, start + 900);
+    expect(where).toContain('result: "PENDING"');
+    expect(where).toMatch(/commenceTime:\s*\{\s*lte:/);
+  });
+});
+
+/**
+ * The integration that matters: settlePendingPicks must not grade a pick off a
+ * final that cannot be its game. Pinning finalBindsToKickoff alone is not
+ * enough — the filter has to actually be wired into the grader, and a unit test
+ * of the helper passes happily while the call site is missing.
+ */
+describe("settlePendingPicks — a lone out-of-window final never grades a pick", () => {
+  const HOUR = 60 * 60 * 1000;
+  const kickoff = "2026-09-06T23:10:00.000Z";
+
+  function seriesFinal(startIso: string, homeScore: number, awayScore: number): TrustedFinal {
+    return {
+      date: startIso.slice(0, 10),
+      startIso,
+      home: { name: "Phillies", abbr: "PHI", score: homeScore },
+      away: { name: "Braves", abbr: "ATL", score: awayScore },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+
+  const seriesPick: PendingPick = {
+    pickId: "series-pick",
+    pickType: "MONEYLINE",
+    selection: "Phillies",
+    line: 0,
+    homeTeam: "Phillies",
+    awayTeam: "Braves",
+    sportKey: "baseball_mlb",
+    gameDateIso: kickoff,
+  };
+
+  it("leaves the pick PENDING when the only final is the previous day's meeting", () => {
+    const yesterday = new Date(Date.parse(kickoff) - 24 * HOUR).toISOString();
+    const out = settlePendingPicks([seriesPick], [seriesFinal(yesterday, 4, 2)])[0]!;
+    // Before this guard the pick was graded WIN off a game it was not on.
+    expect(out.status).toBe("PENDING");
+  });
+
+  it("still grades the pick when the final is its own game", () => {
+    const out = settlePendingPicks([seriesPick], [seriesFinal(kickoff, 4, 2)])[0]!;
+    expect(out.status).toBe("SETTLED");
   });
 });
