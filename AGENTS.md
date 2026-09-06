@@ -119,6 +119,24 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
   ESPN `limit=1000` truncation, matcher containment on 2-3 letter abbreviations and bare
   club tokens, overdue-only runner slice, backfill date order. Do not re-fix them; land #707.
 
+**UPDATED 2026-09-06 — External repo leverage audit complete; nothing installed.**
+Two rounds independently fact-checked (license fetched raw, real commit history, not
+star counts) a set of MCP/RAG/code-graph/agent-memory repos for GSE/GSN fit. Full detail:
+`docs/ai/airwave/GSE_GSN_REPO_LEVERAGE_AUDIT_2026-09.md`. Nothing was installed, no schema
+changed, no account created — every item needs the founder personally, per Law 2 (frozen
+`package-lock.json`/`packages/db/prisma/**`), Law 7/8 (no autonomous package installs), or
+because it needs an external account an agent can't create. A same-session attempt to add
+`@playwright/mcp` to `.mcp.json` was denied by this session's own tool permissions, not by
+AGENTS.md — confirming even the lowest-risk item on the list needs a human hand on it.
+Founder-only next actions, fastest-value first: (1) add `@playwright/mcp` to `.mcp.json`
+for supervised console-step 2FA/SSO (never for unattended autonomous browsing — still
+gated by the clearance-engine rule same as any extraction); (2) Helicone free-tier signup
++ Claude-API proxy URL swap (LLM cost tracing, zero new dependency); (3) approve
+`npm install @orama/orama` (local search — the single most-requested item across the prior
+audit's own domains). Do not approve mem0 AND mcp-memory-service together — two competing
+agent-memory stores is a regression, not a leverage gain. A broader "10-15 more, trending/
+creative" search is running as a follow-up; it will extend this doc, not replace it.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
