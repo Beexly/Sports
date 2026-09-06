@@ -27,6 +27,7 @@
 import { db } from "@sports/db";
 import {
   OddsApiClient,
+  OddsApiError,
   DataNormalizer,
   settleGameLogs,
   NFL_PRESEASON_ODDS_KEY,
@@ -34,8 +35,13 @@ import {
   isNflPreseasonFetchWindow,
   remapPreseasonRows,
   mergeFeedRowsById,
+  decidePaidOddsCall,
+  loadLatestCreditObservation,
+  loadLatestPaidCallAt,
+  recordCreditObservation,
+  recordPaidCall,
 } from "@sports/data-ingestion";
-import type { SupportedSportKey } from "@sports/data-ingestion";
+import type { SupportedSportKey, OddsCreditLedgerDb } from "@sports/data-ingestion";
 import {
   calculatePickResult,
   deriveClosingSnapshotFromOdds,
@@ -106,6 +112,15 @@ export interface SettleSportConfig {
  *  UTC hour bucket is used — still stable across rapid retries. */
 export interface SettleSportOptions {
   readonly scheduledWindow?: string;
+  /**
+   * C-109: sports whose free settlement pass left overdue PENDING picks with
+   * reason NO_FINAL this cycle. The spend guard refuses paid scores for every
+   * sport the free sources cover; only an explicit justification here (built
+   * by the settle-picks route from the free pass RCA) lets the paid getScores
+   * run for that sport, and then at most once per sport per hour across every
+   * caller (durable ledger). Omitted or empty: no paid scores call is made.
+   */
+  readonly paidScoresJustifiedSports?: ReadonlySet<string>;
 }
 
 export interface SettleSportResult {
@@ -171,24 +186,88 @@ export async function settleSport(
   let anomaliesResolved = 0;
   let outboxAppended = 0;
 
+  const skipped = (note: string): SettleSportResult => ({
+    sport: sport.key,
+    status: "success",
+    gamesSettled: 0,
+    picksSettled: 0,
+    observationsRecorded: 0,
+    anomaliesOpened: 0,
+    anomaliesReopened: 0,
+    anomaliesPromoted: 0,
+    anomaliesResolved: 0,
+    outboxAppended: 0,
+    note,
+  });
+
   try {
     // GSE-SEC-039: spend guard — call paidCallJustified before any paid fetch.
     // For "scores" the guard returns false (ESPN + nflverse cover scores free+cleared),
-    // so the paid getScores() IS justified to be refused. settleSport is the explicitly
-    // paid path (the caller passed a real API key), so when the guard flags a free
-    // alternative we log an audit warning; the caller's free-path settlement
-    // (runFreePathSettlement) handles scores coverage when the key is absent.
-    const scoresJustified = paidCallJustified("scores", sport.key);
+    // so the paid getScores() is refused UNLESS the caller justified it for this
+    // sport: the free pass ran first and left overdue PENDING picks with reason
+    // NO_FINAL (C-109; until 2026-09-06 this branch logged and proceeded, which
+    // fetched paid scores for all seven sports five times an hour).
+    const explicitlyJustified = options.paidScoresJustifiedSports?.has(sport.key) === true;
+    const scoresJustified = paidCallJustified("scores", sport.key) || explicitlyJustified;
     if (!scoresJustified) {
-      console.warn(
-        `${logPrefix} ${sport.key}: paid scores fetch not justified by spend guard — ` +
-          `free sources cover scores; paid getScores proceeding on paid path (key present).`,
+      console.info(
+        `${logPrefix} ${sport.key}: paid scores fetch skipped, spend guard: free sources ` +
+          `cover scores and the free pass reported no overdue NO_FINAL picks for this sport.`,
       );
+      return skipped("spend_guard");
     }
-    let scores = (await client.getScores(sport.key, PAID_SCORES_DAYS_FROM)).data;
+
+    // C-109 pacing: at most one paid scores call per sport per hour across every
+    // caller (the hourly cron and the autonomy cycle both reach here), read from
+    // the durable ledger, plus the credit reserve rule. See odds-credit-ledger.ts
+    // for why the JarvisMemoryEvent marker was chosen over the settlement run.
+    const ledger = db as unknown as OddsCreditLedgerDb;
+    const now = new Date();
+    const [lastPaidScoresAt, latestCredits] = await Promise.all([
+      loadLatestPaidCallAt(ledger, "scores", sport.key),
+      loadLatestCreditObservation(ledger),
+    ]);
+    const decision = decidePaidOddsCall({
+      remaining: latestCredits?.remaining ?? null,
+      now,
+      purpose: "scores",
+      hasEventWithin48h: null,
+      freeCoversPurpose: false,
+      lastPaidCallAt: lastPaidScoresAt,
+      observedAt: latestCredits?.observedAt ?? null,
+    });
+    if (!decision.allow) {
+      console.info(
+        `${logPrefix} ${sport.key}: paid scores fetch skipped, credit governor: ${decision.reason}`,
+      );
+      return skipped(`credit_governor: ${decision.reason}`);
+    }
+    await recordPaidCall(ledger, { sport: sport.key, purpose: "scores", at: now.toISOString() });
+    const recordCredits = (remaining: number, used: number | null): Promise<unknown> =>
+      recordCreditObservation(ledger, {
+        remaining,
+        used,
+        observedAt: new Date().toISOString(),
+        source: "settle-sport",
+      });
+    let scoresFetch: Awaited<ReturnType<typeof client.getScores>>;
+    try {
+      scoresFetch = await client.getScores(sport.key, PAID_SCORES_DAYS_FROM);
+    } catch (fetchErr) {
+      // A 402/429 still carries x-requests-remaining: persist it so a probe
+      // against a stale zero lands its reading even when the call fails.
+      if (fetchErr instanceof OddsApiError && fetchErr.remainingRequests != null) {
+        await recordCredits(fetchErr.remainingRequests, null);
+      }
+      throw fetchErr;
+    }
+    await recordCredits(scoresFetch.remainingRequests, scoresFetch.usedRequests);
+    let scores = scoresFetch.data;
     if (sport.key === NFL_CANONICAL_SPORT_KEY && isNflPreseasonFetchWindow()) {
       try {
         const preseason = await client.getScores(NFL_PRESEASON_ODDS_KEY, PAID_SCORES_DAYS_FROM);
+        // Second paid call under the same justification: keep the ledger current.
+        await recordCredits(preseason.remainingRequests, preseason.usedRequests);
         const existingRows = await db.game.findMany({
           where: { sport: { key: NFL_CANONICAL_SPORT_KEY } },
           select: {

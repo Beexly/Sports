@@ -70,7 +70,7 @@ vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: hoisted.getReadinessGates,
 }));
 
-import { refreshOdds, UnsupportedSportError } from "../refresh-odds.js";
+import { refreshOdds, UnsupportedSportError, CREDIT_GOVERNOR_SKIP_NOTE } from "../refresh-odds.js";
 
 const GATES = { isBootstrapMode: false } as const;
 
@@ -365,5 +365,115 @@ describe("refreshOdds", () => {
       UnsupportedSportError,
     );
     expect(mocks.processSport).not.toHaveBeenCalled();
+  });
+
+  /**
+   * C-109: the paid odds path consults the injected credit governor per
+   * sport. A held sport is reported, not dropped; a governor outage fails
+   * open; the free paths (no Odds key) are never gated.
+   */
+  describe("credit governor (C-109)", () => {
+    function governor(decisions: Record<string, { allow: boolean; reason: string }>) {
+      return {
+        decide: vi.fn(async (sport: string) => decisions[sport] ?? { allow: true, reason: "pace ok" }),
+        recordCall: vi.fn(async (_sport: string, _at: Date) => undefined),
+        recordCredits: vi.fn(async (_obs: { remaining: number; observedAt: Date }) => undefined),
+      };
+    }
+
+    it("skips a sport the governor holds and reports it with a note, running the others", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0], SPORTS[1], SPORTS[2]]);
+      const info = vi.spyOn(console, "info").mockImplementation(() => {});
+      const gov = governor({
+        basketball_nba: { allow: false, reason: "no event within 48h on the free scoreboard" },
+      });
+
+      const result = await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(mocks.processSport).toHaveBeenCalledTimes(2);
+      expect(mocks.processSport.mock.calls.map((c) => (c[0] as { key: string }).key)).toEqual([
+        "americanfootball_nfl",
+        "baseball_mlb",
+      ]);
+      expect(result.ok).toBe(true);
+      expect(result.results).toEqual([
+        expect.objectContaining({ sport: "americanfootball_nfl", ok: true }),
+        {
+          sport: "basketball_nba",
+          ok: true,
+          oddsInserted: 0,
+          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: no event within 48h on the free scoreboard`,
+        },
+        expect.objectContaining({ sport: "baseball_mlb", ok: true }),
+      ]);
+      expect(info).toHaveBeenCalledWith(
+        expect.stringContaining("basketball_nba: paid odds fetch skipped, credit governor"),
+      );
+      // The held sport never got a call marker.
+      expect(gov.recordCall.mock.calls.map((c) => c[0])).toEqual([
+        "americanfootball_nfl",
+        "baseball_mlb",
+      ]);
+      info.mockRestore();
+    });
+
+    it("records the call marker before the paid fetch and the credit headers after it", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      mocks.processSport.mockResolvedValueOnce({ status: "success", oddsApiRemainingRequests: 18000 });
+      const gov = governor({});
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.recordCall).toHaveBeenCalledWith("americanfootball_nfl", expect.any(Date));
+      expect(gov.recordCall.mock.invocationCallOrder[0]!).toBeLessThan(
+        mocks.processSport.mock.invocationCallOrder[0]!,
+      );
+      expect(gov.recordCredits).toHaveBeenCalledWith({ remaining: 18000, observedAt: expect.any(Date) });
+    });
+
+    it("does not record credits when processSport reported none", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const gov = governor({});
+      await runWithTimers(refreshOdds({ governor: gov }));
+      expect(gov.recordCredits).not.toHaveBeenCalled();
+    });
+
+    it("a governor that throws fails open: the sport is still refreshed", async () => {
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const gov = {
+        decide: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+        recordCall: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+        recordCredits: vi.fn(async () => {
+          throw new Error("ledger down");
+        }),
+      };
+      mocks.processSport.mockResolvedValueOnce({ status: "success", oddsApiRemainingRequests: 17000 });
+
+      const result = await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(result.ok).toBe(true);
+    });
+
+    it("never gates the free paths: without an Odds key the governor is not consulted", async () => {
+      process.env["THE_ODDS_API_KEY"] = "";
+      delete process.env["ODDS_API_KEY"];
+      delete process.env["FREE_ODDS_API_KEY"];
+      delete process.env["RUNDOWN_API_KEY"];
+      delete process.env["RUNDOWN_KEY"];
+      delete process.env["FREE_RUNDOWN_API_KEY"];
+      mocks.getInSeasonSports.mockReturnValue([SPORTS[0]]);
+      const gov = governor({ americanfootball_nfl: { allow: false, reason: "zero credits remaining" } });
+
+      await runWithTimers(refreshOdds({ governor: gov }));
+
+      expect(gov.decide).not.toHaveBeenCalled();
+      expect(mocks.processSport).toHaveBeenCalledTimes(1);
+      expect(mocks.processSport.mock.calls[0]![1]).toBe("espn-free-path");
+    });
   });
 });

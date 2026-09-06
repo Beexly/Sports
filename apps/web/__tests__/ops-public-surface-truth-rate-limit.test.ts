@@ -129,10 +129,19 @@ vi.mock("@sports/prediction-engine", () => ({
   getPlatformConfig: () => ({ forceNoBetIfStale: false }),
 }));
 
-vi.mock("@sports/data-ingestion", () => ({
-  oddsApiKeyPresence: ingestionMocks.oddsApiKeyPresence,
-  rundownApiKeyPresence: ingestionMocks.rundownApiKeyPresence,
-}));
+vi.mock("@sports/data-ingestion", async () => {
+  // C-109: the route also reads the credit-governor truth block through the
+  // pure/structural ledger helpers; run the real ones against the db mock.
+  const actual = await vi.importActual<typeof import("@sports/data-ingestion")>(
+    "@sports/data-ingestion",
+  );
+  return {
+    oddsApiKeyPresence: ingestionMocks.oddsApiKeyPresence,
+    rundownApiKeyPresence: ingestionMocks.rundownApiKeyPresence,
+    emptyOddsCreditTruth: actual.emptyOddsCreditTruth,
+    loadOddsCreditTruth: actual.loadOddsCreditTruth,
+  };
+});
 
 vi.mock("@/lib/launch/public-surface-gate", () => ({
   isContestsPublic: launchMocks.isContestsPublic,
@@ -409,6 +418,25 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
 
     expect(body.detail).toBe("public");
     expect(body).not.toHaveProperty("stripeWebhookHosts");
+  });
+
+  it("carries the C-109 credits block, all null before the first observation (paceOk is null, not a claim)", async () => {
+    const mod = await import(
+      "@/app/api/ops/public-surface-truth/route"
+    );
+    const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+
+    delete process.env.CRON_SECRET;
+    const body = await mod.GET(req).then((r) => r.json());
+
+    expect(body.oddsInserting.dualPath.credits).toEqual({
+      remaining: null,
+      used: null,
+      observedAt: null,
+      dailyBudget: 600,
+      projectedExhaustionAt: null,
+      paceOk: null,
+    });
   });
 
   it("operator (authenticated) requests are NOT rate-limited and DO call loadStripeWebhookHostsPosture", async () => {

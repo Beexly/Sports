@@ -94,10 +94,31 @@ export class UnsupportedSportError extends Error {
 /** Inter-sport pause to avoid bursting the upstream API quota. Matches the route. */
 const INTER_SPORT_PAUSE_MS = 750;
 
+/**
+ * C-109 credit governor hook for the PAID odds path. Injected by the caller
+ * (the cron route builds it from the free ESPN scoreboard plus the durable
+ * credit ledger) so this loop stays free of I/O it does not own. Consulted
+ * only when a real The Odds API key is in use; the Rundown / ESPN free paths
+ * cost no credits and are never gated by it.
+ */
+export interface PaidOddsGovernor {
+  /** May this sport's paid odds fetch go out now? */
+  decide(sportKey: string): Promise<{ readonly allow: boolean; readonly reason: string }>;
+  /** Called right before the paid fetch so concurrent callers see the marker. */
+  recordCall(sportKey: string, at: Date): Promise<void>;
+  /** Called after a paid fetch that reported x-requests-remaining. */
+  recordCredits(observation: { readonly remaining: number; readonly observedAt: Date }): Promise<void>;
+}
+
 export interface RefreshOddsOptions {
   /** Optional explicit sport key. When omitted, refreshes in-season sports. */
   readonly sport?: string;
+  /** C-109: paid-path credit governor. Omitted: no gating (previous behaviour). */
+  readonly governor?: PaidOddsGovernor;
 }
+
+/** Note prefix on a per-sport result the governor held back this cycle. */
+export const CREDIT_GOVERNOR_SKIP_NOTE = "credit_governor_skip";
 
 /**
  * Runs one full odds-refresh cycle.
@@ -200,12 +221,50 @@ export async function refreshOdds(
       await new Promise((r) => setTimeout(r, interSportPauseMs));
       continue;
     }
+    // C-109: on the paid path, ask the credit governor first. A held sport is
+    // reported (ok, oddsInserted 0, note) rather than silently dropped, so the
+    // cron response says what did not run and why. The governor itself fails
+    // open: a ledger or scoreboard outage must never blank the board.
+    const governor = apiKey ? opts.governor : undefined;
+    if (governor) {
+      let decision: { readonly allow: boolean; readonly reason: string };
+      try {
+        decision = await governor.decide(sport.key);
+      } catch (govErr) {
+        decision = {
+          allow: true,
+          reason: `governor unavailable, proceeding: ${govErr instanceof Error ? govErr.message : String(govErr)}`,
+        };
+      }
+      if (!decision.allow) {
+        console.info(
+          `[cron:refresh-odds] ${sport.key}: paid odds fetch skipped, credit governor: ${decision.reason}`,
+        );
+        results.push({
+          sport: sport.key,
+          ok: true,
+          oddsInserted: 0,
+          note: `${CREDIT_GOVERNOR_SKIP_NOTE}: ${decision.reason}`,
+        });
+        continue;
+      }
+      // Marker written before processSport: on the paid path paidCallJustified
+      // ("odds") is always true today, so every pass here spends a credit. If
+      // that guard ever gains a free fallback, record the marker only when
+      // res.oddsApiRemainingRequests != null instead.
+      await governor.recordCall(sport.key, new Date()).catch(() => undefined);
+    }
     try {
       // processSport NEVER throws on a provider/normalization failure — it
       // catches internally and RESOLVES { status: "failed", error }. Inspect
       // the returned status so a failed sport is recorded as ok:false (and the
       // Healthchecks success ping cannot fire falsely on a silent failure).
       const res = await processSport(sport, processKey, gates, "[cron:refresh-odds]");
+      if (governor && res.oddsApiRemainingRequests != null) {
+        await governor
+          .recordCredits({ remaining: res.oddsApiRemainingRequests, observedAt: new Date() })
+          .catch(() => undefined);
+      }
       const note = res.note ?? "";
       if (
         rundownOnly &&

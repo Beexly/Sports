@@ -81,12 +81,18 @@ async function settleResults(): Promise<void> {
   if (!apiKey) return;
 
   // Settlement is delegated to settleSport() from @sports/ingestion-pipeline —
-  // the single source of truth shared with the Vercel settle-picks cron, so the
-  // two settlement paths can never drift.
+  // the same grader the Vercel settle-picks cron uses, so the two paths cannot
+  // drift. C-109: the paid scores fetch now needs an explicit per-sport
+  // justification from the free pass (overdue NO_FINAL picks). This worker has
+  // no free pass of its own, so it passes none and settleSport returns the
+  // "spend_guard" note for every sport; the cron (the primary scheduler)
+  // supplies the justification and spends the credits.
   const gates = getReadinessGates();
   let failed = 0;
   for (const sport of SUPPORTED_SPORTS) {
-    const result = await settleSport(sport, apiKey, gates, "[settlement]");
+    const result = await settleSport(sport, apiKey, gates, "[settlement]", {
+      paidScoresJustifiedSports: new Set<string>(),
+    });
     if (result.status === "failed") failed += 1;
     // Brief pause between sports to avoid saturating the scores endpoint.
     await new Promise((r) => setTimeout(r, 750));
