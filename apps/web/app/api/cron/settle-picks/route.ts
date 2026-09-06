@@ -11,6 +11,13 @@
  * captured to Sentry. `?path=free` skips the supplement. oddsApiRequired is
  * false forever.
  *
+ * Zero-sit lane (WP-29, C-106; founder policy 2026-09-05: no pick ever sits):
+ * after every grader has run, apps/web/lib/settlement/zero-sit-lane.ts
+ * unpublishes stale published PENDING picks on unstarted games and VOIDs, with
+ * an RCA code on the outbox event, any PENDING pick more than 24h past kickoff
+ * that no grader can settle (no final, fixture absent, ambiguous names, or a
+ * cross-path score conflict). Its counts ride on this response as `zeroSit`.
+ *
  * Why free-first: from 2026-08-24 to 2026-09-02 a deactivated key made the
  * paid branch run alone and throw every hour, so nothing graded for 9 days
  * while ESPN had every final. Ordering the graders by cost-to-fail instead of
@@ -44,6 +51,8 @@ import { hasOddsApiKey, selectSettlementPlan } from "@/lib/settlement/path-selec
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
 import { drainPendingSnapshotOutcomes } from "@/lib/settlement/free-path-snapshot";
+import { paidScoresJustifiedSports } from "@/lib/odds/paid-scores-justification";
+import { runZeroSitLane, type ZeroSitLaneResult } from "@/lib/settlement/zero-sit-lane";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -62,6 +71,8 @@ export interface PaidSupplementSportResult {
   readonly anomaliesResolved: number;
   readonly outboxAppended: number;
   readonly error?: string;
+  /** C-109: "spend_guard" or "credit_governor: ..." when no paid call was made. */
+  readonly note?: string;
 }
 
 export interface PaidSupplementSummary {
@@ -75,6 +86,12 @@ export interface PaidSupplementSummary {
   readonly clvRepair: { attempted: number; graded: number; noClose: number; failed: number } | null;
   readonly snapshotRepair: { attempted: number; done: number; failed: number } | null;
   readonly teamGameLogRepair: { attempted: number; done: number; failed: number } | null;
+  /**
+   * C-109: sports whose free pass left overdue PENDING picks with no final
+   * this cycle. Only these may spend a paid scores call (settleSport refuses
+   * the rest under the spend guard and reports note "spend_guard").
+   */
+  readonly justifiedSports: readonly string[];
 }
 
 export async function GET(request: Request) {
@@ -138,11 +155,25 @@ export async function GET(request: Request) {
   // PENDING-scoped like the free pass; grades only what the free pass left.
   let paidSupplement: PaidSupplementSummary | null = null;
   if (plan.paidSupplement && hasOddsApiKey(apiKey)) {
-    paidSupplement = await runPaidSupplement(apiKey, sportsToProcess, gates);
+    // C-109: the paid scores call is justified only for sports whose free
+    // pass left overdue picks with no final; settleSport enforces the guard
+    // and the once-per-sport-per-hour cap across every caller.
+    paidSupplement = await runPaidSupplement(
+      apiKey,
+      sportsToProcess,
+      gates,
+      paidScoresJustifiedSports(free.rca),
+    );
   }
 
   // ── 3. Stale backfill (published PENDING picks past the 6h grace, in scope) ─
   const staleBackfill = await runStaleBackfillSafe("[cron:settle-picks]", requestedSport);
+
+  // ── 3b. Zero-sit lane: every grader has run; unpublish stale unstarted
+  // picks and VOID (with an RCA code on the outbox event) what still sits
+  // more than 24h past kickoff. Runs before the outbox drain in step 5 so the
+  // VOID receipts it appends are closed in the same cycle.
+  const zeroSit = await runZeroSitLaneSafe("[cron:settle-picks]", requestedSport);
 
   // ── 4. Slate commitment freeze (hash-chained receipts; no odds key needed) ─
   let freeze: SlateFreezeResult[] = [];
@@ -192,7 +223,12 @@ export async function GET(request: Request) {
   // not starved. An error-shaped backfill result contributes nothing.
   const backfillSettled = "error" in staleBackfill ? 0 : staleBackfill.settled;
   const totalSettled = free.picksSettled + (paidSupplement?.picksSettled ?? 0) + backfillSettled;
-  const starved = (priorOverdueCount ?? 0) > 0 && totalSettled === 0 && free.picksHeld === 0;
+  // A VOID with an RCA code clears an overdue pick as surely as a grade does
+  // (that is the zero-sit policy), so a cycle that only voided is not starved.
+  const picksVoided = "error" in zeroSit ? 0 : zeroSit.voids.voided;
+  const picksUnpublished = "error" in zeroSit ? 0 : zeroSit.stale.unpublished;
+  const starved =
+    (priorOverdueCount ?? 0) > 0 && totalSettled === 0 && free.picksHeld === 0 && picksVoided === 0;
   if (starved) {
     advisories.push(
       `${priorOverdueCount} pick(s) were overdue past the ${SETTLEMENT_DEFAULT_GRACE_HOURS}h grace and this cycle graded ` +
@@ -217,6 +253,8 @@ export async function GET(request: Request) {
     elapsedMs: Date.now() - startedAt,
     picksSettled: totalSettled,
     picksHeld: free.picksHeld,
+    picksVoided,
+    picksUnpublished,
     priorOverdueCount: priorOverdueCount ?? null,
     clvRepair: free.clvRepair,
     snapshotRepair: free.snapshotRepair,
@@ -224,6 +262,7 @@ export async function GET(request: Request) {
     scoreDates: free.scoreDates,
     rca: free.rca,
     staleBackfill,
+    zeroSit,
     bootstrapMode: gates.isBootstrapMode,
     free,
     freeScores,
@@ -239,6 +278,7 @@ async function runPaidSupplement(
   apiKey: string,
   sportsToProcess: ReadonlyArray<(typeof SUPPORTED_SPORTS)[number]>,
   gates: ReturnType<typeof getReadinessGates>,
+  justifiedSports: ReadonlySet<string>,
 ): Promise<PaidSupplementSummary> {
   const results: PaidSupplementSportResult[] = [];
   const scheduledWindow = computeScheduledWindow();
@@ -247,6 +287,7 @@ async function runPaidSupplement(
     try {
       const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks:paid]", {
         scheduledWindow,
+        paidScoresJustifiedSports: justifiedSports,
       });
       results.push({
         sport: result.sport,
@@ -259,6 +300,7 @@ async function runPaidSupplement(
         anomaliesResolved: result.anomaliesResolved,
         outboxAppended: result.outboxAppended,
         ...(result.error ? { error: result.error } : {}),
+        ...(result.note ? { note: result.note } : {}),
       });
     } catch (err) {
       // settleSport catches internally and returns status: failed; this guard
@@ -336,6 +378,7 @@ async function runPaidSupplement(
     clvRepair,
     snapshotRepair,
     teamGameLogRepair,
+    justifiedSports: [...justifiedSports].sort(),
   };
 }
 
@@ -351,6 +394,21 @@ async function runStaleBackfillSafe(
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`${logPrefix} stale backfill failed: ${message}`);
     captureError(err, { path: "settle-picks", stage: "stale-backfill" });
+    return { error: message };
+  }
+}
+
+async function runZeroSitLaneSafe(
+  logPrefix: string,
+  sportKey: string | null,
+): Promise<ZeroSitLaneResult | { error: string }> {
+  try {
+    // Same `?sport=` scope as the other lanes.
+    return await runZeroSitLane({ db: db as never, sportKey });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(`${logPrefix} zero-sit lane failed: ${message}`);
+    captureError(err, { path: "settle-picks", stage: "zero-sit" });
     return { error: message };
   }
 }

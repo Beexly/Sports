@@ -71,6 +71,7 @@ import { recordSourceSnapshot } from "./source-snapshot.js";
 import {
   resolveCanonicalGame,
   preferLongerTeamName,
+  gameIdentityMergeDisabled,
   type GameIdentityDb,
 } from "./game-identity.js";
 import { notifyOwner } from "./owner-alert.js";
@@ -80,6 +81,12 @@ import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ing
 import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
+import {
+  FixtureConfirmer,
+  formatFixtureLine,
+  type FixtureConfirmation,
+  type FixtureProbe,
+} from "./fixture-confirmation.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -531,13 +538,21 @@ export async function processSport(
     // fresh row (and a second set of picks) for every feed. resolveCanonicalGame
     // reuses the row we already have when the team pair + kickoff prove it is
     // the same game; every ambiguity falls back to the original upsert.
-    const gameRecords: Record<string, { id: string }> = {};
+    // createdAt rides along for the fixture guard's 30-day re-confirmation rule.
+    const gameRecords: Record<string, { id: string; createdAt?: Date }> = {};
     // A twin may be claimed by at most ONE feed row per cycle — two events that
     // both resolve to one row would stack two games' odds onto it.
     const claimedTwinIds = new Set<string>();
     for (const game of normalizedGames) {
       let twin: { id: string; homeTeamName: string; awayTeamName: string } | null = null;
       let alreadyClaimed = false;
+      // The row already stored under THIS externalId, when the identity lookup
+      // saw it: the plain upsert below must apply the same name guard as the
+      // twin branch. `identityLookupComplete` is true only when the lookup ran
+      // (kill switch off) and returned, so a null there means "new row" and no
+      // second read is needed.
+      let existingByExternalId: { homeTeamName: string; awayTeamName: string } | null = null;
+      let identityLookupComplete = false;
       try {
         const resolved = await resolveCanonicalGame(db as unknown as GameIdentityDb, {
           sportId: sportRecord.id,
@@ -547,6 +562,10 @@ export async function processSport(
           awayTeamName: game.awayTeam,
           commenceTime: game.commenceTime,
         });
+        identityLookupComplete = !gameIdentityMergeDisabled();
+        if (resolved && resolved.matchedBy === "externalId" && resolved.game.externalId === game.externalId) {
+          existingByExternalId = resolved.game;
+        }
         if (resolved && claimedTwinIds.has(resolved.game.id)) {
           // A second feed row for a contest another row already claimed this
           // cycle. Falling through to upsert-by-externalId would either stack
@@ -584,7 +603,7 @@ export async function processSport(
         continue;
       }
 
-      let record: { id: string };
+      let record: { id: string; createdAt?: Date };
       if (twin) {
         claimedTwinIds.add(twin.id);
         record = await db.game.update({
@@ -597,6 +616,24 @@ export async function processSport(
           },
         });
       } else {
+        // Same guard as the twin branch: a stored full name ("New York
+        // Yankees") is never downgraded to a feed's city-only name ("New
+        // York"). Until 2026-09-06 this branch overwrote it, which left ten
+        // MLB game rows with city-only names that no final could be matched
+        // to (ledger C-106). When the identity lookup did not run (kill
+        // switch) or failed, read the stored names here; a read failure falls
+        // back to the feed names, as before.
+        let stored = existingByExternalId;
+        if (!stored && !identityLookupComplete) {
+          try {
+            stored = await db.game.findUnique({
+              where: { externalId: game.externalId },
+              select: { homeTeamName: true, awayTeamName: true },
+            });
+          } catch {
+            stored = null;
+          }
+        }
         record = await db.game.upsert({
           where: { externalId: game.externalId },
           create: {
@@ -607,8 +644,12 @@ export async function processSport(
             commenceTime: game.commenceTime,
           },
           update: {
-            homeTeamName: game.homeTeam,
-            awayTeamName: game.awayTeam,
+            homeTeamName: stored
+              ? preferLongerTeamName(stored.homeTeamName, game.homeTeam)
+              : game.homeTeam,
+            awayTeamName: stored
+              ? preferLongerTeamName(stored.awayTeamName, game.awayTeam)
+              : game.awayTeam,
             commenceTime: game.commenceTime,
           },
         });
@@ -675,6 +716,48 @@ export async function processSport(
       oddsInserted += created.count ?? oddsRows.length;
     }
 
+    // Fixture confirmation guard (C-111): before any pick is generated or
+    // refreshed, every game this cycle must be listed on the day's free ESPN
+    // scoreboard for this sport (both teams, same UTC or US-Eastern day). One
+    // fetch per sport per cycle. Odds rows above are still archived; only pick
+    // generation is gated. A failed fetch skips generation for the whole sport
+    // this cycle (fail-closed; the next cycle is 15 minutes away).
+    const fixtureProbes: FixtureProbe[] = normalizedGames.flatMap((game) => {
+      const rec = gameRecords[game.externalId];
+      return rec
+        ? [{
+            id: rec.id,
+            homeTeamName: game.homeTeam,
+            awayTeamName: game.awayTeam,
+            commenceTime: game.commenceTime,
+            createdAt: rec.createdAt ?? null,
+          }]
+        : [];
+    });
+    const fixtureBatch = await new FixtureConfirmer({ now: fetchedAt }).confirmBatch(
+      sport.key,
+      fixtureProbes,
+    );
+    let fixtureNote: string | undefined;
+    if (fixtureBatch.status === "fetch_failed") {
+      fixtureNote = "fixture_scoreboard_unavailable";
+      console.warn(
+        `${logPrefix} ${sport.key}: fixture scoreboard unavailable, skipping pick generation for ` +
+          `${fixtureProbes.length} games this cycle: ${fixtureBatch.error}`,
+      );
+    } else if (fixtureBatch.status === "unsupported_sport") {
+      fixtureNote = "fixture_scoreboard_unsupported";
+      console.warn(
+        `${logPrefix} ${sport.key}: no free ESPN scoreboard for this sport, skipping pick generation ` +
+          `for ${fixtureProbes.length} games (cannot confirm fixtures)`,
+      );
+    }
+    const fixtureFor = (gameId: string): FixtureConfirmation | null =>
+      fixtureBatch.status === "ok" ? (fixtureBatch.byGameId.get(gameId) ?? null) : null;
+    let fixtureUnconfirmed = 0;
+    // Games that passed the guard; the pick loop below refuses any other gameId.
+    const confirmedGameIds = new Set<string>();
+
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
     // Elo ratings fitted once per sport/day within this cycle (no fabricated ratings).
@@ -688,6 +771,45 @@ export async function processSport(
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
+
+      const fixture = fixtureFor(gameRecord.id);
+      if (!fixture || fixture.status !== "confirmed") {
+        fixtureUnconfirmed += 1;
+        if (fixtureBatch.status === "ok") {
+          console.warn(
+            `${logPrefix} ${sport.key}: fixture not listed on the ESPN scoreboard for its date, no pick: ` +
+              formatFixtureLine({
+                id: gameRecord.id,
+                homeTeamName: game.homeTeam,
+                awayTeamName: game.awayTeam,
+                commenceTime: game.commenceTime,
+              }),
+          );
+        }
+        continue;
+      }
+      confirmedGameIds.add(gameRecord.id);
+      if (fixture.correctedCommenceTime) {
+        // Schedule correction from the free cleared source (see
+        // commenceTimeCorrection in fixture-confirmation.ts): a row older than
+        // 30 days carried a stale kickoff and ESPN lists the same contest, same
+        // day, at a different clock. Facts only; nothing about the pick changes.
+        try {
+          await db.game.update({
+            where: { id: gameRecord.id },
+            data: { commenceTime: fixture.correctedCommenceTime },
+          });
+          console.log(
+            `${logPrefix} ${sport.key}: commenceTime corrected from ESPN for game ${gameRecord.id} ` +
+              `${game.commenceTime.toISOString()} -> ${fixture.correctedCommenceTime.toISOString()}`,
+          );
+        } catch (correctionErr) {
+          console.warn(
+            `${logPrefix} ${sport.key}: commenceTime correction failed for ${gameRecord.id}: ` +
+              `${correctionErr instanceof Error ? correctionErr.message : correctionErr}`,
+          );
+        }
+      }
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
 
@@ -861,6 +983,9 @@ export async function processSport(
     let picksGenerated = 0;
 
     for (const pick of scoredPicks) {
+      // Fixture guard (C-111): no pick is created or refreshed for a game the
+      // day's ESPN scoreboard did not confirm, whatever the scorer emitted.
+      if (!confirmedGameIds.has(pick.gameId)) continue;
       // Fields refreshed on every cycle (confidence, odds, reasoning).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.
@@ -1098,7 +1223,8 @@ export async function processSport(
 
     console.log(
       `${logPrefix} ${sport.key}: ${Object.keys(gameRecords).length} games, ` +
-      `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})`
+      `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})` +
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "")
     );
 
     const emptyNote =
@@ -1119,7 +1245,7 @@ export async function processSport(
       oddsInserted,
       provider: oddsProviderTag,
       eventsCount: events.length,
-      note: emptyNote,
+      note: emptyNote ?? fixtureNote,
       oddsApiRemainingRequests: remainingRequests ?? undefined,
     };
   } catch (err) {

@@ -61,11 +61,38 @@ vi.mock("@/lib/settlement/free-path-clv", () => ({
 vi.mock("@/lib/settlement/free-path-snapshot", () => ({
   drainPendingSnapshotOutcomes: vi.fn(async () => ({ attempted: 0, done: 0, failed: 0 })),
 }));
+vi.mock("@/lib/settlement/zero-sit-lane", () => ({
+  runZeroSitLane: vi.fn(async () => {
+    calls.push("runZeroSitLane");
+    return zeroSitResult(0, 0);
+  }),
+}));
 
 import { GET } from "@/app/api/cron/settle-picks/route";
 import { settleSport } from "@sports/ingestion-pipeline";
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
+import { runZeroSitLane } from "@/lib/settlement/zero-sit-lane";
 import { captureError } from "@/lib/observability/sentry";
+
+/** Zero-sit lane summary shape (WP-29); counts only, no product data. */
+function zeroSitResult(voided: number, unpublished: number) {
+  return {
+    lane: "zero-sit",
+    stale: { maxAgeDays: 14, selected: unpublished, unpublished, recorded: unpublished, capReached: false, pickIds: [] },
+    voids: {
+      minAgeHours: 24,
+      inspected: voided,
+      capReached: false,
+      voided,
+      gamesCanceled: 0,
+      byCode: { OVERDUE_NO_SCORE: voided, SCORE_MISMATCH_CROSS_PATH: 0, AMBIGUOUS_TEAM_NAME: 0, FIXTURE_NOT_FOUND: 0 },
+      skippedByReason: {},
+      voids: [],
+      skipped: [],
+      scoreboardFailures: [],
+    },
+  };
+}
 
 function freeResult(ok = true) {
   return {
@@ -103,9 +130,12 @@ type Body = {
   path: string;
   plan: { primary: string; paidSupplement: boolean };
   picksSettled: number;
+  picksVoided: number;
+  picksUnpublished: number;
   paidSupplement: null | { ok: boolean; failedSports: string[]; totalCount: number; picksSettled: number };
   advisories: string[];
   oddsApiRequired: boolean;
+  zeroSit: { error: string } | ReturnType<typeof zeroSitResult>;
 };
 
 describe("GET /api/cron/settle-picks — free-first law", () => {
@@ -121,6 +151,11 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     (settleSport as Mock).mockImplementation(async (sport: { key: string }) => {
       calls.push(`settleSport:${sport.key}`);
       return paidResult(sport, "success");
+    });
+    (runZeroSitLane as Mock).mockReset();
+    (runZeroSitLane as Mock).mockImplementation(async () => {
+      calls.push("runZeroSitLane");
+      return zeroSitResult(0, 0);
     });
     vi.useFakeTimers({ shouldAdvanceTime: true });
   });
@@ -306,5 +341,76 @@ describe("GET /api/cron/settle-picks — free-first law", () => {
     const body = (await res.json()) as Body;
     expect(body.ok).toBe(false);
     expect(body.paidSupplement?.ok).toBe(true);
+  });
+
+  // ── Zero-sit lane (WP-29, C-106) ──────────────────────────────────────────
+
+  it("the zero-sit lane runs after every grader (free, paid, backfill) and carries the ?sport= scope", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "sk_live_present");
+    await GET(new Request("http://x/api/cron/settle-picks"));
+    const lane = calls.indexOf("runZeroSitLane");
+    expect(lane).toBeGreaterThan(calls.indexOf("runFreePathSettlement"));
+    expect(lane).toBeGreaterThan(calls.indexOf("settleSport:americanfootball_nfl"));
+    expect(lane).toBeGreaterThan(calls.indexOf("backfillStaleSettlement"));
+    expect(runZeroSitLane).toHaveBeenLastCalledWith(expect.objectContaining({ sportKey: null }));
+
+    await GET(new Request("http://x/api/cron/settle-picks?sport=americanfootball_nfl"));
+    expect(runZeroSitLane).toHaveBeenLastCalledWith(
+      expect.objectContaining({ sportKey: "americanfootball_nfl" }),
+    );
+  });
+
+  it("a cycle whose only work is zero-sit voids is not starved and reports the counts", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    (runFreePathSettlement as Mock).mockImplementation(async () => ({
+      ...freeResult(true),
+      picksSettled: 0,
+      picksHeld: 0,
+    }));
+    (runZeroSitLane as Mock).mockImplementation(async () => zeroSitResult(2, 3));
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    const body = (await res.json()) as Body & { starved: boolean };
+    expect(body.starved).toBe(false);
+    expect(body.ok).toBe(true);
+    // Graded and voided are reported apart: a VOID is a cleared pick, not a grade.
+    expect(body.picksSettled).toBe(0);
+    expect(body.picksVoided).toBe(2);
+    expect(body.picksUnpublished).toBe(3);
+    expect("voids" in body.zeroSit && body.zeroSit.voids.voided).toBe(2);
+    expect(captureError).not.toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ stage: "starved-cycle" }),
+    );
+  });
+
+  it("unpublishing alone does not clear a starved cycle (only grades, holds or voids do)", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    (runFreePathSettlement as Mock).mockImplementation(async () => ({
+      ...freeResult(true),
+      picksSettled: 0,
+      picksHeld: 0,
+    }));
+    (runZeroSitLane as Mock).mockImplementation(async () => zeroSitResult(0, 5));
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    const body = (await res.json()) as Body & { starved: boolean };
+    expect(body.starved).toBe(true);
+    expect(body.picksUnpublished).toBe(5);
+  });
+
+  it("a zero-sit lane failure is reported on the response and captured, and never fails the cycle", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "");
+    (runZeroSitLane as Mock).mockImplementation(async () => {
+      throw new Error("zero-sit exploded");
+    });
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    const body = (await res.json()) as Body;
+    expect(body.ok).toBe(true);
+    expect(body.picksSettled).toBe(4);
+    expect(body.picksVoided).toBe(0);
+    expect(body.zeroSit).toEqual({ error: "zero-sit exploded" });
+    expect(captureError).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ path: "settle-picks", stage: "zero-sit" }),
+    );
   });
 });

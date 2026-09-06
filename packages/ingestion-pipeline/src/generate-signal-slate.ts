@@ -22,6 +22,12 @@ import type {
   IndependentMarketFairValue,
 } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
+import {
+  FixtureConfirmer,
+  formatFixtureLine,
+  type FixtureBatchResult,
+  type FixtureProbe,
+} from "./fixture-confirmation.js";
 
 export type SignalSlateResult = {
   readonly ok: boolean;
@@ -29,6 +35,11 @@ export type SignalSlateResult = {
   readonly candidatesWithIndependents: number;
   readonly picksUpserted: number;
   readonly picksSkipped: number;
+  /**
+   * Games skipped by the fixture confirmation guard (C-111): not listed on the
+   * day's free ESPN scoreboard, or the board could not be fetched (fail-closed).
+   */
+  readonly fixtureUnconfirmed: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -117,6 +128,8 @@ export async function generateSignalSlate(opts?: {
   readonly now?: Date;
   /** When true, do not call ESPN seed (board-fill already seeded). */
   readonly skipSeed?: boolean;
+  /** Injected fetch for the fixture confirmation scoreboard (tests); defaults to global fetch. */
+  readonly fetchImpl?: typeof fetch;
 }): Promise<SignalSlateResult> {
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
   const now = opts?.now ?? new Date();
@@ -127,6 +140,7 @@ export async function generateSignalSlate(opts?: {
   let candidatesWithIndependents = 0;
   let picksUpserted = 0;
   let picksSkipped = 0;
+  let fixtureUnconfirmed = 0;
 
   // Cold Game table: seed free ESPN schedule so signals can publish without quote keys.
   if (!opts?.skipSeed) {
@@ -156,11 +170,47 @@ export async function generateSignalSlate(opts?: {
       homeTeamName: true,
       awayTeamName: true,
       commenceTime: true,
+      createdAt: true,
       sport: { select: { key: true, name: true } },
     },
     orderBy: { commenceTime: "asc" },
     take: 80,
   });
+
+  // Fixture confirmation guard (C-111): a game row's own commenceTime is not
+  // proof the contest happens that day. Each sport's games are confirmed in one
+  // batch against the free ESPN scoreboard (one fetch per sport per run); a
+  // failed fetch skips the whole sport this cycle (fail-closed).
+  const confirmer = new FixtureConfirmer({ fetchImpl: opts?.fetchImpl, now });
+  const fixtureBatches = new Map<string, Promise<FixtureBatchResult>>();
+  const fixtureBatchFor = (sportKey: string): Promise<FixtureBatchResult> => {
+    let batch = fixtureBatches.get(sportKey);
+    if (!batch) {
+      const probes: FixtureProbe[] = gameList
+        .filter((g) => (g.sport?.key ?? "unknown") === sportKey)
+        .map((g) => ({
+          id: g.id,
+          homeTeamName: g.homeTeamName,
+          awayTeamName: g.awayTeamName,
+          commenceTime: g.commenceTime,
+          createdAt: g.createdAt,
+        }));
+      batch = confirmer.confirmBatch(sportKey, probes).then((result) => {
+        if (result.status === "fetch_failed") {
+          console.warn(
+            `${logPrefix} fixture scoreboard unavailable for ${sportKey}, skipping ${probes.length} games this cycle: ${result.error}`,
+          );
+        } else if (result.status === "unsupported_sport") {
+          console.warn(
+            `${logPrefix} no free ESPN scoreboard for ${sportKey}, skipping ${probes.length} games (cannot confirm fixtures)`,
+          );
+        }
+        return result;
+      });
+      fixtureBatches.set(sportKey, batch);
+    }
+    return batch;
+  };
 
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
@@ -172,6 +222,41 @@ export async function generateSignalSlate(opts?: {
       picksSkipped += 1;
       continue;
     }
+    const fixtureBatch = await fixtureBatchFor(sportKey);
+    if (fixtureBatch.status !== "ok") {
+      picksSkipped += 1;
+      fixtureUnconfirmed += 1;
+      continue;
+    }
+    const fixture = fixtureBatch.byGameId.get(game.id);
+    if (!fixture || fixture.status !== "confirmed") {
+      console.warn(
+        `${logPrefix} fixture not listed on the ESPN ${sportKey} scoreboard for its date, no pick: ${formatFixtureLine(game)}`,
+      );
+      picksSkipped += 1;
+      fixtureUnconfirmed += 1;
+      continue;
+    }
+    let commenceTime = game.commenceTime;
+    if (fixture.correctedCommenceTime) {
+      // Schedule correction from the free cleared source (see
+      // commenceTimeCorrection): a row older than 30 days carried a stale
+      // kickoff; ESPN lists the same contest, same day, at a different clock.
+      try {
+        await db.game.update({
+          where: { id: game.id },
+          data: { commenceTime: fixture.correctedCommenceTime },
+        });
+        console.log(
+          `${logPrefix} commenceTime corrected from ESPN for ${formatFixtureLine(game)} -> ${fixture.correctedCommenceTime.toISOString()}`,
+        );
+        commenceTime = fixture.correctedCommenceTime;
+      } catch (err) {
+        errors.push(
+          `${game.id}: commenceTime correction failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
+    }
     const homeTeam = game.homeTeamName;
     const awayTeam = game.awayTeamName;
     let independents: IndependentMarketFairValue[];
@@ -180,7 +265,7 @@ export async function generateSignalSlate(opts?: {
         sportKey,
         homeTeam,
         awayTeam,
-        commenceTime: game.commenceTime,
+        commenceTime,
         now: () => now,
       });
     } catch (err) {
@@ -379,7 +464,10 @@ export async function generateSignalSlate(opts?: {
       ? `Signal slate: ${picksUpserted} model-signal picks (independents only; no book labels).`
       : `Signal slate empty: ${gameList.length} games, ${candidatesWithIndependents} with independents, none published.`;
 
-  console.log(`${logPrefix} ${note}`);
+  console.log(
+    `${logPrefix} ${note}` +
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : ""),
+  );
 
   return {
     ok: errors.length === 0,
@@ -387,6 +475,7 @@ export async function generateSignalSlate(opts?: {
     candidatesWithIndependents,
     picksUpserted,
     picksSkipped,
+    fixtureUnconfirmed,
     errors,
     note,
   };

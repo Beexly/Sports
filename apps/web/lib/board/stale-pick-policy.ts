@@ -14,10 +14,15 @@
  * November — while 317 live v5.2.7 picks created in May were refreshed that day.
  *
  * What this policy does: keeps stale rows out of the conviction gate's
- * candidate set (a FIRE on a May line is not actionable) and counts them on
- * the ops truth surface. What it never does: void, hide from the record, or
- * relabel them. Superseding or voiding a published pick is an owner decision
- * (the record is the product), so the owner queue gets the count, not a cron.
+ * candidate set (a FIRE on a May line is not actionable), counts them on the
+ * ops truth surface, and selects them for the zero-sit lane. Founder policy
+ * 2026-09-05 (no pick ever sits; ledger C-106, WP-29): the settle-picks cron
+ * sets isPublished=false on every row this selection returns at the end of
+ * each cycle, in one PENDING-scoped updateMany, and records each action as an
+ * append-only memory event (apps/web/lib/settlement/zero-sit-lane.ts). It
+ * never voids, deletes or relabels a row: the pick stays in the record with
+ * its result untouched, it just stops being a published line. The owner tool
+ * (npm run ops:stale-picks:unpublish) remains as a manual override only.
  */
 export const STALE_PENDING_PICK_MAX_AGE_DAYS = 14;
 
@@ -58,5 +63,34 @@ export function stalePickWhere(now: Date = new Date()): StalePickWhere {
       { dataFreshnessAt: { lt: cutoff } },
       { dataFreshnessAt: null, generatedAt: { lt: cutoff } },
     ],
+  };
+}
+
+export type StaleUnstartedPublishedPendingWhere = {
+  isPublished: true;
+  result: "PENDING";
+  game: { commenceTime: { gt: Date }; sport?: { key: string } };
+} & StalePickWhere;
+
+/**
+ * Prisma `where` for the rows the zero-sit lane unpublishes AND the rows the
+ * truth surface counts as `stalePendingPicks`: published PENDING picks on
+ * games that have not started, not refreshed within the age window. One
+ * builder for both so the count and the cron can never drift; the count
+ * reads 0 exactly when the lane has nothing left to do. `sportKey` narrows to
+ * the settle cron's `?sport=` scope.
+ */
+export function staleUnstartedPublishedPendingWhere(
+  now: Date = new Date(),
+  sportKey: string | null = null,
+): StaleUnstartedPublishedPendingWhere {
+  return {
+    isPublished: true,
+    result: "PENDING",
+    game: {
+      commenceTime: { gt: now },
+      ...(sportKey ? { sport: { key: sportKey } } : {}),
+    },
+    ...stalePickWhere(now),
   };
 }

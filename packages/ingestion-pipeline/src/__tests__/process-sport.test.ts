@@ -52,6 +52,8 @@ const mocks = vi.hoisted(() => ({
     unmatchedSecondary: number;
     skippedWellCovered: number;
   }>(),
+  // fixture confirmation guard (C-111): one batch per sport per cycle
+  confirmBatch: vi.fn<(sportKey: string, probes: readonly { id: string }[]) => Promise<unknown>>(),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -151,7 +153,30 @@ vi.mock("../source-snapshot.js", () => ({
   recordSourceSnapshot: vi.fn().mockResolvedValue(undefined),
 }));
 
+// The confirmer's fetch is replaced; the pure helpers stay real. The batch
+// contract itself is unit-tested in fixture-confirmation.test.ts.
+vi.mock("../fixture-confirmation.js", async () => {
+  const actual = await vi.importActual<typeof import("../fixture-confirmation.js")>(
+    "../fixture-confirmation.js",
+  );
+  return {
+    ...actual,
+    FixtureConfirmer: vi.fn().mockImplementation(() => ({ confirmBatch: mocks.confirmBatch })),
+  };
+});
+
 import { processSport, pickSelectionSide } from "../process-sport.js";
+
+/** Default guard behaviour for these tests: every probe is listed on the board. */
+function confirmAll(_sportKey: string, probes: readonly { id: string }[]): Promise<unknown> {
+  return Promise.resolve({
+    status: "ok",
+    eventsOnBoard: probes.length,
+    byGameId: new Map(
+      probes.map((p) => [p.id, { status: "confirmed", event: { externalId: `espn:test:${p.id}` }, correctedCommenceTime: null }]),
+    ),
+  });
+}
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
 
@@ -239,6 +264,84 @@ describe("processSport", () => {
       unmatchedSecondary: 0,
       skippedWellCovered: 0,
     }));
+    mocks.confirmBatch.mockImplementation(confirmAll);
+  });
+
+  describe("fixture confirmation guard (C-111)", () => {
+    it("generates no pick for a game the day's ESPN scoreboard does not list, and skips it before scoring", async () => {
+      mocks.confirmBatch.mockResolvedValue({
+        status: "ok",
+        eventsOnBoard: 68,
+        byGameId: new Map([["game-1", { status: "not_listed" }]]),
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.confirmBatch).toHaveBeenCalledTimes(1);
+      expect(mocks.confirmBatch).toHaveBeenCalledWith(
+        SPORT.key,
+        [expect.objectContaining({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" })],
+      );
+      // Scoring never sees the phantom game, so no pick can be created or refreshed.
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ status: "success", games: 1 });
+      expect(warn.mock.calls.some((c) => /fixture not listed/.test(String(c[0])) && /game-1/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("skips pick generation for the whole sport this cycle when the scoreboard fetch fails (fail-closed)", async () => {
+      mocks.confirmBatch.mockResolvedValue({ status: "fetch_failed", error: "espn nfl 20260612 HTTP 503" });
+      mocks.normalizeOdds.mockReturnValue([
+        { gameExternalId: "ext-1", bookmaker: "a", market: "SPREADS", spread: -3 },
+      ]);
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+      mocks.oddsCreateMany.mockResolvedValue({ count: 1 });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      // Odds rows are still archived; only pick generation is gated.
+      expect(mocks.oddsCreateMany).toHaveBeenCalledTimes(1);
+      expect(result).toMatchObject({ status: "success", picks: 0, note: "fixture_scoreboard_unavailable" });
+      expect(warn.mock.calls.some((c) => /fixture scoreboard unavailable/.test(String(c[0])) && /HTTP 503/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("leaves a listed fixture unaffected (happy path still creates the pick)", async () => {
+      const result = await processSport(SPORT, "key", gates());
+      expect(result).toMatchObject({ status: "success", games: 1, picks: 1 });
+      expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+      // No commenceTime-only correction write (the identity path's name+time update is unrelated).
+      const corrections = mocks.gameUpdate.mock.calls.filter(
+        (c) => Object.keys((c[0] as { data: Record<string, unknown> }).data).join() === "commenceTime",
+      );
+      expect(corrections).toHaveLength(0);
+    });
+
+    it("applies ESPN's kickoff to a confirmed old row when the batch carries a correction", async () => {
+      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      mocks.confirmBatch.mockResolvedValue({
+        status: "ok",
+        eventsOnBoard: 1,
+        byGameId: new Map([
+          ["game-1", { status: "confirmed", event: { externalId: "espn:nfl:1" }, correctedCommenceTime: corrected }],
+        ]),
+      });
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpdate).toHaveBeenCalledWith({
+        where: { id: "game-1" },
+        data: { commenceTime: corrected },
+      });
+      expect(result).toMatchObject({ status: "success", picks: 1 });
+    });
   });
 
   it("does not call Rundown when every primary event already has two books", async () => {
@@ -935,6 +1038,90 @@ describe("processSport", () => {
         expect.stringContaining("game identity lookup failed"),
       );
       warnSpy.mockRestore();
+    });
+
+    /**
+     * Name guard on the PLAIN upsert branch (ledger C-106, 2026-09-06). The twin
+     * branch already applied preferLongerTeamName; the plain `update` did not,
+     * so a city-only feed cycle overwrote "New York Yankees" with "New York"
+     * on ten MLB rows and their picks could never be matched to a final.
+     * Test fixtures only.
+     */
+    it("plain upsert update branch keeps the longer stored name in both directions when the identity lookup found the externalId row", async () => {
+      const STORED = {
+        id: "game-1",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        // Stored home is the full name, stored away is city-only.
+        homeTeamName: "New York Yankees",
+        awayTeamName: "Tampa Bay",
+        commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+        mergedIntoGameId: null,
+      };
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? STORED : { id: "game-1" };
+      });
+      // Feed cycle: home city-only (must not downgrade), away full (must upgrade).
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "New York", awayTeam: "Tampa Bay Rays" }),
+      ]);
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { externalId: "odds-api-1" },
+          update: expect.objectContaining({
+            homeTeamName: "New York Yankees",
+            awayTeamName: "Tampa Bay Rays",
+          }),
+        }),
+      );
+    });
+
+    it("plain upsert update branch reads the stored names itself when the kill switch skipped the identity lookup", async () => {
+      process.env["GAME_IDENTITY_MERGE_DISABLED"] = "true";
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1"
+          ? { homeTeamName: "New York Yankees", awayTeamName: "Tampa Bay Rays" }
+          : { id: "game-1" };
+      });
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "New York", awayTeam: "Tampa Bay" }),
+      ]);
+
+      await processSport(SPORT, "key", gates());
+
+      // Still no twin scan under the kill switch; only the by-externalId read.
+      expect(mocks.gameFindMany).not.toHaveBeenCalled();
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { externalId: "odds-api-1" },
+          update: expect.objectContaining({
+            homeTeamName: "New York Yankees",
+            awayTeamName: "Tampa Bay Rays",
+          }),
+        }),
+      );
+    });
+
+    it("plain upsert writes the feed names unchanged for a genuinely new row (no stored name to prefer)", async () => {
+      // Identity describe default: the externalId lookup misses -> new row.
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "New York", awayTeam: "Tampa Bay" }),
+      ]);
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.gameUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({ homeTeamName: "New York", awayTeamName: "Tampa Bay" }),
+          update: expect.objectContaining({ homeTeamName: "New York", awayTeamName: "Tampa Bay" }),
+        }),
+      );
     });
   });
 });

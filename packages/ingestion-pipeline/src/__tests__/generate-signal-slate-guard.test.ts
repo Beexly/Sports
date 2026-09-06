@@ -51,11 +51,45 @@ const GAME = {
   homeTeamName: "Cincinnati Bearcats",
   awayTeamName: "Boston College Eagles",
   commenceTime: new Date("2026-09-05T19:30:00.000Z"),
+  createdAt: new Date("2026-09-01T10:00:00.000Z"),
   sport: { key: "americanfootball_ncaaf", name: "NCAAF" },
 };
 
+/**
+ * Fixture confirmation guard (C-111): the slate confirms every game against the
+ * day's free ESPN scoreboard through an injected fetch. TEST FIXTURE shaped like
+ * ESPN's public scoreboard JSON; the 09-06 rows mirror what the public board
+ * listed on 2026-09-06 for the two "phantom" pairs (a day after our rows).
+ */
+function espnEvent(id: string, date: string, home: string, away: string): Record<string, unknown> {
+  return {
+    id,
+    date,
+    status: { type: { state: "pre", completed: false } },
+    competitions: [{ competitors: [
+      { homeAway: "home", team: { displayName: home } },
+      { homeAway: "away", team: { displayName: away } },
+    ] }],
+  };
+}
+const CFB_BOARD = {
+  events: [
+    espnEvent("402", "2026-09-05T19:30Z", "Cincinnati Bearcats", "Boston College Eagles"),
+    espnEvent("403", "2026-09-06T20:00Z", "Washington Huskies", "Washington State Cougars"),
+    espnEvent("404", "2026-09-06T23:30Z", "Ole Miss Rebels", "Louisville Cardinals"),
+  ],
+};
+const espnFetch = vi.fn<(url: string) => Promise<Response>>();
+function boardResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+}
+function runSlate() {
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch });
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
+  espnFetch.mockImplementation(async () => boardResponse(CFB_BOARD));
   mocks.gameFindMany.mockResolvedValue([GAME]);
   mocks.gameUpdate.mockResolvedValue({});
   mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
@@ -93,7 +127,7 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
       selection: "Cincinnati Bearcats ML (-150)",
       bookmakerCount: 5,
     });
-    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    const out = await runSlate();
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
     expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.gameUpdate).not.toHaveBeenCalled();
@@ -109,7 +143,7 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
       selection: `Cincinnati Bearcats ML ${SIGNAL_SELECTION_SUFFIX}`,
       bookmakerCount: 0,
     });
-    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    const out = await runSlate();
     expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
     const args = mocks.pickUpdateMany.mock.calls[0]?.[0] as { where: unknown; data: { selection: string; reasoningShort: string; line: number } };
     expect(args.where).toEqual({ id: "pick-signal", result: "PENDING" });
@@ -121,7 +155,7 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
 
   it("creates a signal pick when the game has no MONEYLINE row at all", async () => {
     mocks.pickFindUnique.mockResolvedValue(null);
-    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    const out = await runSlate();
     expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
     const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { gameId: string; pickType: string; bookmakerCount: number; selection: string; reasoning: string; factorBreakdown: { independentEdge: { rationale: string } } } };
@@ -142,7 +176,7 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
   it("publishes from the readiness gate and prices the tier from PREMIUM_CONFIDENCE_THRESHOLD", async () => {
     // Default fixture: home 0.68 blends past the paywall threshold (mock: 70).
     mocks.pickFindUnique.mockResolvedValue(null);
-    await generateSignalSlate({ now: NOW, skipSeed: true });
+    await runSlate();
     const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { confidence: number; tier: string; isPublished: boolean } };
     expect(args.data.isPublished).toBe(true); // gates.canExposePublicPicks (mocked true)
     expect(args.data.confidence).toBeGreaterThanOrEqual(70);
@@ -154,7 +188,7 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
       { source: "espn_powerindex", homeFairProb: 0.6, awayFairProb: 0.4, capturedAt: NOW.toISOString() },
     ]);
     mocks.pickFindUnique.mockResolvedValue(null);
-    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    const out = await runSlate();
     expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
     const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { confidence: number; tier: string } };
     expect(args.data.confidence).toBeGreaterThanOrEqual(60);
@@ -168,7 +202,7 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
       { source: "espn_powerindex", homeFairProb: 0.52, awayFairProb: 0.48, capturedAt: NOW.toISOString() },
     ]);
     mocks.pickFindUnique.mockResolvedValue(null);
-    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    const out = await runSlate();
     expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
     expect(out.candidatesWithIndependents).toBe(1);
@@ -181,11 +215,144 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
       { ...GAME, id: "game-mls", homeTeamName: "Portland Timbers", awayTeamName: "Austin FC", sport: { key: "soccer_usa_mls", name: "MLS" } },
     ]);
     mocks.pickFindUnique.mockResolvedValue(null);
-    const out = await generateSignalSlate({ now: NOW, skipSeed: true });
+    const out = await runSlate();
     expect(mocks.buildIndependents).not.toHaveBeenCalled();
     expect(mocks.pickCreate).not.toHaveBeenCalled();
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
     expect(out.picksUpserted).toBe(0);
     expect(out.picksSkipped).toBe(1);
+    // Soccer is refused before the guard runs: no scoreboard fetch is spent on it.
+    expect(espnFetch).not.toHaveBeenCalled();
+  });
+});
+
+describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
+  // The three May-listed NCAAF rows dated 2026-09-05 (ledger C-111). The board
+  // above lists two of the pairs on 09-06 and none of them on 09-05.
+  const PHANTOMS = [
+    { ...GAME, id: "g-olemiss", homeTeamName: "Ole Miss Rebels", awayTeamName: "Louisville Cardinals", commenceTime: new Date("2026-09-05T16:00:00.000Z"), createdAt: new Date("2026-05-22T10:00:00.000Z") },
+    { ...GAME, id: "g-illinois", homeTeamName: "Illinois Fighting Illini", awayTeamName: "UAB Blazers", commenceTime: new Date("2026-09-05T16:00:00.000Z"), createdAt: new Date("2026-05-22T10:00:00.000Z") },
+    { ...GAME, id: "g-washington", homeTeamName: "Washington Huskies", awayTeamName: "Washington State Cougars", commenceTime: new Date("2026-09-05T19:00:00.000Z"), createdAt: new Date("2026-05-23T10:00:00.000Z") },
+  ];
+
+  it("writes no pick on the three phantom fixtures and logs each one, while the listed fixture passes", async () => {
+    mocks.gameFindMany.mockResolvedValue([...PHANTOMS, GAME]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+    const created = mocks.pickCreate.mock.calls[0]?.[0] as { data: { gameId: string } };
+    expect(created.data.gameId).toBe("game-1");
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    // The phantom rows never reach the independent build, so no signal is even priced.
+    expect(mocks.buildIndependents).toHaveBeenCalledTimes(1);
+    expect(out.fixtureUnconfirmed).toBe(3);
+    expect(out.picksSkipped).toBe(3);
+    expect(out.picksUpserted).toBe(1);
+    for (const p of PHANTOMS) {
+      expect(
+        warn.mock.calls.some((c) => /fixture not listed/.test(String(c[0])) && String(c[0]).includes(p.id) && String(c[0]).includes(p.homeTeamName)),
+      ).toBe(true);
+    }
+    warn.mockRestore();
+  });
+
+  it("does not refresh an existing signal row to published when its fixture is not listed", async () => {
+    mocks.gameFindMany.mockResolvedValue([PHANTOMS[0]!]);
+    mocks.pickFindUnique.mockResolvedValue({
+      id: "pick-phantom",
+      result: "PENDING",
+      selection: `Ole Miss Rebels ML ${SIGNAL_SELECTION_SUFFIX}`,
+      bookmakerCount: 0,
+    });
+    const out = await runSlate();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.gameUpdate).not.toHaveBeenCalled();
+    expect(out.fixtureUnconfirmed).toBe(1);
+  });
+
+  it("skips the whole sport this cycle and logs when the scoreboard fetch fails (fail-closed)", async () => {
+    espnFetch.mockImplementation(async () => boardResponse({ events: [] }, 503));
+    mocks.gameFindMany.mockResolvedValue([GAME, PHANTOMS[0]!]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    expect(mocks.buildIndependents).not.toHaveBeenCalled();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(out.fixtureUnconfirmed).toBe(2);
+    expect(out.picksUpserted).toBe(0);
+    expect(warn.mock.calls.some((c) => /fixture scoreboard unavailable for americanfootball_ncaaf/.test(String(c[0])) && /HTTP 503/.test(String(c[0])))).toBe(true);
+    // Still one fetch for the sport; the failure is not retried within the cycle.
+    expect(espnFetch).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
+  });
+
+  it("fetches the scoreboard once per ESPN group per sport per cycle across many games (CFB: FBS 80 and FCS 81)", async () => {
+    mocks.gameFindMany.mockResolvedValue([
+      GAME,
+      ...PHANTOMS,
+      { ...GAME, id: "game-2", commenceTime: new Date("2026-09-06T00:00:00.000Z") },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    await runSlate();
+
+    expect(espnFetch).toHaveBeenCalledTimes(2);
+    const urls = espnFetch.mock.calls.map((c) => String(c[0]));
+    for (const url of urls) {
+      expect(url).toContain("/football/college-football/scoreboard");
+      expect(url).toContain("dates=20260905-20260906");
+    }
+    expect(urls.filter((u) => u.includes("groups=80"))).toHaveLength(1);
+    expect(urls.filter((u) => u.includes("groups=81"))).toHaveLength(1);
+    vi.restoreAllMocks();
+  });
+
+  it("corrects a confirmed old row's commenceTime from ESPN only beyond 15 minutes", async () => {
+    // Row created in June (older than 30 days), kickoff within 48h, our clock 45 minutes early.
+    const oldRow = {
+      ...GAME,
+      id: "game-old",
+      commenceTime: new Date("2026-09-05T18:45:00.000Z"),
+      createdAt: new Date("2026-06-01T10:00:00.000Z"),
+    };
+    mocks.gameFindMany.mockResolvedValue([oldRow]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+
+    await runSlate();
+
+    expect(mocks.gameUpdate).toHaveBeenCalledWith({
+      where: { id: "game-old" },
+      data: { commenceTime: new Date("2026-09-05T19:30:00.000Z") },
+    });
+    // The independent build reads the corrected kickoff.
+    expect(mocks.buildIndependents).toHaveBeenCalledWith(
+      expect.objectContaining({ commenceTime: new Date("2026-09-05T19:30:00.000Z") }),
+    );
+
+    // Same old row, 10 minutes of drift: no correction (the dataQualityScore update still runs).
+    vi.clearAllMocks();
+    espnFetch.mockImplementation(async () => boardResponse(CFB_BOARD));
+    mocks.gameFindMany.mockResolvedValue([{ ...oldRow, commenceTime: new Date("2026-09-05T19:20:00.000Z") }]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    mocks.gameUpdate.mockResolvedValue({});
+    mocks.pickCreate.mockResolvedValue({});
+    mocks.buildIndependents.mockResolvedValue([
+      { source: "espn_powerindex", homeFairProb: 0.68, awayFairProb: 0.32, capturedAt: NOW.toISOString() },
+    ]);
+
+    await runSlate();
+
+    const commenceUpdates = mocks.gameUpdate.mock.calls.filter(
+      (c) => Object.prototype.hasOwnProperty.call((c[0] as { data: Record<string, unknown> }).data, "commenceTime"),
+    );
+    expect(commenceUpdates).toHaveLength(0);
   });
 });
