@@ -558,6 +558,144 @@ loud-failure-or-correct rather than silently incomplete on this exact 23-package
 
 ---
 
+---
+
+## Round 6 — Founder-sourced sweep, 14 repos (2026-09-06, afternoon)
+
+First pass was purpose/license/activity triage against GSE's own existing coverage. Founder
+instruction mid-round: assume good faith on every repo, verify with live tests rather than
+trust any claim (vendor's, this doc's own, or a prior dismissal), and look for the non-obvious
+angle before writing anything off. Second pass below re-opens every "skip" from the first pass
+and tests the two live-vendor claims directly rather than relaying their docs.
+
+**Re-examined, still no realistic angle found** (not dismissed on star count alone this time —
+each got a second, closer look for a transferable pattern first): `abusufyanvu/6S191_MIT_DeepLearning`
+is confirmed, from its own content, to be a student's fork of MIT's official `aamini/introtodeeplearning`
+coursework (labs on neural-net fundamentals, computer vision, RL) — genuine material, but GSE's
+prediction engine is explicitly non-ML by design (rule 8), so there's no host for course-lab
+code here even generously read. `smagara/AgilitySports_api` re-confirmed as a PhillyDotNet
+meetup training lab (Angular/.NET/SQL Server, 6-sport player-stats demo) — a real, working
+teaching artifact, not a production pattern GSE's own already-more-sophisticated Prisma schema
+needs. `tanmay-05-p/sport-feed-ai` — re-verified with a direct file-listing fetch (not just a
+README summary) this time: root is exactly `Tithymalopsis/` (folder), `BugTracking.zip`,
+`hello.py`. The original "essentially empty" read holds up under direct verification.
+
+### Real finding: GSE's own two ESPN rights registries disagree, independent of any new repo
+`pseudo-r/Public-ESPN-API` (MIT, 698★, actively maintained, documents 370 v2 + 79 v3 ESPN
+endpoints across 17+ sports) prompted a check against GSE's own existing ESPN usage — and
+surfaced that **`packages/data-ingestion/src/source-registry.ts`'s `espn-hidden-api` entry
+is `verdict: "forbidden"`** ("ESPN ToU restricts to personal, non-commercial use and
+prohibits high-volume automated access"), while **`apps/web/lib/scraping/source-rights-registry.ts`'s
+`espn-public-api` entry is `status: "approved_public_logged_off"`, `automation_allowed: true`**
+for the same underlying `site.api.espn.com` family, with `commercial_display_allowed: false`
+and "treat as fallback only; rate-limit aggressively." Both are real, current entries in this
+repo, not a Public-ESPN-API artifact — worth a founder/legal look at why the two registries
+classify the same provider differently, independent of anything below.
+
+**What this means for `Public-ESPN-API` specifically**: it doesn't change GSE's binding
+constraint either way — `commercial_display_allowed: false` on the approved entry means
+broader endpoint *coverage* (which this repo genuinely offers, well beyond what
+`espn-odds-client.ts`/`espn-results-client.ts` currently pull) still can't be displayed
+commercially without an official ESPN data license. Real value is narrow: an endpoint-
+discovery reference to find fields GSE doesn't yet pull from the *already-approved* surface,
+not a rights unlock.
+
+### Real, unfilled gaps (reference only — none pre-cleared, none installed)
+| Repo | License / activity | Gap it would fill |
+|---|---|---|
+| `henrygd/ncaa-api` | MIT, 264★, real self-hostable NCAA.com proxy | GSE has zero dedicated NCAA.com source today — CFB coverage is reached only via ESPN. Scrapes ncaa.com directly, not ESPN, so it needs its **own** `source-rights-registry.ts` entry (ncaa.com ToS review via `checkClearance()`) before any adoption — not pre-cleared by anything above. |
+| `whatadewitt/yahoo-fantasy-sports-api` (Node, MIT, 227★) / `mattdodge/yahoofantasy` (Python, 86★) | Both real, moderately active | GSE has **zero** Yahoo Fantasy integration today (grepped `data-sources/`, `data-ingestion/` — no hits beyond a DFS-salary licensing mention). The paid Fantasy tier ($4.99/mo, CLAUDE.md pricing table) has no real-league-import path yet. Needs a Yahoo developer app + OAuth — a founder-only step, same class as any other account-gated integration. |
+
+### Reference pattern only — not adoptable as-is
+`machina-sports/sports-skills` (MIT code, 211★, real and actively maintained — wraps ESPN/
+FastF1/Kalshi/Polymarket into "agent skill" commands) is worth reading for the pattern
+(sports data exposed as structured agent-callable skills, which GSE's own `.claude/skills/`
+convention already does for internal tooling) — but its own README states it's "intended for
+personal, non-commercial use" and routes commercial users to a separate paid product
+(machina.gg). Not freely usable for a commercial product as-is.
+
+`reeeeemo/mcp-sports` (MIT, real working MCP server, 13 commits, dormant) only covers NFL via
+SportRadar — a paid vendor GSE holds no key for. Low priority, reference only.
+
+### The real finding behind the two thin wrapper repos: the underlying vendors, tested directly
+`Magoocito/MatchEdge` (.NET, 0 stars) and `williamandradesantana/sports` (Java, 0 stars) are
+each too thin to reuse as code — but per the founder's "assume good faith, find the angle"
+instruction, their real value isn't the wrapper, it's what they prove is *possible*: a working
+integration against SofaScore and API-Football respectively, both real candidates for Round
+3's still-open soccer-data gap (`worldfootballR` confirmed archived, no open-licensed
+replacement found there). Tested both vendors directly rather than trusting either wrapper's
+README:
+
+- **SofaScore**: `sofascore.com/robots.txt` returned a direct, verified **HTTP 403** to a plain
+  fetch — a real, observed anti-bot technical control, not a guess. Under GSE's own
+  `source-rights-registry.ts` status vocabulary (`.claude/rules/scraping.md`), a source that
+  blocks even a robots.txt request is squarely `blocked_technical_controls` territory, the same
+  bucket as sources this repo already refuses to build evasion for. **MatchEdge's own
+  integration approach is worth zero adoption confidence on this evidence** — whatever method
+  it uses to reach SofaScore, "assume good faith" doesn't extend to guessing around a verified
+  technical block.
+- **API-Football**: three independent verification attempts — the marketing pricing page
+  (403), the docs subdomain (DNS did not resolve, wrong guessed host), and its RapidAPI listing
+  (JS-rendered, no usable content via fetch) — **all failed**. Per the founder's own "trust no
+  claims" instruction, the honest report is: **unverified, not confirmed either way**, not "it
+  looks viable" and not "it looks blocked." This needs a follow-up with either a browser-
+  capable fetch or a founder-side manual check of api-football.com's actual terms before it's
+  filed as anything more than an open question.
+
+**Bottom line on both**: the wrapper repos themselves stay non-adoptable (wrong language,
+near-zero engineering signal), but the underlying-vendor question they raised was worth asking
+— one resolved to a real, verified "no" (SofaScore's own technical controls), the other stayed
+genuinely open pending better verification access (API-Football).
+
+### ParlayAPI ecosystem — live-tested, not just read from the README
+`JacobiusMakes/parlay-api-mcp` (22-tool MCP server, MIT, Docker, genuinely production-oriented —
+19 commits, not a stub) plus its two starter-kit siblings (`betting-model-starter`,
+`parlayapi-betting-agent-starter`) all front the same paid third-party odds vendor, ParlayAPI.
+The author (`JacobiusMakes`) checks out as a real developer with genuine unrelated open-source
+contributions (Linagora, Hugging Face transformers.js, ffmpeg.wasm, Scaleway, Mistral AI), not
+a thin marketing account. Per the founder's "trust no claims, test everything" instruction,
+both of ParlayAPI's keyless (no-account) endpoints were called live rather than trusting the
+README's summary of them:
+
+- **`GET /v1/widget/odds?sport=americanfootball_nfl` — real.** Returned live HTTP 200 with
+  actual current NFL moneyline odds (10 games, matching real September 2026 schedule dates)
+  across four real sportsbooks (DraftKings, FanDuel, BetMGM, Caesars), attributed "Live odds by
+  ParlayAPI." This is genuinely real, live, free, keyless data — verified directly, not
+  claimed. **But it is h2h/moneyline only, and rate-limited to 60 requests/hour per IP** per
+  ParlayAPI's own docs — far too thin to serve GSE's actual cadence (`MIN_BOOKMAKERS = 2`
+  across 4 sports × 2 dates, refreshed every 15 minutes) without hitting the exact same
+  quota-exhaustion failure mode this session already fixed for TheRundown.
+- **`GET /v1/sandbox/sports/baseball_mlb/odds` — a real trap, caught by testing rather than
+  reading.** Also returned HTTP 200 with equally plausible-looking data (3 MLB games, 8
+  sportsbooks including Pinnacle, Bovada, Polymarket, and Kalshi) — but ParlayAPI's own docs
+  describe this specific endpoint as **"deterministic synthetic data."** Two similarly-named
+  keyless endpoints, one real and one fabricated-but-realistic, both return 200 with
+  structurally identical-looking JSON. Anyone integrating from the README's "keyless demo
+  endpoint" framing alone, without reading the docs closely, could plausibly wire up the
+  synthetic one and not notice — a real, concrete illustration of exactly why this doc's
+  standard is "verify independently," not "relay the vendor's summary."
+
+**Bottom line, now evidence-based rather than hedged**: the free/keyless tier is real but
+structurally too thin (h2h-only, 60/hr) to be a genuine second-book source at GSE's scale —
+not merely because it's a third vendor the founder's already-recorded position (Hermes brief
+on PR #680: *"we are the provider (Galaxy Sports API). Not Rundown. Not The Odds API."*)
+argues against, though that stands too. A paid ParlayAPI tier might clear the throughput bar,
+but that reintroduces the exact vendor-dependency cost this repo is deliberately moving away
+from (WP-27). Filed the same way TheRundown already is in this file — **"at most a bridge, not
+the product path"** — now backed by a live-tested capacity ceiling, not just a philosophical
+objection.
+
+### Explicitly excluded, not just deprioritized
+`multiplex-invertsoap119/polymarket-sports-arbitrage-bot` (real, working, but tiny — 1 star,
+16 commits — monitoring-only, does not execute trades automatically) touches Polymarket
+directly. Per this repo's own `.claude/skills/polymarket-hold/SKILL.md`: *"Polymarket /
+prediction-market integrations are on compliance hold... Agents must refuse to open tickets,
+build markets, or re-enable crons without counsel registry grant."* This is not filed as a
+someday-idea — it is excluded outright, matching that skill's own law, independent of the
+repo's technical merit.
+
+---
+
 **Addendum — `@ast-grep/cli` deep dive: stalled, not completed.** The background pass hung
 for ~2h50m with zero progress after its first step — `npx --yes @ast-grep/cli@latest
 --version`, an npm-registry install of an uncached package — never returned in this sandbox

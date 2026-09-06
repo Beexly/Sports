@@ -168,7 +168,23 @@ the wire protocol. Full detail and citations in the doc's Round 5 section. `@ast
 deep dive **stalled** (~2h50m hung on an `npx` registry install in this sandbox, stopped
 rather than left running) and was not completed — Round 2's original finding (BLOCKED, new
 dependency, `allowScripts` needed) stands, un-re-verified at the source level. See the doc's
-addendum.
+addendum. **Round 6 (founder-sourced, live-tested): 14 more repos.** Real finding independent
+of any repo: GSE's own two rights registries disagree on ESPN's status
+(`packages/data-ingestion/src/source-registry.ts`'s `espn-hidden-api` = forbidden vs.
+`apps/web/lib/scraping/source-rights-registry.ts`'s `espn-public-api` = approved,
+`commercial_display_allowed: false`) — worth a founder/legal look. `ParlayAPI`'s keyless
+endpoints were called live, not read from the README: the real one (`/v1/widget/odds`) is
+genuinely live NFL data but h2h-only at 60 req/hour (too thin for GSE's cadence); the
+similarly-named `/v1/sandbox/...` endpoint returns equally plausible-looking data that its own
+docs say is synthetic — a real trap if integrated from the README alone. `sofascore.com`
+returned a verified HTTP 403 on a plain robots.txt fetch (real anti-bot control, not a guess);
+`api-football.com` stayed unverified after three independent attempts, reported honestly as
+open rather than guessed. `multiplex-invertsoap119/polymarket-sports-arbitrage-bot` is
+excluded outright, not just deprioritized — it touches Polymarket, which
+`.claude/skills/polymarket-hold/SKILL.md` puts under a counsel compliance hold. Nine of
+fourteen repos (course material, meetup demos, near-empty repos) got a second, closer look per
+founder instruction and still had no realistic adoption angle — verified, not assumed. Full
+detail in the doc's Round 6 section.
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
