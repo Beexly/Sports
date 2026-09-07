@@ -159,7 +159,18 @@ export async function loadBoardPasses(
       },
       include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: { evaluatedAt: "desc" },
-      take: 100,
+      // Bounds decisions SCANNED, not fixtures shown - the collapse below
+      // reduces this to one row per fixture.
+      //
+      // This was 100, and 100 was ALREADY TRUNCATING REAL DAYS. Measured
+      // read-only on production 2026-09-07: a single day has produced 305 GATED
+      // rows across 58 distinct fixtures, with at most 6 evaluations for any one
+      // fixture. So the cap was silently dropping genuine passes off the end of
+      // the list today, and a fixture evaluated repeatedly could crowd others out
+      // entirely (Devin Review and CodeRabbit, #719). 500 matches the bound the
+      // decision query in state.ts already uses for the same reason, and leaves
+      // headroom over the worst day observed.
+      take: 500,
     });
 
     // ONE ROW PER FIXTURE, newest evaluation.

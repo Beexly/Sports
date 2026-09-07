@@ -20,6 +20,7 @@ import {
  */
 
 const final = (over: Partial<FinalScoreInput> = {}): FinalScoreInput => ({
+  sportKey: "baseball_mlb",
   homeTeamName: "Fixture Home Sox",
   awayTeamName: "Fixture Away Jays",
   homeScore: 5,
@@ -71,9 +72,17 @@ describe("expectedResult — the arithmetic, per market", () => {
     expect(expectedResult(p, final({ homeScore: 2, awayScore: 3 }), null)).toBe("LOSS");
   });
 
-  it("refuses to adjudicate a drawn moneyline instead of inventing a side", () => {
+  it("grades a drawn moneyline the way production grades it, per sport", () => {
+    // settlement.ts:96 - soccer settles a two-way ML draw as LOSS because the
+    // draw is unpriced on a three-way market; every other sport settles PUSH.
+    // Returning null here excluded all 30 drawn moneylines in production from
+    // checking, and soccer draws are the C-118 fabrication-risk population, so
+    // the detector was blind to the market it most needed to watch.
     const p = pick({ pickType: "MONEYLINE", selection: "Fixture Home Sox ML", line: null });
-    expect(expectedResult(p, final({ homeScore: 1, awayScore: 1 }), null)).toBeNull();
+    expect(expectedResult(p, final({ homeScore: 1, awayScore: 1 }), null)).toBe("PUSH");
+    expect(
+      expectedResult(p, final({ homeScore: 1, awayScore: 1, sportKey: "soccer_usa_mls" }), null),
+    ).toBe("LOSS");
   });
 
   it("grades a spread from the HOME perspective for either side picked", () => {
@@ -104,7 +113,7 @@ describe("expectedResult — the arithmetic, per market", () => {
   });
 });
 
-describe("classifySettledPick — the three verdicts that matter", () => {
+describe("classifySettledPick — the verdicts that matter", () => {
   it("calls an agreeing pick CONSISTENT", () => {
     const p = pick({ pickType: "TOTAL", selection: "OVER 7.0", line: 7, result: "WIN" });
     expect(classifySettledPick(p, final({ homeScore: 5, awayScore: 3 }))).toBe("CONSISTENT");
@@ -186,6 +195,7 @@ describe("the five REAL production rows from ledger C-115", () => {
       id: "cmtp7olso04ci9t2po0eeh9eo",
       pick: { pickType: "TOTAL", selection: "OVER 83.5", line: 83.5, clvLockLine: 74, result: "WIN" },
       final: {
+        sportKey: "americanfootball_ncaaf",
         homeTeamName: "Arizona State Sun Devils",
         awayTeamName: "Morgan State Bears",
         homeScore: 70,
@@ -197,6 +207,7 @@ describe("the five REAL production rows from ledger C-115", () => {
       id: "cmtpaag0e03uwvxtdedzppu9k",
       pick: { pickType: "TOTAL", selection: "UNDER 46.3", line: 46.25, clvLockLine: 53, result: "WIN" },
       final: {
+        sportKey: "americanfootball_ncaaf",
         homeTeamName: "Sacramento State Hornets",
         awayTeamName: "Mississippi Valley State Delta Devils",
         homeScore: 52,
@@ -208,6 +219,7 @@ describe("the five REAL production rows from ledger C-115", () => {
       id: "cmtp7m2g104iy5gakc5kdrte9",
       pick: { pickType: "TOTAL", selection: "OVER 6.6", line: 6.5625, clvLockLine: 8.375, result: "LOSS" },
       final: {
+        sportKey: "baseball_mlb",
         homeTeamName: "Seattle Mariners",
         awayTeamName: "Athletics",
         homeScore: 6,
@@ -219,6 +231,7 @@ describe("the five REAL production rows from ledger C-115", () => {
       id: "cmtpi1g740e91qkek2wlbayk7",
       pick: { pickType: "TOTAL", selection: "OVER 7.0", line: 7, clvLockLine: 7.5, result: "LOSS" },
       final: {
+        sportKey: "baseball_mlb",
         homeTeamName: "Seattle Mariners",
         awayTeamName: "Athletics",
         homeScore: 6,
@@ -230,6 +243,7 @@ describe("the five REAL production rows from ledger C-115", () => {
       id: "cmtp7m2zq04mg5gak7ze8z2mr",
       pick: { pickType: "TOTAL", selection: "UNDER 8.5", line: 8.5, clvLockLine: 8.5, result: "LOSS" },
       final: {
+        sportKey: "baseball_mlb",
         homeTeamName: "Los Angeles Dodgers",
         awayTeamName: "Washington Nationals",
         homeScore: 5,
@@ -252,7 +266,72 @@ describe("the five REAL production rows from ledger C-115", () => {
       consistent: 0,
       contradictsBoth: 3,
       gradedOnLockLine: 2,
+      gradedOnDisplayLine: 0,
       ungradeable: 0,
     });
+  });
+});
+
+describe("malformed selections fail closed rather than parsing", () => {
+  it("refuses a spread whose number carries no sign", () => {
+    // Six published spread selections in production carry an unsigned tail. With
+    // an optional sign these parsed as team-plus-line and could be graded
+    // (CodeRabbit, #719); the honest answer is that we cannot read them.
+    expect(spreadTeam("Fixture Home Sox 1.5")).toBe("Fixture Home Sox 1.5");
+    expect(spreadTeam("Fixture Home Sox -1.5")).toBe("Fixture Home Sox");
+    const p = pick({ pickType: "SPREAD", selection: "Fixture Home Sox 1.5", line: -1.5 });
+    expect(classifySettledPick(p, final())).toBe("UNGRADEABLE");
+  });
+
+  it("refuses a total whose side is only a prefix of a longer word", () => {
+    expect(totalSide("OVERDUE 7")).toBe("UNKNOWN");
+    expect(totalSide("UNDERWATER 7")).toBe("UNKNOWN");
+    expect(totalSide("OVER 7")).toBe("OVER");
+  });
+});
+
+describe("both lines are always evaluated", () => {
+  /**
+   * The class the first version could not see. Production grades on
+   * clvLockLine; the card displays line. A pick right against the card and
+   * wrong against the graded line was reported CONSISTENT - measured on
+   * production, 46 published TOTAL picks are in exactly that state
+   * (CodeRabbit, #719).
+   */
+  it("flags a pick that is right on the card and wrong on the line we grade on", () => {
+    // Total 52, displayed 46.25 (OVER wins), lock line 53 (OVER loses).
+    const p = pick({
+      pickType: "TOTAL",
+      selection: "OVER 46.3",
+      line: 46.25,
+      clvLockLine: 53,
+      result: "WIN",
+    });
+    expect(classifySettledPick(p, final({ homeScore: 52, awayScore: 0 }))).toBe("GRADED_ON_DISPLAY_LINE");
+  });
+
+  it("still reports CONSISTENT when both readings agree", () => {
+    const p = pick({
+      pickType: "TOTAL",
+      selection: "OVER 7.0",
+      line: 7,
+      clvLockLine: 6,
+      result: "WIN",
+    });
+    // Total 8 clears both lines.
+    expect(classifySettledPick(p, final({ homeScore: 5, awayScore: 3 }))).toBe("CONSISTENT");
+  });
+
+  it("says UNGRADEABLE, not CONTRADICTS_BOTH, when the lock line cannot be graded", () => {
+    // Missing evidence is not proof of corruption. An earlier revision turned a
+    // non-finite lock line into an accusation.
+    const p = pick({
+      pickType: "TOTAL",
+      selection: "OVER 7.0",
+      line: 7,
+      clvLockLine: Number.NaN,
+      result: "LOSS",
+    });
+    expect(classifySettledPick(p, final({ homeScore: 5, awayScore: 3 }))).toBe("UNGRADEABLE");
   });
 });
