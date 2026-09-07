@@ -476,8 +476,35 @@ async function loadBoardStateInner(
       take: 500,
     });
 
-    if (decisions.length > 0) {
-      const decisionEntries = decisions.map((decision): DedupeEntry => ({
+    // A PUBLISHED decision is only a published pick while its pick IS STILL
+    // PUBLISHED.
+    //
+    // GateDecision records what we decided at a moment in time; Pick.isPublished
+    // records what is live now. Nothing kept them in step, so a withdrawn pick
+    // kept its PUBLISHED_TODAY row AND kept suppressing that fixture's gated row
+    // (Devin Review, #719). Measured on production 2026-09-07: 84 PUBLISHED
+    // decisions already point at picks with isPublished=false, so this is a live
+    // defect, not a forward risk - and the corrupted-pick remediation
+    // (scripts/ops/unpublish-corrupted-picks.ts) withdraws 586 more, every one of
+    // which would have stayed on the board looking published. A remediation the
+    // product surface ignores is not a remediation.
+    //
+    // Withdrawn rows are DROPPED rather than relabelled. There is no honest lane
+    // for them: GATED_TODAY would claim we evaluated and passed, which is false -
+    // we published and then withdrew - and a published decision carries no
+    // `reason` to show. Dropping also leaves the fixture free to be picked up by
+    // the fallback lanes on their own predicates.
+    //
+    // Fail closed when the link is absent. Measured on the same read, all 811
+    // PUBLISHED decisions carry a resolvable pick row and all 356 GATED ones
+    // carry none, so the null branch costs nothing today; it is here so a broken
+    // reference can never render as a published pick that does not exist.
+    const displayableDecisions = decisions.filter(
+      (decision) => decision.status !== "PUBLISHED" || decision.pick?.isPublished === true,
+    );
+
+    if (displayableDecisions.length > 0) {
+      const decisionEntries = displayableDecisions.map((decision): DedupeEntry => ({
         // Key built beside the row it belongs to. A parallel-index lookup
         // into `decisions` would break silently the day anyone filters this
         // list, and the failure would be a silently merged pick.
@@ -531,11 +558,11 @@ async function loadBoardStateInner(
       const publishedRows = dedupedDecisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
       const gatedRows = dedupedDecisionRows.filter((row) => row.status === "GATED_TODAY");
 
-      const modelVersion = decisions[0]?.modelVersion ?? MODEL_VERSION;
+      const modelVersion = displayableDecisions[0]?.modelVersion ?? MODEL_VERSION;
       return {
         data: {
           sportsWatched: new Set(dedupedDecisionRows.map((row) => row.sport)).size,
-          booksPolled: Math.max(0, ...decisions.map((decision) => decision.game.bookmakerCoverageMax)),
+          booksPolled: Math.max(0, ...displayableDecisions.map((decision) => decision.game.bookmakerCoverageMax)),
           openPicks: publishedRows.length,
           gatedToday: gatedRows.length,
           lastRefresh: now.toISOString(),

@@ -88,7 +88,7 @@ describe("board loaders with persisted gate decisions", () => {
         evaluatedAt,
         modelVersion: "v5.1.0",
         game: game(),
-        pick: { selection: "BOS -1.5", confidence: 74 },
+        pick: { selection: "BOS -1.5", confidence: 74, isPublished: true },
       },
       {
         id: "gd_gated",
@@ -142,7 +142,7 @@ describe("board loaders with persisted gate decisions", () => {
         evaluatedAt,
         modelVersion: "v5.1.0",
         game: game({ awayTeamName: "TEX", homeTeamName: "STL" }),
-        pick: { selection: "OVER 7.5", confidence: 74 },
+        pick: { selection: "OVER 7.5", confidence: 74, isPublished: true },
       },
     ]);
 
@@ -340,7 +340,7 @@ describe("board loaders with persisted gate decisions", () => {
           evaluatedAt,
           modelVersion: "v5.1.0",
           game: game(),
-          pick: { selection: "BOS -1.5", confidence: 88, pickType: "SPREAD" },
+          pick: { selection: "BOS -1.5", confidence: 88, pickType: "SPREAD", isPublished: true },
         },
         {
           id: "gd_gate",
@@ -549,7 +549,7 @@ describe("board loaders with persisted gate decisions", () => {
           evaluatedAt,
           modelVersion: "v5.1.0",
           game: game(),
-          pick: { selection: "BOS -1.5", confidence: 57 },
+          pick: { selection: "BOS -1.5", confidence: 57, isPublished: true },
         },
         {
           id: "gd_b",
@@ -561,7 +561,7 @@ describe("board loaders with persisted gate decisions", () => {
           evaluatedAt,
           modelVersion: "v5.1.0",
           game: game(),
-          pick: { selection: "BOS -1.5", confidence: 88 },
+          pick: { selection: "BOS -1.5", confidence: 88, isPublished: true },
         },
       ]);
   
@@ -589,5 +589,91 @@ describe("board loaders with persisted gate decisions", () => {
       };
       expect(where.game?.mergedIntoGameId).toBeNull();
     });
+  });
+});
+
+describe("a PUBLISHED decision whose pick has been withdrawn", () => {
+  /**
+   * GateDecision records what we decided at a moment in time; Pick.isPublished
+   * records what is live now. Nothing kept them in step, so a withdrawn pick
+   * kept its PUBLISHED_TODAY row and kept suppressing that fixture's gated row
+   * (Devin Review, #719).
+   *
+   * Measured on production 2026-09-07, read-only: 84 PUBLISHED decisions
+   * already point at picks with isPublished=false, so this was live before the
+   * remediation tool existed - and scripts/ops/unpublish-corrupted-picks.ts
+   * withdraws 586 more. A remediation the product surface ignores is not a
+   * remediation, which is what makes this a launch-sequencing bug and not a
+   * cosmetic one.
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const withdrawn = {
+    id: "gd_withdrawn",
+    gameId: "game_w",
+    status: "PUBLISHED",
+    reason: null,
+    reasonCode: null,
+    edgeIndex: 61,
+    confidence: 74,
+    modelVersion: "v5.2.7",
+    evaluatedAt,
+    game: game(),
+    pick: { selection: "BOS -1.5", confidence: 74, pickType: "SPREAD", isPublished: false },
+  };
+
+  it("does not show it as published", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([withdrawn]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.publishedToday.map((r) => r.id)).not.toContain("gd_withdrawn");
+    expect(result.data.openPicks).toBe(0);
+  });
+
+  it("stops suppressing that fixture's gated row", async () => {
+    // The half that matters more. While the withdrawn row counted as published
+    // it also hid the honest gated row for the same fixture, so the board went
+    // silent about the game entirely rather than showing its real state.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      {
+        id: "gd_gated_w",
+        gameId: "game_w",
+        status: "GATED",
+        reason: "Fixture reason: edge below threshold",
+        reasonCode: "EDGE_BELOW_THRESHOLD",
+        edgeIndex: 40,
+        confidence: 51,
+        modelVersion: "v5.2.7",
+        evaluatedAt,
+        game: game(),
+        pick: null,
+      },
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.id)).toEqual(["gd_gated_w"]);
+    expect(result.data.publishedToday).toHaveLength(0);
+  });
+
+  it("still shows a decision whose pick IS published", async () => {
+    // The control. Dropping every published row would also satisfy the two
+    // assertions above.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      { ...withdrawn, id: "gd_live", pick: { ...withdrawn.pick, isPublished: true } },
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.publishedToday.map((r) => r.id)).toEqual(["gd_live"]);
+    expect(result.data.openPicks).toBe(1);
   });
 });
