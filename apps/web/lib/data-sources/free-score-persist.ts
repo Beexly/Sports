@@ -418,14 +418,20 @@ export async function persistFreeScores(options?: {
         const res = await db.game.updateMany({
           where: {
             id: g.id,
-            // The has-it-started guard, repeated at write time for the same
-            // reason the score guard below is: `g.commenceTime` was read before
-            // the network work above, and a concurrent schedule refresh can
-            // postpone the game into the future in between. Checking only the
-            // in-memory copy would then still stamp a postponed game FINAL
-            // (Devin Review, #717). Re-evaluated by the database against the
-            // CURRENT row, so a row that moved forward simply matches nothing.
-            commenceTime: { lte: new Date() },
+            // The kickoff guard, repeated at write time for the same reason
+            // the score guard below is: `g.commenceTime` was read before the
+            // network work above, and a concurrent schedule refresh can move
+            // the game in between. Checking only the in-memory copy would then
+            // still stamp a moved game FINAL (Devin Review, #717).
+            //
+            // Matched on the EXACT value rather than `lte: now`. The chosen
+            // final was bound to THIS kickoff within MAX_KICKOFF_DRIFT_MS, so
+            // a correction to a DIFFERENT PAST time still satisfies `lte`
+            // while silently invalidating that binding, and the row would take
+            // a score matched to a kickoff it no longer has (Devin Review,
+            // #717). Exact implies the started check: a future `g.commenceTime`
+            // was skipped before any of this ran.
+            commenceTime: g.commenceTime,
             OR: [
               { status: { not: "FINAL" } },
               { homeScore: null },

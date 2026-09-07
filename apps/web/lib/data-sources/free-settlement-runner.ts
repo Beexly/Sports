@@ -308,10 +308,20 @@ export async function writeFreeSettlementInTx(
     // after picks were already graded against it (Devin Review + cubic, #717).
     // Same OR the score persister already carries: permit a row that is not
     // FINAL, one with no score yet, or one that agrees with us.
+    //
+    // The kickoff is matched on its EXACT value, not `lte: settledAt`. The
+    // final was bound to the kickoff read at the top of this transaction,
+    // within MAX_KICKOFF_DRIFT_MS, so a correction to a DIFFERENT PAST time
+    // still satisfies `lte` while silently invalidating that binding: the row
+    // would take a score matched to a kickoff it no longer has (Devin Review,
+    // #717). The scoreless branch above was already exact for the same reason;
+    // this branch was not, which is the same sibling-branch gap a fix in this
+    // file has now left twice. Exact implies `lte` here: the guard at the top
+    // already refused anything not in the past.
     const scored = await tx.game.updateMany({
       where: {
         id: args.gameId,
-        commenceTime: { lte: args.settledAt },
+        commenceTime: currentKickoff.commenceTime,
         OR: [
           { status: { not: "FINAL" } },
           { homeScore: null },
@@ -341,8 +351,13 @@ export async function writeFreeSettlementInTx(
         where: { id: args.gameId },
         select: { commenceTime: true },
       });
+      // ANY change to the kickoff is a schedule correction, not a score
+      // conflict. Comparing against settledAt would call a correction to a
+      // different PAST time a SCORE mismatch and send the operator looking for
+      // a disagreeing final that does not exist.
       const movedOut =
-        after === null || after.commenceTime.getTime() > args.settledAt.getTime();
+        after === null ||
+        after.commenceTime.getTime() !== currentKickoff.commenceTime.getTime();
       throw new SettlementRaceRollback(
         args.pickId,
         args.gameId,

@@ -440,6 +440,32 @@ describe("settlement write under a mid-transaction schedule correction", () => {
     expect(store.game.commenceTime).toEqual(CORRECTED);
   });
 
+  it("SCORED sibling: refuses when the game is corrected to another PAST time", async () => {
+    // The scoreless branch above was made exact in an earlier round and this
+    // one was left on `lte: settledAt`. The final was bound to the kickoff read
+    // at the top of the transaction, within MAX_KICKOFF_DRIFT_MS, so a
+    // correction to a DIFFERENT past time still satisfies `lte` while silently
+    // invalidating that binding: the row would take a score matched to a
+    // kickoff it no longer has (Devin Review, #717). Same fix, same reason, the
+    // branch nobody was looking at.
+    const CORRECTED = new Date(KICKOFF.getTime() - 60 * 60 * 1000);
+    store.onAfterGameRead = (call) => {
+      if (call === 1) store.game = { ...store.game, commenceTime: CORRECTED };
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), ARGS);
+
+    expect(written.count).toBe(0);
+    // A moved kickoff is a schedule correction, never a score conflict: telling
+    // the operator SCORE would send them looking for a disagreeing final that
+    // does not exist.
+    expect(written.refusal).toBe("ROLLED_BACK_KICKOFF");
+    expect(store.pick.result).toBe("PENDING");
+    expect(store.game.commenceTime).toEqual(CORRECTED);
+    // The score never landed on a row whose kickoff no longer matches it.
+    expect(store.game.status).not.toBe("FINAL");
+  });
+
   it("reports the CURRENT kickoff when the pick write is what refused, not the one we loaded", async () => {
     // Three code paths return KICKOFF_MOVED. Two carried kickoffAt from the
     // start; the one reached when the reread passes and the pick write's

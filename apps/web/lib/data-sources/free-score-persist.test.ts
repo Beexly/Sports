@@ -375,10 +375,12 @@ describe("persistFreeScores — clearance gating (GSE-SEC-050/051)", () => {
     expect(mocks.dbGameUpdateMany).toHaveBeenCalledWith({
       where: {
         id: "game-1",
-        // The has-it-started guard is re-evaluated by the database at write
-        // time, so a game postponed between the read and the write matches
-        // nothing instead of being stamped FINAL.
-        commenceTime: { lte: expect.any(Date) },
+        // The kickoff guard is re-evaluated by the database at write time, so
+        // a game moved between the read and the write matches nothing instead
+        // of being stamped FINAL. Matched on the EXACT kickoff the final was
+        // bound to, not `lte: now`: a correction to a different PAST time
+        // satisfies `lte` while invalidating that binding.
+        commenceTime: expect.any(Date),
         OR: [
           { status: { not: "FINAL" } },
           { homeScore: null },
@@ -996,10 +998,58 @@ describe("persistFreeScores — guards that must hold at write time, not just re
 
     expect(mocks.dbGameUpdateMany).toHaveBeenCalledTimes(1);
     const where = (mocks.dbGameUpdateMany.mock.calls[0]![0] as {
-      where: { commenceTime?: { lte?: Date } };
+      where: { commenceTime?: Date };
     }).where;
-    // The database, not this process, decides whether the game has started.
-    expect(where.commenceTime?.lte).toBeInstanceOf(Date);
+    // The database, not this process, decides whether the game still carries
+    // the kickoff the final was bound to. Matched on the EXACT value rather
+    // than `lte: now`, which a correction to a different PAST time satisfies
+    // while invalidating the binding (Devin Review, #717).
+    expect(where.commenceTime).toBeInstanceOf(Date);
+    expect(where.commenceTime!.getTime()).toBe(startedTwoHoursAgo.getTime());
+  });
+
+  it("refuses the write when the kickoff is corrected to a DIFFERENT PAST time", async () => {
+    // The final was bound to the kickoff read before the network work, within
+    // MAX_KICKOFF_DRIFT_MS. A correction to another past time keeps the row
+    // "started", so `lte: now` would still let the write land and the row would
+    // take a score matched to a kickoff it no longer has.
+    const startedTwoHoursAgo = new Date(Date.now() - 2 * HOUR);
+    arm(
+      [
+        makeGameRow({
+          id: "game-corrected",
+          homeTeamName: "Phillies",
+          awayTeamName: "Braves",
+          commenceTime: startedTwoHoursAgo,
+          homeScore: null,
+          awayScore: null,
+        }),
+      ],
+      [
+        makeTrustedFinal({
+          date: startedTwoHoursAgo.toISOString().slice(0, 10),
+          startIso: startedTwoHoursAgo.toISOString(),
+          homeName: "Phillies",
+          homeAbbr: "PHI",
+          homeScore: 4,
+          awayName: "Braves",
+          awayAbbr: "ATL",
+          awayScore: 2,
+          confirmation: "CONFIRMED",
+        }),
+      ],
+    );
+    // The database sees a row whose kickoff has since been corrected, so the
+    // exact-value predicate matches nothing.
+    mocks.dbGameUpdateMany.mockResolvedValue({ count: 0 });
+
+    const result = await persistFreeScores({ sportKey: "baseball_mlb" });
+
+    expect(result.gamesUpdated).toBe(0);
+    const where = (mocks.dbGameUpdateMany.mock.calls[0]![0] as {
+      where: { commenceTime?: Date };
+    }).where;
+    expect(where.commenceTime).toBeInstanceOf(Date);
   });
 
   it("accepts a date-only final one calendar day off, which UTC rollover makes routine", async () => {
