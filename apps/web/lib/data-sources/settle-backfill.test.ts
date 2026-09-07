@@ -275,8 +275,10 @@ describe("backfillStaleSettlement", () => {
     game: typeof game;
     pickUpdates: number;
     events: number;
+    holdCalls: number;
+    moveKickoff: () => void;
   } {
-    const state = { game, pickUpdates: 0, events: 0 };
+    const state = { game, pickUpdates: 0, events: 0, holdCalls: 0, kickoffMoved: false };
     const db: BackfillDb = {
       pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
       $transaction: vi.fn(async (fn) =>
@@ -295,6 +297,12 @@ describe("backfillStaleSettlement", () => {
           postSettlementWork: { createMany: vi.fn(async () => ({ count: 0 })) },
           game: {
             updateMany: vi.fn(async (args: unknown) => {
+              const w = (args as { where: Record<string, unknown> }).where;
+              // The unconditional kickoff HOLD: exact-value match, no OR.
+              if (w["commenceTime"] instanceof Date) {
+                state.holdCalls += 1;
+                return state.kickoffMoved ? { count: 0 } : { count: 1 };
+              }
               const where = (args as { where: { OR: Array<Record<string, unknown>> } }).where;
               const data = (args as { data: { homeScore: number; awayScore: number; status: string } }).data;
               const g = state.game;
@@ -327,8 +335,41 @@ describe("backfillStaleSettlement", () => {
       get events() {
         return state.events;
       },
+      get holdCalls() {
+        return state.holdCalls;
+      },
+      moveKickoff: () => {
+        state.kickoffMoved = true;
+      },
     };
   }
+
+  it("rolls the settlement back when the kickoff moved, instead of grading a game that has not been played", async () => {
+    // The pick write locks the PICK row, so a schedule correction can still
+    // land between it and the game statement. The pick is already written by
+    // then, so refusing has to mean rolling back (Devin Review, #717).
+    const fake = mismatchDb({ status: "SCHEDULED", homeScore: null, awayScore: null });
+    fake.moveKickoff();
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+
+    const result = await backfillStaleSettlement({ db: fake.db, now: NOW, fetchScores });
+
+    expect(result.settled).toBe(0);
+    expect(result.held).toBe(1);
+    expect(result.unresolved[0]!.reason).toBe("KICKOFF_MOVED");
+    expect(fake.holdCalls).toBe(1);
+  });
+
+  it("holds the game on a settlement that writes no score, which had no game check at all before", async () => {
+    // A scoreless settlement never reaches the scored branch, so the hold is
+    // the ONLY game statement it makes. Unconditional is the point.
+    const fake = mismatchDb({ status: "SCHEDULED", homeScore: null, awayScore: null });
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+
+    await backfillStaleSettlement({ db: fake.db, now: NOW, fetchScores });
+
+    expect(fake.holdCalls).toBe(1);
+  });
 
   it("rolls the whole settlement back when the game already carries a different FINAL, rather than grading the pick against a score its own game row contradicts", async () => {
     // The persister used to refuse only the SCORE write and let the pick

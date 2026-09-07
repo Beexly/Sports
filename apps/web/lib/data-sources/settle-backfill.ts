@@ -58,7 +58,7 @@ export type UnresolvedStalePick = {
   gameId: string;
   commenceTime: string;
   ageDays: number;
-  reason: "NO_FINAL" | "ORIENT_FAIL" | "AMBIGUOUS_MATCH" | "DISPUTED" | "SCORE_MISMATCH";
+  reason: "NO_FINAL" | "ORIENT_FAIL" | "AMBIGUOUS_MATCH" | "DISPUTED" | "SCORE_MISMATCH" | "KICKOFF_MOVED";
   sourcesTried: readonly string[];
   olderThanGrace: boolean;
 };
@@ -146,6 +146,12 @@ export type PersistSettledArgs = {
   awayScore: number | null;
   /** Source ids the final came from, recorded as settle-time evidence (C-120). */
   sources?: readonly string[];
+  /**
+   * The kickoff this candidate was loaded with. The final was bound to it
+   * before the network work, so the write must refuse if the row no longer
+   * carries it (Devin Review, #717).
+   */
+  commenceTime: Date;
 };
 
 /**
@@ -155,7 +161,7 @@ export type PersistSettledArgs = {
  */
 export type PersistSettledOutcome = {
   readonly written: boolean;
-  readonly refusal: "SCORE_MISMATCH" | null;
+  readonly refusal: "SCORE_MISMATCH" | "KICKOFF_MOVED" | null;
 };
 
 export async function backfillStaleSettlement(input: {
@@ -324,12 +330,28 @@ export async function backfillStaleSettlement(input: {
         homeScore: o.homeScore,
         awayScore: o.awayScore,
         sources: o.sources,
+        commenceTime: row.game.commenceTime,
       });
       const persisted: PersistSettledOutcome =
         typeof outcome === "boolean" ? { written: outcome, refusal: null } : outcome;
       if (persisted.written) {
         settled++;
         continue;
+      }
+      if (persisted.refusal === "KICKOFF_MOVED") {
+        // The game moved while this cycle was out on the network. The whole
+        // settlement rolled back, so the pick is still PENDING and the next
+        // cycle re-inspects it against the corrected kickoff.
+        held++;
+        unresolved.push({
+          pickId: o.pickId,
+          gameId: row.game.id,
+          commenceTime: row.game.commenceTime.toISOString(),
+          ageDays: Math.round(ageDays * 10) / 10,
+          reason: "KICKOFF_MOVED",
+          sourcesTried: o.sources.length ? o.sources : sourcesTried,
+          olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+        });
       }
       if (persisted.refusal === "SCORE_MISMATCH") {
         // The Game row already carries a DIFFERENT recorded final. The whole
@@ -371,6 +393,13 @@ export async function backfillStaleSettlement(input: {
  * commit, and a throw is the only way to undo the pick write that already
  * happened earlier in the same transaction.
  */
+class BackfillKickoffMoved extends Error {
+  constructor(readonly gameId: string) {
+    super(`settle-backfill: kickoff moved for game ${gameId}`);
+    this.name = "BackfillKickoffMoved";
+  }
+}
+
 class BackfillScoreMismatch extends Error {
   constructor(readonly gameId: string) {
     super(`settle-backfill: recorded final conflicts for game ${gameId}`);
@@ -385,6 +414,7 @@ function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<P
       return await persistInTx(db, args);
     } catch (err) {
       if (err instanceof BackfillScoreMismatch) return { written: false, refusal: "SCORE_MISMATCH" };
+      if (err instanceof BackfillKickoffMoved) return { written: false, refusal: "KICKOFF_MOVED" };
       throw err;
     }
   };
@@ -394,8 +424,20 @@ async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<Pe
   const $transaction = db.$transaction;
   if (!$transaction) return { written: false, refusal: null };
   const written = await $transaction(async (tx) => {
+    // LOCK ORDER: PICK then GAME, the order every settlement transaction here
+    // uses (free-settlement-runner, zero-sit). Taking them the other way round
+    // deadlocks against those lanes, whose candidate sets overlap with this one.
+    //
+    // The started bound rides in the WRITE, not only in the candidate read: a
+    // schedule correction can commit while this lane is out fetching
+    // scoreboards, and grading a game that has not been played is the one
+    // outcome this lane must never commit (Devin Review, #717).
     const updated = await tx.pick.updateMany({
-      where: { id: args.pickId, result: "PENDING" },
+      where: {
+        id: args.pickId,
+        result: "PENDING",
+        game: { commenceTime: { lte: args.settledAt } },
+      },
       data: { result: args.result, settledAt: args.settledAt },
     });
     if (updated.count === 0) return updated;
@@ -427,6 +469,22 @@ async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<Pe
         { subjectId: args.pickId, kind: "SNAPSHOT_OUTCOME" },
       ],
     );
+    // HOLD THE GAME ROW, unconditionally, before this transaction commits.
+    // The pick statement locks the PICK, so a correction can still land between
+    // it and anything below. Matched on the EXACT kickoff the candidate carried,
+    // which refuses any move at all, including to a different PAST time that
+    // would silently invalidate the final's 12h binding. Refusing means rolling
+    // back, never returning: the pick write above has already happened.
+    //
+    // Unconditional, NOT only on the scored path: a scoreless VOID writes no
+    // other game statement, so without this it committed with no game check at
+    // all (Devin Review, #717).
+    const held = await tx.game.updateMany({
+      where: { id: args.gameId, commenceTime: args.commenceTime },
+      data: { commenceTime: args.commenceTime },
+    });
+    if (held.count === 0) throw new BackfillKickoffMoved(args.gameId);
+
     if (args.homeScore != null && args.awayScore != null) {
       // Never overwrite a recorded final with a different one. Same rule as
       // free-score-persist.ts (SCORE_MISMATCH_CROSS_PATH), but the rule rides
