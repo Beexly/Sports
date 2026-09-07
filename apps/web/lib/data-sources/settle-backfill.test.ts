@@ -96,6 +96,43 @@ describe("backfillStaleSettlement", () => {
     expect(fetchScores).toHaveBeenCalled();
   });
 
+  it("surfaces a write that neither succeeded nor named a refusal, instead of dropping the pick from every count", async () => {
+    // `{written:false, refusal:null}` used to fall through all three branches:
+    // not settled, not held, not listed. The pick was still PENDING and
+    // appeared nowhere, which is exactly the silent sit the founder policy
+    // forbids. Reached here by an injected boolean persister returning false,
+    // and in production by a 0-row updateMany when another lane settled the
+    // pick first (Devin Review, #717).
+    const persistSettled = vi.fn(async () => false);
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+    };
+
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores, persistSettled });
+
+    expect(result.settled).toBe(0);
+    // Not a hold: this lane made no decision, so it is counted apart.
+    expect(result.held).toBe(0);
+    expect(result.writeNotApplied).toBe(1);
+    expect(result.unresolved).toHaveLength(1);
+    expect(result.unresolved[0]!.reason).toBe("WRITE_NOT_APPLIED");
+    expect(result.unresolved[0]!.pickId).toBe("pick-1");
+  });
+
+  it("counts a structured written:false with no refusal the same way as the boolean form", async () => {
+    const persistSettled = vi.fn(async () => ({ written: false, refusal: null }) as const);
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+    };
+
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores, persistSettled });
+
+    expect(result.writeNotApplied).toBe(1);
+    expect(result.unresolved[0]!.reason).toBe("WRITE_NOT_APPLIED");
+  });
+
   it("keeps a >14-day unresolvable pick PENDING with an operator flag (no VOID)", async () => {
     const persistSettled = vi.fn(async () => true);
     const fetchScores = vi.fn(async () => scores([]));
@@ -262,35 +299,246 @@ describe("backfillStaleSettlement", () => {
     expect(whereOf(2)).not.toHaveProperty("sport");
   });
 
-  it("refuses to overwrite an existing FINAL score that disagrees with incoming score", async () => {
-    // Regression guard: defaultPersist must check for a score mismatch before
-    // writing, matching the SCORE_MISMATCH_CROSS_PATH pattern from free-score-persist.ts.
-    const gameUpdate = vi.fn();
-    const gameFindUnique = vi.fn(async () => ({
-      status: "FINAL",
-      homeScore: 24,
-      awayScore: 17,
-    }));
+  /**
+   * A db whose settle write matches zero rows, with a probe answering WHY.
+   * Prisma's real updateMany returns count 0 for a concurrently-settled pick
+   * AND for one whose kickoff moved past settledAt; only the probe separates
+   * them (Devin Review, #717).
+   */
+  function raceDb(probe: { result: string; commenceTime: Date } | null): BackfillDb {
+    return {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+      $transaction: vi.fn(async (fn) =>
+        fn({
+          pick: {
+            updateMany: vi.fn(async () => ({ count: 0 })),
+            findUnique: vi.fn(async () =>
+              probe === null
+                ? null
+                : { result: probe.result, game: { commenceTime: probe.commenceTime } },
+            ),
+          },
+          pickSettlementEvent: { create: vi.fn(async () => undefined) },
+          postSettlementWork: {},
+          game: {
+            updateMany: vi.fn(async () => ({ count: 1 })),
+            findUnique: vi.fn(async () => ({ homeScore: null, awayScore: null })),
+          },
+        }),
+      ),
+    };
+  }
+
+  it("does not list a pick another lane already settled as unresolved work", async () => {
+    // The write refused exactly as designed and the pick is DONE. Counting it
+    // held, or listing it unresolved, reports finished work as a backlog item.
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const result = await backfillStaleSettlement({
+      db: raceDb({ result: "WIN", commenceTime: new Date(NOW.getTime() - 5 * 24 * 3600e3) }),
+      now: NOW,
+      fetchScores,
+    });
+
+    expect(result.alreadySettledElsewhere).toBe(1);
+    expect(result.settled).toBe(0);
+    expect(result.held).toBe(0);
+    expect(result.writeNotApplied).toBe(0);
+    expect(result.unresolved).toHaveLength(0);
+  });
+
+  it("reports a kickoff that moved past settledAt as KICKOFF_MOVED, not as an undiagnosed write", async () => {
+    // Same count 0, different pick state: still PENDING, and its loaded age is
+    // now measured against a kickoff the row no longer carries.
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const result = await backfillStaleSettlement({
+      db: raceDb({ result: "PENDING", commenceTime: new Date(NOW.getTime() + 6 * 3600e3) }),
+      now: NOW,
+      fetchScores,
+    });
+
+    expect(result.held).toBe(1);
+    expect(result.writeNotApplied).toBe(0);
+    expect(result.alreadySettledElsewhere).toBe(0);
+    expect(result.unresolved[0]!.reason).toBe("KICKOFF_MOVED");
+    expect(result.unresolved[0]!.kickoffStale).toBe(true);
+    expect(result.unresolved[0]!.olderThanGrace).toBe(false);
+  });
+
+  it("falls back to the undiagnosed outcome when the shim cannot probe", async () => {
+    // A db double without findUnique keeps the pre-existing behaviour rather
+    // than crashing: the optional method is why every other injected shim in
+    // this repo still works unchanged.
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const result = await backfillStaleSettlement({
+      db: raceDb(null),
+      now: NOW,
+      fetchScores,
+    });
+
+    expect(result.writeNotApplied).toBe(1);
+    expect(result.unresolved[0]!.reason).toBe("WRITE_NOT_APPLIED");
+  });
+
+  /**
+   * A db whose game row is real enough to evaluate the guard predicate the
+   * persister now writes, so these tests exercise the rule itself rather than
+   * a stub's return value. Prisma rolls the transaction back when the callback
+   * throws; the fake cannot undo its own writes, so what it proves is that the
+   * persister THROWS instead of returning, which is what triggers that
+   * rollback, and that the lane refuses to count the pick as settled.
+   */
+  function mismatchDb(game: { status: string; homeScore: number | null; awayScore: number | null }): {
+    db: BackfillDb;
+    game: typeof game;
+    pickUpdates: number;
+    events: number;
+    holdCalls: number;
+    moveKickoff: () => void;
+  } {
+    const state = { game, pickUpdates: 0, events: 0, holdCalls: 0, kickoffMoved: false };
     const db: BackfillDb = {
       pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
-      $transaction: vi.fn(async (fn) => {
-        const tx = {
-          pick: { updateMany: vi.fn(async () => ({ count: 1 })) },
-          pickSettlementEvent: { create: vi.fn() },
+      $transaction: vi.fn(async (fn) =>
+        fn({
+          pick: {
+            updateMany: vi.fn(async () => {
+              state.pickUpdates += 1;
+              return { count: 1 };
+            }),
+          },
+          pickSettlementEvent: {
+            create: vi.fn(async () => {
+              state.events += 1;
+            }),
+          },
           postSettlementWork: { createMany: vi.fn(async () => ({ count: 0 })) },
-          game: { update: gameUpdate, findUnique: gameFindUnique },
-        };
-        return fn(tx);
-      }),
+          game: {
+            updateMany: vi.fn(async (args: unknown) => {
+              const w = (args as { where: Record<string, unknown> }).where;
+              // The unconditional kickoff HOLD: exact-value match, no OR.
+              if (w["commenceTime"] instanceof Date) {
+                state.holdCalls += 1;
+                return state.kickoffMoved ? { count: 0 } : { count: 1 };
+              }
+              const where = (args as { where: { OR: Array<Record<string, unknown>> } }).where;
+              const data = (args as { data: { homeScore: number; awayScore: number; status: string } }).data;
+              const g = state.game;
+              const allowed = where.OR.some((clause) => {
+                if ("status" in clause) return g.status !== "FINAL";
+                if ("homeScore" in clause && clause["homeScore"] === null) return g.homeScore === null;
+                if ("awayScore" in clause && clause["awayScore"] === null) return g.awayScore === null;
+                return g.homeScore === clause["homeScore"] && g.awayScore === clause["awayScore"];
+              });
+              if (!allowed) return { count: 0 };
+              state.game = { status: data.status, homeScore: data.homeScore, awayScore: data.awayScore };
+              return { count: 1 };
+            }),
+            findUnique: vi.fn(async () => ({
+              homeScore: state.game.homeScore,
+              awayScore: state.game.awayScore,
+            })),
+          },
+        }),
+      ),
     };
+    return {
+      db,
+      get game() {
+        return state.game;
+      },
+      get pickUpdates() {
+        return state.pickUpdates;
+      },
+      get events() {
+        return state.events;
+      },
+      get holdCalls() {
+        return state.holdCalls;
+      },
+      moveKickoff: () => {
+        state.kickoffMoved = true;
+      },
+    };
+  }
+
+  it("rolls the settlement back when the kickoff moved, instead of grading a game that has not been played", async () => {
+    // The pick write locks the PICK row, so a schedule correction can still
+    // land between it and the game statement. The pick is already written by
+    // then, so refusing has to mean rolling back (Devin Review, #717).
+    const fake = mismatchDb({ status: "SCHEDULED", homeScore: null, awayScore: null });
+    fake.moveKickoff();
     const fetchScores = vi.fn(async () => scores([navyFinal()]));
-    await backfillStaleSettlement({ db, now: NOW, fetchScores });
-    // gameFindUnique was called to check existing scores
-    expect(gameFindUnique).toHaveBeenCalledWith({
-      where: { id: "game-1" },
-      select: { status: true, homeScore: true, awayScore: true },
-    });
-    // gameUpdate should NOT have been called because scores disagree (24-17 vs 21-17)
-    expect(gameUpdate).not.toHaveBeenCalled();
+
+    const result = await backfillStaleSettlement({ db: fake.db, now: NOW, fetchScores });
+
+    expect(result.settled).toBe(0);
+    expect(result.held).toBe(1);
+    expect(result.unresolved[0]!.reason).toBe("KICKOFF_MOVED");
+    expect(fake.holdCalls).toBe(1);
+    // The kickoff this age was measured against is the one the write just
+    // proved is gone, so the record says so and withholds escalation rather
+    // than reporting a game that moved into the future as weeks overdue.
+    expect(result.unresolved[0]!.kickoffStale).toBe(true);
+    expect(result.unresolved[0]!.olderThanGrace).toBe(false);
+  });
+
+  it("holds the game on a settlement that writes no score, which had no game check at all before", async () => {
+    // A scoreless settlement never reaches the scored branch, so the hold is
+    // the ONLY game statement it makes. Unconditional is the point.
+    const fake = mismatchDb({ status: "SCHEDULED", homeScore: null, awayScore: null });
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+
+    await backfillStaleSettlement({ db: fake.db, now: NOW, fetchScores });
+
+    expect(fake.holdCalls).toBe(1);
+  });
+
+  it("rolls the whole settlement back when the game already carries a different FINAL, rather than grading the pick against a score its own game row contradicts", async () => {
+    // The persister used to refuse only the SCORE write and let the pick
+    // settlement it had already made stand, with the comment "the pick
+    // settlement already happened above". That commits a grade computed from
+    // the incoming score onto a row that keeps a different one, and records
+    // nothing anywhere. The grade rests on the same contested number as the
+    // score, so both go or neither does.
+    const fake = mismatchDb({ status: "FINAL", homeScore: 24, awayScore: 17 });
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+
+    const result = await backfillStaleSettlement({ db: fake.db, now: NOW, fetchScores });
+
+    // The recorded final is untouched: 21-17 (the incoming pair) never lands.
+    expect(fake.game).toEqual({ status: "FINAL", homeScore: 24, awayScore: 17 });
+    // And the pick is NOT counted settled. It is recorded, not dropped: the
+    // zero-sit lane takes it from here under SCORE_MISMATCH_CROSS_PATH.
+    expect(result.settled).toBe(0);
+    expect(result.held).toBe(1);
+    expect(result.unresolved).toHaveLength(1);
+    expect(result.unresolved[0]!.reason).toBe("SCORE_MISMATCH");
+    expect(result.unresolved[0]!.pickId).toBe("pick-1");
+    expect(result.unresolved[0]!.kickoffStale).toBe(false);
+  });
+
+  it("settles normally when the game carries no recorded final", async () => {
+    const fake = mismatchDb({ status: "SCHEDULED", homeScore: null, awayScore: null });
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+
+    const result = await backfillStaleSettlement({ db: fake.db, now: NOW, fetchScores });
+
+    expect(result.settled).toBe(1);
+    expect(result.unresolved).toHaveLength(0);
+    expect(fake.game).toEqual({ status: "FINAL", homeScore: 17, awayScore: 16 });
+    expect(fake.events).toBe(1);
+  });
+
+  it("is idempotent: a re-run against the same recorded final settles instead of rolling back", async () => {
+    // The guard must separate "a DIFFERENT final is recorded" from "this exact
+    // final is already recorded". Only the first is a conflict.
+    const fake = mismatchDb({ status: "FINAL", homeScore: 17, awayScore: 16 });
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+
+    const result = await backfillStaleSettlement({ db: fake.db, now: NOW, fetchScores });
+
+    expect(result.settled).toBe(1);
+    expect(result.unresolved).toHaveLength(0);
+    expect(fake.game).toEqual({ status: "FINAL", homeScore: 17, awayScore: 16 });
   });
 });

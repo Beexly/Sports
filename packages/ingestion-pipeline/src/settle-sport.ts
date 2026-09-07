@@ -688,6 +688,26 @@ export async function settleSport(
                 result,
                 settledAt,
                 status: "PENDING",
+                // SETTLE-TIME EVIDENCE (C-120), same contract as the free
+                // lanes: the score this grade was computed from, recorded
+                // inside the settlement transaction. Nothing else records it,
+                // so once a game row is overwritten there is no way to tell a
+                // MIS-GRADED pick from one graded correctly against a score
+                // that later changed.
+                //
+                // `sources` is empty on purpose: the paid path grades from the
+                // odds provider's normalized score, which carries no per-score
+                // source ids, and inventing one would put a fact in the
+                // evidence record that nothing observed. The lane is
+                // identified by `path`.
+                payload: {
+                  settledWith: {
+                    homeScore: score.homeScore,
+                    awayScore: score.awayScore,
+                    sources: [],
+                    path: "paid",
+                  },
+                },
               },
             });
             // Durable post-settlement work-state (6.10): the CLV grade and

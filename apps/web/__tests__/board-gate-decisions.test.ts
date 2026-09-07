@@ -295,4 +295,147 @@ describe("board loaders with persisted gate decisions", () => {
     expect(anonymousResult.data.publishedToday[0]?.rankingP).toBeNull();
     expect(anonymousResult.data.publishedToday[0]?.rankingSource).toBeNull();
   });
+
+  describe("loadBoardState — fallback lanes never double-count a fixture (C-117)", () => {
+    const futureGame = {
+      id: "game_overlap",
+      commenceTime: new Date("2026-05-22T23:00:00.000Z"),
+      updatedAt: new Date("2026-05-22T15:00:00.000Z"),
+      dataQualityScore: 80,
+      ...game(),
+    };
+
+    it("labels a not-yet-started game GATED_TODAY, never SCORING_NOW", async () => {
+      // The fallback's two game queries overlap by construction: the same mock
+      // serves both, exactly as one fixture satisfying both would in production.
+      // The scoring query selects `commenceTime >= now AND status SCHEDULED`, so
+      // every row it returns is a game that has NOT started. Lane precedence
+      // ranks SCORING_NOW above GATED_TODAY, which would announce a game as
+      // being scored before it kicks off (Devin Review, #717).
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      mocks.gameFindMany.mockResolvedValue([futureGame]);
+
+      const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+      const rows = [...result.data.scoringNow, ...result.data.gatedTodayRows];
+      expect(rows.filter((r) => r.gameId === "game_overlap")).toHaveLength(1);
+      expect(result.data.scoringNow).toHaveLength(0);
+      expect(result.data.gatedTodayRows[0]?.status).toBe("GATED_TODAY");
+    });
+
+    it("asks the database only for games that have STARTED, so SCORING_NOW is truthful at the source", async () => {
+      // The suppression above is a backstop, not the fix. It only removes a
+      // scoring row when a gated row shares the id, and the gated query covers
+      // today's window — so a game further out had no gated twin and stayed
+      // labelled SCORING_NOW. The query predicate is what makes the label
+      // honest for every future game, so pin it directly (Devin Review, #717).
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      mocks.gameFindMany.mockResolvedValue([]);
+
+      await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+      const scoringWhere = (mocks.gameFindMany.mock.calls[0]?.[0] as {
+        where: { commenceTime?: Record<string, unknown>; status?: unknown };
+      }).where;
+      // Started, not upcoming.
+      expect(scoringWhere.commenceTime).toHaveProperty("lte");
+      expect(scoringWhere.commenceTime).not.toHaveProperty("gte");
+      // And not yet FINAL.
+      expect(scoringWhere.status).toEqual({ in: ["LIVE", "SCHEDULED"] });
+    });
+
+    it("suppresses a generic lane row for a fixture that already has a published pick", async () => {
+      // Published rows key on the real pickType and the generic lanes on
+      // NO_PICK, so their keys never collide and the collapse alone cannot pair
+      // them. The gated query already excludes published games; the scoring
+      // query does not, so the same fixture appeared twice.
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([
+        {
+          id: "pick_pub",
+          gameId: "game_overlap",
+          pickType: "SPREAD",
+          selection: "BOS -1.5",
+          confidence: 71,
+          edgeScore: 63,
+          factorBreakdown: null,
+          generatedAt: evaluatedAt,
+          modelVersion: "v5.1.0",
+          tier: "FREE",
+          game: game(),
+        },
+      ]);
+      mocks.gameFindMany.mockResolvedValue([futureGame]);
+
+      const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+      expect(result.data.publishedToday).toHaveLength(1);
+      expect(result.data.scoringNow.some((r) => r.gameId === "game_overlap")).toBe(false);
+      expect(result.data.gatedTodayRows.some((r) => r.gameId === "game_overlap")).toBe(false);
+      // And the counters agree with the rows actually shown.
+      expect(result.data.openPicks).toBe(1);
+      expect(result.data.gatedToday).toBe(0);
+    });
+  });
+
+  describe("loadBoardState — one fixture, one row (C-117)", () => {
+    it("collapses repeated gate decisions for one game and keeps the counts honest", async () => {
+      // Measured on a live slate: 58 rows over 18 fixtures, one matchup shown
+      // four times as two contradictory variants. GateDecision has no unique
+      // constraint and the query takes the latest 100 with no per-game collapse,
+      // so repeated evaluations of one game each became a row.
+      mocks.gateDecisionFindMany.mockResolvedValue([
+        {
+          id: "gd_a",
+          gameId: "game_dupe",
+          status: "PUBLISHED",
+          reason: "Cleared publish threshold.",
+          edgeIndex: 60,
+          confidence: 57,
+          evaluatedAt,
+          modelVersion: "v5.1.0",
+          game: game(),
+          pick: { selection: "BOS -1.5", confidence: 57 },
+        },
+        {
+          id: "gd_b",
+          gameId: "game_dupe",
+          status: "PUBLISHED",
+          reason: "Cleared publish threshold.",
+          edgeIndex: 72,
+          confidence: 88,
+          evaluatedAt,
+          modelVersion: "v5.1.0",
+          game: game(),
+          pick: { selection: "BOS -1.5", confidence: 88 },
+        },
+      ]);
+  
+      const result = await loadBoardState(new Date("2026-05-22T18:00:00.000Z"), proViewer);
+  
+      // One fixture, one row — the free visitor and the subscriber can no longer
+      // be shown 57 LEAN and 88 STRONG_PLAY for the same game.
+      expect(result.data.publishedToday).toHaveLength(1);
+      expect(result.data.publishedToday[0]!.confidence).toBe(88);
+      // The board's own numbers describe the rows it actually shows. Deduping
+      // after the counts were taken would leave these disagreeing.
+      expect(result.data.openPicks).toBe(1);
+      expect(result.data.sportsWatched).toBe(1);
+    });
+  
+    it("asks the database only for decisions on games that were not merged away", async () => {
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      mocks.gameFindMany.mockResolvedValue([]);
+  
+      await loadBoardState(new Date("2026-05-22T18:00:00.000Z"), proViewer);
+  
+      const where = mocks.gateDecisionFindMany.mock.calls[0]?.[0]?.where as {
+        game?: { mergedIntoGameId?: null };
+      };
+      expect(where.game?.mergedIntoGameId).toBeNull();
+    });
+  });
 });

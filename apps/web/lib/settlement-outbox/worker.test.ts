@@ -224,6 +224,81 @@ function seedFollowerWorld(extra: FakeDbSeed = {}) {
 }
 
 describe("expansion (6.4/6.6)", () => {
+  it("carries settle-time evidence ACROSS expansion instead of destroying it", async () => {
+    // Expansion REPLACES the payload. Every other field is rebuilt from the
+    // pick and game rows on purpose, but the score the grader actually used
+    // cannot be reconstructed later — and reconstructing it from the game row
+    // is exactly the cross-check it exists for. Without this, a grader writing
+    // settle-time evidence would look correct in its own test and silently
+    // lose the record in production the moment the outbox expanded the event
+    // (C-120, and the reason C-115 cannot be root-caused today).
+    const db = makeDb({
+      events: [
+        decisiveEvent({
+          payload: {
+            settledWith: {
+              homeScore: 4,
+              awayScore: 2,
+              sources: ["espn-public-api"],
+              path: "free",
+            },
+          },
+        }),
+      ],
+      picks: [pickRow()],
+      watchlists: [{ id: "w-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" }],
+      users: [{ id: "user-1", email: "elite@example.com", emailVerified: new Date() }],
+      subscriptions: [{ id: "sub-1", userId: "user-1", endpoint: "e1", p256dh: "k", auth: "a" }],
+    });
+
+    await drainSettlementOutbox(db, eliteDeps(), NOW);
+
+    const payload = (db._tables.events.rows[0] as Row)["payload"] as Row;
+    expect(payload["settledWith"]).toEqual({
+      homeScore: 4,
+      awayScore: 2,
+      sources: ["espn-public-api"],
+      path: "free",
+    });
+    // The announcement fields are still rebuilt, not inherited.
+    expect(payload["selection"]).toBe("Lakers -3.5");
+    expect(payload["schemaVersion"]).toBe(EVENT_PAYLOAD_SCHEMA_VERSION);
+  });
+
+  it("expands an event that carries no settle-time evidence, without inventing one", async () => {
+    // Events written before the graders recorded evidence must stay
+    // deliverable, and must not gain a fabricated settledWith.
+    const db = makeDb({
+      events: [decisiveEvent()],
+      picks: [pickRow()],
+      watchlists: [{ id: "w-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" }],
+      users: [{ id: "user-1", email: "elite@example.com", emailVerified: new Date() }],
+      subscriptions: [{ id: "sub-1", userId: "user-1", endpoint: "e1", p256dh: "k", auth: "a" }],
+    });
+
+    const summary = await drainSettlementOutbox(db, eliteDeps(), NOW);
+
+    expect(summary.expandedEvents).toBe(1);
+    const payload = (db._tables.events.rows[0] as Row)["payload"] as Row;
+    expect(payload["settledWith"]).toBeUndefined();
+    expect(payload["selection"]).toBe("Lakers -3.5");
+  });
+
+  it("ignores a malformed settledWith rather than carrying a half-typed record forward", async () => {
+    const db = makeDb({
+      events: [decisiveEvent({ payload: { settledWith: { homeScore: "four", awayScore: 2 } } })],
+      picks: [pickRow()],
+      watchlists: [{ id: "w-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" }],
+      users: [{ id: "user-1", email: "elite@example.com", emailVerified: new Date() }],
+      subscriptions: [{ id: "sub-1", userId: "user-1", endpoint: "e1", p256dh: "k", auth: "a" }],
+    });
+
+    await drainSettlementOutbox(db, eliteDeps(), NOW);
+
+    const payload = (db._tables.events.rows[0] as Row)["payload"] as Row;
+    expect(payload["settledWith"]).toBeUndefined();
+  });
+
   it("freezes the payload and materializes one delivery per channel destination", async () => {
     const db = makeDb({
       events: [decisiveEvent()],

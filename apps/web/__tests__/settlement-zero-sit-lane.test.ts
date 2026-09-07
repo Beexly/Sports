@@ -156,6 +156,20 @@ type Fake = {
   loseRace: boolean;
   /** When set, pickSettlementEvent.create throws for this pick id (simulates a poison row). */
   failEventFor: string | null;
+  /**
+   * Runs after tx.pick.updateMany, inside the settlement transaction. Lets a
+   * test commit a change to the stored game between the two writes, which is
+   * the only window in which the game-cancel bound can refuse on its own.
+   */
+  afterPickWrite: (() => void) | null;
+  /** Which table each write in the settlement transaction targeted, in order. */
+  writeOrder: Array<"game" | "pick">;
+  /**
+   * Only the CANCEL writes. `gameUpdates` also holds the kickoff hold that
+   * opens the transaction, which is a lock acquisition rather than a
+   * cancellation, so assertions about cancelling address this list.
+   */
+  gameCancels: Array<Record<string, unknown>>;
 };
 
 function isStale(r: FakeRow, cutoff: Date): boolean {
@@ -171,14 +185,48 @@ function makeFake(rows: FakeRow[]): Fake {
     workEnqueued: 0,
     loseRace: false,
     failEventFor: null,
+    afterPickWrite: null,
+    writeOrder: [],
+    gameCancels: [],
     db: {
       pick: {
         findMany: async (args) => {
           const where = args["where"] as Where;
-          return rows.filter((r) => matchesWhere(r, where));
+          // Candidates come back as SNAPSHOTS, the way a real query does: the
+          // lane holds plain objects, and a later write to the stored row does
+          // not reach back into them. Tests that move a game underneath an
+          // in-flight candidate depend on this separation.
+          return rows.filter((r) => matchesWhere(r, where)).map((r) => ({ ...r, game: { ...r.game } }));
         },
       },
-      $transaction: async (fn) => fn(tx),
+      // Models ROLLBACK. persistZeroSitVoid writes the pick and then throws if
+      // the game moved, and only a rollback makes that correct; a fake that
+      // kept the write would let a test assert an outcome Postgres would never
+      // produce. Undo log over the mutable fields these lanes touch.
+      $transaction: async (fn) => {
+        const undo = rows.map((r) => ({
+          row: r,
+          result: r.result,
+          isPublished: r.isPublished,
+          status: r.game.status,
+          commenceTime: r.game.commenceTime,
+        }));
+        const eventsBefore = fake.events.length;
+        const workBefore = fake.workEnqueued;
+        try {
+          return await fn(tx);
+        } catch (err) {
+          for (const u of undo) {
+            u.row.result = u.result;
+            u.row.isPublished = u.isPublished;
+            u.row.game.status = u.status;
+            u.row.game.commenceTime = u.commenceTime;
+          }
+          fake.events.length = eventsBefore;
+          fake.workEnqueued = workBefore;
+          throw err;
+        }
+      },
     },
   };
   const tx: ZeroSitTx = {
@@ -188,6 +236,7 @@ function makeFake(rows: FakeRow[]): Fake {
         return rows.filter((r) => matchesWhere(r, where)).map((r) => ({ id: r.id }));
       },
       updateMany: async (args) => {
+        fake.writeOrder.push("pick");
         if (fake.loseRace) return { count: 0 };
         const where = args["where"] as Where;
         const data = args["data"] as { result?: string; settledAt?: Date; isPublished?: boolean };
@@ -198,6 +247,7 @@ function makeFake(rows: FakeRow[]): Fake {
           if (data.isPublished !== undefined) r.isPublished = data.isPublished;
           count++;
         }
+        fake.afterPickWrite?.();
         return { count };
       },
     },
@@ -217,13 +267,27 @@ function makeFake(rows: FakeRow[]): Fake {
     game: {
       updateMany: async (args) => {
         fake.gameUpdates.push(args);
-        const where = args["where"] as { id: string; status?: { in: string[] } };
-        const data = args["data"] as { status: string };
+        fake.writeOrder.push("game");
+        if ((args["data"] as { status?: string }).status) fake.gameCancels.push(args);
+        const where = args["where"] as {
+          id: string;
+          status?: { in: string[] };
+          commenceTime?: { lt?: Date } | Date;
+        };
+        const data = args["data"] as { status?: string; commenceTime?: Date };
         let count = 0;
         for (const r of rows) {
           if (r.game.id !== where.id) continue;
           if (where.status && !where.status.in.includes(r.game.status)) continue;
-          r.game.status = data.status;
+          // The hold matches an EXACT commenceTime; the cancel bounds it with lt.
+          if (where.commenceTime instanceof Date) {
+            if (r.game.commenceTime.getTime() !== where.commenceTime.getTime()) continue;
+          } else {
+            const before = where.commenceTime?.lt;
+            if (before && !(r.game.commenceTime < before)) continue;
+          }
+          if (data.status) r.game.status = data.status;
+          if (data.commenceTime) r.game.commenceTime = data.commenceTime;
           count++;
         }
         return { count: count > 0 ? 1 : 0 };
@@ -287,7 +351,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(ev.payload.settledAt).toBe(NOW.toISOString());
     expect(ev.payload.actor).toMatch(/zero-sit/);
     expect(fake.workEnqueued).toBe(2);
-    expect(fake.gameUpdates).toHaveLength(0);
+    expect(fake.gameCancels).toHaveLength(0);
   });
 
   it("leaves a 23h pick untouched (below the minimum age)", async () => {
@@ -386,13 +450,115 @@ describe("zero-sit lane: VOID half", () => {
     expect(fake.rows[0]!.result).toBe("VOID");
     expect(fake.rows[0]!.game.status).toBe("POSTPONED");
     expect(fake.events[0]!.payload.rcaCode).toBe("FIXTURE_NOT_FOUND");
-    expect(fake.gameUpdates).toHaveLength(1);
-    const where = (fake.gameUpdates[0] as { where: { id: string; status: { in: string[] } } }).where;
+    expect(fake.gameCancels).toHaveLength(1);
+    const where = (fake.gameCancels[0] as { where: { id: string; status: { in: string[] } } }).where;
     expect(where.id).toBe("game-p-postponed");
     expect(where.status.in).toEqual(["SCHEDULED", "LIVE"]);
     expect(where.status.in).not.toContain("POSTPONED");
     expect(where.status.in).not.toContain("FINAL");
     expect(where.status.in).not.toContain("CANCELED");
+  });
+
+  it("refuses the VOID when the game is rescheduled into the future between the candidate read and the write, and leaves the pick PENDING", async () => {
+    // EVERY void this lane issues is gated on the game having commenced more
+    // than ZERO_SIT_VOID_MIN_AGE_HOURS ago, and that age is measured on the
+    // commenceTime captured when the candidates were loaded. The scoreboard
+    // fetch sits between that read and the write, so a schedule correction can
+    // land in a window that is seconds to minutes wide. Without the kickoff
+    // bound in the WRITE, the pick is VOIDed permanently on an age that no
+    // longer holds; with it, the statement matches nothing and the pick stays
+    // PENDING for the next cycle.
+    const kickoff = hoursAgo(30);
+    const fake = makeFake([
+      row({ id: "p-moved", commenceTime: kickoff, home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    const rescheduleDuringFetch: typeof fetchScoresMultiSource = async (sport, opts) => {
+      // The reschedule commits while the lane is out on the network. The
+      // candidate the lane holds still carries the original kickoff.
+      fake.rows[0]!.game.commenceTime = daysFromNow(2);
+      return scoreboard([])(sport, opts);
+    };
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: rescheduleDuringFetch });
+
+    expect(res.voided).toBe(0);
+    expect(res.skippedByReason.WRITE_RACE_LOST).toBe(1);
+    expect(fake.rows[0]!.result).toBe("PENDING");
+    expect(fake.events).toHaveLength(0);
+    expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
+  });
+
+  it("takes the PICK row before the GAME row, the lock order every settlement lane uses", async () => {
+    // Deadlock avoidance, not style. free-settlement-runner.ts and
+    // settle-backfill.ts both write the pick before the game, and the zero-sit
+    // and free-settlement candidate sets overlap by construction: both select
+    // PENDING picks whose game has commenced. Holding the game first here made
+    // two lanes that legitimately race for the same rows acquire them in
+    // opposite orders, an ABBA deadlock Postgres resolves by aborting one
+    // transaction (Devin Review, #717).
+    const fake = makeFake([
+      row({ id: "p-order", commenceTime: hoursAgo(30), home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: scoreboard([]) });
+
+    expect(res.voided).toBe(1);
+    expect(fake.writeOrder[0]).toBe("pick");
+    expect(fake.writeOrder.indexOf("pick")).toBeLessThan(fake.writeOrder.indexOf("game"));
+    // The hold writes the kickoff back to itself, matched on that exact value,
+    // so any move refuses.
+    const hold = fake.gameUpdates[0] as { where: { commenceTime?: Date }; data: { commenceTime?: Date } };
+    expect(hold.where.commenceTime).toBeInstanceOf(Date);
+    expect(hold.data.commenceTime).toEqual(hold.where.commenceTime);
+    expect(fake.rows[0]!.game.commenceTime).toEqual(hoursAgo(30));
+  });
+
+  it("refuses at the pick write when the game moved before the transaction", async () => {
+    const fake = makeFake([
+      row({ id: "p-moved-tx", commenceTime: hoursAgo(30), home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    const rescheduleDuringFetch: typeof fetchScoresMultiSource = async (sport, opts) => {
+      fake.rows[0]!.game.commenceTime = daysFromNow(2);
+      return scoreboard([])(sport, opts);
+    };
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: rescheduleDuringFetch });
+
+    expect(res.voided).toBe(0);
+    expect(res.skippedByReason.WRITE_RACE_LOST).toBe(1);
+    expect(fake.rows[0]!.result).toBe("PENDING");
+    expect(fake.events).toHaveLength(0);
+    // The pick write's relation filter refuses first, so the game is never
+    // touched at all.
+    expect(fake.writeOrder).toEqual(["pick"]);
+  });
+
+  it("ROLLS BACK when the game moves AFTER the pick write, rather than committing a VOID on a game that will be played", async () => {
+    // The window the pick write cannot cover: its relation filter locks the
+    // PICK, so a reschedule can still commit before the game statement. The
+    // pick is already written by then, so refusing has to mean rolling back —
+    // returning would commit a permanent VOID on a future game
+    // (Devin Review, #717).
+    const fake = makeFake([
+      row({ id: "p-mid-tx", commenceTime: hoursAgo(30), home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    fake.afterPickWrite = (): void => {
+      fake.rows[0]!.game.commenceTime = daysFromNow(2);
+    };
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: scoreboard([]) });
+
+    expect(res.voided).toBe(0);
+    // A deliberate rollback is a lost race, not a poison row.
+    expect(res.skippedByReason.WRITE_RACE_LOST).toBe(1);
+    expect(res.skippedByReason.WRITE_FAILED).toBe(0);
+    // Everything the transaction had written is undone.
+    expect(fake.rows[0]!.result).toBe("PENDING");
+    expect(fake.events).toHaveLength(0);
+    expect(fake.workEnqueued).toBe(0);
+    expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
+    // It got as far as the game statement, which is what refused.
+    expect(fake.writeOrder).toEqual(["pick", "game"]);
   });
 
   it("voids FIXTURE_NOT_FOUND only when the board fetch succeeded and lists neither team, and marks the game CANCELED", async () => {
@@ -409,7 +575,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(res.gamesCanceled).toBe(1);
     expect(fake.rows[0]!.result).toBe("VOID");
     expect(fake.rows[0]!.game.status).toBe("CANCELED");
-    expect(fake.gameUpdates[0]).toMatchObject({
+    expect(fake.gameCancels[0]).toMatchObject({
       where: { id: "game-p-phantom", status: { in: ["SCHEDULED", "LIVE"] } },
       data: { status: "CANCELED" },
     });
@@ -484,7 +650,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(res.voided).toBe(1);
     expect(res.byCode.FIXTURE_NOT_FOUND).toBe(1);
     expect(res.gamesCanceled).toBe(0);
-    expect(fake.gameUpdates).toHaveLength(0);
+    expect(fake.gameCancels).toHaveLength(0);
     expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
     expect(fake.events[0]!.payload.rcaCode).toBe("FIXTURE_NOT_FOUND");
     expect(fake.events[0]!.payload.evidence).toMatchObject({ fixtureListed: false, homeListed: true, awayListed: false });
@@ -615,6 +781,47 @@ describe("zero-sit lane: VOID half", () => {
       expect(decision.rcaCode).toBe("AMBIGUOUS_TEAM_NAME");
       expect(decision.evidence).toMatchObject({ cause: "MULTIPLE_FINALS" });
     }
+  });
+
+  it("names the own-fixture hold as NO_OWN_FIXTURE, not as a city-only name", async () => {
+    // Three AMBIGUOUS_MATCH holds reach this lane and two of them carry no
+    // sources, so deriving the cause from an empty sources array reported the
+    // own-fixture hold as a city-only team name. The RCA reason is what an
+    // operator reads to diagnose a void; a wrong one is a false statement in
+    // an audit record, even though both causes void under the same code.
+    const fake = makeFake([row({ id: "p-own-fixture", commenceTime: hoursAgo(30) })]);
+    const decision = decideZeroSitVoid({
+      row: fake.rows[0]!,
+      outcome: {
+        pickId: "p-own-fixture",
+        status: "HELD",
+        reason: "AMBIGUOUS_MATCH",
+        sources: ["espn-public-api"],
+        ambiguity: "NO_OWN_FIXTURE",
+      },
+      board: [],
+      now: NOW,
+    });
+
+    expect(decision.kind).toBe("void");
+    if (decision.kind === "void") {
+      expect(decision.rcaCode).toBe("AMBIGUOUS_TEAM_NAME");
+      expect(decision.evidence).toMatchObject({ cause: "NO_OWN_FIXTURE" });
+      expect(decision.reason).toContain("own fixture");
+      expect(decision.reason).not.toContain("city-only");
+    }
+  });
+
+  it("falls back to the old sources-length inference for an outcome that carries no stated cause", async () => {
+    const fake = makeFake([row({ id: "p-legacy", commenceTime: hoursAgo(30) })]);
+    const decision = decideZeroSitVoid({
+      row: fake.rows[0]!,
+      outcome: { pickId: "p-legacy", status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] },
+      board: [],
+      now: NOW,
+    });
+
+    expect(decision.kind === "void" ? decision.evidence : null).toMatchObject({ cause: "CITY_ONLY_NAME" });
   });
 
   it("never voids a pick with a usable, consistent final (the graders own it)", async () => {

@@ -92,6 +92,84 @@ export interface BoardStatePayload {
  * number itself. Edge Index stays public by design (canSeeEdgeScore
  * is true for every tier).
  */
+/**
+ * Lane precedence when one fixture appears in more than one lane. PUBLISHED is
+ * the strongest statement we make about a game, SCORING_NOW is a live state,
+ * GATED_TODAY is the weakest ("we passed"). Published and gated are mutually
+ * exclusive by query (the gated query requires no published pick), so in
+ * practice this resolves the scoring/gated overlap the fallback path creates.
+ */
+const LANE_RANK: Record<BoardStateRow["status"], number> = {
+  PUBLISHED_TODAY: 0,
+  SCORING_NOW: 1,
+  GATED_TODAY: 2,
+};
+
+/**
+ * One fixture, one row per market (C-117).
+ *
+ * Measured on a live slate: 58 board rows covering 18 distinct fixtures, with
+ * Notre Dame v Wisconsin MONEYLINE appearing four times as two contradictory
+ * variants (FREE confidence 57 LEAN against PREMIUM confidence 88 STRONG_PLAY).
+ * A subscriber and a free visitor could be shown opposite strength readings on
+ * the same game, which is a direct hit on the product's premise.
+ *
+ * Keyed on `gameId` + `market`, NOT on the matchup string. `matchup` is built
+ * from denormalized team-name columns that differ between rows for the same
+ * fixture, and keying on names is exactly the identity guess that
+ * game-merge-plan.ts deliberately fails closed on (a bare "Los Angeles" must
+ * never prefix-match; MLB has two LA clubs). Collapsing two genuinely different
+ * games is far worse than showing one twice.
+ *
+ * WHAT THIS DOES AND DOES NOT FIX, stated plainly because the difference
+ * matters. It collapses duplicates that share a gameId: repeated GateDecision
+ * evaluations of one game in a day (GateDecision has no unique constraint and
+ * the query takes the latest 100 with no per-game collapse), and the
+ * scoring/gated cross-lane overlap. It does NOT collapse two DIFFERENT Game
+ * rows for the same real contest — that needs the rows merged (F-17), and the
+ * aliased-row filter on the queries handles only the subset already tombstoned.
+ *
+ * The winner is deterministic: strongest lane, then the most informative row
+ * (higher confidence, then higher edge), then the most recently evaluated, then
+ * the lexically smallest id so the result never depends on query order.
+ */
+export type DedupeEntry = { readonly key: string; readonly row: BoardStateRow };
+
+/**
+ * The key MUST come from the caller, not from `row.market`.
+ *
+ * `market` is redacted at row-build time: every row a non-premium viewer gets
+ * carries the literal "ALL_MARKETS", so keying on it would collapse a game's
+ * SPREAD and TOTAL into one row for FREE viewers while PRO viewers kept both.
+ * Rows and openPicks would then differ by entitlement, which is both a lost
+ * pick for the free tier and a break of the tier-invariant count contract
+ * (Devin Review, #717). Callers key on the unredacted pickType instead.
+ */
+export function dedupeBoardRows(entries: readonly DedupeEntry[]): BoardStateRow[] {
+  const best = new Map<string, BoardStateRow>();
+  for (const { key, row } of entries) {
+    const held = best.get(key);
+    if (held === undefined || outranks(row, held)) best.set(key, row);
+  }
+  return [...best.values()];
+}
+
+/** Fixture + market identity, built from values redaction never touches. */
+export function boardDedupeKey(gameId: string, pickType: string | null | undefined): string {
+  return `${gameId}\u0000${pickType ?? "NO_PICK"}`;
+}
+
+function outranks(candidate: BoardStateRow, held: BoardStateRow): boolean {
+  const laneDelta = LANE_RANK[candidate.status] - LANE_RANK[held.status];
+  if (laneDelta !== 0) return laneDelta < 0;
+  const conf = (candidate.confidence ?? -1) - (held.confidence ?? -1);
+  if (conf !== 0) return conf > 0;
+  const edge = (candidate.edgeIndex ?? -1) - (held.edgeIndex ?? -1);
+  if (edge !== 0) return edge > 0;
+  if (candidate.updatedAt !== held.updatedAt) return candidate.updatedAt > held.updatedAt;
+  return candidate.id < held.id;
+}
+
 export function redactBoardConfidence(payload: BoardStatePayload): BoardStatePayload {
   const strip = (rows: BoardStateRow[]): BoardStateRow[] =>
     rows.map((row) => (row.confidence === null ? row : { ...row, confidence: null }));
@@ -317,44 +395,66 @@ async function loadBoardStateInner(
       where: {
         isBootstrap: false,
         evaluatedAt: { gte: start, lt: end },
+        // Never show a decision about a game row that has been merged away
+        // (C-117). This is the database's own canonicity marker, so it needs
+        // no guess about which of two rows is the real fixture.
+        game: { mergedIntoGameId: null },
       },
       include: {
         game: { include: { sport: { select: { name: true } } } },
         pick: true,
       },
       orderBy: { evaluatedAt: "desc" },
-      take: 100,
+      // Bounds decisions SCANNED, not fixtures shown. GateDecision has no
+      // unique constraint, so one game evaluated repeatedly could consume a
+      // small cap and crowd every other fixture off the board before the
+      // collapse below ever ran (Devin Review, #717). Sized well above a
+      // realistic slate's decision count so the cap cannot silently drop a
+      // fixture; the collapse then reduces this to one row per fixture and
+      // market.
+      take: 500,
     });
 
     if (decisions.length > 0) {
-      const decisionRows = decisions.map((decision): BoardStateRow => ({
-        id: decision.id,
-        gameId: decision.gameId,
-        matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
-        sport: decision.game.sport.name,
-        market: isPremiumViewer
-          ? (decision.pick?.selection ?? "ALL_MARKETS")
-          : "ALL_MARKETS",
-        status:
-          decision.status === "PUBLISHED"
-            ? "PUBLISHED_TODAY"
-            : decision.status === "GATED"
-              ? "GATED_TODAY"
-              : "SCORING_NOW",
-        edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
-        confidence: decision.confidence ?? decision.pick?.confidence ?? null,
-        ...extractRankingFromFb(decision.pick?.factorBreakdown, isPremiumViewer),
-        gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
-        updatedAt: decision.evaluatedAt.toISOString(),
+      const decisionEntries = decisions.map((decision): DedupeEntry => ({
+        // Key built beside the row it belongs to. A parallel-index lookup
+        // into `decisions` would break silently the day anyone filters this
+        // list, and the failure would be a silently merged pick.
+        key: boardDedupeKey(decision.gameId, decision.pick?.pickType),
+        row: {
+          id: decision.id,
+          gameId: decision.gameId,
+          matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
+          sport: decision.game.sport.name,
+          market: isPremiumViewer
+            ? (decision.pick?.selection ?? "ALL_MARKETS")
+            : "ALL_MARKETS",
+          status:
+            decision.status === "PUBLISHED"
+              ? "PUBLISHED_TODAY"
+              : decision.status === "GATED"
+                ? "GATED_TODAY"
+                : "SCORING_NOW",
+          edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
+          confidence: decision.confidence ?? decision.pick?.confidence ?? null,
+          ...extractRankingFromFb(decision.pick?.factorBreakdown, isPremiumViewer),
+          gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
+          updatedAt: decision.evaluatedAt.toISOString(),
+        },
       }));
-      const scoringRows = decisionRows.filter((row) => row.status === "SCORING_NOW");
-      const publishedRows = decisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
-      const gatedRows = decisionRows.filter((row) => row.status === "GATED_TODAY");
+      // Deduped BEFORE the lane split and before the counts below, so
+      // openPicks/gatedToday/sportsWatched describe the rows a viewer is
+      // actually shown. Deduping after the counts are taken would leave the
+      // board's own numbers disagreeing with its own rows (C-117).
+      const dedupedDecisionRows = dedupeBoardRows(decisionEntries);
+      const scoringRows = dedupedDecisionRows.filter((row) => row.status === "SCORING_NOW");
+      const publishedRows = dedupedDecisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
+      const gatedRows = dedupedDecisionRows.filter((row) => row.status === "GATED_TODAY");
 
       const modelVersion = decisions[0]?.modelVersion ?? MODEL_VERSION;
       return {
         data: {
-          sportsWatched: new Set(decisionRows.map((row) => row.sport)).size,
+          sportsWatched: new Set(dedupedDecisionRows.map((row) => row.sport)).size,
           booksPolled: Math.max(0, ...decisions.map((decision) => decision.game.bookmakerCoverageMax)),
           openPicks: publishedRows.length,
           gatedToday: gatedRows.length,
@@ -382,7 +482,7 @@ async function loadBoardStateInner(
           isBootstrap: false,
           ...excludeSeedInProd,
           ...freshPickWhere(slateNow),
-          game: gameInSlateWindow(slate),
+          game: { ...gameInSlateWindow(slate), mergedIntoGameId: null },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
         // Wide window — re-rank by rankingP below so low-conf demotions surface
@@ -392,17 +492,35 @@ async function loadBoardStateInner(
       }),
       db.game.findMany({
         where: {
-          commenceTime: { gte: now },
-          status: "SCHEDULED",
+          // SCORING_NOW must mean a game that is actually being scored. This
+          // query previously selected `commenceTime >= now AND status
+          // SCHEDULED` — games that have NOT started — and every one of them
+          // was labelled SCORING_NOW. Suppressing only the ones that overlapped
+          // today's gated window left every game FURTHER out still claiming to
+          // be scoring, which is the same false claim with a smaller blast
+          // radius (Devin Review, #717).
+          //
+          // GameStatus carries a real LIVE value, so the truthful set is games
+          // that have started and are not yet FINAL. A game that has not kicked
+          // off belongs to the gated lane, which describes it honestly.
+          commenceTime: { lte: now },
+          status: { in: ["LIVE", "SCHEDULED"] },
+          // Same canonicity marker as the decision query. Two rows for one
+          // fixture carry DIFFERENT ids, so the collapse below cannot pair
+          // them; only excluding the tombstoned row can (Devin Review, #717).
+          mergedIntoGameId: null,
         },
         include: { sport: { select: { name: true } } },
-        orderBy: { commenceTime: "asc" },
+        // Most recently started first: a live game is more useful at the top of
+        // the lane than one that began hours ago.
+        orderBy: { commenceTime: "desc" },
         take: 8,
       }),
       db.game.findMany({
         where: {
           commenceTime: { gte: start, lt: end },
           picks: { none: publishedPickRelation },
+          mergedIntoGameId: null,
         },
         include: { sport: { select: { name: true } } },
         orderBy: { commenceTime: "asc" },
@@ -414,23 +532,26 @@ async function loadBoardStateInner(
     .sort(comparePicksByRanking)
     .slice(0, 12);
 
-  const publishedRows = publishedToday.map((pick): BoardStateRow => ({
-    id: pick.id,
-    gameId: pick.gameId,
-    matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
-    sport: pick.game.sport.name,
-    market: isPremiumViewer ? pick.selection : "ALL_MARKETS",
-    status: "PUBLISHED_TODAY",
-    // The per-pick fallback is withheld on book-less rows for non-premium viewers
-    // (edgeScore = confidence - 50 there; lib/picks/public-edge-score.ts).
-    edgeIndex: toEdgeIndex(
-      pick.game.currentEdgeIndex ??
-        publicEdgeScore(pick, { canSeeEdgeScore: true, canSeeConfidence: isPremiumViewer }),
-    ),
-    confidence: pick.confidence,
-    ...extractRankingFromFb(pick.factorBreakdown, isPremiumViewer),
-    gateReason: null,
-    updatedAt: pick.generatedAt.toISOString(),
+  const publishedEntries = publishedToday.map((pick): DedupeEntry => ({
+    key: boardDedupeKey(pick.gameId, pick.pickType),
+    row: {
+      id: pick.id,
+      gameId: pick.gameId,
+      matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
+      sport: pick.game.sport.name,
+      market: isPremiumViewer ? pick.selection : "ALL_MARKETS",
+      status: "PUBLISHED_TODAY",
+      // The per-pick fallback is withheld on book-less rows for non-premium viewers
+      // (edgeScore = confidence - 50 there; lib/picks/public-edge-score.ts).
+      edgeIndex: toEdgeIndex(
+        pick.game.currentEdgeIndex ??
+          publicEdgeScore(pick, { canSeeEdgeScore: true, canSeeConfidence: isPremiumViewer }),
+      ),
+      confidence: pick.confidence,
+      ...extractRankingFromFb(pick.factorBreakdown, isPremiumViewer),
+      gateReason: null,
+      updatedAt: pick.generatedAt.toISOString(),
+    },
   }));
 
   const scoringRows = scoringNow.map((game): BoardStateRow => ({
@@ -473,26 +594,66 @@ async function loadBoardStateInner(
   }));
 
     const modelVersion = publishedToday[0]?.modelVersion ?? MODEL_VERSION;
-    const rowCount = scoringRows.length + publishedRows.length + gatedRows.length;
+    // Cross-lane collapse. The scoringNow query (commenceTime >= now,
+    // SCHEDULED) and the gatedToday query (commenceTime today, no published
+    // pick) overlap by construction: a game later today that is scheduled and
+    // has no published pick satisfies both, and became `scoring-<id>` and
+    // `gate-<id>` — same fixture, same market, two rows. Deduping the union and
+    // re-splitting keeps the lane precedence explicit rather than letting
+    // whichever query ran first win.
+    // A generic lane row is suppressed for any fixture already represented by a
+    // more specific one. The collapse alone cannot do this: published rows key
+    // on the real pickType so one fixture can legitimately hold several, while
+    // the generic lanes key on NO_PICK, so their keys never collide by
+    // construction and both rows survive (Devin Review, #717).
+    //
+    // Lane precedence also cannot resolve the scoring/gated overlap here, and
+    // reversing it would be wrong for the decision path. The scoring query
+    // selects `commenceTime >= now AND status SCHEDULED` — games that have NOT
+    // started — so on THIS path a "scoring" row is never more truthful than the
+    // gated row for the same fixture, whatever LANE_RANK says. A game that has
+    // not started is gated, not being scored, and telling a viewer otherwise is
+    // the kind of claim this product does not make.
+    const publishedGameIds = new Set(publishedEntries.map((e) => e.row.gameId));
+    const gatedGameIds = new Set(gatedRows.map((row) => row.gameId));
+    const scoringRowsScoped = scoringRows.filter(
+      (row) => !publishedGameIds.has(row.gameId) && !gatedGameIds.has(row.gameId),
+    );
+    const gatedRowsScoped = gatedRows.filter((row) => !publishedGameIds.has(row.gameId));
+
+    const dedupedFallback = dedupeBoardRows([
+      ...scoringRowsScoped.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
+      ...publishedEntries,
+      ...gatedRowsScoped.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
+    ]);
+    const scoringRowsFinal = dedupedFallback.filter((row) => row.status === "SCORING_NOW");
+    const publishedRowsFinal = dedupedFallback.filter((row) => row.status === "PUBLISHED_TODAY");
+    const gatedRowsFinal = dedupedFallback.filter((row) => row.status === "GATED_TODAY");
+
+    const rowCount = scoringRowsFinal.length + publishedRowsFinal.length + gatedRowsFinal.length;
     const staleInfo =
       rowCount === 0 ? await detectStaleWhenEmpty() : { stale: false, schedulerLiveness: null };
     return {
       data: {
-        sportsWatched: new Set([...scoringRows, ...publishedRows, ...gatedRows].map((row) => row.sport)).size,
+        sportsWatched: new Set(dedupedFallback.map((row) => row.sport)).size,
         booksPolled: Math.max(0, ...scoringNow.map((game) => game.bookmakerCoverageMax)),
-        openPicks: publishedRows.length,
-        gatedToday: gatedRows.length,
+        openPicks: publishedRowsFinal.length,
+        gatedToday: gatedRowsFinal.length,
         lastRefresh: now.toISOString(),
         modelVersion,
         bootstrap: gates.isBootstrapMode,
-        scoringNow: scoringRows,
-        publishedToday: publishedRows,
-        gatedTodayRows: gatedRows,
+        scoringNow: scoringRowsFinal,
+        publishedToday: publishedRowsFinal,
+        gatedTodayRows: gatedRowsFinal,
       },
       meta: buildBoardMeta({
         modelVersion,
         now,
-        rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
+        rows: {
+          gatedTodayRows: gatedRowsFinal,
+          publishedToday: publishedRowsFinal,
+          scoringNow: scoringRowsFinal,
+        },
         liveBoardOn: liveBoardOn(),
         bootstrap: gates.isBootstrapMode,
         staleDetected: staleInfo.stale,

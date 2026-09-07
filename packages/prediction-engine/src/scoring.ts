@@ -382,7 +382,24 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const spreadOdds = input.bookmakerOdds.filter(
     (o) => o.market === "SPREADS" && o.spread !== undefined
   );
-  if (spreadOdds.length < MIN_BOOKMAKERS) return null;
+
+  /**
+   * Books that quote a COMPLETE two-sided market. Every price-derived and
+   * depth-derived value below uses this set, never `spreadOdds`.
+   *
+   * A book carrying a line but no price is still market information about
+   * WHERE the line sits, so it keeps its vote in the line consensus below
+   * (avgSpread, spreadOfSpreads, consensusPct). It is not, however, "pricing
+   * this market": counting it inflated market depth, softened the volatility
+   * penalty, improved the risk level, and shipped as the pick's public
+   * `bookmakerCount` and in the reason string "backed by N bookmakers pricing
+   * this market" — a claim about a book that quoted no price (Devin Review,
+   * #717).
+   */
+  const pricedOdds = spreadOdds.filter(
+    (o) => o.homeSpreadPrice !== undefined && o.awaySpreadPrice !== undefined,
+  );
+  if (pricedOdds.length < MIN_BOOKMAKERS) return null;
 
   const spreads = spreadOdds.map((o) => o.spread as number);
 
@@ -408,24 +425,45 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Chosen side
   const chosenTeam = homeIsChosen ? input.homeTeam : input.awayTeam;
   const chosenSpread = homeIsChosen ? avgSpread : -avgSpread;
+  // Refuse a line that cannot be placed at any book for this sport. See
+  // isPublishableSpreadLine: baseball's run line is a fixed ladder, and the
+  // mean of contaminated book rows lands off it.
+  if (!isPublishableSpreadLine(input.sport, chosenSpread)) return null;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
-  // Average price for chosen side
-  const chosenPrices = spreadOdds
-    .map((o) => (homeIsChosen ? o.homeSpreadPrice : o.awaySpreadPrice))
-    .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  // ONE book set for every price-derived value below.
+  //
+  // Refuse rather than invent a price. The old fallback published `-110` when
+  // no book quoted the chosen side, and that number reached the subscriber as
+  // the pick's odds AND was committed into the immutable proof receipt as
+  // entryOdds — a price no book ever offered, which rule 1 forbids outright.
+  // sanitizeAmericanPrice returns undefined for a missing, null, non-finite or
+  // decimal-format price, so this is reachable from a feed shape change, not
+  // only from an absent market.
+  //
+  // Restricting to books that quote BOTH sides is not only about vig: the edge
+  // is a COMPARISON of avgPrice against fairProb, so drawing those two from
+  // different book sets compares mismatched markets. A book quoting only the
+  // chosen side would move avgPrice while contributing nothing to fairProb, and
+  // a single one-sided outlier could manufacture an edge that no complete
+  // market shows (Devin Review, #717).
+  // Average price for chosen side, over the same complete books.
+  const chosenPrices = pricedOdds.map((o) =>
+    homeIsChosen ? o.homeSpreadPrice! : o.awaySpreadPrice!,
+  );
+  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
-  // Fair value — assume consensus spread IS fair line, edge from vig removal
+  // Fair value — assume consensus spread IS fair line, edge from vig removal.
   const homeImpliedAvg =
-    spreadOdds.reduce((acc, o) => acc + americanToImpliedProbability(o.homeSpreadPrice ?? -110), 0) /
-    spreadOdds.length;
+    pricedOdds.reduce(
+      (acc, o) => acc + americanToImpliedProbability(o.homeSpreadPrice!),
+      0,
+    ) / pricedOdds.length;
   const awayImpliedAvg =
-    spreadOdds.reduce((acc, o) => acc + americanToImpliedProbability(o.awaySpreadPrice ?? -110), 0) /
-    spreadOdds.length;
+    pricedOdds.reduce(
+      (acc, o) => acc + americanToImpliedProbability(o.awaySpreadPrice!),
+      0,
+    ) / pricedOdds.length;
   const fair = removeVig(homeImpliedAvg, awayImpliedAvg);
   const fairProb = homeIsChosen ? fair.home : fair.away;
   const fairShinProb = shinFairForSide(
@@ -437,10 +475,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   // Component scores
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
-  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(spreadOdds.length);
+  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(pricedOdds.length);
   const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
-    computeVolatilityPenalty(spreadOdds.length, spreadOfSpreads);
+    computeVolatilityPenalty(pricedOdds.length, spreadOfSpreads);
 
   // Compute ML fair probability for cross-market validation
   const h2hForContext = input.bookmakerOdds.filter(
@@ -464,7 +502,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
           hasSpreadMarket: true,
           hasTotalMarket: input.bookmakerOdds.some((o) => o.market === "TOTALS"),
           hasH2HMarket: input.bookmakerOdds.some((o) => o.market === "H2H"),
-          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? spreadOdds.length,
+          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? pricedOdds.length,
           mlFairProbHome,
         },
         "SPREAD",
@@ -543,7 +581,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
-  const riskLevel: RiskLevel = computeRiskLevel(spreadOdds.length, consensusPct, lineMovementScore);
+  const riskLevel: RiskLevel = computeRiskLevel(pricedOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
   const spreadDisplay =
@@ -568,7 +606,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     : "";
 
   const reasoning =
-    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${spreadOdds.length} ` +
+    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
     `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     contextNote +
@@ -619,7 +657,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     consensusPct,
     marketFairProb: fairProb,
     entryPrice: Math.round(avgPrice),
-    bookmakerCount: spreadOdds.length,
+    bookmakerCount: pricedOdds.length,
     dataQualityScore,
     tier,
     pickGrade,
@@ -651,7 +689,18 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const pricedTotals = totalOdds.filter(
     (o) => o.overPrice !== undefined && o.underPrice !== undefined
   );
-  if (pricedTotals.length === 0) return null;
+  // ONE book set for every price- and depth-derived value below, exactly as the
+  // spread scorer does. Three different sets were in use here: chosenPrices
+  // from `totalOdds`, each implied average from its own one-sided filter, and
+  // the depth/risk/count values from `totalOdds` again. The edge is a
+  // COMPARISON of avgPrice against fairProb, so mixed sets compare mismatched
+  // markets, and a book quoting neither direction was still counted as pricing
+  // the market in the public `bookmakerCount` (Devin Review, #717).
+  //
+  // Line consensus (`totals`, `avgTotal`, `totalDispersion`) deliberately keeps
+  // every book carrying a total: a line without a price is still real
+  // information about where the line sits.
+  if (pricedTotals.length < MIN_BOOKMAKERS) return null;
 
   // Over is the market favorite when its SIGNED American price is <= the under
   // price: the higher-implied-probability side is the one with the smaller
@@ -690,25 +739,16 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
   // Avg price for chosen direction
-  const chosenPrices = totalOdds
-    .map((o) => (overIsChosen ? o.overPrice : o.underPrice))
-    .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  const chosenPrices = pricedTotals.map((o) => (overIsChosen ? o.overPrice! : o.underPrice!));
+  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
-  // Fair value
+  // Fair value, over the same complete books.
   const overImpliedAvg =
-    totalOdds
-      .filter((o) => o.overPrice !== undefined)
-      .reduce((acc, o) => acc + americanToImpliedProbability(o.overPrice!), 0) /
-    Math.max(totalOdds.filter((o) => o.overPrice !== undefined).length, 1);
+    pricedTotals.reduce((acc, o) => acc + americanToImpliedProbability(o.overPrice!), 0) /
+    pricedTotals.length;
   const underImpliedAvg =
-    totalOdds
-      .filter((o) => o.underPrice !== undefined)
-      .reduce((acc, o) => acc + americanToImpliedProbability(o.underPrice!), 0) /
-    Math.max(totalOdds.filter((o) => o.underPrice !== undefined).length, 1);
+    pricedTotals.reduce((acc, o) => acc + americanToImpliedProbability(o.underPrice!), 0) /
+    pricedTotals.length;
 
   const fair = removeVig(overImpliedAvg, underImpliedAvg);
   const fairProb = overIsChosen ? fair.home : fair.away;
@@ -725,10 +765,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const totalDispersion = Math.sqrt(variance);
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
-  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(totalOdds.length);
+  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(pricedTotals.length);
   const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
-    computeVolatilityPenalty(totalOdds.length, totalDispersion);
+    computeVolatilityPenalty(pricedTotals.length, totalDispersion);
 
   // Game context signals
   const ctx = input.context
@@ -738,7 +778,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
           hasSpreadMarket: input.bookmakerOdds.some((o) => o.market === "SPREADS"),
           hasTotalMarket: true,
           hasH2HMarket: input.bookmakerOdds.some((o) => o.market === "H2H"),
-          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? totalOdds.length,
+          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? pricedTotals.length,
         },
         "TOTAL",
         pickedSide
@@ -772,7 +812,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
-  const riskLevel: RiskLevel = computeRiskLevel(totalOdds.length, consensusPct, lineMovementScore);
+  const riskLevel: RiskLevel = computeRiskLevel(pricedTotals.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
   const direction = overIsChosen ? "OVER" : "UNDER";
@@ -782,7 +822,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
 
   const reasoning =
-    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
+    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${pricedTotals.length} ` +
     `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     movementNote +
@@ -820,7 +860,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     consensusPct,
     marketFairProb: fairProb,
     entryPrice: Math.round(avgPrice),
-    bookmakerCount: totalOdds.length,
+    bookmakerCount: pricedTotals.length,
     dataQualityScore,
     tier,
     pickGrade,
@@ -855,6 +895,43 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
  */
 export function isThreeWayMoneylineSport(sportKey: string): boolean {
   return sportKey.toLowerCase().startsWith("soccer");
+}
+
+/**
+ * Baseball's run line is a FIXED market: 1.5 standard, with 2.5 and 3.5 offered
+ * as alternates. Unlike football, where books legitimately disagree (-3, -3.5,
+ * -3) and a consensus between them is a real number, there is no such thing as
+ * a 6.56 run line at any book.
+ *
+ * The published spread is the arithmetic MEAN of every book's line, so a single
+ * contaminated odds row drags it off the ladder entirely. Measured on
+ * production 2026-09-07: 355 of 725 published MLB spread picks carried a line
+ * that is not a run line, including 4.5, 5.5 and 7.5; separately, 8 of 12
+ * bookmakers carry MLB spread rows up to 19.5, which is where the contamination
+ * enters.
+ *
+ * A subscriber cannot place "Athletics -7.5" on a baseball game anywhere, so
+ * publishing it is fabricated product data. Suppress rather than mislead, the
+ * same call the three-way moneyline guard above makes.
+ *
+ * This does NOT repair the line, which would change what the engine publishes
+ * and require a MODEL_VERSION bump. It refuses the pick.
+ */
+export const BASEBALL_RUN_LINES: readonly number[] = [1.5, 2.5, 3.5];
+
+/** Float tolerance: the published line is a mean, so compare with an epsilon. */
+const RUN_LINE_EPSILON = 1e-9;
+
+export function isBaseballSport(sportKey: string): boolean {
+  return sportKey.toLowerCase().startsWith("baseball");
+}
+
+/** Is `line` a run line a baseball book actually offers? Non-baseball: always true. */
+export function isPublishableSpreadLine(sportKey: string, line: number): boolean {
+  if (!isBaseballSport(sportKey)) return true;
+  if (!Number.isFinite(line)) return false;
+  const abs = Math.abs(line);
+  return BASEBALL_RUN_LINES.some((valid) => Math.abs(abs - valid) < RUN_LINE_EPSILON);
 }
 
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
