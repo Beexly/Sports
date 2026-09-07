@@ -310,6 +310,47 @@ validated precedent (a comparable bot, BettorEdge, confirmed live in 1,100+ serv
 same free-picks-plus-leaderboard shape) — a founder marketing decision, not built. Full detail
 in the doc's Round 10 section.
 
+**Round 11 (2026-09-06/07): GSE's own dev-process pain point — 10 multi-agent coding-
+orchestration repos.** Headline finding: **GSE's own ledger (claim in the same git commit) is
+already more rigorous than most of what's out there.** `code-conductor`'s "atomic" claiming is
+actually an unlocked race (contradicting its own docs), and its install path suffered a real
+supply-chain compromise in March 2026; Podiom and `taskq` both lack a compare-and-swap guarantee
+GSE's git-push atomicity gets for free; `deepseek-ai/deepseek-harness` (verified real) is the one
+genuine exception, with a revision-CAS primitive worth borrowing as a guard-script idea (reject a
+merge introducing two `CLAIMED` owners in one diff hunk). `mission-control` is a real, substantial
+project (1,577 tests run directly, genuinely heterogeneous 5-runtime dispatch) but its review gate
+is one LLM judging another's output via string-matched verdict parsing — named as a real risk if
+that pattern were ever applied to anything touching settlement/entitlements/PROVEN-gate decisions.
+`agentjj` and `Agent-Git` (agent-native VCS tools) are both honest negatives: agentjj's own latest
+commit is a post-mortem admitting its core model breaks under exactly GSE's shape (parallel
+writers, single-writer working copy); Agent-Git never touches git at all. `gitagent-protocol`
+requires files GSE doesn't have to even count as conformant — low priority, revisit later; its one
+real transferable idea is a lightweight schema/validator for `.claude/agents/*.md` frontmatter.
+Nothing installed, no repo recommended as a dependency. Full detail in the doc's Round 11 section.
+
+**Round 12 (2026-09-07): creative-fit pass on founder-sourced items, integrate where real.**
+One thing actually built and shipped: `apps/web/lib/fantasy/td-equity.ts` — three pure, tested
+functions (goal-line QB "vulture" risk, touchdown scoring-distance profile, defensive red-zone
+soft spot) replacing three LLM prompt templates that were circulating as "AI fantasy analyst"
+prompts for the same three real, quantifiable questions — deliberately unwired pending real
+play-by-play (the Round 10 nflverse/CFBD path). Two real repos researched deeply, not buildable
+without a founder-approved new dependency: `claude-faceless-shorts-creator`'s Remotion track is
+genuinely 100%-code-rendered (verified in the actual composition source) and could turn the
+already-built-but-never-published weekly transparency-recap draft into a short, auditable video —
+its other two tracks are generative-AI content and must never be adopted; `CopilotKit/openbot`'s
+"decide before, record after" audit gate is real and load-bearing but solves a harder problem than
+GSE's actual one-agent scripted-playbook need — the pattern itself (log the decision before
+acting) is buildable today with zero new dependencies. A final set, researched for genuine
+leverage rather than written off: Appsmith's Community Edition is verified genuinely free
+(Apache-2.0, self-hosted, no user cap) — real, low-cost leverage for the "no unified ops-health
+view" gap this audit has now flagged twice independently, though it needs new self-hosted infra;
+Google's TimesFM-3 required a correction the marketing clip didn't carry — its code is Apache-2.0
+but its **pretrained weights are Non-Commercial-licensed** (verified from the model's own LICENSE
+file), so a revenue company cannot run it even for internal QA without breaching the license; the
+Perplexity/NVIDIA local-orchestrator hardware product isn't adoptable (GSE runs no local GPU
+hardware) but is real outside validation that GSE's already-planned local-cheap/cloud-frontier
+routing work (C-108) is the right direction. Full detail in the doc's Round 12 section.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
