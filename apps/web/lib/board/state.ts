@@ -109,8 +109,29 @@ export interface BoardStatePayload {
  * Eight hours covers the longest real game with margin — MLB's longest run to
  * about five — so anything older is a row that never got resolved, not a game
  * still being played.
+ *
+ * This bound applies to SCHEDULED rows only. See LIVE_ACTIVE_WINDOW_MS.
  */
 const SCORING_ACTIVE_WINDOW_MS = 8 * 60 * 60 * 1000;
+
+/**
+ * The same staleness bound for rows the ingestion layer has marked LIVE.
+ *
+ * SCHEDULED past its kickoff is AMBIGUOUS — it means either "started" or "the
+ * row was never updated" — which is why it needs the tight eight-hour bound.
+ * LIVE is not ambiguous: it is a positive assertion that the game is in
+ * progress, and applying the eight-hour bound to it silently DROPPED a
+ * genuinely long or delayed game from the board entirely, since the gated lane
+ * starts at `gt: now` and would not take it either (Devin Review, #719). A
+ * rain-delayed MLB game or a lightning-suspended football game runs well past
+ * eight hours.
+ *
+ * A bound is still needed, because a LIVE row also outlives the game when the
+ * transition to FINAL fails. Twenty-four hours is the point past which the
+ * assertion cannot be true of a single game session — a game suspended and
+ * resumed the next day is settlement's problem, not the board's.
+ */
+const LIVE_ACTIVE_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 const LANE_RANK: Record<BoardStateRow["status"], number> = {
   PUBLISHED_TODAY: 0,
@@ -551,8 +572,27 @@ async function loadBoardStateInner(
           // on a quiet slate, indefinitely (Devin Review, #717). A game cannot
           // still be playing eight hours after first pitch; the longest MLB
           // games run to about five.
-          commenceTime: { lte: now, gte: new Date(now.getTime() - SCORING_ACTIVE_WINDOW_MS) },
-          status: { in: ["LIVE", "SCHEDULED"] },
+          //
+          // The bound is PER STATUS, not shared. One eight-hour window across
+          // both values dropped a LIVE game older than eight hours off the
+          // board completely — the gated lane starts at `gt: now` and does not
+          // take it either — so a rain delay made an in-progress game vanish
+          // rather than mislabel it (Devin Review, #719). SCHEDULED needs the
+          // tight bound because it is ambiguous past kickoff; LIVE is a
+          // positive assertion and gets the wider one.
+          OR: [
+            {
+              status: "LIVE",
+              commenceTime: { lte: now, gte: new Date(now.getTime() - LIVE_ACTIVE_WINDOW_MS) },
+            },
+            {
+              status: "SCHEDULED",
+              commenceTime: {
+                lte: now,
+                gte: new Date(now.getTime() - SCORING_ACTIVE_WINDOW_MS),
+              },
+            },
+          ],
           // Same canonicity marker as the decision query. Two rows for one
           // fixture carry DIFFERENT ids, so the collapse below cannot pair
           // them; only excluding the tombstoned row can (Devin Review, #717).

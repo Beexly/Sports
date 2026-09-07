@@ -47,6 +47,22 @@ function game(overrides: Record<string, unknown> = {}): Record<string, unknown> 
   };
 }
 
+type ScoringBranch = {
+  status: string;
+  commenceTime: { lte: Date; gte: Date };
+};
+
+/**
+ * Pull one status branch out of the scoring lane's OR. Throws rather than
+ * returning undefined so a missing branch fails as a missing branch, not as an
+ * unrelated property access on undefined.
+ */
+function branchFor(branches: readonly ScoringBranch[], status: string): ScoringBranch {
+  const found = branches.find((b) => b.status === status);
+  if (found === undefined) throw new Error(`scoring lane has no ${status} branch`);
+  return found;
+}
+
 describe("board loaders with persisted gate decisions", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -366,22 +382,39 @@ describe("board loaders with persisted gate decisions", () => {
 
       const whereOf = (i: number) =>
         (mocks.gameFindMany.mock.calls[i]?.[0] as {
-          where: { commenceTime?: Record<string, unknown>; status?: unknown };
+          where: {
+            commenceTime?: Record<string, unknown>;
+            status?: unknown;
+            OR?: ScoringBranch[];
+          };
         }).where;
 
       const scoring = whereOf(0);
       const gated = whereOf(1);
 
       // SCORING: started, and not so long ago that it cannot still be playing.
-      // The lower bound is what stops a stale SCHEDULED row from a failed
-      // settlement surfacing as "scoring" forever on a quiet slate.
-      expect(scoring.commenceTime).toHaveProperty("lte");
-      expect(scoring.commenceTime).toHaveProperty("gte");
-      expect(scoring.status).toEqual({ in: ["LIVE", "SCHEDULED"] });
-      const scoringLo = (scoring.commenceTime as { gte: Date }).gte;
-      const scoringHi = (scoring.commenceTime as { lte: Date }).lte;
-      expect(scoringHi.getTime()).toBe(now.getTime());
-      expect(now.getTime() - scoringLo.getTime()).toBe(8 * 60 * 60 * 1000);
+      // The lower bound is what stops a stale row from a failed settlement
+      // surfacing as "scoring" forever on a quiet slate — but it is PER
+      // STATUS, because one shared bound dropped a long LIVE game off the
+      // board entirely (Devin Review, #719).
+      const branches = scoring.OR ?? [];
+      expect(branches.map((b) => b.status).sort()).toEqual(["LIVE", "SCHEDULED"]);
+      const live = branchFor(branches, "LIVE");
+      const scheduled = branchFor(branches, "SCHEDULED");
+
+      // Both halves end at `now`: the scoring lane is started games only.
+      expect(live.commenceTime.lte.getTime()).toBe(now.getTime());
+      expect(scheduled.commenceTime.lte.getTime()).toBe(now.getTime());
+
+      // SCHEDULED past kickoff is ambiguous, so it keeps the tight bound.
+      expect(now.getTime() - scheduled.commenceTime.gte.getTime()).toBe(8 * 60 * 60 * 1000);
+      // LIVE is a positive assertion, so its bound is wider — but it IS
+      // bounded, because a LIVE row also outlives a game whose transition to
+      // FINAL failed.
+      expect(now.getTime() - live.commenceTime.gte.getTime()).toBe(24 * 60 * 60 * 1000);
+      expect(live.commenceTime.gte.getTime()).toBeLessThan(scheduled.commenceTime.gte.getTime());
+
+      const scoringHi = live.commenceTime.lte;
 
       // GATED: not started. This is the half that makes the lanes disjoint.
       const gatedLo = (gated.commenceTime as { gt: Date }).gt;
@@ -394,6 +427,48 @@ describe("board loaders with persisted gate decisions", () => {
       expect(gated.commenceTime).toHaveProperty("gt");
       expect(gated.commenceTime).not.toHaveProperty("gte");
       expect(scoringHi.getTime()).toBeLessThanOrEqual(gatedLo.getTime());
+    });
+
+    it("keeps a LIVE game in the scoring lane nine hours after kickoff, and still drops a stale SCHEDULED one", async () => {
+      // A shared eight-hour bound across both status values did not MISLABEL a
+      // long or delayed game — it removed it from the board entirely, because
+      // the gated lane starts at `gt: now` and would not take it either. A rain
+      // delay or a lightning suspension runs past eight hours (Devin Review,
+      // #719). The bound still has to exist for both, because either status can
+      // outlive the game when the transition to FINAL fails.
+      const now = new Date("2026-05-22T16:00:00.000Z");
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      mocks.gameFindMany.mockResolvedValue([]);
+
+      await loadBoardState(now, proViewer);
+
+      const branches =
+        ((mocks.gameFindMany.mock.calls[0]?.[0] as { where: { OR?: ScoringBranch[] } }).where
+          .OR ?? []);
+
+      /** Apply the shipped predicate to a candidate row. */
+      const selects = (status: string, hoursAgo: number): boolean => {
+        const commenceTime = new Date(now.getTime() - hoursAgo * 60 * 60 * 1000);
+        return branches.some(
+          (b) =>
+            b.status === status &&
+            commenceTime.getTime() <= b.commenceTime.lte.getTime() &&
+            commenceTime.getTime() >= b.commenceTime.gte.getTime(),
+        );
+      };
+
+      // THE REGRESSION: a delayed game, still in progress, nine hours in.
+      expect(selects("LIVE", 9)).toBe(true);
+      // Unchanged: SCHEDULED past kickoff is ambiguous and keeps the tight
+      // bound, so a row a failed settlement left behind is still excluded.
+      expect(selects("SCHEDULED", 9)).toBe(false);
+      // LIVE is bounded too — a day-old LIVE row is a failed transition, not a
+      // game. Deleting the LIVE lower bound would flip this to true.
+      expect(selects("LIVE", 25)).toBe(false);
+      // Both statuses inside their windows are still selected.
+      expect(selects("LIVE", 2)).toBe(true);
+      expect(selects("SCHEDULED", 2)).toBe(true);
     });
 
     it("keeps a started game in the scoring lane instead of reverting it to gated", async () => {
