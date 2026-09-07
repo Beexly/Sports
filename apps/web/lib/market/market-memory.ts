@@ -60,8 +60,19 @@ export function buildMarketMemory(input: MarketMemoryInput): MarketMemory {
   const lockToCurrentFavorable = round(fav(input.lockLine, input.currentLine, lower));
   const openToCloseFavorable =
     input.closeLine != null ? round(fav(input.openLine, input.closeLine, lower)) : null;
+  // clvVsCloseFavorable is a DIFFERENT question from the movement-so-far fields
+  // above (openToLock/lockToCurrent/openToCloseFavorable): those ask "is the
+  // market, right now, at a number better than where it started" (movement
+  // toward favorable = positive). This asks "did we beat the close" in
+  // clv.ts's sense — and beating the close means the market moved AWAY from
+  // favorable after we locked (a later bettor gets a worse number than ours),
+  // which is the OPPOSITE sign of "favorable movement". Swapping fav's
+  // argument order negates it. Verified against clv.ts's own worked examples
+  // (computeSpreadClv/computeTotalClv) for all four sides — see
+  // market-memory.test.ts's "matches clv.ts" cases. Do not "simplify" this
+  // back to fav(lockLine, closeLine, lower); that reintroduces the inversion.
   const clvVsCloseFavorable =
-    input.closeLine != null ? round(fav(input.lockLine, input.closeLine, lower)) : null;
+    input.closeLine != null ? round(fav(input.closeLine, input.lockLine, lower)) : null;
 
   let velocityFavorablePerHour: number | null = null;
   const snaps = input.snapshots ?? [];
