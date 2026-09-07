@@ -492,15 +492,28 @@ async function loadBoardStateInner(
       }),
       db.game.findMany({
         where: {
-          commenceTime: { gte: now },
-          status: "SCHEDULED",
+          // SCORING_NOW must mean a game that is actually being scored. This
+          // query previously selected `commenceTime >= now AND status
+          // SCHEDULED` — games that have NOT started — and every one of them
+          // was labelled SCORING_NOW. Suppressing only the ones that overlapped
+          // today's gated window left every game FURTHER out still claiming to
+          // be scoring, which is the same false claim with a smaller blast
+          // radius (Devin Review, #717).
+          //
+          // GameStatus carries a real LIVE value, so the truthful set is games
+          // that have started and are not yet FINAL. A game that has not kicked
+          // off belongs to the gated lane, which describes it honestly.
+          commenceTime: { lte: now },
+          status: { in: ["LIVE", "SCHEDULED"] },
           // Same canonicity marker as the decision query. Two rows for one
           // fixture carry DIFFERENT ids, so the collapse below cannot pair
           // them; only excluding the tombstoned row can (Devin Review, #717).
           mergedIntoGameId: null,
         },
         include: { sport: { select: { name: true } } },
-        orderBy: { commenceTime: "asc" },
+        // Most recently started first: a live game is more useful at the top of
+        // the lane than one that began hours ago.
+        orderBy: { commenceTime: "desc" },
         take: 8,
       }),
       db.game.findMany({

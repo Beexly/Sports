@@ -324,6 +324,28 @@ describe("board loaders with persisted gate decisions", () => {
       expect(result.data.gatedTodayRows[0]?.status).toBe("GATED_TODAY");
     });
 
+    it("asks the database only for games that have STARTED, so SCORING_NOW is truthful at the source", async () => {
+      // The suppression above is a backstop, not the fix. It only removes a
+      // scoring row when a gated row shares the id, and the gated query covers
+      // today's window — so a game further out had no gated twin and stayed
+      // labelled SCORING_NOW. The query predicate is what makes the label
+      // honest for every future game, so pin it directly (Devin Review, #717).
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      mocks.gameFindMany.mockResolvedValue([]);
+
+      await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+      const scoringWhere = (mocks.gameFindMany.mock.calls[0]?.[0] as {
+        where: { commenceTime?: Record<string, unknown>; status?: unknown };
+      }).where;
+      // Started, not upcoming.
+      expect(scoringWhere.commenceTime).toHaveProperty("lte");
+      expect(scoringWhere.commenceTime).not.toHaveProperty("gte");
+      // And not yet FINAL.
+      expect(scoringWhere.status).toEqual({ in: ["LIVE", "SCHEDULED"] });
+    });
+
     it("suppresses a generic lane row for a fixture that already has a published pick", async () => {
       // Published rows key on the real pickType and the generic lanes on
       // NO_PICK, so their keys never collide and the collapse alone cannot pair

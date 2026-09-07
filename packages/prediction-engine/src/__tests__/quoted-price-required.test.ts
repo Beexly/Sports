@@ -193,4 +193,41 @@ describe("scoreGame — a total is never published at a price no book quoted", (
     const picks = scoreGame(totalInput(TOTALS.map((total) => ({ total }))));
     expect(picks.some((p) => p.pickType === "TOTAL")).toBe(false);
   });
+
+  it("refuses when books quote only ONE direction, so no book prices the vig", () => {
+    // The asymmetric case, mirroring the spread scorer. Both directions appear
+    // across the book set but no single book quotes both, so there is no honest
+    // overround to remove.
+    const picks = scoreGame(
+      totalInput([
+        { total: 51.5, overPrice: -110 },
+        { total: 51.5, underPrice: -110 },
+        { total: 51.5, overPrice: -108 },
+        { total: 51.5, underPrice: -112 },
+      ]),
+    );
+    expect(picks.some((p) => p.pickType === "TOTAL")).toBe(false);
+  });
+
+  it("ignores a one-sided total quote entirely, so it cannot manufacture an edge", () => {
+    // Same defect the spread scorer had, in the sibling lane: chosenPrices came
+    // from every book while the implied averages each used their own one-sided
+    // filter — three different book sets inside one function (Devin Review,
+    // #717). A +900 OVER quote from a book with no UNDER must change nothing.
+    const complete = [
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+    ];
+    const withOutlier = scoreGame(
+      totalInput([...complete, { total: 51.5, overPrice: 900 }]),
+    ).find((p) => p.pickType === "TOTAL");
+    const completeOnly = scoreGame(totalInput(complete)).find((p) => p.pickType === "TOTAL");
+
+    expect(withOutlier?.entryPrice).toBe(completeOnly?.entryPrice);
+    expect(withOutlier?.confidence).toBe(completeOnly?.confidence);
+    // And the book that priced only one direction is not counted as pricing it.
+    expect(withOutlier?.bookmakerCount).toBe(4);
+  });
 });

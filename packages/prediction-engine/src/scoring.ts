@@ -689,7 +689,18 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const pricedTotals = totalOdds.filter(
     (o) => o.overPrice !== undefined && o.underPrice !== undefined
   );
-  if (pricedTotals.length === 0) return null;
+  // ONE book set for every price- and depth-derived value below, exactly as the
+  // spread scorer does. Three different sets were in use here: chosenPrices
+  // from `totalOdds`, each implied average from its own one-sided filter, and
+  // the depth/risk/count values from `totalOdds` again. The edge is a
+  // COMPARISON of avgPrice against fairProb, so mixed sets compare mismatched
+  // markets, and a book quoting neither direction was still counted as pricing
+  // the market in the public `bookmakerCount` (Devin Review, #717).
+  //
+  // Line consensus (`totals`, `avgTotal`, `totalDispersion`) deliberately keeps
+  // every book carrying a total: a line without a price is still real
+  // information about where the line sits.
+  if (pricedTotals.length < MIN_BOOKMAKERS) return null;
 
   // Over is the market favorite when its SIGNED American price is <= the under
   // price: the higher-implied-probability side is the one with the smaller
@@ -728,25 +739,16 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
   // Avg price for chosen direction
-  const chosenPrices = totalOdds
-    .map((o) => (overIsChosen ? o.overPrice : o.underPrice))
-    .filter((p): p is number => p !== undefined);
-  // Same refusal as the spread path: no quoted price for the chosen direction
-  // means no publishable pick, never a fabricated -110.
-  if (chosenPrices.length === 0) return null;
+  const chosenPrices = pricedTotals.map((o) => (overIsChosen ? o.overPrice! : o.underPrice!));
   const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
-  // Fair value
+  // Fair value, over the same complete books.
   const overImpliedAvg =
-    totalOdds
-      .filter((o) => o.overPrice !== undefined)
-      .reduce((acc, o) => acc + americanToImpliedProbability(o.overPrice!), 0) /
-    Math.max(totalOdds.filter((o) => o.overPrice !== undefined).length, 1);
+    pricedTotals.reduce((acc, o) => acc + americanToImpliedProbability(o.overPrice!), 0) /
+    pricedTotals.length;
   const underImpliedAvg =
-    totalOdds
-      .filter((o) => o.underPrice !== undefined)
-      .reduce((acc, o) => acc + americanToImpliedProbability(o.underPrice!), 0) /
-    Math.max(totalOdds.filter((o) => o.underPrice !== undefined).length, 1);
+    pricedTotals.reduce((acc, o) => acc + americanToImpliedProbability(o.underPrice!), 0) /
+    pricedTotals.length;
 
   const fair = removeVig(overImpliedAvg, underImpliedAvg);
   const fairProb = overIsChosen ? fair.home : fair.away;
@@ -763,10 +765,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const totalDispersion = Math.sqrt(variance);
 
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
-  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(totalOdds.length);
+  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(pricedTotals.length);
   const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
-    computeVolatilityPenalty(totalOdds.length, totalDispersion);
+    computeVolatilityPenalty(pricedTotals.length, totalDispersion);
 
   // Game context signals
   const ctx = input.context
@@ -776,7 +778,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
           hasSpreadMarket: input.bookmakerOdds.some((o) => o.market === "SPREADS"),
           hasTotalMarket: true,
           hasH2HMarket: input.bookmakerOdds.some((o) => o.market === "H2H"),
-          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? totalOdds.length,
+          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? pricedTotals.length,
         },
         "TOTAL",
         pickedSide
@@ -810,7 +812,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
-  const riskLevel: RiskLevel = computeRiskLevel(totalOdds.length, consensusPct, lineMovementScore);
+  const riskLevel: RiskLevel = computeRiskLevel(pricedTotals.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
   const direction = overIsChosen ? "OVER" : "UNDER";
@@ -820,7 +822,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     lineMovementScore < -5 ? " Total line moving against pick direction." : "";
 
   const reasoning =
-    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${totalOdds.length} ` +
+    `${direction} ${avgTotal.toFixed(1)} backed by ${Math.round(consensusPct * 100)}% of ${pricedTotals.length} ` +
     `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     movementNote +
@@ -858,7 +860,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     consensusPct,
     marketFairProb: fairProb,
     entryPrice: Math.round(avgPrice),
-    bookmakerCount: totalOdds.length,
+    bookmakerCount: pricedTotals.length,
     dataQualityScore,
     tier,
     pickGrade,
