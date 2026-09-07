@@ -77,7 +77,7 @@ What is NOT broken, checked rather than assumed [M]:
 - **free-score-persist.ts is already well guarded** - doubleheader placement, nearest-by-kickoff,
   fail-closed on ties, kickoff-drift rejection.
 
-## 2. Launch blockers (12)
+## 2. Launch blockers (13)
 
 Ordered by what I would do first. Effort is the agent's estimate [A] unless marked.
 
@@ -112,6 +112,12 @@ Ordered by what I would do first. Effort is the agent's estimate [A] unless mark
 | **C-92** | the signal slate writes `isPublished` on UPDATE, so **a withdrawn pick is re-published by the next slate run** — this alone would undo any remediation | hours [A] |
 | **C-94** | fantasy: a live-data badge ("Projections: live · Data via nflverse") renders above **fictional players** on six paid-tier pages | days [A] |
 
+### Auditability
+
+| row | what | effort |
+|---|---|---|
+| **C-150** | 69.5% of settled published picks sit on game rows with no ESPN event id, so their results can never be checked against ground truth. Until that is fixed the track record is unauditable for two thirds of its own history, whatever the numbers say [M] | days |
+
 > **C-92 deserves emphasis.** If it is real as described, any unpublish is temporary — the next slate
 > run puts the rows back. That must be fixed *before* any remediation runs, and it is not founder-gated.
 
@@ -142,7 +148,14 @@ requirement asked for: 49 of ~50 engineering rows reviewed, 1 batch still runnin
 4. **C-143 decision**: which line is canonical.
 5. **C-88 + C-28** landed, or the public performance claims scoped to what is actually measured.
 6. **C-91** landed before real volume hits checkout.
-7. The 117 **re-derived against ESPN** rather than against our own rows, so the true size is known.
+7. ~~The 117 **re-derived against ESPN** rather than against our own rows, so the true size is
+   known.~~ **DONE 2026-09-07 22:xx UTC — `GROUND_TRUTH_AUDIT_2026-09-07.md`.** The true size
+   is larger than 117 and it is now counted, not estimated: **68 published moneyline results
+   are wrong** against ESPN (of 590 checkable), every one of them on a game row carrying
+   another fixture's final; **187 of 670 checkable picks sit on such a row** (MLB 34.4%, NFL 0
+   of 66). And the audit surfaced a bound nobody had stated: **1,529 of 2,199 settled published
+   picks, 69.5%, carry no ESPN event id and cannot be checked against ground truth at all.**
+   That last item is now blocker 13.
 
 Calibration (ECE 0.0524 against a 0.05 floor) is NOT on this list. It is a gate correctly refusing an
 unearned claim, and it resolves with more settled rows, not with work.
