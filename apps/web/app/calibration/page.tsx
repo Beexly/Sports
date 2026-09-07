@@ -29,8 +29,13 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ProofExplorer } from "@/components/proof/proof-explorer";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
+import { jsonLdScript } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site-url";
 
 export const dynamic = "force-dynamic";
+
+const CALIBRATION_OG_DESCRIPTION =
+  "Galaxy Calibration: calibration, CLV, the trust ledger, proof of record, FABLE evidence gates, and loss autopsies. One branded surface.";
 
 export const metadata: Metadata = {
   title: `The Proof Room · ${BRAND_NAME}`,
@@ -39,11 +44,18 @@ export const metadata: Metadata = {
   alternates: { canonical: "/calibration" },
   openGraph: {
     title: `The Proof Room · ${BRAND_NAME}`,
-    description:
-      "Galaxy Calibration: calibration, CLV, the trust ledger, proof of record, FABLE evidence gates, and loss autopsies. One branded surface.",
+    description: CALIBRATION_OG_DESCRIPTION,
     url: "/calibration",
     type: "website",
   },
+};
+
+const calibrationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: `The Proof Room · ${BRAND_NAME}`,
+  description: CALIBRATION_OG_DESCRIPTION,
+  url: `${SITE_URL}/calibration`,
 };
 
 function ProofCard({
@@ -92,6 +104,10 @@ export default async function CalibrationProofRoomPage() {
 
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(calibrationJsonLd) }}
+      />
       <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
       <Nav />
 
