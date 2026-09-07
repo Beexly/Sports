@@ -433,6 +433,33 @@ describe("settlePendingPicks — an unfinished doubleheader holds", () => {
     expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
   });
 
+  it("still settles when the only other board row is an adjacent-day clockless fixture", () => {
+    // A series puts the same matchup on the next day. If that row carries a
+    // date-only start it has no clock, and pulling it into this pick's fixture
+    // set made the set size 2, which makes finalMatchesNearestFixture refuse
+    // every final and holds a perfectly gradable pick — the zero-sit lane would
+    // then VOID it (CodeRabbit, #717). The clockless fallback is same-UTC-day
+    // only, so tomorrow's row is not this pick's neighbour.
+    const soleFinal: TrustedFinal = {
+      date: gameTwo.slice(0, 10),
+      startIso: gameTwo,
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+    const tomorrow = new Date(Date.parse(gameTwo) + 24 * HOUR).toISOString().slice(0, 10);
+
+    const out = settlePendingPicks([dhPick], [soleFinal], {
+      postponedCandidates: [
+        boardRow(gameTwo, true),
+        { ...boardRow(gameTwo, false), gameId: "series-next-day", startTime: tomorrow },
+      ] as never,
+    })[0]!;
+
+    expect(out.status).toBe("SETTLED");
+  });
+
   it("settles normally when the board lists a single fixture that day", () => {
     const soleFinal: TrustedFinal = {
       date: gameTwo.slice(0, 10),

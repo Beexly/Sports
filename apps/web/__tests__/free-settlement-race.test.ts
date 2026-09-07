@@ -440,6 +440,29 @@ describe("settlement write under a mid-transaction schedule correction", () => {
     expect(store.game.commenceTime).toEqual(CORRECTED);
   });
 
+  it("reports the CURRENT kickoff when the pick write is what refused, not the one we loaded", async () => {
+    // Three code paths return KICKOFF_MOVED. Two carried kickoffAt from the
+    // start; the one reached when the reread passes and the pick write's
+    // relation filter then refuses did not, so the caller aged the refusal
+    // against the kickoff this cycle loaded and classified a postponed game as
+    // a lost write race instead of NOT_COMMENCED (CodeRabbit, #717).
+    store.onAfterGameRead = (call) => {
+      if (call === 1) store.game = { ...store.game, commenceTime: POSTPONED_TO };
+    };
+
+    const written = await settleOnePickGuarded((fn) => store.run(fn), {
+      ...ARGS,
+      result: "VOID",
+      homeScore: null,
+      awayScore: null,
+    });
+
+    expect(written.count).toBe(0);
+    expect(written.refusal).toBe("KICKOFF_MOVED");
+    expect(written.kickoffAt).toEqual(POSTPONED_TO);
+    expect(store.pick.result).toBe("PENDING");
+  });
+
   it("rethrows anything that is not the deliberate rollback", async () => {
     const boom = new Error("connection reset");
     await expect(

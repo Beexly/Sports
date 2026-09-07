@@ -336,7 +336,7 @@ export function sameMatchupFixturesNearKickoff(
     const near =
       g.startTime.includes("T") && Number.isFinite(kickoff) && Number.isFinite(start)
         ? Math.abs(start - kickoff) <= MAX_KICKOFF_DRIFT_MS
-        : daysApart(g.startTime.slice(0, 10), day) <= 1;
+        : daysApart(g.startTime.slice(0, 10), day) === 0;
     if (!near) return false;
     if (!g.home || !g.away) return false;
     const gHome = [

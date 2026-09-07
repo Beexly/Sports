@@ -256,7 +256,7 @@ export async function persistFreeScores(options?: {
           const near =
             ev.startTime.includes("T") && Number.isFinite(evStart)
               ? Math.abs(evStart - g.commenceTime.getTime()) <= MAX_KICKOFF_DRIFT_MS
-              : Math.abs(Date.parse(ev.startTime.slice(0, 10)) - d0) <= 36e5 * 24;
+              : Date.parse(ev.startTime.slice(0, 10)) === d0;
           if (!near) return false;
           const evHome = sideTokens({
             name: ev.home?.team ?? "",

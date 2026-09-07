@@ -227,7 +227,18 @@ export async function writeFreeSettlementInTx(
       select: { result: true },
     });
     const takenByAnother = currentPick === null || currentPick.result !== "PENDING";
-    return { count: 0, refusal: takenByAnother ? "ALREADY_SETTLED" : "KICKOFF_MOVED" };
+    if (takenByAnother) return { count: 0, refusal: "ALREADY_SETTLED" };
+    // The relation filter is what refused, so the row moved after the reread
+    // above. Report the kickoff the database NOW holds: without it the caller
+    // ages the refusal against the kickoff this cycle loaded and classifies a
+    // postponed game as a lost write race instead of NOT_COMMENCED. Two of the
+    // three KICKOFF_MOVED returns carried this from the start; this one did not
+    // (CodeRabbit, #717).
+    const moved = await tx.game.findUnique({
+      where: { id: args.gameId },
+      select: { commenceTime: true },
+    });
+    return { count: 0, refusal: "KICKOFF_MOVED", kickoffAt: moved?.commenceTime ?? null };
   }
   await tx.pickSettlementEvent.create({
     data: {
