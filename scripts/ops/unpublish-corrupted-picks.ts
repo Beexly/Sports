@@ -18,6 +18,8 @@
 import { PrismaClient } from "@prisma/client";
 import {
   CORRUPTED_POPULATIONS,
+  MLB_RUN_LINES,
+  RUN_LINE_EPSILON,
   narrow,
   reasonFor,
   summarize,
@@ -105,6 +107,84 @@ async function load(
   return narrow(population, mapped);
 }
 
+/**
+ * Set isPublished=false on exactly the rows that STILL match the population, at
+ * write time, evaluated by the database.
+ *
+ * WHY EVERY POPULATION RE-VALIDATES, not just the time-sensitive one. An earlier
+ * revision of this file re-checked the C-114 predicate database-side and left the
+ * other two guarded only by id and isPublished, on the stated reasoning that they
+ * "key on immutable facts - the sport and the pick's own line". THAT REASONING WAS
+ * WRONG, and two reviewers caught it independently (CodeRabbit and Devin Review,
+ * #719): packages/ingestion-pipeline/src/process-sport.ts refreshes `line` on
+ * every ingestion cycle for picks that already exist, with `result` and
+ * `settledAt` deliberately excluded from that update but `line` deliberately
+ * included. So an off-ladder run line CAN become a valid one between the moment
+ * this tool selects a row and the moment it writes, and the tool would then
+ * withdraw a pick that is no longer corrupt.
+ *
+ * The lesson is not "add a check to the MLB branch". It is that a remediation
+ * tool must never write on a classification it made in the past, so the whole
+ * class is closed: the predicate is re-evaluated inside the write for all three
+ * populations, and the reported count is what the database actually changed. A
+ * row that stopped matching is simply not counted, rather than silently withdrawn.
+ */
+async function unpublish(
+  prisma: PrismaClient,
+  population: CorruptedPopulation,
+  ids: readonly string[],
+): Promise<number> {
+  // `ids` is a JS string[] and Pick.id is postgres `text`. Prisma binds the array
+  // as a single parameter, so ANY() needs the element type spelled out or postgres
+  // cannot resolve it (CodeRabbit, #719).
+  const idList = [...ids];
+  switch (population) {
+    case "settled-before-kickoff":
+      // Cannot be expressed in Prisma's filter language (two columns compared),
+      // and the ingestion pipeline actively corrects commenceTime, so a schedule
+      // correction landing between load and write must not be overwritten.
+      return prisma.$executeRaw`
+        UPDATE picks p
+        SET "isPublished" = false
+        FROM games g
+        WHERE g.id = p."gameId"
+          AND p.id = ANY(${idList}::text[])
+          AND p."isPublished" = true
+          AND p."settledAt" IS NOT NULL
+          AND p."settledAt" < g."commenceTime"
+          AND p.result <> 'VOID'`;
+    case "soccer-two-way-ml":
+      return prisma.$executeRaw`
+        UPDATE picks p
+        SET "isPublished" = false
+        FROM games g
+        JOIN sports s ON s.id = g."sportId"
+        WHERE g.id = p."gameId"
+          AND p.id = ANY(${idList}::text[])
+          AND p."isPublished" = true
+          AND p."pickType" = 'MONEYLINE'
+          AND s.key LIKE 'soccer%'`;
+    case "mlb-off-runline":
+      // The ladder comes from MLB_RUN_LINES rather than being spelled out here,
+      // so the SQL and the in-memory selector cannot drift apart.
+      return prisma.$executeRaw`
+        UPDATE picks p
+        SET "isPublished" = false
+        FROM games g
+        JOIN sports s ON s.id = g."sportId"
+        WHERE g.id = p."gameId"
+          AND p.id = ANY(${idList}::text[])
+          AND p."isPublished" = true
+          AND p."pickType" = 'SPREAD'
+          AND s.key = 'baseball_mlb'
+          AND p.line IS NOT NULL
+          AND NOT EXISTS (
+            SELECT 1 FROM unnest(${[...MLB_RUN_LINES]}::double precision[]) AS valid
+            WHERE abs(abs(p.line) - valid) < ${RUN_LINE_EPSILON}
+          )`;
+  }
+}
+
 async function main(): Promise<void> {
   const prisma = new PrismaClient({ datasources: { db: { url } } });
   const report: Record<string, unknown>[] = [];
@@ -117,41 +197,7 @@ async function main(): Promise<void> {
       let remaining: number | null = null;
 
       if (args.execute && rows.length > 0) {
-        const ids = rows.map((r) => r.id);
-        if (population === "settled-before-kickoff") {
-          // The C-114 predicate is `settledAt < game.commenceTime`, and it is
-          // selected in memory because Prisma's filter language cannot compare
-          // two columns. Re-checking only the ids and isPublished at write time
-          // would let a schedule correction landing between load and write turn
-          // a selected row VALID while this still withdrew it — the ingestion
-          // pipeline actively corrects commenceTime (Devin Review + CodeRabbit,
-          // #719). So the predicate is re-evaluated database-side, inside the
-          // write, against the CURRENT game row.
-          written = await prisma.$executeRaw`
-            UPDATE picks p
-            SET "isPublished" = false
-            FROM games g
-            WHERE g.id = p."gameId"
-              AND p.id = ANY(${ids})
-              AND p."isPublished" = true
-              AND p."settledAt" IS NOT NULL
-              AND p."settledAt" < g."commenceTime"
-              -- Mirrors whereFor/narrow. A postponed fixture settles VOID and is
-              -- then rescheduled, which moves commenceTime past a settlement that
-              -- was correct when written; that is not C-114 corruption, and the
-              -- write-time predicate has to say so too or a concurrent
-              -- postponement could widen the set this recheck was added to narrow.
-              AND p.result <> 'VOID'`;
-        } else {
-          // The other two populations key on immutable facts — the sport and
-          // the pick's own line — so identity plus isPublished is sufficient.
-          // The guard also makes a second run a no-op.
-          const res = await prisma.pick.updateMany({
-            where: { id: { in: ids }, isPublished: true },
-            data: { isPublished: false },
-          });
-          written = res.count;
-        }
+        written = await unpublish(prisma, population, rows.map((r) => r.id));
         remaining = (await load(prisma, population)).length;
       } else if (args.execute) {
         written = 0;

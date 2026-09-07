@@ -194,17 +194,36 @@ export function boardDedupeKey(gameId: string, pickType: string | null | undefin
 }
 
 function outranks(candidate: BoardStateRow, held: BoardStateRow): boolean {
+  // A PUBLISHED row is a FACT, not an evaluation, so it wins outright.
+  //
+  // A published pick either exists or it does not; nothing the gate decides
+  // afterwards makes it stop existing. Letting a newer GATED_TODAY row displace
+  // it would tell a subscriber "we passed on this" about a fixture they can see
+  // a live pick for, which is the same false label C-136 and C-141 are about.
+  const candidatePublished = candidate.status === "PUBLISHED_TODAY";
+  const heldPublished = held.status === "PUBLISHED_TODAY";
+  if (candidatePublished !== heldPublished) return candidatePublished;
+
+  // Between the two EVALUATION lanes, newest wins - lane rank does not.
+  //
+  // SCORING_NOW ranks above GATED_TODAY for display ordering, and comparing that
+  // rank first meant an OLDER "scoring" decision beat a NEWER "gated" one on the
+  // same fixture, so the board showed a state the model had already moved on
+  // from (CodeRabbit, #719). Lane rank survives only as the tie-break for two
+  // rows evaluated at the same instant.
+  //
+  // Note this is narrower than the reviewer's suggestion of comparing timestamps
+  // before lane rank unconditionally: that ordering would let a newer GATED row
+  // displace an older PUBLISHED one, which is the bug the block above prevents.
+  if (candidate.updatedAt !== held.updatedAt) return candidate.updatedAt > held.updatedAt;
   const laneDelta = LANE_RANK[candidate.status] - LANE_RANK[held.status];
   if (laneDelta !== 0) return laneDelta < 0;
-  // NEWEST evaluation wins, before confidence.
-  //
   // GateDecision rows are repeated evaluations of the same game over time, and
   // confidence can legitimately FALL between them as the line moves. Ranking on
   // confidence first meant an older, stronger reading beat the newer downgrade,
   // so a subscriber was shown a number the model no longer stood behind
   // (Devin Review, #717). Confidence and edge stay as tie-breakers for rows
   // evaluated at the same instant.
-  if (candidate.updatedAt !== held.updatedAt) return candidate.updatedAt > held.updatedAt;
   const conf = (candidate.confidence ?? -1) - (held.confidence ?? -1);
   if (conf !== 0) return conf > 0;
   const edge = (candidate.edgeIndex ?? -1) - (held.edgeIndex ?? -1);

@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import {
   CORRUPTED_POPULATIONS,
   isOnRunLineLadder,
@@ -146,5 +148,73 @@ describe("corrupted-pick selection — shared contract", () => {
   it("summarize reports the ids it will write, so the dry run is auditable", () => {
     const s = summarize("mlb-off-runline", [row({ id: "a", pickType: "SPREAD", line: 4.5 })]);
     expect(s).toMatchObject({ population: "mlb-off-runline", count: 1, pickIds: ["a"] });
+  });
+});
+
+describe("the WRITE re-validates, for every population", () => {
+  /**
+   * These assert on the source of the remediation tool rather than on its
+   * behaviour, and that limitation is stated rather than hidden: the writes are
+   * raw SQL and there is no database in this suite, so the SQL itself is NOT
+   * EXERCISED here. What these DO pin is the invariant that was violated — that
+   * every population re-checks its own predicate inside the write — so deleting
+   * a guard fails a test instead of silently shipping.
+   *
+   * The invariant matters because it has already been wrong twice. The first
+   * revision re-checked nothing; the second re-checked only the time-sensitive
+   * population, on my stated reasoning that the others "key on immutable facts,
+   * the sport and the pick's own line". That was false: process-sport.ts
+   * refreshes `line` on every ingestion cycle for picks that already exist, so
+   * an off-ladder run line can become valid between select and write and the
+   * tool would withdraw a pick that is no longer corrupt. CodeRabbit and Devin
+   * Review found it independently on #719.
+   */
+  const source = readFileSync(
+    resolve(__dirname, "../../../scripts/ops/unpublish-corrupted-picks.ts"),
+    "utf8",
+  );
+
+  const updateFor = (population: string): string => {
+    const start = source.indexOf(`case "${population}":`);
+    expect(start).toBeGreaterThan(-1);
+    const rest = source.slice(start);
+    const end = rest.indexOf("`;");
+    expect(end).toBeGreaterThan(-1);
+    return rest.slice(0, end);
+  };
+
+  it("guards every write on isPublished, so a second run is a no-op", () => {
+    for (const population of CORRUPTED_POPULATIONS) {
+      expect(updateFor(population)).toContain(`p."isPublished" = true`);
+    }
+  });
+
+  it("binds the id list as a postgres text array, not a bare parameter", () => {
+    // Pick.id is `text` and Prisma binds the array as ONE parameter, so ANY()
+    // needs the element type spelled out (CodeRabbit, #719).
+    for (const population of CORRUPTED_POPULATIONS) {
+      expect(updateFor(population)).toContain("ANY(${idList}::text[])");
+    }
+  });
+
+  it("re-checks the settled-before-kickoff predicate against the CURRENT game row", () => {
+    const sql = updateFor("settled-before-kickoff");
+    expect(sql).toContain(`p."settledAt" < g."commenceTime"`);
+    expect(sql).toContain(`p.result <> 'VOID'`);
+  });
+
+  it("re-checks the soccer predicate rather than trusting the selection", () => {
+    const sql = updateFor("soccer-two-way-ml");
+    expect(sql).toContain(`p."pickType" = 'MONEYLINE'`);
+    expect(sql).toContain("s.key LIKE 'soccer%'");
+  });
+
+  it("re-checks the MLB run line against the CURRENT line, which is mutable", () => {
+    const sql = updateFor("mlb-off-runline");
+    expect(sql).toContain(`p."pickType" = 'SPREAD'`);
+    expect(sql).toContain("s.key = 'baseball_mlb'");
+    // Driven by MLB_RUN_LINES so the SQL and the in-memory selector cannot drift.
+    expect(sql).toContain("unnest(${[...MLB_RUN_LINES]}::double precision[])");
+    expect(sql).toContain("abs(abs(p.line) - valid)");
   });
 });

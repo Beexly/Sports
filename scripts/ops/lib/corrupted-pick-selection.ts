@@ -46,7 +46,7 @@ export const CORRUPTED_POPULATIONS: readonly CorruptedPopulation[] = [
 
 /** The run line ladder a book actually offers. Mirrors BASEBALL_RUN_LINES. */
 export const MLB_RUN_LINES: readonly number[] = [1.5, 2.5, 3.5];
-const RUN_LINE_EPSILON = 1e-9;
+export const RUN_LINE_EPSILON = 1e-9;
 
 export function isOnRunLineLadder(line: number): boolean {
   if (!Number.isFinite(line)) return false;
