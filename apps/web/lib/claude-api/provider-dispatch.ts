@@ -11,6 +11,9 @@
 import { callClaudeMessages, type ClaudeMessagesRequest, type ClaudeMessagesResult } from "./messages";
 import { pickModelForSurface } from "./model-router";
 import { cloudAttemptOrder, type JynxCloud } from "./jynx";
+import { logClaudeCallToHelicone } from "./helicone-logger";
+import { traceClaudeCallToLangfuse } from "./langfuse-tracing";
+import { estimateClaudeCostUsd } from "./cost-monitor";
 import {
   callBedrockClaudeMessages,
   BedrockConfigError,
@@ -68,6 +71,47 @@ async function invokeCloud(
 }
 
 /**
+ * Log a completed call to Helicone (Async mode — see helicone-logger.ts). Awaited
+ * with its own short internal timeout so a slow/down Helicone endpoint adds bounded
+ * latency at most; never throws, so it can never turn a successful Claude call into
+ * a failed one.
+ */
+async function logResult(
+  result: ClaudeMessagesResult,
+  request: ClaudeMessagesRequest,
+  startedAtMs: number,
+  env: Env,
+): Promise<void> {
+  await Promise.all([
+    logClaudeCallToHelicone(
+      {
+        modelName: result.modelName,
+        system: request.system,
+        user: request.user,
+        responseText: result.text,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        startedAtMs,
+        completedAtMs: startedAtMs + result.durationMs,
+        status: 200,
+      },
+      env,
+    ),
+    traceClaudeCallToLangfuse(
+      {
+        surfaceName: request.surface ?? "claude-call",
+        modelName: result.modelName,
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        costUsd: estimateClaudeCostUsd(result.inputTokens, result.outputTokens),
+        durationMs: result.durationMs,
+      },
+      env,
+    ),
+  ]);
+}
+
+/**
  * Provider-aware Claude call. Clouds from Jynx order; cash Anthropic last.
  */
 export async function callClaude(
@@ -83,16 +127,21 @@ export async function callClaude(
     ...(request.fetchImpl ? { fetchImpl: request.fetchImpl } : {}),
     ...(request.cache ? { cache: request.cache } : {}),
   };
+  const startedAtMs = Date.now();
 
   const attempts = cloudAttemptOrder(env);
   for (const cloud of attempts) {
     try {
-      return await invokeCloud(cloud, providerRequest, env);
+      const result = await invokeCloud(cloud, providerRequest, env);
+      await logResult(result, request, startedAtMs, env);
+      return result;
     } catch (error) {
       if (!isCloudTransportError(error)) throw error;
       // try next cloud / cash
     }
   }
 
-  return callClaudeMessages(request);
+  const result = await callClaudeMessages(request);
+  await logResult(result, request, startedAtMs, env);
+  return result;
 }

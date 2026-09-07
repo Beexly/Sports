@@ -201,6 +201,235 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
   ESPN `limit=1000` truncation, matcher containment on 2-3 letter abbreviations and bare
   club tokens, overdue-only runner slice, backfill date order. Do not re-fix them; land #707.
 
+**UPDATED 2026-09-06 — External repo leverage audit complete; nothing installed.**
+Two rounds independently fact-checked (license fetched raw, real commit history, not
+star counts) a set of MCP/RAG/code-graph/agent-memory repos for GSE/GSN fit. Full detail:
+`docs/ai/airwave/GSE_GSN_REPO_LEVERAGE_AUDIT_2026-09.md`. Nothing was installed, no schema
+changed, no account created — every item needs the founder personally, per Law 2 (frozen
+`package-lock.json`/`packages/db/prisma/**`), Law 7/8 (no autonomous package installs), or
+because it needs an external account an agent can't create. A same-session attempt to add
+`@playwright/mcp` to `.mcp.json` was denied by this session's own tool permissions, not by
+AGENTS.md — confirming even the lowest-risk item on the list needs a human hand on it.
+Founder-only next actions, fastest-value first: (1) add `@playwright/mcp` to `.mcp.json`
+for supervised console-step 2FA/SSO (never for unattended autonomous browsing — still
+gated by the clearance-engine rule same as any extraction); (2) Helicone free-tier signup
++ Claude-API proxy URL swap (LLM cost tracing, zero new dependency); (3) approve
+`npm install @orama/orama` (local search — the single most-requested item across the prior
+audit's own domains). Do not approve mem0 AND mcp-memory-service together — two competing
+agent-memory stores is a regression, not a leverage gain. **Round 3 landed same-day**:
+a broader, six-area exploratory sweep (same doc, new section) — highlights: the
+TheRundown 429 incident has a free, no-new-vendor fix (a Redis daily-quota counter GSE
+already has the connection for); a real CC-BY-4.0 nflverse-equivalent exists for
+NBA/NHL (`sportsdataverse-data`) and a real negative finding for soccer (`worldfootballR`
+archived, no replacement); visual-regression testing for the ~30-route cockpit needs
+zero new dependencies (Playwright's built-in `toHaveScreenshot`); and `NVIDIA/openshell`
+could make this file's own frozen-path/no-install/no-gate-flip laws machine-enforced
+instead of honor-system. Nothing in Round 3 was installed either — same founder-only
+posture as Round 2. **Round 4 added a design reference, not a repo**: a founder-shared
+bitemporal memory-repair pattern that is now the strongest available citation for the
+Airwave `claim-consistency-check.ts` work (supersedes NanoIndex) and directly targets
+the dormant `Entity`/`EntityEdge`/`Signal` schema — see the doc for the open question
+it raises about `Signal.capturedAt` semantics before that gets wired up.
+**Round 5 (same day): eleven of Round 1-2's repos re-verified at the source-code level**
+(cloned fresh, exact files/lines cited, not README/license-level like Rounds 1-2) —
+several prior recommendations are corrected, not just deepened. Highlights: Helicone
+should run in **Async** logging mode, not the proxy-URL-swap Round 2 recommended (Helicone's
+own docs mark Proxy mode as on the critical path — an outage there fails live Claude calls
+outright); Langfuse's SDK is a different repo (`langfuse-js`) with a different package name
+(`@langfuse/otel`, not `langfuse`) after a full OTel-based rewrite; **cut `Stevenic/vectra`
+entirely** (no cross-process concurrency control — a real lost-update race, not just "less
+durable" than Postgres); Orama's "sub-2KB" tagline is false (measured 63-77KB) and it has no
+ANN index at all, fine for small static corpora, wrong for growing semantic search where
+Neon's own pgvector is the better fit; `mem0` is usable only as retrieval plumbing behind
+GSE's own `write-gate.ts` (every mutating call commits synchronously, no pending state);
+`pg_bitemporal`'s real design is a shadow-table + stored-procedure API, not triggers, and
+its portability to `EntityEdge` needs real rework for the compound `cuid` key; the
+`typescript-language-server` MCP bridge is now sized (~300-600 lines, days not weeks), with
+the real risk being silent under-reporting on this repo's own 24-tsconfig-file shape, not
+the wire protocol. Full detail and citations in the doc's Round 5 section. `@ast-grep/cli`'s
+deep dive **stalled** (~2h50m hung on an `npx` registry install in this sandbox, stopped
+rather than left running) and was not completed — Round 2's original finding (BLOCKED, new
+dependency, `allowScripts` needed) stands, un-re-verified at the source level. See the doc's
+addendum. **Round 7: 12 deep-code-dives on the Round 6 sweep, two consequential findings.**
+(1) GSE already built a complete, tested `henrygd-ncaa` adapter with dual-source consensus
+checking — it's fail-closed pending one `source-rights-registry.ts` entry
+(`GSE-SEC-050`), not missing. The dive fetched NCAA.com's live ToS directly and found
+explicit commercial-use restriction language on "statistics, updated scores" — the correct
+classification is `permission_required`, matching Kalshi/ClubElo/scores24.live precedent, not
+`approved_public_logged_off`. Not added to the registry autonomously (a legal/compliance
+call), but the exact entry is fully drafted in the doc. (2) GSE's three real ESPN client files
+(`espn-schedule-seed.ts`/`espn-results-client.ts`/`espn-odds-client.ts`) never call
+`assertIngestible()` at all — confirmed by grep — so `source-registry.ts`'s `espn-hidden-api:
+forbidden` verdict (with a passing test asserting it throws) has zero effect on the ESPN
+traffic GSE actually generates; production runs under the other, more permissive registry's
+posture unchecked. One document disagrees with the running code, not just with the other
+document — a founder/legal item, independent of Round 6's original registry-disagreement
+flag. Also confirmed GSE's own prediction/calibration engine is ahead of every betting-math
+repo checked (Shin devig, robust Kelly, PAV/IVAP/CVAP, purged-embargoed walk-forward, real
+timing CLV) — no gap, a reassurance. One idea was concrete enough to build:
+`apps/web/lib/market/shop-advantage.ts`, a pure "shop vs. edge" probability-delta function,
+deliberately left unwired pending a product decision on placement/wording. Full detail in
+the doc's Round 7 section. **Round 6 (founder-sourced, live-tested): 14 more repos.** Real finding independent
+of any repo: GSE's own two rights registries disagree on ESPN's status
+(`packages/data-ingestion/src/source-registry.ts`'s `espn-hidden-api` = forbidden vs.
+`apps/web/lib/scraping/source-rights-registry.ts`'s `espn-public-api` = approved,
+`commercial_display_allowed: false`) — worth a founder/legal look. `ParlayAPI`'s keyless
+endpoints were called live, not read from the README: the real one (`/v1/widget/odds`) is
+genuinely live NFL data but h2h-only at 60 req/hour (too thin for GSE's cadence); the
+similarly-named `/v1/sandbox/...` endpoint returns equally plausible-looking data that its own
+docs say is synthetic — a real trap if integrated from the README alone. `sofascore.com`
+returned a verified HTTP 403 on a plain robots.txt fetch (real anti-bot control, not a guess);
+`api-football.com` stayed unverified after three independent attempts, reported honestly as
+open rather than guessed. `multiplex-invertsoap119/polymarket-sports-arbitrage-bot` is
+excluded outright, not just deprioritized — it touches Polymarket, which
+`.claude/skills/polymarket-hold/SKILL.md` puts under a counsel compliance hold. Nine of
+fourteen repos (course material, meetup demos, near-empty repos) got a second, closer look per
+founder instruction and still had no realistic adoption angle — verified, not assumed. Full
+detail in the doc's Round 6 section.
+
+**Round 8 (same day): 13 sports-specific external repos** (MCP servers, ESPN/odds clients,
+Kalshi tooling, betting math, fantasy platforms) — all cloned and read at the source level, all
+live-data claims tested directly. Highlights: `Backspace-me/sportscore-mcp` is a vendor SEO
+vehicle requiring a mandatory unwaivable attribution badge, not neutral OSS — treat as
+`permission_required`, not free; `pseudo-r/Public-ESPN-API`'s live-tested endpoints confirm
+GSE's own ESPN odds parsing hits the right shape and document the same free pattern already
+live for NHL/tennis/UFC/F1, sports GSE doesn't yet ingest; `sportsdataverse/sportsdataverse-js`
+does **not** solve the NCAA rights problem (it scrapes NCAA.com directly under a different
+wrapper, and its NCAA endpoint 404s in production today) — the real unlock, if any, is the
+separately-licensed `sportsdataverse-data` (CC-BY-4.0) dataset, untouched by this library;
+`machina-sports/sports-skills` and `TexasCoding/kalshi-python-sdk` corroborate WP-27's premise
+(Kalshi market-data is genuinely keyless, `KXNFLSPREAD`/`KXNFLTOTAL` are real live series) and
+surface two edge cases to check against the unmerged `galaxy-kalshi-book.ts` branch: one
+contract per strike line, not one line-and-price pair, and four distinct expiration timestamps
+that can diverge; `jdguggs10/flaim` is a mature, production Yahoo OAuth2 reference (token
+refresh-lease/cooldown/app-fingerprint logic worth adapting; its plaintext token storage is
+not); and `x402-fpl-api` confirms x402 (a real, Stripe-backed Linux Foundation payment
+protocol) is genuinely implemented in-repo, worth the founder's awareness for a future
+"Galaxy Sports API" monetization surface, not a build-now item. Full detail in the doc's
+Round 8 section.
+
+**Round 9 (same day): the same lens turned inward — 8 parallel read-only audits of GSE's own
+codebase**, not external repos, per founder instruction to find what to add/what's missing/
+what to polish. Three findings stand out. (1) A full calibration-regression detector
+(`calibration-monitor.ts`/`regression-detector.ts`, Brier/RES baseline comparison) is built and
+unit-tested but its DB-backed data feed (`calibration-regression-snapshot.ts`) has zero callers
+in any cron route — a live regression today raises no alert anywhere; the math is done, only
+the wiring is missing. (2) GSE already has a real, working Sleeper league sync
+(`sleeper-sync.ts`) and a real, working League Twin visualization
+(`fantasy/league-twin.ts`) with a tested live-data seam already built — but the synced roster
+is never passed into the Twin, so `/fantasy/league-twin` shows illustrative sample players even
+after a user connects their real league; a projections join is the remaining gap, not a stub.
+(3) `workers/content-publishing` has zero callers anywhere (confirmed by grep) despite CLAUDE.md
+calling it "hard-gated" — the real draft pipeline bypasses it entirely — and the fully-built
+weekly transparency-recap draft template appears to generate a `DRAFT` row every week that
+nobody has ever reviewed into publication. Also found: two dead/duplicate systems needing a
+founder look — `.claude/skills/clearance/` and `clearance-registry/` are duplicate skills that
+have already drifted out of sync (the same failure mode as the code-level rights registries,
+now in the skills docs describing them), and `packages/partner-stack` contains a second,
+competing Stripe-tier resolver with placeholder price IDs that would violate rule 3 if anyone
+ever imported it believing it authoritative. Four of the seven packages CLAUDE.md calls
+dormant (`epistemic-twin`, `quote-plane`, `governed`, `crypto`) are corrected in the doc as
+actually live in production; `genesis-kernel` is confirmed *deliberately* unwired by its own
+CI-enforced structural tests, not neglected. Nothing built autonomously this round — every item
+is either purely additive tooling for the owning domain agent or a founder-decision item. Full
+detail in the doc's Round 9 section.
+
+**Round 10 (same day): new categories — play-by-play/win-probability models, betting exchanges,
+injury data, distribution.** Most directly actionable round yet; three small, single-adapter
+tasks are now scoped needing only a free API-key signup, no schema change, no founder rights
+call beyond that. (1) `nflverse/nflverse-data`'s compiled play-by-play releases (win probability,
+EPA) are **CC-BY-4.0 licensed**, confirmed by reading the full license text — attribution-only,
+no non-commercial clause — and live-tested as real 2025-season data pulled via a plain HTTP GET.
+A thin adapter here gives GSE a genuine third probability signal (alongside the factor model and
+market-implied probability) for the internal drift/QA gap Round 7 already flagged. (2) CFBD's
+own REST API — the same `cfbd` source `cost-policy.ts` already references — already returns
+pre-computed EPA (`ppa`) and win probability as JSON, confirmed by reading `cfbfastR`'s source
+(a thin wrapper around those exact endpoints) and live-testing the API directly; the CFB
+equivalent may need only a thin adapter, not new licensing. (3) MLB's official Stats API
+(`statsapi.mlb.com/api/v1/transactions`) is live, keyless, and directly portable into an injury
+adapter — GSE ships zero player-availability signal for MLB/NBA/NHL/MLS today. NBA's official
+injury-PDF source is equally clean rights-wise but unreachable from this sandbox (Akamai
+mitigation, not a rights problem); `balldontlie.io`'s injury endpoint is confirmed paid-gated
+and Big Balls Data's NBA/NHL feed is confirmed dead by its own current docs — both ruled out with
+direct evidence, not assumed. Two non-buildable-now findings, still useful: ProphetX and Novig
+are real, CFTC-verified (via CFTC.gov's own filings) sports exchanges, but both gate API access
+behind an approval/sales process, not a fit for the free-first board today. And one genuinely
+different lever — a Discord bot posting GSE's Free-tier daily teaser, sketched against a real,
+validated precedent (a comparable bot, BettorEdge, confirmed live in 1,100+ servers running the
+same free-picks-plus-leaderboard shape) — a founder marketing decision, not built. Full detail
+in the doc's Round 10 section.
+
+**Round 11 (2026-09-06/07): GSE's own dev-process pain point — 10 multi-agent coding-
+orchestration repos.** Headline finding: **GSE's own ledger (claim in the same git commit) is
+already more rigorous than most of what's out there.** `code-conductor`'s "atomic" claiming is
+actually an unlocked race (contradicting its own docs), and its install path suffered a real
+supply-chain compromise in March 2026; Podiom and `taskq` both lack a compare-and-swap guarantee
+GSE's git-push atomicity gets for free; `deepseek-ai/deepseek-harness` (verified real) is the one
+genuine exception, with a revision-CAS primitive worth borrowing as a guard-script idea (reject a
+merge introducing two `CLAIMED` owners in one diff hunk). `mission-control` is a real, substantial
+project (1,577 tests run directly, genuinely heterogeneous 5-runtime dispatch) but its review gate
+is one LLM judging another's output via string-matched verdict parsing — named as a real risk if
+that pattern were ever applied to anything touching settlement/entitlements/PROVEN-gate decisions.
+`agentjj` and `Agent-Git` (agent-native VCS tools) are both honest negatives: agentjj's own latest
+commit is a post-mortem admitting its core model breaks under exactly GSE's shape (parallel
+writers, single-writer working copy); Agent-Git never touches git at all. `gitagent-protocol`
+requires files GSE doesn't have to even count as conformant — low priority, revisit later; its one
+real transferable idea is a lightweight schema/validator for `.claude/agents/*.md` frontmatter.
+Nothing installed, no repo recommended as a dependency. Full detail in the doc's Round 11 section.
+
+**Round 12 (2026-09-07): creative-fit pass on founder-sourced items, integrate where real.**
+One thing actually built and shipped: `apps/web/lib/fantasy/td-equity.ts` — three pure, tested
+functions (goal-line QB "vulture" risk, touchdown scoring-distance profile, defensive red-zone
+soft spot) replacing three LLM prompt templates that were circulating as "AI fantasy analyst"
+prompts for the same three real, quantifiable questions — deliberately unwired pending real
+play-by-play (the Round 10 nflverse/CFBD path). Two real repos researched deeply, not buildable
+without a founder-approved new dependency: `claude-faceless-shorts-creator`'s Remotion track is
+genuinely 100%-code-rendered (verified in the actual composition source) and could turn the
+already-built-but-never-published weekly transparency-recap draft into a short, auditable video —
+its other two tracks are generative-AI content and must never be adopted; `CopilotKit/openbot`'s
+"decide before, record after" audit gate is real and load-bearing but solves a harder problem than
+GSE's actual one-agent scripted-playbook need — the pattern itself (log the decision before
+acting) is buildable today with zero new dependencies. A final set, researched for genuine
+leverage rather than written off: Appsmith's Community Edition is verified genuinely free
+(Apache-2.0, self-hosted, no user cap) — real, low-cost leverage for the "no unified ops-health
+view" gap this audit has now flagged twice independently, though it needs new self-hosted infra;
+Google's TimesFM-3 required a correction the marketing clip didn't carry — its code is Apache-2.0
+but its **pretrained weights are Non-Commercial-licensed** (verified from the model's own LICENSE
+file), so a revenue company cannot run it even for internal QA without breaching the license; the
+Perplexity/NVIDIA local-orchestrator hardware product isn't adoptable (GSE runs no local GPU
+hardware) but is real outside validation that GSE's already-planned local-cheap/cloud-frontier
+routing work (C-108) is the right direction. Full detail in the doc's Round 12 section.
+
+**Round 13 (2026-09-07): synthesis pass — connecting Round 11-12's findings into GSE's own
+systems, not more repo research.** Biggest correction: Round 10 was WRONG that nflverse-data
+needs new ingestion — `packages/data-ingestion/src/nflverse-source.ts` is already a complete,
+registered adapter (`commercialUse: true`), and `apps/web/lib/intelligence/scoring-zone.ts` is
+already a LIVE production module pulling real nflverse play-by-play for red-zone/goal-line
+opportunity share, gated through `assertIngestible("nflverse")`. Verified directly by reading
+the file: fully wiring `td-equity.ts` to it is real, precisely scoped work (needs a
+`passer_player_id` column for QB detection, TD tracking beyond the red-zone-only filter, and a
+`defteam`-side aggregation the module doesn't do today) touching a deliberately
+OOM-hardened parsing path — not a new external source, but not a five-minute edit either; both
+"blocked on ingestion" and "trivial" would have been wrong framings. Four previously-isolated
+Round 11 tool verdicts (Podiom, taskq, dsh-goal, code-conductor) are now one phased "ledger
+companion" design: a gitignored SQLite mirror of `AGENT_LEDGER.md` with a revision/CAS column,
+synced via the ledger guard's own already-tested `parseLedger()`, optionally exposed as a local
+MCP server for atomic claim attempts — Phase 0 needs **zero new dependency** (`node:sqlite`
+live-verified working on this environment's Node version), Phase 1 (the MCP server) needs one
+new package, a real Law 7 founder call. mission-control's routing pattern (separate from its
+already-flagged-risky review gate) is filed as a trigger condition — not urgent for today's four
+fixed agent identities, genuinely worth building the moment a fifth (e.g., a rights-registry
+agent) is added. Three previously-scattered findings (the unwired regression detector, nflverse
+as a scoped third calibration signal, nflverse's own publish-a-reproducible-history credibility
+strategy) are now one 3-phase plan directly serving the live PROVEN-gate push, Phase 1 being one
+function call connecting two already-built, already-tested pieces before the flip. Sharpest
+single finding: GSE's settlement pipeline already has its own full "decide before, record after"
+discipline (`SettlementObservation`/`SettlementAnomaly`/`SettlementDecisionEvent` — insert-only,
+independent-corroboration-before-promotion, revisioned decision log) sitting right next to the
+pick-generation side's already-public `/verify` system, with confirmed zero callers outside
+internal ops — the exact patterns this audit found valuable in *external* tools already exist
+inside GSE, unused and unseen by any customer. Full detail in the doc's Round 13 section.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
