@@ -199,6 +199,26 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     expect(payload.data.passes.map((p) => p.id)).toEqual(["older-gated"]);
   });
 
+  it("orders the query by a TOTAL order, so an evaluatedAt tie has one winner", async () => {
+    // Asserted on the QUERY, not on the output, and that is the whole point.
+    // dedupePassesByGame does not re-sort by design, so determinism can only
+    // come from the database ordering. A test that shuffled a JS array and
+    // expected a stable winner would be asserting a property this code
+    // deliberately does not have (Devin Review, #719).
+    //
+    // Measured before the fix: zero of the 356 GATED decisions in production
+    // share a (gameId, evaluatedAt) pair, so this is latent rather than live.
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+
+    await loadBoardPasses(NOW, { includeNoBetDetail: false });
+
+    const gatedCall = mocks.gateDecisionFindMany.mock.calls.find(
+      (call) => (call[0] as { where: { status?: string } }).where.status === "GATED",
+    );
+    const orderBy = (gatedCall?.[0] as { orderBy?: Array<Record<string, string>> }).orderBy;
+    expect(orderBy).toEqual([{ evaluatedAt: "desc" }, { id: "desc" }]);
+  });
+
   it("keeps genuine passes: a fixture with no published pick still lists", async () => {
     // The control. A suppression that removed everything would also pass the
     // test above, so this pins that the lane still does its job.

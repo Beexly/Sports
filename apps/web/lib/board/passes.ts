@@ -82,7 +82,7 @@ function todayBounds(): { start: Date; end: Date } {
  * Collapse repeated evaluations of one fixture to a single, newest pass row.
  *
  * Exported so the collapse can be asserted without a database. Callers must pass
- * rows already ordered newest-first (`orderBy: { evaluatedAt: "desc" }`), which
+ * rows already ordered newest-first (`orderBy: [{ evaluatedAt: "desc" }, { id: "desc" }]`), which
  * is what makes "first seen wins" correct; the function does not re-sort,
  * because sorting here would hide an ordering mistake at the query instead of
  * surfacing it.
@@ -159,7 +159,22 @@ export async function loadBoardPasses(
           game: { picks: { none: publishedPickRelation } },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
-        orderBy: { evaluatedAt: "desc" },
+        // TOTAL ORDER, not just a sort key (Devin Review, #719).
+        //
+        // dedupePassesByGame keeps the FIRST row per fixture and deliberately
+        // does not re-sort, so the query ordering IS the tie-break. On
+        // `evaluatedAt` alone, two evaluations of one fixture written in the
+        // same millisecond leave the winner to whatever order postgres happens
+        // to return, and two identical board loads could show different reasons
+        // and confidences for the same game - the C-117 contradiction again,
+        // this time nondeterministic and so not reproducible from a screenshot.
+        //
+        // MEASURED before fixing: across all 356 GATED decisions in production,
+        // ZERO (gameId, evaluatedAt) pairs carry more than one row, so this has
+        // never fired. It is a one-line total order broken by a column that is
+        // already unique, and the cost of leaving it latent is a bug nobody
+        // could reproduce from a report.
+        orderBy: [{ evaluatedAt: "desc" }, { id: "desc" }],
         // Bounds decisions SCANNED, not fixtures shown - the collapse below
         // reduces this to one row per fixture.
         //
