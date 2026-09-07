@@ -381,6 +381,38 @@ pick-generation side's already-public `/verify` system, with confirmed zero call
 internal ops — the exact patterns this audit found valuable in *external* tools already exist
 inside GSE, unused and unseen by any customer. Full detail in the doc's Round 13 section.
 
+**Round 14 (2026-09-07): turned inward with a dead-code scanner instead of more repo browsing —
+5 dormant-subsystem investigations, one real bug fixed and shipped.** `npx knip` (one-off, no
+install) against the whole monorepo found 275 unused files / 282 unused exports / 380 unused
+exported types, an order of magnitude past prior manual-grep audits. Fixed and shipped (`ed39253`,
+typecheck/tests/guardrails all green): `catalog-expand.ts`'s 16 "zero-importer" functions were a
+knip false positive (already live — `expandAll()` feeds the real public catalog, 881 metrics
+confirmed by running the build), but the investigation found a real bug underneath — `SportCode`
+had no `WNBA`/`F1`/`TENNIS`/`MMA` members, so ~50 real, already-live catalog rows were mistagged
+`sport: "MULTI"` and invisible to `?sport=` filtering on the public API; added the 4 codes and
+retagged the 4 affected functions, purely additive, 2 files. Two real parallel-implementation
+problems found, left as product decisions rather than autonomous fixes: `packages/prediction-
+engine/src/metrics/core/` (89 files, 14,439 lines, 296 tests, a genuine SHADOW-gated metric-
+governance framework) duplicates `packages/prediction-engine/src/nfl/`'s independent QB-burden/
+YAC/rush-environment implementations — different weights, both unwired outside their own tests,
+picking one is a founder/product call before either goes through the existing `metric-
+graduation.ts` gate. `apps/web/lib/decision-genome/` (17 modules, 65 tests, a real pre-decision
+Signal/Shadow/Wait/Pass/Quarantine governance layer) has two pieces that duplicate rather than
+complement already-live systems (`conformal.ts` vs. the production-authority `selective-
+abstention.ts`/`selective-gate.ts`; `agent-court.ts`'s Brier-scored court vs. the live `jarvis/
+agent-council.ts` roster, no type link keeping them in sync) — recommend archiving/folding those
+two, the rest is a real candidate to activate as the pre-result complement to the already-live
+post-result settlement discipline Round 13 found. One non-finding worth recording so it isn't
+re-investigated: `apps/web/lib/fable/` is not sports- or AI-related at all — it's the repo
+owner's own AWS re/Start career-credentialing evidence tracker, fail-closed, zero real AWS calls,
+working as designed; CLAUDE.md/AGENTS.md should eventually get one line noting it exists so a
+future audit doesn't reconstruct its purpose from scratch again. The revenue/content cluster
+resolved into three distinct problems, not one: media-revenue's 30-day draft queue is genuinely
+built-and-never-reviewed (needs an admin UI, real small next step); `revenue/`'s partner engine
+has no data to govern (nothing code can fix); `pre-mortem/templates` is an orphaned duplicate of
+the different, already-live `premortem/` module (a founder call on which survives). Full detail
+in the doc's Round 14 section.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
