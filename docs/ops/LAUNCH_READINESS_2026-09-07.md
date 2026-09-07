@@ -109,7 +109,7 @@ Ordered by what I would do first. Effort is the agent's estimate [A] unless mark
 
 | row | what | effort |
 |---|---|---|
-| **C-92** | the signal slate writes `isPublished` on UPDATE, so **a withdrawn pick is re-published by the next slate run** — this alone would undo any remediation | hours [A] |
+| **C-92** | the signal slate wrote `isPublished` on UPDATE, so a withdrawn pick was re-published by the next slate run. **FIXED**, and the scale claim below it was mine and was wrong | hours → done [M] |
 | **C-94** | fantasy: a live-data badge ("Projections: live · Data via nflverse") renders above **fictional players** on six paid-tier pages | days [A] |
 
 ### Auditability
@@ -118,8 +118,18 @@ Ordered by what I would do first. Effort is the agent's estimate [A] unless mark
 |---|---|---|
 | **C-150** | 69.5% of settled published picks sit on game rows with no ESPN event id, so their results can never be checked against ground truth. Until that is fixed the track record is unauditable for two thirds of its own history, whatever the numbers say [M] | days |
 
-> **C-92 deserves emphasis.** If it is real as described, any unpublish is temporary — the next slate
-> run puts the rows back. That must be fixed *before* any remediation runs, and it is not founder-gated.
+> **C-92: confirmed real, and my claim about its scale was wrong by a factor of 146.** The defect
+> is exactly as reported - `isPublished` sat in the payload shared by the create and the update, so
+> every slate run rewrote the flag on every existing row. But I wrote that "this alone would undo
+> any remediation", and that does not survive measurement. The update is scoped to
+> `result: "PENDING"` and the slate only writes MONEYLINE picks, so of the 585 remediation rows it
+> can reach **4** [M]. The settled populations and every SPREAD row were never at risk.
+>
+> It is fixed anyway, because the live exposure is real on its own terms: **70 published PENDING
+> moneylines** [M] could be silently re-published after an operator withdrew them. The fix is
+> one-directional rather than create-only - a closed gate still forces `false` on every run, because
+> `canExposePublicPicks` is an honesty boundary and create-only would have removed its power to
+> close. Both wrong alternatives are pinned by negative controls.
 
 ---
 

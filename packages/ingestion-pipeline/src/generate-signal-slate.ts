@@ -416,8 +416,30 @@ export async function generateSignalSlate(opts?: {
         factorBreakdown: JSON.parse(JSON.stringify(factorBreakdown)),
         modelVersion: MODEL_VERSION,
         dataFreshnessAt: now,
-        isPublished: gates.canExposePublicPicks,
       };
+
+      // `isPublished` IS NOT IN `shared`, and the asymmetry is the point (C-92).
+      //
+      // It used to be, so every slate run rewrote the flag on every existing
+      // PENDING row. An operator who unpublished a live pick - because it was
+      // wrong, or corrupt, or on a line no book quotes - had it SILENTLY
+      // RE-PUBLISHED by the next run. Measured on production 2026-09-07:
+      // 70 published PENDING moneylines are subject to that today.
+      //
+      // Create-only would be the obvious fix and it is the WRONG one, because
+      // it also removes the gate's power to CLOSE. `canExposePublicPicks` is an
+      // honesty boundary: when it goes false, rows that are live must stop
+      // being live, and a create-only flag would leave them published forever.
+      //
+      // So the write is one-directional. Gate CLOSED: force `false`, every run,
+      // no exceptions - the boundary keeps its teeth. Gate OPEN: write nothing,
+      // because "the gate permits publishing" is not the same statement as
+      // "this particular pick should be published", and only the second one is
+      // an operator's to make. A pick that was never published stays that way
+      // until something deliberately publishes it.
+      const publicationUpdate = gates.canExposePublicPicks
+        ? {}
+        : { isPublished: false };
 
       if (existing) {
         // Race-safe update (GSE-SEC-043): scope to result:"PENDING" so a
@@ -427,6 +449,7 @@ export async function generateSignalSlate(opts?: {
           where: { id: existing.id, result: "PENDING" },
           data: {
             ...shared,
+            ...publicationUpdate,
             generatedAt: now,
           },
         });
@@ -441,6 +464,9 @@ export async function generateSignalSlate(opts?: {
             gameId: game.id,
             pickType: "MONEYLINE",
             ...shared,
+            // On CREATE the gate decides outright: there is no prior operator
+            // judgement to preserve, so the flag is simply the gate's value.
+            isPublished: gates.canExposePublicPicks,
             isBootstrap: !gates.canPersistCanonicalHistory,
             isFeatured: false,
             generatedAt: now,
