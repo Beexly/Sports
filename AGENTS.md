@@ -644,9 +644,10 @@ line by line. Doing that (commit `c595bc5`) found a genuine sign inversion, not 
 lower)` formula as the movement-so-far fields (`openToLockFavorable`, `lockToCurrentFavorable`,
 `openToCloseFavorable`) — a different question with the opposite sign. Movement-so-far asks "is
 the market right now at a number better than where it started" (toward-favorable = positive);
-beating the close means the market moved AWAY from favorable after lock (a later bettor gets a
-worse number than ours) — the logical inverse. Fixed by swapping `fav()`'s argument order for
-that one field only (`fav(closeLine, lockLine, lower)`); the module's OWN pre-existing tests had
+beating the close means the market moved AWAY from favorable after our price was captured (a
+later bettor gets a worse number than ours) — the logical inverse. Fixed by swapping `fav()`'s
+argument order for that one field only (`fav(closeLine, lockLine, lower)`); the module's OWN
+pre-existing tests had
 encoded the wrong/inverted sign as their spec, so 3 of them were corrected and 4 new tests added
 anchored directly to `clv.ts`'s own docstring numbers (HOME beat, AWAY lost, OVER beat, UNDER
 lost) — 11/11 pass. Still zero callers (unaffected by the fix) and still gated off by
