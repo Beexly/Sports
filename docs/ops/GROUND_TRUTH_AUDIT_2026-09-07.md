@@ -50,9 +50,13 @@ Two controls, both run:
   CORRECT rows also match some other real final. It discriminates nothing. No claim below
   rests on it.
 
-The concentration is the signal. NFL is clean at 0 of 66; MLB is at 34.4%. Whatever writes
-the wrong score is not a generic ingestion fault — it is specific to the high-volume,
-duplicate-namespace, doubleheader-bearing sport.
+The concentration is a **prioritization signal, and only that** (CodeRabbit, #719, correcting an
+overreach of mine). An earlier draft of this section said the spread "rules out a generic
+ingestion fault". It does not, and I should not have written it: NFL's zero is zero of 66, a
+sample small enough to be consistent with a low rate rather than none, and MLS sits at 25.8%,
+which is not a clean sport. What is measured is that MLB carries the great majority of the
+affected rows. That says look at MLB first. It says nothing about the writer, which section 6
+still records as unidentified.
 
 ## 3. Published results that are wrong against the true final
 
@@ -74,8 +78,12 @@ Separately, **13 MLS moneylines were settled on matches that ended in a draw.** 
 moneyline has no defined result on a three-way market; production stores LOSS
 (`settlement.ts:96`). That is the C-118 population, measured here rather than assumed.
 
-Including spread and total picks the count is 87 of 670 (13.0%), but see section 4 before
-using that number: for spreads and totals "the correct result" is not a well-defined question.
+Adding spread and total picks brings the count to 87 of 670, **but that figure is not a
+wrong-result count and must not be quoted as one** (CodeRabbit, #719). Section 4 measures that
+the graded line and the displayed line disagree on 57% of settled spread and total picks, so for
+those markets "the correct result" is not a well-defined question and the extra 19 rows are
+**line-dependent disagreements**, not established errors. The defensible headline is the
+moneyline one: **68 wrong results out of 590.**
 
 ## 4. Spread and total lines — what is measured, and what was refuted
 
@@ -111,12 +119,23 @@ step killed a false alarm.
    problem; the data layer beside them is.
 2. **The earlier "117 contradictions" figure understated the population**, exactly as
    predicted: a pick graded off a corrupt row agrees with it and looked consistent.
-3. **MLB is where to look.** NFL 0 of 66 and NCAAF 2 of 51 rule out a generic ingestion fault.
+3. **MLB is where to look first.** It carries 169 of the 187 affected rows. That is a
+   prioritization signal and not proof of anything about the writer: NFL's zero is zero of 66,
+   and MLS is at 25.8%. See section 2 - I made the stronger claim in a first draft and it does
+   not hold.
 4. **69.5% of settled published picks are unmeasurable this way.** Giving every game row a
    stable ESPN event id is a prerequisite for ever being able to audit the track record — it
    is not housekeeping.
-5. Nothing here changes the calibration position. ECE is unaffected by this audit and remains
-   the binding floor.
+5. **A correction to my own first draft of this document, and it matters.** I originally wrote
+   that "ECE is unaffected by this audit". That **contradicts this repository's own ledger**:
+   C-114 records that 63 moneyline rows graded before kickoff sit inside the sample the published
+   ECE 0.0524 is computed from, and that until that is resolved "the public calibration number and
+   any track-record claim rest on a contaminated sample". CodeRabbit caught the contradiction
+   (#719). The accurate statement is narrower and worse: the ECE **floor** remains the binding
+   gate and this audit does not move it, but the published ECE **value** is not trustworthy while
+   rows graded against scores nobody observed remain in its sample. This audit does not recompute
+   ECE and makes no claim about which direction the true value lies in. It becomes trustworthy
+   when C-114 is re-graded or excluded, and not before.
 
 ## 6. What is NOT established
 

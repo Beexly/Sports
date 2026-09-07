@@ -122,6 +122,83 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     expect(payload.data.passes.map((p) => p.id)).toEqual(["newest", "other-game"]);
   });
 
+  it("does NOT list an OLDER gated evaluation once its publication is withdrawn", async () => {
+    // THE FOURTEENTH SIBLING-LANE INSTANCE (CodeRabbit, #719).
+    //
+    // The query excludes a game with a LIVE published pick. That is no rule at
+    // all for a WITHDRAWN one: unpublishing the pick makes the relation match
+    // again, and the older gated evaluation reappears as a current pass. "We
+    // passed on this" is then false in the strongest way this list can be
+    // false, because we evaluated it, published it, and then withdrew it.
+    // C-149 fixed exactly this in the state loader and left its twin here.
+    mocks.gateDecisionFindMany.mockImplementation((args: { where: { status?: string } }) =>
+      Promise.resolve(
+        args.where.status === "PUBLISHED"
+          ? [
+              {
+                gameId: "g-withdrawn",
+                evaluatedAt: new Date("2026-09-07T15:00:00.000Z"),
+                status: "PUBLISHED",
+                pick: { isPublished: false },
+              },
+            ]
+          : [decision({ id: "older-gated", gameId: "g-withdrawn", evaluatedAt: new Date("2026-09-07T14:00:00.000Z") })],
+      ),
+    );
+
+    const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
+    expect(payload.data.passes.map((p) => p.id)).toEqual([]);
+  });
+
+  it("still lists a NEWER gated evaluation made after the withdrawal", async () => {
+    // The positive control, and the reason the rule is chronological rather
+    // than a blanket exclusion: a gated evaluation made AFTER we withdrew
+    // really is the fixture's current state, and hiding it would make the pass
+    // list silent about a game it has an honest answer for.
+    mocks.gateDecisionFindMany.mockImplementation((args: { where: { status?: string } }) =>
+      Promise.resolve(
+        args.where.status === "PUBLISHED"
+          ? [
+              {
+                gameId: "g-withdrawn",
+                evaluatedAt: new Date("2026-09-07T15:00:00.000Z"),
+                status: "PUBLISHED",
+                pick: { isPublished: false },
+              },
+            ]
+          : [decision({ id: "newer-gated", gameId: "g-withdrawn", evaluatedAt: new Date("2026-09-07T16:00:00.000Z") })],
+      ),
+    );
+
+    const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
+    expect(payload.data.passes.map((p) => p.id)).toEqual(["newer-gated"]);
+  });
+
+  it("a publication that is STILL LIVE does not suppress by chronology", async () => {
+    // A live publication is handled at the query, which drops the fixture
+    // entirely. If it ALSO fed the chronology map, then a row the query never
+    // returned would be silently doing work here, and a later refactor of that
+    // relation would change this file's behaviour invisibly. Pinned so the two
+    // mechanisms stay separable.
+    mocks.gateDecisionFindMany.mockImplementation((args: { where: { status?: string } }) =>
+      Promise.resolve(
+        args.where.status === "PUBLISHED"
+          ? [
+              {
+                gameId: "g-live",
+                evaluatedAt: new Date("2026-09-07T15:00:00.000Z"),
+                status: "PUBLISHED",
+                pick: { isPublished: true },
+              },
+            ]
+          : [decision({ id: "older-gated", gameId: "g-live", evaluatedAt: new Date("2026-09-07T14:00:00.000Z") })],
+      ),
+    );
+
+    const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
+    expect(payload.data.passes.map((p) => p.id)).toEqual(["older-gated"]);
+  });
+
   it("keeps genuine passes: a fixture with no published pick still lists", async () => {
     // The control. A suppression that removed everything would also pass the
     // test above, so this pins that the lane still does its job.

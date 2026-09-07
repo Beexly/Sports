@@ -135,42 +135,93 @@ export async function loadBoardPasses(
 
   const { start, end } = todayBounds();
   try {
-    const gateDecisionRows = await db.gateDecision.findMany({
-      where: {
-        status: "GATED",
-        isBootstrap: false,
-        evaluatedAt: { gte: start, lt: end },
-        // A game with a LIVE PUBLISHED PICK is not a pass, whatever an earlier
-        // decision row says.
+    const [allGatedRows, publishedDecisionRows] = await Promise.all([
+      db.gateDecision.findMany({
+        where: {
+          status: "GATED",
+          isBootstrap: false,
+          evaluatedAt: { gte: start, lt: end },
+          // A game with a LIVE PUBLISHED PICK is not a pass, whatever an earlier
+          // decision row says.
+          //
+          // `publishedPickRelation` was declared in this file and applied only to
+          // the fallback game query below; the decision query above it had no
+          // published exclusion at all. So the board could show a subscriber a
+          // published pick in one section and "evaluated without publishing" for
+          // the same fixture in the other (Devin Review, #719). The state loader
+          // got this suppression in c0cfa2b07 and its sibling here did not, which
+          // is the thirteenth time in this PR's history that a fix landed on one
+          // lane and not on its twin.
+          //
+          // Game-level, matching the state loader, because a PassListRow names a
+          // fixture and carries no market: there is no market on the row for a
+          // per-market exclusion to be honest about.
+          game: { picks: { none: publishedPickRelation } },
+        },
+        include: { game: { include: { sport: { select: { name: true } } } } },
+        orderBy: { evaluatedAt: "desc" },
+        // Bounds decisions SCANNED, not fixtures shown - the collapse below
+        // reduces this to one row per fixture.
         //
-        // `publishedPickRelation` was declared in this file and applied only to
-        // the fallback game query below; the decision query above it had no
-        // published exclusion at all. So the board could show a subscriber a
-        // published pick in one section and "evaluated without publishing" for
-        // the same fixture in the other (Devin Review, #719). The state loader
-        // got this suppression in c0cfa2b07 and its sibling here did not, which
-        // is the thirteenth time in this PR's history that a fix landed on one
-        // lane and not on its twin.
-        //
-        // Game-level, matching the state loader, because a PassListRow names a
-        // fixture and carries no market: there is no market on the row for a
-        // per-market exclusion to be honest about.
-        game: { picks: { none: publishedPickRelation } },
-      },
-      include: { game: { include: { sport: { select: { name: true } } } } },
-      orderBy: { evaluatedAt: "desc" },
-      // Bounds decisions SCANNED, not fixtures shown - the collapse below
-      // reduces this to one row per fixture.
+        // This was 100, and 100 was ALREADY TRUNCATING REAL DAYS. Measured
+        // read-only on production 2026-09-07: a single day has produced 305 GATED
+        // rows across 58 distinct fixtures, with at most 6 evaluations for any one
+        // fixture. So the cap was silently dropping genuine passes off the end of
+        // the list today, and a fixture evaluated repeatedly could crowd others out
+        // entirely (Devin Review and CodeRabbit, #719). 500 matches the bound the
+        // decision query in state.ts already uses for the same reason, and leaves
+        // headroom over the worst day observed.
+        take: 500,
+      }),
+      // WITHDRAWN PUBLICATIONS, so an OLDER pass cannot outlive one.
       //
-      // This was 100, and 100 was ALREADY TRUNCATING REAL DAYS. Measured
-      // read-only on production 2026-09-07: a single day has produced 305 GATED
-      // rows across 58 distinct fixtures, with at most 6 evaluations for any one
-      // fixture. So the cap was silently dropping genuine passes off the end of
-      // the list today, and a fixture evaluated repeatedly could crowd others out
-      // entirely (Devin Review and CodeRabbit, #719). 500 matches the bound the
-      // decision query in state.ts already uses for the same reason, and leaves
-      // headroom over the worst day observed.
-      take: 500,
+      // THE FOURTEENTH SIBLING-LANE INSTANCE (CodeRabbit, #719). The query
+      // above excludes a game that has a LIVE published pick, which is the
+      // right rule for a live publication and no rule at all for a withdrawn
+      // one: once the pick is unpublished the relation matches again, and an
+      // OLDER gated evaluation for that fixture reappears as a current pass.
+      // "We passed on this" is then false in the strongest way the pass list
+      // can be false - we evaluated it, published it, and withdrew it. C-149
+      // fixed exactly this in the state loader and left its twin here.
+      //
+      // Same rule as state.ts, deliberately: a withdrawn publication cannot be
+      // SHOWN, but it still RESOLVES ORDER. It suppresses gated rows at or
+      // older than itself; a genuinely NEWER gated evaluation still displays,
+      // because that one really is the fixture's current state.
+      db.gateDecision.findMany({
+        where: {
+          status: "PUBLISHED",
+          isBootstrap: false,
+          evaluatedAt: { gte: start, lt: end },
+        },
+        select: {
+          gameId: true,
+          evaluatedAt: true,
+          status: true,
+          pick: { select: { isPublished: true } },
+        },
+        take: 500,
+      }),
+    ]);
+
+    const newestWithdrawnPublishedAt = new Map<string, number>();
+    for (const row of publishedDecisionRows) {
+      // Both guards are read off the ROW rather than assumed from the query
+      // that produced it. This file has now been the second half of a
+      // one-lane fix twice, so the suppression map asserts its own inputs
+      // instead of trusting a `where` clause several lines away: only a row
+      // that SAYS it is PUBLISHED and whose pick is NOT live can suppress a
+      // pass. A live publication is already handled at the query above.
+      if (row.status !== "PUBLISHED") continue;
+      if (row.pick?.isPublished === true) continue;
+      const at = row.evaluatedAt.getTime();
+      const seen = newestWithdrawnPublishedAt.get(row.gameId);
+      if (seen === undefined || at > seen) newestWithdrawnPublishedAt.set(row.gameId, at);
+    }
+
+    const gateDecisionRows = allGatedRows.filter((row) => {
+      const withdrawnAt = newestWithdrawnPublishedAt.get(row.gameId);
+      return withdrawnAt === undefined || row.evaluatedAt.getTime() > withdrawnAt;
     });
 
     // ONE ROW PER FIXTURE, newest evaluation.
