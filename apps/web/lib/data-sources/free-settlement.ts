@@ -780,6 +780,7 @@ export function findPostponedMatch(
   pick: PendingPick,
   games: readonly NormalizedGame[],
 ): { sources: string[]; detail: string } | null {
+  const matched: Array<{ sources: string[]; detail: string }> = [];
   for (const g of games) {
     if (g.completed) continue;
     if (!isPostponedOrCancelledDetail(g.statusDetail ?? "")) continue;
@@ -791,6 +792,11 @@ export function findPostponedMatch(
     if (!gDate || daysApart(gDate, pDate) > 2) continue;
     const asFinal: TrustedFinal = {
       date: gDate,
+      // Carry the real start time so the kickoff binding below can do clock
+      // math. Without it every postponed row was team-matched inside a +/-2 day
+      // window, which is the exact shape that graded 87 picks off the previous
+      // meeting of a series (Devin Review, #717).
+      ...(g.startTime ? { startIso: g.startTime } : {}),
       home: {
         name: home.team,
         abbr: home.abbreviation ?? home.team.slice(0, 3).toUpperCase(),
@@ -805,10 +811,19 @@ export function findPostponedMatch(
       sources: [String(g.sourceId)],
     };
     if (!finalMatchesPick(pick, asFinal)) continue;
-    return {
+    // The SAME kickoff binding the finals path uses. A postponement produces a
+    // permanent VOID on a published pick, so it must identify THIS fixture, not
+    // merely these two teams within two days. Yesterday's postponed series game
+    // sits 24h away and no longer voids today's game, which was played.
+    if (!finalBindsToKickoff(pick.gameDateIso, asFinal)) continue;
+    matched.push({
       sources: [String(g.sourceId)],
       detail: g.statusDetail ?? "postponed",
-    };
+    });
   }
-  return null;
+  // Fail closed on ambiguity rather than taking whichever row the feed yielded
+  // first: two postponed rows for this matchup cannot both be this pick's game,
+  // and a wrong VOID is not recoverable once published.
+  if (matched.length !== 1) return null;
+  return matched[0]!;
 }

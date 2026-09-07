@@ -320,6 +320,75 @@ describe("finalMatchesNearestFixture", () => {
   });
 });
 
+/**
+ * A postponement produces a PERMANENT VOID on a published pick, so it has to
+ * identify THIS fixture, not merely these two teams inside a two-day window.
+ * findPostponedMatch was left on the old team-name + calendar matching when the
+ * finals path was bound to the kickoff, and the finals binding pushes MORE picks
+ * down this fall-through, so the hardening made the hole likelier to fire
+ * (Devin Review, #717).
+ */
+describe("findPostponedMatch — a postponement must be THIS pick's game", () => {
+  const HR = 60 * 60 * 1000;
+  const today = "2026-09-06T23:10:00.000Z";
+  const yesterday = new Date(Date.parse(today) - 24 * HR).toISOString();
+
+  const pick: PendingPick = {
+    pickId: "series-pick",
+    pickType: "MONEYLINE",
+    selection: "Phillies",
+    line: 0,
+    homeTeam: "Phillies",
+    awayTeam: "Braves",
+    sportKey: "baseball_mlb",
+    gameDateIso: today,
+  };
+
+  const postponedRow = (startTime: string) => ({
+    sourceId: "espn-public-api" as const,
+    sport: "mlb" as const,
+    gameId: `ppd-${startTime}`,
+    startTime,
+    state: "pre",
+    completed: false,
+    statusDetail: "Postponed",
+    venue: null,
+    home: { team: "Phillies", abbreviation: "PHI", score: null },
+    away: { team: "Braves", abbreviation: "ATL", score: null },
+    attribution: "Scores data via ESPN",
+  });
+
+  it("does NOT void today's played game off YESTERDAY's postponement", () => {
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(yesterday)] as never,
+    })[0]!;
+
+    expect(out.status).toBe("PENDING");
+    expect(out.status === "PENDING" ? out.reason : "").toBe("NO_FINAL");
+  });
+
+  it("CONTROL: today's own postponement still voids the pick", () => {
+    // Without this passing, the assertion above proves only that voiding broke.
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(today)] as never,
+    })[0]!;
+
+    expect(out.status).toBe("SETTLED");
+    expect(out.status === "SETTLED" ? out.result : "").toBe("VOID");
+  });
+
+  it("holds rather than guessing when two postponed rows both match the matchup", () => {
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [
+        postponedRow(today),
+        postponedRow(new Date(Date.parse(today) + 2 * HR).toISOString()),
+      ] as never,
+    })[0]!;
+
+    expect(out.status).toBe("PENDING");
+  });
+});
+
 describe("settlePendingPicks — an unfinished doubleheader holds", () => {
   const HOUR = 60 * 60 * 1000;
   const gameTwo = "2026-09-06T23:10:00.000Z";
