@@ -633,6 +633,48 @@ specifically to carry that correction forward rather than let a superseded statu
 circulating. Full detail, every file/line checked, and every external source verified in the
 doc's Round 15 section.
 
+**Round 15 follow-up (2026-09-07, same branch): a real bug fixed inside the "steam" cluster
+Round 15 flagged, plus two honest negatives from reading the rest of that cluster line by
+line.** Round 15 named `market-memory.ts`/`line-dna.ts`/`consensus-clock.ts` as fully built,
+zero-caller, ready to wire once `LINE_ARCHIVE_ENABLED` flips — true, but nobody had yet read
+`market-memory.ts` against `packages/prediction-engine/src/clv.ts`'s own worked examples
+line by line. Doing that (commit `c595bc5`) found a genuine sign inversion, not a wiring gap:
+`buildMarketMemory()`'s `clvVsCloseFavorable` field is documented as matching clv.ts's
+"beat the close" convention (positive = good), but reused the SAME `fav(lockLine, closeLine,
+lower)` formula as the movement-so-far fields (`openToLockFavorable`, `lockToCurrentFavorable`,
+`openToCloseFavorable`) — a different question with the opposite sign. Movement-so-far asks "is
+the market right now at a number better than where it started" (toward-favorable = positive);
+beating the close means the market moved AWAY from favorable after lock (a later bettor gets a
+worse number than ours) — the logical inverse. Fixed by swapping `fav()`'s argument order for
+that one field only (`fav(closeLine, lockLine, lower)`); the module's OWN pre-existing tests had
+encoded the wrong/inverted sign as their spec, so 3 of them were corrected and 4 new tests added
+anchored directly to `clv.ts`'s own docstring numbers (HOME beat, AWAY lost, OVER beat, UNDER
+lost) — 11/11 pass. Still zero callers (unaffected by the fix) and still gated off by
+`LINE_ARCHIVE_ENABLED`; this is a latent-bug fix for whenever a founder-approved wiring pass
+happens, not a live-behavior change today.
+Read in full and found CORRECT, no bug, nothing to fix: `line-dna.ts` (purely descriptive path
+metrics — normalized total variation, increment/book counts, snapshot ages — no
+favorable/unfavorable framing exists in it, so no sign-convention bug is possible) and
+`consensus-clock.ts` (the exponential dispersion-decay fit; its moneyline branch computing
+`probs = 1/price` looks like it assumes decimal odds, which it does — verified against
+`line-snapshot.ts`'s own doc comment that THIS module's `LineSnapshot.price` convention is
+genuinely decimal-for-moneyline, so the code matches its documented contract). Recording this so
+neither gets re-audited from scratch on the strength of "it's dormant, it might have a bug too."
+Also investigated and deliberately NOT wired: whether `market-memory.ts` should feed
+`/api/picks/[id]/audit` once the gate flips. That route already has a THIRD, independent,
+already-LIVE module doing a related-but-distinct job — `apps/web/lib/market/pick-death-clock.ts`
+(read in full), which reports `toward_pick`/`away_from_pick`/`flat` directional movement from the
+same bounded `pick.game.odds` rows, deliberately staying in price-space with no fair-probability
+framing (the audit-drawer contract bans EV language on pick surfaces until a separate gate
+lifts). Wiring `market-memory.ts`'s CLV-framed numbers into the same surface risks two
+overlapping "market moved" narratives on one page — filed as a product-design question for
+whoever owns that wiring pass, not resolved here.
+
+**C-119 branch status as of this note (2026-09-07, PR** `Beexly/Sports#712` **head** `76a5b7c`
+**): all CI green** — guardrails 26/26, test/typecheck/lint/Prisma, trust gate, AI Council,
+brand safety, Codacy (0 issues), dependency audit, secret scan, build. Draft, not yet merged;
+subscribed for CI/review events. Nothing else queued behind it on this branch as of this note.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
