@@ -10,6 +10,11 @@ interface CalibrationCurvePoint {
   /** Only plot a bucket once it clears the publish floor (30+ settled picks) —
    * a 2-pick bucket reading "100%" must never appear on the curve. */
   readonly sufficientSample: boolean;
+  /** 95% Clopper-Pearson interval on observedWinRate. Null when there were no
+   * decided (win/loss) picks to bound. A bucket at n=30 and one at n=500 must
+   * not read as equally solid — the whisker is that difference, made visible. */
+  readonly clopperPearsonLow: number | null;
+  readonly clopperPearsonHigh: number | null;
 }
 
 interface CalibrationCurveProps {
@@ -32,6 +37,11 @@ function pointToSvg(point: CalibrationCurvePoint): { x: number; y: number } {
     x: PAD + clamp01(point.expectedWinRate) * INNER_W,
     y: HEIGHT - PAD - clamp01(point.observedWinRate) * INNER_H,
   };
+}
+
+/** Same y-mapping as pointToSvg, applied to an arbitrary rate (the CI bound). */
+function rateToSvgY(rate: number): number {
+  return HEIGHT - PAD - clamp01(rate) * INNER_H;
 }
 
 function buildPath(points: readonly CalibrationCurvePoint[]): string {
@@ -137,8 +147,43 @@ export function CalibrationCurve({
       ) : null}
       {actualPoints.map((point) => {
         const svgPoint = pointToSvg(point);
+        const hasBand = point.clopperPearsonLow != null && point.clopperPearsonHigh != null;
+        const bandY1 = hasBand ? rateToSvgY(point.clopperPearsonHigh as number) : null;
+        const bandY2 = hasBand ? rateToSvgY(point.clopperPearsonLow as number) : null;
         return (
           <g key={point.label}>
+            {hasBand ? (
+              <g aria-hidden>
+                {/* 95% Clopper-Pearson whisker — a bucket at n=30 and one at
+                    n=500 must not read as equally solid; the whisker is the
+                    difference, made visible. Behind the point marker. */}
+                <line
+                  x1={svgPoint.x}
+                  y1={bandY1 as number}
+                  x2={svgPoint.x}
+                  y2={bandY2 as number}
+                  className="stroke-orbital-cyan/35"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1={svgPoint.x - 3}
+                  y1={bandY1 as number}
+                  x2={svgPoint.x + 3}
+                  y2={bandY1 as number}
+                  className="stroke-orbital-cyan/35"
+                  strokeWidth="1.5"
+                />
+                <line
+                  x1={svgPoint.x - 3}
+                  y1={bandY2 as number}
+                  x2={svgPoint.x + 3}
+                  y2={bandY2 as number}
+                  className="stroke-orbital-cyan/35"
+                  strokeWidth="1.5"
+                />
+              </g>
+            ) : null}
             <circle
               cx={svgPoint.x}
               cy={svgPoint.y}

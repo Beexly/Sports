@@ -128,6 +128,8 @@ export default async function CalibrationProofRoomPage() {
             sampleSize: b.sampleSize,
             delta: b.delta,
             sufficientSample: b.sufficientSample,
+            clopperPearsonLow: b.clopperPearsonLow,
+            clopperPearsonHigh: b.clopperPearsonHigh,
           }))}
           sampleSize={report.sampleSize}
           brierScore={report.brierScore}
