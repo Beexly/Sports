@@ -14,6 +14,27 @@
  *
  * Always run the dry run first and read its output. The row count it prints is
  * the number the ledger evidence must record after --execute.
+ *
+ * ------------------------------------------------------------------------
+ * DO NOT RUN --execute ON settled-before-kickoff YET (2026-09-07, C-114).
+ *
+ * Four rows of that population were spot-checked against ESPN ground truth and
+ * THREE OF THE FOUR stored results are CORRECT against the true final. The game
+ * rows carry wrong scores - ESPN 401816835 truly finished 10-1 where our row
+ * says 4-6, 401816838 truly 8-10 where ours says 10-7, 401816830 truly 10-3
+ * where ours says 5-6 - but the picks themselves mostly landed right.
+ *
+ * Unpublishing therefore removes roughly three correct rows for every wrong one.
+ * There is a real argument the other way (a pick graded 15h before kickoff
+ * observed nothing, so a coincidence with the truth is a coin flip that landed
+ * and must not count as skill), and that argument is about CALIBRATION, not
+ * about the public record. The instrument that satisfies both is RE-GRADING
+ * against ESPN truth, not deletion.
+ *
+ * Re-grading writes `result`, which the settlement outbox owns, so it is a
+ * founder decision. Until that decision is made this population stays queued and
+ * the tool stays unrun. The other two populations are unaffected by this note.
+ * ------------------------------------------------------------------------
  */
 import { PrismaClient } from "@prisma/client";
 import {
