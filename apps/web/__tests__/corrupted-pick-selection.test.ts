@@ -50,6 +50,26 @@ describe("corrupted-pick selection — settled-before-kickoff (C-114)", () => {
     expect(out).toHaveLength(0);
   });
 
+  it("leaves a rescheduled postponement's VOID alone", () => {
+    // A postponed fixture settles VOID with no score
+    // (free-settlement.ts, POSTPONED_OR_CANCELLED), and the fixture is then
+    // RESCHEDULED — which moves commenceTime past a settlement that was correct
+    // when it was written. `settledAt < commenceTime` describes that row exactly
+    // as well as it describes a C-114 phantom grade, and withdrawing it would
+    // delete a true result from public history (Devin Review, #719). C-114
+    // grades against a score nobody observed, which always yields W/L/PUSH.
+    const out = narrow("settled-before-kickoff", [
+      row({ id: "postponed-then-rescheduled", result: "VOID", settledAt: new Date("2026-09-01T00:00:00.000Z") }),
+    ]);
+    expect(out).toHaveLength(0);
+  });
+
+  it("excludes VOID at the query too, not only in memory", () => {
+    // whereFor is the half that reaches the database. If only narrow excluded
+    // VOID, the write-time recheck would still be free to widen the set.
+    expect(whereFor("settled-before-kickoff")).toMatchObject({ result: { not: "VOID" } });
+  });
+
   it("reports the lead time in the reason, so a reviewer can sanity-check a row", () => {
     const r = row({ id: "x", settledAt: new Date("2026-09-01T06:00:00.000Z") });
     expect(reasonFor("settled-before-kickoff", r)).toContain("12.0h BEFORE kickoff");

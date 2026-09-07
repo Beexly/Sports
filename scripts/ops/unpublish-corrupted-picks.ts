@@ -135,7 +135,13 @@ async function main(): Promise<void> {
               AND p.id = ANY(${ids})
               AND p."isPublished" = true
               AND p."settledAt" IS NOT NULL
-              AND p."settledAt" < g."commenceTime"`;
+              AND p."settledAt" < g."commenceTime"
+              -- Mirrors whereFor/narrow. A postponed fixture settles VOID and is
+              -- then rescheduled, which moves commenceTime past a settlement that
+              -- was correct when written; that is not C-114 corruption, and the
+              -- write-time predicate has to say so too or a concurrent
+              -- postponement could widen the set this recheck was added to narrow.
+              AND p.result <> 'VOID'`;
         } else {
           // The other two populations key on immutable facts — the sport and
           // the pick's own line — so identity plus isPublished is sufficient.

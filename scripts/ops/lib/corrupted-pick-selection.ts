@@ -94,7 +94,17 @@ export function whereFor(population: CorruptedPopulation): Prisma.PickWhereInput
     case "settled-before-kickoff":
       // Cannot be expressed as a column comparison in Prisma's filter language,
       // so the caller narrows in SQL/in memory. This where is the safe superset.
-      return { ...base, settledAt: { not: null } };
+      //
+      // VOID is excluded, and that exclusion is load-bearing rather than tidy.
+      // A postponed fixture settles VOID with no score (free-settlement.ts,
+      // POSTPONED_OR_CANCELLED) and the fixture is then RESCHEDULED, which moves
+      // commenceTime later than the settlement that was correct when it was
+      // written. `settledAt < commenceTime` therefore describes a perfectly
+      // valid VOID as well as a C-114 phantom grade, and withdrawing the former
+      // would delete a true result from public history (Devin Review, #719).
+      // C-114 is about grading against a score nobody observed, which always
+      // produces a W/L/PUSH — never a VOID.
+      return { ...base, settledAt: { not: null }, result: { not: "VOID" } };
     case "soccer-two-way-ml":
       return { ...base, pickType: "MONEYLINE", game: { sport: { key: { startsWith: "soccer" } } } };
     case "mlb-off-runline":
@@ -113,7 +123,11 @@ export function narrow(
   switch (population) {
     case "settled-before-kickoff":
       return rows.filter(
-        (r) => r.settledAt !== null && r.settledAt.getTime() < r.commenceTime.getTime(),
+        (r) =>
+          r.settledAt !== null &&
+          r.settledAt.getTime() < r.commenceTime.getTime() &&
+          // Mirrors whereFor: a rescheduled postponement is not corruption.
+          r.result !== "VOID",
       );
     case "soccer-two-way-ml":
       return rows.filter((r) => r.sportKey.startsWith("soccer") && r.pickType === "MONEYLINE");

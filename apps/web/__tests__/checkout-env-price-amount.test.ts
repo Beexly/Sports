@@ -31,6 +31,18 @@ import { advertisedPhaseUnitAmountCents } from "@/lib/billing/price-ids";
 
 const PRO_MONTH_CENTS = advertisedPhaseUnitAmountCents("PRO", "month");
 
+/**
+ * A well-formed Stripe price for PRO/month. Tests override one field at a time
+ * so each assertion isolates the property it is about.
+ */
+const priceFixture = (over: Record<string, unknown> = {}) => ({
+  id: "price_fixture",
+  unit_amount: PRO_MONTH_CENTS,
+  currency: "usd",
+  recurring: { interval: "month", interval_count: 1 },
+  ...over,
+});
+
 describe("verifyEnvPriceAmount", () => {
   beforeEach(() => {
     __resetEnvPriceVerdictCache();
@@ -43,17 +55,17 @@ describe("verifyEnvPriceAmount", () => {
   });
 
   it("matches when the env price charges the advertised amount", async () => {
-    mocks.retrieve.mockResolvedValue({ id: "price_fixture", unit_amount: PRO_MONTH_CENTS });
+    mocks.retrieve.mockResolvedValue(priceFixture());
     await expect(verifyEnvPriceAmount("price_fixture", "PRO", "month")).resolves.toBe("match");
   });
 
   it("reports a mismatch when the env price charges something else", async () => {
-    mocks.retrieve.mockResolvedValue({ id: "price_wrong", unit_amount: PRO_MONTH_CENTS + 1000 });
+    mocks.retrieve.mockResolvedValue(priceFixture({ id: "price_wrong", unit_amount: PRO_MONTH_CENTS + 1000 }));
     await expect(verifyEnvPriceAmount("price_wrong", "PRO", "month")).resolves.toBe("mismatch");
   });
 
   it("reports a mismatch when the price carries no amount at all", async () => {
-    mocks.retrieve.mockResolvedValue({ id: "price_null", unit_amount: null });
+    mocks.retrieve.mockResolvedValue(priceFixture({ id: "price_null", unit_amount: null }));
     await expect(verifyEnvPriceAmount("price_null", "PRO", "month")).resolves.toBe("mismatch");
   });
 
@@ -69,8 +81,33 @@ describe("verifyEnvPriceAmount", () => {
     expect(mocks.retrieve).not.toHaveBeenCalled();
   });
 
+  it("REJECTS the right amount billed on the wrong cadence", async () => {
+    // The amount alone is not the charge. A PRO price carrying 1499 with a
+    // YEARLY interval passes an amount-only check and bills the customer once a
+    // year for what the page sold as a monthly rate (Devin Review, #719).
+    mocks.retrieve.mockResolvedValue(priceFixture({ recurring: { interval: "year", interval_count: 1 } }));
+    await expect(verifyEnvPriceAmount("price_fixture", "PRO", "month")).resolves.toBe("mismatch");
+  });
+
+  it("REJECTS the right amount on the right interval but the wrong interval_count", async () => {
+    // "every 3 months" IS a monthly-interval price. Checking `interval` without
+    // `interval_count` would let it through.
+    mocks.retrieve.mockResolvedValue(priceFixture({ recurring: { interval: "month", interval_count: 3 } }));
+    await expect(verifyEnvPriceAmount("price_fixture", "PRO", "month")).resolves.toBe("mismatch");
+  });
+
+  it("REJECTS the right number in the wrong currency", async () => {
+    mocks.retrieve.mockResolvedValue(priceFixture({ currency: "eur" }));
+    await expect(verifyEnvPriceAmount("price_fixture", "PRO", "month")).resolves.toBe("mismatch");
+  });
+
+  it("REJECTS a one-time price, which has no recurrence at all", async () => {
+    mocks.retrieve.mockResolvedValue(priceFixture({ recurring: null }));
+    await expect(verifyEnvPriceAmount("price_fixture", "PRO", "month")).resolves.toBe("mismatch");
+  });
+
   it("caches a definite verdict, so the money path does not pay a round-trip per checkout", async () => {
-    mocks.retrieve.mockResolvedValue({ id: "price_fixture", unit_amount: PRO_MONTH_CENTS });
+    mocks.retrieve.mockResolvedValue(priceFixture());
     await verifyEnvPriceAmount("price_fixture", "PRO", "month");
     await verifyEnvPriceAmount("price_fixture", "PRO", "month");
     expect(mocks.retrieve).toHaveBeenCalledTimes(1);
@@ -80,7 +117,7 @@ describe("verifyEnvPriceAmount", () => {
     // If a transient error were cached, a real mismatch could stay invisible
     // for the whole TTL. The retry is the point.
     mocks.retrieve.mockRejectedValueOnce(new Error("transient (fixture)"));
-    mocks.retrieve.mockResolvedValue({ id: "p", unit_amount: PRO_MONTH_CENTS + 500 });
+    mocks.retrieve.mockResolvedValue(priceFixture({ id: "p", unit_amount: PRO_MONTH_CENTS + 500 }));
     await expect(verifyEnvPriceAmount("p", "PRO", "month")).resolves.toBe("unverifiable");
     await expect(verifyEnvPriceAmount("p", "PRO", "month")).resolves.toBe("mismatch");
   });
@@ -101,12 +138,12 @@ describe("resolveCheckoutPriceId — the env branch is guarded", () => {
     ({ STRIPE_PRO_MONTHLY_PRICE_ID: id }) as NodeJS.ProcessEnv;
 
   it("returns the env price when its amount matches", async () => {
-    mocks.retrieve.mockResolvedValue({ id: "price_ok", unit_amount: PRO_MONTH_CENTS });
+    mocks.retrieve.mockResolvedValue(priceFixture({ id: "price_ok" }));
     await expect(resolveCheckoutPriceId("PRO", "month", envWith("price_ok"))).resolves.toBe("price_ok");
   });
 
   it("REFUSES the env price when its amount does not match, rather than charging it", async () => {
-    mocks.retrieve.mockResolvedValue({ id: "price_bad", unit_amount: PRO_MONTH_CENTS + 2000 });
+    mocks.retrieve.mockResolvedValue(priceFixture({ id: "price_bad", unit_amount: PRO_MONTH_CENTS + 2000 }));
     await expect(resolveCheckoutPriceId("PRO", "month", envWith("price_bad"))).resolves.toBe("");
   });
 
