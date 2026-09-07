@@ -382,7 +382,24 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const spreadOdds = input.bookmakerOdds.filter(
     (o) => o.market === "SPREADS" && o.spread !== undefined
   );
-  if (spreadOdds.length < MIN_BOOKMAKERS) return null;
+
+  /**
+   * Books that quote a COMPLETE two-sided market. Every price-derived and
+   * depth-derived value below uses this set, never `spreadOdds`.
+   *
+   * A book carrying a line but no price is still market information about
+   * WHERE the line sits, so it keeps its vote in the line consensus below
+   * (avgSpread, spreadOfSpreads, consensusPct). It is not, however, "pricing
+   * this market": counting it inflated market depth, softened the volatility
+   * penalty, improved the risk level, and shipped as the pick's public
+   * `bookmakerCount` and in the reason string "backed by N bookmakers pricing
+   * this market" — a claim about a book that quoted no price (Devin Review,
+   * #717).
+   */
+  const pricedOdds = spreadOdds.filter(
+    (o) => o.homeSpreadPrice !== undefined && o.awaySpreadPrice !== undefined,
+  );
+  if (pricedOdds.length < MIN_BOOKMAKERS) return null;
 
   const spreads = spreadOdds.map((o) => o.spread as number);
 
@@ -414,10 +431,8 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   if (!isPublishableSpreadLine(input.sport, chosenSpread)) return null;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
-  // Average price for chosen side
-  const chosenPrices = spreadOdds
-    .map((o) => (homeIsChosen ? o.homeSpreadPrice : o.awaySpreadPrice))
-    .filter((p): p is number => p !== undefined);
+  // ONE book set for every price-derived value below.
+  //
   // Refuse rather than invent a price. The old fallback published `-110` when
   // no book quoted the chosen side, and that number reached the subscriber as
   // the pick's odds AND was committed into the immutable proof receipt as
@@ -425,27 +440,30 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // sanitizeAmericanPrice returns undefined for a missing, null, non-finite or
   // decimal-format price, so this is reachable from a feed shape change, not
   // only from an absent market.
-  if (chosenPrices.length === 0) return null;
+  //
+  // Restricting to books that quote BOTH sides is not only about vig: the edge
+  // is a COMPARISON of avgPrice against fairProb, so drawing those two from
+  // different book sets compares mismatched markets. A book quoting only the
+  // chosen side would move avgPrice while contributing nothing to fairProb, and
+  // a single one-sided outlier could manufacture an edge that no complete
+  // market shows (Devin Review, #717).
+  // Average price for chosen side, over the same complete books.
+  const chosenPrices = pricedOdds.map((o) =>
+    homeIsChosen ? o.homeSpreadPrice! : o.awaySpreadPrice!,
+  );
   const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
   // Fair value — assume consensus spread IS fair line, edge from vig removal.
-  // Vig removal needs BOTH sides priced by the SAME book: a book missing either
-  // price is dropped whole rather than filled with `-110`, which would have
-  // fabricated the overround the edge is computed from.
-  const twoSidedSpread = spreadOdds.filter(
-    (o) => o.homeSpreadPrice !== undefined && o.awaySpreadPrice !== undefined,
-  );
-  if (twoSidedSpread.length === 0) return null;
   const homeImpliedAvg =
-    twoSidedSpread.reduce(
+    pricedOdds.reduce(
       (acc, o) => acc + americanToImpliedProbability(o.homeSpreadPrice!),
       0,
-    ) / twoSidedSpread.length;
+    ) / pricedOdds.length;
   const awayImpliedAvg =
-    twoSidedSpread.reduce(
+    pricedOdds.reduce(
       (acc, o) => acc + americanToImpliedProbability(o.awaySpreadPrice!),
       0,
-    ) / twoSidedSpread.length;
+    ) / pricedOdds.length;
   const fair = removeVig(homeImpliedAvg, awayImpliedAvg);
   const fairProb = homeIsChosen ? fair.home : fair.away;
   const fairShinProb = shinFairForSide(
@@ -457,10 +475,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   // Component scores
   const { score: consensusScore, factor: consensusFactor } = computeConsensusScore(consensusPct);
-  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(spreadOdds.length);
+  const { score: depthScore, factor: depthFactor } = computeMarketDepthScore(pricedOdds.length);
   const { score: edgeComponentScore, rawEdge, factor: edgeFactor } = computeEdgeScore(fairProb, avgPrice, twoSidedImpliedSum);
   const { penalty: volatilityPenalty, factor: volatilityFactor } =
-    computeVolatilityPenalty(spreadOdds.length, spreadOfSpreads);
+    computeVolatilityPenalty(pricedOdds.length, spreadOfSpreads);
 
   // Compute ML fair probability for cross-market validation
   const h2hForContext = input.bookmakerOdds.filter(
@@ -484,7 +502,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
           hasSpreadMarket: true,
           hasTotalMarket: input.bookmakerOdds.some((o) => o.market === "TOTALS"),
           hasH2HMarket: input.bookmakerOdds.some((o) => o.market === "H2H"),
-          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? spreadOdds.length,
+          bookmakerCoverageMax: input.context.bookmakerCoverageMax ?? pricedOdds.length,
           mlFairProbHome,
         },
         "SPREAD",
@@ -563,7 +581,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
-  const riskLevel: RiskLevel = computeRiskLevel(spreadOdds.length, consensusPct, lineMovementScore);
+  const riskLevel: RiskLevel = computeRiskLevel(pricedOdds.length, consensusPct, lineMovementScore);
   const tier: PickTier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
 
   const spreadDisplay =
@@ -588,7 +606,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     : "";
 
   const reasoning =
-    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${spreadOdds.length} ` +
+    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
     `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     contextNote +
@@ -639,7 +657,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     consensusPct,
     marketFairProb: fairProb,
     entryPrice: Math.round(avgPrice),
-    bookmakerCount: spreadOdds.length,
+    bookmakerCount: pricedOdds.length,
     dataQualityScore,
     tier,
     pickGrade,

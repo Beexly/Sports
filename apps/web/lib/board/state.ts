@@ -588,10 +588,30 @@ async function loadBoardStateInner(
     // `gate-<id>` — same fixture, same market, two rows. Deduping the union and
     // re-splitting keeps the lane precedence explicit rather than letting
     // whichever query ran first win.
+    // A generic lane row is suppressed for any fixture already represented by a
+    // more specific one. The collapse alone cannot do this: published rows key
+    // on the real pickType so one fixture can legitimately hold several, while
+    // the generic lanes key on NO_PICK, so their keys never collide by
+    // construction and both rows survive (Devin Review, #717).
+    //
+    // Lane precedence also cannot resolve the scoring/gated overlap here, and
+    // reversing it would be wrong for the decision path. The scoring query
+    // selects `commenceTime >= now AND status SCHEDULED` — games that have NOT
+    // started — so on THIS path a "scoring" row is never more truthful than the
+    // gated row for the same fixture, whatever LANE_RANK says. A game that has
+    // not started is gated, not being scored, and telling a viewer otherwise is
+    // the kind of claim this product does not make.
+    const publishedGameIds = new Set(publishedEntries.map((e) => e.row.gameId));
+    const gatedGameIds = new Set(gatedRows.map((row) => row.gameId));
+    const scoringRowsScoped = scoringRows.filter(
+      (row) => !publishedGameIds.has(row.gameId) && !gatedGameIds.has(row.gameId),
+    );
+    const gatedRowsScoped = gatedRows.filter((row) => !publishedGameIds.has(row.gameId));
+
     const dedupedFallback = dedupeBoardRows([
-      ...scoringRows.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
+      ...scoringRowsScoped.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
       ...publishedEntries,
-      ...gatedRows.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
+      ...gatedRowsScoped.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
     ]);
     const scoringRowsFinal = dedupedFallback.filter((row) => row.status === "SCORING_NOW");
     const publishedRowsFinal = dedupedFallback.filter((row) => row.status === "PUBLISHED_TODAY");

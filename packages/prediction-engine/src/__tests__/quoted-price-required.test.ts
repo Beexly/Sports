@@ -116,29 +116,63 @@ describe("scoreGame — a spread is never published at a price no book quoted", 
         { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
         { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
         { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
         { spread: -3.5, homeSpreadPrice: -110 },
       ]),
     );
     expect(picks.some((p) => p.pickType === "SPREAD")).toBe(true);
   });
 
-  it("drops an edge that only existed because the missing price was invented", () => {
-    // Measured against the pre-change scorer: this exact input published a
-    // SPREAD before and does not now. That is the guard doing its job, not a
-    // regression. The fourth book quotes only the home side; the old code
-    // invented its away price as -110 and folded that into the vig removal, so
-    // part of the published edge came from a number no book quoted. Dropping
-    // the book from the two-sided average removes the fabricated component and
-    // the remaining edge no longer clears the threshold.
-    const picks = scoreGame(
-      spreadInput([
-        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
-        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
-        { spread: -3.5, homeSpreadPrice: -108, awaySpreadPrice: -112 },
-        { spread: -3.5, homeSpreadPrice: -110 },
-      ]),
-    );
-    expect(picks.some((p) => p.pickType === "SPREAD")).toBe(false);
+  it("ignores a one-sided book entirely, rather than half-counting it", () => {
+    // CORRECTION. An earlier revision of this file asserted the OPPOSITE here:
+    // that this input stops publishing. That was pinning a half-fix. At the
+    // time, avgPrice was still drawn from every book while the fair
+    // probability came only from two-sided books, so the incomplete book moved
+    // one side of the edge comparison and not the other, and the pick vanished
+    // for a reason that was itself a defect. With one book set used throughout,
+    // the incomplete book is simply absent and the result equals the three
+    // complete books on their own.
+    const complete = [
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -108, awaySpreadPrice: -112 },
+    ];
+    const withIncomplete = scoreGame(
+      spreadInput([...complete, { spread: -3.5, homeSpreadPrice: -110 }]),
+    ).find((p) => p.pickType === "SPREAD");
+    const completeOnly = scoreGame(spreadInput(complete)).find((p) => p.pickType === "SPREAD");
+
+    expect(withIncomplete?.entryPrice).toBe(completeOnly?.entryPrice);
+    expect(withIncomplete?.confidence).toBe(completeOnly?.confidence);
+    // And the incomplete book is not counted as one that priced the market.
+    expect(withIncomplete?.bookmakerCount).toBe(4);
+  });
+  it("ignores a one-sided outlier price entirely, so it cannot manufacture an edge", () => {
+    // avgPrice and fairProb are COMPARED to produce the edge, so they must come
+    // from the same books. Drawing avgPrice from all books while fairProb came
+    // from two-sided books only let a single one-sided quote move one half of
+    // the comparison and not the other (Devin Review, #717).
+    //
+    // The outlier here is +900 on the chosen side from a book that quotes no
+    // opposite side. Under the mismatched-set version it dragged avgPrice far
+    // from the complete market; now it is dropped before any price is averaged,
+    // so the result is identical to the same three complete books alone.
+    // Four complete books: three sits below the engine's own market-depth bar
+    // and publishes nothing, which would make this assert undefined === undefined.
+    const complete = [
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+    ];
+    const withOutlier = scoreGame(
+      spreadInput([...complete, { spread: -3.5, homeSpreadPrice: 900, awaySpreadPrice: undefined }]),
+    ).find((p) => p.pickType === "SPREAD");
+    const withoutOutlier = scoreGame(spreadInput(complete)).find((p) => p.pickType === "SPREAD");
+
+    expect(withOutlier?.entryPrice).toBe(withoutOutlier?.entryPrice);
+    expect(withOutlier?.confidence).toBe(withoutOutlier?.confidence);
   });
 });
 
