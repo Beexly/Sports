@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
   CORRUPTED_POPULATIONS,
+  EXECUTE_BLOCKED_POPULATIONS,
+  parseUnpublishArgs,
   isOnRunLineLadder,
   narrow,
   reasonFor,
@@ -216,5 +218,51 @@ describe("the WRITE re-validates, for every population", () => {
     // Driven by MLB_RUN_LINES so the SQL and the in-memory selector cannot drift.
     expect(sql).toContain("unnest(${[...MLB_RUN_LINES]}::double precision[])");
     expect(sql).toContain("abs(abs(p.line) - valid)");
+  });
+});
+
+describe("--execute is BLOCKED for the settled-before-kickoff population", () => {
+  /**
+   * A comment is not a guard. The do-not-run finding was first written as prose
+   * at the top of the CLI while `--execute` stayed fully wired, so
+   * `--population all --execute` would still have unpublished the rows the prose
+   * said to leave alone (Devin Review, #719, rated red). These tests exist so
+   * the warning cannot drift back into being decorative.
+   *
+   * The population is blocked because 3 of 4 rows spot-checked against ESPN
+   * ground truth carry a CORRECT stored result.
+   */
+  it("names the blocked population", () => {
+    expect(EXECUTE_BLOCKED_POPULATIONS).toContain("settled-before-kickoff");
+  });
+
+  it("refuses --execute when the population is named directly", () => {
+    const r = parseUnpublishArgs(["--population", "settled-before-kickoff", "--execute"]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toContain("BLOCKED");
+  });
+
+  it("refuses --execute for `all` too — all is not an escape hatch", () => {
+    const r = parseUnpublishArgs(["--population", "all", "--execute"]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toContain("settled-before-kickoff");
+  });
+
+  it("still allows a DRY RUN of the blocked population", () => {
+    // Inspecting it is how the founder makes the re-grading decision, so the
+    // block must not hide the data.
+    const r = parseUnpublishArgs(["--population", "settled-before-kickoff"]);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.args.execute).toBe(false);
+  });
+
+  it("still allows --execute for the populations that are NOT blocked", () => {
+    // The control: a block that stopped everything would also pass the tests
+    // above while destroying the tool.
+    for (const population of ["soccer-two-way-ml", "mlb-off-runline"]) {
+      const r = parseUnpublishArgs(["--population", population, "--execute"]);
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.args.execute).toBe(true);
+    }
   });
 });

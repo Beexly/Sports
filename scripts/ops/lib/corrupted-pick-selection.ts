@@ -157,3 +157,77 @@ export function summarize(
     pickIds: rows.map((r) => r.id),
   };
 }
+
+/**
+ * Populations that may be inspected but MUST NOT be written.
+ *
+ * A comment is not a guard. An earlier revision carried the do-not-run finding
+ * as prose at the top of the CLI and left `--execute` fully wired, so
+ * `--population all --execute` would still have unpublished the rows the prose
+ * said to leave alone (Devin Review, #719, rated red). The block is executable
+ * now, and lives here rather than in the CLI so it can be tested without
+ * importing a script that runs on import.
+ *
+ * settled-before-kickoff is on this list because 3 of 4 rows spot-checked
+ * against ESPN ground truth carry a CORRECT stored result, so unpublishing
+ * removes roughly three right rows per wrong one. It leaves the list when the
+ * founder decides the re-grading policy - a deliberate code change, not a flag.
+ */
+export const EXECUTE_BLOCKED_POPULATIONS: readonly CorruptedPopulation[] = [
+  "settled-before-kickoff",
+];
+
+export type UnpublishArgs = {
+  readonly populations: readonly CorruptedPopulation[];
+  readonly execute: boolean;
+  readonly json: boolean;
+};
+
+/** Parse and POLICY-CHECK the CLI arguments. Pure, so the block is testable. */
+export function parseUnpublishArgs(
+  argv: readonly string[],
+): { ok: true; args: UnpublishArgs } | { ok: false; error: string } {
+  let populations: CorruptedPopulation[] | null = null;
+  let execute = false;
+  let json = false;
+  for (let i = 0; i < argv.length; i += 1) {
+    const a = argv[i];
+    if (a === "--execute") execute = true;
+    else if (a === "--json") json = true;
+    else if (a === "--population") {
+      const v = argv[i + 1];
+      i += 1;
+      if (v === undefined) return { ok: false, error: "--population needs a value" };
+      if (v === "all") populations = [...CORRUPTED_POPULATIONS];
+      else if ((CORRUPTED_POPULATIONS as readonly string[]).includes(v)) {
+        populations = [v as CorruptedPopulation];
+      } else {
+        return {
+          ok: false,
+          error: `unknown population "${v}" (expected one of ${CORRUPTED_POPULATIONS.join(", ")}, or all)`,
+        };
+      }
+    } else return { ok: false, error: `unexpected argument "${a}"` };
+  }
+  if (populations === null) {
+    return { ok: false, error: "--population is required (no implicit target)" };
+  }
+  if (execute) {
+    // Applies to `--population all` exactly as it applies to naming a population
+    // directly: "all" is not an escape hatch.
+    const blocked = populations.filter((p) => EXECUTE_BLOCKED_POPULATIONS.includes(p));
+    if (blocked.length > 0) {
+      return {
+        ok: false,
+        error:
+          `refusing --execute for ${blocked.join(", ")}: this population is BLOCKED. ` +
+          `Spot-checked against ESPN ground truth, 3 of 4 of its rows carry a CORRECT stored ` +
+          `result, so unpublishing removes about three right rows for every wrong one. The ` +
+          `instrument is re-grading against ground truth, which the settlement outbox owns, not ` +
+          `deletion. Dry run it freely (drop --execute); the block lifts only by a deliberate ` +
+          `code change once the founder decides the policy.`,
+      };
+    }
+  }
+  return { ok: true, args: { populations, execute, json } };
+}

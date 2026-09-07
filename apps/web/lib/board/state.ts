@@ -542,16 +542,47 @@ async function loadBoardStateInner(
       // — the board showed a published row and a "we passed on this" row for
       // the same fixture. Multiple genuine published markets on one game are
       // preserved; only the generic rows are dropped (Devin Review, #717).
-      const publishedDecisionGameIds = new Set(
+      // SUPPRESSION IS NOT THE SAME QUESTION AS DISPLAY, AND A LIVE PICK IS NOT
+      // AN EVALUATION.
+      //
+      // Two different rules, for the same reason `outranks` treats a published
+      // row as a fact rather than a reading:
+      //
+      //   LIVE publication  - the pick EXISTS right now. It suppresses every
+      //                       generic row for that fixture unconditionally,
+      //                       whatever was evaluated afterwards, because
+      //                       "we passed on this" is false while a subscriber
+      //                       can see the pick (C-136, C-141).
+      //   WITHDRAWN one     - there is no live fact left, only history, so
+      //                       chronology decides. It still resolves order even
+      //                       though it cannot be shown: an OLDER gated
+      //                       evaluation must not resurface as the fixture's
+      //                       current state, because we evaluated, published and
+      //                       withdrew, and reverting to an earlier "we passed"
+      //                       misrepresents that sequence (Devin Review, #719).
+      //                       A genuinely NEWER gated evaluation still displays.
+      const livePublishedGameIds = new Set(
         decisionEntries
           .filter((entry) => entry.row.status === "PUBLISHED_TODAY")
           .map((entry) => entry.row.gameId),
       );
+      const newestWithdrawnPublishedAt = new Map<string, number>();
+      for (const decision of decisions) {
+        if (decision.status !== "PUBLISHED") continue;
+        if (decision.pick?.isPublished === true) continue;
+        const at = decision.evaluatedAt.getTime();
+        const seen = newestWithdrawnPublishedAt.get(decision.gameId);
+        if (seen === undefined || at > seen) newestWithdrawnPublishedAt.set(decision.gameId, at);
+      }
+      const supersededByPublication = (entry: DedupeEntry): boolean => {
+        if (livePublishedGameIds.has(entry.row.gameId)) return true;
+        const withdrawnAt = newestWithdrawnPublishedAt.get(entry.row.gameId);
+        if (withdrawnAt === undefined) return false;
+        return Date.parse(entry.row.updatedAt) <= withdrawnAt;
+      };
       const dedupedDecisionRows = dedupeBoardRows(
         decisionEntries.filter(
-          (entry) =>
-            entry.row.status === "PUBLISHED_TODAY" ||
-            !publishedDecisionGameIds.has(entry.row.gameId),
+          (entry) => entry.row.status === "PUBLISHED_TODAY" || !supersededByPublication(entry),
         ),
       );
       const scoringRows = dedupedDecisionRows.filter((row) => row.status === "SCORING_NOW");

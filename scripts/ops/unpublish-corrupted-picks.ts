@@ -42,52 +42,21 @@ import {
   MLB_RUN_LINES,
   RUN_LINE_EPSILON,
   narrow,
+  parseUnpublishArgs,
   reasonFor,
   summarize,
   whereFor,
   type CorruptedPickRow,
   type CorruptedPopulation,
+  type UnpublishArgs,
 } from "./lib/corrupted-pick-selection";
 
-type Args = {
-  readonly populations: readonly CorruptedPopulation[];
-  readonly execute: boolean;
-  readonly json: boolean;
-};
-
-export function parseArgs(argv: readonly string[]): { ok: true; args: Args } | { ok: false; error: string } {
-  let populations: CorruptedPopulation[] | null = null;
-  let execute = false;
-  let json = false;
-  for (let i = 0; i < argv.length; i += 1) {
-    const a = argv[i];
-    if (a === "--execute") execute = true;
-    else if (a === "--json") json = true;
-    else if (a === "--population") {
-      const v = argv[i + 1];
-      i += 1;
-      if (v === undefined) return { ok: false, error: "--population needs a value" };
-      if (v === "all") populations = [...CORRUPTED_POPULATIONS];
-      else if ((CORRUPTED_POPULATIONS as readonly string[]).includes(v)) {
-        populations = [v as CorruptedPopulation];
-      } else {
-        return {
-          ok: false,
-          error: `unknown population "${v}" (expected one of ${CORRUPTED_POPULATIONS.join(", ")}, or all)`,
-        };
-      }
-    } else return { ok: false, error: `unexpected argument "${a}"` };
-  }
-  if (populations === null) return { ok: false, error: "--population is required (no implicit target)" };
-  return { ok: true, args: { populations, execute, json } };
-}
-
-const parsed = parseArgs(process.argv.slice(2));
+const parsed = parseUnpublishArgs(process.argv.slice(2));
 if (!parsed.ok) {
   console.error(`unpublish-corrupted-picks: ${parsed.error}`);
   process.exit(2);
 }
-const args = parsed.args;
+const args: UnpublishArgs = parsed.args;
 
 const url = process.env["DATABASE_URL"]?.trim();
 if (!url || url === "stub" || url.startsWith("changeme")) {

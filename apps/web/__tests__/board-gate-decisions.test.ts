@@ -641,28 +641,46 @@ describe("a PUBLISHED decision whose pick has been withdrawn", () => {
     expect(result.data.openPicks).toBe(0);
   });
 
-  it("stops suppressing that fixture's gated row", async () => {
-    // The half that matters more. While the withdrawn row counted as published
-    // it also hid the honest gated row for the same fixture, so the board went
-    // silent about the game entirely rather than showing its real state.
+  const gated = (over: Record<string, unknown> = {}) => ({
+    id: "gd_gated_w",
+    gameId: "game_w",
+    status: "GATED",
+    reason: "Fixture reason: edge below threshold",
+    reasonCode: "EDGE_BELOW_THRESHOLD",
+    edgeIndex: 40,
+    confidence: 51,
+    modelVersion: "v5.2.7",
+    evaluatedAt,
+    game: game(),
+    pick: null,
+    ...over,
+  });
+
+  it("lets a NEWER gated evaluation display once the publication is withdrawn", async () => {
+    // While the withdrawn row counted as published it hid the honest gated row
+    // for the same fixture, so the board went silent about the game.
     mocks.gateDecisionFindMany.mockResolvedValue([
       withdrawn,
-      {
-        id: "gd_gated_w",
-        gameId: "game_w",
-        status: "GATED",
-        reason: "Fixture reason: edge below threshold",
-        reasonCode: "EDGE_BELOW_THRESHOLD",
-        edgeIndex: 40,
-        confidence: 51,
-        modelVersion: "v5.2.7",
-        evaluatedAt,
-        game: game(),
-        pick: null,
-      },
+      gated({ evaluatedAt: new Date("2026-05-22T15:45:00.000Z") }),
     ]);
     const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
     expect(result.data.gatedTodayRows.map((r) => r.id)).toEqual(["gd_gated_w"]);
+    expect(result.data.publishedToday).toHaveLength(0);
+  });
+
+  it("does NOT let an OLDER gated evaluation resurface after a withdrawal", async () => {
+    // Chronology, not just displayability. We evaluated, published, then
+    // withdrew; reverting the board to an earlier "we passed on this"
+    // misrepresents that sequence (Devin Review, #719). The withdrawn row still
+    // resolves order even though it cannot be shown, so the fixture drops out of
+    // the decision path entirely and the fallback lanes judge it on their own
+    // predicates.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      gated({ evaluatedAt: new Date("2026-05-22T14:00:00.000Z") }),
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows).toHaveLength(0);
     expect(result.data.publishedToday).toHaveLength(0);
   });
 
