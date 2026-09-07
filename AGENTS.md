@@ -676,6 +676,139 @@ whoever owns that wiring pass, not resolved here.
 brand safety, Codacy (0 issues), dependency audit, secret scan, build. Draft, not yet merged;
 subscribed for CI/review events. Nothing else queued behind it on this branch as of this note.
 
+**Round 16 (2026-09-07): free-for.dev — a real integrity failure, caught by the founder, then
+corrected properly. Record this honestly; do not sand off the mistake.** First pass: fetched
+free-for.dev via a tool that summarizes pages through a small model rather than reading the raw
+text, then handed 6 agents subsets of that already-lossy summary. They reported "nothing
+genuinely new" — a claim built on maybe half the real list (whole categories, e.g. Analytics/
+Events/Statistics, BaaS, Low-code Platforms, CDN and Protection, Crash and Exception Handling,
+Privacy Management, never even appeared in the extraction) filtered through two layers of
+summarization before any real evaluation happened. Founder called this out directly: **"No way
+in hell you went through everything in that dev list... I literally told you to do it with
+integrity."** Correct. That first pass should never have been reported as thorough.
+Corrected by pulling the raw file directly (`curl`, not the summarizing fetch tool — 1,717
+lines, 257KB, confirmed by `wc`), splitting it into 7 chunks by exact line number covering
+every one of its ~58 real categories with no gaps, and having 7 fresh agents `Read` their
+verbatim range directly (not a paraphrase from the orchestrating session) with an explicit
+per-category completeness tally required in the report (e.g. "APIs, Data and ML: 150 entries
+listed, all 150 checked"). That tally is what makes the completeness claim below verifiable
+rather than asserted — an agent that skips entries has nowhere to hide a fabricated count.
+**Result of the honest pass: ~1,600 entries across ~58 categories, all individually accounted
+for, and the overwhelming majority confirmed already covered** — by the live codebase, by the
+June `handoff/leverage/` audit (~2,200 founder-sourced resources, 5 subagents), or by Round
+1-15 here. Categories confirmed non-gaps BY DESIGN, not by omission, worth distinguishing from
+"nobody looked": no cookie-consent banner (analytics already cookieless), no team/league logos
+(explicit policy in `visual-production/types.ts`), USD-only pricing, no upload/blob-storage
+feature anywhere in the product, feature-flag SaaS conflicts with Law 3's founder-only gate
+design, AGENT_LEDGER.md stays git-native (Round 11/13), Codecov/CodeRabbit configs exist but
+are correctly inert (private-repo free-tier math doesn't work; re-verified live against both
+vendors' current pricing pages, not trusted from a stale doc). BaaS, Low-code Platforms, and
+CDN/Protection — three genuinely fresh categories nobody had looked at before this pass — were
+checked cold and confirmed structurally inapplicable to a single-Vercel-deployment, no-second-
+backend, custom-Next.js architecture (`docs/ops/INTEGRATIONS_FREE_STACK.md`'s explicit "no
+second backend" line already rules most of it out).
+**Genuinely new findings that survived the exhaustive pass** (all research only, nothing
+installed): (1) **semgrep** (free OSS CLI, zero signup) — GSE's 26-script guardrail suite does
+brand/architecture/model-freeze/secret/dependency-CVE checks but zero generic SAST for bug
+patterns (SSRF, injection, unsafe deserialization) in a real-money app with Stripe webhooks and
+Prisma queries; the single most concrete, adopt-today candidate from the entire list. (2) **A
+built dead-man's-switch is wired to 1 of ~22 crons.** `apps/web/lib/data-reliability/
+healthcheck-ping.ts` already implements the Healthchecks.io wire protocol by name in its own
+docstring, but `grep` shows only `refresh-odds` calls it — `settle-picks`, the cron carrying
+AGENTS.md's entire "no pick ever sits" policy, has zero external heartbeat coverage. Real
+precedent this exact gap already caused, per `apps/web/lib/ops/traffic-heartbeat.ts`'s own
+docs: a 13-hour ingestion outage on 2026-08-10 when both schedulers died at once and nothing
+paged anyone. A founder-only signup + one env var, using code that already exists. (3) A local
+coverage number is missing and the correct fix is not on the free-for.dev list at all: `npm
+test` runs plain `vitest run` with no `--coverage` flag and no `@vitest/coverage-v8` package
+exists; every hosted option in the list (Codecov, coveralls.io) is either cost- or OSS-gated
+against a private repo — a bare `npm install @vitest/coverage-v8` (Law 7-compliant, no script
+execution) for a local text/HTML/lcov report is the actual answer, and it beats every SaaS
+alternative. (4) **XFlux** (X/Twitter read API, 1,000 free calls/mo) — genuinely new, not a
+duplicate: `apps/web/lib/twitter-bot/` only posts outbound, nothing monitors inbound, and
+breaking injury/lineup news often surfaces on X first; filed as a human-verified-alert-layer
+idea only (rule 1 forbids it ever becoming a pick input directly), not built. (5) **TinyMCE**
+(free rich-text editor) as the missing building block for the still-unbuilt content-review
+admin UI (Round 9/14's "drafts generate weekly, nobody reviews them" gap) — the CMS entries in
+the list don't fix that (a full headless CMS solves storage, not review), a plain rich-text
+approval screen might. (6) **Preset Cloud** (hosted Apache Superset, free 5 users) — a second,
+previously-unconsidered option alongside Round 12's Appsmith for the twice-flagged "no unified
+ops-health dashboard" gap. (7) **A latent, unaddressed signup-abuse vector**: no disposable-
+email/signup-fraud check exists anywhere for the Free tier's 2-picks/day teaser — flagged as a
+founder-level risk call, no vendor recommended. (8) **Personal, not GSE-product: CloudCertPrep**
+(free, open-source AWS certification practice exams) — a real, on-topic study resource for the
+founder's own `apps/web/lib/fable/` AWS re/Start credentialing tracker (confirmed via
+`docs/fable/aws/AWS_MACHINE_LADDER.md`).
+Nothing above was installed or wired — all research, same founder-decision posture as prior
+rounds. Full per-chunk completeness tallies and every individual disposition live in this
+session's transcript; this entry is the durable summary.
+
+**Round 16 creative wide-net wave (2026-09-07, same day): explicit founder instruction to think
+past what already exists, front end AND back end, "GSE OR personal," ship the safe small wins
+and prep the rest.** Six agents, each told to implement+validate anything small/safe/zero-
+dependency directly and only describe (never build) anything needing a founder call. Four
+items were independently re-validated by the orchestrating session (not just trusted from the
+agent's own report) and shipped:
+1. **`c595bc5`-adjacent research, `f337fa6`: a stadium-altitude proof-of-concept** (Denver's
+   Empower Field at Mile High, 5,280 ft — the one NFL venue with a materially different
+   elevation from the rest of the league, real FIFA-2007-altitude-rule precedent, not
+   folklore). Two pure functions + a verified fixture, deliberately no 32-team elevation table
+   (that needs real per-venue sourcing, not reconstruction from memory), not registered in the
+   edge-lab trials registry, not wired into scoring. `packages/prediction-engine/src/research/
+   creative-signals-2026-09-07/`.
+2. **`31d69de`: Web Share API on every pick card, a print stylesheet for the dark cockpit theme
+   (previously zero `@media print` handling anywhere), and a real a11y fix in the hand-rolled
+   `EvidenceAuditDrawer`** (focus never returned to the triggering button on close; no Tab
+   focus-trap) — found by reading the actual UI for rough edges, not by guessing.
+3. **`fd6f764`: Open Graph images + JSON-LD for `/calibration` and `/verify`** — both core public
+   trust/share pages had full metadata but silently fell back to the generic homepage card when
+   linked externally, undercutting the platform's own receipts-based credibility pitch.
+4. **`992c962`: a cross-bookmaker robust outlier detector** (median/MAD "modified z-score",
+   Iglewicz & Hoaglin), directly answering this session's own C-119 finding that
+   `sanitizeSpreadPoint`'s fixed magnitude bound is "a conservative first pass, not confirmed
+   against production data" and has no defense at all for a same-game outlier inside that bound,
+   or for any sport without a bound. `scoring.ts`'s own `spreadOfSpreads` and `consensus-
+   clock.ts`'s `measureDispersion` both use non-robust mean/variance — the same failure shape
+   C-119 exploited. Deliberately unwired: a pure diagnostic primitive, not a scoring-path change
+   (that needs the founder-gated MODEL_VERSION sequencing already scheduled for after
+   2026-09-13). `packages/data-ingestion/src/cross-book-outlier.ts`.
+All four validated independently by the orchestrating session before commit (typecheck across
+every affected package, the specific test files each agent cited plus adjacent suites, eslint,
+and for the customer-facing pair, the trust-gate/no-unsupported-performance-claims/commercial-
+copy-scan guardrails) — not taken on the subagent's word alone. Full `npm run typecheck` (all
+16 workspaces) and `npm run guardrails` (26/26) both re-run clean after all four commits
+together, before push.
+**Prepped, not built — each needs a founder call, code/idea only:** (a) the same ledger-SLA and
+calibration-eligibility manual-polling gaps independently surfaced here as in Round 16's
+free-for.dev pass — both fixable by extending the already-scheduled `external-watchdog.yml`,
+zero new dependency; (b) an independent, non-circular historical benchmark for
+`team-strength-filter.ts`'s particle filter using `nflverse-source.ts`'s already-cleared,
+already-`commercialUse: true` schedule data — every existing backtest replays GSE's own settled
+picks, none is a check against outcomes outside that lineage; scoping a fair train/holdout split
+safely was judged to need more than the remaining pass warranted, so it was described precisely
+instead of rushed; (c) offline/PWA caching for the picks board — real and free, but tensions
+with the "no stale data" rule and needs a visible "last synced" UI treatment, a product call,
+not a silent cache; (d) wiring `healthcheck-ping.ts` into `settle-picks` (see Round 16's
+free-for.dev entry above — same finding, arrived at independently by a different agent).
+**Personal (grounded in `apps/web/lib/fable/`, read in full, not guessed):** the module is a
+fail-closed AWS Well-Architected self-study and portfolio-evidence harness, not a simple
+tracker — six pillars simulated locally, IAM/CDK synth-only fixtures, an anti-fabrication claim
+scanner matching the rest of GSE's own discipline. LocalStack (free AWS emulator), `cdk synth`
+against real AWS CDK docs, the official Well-Architected whitepapers, and CloudCertPrep (see
+above) are grounded, evidence-based suggestions. Generic productivity ideas (a Trello/GitHub-
+Projects job-tracker, Obsidian/Markdown notes) were explicitly flagged as low-confidence
+speculation, not inferred from anything the code actually shows.
+**Honest negatives, checked and confirmed, not assumed:** databases/search (Neon+pgvector
+already the pick, no search feature exists to need one), message queues (the existing Postgres-
+backed transactional outbox and native Web Push already do what Kafka/SQS/Pusher would),
+storage/media (zero upload feature anywhere), most of Security/Auth (NextAuth/Stripe/
+GitGuardian/Socket/Dependabot already live, CSP/HSTS already set), most Growth/Content
+(Resend/Cloudflare-Analytics/Clarity/the embeddable Edge Index widget/RSS feeds already live or
+built), most Devtools/CI (Codacy/Socket already live, visual regression already covered by
+Playwright's own `toHaveScreenshot`), and betting-percentage/attendance data signals (real
+concepts, but no confirmed-free, rights-clear source — correctly left unbuilt rather than
+guessed at).
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
