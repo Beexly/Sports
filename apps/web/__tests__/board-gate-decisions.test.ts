@@ -684,6 +684,46 @@ describe("a PUBLISHED decision whose pick has been withdrawn", () => {
     expect(result.data.publishedToday).toHaveLength(0);
   });
 
+  it("falls through to the fallback lanes when chronology supersedes EVERY row", async () => {
+    // REVIEW ROUND 32 (Devin, #719). The branch is entered on displayable
+    // CANDIDATES and returned on them too, so a fixture whose only surviving row
+    // was superseded by a withdrawal produced three empty lanes AND skipped the
+    // fallback pick and game queries - blanking the whole board, live published
+    // picks on other fixtures included.
+    //
+    // This is the assertion the older-gated test could not make: it stubbed both
+    // fallback queries empty, so an empty board and a fallback that never ran
+    // looked identical. Here the fallback lane has a real published pick on a
+    // DIFFERENT fixture, so only one of those two behaviours can pass.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      gated({ evaluatedAt: new Date("2026-05-22T14:00:00.000Z") }),
+    ]);
+    mocks.pickFindMany.mockResolvedValue([
+      {
+        id: "pick_other_fixture",
+        gameId: "game_other",
+        pickType: "SPREAD",
+        selection: "BOS -1.5",
+        confidence: 71,
+        edgeScore: 63,
+        factorBreakdown: null,
+        generatedAt: evaluatedAt,
+        modelVersion: "v5.1.0",
+        tier: "FREE",
+        game: game(),
+      },
+    ]);
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    expect(result.data.publishedToday.map((r) => r.id)).toEqual(["pick_other_fixture"]);
+    expect(result.data.openPicks).toBe(1);
+    // The chronology rule still holds: the superseded gated row does not
+    // resurface just because the fallback lanes now run.
+    expect(result.data.gatedTodayRows.some((r) => r.id === "gd_gated_w")).toBe(false);
+  });
+
   it("still shows a decision whose pick IS published", async () => {
     // The control. Dropping every published row would also satisfy the two
     // assertions above.

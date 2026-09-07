@@ -589,28 +589,47 @@ async function loadBoardStateInner(
       const publishedRows = dedupedDecisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
       const gatedRows = dedupedDecisionRows.filter((row) => row.status === "GATED_TODAY");
 
-      const modelVersion = displayableDecisions[0]?.modelVersion ?? MODEL_VERSION;
-      return {
-        data: {
-          sportsWatched: new Set(dedupedDecisionRows.map((row) => row.sport)).size,
-          booksPolled: Math.max(0, ...displayableDecisions.map((decision) => decision.game.bookmakerCoverageMax)),
-          openPicks: publishedRows.length,
-          gatedToday: gatedRows.length,
-          lastRefresh: now.toISOString(),
-          modelVersion,
+      // RETURN ON ROWS, NOT ON CANDIDATES (Devin Review, #719).
+      //
+      // This branch is entered when any decision is DISPLAYABLE, but the
+      // chronology rule above can then supersede every one of them: a fixture
+      // whose only surviving row is a gated evaluation OLDER than a withdrawn
+      // publication drops out here by design. Returning at that point handed
+      // the caller a board with three empty lanes and skipped the fallback
+      // pick and game queries entirely, so one withdrawal could blank the
+      // WHOLE board - including live published picks on other fixtures that
+      // the fallback lane would have found. The C-149 comment already said the
+      // fixture "drops out of the decision path entirely and the fallback
+      // lanes judge it on their own predicates"; the code did not do that, and
+      // the test that pins the rule stubbed both fallback queries empty, so it
+      // could not tell an empty board from a fallback that never ran.
+      //
+      // The chronology rule is unchanged: superseded rows do not display
+      // either way. They simply stop being a reason to answer at all.
+      if (dedupedDecisionRows.length > 0) {
+        const modelVersion = displayableDecisions[0]?.modelVersion ?? MODEL_VERSION;
+        return {
+          data: {
+            sportsWatched: new Set(dedupedDecisionRows.map((row) => row.sport)).size,
+            booksPolled: Math.max(0, ...displayableDecisions.map((decision) => decision.game.bookmakerCoverageMax)),
+            openPicks: publishedRows.length,
+            gatedToday: gatedRows.length,
+            lastRefresh: now.toISOString(),
+            modelVersion,
+            bootstrap: gates.isBootstrapMode,
+            scoringNow: scoringRows,
+            publishedToday: publishedRows,
+            gatedTodayRows: gatedRows,
+          },
+          meta: buildBoardMeta({
+            modelVersion,
+            now,
+            rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
+          liveBoardOn: liveBoardOn(),
           bootstrap: gates.isBootstrapMode,
-          scoringNow: scoringRows,
-          publishedToday: publishedRows,
-          gatedTodayRows: gatedRows,
-        },
-        meta: buildBoardMeta({
-          modelVersion,
-          now,
-          rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
-        liveBoardOn: liveBoardOn(),
-        bootstrap: gates.isBootstrapMode,
-      }),
-      };
+        }),
+        };
+      }
     }
 
     const [publishedTodayRaw, scoringNow, gatedToday] = await Promise.all([
