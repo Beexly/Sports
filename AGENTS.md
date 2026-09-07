@@ -517,6 +517,63 @@ has no data to govern (nothing code can fix); `pre-mortem/templates` is an orpha
 the different, already-live `premortem/` module (a founder call on which survives). Full detail
 in the doc's Round 14 section.
 
+**Round 15 (2026-09-07): the widest sweep yet — 10 parallel domains on explicit founder
+instruction to cast a wide net, no cap, find what's unresearched or regressed, ship coded and
+tested fixes, put everything where every agent can see it.** Two real fixes shipped, zero new
+dependency, outside any frozen/gated territory: the public `/calibration` reliability chart
+(`CalibrationCurve`) plotted only the point estimate even though `compute.ts` had always computed
+a 95% Clopper-Pearson interval per bucket — wired it through as a whisker (`5d94003`), so a
+30-sample bucket no longer reads as solid as a 500-sample one. GSE's MLB client already called
+`statsapi.mlb.com` for standings/scores but never its free `/transactions` endpoint — added
+`fetchMlbInjuredListMoves()` (`b4a5a5d`, verified live against a real Aug-2026 sample before
+writing the parser), giving MLB an availability signal parallel to NFL's; not yet wired into any
+scoring path. **Single highest-leverage finding of the round: "steam"/line-velocity is fully
+built and switched off, not a data gap.** `line-archive.ts`/`pinnacle-line-archive.ts` persist
+timestamped OPEN/INTERIM/CLOSE snapshots but are hard-gated off (`LINE_ARCHIVE_ENABLED="false"`)
+— this history isn't even being collected today — and three independent, tested compute
+libraries (`market-memory.ts`, `line-dna.ts`, `consensus-clock.ts`) already implement the
+velocity/CLV/dispersion-decay math on top of it, verified by grep to have zero callers anywhere.
+`market-memory.ts`'s `sharpSplitSourced` gate already hard-blocks any informed-bettor-movement
+framing without a real sourced split — GSE has already drawn that honesty line in code. Flipping the
+env flag is a Law-3 founder call; wiring the three functions to a real caller ahead of that flip
+is safe, low-risk follow-on work nobody has done yet. Other real, buildable-now-free-small items
+named per domain: an NFL crew-identity-to-penalty-rate join from already-licensed nflverse data
+(referee signal — real but literature says marginal vs. team-strength factors, not a headline
+feature); a travel-distance-in-miles haversine feature alongside the already-built-but-unwired
+`nfl-body-clock.ts` (zero new dependency, real MIT-licensed methodology reference
+`josedv82/airball` verified); wiring the already-cleared, sport-agnostic `espn-boxscore.ts`
+injuries parser into NBA/NHL (zero callers today despite being fully generic); swapping the live
+(shadow, unpriced) Parlay MRI's variance-of-sum approximation for a real per-leg Φ⁻¹/MVN
+joint-tail calculation and fitting its hardcoded 0.25/0.35 correlation constants from GSE's own
+settled-picks history instead. Two strong reassurance findings, no gap: GSE's Elo is fixed-K, but
+a full tested particle filter (`team-strength-filter.ts`) already implements the state-space
+model a Kalman filter targets, more correctly (handles the Bernoulli-through-sigmoid observation
+a textbook linear KF can't) — a graduation decision, not new research; and its existing
+key-number margin-mixture model already covers what extreme-value theory would chase, better
+suited to a bounded, moderate-variance quantity than a heavy-tail method. A clear, valuable
+"do not adopt" result: all six browser-automation/scraping tools checked (Firecrawl, Browserbase,
+Stagehand, browser-use, ScrapingBee, Apify/Crawlee) have anti-bot evasion as a first-class,
+vendor-documented feature or cloud-tier upsell — confirmed by fetching their own docs, not
+assumed — squarely the class of tool GSE's scraping rule already bans; nothing here should be
+re-investigated without new evidence one of them changed its core design. Player-prop support is
+real but partially built at best: production `scoring.ts`/`settlement.ts` have zero prop
+awareness, `/fantasy/props` runs on a hardcoded illustrative array today, and the one piece
+already wired into production ingestion (`event-odds-ingest.ts`, same paid Odds API plan, no new
+contract) is gated off (`EVENT_ODDS_INGEST_ENABLED`, another founder-only flag) and a real budget
+tradeoff against the same credit pool C-109 already flagged as tight. Two real MCP finds for
+prediction-engine R&D (`posit-dev/mcptools`, an R-stats server maintained by Posit/RStudio;
+`finite-sample/rmcp`), zero production footprint, same class as the already-filed
+`@playwright/mcp` item — and one repo to actively never add: `DanielTomaro13/sportsdata-mcp`
+ships real-money bet-placement tools since v0.31.0, a hard exclusion, not a caution. The internal
+regression self-audit confirmed the founder's "somewhat regressing" instinct was correct, but the
+regression already had a fix in flight: this branch was two commits behind `origin/main`, and
+those two commits correct the 2026-09-05 "all four floors pass today" PROVEN read — the fuller
+production sample reads ECE 0.0524 against a 0.05 floor, RED, with the pooled figure flattering
+every individual model-version stratum. This branch has since merged `origin/main` (`dabc428`)
+specifically to carry that correction forward rather than let a superseded status keep
+circulating. Full detail, every file/line checked, and every external source verified in the
+doc's Round 15 section.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
