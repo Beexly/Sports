@@ -85,6 +85,65 @@ designed specifically to get most of the recovery without needing that bump at a
 query in (1) shows a meaningful residual even after clean inputs, the median question is the
 next lever, on schedule, not before.
 
+**UPDATED 2026-09-07 (second pass): C-119's root cause above was real but incomplete — a
+sharper mechanism was found by direct Neon SQL (`summer-brook-99380762`, production), fixed,
+and shipped on this same branch. Read this before touching `sanitizeSpreadPoint()`'s bound or
+the fixture-confirmation guard again.** The magnitude-bound story ("garbage quotes up to 19.5")
+undersold the exposure: querying the live `picks` table directly (not just `odds`) shows
+**259 of 735 published MLB SPREAD picks (35%) carry a `line` field with `|line| > 1.5`** — an
+impossible run line — as of this session, including picks settled as recently as
+2026-09-06T02:45 UTC, i.e. this was still actively happening, not just historical residue. Most
+of these sit in the 3.5-6.5 range, comfortably inside the already-shipped +/-6 bound, so
+deploying that fix alone would not have caught them. Root cause, confirmed by reading one
+game's full odds history end to end (Rangers @ Angels, `cmt56muo10gq6qvfgy2hhecqd`,
+2026-08-23): **every one of 11 books quoted a clean, unanimous -1.5 run line continuously for
+16 straight hours before kickoff — the free ESPN scoreboard confirmed this game "not started"
+on every one of those cycles — and then the market genuinely went live at kickoff** (in-play
+run line escalating past -5.5 as the game progressed). A later cycle, still inside that live
+window, still read "confirmed" from `FixtureConfirmer` and wrote `-3.75` into the pick's
+persisted `line` — a number no book ever quoted pre-game. That `-3.75` is what
+`apps/web/app/api/picks/route.ts` serves to every viewer as the pick's spread (`line: pick.line`
+at its line ~274): this is customer-facing, not an internal artifact. Critically,
+`pick.line`/`pick.selection` are BY DESIGN refreshed on every ingestion cycle while a pick is
+PENDING (`packages/ingestion-pipeline/src/process-sport.ts`'s `pickUpdateData`) — the "current
+line" Pro-tier users see as market movement — while grading/settlement correctly uses the
+write-once `clvLockLine` instead (`settle-sport.ts`'s own comment: "NOT pick.line, which can
+drift on every refresh cycle while the pick is PENDING"). So settlement was never
+mis-graded by this bug; only the live-displayed line was wrong, for up to 35% of MLB spread
+picks, for as long as they stayed PENDING.
+Fixed (this branch, commit after `c595bc5`): a second, ESPN-independent kickoff guard in
+`process-sport.ts`, right after `kickoff` is resolved (including any ESPN correction) and before
+`gameOdds`/`OddsInput` are built. It does not trust `FixtureConfirmer`'s "confirmed" verdict
+alone — it independently refuses to score or refresh a game whose OWN resolved kickoff is
+already at or before this cycle's `fetchedAt` (`new Date()`, this cycle's real wall-clock time),
+the same authoritative kickoff already trusted for settlement and CLV grading. This closes the
+exact mechanism proven above regardless of why ESPN's status lagged (a delay, a postponement it
+hadn't reflected yet, or anything else) — it is a defense-in-depth check on data already in
+hand, not a fix to ESPN's own data. Scoped to one file, no schema/migration/gate touched.
+Validated: `npx tsc --noEmit -p packages/ingestion-pipeline/tsconfig.json` (0 errors),
+`npx vitest run packages/ingestion-pipeline/src/__tests__/` (390/390, 6 pre-existing skips), `npm
+run guardrails` (26/26). One new regression test added
+(`process-sport.test.ts`, "generates no pick when ESPN reports confirmed but the game's own
+kickoff is already at/before this cycle's fetch time"); five pre-existing tests in the same file
+had their kickoff fixtures moved from a hardcoded calendar date to a real-clock-relative one —
+they were unknowingly relying on "2026-06-12" still being in the future, which this same-shaped
+guard now correctly refuses now that real time has passed it.
+**What this does NOT fix, honestly:** (1) The 259 already-contaminated picks currently in
+production keep their wrong `line` until they next refresh (if still PENDING) or stay wrong
+forever (if already settled/frozen) — this fix stops new contamination, it does not repair
+history; a backfill/repair pass for currently-PENDING contaminated rows is a separate, not yet
+scoped task. (2) The earlier +/-6 `sanitizeSpreadPoint()` bound in `normalizer.ts` is still
+correct to keep as defense-in-depth (it catches genuinely extreme values from a source-level
+data error, a different failure mode than this timing gap) but should not be read as "the C-119
+fix" on its own — this kickoff guard is the primary mechanism for the 259-pick exposure measured
+above. (3) NHL puck line was never independently re-measured this pass either (still assumed,
+per the original C-119 note) — the same kickoff guard applies to it for free since it's
+sport-agnostic, but nobody has confirmed NHL had this same live-line pattern in its own data.
+(4) The exact ESPN-lag mechanism (why this specific game's "confirmed" status didn't flip to
+"event_already_started" in time) was not root-caused inside ESPN's own data — a delay/
+postponement flag ESPN hadn't reflected yet is the leading hypothesis, not a proven one; the fix
+above does not depend on knowing this, since it no longer trusts ESPN's status alone.
+
 **UPDATED 2026-09-06 (16:40 UTC): PROVEN IS NOT CLOSE. Calibration eligibility reads RED on
 production and F-36's precondition cannot be met on current data. Do not wait for a publish
 receipt and do not flip anything.** Measured read of
