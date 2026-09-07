@@ -822,13 +822,29 @@ export function findPostponedMatch(
     const gDate = (g.startTime ?? "").slice(0, 10);
     const pDate = pick.gameDateIso.slice(0, 10);
     if (!gDate || daysApart(gDate, pDate) > 2) continue;
+    // Dropping startIso alone is NOT enough. finalBindsToKickoff's clockless
+    // fallback is a +/-1 DAY calendar rule, so yesterday's postponement would
+    // then void a game that was played today, which is the same series bug the
+    // clock binding exists to stop, arriving through the clockless path
+    // instead. A postponement issues a permanent VOID on a published pick, so
+    // a row with no clock has to be the pick's own DAY, matching how
+    // sameMatchupFixturesNearKickoff already narrows clockless fixtures.
+    const hasClock = g.startTime?.includes("T") === true;
+    if (!hasClock && daysApart(gDate, pDate) !== 0) continue;
     const asFinal: TrustedFinal = {
       date: gDate,
       // Carry the real start time so the kickoff binding below can do clock
       // math. Without it every postponed row was team-matched inside a +/-2 day
       // window, which is the exact shape that graded 87 picks off the previous
       // meeting of a series (Devin Review, #717).
-      ...(g.startTime ? { startIso: g.startTime } : {}),
+      //
+      // Only when it HAS a clock. A date-only board start ("2026-09-06")
+      // parses as midnight UTC, so binding a timed pick against it measures
+      // the hours from midnight rather than any real drift and refuses every
+      // afternoon or evening kickoff as more than MAX_KICKOFF_DRIFT_MS adrift.
+      // The postponement then goes undetected and the pick sits at
+      // PENDING/NO_FINAL instead of taking its direct VOID (CodeRabbit, #717).
+      ...(hasClock ? { startIso: g.startTime } : {}),
       home: {
         name: home.team,
         abbr: home.abbreviation ?? home.team.slice(0, 3).toUpperCase(),

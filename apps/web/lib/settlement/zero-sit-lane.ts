@@ -835,23 +835,36 @@ async function persistZeroSitVoid(
   let gameCanceled = false;
   const payload = buildZeroSitVoidPayload({ row, decision, now });
   const written = await db.$transaction(async (tx) => {
-    // Idempotent: PENDING-scoped, so a race loser (or a pick another lane
-    // graded meanwhile) matches zero rows and appends nothing.
+    // HOLD THE GAME ROW FIRST, before anything is graded against it.
     //
-    // The kickoff bound rides in the WRITE, not only in the candidate read.
     // EVERY void this lane issues is gated on ageHours >= the minimum age
     // (decideZeroSitVoid returns skip below the floor), and that age is
     // computed from the commenceTime captured when the candidates were
-    // loaded. Between that read and this statement the lane fetches
+    // loaded. Between that read and this transaction the lane fetches
     // scoreboards over the network for up to ZERO_SIT_VOID_CAP picks, so the
-    // window is wide, and Prisma's default isolation does not lock the game
-    // row. A contest rescheduled into the future in that window would be
-    // VOIDed permanently on an age that no longer holds. As a relation filter
-    // the database evaluates the bound as part of the update itself: a moved
-    // game matches nothing, count comes back 0, and the caller records
-    // WRITE_RACE_LOST and leaves the pick PENDING for the next cycle. The
-    // unpublish half of this lane already carries its full predicate into its
-    // own updateMany for the same reason.
+    // window is wide.
+    //
+    // A relation filter on the PICK write is not enough. It makes the
+    // decision atomic with that one statement, but the row it locks is the
+    // pick, not the game, so a reschedule can still commit BETWEEN the pick
+    // write and the cancellation below: the cancel then matches nothing while
+    // the transaction commits a permanent VOID on a game that will be played
+    // (Devin Review, #717). Writing the kickoff back to the value the
+    // candidate carried, matched on that EXACT value, refuses whenever the row
+    // has moved at all and holds it to commit, which is the same lock
+    // acquisition free-settlement-runner.ts uses for the same reason. The
+    // value does not change; the row lock is the point.
+    const held = await tx.game.updateMany({
+      where: { id: row.game.id, commenceTime: row.game.commenceTime },
+      data: { commenceTime: row.game.commenceTime },
+    });
+    if (held.count === 0) return { count: 0 };
+
+    // Idempotent: PENDING-scoped, so a race loser (or a pick another lane
+    // graded meanwhile) matches zero rows and appends nothing. The kickoff
+    // bound rides here too: redundant now that the row is held, kept because
+    // it states the precondition the void rests on at the statement that
+    // depends on it.
     const updated = await tx.pick.updateMany({
       where: { id: row.id, result: "PENDING", game: { commenceTime: { lt: cutoff } } },
       data: { result: "VOID", settledAt: now },
@@ -885,10 +898,9 @@ async function persistZeroSitVoid(
       // evidence, not evidence of cancellation. Cancellation needs positive
       // evidence; the pick is still voided FIXTURE_NOT_FOUND above and the row
       // keeps its POSTPONED status.
-      // Same kickoff bound as the pick write above. The pick statement locks
-      // the PICK row, not the game, so a reschedule can still commit between
-      // the two statements inside this transaction; without the bound a game
-      // moved into the future and still SCHEDULED would be marked CANCELED.
+      // The game row is held from the top of this transaction, so its kickoff
+      // cannot have moved since. The bound is kept as a statement of the
+      // precondition rather than as the guard that enforces it.
       const canceled = await tx.game.updateMany({
         where: {
           id: row.game.id,

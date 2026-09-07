@@ -152,11 +152,22 @@ export async function persistFreeScores(options?: {
 
     try {
       // Look at recent games not yet fully result-fetched (load first for date keys)
-      const since = new Date(Date.now() - 21 * 24 * 60 * 60 * 1000);
+      const nowMs = Date.now();
+      const since = new Date(nowMs - 21 * 24 * 60 * 60 * 1000);
       const games = await db.game.findMany({
         where: {
           sport: { key: sport.key },
-          commenceTime: { gte: since },
+          // Upper bound as well as lower. A game that has not started cannot
+          // have a final, and the loop below skips it anyway, but without this
+          // bound the OR clause matches EVERY future scheduled fixture for the
+          // sport (they are all SCHEDULED with a null score) and they compete
+          // for the `take` cap with the started games this pass exists to
+          // score. MLB alone runs about 15 games a day, so the 21-day window is
+          // already near the cap before a single future fixture is counted, and
+          // the starved rows are exactly the ones that go overdue
+          // (CodeRabbit, #717). Future kickoffs also generated scoreboard date
+          // keys for days that cannot hold a final.
+          commenceTime: { gte: since, lte: new Date(nowMs) },
           OR: [
             { resultFetched: false },
             { status: { in: ["SCHEDULED", "LIVE"] } },
@@ -172,6 +183,11 @@ export async function persistFreeScores(options?: {
           awayScore: true,
           status: true,
         },
+        // Oldest first, so when the cap does bind it drops the newest games
+        // (whose finals will still be there next cycle) rather than an
+        // arbitrary slice that could keep starving the same old row forever.
+        // Unordered, which 300 rows came back was left to the database.
+        orderBy: { commenceTime: "asc" },
         take: 300,
       });
 
@@ -194,7 +210,6 @@ export async function persistFreeScores(options?: {
       let matched = 0;
       let updated = 0;
 
-      const nowMs = Date.now();
 
       for (const g of games) {
         // A game that has not started cannot have a final score. Without this

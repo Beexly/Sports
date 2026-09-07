@@ -651,6 +651,36 @@ describe("persistFreeScores — never settles a game that has not started", () =
     mocks.buildTrustedFinalsMock.mockReturnValue(finals);
   }
 
+  it("asks the database only for games that have already started, oldest first", () => {
+    // The loop skips a future game, so this bound is not about correctness of
+    // any single row: it is about the `take` cap. Without an upper bound the OR
+    // clause matches EVERY future scheduled fixture for the sport, since they
+    // are all SCHEDULED with a null score, and they compete for the cap with
+    // the started games this pass exists to score. MLB alone runs about 15
+    // games a day, so the 21-day window is already near the 300 cap before a
+    // single future fixture is counted, and the starved rows are exactly the
+    // ones that go on to be overdue (CodeRabbit, #717).
+    armSport([], []);
+
+    return persistFreeScores({ sportKey: "baseball_mlb" }).then(() => {
+      const args = mocks.dbGameFindMany.mock.calls[0]?.[0] as {
+        where: { commenceTime: { gte: Date; lte?: Date } };
+        orderBy?: { commenceTime?: string };
+        take?: number;
+      };
+      expect(args.where.commenceTime.lte).toBeInstanceOf(Date);
+      expect(args.where.commenceTime.gte).toBeInstanceOf(Date);
+      expect(args.where.commenceTime.lte!.getTime()).toBeGreaterThan(
+        args.where.commenceTime.gte.getTime(),
+      );
+      // Deterministic cap: oldest first, so a bound cap drops the newest games
+      // (whose finals will still be there next cycle) rather than an arbitrary
+      // slice that could keep starving the same old row forever.
+      expect(args.orderBy).toEqual({ commenceTime: "asc" });
+      expect(args.take).toBe(300);
+    });
+  });
+
   /** A final whose team names match the game rows below. */
   function seriesFinal(date: string, homeScore: number, awayScore: number) {
     return makeTrustedFinal({

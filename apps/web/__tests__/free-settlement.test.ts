@@ -377,6 +377,34 @@ describe("findPostponedMatch — a postponement must be THIS pick's game", () =>
     expect(out.status === "SETTLED" ? out.result : "").toBe("VOID");
   });
 
+  it("voids off a postponement whose board row carries a DATE-ONLY start time", () => {
+    // A date-only start ("2026-09-06") parses as midnight UTC. Carrying it as a
+    // startIso made the kickoff binding measure hours-from-midnight rather than
+    // real drift, so an afternoon or evening pick read as more than
+    // MAX_KICKOFF_DRIFT_MS adrift, the postponement went undetected, and the
+    // pick sat at PENDING/NO_FINAL instead of taking its VOID (CodeRabbit,
+    // #717). A row with no clock is clockless: it binds by calendar, exactly as
+    // a row with no start time at all already does.
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(today.slice(0, 10))] as never,
+    })[0]!;
+
+    expect(out.status).toBe("SETTLED");
+    expect(out.status === "SETTLED" ? out.result : "").toBe("VOID");
+  });
+
+  it("still does NOT void off YESTERDAY's date-only postponement", () => {
+    // The calendar fallback must stay bounded: clockless does not mean
+    // date-blind, or the series bug this whole guard exists to stop comes back
+    // through the postponement path.
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(yesterday.slice(0, 10))] as never,
+    })[0]!;
+
+    expect(out.status).toBe("PENDING");
+    expect(out.status === "PENDING" ? out.reason : "").toBe("NO_FINAL");
+  });
+
   it("holds rather than guessing when two postponed rows both match the matchup", () => {
     const out = settlePendingPicks([pick], [], {
       postponedCandidates: [

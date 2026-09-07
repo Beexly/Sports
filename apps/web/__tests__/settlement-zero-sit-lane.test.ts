@@ -162,6 +162,14 @@ type Fake = {
    * the only window in which the game-cancel bound can refuse on its own.
    */
   afterPickWrite: (() => void) | null;
+  /** Which table each write in the settlement transaction targeted, in order. */
+  writeOrder: Array<"game" | "pick">;
+  /**
+   * Only the CANCEL writes. `gameUpdates` also holds the kickoff hold that
+   * opens the transaction, which is a lock acquisition rather than a
+   * cancellation, so assertions about cancelling address this list.
+   */
+  gameCancels: Array<Record<string, unknown>>;
 };
 
 function isStale(r: FakeRow, cutoff: Date): boolean {
@@ -178,6 +186,8 @@ function makeFake(rows: FakeRow[]): Fake {
     loseRace: false,
     failEventFor: null,
     afterPickWrite: null,
+    writeOrder: [],
+    gameCancels: [],
     db: {
       pick: {
         findMany: async (args) => {
@@ -199,6 +209,7 @@ function makeFake(rows: FakeRow[]): Fake {
         return rows.filter((r) => matchesWhere(r, where)).map((r) => ({ id: r.id }));
       },
       updateMany: async (args) => {
+        fake.writeOrder.push("pick");
         if (fake.loseRace) return { count: 0 };
         const where = args["where"] as Where;
         const data = args["data"] as { result?: string; settledAt?: Date; isPublished?: boolean };
@@ -229,19 +240,27 @@ function makeFake(rows: FakeRow[]): Fake {
     game: {
       updateMany: async (args) => {
         fake.gameUpdates.push(args);
+        fake.writeOrder.push("game");
+        if ((args["data"] as { status?: string }).status) fake.gameCancels.push(args);
         const where = args["where"] as {
           id: string;
           status?: { in: string[] };
-          commenceTime?: { lt?: Date };
+          commenceTime?: { lt?: Date } | Date;
         };
-        const data = args["data"] as { status: string };
+        const data = args["data"] as { status?: string; commenceTime?: Date };
         let count = 0;
         for (const r of rows) {
           if (r.game.id !== where.id) continue;
           if (where.status && !where.status.in.includes(r.game.status)) continue;
-          const before = where.commenceTime?.lt;
-          if (before && !(r.game.commenceTime < before)) continue;
-          r.game.status = data.status;
+          // The hold matches an EXACT commenceTime; the cancel bounds it with lt.
+          if (where.commenceTime instanceof Date) {
+            if (r.game.commenceTime.getTime() !== where.commenceTime.getTime()) continue;
+          } else {
+            const before = where.commenceTime?.lt;
+            if (before && !(r.game.commenceTime < before)) continue;
+          }
+          if (data.status) r.game.status = data.status;
+          if (data.commenceTime) r.game.commenceTime = data.commenceTime;
           count++;
         }
         return { count: count > 0 ? 1 : 0 };
@@ -305,7 +324,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(ev.payload.settledAt).toBe(NOW.toISOString());
     expect(ev.payload.actor).toMatch(/zero-sit/);
     expect(fake.workEnqueued).toBe(2);
-    expect(fake.gameUpdates).toHaveLength(0);
+    expect(fake.gameCancels).toHaveLength(0);
   });
 
   it("leaves a 23h pick untouched (below the minimum age)", async () => {
@@ -404,8 +423,8 @@ describe("zero-sit lane: VOID half", () => {
     expect(fake.rows[0]!.result).toBe("VOID");
     expect(fake.rows[0]!.game.status).toBe("POSTPONED");
     expect(fake.events[0]!.payload.rcaCode).toBe("FIXTURE_NOT_FOUND");
-    expect(fake.gameUpdates).toHaveLength(1);
-    const where = (fake.gameUpdates[0] as { where: { id: string; status: { in: string[] } } }).where;
+    expect(fake.gameCancels).toHaveLength(1);
+    const where = (fake.gameCancels[0] as { where: { id: string; status: { in: string[] } } }).where;
     expect(where.id).toBe("game-p-postponed");
     expect(where.status.in).toEqual(["SCHEDULED", "LIVE"]);
     expect(where.status.in).not.toContain("POSTPONED");
@@ -442,27 +461,51 @@ describe("zero-sit lane: VOID half", () => {
     expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
   });
 
-  it("refuses the game CANCELED write when the reschedule lands between the two writes inside the transaction", async () => {
-    // The pick statement locks the PICK row, not the game, so a reschedule can
-    // still commit between the two writes of one transaction. The pick is
-    // voided here (its own bound still held), but the game must not be marked
-    // CANCELED once it is scheduled in the future.
-    const kickoff = hoursAgo(30);
+  it("holds the game row BEFORE writing the pick, so a reschedule cannot land mid-transaction", async () => {
+    // A relation filter on the pick write locks the PICK, not the game. That
+    // makes the decision atomic with that one statement and leaves the window
+    // between it and the cancellation open: a reschedule landing there used to
+    // commit a permanent VOID on a game that will be played, because the
+    // cancel matched nothing but the transaction committed anyway (Devin
+    // Review, #717). The fix is a lock, not a second filter, so the test is
+    // about ORDER: the game is held first and everything else follows.
     const fake = makeFake([
-      row({ id: "p-cancel-race", commenceTime: kickoff, home: "Phantom Rebels", away: "Phantom Cardinals" }),
+      row({ id: "p-order", commenceTime: hoursAgo(30), home: "Phantom Rebels", away: "Phantom Cardinals" }),
     ]);
-    fake.afterPickWrite = (): void => {
-      fake.rows[0]!.game.commenceTime = daysFromNow(2);
-    };
 
     const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: scoreboard([]) });
 
     expect(res.voided).toBe(1);
-    expect(res.byCode.FIXTURE_NOT_FOUND).toBe(1);
-    expect(res.gamesCanceled).toBe(0);
+    expect(fake.writeOrder[0]).toBe("game");
+    expect(fake.writeOrder.indexOf("game")).toBeLessThan(fake.writeOrder.indexOf("pick"));
+    // The hold writes the kickoff back to itself: same value, and it is
+    // matched on that exact value so any move refuses.
+    const hold = fake.gameUpdates[0] as { where: { commenceTime?: Date }; data: { commenceTime?: Date } };
+    expect(hold.where.commenceTime).toBeInstanceOf(Date);
+    expect(hold.data.commenceTime).toEqual(hold.where.commenceTime);
+    expect(fake.rows[0]!.game.commenceTime).toEqual(hoursAgo(30));
+  });
+
+  it("refuses everything when the game moved before the transaction: no pick write, no event", async () => {
+    // The hold is matched on the EXACT kickoff the candidate carried, so a
+    // move to any other time refuses, including a move to a different PAST
+    // time, which would silently change the age the void rests on.
+    const fake = makeFake([
+      row({ id: "p-moved-tx", commenceTime: hoursAgo(30), home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    const rescheduleDuringFetch: typeof fetchScoresMultiSource = async (sport, opts) => {
+      fake.rows[0]!.game.commenceTime = daysFromNow(2);
+      return scoreboard([])(sport, opts);
+    };
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: rescheduleDuringFetch });
+
+    expect(res.voided).toBe(0);
+    expect(res.skippedByReason.WRITE_RACE_LOST).toBe(1);
+    expect(fake.rows[0]!.result).toBe("PENDING");
+    expect(fake.events).toHaveLength(0);
+    expect(fake.writeOrder).toEqual(["game"]);
     expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
-    const where = (fake.gameUpdates[0] as { where: { commenceTime?: { lt?: Date } } }).where;
-    expect(where.commenceTime?.lt).toBeInstanceOf(Date);
   });
 
   it("voids FIXTURE_NOT_FOUND only when the board fetch succeeded and lists neither team, and marks the game CANCELED", async () => {
@@ -479,7 +522,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(res.gamesCanceled).toBe(1);
     expect(fake.rows[0]!.result).toBe("VOID");
     expect(fake.rows[0]!.game.status).toBe("CANCELED");
-    expect(fake.gameUpdates[0]).toMatchObject({
+    expect(fake.gameCancels[0]).toMatchObject({
       where: { id: "game-p-phantom", status: { in: ["SCHEDULED", "LIVE"] } },
       data: { status: "CANCELED" },
     });
@@ -554,7 +597,7 @@ describe("zero-sit lane: VOID half", () => {
     expect(res.voided).toBe(1);
     expect(res.byCode.FIXTURE_NOT_FOUND).toBe(1);
     expect(res.gamesCanceled).toBe(0);
-    expect(fake.gameUpdates).toHaveLength(0);
+    expect(fake.gameCancels).toHaveLength(0);
     expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
     expect(fake.events[0]!.payload.rcaCode).toBe("FIXTURE_NOT_FOUND");
     expect(fake.events[0]!.payload.evidence).toMatchObject({ fixtureListed: false, homeListed: true, awayListed: false });
