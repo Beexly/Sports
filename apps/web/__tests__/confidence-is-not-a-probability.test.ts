@@ -25,11 +25,37 @@ import path from "node:path";
  * property of the text, not of a return value.
  */
 
-const repo = path.resolve(__dirname, "..");
-const read = (rel: string) => fs.readFileSync(path.join(repo, rel), "utf8");
+/**
+ * Every path below is a LITERAL, matching the idiom already used by
+ * proof-of-record-surface.test.ts.
+ *
+ * The first version of this file used a helper that took a relative path as a
+ * PARAMETER and passed it to `fs.readFileSync`. Codacy flagged that as a
+ * critical security finding and was right to: a non-literal filesystem
+ * argument is the CWE-22 shape, and a helper that reads whatever relative path
+ * it is handed is a hazard waiting for the day someone passes it something
+ * computed. Literals cannot be tainted, so the finding is removed at the root
+ * rather than suppressed.
+ */
+const PROOF_LOADER = fs.readFileSync(
+  path.resolve(__dirname, "../lib/proof/load-proof-of-record.ts"),
+  "utf8",
+);
+const HOME_SAMPLE = fs.readFileSync(
+  path.resolve(__dirname, "../components/home/annotated-sample-signal.tsx"),
+  "utf8",
+);
+const FOOTER = fs.readFileSync(
+  path.resolve(__dirname, "../components/ui/footer.tsx"),
+  "utf8",
+);
+const PROBABILITIES_ROUTE = fs.readFileSync(
+  path.resolve(__dirname, "../app/api/v1/probabilities/route.ts"),
+  "utf8",
+);
 
 describe("the proof page does not derive a market comparison from confidence", () => {
-  const src = read("lib/proof/load-proof-of-record.ts");
+  const src = PROOF_LOADER;
 
   it("never subtracts a fair probability from confidence/100", () => {
     // The exact category error: a probability minus a non-probability, printed
@@ -52,7 +78,7 @@ describe("the proof page does not derive a market comparison from confidence", (
 
 describe("customer copy does not claim the Edge Index is calibrated", () => {
   it("the home page annotated sample makes no calibration claim", () => {
-    const src = read("components/home/annotated-sample-signal.tsx");
+    const src = HOME_SAMPLE;
     expect(src).not.toMatch(/calibrated \d+-\d+ Edge Index/);
     // Positive control: the honest half of that sentence must survive, because
     // it is the sentence that tells a customer what the number is NOT.
@@ -60,7 +86,7 @@ describe("customer copy does not claim the Edge Index is calibrated", () => {
   });
 
   it("the global footer makes no calibration claim", () => {
-    const src = read("components/ui/footer.tsx");
+    const src = FOOTER;
     expect(src).not.toContain("calibrated market signals");
     // Positive control: the risk language is the point of that paragraph and
     // must not be lost while trimming the unearned adjective.
@@ -70,7 +96,7 @@ describe("customer copy does not claim the Edge Index is calibrated", () => {
 });
 
 describe("the B2B probabilities route says what pModel actually is", () => {
-  const src = read("app/api/v1/probabilities/route.ts");
+  const src = PROBABILITIES_ROUTE;
 
   it("names pModel a confidence score rather than leaving the field to imply a probability", () => {
     // The contract is NOT changed here: pModel keeps its value and its type, so
