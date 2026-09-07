@@ -1055,7 +1055,14 @@ export async function processSport(
         homeTeam: game.homeTeam,
         awayTeam: game.awayTeam,
         commenceTime: kickoff,
-        sport: sport.name,
+        // The KEY, not the display name. OddsInput.sport has exactly one
+        // functional consumer, isThreeWayMoneylineSport in the engine, and it
+        // tests `startsWith("soccer")`. The display name for soccer_usa_mls is
+        // "MLS", which trips nothing, so the three-way suppression guard has
+        // never fired in production and 148 soccer moneylines were published
+        // against a market whose draw is unpriced. Its unit test passed
+        // throughout because it calls the scorer directly with the key.
+        sport: sport.key,
         bookmakerOdds: gameOdds.map((o) => ({
           bookmaker: o.bookmaker,
           market: o.market,

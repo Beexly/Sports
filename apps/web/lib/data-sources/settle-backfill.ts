@@ -58,7 +58,7 @@ export type UnresolvedStalePick = {
   gameId: string;
   commenceTime: string;
   ageDays: number;
-  reason: "NO_FINAL" | "ORIENT_FAIL" | "AMBIGUOUS_MATCH" | "DISPUTED";
+  reason: "NO_FINAL" | "ORIENT_FAIL" | "AMBIGUOUS_MATCH" | "DISPUTED" | "SCORE_MISMATCH";
   sourcesTried: readonly string[];
   olderThanGrace: boolean;
 };
@@ -127,9 +127,8 @@ export type BackfillDb = {
       pickSettlementEvent: { create: (args: unknown) => Promise<unknown> };
       postSettlementWork: unknown;
       game: {
-        update: (args: unknown) => Promise<unknown>;
+        updateMany: (args: unknown) => Promise<{ count: number }>;
         findUnique: (args: unknown) => Promise<{
-          status: string;
           homeScore: number | null;
           awayScore: number | null;
         } | null>;
@@ -147,6 +146,16 @@ export type PersistSettledArgs = {
   awayScore: number | null;
 };
 
+/**
+ * What one persist attempt did. A refusal is NOT a silent no-op: the pick is
+ * still PENDING and the caller records it, so nothing sits unaccounted.
+ * `boolean` stays accepted for injected persisters: `true` means written.
+ */
+export type PersistSettledOutcome = {
+  readonly written: boolean;
+  readonly refusal: "SCORE_MISMATCH" | null;
+};
+
 export async function backfillStaleSettlement(input: {
   db: BackfillDb;
   now?: Date;
@@ -158,7 +167,7 @@ export async function backfillStaleSettlement(input: {
    */
   sportKey?: string | null;
   fetchScores?: typeof fetchScoresMultiSource;
-  persistSettled?: (args: PersistSettledArgs) => Promise<boolean>;
+  persistSettled?: (args: PersistSettledArgs) => Promise<boolean | PersistSettledOutcome>;
 }): Promise<BackfillResult> {
   const now = input.now ?? new Date();
   const cap = input.cap ?? BACKFILL_CAP;
@@ -305,7 +314,7 @@ export async function backfillStaleSettlement(input: {
         continue;
       }
 
-      const written = await persistSettled({
+      const outcome = await persistSettled({
         pickId: o.pickId,
         gameId: row.game.id,
         result: o.result,
@@ -313,7 +322,29 @@ export async function backfillStaleSettlement(input: {
         homeScore: o.homeScore,
         awayScore: o.awayScore,
       });
-      if (written) settled++;
+      const persisted: PersistSettledOutcome =
+        typeof outcome === "boolean" ? { written: outcome, refusal: null } : outcome;
+      if (persisted.written) {
+        settled++;
+        continue;
+      }
+      if (persisted.refusal === "SCORE_MISMATCH") {
+        // The Game row already carries a DIFFERENT recorded final. The whole
+        // transaction rolled back, so the pick is still PENDING rather than
+        // graded against a score its own game row contradicts. Record it the
+        // way a hold is recorded: the zero-sit lane takes it from here under
+        // SCORE_MISMATCH_CROSS_PATH, the code built for exactly this.
+        held++;
+        unresolved.push({
+          pickId: o.pickId,
+          gameId: row.game.id,
+          commenceTime: row.game.commenceTime.toISOString(),
+          ageDays: Math.round(ageDays * 10) / 10,
+          reason: "SCORE_MISMATCH",
+          sourcesTried: o.sources.length ? o.sources : sourcesTried,
+          olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+        });
+      }
     }
   }
 
@@ -330,69 +361,107 @@ export async function backfillStaleSettlement(input: {
   };
 }
 
-function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<boolean> {
+/**
+ * Thrown inside the persist transaction to roll it back when the Game row
+ * already carries a different recorded final. Grading a pick against a score
+ * its own game row contradicts is the one outcome this lane must never
+ * commit, and a throw is the only way to undo the pick write that already
+ * happened earlier in the same transaction.
+ */
+class BackfillScoreMismatch extends Error {
+  constructor(readonly gameId: string) {
+    super(`settle-backfill: recorded final conflicts for game ${gameId}`);
+    this.name = "BackfillScoreMismatch";
+  }
+}
+
+function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<PersistSettledOutcome> {
   return async (args) => {
-    if (!db.$transaction) return false;
-    const written = await db.$transaction(async (tx) => {
-      const updated = await tx.pick.updateMany({
-        where: { id: args.pickId, result: "PENDING" },
-        data: { result: args.result, settledAt: args.settledAt },
-      });
-      if (updated.count === 0) return updated;
-      await tx.pickSettlementEvent.create({
+    if (!db.$transaction) return { written: false, refusal: null };
+    try {
+      return await persistInTx(db, args);
+    } catch (err) {
+      if (err instanceof BackfillScoreMismatch) return { written: false, refusal: "SCORE_MISMATCH" };
+      throw err;
+    }
+  };
+}
+
+async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<PersistSettledOutcome> {
+  const $transaction = db.$transaction;
+  if (!$transaction) return { written: false, refusal: null };
+  const written = await $transaction(async (tx) => {
+    const updated = await tx.pick.updateMany({
+      where: { id: args.pickId, result: "PENDING" },
+      data: { result: args.result, settledAt: args.settledAt },
+    });
+    if (updated.count === 0) return updated;
+    await tx.pickSettlementEvent.create({
+      data: {
+        pickId: args.pickId,
+        gameId: args.gameId,
+        result: args.result,
+        settledAt: args.settledAt,
+        status: "PENDING",
+      },
+    });
+    await enqueuePostSettlementWork(
+      tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
+      [
+        { subjectId: args.pickId, kind: "CLV_GRADE" },
+        { subjectId: args.pickId, kind: "SNAPSHOT_OUTCOME" },
+      ],
+    );
+    if (args.homeScore != null && args.awayScore != null) {
+      // Never overwrite a recorded final with a different one. Same rule as
+      // free-score-persist.ts (SCORE_MISMATCH_CROSS_PATH), but the rule rides
+      // in the WRITE rather than in a preceding read: updateMany, not update.
+      // A read followed by an unguarded update by id is a race under Prisma's
+      // default isolation, which does not lock the game row, so a competing
+      // FINAL committing in between would be clobbered by the very statement
+      // meant to protect it. The predicate allows the write only when the row
+      // is not yet a scored FINAL, or already carries this exact pair
+      // (idempotent re-run).
+      const scored = await tx.game.updateMany({
+        where: {
+          id: args.gameId,
+          OR: [
+            { status: { not: "FINAL" } },
+            { homeScore: null },
+            { awayScore: null },
+            { homeScore: args.homeScore, awayScore: args.awayScore },
+          ],
+        },
         data: {
-          pickId: args.pickId,
-          gameId: args.gameId,
-          result: args.result,
-          settledAt: args.settledAt,
-          status: "PENDING",
+          homeScore: args.homeScore,
+          awayScore: args.awayScore,
+          status: "FINAL",
+          resultFetched: true,
         },
       });
-      await enqueuePostSettlementWork(
-        tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
-        [
-          { subjectId: args.pickId, kind: "CLV_GRADE" },
-          { subjectId: args.pickId, kind: "SNAPSHOT_OUTCOME" },
-        ],
-      );
-      if (args.homeScore != null && args.awayScore != null) {
-        // Never overwrite a recorded final with a different one.
-        // Same guard pattern as free-score-persist.ts (SCORE_MISMATCH_CROSS_PATH):
-        // if a game already has a FINAL status and a different score pair,
-        // refuse to clobber the result picks were graded against.
-        const existingGame = await tx.game.findUnique({
+      if (scored.count === 0) {
+        // A different final is recorded. Read it once, only on this path, so
+        // the operator sees both sides, then ROLL THE TRANSACTION BACK.
+        //
+        // This used to fall through with "the pick settlement already
+        // happened above", which committed a grade computed from the
+        // incoming score while the game row kept a different one: a settled
+        // pick contradicting its own game row, and no record that it had
+        // happened. Refusing the score write is not enough; the grade rests
+        // on the same contested number, so both go or neither does.
+        const existing = await tx.game.findUnique({
           where: { id: args.gameId },
-          select: { status: true, homeScore: true, awayScore: true },
+          select: { homeScore: true, awayScore: true },
         });
-        const recordedFinal =
-          existingGame?.status === "FINAL" &&
-          existingGame.homeScore != null &&
-          existingGame.awayScore != null;
-        if (
-          recordedFinal &&
-          (existingGame.homeScore !== args.homeScore ||
-            existingGame.awayScore !== args.awayScore)
-        ) {
-          console.warn(
-            `[settle-backfill] SCORE_MISMATCH game=${args.gameId} ` +
-              `existing=${existingGame.homeScore}-${existingGame.awayScore} ` +
-              `incoming=${args.homeScore}-${args.awayScore} — refusing overwrite.`,
-          );
-          // Do not write scores; the pick settlement already happened above.
-        } else {
-        await tx.game.update({
-          where: { id: args.gameId },
-          data: {
-            homeScore: args.homeScore,
-            awayScore: args.awayScore,
-            status: "FINAL",
-            resultFetched: true,
-          },
-        });
-        }
+        console.warn(
+          `[settle-backfill] SCORE_MISMATCH game=${args.gameId} ` +
+            `existing=${existing?.homeScore ?? "null"}-${existing?.awayScore ?? "null"} ` +
+            `incoming=${args.homeScore}-${args.awayScore}; rolling back, the pick stays PENDING.`,
+        );
+        throw new BackfillScoreMismatch(args.gameId);
       }
-      return updated;
-    });
-    return written.count > 0;
-  };
+    }
+    return updated;
+  });
+  return { written: written.count > 0, refusal: null };
 }

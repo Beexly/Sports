@@ -183,7 +183,7 @@ export const ZERO_SIT_SKIP_REASONS: readonly ZeroSitSkipReason[] = [
   "WRITE_FAILED",
 ];
 
-export type ZeroSitAmbiguityCause = "CITY_ONLY_NAME" | "MULTIPLE_FINALS";
+export type ZeroSitAmbiguityCause = "CITY_ONLY_NAME" | "NO_OWN_FIXTURE" | "MULTIPLE_FINALS";
 
 /** One select shape for both halves so one row type serves the whole lane. */
 export const ZERO_SIT_PICK_SELECT = {
@@ -482,13 +482,20 @@ export function decideZeroSitVoid(args: {
 
   if (outcome.status === "HELD") {
     if (outcome.reason === "DISPUTED") return { kind: "skip", reason: "DISPUTED_HOLD" };
-    // cityOnlyAmbiguity holds with no sources; the same-day doubleheader hold
-    // carries the disagreeing candidates' sources (free-settlement.ts).
-    const cause: ZeroSitAmbiguityCause = outcome.sources.length === 0 ? "CITY_ONLY_NAME" : "MULTIPLE_FINALS";
+    // The grader STATES its cause; this lane no longer infers it. Inferring it
+    // from an empty sources array was right for the city-only hold and wrong
+    // for the own-fixture hold, which also carries no sources: an operator was
+    // told the pick was voided for a city-only name when a final existed and
+    // none of them could be placed on this pick's own fixture. The old
+    // inference stays as the fallback for an outcome that predates the field.
+    const cause: ZeroSitAmbiguityCause =
+      outcome.ambiguity ?? (outcome.sources.length === 0 ? "CITY_ONLY_NAME" : "MULTIPLE_FINALS");
     const detail =
       cause === "CITY_ONLY_NAME"
         ? "a stored side names two or more teams on the fetched boards (city-only name)."
-        : "more than one final for these teams inside the date window disagrees on the score.";
+        : cause === "NO_OWN_FIXTURE"
+          ? "a final for these teams was in hand but none of them could be placed on this pick's own fixture."
+          : "more than one final for these teams inside the date window disagrees on the score.";
     return {
       kind: "void",
       rcaCode: "AMBIGUOUS_TEAM_NAME",
@@ -818,22 +825,79 @@ export function scoreboardDatesPublishedFirst(
   return { espnKeys, isoKeys };
 }
 
+/**
+ * Thrown inside the void transaction when the game's kickoff moved after the
+ * pick write. The pick write has already happened by then, so only a throw
+ * undoes it; returning would commit a permanent VOID on a game that will be
+ * played. The caller reports it as a lost race, not as a poison row.
+ */
+class ZeroSitKickoffMoved extends Error {
+  constructor(
+    readonly pickId: string,
+    readonly gameId: string,
+  ) {
+    super(`zero-sit: kickoff moved for game ${gameId} while voiding pick ${pickId}`);
+    this.name = "ZeroSitKickoffMoved";
+  }
+}
+
 async function persistZeroSitVoid(
   db: ZeroSitDb,
   row: ZeroSitPickRow,
   decision: Extract<ZeroSitDecision, { kind: "void" }>,
   now: Date,
+  cutoff: Date,
 ): Promise<{ written: boolean; gameCanceled: boolean }> {
   let gameCanceled = false;
   const payload = buildZeroSitVoidPayload({ row, decision, now });
   const written = await db.$transaction(async (tx) => {
+    // LOCK ORDER: PICK, then GAME. Every settlement transaction in this repo
+    // takes the two rows in that order — free-settlement-runner.ts and
+    // settle-backfill.ts both write the pick first — and this one must match.
+    // Holding the game FIRST here made two lanes that legitimately race for
+    // the same rows acquire them in opposite orders, which is an ABBA deadlock
+    // Postgres resolves by aborting one transaction (Devin Review, #717). The
+    // zero-sit and free-settlement candidate sets overlap by construction:
+    // both select PENDING picks whose game has commenced.
+    //
     // Idempotent: PENDING-scoped, so a race loser (or a pick another lane
-    // graded meanwhile) matches zero rows and appends nothing.
+    // graded meanwhile) matches zero rows and appends nothing. The kickoff
+    // bound rides here too, so a game already moved before this statement
+    // refuses without writing anything.
     const updated = await tx.pick.updateMany({
-      where: { id: row.id, result: "PENDING" },
+      where: { id: row.id, result: "PENDING", game: { commenceTime: { lt: cutoff } } },
       data: { result: "VOID", settledAt: now },
     });
     if (updated.count === 0) return updated;
+
+    // HOLD THE GAME ROW, unconditionally, before this transaction commits.
+    //
+    // EVERY void this lane issues is gated on ageHours >= the minimum age
+    // (decideZeroSitVoid returns skip below the floor), and that age comes
+    // from the commenceTime captured when the candidates were loaded. Between
+    // that read and here the lane fetches scoreboards over the network for up
+    // to ZERO_SIT_VOID_CAP picks, so the window is wide.
+    //
+    // The relation filter on the pick write above is not enough on its own: it
+    // locks the PICK, so a reschedule can still commit between that statement
+    // and this one. Writing the kickoff back to the value the candidate
+    // carried, matched on that EXACT value, refuses whenever the row has moved
+    // at all — including to a different PAST time, which would silently change
+    // the age the void rests on — and holds it to commit.
+    //
+    // Unconditional, NOT only when the decision cancels the game: a
+    // SCORE_MISMATCH_CROSS_PATH or AMBIGUOUS_TEAM_NAME void writes no other
+    // game statement, so without this one nothing would detect a move after
+    // the pick write for those codes.
+    //
+    // Refusing here means rolling back, never returning: the pick write above
+    // has already happened, and only a throw undoes it. Same mechanism, and
+    // the same reason, as free-settlement-runner.ts.
+    const held = await tx.game.updateMany({
+      where: { id: row.game.id, commenceTime: row.game.commenceTime },
+      data: { commenceTime: row.game.commenceTime },
+    });
+    if (held.count === 0) throw new ZeroSitKickoffMoved(row.id, row.game.id);
     // TRANSACTIONAL OUTBOX (same lane as settle-sport.ts and the free runner):
     // the event rides in the settlement transaction; the outbox worker closes
     // VOID events as receipts (non-decisive) and never rewrites this payload.
@@ -862,8 +926,15 @@ async function persistZeroSitVoid(
       // evidence, not evidence of cancellation. Cancellation needs positive
       // evidence; the pick is still voided FIXTURE_NOT_FOUND above and the row
       // keeps its POSTPONED status.
+      // The game row is held by the statement above, so its kickoff cannot
+      // have moved since. The bound is kept as a statement of the precondition
+      // rather than as the guard that enforces it.
       const canceled = await tx.game.updateMany({
-        where: { id: row.game.id, status: { in: ["SCHEDULED", "LIVE"] } },
+        where: {
+          id: row.game.id,
+          status: { in: ["SCHEDULED", "LIVE"] },
+          commenceTime: { lt: cutoff },
+        },
         data: { status: "CANCELED" },
       });
       gameCanceled = canceled.count > 0;
@@ -1030,8 +1101,14 @@ export async function voidSittingPicks(input: {
       }
       let persisted: { written: boolean; gameCanceled: boolean };
       try {
-        persisted = await persistZeroSitVoid(input.db, row, decision, now);
+        persisted = await persistZeroSitVoid(input.db, row, decision, now, cutoff);
       } catch (err) {
+        if (err instanceof ZeroSitKickoffMoved) {
+          // A deliberate rollback, not a failure: the pick is still PENDING
+          // and the next cycle re-inspects it against the corrected kickoff.
+          skip(row, "WRITE_RACE_LOST");
+          continue;
+        }
         // Per-pick isolation: one poison row (a transient DB error, an event
         // unique collision) must not stop every other void this cycle.
         console.warn(

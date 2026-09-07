@@ -5,8 +5,12 @@ import { parseEspnScoreboard } from "@/lib/data-sources/free-adapters/espn-score
 import { parseHenrygdScoreboard, type NcaaGame } from "@/lib/data-sources/free-adapters/henrygd-ncaa";
 import {
   buildTrustedFinals,
+  finalBindsToKickoff,
+  finalMatchesNearestFixture,
+  MAX_KICKOFF_DRIFT_MS,
   settlePendingPicks,
   type PendingPick,
+  type TrustedFinal,
 } from "@/lib/data-sources/free-settlement";
 
 const FIX = resolve(__dirname, "fixtures");
@@ -99,5 +103,479 @@ describe("settlePendingPicks", () => {
     const single = buildTrustedFinals(espn, []);
     const out = settlePendingPicks([pick({ pickType: "MONEYLINE", selection: "Navy" })], single)[0]!;
     expect(out.status === "SETTLED" ? out.confirmation : out.status).toBe("SINGLE_SOURCE");
+  });
+});
+
+// ─── Kickoff binding ───────────────────────────────────────────────────────────
+
+/**
+ * The grader holds when SEVERAL same-matchup finals are in the window, but a
+ * LONE previous-meeting final had nothing to be held against: nearestCandidates
+ * returns a one-element list unchanged. That is how a pick on a game which had
+ * started but had no published result yet was graded off the previous meeting
+ * of the same series, on nothing but a team-name match.
+ *
+ * Measured on production 2026-09-06: 87 published picks carried a settledAt
+ * EARLIER than their game's commenceTime, 63 of them MONEYLINE graded WIN/LOSS.
+ */
+describe("finalBindsToKickoff", () => {
+  const HOUR = 60 * 60 * 1000;
+
+  function final(opts: { startIso?: string; date: string }): TrustedFinal {
+    return {
+      date: opts.date,
+      ...(opts.startIso ? { startIso: opts.startIso } : {}),
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+
+  const kickoff = "2026-09-06T23:10:00.000Z";
+
+  it("accepts a final that starts at the game's kickoff", () => {
+    expect(finalBindsToKickoff(kickoff, final({ startIso: kickoff, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("accepts a delayed start inside the drift bound", () => {
+    const delayed = new Date(Date.parse(kickoff) + 3 * HOUR).toISOString();
+    expect(finalBindsToKickoff(kickoff, final({ startIso: delayed, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("REJECTS the previous day's meeting of the same series", () => {
+    const yesterday = new Date(Date.parse(kickoff) - 24 * HOUR).toISOString();
+    expect(finalBindsToKickoff(kickoff, final({ startIso: yesterday, date: "2026-09-05" }))).toBe(false);
+  });
+
+  it("rejects exactly at the boundary and accepts just inside it", () => {
+    const justOver = new Date(Date.parse(kickoff) - (MAX_KICKOFF_DRIFT_MS + 1)).toISOString();
+    const justUnder = new Date(Date.parse(kickoff) - (MAX_KICKOFF_DRIFT_MS - 1)).toISOString();
+    expect(finalBindsToKickoff(kickoff, final({ startIso: justOver, date: "2026-09-06" }))).toBe(false);
+    expect(finalBindsToKickoff(kickoff, final({ startIso: justUnder, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("falls back to the day when the KICKOFF is date-only, because midnight is not a kickoff", () => {
+    // Clock math against a date-only kickoff would read a 7pm final as 19h
+    // adrift and reject every legitimate settlement on that path.
+    const evening = "2026-09-06T23:10:00.000Z";
+    expect(finalBindsToKickoff("2026-09-06", final({ startIso: evening, date: "2026-09-06" }))).toBe(true);
+  });
+
+  it("falls back to one day when the FINAL carries no start time, and refuses two", () => {
+    expect(finalBindsToKickoff(kickoff, final({ date: "2026-09-05" }))).toBe(true);
+    expect(finalBindsToKickoff(kickoff, final({ date: "2026-09-04" }))).toBe(false);
+  });
+});
+
+/**
+ * Structural guard: the free settlement runner must not hand the grader a pick
+ * whose game has not started. Asserted against the source because the query is
+ * the guard — a unit test of the surrounding function would mock the very call
+ * being pinned. settle-backfill.ts and the zero-sit lane already scope their
+ * loads this way; the runner did not, and that is what fed 298 published
+ * PENDING picks on future games into the grader every cycle.
+ */
+describe("free-settlement-runner PENDING load", () => {
+  it("scopes the pick query to games that have already started", () => {
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "data-sources", "free-settlement-runner.ts"),
+      "utf8",
+    );
+    const start = src.indexOf("db.pick.findMany");
+    expect(start).toBeGreaterThan(-1);
+    const where = src.slice(start, start + 900);
+    expect(where).toContain('result: "PENDING"');
+    expect(where).toMatch(/commenceTime:\s*\{\s*lte:/);
+  });
+});
+
+/**
+ * The integration that matters: settlePendingPicks must not grade a pick off a
+ * final that cannot be its game. Pinning finalBindsToKickoff alone is not
+ * enough — the filter has to actually be wired into the grader, and a unit test
+ * of the helper passes happily while the call site is missing.
+ */
+describe("settlePendingPicks — a lone out-of-window final never grades a pick", () => {
+  const HOUR = 60 * 60 * 1000;
+  const kickoff = "2026-09-06T23:10:00.000Z";
+
+  function seriesFinal(startIso: string, homeScore: number, awayScore: number): TrustedFinal {
+    return {
+      date: startIso.slice(0, 10),
+      startIso,
+      home: { name: "Phillies", abbr: "PHI", score: homeScore },
+      away: { name: "Braves", abbr: "ATL", score: awayScore },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+
+  const seriesPick: PendingPick = {
+    pickId: "series-pick",
+    pickType: "MONEYLINE",
+    selection: "Phillies",
+    line: 0,
+    homeTeam: "Phillies",
+    awayTeam: "Braves",
+    sportKey: "baseball_mlb",
+    gameDateIso: kickoff,
+  };
+
+  it("leaves the pick PENDING when the only final is the previous day's meeting", () => {
+    const yesterday = new Date(Date.parse(kickoff) - 24 * HOUR).toISOString();
+    const out = settlePendingPicks([seriesPick], [seriesFinal(yesterday, 4, 2)])[0]!;
+    // Before this guard the pick was graded WIN off a game it was not on.
+    expect(out.status).toBe("PENDING");
+  });
+
+  it("still grades the pick when the final is its own game", () => {
+    const out = settlePendingPicks([seriesPick], [seriesFinal(kickoff, 4, 2)])[0]!;
+    expect(out.status).toBe("SETTLED");
+  });
+});
+
+describe("finalBindsToKickoff — a malformed timestamp is not evidence", () => {
+  function final(opts: { startIso?: string; date: string }): TrustedFinal {
+    return {
+      date: opts.date,
+      ...(opts.startIso ? { startIso: opts.startIso } : {}),
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+  const kickoff = "2026-09-06T23:10:00.000Z";
+
+  it("binds nothing when a supplied startIso cannot be parsed", () => {
+    // Returning true here let a malformed timestamp through the +/-2-day
+    // candidate filter and settle a pick off a stale score (CodeRabbit, #717).
+    // The one-day calendar fallback was still too generous: a same-day prior
+    // meeting passes it, which is the very case the clock binding exists to
+    // stop (cubic, #717). A final that supplies a broken timestamp binds to
+    // nothing, on any date.
+    expect(finalBindsToKickoff(kickoff, final({ startIso: "not-a-date", date: "2026-09-04" }))).toBe(
+      false,
+    );
+    expect(finalBindsToKickoff(kickoff, final({ startIso: "not-a-date", date: "2026-09-06" }))).toBe(
+      false,
+    );
+    // A final that carries NO start time still gets the one-day calendar rule.
+    expect(finalBindsToKickoff(kickoff, final({ startIso: undefined, date: "2026-09-06" }))).toBe(
+      true,
+    );
+  });
+});
+
+/**
+ * The write-time kickoff guards used to be pinned here by reading this file's
+ * own source, because the only way to reach them was through $transaction. That
+ * proxy is gone: the transactional write is now writeFreeSettlementInTx, and
+ * free-settlement-race.test.ts drives it against a transaction client that
+ * commits a schedule correction BETWEEN the guarded statements — the reread,
+ * the relation filter on the pick write, the predicate on the FINAL write and
+ * the rollback that undoes an already-written pick are each negative-controlled
+ * there (Devin Review, #717). Source-text assertions cannot show a rollback
+ * actually happens, so they were replaced rather than kept alongside.
+ */
+
+/**
+ * The doubleheader hold belongs in the SHARED grader, not only in the score
+ * persister. free-settlement-runner, settle-backfill and the zero-sit lane all
+ * call settlePendingPicks and all already hand it the full board, so one guard
+ * here covers every path that can publish a graded result (Devin Review, #717).
+ */
+describe("finalMatchesNearestFixture", () => {
+  const one = "2026-09-06T17:00:00.000Z";
+  const two = "2026-09-06T21:00:00.000Z";
+
+  it("places a final on the fixture it sits nearest", () => {
+    expect(finalMatchesNearestFixture(two, two, [one, two])).toBe(true);
+    expect(finalMatchesNearestFixture(two, one, [one, two])).toBe(false);
+  });
+
+  it("refuses a tie rather than taking whichever start sorted first", () => {
+    // A kickoff exactly between two fixtures has no nearest row. Comparing with
+    // `<` handed it to the first entry and settled a game that is by
+    // construction unidentifiable (cubic, #717).
+    const midpoint = "2026-09-06T19:00:00.000Z";
+    // Both directions of the tie. Taking the first entry made each of these
+    // read as a successful placement on the fixture that merely sorted first.
+    expect(finalMatchesNearestFixture(midpoint, one, [one, two])).toBe(false);
+    expect(finalMatchesNearestFixture(one, midpoint, [one, two])).toBe(false);
+    // And it is the TIE that refuses, not the midpoint: with a third fixture
+    // that is unambiguously nearer, the same midpoint places fine.
+    expect(finalMatchesNearestFixture(midpoint, midpoint, [one, two, midpoint])).toBe(true);
+  });
+
+  it("accepts everything when the board lists fewer than two fixtures", () => {
+    expect(finalMatchesNearestFixture(two, one, [two])).toBe(true);
+  });
+
+  it("refuses when any timestamp in the comparison carries no clock", () => {
+    expect(finalMatchesNearestFixture(two, two, [one.slice(0, 10), two])).toBe(false);
+    expect(finalMatchesNearestFixture(two, undefined, [one, two])).toBe(false);
+    expect(finalMatchesNearestFixture(two.slice(0, 10), two, [one, two])).toBe(false);
+  });
+});
+
+/**
+ * A postponement produces a PERMANENT VOID on a published pick, so it has to
+ * identify THIS fixture, not merely these two teams inside a two-day window.
+ * findPostponedMatch was left on the old team-name + calendar matching when the
+ * finals path was bound to the kickoff, and the finals binding pushes MORE picks
+ * down this fall-through, so the hardening made the hole likelier to fire
+ * (Devin Review, #717).
+ */
+describe("findPostponedMatch — a postponement must be THIS pick's game", () => {
+  const HR = 60 * 60 * 1000;
+  const today = "2026-09-06T23:10:00.000Z";
+  const yesterday = new Date(Date.parse(today) - 24 * HR).toISOString();
+
+  const pick: PendingPick = {
+    pickId: "series-pick",
+    pickType: "MONEYLINE",
+    selection: "Phillies",
+    line: 0,
+    homeTeam: "Phillies",
+    awayTeam: "Braves",
+    sportKey: "baseball_mlb",
+    gameDateIso: today,
+  };
+
+  const postponedRow = (startTime: string) => ({
+    sourceId: "espn-public-api" as const,
+    sport: "mlb" as const,
+    gameId: `ppd-${startTime}`,
+    startTime,
+    state: "pre",
+    completed: false,
+    statusDetail: "Postponed",
+    venue: null,
+    home: { team: "Phillies", abbreviation: "PHI", score: null },
+    away: { team: "Braves", abbreviation: "ATL", score: null },
+    attribution: "Scores data via ESPN",
+  });
+
+  it("does NOT void today's played game off YESTERDAY's postponement", () => {
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(yesterday)] as never,
+    })[0]!;
+
+    expect(out.status).toBe("PENDING");
+    expect(out.status === "PENDING" ? out.reason : "").toBe("NO_FINAL");
+  });
+
+  it("CONTROL: today's own postponement still voids the pick", () => {
+    // Without this passing, the assertion above proves only that voiding broke.
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(today)] as never,
+    })[0]!;
+
+    expect(out.status).toBe("SETTLED");
+    expect(out.status === "SETTLED" ? out.result : "").toBe("VOID");
+  });
+
+  it("voids off a postponement whose board row carries a DATE-ONLY start time", () => {
+    // A date-only start ("2026-09-06") parses as midnight UTC. Carrying it as a
+    // startIso made the kickoff binding measure hours-from-midnight rather than
+    // real drift, so an afternoon or evening pick read as more than
+    // MAX_KICKOFF_DRIFT_MS adrift, the postponement went undetected, and the
+    // pick sat at PENDING/NO_FINAL instead of taking its VOID (CodeRabbit,
+    // #717). A row with no clock is clockless: it binds by calendar, exactly as
+    // a row with no start time at all already does.
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(today.slice(0, 10))] as never,
+    })[0]!;
+
+    expect(out.status).toBe("SETTLED");
+    expect(out.status === "SETTLED" ? out.result : "").toBe("VOID");
+  });
+
+  it("still does NOT void off YESTERDAY's date-only postponement", () => {
+    // The calendar fallback must stay bounded: clockless does not mean
+    // date-blind, or the series bug this whole guard exists to stop comes back
+    // through the postponement path.
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [postponedRow(yesterday.slice(0, 10))] as never,
+    })[0]!;
+
+    expect(out.status).toBe("PENDING");
+    expect(out.status === "PENDING" ? out.reason : "").toBe("NO_FINAL");
+  });
+
+  it("holds rather than guessing when two postponed rows both match the matchup", () => {
+    const out = settlePendingPicks([pick], [], {
+      postponedCandidates: [
+        postponedRow(today),
+        postponedRow(new Date(Date.parse(today) + 2 * HR).toISOString()),
+      ] as never,
+    })[0]!;
+
+    expect(out.status).toBe("PENDING");
+  });
+});
+
+describe("settlePendingPicks — an unfinished doubleheader holds", () => {
+  const HOUR = 60 * 60 * 1000;
+  const gameTwo = "2026-09-06T23:10:00.000Z";
+  const gameOne = new Date(Date.parse(gameTwo) - 3 * HOUR).toISOString();
+
+  const dhPick: PendingPick = {
+    pickId: "dh-pick",
+    pickType: "MONEYLINE",
+    selection: "Phillies",
+    line: 0,
+    homeTeam: "Phillies",
+    awayTeam: "Braves",
+    sportKey: "baseball_mlb",
+    gameDateIso: gameTwo,
+  };
+
+  function gameOneFinal(): TrustedFinal {
+    return {
+      date: gameOne.slice(0, 10),
+      startIso: gameOne,
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+  }
+
+  function boardRow(startTime: string, completed: boolean) {
+    return {
+      sourceId: "espn-public-api" as const,
+      sport: "mlb" as const,
+      gameId: `row-${startTime}`,
+      startTime,
+      state: completed ? "post" : "pre",
+      completed,
+      statusDetail: "",
+      venue: null,
+      home: { team: "Phillies", abbreviation: "PHI", score: completed ? 4 : null },
+      away: { team: "Braves", abbreviation: "ATL", score: completed ? 2 : null },
+      attribution: "Scores data via ESPN",
+    };
+  }
+
+  it("holds a game-two pick while only game one is final", () => {
+    const out = settlePendingPicks([dhPick], [gameOneFinal()], {
+      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, false)] as never,
+    })[0]!;
+    expect(out.status).toBe("HELD");
+    expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
+  });
+
+  it("SETTLES the game-one pick whose own fixture is complete, even while game two is live", () => {
+    // The count-based first version held this too. A correctly graded opener
+    // left held would have been voided by the zero-sit lane if game two never
+    // reached final — trading one silent corruption for another.
+    const gameOnePick: PendingPick = { ...dhPick, pickId: "dh-game-one", gameDateIso: gameOne };
+    const out = settlePendingPicks([gameOnePick], [gameOneFinal()], {
+      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, false)] as never,
+    })[0]!;
+    expect(out.status).toBe("SETTLED");
+  });
+
+  it("holds when the pick's OWN fixture is completed but produced no final", () => {
+    // buildTrustedFinals drops a completed row whose scores are null, so a
+    // fixture can read completed on the board and still have no usable final.
+    // The old completed-flag heuristic read that as "settle" and graded this
+    // pick against the SIBLING's final (Devin Review + cubic, #717).
+    const out = settlePendingPicks([dhPick], [gameOneFinal()], {
+      postponedCandidates: [boardRow(gameOne, true), boardRow(gameTwo, true)] as never,
+    })[0]!;
+    expect(out.status).toBe("HELD");
+    expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
+  });
+
+  it("settles BOTH picks against their own final once both finals exist", () => {
+    // The mirror failure of the hold above: over-holding a pick whose own
+    // result is in hand is its own corruption, since the zero-sit lane would
+    // eventually VOID a correctly gradable pick (cubic, #717).
+    const gameTwoFinal: TrustedFinal = {
+      date: gameTwo.slice(0, 10),
+      startIso: gameTwo,
+      home: { name: "Phillies", abbr: "PHI", score: 6 },
+      away: { name: "Braves", abbr: "ATL", score: 3 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+    const gameOnePick: PendingPick = { ...dhPick, pickId: "dh-game-one", gameDateIso: gameOne };
+    const board = [boardRow(gameOne, true), boardRow(gameTwo, true)] as never;
+    const finals = [gameOneFinal(), gameTwoFinal];
+
+    const two = settlePendingPicks([dhPick], finals, { postponedCandidates: board })[0]!;
+    const one = settlePendingPicks([gameOnePick], finals, { postponedCandidates: board })[0]!;
+
+    expect(two.status).toBe("SETTLED");
+    expect(two.status === "SETTLED" ? two.homeScore : null).toBe(6);
+    expect(one.status).toBe("SETTLED");
+    expect(one.status === "SETTLED" ? one.homeScore : null).toBe(4);
+  });
+
+  it("holds when a doubleheader fixture carries a date-only start time", () => {
+    // A date-only board time parses as midnight. Clock math then DROPPED that
+    // row, one fixture means "no doubleheader", and the sibling's final settled
+    // this pick unchallenged — the guard failing open (cubic, #717).
+    const out = settlePendingPicks([dhPick], [gameOneFinal()], {
+      postponedCandidates: [
+        { ...boardRow(gameOne, true), startTime: gameOne.slice(0, 10) },
+        boardRow(gameTwo, false),
+      ] as never,
+    })[0]!;
+    expect(out.status).toBe("HELD");
+    expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
+    // The hold STATES its cause. It used to report none, and every reader
+    // inferred the cause from `sources` being empty, which names the city-only
+    // hold: an operator was told this pick was voided for an ambiguous team
+    // NAME when the names were fine and the fixture could not be placed by any
+    // clock. It also now carries the sources of the finals it could not place.
+    expect(out.status === "HELD" ? out.ambiguity : undefined).toBe("NO_OWN_FIXTURE");
+    expect(out.status === "HELD" ? out.sources.length : 0).toBeGreaterThan(0);
+  });
+
+  it("still settles when the only other board row is an adjacent-day clockless fixture", () => {
+    // A series puts the same matchup on the next day. If that row carries a
+    // date-only start it has no clock, and pulling it into this pick's fixture
+    // set made the set size 2, which makes finalMatchesNearestFixture refuse
+    // every final and holds a perfectly gradable pick — the zero-sit lane would
+    // then VOID it (CodeRabbit, #717). The clockless fallback is same-UTC-day
+    // only, so tomorrow's row is not this pick's neighbour.
+    const soleFinal: TrustedFinal = {
+      date: gameTwo.slice(0, 10),
+      startIso: gameTwo,
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+    const tomorrow = new Date(Date.parse(gameTwo) + 24 * HOUR).toISOString().slice(0, 10);
+
+    const out = settlePendingPicks([dhPick], [soleFinal], {
+      postponedCandidates: [
+        boardRow(gameTwo, true),
+        { ...boardRow(gameTwo, false), gameId: "series-next-day", startTime: tomorrow },
+      ] as never,
+    })[0]!;
+
+    expect(out.status).toBe("SETTLED");
+  });
+
+  it("settles normally when the board lists a single fixture that day", () => {
+    const soleFinal: TrustedFinal = {
+      date: gameTwo.slice(0, 10),
+      startIso: gameTwo,
+      home: { name: "Phillies", abbr: "PHI", score: 4 },
+      away: { name: "Braves", abbr: "ATL", score: 2 },
+      confirmation: "CONFIRMED",
+      sources: ["espn-public-api"],
+    };
+    const out = settlePendingPicks([dhPick], [soleFinal], {
+      postponedCandidates: [boardRow(gameTwo, true)] as never,
+    })[0]!;
+    expect(out.status).toBe("SETTLED");
   });
 });
