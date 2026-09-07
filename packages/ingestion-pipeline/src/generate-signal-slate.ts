@@ -437,6 +437,27 @@ export async function generateSignalSlate(opts?: {
       // "this particular pick should be published", and only the second one is
       // an operator's to make. A pick that was never published stays that way
       // until something deliberately publishes it.
+      //
+      // THE COST OF THIS, STATED RATHER THAN GLOSSED (Devin Review, #719).
+      // One-directional means GATE RECOVERY DOES NOT RESTORE. If
+      // canExposePublicPicks closes and later reopens, the rows this code
+      // unpublished on the closed runs are NOT republished on the open ones,
+      // and because a pick is unique per (gameId, pickType) no new row can
+      // replace them - they stay hidden for the rest of their life. That is a
+      // real regression against the previous behaviour and it is not free.
+      //
+      // It is accepted here because the two failures are not symmetric. The old
+      // behaviour silently RE-PUBLISHED a pick an operator had withdrawn for
+      // being wrong or corrupt, which publishes something known to be false.
+      // The new behaviour publishes LESS than it could. Under this product's
+      // premise, publishing less is the safe direction and publishing a known
+      // falsehood is not.
+      //
+      // Doing BOTH correctly needs to distinguish "unpublished by the gate"
+      // from "unpublished by an operator", and `isPublished` is a bare Boolean
+      // with nowhere to record which - so it needs a provenance column, i.e. a
+      // schema change, which is founder-gated. Tracked as C-158; the test suite
+      // pins the current behaviour so the gap is visible rather than latent.
       const publicationUpdate = gates.canExposePublicPicks
         ? {}
         : { isPublished: false };

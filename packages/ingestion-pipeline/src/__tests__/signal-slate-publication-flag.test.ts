@@ -148,6 +148,33 @@ describe("generate-signal-slate publication flag (C-92)", () => {
     expect(updateData()).toMatchObject({ isPublished: false });
   });
 
+  it("KNOWN LIMITATION: a gate reopening does NOT restore rows the gate hid (C-158)", async () => {
+    // This test asserts a GAP, not a desired behaviour, and it exists so the
+    // gap cannot go quiet (Devin Review, #719).
+    //
+    // One-directional writes mean gate recovery does not republish. A pick is
+    // unique per (gameId, pickType), so no new row can replace a hidden one
+    // either: it stays hidden for the rest of its life.
+    //
+    // Accepted because the two failures are not symmetric - the old behaviour
+    // re-published picks an operator had withdrawn for being wrong, which
+    // publishes a known falsehood, while this publishes less than it could.
+    // Fixing both needs a provenance column to tell "hidden by the gate" from
+    // "withdrawn by an operator", and isPublished is a bare Boolean. That is a
+    // schema change and therefore founder-gated.
+    //
+    // WHEN C-158 IS IMPLEMENTED THIS TEST SHOULD FAIL, and should be replaced
+    // by one asserting that gate-suppressed rows are restored while
+    // operator-withdrawn rows are not.
+    mocks.canExpose.value = true;
+    mocks.pickFindUnique.mockResolvedValue(withdrawnSignalRow());
+
+    await runSlate();
+
+    expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+    expect(updateData()).not.toHaveProperty("isPublished");
+  });
+
   it("on CREATE the gate decides outright, in both directions", async () => {
     // No prior operator judgement exists on a new row, so the flag is simply
     // the gate's value - asserted both ways so neither direction can rot.
