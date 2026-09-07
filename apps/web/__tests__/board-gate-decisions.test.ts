@@ -295,4 +295,63 @@ describe("board loaders with persisted gate decisions", () => {
     expect(anonymousResult.data.publishedToday[0]?.rankingP).toBeNull();
     expect(anonymousResult.data.publishedToday[0]?.rankingSource).toBeNull();
   });
+
+  describe("loadBoardState — one fixture, one row (C-117)", () => {
+    it("collapses repeated gate decisions for one game and keeps the counts honest", async () => {
+      // Measured on a live slate: 58 rows over 18 fixtures, one matchup shown
+      // four times as two contradictory variants. GateDecision has no unique
+      // constraint and the query takes the latest 100 with no per-game collapse,
+      // so repeated evaluations of one game each became a row.
+      mocks.gateDecisionFindMany.mockResolvedValue([
+        {
+          id: "gd_a",
+          gameId: "game_dupe",
+          status: "PUBLISHED",
+          reason: "Cleared publish threshold.",
+          edgeIndex: 60,
+          confidence: 57,
+          evaluatedAt,
+          modelVersion: "v5.1.0",
+          game: game(),
+          pick: { selection: "BOS -1.5", confidence: 57 },
+        },
+        {
+          id: "gd_b",
+          gameId: "game_dupe",
+          status: "PUBLISHED",
+          reason: "Cleared publish threshold.",
+          edgeIndex: 72,
+          confidence: 88,
+          evaluatedAt,
+          modelVersion: "v5.1.0",
+          game: game(),
+          pick: { selection: "BOS -1.5", confidence: 88 },
+        },
+      ]);
+  
+      const result = await loadBoardState(new Date("2026-05-22T18:00:00.000Z"), proViewer);
+  
+      // One fixture, one row — the free visitor and the subscriber can no longer
+      // be shown 57 LEAN and 88 STRONG_PLAY for the same game.
+      expect(result.data.publishedToday).toHaveLength(1);
+      expect(result.data.publishedToday[0]!.confidence).toBe(88);
+      // The board's own numbers describe the rows it actually shows. Deduping
+      // after the counts were taken would leave these disagreeing.
+      expect(result.data.openPicks).toBe(1);
+      expect(result.data.sportsWatched).toBe(1);
+    });
+  
+    it("asks the database only for decisions on games that were not merged away", async () => {
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      mocks.gameFindMany.mockResolvedValue([]);
+  
+      await loadBoardState(new Date("2026-05-22T18:00:00.000Z"), proViewer);
+  
+      const where = mocks.gateDecisionFindMany.mock.calls[0]?.[0]?.where as {
+        game?: { mergedIntoGameId?: null };
+      };
+      expect(where.game?.mergedIntoGameId).toBeNull();
+    });
+  });
 });

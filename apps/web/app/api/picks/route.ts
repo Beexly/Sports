@@ -93,6 +93,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       : {};
   const gameFilter = {
     dataQualityScore: { gte: MIN_PUBLIC_PICK_DATA_QUALITY_SCORE },
+    // Never serve a pick sitting on a game row that has been merged away
+    // (C-117). `mergedIntoGameId` is the database's OWN canonicity marker, set
+    // by the owner-run merge, so this needs no guess about which of two rows
+    // is the real fixture. It is shared by the findMany and the
+    // totalAvailableToday count below on purpose: filtering one and not the
+    // other would make the free tier's "N published today" disagree with the
+    // rows it is counting.
+    //
+    // This covers only duplicates already tombstoned. Two never-merged rows
+    // for one contest are still two picks here, and that is F-17's to fix.
+    mergedIntoGameId: null,
     ...(sportFilter
       ? {
           sport: {
