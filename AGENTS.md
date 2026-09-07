@@ -30,6 +30,61 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-07: C-119 (MLB run-line consensus contamination) — root cause fixed and
+shipped, on `claude/gse-gsn-architecture-research-3iidd4`; two pieces stay open, both marked
+below rather than guessed at.** Founder measurement: 568/1116 published spread picks carry a
+line no book quoted; NCAAF's share of that (three real per-book quotes averaging to an
+unquotable-but-legitimate consensus, e.g. -3/-3.5/-3 -> -3.1667) is NOT a bug — do not build a
+blanket "must be quoted" refusal, it would kill 72% of the NCAAF board for a correct behavior.
+MLB is the real exposure: only 370/725 published MLB spread picks sit on a real run line, and
+8/12 bookmakers carry impossible MLB spreads (11,112/426,019 rows, up to 19.5) across 45% of
+MLB games — a pattern that (low per-row rate, broad per-book/per-game spread) is the signature
+of a missing validation gate, not one bad source or one mis-keyed field.
+**Root cause, confirmed by code, not by guessing:** `packages/data-ingestion/src/normalizer.ts`
+sanitizes bookmaker PRICES (`sanitizeAmericanPrice`, guarding the exact same "upstream didn't
+honor the contract" failure mode already named in that function's own comment as the root of
+the earlier "Edge Index 100" board bug) but never sanitized the spread POINT — `spread:
+home?.point` shipped raw straight into `packages/prediction-engine/src/scoring.ts`'s
+`avgSpread` mean (`scoreSpreadPick`, line ~394) and then onto the published pick's `line`
+field (line ~615).
+**Fixed:** added `sanitizeSpreadPoint()` alongside `sanitizeAmericanPrice()` in
+`normalizer.ts`, scoped ONLY to `baseball_mlb`/`icehockey_nhl` (`FIXED_LINE_SPORTS`), rejecting
+any point beyond +/-6 — deliberately generous (a real run/puck line is ~+/-1.5, rare alt lines
+to +/-2.5) so it can never touch a legitimate quote, while still killing the 19.5-class
+contamination actually observed. NFL/NCAAF/NBA/NCAAB are untouched — their wide spread
+dispersion is real. This lives entirely in `packages/data-ingestion`, upstream of
+`packages/prediction-engine`: it changes what data is ADMITTED as a real quote, not the
+scoring formula, so it does not touch `MODEL_VERSION` (`model-freeze` guard still passes) and
+needs no version bump. Once garbage quotes are excluded, `scoreSpreadPick`'s existing mean runs
+over genuine quotes only — for a structurally-clustered market that lands on or near a real
+quoted value far more often than not, without a publish-time "snap" and without refusing the
+pick. Validated: `npx tsc --noEmit -p packages/data-ingestion/tsconfig.json` (0 errors),
+`npx vitest run packages/data-ingestion/src/__tests__/` (391/391), `npx vitest run
+packages/ingestion-pipeline/src/__tests__/` (389/389, 6 pre-existing skips unrelated), `npm run
+guardrails` (26/26 including model-freeze). 3 new tests added (real MLB run line survives;
+19.5-magnitude MLB contamination dropped; a genuine 45-point NCAAF blowout line is untouched).
+**What is NOT done, and why — both need something this session does not have:**
+(1) **The exact bound (6) is a conservative first pass, not confirmed against production
+data.** No live DB access here (Law 7) — nobody has run the query that would confirm this
+mechanism against the real 11,112 contaminated rows or tighten the bound. Whoever has DB access
+should group those rows by `bookmaker` and confirm excluding them (keeping >=2 real quotes)
+recovers a real quoted average on the 355 currently-unresolvable MLB picks; that also validates
+whether 6 is the right number or should move.
+(2) **NHL is assumed, not measured** — C-119's numbers are MLB-only; the puck line shares MLB's
+fixed-line structure so the same fix was applied, but nobody has run NHL's equivalent query to
+confirm the same contamination pattern actually exists there.
+(3) **Any residual after this fix** — games where too few genuine quotes remain post-filter, or
+where real alt-line mixing still produces an unquotable mean — still needs the void-lane
+fallback (the founder's original option 1), sized to whatever's actually left, not 49% of the
+board. Not sized or built this pass; needs the query in (1) first to know if it's even
+meaningfully nonzero.
+(4) **The mean-vs-median question for fixed-line markets stays out of scope on purpose** — that
+edit would live inside `packages/prediction-engine/src/scoring.ts` itself (MODEL_VERSION-frozen
+territory) and was explicitly sequenced by the founder for after 2026-09-13. This fix was
+designed specifically to get most of the recovery without needing that bump at all; if the
+query in (1) shows a meaningful residual even after clean inputs, the median question is the
+next lever, on schedule, not before.
+
 **UPDATED 2026-09-06 (05:00 UTC): tonight's build is on `claude/sports-prediction-launch-rtiexc`
 (four code commits `b4885f214`, `3359e072a`, `23a0a3a0f`, `f06be6b31`; typecheck 0, lint 0,
 guardrails 26/26, five adversarial reviews approved).** C-109 credit governor DONE, C-110

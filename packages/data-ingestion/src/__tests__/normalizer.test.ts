@@ -113,6 +113,93 @@ describe("DataNormalizer", () => {
     });
   });
 
+  describe("normalizeOdds — fixed-line spread sanitization (MLB/NHL)", () => {
+    const mlbEvent: OddsApiEvent = {
+      ...mockEvent,
+      id: "mlb-event-1",
+      sport_key: "baseball_mlb",
+      sport_title: "MLB",
+      home_team: "Los Angeles Dodgers",
+      away_team: "San Diego Padres",
+      bookmakers: [
+        {
+          key: "fanduel",
+          title: "FanDuel",
+          last_update: new Date().toISOString(),
+          markets: [
+            {
+              key: "spreads",
+              last_update: new Date().toISOString(),
+              outcomes: [
+                { name: "Los Angeles Dodgers", price: -110, point: -1.5 },
+                { name: "San Diego Padres", price: -110, point: 1.5 },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    it("keeps a real MLB run line (+/-1.5)", () => {
+      const odds = normalizer.normalizeOdds([mlbEvent], new Date());
+      const spread = odds.find((o) => o.market === "SPREADS")!;
+      expect(spread.spread).toBe(-1.5);
+    });
+
+    it("drops an implausible MLB spread (e.g. 19.5 — the contamination magnitude seen in production)", () => {
+      const contaminated: OddsApiEvent = {
+        ...mlbEvent,
+        bookmakers: [
+          {
+            ...mlbEvent.bookmakers[0]!,
+            markets: [
+              {
+                key: "spreads",
+                last_update: new Date().toISOString(),
+                outcomes: [
+                  { name: "Los Angeles Dodgers", price: -110, point: -19.5 },
+                  { name: "San Diego Padres", price: -110, point: 19.5 },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      const odds = normalizer.normalizeOdds([contaminated], new Date());
+      const spread = odds.find((o) => o.market === "SPREADS")!;
+      expect(spread.spread).toBeUndefined();
+    });
+
+    it("does NOT touch a real, wide NCAAF blowout spread", () => {
+      const ncaafEvent: OddsApiEvent = {
+        ...mockEvent,
+        id: "ncaaf-event-1",
+        sport_key: "americanfootball_ncaaf",
+        sport_title: "NCAAF",
+        bookmakers: [
+          {
+            key: "fanduel",
+            title: "FanDuel",
+            last_update: new Date().toISOString(),
+            markets: [
+              {
+                key: "spreads",
+                last_update: new Date().toISOString(),
+                outcomes: [
+                  { name: mockEvent.home_team, price: -110, point: -45 },
+                  { name: mockEvent.away_team, price: -110, point: 45 },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+      const odds = normalizer.normalizeOdds([ncaafEvent], new Date());
+      const spread = odds.find((o) => o.market === "SPREADS")!;
+      expect(spread.spread).toBe(-45); // untouched — football's wide dispersion is legitimate
+    });
+  });
+
   describe("validateFreshness", () => {
     it("returns true for fresh data", () => {
       const now = new Date();
