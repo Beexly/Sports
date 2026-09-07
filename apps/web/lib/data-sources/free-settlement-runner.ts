@@ -262,7 +262,7 @@ export async function writeFreeSettlementInTx(
     // only guard it had. A postponement committing after that statement then
     // left a VOID stamped on a game nobody has played (Devin Review, #717).
     // Write the kickoff back to the value we just read, matched on that EXACT
-    // value: it changes nothing, it refuses whenever the row has moved at all,
+    // value: it refuses whenever the row has moved at all,
     // and holding it until commit is what stops a correction slipping in behind
     // us. Matching on `lte: settledAt` instead would have made this a no-op
     // only when nothing changed — a correction moving the game to a DIFFERENT
@@ -270,6 +270,17 @@ export async function writeFreeSettlementInTx(
     // overwritten the correction with the stale kickoff it read a moment
     // earlier (Devin Review, #717). The exact match implies the `lte` one: the
     // guard above already refused anything not in the past.
+    //
+    // "Changes nothing" is true of the VALUE and false of the ROW. This is a
+    // lock acquisition: a read takes no row lock under Prisma's default
+    // isolation and the query API exposes no SELECT ... FOR UPDATE, so writing
+    // the value back to itself is the only way to hold the row to commit. The
+    // cost is that Game.updatedAt is a Prisma @updatedAt column and bumps
+    // here, making the row look touched when nothing was learned about it.
+    // That is bounded: this runs once per VOID write, not once per cycle, and
+    // the only readers of Game.updatedAt are display timestamps on the board.
+    // The zero-sit lane already refuses to anchor any window on that column
+    // for the same reason. Do not "simplify" this statement away.
     const held = await tx.game.updateMany({
       where: { id: args.gameId, commenceTime: currentKickoff.commenceTime },
       data: { commenceTime: currentKickoff.commenceTime },
