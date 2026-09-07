@@ -183,7 +183,7 @@ export const ZERO_SIT_SKIP_REASONS: readonly ZeroSitSkipReason[] = [
   "WRITE_FAILED",
 ];
 
-export type ZeroSitAmbiguityCause = "CITY_ONLY_NAME" | "MULTIPLE_FINALS";
+export type ZeroSitAmbiguityCause = "CITY_ONLY_NAME" | "NO_OWN_FIXTURE" | "MULTIPLE_FINALS";
 
 /** One select shape for both halves so one row type serves the whole lane. */
 export const ZERO_SIT_PICK_SELECT = {
@@ -482,13 +482,20 @@ export function decideZeroSitVoid(args: {
 
   if (outcome.status === "HELD") {
     if (outcome.reason === "DISPUTED") return { kind: "skip", reason: "DISPUTED_HOLD" };
-    // cityOnlyAmbiguity holds with no sources; the same-day doubleheader hold
-    // carries the disagreeing candidates' sources (free-settlement.ts).
-    const cause: ZeroSitAmbiguityCause = outcome.sources.length === 0 ? "CITY_ONLY_NAME" : "MULTIPLE_FINALS";
+    // The grader STATES its cause; this lane no longer infers it. Inferring it
+    // from an empty sources array was right for the city-only hold and wrong
+    // for the own-fixture hold, which also carries no sources: an operator was
+    // told the pick was voided for a city-only name when a final existed and
+    // none of them could be placed on this pick's own fixture. The old
+    // inference stays as the fallback for an outcome that predates the field.
+    const cause: ZeroSitAmbiguityCause =
+      outcome.ambiguity ?? (outcome.sources.length === 0 ? "CITY_ONLY_NAME" : "MULTIPLE_FINALS");
     const detail =
       cause === "CITY_ONLY_NAME"
         ? "a stored side names two or more teams on the fetched boards (city-only name)."
-        : "more than one final for these teams inside the date window disagrees on the score.";
+        : cause === "NO_OWN_FIXTURE"
+          ? "a final for these teams was in hand but none of them could be placed on this pick's own fixture."
+          : "more than one final for these teams inside the date window disagrees on the score.";
     return {
       kind: "void",
       rcaCode: "AMBIGUOUS_TEAM_NAME",

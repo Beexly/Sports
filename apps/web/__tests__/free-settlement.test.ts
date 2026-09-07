@@ -500,6 +500,13 @@ describe("settlePendingPicks — an unfinished doubleheader holds", () => {
     })[0]!;
     expect(out.status).toBe("HELD");
     expect(out.status === "HELD" ? out.reason : "").toBe("AMBIGUOUS_MATCH");
+    // The hold STATES its cause. It used to report none, and every reader
+    // inferred the cause from `sources` being empty, which names the city-only
+    // hold: an operator was told this pick was voided for an ambiguous team
+    // NAME when the names were fine and the fixture could not be placed by any
+    // clock. It also now carries the sources of the finals it could not place.
+    expect(out.status === "HELD" ? out.ambiguity : undefined).toBe("NO_OWN_FIXTURE");
+    expect(out.status === "HELD" ? out.sources.length : 0).toBeGreaterThan(0);
   });
 
   it("still settles when the only other board row is an adjacent-day clockless fixture", () => {

@@ -625,7 +625,13 @@ export function settlePendingPicks(
       postponedCandidates.filter((g) => !g.startTime || daysApart(g.startTime.slice(0, 10), pickDate) <= 2),
     );
     if (ambiguousCity) {
-      return { pickId: pick.pickId, status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] };
+      return {
+        pickId: pick.pickId,
+        status: "HELD",
+        reason: "AMBIGUOUS_MATCH",
+        sources: [],
+        ambiguity: "CITY_ONLY_NAME",
+      };
     }
 
     const matching = finals.filter(
@@ -655,7 +661,17 @@ export function settlePendingPicks(
     // VOID it with an RCA code; holding it here would strand it as
     // AMBIGUOUS_MATCH forever.
     if (bound.length > 0 && ownFixture.length === 0) {
-      return { pickId: pick.pickId, status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] };
+      // Carries the sources of the finals it could NOT place, so the operator
+      // surface can name them. The cause is stated explicitly: this is not a
+      // city-only name, and a reader inferring the cause from an empty sources
+      // array would have called it one.
+      return {
+        pickId: pick.pickId,
+        status: "HELD",
+        reason: "AMBIGUOUS_MATCH",
+        sources: [...new Set(bound.flatMap((f) => f.sources))],
+        ambiguity: "NO_OWN_FIXTURE",
+      };
     }
 
     const candidates = nearestCandidates(pick, ownFixture);
@@ -685,6 +701,7 @@ export function settlePendingPicks(
             status: "HELD",
             reason: "AMBIGUOUS_MATCH",
             sources: candidates.flatMap((c) => c.sources),
+            ambiguity: "MULTIPLE_FINALS",
           };
         }
       }
@@ -756,7 +773,22 @@ export type SettlementOutcome =
       sources: readonly string[];
       voidReason: "POSTPONED_OR_CANCELLED";
     }
-  | { pickId: string; status: "HELD"; reason: "DISPUTED" | "AMBIGUOUS_MATCH"; sources: readonly string[] }
+  | {
+      pickId: string;
+      status: "HELD";
+      reason: "DISPUTED" | "AMBIGUOUS_MATCH";
+      sources: readonly string[];
+      /**
+       * Why the match was ambiguous, stated rather than inferred. Readers used
+       * to derive this from `sources` being empty, which was right for the
+       * city-only hold and WRONG for the own-fixture hold: that one also
+       * carries no sources, so an operator was told a pick had been voided for
+       * a city-only name when the real cause was that a final existed and none
+       * of them could be placed on this pick's own fixture. Optional so a
+       * reader can still fall back to the old inference.
+       */
+      ambiguity?: "CITY_ONLY_NAME" | "NO_OWN_FIXTURE" | "MULTIPLE_FINALS";
+    }
   | { pickId: string; status: "PENDING"; reason: "NO_FINAL" | "ORIENT_FAIL" };
 
 /** ESPN/MLB status text that means the contest did not produce a final score. */

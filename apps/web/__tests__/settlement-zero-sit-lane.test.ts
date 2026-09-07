@@ -687,6 +687,47 @@ describe("zero-sit lane: VOID half", () => {
     }
   });
 
+  it("names the own-fixture hold as NO_OWN_FIXTURE, not as a city-only name", async () => {
+    // Three AMBIGUOUS_MATCH holds reach this lane and two of them carry no
+    // sources, so deriving the cause from an empty sources array reported the
+    // own-fixture hold as a city-only team name. The RCA reason is what an
+    // operator reads to diagnose a void; a wrong one is a false statement in
+    // an audit record, even though both causes void under the same code.
+    const fake = makeFake([row({ id: "p-own-fixture", commenceTime: hoursAgo(30) })]);
+    const decision = decideZeroSitVoid({
+      row: fake.rows[0]!,
+      outcome: {
+        pickId: "p-own-fixture",
+        status: "HELD",
+        reason: "AMBIGUOUS_MATCH",
+        sources: ["espn-public-api"],
+        ambiguity: "NO_OWN_FIXTURE",
+      },
+      board: [],
+      now: NOW,
+    });
+
+    expect(decision.kind).toBe("void");
+    if (decision.kind === "void") {
+      expect(decision.rcaCode).toBe("AMBIGUOUS_TEAM_NAME");
+      expect(decision.evidence).toMatchObject({ cause: "NO_OWN_FIXTURE" });
+      expect(decision.reason).toContain("own fixture");
+      expect(decision.reason).not.toContain("city-only");
+    }
+  });
+
+  it("falls back to the old sources-length inference for an outcome that carries no stated cause", async () => {
+    const fake = makeFake([row({ id: "p-legacy", commenceTime: hoursAgo(30) })]);
+    const decision = decideZeroSitVoid({
+      row: fake.rows[0]!,
+      outcome: { pickId: "p-legacy", status: "HELD", reason: "AMBIGUOUS_MATCH", sources: [] },
+      board: [],
+      now: NOW,
+    });
+
+    expect(decision.kind === "void" ? decision.evidence : null).toMatchObject({ cause: "CITY_ONLY_NAME" });
+  });
+
   it("never voids a pick with a usable, consistent final (the graders own it)", async () => {
     const kickoff = hoursAgo(30);
     const fake = makeFake([row({ id: "p-gradable", commenceTime: kickoff })]);
