@@ -138,6 +138,46 @@ export interface FrozenEventPayload {
   readonly deepLinkPath?: string;
   /** v2+ (6.6): model/pick receipt. */
   readonly pickReceipt?: FrozenPickReceipt;
+  /** Settle-time evidence carried FORWARD from the event, never rebuilt
+   *  (C-120). Absent on events written before the graders recorded it. */
+  readonly settledWith?: SettledWithEvidence;
+}
+
+/**
+ * What the grader actually graded against, written INTO the event inside the
+ * settlement transaction (C-120). Distinct from every other payload field:
+ * those describe what was ANNOUNCED and are rebuilt at expansion from the
+ * current pick and game rows, whereas this is an event-time fact that becomes
+ * unrecoverable the moment a game row is overwritten.
+ *
+ * Without it there is no way to tell a MIS-GRADED pick from one graded
+ * correctly whose game row was later rewritten with a different score, which
+ * is the ambiguity blocking the C-115 investigation.
+ */
+export interface SettledWithEvidence {
+  readonly homeScore: number | null;
+  readonly awayScore: number | null;
+  /** Source ids the final came from, as the grader saw them. */
+  readonly sources: readonly string[];
+  /** Which settlement lane wrote this. */
+  readonly path: string;
+}
+
+/** Narrow an unknown event payload to its settle-time evidence, if it has any. */
+export function settledWithFrom(payload: unknown): SettledWithEvidence | null {
+  if (typeof payload !== "object" || payload === null) return null;
+  const raw = (payload as { settledWith?: unknown }).settledWith;
+  if (typeof raw !== "object" || raw === null) return null;
+  const e = raw as Record<string, unknown>;
+  const home = e["homeScore"];
+  const away = e["awayScore"];
+  const sources = e["sources"];
+  const path = e["path"];
+  if (home !== null && typeof home !== "number") return null;
+  if (away !== null && typeof away !== "number") return null;
+  if (!Array.isArray(sources) || sources.some((x) => typeof x !== "string")) return null;
+  if (typeof path !== "string") return null;
+  return { homeScore: home, awayScore: away, sources: sources as string[], path };
 }
 
 export interface OutboxEventRow {
@@ -814,7 +854,15 @@ async function expandEvent(
     throw new Error(`pick ${event.pickId} (or its game) no longer exists`);
   }
 
+  // Expansion REPLACES the payload, so anything the settlement transaction
+  // wrote is destroyed unless it is carried across here. That is fine for
+  // every announcement field, which is rebuilt from the pick and game rows on
+  // purpose, and wrong for the settle-time evidence: the score the grader
+  // actually used cannot be reconstructed later, and reconstructing it from
+  // the game row is exactly the thing it exists to cross-check (C-120).
+  const settledWith = settledWithFrom(event.payload);
   const payload: FrozenEventPayload = {
+    ...(settledWith === null ? {} : { settledWith }),
     schemaVersion: EVENT_PAYLOAD_SCHEMA_VERSION,
     pickId: event.pickId,
     pickType: pick.pickType,

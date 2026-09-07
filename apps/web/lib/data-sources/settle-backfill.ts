@@ -144,6 +144,8 @@ export type PersistSettledArgs = {
   settledAt: Date;
   homeScore: number | null;
   awayScore: number | null;
+  /** Source ids the final came from, recorded as settle-time evidence (C-120). */
+  sources?: readonly string[];
 };
 
 /**
@@ -321,6 +323,7 @@ export async function backfillStaleSettlement(input: {
         settledAt,
         homeScore: o.homeScore,
         awayScore: o.awayScore,
+        sources: o.sources,
       });
       const persisted: PersistSettledOutcome =
         typeof outcome === "boolean" ? { written: outcome, refusal: null } : outcome;
@@ -403,6 +406,18 @@ async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<Pe
         result: args.result,
         settledAt: args.settledAt,
         status: "PENDING",
+        // SETTLE-TIME EVIDENCE (C-120), same contract as the free runner: the
+        // score this grade was computed from, recorded inside the settlement
+        // transaction, because nothing else records it and a later game-row
+        // overwrite makes it unrecoverable.
+        payload: {
+          settledWith: {
+            homeScore: args.homeScore,
+            awayScore: args.awayScore,
+            sources: [...(args.sources ?? [])],
+            path: "free-backfill",
+          },
+        },
       },
     });
     await enqueuePostSettlementWork(

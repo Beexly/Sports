@@ -126,6 +126,8 @@ export type FreeSettlementWriteArgs = {
   readonly homeScore: number | null;
   readonly awayScore: number | null;
   readonly settledAt: Date;
+  /** Source ids the final came from, recorded as settle-time evidence (C-120). */
+  readonly sources?: readonly string[];
 };
 
 /**
@@ -247,6 +249,20 @@ export async function writeFreeSettlementInTx(
       result: args.result,
       settledAt: args.settledAt,
       status: "PENDING",
+      // SETTLE-TIME EVIDENCE (C-120): the score this grade was computed from,
+      // recorded inside the settlement transaction. Nothing else records it,
+      // so once a game row is overwritten there is no way to tell a MIS-GRADED
+      // pick from one graded correctly against a score that later changed —
+      // the ambiguity blocking C-115. The outbox worker carries this key
+      // across expansion instead of rebuilding it.
+      payload: {
+        settledWith: {
+          homeScore: args.homeScore,
+          awayScore: args.awayScore,
+          sources: [...(args.sources ?? [])],
+          path: "free",
+        },
+      },
     },
   });
   await enqueuePostSettlementWork(
@@ -704,6 +720,7 @@ export async function runFreePathSettlement(options?: {
             homeScore: o.homeScore,
             awayScore: o.awayScore,
             settledAt,
+            sources: o.sources,
           },
         );
 

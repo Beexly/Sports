@@ -313,6 +313,13 @@ export type ZeroSitVoidEventPayload = {
   homeTeam: string;
   awayTeam: string;
   commenceTime: string;
+  /** Settle-time evidence, the same key every settlement lane writes (C-120). */
+  settledWith: {
+    homeScore: number | null;
+    awayScore: number | null;
+    sources: readonly string[];
+    path: string;
+  };
   ageHours: number;
   settledAt: string;
   evidence: Record<string, unknown>;
@@ -624,6 +631,22 @@ export function buildZeroSitVoidPayload(args: {
     ageHours: round1(hoursBetween(now, row.game.commenceTime)),
     settledAt: now.toISOString(),
     evidence: decision.evidence,
+    // SETTLE-TIME EVIDENCE (C-120), the same key the graded lanes write, so
+    // one reader can ask "what was this settled against?" of any settlement
+    // event regardless of which lane produced it. A void is graded against no
+    // score by definition, and recording that explicitly is the point: it
+    // distinguishes "voided, no score existed" from "graded against a score we
+    // no longer have".
+    settledWith: {
+      homeScore: null,
+      awayScore: null,
+      // Empty by construction, not by omission: a void grades against no
+      // final, so there are no grading sources to record. The per-code
+      // diagnostic sources live in `evidence`, which has a different shape
+      // per RCA code and is not a grading record.
+      sources: [],
+      path: "zero-sit",
+    },
   };
 }
 

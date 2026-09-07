@@ -1190,6 +1190,20 @@ describe("settleSport", () => {
           result: "WIN",
           settledAt: expect.any(Date),
           status: "PENDING",
+          // SETTLE-TIME EVIDENCE (C-120): the score this grade was computed
+          // from, recorded inside the same transaction. Nothing else records
+          // it, so a later game-row overwrite would otherwise make a
+          // mis-graded pick indistinguishable from one graded correctly.
+          // `sources` is empty because the paid path's normalized score
+          // carries no per-score source ids; the lane is named by `path`.
+          payload: {
+            settledWith: {
+              homeScore: expect.any(Number),
+              awayScore: expect.any(Number),
+              sources: [],
+              path: "paid",
+            },
+          },
         },
       });
       // Durable post-settlement work-state rides in the SAME transaction
