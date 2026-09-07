@@ -78,6 +78,26 @@ function todayBounds(): { start: Date; end: Date } {
 // loadBoardState — /board renders both lanes at once and they can describe the
 // same game, so deriving the wording twice let them disagree in public.
 
+/**
+ * Collapse repeated evaluations of one fixture to a single, newest pass row.
+ *
+ * Exported so the collapse can be asserted without a database. Callers must pass
+ * rows already ordered newest-first (`orderBy: { evaluatedAt: "desc" }`), which
+ * is what makes "first seen wins" correct; the function does not re-sort,
+ * because sorting here would hide an ordering mistake at the query instead of
+ * surfacing it.
+ */
+export function dedupePassesByGame<T extends { gameId: string }>(rows: readonly T[]): T[] {
+  const seen = new Set<string>();
+  const out: T[] = [];
+  for (const row of rows) {
+    if (seen.has(row.gameId)) continue;
+    seen.add(row.gameId);
+    out.push(row);
+  }
+  return out;
+}
+
 export async function loadBoardPasses(
   now = new Date(),
   options: LoadBoardPassesOptions = {},
@@ -115,16 +135,41 @@ export async function loadBoardPasses(
 
   const { start, end } = todayBounds();
   try {
-    const gateDecisions = await db.gateDecision.findMany({
+    const gateDecisionRows = await db.gateDecision.findMany({
       where: {
         status: "GATED",
         isBootstrap: false,
         evaluatedAt: { gte: start, lt: end },
+        // A game with a LIVE PUBLISHED PICK is not a pass, whatever an earlier
+        // decision row says.
+        //
+        // `publishedPickRelation` was declared in this file and applied only to
+        // the fallback game query below; the decision query above it had no
+        // published exclusion at all. So the board could show a subscriber a
+        // published pick in one section and "evaluated without publishing" for
+        // the same fixture in the other (Devin Review, #719). The state loader
+        // got this suppression in c0cfa2b07 and its sibling here did not, which
+        // is the thirteenth time in this PR's history that a fix landed on one
+        // lane and not on its twin.
+        //
+        // Game-level, matching the state loader, because a PassListRow names a
+        // fixture and carries no market: there is no market on the row for a
+        // per-market exclusion to be honest about.
+        game: { picks: { none: publishedPickRelation } },
       },
       include: { game: { include: { sport: { select: { name: true } } } } },
       orderBy: { evaluatedAt: "desc" },
       take: 100,
     });
+
+    // ONE ROW PER FIXTURE, newest evaluation.
+    //
+    // GateDecision has no unique constraint and this query takes the latest 100
+    // with no per-game collapse, so a game evaluated repeatedly in a day became
+    // several pass rows carrying different reasons and confidences - the same
+    // contradiction C-117 fixed on the board itself. `orderBy evaluatedAt desc`
+    // means the first row seen for a gameId is already the newest.
+    const gateDecisions = dedupePassesByGame(gateDecisionRows);
 
     if (gateDecisions.length > 0) {
       return {
