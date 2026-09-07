@@ -418,18 +418,34 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const chosenPrices = spreadOdds
     .map((o) => (homeIsChosen ? o.homeSpreadPrice : o.awaySpreadPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  // Refuse rather than invent a price. The old fallback published `-110` when
+  // no book quoted the chosen side, and that number reached the subscriber as
+  // the pick's odds AND was committed into the immutable proof receipt as
+  // entryOdds — a price no book ever offered, which rule 1 forbids outright.
+  // sanitizeAmericanPrice returns undefined for a missing, null, non-finite or
+  // decimal-format price, so this is reachable from a feed shape change, not
+  // only from an absent market.
+  if (chosenPrices.length === 0) return null;
+  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
-  // Fair value — assume consensus spread IS fair line, edge from vig removal
+  // Fair value — assume consensus spread IS fair line, edge from vig removal.
+  // Vig removal needs BOTH sides priced by the SAME book: a book missing either
+  // price is dropped whole rather than filled with `-110`, which would have
+  // fabricated the overround the edge is computed from.
+  const twoSidedSpread = spreadOdds.filter(
+    (o) => o.homeSpreadPrice !== undefined && o.awaySpreadPrice !== undefined,
+  );
+  if (twoSidedSpread.length === 0) return null;
   const homeImpliedAvg =
-    spreadOdds.reduce((acc, o) => acc + americanToImpliedProbability(o.homeSpreadPrice ?? -110), 0) /
-    spreadOdds.length;
+    twoSidedSpread.reduce(
+      (acc, o) => acc + americanToImpliedProbability(o.homeSpreadPrice!),
+      0,
+    ) / twoSidedSpread.length;
   const awayImpliedAvg =
-    spreadOdds.reduce((acc, o) => acc + americanToImpliedProbability(o.awaySpreadPrice ?? -110), 0) /
-    spreadOdds.length;
+    twoSidedSpread.reduce(
+      (acc, o) => acc + americanToImpliedProbability(o.awaySpreadPrice!),
+      0,
+    ) / twoSidedSpread.length;
   const fair = removeVig(homeImpliedAvg, awayImpliedAvg);
   const fairProb = homeIsChosen ? fair.home : fair.away;
   const fairShinProb = shinFairForSide(
@@ -697,10 +713,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const chosenPrices = totalOdds
     .map((o) => (overIsChosen ? o.overPrice : o.underPrice))
     .filter((p): p is number => p !== undefined);
-  const avgPrice =
-    chosenPrices.length > 0
-      ? chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length
-      : -110;
+  // Same refusal as the spread path: no quoted price for the chosen direction
+  // means no publishable pick, never a fabricated -110.
+  if (chosenPrices.length === 0) return null;
+  const avgPrice = chosenPrices.reduce((a, b) => a + b, 0) / chosenPrices.length;
 
   // Fair value
   const overImpliedAvg =
