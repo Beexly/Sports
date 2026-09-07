@@ -32,7 +32,7 @@ const CALLOUTS_RIGHT = [
   },
   {
     label: "05 · Confidence rating",
-    body: "A calibrated 0-100 Edge Index. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth.",
+    body: "A 0-100 Edge Index. Not a probability the pick wins, but a measure of how much the market is offering vs. what the model thinks the matchup is worth.",
   },
   {
     label: "06 · Variance line",

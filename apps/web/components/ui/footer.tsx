@@ -107,7 +107,7 @@ export function Footer() {
               <BrandLockup />
             </div>
             <p className="disclaim">
-              {BRAND_NAME} delivers calibrated market signals, not certainty.
+              {BRAND_NAME} delivers market signals, not certainty.
               Treat each one as one input in a disciplined decision, never
               the decision itself.{" "}
               <strong style={{ color: "var(--ion)" }}>
