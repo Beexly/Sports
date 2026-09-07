@@ -58,9 +58,27 @@ export type UnresolvedStalePick = {
   gameId: string;
   commenceTime: string;
   ageDays: number;
-  reason: "NO_FINAL" | "ORIENT_FAIL" | "AMBIGUOUS_MATCH" | "DISPUTED" | "SCORE_MISMATCH" | "KICKOFF_MOVED";
+  reason:
+    | "NO_FINAL"
+    | "ORIENT_FAIL"
+    | "AMBIGUOUS_MATCH"
+    | "DISPUTED"
+    | "SCORE_MISMATCH"
+    | "KICKOFF_MOVED"
+    | "WRITE_NOT_APPLIED";
   sourcesTried: readonly string[];
   olderThanGrace: boolean;
+  /**
+   * True when `commenceTime` and `ageDays` above are the values this cycle
+   * LOADED, which the write then proved the row no longer carries. Only
+   * `KICKOFF_MOVED` sets it. The age is therefore measured against a kickoff
+   * that no longer exists and must not drive escalation: `olderThanGrace` is
+   * reported false on these rows, and the next cycle re-inspects the pick
+   * against the corrected kickoff and escalates honestly then (Devin Review,
+   * #717). Suppression is bounded to one cycle; an inflated age on a game
+   * that moved into the future is not.
+   */
+  kickoffStale: boolean;
 };
 
 export type BackfillResult = {
@@ -76,6 +94,16 @@ export type BackfillResult = {
   capReached: boolean;
   settled: number;
   held: number;
+  /**
+   * Writes that neither succeeded nor named a refusal: an injected persister
+   * returning boolean `false`, a db shim with no `$transaction`, or an
+   * `updateMany` that matched 0 rows because another lane settled the pick
+   * first. These used to fall through every branch and appear in no count at
+   * all (Devin Review, #717). They are NOT `held` — a hold is a decision this
+   * lane made, and this is the absence of one — so they are counted here and
+   * listed in `unresolved` under `WRITE_NOT_APPLIED`.
+   */
+  writeNotApplied: number;
   skippedInWindow: number;
   unresolved: UnresolvedStalePick[];
   cap: number;
@@ -248,6 +276,7 @@ export async function backfillStaleSettlement(input: {
 
   let settled = 0;
   let held = 0;
+  let writeNotApplied = 0;
   const unresolved: UnresolvedStalePick[] = [];
   const settledAt = now;
 
@@ -306,6 +335,7 @@ export async function backfillStaleSettlement(input: {
           reason: o.reason,
           sourcesTried: o.sources.length ? o.sources : sourcesTried,
           olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+          kickoffStale: false,
         });
         continue;
       }
@@ -318,6 +348,7 @@ export async function backfillStaleSettlement(input: {
           reason: o.reason,
           sourcesTried,
           olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+          kickoffStale: false,
         });
         continue;
       }
@@ -350,8 +381,15 @@ export async function backfillStaleSettlement(input: {
           ageDays: Math.round(ageDays * 10) / 10,
           reason: "KICKOFF_MOVED",
           sourcesTried: o.sources.length ? o.sources : sourcesTried,
-          olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+          // The write refused BECAUSE the row no longer carries the kickoff
+          // above, so `ageDays` is measured against a time that no longer
+          // exists and could read as weeks overdue on a game that moved into
+          // the future. Escalation is withheld for this one cycle rather than
+          // raised on a number we know is wrong.
+          olderThanGrace: false,
+          kickoffStale: true,
         });
+        continue;
       }
       if (persisted.refusal === "SCORE_MISMATCH") {
         // The Game row already carries a DIFFERENT recorded final. The whole
@@ -368,8 +406,26 @@ export async function backfillStaleSettlement(input: {
           reason: "SCORE_MISMATCH",
           sourcesTried: o.sources.length ? o.sources : sourcesTried,
           olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+          kickoffStale: false,
         });
+        continue;
       }
+
+      // Neither written nor refused. Nothing decided this pick's fate, so it
+      // is still PENDING and must surface: the founder policy is that no pick
+      // ever sits. Counted apart from `held` because this lane made no
+      // decision here (Devin Review, #717).
+      writeNotApplied++;
+      unresolved.push({
+        pickId: o.pickId,
+        gameId: row.game.id,
+        commenceTime: row.game.commenceTime.toISOString(),
+        ageDays: Math.round(ageDays * 10) / 10,
+        reason: "WRITE_NOT_APPLIED",
+        sourcesTried: o.sources.length ? o.sources : sourcesTried,
+        olderThanGrace: ageDays > BACKFILL_UNRESOLVED_GRACE_DAYS,
+        kickoffStale: false,
+      });
     }
   }
 
@@ -378,6 +434,7 @@ export async function backfillStaleSettlement(input: {
     capReached,
     settled,
     held,
+    writeNotApplied,
     skippedInWindow: inWindowSkipped.length,
     unresolved,
     cap,

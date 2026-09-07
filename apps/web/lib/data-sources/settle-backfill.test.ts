@@ -96,6 +96,43 @@ describe("backfillStaleSettlement", () => {
     expect(fetchScores).toHaveBeenCalled();
   });
 
+  it("surfaces a write that neither succeeded nor named a refusal, instead of dropping the pick from every count", async () => {
+    // `{written:false, refusal:null}` used to fall through all three branches:
+    // not settled, not held, not listed. The pick was still PENDING and
+    // appeared nowhere, which is exactly the silent sit the founder policy
+    // forbids. Reached here by an injected boolean persister returning false,
+    // and in production by a 0-row updateMany when another lane settled the
+    // pick first (Devin Review, #717).
+    const persistSettled = vi.fn(async () => false);
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+    };
+
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores, persistSettled });
+
+    expect(result.settled).toBe(0);
+    // Not a hold: this lane made no decision, so it is counted apart.
+    expect(result.held).toBe(0);
+    expect(result.writeNotApplied).toBe(1);
+    expect(result.unresolved).toHaveLength(1);
+    expect(result.unresolved[0]!.reason).toBe("WRITE_NOT_APPLIED");
+    expect(result.unresolved[0]!.pickId).toBe("pick-1");
+  });
+
+  it("counts a structured written:false with no refusal the same way as the boolean form", async () => {
+    const persistSettled = vi.fn(async () => ({ written: false, refusal: null }) as const);
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+    };
+
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores, persistSettled });
+
+    expect(result.writeNotApplied).toBe(1);
+    expect(result.unresolved[0]!.reason).toBe("WRITE_NOT_APPLIED");
+  });
+
   it("keeps a >14-day unresolvable pick PENDING with an operator flag (no VOID)", async () => {
     const persistSettled = vi.fn(async () => true);
     const fetchScores = vi.fn(async () => scores([]));
@@ -358,6 +395,11 @@ describe("backfillStaleSettlement", () => {
     expect(result.held).toBe(1);
     expect(result.unresolved[0]!.reason).toBe("KICKOFF_MOVED");
     expect(fake.holdCalls).toBe(1);
+    // The kickoff this age was measured against is the one the write just
+    // proved is gone, so the record says so and withholds escalation rather
+    // than reporting a game that moved into the future as weeks overdue.
+    expect(result.unresolved[0]!.kickoffStale).toBe(true);
+    expect(result.unresolved[0]!.olderThanGrace).toBe(false);
   });
 
   it("holds the game on a settlement that writes no score, which had no game check at all before", async () => {
@@ -392,6 +434,7 @@ describe("backfillStaleSettlement", () => {
     expect(result.unresolved).toHaveLength(1);
     expect(result.unresolved[0]!.reason).toBe("SCORE_MISMATCH");
     expect(result.unresolved[0]!.pickId).toBe("pick-1");
+    expect(result.unresolved[0]!.kickoffStale).toBe(false);
   });
 
   it("settles normally when the game carries no recorded final", async () => {
