@@ -104,6 +104,15 @@ export type BackfillResult = {
    * listed in `unresolved` under `WRITE_NOT_APPLIED`.
    */
   writeNotApplied: number;
+  /**
+   * Picks another lane had already graded by the time this one wrote. NOT
+   * unresolved and NOT held: there is nothing outstanding about them, so they
+   * are counted here and deliberately kept out of `unresolved` (Devin Review,
+   * #717). A steadily rising number here means the schedulers overlap, which
+   * is an efficiency signal rather than a correctness one — the write refused
+   * exactly as designed.
+   */
+  alreadySettledElsewhere: number;
   skippedInWindow: number;
   unresolved: UnresolvedStalePick[];
   cap: number;
@@ -151,7 +160,19 @@ export type BackfillDb = {
   };
   $transaction?: (
     fn: (tx: {
-      pick: { updateMany: (args: unknown) => Promise<{ count: number }> };
+      pick: {
+        updateMany: (args: unknown) => Promise<{ count: number }>;
+        /**
+         * Diagnostic read used ONLY when the settle write matches 0 rows, to
+         * say WHY. Optional so every injected test double keeps working: a
+         * shim without it falls back to the undiagnosed WRITE_NOT_APPLIED,
+         * which is what this lane reported for every such case before.
+         */
+        findUnique?: (args: unknown) => Promise<{
+          result: string;
+          game: { commenceTime: Date } | null;
+        } | null>;
+      };
       pickSettlementEvent: { create: (args: unknown) => Promise<unknown> };
       postSettlementWork: unknown;
       game: {
@@ -189,8 +210,21 @@ export type PersistSettledArgs = {
  */
 export type PersistSettledOutcome = {
   readonly written: boolean;
-  readonly refusal: "SCORE_MISMATCH" | "KICKOFF_MOVED" | null;
+  readonly refusal: "SCORE_MISMATCH" | "KICKOFF_MOVED" | "ALREADY_SETTLED" | null;
 };
+
+/**
+ * The settle write matched 0 rows because ANOTHER lane had already graded the
+ * pick. It is not unresolved and it is not a hold: nothing is left to do, and
+ * listing it as either would misreport a completed pick as outstanding work
+ * (Devin Review, #717).
+ */
+export class BackfillAlreadySettled extends Error {
+  constructor(readonly pickId: string) {
+    super(`pick ${pickId} was settled by another lane`);
+    this.name = "BackfillAlreadySettled";
+  }
+}
 
 export async function backfillStaleSettlement(input: {
   db: BackfillDb;
@@ -277,6 +311,7 @@ export async function backfillStaleSettlement(input: {
   let settled = 0;
   let held = 0;
   let writeNotApplied = 0;
+  let alreadySettledElsewhere = 0;
   const unresolved: UnresolvedStalePick[] = [];
   const settledAt = now;
 
@@ -411,6 +446,14 @@ export async function backfillStaleSettlement(input: {
         continue;
       }
 
+      if (persisted.refusal === "ALREADY_SETTLED") {
+        // Another lane graded it while this cycle was out on the network. The
+        // pick is DONE, not outstanding: counting it as held or listing it as
+        // unresolved would report finished work as a backlog item.
+        alreadySettledElsewhere++;
+        continue;
+      }
+
       // Neither written nor refused. Nothing decided this pick's fate, so it
       // is still PENDING and must surface: the founder policy is that no pick
       // ever sits. Counted apart from `held` because this lane made no
@@ -435,6 +478,7 @@ export async function backfillStaleSettlement(input: {
     settled,
     held,
     writeNotApplied,
+    alreadySettledElsewhere,
     skippedInWindow: inWindowSkipped.length,
     unresolved,
     cap,
@@ -472,6 +516,7 @@ function defaultPersist(db: BackfillDb): (args: PersistSettledArgs) => Promise<P
     } catch (err) {
       if (err instanceof BackfillScoreMismatch) return { written: false, refusal: "SCORE_MISMATCH" };
       if (err instanceof BackfillKickoffMoved) return { written: false, refusal: "KICKOFF_MOVED" };
+      if (err instanceof BackfillAlreadySettled) return { written: false, refusal: "ALREADY_SETTLED" };
       throw err;
     }
   };
@@ -497,7 +542,28 @@ async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<Pe
       },
       data: { result: args.result, settledAt: args.settledAt },
     });
-    if (updated.count === 0) return updated;
+    if (updated.count === 0) {
+      // Three different situations produce count 0 and they are not the same
+      // pick state: another lane graded it (done, not outstanding), the kickoff
+      // moved past `settledAt` (still PENDING, and its loaded age is now wrong),
+      // or the row is gone. Reporting all three as one undiagnosed outcome
+      // listed a completed pick as unresolved and dropped the stale-kickoff
+      // marking (Devin Review, #717).
+      const probe = tx.pick.findUnique
+        ? await tx.pick.findUnique({
+            where: { id: args.pickId },
+            select: { result: true, game: { select: { commenceTime: true } } },
+          })
+        : null;
+      if (probe !== null) {
+        if (probe.result !== "PENDING") throw new BackfillAlreadySettled(args.pickId);
+        const moved = probe.game?.commenceTime;
+        if (moved !== undefined && moved !== null && moved.getTime() > args.settledAt.getTime()) {
+          throw new BackfillKickoffMoved(args.gameId);
+        }
+      }
+      return updated;
+    }
     await tx.pickSettlementEvent.create({
       data: {
         pickId: args.pickId,

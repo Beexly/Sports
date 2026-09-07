@@ -300,6 +300,86 @@ describe("backfillStaleSettlement", () => {
   });
 
   /**
+   * A db whose settle write matches zero rows, with a probe answering WHY.
+   * Prisma's real updateMany returns count 0 for a concurrently-settled pick
+   * AND for one whose kickoff moved past settledAt; only the probe separates
+   * them (Devin Review, #717).
+   */
+  function raceDb(probe: { result: string; commenceTime: Date } | null): BackfillDb {
+    return {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+      $transaction: vi.fn(async (fn) =>
+        fn({
+          pick: {
+            updateMany: vi.fn(async () => ({ count: 0 })),
+            findUnique: vi.fn(async () =>
+              probe === null
+                ? null
+                : { result: probe.result, game: { commenceTime: probe.commenceTime } },
+            ),
+          },
+          pickSettlementEvent: { create: vi.fn(async () => undefined) },
+          postSettlementWork: {},
+          game: {
+            updateMany: vi.fn(async () => ({ count: 1 })),
+            findUnique: vi.fn(async () => ({ homeScore: null, awayScore: null })),
+          },
+        }),
+      ),
+    };
+  }
+
+  it("does not list a pick another lane already settled as unresolved work", async () => {
+    // The write refused exactly as designed and the pick is DONE. Counting it
+    // held, or listing it unresolved, reports finished work as a backlog item.
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const result = await backfillStaleSettlement({
+      db: raceDb({ result: "WIN", commenceTime: new Date(NOW.getTime() - 5 * 24 * 3600e3) }),
+      now: NOW,
+      fetchScores,
+    });
+
+    expect(result.alreadySettledElsewhere).toBe(1);
+    expect(result.settled).toBe(0);
+    expect(result.held).toBe(0);
+    expect(result.writeNotApplied).toBe(0);
+    expect(result.unresolved).toHaveLength(0);
+  });
+
+  it("reports a kickoff that moved past settledAt as KICKOFF_MOVED, not as an undiagnosed write", async () => {
+    // Same count 0, different pick state: still PENDING, and its loaded age is
+    // now measured against a kickoff the row no longer carries.
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const result = await backfillStaleSettlement({
+      db: raceDb({ result: "PENDING", commenceTime: new Date(NOW.getTime() + 6 * 3600e3) }),
+      now: NOW,
+      fetchScores,
+    });
+
+    expect(result.held).toBe(1);
+    expect(result.writeNotApplied).toBe(0);
+    expect(result.alreadySettledElsewhere).toBe(0);
+    expect(result.unresolved[0]!.reason).toBe("KICKOFF_MOVED");
+    expect(result.unresolved[0]!.kickoffStale).toBe(true);
+    expect(result.unresolved[0]!.olderThanGrace).toBe(false);
+  });
+
+  it("falls back to the undiagnosed outcome when the shim cannot probe", async () => {
+    // A db double without findUnique keeps the pre-existing behaviour rather
+    // than crashing: the optional method is why every other injected shim in
+    // this repo still works unchanged.
+    const fetchScores = vi.fn(async () => scores([navyFinal()]));
+    const result = await backfillStaleSettlement({
+      db: raceDb(null),
+      now: NOW,
+      fetchScores,
+    });
+
+    expect(result.writeNotApplied).toBe(1);
+    expect(result.unresolved[0]!.reason).toBe("WRITE_NOT_APPLIED");
+  });
+
+  /**
    * A db whose game row is real enough to evaluate the guard predicate the
    * persister now writes, so these tests exercise the rule itself rather than
    * a stub's return value. Prisma rolls the transaction back when the callback
