@@ -156,6 +156,12 @@ type Fake = {
   loseRace: boolean;
   /** When set, pickSettlementEvent.create throws for this pick id (simulates a poison row). */
   failEventFor: string | null;
+  /**
+   * Runs after tx.pick.updateMany, inside the settlement transaction. Lets a
+   * test commit a change to the stored game between the two writes, which is
+   * the only window in which the game-cancel bound can refuse on its own.
+   */
+  afterPickWrite: (() => void) | null;
 };
 
 function isStale(r: FakeRow, cutoff: Date): boolean {
@@ -171,11 +177,16 @@ function makeFake(rows: FakeRow[]): Fake {
     workEnqueued: 0,
     loseRace: false,
     failEventFor: null,
+    afterPickWrite: null,
     db: {
       pick: {
         findMany: async (args) => {
           const where = args["where"] as Where;
-          return rows.filter((r) => matchesWhere(r, where));
+          // Candidates come back as SNAPSHOTS, the way a real query does: the
+          // lane holds plain objects, and a later write to the stored row does
+          // not reach back into them. Tests that move a game underneath an
+          // in-flight candidate depend on this separation.
+          return rows.filter((r) => matchesWhere(r, where)).map((r) => ({ ...r, game: { ...r.game } }));
         },
       },
       $transaction: async (fn) => fn(tx),
@@ -198,6 +209,7 @@ function makeFake(rows: FakeRow[]): Fake {
           if (data.isPublished !== undefined) r.isPublished = data.isPublished;
           count++;
         }
+        fake.afterPickWrite?.();
         return { count };
       },
     },
@@ -217,12 +229,18 @@ function makeFake(rows: FakeRow[]): Fake {
     game: {
       updateMany: async (args) => {
         fake.gameUpdates.push(args);
-        const where = args["where"] as { id: string; status?: { in: string[] } };
+        const where = args["where"] as {
+          id: string;
+          status?: { in: string[] };
+          commenceTime?: { lt?: Date };
+        };
         const data = args["data"] as { status: string };
         let count = 0;
         for (const r of rows) {
           if (r.game.id !== where.id) continue;
           if (where.status && !where.status.in.includes(r.game.status)) continue;
+          const before = where.commenceTime?.lt;
+          if (before && !(r.game.commenceTime < before)) continue;
           r.game.status = data.status;
           count++;
         }
@@ -393,6 +411,58 @@ describe("zero-sit lane: VOID half", () => {
     expect(where.status.in).not.toContain("POSTPONED");
     expect(where.status.in).not.toContain("FINAL");
     expect(where.status.in).not.toContain("CANCELED");
+  });
+
+  it("refuses the VOID when the game is rescheduled into the future between the candidate read and the write, and leaves the pick PENDING", async () => {
+    // EVERY void this lane issues is gated on the game having commenced more
+    // than ZERO_SIT_VOID_MIN_AGE_HOURS ago, and that age is measured on the
+    // commenceTime captured when the candidates were loaded. The scoreboard
+    // fetch sits between that read and the write, so a schedule correction can
+    // land in a window that is seconds to minutes wide. Without the kickoff
+    // bound in the WRITE, the pick is VOIDed permanently on an age that no
+    // longer holds; with it, the statement matches nothing and the pick stays
+    // PENDING for the next cycle.
+    const kickoff = hoursAgo(30);
+    const fake = makeFake([
+      row({ id: "p-moved", commenceTime: kickoff, home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    const rescheduleDuringFetch: typeof fetchScoresMultiSource = async (sport, opts) => {
+      // The reschedule commits while the lane is out on the network. The
+      // candidate the lane holds still carries the original kickoff.
+      fake.rows[0]!.game.commenceTime = daysFromNow(2);
+      return scoreboard([])(sport, opts);
+    };
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: rescheduleDuringFetch });
+
+    expect(res.voided).toBe(0);
+    expect(res.skippedByReason.WRITE_RACE_LOST).toBe(1);
+    expect(fake.rows[0]!.result).toBe("PENDING");
+    expect(fake.events).toHaveLength(0);
+    expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
+  });
+
+  it("refuses the game CANCELED write when the reschedule lands between the two writes inside the transaction", async () => {
+    // The pick statement locks the PICK row, not the game, so a reschedule can
+    // still commit between the two writes of one transaction. The pick is
+    // voided here (its own bound still held), but the game must not be marked
+    // CANCELED once it is scheduled in the future.
+    const kickoff = hoursAgo(30);
+    const fake = makeFake([
+      row({ id: "p-cancel-race", commenceTime: kickoff, home: "Phantom Rebels", away: "Phantom Cardinals" }),
+    ]);
+    fake.afterPickWrite = (): void => {
+      fake.rows[0]!.game.commenceTime = daysFromNow(2);
+    };
+
+    const res = await voidSittingPicks({ db: fake.db, now: NOW, fetchScores: scoreboard([]) });
+
+    expect(res.voided).toBe(1);
+    expect(res.byCode.FIXTURE_NOT_FOUND).toBe(1);
+    expect(res.gamesCanceled).toBe(0);
+    expect(fake.rows[0]!.game.status).toBe("SCHEDULED");
+    const where = (fake.gameUpdates[0] as { where: { commenceTime?: { lt?: Date } } }).where;
+    expect(where.commenceTime?.lt).toBeInstanceOf(Date);
   });
 
   it("voids FIXTURE_NOT_FOUND only when the board fetch succeeded and lists neither team, and marks the game CANCELED", async () => {

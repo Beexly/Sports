@@ -823,14 +823,30 @@ async function persistZeroSitVoid(
   row: ZeroSitPickRow,
   decision: Extract<ZeroSitDecision, { kind: "void" }>,
   now: Date,
+  cutoff: Date,
 ): Promise<{ written: boolean; gameCanceled: boolean }> {
   let gameCanceled = false;
   const payload = buildZeroSitVoidPayload({ row, decision, now });
   const written = await db.$transaction(async (tx) => {
     // Idempotent: PENDING-scoped, so a race loser (or a pick another lane
     // graded meanwhile) matches zero rows and appends nothing.
+    //
+    // The kickoff bound rides in the WRITE, not only in the candidate read.
+    // EVERY void this lane issues is gated on ageHours >= the minimum age
+    // (decideZeroSitVoid returns skip below the floor), and that age is
+    // computed from the commenceTime captured when the candidates were
+    // loaded. Between that read and this statement the lane fetches
+    // scoreboards over the network for up to ZERO_SIT_VOID_CAP picks, so the
+    // window is wide, and Prisma's default isolation does not lock the game
+    // row. A contest rescheduled into the future in that window would be
+    // VOIDed permanently on an age that no longer holds. As a relation filter
+    // the database evaluates the bound as part of the update itself: a moved
+    // game matches nothing, count comes back 0, and the caller records
+    // WRITE_RACE_LOST and leaves the pick PENDING for the next cycle. The
+    // unpublish half of this lane already carries its full predicate into its
+    // own updateMany for the same reason.
     const updated = await tx.pick.updateMany({
-      where: { id: row.id, result: "PENDING" },
+      where: { id: row.id, result: "PENDING", game: { commenceTime: { lt: cutoff } } },
       data: { result: "VOID", settledAt: now },
     });
     if (updated.count === 0) return updated;
@@ -862,8 +878,16 @@ async function persistZeroSitVoid(
       // evidence, not evidence of cancellation. Cancellation needs positive
       // evidence; the pick is still voided FIXTURE_NOT_FOUND above and the row
       // keeps its POSTPONED status.
+      // Same kickoff bound as the pick write above. The pick statement locks
+      // the PICK row, not the game, so a reschedule can still commit between
+      // the two statements inside this transaction; without the bound a game
+      // moved into the future and still SCHEDULED would be marked CANCELED.
       const canceled = await tx.game.updateMany({
-        where: { id: row.game.id, status: { in: ["SCHEDULED", "LIVE"] } },
+        where: {
+          id: row.game.id,
+          status: { in: ["SCHEDULED", "LIVE"] },
+          commenceTime: { lt: cutoff },
+        },
         data: { status: "CANCELED" },
       });
       gameCanceled = canceled.count > 0;
@@ -1030,7 +1054,7 @@ export async function voidSittingPicks(input: {
       }
       let persisted: { written: boolean; gameCanceled: boolean };
       try {
-        persisted = await persistZeroSitVoid(input.db, row, decision, now);
+        persisted = await persistZeroSitVoid(input.db, row, decision, now, cutoff);
       } catch (err) {
         // Per-pick isolation: one poison row (a transient DB error, an event
         // unique collision) must not stop every other void this cycle.
