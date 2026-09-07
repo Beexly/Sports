@@ -1,29 +1,41 @@
 /**
  * Does a settled pick's stored result agree with the final score on its own game row?
  *
- * WHY THIS EXISTS. 117 published, settled picks currently carry a result that
- * contradicts their own fixture's final: 47 TOTAL, 51 SPREAD, 19 MONEYLINE
- * (measured read-only on production 2026-09-07, ledger C-115). Nothing in the
- * product noticed. They were found because an agent happened to write the
- * comparison by hand in SQL, which means the same class of corruption could
- * accumulate again the moment nobody is looking. This module is that comparison,
- * written once, as a pure function, so the system can check itself.
+ * WHAT THIS DETECTS, STATED CAREFULLY. 117 published settled picks disagree with
+ * the final on their own game row (47 TOTAL, 51 SPREAD, 19 MONEYLINE, measured
+ * read-only 2026-09-07, ledger C-115). This module finds that DISAGREEMENT. It
+ * does NOT establish which side of the disagreement is wrong, and an earlier
+ * revision of this comment claimed it did.
  *
- * THE MARKET-AGNOSTIC PART IS THE POINT. A MONEYLINE pick involves no line at
- * all — grading it is only "did the team I picked win?" — so a wrong MONEYLINE
- * result can only mean the grader read a DIFFERENT FIXTURE'S score. That rules
- * out every market-specific arithmetic story (OVER/UNDER parsing, half-points,
- * run-line ladders, home-perspective sign) as the main cause and points at the
- * pick-to-final binding. A detector that only understood totals would have
- * missed 70 of the 117.
+ * IT IS USUALLY THE GAME ROW. Verified against ESPN ground truth on three
+ * spot-checked rows, three of three:
+ *
+ *   ESPN 401816824  true Mariners 2 - Athletics 6 (total 8)   our row said 6-7 (13)
+ *   ESPN 401816839  true Mariners 2 - Athletics 0 (total 2)   our row said 6-7 (13)
+ *   ESPN 401816841  true Dodgers 7 - Nationals 5  (total 12)  our row said 5-3 (8)
+ *
+ * In all three the PICK's stored result is correct against the true final, and
+ * the games row carries a DIFFERENT fixture's score - in the Mariners cases, the
+ * 2026-09-05 game's 6-7 stamped onto two later, distinct fixtures of the same
+ * series. So a naive reading of this detector inverts blame, and acting on that
+ * reading by unpublishing the picks would destroy correct results.
+ *
+ * Treat a CONTRADICTS_BOTH row as "these two records disagree, investigate",
+ * never as "the published result is false".
+ *
+ * THE MARKET-AGNOSTIC PART IS STILL THE POINT. A MONEYLINE pick involves no line
+ * at all, so a moneyline disagreement can only be a fixture-level score problem.
+ * That is what pointed at the score-persist lane rather than at any market's
+ * arithmetic, and it is why a totals-only detector would have missed 70 of 117.
  *
  * FOUR DISTINCT VERDICTS, DELIBERATELY NOT MERGED. The fourth exists because
  * review showed the first version could not see it (CodeRabbit, #719):
  *
  *   CONTRADICTS_BOTH        the stored result matches neither the displayed
- *                           `line` nor the `clvLockLine` the settler grades on.
- *                           No reading of this fixture supports what we
- *                           published. This is corruption (ledger C-115).
+ *                           `line` nor the `clvLockLine`, AS SCORED BY THIS GAME
+ *                           ROW. That is a conflict between two records, not a
+ *                           verdict on the pick: in every case verified so far
+ *                           the game row was the wrong one (ledger C-115).
  *
  *   GRADED_ON_LOCK_LINE     correct against `clvLockLine`, wrong against the
  *                           `line` the card displays. The grade is defensible;
