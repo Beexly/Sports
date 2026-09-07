@@ -110,11 +110,17 @@ describe("resolveCheckoutPriceId — the env branch is guarded", () => {
     await expect(resolveCheckoutPriceId("PRO", "month", envWith("price_bad"))).resolves.toBe("");
   });
 
-  it("still returns the env price when Stripe cannot be reached", async () => {
-    // Availability call, stated so it is a decision and not an oversight: a
-    // Stripe outage is not evidence of a wrong amount, and refusing every sale
-    // on no evidence is less available without being more honest.
+  it("REFUSES the env price when the amount cannot be verified at all", async () => {
+    // CORRECTION. An earlier revision returned the price here, arguing an
+    // outage is not evidence of a wrong amount so refusing every sale costs
+    // availability without buying honesty. That reasoning had a hole (Devin
+    // Review, #719): if `prices.retrieve` cannot reach Stripe then
+    // `checkout.sessions.create` almost certainly cannot either, so the
+    // availability it protected was largely illusory. What it did leave open
+    // is the narrow real case — retrieve fails transiently, session create
+    // succeeds, price is misconfigured — and on a money path a recoverable 503
+    // beats an unrecoverable wrong charge.
     mocks.retrieve.mockRejectedValue(new Error("stripe unreachable (fixture)"));
-    await expect(resolveCheckoutPriceId("PRO", "month", envWith("price_ok"))).resolves.toBe("price_ok");
+    await expect(resolveCheckoutPriceId("PRO", "month", envWith("price_ok"))).resolves.toBe("");
   });
 });

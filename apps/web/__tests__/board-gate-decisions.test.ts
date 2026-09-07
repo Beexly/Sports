@@ -384,12 +384,15 @@ describe("board loaders with persisted gate decisions", () => {
       expect(now.getTime() - scoringLo.getTime()).toBe(8 * 60 * 60 * 1000);
 
       // GATED: not started. This is the half that makes the lanes disjoint.
-      const gatedLo = (gated.commenceTime as { gte: Date }).gte;
+      const gatedLo = (gated.commenceTime as { gt: Date }).gt;
       expect(gatedLo.getTime()).toBe(now.getTime());
 
-      // The two windows meet at `now` and do not overlap: scoring is
-      // [now-8h, now], gated is [now, end). Nothing strictly before now can be
-      // gated, and nothing at or after now can be scoring.
+      // The exact instant has ONE owner. Scoring takes it via `lte: now`, so
+      // gated must use a STRICT `gt: now` — inclusive-inclusive would put a
+      // game kicking off at exactly `now` in both lanes, which is the overlap
+      // this split exists to remove (CodeRabbit, #719).
+      expect(gated.commenceTime).toHaveProperty("gt");
+      expect(gated.commenceTime).not.toHaveProperty("gte");
       expect(scoringHi.getTime()).toBeLessThanOrEqual(gatedLo.getTime());
     });
 

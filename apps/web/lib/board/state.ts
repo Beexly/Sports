@@ -576,7 +576,11 @@ async function loadBoardStateInner(
           // false label the scoring-query fix was meant to remove, inverted
           // (Devin Review, #717). Two queries that cannot both match a game are
           // a stronger guarantee than any tie-break between them.
-          commenceTime: { gte: now, lt: end },
+          // STRICT lower bound. Scoring owns the exact instant via `lte: now`,
+          // so `gte` here would put a game kicking off at exactly `now` in BOTH
+          // lanes, which is the overlap this split exists to remove
+          // (CodeRabbit, #719). Inclusive-inclusive is not disjoint.
+          commenceTime: { gt: now, lt: end },
           picks: { none: publishedPickRelation },
           mergedIntoGameId: null,
         },

@@ -77,7 +77,7 @@ async function load(
   population: CorruptedPopulation,
 ): Promise<CorruptedPickRow[]> {
   const rows = await prisma.pick.findMany({
-    where: whereFor(population) as never,
+    where: whereFor(population),
     select: {
       id: true,
       gameId: true,
@@ -117,13 +117,35 @@ async function main(): Promise<void> {
       let remaining: number | null = null;
 
       if (args.execute && rows.length > 0) {
-        // ONE bounded write. The `isPublished: true` guard makes it idempotent:
-        // a second run touches nothing.
-        const res = await prisma.pick.updateMany({
-          where: { id: { in: rows.map((r) => r.id) }, isPublished: true },
-          data: { isPublished: false },
-        });
-        written = res.count;
+        const ids = rows.map((r) => r.id);
+        if (population === "settled-before-kickoff") {
+          // The C-114 predicate is `settledAt < game.commenceTime`, and it is
+          // selected in memory because Prisma's filter language cannot compare
+          // two columns. Re-checking only the ids and isPublished at write time
+          // would let a schedule correction landing between load and write turn
+          // a selected row VALID while this still withdrew it — the ingestion
+          // pipeline actively corrects commenceTime (Devin Review + CodeRabbit,
+          // #719). So the predicate is re-evaluated database-side, inside the
+          // write, against the CURRENT game row.
+          written = await prisma.$executeRaw`
+            UPDATE picks p
+            SET "isPublished" = false
+            FROM games g
+            WHERE g.id = p."gameId"
+              AND p.id = ANY(${ids})
+              AND p."isPublished" = true
+              AND p."settledAt" IS NOT NULL
+              AND p."settledAt" < g."commenceTime"`;
+        } else {
+          // The other two populations key on immutable facts — the sport and
+          // the pick's own line — so identity plus isPublished is sufficient.
+          // The guard also makes a second run a no-op.
+          const res = await prisma.pick.updateMany({
+            where: { id: { in: ids }, isPublished: true },
+            data: { isPublished: false },
+          });
+          written = res.count;
+        }
         remaining = (await load(prisma, population)).length;
       } else if (args.execute) {
         written = 0;

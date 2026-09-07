@@ -31,6 +31,8 @@
  * rows are either evidence or they are not.
  */
 
+import type { Prisma } from "@prisma/client";
+
 export type CorruptedPopulation =
   | "settled-before-kickoff"
   | "soccer-two-way-ml"
@@ -86,7 +88,7 @@ export function reasonFor(population: CorruptedPopulation, row: CorruptedPickRow
  * Prisma `where` per population. Exported separately from the query so it can
  * be asserted in a test without a database.
  */
-export function whereFor(population: CorruptedPopulation): Record<string, unknown> {
+export function whereFor(population: CorruptedPopulation): Prisma.PickWhereInput {
   const base = { isPublished: true };
   switch (population) {
     case "settled-before-kickoff":
