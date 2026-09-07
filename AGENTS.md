@@ -351,6 +351,36 @@ Perplexity/NVIDIA local-orchestrator hardware product isn't adoptable (GSE runs 
 hardware) but is real outside validation that GSE's already-planned local-cheap/cloud-frontier
 routing work (C-108) is the right direction. Full detail in the doc's Round 12 section.
 
+**Round 13 (2026-09-07): synthesis pass — connecting Round 11-12's findings into GSE's own
+systems, not more repo research.** Biggest correction: Round 10 was WRONG that nflverse-data
+needs new ingestion — `packages/data-ingestion/src/nflverse-source.ts` is already a complete,
+registered adapter (`commercialUse: true`), and `apps/web/lib/intelligence/scoring-zone.ts` is
+already a LIVE production module pulling real nflverse play-by-play for red-zone/goal-line
+opportunity share, gated through `assertIngestible("nflverse")`. Verified directly by reading
+the file: fully wiring `td-equity.ts` to it is real, precisely scoped work (needs a
+`passer_player_id` column for QB detection, TD tracking beyond the red-zone-only filter, and a
+`defteam`-side aggregation the module doesn't do today) touching a deliberately
+OOM-hardened parsing path — not a new external source, but not a five-minute edit either; both
+"blocked on ingestion" and "trivial" would have been wrong framings. Four previously-isolated
+Round 11 tool verdicts (Podiom, taskq, dsh-goal, code-conductor) are now one phased "ledger
+companion" design: a gitignored SQLite mirror of `AGENT_LEDGER.md` with a revision/CAS column,
+synced via the ledger guard's own already-tested `parseLedger()`, optionally exposed as a local
+MCP server for atomic claim attempts — Phase 0 needs **zero new dependency** (`node:sqlite`
+live-verified working on this environment's Node version), Phase 1 (the MCP server) needs one
+new package, a real Law 7 founder call. mission-control's routing pattern (separate from its
+already-flagged-risky review gate) is filed as a trigger condition — not urgent for today's four
+fixed agent identities, genuinely worth building the moment a fifth (e.g., a rights-registry
+agent) is added. Three previously-scattered findings (the unwired regression detector, nflverse
+as a scoped third calibration signal, nflverse's own publish-a-reproducible-history credibility
+strategy) are now one 3-phase plan directly serving the live PROVEN-gate push, Phase 1 being one
+function call connecting two already-built, already-tested pieces before the flip. Sharpest
+single finding: GSE's settlement pipeline already has its own full "decide before, record after"
+discipline (`SettlementObservation`/`SettlementAnomaly`/`SettlementDecisionEvent` — insert-only,
+independent-corroboration-before-promotion, revisioned decision log) sitting right next to the
+pick-generation side's already-public `/verify` system, with confirmed zero callers outside
+internal ops — the exact patterns this audit found valuable in *external* tools already exist
+inside GSE, unused and unseen by any customer. Full detail in the doc's Round 13 section.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
