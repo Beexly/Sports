@@ -82,6 +82,31 @@ describe("dedupeBoardRows — one fixture, one row per market", () => {
     expect(out[0]!.status).toBe("PUBLISHED_TODAY");
   });
 
+  it("prefers the NEWEST evaluation, even when it downgrades confidence", () => {
+    // GateDecision rows are repeated evaluations over time and confidence can
+    // legitimately FALL as the line moves. Ranking on confidence before the
+    // timestamp meant an older, stronger reading beat the newer downgrade, so a
+    // subscriber saw a number the model no longer stood behind (Devin Review,
+    // #717).
+    const out = dedupeBoardRows(keyed([
+      row({ id: "old", gameId: "game-1", confidence: 88, updatedAt: "2026-09-07T12:00:00.000Z" }),
+      row({ id: "new", gameId: "game-1", confidence: 57, updatedAt: "2026-09-07T15:00:00.000Z" }),
+    ]));
+
+    expect(out).toHaveLength(1);
+    expect(out[0]!.id).toBe("new");
+    expect(out[0]!.confidence).toBe(57);
+  });
+
+  it("still uses confidence as the tie-break when two rows were evaluated at the same instant", () => {
+    const out = dedupeBoardRows(keyed([
+      row({ id: "a", gameId: "game-1", confidence: 57, updatedAt: "2026-09-07T12:00:00.000Z" }),
+      row({ id: "b", gameId: "game-1", confidence: 88, updatedAt: "2026-09-07T12:00:00.000Z" }),
+    ]));
+
+    expect(out[0]!.confidence).toBe(88);
+  });
+
   it("is deterministic when rows tie on everything, so the board does not flip between loads", () => {
     const a = row({ id: "aaa", gameId: "game-1" });
     const b = row({ id: "bbb", gameId: "game-1" });
