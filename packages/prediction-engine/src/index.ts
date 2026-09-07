@@ -8,6 +8,9 @@ export {
   clamp,
   toEdgeIndex,
   isThreeWayMoneylineSport,
+  isPublishableSpreadLine,
+  isBaseballSport,
+  BASEBALL_RUN_LINES,
 } from "./scoring.js";
 export {
   computeGameContext,

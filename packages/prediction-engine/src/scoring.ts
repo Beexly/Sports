@@ -408,6 +408,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Chosen side
   const chosenTeam = homeIsChosen ? input.homeTeam : input.awayTeam;
   const chosenSpread = homeIsChosen ? avgSpread : -avgSpread;
+  // Refuse a line that cannot be placed at any book for this sport. See
+  // isPublishableSpreadLine: baseball's run line is a fixed ladder, and the
+  // mean of contaminated book rows lands off it.
+  if (!isPublishableSpreadLine(input.sport, chosenSpread)) return null;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
   // Average price for chosen side
@@ -855,6 +859,43 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
  */
 export function isThreeWayMoneylineSport(sportKey: string): boolean {
   return sportKey.toLowerCase().startsWith("soccer");
+}
+
+/**
+ * Baseball's run line is a FIXED market: 1.5 standard, with 2.5 and 3.5 offered
+ * as alternates. Unlike football, where books legitimately disagree (-3, -3.5,
+ * -3) and a consensus between them is a real number, there is no such thing as
+ * a 6.56 run line at any book.
+ *
+ * The published spread is the arithmetic MEAN of every book's line, so a single
+ * contaminated odds row drags it off the ladder entirely. Measured on
+ * production 2026-09-07: 355 of 725 published MLB spread picks carried a line
+ * that is not a run line, including 4.5, 5.5 and 7.5; separately, 8 of 12
+ * bookmakers carry MLB spread rows up to 19.5, which is where the contamination
+ * enters.
+ *
+ * A subscriber cannot place "Athletics -7.5" on a baseball game anywhere, so
+ * publishing it is fabricated product data. Suppress rather than mislead, the
+ * same call the three-way moneyline guard above makes.
+ *
+ * This does NOT repair the line, which would change what the engine publishes
+ * and require a MODEL_VERSION bump. It refuses the pick.
+ */
+export const BASEBALL_RUN_LINES: readonly number[] = [1.5, 2.5, 3.5];
+
+/** Float tolerance: the published line is a mean, so compare with an epsilon. */
+const RUN_LINE_EPSILON = 1e-9;
+
+export function isBaseballSport(sportKey: string): boolean {
+  return sportKey.toLowerCase().startsWith("baseball");
+}
+
+/** Is `line` a run line a baseball book actually offers? Non-baseball: always true. */
+export function isPublishableSpreadLine(sportKey: string, line: number): boolean {
+  if (!isBaseballSport(sportKey)) return true;
+  if (!Number.isFinite(line)) return false;
+  const abs = Math.abs(line);
+  return BASEBALL_RUN_LINES.some((valid) => Math.abs(abs - valid) < RUN_LINE_EPSILON);
 }
 
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
