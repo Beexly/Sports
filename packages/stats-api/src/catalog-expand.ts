@@ -556,7 +556,7 @@ export function expandF1(): MetricDef[] {
     row(
       `f1.telem.${m}`,
       `F1 ${m.replace(/_/g, " ")}`,
-      "MULTI",
+      "F1",
       "tracking",
       "CATALOG",
       "mixed",
@@ -575,7 +575,7 @@ export function expandTennisOptical(): MetricDef[] {
       row(
         `opt.tennis.${m}`,
         `Tennis optical ${m.replace(/_/g, " ")}`,
-        "MULTI",
+        "TENNIS",
         "optical",
         "DARK",
         "mixed",
@@ -642,7 +642,7 @@ export function expandMmaResearch(): MetricDef[] {
     row(
       `mma.stats.${id}`,
       `MMA ${id.replace(/_/g, " ")}`,
-      "MULTI",
+      "MMA",
       "box",
       "CATALOG",
       "mixed",
@@ -660,7 +660,7 @@ export function expandWnba(): MetricDef[] {
     row(
       `wnba.box.${id}`,
       `WNBA ${id.replace(/_/g, " ")}`,
-      "MULTI",
+      "WNBA",
       "box",
       "CATALOG",
       "mixed",
