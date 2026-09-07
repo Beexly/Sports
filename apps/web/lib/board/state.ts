@@ -133,14 +133,30 @@ const LANE_RANK: Record<BoardStateRow["status"], number> = {
  * (higher confidence, then higher edge), then the most recently evaluated, then
  * the lexically smallest id so the result never depends on query order.
  */
-export function dedupeBoardRows(rows: readonly BoardStateRow[]): BoardStateRow[] {
+export type DedupeEntry = { readonly key: string; readonly row: BoardStateRow };
+
+/**
+ * The key MUST come from the caller, not from `row.market`.
+ *
+ * `market` is redacted at row-build time: every row a non-premium viewer gets
+ * carries the literal "ALL_MARKETS", so keying on it would collapse a game's
+ * SPREAD and TOTAL into one row for FREE viewers while PRO viewers kept both.
+ * Rows and openPicks would then differ by entitlement, which is both a lost
+ * pick for the free tier and a break of the tier-invariant count contract
+ * (Devin Review, #717). Callers key on the unredacted pickType instead.
+ */
+export function dedupeBoardRows(entries: readonly DedupeEntry[]): BoardStateRow[] {
   const best = new Map<string, BoardStateRow>();
-  for (const row of rows) {
-    const key = `${row.gameId}\u0000${row.market}`;
+  for (const { key, row } of entries) {
     const held = best.get(key);
     if (held === undefined || outranks(row, held)) best.set(key, row);
   }
   return [...best.values()];
+}
+
+/** Fixture + market identity, built from values redaction never touches. */
+export function boardDedupeKey(gameId: string, pickType: string | null | undefined): string {
+  return `${gameId}\u0000${pickType ?? "NO_PICK"}`;
 }
 
 function outranks(candidate: BoardStateRow, held: BoardStateRow): boolean {
@@ -389,35 +405,48 @@ async function loadBoardStateInner(
         pick: true,
       },
       orderBy: { evaluatedAt: "desc" },
-      take: 100,
+      // Bounds decisions SCANNED, not fixtures shown. GateDecision has no
+      // unique constraint, so one game evaluated repeatedly could consume a
+      // small cap and crowd every other fixture off the board before the
+      // collapse below ever ran (Devin Review, #717). Sized well above a
+      // realistic slate's decision count so the cap cannot silently drop a
+      // fixture; the collapse then reduces this to one row per fixture and
+      // market.
+      take: 500,
     });
 
     if (decisions.length > 0) {
-      const decisionRows = decisions.map((decision): BoardStateRow => ({
-        id: decision.id,
-        gameId: decision.gameId,
-        matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
-        sport: decision.game.sport.name,
-        market: isPremiumViewer
-          ? (decision.pick?.selection ?? "ALL_MARKETS")
-          : "ALL_MARKETS",
-        status:
-          decision.status === "PUBLISHED"
-            ? "PUBLISHED_TODAY"
-            : decision.status === "GATED"
-              ? "GATED_TODAY"
-              : "SCORING_NOW",
-        edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
-        confidence: decision.confidence ?? decision.pick?.confidence ?? null,
-        ...extractRankingFromFb(decision.pick?.factorBreakdown, isPremiumViewer),
-        gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
-        updatedAt: decision.evaluatedAt.toISOString(),
+      const decisionEntries = decisions.map((decision): DedupeEntry => ({
+        // Key built beside the row it belongs to. A parallel-index lookup
+        // into `decisions` would break silently the day anyone filters this
+        // list, and the failure would be a silently merged pick.
+        key: boardDedupeKey(decision.gameId, decision.pick?.pickType),
+        row: {
+          id: decision.id,
+          gameId: decision.gameId,
+          matchup: `${decision.game.awayTeamName} @ ${decision.game.homeTeamName}`,
+          sport: decision.game.sport.name,
+          market: isPremiumViewer
+            ? (decision.pick?.selection ?? "ALL_MARKETS")
+            : "ALL_MARKETS",
+          status:
+            decision.status === "PUBLISHED"
+              ? "PUBLISHED_TODAY"
+              : decision.status === "GATED"
+                ? "GATED_TODAY"
+                : "SCORING_NOW",
+          edgeIndex: toEdgeIndex(decision.edgeIndex ?? decision.game.currentEdgeIndex),
+          confidence: decision.confidence ?? decision.pick?.confidence ?? null,
+          ...extractRankingFromFb(decision.pick?.factorBreakdown, isPremiumViewer),
+          gateReason: decision.status === "PUBLISHED" ? null : decision.reason,
+          updatedAt: decision.evaluatedAt.toISOString(),
+        },
       }));
       // Deduped BEFORE the lane split and before the counts below, so
       // openPicks/gatedToday/sportsWatched describe the rows a viewer is
       // actually shown. Deduping after the counts are taken would leave the
       // board's own numbers disagreeing with its own rows (C-117).
-      const dedupedDecisionRows = dedupeBoardRows(decisionRows);
+      const dedupedDecisionRows = dedupeBoardRows(decisionEntries);
       const scoringRows = dedupedDecisionRows.filter((row) => row.status === "SCORING_NOW");
       const publishedRows = dedupedDecisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
       const gatedRows = dedupedDecisionRows.filter((row) => row.status === "GATED_TODAY");
@@ -453,7 +482,7 @@ async function loadBoardStateInner(
           isBootstrap: false,
           ...excludeSeedInProd,
           ...freshPickWhere(slateNow),
-          game: gameInSlateWindow(slate),
+          game: { ...gameInSlateWindow(slate), mergedIntoGameId: null },
         },
         include: { game: { include: { sport: { select: { name: true } } } } },
         // Wide window — re-rank by rankingP below so low-conf demotions surface
@@ -465,6 +494,10 @@ async function loadBoardStateInner(
         where: {
           commenceTime: { gte: now },
           status: "SCHEDULED",
+          // Same canonicity marker as the decision query. Two rows for one
+          // fixture carry DIFFERENT ids, so the collapse below cannot pair
+          // them; only excluding the tombstoned row can (Devin Review, #717).
+          mergedIntoGameId: null,
         },
         include: { sport: { select: { name: true } } },
         orderBy: { commenceTime: "asc" },
@@ -474,6 +507,7 @@ async function loadBoardStateInner(
         where: {
           commenceTime: { gte: start, lt: end },
           picks: { none: publishedPickRelation },
+          mergedIntoGameId: null,
         },
         include: { sport: { select: { name: true } } },
         orderBy: { commenceTime: "asc" },
@@ -485,23 +519,26 @@ async function loadBoardStateInner(
     .sort(comparePicksByRanking)
     .slice(0, 12);
 
-  const publishedRows = publishedToday.map((pick): BoardStateRow => ({
-    id: pick.id,
-    gameId: pick.gameId,
-    matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
-    sport: pick.game.sport.name,
-    market: isPremiumViewer ? pick.selection : "ALL_MARKETS",
-    status: "PUBLISHED_TODAY",
-    // The per-pick fallback is withheld on book-less rows for non-premium viewers
-    // (edgeScore = confidence - 50 there; lib/picks/public-edge-score.ts).
-    edgeIndex: toEdgeIndex(
-      pick.game.currentEdgeIndex ??
-        publicEdgeScore(pick, { canSeeEdgeScore: true, canSeeConfidence: isPremiumViewer }),
-    ),
-    confidence: pick.confidence,
-    ...extractRankingFromFb(pick.factorBreakdown, isPremiumViewer),
-    gateReason: null,
-    updatedAt: pick.generatedAt.toISOString(),
+  const publishedEntries = publishedToday.map((pick): DedupeEntry => ({
+    key: boardDedupeKey(pick.gameId, pick.pickType),
+    row: {
+      id: pick.id,
+      gameId: pick.gameId,
+      matchup: `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`,
+      sport: pick.game.sport.name,
+      market: isPremiumViewer ? pick.selection : "ALL_MARKETS",
+      status: "PUBLISHED_TODAY",
+      // The per-pick fallback is withheld on book-less rows for non-premium viewers
+      // (edgeScore = confidence - 50 there; lib/picks/public-edge-score.ts).
+      edgeIndex: toEdgeIndex(
+        pick.game.currentEdgeIndex ??
+          publicEdgeScore(pick, { canSeeEdgeScore: true, canSeeConfidence: isPremiumViewer }),
+      ),
+      confidence: pick.confidence,
+      ...extractRankingFromFb(pick.factorBreakdown, isPremiumViewer),
+      gateReason: null,
+      updatedAt: pick.generatedAt.toISOString(),
+    },
   }));
 
   const scoringRows = scoringNow.map((game): BoardStateRow => ({
@@ -551,7 +588,11 @@ async function loadBoardStateInner(
     // `gate-<id>` — same fixture, same market, two rows. Deduping the union and
     // re-splitting keeps the lane precedence explicit rather than letting
     // whichever query ran first win.
-    const dedupedFallback = dedupeBoardRows([...scoringRows, ...publishedRows, ...gatedRows]);
+    const dedupedFallback = dedupeBoardRows([
+      ...scoringRows.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
+      ...publishedEntries,
+      ...gatedRows.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
+    ]);
     const scoringRowsFinal = dedupedFallback.filter((row) => row.status === "SCORING_NOW");
     const publishedRowsFinal = dedupedFallback.filter((row) => row.status === "PUBLISHED_TODAY");
     const gatedRowsFinal = dedupedFallback.filter((row) => row.status === "GATED_TODAY");
