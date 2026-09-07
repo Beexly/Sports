@@ -12,43 +12,70 @@ in place rather than deleted, because the correction is the point.
 
 ---
 
-## 1. The headline correction
+## 1. The headline correction — and a correction to the correction
 
 I spent most of this session reporting that **117 published picks carry a wrong result**. The count is
-right. **The blame was backwards.** [V]
+right. I then corrected the blame: the picks are right and the game rows are wrong. **That correction was
+itself too strong, and adversarial verification caught it.** [V]
 
-Verified against ESPN, three of three spot-checks:
+### What is verified
+
+Game rows genuinely carry another fixture's final. Verified by ESPN **event id** - not by team-and-time,
+which is the field a duplicate-fixture defect corrupts - on 4 rows by me and 45 of 45 by an independent
+verifier that rebuilt the population from scratch (605 / 88 / 37 / **51** against my 588 / 81 / 34 / 47;
+same structure, live-data drift):
 
 | ESPN event | true final | our game row |
 |---|---|---|
-| 401816824 | Mariners 2 - 6 Athletics (total 8) | 6-7 (13) |
-| 401816839 | Mariners 2 - 0 Athletics (total 2) | 6-7 (13) |
-| 401816841 | Dodgers 7 - 5 Nationals (total 12) | 5-3 (8) |
+| 401816824 | Mariners 2 - 6 Athletics | 6-7 |
+| 401816839 | Mariners 2 - 0 Athletics | 6-7 |
+| 401816841 | Dodgers 7 - 5 Nationals | 5-3 |
 
-In all three the **pick is correct** against the true final and the **game row carries another fixture's
-score** - the 2026-09-05 Mariners game's 6-7 copied onto two later, distinct fixtures of the same series.
+### What I got wrong
 
-The full causal chain [M]:
-1. A score is written wrong (phantom pre-kickoff, or a cross-fixture bind).
+I wrote "zero mis-graded pick results; only the reference is corrupt". **There are genuinely mis-graded
+published picks.** Confirmed by me on production: [V]
+
+> `cmtp1qor6052dx2r51abbm3ik` - published MONEYLINE "Seattle Mariners ML", v5.2.7, on
+> `espn:mlb:401816839`. Settled **18.09 hours BEFORE first pitch**. Stored **LOSS**. ESPN: Mariners won
+> 2-0, so the true result is **WIN**. The stored LOSS is exactly what the row's corrupt 6-7 implies.
+
+### The model that actually fits
+
+Two failure modes, separated by **when the pick was graded**:
+
+- **Graded AFTER kickoff** from a fetched payload -> the pick is correct, the row is corrupted later.
+  The contradiction is the row's fault. This is the C-115 population.
+- **Graded BEFORE kickoff** -> there is nothing to fetch, so it is graded off whatever the row already
+  held. The pick **inherits the corruption** and is right or wrong by coincidence. This is C-114, and it
+  matches the 3-of-4-correct I measured: a coin flip against a wrong score.
+
+The two populations **overlap** - that moneyline is in both.
+
+### A claim of mine that was refuted
+
+I said the corrupt-score story "explains the 13x timing split". It does not, and the verifier ran the
+control I had not: corruption in the CORRECT cohort is **39.6% under 5h vs 50.0% at 5h+** - flat to
+inverted. A corrupt baseline cannot produce the population-B gradient. What is time-graded is lane
+disagreement, not corruption frequency. **The timing signal is still unexplained.**
+
+### The causal chain (unchanged, and still the fixable part) [M]
+
+1. A score is written wrong.
 2. `SCORE_MISMATCH_CROSS_PATH` refuses to overwrite an existing final with a different one - a correct
    guard, there to stop one lane clobbering another.
-3. **The wrong score is therefore permanent.** All six verified-wrong rows are frozen, untouched for
-   16h to 1d17h while settle cycles ran several times an hour.
-4. The public surface shows a wrong score beside a correct pick, indefinitely.
+3. **The wrong score is therefore permanent.** All six verified-wrong rows are frozen, untouched for 16h
+   to 1d17h while settle cycles ran several times an hour.
 
-**The missing capability is an authenticated correction lane**: something that may overwrite a final
-when, and only when, a named ground-truth source disagrees with it, writing an audit row per correction.
-That one capability fixes C-115 and makes C-114 re-gradeable instead of deletable. It is a new write path
-over game scores, so it is founder-gated.
+**The missing capability is an authenticated correction lane.** One verifier re-attributed the writer
+from the paid lane (dead on the code: the `!conflicts` gate at settle-sport.ts:552 makes that path
+unreachable) to the **stale backfill lane**. That narrowing is [A], not yet confirmed by me.
 
 What is NOT broken, checked rather than assumed [M]:
 - The **current settlement path is healthy**. C-120's `settledWith` payload went live 20:20 UTC today; on
-  all 14 events recorded so far the score each grade was computed from matches the game row exactly,
-  written within a fraction of a second. It is not producing new corruption.
+  all 14 events recorded so far the score each grade was computed from matches the game row exactly.
 - **free-score-persist.ts is already well guarded** - doubleheader placement, nearest-by-kickoff,
   fail-closed on ties, kickoff-drift rejection.
-
----
 
 ## 2. Launch blockers (12)
 
@@ -58,7 +85,7 @@ Ordered by what I would do first. Effort is the agent's estimate [A] unless mark
 
 | row | what | note |
 |---|---|---|
-| **C-114** | 87 picks settled before kickoff | **AGENT RECOMMENDATION SUPERSEDED.** The triage agent said "run the unpublish tool". I checked 4 of the 87 against ESPN afterwards: **3 of 4 stored results are CORRECT** [V]. Unpublishing removes ~3 right rows per wrong one. Correct instrument is **re-grade against ground truth**, not delete. Decision needed. |
+| **C-114** | 87 picks settled before kickoff | **AGENT RECOMMENDATION SUPERSEDED.** The triage agent said "run the unpublish tool". I checked 4 of the 87 against ESPN: **3 of 4 stored results are CORRECT** [V]. These picks were graded off the corrupt row before kickoff, so each is right or wrong by coincidence - and a confirmed wrong one exists (`cmtp1qor6052dx2r51abbm3ik`). Unpublishing removes ~3 right rows per wrong one; re-grading against ground truth fixes all of them. Correct instrument is **re-grade**, not delete. Decision needed. |
 | **C-137** | the remediation tool itself | 87 / 148 / 352 rows still live [A, matches my 586 figure]. Soccer and off-ladder populations are safe to run; **settled-before-kickoff is not**, per above. |
 | **C-118** | 148 soccer two-way moneylines | Code guard confirmed fixed forward; the data half is one of the tool's three cohorts. Safe to run. |
 | **C-143** | displayed line ≠ graded line | Card renders `pick.line`; grading uses `selectGradingLine` (prefers `clvLockLine`). 602 settled TOTALs affected [A]; I measured 432 of 588 differing and 46 outcome-flipping [M]. **You decide which number is canonical**, then the code follows. |
