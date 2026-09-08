@@ -165,3 +165,61 @@ describe("the dashboard says when a zero is an outage", () => {
     expect(banner).toContain("The counts below did read correctly");
   });
 });
+
+/**
+ * C-241, raised by Devin. The "Today's Picks" COUNT omitted `isBootstrap: false`
+ * while the list rendered directly beneath it includes that filter, so a member
+ * could read a total larger than the slate under it — the same "count above an
+ * empty list" defect this file's own header describes, but always-on rather than
+ * only during a database failure.
+ *
+ * Every other count in that block already carried the flag; this one was the
+ * exception, which is exactly the shape of thing a source assertion catches and
+ * a render test does not: the risk is the query somebody adds later without it.
+ */
+describe("the dashboard's counts describe the rows it actually shows", () => {
+  const source = readFileSync(PAGE, "utf8");
+
+  it("excludes bootstrap rows from every published-pick count", () => {
+    // Each `db.pick.count({...})` that filters on isPublished must also exclude
+    // bootstrap rows. Bootstrap picks are scaffolding, never a member's record.
+    // Comments are STRIPPED before asserting. Found while red-checking this
+    // test: the fix's own comment contains the literal string
+    // "isBootstrap: false", so removing the actual code line left the assertion
+    // passing on prose. A test that can be satisfied by a comment describing the
+    // fix is not testing the fix.
+    const withoutComments = source.replace(/\/\/[^\n]*/g, "");
+    const countBlocks = [
+      ...withoutComments.matchAll(/db\.pick\s*\n?\s*\.count\(\{([\s\S]*?)\}\)/g),
+    ].map((m) => m[1] as string);
+    expect(countBlocks.length, "found no count queries to check").toBeGreaterThanOrEqual(5);
+
+    for (const block of countBlocks) {
+      if (!block.includes("isPublished: true")) continue;
+      // The one legitimate exception is the count OF bootstrap rows itself,
+      // which the page uses to explain the gap rather than to state a record.
+      if (block.includes("isBootstrap: true")) continue;
+      expect(
+        block.includes("isBootstrap: false"),
+        `a published-pick count omits isBootstrap: false — it would report rows the ` +
+          `list beneath it filters out:\n${block.trim().slice(0, 300)}`,
+      ).toBe(true);
+    }
+  });
+
+  it("keeps the count and the list on the same filters", () => {
+    // The specific pairing that broke: today's list and today's count.
+    const stripped = source.replace(/\/\/[^\n]*/g, "");
+    const todayWindow = "generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) }";
+    const occurrences = stripped.split(todayWindow).length - 1;
+    expect(occurrences, "expected both the today list and the today count").toBeGreaterThanOrEqual(2);
+    // Both surrounding queries must carry the bootstrap exclusion.
+    for (const segment of stripped.split(todayWindow).slice(0, occurrences)) {
+      const tail = segment.slice(-400);
+      expect(
+        tail.includes("isBootstrap: false"),
+        "a today-window query is missing isBootstrap: false",
+      ).toBe(true);
+    }
+  });
+});

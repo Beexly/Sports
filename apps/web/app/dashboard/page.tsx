@@ -215,6 +215,15 @@ export default async function DashboardPage({
       .count({
         where: {
           isPublished: true,
+          // isBootstrap: false to MATCH THE LIST ABOVE (C-241, Devin). The list
+          // excludes bootstrap rows and this count did not, so a member could
+          // read "Today's Picks 7" directly above a slate showing fewer - the
+          // same "count above an empty list" defect the comment at the top of
+          // this file describes, but always-on rather than only during a DB
+          // failure. Every other count in this block already carries the flag;
+          // this one was the exception. A number that does not correspond to
+          // what is shown beneath it is a fabricated stat.
+          isBootstrap: false,
           ...excludeSeedInProd,
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
         },
