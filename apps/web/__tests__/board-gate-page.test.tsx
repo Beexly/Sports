@@ -32,7 +32,7 @@ vi.mock("@/lib/board/load-gate-slate", () => ({
   fetchGateSlate: (): unknown => fetchSlate(),
 }));
 
-import GatePage, { metadata } from "@/app/board/gate/page";
+import GatePage, { generateMetadata } from "@/app/board/gate/page";
 import { buildCalibrationRows, buildCandidateRows, type RawPickRow } from "@/lib/board/gate-rows";
 
 const DIGIT_PERCENT = /\d+(\.\d+)?%/;
@@ -153,7 +153,12 @@ describe("/board/gate — illustrative mode (the default)", () => {
   });
 
   it("sets a canonical metadata entry", () => {
-    expect(metadata.alternates?.canonical).toBe("/board/gate");
+    expect(generateMetadata().alternates?.canonical).toBe("/board/gate");
+  });
+
+  it("noindexes the page in illustrative mode (FE-12) — a demo must not be crawled as a live surface", () => {
+    const meta = generateMetadata();
+    expect(meta.robots).toEqual({ index: false, follow: true });
   });
 });
 
@@ -220,6 +225,11 @@ describe("/board/gate — live mode", () => {
     expect(text.toLowerCase()).not.toContain("guaranteed");
     // Real consumer vocabulary, same as illustrative mode.
     expect(text).toContain("What the gate returned");
+  });
+
+  it("does not noindex the page once it is live", () => {
+    const meta = generateMetadata();
+    expect(meta.robots).toBeUndefined();
   });
 
   it("warns that a live price is the one evaluated, not the one obtainable", async () => {
