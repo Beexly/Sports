@@ -4,15 +4,25 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import {
-  createDemoOwnStore,
+  OwnFeedMemoryStore,
   handleOwnValues,
 } from "@sports/stats-api";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
 
-/** Process-local demo store — durable Prisma SoR is a follow-on. */
-const store = createDemoOwnStore();
+/**
+ * Process-local first-party Source of Record. EMPTY until a real writer
+ * hydrates it; `readOwnValue` then refuses with 404 `not_found`.
+ *
+ * This was `createDemoOwnStore()`, which seeded own.model.p 0.58 /
+ * own.model.p_lo 0.54 / own.quote.q 0.51 for nfl:kc and nfl:phi at
+ * asOf = now - 2h, stamped ownership "first_party", sourceId "gse.own",
+ * pitCorrect true. Those are invented model outputs presented as ours, on an
+ * unauthenticated route, always looking fresh. AGENTS.md law 8. Never seed a
+ * production store; the refusal is the honest answer.
+ */
+const store = new OwnFeedMemoryStore();
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // External GSE v1 surface — stop a single caller from looping the PIT value

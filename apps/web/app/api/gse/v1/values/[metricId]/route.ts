@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleGetMetricValue } from "@sports/stats-api";
-import { demoValueProvider } from "@/lib/gse-stats/value-provider";
+import { wiredValueProvider } from "@/lib/gse-stats/value-provider";
 import { resolveStatsBillingTier } from "@/lib/gse-stats/session-tier";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +24,7 @@ export async function GET(
       asOf: sp.get("asOf") ?? "",
       tier: resolved.tier,
     },
-    demoValueProvider,
+    wiredValueProvider,
   );
   if (!result.ok) {
     return NextResponse.json(
@@ -49,7 +49,7 @@ export async function GET(
         spoofBlocked: resolved.spoofBlocked,
       },
       _note:
-        "Session tier authority. Demo/memory provider until full FeatureStore loaders land. Not a performance claim.",
+        "Session tier authority. Values come from wired loaders only; a metric with no loader is refused with 404 no_value, never filled in.",
     },
     { headers: { "X-GSE-API": "stats.v1" } },
   );

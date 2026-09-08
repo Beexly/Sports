@@ -99,6 +99,20 @@ export async function handleGetMetricValue(
   }
 
   const value = await provider(metric, req.entityId, pit.asOfIso);
+  // A provider that holds nothing for this (metric, entity, asOf) is the
+  // refusal case, not a 200 with `value: null`. The provenance block below
+  // asserts sourceIds/rights/pitCorrect over the value it wraps; stamping it
+  // on an absent value asserts a lineage for a number that was never read
+  // from any of those sources. CLAUDE.md rule 1 / AGENTS.md law 8: refuse.
+  // `false`, `0` and `""` are real values and pass through unchanged.
+  if (value === null || value === undefined) {
+    return {
+      ok: false,
+      status: 404,
+      code: "no_value",
+      error: `No value for ${metric.id} / ${req.entityId} at asOf ${pit.asOfIso}.`,
+    };
+  }
   const attribution = metric.rights.attributionRequired
     ? `Source: ${metric.sourceIds.join(", ")} (${metric.rights.rights})`
     : null;
