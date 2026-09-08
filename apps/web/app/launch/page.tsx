@@ -61,7 +61,9 @@ export default function LaunchPage() {
               </p>
             </Reveal>
             <Reveal delay={230}>
-              <div className="mt-6"><ProjectionsBadge /></div>
+              {/* No player rows on this page, so the badge reports the projections
+                  SOURCE and claims nothing about a pool (C-173). */}
+              <div className="mt-6"><ProjectionsBadge pool="none" /></div>
             </Reveal>
             <Reveal delay={300}>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
