@@ -7,6 +7,7 @@ import { SignalCoreLazy } from "@/components/hero/signal-core-lazy";
 import { SignalSpine } from "@/components/motion/signal-spine";
 import { SignalDecode } from "@/components/motion/signal-decode";
 import { ObservatoryBeacon } from "@/components/motion/observatory-beacon";
+import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentientWeather } from "@/components/motion/sentient-weather";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
@@ -328,6 +329,9 @@ export default async function HomePage(): Promise<JSX.Element> {
         </section>
       </main>
       <ObservatoryBeacon />
+      {/* FE-17: restricted to the home hero, not mounted globally — see
+          app/layout.tsx. */}
+      <GalaxyCursor />
       <Footer />
     </div>
   );
