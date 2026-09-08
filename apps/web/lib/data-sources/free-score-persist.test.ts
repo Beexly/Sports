@@ -120,6 +120,7 @@ vi.mock("@/lib/observability/sentry", () => ({
 
 // ─── Now import the module under test ──────────────────────────────────────────
 import { persistFreeScores } from "./free-score-persist";
+import { uniqueScoreboardDates } from "./settlement-score-dates";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -658,10 +659,16 @@ describe("persistFreeScores — never settles a game that has not started", () =
     // any single row: it is about the `take` cap. Without an upper bound the OR
     // clause matches EVERY future scheduled fixture for the sport, since they
     // are all SCHEDULED with a null score, and they compete for the cap with
-    // the started games this pass exists to score. MLB alone runs about 15
-    // games a day, so the 21-day window is already near the 300 cap before a
-    // single future fixture is counted, and the starved rows are exactly the
-    // ones that go on to be overdue (CodeRabbit, #717).
+    // the started games this pass exists to score.
+    //
+    // The cap itself was 300 and is now 2000 (C-170). The arithmetic in the
+    // original note is what defeated the old number rather than supporting it:
+    // MLB alone lists about 15 games a day, so 21 days of MLB is ~315 rows
+    // before another sport is counted, and the table holds about 2.5 rows per
+    // real fixture with none tombstoned. Rows that can never resolve keep
+    // matching this `where` for the full window and, being oldest, sat at the
+    // head of the queue displacing newer games that CAN be scored. Raising it
+    // costs nothing: the scoreboard is fetched per DATE, not per game.
     armSport([], []);
 
     return persistFreeScores({ sportKey: "baseball_mlb" }).then(() => {
@@ -675,11 +682,47 @@ describe("persistFreeScores — never settles a game that has not started", () =
       expect(args.where.commenceTime.lte!.getTime()).toBeGreaterThan(
         args.where.commenceTime.gte.getTime(),
       );
-      // Deterministic cap: oldest first, so a bound cap drops the newest games
-      // (whose finals will still be there next cycle) rather than an arbitrary
-      // slice that could keep starving the same old row forever.
+      // Deterministic ordering: oldest first, so if the bound ever DID bind it
+      // drops the newest games (whose finals will still be there next cycle)
+      // rather than an arbitrary slice that could starve the same old row.
       expect(args.orderBy).toEqual({ commenceTime: "asc" });
-      expect(args.take).toBe(300);
+      expect(args.take).toBe(2000);
+    });
+  });
+
+  it("asks for 22 scoreboard days, not 21, so the oldest candidate date is fetched", () => {
+    // Devin Review, #719. The candidate window is an INSTANT interval - 21*24h
+    // back from now - and an instant interval that does not begin at midnight
+    // touches 22 distinct Eastern calendar dates. uniqueScoreboardDates keeps
+    // the NEWEST maxDays of them while the candidate query orders games OLDEST
+    // first, so at maxDays 21 the oldest date was selected as candidates and
+    // then never fetched: those games stayed unscored until they aged out of
+    // the window entirely. Widening the candidate cap (C-170) made that day
+    // reliably populated rather than sometimes empty, which is how it surfaced.
+    //
+    // Asserted on the ARGUMENT because this suite mocks the date helper (it
+    // returns no keys), so the number this lane asks for is the only thing here
+    // that can carry the fix. The helper's own selection is tested beside it.
+    const spread = Array.from({ length: 22 }, (_unused, i) =>
+      makeGameRow({
+        id: `g-day-${i}`,
+        homeTeamName: "Phillies",
+        awayTeamName: "Mets",
+        commenceTime: new Date(Date.now() - (21 - i) * 24 * 60 * 60 * 1000 + 60_000),
+        homeScore: null,
+        awayScore: null,
+      }),
+    );
+    armSport(spread, []);
+
+    return persistFreeScores({ sportKey: "baseball_mlb" }).then(() => {
+      const call = vi.mocked(uniqueScoreboardDates).mock.calls.at(-1);
+      expect(call).toBeDefined();
+      const [times, options] = call as [readonly Date[], { maxDays?: number }];
+      expect(options.maxDays).toBe(22);
+      // And it is handed every candidate's kickoff, so 22 is a real bound on
+      // this input rather than a number that happens to be larger.
+      expect(times.length).toBe(22);
     });
   });
 

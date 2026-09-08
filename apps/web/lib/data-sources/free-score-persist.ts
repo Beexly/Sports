@@ -209,8 +209,8 @@ export async function persistFreeScores(options?: {
         orderBy: { commenceTime: "asc" },
         // THE CAP DOES NOT PROTECT A BUDGET, so it should not be small (C-170).
         // The scoreboard is fetched per DATE, not per game (uniqueScoreboardDates
-        // below, maxDays 21), so raising this costs zero extra requests - only a
-        // wider SELECT of seven small columns.
+        // below), so raising this costs zero extra requests - only a wider
+        // SELECT of seven small columns.
         //
         // The old 300 was already saturated by arithmetic the previous comment
         // states itself: MLB alone lists about 15 games a day, so 21 days of MLB
@@ -233,9 +233,20 @@ export async function persistFreeScores(options?: {
         );
       }
 
+      // 22, NOT 21, and the extra day is not slack (Devin Review, #719).
+      //
+      // The candidate window above is an INSTANT interval - exactly 21*24h back
+      // from now - and an instant interval that does not start at midnight
+      // touches 22 distinct Eastern calendar dates. `uniqueScoreboardDates`
+      // keeps the NEWEST `maxDays` of them while this query orders games
+      // OLDEST first, so at 21 the oldest date was selected as candidates and
+      // then never fetched: those games stayed unscored until they aged out of
+      // the window entirely. Widening the candidate cap (C-170) made that day
+      // reliably populated rather than sometimes empty, which is how it
+      // surfaced.
       const { espnKeys, isoKeys } = uniqueScoreboardDates(
         games.map((g) => g.commenceTime),
-        { maxDays: 21 },
+        { maxDays: 22 },
       );
 
       const multi = await fetchScoresMultiSource(freeSport, {
