@@ -36,7 +36,7 @@ import { loadMarketCalibrationBacktest } from "@/lib/calibration/market-backtest
 import { loadEloVsMarketBacktest } from "@/lib/calibration/elo-backtest";
 
 export const metadata: Metadata = {
-  title: `Market calibration baseline · ${BRAND_NAME}`,
+  title: { absolute: `Market calibration baseline · ${BRAND_NAME}` },
   description:
     "The closing line's own Brier score, ECE, and reliability curve over the full historical archive — the efficient-market baseline the platform model must beat, and an Elo-vs-market comparison. No picks, no fabricated stats.",
   alternates: { canonical: "/calibration/market" },

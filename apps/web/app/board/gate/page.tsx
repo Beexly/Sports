@@ -38,7 +38,7 @@ import { isLiveGateSlateEnabled } from "@/lib/board/load-gate-slate";
 export function generateMetadata(): Metadata {
   const live = isLiveGateSlateEnabled();
   return {
-    title: `How the gate decides · ${BRAND_NAME}`,
+    title: { absolute: `How the gate decides · ${BRAND_NAME}` },
     description:
       "The selective gate, run live: which calls clear the bar, which are refused, and which we decline to judge at all because the evidence is not there yet.",
     alternates: { canonical: "/board/gate" },

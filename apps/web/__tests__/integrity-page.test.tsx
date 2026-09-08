@@ -92,6 +92,8 @@ describe("/integrity", () => {
 
   it("sets a canonical /integrity metadata entry", () => {
     expect(metadata.alternates?.canonical).toBe("/integrity");
-    expect(metadata.title).toContain("Integrity");
+    // FE-13: title is already brand-suffixed, so it is { absolute } to stop
+    // the root layout's "%s | Galaxy Sports Edge" template doubling it.
+    expect(metadata.title).toEqual({ absolute: expect.stringContaining("Integrity") });
   });
 });

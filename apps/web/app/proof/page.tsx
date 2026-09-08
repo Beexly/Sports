@@ -33,7 +33,7 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: `Proof of Record · ${BRAND_NAME}`,
+  title: { absolute: `Proof of Record · ${BRAND_NAME}` },
   description:
     "Every settled pick carries a tamper-evident Merkle hash stamped at generation time. The record can't be edited after the fact without the hash changing. This page shows the verifiable trail.",
   alternates: { canonical: "/proof" },
