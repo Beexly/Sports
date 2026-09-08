@@ -194,3 +194,54 @@ issue is the duplication in section 8, which is latent rather than live.
 The MLB pricing failure is the two-book problem (ledger C-104, WP-27) and the Odds API credit
 governor (C-109) meeting in the same place. It is not a new defect; it is the known constraint
 finally showing up as a product outage in one sport.
+
+
+## 10. Correcting section 9: MLB is NOT broken, and I made the same mistake twice
+
+Section 9 says MLB "is the sport that is actually broken" and "cannot produce book-priced picks
+for most of its own slate". **That is wrong.** I am correcting it in the same document rather than
+editing it away, because the mistake is more instructive than the conclusion.
+
+MLB forward pricing by how close kickoff is, per real fixture:
+
+| horizon | fixtures | priced | share |
+|---|---|---|---|
+| **under 24h** | 12 | **12** | **100%** |
+| 24-48h | 15 | 4 | 27% |
+| 2-4 days | 18 | 0 | 0% |
+| 4+ days | 196 | 0 | 0% |
+
+**Every MLB fixture inside 24 hours is priced.** Baseball books post about a day ahead; they do not
+post a week ahead. So MLB's curve is the normal shape for its market, exactly as NCAAF's 76%
+falling to 4% is normal for college football, and NFL's 95% months out is normal for the NFL.
+
+### The mistake, named
+
+I compared every sport against **one fixed seven-day bar**. But the horizon at which books post
+lines is different for every sport, so a fixed bar measures the sport's calendar, not its health.
+That is the same error as section 9's own correction, where I counted per row and the duplicates
+did the distorting. Twice in one night, the same shape: **an aggregate whose denominator quietly
+encodes something other than what I was claiming to measure.**
+
+### What the corrected read is
+
+Judged against each market's own posting window, **all four in-season sports are healthy**:
+
+| sport | posting window | coverage at that window |
+|---|---|---|
+| NFL | weeks | 100% next 7 days, 95% season |
+| NCAAF | about a week | 76% next 7 days |
+| MLB | about a day | **100% under 24h** |
+| MLS | a few days | 86% within 2 days |
+
+NHL at 0% is its season not having started, and NBA having no forward schedule is the same. Neither
+is evidence of a defect today, though both are worth re-checking in October.
+
+### What was NOT wrong
+
+MLB's **settled history** problems stand unchanged and are not affected by this correction: 169 of
+491 checked rows carry another fixture's final, 62 published moneyline results are wrong, and 420
+of the 578 strandable picks are MLB's. The forward pipeline is fine; the historical data is not.
+
+The MLB 24-48h figure of 27% is the one number here I cannot call either way. It is consistent with
+books simply not having posted yet, and it is also consistent with a refresh lag. **NOT ESTABLISHED.**
