@@ -26,6 +26,7 @@ const mocks = vi.hoisted(() => ({
   teamGameEfficiencyFindMany: vi.fn(),
   opponentAdjustedRatings: vi.fn(),
   nflEpaToIndependentFairValue: vi.fn(),
+  resolveNflWeek: vi.fn(),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -52,6 +53,7 @@ vi.mock("@sports/data-ingestion", () => ({
   isIngestible: vi.fn().mockReturnValue(false),
   isPolymarketIndependentEnabled: vi.fn().mockReturnValue(false),
   PolymarketIndependentClient: vi.fn(),
+  resolveNflWeek: mocks.resolveNflWeek,
   fetchMlbStandings: vi.fn().mockResolvedValue([]),
   buildMlbWinPctLookup: vi.fn().mockReturnValue(new Map()),
   lookupMlbWinPct: vi.fn().mockReturnValue(null),
@@ -154,6 +156,8 @@ function queriedSeasons(): number[] {
 }
 
 beforeEach(() => {
+  mocks.resolveNflWeek.mockReset();
+  mocks.resolveNflWeek.mockReturnValue({ season: 2026, week: 1, inSeason: true });
   mocks.teamGameEfficiencyFindMany.mockReset();
   mocks.opponentAdjustedRatings.mockReset();
   mocks.nflEpaToIndependentFairValue.mockReset();
@@ -296,5 +300,74 @@ describe("the short-key fallback matches whole tokens, not prefixes", () => {
     expect(
       out.filter((fv) => fv.source === NFL_EPA_PRIOR_SEASON_SOURCE),
     ).toHaveLength(1);
+  });
+});
+
+/**
+ * C-238, raised by Devin. The first version of the fallback fired whenever a
+ * current rating was absent or thin, REGARDLESS OF WEEK, and I described it as
+ * "self-limiting". It self-limits only while the data is healthy. It does not
+ * self-limit when ingestion breaks: in Week 12 a missing TeamGameEfficiency row
+ * is an OUTAGE, and falling back would publish a pick built on year-old form
+ * while reporting nothing wrong.
+ *
+ * The bound is derived rather than chosen: by target week W a team has played at
+ * most W-1 games, so a sample under NFL_EPA_MIN_GAMES is expected only while
+ * W-1 is below that floor. Past it, thin current data means something upstream
+ * is wrong and the honest answer is no opinion.
+ */
+describe("the fallback is bounded to the genuinely early season", () => {
+  it("refuses to reuse last season when the current one is thin in Week 12", async () => {
+    // The outage case: 2026 has no rows for these teams in Week 12. Falling
+    // back here would price a mid-season game on last season's form.
+    mocks.resolveNflWeek.mockReturnValue({ season: 2026, week: 12, inSeason: true });
+    seasonData({ 2025: { KC: 17, BUF: 17 } });
+
+    const out = await buildIndependentFairValues(week1Input());
+
+    expect(
+      out.filter(
+        (fv) => fv.source === NFL_EPA_PRIOR_SEASON_SOURCE || fv.source === "nfl_epa_adj",
+      ),
+    ).toHaveLength(0);
+    // And it does not even pay for the prior-season query.
+    expect(queriedSeasons()).toEqual([2026]);
+  });
+
+  it("still falls back at the last week where a thin sample is expected", async () => {
+    // W-1 games at most, so week 4 is the boundary the floor implies.
+    mocks.resolveNflWeek.mockReturnValue({ season: 2026, week: 4, inSeason: true });
+    seasonData({ 2025: { KC: 17, BUF: 17 } });
+
+    const out = await buildIndependentFairValues(week1Input());
+
+    expect(
+      out.filter((fv) => fv.source === NFL_EPA_PRIOR_SEASON_SOURCE),
+    ).toHaveLength(1);
+  });
+
+  it("refuses one week past that boundary", async () => {
+    mocks.resolveNflWeek.mockReturnValue({ season: 2026, week: 5, inSeason: true });
+    seasonData({ 2025: { KC: 17, BUF: 17 } });
+
+    const out = await buildIndependentFairValues(week1Input());
+
+    expect(
+      out.filter((fv) => fv.source === NFL_EPA_PRIOR_SEASON_SOURCE),
+    ).toHaveLength(0);
+  });
+
+  it("refuses when the resolver disagrees with the fixture's own season", async () => {
+    // A fixture whose commenceTime lands outside the resolved season window is
+    // not an early-season thin sample; it is a mismatch, and guessing would be
+    // the same silent-wrong-basis failure in a different disguise.
+    mocks.resolveNflWeek.mockReturnValue({ season: 2025, week: 1, inSeason: true });
+    seasonData({ 2025: { KC: 17, BUF: 17 } });
+
+    const out = await buildIndependentFairValues(week1Input());
+
+    expect(
+      out.filter((fv) => fv.source === NFL_EPA_PRIOR_SEASON_SOURCE),
+    ).toHaveLength(0);
   });
 });

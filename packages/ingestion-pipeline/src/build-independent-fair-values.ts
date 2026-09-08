@@ -42,6 +42,7 @@ import {
   fetchMlbStandings,
   buildMlbWinPctLookup,
   lookupMlbWinPct,
+  resolveNflWeek,
 } from "@sports/data-ingestion";
 import {
   isPoissonValidSport,
@@ -518,6 +519,28 @@ async function tryNflEpaFairValue(
         { now: input.now },
       );
     }
+
+    // BOUND THE FALLBACK TO THE GENUINELY EARLY SEASON (C-238, Devin).
+    //
+    // The first version fell back whenever either current rating was absent or
+    // under the floor, REGARDLESS OF WEEK, and I described that as
+    // "self-limiting". It self-limits only while the data is healthy: teams
+    // accumulate games and the fallback stops. It does NOT self-limit when
+    // ingestion breaks. In Week 12, a TeamGameEfficiency table missing rows for
+    // a team is an OUTAGE, and falling back would publish a pick built on
+    // year-old form while reporting nothing wrong - the silent wrong basis this
+    // whole path exists to refuse.
+    //
+    // The bound is derived, not chosen, on the same reasoning as
+    // PRIOR_SEASON_GRACE_WEEKS in the fantasy gate: by target week W a team has
+    // played at most W-1 games, so a sample under NFL_EPA_MIN_GAMES is EXPECTED
+    // only while W-1 < NFL_EPA_MIN_GAMES. Past that point thin current-season
+    // data means something upstream is wrong, and the honest answer is no
+    // opinion rather than last season's.
+    const { week, season: resolvedSeason } = resolveNflWeek(input.commenceTime);
+    const withinEarlySeasonWindow =
+      resolvedSeason === nflSeason && week <= NFL_EPA_MIN_GAMES;
+    if (!withinEarlySeasonWindow) return null;
 
     // Early season: the prior season is the honest basis, with its own label.
     const prior = await loadNflEpaRatings(nflSeason - 1, nowMs);
