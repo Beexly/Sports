@@ -106,6 +106,19 @@ export function ensureLiveProjections(
   // Registered but stale, and nothing is running: drop the cached attempt so the
   // next load rebuilds it against the current target week.
   if (live) gradedLoadPromise = null;
+  // Not registered, with nothing running: a SETTLED cached promise is now only a
+  // record of a registration that has since been undone, so it must not be
+  // returned as though it still stood (C-232). instrumentation.ts is a SECOND
+  // registration entry point - it calls loadAndRegisterGradedProvider directly,
+  // bypassing every variable here - so an unawaited startup load completing with
+  // a refusal can unregister a provider a lazy load installed, while registeredAt
+  // stays set. Without this line the next call finds live false, nothing in
+  // flight, and a non-null fulfilled promise: it skips the cooldown branch (which
+  // requires a null promise), skips the start branch, and returns the settled
+  // promise - forever. Paid tools would sit on the illustrative pool for the life
+  // of the instance, which is exactly the C-229 failure this module exists to
+  // prevent, reached through the other door.
+  if (!live && !loadInFlight) gradedLoadPromise = null;
   // Not registered, and the last attempt was recent: do not re-fetch megabytes
   // on every request while a refusal or outage persists.
   if (!live && gradedLoadPromise === null && nowMs - lastAttemptAt < PROVIDER_RETRY_COOLDOWN_MS) {

@@ -201,3 +201,55 @@ describe("a stale refresh is single-flight", () => {
     expect(registered).toBe(true);
   });
 });
+
+/**
+ * C-232, raised by Devin as RED and found independently while chasing its
+ * resolution note on C-230. instrumentation.ts is a SECOND registration entry
+ * point: it fires an unawaited loadAndRegisterGradedProvider at startup that
+ * goes straight to graded-pool, so it sets none of loadInFlight, registeredAt
+ * or lastAttemptAt. The provider can therefore be unregistered behind this
+ * module's back — that startup load calls registerProjectionsProvider(null) on
+ * a refusal — while registeredAt stays set from a lazy load that succeeded.
+ *
+ * Only the PERMANENT consequence is fixed here. The remaining two (a forked
+ * load on every cold start, and a startup-registered provider treated as stale
+ * on arrival) are wasteful rather than wrong, and retiring them means making
+ * one coordinator own registration, which changes app-wide startup behaviour —
+ * founder-scoped, ledger C-232.
+ */
+describe("an unregistration behind our back does not become permanent", () => {
+  it("reloads when the provider is gone but a settled promise is still cached", async () => {
+    const m = await loader();
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      registered = true;
+      return liveResult;
+    });
+    await m.ensureLiveProjections(ENV, 1_000);
+    expect(loadAndRegisterGradedProvider).toHaveBeenCalledTimes(1);
+
+    // The startup entry point unregisters, without touching anything in this
+    // module: registeredAt stays 1_000 and the fulfilled promise stays cached.
+    registered = false;
+
+    // Past the cooldown, this must try again. Before the fix it returned the
+    // settled promise forever — live false, nothing in flight, and a non-null
+    // promise fell through every branch — so paid tools stayed on the
+    // illustrative pool for the life of the instance.
+    await m.ensureLiveProjections(ENV, 1_000 + m.PROVIDER_RETRY_COOLDOWN_MS + 1);
+    expect(loadAndRegisterGradedProvider).toHaveBeenCalledTimes(2);
+  });
+
+  it("still respects the cooldown after an unregistration", async () => {
+    // The control: closing the stuck state must not turn every request on an
+    // unregistered provider into a fresh multi-MB load.
+    const m = await loader();
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      registered = true;
+      return liveResult;
+    });
+    await m.ensureLiveProjections(ENV, 1_000);
+    registered = false;
+    await m.ensureLiveProjections(ENV, 1_500);
+    expect(loadAndRegisterGradedProvider).toHaveBeenCalledTimes(1);
+  });
+});
