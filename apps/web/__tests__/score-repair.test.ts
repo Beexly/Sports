@@ -203,6 +203,21 @@ describe("the runner's write contract", () => {
     expect(code).not.toMatch(/\.delete\(|\.deleteMany\(|\.create\(|\.createMany\(/);
   });
 
+  it("creates nothing except the queue row that re-arms the team-log drain", () => {
+    // Narrowed, not weakened. The claim is that this tool never CREATES
+    // product data - no games, no picks, no logs. Re-arming the drain can
+    // legitimately need a row where the free path never left one, so the
+    // single permitted creation is queue bookkeeping on postSettlementWork,
+    // and every other model is still forbidden from being created at all.
+    const upserts = code.match(/prisma\.(\w+)\.upsert\(/g) ?? [];
+    for (const u of upserts) {
+      expect(u, `upsert on ${u} is not queue bookkeeping`).toBe(
+        "prisma.postSettlementWork.upsert(",
+      );
+    }
+    expect(code).not.toMatch(/prisma\.(game|pick|teamGameLog)\.upsert\(/);
+  });
+
   it("applies each game's score and its re-grades in one transaction", () => {
     expect(code).toMatch(/\$transaction\(\[/);
   });
@@ -352,27 +367,49 @@ describe("the runner refuses before writing", () => {
     // writer with the opening-spread ATS semantics and the bootstrap and
     // data-quality gates, and a second implementation inside a repair tool is
     // the drift C-253 warned about.
-    expect(runnerCode).toContain("postSettlementWork.updateMany");
+    expect(runnerCode).toContain("postSettlementWork.upsert");
     expect(runnerCode).not.toContain("teamGameLog.");
-    expect(runnerCode).not.toContain("settleGameLogs");
+    // Narrowed from a bare substring match, and NOT weakened: the claim is
+    // that the runner never CALLS the canonical writer or imports it, and the
+    // operator output now names `settleGameLogs` on purpose, to say whose
+    // policy decides whether the re-queued logs actually get rewritten.
+    // Asserting on the call and the import is where that claim actually lives.
+    expect(runnerCode).not.toMatch(/settleGameLogs\s*\(/);
+    expect(runnerCode).not.toMatch(/import[^;]*settleGameLogs/);
   });
 
-  it("scopes the re-queue to this game's TEAM_GAME_LOG row and clears completedAt", () => {
-    // An enqueue would look like it worked and do nothing: PostSettlementWork
-    // is unique on (subjectId, kind) and every settled game already holds a
-    // DONE row, so createMany's skipDuplicates makes the insert a no-op. The
-    // write has to be an update to the existing row.
-    const block = runnerCode.match(
-      /postSettlementWork\.updateMany\(\{[\s\S]*?\}\),/,
-    );
-    expect(block, "no postSettlementWork.updateMany found").not.toBeNull();
+  it("re-arms an existing work row AND creates one when none exists", () => {
+    // Devin, second pass. Each half alone is a silent no-op on a real cohort:
+    //  - enqueue alone dies on the PAID path, where settle-sport.ts already
+    //    left a DONE row and skipDuplicates makes the insert a no-op;
+    //  - updateMany alone dies on the FREE path, the primary settlement lane
+    //    here, because free-settlement-runner.ts enqueues CLV_GRADE and
+    //    SNAPSHOT_OUTCOME and NOT TEAM_GAME_LOG, so those games have no work
+    //    row and an update matches zero rows.
+    // Only an upsert covers both, and the free cohort is the larger one.
+    const block = runnerCode.match(/postSettlementWork\.upsert\(\{[\s\S]*?\n        \}\),/);
+    expect(block, "no postSettlementWork.upsert found").not.toBeNull();
     const text = block![0];
+    expect(text).toContain("subjectId_kind");
     expect(text).toContain("subjectId: g.gameId");
     expect(text).toContain('kind: "TEAM_GAME_LOG"');
-    expect(text).toContain('status: "PENDING"');
+    // Both branches must re-arm, not just one.
+    expect(text).toMatch(/update:\s*\{[^}]*status: "PENDING"/);
+    expect(text).toMatch(/create:\s*\{[^}]*status: "PENDING"/);
     // A DONE timestamp surviving on a PENDING row is a record that contradicts
     // its own status - the defect class this branch keeps removing.
     expect(text).toContain("completedAt: null");
+  });
+
+  it("does not claim the drain will definitely rewrite the logs", () => {
+    // settleGameLogs SKIPS THE WRITE ENTIRELY when the game's dataQualityScore
+    // is below gates.minDataQualityForGameLog, and the drain marks the work
+    // DONE either way. An operator told "logs are rewritten" would read a
+    // consumed queue item as a corrected log. The output states the policy and
+    // tells them to verify.
+    expect(runnerCode).toContain("RE-QUEUED, not rewritten by this");
+    expect(runnerCode).toContain("minDataQualityForGameLog");
+    expect(runnerCode).toContain("Verify the team logs afterwards");
   });
 
   it("re-queues inside the same transaction as the score and the re-grades", () => {
@@ -380,7 +417,7 @@ describe("the runner refuses before writing", () => {
     // the per-game transaction exists to prevent.
     const tx = runnerCode.match(/\$transaction\(\[[\s\S]*?\n      \]\);/);
     expect(tx, "no $transaction block found").not.toBeNull();
-    expect(tx![0]).toContain("postSettlementWork.updateMany");
+    expect(tx![0]).toContain("postSettlementWork.upsert");
   });
 
   it("still writes only the fields it documents", () => {

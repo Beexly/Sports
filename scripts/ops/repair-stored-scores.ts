@@ -335,16 +335,28 @@ async function main(): Promise<void> {
         // already runs every settlement cycle (drainPendingTeamGameLogs)
         // recomputes both team rows from the corrected score.
         //
-        // An `enqueue` would NOT work and would look like it did:
-        // PostSettlementWork is unique on (subjectId, kind) and every settled
-        // game already holds a DONE row, so enqueuePostSettlementWork's
-        // skipDuplicates makes the insert a silent no-op. updateMany on the
-        // existing row is what actually re-arms the lane. It is scoped to this
-        // game and this kind, and clears completedAt so a DONE timestamp never
-        // survives on a PENDING row.
-        prisma.postSettlementWork.updateMany({
-          where: { subjectId: g.gameId, kind: "TEAM_GAME_LOG" },
-          data: { status: "PENDING", completedAt: null },
+        // UPSERT, and neither half is optional - each one alone is a silent
+        // no-op on a real cohort (Devin, second pass).
+        //
+        // An `enqueue` alone fails on the PAID path: PostSettlementWork is
+        // unique on (subjectId, kind), a game settled by settle-sport.ts
+        // already holds a DONE row, and enqueuePostSettlementWork's
+        // skipDuplicates turns the insert into a no-op.
+        //
+        // An `updateMany` alone fails on the FREE path, which is the primary
+        // settlement lane here: free-settlement-runner.ts enqueues CLV_GRADE
+        // and SNAPSHOT_OUTCOME and NOT TEAM_GAME_LOG, so those games have no
+        // work row at all and an update matches zero rows. That is the larger
+        // cohort, and it is the one most likely to need a repair.
+        //
+        // The upsert re-arms an existing row and creates one when none exists.
+        // completedAt is cleared so a DONE timestamp never survives on a
+        // PENDING row - a record contradicting its own status is the defect
+        // class this whole branch keeps removing.
+        prisma.postSettlementWork.upsert({
+          where: { subjectId_kind: { subjectId: g.gameId, kind: "TEAM_GAME_LOG" } },
+          update: { status: "PENDING", completedAt: null },
+          create: { subjectId: g.gameId, kind: "TEAM_GAME_LOG", status: "PENDING" },
         }),
       ]);
       gamesWritten += 1;
@@ -352,7 +364,7 @@ async function main(): Promise<void> {
       if (!JSON_OUT)
         console.log(
           `  applied ${g.matchup}: score corrected, ${changed.length} pick(s) re-graded, ` +
-            `team game logs re-queued`,
+            `team game logs re-queued (rebuilt by the drain, subject to its policy)`,
         );
     }
     if (!JSON_OUT) {
@@ -366,8 +378,12 @@ async function main(): Promise<void> {
             ? ` ${plan.totals.staleDerivatives} write-once record(s) still hold the old result.`
             : "") +
           (gamesWritten > 0
-            ? ` Team game logs for ${gamesWritten} game(s) are re-queued and are rewritten by the` +
-              ` TEAM_GAME_LOG drain on the next settlement cycle, not by this tool.`
+            ? ` Team game logs for ${gamesWritten} game(s) are RE-QUEUED, not rewritten by this` +
+              ` tool. The TEAM_GAME_LOG drain rebuilds them on the next settlement cycle` +
+              ` SUBJECT TO ITS OWN POLICY: settleGameLogs skips the write entirely when the` +
+              ` game's dataQualityScore is below gates.minDataQualityForGameLog, and the drain` +
+              ` marks the work DONE either way. Verify the team logs afterwards rather than` +
+              ` assuming the re-queue rewrote them.`
             : "") +
           ` Re-run npm run ops:verify-scores to confirm the mismatch count.`,
       );
