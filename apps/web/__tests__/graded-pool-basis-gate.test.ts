@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { resolveNflWeek } from "@sports/data-ingestion";
-import { buildGradedPool } from "@/lib/integrations/graded-pool";
+import { buildGradedPool, usableValueBasis, xfpByNormName } from "@/lib/integrations/graded-pool";
 import { NFL_REGULAR_SEASON_WEEKS } from "@sports/data-ingestion";
 import {
   evaluateProjectionBasis,
@@ -318,5 +318,54 @@ describe("the basis label reaches a customer (C-226)", () => {
     const { buildGradedProvider } = await import("@/lib/integrations/graded-pool");
     const provider = buildGradedProvider([], "2026-09-08T00:00:00Z", "nflverse");
     expect(provider.basisLabel).toBeUndefined();
+  });
+});
+
+/**
+ * C-233, raised by CodeRabbit. The pool excludes a profile on TWO independent
+ * tests - the basis gate, and having a usable value to project from - but the
+ * provenance label filtered on the gate alone. A profile the pool had already
+ * dropped could therefore set the printed game count: a backup with four games
+ * and no production would put "4 games" on a board whose published projections
+ * were all built from seventeen.
+ *
+ * The direction was safe, since it understates, but the claim was false all the
+ * same, and the comment above it asserted "the profiles that actually survived"
+ * when they had not. The fix is one shared rule rather than two call sites
+ * deriving it separately, because separate derivation is what let them drift.
+ */
+describe("the game count describes only profiles that reach the pool", () => {
+  const NO_XFP = xfpByNormName([]);
+
+  it("drops a profile with no usable value, exactly as the pool does", () => {
+    const deadweight = profile("no-production", 4, 0);
+    const producer = profile("producer", 17, 14);
+
+    // The pool excludes the zero-production profile...
+    const pool = buildGradedPool([deadweight, producer], [], [], [], {}, WEEK1_2026);
+    expect(pool.map((p) => p.name)).toEqual(["producer"]);
+
+    // ...and the label's filter agrees, so the count can only come from a
+    // profile the customer's board is actually built from. Before the fix this
+    // profile cleared the gate (4 games meets the floor) and set the count to 4.
+    expect(usableValueBasis(deadweight, NO_XFP)).toBeNull();
+    expect(usableValueBasis(producer, NO_XFP)).toBe(14);
+  });
+
+  it("prefers a positive xFP over actual points, and never a non-positive one", () => {
+    // The value rule the pool projects from, pinned directly: xFP when it is
+    // positive, otherwise fppg, and null when neither is.
+    const p = profile("both", 17, 9);
+    expect(usableValueBasis(p, xfpByNormName([{ name: "both", xfpPerGame: 12 }]))).toBe(12);
+    expect(usableValueBasis(p, xfpByNormName([{ name: "both", xfpPerGame: 0 }]))).toBe(9);
+    expect(usableValueBasis(profile("neither", 17, 0), xfpByNormName([]))).toBeNull();
+  });
+
+  it("applies the value filter where the count is computed", () => {
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "integrations", "graded-pool.ts"),
+      "utf8",
+    );
+    expect(src).toContain("usableValueBasis(p, poolXfpByName) != null");
   });
 });

@@ -185,6 +185,36 @@ export function injuryDisplayJoinKey(name: string, pos: string, team: string): s
  * "prior season, and say so" - not "refuse", which would mean no Week 1 board
  * at all, and not "ship it silently", which is the failure the label prevents.
  */
+/** The xFP-per-game lookup both the pool and its provenance label read. */
+export function xfpByNormName(xfp: readonly ExpectedPointsRow[]): Map<string, number> {
+  return new Map(xfp.map((r) => [normName(r.name), r.xfpPerGame]));
+}
+
+/**
+ * The value a projection is built from, or null when there is none: expected
+ * points per game when positive (predictive), otherwise actual fantasy points
+ * per game.
+ *
+ * Extracted so ONE rule serves both call sites (C-233, CodeRabbit). The pool
+ * excludes a profile on two independent tests - the basis gate AND this value
+ * check - but the provenance label filtered on the basis gate alone, so a
+ * profile the pool had dropped for having no usable value still contributed
+ * its game count to the label. A backup with four games and no production
+ * would put "4 games" on a board whose published projections were all built
+ * from seventeen. The direction was safe (it understates) but the claim was
+ * still false, and the comment below it asserted "the profiles that actually
+ * survived" - which they had not. Two call sites deriving the same rule
+ * separately is what let them drift.
+ */
+export function usableValueBasis(
+  profile: Pick<PlayerProfile, "name" | "fppg">,
+  xfpByName: ReadonlyMap<string, number>,
+): number | null {
+  const xfpPg = xfpByName.get(normName(profile.name));
+  const basis = xfpPg != null && xfpPg > 0 ? xfpPg : profile.fppg;
+  return basis > 0 ? basis : null;
+}
+
 export function buildGradedPool(
   profiles: readonly PlayerProfile[],
   xfp: readonly ExpectedPointsRow[],
@@ -193,7 +223,7 @@ export function buildGradedPool(
   enrich: GradedPoolEnrichment = {},
   basisContext?: GradedPoolBasisContext,
 ): Player[] {
-  const xfpByName = new Map(xfp.map((r) => [normName(r.name), r.xfpPerGame]));
+  const xfpByName = xfpByNormName(xfp);
   const schemeFitByTeam = buildSchemeFitByTeam(teamEnv);
   const qbGradeByTeam = buildQbGradeByTeam(qbForward);
 
@@ -213,9 +243,8 @@ export function buildGradedPool(
         if (!verdict.ok) return null;
       }
 
-      const xfpPg = xfpByName.get(normName(p.name));
-      const basis = xfpPg != null && xfpPg > 0 ? xfpPg : p.fppg; // prefer expected (predictive) over actual
-      if (!(basis > 0)) return null; // no usable input -> exclude, never invent
+      const basis = usableValueBasis(p, xfpByName); // prefer expected (predictive) over actual
+      if (basis == null) return null; // no usable input -> exclude, never invent
       const proj = round(basis * SEASON_GAMES);
       const trend: Player["trend"] = p.signal === "buy-low" ? "up" : p.signal === "sell-high" ? "down" : "flat";
       const usage = p.position === "QB" ? 0 : clamp01(p.touches / Math.max(1, p.games * 18));
@@ -561,8 +590,15 @@ export async function loadGradedPool({
   // now the MINIMUM real sample among the profiles that actually survived, so
   // the label understates rather than overstates, and when nothing survives
   // there is no count to print because there is no basis (C-223).
+  //
+  // BOTH of the pool's exclusions, not just the gate (C-233). buildGradedPool
+  // drops a profile on the basis gate OR on having no usable value, and this
+  // filtered on the gate alone - so a profile the pool had already dropped
+  // could still set the count.
+  const poolXfpByName = xfpByNormName(xfpRows);
   const survivingGames = model.profiles
     .filter((p) => evaluateProjectionBasis({ ...gateContext, gamesBehind: p.games }).ok)
+    .filter((p) => usableValueBasis(p, poolXfpByName) != null)
     .map((p) => p.games);
   const poolVerdict = survivingGames.length > 0
     ? evaluateProjectionBasis({ ...gateContext, gamesBehind: Math.min(...survivingGames) })
