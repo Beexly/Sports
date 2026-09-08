@@ -138,9 +138,31 @@ via the-odds-api (mustSpend)", i.e. single-source coverage that `MIN_BOOKMAKERS 
 (`packages/data-ingestion/src/odds-event-merge.ts:16`) will not price. **[M][C]**
 
 **State it plainly: on NFL opening week, a visitor lands on 2 spread picks across 6 games, no
-moneylines and no totals.** That is a product decision, not a defect — the board refuses to price
-what it cannot source two books for, which is the correct behaviour. But it should be a conscious
-choice to launch a sports-picks product into Week 1 in that state.
+moneylines and no totals.**
+
+### CORRECTED — the moneyline half was a DEFECT, and it is now fixed (C-235)
+
+The paragraph that stood here called the whole gap "a product decision, not a defect". **That was
+wrong on the moneyline half, and the founder was right to reject it.** MLB gets 26 moneylines off
+the same working key; a two-book floor does not explain NFL getting zero. Chasing it properly found
+a real bug, and one much larger than Week 1:
+
+- `tryNflEpaFairValue` (`packages/ingestion-pipeline/src/build-independent-fair-values.ts`) looked
+  up the CURRENT nflverse season only, and `nflEpaToWinProbs` refuses a team under
+  `NFL_EPA_MIN_GAMES` (4). In Week 1 the season has **zero rows**, so it returns null before the
+  floor is even reached; through Week 4 no team has met the floor.
+- The only other NFL independent is ESPN PowerIndex, rights-gated closed by default.
+- The signal slate is MONEYLINE-only and builds from independents.
+
+**So NFL produced no moneyline picks at all for the first four weeks of EVERY season.** This is the
+same hole C-225 closed for the fantasy projection basis, sitting unfixed in the picks path. Fixed by
+falling back to the prior season while the current one cannot meet the floor — self-limiting (it
+stops on its own by Week 5), exactly one season back, and under distinct provenance
+(`nfl_epa_adj_prior`) so last season's form is never presented as this season's.
+
+The TOTAL half of the gap **is** the documented two-book behaviour and stands: the board refuses to
+price what it cannot source two cleared books for, and that is correct. The lever there is a second
+book (WP-27 / ledger C-104), never a loosened floor.
 
 Credit pace note: `dailyBudget` 600, `paceOk` **false**, projected exhaustion 2026-10-01. Not a
 launch blocker — three weeks of headroom — but the governor is running over budget. **[M]**
@@ -159,8 +181,11 @@ which returns early when the gate is closed: **[C]**
 ```ts
 const effective = await resolveEffectivePerformanceGate();
 if (!effective.canExposePerformanceStats) {
-  const report = computeCalibration([]);   // empty sample → no Brier to print
-  return { data: { ...report, ... }, meta: { gated: true, isSampleData: false } };
+  const report = computeCalibration([]); // empty sample, so there is no Brier to print
+  return {
+    data: { ...report, updatedAt: now.toISOString(), isCollecting: true, modelVersions: [] },
+    meta: { gated: true, isSampleData: false },
+  };
 }
 ```
 
@@ -218,12 +243,22 @@ Three independent reasons, any one sufficient:
 3. C-224 is still open. Opening the gate publishes four Brier scores computed against confidence.
 4. Separately: the deployed v5.2.7 measures ECE 0.0947 on its own 262 rows against a 0.05 floor.
 
-### (c) Serve NFL Week 1 picks — **GO, degraded, and say so**
+### (c) Serve NFL Week 1 picks — **GO, and materially better than when this was written**
 
-The board will carry 2 spread picks across 6 NFL games, no moneylines, no totals, because
-`MIN_BOOKMAKERS = 2` refuses single-source pricing. That is the honest behaviour and it should not
-be changed to fill the board. If Week 1 breadth matters commercially, the lever is a cleared second
-book (the Galaxy/Kalshi path already designed as WP-27 / ledger C-104), not a loosened floor.
+At the time of the measurement the board carried 2 spread picks across 6 NFL games, no moneylines,
+no totals. The moneyline half of that was a defect, now fixed (C-235, section 3): NFL had no
+independent fair value for the first four weeks of any season, so the moneyline-only signal slate
+had nothing to build from. With the prior-season fallback in place, NFL moneylines can be generated
+for Week 1.
+
+Two honest caveats on that. The fix ships on this branch and is **not yet deployed**, so the
+improvement is not live until it merges. And NFL calibration is the thinnest stratum we have
+(n 28, ECE 0.267), so more NFL volume is not the same as more trustworthy NFL picks — it is more
+rows against which the model will be measured, which is the right direction but not a claim.
+
+The TOTAL half stands as documented behaviour: `MIN_BOOKMAKERS = 2` refuses single-source pricing,
+which is correct and should not be changed to fill the board. The lever there is a cleared second
+book (WP-27 / ledger C-104), not a loosened floor.
 
 ---
 
