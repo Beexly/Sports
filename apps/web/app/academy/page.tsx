@@ -195,8 +195,8 @@ export default function AcademyPage() {
                 The filmed curriculum, in production.
               </h2>
               <p className="mt-3 max-w-2xl text-ion-1">
-                Six episodes pairing with the course floor: the real production order, no
-                placeholders. Every lesson is already trainable above.
+                Six episodes pairing with the course floor: the real production order,
+                start to finish. Every lesson is already trainable above.
               </p>
             </Reveal>
             <Reveal delay={120}>

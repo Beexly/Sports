@@ -45,6 +45,7 @@ interface ReceiptRow {
   slateKey: string | null;
   pick: {
     result: string;
+    pickType: string;
     game: {
       homeTeamName: string;
       awayTeamName: string;
@@ -74,6 +75,7 @@ function makeReceipt(over: Partial<ReceiptRow> & { id?: string; pickId?: string 
     slateKey: "NFL:2026-09-14",
     pick: {
       result: "WIN",
+      pickType: "SPREAD",
       game: {
         homeTeamName: "Chiefs",
         awayTeamName: "Ravens",
@@ -121,6 +123,7 @@ interface ReceiptsResponseRow {
   contentHash: string;
   slateKey: string | null;
   result: string;
+  pickType: string | null;
   frozenAt: string;
   modelVersion: string;
   verified: boolean;
@@ -177,6 +180,8 @@ describe("GET /api/proof/receipts", () => {
     expect(row.committed).not.toBeNull();
     expect(row.game!.matchup).toBe("Ravens @ Chiefs");
     expect(row.game!.sport).toBe("NFL");
+    // P3-7: pickType now surfaced as an explicit row field (matches /api/verify shape).
+    expect(row.pickType).toBe("SPREAD");
     expect(typeof row.payload).toBe("string"); // the leaf preimage, so an agent can recompute
     expect(row.contentHash).toMatch(/^[0-9a-f]{64}$/);
   });
