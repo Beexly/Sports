@@ -27,7 +27,11 @@
  *    aggregate looks unchanged.
  */
 
-import { calculatePickResult, selectGradingLine } from "@sports/prediction-engine";
+import {
+  calculatePickResult,
+  selectGradingLine,
+  selectionIsHomeSide,
+} from "@sports/prediction-engine";
 import type { ScoreMismatch } from "./score-reconciliation";
 
 /** The settled-pick fields the grader needs, exactly and only. */
@@ -138,6 +142,60 @@ export type RepairPlan = {
 const GRADED = new Set(["WIN", "LOSS", "PUSH"]);
 
 /**
+ * Refuse a selection the grader would only resolve by falling back.
+ *
+ * `calculatePickResult` fails loud on an unknown pickType but is fail-OPEN on
+ * the selection itself (Devin, #720): it reads `selectionIsHomeSide`, which
+ * returns a bare boolean, so a selection matching NEITHER team is graded as
+ * the AWAY side, and a TOTAL selection that does not literally begin "OVER"
+ * is graded as under. In live settlement that is survivable because the
+ * selection was validated upstream when the pick was written. This tool grades
+ * an EXISTING settled row directly against a corrected score, so nothing
+ * upstream vouches for the string, and a fallback interpretation here would
+ * overwrite a stored result with an invented one -- the exact class of defect
+ * the tool exists to remove.
+ *
+ * The team check composes the exported `selectionIsHomeSide` with the sides
+ * swapped, the idiom `apps/web/lib/board/gate-rows.ts` and
+ * `publish-time-market-p.ts` already use, so the boundary-aware matching
+ * semantics have ONE implementation rather than a second one free to drift.
+ *
+ * Validated on the RAW selection, deliberately untrimmed and un-normalised,
+ * because that is the exact string `calculatePickResult` will read. Trimming
+ * or upper-casing here would let " OVER 45.5" pass a guard the grader then
+ * settles as UNDER, which is the disagreement this is meant to prevent. A
+ * selection that needs normalising is refused, not repaired: normalising it
+ * would grade the pick differently from the way production settlement graded
+ * it the first time.
+ *
+ * Returns the refusal reason, or null when the grader resolves it
+ * unambiguously -- in which case grading is byte-identical to before.
+ */
+function unresolvableSelection(
+  pick: PickForRepair,
+  homeTeamName: string,
+  awayTeamName: string,
+): string | null {
+  if (pick.pickType === "MONEYLINE" || pick.pickType === "SPREAD") {
+    const isHome = selectionIsHomeSide(pick.selection, homeTeamName, awayTeamName);
+    const isAway = selectionIsHomeSide(pick.selection, awayTeamName, homeTeamName);
+    if (isHome === isAway) {
+      return isHome
+        ? `ambiguous selection: "${pick.selection}" resolves to BOTH "${homeTeamName}" and "${awayTeamName}"`
+        : `unrecognised selection: "${pick.selection}" matches neither "${homeTeamName}" nor "${awayTeamName}"`;
+    }
+    return null;
+  }
+  if (pick.pickType === "TOTAL") {
+    if (!pick.selection.startsWith("OVER") && !pick.selection.startsWith("UNDER")) {
+      return `unrecognised TOTAL selection: "${pick.selection}" is neither OVER nor UNDER`;
+    }
+    return null;
+  }
+  return null;
+}
+
+/**
  * Re-grade one pick against the source score. Returns null when the pick is not
  * a settled row this repair is allowed to touch (PENDING, VOID, null): those
  * are the settlement lane's business, not this tool's.
@@ -163,6 +221,16 @@ export function regradePick(
       pickType: pick.pickType,
       selection: pick.selection,
       reason: `no grading line: clvLockLine and line are both absent on a ${pick.pickType} pick`,
+    };
+  }
+
+  const unresolved = unresolvableSelection(pick, homeTeamName, awayTeamName);
+  if (unresolved) {
+    return {
+      pickId: pick.id,
+      pickType: pick.pickType,
+      selection: pick.selection,
+      reason: unresolved,
     };
   }
 

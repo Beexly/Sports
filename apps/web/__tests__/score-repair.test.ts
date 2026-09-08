@@ -346,3 +346,98 @@ describe("the runner refuses before writing", () => {
     }
   });
 });
+
+/**
+ * C-260 (Devin, #720). `calculatePickResult` fails loud on an unknown pickType
+ * but is fail-OPEN on the selection: `selectionIsHomeSide` returns a bare
+ * boolean, so a selection matching NEITHER team grades as the AWAY side, and a
+ * TOTAL that does not literally begin "OVER" grades as under. Live settlement
+ * survives that because the selection was validated when the pick was written;
+ * this tool re-grades an existing row directly, so nothing vouches for the
+ * string and a fallback would overwrite a stored result with an invented one.
+ *
+ * The bar these tests set: refuse, and refuse the WHOLE GAME, rather than
+ * grade on a fallback reading.
+ */
+describe("a selection the grader would only resolve by falling back is refused", () => {
+  const NEITHER = pick({ id: "n", selection: "Dodgers ML (-150)" });
+  const LOWER_TOTAL = pick({ id: "t", pickType: "TOTAL", selection: "over 8.5", line: 8.5 });
+
+  it("refuses a MONEYLINE selection naming neither team, instead of grading it away", () => {
+    const r = regradePick(NEITHER, "Yankees", "Red Sox", "baseball_mlb", 2, 5);
+    // Away won 5-2. The fallback reading would have called this a WIN.
+    expect(r).toMatchObject({ pickId: "n" });
+    expect(r).not.toHaveProperty("to");
+    expect((r as { reason: string }).reason).toContain("matches neither");
+  });
+
+  it("refuses a SPREAD selection naming neither team", () => {
+    const r = regradePick(
+      pick({ id: "s", pickType: "SPREAD", selection: "Dodgers -1.5", line: -1.5 }),
+      "Yankees",
+      "Red Sox",
+      "baseball_mlb",
+      2,
+      5,
+    );
+    expect((r as { reason: string }).reason).toContain("matches neither");
+  });
+
+  it("refuses an ambiguous selection that resolves to BOTH sides", () => {
+    // Degenerate data: identical team names. The engine's most-specific rule
+    // has no winner here, so there is no defensible side to grade.
+    const r = regradePick(pick({ id: "b" }), "Yankees", "Yankees", "baseball_mlb", 2, 5);
+    expect((r as { reason: string }).reason).toContain("BOTH");
+  });
+
+  it("refuses a lower-case TOTAL rather than normalising it", () => {
+    // Normalising would grade this OVER, while production settlement graded it
+    // UNDER on the same string. Refusing is the only reading that cannot
+    // disagree with how the pick was settled the first time.
+    const r = regradePick(LOWER_TOTAL, "Yankees", "Red Sox", "baseball_mlb", 6, 6);
+    expect((r as { reason: string }).reason).toContain("neither OVER nor UNDER");
+  });
+
+  it("refuses a leading-space TOTAL, because the grader reads the raw string", () => {
+    const r = regradePick(
+      pick({ id: "w", pickType: "TOTAL", selection: " OVER 8.5", line: 8.5 }),
+      "Yankees",
+      "Red Sox",
+      "baseball_mlb",
+      6,
+      6,
+    );
+    expect((r as { reason: string }).reason).toContain("neither OVER nor UNDER");
+  });
+
+  it("still grades every selection the engine resolves unambiguously", () => {
+    // The guard must refuse fallbacks WITHOUT narrowing what already worked.
+    for (const [selection, home, away] of [
+      ["Yankees ML (-150)", "Yankees", "Red Sox"],
+      ["Red Sox ML (+130)", "Yankees", "Red Sox"],
+      ["Yankees", "Yankees", "Red Sox"],
+    ] as const) {
+      const r = regradePick(pick({ selection }), home, away, "baseball_mlb", 2, 5);
+      expect(r, `${selection} was refused`).not.toHaveProperty("reason");
+    }
+    for (const selection of ["OVER 8.5", "UNDER 8.5"]) {
+      const r = regradePick(
+        pick({ pickType: "TOTAL", selection, line: 8.5 }),
+        "Yankees",
+        "Red Sox",
+        "baseball_mlb",
+        2,
+        5,
+      );
+      expect(r, `${selection} was refused`).not.toHaveProperty("reason");
+    }
+  });
+
+  it("refuses the WHOLE GAME when one settled pick carries such a selection", () => {
+    // C-256's rule holds: correcting the score while leaving that pick on its
+    // old result is the contradiction the tool exists to remove.
+    const plan = planGameRepair(MISMATCH, GAME, [pick({ id: "a" }), NEITHER]);
+    expect(plan.refused).toBe(true);
+    expect(summarizeRepairPlan([plan]).totals.repairable).toBe(0);
+  });
+});
