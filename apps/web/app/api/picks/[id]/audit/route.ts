@@ -34,6 +34,7 @@ import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-eng
 import { buildPickPremortemNote } from "@/lib/premortem/build";
 import { computeFragilityScore } from "@/lib/premortem/fragility";
 import { buildPickDeathClock } from "@/lib/market/pick-death-clock";
+import { jsonNoStore } from "@/lib/api/no-store";
 import type {
   AuditPayload,
   AuditPayloadDetailed,
@@ -54,14 +55,14 @@ export async function GET(
 ): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canExposePublicPicks) {
-    return NextResponse.json(bootstrapGateResponse("Evidence audit"), {
+    return jsonNoStore(bootstrapGateResponse("Evidence audit"), {
       status: 503,
     });
   }
 
   const pickId = context.params.id;
   if (!pickId || typeof pickId !== "string") {
-    return NextResponse.json({ error: "invalid pick id" }, { status: 400 });
+    return jsonNoStore({ error: "invalid pick id" }, { status: 400 });
   }
 
   const session = await auth();
@@ -78,7 +79,7 @@ export async function GET(
   // multiplied by warm-instance count on serverless.
   const rl = await consumePublicFormRateLimit("public-pick-audit", clientIp(req), 60, 60_000);
   if (!rl.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       rl.status === 429
         ? { error: "Too many requests. Please wait and try again.", code: "rate_limited" }
         : { error: "Rate limit service unavailable. Please retry shortly.", code: "rate_limit_store_unavailable" },
@@ -114,7 +115,7 @@ export async function GET(
   });
 
   if (!pick || !pick.isPublished || pick.isBootstrap) {
-    return NextResponse.json({ error: "pick not found" }, { status: 404 });
+    return jsonNoStore({ error: "pick not found" }, { status: 404 });
   }
 
   // Collect distinct IngestionRun ids that produced odds for this game,
@@ -253,7 +254,7 @@ export async function GET(
     // both — mirroring the FREE view on the board (`app/api/picks/route.ts`).
     // These are computed only in the entitled branch below, so this path has
     // nothing premium in scope to leak.
-    return NextResponse.json({
+    return jsonNoStore({
       success: true,
       audit: payload,
       preMortem: null,
@@ -355,5 +356,5 @@ export async function GET(
     },
   };
   const payload: AuditPayload = detailed;
-  return NextResponse.json({ success: true, audit: payload, preMortem, fragility });
+  return jsonNoStore({ success: true, audit: payload, preMortem, fragility });
 }

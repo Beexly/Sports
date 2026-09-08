@@ -11,6 +11,7 @@ import {
 } from "@/lib/b2b/api-key-auth";
 import { db, isStubMode } from "@sports/db";
 import { rankingSortKey } from "@/lib/ranking/sort-key";
+import { jsonNoStore } from "@/lib/api/no-store";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,19 +20,19 @@ export async function GET(req: Request): Promise<NextResponse> {
   // Scope decides whether this key may see PREMIUM rows. A bare key is FREE-only.
   const scope = resolveB2bKeyScope(req);
   if (scope === null) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return jsonNoStore({ error: "Unauthorized" }, { status: 401 });
   }
   const key = extractB2bApiKey(req) ?? "";
   const rl = await rateLimitB2b(key, 30);
   if (!rl.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: rl.status === 429 ? "Rate limit exceeded" : "Rate limit service unavailable" },
       { status: rl.status },
     );
   }
 
   if (isStubMode()) {
-    return NextResponse.json({
+    return jsonNoStore({
       schemaVersion: "v1",
       surface: "probabilities",
       claimPosture: "experimental_research_grade_not_verified_roi",
@@ -99,7 +100,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     .sort((a, b) => b._sort - a._sort)
     .map(({ _sort, ...row }) => row);
 
-  return NextResponse.json({
+  return jsonNoStore({
     schemaVersion: "v1",
     surface: "probabilities",
     claimPosture: "experimental_research_grade_not_verified_roi",
