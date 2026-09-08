@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    gateDecision: { findMany: mocks.gateDecisionFindMany },
+    gateDecision: { findMany: mocks.gateDecisionFindMany, /* groupBy: the pass lane's withdrawal watermark (C-161). A db mock has to carry every method the code calls. */ groupBy: vi.fn(async () => []) },
     pick: { findMany: mocks.pickFindMany },
     game: { findMany: mocks.gameFindMany },
   },

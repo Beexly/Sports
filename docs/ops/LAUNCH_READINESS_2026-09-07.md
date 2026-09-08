@@ -14,8 +14,14 @@ in place rather than deleted, because the correction is the point.
 
 ## 1. The headline correction — and a correction to the correction
 
-I spent most of this session reporting that **117 published picks carry a wrong result**. The count is
-right. I then corrected the blame: the picks are right and the game rows are wrong. **That correction was
+I spent most of this session reporting that **117 published picks carry a wrong result**, and that
+headline has since been superseded twice over (CodeRabbit, #719). It was never a measured
+wrong-result count: it was the size of the *contradiction* population, picks whose stored result
+disagrees with what their own game row implies. The ground-truth audit replaced it with numbers
+that mean something: **68 wrong moneyline results out of 590 checkable**, plus spread and total
+disagreements that are **line-dependent rather than confirmed wrong** while C-143 is open. Read 117
+as "rows worth investigating", never as "results we know are wrong". I then corrected the blame
+as well: the picks are largely right and the game rows are wrong. **That correction was
 itself too strong, and adversarial verification caught it.** [V]
 
 ### What is verified
@@ -167,8 +173,13 @@ requirement asked for: 49 of ~50 engineering rows reviewed, 1 batch still runnin
    picks, 69.5%, carry no ESPN event id and cannot be checked against ground truth at all.**
    That last item is now blocker 13.
 
-Calibration (ECE 0.0524 against a 0.05 floor) is NOT on this list. It is a gate correctly refusing an
-unearned claim, and it resolves with more settled rows, not with work.
+Calibration is NOT on this blocker list, but the reason has to be stated more carefully than an
+earlier draft did (CodeRabbit, #719). The ECE **floor** is a gate correctly refusing an unearned
+claim, and no code change should target it. The published ECE **value of 0.0524 is not itself
+trustworthy**: C-114 records 63 moneyline rows graded before kickoff sitting inside the sample it
+is computed from. Those rows must be re-graded or excluded before the number means anything, and
+until then "it resolves with more settled rows" is only half true - more rows help, but they do
+not remove outcomes nobody observed.
 
 ---
 

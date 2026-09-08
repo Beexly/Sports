@@ -2,12 +2,13 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   gateDecisionFindMany: vi.fn(),
+  gateDecisionGroupBy: vi.fn(),
   gameFindMany: vi.fn(),
 }));
 
 vi.mock("@sports/db", () => ({
   db: {
-    gateDecision: { findMany: mocks.gateDecisionFindMany },
+    gateDecision: { findMany: mocks.gateDecisionFindMany, groupBy: mocks.gateDecisionGroupBy },
     game: { findMany: mocks.gameFindMany },
   },
   isDemoPicksEnabled: () => false,
@@ -87,6 +88,8 @@ describe("dedupePassesByGame", () => {
 describe("loadBoardPasses — a game with a published pick is not a pass", () => {
   beforeEach(() => {
     mocks.gateDecisionFindMany.mockReset();
+    mocks.gateDecisionGroupBy.mockReset();
+    mocks.gateDecisionGroupBy.mockResolvedValue([]);
     mocks.gameFindMany.mockReset();
     mocks.gameFindMany.mockResolvedValue([]);
   });
@@ -131,20 +134,12 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     // passed on this" is then false in the strongest way this list can be
     // false, because we evaluated it, published it, and then withdrew it.
     // C-149 fixed exactly this in the state loader and left its twin here.
-    mocks.gateDecisionFindMany.mockImplementation((args: { where: { status?: string } }) =>
-      Promise.resolve(
-        args.where.status === "PUBLISHED"
-          ? [
-              {
-                gameId: "g-withdrawn",
-                evaluatedAt: new Date("2026-09-07T15:00:00.000Z"),
-                status: "PUBLISHED",
-                pick: { isPublished: false },
-              },
-            ]
-          : [decision({ id: "older-gated", gameId: "g-withdrawn", evaluatedAt: new Date("2026-09-07T14:00:00.000Z") })],
-      ),
-    );
+    mocks.gateDecisionGroupBy.mockResolvedValue([
+      { gameId: "g-withdrawn", _max: { evaluatedAt: new Date("2026-09-07T15:00:00.000Z") } },
+    ]);
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      decision({ id: "older-gated", gameId: "g-withdrawn", evaluatedAt: new Date("2026-09-07T14:00:00.000Z") }),
+    ]);
 
     const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
     expect(payload.data.passes.map((p) => p.id)).toEqual([]);
@@ -155,20 +150,12 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     // than a blanket exclusion: a gated evaluation made AFTER we withdrew
     // really is the fixture's current state, and hiding it would make the pass
     // list silent about a game it has an honest answer for.
-    mocks.gateDecisionFindMany.mockImplementation((args: { where: { status?: string } }) =>
-      Promise.resolve(
-        args.where.status === "PUBLISHED"
-          ? [
-              {
-                gameId: "g-withdrawn",
-                evaluatedAt: new Date("2026-09-07T15:00:00.000Z"),
-                status: "PUBLISHED",
-                pick: { isPublished: false },
-              },
-            ]
-          : [decision({ id: "newer-gated", gameId: "g-withdrawn", evaluatedAt: new Date("2026-09-07T16:00:00.000Z") })],
-      ),
-    );
+    mocks.gateDecisionGroupBy.mockResolvedValue([
+      { gameId: "g-withdrawn", _max: { evaluatedAt: new Date("2026-09-07T15:00:00.000Z") } },
+    ]);
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      decision({ id: "newer-gated", gameId: "g-withdrawn", evaluatedAt: new Date("2026-09-07T16:00:00.000Z") }),
+    ]);
 
     const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
     expect(payload.data.passes.map((p) => p.id)).toEqual(["newer-gated"]);
@@ -180,23 +167,22 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     // returned would be silently doing work here, and a later refactor of that
     // relation would change this file's behaviour invisibly. Pinned so the two
     // mechanisms stay separable.
-    mocks.gateDecisionFindMany.mockImplementation((args: { where: { status?: string } }) =>
-      Promise.resolve(
-        args.where.status === "PUBLISHED"
-          ? [
-              {
-                gameId: "g-live",
-                evaluatedAt: new Date("2026-09-07T15:00:00.000Z"),
-                status: "PUBLISHED",
-                pick: { isPublished: true },
-              },
-            ]
-          : [decision({ id: "older-gated", gameId: "g-live", evaluatedAt: new Date("2026-09-07T14:00:00.000Z") })],
-      ),
-    );
+    // A live publication never reaches the watermark at all: the groupBy filter
+    // selects only withdrawn or broken-link rows, so it returns nothing here.
+    mocks.gateDecisionGroupBy.mockResolvedValue([]);
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      decision({ id: "older-gated", gameId: "g-live", evaluatedAt: new Date("2026-09-07T14:00:00.000Z") }),
+    ]);
 
     const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
     expect(payload.data.passes.map((p) => p.id)).toEqual(["older-gated"]);
+
+    // And the SEPARATION is pinned at the query: the watermark must ask only
+    // for withdrawn publications, never for every published decision.
+    const where = (mocks.gateDecisionGroupBy.mock.calls[0]?.[0] as {
+      where: { OR?: Array<Record<string, unknown>> };
+    }).where;
+    expect(where.OR).toEqual([{ pick: null }, { pick: { isPublished: false } }]);
   });
 
   it("orders the query by a TOTAL order, so an evaluatedAt tie has one winner", async () => {
@@ -212,11 +198,36 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
 
     await loadBoardPasses(NOW, { includeNoBetDetail: false });
 
-    const gatedCall = mocks.gateDecisionFindMany.mock.calls.find(
-      (call) => (call[0] as { where: { status?: string } }).where.status === "GATED",
-    );
+    const gatedCall = mocks.gateDecisionFindMany.mock.calls[0];
     const orderBy = (gatedCall?.[0] as { orderBy?: Array<Record<string, string>> }).orderBy;
     expect(orderBy).toEqual([{ evaluatedAt: "desc" }, { id: "desc" }]);
+  });
+
+  it("computes the withdrawal watermark in the DATABASE, so no cap can truncate it", async () => {
+    // REVIEW ROUND 36 (CodeRabbit, #719), and it is a defect I introduced in the
+    // fix one round earlier. The watermark used to come from a second findMany
+    // with take:500 and NO ordering - a cap applied before the per-fixture
+    // collapse, which is the same class of bug this file keeps producing.
+    // Production holds 811 PUBLISHED decisions, so an arbitrary 500 would have
+    // been kept and any fixture whose withdrawal fell outside that slice would
+    // have shown its OLD gated row as a current pass: the exact false claim the
+    // query exists to prevent, reintroduced by the query itself.
+    //
+    // groupBy takes max(evaluatedAt) per gameId in the database. There is no
+    // window to truncate, so this asserts on the SHAPE of the call rather than
+    // on an output, because "there is no cap" is a property of the query.
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+
+    await loadBoardPasses(NOW, { includeNoBetDetail: false });
+
+    expect(mocks.gateDecisionGroupBy).toHaveBeenCalledTimes(1);
+    const call = mocks.gateDecisionGroupBy.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(call.by).toEqual(["gameId"]);
+    expect(call._max).toEqual({ evaluatedAt: true });
+    expect(call).not.toHaveProperty("take");
+    // And the gated lane is the only findMany left, so a reader cannot confuse
+    // the two queries again.
+    expect(mocks.gateDecisionFindMany).toHaveBeenCalledTimes(1);
   });
 
   it("keeps genuine passes: a fixture with no published pick still lists", async () => {

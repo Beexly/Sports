@@ -24,8 +24,16 @@ source can find those. Hence ESPN.
 | of those, whose event id is inside the ESPN windows fetched | **670** |
 
 **So 1,529 of 2,199 settled published picks (69.5%) cannot be checked against ground truth by
-this method at all**, because their game row carries no ESPN event id. That is itself a
-finding and it is not an estimate: it is a count. Nothing below should be extrapolated onto
+this method**, and that splits into two different problems, which an earlier draft of this
+section wrongly merged into one (CodeRabbit, #719):
+
+- **1,425 have no ESPN event id at all.** Structural. No fetch fixes these; the game rows have
+  no stable external identity to check against.
+- **104 have an event id that fell outside the windows I fetched.** Merely incomplete. These
+  are checkable and simply were not checked, and closing that gap is an afternoon of fetching.
+
+Conflating the two overstates the structural problem by 7% and understates how much of the
+record could be audited today. Neither number is an estimate: both are counts. Nothing below should be extrapolated onto
 those rows — the rate on an unmeasured population is unknown, not assumed.
 
 Sports covered: MLB 491, NFL 66, MLS 62, NCAAF 51.
@@ -114,18 +122,26 @@ step killed a false alarm.
 
 ## 5. What this changes
 
-1. **Wrong published results exist and are now counted, not estimated.** 68 moneylines,
-   all of them downstream of a wrong score on a game row. The picks themselves are not the
-   problem; the data layer beside them is.
+1. **Wrong published results exist and are now counted, not estimated.** 68 moneylines, every
+   one of them on a game row that carries a wrong score.
+   **That is not the same as saying every pick was correct when it was graded**, and an earlier
+   draft of this line said so anyway (CodeRabbit, #719). What is established is the association:
+   wrong result implies wrong row, on all 68. What is NOT established is the direction. C-114
+   contains a pick settled 18 hours BEFORE first pitch, which had no payload to grade against
+   and inherited the corrupt row - genuinely mis-graded, not merely mis-referenced. So
+   **C-114 re-grading stays in scope**, and "the data layer is the problem" is a claim about
+   where the fix goes, not a clean bill for the grading path.
 2. **The earlier "117 contradictions" figure understated the population**, exactly as
    predicted: a pick graded off a corrupt row agrees with it and looked consistent.
 3. **MLB is where to look first.** It carries 169 of the 187 affected rows. That is a
    prioritization signal and not proof of anything about the writer: NFL's zero is zero of 66,
    and MLS is at 25.8%. See section 2 - I made the stronger claim in a first draft and it does
    not hold.
-4. **69.5% of settled published picks are unmeasurable this way.** Giving every game row a
-   stable ESPN event id is a prerequisite for ever being able to audit the track record — it
-   is not housekeeping.
+4. **69.5% of settled published picks went unchecked, and only 64.8% are structurally
+   unmeasurable.** 1,425 rows carry no ESPN event id, which is the real prerequisite work:
+   giving every game row a stable external identity is what makes the track record auditable
+   at all, and it is not housekeeping. The other 104 are checkable today and simply outside
+   the windows I fetched.
 5. **A correction to my own first draft of this document, and it matters.** I originally wrote
    that "ECE is unaffected by this audit". That **contradicts this repository's own ledger**:
    C-114 records that 63 moneyline rows graded before kickoff sit inside the sample the published

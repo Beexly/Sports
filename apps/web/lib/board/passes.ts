@@ -203,35 +203,41 @@ export async function loadBoardPasses(
       // SHOWN, but it still RESOLVES ORDER. It suppresses gated rows at or
       // older than itself; a genuinely NEWER gated evaluation still displays,
       // because that one really is the fixture's current state.
-      db.gateDecision.findMany({
+      // AGGREGATED, NOT PAGED, and that is the whole point (CodeRabbit, #719).
+      //
+      // My first version of this was a findMany with `take: 500` and NO
+      // ordering, which is the same class of defect this file keeps producing:
+      // a cap applied BEFORE the per-fixture collapse. Production holds 811
+      // PUBLISHED decisions, so an arbitrary 500 of them would have been kept
+      // and a fixture whose withdrawal fell outside that slice would have had
+      // its OLD gated row displayed as a current pass - the exact false claim
+      // this query exists to prevent, reintroduced by the query itself.
+      //
+      // groupBy computes max(evaluatedAt) per gameId in the DATABASE, so there
+      // is no window to truncate and no cap to size. The filter is also the
+      // guarantee now: only a WITHDRAWN publication is selected, so nothing
+      // downstream has to re-assert what the rows are.
+      db.gateDecision.groupBy({
+        by: ["gameId"],
         where: {
           status: "PUBLISHED",
           isBootstrap: false,
           evaluatedAt: { gte: start, lt: end },
+          // Withdrawn, or a broken link. A LIVE publication is already handled
+          // by the picks-none relation on the query above, and must NOT
+          // suppress by chronology as well - see the test that pins the two
+          // mechanisms apart.
+          OR: [{ pick: null }, { pick: { isPublished: false } }],
         },
-        select: {
-          gameId: true,
-          evaluatedAt: true,
-          status: true,
-          pick: { select: { isPublished: true } },
-        },
-        take: 500,
+        _max: { evaluatedAt: true },
       }),
     ]);
 
     const newestWithdrawnPublishedAt = new Map<string, number>();
     for (const row of publishedDecisionRows) {
-      // Both guards are read off the ROW rather than assumed from the query
-      // that produced it. This file has now been the second half of a
-      // one-lane fix twice, so the suppression map asserts its own inputs
-      // instead of trusting a `where` clause several lines away: only a row
-      // that SAYS it is PUBLISHED and whose pick is NOT live can suppress a
-      // pass. A live publication is already handled at the query above.
-      if (row.status !== "PUBLISHED") continue;
-      if (row.pick?.isPublished === true) continue;
-      const at = row.evaluatedAt.getTime();
-      const seen = newestWithdrawnPublishedAt.get(row.gameId);
-      if (seen === undefined || at > seen) newestWithdrawnPublishedAt.set(row.gameId, at);
+      const at = row._max?.evaluatedAt?.getTime();
+      if (at === undefined) continue;
+      newestWithdrawnPublishedAt.set(row.gameId, at);
     }
 
     const gateDecisionRows = allGatedRows.filter((row) => {

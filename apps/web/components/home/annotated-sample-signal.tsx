@@ -36,7 +36,7 @@ const CALLOUTS_RIGHT = [
   },
   {
     label: "06 · Variance line",
-    body: "Every pick carries the reminder that even a 64% confidence signal still loses 36 of 100 times. Variance is described, not hidden.",
+    body: "Every pick carries the reminder that a high Edge Index is not a promise. Strong signals lose, often, and the number is a ranking of value against the market rather than a rate of winning. Variance is described, not hidden.",
   },
 ] as const;
 
@@ -425,7 +425,7 @@ function SampleCard() {
           textAlign: "center",
         }}
       >
-        A 71-confidence signal still loses ~29 of 100. Treat as one input.
+        A high Edge Index is not a win rate. Strong signals lose. Treat as one input.
       </p>
     </article>
   );
