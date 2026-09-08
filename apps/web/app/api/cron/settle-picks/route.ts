@@ -30,6 +30,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { captureError } from "@/lib/observability/sentry";
+import { pingHealthcheck } from "@/lib/data-reliability/healthcheck-ping";
 import { db } from "@sports/db";
 import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
 import {
@@ -99,6 +100,13 @@ export async function GET(request: Request) {
   if (denied) return denied;
 
   const apiKey = process.env["THE_ODDS_API_KEY"]?.trim();
+  // Dead-man's-switch (Round 16, healthcheck-ping.ts): env-gated no-op until
+  // set, same pattern as refresh-odds's HC_REFRESH_PING_URL. This is the cron
+  // AGENTS.md's "no pick ever sits" policy depends on — refresh-odds already
+  // pings, this one never did, so a silently-dead settle-picks scheduler had
+  // zero external heartbeat (traffic-heartbeat.ts's own docs cite a real
+  // 13-hour outage on 2026-08-10 from exactly this class of gap).
+  const pingUrl = process.env["HC_SETTLE_PICKS_PING_URL"];
   const url = new URL(request.url);
   const requestedSport = url.searchParams.get("sport");
   // Owner drain: ?path=free skips the paid supplement even when a key is set.
@@ -249,6 +257,8 @@ export async function GET(request: Request) {
   }
 
   const freeOk = free.sports.every((s) => s.ok) && !starved;
+  await pingHealthcheck(pingUrl, freeOk ? "success" : "fail");
+
   // Top-level clvRepair / snapshotRepair / scoreDates / rca for ops
   // (same values also under free.* for the full free-path payload).
   return NextResponse.json({
