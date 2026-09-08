@@ -986,11 +986,16 @@ export async function processSport(
       const [homeAtsForm, awayAtsForm, homeAtsFormAtHome, awayAtsFormAway, homeH2HForm] =
         gates.canUseDerivedHistory
           ? await Promise.all([
-              getAtsForm(game.homeTeam, sport.key, 15, undefined, true).catch(() => null),
-              getAtsForm(game.awayTeam, sport.key, 15, undefined, true).catch(() => null),
-              getAtsForm(game.homeTeam, sport.key, 15, "HOME", true).catch(() => null),
-              getAtsForm(game.awayTeam, sport.key, 15, "AWAY", true).catch(() => null),
-              getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key, 10, true).catch(() => null),
+              // AS-OF THIS FIXTURE OWN KICKOFF (C-187). A form window with no
+              // date bound reads whatever has settled by the time it RUNS, which
+              // is only equal to "before this game" while generation is live. On
+              // any reprocess or backfill it would include results from after the
+              // game being predicted.
+              getAtsForm(game.homeTeam, sport.key, kickoff, 15, undefined, true).catch(() => null),
+              getAtsForm(game.awayTeam, sport.key, kickoff, 15, undefined, true).catch(() => null),
+              getAtsForm(game.homeTeam, sport.key, kickoff, 15, "HOME", true).catch(() => null),
+              getAtsForm(game.awayTeam, sport.key, kickoff, 15, "AWAY", true).catch(() => null),
+              getHeadToHeadForm(game.homeTeam, game.awayTeam, sport.key, kickoff, 10, true).catch(() => null),
             ])
           : [null, null, null, null, null];
 
