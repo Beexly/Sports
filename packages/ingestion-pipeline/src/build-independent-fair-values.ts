@@ -436,14 +436,24 @@ function resolveNflTeamRating(
     byTeam.get(name.toUpperCase()) ??
     byTeam.get(name.trim());
   if (direct) return direct;
-  // Token overlap: a short key (e.g. "NE") embedded in a full name, at a word
-  // boundary so "NE" does not match inside "NEW ORLEANS".
-  const upper = name.toUpperCase();
+
+  // Token match on a short key (e.g. "NE" inside "NE PATRIOTS").
+  //
+  // FIXED (C-237): the previous form tested a dynamic RegExp for a word
+  // boundary and then ALSO accepted `upper.startsWith(k) || upper.endsWith(k)`,
+  // which defeats the boundary it had just checked. Its own comment said "so
+  // 'NE' does not match inside 'NEW ORLEANS'" - and "NEW ORLEANS
+  // SAINTS".startsWith("NE") is true, so New Orleans resolved to NEW ENGLAND's
+  // rating. A team priced on another team's EPA is exactly the kind of silent
+  // wrong number this pipeline exists to refuse.
+  //
+  // Splitting on non-alphanumerics and comparing whole tokens gives the word
+  // boundary the comment always intended, and removes the interpolated RegExp
+  // (an unescaped key containing a metacharacter would have changed the pattern
+  // rather than been matched literally).
+  const tokens = new Set(name.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean));
   for (const [k, v] of byTeam) {
-    if (k.length <= 3 && upper.includes(k)) {
-      const re = new RegExp(`(?:^|\\s)${k}(?:\\s|$)`);
-      if (re.test(upper) || upper.endsWith(k) || upper.startsWith(k)) return v;
-    }
+    if (k.length <= 3 && tokens.has(k)) return v;
   }
   return null;
 }

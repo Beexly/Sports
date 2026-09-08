@@ -255,3 +255,46 @@ describe("NFL EPA: the prior season carries the early weeks", () => {
     ).toHaveLength(0);
   });
 });
+
+/**
+ * C-237. The short-key fallback in resolveNflTeamRating tested a word boundary
+ * with a dynamic RegExp and then ALSO accepted startsWith/endsWith, which
+ * defeats the boundary. Its own comment claimed "NE" would not match inside
+ * "NEW ORLEANS" - and "NEW ORLEANS SAINTS".startsWith("NE") is true, so New
+ * Orleans resolved to New England's rating.
+ *
+ * A team priced on another team's EPA is a silent wrong number, which is worse
+ * than no pick at all. Whole-token matching is the boundary the comment always
+ * meant.
+ */
+describe("the short-key fallback matches whole tokens, not prefixes", () => {
+  it("does not resolve New Orleans to New England", async () => {
+    // Only NE is in the ratings, and the abbreviation map is bypassed by using
+    // a name it does not contain, so the short-key fallback is what answers.
+    seasonData({ 2025: { NE: 17 } });
+
+    const out = await buildIndependentFairValues(
+      week1Input({ homeTeam: "New Orleans Gridiron", awayTeam: "New Orleans Gridiron" }),
+    );
+
+    expect(
+      out.filter(
+        (fv) => fv.source === NFL_EPA_PRIOR_SEASON_SOURCE || fv.source === "nfl_epa_adj",
+      ),
+    ).toHaveLength(0);
+    expect(mocks.nflEpaToIndependentFairValue).not.toHaveBeenCalled();
+  });
+
+  it("still resolves a short key that IS a whole token", async () => {
+    // The behaviour the fallback exists for must survive the fix.
+    seasonData({ 2025: { NE: 17 } });
+
+    const out = await buildIndependentFairValues(
+      week1Input({ homeTeam: "NE Patriots", awayTeam: "NE Patriots" }),
+    );
+
+    expect(
+      out.filter((fv) => fv.source === NFL_EPA_PRIOR_SEASON_SOURCE),
+    ).toHaveLength(1);
+  });
+});
