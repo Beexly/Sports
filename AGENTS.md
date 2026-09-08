@@ -44,11 +44,16 @@ most of them, because several stored away scores EXCEED the final away score, wh
 reading can produce. NOT established: which code path wrote them. The obvious suspect
 (`free-score-persist.ts`, team+date match) inherits a 12h `MAX_KICKOFF_DRIFT_MS` whose comment
 says it exists precisely to stop this, and consecutive games sit 19 to 24h apart, so either that
-guard is bypassed or a different writer is responsible. Do not guess. **IT IS NOT MLB-ONLY:** NCAAF over 21 days shows 2 mismatched rows of 37 comparable
-(LSU v Clemson stored 66-14 against a real 51-10, which is another game's final from the same
-board), and that 2 is a FLOOR rather than a measurement, because only 50 of 183 NCAAF FINAL rows
-carry an ESPN event id at all so 146 could not be compared; MLS is in the same position (48 of
-111) and is still unaudited. Earlier dates are unaudited everywhere. A stored final whose id
+guard is bypassed or a different writer is responsible. Do not guess, and note that MORE THAN ONE MECHANISM IS AT WORK. **IT IS NOT MLB-ONLY**, measured
+over 21 days: **MLS 14 mismatched of 48 comparable (29 per cent, the worst), 12 settled picks**;
+NCAAF 2 of 37, 2 settled picks. Every rate is over the fraction the check can SEE: 63 MLS rows and
+146 NCAAF rows carry no ESPN event id and could not be compared at all. MLS breaks the MLB
+explanation: those teams never play on consecutive days, so the series-propagation pattern cannot
+apply, and the failures there are mixed (Seattle v Austin stored 2-1 against a real 1-2 is an exact
+reversal; Toronto v Charlotte stored 1-2 against a real 3-3 is neither a reversal nor a sibling
+fixture). A root cause that explains MLB will not automatically explain MLS. NFL has 37 FINAL rows
+and 59 settled picks but Week 1 has not kicked off; check it after 2026-09-14. Earlier dates are
+unaudited everywhere. A stored final whose id
 cannot be traced back to the feed it came from cannot be verified by anyone, which is its own
 problem. Full evidence, the per-series table and the reproduction method:
 **`docs/ops/SCORE_INTEGRITY_2026-09-08.md`** (ledger C-247). There is now a committed read-only

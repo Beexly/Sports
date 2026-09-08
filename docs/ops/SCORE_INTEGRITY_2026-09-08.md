@@ -137,12 +137,33 @@ which breaks any spread or total on it. And 66-14 is the final of a different
 game on the same board, so it is the same propagation pattern in a second
 sport.
 
-**The NCAAF number is a floor, not a measurement.** Only 50 of 183 NCAAF FINAL
-rows carry an ESPN event id at all, and the college-football scoreboard returned
-56 finals for the window, so **146 of 183 rows could not be compared**. MLS is
-in the same position (48 of 111 ESPN-keyed) and is still unaudited. Whatever
-the true NCAAF and MLS rates are, they are not 2 in 183; they are unknown, over
-a denominator this check can currently see only a fifth of.
+**MLS is the worst of the three.** 48 rows comparable, **14 mismatched (29 per
+cent)**, 12 settled picks. Those 14 are 7 distinct fixtures each stored twice.
+8 of the 14 disagree about the winner, including Seattle Sounders v Austin
+where we hold **2-1** and the real result is **1-2** — an exact reversal.
+
+**And MLS is not the same mechanism.** The consecutive-day series pattern that
+explains MLB cannot apply here, because MLS teams do not play each other on
+back-to-back days. One row looks like a home/away orientation flip; the others
+(Toronto v Charlotte stored 1-2 against a real 3-3, Real Salt Lake v FC Dallas
+stored 2-1 against a real 3-4) are neither reversals nor another fixture in a
+series. **So there is more than one way this is happening**, and a root cause
+that explains the MLB series pattern will not necessarily explain MLS.
+
+**The NCAAF number is a floor, not a measurement,** and so is the MLS one. Only
+50 of 183 NCAAF rows and 48 of 111 MLS rows carry an ESPN event id at all, so
+**146 NCAAF and 63 MLS rows could not be compared**. The rates below are over
+the fraction this check can see, not over the table.
+
+| Sport | Comparable | Mismatched | Rate | Uncomparable | Settled picks affected |
+|---|---|---|---|---|---|
+| MLB (10d) | 169 | 25 | 15% | not counted in that pass | 54 |
+| MLS (21d) | 48 | 14 | 29% | 63 | 12 |
+| NCAAF (21d) | 37 | 2 | 5% | 146 | 2 |
+
+NFL has 37 FINAL rows and 59 settled picks in the window but Week 1 has not
+kicked off, so it is not yet worth measuring. It should be checked after
+2026-09-14.
 
 That gap is itself worth fixing: a stored final whose id cannot be traced back
 to the feed it came from cannot be verified by anyone, ever.
