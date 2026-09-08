@@ -223,6 +223,20 @@ score with signal.
 
 ## 6. Go / no-go
 
+**AMENDED 14:55 UTC. Everything below was written before C-247 was found, and
+C-247 changes the character of decision (b) rather than just adding a reason to
+it.** Measured after this section was first written: 25 of 169 MLB, 14 of 48
+MLS and 2 of 37 NCAAF game rows we mark FINAL hold a score that the feed we
+ingest from contradicts, with 54, 12 and 2 settled published picks on them
+respectively, and 8 published moneyline results are the opposite of what
+happened. Details and reproduction in `docs/ops/SCORE_INTEGRITY_2026-09-08.md`.
+
+The reasons for (b) below are all of the form "we have not proven enough yet".
+C-247 is not that. It says the record we would be reasoning FROM contains
+results that are wrong. A gate held shut for want of evidence can be opened
+later by gathering evidence; this one cannot be opened until the underlying
+data is repaired, however good the metrics look.
+
 Three separate decisions. They do not have the same answer.
 
 ### (a) Ship the code on `claude/sports-launch-round2-fixes-hk7kv9` — **GO**
@@ -242,6 +256,11 @@ Three independent reasons, any one sufficient:
    failure shadow that recurs with ordinary MLB churn.
 3. C-224 is still open. Opening the gate publishes four Brier scores computed against confidence.
 4. Separately: the deployed v5.2.7 measures ECE 0.0947 on its own 262 rows against a 0.05 floor.
+5. **Added 14:55 UTC and the one that outranks the rest: C-247.** The settled record contains
+   results that are wrong, across three sports. 16 of the 475 moneyline rows the calibration
+   sample is built from sit on a game whose score the source contradicts, and 8 of them are
+   recorded as the opposite of what happened. Reasons 1 to 4 are about not having proven enough;
+   this one is about the record itself. It does not clear by waiting.
 
 ### (c) Serve NFL Week 1 picks — **GO, and materially better than when this was written**
 
@@ -259,6 +278,15 @@ rows against which the model will be measured, which is the right direction but 
 The TOTAL half stands as documented behaviour: `MIN_BOOKMAKERS = 2` refuses single-source pricing,
 which is correct and should not be changed to fill the board. The lever there is a cleared second
 book (WP-27 / ledger C-104), not a loosened floor.
+
+**A third caveat, added 14:55 UTC.** This decision is about SERVING picks, and it stands: nothing
+in C-247 makes a published Week 1 pick wrong at the moment it is published. But those picks will
+later be GRADED, by the same settlement path whose score inputs are demonstrably unreliable in the
+three sports that have been measured. NFL itself is unmeasured only because Week 1 has not kicked
+off, not because it was checked and found clean. So serving Week 1 is a go; treating the resulting
+Week 1 record as evidence of anything is not, until C-247 is closed. Run
+`npm run ops:verify-scores -- --sport=nfl --days=14` after 2026-09-14 before quoting a Week 1
+number to anyone.
 
 ---
 
