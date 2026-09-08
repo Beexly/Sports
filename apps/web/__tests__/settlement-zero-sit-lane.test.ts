@@ -21,6 +21,7 @@ import {
   staleUnstartedPublishedPendingWhere,
 } from "@/lib/board/stale-pick-policy";
 import { loadSettlementHealth } from "@/lib/performance/settlement-health";
+import { settledWithFrom } from "@/lib/settlement-outbox/worker";
 import type { NormalizedGame } from "@/lib/data-sources/free-adapters/espn-scores";
 import type { MultiSourceScoreResult } from "@/lib/data-sources/multi-source-scores";
 import type { fetchScoresMultiSource } from "@/lib/data-sources/multi-source-scores";
@@ -348,6 +349,17 @@ describe("zero-sit lane: VOID half", () => {
     expect(ev.status).toBe("PENDING");
     expect(ev.payload.kind).toBe("ZERO_SIT_VOID");
     expect(ev.payload.rcaCode).toBe("OVERDUE_NO_SCORE");
+    // Settle-time evidence (C-120 / C-143): a void grades against no score and
+    // no line, and says so explicitly rather than omitting the keys. The
+    // outbox worker's guard accepts the record as written.
+    expect(ev.payload.settledWith).toEqual({
+      homeScore: null,
+      awayScore: null,
+      sources: [],
+      path: "zero-sit",
+      gradedLine: null,
+    });
+    expect(settledWithFrom(ev.payload)).toEqual(ev.payload.settledWith);
     expect(ev.payload.settledAt).toBe(NOW.toISOString());
     expect(ev.payload.actor).toMatch(/zero-sit/);
     expect(fake.workEnqueued).toBe(2);

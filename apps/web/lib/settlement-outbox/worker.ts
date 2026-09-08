@@ -161,6 +161,15 @@ export interface SettledWithEvidence {
   readonly sources: readonly string[];
   /** Which settlement lane wrote this. */
   readonly path: string;
+  /**
+   * The exact line the grade was computed against: the output of
+   * selectGradingLine (clvLockLine when present, else line) at settle time.
+   * The card renders `line`, which is not always this number (ledger C-143),
+   * so without it a reader cannot reproduce the result from the card.
+   * Absent on events written before it was recorded; null when the lane
+   * graded against no line at all (a void).
+   */
+  readonly gradedLine?: number | null;
 }
 
 /** Narrow an unknown event payload to its settle-time evidence, if it has any. */
@@ -177,7 +186,21 @@ export function settledWithFrom(payload: unknown): SettledWithEvidence | null {
   if (away !== null && typeof away !== "number") return null;
   if (!Array.isArray(sources) || sources.some((x) => typeof x !== "string")) return null;
   if (typeof path !== "string") return null;
-  return { homeScore: home, awayScore: away, sources: sources as string[], path };
+  const gradedLine = e["gradedLine"];
+  // Absent is legal (pre-C-143 events); null is legal (a void); anything else
+  // must be a finite number, or the whole record is dropped like every other
+  // malformed field. JSON cannot carry NaN, but a guard is not a place to rely
+  // on that.
+  if (gradedLine !== undefined && gradedLine !== null) {
+    if (typeof gradedLine !== "number" || !Number.isFinite(gradedLine)) return null;
+  }
+  return {
+    homeScore: home,
+    awayScore: away,
+    sources: sources as string[],
+    path,
+    ...(gradedLine === undefined ? {} : { gradedLine }),
+  };
 }
 
 export interface OutboxEventRow {

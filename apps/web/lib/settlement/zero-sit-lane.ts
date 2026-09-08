@@ -319,6 +319,8 @@ export type ZeroSitVoidEventPayload = {
     awayScore: number | null;
     sources: readonly string[];
     path: string;
+    /** Null by construction: a void grades against no line (C-143 evidence key). */
+    gradedLine: null;
   };
   ageHours: number;
   settledAt: string;
@@ -646,6 +648,11 @@ export function buildZeroSitVoidPayload(args: {
       // per RCA code and is not a grading record.
       sources: [],
       path: "zero-sit",
+      // Null by construction, same reasoning as the scores: a void computes no
+      // result, so there is no line it was graded against. The line the pick
+      // carried is still on the pick row; recording it here would claim a
+      // grade that never happened.
+      gradedLine: null,
     },
   };
 }

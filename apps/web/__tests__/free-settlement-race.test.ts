@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import type { Prisma } from "@prisma/client";
+import { selectGradingLine } from "@sports/prediction-engine";
+import { settledWithFrom } from "@/lib/settlement-outbox/worker";
 import {
   SettlementRaceRollback,
   settleOnePickGuarded,
@@ -237,6 +239,50 @@ describe("settlement write under a mid-transaction schedule correction", () => {
     expect(store.game.resultFetched).toBe(true);
     expect(store.events).toHaveLength(1);
     expect(store.work).toHaveLength(2);
+  });
+
+  it("records the score, sources and the exact graded line as settle-time evidence (C-120 / C-143)", async () => {
+    // What the grader graded AGAINST, written in the settlement transaction.
+    // gradedLine is the output of selectGradingLine for this pick — the same
+    // function the score-repair tool re-grades with — so a later reader can
+    // reproduce the result without trusting the card's `line`.
+    const gradedLine = selectGradingLine({ clvLockLine: -3.5, line: -2.5 });
+    const written = await settleOnePickGuarded((fn) => store.run(fn), {
+      ...ARGS,
+      sources: ["espn-public-api"],
+      gradedLine,
+    });
+
+    expect(written.count).toBe(1);
+    expect(store.events).toHaveLength(1);
+    const payload = store.events[0]!["payload"];
+    expect(payload).toEqual({
+      settledWith: {
+        homeScore: 27,
+        awayScore: 20,
+        sources: ["espn-public-api"],
+        path: "free",
+        gradedLine: -3.5,
+      },
+    });
+    // Shape parity: the outbox worker's guard accepts exactly what this lane
+    // wrote, so expansion carries it rather than dropping it as malformed.
+    expect(settledWithFrom(payload)).toEqual({
+      homeScore: 27,
+      awayScore: 20,
+      sources: ["espn-public-api"],
+      path: "free",
+      gradedLine: -3.5,
+    });
+  });
+
+  it("writes gradedLine null, never a fabricated number, when no finite line was supplied", async () => {
+    const written = await settleOnePickGuarded((fn) => store.run(fn), { ...ARGS, gradedLine: Number.NaN });
+
+    expect(written.count).toBe(1);
+    const evidence = settledWithFrom(store.events[0]!["payload"]);
+    expect(evidence).not.toBeNull();
+    expect(evidence!.gradedLine).toBeNull();
   });
 
   it("refuses before writing anything when the postponement is already committed", async () => {
