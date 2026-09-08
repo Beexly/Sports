@@ -150,10 +150,30 @@ export default async function DashboardPage({
   // hardcoded percent beside "win rate" on a customer page as a claim, and it
   // is right to - the guard does not know a comment from a headline.)
   // So the record is withheld entirely if ANY of its inputs failed.
+  //
+  // C-216, found in review. TWO corrections to the C-201 shape above.
+  //
+  // (a) SCOPE. Every count that reaches evaluatePublicPerformancePolicy is a
+  // record input, not just the five that form the W-L-P-V string. The recent-
+  // window pair drives the ALL_RECENT_PICKS_BOOTSTRAP blocker, and that blocker
+  // is written `recentTotal > 0 && recentBootstrap === recentTotal` - so a
+  // failed recentTotalCount falling back to 0 does not merely lose a number, it
+  // SATISFIES the blocker's guard and the gate opens. A partial outage was
+  // therefore able to publish a performance record whose required history was
+  // unreadable, which is the exact failure C-201 was written to stop, reached
+  // by a different door. The pending/bootstrap pair feeds the operator message
+  // for the same policy call. All four move here.
+  //
+  // (b) The banner's CLAIM. softPerfZero used to raise countsDegraded, which
+  // makes the banner tell a member that "some counts below are showing zero".
+  // None of these counts is rendered as a number: the record reads
+  // "Unavailable" and the win rate reads an em-less dash. Saying the visible
+  // counts fell back when the one visible count read fine is a false statement,
+  // the same C-205a defect one flag over. countsDegraded now belongs to
+  // softZero alone, which after this change guards exactly one displayed count.
   let perfDegraded = false;
   const softPerfZero = (): number => {
     dbDegraded = true;
-    countsDegraded = true;
     perfDegraded = true;
     return 0;
   };
@@ -214,7 +234,7 @@ export default async function DashboardPage({
     db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
     db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
     db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
-    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
+    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
     db.pick
       .count({
         where: {
@@ -223,9 +243,12 @@ export default async function DashboardPage({
           isBootstrap: true,
         },
       })
-      .catch(softZero),
-    db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(softZero),
-    db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(softZero),
+      .catch(softPerfZero),
+    // The recent-window pair: policy inputs, never displayed. A zero here is
+    // not a small number, it is the ALL_RECENT_PICKS_BOOTSTRAP blocker's
+    // off-switch (C-216).
+    db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(softPerfZero),
+    db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(softPerfZero),
     getBillingNotice(user.id),
   ]);
 

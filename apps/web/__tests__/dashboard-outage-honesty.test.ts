@@ -77,11 +77,57 @@ describe("the dashboard says when a zero is an outage", () => {
     expect(source).toContain("perfDegraded = true");
     // Every count that forms the public record routes through the record-
     // scoped fallback, not the display one.
+    // C-216 widened this from five to nine. Every count that reaches
+    // evaluatePublicPerformancePolicy is a record input - not only the five
+    // that form the W-L-P-V string.
     const perfCatches = source.match(/\.catch\(softPerfZero\)/g) ?? [];
-    expect(perfCatches, "the five record counts must use softPerfZero").toHaveLength(5);
+    expect(perfCatches, "the nine record counts must use softPerfZero").toHaveLength(9);
     // And the record is withheld when any of them failed.
     expect(source).toContain("performancePolicy.canExposePerformanceStats && !perfDegraded");
     expect(source).toContain('perfDegraded\n    ? "Unavailable"');
+  });
+
+  it("never lets a failed policy input open the gate it is supposed to close", () => {
+    // C-216, found in review. The RED case, and it is a gating BYPASS rather
+    // than a display bug. evaluatePublicPerformancePolicy writes the recent-
+    // window blocker as `recentTotal > 0 && recentBootstrap === recentTotal`,
+    // so a recentTotalCount that falls back to 0 does not just lose a number -
+    // it fails the blocker's own guard and the blocker never fires. Routed
+    // through softZero, a partial outage could publish a performance record
+    // while the history that record depends on was unreadable.
+    //
+    // Pinned per QUERY, not by counting catches: the count assertion above
+    // cannot tell which query got which fallback, and "the right number of the
+    // right calls" is exactly the assertion-that-looks-like-proof this file
+    // keeps finding.
+    const recentTotal = source.match(
+      /db\.pick\.count\(\{ where: \{ generatedAt: \{ gte: recentSince \} \} \}\)\.catch\((\w+)\)/,
+    );
+    expect(recentTotal?.[1], "recentTotalCount fallback").toBe("softPerfZero");
+    const recentBootstrap = source.match(
+      /db\.pick\.count\(\{ where: \{ generatedAt: \{ gte: recentSince \}, isBootstrap: true \} \}\)\.catch\((\w+)\)/,
+    );
+    expect(recentBootstrap?.[1], "recentBootstrapCount fallback").toBe("softPerfZero");
+    const pending = source.match(
+      /result: "PENDING"[\s\S]{0,120}?\}\)\.catch\((\w+)\)/,
+    );
+    expect(pending?.[1], "canonicalPendingCount fallback").toBe("softPerfZero");
+    // And the ONE remaining softZero is the one count actually rendered as a
+    // number. If a later query takes the display fallback, this fails.
+    const displayCatches = source.match(/\.catch\(softZero\)/g) ?? [];
+    expect(displayCatches, "softZero guards only the displayed count").toHaveLength(1);
+  });
+
+  it("does not tell a member a visible count fell back when none did", () => {
+    // C-216(b). softPerfZero raising countsDegraded made the banner claim
+    // "some counts below are showing zero" during an outage in which the only
+    // displayed count read correctly and the record already says "Unavailable"
+    // for itself. Same false-statement class as C-205a, one flag over.
+    const perfFallback = source.match(/const softPerfZero[\s\S]{0,240}?\};/)?.[0] ?? "";
+    expect(perfFallback, "softPerfZero not found").not.toEqual("");
+    expect(perfFallback).toContain("dbDegraded = true");
+    expect(perfFallback).toContain("perfDegraded = true");
+    expect(perfFallback).not.toContain("countsDegraded");
   });
 
   it("keeps the list flag distinct from the page-wide flag", () => {

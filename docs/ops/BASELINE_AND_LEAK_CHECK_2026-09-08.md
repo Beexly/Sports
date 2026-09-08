@@ -178,6 +178,15 @@ mismatch) to our own engine, as a measurement rather than a description.
 `pick_signal_snapshots` records, per pick, which signals were present at publish
 time. Across **all 3,065 non-bootstrap snapshots**:
 
+> **On 3,065 against 3,068.** The collinearity table further down reports 3,068 rows
+> for the same population. Both are real reads; neither is a typo. They are separate
+> point-in-time SELECTs against a table the publisher is still appending to, taken
+> minutes apart, so three rows arrived between them. Nothing in either result turns
+> on the difference — the zero counts below are zero at both sizes, and 518 against
+> 3,068 and 518 against 3,065 are the same finding. Flagged rather than silently
+> harmonised: editing one number to match the other would make the document
+> internally tidy and stop it describing anything that was actually measured.
+
 | signal | times it has EVER fired |
 |---|---|
 | `hadRatingsSignal` — the power gap | **0** |
@@ -284,7 +293,16 @@ Read carefully, because it is easy to over-read:
 
 1. Are the eight unwired sources worth connecting? Ratings and QB availability are the
    two a handicapper would connect first, and neither exists today.
-2. `hadLineMovementSignal` and `hadScheduleSignal` should not both exist if they
-   cannot disagree.
+2. ~~`hadLineMovementSignal` and `hadScheduleSignal` should not both exist if they
+   cannot disagree.~~ **WITHDRAWN, and it contradicted this document's own section
+   above.** The rest/ATS pair measured in the same table disagrees 518 times overall
+   and 0 times inside the scored subset, which demonstrates that perfect
+   co-occurrence in a sample is a coverage artifact rather than proof two conditions
+   are identical. The same reasoning applies to line movement and schedule, whose
+   inputs differ in code (`signal-snapshot.ts:89` opening lines, `:101` schedule
+   density). Removing a schema field on observed collinearity would delete evidence
+   on the strength of an inference this document already withdrew. The bounded,
+   surviving claim is the one stated above: inside the scored subset these pairs
+   cannot be treated as independent evidence.
 3. Nothing here justifies touching MODEL_VERSION or a threshold. The finding is about
    inputs that were never wired, not weights that are wrong.

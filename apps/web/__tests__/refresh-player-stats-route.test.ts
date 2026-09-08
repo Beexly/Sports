@@ -99,8 +99,16 @@ describe("GET /api/cron/refresh-player-stats", () => {
     // and say so in the ledger.
     const entries = CRON_MANIFEST.filter((e) => e.path.includes("refresh-player-stats"));
     expect(entries.length, "refresh-player-stats missing from the cron manifest").toBeGreaterThan(0);
+    // BOTH spellings. The route reads `mode === "full" || mode === "all"`, so
+    // a schedule fixed with ?mode=all would close the gap while an assertion
+    // that only looks for "mode=full" stayed green - this test's title would
+    // then be a false statement about production, which is the one failure it
+    // exists to prevent. Found in review.
     entries.forEach((e) =>
-      expect(e.path, `${e.path} now requests full mode - the gap is closed`).not.toContain("mode=full"),
+      expect(
+        /[?&]mode=(full|all)\b/i.test(e.path),
+        `${e.path} now requests satellite mode - the gap is closed`,
+      ).toBe(false),
     );
   });
 

@@ -316,6 +316,19 @@ export function optimizeOne(
   decay: DecayFn = () => 1,
   slate: readonly DfsPlayer[] = activeDfsSlate(),
 ): DfsPlayer[] | null {
+  // A player both LOCKED and EXCLUDED is a contradiction, and the honest
+  // answer is "no lineup", not a lineup that quietly drops one of the two
+  // instructions. The exclude filter below removes the id from the pool, after
+  // which the lock has nothing to force - so the solver returned a perfectly
+  // good lineup that simply did not contain the player the user pinned, with
+  // nothing in the result saying the lock had been ignored. That is a guess
+  // dressed as an answer. The docstring above already promises null when the
+  // locks and excludes admit no legal lineup; this makes the code keep it.
+  // Found in review (C-217).
+  for (const id of opts.locks) {
+    if (opts.excludes.has(id)) return null;
+  }
+
   const cand = slate.filter((p) => !opts.excludes.has(p.id));
   if (!cand.length) return null;
 
@@ -395,6 +408,14 @@ export type GenResult = {
    * not a bug in the count.
    */
   readonly partial: boolean;
+  /**
+   * The per-player appearance bound the RETURNED set was built under, in whole
+   * lineups. `exposureCap / lineups.length <= maxExposure` whenever
+   * `floor(maxExposure * lineups.length) >= 1`; below that a player must
+   * appear once or not at all, so the bound is 1 and the realized share is
+   * higher than any percentage cap can express (C-217).
+   */
+  readonly exposureCap: number;
 };
 
 const EXPOSURE_DECAY = 0.97;
@@ -412,69 +433,114 @@ const MAX_DEDUP_RETRIES = 5;
  * a fresh one, generation stops early (no duplicates are ever emitted).
  */
 export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6, slate: readonly DfsPlayer[] = activeDfsSlate()): GenResult {
-  const usage = new Map<string, number>();
-  const seen = new Set<string>();
-  const lineups: { players: Lineup; metrics: LineupMetrics }[] = [];
-
   const key = (lu: Lineup) => lu.map((p) => p.id).sort().join(",");
 
-  for (let n = 0; n < count; n++) {
-    // Hard-exclude players at max exposure.
-    //
-    // C-204, two defects in one line. The denominator was `n`, the number of
-    // lineups built SO FAR, not the number requested. After lineup 1, n is 1,
-    // so every player used once measured 1/1 = 1.0 against a 0.6 cap and was
-    // excluded - which does not cap exposure at 60%, it forces lineup 2 to be
-    // completely disjoint from lineup 1, and lineup 3 from both. The cap is a
-    // ceiling on the share of the FINAL set, so the denominator is `count`.
-    //
-    // And a LOCKED player was swept up by the same rule: the user pins a
-    // player, gets them in lineup 1, and they silently vanish from every
-    // lineup after it. A lock is an instruction, not a preference - it always
-    // wins over the exposure heuristic. (If a lock and the cap genuinely
-    // conflict the lock holds and exposure exceeds the cap; that is the honest
-    // resolution, and it is what the user asked for.)
-    // The denominator is the set BEING BUILT (n + 1), not the requested count.
-    // Using `count` was right for a full run and wrong for a partial one: when
-    // generation stops early - an over-constrained pool, no more unique
-    // feasible lineups - the cap had been measured against lineups that never
-    // existed, so a player could occupy every lineup actually returned while
-    // the code believed it was under a 60% ceiling. Measuring against n + 1
-    // tightens as the set grows and never references a lineup that was not
-    // produced.
-    //
-    // Integer counts mean this is a near-cap, not an exact one: the bound is
-    // ceil(maxExposure * L) for a final set of size L, so a 60% cap on 3
-    // lineups permits 2 (67%). That residual is inherent to whole lineups and
-    // is stated here rather than papered over; `partial` is already returned
-    // so a caller can see when the set is short.
-    const capCount = Math.max(1, Math.ceil(maxExposure * (n + 1)));
-    const overexposed = new Set<string>();
-    for (const [id, c] of usage) {
-      if (c >= capCount && !opts.locks.has(id)) overexposed.add(id);
-    }
-    const dynOpts: OptOpts = { ...opts, excludes: new Set([...opts.excludes, ...overexposed]) };
+  // The appearance bound for a FINAL set of `target` lineups.
+  //
+  // C-217, and this is the third shape this line has had. History matters here
+  // because each previous shape was a correct fix for the defect in front of it
+  // and introduced the next one:
+  //
+  //   C-204  denominator `n` (lineups so far). After lineup 1 every used
+  //          player measured 1/1 against the cap and was excluded, which does
+  //          not cap exposure - it forces every lineup to be disjoint.
+  //   C-208  denominator `count` (lineups requested). Correct for a full run,
+  //          wrong for a partial one: the cap referenced lineups that were
+  //          never produced, so a player could sit in every RETURNED lineup
+  //          while the code believed it was under the ceiling.
+  //   C-204b denominator `n + 1` (the set being built). Fixed C-208's phantom
+  //          lineups, but made the bound TIGHTEN mid-run, which can terminate a
+  //          set that is entirely feasible at its own final bound. Four
+  //          interchangeable WRs, three WR slots, four lineups at 0.6: lineups
+  //          1 and 2 must share two WRs, iteration 3 sees them at the prefix
+  //          bound ceil(0.6 * 3) = 2 and excludes both, two WRs remain for
+  //          three slots, generation stops at 2. All four of the three-of-four
+  //          WR lineups satisfy the final bound of 3. Found in review.
+  //
+  // The resolution is not a fourth denominator. A prefix bound cannot be right,
+  // because the quantity being bounded - a share of the final set - is not
+  // known until the set is final. So: build against a FIXED target, and if the
+  // run falls short, rebuild against the length it actually reached. `target`
+  // strictly decreases on every rebuild, so this terminates in at most `count`
+  // rounds and in practice in one.
+  //
+  // ceil, not floor - and this one was argued the other way in review, so the
+  // reasoning is recorded rather than left as a preference. ceil makes the
+  // bound a NEAR-cap that can exceed the number the caller typed: 0.6 over 3
+  // lineups permits 2, which is 67%. floor would be a true ceiling. It was
+  // built and MEASURED before being rejected:
+  //
+  //   - On the shipped slate floor costs nothing: requests of 2,3,4,5,6,8,10,12
+  //     all return in full with a realized share at or under 0.60.
+  //   - On a position-scarce pool it collapses. Four interchangeable WRs and
+  //     three WR slots is exactly the case raised in review, and its four-lineup
+  //     solution {abc, abd, acd, bcd} puts every WR in 3 of 4 - feasible under
+  //     ceil(0.6 * 4) = 3, INFEASIBLE under floor(0.6 * 4) = 2. Generation then
+  //     stops at 2, the shortfall rebuild retargets to 2 where floor(1.2) = 1,
+  //     and the caller who asked for four lineups is handed one.
+  //
+  // Trading four lineups for one to move a rounding residual is the wrong
+  // trade. The residual is inherent to whole lineups - no integer bound
+  // expresses 60% of 3 - so it is DISCLOSED instead of implied: `exposureCap`
+  // returns the appearance bound the returned set was actually built under, so
+  // a caller states the real number rather than repeating a percentage the
+  // arithmetic cannot honour.
+  const capFor = (target: number): number => Math.max(1, Math.ceil(maxExposure * target));
 
-    let extraDecay = new Map<string, number>();
-    let lu: DfsPlayer[] | null = null;
-    for (let attempt = 0; attempt <= MAX_DEDUP_RETRIES; attempt++) {
-      const decay: DecayFn = (p) => EXPOSURE_DECAY ** ((usage.get(p.id) ?? 0) + (extraDecay.get(p.id) ?? 0));
-      const c = optimizeOne(dynOpts, decay, slate);
-      if (!c) { lu = null; break; }
-      if (!seen.has(key(c))) { lu = c; break; }
-      // duplicate of an already-accepted lineup: compound decay on exactly
-      // these players (deterministically) and try again.
-      const next = new Map(extraDecay);
-      for (const p of c) next.set(p.id, (next.get(p.id) ?? 0) + 1);
-      extraDecay = next;
-      lu = null;
-    }
-    if (!lu) break; // exhausted: no more unique, feasible lineups under current pressure
+  const build = (target: number): { players: Lineup; metrics: LineupMetrics }[] => {
+    const usage = new Map<string, number>();
+    const seen = new Set<string>();
+    const out: { players: Lineup; metrics: LineupMetrics }[] = [];
+    const capCount = capFor(target);
 
-    seen.add(key(lu));
-    lineups.push({ players: lu, metrics: metrics(lu) });
-    for (const p of lu) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
+    for (let n = 0; n < target; n++) {
+      // Hard-exclude players already at the final bound. A LOCKED player is
+      // never swept up: a lock is an instruction, not a preference (C-204). If
+      // a lock and the cap genuinely conflict the lock holds and exposure
+      // exceeds the cap - that is what the user asked for, and it is why the
+      // cap assertions in the tests exclude locked ids.
+      const overexposed = new Set<string>();
+      for (const [id, c] of usage) {
+        if (c >= capCount && !opts.locks.has(id)) overexposed.add(id);
+      }
+      const dynOpts: OptOpts = { ...opts, excludes: new Set([...opts.excludes, ...overexposed]) };
+
+      let extraDecay = new Map<string, number>();
+      let lu: DfsPlayer[] | null = null;
+      for (let attempt = 0; attempt <= MAX_DEDUP_RETRIES; attempt++) {
+        const decay: DecayFn = (p) => EXPOSURE_DECAY ** ((usage.get(p.id) ?? 0) + (extraDecay.get(p.id) ?? 0));
+        const c = optimizeOne(dynOpts, decay, slate);
+        if (!c) { lu = null; break; }
+        if (!seen.has(key(c))) { lu = c; break; }
+        // duplicate of an already-accepted lineup: compound decay on exactly
+        // these players (deterministically) and try again.
+        const next = new Map(extraDecay);
+        for (const p of c) next.set(p.id, (next.get(p.id) ?? 0) + 1);
+        extraDecay = next;
+        lu = null;
+      }
+      if (!lu) break; // exhausted: no more unique, feasible lineups under current pressure
+
+      seen.add(key(lu));
+      out.push({ players: lu, metrics: metrics(lu) });
+      for (const p of lu) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
+    }
+    return out;
+  };
+
+  let target = count;
+  let lineups = build(target);
+  // Rebuild only when the shortfall makes the bound the set was built under
+  // looser than the bound its actual length demands. A set that already
+  // satisfies capFor(its own length) is returned as-is - re-solving it would
+  // burn N more exact DP runs to reach the same place.
+  while (lineups.length > 0 && lineups.length < target && capFor(lineups.length) < capFor(target)) {
+    target = lineups.length;
+    lineups = build(target);
   }
+
+  const usage = new Map<string, number>();
+  for (const l of lineups) for (const p of l.players) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
 
   const byId = new Map(slate.map((p) => [p.id, p]));
   const exposure = [...usage.entries()]
@@ -484,5 +550,11 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     })
     .sort((a, b) => b.count - a.count);
 
-  return { lineups, exposure, requested: count, partial: lineups.length < count };
+  return {
+    lineups,
+    exposure,
+    requested: count,
+    partial: lineups.length < count,
+    exposureCap: capFor(Math.max(1, lineups.length)),
+  };
 }

@@ -60,9 +60,13 @@ function parseHex(hex: string): Rgb {
  */
 function tokenHex(key: TokenKey, scope: string = TAILWIND_CONFIG): Rgb {
   // `key` is a union of literals, not free text, and the pattern is built from
-  // that closed set rather than interpolated from a caller-supplied string -
-  // a dynamic RegExp source is a code-injection sink even when today's callers
-  // all pass constants, and static analysis is right to say so.
+  // that closed set rather than interpolated from a caller-supplied string.
+  // Stated at the right strength, since the first version of this comment
+  // overstated it: this is a TEST file, never deployed, and no caller-supplied
+  // or request-derived value has ever reached it, so the interpolated
+  // `new RegExp` it replaced was a latent hazard rather than a live injection
+  // path. The closed Record is still the better shape - it costs nothing and
+  // turns an unknown key into a type error instead of a silent no-match.
   const match = scope.match(TOKEN_PATTERNS[key]);
   if (!match) {
     throw new Error(

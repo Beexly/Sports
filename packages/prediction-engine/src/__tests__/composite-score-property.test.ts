@@ -154,7 +154,15 @@ describe("compositeScore is a well-behaved weighted mean (fuzz)", () => {
         const r = compositeScore(signals);
         const total = r.contributions.reduce((s, c) => s + c.weightShare, 0);
         if (r.contributions.some((c) => c.weightShare > 0)) {
-          expect(total).toBeCloseTo(1, 3);
+          // Tolerance DERIVED from the rounding contract, not picked. Each
+          // share is round4'd independently, so each carries up to half an ulp
+          // (5e-5) of error and the sum carries up to n of them. Found in
+          // review: toBeCloseTo(1, 3) fixes the budget at 5e-4 regardless of n,
+          // which a 14-signal case (this generator's maximum) can exceed at
+          // 7e-4 - a test that passes because the generator usually draws
+          // fewer, not because the property holds.
+          const tolerance = r.contributions.length * 0.00005;
+          expect(Math.abs(total - 1)).toBeLessThanOrEqual(tolerance);
         }
       }),
       { numRuns: RUNS },

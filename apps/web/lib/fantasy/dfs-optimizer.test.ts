@@ -313,6 +313,66 @@ describe("dfs optimizer", () => {
     );
   });
 
+  it("does not stop a set that is feasible at its own final exposure bound (C-217)", () => {
+    // Found in review, and it is the defect the C-208 fix introduced. That fix
+    // measured the cap against `n + 1`, the set being built, so the bound
+    // TIGHTENED mid-run - and a bound that tightens can refuse a lineup the
+    // final bound would have allowed.
+    //
+    // The case, stated exactly. Four interchangeable WRs, three WR slots, four
+    // lineups at a 0.6 ceiling. Every other slot is forced (one QB, three RBs
+    // for two RB slots plus FLEX, one TE, one DST), so the ONLY degree of
+    // freedom is which three of the four WRs play, giving exactly four distinct
+    // lineups: abc, abd, acd, bcd. Each WR appears in three of them, which sits
+    // exactly at the final bound ceil(0.6 * 4) = 3. All four are feasible.
+    //
+    // Under the prefix bound they were not reachable. Lineups 1 and 2 must
+    // share two WRs; iteration 3 saw those two at ceil(0.6 * 3) = 2, excluded
+    // both, left two WRs for three slots, and generation stopped at two.
+    //
+    // The forced players are LOCKED so the cap cannot reach them - otherwise
+    // this measures roster scarcity rather than the WR rotation it is about.
+    const mk = (id: string, pos: DfsPos, proj: number): DfsPlayer => ({
+      id, name: id, pos, team: "AAA", opp: "BBB", salary: 5000, proj,
+      floor: proj - 3, ceiling: proj + 6, own: 0.1,
+    });
+    const forced = ["q1:QB", "r1:RB", "r2:RB", "r3:RB", "t1:TE", "d1:DST"] as const;
+    const pool: DfsPlayer[] = [
+      ...forced.map((f, i) => mk(f.split(":")[0]!, f.split(":")[1] as DfsPos, 20 - i)),
+      // Deliberately DISTINCT projections. Equal ones would make the four
+      // lineups tie and let the tie-break, not the exposure bound, decide the
+      // order - which is a different test.
+      mk("wa", "WR", 15), mk("wb", "WR", 14), mk("wc", "WR", 13), mk("wd", "WR", 12),
+    ];
+    const locks = new Set(forced.map((f) => f.split(":")[0]!));
+
+    const { lineups, exposure, partial, exposureCap } = generateLineups(
+      { mode: "gpp", stack: false, locks, excludes: new Set() },
+      4,
+      0.6,
+      pool,
+    );
+
+    expect(lineups.length, "a feasible four-lineup set was cut short").toBe(4);
+    expect(partial).toBe(false);
+    expect(exposureCap).toBe(3);
+
+    // All four WR triples, and nothing repeated.
+    const keys = lineups.map((l) => l.players.map((p) => p.id).sort().join(","));
+    expect(new Set(keys).size).toBe(4);
+    const wrSets = lineups.map((l) =>
+      l.players.filter((p) => p.pos === "WR").map((p) => p.id).sort().join(""),
+    ).sort();
+    expect(wrSets).toEqual(["wawbwc", "wawbwd", "wawcwd", "wbwcwd"]);
+
+    // And the bound the set was built under actually held for every unlocked
+    // player. The locks are excluded on purpose: a lock outranks the cap, and
+    // asserting over them would assert the opposite of C-204.
+    exposure
+      .filter((e) => !locks.has(e.id))
+      .forEach((e) => expect(e.count, `${e.id} over the bound`).toBeLessThanOrEqual(exposureCap));
+  });
+
   it("leverage mode favours lower total ownership than cash", () => {
     const lev = generateLineups(base({ mode: "leverage" }), 4).lineups;
     const cash = generateLineups(base({ mode: "cash" }), 4).lineups;

@@ -57,8 +57,8 @@ All three new tests were verified against the pre-fix code and fail on it.
 | MEDIUM | bestball | `apps/web/lib/fantasy/bestball.ts:57` | "Ceiling" and "Spike upside" are fixed rescales of "Projection" on the live pool, presented as three independent measurements |
 | MEDIUM | bestball | `apps/web/lib/fantasy/bestball.ts:142` | byeFragility treats an unknown bye (0) as "never on bye", so a missing FFC join renders as a clean bill of health |
 | MEDIUM | dfs-optimizer | `apps/web/components/fantasy/dfs-optimizer.tsx:62` | The data-honesty banner is hidden precisely when real player names load |
-| MEDIUM | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts:424` | generateLineups silently drops a pinned player from every lineup after the first |
-| MEDIUM | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts:424` | The 60% exposure cap actually forces lineup 2 to be fully disjoint from lineup 1 |
+| ~~MEDIUM~~ FIXED | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts` | ~~generateLineups silently drops a pinned player from every lineup after the first~~ — fixed in C-204; locks now bypass the exposure excluder, pinned by `dfs-optimizer.test.ts` "keeps a locked player in EVERY lineup" |
+| ~~MEDIUM~~ FIXED | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts` | ~~The 60% exposure cap actually forces lineup 2 to be fully disjoint from lineup 1~~ — fixed across C-204/C-208/C-217; the cap is now a fixed final bound with a shortfall rebuild, pinned by the four-WR regression case |
 | MEDIUM | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts:96` | No game/team constraint: a Showdown CSV import yields a lineup DraftKings rejects |
 | MEDIUM | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts:168` | Stacked solve on a real ~900-row DK slate allocates ~170MB per solve on the main thread |
 | MEDIUM | props | `apps/web/lib/fantasy/props.ts:114` | Priced UNDER props report and rank on the OVER edge, sign-flipped |

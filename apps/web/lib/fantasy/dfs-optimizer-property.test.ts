@@ -177,8 +177,14 @@ describe("locks and excludes are instructions, not preferences (fuzz)", () => {
           undefined,
           slate,
         );
-        // Whatever it does, it must not both honour and violate the same id.
-        if (lu) expect(lu.some((p) => p.id === id)).toBe(false);
+        // Was "whatever it does, it must not both honour and violate the same
+        // id" - which every possible return value satisfies, including the one
+        // the solver actually produced: a lineup that silently ignored the
+        // lock. An assertion no behaviour can fail is not a test. The contract
+        // is the one optimizeOne's own docstring states - null when the locks
+        // and excludes admit no legal lineup - and a contradiction between the
+        // two is exactly that case. Found in review.
+        expect(lu).toBeNull();
       }),
       { numRuns: RUNS },
     );
