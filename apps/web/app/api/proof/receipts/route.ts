@@ -68,6 +68,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     slateKey: string | null;
     pick: {
       result: string;
+      pickType: string;
       game: {
         homeTeamName: string;
         awayTeamName: string;
@@ -89,6 +90,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         pick: {
           select: {
             result: true,
+            pickType: true,
             game: {
               select: {
                 homeTeamName: true,
@@ -134,6 +136,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       contentHash: r.contentHash,
       slateKey: r.slateKey ?? null,
       result: r.pick?.result ?? "UNKNOWN",
+      // P3-7 (launch audit 2026-09-08): pickType was present only in the
+      // payload string and the /api/verify payload — surface it as an explicit
+      // row field so the enumeration API matches /api/verify's shape.
+      pickType: r.pick?.pickType ?? null,
       frozenAt: v.frozenAt,
       modelVersion: v.modelVersion,
       verified: v.verified,
