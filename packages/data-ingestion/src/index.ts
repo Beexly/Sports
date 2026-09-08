@@ -136,6 +136,8 @@ export {
   ingestionTargetNflSeason,
   latestCompletedNflSeasonFloor,
   resolveFootballStatsSeason,
+  resolveFootballStatsSeasonAsync,
+  type RegRowsProbe,
   type StatsSeasonResolution,
 } from "./nflverse-season.js";
 export {
