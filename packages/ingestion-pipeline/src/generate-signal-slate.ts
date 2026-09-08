@@ -20,6 +20,7 @@ import {
   type PublishTimeMarketPResult,
 } from "@sports/prediction-engine";
 import {
+  anchorFreshness,
   signalDecision,
   signalEdgeFields,
   signalFactorDescription,
@@ -81,6 +82,8 @@ export type SignalSlateResult = {
   readonly marketAnchorReadError: string | null;
   /** Per-pick resolver throws. Each cost one pick its anchor, none cost a pick. */
   readonly marketAnchorResolveFailures: number;
+  /** Anchors resolved but refused as too old, or blended from books too far apart in time. */
+  readonly marketAnchorRejectedStale: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -253,6 +256,7 @@ export async function generateSignalSlate(opts?: {
   let slateOddsRows: OddsRowForMarketP[] = [];
   let marketAnchorReadError: string | null = null;
   let marketAnchorResolveFailures = 0;
+  let anchorRejectedStale = 0;
   if (gameList.length > 0) {
     try {
       slateOddsRows = await db.odds.findMany({
@@ -474,6 +478,19 @@ export async function generateSignalSlate(opts?: {
       marketAnchorResolveFailures += 1;
       console.warn(
         `${logPrefix} market anchor resolve failed for ${formatFixtureLine(game)}, pick falls back to unanchored: ${err instanceof Error ? err.message : String(err)}`,
+      );
+      anchor = null;
+    }
+    // C-256 (Devin). A book that stopped quoting days ago can still be a
+    // bookmaker's "latest row at or before generatedAt", so a stale price could
+    // pair with a fresh one and present as a two-book anchor. Checked here
+    // rather than in the resolver, which the calibration loader also runs:
+    // tightening that would move measured history to fix the instrument.
+    const freshness = anchorFreshness(anchor, now);
+    if (!freshness.usable) {
+      anchorRejectedStale += 1;
+      console.warn(
+        `${logPrefix} market anchor rejected (${freshness.reason}) for ${formatFixtureLine(game)}, pick falls back to unanchored`,
       );
       anchor = null;
     }
@@ -723,7 +740,8 @@ export async function generateSignalSlate(opts?: {
       (marketAnchorReadError != null ? ` marketAnchorReadFailed` : "") +
       (marketAnchorResolveFailures > 0
         ? ` marketAnchorResolveFailures=${marketAnchorResolveFailures}`
-        : ""),
+        : "") +
+      (anchorRejectedStale > 0 ? ` marketAnchorRejectedStale=${anchorRejectedStale}` : ""),
   );
 
   return {
@@ -737,6 +755,7 @@ export async function generateSignalSlate(opts?: {
     marketAnchoredSingleBook: anchoredSingleBook,
     marketAnchorReadError,
     marketAnchorResolveFailures,
+    marketAnchorRejectedStale: anchorRejectedStale,
     errors,
     note,
   };

@@ -40,6 +40,10 @@ export type PickForRepair = {
   readonly isPublished: boolean;
   /** Current stored result. Only WIN, LOSS and PUSH rows are re-graded. */
   readonly result: string | null;
+  /** PickSignalSnapshot.settlementResult, when one is set. Write-once mirror. */
+  readonly snapshotSettlementResult?: string | null;
+  /** PickSettlementEvent.result, when an event exists. Frozen at expansion. */
+  readonly settlementEventResult?: string | null;
 };
 
 export type PickRepair = {
@@ -59,6 +63,31 @@ export type UngradeablePick = {
   readonly reason: string;
 };
 
+/**
+ * Result-bearing records derived from a pick, which the settlement lanes write
+ * once and never rewrite (C-256, Devin).
+ *
+ * `PickSignalSnapshot.settlementResult` is documented in the schema as
+ * "mirrors pick.result" and is written by `settlement-snapshots.ts` under
+ * `where: { pickId, settlementResult: null }`, returning "already-settled" if
+ * one exists. `PickSettlementEvent.result` is a frozen event row with
+ * `onDelete: Restrict`.
+ *
+ * Neither is rewritten by this repair, and that is deliberate: an immutable
+ * event record that a correction quietly edits is no longer evidence of
+ * anything. But leaving them unmentioned would make this tool produce the very
+ * thing it exists to remove, so every one is counted and named, and the runner
+ * refuses to execute unless the operator opts in to leaving them behind.
+ */
+export type StaleDerivative = {
+  readonly pickId: string;
+  readonly kind: "signal_snapshot" | "settlement_event";
+  /** The result the derivative froze, which the repair does not change. */
+  readonly frozenResult: string;
+  /** The result the pick will carry after the repair. */
+  readonly correctedResult: string;
+};
+
 export type GameRepairPlan = {
   readonly gameId: string;
   readonly eventId: string;
@@ -73,15 +102,32 @@ export type GameRepairPlan = {
   readonly changedCount: number;
   /** Published picks whose result would change: the part the public saw. */
   readonly changedPublishedCount: number;
+  /** Write-once records that would keep contradicting the repaired result. */
+  readonly staleDerivatives: readonly StaleDerivative[];
+  /**
+   * True when this game cannot be repaired without creating a contradiction of
+   * its own: at least one settled pick on it could not be re-graded, so
+   * correcting the score would leave that pick's result disagreeing with the
+   * score it is settled against. Refusing the whole game is the only outcome
+   * that does not trade one contradiction for another.
+   */
+  readonly refused: boolean;
+  readonly refusedReason: string | null;
 };
 
 export type RepairPlanTotals = {
+  /** Games in the plan, repairable and refused together. */
   readonly games: number;
+  /** Games that WILL be written. `games - repairable` are refused. */
+  readonly repairable: number;
+  readonly refused: number;
   readonly winnerFlips: number;
   readonly picksExamined: number;
   readonly picksChanged: number;
   readonly publishedPicksChanged: number;
   readonly ungradeable: number;
+  /** Write-once records that would keep contradicting a corrected result. */
+  readonly staleDerivatives: number;
 };
 
 export type RepairPlan = {
@@ -186,6 +232,41 @@ export function planGameRepair(
     else repairs.push(outcome);
   }
   const changed = repairs.filter((r) => r.changed);
+
+  // C-256, Devin. Write-once derivatives that would keep the old result. Only
+  // computed for picks whose result actually changes: a pick graded the same
+  // way twice leaves nothing contradicting anything.
+  const byId = new Map(picks.map((p) => [p.id, p]));
+  const staleDerivatives: StaleDerivative[] = [];
+  for (const r of changed) {
+    const src = byId.get(r.pickId);
+    if (!src) continue;
+    const snap = src.snapshotSettlementResult;
+    if (typeof snap === "string" && snap.length > 0 && snap !== r.to) {
+      staleDerivatives.push({
+        pickId: r.pickId,
+        kind: "signal_snapshot",
+        frozenResult: snap,
+        correctedResult: r.to,
+      });
+    }
+    const ev = src.settlementEventResult;
+    if (typeof ev === "string" && ev.length > 0 && ev !== r.to) {
+      staleDerivatives.push({
+        pickId: r.pickId,
+        kind: "settlement_event",
+        frozenResult: ev,
+        correctedResult: r.to,
+      });
+    }
+  }
+
+  // C-256, Devin. An ungradeable pick is not a footnote. Correcting the score
+  // while leaving it settled against the old one manufactures a score-result
+  // contradiction, which is the exact defect this tool exists to remove. The
+  // game is refused whole rather than repaired in part.
+  const refused = ungradeable.length > 0;
+
   return {
     gameId: mismatch.gameId,
     eventId: mismatch.eventId,
@@ -197,6 +278,12 @@ export function planGameRepair(
     ungradeable,
     changedCount: changed.length,
     changedPublishedCount: changed.filter((r) => r.isPublished).length,
+    staleDerivatives,
+    refused,
+    refusedReason: refused
+      ? `${ungradeable.length} settled pick(s) on this game cannot be re-graded; ` +
+        `correcting the score alone would leave them settled against a score that no longer exists`
+      : null,
   };
 }
 
@@ -207,22 +294,33 @@ export function summarizeRepairPlan(plans: readonly GameRepairPlan[]): RepairPla
   let picksChanged = 0;
   let publishedPicksChanged = 0;
   let ungradeable = 0;
+  let refused = 0;
+  let staleDerivatives = 0;
   for (const plan of plans) {
     if (plan.winnerDiffers) winnerFlips += 1;
+    if (plan.refused) refused += 1;
     picksExamined += plan.picks.length;
-    picksChanged += plan.changedCount;
-    publishedPicksChanged += plan.changedPublishedCount;
+    // A refused game writes nothing, so its picks are not counted as changes.
+    // Counting them would report a repair the tool is about to decline to make.
+    if (!plan.refused) {
+      picksChanged += plan.changedCount;
+      publishedPicksChanged += plan.changedPublishedCount;
+      staleDerivatives += plan.staleDerivatives.length;
+    }
     ungradeable += plan.ungradeable.length;
   }
   return {
     plans,
     totals: {
       games: plans.length,
+      repairable: plans.length - refused,
+      refused,
       winnerFlips,
       picksExamined,
       picksChanged,
       publishedPicksChanged,
       ungradeable,
+      staleDerivatives,
     },
   };
 }
@@ -232,27 +330,40 @@ export function formatRepairPlan(plan: RepairPlan): string[] {
   const out: string[] = [];
   const t = plan.totals;
   out.push(
-    `${t.games} game(s) to repair; ${t.winnerFlips} name a different winner. ` +
+    `${t.games} mismatched game(s): ${t.repairable} repairable, ${t.refused} REFUSED. ` +
+      `${t.winnerFlips} name a different winner. ` +
       `${t.picksChanged} of ${t.picksExamined} settled pick(s) would change result ` +
       `(${t.publishedPicksChanged} of them published).` +
-      (t.ungradeable > 0 ? ` ${t.ungradeable} pick(s) UNGRADEABLE and left untouched.` : ""),
+      (t.ungradeable > 0 ? ` ${t.ungradeable} pick(s) UNGRADEABLE.` : "") +
+      (t.staleDerivatives > 0
+        ? ` ${t.staleDerivatives} write-once record(s) would keep the old result.`
+        : ""),
   );
   for (const g of plan.plans) {
     out.push("");
     out.push(
-      `  ${g.matchup}  event=${g.eventId}  stored ${g.storedScore.home}-${g.storedScore.away} ` +
+      `  ${g.refused ? "REFUSED " : ""}${g.matchup}  event=${g.eventId}  ` +
+        `stored ${g.storedScore.home}-${g.storedScore.away} ` +
         `-> source ${g.sourceScore.home}-${g.sourceScore.away}` +
         (g.winnerDiffers ? "  WINNER DIFFERS" : ""),
     );
+    if (g.refused && g.refusedReason) out.push(`    ${g.refusedReason}`);
     for (const p of g.picks) {
       if (!p.changed) continue;
       out.push(
-        `    ${p.isPublished ? "PUBLISHED" : "unpublished"} ${p.pickType} "${p.selection}" ` +
+        `    ${g.refused ? "(not applied) " : ""}` +
+          `${p.isPublished ? "PUBLISHED" : "unpublished"} ${p.pickType} "${p.selection}" ` +
           `${p.from} -> ${p.to}`,
       );
     }
     for (const u of g.ungradeable) {
       out.push(`    UNGRADEABLE ${u.pickType} "${u.selection}": ${u.reason}`);
+    }
+    for (const d of g.staleDerivatives) {
+      out.push(
+        `    STALE ${d.kind} on pick ${d.pickId}: keeps ${d.frozenResult}, ` +
+          `pick becomes ${d.correctedResult} (write-once, not rewritten)`,
+      );
     }
   }
   return out;

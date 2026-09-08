@@ -84,6 +84,15 @@ const SPORT = arg("sport", "mlb").toLowerCase();
 const DAYS = Math.max(1, Math.min(60, Number(arg("days", "10")) || 10));
 const ONLY_GAME = arg("game", "");
 const EXECUTE = process.argv.includes("--execute");
+/**
+ * C-256 (Devin). Repairing a pick whose write-once settlement snapshot or
+ * settlement event already froze the OLD result leaves a record contradicting
+ * the corrected one. Those records are immutable by design - an event a
+ * correction quietly edits is no longer evidence - so this tool does not
+ * rewrite them, and it refuses to execute while any would be left behind unless
+ * the operator says, explicitly, that they accept it.
+ */
+const ACCEPT_STALE_DERIVATIVES = process.argv.includes("--accept-stale-derivatives");
 const JSON_OUT = process.argv.includes("--json");
 
 const espnPath = ESPN_PATHS[SPORT];
@@ -167,6 +176,11 @@ async function main(): Promise<void> {
             clvLockLine: true,
             isPublished: true,
             result: true,
+            // C-256 (Devin). Both are write-once by their lanes and both mirror
+            // or freeze a result, so both would contradict a corrected pick.
+            // Read so the plan can name them; never written by this tool.
+            signalSnapshot: { select: { settlementResult: true } },
+            settlementEvent: { select: { result: true } },
           },
         },
         _count: {
@@ -207,6 +221,8 @@ async function main(): Promise<void> {
         clvLockLine: p.clvLockLine,
         isPublished: p.isPublished,
         result: p.result,
+        snapshotSettlementResult: p.signalSnapshot?.settlementResult ?? null,
+        settlementEventResult: p.settlementEvent?.result ?? null,
       }));
       plans.push(
         planGameRepair(
@@ -250,9 +266,31 @@ async function main(): Promise<void> {
       return;
     }
 
+    // C-256 (Devin). Refuse before writing anything, not per game mid-loop: an
+    // operator must not discover halfway through that the run is partial.
+    if (plan.totals.staleDerivatives > 0 && !ACCEPT_STALE_DERIVATIVES) {
+      console.error("");
+      console.error(
+        `REFUSING TO EXECUTE: ${plan.totals.staleDerivatives} write-once record(s) listed above ` +
+          `would keep the OLD result after this repair. PickSignalSnapshot.settlementResult and ` +
+          `PickSettlementEvent.result are written once by their lanes and are not rewritten here, ` +
+          `because an immutable event a correction edits is no longer evidence of anything. ` +
+          `Re-run with --accept-stale-derivatives to proceed and leave them contradicting the ` +
+          `corrected results, or repair those picks through a lane that owns those records.`,
+      );
+      process.exitCode = 1;
+      return;
+    }
+
     let gamesWritten = 0;
     let picksWritten = 0;
+    let gamesRefused = 0;
     for (const g of plan.plans) {
+      if (g.refused) {
+        gamesRefused += 1;
+        if (!JSON_OUT) console.log(`  refused ${g.matchup}: ${g.refusedReason ?? "unrepairable"}`);
+        continue;
+      }
       const changed = g.picks.filter((p) => p.changed);
       // One transaction per game: the score and the grades it implies land
       // together or not at all. A half-applied game is exactly the state this
@@ -276,10 +314,19 @@ async function main(): Promise<void> {
     if (!JSON_OUT) {
       console.log("");
       console.log(
-        `Applied: ${gamesWritten} game(s), ${picksWritten} pick result(s). ` +
-          `Re-run npm run ops:verify-scores to confirm the mismatch count is now 0.`,
+        `Applied: ${gamesWritten} game(s), ${picksWritten} pick result(s).` +
+          (gamesRefused > 0
+            ? ` REFUSED ${gamesRefused} game(s) that carry an ungradeable settled pick.`
+            : "") +
+          (plan.totals.staleDerivatives > 0
+            ? ` ${plan.totals.staleDerivatives} write-once record(s) still hold the old result.`
+            : "") +
+          ` Re-run npm run ops:verify-scores to confirm the mismatch count.`,
       );
     }
+    // A refused game is still a mismatch on the record. Exiting 0 here would
+    // let an operator read a partial repair as a complete one.
+    if (gamesRefused > 0) process.exitCode = 1;
   } finally {
     await prisma.$disconnect();
   }

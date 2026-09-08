@@ -209,3 +209,130 @@ describe("the runner's write contract", () => {
     expect(code).toMatch(/process\.exit\(2\)/);
   });
 });
+
+
+/**
+ * C-256 (Devin). Two refusals the first version of this tool did not make.
+ */
+describe("a game with an ungradeable settled pick is refused whole", () => {
+  const ungradeablePick = pick({
+    id: "u",
+    pickType: "TOTAL",
+    selection: "Over",
+    line: null,
+    clvLockLine: null,
+    result: "WIN",
+  });
+
+  it("refuses rather than correcting the score and leaving the pick behind", () => {
+    // The finding: correcting the score while one settled pick keeps its old
+    // result manufactures a score-result contradiction, which is the exact
+    // defect this tool exists to remove.
+    const plan = planGameRepair(MISMATCH, GAME, [pick({ id: "a" }), ungradeablePick]);
+    expect(plan.refused).toBe(true);
+    expect(plan.refusedReason).toContain("cannot be re-graded");
+  });
+
+  it("does not count a refused game's picks as changes", () => {
+    const refusedPlan = planGameRepair(MISMATCH, GAME, [pick({ id: "a" }), ungradeablePick]);
+    const totals = summarizeRepairPlan([refusedPlan]).totals;
+    expect(totals.refused).toBe(1);
+    expect(totals.repairable).toBe(0);
+    expect(totals.picksChanged).toBe(0);
+    expect(totals.publishedPicksChanged).toBe(0);
+  });
+
+  it("still repairs a game whose every settled pick can be re-graded", () => {
+    const plan = planGameRepair(MISMATCH, GAME, [pick({ id: "a" })]);
+    expect(plan.refused).toBe(false);
+    expect(summarizeRepairPlan([plan]).totals.repairable).toBe(1);
+  });
+
+  it("says REFUSED in the printed plan so an operator cannot miss it", () => {
+    const plan = summarizeRepairPlan([planGameRepair(MISMATCH, GAME, [pick({ id: "a" }), ungradeablePick])]);
+    const text = formatRepairPlan(plan).join("\n");
+    expect(text).toContain("REFUSED");
+    expect(text).toContain("(not applied)");
+  });
+});
+
+describe("write-once records that would keep the old result are named", () => {
+  it("flags a settlement snapshot frozen on the pre-repair result", () => {
+    const plan = planGameRepair(MISMATCH, GAME, [
+      pick({ id: "a", result: "WIN", snapshotSettlementResult: "WIN" }),
+    ]);
+    expect(plan.staleDerivatives).toHaveLength(1);
+    expect(plan.staleDerivatives[0]).toMatchObject({
+      pickId: "a",
+      kind: "signal_snapshot",
+      frozenResult: "WIN",
+      correctedResult: "LOSS",
+    });
+  });
+
+  it("flags an immutable settlement event too, and both together", () => {
+    const plan = planGameRepair(MISMATCH, GAME, [
+      pick({ id: "a", result: "WIN", snapshotSettlementResult: "WIN", settlementEventResult: "WIN" }),
+    ]);
+    expect(plan.staleDerivatives.map((d) => d.kind).sort()).toEqual([
+      "settlement_event",
+      "signal_snapshot",
+    ]);
+  });
+
+  it("does NOT flag a derivative that already agrees with the corrected result", () => {
+    // A pick graded the same way twice leaves nothing contradicting anything,
+    // and reporting it would inflate the number an operator is asked to accept.
+    const plan = planGameRepair(MISMATCH, GAME, [
+      pick({ id: "a", result: "WIN", snapshotSettlementResult: "LOSS" }),
+    ]);
+    expect(plan.staleDerivatives).toHaveLength(0);
+  });
+
+  it("does NOT flag derivatives on a pick whose result is unchanged", () => {
+    const plan = planGameRepair(
+      { ...MISMATCH, source: { home: 9, away: 1 }, winnerDiffers: false },
+      GAME,
+      [pick({ id: "a", result: "WIN", snapshotSettlementResult: "WIN" })],
+    );
+    expect(plan.changedCount).toBe(0);
+    expect(plan.staleDerivatives).toHaveLength(0);
+  });
+});
+
+describe("the runner refuses before writing", () => {
+  const runnerSrc = readFileSync(
+    resolve(__dirname, "../../../scripts/ops/repair-stored-scores.ts"),
+    "utf8",
+  );
+  const runnerCode = runnerSrc
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .split("\n")
+    .filter((l) => !l.trim().startsWith("//"))
+    .join("\n");
+
+  it("will not execute with stale derivatives unless explicitly accepted", () => {
+    expect(runnerCode).toMatch(/--accept-stale-derivatives/);
+    expect(runnerCode).toMatch(/REFUSING TO EXECUTE/);
+  });
+
+  it("skips refused games in the write loop", () => {
+    expect(runnerCode).toMatch(/if \(g\.refused\)/);
+  });
+
+  it("exits nonzero when any game was refused, so a partial run is not read as success", () => {
+    expect(runnerCode).toMatch(/if \(gamesRefused > 0\) process\.exitCode = 1;/);
+  });
+
+  it("still writes only the four documented fields", () => {
+    const writes = runnerCode.match(/data:\s*\{[^}]*\}/g) ?? [];
+    const allowed = new Set(["homeScore", "awayScore", "result", "settledAt"]);
+    for (const w of writes) {
+      for (const field of w.match(/(\w+):/g) ?? []) {
+        const name = field.slice(0, -1);
+        if (name === "data") continue;
+        expect(allowed.has(name), name).toBe(true);
+      }
+    }
+  });
+});

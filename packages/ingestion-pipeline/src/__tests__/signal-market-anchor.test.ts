@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
-import type { PublishTimeMarketPResult } from "@sports/prediction-engine";
+import type {
+  PublishTimeMarketPResolved,
+  PublishTimeMarketPResult,
+} from "@sports/prediction-engine";
 import {
+  MAX_ANCHOR_AGE_MS,
+  MAX_ANCHOR_SPREAD_MS,
   NO_MARKET_REFERENCE,
+  anchorFreshness,
   SIGNAL_EDGE_SHRINK,
   SIGNAL_LEAN_TRUEPROB,
   signalDecision,
@@ -18,7 +24,7 @@ import {
  * one measures against a coin flip AND SAYS SO, and no copy asserts a price a
  * pick does not have or denies one it does.
  */
-function resolved(p: number, bookCount = 2): PublishTimeMarketPResult {
+function resolved(p: number, bookCount = 2): PublishTimeMarketPResolved {
   return {
     status: "resolved",
     p,
@@ -242,5 +248,52 @@ describe("signalFactorDescription — the third place the price sentence lived",
         expect(all.some(assertsPrice), label).toBe(false);
       }
     }
+  });
+});
+
+/**
+ * C-256 (Devin). A bookmaker's newest row at or before generatedAt can be
+ * arbitrarily old, so a dead book could pair with a live one and present as a
+ * two-book snapshot. The policy sits here rather than in the resolver, which the
+ * calibration loader also runs.
+ */
+describe("anchorFreshness", () => {
+  const at = (iso: string) => new Date(iso);
+  function withTimes(newest: string, oldest: string): PublishTimeMarketPResult {
+    return { ...resolved(0.54, 2), snapshotAt: at(newest), oldestBookAt: at(oldest) };
+  }
+
+  it("accepts an ordinary refresh cycle", () => {
+    const r = withTimes("2026-09-08T12:00:00Z", "2026-09-08T11:45:00Z");
+    expect(anchorFreshness(r, at("2026-09-08T12:10:00Z")).usable).toBe(true);
+  });
+
+  it("rejects an anchor whose freshest book is older than the age bound", () => {
+    const r = withTimes("2026-09-05T12:00:00Z", "2026-09-05T12:00:00Z");
+    const f = anchorFreshness(r, at("2026-09-08T12:00:00Z"));
+    expect(f.usable).toBe(false);
+    expect(f.usable === false && f.reason).toBe("anchor_too_old");
+  });
+
+  it("rejects a snapshot blended from books hours apart, even when the newest is fresh", () => {
+    // The exact finding: a dead book's last quote paired with a live one.
+    const r = withTimes("2026-09-08T12:00:00Z", "2026-09-08T02:00:00Z");
+    const f = anchorFreshness(r, at("2026-09-08T12:05:00Z"));
+    expect(f.usable).toBe(false);
+    expect(f.usable === false && f.reason).toBe("anchor_books_disagree_in_time");
+  });
+
+  it("is a no-op on an unresolved anchor, which has nothing to be stale about", () => {
+    expect(anchorFreshness(unresolved, at("2026-09-08T12:00:00Z")).usable).toBe(true);
+    expect(anchorFreshness(null, at("2026-09-08T12:00:00Z")).usable).toBe(true);
+  });
+
+  it("rejects rather than accepts when a timestamp is not finite", () => {
+    const r = withTimes("invalid", "2026-09-08T11:00:00Z");
+    expect(anchorFreshness(r, at("2026-09-08T12:00:00Z")).usable).toBe(false);
+  });
+
+  it("bounds the spread more tightly than the age, so one cannot swallow the other", () => {
+    expect(MAX_ANCHOR_SPREAD_MS).toBeLessThan(MAX_ANCHOR_AGE_MS);
   });
 });

@@ -49,6 +49,50 @@ export const NO_MARKET_REFERENCE = 0.5;
  */
 export const SIGNAL_LEAN_TRUEPROB = 0.58;
 
+/**
+ * C-256 (Devin). `latestH2hRowPerBookmaker` takes each bookmaker's newest row at
+ * or before generatedAt with no age limit, so a book that stopped quoting days
+ * ago can pair with a fresh one and present as a two-book snapshot. The blended
+ * price is then part current and part obsolete.
+ *
+ * The policy lives HERE, at the consumer, and not in the resolver. The resolver
+ * is also the calibration loader's recomputation path, and tightening it would
+ * retroactively change measured historical numbers - moving the record to fix
+ * the instrument. Publishing is a forward decision and can hold a stricter bar
+ * than measurement without either one lying.
+ *
+ * MAX_ANCHOR_AGE_MS bounds how old the freshest row may be; MAX_ANCHOR_SPREAD_MS
+ * bounds how far apart the books in one snapshot may sit. Both are generous
+ * relative to the 15 minute refresh cadence, so an ordinary cycle passes and a
+ * genuinely stale book does not.
+ */
+export const MAX_ANCHOR_AGE_MS = 6 * 60 * 60 * 1000;
+export const MAX_ANCHOR_SPREAD_MS = 3 * 60 * 60 * 1000;
+
+export type AnchorFreshness =
+  | { readonly usable: true }
+  | { readonly usable: false; readonly reason: "anchor_too_old" | "anchor_books_disagree_in_time" };
+
+/**
+ * Whether a resolved anchor is fresh enough, and coherent enough, to price a
+ * pick against. Pure: `now` is passed, never read from the clock.
+ */
+export function anchorFreshness(
+  resolved: PublishTimeMarketPResult | null,
+  now: Date,
+): AnchorFreshness {
+  if (resolved == null || resolved.status !== "resolved") return { usable: true };
+  const ageMs = now.getTime() - resolved.snapshotAt.getTime();
+  if (!Number.isFinite(ageMs) || ageMs > MAX_ANCHOR_AGE_MS) {
+    return { usable: false, reason: "anchor_too_old" };
+  }
+  const spreadMs = resolved.snapshotAt.getTime() - resolved.oldestBookAt.getTime();
+  if (!Number.isFinite(spreadMs) || spreadMs > MAX_ANCHOR_SPREAD_MS) {
+    return { usable: false, reason: "anchor_books_disagree_in_time" };
+  }
+  return { usable: true };
+}
+
 export type SignalEdgeFields = {
   /** True when a real de-vigged book price backs `reference`. */
   readonly anchored: boolean;
