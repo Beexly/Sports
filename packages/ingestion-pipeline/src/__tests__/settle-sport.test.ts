@@ -1167,6 +1167,28 @@ describe("settleSport", () => {
     });
   });
 
+  describe("settle-time evidence: graded line (C-120 / C-143)", () => {
+    it("records pick.line as gradedLine when the pick carries no lock, and the lock when it does", async () => {
+      mocks.gameFindUnique.mockResolvedValue(
+        dbGame([
+          pendingPick({ id: "pick-legacy", clvLockLine: null, line: -2.5 }),
+          pendingPick({ id: "pick-locked", clvLockLine: -3.5, line: -6.5 }),
+        ]),
+      );
+
+      await settleSport(SPORT, "key", gates(), "[settlement]", JUSTIFIED);
+
+      const byPick = new Map(
+        mocks.outboxCreate.mock.calls.map((c) => {
+          const data = (c[0] as { data: { pickId: string; payload: { settledWith: { gradedLine: unknown } } } }).data;
+          return [data.pickId, data.payload.settledWith.gradedLine] as const;
+        }),
+      );
+      expect(byPick.get("pick-legacy")).toBe(-2.5);
+      expect(byPick.get("pick-locked")).toBe(-3.5);
+    });
+  });
+
   describe("transactional outbox (Phase 1E)", () => {
     it("appends exactly one PickSettlementEvent per settled pick, inside the same transaction as the pick update", async () => {
       mocks.gameFindUnique.mockResolvedValue(
@@ -1202,6 +1224,9 @@ describe("settleSport", () => {
               awayScore: expect.any(Number),
               sources: [],
               path: "paid",
+              // The fixture's clvLockLine (-3.5): the exact line the grade
+              // used, which is what selectGradingLine returned (C-143).
+              gradedLine: -3.5,
             },
           },
         },

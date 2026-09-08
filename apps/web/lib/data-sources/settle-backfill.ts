@@ -195,6 +195,8 @@ export type PersistSettledArgs = {
   awayScore: number | null;
   /** Source ids the final came from, recorded as settle-time evidence (C-120). */
   sources?: readonly string[];
+  /** The line the grade was computed against (selectGradingLine's output), settle-time evidence (C-120 / C-143). */
+  gradedLine?: number | null;
   /**
    * The kickoff this candidate was loaded with. The final was bound to it
    * before the network work, so the write must refuse if the row no longer
@@ -351,6 +353,9 @@ export async function backfillStaleSettlement(input: {
     const outcomes = settlePendingPicks(pending, finals, {
       postponedCandidates: games,
     });
+    // The grading line each pick was graded on, keyed for the evidence write:
+    // the value settlePendingPicks received, not a recomputation.
+    const gradingLineByPickId = new Map(pending.map((p) => [p.pickId, p.line]));
 
     for (const o of outcomes) {
       const row = sportRows.find((r) => r.id === o.pickId);
@@ -396,6 +401,7 @@ export async function backfillStaleSettlement(input: {
         homeScore: o.homeScore,
         awayScore: o.awayScore,
         sources: o.sources,
+        gradedLine: gradingLineByPickId.get(o.pickId) ?? null,
         commenceTime: row.game.commenceTime,
       });
       const persisted: PersistSettledOutcome =
@@ -581,6 +587,12 @@ async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<Pe
             awayScore: args.awayScore,
             sources: [...(args.sources ?? [])],
             path: "free-backfill",
+            // The exact number the grade used (C-143): the card's `line` is
+            // not always this number.
+            gradedLine:
+              typeof args.gradedLine === "number" && Number.isFinite(args.gradedLine)
+                ? args.gradedLine
+                : null,
           },
         },
       },

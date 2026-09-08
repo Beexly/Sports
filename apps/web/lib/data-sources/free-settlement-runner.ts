@@ -128,6 +128,12 @@ export type FreeSettlementWriteArgs = {
   readonly settledAt: Date;
   /** Source ids the final came from, recorded as settle-time evidence (C-120). */
   readonly sources?: readonly string[];
+  /**
+   * The line the grade was computed against (selectGradingLine's output),
+   * recorded as settle-time evidence (C-120 / C-143). Null when no finite
+   * line was involved.
+   */
+  readonly gradedLine?: number | null;
 };
 
 /**
@@ -261,6 +267,13 @@ export async function writeFreeSettlementInTx(
           awayScore: args.awayScore,
           sources: [...(args.sources ?? [])],
           path: "free",
+          // The exact number the grade used. `line` on the pick row is what
+          // the card shows and can differ from this (C-143); a reader cannot
+          // reproduce the result without it.
+          gradedLine:
+            typeof args.gradedLine === "number" && Number.isFinite(args.gradedLine)
+              ? args.gradedLine
+              : null,
         },
       },
     },
@@ -670,6 +683,9 @@ export async function runFreePathSettlement(options?: {
       const outcomes = settlePendingPicks(pending, finals, {
         postponedCandidates: espn,
       });
+      // The grading line each pick was graded on, keyed for the evidence write
+      // below: the same value settlePendingPicks received, not a recomputation.
+      const gradingLineByPickId = new Map(pending.map((p) => [p.pickId, p.line]));
       let settled = 0;
       let held = 0;
       let stillPending = 0;
@@ -721,6 +737,7 @@ export async function runFreePathSettlement(options?: {
             awayScore: o.awayScore,
             settledAt,
             sources: o.sources,
+            gradedLine: gradingLineByPickId.get(o.pickId) ?? null,
           },
         );
 

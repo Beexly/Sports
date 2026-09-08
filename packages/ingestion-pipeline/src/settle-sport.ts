@@ -706,6 +706,11 @@ export async function settleSport(
                     awayScore: score.awayScore,
                     sources: [],
                     path: "paid",
+                    // The exact line this grade used (selectGradingLine above).
+                    // The card renders pick.line, which is not always this
+                    // number (C-143); without it the result is not
+                    // reproducible from the card.
+                    gradedLine: Number.isFinite(gradingLine) ? gradingLine : null,
                   },
                 },
               },

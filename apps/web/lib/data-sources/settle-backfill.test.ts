@@ -7,6 +7,8 @@ import {
   type BackfillDb,
 } from "./settle-backfill";
 import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "../performance/settlement-health";
+import { selectGradingLine } from "@sports/prediction-engine";
+import { settledWithFrom } from "../settlement-outbox/worker";
 import type { NormalizedGame } from "./free-adapters/espn-scores";
 import type { MultiSourceScoreResult } from "./multi-source-scores";
 
@@ -73,6 +75,63 @@ function scores(games: NormalizedGame[]): MultiSourceScoreResult {
 }
 
 describe("backfillStaleSettlement", () => {
+  it("writes the score, sources and the exact graded line into the settlement event (C-120 / C-143)", async () => {
+    // A TOTAL whose card line (44) differs from the locked line the grade
+    // uses (40.5). Navy 17 - Army 16 is 33: UNDER wins on either number, but
+    // the evidence must name the number that was actually used, and it must
+    // be the same one the score-repair tool would re-grade with.
+    const totalRow = {
+      ...row({ daysAgo: 5 }),
+      pickType: "TOTAL",
+      selection: "UNDER 44",
+      line: 44,
+      clvLockLine: 40.5,
+    };
+    const created: unknown[] = [];
+    const db: BackfillDb = {
+      pick: { findMany: vi.fn(async () => [totalRow]) },
+      $transaction: vi.fn(async (fn) =>
+        fn({
+          pick: { updateMany: vi.fn(async () => ({ count: 1 })) },
+          pickSettlementEvent: {
+            create: vi.fn(async (args: unknown) => {
+              created.push(args);
+              return undefined;
+            }),
+          },
+          postSettlementWork: { createMany: vi.fn(async () => ({ count: 0 })) },
+          game: {
+            updateMany: vi.fn(async () => ({ count: 1 })),
+            findUnique: vi.fn(async () => ({ homeScore: null, awayScore: null })),
+          },
+        }),
+      ),
+    };
+
+    const result = await backfillStaleSettlement({
+      db,
+      now: NOW,
+      fetchScores: vi.fn(async () => scores([navyFinal()])),
+    });
+
+    expect(result.settled).toBe(1);
+    expect(created).toHaveLength(1);
+    const data = (created[0] as { data: Record<string, unknown> }).data;
+    expect(data["result"]).toBe("WIN");
+    expect(data["payload"]).toEqual({
+      settledWith: {
+        homeScore: 17,
+        awayScore: 16,
+        sources: ["espn-public-api"],
+        path: "free-backfill",
+        gradedLine: 40.5,
+      },
+    });
+    expect(selectGradingLine({ clvLockLine: 40.5, line: 44 })).toBe(40.5);
+    // Shape parity with the outbox worker's guard: carried, not dropped.
+    expect(settledWithFrom(data["payload"])?.gradedLine).toBe(40.5);
+  });
+
   it("settles a >3-day PENDING pick through mocked free-source scores", async () => {
     const persistSettled = vi.fn(async () => true);
     const fetchScores = vi.fn(async () => scores([navyFinal()]));

@@ -299,6 +299,64 @@ describe("expansion (6.4/6.6)", () => {
     expect(payload["settledWith"]).toBeUndefined();
   });
 
+  it("carries the graded line across expansion, exactly as the lane wrote it (C-143)", async () => {
+    // The card renders pick.line; the grade may have used clvLockLine. The
+    // number the grade USED is event-time evidence with the same
+    // unrecoverability as the score, so it rides in settledWith and must
+    // survive expansion unchanged — including a legitimate 0 (a pick'em).
+    const db = makeDb({
+      events: [
+        decisiveEvent({
+          payload: {
+            settledWith: {
+              homeScore: 4,
+              awayScore: 2,
+              sources: ["espn-public-api"],
+              path: "free",
+              gradedLine: 0,
+            },
+          },
+        }),
+      ],
+      picks: [pickRow()],
+      watchlists: [{ id: "w-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" }],
+      users: [{ id: "user-1", email: "elite@example.com", emailVerified: new Date() }],
+      subscriptions: [{ id: "sub-1", userId: "user-1", endpoint: "e1", p256dh: "k", auth: "a" }],
+    });
+
+    await drainSettlementOutbox(db, eliteDeps(), NOW);
+
+    const payload = (db._tables.events.rows[0] as Row)["payload"] as Row;
+    expect(payload["settledWith"]).toEqual({
+      homeScore: 4,
+      awayScore: 2,
+      sources: ["espn-public-api"],
+      path: "free",
+      gradedLine: 0,
+    });
+  });
+
+  it("drops the whole evidence record when gradedLine is present but not a finite number", async () => {
+    const db = makeDb({
+      events: [
+        decisiveEvent({
+          payload: {
+            settledWith: { homeScore: 4, awayScore: 2, sources: [], path: "free", gradedLine: "44.5" },
+          },
+        }),
+      ],
+      picks: [pickRow()],
+      watchlists: [{ id: "w-1", userId: "user-1", entityType: "TEAM", entityId: "team-home" }],
+      users: [{ id: "user-1", email: "elite@example.com", emailVerified: new Date() }],
+      subscriptions: [{ id: "sub-1", userId: "user-1", endpoint: "e1", p256dh: "k", auth: "a" }],
+    });
+
+    await drainSettlementOutbox(db, eliteDeps(), NOW);
+
+    const payload = (db._tables.events.rows[0] as Row)["payload"] as Row;
+    expect(payload["settledWith"]).toBeUndefined();
+  });
+
   it("freezes the payload and materializes one delivery per channel destination", async () => {
     const db = makeDb({
       events: [decisiveEvent()],
