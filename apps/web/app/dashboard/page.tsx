@@ -100,6 +100,26 @@ export default async function DashboardPage({
   const entitlements = await getUserEntitlements(user.id);
   const phaseName = getCurrentPricingPhase().name;
 
+  // A ZERO A CUSTOMER CANNOT DISTINGUISH FROM AN OUTAGE IS A FALSE STATEMENT
+  // (C-179). Every count below fails soft so one dead query cannot take down a
+  // signed-in member's dashboard - which is right - but the fallbacks are 0 and
+  // [], so a database outage rendered "0 settled, 0 wins, no picks today" and a
+  // member read it as an empty account rather than a broken load. /board and
+  // /picks already say DB_UNREACHABLE out loud; this surface did not.
+  //
+  // The flag is set by the fallback itself, so it cannot drift from the catches
+  // it describes: adding a query without routing its catch through here is the
+  // only way to reintroduce a silent zero, and the test pins the count.
+  let dbDegraded = false;
+  const softZero = (): number => {
+    dbDegraded = true;
+    return 0;
+  };
+  const softList = (): unknown[] => {
+    dbDegraded = true;
+    return [];
+  };
+
   const [
     todayPicks,
     todayPicksCount,
@@ -132,7 +152,7 @@ export default async function DashboardPage({
           .sort(comparePicksByRanking)
           .slice(0, entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1)),
       )
-      .catch(() => [] as unknown[]) as Promise<TodayPick[]>,
+      .catch(softList) as Promise<TodayPick[]>,
     db.pick
       .count({
         where: {
@@ -141,7 +161,7 @@ export default async function DashboardPage({
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
         },
       })
-      .catch(() => 0),
+      .catch(softZero),
     db.pick
       .count({
         where: {
@@ -151,12 +171,12 @@ export default async function DashboardPage({
           ...excludeSeedInProd,
         },
       })
-      .catch(() => 0),
-    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
+      .catch(softZero),
+    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
+    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
+    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
+    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
+    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
     db.pick
       .count({
         where: {
@@ -165,9 +185,9 @@ export default async function DashboardPage({
           isBootstrap: true,
         },
       })
-      .catch(() => 0),
-    db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(() => 0),
-    db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(() => 0),
+      .catch(softZero),
+    db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(softZero),
+    db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(softZero),
     getBillingNotice(user.id),
   ]);
 
@@ -237,6 +257,21 @@ export default async function DashboardPage({
 
       <main id="main-content" className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
+          {dbDegraded && (
+            <div
+              role="status"
+              className="mb-6 flex flex-col gap-2 rounded-lg border border-alert/40 bg-alert/10 px-4 py-3 text-sm text-ion-1 sm:flex-row sm:items-center"
+            >
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-alert">
+                Data store unreachable
+              </span>
+              <span className="break-words sm:ml-3">
+                At least one query did not respond, so some counts below are showing
+                zero because they could not be read - not because they are zero.
+                Nothing here has been changed.
+              </span>
+            </div>
+          )}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
