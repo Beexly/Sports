@@ -47,7 +47,11 @@ import { FF_OPPORTUNITY_ATTRIBUTION, type ExpectedPointsRow } from "../intellige
 import { normName, percentileRanks } from "../intelligence/qb-consensus";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
-import { evaluateProjectionBasis, type ProjectionBasisCode } from "./projection-basis";
+import {
+  evaluateProjectionBasis,
+  PRIOR_SEASON_GRACE_WEEKS,
+  type ProjectionBasisCode,
+} from "./projection-basis";
 import { adpByNormName, adpJoinKey, loadFfcAdp, FFC_ATTRIBUTION, type FfcAdpRow } from "../fantasy/adp-source";
 import { checkClearance, wrapExtractedRecord, type ExtractedRecord } from "../scraping/clearance-engine";
 
@@ -463,22 +467,31 @@ export async function loadGradedPool({
     return { targetSeason: season, targetWeek: week };
   })();
 
-  // Ask for the TARGET season, not the completed-season floor.
+  // Which season to ASK nflverse for, decided by the target week rather than
+  // by a fixed floor.
   //
-  // Found in review, and it was a live regression introduced by turning the
-  // gate on (C-220). loadPlayerModel defaults to latestNflverseInspectionSeason
-  // -> resolveFootballStatsSeason, which deliberately holds at the completed
-  // REG floor so product surfaces never advertise an empty in-progress season.
-  // That is right for a stats page and fatal here: the target advances week by
-  // week while the model stays pinned to last season, so the moment targetWeek
-  // passed PRIOR_SEASON_GRACE_WEEKS the gate refused EVERY player and the paid
-  // provider went silently empty, dropping every fantasy tool back to the
-  // illustrative pool. Asking for the target season fixes it at the source and
-  // costs nothing: loadPlayerModel already falls back to the newest season
-  // actually present in the response when the requested one has no REG rows,
-  // so during Weeks 1-3 this still resolves to the prior season and the gate
-  // still labels it as prior-season basis.
-  const model = await loadPlayerModel({ fetcher, season: target.targetSeason });
+  // Two review rounds shaped this line. First, it was loadPlayerModel's own
+  // default — latestNflverseInspectionSeason, the completed-REG floor. That is
+  // right for a stats page and fatal here: the target advanced week by week
+  // while the model stayed pinned to last season, so once targetWeek passed the
+  // grace window the gate refused EVERY player and the paid provider went
+  // silently empty (C-223).
+  //
+  // Then asking for `target.targetSeason` unconditionally traded that for the
+  // mirror-image failure, which the reviewer named immediately: early in a new
+  // season nflverse HAS current-season rows, but each player has only one or
+  // two games — under MIN_GAMES_FOR_BASIS — so the gate refused them all for a
+  // thin sample and the pool emptied again, this time in Weeks 2-4.
+  //
+  // The rule that satisfies both: inside the grace window the current season
+  // cannot yet supply the required games BY CONSTRUCTION, so ask for the prior
+  // season and let the gate label it honestly as a prior-season basis. From the
+  // first week outside the window, the current season can supply them, so ask
+  // for it. PRIOR_SEASON_GRACE_WEEKS is derived from MIN_GAMES_FOR_BASIS
+  // precisely so this handoff has no hole in it (C-225).
+  const basisSeasonToRequest =
+    target.targetWeek <= PRIOR_SEASON_GRACE_WEEKS ? target.targetSeason - 1 : target.targetSeason;
+  const model = await loadPlayerModel({ fetcher, season: basisSeasonToRequest });
   if (model.status === "source-error") {
     return {
       status: "source-error", season: 0, count: 0, players: [],

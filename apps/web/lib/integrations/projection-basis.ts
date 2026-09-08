@@ -26,11 +26,27 @@
  * a label. Pure: no clock, no DB, no env.
  */
 
-/** A prior season is a defensible basis through this week of the new season. */
-export const PRIOR_SEASON_GRACE_WEEKS = 3;
-
 /** Below this many games behind a player's number, there is nothing to project from. */
 export const MIN_GAMES_FOR_BASIS = 4;
+
+/**
+ * How many weeks into a new season a PRIOR-season basis stays admissible.
+ *
+ * DERIVED from MIN_GAMES_FOR_BASIS, not chosen. It was an independent literal
+ * 3, and the two constants did not compose: by target week W a player has
+ * played at most W-1 games, so a current-season basis cannot reach the 4-game
+ * floor until week 5 — while a prior-season basis was refused from week 4.
+ * Week 4 therefore admitted NO basis at all, current or prior, and the graded
+ * pool would have been empty for that entire week. Found in review, after the
+ * first fix for the post-grace failure exposed it.
+ *
+ * Tying the window to the sample requirement makes the handoff exact: prior
+ * season is admissible through week MIN_GAMES_FOR_BASIS, and at the first week
+ * it is refused the current season can already supply the required games.
+ * Changing MIN_GAMES_FOR_BASIS now moves this with it, so the gap cannot
+ * silently reopen (C-225).
+ */
+export const PRIOR_SEASON_GRACE_WEEKS = MIN_GAMES_FOR_BASIS;
 
 export type ProjectionBasisCode =
   | "CURRENT_SEASON"

@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { resolveNflWeek } from "@sports/data-ingestion";
 import { buildGradedPool } from "@/lib/integrations/graded-pool";
+import { NFL_REGULAR_SEASON_WEEKS } from "@sports/data-ingestion";
 import {
   evaluateProjectionBasis,
   MIN_GAMES_FOR_BASIS,
@@ -155,15 +156,23 @@ describe("the gate must not empty the paid pool as the season advances (C-223)",
     expect(buildGradedPool([profile("real", 4, 14)], [], [], [], {}, week4Current)).toHaveLength(1);
   });
 
-  it("asks the source for the target season, not the completed-REG floor", () => {
-    // Source-level, because loadGradedPool needs the network. The old call was
-    // `loadPlayerModel({ fetcher })`, which silently took the floor default.
+  it("never falls back to the completed-REG floor default", () => {
+    // Source-level, because loadGradedPool needs the network. The original call
+    // was `loadPlayerModel({ fetcher })`, which silently took
+    // latestNflverseInspectionSeason - the completed floor - and is what made
+    // the pool empty after the grace window.
+    //
+    // This assertion deliberately pins only what must NOT come back. Which
+    // season IS requested is a week-aware decision covered by C-225 below;
+    // an earlier version of this test hardcoded `season: target.targetSeason`
+    // and had to be rewritten one round later when that turned out to be the
+    // mirror-image bug. Pin the floor's absence, not one particular successor.
     const src = readFileSync(
       resolve(__dirname, "..", "lib", "integrations", "graded-pool.ts"),
       "utf8",
     );
-    expect(src).toContain("loadPlayerModel({ fetcher, season: target.targetSeason })");
     expect(src).not.toContain("await loadPlayerModel({ fetcher });");
+    expect(src).toContain("const model = await loadPlayerModel({ fetcher, season: basisSeasonToRequest });");
   });
 
   it("reports a refused pool as degraded, never as a healthy empty one", () => {
@@ -205,5 +214,63 @@ describe("the gate must not empty the paid pool as the season advances (C-223)",
     const wk3 = evaluateProjectionBasis({ targetSeason: 2026, targetWeek: 3, basisSeason: 2025, gamesBehind: 17 });
     expect(wk3.ok && wk3.label).not.toContain("no 2026 games played yet");
     expect(wk3.ok && wk3.label).toContain("Week 3");
+  });
+});
+
+describe("every week has exactly one admissible basis (C-225)", () => {
+  /**
+   * The hole the C-223 fix exposed, found in review as "the current short-sample
+   * transition is a distinct failure". The two constants had been chosen
+   * independently and did not compose: by target week W a player has played at
+   * most W-1 games, so a CURRENT-season basis could not reach the 4-game floor
+   * until week 5 — while a PRIOR-season basis was refused from week 4. Week 4
+   * admitted no basis at all and the pool would have been empty for the week.
+   */
+  const anyAdmissible = (week: number): { current: boolean; prior: boolean } => ({
+    current: evaluateProjectionBasis({
+      targetSeason: 2026, targetWeek: week, basisSeason: 2026, gamesBehind: week - 1,
+    }).ok,
+    prior: evaluateProjectionBasis({
+      targetSeason: 2026, targetWeek: week, basisSeason: 2025, gamesBehind: 17,
+    }).ok,
+  });
+
+  it("never leaves a week with no basis at all", () => {
+    for (let week = 1; week <= NFL_REGULAR_SEASON_WEEKS; week++) {
+      const { current, prior } = anyAdmissible(week);
+      expect(current || prior, `week ${week} admits no basis, current or prior`).toBe(true);
+    }
+  });
+
+  it("hands off from prior to current with no overlap and no gap", () => {
+    // The last week prior-season is admissible must be immediately followed by
+    // the first week current-season is. Asserted as a handoff rather than
+    // against literal week numbers, so retuning MIN_GAMES_FOR_BASIS moves both.
+    const lastPrior = PRIOR_SEASON_GRACE_WEEKS;
+    expect(anyAdmissible(lastPrior).prior).toBe(true);
+    expect(anyAdmissible(lastPrior + 1).prior).toBe(false);
+    expect(anyAdmissible(lastPrior + 1).current).toBe(true);
+  });
+
+  it("derives the grace window from the sample floor rather than a loose literal", () => {
+    // The invariant that makes the handoff hold: prior season must stay
+    // admissible until a current-season player can actually clear the floor.
+    expect(PRIOR_SEASON_GRACE_WEEKS).toBe(MIN_GAMES_FOR_BASIS);
+    // Restated as the property it enforces, so this survives a value change.
+    expect(PRIOR_SEASON_GRACE_WEEKS + 1 - 1).toBeGreaterThanOrEqual(MIN_GAMES_FOR_BASIS);
+  });
+
+  it("asks nflverse for the season the week can actually support", () => {
+    // Asking for the target season unconditionally was the mirror-image bug:
+    // in Weeks 2-4 nflverse HAS current-season rows but every player is one or
+    // two games in, so the gate refused them all and the pool emptied again.
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "integrations", "graded-pool.ts"),
+      "utf8",
+    );
+    expect(src).toContain(
+      "target.targetWeek <= PRIOR_SEASON_GRACE_WEEKS ? target.targetSeason - 1 : target.targetSeason",
+    );
+    expect(src).not.toContain("loadPlayerModel({ fetcher, season: target.targetSeason })");
   });
 });
