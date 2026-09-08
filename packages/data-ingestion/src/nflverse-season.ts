@@ -150,6 +150,15 @@ export function nflWeekOneStart(season: number): Date {
 /** Regular-season weeks in the modern NFL schedule. */
 export const NFL_REGULAR_SEASON_WEEKS = 18;
 
+/**
+ * Weeks of postseason after week 18 (wild card, divisional, conference, Super
+ * Bowl). Used only to decide WHICH SEASON a January or early-February date
+ * belongs to: the season that opened the previous September is still being
+ * played, so the frame stays on it rather than jumping to the one eight months
+ * away.
+ */
+export const NFL_POSTSEASON_WEEKS = 4;
+
 export type NflWeekResolution = {
   /** Labelled season the week belongs to. */
   readonly season: number;
@@ -174,13 +183,45 @@ export type NflWeekResolution = {
  * `inRegularSeason`.
  */
 export function resolveNflWeek(now = new Date()): NflWeekResolution {
-  const season = currentNflSeasonLabel(now);
-  const start = nflWeekOneStart(season);
-  const elapsedDays = Math.floor((now.getTime() - start.getTime()) / (24 * 60 * 60 * 1000));
-  if (elapsedDays < 0) return { season, week: 1, inRegularSeason: false };
-  const week = Math.floor(elapsedDays / 7) + 1;
-  if (week > NFL_REGULAR_SEASON_WEEKS) {
-    return { season, week: NFL_REGULAR_SEASON_WEEKS, inRegularSeason: false };
+  // The season is chosen by WHICH WEEK-ONE WINDOW WE ARE IN, never by the
+  // month. Found in review, and the first version of this function had it
+  // wrong: it delegated to currentNflSeasonLabel, which returns `year - 1` for
+  // every month before September because it answers a question about
+  // COMPLETED STATS. That is the right answer for a stats cursor and the wrong
+  // one for a forward-looking projection target - from February to August it
+  // measured elapsed days from the PREVIOUS season's opener, so 2026-08-15
+  // resolved to season 2025 week 18 instead of the 2026 week 1 everyone in the
+  // draft window is actually preparing for. The graded pool then read
+  // basisSeason === targetSeason and published "2025 season form" as CURRENT
+  // through the entire offseason, which is precisely the false provenance this
+  // gate exists to prevent. The original tests all started in September, so
+  // none of them could see it.
+  const dayMs = 24 * 60 * 60 * 1000;
+  const calendarYear = now.getUTCFullYear();
+  const weekIn = (season: number): number =>
+    Math.floor(Math.floor((now.getTime() - nflWeekOneStart(season).getTime()) / dayMs) / 7) + 1;
+
+  // Inside the window that opened this calendar year (September onward).
+  if (now.getTime() >= nflWeekOneStart(calendarYear).getTime()) {
+    const week = weekIn(calendarYear);
+    return week > NFL_REGULAR_SEASON_WEEKS
+      ? { season: calendarYear, week: NFL_REGULAR_SEASON_WEEKS, inRegularSeason: false }
+      : { season: calendarYear, week, inRegularSeason: true };
   }
-  return { season, week, inRegularSeason: true };
+
+  // Before this year's opener. The season that opened LAST September may still
+  // be running - and "running" has to include the postseason, or a late-January
+  // date jumps eight months forward to a season nobody has played.
+  const priorWeek = weekIn(calendarYear - 1);
+  if (priorWeek <= NFL_REGULAR_SEASON_WEEKS) {
+    return { season: calendarYear - 1, week: priorWeek, inRegularSeason: true };
+  }
+  if (priorWeek <= NFL_REGULAR_SEASON_WEEKS + NFL_POSTSEASON_WEEKS) {
+    // Postseason: still that season, clamped to the last regular-season week.
+    return { season: calendarYear - 1, week: NFL_REGULAR_SEASON_WEEKS, inRegularSeason: false };
+  }
+
+  // True offseason (roughly late February to August): the frame is week 1 of
+  // the season being headed into.
+  return { season: calendarYear, week: 1, inRegularSeason: false };
 }

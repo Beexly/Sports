@@ -3,6 +3,7 @@ import {
   nflWeekOneStart,
   resolveNflWeek,
   NFL_REGULAR_SEASON_WEEKS,
+  NFL_POSTSEASON_WEEKS,
 } from "../nflverse-season";
 
 /**
@@ -86,6 +87,72 @@ describe("the target week is clamped at both ends", () => {
       const { week } = resolveNflWeek(day);
       expect(week, day.toISOString()).toBeGreaterThanOrEqual(1);
       expect(week, day.toISOString()).toBeLessThanOrEqual(NFL_REGULAR_SEASON_WEEKS);
+      day.setUTCDate(day.getUTCDate() + 1);
+    }
+  });
+});
+
+describe("the offseason points FORWARD, not back at the finished season", () => {
+  /**
+   * Found in review, and the original tests could not have caught it: every one
+   * of them started in September. The first version delegated the season to
+   * `currentNflSeasonLabel`, which answers a question about COMPLETED STATS and
+   * returns `year - 1` for every month before September. Correct for a stats
+   * cursor, wrong for a projection target - so from February to August the
+   * frame measured from the PREVIOUS opener and read the finished season as
+   * current. The graded pool then had basisSeason === targetSeason and
+   * published last year's numbers as "current season form" through the entire
+   * draft window, which is the exact false provenance this gate exists to stop.
+   */
+  it("reads August as week 1 of the season being headed into", () => {
+    // Mid-August 2026: the 2025 season is over, 2026 has not started, and every
+    // projection surface is about 2026 Week 1. The old code said 2025 week 18.
+    expect(resolveNflWeek(new Date("2026-08-15T12:00:00Z"))).toEqual({
+      season: 2026,
+      week: 1,
+      inRegularSeason: false,
+    });
+  });
+
+  it("reads late February through August the same way", () => {
+    for (const day of ["2026-02-25", "2026-04-01", "2026-06-15", "2026-07-31", "2026-09-01"]) {
+      const r = resolveNflWeek(new Date(`${day}T12:00:00Z`));
+      expect({ day, ...r }).toEqual({ day, season: 2026, week: 1, inRegularSeason: false });
+    }
+  });
+
+  it("keeps January and the Super Bowl on the season that is still being played", () => {
+    // The other side of the boundary, and the reason a bare "point forward"
+    // rule is wrong: in January the season that opened in September is still
+    // running its postseason. Jumping to the next season would be eight months
+    // early and would age a perfectly current basis out of every window.
+    const january = resolveNflWeek(new Date("2027-01-25T00:00:00Z"));
+    expect(january.season).toBe(2026);
+    expect(january.week).toBe(NFL_REGULAR_SEASON_WEEKS);
+    expect(january.inRegularSeason).toBe(false);
+
+    // Super Bowl week is the last date that still belongs to it.
+    const superBowl = resolveNflWeek(new Date("2027-02-07T00:00:00Z"));
+    expect(superBowl.season).toBe(2026);
+    expect(NFL_POSTSEASON_WEEKS).toBeGreaterThan(0);
+  });
+
+  it("never reports the completed season as the target once it is over", () => {
+    // The property, stated directly: outside the regular season, the target
+    // season must never be more than one behind the calendar year, and in the
+    // deep offseason it must equal it.
+    const day = new Date("2026-01-01T00:00:00Z");
+    while (day.getUTCFullYear() < 2030) {
+      const { season } = resolveNflWeek(day);
+      const year = day.getUTCFullYear();
+      expect(season, day.toISOString()).toBeGreaterThanOrEqual(year - 1);
+      expect(season, day.toISOString()).toBeLessThanOrEqual(year);
+      // June is unambiguously offseason: the frame must be this year's week 1.
+      if (day.getUTCMonth() === 5) {
+        expect(resolveNflWeek(day), day.toISOString()).toEqual({
+          season: year, week: 1, inRegularSeason: false,
+        });
+      }
       day.setUTCDate(day.getUTCDate() + 1);
     }
   });

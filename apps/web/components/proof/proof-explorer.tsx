@@ -30,7 +30,14 @@ export interface ProofBucket {
 export interface ProofExplorerProps {
   readonly buckets: readonly ProofBucket[];
   readonly sampleSize: number;
-  readonly brierScore: number | null;
+  /**
+   * Accepted but DELIBERATELY NOT RENDERED (C-223). Kept on the prop type
+   * because the loader still computes it for the operator/ops surfaces; this
+   * public panel must not display it, because scoring a 0-100 ranking signal
+   * as though it were a forecast probability is the claim this product
+   * refuses to make.
+   */
+  readonly brierScore?: number | null;
   readonly discriminationSpread: number | null;
   readonly discriminationTrend: string;
   readonly isCollecting: boolean;
@@ -42,7 +49,6 @@ const pct = (v: number) => `${Math.round(v * 100)}%`;
 export function ProofExplorer({
   buckets,
   sampleSize,
-  brierScore,
   discriminationSpread,
   discriminationTrend,
   isCollecting,
@@ -80,8 +86,16 @@ export function ProofExplorer({
             }))}
             sampleSize={sampleSize}
           />
+          {/* C-223. This caption used to read "predicted vs observed · the
+              diagonal is perfect calibration", and the Brier stat beside it
+              scored (confidence/100 - outcome)^2. Both treat the Edge Index AS
+              a forecast probability, which is the one claim this product
+              refuses to make - and CalibrationPanel had already been corrected
+              in this same change, so the two public surfaces contradicted each
+              other. Found in review. The band curve is a SEPARATION read: do
+              higher-Edge picks win more often than lower-Edge ones. */}
           <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-            predicted vs observed · the diagonal is perfect calibration
+            band rank vs observed rate · rising left to right is separation
           </p>
         </div>
 
@@ -89,10 +103,11 @@ export function ProofExplorer({
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
             <Stat label="Settled" value={<CountUp value={sampleSize} group className="tabular-nums" />} />
-            <Stat
-              label="Brier"
-              value={brierScore === null ? "n/a" : <CountUp value={brierScore} decimals={3} className="tabular-nums" />}
-            />
+            {/* The Brier score is deliberately NOT shown: it is only a
+                calibration score if the number being scored is a probability,
+                and the Edge Index is a 0-100 ranking signal. The separation
+                spread beside this is the honest measure of the same panel. */}
+            <Stat label="Bands" value={<CountUp value={buckets.length} className="tabular-nums" />} />
             <Stat
               label="Disc. spread"
               value={
@@ -138,7 +153,10 @@ export function ProofExplorer({
             {active && active.sufficientSample ? (
               <div className="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
                 <Stat label="Observed" value={pct(active.observedWinRate)} tone="text-orbital-cyan" />
-                <Stat label="Expected" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
+                {/* "Expected" was the band's mean confidence rendered as a
+                    promised win rate. Same claim, one row down. It now reads as
+                    what it is: the band's own Edge level. */}
+                <Stat label="Edge level" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
                 {/* Sign glyph carries the direction alongside the color —
                     verify above expectation, caution below (plasma is CTA
                     territory, never a shortfall signal). */}

@@ -140,9 +140,18 @@ export function evaluateProjectionBasis(input: ProjectionBasisInput): Projection
       targetSeason,
       targetWeek,
       gamesBehind,
-      // The label a Week 1 reader must see. It names the season the number
-      // came from, not the season it is for.
-      label: `${basisSeason} season basis, ${gamesBehind} games (no ${targetSeason} games played yet)`,
+      // Names the season the number came from, not the season it is for.
+      //
+      // The parenthetical is WEEK-1 ONLY. Found in review: it was
+      // unconditional, so in Weeks 2 and 3 - both still inside the grace
+      // window - the label told a customer "no 2026 games played yet" after
+      // one or two weeks of 2026 football had been played. A false statement
+      // inside the provenance line is worse than no provenance line.
+      label:
+        targetWeek <= 1
+          ? `${basisSeason} season basis, ${gamesBehind} games (no ${targetSeason} games played yet)`
+          : `${basisSeason} season basis, ${gamesBehind} games (${targetSeason} Week ${targetWeek}; ` +
+            `${targetSeason} sample not yet large enough)`,
     };
   }
 

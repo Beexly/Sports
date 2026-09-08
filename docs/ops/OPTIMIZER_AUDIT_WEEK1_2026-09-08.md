@@ -61,7 +61,7 @@ All three new tests were verified against the pre-fix code and fail on it.
 | ~~MEDIUM~~ FIXED | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts` | ~~The 60% exposure cap actually forces lineup 2 to be fully disjoint from lineup 1~~ — fixed across C-204/C-208/C-217; the cap is now a fixed final bound with a shortfall rebuild, pinned by the four-WR regression case |
 | MEDIUM | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts:96` | No game/team constraint: a Showdown CSV import yields a lineup DraftKings rejects |
 | MEDIUM | dfs-optimizer | `apps/web/lib/fantasy/dfs-optimizer.ts:168` | Stacked solve on a real ~900-row DK slate allocates ~170MB per solve on the main thread |
-| MEDIUM | props | `apps/web/lib/fantasy/props.ts:114` | Priced UNDER props report and rank on the OVER edge, sign-flipped |
+| ~~MEDIUM~~ FIXED | props | `apps/web/lib/fantasy/props.ts` | ~~Priced UNDER props report and rank on the OVER edge, sign-flipped~~ — fixed in C-203; `edge` now follows the recommended side, pinned by a regression test that is red against the pre-fix code |
 | MEDIUM | waivers | `apps/web/lib/fantasy/waivers.ts:21` | Live waiver scoring is blind to injuries by construction, and the board shows no injury at all |
 | MEDIUM | waivers | `apps/web/app/fantasy/waivers/page.tsx:35` | Live pool carries no season or freshness label on this page: the badge is hard-defaulted to "illustrative" while the note claims real grades |
 | MEDIUM | waivers | `apps/web/lib/integrations/graded-pool.ts:451` | The provider's only freshness stamp is the fetch clock, and the season silently falls back to 2025 |

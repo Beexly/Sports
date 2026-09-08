@@ -439,10 +439,16 @@ export type GenResult = {
   readonly partial: boolean;
   /**
    * The per-player appearance bound the RETURNED set was built under, in whole
-   * lineups. `exposureCap / lineups.length <= maxExposure` whenever
-   * `floor(maxExposure * lineups.length) >= 1`; below that a player must
-   * appear once or not at all, so the bound is 1 and the realized share is
-   * higher than any percentage cap can express (C-217).
+   * lineups: `max(1, ceil(maxExposure * lineups.length))`.
+   *
+   * Because the bound rounds UP, `exposureCap / lineups.length` CAN exceed
+   * `maxExposure` — 0.6 over 3 lineups yields 2 (67%), over 4 yields 3 (75%).
+   * An earlier version of this docstring asserted the opposite inequality held
+   * whenever `floor(maxExposure * n) >= 1`; that is false, it contradicted the
+   * `capFor` comment three screens below, and it was caught in review. Report
+   * THIS integer to a user and never restate `maxExposure` as the realized
+   * share — the arithmetic cannot honour the percentage, and saying so is the
+   * point (C-217).
    */
   readonly exposureCap: number;
 };

@@ -3,7 +3,11 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { resolveNflWeek } from "@sports/data-ingestion";
 import { buildGradedPool } from "@/lib/integrations/graded-pool";
-import { evaluateProjectionBasis, MIN_GAMES_FOR_BASIS } from "@/lib/integrations/projection-basis";
+import {
+  evaluateProjectionBasis,
+  MIN_GAMES_FOR_BASIS,
+  PRIOR_SEASON_GRACE_WEEKS,
+} from "@/lib/integrations/projection-basis";
 import type { PlayerProfile } from "@/lib/intelligence/player-model";
 
 /**
@@ -117,5 +121,89 @@ describe("the gate is ON by default, not waiting to be opted into (C-220)", () =
       { targetSeason: season, targetWeek: week, basisSeason: 2025 },
     );
     expect(pool).toHaveLength(1);
+  });
+});
+
+describe("the gate must not empty the paid pool as the season advances (C-223)", () => {
+  /**
+   * The regression C-220 introduced, found in review and rated RED. Turning the
+   * gate on made the TARGET advance week by week while `loadPlayerModel` stayed
+   * pinned to `latestNflverseInspectionSeason()` — the completed-REG floor,
+   * which is deliberately conservative and correct for a stats page. The moment
+   * targetWeek passed PRIOR_SEASON_GRACE_WEEKS every player was refused, the
+   * paid provider went silently empty, and every fantasy tool fell back to the
+   * illustrative pool. Fixed at the source: the pool now asks nflverse for the
+   * TARGET season.
+   */
+  it("refuses a prior-season basis after the grace window — the behaviour that broke it", () => {
+    const week4 = { targetSeason: 2026, targetWeek: PRIOR_SEASON_GRACE_WEEKS + 1, basisSeason: 2025 };
+    expect(evaluateProjectionBasis({ ...week4, gamesBehind: 17 }).ok).toBe(false);
+    // And the pool built on that frame is genuinely empty — this is correct
+    // behaviour for a stale basis, and it is why the SEASON REQUESTED matters.
+    expect(buildGradedPool([profile("real", 17, 14)], [], [], [], {}, week4)).toHaveLength(0);
+  });
+
+  it("keeps the pool alive at the same week once the basis is the target season", () => {
+    // The fix, stated as a property: at Week 4 a CURRENT-season basis passes.
+    // loadGradedPool now requests target.targetSeason from loadPlayerModel, and
+    // loadPlayerModel already falls back to the newest season actually present
+    // when the requested one has no REG rows — so Weeks 1-3 still resolve to
+    // the prior season and still label it as prior-season basis.
+    const week4Current = { targetSeason: 2026, targetWeek: 4, basisSeason: 2026 };
+    const verdict = evaluateProjectionBasis({ ...week4Current, gamesBehind: 4 });
+    expect(verdict.ok).toBe(true);
+    expect(buildGradedPool([profile("real", 4, 14)], [], [], [], {}, week4Current)).toHaveLength(1);
+  });
+
+  it("asks the source for the target season, not the completed-REG floor", () => {
+    // Source-level, because loadGradedPool needs the network. The old call was
+    // `loadPlayerModel({ fetcher })`, which silently took the floor default.
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "integrations", "graded-pool.ts"),
+      "utf8",
+    );
+    expect(src).toContain("loadPlayerModel({ fetcher, season: target.targetSeason })");
+    expect(src).not.toContain("await loadPlayerModel({ fetcher });");
+  });
+
+  it("reports a refused pool as degraded, never as a healthy empty one", () => {
+    // Also from review: status "live" + count 0 + error null made a total
+    // refusal indistinguishable from an ordinary empty slate, and the API
+    // forwarded success: true.
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "integrations", "graded-pool.ts"),
+      "utf8",
+    );
+    expect(src).toContain('status: refused ? "source-error" : "live"');
+    expect(src).toContain("error: poolVerdict.ok ? null : poolVerdict.reason");
+  });
+
+  it("never prints a game count it did not measure", () => {
+    // The label used to pass MIN_GAMES_FOR_BASIS, so every response claimed
+    // exactly four games regardless of the real samples — provenance invented
+    // from a constant, by the gate whose whole job is preventing that.
+    const src = readFileSync(
+      resolve(__dirname, "..", "lib", "integrations", "graded-pool.ts"),
+      "utf8",
+    );
+    expect(src).not.toContain("gamesBehind: MIN_GAMES_FOR_BASIS");
+    expect(src).toContain("Math.min(...survivingGames)");
+
+    // And the label itself reports the real minimum, not the floor.
+    const label = evaluateProjectionBasis({
+      targetSeason: 2026, targetWeek: 1, basisSeason: 2025, gamesBehind: 17,
+    });
+    expect(label.ok && label.label).toContain("17 games");
+  });
+
+  it("does not claim zero current-season games once the season has started", () => {
+    // Weeks 2 and 3 are inside the grace window, and the parenthetical used to
+    // be unconditional — telling a customer "no 2026 games played yet" after
+    // two weeks of 2026 football.
+    const wk1 = evaluateProjectionBasis({ targetSeason: 2026, targetWeek: 1, basisSeason: 2025, gamesBehind: 17 });
+    expect(wk1.ok && wk1.label).toContain("no 2026 games played yet");
+    const wk3 = evaluateProjectionBasis({ targetSeason: 2026, targetWeek: 3, basisSeason: 2025, gamesBehind: 17 });
+    expect(wk3.ok && wk3.label).not.toContain("no 2026 games played yet");
+    expect(wk3.ok && wk3.label).toContain("Week 3");
   });
 });
