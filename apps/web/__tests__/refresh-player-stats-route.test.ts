@@ -23,6 +23,7 @@ import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
 import { CRON_MANIFEST } from "@/lib/ops/cron-schedule-manifest";
+import { SATELLITE_DAILY_HOUR_UTC } from "@/lib/ingestion/satellite-window";
 
 function req(url: string, auth?: string): Request {
   return new Request(url, auth ? { headers: { authorization: auth } } : undefined);
@@ -57,58 +58,155 @@ describe("GET /api/cron/refresh-player-stats", () => {
   });
   afterEach(() => vi.unstubAllEnvs());
 
-  it("SCHEDULED RUNS INGEST NO SATELLITES - injuries, depth charts, snaps and NGS are all skipped (C-198)", async () => {
-    // CHARACTERIZATION TEST, pinning a real production gap so it cannot stay
-    // invisible. It asserts what the code does TODAY, not what it should do.
-    //
-    // The satellites sit behind `runFull`, which is only true for
-    // ?mode=full|all. Neither scheduled caller passes it: apps/web/vercel.json
-    // schedules the bare path "/api/cron/refresh-player-stats" (0,30 * * * *)
-    // and .github/workflows/external-cron.yml curls the bare path too. So on
-    // every scheduled run injuries, depth charts, snap counts and Next Gen
-    // Stats are skipped - which is why, two days before NFL 2026 Week 1,
-    // depth_chart_entries holds 0 rows and injuries stop at 2025 week 22.
-    //
-    // Every OTHER test in this file passes ?mode=full, so the suite proves the
-    // satellites work when invoked in a mode nothing invokes them in. That is
-    // the gap this test exists to make loud.
-    //
-    // WHEN THIS IS FIXED (either the schedule gains ?mode=full or the route's
-    // default flips) THIS TEST WILL FAIL. That is intended: delete it and say
-    // so in the ledger. Do not "fix" it by loosening the assertion.
+  /**
+   * These three replace the C-198 CHARACTERIZATION test, which pinned the gap
+   * rather than the fix and said in its own comment: "WHEN THIS IS FIXED THIS
+   * TEST WILL FAIL. That is intended: delete it and say so in the ledger. Do
+   * not 'fix' it by loosening the assertion." C-244 fixed it from inside the
+   * route, so it is deleted here as instructed and replaced with assertions
+   * that are strictly stronger - it could only ever prove satellites DON'T
+   * run; these prove when they do and when they don't, and pin the schedule
+   * the window was derived from.
+   *
+   * It also had to go for a second reason: the old test called the route on
+   * the WALL CLOCK, so once the daily window existed it would have passed
+   * every hour of the day except one. A test that fails for thirty minutes a
+   * day is worse than no test.
+   */
+  it("a scheduled run outside the daily window still ingests no satellites", async () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "ok",
       season: 2024,
       statsUpserted: 7,
     });
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(Date.UTC(2026, 8, 8, 3, 0, 0)));
+    try {
+      const res = await GET(
+        req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"),
+      );
+      const body = await res.json();
 
-    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
-    const body = await res.json();
+      expect(body.mode).toBe("primary");
+      expect(body.satelliteReason).toBe("primary-only");
+      expect(ingestInjuries).not.toHaveBeenCalled();
+      expect(ingestDepthCharts).not.toHaveBeenCalled();
+      expect(ingestSnapCounts).not.toHaveBeenCalled();
+      expect(ingestNextGenStats).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 
-    expect(body.mode).toBe("primary");
-    expect(ingestInjuries).not.toHaveBeenCalled();
-    expect(ingestDepthCharts).not.toHaveBeenCalled();
-    expect(ingestSnapCounts).not.toHaveBeenCalled();
-    expect(ingestNextGenStats).not.toHaveBeenCalled();
+  it("the daily-window run ingests all four satellites with no query string (C-244)", async () => {
+    // The gap in one assertion. Every OTHER satellite test in this file passes
+    // ?mode=full, so the suite proved the satellites work in a mode nothing
+    // invoked them in; measured on production 2026-09-08,
+    // depth_chart_entries held zero rows as a result. This is the scheduled
+    // caller - a bare path, exactly what vercel.json fires.
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok",
+      season: 2024,
+      statsUpserted: 7,
+    });
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(Date.UTC(2026, 8, 8, SATELLITE_DAILY_HOUR_UTC, 0, 0)));
+    try {
+      const res = await GET(
+        req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"),
+      );
+      const body = await res.json();
 
-    // The route half alone is not enough: a scheduler-only fix (adding
-    // ?mode=full to the cron path) would leave every assertion above green
-    // while this test's title and comments went on claiming scheduled runs
-    // skip satellites. So pin the SCHEDULER too. When the schedule is fixed
-    // this assertion fails, which is the whole point - delete the test then
-    // and say so in the ledger.
+      expect(body.mode).toBe("full");
+      expect(body.satelliteReason).toBe("daily-window");
+      expect(ingestInjuries).toHaveBeenCalled();
+      expect(ingestDepthCharts).toHaveBeenCalled();
+      expect(ingestSnapCounts).toHaveBeenCalled();
+      // All three NGS families, not just one.
+      expect((ingestNextGenStats as Mock).mock.calls.map((c) => c[1]).sort()).toEqual([
+        "passing",
+        "receiving",
+        "rushing",
+      ]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("the daily window refuses a season it did not ask for (C-198 second-order risk)", async () => {
+    // The unpublished-season fallback silently moves `season` to the last
+    // completed one, and `season` is what the satellites are ingested FOR. An
+    // unattended full run today would therefore write 2025 depth charts - the
+    // newest from the Super Bowl - as the newest depth-chart rows in the
+    // database. That is worse than the empty table it fills: empty reads as
+    // "no data", stale reads as a lineup. So the window stands down while the
+    // primary is on a fallback season.
+    const clock = new Date(Date.UTC(2026, 8, 8, SATELLITE_DAILY_HOUR_UTC, 0, 0));
+    const labelled = ingestionTargetNflSeason(clock);
+    const floor = currentNflSeason(clock);
+    expect(labelled, "no rollover window on this date - the test proves nothing").not.toBe(floor);
+
+    (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) =>
+      season === labelled
+        ? { status: "source-error", season, playersUpserted: 0, statsUpserted: 0, error: "HTTP 404" }
+        : { status: "ok", season, playersUpserted: 1, statsUpserted: 9 },
+    );
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(clock);
+    try {
+      const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+      const body = await res.json();
+
+      expect(body.season).toBe(floor); // the fallback did happen
+      expect(body.mode).toBe("primary");
+      expect(body.satelliteReason).toBe("skipped-prior-season");
+      expect(ingestDepthCharts).not.toHaveBeenCalled();
+      expect(ingestInjuries).not.toHaveBeenCalled();
+      expect(ingestSnapCounts).not.toHaveBeenCalled();
+      expect(ingestNextGenStats).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("an explicit mode=full is still the operator's to aim, fallback or not", async () => {
+    // The stand-down above applies to the UNATTENDED run only. An operator who
+    // names the mode gets the mode, and ?season is theirs to point wherever
+    // they need - that is how the 2025 satellites get backfilled at all.
+    const clock = new Date(Date.UTC(2026, 8, 8, SATELLITE_DAILY_HOUR_UTC, 0, 0));
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok",
+      season: 2025,
+      statsUpserted: 4,
+    });
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(clock);
+    try {
+      const res = await GET(
+        req("http://x/api/cron/refresh-player-stats?season=2025&mode=full", "Bearer secret"),
+      );
+      const body = await res.json();
+      expect(body.satelliteReason).toBe("requested");
+      expect(ingestDepthCharts).toHaveBeenCalledWith(2025);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("pins the schedule the daily window was derived from", () => {
+    // The window is `hour === 10 && minute < 30`, and "minute < 30" is only a
+    // once-a-day rule while the cron fires at :00 and :30. Change the cadence
+    // to */10 and one heavy run silently becomes three; change it to a
+    // different hour-of-day expression and it becomes zero. Either way
+    // satellite-window.ts has to be revisited, so pin the assumption where it
+    // is made rather than leaving it implied.
     const entries = CRON_MANIFEST.filter((e) => e.path.includes("refresh-player-stats"));
     expect(entries.length, "refresh-player-stats missing from the cron manifest").toBeGreaterThan(0);
-    // BOTH spellings. The route reads `mode === "full" || mode === "all"`, so
-    // a schedule fixed with ?mode=all would close the gap while an assertion
-    // that only looks for "mode=full" stayed green - this test's title would
-    // then be a false statement about production, which is the one failure it
-    // exists to prevent. Found in review.
     entries.forEach((e) =>
       expect(
-        /[?&]mode=(full|all)\b/i.test(e.path),
-        `${e.path} now requests satellite mode - the gap is closed`,
-      ).toBe(false),
+        e.schedule,
+        `${e.path} no longer fires at :00/:30 - re-derive the window in lib/ingestion/satellite-window.ts`,
+      ).toBe("0,30 * * * *"),
     );
   });
 

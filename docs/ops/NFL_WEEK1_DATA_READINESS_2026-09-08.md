@@ -2,7 +2,10 @@
 
 **Measured 2026-09-08 on production (read-only SELECT) and against the repo.**
 **Kickoff: 2026-09-10T00:20:00Z — roughly 48 hours out.**
-**Status: OPEN. The remedy touches `vercel.json`, which agents do not edit.**
+**Status: CLOSED IN CODE 2026-09-08 (C-244). The satellites now run once a day
+from inside the route, because `vercel.json` is agent-frozen and the gap was
+fixable without it. The scheduling fix below is still the cleaner shape and is
+still the founder's to make — see "The fix", option C.**
 
 ## The state of the inputs
 
@@ -65,15 +68,44 @@ line 249:  ...refresh-player-stats?season=2024&mode=full
 ```
 
 The suite proves the satellites work **when invoked in a mode nothing invokes
-them in**. Nothing asserted that a scheduled invocation reaches them. Added in
-this change: a characterization test named
-`"SCHEDULED RUNS INGEST NO SATELLITES ... (C-198)"` that pins the current
-behaviour so the gap is loud in the test output. It is written to FAIL once the
-gap is closed, and says so in its own comment.
+them in**. Nothing asserted that a scheduled invocation reaches them. A
+characterization test named `"SCHEDULED RUNS INGEST NO SATELLITES ... (C-198)"`
+was added to pin that, written to FAIL once the gap closed and saying so in its
+own comment.
 
-## The fix (founder action — `vercel.json` is agent-frozen)
+**Superseded 2026-09-08 (C-244).** The gap is closed, so that test was deleted
+as instructed and replaced with assertions that are strictly stronger: it could
+only ever prove the satellites *do not* run. The replacements prove when they
+do and when they do not, on a fixed clock rather than the wall clock, cover all
+three Next Gen Stats families, assert that exactly one heavy run falls in a day
+of the real cron expression, and pin the `0,30 * * * *` schedule the daily
+window was derived from — so changing the cadence to `*/10` cannot silently
+turn one heavy run into three.
 
-Pick one:
+## The fix
+
+**C. SHIPPED 2026-09-08 (C-244) — a daily window inside the route.** The
+satellites run on one invocation a day (10:00 UTC, the first of the two
+firings) with no query string, so the schedule reaches them without touching
+`vercel.json`. An explicit `?mode=` still decides in both directions. Two
+things were checked rather than assumed before shipping it. The route's stated
+reason for primary-only is a **Hobby** serverless OOM on 2026-08-06, and the
+account is on **Vercel Pro** (verified against the Vercel API) — out of date,
+but not disproven, since nobody has measured a full run on Pro, so the default
+did not flip. And running the satellites whenever their coverage lags the
+primary would, with an EMPTY depth-chart table, take the heavy path on all 48
+daily invocations until it succeeded; a clock window is its own cooldown.
+
+It also stands down while the primary is on a fallback season, which was
+C-198's recorded second-order risk and would otherwise have fired on the very
+first run: the fallback moves `season` to the last completed one, and `season`
+is what the satellites ingest for, so an unattended full run today would write
+2025 depth charts — the newest from the Super Bowl — as the newest depth-chart
+rows in the database. Empty reads as "no data"; stale reads as a lineup.
+
+The two options below remain the cleaner shape and are still the founder's to
+make. Neither is urgent now, and A is what to reach for when you want the
+cadence to be a scheduling decision rather than a constant in the route:
 
 **A. Change the schedule (smallest, no code change).** Point the cron at
 `/api/cron/refresh-player-stats?mode=full`. Cost: six extra nflverse fetches
