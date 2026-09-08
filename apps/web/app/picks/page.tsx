@@ -447,7 +447,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               data-testid="picks-locked-upgrade"
               className="rounded-xl border border-ultraviolet/40 bg-ultraviolet/20 p-8 text-center"
             >
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-ultraviolet">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-ultraviolet-glow">
                 Full board is a Pro feature
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
@@ -540,14 +540,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               entitlements.dailyPickLimit, not a hardcoded absolute. */}
           {isFreeTier && picks.length > 0 && (
             <div className="mt-10 rounded-xl border border-ultraviolet/40 bg-ultraviolet/20 p-6 text-center">
-              <p className="text-sm font-semibold text-ultraviolet">
+              <p className="text-sm font-semibold text-ultraviolet-glow">
                 {hasAccount
                   ? entitlements.tier !== "FREE"
                     ? `Your plan sees the daily teaser on the betting board: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
                     : `You're on Free: a daily teaser of up to ${teaserSize} picks with the public Edge Index, no confidence scores.`
                   : `Today's free teaser: up to ${teaserSize} picks with the public Edge Index, no confidence scores.`}
               </p>
-              <p className="mt-1 text-xs text-ultraviolet">
+              <p className="mt-1 text-xs text-ultraviolet-glow">
                 Pro unlocks the full board plus the confidence score, the full factor trail, and line movement behind each pick.
               </p>
               <Link
@@ -562,7 +562,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* PRO conversion teaser for elite features */}
           {isPro && entitlements.tier === "PRO" && picks.length > 0 && (
             <div className="mt-8 rounded-xl border border-ultraviolet/30 bg-ultraviolet/10 p-4 text-center">
-              <p className="text-xs text-ultraviolet">
+              <p className="text-xs text-ultraviolet-glow">
                 Want email + push alerts when your followed picks grade?{" "}
                 <Link href="/pricing" className="font-semibold underline underline-offset-2">
                   {`Upgrade to Elite · $${phase.elite.monthly}/mo`}

@@ -31,7 +31,7 @@ const pct = (n: number) => `${Math.round(n * 100)}%`;
 const VERDICT_TONE: Record<ParlayVerdict, { text: string; badge: string; glow: string }> = {
   Empty: { text: "text-ion-2", badge: "border-mineral text-ion-1", glow: "bg-transparent" },
   Balanced: { text: "text-orbital-cyan", badge: "border-orbital-cyan/40 bg-orbital-cyan/10 text-orbital-cyan", glow: "bg-orbital-cyan/10" },
-  Stretched: { text: "text-ultraviolet", badge: "border-ultraviolet/40 bg-ultraviolet/10 text-ultraviolet", glow: "bg-ultraviolet/10" },
+  Stretched: { text: "text-ultraviolet-glow", badge: "border-ultraviolet/40 bg-ultraviolet/10 text-ultraviolet-glow", glow: "bg-ultraviolet/10" },
   Brittle: { text: "text-caution", badge: "border-caution/40 bg-caution/10 text-caution", glow: "bg-caution/10" },
   Mutated: { text: "text-alert", badge: "border-alert/40 bg-alert/10 text-alert", glow: "bg-alert/10" },
 };
@@ -158,7 +158,7 @@ export function ParlayGenome() {
             <Vital label="Survivability" value={pct(vitals.survivability)} sub="chance all legs hit" toneClass="text-orbital-cyan" />
             <Vital label="Expected value" value={`${(vitals.ev * 100).toFixed(1)}%`} sub="per $1 staked" toneClass={evPositive ? "text-orbital-cyan" : "text-alert"} />
             <Vital label="Headline payout" value={`${vitals.payoutDecimal ? vitals.payoutDecimal.toFixed(2) : "0"}×`} sub={`${decimalToAmerican(vitals.payoutDecimal)} American`} toneClass="text-ion-white" />
-            <Vital label="Fair payout" value={`${vitals.fairPayoutDecimal ? vitals.fairPayoutDecimal.toFixed(2) : "0"}×`} sub="zero-vig break-even" toneClass="text-ultraviolet" />
+            <Vital label="Fair payout" value={`${vitals.fairPayoutDecimal ? vitals.fairPayoutDecimal.toFixed(2) : "0"}×`} sub="zero-vig break-even" toneClass="text-ultraviolet-glow" />
             <Vital label="House edge" value={pct(vitals.houseEdge)} sub="compounded across legs" toneClass="text-caution" />
             <Vital label="Dependency Coefficient" value={vitals.count ? vitals.dependencyCoefficient.toFixed(2) : "—"} sub={vitals.correlated.length ? `${vitals.correlated.length} same-game tie${vitals.correlated.length > 1 ? "s" : ""}: structural, not statistical` : "every leg independent"} toneClass={vitals.correlated.length ? "text-caution" : "text-orbital-cyan"} />
           </div>
