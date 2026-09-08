@@ -25,7 +25,10 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const errorMessage = getErrorMessage(searchParams.error);
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-obsidian px-4 py-12">
+    <div
+      id="main-content"
+      className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-obsidian px-4 py-12"
+    >
       {/* Atmosphere — calm deep-space plate, truth rendered on top */}
       <GeneratedPlate assetId="intro-galaxy" className="-z-10 opacity-20" />
 

@@ -20,7 +20,10 @@ export default function AuthErrorPage({
     errorMessages["Default"]!;
 
   return (
-    <div className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-obsidian px-4 py-12">
+    <div
+      id="main-content"
+      className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-obsidian px-4 py-12"
+    >
       {/* Atmosphere — same calm deep-space plate as /auth/signin */}
       <GeneratedPlate assetId="intro-galaxy" className="-z-10 opacity-20" />
 
