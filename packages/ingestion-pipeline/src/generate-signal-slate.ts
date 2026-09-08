@@ -28,6 +28,18 @@ import {
   type FixtureBatchResult,
   type FixtureProbe,
 } from "./fixture-confirmation.js";
+import { collapseSlateFixtures } from "./slate-fixture-collapse.js";
+
+/**
+ * Rows read from `games` before the per-fixture collapse. Sized well above the
+ * window's real row count (744 measured on 2026-09-08 across a 21d horizon) so
+ * the collapse, not this number, decides the slate; a run that fills it says so
+ * in the log rather than silently shortening the board.
+ */
+const SLATE_SCAN_LIMIT = 1000;
+
+/** Fixtures actually slated, applied AFTER the collapse. */
+const SLATE_FIXTURE_LIMIT = 80;
 
 export type SignalSlateResult = {
   readonly ok: boolean;
@@ -163,19 +175,56 @@ export async function generateSignalSlate(opts?: {
     }
   }
 
-  const gameList = await db.game.findMany({
-    where: { commenceTime: { gte: now, lte: horizon } },
+  // BOUNDS ROWS SCANNED, NOT FIXTURES SLATED (C-166).
+  //
+  // `take: 80` used to be both at once, and the games table holds about 2.5
+  // rows per real fixture with none of them tombstoned, so the cap was spent
+  // partly on duplicates: measured on production 2026-09-08, 744 rows over 658
+  // real fixtures inside this window, the cap reaching only 71 fixtures, 9 of
+  // the 80 slots (11%) on duplicate rows. That is a cap applied BEFORE the
+  // collapse - the same defect the board's pass lane (C-153) and its withdrawal
+  // watermark (C-161) each carried. Scan wide, collapse, then cap on fixtures.
+  const scannedGames = await db.game.findMany({
+    where: {
+      commenceTime: { gte: now, lte: horizon },
+      // The database's own canonicity marker. Latent today (zero rows are
+      // tombstoned in any sport) and load-bearing the moment the merge runs:
+      // without it this lane would keep generating picks on rows the database
+      // has marked not-real.
+      mergedIntoGameId: null,
+    },
     select: {
       id: true,
+      externalId: true,
+      sportId: true,
+      mergedIntoGameId: true,
       homeTeamName: true,
       awayTeamName: true,
       commenceTime: true,
       createdAt: true,
       sport: { select: { key: true, name: true } },
+      // Feeds the survivor rule, which is selectCanonical's rule and not a new
+      // one: most picks, most odds children, non-ESPN externalId, oldest row.
+      _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
     },
     orderBy: { commenceTime: "asc" },
-    take: 80,
+    take: SLATE_SCAN_LIMIT,
   });
+  const collapsedGames = collapseSlateFixtures(scannedGames);
+  const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
+  if (collapsedGames.length !== scannedGames.length) {
+    console.log(
+      `${logPrefix} collapsed ${scannedGames.length} rows to ${collapsedGames.length} fixtures, slating ${gameList.length}`,
+    );
+  }
+  if (scannedGames.length === SLATE_SCAN_LIMIT) {
+    // NO SILENT CAP. If the scan itself filled, fixtures beyond it were never
+    // considered and the slate is bounded by the scan rather than by the
+    // horizon. Said out loud so it is a number someone can act on.
+    console.warn(
+      `${logPrefix} scan limit ${SLATE_SCAN_LIMIT} reached inside the ${horizonHours}h horizon; later fixtures were not considered`,
+    );
+  }
 
   // Fixture confirmation guard (C-111): a game row's own commenceTime is not
   // proof the contest happens that day. Each sport's games are confirmed in one
