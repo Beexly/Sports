@@ -51,9 +51,12 @@ describe("independentEdgeRankingBadge", () => {
     ).toBe("signal only");
   });
 
-  it("a confidence-ranked row with a finite trueProb still counts as ranked", () => {
-    // Preserved from the original condition: trueProb alone was enough. Only the
-    // market half of the claim changed.
+  it("a BACKFILLED row does not claim the estimate drove its ranking", () => {
+    // Devin. backfill-independent-trueprob.ts writes independentEdge.trueProb
+    // onto settled picks for calibration and leaves rankingSource/rankingP as
+    // published, a confidence echo. This is that exact row shape. Reading
+    // trueProb as evidence of ranking impact would have claimed something the
+    // backfill explicitly does not do.
     expect(
       independentEdgeRankingBadge({
         rankingP: 0.6,
@@ -61,7 +64,21 @@ describe("independentEdgeRankingBadge", () => {
         trueProb: 0.6,
         marketFairProb: null,
       }),
-    ).toBe("model signal, no book price");
+    ).toBe("signal only");
+  });
+
+  it("accepts the two ranking sources that mean independents took part", () => {
+    for (const rankingSource of ["independent_trueProb", "blend_indep_conf"]) {
+      expect(
+        independentEdgeRankingBadge({ rankingP: 0.66, rankingSource, trueProb: 0.66, marketFairProb: 0.54 }),
+      ).toBe("priced into ranking");
+    }
+  });
+
+  it("falls to signal only on an old row with no rankingSource at all", () => {
+    expect(
+      independentEdgeRankingBadge({ rankingP: 0.66, rankingSource: null, trueProb: 0.66, marketFairProb: 0.54 }),
+    ).toBe("signal only");
   });
 
   it("no input shape returns the priced badge without a finite market fair", () => {
@@ -69,7 +86,7 @@ describe("independentEdgeRankingBadge", () => {
       input({ marketFairProb: null }),
       input({ marketFairProb: Number.NaN }),
       input({ marketFairProb: null, rankingSource: "blend_indep_conf" }),
-      input({ marketFairProb: null, rankingSource: null, trueProb: 0.71 }),
+      input({ marketFairProb: null, rankingSource: "blend_indep_conf" }),
     ];
     for (const row of noMarket) {
       expect(independentEdgeRankingBadge(row)).not.toBe("priced into ranking");

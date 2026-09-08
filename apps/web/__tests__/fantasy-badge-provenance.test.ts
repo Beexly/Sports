@@ -196,4 +196,50 @@ describe("a page whose badge depends on the live pool renders at request time", 
       );
     }
   });
+
+  /**
+   * C-255, Devin, twice on the same page. Two more axes the invariants above do
+   * not cover, both found on /fantasy/studio after C-251 moved it to request
+   * time.
+   */
+  it("budgets execution time wherever it resolves the pool on the request path", () => {
+    // resolveToolPoolAsync performs the multi-megabyte graded-pool load. Five
+    // pages already declare maxDuration = 60 because it can exceed the platform
+    // default; studio did not, so C-251 fixed the honesty of its claim and gave
+    // it a cold-start timeout instead. A page cannot make a request-time claim
+    // it may not survive making.
+    const offenders: string[] = [];
+    for (const file of pageFiles(APP_DIR)) {
+      const src = readFileSync(file, "utf8");
+      if (!src.includes("resolveToolPoolAsync")) continue;
+      if (!/export const maxDuration\s*=\s*\d+/.test(src)) {
+        offenders.push(relative(APP_DIR, file));
+      }
+    }
+    expect(
+      offenders,
+      "these pages load the graded pool on the request path with no execution budget",
+    ).toEqual([]);
+  });
+
+  it("never pairs a conditional badge with an unconditional illustrative note", () => {
+    // The badge said "real" while the note called every player fictional, in the
+    // same header. Whatever decides the badge must also decide the note, so the
+    // page states ONE provenance. Asserted structurally rather than on wording:
+    // a note that mentions ILLUSTRATIVE_NOTE at all must do so behind the same
+    // conditional the badge uses.
+    const offenders: string[] = [];
+    for (const file of pageFiles(APP_DIR)) {
+      const src = readFileSync(file, "utf8");
+      if (!/projectionsPool=\{[^}]*\?[^}]*\}/.test(src)) continue;
+      const note = src.match(/note=\{([\s\S]*?)\}\s*\n/)?.[1] ?? "";
+      if (note.includes("ILLUSTRATIVE_NOTE") && !note.includes("?")) {
+        offenders.push(relative(APP_DIR, file));
+      }
+    }
+    expect(
+      offenders,
+      "these pages can claim a live pool in the badge while calling it illustrative in the note",
+    ).toEqual([]);
+  });
 });

@@ -20,7 +20,9 @@ import {
   type PublishTimeMarketPResult,
 } from "@sports/prediction-engine";
 import {
+  signalDecision,
   signalEdgeFields,
+  signalFactorDescription,
   signalRationale,
   signalReasoning,
 } from "./signal-market-anchor.js";
@@ -476,16 +478,16 @@ export async function generateSignalSlate(opts?: {
       anchor = null;
     }
     const edge = signalEdgeFields(trueProb, anchor);
-    if (edge.anchored) {
-      anchoredCount += 1;
-      if (edge.marketFairSource === "market_p_single_book") anchoredSingleBook += 1;
-    }
 
     const independentEdge: IndependentEdgeSummary = {
-      // Unchanged by C-253 and deliberately so: the publish decision on this
-      // lane is a function of trueProb alone. Attaching a market anchor changes
-      // what the edge MEASURES, not what the slate publishes.
-      decision: trueProb >= 0.58 ? "LEAN" : "PASS",
+      // C-255 (Devin). Was `trueProb >= 0.58` alone, which went on labelling a
+      // pick LEAN even when the anchor showed the market prices the side ABOVE
+      // our estimate - the product liking a price its own arithmetic just called
+      // overpriced. `decision` is a claim label, not a publish gate (nothing
+      // reads it to decide what is written or served), so this retracts a claim
+      // where the evidence retracts it and moves no gate. Unanchored rows keep
+      // the old rule unchanged, because for them nothing has changed.
+      decision: signalDecision(trueProb, edge),
       agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
       // Still null when nothing was stored: never invent 0.5 into this field.
       // When a real de-vigged book price exists it goes here, with the book
@@ -528,7 +530,13 @@ export async function generateSignalSlate(opts?: {
         {
           name: `Independent fair value (${sourcesLabel})`,
           impact: "positive",
-          description: `trueProb=${trueProb.toFixed(3)} from ${sourcesLabel}. No book odds attached.`,
+          // C-255 (Devin). This was fixed at "No book odds attached." and the
+          // pick card renders it beside the rationale, so an anchored pick
+          // asserted a de-vigged price and denied one in the same card. Third
+          // place the same sentence lived; it now derives from the same
+          // SignalEdgeFields as the rationale and the reasoning, so all three
+          // cannot disagree.
+          description: signalFactorDescription(edge, sourcesLabel, trueProb),
           weight: confidence,
         },
       ],
@@ -682,6 +690,18 @@ export async function generateSignalSlate(opts?: {
         data: { dataQualityScore: gameDq },
       });
       picksUpserted += 1;
+      // C-255 (Devin). These were incremented right after the anchor resolved,
+      // BEFORE the settled-row skip, the book-priced skip, the side-flip refusal
+      // and this write itself. `marketAnchored` could therefore exceed
+      // `picksUpserted` and report coverage for picks that were never written:
+      // a count whose label did not match what it counted, which is the exact
+      // defect class C-241, C-246, C-250, C-251 and C-252 are. They now advance
+      // only on the same line that records a successful upsert, so the ratio
+      // marketAnchored/picksUpserted is always over the same population.
+      if (edge.anchored) {
+        anchoredCount += 1;
+        if (edge.marketFairSource === "market_p_single_book") anchoredSingleBook += 1;
+      }
     } catch (err) {
       errors.push(
         `${game.id}: upsert failed — ${err instanceof Error ? err.message : String(err)}`,

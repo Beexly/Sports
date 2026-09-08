@@ -32,6 +32,27 @@ export const metadata: Metadata = {
  * cannot disagree.
  */
 export const dynamic = "force-dynamic";
+// C-255 (Devin). C-251 made this page resolve the pool at REQUEST time, which is
+// what made its live claim honest, and in doing so put the heavy graded-pool
+// load on the request path. Every sibling that does the same (lineup, trade,
+// waivers, draft, bestball) budgets 60 seconds for it because the load can
+// exceed the platform default; this page kept the default, so a cold request
+// could time out. Same load, same budget.
+export const maxDuration = 60; // heavy nflverse load (graded pool) needs headroom beyond the default
+
+/**
+ * C-255 (Devin). The note was ILLUSTRATIVE_NOTE unconditionally, so a live
+ * studio told the reader its badge said "real" while its note called every
+ * player fictional. The badge and the note now derive from the SAME resolved
+ * pool, exactly as `waivers` does, so the page states one provenance rather
+ * than two. The studio-specific half of the sentence (script and draft text
+ * only, no synthetic-likeness video, no autonomous posting) is a property of
+ * the product rather than of the pool, so it is appended to both.
+ */
+const LIVE_NOTE =
+  "Live graded pool: real players with model-derived projections. The brief and the broadcast are written from real grades.";
+const STUDIO_SCOPE =
+  "Studios generates broadcast scripts and draft text only: no synthetic-likeness video, no autonomous posting, and it does not publish to any external channel.";
 
 export default async function StudioPage() {
   // Await BEFORE generating: generateWeeklyBrief and buildBroadcast read
@@ -53,7 +74,7 @@ export default async function StudioPage() {
       accent="ultraviolet"
       title={<>The week, <span className="gse-editorial" style={{ fontSize: "1.08em" }}>on air</span>.</>}
       intro="Galaxy Studios fronts the week with Nova, our brand presenter, reporting the edge from the field, the clubhouse, and the desk, then hands you the written Galaxy Brief beneath the broadcast. Studios reads every surface of the OS and turns it into a production-ready show and script. You review and publish; it never ships on its own, and every broadcast carries a clear synthetic-presenter disclosure."
-      note={`${ILLUSTRATIVE_NOTE} Studios generates broadcast scripts and draft text only: no synthetic-likeness video, no autonomous posting, and it does not publish to any external channel.`}
+      note={`${pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE} ${STUDIO_SCOPE}`}
       wide
       // C-236 established that generateWeeklyBrief() is called in this server
       // component and reaches waiverTargets(), buildLeagueTwin() and

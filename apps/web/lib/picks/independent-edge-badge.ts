@@ -54,10 +54,24 @@ function finiteUnitOrNull(v: number | null | undefined): number | null {
 export function independentEdgeRankingBadge(
   input: IndependentEdgeBadgeInput,
 ): IndependentEdgeBadge {
+  // Devin, on this file. The first draft accepted a finite `trueProb` as
+  // sufficient evidence that independents drove the ranking. They are not the
+  // same claim, and `backfill-independent-trueprob.ts` is the proof: it writes
+  // independentEdge.trueProb onto SETTLED picks for calibration and says in its
+  // own comment that it deliberately leaves rankingSource and rankingP as
+  // published, a confidence echo. A backfilled row therefore has a finite
+  // trueProb and a confidence ranking, and the badge would have claimed the
+  // estimate drove a ranking it never touched.
+  //
+  // rankingSource is the field that records what actually drove it, so it is
+  // the only field read. `deriveRankingProbability` emits exactly these two
+  // values when independents took part; anything else, including an absent
+  // source on an old row, falls to "signal only", which is the conservative
+  // answer when the claim cannot be established.
   const drivesRanking =
     finiteUnitOrNull(input.rankingP) !== null &&
-    (input.rankingSource?.includes("independent") === true ||
-      finiteUnitOrNull(input.trueProb) !== null);
+    (input.rankingSource === "independent_trueProb" ||
+      input.rankingSource === "blend_indep_conf");
   if (!drivesRanking) return "signal only";
   return finiteUnitOrNull(input.marketFairProb) !== null
     ? "priced into ranking"

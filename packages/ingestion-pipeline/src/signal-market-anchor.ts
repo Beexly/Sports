@@ -41,6 +41,14 @@ export const SIGNAL_EDGE_SHRINK = 0.7;
  */
 export const NO_MARKET_REFERENCE = 0.5;
 
+/**
+ * The model-estimate floor this lane has always used to claim a LEAN. Lifted out
+ * of generate-signal-slate.ts unchanged (it was the literal 0.58) so the decision
+ * rule lives beside the edge it now also depends on, and so a test can assert on
+ * the rule rather than on a number copied into two files.
+ */
+export const SIGNAL_LEAN_TRUEPROB = 0.58;
+
 export type SignalEdgeFields = {
   /** True when a real de-vigged book price backs `reference`. */
   readonly anchored: boolean;
@@ -85,10 +93,66 @@ export function signalEdgeFields(
   };
 }
 
+/**
+ * Whether this pick may CLAIM an edge, given what the market says.
+ *
+ * Devin found the hole C-253 opened and it is the most important finding on the
+ * change. Before the anchor existed, `decision` could only be a function of
+ * trueProb, because there was nothing to compare trueProb against. Now that a
+ * real de-vigged book price backs 60 per cent of these rows, a pick can have a
+ * high model estimate AND a NEGATIVE measured edge: the market prices the side
+ * higher than we do, which means it is overpriced by our own arithmetic. Leaving
+ * `decision` on trueProb alone would have gone on labelling those "LEAN", which
+ * is the product telling a customer it likes a price its own math just called
+ * bad.
+ *
+ * `decision` is a CLAIM LABEL, not a publish gate. Nothing in the repository
+ * reads it to decide whether a pick is written or served; the pick card reads it
+ * to decide whether to render the independent-edge block, and the explainer
+ * quotes it. So this narrows what we assert, and changes nothing about what
+ * publishes. That distinction is why it is a correction rather than a threshold
+ * change: no gate resolves differently, one claim gets retracted where the
+ * evidence retracts it.
+ *
+ * Unanchored rows keep the pre-C-253 rule exactly, because for them nothing has
+ * changed: there is still no market to compare against, and the wording on those
+ * picks says so.
+ */
+export function signalDecision(
+  trueProb: number,
+  fields: SignalEdgeFields,
+): "LEAN" | "PASS" {
+  const modelLikesIt = trueProb >= SIGNAL_LEAN_TRUEPROB;
+  if (!fields.anchored) return modelLikesIt ? "LEAN" : "PASS";
+  // Anchored: the model must like the side AND the market must not already
+  // price it at or above our estimate. A zero edge is not an edge.
+  return modelLikesIt && fields.rawEdge > 0 ? "LEAN" : "PASS";
+}
+
 /** How many books the anchor came from, in words a customer reads. */
 function bookPhrase(fields: SignalEdgeFields): string {
   const n = fields.marketBookCount ?? 0;
   return n === 1 ? "one stored book line" : `${n} stored book lines`;
+}
+
+/**
+ * The glass-box factor line rendered on the pick card beside the rationale.
+ * Derived from the same fields as the rationale and the reasoning so the three
+ * customer-visible statements about price provenance cannot contradict one
+ * another (Devin, C-255: this line still read "No book odds attached." on picks
+ * that had just been given a de-vigged one).
+ */
+export function signalFactorDescription(
+  fields: SignalEdgeFields,
+  sourcesLabel: string,
+  trueProb: number,
+): string {
+  const head = `trueProb=${trueProb.toFixed(3)} from ${sourcesLabel}.`;
+  if (!fields.anchored) return `${head} No book odds attached.`;
+  return (
+    `${head} Stored book fair ${fields.reference.toFixed(3)} from ${bookPhrase(fields)}, ` +
+    `edge ${fields.rawEdge >= 0 ? "+" : ""}${fields.rawEdge.toFixed(3)}.`
+  );
 }
 
 /**
