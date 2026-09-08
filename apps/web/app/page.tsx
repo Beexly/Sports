@@ -329,8 +329,8 @@ export default async function HomePage(): Promise<JSX.Element> {
         </section>
       </main>
       <ObservatoryBeacon />
-      {/* FE-17: restricted to the home hero, not mounted globally — see
-          app/layout.tsx. */}
+      {/* FE-17: restricted to the home hero, not mounted globally.
+          See app/layout.tsx. */}
       <GalaxyCursor />
       <Footer />
     </div>
