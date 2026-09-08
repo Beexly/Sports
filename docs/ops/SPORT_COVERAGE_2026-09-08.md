@@ -159,3 +159,38 @@ hours). So the mix is shifting, but nothing retires the rows already made.
 the other writers resolve to it before insert, and give the merge a companion that re-points or
 withdraws alias picks. All three parts are founder-gated because they touch published history and
 the shape of the data.
+
+
+## 9. A correction to my own numbers: per ROW understates NFL badly
+
+Sections 1 and 5 counted priced coverage per game ROW. With NFL at 2.52 rows per fixture, that
+divides by the empty duplicates and reports a number no customer would recognise. Recounted **per
+real fixture** (priced if ANY row for that fixture carries 2+ books):
+
+| sport | horizon | real fixtures | game rows | fixtures priced | share |
+|---|---|---|---|---|---|
+| **NFL** | next 7 days | 15 | 45 | **15** | **100%** |
+| **NFL** | beyond 7 days | 257 | 275 | 245 | **95%** |
+| NCAAF | next 7 days | 97 | 101 | 74 | 76% |
+| NCAAF | beyond 7 days | 161 | 164 | 7 | 4% |
+| MLB | next 7 days | 80 | 89 | 16 | **20%** |
+| MLB | beyond 7 days | 159 | 178 | 0 | **0%** |
+
+Three things change:
+
+1. **NFL is the healthiest sport in the product, not a worry.** Every fixture in the next seven
+   days is priced, and 95% of the rest of the season is too. The earlier 33% was an artifact of
+   dividing by duplicates. Five days from Week 1 that is a strong position.
+2. **NCAAF is normal.** 76% near-term falling to 4% further out is exactly how books post lines:
+   close to kickoff, not months ahead. Nothing to fix.
+3. **MLB is the sport that is actually broken.** 20% of this week's fixtures priced and **zero**
+   beyond seven days. MLB cannot produce book-priced picks for most of its own slate.
+
+**So the ranking of concern is the reverse of where my attention had been.** MLB dominated every
+query because it has the settled-row history; it is also the one sport whose forward pipeline has
+failed. NFL, the commercially decisive one, is in the best shape of any sport and its only real
+issue is the duplication in section 8, which is latent rather than live.
+
+The MLB pricing failure is the two-book problem (ledger C-104, WP-27) and the Odds API credit
+governor (C-109) meeting in the same place. It is not a new defect; it is the known constraint
+finally showing up as a product outage in one sport.
