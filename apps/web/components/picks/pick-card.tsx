@@ -14,7 +14,7 @@ import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
-import { gradedLineNote } from "@/lib/picks/graded-line-display";
+import { gradedLineDisplay } from "@/lib/picks/graded-line-display";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -128,25 +128,42 @@ export function PickCard({
              settlement, so rendering it raw here would contradict the selection
              for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */
           pick.line !== 0 && pick.pickType !== "SPREAD" && (
-            <p className="mt-0.5 text-xs text-ion-1">
-              Line: {pick.line > 0 ? "+" : ""}{pick.line}
-            </p>
+            (() => {
+              /* Settled rows lead with the number settlement actually graded
+                 (ledger C-143, founder-delegated 2026-09-08): "Graded at X" is
+                 the primary line, and the later refreshed line follows as
+                 secondary context only when it is a different number. Pending
+                 rows keep the live line, which is the number that still
+                 matters to them. Nothing here changes the grade. */
+              const graded = gradedLineDisplay(pick);
+              if (!graded) {
+                return (
+                  <p className="mt-0.5 text-xs text-ion-1">
+                    Line: {pick.line > 0 ? "+" : ""}{pick.line}
+                  </p>
+                );
+              }
+              return (
+                <>
+                  <p className="mt-0.5 text-xs text-ion-1" data-testid="graded-line-primary">
+                    {graded.primaryText}
+                  </p>
+                  {graded.secondaryText && (
+                    <p
+                      className="mt-0.5 text-[11px] leading-snug text-ion-2"
+                      data-testid="graded-line-secondary"
+                    >
+                      {graded.secondaryText}
+                    </p>
+                  )}
+                </>
+              );
+            })()
           )
         )}
         {pick.lineMovement && (
           <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
         )}
-        {/* Settled TOTAL graded on a different number from the one shown
-            (ledger C-143): say so in plain words, with both numbers, so the
-            reader can reproduce the result. Nothing here changes the grade. */}
-        {(() => {
-          const note = gradedLineNote(pick);
-          return note ? (
-            <p className="mt-1 text-[11px] leading-snug text-ion-2" data-testid="graded-line-note">
-              {note.text}
-            </p>
-          ) : null;
-        })()}
       </div>
 
       {/* Scores row: confidence + edge + risk */}

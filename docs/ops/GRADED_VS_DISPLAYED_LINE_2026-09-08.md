@@ -1,8 +1,9 @@
 # Graded line versus displayed line (ledger C-143)
 
-**Status:** measurement and disclosure shipped; the policy decision is the founder's.
+**Status:** DECIDED (section 5). Measurement, disclosure and the display change are shipped.
 **Written:** 2026-09-08 by the settlement-evidence session on `claude/launch-settlement-evidence`.
-**Nothing in this document or its branch changes which line a pick is graded on.**
+**Decided:** 2026-09-08 by the founder, delegated via the launch orchestrator; applied by the PR steward session on the same branch.
+**Nothing in this document or its branch changes which line a pick is graded on.** The decision changes only which number the card and the settled-pick payload lead with.
 
 ## 1. The defect, in one paragraph
 
@@ -107,82 +108,83 @@ unreadable from the card until this branch.
 What this session could and could not reproduce: the code paths above are
 verified by tests on this branch; the database counts are not re-measured here.
 
-## 5. What shipped on this branch
+## 5. The decision
+
+**DECIDED. Founder, delegated 2026-09-08 via the launch orchestrator.** This is
+option A below. It is recorded here as taken, not offered.
+
+1. **The line that GRADES does not change.** Settlement keeps using
+   `selectGradingLine`: `clvLockLine` when the pick carries one, else `line`.
+   That is the publish-time line — the number the customer actually saw when the
+   pick went out. No grade is recomputed, no `settledAt` is re-stamped, and the
+   34 flipped rows keep their published results.
+2. **The DISPLAY changes.** On a settled pick, the graded line is the PRIMARY
+   number, labelled "Graded at X". The later, refreshed line appears only as
+   secondary context, and only when it is a different number.
+3. The settled-pick payload carries the graded line as its own field
+   (`PublicPick.gradedLine`) so any consumer can lead with it the same way.
+
+The reasoning, in one line: the result we publish must be reproducible from the
+number we show, and the number we show should be the one the reader was given at
+publish. A refreshed line that arrives after the pick is out is market context,
+not the basis of the grade, and it should not be the number that leads.
+
+## 6. What shipped on this branch
 
 - `PublicPick.gradedLine` (`packages/types`), published by `/api/picks` on settled
   SPREAD and TOTAL rows only, null on MONEYLINE, PENDING and VOID. It is the
   `clvLockLine ?? line` value, restated in
   `apps/web/lib/picks/graded-line-display.ts` so the display module does not
-  import the engine.
-- The pick card renders, on a settled TOTAL whose graded line differs from the
-  displayed one: "Graded at +74, the line locked when this pick was published.
-  The +83.5 shown above is the line as last refreshed." Both numbers, plain
-  words, nothing hidden.
-- Settle-time evidence now records the graded line
+  import the engine. `line` stays on the payload unchanged, as the later
+  refreshed number and secondary context.
+- `gradedLineDisplay()` in the same module returns the settled-row line slot:
+  `primaryText` "Graded at +74" and `secondaryText` "Line as last refreshed:
+  +83.5", the second one null when the two numbers agree.
+- The pick card leads a settled TOTAL with "Graded at +74" in the line slot, and
+  puts "Line as last refreshed: +83.5" beneath it only when the numbers differ.
+  A PENDING row keeps the live "Line: +83.5" lead: nothing has been graded yet,
+  so the live number is still the number that matters to it.
+- Settle-time evidence records the graded line
   (`PickSettlementEvent.payload.settledWith.gradedLine`) on all four lanes, so
   the number a grade used is an immutable event-time fact rather than a
   reconstruction (ledger C-120).
 
-## 6. The two policy options
+## 7. What this decision does NOT cover
 
-The founder decides which number is canonical. Both options are stated with
-their consequences; neither is recommended here because the choice is about what
-the product promises, not about code.
+- **SPREAD card rendering.** The card renders no `line` for SPREAD at all: the
+  chosen side's number lives inside the stored `selection` string, and `line` is
+  home-perspective, so leading with `line` would contradict the selection on an
+  away-favoured pick. There is therefore no second, later number displayed
+  beside a SPREAD selection today, and nothing here needs to change for the
+  decision to hold on that card. What was NOT established in the session that
+  made this change is whether the stored `selection` string itself can drift
+  after publish. If it can, a settled SPREAD card can show a number the grade
+  did not use, and that is the same defect in a different place. Ledger row
+  **C-264** carries it. It is an open question, not a known defect.
+- **Other surfaces that render `line` for a published pick** (anything beyond
+  the pick card). Enumerating them is a work package; the card is the surface
+  the C-143 measurement covers.
+- **Rows with no evidence.** Rows settled before 2026-09-07 20:20 UTC carry no
+  settlement evidence, and rows settled before this branch deploys carry no
+  `gradedLine` in that evidence. The classifier reconstructs from `clvLockLine`,
+  which is immutable, and names the source it used.
 
-### Option A: the locked line is canonical (status quo for grading; the display changes)
+## 8. The option that was NOT taken
 
-Keep `selectGradingLine` as it is. Make the card show the locked line as THE line
-on every pick from the moment it is published, and relabel the refreshed number
-as market movement (the Pro-tier `lineMovement` chip already carries opening and
-current).
+Recorded so the choice is legible later. **Option B: make the displayed line
+canonical** — change `selectGradingLine` to grade against `line`, or (more
+defensibly) freeze `line` at publish so it stops drifting and the two numbers
+collapse into one.
 
-Consequences:
-- No grade changes, past or future. The track record and the CLV grade already
-  rest on the lock, so nothing contradicts anything else.
-- The card's headline number stops moving after publish. A subscriber who saw
-  OVER 74 at publish sees OVER 74 at settlement. That is the honest version of
-  "the number we published".
-- The refreshed `line` remains visible only as movement context. Signal-slate
-  rows (no book) are unaffected.
-- Cost: a display change on the card and on every other surface that shows
-  `line` for a published pick; enumerating those surfaces is a work package,
-  not a one-line change.
+Why it was not taken:
 
-### Option B: the displayed line is canonical (the settlement rule changes)
-
-Change `selectGradingLine` to grade against `line` (or, more defensibly, freeze
-`line` at publish so it stops drifting, which makes it equal to the lock and
-collapses the two into one number).
-
-Consequences:
-- Forward-only. Settled rows are never re-graded and `settledAt` is never
-  re-stamped (the lesson of C-258 on PR #720 stands). The 34 flipped rows keep
-  their published results and their new on-card disclosure.
-- Grading against a drifting number is the failure the rule was written to
-  prevent: a pick published at OVER 74 can be graded at 83.5 and lose a number the
-  subscriber never saw. If B is chosen, freezing `line` at publish is the
-  variant that avoids that, and it is a change to the odds refresh path, not to
-  settlement.
+- Grading against a drifting number is the failure the current rule exists to
+  prevent: a pick published at OVER 74 could be graded at 83.5 and lose on a
+  number the subscriber never saw.
 - The CLV grade compares the lock to the close. Under B the graded line and the
-  CLV line can differ on the same pick, which reintroduces the contradiction the
-  settle-sport comment describes, unless `line` is frozen.
-- MODEL_VERSION is frozen by `scripts/guardrails/model-freeze.mjs`; grading is
-  outside the engine, but a settlement-rule change is a product-claim change and
-  should be announced with the same care as a version bump.
-
-### Either way
-
-- The disclosure shipped here stays until the two numbers are one number. It is
-  the minimum that makes the published result reproducible from the card.
-- SPREAD rendering is an open item: the card shows the chosen side's number
-  inside `selection` while `line` is stored home-perspective, so "shown at Y"
-  needs the side resolved before the note can be worded. `gradedLine` is
-  already published for SPREAD; only the card note is TOTAL-only.
-- Rows settled before 2026-09-07 20:20 UTC carry no evidence and rows settled
-  before this branch deploys carry no `gradedLine`; the classifier reconstructs
-  from `clvLockLine`, which is immutable, and says so.
-
-## 7. Decision requested
-
-Founder: choose A or B (with the freeze-at-publish variant if B). Record the
-decision in ledger row C-143. Until then, nothing changes which line grades.
+  CLV line can differ on the same pick, reintroducing the contradiction the
+  `settle-sport` comment describes, unless `line` is frozen at publish.
+- The freeze-at-publish variant is a change to the odds refresh path, not to
+  settlement, and it remains available later without contradicting anything
+  decided here: it would make the refreshed line equal the graded line, at which
+  point the secondary context in section 5 simply stops rendering on its own.

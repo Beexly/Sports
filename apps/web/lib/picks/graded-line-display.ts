@@ -9,10 +9,13 @@
  * outcome on 34: a subscriber reading the card computed a different result
  * from the one we published, with no indication on the card.
  *
- * WHICH number is canonical is a founder decision, not an agent one
- * (docs/ops/GRADED_VS_DISPLAYED_LINE_2026-09-08.md). This module changes no
- * grading. It exposes the number the grade used and words the card so the
- * result is reproducible from what the reader sees.
+ * DECIDED (founder, delegated 2026-09-08 via the launch orchestrator, recorded
+ * in docs/ops/GRADED_VS_DISPLAYED_LINE_2026-09-08.md): the line that GRADES is
+ * unchanged - clvLockLine when present, the line the customer saw at publish.
+ * What changes is DISPLAY: on a settled pick the graded line is the PRIMARY
+ * number, labelled "Graded at X", and the later refreshed line appears only as
+ * secondary context when the two differ. This module changes no grading; it
+ * words that display so the published result is reproducible from the card.
  */
 import type { PickResult, PickType } from "@sports/types";
 
@@ -46,40 +49,46 @@ function fmt(n: number): string {
   return `${n > 0 ? "+" : ""}${n}`;
 }
 
-export type GradedLineNote = {
+export type GradedLineDisplay = {
+  /** The graded line, formatted with the card's sign convention. */
   readonly graded: string;
-  readonly shown: string;
-  /** Plain-words sentence for the card. */
-  readonly text: string;
+  /** The later refreshed line, formatted; null when it is the same number. */
+  readonly shown: string | null;
+  /** Primary line-slot text on a settled row. */
+  readonly primaryText: string;
+  /** Secondary context, or null when there is no second number to give. */
+  readonly secondaryText: string | null;
 };
 
 /**
- * The card note, or null when there is nothing to disclose.
+ * The settled-row line slot, or null when this row has no graded line to lead
+ * with (so the caller keeps rendering the live line as it always has).
  *
- * Rendered only on a settled TOTAL whose graded line is a different number
- * from the displayed one. TOTAL only, for now: it is the market the C-143
- * measurement covers and the only one whose `line` the card shows directly. A
- * SPREAD card shows the chosen side's number inside `selection` while `line`
- * is stored home-perspective, so "shown at Y" needs the side resolved first;
- * that is listed as an open item in the C-143 document rather than guessed at
- * here.
+ * Applied to TOTAL. A SPREAD card renders no `line` at all - the chosen side's
+ * number lives inside `selection`, and `line` is stored home-perspective, so
+ * leading with it would contradict the selection on an away-favoured pick. The
+ * decision is therefore already satisfied for SPREAD in the sense that no
+ * second, later number is shown next to it; whether the stored `selection`
+ * string itself can drift after publish was NOT established in this session,
+ * and that question is ledger row C-264, not a guess made here.
  */
-export function gradedLineNote(pick: {
+export function gradedLineDisplay(pick: {
   readonly pickType: PickType;
   readonly result: PickResult;
   readonly line: number;
   readonly gradedLine?: number | null;
-}): GradedLineNote | null {
+}): GradedLineDisplay | null {
   if (pick.pickType !== "TOTAL") return null;
   if (!GRADED_RESULTS.has(pick.result)) return null;
   const graded = pick.gradedLine;
   if (typeof graded !== "number" || !Number.isFinite(graded)) return null;
-  if (graded === pick.line) return null;
   const g = fmt(graded);
-  const s = fmt(pick.line);
+  const differs = graded !== pick.line && Number.isFinite(pick.line);
+  const s = differs ? fmt(pick.line) : null;
   return {
     graded: g,
     shown: s,
-    text: `Graded at ${g}, the line locked when this pick was published. The ${s} shown above is the line as last refreshed.`,
+    primaryText: `Graded at ${g}`,
+    secondaryText: s === null ? null : `Line as last refreshed: ${s}`,
   };
 }

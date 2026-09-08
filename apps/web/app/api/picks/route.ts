@@ -286,9 +286,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       line: pick.line,
       // The number settlement actually graded against, on settled SPREAD and
       // TOTAL rows only (ledger C-143): it is clvLockLine when present and can
-      // differ from `line` above. Exposed so a reader can reproduce the
-      // result; which number is canonical is a founder decision and nothing
-      // here changes the grade.
+      // differ from `line` above. DECIDED (founder, delegated 2026-09-08): on a
+      // settled row this is the PRIMARY number a surface leads with and `line`
+      // above is secondary context, shown only when the two differ. Grading is
+      // unchanged; this is a display decision.
       gradedLine: publicGradedLine({
         pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
         result: pick.result as PickResult,

@@ -657,8 +657,10 @@ export interface PublicPick {
    * The line settlement graded this pick against (clvLockLine when the pick
    * carries one, else `line`: the selectGradingLine rule). Present only on a
    * settled SPREAD or TOTAL; null on MONEYLINE, PENDING and VOID rows. It is
-   * not always `line` (ledger C-143), so surfaces show it beside the displayed
-   * line whenever the two differ, so a reader can reproduce the result.
+   * not always `line` (ledger C-143). DECIDED (founder, delegated 2026-09-08):
+   * on a settled row this is the PRIMARY number a surface leads with, and
+   * `line` is secondary context shown only when the two differ, so a reader can
+   * reproduce the published result from what the surface shows.
    */
   gradedLine?: number | null;
   /**

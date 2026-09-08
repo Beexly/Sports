@@ -3,14 +3,15 @@ import { render } from "@testing-library/react";
 import type { PublicPick } from "@sports/types";
 import { selectGradingLine } from "@sports/prediction-engine";
 import { PickCard } from "@/components/picks/pick-card";
-import { gradedLineNote, publicGradedLine } from "@/lib/picks/graded-line-display";
+import { gradedLineDisplay, publicGradedLine } from "@/lib/picks/graded-line-display";
 
 /**
  * Ledger C-143: the line a settled pick is GRADED on is not always the line
- * its card DISPLAYS. These tests pin the two halves that make the result
- * reproducible from the card: the public payload's `gradedLine` decision, and
- * the card note that names both numbers when they differ. Nothing here
- * changes which line grades; that is a founder decision.
+ * its card DISPLAYS. DECIDED (founder, delegated 2026-09-08 via the launch
+ * orchestrator): grading is unchanged, and a settled card LEADS with the
+ * graded number ("Graded at X"), showing the later refreshed line only as
+ * secondary context when the two differ. These tests pin both halves: the
+ * public payload's `gradedLine` decision and that display order.
  */
 vi.mock("@/components/picks/evidence-audit-drawer", () => ({
   EvidenceAuditDrawer: (): null => null,
@@ -81,44 +82,51 @@ describe("publicGradedLine (the /api/picks payload decision)", () => {
   });
 });
 
-describe("gradedLineNote (the card wording)", () => {
-  it("names both numbers, in plain words, when a settled TOTAL was graded on a different line", () => {
-    const note = gradedLineNote({ pickType: "TOTAL", result: "WIN", line: 83.5, gradedLine: 74 });
-    expect(note).not.toBeNull();
-    expect(note!.graded).toBe("+74");
-    expect(note!.shown).toBe("+83.5");
-    expect(note!.text).toBe(
-      "Graded at +74, the line locked when this pick was published. The +83.5 shown above is the line as last refreshed.",
-    );
+describe("gradedLineDisplay (the settled-row line slot)", () => {
+  it("leads with the graded number and gives the refreshed line as secondary context", () => {
+    const d = gradedLineDisplay({ pickType: "TOTAL", result: "WIN", line: 83.5, gradedLine: 74 });
+    expect(d).not.toBeNull();
+    expect(d!.graded).toBe("+74");
+    expect(d!.shown).toBe("+83.5");
+    expect(d!.primaryText).toBe("Graded at +74");
+    expect(d!.secondaryText).toBe("Line as last refreshed: +83.5");
   });
 
-  it("is silent when the two numbers agree, when the pick is not settled, and when nothing was recorded", () => {
-    expect(gradedLineNote({ pickType: "TOTAL", result: "WIN", line: 74, gradedLine: 74 })).toBeNull();
-    expect(gradedLineNote({ pickType: "TOTAL", result: "PENDING", line: 83.5, gradedLine: 74 })).toBeNull();
-    expect(gradedLineNote({ pickType: "TOTAL", result: "WIN", line: 83.5, gradedLine: null })).toBeNull();
-    expect(gradedLineNote({ pickType: "TOTAL", result: "WIN", line: 83.5 })).toBeNull();
+  it("still leads with the graded number when the two agree, and gives no second number", () => {
+    const d = gradedLineDisplay({ pickType: "TOTAL", result: "WIN", line: 74, gradedLine: 74 });
+    expect(d).not.toBeNull();
+    expect(d!.primaryText).toBe("Graded at +74");
+    expect(d!.shown).toBeNull();
+    expect(d!.secondaryText).toBeNull();
   });
 
-  it("is TOTAL-only for now: a SPREAD card shows the chosen side's number, not `line`", () => {
-    expect(gradedLineNote({ pickType: "SPREAD", result: "WIN", line: -3.5, gradedLine: -2.5 })).toBeNull();
-    expect(gradedLineNote({ pickType: "MONEYLINE", result: "WIN", line: -150, gradedLine: -140 })).toBeNull();
+  it("is null when the row has not been graded against a line, so the caller keeps the live line", () => {
+    expect(gradedLineDisplay({ pickType: "TOTAL", result: "PENDING", line: 83.5, gradedLine: 74 })).toBeNull();
+    expect(gradedLineDisplay({ pickType: "TOTAL", result: "VOID", line: 83.5, gradedLine: 74 })).toBeNull();
+    expect(gradedLineDisplay({ pickType: "TOTAL", result: "WIN", line: 83.5, gradedLine: null })).toBeNull();
+    expect(gradedLineDisplay({ pickType: "TOTAL", result: "WIN", line: 83.5 })).toBeNull();
+  });
+
+  it("is TOTAL-only: a SPREAD card renders no `line`, and MONEYLINE is not graded on one", () => {
+    expect(gradedLineDisplay({ pickType: "SPREAD", result: "WIN", line: -3.5, gradedLine: -2.5 })).toBeNull();
+    expect(gradedLineDisplay({ pickType: "MONEYLINE", result: "WIN", line: -150, gradedLine: -140 })).toBeNull();
   });
 });
 
-describe("PickCard renders the graded line beside the displayed one (C-143)", () => {
-  it("shows the note with both numbers on a settled TOTAL whose graded line differs", () => {
-    const { getByTestId, getByText } = render(
+describe("PickCard leads a settled TOTAL with the graded line (C-143)", () => {
+  it("shows 'Graded at' as the primary number and the refreshed line as secondary", () => {
+    const { getByTestId, queryByText } = render(
       <PickCard pick={fixturePick()} canSeeConfidence canSeeEdgeScore canSeeFactorBreakdown />,
     );
-    // The displayed line is still the card's own number.
-    expect(getByText(/Line:\s*\+83\.5/)).toBeTruthy();
-    const note = getByTestId("graded-line-note");
-    expect(note.textContent).toContain("Graded at +74");
-    expect(note.textContent).toContain("+83.5 shown above");
+    expect(getByTestId("graded-line-primary").textContent).toBe("Graded at +74");
+    expect(getByTestId("graded-line-secondary").textContent).toBe("Line as last refreshed: +83.5");
+    // The bare "Line: +83.5" lead is gone on a settled row: the refreshed
+    // number no longer reads as the number the result came from.
+    expect(queryByText(/^Line:\s*\+83\.5$/)).toBeNull();
   });
 
-  it("shows no note when the graded line is the displayed line", () => {
-    const { queryByTestId } = render(
+  it("leads with the graded number and shows no second number when they agree", () => {
+    const { getByTestId, queryByTestId } = render(
       <PickCard
         pick={fixturePick({ gradedLine: 83.5 })}
         canSeeConfidence
@@ -126,11 +134,12 @@ describe("PickCard renders the graded line beside the displayed one (C-143)", ()
         canSeeFactorBreakdown
       />,
     );
-    expect(queryByTestId("graded-line-note")).toBeNull();
+    expect(getByTestId("graded-line-primary").textContent).toBe("Graded at +83.5");
+    expect(queryByTestId("graded-line-secondary")).toBeNull();
   });
 
-  it("shows no note on a PENDING pick even when a lock is present on the row", () => {
-    const { queryByTestId } = render(
+  it("keeps the live line on a PENDING pick: nothing has been graded yet", () => {
+    const { getByText, queryByTestId } = render(
       <PickCard
         pick={fixturePick({ result: "PENDING", gradedLine: null })}
         canSeeConfidence
@@ -138,6 +147,8 @@ describe("PickCard renders the graded line beside the displayed one (C-143)", ()
         canSeeFactorBreakdown
       />,
     );
-    expect(queryByTestId("graded-line-note")).toBeNull();
+    expect(getByText(/Line:\s*\+83\.5/)).toBeTruthy();
+    expect(queryByTestId("graded-line-primary")).toBeNull();
+    expect(queryByTestId("graded-line-secondary")).toBeNull();
   });
 });
