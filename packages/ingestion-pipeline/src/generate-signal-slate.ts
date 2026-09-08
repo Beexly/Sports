@@ -20,6 +20,7 @@ import {
   type PublishTimeMarketPResult,
 } from "@sports/prediction-engine";
 import {
+  NO_MARKET_REFERENCE,
   anchorFreshness,
   signalDecision,
   signalEdgeFields,
@@ -447,7 +448,6 @@ export async function generateSignalSlate(opts?: {
 
     const chosenTeam = homeChosen ? homeTeam : awayTeam;
     const rankingP = trueProb;
-    const edgePts = Math.max(0, Math.round((trueProb - 0.5) * 100));
     const pickGrade = pickGradeFromConfidence(confidence);
     const tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
     const sources = blend.sources;
@@ -495,6 +495,18 @@ export async function generateSignalSlate(opts?: {
       anchor = null;
     }
     const edge = signalEdgeFields(trueProb, anchor);
+    // C-258 (Devin). edgePts was round((trueProb - 0.5) * 100), computed before
+    // the anchor was resolved, and persists as the Edge Index the card renders
+    // as a market-relative number. That is the same coin-flip-as-edge the whole
+    // C-253 change removed from rawEdge, surviving one field over. It is now
+    // the market-relative edge when an anchor backs it, and unchanged otherwise
+    // (those rows are already withheld from viewers who cannot see confidence
+    // by publicEdgeScore, whose own docblock gives the reason: without a book
+    // line it equals confidence minus 50). Negative edges floor at 0 exactly as
+    // before, so the field's range does not change.
+    const edgePts = edge.anchored
+      ? Math.max(0, Math.round(edge.rawEdge * 100))
+      : Math.max(0, Math.round((trueProb - NO_MARKET_REFERENCE) * 100));
 
     const independentEdge: IndependentEdgeSummary = {
       // C-255 (Devin). Was `trueProb >= 0.58` alone, which went on labelling a

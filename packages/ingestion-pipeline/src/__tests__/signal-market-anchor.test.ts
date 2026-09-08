@@ -297,3 +297,61 @@ describe("anchorFreshness", () => {
     expect(MAX_ANCHOR_SPREAD_MS).toBeLessThan(MAX_ANCHOR_AGE_MS);
   });
 });
+
+/**
+ * C-258 (Devin). The reasoning paragraph justified a pick with a gap that runs
+ * the wrong way, while signalDecision had already PASSED it for that reason.
+ */
+describe("anchored reasoning follows the sign of the edge", () => {
+  it("calls the gap the reason only when the edge is positive", () => {
+    const good = signalReasoning(signalEdgeFields(0.66, resolved(0.54)), "Yankees", "elo", 0.66);
+    expect(good).toContain("That gap is the reason this pick is here");
+  });
+
+  it("does NOT justify a pick the market prices above our estimate", () => {
+    const overpriced = signalEdgeFields(0.6, resolved(0.71));
+    const text = signalReasoning(overpriced, "Yankees", "elo", 0.6);
+    expect(text).not.toContain("reason this pick is here");
+    expect(text).toContain("no edge is claimed on it");
+  });
+
+  it("treats a zero gap as no reason either", () => {
+    const flat = signalEdgeFields(0.66, resolved(0.66));
+    expect(signalReasoning(flat, "Yankees", "elo", 0.66)).toContain("no edge is claimed on it");
+  });
+
+  it("agrees with signalDecision on every anchored case", () => {
+    // The invariant behind the finding: the customer sentence and the machine
+    // decision must never disagree about whether an edge exists.
+    for (const q of [0.3, 0.5, 0.54, 0.65, 0.66, 0.71, 0.9]) {
+      const fields = signalEdgeFields(0.66, resolved(q));
+      const claimsEdge = signalReasoning(fields, "Yankees", "elo", 0.66).includes(
+        "reason this pick is here",
+      );
+      expect(claimsEdge, `q=${q}`).toBe(signalDecision(0.66, fields) === "LEAN");
+    }
+  });
+
+  it("keeps the tail disclaimer on both branches", () => {
+    for (const q of [0.54, 0.71]) {
+      expect(signalReasoning(signalEdgeFields(0.66, resolved(q)), "Y", "elo", 0.66)).toContain(
+        "not a quote you can take",
+      );
+    }
+  });
+});
+
+describe("the persisted Edge Index is not a coin-flip distance once a market exists", () => {
+  it("derives from the market-relative edge when anchored", () => {
+    // Mirrors the slate: anchored uses rawEdge, unanchored uses trueProb - 0.5.
+    const anchored = signalEdgeFields(0.66, resolved(0.54));
+    expect(Math.max(0, Math.round(anchored.rawEdge * 100))).toBe(12);
+    // The old formula would have persisted 16 on the same pick.
+    expect(Math.round((0.66 - NO_MARKET_REFERENCE) * 100)).toBe(16);
+  });
+
+  it("floors a negative anchored edge at zero, leaving the field's range unchanged", () => {
+    const overpriced = signalEdgeFields(0.6, resolved(0.71));
+    expect(Math.max(0, Math.round(overpriced.rawEdge * 100))).toBe(0);
+  });
+});

@@ -20,7 +20,9 @@
  *   - each settled pick on that game gets the result the ENGINE'S OWN GRADER
  *     returns for the corrected score, via calculatePickResult and
  *     selectGradingLine, the same two functions that graded it originally.
- *   - `settledAt` is refreshed so the audit trail shows when it was corrected.
+ *   - `settledAt` is DELIBERATELY NOT touched: it is the settlement event time
+ *     that daily-truth windows, calibration ranges and ordered histories slice
+ *     on, so re-stamping it would move a corrected pick into today's counts.
  *   - nothing else. No publish flag moves, no pick is created or deleted, and
  *     PENDING and VOID rows are left to the settlement lane that owns them.
  *
@@ -300,10 +302,20 @@ async function main(): Promise<void> {
           where: { id: g.gameId },
           data: { homeScore: g.sourceScore.home, awayScore: g.sourceScore.away },
         }),
+        // C-258 (Devin). `settledAt` is NOT touched, and the first version of
+        // this tool was wrong to stamp it with the correction time. It is read
+        // everywhere as the settlement EVENT time: daily-truth windows,
+        // calibration date ranges, journal ordering, proof ordering and
+        // sequential ROI all slice on it. Re-stamping a pick settled on
+        // 2026-09-01 would move it into today's counts and reorder every
+        // history that reads it, which is a second falsification laid on top of
+        // the one being repaired. When the correction happened belongs in the
+        // operator's run output, not in a field that already means something
+        // else.
         ...changed.map((p) =>
           prisma.pick.update({
             where: { id: p.pickId },
-            data: { result: p.to as "WIN" | "LOSS" | "PUSH", settledAt: new Date() },
+            data: { result: p.to as "WIN" | "LOSS" | "PUSH" },
           }),
         ),
       ]);

@@ -248,10 +248,21 @@ export function signalReasoning(
     );
   }
   const q = `${Math.round(fields.reference * 100)}%`;
-  return (
+  const head =
     `Model signal: independent sources [${sourcesLabel}] put ${chosenTeam} at a model estimate of ` +
     `${estimate}, uncalibrated, against a de-vigged ${q} from ${bookPhrase(fields)} we stored at or ` +
-    `before publish time. The difference is the reason this pick is here. The stored line is a ` +
-    `reference price, not a quote you can take.`
+    `before publish time.`;
+  const tail = `The stored line is a reference price, not a quote you can take.`;
+  // C-258 (Devin). "The difference is the reason this pick is here" was printed
+  // whatever the sign, so a pick the market prices ABOVE our estimate told a
+  // paying viewer that gap justified it, while signalDecision had already
+  // PASSED it for exactly that reason. The sentence now follows the sign, and
+  // a zero gap is not a reason either.
+  if (fields.rawEdge > 0) {
+    return `${head} That gap is the reason this pick is here. ${tail}`;
+  }
+  return (
+    `${head} The stored market does not price this side below our estimate, so no edge is ` +
+    `claimed on it. ${tail}`
   );
 }

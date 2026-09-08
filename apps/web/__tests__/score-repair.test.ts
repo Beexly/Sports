@@ -324,9 +324,19 @@ describe("the runner refuses before writing", () => {
     expect(runnerCode).toMatch(/if \(gamesRefused > 0\) process\.exitCode = 1;/);
   });
 
-  it("still writes only the four documented fields", () => {
+  it("never re-stamps settledAt, which is the settlement event time", () => {
+    // C-258 (Devin). The first version wrote `settledAt: new Date()` on a
+    // correction. settledAt is sliced on by daily-truth windows, calibration
+    // date ranges, journal and proof ordering and sequential ROI, so
+    // re-stamping a pick settled a week ago moves it into today's counts: a
+    // second falsification on top of the one being repaired.
     const writes = runnerCode.match(/data:\s*\{[^}]*\}/g) ?? [];
-    const allowed = new Set(["homeScore", "awayScore", "result", "settledAt"]);
+    for (const w of writes) expect(w).not.toContain("settledAt");
+  });
+
+  it("still writes only the three documented fields", () => {
+    const writes = runnerCode.match(/data:\s*\{[^}]*\}/g) ?? [];
+    const allowed = new Set(["homeScore", "awayScore", "result"]);
     for (const w of writes) {
       for (const field of w.match(/(\w+):/g) ?? []) {
         const name = field.slice(0, -1);
