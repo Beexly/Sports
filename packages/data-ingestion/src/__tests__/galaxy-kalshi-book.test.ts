@@ -174,6 +174,27 @@ describe("parseKalshiSpreadLine / parseKalshiTotalLine", () => {
     expect(parseKalshiSpreadLine(market({ ticker: "KXNFLSPREAD-26SEP14PITBUF-BUF", event_ticker: "E", title: "Buffalo covers?" }), "BUF", "PIT")).toBeNull();
     expect(parseKalshiTotalLine(market({ ticker: "KXNFLTOTAL-26SEP14PITBUF-X", event_ticker: "E", title: "Total points?" }))).toBeNull();
   });
+
+  it("treats an abbreviation carrying RegExp metacharacters as literal text, never as a pattern", () => {
+    // The abbreviations reach this parser from the fixture feed, so interpolating
+    // one into a RegExp unescaped is regex injection. Two failure modes, both
+    // real: a value with an unbalanced paren throws SyntaxError inside the odds
+    // cycle, and a value with "." matches a team it is not.
+    const wording = market({
+      ticker: "KXNFLSPREAD-26SEP14PITBUF-X",
+      event_ticker: "E",
+      title: "LAR wins by more than 3 points?",
+      strike_type: "greater",
+    });
+    // Unbalanced paren: must return null, not throw.
+    expect(() => parseKalshiSpreadLine(wording, "BUF(", "PIT")).not.toThrow();
+    expect(parseKalshiSpreadLine(wording, "BUF(", "PIT")).toBeNull();
+    // "L.R" must not match the literal "LAR"; with an unescaped dot it would,
+    // and the parser would hand back a side it never read.
+    expect(parseKalshiSpreadLine(wording, "L.R", "PIT")).toBeNull();
+    // Control: the same wording with the real abbreviation still reads.
+    expect(parseKalshiSpreadLine(wording, "LAR", "PIT")).toEqual({ side: "home", line: 3.5 });
+  });
 });
 
 describe("KALSHI_LINE_SERIES", () => {

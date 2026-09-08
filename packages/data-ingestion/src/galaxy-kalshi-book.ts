@@ -172,9 +172,22 @@ function strikeFromText(m: PredExonKalshiMarket): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/**
+ * Escape every RegExp metacharacter so an abbreviation is matched as literal
+ * text. The abbreviations reach `hasWord` from the fixture feed, so an
+ * unescaped interpolation is regex injection with two real failure modes: a
+ * value carrying an unbalanced paren throws SyntaxError inside the odds cycle,
+ * and a value carrying "." matches a team it is not, which would hand the
+ * caller a YES side it never actually read. Escaped, an odd abbreviation is an
+ * honest miss (null), which is what every other unreadable field here returns.
+ */
+function escapeRegExp(word: string): string {
+  return word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function hasWord(text: string, word: string): boolean {
   if (!word) return false;
-  return new RegExp(`(^|[^A-Z0-9])${word}([^A-Z0-9]|$)`, "i").test(text);
+  return new RegExp(`(^|[^A-Z0-9])${escapeRegExp(word)}([^A-Z0-9]|$)`, "i").test(text);
 }
 
 export interface KalshiSpreadLine {
