@@ -54,7 +54,7 @@ describe("a page that renders the live pool cannot claim an illustrative badge",
   it.each(shellPages.map(({ file, src }) => [file.slice(APP_DIR.length + 1), src]))(
     "%s declares what it renders",
     (_name, src) => {
-      expect(src).toMatch(/projectionsPool=\{/);
+      expect(src).toMatch(/projectionsPool=(\{|")/);
     },
   );
 
@@ -70,6 +70,66 @@ describe("a page that renders the live pool cannot claim an illustrative badge",
     expect(shell).toMatch(/projectionsPool:\s*ProjectionsPool;/); // required, not `?:`
     expect(shell).not.toMatch(/projectionsPool\?:/);
     expect(shell).not.toMatch(/projectionsPool\s*=\s*"/); // no default in the signature
+  });
+
+  it("never claims \"real\" while a CLIENT component recomputes the pool", () => {
+    // C-239. C-236 declared /fantasy/scheme live-dependent because a client
+    // component is server-rendered for the first paint, where activePlayerPool()
+    // reads the live registry. True, and the wrong thing to key the badge on:
+    // SchemeIntel recomputes in the BROWSER, where the registry is empty. The
+    // page showed real players for one paint and illustrative players for the
+    // entire time a customer was actually using it, under a badge reading live.
+    //
+    // /fantasy/studio looks similar and is not the same: its page is a server
+    // component that calls generateWeeklyBrief() itself and passes the RESULT
+    // down as props, so its client children render server-computed rows. The
+    // distinction is not "does a client component appear" but "does a client
+    // component RESOLVE THE POOL ITSELF".
+    //
+    // The helper list is derived from the source rather than hardcoded, so a new
+    // pool-defaulting helper is covered the day it is written.
+    const fantasyLib = join(APP_DIR, "..", "lib", "fantasy");
+    const poolDefaulting = new Set<string>();
+    for (const entry of readdirSync(fantasyLib)) {
+      if (!entry.endsWith(".ts") || entry.includes(".test.")) continue;
+      const src = readFileSync(join(fantasyLib, entry), "utf8");
+      for (const m of src.matchAll(
+        /export function (\w+)\s*\([^)]*=\s*activePlayerPool\(\)/gs,
+      )) {
+        poolDefaulting.add(m[1] as string);
+      }
+    }
+    expect(poolDefaulting.size, "found no pool-defaulting helpers to check").toBeGreaterThan(0);
+
+    const componentsDir = join(APP_DIR, "..", "components");
+    for (const { file, src } of shellPages) {
+      if (!/projectionsPool=\{?[^}]*"real"/.test(src)) continue;
+      for (const m of src.matchAll(/from "@\/components\/([\w/-]+)"/g)) {
+        const componentPath = join(componentsDir, `${m[1] as string}.tsx`);
+        let componentSrc: string;
+        try {
+          componentSrc = readFileSync(componentPath, "utf8");
+        } catch {
+          continue; // not a single-file component; nothing to assert
+        }
+        if (!componentSrc.startsWith('"use client"')) continue;
+        // A client component that can RECEIVE a server-resolved pool is fine:
+        // /fantasy/lineup's optimizer takes `pool` and uses sampleRoster(pool)
+        // on the live path, falling back to a pool-defaulting helper only when
+        // there is no live pool, which is exactly right. The broken shape is a
+        // client component with NO WAY to receive one, so its only option is the
+        // browser's empty registry - which is what SchemeIntel did.
+        const acceptsPool = /\bpool\b\s*[?:}]/.test(componentSrc.slice(0, 4000));
+        if (acceptsPool) continue;
+        for (const helper of poolDefaulting) {
+          expect(
+            componentSrc.includes(`${helper}(`),
+            `${file} claims "real" but the CLIENT component ${m[1]} calls ${helper}() ` +
+              "and accepts no pool prop, so it can only read the browser's empty registry",
+          ).toBe(false);
+        }
+      }
+    }
   });
 
   it("derives the claim from the resolved pool wherever one is resolved", () => {

@@ -135,7 +135,7 @@ The Odds API key **is** present and working — `oddsInserting` shows 450 rows i
 before the read, `THE_ODDS_API_KEY` matched, 13,481 credits remaining. So the NFL gap is not a
 dead key. `freeSpine.oddsPath` reports "Odds free dual-path ABSENT: 7 sport cell(s) single-cleared
 via the-odds-api (mustSpend)", i.e. single-source coverage that `MIN_BOOKMAKERS = 2`
-(`packages/data-ingestion/src/odds-event-merge.ts:16`) will not price. **[M][C]**
+(`packages/data-ingestion/src/odds-event-merge.ts:16`) will not price. **[M]** **[C]**
 
 **State it plainly: on NFL opening week, a visitor lands on 2 spread picks across 6 games, no
 moneylines and no totals.**
