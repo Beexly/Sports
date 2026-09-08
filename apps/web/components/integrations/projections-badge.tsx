@@ -71,6 +71,14 @@ export function ProjectionsBadge({ pool }: { pool: ProjectionsPool }) {
       {live ? (
         <span className="text-ion-2">
           {fresh ? `· ${fresh}` : ""}
+          {/* The projection BASIS - which season these numbers actually come
+              from. The gate computes it, and until C-226 the provider dropped
+              it before the UI, so a member saw "Projections: live" with no way
+              to know they were reading last season's form. Freshness answers
+              "when did we fetch"; this answers "what is it made of", and on a
+              Week 1 board those are different questions with different
+              answers. */}
+          {meta.basisLabel ? ` · ${meta.basisLabel}` : ""}
           {meta.attribution ? ` · ${meta.attribution}` : " · licensed source wired"}
         </span>
       ) : (

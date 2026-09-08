@@ -151,13 +151,26 @@ export function nflWeekOneStart(season: number): Date {
 export const NFL_REGULAR_SEASON_WEEKS = 18;
 
 /**
- * Weeks of postseason after week 18 (wild card, divisional, conference, Super
- * Bowl). Used only to decide WHICH SEASON a January or early-February date
- * belongs to: the season that opened the previous September is still being
- * played, so the frame stays on it rather than jumping to the one eight months
- * away.
+ * The day a season's calendar is finally over: the second Sunday in February
+ * following its week one, which is the league's own Super Bowl convention.
+ *
+ * This replaces a fixed "postseason weeks" count, which was wrong and was
+ * caught in review with dates. Week one opens somewhere between September 2
+ * and September 8 depending on where Labor Day falls, so the number of
+ * Tuesday windows between it and the Super Bowl is not constant - it is 22 in
+ * some seasons and 23 in others. A flat 4-week allowance covered 22 and missed
+ * 23, so on 2025-02-09 (Super Bowl LIX) and 2026-02-08 (Super Bowl LX) the
+ * resolver rolled the season forward ON GAME DAY, labelling an active season's
+ * evidence as prior-season. Deriving the boundary from the calendar removes
+ * the variance instead of tuning a constant against it.
  */
-export const NFL_POSTSEASON_WEEKS = 4;
+export function nflSeasonEnd(season: number): Date {
+  // Second Sunday in February of the following calendar year.
+  const feb1 = new Date(Date.UTC(season + 1, 1, 1));
+  const dow = feb1.getUTCDay(); // 0 = Sunday
+  const firstSunday = 1 + ((7 - dow) % 7);
+  return new Date(Date.UTC(season + 1, 1, firstSunday + 7));
+}
 
 export type NflWeekResolution = {
   /** Labelled season the week belongs to. */
@@ -210,15 +223,24 @@ export function resolveNflWeek(now = new Date()): NflWeekResolution {
   }
 
   // Before this year's opener. The season that opened LAST September may still
-  // be running - and "running" has to include the postseason, or a late-January
-  // date jumps eight months forward to a season nobody has played.
-  const priorWeek = weekIn(calendarYear - 1);
+  // be running - and "running" has to include the postseason, or a date in
+  // January or early February jumps forward to a season nobody has played.
+  const priorSeason = calendarYear - 1;
+  const priorWeek = weekIn(priorSeason);
   if (priorWeek <= NFL_REGULAR_SEASON_WEEKS) {
-    return { season: calendarYear - 1, week: priorWeek, inRegularSeason: true };
+    return { season: priorSeason, week: priorWeek, inRegularSeason: true };
   }
-  if (priorWeek <= NFL_REGULAR_SEASON_WEEKS + NFL_POSTSEASON_WEEKS) {
-    // Postseason: still that season, clamped to the last regular-season week.
-    return { season: calendarYear - 1, week: NFL_REGULAR_SEASON_WEEKS, inRegularSeason: false };
+  // Postseason: still that season, clamped to the last regular-season week,
+  // through the Super Bowl itself.
+  //
+  // The boundary runs to the END of Super Bowl Sunday in US Pacific, not to
+  // midnight UTC on that date. Kickoff is around 23:30 UTC and the game
+  // finishes in the early hours of Monday UTC, so a midnight-UTC comparison
+  // rolls the season forward WHILE THE GAME IS BEING PLAYED. 32 hours past the
+  // Sunday UTC date covers the game and still rolls over on the Monday.
+  const seasonOverAt = nflSeasonEnd(priorSeason).getTime() + 32 * 60 * 60 * 1000;
+  if (now.getTime() < seasonOverAt) {
+    return { season: priorSeason, week: NFL_REGULAR_SEASON_WEEKS, inRegularSeason: false };
   }
 
   // True offseason (roughly late February to August): the frame is week 1 of

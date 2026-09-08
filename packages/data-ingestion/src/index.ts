@@ -139,6 +139,7 @@ export {
   resolveNflWeek,
   nflWeekOneStart,
   NFL_REGULAR_SEASON_WEEKS,
+  nflSeasonEnd,
   type StatsSeasonResolution,
   type NflWeekResolution,
 } from "./nflverse-season.js";

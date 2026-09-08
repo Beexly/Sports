@@ -30,6 +30,17 @@ export interface ProjectionsProvider {
   readonly fetchedAt?: string;
   /** Source-license attribution line (e.g. nflverse CC-BY-4.0). */
   readonly attribution?: string;
+  /**
+   * The accepted projection basis, in the gate's own words - e.g.
+   * "2025 season basis, 17 games (no 2026 games played yet)".
+   *
+   * Carried so it can REACH A CUSTOMER. The gate computed this and
+   * loadAndRegisterGradedProvider dropped it on the floor, so every fantasy
+   * surface rendered live projections with no season provenance at all - the
+   * entire point of the gate, discarded one function before the UI. Found in
+   * review (C-226).
+   */
+  readonly basisLabel?: string;
   list(): PlayerProjection[];
   /**
    * The rich player pool the fantasy engines consume (usage/scheme/trend/etc.).
@@ -88,13 +99,15 @@ export type ProjectionsMeta = {
   readonly name?: string;
   readonly fetchedAt?: string;
   readonly attribution?: string;
+  /** The accepted projection basis, for display beside the live badge (C-226). */
+  readonly basisLabel?: string;
 };
 
 /** Honest live status + freshness/attribution metadata for the projections badge. */
 export function getLiveProjectionsMeta(env: Record<string, string | undefined> = process.env): ProjectionsMeta {
   if (!isLiveProjections(env)) return { live: false };
   const p = getLiveProvider()!;
-  return { live: true, name: p.name, fetchedAt: p.fetchedAt, attribution: p.attribution };
+  return { live: true, name: p.name, fetchedAt: p.fetchedAt, attribution: p.attribution, basisLabel: p.basisLabel };
 }
 
 /**

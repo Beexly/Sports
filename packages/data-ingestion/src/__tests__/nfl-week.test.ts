@@ -3,7 +3,7 @@ import {
   nflWeekOneStart,
   resolveNflWeek,
   NFL_REGULAR_SEASON_WEEKS,
-  NFL_POSTSEASON_WEEKS,
+  nflSeasonEnd,
 } from "../nflverse-season";
 
 /**
@@ -131,10 +131,9 @@ describe("the offseason points FORWARD, not back at the finished season", () => 
     expect(january.week).toBe(NFL_REGULAR_SEASON_WEEKS);
     expect(january.inRegularSeason).toBe(false);
 
-    // Super Bowl week is the last date that still belongs to it.
+    // Super Bowl Sunday is the last date that still belongs to it.
     const superBowl = resolveNflWeek(new Date("2027-02-07T00:00:00Z"));
     expect(superBowl.season).toBe(2026);
-    expect(NFL_POSTSEASON_WEEKS).toBeGreaterThan(0);
   });
 
   it("never reports the completed season as the target once it is over", () => {
@@ -154,6 +153,49 @@ describe("the offseason points FORWARD, not back at the finished season", () => 
         });
       }
       day.setUTCDate(day.getUTCDate() + 1);
+    }
+  });
+});
+
+describe("the season boundary is the Super Bowl, derived not counted", () => {
+  /**
+   * Found in review, with dates, and the constant it replaces was mine. Week
+   * one opens between September 2 and September 8 depending on Labor Day, so
+   * the number of Tuesday windows between it and the Super Bowl is 22 in some
+   * seasons and 23 in others. A flat four-week postseason allowance covered 22
+   * and missed 23 — so on Super Bowl Sunday itself the resolver rolled the
+   * season forward and labelled an active season's evidence as prior-season.
+   */
+  it("lands on the real Super Bowl dates", () => {
+    // Second Sunday in February, the league's own convention.
+    expect(nflSeasonEnd(2024).toISOString().slice(0, 10)).toBe("2025-02-09"); // LIX
+    expect(nflSeasonEnd(2025).toISOString().slice(0, 10)).toBe("2026-02-08"); // LX
+    for (let season = 2020; season <= 2035; season++) {
+      const end = nflSeasonEnd(season);
+      expect(end.getUTCDay(), `season ${season} end is not a Sunday`).toBe(0);
+      expect(end.getUTCMonth(), `season ${season} end is not February`).toBe(1);
+      expect(end.getUTCDate()).toBeGreaterThanOrEqual(8);
+      expect(end.getUTCDate()).toBeLessThanOrEqual(14);
+    }
+  });
+
+  it("does not advance the season on Super Bowl Sunday", () => {
+    // The exact dates from the finding. Both used to roll forward a season.
+    expect(resolveNflWeek(new Date("2025-02-09T20:00:00Z")).season).toBe(2024);
+    expect(resolveNflWeek(new Date("2026-02-08T20:00:00Z")).season).toBe(2025);
+    // And the day after does roll over — the boundary must not drift late
+    // either, or the offseason never starts.
+    expect(resolveNflWeek(new Date("2025-02-10T12:00:00Z")).season).toBe(2025);
+    expect(resolveNflWeek(new Date("2026-02-09T12:00:00Z")).season).toBe(2026);
+  });
+
+  it("holds the boundary for every season, both sides", () => {
+    for (let season = 2020; season <= 2034; season++) {
+      const end = nflSeasonEnd(season);
+      const onDay = new Date(end.getTime() + 12 * 60 * 60 * 1000);
+      const dayAfter = new Date(end.getTime() + 36 * 60 * 60 * 1000);
+      expect(resolveNflWeek(onDay).season, `season ${season} Super Bowl day`).toBe(season);
+      expect(resolveNflWeek(dayAfter).season, `season ${season} day after`).toBe(season + 1);
     }
   });
 });

@@ -308,12 +308,18 @@ function toProjection(p: Player): PlayerProjection {
 const NFLVERSE_ATTRIBUTION = "Data via nflverse (CC-BY-4.0)";
 
 /** Build a live ProjectionsProvider from an already-loaded graded pool. Pure. */
-export function buildGradedProvider(pool: readonly Player[], fetchedAt?: string, attribution: string = NFLVERSE_ATTRIBUTION): ProjectionsProvider {
+export function buildGradedProvider(
+  pool: readonly Player[],
+  fetchedAt?: string,
+  attribution: string = NFLVERSE_ATTRIBUTION,
+  basisLabel?: string,
+): ProjectionsProvider {
   return {
     name: "Graded · nflverse process model",
     live: true,
     fetchedAt,
     attribution,
+    basisLabel,
     list: () => pool.map(toProjection),
     players: () => pool,
   };
@@ -606,6 +612,17 @@ export async function loadAndRegisterGradedProvider({
   now?: Date;
 } = {}): Promise<GradedPoolResult> {
   const result = await loadGradedPool({ fetcher, basisContext, now });
-  registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players, new Date().toISOString(), result.attribution) : null);
+  registerProjectionsProvider(
+    result.status === "live" && result.players.length > 0
+      ? buildGradedProvider(
+          result.players,
+          new Date().toISOString(),
+          result.attribution,
+          // The basis label travels with the provider so a customer can see
+          // which season the numbers came from (C-226).
+          result.basisLabel ?? undefined,
+        )
+      : null,
+  );
   return result;
 }

@@ -274,3 +274,49 @@ describe("every week has exactly one admissible basis (C-225)", () => {
     expect(src).not.toContain("loadPlayerModel({ fetcher, season: target.targetSeason })");
   });
 });
+
+describe("the basis label reaches a customer (C-226)", () => {
+  /**
+   * Found in review: `GradedPoolResult` computed `basisLabel` and
+   * `loadAndRegisterGradedProvider` dropped it when constructing the provider,
+   * so every live fantasy surface rendered projections with no season
+   * provenance whatsoever. The gate's entire output, discarded one function
+   * before the UI. This walks the value from the provider through the meta
+   * accessor, which is what the badge reads.
+   */
+  it("carries the label from provider to projections meta", async () => {
+    const { buildGradedProvider } = await import("@/lib/integrations/graded-pool");
+    const { registerProjectionsProvider, getLiveProjectionsMeta } = await import(
+      "@/lib/integrations/projections"
+    );
+    const label = "2025 season basis, 17 games (no 2026 games played yet)";
+    const provider = buildGradedProvider([], "2026-09-08T00:00:00Z", "nflverse", label);
+    expect(provider.basisLabel).toBe(label);
+
+    registerProjectionsProvider(provider);
+    try {
+      const meta = getLiveProjectionsMeta({ PROJECTIONS_PROVIDER: "graded" });
+      expect(meta.live).toBe(true);
+      expect(meta.basisLabel).toBe(label);
+    } finally {
+      registerProjectionsProvider(null);
+    }
+  });
+
+  it("the badge renders the basis beside the live state", () => {
+    // Source-level on the component, because the badge reads process env and a
+    // registered singleton. What matters is that the field is consumed at all -
+    // it was computed and never referenced anywhere in the UI.
+    const badge = readFileSync(
+      resolve(__dirname, "..", "components", "integrations", "projections-badge.tsx"),
+      "utf8",
+    );
+    expect(badge).toContain("meta.basisLabel");
+  });
+
+  it("omits the basis rather than inventing one when the gate gave none", async () => {
+    const { buildGradedProvider } = await import("@/lib/integrations/graded-pool");
+    const provider = buildGradedProvider([], "2026-09-08T00:00:00Z", "nflverse");
+    expect(provider.basisLabel).toBeUndefined();
+  });
+});
