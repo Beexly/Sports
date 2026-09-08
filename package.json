@@ -147,8 +147,8 @@
     "ops:impeccable": "node scripts/ops/impeccable-probe.mjs",
     "check:ledger": "node scripts/ops/check-agent-ledger.mjs",
     "guardrails:chain": "node scripts/guardrails/run-all.mjs",
-    "test:fuzz": "vitest run ranking-comparator-property odds-devig-property fixture-collapse-property",
-    "test:fuzz:deep": "DEEP_FUZZ=1 vitest run ranking-comparator-property odds-devig-property fixture-collapse-property"
+    "test:fuzz": "vitest run odds-devig-property fixture-collapse-property composite-score-property && npm run test:fuzz -w apps/web",
+    "test:fuzz:deep": "DEEP_FUZZ=1 vitest run odds-devig-property fixture-collapse-property composite-score-property && DEEP_FUZZ=1 npm run test:fuzz -w apps/web"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
