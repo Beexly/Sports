@@ -34,6 +34,7 @@ import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reli
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
 import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
+import { surveyLineIntegrity } from "@/lib/settlement/line-integrity-lane";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
@@ -621,6 +622,24 @@ export async function GET(request: Request) {
   const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
   const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
 
+  // Line integrity (C-272; ledger C-197/C-270/C-271): how many published picks
+  // carry a `line` no bookmaker quoted. Read-only, writes nothing.
+  //
+  // READ THE FIELD NAMES, NOT THE SHAPE. Two different populations are counted
+  // here and they are NOT interchangeable:
+  //   publishedUnsettledOffGridOrBadRunline  exact, no odds join, a LOWER BOUND
+  //     (off-grid is certainly not a book line; on-grid may still be unquoted)
+  //   publishedUnsettledNotQuoted / remainingToVoid  exact against the odds
+  //     table, but only over the rows this call INSPECTED — each carries its
+  //     own `*Inspected` denominator and `*CapReached` flag, and a count whose
+  //     denominator is not stated is the C-241/C-246/C-250 defect class.
+  //
+  // `remainingToVoid` reading 0 with `remainingCapReached` false is the
+  // precondition the founder flips PERFORMANCE_STATS_ENABLED and
+  // PRICING_PHASE=PROVEN against. See
+  // docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.
+  const lineIntegrity = isStubMode() ? null : await safeRead(() => surveyLineIntegrity(db as never));
+
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
     canonicalSettled: sample?.canonicalSettled ?? 0,
@@ -886,6 +905,7 @@ export async function GET(request: Request) {
       },
       marketCoverage,
       confidenceTail,
+      lineIntegrity,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
     },
     { headers: { "Cache-Control": "no-store" } },

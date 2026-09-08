@@ -5,6 +5,7 @@ import {
   isOffHalfPointGrid,
   lineIntegrityVoidEnabled,
   runLineIntegrityLane,
+  surveyLineIntegrity,
   unpublishDefectiveUnsettledPicks,
   voidDefectiveSettledPicks,
   type LineIntegrityDb,
@@ -51,6 +52,7 @@ function makeDb(args: {
   const pickUpdates: Array<Record<string, unknown>> = [];
   const events: Array<Record<string, unknown>> = [];
   const work: Array<unknown> = [];
+  const memories: Array<Record<string, unknown>> = [];
   let oddsQueries = 0;
   const db = {
     pick: {
@@ -85,6 +87,7 @@ function makeDb(args: {
           },
         },
         pickSettlementEvent: { create: async (q: Record<string, unknown>) => events.push(q) },
+        jarvisMemoryEvent: { create: async (q: Record<string, unknown>) => memories.push(q) },
         postSettlementWork: {
           createMany: async (q: Record<string, unknown>) => {
             work.push(q);
@@ -93,7 +96,7 @@ function makeDb(args: {
         },
       } as never),
   };
-  return { db: db as unknown as LineIntegrityDb, pickUpdates, events, work, oddsQueries: () => oddsQueries };
+  return { db: db as unknown as LineIntegrityDb, pickUpdates, events, work, memories, oddsQueries: () => oddsQueries };
 }
 
 describe("classifyStoredLine", () => {
@@ -280,6 +283,12 @@ describe("UNPUBLISH half with the flag ON", () => {
     // Never deleted, never graded, and no settlement event: it stays PENDING.
     expect(h.pickUpdates[0]!["where"]).toMatchObject({ result: "PENDING", isPublished: true });
     expect(h.events).toHaveLength(0);
+    // But an append-only record IS written, in the same transaction, so the
+    // ops surface can count what this half did.
+    expect(h.memories).toHaveLength(1);
+    const mem = h.memories[0]!["data"] as Record<string, unknown>;
+    expect(mem["scope"]).toBe("settlement.line-integrity");
+    expect(mem["metadata"]).toMatchObject({ action: "UNPUBLISH", rcaCode: "LINE_NOT_QUOTED", storedLine: 44.333333333333336 });
   });
 
   it("is idempotent: the second run selects nothing because it is unpublished", async () => {
@@ -290,5 +299,99 @@ describe("UNPUBLISH half with the flag ON", () => {
     const second = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true });
     expect(second.inspected).toBe(0);
     expect(second.acted).toBe(0);
+  });
+});
+
+describe("surveyLineIntegrity — the ops truth-surface block (C-272)", () => {
+  const spreadQuotes: OddsRow[] = [
+    { id: "o1", bookmaker: "a", spread: -3, total: null },
+    { id: "o2", bookmaker: "b", spread: -3.5, total: null },
+  ];
+
+  function surveyDb(picks: LineIntegrityPickRow[], counts = { events: 4, memories: 7 }) {
+    const base = makeDb({ picks, odds: spreadQuotes });
+    const db = base.db as unknown as Record<string, unknown>;
+    db["pickSettlementEvent"] = { count: async () => counts.events };
+    db["jarvisMemoryEvent"] = { count: async () => counts.memories, create: async () => undefined };
+    return base.db;
+  }
+
+  it("counts off-grid published unsettled picks by sport and market, exactly", async () => {
+    const db = surveyDb([
+      pickRow({ id: "p1", result: "PENDING", settledAt: null, line: -3.25 }),
+      pickRow({ id: "p2", result: "PENDING", settledAt: null, line: -3.5 }),
+      pickRow({
+        id: "p3",
+        result: "PENDING",
+        settledAt: null,
+        pickType: "TOTAL",
+        line: 44.333333333333336,
+      }),
+    ]);
+    const s = await surveyLineIntegrity(db, { env: {} });
+    expect(s.publishedUnsettledOffGridOrBadRunline).toBe(2);
+    expect(s.publishedUnsettledOffGridOrBadRunlineBy).toEqual([
+      { sportKey: "americanfootball_nfl", pickType: "SPREAD", count: 1 },
+      { sportKey: "americanfootball_nfl", pickType: "TOTAL", count: 1 },
+    ]);
+  });
+
+  it("counts an MLB spread off the run-line ladder that the grid screen alone would miss", async () => {
+    const db = surveyDb([
+      pickRow({
+        id: "p1",
+        result: "PENDING",
+        settledAt: null,
+        line: -13.5, // ON the half-point grid, but never a run line
+        game: { id: "game-1", sport: { key: "baseball_mlb" } },
+      }),
+    ]);
+    const s = await surveyLineIntegrity(db, { env: {} });
+    expect(s.publishedUnsettledOffGridOrBadRunline).toBe(1);
+  });
+
+  it("reports the exact not-quoted counts with their own denominators", async () => {
+    const db = surveyDb([
+      pickRow({ id: "p1", result: "PENDING", settledAt: null, line: -3.25 }),
+      pickRow({ id: "p2", result: "LOSS", line: -3.25 }),
+      pickRow({ id: "p3", result: "WIN", line: -3.5 }),
+    ]);
+    const s = await surveyLineIntegrity(db, { env: {} });
+    expect(s.publishedUnsettledInspected).toBe(1);
+    expect(s.publishedUnsettledNotQuoted).toBe(1);
+    expect(s.remainingInspected).toBe(2);
+    expect(s.remainingToVoid).toBe(1); // p2 only; p3's -3.5 IS quoted
+    expect(s.remainingCapReached).toBe(false);
+  });
+
+  it("flags the cap so a floor is never read as a total", async () => {
+    const picks = Array.from({ length: 3 }, (_, i) =>
+      pickRow({ id: `p${i}`, result: "LOSS", line: -3.25 }),
+    );
+    const s = await surveyLineIntegrity(surveyDb(picks), { cap: 2, env: {} });
+    expect(s.remainingInspected).toBe(2);
+    expect(s.remainingToVoid).toBe(2);
+    expect(s.remainingCapReached).toBe(true);
+  });
+
+  it("reports what the lane did and whether either flag is on", async () => {
+    const s = await surveyLineIntegrity(surveyDb([]), {
+      env: { LINE_INTEGRITY_VOID_ENABLED: "true" },
+    });
+    expect(s.voidedByLane).toBe(4);
+    expect(s.unpublishedByLane).toBe(7);
+    expect(s.laneEnabled).toBe(true);
+    expect(s.publishGuardEnabled).toBe(false);
+  });
+
+  it("writes nothing", async () => {
+    const picks = [pickRow({ id: "p1", result: "LOSS", line: -3.25 })];
+    const base = makeDb({ picks, odds: spreadQuotes });
+    const db = base.db as unknown as Record<string, unknown>;
+    db["pickSettlementEvent"] = { count: async () => 0 };
+    db["jarvisMemoryEvent"] = { count: async () => 0, create: async () => undefined };
+    await surveyLineIntegrity(base.db, { env: {} });
+    expect(base.pickUpdates).toHaveLength(0);
+    expect(base.events).toHaveLength(0);
   });
 });

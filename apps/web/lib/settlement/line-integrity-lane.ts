@@ -62,6 +62,7 @@ export const LINE_INTEGRITY_RCA_CODE: Extract<SettlementRootCauseCode, "LINE_NOT
   "LINE_NOT_QUOTED";
 
 export const LINE_INTEGRITY_ACTOR = "system:settle-picks:line-integrity";
+export const LINE_INTEGRITY_MEMORY_SCOPE = "settlement.line-integrity";
 export const LINE_INTEGRITY_POLICY_REF = "docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md";
 export const LINE_INTEGRITY_EVENT_SCHEMA_VERSION = 1;
 
@@ -187,6 +188,7 @@ export type LineIntegrityTx = {
   pick: { updateMany(args: Record<string, unknown>): Promise<{ count: number }> };
   pickSettlementEvent: { create(args: Record<string, unknown>): Promise<unknown> };
   postSettlementWork: unknown;
+  jarvisMemoryEvent: { create(args: Record<string, unknown>): Promise<unknown> };
 };
 
 export type LineIntegrityDb = {
@@ -199,6 +201,11 @@ export type LineIntegrityDb = {
       Array<{ id: string; bookmaker: string; spread: number | null; total: number | null }>
     >;
   };
+  jarvisMemoryEvent: {
+    create(args: Record<string, unknown>): Promise<unknown>;
+    count(args: Record<string, unknown>): Promise<number>;
+  };
+  pickSettlementEvent: { count(args: Record<string, unknown>): Promise<number> };
   $transaction(fn: (tx: LineIntegrityTx) => Promise<{ count: number }>): Promise<{ count: number }>;
 };
 
@@ -320,6 +327,58 @@ export function buildLineIntegrityPayload(args: {
       priorResult: row.result,
       settledAt: row.settledAt ? row.settledAt.toISOString() : null,
     },
+  };
+}
+
+/**
+ * Durable, append-only record of one UNPUBLISH. The unpublish half writes no
+ * PickSettlementEvent (nothing was settled), so without this the action would
+ * leave no trace and the ops surface could not count it — exactly the same
+ * reason the zero-sit stale half writes one (zero-sit-lane.ts).
+ */
+export function lineIntegrityUnpublishMemoryEvent(
+  row: LineIntegrityPickRow,
+  verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>,
+  now: Date,
+): Record<string, unknown> {
+  const sportKey = row.game.sport?.key ?? "";
+  const metadata = {
+    action: "UNPUBLISH",
+    rcaCode: LINE_INTEGRITY_RCA_CODE,
+    defect: verdict.defect,
+    lane: "line-integrity",
+    actor: LINE_INTEGRITY_ACTOR,
+    policy: LINE_INTEGRITY_POLICY_REF,
+    pickId: row.id,
+    gameId: row.gameId,
+    sportKey,
+    pickType: row.pickType,
+    modelVersion: row.modelVersion,
+    storedLine: row.line,
+    bookLine: verdict.bookLine,
+    sourceIds: verdict.sourceIds,
+    generatedAt: row.generatedAt.toISOString(),
+    unpublishedAt: now.toISOString(),
+  };
+  return {
+    memory_type: "decision",
+    memory_state: "confirmed",
+    scope: LINE_INTEGRITY_MEMORY_SCOPE,
+    title: `Line integrity: unpublished pick ${row.id}`,
+    summary:
+      `${sportKey} ${row.pickType} "${row.selection}": stored line ${row.line} was not quoted by any ` +
+      `bookmaker at or before ${metadata.generatedAt} (nearest quoted ${verdict.bookLine ?? "NONE"}). ` +
+      `isPublished set false by the settle-picks cron under ${LINE_INTEGRITY_POLICY_REF}. ` +
+      `Row kept, result untouched.`,
+    full_text: JSON.stringify(metadata),
+    source_type: "cron",
+    source_ref: "settle-picks:line-integrity",
+    source_timestamp: now,
+    actor: LINE_INTEGRITY_ACTOR,
+    owner: "system",
+    confidence: 100,
+    tags: ["line-integrity", "unpublish", sportKey, row.pickType],
+    metadata,
   };
 }
 
@@ -473,6 +532,7 @@ export async function voidDefectiveSettledPicks(input: {
  */
 export async function unpublishDefectiveUnsettledPicks(input: {
   readonly db: LineIntegrityDb;
+  readonly now?: Date;
   readonly cap?: number;
   readonly enabled?: boolean;
 }): Promise<LineIntegrityHalfResult> {
@@ -480,6 +540,7 @@ export async function unpublishDefectiveUnsettledPicks(input: {
   const half = emptyHalf(enabled);
   if (!enabled) return half;
 
+  const now = input.now ?? new Date();
   const cap = input.cap ?? LINE_INTEGRITY_UNPUBLISH_CAP;
   const rows = await input.db.pick.findMany({
     where: {
@@ -500,9 +561,20 @@ export async function unpublishDefectiveUnsettledPicks(input: {
     if (!verdict) continue;
     let written: { count: number };
     try {
-      written = await input.db.pick.updateMany({
-        where: { id: row.id, result: "PENDING", isPublished: true },
-        data: { isPublished: false },
+      written = await input.db.$transaction(async (tx) => {
+        const updated = await tx.pick.updateMany({
+          where: { id: row.id, result: "PENDING", isPublished: true },
+          data: { isPublished: false },
+        });
+        // Append-only record IN THE SAME TRANSACTION: an unpublish with no
+        // durable trace is one the ops surface cannot count and nobody can
+        // audit.
+        if (updated.count > 0) {
+          await tx.jarvisMemoryEvent.create({
+            data: lineIntegrityUnpublishMemoryEvent(row, verdict, now),
+          });
+        }
+        return updated;
       });
     } catch (err) {
       console.warn(
@@ -532,11 +604,156 @@ export async function runLineIntegrityLane(input: {
   readonly enabled?: boolean;
 }): Promise<LineIntegrityLaneResult> {
   const enabled = input.enabled ?? lineIntegrityVoidEnabled();
-  const unpublished = await unpublishDefectiveUnsettledPicks({ db: input.db, enabled });
+  const unpublished = await unpublishDefectiveUnsettledPicks({
+    db: input.db,
+    enabled,
+    ...(input.now ? { now: input.now } : {}),
+  });
   const voids = await voidDefectiveSettledPicks({
     db: input.db,
     enabled,
     ...(input.now ? { now: input.now } : {}),
   });
   return { lane: "line-integrity", enabled, voids, unpublished };
+}
+
+// ── Read-only survey for the ops truth surface (C-272) ──────────────────────
+
+/**
+ * Cap on the picks the survey inspects against the odds table per call. The
+ * exact rule needs one odds read per pick, so the survey reports how many it
+ * INSPECTED alongside every exact count; a count whose denominator is not
+ * stated is the C-241/C-246/C-250 defect class.
+ */
+export const LINE_INTEGRITY_SURVEY_CAP = 300;
+
+export type LineIntegrityBreakdown = { sportKey: string; pickType: string; count: number };
+
+export type LineIntegritySurvey = {
+  /**
+   * EXACT count, no odds join: currently published UNSETTLED SPREAD/TOTAL
+   * picks whose stored line is off the half-point grid, or is an MLB spread
+   * that is not +/-1.5, 2.5 or 3.5. This is a LOWER BOUND on the real defect —
+   * off-grid is certainly not a book line, but a line ON the grid may still
+   * never have been quoted. It is not the same number as
+   * `publishedUnsettledNotQuoted` below and must never be reported as one.
+   */
+  publishedUnsettledOffGridOrBadRunline: number;
+  publishedUnsettledOffGridOrBadRunlineBy: LineIntegrityBreakdown[];
+  /**
+   * Currently published UNSETTLED SPREAD/TOTAL picks inspected against the
+   * odds table this call, and how many of those carried a line no bookmaker
+   * quoted for that game and market at or before generatedAt. EXACT over
+   * `publishedUnsettledInspected` rows; `publishedUnsettledCapReached` true
+   * means more exist than were inspected and the count is a floor.
+   */
+  publishedUnsettledInspected: number;
+  publishedUnsettledNotQuoted: number;
+  publishedUnsettledCapReached: boolean;
+  /**
+   * SETTLED published SPREAD/TOTAL picks inspected against the odds table this
+   * call, and how many the VOID half would act on right now. This is the
+   * "remaining to void" figure. EXACT over `remainingInspected` rows;
+   * `remainingCapReached` true means the count is a floor, not a total.
+   */
+  remainingInspected: number;
+  remainingToVoid: number;
+  remainingCapReached: boolean;
+  /** Picks VOIDED by this lane: settlement events stamped rcaCode LINE_NOT_QUOTED. */
+  voidedByLane: number;
+  /** Picks UNPUBLISHED by this lane: append-only memory events in its scope. */
+  unpublishedByLane: number;
+  /** Whether the remediation lane is currently enabled. */
+  laneEnabled: boolean;
+  /** Whether the publish-time guard (C-270) is currently enabled. */
+  publishGuardEnabled: boolean;
+};
+
+async function surveyHalf(
+  db: LineIntegrityDb,
+  where: Record<string, unknown>,
+  cap: number,
+): Promise<{ inspected: number; defective: number; capReached: boolean }> {
+  const rows = await db.pick.findMany({
+    where: { ...where, pickType: { in: [...LINE_INTEGRITY_MARKETS] } },
+    orderBy: [{ generatedAt: "asc" }],
+    take: cap + 1,
+    select: LINE_INTEGRITY_PICK_SELECT,
+  });
+  const capReached = rows.length > cap;
+  const candidates = rows.slice(0, cap);
+  let defective = 0;
+  const scratch = emptyHalf(true);
+  for (const row of candidates) {
+    if (await verdictFor(db, row, scratch)) defective += 1;
+  }
+  return { inspected: candidates.length, defective, capReached };
+}
+
+/**
+ * Read-only. Writes nothing, and is safe to call from the ops truth surface on
+ * every request. Counts are labelled for exactly what they count.
+ */
+export async function surveyLineIntegrity(
+  db: LineIntegrityDb,
+  opts: { readonly cap?: number; readonly env?: NodeJS.ProcessEnv } = {},
+): Promise<LineIntegritySurvey> {
+  const cap = opts.cap ?? LINE_INTEGRITY_SURVEY_CAP;
+  const env = opts.env ?? process.env;
+
+  const unsettledRows = await db.pick.findMany({
+    where: {
+      isPublished: true,
+      result: "PENDING",
+      pickType: { in: [...LINE_INTEGRITY_MARKETS] },
+    },
+    orderBy: [{ generatedAt: "asc" }],
+    take: cap + 1,
+    select: LINE_INTEGRITY_PICK_SELECT,
+  });
+  const byKey = new Map<string, LineIntegrityBreakdown>();
+  let offGrid = 0;
+  for (const row of unsettledRows.slice(0, cap)) {
+    const sportKey = row.game.sport?.key ?? "";
+    if (!isOffHalfPointGrid(row.line) && !isNonStandardRunline(sportKey, row.pickType, row.line)) {
+      continue;
+    }
+    offGrid += 1;
+    const key = `${sportKey}|${row.pickType}`;
+    const entry = byKey.get(key) ?? { sportKey, pickType: row.pickType, count: 0 };
+    entry.count += 1;
+    byKey.set(key, entry);
+  }
+
+  const unsettled = await surveyHalf(db, { isPublished: true, result: "PENDING" }, cap);
+  const settled = await surveyHalf(
+    db,
+    { isPublished: true, result: { in: ["WIN", "LOSS", "PUSH"] } },
+    cap,
+  );
+
+  const voidedByLane = await db.pickSettlementEvent.count({
+    where: { result: "VOID", payload: { path: ["rcaCode"], equals: LINE_INTEGRITY_RCA_CODE } },
+  });
+  const unpublishedByLane = await db.jarvisMemoryEvent.count({
+    where: { scope: LINE_INTEGRITY_MEMORY_SCOPE },
+  });
+
+  return {
+    publishedUnsettledOffGridOrBadRunline: offGrid,
+    publishedUnsettledOffGridOrBadRunlineBy: [...byKey.values()].sort(
+      (a, b) => b.count - a.count || a.sportKey.localeCompare(b.sportKey),
+    ),
+    publishedUnsettledInspected: unsettled.inspected,
+    publishedUnsettledNotQuoted: unsettled.defective,
+    publishedUnsettledCapReached: unsettled.capReached,
+    remainingInspected: settled.inspected,
+    remainingToVoid: settled.defective,
+    remainingCapReached: settled.capReached,
+    voidedByLane,
+    unpublishedByLane,
+    laneEnabled: lineIntegrityVoidEnabled(env),
+    publishGuardEnabled:
+      env["LINE_INTEGRITY_PUBLISH_GUARD_ENABLED"]?.trim().toLowerCase() === "true",
+  };
 }
