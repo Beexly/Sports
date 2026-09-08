@@ -809,6 +809,72 @@ Playwright's own `toHaveScreenshot`), and betting-percentage/attendance data sig
 concepts, but no confirmed-free, rights-clear source — correctly left unbuilt rather than
 guessed at).
 
+**Round 16 second follow-up (2026-09-08): explicit founder instruction to distrust every prior
+claim, including this session's own, re-verify everything from scratch, wire in what is safe,
+and document what is not.** Nothing from the prior entries was taken on faith — every claim
+below traces to a command re-run in this pass, not a citation of an earlier report.
+**Re-verification (not new work, confirming old work actually holds):** `git status`/`git log`/
+`git fetch` showed the branch genuinely clean and fully pushed (the stop-hook's "uncommitted
+changes" warning was stale). Every file the prior Round 16 entries claim to exist was confirmed
+on disk and correctly wired (`grep` for `SharePickButton` in `pick-card.tsx`, direct `ls` on
+every new path). Re-ran, from zero, not trusted from any commit message: `npm run typecheck`
+(24 workspaces, 0 errors), `npm run guardrails` (26/26), and every test file any prior commit
+message cited by name, individually. All held.
+**Newly wired in (was "prepped," now shipped, commit `65c382de1`):** `settle-picks`'s cron route
+now calls the already-built `healthcheck-ping.ts` dead-man's-switch, mirroring `refresh-odds`'s
+existing `HC_REFRESH_PING_URL` pattern exactly (`HC_SETTLE_PICKS_PING_URL`, same env-gated
+no-op contract, pings the route's own `freeOk` verdict). This was safe to wire autonomously
+because the helper's own contract (read in full before wiring) guarantees a no-op with no
+network call at all until a founder sets the env var, and it never throws. 3 new tests pin the
+wiring itself (success signal, fail signal, no-op-passthrough when unset); all 4 pre-existing
+settle-picks route test files (28 tests total) still pass unchanged.
+**Found by adversarial re-review, not by re-running the same tests (commit `be850256e`):**
+`cross-book-outlier.ts`'s `findOddsOutliers()` grouped raw odds rows by game+market with no
+dedup by bookmaker. Under how it is actually called today (one ingestion cycle's fresh
+`normalizeOdds()` output, at most one row per bookmaker) this was never wrong in production —
+but the module is explicitly a reusable, not-yet-wired utility "for a future gated caller," and
+a caller who ever fed it a batch spanning multiple fetch cycles (exactly what this session's own
+earlier C-119 SQL investigation did against raw odds history) would have one book's own time
+series silently counted as several independent bookmakers, corrupting the median/MAD the whole
+detector depends on. Hardened to keep only the latest `fetchedAt` reading per (game, bookmaker)
+before judging; a new regression test proves it (7 rows including 3 stale duplicates of one
+book correctly collapse to the 6 real quotes a fresh cycle would actually see). The core
+`detectCrossBookOutliers()` math itself (median, MAD, the Iglewicz & Hoaglin modified z-score,
+and its documented mean-absolute-deviation fallback for the MAD=0 quantized-tie case) was
+re-derived by hand against the literature during this review and found correct as originally
+shipped — nothing there needed changing. `stadium-altitude.ts`'s two functions are one-line
+arithmetic/comparison with negligible bug surface; added one boundary test (exactly-at-threshold
+and just-under) that didn't exist before, found no defect.
+**Re-run one more time, after both fixes, before this note was written:** the full suite for
+every touched package, not just the changed files — `apps/web` (929 files / 12,468 tests / 97
+pre-existing skips), `packages/data-ingestion` (39 files / 403 tests), `packages/prediction-
+engine` (276 files / 3,082 tests) — zero failures anywhere. `npm run typecheck` and `npm run
+guardrails` both re-run clean a second time after the two new commits, before push.
+**Explicitly NOT safe to complete autonomously, and why — do not attempt without a founder
+decision, even though each is otherwise small:**
+(1) **Scheduling the ledger-SLA and calibration-eligibility checks** (both independently
+flagged twice now — Round 16's free-for.dev pass and its creative wave) needs a new or edited
+entry in `.github/workflows/*.yml` or `external-watchdog.yml`'s own cron body — `.github/
+workflows/**` is a Law-2 frozen path for every agent, no exception. The code-side half (what to
+check) already exists and needs no work; only the scheduling entry point is blocked.
+(2) **Offline/PWA caching for the picks board** — real and free, but caching anything
+picks-shaped risks colliding with the explicit no-store contract in `.claude/rules/
+nextjs-caching.md` (picks/odds/entitlement data must never be cached) unless designed very
+carefully with a visible "last synced" UI treatment; that is a product/security judgment call,
+not a mechanical wire-up, so it stays prepped-only.
+(3) **A non-circular historical benchmark for `team-strength-filter.ts`** needs a real train/
+holdout split against `nflverse-source.ts` data sized correctly enough to be honest, not
+rushed — attempting it in the time remaining in a pass risks producing a benchmark that LOOKS
+rigorous but leaks information, which is worse than not building it; still described, not built.
+(4) **`cross-book-outlier.ts` and `stadium-altitude.ts` stay deliberately unwired from any
+scoring path** — wiring either into `scoring.ts` would be a scoring-path behavior change
+requiring the founder-gated `MODEL_VERSION` sequencing already scheduled for after 2026-09-13,
+and `stadium-altitude.ts` additionally has no real per-venue elevation table (only Denver's
+figure is a verified fixture) — building one out would mean fabricating 31 other teams'
+numbers from memory, which Law 8 forbids outright.
+No schema, migration, workflow file, `.env*`, gate, or dependency was touched in this pass.
+Both new commits pushed to this branch; PR #712 CI to be watched for the result.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
