@@ -68,16 +68,58 @@ against 6-1: in each case the stored away score EXCEEDS the final away score,
 which no partial reading can produce. These are another game's numbers, not an
 early snapshot of this one.
 
+## The platform already has a detector for exactly this, and it has never fired
+
+`apps/web/lib/settlement/zero-sit-lane.ts` carries `isCrossPathScoreMismatch`
+and an `RCA` code `SCORE_MISMATCH_CROSS_PATH` whose message reads, verbatim:
+"Game row carries FINAL X-Y (row last written ...); the free final reads A-B;
+every grader refused to write". That is this defect, named and instrumented,
+written before today.
+
+**It has produced zero voids.** Every RCA-coded settlement event in the table:
+
+| RCA code | Voids | First | Last |
+|---|---|---|---|
+| AMBIGUOUS_TEAM_NAME | 10 | 2026-09-06 09:20 | 2026-09-06 09:20 |
+| FIXTURE_NOT_FOUND | 6 | 2026-09-06 16:07 | 2026-09-06 19:07 |
+
+**This corrects the record in AGENTS.md**, which attributes the first cohort to
+`SCORE_MISMATCH_CROSS_PATH` ("10 MLB spreads on city-only game rows refused
+every cycle as SCORE_MISMATCH_CROSS_PATH"). They were recorded as
+`AMBIGUOUS_TEAM_NAME`. The cross-path code has never been emitted.
+
+So the detector did not stop the 54. A plausible mechanism, **not confirmed**,
+is that the comparison needs the game to still be on the free scoreboard, and
+those boards only carry recent dates: once a corrupted row ages off the board
+there is nothing left to contradict it and the stored score is simply used.
+That would make the guard a narrow window rather than a net. Confirming it
+means reading the grading path, which is the next investigation and not this
+one.
+
 ## What is NOT established
 
 **The writing path.** The obvious suspect is
 `apps/web/lib/data-sources/free-score-persist.ts`, whose header says it matches
-on "team+date". But it inherits `MAX_KICKOFF_DRIFT_MS = 12h` from
-`free-settlement.ts`, whose comment states the bound exists precisely so a
-final cannot be placed on a game 24h away in a series. Consecutive MLB games
-sit about 19 to 24 hours apart, so that guard should already refuse these.
-Either the guard is bypassed on this path, or a different writer is
-responsible.
+on "team+date". Reading it, that is almost certainly NOT the writer. It carries
+four guards aimed at this precise failure, several of them added in response to
+earlier review rounds on it: `UNRESOLVED_DOUBLEHEADER` refuses when no final
+places on this row by the clock, `AMBIGUOUS_MATCH` fails closed when more than
+one final survives kickoff narrowing, and `KICKOFF_DRIFT` refuses a final whose
+start sits more than `MAX_KICKOFF_DRIFT_MS` (12h) from the row's kickoff, with
+a comment stating the bound exists so a final cannot be placed on a game 24h
+away in a series. Consecutive MLB games sit 19 to 24 hours apart, well outside
+it.
+
+It also **refuses to overwrite an existing FINAL that disagrees**, logging the
+contradiction instead. Which means two things: it is a poor candidate for
+having written these, and **it cannot repair them either.** A corrupted row is
+permanent as far as this path is concerned.
+
+So a different writer is responsible and has not been identified. Note that
+`packages/data-ingestion/src/mlb-statsapi-client.ts` exists, so MLB scores can
+arrive from a source whose ids do not align with the `espn:` ids these rows are
+keyed by; a cross-source join on team and date is the shape that would produce
+exactly this. That is a lead, not a finding, and it is written down as a lead.
 
 That is where the investigation stopped rather than guessing. An earlier
 episode this session cost two wrong fixes by guessing at a cause before reading
@@ -125,3 +167,10 @@ the corrupted rows. Grading them against the stored 4-2 would record the spread
 as a WIN when the real 1-0 result makes it a LOSS. The zero-sit lane will void
 them at 24 hours past kickoff, which is roughly 17:06 UTC today. Voiding them
 is the less wrong outcome of the two available, but neither is correct.
+
+This also reframes the settlement-health RED that AGENTS.md attributes to a
+structural conflict between three constants. That conflict is real and the
+analysis of it stands. But the specific two picks holding health DEGRADED right
+now are not "ordinary churn" as recorded there: they are the visible edge of
+this. Whatever is holding them back is declining to grade a pick whose game row
+we cannot trust, and on today's evidence that refusal is correct.
