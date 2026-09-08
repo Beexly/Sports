@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { isStatsPublic } from "@/lib/launch/public-surface-gate";
 import { SITE_URL } from "@/lib/seo/site-url";
 
 /**
@@ -27,9 +28,17 @@ export default function robots(): MetadataRoute.Robots {
           "/dashboard/",
           "/brief",
           "/go/",
-          // StatKing foundation — public only with STATS_PUBLIC=true
-          "/stats",
-          "/stats/",
+          // DERIVED FROM THE SAME GATE THE SITEMAP USES (C-185).
+          //
+          // These two lines used to be unconditional while sitemap.ts adds
+          // /stats, /stats/compare, /stats/ask, /stats/proof and
+          // /stats/expert-board the moment isStatsPublic() is true. Submitting
+          // a URL in the sitemap that robots.txt forbids is the "Indexed,
+          // though blocked by robots.txt" state: the page is neither properly
+          // crawled nor cleanly excluded, and Search Console reports it as an
+          // error against the site. Latent today because the gate is off,
+          // which is why it is worth fixing before it is turned on.
+          ...(isStatsPublic() ? [] : ["/stats", "/stats/"]),
         ],
       },
     ],

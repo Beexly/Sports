@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { absoluteUrl } from "@/lib/seo/site-url";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -285,7 +286,12 @@ const productJsonLd = {
     name: `${p.name} (monthly)`,
     price: p.monthly,
     priceCurrency: "USD",
-    url: "/pricing",
+    // ABSOLUTE, not relative (C-185). metadataBase resolves relative URLs
+    // inside Next's own Metadata fields; it does not touch a hand-built
+    // JSON-LD object serialised into a <script> tag, so a structured-data
+    // parser sees the literal "/pricing" and either drops the Offer or
+    // resolves it against the wrong origin.
+    url: absoluteUrl("/pricing"),
     availability: "https://schema.org/InStock",
   })),
 };

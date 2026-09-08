@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { SITE_URL } from "@/lib/seo/site-url";
 import { db, Prisma } from "@sports/db";
 import { auth } from "@/lib/auth";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
@@ -93,7 +94,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           gameId: data.selectedNode.id,
           modelVersion: "current",
           brandConfig: {
-            publicUrl: "https://galaxysportsedge.com",
+            // Same apex hardcode as lib/studio/load.ts, duplicated rather
+            // than shared - so fixing one did not fix the other (C-182).
+            publicUrl: SITE_URL,
             voiceReferences: ["docs/positioning.md", "docs/product/galaxy-studio-spec.md"],
           },
         },
