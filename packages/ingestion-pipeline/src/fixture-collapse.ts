@@ -136,15 +136,68 @@ export function collapseGameRowsToFixtures<T extends FixtureCollapseRow>(rows: r
       sportKey: row.sport?.key ?? undefined,
     });
 
+    // C-194. A FLIPPED BEST MATCH MUST NOT MASK A SAME-ORIENTATION TWIN.
+    //
+    // findTwinCandidate returns the single best match, ranked partly by
+    // kickoff proximity. When the table holds a flipped twin AND a
+    // same-orientation duplicate, the flipped row can be the closer of the
+    // two - so the refusal below fired and the real duplicate survived. The
+    // observable result is the same fixture rendered twice, in the SAME
+    // orientation, on a surface whose whole job is one row per contest.
+    // Measured by property fuzz: rows at +0min (H/A), +5min (A/H flipped) and
+    // +10min (H/A) collapsed to all three.
+    //
+    // Refusing to merge a flipped pair is still correct and unchanged - two
+    // rows that disagree about who is home disagree about the sign of every
+    // derived line. What is fixed is only the MASKING: retry against the
+    // candidates that share this row's orientation before giving up. The
+    // flipped row stays kept either way.
+    // The retry fires on NULL too, not only on an explicit flipped verdict.
+    // findTwinCandidate fails CLOSED when a probe matches more than one kept
+    // candidate, and a fixture that has both a flipped row and a
+    // same-orientation duplicate is exactly that ambiguity - so the masking
+    // case arrives as `null`, not as `orientation: "flipped"`. Filtering to
+    // this row's own orientation REMOVES the ambiguity rather than resolving
+    // it by guess, which is what the fail-closed rule is protecting. If the
+    // filtered list is still ambiguous, it still returns null and we still
+    // keep the row.
+    const orientedTwin =
+      !twin || twin.orientation === "flipped"
+        ? findTwinCandidate(
+            keptCandidates.filter(
+              (c) =>
+                c.homeTeamName === row.homeTeamName && c.awayTeamName === row.awayTeamName,
+            ),
+            {
+              sportId: row.sportId,
+              externalId: row.externalId,
+              homeTeamName: row.homeTeamName,
+              awayTeamName: row.awayTeamName,
+              commenceTime: row.commenceTime,
+              sportKey: row.sport?.key ?? undefined,
+            },
+          )
+        : twin;
+
     // No twin, or a twin we refuse to act on: keep the row. "flipped" is the
     // refusal — see the module doc.
-    if (!twin || twin.orientation === "flipped") {
+    if (!orientedTwin || orientedTwin.orientation === "flipped") {
       kept.push(row);
       keptCandidates.push(toTwinCandidate(row));
       continue;
     }
 
-    const index = kept.findIndex((k) => k.id === twin.candidate.id);
+    // C-194. `kept` and `keptCandidates` are NOT parallel arrays. The
+    // unusable-commenceTime branch above pushes to `kept` and continues, so
+    // from the first such row the two arrays are offset. Reusing a `kept`
+    // index to write into `keptCandidates` therefore corrupted an unrelated
+    // slot - or wrote past the end and left an `undefined` hole, which
+    // findTwinCandidate then dereferenced (`for (const c of candidates)
+    // byId.set(c.id, c)`), throwing TypeError. Both callers catch and return
+    // an empty board, so the guard written to stop a throw from blanking a
+    // public surface was itself the throw. Index each array by its own id.
+    const index = kept.findIndex((k) => k.id === orientedTwin.candidate.id);
+    const candidateIndex = keptCandidates.findIndex((c) => c.id === orientedTwin.candidate.id);
     if (index === -1) {
       // The twin resolved through an alias chain to a row we are not holding.
       // Nothing to compare against, so fail closed and keep this row.
@@ -155,7 +208,11 @@ export function collapseGameRowsToFixtures<T extends FixtureCollapseRow>(rows: r
 
     if (isBetterFixtureCanonical(row, kept[index]!)) {
       kept[index] = row;
-      keptCandidates[index] = toTwinCandidate(row);
+      // Alias resolution can return a candidate we no longer hold; skip rather
+      // than append, which would reintroduce the desync this fixes.
+      if (candidateIndex !== -1) {
+        keptCandidates[candidateIndex] = toTwinCandidate(row);
+      }
     }
   }
 
