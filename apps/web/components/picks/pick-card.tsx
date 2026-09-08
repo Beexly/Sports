@@ -14,6 +14,7 @@ import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
+import { gradedLineNote } from "@/lib/picks/graded-line-display";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -135,6 +136,17 @@ export function PickCard({
         {pick.lineMovement && (
           <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
         )}
+        {/* Settled TOTAL graded on a different number from the one shown
+            (ledger C-143): say so in plain words, with both numbers, so the
+            reader can reproduce the result. Nothing here changes the grade. */}
+        {(() => {
+          const note = gradedLineNote(pick);
+          return note ? (
+            <p className="mt-1 text-[11px] leading-snug text-ion-2" data-testid="graded-line-note">
+              {note.text}
+            </p>
+          ) : null;
+        })()}
       </div>
 
       {/* Scores row: confidence + edge + risk */}

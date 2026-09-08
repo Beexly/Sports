@@ -654,6 +654,14 @@ export interface PublicPick {
   dataFreshnessAt: string | null;
   result: PickResult;
   /**
+   * The line settlement graded this pick against (clvLockLine when the pick
+   * carries one, else `line`: the selectGradingLine rule). Present only on a
+   * settled SPREAD or TOTAL; null on MONEYLINE, PENDING and VOID rows. It is
+   * not always `line` (ledger C-143), so surfaces show it beside the displayed
+   * line whenever the two differ, so a reader can reproduce the result.
+   */
+  gradedLine?: number | null;
+  /**
    * SHA-256 content hash of the pick's tamper-evident pre-kickoff receipt.
    * Always public (a hash reveals nothing; publishing it early is how
    * commitments work) — paste it at /verify to check integrity. Null for

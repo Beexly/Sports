@@ -18,6 +18,7 @@ import { teaserForViewer } from "@/lib/picks/teaser-text";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
+import { publicGradedLine } from "@/lib/picks/graded-line-display";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { clientIp } from "@/lib/api/rate-limit";
@@ -283,6 +284,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // at render time (lib/picks/display-selection.ts); the DB string is kept.
       selection: displaySelection(pick.selection),
       line: pick.line,
+      // The number settlement actually graded against, on settled SPREAD and
+      // TOTAL rows only (ledger C-143): it is clvLockLine when present and can
+      // differ from `line` above. Exposed so a reader can reproduce the
+      // result; which number is canonical is a founder decision and nothing
+      // here changes the grade.
+      gradedLine: publicGradedLine({
+        pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+        result: pick.result as PickResult,
+        line: pick.line,
+        clvLockLine: pick.clvLockLine,
+      }),
       hasBookPrice: bookmakerCount > 0,
       ...(marketImplied ? { marketImplied } : {}),
       // Opening -> current movement, the Pro-tier market read. Only SPREAD and
