@@ -238,7 +238,13 @@ export async function CalibrationPanel() {
           <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
             Reliability by confidence bucket
           </h3>
-          <span className="text-[11px] text-ion-2">bar = observed · marker = expected</span>
+          {/* The marker this legend used to name was removed in C-176 because it
+              asserted the Edge Index IS a win probability. The legend outlived it,
+              so every row documented a cue that is not drawn - and re-made the
+              claim the marker was removed for. Describe only what is rendered. */}
+          <span className="text-[11px] text-ion-2">
+            bar = observed decided win rate · Clopper-Pearson interval
+          </span>
         </div>
         <div className="divide-y divide-titanium/60">
           {data.buckets.map((b) => (

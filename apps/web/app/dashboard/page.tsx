@@ -115,8 +115,17 @@ export default async function DashboardPage({
     dbDegraded = true;
     return 0;
   };
-  const softList = (): unknown[] => {
+  // The list needs its OWN flag, not just the shared one. `dbDegraded` drives a
+  // banner that talks about COUNTS reading zero; the list below renders a
+  // different positive claim - "No picks published yet today" - and an empty
+  // array from a failed findMany is indistinguishable from a genuinely empty
+  // slate. Worse, the count query is independent, so a lone list failure prints
+  // "Today's Picks 6" directly above "No picks published yet today". Same
+  // defect class as C-179, one surface deeper than that fix reached.
+  let todayPicksDegraded = false;
+  const softTodayPicks = (): TodayPick[] => {
     dbDegraded = true;
+    todayPicksDegraded = true;
     return [];
   };
 
@@ -152,7 +161,7 @@ export default async function DashboardPage({
           .sort(comparePicksByRanking)
           .slice(0, entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1)),
       )
-      .catch(softList) as Promise<TodayPick[]>,
+      .catch(softTodayPicks),
     db.pick
       .count({
         where: {
@@ -433,7 +442,12 @@ export default async function DashboardPage({
                 View all →
               </Link>
             </div>
-            {todayPicks.length === 0 ? (
+            {todayPicksDegraded ? (
+              <p role="status" className="py-6 text-center text-sm text-ion-2">
+                Today&rsquo;s picks could not be read - the query did not
+                respond. This is not an empty board; try again shortly.
+              </p>
+            ) : todayPicks.length === 0 ? (
               <p className="py-6 text-center text-sm text-ion-2">
                 No picks published yet today. The board fills in as games clear
                 the model — check back closer to game time.

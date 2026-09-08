@@ -40,6 +40,23 @@ describe("the public calibration panel makes no probability claim", () => {
     expect(source).not.toContain("expectedWinRate");
   });
 
+  it("leaves no legend describing the marker it removed", () => {
+    // C-191. The marker went; the legend that named it ("marker = expected")
+    // did not, so every row documented a cue that is not drawn - and re-made
+    // the exact claim the marker was deleted for. A dangling legend is the
+    // same false statement as the marker, minus the pixels.
+    expect(source).not.toContain("marker = expected");
+    expect(source).not.toMatch(/marker\s*=/);
+    // And the replacement has to describe what IS rendered, or the chart is
+    // just unlabelled.
+    expect(source).toContain("bar = observed decided win rate");
+    // The legend names the interval METHOD rather than a literal "95%": the
+    // no-fake-percentages guard reads any hardcoded percentage on a customer
+    // page as an outcome claim, and it is right to - a bare 95% next to a win
+    // rate is exactly the kind of number a reader takes as a promise.
+    expect(source).toContain("Clopper-Pearson interval");
+  });
+
   it("does not render a Brier score", () => {
     expect(source).not.toContain("formatBrier");
     expect(source).not.toContain("brierScore");
