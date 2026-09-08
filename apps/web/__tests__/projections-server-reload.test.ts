@@ -116,3 +116,88 @@ describe("a registered provider does not outlive its basis", () => {
     });
   });
 });
+
+/**
+ * C-230, found in review of C-229 above. The stale path cleared the cached
+ * promise so the NEXT call would rebuild. Under concurrent traffic every
+ * request takes that path at once — the old provider is still registered and
+ * `registeredAt` does not move until a load succeeds — so each request cleared
+ * the in-flight promise and forked its own multi-MB load. That defeats the
+ * de-duplication the module is built around, and it lets a losing reload's
+ * `registerProjectionsProvider(null)` land on top of the provider a winning
+ * reload just installed.
+ */
+describe("a stale refresh is single-flight", () => {
+  /** A load the test controls, so several callers are genuinely in flight at once. */
+  function deferred() {
+    let settle: (v: unknown) => void = () => {};
+    const promise = new Promise((res) => {
+      settle = res;
+    });
+    return { promise, settle };
+  }
+
+  it("shares ONE reload across concurrent requests on a stale provider", async () => {
+    const m = await loader();
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      registered = true;
+      return liveResult;
+    });
+    await m.ensureLiveProjections(ENV, 0);
+    expect(loadAndRegisterGradedProvider).toHaveBeenCalledTimes(1);
+
+    // The provider is registered but past its trust interval. Hold the reload
+    // open so all five callers overlap.
+    const gate = deferred();
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      await gate.promise;
+      registered = true;
+      return liveResult;
+    });
+    const stale = m.PROVIDER_RELOAD_AFTER_MS + 1;
+    const inFlight = [
+      m.ensureLiveProjections(ENV, stale),
+      m.ensureLiveProjections(ENV, stale),
+      m.ensureLiveProjections(ENV, stale),
+      m.ensureLiveProjections(ENV, stale),
+      m.ensureLiveProjections(ENV, stale),
+    ];
+    gate.settle(undefined);
+    await Promise.all(inFlight);
+    // 2 = the initial registration plus ONE shared reload. Before the fix this
+    // read 6 — a reload per concurrent request, each pulling the same several
+    // megabytes, because every one of them cleared the in-flight promise.
+    expect(loadAndRegisterGradedProvider).toHaveBeenCalledTimes(2);
+  });
+
+  it("leaves the provider registered when a refusal races a successful reload", async () => {
+    const m = await loader();
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      registered = true;
+      return liveResult;
+    });
+    await m.ensureLiveProjections(ENV, 0);
+
+    // One reload succeeds; a second concurrent caller must NOT start its own
+    // load that could refuse and unregister what the first just installed.
+    const gate = deferred();
+    let call = 0;
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      call += 1;
+      await gate.promise;
+      if (call === 1) {
+        registered = true;
+        return liveResult;
+      }
+      registered = false; // a refusal unregisters, by design (C-229 reason 2)
+      return refusedResult;
+    });
+    const stale = m.PROVIDER_RELOAD_AFTER_MS + 1;
+    const both = [m.ensureLiveProjections(ENV, stale), m.ensureLiveProjections(ENV, stale)];
+    gate.settle(undefined);
+    await Promise.all(both);
+
+    expect(call).toBe(1);
+    expect(registered).toBe(true);
+  });
+});

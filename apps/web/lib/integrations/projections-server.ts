@@ -37,8 +37,25 @@ import type { Player } from "../fantasy/players";
  * comparison with no import, an inadmissible basis cannot outlive the interval,
  * and a refusal retries on the next request after a short cooldown rather than
  * waiting it out.
+ *
+ * A REFRESH IS SINGLE-FLIGHT (C-230, found in review of the above). The stale
+ * path cleared the cached promise so the next call would rebuild — but under
+ * concurrent traffic EVERY request took that path, because the old provider is
+ * still registered and `registeredAt` does not move until a load succeeds. So
+ * each concurrent request cleared the in-flight promise and started its own
+ * multi-MB load, defeating the de-duplication this module's whole design rests
+ * on, and letting a losing reload call `registerProjectionsProvider(null)` on
+ * top of the provider a winning reload had just installed. `loadInFlight`
+ * makes the refresh shared: concurrent callers await the one that is running.
  */
 let gradedLoadPromise: Promise<void> | null = null;
+/**
+ * Whether `gradedLoadPromise` is still running. Distinct from "the promise is
+ * non-null": after a load settles the promise is kept as a CACHED RESULT that
+ * the stale path is allowed to discard, but an unsettled one must never be
+ * discarded — that is what forks a second load.
+ */
+let loadInFlight = false;
 /** When the currently-registered provider was built. */
 let registeredAt = 0;
 /**
@@ -68,6 +85,7 @@ export const PROVIDER_RETRY_COOLDOWN_MS = 60 * 1000;
 /** Test seam: forget any registration decision without touching the provider. */
 export function resetLiveProjectionsCacheForTests(): void {
   gradedLoadPromise = null;
+  loadInFlight = false;
   registeredAt = 0;
   lastAttemptAt = Number.NEGATIVE_INFINITY;
 }
@@ -81,8 +99,12 @@ export function ensureLiveProjections(
   const live = isLiveProjections(env);
   // Registered AND still inside the trust interval: nothing to do.
   if (live && nowMs - registeredAt < PROVIDER_RELOAD_AFTER_MS) return Promise.resolve();
-  // Registered but stale: drop the cached attempt so the next load rebuilds it
-  // against the current target week.
+  // A load is already running: share it, never restart it. This check must come
+  // BEFORE the stale-path clear below — otherwise every concurrent request on a
+  // stale provider forks its own multi-MB reload (C-230).
+  if (loadInFlight && gradedLoadPromise) return gradedLoadPromise;
+  // Registered but stale, and nothing is running: drop the cached attempt so the
+  // next load rebuilds it against the current target week.
   if (live) gradedLoadPromise = null;
   // Not registered, and the last attempt was recent: do not re-fetch megabytes
   // on every request while a refusal or outage persists.
@@ -92,9 +114,11 @@ export function ensureLiveProjections(
 
   if (!gradedLoadPromise) {
     lastAttemptAt = nowMs;
+    loadInFlight = true;
     gradedLoadPromise = import("./graded-pool")
       .then((m) => m.loadAndRegisterGradedProvider())
       .then((result) => {
+        loadInFlight = false;
         const registered = result.status === "live" && result.players.length > 0;
         if (registered) {
           registeredAt = nowMs;
@@ -107,6 +131,7 @@ export function ensureLiveProjections(
         }
       })
       .catch((err) => {
+        loadInFlight = false;
         gradedLoadPromise = null; // allow a later request to retry
         registeredAt = 0;
         throw err;

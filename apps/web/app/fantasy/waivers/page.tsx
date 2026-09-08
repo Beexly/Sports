@@ -3,6 +3,8 @@ import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { WaiverBoard } from "@/components/fantasy/waiver-board";
 import { ILLUSTRATIVE_NOTE } from "@/lib/fantasy/players";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
+import { FANTASY_DATA_ATTRIBUTION } from "@/lib/fantasy/attribution";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
 
@@ -33,6 +35,16 @@ export default async function WaiversPage() {
       title={<>Spend the budget where the <span className="gse-editorial" style={{ fontSize: "1.08em" }}>upside</span> is.</>}
       intro="Targets ranked on ceiling, trend, usage, and scheme fit, tiered from Priority to Dart, with a FAAB bid that re-prices the moment you set your remaining budget. And the part most tools skip: who to drop, judged on the floor of your bench, not last week's points."
       note={pool ? LIVE_NOTE : ILLUSTRATIVE_NOTE}
+      // Dynamic attribution: the provider composes its line from the sources
+      // ACTUALLY joined this load, so a day with failed joins does not
+      // over-credit. The static constant is only the fallback.
+      attribution={pool ? getLiveProjectionsMeta().attribution ?? FANTASY_DATA_ATTRIBUTION : undefined}
+      // Derived from the SAME value the note above uses, so the badge and the
+      // note can never disagree about whether these are real players (C-173).
+      // Omitting it left FantasyShell's "illustrative" default in place, so a
+      // live pool rendered real players under a badge that called them
+      // illustrative and suppressed the basis label entirely (C-231).
+      projectionsPool={pool ? "real" : "illustrative"}
       wide
     >
       <WaiverBoard pool={gatedPool} />
