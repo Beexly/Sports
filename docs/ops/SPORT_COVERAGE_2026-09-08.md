@@ -243,5 +243,24 @@ MLB's **settled history** problems stand unchanged and are not affected by this 
 491 checked rows carry another fixture's final, 62 published moneyline results are wrong, and 420
 of the 578 strandable picks are MLB's. The forward pipeline is fine; the historical data is not.
 
-The MLB 24-48h figure of 27% is the one number here I cannot call either way. It is consistent with
-books simply not having posted yet, and it is also consistent with a refresh lag. **NOT ESTABLISHED.**
+### The 24-48h question, now CLOSED
+
+Section 10 first left the MLB 24-48h figure of 27% as NOT ESTABLISHED, since it was consistent
+both with books not having posted and with a refresh lag on our side. Odds-table timestamps
+separate the two:
+
+| horizon | games | priced | odds rows ever | last odds fetch |
+|---|---|---|---|---|
+| under 24h | 12 | 12 | **11,450** | **0.0h ago** |
+| 24-48h | 19 | 4 | 408 | **0.0h ago** |
+| 2-4 days | 18 | 0 | **0** | never |
+| 4+ days | 218 | 0 | **0** | never |
+
+**It is not a refresh lag.** We are fetching those 24-48h fixtures right now, this minute, and
+getting 408 rows against 11,450 for the nearer ones. The pipeline is working and the books simply
+have thin coverage that far ahead of a baseball game. The 27% is the market, not us.
+
+The zero at 2+ days is different and is a **deliberate horizon limit**: we have never fetched odds
+for those fixtures at all. That is a defensible choice for baseball, and it does mean the product
+cannot show a priced MLB board beyond about two days. Worth knowing as a product constraint rather
+than a defect.
