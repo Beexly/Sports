@@ -1952,3 +1952,29 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// Publish-time market probability from the append-only odds table. Moved here
+// from apps/web/lib/calibration on 2026-09-08 (C-253) so the SIGNAL SLATE can
+// use the same resolver the calibration loader uses, rather than a second copy
+// of the same de-vig arithmetic drifting beside it. The app path re-exports
+// this module, so every existing import still resolves to one implementation.
+export {
+  PUBLISH_TIME_MARKET_P_METHOD,
+  NON_BOOK_BOOKMAKER_KEYS,
+  isRealBookmakerKey,
+  pickedSide,
+  latestH2hRowPerBookmaker,
+  publishTimeMarketPSource,
+  resolvePublishTimeMarketP,
+  publishTimeMarketP,
+} from "./publish-time-market-p.js";
+export type {
+  OddsRowForMarketP,
+  PickForMarketP,
+  PickedSide,
+  PublishTimeMarketPUnresolvedReason,
+  PublishTimeMarketPSource,
+  PublishTimeMarketPResolved,
+  PublishTimeMarketPUnresolved,
+  PublishTimeMarketPResult,
+} from "./publish-time-market-p.js";

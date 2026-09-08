@@ -15,7 +15,15 @@ import {
   MODEL_VERSION,
   MIN_PUBLISH_CONFIDENCE,
   PREMIUM_CONFIDENCE_THRESHOLD,
+  resolvePublishTimeMarketP,
+  type OddsRowForMarketP,
+  type PublishTimeMarketPResult,
 } from "@sports/prediction-engine";
+import {
+  signalEdgeFields,
+  signalRationale,
+  signalReasoning,
+} from "./signal-market-anchor.js";
 import type {
   FactorBreakdown,
   IndependentEdgeSummary,
@@ -52,6 +60,25 @@ export type SignalSlateResult = {
    * day's free ESPN scoreboard, or the board could not be fetched (fail-closed).
    */
   readonly fixtureUnconfirmed: number;
+  /**
+   * C-253. Picks written with a real de-vigged market anchor from the stored
+   * odds table, and how many of those came from a single book. Reported
+   * separately and never summed into one number, because one book is below the
+   * floor a board-priced pick requires. `picksUpserted - marketAnchored` is the
+   * count still measuring its edge against a coin flip.
+   */
+  readonly marketAnchored: number;
+  readonly marketAnchoredSingleBook: number;
+  /**
+   * Set when the one odds read for the slate threw, so EVERY pick this cycle is
+   * unanchored for an infrastructure reason rather than because no market
+   * existed. Deliberately not an `errors` entry: the slate still published what
+   * it meant to publish. A reader that treats `marketAnchored: 0` as "no market
+   * existed" without checking this field would draw the wrong conclusion.
+   */
+  readonly marketAnchorReadError: string | null;
+  /** Per-pick resolver throws. Each cost one pick its anchor, none cost a pick. */
+  readonly marketAnchorResolveFailures: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -212,6 +239,60 @@ export async function generateSignalSlate(opts?: {
   });
   const collapsedGames = collapseGameRowsToFixtures(scannedGames);
   const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
+
+  // C-253: one read of the append-only odds table for the whole slate, so a
+  // pick that HAS a stored market price stops being published as if it had
+  // none. Measured before this change: 232 of 387 published signal moneylines
+  // had a real two-sided book row for their fixture at or before their own
+  // generatedAt, and every one of them was written with marketFairProb null.
+  // Rows after `now` are never read - the anchor is fixed at publish time, not
+  // recomputed toward the close - and a failed read degrades to the unanchored
+  // path rather than failing the slate.
+  let slateOddsRows: OddsRowForMarketP[] = [];
+  let marketAnchorReadError: string | null = null;
+  let marketAnchorResolveFailures = 0;
+  if (gameList.length > 0) {
+    try {
+      slateOddsRows = await db.odds.findMany({
+        where: {
+          gameId: { in: gameList.map((g) => g.id) },
+          market: "H2H",
+          fetchedAt: { lte: now },
+          homePrice: { not: null },
+          awayPrice: { not: null },
+        },
+        select: {
+          gameId: true,
+          bookmaker: true,
+          homePrice: true,
+          awayPrice: true,
+          fetchedAt: true,
+        },
+      });
+      console.log(
+        `${logPrefix} market anchor: ${slateOddsRows.length} stored H2H row(s) at or before ${now.toISOString()} across ${gameList.length} fixture(s)`,
+      );
+    } catch (err) {
+      // NOT an `errors` entry. `errors` drives `ok: false` and the truth
+      // surface, and a slate that published every pick it meant to publish did
+      // not fail. Losing the anchor degrades what the edge is MEASURED against;
+      // the copy on each affected pick then states plainly that no market price
+      // was stored. Reported through its own field so it is still visible.
+      marketAnchorReadError = err instanceof Error ? err.message : String(err);
+      console.warn(
+        `${logPrefix} market anchor read failed, every pick this cycle falls back to unanchored: ${marketAnchorReadError}`,
+      );
+      slateOddsRows = [];
+    }
+  }
+  const oddsByGame = new Map<string, OddsRowForMarketP[]>();
+  for (const row of slateOddsRows) {
+    const bucket = oddsByGame.get(row.gameId);
+    if (bucket) bucket.push(row);
+    else oddsByGame.set(row.gameId, [row]);
+  }
+  let anchoredCount = 0;
+  let anchoredSingleBook = 0;
   if (collapsedGames.length !== scannedGames.length) {
     console.log(
       `${logPrefix} collapsed ${scannedGames.length} rows to ${collapsedGames.length} fixtures, slating ${gameList.length}`,
@@ -366,19 +447,61 @@ export async function generateSignalSlate(opts?: {
     const sources = blend.sources;
     const sourcesLabel = sources.join(", ");
 
+    // C-253. The selection string is built here rather than below because the
+    // market anchor is resolved for the SIDE, and the side comes from the
+    // selection through the engine's own boundary-aware resolver - the same one
+    // settlement and CLV use - not from a second team-matching heuristic.
+    const selection = `${chosenTeam} ML ${SIGNAL_SELECTION_SUFFIX}`;
+    let anchor: PublishTimeMarketPResult | null = null;
+    try {
+      anchor = resolvePublishTimeMarketP(
+        {
+          gameId: game.id,
+          generatedAt: now,
+          selection,
+          homeTeamName: homeTeam,
+          awayTeamName: awayTeam,
+        },
+        oddsByGame.get(game.id) ?? [],
+      );
+    } catch (err) {
+      // A resolver throw must not cost the slate a pick, and it is not a slate
+      // failure: it costs THIS pick its anchor, which the copy below then
+      // states rather than hides. Counted, logged, and kept out of `errors` for
+      // the same reason as the read failure above.
+      marketAnchorResolveFailures += 1;
+      console.warn(
+        `${logPrefix} market anchor resolve failed for ${formatFixtureLine(game)}, pick falls back to unanchored: ${err instanceof Error ? err.message : String(err)}`,
+      );
+      anchor = null;
+    }
+    const edge = signalEdgeFields(trueProb, anchor);
+    if (edge.anchored) {
+      anchoredCount += 1;
+      if (edge.marketFairSource === "market_p_single_book") anchoredSingleBook += 1;
+    }
+
     const independentEdge: IndependentEdgeSummary = {
+      // Unchanged by C-253 and deliberately so: the publish decision on this
+      // lane is a function of trueProb alone. Attaching a market anchor changes
+      // what the edge MEASURES, not what the slate publishes.
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
       agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
-      // No book line on pure signal slate — omit market, never invent 0.5
-      marketFairProb: null,
+      // Still null when nothing was stored: never invent 0.5 into this field.
+      // When a real de-vigged book price exists it goes here, with the book
+      // count and snapshot beside it so one book is never read as two.
+      marketFairProb: edge.marketFairProb,
       trueProb,
-      rawEdge: trueProb - 0.5,
-      shrunkEdge: (trueProb - 0.5) * 0.7,
+      rawEdge: edge.rawEdge,
+      shrunkEdge: edge.shrunkEdge,
+      marketFairSource: edge.marketFairSource,
+      marketBookCount: edge.marketBookCount,
+      marketSnapshotAt: edge.marketSnapshotAt,
       expectedClv: 0,
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources: [...sources],
       priced: true,
-      rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
+      rationale: signalRationale(edge, chosenTeam, sourcesLabel, trueProb),
     };
 
     const factorBreakdown: FactorBreakdown = {
@@ -386,7 +509,13 @@ export async function generateSignalSlate(opts?: {
       marketDepthScore: 0,
       edgeScore: edgePts,
       marketPriceShapeScore: 0,
-      trueEvScore: trueProb - 0.5,
+      // C-253. An expected value cannot be computed without a price, and this
+      // field previously held `trueProb - 0.5`: a distance from a coin flip
+      // wearing the name of an EV. It is now the shrunk edge against a real
+      // de-vigged book price when one exists, matching what the board path
+      // writes (scoring.ts), and null when no market was stored. Null is the
+      // honest value for "no EV is computable here".
+      trueEvScore: edge.anchored ? edge.shrunkEdge : null,
       fairProbability: rankingP,
       lineMovementScore: 0,
       volatilityPenalty: 0,
@@ -405,13 +534,12 @@ export async function generateSignalSlate(opts?: {
       ],
     };
 
-    const selection = `${chosenTeam} ML ${SIGNAL_SELECTION_SUFFIX}`;
     // Paid viewers read this verbatim. It states an estimate with its status, and
     // carries no operator vocabulary (RankingP, eligibility colours, ladder names).
-    const reasoning =
-      `Model signal (no book line): independent sources [${sourcesLabel}] put ${chosenTeam} at a ` +
-      `model estimate of ${Math.round(trueProb * 100)}%, uncalibrated and not a sportsbook quote. ` +
-      `No book price is attached to this pick.`;
+    // C-253: it must not say "No book price is attached to this pick" on a pick
+    // that now carries a de-vigged stored price, so the wording follows the
+    // anchor instead of being fixed.
+    const reasoning = signalReasoning(edge, chosenTeam, sourcesLabel, trueProb);
     const reasoningShort = buildSignalReasoningShort(chosenTeam, sourcesLabel);
 
     try {
@@ -569,7 +697,13 @@ export async function generateSignalSlate(opts?: {
 
   console.log(
     `${logPrefix} ${note}` +
-      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : ""),
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
+      ` marketAnchored=${anchoredCount}/${picksUpserted}` +
+      (anchoredSingleBook > 0 ? ` (singleBook=${anchoredSingleBook})` : "") +
+      (marketAnchorReadError != null ? ` marketAnchorReadFailed` : "") +
+      (marketAnchorResolveFailures > 0
+        ? ` marketAnchorResolveFailures=${marketAnchorResolveFailures}`
+        : ""),
   );
 
   return {
@@ -579,6 +713,10 @@ export async function generateSignalSlate(opts?: {
     picksUpserted,
     picksSkipped,
     fixtureUnconfirmed,
+    marketAnchored: anchoredCount,
+    marketAnchoredSingleBook: anchoredSingleBook,
+    marketAnchorReadError,
+    marketAnchorResolveFailures,
     errors,
     note,
   };

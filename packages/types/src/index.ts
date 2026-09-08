@@ -57,6 +57,23 @@ export interface IndependentEdgeSummary {
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
   priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
+  /**
+   * C-253. Provenance of `marketFairProb` when it was resolved from the
+   * append-only odds table at publish time rather than from a live board
+   * snapshot. Present ONLY on that path, so its absence beside a finite
+   * `marketFairProb` means the engine's own board read produced it.
+   *
+   * It exists because the two are not the same claim. `market_p_from_odds_table`
+   * means at least MIN_BOOKMAKERS real books quoted both sides at or before
+   * generation; `market_p_single_book` means exactly one did. A single stored
+   * book is a real de-vigged price and it is NOT the two-book floor publishing
+   * requires, and nothing downstream may read one as the other.
+   */
+  marketFairSource?: "market_p_from_odds_table" | "market_p_single_book" | null;
+  /** Distinct real bookmakers in the snapshot the anchor was de-vigged from. */
+  marketBookCount?: number | null;
+  /** Latest fetchedAt among the odds rows used, ISO. The snapshot this reflects. */
+  marketSnapshotAt?: string | null;
 }
 
 export interface FactorBreakdown {

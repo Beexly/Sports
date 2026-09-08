@@ -517,11 +517,54 @@ describe("wiring: both canonical loaders run the odds-table resolver and the sur
   });
 
   it("the pure module imports the book minimum from the engine and uses no literal threshold", () => {
-    const src = read("lib/calibration/publish-time-market-p.ts");
+    // C-253 moved the implementation into packages/prediction-engine so the
+    // signal slate can call it at GENERATION time. This assertion follows the
+    // implementation rather than the path, because asserting on the app file
+    // after the move would have passed against a re-export containing no
+    // arithmetic at all - a guard that cannot fail.
+    const src = readFileSync(
+      resolve(root, "../../packages/prediction-engine/src/publish-time-market-p.ts"),
+      "utf8",
+    );
     expect(src).toMatch(/MIN_BOOKMAKERS/);
     expect(src).not.toMatch(/books\.length\s*<\s*\d/);
     expect(src).toMatch(/americanToImpliedProbability/);
     expect(src).toMatch(/removeVig/);
     expect(src).not.toMatch(/consensusNoVig\(/);
+  });
+
+  it("there is exactly ONE implementation: the app path re-exports and holds no arithmetic", () => {
+    // The reason the move is safe. Two copies of the receipt's own de-vig would
+    // be free to drift apart, and the drift would surface as a calibration
+    // number that no longer matches the receipt it claims to reproduce.
+    const src = read("lib/calibration/publish-time-market-p.ts");
+    expect(src).toMatch(/from "@sports\/prediction-engine"/);
+    for (const arithmetic of [
+      "americanToImpliedProbability(",
+      "removeVig(",
+      "homeSum",
+      "awaySum",
+      "toFixed(6)",
+    ]) {
+      expect(src).not.toContain(arithmetic);
+    }
+  });
+
+  it("the signal slate resolves an anchor at publish time instead of writing null", () => {
+    // The defect C-253 fixes: 387 of 428 published moneylines carried
+    // marketFairProb null while 232 of them had a real two-sided book row in
+    // our own odds table at or before their generatedAt.
+    const slate = readFileSync(
+      resolve(root, "../../packages/ingestion-pipeline/src/generate-signal-slate.ts"),
+      "utf8",
+    );
+    expect(slate).toMatch(/resolvePublishTimeMarketP\(/);
+    expect(slate).toMatch(/market:\s*"H2H"/);
+    // The anchor is fixed at publish time, never recomputed toward the close.
+    expect(slate).toMatch(/fetchedAt:\s*\{\s*lte:\s*now\s*\}/);
+    // The old hard-coded coin-flip edge must not survive anywhere in the file.
+    expect(slate).not.toMatch(/rawEdge:\s*trueProb\s*-\s*0\.5/);
+    expect(slate).not.toMatch(/shrunkEdge:\s*\(trueProb\s*-\s*0\.5\)/);
+    expect(slate).not.toMatch(/trueEvScore:\s*trueProb\s*-\s*0\.5/);
   });
 });

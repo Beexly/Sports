@@ -189,9 +189,17 @@ export async function loadPublishTimeMarketPResolver(
   const byPickId = new Map<string, ResolvedMarketP>();
   let resolvedSingleBook = 0;
   for (const c of candidates) {
+    // PickForMarketP.id is optional since C-253 (the signal slate resolves an
+    // anchor before its pick row exists). Every candidate THIS loader builds
+    // comes from a persisted pick via oddsTableCandidate, so an id is always
+    // present here; a candidate without one is skipped rather than keyed under
+    // a fabricated id, which would silently attach one pick's market
+    // probability to another.
+    const pickId = c.id;
+    if (typeof pickId !== "string" || pickId.length === 0) continue;
     const res = resolvePublishTimeMarketP(c, rowsByGame.get(c.gameId) ?? []);
     if (res.status === "resolved") {
-      byPickId.set(c.id, { p: res.p, source: resolverSourceForPSource(res.pSource) });
+      byPickId.set(pickId, { p: res.p, source: resolverSourceForPSource(res.pSource) });
       if (res.pSource === "market_p_single_book") resolvedSingleBook += 1;
     } else {
       unresolved[res.reason] += 1;
