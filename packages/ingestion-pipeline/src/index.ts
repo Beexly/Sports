@@ -152,6 +152,12 @@ export type {
   CanonicalGameResolution,
 } from "./game-identity.js";
 
+export {
+  collapseGameRowsToFixtures,
+  isBetterFixtureCanonical,
+} from "./fixture-collapse.js";
+export type { FixtureCollapseRow } from "./fixture-collapse.js";
+
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
 export {

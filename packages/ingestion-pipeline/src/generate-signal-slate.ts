@@ -28,7 +28,7 @@ import {
   type FixtureBatchResult,
   type FixtureProbe,
 } from "./fixture-confirmation.js";
-import { collapseSlateFixtures } from "./slate-fixture-collapse.js";
+import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -210,7 +210,7 @@ export async function generateSignalSlate(opts?: {
     orderBy: { commenceTime: "asc" },
     take: SLATE_SCAN_LIMIT,
   });
-  const collapsedGames = collapseSlateFixtures(scannedGames);
+  const collapsedGames = collapseGameRowsToFixtures(scannedGames);
   const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
   if (collapsedGames.length !== scannedGames.length) {
     console.log(

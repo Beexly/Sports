@@ -1,5 +1,6 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
+import { collapseGameRowsToFixtures } from "@sports/ingestion-pipeline";
 import type { Entitlements } from "@sports/types";
 import {
   buildBoardHealth,
@@ -132,6 +133,18 @@ const SCORING_ACTIVE_WINDOW_MS = 8 * 60 * 60 * 1000;
  * resumed the next day is settlement's problem, not the board's.
  */
 const LIVE_ACTIVE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Fallback-lane bounds (C-171). The SCAN limits are generous because they bound
+ * rows read; the LANE limits are the numbers a viewer sees and are unchanged
+ * from the caps they replace. Splitting them is the whole fix: the table holds
+ * about 2.5 rows per real fixture with none tombstoned, so a cap applied before
+ * the collapse showed a contest twice AND spent the lane on duplicates.
+ */
+const SCORING_FALLBACK_SCAN_LIMIT = 40;
+const SCORING_LANE_LIMIT = 8;
+const GATED_FALLBACK_SCAN_LIMIT = 60;
+const GATED_LANE_LIMIT = 12;
 
 const LANE_RANK: Record<BoardStateRow["status"], number> = {
   PUBLISHED_TODAY: 0,
@@ -679,7 +692,7 @@ async function loadBoardStateInner(
       }
     }
 
-    const [publishedTodayRaw, scoringNow, gatedToday] = await Promise.all([
+    const [publishedTodayRaw, scoringNowRaw, gatedTodayRaw] = await Promise.all([
       db.pick.findMany({
         where: {
           isPublished: true,
@@ -741,11 +754,17 @@ async function loadBoardStateInner(
           // them; only excluding the tombstoned row can (Devin Review, #717).
           mergedIntoGameId: null,
         },
-        include: { sport: { select: { name: true } } },
+        // `key` as well as `name`: the per-fixture collapse below picks its twin
+        // window from the sport key, and baseball's is 2h so a doubleheader
+        // stays two contests. Omitting it silently takes the 18h default.
+        include: {
+          sport: { select: { name: true, key: true } },
+          _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
+        },
         // Most recently started first: a live game is more useful at the top of
         // the lane than one that began hours ago.
         orderBy: { commenceTime: "desc" },
-        take: 8,
+        take: SCORING_FALLBACK_SCAN_LIMIT,
       }),
       db.game.findMany({
         where: {
@@ -767,11 +786,28 @@ async function loadBoardStateInner(
           picks: { none: publishedPickRelation },
           mergedIntoGameId: null,
         },
-        include: { sport: { select: { name: true } } },
+        include: {
+          sport: { select: { name: true, key: true } },
+          _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
+        },
         orderBy: { commenceTime: "asc" },
-        take: 12,
+        take: GATED_FALLBACK_SCAN_LIMIT,
       }),
     ]);
+
+  // ONE ROW PER FIXTURE IN BOTH FALLBACK LANES (C-171).
+  //
+  // The comment on the scoring query's `mergedIntoGameId` filter says it
+  // straight: "Two rows for one fixture carry DIFFERENT ids, so the collapse
+  // below cannot pair them; only excluding the tombstoned row can." That was
+  // right, and the merge it depends on has never run - zero rows are tombstoned
+  // in any sport - so the board could and did show one contest twice, with the
+  // duplicates eating the lane's slots.
+  //
+  // The cap is therefore a SCAN bound now and the display cap comes after the
+  // collapse: the fifth time tonight the same repair has been the right one.
+  const scoringNow = collapseGameRowsToFixtures(scoringNowRaw).slice(0, SCORING_LANE_LIMIT);
+  const gatedToday = collapseGameRowsToFixtures(gatedTodayRaw).slice(0, GATED_LANE_LIMIT);
 
   const publishedToday = [...publishedTodayRaw]
     .sort(comparePicksByRanking)

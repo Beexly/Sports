@@ -261,6 +261,75 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     expect(payload.data.passes.map((p) => p.id)).toEqual(["gated-while-live"]);
   });
 
+  it("lists a contest ONCE even when the table holds several rows for it (C-171)", async () => {
+    // The fallback lane's own collapse keys on gameId (`dedupePassesByGame`),
+    // which is exactly what two rows for one contest do NOT share. Three
+    // writers key `games` on three externalId shapes, about 2.5 rows per real
+    // fixture, and NOTHING is tombstoned - so the pass list showed the same
+    // matchup two or three times, each row carrying its own reason. That is the
+    // C-117 contradiction, in the lane C-117 did not reach.
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([
+      {
+        id: "g-odds",
+        externalId: "9f2c4d1e8b7a6c5d4e3f2a1b0c9d8e7f",
+        sportId: "sport-nfl",
+        mergedIntoGameId: null,
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Denver Broncos",
+        commenceTime: new Date("2026-09-07T21:00:00.000Z"),
+        createdAt: new Date("2026-09-01T00:00:00.000Z"),
+        updatedAt: NOW,
+        currentEdgeIndex: 44,
+        bookmakerCoverageMax: 6,
+        dataQualityScore: 80,
+        sport: { name: "NFL", key: "americanfootball_nfl" },
+        _count: { picks: 0, odds: 3, oddsLineSnapshots: 0 },
+      },
+      {
+        id: "g-espn",
+        externalId: "espn:nfl:401772936",
+        sportId: "sport-nfl",
+        mergedIntoGameId: null,
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Denver Broncos",
+        commenceTime: new Date("2026-09-07T21:05:00.000Z"),
+        createdAt: new Date("2026-09-02T00:00:00.000Z"),
+        updatedAt: NOW,
+        currentEdgeIndex: 44,
+        bookmakerCoverageMax: 1,
+        dataQualityScore: 40,
+        sport: { name: "NFL", key: "americanfootball_nfl" },
+        _count: { picks: 0, odds: 0, oddsLineSnapshots: 0 },
+      },
+    ]);
+
+    const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
+    expect(payload.data.passes.map((p) => p.gameId)).toEqual(["g-odds"]);
+  });
+
+  it("scans wider than it lists, and excludes tombstoned rows in THIS lane", async () => {
+    // Asserted on the query. The cap has to bound rows SCANNED, or the collapse
+    // runs on an already-truncated slice and the lane shows fewer fixtures than
+    // it should. The canonicity filter is safe HERE because this is a display
+    // lane - unlike the score lane (C-170), where it would strand settlement.
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    await loadBoardPasses(NOW, { includeNoBetDetail: false });
+
+    const call = mocks.gameFindMany.mock.calls[0]?.[0] as {
+      take: number;
+      where: { mergedIntoGameId?: unknown };
+      include: { sport: { select: Record<string, unknown> } };
+    };
+    expect(call.take).toBeGreaterThan(100);
+    expect(call.where.mergedIntoGameId).toBeNull();
+    // The sport KEY drives the twin window; without it baseball would take the
+    // 18h default and a doubleheader would collapse into one contest.
+    expect(call.include.sport.select).toMatchObject({ key: true });
+  });
+
   it("keeps genuine passes: a fixture with no published pick still lists", async () => {
     // The control. A suppression that removed everything would also pass the
     // test above, so this pins that the lane still does its job.

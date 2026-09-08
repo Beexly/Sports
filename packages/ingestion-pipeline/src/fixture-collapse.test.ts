@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
-  collapseSlateFixtures,
-  isBetterSlateCanonical,
-  type SlateCollapseRow,
-} from "./slate-fixture-collapse.js";
+  collapseGameRowsToFixtures,
+  isBetterFixtureCanonical,
+  type FixtureCollapseRow,
+} from "./fixture-collapse.js";
 
 /**
  * C-166. The signal slate took the next 80 GAME ROWS and treated each as a
@@ -15,7 +15,7 @@ import {
 
 const KICKOFF = new Date("2026-09-14T17:00:00.000Z");
 
-function row(over: Partial<SlateCollapseRow> & { id: string }): SlateCollapseRow {
+function row(over: Partial<FixtureCollapseRow> & { id: string }): FixtureCollapseRow {
   return {
     externalId: `odds-${over.id}`,
     sportId: "sport-nfl",
@@ -30,12 +30,12 @@ function row(over: Partial<SlateCollapseRow> & { id: string }): SlateCollapseRow
   };
 }
 
-describe("collapseSlateFixtures", () => {
+describe("collapseGameRowsToFixtures", () => {
   it("collapses the three externalId shapes of one contest to a single fixture", () => {
     // The exact production shape: game-identity.ts documents that the same
     // contest arrives as an Odds API 32-hex id, an `espn:<sportKey>:<id>` and an
     // `espn:<short>:<id>`. Feed clocks differ by minutes, never hours.
-    const out = collapseSlateFixtures([
+    const out = collapseGameRowsToFixtures([
       row({ id: "a", externalId: "9f2c4d1e8b7a6c5d4e3f2a1b0c9d8e7f" }),
       row({
         id: "b",
@@ -54,7 +54,7 @@ describe("collapseSlateFixtures", () => {
   it("keeps genuinely different fixtures", () => {
     // The control. A collapse that ate everything would also pass the test
     // above.
-    const out = collapseSlateFixtures([
+    const out = collapseGameRowsToFixtures([
       row({ id: "a" }),
       row({ id: "b", homeTeamName: "Buffalo Bills", awayTeamName: "New York Jets" }),
       row({ id: "c", sportId: "sport-mlb", sport: { key: "baseball_mlb" } }),
@@ -67,7 +67,7 @@ describe("collapseSlateFixtures", () => {
     // gives baseball a 2h twin window for exactly this; collapsing them would
     // drop a real game off the slate.
     const first = new Date("2026-06-11T17:10:00.000Z");
-    const out = collapseSlateFixtures([
+    const out = collapseGameRowsToFixtures([
       row({
         id: "game1",
         sportId: "sport-mlb",
@@ -93,7 +93,7 @@ describe("collapseSlateFixtures", () => {
     // home/away drive the sign of every line derived from the row. Same
     // fail-closed rule resolveCanonicalGame already applies - keep both, never
     // guess an orientation.
-    const out = collapseSlateFixtures([
+    const out = collapseGameRowsToFixtures([
       row({ id: "aligned", homeTeamName: "Kansas City Chiefs", awayTeamName: "Denver Broncos" }),
       row({ id: "flipped", homeTeamName: "Denver Broncos", awayTeamName: "Kansas City Chiefs" }),
     ]);
@@ -104,7 +104,7 @@ describe("collapseSlateFixtures", () => {
     // THE REASON THE SURVIVOR RULE IS selectCanonical's AND NOT A NEW ONE
     // (C-163): picks this lane writes today land on the row the merge would
     // keep, so each one is a pick that merge no longer strands.
-    const out = collapseSlateFixtures([
+    const out = collapseGameRowsToFixtures([
       row({ id: "bare", externalId: "espn:nfl:401772936" }),
       row({ id: "has-picks", _count: { picks: 2, odds: 0, oddsLineSnapshots: 0 } }),
     ]);
@@ -115,40 +115,51 @@ describe("collapseSlateFixtures", () => {
     // Re-sorting here would silently change WHICH fixtures make the slate, and
     // the caller orders by kickoff for a reason.
     const later = new Date(KICKOFF.getTime() + 48 * 60 * 60 * 1000);
-    const out = collapseSlateFixtures([
+    const out = collapseGameRowsToFixtures([
       row({ id: "early" }),
       row({ id: "late", homeTeamName: "Buffalo Bills", awayTeamName: "New York Jets", commenceTime: later }),
     ]);
     expect(out.map((r) => r.id)).toEqual(["early", "late"]);
   });
+
+  it("keeps a row whose commenceTime is unusable instead of throwing", () => {
+    // Both callers are read paths whose catch returns an EMPTY board, so a
+    // TypeError in here would silently blank a public surface. Fail open to
+    // today's behaviour - the row survives, uncollapsed.
+    const rows = [
+      row({ id: "ok" }),
+      { ...row({ id: "broken" }), commenceTime: undefined as unknown as Date },
+    ];
+    expect(collapseGameRowsToFixtures(rows).map((r) => r.id)).toEqual(["ok", "broken"]);
+  });
 });
 
-describe("isBetterSlateCanonical", () => {
+describe("isBetterFixtureCanonical", () => {
   const base = row({ id: "held" });
 
   it("ranks most picks first", () => {
     expect(
-      isBetterSlateCanonical(row({ id: "c", _count: { picks: 1, odds: 0, oddsLineSnapshots: 0 } }), base),
+      isBetterFixtureCanonical(row({ id: "c", _count: { picks: 1, odds: 0, oddsLineSnapshots: 0 } }), base),
     ).toBe(true);
   });
 
   it("then most odds children, summed across both tables", () => {
     expect(
-      isBetterSlateCanonical(row({ id: "c", _count: { picks: 0, odds: 1, oddsLineSnapshots: 3 } }), base),
+      isBetterFixtureCanonical(row({ id: "c", _count: { picks: 0, odds: 1, oddsLineSnapshots: 3 } }), base),
     ).toBe(true);
   });
 
   it("then prefers a non-ESPN externalId, because odds ingestion writes to that row", () => {
     const espnHeld = row({ id: "held", externalId: "espn:nfl:1" });
-    expect(isBetterSlateCanonical(row({ id: "c", externalId: "abc123" }), espnHeld)).toBe(true);
-    expect(isBetterSlateCanonical(espnHeld, row({ id: "c", externalId: "abc123" }))).toBe(false);
+    expect(isBetterFixtureCanonical(row({ id: "c", externalId: "abc123" }), espnHeld)).toBe(true);
+    expect(isBetterFixtureCanonical(espnHeld, row({ id: "c", externalId: "abc123" }))).toBe(false);
   });
 
   it("then the oldest row, and a tie keeps what is already held", () => {
     expect(
-      isBetterSlateCanonical(row({ id: "c", createdAt: new Date("2026-08-01T00:00:00.000Z") }), base),
+      isBetterFixtureCanonical(row({ id: "c", createdAt: new Date("2026-08-01T00:00:00.000Z") }), base),
     ).toBe(true);
-    expect(isBetterSlateCanonical(row({ id: "c" }), base)).toBe(false);
+    expect(isBetterFixtureCanonical(row({ id: "c" }), base)).toBe(false);
   });
 
   it("treats an absent _count as zero rather than as unknown", () => {
@@ -157,7 +168,7 @@ describe("isBetterSlateCanonical", () => {
     // rule, so absence has to mean zero and be pinned as meaning zero.
     const noCounts = row({ id: "c", _count: null });
     expect(
-      isBetterSlateCanonical(noCounts, row({ id: "held", _count: { picks: 1, odds: 0, oddsLineSnapshots: 0 } })),
+      isBetterFixtureCanonical(noCounts, row({ id: "held", _count: { picks: 1, odds: 0, oddsLineSnapshots: 0 } })),
     ).toBe(false);
   });
 });

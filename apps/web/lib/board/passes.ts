@@ -2,6 +2,13 @@ import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
 import { unevaluatedPassReason } from "./pass-reason";
+import { collapseGameRowsToFixtures } from "@sports/ingestion-pipeline";
+
+/** Rows read before the per-fixture collapse. Bounds the SCAN, not the list. */
+const PASS_FALLBACK_SCAN_LIMIT = 300;
+
+/** Fixtures listed, applied AFTER the collapse. Unchanged from the old cap. */
+const PASS_FALLBACK_LIMIT = 100;
 
 /**
  * The auditable trail behind a refusal. Every field here is REAL data already
@@ -295,15 +302,33 @@ export async function loadBoardPasses(
       };
     }
 
-    const games = await db.game.findMany({
+    // ONE ROW PER FIXTURE HERE TOO (C-171), and this lane needed it as much as
+    // the decision lane above. `dedupePassesByGame` keys on gameId, which is
+    // exactly what two rows for one contest do NOT share, so it cannot pair
+    // them: the pass list showed the same matchup two or three times, each row
+    // carrying its own reason - the C-117 contradiction, in the fallback lane.
+    // The cap is now a scan bound with the collapse after it, the same shape
+    // C-153, C-161, C-169 and C-170 each landed.
+    const scannedGames = await db.game.findMany({
       where: {
         commenceTime: { gte: start, lt: end },
         picks: { none: publishedPickRelation },
+        // Safe HERE, unlike on the score lane (C-170): this is a display lane,
+        // and a tombstoned row is not the fixture. The sweep is not uniform.
+        mergedIntoGameId: null,
       },
-      include: { sport: { select: { name: true } } },
+      include: {
+        // `key` as well as `name`: the collapse picks its twin window from the
+        // sport key, and baseball's is 2h so a doubleheader stays two contests.
+        // Omitting it would silently take the 18h default and merge them.
+        sport: { select: { name: true, key: true } },
+        // Feeds the survivor rule, which is the merge planner's rule.
+        _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
+      },
       orderBy: { commenceTime: "asc" },
-      take: 100,
+      take: PASS_FALLBACK_SCAN_LIMIT,
     });
+    const games = collapseGameRowsToFixtures(scannedGames).slice(0, PASS_FALLBACK_LIMIT);
 
     const passes = games.map((game): PassListRow => ({
       id: `pass-${game.id}`,

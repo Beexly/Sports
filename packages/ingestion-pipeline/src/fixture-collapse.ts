@@ -1,6 +1,9 @@
 /**
- * Collapse duplicate `games` rows to one row per real contest, for the signal
- * slate's candidate list.
+ * Collapse duplicate `games` rows to one row per real contest.
+ *
+ * Used by the signal slate's candidate list (C-169) and by the board's fallback
+ * lanes (C-171). It is deliberately shared: both were showing or slating the
+ * same contest more than once, for the same reason.
  *
  * WHY THIS EXISTS (C-166, measured on production 2026-09-08). The slate took
  * the next 80 game rows by kickoff and treated each as a fixture. It is not:
@@ -34,7 +37,7 @@
 import { findTwinCandidate, type GameTwinCandidate } from "./game-identity.js";
 
 /** The fields the collapse needs. A caller may carry any others alongside. */
-export type SlateCollapseRow = {
+export type FixtureCollapseRow = {
   readonly id: string;
   readonly externalId: string;
   readonly sportId: string;
@@ -43,7 +46,14 @@ export type SlateCollapseRow = {
   readonly commenceTime: Date;
   readonly createdAt: Date;
   readonly mergedIntoGameId: string | null;
-  readonly sport?: { readonly key: string } | null;
+  /**
+   * Sport key, when the caller selected it. It is not decoration: it chooses
+   * the twin window (baseball gets 2h so a doubleheader is two contests, not
+   * one) and whether city-prefix matching is allowed. A caller that omits it
+   * gets the conservative 18h default and exact-name matching only, so a
+   * BASEBALL caller must select it.
+   */
+  readonly sport?: { readonly key?: string | null } | null;
   /** Prisma relation counts; absent is treated as zero, never as "unknown". */
   readonly _count?: {
     readonly picks?: number;
@@ -56,7 +66,7 @@ function isEspnExternalId(externalId: string): boolean {
   return externalId.startsWith("espn:");
 }
 
-function childCount(row: SlateCollapseRow): number {
+function childCount(row: FixtureCollapseRow): number {
   return (row._count?.odds ?? 0) + (row._count?.oddsLineSnapshots ?? 0);
 }
 
@@ -65,9 +75,9 @@ function childCount(row: SlateCollapseRow): number {
  * Mirrors selectCanonical's comparator exactly; ties keep `held`, which makes
  * the result stable under the caller's kickoff ordering.
  */
-export function isBetterSlateCanonical(
-  candidate: SlateCollapseRow,
-  held: SlateCollapseRow,
+export function isBetterFixtureCanonical(
+  candidate: FixtureCollapseRow,
+  held: FixtureCollapseRow,
 ): boolean {
   const candidatePicks = candidate._count?.picks ?? 0;
   const heldPicks = held._count?.picks ?? 0;
@@ -84,7 +94,7 @@ export function isBetterSlateCanonical(
   return candidate.createdAt.getTime() < held.createdAt.getTime(); // oldest wins
 }
 
-function toTwinCandidate(row: SlateCollapseRow): GameTwinCandidate {
+function toTwinCandidate(row: FixtureCollapseRow): GameTwinCandidate {
   return {
     id: row.id,
     externalId: row.externalId,
@@ -103,18 +113,27 @@ function toTwinCandidate(row: SlateCollapseRow): GameTwinCandidate {
  * orders by kickoff and then slices a fixture cap off the front, so a re-sort
  * here would silently change WHICH fixtures make the slate.
  */
-export function collapseSlateFixtures<T extends SlateCollapseRow>(rows: readonly T[]): T[] {
+export function collapseGameRowsToFixtures<T extends FixtureCollapseRow>(rows: readonly T[]): T[] {
   const kept: T[] = [];
   const keptCandidates: GameTwinCandidate[] = [];
 
   for (const row of rows) {
+    // A row this function cannot reason about is KEPT, never dropped and never
+    // thrown on. Both callers are read paths whose catch returns an empty
+    // board, so a TypeError here would blank a public surface rather than
+    // surface itself - the collapse must not be able to do that.
+    if (!(row.commenceTime instanceof Date) || !Number.isFinite(row.commenceTime.getTime())) {
+      kept.push(row);
+      continue;
+    }
+
     const twin = findTwinCandidate(keptCandidates, {
       sportId: row.sportId,
       externalId: row.externalId,
       homeTeamName: row.homeTeamName,
       awayTeamName: row.awayTeamName,
       commenceTime: row.commenceTime,
-      sportKey: row.sport?.key,
+      sportKey: row.sport?.key ?? undefined,
     });
 
     // No twin, or a twin we refuse to act on: keep the row. "flipped" is the
@@ -134,7 +153,7 @@ export function collapseSlateFixtures<T extends SlateCollapseRow>(rows: readonly
       continue;
     }
 
-    if (isBetterSlateCanonical(row, kept[index]!)) {
+    if (isBetterFixtureCanonical(row, kept[index]!)) {
       kept[index] = row;
       keptCandidates[index] = toTwinCandidate(row);
     }

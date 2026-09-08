@@ -596,6 +596,103 @@ describe("board loaders with persisted gate decisions", () => {
   });
 });
 
+describe("the fallback lanes show one row per contest (C-171)", () => {
+  /**
+   * The scoring query's own comment said it: "Two rows for one fixture carry
+   * DIFFERENT ids, so the collapse below cannot pair them; only excluding the
+   * tombstoned row can." That was correct, and the merge it depends on has
+   * never run - zero rows are tombstoned in any sport - so the board showed one
+   * contest twice and the duplicates ate the lane's slots.
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const fallbackGame = (over: Record<string, unknown>): Record<string, unknown> => ({
+    id: "fg-odds",
+    externalId: "9f2c4d1e8b7a6c5d4e3f2a1b0c9d8e7f",
+    sportId: "sport-mlb",
+    mergedIntoGameId: null,
+    homeTeamName: "New York Yankees",
+    awayTeamName: "Boston Red Sox",
+    commenceTime: new Date("2026-05-22T23:05:00.000Z"),
+    createdAt: new Date("2026-05-01T00:00:00.000Z"),
+    updatedAt: new Date("2026-05-22T15:00:00.000Z"),
+    currentEdgeIndex: 47,
+    status: "SCHEDULED",
+    sport: { name: "MLB", key: "baseball_mlb" },
+    _count: { picks: 0, odds: 4, oddsLineSnapshots: 0 },
+    ...over,
+  });
+
+  it("collapses two rows for one contest into a single gated row", async () => {
+    mocks.gameFindMany.mockImplementation(async (args?: unknown) => {
+      const where = (args as { where?: { commenceTime?: { gt?: Date } } })?.where;
+      // Only the GATED lane (strict `gt: now`) gets rows here; the scoring lane
+      // is left empty so this asserts one lane at a time.
+      if (!where?.commenceTime?.gt) return [];
+      return [
+        fallbackGame({}),
+        fallbackGame({
+          id: "fg-espn",
+          externalId: "espn:mlb:401816839",
+          commenceTime: new Date("2026-05-22T23:10:00.000Z"),
+          createdAt: new Date("2026-05-02T00:00:00.000Z"),
+          _count: { picks: 0, odds: 0, oddsLineSnapshots: 0 },
+        }),
+      ];
+    });
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.gameId)).toEqual(["fg-odds"]);
+  });
+
+  it("does NOT collapse an MLB doubleheader, because the query selects the sport key", async () => {
+    // Two DIFFERENT contests, same teams, same day, four hours apart. The 2h
+    // baseball twin window separates them - but only if the query selected
+    // `sport.key`. Without it the collapse takes the 18h default and eats a
+    // real game, so this is the control for that select.
+    mocks.gameFindMany.mockImplementation(async (args?: unknown) => {
+      const where = (args as { where?: { commenceTime?: { gt?: Date } } })?.where;
+      if (!where?.commenceTime?.gt) return [];
+      return [
+        fallbackGame({ id: "dh-1" }),
+        fallbackGame({
+          id: "dh-2",
+          externalId: "odds-dh-2",
+          commenceTime: new Date("2026-05-23T03:05:00.000Z"),
+        }),
+      ];
+    });
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.gameId)).toEqual(["dh-1", "dh-2"]);
+  });
+
+  it("scans wider than the lane displays", async () => {
+    // Asserted on the query: a cap applied before the collapse would leave the
+    // lane short by however many duplicates fell inside it.
+    mocks.gameFindMany.mockResolvedValue([]);
+    await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    const takes = mocks.gameFindMany.mock.calls.map(
+      (c) => (c?.[0] as { take?: number } | undefined)?.take,
+    );
+    // Two fallback game queries, both scanning above their display caps (8, 12).
+    expect(takes.filter((t): t is number => typeof t === "number").every((t) => t >= 40)).toBe(true);
+  });
+});
+
 describe("a fixture whose live published pick was decided OUTSIDE today's window", () => {
   /**
    * REVIEW ROUND 38 (Devin, #719), and it is the sibling-lane defect once more
