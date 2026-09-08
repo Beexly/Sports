@@ -56,6 +56,41 @@ describe("GET /api/cron/refresh-player-stats", () => {
   });
   afterEach(() => vi.unstubAllEnvs());
 
+  it("SCHEDULED RUNS INGEST NO SATELLITES - injuries, depth charts, snaps and NGS are all skipped (C-198)", async () => {
+    // CHARACTERIZATION TEST, pinning a real production gap so it cannot stay
+    // invisible. It asserts what the code does TODAY, not what it should do.
+    //
+    // The satellites sit behind `runFull`, which is only true for
+    // ?mode=full|all. Neither scheduled caller passes it: apps/web/vercel.json
+    // schedules the bare path "/api/cron/refresh-player-stats" (0,30 * * * *)
+    // and .github/workflows/external-cron.yml curls the bare path too. So on
+    // every scheduled run injuries, depth charts, snap counts and Next Gen
+    // Stats are skipped - which is why, two days before NFL 2026 Week 1,
+    // depth_chart_entries holds 0 rows and injuries stop at 2025 week 22.
+    //
+    // Every OTHER test in this file passes ?mode=full, so the suite proves the
+    // satellites work when invoked in a mode nothing invokes them in. That is
+    // the gap this test exists to make loud.
+    //
+    // WHEN THIS IS FIXED (either the schedule gains ?mode=full or the route's
+    // default flips) THIS TEST WILL FAIL. That is intended: delete it and say
+    // so in the ledger. Do not "fix" it by loosening the assertion.
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok",
+      season: 2024,
+      statsUpserted: 7,
+    });
+
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024", "Bearer secret"));
+    const body = await res.json();
+
+    expect(body.mode).toBe("primary");
+    expect(ingestInjuries).not.toHaveBeenCalled();
+    expect(ingestDepthCharts).not.toHaveBeenCalled();
+    expect(ingestSnapCounts).not.toHaveBeenCalled();
+    expect(ingestNextGenStats).not.toHaveBeenCalled();
+  });
+
   it("asks the source for the labelled season on a scheduled run and stands on it when published", async () => {
     const labelled = ingestionTargetNflSeason(new Date());
     (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) => ({
