@@ -147,6 +147,66 @@ export function reconcileScores(
   };
 }
 
+/**
+ * The same real fixture, stored more than once, holding two different scores.
+ *
+ * Found while measuring C-247: over 30 days, 302 MLB event ids and 75 MLS event
+ * ids have more than one row, and 18 MLB plus 1 MLS of those hold DISAGREEING
+ * scores across their own duplicates. The database contradicts itself.
+ *
+ * This is a strictly cheaper detector than the source comparison above and it
+ * is complementary, not redundant:
+ *   - it needs NO network and no source at all, so it can run anywhere;
+ *   - it cannot be fooled by a source outage or a board that has aged out;
+ *   - but it only sees fixtures that happen to be duplicated, and it cannot say
+ *     WHICH of the two scores is right - only that at least one is wrong.
+ *
+ * The reverse is also true, which is why both exist: the source comparison sees
+ * single rows, which this one is blind to.
+ *
+ * A measured non-finding, recorded so nobody re-derives it: the duplicates
+ * never disagree about which side is home. 0 of 495 duplicated event ids across
+ * all four sports. Whatever produces the wrong scores, it is not a home/away
+ * orientation flip between duplicate rows.
+ */
+export type SelfContradiction = {
+  readonly eventId: string;
+  readonly matchup: string;
+  readonly scores: readonly string[];
+  readonly gameIds: readonly string[];
+  readonly settledPicks: number;
+};
+
+export function findSelfContradictions(
+  stored: readonly StoredGame[],
+  source = "espn",
+): SelfContradiction[] {
+  const byEvent = new Map<string, StoredGame[]>();
+  for (const g of stored) {
+    if (g.homeScore === null || g.awayScore === null) continue;
+    const eventId = sourceEventId(g.externalId, source);
+    if (!eventId) continue;
+    const bucket = byEvent.get(eventId);
+    if (bucket) bucket.push(g);
+    else byEvent.set(eventId, [g]);
+  }
+
+  const out: SelfContradiction[] = [];
+  for (const [eventId, rows] of byEvent) {
+    if (rows.length < 2) continue;
+    const scores = [...new Set(rows.map((r) => `${r.homeScore}-${r.awayScore}`))];
+    if (scores.length < 2) continue;
+    out.push({
+      eventId,
+      matchup: `${rows[0]!.homeTeamName} v ${rows[0]!.awayTeamName}`,
+      scores,
+      gameIds: rows.map((r) => r.id),
+      settledPicks: rows.reduce((n, r) => n + r.settledPicks, 0),
+    });
+  }
+  return out.sort((a, b) => a.eventId.localeCompare(b.eventId));
+}
+
 /** Human-readable report. Returns lines rather than printing, so it is testable. */
 export function formatReconciliation(report: ReconciliationReport): string[] {
   const lines: string[] = [];

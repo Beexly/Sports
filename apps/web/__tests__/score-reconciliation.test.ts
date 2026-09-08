@@ -11,6 +11,7 @@ import { describe, expect, it } from "vitest";
  */
 
 import {
+  findSelfContradictions,
   formatReconciliation,
   reconcileScores,
   sourceEventId,
@@ -126,5 +127,61 @@ describe("reconciling stored finals against the source", () => {
     expect(r.compared).toBe(1);
     expect(r.mismatches).toEqual([]);
     expect(formatReconciliation(r).join("\n")).not.toContain("WINNER DIFFERS");
+  });
+});
+
+/**
+ * C-249. A second, cheaper detector found while measuring C-247: over 30 days,
+ * 302 MLB event ids and 75 MLS event ids have more than one row, and 18 MLB
+ * plus 1 MLS of those hold DISAGREEING scores across their own duplicates. The
+ * database contradicts itself, so no source is needed to know one is wrong.
+ *
+ * It is complementary rather than redundant. It needs no network and cannot be
+ * fooled by a board that has aged out, but it only sees duplicated fixtures and
+ * cannot say WHICH score is right. The source comparison sees single rows,
+ * which this one is blind to.
+ */
+describe("the same fixture stored twice with two different scores", () => {
+  it("flags a fixture whose own duplicates disagree", () => {
+    const rows: StoredGame[] = [
+      game({ id: "row-a", externalId: "espn:mlb:401816843", homeScore: 4, awayScore: 2, settledPicks: 1 }),
+      game({ id: "row-b", externalId: "espn:baseball_mlb:401816843", homeScore: 1, awayScore: 0, settledPicks: 2 }),
+    ];
+    const found = findSelfContradictions(rows);
+
+    expect(found).toHaveLength(1);
+    expect(found[0]?.eventId).toBe("401816843");
+    expect(found[0]?.scores.sort()).toEqual(["1-0", "4-2"]);
+    // Both rows' picks are counted: each duplicate carries its own.
+    expect(found[0]?.settledPicks).toBe(3);
+    expect(found[0]?.gameIds.sort()).toEqual(["row-a", "row-b"]);
+  });
+
+  it("says nothing about duplicates that agree", () => {
+    // Duplication on its own is a separate problem. This detector is about
+    // contradiction, and reporting agreement as a finding would bury the signal.
+    const rows: StoredGame[] = [
+      game({ id: "row-a", externalId: "espn:mlb:401816813", homeScore: 4, awayScore: 2 }),
+      game({ id: "row-b", externalId: "espn:baseball_mlb:401816813", homeScore: 4, awayScore: 2 }),
+    ];
+    expect(findSelfContradictions(rows)).toEqual([]);
+  });
+
+  it("needs two rows: a lone wrong score is invisible to it", () => {
+    // Stated as a test because it is the limit that makes the source
+    // comparison necessary as well. Neither detector subsumes the other.
+    const rows: StoredGame[] = [game({ id: "row-a", homeScore: 4, awayScore: 2 })];
+    expect(findSelfContradictions(rows)).toEqual([]);
+  });
+
+  it("ignores rows it cannot key, rather than grouping them together", () => {
+    // Two unkeyable rows are not "the same event". Bucketing them under a
+    // shared null key would manufacture a contradiction out of two unrelated
+    // fixtures.
+    const rows: StoredGame[] = [
+      game({ id: "row-a", externalId: "e6fa25c7c3e50e466694d127f6c929ba", homeScore: 4, awayScore: 2 }),
+      game({ id: "row-b", externalId: "1f0e3dad99908345f7439f8ffabdffc4", homeScore: 1, awayScore: 0 }),
+    ];
+    expect(findSelfContradictions(rows)).toEqual([]);
   });
 });

@@ -96,6 +96,26 @@ That would make the guard a narrow window rather than a net. Confirming it
 means reading the grading path, which is the next investigation and not this
 one.
 
+## The database also contradicts itself, which is cheaper to detect
+
+Over 30 days, **302 MLB event ids, 75 MLS, 70 NCAAF and 48 NFL have more than
+one row**, and **18 MLB plus 1 MLS of those hold disagreeing scores across
+their own duplicates**. No external source is needed to know one of each pair is
+wrong. `ops:verify-scores` now reports these too and exits 1 on either finding.
+
+The two checks are complementary and neither subsumes the other. The
+self-contradiction check needs no network and cannot be fooled by a board that
+has aged out, but it only sees duplicated fixtures and cannot say WHICH score is
+right. The source comparison sees single rows, which the other is blind to.
+
+**A measured non-finding, recorded so nobody re-derives it: the duplicates never
+disagree about which side is home.** 0 of 495 duplicated event ids, all four
+sports. That refutes the obvious reading of the MLS reversal (Seattle v Austin
+stored 2-1 against a real 1-2). Whatever produces it, it is not a home/away flip
+between duplicate rows.
+
+The duplication itself is a large, separate problem sitting underneath this one.
+
 ## What is NOT established
 
 **The writing path.** The obvious suspect is

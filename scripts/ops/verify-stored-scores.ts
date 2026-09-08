@@ -27,6 +27,7 @@
  */
 import { PrismaClient } from "@prisma/client";
 import {
+  findSelfContradictions,
   formatReconciliation,
   reconcileScores,
   type SourceFinal,
@@ -163,12 +164,27 @@ async function main(): Promise<void> {
     }
 
     const report = reconcileScores(stored, finals);
+    // Runs on the same rows and needs no source at all, so it still says
+    // something when the board is down or a fixture has aged off it.
+    const contradictions = findSelfContradictions(stored);
 
     if (JSON_OUT) {
-      console.log(JSON.stringify({ sport: SPORT, days: DAYS, ...report }, null, 2));
+      console.log(JSON.stringify({ sport: SPORT, days: DAYS, ...report, contradictions }, null, 2));
     } else {
       console.log(`[verify-stored-scores] sport=${SPORT} window=${DAYS}d`);
       for (const line of formatReconciliation(report)) console.log(line);
+      if (contradictions.length > 0) {
+        console.log("");
+        console.log(
+          `${contradictions.length} fixture(s) are stored more than once with DISAGREEING scores. ` +
+            `No source is needed to know at least one of each pair is wrong:`,
+        );
+        for (const c of contradictions) {
+          console.log(
+            `  ${c.matchup}  event=${c.eventId}  scores=${c.scores.join(" vs ")}  settled=${c.settledPicks}`,
+          );
+        }
+      }
       if (report.mismatches.length > 0) {
         console.log("");
         console.log(
@@ -178,7 +194,10 @@ async function main(): Promise<void> {
       }
     }
 
-    if (report.mismatches.length > 0) process.exitCode = 1;
+    // Either finding is a failure. A self-contradiction is not a lesser problem
+    // than a source disagreement: it is the same wrong score, caught without
+    // needing anybody's permission to fetch a board.
+    if (report.mismatches.length > 0 || contradictions.length > 0) process.exitCode = 1;
   } finally {
     await prisma.$disconnect();
   }
