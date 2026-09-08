@@ -57,9 +57,19 @@ function isMarketKey(value: string): value is MarketKey {
 
 /**
  * The book-priced moneyline's fair-probability floor. A literal in
- * `scoreMoneylinePick` (packages/prediction-engine/src/scoring.ts, "Need strong
- * conviction on ML"), not a named constant, so it is restated here for the
- * operator copy and pinned by the scorer's own tests.
+ * `scoreMoneylinePick` (packages/prediction-engine/src/scoring.ts:965, "Need
+ * strong conviction on ML"), not a named constant, so it is restated here for
+ * the operator copy.
+ *
+ * This restatement is NOT pinned by a test: `scoreMoneylinePick` is module
+ * private, no scorer test asserts the 0.58 boundary (verified 2026-09-08,
+ * `grep -rn "0\.58" packages/prediction-engine/src/__tests__`), and the two
+ * other gates this file quotes (MIN_BOOKMAKERS, MIN_PUBLISH_CONFIDENCE) are
+ * real imports while this one cannot be. If the scorer's literal ever moves,
+ * this copy goes stale silently and the hint states a gate the engine does not
+ * apply. Naming it as a named export from the engine would fix that and needs
+ * a MODEL_VERSION-freeze-aware change to the frozen scorer, so it is recorded
+ * as C-263 rather than done here.
  */
 const MONEYLINE_FAIR_PROB_FLOOR = 0.58;
 
