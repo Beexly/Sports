@@ -230,6 +230,37 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     expect(mocks.gateDecisionFindMany).toHaveBeenCalledTimes(1);
   });
 
+  it("PINS A KNOWN GAP: a gated evaluation made while the pick was LIVE still lists after withdrawal", async () => {
+    // REVIEW ROUND 37 (Devin, #719). CONFIRMED, and deliberately NOT fixed in
+    // this file. The watermark carries the PUBLICATION's evaluatedAt, never the
+    // WITHDRAWAL's, because Pick.isPublished is a bare Boolean with no
+    // timestamp beside it. Two different histories therefore produce identical
+    // rows, and only one of them is honestly a pass:
+    //
+    //   published 12:00 -> gated 14:00 -> withdrawn 16:00   a pick was LIVE at 14:00
+    //   published 12:00 -> withdrawn 13:00 -> gated 14:00   the gated row is current
+    //
+    // The lane lists the gated row in both, so the first case shows "we passed
+    // on this" for an evaluation made while a subscriber could see the pick.
+    //
+    // THIS EXPECTATION IS THE DEFECT, not the contract. It should FAIL and be
+    // replaced when C-158's provenance column lands: with an `unpublishedAt`
+    // the first history suppresses and the second still displays.
+    mocks.gateDecisionGroupBy.mockResolvedValue([
+      { gameId: "g-withdrawn-late", _max: { evaluatedAt: new Date("2026-09-07T12:00:00.000Z") } },
+    ]);
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      decision({
+        id: "gated-while-live",
+        gameId: "g-withdrawn-late",
+        evaluatedAt: new Date("2026-09-07T14:00:00.000Z"),
+      }),
+    ]);
+
+    const payload = await loadBoardPasses(NOW, { includeNoBetDetail: false });
+    expect(payload.data.passes.map((p) => p.id)).toEqual(["gated-while-live"]);
+  });
+
   it("keeps genuine passes: a fixture with no published pick still lists", async () => {
     // The control. A suppression that removed everything would also pass the
     // test above, so this pins that the lane still does its job.

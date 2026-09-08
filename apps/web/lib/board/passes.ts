@@ -203,6 +203,16 @@ export async function loadBoardPasses(
       // SHOWN, but it still RESOLVES ORDER. It suppresses gated rows at or
       // older than itself; a genuinely NEWER gated evaluation still displays,
       // because that one really is the fixture's current state.
+      //
+      // Same KNOWN LIMITATION as the state lane, stated there in full
+      // (state.ts, the newestWithdrawnPublishedAt comment; Devin Review, #719,
+      // round 37): the watermark is the PUBLICATION's evaluatedAt, not the
+      // WITHDRAWAL's, because Pick.isPublished is a bare Boolean with no
+      // timestamp. A gated evaluation made while a pick was still live, on a
+      // fixture withdrawn afterwards, therefore survives this rule and lists as
+      // a pass. Fixing it needs the C-158 provenance column, which is frozen
+      // for agents by AGENTS.md law 2. Pinned by a test in
+      // board-passes-published-suppression.test.ts.
       // AGGREGATED, NOT PAGED, and that is the whole point (CodeRabbit, #719).
       //
       // My first version of this was a findMany with `take: 500` and NO

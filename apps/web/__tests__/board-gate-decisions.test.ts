@@ -684,6 +684,35 @@ describe("a PUBLISHED decision whose pick has been withdrawn", () => {
     expect(result.data.publishedToday).toHaveLength(0);
   });
 
+  it("PINS A KNOWN GAP: the watermark is the publication time, not the withdrawal time", async () => {
+    // REVIEW ROUND 37 (Devin, #719). CONFIRMED, and it is C-158's missing
+    // column showing a second face rather than a separate bug.
+    //
+    // The rule above compares a gated evaluation against the PUBLICATION's
+    // evaluatedAt, because Pick.isPublished is a bare Boolean (schema.prisma:550)
+    // with nowhere to record when it flipped. So the fixture below is
+    // ambiguous by construction:
+    //
+    //   published 15:30 -> gated 15:45 -> withdrawn 16:00   a pick was LIVE at 15:45
+    //   published 15:30 -> withdrawn 15:40 -> gated 15:45   the gated row is current
+    //
+    // The board shows the gated row in both. The test one block above asserts
+    // the SECOND reading, which is the honest one; this test names the price of
+    // it, which is the first.
+    //
+    // THIS EXPECTATION IS THE DEFECT, not the contract. It should FAIL and be
+    // replaced when C-158 lands an `unpublishedAt`. The fix available without
+    // that column - suppress every gated row on any withdrawn fixture - is
+    // worse: it silences the board on games we have an honest current answer
+    // for, which is what C-149 was written to stop.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      gated({ id: "gd_gated_while_live", evaluatedAt: new Date("2026-05-22T15:45:00.000Z") }),
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.id)).toEqual(["gd_gated_while_live"]);
+  });
+
   it("falls through to the fallback lanes when chronology supersedes EVERY row", async () => {
     // REVIEW ROUND 32 (Devin, #719). The branch is entered on displayable
     // CANDIDATES and returned on them too, so a fixture whose only surviving row

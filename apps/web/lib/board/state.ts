@@ -561,6 +561,29 @@ async function loadBoardStateInner(
       //                       withdrew, and reverting to an earlier "we passed"
       //                       misrepresents that sequence (Devin Review, #719).
       //                       A genuinely NEWER gated evaluation still displays.
+      //
+      // KNOWN LIMITATION, and it is C-158's missing column showing a second
+      // face (Devin Review, #719, round 37). The watermark is the
+      // PUBLICATION's evaluatedAt, because that is the only timestamp either
+      // board lane has. It is not the WITHDRAWAL's. So "published at T1,
+      // evaluated gated at T2, withdrawn at T3" is indistinguishable in the
+      // data from "published at T1, withdrawn at T2, evaluated gated at T3",
+      // and only the second is honestly a pass. In the first, the T2 gated row
+      // survives this rule and displays as the fixture's current state even
+      // though a published pick was live at the moment it was evaluated.
+      //
+      // It cannot be fixed here: Pick.isPublished is a bare Boolean
+      // (schema.prisma:550) with nowhere to record WHEN it flipped, and the
+      // schema and migrations are frozen for agents by AGENTS.md law 2. So
+      // C-158's suggested shape needs a TIMESTAMP (`unpublishedAt`) and not
+      // only an `unpublishedReason`.
+      //
+      // The one fix available without that column - suppress every gated row
+      // for any withdrawn fixture - is worse, and that is a judgement rather
+      // than a measurement: it silences the board on games we have an honest
+      // current answer for, which is exactly what C-149 was written to stop.
+      // Bounded and named beats broad and quiet. Pinned by a test that says in
+      // its own body that it should be REPLACED when the column lands.
       const livePublishedGameIds = new Set(
         decisionEntries
           .filter((entry) => entry.row.status === "PUBLISHED_TODAY")
