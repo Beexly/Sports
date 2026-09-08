@@ -22,6 +22,7 @@ import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
+import { CRON_MANIFEST } from "@/lib/ops/cron-schedule-manifest";
 
 function req(url: string, auth?: string): Request {
   return new Request(url, auth ? { headers: { authorization: auth } } : undefined);
@@ -89,6 +90,18 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(ingestDepthCharts).not.toHaveBeenCalled();
     expect(ingestSnapCounts).not.toHaveBeenCalled();
     expect(ingestNextGenStats).not.toHaveBeenCalled();
+
+    // The route half alone is not enough: a scheduler-only fix (adding
+    // ?mode=full to the cron path) would leave every assertion above green
+    // while this test's title and comments went on claiming scheduled runs
+    // skip satellites. So pin the SCHEDULER too. When the schedule is fixed
+    // this assertion fails, which is the whole point - delete the test then
+    // and say so in the ledger.
+    const entries = CRON_MANIFEST.filter((e) => e.path.includes("refresh-player-stats"));
+    expect(entries.length, "refresh-player-stats missing from the cron manifest").toBeGreaterThan(0);
+    entries.forEach((e) =>
+      expect(e.path, `${e.path} now requests full mode - the gap is closed`).not.toContain("mode=full"),
+    );
   });
 
   it("asks the source for the labelled season on a scheduled run and stands on it when published", async () => {

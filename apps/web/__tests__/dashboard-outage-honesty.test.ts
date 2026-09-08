@@ -91,9 +91,12 @@ describe("the dashboard says when a zero is an outage", () => {
     const listFallback = source.match(/const softTodayPicks[\s\S]{0,240}?\};/)?.[0] ?? "";
     expect(listFallback).toContain("dbDegraded = true");
     expect(listFallback).toContain("todayPicksDegraded = true");
-    const zeroFallback = source.match(/const softZero[\s\S]{0,200}?\};/)?.[0] ?? "";
+    const zeroFallback = source.match(/const softZero[\s\S]{0,240}?\};/)?.[0] ?? "";
     expect(zeroFallback).toContain("dbDegraded = true");
+    expect(zeroFallback).toContain("countsDegraded = true");
     expect(zeroFallback).not.toContain("todayPicksDegraded");
+    // And the list fallback must NOT claim a count failed.
+    expect(listFallback).not.toContain("countsDegraded");
   });
 
   it("renders a banner that names the cause and disclaims the numbers", () => {
@@ -103,9 +106,16 @@ describe("the dashboard says when a zero is an outage", () => {
     // degradation banner. A bare source-wide `role="status"` check passed on
     // this file before the banner existed: SampleDataBanner already carries
     // one, so the assertion proved nothing about the thing it named.
-    const banner = source.match(/\{dbDegraded && \([\s\S]{0,1200}?\)\}/)?.[0] ?? "";
+    const banner = source.match(/\{dbDegraded && \([\s\S]{0,1800}?\)\}/)?.[0] ?? "";
     expect(banner, "degradation banner block not found").not.toEqual("");
     expect(banner).toContain('role="status"');
     expect(banner).toContain("Data store unreachable");
+    // C-205a. The banner must not CLAIM the counts fell back when they did
+    // not. A list-only failure raises dbDegraded (something did fail) but not
+    // countsDegraded, and the wording has to follow that distinction - telling
+    // a member their counts are unreadable zeros when every count succeeded is
+    // a false statement inside the fix meant to prevent false statements.
+    expect(banner).toContain("countsDegraded");
+    expect(banner).toContain("The counts below did read correctly");
   });
 });

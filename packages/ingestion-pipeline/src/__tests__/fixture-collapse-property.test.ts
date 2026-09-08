@@ -27,6 +27,7 @@ import {
   collapseGameRowsToFixtures,
   type FixtureCollapseRow,
 } from "../fixture-collapse.js";
+import { commenceMatchMsFor } from "../game-identity.js";
 
 /**
  * Two-speed fuzz. CI runs the fast tier on every push; the deep tier is opt-in
@@ -150,10 +151,16 @@ describe("collapseGameRowsToFixtures algebra (fuzz)", () => {
             // What must never happen is the reverse - a same-orientation
             // duplicate of the same fixture surviving twice.
             if (!flipped) {
+              // Use the SPORT'S CONFIGURED WINDOW, not a fixed 60s. The
+              // generator spaces same-fixture rows up to 40 minutes apart and
+              // NFL's window is 18 hours, so a 60s threshold silently ignored
+              // almost every generated duplicate - a regression leaving two
+              // rows several minutes apart would have passed this property.
+              const window = commenceMatchMsFor(a.sport?.key ?? undefined);
               const sameFixture =
                 a.homeTeamName === b.homeTeamName &&
                 a.awayTeamName === b.awayTeamName &&
-                Math.abs(a.commenceTime.getTime() - b.commenceTime.getTime()) < 60_000;
+                Math.abs(a.commenceTime.getTime() - b.commenceTime.getTime()) < window;
               expect(sameFixture, `duplicate survived: ${a.id} / ${b.id}`).toBe(false);
             }
           }

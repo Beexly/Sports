@@ -110,9 +110,17 @@ export default async function DashboardPage({
   // The flag is set by the fallback itself, so it cannot drift from the catches
   // it describes: adding a query without routing its catch through here is the
   // only way to reintroduce a silent zero, and the test pins the count.
+  // C-205a. THREE questions, not one, because the banner makes a CLAIM about
+  // counts. `dbDegraded` answers "did anything fail"; `countsDegraded` answers
+  // "did a COUNT fail". Raising the counts banner on a list-only failure told
+  // members that displayed counts had fallen back to zero when every count had
+  // in fact succeeded - a false statement, inside the fix whose whole purpose
+  // is not making false statements. The banner now says only what failed.
   let dbDegraded = false;
+  let countsDegraded = false;
   const softZero = (): number => {
     dbDegraded = true;
+    countsDegraded = true;
     return 0;
   };
   // The list needs its OWN flag, not just the shared one. `dbDegraded` drives a
@@ -145,6 +153,7 @@ export default async function DashboardPage({
   let perfDegraded = false;
   const softPerfZero = (): number => {
     dbDegraded = true;
+    countsDegraded = true;
     perfDegraded = true;
     return 0;
   };
@@ -301,9 +310,9 @@ export default async function DashboardPage({
                 Data store unreachable
               </span>
               <span className="break-words sm:ml-3">
-                At least one query did not respond, so some counts below are showing
-                zero because they could not be read - not because they are zero.
-                Nothing here has been changed.
+                {countsDegraded
+                  ? "At least one query did not respond, so some counts below are showing zero because they could not be read - not because they are zero. Nothing here has been changed."
+                  : "A query did not respond. The counts below did read correctly; the section that could not load says so where it appears. Nothing here has been changed."}
               </span>
             </div>
           )}
