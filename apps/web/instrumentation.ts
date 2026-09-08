@@ -80,6 +80,16 @@ export async function register(): Promise<void> {
   // dep) is excluded from the Edge instrumentation bundle by dead-code elimination.
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const { loadAndRegisterGradedProvider } = await import("@/lib/integrations/graded-pool");
+    // C-243: run the startup load THROUGH the request-time coordinator rather
+    // than beside it. Calling loadAndRegisterGradedProvider directly left the
+    // load recorded nowhere in projections-server, so `registeredAt` stayed 0
+    // and the first fantasy request treated the provider startup had just
+    // installed as stale and began its own multi-MB load. Two loads then raced
+    // one process-wide registry, and a refusal unregisters (the loader calls
+    // registerProjectionsProvider(null)), so the loser could undo the winner.
+    // Dynamic, inside the same NEXT_RUNTIME literal guard, because
+    // projections-server is `server-only` and must not enter the Edge bundle.
+    const { adoptGradedLoad } = await import("@/lib/integrations/projections-server");
     // NON-BLOCKING: we deliberately do NOT await the graded-pool load. It fetches
     // several MB of nflverse/ffverse data; awaiting it here would delay EVERY
     // serverless cold start (for every route, not just the fantasy tools). Instead
@@ -87,7 +97,9 @@ export async function register(): Promise<void> {
     // it completes, then switch to the live graded pool on that warm instance. A
     // failure never crashes startup (registerProjectionsFromEnv swallows it; the
     // extra .catch guards against an unhandled rejection).
-    void registerProjectionsFromEnv(process.env, loadAndRegisterGradedProvider).catch((err) => {
+    void registerProjectionsFromEnv(process.env, () =>
+      adoptGradedLoad(loadAndRegisterGradedProvider),
+    ).catch((err) => {
       console.error("[projections] background graded-provider registration failed", err);
     });
   }

@@ -2,6 +2,7 @@ import "server-only";
 import { isConfigured } from "./providers";
 import { isLiveProjections, resolveToolPool } from "./projections";
 import type { Player } from "../fantasy/players";
+import type { GradedPoolResult } from "./graded-pool";
 
 /**
  * SERVER-ONLY live-projections loader. Kept out of projections.ts because that
@@ -48,12 +49,25 @@ import type { Player } from "../fantasy/players";
  * top of the provider a winning reload had just installed. `loadInFlight`
  * makes the refresh shared: concurrent callers await the one that is running.
  */
-let gradedLoadPromise: Promise<void> | null = null;
+type GradedLoader = () => Promise<GradedPoolResult>;
+
 /**
- * Whether `gradedLoadPromise` is still running. Distinct from "the promise is
- * non-null": after a load settles the promise is kept as a CACHED RESULT that
- * the stale path is allowed to discard, but an unsettled one must never be
- * discarded — that is what forks a second load.
+ * One load, exposed two ways. `result` is what the loader returned — the
+ * startup path needs it to report an outcome. `done` is the void-typed twin
+ * every request-time caller awaits. They are held in ONE field so there is no
+ * way to clear the cache through one branch and leave the other standing.
+ */
+type InFlightLoad = {
+  readonly result: Promise<GradedPoolResult>;
+  readonly done: Promise<void>;
+};
+
+let gradedLoad: InFlightLoad | null = null;
+/**
+ * Whether `gradedLoad` is still running. Distinct from "the field is
+ * non-null": after a load settles it is kept as a CACHED RESULT that the stale
+ * path is allowed to discard, but an unsettled one must never be discarded —
+ * that is what forks a second load.
  */
 let loadInFlight = false;
 /** When the currently-registered provider was built. */
@@ -84,7 +98,7 @@ export const PROVIDER_RETRY_COOLDOWN_MS = 60 * 1000;
 
 /** Test seam: forget any registration decision without touching the provider. */
 export function resetLiveProjectionsCacheForTests(): void {
-  gradedLoadPromise = null;
+  gradedLoad = null;
   loadInFlight = false;
   registeredAt = 0;
   lastAttemptAt = Number.NEGATIVE_INFINITY;
@@ -102,55 +116,104 @@ export function ensureLiveProjections(
   // A load is already running: share it, never restart it. This check must come
   // BEFORE the stale-path clear below — otherwise every concurrent request on a
   // stale provider forks its own multi-MB reload (C-230).
-  if (loadInFlight && gradedLoadPromise) return gradedLoadPromise;
+  if (loadInFlight && gradedLoad) return gradedLoad.done;
   // Registered but stale, and nothing is running: drop the cached attempt so the
   // next load rebuilds it against the current target week.
-  if (live) gradedLoadPromise = null;
+  if (live) gradedLoad = null;
   // Not registered, with nothing running: a SETTLED cached promise is now only a
   // record of a registration that has since been undone, so it must not be
-  // returned as though it still stood (C-232). instrumentation.ts is a SECOND
-  // registration entry point - it calls loadAndRegisterGradedProvider directly,
-  // bypassing every variable here - so an unawaited startup load completing with
-  // a refusal can unregister a provider a lazy load installed, while registeredAt
-  // stays set. Without this line the next call finds live false, nothing in
+  // returned as though it still stood (C-232). The fork that motivated this is
+  // closed as of C-243 - startup now runs through adoptGradedLoad below rather
+  // than calling loadAndRegisterGradedProvider directly - but the line stays:
+  // ANY path that unregisters the provider without moving these variables
+  // (a direct registerProjectionsProvider(null) call, a future second entry
+  // point) reaches the same state. Without it the next call finds live false, nothing in
   // flight, and a non-null fulfilled promise: it skips the cooldown branch (which
   // requires a null promise), skips the start branch, and returns the settled
   // promise - forever. Paid tools would sit on the illustrative pool for the life
   // of the instance, which is exactly the C-229 failure this module exists to
   // prevent, reached through the other door.
-  if (!live && !loadInFlight) gradedLoadPromise = null;
+  if (!live && !loadInFlight) gradedLoad = null;
   // Not registered, and the last attempt was recent: do not re-fetch megabytes
   // on every request while a refusal or outage persists.
-  if (!live && gradedLoadPromise === null && nowMs - lastAttemptAt < PROVIDER_RETRY_COOLDOWN_MS) {
+  if (!live && gradedLoad === null && nowMs - lastAttemptAt < PROVIDER_RETRY_COOLDOWN_MS) {
     return Promise.resolve();
   }
 
-  if (!gradedLoadPromise) {
-    lastAttemptAt = nowMs;
-    loadInFlight = true;
-    gradedLoadPromise = import("./graded-pool")
-      .then((m) => m.loadAndRegisterGradedProvider())
-      .then((result) => {
-        loadInFlight = false;
-        const registered = result.status === "live" && result.players.length > 0;
-        if (registered) {
-          registeredAt = nowMs;
-        } else {
-          // A refusal or an empty pool is NOT a successful registration. Clear
-          // the cache so a later request can try again instead of inheriting a
-          // fulfilled promise that registered nothing.
-          registeredAt = 0;
-          gradedLoadPromise = null;
-        }
-      })
-      .catch((err) => {
-        loadInFlight = false;
-        gradedLoadPromise = null; // allow a later request to retry
+  if (gradedLoad) return gradedLoad.done;
+  return startGradedLoad(nowMs, defaultGradedLoader).done;
+}
+
+/** The production loader: the dynamic import that keeps node:zlib out of any client bundle. */
+const defaultGradedLoader: GradedLoader = () =>
+  import("./graded-pool").then((m) => m.loadAndRegisterGradedProvider());
+
+/**
+ * Run one load through the coordinator, recording it in `gradedLoad` and
+ * stamping `registeredAt` only on a real registration.
+ */
+function startGradedLoad(nowMs: number, loader: GradedLoader): InFlightLoad {
+  lastAttemptAt = nowMs;
+  loadInFlight = true;
+  const result = loader()
+    .then((r) => {
+      loadInFlight = false;
+      const registered = r.status === "live" && r.players.length > 0;
+      if (registered) {
+        registeredAt = nowMs;
+      } else {
+        // A refusal or an empty pool is NOT a successful registration. Clear
+        // the cache so a later request can try again instead of inheriting a
+        // fulfilled promise that registered nothing.
         registeredAt = 0;
-        throw err;
-      });
-  }
-  return gradedLoadPromise;
+        gradedLoad = null;
+      }
+      return r;
+    })
+    .catch((err: unknown) => {
+      loadInFlight = false;
+      gradedLoad = null; // allow a later request to retry
+      registeredAt = 0;
+      throw err;
+    });
+  const done = result.then(() => undefined);
+  // One load, two branches. A caller takes one of them and handles its
+  // rejection; the other would otherwise settle rejected with nobody attached
+  // and surface as an unhandled rejection. A terminal no-op handler on each is
+  // not a swallow: `p.catch(...)` returns a NEW promise and leaves `p`
+  // rejecting exactly as it did for whoever is actually awaiting it.
+  result.catch(() => {});
+  done.catch(() => {});
+  const load: InFlightLoad = { result, done };
+  gradedLoad = load;
+  return load;
+}
+
+/**
+ * Adopt an externally-driven load into this coordinator (C-243).
+ *
+ * `instrumentation.ts` was a SECOND registration entry point: it called
+ * `loadAndRegisterGradedProvider` directly, so the startup load was recorded
+ * nowhere here. `registeredAt` stayed 0, which made the first fantasy request
+ * treat the provider startup had just installed as stale and begin its own
+ * multi-MB load; both were then in flight against one process-wide registry,
+ * and `loadAndRegisterGradedProvider` calls `registerProjectionsProvider(null)`
+ * on a refusal — so the loser could unregister the winner's provider. The
+ * module already carried a defence against the WORST consequence of that fork
+ * (the `!live && !loadInFlight` line above, which stops a settled promise from
+ * standing in for a registration that has since been undone). This closes the
+ * fork itself.
+ *
+ * Startup keeps its own founder gate and its own outcome logging. All this
+ * takes over is WHERE the load runs: if a request-time load is already in
+ * flight, or a live one is cached, that one is shared instead of forked.
+ */
+export function adoptGradedLoad(
+  loader: GradedLoader,
+  nowMs: number = Date.now(),
+): Promise<GradedPoolResult> {
+  if (gradedLoad) return gradedLoad.result;
+  return startGradedLoad(nowMs, loader).result;
 }
 
 /**
