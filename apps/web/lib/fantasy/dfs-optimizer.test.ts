@@ -225,6 +225,49 @@ describe("dfs optimizer", () => {
     exposure.forEach((e) => expect(e.count / lineups.length).toBeLessThanOrEqual(0.8));
   });
 
+  it("keeps a locked player in EVERY lineup, not just the first (C-204)", () => {
+    // The existing lock test calls optimizeOne ONCE, so it never saw this: the
+    // exposure excluder swept locked players up with everyone else, and a
+    // pinned player silently vanished from every lineup after the first.
+    const lockId = "dwr1";
+    const { lineups } = generateLineups(base({ mode: "gpp", locks: new Set([lockId]) }), 5);
+    expect(lineups.length).toBeGreaterThanOrEqual(3);
+    lineups.forEach((l, i) =>
+      expect(l.players.some((p) => p.id === lockId), `lineup ${i + 1} dropped the lock`).toBe(true),
+    );
+  });
+
+  it("treats maxExposure as a share of the REQUESTED set, not of lineups so far (C-204)", () => {
+    // The denominator was `n`, the count built so far. After lineup 1 that is
+    // 1, so any used player measured 1/1 = 1.0 against a 0.6 cap - which does
+    // not cap exposure, it forces lineup 2 to be fully disjoint from lineup 1.
+    // With the cap as a share of the requested count, consecutive lineups are
+    // allowed to overlap, which is what an exposure cap means.
+    const count = 5;
+    const { lineups, exposure } = generateLineups(base({ mode: "gpp" }), count, 0.6);
+    expect(lineups.length).toBeGreaterThanOrEqual(3);
+
+    // A real cap, asserted against maxExposure itself rather than a slack 0.8.
+    exposure.forEach((e) =>
+      expect(e.count, `${e.id} exceeded the cap`).toBeLessThanOrEqual(
+        Math.max(1, Math.floor(0.6 * count)),
+      ),
+    );
+
+    // And the sets are NOT forced disjoint. This must be asserted on lineups
+    // ONE AND TWO specifically, not "some consecutive pair": under the old
+    // denominator n, later pairs could still overlap (by n=3 a player used
+    // once measures 1/3 < 0.6), so a loose any-pair check passed against the
+    // broken code and proved nothing. Lineup 2 is the discriminator - at n=1
+    // every player of lineup 1 measured 1/1 against the cap and was excluded.
+    const first = new Set(lineups[0]!.players.map((p) => p.id));
+    const second = lineups[1]!.players.map((p) => p.id);
+    expect(
+      second.some((id) => first.has(id)),
+      "lineup 2 was forced fully disjoint from lineup 1",
+    ).toBe(true);
+  });
+
   it("leverage mode favours lower total ownership than cash", () => {
     const lev = generateLineups(base({ mode: "leverage" }), 4).lineups;
     const cash = generateLineups(base({ mode: "cash" }), 4).lineups;

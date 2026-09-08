@@ -419,9 +419,26 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
   const key = (lu: Lineup) => lu.map((p) => p.id).sort().join(",");
 
   for (let n = 0; n < count; n++) {
-    // hard exclude players at max exposure
+    // Hard-exclude players at max exposure.
+    //
+    // C-204, two defects in one line. The denominator was `n`, the number of
+    // lineups built SO FAR, not the number requested. After lineup 1, n is 1,
+    // so every player used once measured 1/1 = 1.0 against a 0.6 cap and was
+    // excluded - which does not cap exposure at 60%, it forces lineup 2 to be
+    // completely disjoint from lineup 1, and lineup 3 from both. The cap is a
+    // ceiling on the share of the FINAL set, so the denominator is `count`.
+    //
+    // And a LOCKED player was swept up by the same rule: the user pins a
+    // player, gets them in lineup 1, and they silently vanish from every
+    // lineup after it. A lock is an instruction, not a preference - it always
+    // wins over the exposure heuristic. (If a lock and the cap genuinely
+    // conflict the lock holds and exposure exceeds the cap; that is the honest
+    // resolution, and it is what the user asked for.)
+    const capCount = Math.max(1, Math.floor(maxExposure * count));
     const overexposed = new Set<string>();
-    for (const [id, c] of usage) if (c / Math.max(1, n) >= maxExposure) overexposed.add(id);
+    for (const [id, c] of usage) {
+      if (c >= capCount && !opts.locks.has(id)) overexposed.add(id);
+    }
     const dynOpts: OptOpts = { ...opts, excludes: new Set([...opts.excludes, ...overexposed]) };
 
     let extraDecay = new Map<string, number>();

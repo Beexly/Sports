@@ -111,7 +111,14 @@ export function readProp(prop: Prop): PropRead {
       underAmerican: prop.underAmerican,
     });
     if (pricedRead.ok) {
-      edge = pricedRead.edgeOver;
+      // C-203. `edgeOver` is the edge on the OVER. When the recommended side is
+      // the UNDER, reporting it unchanged reports the wrong sign: a genuinely
+      // +EV under was printed and RANKED as negative edge, and a -EV under as
+      // positive. The under edge is exactly the negation, because
+      // pUnder - qUnder = (1 - pOver) - (1 - qOver) = -(pOver - qOver).
+      // pricePropAgainstMarket exposes only edgeOver, so negate here rather
+      // than widen its contract.
+      edge = side === "over" ? pricedRead.edgeOver : -pricedRead.edgeOver;
       priced = true;
     }
   }

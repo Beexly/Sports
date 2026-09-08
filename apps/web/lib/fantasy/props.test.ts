@@ -52,6 +52,31 @@ describe("props edge", () => {
     expect(lock.conviction).toBeGreaterThan(0.95);
   });
 
+  it("reports the UNDER edge on an under, not the over's (C-203)", () => {
+    // Every other priced assertion in this file uses a mean ABOVE the line, so
+    // `side` is always "over" and the sign flip at props.ts:114 was invisible.
+    // Here the mean sits BELOW the line, so the recommended side is the under.
+    const under = readProp(mk({ mean: 42, sigma: 20, line: 58, overAmerican: -110, underAmerican: -110 }));
+    expect(under.priced).toBe(true);
+    expect(under.side).toBe("under");
+    // Against an even -110/-110 book the de-vigged q is 0.5 a side, so the
+    // under edge is pUnder - 0.5, which is exactly -(pOver - 0.5).
+    expect(under.edge).toBeCloseTo(under.pSide - 0.5, 5);
+    expect(under.edge).toBeCloseTo(-(under.pOver - 0.5), 5);
+    // The bug reported the over's edge, which on a favoured under is negative:
+    // a genuinely +EV under was printed and ranked as negative edge.
+    expect(under.edge).toBeGreaterThan(0);
+  });
+
+  it("keeps the reported edge on the side it recommends, both ways", () => {
+    // The control: the same assertion must hold for an over, so the fix is a
+    // sign that follows `side` rather than a blanket negation.
+    const over = readProp(mk({ mean: 74, sigma: 20, line: 58, overAmerican: -110, underAmerican: -110 }));
+    expect(over.side).toBe("over");
+    expect(over.edge).toBeCloseTo(over.pSide - 0.5, 5);
+    expect(over.edge).toBeGreaterThan(0);
+  });
+
   it("prices e = p − q vs an even book and does not treat 90% chalk as value", () => {
     const even = readProp(mk({ mean: 58, sigma: 20, overAmerican: -110, underAmerican: -110 }));
     expect(even.priced).toBe(true);
