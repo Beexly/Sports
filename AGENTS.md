@@ -30,6 +30,46 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-08 (11:50 UTC) — THE 2026-09-06 NOTE BELOW IS STALE ON ITS CENTRAL CLAIM.
+READ THIS FIRST. Measured on production at 11:38:13 UTC (generatedAt from
+`/api/ops/public-surface-truth` itself), ALL FOUR CALIBRATION FLOORS NOW PASS:** n 475 against 100,
+**ECE 0.0466 against 0.05**, Brier 0.1898 against 0.22, Murphy reliability 0.005 against 0.05. The
+2026-09-06 note says ECE 0.0524 fails and "does not clear on its own, and nothing that has happened
+today moved it". More rows settled (n 458 to n 475) and it cleared. Nobody shipped a fix; the number
+moved. Do not act on the 0.0524 figure.
+
+**Eligibility is still RED, and `reasons` now contains exactly ONE entry: "Settlement not healthy."**
+`consecutiveGreen` 0 of `streakRequired` 3. What holds PROVEN is no longer the calibration
+arithmetic — it is a STRUCTURAL CONFLICT between three constants, found 2026-09-08 and verified in
+code:
+
+- settlement grace is **6 hours** (`apps/web/lib/performance/settlement-health.ts:58`),
+- `health = "HEALTHY"` requires **`overduePending === 0` exactly** (same file, line 86) — one pick
+  is enough for DEGRADED, which pushes "Settlement not healthy" into the eligibility reasons
+  (`apps/web/lib/ops/calibration-eligibility.ts:106`) and resets the streak,
+- but the zero-sit lane that finally clears an ungradeable pick **deliberately will not act until
+  24 hours past kickoff** (`apps/web/lib/settlement/zero-sit-lane.ts:104`).
+
+**So one ungradeable pick forces eligibility RED for up to 18 continuous hours, by design.** The
+eligibility cron runs `40 */6 * * *` and the streak needs three consecutive GREEN runs — 12 hours
+minimum of zero overdue picks, sampled at three fixed instants, while MLB alone shows 35 games in a
+72-hour window. That is the binding constraint on PROVEN, not the calibration math.
+
+**No agent may resolve this by touching any of those three constants, or a floor, or the health
+threshold.** Every one of them would turn the light green without making anything more true, and
+law 9 forbids it. It is a founder decision. Current reading: `overduePending` 2 of 2694
+(was 0 of 2627 on 09-06 19:08, so this is ordinary churn, not a stuck cohort), `stalePendingPicks`
+0, scheduler healthy.
+
+**The v5.2.7 caveat stands and is unchanged:** the pooled 0.0466 sits below every stratum it is
+built from, and the DEPLOYED version measures ECE **0.0947** on its own 262 rows — roughly twice
+the floor. MLB (n 373, ECE 0.0451) carries the pool; NCAAF (n 74, 0.1178) and NFL (n 28, 0.267) are
+too thin to steer by. Publishing a PROVEN claim off the pooled number while the version serving
+traffic measures twice the floor remains exactly what this product's premise forbids. Founder call.
+
+Full working, including NFL Week 1 coverage and the three separate go/no-go decisions:
+**`docs/ops/LAUNCH_VERIFICATION_2026-09-08.md`**.
+
 **UPDATED 2026-09-06 (16:40 UTC): PROVEN IS NOT CLOSE. Calibration eligibility reads RED on
 production and F-36's precondition cannot be met on current data. Do not wait for a publish
 receipt and do not flip anything.** Measured read of
