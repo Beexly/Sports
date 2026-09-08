@@ -85,6 +85,45 @@ I did not change ingestion to stop minting three NFL rows, because the fix belon
 identity (`packages/ingestion-pipeline/src/game-identity.ts`) and picking a canonical namespace
 is a data-model decision with more than one defensible answer.
 
-**NOT ESTABLISHED:** whether the merge tool, run today, would correctly pick the odds-bearing
-opaque-id row as the survivor. That determines whether running it is safe or destructive, and it
-should be answered before it runs.
+## 7. The merge is NOT safe to run today, and here is the number
+
+The open question above is now answered, and the answer inverts the recommendation.
+
+**The survivor rule is correct.** `selectCanonical` (`apps/web/lib/ops/game-merge-plan.ts:253`)
+sorts by pick count first, then odds and snapshot counts, then external-id shape, then age. For
+NFL Week 1 the odds-bearing, pick-bearing row wins on the first tie-break and would be kept. That
+half of the worry was unfounded.
+
+**The cost is somewhere else, and it is large.** `merge-duplicate-games.ts` re-points odds,
+snapshots, signals and several other child tables onto the canonical row, but by explicit design
+it **never moves `picks`** - they are treated as settlement history and stay where they are. The
+alias row is then tombstoned with `mergedIntoGameId`, and the board filters on
+`mergedIntoGameId IS NULL`. So any published pick sitting on a losing row disappears from the
+product.
+
+MEASURED, replicating the tool's own ordering:
+
+| sport | fixtures merged | published picks kept | **published picks stranded** |
+|---|---|---|---|
+| MLB | 405 | 486 | **420** |
+| NCAAF | 105 | 168 | **90** |
+| MLS | 75 | 58 | **49** |
+| NFL | 64 | 79 | **19** |
+| NHL | 3 | 0 | 0 |
+| NBA | 0 | - | - |
+| **total** | **652** | **791** | **578** |
+
+**Running the merge today would hide 578 published picks.** That is not a reason never to run it,
+and the duplication has to be resolved before NFL volume arrives. It is a reason the merge needs a
+companion step first: published picks on alias rows must be re-pointed, or deliberately withdrawn
+with a reason, before the tombstone hides them.
+
+**Caveat on my replication, stated because the number drives a decision:** I ordered by pick count,
+then odds count, then age. The real `selectCanonical` also counts `oddsLineSnapshots` alongside
+odds and carries an ESPN-shape tie-break ahead of age. Groups decided by those two terms could
+split differently, so treat 578 as accurate to its order of magnitude rather than to the unit. The
+tool's own `--dry-run` prints the exact set and is the right instrument before any apply.
+
+**Founder decisions this creates:** whether to re-point or withdraw the 578 before merging; whether
+the merge becomes a cron once that companion exists; and the canonical namespace for NFL fixture
+identity so three rows stop being minted in the first place.
