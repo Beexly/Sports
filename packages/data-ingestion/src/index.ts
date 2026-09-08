@@ -295,6 +295,24 @@ export {
 export type { OddsApiKeyEnvName } from "./odds-api-key.js";
 
 export { americanToDecimal, deVigFairProbs } from "./galaxy-devig.js";
+export {
+  KALSHI_BOOK_KEY,
+  KALSHI_BOOK_TITLE,
+  KALSHI_LINE_SERIES,
+  probToAmerican,
+  kalshiH2hBookmaker,
+  predexonTwoWay,
+  parseKalshiSpreadLine,
+  parseKalshiTotalLine,
+  PredExonKalshiCatalog,
+  createGalaxySecondBook,
+} from "./galaxy-kalshi-book.js";
+export type {
+  KalshiSpreadLine,
+  PredExonTwoWay,
+  PredExonCatalogSeries,
+  PredExonKalshiCatalogOptions,
+} from "./galaxy-kalshi-book.js";
 
 export {
   fetchEspnOddsForSport,

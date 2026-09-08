@@ -19,6 +19,7 @@ import type { FixtureProbe } from "../fixture-confirmation.js";
 const mocks = vi.hoisted(() => ({
   // data-ingestion
   circuitState: vi.fn<() => "closed" | "open" | "half_open">(),
+  createGalaxySecondBook: vi.fn<() => { bookmakerFor: (g: unknown) => Promise<unknown> } | undefined>(),
   // Header fields mirror the client contract: number | null (null = header absent), usedRequests optional in older fixtures.
   getOdds: vi.fn<
     (sport: string, markets: string[]) => Promise<{ data: unknown[]; remainingRequests: number | null; usedRequests?: number | null }>
@@ -138,6 +139,8 @@ vi.mock("@sports/data-ingestion", async () => {
   mergeBookmakersIntoPrimary: mocks.mergeBookmakersIntoPrimary,
   THIN_FILL_MIN_BOOKMAKERS: 2,
   fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
+  // Second book (Kalshi via PredExon) is OFF by default: no catalog, no seam.
+  createGalaxySecondBook: mocks.createGalaxySecondBook,
   NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
   NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
   isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
@@ -289,6 +292,7 @@ describe("processSport", () => {
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
     mocks.circuitState.mockReturnValue("closed");
+    mocks.createGalaxySecondBook.mockReturnValue(undefined);
     mocks.resolveRundownApiKey.mockReturnValue("");
     mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
     mocks.eventsBelowBookmakerThreshold.mockImplementation((events: unknown[], min = 2) =>
@@ -628,6 +632,19 @@ describe("processSport", () => {
       expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
       expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledTimes(0);
       expect(mocks.oddsCreateMany).toHaveBeenCalled();
+    });
+
+    it("hands the per-cycle second book (Kalshi via PredExon) to the keyless fetch, one catalog per sport per cycle", async () => {
+      const catalog = { bookmakerFor: vi.fn(async () => null) };
+      mocks.createGalaxySecondBook.mockReturnValue(catalog);
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard());
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      await processSport(SPORT, "", gates());
+
+      expect(mocks.createGalaxySecondBook).toHaveBeenCalledTimes(1);
+      expect(vi.mocked(fetchEspnOddsForSport).mock.calls[0]?.[1]).toEqual({ secondBook: catalog });
     });
 
     it("paid circuit OPEN: skips the paid leg entirely and takes the keyless path (no phantom paid request)", async () => {

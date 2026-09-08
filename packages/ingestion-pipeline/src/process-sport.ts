@@ -33,6 +33,7 @@ import {
   resolveRundownApiKey,
   fetchRundownEventsForSport,
   fetchEspnOddsForSport,
+  createGalaxySecondBook,
   getOddsPaymentCircuitBreaker,
   NFL_PRESEASON_ODDS_KEY,
   NFL_CANONICAL_SPORT_KEY,
@@ -460,7 +461,11 @@ export async function processSport(
     let espnAttemptNote: string | null = null;
     if (events.length === 0) {
       try {
-        const espn = await fetchEspnOddsForSport(sport.key);
+        // One PredExon catalog per sport per cycle (cached inside; undefined
+        // while PREDEXON_INGEST is off, which is the default).
+        const espn = await fetchEspnOddsForSport(sport.key, {
+          secondBook: createGalaxySecondBook(),
+        });
         if (espn.events.length > 0) {
           events = espn.events;
           oddsProviderTag = "espn_public";
