@@ -140,7 +140,17 @@ async function main(): Promise<void> {
         awayTeamName: true,
         homeScore: true,
         awayScore: true,
-        _count: { select: { picks: { where: { result: { in: ["WIN", "LOSS", "PUSH"] } } } } },
+        // isPublished, not just a graded result (Devin). StoredGame.settledPicks
+        // is documented as PUBLISHED picks and this filtered only on result, so
+        // a withdrawn pick still counted toward the damage. The count would
+        // have been most wrong exactly when somebody was repairing things:
+        // unpublishing is a real remediation lane here
+        // (ops:stale-picks:unpublish, unpublish-corrupted-picks), so every pick
+        // pulled from the record would have kept inflating the number that is
+        // supposed to show the repair working.
+        _count: {
+          select: { picks: { where: { isPublished: true, result: { in: ["WIN", "LOSS", "PUSH"] } } } },
+        },
       },
     });
 

@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 /**
  * C-247. The reconciliation behind `npm run ops:verify-scores`, tested on the
@@ -183,5 +185,47 @@ describe("the same fixture stored twice with two different scores", () => {
       game({ id: "row-b", externalId: "1f0e3dad99908345f7439f8ffabdffc4", homeScore: 1, awayScore: 0 }),
     ];
     expect(findSelfContradictions(rows)).toEqual([]);
+  });
+});
+
+/**
+ * C-250, Devin, on the tool shipped for C-247/C-248 itself.
+ *
+ * `StoredGame.settledPicks` is documented as PUBLISHED picks carrying a graded
+ * result, and the query behind it filtered only on `result`. A withdrawn pick
+ * still counted toward the damage, so the audit overstated the published
+ * exposure.
+ *
+ * It would have been most wrong exactly when somebody was repairing things.
+ * Unpublishing is a real remediation lane in this repo
+ * (`ops:stale-picks:unpublish`, `unpublish-corrupted-picks`), so every pick
+ * pulled out of the record would have gone on inflating the number that is
+ * supposed to demonstrate the repair worked.
+ *
+ * Asserted at the source because the miscount lives in the Prisma selection,
+ * not in the pure function: the pure side receives `settledPicks` already
+ * computed and cannot tell a good count from a bad one. Comments are stripped
+ * first - C-241 in this repo shipped an assertion that passed on the fix's own
+ * comment, and the comment beside this fix names the very field being checked.
+ */
+describe("the audit counts published picks, not withdrawn ones", () => {
+  const script = readFileSync(
+    resolve(__dirname, "..", "..", "..", "scripts", "ops", "verify-stored-scores.ts"),
+    "utf8",
+  )
+    .replace(/\/\/[^\n]*/g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "");
+
+  it("filters the settled-pick count on isPublished", () => {
+    expect(script).toContain("picks: { where: { isPublished: true, result:");
+  });
+
+  it("has no graded-result count that omits the published filter", () => {
+    // The shape the bug had. Pinned so it cannot come back by a different edit.
+    const counts = script.match(/picks:\s*\{\s*where:\s*\{[^}]*\}/g) ?? [];
+    expect(counts.length).toBeGreaterThan(0);
+    for (const c of counts) {
+      expect(c, `a pick count omits isPublished: ${c}`).toContain("isPublished");
+    }
   });
 });
