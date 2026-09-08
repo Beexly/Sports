@@ -132,6 +132,18 @@ without re-running the check.
 
 ## How to reproduce
 
+**There is now a command for it: `npm run ops:verify-scores`.** It is read-only
+and DATABASE_URL-guarded, defaults to MLB over ten days, takes
+`--sport=nfl --days=21 --json`, and exits 1 when anything disagrees so it can be
+wired to an alert later. It repairs nothing.
+
+It reports an `uncomparable` count alongside the mismatches. That number is not
+noise: a row whose `externalId` is not the source's, or an event the board is no
+longer serving, was not checked at all, and a tool that silently skipped those
+would report a clean bill of health it had not earned.
+
+The manual version, which is what produced the numbers above:
+
 1. Pull ESPN finals for the window, one call per date:
    `https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard?dates=YYYYMMDD`,
    keeping events whose `status.type.name` is `STATUS_FINAL` and reading each
@@ -156,8 +168,12 @@ The whole check is read-only and takes about two minutes.
 3. **Repair the data.** Re-fetch the correct final for each affected row, and
    re-grade the 54 settled picks. Both are writes, so both are owner actions.
 4. **Add a standing check.** A daily reconciliation of stored finals against the
-   feed they came from would have caught this on 2026-08-30. It belongs beside
-   the existing truth surface rather than in a one-off script.
+   feed they came from would have caught this on 2026-08-30. **Half of this is
+   now done:** `npm run ops:verify-scores` exists, is read-only, and exits
+   non-zero on any disagreement. What is still open is running it on a schedule
+   and surfacing the result, which needs a cron entry in `vercel.json` (frozen
+   for agents) or a place on the truth surface. The tool was written so that
+   step is a wiring decision rather than new logic.
 
 ## One thing that is fine
 

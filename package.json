@@ -137,6 +137,7 @@
     "ops:stale-picks:unpublish": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/adjudicate-stale-picks.ts",
     "ops:corrupted-picks": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/unpublish-corrupted-picks.ts",
     "ops:merge-games": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/merge-duplicate-games.ts",
+    "ops:verify-scores": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/verify-stored-scores.ts",
     "dspy:gse": "node scripts/dspy-gse/run.mjs",
     "session2:extract": "node scripts/orbit-extract-integrity.mjs --full",
     "orbit:map": "node scripts/orbit-extract-integrity.mjs --full && node scripts/ops/orbit-unlock-smoke.mjs",
