@@ -157,3 +157,98 @@ PROVEN should mean, not a repair an agent should make unilaterally.
   never as a claim.
 - Closing-line value. Beating the *opening* de-vigged price is not the same as beating
   the close, and CLV is the measurement that would settle whether this is real.
+
+---
+
+## 5. The factor audit: eight of fifteen signals have never fired
+
+Applying the handicapping lenses (power gap, QB swing, rest check, line move, unit
+mismatch) to our own engine, as a measurement rather than a description.
+
+`pick_signal_snapshots` records, per pick, which signals were present at publish
+time. Across **all 3,065 non-bootstrap snapshots**:
+
+| signal | times it has EVER fired |
+|---|---|
+| `hadRatingsSignal` — the power gap | **0** |
+| `hadInjurySignal` — the QB swing | **0** |
+| `hadPlayerSignal` — the QB swing | **0** |
+| `hadWeatherSignal` | **0** |
+| `hadOfficialsSignal` | **0** |
+| `hadPaceSignal` | **0** |
+| `hadMilestoneSignal` | **0** |
+| `hadVenueEnvironmentSignal` | **0** |
+| `hadH2HSignal` | 5 (0.16%) |
+
+Eight of the fifteen declared signals have never fired once. Not "rarely" — never,
+across every non-bootstrap pick the product has generated.
+
+### A correction to my own first reading of that table
+
+My first draft of this section called the engine "a four-factor model wearing a
+fifteen-factor label", implying it expects those inputs and is degraded without
+them. **That is wrong, and the code says so in two places.**
+
+`signal-snapshot.ts:172-175` states these flags "remain false until that data is
+wired in. Recorded for the audit trail only — they do not move the confidence
+score." And `scoring.ts:141-150` builds every shadow-evidence factor with
+`weight: 0` and `impact: "neutral"`.
+
+So these are **zero-weight audit fields by design**. They never contributed to a
+score, and their absence is not a degradation of a model that was counting on them.
+The `had*Signal` flags themselves are read only by the admin dashboard and the pick
+audit route — never by the scorer.
+
+The measurement stands; the inference I drew from it did not. Worth recording,
+because the wrong version is the more dramatic one and it would have sent someone
+looking for a bug that is not there.
+
+### What is actually true, and it still matters
+
+The product has **no power-gap input, no injury or QB input, no weather input**, and
+**no unit-mismatch signal in the schema at all**. The factors a handicapper would
+reach for first are absent from the model's inputs — not mis-weighted, absent. That
+is a capability gap and a roadmap question, not a defect, and it is a better
+explanation for a thin measured edge than any threshold is.
+
+### One genuine modelling defect, independent of the above
+
+> `hadLineMovementSignal` and `hadScheduleSignal` differ in **0 of 3,065 rows**.
+
+Perfectly collinear — one condition recorded under two names. Two named factors that
+cannot disagree are one factor, and any analysis that treats them as independent
+double-counts it. (`hadRestSignal` and `hadAtsFormSignal` differ in 518 of 3,065
+overall, so those two are genuinely distinct — but they were collinear within the
+settled moneyline subset scored below, which is why they cannot be separated there.)
+
+### Do the signals that DO fire earn their place?
+
+Same edge-vs-market metric as section 2, MLS excluded on the stated a priori grounds,
+n = 472. Only three distinct contrasts exist once collinearity is accounted for:
+
+| contrast | n with | n without | edge difference | Welch t |
+|---|---|---|---|---|
+| line movement (≡ schedule density) | 160 | 312 | **+8.04 pp** | **2.10** |
+| rest | 132 | 340 | +7.23 pp | 1.78 |
+| venue | 123 | 349 | +5.59 pp | 1.33 |
+
+Read carefully, because it is easy to over-read:
+
+- Only line movement clears two standard errors, and with three contrasts tested even
+  that is marginal under any multiple-comparison adjustment.
+- **Rest is t = 1.78 — suggestive, not established.** That is the honest answer to
+  "is the schedule spot a real edge or a lazy storyline" on our own data: it leans the
+  right way and does not clear the bar. Most schedule narratives are smaller than they
+  sound, including ours.
+- **Observational and confounded.** "Signal present" correlates with data coverage,
+  which correlates with sport and fixture prominence. Better-covered games may simply
+  be more predictable. None of these differences shows the factor *causes* the edge.
+
+### The actionable questions
+
+1. Are the eight unwired sources worth connecting? Ratings and QB availability are the
+   two a handicapper would connect first, and neither exists today.
+2. `hadLineMovementSignal` and `hadScheduleSignal` should not both exist if they
+   cannot disagree.
+3. Nothing here justifies touching MODEL_VERSION or a threshold. The finding is about
+   inputs that were never wired, not weights that are wrong.
