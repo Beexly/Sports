@@ -30,6 +30,27 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-08 (14:45 UTC) — READ THIS BEFORE THE CALIBRATION NOTES BELOW. THE SETTLED
+RECORD ITSELF IS NOT TRUSTWORTHY, WHICH MAKES EVERY CALIBRATION NUMBER IN THIS FILE A
+MEASUREMENT OVER BAD INPUTS.** Measured on production 14:20 to 14:45 UTC, read-only SELECT plus
+public ESPN reads: **25 of 169 `games` rows we mark FINAL hold a score that ESPN's own API
+contradicts, and 54 settled published picks sit on those rows.** ESPN is not an outside referee
+here, it is the feed we ingest from and every one of these rows carries an `espn:` external id,
+so our stored value diverged from the source we read it out of. 16 of the 54 are MONEYLINE, the
+market the calibration sample is built from, and **8 of those are recorded as the opposite of what
+happened** (the game's winner differs). The pattern: when two teams play on consecutive days, one
+game's score lands on every fixture in the series. A stale in-progress capture is ruled out for
+most of them, because several stored away scores EXCEED the final away score, which no partial
+reading can produce. NOT established: which code path wrote them. The obvious suspect
+(`free-score-persist.ts`, team+date match) inherits a 12h `MAX_KICKOFF_DRIFT_MS` whose comment
+says it exists precisely to stop this, and consecutive games sit 19 to 24h apart, so either that
+guard is bypassed or a different writer is responsible. Do not guess. Scope is MLB only,
+2026-08-29 to 2026-09-08; other sports and earlier dates are unaudited. Full evidence, the
+per-series table and the reproduction method: **`docs/ops/SCORE_INTEGRITY_2026-09-08.md`**
+(ledger C-247). **No agent may repair this: it needs database writes and a root cause. Publishing
+calibration, a win rate, or the PROVEN phase off this record is not defensible until the affected
+picks are re-settled.**
+
 **UPDATED 2026-09-08 (11:50 UTC) — THE 2026-09-06 NOTE BELOW IS STALE ON ITS CENTRAL CLAIM.
 READ THIS FIRST. Measured on production at 11:38:13 UTC (generatedAt from
 `/api/ops/public-surface-truth` itself), ALL FOUR CALIBRATION FLOORS NOW PASS:** n 475 against 100,
