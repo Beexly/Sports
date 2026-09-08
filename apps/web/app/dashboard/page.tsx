@@ -298,6 +298,22 @@ export default async function DashboardPage({
     performanceVisible && performancePolicy.publicWinRate !== null
       ? `${performancePolicy.publicWinRate}%`
       : "—";
+
+  // C-246, Devin. `publicMessage` comes out of the SAME policy call as the
+  // record, fed by the same counts softPerfZero falls back to ZERO. C-201 and
+  // C-216 established that the record is withheld entirely if any of those
+  // inputs failed, because one real count mixed with one fallback zero
+  // manufactures a claim - and then the message from that identical policy
+  // object was rendered anyway, in two places, describing a sample size and a
+  // gate status derived from zeros. One field over from the defect those rows
+  // fixed. A member during an outage read "Unavailable" in the record card and
+  // baseline-collection progress immediately beneath it.
+  //
+  // The replacement names what actually failed and refuses to characterise the
+  // sample, because the sample is exactly what we could not read.
+  const performanceMessage = perfDegraded
+    ? "We could not read the settled-pick counts just now, so there is nothing to report about the verified record or the baseline. That is a read failure on our side, not a statement about the sample."
+    : performancePolicy.publicMessage;
   const winRateHighlight =
     performanceVisible &&
     performancePolicy.publicWinRate !== null &&
@@ -467,7 +483,20 @@ export default async function DashboardPage({
           )}
 
           <div className="mb-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <StatCard label="Today's Picks" value={todayPicksCount.toString()} />
+            {/* "Published Today", not "Today's Picks" (C-246, Devin). The card
+                carried the SAME label as the list heading two blocks below it
+                while counting a different thing: the card is every published
+                pick, the list is the slice this viewer can act on - capped at
+                the teaser limit for FREE and at six for PRO. So the two numbers
+                legitimately differ, for two separate reasons, under one name.
+                C-241 aligned the count's FILTERS with the list and left that
+                alone; this is the half that was still misread.
+                The count itself is unchanged, because neither candidate number
+                is wrong: capping it at the list's length would hide from a FREE
+                member that a fuller board exists, and would drop a PRO member's
+                total to six. What was wrong was calling both of them the same
+                thing. */}
+            <StatCard label="Published Today" value={todayPicksCount.toString()} />
             <StatCard label="Verified Record" value={recordDisplay} />
             <StatCard label="Win Rate" value={winRateDisplay} highlight={winRateHighlight} subtext={winRateSubtext} />
             <StatCard
@@ -485,7 +514,7 @@ export default async function DashboardPage({
               data-testid="dashboard-performance-collecting"
               className="mb-6 rounded-lg border border-mineral bg-carbon/40 px-4 py-3 text-xs leading-relaxed text-ion-2"
             >
-              {performancePolicy.publicMessage}
+              {performanceMessage}
             </p>
           )}
           {performanceVisible && (
@@ -556,9 +585,13 @@ export default async function DashboardPage({
               <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
                 Where we are
               </h2>
-              <p className="text-sm leading-relaxed text-ion-1">{performancePolicy.publicMessage}</p>
+              <p className="text-sm leading-relaxed text-ion-1">{performanceMessage}</p>
               <p className="mt-3 text-xs leading-relaxed text-ion-2">
-                Pick generation, ingestion, and settlement are running.
+                {/* "are running" is an OBSERVATION, and during a count outage
+                    we have not observed it - the read that would tell us is
+                    the one that just failed. The two sentences after it are
+                    policy, true whatever the database says, so they stay. */}
+                {!perfDegraded && "Pick generation, ingestion, and settlement are running. "}
                 Your verified record will populate as canonical picks
                 settle. We do not publish a win rate until we have a
                 meaningful sample.

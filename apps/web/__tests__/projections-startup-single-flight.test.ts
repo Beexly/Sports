@@ -34,6 +34,11 @@ vi.mock("@/lib/integrations/providers", () => ({ isConfigured: () => true }));
 vi.mock("@/lib/integrations/projections", () => ({
   isLiveProjections: () => registered,
   resolveToolPool: () => undefined,
+  // Mirrors the real registry: registering null is what takes the tools back
+  // to the illustrative pool, and `registered` is what isLiveProjections reads.
+  registerProjectionsProvider: (provider: unknown) => {
+    registered = provider !== null;
+  },
 }));
 vi.mock("@/lib/observability/sentry", () => ({ initObservability: () => undefined }));
 

@@ -1,6 +1,6 @@
 import "server-only";
 import { isConfigured } from "./providers";
-import { isLiveProjections, resolveToolPool } from "./projections";
+import { isLiveProjections, registerProjectionsProvider, resolveToolPool } from "./projections";
 import type { Player } from "../fantasy/players";
 import type { GradedPoolResult } from "./graded-pool";
 
@@ -174,6 +174,21 @@ function startGradedLoad(nowMs: number, loader: GradedLoader): InFlightLoad {
       loadInFlight = false;
       gradedLoad = null; // allow a later request to retry
       registeredAt = 0;
+      // C-245. Clearing the timestamps is not enough when a load THROWS: the
+      // process-wide provider is registered somewhere else entirely, so a
+      // failed refresh of an already-registered provider left the OLD one
+      // serving. `resolveToolPoolAsync` catches the rejection and
+      // `resolveToolPool` hands back the stale pool, indefinitely — which is
+      // precisely what the reload interval exists to prevent. Reason 2 in this
+      // module's own header: registration is a process-wide singleton and the
+      // basis decision is WEEK-DEPENDENT, so "already registered" says nothing
+      // about "still admissible". If we could not re-verify the basis, we no
+      // longer know it is admissible, and the honest answer is the illustrative
+      // pool (which is labelled as such) rather than a basis we cannot vouch
+      // for. The non-live RESULT path already unregisters — the loader itself
+      // calls registerProjectionsProvider(null) — so this only makes the throw
+      // path agree with it. Fail closed, then retry after the cooldown.
+      registerProjectionsProvider(null);
       throw err;
     });
   const done = result.then(() => undefined);

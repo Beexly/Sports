@@ -28,6 +28,11 @@ vi.mock("@/lib/integrations/providers", () => ({ isConfigured: () => true }));
 vi.mock("@/lib/integrations/projections", () => ({
   isLiveProjections: () => registered,
   resolveToolPool: () => undefined,
+  // Mirrors the real registry: registering null is what takes the tools back
+  // to the illustrative pool, and `registered` is what isLiveProjections reads.
+  registerProjectionsProvider: (provider: unknown) => {
+    registered = provider !== null;
+  },
 }));
 
 const ENV = { PROJECTIONS_PROVIDER: "graded" };
@@ -211,11 +216,16 @@ describe("a stale refresh is single-flight", () => {
  * module's back — that startup load calls registerProjectionsProvider(null) on
  * a refusal — while registeredAt stays set from a lazy load that succeeded.
  *
- * Only the PERMANENT consequence is fixed here. The remaining two (a forked
+ * Only the PERMANENT consequence was fixed here. The remaining two (a forked
  * load on every cold start, and a startup-registered provider treated as stale
- * on arrival) are wasteful rather than wrong, and retiring them means making
- * one coordinator own registration, which changes app-wide startup behaviour —
- * founder-scoped, ledger C-232.
+ * on arrival) were wasteful rather than wrong.
+ *
+ * UPDATE (C-243): those two are now fixed as well — startup runs through
+ * `adoptGradedLoad` and shares this module's single-flight state. The tests
+ * below still stand and still matter: they do not assume the fork, they assume
+ * only that the provider CAN be unregistered without this module being told,
+ * which remains true of any direct `registerProjectionsProvider(null)` call.
+ * `projections-startup-single-flight.test.ts` covers the fork itself.
  */
 describe("an unregistration behind our back does not become permanent", () => {
   it("reloads when the provider is gone but a settled promise is still cached", async () => {
@@ -251,5 +261,72 @@ describe("an unregistration behind our back does not become permanent", () => {
     registered = false;
     await m.ensureLiveProjections(ENV, 1_500);
     expect(loadAndRegisterGradedProvider).toHaveBeenCalledTimes(1);
+  });
+});
+
+/**
+ * C-245, raised by Devin as RED against the C-243 refactor and true of the code
+ * before it too. Clearing the coordinator's timestamps on a rejected load is
+ * not enough: the provider is registered in a DIFFERENT module, so a failed
+ * refresh of an already-registered provider left the OLD one serving.
+ * `resolveToolPoolAsync` catches the rejection and `resolveToolPool` hands back
+ * the stale pool — indefinitely, which is exactly what the reload interval
+ * exists to prevent (reason 2 in the module header: registration is a
+ * process-wide singleton and the basis decision is week-dependent, so "already
+ * registered" says nothing about "still admissible").
+ *
+ * If the basis cannot be re-verified we no longer know it is admissible, so the
+ * honest answer is the illustrative pool, which is labelled as such. The
+ * non-live RESULT path already unregistered — the loader itself calls
+ * registerProjectionsProvider(null) — so this only makes the THROW path agree
+ * with it.
+ */
+describe("a refresh that throws does not leave a stale provider serving", () => {
+  it("unregisters the provider it could not re-verify", async () => {
+    const m = await loader();
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      registered = true;
+      return liveResult;
+    });
+    await m.ensureLiveProjections(ENV, 1_000);
+    expect(registered).toBe(true);
+
+    // Past the trust interval, the reload throws (source outage).
+    loadAndRegisterGradedProvider.mockRejectedValue(new Error("nflverse unreachable"));
+    await expect(
+      m.ensureLiveProjections(ENV, 1_000 + m.PROVIDER_RELOAD_AFTER_MS + 1),
+    ).rejects.toThrow("nflverse unreachable");
+
+    // Before the fix this stayed true and paid tools kept serving a basis whose
+    // admissibility could no longer be checked.
+    expect(registered, "a basis we could not re-verify is still serving").toBe(false);
+  });
+
+  it("recovers on the next successful load rather than staying dark", async () => {
+    // Fail closed, not fail permanently. The cooldown applies (live is now
+    // false), and the retry after it restores the live pool.
+    const m = await loader();
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      registered = true;
+      return liveResult;
+    });
+    await m.ensureLiveProjections(ENV, 1_000);
+
+    const failedAt = 1_000 + m.PROVIDER_RELOAD_AFTER_MS + 1;
+    loadAndRegisterGradedProvider.mockRejectedValue(new Error("nflverse unreachable"));
+    await expect(m.ensureLiveProjections(ENV, failedAt)).rejects.toThrow();
+    expect(registered).toBe(false);
+
+    // Inside the cooldown: no re-fetch of several megabytes on every request.
+    const callsAfterFailure = loadAndRegisterGradedProvider.mock.calls.length;
+    await m.ensureLiveProjections(ENV, failedAt + 1);
+    expect(loadAndRegisterGradedProvider).toHaveBeenCalledTimes(callsAfterFailure);
+
+    loadAndRegisterGradedProvider.mockImplementation(async () => {
+      registered = true;
+      return liveResult;
+    });
+    await m.ensureLiveProjections(ENV, failedAt + m.PROVIDER_RETRY_COOLDOWN_MS + 1);
+    expect(registered).toBe(true);
   });
 });

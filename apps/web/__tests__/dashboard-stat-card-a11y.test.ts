@@ -17,7 +17,9 @@ const src = readFileSync(resolve(repoRoot, "app/dashboard/page.tsx"), "utf8");
 
 describe("/dashboard StatCard a11y", () => {
   it("renders all four headline StatCards", () => {
-    for (const label of ["Today's Picks", "Verified Record", "Win Rate", "Tier"]) {
+    // "Published Today" was "Today's Picks" until C-246 - the same string as
+    // the picks-list heading below it, over a different quantity.
+    for (const label of ["Published Today", "Verified Record", "Win Rate", "Tier"]) {
       expect(src, `StatCard label missing: ${label}`).toContain(label);
     }
   });

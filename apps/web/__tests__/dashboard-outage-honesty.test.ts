@@ -223,3 +223,68 @@ describe("the dashboard's counts describe the rows it actually shows", () => {
     }
   });
 });
+
+/**
+ * C-246, both halves raised by Devin.
+ *
+ * (1) The headline card and the picks list carried the SAME LABEL over
+ * different quantities. The card counts every published pick today; the list
+ * shows the slice this viewer can act on, capped at the teaser limit for FREE
+ * and at six for PRO. Two legitimate numbers, two separate reasons for them to
+ * differ, one name. C-241 aligned the count's FILTERS with the list and left
+ * the naming alone; this is the half that was still misread. The count is not
+ * changed here - capping it at the list's length would hide a fuller board
+ * from a FREE member and would drop a PRO member's total to six.
+ *
+ * (2) `publicMessage` comes out of the same policy call as the record, fed by
+ * the same counts `softPerfZero` falls back to ZERO. C-201 and C-216
+ * established that the record is withheld entirely when any of those inputs
+ * fail; the message from that identical object was rendered anyway, in two
+ * places, describing a sample size and a gate status computed from zeros. A
+ * member during an outage read "Unavailable" in the record card and
+ * baseline-collection progress directly beneath it.
+ */
+describe("the dashboard does not put one name on two different numbers", () => {
+  const clean = readFileSync(PAGE, "utf8").replace(/\/\/[^\n]*/g, "").replace(/\/\*[\s\S]*?\*\//g, "");
+
+  it("does not label the headline card with the picks-list heading", () => {
+    // Comments are stripped first: this file's own prose names the old label,
+    // and an assertion that passes on a comment is the C-241 defect again.
+    expect(clean).toContain('<StatCard label="Published Today"');
+    expect(clean, "the card is named after the list it does not equal").not.toContain(
+      "<StatCard label=\"Today's Picks\"",
+    );
+  });
+
+  it("keeps the list heading, which is a different quantity and keeps its own name", () => {
+    expect(clean).toContain("Today&rsquo;s picks");
+  });
+});
+
+describe("a performance outage does not narrate the sample it could not read", () => {
+  const clean = readFileSync(PAGE, "utf8").replace(/\/\/[^\n]*/g, "").replace(/\/\*[\s\S]*?\*\//g, "");
+
+  it("routes every rendered performance message through the degraded check", () => {
+    // The policy's own message must not reach the page directly any more; it
+    // goes through `performanceMessage`, which substitutes an explicit read
+    // failure when perfDegraded.
+    expect(clean).toContain("const performanceMessage = perfDegraded");
+    expect(
+      clean.includes("{performancePolicy.publicMessage}"),
+      "publicMessage is rendered directly - during an outage it describes a sample computed from fallback zeros",
+    ).toBe(false);
+  });
+
+  it("renders the substituted message in both places that showed the policy's", () => {
+    const uses = clean.match(/\{performanceMessage\}/g) ?? [];
+    expect(uses.length, "both render sites must use the guarded message").toBe(2);
+  });
+
+  it("withholds the observational pipeline claim during a count outage", () => {
+    // "are running" is something we OBSERVE, and the read that would tell us is
+    // the one that just failed. The policy sentences beside it stay.
+    expect(clean).toContain(
+      '{!perfDegraded && "Pick generation, ingestion, and settlement are running. "}',
+    );
+  });
+});
