@@ -55,10 +55,10 @@ export function ObservatoryBeacon() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       aria-label="Return to Observatory"
-      className="pointer-events-none fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full transition-all duration-500 lg:pointer-events-auto"
+      className="pointer-events-none fixed top-6 right-6 z-50 flex items-center gap-3 rounded-full transition-all duration-500 lg:pointer-events-auto"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transform: visible ? "translateY(0)" : "translateY(-20px)",
       }}
     >
       {/* Tooltip */}
