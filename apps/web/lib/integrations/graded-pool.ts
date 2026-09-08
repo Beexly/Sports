@@ -547,8 +547,17 @@ export async function loadGradedPool({
  * source-error model registers nothing (the tools stay on the illustrative pool).
  * Always the PUBLISHED pool: xFP stays excluded (see loadGradedPool).
  */
-export async function loadAndRegisterGradedProvider({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
-  const result = await loadGradedPool({ fetcher });
+export async function loadAndRegisterGradedProvider({
+  fetcher = fetch,
+  basisContext,
+  now = new Date(),
+}: {
+  fetcher?: FetchLike;
+  /** Passed straight through to loadGradedPool; defaults from the calendar. */
+  basisContext?: { readonly targetSeason: number; readonly targetWeek: number };
+  now?: Date;
+} = {}): Promise<GradedPoolResult> {
+  const result = await loadGradedPool({ fetcher, basisContext, now });
   registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players, new Date().toISOString(), result.attribution) : null);
   return result;
 }

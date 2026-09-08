@@ -329,16 +329,32 @@ describe("loadGradedPool", () => {
   });
 
   // A minimal player_stats CSV (decodeDatasetText passes plain text through) with
-  // one WR over the 25-play threshold, season 2024.
+  // C-220. Every fixture below is built on a 2024 season, and the basis gate is
+  // now ON BY DEFAULT with its frame derived from the real calendar - so these
+  // tests would be judged against whatever week it is when they run, and a 2024
+  // basis is two seasons behind a 2026 target. The gate is right to refuse
+  // that; these tests are about xFP composition and enrichment joins, not about
+  // the basis rule, so each is given the frame its OWN data describes. Pinning
+  // it also makes them time-independent, which they were not before.
+  const BASIS_2024 = { targetSeason: 2025, targetWeek: 1 } as const;
+
+  // One WR over the 25-play threshold, season 2024.
+  //
+  // FOUR weeks, not two, since C-220. The basis gate refuses a sample under
+  // MIN_GAMES_FOR_BASIS, and a two-game player is exactly the case it exists to
+  // stop - so the old fixture described a player these tests then asserted a
+  // projection for, which the product would now (correctly) refuse to project.
+  // Every week is identical, so fppg stays 10 and the xFP basis stays 18/g:
+  // the expected 170 and 306 below are unchanged. The fixture got more honest,
+  // not more convenient.
+  const WEEKS = [1, 2, 3, 4];
   const statsCsv = [
     "season,season_type,week,position,player_id,player_display_name,recent_team,attempts,carries,targets,passing_epa,rushing_epa,receiving_epa,wopr,target_share,dakota,pacr,fantasy_points_ppr",
-    "2024,REG,1,WR,WR1,Real Wideout,KC,0,0,14,0,0,6,0.5,0.25,,,10",
-    "2024,REG,2,WR,WR1,Real Wideout,KC,0,0,14,0,0,6,0.5,0.25,,,10",
+    ...WEEKS.map((w) => `2024,REG,${w},WR,WR1,Real Wideout,KC,0,0,14,0,0,6,0.5,0.25,,,10`),
   ].join("\n");
   const xfpCsv = (season: number) => [
     "season,week,position,player_id,full_name,posteam,total_fantasy_points_exp,total_fantasy_points_diff",
-    `${season},1,WR,WR1,Real Wideout,KC,18,0`,
-    `${season},2,WR,WR1,Real Wideout,KC,18,0`,
+    ...WEEKS.map((w) => `${season},${w},WR,WR1,Real Wideout,KC,18,0`),
   ].join("\n");
 
   // A neutral-script play_by_play fixture: KC is a strong offense, CHI a weak one,
@@ -376,7 +392,7 @@ describe("loadGradedPool", () => {
     // loadAndRegisterGradedProvider publishes to customers) must fall back to
     // the pure CC-BY-4.0 basis (player-model actual per-game + process grade)
     // even though a season-matched ep_weekly asset is being served.
-    const r = await loadGradedPool({ fetcher: route(2024) });
+    const r = await loadGradedPool({ fetcher: route(2024), basisContext: BASIS_2024 });
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     const wr = r.players.find((p) => p.id === "WR1")!;
@@ -385,7 +401,7 @@ describe("loadGradedPool", () => {
   });
 
   it("internal opt-in (includeXfp): pins xFP to the model's season so the basis is xFP, not actual", async () => {
-    const r = await loadGradedPool({ fetcher: route(2024), includeXfp: true });
+    const r = await loadGradedPool({ fetcher: route(2024), includeXfp: true, basisContext: BASIS_2024 });
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     const wr = r.players.find((p) => p.id === "WR1")!;
@@ -396,7 +412,7 @@ describe("loadGradedPool", () => {
 
   it("internal opt-in: falls back to the model's per-game when xFP for the model's season is missing (no cross-season basis)", async () => {
     // Only 2025 xFP is served; the 2024 model must NOT borrow it.
-    const r = await loadGradedPool({ fetcher: route(2025), includeXfp: true });
+    const r = await loadGradedPool({ fetcher: route(2025), includeXfp: true, basisContext: BASIS_2024 });
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     const wr = r.players.find((p) => p.id === "WR1")!;
@@ -421,7 +437,7 @@ describe("loadGradedPool", () => {
       if (url.includes("sleeper.app/v1/players/nfl")) return new Response(JSON.stringify(sleeper));
       return new Response("not found", { status: 404 });
     };
-    const r = await loadGradedPool({ fetcher });
+    const r = await loadGradedPool({ fetcher, basisContext: BASIS_2024 });
     expect(r.status).toBe("live");
     const wr = r.players.find((p) => p.id === "WR1")!;
     expect(wr.bye).toBe(10); // FFC bye joined (was hardcoded 0)
@@ -438,7 +454,7 @@ describe("loadGradedPool", () => {
   });
 
   it("enrichment failures degrade gracefully — bye 0, no adp, no flag, base attribution", async () => {
-    const r = await loadGradedPool({ fetcher: route(2024) }); // FFC + Sleeper both 404
+    const r = await loadGradedPool({ fetcher: route(2024), basisContext: BASIS_2024 }); // FFC + Sleeper both 404
     expect(r.status).toBe("live");
     const wr = r.players.find((p) => p.id === "WR1")!;
     expect(wr.bye).toBe(0);
@@ -450,7 +466,7 @@ describe("loadGradedPool", () => {
   });
 
   it("internal opt-in (includeXfp) propagates the ffverse CC-BY-SA attribution when the xFP basis is joined", async () => {
-    const r = await loadGradedPool({ fetcher: route(2024), includeXfp: true });
+    const r = await loadGradedPool({ fetcher: route(2024), includeXfp: true, basisContext: BASIS_2024 });
     expect(r.status).toBe("live");
     expect(r.attribution).toContain("ffverse/ffopportunity");
     expect(r.attribution).toContain("CC-BY-SA-4.0");
@@ -460,7 +476,7 @@ describe("loadGradedPool", () => {
     // Mutation-tested gap: pin the REGISTERED provider (what customers get when
     // the founder flips the env gate) to the published CC-BY-4.0 basis. A
     // season-matched ep_weekly asset IS being served — it must stay unused.
-    const result = await loadAndRegisterGradedProvider({ fetcher: route(2024) });
+    const result = await loadAndRegisterGradedProvider({ fetcher: route(2024), basisContext: BASIS_2024 });
     expect(result.status).toBe("live");
     const pool = activePlayerPool({ PROJECTIONS_PROVIDER: "graded" });
     expect(pool).not.toBe(PLAYERS); // the registered live pool, not the illustrative fallback
@@ -503,7 +519,7 @@ describe("loadGradedPool", () => {
     // (pbp is ~40MB — too heavy for a serverless cold start; it 500s in prod). The
     // pure buildGradedPool still composes team-environment when given rows (tested
     // above); loadGradedPool just doesn't fetch it. schemeFit -> documented neutral.
-    const r = await loadGradedPool({ fetcher: route(2024, 2024) });
+    const r = await loadGradedPool({ fetcher: route(2024, 2024), basisContext: BASIS_2024 });
     expect(r.status).toBe("live");
     expect(r.season).toBe(2024);
     const wr = r.players.find((p) => p.id === "WR1")!;
