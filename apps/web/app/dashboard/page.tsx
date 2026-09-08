@@ -17,6 +17,7 @@ import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS, type PickGrade, type RiskLevel } from "@sports/types";
 
 export const dynamic = "force-dynamic";
 
@@ -27,8 +28,8 @@ type TodayPick = {
   line: number;
   confidence: number;
   edgeScore: number;
-  pickGrade: string;
-  riskLevel: string;
+  pickGrade: PickGrade;
+  riskLevel: RiskLevel;
   reasoningShort: string;
   isFeatured: boolean;
   result: string;
@@ -564,28 +565,21 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
             +{pick.edgeScore.toFixed(1)} edge
           </span>
         )}
-        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-          {pick.riskLevel}
+        <span className={`font-mono text-[10px] uppercase tracking-[0.14em] ${RISK_LEVEL_LABELS[pick.riskLevel].color}`}>
+          {RISK_LEVEL_LABELS[pick.riskLevel].label}
         </span>
       </div>
     </li>
   );
 }
 
-function GradeBadge({ grade }: { grade: string }) {
-  const styles: Record<string, string> = {
-    A: "bg-verify/15 text-verify",
-    B: "bg-orbital-cyan/15 text-orbital-cyan",
-    C: "bg-titanium text-ion-2",
-  };
+function GradeBadge({ grade }: { grade: PickGrade }) {
+  const info = PICK_GRADE_LABELS[grade];
   return (
     <span
-      className={[
-        "rounded-full px-2 py-0.5 text-xs font-bold",
-        styles[grade] ?? "bg-titanium text-ion-2",
-      ].join(" ")}
+      className={["rounded-full px-2 py-0.5 text-xs font-bold", info.color, info.bgColor].join(" ")}
     >
-      {grade}
+      {info.label}
     </span>
   );
 }
