@@ -146,11 +146,17 @@ describe("the honesty valves are wired, not decorative", () => {
   it("does not inherit compositeScore's 14-day news half-life", () => {
     // Found by the test above failing on the first version of this module.
     // compositeScore defaults to 14 days, tuned for in-season news. A Week 1
-    // index runs on a ~240-day-old basis, and 0.5^(240/14) zeroes every
-    // production and usage signal - so EVERY player in the league returned
-    // exactly 50 and the ranking could not distinguish anyone. Pinned here
-    // because the failure is silent: a uniform 50 looks like a conservative
-    // score rather than a broken one.
+    // index runs on a ~240-day-old basis, and 0.5^(240/14) = 6.9e-6 zeroes the
+    // production, usage, upside, floorSafety and schemeFit signals.
+    //
+    // CORRECTED (C-236): this comment used to say EVERY player returned exactly
+    // 50. Measured, that is false - availability and trend push with ageDays 0,
+    // so they survive any half-life and the pool spreads over 30.1 / 32 / 48.1 /
+    // 50 / 51.9, with 22 of 30 players off 50. THIS fixture returns exactly 50
+    // because mk() defaults to healthy and flat, which is the only combination
+    // that lands on centre. The defect pinned below is real; the description of
+    // it was not. Kept because the failure is silent either way: a ranking that
+    // cannot separate anyone on production looks conservative rather than broken.
     const stats = positionStats(pool());
     const strong = mk("hl", "RB", { proj: 300, usage: 0.85 });
     const newsHalfLife = galaxyIndex(strong, stats, { basisAgeDays: 240, halfLifeDays: 14 });

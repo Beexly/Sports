@@ -135,10 +135,19 @@ export const INDEX_PER_SD = 20;
  * for - in-season news, where a two-week-old practice report really has lost
  * half its meaning. It is catastrophically wrong here, and the test that found
  * it is worth keeping in mind: a Week 1 index on a prior-season basis is about
- * 240 days old, and at a 14-day half-life that is 0.5^17, which zeroes every
- * production and usage signal and returns EXACTLY 50 for every player in the
- * league. A ranking that cannot distinguish anyone is not a conservative
- * ranking, it is a broken one.
+ * 240 days old, and at a 14-day half-life that is 0.5^(240/14) = 6.9e-6, which
+ * zeroes every production, usage, upside, floorSafety and schemeFit signal.
+ *
+ * CORRECTED (C-236): an earlier version of this comment said that "returns
+ * EXACTLY 50 for every player in the league", and that is not what happens.
+ * Availability and trend are pushed with ageDays 0 (see the push calls below),
+ * so they keep their full weight at any half-life, and the ranking collapses to
+ * the handful of values those two can express - measured on the real pool:
+ * 30.1, 32, 48.1, 50, 51.9, with 22 of 30 players NOT at 50. Only a healthy,
+ * flat-trend player lands exactly on 50, which is why the pinned test fixture
+ * does. The defect is real and the fix is unchanged; the sentence describing it
+ * was wrong. A ranking that cannot separate anyone ON PRODUCTION OR USAGE is
+ * not a conservative ranking, it is a broken one.
  *
  * 240 days is one offseason, so the statement this encodes is: a full offseason
  * halves the weight of a season's production. That is a real position and it is

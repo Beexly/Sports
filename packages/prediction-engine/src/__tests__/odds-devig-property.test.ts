@@ -209,21 +209,65 @@ describe("de-vig normalizes and preserves ordering (fuzz)", () => {
         fc.array(fc.double({ min: 1.01, max: 200, noNaN: true }), { minLength: 2, maxLength: 4 }),
         (decimals) => {
           const raw = impliedFromDecimalOdds(decimals);
-          for (const probs of [
-            shinDevig(raw).probabilities,
-            gotoConversion(raw),
-            powerDevig(raw).probabilities,
-          ]) {
+          const booksum = raw.reduce((a, b) => a + b, 0);
+          for (const [method, probs] of [
+            ["shin", shinDevig(raw).probabilities],
+            ["goto", gotoConversion(raw)],
+            ["power", powerDevig(raw).probabilities],
+          ] as const) {
             for (const p of probs) {
               expect(Number.isFinite(p), `non-finite from de-vig: ${p}`).toBe(true);
               expect(p).toBeGreaterThanOrEqual(0);
               expect(p).toBeLessThanOrEqual(1);
+            }
+            // The word "normalized" in this test's title was untested (C-236).
+            // Raw implied probabilities from decimals in [1.01, 200] are already
+            // finite and inside [0, 1], so a de-vig that returned its INPUT
+            // UNCHANGED - removing no vig at all - passed every assertion above.
+            // Summing to one is the property that separates a de-vig from a
+            // no-op, and it is the whole point of the operation.
+            // NORMALIZATION IS ONLY PROMISED WHERE THERE IS VIG TO REMOVE.
+            //
+            // The title said "normalized" and nothing asserted it (C-236), so a
+            // de-vig returning its INPUT UNCHANGED passed. Adding the obvious
+            // sum-to-1 check then failed at |sum-1| up to 0.99, which is not a
+            // tolerance question: shin-devig.ts:49-51 returns the raw implied
+            // probabilities untouched when booksum <= 1 + 1e-9, documented at
+            // line 41 ("a book with no margin is returned unchanged with z = 0").
+            // That is correct - you cannot remove vig that is not there - but it
+            // means the OUTPUT OF shinDevig AND gotoConversion IS NOT A
+            // NORMALIZED DISTRIBUTION on a no-vig book. Decimals drawn from
+            // [1.01, 200] produce such books constantly (two longshots sum to
+            // ~0.01), which is why the naive assertion exploded.
+            //
+            // So assert the contract that exists: with real margin the methods
+            // must normalize. Tolerance 1e-5 covers round6 on up to four
+            // outcomes; a no-op de-vig would sum to the overround (1.02-1.10)
+            // and miss by four orders of magnitude.
+            if (booksum > 1 + 1e-9) {
+              const sum = probs.reduce((a, b) => a + b, 0);
+              expect(sum, `${method} did not normalize: sum ${sum}`).toBeCloseTo(1, 5);
             }
           }
         },
       ),
       { numRuns: 10_000 * SCALE },
     );
+  });
+
+  it("returns a no-vig book unchanged, and says so rather than normalizing it", () => {
+    // The other half of the contract, which had no test before C-236. A book
+    // whose implied probabilities already sum to 1 or less carries no margin to
+    // remove, so shin returns it untouched with z = 0. Pinned because it is a
+    // SHARP EDGE for callers: on such a book the output is NOT a probability
+    // distribution, and anything that treats a de-vig result as normalized
+    // without checking booksum is wrong on exactly these inputs.
+    const raw = [0.2, 0.3]; // booksum 0.5 — a deeply underround book
+    const out = shinDevig(raw);
+    expect(out.z).toBe(0);
+    expect(out.booksum).toBeCloseTo(0.5, 9);
+    expect(out.probabilities).toEqual(raw); // unchanged, NOT scaled to sum 1
+    expect(out.probabilities.reduce((a, b) => a + b, 0)).toBeCloseTo(0.5, 9);
   });
 });
 

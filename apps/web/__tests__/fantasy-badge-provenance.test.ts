@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 /**
  * C-231, found in review. `FantasyShell` defaults `projectionsPool` to
@@ -17,10 +17,15 @@ import { join } from "node:path";
  * doctrine) but a customer cannot tell which of two contradictory statements on
  * one page to believe, and the basis label is not decoration.
  *
- * This is a source invariant rather than three render tests on purpose: it
- * binds the NEXT page too. A page that resolves the live pool and renders the
- * shell must derive the badge's pool claim from the same `pool` value its note
- * is derived from, so the two can never disagree again.
+ * C-236 widened this. The original filter only saw pages that mention
+ * `resolveToolPoolAsync` by name, and that missed the harder half: /fantasy/scheme
+ * and /fantasy/studio reach the live pool TRANSITIVELY, through helpers
+ * (applyScheme, waiverTargets, buildLeagueTwin) that default to activePlayerPool(),
+ * so they rendered real players under an illustrative badge without ever naming
+ * the resolver. A source grep cannot see that. `projectionsPool` is now REQUIRED on
+ * FantasyShell, so the compiler forces all 14 shell pages to state what they show,
+ * and what remains here is the guard the compiler cannot give: that nobody restores
+ * the default.
  */
 
 const APP_DIR = join(__dirname, "..", "app");
@@ -38,18 +43,42 @@ function pageFiles(dir: string): string[] {
 describe("a page that renders the live pool cannot claim an illustrative badge", () => {
   const shellPages = pageFiles(APP_DIR)
     .map((file) => ({ file, src: readFileSync(file, "utf8") }))
-    .filter(({ src }) => src.includes("resolveToolPoolAsync") && src.includes("<FantasyShell"));
+    .filter(({ src }) => src.includes("<FantasyShell"));
 
-  it("finds the fantasy tool pages to check", () => {
-    // A guard on the guard: if the shell or the resolver is renamed this test
-    // would silently pass over an empty set.
-    expect(shellPages.length).toBeGreaterThanOrEqual(5);
+  it("finds the fantasy shell pages to check", () => {
+    // A guard on the guard: if the shell is renamed this test would silently
+    // pass over an empty set.
+    expect(shellPages.length).toBeGreaterThanOrEqual(14);
   });
 
   it.each(shellPages.map(({ file, src }) => [file.slice(APP_DIR.length + 1), src]))(
-    "%s derives projectionsPool from the resolved pool",
+    "%s declares what it renders",
     (_name, src) => {
-      expect(src).toMatch(/projectionsPool=\{pool\b/);
+      expect(src).toMatch(/projectionsPool=\{/);
     },
   );
+
+  it("keeps projectionsPool REQUIRED on the shell, with no default", () => {
+    // The compiler is the real guarantee now — every page must pass the prop.
+    // This test guards the one thing the compiler cannot: someone restoring the
+    // default, which would silently re-arm the original bug on all 14 pages at
+    // once and produce no type error anywhere (C-236).
+    const shell = readFileSync(
+      resolve(APP_DIR, "..", "components", "fantasy", "fantasy-shell.tsx"),
+      "utf8",
+    );
+    expect(shell).toMatch(/projectionsPool:\s*ProjectionsPool;/); // required, not `?:`
+    expect(shell).not.toMatch(/projectionsPool\?:/);
+    expect(shell).not.toMatch(/projectionsPool\s*=\s*"/); // no default in the signature
+  });
+
+  it("derives the claim from the resolved pool wherever one is resolved", () => {
+    // The five tool pages that resolve a live pool must key the badge off the
+    // SAME value their note is derived from, so the two can never disagree.
+    const resolvers = shellPages.filter(({ src }) => src.includes("resolveToolPoolAsync"));
+    expect(resolvers.length).toBeGreaterThanOrEqual(5);
+    for (const { file, src } of resolvers) {
+      expect(src, file).toMatch(/projectionsPool=\{pool\b/);
+    }
+  });
 });

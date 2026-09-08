@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
+import { isLiveProjections } from "@/lib/integrations/projections";
 import { StudioBrief } from "@/components/fantasy/studio-brief";
 import { StudioHost } from "@/components/fantasy/studio-host";
 import { generateWeeklyBrief } from "@/lib/fantasy/studio";
@@ -24,6 +25,8 @@ export default function StudioPage() {
       intro="Galaxy Studios fronts the week with Nova, our brand presenter, reporting the edge from the field, the clubhouse, and the desk, then hands you the written Galaxy Brief beneath the broadcast. Studios reads every surface of the OS and turns it into a production-ready show and script. You review and publish; it never ships on its own, and every broadcast carries a clear synthetic-presenter disclosure."
       note={`${ILLUSTRATIVE_NOTE} Studios generates broadcast scripts and draft text only: no synthetic-likeness video, no autonomous posting, and it does not publish to any external channel.`}
       wide
+      // C-236: generateWeeklyBrief() is called in this server component (page.tsx:17) and reaches waiverTargets(), buildLeagueTwin() and applyScheme(), all of which default to activePlayerPool().
+      projectionsPool={isLiveProjections() ? "real" : "illustrative"}
     >
       <div className="space-y-12">
         <StudioHost broadcast={broadcast} />

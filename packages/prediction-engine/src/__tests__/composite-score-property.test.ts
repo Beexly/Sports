@@ -247,10 +247,25 @@ describe("the confidence valve — how a rumor is stopped from voting like a fac
   });
 
   it("treats a missing confidence as full confidence", () => {
+    // TWO signals, not one (C-236). With a single signal the score is
+    // sum(value*ew)/totalWeight, which collapses to exactly `value` for ANY
+    // effectiveWeight > 0 - so the default confidence cancels and the assertion
+    // holds whatever the default is. Verified by mutation: with the default
+    // changed from 1 to 0.2, the one-signal form passed 200,000 randomised
+    // cases without a single failure. It could only ever have caught a default
+    // of 0, which is not what the test is named for.
+    //
+    // A zero-valued anchor of fixed weight keeps the denominator fixed, so the
+    // subject's effective weight moves the blended score and any default below
+    // 1 separates the two calls.
     fc.assert(
       fc.property(arbSignal, (s) => {
-        const withOut = compositeScore([{ key: s.key, value: s.value, weight: s.weight }]).score;
-        const withOne = compositeScore([{ ...s, confidence: 1, ageDays: 0 }]).score;
+        const anchor = { key: "anchor", value: 0, weight: 1, confidence: 1, ageDays: 0 };
+        const withOut = compositeScore([
+          anchor,
+          { key: s.key, value: s.value, weight: s.weight },
+        ]).score;
+        const withOne = compositeScore([anchor, { ...s, confidence: 1, ageDays: 0 }]).score;
         expect(withOut).toBeCloseTo(withOne, 10);
       }),
       { numRuns: RUNS },

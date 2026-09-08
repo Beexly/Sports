@@ -22,7 +22,7 @@ const ACCENTS: Record<string, { eyebrowClass: string; cssColor: string }> = {
 };
 
 export function FantasyShell({
-  eyebrow, title, intro, accent = "ultraviolet", children, note, attribution, wide, projectionsBadge = true, projectionsPool = "illustrative",
+  eyebrow, title, intro, accent = "ultraviolet", children, note, attribution, wide, projectionsBadge = true, projectionsPool,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -37,12 +37,23 @@ export function FantasyShell({
   /** Show the honest live/illustrative projections status in the hero (default on). */
   projectionsBadge?: boolean;
   /**
-   * Which player rows this page renders (C-173). DEFAULTS TO "illustrative" on
-   * purpose: most of the fantasy suite draws the fictional pool from
-   * lib/fantasy/players.ts, and a page that has real players has to say so
-   * rather than inherit the claim by omission.
+   * Which player rows this page renders (C-173). REQUIRED — no default (C-236).
+   *
+   * It used to default to "illustrative", which quietly undid the thing
+   * ProjectionsBadge was built for: that badge makes its own `pool` prop
+   * required with no default precisely so a caller must ASSERT what it renders,
+   * and this shell then supplied the assertion on every caller's behalf. The
+   * result was a page rendering real players under a badge calling them
+   * illustrative — waivers, lineup and trade did exactly that until C-231, and
+   * scheme, studio and league-twin still did afterwards, because their helpers
+   * (applyScheme, waiverTargets, buildLeagueTwin) default to activePlayerPool()
+   * and inherit the process-global live pool without ever naming it.
+   *
+   * A source-grep test cannot catch that class — it can only see the pages that
+   * mention the resolver by name. Requiring the prop moves the guarantee to the
+   * compiler, where every present and future page must state what it shows.
    */
-  projectionsPool?: ProjectionsPool;
+  projectionsPool: ProjectionsPool;
 }) {
   const known = ACCENTS[accent];
   const accentColor = known?.cssColor ?? accent;
