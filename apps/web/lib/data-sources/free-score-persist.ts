@@ -37,6 +37,25 @@ import { uniqueScoreboardDates } from "./settlement-score-dates";
 import { recordFreeIngestionRun } from "./free-ingestion-run";
 import { checkClearance } from "@/lib/scraping/clearance-engine";
 
+/**
+ * Candidate `games` rows read per sport per pass (C-170).
+ *
+ * Sized so it cannot bind on a real slate: 21 days of every in-season sport is
+ * roughly 640 real fixtures, and the table carries about 2.5 rows per fixture,
+ * so ~1600 rows is the realistic ceiling. A pass that fills this warns rather
+ * than silently shortening its own work.
+ *
+ * DELIBERATELY NOT ACCOMPANIED BY A `mergedIntoGameId: null` FILTER, and this
+ * is the one place in the C-166 sweep where that filter would be WRONG. A merge
+ * never moves `picks` - the schema comment on Game.mergedIntoGameId says so,
+ * because `picks` is unique on (gameId, pickType) and cannot always be
+ * re-pointed - so an alias row goes on holding real settlement history. Refuse
+ * to score it and every pick sitting on it can never settle, which is C-163's
+ * stranding turned from a merge-time cost into a permanent one. This lane
+ * scores rows; it does not decide which row is the fixture.
+ */
+const SCORE_CANDIDATE_LIMIT = 2000;
+
 const ODDS_KEY_TO_FREE: Record<string, Sport> = {
   americanfootball_nfl: "nfl",
   americanfootball_ncaaf: "ncaaf",
@@ -186,10 +205,33 @@ export async function persistFreeScores(options?: {
         // Oldest first, so when the cap does bind it drops the newest games
         // (whose finals will still be there next cycle) rather than an
         // arbitrary slice that could keep starving the same old row forever.
-        // Unordered, which 300 rows came back was left to the database.
+        // Unordered, which rows came back was left to the database.
         orderBy: { commenceTime: "asc" },
-        take: 300,
+        // THE CAP DOES NOT PROTECT A BUDGET, so it should not be small (C-170).
+        // The scoreboard is fetched per DATE, not per game (uniqueScoreboardDates
+        // below, maxDays 21), so raising this costs zero extra requests - only a
+        // wider SELECT of seven small columns.
+        //
+        // The old 300 was already saturated by arithmetic the previous comment
+        // states itself: MLB alone lists about 15 games a day, so 21 days of MLB
+        // is ~315 rows before NFL, NCAAF or MLS are counted, and the games table
+        // holds about 2.5 ROWS PER REAL FIXTURE with none tombstoned (C-163),
+        // so 300 rows could be as few as ~120 real fixtures. Rows that can never
+        // resolve - a phantom fixture, a duplicate carrying no feed match - keep
+        // matching this `where` for the full 21 days and, being oldest, sit at
+        // the head of the queue displacing newer games that CAN be scored. That
+        // is the starvation this cap was meant to avoid, produced by the cap.
+        take: SCORE_CANDIDATE_LIMIT,
       });
+
+      // NO SILENT CAP (the discipline C-153, C-161 and C-169 each landed after
+      // the same defect class). A filled cap means rows this pass never looked
+      // at, which surfaces later as overdue picks rather than as a fetch error.
+      if (games.length === SCORE_CANDIDATE_LIMIT) {
+        console.warn(
+          `[free-score-persist] candidate cap ${SCORE_CANDIDATE_LIMIT} reached for ${sport.key}; older unresolved rows may be starving newer ones`,
+        );
+      }
 
       const { espnKeys, isoKeys } = uniqueScoreboardDates(
         games.map((g) => g.commenceTime),

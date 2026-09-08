@@ -103,3 +103,62 @@ describe("persistFreeScores — recorded-final guard", () => {
     expect(result.gamesUpdated).toBe(1);
   });
 });
+
+describe("candidate query shape (C-170)", () => {
+  beforeEach(() => {
+    mocks.findMany.mockReset();
+    mocks.updateMany.mockClear();
+    mocks.fetchScoresMultiSource.mockReset();
+    mocks.fetchScoresMultiSource.mockResolvedValue({ games: [] });
+  });
+
+  it("reads a candidate window wide enough that it cannot bind on a real slate", async () => {
+    // The old cap was 300, and the file's own comment did the arithmetic that
+    // defeats it: MLB alone lists ~15 games a day, so 21 days of MLB is ~315
+    // rows before any other sport, and the table holds about 2.5 rows per real
+    // fixture with none tombstoned. Rows that can never resolve keep matching
+    // this `where` for the full window and, being oldest, displace newer games
+    // that CAN be scored - the starvation the cap was meant to prevent.
+    //
+    // Raising it costs nothing: the scoreboard is fetched per DATE, not per
+    // game, so the request count is unchanged.
+    mocks.findMany.mockResolvedValue([]);
+    await persistFreeScores();
+
+    const args = mocks.findMany.mock.calls[0]?.[0] as {
+      take: number;
+      where: Record<string, unknown>;
+    };
+    expect(args.take).toBeGreaterThanOrEqual(2000);
+  });
+
+  it("does NOT exclude merged-away rows, and that is deliberate", async () => {
+    // The one place in the C-166 canonicity sweep where the filter would be
+    // WRONG. A merge never moves `picks` (Game.mergedIntoGameId's own schema
+    // comment says why: picks is unique on gameId+pickType), so an alias row
+    // still carries real settlement history. Excluding it here would mean every
+    // pick on that row can never settle. Pinned so a later sweep adding the
+    // filter for consistency has to argue with this test first.
+    mocks.findMany.mockResolvedValue([]);
+    await persistFreeScores();
+
+    const where = (mocks.findMany.mock.calls[0]?.[0] as { where: Record<string, unknown> }).where;
+    expect(where).not.toHaveProperty("mergedIntoGameId");
+  });
+
+  it("warns instead of silently truncating when the cap does fill", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const filled = Array.from({ length: 2000 }, (_unused, i) => ({
+      ...ARMY_NAVY,
+      id: `row-${i}`,
+    }));
+    mocks.findMany.mockResolvedValue(filled);
+
+    await persistFreeScores();
+
+    expect(
+      warn.mock.calls.some((c) => /candidate cap 2000 reached/.test(String(c[0]))),
+    ).toBe(true);
+    warn.mockRestore();
+  });
+});
