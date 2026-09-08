@@ -48,6 +48,7 @@ import {
   scoreGames,
   buildPickSignalSnapshot,
   buildPickProofReceipt,
+  isPlausibleEntryOdds,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
 import {
@@ -953,14 +954,20 @@ export async function processSport(
       // only with HONEST inputs: a real devigged market fair prob + the labeled
       // confidence heuristic; modelProb stays null until a calibrated one exists (never
       // confidence/100). Non-fatal — a receipt failure must never block a pick.
+      //
+      // P0-2 write-guard (launch audit 2026-09-08): entryOdds must be a plausible
+      // American price (|odds| >= 100). The old `entryOdds !== 0` check let a
+      // non-MONEYLINE pick's raw spread/total line (e.g. -3.5) slip through the
+      // Math.round(pick.line) fallback as a "price" — 199 frozen rows were poisoned
+      // this way. isPlausibleEntryOdds rejects such mints at write time; frozen rows
+      // are immutable, so prevention is the only cure.
       try {
         const entryOdds = pick.entryPrice ?? (pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null);
         if (
           typeof pick.marketFairProb === "number" &&
           pick.marketFairProb > 0 &&
           pick.marketFairProb < 1 &&
-          typeof entryOdds === "number" &&
-          entryOdds !== 0
+          isPlausibleEntryOdds(entryOdds)
         ) {
           const receipt = buildPickProofReceipt(
             {
