@@ -43,7 +43,14 @@ type Env = Record<string, string | undefined>;
 export type StripePriceLike = {
   /** Stripe's unit_amount for a price, in the currency's minor unit (cents for USD). */
   unit_amount: number | null;
+  /** ISO currency code, lower-case, as Stripe returns it. */
+  currency?: string | null;
+  /** Recurrence. Absent on a one-time price, which is never valid here. */
+  recurring?: { interval?: string | null; interval_count?: number | null } | null;
 };
+
+/** The only currency the pricing ladder is denominated in. */
+export const ADVERTISED_CURRENCY = "usd";
 
 /**
  * The amount we publicly advertise for a tier × interval, expressed in Stripe
@@ -69,6 +76,12 @@ export function advertisedPhaseUnitAmountCents(
  * When unit_amount is null (some pricing tiers omit it), this returns false
  * — fail-closed rather than silently charging an unverified amount.
  *
+ * AMOUNT ONLY, deliberately. This predicate is shared with the deploy-time gate
+ * (scripts/lib/stripe-price-check.mjs), which composes it with its own currency
+ * and interval axes; folding those in here would silently re-scope that gate.
+ * The runtime checks the same three axes by calling the two helpers below
+ * alongside this one — see verifyEnvPriceAmount in lib/stripe.ts.
+ *
  * Pure + env-free → fully unit-testable without Stripe.
  */
 export function stripePriceAmountMatchesAd(
@@ -78,6 +91,44 @@ export function stripePriceAmountMatchesAd(
 ): boolean {
   if (price.unit_amount == null) return false;
   return price.unit_amount === advertisedPhaseUnitAmountCents(tier, interval);
+}
+
+/**
+ * Does the price recur on the cadence this tier × interval is sold at?
+ *
+ * This is the RUNTIME interval guard the deploy-time gate has been reaching for
+ * since #612 (`intervalMatchesAd` in scripts/lib/stripe-price-check.mjs prefers
+ * it when present and otherwise falls back to an inline copy). The money path
+ * itself was checking `unit_amount` alone, so an annual price carrying the
+ * monthly amount passed verification and would have billed a monthly subscriber
+ * once a year (Devin Review, #719).
+ *
+ * Fails CLOSED for a one-time price: no recurring block can satisfy a
+ * subscription interval. `interval_count` is part of the cadence, not a detail —
+ * "every 3 months" is a month-interval price and is not what we sell.
+ */
+export function stripePriceIntervalMatchesAd(
+  price: StripePriceLike,
+  interval: BillingInterval,
+): boolean {
+  const recurring = price.recurring;
+  if (!recurring) return false;
+  if (recurring.interval !== interval) return false;
+  return (recurring.interval_count ?? 1) === 1;
+}
+
+/**
+ * Does the price bill in the currency the ladder is quoted in?
+ *
+ * Stricter than the deploy gate's `currencyMatchesAd`, and the difference is
+ * intentional: that one tolerates an absent currency because it also grades
+ * hand-built fixtures, while a price object coming back from `prices.retrieve`
+ * always carries one, so absent means malformed and malformed fails closed.
+ */
+export function stripePriceCurrencyMatchesAd(price: StripePriceLike): boolean {
+  const actual = price.currency;
+  if (actual == null) return false;
+  return actual.toLowerCase() === ADVERTISED_CURRENCY;
 }
 
 export const STRIPE_LOOKUP_KEYS: Record<

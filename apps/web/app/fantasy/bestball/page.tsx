@@ -39,6 +39,9 @@ export default async function BestBallPage() {
       // ACTUALLY joined this load (a day with failed FFC/Sleeper joins must not
       // over-credit). The static constant is only the fallback.
       attribution={pool ? getLiveProjectionsMeta().attribution ?? FANTASY_DATA_ATTRIBUTION : undefined}
+      // Derived from the SAME value the note above uses, so the badge and the
+      // note can never disagree about whether these are real players (C-173).
+      projectionsPool={pool ? "real" : "illustrative"}
       wide
     >
       <BestBallBoard pool={gatedPool} canUseFantasyFull={viewer.canUseFantasyFull} />

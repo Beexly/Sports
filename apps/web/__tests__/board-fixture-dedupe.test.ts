@@ -26,6 +26,43 @@ const row = (over: Partial<BoardStateRow> & Pick<BoardStateRow, "id" | "gameId">
 const keyed = (rows: readonly BoardStateRow[], pickTypes?: readonly (string | null)[]) =>
   rows.map((row, i) => ({ key: boardDedupeKey(row.gameId, pickTypes?.[i] ?? null), row }));
 
+describe("dedupeBoardRows — precedence between an evaluation and a fact", () => {
+  it("keeps the NEWER gated evaluation over an older scoring one", () => {
+    // SCORING_NOW ranks above GATED_TODAY for display ordering, and comparing
+    // that rank first meant an OLDER "we are scoring this" decision beat a NEWER
+    // "we passed" one on the same fixture, so the board showed a state the model
+    // had already moved on from (CodeRabbit, #719). Both are EVALUATIONS, so
+    // recency is what decides.
+    const out = dedupeBoardRows(keyed([
+      row({ id: "old-scoring", gameId: "g1", status: "SCORING_NOW", updatedAt: "2026-09-07T09:00:00.000Z" }),
+      row({ id: "new-gated", gameId: "g1", status: "GATED_TODAY", updatedAt: "2026-09-07T15:00:00.000Z" }),
+    ]));
+    expect(out.map((r) => r.id)).toEqual(["new-gated"]);
+  });
+
+  it("keeps an OLDER published row over a newer gated one", () => {
+    // The other half, and the reason the fix is not simply "timestamps first".
+    // A published pick is a FACT: it either exists or it does not, and nothing
+    // the gate decides afterwards makes it stop existing. Ordering purely on
+    // recency would tell a subscriber "we passed on this" about a fixture they
+    // can see a live pick for, which is the false label C-136 and C-141 are
+    // about. Reverting the published-precedence block flips exactly this test.
+    const out = dedupeBoardRows(keyed([
+      row({ id: "old-published", gameId: "g2", status: "PUBLISHED_TODAY", updatedAt: "2026-09-07T09:00:00.000Z" }),
+      row({ id: "new-gated", gameId: "g2", status: "GATED_TODAY", updatedAt: "2026-09-07T15:00:00.000Z" }),
+    ]));
+    expect(out.map((r) => r.id)).toEqual(["old-published"]);
+  });
+
+  it("falls back to lane rank only when two evaluations share an instant", () => {
+    const out = dedupeBoardRows(keyed([
+      row({ id: "gated", gameId: "g3", status: "GATED_TODAY", updatedAt: "2026-09-07T12:00:00.000Z" }),
+      row({ id: "scoring", gameId: "g3", status: "SCORING_NOW", updatedAt: "2026-09-07T12:00:00.000Z" }),
+    ]));
+    expect(out.map((r) => r.id)).toEqual(["scoring"]);
+  });
+});
+
 describe("dedupeBoardRows — one fixture, one row per market", () => {
   it("collapses repeated evaluations of the same game into one row", () => {
     // GateDecision has no unique constraint and the query takes the latest 100
@@ -80,6 +117,31 @@ describe("dedupeBoardRows — one fixture, one row per market", () => {
       row({ id: "pub-1", gameId: "game-1", status: "PUBLISHED_TODAY" }),
     ]));
     expect(out[0]!.status).toBe("PUBLISHED_TODAY");
+  });
+
+  it("prefers the NEWEST evaluation, even when it downgrades confidence", () => {
+    // GateDecision rows are repeated evaluations over time and confidence can
+    // legitimately FALL as the line moves. Ranking on confidence before the
+    // timestamp meant an older, stronger reading beat the newer downgrade, so a
+    // subscriber saw a number the model no longer stood behind (Devin Review,
+    // #717).
+    const out = dedupeBoardRows(keyed([
+      row({ id: "old", gameId: "game-1", confidence: 88, updatedAt: "2026-09-07T12:00:00.000Z" }),
+      row({ id: "new", gameId: "game-1", confidence: 57, updatedAt: "2026-09-07T15:00:00.000Z" }),
+    ]));
+
+    expect(out).toHaveLength(1);
+    expect(out[0]!.id).toBe("new");
+    expect(out[0]!.confidence).toBe(57);
+  });
+
+  it("still uses confidence as the tie-break when two rows were evaluated at the same instant", () => {
+    const out = dedupeBoardRows(keyed([
+      row({ id: "a", gameId: "game-1", confidence: 57, updatedAt: "2026-09-07T12:00:00.000Z" }),
+      row({ id: "b", gameId: "game-1", confidence: 88, updatedAt: "2026-09-07T12:00:00.000Z" }),
+    ]));
+
+    expect(out[0]!.confidence).toBe(88);
   });
 
   it("is deterministic when rows tie on everything, so the board does not flip between loads", () => {

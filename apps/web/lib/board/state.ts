@@ -1,5 +1,6 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
+import { collapseGameRowsToFixtures } from "@sports/ingestion-pipeline";
 import type { Entitlements } from "@sports/types";
 import {
   buildBoardHealth,
@@ -99,6 +100,52 @@ export interface BoardStatePayload {
  * exclusive by query (the gated query requires no published pick), so in
  * practice this resolves the scoring/gated overlap the fallback path creates.
  */
+/**
+ * How long after kickoff a game may still be counted as in progress.
+ *
+ * The scoring lane selects games that have STARTED and are not yet FINAL, but
+ * a `status` of SCHEDULED outlives the game whenever result ingestion or
+ * settlement fails. Without a lower bound those stale rows are eligible
+ * forever and surface as SCORING_NOW on quiet slates (Devin Review, #717).
+ * Eight hours covers the longest real game with margin — MLB's longest run to
+ * about five — so anything older is a row that never got resolved, not a game
+ * still being played.
+ *
+ * This bound applies to SCHEDULED rows only. See LIVE_ACTIVE_WINDOW_MS.
+ */
+const SCORING_ACTIVE_WINDOW_MS = 8 * 60 * 60 * 1000;
+
+/**
+ * The same staleness bound for rows the ingestion layer has marked LIVE.
+ *
+ * SCHEDULED past its kickoff is AMBIGUOUS — it means either "started" or "the
+ * row was never updated" — which is why it needs the tight eight-hour bound.
+ * LIVE is not ambiguous: it is a positive assertion that the game is in
+ * progress, and applying the eight-hour bound to it silently DROPPED a
+ * genuinely long or delayed game from the board entirely, since the gated lane
+ * starts at `gt: now` and would not take it either (Devin Review, #719). A
+ * rain-delayed MLB game or a lightning-suspended football game runs well past
+ * eight hours.
+ *
+ * A bound is still needed, because a LIVE row also outlives the game when the
+ * transition to FINAL fails. Twenty-four hours is the point past which the
+ * assertion cannot be true of a single game session — a game suspended and
+ * resumed the next day is settlement's problem, not the board's.
+ */
+const LIVE_ACTIVE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Fallback-lane bounds (C-171). The SCAN limits are generous because they bound
+ * rows read; the LANE limits are the numbers a viewer sees and are unchanged
+ * from the caps they replace. Splitting them is the whole fix: the table holds
+ * about 2.5 rows per real fixture with none tombstoned, so a cap applied before
+ * the collapse showed a contest twice AND spent the lane on duplicates.
+ */
+const SCORING_FALLBACK_SCAN_LIMIT = 40;
+const SCORING_LANE_LIMIT = 8;
+const GATED_FALLBACK_SCAN_LIMIT = 60;
+const GATED_LANE_LIMIT = 12;
+
 const LANE_RANK: Record<BoardStateRow["status"], number> = {
   PUBLISHED_TODAY: 0,
   SCORING_NOW: 1,
@@ -160,13 +207,40 @@ export function boardDedupeKey(gameId: string, pickType: string | null | undefin
 }
 
 function outranks(candidate: BoardStateRow, held: BoardStateRow): boolean {
+  // A PUBLISHED row is a FACT, not an evaluation, so it wins outright.
+  //
+  // A published pick either exists or it does not; nothing the gate decides
+  // afterwards makes it stop existing. Letting a newer GATED_TODAY row displace
+  // it would tell a subscriber "we passed on this" about a fixture they can see
+  // a live pick for, which is the same false label C-136 and C-141 are about.
+  const candidatePublished = candidate.status === "PUBLISHED_TODAY";
+  const heldPublished = held.status === "PUBLISHED_TODAY";
+  if (candidatePublished !== heldPublished) return candidatePublished;
+
+  // Between the two EVALUATION lanes, newest wins - lane rank does not.
+  //
+  // SCORING_NOW ranks above GATED_TODAY for display ordering, and comparing that
+  // rank first meant an OLDER "scoring" decision beat a NEWER "gated" one on the
+  // same fixture, so the board showed a state the model had already moved on
+  // from (CodeRabbit, #719). Lane rank survives only as the tie-break for two
+  // rows evaluated at the same instant.
+  //
+  // Note this is narrower than the reviewer's suggestion of comparing timestamps
+  // before lane rank unconditionally: that ordering would let a newer GATED row
+  // displace an older PUBLISHED one, which is the bug the block above prevents.
+  if (candidate.updatedAt !== held.updatedAt) return candidate.updatedAt > held.updatedAt;
   const laneDelta = LANE_RANK[candidate.status] - LANE_RANK[held.status];
   if (laneDelta !== 0) return laneDelta < 0;
+  // GateDecision rows are repeated evaluations of the same game over time, and
+  // confidence can legitimately FALL between them as the line moves. Ranking on
+  // confidence first meant an older, stronger reading beat the newer downgrade,
+  // so a subscriber was shown a number the model no longer stood behind
+  // (Devin Review, #717). Confidence and edge stay as tie-breakers for rows
+  // evaluated at the same instant.
   const conf = (candidate.confidence ?? -1) - (held.confidence ?? -1);
   if (conf !== 0) return conf > 0;
   const edge = (candidate.edgeIndex ?? -1) - (held.edgeIndex ?? -1);
   if (edge !== 0) return edge > 0;
-  if (candidate.updatedAt !== held.updatedAt) return candidate.updatedAt > held.updatedAt;
   return candidate.id < held.id;
 }
 
@@ -401,7 +475,27 @@ async function loadBoardStateInner(
         game: { mergedIntoGameId: null },
       },
       include: {
-        game: { include: { sport: { select: { name: true } } } },
+        game: {
+          include: {
+            sport: { select: { name: true } },
+            // EXISTENCE PROBE FOR A LIVE PUBLISHED PICK, and it is the sibling
+            // of a filter passes.ts has had all along (`game.picks.none` on its
+            // gated query, line ~159). This lane could only learn that a
+            // fixture was published from a PUBLISHED GateDecision inside
+            // TODAY's window, so a pick published yesterday and still live
+            // today - or one whose decision fell outside this query at all -
+            // left the fixture looking un-published, and a GATED row for it
+            // rendered as "we passed on this" while a subscriber could see the
+            // pick (Devin Review, #719, round 38).
+            //
+            // `take: 1` makes this a boolean, not a list: the id is never read
+            // and no cap can truncate an answer that only has to be
+            // present-or-absent. It cannot be a `where` on the query itself,
+            // because that would also exclude the PUBLISHED decisions this
+            // lane exists to show.
+            picks: { where: publishedPickRelation, select: { id: true }, take: 1 },
+          },
+        },
         pick: true,
       },
       orderBy: { evaluatedAt: "desc" },
@@ -415,8 +509,48 @@ async function loadBoardStateInner(
       take: 500,
     });
 
-    if (decisions.length > 0) {
-      const decisionEntries = decisions.map((decision): DedupeEntry => ({
+    // A PUBLISHED decision is only a published pick while its pick IS STILL
+    // PUBLISHED.
+    //
+    // GateDecision records what we decided at a moment in time; Pick.isPublished
+    // records what is live now. Nothing kept them in step, so a withdrawn pick
+    // kept its PUBLISHED_TODAY row AND kept suppressing that fixture's gated row
+    // (Devin Review, #719). Measured on production 2026-09-07: 84 PUBLISHED
+    // decisions already point at picks with isPublished=false, so this is a live
+    // defect, not a forward risk - and the corrupted-pick remediation
+    // (scripts/ops/unpublish-corrupted-picks.ts) withdraws 586 more, every one of
+    // which would have stayed on the board looking published. A remediation the
+    // product surface ignores is not a remediation.
+    //
+    // Withdrawn rows are DROPPED rather than relabelled. There is no honest lane
+    // for them: GATED_TODAY would claim we evaluated and passed, which is false -
+    // we published and then withdrew - and a published decision carries no
+    // `reason` to show. Dropping also leaves the fixture free to be picked up by
+    // the fallback lanes on their own predicates.
+    //
+    // Fail closed when the link is absent. Measured on the same read, all 811
+    // PUBLISHED decisions carry a resolvable pick row and all 356 GATED ones
+    // carry none, so the null branch costs nothing today; it is here so a broken
+    // reference can never render as a published pick that does not exist.
+    const displayableDecisions = decisions.filter(
+      (decision) => decision.status !== "PUBLISHED" || decision.pick?.isPublished === true,
+    );
+
+    // Withdrawn publications, newest per fixture. Computed OUTSIDE the decision
+    // branch because both paths need it: the branch orders gated rows against it
+    // (C-149), and the FALLBACK lane below must not describe one of these
+    // fixtures as unevaluated (C-175).
+    const newestWithdrawnPublishedAt = new Map<string, number>();
+    for (const decision of decisions) {
+      if (decision.status !== "PUBLISHED") continue;
+      if (decision.pick?.isPublished === true) continue;
+      const at = decision.evaluatedAt.getTime();
+      const seen = newestWithdrawnPublishedAt.get(decision.gameId);
+      if (seen === undefined || at > seen) newestWithdrawnPublishedAt.set(decision.gameId, at);
+    }
+
+    if (displayableDecisions.length > 0) {
+      const decisionEntries = displayableDecisions.map((decision): DedupeEntry => ({
         // Key built beside the row it belongs to. A parallel-index lookup
         // into `decisions` would break silently the day anyone filters this
         // list, and the failure would be a silently merged pick.
@@ -446,36 +580,124 @@ async function loadBoardStateInner(
       // openPicks/gatedToday/sportsWatched describe the rows a viewer is
       // actually shown. Deduping after the counts are taken would leave the
       // board's own numbers disagreeing with its own rows (C-117).
-      const dedupedDecisionRows = dedupeBoardRows(decisionEntries);
+      // Same published-suppression the fallback path applies, and it belongs
+      // here too: GateDecision rows are historical and the query does not make
+      // PUBLISHED and GATED mutually exclusive, so one game can carry both. A
+      // published decision keys on its real pickType and a gated one on
+      // NO_PICK, so their keys never collide and the collapse cannot pair them
+      // — the board showed a published row and a "we passed on this" row for
+      // the same fixture. Multiple genuine published markets on one game are
+      // preserved; only the generic rows are dropped (Devin Review, #717).
+      // SUPPRESSION IS NOT THE SAME QUESTION AS DISPLAY, AND A LIVE PICK IS NOT
+      // AN EVALUATION.
+      //
+      // Two different rules, for the same reason `outranks` treats a published
+      // row as a fact rather than a reading:
+      //
+      //   LIVE publication  - the pick EXISTS right now. It suppresses every
+      //                       generic row for that fixture unconditionally,
+      //                       whatever was evaluated afterwards, because
+      //                       "we passed on this" is false while a subscriber
+      //                       can see the pick (C-136, C-141).
+      //   WITHDRAWN one     - there is no live fact left, only history, so
+      //                       chronology decides. It still resolves order even
+      //                       though it cannot be shown: an OLDER gated
+      //                       evaluation must not resurface as the fixture's
+      //                       current state, because we evaluated, published and
+      //                       withdrew, and reverting to an earlier "we passed"
+      //                       misrepresents that sequence (Devin Review, #719).
+      //                       A genuinely NEWER gated evaluation still displays.
+      //
+      // KNOWN LIMITATION, and it is C-158's missing column showing a second
+      // face (Devin Review, #719, round 37). The watermark is the
+      // PUBLICATION's evaluatedAt, because that is the only timestamp either
+      // board lane has. It is not the WITHDRAWAL's. So "published at T1,
+      // evaluated gated at T2, withdrawn at T3" is indistinguishable in the
+      // data from "published at T1, withdrawn at T2, evaluated gated at T3",
+      // and only the second is honestly a pass. In the first, the T2 gated row
+      // survives this rule and displays as the fixture's current state even
+      // though a published pick was live at the moment it was evaluated.
+      //
+      // It cannot be fixed here: Pick.isPublished is a bare Boolean
+      // (schema.prisma:550) with nowhere to record WHEN it flipped, and the
+      // schema and migrations are frozen for agents by AGENTS.md law 2. So
+      // C-158's suggested shape needs a TIMESTAMP (`unpublishedAt`) and not
+      // only an `unpublishedReason`.
+      //
+      // The one fix available without that column - suppress every gated row
+      // for any withdrawn fixture - is worse, and that is a judgement rather
+      // than a measurement: it silences the board on games we have an honest
+      // current answer for, which is exactly what C-149 was written to stop.
+      // Bounded and named beats broad and quiet. Pinned by a test that says in
+      // its own body that it should be REPLACED when the column lands.
+      const livePublishedGameIds = new Set([
+        ...decisionEntries
+          .filter((entry) => entry.row.status === "PUBLISHED_TODAY")
+          .map((entry) => entry.row.gameId),
+        // The probe above, unioned in. A fixture is suppressed because a pick
+        // is LIVE, which is a fact about Pick.isPublished now - not about
+        // whether this query happened to return the decision that published it.
+        ...decisions.filter((d) => d.game.picks.length > 0).map((d) => d.gameId),
+      ]);
+      const supersededByPublication = (entry: DedupeEntry): boolean => {
+        if (livePublishedGameIds.has(entry.row.gameId)) return true;
+        const withdrawnAt = newestWithdrawnPublishedAt.get(entry.row.gameId);
+        if (withdrawnAt === undefined) return false;
+        return Date.parse(entry.row.updatedAt) <= withdrawnAt;
+      };
+      const dedupedDecisionRows = dedupeBoardRows(
+        decisionEntries.filter(
+          (entry) => entry.row.status === "PUBLISHED_TODAY" || !supersededByPublication(entry),
+        ),
+      );
       const scoringRows = dedupedDecisionRows.filter((row) => row.status === "SCORING_NOW");
       const publishedRows = dedupedDecisionRows.filter((row) => row.status === "PUBLISHED_TODAY");
       const gatedRows = dedupedDecisionRows.filter((row) => row.status === "GATED_TODAY");
 
-      const modelVersion = decisions[0]?.modelVersion ?? MODEL_VERSION;
-      return {
-        data: {
-          sportsWatched: new Set(dedupedDecisionRows.map((row) => row.sport)).size,
-          booksPolled: Math.max(0, ...decisions.map((decision) => decision.game.bookmakerCoverageMax)),
-          openPicks: publishedRows.length,
-          gatedToday: gatedRows.length,
-          lastRefresh: now.toISOString(),
-          modelVersion,
+      // RETURN ON ROWS, NOT ON CANDIDATES (Devin Review, #719).
+      //
+      // This branch is entered when any decision is DISPLAYABLE, but the
+      // chronology rule above can then supersede every one of them: a fixture
+      // whose only surviving row is a gated evaluation OLDER than a withdrawn
+      // publication drops out here by design. Returning at that point handed
+      // the caller a board with three empty lanes and skipped the fallback
+      // pick and game queries entirely, so one withdrawal could blank the
+      // WHOLE board - including live published picks on other fixtures that
+      // the fallback lane would have found. The C-149 comment already said the
+      // fixture "drops out of the decision path entirely and the fallback
+      // lanes judge it on their own predicates"; the code did not do that, and
+      // the test that pins the rule stubbed both fallback queries empty, so it
+      // could not tell an empty board from a fallback that never ran.
+      //
+      // The chronology rule is unchanged: superseded rows do not display
+      // either way. They simply stop being a reason to answer at all.
+      if (dedupedDecisionRows.length > 0) {
+        const modelVersion = displayableDecisions[0]?.modelVersion ?? MODEL_VERSION;
+        return {
+          data: {
+            sportsWatched: new Set(dedupedDecisionRows.map((row) => row.sport)).size,
+            booksPolled: Math.max(0, ...displayableDecisions.map((decision) => decision.game.bookmakerCoverageMax)),
+            openPicks: publishedRows.length,
+            gatedToday: gatedRows.length,
+            lastRefresh: now.toISOString(),
+            modelVersion,
+            bootstrap: gates.isBootstrapMode,
+            scoringNow: scoringRows,
+            publishedToday: publishedRows,
+            gatedTodayRows: gatedRows,
+          },
+          meta: buildBoardMeta({
+            modelVersion,
+            now,
+            rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
+          liveBoardOn: liveBoardOn(),
           bootstrap: gates.isBootstrapMode,
-          scoringNow: scoringRows,
-          publishedToday: publishedRows,
-          gatedTodayRows: gatedRows,
-        },
-        meta: buildBoardMeta({
-          modelVersion,
-          now,
-          rows: { gatedTodayRows: gatedRows, publishedToday: publishedRows, scoringNow: scoringRows },
-        liveBoardOn: liveBoardOn(),
-        bootstrap: gates.isBootstrapMode,
-      }),
-      };
+        }),
+        };
+      }
     }
 
-    const [publishedTodayRaw, scoringNow, gatedToday] = await Promise.all([
+    const [publishedTodayRaw, scoringNowRaw, gatedTodayRaw] = await Promise.all([
       db.pick.findMany({
         where: {
           isPublished: true,
@@ -503,30 +725,107 @@ async function loadBoardStateInner(
           // GameStatus carries a real LIVE value, so the truthful set is games
           // that have started and are not yet FINAL. A game that has not kicked
           // off belongs to the gated lane, which describes it honestly.
-          commenceTime: { lte: now },
-          status: { in: ["LIVE", "SCHEDULED"] },
+          // STARTED, and started recently enough to still be in progress.
+          //
+          // `lte: now` alone had no lower bound, so any historical row still
+          // marked SCHEDULED — a game whose result ingestion or settlement
+          // failed — stayed eligible forever and would surface as SCORING_NOW
+          // on a quiet slate, indefinitely (Devin Review, #717). A game cannot
+          // still be playing eight hours after first pitch; the longest MLB
+          // games run to about five.
+          //
+          // The bound is PER STATUS, not shared. One eight-hour window across
+          // both values dropped a LIVE game older than eight hours off the
+          // board completely — the gated lane starts at `gt: now` and does not
+          // take it either — so a rain delay made an in-progress game vanish
+          // rather than mislabel it (Devin Review, #719). SCHEDULED needs the
+          // tight bound because it is ambiguous past kickoff; LIVE is a
+          // positive assertion and gets the wider one.
+          OR: [
+            {
+              status: "LIVE",
+              commenceTime: { lte: now, gte: new Date(now.getTime() - LIVE_ACTIVE_WINDOW_MS) },
+            },
+            {
+              status: "SCHEDULED",
+              commenceTime: {
+                lte: now,
+                gte: new Date(now.getTime() - SCORING_ACTIVE_WINDOW_MS),
+              },
+            },
+          ],
           // Same canonicity marker as the decision query. Two rows for one
           // fixture carry DIFFERENT ids, so the collapse below cannot pair
           // them; only excluding the tombstoned row can (Devin Review, #717).
           mergedIntoGameId: null,
         },
-        include: { sport: { select: { name: true } } },
+        // `key` as well as `name`: the per-fixture collapse below picks its twin
+        // window from the sport key, and baseball's is 2h so a doubleheader
+        // stays two contests. Omitting it silently takes the 18h default.
+        include: {
+          sport: { select: { name: true, key: true } },
+          _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
+        },
         // Most recently started first: a live game is more useful at the top of
         // the lane than one that began hours ago.
         orderBy: { commenceTime: "desc" },
-        take: 8,
+        take: SCORING_FALLBACK_SCAN_LIMIT,
       }),
       db.game.findMany({
         where: {
-          commenceTime: { gte: start, lt: end },
+          // NOT started. The two fallback lanes are now disjoint BY PREDICATE
+          // rather than by a precedence rule applied afterwards.
+          //
+          // This previously read `gte: start`, the top of today's slate, so a
+          // game that had already kicked off satisfied BOTH lanes. The
+          // suppression that resolved the overlap dropped the scoring row, so a
+          // started game kept reading GATED_TODAY after kickoff — the exact
+          // false label the scoring-query fix was meant to remove, inverted
+          // (Devin Review, #717). Two queries that cannot both match a game are
+          // a stronger guarantee than any tie-break between them.
+          // STRICT lower bound. Scoring owns the exact instant via `lte: now`,
+          // so `gte` here would put a game kicking off at exactly `now` in BOTH
+          // lanes, which is the overlap this split exists to remove
+          // (CodeRabbit, #719). Inclusive-inclusive is not disjoint.
+          commenceTime: { gt: now, lt: end },
           picks: { none: publishedPickRelation },
           mergedIntoGameId: null,
+          // A FIXTURE WE PUBLISHED AND WITHDREW IS NOT "NOT EVALUATED" (C-175,
+          // Devin Review, #719). This lane's `gateReason` is
+          // `unevaluatedPassReason`, and the relation above only excludes a
+          // LIVE published pick - so once a pick is withdrawn its fixture
+          // matched again and the board said we had not looked at a game we
+          // published and then withdrew.
+          //
+          // Silence is the honest option among the ones available here.
+          // "We passed" and "not evaluated" both assert something untrue, and a
+          // third public state ("published, then withdrawn") is copy nobody has
+          // approved - and could not be written accurately anyway while
+          // Pick.isPublished carries no withdrawal timestamp (C-158, C-167).
+          id: { notIn: [...newestWithdrawnPublishedAt.keys()] },
         },
-        include: { sport: { select: { name: true } } },
+        include: {
+          sport: { select: { name: true, key: true } },
+          _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
+        },
         orderBy: { commenceTime: "asc" },
-        take: 12,
+        take: GATED_FALLBACK_SCAN_LIMIT,
       }),
     ]);
+
+  // ONE ROW PER FIXTURE IN BOTH FALLBACK LANES (C-171).
+  //
+  // The comment on the scoring query's `mergedIntoGameId` filter says it
+  // straight: "Two rows for one fixture carry DIFFERENT ids, so the collapse
+  // below cannot pair them; only excluding the tombstoned row can." That was
+  // right, and the merge it depends on has never run - zero rows are tombstoned
+  // in any sport - so the board could and did show one contest twice, with the
+  // duplicates eating the lane's slots.
+  //
+  // The cap is therefore a SCAN bound now and the display cap comes after the
+  // collapse: the fifth time tonight the same repair has been the right one.
+  const scoringNow = collapseGameRowsToFixtures(scoringNowRaw).slice(0, SCORING_LANE_LIMIT);
+  const gatedToday = collapseGameRowsToFixtures(gatedTodayRaw).slice(0, GATED_LANE_LIMIT);
 
   const publishedToday = [...publishedTodayRaw]
     .sort(comparePicksByRanking)
@@ -614,11 +913,18 @@ async function loadBoardStateInner(
     // gated row for the same fixture, whatever LANE_RANK says. A game that has
     // not started is gated, not being scored, and telling a viewer otherwise is
     // the kind of claim this product does not make.
+    // The scoring and gated queries are now disjoint by predicate — started
+    // versus not started — so there is nothing left to arbitrate between them,
+    // and the gated-versus-scoring half of this suppression has been REMOVED.
+    // It was not merely redundant: with the lanes fixed it would have dropped
+    // the scoring row of a started game and left it labelled GATED_TODAY after
+    // kickoff (Devin Review, #717).
+    //
+    // The published half stays. Published rows key on the real pickType and the
+    // generic lanes on NO_PICK, so their keys never collide and the collapse
+    // cannot pair them; only excluding the fixture can.
     const publishedGameIds = new Set(publishedEntries.map((e) => e.row.gameId));
-    const gatedGameIds = new Set(gatedRows.map((row) => row.gameId));
-    const scoringRowsScoped = scoringRows.filter(
-      (row) => !publishedGameIds.has(row.gameId) && !gatedGameIds.has(row.gameId),
-    );
+    const scoringRowsScoped = scoringRows.filter((row) => !publishedGameIds.has(row.gameId));
     const gatedRowsScoped = gatedRows.filter((row) => !publishedGameIds.has(row.gameId));
 
     const dedupedFallback = dedupeBoardRows([

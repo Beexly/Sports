@@ -8,7 +8,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
-import { ProjectionsBadge } from "@/components/integrations/projections-badge";
+import { ProjectionsBadge, type ProjectionsPool } from "@/components/integrations/projections-badge";
 
 /**
  * Semantic accent names → design-token classes/vars (styles/design-tokens.css).
@@ -22,7 +22,7 @@ const ACCENTS: Record<string, { eyebrowClass: string; cssColor: string }> = {
 };
 
 export function FantasyShell({
-  eyebrow, title, intro, accent = "ultraviolet", children, note, attribution, wide, projectionsBadge = true,
+  eyebrow, title, intro, accent = "ultraviolet", children, note, attribution, wide, projectionsBadge = true, projectionsPool = "illustrative",
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -36,6 +36,13 @@ export function FantasyShell({
   wide?: boolean;
   /** Show the honest live/illustrative projections status in the hero (default on). */
   projectionsBadge?: boolean;
+  /**
+   * Which player rows this page renders (C-173). DEFAULTS TO "illustrative" on
+   * purpose: most of the fantasy suite draws the fictional pool from
+   * lib/fantasy/players.ts, and a page that has real players has to say so
+   * rather than inherit the claim by omission.
+   */
+  projectionsPool?: ProjectionsPool;
 }) {
   const known = ACCENTS[accent];
   const accentColor = known?.cssColor ?? accent;
@@ -71,7 +78,7 @@ export function FantasyShell({
             {projectionsBadge && (
               <Reveal delay={230}>
                 <div className="mt-6">
-                  <ProjectionsBadge />
+                  <ProjectionsBadge pool={projectionsPool} />
                 </div>
               </Reveal>
             )}

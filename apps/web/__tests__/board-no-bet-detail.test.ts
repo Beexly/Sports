@@ -19,7 +19,7 @@ const findMany = vi.fn();
 
 vi.mock("@sports/db", () => ({
   db: {
-    gateDecision: { findMany: (...a: unknown[]) => findMany(...a) },
+    gateDecision: { findMany: (...a: unknown[]) => findMany(...a), /* groupBy: the pass lane's withdrawal watermark (C-161). A db mock has to carry every method the code calls. */ groupBy: async () => [] },
     game: { findMany: async () => [] },
   },
   isStubMode: () => false,

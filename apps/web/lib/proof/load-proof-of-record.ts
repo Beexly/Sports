@@ -257,18 +257,28 @@ export async function loadProofOfRecord(
     // so compare the model's confidence to the fair prob of the SIDE actually picked.
     // SPREAD/TOTAL picks have no like-for-like H2H probability, so leave it null rather
     // than print a number that mixes two unrelated quantities.
-    let modelVsMarketPp: number | null = null;
-    if (consensus !== null && pick.pickType === "MONEYLINE") {
-      const fairProb =
-        pick.selection === game?.homeTeamName
-          ? consensus.fairHomeProb
-          : pick.selection === game?.awayTeamName
-            ? consensus.fairAwayProb
-            : null;
-      if (fairProb !== null) {
-        modelVsMarketPp = Number(((pick.confidence / 100 - fairProb) * 100).toFixed(1));
-      }
-    }
+    // ALWAYS NULL, and the reason is the paragraph above applied honestly (C-88).
+    //
+    // This used to print the gap between the market's fair probability and the
+    // Edge Index scaled to a 0-1 range, as "model vs market Xpp". The first is a
+    // probability. The second is NOT one, at any scale.
+    // This repository says so in its own calibration module - "confidence/100 is
+    // never scored" for the floors - and the home page says so to customers in
+    // as many words: "Not a probability the pick wins". Differencing them and
+    // labelling the result percentage points mixes two unrelated quantities and
+    // prints it on a PUBLIC PROOF PAGE, in green or red, as if it were evidence
+    // about our edge.
+    //
+    // The comment directly above already forbids exactly this for SPREAD and
+    // TOTAL ("leave it null rather than print a number that mixes two unrelated
+    // quantities"). The rule was right; it simply was not applied to MONEYLINE.
+    //
+    // Publishing nothing is the honest state until a real model probability is
+    // wired through here (`rankingP` is the candidate, and it is not in this
+    // query's select today). The field and its render path are kept because both
+    // are already null-safe, so restoring the annotation later is a one-line
+    // change rather than a re-design.
+    const modelVsMarketPp: number | null = null;
 
     pageRows.push({
       id: pick.id,

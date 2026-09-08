@@ -105,6 +105,9 @@ export async function GET(req: Request): Promise<NextResponse> {
     claimPosture: "experimental_research_grade_not_verified_roi",
     data,
     disclaimer:
-      "Experimental probabilities for research/integration. rankingP is a model ranking key when present — not a verified edge product. Eligibility may be RED.",
+      "Experimental probabilities for research/integration. rankingP is a model ranking key when present — not a verified edge product. Eligibility may be RED. " +
+      "pModel is the 0-100 Edge Index divided by 100. It is a CONFIDENCE SCORE, not a calibrated win probability, and this service never scores it as one: " +
+      "the calibration floors are computed on market-anchored probabilities only. Use marketFairProb for a market probability and rankingP for the model's ranking key. " +
+      "Whether pModel should carry a real probability instead of the confidence score is an open product decision (ledger C-88); until it is taken, this note is the contract.",
   });
 }

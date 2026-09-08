@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: {
-    gateDecision: { findMany: mocks.gateDecisionFindMany },
+    gateDecision: { findMany: mocks.gateDecisionFindMany, /* groupBy: the pass lane's withdrawal watermark (C-161). A db mock has to carry every method the code calls. */ groupBy: vi.fn(async () => []) },
     pick: { findMany: mocks.pickFindMany },
     game: { findMany: mocks.gameFindMany },
   },
@@ -43,8 +43,28 @@ function game(overrides: Record<string, unknown> = {}): Record<string, unknown> 
     currentEdgeIndex: 61,
     bookmakerCoverageMax: 11,
     sport: { name: "MLB" },
+    // The live-published-pick existence probe (Devin Review, #719, round 38).
+    // Empty by default: most fixtures here carry no live pick, and a test that
+    // wants one overrides this with a single row.
+    picks: [],
     ...overrides,
   };
+}
+
+type ScoringBranch = {
+  status: string;
+  commenceTime: { lte: Date; gte: Date };
+};
+
+/**
+ * Pull one status branch out of the scoring lane's OR. Throws rather than
+ * returning undefined so a missing branch fails as a missing branch, not as an
+ * unrelated property access on undefined.
+ */
+function branchFor(branches: readonly ScoringBranch[], status: string): ScoringBranch {
+  const found = branches.find((b) => b.status === status);
+  if (found === undefined) throw new Error(`scoring lane has no ${status} branch`);
+  return found;
 }
 
 describe("board loaders with persisted gate decisions", () => {
@@ -72,7 +92,7 @@ describe("board loaders with persisted gate decisions", () => {
         evaluatedAt,
         modelVersion: "v5.1.0",
         game: game(),
-        pick: { selection: "BOS -1.5", confidence: 74 },
+        pick: { selection: "BOS -1.5", confidence: 74, isPublished: true },
       },
       {
         id: "gd_gated",
@@ -126,7 +146,7 @@ describe("board loaders with persisted gate decisions", () => {
         evaluatedAt,
         modelVersion: "v5.1.0",
         game: game({ awayTeamName: "TEX", homeTeamName: "STL" }),
-        pick: { selection: "OVER 7.5", confidence: 74 },
+        pick: { selection: "OVER 7.5", confidence: 74, isPublished: true },
       },
     ]);
 
@@ -305,45 +325,181 @@ describe("board loaders with persisted gate decisions", () => {
       ...game(),
     };
 
-    it("labels a not-yet-started game GATED_TODAY, never SCORING_NOW", async () => {
-      // The fallback's two game queries overlap by construction: the same mock
-      // serves both, exactly as one fixture satisfying both would in production.
-      // The scoring query selects `commenceTime >= now AND status SCHEDULED`, so
-      // every row it returns is a game that has NOT started. Lane precedence
-      // ranks SCORING_NOW above GATED_TODAY, which would announce a game as
-      // being scored before it kicks off (Devin Review, #717).
-      mocks.gateDecisionFindMany.mockResolvedValue([]);
-      mocks.pickFindMany.mockResolvedValue([]);
-      mocks.gameFindMany.mockResolvedValue([futureGame]);
+    it("drops a gated DECISION row for a game that also has a published decision", async () => {
+      // The primary GateDecision path had the same gap the fallback did, and
+      // the fallback fix did not reach it. GateDecision rows are historical and
+      // the query does not make PUBLISHED and GATED mutually exclusive, so one
+      // game carries both. The published row keys on its real pickType and the
+      // gated one on NO_PICK, so their keys never collide and the collapse
+      // cannot pair them: the board showed a published pick AND a "we passed on
+      // this" row for the same fixture (Devin Review, #717).
+      mocks.gateDecisionFindMany.mockResolvedValue([
+        {
+          id: "gd_pub",
+          gameId: "game_both",
+          status: "PUBLISHED",
+          reason: "Cleared publish threshold.",
+          edgeIndex: 72,
+          confidence: 88,
+          evaluatedAt,
+          modelVersion: "v5.1.0",
+          game: game(),
+          pick: { selection: "BOS -1.5", confidence: 88, pickType: "SPREAD", isPublished: true },
+        },
+        {
+          id: "gd_gate",
+          gameId: "game_both",
+          status: "GATED",
+          reason: "Market depth below publish threshold.",
+          edgeIndex: 40,
+          confidence: null,
+          evaluatedAt: new Date("2026-05-22T15:45:00.000Z"),
+          modelVersion: "v5.1.0",
+          game: game(),
+          pick: null,
+        },
+      ]);
 
-      const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+      const result = await loadBoardState(new Date("2026-05-22T18:00:00.000Z"), proViewer);
 
-      const rows = [...result.data.scoringNow, ...result.data.gatedTodayRows];
-      expect(rows.filter((r) => r.gameId === "game_overlap")).toHaveLength(1);
-      expect(result.data.scoringNow).toHaveLength(0);
-      expect(result.data.gatedTodayRows[0]?.status).toBe("GATED_TODAY");
+      expect(result.data.publishedToday).toHaveLength(1);
+      expect(result.data.gatedTodayRows).toHaveLength(0);
+      // Counters describe the rows actually shown.
+      expect(result.data.openPicks).toBe(1);
+      expect(result.data.gatedToday).toBe(0);
     });
 
-    it("asks the database only for games that have STARTED, so SCORING_NOW is truthful at the source", async () => {
-      // The suppression above is a backstop, not the fix. It only removes a
-      // scoring row when a gated row shares the id, and the gated query covers
-      // today's window — so a game further out had no gated twin and stayed
-      // labelled SCORING_NOW. The query predicate is what makes the label
-      // honest for every future game, so pin it directly (Devin Review, #717).
+    it("makes the scoring and gated lanes DISJOINT at the query, so no game can be in both", async () => {
+      // CORRECTION. Two earlier tests here asserted post-filter behaviour: that
+      // a game satisfying both lanes ends up gated. That pinned a workaround.
+      // Suppressing the scoring row was right while the scoring query returned
+      // only FUTURE games, and became wrong the moment it returned started
+      // ones — it then left a started game reading GATED_TODAY after kickoff
+      // (Devin Review, #717). The real fix is that the two predicates cannot
+      // both match, so there is nothing to arbitrate. That is what to pin.
+      const now = new Date("2026-05-22T16:00:00.000Z");
       mocks.gateDecisionFindMany.mockResolvedValue([]);
       mocks.pickFindMany.mockResolvedValue([]);
       mocks.gameFindMany.mockResolvedValue([]);
 
-      await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+      await loadBoardState(now, proViewer);
 
-      const scoringWhere = (mocks.gameFindMany.mock.calls[0]?.[0] as {
-        where: { commenceTime?: Record<string, unknown>; status?: unknown };
-      }).where;
-      // Started, not upcoming.
-      expect(scoringWhere.commenceTime).toHaveProperty("lte");
-      expect(scoringWhere.commenceTime).not.toHaveProperty("gte");
-      // And not yet FINAL.
-      expect(scoringWhere.status).toEqual({ in: ["LIVE", "SCHEDULED"] });
+      const whereOf = (i: number) =>
+        (mocks.gameFindMany.mock.calls[i]?.[0] as {
+          where: {
+            commenceTime?: Record<string, unknown>;
+            status?: unknown;
+            OR?: ScoringBranch[];
+          };
+        }).where;
+
+      const scoring = whereOf(0);
+      const gated = whereOf(1);
+
+      // SCORING: started, and not so long ago that it cannot still be playing.
+      // The lower bound is what stops a stale row from a failed settlement
+      // surfacing as "scoring" forever on a quiet slate — but it is PER
+      // STATUS, because one shared bound dropped a long LIVE game off the
+      // board entirely (Devin Review, #719).
+      const branches = scoring.OR ?? [];
+      expect(branches.map((b) => b.status).sort()).toEqual(["LIVE", "SCHEDULED"]);
+      const live = branchFor(branches, "LIVE");
+      const scheduled = branchFor(branches, "SCHEDULED");
+
+      // Both halves end at `now`: the scoring lane is started games only.
+      expect(live.commenceTime.lte.getTime()).toBe(now.getTime());
+      expect(scheduled.commenceTime.lte.getTime()).toBe(now.getTime());
+
+      // SCHEDULED past kickoff is ambiguous, so it keeps the tight bound.
+      expect(now.getTime() - scheduled.commenceTime.gte.getTime()).toBe(8 * 60 * 60 * 1000);
+      // LIVE is a positive assertion, so its bound is wider — but it IS
+      // bounded, because a LIVE row also outlives a game whose transition to
+      // FINAL failed.
+      expect(now.getTime() - live.commenceTime.gte.getTime()).toBe(24 * 60 * 60 * 1000);
+      expect(live.commenceTime.gte.getTime()).toBeLessThan(scheduled.commenceTime.gte.getTime());
+
+      const scoringHi = live.commenceTime.lte;
+
+      // GATED: not started. This is the half that makes the lanes disjoint.
+      const gatedLo = (gated.commenceTime as { gt: Date }).gt;
+      expect(gatedLo.getTime()).toBe(now.getTime());
+
+      // The exact instant has ONE owner. Scoring takes it via `lte: now`, so
+      // gated must use a STRICT `gt: now` — inclusive-inclusive would put a
+      // game kicking off at exactly `now` in both lanes, which is the overlap
+      // this split exists to remove (CodeRabbit, #719).
+      expect(gated.commenceTime).toHaveProperty("gt");
+      expect(gated.commenceTime).not.toHaveProperty("gte");
+      expect(scoringHi.getTime()).toBeLessThanOrEqual(gatedLo.getTime());
+    });
+
+    it("keeps a LIVE game in the scoring lane nine hours after kickoff, and still drops a stale SCHEDULED one", async () => {
+      // A shared eight-hour bound across both status values did not MISLABEL a
+      // long or delayed game — it removed it from the board entirely, because
+      // the gated lane starts at `gt: now` and would not take it either. A rain
+      // delay or a lightning suspension runs past eight hours (Devin Review,
+      // #719). The bound still has to exist for both, because either status can
+      // outlive the game when the transition to FINAL fails.
+      const now = new Date("2026-05-22T16:00:00.000Z");
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      mocks.gameFindMany.mockResolvedValue([]);
+
+      await loadBoardState(now, proViewer);
+
+      const branches =
+        ((mocks.gameFindMany.mock.calls[0]?.[0] as { where: { OR?: ScoringBranch[] } }).where
+          .OR ?? []);
+
+      /** Apply the shipped predicate to a candidate row. */
+      const selects = (status: string, hoursAgo: number): boolean => {
+        const commenceTime = new Date(now.getTime() - hoursAgo * 60 * 60 * 1000);
+        return branches.some(
+          (b) =>
+            b.status === status &&
+            commenceTime.getTime() <= b.commenceTime.lte.getTime() &&
+            commenceTime.getTime() >= b.commenceTime.gte.getTime(),
+        );
+      };
+
+      // THE REGRESSION: a delayed game, still in progress, nine hours in.
+      expect(selects("LIVE", 9)).toBe(true);
+      // Unchanged: SCHEDULED past kickoff is ambiguous and keeps the tight
+      // bound, so a row a failed settlement left behind is still excluded.
+      expect(selects("SCHEDULED", 9)).toBe(false);
+      // LIVE is bounded too — a day-old LIVE row is a failed transition, not a
+      // game. Deleting the LIVE lower bound would flip this to true.
+      expect(selects("LIVE", 25)).toBe(false);
+      // Both statuses inside their windows are still selected.
+      expect(selects("LIVE", 2)).toBe(true);
+      expect(selects("SCHEDULED", 2)).toBe(true);
+    });
+
+    it("keeps a started game in the scoring lane instead of reverting it to gated", async () => {
+      // The RED case: a same-day started game with no published pick used to
+      // satisfy both queries, and the suppression dropped its scoring row, so
+      // viewers saw GATED_TODAY after kickoff. With the lanes disjoint the
+      // gated query no longer returns it at all, and the suppression that could
+      // have re-broken this is gone.
+      const startedGame = {
+        id: "game_started",
+        commenceTime: new Date("2026-05-22T15:00:00.000Z"),
+        updatedAt: new Date("2026-05-22T15:30:00.000Z"),
+        dataQualityScore: 80,
+        ...game(),
+      };
+      mocks.gateDecisionFindMany.mockResolvedValue([]);
+      mocks.pickFindMany.mockResolvedValue([]);
+      // Only the scoring query matches it now, so return it for that call only.
+      mocks.gameFindMany
+        .mockResolvedValueOnce([startedGame])
+        .mockResolvedValueOnce([]);
+
+      const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+      expect(result.data.scoringNow).toHaveLength(1);
+      expect(result.data.scoringNow[0]?.status).toBe("SCORING_NOW");
+      expect(result.data.gatedTodayRows).toHaveLength(0);
     });
 
     it("suppresses a generic lane row for a fixture that already has a published pick", async () => {
@@ -397,7 +553,7 @@ describe("board loaders with persisted gate decisions", () => {
           evaluatedAt,
           modelVersion: "v5.1.0",
           game: game(),
-          pick: { selection: "BOS -1.5", confidence: 57 },
+          pick: { selection: "BOS -1.5", confidence: 57, isPublished: true },
         },
         {
           id: "gd_b",
@@ -409,7 +565,7 @@ describe("board loaders with persisted gate decisions", () => {
           evaluatedAt,
           modelVersion: "v5.1.0",
           game: game(),
-          pick: { selection: "BOS -1.5", confidence: 88 },
+          pick: { selection: "BOS -1.5", confidence: 88, isPublished: true },
         },
       ]);
   
@@ -437,5 +593,418 @@ describe("board loaders with persisted gate decisions", () => {
       };
       expect(where.game?.mergedIntoGameId).toBeNull();
     });
+  });
+});
+
+describe("a withdrawn fixture is not described as unevaluated (C-175)", () => {
+  /**
+   * Devin Review, #719. The fallback gated lane's `gateReason` is
+   * `unevaluatedPassReason`, and its relation excludes only a LIVE published
+   * pick - so once a pick was withdrawn, its fixture matched again and the
+   * board said we had not looked at a game we published and then withdrew.
+   *
+   * Silence is the honest option among those available. "We passed" and "not
+   * evaluated" both assert something untrue, and a third public state is copy
+   * nobody has approved - and could not be written accurately anyway while
+   * Pick.isPublished carries no withdrawal timestamp (C-158, C-167).
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("excludes it from the fallback gated query", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      {
+        id: "gd_withdrawn_only",
+        gameId: "game_w",
+        status: "PUBLISHED",
+        reason: null,
+        reasonCode: null,
+        edgeIndex: 61,
+        confidence: 74,
+        modelVersion: "v5.2.7",
+        evaluatedAt,
+        game: game(),
+        pick: { selection: "BOS -1.5", confidence: 74, pickType: "SPREAD", isPublished: false },
+      },
+    ]);
+
+    await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    // The gated fallback is the query with the strict `gt: now` lower bound.
+    const gatedCall = mocks.gameFindMany.mock.calls
+      .map((c) => c?.[0] as { where?: { commenceTime?: { gt?: Date }; id?: { notIn?: string[] } } })
+      .find((c) => c?.where?.commenceTime?.gt !== undefined);
+    expect(gatedCall).toBeDefined();
+    expect(gatedCall?.where?.id?.notIn).toEqual(["game_w"]);
+  });
+});
+
+describe("the fallback lanes show one row per contest (C-171)", () => {
+  /**
+   * The scoring query's own comment said it: "Two rows for one fixture carry
+   * DIFFERENT ids, so the collapse below cannot pair them; only excluding the
+   * tombstoned row can." That was correct, and the merge it depends on has
+   * never run - zero rows are tombstoned in any sport - so the board showed one
+   * contest twice and the duplicates ate the lane's slots.
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.pickFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const fallbackGame = (over: Record<string, unknown>): Record<string, unknown> => ({
+    id: "fg-odds",
+    externalId: "9f2c4d1e8b7a6c5d4e3f2a1b0c9d8e7f",
+    sportId: "sport-mlb",
+    mergedIntoGameId: null,
+    homeTeamName: "New York Yankees",
+    awayTeamName: "Boston Red Sox",
+    commenceTime: new Date("2026-05-22T23:05:00.000Z"),
+    createdAt: new Date("2026-05-01T00:00:00.000Z"),
+    updatedAt: new Date("2026-05-22T15:00:00.000Z"),
+    currentEdgeIndex: 47,
+    status: "SCHEDULED",
+    sport: { name: "MLB", key: "baseball_mlb" },
+    _count: { picks: 0, odds: 4, oddsLineSnapshots: 0 },
+    ...over,
+  });
+
+  it("collapses two rows for one contest into a single gated row", async () => {
+    mocks.gameFindMany.mockImplementation(async (args?: unknown) => {
+      const where = (args as { where?: { commenceTime?: { gt?: Date } } })?.where;
+      // Only the GATED lane (strict `gt: now`) gets rows here; the scoring lane
+      // is left empty so this asserts one lane at a time.
+      if (!where?.commenceTime?.gt) return [];
+      return [
+        fallbackGame({}),
+        fallbackGame({
+          id: "fg-espn",
+          externalId: "espn:mlb:401816839",
+          commenceTime: new Date("2026-05-22T23:10:00.000Z"),
+          createdAt: new Date("2026-05-02T00:00:00.000Z"),
+          _count: { picks: 0, odds: 0, oddsLineSnapshots: 0 },
+        }),
+      ];
+    });
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.gameId)).toEqual(["fg-odds"]);
+  });
+
+  it("does NOT collapse an MLB doubleheader, because the query selects the sport key", async () => {
+    // Two DIFFERENT contests, same teams, same day, four hours apart. The 2h
+    // baseball twin window separates them - but only if the query selected
+    // `sport.key`. Without it the collapse takes the 18h default and eats a
+    // real game, so this is the control for that select.
+    mocks.gameFindMany.mockImplementation(async (args?: unknown) => {
+      const where = (args as { where?: { commenceTime?: { gt?: Date } } })?.where;
+      if (!where?.commenceTime?.gt) return [];
+      return [
+        fallbackGame({ id: "dh-1" }),
+        fallbackGame({
+          id: "dh-2",
+          externalId: "odds-dh-2",
+          commenceTime: new Date("2026-05-23T03:05:00.000Z"),
+        }),
+      ];
+    });
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.gameId)).toEqual(["dh-1", "dh-2"]);
+  });
+
+  it("scans wider than the lane displays", async () => {
+    // Asserted on the query: a cap applied before the collapse would leave the
+    // lane short by however many duplicates fell inside it.
+    mocks.gameFindMany.mockResolvedValue([]);
+    await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    const takes = mocks.gameFindMany.mock.calls.map(
+      (c) => (c?.[0] as { take?: number } | undefined)?.take,
+    );
+    // Two fallback game queries, both scanning above their display caps (8, 12).
+    expect(takes.filter((t): t is number => typeof t === "number").every((t) => t >= 40)).toBe(true);
+  });
+});
+
+describe("a fixture whose live published pick was decided OUTSIDE today's window", () => {
+  /**
+   * REVIEW ROUND 38 (Devin, #719), and it is the sibling-lane defect once more
+   * - this time with the pass lane holding the correct behaviour and this one
+   * missing it. passes.ts has filtered its gated query on
+   * `game.picks.none(isPublished)` since C-153; the state loader learned that a
+   * fixture was published ONLY from a PUBLISHED GateDecision inside today's
+   * `evaluatedAt` window.
+   *
+   * So a pick published yesterday and still live today, on a fixture the engine
+   * re-evaluated and gated this morning, rendered as "we passed on this" in the
+   * gated lane while a subscriber could still see the pick. Suppression is a
+   * question about Pick.isPublished NOW, not about which decision rows this
+   * query happened to return.
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("does not show a GATED row for it", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      {
+        id: "gd_gated_live_elsewhere",
+        gameId: "game_live",
+        status: "GATED",
+        reason: "Fixture reason: edge below threshold",
+        reasonCode: "EDGE_BELOW_THRESHOLD",
+        edgeIndex: 40,
+        confidence: 51,
+        modelVersion: "v5.2.7",
+        evaluatedAt,
+        // The probe finds the live pick even though no PUBLISHED decision for
+        // this fixture is in today's result set.
+        game: game({ picks: [{ id: "pick_live" }] }),
+        pick: null,
+      },
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows).toHaveLength(0);
+  });
+
+  it("asks the database for the probe with the published-pick predicate, capped at one row", async () => {
+    // Asserted on the QUERY. "Is there a live published pick" must be answered
+    // in the database and must be a boolean: a list would reintroduce the
+    // cap-before-collapse defect this file has now produced three times.
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    const include = (mocks.gateDecisionFindMany.mock.calls[0]?.[0] as {
+      include: { game: { include: { picks: { where: Record<string, unknown>; take: number } } } };
+    }).include;
+    const probe = include.game.include.picks;
+    expect(probe.take).toBe(1);
+    expect(probe.where).toMatchObject({ isPublished: true, isBootstrap: false });
+  });
+
+  it("still shows the GATED row when no pick is live", async () => {
+    // The control. A probe that suppressed unconditionally would also pass the
+    // test above, so this pins that the gated lane still does its job.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      {
+        id: "gd_gated_clean",
+        gameId: "game_clean",
+        status: "GATED",
+        reason: "Fixture reason: edge below threshold",
+        reasonCode: "EDGE_BELOW_THRESHOLD",
+        edgeIndex: 40,
+        confidence: 51,
+        modelVersion: "v5.2.7",
+        evaluatedAt,
+        game: game(),
+        pick: null,
+      },
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.id)).toEqual(["gd_gated_clean"]);
+  });
+});
+
+describe("a PUBLISHED decision whose pick has been withdrawn", () => {
+  /**
+   * GateDecision records what we decided at a moment in time; Pick.isPublished
+   * records what is live now. Nothing kept them in step, so a withdrawn pick
+   * kept its PUBLISHED_TODAY row and kept suppressing that fixture's gated row
+   * (Devin Review, #719).
+   *
+   * Measured on production 2026-09-07, read-only: 84 PUBLISHED decisions
+   * already point at picks with isPublished=false, so this was live before the
+   * remediation tool existed - and scripts/ops/unpublish-corrupted-picks.ts
+   * withdraws 586 more. A remediation the product surface ignores is not a
+   * remediation, which is what makes this a launch-sequencing bug and not a
+   * cosmetic one.
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const withdrawn = {
+    id: "gd_withdrawn",
+    gameId: "game_w",
+    status: "PUBLISHED",
+    reason: null,
+    reasonCode: null,
+    edgeIndex: 61,
+    confidence: 74,
+    modelVersion: "v5.2.7",
+    evaluatedAt,
+    game: game(),
+    pick: { selection: "BOS -1.5", confidence: 74, pickType: "SPREAD", isPublished: false },
+  };
+
+  it("does not show it as published", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([withdrawn]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.publishedToday.map((r) => r.id)).not.toContain("gd_withdrawn");
+    expect(result.data.openPicks).toBe(0);
+  });
+
+  const gated = (over: Record<string, unknown> = {}) => ({
+    id: "gd_gated_w",
+    gameId: "game_w",
+    status: "GATED",
+    reason: "Fixture reason: edge below threshold",
+    reasonCode: "EDGE_BELOW_THRESHOLD",
+    edgeIndex: 40,
+    confidence: 51,
+    modelVersion: "v5.2.7",
+    evaluatedAt,
+    game: game(),
+    pick: null,
+    ...over,
+  });
+
+  it("lets a NEWER gated evaluation display once the publication is withdrawn", async () => {
+    // While the withdrawn row counted as published it hid the honest gated row
+    // for the same fixture, so the board went silent about the game.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      gated({ evaluatedAt: new Date("2026-05-22T15:45:00.000Z") }),
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.id)).toEqual(["gd_gated_w"]);
+    expect(result.data.publishedToday).toHaveLength(0);
+  });
+
+  it("does NOT let an OLDER gated evaluation resurface after a withdrawal", async () => {
+    // Chronology, not just displayability. We evaluated, published, then
+    // withdrew; reverting the board to an earlier "we passed on this"
+    // misrepresents that sequence (Devin Review, #719). The withdrawn row still
+    // resolves order even though it cannot be shown, so the fixture drops out of
+    // the decision path entirely and the fallback lanes judge it on their own
+    // predicates.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      gated({ evaluatedAt: new Date("2026-05-22T14:00:00.000Z") }),
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows).toHaveLength(0);
+    expect(result.data.publishedToday).toHaveLength(0);
+  });
+
+  it("PINS A KNOWN GAP: the watermark is the publication time, not the withdrawal time", async () => {
+    // REVIEW ROUND 37 (Devin, #719). CONFIRMED, and it is C-158's missing
+    // column showing a second face rather than a separate bug.
+    //
+    // The rule above compares a gated evaluation against the PUBLICATION's
+    // evaluatedAt, because Pick.isPublished is a bare Boolean (schema.prisma:550)
+    // with nowhere to record when it flipped. So the fixture below is
+    // ambiguous by construction:
+    //
+    //   published 15:30 -> gated 15:45 -> withdrawn 16:00   a pick was LIVE at 15:45
+    //   published 15:30 -> withdrawn 15:40 -> gated 15:45   the gated row is current
+    //
+    // The board shows the gated row in both. The test one block above asserts
+    // the SECOND reading, which is the honest one; this test names the price of
+    // it, which is the first.
+    //
+    // THIS EXPECTATION IS THE DEFECT, not the contract. It should FAIL and be
+    // replaced when C-158 lands an `unpublishedAt`. The fix available without
+    // that column - suppress every gated row on any withdrawn fixture - is
+    // worse: it silences the board on games we have an honest current answer
+    // for, which is what C-149 was written to stop.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      gated({ id: "gd_gated_while_live", evaluatedAt: new Date("2026-05-22T15:45:00.000Z") }),
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.id)).toEqual(["gd_gated_while_live"]);
+  });
+
+  it("falls through to the fallback lanes when chronology supersedes EVERY row", async () => {
+    // REVIEW ROUND 32 (Devin, #719). The branch is entered on displayable
+    // CANDIDATES and returned on them too, so a fixture whose only surviving row
+    // was superseded by a withdrawal produced three empty lanes AND skipped the
+    // fallback pick and game queries - blanking the whole board, live published
+    // picks on other fixtures included.
+    //
+    // This is the assertion the older-gated test could not make: it stubbed both
+    // fallback queries empty, so an empty board and a fallback that never ran
+    // looked identical. Here the fallback lane has a real published pick on a
+    // DIFFERENT fixture, so only one of those two behaviours can pass.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      withdrawn,
+      gated({ evaluatedAt: new Date("2026-05-22T14:00:00.000Z") }),
+    ]);
+    mocks.pickFindMany.mockResolvedValue([
+      {
+        id: "pick_other_fixture",
+        gameId: "game_other",
+        pickType: "SPREAD",
+        selection: "BOS -1.5",
+        confidence: 71,
+        edgeScore: 63,
+        factorBreakdown: null,
+        generatedAt: evaluatedAt,
+        modelVersion: "v5.1.0",
+        tier: "FREE",
+        game: game(),
+      },
+    ]);
+
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    expect(result.data.publishedToday.map((r) => r.id)).toEqual(["pick_other_fixture"]);
+    expect(result.data.openPicks).toBe(1);
+    // The chronology rule still holds: the superseded gated row does not
+    // resurface just because the fallback lanes now run.
+    expect(result.data.gatedTodayRows.some((r) => r.id === "gd_gated_w")).toBe(false);
+  });
+
+  it("still shows a decision whose pick IS published", async () => {
+    // The control. Dropping every published row would also satisfy the two
+    // assertions above.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      { ...withdrawn, id: "gd_live", pick: { ...withdrawn.pick, isPublished: true } },
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.publishedToday.map((r) => r.id)).toEqual(["gd_live"]);
+    expect(result.data.openPicks).toBe(1);
   });
 });

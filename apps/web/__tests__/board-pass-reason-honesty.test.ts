@@ -26,7 +26,7 @@ const gameFindMany = vi.fn();
 
 vi.mock("@sports/db", () => ({
   db: {
-    gateDecision: { findMany: (...a: unknown[]) => gateDecisionFindMany(...a) },
+    gateDecision: { findMany: (...a: unknown[]) => gateDecisionFindMany(...a), /* groupBy: the pass lane's withdrawal watermark (C-161). A db mock has to carry every method the code calls. */ groupBy: async () => [] },
     game: { findMany: (...a: unknown[]) => gameFindMany(...a) },
   },
   isStubMode: () => false,
@@ -55,9 +55,18 @@ const NOW = new Date("2026-07-25T18:00:00.000Z");
 function game(over: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     id: "game-1",
+    // Shaped like a production row: the per-fixture collapse (C-171) reads
+    // externalId, sportId, commenceTime, createdAt and the sport KEY. A fixture
+    // missing them takes the collapse's fail-open path and would prove nothing
+    // about a real board.
+    externalId: "odds-game-1",
+    sportId: "sport-nfl",
+    mergedIntoGameId: null,
+    commenceTime: new Date("2026-07-25T20:00:00.000Z"),
+    createdAt: new Date("2026-07-01T00:00:00.000Z"),
     awayTeamName: "Away",
     homeTeamName: "Home",
-    sport: { name: "NFL" },
+    sport: { name: "NFL", key: "americanfootball_nfl" },
     currentEdgeIndex: 50,
     // Deliberately ABOVE both input floors, so neither named input deficiency
     // applies and the catch-all branch is the one under test.

@@ -12,7 +12,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  */
 
 const mocks = vi.hoisted(() => ({
-  gameFindMany: vi.fn<() => Promise<unknown[]>>(),
+  // Typed with its argument: the slate passes a query object, and a test that
+  // asserts the QUERY SHAPE (C-166) cannot read an argument the mock's type
+  // says does not exist.
+  gameFindMany: vi.fn<(args?: unknown) => Promise<unknown[]>>(),
   gameUpdate: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
   pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
@@ -48,11 +51,18 @@ import {
 const NOW = new Date("2026-09-05T15:00:00.000Z");
 const GAME = {
   id: "game-1",
+  // The per-fixture collapse (C-166) reads these three, so the fixture carries
+  // them: a test row shaped unlike a production row proves nothing about a
+  // production run.
+  externalId: "odds-game-1",
+  sportId: "sport-ncaaf",
+  mergedIntoGameId: null,
   homeTeamName: "Cincinnati Bearcats",
   awayTeamName: "Boston College Eagles",
   commenceTime: new Date("2026-09-05T19:30:00.000Z"),
   createdAt: new Date("2026-09-01T10:00:00.000Z"),
   sport: { key: "americanfootball_ncaaf", name: "NCAAF" },
+  _count: { picks: 0, odds: 0, oddsLineSnapshots: 0 },
 };
 
 /**
@@ -230,9 +240,9 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
   // The three May-listed NCAAF rows dated 2026-09-05 (ledger C-111). The board
   // above lists two of the pairs on 09-06 and none of them on 09-05.
   const PHANTOMS = [
-    { ...GAME, id: "g-olemiss", homeTeamName: "Ole Miss Rebels", awayTeamName: "Louisville Cardinals", commenceTime: new Date("2026-09-05T16:00:00.000Z"), createdAt: new Date("2026-05-22T10:00:00.000Z") },
-    { ...GAME, id: "g-illinois", homeTeamName: "Illinois Fighting Illini", awayTeamName: "UAB Blazers", commenceTime: new Date("2026-09-05T16:00:00.000Z"), createdAt: new Date("2026-05-22T10:00:00.000Z") },
-    { ...GAME, id: "g-washington", homeTeamName: "Washington Huskies", awayTeamName: "Washington State Cougars", commenceTime: new Date("2026-09-05T19:00:00.000Z"), createdAt: new Date("2026-05-23T10:00:00.000Z") },
+    { ...GAME, id: "g-olemiss", externalId: "odds-g-olemiss", homeTeamName: "Ole Miss Rebels", awayTeamName: "Louisville Cardinals", commenceTime: new Date("2026-09-05T16:00:00.000Z"), createdAt: new Date("2026-05-22T10:00:00.000Z") },
+    { ...GAME, id: "g-illinois", externalId: "odds-g-illinois", homeTeamName: "Illinois Fighting Illini", awayTeamName: "UAB Blazers", commenceTime: new Date("2026-09-05T16:00:00.000Z"), createdAt: new Date("2026-05-22T10:00:00.000Z") },
+    { ...GAME, id: "g-washington", externalId: "odds-g-washington", homeTeamName: "Washington Huskies", awayTeamName: "Washington State Cougars", commenceTime: new Date("2026-09-05T19:00:00.000Z"), createdAt: new Date("2026-05-23T10:00:00.000Z") },
   ];
 
   it("writes no pick on the three phantom fixtures and logs each one, while the listed fixture passes", async () => {
@@ -342,11 +352,76 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
     warn.mockRestore();
   });
 
+  it("bounds ROWS SCANNED, not fixtures slated, and skips tombstoned rows (C-166)", async () => {
+    // Asserted on the QUERY, because "the cap is not applied before the
+    // collapse" is a property of the query and not of any one output. The slate
+    // used to take 80 GAME ROWS: measured on production 2026-09-08, 744 rows
+    // over 658 real fixtures inside its own window, the cap reaching 71
+    // fixtures, 9 of the 80 slots spent on duplicates. Third instance of this
+    // defect class in one night, after C-153 and C-161.
+    mocks.gameFindMany.mockResolvedValue([]);
+    await runSlate();
+
+    const call = mocks.gameFindMany.mock.calls[0]?.[0] as {
+      take: number;
+      where: { mergedIntoGameId?: unknown };
+      select: Record<string, unknown>;
+    };
+    expect(call.take).toBe(1000);
+    // The database's own canonicity marker, so the lane cannot generate picks
+    // on a row the database has marked not-real once the merge runs.
+    expect(call.where.mergedIntoGameId).toBeNull();
+    // The collapse needs these; selecting them is what makes the survivor rule
+    // the merge's rule rather than "whichever row sorted first".
+    expect(call.select.externalId).toBe(true);
+    expect(call.select.sportId).toBe(true);
+    expect(call.select._count).toEqual({
+      select: { picks: true, odds: true, oddsLineSnapshots: true },
+    });
+  });
+
+  it("does not spend a fixture slot on a duplicate row of the same contest", async () => {
+    // The behaviour the query shape above exists for. Two rows, one contest,
+    // the second under an ESPN externalId minutes apart - exactly what the
+    // three writers produce. Only one pick may be written.
+    mocks.gameFindMany.mockResolvedValue([
+      GAME,
+      {
+        ...GAME,
+        id: "game-1-espn",
+        externalId: "espn:ncaaf:401772936",
+        commenceTime: new Date("2026-09-05T19:35:00.000Z"),
+      },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+
+    const out = await runSlate();
+
+    expect(mocks.buildIndependents).toHaveBeenCalledTimes(1);
+    expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+    const created = mocks.pickCreate.mock.calls[0]?.[0] as { data: { gameId: string } };
+    // The non-ESPN row survives, because odds ingestion writes to that one.
+    expect(created.data.gameId).toBe("game-1");
+    expect(out.picksUpserted).toBe(1);
+  });
+
   it("fetches the scoreboard once per day per ESPN group per sport per cycle across many games (CFB: FBS 80 and FCS 81)", async () => {
     mocks.gameFindMany.mockResolvedValue([
       GAME,
       ...PHANTOMS,
-      { ...GAME, id: "game-2", commenceTime: new Date("2026-09-06T00:00:00.000Z") },
+      // A DIFFERENT matchup, deliberately. This row exists to add a second day
+      // key, and it used to be a copy of GAME six hours later - which is the
+      // duplicate shape the C-166 collapse now removes, so the copy would have
+      // been dropped before the fetch count was taken. Distinct teams keep the
+      // assertion below testing what it was written to test.
+      {
+        ...GAME,
+        id: "game-2",
+        externalId: "odds-game-2",
+        homeTeamName: "Kansas State Wildcats",
+        awayTeamName: "Iowa State Cyclones",
+        commenceTime: new Date("2026-09-06T00:00:00.000Z"),
+      },
     ]);
     mocks.pickFindUnique.mockResolvedValue(null);
     vi.spyOn(console, "warn").mockImplementation(() => {});

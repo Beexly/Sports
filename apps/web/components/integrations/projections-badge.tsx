@@ -4,10 +4,43 @@
  * Live only when a licensed provider is registered AND enabled by env; otherwise
  * it states plainly that the data is illustrative, and links to the full
  * integrations transparency page. Server component.
+ *
+ * TWO CLAIMS, NOT ONE (C-173). "The projections SOURCE is live" and "the players
+ * on this page are real" are different facts, and this badge used to publish the
+ * first while a page rendered the second as false. Five fantasy surfaces -
+ * waivers, league-twin, trade, studio, scheme - render the FICTIONAL pool from
+ * lib/fantasy/players.ts, whose own doctrine comment says "Player NAMES are
+ * fictional so no estimate is mistaken for a real one", and every one of them
+ * shows this badge.
+ *
+ * TODAY THAT IS LATENT, AND SAYING SO MATTERS: `getLiveProjectionsMeta().live`
+ * is false because the licensed provider is founder-gated, so the badge already
+ * reads "illustrative" everywhere. It becomes a live false claim on the day the
+ * provider is enabled - a config change, with nothing in the code to catch it.
+ *
+ * So `pool` is REQUIRED and there is no default. A caller must assert that the
+ * players it renders are real before this can say "live"; anything else fails
+ * closed to "illustrative", which is the safe direction under this product's
+ * premise.
  */
 
 import Link from "next/link";
 import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
+
+/**
+ * What the surface renders.
+ *
+ *   "real"         - the caller asserts its own player rows are real players.
+ *   "illustrative" - the fictional pool in lib/fantasy/players. Never live.
+ *   "none"         - the page renders no player rows at all (a marketing or
+ *                    status surface), so the badge reports the SOURCE status
+ *                    and nothing about a pool.
+ *
+ * Three states rather than two because collapsing "none" into either one lies:
+ * calling it illustrative understates a working provider, and calling it real
+ * asserts players the page does not have.
+ */
+export type ProjectionsPool = "real" | "illustrative" | "none";
 
 /** Relative "refreshed Xm/Xh/Xd ago" from an ISO timestamp. Null when absent/invalid. */
 function freshnessLabel(fetchedAt?: string): string | null {
@@ -21,9 +54,10 @@ function freshnessLabel(fetchedAt?: string): string | null {
   return `refreshed ${Math.round(hrs / 24)}d ago`;
 }
 
-export function ProjectionsBadge() {
+export function ProjectionsBadge({ pool }: { pool: ProjectionsPool }) {
   const meta = getLiveProjectionsMeta();
-  const live = meta.live;
+  // A live SOURCE over a fictional POOL is still not live data.
+  const live = meta.live && pool !== "illustrative";
   const fresh = live ? freshnessLabel(meta.fetchedAt) : null;
   // Live = orbital cyan (data signal). Not live = caution (incomplete data) —
   // semantic tokens only; never plasma for a degraded/absent state.
@@ -40,7 +74,11 @@ export function ProjectionsBadge() {
           {meta.attribution ? ` · ${meta.attribution}` : " · licensed source wired"}
         </span>
       ) : (
-        <span className="text-ion-2">· a licensed source is founder-gated</span>
+        <span className="text-ion-2">
+          {pool === "illustrative"
+            ? "· illustrative player pool"
+            : "· a licensed source is founder-gated"}
+        </span>
       )}
       <Link href="/integrations" className="text-ultraviolet underline underline-offset-2 hover:text-ultraviolet-glow">Data status →</Link>
     </div>
