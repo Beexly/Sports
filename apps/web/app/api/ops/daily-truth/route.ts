@@ -28,6 +28,14 @@ import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+// EVERY OTHER CRON SETS THIS; THIS ONE DID NOT (C-184). Without it the route
+// runs under the platform default, which is shorter than the 300s the other
+// heavy ops jobs are given - and this job fans out across the calibration
+// surface, scheduler liveness and canonical-sample posture in one pass. A
+// timeout here is not loud: the daily truth record simply does not get
+// written, and the surface that would tell an operator something is wrong is
+// the one that failed. 300 matches the ceiling used by the other 300s crons.
+export const maxDuration = 300;
 
 /**
  * Timing-safe Bearer CRON_SECRET check — mirrors hasOpsAuth in

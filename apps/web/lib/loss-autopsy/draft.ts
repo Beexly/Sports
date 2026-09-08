@@ -12,6 +12,7 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { captureError } from "@/lib/observability/sentry";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
   getCurrentMonthClaudeSpendUsd,
@@ -164,8 +165,27 @@ export async function draftLossAutopsy(
         errorKind: `HTTP_${error.status}`,
       });
     }
+    // SECURITY, and it is GSE-SEC-071 IN THE SIBLING LANE (C-186).
+    //
+    // This used to rethrow `error.message` verbatim, and the route returns a
+    // LossAutopsyDraftError's message to the caller. `ClaudeMessagesError` is
+    // constructed as `Claude API error: ${status} - ${await response.text()}`
+    // (claude-api/messages.ts), so its message carries the RAW upstream
+    // Anthropic response body: request ids, account and quota detail, model
+    // names, internal error text. The explain lane fixed exactly this and the
+    // fix was never carried across to this one.
+    //
+    // The detail is not lost. The status is already ledgered above as
+    // `HTTP_<status>`, and the full error goes to Sentry here. The caller gets
+    // a generic message, which is all a caller could act on anyway.
+    captureError(error, {
+      surface: "loss-autopsy",
+      upstreamStatus: error instanceof ClaudeMessagesError ? error.status : null,
+      modelName: error instanceof ClaudeMessagesError ? error.modelName : null,
+    });
     throw new LossAutopsyDraftError(
-      error instanceof Error ? error.message : "Loss-autopsy draft failed.",
+      "The loss autopsy drafter is temporarily unavailable. Please try again shortly.",
+      "UPSTREAM",
     );
   }
 }
