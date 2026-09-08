@@ -175,3 +175,34 @@ describe("the gate is total and never silently accepts (fuzz)", () => {
     );
   });
 });
+
+describe("a game count is a count (C-228)", () => {
+  it("refuses a fractional gamesBehind instead of printing it as provenance", () => {
+    // gamesBehind checked only Number.isFinite while every sibling field used
+    // isUsableInt, so 4.5 cleared the gate and reached the label as
+    // "4.5 games". The refusal message already promised "whole numbers".
+    const fractional = evaluateProjectionBasis({
+      targetSeason: 2026, targetWeek: 1, basisSeason: 2025, gamesBehind: 4.5,
+    });
+    expect(fractional.ok).toBe(false);
+    expect(fractional.ok === false && fractional.code).toBe("REFUSED_UNUSABLE_INPUT");
+
+    // The whole-number equivalent still passes, so this refuses the shape and
+    // not the value.
+    const whole = evaluateProjectionBasis({
+      targetSeason: 2026, targetWeek: 1, basisSeason: 2025, gamesBehind: 4,
+    });
+    expect(whole.ok).toBe(true);
+  });
+
+  it("never emits a non-integer game count in any accepted label", () => {
+    // The property behind it: whatever the gate accepts, the number it prints
+    // must be a whole one.
+    for (const games of [0.5, 1.1, 3.999, 4.5, 16.5, 17.0001]) {
+      const r = evaluateProjectionBasis({
+        targetSeason: 2026, targetWeek: 1, basisSeason: 2025, gamesBehind: games,
+      });
+      expect(r.ok, `gamesBehind ${games} was accepted`).toBe(false);
+    }
+  });
+});

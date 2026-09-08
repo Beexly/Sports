@@ -101,7 +101,12 @@ export function evaluateProjectionBasis(input: ProjectionBasisInput): Projection
     !isUsableInt(basisSeason) ||
     !isUsableInt(targetWeek) ||
     targetWeek < 1 ||
-    !Number.isFinite(gamesBehind) ||
+    // gamesBehind used only Number.isFinite here, while every other field
+    // used isUsableInt — so a fractional 4.5 passed the gate and was printed
+    // straight into customer-facing provenance as "4.5 games". A game count is
+    // a count. The refusal message below already promised "whole numbers";
+    // this makes the check keep that promise. Found in review (C-228).
+    !isUsableInt(gamesBehind) ||
     gamesBehind < 0
   ) {
     return {
