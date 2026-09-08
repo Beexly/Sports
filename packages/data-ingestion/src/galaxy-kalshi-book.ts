@@ -172,22 +172,38 @@ function strikeFromText(m: PredExonKalshiMarket): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/**
- * Escape every RegExp metacharacter so an abbreviation is matched as literal
- * text. The abbreviations reach `hasWord` from the fixture feed, so an
- * unescaped interpolation is regex injection with two real failure modes: a
- * value carrying an unbalanced paren throws SyntaxError inside the odds cycle,
- * and a value carrying "." matches a team it is not, which would hand the
- * caller a YES side it never actually read. Escaped, an odd abbreviation is an
- * honest miss (null), which is what every other unreadable field here returns.
- */
-function escapeRegExp(word: string): string {
-  return word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+/** A character that continues a token: the boundary class the match uses. */
+function isWordChar(ch: string | undefined): boolean {
+  if (ch === undefined) return false;
+  const u = ch.toUpperCase();
+  return (u >= "A" && u <= "Z") || (u >= "0" && u <= "9");
 }
 
+/**
+ * Whole-word, case-insensitive containment, matched as LITERAL text.
+ *
+ * The abbreviations reach here from the fixture feed, so this deliberately
+ * builds no RegExp from them. An earlier version interpolated the word into
+ * `new RegExp` and that was regex injection with two real failure modes: an
+ * abbreviation carrying an unbalanced paren threw SyntaxError inside the odds
+ * cycle, and one carrying "." matched a team it is not ("L.R" matched the
+ * literal "LAR"), which would hand the caller a YES side it never read.
+ * Escaping the metacharacters fixes both, but a dynamic RegExp is still a
+ * standing security finding, so the scan is done directly instead: same
+ * semantics as the old /(^|[^A-Z0-9])word([^A-Z0-9]|$)/i, no pattern compiled
+ * from feed data. Slicing the ORIGINAL text keeps indices exact, so a case
+ * fold that changes length can only fail the comparison, never misalign it.
+ */
 function hasWord(text: string, word: string): boolean {
   if (!word) return false;
-  return new RegExp(`(^|[^A-Z0-9])${escapeRegExp(word)}([^A-Z0-9]|$)`, "i").test(text);
+  const needle = word.toUpperCase();
+  const n = word.length;
+  for (let i = 0; i + n <= text.length; i++) {
+    if (text.slice(i, i + n).toUpperCase() !== needle) continue;
+    if (isWordChar(text[i - 1]) || isWordChar(text[i + n])) continue;
+    return true;
+  }
+  return false;
 }
 
 export interface KalshiSpreadLine {
