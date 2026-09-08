@@ -125,10 +125,27 @@ That is where the investigation stopped rather than guessing. An earlier
 episode this session cost two wrong fixes by guessing at a cause before reading
 the actual evidence, and the same discipline applies here.
 
-**Scope beyond this window.** MLB only, ten days only, and only rows whose
-`externalId` carries an ESPN event id. NFL, NCAAF and MLS are unaudited, as is
-anything before 2026-08-29. The 25 out of 169 rate should not be extrapolated
-without re-running the check.
+**Scope beyond this window.** The MLB numbers above are ten days only, and only
+rows whose `externalId` carries an ESPN event id. Anything before 2026-08-29 is
+unaudited.
+
+**It is NOT MLB-only.** NCAAF, 21 days, checked after the tool existed: 37 rows
+comparable, **2 mismatched**, 2 settled picks on them. Both are the same
+fixture stored twice, LSU v Clemson on 2026-09-06: we hold **66-14**, ESPN
+reads **51-10**. The winner is the same but the margin is off by eleven points,
+which breaks any spread or total on it. And 66-14 is the final of a different
+game on the same board, so it is the same propagation pattern in a second
+sport.
+
+**The NCAAF number is a floor, not a measurement.** Only 50 of 183 NCAAF FINAL
+rows carry an ESPN event id at all, and the college-football scoreboard returned
+56 finals for the window, so **146 of 183 rows could not be compared**. MLS is
+in the same position (48 of 111 ESPN-keyed) and is still unaudited. Whatever
+the true NCAAF and MLS rates are, they are not 2 in 183; they are unknown, over
+a denominator this check can currently see only a fifth of.
+
+That gap is itself worth fixing: a stored final whose id cannot be traced back
+to the feed it came from cannot be verified by anyone, ever.
 
 ## How to reproduce
 

@@ -44,10 +44,16 @@ most of them, because several stored away scores EXCEED the final away score, wh
 reading can produce. NOT established: which code path wrote them. The obvious suspect
 (`free-score-persist.ts`, team+date match) inherits a 12h `MAX_KICKOFF_DRIFT_MS` whose comment
 says it exists precisely to stop this, and consecutive games sit 19 to 24h apart, so either that
-guard is bypassed or a different writer is responsible. Do not guess. Scope is MLB only,
-2026-08-29 to 2026-09-08; other sports and earlier dates are unaudited. Full evidence, the
-per-series table and the reproduction method: **`docs/ops/SCORE_INTEGRITY_2026-09-08.md`**
-(ledger C-247). **No agent may repair this: it needs database writes and a root cause. Publishing
+guard is bypassed or a different writer is responsible. Do not guess. **IT IS NOT MLB-ONLY:** NCAAF over 21 days shows 2 mismatched rows of 37 comparable
+(LSU v Clemson stored 66-14 against a real 51-10, which is another game's final from the same
+board), and that 2 is a FLOOR rather than a measurement, because only 50 of 183 NCAAF FINAL rows
+carry an ESPN event id at all so 146 could not be compared; MLS is in the same position (48 of
+111) and is still unaudited. Earlier dates are unaudited everywhere. A stored final whose id
+cannot be traced back to the feed it came from cannot be verified by anyone, which is its own
+problem. Full evidence, the per-series table and the reproduction method:
+**`docs/ops/SCORE_INTEGRITY_2026-09-08.md`** (ledger C-247). There is now a committed read-only
+tool for it, `npm run ops:verify-scores` (C-248), which reports an UNCOMPARABLE count beside the
+mismatches precisely so nobody reads "0 mismatches" off rows it could not see. **No agent may repair this: it needs database writes and a root cause. Publishing
 calibration, a win rate, or the PROVEN phase off this record is not defensible until the affected
 picks are re-settled.**
 
