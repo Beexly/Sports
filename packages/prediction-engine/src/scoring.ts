@@ -23,6 +23,7 @@ import { computeGameContext } from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 import { shinFairForSide } from "./honesty/devig-method-compare.js";
+import { getPlatformConfig } from "./platform-config.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -429,6 +430,14 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // isPublishableSpreadLine: baseball's run line is a fixed ladder, and the
   // mean of contaminated book rows lands off it.
   if (!isPublishableSpreadLine(input.sport, chosenSpread)) return null;
+  // Refuse a stored line no book in this consensus set quoted. Gated OFF by
+  // default: see isQuotedBookLine and PlatformConfig.
+  if (
+    getPlatformConfig().lineIntegrityPublishGuardEnabled &&
+    !isQuotedBookLine(avgSpread, spreads)
+  ) {
+    return null;
+  }
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
   // ONE book set for every price-derived value below.
@@ -683,6 +692,18 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const totals = totalOdds.map((o) => o.total as number);
   const avgTotal = totals.reduce((a, b) => a + b, 0) / totals.length;
 
+  // The SPREAD twin of this check lives beside isPublishableSpreadLine. Totals
+  // had no line-integrity guard of any kind (the run-line ladder is
+  // spread-only), which is the sibling-lane pattern this repo keeps hitting;
+  // TOTAL is in fact the worse half of the finding (369 of 599 off-grid vs 310
+  // of 719). Gated OFF by default, same flag, same founder decision.
+  if (
+    getPlatformConfig().lineIntegrityPublishGuardEnabled &&
+    !isQuotedBookLine(avgTotal, totals)
+  ) {
+    return null;
+  }
+
   // Consensus is only meaningful over books that quote BOTH sides. A totals row
   // with a `total` but no over/under prices carries no consensus signal, so we
   // must not let its absence fabricate a one-sided (100% UNDER) consensus.
@@ -932,6 +953,37 @@ export function isPublishableSpreadLine(sportKey: string, line: number): boolean
   if (!Number.isFinite(line)) return false;
   const abs = Math.abs(line);
   return BASEBALL_RUN_LINES.some((valid) => Math.abs(abs - valid) < RUN_LINE_EPSILON);
+}
+
+/**
+ * Is `line` a value at least one book in `quotedLines` actually quoted?
+ *
+ * C-270 (ledger C-197). The published `line` is the arithmetic MEAN of every
+ * book's line (`avgSpread`, `avgTotal` below). On a market where books agree
+ * the mean IS a quoted line; where they disagree it is not, and the member is
+ * shown a price nobody offers — "Missouri Tigers -53.8", stored as
+ * -53.83333333333334, is the mean of three real FCS book lines, not a model
+ * margin. Measured on production 2026-09-08: SPREAD 310 of 719 and TOTAL 369
+ * of 599 published settled picks sit off the half-point grid.
+ *
+ * This predicate is the measurement. Whether the engine ACTS on it is gated by
+ * PlatformConfig.lineIntegrityPublishGuardEnabled, default OFF: enforcing it
+ * suppresses roughly half the board, which is a founder decision (see
+ * docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md) and directly overturns the
+ * recorded C-119/C-125 call that a blanket rule would gut it.
+ *
+ * Deliberately NOT a half-point-grid test: books quote quarter-point Asian
+ * handicaps and whole-number totals, so the grid is a proxy and the book set is
+ * the fact. The baseball run-line ladder above stays as well — it catches the
+ * case this one cannot, where every book quotes the same contaminated line.
+ */
+const QUOTED_LINE_EPSILON = 1e-9;
+
+export function isQuotedBookLine(line: number, quotedLines: readonly number[]): boolean {
+  if (!Number.isFinite(line)) return false;
+  return quotedLines.some(
+    (quoted) => Number.isFinite(quoted) && Math.abs(quoted - line) < QUOTED_LINE_EPSILON,
+  );
 }
 
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {

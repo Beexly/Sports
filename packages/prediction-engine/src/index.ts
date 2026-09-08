@@ -11,6 +11,7 @@ export {
   isPublishableSpreadLine,
   isBaseballSport,
   BASEBALL_RUN_LINES,
+  isQuotedBookLine,
 } from "./scoring.js";
 export {
   computeGameContext,
