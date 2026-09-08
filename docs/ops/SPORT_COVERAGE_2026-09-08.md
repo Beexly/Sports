@@ -127,3 +127,35 @@ tool's own `--dry-run` prints the exact set and is the right instrument before a
 **Founder decisions this creates:** whether to re-point or withdraw the 578 before merging; whether
 the merge becomes a cron once that companion exists; and the canonical namespace for NFL fixture
 identity so three rows stop being minted in the first place.
+
+
+## 8. Why there are three rows, and why that is the real finding
+
+The duplication is not a mystery and not a new bug. **Three writers mint three different ids for
+one contest**, and the code says so itself at `packages/ingestion-pipeline/src/seed-games-from-espn.ts:81`:
+
+> This seed writes `espn:<short>:<id>` while espn-odds-client writes `espn:<sportKey>:<id>` and the
+> paid path writes the Odds API id - three ids for one contest.
+
+- `packages/data-ingestion/src/espn-schedule-seed.ts:121` writes `espn:<short>:<id>`, e.g. `espn:nfl:...`
+- `packages/data-ingestion/src/espn-odds-client.ts:361` writes `espn:<sportKey>:<id>`, e.g. `espn:americanfootball_nfl:...`
+- the paid Odds API path writes a bare 32-hex hash, e.g. `000fc688beb4fc004ecdad115d9adb1c`
+
+There IS a reconciliation attempt: the seed calls `resolveCanonicalGame`
+(`packages/ingestion-pipeline/src/game-identity.ts`) and claims a twin when identity proves the
+same game. It is evidently not catching every case, since NFL sits at 2.52 rows per fixture with
+zero tombstones.
+
+**So the architecture mints up to three rows per contest by design, and the only reconciliation
+that actually tombstones anything is an owner-run tool whose known side effect is hiding 578
+published picks.** That is the finding worth acting on, and it is bigger than NFL: it is why MLB
+accumulated the duplicate rows that carry 34.4% wrong finals.
+
+MEASURED on creation dates: the hash writer has stopped minting NFL and MLB rows (last NFL hash row
+2026-08-22, none in the last 48 hours) while ESPN ingestion continues (NCAAF created 134 rows in 48
+hours). So the mix is shifting, but nothing retires the rows already made.
+
+**This is a data-model decision, not an agent's:** pick one canonical identity for a fixture, make
+the other writers resolve to it before insert, and give the merge a companion that re-points or
+withdraws alias picks. All three parts are founder-gated because they touch published history and
+the shape of the data.
