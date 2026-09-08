@@ -330,6 +330,27 @@ describe("loadBoardPasses — a game with a published pick is not a pass", () =>
     expect(call.include.sport.select).toMatchObject({ key: true });
   });
 
+  it("does not describe a WITHDRAWN fixture as unevaluated in the fallback lane (C-175)", async () => {
+    // Devin Review, #719. The fallback relation excludes a LIVE published pick
+    // only, so a withdrawn one made its fixture match again - and this lane's
+    // reason text says the game was not evaluated, which is false about a game
+    // we published and then withdrew. Asserted on the QUERY, because the
+    // exclusion has to happen in the database: filtering afterwards would
+    // shrink the scan window and drop genuine passes off the end.
+    mocks.gateDecisionGroupBy.mockResolvedValue([
+      { gameId: "g-withdrawn", _max: { evaluatedAt: new Date("2026-09-07T15:00:00.000Z") } },
+    ]);
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+
+    await loadBoardPasses(NOW, { includeNoBetDetail: false });
+
+    const where = (mocks.gameFindMany.mock.calls[0]?.[0] as {
+      where: { id?: { notIn?: string[] } };
+    }).where;
+    expect(where.id?.notIn).toEqual(["g-withdrawn"]);
+  });
+
   it("keeps genuine passes: a fixture with no published pick still lists", async () => {
     // The control. A suppression that removed everything would also pass the
     // test above, so this pins that the lane still does its job.

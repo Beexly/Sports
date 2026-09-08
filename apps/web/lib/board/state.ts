@@ -536,6 +536,19 @@ async function loadBoardStateInner(
       (decision) => decision.status !== "PUBLISHED" || decision.pick?.isPublished === true,
     );
 
+    // Withdrawn publications, newest per fixture. Computed OUTSIDE the decision
+    // branch because both paths need it: the branch orders gated rows against it
+    // (C-149), and the FALLBACK lane below must not describe one of these
+    // fixtures as unevaluated (C-175).
+    const newestWithdrawnPublishedAt = new Map<string, number>();
+    for (const decision of decisions) {
+      if (decision.status !== "PUBLISHED") continue;
+      if (decision.pick?.isPublished === true) continue;
+      const at = decision.evaluatedAt.getTime();
+      const seen = newestWithdrawnPublishedAt.get(decision.gameId);
+      if (seen === undefined || at > seen) newestWithdrawnPublishedAt.set(decision.gameId, at);
+    }
+
     if (displayableDecisions.length > 0) {
       const decisionEntries = displayableDecisions.map((decision): DedupeEntry => ({
         // Key built beside the row it belongs to. A parallel-index lookup
@@ -626,14 +639,6 @@ async function loadBoardStateInner(
         // whether this query happened to return the decision that published it.
         ...decisions.filter((d) => d.game.picks.length > 0).map((d) => d.gameId),
       ]);
-      const newestWithdrawnPublishedAt = new Map<string, number>();
-      for (const decision of decisions) {
-        if (decision.status !== "PUBLISHED") continue;
-        if (decision.pick?.isPublished === true) continue;
-        const at = decision.evaluatedAt.getTime();
-        const seen = newestWithdrawnPublishedAt.get(decision.gameId);
-        if (seen === undefined || at > seen) newestWithdrawnPublishedAt.set(decision.gameId, at);
-      }
       const supersededByPublication = (entry: DedupeEntry): boolean => {
         if (livePublishedGameIds.has(entry.row.gameId)) return true;
         const withdrawnAt = newestWithdrawnPublishedAt.get(entry.row.gameId);
@@ -785,6 +790,19 @@ async function loadBoardStateInner(
           commenceTime: { gt: now, lt: end },
           picks: { none: publishedPickRelation },
           mergedIntoGameId: null,
+          // A FIXTURE WE PUBLISHED AND WITHDREW IS NOT "NOT EVALUATED" (C-175,
+          // Devin Review, #719). This lane's `gateReason` is
+          // `unevaluatedPassReason`, and the relation above only excludes a
+          // LIVE published pick - so once a pick is withdrawn its fixture
+          // matched again and the board said we had not looked at a game we
+          // published and then withdrew.
+          //
+          // Silence is the honest option among the ones available here.
+          // "We passed" and "not evaluated" both assert something untrue, and a
+          // third public state ("published, then withdrawn") is copy nobody has
+          // approved - and could not be written accurately anyway while
+          // Pick.isPublished carries no withdrawal timestamp (C-158, C-167).
+          id: { notIn: [...newestWithdrawnPublishedAt.keys()] },
         },
         include: {
           sport: { select: { name: true, key: true } },

@@ -313,6 +313,23 @@ export async function loadBoardPasses(
       where: {
         commenceTime: { gte: start, lt: end },
         picks: { none: publishedPickRelation },
+        // A FIXTURE WE PUBLISHED AND WITHDREW IS NOT "NOT EVALUATED" (C-175,
+        // Devin Review, #719).
+        //
+        // The relation above only excludes a LIVE published pick, so once a
+        // pick is withdrawn its fixture matches again - and this lane's reason
+        // text says the game has not been evaluated, which is false in the
+        // strongest way this list can be false. It is the same defect the
+        // decision lane fixed by chronology (C-153) reappearing one query
+        // lower down, and the watermark that lane already computed is the
+        // answer here too.
+        //
+        // Silence is the honest option among the ones available. Labelling it
+        // "we passed" or "not evaluated" both assert something untrue, and a
+        // third state ("published, then withdrawn") is public copy nobody has
+        // approved - and could not be written accurately anyway while
+        // Pick.isPublished carries no withdrawal timestamp (C-158, C-167).
+        id: { notIn: [...newestWithdrawnPublishedAt.keys()] },
         // Safe HERE, unlike on the score lane (C-170): this is a display lane,
         // and a tombstoned row is not the fixture. The sweep is not uniform.
         mergedIntoGameId: null,

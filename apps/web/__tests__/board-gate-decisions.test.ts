@@ -596,6 +596,60 @@ describe("board loaders with persisted gate decisions", () => {
   });
 });
 
+describe("a withdrawn fixture is not described as unevaluated (C-175)", () => {
+  /**
+   * Devin Review, #719. The fallback gated lane's `gateReason` is
+   * `unevaluatedPassReason`, and its relation excludes only a LIVE published
+   * pick - so once a pick was withdrawn, its fixture matched again and the
+   * board said we had not looked at a game we published and then withdrew.
+   *
+   * Silence is the honest option among those available. "We passed" and "not
+   * evaluated" both assert something untrue, and a third public state is copy
+   * nobody has approved - and could not be written accurately anyway while
+   * Pick.isPublished carries no withdrawal timestamp (C-158, C-167).
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("excludes it from the fallback gated query", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      {
+        id: "gd_withdrawn_only",
+        gameId: "game_w",
+        status: "PUBLISHED",
+        reason: null,
+        reasonCode: null,
+        edgeIndex: 61,
+        confidence: 74,
+        modelVersion: "v5.2.7",
+        evaluatedAt,
+        game: game(),
+        pick: { selection: "BOS -1.5", confidence: 74, pickType: "SPREAD", isPublished: false },
+      },
+    ]);
+
+    await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    // The gated fallback is the query with the strict `gt: now` lower bound.
+    const gatedCall = mocks.gameFindMany.mock.calls
+      .map((c) => c?.[0] as { where?: { commenceTime?: { gt?: Date }; id?: { notIn?: string[] } } })
+      .find((c) => c?.where?.commenceTime?.gt !== undefined);
+    expect(gatedCall).toBeDefined();
+    expect(gatedCall?.where?.id?.notIn).toEqual(["game_w"]);
+  });
+});
+
 describe("the fallback lanes show one row per contest (C-171)", () => {
   /**
    * The scoring query's own comment said it: "Two rows for one fixture carry
