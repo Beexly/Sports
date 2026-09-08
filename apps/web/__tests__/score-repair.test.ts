@@ -173,7 +173,14 @@ describe("the runner's write contract", () => {
   it("only ever writes the four fields it documents", () => {
     const writes = code.match(/data:\s*\{[^}]*\}/g) ?? [];
     expect(writes.length).toBeGreaterThan(0);
-    const allowed = new Set(["homeScore", "awayScore", "result", "settledAt"]);
+    const allowed = new Set([
+      "homeScore",
+      "awayScore",
+      "result",
+      "settledAt",
+      "status",
+      "completedAt",
+    ]);
     for (const w of writes) {
       for (const field of w.match(/(\w+):/g) ?? []) {
         const name = field.slice(0, -1);
@@ -334,9 +341,58 @@ describe("the runner refuses before writing", () => {
     for (const w of writes) expect(w).not.toContain("settledAt");
   });
 
-  it("still writes only the three documented fields", () => {
+  it("re-queues team game logs rather than rewriting them itself", () => {
+    // C-261 (Devin). TeamGameLog holds teamScore/opponentScore/result/atsResult
+    // derived from the game score, and build-independent-fair-values.ts reads
+    // it to produce the independent factors behind trueProb - so a corrected
+    // score with stale team logs feeds the wrong outcome back into the engine
+    // while the tool reports success.
+    //
+    // The rows must NOT be rewritten here: settleGameLogs is the canonical
+    // writer with the opening-spread ATS semantics and the bootstrap and
+    // data-quality gates, and a second implementation inside a repair tool is
+    // the drift C-253 warned about.
+    expect(runnerCode).toContain("postSettlementWork.updateMany");
+    expect(runnerCode).not.toContain("teamGameLog.");
+    expect(runnerCode).not.toContain("settleGameLogs");
+  });
+
+  it("scopes the re-queue to this game's TEAM_GAME_LOG row and clears completedAt", () => {
+    // An enqueue would look like it worked and do nothing: PostSettlementWork
+    // is unique on (subjectId, kind) and every settled game already holds a
+    // DONE row, so createMany's skipDuplicates makes the insert a no-op. The
+    // write has to be an update to the existing row.
+    const block = runnerCode.match(
+      /postSettlementWork\.updateMany\(\{[\s\S]*?\}\),/,
+    );
+    expect(block, "no postSettlementWork.updateMany found").not.toBeNull();
+    const text = block![0];
+    expect(text).toContain("subjectId: g.gameId");
+    expect(text).toContain('kind: "TEAM_GAME_LOG"');
+    expect(text).toContain('status: "PENDING"');
+    // A DONE timestamp surviving on a PENDING row is a record that contradicts
+    // its own status - the defect class this branch keeps removing.
+    expect(text).toContain("completedAt: null");
+  });
+
+  it("re-queues inside the same transaction as the score and the re-grades", () => {
+    // A score corrected without the re-queue landing is the half-applied state
+    // the per-game transaction exists to prevent.
+    const tx = runnerCode.match(/\$transaction\(\[[\s\S]*?\n      \]\);/);
+    expect(tx, "no $transaction block found").not.toBeNull();
+    expect(tx![0]).toContain("postSettlementWork.updateMany");
+  });
+
+  it("still writes only the fields it documents", () => {
+    // The allow-list GREW by `status` and `completedAt` in C-261, and that is a
+    // real surface change rather than a loosened guard: the runner now resets
+    // the game's TEAM_GAME_LOG work row so the canonical drain rebuilds the
+    // team logs from the corrected score. The assertion keeps its full power -
+    // it still enumerates EVERY field written anywhere in the runner and still
+    // fails on anything absent from the list, settledAt and isPublished
+    // included - and the scoping test below pins what that new write may touch.
     const writes = runnerCode.match(/data:\s*\{[^}]*\}/g) ?? [];
-    const allowed = new Set(["homeScore", "awayScore", "result"]);
+    const allowed = new Set(["homeScore", "awayScore", "result", "status", "completedAt"]);
     for (const w of writes) {
       for (const field of w.match(/(\w+):/g) ?? []) {
         const name = field.slice(0, -1);

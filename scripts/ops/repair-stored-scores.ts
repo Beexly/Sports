@@ -318,10 +318,42 @@ async function main(): Promise<void> {
             data: { result: p.to as "WIN" | "LOSS" | "PUSH" },
           }),
         ),
+        // C-261 (Devin). TeamGameLog stores teamScore, opponentScore, result
+        // and atsResult DERIVED from this game's score, and it is not a dead
+        // archive: build-independent-fair-values.ts reads it to produce the
+        // independent factors behind trueProb, and context-enrichment /
+        // team-rates-source read it for form and ATS. Correcting the score and
+        // leaving those rows would feed the wrong outcome straight back into
+        // the engine's own inputs while the tool reported success - the same
+        // score-result contradiction this exists to remove, one table over.
+        //
+        // The rows are NOT rewritten here. settleGameLogs is the canonical
+        // writer and it applies opening-spread ATS semantics plus the bootstrap
+        // and data-quality gates; a second implementation inside a repair tool
+        // is exactly the drift C-253 warned about. Instead the game's existing
+        // TEAM_GAME_LOG row is reset to PENDING so the repair drain that
+        // already runs every settlement cycle (drainPendingTeamGameLogs)
+        // recomputes both team rows from the corrected score.
+        //
+        // An `enqueue` would NOT work and would look like it did:
+        // PostSettlementWork is unique on (subjectId, kind) and every settled
+        // game already holds a DONE row, so enqueuePostSettlementWork's
+        // skipDuplicates makes the insert a silent no-op. updateMany on the
+        // existing row is what actually re-arms the lane. It is scoped to this
+        // game and this kind, and clears completedAt so a DONE timestamp never
+        // survives on a PENDING row.
+        prisma.postSettlementWork.updateMany({
+          where: { subjectId: g.gameId, kind: "TEAM_GAME_LOG" },
+          data: { status: "PENDING", completedAt: null },
+        }),
       ]);
       gamesWritten += 1;
       picksWritten += changed.length;
-      if (!JSON_OUT) console.log(`  applied ${g.matchup}: score corrected, ${changed.length} pick(s) re-graded`);
+      if (!JSON_OUT)
+        console.log(
+          `  applied ${g.matchup}: score corrected, ${changed.length} pick(s) re-graded, ` +
+            `team game logs re-queued`,
+        );
     }
     if (!JSON_OUT) {
       console.log("");
@@ -332,6 +364,10 @@ async function main(): Promise<void> {
             : "") +
           (plan.totals.staleDerivatives > 0
             ? ` ${plan.totals.staleDerivatives} write-once record(s) still hold the old result.`
+            : "") +
+          (gamesWritten > 0
+            ? ` Team game logs for ${gamesWritten} game(s) are re-queued and are rewritten by the` +
+              ` TEAM_GAME_LOG drain on the next settlement cycle, not by this tool.`
             : "") +
           ` Re-run npm run ops:verify-scores to confirm the mismatch count.`,
       );
