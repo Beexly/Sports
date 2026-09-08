@@ -158,6 +158,12 @@ export {
 } from "./fixture-collapse.js";
 export type { FixtureCollapseRow } from "./fixture-collapse.js";
 
+// Settle-time line-archive CLOSE tag. Hard-gated on LINE_ARCHIVE_ENABLED and
+// never throws, so every settlement lane (paid settle-sport, the free grader,
+// the stale backfill) can stamp the close after a successful grade (C-95).
+export { markClosingSnapshotsIfEnabled } from "./line-archive.js";
+export type { MarkClosingSnapshotsIfEnabledResult } from "./line-archive.js";
+
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
 export {
