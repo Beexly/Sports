@@ -1,0 +1,542 @@
+/**
+ * Line-integrity remediation lane (C-271; ledger C-197 finding, C-270 guard).
+ *
+ * Founder-delegated 2026-09-08, via orchestrator. Founder policy since
+ * 2026-09-05 is that no pick ever sits on a human, so the remediation for
+ * C-197 is automated rather than hand-run — the same posture as the zero-sit
+ * lane (zero-sit-lane.ts), whose transactional-outbox shape this one copies.
+ *
+ * WHAT THE DEFECT ACTUALLY IS. The engine stores the arithmetic MEAN of every
+ * book's quoted line (scoring.ts `avgSpread` / `avgTotal`) in `Pick.line`, the
+ * field the product displays as a price and settles against. Where books agree
+ * that mean IS a quoted line; where they disagree it is not, and the member is
+ * shown something no book offers. C-197 called this a model-predicted margin;
+ * it is not (C-270 records the correction), but the consequence it describes —
+ * an unplaceable pick, graded against a price that never existed — stands.
+ *
+ * WHAT THIS LANE DOES, when LINE_INTEGRITY_VOID_ENABLED is true:
+ *
+ *   VOID half (voidDefectiveSettledPicks): a SETTLED, published pick whose
+ *   stored line was not quoted by any bookmaker for that game and market at or
+ *   before `generatedAt` has its result set to VOID through the same
+ *   transactional outbox the graders use — one PickSettlementEvent carrying
+ *   rcaCode LINE_NOT_QUOTED and the evidence, plus post-settlement work rows.
+ *   The recorded result is WITHDRAWN, never rewritten in place to some other
+ *   outcome, and `settledAt` is NEVER re-stamped: the pick was settled when it
+ *   was settled, and moving that timestamp would falsify the settlement
+ *   history the calibration loader reads. (This is the C-254/C-256/C-258
+ *   settledAt-preservation rule.)
+ *
+ *   UNPUBLISH half (unpublishDefectiveUnsettledPicks): an UNSETTLED published
+ *   pick with the same defect is set isPublished=false in one PENDING-scoped
+ *   updateMany. Nothing is deleted; the result stays PENDING and the zero-sit
+ *   lane still owns its eventual grading or void.
+ *
+ * WHY VOID AND NOT RE-GRADE. Re-grading a settled pick against a book line
+ * requires choosing WHICH book line at WHICH timestamp, which is a policy
+ * nobody has approved, and it would rewrite a published result. The lane
+ * withdraws the claim instead. scripts/ops/regrade-against-book-lines.ts
+ * reports what a re-grade would change, and writes nothing.
+ *
+ * CONSERVATIVE BY CONSTRUCTION. A pick with no odds rows readable for its game
+ * and market is voided ONLY under the explicit NO_QUOTE_ROWS branch, and that
+ * branch fires only when the query succeeded and returned nothing — a read
+ * failure skips the pick, so nothing is voided on missing evidence. Every
+ * write is scoped by the state it read (result and isPublished in the `where`),
+ * so a race loser writes nothing and a second run is a no-op. A write failure
+ * on one pick is isolated and the loop continues. Per-run caps bound the work.
+ *
+ * DEFAULT OFF. The flag ships false. Turning it on withdraws published results,
+ * which is a founder action; see docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.
+ */
+
+import { isBaseballSport, isQuotedBookLine } from "@sports/prediction-engine";
+import {
+  enqueuePostSettlementWork,
+  type PostSettlementWorkDelegate,
+} from "@sports/ingestion-pipeline";
+import type { SettlementRootCauseCode } from "./root-cause-analysis";
+
+/** The RCA code every void from this lane carries. */
+export const LINE_INTEGRITY_RCA_CODE: Extract<SettlementRootCauseCode, "LINE_NOT_QUOTED"> =
+  "LINE_NOT_QUOTED";
+
+export const LINE_INTEGRITY_ACTOR = "system:settle-picks:line-integrity";
+export const LINE_INTEGRITY_POLICY_REF = "docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md";
+export const LINE_INTEGRITY_EVENT_SCHEMA_VERSION = 1;
+
+/** Oldest-first cap on candidates inspected per cycle, per half. */
+export const LINE_INTEGRITY_VOID_CAP = 50;
+export const LINE_INTEGRITY_UNPUBLISH_CAP = 200;
+/** Cap on the sample arrays returned for the ops surface. */
+const SAMPLE_CAP = 20;
+
+/** Pick markets that carry a points line. MONEYLINE has none and is out of scope. */
+export const LINE_INTEGRITY_MARKETS = ["SPREAD", "TOTAL"] as const;
+export type LineIntegrityMarket = (typeof LINE_INTEGRITY_MARKETS)[number];
+
+/** Pick market -> the OddsMarket enum value whose rows carry that line. */
+const PICK_MARKET_TO_ODDS_MARKET: Record<LineIntegrityMarket, "SPREADS" | "TOTALS"> = {
+  SPREAD: "SPREADS",
+  TOTAL: "TOTALS",
+};
+
+/**
+ * Flag read. There is no zero-sit flag to mirror literally — that lane ships
+ * always-on — so this uses the repo's established env-flag idiom
+ * (free-settlement-runner.ts, public-surface-truth/route.ts): trimmed,
+ * lower-cased, exact "true", default false.
+ */
+export function lineIntegrityVoidEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env["LINE_INTEGRITY_VOID_ENABLED"]?.trim().toLowerCase() === "true";
+}
+
+export type LineIntegrityDefectKind =
+  /** Odds rows exist for the game and market by generatedAt; none carries the stored line. */
+  | "LINE_NOT_QUOTED"
+  /** No odds row at all for the game and market by generatedAt: the line has no book basis. */
+  | "NO_QUOTE_ROWS";
+
+export type LineIntegrityQuote = {
+  readonly id: string;
+  readonly bookmaker: string;
+  /** The line this row quotes, in the pick's unit (points). */
+  readonly line: number | null;
+};
+
+export type LineIntegrityVerdict =
+  | { readonly kind: "ok"; readonly matchedQuoteId: string }
+  | {
+      readonly kind: "defect";
+      readonly defect: LineIntegrityDefectKind;
+      /** The nearest line any book quoted, or null when no book quoted one. */
+      readonly bookLine: number | null;
+      readonly sourceIds: readonly string[];
+    };
+
+/**
+ * Was `storedLine` a line some book quoted? Pure; the caller supplies the rows.
+ *
+ * `bookLine` on a defect is the NEAREST quoted line, reported so the evidence
+ * shows how far off the stored value was. It is explicitly NOT a corrected
+ * line and nothing grades against it.
+ */
+export function classifyStoredLine(
+  storedLine: number,
+  quotes: readonly LineIntegrityQuote[],
+): LineIntegrityVerdict {
+  const quoted = quotes.filter(
+    (q): q is LineIntegrityQuote & { line: number } => q.line !== null && Number.isFinite(q.line),
+  );
+  if (quoted.length === 0) {
+    return { kind: "defect", defect: "NO_QUOTE_ROWS", bookLine: null, sourceIds: quotes.map((q) => q.id) };
+  }
+  const match = quoted.find((q) => isQuotedBookLine(storedLine, [q.line]));
+  if (match) return { kind: "ok", matchedQuoteId: match.id };
+
+  let nearest = quoted[0]!;
+  for (const q of quoted) {
+    if (Math.abs(q.line - storedLine) < Math.abs(nearest.line - storedLine)) nearest = q;
+  }
+  return {
+    kind: "defect",
+    defect: "LINE_NOT_QUOTED",
+    bookLine: nearest.line,
+    // Bounded: the evidence names the books that DID quote, not every row.
+    sourceIds: quoted.slice(0, 25).map((q) => q.id),
+  };
+}
+
+/**
+ * SQL-free screen used by the ops truth surface, where joining the odds table
+ * per pick is not affordable. It is a PROXY for the real rule above and is
+ * labelled as one everywhere it is reported: a line off the half-point grid is
+ * certainly not a book line, but a line ON the grid may still never have been
+ * quoted, so this UNDER-counts and never over-counts.
+ */
+export function isOffHalfPointGrid(line: number): boolean {
+  if (!Number.isFinite(line)) return true;
+  const doubled = Math.abs(line) * 2;
+  // The stored value is a mean, so allow float drift around a grid point.
+  return Math.abs(doubled - Math.round(doubled)) > 1e-9;
+}
+
+/** A baseball run line is always ±1.5 (2.5 and 3.5 are the offered alternates). */
+export function isNonStandardRunline(sportKey: string, pickType: string, line: number): boolean {
+  if (pickType !== "SPREAD" || !isBaseballSport(sportKey)) return false;
+  if (!Number.isFinite(line)) return true;
+  return ![1.5, 2.5, 3.5].some((valid) => Math.abs(Math.abs(line) - valid) < 1e-9);
+}
+
+export type LineIntegrityPickRow = {
+  readonly id: string;
+  readonly gameId: string;
+  readonly pickType: string;
+  readonly selection: string;
+  readonly line: number;
+  readonly result: string;
+  readonly settledAt: Date | null;
+  readonly isPublished: boolean;
+  readonly generatedAt: Date;
+  readonly modelVersion: string;
+  readonly game: { readonly id: string; readonly sport: { readonly key: string } | null };
+};
+
+/** Structural transaction surface (mirrors zero-sit-lane.ts's doctrine). */
+export type LineIntegrityTx = {
+  pick: { updateMany(args: Record<string, unknown>): Promise<{ count: number }> };
+  pickSettlementEvent: { create(args: Record<string, unknown>): Promise<unknown> };
+  postSettlementWork: unknown;
+};
+
+export type LineIntegrityDb = {
+  pick: {
+    findMany(args: Record<string, unknown>): Promise<LineIntegrityPickRow[]>;
+    updateMany(args: Record<string, unknown>): Promise<{ count: number }>;
+  };
+  odds: {
+    findMany(args: Record<string, unknown>): Promise<
+      Array<{ id: string; bookmaker: string; spread: number | null; total: number | null }>
+    >;
+  };
+  $transaction(fn: (tx: LineIntegrityTx) => Promise<{ count: number }>): Promise<{ count: number }>;
+};
+
+export type LineIntegritySkipReason =
+  | "MARKET_OUT_OF_SCOPE"
+  | "ODDS_READ_FAILED"
+  | "LINE_IS_QUOTED"
+  | "WRITE_RACE_LOST"
+  | "WRITE_FAILED";
+
+export type LineIntegrityAction = {
+  readonly pickId: string;
+  readonly gameId: string;
+  readonly sportKey: string;
+  readonly pickType: string;
+  readonly defect: LineIntegrityDefectKind;
+  readonly storedLine: number;
+  readonly bookLine: number | null;
+};
+
+export type LineIntegrityHalfResult = {
+  readonly enabled: boolean;
+  inspected: number;
+  acted: number;
+  capReached: boolean;
+  skippedByReason: Record<LineIntegritySkipReason, number>;
+  actions: LineIntegrityAction[];
+};
+
+export type LineIntegrityLaneResult = {
+  readonly lane: "line-integrity";
+  readonly enabled: boolean;
+  readonly voids: LineIntegrityHalfResult;
+  readonly unpublished: LineIntegrityHalfResult;
+};
+
+const LINE_INTEGRITY_PICK_SELECT = {
+  id: true,
+  gameId: true,
+  pickType: true,
+  selection: true,
+  line: true,
+  result: true,
+  settledAt: true,
+  isPublished: true,
+  generatedAt: true,
+  modelVersion: true,
+  game: { select: { id: true, sport: { select: { key: true } } } },
+} as const;
+
+function emptySkips(): Record<LineIntegritySkipReason, number> {
+  return {
+    MARKET_OUT_OF_SCOPE: 0,
+    ODDS_READ_FAILED: 0,
+    LINE_IS_QUOTED: 0,
+    WRITE_RACE_LOST: 0,
+    WRITE_FAILED: 0,
+  };
+}
+
+function emptyHalf(enabled: boolean): LineIntegrityHalfResult {
+  return { enabled, inspected: 0, acted: 0, capReached: false, skippedByReason: emptySkips(), actions: [] };
+}
+
+/**
+ * Read the books' quoted lines for one pick, as of publish time.
+ *
+ * `lte: generatedAt` is the "at or before publish" bound: a line a book posted
+ * AFTER we published cannot justify what we published.
+ */
+async function readQuotesAtPublish(
+  db: LineIntegrityDb,
+  row: LineIntegrityPickRow,
+  market: LineIntegrityMarket,
+): Promise<LineIntegrityQuote[]> {
+  const rows = await db.odds.findMany({
+    where: {
+      gameId: row.gameId,
+      market: PICK_MARKET_TO_ODDS_MARKET[market],
+      fetchedAt: { lte: row.generatedAt },
+    },
+    select: { id: true, bookmaker: true, spread: true, total: true },
+  });
+  return rows.map((o) => ({
+    id: o.id,
+    bookmaker: o.bookmaker,
+    line: market === "SPREAD" ? o.spread : o.total,
+  }));
+}
+
+export function buildLineIntegrityPayload(args: {
+  readonly row: LineIntegrityPickRow;
+  readonly verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>;
+  readonly decidedAt: Date;
+}): Record<string, unknown> {
+  const { row, verdict, decidedAt } = args;
+  return {
+    schemaVersion: LINE_INTEGRITY_EVENT_SCHEMA_VERSION,
+    lane: "line-integrity",
+    actor: LINE_INTEGRITY_ACTOR,
+    policyRef: LINE_INTEGRITY_POLICY_REF,
+    rcaCode: LINE_INTEGRITY_RCA_CODE,
+    decidedAt: decidedAt.toISOString(),
+    reason:
+      verdict.defect === "NO_QUOTE_ROWS"
+        ? "No bookmaker quoted any line for this game and market at or before generatedAt, so the published line had no book basis."
+        : "The stored line was not quoted by any bookmaker for this game and market at or before generatedAt.",
+    evidence: {
+      defect: verdict.defect,
+      storedLine: row.line,
+      bookLine: verdict.bookLine,
+      sourceIds: verdict.sourceIds,
+      pickType: row.pickType,
+      selection: row.selection,
+      generatedAt: row.generatedAt.toISOString(),
+      modelVersion: row.modelVersion,
+      sportKey: row.game.sport?.key ?? "",
+      // The result being withdrawn, and the settlement time being PRESERVED.
+      priorResult: row.result,
+      settledAt: row.settledAt ? row.settledAt.toISOString() : null,
+    },
+  };
+}
+
+/**
+ * Inspect one candidate and return its verdict, or null when it must be
+ * skipped. Shared by both halves so the two can never diverge on what counts
+ * as the defect (the sibling-lane pattern this repo keeps hitting).
+ */
+async function verdictFor(
+  db: LineIntegrityDb,
+  row: LineIntegrityPickRow,
+  half: LineIntegrityHalfResult,
+): Promise<Extract<LineIntegrityVerdict, { kind: "defect" }> | null> {
+  const market = LINE_INTEGRITY_MARKETS.find((m) => m === row.pickType);
+  if (!market) {
+    half.skippedByReason.MARKET_OUT_OF_SCOPE += 1;
+    return null;
+  }
+  let quotes: LineIntegrityQuote[];
+  try {
+    quotes = await readQuotesAtPublish(db, row, market);
+  } catch (err) {
+    // Nothing is voided on missing evidence.
+    console.warn(
+      `[line-integrity] ODDS_READ_FAILED pick=${row.id} game=${row.gameId}: ` +
+        (err instanceof Error ? err.message : String(err)),
+    );
+    half.skippedByReason.ODDS_READ_FAILED += 1;
+    return null;
+  }
+  const verdict = classifyStoredLine(row.line, quotes);
+  if (verdict.kind === "ok") {
+    half.skippedByReason.LINE_IS_QUOTED += 1;
+    return null;
+  }
+  return verdict;
+}
+
+function record(half: LineIntegrityHalfResult, row: LineIntegrityPickRow, verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>): void {
+  half.acted += 1;
+  if (half.actions.length < SAMPLE_CAP) {
+    half.actions.push({
+      pickId: row.id,
+      gameId: row.gameId,
+      sportKey: row.game.sport?.key ?? "",
+      pickType: row.pickType,
+      defect: verdict.defect,
+      storedLine: row.line,
+      bookLine: verdict.bookLine,
+    });
+  }
+}
+
+/**
+ * VOID half: settled published picks whose stored line was never quoted.
+ *
+ * The pick write NEVER touches `settledAt`. The update is scoped to the exact
+ * result the candidate was read at, so a race loser writes nothing and a second
+ * run finds the row already VOID and no longer selects it.
+ */
+export async function voidDefectiveSettledPicks(input: {
+  readonly db: LineIntegrityDb;
+  readonly now?: Date;
+  readonly cap?: number;
+  readonly enabled?: boolean;
+}): Promise<LineIntegrityHalfResult> {
+  const enabled = input.enabled ?? lineIntegrityVoidEnabled();
+  const half = emptyHalf(enabled);
+  if (!enabled) return half;
+
+  const now = input.now ?? new Date();
+  const cap = input.cap ?? LINE_INTEGRITY_VOID_CAP;
+  const rows = await input.db.pick.findMany({
+    where: {
+      isPublished: true,
+      result: { in: ["WIN", "LOSS", "PUSH"] },
+      pickType: { in: [...LINE_INTEGRITY_MARKETS] },
+    },
+    orderBy: [{ generatedAt: "asc" }],
+    take: cap + 1,
+    select: LINE_INTEGRITY_PICK_SELECT,
+  });
+  half.capReached = rows.length > cap;
+  const candidates = rows.slice(0, cap);
+  half.inspected = candidates.length;
+
+  for (const row of candidates) {
+    const verdict = await verdictFor(input.db, row, half);
+    if (!verdict) continue;
+    const payload = buildLineIntegrityPayload({ row, verdict, decidedAt: now });
+    let written: { count: number };
+    try {
+      written = await input.db.$transaction(async (tx) => {
+        // Scoped to the result we READ. settledAt is deliberately absent from
+        // `data`: the pick was settled when it was settled.
+        const updated = await tx.pick.updateMany({
+          where: { id: row.id, result: row.result, isPublished: true },
+          data: { result: "VOID" },
+        });
+        if (updated.count === 0) return updated;
+        // TRANSACTIONAL OUTBOX, same lane as the graders and zero-sit: the
+        // event rides in the settlement transaction.
+        await tx.pickSettlementEvent.create({
+          data: {
+            pickId: row.id,
+            gameId: row.gameId,
+            result: "VOID",
+            // The event records the ORIGINAL settlement time, not now.
+            settledAt: row.settledAt ?? row.generatedAt,
+            status: "PENDING",
+            payload,
+          },
+        });
+        await enqueuePostSettlementWork(
+          tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
+          [
+            { subjectId: row.id, kind: "CLV_GRADE" },
+            { subjectId: row.id, kind: "SNAPSHOT_OUTCOME" },
+          ],
+        );
+        return updated;
+      });
+    } catch (err) {
+      // Per-pick isolation: one poison row must not stop the cycle.
+      console.warn(
+        `[line-integrity] WRITE_FAILED pick=${row.id} game=${row.gameId}: ` +
+          (err instanceof Error ? err.message : String(err)),
+      );
+      half.skippedByReason.WRITE_FAILED += 1;
+      continue;
+    }
+    if (written.count === 0) {
+      half.skippedByReason.WRITE_RACE_LOST += 1;
+      continue;
+    }
+    record(half, row, verdict);
+    console.warn(
+      `[line-integrity] VOID pick=${row.id} game=${row.gameId} rca=${LINE_INTEGRITY_RCA_CODE} ` +
+        `stored=${row.line} book=${verdict.bookLine ?? "NONE"}`,
+    );
+  }
+  return half;
+}
+
+/**
+ * UNPUBLISH half: unsettled published picks with the same defect.
+ *
+ * Nothing is deleted and the result stays PENDING — the zero-sit lane still
+ * owns grading or voiding it. The write is scoped to isPublished=true and
+ * result PENDING, so a second run selects nothing.
+ */
+export async function unpublishDefectiveUnsettledPicks(input: {
+  readonly db: LineIntegrityDb;
+  readonly cap?: number;
+  readonly enabled?: boolean;
+}): Promise<LineIntegrityHalfResult> {
+  const enabled = input.enabled ?? lineIntegrityVoidEnabled();
+  const half = emptyHalf(enabled);
+  if (!enabled) return half;
+
+  const cap = input.cap ?? LINE_INTEGRITY_UNPUBLISH_CAP;
+  const rows = await input.db.pick.findMany({
+    where: {
+      isPublished: true,
+      result: "PENDING",
+      pickType: { in: [...LINE_INTEGRITY_MARKETS] },
+    },
+    orderBy: [{ generatedAt: "asc" }],
+    take: cap + 1,
+    select: LINE_INTEGRITY_PICK_SELECT,
+  });
+  half.capReached = rows.length > cap;
+  const candidates = rows.slice(0, cap);
+  half.inspected = candidates.length;
+
+  for (const row of candidates) {
+    const verdict = await verdictFor(input.db, row, half);
+    if (!verdict) continue;
+    let written: { count: number };
+    try {
+      written = await input.db.pick.updateMany({
+        where: { id: row.id, result: "PENDING", isPublished: true },
+        data: { isPublished: false },
+      });
+    } catch (err) {
+      console.warn(
+        `[line-integrity] WRITE_FAILED (unpublish) pick=${row.id} game=${row.gameId}: ` +
+          (err instanceof Error ? err.message : String(err)),
+      );
+      half.skippedByReason.WRITE_FAILED += 1;
+      continue;
+    }
+    if (written.count === 0) {
+      half.skippedByReason.WRITE_RACE_LOST += 1;
+      continue;
+    }
+    record(half, row, verdict);
+    console.warn(
+      `[line-integrity] UNPUBLISH pick=${row.id} game=${row.gameId} ` +
+        `stored=${row.line} book=${verdict.bookLine ?? "NONE"}`,
+    );
+  }
+  return half;
+}
+
+/** Both halves. Unpublish first: it is the cheaper write and stops the bleed. */
+export async function runLineIntegrityLane(input: {
+  readonly db: LineIntegrityDb;
+  readonly now?: Date;
+  readonly enabled?: boolean;
+}): Promise<LineIntegrityLaneResult> {
+  const enabled = input.enabled ?? lineIntegrityVoidEnabled();
+  const unpublished = await unpublishDefectiveUnsettledPicks({ db: input.db, enabled });
+  const voids = await voidDefectiveSettledPicks({
+    db: input.db,
+    enabled,
+    ...(input.now ? { now: input.now } : {}),
+  });
+  return { lane: "line-integrity", enabled, voids, unpublished };
+}

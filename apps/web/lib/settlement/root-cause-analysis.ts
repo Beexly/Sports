@@ -27,6 +27,14 @@ export type SettlementRootCauseCode =
   | "SCORE_MISMATCH_CROSS_PATH"
   | "AMBIGUOUS_TEAM_NAME"
   | "FIXTURE_NOT_FOUND"
+  // Line-integrity lane void code (C-271, ledger C-197/C-270). Stamped on the
+  // VOID PickSettlementEvent payload by
+  // apps/web/lib/settlement/line-integrity-lane.ts; never produced by
+  // classifySettlementRootCause (it explains, the lane acts). Means: the pick's
+  // stored `line` was not a line any bookmaker quoted for that game and market
+  // at or before generatedAt, so the pick was unplaceable and was graded
+  // against a price that did not exist.
+  | "LINE_NOT_QUOTED"
   | "UNKNOWN";
 
 /** Fishbone (Ishikawa) category for ops routing. */
@@ -124,6 +132,7 @@ const CODE_CATEGORY: Record<SettlementRootCauseCode, FishboneCategory> = {
   SCORE_MISMATCH_CROSS_PATH: "DATA_SOURCE",
   AMBIGUOUS_TEAM_NAME: "MATCHING",
   FIXTURE_NOT_FOUND: "DATA_SOURCE",
+  LINE_NOT_QUOTED: "DATA_SOURCE",
   UNKNOWN: "UNKNOWN",
 };
 
@@ -142,6 +151,7 @@ const CODE_WAVE: Record<SettlementRootCauseCode, "A" | "B" | "C" | "D"> = {
   SCORE_MISMATCH_CROSS_PATH: "C",
   AMBIGUOUS_TEAM_NAME: "C",
   FIXTURE_NOT_FOUND: "C",
+  LINE_NOT_QUOTED: "C",
   // D: not actionable yet / unknown
   WITHIN_GRACE: "D",
   NOT_COMMENCED: "D",
@@ -276,6 +286,14 @@ function fiveWhysFor(
         "Why CANCELED or not? The row is marked CANCELED only when NEITHER stored name matched a board side (evidence homeListed and awayListed both false) and the row was still SCHEDULED or LIVE; a POSTPONED row keeps its status because it may be rescheduled, and when one stored name matched against another opponent the board is real and the row is left as is (a one-sided name mismatch).",
         "Root: fixture confirmation missing before pick generation; the per-name evidence separates a phantom fixture from a name defect only once the fixture itself is verified.",
       ];
+    case "LINE_NOT_QUOTED":
+      return [
+        "Why VOIDED? The pick's stored `line` was not a line any bookmaker quoted for that game and market at or before generatedAt.",
+        "Why was it stored? The engine stores the arithmetic MEAN of every book's line (scoring.ts avgSpread / avgTotal). Where books disagree, that mean is a number no book offers.",
+        "Why does that void the pick? A member could not place it, and grading it against a price that did not exist makes the recorded result meaningless — the result is withdrawn, not corrected.",
+        "Why not re-grade instead? Re-grading needs a publish-time book line chosen by a policy nobody has approved; scripts/ops/regrade-against-book-lines.ts reports what that would change and writes nothing.",
+        "Root: a consensus statistic was written into a field the product presents and settles as a market price.",
+      ];
     default:
       return [
         "Why unclassified? Outcome shape did not match a known pattern.",
@@ -359,6 +377,12 @@ function remediationFor(
         "Verify the fixture itself (the ESPN event id or the league schedule page) before concluding the contest did not occur: a SCHEDULED or LIVE row with both names unmatched was marked CANCELED and must be reopened if the contest exists under other names; a POSTPONED row kept its status.",
         "Confirm the fixture against ESPN before any new pick (C-111); for a name mismatch repair the stored team name instead of cancelling anything.",
       ];
+    case "LINE_NOT_QUOTED":
+      return [
+        "Already voided by the line-integrity lane; read evidence.storedLine, evidence.bookLine and evidence.sourceIds on the PickSettlementEvent payload. bookLine null means no book quoted ANY line for that game and market by generatedAt; a number means books quoted, just never the stored value.",
+        "Run `npm run ops:regrade-lines` to see, per sport and market, what a publish-time book line would have graded instead. It writes nothing and reports no corrected hit rate.",
+        "Upstream: LINE_INTEGRITY_PUBLISH_GUARD_ENABLED refuses these at publish time (C-270). It is OFF by default because enabling it suppresses roughly half the board — a founder decision, see docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.",
+      ];
     default:
       return ["Inspect raw settlement outcome and extend RCA classifier."];
   }
@@ -392,6 +416,8 @@ function summaryFor(code: SettlementRootCauseCode, ageHours: number): string {
       return `Voided: team names could not identify one game (${ageHours.toFixed(1)}h since kickoff).`;
     case "FIXTURE_NOT_FOUND":
       return `Voided: the free scoreboard for that date lists no event pairing the two stored team names (${ageHours.toFixed(1)}h since kickoff).`;
+    case "LINE_NOT_QUOTED":
+      return "Voided: the stored line was not quoted by any bookmaker for that game and market at or before generatedAt.";
     default:
       return "Unclassified settlement blockage.";
   }

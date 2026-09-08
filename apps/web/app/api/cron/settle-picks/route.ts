@@ -53,6 +53,10 @@ import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
 import { drainPendingSnapshotOutcomes } from "@/lib/settlement/free-path-snapshot";
 import { paidScoresJustifiedSports } from "@/lib/odds/paid-scores-justification";
 import { runZeroSitLane, zeroSitDeadline, type ZeroSitLaneResult } from "@/lib/settlement/zero-sit-lane";
+import {
+  runLineIntegrityLane,
+  type LineIntegrityLaneResult,
+} from "@/lib/settlement/line-integrity-lane";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -182,6 +186,16 @@ export async function GET(request: Request) {
     zeroSitDeadline(startedAt, maxDuration),
   );
 
+  // ── 3c. Line-integrity lane (C-271; ledger C-197/C-270): unpublish, and
+  // VOID through the same outbox, published picks whose stored `line` was
+  // never quoted by any bookmaker for that game and market at or before
+  // generatedAt. Gated by LINE_INTEGRITY_VOID_ENABLED, default OFF — with the
+  // flag unset it reads nothing and writes nothing. Runs after zero-sit so a
+  // pick the graders could still settle this cycle is not withdrawn out from
+  // under them, and before the outbox drain in step 5 so its VOID receipts
+  // close in the same cycle.
+  const lineIntegrity = await runLineIntegrityLaneSafe("[cron:settle-picks]");
+
   // ── 4. Slate commitment freeze (hash-chained receipts; no odds key needed) ─
   let freeze: SlateFreezeResult[] = [];
   try {
@@ -232,6 +246,12 @@ export async function GET(request: Request) {
   const totalSettled = free.picksSettled + (paidSupplement?.picksSettled ?? 0) + backfillSettled;
   // A VOID with an RCA code clears an overdue pick as surely as a grade does
   // (that is the zero-sit policy), so a cycle that only voided is not starved.
+  // Counts are per-lane, never pooled: `picksVoided` has always meant "voided
+  // by the zero-sit lane" and folding a second lane's voids into it would make
+  // the label stop describing what it counts (the C-241/C-246/C-250 defect
+  // class). The line-integrity lane reports its own counts under
+  // `lineIntegrity`, and its voids do NOT clear the starvation check below —
+  // withdrawing a published result is not the same as grading an overdue pick.
   const picksVoided = "error" in zeroSit ? 0 : zeroSit.voids.voided;
   const picksUnpublished = "error" in zeroSit ? 0 : zeroSit.stale.unpublished;
   const starved =
@@ -270,6 +290,7 @@ export async function GET(request: Request) {
     rca: free.rca,
     staleBackfill,
     zeroSit,
+    lineIntegrity,
     bootstrapMode: gates.isBootstrapMode,
     free,
     freeScores,
@@ -401,6 +422,19 @@ async function runStaleBackfillSafe(
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`${logPrefix} stale backfill failed: ${message}`);
     captureError(err, { path: "settle-picks", stage: "stale-backfill" });
+    return { error: message };
+  }
+}
+
+async function runLineIntegrityLaneSafe(
+  logPrefix: string,
+): Promise<LineIntegrityLaneResult | { error: string }> {
+  try {
+    return await runLineIntegrityLane({ db: db as never });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn(`${logPrefix} line-integrity lane failed: ${message}`);
+    captureError(err, { path: "settle-picks", stage: "line-integrity" });
     return { error: message };
   }
 }
