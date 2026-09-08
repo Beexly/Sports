@@ -1,6 +1,6 @@
 # Identical-row score bake-off — 2026-09-08
 
-Ledger row **C-261**. Branch `claude/launch-identical-row-bakeoff`, based on `main` at `8cc0695`.
+Ledger row **C-265**. Branch `claude/launch-identical-row-bakeoff`, based on `main` at `8cc0695`.
 
 Every number in this document comes from a command run in this session or from the live truth
 surface at the stated time. A cell that could not be produced without a database reads
@@ -198,8 +198,14 @@ Collect the game ids it reports as contradicted. Then either
   #720 lands first, nothing here conflicts with its C-253/C-255/C-257 changes: those alter where the
   *slate* writes `marketFairProb` and how `/api/v1/probabilities` reads it; this row reads through
   the calibration loader's resolver, which already handles both the nested and the top-level field.
-- **Ledger numbering**: C-261 was chosen as the next number above #720's C-260. Six sibling sessions
-  are dispatching in parallel; a duplicate number is a merge conflict the ledger guard will catch.
+- **Ledger numbering**: this row was opened as C-261 (the next number above #720's C-260) and
+  RENUMBERED to **C-265** on 2026-09-08 by the PR steward session. The duplicate the note below
+  predicted actually happened: a sibling launch session opened a different C-261 (NFL Week 1 board
+  coverage) on `claude/launch-nfl-week1-coverage`, PR #725. Two rows with one id fail the ledger
+  guard's duplicate-ID check (`scripts/ops/check-agent-ledger.mjs:306`) the moment both branches
+  merge. #725 lands first and keeps C-261. The commit messages `eefc7c979` and `346330852` and this
+  PR's title still say C-261 and were not rewritten — no history rewrite on a pushed branch — so the
+  SHAs, not the numbers in those messages, are the authority.
 - **Cost**: one extra `odds.findMany` per truth-surface read (the same query the six-hourly cron
   already runs), bounded by the 2000-pick window and the 60/min rate limit already on the route.
 - **What this does not do**: it does not change `bestScore`, any floor, the streak, the pause list,

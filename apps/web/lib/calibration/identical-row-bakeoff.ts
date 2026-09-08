@@ -1,5 +1,5 @@
 /**
- * Identical-row score bake-off (2026-09-08, ledger C-261).
+ * Identical-row score bake-off (2026-09-08, ledger C-265).
  *
  * WHY THIS EXISTS. scoreBakeoff / scoreBakeoffByMarket compare four ranking
  * scores, each on whatever rows carry that score: on the 2026-09-08 truth

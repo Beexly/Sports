@@ -13,7 +13,7 @@ import { buildProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import { toProvenPathPickRow } from "@/lib/calibration/proven-path-rows";
 
 /**
- * Ledger C-261: every score on ONE identical settled-moneyline row set.
+ * Ledger C-265: every score on ONE identical settled-moneyline row set.
  * Fixtures are small enough that every expected number below was worked by
  * hand (the arithmetic is in the comments), so the assertions are the answer
  * and the evidence in one step.

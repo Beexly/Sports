@@ -62,7 +62,7 @@ async function loadRows() {
       settledAt: true,
       // Lock-time market fair backs up a factor breakdown that lost it (proven-path-rows.ts).
       proofReceipt: { select: { marketFairProb: true } },
-      // C-261 identity fields: the odds-table resolver (WP-28 / C-110) needs
+      // C-265 identity fields: the odds-table resolver (WP-28 / C-110) needs
       // the pick's side and publish time to recompute a market probability
       // for the identical-row bake-off, exactly as the calibration loader does.
       id: true,
@@ -83,7 +83,7 @@ async function loadRows() {
   // Three-way moneyline sports are excluded here (shared row builder) and counted.
   const report = toProvenPathPickRowsReport(picks);
 
-  // C-261: one identical row set for every score. Market probability follows
+  // C-265: one identical row set for every score. Market probability follows
   // the calibration loader's resolver order (receipt, factor breakdown, then
   // the read-only odds-table recompute at generatedAt). Best-effort: a failed
   // odds read leaves the bake-off rows untouched and the table absent.

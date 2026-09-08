@@ -100,7 +100,7 @@ export type ProvenPathPlan = {
   readonly scoreBakeoffByMarket?: readonly ScoreBakeoffMarketRow[];
   /**
    * Every score on ONE identical settled-moneyline row set (2026-09-08, ledger
-   * C-261); absent on plans persisted before it and when the loader supplied
+   * C-265); absent on plans persisted before it and when the loader supplied
    * no selection. Measurement only: bestScore is still chosen from scoreBakeoff.
    */
   readonly scoreBakeoffIdenticalRows?: ScoreBakeoffIdenticalRows;
