@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 
 /**
  * C-231, found in review. `FantasyShell` defaults `projectionsPool` to
@@ -139,6 +139,61 @@ describe("a page that renders the live pool cannot claim an illustrative badge",
     expect(resolvers.length).toBeGreaterThanOrEqual(5);
     for (const { file, src } of resolvers) {
       expect(src, file).toMatch(/projectionsPool=\{pool\b/);
+    }
+  });
+});
+
+/**
+ * C-251, Devin. A second axis the invariant above does not cover.
+ *
+ * That one asks WHETHER a client component resolves the pool itself. It never
+ * asks WHEN the server component runs. /fantasy/studio had no `dynamic` export
+ * and a synchronous default export, so Next prerendered it at BUILD time: the
+ * brief was generated against the build's pool and the badge was baked from an
+ * `isLiveProjections()` evaluated before the runtime registration that
+ * instrumentation performs. Activating the provider could never change either,
+ * because the page never rendered again.
+ *
+ * A page that claims "real" only when the pool resolves live is making a
+ * REQUEST-TIME claim. Freezing it at build time makes it a statement about the
+ * build machine, not about what the reader is being served.
+ */
+describe("a page whose badge depends on the live pool renders at request time", () => {
+  it("declares force-dynamic and resolves asynchronously", () => {
+    const offenders: string[] = [];
+    for (const file of pageFiles(APP_DIR)) {
+      const rel = relative(APP_DIR, file);
+      const src = readFileSync(file, "utf8");
+      // Only pages whose badge is CONDITIONAL are making a live claim. A page
+      // hardcoding "illustrative" or "none" says the same thing whenever it is
+      // rendered, so prerendering it is harmless.
+      const conditional = /projectionsPool=\{[^}]*\?[^}]*\}/.test(src);
+      if (!conditional) continue;
+      const dynamic = /export const dynamic\s*=\s*["']force-dynamic["']/.test(src);
+      const isAsync = /export default async function/.test(src);
+      if (!dynamic || !isAsync) {
+        offenders.push(`${rel} (force-dynamic=${dynamic}, async=${isAsync})`);
+      }
+    }
+    expect(
+      offenders,
+      "these pages claim a live pool but can be prerendered, freezing the claim at build time",
+    ).toEqual([]);
+  });
+
+  it("derives the badge from a resolved pool, never from a second independent lookup", () => {
+    // isLiveProjections() asks the registry again, separately from whatever
+    // resolution produced the content. The two can disagree, and on a
+    // prerendered page they disagreed permanently. Every conditional page now
+    // keys the badge on the pool it actually resolved.
+    for (const file of pageFiles(APP_DIR)) {
+      const rel = relative(APP_DIR, file);
+      const src = readFileSync(file, "utf8");
+      if (!/projectionsPool=\{[^}]*\?[^}]*\}/.test(src)) continue;
+      const badge = src.match(/projectionsPool=\{([^}]*)\}/)?.[1] ?? "";
+      expect(badge, `${rel} derives its badge from a separate registry lookup`).not.toContain(
+        "isLiveProjections",
+      );
     }
   });
 });
