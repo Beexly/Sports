@@ -16,20 +16,99 @@ import type { Player } from "../fantasy/players";
  * (which never call this) keep their fast cold starts.
  *
  * De-duplicated via a module-level cached promise so concurrent tool requests and
- * the instrumentation head-start share ONE multi-MB load; a failure clears the
- * cache to allow a later retry. No-op when the gate is off or already registered.
+ * the instrumentation head-start share ONE multi-MB load.
+ *
+ * THE CACHE IS TIME-BOUNDED, and both reasons were found in review (C-229).
+ *
+ * 1. A cached attempt used to be cleared only when the promise REJECTED. Once
+ *    the graded pool started returning `source-error` as a normal value for a
+ *    refused basis rather than throwing, the promise fulfilled with no provider
+ *    registered - so the cache stuck, `isLiveProjections` stayed false, and the
+ *    instance never retried. Paid tools fell back to the illustrative pool for
+ *    the entire life of the process. A non-live result now clears the cache.
+ *
+ * 2. The registration is a process-wide singleton and the basis decision is
+ *    WEEK-DEPENDENT. A provider registered inside the prior-season grace window
+ *    stayed registered after that window closed, so a basis the gate would now
+ *    refuse kept serving. Nothing about "already registered" implies "still
+ *    admissible".
+ *
+ * One mechanism covers both: a reload interval. The fast path stays a timestamp
+ * comparison with no import, an inadmissible basis cannot outlive the interval,
+ * and a refusal retries on the next request after a short cooldown rather than
+ * waiting it out.
  */
 let gradedLoadPromise: Promise<void> | null = null;
+/** When the currently-registered provider was built. */
+let registeredAt = 0;
+/**
+ * When the last attempt ran, live or not - bounds retry pressure on a refusal.
+ * NEGATIVE_INFINITY, not 0, so a cold start is unambiguously "never attempted"
+ * rather than "attempted at epoch": with 0 the cooldown comparison reads as a
+ * recent attempt whenever the clock is near zero, which suppressed the very
+ * first load.
+ */
+let lastAttemptAt = Number.NEGATIVE_INFINITY;
 
-export function ensureLiveProjections(env: Record<string, string | undefined> = process.env): Promise<void> {
+/**
+ * How long a registered provider is trusted before it is rebuilt. An hour
+ * bounds how long a basis that has become inadmissible can keep serving: the
+ * week rolls over on a Tuesday, so an hour is far inside the boundary while
+ * still costing at most 24 multi-MB loads a day per instance.
+ */
+export const PROVIDER_RELOAD_AFTER_MS = 60 * 60 * 1000;
+
+/**
+ * Minimum gap between attempts after one that did not register a provider.
+ * Without it, a refused basis would re-fetch several megabytes on every single
+ * request; with it, the retry is prompt but bounded.
+ */
+export const PROVIDER_RETRY_COOLDOWN_MS = 60 * 1000;
+
+/** Test seam: forget any registration decision without touching the provider. */
+export function resetLiveProjectionsCacheForTests(): void {
+  gradedLoadPromise = null;
+  registeredAt = 0;
+  lastAttemptAt = Number.NEGATIVE_INFINITY;
+}
+
+export function ensureLiveProjections(
+  env: Record<string, string | undefined> = process.env,
+  nowMs: number = Date.now(),
+): Promise<void> {
   if (!isConfigured("projections", env)) return Promise.resolve(); // founder gate off
-  if (isLiveProjections(env)) return Promise.resolve(); // already registered
+
+  const live = isLiveProjections(env);
+  // Registered AND still inside the trust interval: nothing to do.
+  if (live && nowMs - registeredAt < PROVIDER_RELOAD_AFTER_MS) return Promise.resolve();
+  // Registered but stale: drop the cached attempt so the next load rebuilds it
+  // against the current target week.
+  if (live) gradedLoadPromise = null;
+  // Not registered, and the last attempt was recent: do not re-fetch megabytes
+  // on every request while a refusal or outage persists.
+  if (!live && gradedLoadPromise === null && nowMs - lastAttemptAt < PROVIDER_RETRY_COOLDOWN_MS) {
+    return Promise.resolve();
+  }
+
   if (!gradedLoadPromise) {
+    lastAttemptAt = nowMs;
     gradedLoadPromise = import("./graded-pool")
       .then((m) => m.loadAndRegisterGradedProvider())
-      .then(() => undefined)
+      .then((result) => {
+        const registered = result.status === "live" && result.players.length > 0;
+        if (registered) {
+          registeredAt = nowMs;
+        } else {
+          // A refusal or an empty pool is NOT a successful registration. Clear
+          // the cache so a later request can try again instead of inheriting a
+          // fulfilled promise that registered nothing.
+          registeredAt = 0;
+          gradedLoadPromise = null;
+        }
+      })
       .catch((err) => {
         gradedLoadPromise = null; // allow a later request to retry
+        registeredAt = 0;
         throw err;
       });
   }
