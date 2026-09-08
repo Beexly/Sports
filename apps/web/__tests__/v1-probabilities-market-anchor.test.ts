@@ -35,10 +35,15 @@ describe("v1 probabilities exposes the anchor a signal pick actually carries", (
   });
 
   it("carries provenance, so one stored book cannot read as the two-book floor", () => {
-    for (const field of ["marketFairSource", "marketBookCount"]) {
-      expect(CODE).toContain(`${field},`);
-      expect(CODE).toMatch(new RegExp(`let ${field}`));
-    }
+    // Literal assertions rather than a RegExp built from a loop variable. The
+    // constructed form was the only dynamic pattern this change introduced, and
+    // a static scanner cannot tell a loop over two hard-coded strings from user
+    // input. It was also weaker: `let marketFairSource` as a literal says
+    // exactly what is being asserted.
+    expect(CODE).toContain("let marketFairSource: string | null = null;");
+    expect(CODE).toContain("let marketBookCount: number | null = null;");
+    expect(CODE).toContain("marketFairSource,");
+    expect(CODE).toContain("marketBookCount,");
   });
 
   it("sets provenance ONLY on the nested path, never beside a board-priced value", () => {
