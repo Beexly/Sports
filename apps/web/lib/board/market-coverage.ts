@@ -13,6 +13,7 @@
  * fake data). Pure classifier + a thin loader.
  */
 
+import { MIN_BOOKMAKERS, MIN_PUBLISH_CONFIDENCE, WEIGHTS } from "@sports/prediction-engine";
 import { freshPickWhere, type FreshPickWhere } from "./stale-pick-policy";
 
 export const MARKET_COVERAGE_WINDOW_HOURS = 72;
@@ -49,22 +50,64 @@ export interface MarketCoverageInput {
   readonly picks: ReadonlyArray<{ readonly sportKey: string; readonly pickType: string }>;
 }
 
-const FOOTBALL_SPORTS = new Set(["americanfootball_nfl", "americanfootball_ncaaf"]);
-
 function isMarketKey(value: string): value is MarketKey {
   return (MARKET_KEYS as readonly string[]).includes(value);
 }
 
+/**
+ * The book-priced moneyline's fair-probability floor. A literal in
+ * `scoreMoneylinePick` (packages/prediction-engine/src/scoring.ts, "Need strong
+ * conviction on ML"), not a named constant, so it is restated here for the
+ * operator copy and pinned by the scorer's own tests.
+ */
+const MONEYLINE_FAIR_PROB_FLOOR = 0.58;
+
+/**
+ * Operator hint for a market with games but no picks. It names the gates the
+ * frozen scorer applies, in order, and points at the feed posture the truth
+ * surface already reports (`oddsInserting`). It asserts no cause it cannot
+ * see: this module reads pick and game counts, never the odds table or the
+ * environment, so it cannot know whether a key is missing or a feed is down.
+ *
+ * Why the rewrite (C-261, 2026-09-08): the football TOTAL hint read "Known
+ * cause: the zero-key signal slate is moneyline-only and ESPN's single-bookmaker
+ * odds fail MIN_BOOKMAKERS=2, so totals need a live odds feed (THE_ODDS_API_KEY
+ * or TheRundown)" while the same truth surface showed THE_ODDS_API_KEY present,
+ * an odds insert 15 minutes old and 13,306 credits remaining. On the scorer the
+ * NFL Week 1 totals and moneylines fall to the gates below, not to a missing
+ * key, and a hint that names the wrong cause sends the operator to the wrong
+ * console.
+ */
 function hintFor(sportKey: string, market: MarketKey): string {
-  if (market === "TOTAL" && FOOTBALL_SPORTS.has(sportKey)) {
-    return (
-      "No TOTAL picks while games are scheduled. Known cause: the zero-key signal slate is " +
-      "moneyline-only and ESPN's single-bookmaker odds fail MIN_BOOKMAKERS=2, so totals need " +
-      "a live odds feed (THE_ODDS_API_KEY or TheRundown). Check refresh-odds provider status; " +
-      "the board is degraded, not broken."
-    );
+  const feed = "Read oddsInserting on this surface for the live feed state before blaming the feed; the board is degraded, not broken.";
+  const bookFloor = `at least MIN_BOOKMAKERS=${MIN_BOOKMAKERS} books price both sides`;
+  switch (market) {
+    case "MONEYLINE":
+      return (
+        `No MONEYLINE picks while ${sportKey} games are scheduled in the window. A book-priced moneyline ` +
+        `publishes only when ${bookFloor}, the de-vigged consensus fair probability for the favoured side ` +
+        `reaches ${MONEYLINE_FAIR_PROB_FLOOR} and the composite confidence reaches ${MIN_PUBLISH_CONFIDENCE} ` +
+        `(scoreMoneylinePick, packages/prediction-engine/src/scoring.ts); a tight line sits under the ` +
+        `fair-probability floor by design. The zero-key signal slate publishes a moneyline only when an ` +
+        `independent estimate exists for the fixture and clears the selective delta. ${feed}`
+      );
+    case "TOTAL":
+      return (
+        `No TOTAL picks while ${sportKey} games are scheduled in the window. A total publishes only when ` +
+        `${bookFloor}, the over/under vote across those books reaches ${WEIGHTS.CONSENSUS_MIN_PCT} and the ` +
+        `composite confidence reaches ${MIN_PUBLISH_CONFIDENCE} (scoreTotalPick, ` +
+        `packages/prediction-engine/src/scoring.ts); a juice split across books or a thin priced set drops ` +
+        `the total below the floor by design, and a single-bookmaker free feed (ESPN) cannot clear ` +
+        `MIN_BOOKMAKERS=${MIN_BOOKMAKERS}. The zero-key signal slate is moneyline-only. ${feed}`
+      );
+    case "SPREAD":
+      return (
+        `No SPREAD picks while ${sportKey} games are scheduled in the window. A spread publishes only when ` +
+        `${bookFloor}, the favoured-side vote reaches ${WEIGHTS.CONSENSUS_MIN_PCT} and the composite ` +
+        `confidence reaches ${MIN_PUBLISH_CONFIDENCE} (scoreSpreadPick, packages/prediction-engine/src/scoring.ts). ` +
+        `The zero-key signal slate is moneyline-only. ${feed}`
+      );
   }
-  return `No ${market} picks while ${sportKey} games are scheduled in the window; check the odds feed for this sport.`;
 }
 
 export function classifyMarketCoverage(

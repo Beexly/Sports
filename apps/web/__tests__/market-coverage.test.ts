@@ -129,3 +129,49 @@ describe("loadMarketCoverage", () => {
     ]);
   });
 });
+
+describe("degraded hints tell the truth about what they can see (C-261)", () => {
+  // Measured 2026-09-08 19:07 UTC on the production truth surface: the NFL
+  // TOTAL hint read "Known cause: ... totals need a live odds feed
+  // (THE_ODDS_API_KEY or TheRundown)" while the same payload reported the key
+  // present, an odds insert 15 minutes old and 13,306 credits. The classifier
+  // sees pick and game counts only, so it must name the scorer's gates and
+  // point at the feed posture, never assert a cause it cannot observe.
+  const report = classifyMarketCoverage(
+    { games: [{ sportKey: "americanfootball_nfl" }], picks: [] },
+    { from, to },
+  );
+  const hint = (market: string) => report.degraded.find((d) => d.market === market)!.hint;
+
+  it("never asserts a missing key or a 'known cause' it did not observe", () => {
+    for (const market of ["MONEYLINE", "SPREAD", "TOTAL"]) {
+      expect(hint(market)).not.toMatch(/Known cause/);
+      expect(hint(market)).not.toMatch(/THE_ODDS_API_KEY/);
+      expect(hint(market)).not.toMatch(/TheRundown/);
+      expect(hint(market)).toMatch(/oddsInserting/);
+    }
+  });
+
+  it("names the scorer gates a TOTAL must clear, in order: priced books, vote, confidence", () => {
+    const h = hint("TOTAL");
+    expect(h).toMatch(/MIN_BOOKMAKERS=2 books price both sides/);
+    expect(h).toMatch(/over\/under vote across those books reaches 0\.55/);
+    expect(h).toMatch(/composite confidence reaches 50/);
+    expect(h).toMatch(/scoreTotalPick/);
+    expect(h).toMatch(/by design/);
+  });
+
+  it("names the 0.58 fair-probability floor a book-priced MONEYLINE must clear", () => {
+    const h = hint("MONEYLINE");
+    expect(h).toMatch(/fair probability for the favoured side reaches 0\.58/);
+    expect(h).toMatch(/composite confidence reaches 50/);
+    expect(h).toMatch(/scoreMoneylinePick/);
+    expect(h).toMatch(/independent estimate/);
+  });
+
+  it("names the spread gates and says the zero-key slate is moneyline-only", () => {
+    const h = hint("SPREAD");
+    expect(h).toMatch(/scoreSpreadPick/);
+    expect(h).toMatch(/zero-key signal slate is moneyline-only/);
+  });
+});
