@@ -13,6 +13,7 @@
  * fake data). Pure classifier + a thin loader.
  */
 
+import { collapseGameRowsToFixtures, type FixtureCollapseRow } from "@sports/ingestion-pipeline";
 import { MIN_BOOKMAKERS, MIN_PUBLISH_CONFIDENCE, WEIGHTS } from "@sports/prediction-engine";
 import { freshPickWhere, type FreshPickWhere } from "./stale-pick-policy";
 
@@ -163,14 +164,34 @@ export function classifyMarketCoverage(
  */
 const SEED_MODEL_VERSION = "v5.0.0-seed";
 
+/**
+ * The row shape the game count needs: the per-fixture collapse's identity
+ * fields plus the sport key. `_count` rides along so the collapse keeps the
+ * row that carries the picks, the same tiebreak the board lanes use.
+ */
+export type MarketCoverageGameRow = FixtureCollapseRow & {
+  readonly sport: { readonly key: string };
+};
+
 export interface MarketCoverageDb {
   game: {
     findMany(args: {
       // Canonical rows only: a merged alias (tombstone) is the same contest
       // twice and would inflate the game count.
       where: { commenceTime: { gte: Date; lte: Date }; mergedIntoGameId: null };
-      select: { sport: { select: { key: true } } };
-    }): Promise<Array<{ sport: { key: string } }>>;
+      select: {
+        id: true;
+        externalId: true;
+        sportId: true;
+        homeTeamName: true;
+        awayTeamName: true;
+        commenceTime: true;
+        createdAt: true;
+        mergedIntoGameId: true;
+        sport: { select: { key: true } };
+        _count: { select: { picks: true; odds: true; oddsLineSnapshots: true } };
+      };
+    }): Promise<MarketCoverageGameRow[]>;
   };
   pick: {
     findMany(args: {
@@ -200,7 +221,20 @@ export async function loadMarketCoverage(
   const [games, picks] = await Promise.all([
     db.game.findMany({
       where: { commenceTime: range, mergedIntoGameId: null },
-      select: { sport: { select: { key: true } } },
+      select: {
+        id: true,
+        externalId: true,
+        sportId: true,
+        homeTeamName: true,
+        awayTeamName: true,
+        commenceTime: true,
+        createdAt: true,
+        mergedIntoGameId: true,
+        // `key` feeds the collapse's twin window (baseball 2h so a doubleheader
+        // stays two contests); omitting it takes the conservative 18h default.
+        sport: { select: { key: true } },
+        _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
+      },
     }),
     db.pick.findMany({
       where: {
@@ -214,9 +248,19 @@ export async function loadMarketCoverage(
       select: { pickType: true, game: { select: { sport: { select: { key: true } } } } },
     }),
   ]);
+  // ONE ROW PER CONTEST, not per feed. Every odds feed writes its own game row
+  // (The Odds API id, `espn:<sport>:<id>`, TheRundown), only some of which the
+  // merge lane has tombstoned, so a raw count over `mergedIntoGameId: null`
+  // reports feeds, not fixtures. Measured 2026-09-08 19:07 UTC on the
+  // production truth surface: americanfootball_nfl `games: 6` for a 72h window
+  // in which ESPN's public scoreboard lists exactly two Week 1 fixtures (NE at
+  // SEA, SF at LAR), i.e. three feed rows per contest. The same fixture-collapse
+  // guard the board lanes and the slate use (C-172) is applied here; picks are
+  // not collapsed because each pick hangs off exactly one row.
+  const fixtures = collapseGameRowsToFixtures(games);
   return classifyMarketCoverage(
     {
-      games: games.map((g) => ({ sportKey: g.sport.key })),
+      games: fixtures.map((g) => ({ sportKey: g.sport.key })),
       picks: picks.map((p) => ({ sportKey: p.game.sport.key, pickType: p.pickType })),
     },
     { from: now, to, windowHours },
