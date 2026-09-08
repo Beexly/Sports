@@ -462,7 +462,27 @@ async function loadBoardStateInner(
         game: { mergedIntoGameId: null },
       },
       include: {
-        game: { include: { sport: { select: { name: true } } } },
+        game: {
+          include: {
+            sport: { select: { name: true } },
+            // EXISTENCE PROBE FOR A LIVE PUBLISHED PICK, and it is the sibling
+            // of a filter passes.ts has had all along (`game.picks.none` on its
+            // gated query, line ~159). This lane could only learn that a
+            // fixture was published from a PUBLISHED GateDecision inside
+            // TODAY's window, so a pick published yesterday and still live
+            // today - or one whose decision fell outside this query at all -
+            // left the fixture looking un-published, and a GATED row for it
+            // rendered as "we passed on this" while a subscriber could see the
+            // pick (Devin Review, #719, round 38).
+            //
+            // `take: 1` makes this a boolean, not a list: the id is never read
+            // and no cap can truncate an answer that only has to be
+            // present-or-absent. It cannot be a `where` on the query itself,
+            // because that would also exclude the PUBLISHED decisions this
+            // lane exists to show.
+            picks: { where: publishedPickRelation, select: { id: true }, take: 1 },
+          },
+        },
         pick: true,
       },
       orderBy: { evaluatedAt: "desc" },
@@ -584,11 +604,15 @@ async function loadBoardStateInner(
       // current answer for, which is exactly what C-149 was written to stop.
       // Bounded and named beats broad and quiet. Pinned by a test that says in
       // its own body that it should be REPLACED when the column lands.
-      const livePublishedGameIds = new Set(
-        decisionEntries
+      const livePublishedGameIds = new Set([
+        ...decisionEntries
           .filter((entry) => entry.row.status === "PUBLISHED_TODAY")
           .map((entry) => entry.row.gameId),
-      );
+        // The probe above, unioned in. A fixture is suppressed because a pick
+        // is LIVE, which is a fact about Pick.isPublished now - not about
+        // whether this query happened to return the decision that published it.
+        ...decisions.filter((d) => d.game.picks.length > 0).map((d) => d.gameId),
+      ]);
       const newestWithdrawnPublishedAt = new Map<string, number>();
       for (const decision of decisions) {
         if (decision.status !== "PUBLISHED") continue;

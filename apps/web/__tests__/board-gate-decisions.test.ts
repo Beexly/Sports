@@ -43,6 +43,10 @@ function game(overrides: Record<string, unknown> = {}): Record<string, unknown> 
     currentEdgeIndex: 61,
     bookmakerCoverageMax: 11,
     sport: { name: "MLB" },
+    // The live-published-pick existence probe (Devin Review, #719, round 38).
+    // Empty by default: most fixtures here carry no live pick, and a test that
+    // wants one overrides this with a single row.
+    picks: [],
     ...overrides,
   };
 }
@@ -589,6 +593,95 @@ describe("board loaders with persisted gate decisions", () => {
       };
       expect(where.game?.mergedIntoGameId).toBeNull();
     });
+  });
+});
+
+describe("a fixture whose live published pick was decided OUTSIDE today's window", () => {
+  /**
+   * REVIEW ROUND 38 (Devin, #719), and it is the sibling-lane defect once more
+   * - this time with the pass lane holding the correct behaviour and this one
+   * missing it. passes.ts has filtered its gated query on
+   * `game.picks.none(isPublished)` since C-153; the state loader learned that a
+   * fixture was published ONLY from a PUBLISHED GateDecision inside today's
+   * `evaluatedAt` window.
+   *
+   * So a pick published yesterday and still live today, on a fixture the engine
+   * re-evaluated and gated this morning, rendered as "we passed on this" in the
+   * gated lane while a subscriber could still see the pick. Suppression is a
+   * question about Pick.isPublished NOW, not about which decision rows this
+   * query happened to return.
+   */
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-22T16:00:00.000Z"));
+    mocks.gateDecisionFindMany.mockReset();
+    mocks.pickFindMany.mockReset();
+    mocks.gameFindMany.mockReset();
+    mocks.pickFindMany.mockResolvedValue([]);
+    mocks.gameFindMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("does not show a GATED row for it", async () => {
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      {
+        id: "gd_gated_live_elsewhere",
+        gameId: "game_live",
+        status: "GATED",
+        reason: "Fixture reason: edge below threshold",
+        reasonCode: "EDGE_BELOW_THRESHOLD",
+        edgeIndex: 40,
+        confidence: 51,
+        modelVersion: "v5.2.7",
+        evaluatedAt,
+        // The probe finds the live pick even though no PUBLISHED decision for
+        // this fixture is in today's result set.
+        game: game({ picks: [{ id: "pick_live" }] }),
+        pick: null,
+      },
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows).toHaveLength(0);
+  });
+
+  it("asks the database for the probe with the published-pick predicate, capped at one row", async () => {
+    // Asserted on the QUERY. "Is there a live published pick" must be answered
+    // in the database and must be a boolean: a list would reintroduce the
+    // cap-before-collapse defect this file has now produced three times.
+    mocks.gateDecisionFindMany.mockResolvedValue([]);
+    await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+
+    const include = (mocks.gateDecisionFindMany.mock.calls[0]?.[0] as {
+      include: { game: { include: { picks: { where: Record<string, unknown>; take: number } } } };
+    }).include;
+    const probe = include.game.include.picks;
+    expect(probe.take).toBe(1);
+    expect(probe.where).toMatchObject({ isPublished: true, isBootstrap: false });
+  });
+
+  it("still shows the GATED row when no pick is live", async () => {
+    // The control. A probe that suppressed unconditionally would also pass the
+    // test above, so this pins that the gated lane still does its job.
+    mocks.gateDecisionFindMany.mockResolvedValue([
+      {
+        id: "gd_gated_clean",
+        gameId: "game_clean",
+        status: "GATED",
+        reason: "Fixture reason: edge below threshold",
+        reasonCode: "EDGE_BELOW_THRESHOLD",
+        edgeIndex: 40,
+        confidence: 51,
+        modelVersion: "v5.2.7",
+        evaluatedAt,
+        game: game(),
+        pick: null,
+      },
+    ]);
+    const result = await loadBoardState(new Date("2026-05-22T16:00:00.000Z"), proViewer);
+    expect(result.data.gatedTodayRows.map((r) => r.id)).toEqual(["gd_gated_clean"]);
   });
 });
 
