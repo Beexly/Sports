@@ -129,6 +129,26 @@ export default async function DashboardPage({
     return [];
   };
 
+  // A THIRD flag, for the counts that become a PUBLISHED RECORD (C-201).
+  // `softZero` is right for a display count - a zero next to a banner is a
+  // degraded number a reader can discount. It is NOT right for the inputs to
+  // evaluatePublicPerformancePolicy, because those get COMBINED: if
+  // canonicalSettledCount succeeds with a real total while canonicalWins fails
+  // to its fallback, the page renders a zero-win record and the win rate that
+  // follows from it, as a statement of record. A fabricated performance claim
+  // is the single worst output this product can produce, and mixing one real
+  // count with one fallback zero manufactures one. (Written without a literal
+  // percentage on purpose: no-unsupported-performance-claims reads any
+  // hardcoded percent beside "win rate" on a customer page as a claim, and it
+  // is right to - the guard does not know a comment from a headline.)
+  // So the record is withheld entirely if ANY of its inputs failed.
+  let perfDegraded = false;
+  const softPerfZero = (): number => {
+    dbDegraded = true;
+    perfDegraded = true;
+    return 0;
+  };
+
   const [
     todayPicks,
     todayPicksCount,
@@ -180,11 +200,11 @@ export default async function DashboardPage({
           ...excludeSeedInProd,
         },
       })
-      .catch(softZero),
-    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
-    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
-    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
-    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
+      .catch(softPerfZero),
+    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
+    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
+    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
+    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
     db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softZero),
     db.pick
       .count({
@@ -225,8 +245,14 @@ export default async function DashboardPage({
     clv: clvPolicy,
   });
 
-  const performanceVisible = performancePolicy.canExposePerformanceStats;
-  const recordDisplay = performanceVisible ? performancePolicy.publicRecord : "Collecting…";
+  // perfDegraded withholds the record even when the gate would expose it: a
+  // partial outage must read as "not available", never as a real record.
+  const performanceVisible = performancePolicy.canExposePerformanceStats && !perfDegraded;
+  const recordDisplay = perfDegraded
+    ? "Unavailable"
+    : performanceVisible
+      ? performancePolicy.publicRecord
+      : "Collecting…";
   const winRateDisplay =
     performanceVisible && performancePolicy.publicWinRate !== null
       ? `${performancePolicy.publicWinRate}%`

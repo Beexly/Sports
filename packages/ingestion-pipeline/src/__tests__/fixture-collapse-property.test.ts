@@ -213,3 +213,58 @@ describe("cap-after-collapse is not the same as cap-before-collapse (fuzz)", () 
     expect(shortfalls, "generator produced no duplicate-collapse cases").toBeGreaterThan(0);
   });
 });
+
+describe("the orientation retry uses the matcher, not raw name equality (C-200)", () => {
+  // Regression for a gap in C-194's own fix, found in review. The retry used
+  // to filter aligned candidates with `c.homeTeamName === row.homeTeamName`.
+  // findTwinCandidate does NOT compare names that way - it normalizes and, for
+  // the sports in PREFIX_MATCH_SPORT_KEYS (NFL among them), matches city
+  // prefixes. So whenever two feeds spell the same club differently, the raw
+  // filter dropped the very candidate it was looking for and the duplicate
+  // survived exactly as before the fix.
+  const T = Date.UTC(2026, 8, 13, 17, 0, 0);
+  const row = (id: string, home: string, away: string, skewMin: number) => ({
+    id,
+    externalId: `feed-${id}`,
+    sportId: "nfl",
+    homeTeamName: home,
+    awayTeamName: away,
+    commenceTime: new Date(T + skewMin * 60_000),
+    createdAt: new Date(T),
+    mergedIntoGameId: null,
+    sport: { key: "americanfootball_nfl" },
+    _count: { picks: 0, odds: 0 },
+  });
+
+  it("collapses a city-alias duplicate that a flipped row sits closer to", () => {
+    // Feed A full names; feed B a closer FLIPPED row; feed C the same fixture
+    // as A but city-only. C must collapse into A. The flipped row stays.
+    //
+    // Cincinnati and Detroit are deliberate: each city has exactly ONE NFL
+    // team, so matchTeamSide's prefix branch applies. An earlier draft of this
+    // test used Los Angeles, which is in AMBIGUOUS_CITY_TOKENS precisely
+    // because LA has two teams - the matcher correctly refuses it, and the
+    // test proved nothing. Verified directly: "Cincinnati" against
+    // "Cincinnati Bengals" returns orientation "aligned".
+    const rows = [
+      row("full", "Cincinnati Bengals", "Detroit Lions", 0),
+      row("flipped", "Detroit Lions", "Cincinnati Bengals", 5),
+      row("alias", "Cincinnati", "Detroit", 10),
+    ];
+    const out = collapseGameRowsToFixtures(rows).map((r) => r.id);
+    expect(out, "the city-alias duplicate survived").not.toContain("alias");
+    expect(out).toContain("full");
+    expect(out).toContain("flipped");
+    expect(out).toHaveLength(2);
+  });
+
+  it("still refuses to merge a genuinely flipped pair", () => {
+    // The control. Removing the masking must not have started collapsing
+    // orientation disagreements, which would grade against a guessed sign.
+    const rows = [
+      row("home-a", "Cincinnati Bengals", "Detroit Lions", 0),
+      row("home-b", "Detroit Lions", "Cincinnati Bengals", 5),
+    ];
+    expect(collapseGameRowsToFixtures(rows)).toHaveLength(2);
+  });
+});

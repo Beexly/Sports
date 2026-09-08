@@ -105,8 +105,18 @@ It is not proven, and it has never been validated out of sample.**
 
 ## 3. The gate has no skill floor, and that is the structural finding
 
-`apps/web/lib/ops/calibration-eligibility.ts` gates PROVEN on four floors: sample
-size, Brier ≤ 0.22, ECE ≤ 0.05, Murphy reliability ≤ 0.05.
+`apps/web/lib/ops/calibration-eligibility.ts` applies four CALIBRATION FLOORS:
+sample size, Brier ≤ 0.22, ECE ≤ 0.05, Murphy reliability ≤ 0.05.
+
+Scope this correctly, because an earlier draft of this section said "the gate"
+and that overstates it. Those four floors are not the whole of eligibility:
+`evaluateCalibrationEligibility` also requires `settlementHealthy`,
+`canonicalSettled >= minSettledForLearning`, and a streak of consecutive GREEN
+runs. So a constant no-skill forecaster clearing the four floors does NOT
+thereby reach PROVEN - the complete eligibility result can still read RED, and
+today it does. What follows is a statement about the FLOORS, which are the part
+that purports to measure skill, and it is exactly there that the skill floor is
+missing.
 
 Take a forecaster with **no skill at all** that predicts the base rate `p̄` on every
 pick. Every prediction lands in one bin, so from the decomposition in
@@ -215,11 +225,34 @@ explanation for a thin measured edge than any threshold is.
 
 > `hadLineMovementSignal` and `hadScheduleSignal` differ in **0 of 3,065 rows**.
 
-Perfectly collinear — one condition recorded under two names. Two named factors that
-cannot disagree are one factor, and any analysis that treats them as independent
-double-counts it. (`hadRestSignal` and `hadAtsFormSignal` differ in 518 of 3,065
-overall, so those two are genuinely distinct — but they were collinear within the
-settled moneyline subset scored below, which is why they cannot be separated there.)
+**CORRECTED after review.** An earlier draft of this section called that "one
+condition recorded under two names" and floated dropping a schema field. That
+inference is not supported and has been withdrawn. `buildPickSignalSnapshot`
+derives the two flags from different inputs — `hadLineMovementSignal` from
+opening lines (signal-snapshot.ts:89), `hadScheduleSignal` from schedule-density
+fields (line 101). Observed co-occurrence in a sample is DATA-COVERAGE
+CORRELATION; it is not evidence that the conditions are the same condition, and
+only an aligned per-field decomposition nobody has run could show that.
+
+The rest/ATS pair proves the mechanism directly, which is why it is worth
+stating rather than assuming:
+
+| sample | rows | rest ≠ ATS form | line movement ≠ schedule |
+|---|---|---|---|
+| all non-bootstrap snapshots | 3,068 | **518** | 0 |
+| settled, non-soccer | 1,966 | **217** | 0 |
+| settled, non-soccer, receipt-carrying (contains the scored subset) | 929 | **0** | 0 |
+
+`hadRestSignal` and `hadAtsFormSignal` are demonstrably DIFFERENT conditions —
+they disagree 518 times overall — and yet they are perfectly collinear inside
+the scored subset. That is a coverage artifact appearing and disappearing with
+the sample, and it is the correct way to read the line-movement/schedule zero
+too: as co-occurrence under this coverage, not as identity.
+
+What survives unchanged: within the scored subset these pairs cannot be
+separated, so any analysis there must not treat them as independent evidence.
+That is a limit on what the contrasts below can claim, not a licence to delete
+a field.
 
 ### Do the signals that DO fire earn their place?
 
@@ -229,17 +262,20 @@ n = 472. Only three distinct contrasts exist once collinearity is accounted for:
 | contrast | n with | n without | edge difference | Welch t |
 |---|---|---|---|---|
 | line movement (≡ schedule density) | 160 | 312 | **+8.04 pp** | **2.10** |
-| rest | 132 | 340 | +7.23 pp | 1.78 |
+| rest + ATS form (collinear here, inseparable) | 132 | 340 | +7.23 pp | 1.78 |
 | venue | 123 | 349 | +5.59 pp | 1.33 |
 
 Read carefully, because it is easy to over-read:
 
 - Only line movement clears two standard errors, and with three contrasts tested even
   that is marginal under any multiple-comparison adjustment.
-- **Rest is t = 1.78 — suggestive, not established.** That is the honest answer to
-  "is the schedule spot a real edge or a lazy storyline" on our own data: it leans the
-  right way and does not clear the bar. Most schedule narratives are smaller than they
-  sound, including ours.
+- **The rest row is t = 1.78 — suggestive, not established, AND not attributable to
+  rest.** `hadRestSignal` and `hadAtsFormSignal` differ in 0 of the 929 receipt-carrying
+  settled rows this subset is drawn from, so the contrast measures the two together and
+  cannot say which one carries it. An earlier draft labelled this row "rest" and read it
+  as a schedule-spot result; that attribution is withdrawn. Separating them needs a
+  sample where the two flags disagree, which the broader snapshot table does have
+  (217 disagreements among settled non-soccer rows) but the scored subset does not.
 - **Observational and confounded.** "Signal present" correlates with data coverage,
   which correlates with sport and fixture prominence. Better-covered games may simply
   be more predictable. None of these differences shows the factor *causes* the edge.

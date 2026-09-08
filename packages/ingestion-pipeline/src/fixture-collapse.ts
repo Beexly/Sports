@@ -127,14 +127,15 @@ export function collapseGameRowsToFixtures<T extends FixtureCollapseRow>(rows: r
       continue;
     }
 
-    const twin = findTwinCandidate(keptCandidates, {
+    const probe = {
       sportId: row.sportId,
       externalId: row.externalId,
       homeTeamName: row.homeTeamName,
       awayTeamName: row.awayTeamName,
       commenceTime: row.commenceTime,
       sportKey: row.sport?.key ?? undefined,
-    });
+    };
+    const twin = findTwinCandidate(keptCandidates, probe);
 
     // C-194. A FLIPPED BEST MATCH MUST NOT MASK A SAME-ORIENTATION TWIN.
     //
@@ -161,21 +162,26 @@ export function collapseGameRowsToFixtures<T extends FixtureCollapseRow>(rows: r
     // it by guess, which is what the fail-closed rule is protecting. If the
     // filtered list is still ambiguous, it still returns null and we still
     // keep the row.
+    // The aligned subset is decided by THE MATCHER, one candidate at a time -
+    // never by raw team-name equality. findTwinCandidate normalizes names and
+    // applies sport-aware city-prefix matching, so a raw `===` filter drops the
+    // very candidate it is looking for whenever two feeds spell the same club
+    // differently ("LA Rams" against "Los Angeles Rams"), and the duplicate
+    // survives exactly as it did before this fix. Asking the matcher per
+    // candidate reuses its semantics instead of restating them, which is the
+    // same reason this module reuses selectCanonical's survivor rule.
+    //
+    // Filtering to the aligned subset REMOVES an ambiguity rather than
+    // resolving one: if that subset is still ambiguous, findTwinCandidate
+    // still returns null and the row is still kept. Fail-closed is preserved.
     const orientedTwin =
       !twin || twin.orientation === "flipped"
         ? findTwinCandidate(
-            keptCandidates.filter(
-              (c) =>
-                c.homeTeamName === row.homeTeamName && c.awayTeamName === row.awayTeamName,
-            ),
-            {
-              sportId: row.sportId,
-              externalId: row.externalId,
-              homeTeamName: row.homeTeamName,
-              awayTeamName: row.awayTeamName,
-              commenceTime: row.commenceTime,
-              sportKey: row.sport?.key ?? undefined,
-            },
+            keptCandidates.filter((candidate) => {
+              const solo = findTwinCandidate([candidate], probe);
+              return solo !== null && solo.orientation === "aligned";
+            }),
+            probe,
           )
         : twin;
 

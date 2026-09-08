@@ -33,6 +33,15 @@ type Rgb = readonly [number, number, number];
 
 const TAILWIND_CONFIG = readFileSync(resolve(__dirname, "..", "tailwind.config.ts"), "utf8");
 
+/** The only colour keys this guard reads. Closed set, no interpolation. */
+type TokenKey = "obsidian" | "DEFAULT" | "glow";
+
+const TOKEN_PATTERNS: Readonly<Record<TokenKey, RegExp>> = {
+  obsidian: /\bobsidian:\s*"(#[0-9a-fA-F]{6})"/,
+  DEFAULT: /\bDEFAULT:\s*"(#[0-9a-fA-F]{6})"/,
+  glow: /\bglow:\s*"(#[0-9a-fA-F]{6})"/,
+};
+
 function parseHex(hex: string): Rgb {
   return [
     Number.parseInt(hex.slice(1, 3), 16),
@@ -49,8 +58,12 @@ function parseHex(hex: string): Rgb {
  * the first draft of this file measured 9.11:1 for a pairing that is 3.88:1.
  * Always narrow to the block before reading a generic key.
  */
-function tokenHex(key: string, scope: string = TAILWIND_CONFIG): Rgb {
-  const match = scope.match(new RegExp(`\\b${key}:\\s*"(#[0-9a-fA-F]{6})"`));
+function tokenHex(key: TokenKey, scope: string = TAILWIND_CONFIG): Rgb {
+  // `key` is a union of literals, not free text, and the pattern is built from
+  // that closed set rather than interpolated from a caller-supplied string -
+  // a dynamic RegExp source is a code-injection sink even when today's callers
+  // all pass constants, and static analysis is right to say so.
+  const match = scope.match(TOKEN_PATTERNS[key]);
   if (!match) {
     throw new Error(
       `tailwind.config.ts no longer defines a hex for "${key}". ` +

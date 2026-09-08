@@ -37,7 +37,7 @@ describe("the dashboard says when a zero is an outage", () => {
     // EXACT, not a floor. `>= 10` let a handler disappear or route around the
     // helpers without failing, which is the same "assertion that looks like
     // proof" problem this file exists to prevent.
-    const counts = source.match(/\.catch\(soft(Zero|TodayPicks)\)/g) ?? [];
+    const counts = source.match(/\.catch\(soft(Zero|TodayPicks|PerfZero)\)/g) ?? [];
     expect(counts.length).toBe(11);
     // Every OTHER catch on the page must be accounted for by name. There is
     // exactly one legitimate non-helper catch - loadPublicClvPolicy, which
@@ -64,6 +64,24 @@ describe("the dashboard says when a zero is an outage", () => {
     const guarded = /\{todayPicksDegraded \? \([\s\S]{0,600}?\) : todayPicks\.length === 0 \? \(/;
     expect(source).toMatch(guarded);
     expect(source).toContain("could not be read");
+  });
+
+  it("never publishes a record assembled from one real count and one fallback zero", () => {
+    // C-201, found in review. softZero is right for a DISPLAY count - a zero
+    // beside the banner is a degraded number a reader can discount. It is
+    // wrong for the inputs to evaluatePublicPerformancePolicy, because those
+    // get COMBINED: canonicalSettledCount succeeding at 500 while
+    // canonicalWins fails to 0 renders "0-..." and a 0% win rate as a
+    // statement of record. That is a fabricated performance claim, which is
+    // the worst output this product can produce.
+    expect(source).toContain("perfDegraded = true");
+    // Every count that forms the public record routes through the record-
+    // scoped fallback, not the display one.
+    const perfCatches = source.match(/\.catch\(softPerfZero\)/g) ?? [];
+    expect(perfCatches, "the five record counts must use softPerfZero").toHaveLength(5);
+    // And the record is withheld when any of them failed.
+    expect(source).toContain("performancePolicy.canExposePerformanceStats && !perfDegraded");
+    expect(source).toContain('perfDegraded\n    ? "Unavailable"');
   });
 
   it("keeps the list flag distinct from the page-wide flag", () => {
