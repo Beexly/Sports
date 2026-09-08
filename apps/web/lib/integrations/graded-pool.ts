@@ -46,6 +46,11 @@ import { FF_OPPORTUNITY_ATTRIBUTION, type ExpectedPointsRow } from "../intellige
 import { normName, percentileRanks } from "../intelligence/qb-consensus";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
+import {
+  evaluateProjectionBasis,
+  MIN_GAMES_FOR_BASIS,
+  type ProjectionBasisCode,
+} from "./projection-basis";
 import { adpByNormName, adpJoinKey, loadFfcAdp, FFC_ATTRIBUTION, type FfcAdpRow } from "../fantasy/adp-source";
 import { checkClearance, wrapExtractedRecord, type ExtractedRecord } from "../scraping/clearance-engine";
 
@@ -172,12 +177,20 @@ export function injuryDisplayJoinKey(name: string, pos: string, team: string): s
   return `${normName(name)}|${pos.toUpperCase()}|${normTeam(team)}`;
 }
 
+/**
+ * Basis gate (C-213). A projection may only ship when the season behind it is
+ * a defensible basis for the week it is FOR, and it must carry the label that
+ * says which season that was. On the eve of Week 1 the correct answer is
+ * "prior season, and say so" - not "refuse", which would mean no Week 1 board
+ * at all, and not "ship it silently", which is the failure the label prevents.
+ */
 export function buildGradedPool(
   profiles: readonly PlayerProfile[],
   xfp: readonly ExpectedPointsRow[],
   teamEnv: readonly TeamEnvironmentRow[] = [],
   qbForward: readonly QbForwardRow[] = [],
   enrich: GradedPoolEnrichment = {},
+  basisContext?: GradedPoolBasisContext,
 ): Player[] {
   const xfpByName = new Map(xfp.map((r) => [normName(r.name), r.xfpPerGame]));
   const schemeFitByTeam = buildSchemeFitByTeam(teamEnv);
@@ -185,6 +198,20 @@ export function buildGradedPool(
 
   return profiles
     .map((p): Player | null => {
+      // Basis gate FIRST: a player whose evidence cannot support a projection
+      // is excluded here, on the same rule the value check below already uses
+      // - exclude, never invent. Skipped entirely when no context is supplied,
+      // so existing callers and tests are unaffected.
+      if (basisContext) {
+        const verdict = evaluateProjectionBasis({
+          targetSeason: basisContext.targetSeason,
+          targetWeek: basisContext.targetWeek,
+          basisSeason: basisContext.basisSeason,
+          gamesBehind: p.games,
+        });
+        if (!verdict.ok) return null;
+      }
+
       const xfpPg = xfpByName.get(normName(p.name));
       const basis = xfpPg != null && xfpPg > 0 ? xfpPg : p.fppg; // prefer expected (predictive) over actual
       if (!(basis > 0)) return null; // no usable input -> exclude, never invent
@@ -291,11 +318,27 @@ export function buildGradedProvider(pool: readonly Player[], fetchedAt?: string,
   };
 }
 
+/** What the basis gate needs to judge this pool. */
+export interface GradedPoolBasisContext {
+  readonly targetSeason: number;
+  readonly targetWeek: number;
+  readonly basisSeason: number;
+}
+
 export interface GradedPoolResult {
   readonly status: "live" | "source-error";
   readonly season: number;
   readonly count: number;
   readonly players: readonly Player[];
+  /**
+   * The season these numbers were built from, in words, for display. Null only
+   * when no basis context was supplied (legacy callers) or the pool failed.
+   * A surface showing pool numbers without showing this is showing a number
+   * whose provenance the reader cannot see.
+   */
+  readonly basisLabel: string | null;
+  /** Machine-readable partner to basisLabel. */
+  readonly basisCode: ProjectionBasisCode | null;
   /** Source-license attribution for every surface that displays the pool. */
   readonly attribution: string;
   readonly error: string | null;
@@ -388,10 +431,27 @@ export async function loadSleeperInjuryDisplay(fetcher: FetchLike): Promise<Slee
  * compute the xFP-preferred basis (internal analysis is cleared by the
  * `ffverse-ffopportunity` registry entry).
  */
-export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { fetcher?: FetchLike; includeXfp?: boolean } = {}): Promise<GradedPoolResult> {
+export async function loadGradedPool({
+  fetcher = fetch,
+  includeXfp = false,
+  basisContext,
+}: {
+  fetcher?: FetchLike;
+  includeXfp?: boolean;
+  /**
+   * Target season/week this pool is FOR. Supplying it turns on the basis gate
+   * (C-213): players whose evidence cannot support a projection are excluded,
+   * and the result carries the label naming the season the numbers came from.
+   * Omitted, behaviour is exactly as before.
+   */
+  basisContext?: { readonly targetSeason: number; readonly targetWeek: number };
+} = {}): Promise<GradedPoolResult> {
   const model = await loadPlayerModel({ fetcher });
   if (model.status === "source-error") {
-    return { status: "source-error", season: 0, count: 0, players: [], attribution: NFLVERSE_ATTRIBUTION, error: model.error };
+    return {
+      status: "source-error", season: 0, count: 0, players: [],
+      attribution: NFLVERSE_ATTRIBUTION, basisLabel: null, basisCode: null, error: model.error,
+    };
   }
   // Season-consistent composition: the (internal-only) expected-points basis and
   // the QB forward prior must describe the SAME season as the process grade. They
@@ -427,7 +487,25 @@ export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { 
   const injuryDisplayByKey = sleeperInjury.byKey;
 
   // teamEnv intentionally [] on the live path (see note above) -> neutral schemeFit.
-  const pool = buildGradedPool(model.profiles, xfpRows, [], qbForwardRows, { adpByName, injuryDisplayByKey });
+  // The basis the gate judges is the season the PROCESS GRADE describes -
+  // model.season - because that is what every number in the pool is composed
+  // from (xFP and the QB prior are pinned to it above, or dropped).
+  const gateContext = basisContext
+    ? { ...basisContext, basisSeason: model.season }
+    : undefined;
+  const pool = buildGradedPool(
+    model.profiles, xfpRows, [], qbForwardRows,
+    { adpByName, injuryDisplayByKey },
+    gateContext,
+  );
+
+  // One representative verdict for the whole pool: every surviving player
+  // cleared the same season rule, so the label is a pool-level fact. Games are
+  // reported at the gate's own floor because the label describes the BASIS,
+  // not any one player's sample.
+  const poolVerdict = gateContext
+    ? evaluateProjectionBasis({ ...gateContext, gamesBehind: MIN_GAMES_FOR_BASIS })
+    : null;
   // Attribution composes from the sources ACTUALLY joined — a failed join must
   // not over-credit, and the ffverse CC-BY-SA line rides on every (internal)
   // pool that used the xFP basis, per the registry's propagation requirement.
@@ -437,7 +515,16 @@ export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { 
     ...(adpByName.size > 0 ? [FFC_ATTRIBUTION] : []),
     ...(injuryDisplayByKey.size > 0 ? ["rosters/injury via Sleeper"] : []),
   ].join(" · ");
-  return { status: "live", season: model.season, count: pool.length, players: pool, attribution, error: null };
+  return {
+    status: "live",
+    season: model.season,
+    count: pool.length,
+    players: pool,
+    attribution,
+    basisLabel: poolVerdict?.ok ? poolVerdict.label : null,
+    basisCode: poolVerdict ? poolVerdict.code : null,
+    error: null,
+  };
 }
 
 /**
