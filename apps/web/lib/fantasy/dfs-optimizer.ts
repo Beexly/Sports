@@ -434,7 +434,21 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     // wins over the exposure heuristic. (If a lock and the cap genuinely
     // conflict the lock holds and exposure exceeds the cap; that is the honest
     // resolution, and it is what the user asked for.)
-    const capCount = Math.max(1, Math.floor(maxExposure * count));
+    // The denominator is the set BEING BUILT (n + 1), not the requested count.
+    // Using `count` was right for a full run and wrong for a partial one: when
+    // generation stops early - an over-constrained pool, no more unique
+    // feasible lineups - the cap had been measured against lineups that never
+    // existed, so a player could occupy every lineup actually returned while
+    // the code believed it was under a 60% ceiling. Measuring against n + 1
+    // tightens as the set grows and never references a lineup that was not
+    // produced.
+    //
+    // Integer counts mean this is a near-cap, not an exact one: the bound is
+    // ceil(maxExposure * L) for a final set of size L, so a 60% cap on 3
+    // lineups permits 2 (67%). That residual is inherent to whole lineups and
+    // is stated here rather than papered over; `partial` is already returned
+    // so a caller can see when the set is short.
+    const capCount = Math.max(1, Math.ceil(maxExposure * (n + 1)));
     const overexposed = new Set<string>();
     for (const [id, c] of usage) {
       if (c >= capCount && !opts.locks.has(id)) overexposed.add(id);

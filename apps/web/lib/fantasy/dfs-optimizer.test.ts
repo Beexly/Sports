@@ -247,11 +247,20 @@ describe("dfs optimizer", () => {
     const { lineups, exposure } = generateLineups(base({ mode: "gpp" }), count, 0.6);
     expect(lineups.length).toBeGreaterThanOrEqual(3);
 
-    // A real cap, asserted against maxExposure itself rather than a slack 0.8.
+    // A real cap, asserted against maxExposure itself rather than a slack 0.8,
+    // and against the number of lineups ACTUALLY RETURNED - not the number
+    // requested. Measuring against `count` was the bug Devin found in the
+    // first version of this fix: on a partial run the cap referenced lineups
+    // that were never produced, so a player could sit in every returned
+    // lineup while the code believed it was under the ceiling.
+    //
+    // ceil, not floor: whole lineups make this a near-cap. A 60% ceiling over
+    // 3 lineups permits 2, which is 67%. That residual is inherent and is
+    // asserted honestly rather than hidden behind a slacker bound.
+    const produced = lineups.length;
+    const bound = Math.max(1, Math.ceil(0.6 * produced));
     exposure.forEach((e) =>
-      expect(e.count, `${e.id} exceeded the cap`).toBeLessThanOrEqual(
-        Math.max(1, Math.floor(0.6 * count)),
-      ),
+      expect(e.count, `${e.id} exceeded the cap over ${produced} lineups`).toBeLessThanOrEqual(bound),
     );
 
     // And the sets are NOT forced disjoint. This must be asserted on lineups
@@ -266,6 +275,42 @@ describe("dfs optimizer", () => {
       second.some((id) => first.has(id)),
       "lineup 2 was forced fully disjoint from lineup 1",
     ).toBe(true);
+  });
+
+  it("holds the cap against the lineups PRODUCED when generation stops early (C-208)", () => {
+    // Devin's finding on the first version of C-204's fix. Measuring the cap
+    // against the REQUESTED count referenced lineups that were never produced:
+    // on a constrained pool that stops early, a player could sit in every
+    // lineup actually returned while the code believed it was under the
+    // ceiling. This slate is deliberately just big enough to fill the roster
+    // with almost no alternatives, so asking for 12 returns far fewer.
+    const mk = (id: string, pos: DfsPos, salary: number, proj: number): DfsPlayer => ({
+      id, name: id, pos, team: "AAA", opp: "BBB", salary, proj, floor: proj - 3, ceiling: proj + 6, own: 0.1,
+    });
+    const tiny: DfsPlayer[] = [
+      mk("q1", "QB", 5000, 20), mk("q2", "QB", 5000, 19),
+      mk("r1", "RB", 5000, 15), mk("r2", "RB", 5000, 14), mk("r3", "RB", 5000, 13),
+      mk("w1", "WR", 5000, 15), mk("w2", "WR", 5000, 14), mk("w3", "WR", 5000, 13), mk("w4", "WR", 5000, 12),
+      mk("t1", "TE", 5000, 10), mk("t2", "TE", 5000, 9),
+      mk("d1", "DST", 5000, 8),
+    ];
+
+    const requested = 12;
+    const { lineups, exposure, partial } = generateLineups(base({ mode: "gpp" }), requested, 0.6, tiny);
+
+    expect(lineups.length).toBeGreaterThan(0);
+    expect(lineups.length, "pool was not constrained enough to stop early").toBeLessThan(requested);
+    expect(partial).toBe(true);
+
+    // The cap must hold against what was RETURNED, not what was asked for.
+    const produced = lineups.length;
+    const bound = Math.max(1, Math.ceil(0.6 * produced));
+    exposure.forEach((e) =>
+      expect(
+        e.count,
+        `${e.id} in ${e.count} of ${produced} returned lineups, over the cap`,
+      ).toBeLessThanOrEqual(bound),
+    );
   });
 
   it("leverage mode favours lower total ownership than cash", () => {
