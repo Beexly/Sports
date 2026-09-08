@@ -176,7 +176,20 @@ export function DfsOptimizer() {
         <div className="space-y-4">
           {result && result.exposure.length > 0 && (
             <div className="surface-card p-5">
-              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Exposure across {result.lineups.length} lineups</p>
+              <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Exposure across {result.lineups.length} lineups</p>
+              {/* The bound is STATED, not implied. `exposureCap` is a whole
+                  number of lineups because lineups are whole: no integer
+                  bound expresses 60% of 3, so the optimizer reports the
+                  appearance bound the returned set was actually built under
+                  rather than a percentage the arithmetic cannot honour
+                  (C-217). Pinned players are exempt by design - a pin is an
+                  instruction, not a preference (C-204) - so the claim is
+                  scoped to unpinned players and says so. Without this line
+                  the reader sees a 67% bar with nothing to read it against. */}
+              <p className="mb-3 font-mono text-[10px] tracking-[0.06em] text-ion-2">
+                Bound: no unpinned player in more than{" "}
+                <span className="tabular-nums text-ion-white">{result.exposureCap} of {result.lineups.length}</span>
+              </p>
               <div className="max-h-[40vh] space-y-1.5 overflow-y-auto">
                 {result.exposure.map((e) => (
                   <div key={e.id} className="flex items-center gap-2">

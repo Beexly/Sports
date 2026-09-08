@@ -449,6 +449,14 @@ export type GenResult = {
    * THIS integer to a user and never restate `maxExposure` as the realized
    * share — the arithmetic cannot honour the percentage, and saying so is the
    * point (C-217).
+   *
+   * That instruction went unfollowed by the only consumer until C-242: the
+   * exposure panel drew a 67% bar with nothing to read it against, while the
+   * sibling `partial` field was surfaced. It now prints "no unpinned player in
+   * more than N of M" beside the bars. A stated bound is only worth having
+   * while it is true, so `__tests__/dfs-exposure-bound-disclosed.test.tsx`
+   * asserts the returned set honours the number on screen, not merely that a
+   * number is on screen.
    */
   readonly exposureCap: number;
 };
