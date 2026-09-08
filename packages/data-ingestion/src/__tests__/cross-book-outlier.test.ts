@@ -156,4 +156,37 @@ describe("findOddsOutliers", () => {
     );
     expect(findOddsOutliers(batch)).toEqual([]);
   });
+
+  it("dedupes a bookmaker appearing more than once in the batch (e.g. multiple fetch cycles), keeping only its latest reading", () => {
+    // "draftkings" quoted -1.5 all day, then went live (C-119 shape) and
+    // escalated to -19.5 in its own LATER snapshot in the same batch. If this
+    // were not deduped, "draftkings" would count as 5 independent quotes (4 at
+    // -1.5, 1 at -19.5) alongside the 3 genuinely distinct books, biasing the
+    // median/MAD toward one source's own history instead of reflecting the
+    // real 4-book cross-section — and could mask or fabricate a signal either
+    // way depending on how many stale duplicates happen to be in the batch.
+    const batch: NormalizedOdds[] = [
+      odds({ bookmaker: "draftkings", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T02:00:00Z") }),
+      odds({ bookmaker: "draftkings", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T10:00:00Z") }),
+      odds({ bookmaker: "draftkings", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T16:00:00Z") }),
+      // Its genuinely latest reading, post-kickoff live drift — the one that
+      // should actually be judged against the other books.
+      odds({ bookmaker: "draftkings", market: "SPREADS", spread: -19.5, fetchedAt: new Date("2026-08-23T20:00:00Z") }),
+      odds({ bookmaker: "fanduel", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T20:00:00Z") }),
+      odds({ bookmaker: "betmgm", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T20:00:00Z") }),
+      odds({ bookmaker: "caesars", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T20:00:00Z") }),
+      odds({ bookmaker: "lowvig", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T20:00:00Z") }),
+      odds({ bookmaker: "bovada", market: "SPREADS", spread: -1.5, fetchedAt: new Date("2026-08-23T20:00:00Z") }),
+    ];
+
+    const flags = findOddsOutliers(batch);
+
+    // Exactly one flag: draftkings' single latest (-19.5) reading against the
+    // 6-book group (its own 3 stale dupes excluded), not 7 rows for draftkings.
+    // (6 real books, not 4, so the outlier clears the modified-z threshold the
+    // same way the other tests' 5-vs-1 and 11-vs-1 shapes do — this test is
+    // about proving dedup, not re-proving the threshold math at the margin.)
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatchObject({ bookmaker: "draftkings", value: -19.5 });
+  });
 });

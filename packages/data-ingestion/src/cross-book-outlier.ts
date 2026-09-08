@@ -165,15 +165,39 @@ export function findOddsOutliers(odds: readonly NormalizedOdds[]): OddsOutlierFl
 
   for (const market of ["SPREADS", "TOTALS"] as const) {
     const field = market === "SPREADS" ? "spread" : "total";
-    const byGame = new Map<string, { bookmaker: string; value: number }[]>();
+    // Deduped so a batch spanning more than one fetch cycle (not how
+    // process-sport.ts calls this today, but this is a reusable, not-yet-wired
+    // utility a future caller could feed a wider batch) can never count the
+    // SAME book's own odds more than once — that would silently corrupt the
+    // median/MAD by treating one source's time series as several independent
+    // books, exactly the kind of false-consensus shape this module exists to
+    // catch in OTHER books. Keeps the LATEST `fetchedAt` reading per
+    // (game, bookmaker), since that is the quote scoring.ts would actually use
+    // for a fresh cycle. Nested by game first (not a composite string key) so
+    // no delimiter-collision assumption is needed for gameExternalId/bookmaker.
+    const latestByGameAndBookmaker = new Map<string, Map<string, { value: number; fetchedAt: Date }>>();
 
     for (const o of odds) {
       if (o.market !== market) continue;
       const value = o[field];
       if (value === undefined || value === null) continue;
-      const list = byGame.get(o.gameExternalId) ?? [];
-      list.push({ bookmaker: o.bookmaker, value });
-      byGame.set(o.gameExternalId, list);
+      let byBookmaker = latestByGameAndBookmaker.get(o.gameExternalId);
+      if (!byBookmaker) {
+        byBookmaker = new Map();
+        latestByGameAndBookmaker.set(o.gameExternalId, byBookmaker);
+      }
+      const existing = byBookmaker.get(o.bookmaker);
+      if (!existing || o.fetchedAt.getTime() >= existing.fetchedAt.getTime()) {
+        byBookmaker.set(o.bookmaker, { value, fetchedAt: o.fetchedAt });
+      }
+    }
+
+    const byGame = new Map<string, { bookmaker: string; value: number }[]>();
+    for (const [gameExternalId, byBookmaker] of latestByGameAndBookmaker) {
+      byGame.set(
+        gameExternalId,
+        [...byBookmaker.entries()].map(([bookmaker, quote]) => ({ bookmaker, value: quote.value })),
+      );
     }
 
     for (const [gameExternalId, quotes] of byGame) {

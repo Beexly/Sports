@@ -35,4 +35,9 @@ describe("isSignificantAltitudeJump", () => {
     expect(isSignificantAltitudeJump(2000, 1500)).toBe(true);
     expect(isSignificantAltitudeJump(2000, 2500)).toBe(false);
   });
+
+  it("treats a gain exactly at the threshold as significant (inclusive boundary)", () => {
+    expect(isSignificantAltitudeJump(3000)).toBe(true);
+    expect(isSignificantAltitudeJump(2999.999)).toBe(false);
+  });
 });
