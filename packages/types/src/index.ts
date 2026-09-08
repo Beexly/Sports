@@ -254,8 +254,15 @@ export interface OddsApiSport {
 
 export interface OddsApiOutcome {
   name: string;
-  price: number;
+  /**
+   * Absent when a public scoreboard gives a point but no American price
+   * (Galaxy/ESPN inline spread and total facts). Never fake -110: an unpriced
+   * outcome normalizes to an unpriced row that the engine will not mint from.
+   */
+  price?: number;
   point?: number;
+  /** Galaxy de-vig p_i = (1/O_i) / sum_j(1/O_j) when every side carries a price. */
+  fair_prob?: number;
 }
 
 export interface OddsApiMarket {

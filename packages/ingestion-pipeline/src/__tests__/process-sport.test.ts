@@ -18,6 +18,7 @@ import type { FixtureProbe } from "../fixture-confirmation.js";
 
 const mocks = vi.hoisted(() => ({
   // data-ingestion
+  circuitState: vi.fn<() => "closed" | "open" | "half_open">(),
   // Header fields mirror the client contract: number | null (null = header absent), usedRequests optional in older fixtures.
   getOdds: vi.fn<
     (sport: string, markets: string[]) => Promise<{ data: unknown[]; remainingRequests: number | null; usedRequests?: number | null }>
@@ -129,6 +130,8 @@ vi.mock("@sports/data-ingestion", async () => {
   getSharedClubEloClient: vi.fn(),
   isClubEloSport: vi.fn().mockReturnValue(false),
   isIngestible: vi.fn().mockReturnValue(false),
+  // WP-27 step 2: the paid 402 breaker state the pipeline consults before the paid leg.
+  getOddsPaymentCircuitBreaker: () => ({ getState: mocks.circuitState }),
   resolveRundownApiKey: mocks.resolveRundownApiKey,
   fetchRundownEventsForSport: mocks.fetchRundownEventsForSport,
   eventsBelowBookmakerThreshold: mocks.eventsBelowBookmakerThreshold,
@@ -196,7 +199,7 @@ vi.mock("../build-independent-fair-values.js", async () => {
 });
 
 import { processSport, pickSelectionSide } from "../process-sport.js";
-import { isNflPreseasonFetchWindow } from "@sports/data-ingestion";
+import { fetchEspnOddsForSport, isNflPreseasonFetchWindow } from "@sports/data-ingestion";
 
 /** Default guard behaviour for these tests: every probe is listed on the board. */
 function confirmAll(_sportKey: string, probes: readonly { id: string }[]): Promise<unknown> {
@@ -285,6 +288,7 @@ describe("processSport", () => {
     mocks.pickFindUnique.mockResolvedValue(null);
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
+    mocks.circuitState.mockReturnValue("closed");
     mocks.resolveRundownApiKey.mockReturnValue("");
     mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
     mocks.eventsBelowBookmakerThreshold.mockImplementation((events: unknown[], min = 2) =>
@@ -555,6 +559,115 @@ describe("processSport", () => {
       // The pick still ships: a failed schedule correction is not a reason to sit.
       expect(result).toMatchObject({ status: "success", picks: 1 });
       warn.mockRestore();
+    });
+  });
+
+  describe("WP-27 keyless Galaxy/ESPN path (C-104)", () => {
+    // The ESPN fetch double lives in the module mock, not in `mocks`, so the
+    // global mockReset never touches it: clear its call log per test.
+    beforeEach(() => vi.mocked(fetchEspnOddsForSport).mockClear());
+
+    const espnBoard = (books: readonly string[] = ["espn_public", "kalshi"]) => ({
+      provider: "espn_public" as const,
+      events: [
+        {
+          id: "espn:americanfootball_nfl:401",
+          sport_key: "americanfootball_nfl",
+          sport_title: "NFL",
+          // Within 24h of real now — a stale fixture date trips the quiet-board
+          // carve-out and the run is skipped before any persistence.
+          commence_time: new Date(Date.now() + 6 * 3600 * 1000).toISOString(),
+          home_team: "Chiefs",
+          away_team: "Bills",
+          bookmakers: books.map((key) => ({ key, title: key, markets: [] })),
+        },
+      ],
+    });
+    const oneOddsRow = () => [
+      {
+        gameExternalId: "ext-1",
+        bookmaker: "espn_public",
+        market: "SPREADS",
+        spread: -3,
+        fetchedAt: new Date(),
+        bookmakerLastUpdate: new Date(),
+      },
+    ];
+
+    it("unpaid path: a two-book Galaxy/ESPN board is used BEFORE Rundown and persists odds", async () => {
+      // Key absent → paid fetch skipped; ESPN+Kalshi board fully covered →
+      // Rundown must not be consulted, and the rows flow through normalize+persist.
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard());
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      // Fresh upstream odds for the game — the default empty set reads as
+      // "every game stale" and diverts the run into the quiet-board skip.
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      const res = await processSport(SPORT, "", gates());
+
+      expect(vi.mocked(fetchEspnOddsForSport).mock.calls[0]?.[0]).toBe("americanfootball_nfl");
+      expect(mocks.getOdds).not.toHaveBeenCalled();
+      expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+      expect(res.status).not.toBe("failed");
+      // Zero paid requests: the envelope carries no paid accounting at all.
+      expect(res.paidRequestCount).toBeUndefined();
+    });
+
+    it("unpaid path, single-book ESPN board: Rundown is only a thin-fill bridge (C-103), the board stays espn_public", async () => {
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard(["espn_public"]));
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      await processSport(SPORT, "", gates());
+
+      expect(mocks.getOdds).not.toHaveBeenCalled();
+      // Thin-fill (merge into the ESPN primary), never a full replace of the board.
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledTimes(0);
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+    });
+
+    it("paid circuit OPEN: skips the paid leg entirely and takes the keyless path (no phantom paid request)", async () => {
+      mocks.circuitState.mockReturnValue("open");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard());
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const res = await processSport(SPORT, "real-paid-key", gates());
+
+      expect(mocks.getOdds).not.toHaveBeenCalled();
+      expect(fetchEspnOddsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+      expect(res.status).not.toBe("failed");
+      expect(res.paidRequestCount).toBeUndefined();
+      expect(warn.mock.calls.some((c) => /payment circuit open/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("paid circuit CLOSED with a key: the paid leg still runs first (no behaviour change when paid works)", async () => {
+      mocks.circuitState.mockReturnValue("closed");
+      await processSport(SPORT, "real-paid-key", gates());
+      expect(mocks.getOdds).toHaveBeenCalledTimes(1);
+      // Paid returned an event, so the keyless path is never consulted.
+      expect(fetchEspnOddsForSport).not.toHaveBeenCalled();
+    });
+
+    it("paid empty AND keyless empty: Rundown is consulted only after the Galaxy/ESPN attempt", async () => {
+      mocks.getOdds.mockResolvedValue({ data: [], remainingRequests: 400 });
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce({ events: [], provider: "espn_public", error: "espn odds empty" });
+
+      await processSport(SPORT, "real-paid-key", gates());
+
+      expect(fetchEspnOddsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      const espnOrder = vi.mocked(fetchEspnOddsForSport).mock.invocationCallOrder[0]!;
+      const rundownOrder = mocks.fetchRundownEventsForSport.mock.invocationCallOrder[0]!;
+      expect(espnOrder).toBeLessThan(rundownOrder);
     });
   });
 

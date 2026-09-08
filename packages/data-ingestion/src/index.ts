@@ -184,6 +184,7 @@ export {
 export {
   OfflineOddsProvider,
   TheOddsApiOddsProvider,
+  GalaxySportsApiOddsProvider,
   createOddsQuoteProvider,
   isCertifiableOddsProvider,
   type OddsProviderId,
@@ -293,11 +294,22 @@ export {
 } from "./odds-api-key.js";
 export type { OddsApiKeyEnvName } from "./odds-api-key.js";
 
+export { americanToDecimal, deVigFairProbs } from "./galaxy-devig.js";
+
 export {
   fetchEspnOddsForSport,
+  GALAXY_ESPN_INLINE_SOURCE_ID,
   ESPN_ODDS_SPORT_MAP,
 } from "./espn-odds-client.js";
-export type { EspnOddsFetchResult } from "./espn-odds-client.js";
+export type {
+  EspnOddsFetchResult,
+  GalaxySecondBook,
+  GalaxySecondBookGameRef,
+} from "./espn-odds-client.js";
+export {
+  getOddsPaymentCircuitBreaker,
+  type OddsCircuitState,
+} from "./odds-api-circuit-breaker.js";
 
 export {
   NFL_PRESEASON_ODDS_KEY,
