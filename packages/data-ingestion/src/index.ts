@@ -136,7 +136,11 @@ export {
   ingestionTargetNflSeason,
   latestCompletedNflSeasonFloor,
   resolveFootballStatsSeason,
+  resolveNflWeek,
+  nflWeekOneStart,
+  NFL_REGULAR_SEASON_WEEKS,
   type StatsSeasonResolution,
+  type NflWeekResolution,
 } from "./nflverse-season.js";
 export {
   probeNflverseSourceCurrency,

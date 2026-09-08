@@ -20,6 +20,18 @@ export type DfsPlayer = {
   readonly floor: number;
   readonly ceiling: number;
   readonly own: number; // projected ownership 0..1
+  /**
+   * The Galaxy Index for this player, 0..100, when the slate source can supply
+   * it (galaxy-index.ts). OPTIONAL by design: the four numbers above are all a
+   * salary/projection/ownership feed carries, and the index needs usage, team
+   * environment, trend and availability - signals that live on the graded
+   * player pool, not on a DFS slate file. A source that can join them
+   * populates this and the optimizer weights it heavily; a source that cannot
+   * omits it and the objective is exactly what it was. Never defaulted to 50:
+   * an absent index and a league-average index are different statements, and
+   * only one of them is a measurement (C-212).
+   */
+  readonly galaxyIndex?: number;
 };
 
 const d = (id: string, name: string, pos: DfsPos, team: string, opp: string, salary: number, proj: number, floor: number, ceiling: number, own: number): DfsPlayer =>

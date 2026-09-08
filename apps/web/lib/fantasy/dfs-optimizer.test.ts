@@ -373,6 +373,70 @@ describe("dfs optimizer", () => {
       .forEach((e) => expect(e.count, `${e.id} over the bound`).toBeLessThanOrEqual(exposureCap));
   });
 
+  it("weights the Galaxy Index heavily, and is inert without one (C-212)", () => {
+    // The "unique to us" wire. compositeScore - the weighted-signal matrix
+    // built to blend usage, team environment, availability and beat reporting
+    // under a confidence valve - had zero consumers in lib/fantasy, so every
+    // fantasy surface ranked on a raw projection, which is the one input every
+    // competitor also has.
+    //
+    // THE POOL IS SHAPED SO THE INDEX HAS TO DECIDE SOMETHING. The first draft
+    // of this test put four WRs against three WR slots with the twins as the
+    // top two, so both twins made every lineup and every assertion passed with
+    // the wiring removed. Here wc and wd out-project both twins, so exactly one
+    // twin takes the third WR slot and the choice is the measurement. The FLEX
+    // is held by r3, who out-projects the losing twin, so it cannot absorb him.
+    const mkp = (id: string, pos: DfsPos, proj: number, over: Partial<DfsPlayer> = {}): DfsPlayer => ({
+      id, name: id, pos, team: "AAA", opp: "BBB", salary: 5000, proj,
+      floor: proj - 3, ceiling: proj + 6, own: 0.1, ...over,
+    });
+    const pool = (a: Partial<DfsPlayer>, b: Partial<DfsPlayer>): DfsPlayer[] => [
+      mkp("q1", "QB", 20), mkp("r1", "RB", 15), mkp("r2", "RB", 14), mkp("r3", "RB", 13),
+      mkp("t1", "TE", 10), mkp("d1", "DST", 8),
+      mkp("wc", "WR", 14), mkp("wd", "WR", 13),   // out-project both twins
+      mkp("wa", "WR", 12, a), mkp("wb", "WR", 12, b),
+    ];
+    const opts: OptOpts = { mode: "cash", stack: false, locks: new Set(), excludes: new Set() };
+    const idsOf = (lu: DfsPlayer[] | null) => (lu ?? []).map((p) => p.id);
+
+    // Exactly one twin is ever selected - the precondition this test rests on.
+    const neither = idsOf(optimizeOne(opts, undefined, pool({}, {})));
+    expect(neither.filter((id) => id === "wa" || id === "wb")).toHaveLength(1);
+    expect(neither).toContain("r3"); // FLEX is not free to take the other twin
+
+    // THE MEASUREMENT: the index, and only the index, decides which twin.
+    // Asserted in BOTH directions, because a one-directional assertion passes
+    // on any solver that happens to tie-break alphabetically - which is
+    // exactly what this solver does, and exactly how the first draft of this
+    // test passed with the wiring removed.
+    expect(idsOf(optimizeOne(opts, undefined, pool({ galaxyIndex: 88 }, { galaxyIndex: 22 })))).toContain("wa");
+    expect(idsOf(optimizeOne(opts, undefined, pool({ galaxyIndex: 22 }, { galaxyIndex: 88 })))).toContain("wb");
+
+    // HEAVY, measured rather than read off the constant. A 0.6 weight has to
+    // let a well-supported player beat a twin projected meaningfully higher;
+    // an index that could only break exact ties would not be worth wiring.
+    // 12 x 1.6 = 19.2 against 16 x 0.4 = 6.4, so "hi" takes the slot that pure
+    // projection would have given to "lo".
+    const outgunned = idsOf(optimizeOne(opts, undefined, [
+      mkp("q1", "QB", 20), mkp("r1", "RB", 15), mkp("r2", "RB", 14), mkp("r3", "RB", 13),
+      mkp("t1", "TE", 10), mkp("d1", "DST", 8),
+      mkp("wc", "WR", 14), mkp("wd", "WR", 13),
+      mkp("hi", "WR", 12, { galaxyIndex: 95 }),
+      mkp("lo", "WR", 16, { galaxyIndex: 20 }),
+    ]));
+    expect(outgunned).toContain("hi");
+    expect(outgunned).not.toContain("lo");
+
+    // A malformed index is treated as ABSENT, never coerced to a flattering
+    // number: the solver still returns a legal lineup and the twins fall back
+    // to the deterministic tie-break.
+    const hostile = optimizeOne(opts, undefined, pool(
+      { galaxyIndex: Number.NaN }, { galaxyIndex: Number.POSITIVE_INFINITY },
+    ));
+    expect(hostile).not.toBeNull();
+    expect(idsOf(hostile)).toEqual(neither);
+  });
+
   it("leverage mode favours lower total ownership than cash", () => {
     const lev = generateLineups(base({ mode: "leverage" }), 4).lineups;
     const cash = generateLineups(base({ mode: "cash" }), 4).lineups;

@@ -57,10 +57,39 @@ export type OptOpts = {
 
 const FLEX_POS: readonly DfsPos[] = ["RB", "WR", "TE"];
 
+/**
+ * How hard the Galaxy Index pushes the objective. 0.6 means an index of 100
+ * multiplies a player's value term by 1.6 and an index of 0 by 0.4 - heavy,
+ * which is the point: an optimizer that ranks on a projection everyone else
+ * also has produces lineups everyone else also has. This is the field where
+ * being right about usage, team environment, availability and what the beat
+ * reporters are saying is supposed to show up (C-212).
+ */
+export const GALAXY_OBJECTIVE_WEIGHT = 0.6;
+
+/**
+ * The index's multiplier on a value term. 1.0 when there is no index, so a
+ * slate that cannot supply one optimizes exactly as it did before.
+ *
+ * MULTIPLICATIVE on the value term only, never on the whole objective. The
+ * leverage mode's contrarian component can be negative, and scaling a negative
+ * by a factor above 1 pushes it the WRONG way - a well-supported player would
+ * be penalised harder for being popular. Applying the factor to the points
+ * term and leaving the ownership term alone keeps each half meaning what it
+ * says.
+ */
+function galaxyFactor(p: DfsPlayer): number {
+  const idx = p.galaxyIndex;
+  if (idx === undefined || !Number.isFinite(idx)) return 1;
+  const clamped = Math.max(0, Math.min(100, idx));
+  return 1 + GALAXY_OBJECTIVE_WEIGHT * ((clamped - 50) / 50);
+}
+
 function objVal(p: DfsPlayer, mode: Mode): number {
-  if (mode === "cash") return p.proj;
-  if (mode === "gpp") return p.ceiling;
-  return leverage(p) * 6 + p.ceiling * 0.45; // leverage: contrarian ceiling
+  const g = galaxyFactor(p);
+  if (mode === "cash") return p.proj * g;
+  if (mode === "gpp") return p.ceiling * g;
+  return leverage(p) * 6 + p.ceiling * 0.45 * g; // leverage: contrarian ceiling
 }
 
 export type Lineup = readonly DfsPlayer[];

@@ -39,6 +39,7 @@
  * deliberate go-live decision.
  */
 
+import { resolveNflWeek } from "@sports/data-ingestion";
 import { registerProjectionsProvider, type PlayerProjection, type ProjectionsProvider } from "./projections";
 import type { Player } from "../fantasy/players";
 import { loadPlayerModel, type PlayerProfile } from "../intelligence/player-model";
@@ -435,16 +436,29 @@ export async function loadGradedPool({
   fetcher = fetch,
   includeXfp = false,
   basisContext,
+  now = new Date(),
 }: {
   fetcher?: FetchLike;
   includeXfp?: boolean;
   /**
-   * Target season/week this pool is FOR. Supplying it turns on the basis gate
-   * (C-213): players whose evidence cannot support a projection are excluded,
+   * Target season/week this pool is FOR — the basis gate's frame of reference
+   * (C-213). Players whose evidence cannot support a projection are excluded
    * and the result carries the label naming the season the numbers came from.
-   * Omitted, behaviour is exactly as before.
+   *
+   * DEFAULTED, NOT OPTIONAL, since C-220. It was opt-in, and no caller opted
+   * in: neither the API route nor the internal provider passed it, so the gate
+   * never ran anywhere in production, every player passed regardless of basis,
+   * and `basisLabel` was null on every response. A gate nothing calls is not a
+   * conservative gate, it is a gate that does not exist — and it fails OPEN,
+   * which is the direction that publishes an unsupported number. The default
+   * is derived from the calendar (`resolveNflWeek`), so the frame advances on
+   * its own and cannot go stale between seasons. Pass an explicit context to
+   * evaluate against a different target; the shape is unchanged for callers
+   * that already do.
    */
   basisContext?: { readonly targetSeason: number; readonly targetWeek: number };
+  /** Injectable clock, for tests and for evaluating a past target. */
+  now?: Date;
 } = {}): Promise<GradedPoolResult> {
   const model = await loadPlayerModel({ fetcher });
   if (model.status === "source-error") {
@@ -490,9 +504,11 @@ export async function loadGradedPool({
   // The basis the gate judges is the season the PROCESS GRADE describes -
   // model.season - because that is what every number in the pool is composed
   // from (xFP and the QB prior are pinned to it above, or dropped).
-  const gateContext = basisContext
-    ? { ...basisContext, basisSeason: model.season }
-    : undefined;
+  const target = basisContext ?? (() => {
+    const { season, week } = resolveNflWeek(now);
+    return { targetSeason: season, targetWeek: week };
+  })();
+  const gateContext = { ...target, basisSeason: model.season };
   const pool = buildGradedPool(
     model.profiles, xfpRows, [], qbForwardRows,
     { adpByName, injuryDisplayByKey },
@@ -503,9 +519,7 @@ export async function loadGradedPool({
   // cleared the same season rule, so the label is a pool-level fact. Games are
   // reported at the gate's own floor because the label describes the BASIS,
   // not any one player's sample.
-  const poolVerdict = gateContext
-    ? evaluateProjectionBasis({ ...gateContext, gamesBehind: MIN_GAMES_FOR_BASIS })
-    : null;
+  const poolVerdict = evaluateProjectionBasis({ ...gateContext, gamesBehind: MIN_GAMES_FOR_BASIS });
   // Attribution composes from the sources ACTUALLY joined — a failed join must
   // not over-credit, and the ffverse CC-BY-SA line rides on every (internal)
   // pool that used the xFP basis, per the registry's propagation requirement.
@@ -521,8 +535,8 @@ export async function loadGradedPool({
     count: pool.length,
     players: pool,
     attribution,
-    basisLabel: poolVerdict?.ok ? poolVerdict.label : null,
-    basisCode: poolVerdict ? poolVerdict.code : null,
+    basisLabel: poolVerdict.ok ? poolVerdict.label : null,
+    basisCode: poolVerdict.code,
     error: null,
   };
 }
