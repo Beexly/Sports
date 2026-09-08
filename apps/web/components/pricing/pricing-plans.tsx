@@ -2,9 +2,10 @@
 
 import { HoloTilt } from "@/components/motion/holo-tilt";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { SubscribeButton } from "./subscribe-button";
+import { readCheckoutIntent } from "@/lib/pricing/checkout-resume";
 
 /**
  * Pricing plan cards with a monthly/annual billing toggle.
@@ -40,6 +41,14 @@ export function PricingPlans({
 }) {
   const [interval, setInterval] = useState<Interval>("month");
   const annual = interval === "year";
+
+  // FE-08: put the billing toggle back where a resumed checkout intent left
+  // it (SubscribeButton restores the DOB into the matching tier's own
+  // field; this restores the shared monthly/annual toggle they both read).
+  useEffect(() => {
+    const intent = readCheckoutIntent();
+    if (intent) setInterval(intent.interval);
+  }, []);
 
   return (
     <div>
@@ -136,7 +145,7 @@ export function PricingPlans({
               <div className="mt-auto">
                 {plan.id === "FREE" ? (
                   <Link
-                    href="/auth/signin"
+                    href="/auth/signin?callbackUrl=/dashboard"
                     className="block w-full rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
                   >
                     {plan.cta}
