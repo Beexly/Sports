@@ -92,6 +92,16 @@ describe("calibration gate reading", () => {
     expect(queryAllByTestId("gate-reading-value").length).toBe(0);
   });
 
+  it("a RED evaluation closes the figures even while the last receipt still says published", async () => {
+    const red: EligibilityDurableSnap = { ...snap, evaluatedAt: new Date().toISOString(), report: { ...snap.report, status: "RED", reasons: ["ECE 0.061 > 0.05"] } };
+    const mod = await import("@/components/calibration/gate-reading");
+    const { queryAllByTestId, getByTestId } = render(
+      <mod.GateReadingView model={{ snap: red, receipt, pBasis: "market_anchored_v4", numbersPublished: false, stale: false }} />,
+    );
+    expect(getByTestId("gate-reading-status").textContent).toBe("RED");
+    expect(queryAllByTestId("gate-reading-value").length).toBe(0);
+  });
+
   it("reads PERFORMANCE_STATS_ENABLED literally", () => {
     expect(performanceStatsEnabled({ PERFORMANCE_STATS_ENABLED: "true" })).toBe(true);
     expect(performanceStatsEnabled({ PERFORMANCE_STATS_ENABLED: "1" })).toBe(false);

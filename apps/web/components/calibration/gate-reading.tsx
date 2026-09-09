@@ -7,10 +7,12 @@
  *
  * Honesty rules, in code:
  *   - No snap: renders nothing. Nothing is invented.
- *   - Numbers render only when the latest receipt says published AND
- *     PERFORMANCE_STATS_ENABLED is on AND the snap is fresh. An unpublish
- *     receipt, a missing flag, or a snap older than MAX_SNAP_AGE_MS closes
- *     the figures; the block then shows status and streak only.
+ *   - Numbers render only when the latest receipt says published AND the
+ *     snap itself reads GREEN AND PERFORMANCE_STATS_ENABLED is on AND the
+ *     snap is fresh. A RED evaluation closes the figures the moment it lands,
+ *     before any unpublish receipt is written (the same rule as
+ *     calibration-publish-policy); an unpublish receipt, a missing flag, or a
+ *     snap older than MAX_SNAP_AGE_MS closes them too.
  *   - Freshness: the eligibility cron is six-hourly. A snap older than four
  *     missed runs (24h) is shown as STALE with its timestamp, never as live.
  *   - Every figure is the snap's own value; raw ECE is shown beside the
@@ -65,7 +67,8 @@ export async function loadGateReading(): Promise<GateReadingModel | null> {
       snap,
       receipt,
       pBasis: snap.pBasis ?? metricsPBasis(metrics),
-      numbersPublished: receipt?.published === true && performanceStatsEnabled() && !stale,
+      numbersPublished:
+        receipt?.published === true && snap.report.status === "GREEN" && performanceStatsEnabled() && !stale,
       stale,
     };
   } catch {
