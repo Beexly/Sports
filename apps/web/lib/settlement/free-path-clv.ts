@@ -12,10 +12,12 @@ import {
   type ClosingOddsRow,
 } from "@sports/prediction-engine";
 import {
+  cancelPostSettlementWork,
   markPostSettlementWorkDone,
   markPostSettlementWorkFailed,
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
+import { CLV_WITHDRAWN_RESULT } from "@/lib/clv/clv-sample-policy";
 
 export type FreePathClvPick = {
   readonly id: string;
@@ -156,13 +158,13 @@ export async function drainPendingClvGrades(
     };
     pick: FreePathClvDb["pick"] & {
       findMany: (args: {
-        where: { id: { in: string[] }; result: { notIn: string[] } };
+        where: { id: { in: string[] } };
         select: Record<string, unknown>;
-      }) => Promise<FreePathClvPick[]>;
+      }) => Promise<Array<FreePathClvPick & { result: string }>>;
     };
   },
   options: { take?: number; now?: Date } = {},
-): Promise<{ attempted: number; graded: number; noClose: number; failed: number }> {
+): Promise<{ attempted: number; graded: number; noClose: number; failed: number; retired: number }> {
   const take = options.take ?? 80;
   const settledAt = options.now ?? new Date();
   const pending = await db.postSettlementWork.findMany({
@@ -172,17 +174,29 @@ export async function drainPendingClvGrades(
     select: { subjectId: true },
   });
   if (pending.length === 0) {
-    return { attempted: 0, graded: 0, noClose: 0, failed: 0 };
+    return { attempted: 0, graded: 0, noClose: 0, failed: 0, retired: 0 };
   }
 
   const ids = pending.map((p) => p.subjectId);
-  const picks = await db.pick.findMany({
-    // PENDING has no outcome to grade; VOID has no bet. Grading a withdrawn
-    // pick would mint a fresh clvVerdict for a claim we have retracted, and
-    // that verdict feeds the public CLV sample (Devin Review, #733).
-    where: { id: { in: ids }, result: { notIn: ["PENDING", "VOID"] } },
+  // Load the selected subjects WITH their result and partition in code rather
+  // than filtering them out in the query.
+  //
+  // Filtering in SQL was the round-4 fix and it introduced a liveness bug
+  // (round 7): a VOID subject still consumed one of the `take` slots, was
+  // dropped from `picks`, and — because nothing retired its work row — was
+  // re-selected on every subsequent cycle. Enough withdrawn picks at the head
+  // of the oldest-first queue and no valid repair behind them ever runs.
+  //
+  //   WIN | LOSS | PUSH -> grade it
+  //   VOID             -> RETIRE the work row; there is no bet to grade and no
+  //                       repair that would change that. The stored clvVerdict
+  //                       is left untouched (settlement history).
+  //   PENDING          -> leave PENDING; it is legitimately still waiting.
+  const rows = await db.pick.findMany({
+    where: { id: { in: ids } },
     select: {
       id: true,
+      result: true,
       pickType: true,
       selection: true,
       clvLockLine: true,
@@ -198,6 +212,24 @@ export async function drainPendingClvGrades(
     },
   });
 
+  const picks = rows.filter((p) => p.result === "WIN" || p.result === "LOSS" || p.result === "PUSH");
+  const withdrawn = rows.filter((p) => p.result === CLV_WITHDRAWN_RESULT);
+
+  // Retire withdrawn work FIRST, so a batch that is entirely VOID still frees
+  // its slots for the next cycle instead of reselecting the same rows forever.
+  let retired = 0;
+  const work = db.postSettlementWork as unknown as PostSettlementWorkDelegate;
+  for (const p of withdrawn) {
+    await cancelPostSettlementWork(
+      work,
+      p.id,
+      "CLV_GRADE",
+      "pick withdrawn to VOID: no bet stood, so there is no closing-line value to grade",
+      settledAt,
+    );
+    retired += 1;
+  }
+
   let graded = 0;
   let noClose = 0;
   let failed = 0;
@@ -208,5 +240,5 @@ export async function drainPendingClvGrades(
     else failed++;
   }
 
-  return { attempted: picks.length, graded, noClose, failed };
+  return { attempted: picks.length, graded, noClose, failed, retired };
 }

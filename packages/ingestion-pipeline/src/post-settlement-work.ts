@@ -102,6 +102,51 @@ export async function markPostSettlementWorkDone(
   }
 }
 
+/**
+ * RETIRES a work row that can never be performed, so it stops being selected.
+ *
+ * Distinct from DONE (the work happened) and from FAILED (it should be retried).
+ * A CLV grade owed on a pick that was later WITHDRAWN is neither: there is no
+ * bet left to grade and no repair that would change that.
+ *
+ * Why this exists (Devin Review, #733 round 7): the drains select PENDING rows
+ * oldest-first with a fixed `take`, then filter the subjects they cannot
+ * process. A subject that is filtered but never retired is re-selected every
+ * cycle and occupies a slot forever — enough of them and valid repairs behind
+ * them never run. Excluding work without retiring it converts a correctness fix
+ * into a liveness bug.
+ *
+ * `status` is a plain String column, not an enum, and the only readers filter on
+ * `status: "PENDING"` (the CLV and snapshot drains), so a new terminal value
+ * needs no schema change and is invisible to them — which is the point.
+ * Nothing is deleted; the row and its reason stay for audit.
+ */
+export const POST_SETTLEMENT_WORK_CANCELLED = "CANCELLED" as const;
+
+export async function cancelPostSettlementWork(
+  delegate: PostSettlementWorkDelegate,
+  subjectId: string,
+  kind: PostSettlementWorkKind,
+  reason: string,
+  now: Date = new Date(),
+): Promise<void> {
+  try {
+    await delegate.updateMany({
+      where: { subjectId, kind },
+      data: {
+        status: POST_SETTLEMENT_WORK_CANCELLED,
+        completedAt: now,
+        lastError: reason,
+      },
+    });
+  } catch (err) {
+    console.warn(
+      `[post-settlement-work] could not cancel ${kind}/${subjectId}: ` +
+        `${err instanceof Error ? err.message : err}`,
+    );
+  }
+}
+
 /** Marks one work row FAILED with the error (repairable, never deleted).
  *  Never throws. */
 export async function markPostSettlementWorkFailed(

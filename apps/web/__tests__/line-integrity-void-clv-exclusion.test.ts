@@ -41,9 +41,15 @@ describe("loadPublicClvPolicy excludes withdrawn picks", () => {
 });
 
 describe("drainPendingClvGrades never grades a withdrawn pick", () => {
+  /**
+   * Models the real queue: work rows carry a status, the drain takes the
+   * OLDEST `take` PENDING ones, and a row only leaves the queue when something
+   * writes a terminal status to it. That is what makes the starvation visible.
+   */
   function drainDb(picks: Array<{ id: string; result: string }>) {
     const updates: Array<Record<string, unknown>> = [];
     let selection: Record<string, unknown> = {};
+    const queue = picks.map((p) => ({ subjectId: p.id, kind: "CLV_GRADE", status: "PENDING" }));
     const db = {
       odds: { findMany: async () => [] },
       pick: {
@@ -53,12 +59,12 @@ describe("drainPendingClvGrades never grades a withdrawn pick", () => {
         },
         findMany: async (args: { where: Record<string, unknown> }) => {
           selection = args.where;
-          const filter = args.where["result"] as { notIn?: string[] } | undefined;
-          const blocked = filter?.notIn ?? [];
+          const ids = (args.where["id"] as { in: string[] }).in;
           return picks
-            .filter((p) => !blocked.includes(p.result))
+            .filter((p) => ids.includes(p.id))
             .map((p) => ({
               id: p.id,
+              result: p.result,
               pickType: "SPREAD",
               selection: "Fixture Home Bears -3.5",
               clvLockLine: -3.5,
@@ -73,18 +79,27 @@ describe("drainPendingClvGrades never grades a withdrawn pick", () => {
         },
       },
       postSettlementWork: {
-        findMany: async () => picks.map((p) => ({ subjectId: p.id })),
+        findMany: async (args: { take: number }) =>
+          queue.filter((w) => w.status === "PENDING").slice(0, args.take).map((w) => ({ subjectId: w.subjectId })),
         createMany: async () => ({ count: 0 }),
-        updateMany: async () => ({ count: 1 }),
+        updateMany: async (args: { where: { subjectId: string }; data: { status?: string } }) => {
+          const row = queue.find((w) => w.subjectId === args.where.subjectId);
+          if (row && typeof args.data.status === "string") row.status = args.data.status;
+          return { count: row ? 1 : 0 };
+        },
       },
     };
-    return { db, updates, selection: () => selection };
+    return { db, updates, selection: () => selection, queue };
   }
 
-  it("asks the database to exclude PENDING and VOID", async () => {
+  it("loads the selected subjects WITH their result and partitions in code", async () => {
+    // Filtering VOID out in SQL was the round-4 fix and it starved the queue
+    // (round 7): the row was skipped but never retired, so it was re-selected
+    // forever. The query must not filter on result at all.
     const h = drainDb([{ id: "p1", result: "LOSS" }]);
     await drainPendingClvGrades(h.db as never, { take: 10 });
-    expect(h.selection()["result"]).toEqual({ notIn: ["PENDING", "VOID"] });
+    expect(h.selection()["result"]).toBeUndefined();
+    expect(h.selection()["id"]).toEqual({ in: ["p1"] });
   });
 
   it("a VOID pick is not attempted, so no fresh verdict is minted", async () => {
@@ -92,6 +107,53 @@ describe("drainPendingClvGrades never grades a withdrawn pick", () => {
     const out = await drainPendingClvGrades(h.db as never, { take: 10 });
     expect(out.graded).toBe(0);
     expect(h.updates).toHaveLength(0);
+  });
+
+  it("RETIRES the withdrawn work row so it leaves the queue", async () => {
+    const h = drainDb([{ id: "voided", result: "VOID" }]);
+    const out = await drainPendingClvGrades(h.db as never, { take: 10 });
+    expect(out.retired).toBe(1);
+    expect(h.queue[0]!.status).toBe("CANCELLED");
+  });
+
+  it("an all-VOID oldest batch no longer blocks the next batch", async () => {
+    // take=2, and the two oldest are both withdrawn. Before the fix they were
+    // re-selected every cycle and `valid` could never be reached.
+    const h = drainDb([
+      { id: "a-void", result: "VOID" },
+      { id: "b-void", result: "VOID" },
+      { id: "c-valid", result: "LOSS" },
+    ]);
+    const first = await drainPendingClvGrades(h.db as never, { take: 2 });
+    expect(first.retired).toBe(2);
+    expect(first.graded).toBe(0);
+
+    // The liveness property: the second batch REACHES the valid pick, and its
+    // work row leaves the queue. (It takes the no-close path here because the
+    // fixture has no odds rows, so `pick.update` is not the artifact to assert.)
+    const second = await drainPendingClvGrades(h.db as never, { take: 2 });
+    expect(second.attempted).toBe(1);
+    expect(second.retired).toBe(0);
+    expect(h.queue.find((w) => w.subjectId === "c-valid")!.status).not.toBe("PENDING");
+  });
+
+  it("a mixed batch grades the valid picks AND retires the withdrawn work", async () => {
+    const h = drainDb([
+      { id: "a-void", result: "VOID" },
+      { id: "b-valid", result: "WIN" },
+    ]);
+    const out = await drainPendingClvGrades(h.db as never, { take: 2 });
+    expect(out.retired).toBe(1);
+    expect(out.attempted).toBe(1);
+    expect(h.queue.find((w) => w.subjectId === "a-void")!.status).toBe("CANCELLED");
+    expect(h.queue.find((w) => w.subjectId === "b-valid")!.status).not.toBe("PENDING");
+  });
+
+  it("a still-PENDING pick is left in the queue, not retired", async () => {
+    const h = drainDb([{ id: "waiting", result: "PENDING" }]);
+    const out = await drainPendingClvGrades(h.db as never, { take: 10 });
+    expect(out.retired).toBe(0);
+    expect(h.queue[0]!.status).toBe("PENDING");
   });
 });
 
