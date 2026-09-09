@@ -11,14 +11,15 @@ and a fixed output path. The orchestrating session (Fable) only writes briefs, r
 resolves conflicts and validates names against the build. No orchestrator time goes into grepping
 routes, rewriting strings or computing contrast ratios.
 
-## Phase 0: the design system Claude Design builds with (in progress)
+## Phase 0: the design system Claude Design builds with (built, upload pending)
 
 `/design-sync` converts the real `apps/web` components into the Claude Design format so every
 screen the design agent produces is made of shipping parts. State on this branch:
 
 - Entry, shims, config and conventions header: `.design-sync/` (committed).
-- 53 components bundled; render check clean; authored preview cards graded on the absolute rubric
-  (four Sonnet batches, disjoint sets, see `.design-sync/NOTES.md`).
+- 53 components bundled; render check clean on all 53; every component has an authored preview
+  card graded good on the absolute rubric (four Sonnet batches over disjoint sets, orchestrator
+  fold-in, final capture run carries all 53 grades forward; see `.design-sync/NOTES.md`).
 - Upload is blocked until the founder authorizes claude.ai/design for this workspace (Claude
   Design's "Send to Claude Code Web", or `/design-login` in an interactive session). The next
   `/design-sync` run uploads the already-verified bundle into a new project named
