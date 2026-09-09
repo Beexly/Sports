@@ -181,3 +181,21 @@ Repo-specific gotchas for re-syncs. One bullet per item.
 - `conventions.md` validated against the fresh build with **zero drift** — all 49 classes, 9 `var(--*)`
   tokens and 9 component names it names still resolve. Not rewritten (correctly: content belongs to
   its authors).
+
+## Permanent false positive: the "183 component-scoped properties" warning (2026-09-09)
+- The claude.ai/design server-side design-system check reports ~183 "custom properties under
+  component selectors" and will do so on EVERY sync, forever. **This is not actionable. Do not
+  try to fix it.** All 417 non-`:root` custom properties in `ds-bundle/_ds_bundle.css` are
+  `--tw-*` (verified by parsing every rule block: 417 `--tw-*`, 0 hand-authored). They come from
+  Tailwind's unconditional `*,:after,:before` and `::backdrop` reset block (51 each) plus
+  `--tw-gradient-*` / `--tw-shadow-*` on utility classes.
+- `_ds_bundle.css` IS the Tailwind compile (`cfg.cssEntry` = `.design-sync/.cache/tailwind.css`),
+  so these are present regardless of what the token file is named or how it is scoped. Renaming
+  `design-tokens.css` tokens (contract §14) fixes the *79 unclassifiable* count only — it cannot
+  and will not change the 183.
+- DESIGN-CONTRACT.md §14.2 records this as **closed, not deferred**. If a future agent proposes
+  adding `@kind` annotations, a `tokensPkg`, or a token-file restructure to clear it, that is
+  wasted work — point them here and at the `tokensGlob` NO-OP bullet under Re-sync risks.
+- Related: `@kind` appears NOWHERE in the staged converter (`.ds-sync/**/*.mjs` has no token
+  classification code at all). Whatever classifies tokens is server-side in the app's self-check.
+  Treat `@kind` as a best-effort convention; never build tooling or a gate on it.

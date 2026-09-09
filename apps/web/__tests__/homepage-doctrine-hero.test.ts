@@ -16,28 +16,47 @@ describe("homepage doctrine hero", () => {
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
-  it("loads the doctrine font families through next/font and binds the CSS vars", () => {
-    // Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3),
-    // bound to both the heavy archetype slams and the standard headlines.
-    expect(layout).toMatch(/Exo_2/);
-    expect(layout).toMatch(/Inter/);
-    expect(tokens).toMatch(/--f-body: "Geist", "Inter"/);
-    expect(layout).toMatch(/JetBrains_Mono/);
-    expect(layout).toMatch(/Instrument_Serif/);
-    for (const cssVar of [
+  it("ships exactly one type family, with tabular figures (design contract Law 1)", () => {
+    // Law 1 — evidence sets the rendering. A figure and its sample size must sit
+    // at the same optical size at n=10-29, which is unachievable across two
+    // families: a mono figure beside a sans caption reads as machine output
+    // annotated by a human. Inter carries every role, and "tnum" replaces the
+    // half of the mono role that was load-bearing (column alignment).
+    //
+    // Supersedes the previous Exo 2 / JetBrains Mono / Instrument Serif doctrine.
+    // If you are here because this test failed, the question is not "how do I
+    // make it pass" but "am I re-opening Law 1".
+
+    // Exactly one family is fetched, and it is Inter.
+    expect(layout.match(/Inter\(/g)).toHaveLength(1);
+    for (const retired of ["Exo_2", "JetBrains_Mono", "Instrument_Serif"]) {
+      expect(layout).not.toMatch(new RegExp(retired));
+    }
+
+    // next/font binds --f-body and nothing else; every other family derives.
+    expect(layout).toContain(`variable: "--f-body"`);
+    for (const derived of [
       "--f-display",
-      "--f-body",
+      "--f-arch",
+      "--f-display-tech",
       "--f-numerals",
+      "--f-mono",
       "--f-editorial",
     ]) {
-      expect(layout).toContain(`variable: "${cssVar}"`);
+      expect(layout).not.toContain(`variable: "${derived}"`);
+      // ...and each one resolves back to --f-body in the token file.
+      expect(tokens).toMatch(new RegExp(`${derived}:\\s*var\\(--f-body`));
     }
-    // Each family is fetched exactly once: --f-arch and --f-mono are aliases
-    // of their canonical vars in design-tokens.css, not second font loads.
-    expect(layout.match(/Exo_2\(/g)).toHaveLength(1);
-    expect(layout.match(/JetBrains_Mono\(/g)).toHaveLength(1);
-    expect(tokens).toMatch(/--f-arch: var\(--f-display\)/);
-    expect(tokens).toMatch(/--f-mono: var\(--f-numerals\)/);
+
+    // --f-body is owned by next/font and must NOT be redeclared in :root, or the
+    // element-level binding and the token file fight over the cascade.
+    expect(tokens).not.toMatch(/^\s*--f-body:/m);
+
+    // Tabular figures, globally. This is the numerals role now.
+    expect(tokens).toMatch(/font-feature-settings:\s*"tnum"\s*1/);
+
+    // The Tailwind utilities still resolve through the vars, which is why the
+    // 245 files using font-display / font-mono / font-numerals needed no edit.
     for (const cssVar of [
       "--f-arch",
       "--f-display",
