@@ -373,6 +373,22 @@ displayed probability basis going forward; it does not re-grade the 481 rows).
    act and the public claim it makes is his; no agent will edit floors, bins, streak length or the
    engine to produce it.
 
+### 4e. 03:46 UTC sweep
+
+Calibration still RED, now ECE 0.0534 on n 484 (three more settled rows since 02:08), streak 0 of 3,
+published false, ladder FOUNDING; sha `acb2c81a2`, HEALTHY. **Hermes has started HP-14**:
+`origin/hermes/v528-week1` at `2d313557a` (03:43 UTC), one commit, 35 lines in
+`packages/prediction-engine/src/scoring.ts` adding the market-anchored positive-edge gate (C-255);
+tests, the IMPLEMENTED proposal and the MODEL_VERSION bump are not there yet. A new draft PR #738
+("design-sync: Claude Design bundle of apps/web components") appeared at 03:46 UTC from a founder
+session on `claude/tender-faraday-stlhlz`; its CI runs were cancelled by successive pushes.
+Merge train: #733 round 7 (VOID work rows starve the CLV drain; author re-woken 03:48); #734 CI
+green on `6d717e906` after the conflict fix; #736 CI green on `36c004b87` with two webhook reds fixed
+and one red (concurrent checkouts can still double-bill, `checkout/route.ts:230`) deliberately left
+open and ledgered as C-185, founder-gated because it changes commercial-intent semantics on live
+money; #737 CI green on `1940d1723`. Agent 3 answered its own question a second time at 03:26
+("expand to age-verification removal?"); answered YES by trigger at 03:49 with the founder's words.
+
 ## 5. What was deliberately NOT started, and why
 
 - A queue/stream/microservice re-architecture: the platform runs on Vercel cron routes with no queue library
