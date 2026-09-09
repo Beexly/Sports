@@ -1,7 +1,13 @@
 # A published pick's "publish time" moves on every refresh — 2026-09-08
 
 Found by Devin Review on PR #720 (🔴), verified here against the source. **Not fixed. Founder
-decision.** Ledger C-262.
+decision.** Ledger C-265.
+
+> **Renumbered 2026-09-09.** This was filed as C-262. While this branch was open, PR #725 merged
+> to `main` carrying its own C-261, C-262 and C-263 for unrelated work, so the three rows added
+> on this branch were renumbered C-264, C-265 and C-266 when `main` was merged in. `main`'s rows
+> keep the original numbers because they landed first. Commit messages and PR comments written
+> before that merge still say C-261 / C-262 / C-263; they mean these rows.
 
 This matters more than its size suggests, because the number it moves is the one the calibration
 gate reads.

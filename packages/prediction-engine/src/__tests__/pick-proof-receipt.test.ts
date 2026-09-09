@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   buildPickProofReceipt,
   verifyPickProofReceipt,
+  isPlausibleEntryOdds,
+  ENTRY_ODDS_MIN_ABS,
   type PickProofInput,
 } from "../pick-proof-receipt.js";
 
@@ -96,5 +98,49 @@ describe("pick proof receipt", () => {
     expect(() => buildPickProofReceipt(base({ pickId: "" }), testHash)).toThrow(/pickId/);
     expect(() => buildPickProofReceipt(base({ edgeScore: Number.NaN }), testHash)).toThrow(/edgeScore/);
     expect(() => buildPickProofReceipt(base({ confidence: Number.NaN }), testHash)).toThrow(/confidence/);
+  });
+});
+
+describe("entryOdds plausibility write-guard (P0-2, launch audit 2026-09-08)", () => {
+  it("accepts standard American prices — both favorite and underdog sides", () => {
+    for (const odds of [-110, 110, -105, 105, -350, 350, -1000, 1000, -100, 100]) {
+      expect(isPlausibleEntryOdds(odds)).toBe(true);
+    }
+  });
+
+  it("rejects the poison band — spread/total lines that leaked in as prices", () => {
+    // The exact poison shape from the audit: a raw spread/total used as a "price".
+    for (const odds of [-3.5, 3.5, -48.5, 48.5, -7, 7, -55, 55, -99.5, 99.5, 0]) {
+      expect(isPlausibleEntryOdds(odds)).toBe(false);
+    }
+  });
+
+  it("fail-closes on non-number and non-finite input", () => {
+    for (const bad of [null, undefined, "−110", Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(isPlausibleEntryOdds(bad)).toBe(false);
+    }
+  });
+
+  it("constants are the documented band", () => {
+    expect(ENTRY_ODDS_MIN_ABS).toBe(100);
+  });
+
+  it("boundary semantics: |odds| >= 100 passes the validator", () => {
+    expect(isPlausibleEntryOdds(-100)).toBe(true);
+    expect(isPlausibleEntryOdds(100)).toBe(true);
+    expect(isPlausibleEntryOdds(-99.5)).toBe(false);
+    expect(isPlausibleEntryOdds(55.5)).toBe(false);
+  });
+
+  it("the mint itself stays band-agnostic so frozen legacy rows re-derive (no false tamper)", () => {
+    // The 199 frozen audit rows were minted before this guard and are immutable by
+    // design. They carry poison-band entryOdds values with hashes CONSISTENT with
+    // those values. If buildPickProofReceipt threw on the poison band, every
+    // re-derivation path (verifyPickProofReceipt, verifyPickInSlate) would report
+    // those rows as tampered — a false integrity alarm. So the validator is a
+    // WRITE-PATH gate (the pipeline mint call), not a mint-time throw. A receipt
+    // with a poison-band price still re-derives to its own hash:
+    const legacyShape = buildPickProofReceipt(base({ entryOdds: -3.5 }), testHash);
+    expect(verifyPickProofReceipt(legacyShape, testHash)).toBe(true);
   });
 });

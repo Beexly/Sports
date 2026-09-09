@@ -21,8 +21,8 @@
  * Auth: Bearer <CRON_SECRET>.
  */
 import { NextResponse } from "next/server";
-import { resolveFootballStatsSeason } from "@sports/data-ingestion";
 import { cronAuthError } from "@/lib/cron/authorize";
+import { resolveFootballStatsSeasonFromDb } from "@/lib/nflverse/reg-rows-probe";
 import { ingestPlayerWeeklyStats, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
 import { isUnpublishedSeasonSignal } from "@/lib/ingestion/unpublished-season";
 import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
@@ -65,7 +65,10 @@ export async function GET(request: Request): Promise<NextResponse> {
   // resolved display floor (2025 until 2026 REG rows exist) is the fallback
   // when the labelled season is not published yet, so the run stays green and
   // 2026 is picked up automatically the day nflverse ships week-1 rows.
-  const resolved = resolveFootballStatsSeason();
+  // Resolved against STORED REG rows (C-95): without the probe the resolver
+  // can only ever return the completed floor, so the display season never
+  // advanced past 2025 no matter what had been ingested.
+  const resolved = await resolveFootballStatsSeasonFromDb();
   const labelled = ingestionTargetNflSeason();
   const requested = seasonParam ? Number(seasonParam) : labelled;
   if (!Number.isInteger(requested) || requested < 1999 || requested > 2100) {
@@ -155,6 +158,8 @@ export async function GET(request: Request): Promise<NextResponse> {
         labelledCurrent: resolved.labelledCurrent,
         completedFloor: resolved.completedFloor,
         ingestionTarget: labelled,
+        regRowsProbed: resolved.probed,
+        regRowsProbeErrors: resolved.probeErrors,
       },
       labelledAttempt,
       stats,

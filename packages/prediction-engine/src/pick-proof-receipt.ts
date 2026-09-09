@@ -119,6 +119,37 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
 }
 
 /**
+ * The strict American-odds plausibility band a committed entry price must land in
+ * before a receipt may be minted. American odds carry implied probability strictly
+ * between 0% and 100%, so |odds| >= 100 always; values inside (-100, 100) — e.g.
+ * a raw spread like -3.5 or 48.5 leaking in as a "price" — are structurally
+ * impossible American prices.
+ *
+ * The launch audit (2026-09-08) found 199/1,111 frozen receipt rows with such
+ * values (17.9%), caused by a spread/total `line` falling through the
+ * `pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null` fallback in the
+ * pick-commit path. Frozen rows are immutable by design, so the fix is a write
+ * guard: reject at mint time so no new poisoned rows can exist.
+ */
+export const ENTRY_ODDS_MIN_ABS = 100;
+
+/**
+ * True when `entryOdds` is a finite number within the plausible American-odds
+ * band (|odds| >= ENTRY_ODDS_MIN_ABS). Pure; shared by every pick-commit path
+ * so the rule cannot drift between callers.
+ *
+ * DELIBERATELY a WRITE-PATH gate, not a buildPickProofReceipt throw: the 199
+ * frozen rows from the 2026-09-08 audit carry poison-band prices whose hashes
+ * are consistent with those values. Enforcing here-at-mint inside the builder
+ * would make every re-derivation of a legacy row (verifyPickProofReceipt,
+ * verifyPickInSlate) throw and report frozen rows as tampered — a false
+ * integrity alarm. Callers MINTING new receipts must call this first.
+ */
+export function isPlausibleEntryOdds(entryOdds: unknown): entryOdds is number {
+  return typeof entryOdds === "number" && Number.isFinite(entryOdds) && Math.abs(entryOdds) >= ENTRY_ODDS_MIN_ABS;
+}
+
+/**
  * Freeze a pick into a tamper-evident receipt. Validates the inputs (never mints a
  * receipt from non-finite probabilities or empty identifiers), builds the canonical
  * payload, and stamps it with the injected hash.

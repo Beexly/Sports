@@ -15,6 +15,17 @@ vi.mock("@/lib/ingestion/snap-counts", () => ({ ingestSnapCounts: vi.fn() }));
 vi.mock("@/lib/ingestion/injuries", () => ({ ingestInjuries: vi.fn() }));
 vi.mock("@/lib/ingestion/depth-charts", () => ({ ingestDepthCharts: vi.fn() }));
 vi.mock("@/lib/ingestion/next-gen-stats", () => ({ ingestNextGenStats: vi.fn() }));
+// The REG-row probe (C-95) reads the database; here it answers from a list the
+// test controls. Default: no season has rows, which is the pre-probe behaviour
+// (completed floor) every case below was written against.
+const probe = vi.hoisted(() => ({ seasonsWithRegRows: [] as number[] }));
+vi.mock("@/lib/nflverse/reg-rows-probe", async () => {
+  const { resolveFootballStatsSeasonAsync } = await import("@sports/data-ingestion");
+  return {
+    resolveFootballStatsSeasonFromDb: (now: Date = new Date()) =>
+      resolveFootballStatsSeasonAsync(now, async (season) => probe.seasonsWithRegRows.includes(season)),
+  };
+});
 
 import { GET } from "@/app/api/cron/refresh-player-stats/route";
 import { ingestPlayerWeeklyStats, currentNflSeason, ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
@@ -55,6 +66,7 @@ describe("GET /api/cron/refresh-player-stats", () => {
       Promise.resolve({ status: "ok", season, statType, rowsWritten: 5 }),
     );
     vi.stubEnv("CRON_SECRET", "secret");
+    probe.seasonsWithRegRows = [];
   });
   afterEach(() => vi.unstubAllEnvs());
 
@@ -208,6 +220,21 @@ describe("GET /api/cron/refresh-player-stats", () => {
         `${e.path} no longer fires at :00/:30 - re-derive the window in lib/ingestion/satellite-window.ts`,
       ).toBe("0,30 * * * *"),
     );
+  });
+
+  it("reports the labelled season as resolved once its REG rows are stored, and says which seasons it probed (C-95)", async () => {
+    const now = new Date();
+    const labelled = ingestionTargetNflSeason(now);
+    probe.seasonsWithRegRows = [labelled];
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({ status: "ok", season: labelled, playersUpserted: 1, statsUpserted: 9 });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      seasonResolution: { season: number; regRowsProbed: number[]; regRowsProbeErrors: string[] };
+    };
+    expect(body.seasonResolution.season).toBe(labelled);
+    expect(body.seasonResolution.regRowsProbed).toEqual([labelled]);
+    expect(body.seasonResolution.regRowsProbeErrors).toEqual([]);
   });
 
   it("asks the source for the labelled season on a scheduled run and stands on it when published", async () => {
