@@ -389,6 +389,20 @@ open and ledgered as C-185, founder-gated because it changes commercial-intent s
 money; #737 CI green on `1940d1723`. Agent 3 answered its own question a second time at 03:26
 ("expand to age-verification removal?"); answered YES by trigger at 03:49 with the founder's words.
 
+### 4f. 04:15 UTC: founder asleep; overnight dispatch
+
+- Hermes overnight prompt written: `gse-competitive-intel/LAUNCH/20-HERMES-OVERNIGHT-2026-09-09.md`
+  (HP-14b v5.2.8 fix, C-278a Rundown thin-fill with 429 cooldown and Kalshi taker fee, C-278b
+  PredExon thin-fill, HP-10..13 PR finishing, HP-15 triage, then a 30-minute review loop; morning
+  report goes to `docs/ops/HERMES_OVERNIGHT_2026-09-09.md` on its last branch).
+- #736: Devin on 45278e1 posted one red (reconciler leaves earlier `unpaid` rows CANCELED; no repair
+  path, `reconcile-entitlements.ts:490-499`) and one yellow (no `pastDueSince` anchor). Agent 10 woken
+  04:14 UTC with both; merge only on green with no open red (founder order).
+- #733: head 67ab3cd reads `mergeable_state: dirty` after #722/#734 landed. A1 woken 04:14 UTC to
+  merge main and resolve; merge after, then the `LINE_INTEGRITY_VOID_ENABLED=true` block goes to the
+  founder.
+- Hourly sweep trig_01HwiowYAW6EXEmkYwpxXH6M still armed (next 04:51 UTC).
+
 ## 5. What was deliberately NOT started, and why
 
 - A queue/stream/microservice re-architecture: the platform runs on Vercel cron routes with no queue library
