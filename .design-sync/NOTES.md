@@ -70,3 +70,57 @@ Repo-specific gotchas for re-syncs. One bullet per item.
   a type change there breaks the preview compile (`! preview build failed: PickCard`).
 - Playwright: the pre-installed chromium build (`/opt/pw-browsers/chromium-1194`) pins
   `playwright@1.56.0` in `.ds-sync/`; the repo's own playwright pins build 1223 and will not launch.
+- `cfg.tokensGlob` alone is a NO-OP: `lib/css.mjs` `copyTokens()` returns early unless
+  `cfg.tokensPkg` is also set, and it resolves the glob inside `node_modules/<tokensPkg>`, not
+  from a repo path. So `ds-bundle/tokens/` ships EMPTY and `apps/web/styles/design-tokens.css` is
+  never copied. This is harmless — globals.css `@import`s the token file, so every custom property
+  is compiled into `.design-sync/.cache/tailwind.css` = `_ds_bundle.css`, which `styles.css`
+  imports, so rendered designs do get the tokens. Do not "fix" it by inventing a `tokensPkg`;
+  do not let `conventions.md` point at `tokens/design-tokens.css` (corrected 2026-09-09 to point
+  at `_ds_bundle.css`, which is where the properties actually resolve).
+- Playwright on Windows (2026-09-09): the repo's own `playwright` in `Sports/node_modules` launched
+  fine against the machine's `ms-playwright` cache (builds 1223/1228/1234) and the render check ran
+  53/53 clean. The `/opt/pw-browsers/chromium-1194` + `playwright@1.56.0` pin noted above was
+  specific to the earlier Linux session — it is not a cross-machine requirement.
+
+## Wave learnings folded 2026-09-09 (grading re-run, 4 batches)
+- **Add `BoardSurfaceChip` to the "needs a `var(--carbon)` wrapper" list above.** It uses the
+  low-opacity dark-first pattern (`border-caution/50 bg-caution/10 text-caution`, and the
+  orbital-cyan equivalent for `market`), so its `OddsFreshFalse` / `OddsFreshUnknown` cells were
+  nearly invisible on the white card body. Rule of thumb: ANY chip/badge built on a
+  `*-caution/NN` or `*-orbital-cyan/NN` low-opacity token needs the wrapper, whether or not it
+  has a `variant` prop.
+- **Fixture numbers must not echo real product metrics (AGENTS.md law 8).** The `CountUp` fixture
+  shipped `458` / "Settled picks calibrated" and `64.2%` / "Confidence, ten-bin average". `458`
+  is the exact settled-pick sample size in AGENTS.md's live calibration notes and "ten-bin" is the
+  real ECE bucketing language, so the card read as a published accuracy benchmark. Replaced with
+  neutral counters (a token count, an animation duration) keeping the same prop shapes. When
+  authoring a numeric fixture, pick a quantity that CANNOT be mistaken for a performance claim —
+  not just an invented one.
+- **Capture screenshots animated components mid-tween.** `CountUp`'s captured value never equals
+  its authored value (observed `441` vs authored `458`; `1,246` vs `1284`; `3.1s` vs `3.2s`): the
+  capture step shoots before the ease-out settles and does not force
+  `prefers-reduced-motion: reduce`. Not fixable from a preview file. Consequence for grading: judge
+  an animated counter on plausibility and styling, NOT on the exact number matching the source.
+- **`EvidenceAuditDrawer` is previewed closed-only, on purpose** — it fetches its content on open,
+  so an open-state capture would render an empty/error panel. Its two cells vary by the `label`
+  prop. Treat this as the standing convention for any fetch-on-open component: preview the trigger,
+  not the open state, and say so in a comment at the top of the preview file.
+
+## State as of 2026-09-09
+- Uploaded to claude.ai/design project **Galaxy Sports Edge**
+  (`d25d1331-0bb1-4d12-b9ba-ad4f78ab310f`, now pinned as `cfg.projectId`). 292 files, 53 components,
+  render check 53/53 clean, all 53 graded good, 0 floor cards, 0 deletes. The project's
+  `_ds_sync.json` is the verification anchor — a future re-sync on ANY machine skips unchanged
+  components from it, so grades never need re-earning.
+- This run executed in the clone at `C:\Users\Garrett\Sports` (branch `claude/tender-faraday-stlhlz`).
+  `apps/web/components`, `tailwind.config.ts`, `globals.css` and `styles/design-tokens.css` there are
+  byte-identical to `origin/main` (verified with `git diff` against `154b89305`), so the bundle
+  reflects main even though `.design-sync/` lives on this branch. Merging `.design-sync/` to main is
+  still worth doing so the next sync finds it from a normal checkout.
+- Build output is excluded via `.git/info/exclude` (NOT `.gitignore` — AGENTS.md law 2 freezes that
+  file): `/ds-bundle/`, `/.ds-sync/`, `/.design-sync/.cache/`, `/.design-sync/learnings/`,
+  `/.design-sync/node_modules`. A fresh clone must re-add those.
+- Converter deps: this clone already had `esbuild`, `@types/react`, `playwright` and `tailwindcss`
+  in `Sports/node_modules`, so `.ds-sync/` only needed `npm i ts-morph` (no install scripts, so the
+  repo's `strict-allow-scripts` control was never engaged).
