@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description:
     "The strongest start/sit call for the roster you already have, with the leverage of every call and a what-if toggle that re-ranks the moment a player is ruled out.",
   alternates: { canonical: "/fantasy/lineup" },
+  robots: { index: false, follow: true },
 };
 
 // Render per-request so the founder-gated live-projections status is reflected

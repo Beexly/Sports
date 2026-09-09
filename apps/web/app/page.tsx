@@ -127,14 +127,16 @@ export default async function HomePage(): Promise<JSX.Element> {
             </Reveal>
             <Reveal delay={220}>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link href="/tools" className="btn-primary min-h-11 px-6 py-3">
-                  Free calculators
+                {/* F-28 (founder-delegated 2026-09-08, via orchestrator): primary
+                    CTA to /picks, secondary to /pricing. */}
+                <Link href="/picks" className="btn-primary min-h-11 px-6 py-3">
+                  See today&apos;s picks
                 </Link>
                 <Link
-                  href="/methodology"
+                  href="/pricing"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-orbital-cyan/60 px-6 py-3 text-sm font-semibold text-orbital-cyan transition-shadow hover:border-orbital-cyan hover:text-ion-white hover:shadow-[0_0_28px_-6px_rgba(0,229,255,0.6)]"
                 >
-                  How the engine works
+                  See pricing
                 </Link>
               </div>
             </Reveal>
@@ -159,7 +161,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               <DoorCard
                 index={1}
                 label="Board"
-                decides="What's worth a play today, and what to pass."
+                decides="The gate's reasoning behind every pass and every clear."
                 stat={
                   boardUnavailable
                     ? "Live board data unavailable"
